@@ -10,6 +10,7 @@ import 'package:ion/app/components/text_editor/components/custom_blocks/text_edi
 import 'package:ion/app/components/text_editor/custom_recognizer_builder.dart';
 import 'package:ion/app/components/text_editor/utils/text_editor_styles.dart';
 import 'package:ion/app/features/ion_connect/model/media_attachment.dart';
+import 'package:ion/app/features/user/model/user_metadata.c.dart';
 
 class TextEditorPreview extends HookWidget {
   const TextEditorPreview({
@@ -19,6 +20,7 @@ class TextEditorPreview extends HookWidget {
     this.maxHeight,
     this.customStyles,
     this.scrollable = true,
+    this.mentionedUsers = const [],
     super.key,
   });
 
@@ -28,6 +30,7 @@ class TextEditorPreview extends HookWidget {
   final DefaultStyles? customStyles;
   final double? maxHeight;
   final bool scrollable;
+  final List<UserMetadataEntity?> mentionedUsers;
 
   @override
   Widget build(BuildContext context) {
@@ -61,7 +64,11 @@ class TextEditorPreview extends HookWidget {
         ],
         disableClipboard: !enableInteractiveSelection,
         customStyleBuilder: (attribute) => customTextStyleBuilder(attribute, context),
-        customRecognizerBuilder: (attribute, leaf) => customRecognizerBuilder(context, attribute),
+        customRecognizerBuilder: (attribute, leaf) => customRecognizerBuilder(
+          context,
+          attribute,
+          users: mentionedUsers,
+        ),
       ),
     );
   }

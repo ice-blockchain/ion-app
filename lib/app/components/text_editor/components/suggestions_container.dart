@@ -23,7 +23,7 @@ class SuggestionsContainer extends HookConsumerWidget {
 
   final ScrollController scrollController;
   final GlobalKey<TextEditorState> editorKey;
-  final void Function((String pubkey, String username)) onMentionSuggestionSelected;
+  final void Function(({String pubkey, String username})) onMentionSuggestionSelected;
 
   void _onSuggestionSelected(String suggestion) {
     final textEditorState = editorKey.currentState;
@@ -57,10 +57,10 @@ class SuggestionsContainer extends HookConsumerWidget {
           color: context.theme.appColors.secondaryBackground,
           child: switch (suggestionsState.taggingCharacter) {
             '@' => MentionsSuggestions(
-                suggestions: ['2c3002d0b733d64093cb06a779889aa4a5d492b1fca4864ba247f65fb8830a2f'],
+                suggestions: suggestionsState.suggestions,
                 onSuggestionSelected: (pubkeyUsernamePair) {
                   onMentionSuggestionSelected(pubkeyUsernamePair);
-                  _onSuggestionSelected(pubkeyUsernamePair.$2);
+                  _onSuggestionSelected(pubkeyUsernamePair.username);
                 },
               ),
             '#' => HashtagsSuggestions(

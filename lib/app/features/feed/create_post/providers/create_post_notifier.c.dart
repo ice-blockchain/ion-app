@@ -7,7 +7,6 @@ import 'package:collection/collection.dart';
 import 'package:flutter_quill/flutter_quill.dart';
 import 'package:flutter_quill/quill_delta.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:ion/app/components/text_editor/attributes.dart';
 import 'package:ion/app/components/text_editor/utils/build_empty_delta.dart';
 import 'package:ion/app/components/text_editor/utils/extract_tags.dart';
 import 'package:ion/app/exceptions/exceptions.dart';
@@ -20,6 +19,7 @@ import 'package:ion/app/features/feed/data/models/entities/post_data.c.dart';
 import 'package:ion/app/features/feed/data/models/who_can_reply_settings_option.dart';
 import 'package:ion/app/features/feed/providers/counters/replies_count_provider.c.dart';
 import 'package:ion/app/features/feed/providers/counters/reposts_count_provider.c.dart';
+import 'package:ion/app/features/feed/providers/reference_encoded_mentions_operations_provider.c.dart';
 import 'package:ion/app/features/ion_connect/model/entity_data_with_settings.dart';
 import 'package:ion/app/features/ion_connect/model/entity_editing_ended_at.c.dart';
 import 'package:ion/app/features/ion_connect/model/entity_expiration.c.dart';
@@ -41,7 +41,6 @@ import 'package:ion/app/features/ion_connect/providers/ion_connect_delete_file_n
 import 'package:ion/app/features/ion_connect/providers/ion_connect_entity_provider.c.dart';
 import 'package:ion/app/features/ion_connect/providers/ion_connect_notifier.c.dart';
 import 'package:ion/app/features/ion_connect/providers/ion_connect_upload_notifier.c.dart';
-import 'package:ion/app/features/user/providers/user_metadata_provider.c.dart';
 import 'package:ion/app/services/compressor/compress_service.c.dart';
 import 'package:ion/app/services/logger/logger.dart';
 import 'package:ion/app/services/markdown/quill.dart';
@@ -94,7 +93,7 @@ class CreatePostNotifier extends _$CreatePostNotifier {
         relatedHashtags: extractTags(postContent).map((tag) => RelatedHashtag(value: tag)).toList(),
         quotedEvent: quotedEvent != null ? _buildQuotedEvent(quotedEvent) : null,
         relatedEvents: parentEntity != null ? _buildRelatedEvents(parentEntity) : null,
-        relatedPubkeys: parentEntity != null ? _buildRelatedPubkeys(parentEntity) : null,
+        relatedPubkeys: _buildRelatedPubkeys(parentEntity, mentions.values),
         settings: EntityDataWithSettings.build(whoCanReply: whoCanReply),
         expiration: _buildExpiration(),
         communityId: communityId,
@@ -298,10 +297,11 @@ class CreatePostNotifier extends _$CreatePostNotifier {
     required Map<String, String> mentions,
   }) async {
     final currentOperations = content.operations.toList();
-    final mappedMentionsOperations = await Future.wait(
-      currentOperations
-          .map((operation) => _getMappedMentionOperation(operation, mentions: mentions))
-          .toList(),
+    final mappedMentionsOperations = await ref.read(
+      referenceEncodedMentionsOperationsProvider(
+        currentOperations,
+        mentions: mentions,
+      ).future,
     );
     final newContentDelta = Delta.fromOperations(mappedMentionsOperations);
 
@@ -312,31 +312,6 @@ class CreatePostNotifier extends _$CreatePostNotifier {
           )
           .toList(),
     ).concat(newContentDelta);
-  }
-
-  Future<Operation> _getMappedMentionOperation(
-    Operation operation, {
-    required Map<String, String> mentions,
-  }) async {
-    if (!operation.hasAttribute(MentionAttribute.attributeKey) ||
-        operation.data is! String ||
-        !(operation.data! as String).startsWith('@')) {
-      return operation;
-    }
-    final username = operation.data! as String;
-    final pubkey = mentions[username];
-    if (pubkey == null) {
-      return operation;
-    }
-    final userMetadata = await ref.read(userMetadataProvider(pubkey).future);
-    if (userMetadata == null) {
-      return operation;
-    }
-    final userMetadataEncoded = userMetadata.toEventReference().encode();
-    return Operation.insert(
-      userMetadataEncoded,
-      operation.attributes,
-    );
   }
 
   List<RelatedEvent> _buildRelatedEvents(IonConnectEntity parentEntity) {
@@ -375,11 +350,20 @@ class CreatePostNotifier extends _$CreatePostNotifier {
     }
   }
 
-  List<RelatedPubkey> _buildRelatedPubkeys(IonConnectEntity parentEntity) {
+  List<RelatedPubkey>? _buildRelatedPubkeys(
+    IonConnectEntity? parentEntity,
+    Iterable<String> mentionedPubkeys,
+  ) {
+    if (parentEntity == null && mentionedPubkeys.isEmpty) {
+      return null;
+    }
     return <RelatedPubkey>{
-      RelatedPubkey(value: parentEntity.masterPubkey),
-      if (parentEntity is ModifiablePostEntity) ...(parentEntity.data.relatedPubkeys ?? []),
-      if (parentEntity is PostEntity) ...(parentEntity.data.relatedPubkeys ?? []),
+      ...mentionedPubkeys.map((pubkey) => RelatedPubkey(value: pubkey)),
+      if (parentEntity != null) ...{
+        RelatedPubkey(value: parentEntity.masterPubkey),
+        if (parentEntity is ModifiablePostEntity) ...(parentEntity.data.relatedPubkeys ?? []),
+        if (parentEntity is PostEntity) ...(parentEntity.data.relatedPubkeys ?? []),
+      },
     }.toList();
   }
 
