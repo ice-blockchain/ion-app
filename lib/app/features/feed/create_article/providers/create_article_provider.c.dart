@@ -14,6 +14,7 @@ import 'package:ion/app/features/feed/create_article/providers/draft_article_pro
 import 'package:ion/app/features/feed/data/models/article_topic.dart';
 import 'package:ion/app/features/feed/data/models/entities/article_data.c.dart';
 import 'package:ion/app/features/feed/data/models/who_can_reply_settings_option.dart';
+import 'package:ion/app/features/feed/providers/reference_encoded_mentions_operations_provider.c.dart';
 import 'package:ion/app/features/gallery/providers/gallery_provider.c.dart';
 import 'package:ion/app/features/ion_connect/model/color_label.c.dart';
 import 'package:ion/app/features/ion_connect/model/entity_data_with_settings.dart';
@@ -66,6 +67,7 @@ class CreateArticle extends _$CreateArticle {
     DateTime? publishedAt,
     List<String>? mediaIds,
     String? imageColor,
+    Map<String, String> mentions = const {},
   }) async {
     state = const AsyncValue.loading();
 
@@ -79,6 +81,7 @@ class CreateArticle extends _$CreateArticle {
         mediaIds: mediaIds,
         files: files,
         mediaAttachments: mediaAttachments,
+        mentions: mentions,
       );
 
       final (imageUrl, updatedContent) = await (mainImageFuture, contentFuture).wait;
@@ -160,6 +163,7 @@ class CreateArticle extends _$CreateArticle {
     String? originalImageUrl,
     Map<String, MediaAttachment> mediaAttachments = const {},
     String? imageColor,
+    Map<String, String> mentions = const {},
   }) async {
     state = const AsyncValue.loading();
 
@@ -185,6 +189,7 @@ class CreateArticle extends _$CreateArticle {
         content: content,
         files: files,
         mediaAttachments: updatedMediaAttachments,
+        mentions: mentions,
       );
 
       final contentString = jsonEncode(updatedContent.toJson());
@@ -265,6 +270,7 @@ class CreateArticle extends _$CreateArticle {
     required List<FileMetadata> files,
     required List<MediaAttachment> mediaAttachments,
     List<String>? mediaIds,
+    Map<String, String> mentions = const {},
   }) async {
     final uploadedUrls = <String, String>{};
 
@@ -303,7 +309,28 @@ class CreateArticle extends _$CreateArticle {
       updatedContent = _replaceImagePathsWithUrls(updatedContent, uploadedUrls);
     }
 
+    if (mentions.isNotEmpty) {
+      updatedContent = await _buildContentWithMentions(
+        content: updatedContent,
+        mentions: mentions,
+      );
+    }
+
     return updatedContent;
+  }
+
+  Future<Delta> _buildContentWithMentions({
+    required Delta content,
+    required Map<String, String> mentions,
+  }) async {
+    final currentOperations = content.operations.toList();
+    final mappedMentionsOperations = await ref.read(
+      referenceEncodedMentionsOperationsProvider(
+        currentOperations,
+        mentions: mentions,
+      ).future,
+    );
+    return Delta.fromOperations(mappedMentionsOperations);
   }
 
   Delta _replaceImagePathsWithUrls(

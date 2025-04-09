@@ -6,7 +6,7 @@ class MentionAttribute extends Attribute<String?> {
   const MentionAttribute(String? mentionValue)
       : super(attributeKey, AttributeScope.inline, mentionValue);
 
-  const MentionAttribute.withValue(String value) : this(value);
+  const MentionAttribute.withValue(String? value) : this(value);
 
   const MentionAttribute.unset() : this(null);
 

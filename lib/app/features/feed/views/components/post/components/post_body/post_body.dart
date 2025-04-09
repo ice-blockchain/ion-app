@@ -10,12 +10,13 @@ import 'package:ion/app/components/text_editor/utils/is_attributed_operation.dar
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/feed/data/models/entities/modifiable_post_data.c.dart';
 import 'package:ion/app/features/feed/data/models/entities/post_data.c.dart';
+import 'package:ion/app/features/feed/providers/parsed_media_content_provider.c.dart';
 import 'package:ion/app/features/feed/views/components/post/components/post_body/components/post_media/post_media.dart';
+import 'package:ion/app/features/feed/views/components/post/post_skeleton.dart';
 import 'package:ion/app/features/feed/views/components/url_preview_content/url_preview_content.dart';
 import 'package:ion/app/features/ion_connect/model/entity_data_with_media_content.dart';
 import 'package:ion/app/features/ion_connect/model/event_reference.c.dart';
 import 'package:ion/app/features/ion_connect/model/ion_connect_entity.dart';
-import 'package:ion/app/features/ion_connect/views/hooks/use_parsed_media_content.dart';
 import 'package:ion/app/typedefs/typedefs.dart';
 
 class PostBody extends HookConsumerWidget {
@@ -48,10 +49,19 @@ class PostBody extends HookConsumerWidget {
       return const SizedBox.shrink();
     }
 
-    final (:content, :media) = useParsedMediaContent(
-      data: postData,
-      key: ValueKey(postData.hashCode),
-    );
+    final contentMediaAndMentionedUsers = ref
+        .watch(
+          parsedMediaContentProvider(
+            data: postData,
+          ),
+        )
+        .valueOrNull;
+
+    if (contentMediaAndMentionedUsers == null) {
+      return const PostSkeleton();
+    }
+
+    final (:content, :media, :mentionedUsers) = contentMediaAndMentionedUsers;
 
     final firstLinkOperation = useMemoized(
       () => content.operations.firstWhereOrNull(
@@ -96,6 +106,7 @@ class PostBody extends HookConsumerWidget {
                           content: content,
                           enableInteractiveSelection: isTextSelectable,
                           scrollable: false,
+                          mentionedUsers: mentionedUsers,
                         ),
                       ),
                     ),

@@ -65,7 +65,7 @@ class CreatePostBottomPanel extends StatelessWidget {
           editorKey: textEditorKey,
           onMentionSuggestionSelected: (pubkeyUsernamePair) {
             final mapCopy = Map<String, String>.from(mentionsMapNotifier.value);
-            mapCopy[pubkeyUsernamePair.$2] = pubkeyUsernamePair.$1;
+            mapCopy[pubkeyUsernamePair.username] = pubkeyUsernamePair.pubkey;
             mentionsMapNotifier.value = mapCopy;
           },
         ),

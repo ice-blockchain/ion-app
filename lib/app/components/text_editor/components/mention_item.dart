@@ -15,7 +15,7 @@ class MentionItem extends ConsumerWidget {
   });
 
   final String pubkey;
-  final void Function((String pubkey, String username)) onPress;
+  final void Function(({String pubkey, String username})) onPress;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -29,7 +29,7 @@ class MentionItem extends ConsumerWidget {
         final username = prefixUsername(username: userMetadata.data.name, context: context);
         return IntrinsicHeight(
           child: ListItem.user(
-            onTap: () => onPress((pubkey, username)),
+            onTap: () => onPress((pubkey: pubkey, username: username)),
             title: Text(userMetadata.data.displayName),
             subtitle: Text(username),
             pubkey: pubkey,

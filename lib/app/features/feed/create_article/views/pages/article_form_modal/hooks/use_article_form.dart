@@ -14,6 +14,7 @@ import 'package:ion/app/features/user/providers/image_proccessor_notifier.c.dart
 import 'package:ion/app/services/markdown/quill.dart';
 import 'package:ion/app/services/media_service/image_proccessing_config.dart';
 import 'package:ion/app/services/media_service/media_service.c.dart';
+import 'package:ion/app/typedefs/typedefs.dart';
 
 class ArticleFormState {
   ArticleFormState({
@@ -32,6 +33,7 @@ class ArticleFormState {
     required this.isTitleLengthValid,
     required this.descriptionOverflowCount,
     required this.isDescriptionLengthValid,
+    required this.mentions,
   });
 
   final ValueNotifier<MediaFile?> selectedImage;
@@ -49,6 +51,7 @@ class ArticleFormState {
   final ValueNotifier<bool> isTitleLengthValid;
   final ValueNotifier<int> descriptionOverflowCount;
   final ValueNotifier<bool> isDescriptionLengthValid;
+  final MentionsMapNotifier mentions;
 }
 
 ArticleFormState useArticleForm(WidgetRef ref, {EventReference? modifiedEvent}) {
@@ -67,6 +70,7 @@ ArticleFormState useArticleForm(WidgetRef ref, {EventReference? modifiedEvent}) 
   final isTitleLengthValid = useState(true);
   final descriptionOverflowCount = useState<int>(0);
   final isDescriptionLengthValid = useState(true);
+  final mentionsMapNotifier = useState<Map<String, String>>({});
   const titleMaxLength = 120;
   const descriptionMaxLength = 25001;
 
@@ -189,6 +193,7 @@ ArticleFormState useArticleForm(WidgetRef ref, {EventReference? modifiedEvent}) 
           titleController.text,
           selectedImageUrl.value,
           selectedImageUrlColor.value,
+          mentionsMapNotifier.value,
         );
   }
 
@@ -226,5 +231,6 @@ ArticleFormState useArticleForm(WidgetRef ref, {EventReference? modifiedEvent}) 
     isTitleLengthValid: isTitleLengthValid,
     descriptionOverflowCount: descriptionOverflowCount,
     isDescriptionLengthValid: isDescriptionLengthValid,
+    mentions: mentionsMapNotifier,
   );
 }

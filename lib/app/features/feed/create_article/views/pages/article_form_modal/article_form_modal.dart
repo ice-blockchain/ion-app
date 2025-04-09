@@ -200,7 +200,11 @@ class ArticleFormModal extends HookConsumerWidget {
                 SuggestionsContainer(
                   scrollController: scrollController,
                   editorKey: textEditorKey,
-                  onMentionSuggestionSelected: (pubkeyUsernamePair) {},
+                  onMentionSuggestionSelected: (pubkeyUsernamePair) {
+                    final mapCopy = Map<String, String>.from(articleState.mentions.value);
+                    mapCopy[pubkeyUsernamePair.username] = pubkeyUsernamePair.pubkey;
+                    articleState.mentions.value = mapCopy;
+                  },
                 ),
                 const HorizontalSeparator(),
                 ValueListenableBuilder<bool>(
