@@ -13,6 +13,7 @@ import 'package:ion/app/features/chat/e2ee/model/entities/private_direct_message
 import 'package:ion/app/features/chat/providers/muted_conversations_provider.c.dart';
 import 'package:ion/app/features/chat/recent_chats/model/conversation_list_item.c.dart';
 import 'package:ion/app/features/chat/recent_chats/providers/toggle_archive_conversation_provider.c.dart';
+import 'package:ion/app/features/user/providers/report_notifier.c.dart';
 import 'package:ion/app/router/app_routes.c.dart';
 import 'package:ion/generated/assets.gen.dart';
 
@@ -35,6 +36,9 @@ class RecentChatOverlayContextMenu extends ConsumerWidget {
             .valueOrNull
             ?.contains(conversation.conversationId) ??
         false;
+
+    ref.displayErrors(reportNotifierProvider);
+
     return SizedBox(
       height: height,
       child: Padding(
@@ -103,6 +107,18 @@ class RecentChatOverlayContextMenu extends ConsumerWidget {
                   icon: Assets.svg.iconBlockClose3
                       .icon(size: iconSize, color: context.theme.appColors.quaternaryText),
                   onPressed: () {
+                    final currentUserPubkey = ref.watch(currentPubkeySelectorProvider);
+                    final receiverPubkey = PrivateDirectMessageData.fromEventMessage(
+                      conversation.latestMessage!,
+                    ).relatedPubkeys?.firstWhereOrNull((p) => p.value != currentUserPubkey)?.value;
+
+                    if (receiverPubkey == null) {
+                      return;
+                    }
+
+                    ref
+                        .read(reportNotifierProvider.notifier)
+                        .report(ReportReason.user(pubkey: receiverPubkey));
                     Navigator.of(context).pop();
                   },
                 ),

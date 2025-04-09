@@ -465,3 +465,7 @@ class FormException extends IONException {
   FormException(dynamic error, {String? formName})
       : super(10091, 'Form ${formName ?? '<not specified>'} issue: $error');
 }
+
+class FailedToSendEmail extends IONException {
+  FailedToSendEmail() : super(10092, 'Unable to send email');
+}

@@ -68,6 +68,7 @@ class ChannelMessagingPage extends HookConsumerWidget {
               subtitle: CommunityMemberCountTile(
                 community: channel,
               ),
+              conversationId: '', //TODO: set when channels are impl
             ),
             Expanded(
               child: messages.maybeWhen(

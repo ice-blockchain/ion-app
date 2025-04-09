@@ -101,6 +101,7 @@ class _Header extends HookConsumerWidget {
       imageWidget: groupImageFile != null ? Image.file(groupImageFile) : null,
       name: entity.relatedSubject?.value ?? '',
       subtitle: MemberCountTile(count: entity.relatedPubkeys?.length ?? 0),
+      conversationId: '', //TODO: set when groups are impl
     );
   }
 }

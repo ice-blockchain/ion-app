@@ -77,7 +77,10 @@ class OneToOneMessagesPage extends HookConsumerWidget {
       body: SafeArea(
         child: Column(
           children: [
-            _Header(receiverMasterPubKey: receiverPubKey, conversationId: conversationId.value),
+            _Header(
+              receiverMasterPubKey: receiverPubKey,
+              conversationId: conversationId.value ?? '',
+            ),
             _MessagesList(conversationId: conversationId.value),
             const RepliedMessageInfo(),
             MessagingBottomBar(onSubmitted: onSubmitted),
@@ -92,7 +95,7 @@ class _Header extends HookConsumerWidget {
   const _Header({required this.receiverMasterPubKey, required this.conversationId});
 
   final String receiverMasterPubKey;
-  final String? conversationId;
+  final String conversationId;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {

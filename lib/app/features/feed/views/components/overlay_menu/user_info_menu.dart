@@ -12,6 +12,7 @@ import 'package:ion/app/features/ion_connect/model/event_reference.c.dart';
 import 'package:ion/app/features/user/pages/profile_page/pages/block_user_modal/block_user_modal.dart';
 import 'package:ion/app/features/user/providers/block_list_notifier.c.dart';
 import 'package:ion/app/features/user/providers/follow_list_provider.c.dart';
+import 'package:ion/app/features/user/providers/report_notifier.c.dart';
 import 'package:ion/app/features/user/providers/user_metadata_provider.c.dart';
 import 'package:ion/app/router/utils/show_simple_bottom_sheet.dart';
 import 'package:ion/generated/assets.gen.dart';
@@ -39,6 +40,8 @@ class UserInfoMenu extends ConsumerWidget {
     if (userMetadata == null) {
       return const SizedBox.shrink();
     }
+
+    ref.displayErrors(reportNotifierProvider);
 
     return OverlayMenu(
       menuBuilder: (closeMenu) => ConstrainedBox(
@@ -71,7 +74,12 @@ class UserInfoMenu extends ConsumerWidget {
                         ? context.i18n.article_menu_report_article
                         : context.i18n.post_menu_report_post,
                     icon: Assets.svg.iconReport.icon(size: iconSize),
-                    onPressed: closeMenu,
+                    onPressed: () {
+                      closeMenu();
+                      ref
+                          .read(reportNotifierProvider.notifier)
+                          .report(ReportReason.content(eventReference: eventReference));
+                    },
                   ),
                 ],
               ),

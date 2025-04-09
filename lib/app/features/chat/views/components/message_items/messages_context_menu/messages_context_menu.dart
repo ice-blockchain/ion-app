@@ -8,12 +8,13 @@ import 'package:ion/app/components/overlay_menu/overlay_menu.dart';
 import 'package:ion/app/components/overlay_menu/overlay_menu_container.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/chat/providers/muted_conversations_provider.c.dart';
+import 'package:ion/app/features/user/providers/report_notifier.c.dart';
 import 'package:ion/generated/assets.gen.dart';
 
 class MessagingContextMenu extends ConsumerWidget {
-  const MessagingContextMenu({super.key, this.conversationId, this.onToggleMute});
+  const MessagingContextMenu({required this.conversationId, super.key, this.onToggleMute});
 
-  final String? conversationId;
+  final String conversationId;
   final VoidCallback? onToggleMute;
   static double get iconSize => 20.0.s;
 
@@ -21,6 +22,8 @@ class MessagingContextMenu extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final isMuted =
         ref.watch(mutedConversationIdsProvider).valueOrNull?.contains(conversationId) ?? false;
+
+    ref.displayErrors(reportNotifierProvider);
 
     return OverlayMenu(
       menuBuilder: (closeMenu) => Column(
@@ -54,7 +57,12 @@ class MessagingContextMenu extends ConsumerWidget {
                     label: context.i18n.button_report,
                     icon: Assets.svg.iconBlockClose3
                         .icon(size: iconSize, color: context.theme.appColors.quaternaryText),
-                    onPressed: closeMenu,
+                    onPressed: () {
+                      closeMenu();
+                      ref
+                          .read(reportNotifierProvider.notifier)
+                          .report(ReportReason.conversation(conversationId: conversationId));
+                    },
                   ),
                   const OverlayMenuItemSeparator(),
                   OverlayMenuItem(
