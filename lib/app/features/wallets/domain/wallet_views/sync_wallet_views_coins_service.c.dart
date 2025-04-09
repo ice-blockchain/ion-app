@@ -92,7 +92,7 @@ class SyncWalletViewCoinsService {
 
     _syncQueueInitialized = true;
 
-    final difference = nextUpdate.difference(DateTime.now().add(Duration(days: 1)));
+    final difference = nextUpdate.difference(DateTime.now());
     Logger.log(
       'Coins sync queue is active. The next sync will be on the $nextUpdate',
     );
@@ -105,7 +105,7 @@ class SyncWalletViewCoinsService {
     // Sync queue was disabled during delay, stop syncing
     if (!_syncQueueActive) return;
 
-    final coins = await _coinsRepository.getCoinsToSync(DateTime.now().add(Duration(days: 1)));
+    final coins = await _coinsRepository.getCoinsToSync(DateTime.now());
 
     if (coins.isNotEmpty) {
       final syncedCoinsData =

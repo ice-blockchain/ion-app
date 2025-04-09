@@ -64,7 +64,9 @@ class CoinsRepository {
       final toDelete = existingCoinIds.difference(incomingCoinIds);
       toInsert = syncCoinsInput.where((e) => !existingCoinIds.contains(e.coinId)).toList();
 
-      await _syncCoinsDao.removeFromQueue(toDelete.toList());
+      if (toDelete.isNotEmpty) {
+        await _syncCoinsDao.removeFromQueue(toDelete.toList());
+      }
     }
 
     await _syncCoinsDao.insertAll(toInsert);
