@@ -37,7 +37,7 @@ class SplashPage extends HookConsumerWidget {
     // This ensures a seamless transition to the IntroPage without flickering or delays.
     ref.watch(
       videoControllerProvider(
-        VideoControllerParams(sourcePath: Assets.videos.intro, autoPlay: true),
+        VideoControllerParams(sourcePath: Assets.videos.intro, looping: true),
       ),
     );
 

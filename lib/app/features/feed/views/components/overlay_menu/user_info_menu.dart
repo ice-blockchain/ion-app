@@ -5,6 +5,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/components/overlay_menu/components/overlay_menu_item.dart';
 import 'package:ion/app/components/overlay_menu/overlay_menu.dart';
 import 'package:ion/app/components/overlay_menu/overlay_menu_container.dart';
+import 'package:ion/app/components/shadow/svg_shadow.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/core/views/pages/unfollow_user_page.dart';
 import 'package:ion/app/features/feed/data/models/entities/article_data.c.dart';
@@ -22,14 +23,20 @@ class UserInfoMenu extends ConsumerWidget {
     required this.eventReference,
     this.iconColor,
     this.reportTitle,
+    this.showShadow = false,
+    this.padding = EdgeInsets.zero,
+    this.iconSize,
     super.key,
   });
 
-  static double get iconSize => 20.0.s;
+  static double get menuIconSize => 20.0.s;
 
   final EventReference eventReference;
   final Color? iconColor;
   final String? reportTitle;
+  final bool showShadow;
+  final EdgeInsetsGeometry padding;
+  final double? iconSize;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -43,6 +50,11 @@ class UserInfoMenu extends ConsumerWidget {
 
     ref.displayErrors(reportNotifierProvider);
 
+    final icon = Assets.svg.iconMorePopup.icon(
+      color: iconColor ?? context.theme.appColors.onTertararyBackground,
+      size: iconSize,
+    );
+
     return OverlayMenu(
       menuBuilder: (closeMenu) => ConstrainedBox(
         constraints: BoxConstraints(maxWidth: 300.0.s),
@@ -51,7 +63,7 @@ class UserInfoMenu extends ConsumerWidget {
             OverlayMenuContainer(
               child: OverlayMenuItem(
                 label: context.i18n.post_menu_not_interested,
-                icon: Assets.svg.iconNotinterested.icon(size: iconSize),
+                icon: Assets.svg.iconNotinterested.icon(size: menuIconSize),
                 onPressed: closeMenu,
               ),
             ),
@@ -73,7 +85,7 @@ class UserInfoMenu extends ConsumerWidget {
                     label: isArticle
                         ? context.i18n.article_menu_report_article
                         : context.i18n.post_menu_report_post,
-                    icon: Assets.svg.iconReport.icon(size: iconSize),
+                    icon: Assets.svg.iconReport.icon(size: menuIconSize),
                     onPressed: () {
                       closeMenu();
                       ref
@@ -87,8 +99,9 @@ class UserInfoMenu extends ConsumerWidget {
           ],
         ),
       ),
-      child: Assets.svg.iconMorePopup.icon(
-        color: iconColor ?? context.theme.appColors.onTertararyBackground,
+      child: Padding(
+        padding: padding,
+        child: showShadow ? SvgShadow(child: icon) : icon,
       ),
     );
   }
@@ -114,7 +127,7 @@ class _FollowUserMenuItem extends ConsumerWidget {
           ? context.i18n.post_menu_unfollow_nickname(username)
           : context.i18n.post_menu_follow_nickname(username),
       icon: Assets.svg.iconFollowuser.icon(
-        size: UserInfoMenu.iconSize,
+        size: UserInfoMenu.menuIconSize,
         color: context.theme.appColors.onTertararyBackground,
       ),
       onPressed: () {
@@ -150,7 +163,7 @@ class _BlockUserMenuItem extends ConsumerWidget {
       label: isBlocked
           ? context.i18n.post_menu_unblock_nickname(username)
           : context.i18n.post_menu_block_nickname(username),
-      icon: Assets.svg.iconBlock.icon(size: UserInfoMenu.iconSize),
+      icon: Assets.svg.iconBlock.icon(size: UserInfoMenu.menuIconSize),
       onPressed: () {
         closeMenu();
         if (!isBlocked) {

@@ -1,11 +1,13 @@
 // SPDX-License-Identifier: ice License 1.0
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/components/shadow/svg_shadow.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/feed/providers/counters/like_reaction_provider.c.dart';
 import 'package:ion/app/features/feed/providers/counters/likes_count_provider.c.dart';
+import 'package:ion/app/features/feed/providers/counters/likes_notifier.c.dart';
 import 'package:ion/app/features/ion_connect/model/event_reference.c.dart';
 import 'package:ion/app/utils/num.dart';
 import 'package:ion/generated/assets.gen.dart';
@@ -36,7 +38,10 @@ class TrendingVideoLikesButton extends ConsumerWidget {
       style: TextButton.styleFrom(
         padding: EdgeInsets.symmetric(horizontal: 12.0.s),
       ),
-      onPressed: () {},
+      onPressed: () {
+        HapticFeedback.lightImpact();
+        ref.read(likesNotifierProvider(eventReference).notifier).toggle();
+      },
       child: Row(
         children: [
           SvgShadow(
