@@ -148,9 +148,7 @@ class ModifiablePostData
         if (relatedPubkeys != null) ...relatedPubkeys!.map((pubkey) => pubkey.toTag()),
         if (relatedHashtags != null) ...relatedHashtags!.map((hashtag) => hashtag.toTag()),
         if (relatedEvents != null) ...relatedEvents!.map((event) => event.toTag()),
-        if (media.isNotEmpty)
-          //TODO: remove includeDuration when we BE supports it
-          ...media.values.map((mediaAttachment) => mediaAttachment.toTag(includeDuration: false)),
+        if (media.isNotEmpty) ...media.values.map((mediaAttachment) => mediaAttachment.toTag()),
         if (settings != null) ...settings!.map((setting) => setting.toTag()),
         if (communityId != null) CommunityIdentifierTag(value: communityId!).toTag(),
         if (richText != null) richText!.toTag(),

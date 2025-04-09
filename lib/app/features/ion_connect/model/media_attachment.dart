@@ -236,7 +236,7 @@ class MediaAttachment {
       if (thumb != null) 'thumb $thumb',
       if (image != null) 'image $image',
       if (blurhash != null) 'blurhash $blurhash',
-      if (includeDuration && (duration ?? 0) > 0) 'duration $duration',
+      if ((duration ?? 0) > 0) 'duration $duration',
     ];
   }
 
