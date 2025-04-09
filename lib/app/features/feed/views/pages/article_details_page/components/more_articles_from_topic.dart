@@ -29,12 +29,13 @@ class MoreArticlesFromTopic extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final dataSource = ref.watch(topicArticlesDataSourceProvider(topic));
     final entitiesPagedData = ref.watch(entitiesPagedDataProvider(dataSource));
-    final articles = entitiesPagedData?.data.items
+    final articlesReferences = entitiesPagedData?.data.items
         ?.whereType<ArticleEntity>()
         .where((article) => article.toEventReference() != eventReference)
+        .map((article) => article.toEventReference())
         .toList();
 
-    if (articles == null || articles.isEmpty) {
+    if (articlesReferences == null || articlesReferences.isEmpty) {
       return const SizedBox.shrink();
     }
 
@@ -44,7 +45,7 @@ class MoreArticlesFromTopic extends ConsumerWidget {
         ScreenSideOffset.small(
           child: ArticleDetailsSectionHeader(
             title: topic.getTitle(context),
-            count: articles.length,
+            count: articlesReferences.length,
             trailing: GestureDetector(
               onTap: () => ArticlesFromTopicRoute(topic: topic.toShortString()).push<void>(context),
               child: Assets.svg.iconButtonNext.icon(),
@@ -52,7 +53,7 @@ class MoreArticlesFromTopic extends ConsumerWidget {
           ),
         ),
         SizedBox(height: 16.0.s),
-        ArticlesCarousel(articles: articles),
+        ArticlesCarousel(articlesReferences: articlesReferences),
       ],
     );
   }

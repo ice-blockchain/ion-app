@@ -518,6 +518,7 @@
   "post_menu_unblock_nickname": "Unblock @{nickname}",
   "post_menu_report_post": "Report post",
   "post_menu_delete": "Delete",
+  "article_menu_report_article": "Report article",
   "protect_account_header_security": "Security",
   "protect_account_title_secure_account": "Secure your account",
   "protect_account_description_secure_account": "Enable at least one two-factor authentication (2FA) option to continue",

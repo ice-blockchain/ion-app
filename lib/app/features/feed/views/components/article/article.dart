@@ -92,7 +92,7 @@ class Article extends ConsumerWidget {
                         if (isOwnedByCurrentUser)
                           OwnEntityMenu(eventReference: eventReference)
                         else
-                          UserInfoMenu(pubkey: eventReference.pubkey),
+                          UserInfoMenu(eventReference: eventReference),
                       ],
                     )
                   : null,
@@ -143,7 +143,7 @@ class Article extends ConsumerWidget {
                                           if (isOwnedByCurrentUser)
                                             OwnEntityMenu(eventReference: eventReference)
                                           else
-                                            UserInfoMenu(pubkey: eventReference.pubkey),
+                                            UserInfoMenu(eventReference: eventReference),
                                         ],
                                       )
                                     : null,

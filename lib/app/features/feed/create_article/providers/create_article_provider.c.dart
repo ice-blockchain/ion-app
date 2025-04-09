@@ -141,6 +141,7 @@ class CreateArticle extends _$CreateArticle {
         colorLabel: null,
         settings: null,
         richText: null,
+        editingEndedAt: null,
       );
 
       await _sendArticleEntities([articleData]);

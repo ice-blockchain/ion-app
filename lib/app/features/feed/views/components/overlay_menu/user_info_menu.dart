@@ -7,6 +7,8 @@ import 'package:ion/app/components/overlay_menu/overlay_menu.dart';
 import 'package:ion/app/components/overlay_menu/overlay_menu_container.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/core/views/pages/unfollow_user_page.dart';
+import 'package:ion/app/features/feed/data/models/entities/article_data.c.dart';
+import 'package:ion/app/features/ion_connect/model/event_reference.c.dart';
 import 'package:ion/app/features/user/pages/profile_page/pages/block_user_modal/block_user_modal.dart';
 import 'package:ion/app/features/user/providers/block_list_notifier.c.dart';
 import 'package:ion/app/features/user/providers/follow_list_provider.c.dart';
@@ -16,19 +18,23 @@ import 'package:ion/generated/assets.gen.dart';
 
 class UserInfoMenu extends ConsumerWidget {
   const UserInfoMenu({
-    required this.pubkey,
+    required this.eventReference,
     this.iconColor,
+    this.reportTitle,
     super.key,
   });
 
   static double get iconSize => 20.0.s;
 
-  final String pubkey;
+  final EventReference eventReference;
   final Color? iconColor;
+  final String? reportTitle;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final userMetadata = ref.watch(cachedUserMetadataProvider(pubkey));
+    final userMetadata = ref.watch(cachedUserMetadataProvider(eventReference.pubkey));
+    final isArticle = eventReference is ReplaceableEventReference &&
+        (eventReference as ReplaceableEventReference).kind == ArticleEntity.kind;
 
     if (userMetadata == null) {
       return const SizedBox.shrink();
@@ -51,17 +57,19 @@ class UserInfoMenu extends ConsumerWidget {
               child: Column(
                 children: [
                   _FollowUserMenuItem(
-                    pubkey: pubkey,
+                    pubkey: eventReference.pubkey,
                     username: userMetadata.data.name,
                     closeMenu: closeMenu,
                   ),
                   _BlockUserMenuItem(
-                    pubkey: pubkey,
+                    pubkey: eventReference.pubkey,
                     username: userMetadata.data.name,
                     closeMenu: closeMenu,
                   ),
                   OverlayMenuItem(
-                    label: context.i18n.post_menu_report_post,
+                    label: isArticle
+                        ? context.i18n.article_menu_report_article
+                        : context.i18n.post_menu_report_post,
                     icon: Assets.svg.iconReport.icon(size: iconSize),
                     onPressed: closeMenu,
                   ),

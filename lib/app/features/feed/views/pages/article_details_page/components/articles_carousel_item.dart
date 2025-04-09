@@ -1,34 +1,38 @@
 // SPDX-License-Identifier: ice License 1.0
 
 import 'package:flutter/material.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/components/image/ion_network_image.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/feed/data/models/entities/article_data.c.dart';
+import 'package:ion/app/features/feed/providers/ion_connect_entity_with_counters_provider.c.dart';
 import 'package:ion/app/features/feed/views/components/overlay_menu/user_info_menu.dart';
 import 'package:ion/app/features/feed/views/components/user_info/user_info.dart';
+import 'package:ion/app/features/ion_connect/model/event_reference.c.dart';
 import 'package:ion/app/router/app_routes.c.dart';
 
-class ArticlesCarouselItem extends StatelessWidget {
-  const ArticlesCarouselItem({required this.article, super.key});
+class ArticlesCarouselItem extends ConsumerWidget {
+  const ArticlesCarouselItem({required this.eventReference, super.key});
 
-  final ArticleEntity article;
+  final EventReference eventReference;
 
   @override
-  Widget build(BuildContext context) {
-    final topics = article.data.topics;
+  Widget build(BuildContext context, WidgetRef ref) {
+    final article = ref.watch(ionConnectEntityWithCountersProvider(eventReference: eventReference));
 
-    if (article.isDeleted) {
+    if (article is! ArticleEntity || article.isDeleted) {
       return const SizedBox.shrink();
     }
 
+    final topics = article.data.topics;
+
     return GestureDetector(
-      onTap: () => ArticleDetailsRoute(eventReference: article.toEventReference().encode())
-          .push<void>(context),
+      onTap: () => ArticleDetailsRoute(eventReference: eventReference.encode()).push<void>(context),
       child: Column(
         children: [
           UserInfo(
             pubkey: article.masterPubkey,
-            trailing: UserInfoMenu(pubkey: article.masterPubkey),
+            trailing: UserInfoMenu(eventReference: eventReference),
           ),
           Flexible(
             child: Row(

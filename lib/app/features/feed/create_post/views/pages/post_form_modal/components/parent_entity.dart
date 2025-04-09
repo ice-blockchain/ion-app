@@ -45,7 +45,7 @@ class ParentEntity extends ConsumerWidget {
           subtitle: Text(prefixUsername(username: userMetadata.data.name, context: context)),
           profilePicture: userMetadata.data.picture,
           trailing: UserInfoMenu(
-            pubkey: eventReference.pubkey,
+            eventReference: eventReference,
           ),
         ),
         SizedBox(height: 8.0.s),
