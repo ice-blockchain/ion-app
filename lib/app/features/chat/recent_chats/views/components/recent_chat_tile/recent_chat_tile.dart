@@ -296,7 +296,7 @@ class RecentChatMessageIcon extends StatelessWidget {
   String? _getMessageIcon() => switch (messageType) {
         MessageType.text => null,
         MessageType.emoji => null,
-        MessageType.requestFunds => null,
+        MessageType.requestFunds => Assets.svg.iconProfileTips,
         // MessageType.video => Assets.svg.iconFeedVideos,
         MessageType.audio => Assets.svg.iconChatVoicemessage,
         MessageType.profile => Assets.svg.iconProfileUsertab,

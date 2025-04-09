@@ -27,10 +27,10 @@ typedef _PubkeysCollection = ({
 
 const _formName = 'RequestCoinsForm';
 
-@Riverpod(keepAlive: true)
+@riverpod
 class RequestCoinsSubmitNotifier extends _$RequestCoinsSubmitNotifier {
   @override
-  Future<void> build() async {}
+  FutureOr<void> build() {}
 
   Future<void> submitRequest() async {
     state = const AsyncLoading();
@@ -48,15 +48,14 @@ class RequestCoinsSubmitNotifier extends _$RequestCoinsSubmitNotifier {
 
       final sendToRelayService = await ref.read(sendTransactionToRelayServiceProvider.future);
       final event = await sendToRelayService.sendTransactionEntity(
-        createEventMessage: (currentUserPubkey) =>
-            request.toEventMessage(currentUserPubkey: currentUserPubkey),
+        createEventMessage: (_) => request.toEventMessage(currentUserPubkey: currentUserPubkey),
         senderPubkeys: pubkeys.sender,
         receiverPubkeys: pubkeys.receiver,
       );
 
       final message = ImmutableEventReference(
         eventId: event.id,
-        pubkey: event.pubkey,
+        pubkey: currentUserPubkey,
         kind: event.kind,
       ).encode();
 

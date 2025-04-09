@@ -11,7 +11,6 @@ import 'package:ion/app/features/ion_connect/model/action_source.c.dart';
 import 'package:ion/app/features/ion_connect/model/entity_expiration.c.dart';
 import 'package:ion/app/features/ion_connect/providers/ion_connect_event_signer_provider.c.dart';
 import 'package:ion/app/features/ion_connect/providers/ion_connect_notifier.c.dart';
-import 'package:ion/app/features/wallets/model/entities/wallet_asset_entity.c.dart';
 import 'package:ion/app/services/ion_connect/ion_connect_gift_wrap_service.c.dart';
 import 'package:ion/app/services/ion_connect/ion_connect_seal_service.c.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
@@ -87,7 +86,7 @@ class SendTransactionToRelayService {
           eventMessage: event,
           receiverPubkey: devicePubkey,
           receiverMasterPubkey: masterPubkey,
-          kind: WalletAssetEntity.kind,
+          kind: event.kind,
         );
 
         await ionConnectNotifier.sendEvent(

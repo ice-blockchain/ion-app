@@ -56,6 +56,7 @@ class ImmutableEventReference with _$ImmutableEventReference implements EventRef
   const factory ImmutableEventReference({
     required String pubkey,
     required String eventId,
+    int? kind,
   }) = _ImmutableEventReference;
 
   const ImmutableEventReference._();
@@ -90,6 +91,7 @@ class ImmutableEventReference with _$ImmutableEventReference implements EventRef
         prefix: IonConnectProtocolIdentifierType.nevent,
         special: eventId,
         author: pubkey,
+        kind: kind,
       ),
     );
   }

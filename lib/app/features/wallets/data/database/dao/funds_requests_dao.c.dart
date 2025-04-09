@@ -15,10 +15,14 @@ class FundsRequestsDao {
 
   final WalletsDatabase _db;
 
-  Future<DateTime?> getLastCreatedAt() =>
-      (_db.select(_db.fundsRequestsTable)..orderBy([(t) => OrderingTerm.desc(t.createdAt)]))
-          .getSingleOrNull()
-          .then((value) => value?.createdAt);
+  Future<DateTime?> getLastCreatedAt() async {
+    final query = _db.select(_db.fundsRequestsTable)
+      ..orderBy([(t) => OrderingTerm.desc(t.createdAt)])
+      ..limit(1);
+
+    final result = await query.getSingleOrNull();
+    return result?.createdAt;
+  }
 
   Future<FundsRequest?> getFundsRequestById(String eventId) =>
       (_db.select(_db.fundsRequestsTable)..where((t) => t.eventId.equals(eventId)))

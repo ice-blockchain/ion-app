@@ -46,6 +46,15 @@ class CoinsDao extends DatabaseAccessor<WalletsDatabase> with _$CoinsDaoMixin {
     return query.map(_toCoinData).watch();
   }
 
+  Future<CoinData?> getById(String coinId) {
+    final query = select(coinsTable).join([
+      leftOuterJoin(networksTable, networksTable.id.equalsExp(coinsTable.networkId)),
+    ])
+      ..where(coinsTable.id.equals(coinId));
+
+    return query.map(_toCoinData).getSingleOrNull();
+  }
+
   Future<List<CoinData>> get(Iterable<String>? coinIds) {
     final query = select(coinsTable).join([
       leftOuterJoin(networksTable, networksTable.id.equalsExp(coinsTable.networkId)),
