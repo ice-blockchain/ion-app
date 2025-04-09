@@ -64,11 +64,11 @@ class SyncTransactionsService {
           if (!wereAnyUpdates) nextPageToken = null;
         }
       }
-    } on Exception catch (ex, stacktrace) {
+    } catch (ex, stacktrace) {
       Logger.error(
-        'Failed to sync wallet(${wallet.id}) history by pages.\n'
-        'Error: $ex,\n'
-        'StackTrace: $stacktrace',
+        ex,
+        stackTrace: stacktrace,
+        message: 'Failed to sync wallet(${wallet.id}) history by pages',
       );
     }
   }
@@ -97,11 +97,11 @@ class SyncTransactionsService {
       }
 
       await _cryptoWalletsRepository.save(wallet: wallet, isHistoryLoaded: true);
-    } on Exception catch (ex, stacktrace) {
+    } catch (ex, stacktrace) {
       Logger.error(
-        'Failed to load all transactions of the wallet(${wallet.id}).\n'
-        'Error: $ex,\n'
-        'StackTrace: $stacktrace',
+        ex,
+        stackTrace: stacktrace,
+        message: 'Failed to load all transactions of the wallet(${wallet.id})',
       );
     }
   }
