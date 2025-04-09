@@ -7,6 +7,7 @@ import 'package:ion/app/features/core/providers/wallets_provider.c.dart';
 import 'package:ion/app/features/wallets/data/repository/crypto_wallets_repository.c.dart';
 import 'package:ion/app/features/wallets/data/repository/transactions_repository.c.dart';
 import 'package:ion/app/features/wallets/model/transaction_data.c.dart';
+import 'package:ion/app/services/logger/logger.dart';
 import 'package:ion_identity_client/ion_identity.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
@@ -21,6 +22,8 @@ Future<SyncTransactionsService> syncTransactionsService(Ref ref) async {
   );
 }
 
+/// Loads the available wallet history, and on subsequent calls, synchronizes it.
+/// In case of an error, logs it and skips the wallet.
 class SyncTransactionsService {
   SyncTransactionsService(
     this._transactionsRepository,
@@ -46,18 +49,27 @@ class SyncTransactionsService {
 
   Future<void> _syncTransactionsByPages(Wallet wallet) async {
     String? nextPageToken = '';
-    while (nextPageToken != null) {
-      final result = await _transactionsRepository.loadCoinTransactions(
-        wallet.id,
-        pageToken: nextPageToken.isEmpty ? null : nextPageToken,
-      );
+    try {
+      while (nextPageToken != null) {
+        final result = await _transactionsRepository.loadCoinTransactions(
+          wallet.id,
+          pageToken: nextPageToken.isEmpty ? null : nextPageToken,
+        );
 
-      nextPageToken = result.nextPageToken;
+        nextPageToken = result.nextPageToken;
 
-      if (result.transactions.isNotEmpty) {
-        final wereAnyUpdates = await _transactionsRepository.saveTransactions(result.transactions);
-        if (!wereAnyUpdates) nextPageToken = null;
+        if (result.transactions.isNotEmpty) {
+          final wereAnyUpdates =
+              await _transactionsRepository.saveTransactions(result.transactions);
+          if (!wereAnyUpdates) nextPageToken = null;
+        }
       }
+    } on Exception catch (ex, stacktrace) {
+      Logger.error(
+        'Failed to sync wallet(${wallet.id}) history by pages.\n'
+        'Error: $ex,\n'
+        'StackTrace: $stacktrace',
+      );
     }
   }
 
@@ -65,24 +77,32 @@ class SyncTransactionsService {
     String? nextPageToken = '';
     final transactions = <TransactionData>[];
 
-    while (nextPageToken != null) {
-      final result = await _transactionsRepository.loadCoinTransactions(
-        wallet.id,
-        pageSize: 500,
-        pageToken: nextPageToken.isEmpty ? null : nextPageToken,
-      );
+    try {
+      while (nextPageToken != null) {
+        final result = await _transactionsRepository.loadCoinTransactions(
+          wallet.id,
+          pageSize: 500,
+          pageToken: nextPageToken.isEmpty ? null : nextPageToken,
+        );
 
-      nextPageToken = result.nextPageToken;
+        nextPageToken = result.nextPageToken;
 
-      if (result.transactions.isNotEmpty) {
-        transactions.addAll(result.transactions);
+        if (result.transactions.isNotEmpty) {
+          transactions.addAll(result.transactions);
+        }
       }
-    }
 
-    if (transactions.isNotEmpty) {
-      await _transactionsRepository.saveTransactions(transactions);
-    }
+      if (transactions.isNotEmpty) {
+        await _transactionsRepository.saveTransactions(transactions);
+      }
 
-    await _cryptoWalletsRepository.save(wallet: wallet, isHistoryLoaded: true);
+      await _cryptoWalletsRepository.save(wallet: wallet, isHistoryLoaded: true);
+    } on Exception catch (ex, stacktrace) {
+      Logger.error(
+        'Failed to load all transactions of the wallet(${wallet.id}).\n'
+        'Error: $ex,\n'
+        'StackTrace: $stacktrace',
+      );
+    }
   }
 }
