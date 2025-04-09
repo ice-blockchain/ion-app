@@ -22,7 +22,7 @@ WalletHistoryAssetMetadata _$WalletHistoryAssetMetadataFromJson(
 /// @nodoc
 mixin _$WalletHistoryAssetMetadata {
   String get symbol => throw _privateConstructorUsedError;
-  int get decimals => throw _privateConstructorUsedError;
+  int? get decimals => throw _privateConstructorUsedError;
   bool? get verified => throw _privateConstructorUsedError;
 
   /// Serializes this WalletHistoryAssetMetadata to a JSON map.
@@ -42,7 +42,7 @@ abstract class $WalletHistoryAssetMetadataCopyWith<$Res> {
       _$WalletHistoryAssetMetadataCopyWithImpl<$Res,
           WalletHistoryAssetMetadata>;
   @useResult
-  $Res call({String symbol, int decimals, bool? verified});
+  $Res call({String symbol, int? decimals, bool? verified});
 }
 
 /// @nodoc
@@ -62,7 +62,7 @@ class _$WalletHistoryAssetMetadataCopyWithImpl<$Res,
   @override
   $Res call({
     Object? symbol = null,
-    Object? decimals = null,
+    Object? decimals = freezed,
     Object? verified = freezed,
   }) {
     return _then(_value.copyWith(
@@ -70,10 +70,10 @@ class _$WalletHistoryAssetMetadataCopyWithImpl<$Res,
           ? _value.symbol
           : symbol // ignore: cast_nullable_to_non_nullable
               as String,
-      decimals: null == decimals
+      decimals: freezed == decimals
           ? _value.decimals
           : decimals // ignore: cast_nullable_to_non_nullable
-              as int,
+              as int?,
       verified: freezed == verified
           ? _value.verified
           : verified // ignore: cast_nullable_to_non_nullable
@@ -91,7 +91,7 @@ abstract class _$$WalletHistoryAssetMetadataImplCopyWith<$Res>
       __$$WalletHistoryAssetMetadataImplCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call({String symbol, int decimals, bool? verified});
+  $Res call({String symbol, int? decimals, bool? verified});
 }
 
 /// @nodoc
@@ -110,7 +110,7 @@ class __$$WalletHistoryAssetMetadataImplCopyWithImpl<$Res>
   @override
   $Res call({
     Object? symbol = null,
-    Object? decimals = null,
+    Object? decimals = freezed,
     Object? verified = freezed,
   }) {
     return _then(_$WalletHistoryAssetMetadataImpl(
@@ -118,10 +118,10 @@ class __$$WalletHistoryAssetMetadataImplCopyWithImpl<$Res>
           ? _value.symbol
           : symbol // ignore: cast_nullable_to_non_nullable
               as String,
-      decimals: null == decimals
+      decimals: freezed == decimals
           ? _value.decimals
           : decimals // ignore: cast_nullable_to_non_nullable
-              as int,
+              as int?,
       verified: freezed == verified
           ? _value.verified
           : verified // ignore: cast_nullable_to_non_nullable
@@ -143,7 +143,7 @@ class _$WalletHistoryAssetMetadataImpl implements _WalletHistoryAssetMetadata {
   @override
   final String symbol;
   @override
-  final int decimals;
+  final int? decimals;
   @override
   final bool? verified;
 
@@ -189,7 +189,7 @@ abstract class _WalletHistoryAssetMetadata
     implements WalletHistoryAssetMetadata {
   const factory _WalletHistoryAssetMetadata(
       {required final String symbol,
-      required final int decimals,
+      required final int? decimals,
       required final bool? verified}) = _$WalletHistoryAssetMetadataImpl;
 
   factory _WalletHistoryAssetMetadata.fromJson(Map<String, dynamic> json) =
@@ -198,7 +198,7 @@ abstract class _WalletHistoryAssetMetadata
   @override
   String get symbol;
   @override
-  int get decimals;
+  int? get decimals;
   @override
   bool? get verified;
 

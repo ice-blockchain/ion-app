@@ -29,9 +29,10 @@ mixin _$WalletHistoryRecord {
   String get txHash => throw _privateConstructorUsedError;
   String? get index => throw _privateConstructorUsedError;
   String? get contract => throw _privateConstructorUsedError;
+  String? get tokenId => throw _privateConstructorUsedError;
   String get from => throw _privateConstructorUsedError;
   String get to => throw _privateConstructorUsedError;
-  String get value => throw _privateConstructorUsedError;
+  String? get value => throw _privateConstructorUsedError;
   String get fee => throw _privateConstructorUsedError;
   WalletHistoryMetadata get metadata => throw _privateConstructorUsedError;
 
@@ -61,9 +62,10 @@ abstract class $WalletHistoryRecordCopyWith<$Res> {
       String txHash,
       String? index,
       String? contract,
+      String? tokenId,
       String from,
       String to,
-      String value,
+      String? value,
       String fee,
       WalletHistoryMetadata metadata});
 
@@ -94,9 +96,10 @@ class _$WalletHistoryRecordCopyWithImpl<$Res, $Val extends WalletHistoryRecord>
     Object? txHash = null,
     Object? index = freezed,
     Object? contract = freezed,
+    Object? tokenId = freezed,
     Object? from = null,
     Object? to = null,
-    Object? value = null,
+    Object? value = freezed,
     Object? fee = null,
     Object? metadata = null,
   }) {
@@ -137,6 +140,10 @@ class _$WalletHistoryRecordCopyWithImpl<$Res, $Val extends WalletHistoryRecord>
           ? _value.contract
           : contract // ignore: cast_nullable_to_non_nullable
               as String?,
+      tokenId: freezed == tokenId
+          ? _value.tokenId
+          : tokenId // ignore: cast_nullable_to_non_nullable
+              as String?,
       from: null == from
           ? _value.from
           : from // ignore: cast_nullable_to_non_nullable
@@ -145,10 +152,10 @@ class _$WalletHistoryRecordCopyWithImpl<$Res, $Val extends WalletHistoryRecord>
           ? _value.to
           : to // ignore: cast_nullable_to_non_nullable
               as String,
-      value: null == value
+      value: freezed == value
           ? _value.value
           : value // ignore: cast_nullable_to_non_nullable
-              as String,
+              as String?,
       fee: null == fee
           ? _value.fee
           : fee // ignore: cast_nullable_to_non_nullable
@@ -189,9 +196,10 @@ abstract class _$$WalletHistoryRecordImplCopyWith<$Res>
       String txHash,
       String? index,
       String? contract,
+      String? tokenId,
       String from,
       String to,
-      String value,
+      String? value,
       String fee,
       WalletHistoryMetadata metadata});
 
@@ -221,9 +229,10 @@ class __$$WalletHistoryRecordImplCopyWithImpl<$Res>
     Object? txHash = null,
     Object? index = freezed,
     Object? contract = freezed,
+    Object? tokenId = freezed,
     Object? from = null,
     Object? to = null,
-    Object? value = null,
+    Object? value = freezed,
     Object? fee = null,
     Object? metadata = null,
   }) {
@@ -264,6 +273,10 @@ class __$$WalletHistoryRecordImplCopyWithImpl<$Res>
           ? _value.contract
           : contract // ignore: cast_nullable_to_non_nullable
               as String?,
+      tokenId: freezed == tokenId
+          ? _value.tokenId
+          : tokenId // ignore: cast_nullable_to_non_nullable
+              as String?,
       from: null == from
           ? _value.from
           : from // ignore: cast_nullable_to_non_nullable
@@ -272,10 +285,10 @@ class __$$WalletHistoryRecordImplCopyWithImpl<$Res>
           ? _value.to
           : to // ignore: cast_nullable_to_non_nullable
               as String,
-      value: null == value
+      value: freezed == value
           ? _value.value
           : value // ignore: cast_nullable_to_non_nullable
-              as String,
+              as String?,
       fee: null == fee
           ? _value.fee
           : fee // ignore: cast_nullable_to_non_nullable
@@ -301,6 +314,7 @@ class _$WalletHistoryRecordImpl implements _WalletHistoryRecord {
       required this.txHash,
       required this.index,
       required this.contract,
+      required this.tokenId,
       required this.from,
       required this.to,
       required this.value,
@@ -329,11 +343,13 @@ class _$WalletHistoryRecordImpl implements _WalletHistoryRecord {
   @override
   final String? contract;
   @override
+  final String? tokenId;
+  @override
   final String from;
   @override
   final String to;
   @override
-  final String value;
+  final String? value;
   @override
   final String fee;
   @override
@@ -341,7 +357,7 @@ class _$WalletHistoryRecordImpl implements _WalletHistoryRecord {
 
   @override
   String toString() {
-    return 'WalletHistoryRecord(walletId: $walletId, network: $network, kind: $kind, direction: $direction, blockNumber: $blockNumber, timestamp: $timestamp, txHash: $txHash, index: $index, contract: $contract, from: $from, to: $to, value: $value, fee: $fee, metadata: $metadata)';
+    return 'WalletHistoryRecord(walletId: $walletId, network: $network, kind: $kind, direction: $direction, blockNumber: $blockNumber, timestamp: $timestamp, txHash: $txHash, index: $index, contract: $contract, tokenId: $tokenId, from: $from, to: $to, value: $value, fee: $fee, metadata: $metadata)';
   }
 
   @override
@@ -363,6 +379,7 @@ class _$WalletHistoryRecordImpl implements _WalletHistoryRecord {
             (identical(other.index, index) || other.index == index) &&
             (identical(other.contract, contract) ||
                 other.contract == contract) &&
+            (identical(other.tokenId, tokenId) || other.tokenId == tokenId) &&
             (identical(other.from, from) || other.from == from) &&
             (identical(other.to, to) || other.to == to) &&
             (identical(other.value, value) || other.value == value) &&
@@ -384,6 +401,7 @@ class _$WalletHistoryRecordImpl implements _WalletHistoryRecord {
       txHash,
       index,
       contract,
+      tokenId,
       from,
       to,
       value,
@@ -418,9 +436,10 @@ abstract class _WalletHistoryRecord implements WalletHistoryRecord {
           required final String txHash,
           required final String? index,
           required final String? contract,
+          required final String? tokenId,
           required final String from,
           required final String to,
-          required final String value,
+          required final String? value,
           required final String fee,
           required final WalletHistoryMetadata metadata}) =
       _$WalletHistoryRecordImpl;
@@ -447,11 +466,13 @@ abstract class _WalletHistoryRecord implements WalletHistoryRecord {
   @override
   String? get contract;
   @override
+  String? get tokenId;
+  @override
   String get from;
   @override
   String get to;
   @override
-  String get value;
+  String? get value;
   @override
   String get fee;
   @override
