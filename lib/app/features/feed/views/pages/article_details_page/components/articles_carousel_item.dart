@@ -5,7 +5,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/components/image/ion_network_image.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/feed/data/models/entities/article_data.c.dart';
-import 'package:ion/app/features/feed/providers/feed_entity_provider.c.dart';
+import 'package:ion/app/features/feed/providers/ion_connect_entity_with_counters_provider.c.dart';
 import 'package:ion/app/features/feed/views/components/overlay_menu/user_info_menu.dart';
 import 'package:ion/app/features/feed/views/components/user_info/user_info.dart';
 import 'package:ion/app/features/ion_connect/model/event_reference.c.dart';
@@ -18,7 +18,7 @@ class ArticlesCarouselItem extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final article = ref.watch(feedEntityProvider(eventReference: eventReference));
+    final article = ref.watch(ionConnectEntityWithCountersProvider(eventReference: eventReference));
 
     if (article is! ArticleEntity || article.isDeleted) {
       return const SizedBox.shrink();
