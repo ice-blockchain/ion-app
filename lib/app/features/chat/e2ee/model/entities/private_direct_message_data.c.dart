@@ -144,6 +144,8 @@ class PrivateDirectMessageData with _$PrivateDirectMessageData, EntityDataWithMe
       return MessageType.visualMedia;
     } else if (media.isNotEmpty) {
       return MessageType.document;
+    } else if (IonConnectProtocolIdentifierTypeValidator.isEventIdentifier(content)) {
+      return MessageType.requestFunds;
     }
 
     return MessageType.text;
