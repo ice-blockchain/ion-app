@@ -34,6 +34,7 @@ class VideoEditorModule: VideoEditor {
         var config = VideoEditorConfig()
 
         config.featureConfiguration.supportsTrimRecordedVideo = true
+        config.featureConfiguration.draftsConfig = .disabled
 
         // Make customization here
         
