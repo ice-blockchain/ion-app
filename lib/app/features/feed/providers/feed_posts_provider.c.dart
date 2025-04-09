@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: ice License 1.0
 
 import 'package:async/async.dart';
-import 'package:ion/app/features/core/model/media_type.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/features/feed/create_article/providers/create_article_provider.c.dart';
 import 'package:ion/app/features/feed/create_post/providers/create_post_notifier.c.dart';
 import 'package:ion/app/features/feed/data/models/entities/article_data.c.dart';
@@ -46,8 +46,8 @@ class FeedPosts extends _$FeedPosts {
       case FeedCategory.feed:
         return _isRegularPostOrRepost(entity) || _isArticleOrArticleRepost(entity);
       case FeedCategory.videos:
-        final isVideoPost = _isVideoPost(entity);
-        final isVideoRepost = _isVideoRepost(entity);
+        final isVideoPost = ref.read(isVideoPostProvider(entity));
+        final isVideoRepost = ref.read(isVideoRepostProvider(entity));
         return isVideoPost || isVideoRepost;
       case FeedCategory.articles:
         return _isArticleOrArticleRepost(entity);
@@ -64,15 +64,6 @@ class FeedPosts extends _$FeedPosts {
     ref.read(entitiesPagedDataProvider(dataSource).notifier).insertEntity(entity);
   }
 
-  bool _isVideoPost(IonConnectEntity entity) {
-    if (entity is ModifiablePostEntity) {
-      return entity.data.parentEvent?.eventReference == null &&
-          entity.data.expiration == null &&
-          entity.data.media.values.any((media) => media.mediaType == MediaType.video);
-    }
-    return false;
-  }
-
   bool _isRegularPostOrRepost(IonConnectEntity entity) {
     final isRegularPost = entity is ModifiablePostEntity &&
         entity.data.parentEvent?.eventReference == null &&
@@ -82,7 +73,7 @@ class FeedPosts extends _$FeedPosts {
   }
 
   bool _isPostRepost(IonConnectEntity entity) {
-    final repostedEntity = _repostedEntity(entity);
+    final repostedEntity = ref.read(getRepostedEntityProvider(entity));
     return repostedEntity != null &&
         (repostedEntity is ModifiablePostEntity || repostedEntity is PostEntity);
   }
@@ -92,30 +83,40 @@ class FeedPosts extends _$FeedPosts {
   }
 
   bool _isArticleRepost(IonConnectEntity entity) {
-    final repostedEntity = _repostedEntity(entity);
+    final repostedEntity = ref.read(getRepostedEntityProvider(entity));
     return repostedEntity != null && repostedEntity is ArticleEntity;
   }
+}
 
-  bool _isVideoRepost(IonConnectEntity entity) {
-    final repostedEntity = _repostedEntity(entity);
-
-    if (repostedEntity is ModifiablePostEntity) {
-      return repostedEntity.data.parentEvent?.eventReference == null &&
-          repostedEntity.data.expiration == null &&
-          repostedEntity.data.media.values.any((media) => media.mediaType == MediaType.video);
-    }
-    return false;
+@riverpod
+bool isVideoPost(Ref ref, IonConnectEntity entity) {
+  if (entity is ModifiablePostEntity) {
+    return entity.data.parentEvent?.eventReference == null &&
+        entity.data.expiration == null &&
+        entity.data.hasVideo;
   }
+  return false;
+}
 
-  IonConnectEntity? _repostedEntity(IonConnectEntity entity) {
-    EventReference? repostedEventReference;
-    if (entity is GenericRepostEntity) {
-      repostedEventReference = entity.data.eventReference;
-    } else if (entity is RepostEntity) {
-      repostedEventReference = entity.data.eventReference;
-    }
-
-    if (repostedEventReference == null) return null;
-    return ref.read(ionConnectEntityWithCountersProvider(eventReference: repostedEventReference));
+@riverpod
+bool isVideoRepost(Ref ref, IonConnectEntity entity) {
+  final reposted = ref.read(getRepostedEntityProvider(entity));
+  if (reposted is ModifiablePostEntity) {
+    return reposted.data.parentEvent?.eventReference == null &&
+        reposted.data.expiration == null &&
+        reposted.data.hasVideo;
   }
+  return false;
+}
+
+@riverpod
+IonConnectEntity? getRepostedEntity(Ref ref, IonConnectEntity entity) {
+  EventReference? repostedEventReference;
+  if (entity is GenericRepostEntity) {
+    repostedEventReference = entity.data.eventReference;
+  } else if (entity is RepostEntity) {
+    repostedEventReference = entity.data.eventReference;
+  }
+  if (repostedEventReference == null) return null;
+  return ref.read(ionConnectEntityWithCountersProvider(eventReference: repostedEventReference));
 }
