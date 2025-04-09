@@ -24,6 +24,9 @@ class SyncCoinsDao extends DatabaseAccessor<WalletsDatabase> with _$SyncCoinsDao
     });
   }
 
+  Future<List<SyncCoins>> getAll() =>
+      (select(syncCoinsTable)..orderBy([(tbl) => OrderingTerm.asc(tbl.syncAfter)])).get();
+
   Future<DateTime?> getNextSyncTime() async {
     return (select(syncCoinsTable)
           ..orderBy([(tbl) => OrderingTerm.asc(tbl.syncAfter)])
@@ -48,5 +51,9 @@ class SyncCoinsDao extends DatabaseAccessor<WalletsDatabase> with _$SyncCoinsDao
 
   Future<void> clear() async {
     await delete(syncCoinsTable).go();
+  }
+
+  Future<void> removeFromQueue(List<String> coinIds) async {
+    await (delete(syncCoinsTable)..where((tbl) => tbl.coinId.isIn(coinIds))).go();
   }
 }

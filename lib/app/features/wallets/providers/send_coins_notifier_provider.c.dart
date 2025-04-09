@@ -117,7 +117,7 @@ class SendCoinsNotifier extends _$SendCoinsNotifier {
           coinAssetData: coinAssetData,
         );
       } on SendEventException catch (e, stacktrace) {
-        Logger.error('Failed to send Nostr event $e', stackTrace: stacktrace);
+        Logger.error('Failed to send event $e', stackTrace: stacktrace);
       }
 
       return details;

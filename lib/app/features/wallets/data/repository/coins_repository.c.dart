@@ -1,5 +1,6 @@
 // SPDX-License-Identifier: ice License 1.0
 
+import 'package:collection/collection.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/features/wallets/data/database/dao/coins_dao.c.dart';
 import 'package:ion/app/features/wallets/data/database/dao/sync_coins_dao.c.dart';
@@ -10,6 +11,8 @@ import 'package:ion/app/services/storage/local_storage.c.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'coins_repository.c.g.dart';
+
+typedef SyncCoinAfter = ({String coinId, DateTime syncAfter});
 
 @Riverpod(keepAlive: true)
 CoinsRepository coinsRepository(Ref ref) => CoinsRepository(
@@ -40,11 +43,44 @@ class CoinsRepository {
 
   Future<void> updateCoins(List<Coin> coins) => _coinsDao.upsertAll(coins);
 
-  Future<void> updateCoinSyncQueue(List<SyncCoins> syncCoins) => _syncCoinsDao.insertAll(syncCoins);
+  Future<void> updateCoinSyncQueue(
+    Iterable<SyncCoinAfter> syncCoins, {
+    bool updateOnlyDifferences = false,
+  }) async {
+    final syncCoinsInput = syncCoins
+        .map(
+          (pair) => SyncCoins(coinId: pair.coinId, syncAfter: pair.syncAfter),
+        )
+        .toList();
+
+    var toInsert = syncCoinsInput;
+
+    if (updateOnlyDifferences) {
+      final coinsInQueue = await _syncCoinsDao.getAll();
+
+      final incomingCoinIds = syncCoins.map((e) => e.coinId).toSet();
+      final existingCoinIds = coinsInQueue.map((e) => e.coinId).toSet();
+
+      final toDelete = existingCoinIds.difference(incomingCoinIds);
+      toInsert = syncCoinsInput.where((e) => !existingCoinIds.contains(e.coinId)).toList();
+
+      await _syncCoinsDao.removeFromQueue(toDelete.toList());
+    }
+
+    await _syncCoinsDao.insertAll(toInsert);
+  }
+
+  Future<void> removeFromQueue(List<String> coinIds) => _syncCoinsDao.removeFromQueue(coinIds);
 
   Future<DateTime?> getNextSyncTime() => _syncCoinsDao.getNextSyncTime();
 
   Future<bool> hasSyncQueue() => _syncCoinsDao.hasAny();
+
+  Future<bool> isSyncQueueReady(Iterable<String> coinIds) async {
+    final coinsInQueue = await _syncCoinsDao.getAll();
+    final coinIdsInQueue = coinsInQueue.map((e) => e.coinId);
+    return const UnorderedIterableEquality<String>().equals(coinIds, coinIdsInQueue);
+  }
 
   Future<void> removeSyncQueue() => _syncCoinsDao.clear();
 

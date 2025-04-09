@@ -31,9 +31,6 @@ class CoinsSync extends _$CoinsSync {
       await coinSyncService.syncAllCoins();
       coinSyncService.startPeriodicSync();
       ref.onDispose(coinSyncService.stopPeriodicSync);
-      await coinSyncService.startActiveCoinsSyncQueue();
-    } else {
-      coinSyncService.removeActiveCoinsSyncQueue();
     }
   }
 }

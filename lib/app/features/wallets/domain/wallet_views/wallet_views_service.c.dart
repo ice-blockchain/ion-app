@@ -11,6 +11,7 @@ import 'package:ion/app/features/wallets/data/repository/coins_repository.c.dart
 import 'package:ion/app/features/wallets/data/repository/networks_repository.c.dart';
 import 'package:ion/app/features/wallets/data/repository/transactions_repository.c.dart';
 import 'package:ion/app/features/wallets/domain/coins/coins_comparator.dart';
+import 'package:ion/app/features/wallets/domain/wallet_views/sync_wallet_views_coins_service.c.dart';
 import 'package:ion/app/features/wallets/model/coin_data.c.dart';
 import 'package:ion/app/features/wallets/model/coin_in_wallet_data.c.dart';
 import 'package:ion/app/features/wallets/model/coins_group.c.dart';
@@ -35,6 +36,7 @@ Future<WalletViewsService> walletViewsService(Ref ref) async {
     ref.watch(coinsRepositoryProvider),
     ref.watch(networksRepositoryProvider),
     await ref.watch(transactionsRepositoryProvider.future),
+    await ref.watch(syncWalletViewCoinsServiceProvider.future),
   );
 
   ref.onDispose(service.dispose);
@@ -49,6 +51,7 @@ class WalletViewsService {
     this._coinsRepository,
     this._networksRepository,
     this._transactionsRepository,
+    this._syncWalletViewCoinsService,
   );
 
   final List<Wallet> _userWallets;
@@ -56,6 +59,7 @@ class WalletViewsService {
   final CoinsRepository _coinsRepository;
   final NetworksRepository _networksRepository;
   final TransactionsRepository _transactionsRepository;
+  final SyncWalletViewCoinsService _syncWalletViewCoinsService;
 
   final StreamController<List<WalletViewData>> _walletViewsController =
       StreamController.broadcast();
@@ -86,9 +90,16 @@ class WalletViewsService {
           ),
         )
         .toList();
+    _syncCoinsFromWalletViews();
     _emitModifiedWalletViews(walletViews: _originWalletViews);
 
     return _originWalletViews;
+  }
+
+  // TODO: We need somehow to improve the call of this method. Maybe, move it to the _emitModifiedWalletViews with a flag
+  void _syncCoinsFromWalletViews() {
+    final coins = _originWalletViews.expand((wv) => wv.coins).map((c) => c.coin).toList();
+    _syncWalletViewCoinsService.startCoinsSyncQueue(coins);
   }
 
   void _emitModifiedWalletViews({
@@ -253,6 +264,7 @@ class WalletViewsService {
         );
 
     _originWalletViews = [..._originWalletViews, newWalletView];
+    _syncCoinsFromWalletViews();
     _emitModifiedWalletViews(walletViews: _originWalletViews);
 
     return newWalletView;
@@ -287,6 +299,7 @@ class WalletViewsService {
       _originWalletViews.add(updatedWalletView);
     }
 
+    _syncCoinsFromWalletViews();
     _emitModifiedWalletViews(walletViews: _originWalletViews);
 
     return updatedWalletView;
@@ -294,9 +307,10 @@ class WalletViewsService {
 
   Future<void> delete({required String walletViewId}) async {
     await _identity.wallets.deleteWalletView(walletViewId);
-    _emitModifiedWalletViews(
-      walletViews: _originWalletViews.where((view) => view.id != walletViewId).toList(),
-    );
+    _originWalletViews = _originWalletViews.where((view) => view.id != walletViewId).toList();
+
+    _syncCoinsFromWalletViews();
+    _emitModifiedWalletViews(walletViews: _originWalletViews);
   }
 
   // TODO: Move parsing to the separate class
