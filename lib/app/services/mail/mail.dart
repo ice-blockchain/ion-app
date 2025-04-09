@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: ice License 1.0
+
 import 'package:ion/app/exceptions/exceptions.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -12,10 +14,7 @@ Future<void> sendEmail({
     // Applying Uri.encodeComponent manually to query params
     // because otherwise the whitespaces will be encoded as
     // '+' instead of proper '%20'
-    queryParameters: {
-      'subject': Uri.encodeComponent(subject),
-      'body': Uri.encodeComponent(body),
-    },
+    query: 'subject=$subject&body=$body',
   );
 
   if (await canLaunchUrl(emailUri)) {
