@@ -7,6 +7,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:ion/app/components/progress_bar/ion_loading_indicator.dart';
 import 'package:ion/app/components/screen_offset/screen_side_offset.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/chat/e2ee/model/entities/private_direct_message_data.c.dart';
@@ -62,6 +63,7 @@ class PhotoGalleryPage extends HookConsumerWidget {
         }
 
         pageController.addListener(listener);
+
         return () {
           if (pageController.hasClients) {
             pageController.removeListener(listener);
@@ -72,6 +74,26 @@ class PhotoGalleryPage extends HookConsumerWidget {
     );
 
     final isZoomed = ref.watch(imageZoomProvider);
+
+    final messageDetailsKey = useRef(GlobalKey());
+    final bottomHeight = useState<double>(0);
+
+    useEffect(
+      () {
+        WidgetsBinding.instance.addPostFrameCallback((_) async {
+          await Future<void>.delayed(const Duration(milliseconds: 100));
+          final context = messageDetailsKey.value.currentContext;
+          if (context != null) {
+            final box = context.findRenderObject() as RenderBox?;
+            if (box != null) {
+              bottomHeight.value = box.size.height;
+            }
+          }
+        });
+        return null;
+      },
+      [messageDetailsKey.value.currentContext],
+    );
 
     if (!eventMessageFuture.hasData) {
       return const SizedBox.shrink();
@@ -90,7 +112,7 @@ class PhotoGalleryPage extends HookConsumerWidget {
             '';
 
     return Material(
-      color: Colors.transparent,
+      color: context.theme.appColors.primaryText,
       child: AnnotatedRegion<SystemUiOverlayStyle>(
         value: SystemUiOverlayStyle(
           statusBarColor: context.theme.appColors.primaryText,
@@ -123,15 +145,6 @@ class PhotoGalleryPage extends HookConsumerWidget {
           ),
           body: Stack(
             children: [
-              // AnimatedPadding(
-              //   duration: const Duration(milliseconds: 1),
-              //   padding: !isZoomed
-              //       ? EdgeInsetsDirectional.only(
-              //           top: NavigationAppBar.screenHeaderHeight +
-              //               MediaQuery.of(context).padding.top,
-              //         )
-              //       : EdgeInsets.zero,
-              // ),
               Align(
                 child: PageView.builder(
                   onPageChanged: (index) {
@@ -145,6 +158,14 @@ class PhotoGalleryPage extends HookConsumerWidget {
                     final media = medias[index];
                     final mediaAttchment =
                         entity.visualMedias.where((e) => e.url == media.remoteUrl).first;
+                    // final urlFeature = ref.read(
+                    //   chatMessageLoadMediaProvider(
+                    //     entity: entity,
+                    //     mediaAttachment: mediaAttchment,
+                    //     loadThumbnail: false,
+                    //   ),
+                    // );
+
                     final urlFeature = ref
                         .read(
                           mediaEncryptionServiceProvider,
@@ -155,20 +176,23 @@ class PhotoGalleryPage extends HookConsumerWidget {
                       future: urlFeature,
                       builder: (context, snapshot) {
                         if (!snapshot.hasData) {
-                          return const SizedBox.shrink();
+                          return const Center(
+                            child: IONLoadingIndicator(),
+                          );
                         }
                         final isVideo = mediaAttchment.mediaType == MediaType.video;
 
                         if (isVideo) {
+                          print(snapshot.data!.path);
                           return VideoPage(
-                            key: ValueKey('video_${entity.visualMedias[index].url}'),
+                            key: ValueKey('video_${media.id}'),
                             // video: post,
                             videoUrl: snapshot.data!.path,
                           );
                         }
 
                         return ColoredBox(
-                          color: context.theme.appColors.primaryText,
+                          color: Colors.transparent,
                           child: GestureDetector(
                             onDoubleTapDown: zoomController.onDoubleTapDown,
                             onDoubleTap: zoomController.onDoubleTap,
@@ -179,9 +203,16 @@ class PhotoGalleryPage extends HookConsumerWidget {
                               onInteractionStart: zoomController.onInteractionStart,
                               onInteractionUpdate: zoomController.onInteractionUpdate,
                               onInteractionEnd: zoomController.onInteractionEnd,
-                              child: Image.file(
-                                File(snapshot.data!.path),
-                                fit: BoxFit.fitWidth,
+                              child: Container(
+                                padding: EdgeInsets.only(
+                                  top: MediaQuery.of(context).padding.top,
+                                  bottom:
+                                      bottomHeight.value + MediaQuery.of(context).padding.bottom,
+                                ),
+                                child: Image.file(
+                                  File(snapshot.data!.path),
+                                  fit: BoxFit.contain,
+                                ),
                               ),
                             ),
                           ),
@@ -192,19 +223,25 @@ class PhotoGalleryPage extends HookConsumerWidget {
                 ),
               ),
               Positioned(
-                bottom: 0,
+                bottom: MediaQuery.of(context).padding.bottom,
                 left: 0,
                 right: 0,
-                child: SafeArea(
-                  top: false,
-                  child: ScreenSideOffset.small(
+                child: ScreenSideOffset.small(
+                  key: messageDetailsKey.value,
+                  child: Padding(
+                    padding: EdgeInsets.symmetric(vertical: 8.0.s),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         if (eventMessage.content.isNotEmpty)
                           Padding(
                             padding: EdgeInsets.only(bottom: 24.0.s),
-                            child: PhotoGalleryTitle(message: eventMessage.content),
+                            child: Text(
+                              eventMessage.content,
+                              style: context.theme.appTextThemes.body2.copyWith(
+                                color: context.theme.appColors.onPrimaryAccent,
+                              ),
+                            ),
                           ),
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
