@@ -221,7 +221,7 @@ class MediaAttachment {
     return MediaType.fromUrl(url);
   }
 
-  List<String> toTag({bool includeDuration = true}) {
+  List<String> toTag() {
     return [
       tagName,
       'url $url',
