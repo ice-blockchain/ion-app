@@ -127,7 +127,7 @@ class VideosVerticalScrollPage extends HookConsumerWidget {
             Padding(
               padding: EdgeInsetsDirectional.only(end: rightPadding),
               child: UserInfoMenu(
-                pubkey: eventReference.pubkey,
+                eventReference: eventReference,
                 iconColor: secondaryBackgroundColor,
               ),
             ),

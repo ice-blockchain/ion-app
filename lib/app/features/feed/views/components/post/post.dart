@@ -116,7 +116,7 @@ class Post extends ConsumerWidget {
                 timeFormat: timeFormat,
                 trailing: isOwnedByCurrentUser
                     ? OwnEntityMenu(eventReference: eventReference, onDelete: onDelete)
-                    : UserInfoMenu(pubkey: eventReference.pubkey),
+                    : UserInfoMenu(eventReference: eventReference),
               ),
         ),
         if (contentWrapper != null) contentWrapper!(content) else content,

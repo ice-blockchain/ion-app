@@ -67,7 +67,7 @@ class FullscreenMediaPage extends HookConsumerWidget {
                         },
                       )
                     : UserInfoMenu(
-                        pubkey: eventReference.pubkey,
+                        eventReference: eventReference,
                         iconColor: context.theme.appColors.onPrimaryAccent,
                       ),
               ),

@@ -26,16 +26,19 @@ class MoreArticlesFromAuthor extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final dataSource = ref.watch(userArticlesDataSourceProvider(eventReference.pubkey));
     final entitiesPagedData = ref.watch(entitiesPagedDataProvider(dataSource));
-    final articles = entitiesPagedData?.data.items
+
+    final articlesReferences = entitiesPagedData?.data.items
         ?.whereType<ArticleEntity>()
         .where((article) => article.toEventReference() != eventReference)
+        .map((article) => article.toEventReference())
         .toList();
+
     final authorDisplayName = ref.watch(
       userMetadataProvider(eventReference.pubkey)
           .select((value) => value.valueOrNull?.data.displayName),
     );
 
-    if (articles == null || articles.isEmpty || authorDisplayName == null) {
+    if (articlesReferences == null || articlesReferences.isEmpty || authorDisplayName == null) {
       return const SizedBox.shrink();
     }
 
@@ -45,7 +48,7 @@ class MoreArticlesFromAuthor extends ConsumerWidget {
         ScreenSideOffset.small(
           child: ArticleDetailsSectionHeader(
             title: context.i18n.article_page_from_author(authorDisplayName),
-            count: articles.length,
+            count: articlesReferences.length,
             trailing: GestureDetector(
               onTap: () =>
                   ArticlesFromAuthorRoute(pubkey: eventReference.pubkey).push<void>(context),
@@ -54,7 +57,7 @@ class MoreArticlesFromAuthor extends ConsumerWidget {
           ),
         ),
         SizedBox(height: 16.0.s),
-        ArticlesCarousel(articles: articles),
+        ArticlesCarousel(articlesReferences: articlesReferences),
       ],
     );
   }
