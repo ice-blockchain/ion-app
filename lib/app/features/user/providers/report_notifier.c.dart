@@ -3,6 +3,7 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:ion/app/constants/emails.dart';
 import 'package:ion/app/features/ion_connect/model/event_reference.c.dart';
+import 'package:ion/app/features/user/model/user_metadata.c.dart';
 import 'package:ion/app/services/mail/mail.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
@@ -38,7 +39,8 @@ class ReportNotifier extends _$ReportNotifier {
 
   String _getReportBody(ReportReason reason) {
     return switch (reason) {
-      ReportReasonUser() => 'This is a report for the user ${reason.pubkey}',
+      ReportReasonUser() =>
+        'This is a report for the user ${ReplaceableEventReference(pubkey: reason.pubkey, kind: UserMetadataEntity.kind).encode()}',
       ReportReasonContent() => 'This is a report for the content ${reason.eventReference.encode()}',
       ReportReasonConversation() =>
         'This is a report for the conversation ${reason.conversationId}',

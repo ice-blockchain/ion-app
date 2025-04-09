@@ -11,9 +11,8 @@ Future<void> sendEmail({
   final emailUri = Uri(
     scheme: 'mailto',
     path: receiver,
-    // Applying Uri.encodeComponent manually to query params
-    // because otherwise the whitespaces will be encoded as
-    // '+' instead of proper '%20'
+    // Not using Uri.encodeComponent or Uri.queryParameters intentionally to avoid encoding.
+    // Encoding transforms whitespaces to either '+' or '%20' that doesn't work in mails
     query: 'subject=$subject&body=$body',
   );
 
