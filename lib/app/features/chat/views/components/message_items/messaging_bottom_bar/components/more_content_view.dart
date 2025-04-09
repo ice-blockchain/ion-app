@@ -41,33 +41,26 @@ class MoreContentView extends ConsumerWidget {
             mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: [
               PermissionAwareWidget(
-                permissionType: Permission.videos,
-                onGranted: () async {},
-                requestDialog: const PermissionRequestSheet(permission: Permission.videos),
-                settingsDialog: SettingsRedirectSheet.fromType(context, Permission.videos),
-                builder: (context, onPressed) => PermissionAwareWidget(
-                  permissionType: Permission.photos,
-                  onGranted: () async {
-                    final mediaFiles = await MediaPickerRoute(
-                      maxSelection: 10,
-                      maxVideoDurationInSeconds:
-                          PrivateDirectMessageData.videoDurationLimitInSeconds,
-                    ).push<List<MediaFile>>(context);
-                    if (mediaFiles != null && mediaFiles.isNotEmpty && context.mounted) {
-                      final convertedMediaFiles = await ref
-                          .read(mediaServiceProvider)
-                          .convertAssetIdsToMediaFiles(ref, mediaFiles: mediaFiles);
+                permissionType: Permission.photos,
+                onGranted: () async {
+                  final mediaFiles = await MediaPickerRoute(
+                    maxSelection: 10,
+                    maxVideoDurationInSeconds: PrivateDirectMessageData.videoDurationLimitInSeconds,
+                  ).push<List<MediaFile>>(context);
+                  if (mediaFiles != null && mediaFiles.isNotEmpty && context.mounted) {
+                    final convertedMediaFiles = await ref
+                        .read(mediaServiceProvider)
+                        .convertAssetIdsToMediaFiles(ref, mediaFiles: mediaFiles);
 
-                      unawaited(onSubmitted(mediaFiles: convertedMediaFiles));
-                    }
-                  },
-                  requestDialog: const PermissionRequestSheet(permission: Permission.photos),
-                  settingsDialog: SettingsRedirectSheet.fromType(context, Permission.photos),
-                  builder: (context, onPressed) => _MoreContentItem(
-                    iconPath: Assets.svg.walletChatPhotos,
-                    title: context.i18n.common_media,
-                    onTap: onPressed,
-                  ),
+                    unawaited(onSubmitted(mediaFiles: convertedMediaFiles));
+                  }
+                },
+                requestDialog: const PermissionRequestSheet(permission: Permission.photos),
+                settingsDialog: SettingsRedirectSheet.fromType(context, Permission.photos),
+                builder: (context, onPressed) => _MoreContentItem(
+                  iconPath: Assets.svg.walletChatPhotos,
+                  title: context.i18n.common_media,
+                  onTap: onPressed,
                 ),
               ),
               PermissionAwareWidget(

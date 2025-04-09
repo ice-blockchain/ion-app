@@ -23,18 +23,66 @@ class PermissionHandlerStrategy extends PermissionStrategy {
 
   @override
   Future<PermissionStatus> checkPermission() async {
-    final permission = await _getPermission();
-    final status = await permission.status;
+    if (!kIsWeb && Platform.isAndroid && permissionType == Permission.photos) {
+      final androidInfo = await DeviceInfoPlugin().androidInfo;
+      if (androidInfo.version.sdkInt <= 32) {
+        const permission = ph.Permission.storage;
+        final status = await permission.status;
+        return _mapToAppPermission(status);
+      } else {
+        final permissions = [ph.Permission.photos, ph.Permission.videos];
+        final statuses =
+            await Future.wait(permissions.map((permission) => permission.status).toList());
 
-    return _mapToAppPermission(status);
+        final status = statuses.any((status) => status.isDenied)
+            ? ph.PermissionStatus.denied
+            : statuses.every((status) => status.isGranted)
+                ? ph.PermissionStatus.granted
+                : statuses.any((status) => status.isLimited)
+                    ? ph.PermissionStatus.limited
+                    : statuses.any((status) => status.isPermanentlyDenied)
+                        ? ph.PermissionStatus.permanentlyDenied
+                        : ph.PermissionStatus.denied;
+
+        return _mapToAppPermission(status);
+      }
+    } else {
+      final permission = await _getPermission();
+      final status = await permission.status;
+
+      return _mapToAppPermission(status);
+    }
   }
 
   @override
   Future<PermissionStatus> requestPermission() async {
-    final permission = await _getPermission();
-    final status = await permission.request();
+    if (!kIsWeb && Platform.isAndroid && permissionType == Permission.photos) {
+      final androidInfo = await DeviceInfoPlugin().androidInfo;
+      if (androidInfo.version.sdkInt <= 32) {
+        const permission = ph.Permission.storage;
+        final status = await permission.request();
+        return _mapToAppPermission(status);
+      } else {
+        final permissions = [ph.Permission.photos, ph.Permission.videos];
+        final statuses = (await permissions.request()).values.toList();
 
-    return _mapToAppPermission(status);
+        final status = statuses.any((status) => status.isDenied)
+            ? ph.PermissionStatus.denied
+            : statuses.every((status) => status.isGranted)
+                ? ph.PermissionStatus.granted
+                : statuses.any((status) => status.isLimited)
+                    ? ph.PermissionStatus.limited
+                    : statuses.any((status) => status.isPermanentlyDenied)
+                        ? ph.PermissionStatus.permanentlyDenied
+                        : ph.PermissionStatus.denied;
+
+        return _mapToAppPermission(status);
+      }
+    } else {
+      final permission = await _getPermission();
+      final status = await permission.request();
+      return _mapToAppPermission(status);
+    }
   }
 
   PermissionStatus _mapToAppPermission(ph.PermissionStatus status) => switch (status) {
@@ -48,21 +96,12 @@ class PermissionHandlerStrategy extends PermissionStrategy {
 
   Future<ph.Permission> _getPermission() async {
     final permission = switch (permissionType) {
-      Permission.videos => ph.Permission.videos,
       Permission.camera => ph.Permission.camera,
       Permission.notifications => ph.Permission.notification,
       Permission.photos => ph.Permission.photos,
       Permission.cloud => ph.Permission.unknown,
       Permission.microphone => ph.Permission.microphone,
     };
-
-    if (!kIsWeb &&
-        Platform.isAndroid &&
-        (permissionType == Permission.photos || permissionType == Permission.videos)) {
-      final androidInfo = await DeviceInfoPlugin().androidInfo;
-
-      return androidInfo.version.sdkInt <= 32 ? ph.Permission.storage : permission;
-    }
 
     return Future.value(permission);
   }
