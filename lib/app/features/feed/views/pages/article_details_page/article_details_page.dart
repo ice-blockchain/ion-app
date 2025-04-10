@@ -17,7 +17,6 @@ import 'package:ion/app/features/feed/views/components/deleted_entity/deleted_en
 import 'package:ion/app/features/feed/views/components/list_separator/list_separator.dart';
 import 'package:ion/app/features/feed/views/components/overlay_menu/own_entity_menu.dart';
 import 'package:ion/app/features/feed/views/components/overlay_menu/user_info_menu.dart';
-import 'package:ion/app/features/feed/views/components/post/post_skeleton.dart';
 import 'package:ion/app/features/feed/views/pages/article_details_page/components/article_details_date_topics.dart';
 import 'package:ion/app/features/feed/views/pages/article_details_page/components/article_details_header.dart';
 import 'package:ion/app/features/feed/views/pages/article_details_page/components/article_details_progress_indicator.dart';
@@ -28,6 +27,7 @@ import 'package:ion/app/features/feed/views/pages/article_details_page/component
 import 'package:ion/app/features/feed/views/pages/article_details_page/hooks/use_scroll_indicator.dart';
 import 'package:ion/app/features/ion_connect/model/event_reference.c.dart';
 import 'package:ion/app/router/components/navigation_app_bar/navigation_app_bar.dart';
+import 'package:ion/app/services/markdown/quill.dart';
 
 class ArticleDetailsPage extends HookConsumerWidget {
   const ArticleDetailsPage({
@@ -50,19 +50,13 @@ class ArticleDetailsPage extends HookConsumerWidget {
     final scrollController = useScrollController();
     final progress = useScrollIndicator(scrollController);
 
-    final contentMediaAndMentionedUsers = ref
-        .watch(
-          parsedMediaContentProvider(
-            data: articleEntity.data,
-          ),
-        )
-        .valueOrNull;
-
-    if (contentMediaAndMentionedUsers == null) {
-      return const PostSkeleton();
-    }
-
-    final (:content, :media, :mentionedUsers) = contentMediaAndMentionedUsers;
+    final delta = useMemoized(
+      () => parseAndConvertDelta(
+        articleEntity.data.richText?.content,
+        articleEntity.data.content,
+      ),
+      [articleEntity.data.richText?.content, articleEntity.data.content],
+    );
 
     final topics = articleEntity.data.topics;
 
@@ -107,10 +101,9 @@ class ArticleDetailsPage extends HookConsumerWidget {
                       if (articleEntity.data.content.isNotEmpty) SizedBox(height: 20.0.s),
                       ScreenSideOffset.small(
                         child: TextEditorPreview(
-                          content: content,
+                          content: delta,
                           media: articleEntity.data.media,
                           enableInteractiveSelection: true,
-                          mentionedUsers: mentionedUsers,
                         ),
                       ),
                     ],

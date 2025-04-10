@@ -3,6 +3,7 @@
 import 'package:flutter_quill/quill_delta.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/components/text_editor/attributes.dart';
+import 'package:ion/app/components/text_editor/components/custom_blocks/text_editor_profile_block/text_editor_profile_block.dart';
 import 'package:ion/app/features/user/providers/user_metadata_provider.c.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
@@ -42,7 +43,9 @@ Future<Operation> _getMappedMentionOperation(
   }
   final userMetadataEncoded = userMetadata.toEventReference().encode();
   return Operation.insert(
-    userMetadataEncoded,
+    {
+      textEditorProfileKey: userMetadataEncoded,
+    },
     operation.attributes,
   );
 }

@@ -5,13 +5,13 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_quill/flutter_quill.dart';
 import 'package:flutter_quill/quill_delta.dart';
 import 'package:ion/app/components/text_editor/components/custom_blocks/text_editor_code_block/text_editor_code_block.dart';
+import 'package:ion/app/components/text_editor/components/custom_blocks/text_editor_profile_block/text_editor_profile_block.dart';
 import 'package:ion/app/components/text_editor/components/custom_blocks/text_editor_separator_block/text_editor_separator_block.dart';
 import 'package:ion/app/components/text_editor/components/custom_blocks/text_editor_single_image_block/text_editor_single_image_block.dart';
 import 'package:ion/app/components/text_editor/components/custom_blocks/unknown/text_editor_unknown_embed_builder.dart';
 import 'package:ion/app/components/text_editor/custom_recognizer_builder.dart';
 import 'package:ion/app/components/text_editor/utils/text_editor_styles.dart';
 import 'package:ion/app/features/ion_connect/model/media_attachment.dart';
-import 'package:ion/app/features/user/model/user_metadata.c.dart';
 
 class TextEditorPreview extends HookWidget {
   const TextEditorPreview({
@@ -21,7 +21,6 @@ class TextEditorPreview extends HookWidget {
     this.maxHeight,
     this.customStyles,
     this.scrollable = true,
-    this.mentionedUsers = const [],
     super.key,
   });
 
@@ -31,7 +30,6 @@ class TextEditorPreview extends HookWidget {
   final DefaultStyles? customStyles;
   final double? maxHeight;
   final bool scrollable;
-  final List<UserMetadataEntity?> mentionedUsers;
 
   @override
   Widget build(BuildContext context) {
@@ -95,6 +93,7 @@ class _QuillFormattedContent extends StatelessWidget {
           TextEditorSingleImageBuilder(media: media),
           TextEditorSeparatorBuilder(readOnly: true),
           TextEditorCodeBuilder(readOnly: true),
+          TextEditorProfileBuilder(),
         ],
         unknownEmbedBuilder: TextEditorUnknownEmbedBuilder(),
         disableClipboard: true,
@@ -102,7 +101,6 @@ class _QuillFormattedContent extends StatelessWidget {
         customRecognizerBuilder: (attribute, leaf) => customRecognizerBuilder(
           context,
           attribute,
-          users: mentionedUsers,
         ),
       ),
     );

@@ -2,25 +2,29 @@
 
 import 'dart:convert';
 
+import 'package:flutter/material.dart';
+import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_quill/flutter_quill.dart';
 import 'package:flutter_quill/quill_delta.dart';
-import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:ion/app/components/text_editor/attributes.dart';
-import 'package:ion/app/features/feed/providers/mentioned_users_in_content_provider.c.dart';
 import 'package:ion/app/features/ion_connect/model/entity_data_with_media_content.dart';
 import 'package:ion/app/features/ion_connect/model/media_attachment.dart';
-import 'package:ion/app/features/user/model/user_metadata.c.dart';
 import 'package:ion/app/services/markdown/quill.dart';
-import 'package:riverpod_annotation/riverpod_annotation.dart';
 
-part 'parsed_media_content_provider.c.g.dart';
-
-@riverpod
-Future<({Delta content, List<MediaAttachment> media, List<UserMetadataEntity?> mentionedUsers})>
-    parsedMediaContent(
-  Ref ref, {
+/// Returns [content] in Delta format with excluded media links
+/// and List of media attachments, extracted from the content.
+({Delta content, List<MediaAttachment> media}) useParsedMediaContent({
   required EntityDataWithMediaContent data,
-}) async {
+  Key? key,
+}) {
+  return useMemoized(
+    () => parseMediaContent(data: data),
+    [data, key],
+  );
+}
+
+({Delta content, List<MediaAttachment> media}) parseMediaContent({
+  required EntityDataWithMediaContent data,
+}) {
   final EntityDataWithMediaContent(:content, :media, :richText) = data;
 
   Delta? delta;
@@ -29,14 +33,7 @@ Future<({Delta content, List<MediaAttachment> media, List<UserMetadataEntity?> m
     final richTextDecoded = Delta.fromJson(jsonDecode(richText.content) as List<dynamic>);
     final richTextDelta = processDelta(richTextDecoded);
     final mediaDelta = _parseMediaContentDelta(delta: richTextDelta, media: media);
-    final mentionedUsers =
-        await ref.watch(mentionedUsersInContentProvider(contentDelta: mediaDelta.content).future);
-    final deltaWithMentions = _parseDeltaMentions(mediaDelta.content, mentionedUsers);
-    return (
-      content: processDeltaMatches(deltaWithMentions),
-      media: mediaDelta.media,
-      mentionedUsers: mentionedUsers.values.toList(),
-    );
+    return (content: processDeltaMatches(mediaDelta.content), media: mediaDelta.media);
   }
 
   final isMarkdownContent = isMarkdown(content);
@@ -48,13 +45,9 @@ Future<({Delta content, List<MediaAttachment> media, List<UserMetadataEntity?> m
   }
 
   final mediaDeltaFallback = _parseMediaContentDelta(delta: delta, media: media);
-  final mentionedUsers = await ref
-      .watch(mentionedUsersInContentProvider(contentDelta: mediaDeltaFallback.content).future);
-  final deltaWithMentions = _parseDeltaMentions(mediaDeltaFallback.content, mentionedUsers);
   return (
-    content: processDeltaMatches(deltaWithMentions),
-    media: mediaDeltaFallback.media,
-    mentionedUsers: mentionedUsers.values.toList(),
+    content: processDeltaMatches(mediaDeltaFallback.content),
+    media: mediaDeltaFallback.media
   );
 }
 
@@ -107,20 +100,6 @@ Future<({Delta content, List<MediaAttachment> media, List<UserMetadataEntity?> m
   }
 
   return (content: Delta.fromOperations(nonMediaOperations), media: mediaFromContent);
-}
-
-Delta _parseDeltaMentions(Delta delta, Map<String, UserMetadataEntity?> mentionedUsers) {
-  return Delta.fromOperations(
-    delta.operations.map((operation) {
-      if (operation.hasAttribute(MentionAttribute.attributeKey)) {
-        final encodedReference = operation.value as String;
-        final userMetadata = mentionedUsers[encodedReference];
-        if (userMetadata == null) return operation;
-        return Operation.insert('@${userMetadata.data.name}', operation.attributes);
-      }
-      return operation;
-    }).toList(),
-  );
 }
 
 bool isMarkdown(String text) {
