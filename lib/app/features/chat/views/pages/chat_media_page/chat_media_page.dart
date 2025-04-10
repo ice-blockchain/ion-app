@@ -12,9 +12,9 @@ import 'package:ion/app/features/chat/e2ee/providers/chat_medias_provider.c.dart
 import 'package:ion/app/features/chat/model/database/chat_database.c.dart';
 import 'package:ion/app/features/chat/model/message_list_item.c.dart';
 import 'package:ion/app/features/chat/recent_chats/providers/selected_message_provider.c.dart';
-import 'package:ion/app/features/chat/views/pages/chat_media_page/components/chat_madia_page_view.dart';
 import 'package:ion/app/features/chat/views/pages/chat_media_page/components/chat_media_context_menu.dart';
 import 'package:ion/app/features/chat/views/pages/chat_media_page/components/chat_media_metadata.dart';
+import 'package:ion/app/features/chat/views/pages/chat_media_page/components/chat_media_page_view.dart';
 import 'package:ion/app/features/feed/views/pages/fullscreen_media/hooks/use_image_zoom.dart';
 import 'package:ion/app/features/feed/views/pages/fullscreen_media/providers/image_zoom_provider.c.dart';
 import 'package:ion/app/features/ion_connect/ion_connect.dart';
