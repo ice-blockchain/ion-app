@@ -9,6 +9,7 @@ class NetworksTable extends Table {
   BoolColumn get isTestnet => boolean()();
   TextColumn get displayName => text()();
   TextColumn get explorerUrl => text()();
+  IntColumn get tier => integer().nullable()();
 
   @override
   Set<Column> get primaryKey => {id};
