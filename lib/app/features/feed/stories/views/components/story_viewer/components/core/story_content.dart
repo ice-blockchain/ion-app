@@ -62,9 +62,10 @@ class StoryContent extends HookConsumerWidget {
     );
 
     final isPaused = ref.watch(storyPauseControllerProvider);
+    final isReplyLoading = ref.watch(storyReplyProvider).isLoading;
     final isMenuOpen = ref.watch(storyMenuControllerProvider);
 
-    final shouldShowElements = !isPaused || isMenuOpen || isKeyboardVisible;
+    final shouldShowElements = isReplyLoading || !isPaused || isMenuOpen || isKeyboardVisible;
 
     return ClipRRect(
       borderRadius: isKeyboardVisible
@@ -80,19 +81,12 @@ class StoryContent extends HookConsumerWidget {
             fit: StackFit.expand,
             children: [
               StoryViewerContent(post: post),
-              Visibility(
-                visible: ref.watch(storyReplyProvider).isLoading,
-                child: BackdropFilter(
+              if (isReplyLoading)
+                BackdropFilter(
                   filter: ImageFilter.blur(sigmaX: 15, sigmaY: 15),
-                  child: ColoredBox(
-                    color: Colors.white.withValues(alpha: 0.5),
-                    child: const SizedBox.expand(),
+                  child: Center(
+                    child: IONLoadingIndicator(size: Size.square(54.0.s)),
                   ),
-                ),
-              ),
-              if (ref.watch(storyReplyProvider).isLoading)
-                Center(
-                  child: IONLoadingIndicator(size: Size.square(54.0.s)),
                 ),
             ],
           ),
@@ -107,12 +101,12 @@ class StoryContent extends HookConsumerWidget {
               .slideY(begin: -0.1, end: 0, duration: 300.ms),
           Stack(
             children: [
-              if (canReply && !isCurrentUserStory)
-                StoryInputField(
-                  controller: textController,
-                  bottomPadding: bottomPadding,
-                  onSubmitted: onSubmitted,
-                ),
+              //  if (canReply && !isCurrentUserStory)
+              StoryInputField(
+                controller: textController,
+                bottomPadding: bottomPadding,
+                onSubmitted: onSubmitted,
+              ),
               StoryViewerActionButtons(
                 post: post,
                 bottomPadding: bottomPadding,
