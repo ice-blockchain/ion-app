@@ -1,6 +1,7 @@
 // SPDX-License-Identifier: ice License 1.0
 
 import 'package:dio/dio.dart';
+import 'package:dio_smart_retry/dio_smart_retry.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:ion_identity_client/ion_identity.dart';
 import 'package:ion_identity_client/src/core/network/auth_interceptor.dart';
@@ -42,7 +43,10 @@ mixin _Dio {
 
     _dioInstance = _defaultDio(config);
 
-    final interceptors = NetworkServiceLocator().interceptors(config: config).toList();
+    final interceptors = NetworkServiceLocator().interceptors(
+      dio: _dioInstance!,
+      config: config,
+    );
     _dioInstance!.interceptors.addAll(interceptors);
 
     return _dioInstance!;
@@ -81,13 +85,15 @@ mixin _Dio {
 }
 
 mixin _Interceptors {
-  Iterable<Interceptor> interceptors({
+  List<Interceptor> interceptors({
+    required Dio dio,
     required IONIdentityConfig config,
   }) {
     final logger = config.logger;
     return <Interceptor>[
       if (config.logger != null) logger!,
       authInterceptor(config: config),
+      retryInterceptor(dio: dio),
     ];
   }
 
@@ -97,6 +103,22 @@ mixin _Interceptors {
     return AuthInterceptor(
       dio: NetworkServiceLocator()._refreshTokenDio(config),
       delegatedLoginService: AuthClientServiceLocator().delegatedLogin(config: config),
+    );
+  }
+
+  RetryInterceptor retryInterceptor({
+    required Dio dio,
+  }) {
+    return RetryInterceptor(
+      dio: dio,
+      retries: 5,
+      retryDelays: [
+        const Duration(milliseconds: 200),
+        const Duration(milliseconds: 400),
+        const Duration(milliseconds: 600),
+        const Duration(milliseconds: 800),
+        const Duration(seconds: 1),
+      ],
     );
   }
 }
