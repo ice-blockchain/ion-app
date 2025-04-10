@@ -31,7 +31,14 @@ class IntroPage extends HookConsumerWidget {
 
     // Playing the intro video as soon as the widget is built.
     // This ensures the video starts playing immediately after the page is displayed.
-    useOnInit(() => videoController?.play(), [videoController]);
+    useOnInit(
+      () {
+        if (videoController?.value.isInitialized ?? false) {
+          videoController?.play();
+        }
+      },
+      [videoController],
+    );
 
     return Scaffold(
       resizeToAvoidBottomInset: false,

@@ -55,7 +55,6 @@ class PermissionHandlerStrategy extends PermissionStrategy {
 
     final permission = switch (permissionType) {
       Permission.camera => ph.Permission.camera,
-      Permission.contacts => ph.Permission.contacts,
       Permission.notifications => ph.Permission.notification,
       Permission.photos => ph.Permission.photos,
       Permission.cloud => ph.Permission.unknown,
