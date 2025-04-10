@@ -103,6 +103,7 @@ class VideosVerticalScrollPage extends HookConsumerWidget {
             initialMediaIndex;
 
     final userPageController = usePageController(initialPage: initialPage);
+    final currentEventReference = useState<EventReference>(eventReference);
 
     return AnnotatedRegion<SystemUiOverlayStyle>(
       value: SystemUiOverlayStyle(
@@ -129,7 +130,7 @@ class VideosVerticalScrollPage extends HookConsumerWidget {
             Padding(
               padding: EdgeInsetsDirectional.only(end: rightPadding),
               child: UserInfoMenu(
-                eventReference: eventReference,
+                eventReference: currentEventReference.value,
                 iconColor: secondaryBackgroundColor,
               ),
             ),
@@ -139,7 +140,10 @@ class VideosVerticalScrollPage extends HookConsumerWidget {
           controller: userPageController,
           itemCount: flattenedVideos.length,
           scrollDirection: Axis.vertical,
-          onPageChanged: (index) => _loadMore(ref, index, flattenedVideos.length),
+          onPageChanged: (index) {
+            _loadMore(ref, index, flattenedVideos.length);
+            currentEventReference.value = flattenedVideos[index].entity.toEventReference();
+          },
           itemBuilder: (_, index) => VideoPage(
             videoInfo: VideoPostInfo(videoPost: flattenedVideos[index].entity),
             bottomOverlay: VideoActions(eventReference: eventReference),
