@@ -10,13 +10,11 @@ class ChatSearchNoResults extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Expanded(
-      child: Padding(
-        padding: EdgeInsets.symmetric(vertical: 12.0.s),
-        child: EmptyList(
-          asset: Assets.svg.walletIconWalletEmptysearch,
-          title: context.i18n.core_empty_search,
-        ),
+    return Padding(
+      padding: EdgeInsets.symmetric(vertical: 12.0.s),
+      child: EmptyList(
+        asset: Assets.svg.walletIconWalletEmptysearch,
+        title: context.i18n.core_empty_search,
       ),
     );
   }

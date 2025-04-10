@@ -19,15 +19,13 @@ class ChatSearchResults extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    return Flexible(
-      child: ListView.separated(
-        itemCount: pubkeysAndContentTuples.length,
-        padding: EdgeInsets.symmetric(vertical: 16.0.s),
-        separatorBuilder: (_, __) => const HorizontalSeparator(),
-        itemBuilder: (context, index) => ChatSearchResultListItem(
-          showLastMessage: showLastMessage,
-          pubkeyAndContent: pubkeysAndContentTuples[index],
-        ),
+    return ListView.separated(
+      itemCount: pubkeysAndContentTuples.length,
+      padding: EdgeInsets.symmetric(vertical: 16.0.s),
+      separatorBuilder: (_, __) => const HorizontalSeparator(),
+      itemBuilder: (context, index) => ChatSearchResultListItem(
+        showLastMessage: showLastMessage,
+        pubkeyAndContent: pubkeysAndContentTuples[index],
       ),
     );
   }
