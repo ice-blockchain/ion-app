@@ -14,27 +14,25 @@ part 'force_update_provider.c.g.dart';
 @Riverpod(keepAlive: true)
 class ForceUpdate extends _$ForceUpdate {
   @override
-  bool? build() {
+  Future<bool> build() {
     ref.listen<AppLifecycleState>(
       appLifecycleProvider,
-      (previous, next) {
+      (previous, next) async {
         if (next == AppLifecycleState.resumed) {
-          _checkForceUpdateRequired();
+          state = AsyncData(await _isForceUpdateRequired());
         }
       },
-      fireImmediately: true,
     );
-    return null;
+    return _isForceUpdateRequired();
   }
 
-  Future<void> _checkForceUpdateRequired() async {
+  Future<bool> _isForceUpdateRequired() async {
     final repository = await ref.read(minAppVersionRepositoryProvider.future);
     final minVersion = await repository.getMinVersion();
 
     final appInfo = await ref.read(appInfoProvider.future);
     final appVersion = appInfo.version;
 
-    final notSupported = compareVersions(appVersion, minVersion) == -1;
-    state = notSupported;
+    return compareVersions(appVersion, minVersion) == -1;
   }
 }

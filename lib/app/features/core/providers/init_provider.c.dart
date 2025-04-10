@@ -10,6 +10,7 @@ import 'package:ion/app/features/core/permissions/providers/permissions_provider
 import 'package:ion/app/features/core/providers/feature_flags_provider.c.dart';
 import 'package:ion/app/features/core/providers/template_provider.c.dart';
 import 'package:ion/app/features/core/providers/window_manager_provider.c.dart';
+import 'package:ion/app/features/force_update/providers/force_update_provider.c.dart';
 import 'package:ion/app/features/user/providers/update_user_metadata_notifier.c.dart';
 import 'package:ion/app/features/wallets/providers/coins_sync_provider.c.dart';
 import 'package:ion/app/features/wallets/providers/connected_crypto_wallets_provider.c.dart';
@@ -38,6 +39,7 @@ Future<void> initApp(Ref ref) async {
     ref.read(authProvider.future),
     ref.read(permissionsProvider.notifier).checkAllPermissions(),
     ref.read(onboardingCompleteProvider.future),
+    ref.read(forceUpdateProvider.future),
   ]);
 
   // `ref.read` lets `coinsSyncProvider` be disposed even though it's a keepAlive provider
