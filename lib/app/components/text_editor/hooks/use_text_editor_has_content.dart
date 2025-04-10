@@ -4,12 +4,12 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_quill/flutter_quill.dart';
 
 bool useTextEditorHasContent(QuillController textEditorController) {
-  final hasContent = useState<bool>(!textEditorController.document.isEmpty());
+  final hasContent = useState<bool>(_checkContentNotEmpty(textEditorController));
 
   useEffect(
     () {
       void textEditorListener() {
-        hasContent.value = !textEditorController.document.isEmpty();
+        hasContent.value = _checkContentNotEmpty(textEditorController);
       }
 
       textEditorController.addListener(textEditorListener);
@@ -21,4 +21,13 @@ bool useTextEditorHasContent(QuillController textEditorController) {
   );
 
   return hasContent.value;
+}
+
+bool _checkContentNotEmpty(QuillController controller) {
+  if (controller.document.isEmpty()) {
+    return false;
+  }
+
+  final plainText = controller.document.toPlainText().trim();
+  return plainText.isNotEmpty && plainText != '\n';
 }
