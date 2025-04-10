@@ -19,6 +19,7 @@ import 'package:ion/app/features/feed/views/pages/fullscreen_media/hooks/use_ima
 import 'package:ion/app/features/feed/views/pages/fullscreen_media/providers/image_zoom_provider.c.dart';
 import 'package:ion/app/features/ion_connect/ion_connect.dart';
 import 'package:ion/app/features/video/views/hooks/use_status_bar_color.dart';
+import 'package:ion/app/hooks/use_on_init.dart';
 import 'package:ion/app/router/components/navigation_app_bar/navigation_app_bar.dart';
 import 'package:ion/app/router/components/navigation_app_bar/navigation_back_button.dart';
 import 'package:ion/generated/assets.gen.dart';
@@ -38,23 +39,6 @@ class ChatMediaPage extends HookConsumerWidget {
     final currentPage = useState(initialIndex);
     final messageDetailsKey = useRef(GlobalKey());
     final bottomHeight = useState<double>(0);
-
-    useEffect(
-      () {
-        WidgetsBinding.instance.addPostFrameCallback((_) async {
-          await Future<void>.delayed(const Duration(milliseconds: 100));
-          final context = messageDetailsKey.value.currentContext;
-          if (context != null && context.mounted) {
-            final box = context.findRenderObject() as RenderBox?;
-            if (box != null) {
-              bottomHeight.value = box.size.height;
-            }
-          }
-        });
-        return null;
-      },
-      [messageDetailsKey.value.currentContext],
-    );
 
     final pageController = usePageController(initialPage: initialIndex);
     final zoomController = useImageZoom(ref, withReset: true);
@@ -98,6 +82,20 @@ class ChatMediaPage extends HookConsumerWidget {
     final entity = PrivateDirectMessageData.fromEventMessage(eventMessage);
 
     final medias = ref.watch(chatMediasProvider(eventMessageId: eventMessageId)).valueOrNull;
+
+    useOnInit(
+      () {
+        final context = messageDetailsKey.value.currentContext;
+        if (context != null && context.mounted) {
+          final box = context.findRenderObject() as RenderBox?;
+          if (box != null) {
+            bottomHeight.value = box.size.height;
+          }
+        }
+        return;
+      },
+      [medias],
+    );
 
     if (medias == null) {
       return const SizedBox.shrink();
