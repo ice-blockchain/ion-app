@@ -39,7 +39,6 @@ class ChatMediaPageView extends HookConsumerWidget {
         physics: isZoomed ? const NeverScrollableScrollPhysics() : const PageScrollPhysics(),
         itemCount: medias.length,
         itemBuilder: (context, index) {
-          print('index: $index');
           final media = medias[index];
           final mediaAttchment = entity.visualMedias.where((e) => e.url == media.remoteUrl).first;
 
