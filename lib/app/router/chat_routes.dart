@@ -190,3 +190,20 @@ class ShareViaMessageModalRoute extends BaseRouteData {
 
   final String eventReference;
 }
+
+@TypedGoRoute<ChatMediaRoute>(path: '/chat-media')
+class ChatMediaRoute extends BaseRouteData {
+  ChatMediaRoute({
+    required this.eventMessageId,
+    required this.initialIndex,
+  }) : super(
+          child: ChatMediaPage(
+            eventMessageId: eventMessageId,
+            initialIndex: initialIndex,
+          ),
+          type: IceRouteType.swipeDismissible,
+        );
+
+  final String eventMessageId;
+  final int initialIndex;
+}

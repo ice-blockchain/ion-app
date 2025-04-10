@@ -1,9 +1,11 @@
 // SPDX-License-Identifier: ice License 1.0
 
-part of 'components.dart';
+import 'package:flutter/material.dart';
+import 'package:ion/app/extensions/extensions.dart';
+import 'package:ion/app/utils/date.dart';
 
-class PhotoGalleryMeta extends StatelessWidget {
-  const PhotoGalleryMeta({
+class ChatMediaMetaData extends StatelessWidget {
+  const ChatMediaMetaData({
     required this.senderName,
     required this.sentAt,
     super.key,
