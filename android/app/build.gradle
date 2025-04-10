@@ -90,7 +90,7 @@ android {
         production {
             dimension "default"
             applicationIdSuffix ""
-            manifestPlaceholders = [appName: "ice"]
+            manifestPlaceholders = [appName: "Online+"]
         }
         staging {
             dimension "default"
