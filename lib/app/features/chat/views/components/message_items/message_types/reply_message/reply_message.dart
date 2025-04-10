@@ -63,6 +63,7 @@ class ReplyMessage extends HookConsumerWidget {
                   messageMedias: mediaItem.medias,
                   customHeight: mediaItem.medias.length > 1 ? 16.0.s : 30.0.s,
                   eventMessage: repliedMessageItem!.eventMessage,
+                  isReply: true,
                 ),
               ),
             ),

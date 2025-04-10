@@ -23,12 +23,14 @@ class VisualMediaContent extends HookConsumerWidget {
     required this.messageMediaTableData,
     required this.eventMessage,
     required this.height,
+    this.isReply = false,
     super.key,
   });
 
   final MessageMediaTableData messageMediaTableData;
   final EventMessage eventMessage;
   final double height;
+  final bool isReply;
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final localFile = useState<File?>(null);
@@ -97,7 +99,7 @@ class VisualMediaContent extends HookConsumerWidget {
                 height: height,
               ),
             ),
-          if (isVideo)
+          if (isVideo && !isReply)
             Align(
               child: Container(
                 padding: EdgeInsets.all(6.0.s),
@@ -110,7 +112,7 @@ class VisualMediaContent extends HookConsumerWidget {
                 ),
               ),
             ),
-          if (isVideo && mediaAttachment?.duration != null)
+          if (isVideo && mediaAttachment?.duration != null && !isReply)
             _VideoDurationLabel(duration: mediaAttachment!.duration!),
           if (messageMediaTableData.status == MessageMediaStatus.processing)
             CancelButton(
