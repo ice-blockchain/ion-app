@@ -10,6 +10,8 @@ import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/chat/e2ee/model/entities/private_direct_message_data.c.dart';
 import 'package:ion/app/features/chat/e2ee/providers/chat_medias_provider.c.dart';
 import 'package:ion/app/features/chat/model/database/chat_database.c.dart';
+import 'package:ion/app/features/chat/model/message_list_item.c.dart';
+import 'package:ion/app/features/chat/recent_chats/providers/selected_message_provider.c.dart';
 import 'package:ion/app/features/chat/views/pages/chat_media_page/components/chat_madia_page_view.dart';
 import 'package:ion/app/features/chat/views/pages/chat_media_page/components/chat_media_context_menu.dart';
 import 'package:ion/app/features/chat/views/pages/chat_media_page/components/chat_media_metadata.dart';
@@ -147,6 +149,7 @@ class ChatMediaPage extends HookConsumerWidget {
               _MediaBottomOverlay(
                 eventMessage: eventMessage,
                 messageDetailsKey: messageDetailsKey.value,
+                messageMedias: medias,
               ),
             ],
           ),
@@ -176,16 +179,18 @@ class _MediaPagerCounter extends StatelessWidget {
   }
 }
 
-class _MediaBottomOverlay extends StatelessWidget {
+class _MediaBottomOverlay extends ConsumerWidget {
   const _MediaBottomOverlay({
     required this.eventMessage,
     required this.messageDetailsKey,
+    required this.messageMedias,
   });
 
   final EventMessage eventMessage;
   final GlobalKey messageDetailsKey;
+  final List<MessageMediaTableData> messageMedias;
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     return PositionedDirectional(
       bottom: MediaQuery.paddingOf(context).bottom,
       start: 0,
@@ -213,9 +218,19 @@ class _MediaBottomOverlay extends StatelessWidget {
                   ChatMediaMetaData(
                     eventMessage: eventMessage,
                   ),
-                  Assets.svg.iconChatReplymessage.icon(
-                    size: 20.0.s,
-                    color: context.theme.appColors.onPrimaryAccent,
+                  GestureDetector(
+                    onTap: () {
+                      ref.read(selectedMessageProvider.notifier).selectedMessage = MediaItem(
+                        medias: messageMedias,
+                        eventMessage: eventMessage,
+                        contentDescription: context.i18n.common_media,
+                      );
+                      context.pop();
+                    },
+                    child: Assets.svg.iconChatReplymessage.icon(
+                      size: 20.0.s,
+                      color: context.theme.appColors.onPrimaryAccent,
+                    ),
                   ),
                 ],
               ),
