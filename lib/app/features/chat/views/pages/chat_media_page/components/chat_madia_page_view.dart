@@ -107,8 +107,8 @@ class _ImagePreview extends HookConsumerWidget {
           onInteractionEnd: zoomController.onInteractionEnd,
           child: Container(
             padding: EdgeInsetsDirectional.only(
-              top: MediaQuery.of(context).padding.top,
-              bottom: bottomHeight + MediaQuery.of(context).padding.bottom,
+              top: MediaQuery.paddingOf(context).top,
+              bottom: bottomHeight + MediaQuery.paddingOf(context).bottom,
             ),
             child: Image.file(
               File(filePath),

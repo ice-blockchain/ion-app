@@ -187,7 +187,7 @@ class _MediaBottomOverlay extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return PositionedDirectional(
-      bottom: MediaQuery.of(context).padding.bottom,
+      bottom: MediaQuery.paddingOf(context).bottom,
       start: 0,
       end: 0,
       child: ScreenSideOffset.small(
