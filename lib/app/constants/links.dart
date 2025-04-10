@@ -8,4 +8,6 @@ class Links {
   static String privacy = 'https://identity.io/privacy';
 
   static String identity = 'https://identity.io';
+
+  static String appUpdate = 'https://online.io/app-update';
 }
