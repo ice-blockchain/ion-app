@@ -106,7 +106,10 @@ class MinAppVersionRepository {
     return _prefs.getString(_minSupportedAppVersionKey);
   }
 
-  Future<bool> _saveToCache(String version) {
-    return _prefs.setString(_minSupportedAppVersionKey, version);
+  Future<void> _saveToCache(String version) async {
+    await Future.wait([
+      _prefs.setString(_lastSyncDateKey, DateTime.now().toIso8601String()),
+      _prefs.setString(_minSupportedAppVersionKey, version),
+    ]);
   }
 }
