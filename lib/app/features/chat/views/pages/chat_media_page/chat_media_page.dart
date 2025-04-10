@@ -44,12 +44,10 @@ class ChatMediaPage extends HookConsumerWidget {
         WidgetsBinding.instance.addPostFrameCallback((_) async {
           await Future<void>.delayed(const Duration(milliseconds: 100));
           final context = messageDetailsKey.value.currentContext;
-          if (context != null) {
-            if (context.mounted) {
-              final box = context.findRenderObject() as RenderBox?;
-              if (box != null) {
-                bottomHeight.value = box.size.height;
-              }
+          if (context != null && context.mounted) {
+            final box = context.findRenderObject() as RenderBox?;
+            if (box != null) {
+              bottomHeight.value = box.size.height;
             }
           }
         });
