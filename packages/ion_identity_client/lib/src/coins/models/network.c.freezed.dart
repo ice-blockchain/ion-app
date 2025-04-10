@@ -25,6 +25,7 @@ mixin _$Network {
   String get id => throw _privateConstructorUsedError;
   String get image => throw _privateConstructorUsedError;
   bool get isTestnet => throw _privateConstructorUsedError;
+  int get tier => throw _privateConstructorUsedError;
 
   /// Serializes this Network to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
@@ -45,7 +46,8 @@ abstract class $NetworkCopyWith<$Res> {
       String explorerUrl,
       String id,
       String image,
-      bool isTestnet});
+      bool isTestnet,
+      int tier});
 }
 
 /// @nodoc
@@ -68,6 +70,7 @@ class _$NetworkCopyWithImpl<$Res, $Val extends Network>
     Object? id = null,
     Object? image = null,
     Object? isTestnet = null,
+    Object? tier = null,
   }) {
     return _then(_value.copyWith(
       displayName: null == displayName
@@ -90,6 +93,10 @@ class _$NetworkCopyWithImpl<$Res, $Val extends Network>
           ? _value.isTestnet
           : isTestnet // ignore: cast_nullable_to_non_nullable
               as bool,
+      tier: null == tier
+          ? _value.tier
+          : tier // ignore: cast_nullable_to_non_nullable
+              as int,
     ) as $Val);
   }
 }
@@ -106,7 +113,8 @@ abstract class _$$NetworkImplCopyWith<$Res> implements $NetworkCopyWith<$Res> {
       String explorerUrl,
       String id,
       String image,
-      bool isTestnet});
+      bool isTestnet,
+      int tier});
 }
 
 /// @nodoc
@@ -127,6 +135,7 @@ class __$$NetworkImplCopyWithImpl<$Res>
     Object? id = null,
     Object? image = null,
     Object? isTestnet = null,
+    Object? tier = null,
   }) {
     return _then(_$NetworkImpl(
       displayName: null == displayName
@@ -149,6 +158,10 @@ class __$$NetworkImplCopyWithImpl<$Res>
           ? _value.isTestnet
           : isTestnet // ignore: cast_nullable_to_non_nullable
               as bool,
+      tier: null == tier
+          ? _value.tier
+          : tier // ignore: cast_nullable_to_non_nullable
+              as int,
     ));
   }
 }
@@ -161,7 +174,8 @@ class _$NetworkImpl implements _Network {
       required this.explorerUrl,
       required this.id,
       required this.image,
-      required this.isTestnet});
+      required this.isTestnet,
+      this.tier = 1});
 
   factory _$NetworkImpl.fromJson(Map<String, dynamic> json) =>
       _$$NetworkImplFromJson(json);
@@ -176,10 +190,13 @@ class _$NetworkImpl implements _Network {
   final String image;
   @override
   final bool isTestnet;
+  @override
+  @JsonKey()
+  final int tier;
 
   @override
   String toString() {
-    return 'Network(displayName: $displayName, explorerUrl: $explorerUrl, id: $id, image: $image, isTestnet: $isTestnet)';
+    return 'Network(displayName: $displayName, explorerUrl: $explorerUrl, id: $id, image: $image, isTestnet: $isTestnet, tier: $tier)';
   }
 
   @override
@@ -194,13 +211,14 @@ class _$NetworkImpl implements _Network {
             (identical(other.id, id) || other.id == id) &&
             (identical(other.image, image) || other.image == image) &&
             (identical(other.isTestnet, isTestnet) ||
-                other.isTestnet == isTestnet));
+                other.isTestnet == isTestnet) &&
+            (identical(other.tier, tier) || other.tier == tier));
   }
 
   @JsonKey(includeFromJson: false, includeToJson: false)
   @override
-  int get hashCode =>
-      Object.hash(runtimeType, displayName, explorerUrl, id, image, isTestnet);
+  int get hashCode => Object.hash(
+      runtimeType, displayName, explorerUrl, id, image, isTestnet, tier);
 
   /// Create a copy of Network
   /// with the given fields replaced by the non-null parameter values.
@@ -224,7 +242,8 @@ abstract class _Network implements Network {
       required final String explorerUrl,
       required final String id,
       required final String image,
-      required final bool isTestnet}) = _$NetworkImpl;
+      required final bool isTestnet,
+      final int tier}) = _$NetworkImpl;
 
   factory _Network.fromJson(Map<String, dynamic> json) = _$NetworkImpl.fromJson;
 
@@ -238,6 +257,8 @@ abstract class _Network implements Network {
   String get image;
   @override
   bool get isTestnet;
+  @override
+  int get tier;
 
   /// Create a copy of Network
   /// with the given fields replaced by the non-null parameter values.

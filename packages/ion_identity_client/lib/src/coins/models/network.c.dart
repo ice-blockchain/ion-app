@@ -13,6 +13,7 @@ class Network with _$Network {
     required String id,
     required String image,
     required bool isTestnet,
+    @Default(1) int tier,
   }) = _Network;
 
   factory Network.fromJson(Map<String, dynamic> json) => _$NetworkFromJson(json);

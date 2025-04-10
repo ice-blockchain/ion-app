@@ -13,6 +13,7 @@ _$NetworkImpl _$$NetworkImplFromJson(Map<String, dynamic> json) =>
       id: json['id'] as String,
       image: json['image'] as String,
       isTestnet: json['isTestnet'] as bool,
+      tier: (json['tier'] as num?)?.toInt() ?? 1,
     );
 
 Map<String, dynamic> _$$NetworkImplToJson(_$NetworkImpl instance) =>
@@ -22,4 +23,5 @@ Map<String, dynamic> _$$NetworkImplToJson(_$NetworkImpl instance) =>
       'id': instance.id,
       'image': instance.image,
       'isTestnet': instance.isTestnet,
+      'tier': instance.tier,
     };
