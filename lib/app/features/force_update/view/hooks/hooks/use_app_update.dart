@@ -13,11 +13,11 @@ import 'package:ion/app/router/utils/show_simple_bottom_sheet.dart';
 
 void useAppUpdate(WidgetRef ref) {
   final isUpdateModalVisible = useState(false);
-  final needForceUpdate = ref.watch(forceUpdateProvider);
+  final forceUpdateRequired = ref.watch(forceUpdateProvider);
 
   useOnInit(
     () {
-      if (needForceUpdate.falseOrValue && !isUpdateModalVisible.value) {
+      if (forceUpdateRequired.falseOrValue && !isUpdateModalVisible.value) {
         WidgetsBinding.instance.addPostFrameCallback(
           (_) => isUpdateModalVisible.value = true,
         );
@@ -31,6 +31,6 @@ void useAppUpdate(WidgetRef ref) {
         ).then((_) => isUpdateModalVisible.value = false);
       }
     },
-    [needForceUpdate, isUpdateModalVisible.value],
+    [forceUpdateRequired, isUpdateModalVisible.value],
   );
 }
