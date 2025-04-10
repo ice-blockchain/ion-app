@@ -7,6 +7,7 @@ import 'package:ion/app/extensions/build_context.dart';
 import 'package:ion/app/extensions/num.dart';
 import 'package:ion/app/extensions/theme_data.dart';
 import 'package:ion/app/features/user/providers/user_metadata_provider.c.dart';
+import 'package:ion/app/router/app_routes.c.dart';
 
 class TrendingVideoAuthor extends ConsumerWidget {
   const TrendingVideoAuthor({
@@ -35,7 +36,9 @@ class TrendingVideoAuthor extends ConsumerWidget {
     return Padding(
       padding: EdgeInsets.all(8.0.s),
       child: TextButton(
-        onPressed: () {},
+        onPressed: () {
+          ProfileRoute(pubkey: pubkey).push<void>(context);
+        },
         child: Padding(
           padding: EdgeInsets.all(4.0.s),
           child: Row(
