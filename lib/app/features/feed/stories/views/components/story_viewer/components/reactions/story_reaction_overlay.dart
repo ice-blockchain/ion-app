@@ -6,6 +6,7 @@ import 'package:flutter_keyboard_visibility/flutter_keyboard_visibility.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/feed/stories/providers/emoji_reaction_provider.c.dart';
+import 'package:ion/app/features/feed/stories/providers/story_reply_provider.c.dart';
 
 class StoryReactionOverlay extends HookConsumerWidget {
   const StoryReactionOverlay({
@@ -29,9 +30,12 @@ class StoryReactionOverlay extends HookConsumerWidget {
     final emojiController = ref.read(emojiReactionsControllerProvider.notifier);
 
     final handleEmojiSelected = useCallback(
-      (String emoji) {
+      (String emoji) async {
         textController.clear();
+
         FocusScope.of(context).unfocus();
+
+        await ref.read(storyReplyProvider.notifier).sendReaction();
 
         WidgetsBinding.instance.addPostFrameCallback((_) {
           emojiController.showReaction(emoji);
