@@ -101,12 +101,12 @@ class StoryContent extends HookConsumerWidget {
               .slideY(begin: -0.1, end: 0, duration: 300.ms),
           Stack(
             children: [
-              //  if (canReply && !isCurrentUserStory)
-              StoryInputField(
-                controller: textController,
-                bottomPadding: bottomPadding,
-                onSubmitted: onSubmitted,
-              ),
+              if (canReply && !isCurrentUserStory)
+                StoryInputField(
+                  controller: textController,
+                  bottomPadding: bottomPadding,
+                  onSubmitted: onSubmitted,
+                ),
               StoryViewerActionButtons(
                 post: post,
                 bottomPadding: bottomPadding,
