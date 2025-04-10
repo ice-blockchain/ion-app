@@ -1,16 +1,18 @@
 // SPDX-License-Identifier: ice License 1.0
 
 import 'package:flutter/material.dart';
+import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/auth/providers/auth_provider.c.dart';
+import 'package:ion/app/features/chat/model/database/chat_database.c.dart';
 import 'package:ion/app/features/chat/model/message_list_item.c.dart';
 import 'package:ion/app/features/chat/views/components/message_items/message_item_wrapper/message_item_wrapper.dart';
 import 'package:ion/app/features/chat/views/components/message_items/message_metadata/message_metadata.dart';
 import 'package:ion/app/features/chat/views/components/message_items/message_reactions/message_reactions.dart';
 import 'package:ion/app/features/ion_connect/ion_connect.dart';
 
-class TextMessage extends ConsumerWidget {
+class TextMessage extends HookConsumerWidget {
   const TextMessage({
     required this.eventMessage,
     super.key,
@@ -38,6 +40,13 @@ class TextMessage extends ConsumerWidget {
     final oneLineMetrics = oneLineTextPainter.computeLineMetrics();
     final multiline = oneLineMetrics.length > 1;
 
+    final reactions = useStream(
+      useMemoized(
+        () => ref.watch(conversationMessageReactionDaoProvider).messageReactions(eventMessage),
+      ),
+    );
+    final hasReactions = reactions.data?.isNotEmpty ?? false;
+
     return MessageItemWrapper(
       isMe: isMe,
       messageItem: TextItem(
@@ -49,16 +58,27 @@ class TextMessage extends ConsumerWidget {
         horizontal: 12.0.s,
         vertical: 12.0.s,
       ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          _TextMessageContent(
-            multiline: multiline,
-            textStyle: textStyle,
-            eventMessage: eventMessage,
-          ),
-          MessageReactions(isMe: isMe, eventMessage: eventMessage),
-        ],
+      child: IntrinsicWidth(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            _TextMessageContent(
+              multiline: multiline,
+              textStyle: textStyle,
+              eventMessage: eventMessage,
+              hasReactions: hasReactions,
+            ),
+            if (hasReactions)
+              Row(
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.end,
+                children: [
+                  Expanded(child: MessageReactions(isMe: isMe, eventMessage: eventMessage)),
+                  MessageMetaData(eventMessage: eventMessage),
+                ],
+              ),
+          ],
+        ),
       ),
     );
   }
@@ -69,12 +89,13 @@ class _TextMessageContent extends StatelessWidget {
     required this.textStyle,
     required this.multiline,
     required this.eventMessage,
+    required this.hasReactions,
   });
 
   final bool multiline;
   final TextStyle textStyle;
   final EventMessage eventMessage;
-
+  final bool hasReactions;
   @override
   Widget build(BuildContext context) {
     if (!multiline) {
@@ -83,6 +104,7 @@ class _TextMessageContent extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.end,
         children: [
           Text(eventMessage.content, style: textStyle),
+          if (!hasReactions) MessageMetaData(eventMessage: eventMessage),
         ],
       );
     } else {
@@ -99,10 +121,12 @@ class _TextMessageContent extends StatelessWidget {
         alignment: AlignmentDirectional.bottomEnd,
         children: [
           Text(
-            '${eventMessage.content}${wouldOverlap ? '\n' : ''}',
+            hasReactions
+                ? eventMessage.content
+                : '${eventMessage.content}${wouldOverlap ? '\n' : ''}',
             style: textStyle,
           ),
-          MessageMetaData(eventMessage: eventMessage),
+          if (!hasReactions) MessageMetaData(eventMessage: eventMessage),
         ],
       );
     }

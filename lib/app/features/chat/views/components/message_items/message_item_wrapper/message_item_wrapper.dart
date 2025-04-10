@@ -131,16 +131,7 @@ class MessageItemWrapper extends HookConsumerWidget {
                       ),
                     ),
                     child: repliedMessageItem == null
-                        ? messageItem is! TextItem ||
-                                (messageItem is TextItem && (messageItem as TextItem).multiline)
-                            ? child
-                            : Row(
-                                mainAxisSize: MainAxisSize.min,
-                                children: [
-                                  child,
-                                  MessageMetaData(eventMessage: messageItem.eventMessage),
-                                ],
-                              )
+                        ? child
                         : Column(
                             children: [
                               ReplyMessage(messageItem, repliedMessageItem),
