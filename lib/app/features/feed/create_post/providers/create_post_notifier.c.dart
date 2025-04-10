@@ -73,45 +73,50 @@ class CreatePostNotifier extends _$CreatePostNotifier {
     state = const AsyncValue.loading();
 
     state = await AsyncValue.guard(() async {
-      final postContent = content ?? buildEmptyDelta();
-      final parentEntity = parentEvent != null ? await _getParentEntity(parentEvent) : null;
-      final (:files, :media) = await _uploadMediaFiles(mediaFiles: mediaFiles);
-      final editingEndedAt = EntityEditingEndedAt.build(
-        ref.read(envProvider.notifier).get<int>(EnvVariable.EDIT_POST_ALLOWED_MINUTES),
-      );
+      try {
+        final postContent = content ?? buildEmptyDelta();
+        final parentEntity = parentEvent != null ? await _getParentEntity(parentEvent) : null;
+        final (:files, :media) = await _uploadMediaFiles(mediaFiles: mediaFiles);
+        final editingEndedAt = EntityEditingEndedAt.build(
+          ref.read(envProvider.notifier).get<int>(EnvVariable.EDIT_POST_ALLOWED_MINUTES),
+        );
 
-      final postData = ModifiablePostData(
-        content: await _buildContentWithMediaLinksAndMentions(
-          content: postContent,
-          media: media.values.toList(),
-          mentions: mentions,
-        ),
-        media: media,
-        replaceableEventId: ReplaceableEventIdentifier.generate(),
-        publishedAt: _buildEntityPublishedAt(),
-        editingEndedAt: editingEndedAt,
-        relatedHashtags: extractTags(postContent).map((tag) => RelatedHashtag(value: tag)).toList(),
-        quotedEvent: quotedEvent != null ? _buildQuotedEvent(quotedEvent) : null,
-        relatedEvents: parentEntity != null ? _buildRelatedEvents(parentEntity) : null,
-        relatedPubkeys: _buildRelatedPubkeys(parentEntity, mentions.values),
-        settings: EntityDataWithSettings.build(whoCanReply: whoCanReply),
-        expiration: _buildExpiration(),
-        communityId: communityId,
-        richText: await _buildRichTextContentWithMediaLinksAndMentions(
-          content: postContent,
-          media: media.values.toList(),
-          mentions: mentions,
-        ),
-      );
+        final postData = ModifiablePostData(
+          content: await _buildContentWithMediaLinksAndMentions(
+            content: postContent,
+            media: media.values.toList(),
+            mentions: mentions,
+          ),
+          media: media,
+          replaceableEventId: ReplaceableEventIdentifier.generate(),
+          publishedAt: _buildEntityPublishedAt(),
+          editingEndedAt: editingEndedAt,
+          relatedHashtags:
+              extractTags(postContent).map((tag) => RelatedHashtag(value: tag)).toList(),
+          quotedEvent: quotedEvent != null ? _buildQuotedEvent(quotedEvent) : null,
+          relatedEvents: parentEntity != null ? _buildRelatedEvents(parentEntity) : null,
+          relatedPubkeys: _buildRelatedPubkeys(parentEntity, mentions.values),
+          settings: EntityDataWithSettings.build(whoCanReply: whoCanReply),
+          expiration: _buildExpiration(),
+          communityId: communityId,
+          richText: await _buildRichTextContentWithMediaLinksAndMentions(
+            content: postContent,
+            media: media.values.toList(),
+            mentions: mentions,
+          ),
+        );
 
-      final posts = await _sendPostEntities([...files, postData]);
-      posts?.whereType<ModifiablePostEntity>().forEach(_createPostNotifierStreamController.add);
+        final posts = await _sendPostEntities([...files, postData]);
+        posts?.whereType<ModifiablePostEntity>().forEach(_createPostNotifierStreamController.add);
 
-      if (quotedEvent != null) {
-        ref.read(repostsCountProvider(quotedEvent).notifier).addOne();
-      }
-      if (parentEvent != null) {
-        ref.read(repliesCountProvider(parentEvent).notifier).addOne();
+        if (quotedEvent != null) {
+          ref.read(repostsCountProvider(quotedEvent).notifier).addOne();
+        }
+        if (parentEvent != null) {
+          ref.read(repliesCountProvider(parentEvent).notifier).addOne();
+        }
+      } catch (e) {
+        print(e);
       }
     });
   }

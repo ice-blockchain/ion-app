@@ -7,6 +7,7 @@ import 'package:ion/app/components/text_editor/components/custom_blocks/text_edi
 import 'package:ion/app/components/text_editor/components/custom_blocks/text_editor_poll_block/text_editor_poll_block.dart';
 import 'package:ion/app/components/text_editor/components/custom_blocks/text_editor_separator_block/text_editor_separator_block.dart';
 import 'package:ion/app/components/text_editor/components/custom_blocks/text_editor_single_image_block/text_editor_single_image_block.dart';
+import 'package:ion/app/components/text_editor/components/custom_blocks/unknown/text_editor_unknown_embed_builder.dart';
 import 'package:ion/app/components/text_editor/custom_recognizer_builder.dart';
 import 'package:ion/app/components/text_editor/utils/links_handler.dart';
 import 'package:ion/app/components/text_editor/utils/mentions_hashtags_handler.dart';
@@ -98,6 +99,7 @@ class TextEditorState extends ConsumerState<TextEditor> {
           TextEditorSeparatorBuilder(),
           TextEditorCodeBuilder(),
         ],
+        unknownEmbedBuilder: TextEditorUnknownEmbedBuilder(),
         autoFocus: widget.autoFocus,
         placeholder: widget.placeholder,
         customStyles: textEditorStyles(context),

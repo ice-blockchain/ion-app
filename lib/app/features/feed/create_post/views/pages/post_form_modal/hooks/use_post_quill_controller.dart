@@ -8,9 +8,9 @@ import 'package:flutter_quill/flutter_quill.dart';
 import 'package:flutter_quill/quill_delta.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/features/feed/data/models/entities/modifiable_post_data.c.dart';
-import 'package:ion/app/features/feed/providers/parsed_media_content_provider.c.dart';
 import 'package:ion/app/features/ion_connect/model/event_reference.c.dart';
 import 'package:ion/app/features/ion_connect/providers/ion_connect_entity_provider.c.dart';
+import 'package:ion/app/features/ion_connect/views/hooks/use_parsed_media_content.dart';
 
 QuillController? usePostQuillController(
   WidgetRef ref, {
@@ -20,17 +20,6 @@ QuillController? usePostQuillController(
   final modifiedEntity = modifiedEvent != null
       ? ref.watch(ionConnectEntityProvider(eventReference: modifiedEvent)).valueOrNull
       : null;
-
-  final contentMediaAndMentionedUsers =
-      (modifiedEntity != null && modifiedEntity is ModifiablePostEntity)
-          ? ref
-              .watch(
-                parsedMediaContentProvider(
-                  data: modifiedEntity.data,
-                ),
-              )
-              .valueOrNull
-          : null;
 
   return useMemoized(
     () {
@@ -48,8 +37,8 @@ QuillController? usePostQuillController(
         );
       }
       if (modifiedEntity != null) {
-        if (modifiedEntity is ModifiablePostEntity && contentMediaAndMentionedUsers != null) {
-          final (:content, :media, :mentionedUsers) = contentMediaAndMentionedUsers;
+        if (modifiedEntity is ModifiablePostEntity) {
+          final (:content, :media) = parseMediaContent(data: modifiedEntity.data);
           final document = Document.fromDelta(content);
           return QuillController(
             document: document,
@@ -61,6 +50,6 @@ QuillController? usePostQuillController(
       }
       return QuillController.basic(config: defaultConfig);
     },
-    [content, modifiedEntity, contentMediaAndMentionedUsers],
+    [content, modifiedEntity],
   );
 }

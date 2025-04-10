@@ -3,15 +3,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_quill/flutter_quill.dart';
-import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/components/text_editor/text_editor_preview.dart';
 import 'package:ion/app/components/text_editor/utils/text_editor_styles.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/feed/data/models/entities/modifiable_post_data.c.dart';
-import 'package:ion/app/features/feed/providers/parsed_media_content_provider.c.dart';
-import 'package:ion/app/features/feed/views/components/post/post_skeleton.dart';
+import 'package:ion/app/features/ion_connect/views/hooks/use_parsed_media_content.dart';
 
-class VideoTextPost extends HookConsumerWidget {
+class VideoTextPost extends HookWidget {
   const VideoTextPost({
     required this.entity,
     super.key,
@@ -20,25 +18,12 @@ class VideoTextPost extends HookConsumerWidget {
   final ModifiablePostEntity entity;
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  Widget build(BuildContext context) {
+    final (:content, :media) = useParsedMediaContent(data: entity.data);
     final isTextExpanded = useState(false);
     final style = context.theme.appTextThemes.body2.copyWith(
       color: context.theme.appColors.secondaryBackground,
     );
-
-    final contentMediaAndMentionedUsers = ref
-        .watch(
-          parsedMediaContentProvider(
-            data: entity.data,
-          ),
-        )
-        .valueOrNull;
-
-    if (contentMediaAndMentionedUsers == null) {
-      return const PostSkeleton();
-    }
-
-    final (:content, :media, :mentionedUsers) = contentMediaAndMentionedUsers;
 
     final isOneLine = useMemoized(
       () {
