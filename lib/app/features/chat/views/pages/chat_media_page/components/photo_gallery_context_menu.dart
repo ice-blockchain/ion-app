@@ -1,9 +1,15 @@
 // SPDX-License-Identifier: ice License 1.0
 
-part of 'components.dart';
+import 'package:flutter/material.dart';
+import 'package:ion/app/components/overlay_menu/components/overlay_menu_item.dart';
+import 'package:ion/app/components/overlay_menu/components/overlay_menu_item_separator.dart';
+import 'package:ion/app/components/overlay_menu/overlay_menu.dart';
+import 'package:ion/app/components/overlay_menu/overlay_menu_container.dart';
+import 'package:ion/app/extensions/extensions.dart';
+import 'package:ion/generated/assets.gen.dart';
 
-class PhotoGalleryContextMenu extends StatelessWidget {
-  const PhotoGalleryContextMenu({super.key});
+class ChatMediaContextMenu extends StatelessWidget {
+  const ChatMediaContextMenu({super.key});
 
   static double get iconSize => 20.0.s;
 

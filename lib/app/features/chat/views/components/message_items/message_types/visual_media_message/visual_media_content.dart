@@ -67,7 +67,7 @@ class VisualMediaContent extends HookConsumerWidget {
             await ref.read(chatMediasProvider(eventMessageId: eventMessage.id).future);
 
         if (context.mounted) {
-          await PhotoGalleryRoute(
+          await ChatMediaRoute(
             eventMessageId: eventMessage.id,
             initialIndex: messageMedias.indexOf(messageMediaTableData),
           ).push<void>(context);

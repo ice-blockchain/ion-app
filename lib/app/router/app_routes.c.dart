@@ -27,6 +27,7 @@ import 'package:ion/app/features/chat/views/pages/chat_learn_more_modal/chat_lea
 import 'package:ion/app/features/chat/views/pages/chat_main_modal/chat_main_modal_page.dart';
 import 'package:ion/app/features/chat/views/pages/chat_main_page/arhived_chats_main_page.dart';
 import 'package:ion/app/features/chat/views/pages/chat_main_page/chat_main_page.dart';
+import 'package:ion/app/features/chat/views/pages/chat_media_page/photo_gallery_page.dart';
 import 'package:ion/app/features/chat/views/pages/conversation_page/conversation_page.dart';
 import 'package:ion/app/features/chat/views/pages/new_chat_modal/new_chat_modal.dart';
 import 'package:ion/app/features/chat/views/pages/new_group_modal/pages/add_group_participants_modal.dart';
@@ -37,7 +38,6 @@ import 'package:ion/app/features/core/views/pages/app_test_page/app_test_page.da
 import 'package:ion/app/features/core/views/pages/error_page.dart';
 import 'package:ion/app/features/core/views/pages/search_emoji_modal/search_emoji_modal.dart';
 import 'package:ion/app/features/core/views/pages/splash_page.dart';
-import 'package:ion/app/features/core/views/photo_gallery_page/photo_gallery_page.dart';
 import 'package:ion/app/features/dapps/views/pages/dapp_details/dapp_details_modal.dart';
 import 'package:ion/app/features/dapps/views/pages/dapps.dart';
 import 'package:ion/app/features/dapps/views/pages/dapps_list/dapps_list.dart';
@@ -327,21 +327,4 @@ class WalletMainModalRoute extends BaseRouteData {
 @TypedGoRoute<CompressTestRoute>(path: '/compress-test')
 class CompressTestRoute extends BaseRouteData {
   CompressTestRoute() : super(child: const CompressTestPage());
-}
-
-@TypedGoRoute<PhotoGalleryRoute>(path: '/photo-gallery')
-class PhotoGalleryRoute extends BaseRouteData {
-  PhotoGalleryRoute({
-    required this.eventMessageId,
-    required this.initialIndex,
-  }) : super(
-          child: PhotoGalleryPage(
-            eventMessageId: eventMessageId,
-            initialIndex: initialIndex,
-          ),
-          type: IceRouteType.swipeDismissible,
-        );
-
-  final String eventMessageId;
-  final int initialIndex;
 }

@@ -26,8 +26,8 @@ import 'package:ion/app/router/components/navigation_app_bar/navigation_back_but
 import 'package:ion/app/services/media_service/media_encryption_service.c.dart';
 import 'package:ion/generated/assets.gen.dart';
 
-class PhotoGalleryPage extends HookConsumerWidget {
-  const PhotoGalleryPage({
+class ChatMediaPage extends HookConsumerWidget {
+  const ChatMediaPage({
     required this.eventMessageId,
     required this.initialIndex,
     super.key,
