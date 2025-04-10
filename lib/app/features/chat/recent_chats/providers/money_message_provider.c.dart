@@ -7,7 +7,7 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'money_message_provider.c.g.dart';
 
-@Riverpod(keepAlive: true)
+@riverpod
 Future<FundsRequestEntity?> fundsRequestForMessage(
   Ref ref,
   String eventMessageId,

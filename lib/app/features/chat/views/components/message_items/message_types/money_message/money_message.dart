@@ -34,12 +34,10 @@ class MoneyMessage extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final currentUserPubkey = ref.watch(currentPubkeySelectorProvider);
-
     final eventReference =
         EventReference.fromEncoded(eventMessage.content) as ImmutableEventReference;
 
-    final isMe = currentUserPubkey == eventReference.pubkey;
+    final isMe = ref.watch(isCurrentUserSelectorProvider(eventReference.pubkey));
 
     final fundsRequestAsync = ref.watch(fundsRequestForMessageProvider(eventReference.eventId));
     final fundsRequest = fundsRequestAsync.value;
@@ -50,6 +48,7 @@ class MoneyMessage extends HookConsumerWidget {
     final assetId = fundsRequest?.data.content.assetId?.emptyOrValue;
     final coin = ref.watch(coinByIdProvider(assetId.emptyOrValue)).value;
 
+    // TODO: currently hardcoded, will be dynamic when we implement paid requests.
     const type = MoneyMessageType.requested;
 
     final amount = fundsRequest?.data.content.amount?.let(double.parse) ?? 0.0;
@@ -127,7 +126,6 @@ class _MoneyMessageContent extends HookConsumerWidget {
     };
 
     return MessageItemWrapper(
-      //TODO: Add corresponding message item
       messageItem: ChatMessageInfoItem.money(
         eventMessage: eventMessage,
         contentDescription: title,
@@ -175,7 +173,9 @@ class _MoneyMessageContent extends HookConsumerWidget {
                   buttonLabel,
                   style: context.theme.appTextThemes.caption2.copyWith(color: buttonTextColor),
                 ),
-                onPressed: () {},
+                onPressed: () {
+                  // TODO: implement cancel request
+                },
               ),
               Text(
                 toTimeDisplayValue(eventMessage.createdAt.millisecondsSinceEpoch),
