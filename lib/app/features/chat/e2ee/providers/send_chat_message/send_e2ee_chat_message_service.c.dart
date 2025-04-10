@@ -138,7 +138,7 @@ class SendE2eeChatMessageService {
               content: content,
               signer: eventSigner,
               tags: conversationTagsWithMediaTags,
-              previousId: eventMessage.id,
+              previousId: isCurrentUser ? eventMessage.id : null,
             );
 
             await _sendKind14Message(

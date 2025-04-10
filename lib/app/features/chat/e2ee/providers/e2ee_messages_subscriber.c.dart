@@ -136,10 +136,7 @@ class E2eeMessagesSubscriber extends _$E2eeMessagesSubscriber {
 
             if (currentStatus == null ||
                 currentStatus.index < MessageDeliveryStatus.received.index) {
-              await sendE2eeMessageService.sendMessageStatus(
-                rumor,
-                MessageDeliveryStatus.received,
-              );
+              await sendE2eeMessageService.sendMessageStatus(rumor, MessageDeliveryStatus.received);
             }
 
             // Only for kind 7
