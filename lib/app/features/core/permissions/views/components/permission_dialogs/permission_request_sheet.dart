@@ -67,7 +67,7 @@ class PermissionRequestSheet extends ConsumerWidget {
               Flexible(
                 child: Button(
                   mainAxisSize: MainAxisSize.max,
-                  label: Text(context.i18n.button_allow),
+                  label: Text(context.i18n.button_continue),
                   onPressed: () => Navigator.of(context).pop(true),
                 ),
               ),

@@ -5,9 +5,6 @@ part of 'app_routes.c.dart';
 class WalletRoutes {
   static const routes = <TypedRoute<RouteData>>[
     TypedShellRoute<ModalShellRouteData>(
-      routes: [TypedGoRoute<AllowAccessRoute>(path: 'allow-access')],
-    ),
-    TypedShellRoute<ModalShellRouteData>(
       routes: [TypedGoRoute<ManageNftsRoute>(path: 'manage-nfts')],
     ),
     TypedShellRoute<ModalShellRouteData>(
@@ -101,14 +98,6 @@ class WalletRoutes {
       ],
     ),
   ];
-}
-
-class AllowAccessRoute extends BaseRouteData {
-  AllowAccessRoute()
-      : super(
-          child: const RequestContactAccessModal(),
-          type: IceRouteType.bottomSheet,
-        );
 }
 
 class ManageNftsRoute extends BaseRouteData {
