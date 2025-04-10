@@ -9,6 +9,8 @@ import 'package:ion/app/features/feed/data/models/entities/modifiable_post_data.
 import 'package:ion/app/features/feed/views/pages/fullscreen_media/components/fullscreen_image.dart';
 import 'package:ion/app/features/ion_connect/model/event_reference.c.dart';
 import 'package:ion/app/features/ion_connect/model/media_attachment.dart';
+import 'package:ion/app/features/video/views/components/video_actions.dart';
+import 'package:ion/app/features/video/views/components/video_post_info.dart';
 import 'package:ion/app/features/video/views/hooks/use_wake_lock.dart';
 import 'package:ion/app/features/video/views/pages/video_page.dart';
 
@@ -35,7 +37,8 @@ class SingleMediaView extends HookWidget {
 
     if (media.mediaType == MediaType.video) {
       return VideoPage(
-        video: post,
+        videoInfo: VideoPostInfo(videoPost: post),
+        bottomOverlay: VideoActions(eventReference: eventReference),
         framedEventReference: framedEventReference,
         looping: true,
       );

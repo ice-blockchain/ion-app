@@ -8,11 +8,13 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/chat/e2ee/model/entities/private_direct_message_data.c.dart';
+import 'package:ion/app/features/chat/e2ee/providers/chat_medias_provider.c.dart';
 import 'package:ion/app/features/chat/e2ee/providers/chat_message_load_media_provider.c.dart';
 import 'package:ion/app/features/chat/e2ee/providers/send_chat_message/send_chat_media_provider.c.dart';
 import 'package:ion/app/features/chat/model/database/chat_database.c.dart';
 import 'package:ion/app/features/core/model/media_type.dart';
 import 'package:ion/app/features/ion_connect/ion_connect.dart';
+import 'package:ion/app/router/app_routes.c.dart';
 import 'package:ion/app/utils/date.dart';
 import 'package:ion/generated/assets.gen.dart';
 
@@ -21,12 +23,14 @@ class VisualMediaContent extends HookConsumerWidget {
     required this.messageMediaTableData,
     required this.eventMessage,
     required this.height,
+    this.isReply = false,
     super.key,
   });
 
   final MessageMediaTableData messageMediaTableData;
   final EventMessage eventMessage;
   final double height;
+  final bool isReply;
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final localFile = useState<File?>(null);
@@ -59,50 +63,63 @@ class VisualMediaContent extends HookConsumerWidget {
 
     final isVideo = MediaType.fromMimeType(mediaAttachment?.mimeType ?? '') == MediaType.video;
 
-    return Stack(
-      key: Key(messageMediaTableData.id.toString()),
-      alignment: Alignment.center,
-      children: [
-        if (mediaAttachment?.blurhash != null)
-          ClipRRect(
-            borderRadius: BorderRadius.circular(height <= 30.0.s ? 2.0.s : 5.0.s),
-            child: SizedBox(
-              height: height,
-              child: BlurhashFfi(
-                hash: mediaAttachment!.blurhash!,
+    return GestureDetector(
+      onTap: () async {
+        final messageMedias =
+            await ref.read(chatMediasProvider(eventMessageId: eventMessage.id).future);
+
+        if (context.mounted) {
+          await ChatMediaRoute(
+            eventMessageId: eventMessage.id,
+            initialIndex: messageMedias.indexOf(messageMediaTableData),
+          ).push<void>(context);
+        }
+      },
+      child: Stack(
+        key: Key(messageMediaTableData.id.toString()),
+        alignment: Alignment.center,
+        children: [
+          if (mediaAttachment?.blurhash != null)
+            ClipRRect(
+              borderRadius: BorderRadius.circular(height <= 30.0.s ? 2.0.s : 5.0.s),
+              child: SizedBox(
+                height: height,
+                child: BlurhashFfi(
+                  hash: mediaAttachment!.blurhash!,
+                ),
               ),
             ),
-          ),
-        if (localFile.value != null)
-          ClipRRect(
-            borderRadius: BorderRadius.circular(height <= 30.0.s ? 2.0.s : 5.0.s),
-            child: Image.file(
-              localFile.value!,
-              fit: BoxFit.cover,
-              width: double.infinity,
-              height: height,
-            ),
-          ),
-        if (isVideo)
-          Align(
-            child: Container(
-              padding: EdgeInsets.all(6.0.s),
-              decoration: BoxDecoration(
-                color: context.theme.appColors.backgroundSheet.withValues(alpha: 0.7),
-                borderRadius: BorderRadius.circular(12.0.s),
-              ),
-              child: Assets.svg.iconVideoPlay.icon(
-                size: 16.0.s,
+          if (localFile.value != null)
+            ClipRRect(
+              borderRadius: BorderRadius.circular(height <= 30.0.s ? 2.0.s : 5.0.s),
+              child: Image.file(
+                localFile.value!,
+                fit: BoxFit.cover,
+                width: double.infinity,
+                height: height,
               ),
             ),
-          ),
-        if (isVideo && mediaAttachment?.duration != null)
-          _VideoDurationLabel(duration: mediaAttachment!.duration!),
-        if (messageMediaTableData.status == MessageMediaStatus.processing)
-          CancelButton(
-            messageMediaId: messageMediaTableData.id,
-          ),
-      ],
+          if (isVideo && !isReply)
+            Align(
+              child: Container(
+                padding: EdgeInsets.all(6.0.s),
+                decoration: BoxDecoration(
+                  color: context.theme.appColors.backgroundSheet.withValues(alpha: 0.7),
+                  borderRadius: BorderRadius.circular(12.0.s),
+                ),
+                child: Assets.svg.iconVideoPlay.icon(
+                  size: 16.0.s,
+                ),
+              ),
+            ),
+          if (isVideo && mediaAttachment?.duration != null && !isReply)
+            _VideoDurationLabel(duration: mediaAttachment!.duration!),
+          if (messageMediaTableData.status == MessageMediaStatus.processing)
+            CancelButton(
+              messageMediaId: messageMediaTableData.id,
+            ),
+        ],
+      ),
     );
   }
 }

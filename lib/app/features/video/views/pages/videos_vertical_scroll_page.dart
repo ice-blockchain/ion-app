@@ -14,6 +14,8 @@ import 'package:ion/app/features/feed/views/components/overlay_menu/user_info_me
 import 'package:ion/app/features/ion_connect/model/event_reference.c.dart';
 import 'package:ion/app/features/ion_connect/model/media_attachment.dart';
 import 'package:ion/app/features/ion_connect/providers/entities_paged_data_provider.c.dart';
+import 'package:ion/app/features/video/views/components/video_actions.dart';
+import 'package:ion/app/features/video/views/components/video_post_info.dart';
 import 'package:ion/app/features/video/views/hooks/use_status_bar_color.dart';
 import 'package:ion/app/features/video/views/hooks/use_wake_lock.dart';
 import 'package:ion/app/features/video/views/pages/video_page.dart';
@@ -139,7 +141,8 @@ class VideosVerticalScrollPage extends HookConsumerWidget {
           scrollDirection: Axis.vertical,
           onPageChanged: (index) => _loadMore(ref, index, flattenedVideos.length),
           itemBuilder: (_, index) => VideoPage(
-            video: flattenedVideos[index].entity,
+            videoInfo: VideoPostInfo(videoPost: flattenedVideos[index].entity),
+            bottomOverlay: VideoActions(eventReference: eventReference),
             videoUrl: flattenedVideos[index].media.url,
             framedEventReference: index == initialPage ? framedEventReference : null,
             onVideoEnded: () {

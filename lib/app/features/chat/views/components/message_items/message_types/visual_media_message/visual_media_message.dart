@@ -38,23 +38,18 @@ class VisualMediaMessage extends HookConsumerWidget {
         contentDescription: context.i18n.common_media,
       ),
       contentPadding: EdgeInsets.all(padding),
-      child: GestureDetector(
-        onTap: () {
-          //TODO: show full screen media
-        },
-        child: SizedBox(
-          width: messageMedias.length > 1 ? double.infinity : 146.0.s,
-          child: Column(
-            children: [
-              VisualMediaCustomGrid(
-                messageMedias: messageMedias,
-                eventMessage: eventMessage,
-              ),
-              VisualMediaMetadata(
-                eventMessage: eventMessage,
-              ),
-            ],
-          ),
+      child: SizedBox(
+        width: messageMedias.length > 1 ? double.infinity : 146.0.s,
+        child: Column(
+          children: [
+            VisualMediaCustomGrid(
+              messageMedias: messageMedias,
+              eventMessage: eventMessage,
+            ),
+            VisualMediaMetadata(
+              eventMessage: eventMessage,
+            ),
+          ],
         ),
       ),
     );

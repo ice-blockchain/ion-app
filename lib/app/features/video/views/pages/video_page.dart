@@ -8,11 +8,8 @@ import 'package:ion/app/components/progress_bar/centered_loading_indicator.dart'
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/core/providers/app_lifecycle_provider.c.dart';
 import 'package:ion/app/features/core/providers/video_player_provider.c.dart';
-import 'package:ion/app/features/feed/data/models/entities/modifiable_post_data.c.dart';
 import 'package:ion/app/features/ion_connect/model/event_reference.c.dart';
-import 'package:ion/app/features/video/views/components/video_actions.dart';
 import 'package:ion/app/features/video/views/components/video_button.dart';
-import 'package:ion/app/features/video/views/components/video_post_info.dart';
 import 'package:ion/app/features/video/views/components/video_progress.dart';
 import 'package:ion/app/features/video/views/components/video_slider.dart';
 import 'package:ion/app/features/video/views/hooks/use_video_ended.dart';
@@ -21,23 +18,24 @@ import 'package:visibility_detector/visibility_detector.dart';
 
 class VideoPage extends HookConsumerWidget {
   const VideoPage({
-    required this.video,
     this.onVideoEnded,
     this.videoUrl,
     this.looping = false,
     this.framedEventReference,
+    this.videoInfo,
+    this.bottomOverlay,
     super.key,
   });
 
-  final ModifiablePostEntity video;
   final VoidCallback? onVideoEnded;
   final String? videoUrl;
   final EventReference? framedEventReference;
   final bool looping;
-
+  final Widget? videoInfo;
+  final Widget? bottomOverlay;
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final videoPath = videoUrl ?? video.data.primaryVideo?.url;
+    final videoPath = videoUrl;
     if (videoPath == null || videoPath.isEmpty) {
       return Text(context.i18n.video_not_found);
     }
@@ -137,7 +135,7 @@ class VideoPage extends HookConsumerWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 const Spacer(),
-                VideoPostInfo(videoPost: video),
+                if (videoInfo != null) videoInfo!,
                 VideoProgress(
                   controller: playerController,
                   builder: (context, position, duration) => VideoSlider(
@@ -154,9 +152,7 @@ class VideoPage extends HookConsumerWidget {
                     },
                   ),
                 ),
-                VideoActions(
-                  eventReference: video.toEventReference(),
-                ),
+                if (bottomOverlay != null) bottomOverlay!,
               ],
             ),
           ),
