@@ -3,6 +3,7 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/components/progress_bar/ion_loading_indicator.dart';
 import 'package:ion/app/extensions/extensions.dart';
@@ -11,6 +12,7 @@ import 'package:ion/app/features/chat/e2ee/providers/chat_message_load_media_pro
 import 'package:ion/app/features/chat/model/database/chat_database.c.dart';
 import 'package:ion/app/features/core/model/media_type.dart';
 import 'package:ion/app/features/feed/views/pages/fullscreen_media/hooks/use_image_zoom.dart';
+import 'package:ion/app/features/ion_connect/model/media_attachment.dart';
 import 'package:ion/app/features/video/views/pages/video_page.dart';
 
 class ChatMediaPageView extends HookConsumerWidget {
@@ -41,43 +43,70 @@ class ChatMediaPageView extends HookConsumerWidget {
         physics: isZoomed ? const NeverScrollableScrollPhysics() : const PageScrollPhysics(),
         itemCount: medias.length,
         itemBuilder: (context, index) {
-          final media = medias[index];
-          final mediaAttchment = entity.visualMedias.where((e) => e.url == media.remoteUrl).first;
-
-          final retreiveMediaFuture = ref.read(
-            chatMessageLoadMediaProvider(
-              entity: entity,
-              loadThumbnail: false,
-              mediaAttachment: mediaAttchment,
-            ),
-          );
-
-          return FutureBuilder(
-            future: retreiveMediaFuture,
-            builder: (context, snapshot) {
-              if (!snapshot.hasData) {
-                return const Center(
-                  child: IONLoadingIndicator(),
-                );
-              }
-
-              final isVideo = mediaAttchment.mediaType == MediaType.video;
-              if (isVideo) {
-                return VideoPage(
-                  key: ValueKey('video_${media.id}'),
-                  videoUrl: snapshot.data!.path,
-                );
-              }
-
-              return _ImagePreview(
-                zoomController: zoomController,
-                filePath: snapshot.data!.path,
-                bottomHeight: bottomHeight,
-              );
-            },
+          return _ChatMediaItem(
+            media: medias[index],
+            mediaAttachment:
+                entity.visualMedias.firstWhere((e) => e.url == medias[index].remoteUrl),
+            entity: entity,
+            zoomController: zoomController,
+            bottomHeight: bottomHeight,
           );
         },
       ),
+    );
+  }
+}
+
+class _ChatMediaItem extends HookConsumerWidget {
+  const _ChatMediaItem({
+    required this.media,
+    required this.mediaAttachment,
+    required this.entity,
+    required this.zoomController,
+    required this.bottomHeight,
+  });
+
+  final MessageMediaTableData media;
+  final MediaAttachment mediaAttachment;
+  final PrivateDirectMessageData entity;
+  final ImageZoomController zoomController;
+  final double bottomHeight;
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final fileFuture = useFuture(
+      useMemoized(
+        () {
+          return ref.read(
+            chatMessageLoadMediaProvider(
+              entity: entity,
+              loadThumbnail: false,
+              mediaAttachment: mediaAttachment,
+            ),
+          );
+        },
+        [media.id],
+      ),
+    );
+
+    if (!fileFuture.hasData) {
+      return const Center(child: IONLoadingIndicator());
+    }
+
+    final path = fileFuture.data!.path;
+    final isVideo = mediaAttachment.mediaType == MediaType.video;
+
+    if (isVideo) {
+      return VideoPage(
+        key: ValueKey('video_${media.id}'),
+        videoUrl: path,
+      );
+    }
+
+    return _ImagePreview(
+      filePath: path,
+      bottomHeight: bottomHeight,
+      zoomController: zoomController,
     );
   }
 }
