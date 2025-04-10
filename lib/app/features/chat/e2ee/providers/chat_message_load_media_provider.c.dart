@@ -11,7 +11,7 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'chat_message_load_media_provider.c.g.dart';
 
-@riverpod
+@Riverpod(keepAlive: true)
 Raw<Future<File?>> chatMessageLoadMedia(
   Ref ref, {
   required PrivateDirectMessageData entity,
