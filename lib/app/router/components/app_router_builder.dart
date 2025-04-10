@@ -3,6 +3,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:ion/app/components/app_update_handler/hooks/use_app_update.dart';
 import 'package:ion/app/components/global_notification_bar/global_notification_bar.dart';
 import 'package:ion/app/components/global_notification_bar/providers/global_notification_provider.c.dart';
 import 'package:ion/app/extensions/extensions.dart';
@@ -20,7 +21,7 @@ class AppRouterBuilder extends HookConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final notification = ref.watch(globalNotificationProvider);
     final isShowSafeArea = useState(false);
-    // useAppUpdate(ref);
+    useAppUpdate(ref);
 
     if (notification.isShow) {
       isShowSafeArea.value = true;

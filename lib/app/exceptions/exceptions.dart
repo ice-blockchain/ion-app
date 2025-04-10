@@ -225,7 +225,8 @@ class ForceUpdateCouldntLaunchUrlException extends IONException {
 }
 
 class ForceUpdateFetchConfigException extends IONException {
-  ForceUpdateFetchConfigException() : super(10047, 'Failed to get version config');
+  ForceUpdateFetchConfigException(dynamic error)
+      : super(10047, 'Failed to get version config $error');
 }
 
 class DeleteEntityUnsupportedTypeException extends IONException {
