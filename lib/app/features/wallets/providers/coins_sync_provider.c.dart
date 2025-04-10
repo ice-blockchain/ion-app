@@ -6,6 +6,7 @@ import 'package:ion/app/extensions/bool.dart';
 import 'package:ion/app/features/auth/providers/auth_provider.c.dart';
 import 'package:ion/app/features/core/providers/app_lifecycle_provider.c.dart';
 import 'package:ion/app/features/wallets/domain/coins/coins_sync_service.c.dart';
+import 'package:ion/app/features/wallets/domain/wallet_views/sync_wallet_views_coins_service.c.dart';
 import 'package:ion/app/features/wallets/providers/wallets_initializer_provider.c.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
@@ -26,14 +27,14 @@ class CoinsSync extends _$CoinsSync {
     }
 
     final coinSyncService = await ref.watch(coinsSyncServiceProvider.future);
+    final walletViewsCoinsSyncService = await ref.watch(syncWalletViewCoinsServiceProvider.future);
 
     if (authState.isAuthenticated.falseOrValue) {
       await coinSyncService.syncAllCoins();
       coinSyncService.startPeriodicSync();
       ref.onDispose(coinSyncService.stopPeriodicSync);
-      await coinSyncService.startActiveCoinsSyncQueue();
     } else {
-      coinSyncService.removeActiveCoinsSyncQueue();
+      walletViewsCoinsSyncService.removeCoinsSyncQueue();
     }
   }
 }
