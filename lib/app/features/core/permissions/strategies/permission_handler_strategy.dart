@@ -9,6 +9,10 @@ import 'package:ion/app/features/core/permissions/strategies/permission_strategy
 import 'package:permission_handler/permission_handler.dart' as ph;
 
 /// A base class responsible for handling permissions using the `permission_handler` package.
+
+/// This class provides logic for requesting and checking permissions on platforms
+/// where `permission_handler` is applicable. For platform-specific logic not covered by `permission_handler`,
+/// a different implementation of [PermissionStrategy] can be used.
 class PermissionHandlerStrategy extends PermissionStrategy {
   PermissionHandlerStrategy(this.permissionType);
 
