@@ -1,3 +1,1 @@
-<svg width="12" height="8" viewBox="0 0 12 8" fill="none" xmlns="http://www.w3.org/2000/svg">
-<path d="M3.5 4.30005L6 6.80005L11 1.80005M1 4.80005L3 6.80005M6 3.80005L8.5 1.30005" stroke="#35D487" stroke-linecap="round" stroke-linejoin="round"/>
-</svg>
+<svg xmlns="http://www.w3.org/2000/svg" width="12" height="8" fill="none"><path stroke="#35D487" stroke-linecap="round" stroke-linejoin="round" d="M3.5 4.3 6 6.8l5-5m-10 3 2 2m3-3 2.5-2.5"/></svg>
