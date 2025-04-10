@@ -12,7 +12,6 @@ import 'package:ion/app/features/chat/model/database/chat_database.c.dart';
 import 'package:ion/app/features/chat/model/message_list_item.c.dart';
 import 'package:ion/app/features/chat/model/message_type.dart';
 import 'package:ion/app/features/chat/recent_chats/providers/replied_message_list_item_provider.c.dart';
-import 'package:ion/app/features/chat/views/components/message_items/components.dart';
 import 'package:ion/app/features/chat/views/components/message_items/message_reaction_dialog/message_reaction_dialog.dart';
 import 'package:ion/app/features/chat/views/components/message_items/message_types/reply_message/reply_message.dart';
 import 'package:ion/app/features/ion_connect/ion_connect.dart';
@@ -145,8 +144,8 @@ class MessageItemWrapper extends HookConsumerWidget {
                                         mainAxisSize: MainAxisSize.min,
                                         children: [
                                           child,
-                                          const Spacer(),
-                                          MessageMetaData(eventMessage: messageItem.eventMessage),
+                                          // const Spacer(),
+                                          // MessageMetaData(eventMessage: messageItem.eventMessage),
                                         ],
                                       ),
                               ),
