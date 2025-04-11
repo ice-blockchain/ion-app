@@ -12,6 +12,7 @@ class NetworksMapper {
             explorerUrl: network.explorerUrl,
             image: network.image,
             isTestnet: network.isTestnet,
+            tier: network.tier,
           ),
       ];
 }
