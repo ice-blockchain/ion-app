@@ -4,11 +4,13 @@ import 'dart:async';
 
 import 'package:ion/app/exceptions/exceptions.dart';
 import 'package:ion/app/features/auth/providers/auth_provider.c.dart';
+import 'package:ion/app/features/chat/e2ee/providers/send_chat_message_service.c.dart';
+import 'package:ion/app/features/ion_connect/model/event_reference.c.dart';
 import 'package:ion/app/features/user/model/request_coins_form_data.c.dart';
 import 'package:ion/app/features/user/providers/request_coins_form_provider.c.dart';
 import 'package:ion/app/features/user/providers/user_delegation_provider.c.dart';
 import 'package:ion/app/features/wallets/domain/transactions/send_transaction_to_relay_service.c.dart';
-import 'package:ion/app/features/wallets/model/entities/request_asset_entity.c.dart';
+import 'package:ion/app/features/wallets/model/entities/funds_request_entity.c.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'request_coins_submit_notifier.c.g.dart';
@@ -25,10 +27,10 @@ typedef _PubkeysCollection = ({
 
 const _formName = 'RequestCoinsForm';
 
-@Riverpod(keepAlive: true)
+@riverpod
 class RequestCoinsSubmitNotifier extends _$RequestCoinsSubmitNotifier {
   @override
-  Future<void> build() async {}
+  FutureOr<void> build() {}
 
   Future<void> submitRequest() async {
     state = const AsyncLoading();
@@ -41,15 +43,26 @@ class RequestCoinsSubmitNotifier extends _$RequestCoinsSubmitNotifier {
         throw const CurrentUserNotFoundException();
       }
 
-      final request = _buildRequestAssetData(formData);
+      final request = _buildFundsRequestData(formData);
       final pubkeys = await _collectPubkeys(formData.contactPubkey!, currentUserPubkey);
 
       final sendToRelayService = await ref.read(sendTransactionToRelayServiceProvider.future);
-      await sendToRelayService.sendTransactionEntity(
-        createEventMessage: (currentUserPubkey) =>
-            request.toEventMessage(currentUserPubkey: currentUserPubkey),
+      final event = await sendToRelayService.sendTransactionEntity(
+        createEventMessage: (_) => request.toEventMessage(currentUserPubkey: currentUserPubkey),
         senderPubkeys: pubkeys.sender,
         receiverPubkeys: pubkeys.receiver,
+      );
+
+      final message = ImmutableEventReference(
+        eventId: event.id,
+        pubkey: currentUserPubkey,
+        kind: event.kind,
+      ).encode();
+
+      final chatService = await ref.read(sendChatMessageServiceProvider.future);
+      await chatService.send(
+        receiverPubkey: pubkeys.receiver.masterPubkey,
+        content: message,
       );
     });
   }
@@ -68,7 +81,7 @@ class RequestCoinsSubmitNotifier extends _$RequestCoinsSubmitNotifier {
     }
 
     final toWalletAddress = formData.toWallet?.address;
-    final fromWalletAddress = formData.assetData?.selectedOption?.walletAddress;
+    final fromWalletAddress = formData.toWallet?.address;
 
     if (toWalletAddress == null) {
       errors.add('toWallet address is required');
@@ -87,15 +100,15 @@ class RequestCoinsSubmitNotifier extends _$RequestCoinsSubmitNotifier {
     }
   }
 
-  RequestAssetData _buildRequestAssetData(RequestCoinsFormData formData) {
+  FundsRequestData _buildFundsRequestData(RequestCoinsFormData formData) {
     final RequestCoinsFormData(:assetData, :network, :contactPubkey, :toWallet) = formData;
     final toWalletAddress = toWallet!.address!;
-    final fromWalletAddress = assetData!.selectedOption!.walletAddress!;
+    final fromWalletAddress = toWalletAddress;
 
-    final content = RequestAssetContent(
+    final content = FundsRequestContent(
       from: fromWalletAddress,
       to: toWalletAddress,
-      assetId: assetData.selectedOption!.coin.id,
+      assetId: assetData!.selectedOption!.coin.id,
       amount: assetData.amount > 0 ? assetData.amount.toString() : null,
       amountUsd: assetData.amountUSD > 0 ? assetData.amountUSD.toString() : null,
     );
@@ -103,7 +116,7 @@ class RequestCoinsSubmitNotifier extends _$RequestCoinsSubmitNotifier {
     final contractAddress = assetData.selectedOption!.coin.contractAddress;
     final isNative = contractAddress.isEmpty;
 
-    return RequestAssetData(
+    return FundsRequestData(
       networkId: network!.id,
       assetClass: isNative ? 'native' : 'token',
       assetAddress: contractAddress,

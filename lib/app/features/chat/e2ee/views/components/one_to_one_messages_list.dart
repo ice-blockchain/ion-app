@@ -7,12 +7,8 @@ import 'package:ion/app/components/screen_offset/screen_side_offset.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/chat/e2ee/model/entities/private_direct_message_data.c.dart';
 import 'package:ion/app/features/chat/model/message_type.dart';
-import 'package:ion/app/features/chat/views/components/message_items/chat_date_header_text/chat_date_header_text.dart';
-import 'package:ion/app/features/chat/views/components/message_items/message_types/audio_message/audio_message.dart';
+import 'package:ion/app/features/chat/views/components/message_items/components.dart';
 import 'package:ion/app/features/chat/views/components/message_items/message_types/document_message/document_message.dart';
-import 'package:ion/app/features/chat/views/components/message_items/message_types/emoji_message/emoji_message.dart';
-import 'package:ion/app/features/chat/views/components/message_items/message_types/profile_share_message/profile_share_message.dart';
-import 'package:ion/app/features/chat/views/components/message_items/message_types/text_message/text_message.dart';
 import 'package:ion/app/features/chat/views/components/message_items/message_types/visual_media_message/visual_media_message.dart';
 import 'package:ion/app/features/ion_connect/ion_connect.dart';
 
@@ -70,6 +66,7 @@ class OneToOneMessageList extends HookConsumerWidget {
                         MessageType.profile => ProfileShareMessage(eventMessage: message),
                         MessageType.document => DocumentMessage(eventMessage: message),
                         MessageType.visualMedia => VisualMediaMessage(eventMessage: message),
+                        MessageType.requestFunds => MoneyMessage(eventMessage: message),
                       },
                     );
                   },

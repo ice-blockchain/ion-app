@@ -2,98 +2,134 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:intl/intl.dart';
 import 'package:ion/app/components/button/button.dart';
 import 'package:ion/app/extensions/extensions.dart';
-import 'package:ion/app/features/chat/model/message_author.c.dart';
+import 'package:ion/app/extensions/object.dart';
+import 'package:ion/app/features/auth/providers/auth_provider.c.dart';
 import 'package:ion/app/features/chat/model/message_list_item.c.dart';
-import 'package:ion/app/features/chat/model/message_reaction_group.c.dart';
 import 'package:ion/app/features/chat/model/money_message_type.dart';
-import 'package:ion/app/features/chat/views/components/message_items/message_author/message_author.dart';
-import 'package:ion/app/features/chat/views/components/message_items/message_item_wrapper/message_item_wrapper.dart';
+import 'package:ion/app/features/chat/recent_chats/providers/money_message_provider.c.dart';
+import 'package:ion/app/features/chat/views/components/message_items/components.dart';
 import 'package:ion/app/features/ion_connect/ion_connect.dart';
+import 'package:ion/app/features/ion_connect/model/event_reference.c.dart';
+import 'package:ion/app/features/wallets/model/coin_data.c.dart';
+import 'package:ion/app/features/wallets/model/network_data.c.dart';
+import 'package:ion/app/features/wallets/providers/coins_provider.c.dart';
+import 'package:ion/app/features/wallets/providers/networks_provider.c.dart';
+import 'package:ion/app/features/wallets/views/components/network_icon_widget.dart';
+import 'package:ion/app/utils/date.dart';
 import 'package:ion/app/utils/num.dart';
-import 'package:ion/generated/assets.gen.dart';
 
 part 'components/amount_display.dart';
 
-class MoneyMessage extends HookWidget {
+class MoneyMessage extends HookConsumerWidget {
   const MoneyMessage({
+    required this.eventMessage,
+    super.key,
+  });
+
+  final EventMessage eventMessage;
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final eventReference =
+        EventReference.fromEncoded(eventMessage.content) as ImmutableEventReference;
+
+    final isMe = ref.watch(isCurrentUserSelectorProvider(eventReference.pubkey));
+
+    final fundsRequestAsync = ref.watch(fundsRequestForMessageProvider(eventReference.eventId));
+    final fundsRequest = fundsRequestAsync.value;
+
+    final networkId = fundsRequest?.data.networkId;
+    final network = ref.watch(networkByIdProvider(networkId.emptyOrValue)).value;
+
+    final assetId = fundsRequest?.data.content.assetId?.emptyOrValue;
+    final coin = ref.watch(coinByIdProvider(assetId.emptyOrValue)).value;
+
+    // TODO: currently hardcoded, will be dynamic when we implement paid requests.
+    const type = MoneyMessageType.requested;
+
+    final amount = fundsRequest?.data.content.amount?.let(double.parse) ?? 0.0;
+    final equivalentUsd = fundsRequest?.data.content.amountUsd?.let(double.parse) ?? 0.0;
+
+    return _MoneyMessageContent(
+      isMe: isMe,
+      type: type,
+      amount: amount,
+      equivalentUsd: equivalentUsd,
+      network: network,
+      coin: coin,
+      eventMessage: eventMessage,
+    );
+  }
+}
+
+class _MoneyMessageContent extends HookConsumerWidget {
+  const _MoneyMessageContent({
     required this.isMe,
     required this.type,
     required this.amount,
     required this.equivalentUsd,
-    required this.chain,
-    required this.createdAt,
+    required this.network,
+    required this.coin,
     required this.eventMessage,
-    this.isLastMessageFromAuthor = true,
-    this.author,
-    this.reactions,
-    super.key,
   });
 
   final bool isMe;
   final MoneyMessageType type;
   final double amount;
   final double equivalentUsd;
-  final String chain;
-  final DateTime createdAt;
-  final MessageAuthor? author;
+  final NetworkData? network;
+  final CoinData? coin;
   final EventMessage eventMessage;
-  final bool isLastMessageFromAuthor;
-  final List<MessageReactionGroup>? reactions;
 
   @override
-  Widget build(BuildContext context) {
-    final textColor = useMemoized(
-      () => isMe ? context.theme.appColors.onPrimaryAccent : context.theme.appColors.primaryText,
-      [isMe],
-    );
+  Widget build(BuildContext context, WidgetRef ref) {
+    final textColor = switch (isMe) {
+      true => context.theme.appColors.onPrimaryAccent,
+      false => context.theme.appColors.primaryText,
+    };
 
-    final title = useMemoized(
-      () => type == MoneyMessageType.receive
-          ? context.i18n.chat_money_received_title
-          : context.i18n.chat_money_request_title,
-      [type],
-    );
+    final title = switch (type) {
+      MoneyMessageType.received => context.i18n.chat_money_received_title,
+      MoneyMessageType.requested => context.i18n.chat_money_request_title,
+    };
 
-    final buttonLabel = useMemoized(
-      () => type == MoneyMessageType.receive
-          ? context.i18n.chat_money_received_button
-          : context.i18n.button_send,
-      [type],
-    );
+    final buttonLabel = switch ((isMe, type)) {
+      (true, MoneyMessageType.requested) => context.i18n.button_cancel,
+      (false, MoneyMessageType.requested) => context.i18n.button_send,
+      (_, MoneyMessageType.received) => context.i18n.chat_money_received_button,
+    };
 
-    final buttonType = useMemoized(
-      () => type == MoneyMessageType.receive
-          ? (isMe ? ButtonType.primary : ButtonType.outlined)
-          : (isMe ? ButtonType.secondary : ButtonType.primary),
-      [type, isMe],
-    );
+    final buttonType = switch (type) {
+      MoneyMessageType.requested => ButtonType.outlined,
+      MoneyMessageType.received => ButtonType.primary,
+    };
 
-    final buttonBackgroundColor = useMemoized(
-      () => type == MoneyMessageType.receive
-          ? (isMe ? context.theme.appColors.darkBlue : context.theme.appColors.tertararyBackground)
-          : (isMe
-              ? context.theme.appColors.secondaryBackground
-              : context.theme.appColors.primaryAccent),
-      [isMe],
-    );
+    final buttonBackgroundColor = switch ((isMe, type)) {
+      (_, MoneyMessageType.received) => context.theme.appColors.darkBlue,
+      (true, MoneyMessageType.requested) => context.theme.appColors.tertararyBackground,
+      (false, MoneyMessageType.requested) => context.theme.appColors.darkBlue,
+    };
 
-    final buttonTextColor = useMemoized(
-      () => type == MoneyMessageType.receive
-          ? (isMe ? context.theme.appColors.onPrimaryAccent : context.theme.appColors.primaryText)
-          : (isMe ? context.theme.appColors.primaryText : context.theme.appColors.onPrimaryAccent),
-      [type, isMe],
-    );
+    final buttonTextColor = switch ((isMe, type)) {
+      (_, MoneyMessageType.received) => context.theme.appColors.onPrimaryAccent,
+      (true, MoneyMessageType.requested) => context.theme.appColors.primaryText,
+      (false, MoneyMessageType.requested) => context.theme.appColors.onPrimaryAccent,
+    };
+
+    final timeTextColor = switch (isMe) {
+      true => context.theme.appColors.strokeElements,
+      false => context.theme.appColors.quaternaryText,
+    };
 
     return MessageItemWrapper(
-      //TODO: Add corresponding message item
-      messageItem: TextItem(
+      messageItem: ChatMessageInfoItem.money(
         eventMessage: eventMessage,
         contentDescription: title,
       ),
-      isLastMessageFromAuthor: isLastMessageFromAuthor,
       contentPadding: EdgeInsets.symmetric(
         horizontal: 12.0.s,
         vertical: 12.0.s,
@@ -102,7 +138,6 @@ class MoneyMessage extends HookWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          MessageAuthorNameWidget(author: author),
           Text(
             title,
             style: context.theme.appTextThemes.body2.copyWith(color: textColor),
@@ -110,38 +145,43 @@ class MoneyMessage extends HookWidget {
           SizedBox(height: 10.0.s),
           Row(
             children: [
-              Assets.svg.walletIce.icon(size: 36.0.s),
+              NetworkIconWidget(
+                imageUrl: network?.image ?? '',
+                size: 36.0.s,
+              ),
               SizedBox(width: 8.0.s),
               _AmountDisplay(
                 amount: amount,
                 equivalentUsd: equivalentUsd,
-                chain: chain,
+                chain: network?.displayName ?? '',
+                coin: coin?.abbreviation,
                 isMe: isMe,
               ),
             ],
           ),
           SizedBox(height: 8.0.s),
-          Button.compact(
-            type: buttonType,
-            backgroundColor: buttonBackgroundColor,
-            tintColor: buttonType == ButtonType.primary ? buttonBackgroundColor : null,
-            minimumSize: Size(150.0.s, 32.0.s),
-            label: Text(
-              buttonLabel,
-              style: context.theme.appTextThemes.caption2.copyWith(
-                color: buttonTextColor,
-              ),
-            ),
-            onPressed: () {},
-          ),
-          const Row(
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
             crossAxisAlignment: CrossAxisAlignment.end,
             children: [
-              //TODO: add metadata
-              //MessageReactions(reactions: reactions),
-              Spacer(),
-              //TODO: add metadata
-              // MessageMetaData(isMe: isMe, createdAt: createdAt),
+              // TODO: implement reactions
+              Button.compact(
+                type: buttonType,
+                backgroundColor: buttonBackgroundColor,
+                tintColor: buttonType == ButtonType.primary ? buttonBackgroundColor : null,
+                minimumSize: Size(150.0.s, 32.0.s),
+                label: Text(
+                  buttonLabel,
+                  style: context.theme.appTextThemes.caption2.copyWith(color: buttonTextColor),
+                ),
+                onPressed: () {
+                  // TODO: implement cancel request
+                },
+              ),
+              Text(
+                toTimeDisplayValue(eventMessage.createdAt.millisecondsSinceEpoch),
+                style: context.theme.appTextThemes.caption4.copyWith(color: timeTextColor),
+              ),
             ],
           ),
         ],

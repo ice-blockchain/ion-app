@@ -13,30 +13,30 @@ import 'package:ion/app/features/wallets/model/entities/tags/label_namespace_tag
 import 'package:ion/app/features/wallets/model/entities/tags/label_tag.c.dart';
 import 'package:ion/app/features/wallets/model/entities/tags/network_tag.c.dart';
 
-part 'request_asset_entity.c.freezed.dart';
-part 'request_asset_entity.c.g.dart';
+part 'funds_request_entity.c.freezed.dart';
+part 'funds_request_entity.c.g.dart';
 
 @Freezed(equal: false)
-class RequestAssetEntity with _$RequestAssetEntity {
-  const factory RequestAssetEntity({
+class FundsRequestEntity with _$FundsRequestEntity {
+  const factory FundsRequestEntity({
     required String id,
     required String pubkey,
     required DateTime createdAt,
-    required RequestAssetData data,
-  }) = _RequestAssetEntity;
+    required FundsRequestData data,
+  }) = _FundsRequestEntity;
 
-  const RequestAssetEntity._();
+  const FundsRequestEntity._();
 
-  factory RequestAssetEntity.fromEventMessage(EventMessage eventMessage) {
+  factory FundsRequestEntity.fromEventMessage(EventMessage eventMessage) {
     if (eventMessage.kind != kind) {
       throw IncorrectEventKindException(eventMessage.id, kind: kind);
     }
 
-    final parsed = RequestAssetEntity(
+    final parsed = FundsRequestEntity(
       id: eventMessage.id,
       pubkey: eventMessage.pubkey,
       createdAt: eventMessage.createdAt,
-      data: RequestAssetData.fromEventMessage(eventMessage),
+      data: FundsRequestData.fromEventMessage(eventMessage),
     );
 
     return parsed;
@@ -46,24 +46,24 @@ class RequestAssetEntity with _$RequestAssetEntity {
 }
 
 @freezed
-class RequestAssetData with _$RequestAssetData {
-  const factory RequestAssetData({
-    required RequestAssetContent content,
+class FundsRequestData with _$FundsRequestData {
+  const factory FundsRequestData({
+    required FundsRequestContent content,
     @JsonKey(name: 'network') required String networkId,
     required String assetClass,
     required String assetAddress,
     String? walletAddress,
     String? pubkey,
     String? request, // TODO: Not implemented
-  }) = _RequestAssetData;
+  }) = _FundsRequestData;
 
-  const RequestAssetData._();
+  const FundsRequestData._();
 
-  factory RequestAssetData.fromEventMessage(EventMessage eventMessage) {
+  factory FundsRequestData.fromEventMessage(EventMessage eventMessage) {
     final tags = groupBy(eventMessage.tags, (tag) => tag[0]);
     final decodedContent = jsonDecode(eventMessage.content) as Map<String, dynamic>;
-    return RequestAssetData(
-      content: RequestAssetContent.fromJson(decodedContent),
+    return FundsRequestData(
+      content: FundsRequestContent.fromJson(decodedContent),
       pubkey: tags[RelatedPubkey.tagName]?.map(RelatedPubkey.fromTag).first.value,
       networkId: tags[NetworkTag.tagName]!.map(NetworkTag.fromTag).first.value,
       assetClass: tags[AssetClassTag.tagName]!.map(AssetClassTag.fromTag).first.value,
@@ -92,7 +92,7 @@ class RequestAssetData with _$RequestAssetData {
     final rumorId = EventMessage.calculateEventId(
       publicKey: currentUserPubkey,
       createdAt: createdAt,
-      kind: RequestAssetEntity.kind,
+      kind: FundsRequestEntity.kind,
       tags: tags,
       content: encodedContent,
     );
@@ -101,7 +101,7 @@ class RequestAssetData with _$RequestAssetData {
       id: rumorId,
       pubkey: currentUserPubkey,
       createdAt: createdAt,
-      kind: RequestAssetEntity.kind,
+      kind: FundsRequestEntity.kind,
       tags: tags,
       content: encodedContent,
       sig: null,
@@ -110,15 +110,15 @@ class RequestAssetData with _$RequestAssetData {
 }
 
 @freezed
-class RequestAssetContent with _$RequestAssetContent {
-  const factory RequestAssetContent({
+class FundsRequestContent with _$FundsRequestContent {
+  const factory FundsRequestContent({
     required String from,
     required String to,
     @JsonKey(includeIfNull: false) String? assetId,
     @JsonKey(includeIfNull: false) String? amount,
     @JsonKey(includeIfNull: false) String? amountUsd,
-  }) = _RequestAssetContent;
+  }) = _FundsRequestContent;
 
-  factory RequestAssetContent.fromJson(Map<String, dynamic> json) =>
-      _$RequestAssetContentFromJson(json);
+  factory FundsRequestContent.fromJson(Map<String, dynamic> json) =>
+      _$FundsRequestContentFromJson(json);
 }

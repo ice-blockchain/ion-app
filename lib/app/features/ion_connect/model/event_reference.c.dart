@@ -56,6 +56,7 @@ class ImmutableEventReference with _$ImmutableEventReference implements EventRef
   const factory ImmutableEventReference({
     required String pubkey,
     required String eventId,
+    int? kind,
   }) = _ImmutableEventReference;
 
   const ImmutableEventReference._();
@@ -69,13 +70,13 @@ class ImmutableEventReference with _$ImmutableEventReference implements EventRef
   }
 
   factory ImmutableEventReference.fromShareableIdentifier(ShareableIdentifier identifier) {
-    final ShareableIdentifier(:special, :author) = identifier;
+    final ShareableIdentifier(:special, :author, :kind) = identifier;
 
     if (author == null) {
       throw IncorrectShareableIdentifierException(identifier);
     }
 
-    return ImmutableEventReference(eventId: special, pubkey: author);
+    return ImmutableEventReference(eventId: special, pubkey: author, kind: kind);
   }
 
   @override
@@ -90,6 +91,7 @@ class ImmutableEventReference with _$ImmutableEventReference implements EventRef
         prefix: IonConnectProtocolIdentifierType.nevent,
         special: eventId,
         author: pubkey,
+        kind: kind,
       ),
     );
   }

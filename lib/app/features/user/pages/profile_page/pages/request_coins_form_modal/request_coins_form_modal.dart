@@ -20,6 +20,7 @@ import 'package:ion/app/features/wallets/model/coin_in_wallet_data.c.dart';
 import 'package:ion/app/features/wallets/model/crypto_asset_to_send_data.c.dart';
 import 'package:ion/app/features/wallets/views/pages/coins_flow/send_coins/components/buttons/coin_amount_input.dart';
 import 'package:ion/app/features/wallets/views/utils/amount_parser.dart';
+import 'package:ion/app/hooks/use_on_init.dart';
 import 'package:ion/app/router/app_routes.c.dart';
 import 'package:ion/app/router/components/navigation_app_bar/navigation_app_bar.dart';
 import 'package:ion/app/router/components/navigation_app_bar/navigation_close_button.dart';
@@ -46,11 +47,25 @@ class RequestCoinsFormModal extends HookConsumerWidget {
       ..displayErrors(requestCoinsSubmitNotifierProvider)
       ..listenSuccess(
         requestCoinsSubmitNotifierProvider,
-        (_) => Navigator.of(context, rootNavigator: true).pop(),
+        (_) => ConversationRoute(receiverPubKey: form.contactPubkey).go(context),
       );
 
     final isLoading = ref.watch(requestCoinsSubmitNotifierProvider).isLoading;
     final isButtonDisabled = amountController.text.isEmpty || isLoading;
+
+    useOnInit(
+      () {
+        void listener() {
+          final amount = parseAmount(amountController.value.text);
+          ref
+              .read(requestCoinsFormControllerProvider.notifier)
+              .setCoinsAmount(amount?.toString() ?? '');
+        }
+
+        amountController.addListener(listener);
+      },
+      [amountController],
+    );
 
     return SheetContent(
       body: KeyboardDismissOnTap(

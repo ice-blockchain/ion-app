@@ -98,6 +98,8 @@ class CoinsRepository {
   /// If the [coins] list is not provided, all coins will be returned.
   Future<List<CoinData>> getCoins([Iterable<String>? coinIds]) => _coinsDao.get(coinIds);
 
+  Future<CoinData?> getCoinById(String coinId) => _coinsDao.getById(coinId);
+
   Future<CoinData> getNativeCoin(NetworkData network) =>
       getCoinsByFilters(networks: [network.id], contractAddresses: [''])
           .then((result) => result.first);

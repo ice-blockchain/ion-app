@@ -8,11 +8,13 @@ class _AmountDisplay extends HookWidget {
     required this.equivalentUsd,
     required this.chain,
     required this.isMe,
+    required this.coin,
   });
 
   final double amount;
   final double equivalentUsd;
   final String chain;
+  final String? coin;
   final bool isMe;
 
   @override
@@ -34,7 +36,7 @@ class _AmountDisplay extends HookWidget {
           children: [
             Text(
               NumberFormat.currency(
-                symbol: 'ICE ',
+                symbol: coin.emptyOrValue.isEmpty ? '' : '$coin ',
                 decimalDigits: 2,
               ).format(amount),
               style: context.theme.appTextThemes.subtitle3.copyWith(color: textColor),

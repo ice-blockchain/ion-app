@@ -40,6 +40,8 @@ class CoinsService {
   Stream<Iterable<CoinData>> watchCoins(Iterable<String>? coinIds) =>
       _coinsRepository.watchCoins(coinIds);
 
+  Future<CoinData?> getCoinById(String coinId) => _coinsRepository.getCoinById(coinId);
+
   Future<Iterable<CoinData>> getCoinsByFilters({
     String? symbolGroup,
     String? symbol,

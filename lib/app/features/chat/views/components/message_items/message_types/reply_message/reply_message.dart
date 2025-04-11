@@ -106,6 +106,7 @@ class ReplyMessage extends HookConsumerWidget {
   String? _getMessageIcon() => switch (repliedMessageItem!) {
         TextItem _ => null,
         EmojiItem _ => null,
+        MoneyItem _ => null,
         LinkItem _ => Assets.svg.iconArticleLink,
         DocumentItem _ => Assets.svg.iconChatFile,
         MediaItem _ => Assets.svg.iconProfileCamera,

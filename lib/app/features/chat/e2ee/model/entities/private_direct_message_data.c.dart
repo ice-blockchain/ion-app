@@ -10,10 +10,12 @@ import 'package:ion/app/features/chat/model/message_type.dart';
 import 'package:ion/app/features/chat/model/related_subject.c.dart';
 import 'package:ion/app/features/ion_connect/ion_connect.dart';
 import 'package:ion/app/features/ion_connect/model/entity_data_with_media_content.dart';
+import 'package:ion/app/features/ion_connect/model/event_reference.c.dart';
 import 'package:ion/app/features/ion_connect/model/media_attachment.dart';
 import 'package:ion/app/features/ion_connect/model/related_event.c.dart';
 import 'package:ion/app/features/ion_connect/model/related_pubkey.c.dart';
 import 'package:ion/app/features/ion_connect/model/rich_text.c.dart';
+import 'package:ion/app/features/wallets/model/entities/funds_request_entity.c.dart';
 import 'package:ion/app/services/ion_connect/ion_connect_protocol_identifier_type.dart';
 import 'package:ion/app/services/uuid/uuid.dart';
 import 'package:ion/app/utils/string.dart';
@@ -144,6 +146,13 @@ class PrivateDirectMessageData with _$PrivateDirectMessageData, EntityDataWithMe
       return MessageType.visualMedia;
     } else if (media.isNotEmpty) {
       return MessageType.document;
+    } else if (IonConnectProtocolIdentifierTypeValidator.isEventIdentifier(content)) {
+      if (EventReference.fromEncoded(content) case final ImmutableEventReference eventReference) {
+        return switch (eventReference.kind) {
+          FundsRequestEntity.kind => MessageType.requestFunds,
+          _ => MessageType.text,
+        };
+      }
     }
 
     return MessageType.text;
