@@ -49,7 +49,7 @@ Future<void> transactionsSubscription(Ref ref) async {
   final requestLastCreatedAt = await requestAssetsRepository.getLastCreatedAt();
 
   final lastCreatedAt = _getEarliestDateTime(transactionLastCreatedAt, requestLastCreatedAt);
-  final since = lastCreatedAt?.subtract(2.days) ?? DateTime.now().subtract(2.days);
+  final since = lastCreatedAt?.subtract(2.days);
 
   final requestMessage = RequestMessage(
     filters: [
