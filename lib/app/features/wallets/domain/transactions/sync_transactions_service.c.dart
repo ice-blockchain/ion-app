@@ -33,11 +33,7 @@ class SyncTransactionsService {
     this._transactionsRepository,
     this._cryptoWalletsRepository,
     this._userWallets,
-  ) {
-    if (_userWallets.isNotEmpty) {
-      sync();
-    }
-  }
+  );
 
   final TransactionsRepository _transactionsRepository;
   final CryptoWalletsRepository _cryptoWalletsRepository;
@@ -55,24 +51,25 @@ class SyncTransactionsService {
   }
 
   Future<void> _syncTransactionsByPages(Wallet wallet, NetworkData? network) async {
+    if (!_canRequestHistory(network)) {
+      return;
+    }
+
     String? nextPageToken = '';
+
     try {
       while (nextPageToken != null) {
-        if (_canRequestHistory(wallet, network)) {
-          final result = await _transactionsRepository.loadCoinTransactions(
-            wallet.id,
-            pageToken: nextPageToken.isEmpty ? null : nextPageToken,
-          );
+        final result = await _transactionsRepository.loadCoinTransactions(
+          wallet.id,
+          pageToken: nextPageToken.isEmpty ? null : nextPageToken,
+        );
 
-          nextPageToken = result.nextPageToken;
+        nextPageToken = result.nextPageToken;
 
-          if (result.transactions.isNotEmpty) {
-            final wereAnyUpdates =
-                await _transactionsRepository.saveTransactions(result.transactions);
-            if (!wereAnyUpdates) nextPageToken = null;
-          }
-        } else {
-          nextPageToken = null;
+        if (result.transactions.isNotEmpty) {
+          final wereAnyUpdates =
+              await _transactionsRepository.saveTransactions(result.transactions);
+          if (!wereAnyUpdates) nextPageToken = null;
         }
       }
     } catch (ex, stacktrace) {
@@ -88,22 +85,23 @@ class SyncTransactionsService {
     String? nextPageToken = '';
     final transactions = <TransactionData>[];
 
+    if (!_canRequestHistory(network)) {
+      await _cryptoWalletsRepository.save(wallet: wallet, isHistoryLoaded: true);
+      return;
+    }
+
     try {
       while (nextPageToken != null) {
-        if (_canRequestHistory(wallet, network)) {
-          final result = await _transactionsRepository.loadCoinTransactions(
-            wallet.id,
-            pageSize: 500,
-            pageToken: nextPageToken.isEmpty ? null : nextPageToken,
-          );
+        final result = await _transactionsRepository.loadCoinTransactions(
+          wallet.id,
+          pageSize: 500,
+          pageToken: nextPageToken.isEmpty ? null : nextPageToken,
+        );
 
-          nextPageToken = result.nextPageToken;
+        nextPageToken = result.nextPageToken;
 
-          if (result.transactions.isNotEmpty) {
-            transactions.addAll(result.transactions);
-          }
-        } else {
-          nextPageToken = null;
+        if (result.transactions.isNotEmpty) {
+          transactions.addAll(result.transactions);
         }
       }
 
@@ -121,6 +119,5 @@ class SyncTransactionsService {
     }
   }
 
-  bool _canRequestHistory(Wallet wallet, NetworkData? network) =>
-      network != null && wallet.network == network.id && network.isIonHistorySupported;
+  bool _canRequestHistory(NetworkData? network) => network != null && network.isIonHistorySupported;
 }
