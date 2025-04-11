@@ -69,18 +69,35 @@ class MediaService {
         size: size,
       );
 
-      final mediaFiles = await Future.wait(
-        assets.map((asset) async {
-          final mimeType = await asset.mimeTypeAsync;
+      final mediaFiles = <MediaFile>[];
+      const batchSize = 15;
 
-          return MediaFile(
-            path: asset.id,
-            height: asset.height,
-            width: asset.width,
-            mimeType: mimeType,
+      for (var i = 0; i < assets.length; i += batchSize) {
+        final end = (i + batchSize < assets.length) ? i + batchSize : assets.length;
+        final batch = assets.sublist(i, end);
+
+        // Process each asset in the batch directly with a for loop
+        for (final asset in batch) {
+          String? mimeType;
+
+          // For Android we can try to get the mimeType from the asset directly
+          mimeType = (defaultTargetPlatform == TargetPlatform.android)
+              ? asset.mimeType ?? await asset.mimeTypeAsync
+              : await asset.mimeTypeAsync;
+
+          mediaFiles.add(
+            MediaFile(
+              path: asset.id,
+              height: asset.height,
+              width: asset.width,
+              mimeType: mimeType,
+            ),
           );
-        }),
-      );
+        }
+
+        // Add a small delay to avoid overwhelming
+        await Future<void>.delayed(Duration.zero);
+      }
 
       return mediaFiles;
     } catch (e) {
