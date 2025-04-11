@@ -52,8 +52,7 @@ class SyncWalletViewCoinsService {
         if (coins.isNotEmpty) {
           if (await isQueueNotReady()) {
             Logger.log(
-              'The queue needs to be created/updated as it does not match the selected coins. '
-              'We also update the coins immediately to provide the actual coin prices.',
+              'The queue needs to be created/updated as it does not match the selected coins. ',
             );
 
             await _updateCoinsSyncQueue(
@@ -62,7 +61,6 @@ class SyncWalletViewCoinsService {
               ),
               updateOnlyDifferences: true,
             );
-            await _syncCoins(forceSyncAll: true);
           }
           completer.complete();
         }
@@ -109,10 +107,8 @@ class SyncWalletViewCoinsService {
     });
   }
 
-  Future<void> _syncCoins({bool forceSyncAll = false}) async {
-    final coins = forceSyncAll
-        ? await _coinsRepository.getAllCoinsToSync()
-        : await _coinsRepository.getCoinsToSync(DateTime.now());
+  Future<void> _syncCoins() async {
+    final coins = await _coinsRepository.getCoinsToSync(DateTime.now());
 
     Logger.log('Sync coins to get actual prices. Need to update ${coins.length} coins.');
     if (coins.isEmpty) return;
