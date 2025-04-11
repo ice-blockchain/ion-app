@@ -1,0 +1,53 @@
+// SPDX-License-Identifier: ice License 1.0
+
+import 'package:flutter/material.dart';
+import 'package:ion/app/extensions/extensions.dart';
+import 'package:ion/generated/assets.gen.dart';
+
+class BookmarksFilterTile extends StatelessWidget {
+  const BookmarksFilterTile({
+    required this.title,
+    required this.isActive,
+    required this.onTap,
+    super.key,
+  });
+
+  final String title;
+  final bool isActive;
+  final VoidCallback onTap;
+
+  @override
+  Widget build(BuildContext context) {
+    final borderColor =
+        isActive ? context.theme.appColors.primaryAccent : context.theme.appColors.onTerararyFill;
+    final color =
+        isActive ? context.theme.appColors.primaryAccent : context.theme.appColors.tertararyText;
+    return GestureDetector(
+      onTap: onTap,
+      child: Container(
+        height: 40.0.s,
+        padding: EdgeInsets.symmetric(horizontal: 10.0.s),
+        alignment: Alignment.center,
+        decoration: BoxDecoration(
+          color: context.theme.appColors.tertararyBackground,
+          borderRadius: BorderRadius.circular(12.0.s),
+          border: Border.all(color: borderColor),
+        ),
+        child: Row(
+          children: [
+            Assets.svg.iconFolderOpen.icon(color: color),
+            SizedBox(
+              width: 6.0.s,
+            ),
+            Text(
+              title,
+              style: context.theme.appTextThemes.caption.copyWith(
+                color: color,
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}

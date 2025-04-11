@@ -231,8 +231,6 @@
   "profile_feed_desc": "Discover and engage",
   "profile_videos_desc": "Social streaming",
   "profile_articles_desc": "Trending stories",
-  "profile_bookmarks": "Bookmarks",
-  "profile_bookmarks_desc": "Your saved posts",
   "profile_switch_user_header": "User accounts",
   "profile_create_new_account": "Create a new account",
   "profile_log_out": "Log out {nickname}",
@@ -806,5 +804,16 @@
   "contact_wallet_not_found_description": "doesn't have a wallet in the {network} network",
   "upload_limit_error_title": "Upload limit reached",
   "video_upload_limit_modal_description": "You can upload a video of up to 5 minutes",
-  "file_upload_limit_modal_description": "You can upload a file of up to 25 megabytes"
+  "file_upload_limit_modal_description": "You can upload a file of up to 25 megabytes",
+  "bookmarks_create_collection": "Create collection",
+  "bookmarks_title": "Bookmarks",
+  "bookmarks_edit_title": "Edit bookmarks",
+  "bookmarks_new_collection_title": "Create new collection",
+  "bookmarks_new_collection_desc": "Add a name for new bookmarks collection",
+  "bookmarks_edit_collection_title": "Edit collection",
+  "bookmarks_edit_collection_desc": "Edit bookmark collection name",
+  "bookmarks_delete_collection_title": "Delete collection?",
+  "bookmarks_delete_collection_desc": "Are you sure you want to delete your collection?",
+  "bookmarks_collection_name": "Collection name",
+  "bookmarks_empty_state": "You don't have any bookmarks"
 }

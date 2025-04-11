@@ -29,6 +29,11 @@ class FeedRoutes {
     ),
     TypedShellRoute<ModalShellRouteData>(
       routes: [
+        TypedGoRoute<AddBookmarkRoute>(path: 'add-bookmark'),
+      ],
+    ),
+    TypedShellRoute<ModalShellRouteData>(
+      routes: [
         TypedGoRoute<RepostOptionsModalRoute>(path: 'post-repost-options/:eventReference'),
         TypedGoRoute<CreatePostRoute>(path: 'post-editor/create'),
         TypedGoRoute<EditPostRoute>(path: 'post-editor/edit/:modifiedEvent'),
@@ -522,4 +527,17 @@ class FullscreenMediaRoute extends BaseRouteData {
   final int initialMediaIndex;
   final String eventReference;
   final String? framedEventReference;
+}
+
+class AddBookmarkRoute extends BaseRouteData {
+  AddBookmarkRoute({
+    required this.eventReference,
+  }) : super(
+          child: AddBookmarkModal(
+            eventReference: EventReference.fromEncoded(eventReference),
+          ),
+          type: IceRouteType.bottomSheet,
+        );
+
+  final String eventReference;
 }

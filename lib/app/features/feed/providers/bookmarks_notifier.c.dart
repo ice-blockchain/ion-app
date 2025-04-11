@@ -1,6 +1,7 @@
 // SPDX-License-Identifier: ice License 1.0
 
 import 'package:collection/collection.dart';
+import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/exceptions/exceptions.dart';
 import 'package:ion/app/features/auth/providers/auth_provider.c.dart';
@@ -19,13 +20,30 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'bookmarks_notifier.c.g.dart';
 
+@immutable
+class BookmarkTypes {
+  const BookmarkTypes(this.types);
+
+  final List<BookmarksSetType> types;
+
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is BookmarkTypes && const ListEquality<BookmarksSetType>().equals(types, other.types);
+
+  @override
+  int get hashCode => const ListEquality<BookmarksSetType>().hash(types);
+}
+
 @riverpod
 Future<Map<BookmarksSetType, BookmarksSetEntity?>> bookmarks(
   Ref ref,
   String pubkey,
+  BookmarkTypes bookmarkTypes,
 ) async {
+  final bookmarkTypesList = bookmarkTypes.types;
   final bookmarksMap = Map.fromEntries(
-    BookmarksSetType.values.map((type) {
+    bookmarkTypesList.map((type) {
       final cacheKey = CacheableEntity.cacheKeyBuilder(
         eventReference: ReplaceableEventReference(
           pubkey: pubkey,
@@ -49,7 +67,7 @@ Future<Map<BookmarksSetType, BookmarksSetEntity?>> bookmarks(
       RequestFilter(
         kinds: const [BookmarksSetEntity.kind],
         tags: {
-          '#d': BookmarksSetType.values.map((type) => type.dTagName).toList(),
+          '#d': bookmarkTypesList.map((type) => type.dTagName).toList(),
         },
         authors: [pubkey],
       ),
@@ -62,7 +80,7 @@ Future<Map<BookmarksSetType, BookmarksSetEntity?>> bookmarks(
   final eventsList = await eventsStream.cast<BookmarksSetEntity>().toList();
   final bookmarksSets = eventsList.cast<BookmarksSetEntity>();
   return Map.fromEntries(
-    BookmarksSetType.values.map((type) {
+    bookmarkTypesList.map((type) {
       final bookmarksSet = bookmarksSets.firstWhereOrNull((set) => set.data.type == type);
       return MapEntry(type, bookmarksSet);
     }),
@@ -70,12 +88,67 @@ Future<Map<BookmarksSetType, BookmarksSetEntity?>> bookmarks(
 }
 
 @riverpod
-Future<Map<BookmarksSetType, BookmarksSetEntity?>> currentUserBookmarks(Ref ref) async {
+Future<BookmarksSetData?> currentUserChatBookmarksData(Ref ref) async {
+  final currentPubkey = ref.watch(currentPubkeySelectorProvider);
+  if (currentPubkey == null) {
+    return null;
+  }
+  final bookmarksSet = await ref.watch(
+    bookmarksProvider(currentPubkey, const BookmarkTypes([BookmarksSetType.chats])).future,
+  );
+
+  return bookmarksSet[BookmarksSetType.chats]?.data;
+}
+
+@riverpod
+Future<Map<BookmarksSetType, BookmarksSetEntity?>> currentUserFeedBookmarks(Ref ref) async {
   final currentPubkey = ref.watch(currentPubkeySelectorProvider);
   if (currentPubkey == null) {
     return {};
   }
-  return ref.watch(bookmarksProvider(currentPubkey).future);
+  return ref.watch(
+    bookmarksProvider(
+      currentPubkey,
+      const BookmarkTypes(
+        [BookmarksSetType.posts, BookmarksSetType.videos, BookmarksSetType.articles],
+      ),
+    ).future,
+  );
+}
+
+@riverpod
+Future<List<ReplaceableEventReference>> currentUserFeedBookmarksRefs(Ref ref) async {
+  final bookmarksMap = await ref.watch(currentUserFeedBookmarksProvider.future);
+  return bookmarksMap.values
+      .whereType<BookmarksSetEntity>()
+      .expand((set) => [...set.data.postsRefs, ...set.data.articlesRefs])
+      .toList();
+}
+
+@riverpod
+Future<List<IonConnectEntity>> currentUserFeedBookmarksEntities(Ref ref) async {
+  final bookmarksRefs = await ref.watch(currentUserFeedBookmarksRefsProvider.future);
+
+  final entityFutures = bookmarksRefs.map((eventRef) {
+    return ref.read(ionConnectEntityProvider(eventReference: eventRef).future);
+  });
+
+  final fetchedEntities = await Future.wait(entityFutures);
+  return fetchedEntities.whereType<IonConnectEntity>().toList();
+}
+
+@riverpod
+Future<int> currentUserBookmarksTotalAmount(Ref ref) async {
+  final bookmarksMap = await ref.watch(currentUserFeedBookmarksProvider.future);
+  final amountMap = bookmarksMap.map((type, bookmarksSet) {
+    return MapEntry(
+      type,
+      bookmarksSet != null
+          ? bookmarksSet.data.articlesRefs.length + bookmarksSet.data.postsRefs.length
+          : 0,
+    );
+  });
+  return amountMap.values.fold<int>(0, (sum, count) => sum + count);
 }
 
 @riverpod
@@ -85,7 +158,7 @@ Future<bool> isBookmarked(Ref ref, EventReference eventReference) async {
   );
   if (ionConnectEntity == null) return false;
 
-  final currentBookmarks = await ref.watch(currentUserBookmarksProvider.future);
+  final currentBookmarks = await ref.watch(currentUserFeedBookmarksProvider.future);
   return switch (ionConnectEntity) {
     ModifiablePostEntity() => currentBookmarks.values.any(
         (bookmarksSet) =>
@@ -122,7 +195,7 @@ class BookmarksNotifier extends _$BookmarksNotifier {
 
       final bookmarkType = _getBookmarkType(ionConnectEntity);
 
-      final bookmarksMap = await ref.read(currentUserBookmarksProvider.future);
+      final bookmarksMap = await ref.read(currentUserFeedBookmarksProvider.future);
       final bookmarksSet = bookmarksMap[bookmarkType];
       final bookmarksSetsData = bookmarksMap.map((key, value) => MapEntry(key, value?.data));
 
@@ -132,9 +205,9 @@ class BookmarksNotifier extends _$BookmarksNotifier {
 
       switch (ionConnectEntity) {
         case ModifiablePostEntity():
-          _togglePostBookmark(postsRefs, ionConnectEntity);
+          _toggleBookmark(postsRefs, ionConnectEntity);
         case ArticleEntity():
-          _toggleArticleBookmark(articlesRefs, ionConnectEntity);
+          _toggleBookmark(articlesRefs, ionConnectEntity);
         default:
           return;
       }
@@ -168,21 +241,12 @@ class BookmarksNotifier extends _$BookmarksNotifier {
     };
   }
 
-  void _togglePostBookmark(Set<ReplaceableEventReference> postsRefs, ModifiablePostEntity post) {
-    final postRef = post.toEventReference();
-    if (postsRefs.contains(postRef)) {
-      postsRefs.remove(postRef);
+  void _toggleBookmark(Set<ReplaceableEventReference> refs, ReplaceableEntity post) {
+    final ref = post.toEventReference();
+    if (refs.contains(ref)) {
+      refs.remove(ref);
     } else {
-      postsRefs.add(postRef);
-    }
-  }
-
-  void _toggleArticleBookmark(Set<ReplaceableEventReference> articlesRefs, ArticleEntity article) {
-    final articleRef = article.toEventReference();
-    if (articlesRefs.contains(articleRef)) {
-      articlesRefs.remove(articleRef);
-    } else {
-      articlesRefs.add(articleRef);
+      refs.add(ref);
     }
   }
 }

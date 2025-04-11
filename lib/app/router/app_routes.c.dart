@@ -51,6 +51,7 @@ import 'package:ion/app/features/feed/notifications/views/notifications_history_
 import 'package:ion/app/features/feed/stories/views/pages/story_preview_page.dart';
 import 'package:ion/app/features/feed/stories/views/pages/story_record_page.dart';
 import 'package:ion/app/features/feed/stories/views/pages/story_viewer_page.dart';
+import 'package:ion/app/features/feed/views/pages/add_bookmark_modal/add_bookmark_modal.dart';
 import 'package:ion/app/features/feed/views/pages/article_details_page/article_details_page.dart';
 import 'package:ion/app/features/feed/views/pages/article_replies_page/article_replies_page.dart';
 import 'package:ion/app/features/feed/views/pages/articles_from_author_page/articles_from_author_page.dart';
@@ -106,6 +107,8 @@ import 'package:ion/app/features/settings/views/settings_modal.dart';
 import 'package:ion/app/features/user/model/follow_type.dart';
 import 'package:ion/app/features/user/model/payment_type.dart';
 import 'package:ion/app/features/user/model/tab_entity_type.dart';
+import 'package:ion/app/features/user/pages/bookmarks_page/bookmarks_page.dart';
+import 'package:ion/app/features/user/pages/edit_bookmarks_page/edit_bookmarks_page.dart';
 import 'package:ion/app/features/user/pages/profile_edit_page/pages/category_select_modal/category_select_modal.dart';
 import 'package:ion/app/features/user/pages/profile_edit_page/profile_edit_page.dart';
 import 'package:ion/app/features/user/pages/profile_page/pages/follow_list_modal/follow_list_modal.dart';

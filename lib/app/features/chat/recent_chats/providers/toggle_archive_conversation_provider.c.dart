@@ -44,10 +44,9 @@ class ToggleArchivedConversations extends _$ToggleArchivedConversations {
   }
 
   Future<BookmarksSetData> _getInitialBookmarkSet() async {
-    final bookmarksMap = await ref.read(currentUserBookmarksProvider.future);
-    final archivedConversationBookmarksSet = bookmarksMap[BookmarksSetType.chats];
-
-    return archivedConversationBookmarksSet?.data ??
+    final archivedConversationBookmarksData =
+        await ref.read(currentUserChatBookmarksDataProvider.future);
+    return archivedConversationBookmarksData ??
         const BookmarksSetData(
           postsRefs: [],
           articlesRefs: [],
