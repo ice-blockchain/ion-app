@@ -8,6 +8,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/components/inputs/hooks/use_node_focused.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/feed/stories/providers/story_pause_provider.c.dart';
+import 'package:ion/app/features/feed/stories/providers/story_reply_provider.c.dart';
 import 'package:ion/app/features/feed/views/components/toolbar_buttons/toolbar_send_button.dart';
 import 'package:ion/app/hooks/use_on_init.dart';
 
@@ -28,6 +29,7 @@ class StoryInputField extends HookConsumerWidget {
     final isTextNotEmpty = useState(false);
     final focusNode = useFocusNode();
     final focused = useNodeFocused(focusNode);
+    final replyLoading = ref.watch(storyReplyProvider).isLoading;
 
     final appColors = context.theme.appColors;
     final onPrimaryAccent = appColors.onPrimaryAccent;
@@ -35,7 +37,7 @@ class StoryInputField extends HookConsumerWidget {
     final body2 = textTheme.body2;
 
     useOnInit(
-      () => ref.read(storyPauseControllerProvider.notifier).paused = focused.value,
+      () => ref.read(storyPauseControllerProvider.notifier).paused = replyLoading || focused.value,
       [focused.value],
     );
 
