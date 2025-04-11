@@ -49,4 +49,5 @@ const mockedNetwork = NetworkData(
   isTestnet: true,
   displayName: 'ION',
   explorerUrl: 'https://explorer.testnet.ice.io/address/{txHash}',
+  tier: 1,
 );

@@ -5,7 +5,9 @@ import 'dart:async';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/features/core/providers/wallets_provider.c.dart';
 import 'package:ion/app/features/wallets/data/repository/crypto_wallets_repository.c.dart';
+import 'package:ion/app/features/wallets/data/repository/networks_repository.c.dart';
 import 'package:ion/app/features/wallets/data/repository/transactions_repository.c.dart';
+import 'package:ion/app/features/wallets/model/network_data.c.dart';
 import 'package:ion/app/features/wallets/model/transaction_data.c.dart';
 import 'package:ion/app/services/logger/logger.dart';
 import 'package:ion_identity_client/ion_identity.dart';
@@ -16,6 +18,7 @@ part 'sync_transactions_service.c.g.dart';
 @riverpod
 Future<SyncTransactionsService> syncTransactionsService(Ref ref) async {
   return SyncTransactionsService(
+    ref.watch(networksRepositoryProvider),
     await ref.watch(transactionsRepositoryProvider.future),
     await ref.watch(cryptoWalletsRepositoryProvider),
     await ref.watch(walletsNotifierProvider.future),
@@ -26,29 +29,34 @@ Future<SyncTransactionsService> syncTransactionsService(Ref ref) async {
 /// In case of an error, logs it and skips the wallet.
 class SyncTransactionsService {
   SyncTransactionsService(
+    this._networksRepository,
     this._transactionsRepository,
     this._cryptoWalletsRepository,
     this._userWallets,
-  ) {
-    if (_userWallets.isNotEmpty) {
-      sync();
-    }
-  }
+  );
 
   final TransactionsRepository _transactionsRepository;
   final CryptoWalletsRepository _cryptoWalletsRepository;
+  final NetworksRepository _networksRepository;
   final List<Wallet> _userWallets;
 
   Future<void> sync() async {
+    final networks = await _networksRepository.getAllAsMap();
     await _userWallets.map((wallet) async {
+      final network = networks[wallet.network];
       return await _cryptoWalletsRepository.isHistoryLoadedForWallet(walletId: wallet.id)
-          ? _syncTransactionsByPages(wallet)
-          : _loadAllTransactions(wallet);
+          ? _syncTransactionsByPages(wallet, network)
+          : _loadAllTransactions(wallet, network);
     }).wait;
   }
 
-  Future<void> _syncTransactionsByPages(Wallet wallet) async {
+  Future<void> _syncTransactionsByPages(Wallet wallet, NetworkData? network) async {
+    if (!_canRequestHistory(network)) {
+      return;
+    }
+
     String? nextPageToken = '';
+
     try {
       while (nextPageToken != null) {
         final result = await _transactionsRepository.loadCoinTransactions(
@@ -73,9 +81,14 @@ class SyncTransactionsService {
     }
   }
 
-  Future<void> _loadAllTransactions(Wallet wallet) async {
+  Future<void> _loadAllTransactions(Wallet wallet, NetworkData? network) async {
     String? nextPageToken = '';
     final transactions = <TransactionData>[];
+
+    if (!_canRequestHistory(network)) {
+      await _cryptoWalletsRepository.save(wallet: wallet, isHistoryLoaded: true);
+      return;
+    }
 
     try {
       while (nextPageToken != null) {
@@ -105,4 +118,6 @@ class SyncTransactionsService {
       );
     }
   }
+
+  bool _canRequestHistory(NetworkData? network) => network != null && network.isIonHistorySupported;
 }

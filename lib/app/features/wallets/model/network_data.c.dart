@@ -14,6 +14,7 @@ class NetworkData with _$NetworkData {
     required bool isTestnet,
     required String displayName,
     required String explorerUrl,
+    required int tier,
   }) = _NetworkData;
 
   const NetworkData._();
@@ -24,6 +25,7 @@ class NetworkData with _$NetworkData {
         isTestnet: dbInstance.isTestnet,
         displayName: dbInstance.displayName,
         explorerUrl: dbInstance.explorerUrl,
+        tier: dbInstance.tier,
       );
 
   factory NetworkData.fromDTO(ion_identity.Network instance) => NetworkData(
@@ -32,7 +34,10 @@ class NetworkData with _$NetworkData {
         isTestnet: instance.isTestnet,
         displayName: instance.displayName,
         explorerUrl: instance.explorerUrl,
+        tier: instance.tier,
       );
+
+  bool get isIonHistorySupported => tier == 1;
 
   String getExplorerUrl(String txHash) => explorerUrl.replaceAll('{txHash}', txHash);
 }
