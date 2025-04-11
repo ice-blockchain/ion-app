@@ -30,7 +30,7 @@ class WalletsInitializerNotifier extends _$WalletsInitializerNotifier {
       final networksInitializer = ref.watch(networksInitializerProvider);
       final syncServiceFuture = ref.watch(syncTransactionsServiceProvider.future);
 
-      final [_, __, syncService] = await Future.wait([
+      final [_, _, syncService] = await Future.wait([
         coinInitializer.initialize(),
         networksInitializer.initialize(),
         syncServiceFuture,
