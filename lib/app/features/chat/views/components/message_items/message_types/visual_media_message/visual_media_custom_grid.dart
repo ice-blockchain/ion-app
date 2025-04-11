@@ -84,11 +84,7 @@ class VisualMediaCustomGrid extends HookConsumerWidget {
                   isReply: isReply,
                 ),
               ),
-            ],
-          ),
-          SizedBox(height: _spacing),
-          Row(
-            children: <Widget>[
+              SizedBox(width: _spacing),
               Expanded(
                 child: VisualMediaContent(
                   key: ValueKey(messageMedias[1].id),
@@ -98,7 +94,11 @@ class VisualMediaCustomGrid extends HookConsumerWidget {
                   isReply: isReply,
                 ),
               ),
-              SizedBox(width: _spacing),
+            ],
+          ),
+          SizedBox(height: _spacing),
+          Row(
+            children: <Widget>[
               Expanded(
                 child: VisualMediaContent(
                   key: ValueKey(messageMedias[2].id),
