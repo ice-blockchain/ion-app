@@ -40,7 +40,7 @@ class E2eeMessagesSubscriber extends _$E2eeMessagesSubscriber {
 
     final latestEventMessageDate = await ref
         .watch(conversationEventMessageDaoProvider)
-        .getLatestEventMessageDate(PrivateDirectMessageEntity.kind);
+        .getLatestEventMessageDate(PrivateDirectMessageEntity.immutableKind);
 
     final userChatRelays = await ref.watch(userChatRelaysProvider(masterPubkey).future);
 
@@ -57,7 +57,7 @@ class E2eeMessagesSubscriber extends _$E2eeMessagesSubscriber {
       tags: {
         '#k': [
           DeletionRequest.kind.toString(),
-          PrivateDirectMessageEntity.kind.toString(),
+          PrivateDirectMessageEntity.immutableKind.toString(),
           PrivateMessageReactionEntity.kind.toString(),
         ],
         '#p': [masterPubkey],
@@ -114,7 +114,7 @@ class E2eeMessagesSubscriber extends _$E2eeMessagesSubscriber {
           }
 
           // Only for kind 14
-          if (rumor.kind == PrivateDirectMessageEntity.kind) {
+          if (rumor.kind == PrivateDirectMessageEntity.immutableKind) {
             // Add conversation if that doesn't exist
             await ref.watch(conversationDaoProvider).add([rumor]);
             // Add message if that doesn't exist
@@ -188,7 +188,7 @@ class E2eeMessagesSubscriber extends _$E2eeMessagesSubscriber {
               deleteRequest: rumor,
               conversationIds: deleteConversationIds,
             );
-          } else if (deleteEventKind == PrivateDirectMessageEntity.kind.toString()) {
+          } else if (deleteEventKind == PrivateDirectMessageEntity.immutableKind.toString()) {
             if (deleteEventIds.isNotEmpty) {
               await conversationMessageDao.removeMessages(
                 ref: ref,

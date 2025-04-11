@@ -131,33 +131,35 @@ class MessageItemWrapper extends HookConsumerWidget {
                       ),
                     ),
                     child: repliedMessageItem == null
-                        ? messageItem is! TextItem ||
-                                (messageItem is TextItem && (messageItem as TextItem).multiline)
-                            ? child
-                            : Row(
-                                mainAxisSize: MainAxisSize.min,
-                                children: [
-                                  child,
-                                  MessageMetaData(eventMessage: messageItem.eventMessage),
-                                ],
-                              )
+                        ? messageItem.maybeWhen(
+                            text: (_, __, multiline) => multiline
+                                ? child
+                                : Row(
+                                    mainAxisSize: MainAxisSize.min,
+                                    children: [
+                                      child,
+                                      MessageMetaData(eventMessage: messageItem.eventMessage),
+                                    ],
+                                  ),
+                            orElse: () => child,
+                          )
                         : Column(
                             children: [
                               ReplyMessage(messageItem, repliedMessageItem),
                               Align(
                                 alignment: AlignmentDirectional.centerEnd,
-                                child: messageItem is! TextItem ||
-                                        (messageItem is TextItem &&
-                                            (messageItem as TextItem).multiline)
-                                    ? child
-                                    : Row(
-                                        mainAxisSize: MainAxisSize.min,
-                                        children: [
-                                          child,
-                                          const Spacer(),
-                                          MessageMetaData(eventMessage: messageItem.eventMessage),
-                                        ],
-                                      ),
+                                child: messageItem.maybeWhen(
+                                  text: (_, __, multiline) => multiline
+                                      ? child
+                                      : Row(
+                                          mainAxisSize: MainAxisSize.min,
+                                          children: [
+                                            child,
+                                            MessageMetaData(eventMessage: messageItem.eventMessage),
+                                          ],
+                                        ),
+                                  orElse: () => child,
+                                ),
                               ),
                             ],
                           ),
