@@ -3,24 +3,21 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
-import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_quill/flutter_quill.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:ion/app/components/text_editor/hooks/use_text_editor_character_limit_exceed_amount.dart';
-import 'package:ion/app/components/text_editor/hooks/use_text_editor_has_content.dart';
 import 'package:ion/app/features/core/providers/poll/poll_answers_provider.c.dart';
 import 'package:ion/app/features/core/providers/poll/poll_title_notifier.c.dart';
 import 'package:ion/app/features/feed/create_post/model/create_post_option.dart';
 import 'package:ion/app/features/feed/create_post/providers/create_post_notifier.c.dart';
-import 'package:ion/app/features/feed/create_post/views/pages/post_form_modal/hooks/use_has_poll.dart';
-import 'package:ion/app/features/feed/data/models/entities/modifiable_post_data.c.dart';
+import 'package:ion/app/features/feed/create_post/views/hooks/use_can_submit_post.dart';
 import 'package:ion/app/features/feed/providers/selected_who_can_reply_option_provider.c.dart';
 import 'package:ion/app/features/feed/views/components/toolbar_buttons/toolbar_send_button.dart';
 import 'package:ion/app/features/ion_connect/model/event_reference.c.dart';
+import 'package:ion/app/features/ion_connect/model/ion_connect_entity.dart';
 import 'package:ion/app/features/ion_connect/model/media_attachment.dart';
+import 'package:ion/app/features/ion_connect/providers/ion_connect_entity_provider.c.dart';
 import 'package:ion/app/services/media_service/media_service.c.dart';
-import 'package:ion/app/utils/validators.dart';
 
 class PostSubmitButton extends HookConsumerWidget {
   const PostSubmitButton({
@@ -53,28 +50,22 @@ class PostSubmitButton extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final hasContent = useTextEditorHasContent(textEditorController) || mediaFiles.isNotEmpty;
-    final exceedsCharacterLimit = useTextEditorCharacterLimitExceedAmount(
-          textEditorController,
-          ModifiablePostEntity.contentCharacterLimit,
-        ) >
-        0;
+    IonConnectEntity? modifiedEntity;
+    if (modifiedEvent != null) {
+      modifiedEntity =
+          ref.read(ionConnectEntityProvider(eventReference: modifiedEvent!)).valueOrNull;
+    }
     final pollTitle = ref.watch(pollTitleNotifierProvider);
     final pollAnswers = ref.watch(pollAnswersNotifierProvider);
-    final hasPoll = useHasPoll(textEditorController);
     final whoCanReply = ref.watch(selectedWhoCanReplyOptionProvider);
 
-    final isSubmitButtonEnabled = useMemoized(
-      () {
-        final contentValid = hasPoll
-            ? Validators.isPollValid(
-                pollTitle.text,
-                pollAnswers,
-              )
-            : hasContent;
-        return contentValid && !exceedsCharacterLimit;
-      },
-      [hasPoll, hasContent, exceedsCharacterLimit],
+    final isSubmitButtonEnabled = useCanSubmitPost(
+      textEditorController,
+      mediaFiles,
+      mediaAttachments,
+      pollTitle,
+      pollAnswers,
+      modifiedEntity,
     );
 
     return ToolbarSendButton(
