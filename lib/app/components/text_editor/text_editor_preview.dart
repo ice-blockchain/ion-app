@@ -41,19 +41,123 @@ class TextEditorPreview extends HookWidget {
       [content],
     );
 
-    if (content.length == 1 && content.first.value == '\n') {
+    if (_isEmptyContent(content)) {
       return const SizedBox.shrink();
     }
+
+    return enableInteractiveSelection
+        ? _SelectableContentText(
+            controller: controller,
+            customStyles: customStyles,
+          )
+        : _QuillFormattedContent(
+            controller: controller,
+            customStyles: customStyles,
+            media: media,
+            maxHeight: maxHeight,
+            scrollable: scrollable,
+          );
+  }
+
+  bool _isEmptyContent(Delta delta) => delta.length == 1 && delta.first.value == '\n';
+}
+
+class _SelectableContentText extends StatelessWidget {
+  const _SelectableContentText({
+    required this.controller,
+    this.customStyles,
+  });
+
+  final QuillController controller;
+  final DefaultStyles? customStyles;
+
+  @override
+  Widget build(BuildContext context) {
+    final effectiveStyles = customStyles ?? textEditorStyles(context);
+
+    return SelectableText.rich(
+      TextSpan(
+        text: controller.document.toPlainText(),
+        style: effectiveStyles.paragraph?.style.copyWith(
+          color: customStyles?.paragraph?.style.color,
+        ),
+      ),
+      textAlign: TextAlign.start,
+      contextMenuBuilder: (context, editableTextState) => _ExtendedContextMenu(
+        editableTextState: editableTextState,
+      ),
+    );
+  }
+}
+
+class _ExtendedContextMenu extends StatelessWidget {
+  const _ExtendedContextMenu({
+    required this.editableTextState,
+  });
+
+  final EditableTextState editableTextState;
+
+  @override
+  Widget build(BuildContext context) {
+    final buttonItems = editableTextState.contextMenuButtonItems;
+
+    final hasSelectAll = buttonItems.any(
+      (item) => item.type == ContextMenuButtonType.selectAll,
+    );
+
+    if (!hasSelectAll) {
+      final copyIndex = buttonItems.indexWhere(
+        (item) => item.type == ContextMenuButtonType.copy,
+      );
+
+      final insertIndex = copyIndex != -1 ? copyIndex + 1 : 0;
+
+      buttonItems.insert(
+        insertIndex,
+        ContextMenuButtonItem(
+          type: ContextMenuButtonType.selectAll,
+          onPressed: () {
+            editableTextState.selectAll(SelectionChangedCause.toolbar);
+          },
+        ),
+      );
+    }
+
+    return AdaptiveTextSelectionToolbar.buttonItems(
+      anchors: editableTextState.contextMenuAnchors,
+      buttonItems: buttonItems,
+    );
+  }
+}
+
+class _QuillFormattedContent extends StatelessWidget {
+  const _QuillFormattedContent({
+    required this.controller,
+    this.customStyles,
+    this.media,
+    this.maxHeight,
+    this.scrollable = true,
+  });
+
+  final QuillController controller;
+  final DefaultStyles? customStyles;
+  final Map<String, MediaAttachment>? media;
+  final double? maxHeight;
+  final bool scrollable;
+
+  @override
+  Widget build(BuildContext context) {
+    final effectiveStyles = customStyles ?? textEditorStyles(context);
 
     return QuillEditor.basic(
       controller: controller,
       config: QuillEditorConfig(
-        enableSelectionToolbar: enableInteractiveSelection,
+        enableSelectionToolbar: false,
         floatingCursorDisabled: true,
         showCursor: false,
         scrollable: scrollable,
-        enableInteractiveSelection: enableInteractiveSelection,
-        customStyles: customStyles ?? textEditorStyles(context),
+        enableInteractiveSelection: false,
+        customStyles: effectiveStyles,
         maxHeight: maxHeight,
         embedBuilders: [
           TextEditorSingleImageBuilder(media: media),
@@ -61,7 +165,7 @@ class TextEditorPreview extends HookWidget {
           TextEditorCodeBuilder(readOnly: true),
         ],
         unknownEmbedBuilder: TextEditorUnknownEmbedBuilder(),
-        disableClipboard: !enableInteractiveSelection,
+        disableClipboard: true,
         customStyleBuilder: (attribute) => customTextStyleBuilder(attribute, context),
         customRecognizerBuilder: (attribute, leaf) => customRecognizerBuilder(context, attribute),
       ),
