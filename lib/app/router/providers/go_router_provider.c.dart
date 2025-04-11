@@ -15,6 +15,8 @@ import 'package:ion/app/features/core/providers/feature_flags_provider.c.dart';
 import 'package:ion/app/features/core/providers/init_provider.c.dart';
 import 'package:ion/app/features/core/providers/splash_provider.c.dart';
 import 'package:ion/app/features/core/views/pages/error_page.dart';
+import 'package:ion/app/features/force_update/providers/force_update_provider.c.dart';
+import 'package:ion/app/features/force_update/view/pages/app_update_modal.dart';
 import 'package:ion/app/features/user/providers/user_metadata_provider.c.dart';
 import 'package:ion/app/router/app_router_listenable.dart';
 import 'package:ion/app/router/app_routes.c.dart';
@@ -64,11 +66,16 @@ Future<String?> _mainRedirect({
   final isAuthenticated = (ref.read(authProvider).valueOrNull?.isAuthenticated).falseOrValue;
   final onboardingComplete = ref.read(onboardingCompleteProvider).valueOrNull;
   final hasNotificationsPermission = ref.read(hasPermissionProvider(Permission.notifications));
+  final forceUpdateRequired = ref.read(forceUpdateProvider).valueOrNull.falseOrValue;
 
   final isOnSplash = location.startsWith(SplashRoute().location);
   final isOnAuth = location.contains('/${AuthRoutes.authPrefix}/');
   final isOnOnboarding = location.contains('/${AuthRoutes.onboardingPrefix}/');
   final isOnFeed = location == FeedRoute().location;
+
+  if (forceUpdateRequired && !isOnSplash) {
+    ref.read(uiEventQueueNotifierProvider.notifier).emit(const ShowAppUpdateModalEvent());
+  }
 
   if (!isAuthenticated && !isOnAuth) {
     return IntroRoute().location;

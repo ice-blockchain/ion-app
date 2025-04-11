@@ -219,13 +219,9 @@ class ConfigPlatformNotSupportException extends IONException {
   ConfigPlatformNotSupportException() : super(10045, 'Platform not supported');
 }
 
-class ForceUpdateCouldntLaunchUrlException extends IONException {
-  ForceUpdateCouldntLaunchUrlException({required String url})
-      : super(10046, 'Could not launch $url');
-}
-
 class ForceUpdateFetchConfigException extends IONException {
-  ForceUpdateFetchConfigException() : super(10047, 'Failed to get version config');
+  ForceUpdateFetchConfigException(dynamic error)
+      : super(10047, 'Failed to get version config $error');
 }
 
 class DeleteEntityUnsupportedTypeException extends IONException {

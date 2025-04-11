@@ -6,9 +6,32 @@ import 'package:ion/app/components/button/button.dart';
 import 'package:ion/app/components/card/info_card.dart';
 import 'package:ion/app/components/screen_offset/screen_bottom_offset.dart';
 import 'package:ion/app/components/screen_offset/screen_side_offset.dart';
+import 'package:ion/app/constants/links.dart';
 import 'package:ion/app/extensions/extensions.dart';
-import 'package:ion/app/features/config/providers/force_update_util_provider.c.dart';
-import 'package:ion/app/features/core/model/app_update_type.dart';
+import 'package:ion/app/features/force_update/model/app_update_type.dart';
+import 'package:ion/app/router/utils/show_simple_bottom_sheet.dart';
+import 'package:ion/app/services/browser/browser.dart';
+import 'package:ion/app/services/ui_event_queue/ui_event_queue_notifier.c.dart';
+
+class ShowAppUpdateModalEvent extends UiEvent {
+  const ShowAppUpdateModalEvent();
+
+  static bool shown = false;
+
+  @override
+  void performAction(BuildContext context) {
+    if (!shown) {
+      shown = true;
+      showSimpleBottomSheet<void>(
+        context: context,
+        isDismissible: false,
+        child: const AppUpdateModal(
+          appUpdateType: AppUpdateType.updateRequired,
+        ),
+      ).then((_) => shown = false);
+    }
+  }
+}
 
 class AppUpdateModal extends ConsumerWidget {
   const AppUpdateModal({
@@ -37,10 +60,9 @@ class AppUpdateModal extends ConsumerWidget {
             leadingIcon: appUpdateType.buttonIconAsset.icon(
               color: context.theme.appColors.onPrimaryAccent,
             ),
-            onPressed: () async {
+            onPressed: () {
               if (appUpdateType == AppUpdateType.updateRequired) {
-                final forceUpdateService = ref.read(forceUpdateServiceProvider);
-                await forceUpdateService.handleForceUpdateRedirect();
+                openUrl(Links.appUpdate);
               }
             },
             label: Text(appUpdateType.getActionTitle(context)),

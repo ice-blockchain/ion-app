@@ -6,10 +6,12 @@ import 'package:ion/app/features/auth/providers/auth_provider.c.dart';
 import 'package:ion/app/features/auth/providers/onboarding_complete_provider.c.dart';
 import 'package:ion/app/features/core/providers/init_provider.c.dart';
 import 'package:ion/app/features/core/providers/splash_provider.c.dart';
+import 'package:ion/app/features/force_update/providers/force_update_provider.c.dart';
 
 class AppRouterNotifier extends ChangeNotifier {
   AppRouterNotifier(this.ref) {
     ref
+      ..listen(forceUpdateProvider, (_, __) => notifyListeners())
       ..listen(authProvider, (_, __) => notifyListeners())
       ..listen(initAppProvider, (_, __) => notifyListeners())
       ..listen(splashProvider, (_, __) => notifyListeners())
