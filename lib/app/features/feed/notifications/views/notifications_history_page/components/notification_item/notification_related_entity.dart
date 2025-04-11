@@ -30,8 +30,7 @@ class NotificationRelatedEntity extends StatelessWidget {
         padding: EdgeInsetsDirectional.only(top: 12.0.s, end: 16.0.s),
         child: GestureDetector(
           onTap: () {
-            ArticleDetailsRoute(eventReference: entity.toEventReference().encode())
-                .push<void>(context);
+            ArticleDetailsRoute(eventReference: eventReference.encode()).push<void>(context);
           },
           child: Article(
             eventReference: eventReference,
