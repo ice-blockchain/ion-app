@@ -15,6 +15,7 @@ import 'package:ion/app/features/user/providers/image_proccessor_notifier.c.dart
 import 'package:ion/app/services/markdown/quill.dart';
 import 'package:ion/app/services/media_service/image_proccessing_config.dart';
 import 'package:ion/app/services/media_service/media_service.c.dart';
+import 'package:ion/app/typedefs/typedefs.dart';
 
 class ArticleFormState {
   ArticleFormState({
@@ -30,6 +31,7 @@ class ArticleFormState {
     required this.titleFocusNode,
     required this.isTitleFocused,
     required this.media,
+    required this.mentions,
   });
 
   final ValueNotifier<MediaFile?> selectedImage;
@@ -44,6 +46,7 @@ class ArticleFormState {
   final FocusNode titleFocusNode;
   final ValueNotifier<bool> isTitleFocused;
   final ValueNotifier<Map<String, MediaAttachment>?> media;
+  final MentionsMapNotifier mentions;
 }
 
 ArticleFormState useArticleForm(WidgetRef ref, {EventReference? modifiedEvent}) {
@@ -58,6 +61,7 @@ ArticleFormState useArticleForm(WidgetRef ref, {EventReference? modifiedEvent}) 
   final titleFocusNode = useFocusNode();
   final isTitleFocused = useState(false);
   final isTextValid = useState(false);
+  final mentionsMapNotifier = useState<Map<String, String>>({});
   const titleMaxLength = 120;
 
   useEffect(
@@ -173,6 +177,7 @@ ArticleFormState useArticleForm(WidgetRef ref, {EventReference? modifiedEvent}) 
           titleController.text,
           selectedImageUrl.value,
           selectedImageUrlColor.value,
+          mentionsMapNotifier.value,
         );
   }
 
@@ -198,5 +203,6 @@ ArticleFormState useArticleForm(WidgetRef ref, {EventReference? modifiedEvent}) 
     titleFocusNode: titleFocusNode,
     isTitleFocused: isTitleFocused,
     media: media,
+    mentions: mentionsMapNotifier,
   );
 }

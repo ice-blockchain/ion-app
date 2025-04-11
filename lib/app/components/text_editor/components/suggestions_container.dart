@@ -17,11 +17,13 @@ class SuggestionsContainer extends HookConsumerWidget {
   const SuggestionsContainer({
     required this.scrollController,
     required this.editorKey,
+    required this.onMentionSuggestionSelected,
     super.key,
   });
 
   final ScrollController scrollController;
   final GlobalKey<TextEditorState> editorKey;
+  final void Function(({String pubkey, String username})) onMentionSuggestionSelected;
 
   void _onSuggestionSelected(String suggestion) {
     final textEditorState = editorKey.currentState;
@@ -56,7 +58,10 @@ class SuggestionsContainer extends HookConsumerWidget {
           child: switch (suggestionsState.taggingCharacter) {
             '@' => MentionsSuggestions(
                 suggestions: suggestionsState.suggestions,
-                onSuggestionSelected: _onSuggestionSelected,
+                onSuggestionSelected: (pubkeyUsernamePair) {
+                  onMentionSuggestionSelected(pubkeyUsernamePair);
+                  _onSuggestionSelected(pubkeyUsernamePair.username);
+                },
               ),
             '#' => HashtagsSuggestions(
                 suggestions: suggestionsState.suggestions,

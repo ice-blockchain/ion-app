@@ -19,6 +19,7 @@ import 'package:ion/app/features/feed/data/models/entities/post_data.c.dart';
 import 'package:ion/app/features/feed/data/models/who_can_reply_settings_option.dart';
 import 'package:ion/app/features/feed/providers/counters/replies_count_provider.c.dart';
 import 'package:ion/app/features/feed/providers/counters/reposts_count_provider.c.dart';
+import 'package:ion/app/features/feed/providers/reference_encoded_mentions_operations_provider.c.dart';
 import 'package:ion/app/features/ion_connect/model/entity_data_with_settings.dart';
 import 'package:ion/app/features/ion_connect/model/entity_editing_ended_at.c.dart';
 import 'package:ion/app/features/ion_connect/model/entity_expiration.c.dart';
@@ -67,42 +68,55 @@ class CreatePostNotifier extends _$CreatePostNotifier {
     EventReference? quotedEvent,
     List<MediaFile>? mediaFiles,
     String? communityId,
+    Map<String, String> mentions = const {},
   }) async {
     state = const AsyncValue.loading();
 
     state = await AsyncValue.guard(() async {
-      final postContent = content ?? buildEmptyDelta();
-      final parentEntity = parentEvent != null ? await _getParentEntity(parentEvent) : null;
-      final (:files, :media) = await _uploadMediaFiles(mediaFiles: mediaFiles);
-      final editingEndedAt = EntityEditingEndedAt.build(
-        ref.read(envProvider.notifier).get<int>(EnvVariable.EDIT_POST_ALLOWED_MINUTES),
-      );
+      try {
+        final postContent = content ?? buildEmptyDelta();
+        final parentEntity = parentEvent != null ? await _getParentEntity(parentEvent) : null;
+        final (:files, :media) = await _uploadMediaFiles(mediaFiles: mediaFiles);
+        final editingEndedAt = EntityEditingEndedAt.build(
+          ref.read(envProvider.notifier).get<int>(EnvVariable.EDIT_POST_ALLOWED_MINUTES),
+        );
 
-      final postData = ModifiablePostData(
-        content: _buildContentWithMediaLinks(content: postContent, media: media.values.toList()),
-        media: media,
-        replaceableEventId: ReplaceableEventIdentifier.generate(),
-        publishedAt: _buildEntityPublishedAt(),
-        editingEndedAt: editingEndedAt,
-        relatedHashtags: extractTags(postContent).map((tag) => RelatedHashtag(value: tag)).toList(),
-        quotedEvent: quotedEvent != null ? _buildQuotedEvent(quotedEvent) : null,
-        relatedEvents: parentEntity != null ? _buildRelatedEvents(parentEntity) : null,
-        relatedPubkeys: parentEntity != null ? _buildRelatedPubkeys(parentEntity) : null,
-        settings: EntityDataWithSettings.build(whoCanReply: whoCanReply),
-        expiration: _buildExpiration(),
-        communityId: communityId,
-        richText:
-            _buildRichTextContentWithMediaLinks(content: postContent, media: media.values.toList()),
-      );
+        final postData = ModifiablePostData(
+          content: await _buildContentWithMediaLinksAndMentions(
+            content: postContent,
+            media: media.values.toList(),
+            mentions: mentions,
+          ),
+          media: media,
+          replaceableEventId: ReplaceableEventIdentifier.generate(),
+          publishedAt: _buildEntityPublishedAt(),
+          editingEndedAt: editingEndedAt,
+          relatedHashtags:
+              extractTags(postContent).map((tag) => RelatedHashtag(value: tag)).toList(),
+          quotedEvent: quotedEvent != null ? _buildQuotedEvent(quotedEvent) : null,
+          relatedEvents: parentEntity != null ? _buildRelatedEvents(parentEntity) : null,
+          relatedPubkeys: _buildRelatedPubkeys(parentEntity, mentions.values),
+          settings: EntityDataWithSettings.build(whoCanReply: whoCanReply),
+          expiration: _buildExpiration(),
+          communityId: communityId,
+          richText: await _buildRichTextContentWithMediaLinksAndMentions(
+            content: postContent,
+            media: media.values.toList(),
+            mentions: mentions,
+          ),
+        );
 
-      final posts = await _sendPostEntities([...files, postData]);
-      posts?.whereType<ModifiablePostEntity>().forEach(_createPostNotifierStreamController.add);
+        final posts = await _sendPostEntities([...files, postData]);
+        posts?.whereType<ModifiablePostEntity>().forEach(_createPostNotifierStreamController.add);
 
-      if (quotedEvent != null) {
-        ref.read(repostsCountProvider(quotedEvent).notifier).addOne();
-      }
-      if (parentEvent != null) {
-        ref.read(repliesCountProvider(parentEvent).notifier).addOne();
+        if (quotedEvent != null) {
+          ref.read(repostsCountProvider(quotedEvent).notifier).addOne();
+        }
+        if (parentEvent != null) {
+          ref.read(repliesCountProvider(parentEvent).notifier).addOne();
+        }
+      } catch (e) {
+        print(e);
       }
     });
   }
@@ -113,6 +127,7 @@ class CreatePostNotifier extends _$CreatePostNotifier {
     List<MediaFile>? mediaFiles,
     Map<String, MediaAttachment> mediaAttachments = const {},
     WhoCanReplySettingsOption? whoCanReply,
+    Map<String, String> mentions = const {},
   }) async {
     state = const AsyncValue.loading();
 
@@ -132,13 +147,15 @@ class CreatePostNotifier extends _$CreatePostNotifier {
       final removedMediaHashes = originalMediaHashes.difference(attachedMediaHashes).toList();
 
       final postData = modifiedEntity.data.copyWith(
-        content: _buildContentWithMediaLinks(
+        content: await _buildContentWithMediaLinksAndMentions(
           content: postContent,
           media: modifiedMedia.values.toList(),
+          mentions: mentions,
         ),
-        richText: _buildRichTextContentWithMediaLinks(
+        richText: await _buildRichTextContentWithMediaLinksAndMentions(
           content: postContent,
           media: modifiedMedia.values.toList(),
+          mentions: mentions,
         ),
         media: modifiedMedia,
         relatedHashtags: extractTags(postContent).map((tag) => RelatedHashtag(value: tag)).toList(),
@@ -247,11 +264,16 @@ class CreatePostNotifier extends _$CreatePostNotifier {
     };
   }
 
-  RichText _buildRichTextContentWithMediaLinks({
+  Future<RichText> _buildRichTextContentWithMediaLinksAndMentions({
     required Delta content,
     required List<MediaAttachment> media,
-  }) {
-    final contentWithMedia = _buildContentWithMediaLinksDelta(content: content, media: media);
+    required Map<String, String> mentions,
+  }) async {
+    final contentWithMedia = await _buildContentWithMediaLinksAndMentionsDelta(
+      content: content,
+      media: media,
+      mentions: mentions,
+    );
 
     final richText = RichText(
       protocol: 'quill_delta',
@@ -261,25 +283,40 @@ class CreatePostNotifier extends _$CreatePostNotifier {
     return richText;
   }
 
-  String _buildContentWithMediaLinks({
+  Future<String> _buildContentWithMediaLinksAndMentions({
     required Delta content,
     required List<MediaAttachment> media,
-  }) {
-    final contentWithMedia = _buildContentWithMediaLinksDelta(content: content, media: media);
+    required Map<String, String> mentions,
+  }) async {
+    final contentWithMedia = await _buildContentWithMediaLinksAndMentionsDelta(
+      content: content,
+      media: media,
+      mentions: mentions,
+    );
     return deltaToMarkdown(contentWithMedia);
   }
 
-  Delta _buildContentWithMediaLinksDelta({
+  Future<Delta> _buildContentWithMediaLinksAndMentionsDelta({
     required Delta content,
     required List<MediaAttachment> media,
-  }) {
+    required Map<String, String> mentions,
+  }) async {
+    final currentOperations = content.operations.toList();
+    final mappedMentionsOperations = await ref.read(
+      referenceEncodedMentionsOperationsProvider(
+        currentOperations,
+        mentions: mentions,
+      ).future,
+    );
+    final newContentDelta = Delta.fromOperations(mappedMentionsOperations);
+
     return Delta.fromOperations(
       media
           .map(
             (mediaItem) => Operation.insert(mediaItem.url, {Attribute.link.key: mediaItem.url}),
           )
           .toList(),
-    ).concat(content);
+    ).concat(newContentDelta);
   }
 
   List<RelatedEvent> _buildRelatedEvents(IonConnectEntity parentEntity) {
@@ -318,11 +355,20 @@ class CreatePostNotifier extends _$CreatePostNotifier {
     }
   }
 
-  List<RelatedPubkey> _buildRelatedPubkeys(IonConnectEntity parentEntity) {
+  List<RelatedPubkey>? _buildRelatedPubkeys(
+    IonConnectEntity? parentEntity,
+    Iterable<String> mentionedPubkeys,
+  ) {
+    if (parentEntity == null && mentionedPubkeys.isEmpty) {
+      return null;
+    }
     return <RelatedPubkey>{
-      RelatedPubkey(value: parentEntity.masterPubkey),
-      if (parentEntity is ModifiablePostEntity) ...(parentEntity.data.relatedPubkeys ?? []),
-      if (parentEntity is PostEntity) ...(parentEntity.data.relatedPubkeys ?? []),
+      ...mentionedPubkeys.map((pubkey) => RelatedPubkey(value: pubkey)),
+      if (parentEntity != null) ...{
+        RelatedPubkey(value: parentEntity.masterPubkey),
+        if (parentEntity is ModifiablePostEntity) ...(parentEntity.data.relatedPubkeys ?? []),
+        if (parentEntity is PostEntity) ...(parentEntity.data.relatedPubkeys ?? []),
+      },
     }.toList();
   }
 
