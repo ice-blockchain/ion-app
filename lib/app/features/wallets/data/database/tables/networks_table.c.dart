@@ -9,7 +9,7 @@ class NetworksTable extends Table {
   BoolColumn get isTestnet => boolean()();
   TextColumn get displayName => text()();
   TextColumn get explorerUrl => text()();
-  IntColumn get tier => integer().nullable()();
+  IntColumn get tier => integer().withDefault(const Constant(1))();
 
   @override
   Set<Column> get primaryKey => {id};

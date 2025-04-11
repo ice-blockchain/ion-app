@@ -14,7 +14,7 @@ class NetworkData with _$NetworkData {
     required bool isTestnet,
     required String displayName,
     required String explorerUrl,
-    @Default(1) int? tier,
+    required int tier,
   }) = _NetworkData;
 
   const NetworkData._();

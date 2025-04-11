@@ -175,7 +175,7 @@ class _$NetworkImpl implements _Network {
       required this.id,
       required this.image,
       required this.isTestnet,
-      this.tier = 1});
+      required this.tier});
 
   factory _$NetworkImpl.fromJson(Map<String, dynamic> json) =>
       _$$NetworkImplFromJson(json);
@@ -191,7 +191,6 @@ class _$NetworkImpl implements _Network {
   @override
   final bool isTestnet;
   @override
-  @JsonKey()
   final int tier;
 
   @override
@@ -243,7 +242,7 @@ abstract class _Network implements Network {
       required final String id,
       required final String image,
       required final bool isTestnet,
-      final int tier}) = _$NetworkImpl;
+      required final int tier}) = _$NetworkImpl;
 
   factory _Network.fromJson(Map<String, dynamic> json) = _$NetworkImpl.fromJson;
 
