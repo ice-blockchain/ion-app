@@ -10,6 +10,7 @@ import 'package:ion/app/features/chat/e2ee/model/entities/private_direct_message
 import 'package:ion/app/features/chat/e2ee/model/entities/private_message_reaction_data.c.dart';
 import 'package:ion/app/features/chat/e2ee/providers/send_e2ee_message_provider.c.dart';
 import 'package:ion/app/features/chat/model/database/chat_database.c.dart';
+import 'package:ion/app/features/chat/providers/user_chat_relays_provider.c.dart';
 import 'package:ion/app/features/ion_connect/ion_connect.dart';
 import 'package:ion/app/features/ion_connect/model/action_source.c.dart';
 import 'package:ion/app/features/ion_connect/model/deletion_request.c.dart';
@@ -40,6 +41,14 @@ class E2eeMessagesSubscriber extends _$E2eeMessagesSubscriber {
     final latestEventMessageDate = await ref
         .watch(conversationEventMessageDaoProvider)
         .getLatestEventMessageDate(PrivateDirectMessageEntity.kind);
+
+    final userChatRelays = await ref.watch(userChatRelaysProvider(masterPubkey).future);
+
+    if (userChatRelays == null) {
+      await ref.read(userChatRelaysManagerProvider.notifier).sync();
+      ref.invalidateSelf();
+      return;
+    }
 
     final sinceDate = latestEventMessageDate?.add(const Duration(days: -2));
 
