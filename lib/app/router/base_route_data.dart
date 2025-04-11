@@ -1,5 +1,7 @@
 // SPDX-License-Identifier: ice License 1.0
 
+import 'dart:io';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
@@ -37,7 +39,7 @@ abstract class BaseRouteData extends GoRouteData {
       IceRouteType.single => CupertinoPage<void>(
           key: state.pageKey,
           child: PopScope(
-            canPop: false,
+            canPop: Platform.isIOS,
             onPopInvokedWithResult: (didPop, result) async {
               if (!didPop) {
                 context.pop();
