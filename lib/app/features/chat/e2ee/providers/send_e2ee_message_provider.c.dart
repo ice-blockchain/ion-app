@@ -109,7 +109,7 @@ class SendE2eeMessageService {
           signer: eventSigner!,
           eventMessage: eventMessage,
           receiverMasterPubkey: masterPubkey,
-          kind: PrivateMessageReactionEntity.kind,
+          kinds: [PrivateMessageReactionEntity.kind.toString()],
           receiverPubkey: currentUser ? eventSigner!.publicKey : pubkey,
         );
 
@@ -164,7 +164,7 @@ class SendE2eeMessageService {
           signer: eventSigner!,
           eventMessage: eventMessage,
           receiverMasterPubkey: masterPubkey,
-          kind: PrivateMessageReactionEntity.kind,
+          kinds: [PrivateMessageReactionEntity.kind.toString()],
           receiverPubkey: currentUser ? eventSigner!.publicKey : pubkey,
         );
 
@@ -213,8 +213,10 @@ class SendE2eeMessageService {
     required String receiverMasterPubkey,
     required EventSigner signer,
     required EventMessage eventMessage,
-    int kind = PrivateDirectMessageEntity.kind,
+    List<String>? kinds,
   }) async {
+    final contentKinds = kinds ?? [PrivateDirectMessageEntity.kind.toString()];
+
     final expirationTag = EntityExpiration(
       value: DateTime.now().add(
         Duration(hours: env.get<int>(EnvVariable.GIFT_WRAP_EXPIRATION_HOURS)),
@@ -229,7 +231,7 @@ class SendE2eeMessageService {
 
     final wrap = await wrapService.createWrap(
       event: seal,
-      contentKind: kind,
+      contentKinds: contentKinds,
       receiverPubkey: receiverPubkey,
       receiverMasterPubkey: receiverMasterPubkey,
       expirationTag: expirationTag,

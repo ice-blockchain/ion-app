@@ -141,7 +141,7 @@ class SendE2eeChatMessageService {
               previousId: eventMessage.id,
             );
 
-            await _sendKind14Message(
+            await sendWrappedMessage(
               eventMessage: event,
               eventSigner: eventSigner,
               pubkey: pubkey,
@@ -253,17 +253,19 @@ class SendE2eeChatMessageService {
     return mediaAttachmentsUsersBased;
   }
 
-  Future<void> _sendKind14Message({
+  Future<void> sendWrappedMessage({
     required String pubkey,
     required String masterPubkey,
     required EventSigner eventSigner,
     required EventMessage eventMessage,
+    List<String>? kinds,
   }) async {
     final giftWrap = await _createGiftWrap(
       signer: eventSigner,
       receiverPubkey: pubkey,
       eventMessage: eventMessage,
       receiverMasterPubkey: masterPubkey,
+      kinds: kinds ?? [PrivateDirectMessageEntity.kind.toString()],
     );
 
     await ref.read(ionConnectNotifierProvider.notifier).sendEvent(
@@ -328,11 +330,11 @@ class SendE2eeChatMessageService {
   }
 
   Future<EventMessage> _createGiftWrap({
+    required List<String> kinds,
     required String receiverPubkey,
     required String receiverMasterPubkey,
     required EventSigner signer,
     required EventMessage eventMessage,
-    int kind = PrivateDirectMessageEntity.kind,
   }) async {
     final env = ref.read(envProvider.notifier);
     final sealService = await ref.read(ionConnectSealServiceProvider.future);
@@ -352,7 +354,7 @@ class SendE2eeChatMessageService {
 
     final wrap = await wrapService.createWrap(
       event: seal,
-      contentKind: kind,
+      contentKinds: kinds,
       receiverPubkey: receiverPubkey,
       receiverMasterPubkey: receiverMasterPubkey,
       expirationTag: expirationTag,

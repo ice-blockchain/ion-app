@@ -21,20 +21,20 @@ import 'package:ion/app/features/feed/stories/views/components/story_viewer/comp
 
 class StoryContent extends HookConsumerWidget {
   const StoryContent({
-    required this.post,
+    required this.story,
     super.key,
   });
 
-  final ModifiablePostEntity post;
+  final ModifiablePostEntity story;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final emojiState = ref.watch(emojiReactionsControllerProvider);
     final textController = useTextEditingController();
     final isKeyboardVisible = KeyboardVisibilityProvider.isKeyboardVisible(context);
-    final canReply = ref.watch(canReplyProvider(post.toEventReference())).valueOrNull ?? false;
+    final canReply = ref.watch(canReplyProvider(story.toEventReference())).valueOrNull ?? false;
     final currentPubkey = ref.watch(currentPubkeySelectorProvider);
-    final isCurrentUserStory = currentPubkey == post.masterPubkey;
+    final isCurrentUserStory = currentPubkey == story.masterPubkey;
 
     ref.listen(
       storyReplyProvider,
@@ -49,7 +49,7 @@ class StoryContent extends HookConsumerWidget {
         if (content == null || content.isEmpty) return;
         final sendChatMessageService = await ref.read(sendChatMessageServiceProvider.future);
         await sendChatMessageService.send(
-          receiverPubkey: post.masterPubkey,
+          receiverPubkey: story.masterPubkey,
           content: content,
         );
 
@@ -58,7 +58,7 @@ class StoryContent extends HookConsumerWidget {
           FocusScope.of(context).unfocus();
         }
       },
-      [post.masterPubkey],
+      [story.masterPubkey],
     );
 
     final isPaused = ref.watch(storyPauseControllerProvider);
@@ -80,7 +80,7 @@ class StoryContent extends HookConsumerWidget {
           Stack(
             fit: StackFit.expand,
             children: [
-              StoryViewerContent(post: post),
+              StoryViewerContent(post: story),
               if (isReplyLoading)
                 BackdropFilter(
                   filter: ImageFilter.blur(sigmaX: 15, sigmaY: 15),
@@ -93,7 +93,7 @@ class StoryContent extends HookConsumerWidget {
           Stack(
             children: [
               const StoryHeaderGradient(),
-              StoryViewerHeader(currentPost: post),
+              StoryViewerHeader(currentPost: story),
             ],
           )
               .animate(target: shouldShowElements ? 1 : 0)
@@ -108,11 +108,12 @@ class StoryContent extends HookConsumerWidget {
                   onSubmitted: onSubmitted,
                 ),
               StoryViewerActionButtons(
-                post: post,
+                post: story,
                 bottomPadding: bottomPadding,
               ),
               if (isKeyboardVisible)
                 StoryReactionOverlay(
+                  story: story,
                   textController: textController,
                 ),
             ],
