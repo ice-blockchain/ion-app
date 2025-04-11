@@ -52,6 +52,15 @@ class WalletsDatabase extends _$WalletsDatabase {
   @override
   int get schemaVersion => 2;
 
+  @override
+  MigrationStrategy get migration => MigrationStrategy(
+        onUpgrade: stepByStep(
+          from1To2: (m, schema) async {
+            await m.addColumn(schema.networksTable, schema.networksTable.tier);
+          },
+        ),
+      );
+
   static QueryExecutor _openConnection(String pubkey) {
     return driftDatabase(name: 'wallets_database_$pubkey');
   }
