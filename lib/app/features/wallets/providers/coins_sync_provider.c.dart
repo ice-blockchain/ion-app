@@ -34,7 +34,7 @@ class CoinsSync extends _$CoinsSync {
       coinSyncService.startPeriodicSync();
       ref.onDispose(coinSyncService.stopPeriodicSync);
     } else {
-      walletViewsCoinsSyncService.removeCoinsSyncQueue();
+      walletViewsCoinsSyncService.removeQueue();
     }
   }
 }

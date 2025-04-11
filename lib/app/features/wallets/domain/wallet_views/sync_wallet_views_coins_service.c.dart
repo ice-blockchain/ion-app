@@ -30,11 +30,10 @@ class SyncWalletViewCoinsService {
   final CoinsRepository _coinsRepository;
   final IONIdentityClient _ionIdentityClient;
 
-  var _syncQueueActive = false;
-  var _syncQueueInitialized = false;
+  Timer? _syncTimer;
   StreamSubscription<List<CoinData>>? _subscription;
 
-  Future<void> startCoinsSyncQueue(List<CoinData> coins) async {
+  Future<void> start(List<CoinData> coins) async {
     final coinIds = coins.map((coin) => coin.id).toSet();
 
     Future<bool> isQueueNotReady() async => !(await _coinsRepository.isSyncQueueReady(coinIds));
@@ -52,12 +51,18 @@ class SyncWalletViewCoinsService {
       _subscription = _coinsRepository.watchCoins(coinIds).listen((coins) async {
         if (coins.isNotEmpty) {
           if (await isQueueNotReady()) {
+            Logger.log(
+              'The queue needs to be created/updated as it does not match the selected coins. '
+              'We also update the coins immediately to provide the actual coin prices.',
+            );
+
             await _updateCoinsSyncQueue(
               coins.map(
                 (coin) => (coinId: coin.id, syncFrequency: coin.syncFrequency),
               ),
               updateOnlyDifferences: true,
             );
+            await _syncCoins(forceSyncAll: true);
           }
           completer.complete();
         }
@@ -67,76 +72,68 @@ class SyncWalletViewCoinsService {
       await _subscription?.cancel();
     }
 
-    if (!_syncQueueInitialized) {
-      _syncQueueActive = true;
-      unawaited(syncCoins());
-    }
+    await _scheduleNextSync();
   }
 
-  void removeCoinsSyncQueue() {
-    Logger.log('Remove coins sync queue');
+  void removeQueue() {
+    Logger.log('Remove coins sync queue.');
 
-    _stopCoinsSyncQueue();
+    _stopQueue();
     _subscription?.cancel();
     _coinsRepository.removeSyncQueue();
   }
 
-  void _stopCoinsSyncQueue() {
-    _syncQueueActive = false;
-    _syncQueueInitialized = false;
+  void _stopQueue() {
+    Logger.log('Stop coins sync queue.');
+
+    _syncTimer?.cancel();
+    _syncTimer = null;
   }
 
-  Future<void> syncCoins() async {
+  Future<void> _scheduleNextSync() async {
     final nextUpdate = await _coinsRepository.getNextSyncTime();
-
-    if (nextUpdate == null || !_syncQueueActive) {
-      // There are no coins to sync or sync queue was disabled
-      _stopCoinsSyncQueue();
+    if (nextUpdate == null) {
+      Logger.log('Cannot schedule the next coins sync, because the next update date is null');
+      _stopQueue();
       return;
     }
 
-    _syncQueueInitialized = true;
+    final delay = nextUpdate.difference(DateTime.now());
 
-    final difference = nextUpdate.difference(DateTime.now());
-    Logger.log(
-      'Coins sync queue is active. The next sync will be on the $nextUpdate',
+    Logger.log('Next coins sync scheduled at $nextUpdate.');
+
+    _syncTimer?.cancel();
+    _syncTimer = Timer(delay > Duration.zero ? delay : Duration.zero, () async {
+      await _syncCoins();
+      await _scheduleNextSync();
+    });
+  }
+
+  Future<void> _syncCoins({bool forceSyncAll = false}) async {
+    final coins = forceSyncAll
+        ? await _coinsRepository.getAllCoinsToSync()
+        : await _coinsRepository.getCoinsToSync(DateTime.now());
+
+    Logger.log('Sync coins to get actual prices. Need to update ${coins.length} coins.');
+    if (coins.isEmpty) return;
+
+    final syncedCoinsData = await _ionIdentityClient.coins.syncCoins(
+      coins.map((e) => e.symbolGroup).toSet(),
     );
 
-    if (!difference.isNegative) {
-      // Wait until first group in queue should be synced
-      await Future<void>.delayed(difference.abs());
-    }
-
-    // Sync queue was disabled during delay, stop syncing
-    if (!_syncQueueActive) return;
-
-    final coins = await _coinsRepository.getCoinsToSync(DateTime.now());
-
-    if (coins.isNotEmpty) {
-      final syncedCoinsData =
-          await _ionIdentityClient.coins.syncCoins(coins.map((e) => e.symbolGroup).toSet());
-
-      final syncedCoins = coins.map((coinDB) {
-        final syncedData = syncedCoinsData.firstWhere((e) => e.symbolGroup == coinDB.symbolGroup);
-
-        return coinDB.copyWith(
-          priceUSD: syncedData.priceUSD,
-          syncFrequency: syncedData.syncFrequency,
-          decimals: syncedData.decimals,
-        );
-      }).toList();
-
-      await _coinsRepository.updateCoins(syncedCoins);
-      await _updateCoinsSyncQueue(
-        syncedCoins.map(
-          (coin) => (coinId: coin.id, syncFrequency: coin.syncFrequency),
-        ),
+    final syncedCoins = coins.map((coinDB) {
+      final syncedData = syncedCoinsData.firstWhere((e) => e.symbolGroup == coinDB.symbolGroup);
+      return coinDB.copyWith(
+        priceUSD: syncedData.priceUSD,
+        syncFrequency: syncedData.syncFrequency,
+        decimals: syncedData.decimals,
       );
-    }
+    }).toList();
 
-    // First section (coins with the same syncFrequency)
-    // in the queue was updated, move on to the next syncFrequency group of coins
-    unawaited(syncCoins());
+    await _coinsRepository.updateCoins(syncedCoins);
+    await _updateCoinsSyncQueue(
+      syncedCoins.map((coin) => (coinId: coin.id, syncFrequency: coin.syncFrequency)),
+    );
   }
 
   Future<void> _updateCoinsSyncQueue(
