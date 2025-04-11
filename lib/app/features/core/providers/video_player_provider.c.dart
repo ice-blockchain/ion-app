@@ -8,6 +8,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/features/core/providers/mute_provider.c.dart';
+import 'package:ion/app/services/logger/logger.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'video_player_provider.c.g.dart';
@@ -50,32 +51,42 @@ class VideoController extends _$VideoController {
         .watch(videoPlayerControllerFactoryProvider(params.sourcePath))
         .createController(VideoPlayerOptions(mixWithOthers: isMuted));
 
-    await controller.initialize();
-    await Future.wait(
-      [controller.setLooping(params.looping), controller.setVolume(isMuted ? 0 : 1)],
-    );
+    try {
+      await controller.initialize();
+      if (!controller.value.hasError) {
+        await Future.wait(
+          [controller.setLooping(params.looping), controller.setVolume(isMuted ? 0 : 1)],
+        );
 
-    if (_activeController != null) {
-      final prevController = _activeController!;
-      final isPlaying = prevController.value.isLooping ||
-          prevController.value.isBuffering ||
-          prevController.value.isPlaying;
-      await controller.seekTo(prevController.value.position);
-      if (isPlaying) {
-        unawaited(controller.play());
+        if (_activeController != null) {
+          final prevController = _activeController!;
+          final isPlaying = prevController.value.isLooping ||
+              prevController.value.isBuffering ||
+              prevController.value.isPlaying;
+          await controller.seekTo(prevController.value.position);
+          if (isPlaying) {
+            unawaited(controller.play());
+          }
+          WidgetsBinding.instance.addPostFrameCallback(
+            (_) {
+              prevController.dispose();
+            },
+          );
+        } else {
+          if (params.autoPlay) {
+            unawaited(controller.play());
+          }
+        }
+
+        _activeController = controller;
       }
-      WidgetsBinding.instance.addPostFrameCallback(
-        (_) {
-          prevController.dispose();
-        },
+    } catch (error, stackTrace) {
+      Logger.log(
+        'Error during video controller initialisation for source: ${params.sourcePath}',
+        error: error,
+        stackTrace: stackTrace,
       );
-    } else {
-      if (params.autoPlay) {
-        unawaited(controller.play());
-      }
     }
-
-    _activeController = controller;
 
     ref.onCancel(() async {
       return controller.dispose();
