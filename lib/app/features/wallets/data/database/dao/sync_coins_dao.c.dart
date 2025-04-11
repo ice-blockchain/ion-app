@@ -49,6 +49,12 @@ class SyncCoinsDao extends DatabaseAccessor<WalletsDatabase> with _$SyncCoinsDao
     return query.map((row) => row.readTable(coinsTable)).get();
   }
 
+  Future<List<Coin>> getAllCoinsToSync() async {
+    final query = select(syncCoinsTable)
+        .join([innerJoin(coinsTable, coinsTable.id.equalsExp(syncCoinsTable.coinId))]);
+    return query.map((row) => row.readTable(coinsTable)).get();
+  }
+
   Future<void> clear() async {
     await delete(syncCoinsTable).go();
   }

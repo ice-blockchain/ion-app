@@ -102,7 +102,7 @@ class WalletViewsService {
   }) {
     if (updatePeriodicCoinsSync) {
       final coins = _originWalletViews.expand((wv) => wv.coins).map((c) => c.coin).toList();
-      _syncWalletViewCoinsService.startCoinsSyncQueue(coins);
+      _syncWalletViewCoinsService.start(coins);
     }
 
     if (walletViews != null) {
