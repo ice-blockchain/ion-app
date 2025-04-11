@@ -62,7 +62,7 @@ class WalletsDatabase extends _$WalletsDatabase {
       onCreate: (m) => m.createAll(),
       onUpgrade: stepByStep(
         from1To2: (m, schema) async {
-          await m.createTable(schema.requestAssetsTable);
+          await m.createTable(schema.fundsRequestsTable);
         },
       ),
     );

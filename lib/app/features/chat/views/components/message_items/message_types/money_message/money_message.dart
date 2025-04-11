@@ -164,6 +164,7 @@ class _MoneyMessageContent extends HookConsumerWidget {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             crossAxisAlignment: CrossAxisAlignment.end,
             children: [
+              // TODO: implement reactions
               Button.compact(
                 type: buttonType,
                 backgroundColor: buttonBackgroundColor,

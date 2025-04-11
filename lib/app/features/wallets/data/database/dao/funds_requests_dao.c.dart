@@ -29,7 +29,10 @@ class FundsRequestsDao {
           .getSingleOrNull();
 
   Future<int> saveFundsRequest(FundsRequest fundsRequest) =>
-      _db.into(_db.fundsRequestsTable).insertOnConflictUpdate(fundsRequest);
+      _db.into(_db.fundsRequestsTable).insert(
+            fundsRequest,
+            mode: InsertMode.insertOrIgnore,
+          );
 
   Future<int> saveFundsRequests(List<FundsRequest> fundsRequests) async {
     await _db.batch((batch) {

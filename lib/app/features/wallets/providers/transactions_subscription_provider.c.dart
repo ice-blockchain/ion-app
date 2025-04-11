@@ -1,5 +1,6 @@
 // SPDX-License-Identifier: ice License 1.0
 
+import 'package:flutter_animate/flutter_animate.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/exceptions/exceptions.dart';
 import 'package:ion/app/features/auth/providers/auth_provider.c.dart';
@@ -48,8 +49,7 @@ Future<void> transactionsSubscription(Ref ref) async {
   final requestLastCreatedAt = await requestAssetsRepository.getLastCreatedAt();
 
   final lastCreatedAt = _getEarliestDateTime(transactionLastCreatedAt, requestLastCreatedAt);
-  final since = lastCreatedAt?.subtract(const Duration(days: 2)) ??
-      DateTime.now().subtract(const Duration(days: 30));
+  final since = lastCreatedAt?.subtract(2.days) ?? DateTime.now().subtract(2.days);
 
   final requestMessage = RequestMessage(
     filters: [

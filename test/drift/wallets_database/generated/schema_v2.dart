@@ -1731,16 +1731,11 @@ class CryptoWalletsTableCompanion extends UpdateCompanion<CryptoWalletsTableData
   }
 }
 
-class RequestAssetsTable extends Table with TableInfo<RequestAssetsTable, RequestAssetsTableData> {
+class FundsRequestsTable extends Table with TableInfo<FundsRequestsTable, FundsRequestsTableData> {
   @override
   final GeneratedDatabase attachedDatabase;
   final String? _alias;
-  RequestAssetsTable(this.attachedDatabase, [this._alias]);
-  late final GeneratedColumn<int> id = GeneratedColumn<int>('id', aliasedName, false,
-      hasAutoIncrement: true,
-      type: DriftSqlType.int,
-      requiredDuringInsert: false,
-      defaultConstraints: GeneratedColumn.constraintIsAlways('PRIMARY KEY AUTOINCREMENT'));
+  FundsRequestsTable(this.attachedDatabase, [this._alias]);
   late final GeneratedColumn<String> eventId = GeneratedColumn<String>(
       'event_id', aliasedName, false,
       type: DriftSqlType.string, requiredDuringInsert: true);
@@ -1786,7 +1781,6 @@ class RequestAssetsTable extends Table with TableInfo<RequestAssetsTable, Reques
       type: DriftSqlType.string, requiredDuringInsert: false);
   @override
   List<GeneratedColumn> get $columns => [
-        id,
         eventId,
         pubkey,
         createdAt,
@@ -1807,14 +1801,13 @@ class RequestAssetsTable extends Table with TableInfo<RequestAssetsTable, Reques
   String get aliasedName => _alias ?? actualTableName;
   @override
   String get actualTableName => $name;
-  static const String $name = 'request_assets_table';
+  static const String $name = 'funds_requests_table';
   @override
-  Set<GeneratedColumn> get $primaryKey => {id};
+  Set<GeneratedColumn> get $primaryKey => {eventId};
   @override
-  RequestAssetsTableData map(Map<String, dynamic> data, {String? tablePrefix}) {
+  FundsRequestsTableData map(Map<String, dynamic> data, {String? tablePrefix}) {
     final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
-    return RequestAssetsTableData(
-      id: attachedDatabase.typeMapping.read(DriftSqlType.int, data['${effectivePrefix}id'])!,
+    return FundsRequestsTableData(
       eventId: attachedDatabase.typeMapping
           .read(DriftSqlType.string, data['${effectivePrefix}event_id'])!,
       pubkey:
@@ -1847,13 +1840,12 @@ class RequestAssetsTable extends Table with TableInfo<RequestAssetsTable, Reques
   }
 
   @override
-  RequestAssetsTable createAlias(String alias) {
-    return RequestAssetsTable(attachedDatabase, alias);
+  FundsRequestsTable createAlias(String alias) {
+    return FundsRequestsTable(attachedDatabase, alias);
   }
 }
 
-class RequestAssetsTableData extends DataClass implements Insertable<RequestAssetsTableData> {
-  final int id;
+class FundsRequestsTableData extends DataClass implements Insertable<FundsRequestsTableData> {
   final String eventId;
   final String pubkey;
   final DateTime createdAt;
@@ -1869,9 +1861,8 @@ class RequestAssetsTableData extends DataClass implements Insertable<RequestAsse
   final String? amountUsd;
   final bool isPending;
   final String? request;
-  const RequestAssetsTableData(
-      {required this.id,
-      required this.eventId,
+  const FundsRequestsTableData(
+      {required this.eventId,
       required this.pubkey,
       required this.createdAt,
       required this.networkId,
@@ -1889,7 +1880,6 @@ class RequestAssetsTableData extends DataClass implements Insertable<RequestAsse
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
     final map = <String, Expression>{};
-    map['id'] = Variable<int>(id);
     map['event_id'] = Variable<String>(eventId);
     map['pubkey'] = Variable<String>(pubkey);
     map['created_at'] = Variable<DateTime>(createdAt);
@@ -1920,9 +1910,8 @@ class RequestAssetsTableData extends DataClass implements Insertable<RequestAsse
     return map;
   }
 
-  RequestAssetsTableCompanion toCompanion(bool nullToAbsent) {
-    return RequestAssetsTableCompanion(
-      id: Value(id),
+  FundsRequestsTableCompanion toCompanion(bool nullToAbsent) {
+    return FundsRequestsTableCompanion(
       eventId: Value(eventId),
       pubkey: Value(pubkey),
       createdAt: Value(createdAt),
@@ -1942,11 +1931,10 @@ class RequestAssetsTableData extends DataClass implements Insertable<RequestAsse
     );
   }
 
-  factory RequestAssetsTableData.fromJson(Map<String, dynamic> json,
+  factory FundsRequestsTableData.fromJson(Map<String, dynamic> json,
       {ValueSerializer? serializer}) {
     serializer ??= driftRuntimeOptions.defaultSerializer;
-    return RequestAssetsTableData(
-      id: serializer.fromJson<int>(json['id']),
+    return FundsRequestsTableData(
       eventId: serializer.fromJson<String>(json['event_id']),
       pubkey: serializer.fromJson<String>(json['pubkey']),
       createdAt: serializer.fromJson<DateTime>(json['created_at']),
@@ -1968,7 +1956,6 @@ class RequestAssetsTableData extends DataClass implements Insertable<RequestAsse
   Map<String, dynamic> toJson({ValueSerializer? serializer}) {
     serializer ??= driftRuntimeOptions.defaultSerializer;
     return <String, dynamic>{
-      'id': serializer.toJson<int>(id),
       'event_id': serializer.toJson<String>(eventId),
       'pubkey': serializer.toJson<String>(pubkey),
       'created_at': serializer.toJson<DateTime>(createdAt),
@@ -1987,9 +1974,8 @@ class RequestAssetsTableData extends DataClass implements Insertable<RequestAsse
     };
   }
 
-  RequestAssetsTableData copyWith(
-          {int? id,
-          String? eventId,
+  FundsRequestsTableData copyWith(
+          {String? eventId,
           String? pubkey,
           DateTime? createdAt,
           String? networkId,
@@ -2004,8 +1990,7 @@ class RequestAssetsTableData extends DataClass implements Insertable<RequestAsse
           Value<String?> amountUsd = const Value.absent(),
           bool? isPending,
           Value<String?> request = const Value.absent()}) =>
-      RequestAssetsTableData(
-        id: id ?? this.id,
+      FundsRequestsTableData(
         eventId: eventId ?? this.eventId,
         pubkey: pubkey ?? this.pubkey,
         createdAt: createdAt ?? this.createdAt,
@@ -2022,9 +2007,8 @@ class RequestAssetsTableData extends DataClass implements Insertable<RequestAsse
         isPending: isPending ?? this.isPending,
         request: request.present ? request.value : this.request,
       );
-  RequestAssetsTableData copyWithCompanion(RequestAssetsTableCompanion data) {
-    return RequestAssetsTableData(
-      id: data.id.present ? data.id.value : this.id,
+  FundsRequestsTableData copyWithCompanion(FundsRequestsTableCompanion data) {
+    return FundsRequestsTableData(
       eventId: data.eventId.present ? data.eventId.value : this.eventId,
       pubkey: data.pubkey.present ? data.pubkey.value : this.pubkey,
       createdAt: data.createdAt.present ? data.createdAt.value : this.createdAt,
@@ -2045,8 +2029,7 @@ class RequestAssetsTableData extends DataClass implements Insertable<RequestAsse
 
   @override
   String toString() {
-    return (StringBuffer('RequestAssetsTableData(')
-          ..write('id: $id, ')
+    return (StringBuffer('FundsRequestsTableData(')
           ..write('eventId: $eventId, ')
           ..write('pubkey: $pubkey, ')
           ..write('createdAt: $createdAt, ')
@@ -2067,28 +2050,12 @@ class RequestAssetsTableData extends DataClass implements Insertable<RequestAsse
   }
 
   @override
-  int get hashCode => Object.hash(
-      id,
-      eventId,
-      pubkey,
-      createdAt,
-      networkId,
-      assetClass,
-      assetAddress,
-      from,
-      to,
-      walletAddress,
-      userPubkey,
-      assetId,
-      amount,
-      amountUsd,
-      isPending,
-      request);
+  int get hashCode => Object.hash(eventId, pubkey, createdAt, networkId, assetClass, assetAddress,
+      from, to, walletAddress, userPubkey, assetId, amount, amountUsd, isPending, request);
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
-      (other is RequestAssetsTableData &&
-          other.id == this.id &&
+      (other is FundsRequestsTableData &&
           other.eventId == this.eventId &&
           other.pubkey == this.pubkey &&
           other.createdAt == this.createdAt &&
@@ -2106,8 +2073,7 @@ class RequestAssetsTableData extends DataClass implements Insertable<RequestAsse
           other.request == this.request);
 }
 
-class RequestAssetsTableCompanion extends UpdateCompanion<RequestAssetsTableData> {
-  final Value<int> id;
+class FundsRequestsTableCompanion extends UpdateCompanion<FundsRequestsTableData> {
   final Value<String> eventId;
   final Value<String> pubkey;
   final Value<DateTime> createdAt;
@@ -2123,8 +2089,8 @@ class RequestAssetsTableCompanion extends UpdateCompanion<RequestAssetsTableData
   final Value<String?> amountUsd;
   final Value<bool> isPending;
   final Value<String?> request;
-  const RequestAssetsTableCompanion({
-    this.id = const Value.absent(),
+  final Value<int> rowid;
+  const FundsRequestsTableCompanion({
     this.eventId = const Value.absent(),
     this.pubkey = const Value.absent(),
     this.createdAt = const Value.absent(),
@@ -2140,9 +2106,9 @@ class RequestAssetsTableCompanion extends UpdateCompanion<RequestAssetsTableData
     this.amountUsd = const Value.absent(),
     this.isPending = const Value.absent(),
     this.request = const Value.absent(),
+    this.rowid = const Value.absent(),
   });
-  RequestAssetsTableCompanion.insert({
-    this.id = const Value.absent(),
+  FundsRequestsTableCompanion.insert({
     required String eventId,
     required String pubkey,
     required DateTime createdAt,
@@ -2158,6 +2124,7 @@ class RequestAssetsTableCompanion extends UpdateCompanion<RequestAssetsTableData
     this.amountUsd = const Value.absent(),
     this.isPending = const Value.absent(),
     this.request = const Value.absent(),
+    this.rowid = const Value.absent(),
   })  : eventId = Value(eventId),
         pubkey = Value(pubkey),
         createdAt = Value(createdAt),
@@ -2166,8 +2133,7 @@ class RequestAssetsTableCompanion extends UpdateCompanion<RequestAssetsTableData
         assetAddress = Value(assetAddress),
         from = Value(from),
         to = Value(to);
-  static Insertable<RequestAssetsTableData> custom({
-    Expression<int>? id,
+  static Insertable<FundsRequestsTableData> custom({
     Expression<String>? eventId,
     Expression<String>? pubkey,
     Expression<DateTime>? createdAt,
@@ -2183,9 +2149,9 @@ class RequestAssetsTableCompanion extends UpdateCompanion<RequestAssetsTableData
     Expression<String>? amountUsd,
     Expression<bool>? isPending,
     Expression<String>? request,
+    Expression<int>? rowid,
   }) {
     return RawValuesInsertable({
-      if (id != null) 'id': id,
       if (eventId != null) 'event_id': eventId,
       if (pubkey != null) 'pubkey': pubkey,
       if (createdAt != null) 'created_at': createdAt,
@@ -2201,12 +2167,12 @@ class RequestAssetsTableCompanion extends UpdateCompanion<RequestAssetsTableData
       if (amountUsd != null) 'amount_usd': amountUsd,
       if (isPending != null) 'is_pending': isPending,
       if (request != null) 'request': request,
+      if (rowid != null) 'rowid': rowid,
     });
   }
 
-  RequestAssetsTableCompanion copyWith(
-      {Value<int>? id,
-      Value<String>? eventId,
+  FundsRequestsTableCompanion copyWith(
+      {Value<String>? eventId,
       Value<String>? pubkey,
       Value<DateTime>? createdAt,
       Value<String>? networkId,
@@ -2220,9 +2186,9 @@ class RequestAssetsTableCompanion extends UpdateCompanion<RequestAssetsTableData
       Value<String?>? amount,
       Value<String?>? amountUsd,
       Value<bool>? isPending,
-      Value<String?>? request}) {
-    return RequestAssetsTableCompanion(
-      id: id ?? this.id,
+      Value<String?>? request,
+      Value<int>? rowid}) {
+    return FundsRequestsTableCompanion(
       eventId: eventId ?? this.eventId,
       pubkey: pubkey ?? this.pubkey,
       createdAt: createdAt ?? this.createdAt,
@@ -2238,15 +2204,13 @@ class RequestAssetsTableCompanion extends UpdateCompanion<RequestAssetsTableData
       amountUsd: amountUsd ?? this.amountUsd,
       isPending: isPending ?? this.isPending,
       request: request ?? this.request,
+      rowid: rowid ?? this.rowid,
     );
   }
 
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
     final map = <String, Expression>{};
-    if (id.present) {
-      map['id'] = Variable<int>(id.value);
-    }
     if (eventId.present) {
       map['event_id'] = Variable<String>(eventId.value);
     }
@@ -2292,13 +2256,15 @@ class RequestAssetsTableCompanion extends UpdateCompanion<RequestAssetsTableData
     if (request.present) {
       map['request'] = Variable<String>(request.value);
     }
+    if (rowid.present) {
+      map['rowid'] = Variable<int>(rowid.value);
+    }
     return map;
   }
 
   @override
   String toString() {
-    return (StringBuffer('RequestAssetsTableCompanion(')
-          ..write('id: $id, ')
+    return (StringBuffer('FundsRequestsTableCompanion(')
           ..write('eventId: $eventId, ')
           ..write('pubkey: $pubkey, ')
           ..write('createdAt: $createdAt, ')
@@ -2313,7 +2279,8 @@ class RequestAssetsTableCompanion extends UpdateCompanion<RequestAssetsTableData
           ..write('amount: $amount, ')
           ..write('amountUsd: $amountUsd, ')
           ..write('isPending: $isPending, ')
-          ..write('request: $request')
+          ..write('request: $request, ')
+          ..write('rowid: $rowid')
           ..write(')'))
         .toString();
   }
@@ -2326,7 +2293,7 @@ class DatabaseAtV2 extends GeneratedDatabase {
   late final NetworksTable networksTable = NetworksTable(this);
   late final TransactionsTable transactionsTable = TransactionsTable(this);
   late final CryptoWalletsTable cryptoWalletsTable = CryptoWalletsTable(this);
-  late final RequestAssetsTable requestAssetsTable = RequestAssetsTable(this);
+  late final FundsRequestsTable fundsRequestsTable = FundsRequestsTable(this);
   @override
   Iterable<TableInfo<Table, Object?>> get allTables =>
       allSchemaEntities.whereType<TableInfo<Table, Object?>>();
@@ -2337,7 +2304,7 @@ class DatabaseAtV2 extends GeneratedDatabase {
         networksTable,
         transactionsTable,
         cryptoWalletsTable,
-        requestAssetsTable
+        fundsRequestsTable
       ];
   @override
   int get schemaVersion => 2;
