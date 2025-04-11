@@ -45,14 +45,57 @@ class TextEditorPreview extends HookWidget {
       return const SizedBox.shrink();
     }
 
+    if (enableInteractiveSelection) {
+      return SelectableText.rich(
+        TextSpan(
+          text: controller.document.toPlainText(),
+          style: (customStyles ?? textEditorStyles(context))
+              .paragraph
+              ?.style
+              .copyWith(color: customStyles?.paragraph?.style.color),
+        ),
+        textAlign: TextAlign.left,
+        contextMenuBuilder: (context, editableTextState) {
+          final buttonItems = editableTextState.contextMenuButtonItems;
+
+          final hasSelectAll = buttonItems.any(
+            (item) => item.type == ContextMenuButtonType.selectAll,
+          );
+
+          if (!hasSelectAll) {
+            final copyIndex = buttonItems.indexWhere(
+              (item) => item.type == ContextMenuButtonType.copy,
+            );
+
+            final insertIndex = copyIndex != -1 ? copyIndex + 1 : 0;
+
+            buttonItems.insert(
+              insertIndex,
+              ContextMenuButtonItem(
+                type: ContextMenuButtonType.selectAll,
+                onPressed: () {
+                  editableTextState.selectAll(SelectionChangedCause.toolbar);
+                },
+              ),
+            );
+          }
+
+          return AdaptiveTextSelectionToolbar.buttonItems(
+            anchors: editableTextState.contextMenuAnchors,
+            buttonItems: buttonItems,
+          );
+        },
+      );
+    }
+
     return QuillEditor.basic(
       controller: controller,
       config: QuillEditorConfig(
-        enableSelectionToolbar: enableInteractiveSelection,
+        enableSelectionToolbar: false,
         floatingCursorDisabled: true,
         showCursor: false,
         scrollable: scrollable,
-        enableInteractiveSelection: enableInteractiveSelection,
+        enableInteractiveSelection: false,
         customStyles: customStyles ?? textEditorStyles(context),
         maxHeight: maxHeight,
         embedBuilders: [
@@ -61,7 +104,7 @@ class TextEditorPreview extends HookWidget {
           TextEditorCodeBuilder(readOnly: true),
         ],
         unknownEmbedBuilder: TextEditorUnknownEmbedBuilder(),
-        disableClipboard: !enableInteractiveSelection,
+        disableClipboard: true,
         customStyleBuilder: (attribute) => customTextStyleBuilder(attribute, context),
         customRecognizerBuilder: (attribute, leaf) => customRecognizerBuilder(context, attribute),
       ),
