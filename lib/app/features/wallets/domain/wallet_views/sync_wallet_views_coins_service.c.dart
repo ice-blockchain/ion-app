@@ -52,7 +52,7 @@ class SyncWalletViewCoinsService {
         if (coins.isNotEmpty) {
           if (await isQueueNotReady()) {
             Logger.log(
-              'The queue needs to be created/updated as it does not match the selected coins. ',
+              'The queue needs to be created/updated as it does not match the selected coins.',
             );
 
             await _updateCoinsSyncQueue(
