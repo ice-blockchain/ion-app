@@ -20,6 +20,7 @@ dependencies:
   crypto_keys: ^0.3.0+1
   cryptography: ^2.7.0
   dio: ^5.7.0
+  dio_smart_retry: ^7.0.1
   flutter:
     sdk: flutter
   flutter_secure_storage: ^9.2.2
