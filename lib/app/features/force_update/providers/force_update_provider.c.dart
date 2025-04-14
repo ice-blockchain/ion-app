@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:ion/app/features/core/providers/app_info_provider.c.dart';
 import 'package:ion/app/features/core/providers/app_lifecycle_provider.c.dart';
 import 'package:ion/app/features/force_update/providers/min_app_version_repository.c.dart';
+import 'package:ion/app/services/logger/logger.dart';
 import 'package:ion/app/utils/version.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
@@ -27,12 +28,21 @@ class ForceUpdate extends _$ForceUpdate {
   }
 
   Future<bool> _isForceUpdateRequired() async {
-    final repository = await ref.read(minAppVersionRepositoryProvider.future);
-    final minVersion = await repository.getMinVersion();
+    try {
+      final repository = await ref.read(minAppVersionRepositoryProvider.future);
+      final minVersion = await repository.getMinVersion();
 
-    final appInfo = await ref.read(appInfoProvider.future);
-    final appVersion = appInfo.version;
+      final appInfo = await ref.read(appInfoProvider.future);
+      final appVersion = appInfo.version;
 
-    return compareVersions(appVersion, minVersion) == -1;
+      return compareVersions(appVersion, minVersion) == -1;
+    } catch (error, stackTrace) {
+      Logger.error(
+        error,
+        stackTrace: stackTrace,
+        message: 'Failed to check if force update is required',
+      );
+      return false;
+    }
   }
 }
