@@ -120,7 +120,9 @@ class _ReactionButton extends StatelessWidget {
         child: Center(
           child: Text(
             emoji,
-            style: TextStyle(fontSize: 40.0.s),
+            style: context.theme.appTextThemes.headline1.copyWith(
+              fontSize: 40.0.s,
+            ),
           ),
         ),
       ),

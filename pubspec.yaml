@@ -167,6 +167,9 @@ flutter:
     - family: Monaco
       fonts:
         - asset: assets/fonts/Monaco.ttf
+    - family: NotoColorEmoji
+      fonts:
+        - asset: assets/fonts/NotoColorEmoji-Regular.ttf
   assets:
     - lib/app/templates/basic.json
     - assets/videos/

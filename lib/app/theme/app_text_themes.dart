@@ -145,6 +145,7 @@ class TemplateTextStyle extends TextStyle {
       height: theme.height,
       fontFamily: 'NotoSans',
       letterSpacing: 0,
+      fontFamilyFallback: const ['NotoColorEmoji'],
     );
   }
 }

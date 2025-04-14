@@ -1,5 +1,7 @@
 // SPDX-License-Identifier: ice License 1.0
 
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_quill/flutter_quill.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
@@ -14,14 +16,15 @@ import 'package:ion/app/router/providers/go_router_provider.c.dart';
 import 'package:ion/app/services/logger/logger_initializer.dart';
 import 'package:ion/app/services/storage/secure_storage.c.dart';
 import 'package:ion/app/theme/theme.dart';
+import 'package:ion/app/utils/fallback_emoji_font.dart';
 import 'package:ion/generated/app_localizations.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await SecureStorage().clearOnReinstall();
-
   final container = ProviderContainer();
   LoggerInitializer.initialize(container);
+  unawaited(preloadFallbackEmojiFont());
 
   runApp(
     UncontrolledProviderScope(
