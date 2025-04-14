@@ -13,8 +13,8 @@ class PaginationParams with _$PaginationParams {
 
   PaginationParams._();
 
-  // Adding 1 second because otherwise events might be unintentionally skipped
-  DateTime? get until => lastEventTime?.add(const Duration(seconds: 1));
+  // Adding 2 seconds because otherwise events might be unintentionally skipped
+  DateTime? get until => lastEventTime?.add(const Duration(seconds: 2));
 }
 
 @freezed
