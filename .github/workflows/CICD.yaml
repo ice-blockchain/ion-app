@@ -3,6 +3,7 @@ on:
   push:
     branches:
       - master
+      - release/v*
   workflow_dispatch:
     inputs:
       environment:
@@ -21,7 +22,6 @@ on:
         type: choice
         options:
           - firebase
-          - store
       version:
         description: "App version"
         default: "9.9.9"
@@ -33,9 +33,9 @@ on:
         type: bool
 
 env:
-  APP_ENV: ${{ inputs.environment || 'staging' }}
-  DEPLOYMENT_TYPE: ${{ inputs.deployment || 'firebase' }}
-  APP_VERSION: ${{ inputs.version || '9.9.9' }}
+  APP_ENV: ${{ inputs.environment || (startsWith(github.ref, 'refs/heads/release/') && 'production') || 'staging' }}
+  DEPLOYMENT_TYPE: ${{ inputs.deployment || (startsWith(github.ref, 'refs/heads/release/') && 'store') || 'firebase' }}
+  APP_VERSION: ${{ inputs.version || (startsWith(github.ref, 'refs/heads/release/') && github.ref_name.replace('release/v', '')) || '9.9.9' }}
 
 jobs:
   flutter:
