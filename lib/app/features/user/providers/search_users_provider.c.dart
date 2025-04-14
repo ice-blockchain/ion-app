@@ -5,6 +5,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/features/auth/providers/auth_provider.c.dart';
 import 'package:ion/app/features/ion_connect/ion_connect.dart';
 import 'package:ion/app/features/ion_connect/model/action_source.c.dart';
+import 'package:ion/app/features/ion_connect/model/related_hashtag.c.dart';
 import 'package:ion/app/features/ion_connect/model/search_extension.dart';
 import 'package:ion/app/features/ion_connect/providers/entities_paged_data_provider.c.dart';
 import 'package:ion/app/features/user/model/user_metadata.c.dart';
@@ -52,6 +53,17 @@ class SearchUsers extends _$SearchUsers {
 
 @riverpod
 List<EntitiesDataSource> searchUsersDataSource(Ref ref, {required String query}) {
+  final isTagSearch = RelatedHashtag.isTag(query);
+  final tags = isTagSearch
+      ? {
+          '#${RelatedHashtag.tagName}': [
+            query.toLowerCase(),
+            // Is needed for backward compatibility - previously we set 't' tags without the symbol
+            // TODO:It might be removed after the release.
+            if (query.startsWith('#')) query.substring(1).toLowerCase(),
+          ],
+        }
+      : <String, List<Object>>{};
   return [
     EntitiesDataSource(
       actionSource: const ActionSourceIndexers(),
@@ -61,9 +73,10 @@ List<EntitiesDataSource> searchUsersDataSource(Ref ref, {required String query})
           kinds: const [UserMetadataEntity.kind],
           search: SearchExtensions(
             [
-              QuerySearchExtension(searchQuery: query),
+              if (!isTagSearch) QuerySearchExtension(searchQuery: query),
             ],
           ).toString(),
+          tags: tags,
           limit: 20,
         ),
       ],

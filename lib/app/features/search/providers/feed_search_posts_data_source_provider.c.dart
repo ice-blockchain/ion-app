@@ -60,7 +60,7 @@ List<EntitiesDataSource>? feedSearchPostsDataSource(
           '#${RelatedHashtag.tagName}': [
             query.toLowerCase(),
             // Is needed for backward compatibility - previously we set 't' tags without the symbol
-            // It might be removed after the release.
+            // TODO:It might be removed after the release.
             if (query.startsWith('#')) query.substring(1).toLowerCase(),
           ],
         }
