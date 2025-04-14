@@ -85,9 +85,9 @@ class MinAppVersionRepository {
 
   Future<String> _getFromNetwork() async {
     final configName = MinAppVersionConfigName.fromPlatform();
-    final path = '$_ionOrigin/v1/config/$configName';
     try {
-      final response = await _dio.get<String>(path);
+      final uri = Uri.parse(_ionOrigin).replace(path: '/v1/config/$configName');
+      final response = await _dio.get<String>(uri.toString());
       return jsonDecode(response.data!) as String;
     } catch (error) {
       throw ForceUpdateFetchConfigException(error);
