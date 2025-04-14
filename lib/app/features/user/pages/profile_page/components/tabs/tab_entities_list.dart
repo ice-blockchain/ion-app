@@ -51,14 +51,14 @@ class TabEntitiesList extends ConsumerWidget {
     final userMetadata = ref.watch(userMetadataProvider(pubkey)).valueOrNull;
     final dataSource = ref.watch(tabDataSourceProvider(type: type, pubkey: pubkey));
     final entitiesPagedData = ref.watch(entitiesPagedDataProvider(dataSource));
-    final isBlockedOrBlocking = ref.watch(isBlockedOrBlockingProvider(pubkey));
+    final isBlockedOrMutedOrBlocking = ref.watch(isBlockedOrMutedOrBlockingProvider(pubkey));
     final entities = entitiesPagedData?.data.items;
 
     return PullToRefreshBuilder(
       slivers: [
         if (entities == null)
           const EntitiesListSkeleton()
-        else if (entities.isEmpty || isBlockedOrBlocking)
+        else if (entities.isEmpty || isBlockedOrMutedOrBlocking)
           EmptyState(
             type: type,
             isCurrentUserProfile: pubkey == ref.watch(currentPubkeySelectorProvider),

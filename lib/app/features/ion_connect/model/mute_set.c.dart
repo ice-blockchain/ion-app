@@ -17,6 +17,7 @@ part 'mute_set.c.freezed.dart';
 
 enum MuteSetType {
   chatConversations(dTagName: 'chat_conversations'),
+  notInterested(dTagName: 'not_interested'),
   unknown(dTagName: 'unknown');
 
   const MuteSetType({required this.dTagName});

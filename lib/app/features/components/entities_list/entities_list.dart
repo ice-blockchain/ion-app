@@ -74,7 +74,7 @@ class _EntityListItem extends ConsumerWidget {
     final entity = ref.watch(ionConnectSyncEntityProvider(eventReference: eventReference));
 
     if (entity == null ||
-        _isBlockedOrBlocking(ref, entity) ||
+        _isBlockedOrMutedOrBlocking(ref, entity) ||
         _isDeleted(ref, entity) ||
         _isRepostedEntityDeleted(ref, entity) ||
         !_hasMetadata(ref, entity)) {
@@ -112,8 +112,8 @@ class _EntityListItem extends ConsumerWidget {
     return false;
   }
 
-  bool _isBlockedOrBlocking(WidgetRef ref, IonConnectEntity entity) {
-    return ref.watch(isEntityBlockedOrBlockingProvider(entity));
+  bool _isBlockedOrMutedOrBlocking(WidgetRef ref, IonConnectEntity entity) {
+    return ref.watch(isEntityBlockedOrMutedOrBlockingProvider(entity));
   }
 
   /// When we fetch lists (e.g. feed, search or data for tabs in profiles),

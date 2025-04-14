@@ -13,6 +13,7 @@ import 'package:ion/app/features/ion_connect/model/event_reference.c.dart';
 import 'package:ion/app/features/user/pages/profile_page/pages/block_user_modal/block_user_modal.dart';
 import 'package:ion/app/features/user/providers/block_list_notifier.c.dart';
 import 'package:ion/app/features/user/providers/follow_list_provider.c.dart';
+import 'package:ion/app/features/user/providers/muted_users_notifier.c.dart';
 import 'package:ion/app/features/user/providers/report_notifier.c.dart';
 import 'package:ion/app/features/user/providers/user_metadata_provider.c.dart';
 import 'package:ion/app/router/utils/show_simple_bottom_sheet.dart';
@@ -61,10 +62,9 @@ class UserInfoMenu extends ConsumerWidget {
         child: Column(
           children: [
             OverlayMenuContainer(
-              child: OverlayMenuItem(
-                label: context.i18n.post_menu_not_interested,
-                icon: Assets.svg.iconNotinterested.icon(size: menuIconSize),
-                onPressed: closeMenu,
+              child: _NotInterestedMenuItem(
+                pubkey: eventReference.pubkey,
+                closeMenu: closeMenu,
               ),
             ),
             SizedBox(height: 14.0.s),
@@ -174,6 +174,30 @@ class _BlockUserMenuItem extends ConsumerWidget {
         } else {
           ref.read(blockListNotifierProvider.notifier).toggleBlocked(pubkey);
         }
+      },
+    );
+  }
+}
+
+class _NotInterestedMenuItem extends ConsumerWidget {
+  const _NotInterestedMenuItem({
+    required this.pubkey,
+    required this.closeMenu,
+  });
+
+  final String pubkey;
+  final VoidCallback closeMenu;
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    return OverlayMenuItem(
+      label: context.i18n.post_menu_not_interested,
+      icon: Assets.svg.iconNotinterested.icon(
+        size: UserInfoMenu.menuIconSize,
+      ),
+      onPressed: () {
+        closeMenu();
+        ref.read(mutedUsersProvider.notifier).toggleMutedMasterPubkey(pubkey);
       },
     );
   }

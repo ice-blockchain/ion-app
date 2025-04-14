@@ -11,6 +11,7 @@ import 'package:ion/app/features/ion_connect/providers/ion_connect_entity_provid
 import 'package:ion/app/features/ion_connect/providers/ion_connect_notifier.c.dart';
 import 'package:ion/app/features/user/model/block_list.c.dart';
 import 'package:ion/app/features/user/providers/follow_list_provider.c.dart';
+import 'package:ion/app/features/user/providers/muted_users_notifier.c.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'block_list_notifier.c.g.dart';
@@ -86,30 +87,33 @@ bool cachedIsBlocking(Ref ref, String pubkey) {
 }
 
 @riverpod
-bool isBlockedOrBlocking(Ref ref, String pubkey) {
+bool isBlockedOrMutedOrBlocking(Ref ref, String pubkey) {
   final results = (
     ref.watch(isBlockedProvider(pubkey)),
     ref.watch(cachedIsBlockingProvider(pubkey)),
+    ref.watch(isUserMutedProvider(pubkey)),
   );
-  return results.$1 || results.$2;
+  return results.$1 || results.$2 || results.$3;
 }
 
 @riverpod
-bool isEntityBlockedOrBlocking(
+bool isEntityBlockedOrMutedOrBlocking(
   Ref ref,
   IonConnectEntity entity,
 ) {
-  final isMainAuthorBlockedOrBlocking = ref.watch(isBlockedOrBlockingProvider(entity.masterPubkey));
+  final isMainAuthorBlockedOrBlocking =
+      ref.watch(isBlockedOrMutedOrBlockingProvider(entity.masterPubkey));
   if (isMainAuthorBlockedOrBlocking) return true;
   return switch (entity) {
-    ModifiablePostEntity() => ref.watch(isPostChildBlockedOrBlockingProvider(entity)),
-    GenericRepostEntity() => ref.watch(isGenericRepostChildBlockedOrBlockingProvider(entity)),
+    ModifiablePostEntity() => ref.watch(isPostChildBlockedOrMutedOrBlockingProvider(entity)),
+    GenericRepostEntity() =>
+      ref.watch(isGenericRepostChildBlockedOrMutedOrBlockingProvider(entity)),
     _ => false,
   };
 }
 
 @riverpod
-bool isPostChildBlockedOrBlocking(
+bool isPostChildBlockedOrMutedOrBlocking(
   Ref ref,
   ModifiablePostEntity entity,
 ) {
@@ -119,18 +123,18 @@ bool isPostChildBlockedOrBlocking(
     ionConnectSyncEntityProvider(eventReference: quotedEvent.eventReference),
   );
   if (quotedPost == null) return false;
-  return ref.watch(isEntityBlockedOrBlockingProvider(quotedPost));
+  return ref.watch(isEntityBlockedOrMutedOrBlockingProvider(quotedPost));
 }
 
 @riverpod
-bool isGenericRepostChildBlockedOrBlocking(
+bool isGenericRepostChildBlockedOrMutedOrBlocking(
   Ref ref,
   GenericRepostEntity repost,
 ) {
   final entity =
       ref.watch(ionConnectSyncEntityProvider(eventReference: repost.data.eventReference));
   if (entity == null) return false;
-  return ref.watch(isEntityBlockedOrBlockingProvider(entity));
+  return ref.watch(isEntityBlockedOrMutedOrBlockingProvider(entity));
 }
 
 @riverpod
