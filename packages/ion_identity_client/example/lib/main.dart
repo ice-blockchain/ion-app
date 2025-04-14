@@ -22,7 +22,6 @@ class IONIdentityClientExample extends StatelessWidget {
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
         useMaterial3: true,
-        fontFamilyFallback: ['NotoColorEmoji'],
       ),
       home: const UsersPage(),
     );

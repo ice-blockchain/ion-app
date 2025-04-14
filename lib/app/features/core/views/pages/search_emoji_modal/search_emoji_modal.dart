@@ -171,10 +171,3 @@ class _EmojiCategoryButtons extends StatelessWidget {
     );
   }
 }
-
-class EmojiSectionItem {
-  EmojiSectionItem.header(this.headerCategory) : emojiRow = null;
-  EmojiSectionItem.row(this.emojiRow) : headerCategory = null;
-  final EmojiCategory? headerCategory;
-  final List<String>? emojiRow;
-}
