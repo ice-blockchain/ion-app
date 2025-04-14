@@ -1,5 +1,7 @@
 // SPDX-License-Identifier: ice License 1.0
 
+import 'dart:async';
+
 import 'package:collection/collection.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/features/core/permissions/data/models/permissions_types.dart';
@@ -23,11 +25,13 @@ Future<AssetEntity?> assetEntity(Ref ref, String id) {
 @riverpod
 Future<AssetEntity?> latestGalleryPreview(Ref ref) async {
   final mediaService = ref.watch(mediaServiceProvider);
-  final mediaData = await mediaService.fetchGalleryMedia(
-    page: 0,
-    size: 1,
-    type: MediaPickerType.image,
-  );
+  final mediaData = await mediaService
+      .watchGalleryMedia(
+        page: 0,
+        size: 1,
+        type: MediaPickerType.image,
+      )
+      .first;
 
   return await ref.watch(assetEntityProvider(mediaData.first.path).future);
 }
@@ -59,6 +63,7 @@ class GalleryNotifier extends _$GalleryNotifier {
         currentPage: 0,
         hasMore: false,
         type: type,
+        isLoading: false,
       );
     }
 
@@ -75,6 +80,7 @@ class GalleryNotifier extends _$GalleryNotifier {
           currentPage: 0,
           hasMore: media.length == _pageSize,
           type: type,
+          isLoading: false,
         ),
       );
     });
@@ -86,29 +92,26 @@ class GalleryNotifier extends _$GalleryNotifier {
       currentPage: 1,
       hasMore: false,
       type: type,
+      isLoading: false,
     );
   }
 
   Future<void> fetchNextPage() async {
     final currentState = state.valueOrNull;
 
-    if (currentState == null || state.isLoading) return;
+    if (currentState == null || currentState.isLoading) return;
     if (!currentState.hasMore) return;
 
     if (currentState.selectedAlbum == null) {
-      state = await AsyncValue.guard(() async {
-        final newMedia = await ref.read(mediaServiceProvider).fetchGalleryMedia(
+      state = AsyncValue.data(currentState.copyWith(isLoading: true));
+      unawaited(
+        ref.read(mediaServiceProvider).fetchGalleryMediaPage(
               page: currentState.currentPage,
               size: _pageSize,
               type: currentState.type,
-            );
-        final hasMore = newMedia.length == _pageSize;
-        return currentState.copyWith(
-          mediaData: [...currentState.mediaData, ...newMedia],
-          currentPage: currentState.currentPage + 1,
-          hasMore: hasMore,
-        );
-      });
+            ),
+      );
+
       return;
     }
 
@@ -126,6 +129,7 @@ class GalleryNotifier extends _$GalleryNotifier {
         mediaData: [...currentState.mediaData, ...newMedia],
         currentPage: currentState.currentPage + 1,
         hasMore: hasMore,
+        isLoading: true,
       );
     });
   }
