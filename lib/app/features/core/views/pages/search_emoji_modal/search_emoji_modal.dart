@@ -7,7 +7,6 @@ import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/components/inputs/search_input/search_input.dart';
 import 'package:ion/app/components/screen_offset/screen_side_offset.dart';
-import 'package:ion/app/components/separated/separated_column.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/chat/providers/recent_emoji_reactions_provider.c.dart';
 import 'package:ion/app/features/core/model/emoji/emoji_category.dart';
@@ -27,7 +26,7 @@ class SearchEmojiModal extends HookConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final emojiGroups = ref.watch(emojisFilteredByQueryProvider);
-    final recentEmojiReactions = ref.read(recentEmojiReactionsProvider);
+    final recentEmojiReactions = ref.watch(recentEmojiReactionsProvider);
     final activeCategory = useState<EmojiCategory>(EmojiCategory.recent);
 
     final categoryKeys = useMemoized(
@@ -63,39 +62,38 @@ class SearchEmojiModal extends HookConsumerWidget {
             ),
             if (hasLoadedEmojis)
               Expanded(
-                child: SingleChildScrollView(
-                  padding: EdgeInsetsDirectional.only(top: 16.0.s, bottom: 10.0.s),
-                  child: SeparatedColumn(
-                    separator: SizedBox(height: 24.0.s),
-                    children: EmojiCategory.values.map((category) {
+                child: CustomScrollView(
+                  slivers: [
+                    ...EmojiCategory.values.map((category) {
                       final emojis = _getEmojisByCategory(
                         category,
                         recentEmojiReactions,
                         emojiGroups.value!,
                       );
 
-                      if (emojis.isEmpty) {
-                        return const SizedBox();
-                      }
+                      if (emojis.isEmpty) return const SliverToBoxAdapter(child: SizedBox());
 
-                      return VisibilityDetector(
-                        key: categoryKeys[category.index],
-                        onVisibilityChanged: (visibility) {
-                          if (context.mounted) {
-                            _handleCategoryVisibilityChange(
-                              category,
-                              visibility.visibleFraction,
-                              activeCategory,
-                            );
-                          }
-                        },
-                        child: _EmojisGridView(
-                          emojis: emojis,
-                          title: category.getTitle(context),
+                      return SliverToBoxAdapter(
+                        child: VisibilityDetector(
+                          key: categoryKeys[category.index],
+                          onVisibilityChanged: (visibility) {
+                            if (context.mounted) {
+                              _handleCategoryVisibilityChange(
+                                category,
+                                visibility.visibleFraction,
+                                activeCategory,
+                              );
+                            }
+                          },
+                          child: _EmojisGridView(
+                            emojis: emojis,
+                            title: category.getTitle(context),
+                          ),
                         ),
                       );
-                    }).toList(),
-                  ),
+                    }),
+                    SliverToBoxAdapter(child: SizedBox(height: 10.0.s)),
+                  ],
                 ),
               )
             else
@@ -111,12 +109,6 @@ class SearchEmojiModal extends HookConsumerWidget {
     double visibleFraction,
     ValueNotifier<EmojiCategory> activeCategory,
   ) {
-    if (activeCategory.value == EmojiCategory.recent) {
-      if (category == EmojiCategory.recent && visibleFraction == 0) {
-        activeCategory.value = EmojiCategory.smileysPeople;
-      }
-      return;
-    }
     if (visibleFraction > 0) {
       activeCategory.value = category;
     }
@@ -178,4 +170,11 @@ class _EmojiCategoryButtons extends StatelessWidget {
       ),
     );
   }
+}
+
+class EmojiSectionItem {
+  EmojiSectionItem.header(this.headerCategory) : emojiRow = null;
+  EmojiSectionItem.row(this.emojiRow) : headerCategory = null;
+  final EmojiCategory? headerCategory;
+  final List<String>? emojiRow;
 }

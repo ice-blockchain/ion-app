@@ -15,39 +15,42 @@ class _EmojisGridView extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
-      mainAxisSize: MainAxisSize.min,
       children: [
-        Text(
-          title,
-          style: context.theme.appTextThemes.body2.copyWith(
-            color: context.theme.appColors.quaternaryText,
+        Padding(
+          padding: EdgeInsetsDirectional.only(top: 16.0.s, bottom: 10.0.s),
+          child: Text(
+            title,
+            style: context.theme.appTextThemes.body2.copyWith(
+              color: context.theme.appColors.quaternaryText,
+            ),
           ),
         ),
-        GridView.count(
-          padding: EdgeInsetsDirectional.only(top: 10.0.s),
+        GridView.builder(
           shrinkWrap: true,
           physics: const NeverScrollableScrollPhysics(),
-          crossAxisCount: 8,
-          mainAxisSpacing: 16.0.s,
-          crossAxisSpacing: 8.0.s,
-          children: emojis
-              .map(
-                (emoji) => Center(
-                  child: GestureDetector(
-                    onTap: () {
-                      ref.read(recentEmojiReactionsProvider.notifier).addEmoji(emoji);
-                      context.pop<String>(emoji);
-                    },
-                    child: Text(
-                      emoji,
-                      style: context.theme.appTextThemes.headline1.copyWith(
-                        height: 1,
-                      ),
-                    ),
+          itemCount: emojis.length,
+          gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+            crossAxisCount: 8,
+            mainAxisSpacing: 16.0.s,
+            crossAxisSpacing: 8.0.s,
+          ),
+          itemBuilder: (context, index) {
+            final emoji = emojis[index];
+            return Center(
+              child: GestureDetector(
+                onTap: () {
+                  ref.read(recentEmojiReactionsProvider.notifier).addEmoji(emoji);
+                  context.pop<String>(emoji);
+                },
+                child: Text(
+                  emoji,
+                  style: context.theme.appTextThemes.headline1.copyWith(
+                    height: 1,
                   ),
                 ),
-              )
-              .toList(),
+              ),
+            );
+          },
         ),
       ],
     );

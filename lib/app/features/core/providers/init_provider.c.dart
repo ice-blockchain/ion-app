@@ -7,6 +7,7 @@ import 'package:ion/app/features/auth/providers/auth_provider.c.dart';
 import 'package:ion/app/features/auth/providers/onboarding_complete_provider.c.dart';
 import 'package:ion/app/features/core/model/feature_flags.dart';
 import 'package:ion/app/features/core/permissions/providers/permissions_provider.c.dart';
+import 'package:ion/app/features/core/providers/emoji/emoji_set_provider.c.dart';
 import 'package:ion/app/features/core/providers/feature_flags_provider.c.dart';
 import 'package:ion/app/features/core/providers/template_provider.c.dart';
 import 'package:ion/app/features/core/providers/window_manager_provider.c.dart';
@@ -41,6 +42,9 @@ Future<void> initApp(Ref ref) async {
     ref.read(onboardingCompleteProvider.future),
     ref.read(forceUpdateProvider.future),
   ]);
+
+  unawaited(ref.read(emojiGroupsProvider.future));
+  unawaited(ref.read(emojiKeywordsProvider.future));
 
   // `ref.read` lets `coinsSyncProvider` be disposed even though it's a keepAlive provider
   // so we need to listen to it to keep it alive. The same with transactionsSubscription.
