@@ -11,8 +11,8 @@ import 'package:ion/app/features/feed/data/models/entities/article_data.c.dart';
 import 'package:ion/app/features/feed/data/models/entities/modifiable_post_data.c.dart';
 import 'package:ion/app/features/feed/data/models/generic_repost.c.dart';
 import 'package:ion/app/features/feed/notifications/data/model/ion_notification.c.dart';
-import 'package:ion/app/features/ion_connect/model/event_reference.c.dart';
-import 'package:ion/app/features/ion_connect/providers/ion_connect_entity_provider.c.dart';
+import 'package:ion/app/features/feed/providers/ion_connect_entity_with_counters_provider.c.dart';
+import 'package:ion/app/features/ion_connect/model/ion_connect_entity.dart';
 import 'package:ion/app/features/user/providers/user_metadata_provider.c.dart';
 import 'package:ion/app/router/app_routes.c.dart';
 import 'package:ion/app/utils/date.dart';
@@ -109,6 +109,20 @@ class NotificationInfo extends HookConsumerWidget {
   }
 
   String _getEventTypeLabel(WidgetRef ref, {required IonNotification notification}) {
+    final relatedEntity = _getRelatedEntity(ref, notification: notification);
+
+    return switch (relatedEntity) {
+      ModifiablePostEntity(:final data) when data.expiration != null =>
+        ref.context.i18n.common_story,
+      ModifiablePostEntity(:final data) when data.parentEvent != null =>
+        ref.context.i18n.common_reply,
+      ModifiablePostEntity() => ref.context.i18n.common_post,
+      ArticleEntity() => ref.context.i18n.common_article,
+      _ => '',
+    };
+  }
+
+  IonConnectEntity? _getRelatedEntity(WidgetRef ref, {required IonNotification notification}) {
     final eventReference = switch (notification) {
       CommentIonNotification() => notification.eventReference,
       LikesIonNotification() => notification.eventReference,
@@ -116,41 +130,34 @@ class NotificationInfo extends HookConsumerWidget {
     };
 
     if (eventReference == null) {
-      return '';
+      return null;
     }
 
-    final entity = ref.watch(ionConnectEntityProvider(eventReference: eventReference)).valueOrNull;
+    final entity = ref.watch(ionConnectEntityWithCountersProvider(eventReference: eventReference));
 
     if (entity == null) {
-      return '';
+      return null;
     }
 
     if (notification is LikesIonNotification) {
-      if (entity is ModifiablePostEntity) {
-        return entity.data.parentEvent == null
-            ? ref.context.i18n.common_post
-            : ref.context.i18n.common_reply;
-      } else if (entity is ArticleEntity) {
-        return ref.context.i18n.common_article;
-      }
-    } else if (notification is CommentIonNotification) {
-      if (entity is ModifiablePostEntity) {
-        final relatedEventReference =
-            entity.data.parentEvent?.eventReference ?? entity.data.quotedEvent?.eventReference;
-        if (relatedEventReference != null && relatedEventReference is ReplaceableEventReference) {
-          return switch (relatedEventReference.kind) {
-            ArticleEntity.kind => ref.context.i18n.common_article,
-            _ => ref.context.i18n.common_post,
-          };
-        }
-      } else if (entity is GenericRepostEntity) {
-        return switch (entity.data.kind) {
-          ArticleEntity.kind => ref.context.i18n.common_article,
-          _ => ref.context.i18n.common_post,
-        };
+      return entity;
+    }
+
+    if (notification is CommentIonNotification) {
+      final relatedEventReference = switch (entity) {
+        GenericRepostEntity() => entity.data.eventReference,
+        ModifiablePostEntity() =>
+          entity.data.parentEvent?.eventReference ?? entity.data.quotedEvent?.eventReference,
+        _ => null,
+      };
+
+      if (relatedEventReference != null) {
+        return ref
+            .watch(ionConnectEntityWithCountersProvider(eventReference: relatedEventReference));
       }
     }
-    return ref.context.i18n.common_post;
+
+    return null;
   }
 }
 
