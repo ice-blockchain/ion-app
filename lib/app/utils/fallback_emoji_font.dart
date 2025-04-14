@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: ice License 1.0
+
 import 'package:flutter/services.dart' show FontLoader, rootBundle;
 import 'package:ion/app/services/logger/logger.dart';
 
