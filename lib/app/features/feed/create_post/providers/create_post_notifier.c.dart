@@ -4,6 +4,7 @@ import 'dart:async';
 import 'dart:convert';
 
 import 'package:collection/collection.dart';
+import 'package:ffmpeg_kit_flutter/ffmpeg_kit.dart';
 import 'package:flutter_quill/flutter_quill.dart';
 import 'package:flutter_quill/quill_delta.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
@@ -343,9 +344,25 @@ class CreatePostNotifier extends _$CreatePostNotifier {
     Logger.info(
       'Uploading image: width=${file.width}, height=${file.height}, path=${file.path}',
     );
+    var fileToUpload = file;
+
+    if (fileToUpload.mimeType == 'image/gif') {
+      final webpPath = await _convertGifToWebP(fileToUpload.path);
+      if (webpPath != null) {
+        fileToUpload = MediaFile(
+          path: webpPath,
+          mimeType: 'image/webp',
+          width: fileToUpload.width,
+          height: fileToUpload.height,
+        );
+      }
+    } else if (fileToUpload.mimeType != null) {
+      final compressedImage = await ref.read(compressServiceProvider).compressImage(fileToUpload);
+      fileToUpload = compressedImage;
+    }
 
     final uploadResult = await ref.read(ionConnectUploadNotifierProvider.notifier).upload(
-          file,
+          fileToUpload,
           alt: _getFileAlt(),
         );
 
@@ -357,6 +374,37 @@ class CreatePostNotifier extends _$CreatePostNotifier {
       fileMetadatas: [uploadResult.fileMetadata],
       mediaAttachment: uploadResult.mediaAttachment
     );
+  }
+
+  Future<String?> _convertGifToWebP(String inputGif) async {
+    final outputWebP = inputGif.replaceAll('.gif', '.webp');
+
+    final command = [
+      '-i',
+      inputGif,
+      '-c:v',
+      'libwebp',
+      '-lossless',
+      '0',
+      '-q:v',
+      '80',
+      '-preset',
+      'default',
+      '-loop',
+      '0',
+      '-an',
+      outputWebP,
+    ].join(' ');
+
+    final session = await FFmpegKit.execute(command);
+
+    final returnCode = await session.getReturnCode();
+
+    if (returnCode?.isValueSuccess() ?? false) {
+      return outputWebP;
+    } else {
+      return null;
+    }
   }
 
   Future<({List<FileMetadata> fileMetadatas, MediaAttachment mediaAttachment})> _uploadVideo(

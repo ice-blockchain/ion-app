@@ -276,7 +276,14 @@ class MediaService {
         if (assetEntity == null) {
           throw AssetEntityFileNotFoundException();
         }
-        final (mimeType, file) = await (assetEntity.mimeTypeAsync, assetEntity.file).wait;
+        final title = await assetEntity.titleAsync;
+
+        // If the asset is a gif, use the origin file
+        // https://github.com/fluttercandies/flutter_photo_manager/issues/333
+
+        final assetFileFuture = title.contains('gif') ? assetEntity.originFile : assetEntity.file;
+
+        final (mimeType, file) = await (assetEntity.mimeTypeAsync, assetFileFuture).wait;
         if (file == null) {
           throw AssetEntityFileNotFoundException();
         }
