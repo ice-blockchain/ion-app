@@ -25,6 +25,7 @@ class DraftArticleState with _$DraftArticleState {
     String? imageColor,
     @Default({}) Map<String, String> codeBlocks,
     String? imageUrl,
+    @Default({}) Map<String, String> mentions,
   }) = _DraftArticleState;
 }
 
@@ -41,6 +42,7 @@ class DraftArticle extends _$DraftArticle {
     String title,
     String? imageUrl,
     String? imageUrlColor,
+    Map<String, String> mentions,
   ) async {
     final delta = textEditorController.document.toDelta();
     final imageIds = extractImageIds(textEditorController.document.toDelta());
@@ -54,6 +56,7 @@ class DraftArticle extends _$DraftArticle {
       imageUrl: imageUrl,
       title: title.trim(),
       imageColor: colorHex,
+      mentions: mentions,
     );
   }
 
