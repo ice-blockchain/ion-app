@@ -2,6 +2,7 @@
 
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:ion/app/features/wallets/model/crypto_asset_to_send_data.c.dart';
+import 'package:ion/app/features/wallets/model/entities/funds_request_entity.c.dart';
 import 'package:ion/app/features/wallets/model/network_data.c.dart';
 import 'package:ion/app/features/wallets/model/network_fee_option.c.dart';
 import 'package:ion/app/features/wallets/model/wallet_view_data.c.dart';
@@ -21,6 +22,7 @@ class SendAssetFormData with _$SendAssetFormData {
     String? contactPubkey,
     WalletAsset? networkNativeToken,
     NetworkFeeOption? selectedNetworkFeeOption,
+    FundsRequestEntity? request,
     @Default(true) bool canCoverNetworkFee,
     @Default([]) List<NetworkFeeOption> networkFeeOptions,
     @Default(false) bool isContactPreselected,

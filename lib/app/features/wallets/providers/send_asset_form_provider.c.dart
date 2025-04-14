@@ -8,6 +8,7 @@ import 'package:ion/app/features/wallets/domain/coins/coins_service.c.dart';
 import 'package:ion/app/features/wallets/model/coin_in_wallet_data.c.dart';
 import 'package:ion/app/features/wallets/model/coins_group.c.dart';
 import 'package:ion/app/features/wallets/model/crypto_asset_to_send_data.c.dart';
+import 'package:ion/app/features/wallets/model/entities/funds_request_entity.c.dart';
 import 'package:ion/app/features/wallets/model/network_data.c.dart';
 import 'package:ion/app/features/wallets/model/network_fee_option.c.dart';
 import 'package:ion/app/features/wallets/model/send_asset_form_data.c.dart';
@@ -29,6 +30,10 @@ class SendAssetFormController extends _$SendAssetFormController {
       receiverAddress: '',
       assetData: const CryptoAssetToSendData.notInitialized(),
     );
+  }
+
+  void setWalletView(WalletViewData walletView) {
+    state = state.copyWith(walletView: walletView);
   }
 
   Future<void> setCoin(CoinsGroup coin, [WalletViewData? walletView]) async {
@@ -167,5 +172,9 @@ class SendAssetFormController extends _$SendAssetFormController {
       selectedNetworkFeeOption: selectedOption,
     );
     _checkIfUserCanCoverFee();
+  }
+
+  void setRequest(FundsRequestEntity request) {
+    state = state.copyWith(request: request);
   }
 }

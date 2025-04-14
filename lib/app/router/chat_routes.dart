@@ -28,6 +28,16 @@ class ChatRoutes {
         TypedGoRoute<AddParticipantsToGroupModalRoute>(path: 'add-participants-to-group'),
         TypedGoRoute<CreateGroupModalRoute>(path: 'create-group'),
         TypedGoRoute<ShareViaMessageModalRoute>(path: 'share-via-message/:eventReference'),
+        TypedGoRoute<SelectCoinChatRoute>(path: 'coin-selector-chat'),
+        TypedGoRoute<SelectNetworkChatRoute>(path: 'network-selector-chat'),
+        TypedGoRoute<SendCoinsFormChatRoute>(path: 'send-coins-form-chat'),
+        TypedGoRoute<SelectContactChatRoute>(path: 'select-contact-chat'),
+        TypedGoRoute<CoinSendScanChatRoute>(path: 'scan-receiver-wallet-chat'),
+        TypedGoRoute<SendCoinsConfirmationChatRoute>(path: 'send-form-confirmation-chat'),
+        TypedGoRoute<CoinTransactionResultChatRoute>(path: 'coin-transaction-result-chat'),
+        TypedGoRoute<CoinTransactionDetailsChatRoute>(path: 'coin-transaction-details-chat'),
+        TypedGoRoute<ExploreTransactionDetailsChatRoute>(path: 'coin-transaction-explore-chat'),
+        TypedGoRoute<RequestCoinsFormChatRoute>(path: 'request-coins-form-chat'),
       ],
     ),
   ];
@@ -189,6 +199,129 @@ class ShareViaMessageModalRoute extends BaseRouteData {
         );
 
   final String eventReference;
+}
+
+class SelectCoinChatRoute extends BaseRouteData {
+  SelectCoinChatRoute({required this.paymentType})
+      : super(
+          child: switch (paymentType) {
+            PaymentType.send => SendCoinModalPage(
+                selectNetworkRouteLocationBuilder: () =>
+                    SelectNetworkChatRoute(paymentType: paymentType).location,
+              ),
+            PaymentType.request => const RequestCoinsModalPage(),
+          },
+          type: IceRouteType.bottomSheet,
+        );
+
+  final PaymentType paymentType;
+}
+
+class SelectNetworkChatRoute extends BaseRouteData {
+  SelectNetworkChatRoute({required this.paymentType})
+      : super(
+          child: NetworkListView(
+            type: switch (paymentType) {
+              PaymentType.send => NetworkListViewType.send,
+              PaymentType.request => NetworkListViewType.request,
+            },
+            sendFormRouteLocationBuilder: () => switch (paymentType) {
+              PaymentType.send => SendCoinsFormChatRoute().location,
+              PaymentType.request => RequestCoinsFormChatRoute().location,
+            },
+          ),
+          type: IceRouteType.bottomSheet,
+        );
+
+  final PaymentType paymentType;
+}
+
+class CoinSendScanChatRoute extends BaseRouteData {
+  CoinSendScanChatRoute()
+      : super(
+          child: const WalletScanModalPage(),
+          type: IceRouteType.bottomSheet,
+        );
+}
+
+class SendCoinsFormChatRoute extends BaseRouteData {
+  SendCoinsFormChatRoute()
+      : super(
+          child: SendCoinsForm(
+            selectCoinRouteLocationBuilder: () =>
+                SelectCoinChatRoute(paymentType: PaymentType.send).location,
+            selectNetworkRouteLocationBuilder: () =>
+                SelectNetworkChatRoute(paymentType: PaymentType.send).location,
+            selectContactRouteLocationBuilder: (networkId) =>
+                SelectContactChatRoute(networkId: networkId).location,
+            scanAddressRouteLocationBuilder: () => CoinSendScanChatRoute().location,
+            confirmRouteLocationBuilder: () => SendCoinsConfirmationChatRoute().location,
+          ),
+          type: IceRouteType.bottomSheet,
+        );
+}
+
+class SelectContactChatRoute extends BaseRouteData {
+  SelectContactChatRoute({required this.networkId})
+      : super(
+          child: ContactPickerModal(
+            networkId: networkId,
+            validatorType: ContactPickerValidatorType.networkWallet,
+          ),
+          type: IceRouteType.bottomSheet,
+        );
+
+  final String networkId;
+}
+
+class SendCoinsConfirmationChatRoute extends BaseRouteData {
+  SendCoinsConfirmationChatRoute()
+      : super(
+          child: ConfirmationSheet(
+            successRouteLocationBuilder: () => CoinTransactionResultChatRoute().location,
+          ),
+          type: IceRouteType.bottomSheet,
+        );
+}
+
+class CoinTransactionResultChatRoute extends BaseRouteData {
+  CoinTransactionResultChatRoute()
+      : super(
+          child: TransactionResultSheet(
+            transactionDetailsRouteLocationBuilder: () =>
+                CoinTransactionDetailsChatRoute().location,
+          ),
+          type: IceRouteType.bottomSheet,
+        );
+}
+
+class CoinTransactionDetailsChatRoute extends BaseRouteData {
+  CoinTransactionDetailsChatRoute()
+      : super(
+          child: TransactionDetailsPage(
+            exploreRouteLocationBuilder: (url) =>
+                ExploreTransactionDetailsChatRoute(url: url).location,
+          ),
+          type: IceRouteType.bottomSheet,
+        );
+}
+
+class ExploreTransactionDetailsChatRoute extends BaseRouteData {
+  ExploreTransactionDetailsChatRoute({required this.url})
+      : super(
+          child: ExploreTransactionDetailsModal(url: url),
+          type: IceRouteType.bottomSheet,
+        );
+
+  final String url;
+}
+
+class RequestCoinsFormChatRoute extends BaseRouteData {
+  RequestCoinsFormChatRoute()
+      : super(
+          child: const RequestCoinsFormModal(),
+          type: IceRouteType.bottomSheet,
+        );
 }
 
 @TypedGoRoute<ChatMediaRoute>(path: '/chat-media')

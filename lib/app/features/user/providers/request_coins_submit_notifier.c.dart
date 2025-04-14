@@ -9,6 +9,7 @@ import 'package:ion/app/features/ion_connect/model/event_reference.c.dart';
 import 'package:ion/app/features/user/model/request_coins_form_data.c.dart';
 import 'package:ion/app/features/user/providers/request_coins_form_provider.c.dart';
 import 'package:ion/app/features/user/providers/user_delegation_provider.c.dart';
+import 'package:ion/app/features/user/providers/user_metadata_provider.c.dart';
 import 'package:ion/app/features/wallets/domain/transactions/send_transaction_to_relay_service.c.dart';
 import 'package:ion/app/features/wallets/model/entities/funds_request_entity.c.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
@@ -43,7 +44,7 @@ class RequestCoinsSubmitNotifier extends _$RequestCoinsSubmitNotifier {
         throw const CurrentUserNotFoundException();
       }
 
-      final request = _buildFundsRequestData(formData);
+      final request = await _buildFundsRequestData(formData);
       final pubkeys = await _collectPubkeys(formData.contactPubkey!, currentUserPubkey);
 
       final sendToRelayService = await ref.read(sendTransactionToRelayServiceProvider.future);
@@ -100,10 +101,13 @@ class RequestCoinsSubmitNotifier extends _$RequestCoinsSubmitNotifier {
     }
   }
 
-  FundsRequestData _buildFundsRequestData(RequestCoinsFormData formData) {
+  Future<FundsRequestData> _buildFundsRequestData(RequestCoinsFormData formData) async {
     final RequestCoinsFormData(:assetData, :network, :contactPubkey, :toWallet) = formData;
+
+    final user = await ref.read(userMetadataProvider(contactPubkey!).future);
+
     final toWalletAddress = toWallet!.address!;
-    final fromWalletAddress = toWalletAddress;
+    final fromWalletAddress = user!.data.wallets![network!.id]!;
 
     final content = FundsRequestContent(
       from: fromWalletAddress,
@@ -117,7 +121,7 @@ class RequestCoinsSubmitNotifier extends _$RequestCoinsSubmitNotifier {
     final isNative = contractAddress.isEmpty;
 
     return FundsRequestData(
-      networkId: network!.id,
+      networkId: network.id,
       assetClass: isNative ? 'native' : 'token',
       assetAddress: contractAddress,
       pubkey: contactPubkey,

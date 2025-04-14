@@ -11,7 +11,6 @@ import 'package:ion/app/components/skeleton/skeleton.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/extensions/object.dart';
 import 'package:ion/app/features/user/providers/request_coins_form_provider.c.dart';
-import 'package:ion/app/features/user/providers/user_metadata_provider.c.dart';
 import 'package:ion/app/features/wallets/model/coin_data.c.dart';
 import 'package:ion/app/features/wallets/model/coin_in_wallet_data.c.dart';
 import 'package:ion/app/features/wallets/model/crypto_asset_to_send_data.c.dart';
@@ -22,7 +21,7 @@ import 'package:ion/app/features/wallets/providers/send_asset_form_provider.c.da
 import 'package:ion/app/features/wallets/providers/synced_coins_by_symbol_group_provider.c.dart';
 import 'package:ion/app/features/wallets/views/pages/coins_flow/network_list/network_item.dart';
 import 'package:ion/app/features/wallets/views/pages/coins_flow/receive_coins/providers/receive_coins_form_provider.c.dart';
-import 'package:ion/app/features/wallets/views/pages/contact_without_wallet_error_modal.dart';
+import 'package:ion/app/features/wallets/views/utils/network_validator.dart';
 import 'package:ion/app/router/app_routes.c.dart';
 import 'package:ion/app/router/components/navigation_app_bar/navigation_app_bar.dart';
 import 'package:ion/app/router/components/navigation_app_bar/navigation_close_button.dart';
@@ -78,21 +77,10 @@ class NetworkListView extends ConsumerWidget {
       switch (type) {
         case NetworkListViewType.send:
           final state = ref.read(sendAssetFormControllerProvider);
+          final isNetworkValid = await validateNetwork(ref, state.contactPubkey, network);
 
-          if (state.contactPubkey != null) {
-            final contact = await ref.read(userMetadataProvider(state.contactPubkey!).future);
-            final address = contact?.data.wallets?[network.id];
-
-            if (address == null && context.mounted) {
-              unawaited(
-                showContactWithoutWalletError(
-                  context,
-                  user: contact!,
-                  network: network,
-                ),
-              );
-              return;
-            }
+          if (!isNetworkValid) {
+            return;
           }
 
           if (context.mounted) {
@@ -103,8 +91,17 @@ class NetworkListView extends ConsumerWidget {
           ref.read(receiveCoinsFormControllerProvider.notifier).setNetwork(network);
           unawaited(ShareAddressRoute().push<void>(context));
         case NetworkListViewType.request:
-          unawaited(ref.read(requestCoinsFormControllerProvider.notifier).setNetwork(network));
-          unawaited(context.push(sendFormRouteLocationBuilder!()));
+          final form = ref.read(requestCoinsFormControllerProvider);
+          final isNetworkValid = await validateNetwork(ref, form.contactPubkey, network);
+
+          if (!isNetworkValid) {
+            return;
+          }
+
+          if (context.mounted) {
+            unawaited(ref.read(requestCoinsFormControllerProvider.notifier).setNetwork(network));
+            unawaited(context.push(sendFormRouteLocationBuilder!()));
+          }
       }
     }
 

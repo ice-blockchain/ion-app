@@ -7,10 +7,12 @@ import 'package:ion/generated/assets.gen.dart';
 class SelectContainer extends StatelessWidget {
   const SelectContainer({
     required this.child,
+    this.enabled = true,
     super.key,
   });
 
   final Widget child;
+  final bool enabled;
 
   @override
   Widget build(BuildContext context) {
@@ -28,7 +30,7 @@ class SelectContainer extends StatelessWidget {
           children: [
             SizedBox(width: 16.0.s),
             Expanded(child: child),
-            Assets.svg.iconArrowDown.icon(),
+            if (enabled) Assets.svg.iconArrowDown.icon(),
             SizedBox(width: 16.0.s),
           ],
         ),
