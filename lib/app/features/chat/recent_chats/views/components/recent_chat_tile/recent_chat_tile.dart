@@ -10,6 +10,7 @@ import 'package:ion/app/features/chat/providers/muted_conversations_provider.c.d
 import 'package:ion/app/features/chat/recent_chats/model/conversation_list_item.c.dart';
 import 'package:ion/app/features/chat/recent_chats/providers/conversations_edit_mode_provider.c.dart';
 import 'package:ion/app/features/chat/recent_chats/providers/selected_conversations_ids_provider.c.dart';
+import 'package:ion/app/features/chat/recent_chats/providers/story_reaction_provider.c.dart';
 import 'package:ion/app/features/chat/recent_chats/views/pages/recent_chat_overlay/recent_chat_overlay.dart';
 import 'package:ion/app/features/ion_connect/model/event_reference.c.dart';
 import 'package:ion/app/features/user/providers/user_metadata_provider.c.dart';
@@ -18,29 +19,32 @@ import 'package:ion/generated/assets.gen.dart';
 
 class RecentChatTile extends HookConsumerWidget {
   const RecentChatTile({
-    required this.conversation,
     required this.name,
+    required this.onTap,
+    required this.messageType,
+    required this.conversation,
     required this.defaultAvatar,
     required this.lastMessageAt,
+    required this.lastMessageId,
     required this.lastMessageContent,
     required this.unreadMessagesCount,
-    required this.messageType,
-    required this.onTap,
     this.avatarUrl,
     this.avatarWidget,
     super.key,
   });
 
-  final ConversationListItem conversation;
   final String name;
   final String? avatarUrl;
+  final String? lastMessageId;
   final Widget? defaultAvatar;
   final DateTime lastMessageAt;
-  final String lastMessageContent;
   final int unreadMessagesCount;
+  final String lastMessageContent;
   final VoidCallback? onTap;
   final Widget? avatarWidget;
   final MessageType messageType;
+  final ConversationListItem conversation;
+
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final isEditMode = ref.watch(conversationsEditModeProvider);
@@ -145,8 +149,9 @@ class RecentChatTile extends HookConsumerWidget {
                             children: [
                               Expanded(
                                 child: ChatPreview(
-                                  content: lastMessageContent,
                                   messageType: messageType,
+                                  lastMessageId: lastMessageId,
+                                  lastMessageContent: lastMessageContent,
                                 ),
                               ),
                               UnreadCountBadge(unreadCount: unreadMessagesCount, isMuted: isMuted),
@@ -226,35 +231,42 @@ class ChatTimestamp extends StatelessWidget {
 
 class ChatPreview extends HookConsumerWidget {
   const ChatPreview({
-    required this.content,
     required this.messageType,
+    required this.lastMessageContent,
+    this.lastMessageId,
     this.textColor,
     this.maxLines = 2,
     super.key,
   });
 
-  final String content;
-  final Color? textColor;
   final int maxLines;
+  final String lastMessageContent;
+  final Color? textColor;
+  final String? lastMessageId;
   final MessageType messageType;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final storyReplyContent = messageType == MessageType.storyReply && lastMessageContent.isEmpty
+        ? ref.watch(storyReactionProvider(lastMessageId)).valueOrNull ?? ''
+        : lastMessageContent;
+
     return Row(
       children: [
         RecentChatMessageIcon(messageType: messageType, color: textColor),
         Flexible(
           child: Text(
             switch (messageType) {
-              MessageType.text => content,
-              MessageType.emoji => content,
-              MessageType.storyReply => content.isEmpty ? 'Story reply' : content,
+              MessageType.text => lastMessageContent,
+              MessageType.emoji => lastMessageContent,
+              MessageType.storyReply => storyReplyContent,
               MessageType.audio => context.i18n.common_voice_message,
               MessageType.visualMedia => context.i18n.common_media,
-              MessageType.document => content,
+              MessageType.document => lastMessageContent,
               MessageType.requestFunds => context.i18n.chat_money_request_title,
               MessageType.profile => ref
-                      .watch(userMetadataProvider(EventReference.fromEncoded(content).pubkey))
+                      .watch(userMetadataProvider(
+                          EventReference.fromEncoded(lastMessageContent).pubkey))
                       .valueOrNull
                       ?.data
                       .displayName ??

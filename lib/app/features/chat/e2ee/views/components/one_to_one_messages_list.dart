@@ -45,7 +45,7 @@ class OneToOneMessageList extends HookConsumerWidget {
                   (context, msgIndex) {
                     final message = entry.value[msgIndex];
                     final entity = PrivateDirectMessageEntity.fromEventMessage(message);
-                    print('${entity.data.quotedEvent}');
+
                     final previousMessage = msgIndex > 0 ? entry.value[msgIndex - 1] : null;
                     final isLastMessage = msgIndex == entry.value.length - 1;
 

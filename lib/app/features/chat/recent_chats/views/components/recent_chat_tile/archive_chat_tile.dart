@@ -98,7 +98,7 @@ class ArchiveChatTile extends HookConsumerWidget {
                           children: [
                             Expanded(
                               child: ChatPreview(
-                                content: combinedConversationNames,
+                                lastMessageContent: combinedConversationNames,
                                 maxLines: 1,
                                 messageType: MessageType.text,
                               ),

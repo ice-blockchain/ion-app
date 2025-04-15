@@ -633,6 +633,8 @@
   "delete_story_title": "Delete story?",
   "story_reply_sender": "You replied",
   "story_reply_receiver": "Replied you",
+  "story_reply_not_available_sender": "Content unavailable",
+  "story_reply_not_available_receiver": "Unavailable story",
   "delete_video_title": "Delete video?",
   "delete_post_title": "Delete post?",
   "delete_article_title": "Delete article?",

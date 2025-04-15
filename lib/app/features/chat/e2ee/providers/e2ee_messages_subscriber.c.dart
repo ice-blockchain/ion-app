@@ -207,7 +207,6 @@ class E2eeMessagesSubscriber extends _$E2eeMessagesSubscriber {
             );
           }
         } else if (rumor.kind == GenericRepostEntity.kind) {
-          print('QQQ');
           await eventMessageDao.add(rumor);
         }
       }

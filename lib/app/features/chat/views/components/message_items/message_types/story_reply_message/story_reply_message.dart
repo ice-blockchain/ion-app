@@ -10,6 +10,7 @@ import 'package:ion/app/features/chat/e2ee/model/entities/private_direct_message
 import 'package:ion/app/features/chat/e2ee/providers/story_reply_message_provider.c.dart';
 import 'package:ion/app/features/chat/views/components/message_items/components.dart';
 import 'package:ion/app/features/chat/views/components/message_items/message_reactions/message_reactions.dart';
+import 'package:ion/app/features/core/model/media_type.dart';
 import 'package:ion/app/features/ion_connect/ion_connect.dart';
 import 'package:ion/generated/assets.gen.dart';
 
@@ -29,7 +30,10 @@ class StoryReplyMessage extends HookConsumerWidget {
             )
             .valueOrNull
         : null;
-    final storyUrl = story?.data.media.values.firstOrNull?.url ?? '';
+
+    final storyMedia = story?.data.media.values.firstOrNull;
+    final storyUrl =
+        (storyMedia?.mediaType == MediaType.video ? storyMedia?.thumb : storyMedia?.url) ?? '';
 
     return Align(
       alignment: isMe ? AlignmentDirectional.centerEnd : AlignmentDirectional.centerStart,
@@ -40,7 +44,12 @@ class StoryReplyMessage extends HookConsumerWidget {
             children: [
               _SenderReceiverLabel(isMe: isMe),
               if (storyUrl.isNotEmpty)
-                _StoryImage(storyUrl: storyUrl)
+                _StoryPreviewImage(
+                  storyUrl: storyUrl,
+                  isMe: isMe,
+                  eventMessage: eventMessage,
+                  isThumb: storyMedia?.mediaType == MediaType.video,
+                )
               else
                 _UnavailableStoryContainer(isMe: isMe, eventMessage: eventMessage),
               if (eventMessage.content.isNotEmpty)
@@ -78,10 +87,18 @@ class _SenderReceiverLabel extends StatelessWidget {
   }
 }
 
-class _StoryImage extends StatelessWidget {
-  const _StoryImage({required this.storyUrl});
+class _StoryPreviewImage extends StatelessWidget {
+  const _StoryPreviewImage({
+    required this.isMe,
+    required this.storyUrl,
+    required this.eventMessage,
+    required this.isThumb,
+  });
 
+  final bool isMe;
+  final bool isThumb;
   final String storyUrl;
+  final EventMessage eventMessage;
 
   @override
   Widget build(BuildContext context) {
@@ -89,9 +106,20 @@ class _StoryImage extends StatelessWidget {
       imageUrl: storyUrl,
       imageBuilder: (_, imageProvider) => ClipRRect(
         borderRadius: BorderRadius.circular(12.0.s),
-        child: Image(image: imageProvider, height: 220.0.s),
+        child: Stack(
+          alignment: AlignmentDirectional.center,
+          children: [
+            Image(image: imageProvider, height: 220.0.s),
+            if (isThumb)
+              Assets.svg.iconVideoPlay.icon(
+                color: context.theme.appColors.onPrimaryAccent,
+                size: 32.0.s,
+              ),
+          ],
+        ),
       ),
-      errorWidget: (context, url, error) => const SizedBox.shrink(),
+      errorWidget: (context, url, error) =>
+          _UnavailableStoryContainer(isMe: isMe, eventMessage: eventMessage),
     );
   }
 }
@@ -132,7 +160,9 @@ class _UnavailableStoryContainer extends StatelessWidget {
               ),
               SizedBox(width: 4.0.s),
               Text(
-                isMe ? 'Content unavailable' : 'Unavailable story',
+                isMe
+                    ? context.i18n.story_reply_not_available_sender
+                    : context.i18n.story_reply_not_available_receiver,
                 style: context.theme.appTextThemes.caption3.copyWith(
                   color: isMe
                       ? context.theme.appColors.onPrimaryAccent
