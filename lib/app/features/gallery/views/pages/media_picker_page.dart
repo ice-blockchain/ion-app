@@ -111,6 +111,7 @@ class MediaPickerPage extends HookConsumerWidget {
               mediaData: [],
               currentPage: 0,
               hasMore: true,
+              isLoading: false,
               type: type,
             ),
       ),

@@ -48,45 +48,88 @@ class MediaFile with _$MediaFile {
 typedef CropImageUiSettings = List<PlatformUiSettings>;
 
 class MediaService {
+  final _streamController = StreamController<List<MediaFile>>.broadcast();
+  int _currentPage = 0;
+  MediaPickerType? _currentType;
+
   Future<void> presentLimitedGallery(RequestType type) async {
     return PhotoManager.presentLimited(type: type);
   }
 
-  Future<List<MediaFile>> fetchGalleryMedia({
+  Future<void> fetchGalleryMediaPage({
     required int page,
     required int size,
     required MediaPickerType type,
   }) async {
     try {
+      _currentPage = page;
+      _currentType = type;
+
       final albums = await PhotoManager.getAssetPathList(
         type: type.toRequestType(),
       );
 
-      if (albums.isEmpty) return [];
+      if (albums.isEmpty) {
+        if (page == 0) {
+          _streamController.add([]);
+        }
+        return;
+      }
 
       final assets = await albums.first.getAssetListPaged(
         page: page,
         size: size,
       );
 
-      final mediaFiles = await Future.wait(
-        assets.map((asset) async {
-          final mimeType = await asset.mimeTypeAsync;
+      if (assets.isEmpty) {
+        if (page == 0) {
+          _streamController.add([]);
+        }
+        return;
+      }
 
-          return MediaFile(
-            path: asset.id,
-            height: asset.height,
-            width: asset.width,
-            mimeType: mimeType,
-          );
-        }),
-      );
+      const batchSize = 20;
+      final totalBatches = (assets.length / batchSize).ceil();
 
-      return mediaFiles;
+      for (var i = 0; i < totalBatches; i++) {
+        final start = i * batchSize;
+        final end = (start + batchSize < assets.length) ? start + batchSize : assets.length;
+        final batch = assets.sublist(start, end);
+
+        final batchResults = await _processBatch(batch);
+
+        _streamController.add(batchResults);
+      }
     } catch (e) {
       Logger.log('Error fetching gallery images: $e');
-      return [];
+      if (page == 0) {
+        _streamController.add([]);
+      }
     }
+  }
+
+  static Future<List<MediaFile>> _processBatch(List<AssetEntity> batch) async {
+    final mediaFiles = <MediaFile>[];
+
+    for (final asset in batch) {
+      String? mimeType;
+
+      // For Android we can try to get the mimeType from the asset directly
+      mimeType = (defaultTargetPlatform == TargetPlatform.android)
+          ? asset.mimeType ?? await asset.mimeTypeAsync
+          : await asset.mimeTypeAsync;
+
+      mediaFiles.add(
+        MediaFile(
+          path: asset.id,
+          height: asset.height,
+          width: asset.width,
+          mimeType: mimeType,
+        ),
+      );
+    }
+
+    return mediaFiles;
   }
 
   Stream<List<MediaFile>> watchGalleryMedia({
@@ -94,32 +137,32 @@ class MediaService {
     required int size,
     required MediaPickerType type,
   }) {
-    final streamController = StreamController<List<MediaFile>>();
-
+    // Handle changes from PhotoManager
     Future<void> onChangeCallback(MethodCall _) async {
-      final newMedia = await fetchGalleryMedia(
-        page: page,
+      await fetchGalleryMediaPage(
+        page: _currentPage,
         size: size,
-        type: type,
+        type: _currentType ?? type,
       );
-      streamController.add(newMedia);
     }
 
     PhotoManager.addChangeCallback(onChangeCallback);
     PhotoManager.startChangeNotify();
 
-    streamController.onCancel = () {
+    _streamController.onCancel = () {
       PhotoManager.removeChangeCallback(onChangeCallback);
       PhotoManager.stopChangeNotify();
     };
 
-    fetchGalleryMedia(
-      page: page,
-      size: size,
-      type: type,
-    ).then(streamController.add);
+    if (page == 0 || _currentType != type) {
+      fetchGalleryMediaPage(
+        page: page,
+        size: size,
+        type: type,
+      );
+    }
 
-    return streamController.stream;
+    return _streamController.stream;
   }
 
   Future<MediaFile?> cropImage({
