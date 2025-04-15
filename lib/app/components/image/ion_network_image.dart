@@ -26,10 +26,13 @@ class IonNetworkImage extends CachedNetworkImage {
           // Do not log image loading errors
           errorListener: (_) {},
           errorWidget: errorWidget ??
-              (context, url, error) => Center(
-                    child: Assets.svg.iconFeedStories.icon(
-                      size: 40.0.s,
-                      color: context.theme.appColors.sheetLine,
+              (context, url, error) => ColoredBox(
+                    color: context.theme.appColors.tertararyBackground,
+                    child: Center(
+                      child: Assets.svg.iconFeedStories.icon(
+                        size: 40.0.s,
+                        color: context.theme.appColors.sheetLine,
+                      ),
                     ),
                   ),
         );
