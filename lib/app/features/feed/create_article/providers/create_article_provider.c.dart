@@ -330,13 +330,15 @@ class CreateArticle extends _$CreateArticle {
 
   Future<UploadResult> _uploadImage(String imagePath, {bool extractColor = false}) async {
     final dimension = await ref.read(compressServiceProvider).getImageDimension(path: imagePath);
+    final file = MediaFile(
+      path: imagePath,
+      width: dimension.width,
+      height: dimension.height,
+    );
+    final compressedImage = await ref.read(compressServiceProvider).compressImage(file);
 
     final result = await ref.read(ionConnectUploadNotifierProvider.notifier).upload(
-          MediaFile(
-            path: imagePath,
-            width: dimension.width,
-            height: dimension.height,
-          ),
+          compressedImage,
           alt: FileAlt.article,
         );
     return result;
