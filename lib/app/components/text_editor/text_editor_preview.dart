@@ -95,7 +95,8 @@ class _SelectableContentText extends StatelessWidget {
     );
   }
 
-  /// Recursively builds a TextSpan tree from Quill Delta, preserving formatting and recognizers.
+  /// Builds a TextSpan tree from Quill Delta, preserving formatting and recognizers.
+  /// Handles bold, italic, underline, links, hashtags, mentions, cashtags.
   TextSpan _buildRichTextSpanFromDelta(
     Delta delta, {
     required BuildContext context,
@@ -107,56 +108,74 @@ class _SelectableContentText extends StatelessWidget {
       final data = op.data;
       final attrs = op.attributes ?? {};
       if (data is String) {
-        var style = styles.paragraph?.style ?? const TextStyle();
-        // Bold
-        if (attrs['b'] == true) {
-          style = style.merge(styles.bold);
-        }
-        // Italic
-        if (attrs['i'] == true) {
-          style = style.merge(styles.italic);
-        }
-        // Underline
-        if (attrs['u'] == true) {
-          style = style.merge(const TextStyle(decoration: TextDecoration.underline));
-        }
-        // Link
-        GestureRecognizer? recognizer;
-        if (attrs.containsKey('a') && attrs['a'] != null) {
-          style = style.merge(customTextStyleBuilder(Attribute.link, context));
-          recognizer = TapGestureRecognizer()
-            ..onTap = () => ion_text_span_builder.TextSpanBuilder.defaultOnTap(
-                  context,
-                  match: TextMatch(
-                    data,
-                    matcher: const UrlMatcher(),
-                  ),
-                );
-        }
-        // Hashtag
-        if (attrs.containsKey('hashtag')) {
-          style = style.merge(customTextStyleBuilder(const HashtagAttribute(''), context));
-          recognizer = customRecognizerBuilder(
-            context,
-            HashtagAttribute.withValue(attrs['hashtag'] as String),
-          );
-        }
-        // Mention
-        if (attrs.containsKey('mention')) {
-          style = style.merge(customTextStyleBuilder(const MentionAttribute(''), context));
-        }
-        // Cashtag
-        if (attrs.containsKey('cashtag')) {
-          style = style.merge(customTextStyleBuilder(const CashtagAttribute(''), context));
-          recognizer = customRecognizerBuilder(
-            context,
-            CashtagAttribute.withValue(attrs['cashtag'] as String),
-          );
-        }
+        final style = _applyTextAttributes(attrs, styles, context);
+        final recognizer = _buildRecognizer(attrs, context, data);
         children.add(TextSpan(text: data, style: style, recognizer: recognizer));
       }
     }
     return TextSpan(children: children);
+  }
+
+  /// Applies text attributes (bold, italic, underline, link, hashtag, mention, cashtag) to style.
+  TextStyle _applyTextAttributes(
+    Map<String, dynamic> attrs,
+    DefaultStyles styles,
+    BuildContext context,
+  ) {
+    var style = styles.paragraph?.style ?? const TextStyle();
+    if (attrs['b'] == true) {
+      style = style.merge(styles.bold);
+    }
+    if (attrs['i'] == true) {
+      style = style.merge(styles.italic);
+    }
+    if (attrs['u'] == true) {
+      style = style.merge(const TextStyle(decoration: TextDecoration.underline));
+    }
+    if (attrs.containsKey('a') && attrs['a'] != null) {
+      style = style.merge(customTextStyleBuilder(Attribute.link, context));
+    }
+    if (attrs.containsKey('hashtag')) {
+      style = style.merge(customTextStyleBuilder(const HashtagAttribute(''), context));
+    }
+    if (attrs.containsKey('mention')) {
+      style = style.merge(customTextStyleBuilder(const MentionAttribute(''), context));
+    }
+    if (attrs.containsKey('cashtag')) {
+      style = style.merge(customTextStyleBuilder(const CashtagAttribute(''), context));
+    }
+    return style;
+  }
+
+  /// Builds a GestureRecognizer for links, hashtags, cashtags.
+  GestureRecognizer? _buildRecognizer(
+    Map<String, dynamic> attrs,
+    BuildContext context,
+    String data,
+  ) {
+    if (attrs.containsKey('a') && attrs['a'] != null) {
+      return TapGestureRecognizer()
+        ..onTap = () => ion_text_span_builder.TextSpanBuilder.defaultOnTap(
+              context,
+              match: TextMatch(
+                data,
+                matcher: const UrlMatcher(),
+              ),
+            );
+    }
+    if (attrs.containsKey('hashtag')) {
+      return customRecognizerBuilder(
+        context,
+        HashtagAttribute.withValue(attrs['hashtag'] as String),
+      );
+    }
+    if (attrs.containsKey('cashtag')) {
+      return customRecognizerBuilder(
+        context,
+        CashtagAttribute.withValue(attrs['cashtag'] as String),
+      );
+    }
+    return null;
   }
 }
 
