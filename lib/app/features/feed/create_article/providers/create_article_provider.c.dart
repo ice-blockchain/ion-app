@@ -33,6 +33,7 @@ import 'package:ion/app/features/ion_connect/providers/ion_connect_upload_notifi
 import 'package:ion/app/services/compressor/compress_service.c.dart';
 import 'package:ion/app/services/markdown/quill.dart';
 import 'package:ion/app/services/media_service/media_service.c.dart';
+import 'package:photo_manager/photo_manager.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'create_article_provider.c.g.dart';
@@ -292,8 +293,8 @@ class CreateArticle extends _$CreateArticle {
     if (mediaIds != null && mediaIds.isNotEmpty) {
       await Future.wait(
         mediaIds.map((assetId) async {
-          final imagePath = await ref.read(assetFilePathProvider(assetId).future);
-          final (:fileMetadata, :mediaAttachment) = await _uploadImage(imagePath!);
+          final imagePath = await getOriginalAssetPath(assetId);
+          final (:fileMetadata, :mediaAttachment) = await _uploadImage(imagePath);
           uploadedUrls[assetId] = mediaAttachment.url;
           files.add(fileMetadata);
           mediaAttachments.add(mediaAttachment);
@@ -339,5 +340,26 @@ class CreateArticle extends _$CreateArticle {
           alt: FileAlt.article,
         );
     return result;
+  }
+
+  Future<String> getOriginalAssetPath(String assetId) async {
+    final assetEntity = await AssetEntity.fromId(assetId);
+    if (assetEntity == null) return '';
+
+    final file = await assetEntity.originFile;
+    final path = file?.path ?? '';
+
+    if (path.toLowerCase().endsWith('.gif')) {
+      return path;
+    }
+
+    final mimeType = assetEntity.mimeType;
+    if (mimeType == 'image/gif') {
+      return path;
+    }
+
+    // Standard processing for non-GIF files
+    final defaultPath = await ref.read(assetFilePathProvider(assetId).future);
+    return defaultPath ?? '';
   }
 }
