@@ -35,10 +35,12 @@ class StoryReactionOverlay extends HookConsumerWidget {
     final handleEmojiSelected = useCallback(
       (String emoji) async {
         textController.clear();
-
         FocusScope.of(context).unfocus();
 
-        await ref.read(storyReplyProvider.notifier).sendReplyReaction(story);
+        await ref.read(storyReplyProvider.notifier).sendReply(
+              story,
+              replyEmoji: emoji,
+            );
 
         WidgetsBinding.instance.addPostFrameCallback((_) {
           emojiController.showReaction(emoji);

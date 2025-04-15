@@ -44,17 +44,20 @@ class SendE2eeChatMessageService {
 
   final Ref ref;
 
-  Future<void> sendMessage({
+  Future<EventMessage> sendMessage({
     required String conversationId,
     required List<String> participantsMasterPubkeys,
     required String content,
     required List<MediaFile> mediaFiles,
     String? subject,
-    List<String>? groupImageTag,
     String? failedEventMessageId,
     EventMessage? repliedMessage,
+    List<String>? groupImageTag,
+    List<String>? referencePostTag,
     List<String>? failedParticipantsMasterPubkeys,
   }) async {
+    late final EventMessage sentKind14Message;
+
     String? currentUserEventMessageId;
 
     try {
@@ -75,6 +78,7 @@ class SendE2eeChatMessageService {
         groupImageTag: groupImageTag,
         conversationId: conversationId,
         repliedMessage: repliedMessage,
+        referencePostTag: referencePostTag,
         masterPubkeys: participantsMasterPubkeys,
       );
 
@@ -128,12 +132,14 @@ class SendE2eeChatMessageService {
                 groupImageTag: groupImageTag,
                 conversationId: conversationId,
                 repliedMessage: repliedMessage,
+                referencePostTag: referencePostTag,
                 masterPubkeys: participantsMasterPubkeys,
               ),
               if (mediaTags != null) ...mediaTags,
             ];
 
             final isCurrentUser = ref.read(isCurrentUserSelectorProvider(masterPubkey));
+
             final event = await _createEventMessage(
               content: content,
               signer: eventSigner,
@@ -147,6 +153,8 @@ class SendE2eeChatMessageService {
               pubkey: pubkey,
               masterPubkey: masterPubkey,
             );
+
+            sentKind14Message = event;
 
             await ref.read(conversationMessageDataDaoProvider).add(
                   masterPubkey: masterPubkey,
@@ -169,13 +177,15 @@ class SendE2eeChatMessageService {
         for (final pubkey in participantsMasterPubkeys) {
           await ref.read(conversationMessageDataDaoProvider).add(
                 masterPubkey: pubkey,
-                eventMessageId: currentUserEventMessageId,
                 status: MessageDeliveryStatus.failed,
+                eventMessageId: currentUserEventMessageId,
               );
         }
       }
       throw SendEventException(e.toString());
     }
+
+    return sentKind14Message;
   }
 
   List<RelatedEvent> _buildRelatedEvents(EventMessage? repliedMessage) {
@@ -280,6 +290,7 @@ class SendE2eeChatMessageService {
     required List<String> masterPubkeys,
     String? subject,
     List<String>? groupImageTag,
+    List<String>? referencePostTag,
     EventMessage? repliedMessage,
   }) {
     final currentUserMasterPubkey = ref.read(currentPubkeySelectorProvider);
@@ -292,6 +303,7 @@ class SendE2eeChatMessageService {
       ...relatedEventsTags,
       [CommunityIdentifierTag.tagName, conversationId],
       if (groupImageTag != null) groupImageTag,
+      if (referencePostTag != null) referencePostTag,
       ['b', currentUserMasterPubkey!],
     ];
 

@@ -10,7 +10,6 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/components/progress_bar/ion_loading_indicator.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/auth/providers/auth_provider.c.dart';
-import 'package:ion/app/features/chat/e2ee/providers/send_chat_message_service.c.dart';
 import 'package:ion/app/features/feed/data/models/entities/modifiable_post_data.c.dart';
 import 'package:ion/app/features/feed/providers/can_reply_notifier.c.dart';
 import 'package:ion/app/features/feed/stories/providers/emoji_reaction_provider.c.dart';
@@ -47,16 +46,17 @@ class StoryContent extends HookConsumerWidget {
     final onSubmitted = useCallback(
       (String? content) async {
         if (content == null || content.isEmpty) return;
-        final sendChatMessageService = await ref.read(sendChatMessageServiceProvider.future);
-        await sendChatMessageService.send(
-          receiverPubkey: story.masterPubkey,
-          content: content,
-        );
+
+        final text = textController.text;
 
         textController.clear();
-        if (context.mounted) {
-          FocusScope.of(context).unfocus();
-        }
+
+        FocusScope.of(context).unfocus();
+
+        await ref.read(storyReplyProvider.notifier).sendReply(
+              story,
+              replyText: text,
+            );
       },
       [story.masterPubkey],
     );
