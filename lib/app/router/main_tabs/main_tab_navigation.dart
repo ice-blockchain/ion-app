@@ -6,14 +6,12 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/extensions/extensions.dart';
-import 'package:ion/app/features/chat/providers/user_chat_relays_provider.c.dart';
 import 'package:ion/app/features/chat/recent_chats/providers/conversations_edit_mode_provider.c.dart';
 import 'package:ion/app/features/chat/recent_chats/views/components/conversation_edit_bottom_bar/conversation_edit_bottom_bar.dart';
 import 'package:ion/app/features/chat/views/components/unread_messages_counter.dart';
-import 'package:ion/app/hooks/use_on_init.dart';
 import 'package:ion/app/router/main_tabs/components/components.dart';
 
-class MainTabNavigation extends HookConsumerWidget {
+class MainTabNavigation extends HookWidget {
   const MainTabNavigation({
     required this.shell,
     required this.state,
@@ -24,20 +22,16 @@ class MainTabNavigation extends HookConsumerWidget {
   final GoRouterState state;
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  Widget build(BuildContext context) {
     final tabHistory = useState<List<int>>([shell.currentIndex]);
     final tabPressStreamController = useStreamController<TabPressSteamData>();
     final currentTab = TabItem.fromNavigationIndex(shell.currentIndex);
-
-    useOnInit(() {
-      ref.read(userChatRelaysManagerProvider.notifier).sync();
-    });
 
     return PopScope(
       canPop: false,
       onPopInvokedWithResult: (didPop, result) async {
         if (!didPop) {
-          if (Navigator.of(ref.context).canPop()) {
+          if (Navigator.of(context).canPop()) {
             context.pop();
           } else {
             if (tabHistory.value.length > 1) {

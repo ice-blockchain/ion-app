@@ -9,6 +9,7 @@ import 'package:ion/app/features/ion_connect/model/event_reference.c.dart';
 import 'package:ion/app/features/ion_connect/providers/ion_connect_cache.c.dart';
 import 'package:ion/app/features/ion_connect/providers/ion_connect_notifier.c.dart';
 import 'package:ion/app/features/user/model/user_relays.c.dart';
+import 'package:ion/app/features/user/providers/current_user_identity_provider.c.dart';
 import 'package:ion/app/services/ion_identity/ion_identity_client_provider.c.dart';
 import 'package:ion/app/services/logger/logger.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
@@ -32,6 +33,22 @@ Future<UserRelaysEntity?> currentUserRelay(Ref ref) async {
     return null;
   }
   return ref.watch(userRelayProvider(currentPubkey).future);
+}
+
+@riverpod
+Future<UserRelaysEntity?> currentUserIdentityRelays(Ref ref) async {
+  final userIdentity = await ref.watch(currentUserIdentityProvider.future);
+  final identityConnectRelays = userIdentity?.ionConnectRelays;
+  if (userIdentity == null || identityConnectRelays == null) {
+    return null;
+  }
+  final updatedUserRelays = UserRelaysData(
+    list: identityConnectRelays.map((url) => UserRelay(url: url)).toList(),
+  );
+  final userRelaysEvent =
+      await ref.read(ionConnectNotifierProvider.notifier).sign(updatedUserRelays);
+
+  return UserRelaysEntity.fromEventMessage(userRelaysEvent);
 }
 
 @riverpod

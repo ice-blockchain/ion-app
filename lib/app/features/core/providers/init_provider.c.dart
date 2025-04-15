@@ -5,6 +5,7 @@ import 'dart:async';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/features/auth/providers/auth_provider.c.dart';
 import 'package:ion/app/features/auth/providers/onboarding_complete_provider.c.dart';
+import 'package:ion/app/features/chat/providers/user_chat_relays_sync_provider.c.dart';
 import 'package:ion/app/features/core/model/feature_flags.dart';
 import 'package:ion/app/features/core/permissions/providers/permissions_provider.c.dart';
 import 'package:ion/app/features/core/providers/feature_flags_provider.c.dart';
@@ -12,6 +13,7 @@ import 'package:ion/app/features/core/providers/template_provider.c.dart';
 import 'package:ion/app/features/core/providers/window_manager_provider.c.dart';
 import 'package:ion/app/features/force_update/providers/force_update_provider.c.dart';
 import 'package:ion/app/features/user/providers/update_user_metadata_notifier.c.dart';
+import 'package:ion/app/features/user/providers/user_relays_sync_provider.c.dart';
 import 'package:ion/app/features/wallets/providers/coins_sync_provider.c.dart';
 import 'package:ion/app/features/wallets/providers/connected_crypto_wallets_provider.c.dart';
 import 'package:ion/app/features/wallets/providers/transactions_subscription_provider.c.dart';
@@ -50,7 +52,9 @@ Future<void> initApp(Ref ref) async {
     ..listen(walletsInitializerNotifierProvider, noop)
     ..listen(mainCryptoWalletsProvider, (_, __) {
       ref.read(updateUserMetadataNotifierProvider.notifier).updatePublishedWallets();
-    });
+    })
+    ..listen(userRelaysSyncProvider, noop)
+    ..listen(userChatRelaysSyncProvider, noop);
 
   registerTimeagoLocalesForEnum();
 }
