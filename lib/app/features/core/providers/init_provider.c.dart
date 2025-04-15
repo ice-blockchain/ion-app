@@ -52,7 +52,7 @@ Future<void> initApp(Ref ref) async {
     ..listen(mainCryptoWalletsProvider, (_, __) {
       ref.read(updateUserMetadataNotifierProvider.notifier).updatePublishedWallets();
     })
-    ..listen(useRelaysSyncProvider, noop);
+    ..listen(userRelaysSyncProvider, noop);
 
   registerTimeagoLocalesForEnum();
 }

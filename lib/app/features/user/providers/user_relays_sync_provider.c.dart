@@ -14,8 +14,10 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'user_relays_sync_provider.c.g.dart';
 
+// Relays specified in 10002 might obsolete, so syncing those by taking always
+// up to date ones from identity.
 @Riverpod(keepAlive: true)
-Future<void> useRelaysSync(Ref ref) async {
+Future<void> userRelaysSync(Ref ref) async {
   final authState = await ref.watch(authProvider.future);
 
   if (!authState.isAuthenticated) {

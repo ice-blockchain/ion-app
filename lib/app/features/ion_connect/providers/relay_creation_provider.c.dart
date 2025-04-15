@@ -159,6 +159,8 @@ class RelayCreation extends _$RelayCreation {
   }
 
   Future<UserRelaysEntity> _getUserRelays(String pubkey) async {
+    // For the current user, we use the relays from Identity as the single source of truth.
+    // Unlike Connect relays, Identity relays are always up to date.
     final userRelays = ref.read(isCurrentUserSelectorProvider(pubkey))
         ? await ref.read(currentUserIdentityRelaysProvider.future)
         : await ref.read(userRelayProvider(pubkey).future);
