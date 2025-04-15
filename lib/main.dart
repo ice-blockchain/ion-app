@@ -19,13 +19,26 @@ import 'package:ion/app/theme/theme.dart';
 import 'package:ion/app/utils/fallback_emoji_font.dart';
 import 'package:ion/generated/app_localizations.dart';
 
+void warmUpEmojiFont(String emoji) {
+  final painter = TextPainter(
+    text: TextSpan(
+      text: emoji, // any emojis your app might use
+      style: const TextStyle(
+        fontFamily: 'NotoSans',
+        fontFamilyFallback: ['AppleColorEmoji', 'NotoColorEmoji'],
+        fontSize: 24,
+      ),
+    ),
+    textDirection: TextDirection.ltr,
+  )..layout(); // triggers internal font resolution
+}
+
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await SecureStorage().clearOnReinstall();
   final container = ProviderContainer();
   LoggerInitializer.initialize(container);
   unawaited(preloadFallbackEmojiFont());
-
   runApp(
     UncontrolledProviderScope(
       container: container,

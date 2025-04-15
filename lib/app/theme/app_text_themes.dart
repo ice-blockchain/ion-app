@@ -42,20 +42,79 @@ class AppTextThemesExtension extends ThemeExtension<AppTextThemesExtension> {
 
   factory AppTextThemesExtension.defaultTextThemes() {
     return const AppTextThemesExtension(
-      headline1: TextStyle(fontSize: 28, fontWeight: FontWeight.w700),
-      headline2: TextStyle(fontSize: 24, fontWeight: FontWeight.w700),
-      title: TextStyle(fontSize: 17, fontWeight: FontWeight.w600),
-      subtitle: TextStyle(fontSize: 15, fontWeight: FontWeight.w600),
-      subtitle2: TextStyle(fontSize: 15, fontWeight: FontWeight.w500),
-      subtitle3: TextStyle(fontSize: 14, fontWeight: FontWeight.w500),
-      body: TextStyle(fontSize: 13, height: 1.38, fontWeight: FontWeight.w600),
-      body2: TextStyle(fontSize: 13, fontWeight: FontWeight.w400),
-      caption: TextStyle(fontSize: 12, fontWeight: FontWeight.w500),
-      caption2: TextStyle(fontSize: 12, fontWeight: FontWeight.w400),
-      caption3: TextStyle(fontSize: 11, height: 1.63, fontWeight: FontWeight.w400),
-      caption4: TextStyle(fontSize: 11, height: 1.45, fontWeight: FontWeight.w500),
-      caption5: TextStyle(fontSize: 10, fontWeight: FontWeight.w400),
-      notificationCaption: TextStyle(fontSize: 10, fontWeight: FontWeight.w400),
+      headline1: TextStyle(
+        fontSize: 28,
+        fontWeight: FontWeight.w700,
+        fontFamilyFallback: ['NotoColorEmoji'],
+      ),
+      headline2: TextStyle(
+        fontSize: 24,
+        fontWeight: FontWeight.w700,
+        fontFamilyFallback: ['NotoColorEmoji'],
+      ),
+      title: TextStyle(
+        fontSize: 17,
+        fontWeight: FontWeight.w600,
+        fontFamilyFallback: ['NotoColorEmoji'],
+      ),
+      subtitle: TextStyle(
+        fontSize: 15,
+        fontWeight: FontWeight.w600,
+        fontFamilyFallback: ['NotoColorEmoji'],
+      ),
+      subtitle2: TextStyle(
+        fontSize: 15,
+        fontWeight: FontWeight.w500,
+        fontFamilyFallback: ['NotoColorEmoji'],
+      ),
+      subtitle3: TextStyle(
+        fontSize: 14,
+        fontWeight: FontWeight.w500,
+        fontFamilyFallback: ['NotoColorEmoji'],
+      ),
+      body: TextStyle(
+        fontSize: 13,
+        height: 1.38,
+        fontWeight: FontWeight.w600,
+        fontFamilyFallback: ['NotoColorEmoji'],
+      ),
+      body2: TextStyle(
+        fontSize: 13,
+        fontWeight: FontWeight.w400,
+        fontFamilyFallback: ['NotoColorEmoji'],
+      ),
+      caption: TextStyle(
+        fontSize: 12,
+        fontWeight: FontWeight.w500,
+        fontFamilyFallback: ['NotoColorEmoji'],
+      ),
+      caption2: TextStyle(
+        fontSize: 12,
+        fontWeight: FontWeight.w400,
+        fontFamilyFallback: ['NotoColorEmoji'],
+      ),
+      caption3: TextStyle(
+        fontSize: 11,
+        height: 1.63,
+        fontWeight: FontWeight.w400,
+        fontFamilyFallback: ['NotoColorEmoji'],
+      ),
+      caption4: TextStyle(
+        fontSize: 11,
+        height: 1.45,
+        fontWeight: FontWeight.w500,
+        fontFamilyFallback: ['NotoColorEmoji'],
+      ),
+      caption5: TextStyle(
+        fontSize: 10,
+        fontWeight: FontWeight.w400,
+        fontFamilyFallback: ['NotoColorEmoji'],
+      ),
+      notificationCaption: TextStyle(
+        fontSize: 10,
+        fontWeight: FontWeight.w400,
+        fontFamilyFallback: ['NotoColorEmoji'],
+      ),
     );
   }
 
@@ -145,7 +204,7 @@ class TemplateTextStyle extends TextStyle {
       height: theme.height,
       fontFamily: 'NotoSans',
       letterSpacing: 0,
-      fontFamilyFallback: const ['NotoColorEmoji'],
+      fontFamilyFallback: const ['Apple Color Emoji', 'NotoColorEmoji'],
     );
   }
 }
