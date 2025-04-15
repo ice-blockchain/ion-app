@@ -113,9 +113,8 @@ class _UnavailableStoryContainer extends StatelessWidget {
         maxWidth: MessageItemWrapper.maxWidth,
       ),
       decoration: BoxDecoration(
-        color: isMe
-            ? context.theme.appColors.primaryAccent
-            : context.theme.appColors.onPrimaryAccent,
+        color:
+            isMe ? context.theme.appColors.primaryAccent : context.theme.appColors.onPrimaryAccent,
         borderRadius: BorderRadiusDirectional.all(
           Radius.circular(12.0.s),
         ),
