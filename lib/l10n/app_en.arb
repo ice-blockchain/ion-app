@@ -631,6 +631,8 @@
   "push_notifications_no_access_description": "You have previously denied notification permission. Please go to settings to enable notifications.",
   "story_preview_title": "Story preview",
   "delete_story_title": "Delete story?",
+  "story_reply_sender": "You replied",
+  "story_reply_receiver": "Replied you",
   "delete_video_title": "Delete video?",
   "delete_post_title": "Delete post?",
   "delete_article_title": "Delete article?",

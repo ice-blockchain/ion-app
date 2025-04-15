@@ -1,7 +1,6 @@
 // SPDX-License-Identifier: ice License 1.0
 
 import 'dart:convert';
-import 'dart:developer';
 
 import 'package:ion/app/exceptions/exceptions.dart';
 import 'package:ion/app/features/auth/providers/auth_provider.c.dart';
@@ -112,13 +111,14 @@ class StoryReply extends _$StoryReply {
       );
     }
 
-    log('Kind 16 rumor sent: ${kind16Rumor.id}');
-
     final sentKind14EventMessage = await ref.read(sendE2eeChatMessageServiceProvider).sendMessage(
       content: replyText ?? '',
       conversationId: conversationId,
       participantsMasterPubkeys: participantsMasterPubkeys,
-      referencePostTag: [QuotedReplaceableEvent.tagName, kind16Rumor.id],
+      referencePostTag: QuotedImmutableEvent(
+        eventReference:
+            ImmutableEventReference(eventId: kind16Rumor.id, pubkey: kind16Rumor.pubkey),
+      ).toTag(),
       mediaFiles: [],
     );
 

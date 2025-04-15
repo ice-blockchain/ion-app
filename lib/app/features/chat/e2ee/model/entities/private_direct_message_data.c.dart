@@ -75,7 +75,7 @@ class PrivateDirectMessageData with _$PrivateDirectMessageData, EntityDataWithMe
     RichText? richText,
     String? relatedGroupImagePath,
     RelatedSubject? relatedSubject,
-    QuotedEvent? quotedEvent,
+    QuotedImmutableEvent? quotedEvent,
     List<RelatedEvent>? relatedEvents,
     List<RelatedPubkey>? relatedPubkeys,
     CommunityIdentifierTag? relatedConversationId,
@@ -88,7 +88,7 @@ class PrivateDirectMessageData with _$PrivateDirectMessageData, EntityDataWithMe
       content: eventMessage.content,
       media: EntityDataWithMediaContent.parseImeta(tags[MediaAttachment.tagName]),
       relatedSubject: tags[RelatedSubject.tagName]?.map(RelatedSubject.fromTag).singleOrNull,
-      quotedEvent: tags[QuotedReplaceableEvent.tagName]?.map(QuotedEvent.fromTag).singleOrNull,
+      quotedEvent: tags[QuotedImmutableEvent.tagName]?.map(QuotedImmutableEvent.fromTag).singleOrNull,
       relatedPubkeys: tags[RelatedPubkey.tagName]?.map(RelatedPubkey.fromTag).toList(),
       relatedEvents: tags[RelatedImmutableEvent.tagName]?.map(RelatedEvent.fromTag).toList(),
       uuid:
