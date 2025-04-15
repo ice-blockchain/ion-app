@@ -74,11 +74,12 @@ class GalleryNotifier extends _$GalleryNotifier {
       type: type,
     )
         .listen((media) {
+      final currentState = state.valueOrNull;
       state = AsyncValue.data(
         GalleryState(
-          mediaData: media,
-          currentPage: 0,
-          hasMore: media.length == _pageSize,
+          mediaData: [...(currentState?.mediaData ?? []), ...media],
+          currentPage: currentState?.currentPage ?? 0,
+          hasMore: media.isNotEmpty,
           type: type,
           isLoading: false,
         ),
@@ -103,14 +104,18 @@ class GalleryNotifier extends _$GalleryNotifier {
     if (!currentState.hasMore) return;
 
     if (currentState.selectedAlbum == null) {
-      state = AsyncValue.data(currentState.copyWith(isLoading: true));
-      unawaited(
-        ref.read(mediaServiceProvider).fetchGalleryMediaPage(
-              page: currentState.currentPage,
-              size: _pageSize,
-              type: currentState.type,
-            ),
+      state = AsyncValue.data(
+        currentState.copyWith(
+          isLoading: true,
+          currentPage: currentState.currentPage + 1,
+        ),
       );
+
+      await ref.read(mediaServiceProvider).fetchGalleryMediaPage(
+            page: currentState.currentPage,
+            size: _pageSize,
+            type: currentState.type,
+          );
 
       return;
     }

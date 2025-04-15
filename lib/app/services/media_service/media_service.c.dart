@@ -48,8 +48,7 @@ class MediaFile with _$MediaFile {
 typedef CropImageUiSettings = List<PlatformUiSettings>;
 
 class MediaService {
-  final streamController = StreamController<List<MediaFile>>.broadcast();
-  List<MediaFile> _currentMediaFiles = [];
+  final _streamController = StreamController<List<MediaFile>>.broadcast();
   int _currentPage = 0;
   MediaPickerType? _currentType;
 
@@ -72,8 +71,7 @@ class MediaService {
 
       if (albums.isEmpty) {
         if (page == 0) {
-          _currentMediaFiles = [];
-          streamController.add([]);
+          _streamController.add([]);
         }
         return;
       }
@@ -85,14 +83,9 @@ class MediaService {
 
       if (assets.isEmpty) {
         if (page == 0) {
-          _currentMediaFiles = [];
-          streamController.add([]);
+          _streamController.add([]);
         }
         return;
-      }
-
-      if (page == 0) {
-        _currentMediaFiles = [];
       }
 
       const batchSize = 20;
@@ -103,17 +96,14 @@ class MediaService {
         final end = (start + batchSize < assets.length) ? start + batchSize : assets.length;
         final batch = assets.sublist(start, end);
 
-        final batchResults = await compute(_processBatch, batch);
+        final batchResults = await _processBatch(batch);
 
-        _currentMediaFiles = [..._currentMediaFiles, ...batchResults];
-
-        streamController.add(List<MediaFile>.from(_currentMediaFiles));
+        _streamController.add(batchResults);
       }
     } catch (e) {
       Logger.log('Error fetching gallery images: $e');
       if (page == 0) {
-        _currentMediaFiles = [];
-        streamController.add([]);
+        _streamController.add([]);
       }
     }
   }
@@ -159,22 +149,20 @@ class MediaService {
     PhotoManager.addChangeCallback(onChangeCallback);
     PhotoManager.startChangeNotify();
 
-    streamController.onCancel = () {
+    _streamController.onCancel = () {
       PhotoManager.removeChangeCallback(onChangeCallback);
       PhotoManager.stopChangeNotify();
     };
 
-    if (_currentMediaFiles.isEmpty || _currentType != type) {
+    if (page == 0 || _currentType != type) {
       fetchGalleryMediaPage(
         page: page,
         size: size,
         type: type,
       );
-    } else {
-      streamController.add(_currentMediaFiles);
     }
 
-    return streamController.stream;
+    return _streamController.stream;
   }
 
   Future<MediaFile?> cropImage({
