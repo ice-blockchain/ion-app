@@ -45,7 +45,7 @@ Future<void> transactionsSubscription(Ref ref) async {
       sealService == null ||
       giftWrapService == null ||
       transactionsRepository == null ||
-      // otherwise relays might be not assigned yet
+      // otherwise relays might not be assigned yet or delegation is not done
       !onboardingComplete.falseOrValue) {
     return;
   }
