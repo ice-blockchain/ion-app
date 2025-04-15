@@ -1,22 +1,17 @@
 // SPDX-License-Identifier: ice License 1.0
 
-import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_quill/flutter_quill.dart';
 import 'package:flutter_quill/quill_delta.dart';
-import 'package:ion/app/components/text_editor/attributes.dart';
 import 'package:ion/app/components/text_editor/components/custom_blocks/text_editor_code_block/text_editor_code_block.dart';
 import 'package:ion/app/components/text_editor/components/custom_blocks/text_editor_separator_block/text_editor_separator_block.dart';
 import 'package:ion/app/components/text_editor/components/custom_blocks/text_editor_single_image_block/text_editor_single_image_block.dart';
 import 'package:ion/app/components/text_editor/components/custom_blocks/unknown/text_editor_unknown_embed_builder.dart';
 import 'package:ion/app/components/text_editor/custom_recognizer_builder.dart';
+import 'package:ion/app/components/text_editor/utils/quill_text_span_builder.dart';
 import 'package:ion/app/components/text_editor/utils/text_editor_styles.dart';
-import 'package:ion/app/components/text_span_builder/text_span_builder.dart'
-    as ion_text_span_builder;
 import 'package:ion/app/features/ion_connect/model/media_attachment.dart';
-import 'package:ion/app/services/text_parser/model/text_match.c.dart';
-import 'package:ion/app/services/text_parser/model/text_matcher.dart';
 
 class TextEditorPreview extends HookWidget {
   const TextEditorPreview({
@@ -83,7 +78,7 @@ class _SelectableContentText extends StatelessWidget {
     final delta = controller.document.toDelta();
 
     return SelectableText.rich(
-      _buildRichTextSpanFromDelta(
+      QuillTextSpanBuilder.buildFromDelta(
         delta,
         context: context,
         styles: effectiveStyles,
@@ -93,89 +88,6 @@ class _SelectableContentText extends StatelessWidget {
         editableTextState: editableTextState,
       ),
     );
-  }
-
-  /// Builds a TextSpan tree from Quill Delta, preserving formatting and recognizers.
-  /// Handles bold, italic, underline, links, hashtags, mentions, cashtags.
-  TextSpan _buildRichTextSpanFromDelta(
-    Delta delta, {
-    required BuildContext context,
-    required DefaultStyles styles,
-  }) {
-    final children = <InlineSpan>[];
-    for (final op in delta.toList()) {
-      if (op.key != 'insert') continue;
-      final data = op.data;
-      final attrs = op.attributes ?? {};
-      if (data is String) {
-        final style = _applyTextAttributes(attrs, styles, context);
-        final recognizer = _buildRecognizer(attrs, context, data);
-        children.add(TextSpan(text: data, style: style, recognizer: recognizer));
-      }
-    }
-    return TextSpan(children: children);
-  }
-
-  /// Applies text attributes (bold, italic, underline, link, hashtag, mention, cashtag) to style.
-  TextStyle _applyTextAttributes(
-    Map<String, dynamic> attrs,
-    DefaultStyles styles,
-    BuildContext context,
-  ) {
-    var style = styles.paragraph?.style ?? const TextStyle();
-    if (attrs['b'] == true) {
-      style = style.merge(styles.bold);
-    }
-    if (attrs['i'] == true) {
-      style = style.merge(styles.italic);
-    }
-    if (attrs['u'] == true) {
-      style = style.merge(const TextStyle(decoration: TextDecoration.underline));
-    }
-    if (attrs.containsKey('a') && attrs['a'] != null) {
-      style = style.merge(customTextStyleBuilder(Attribute.link, context));
-    }
-    if (attrs.containsKey('hashtag')) {
-      style = style.merge(customTextStyleBuilder(const HashtagAttribute(''), context));
-    }
-    if (attrs.containsKey('mention')) {
-      style = style.merge(customTextStyleBuilder(const MentionAttribute(''), context));
-    }
-    if (attrs.containsKey('cashtag')) {
-      style = style.merge(customTextStyleBuilder(const CashtagAttribute(''), context));
-    }
-    return style;
-  }
-
-  /// Builds a GestureRecognizer for links, hashtags, cashtags.
-  GestureRecognizer? _buildRecognizer(
-    Map<String, dynamic> attrs,
-    BuildContext context,
-    String data,
-  ) {
-    if (attrs.containsKey('a') && attrs['a'] != null) {
-      return TapGestureRecognizer()
-        ..onTap = () => ion_text_span_builder.TextSpanBuilder.defaultOnTap(
-              context,
-              match: TextMatch(
-                data,
-                matcher: const UrlMatcher(),
-              ),
-            );
-    }
-    if (attrs.containsKey('hashtag')) {
-      return customRecognizerBuilder(
-        context,
-        HashtagAttribute.withValue(attrs['hashtag'] as String),
-      );
-    }
-    if (attrs.containsKey('cashtag')) {
-      return customRecognizerBuilder(
-        context,
-        CashtagAttribute.withValue(attrs['cashtag'] as String),
-      );
-    }
-    return null;
   }
 }
 
