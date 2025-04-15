@@ -465,8 +465,3 @@ class FormException extends IONException {
 class FailedToSendEmail extends IONException {
   FailedToSendEmail() : super(10092, 'Unable to send email');
 }
-
-class UserRelaysNotAssignedException extends IONException {
-  UserRelaysNotAssignedException()
-      : super(10093, 'Failed to get ion connect relays from identity for the current user');
-}
