@@ -45,8 +45,6 @@ class E2eeMessagesSubscriber extends _$E2eeMessagesSubscriber {
     final userChatRelays = await ref.watch(userChatRelaysProvider(masterPubkey).future);
 
     if (userChatRelays == null) {
-      await ref.read(userChatRelaysManagerProvider.notifier).sync();
-      ref.invalidateSelf();
       return;
     }
 
