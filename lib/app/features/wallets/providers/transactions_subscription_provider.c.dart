@@ -3,7 +3,9 @@
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/exceptions/exceptions.dart';
+import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/auth/providers/auth_provider.c.dart';
+import 'package:ion/app/features/auth/providers/onboarding_complete_provider.c.dart';
 import 'package:ion/app/features/ion_connect/ion_connect.dart';
 import 'package:ion/app/features/ion_connect/providers/ion_connect_event_signer_provider.c.dart';
 import 'package:ion/app/features/ion_connect/providers/ion_connect_subscription_provider.c.dart';
@@ -36,12 +38,15 @@ Future<void> transactionsSubscription(Ref ref) async {
   final eventSigner = ref.watch(currentUserIonConnectEventSignerProvider).valueOrNull;
   final sealService = ref.watch(ionConnectSealServiceProvider).valueOrNull;
   final giftWrapService = ref.watch(ionConnectGiftWrapServiceProvider).valueOrNull;
+  final onboardingComplete = ref.watch(onboardingCompleteProvider).valueOrNull;
 
   if (currentPubkey == null ||
       eventSigner == null ||
       sealService == null ||
       giftWrapService == null ||
-      transactionsRepository == null) {
+      transactionsRepository == null ||
+      // otherwise relays might be not assigned yet
+      !onboardingComplete.falseOrValue) {
     return;
   }
 

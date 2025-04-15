@@ -79,9 +79,7 @@ class UserChatRelaysManager extends _$UserChatRelaysManager {
       list: relayUrls.map((url) => UserRelay(url: url)).toList(),
     );
 
-    final chatRelaysEvent = await ref.read(ionConnectNotifierProvider.notifier).sign(chatRelays);
-
-    await ref.read(ionConnectNotifierProvider.notifier).sendEvents([chatRelaysEvent]);
+    await ref.read(ionConnectNotifierProvider.notifier).sendEntityData(chatRelays);
     ref.invalidate(userChatRelaysProvider(pubkey));
   }
 }

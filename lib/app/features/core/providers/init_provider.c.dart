@@ -12,6 +12,7 @@ import 'package:ion/app/features/core/providers/template_provider.c.dart';
 import 'package:ion/app/features/core/providers/window_manager_provider.c.dart';
 import 'package:ion/app/features/force_update/providers/force_update_provider.c.dart';
 import 'package:ion/app/features/user/providers/update_user_metadata_notifier.c.dart';
+import 'package:ion/app/features/user/providers/user_relays_sync_provider.c.dart';
 import 'package:ion/app/features/wallets/providers/coins_sync_provider.c.dart';
 import 'package:ion/app/features/wallets/providers/connected_crypto_wallets_provider.c.dart';
 import 'package:ion/app/features/wallets/providers/transactions_subscription_provider.c.dart';
@@ -50,7 +51,8 @@ Future<void> initApp(Ref ref) async {
     ..listen(walletsInitializerNotifierProvider, noop)
     ..listen(mainCryptoWalletsProvider, (_, __) {
       ref.read(updateUserMetadataNotifierProvider.notifier).updatePublishedWallets();
-    });
+    })
+    ..listen(useRelaysSyncProvider, noop);
 
   registerTimeagoLocalesForEnum();
 }

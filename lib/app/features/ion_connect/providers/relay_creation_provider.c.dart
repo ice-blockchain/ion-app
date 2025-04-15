@@ -1,6 +1,5 @@
 // SPDX-License-Identifier: ice License 1.0
 
-import 'package:flutter/foundation.dart';
 import 'package:ion/app/exceptions/exceptions.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/auth/providers/auth_provider.c.dart';
@@ -9,7 +8,6 @@ import 'package:ion/app/features/ion_connect/ion_connect.dart' hide requestEvent
 import 'package:ion/app/features/ion_connect/ion_connect.dart';
 import 'package:ion/app/features/ion_connect/model/action_source.c.dart';
 import 'package:ion/app/features/ion_connect/providers/active_relays_provider.c.dart';
-import 'package:ion/app/features/ion_connect/providers/ion_connect_notifier.c.dart';
 import 'package:ion/app/features/ion_connect/providers/relays_provider.c.dart';
 import 'package:ion/app/features/user/model/user_chat_relays.c.dart';
 import 'package:ion/app/features/user/model/user_relays.c.dart';
@@ -35,8 +33,7 @@ class RelayCreation extends _$RelayCreation {
           throw UserMasterPubkeyNotFoundException();
         }
 
-        final userRelays =
-            await _getAndSyncUserRelays(pubkey).then((userRelays) => userRelays.data.list);
+        final userRelays = await _getUserRelays(pubkey).then((userRelays) => userRelays.data.list);
         final relays = _userRelaysAvoidingDislikedUrls(userRelays, dislikedUrls)
             .map((relay) => relay.url)
             .toList();
@@ -73,8 +70,8 @@ class RelayCreation extends _$RelayCreation {
         return _getRelay(relays.random, actionSource.anonymous);
 
       case ActionSourceUser():
-        final userRelays = await _getAndSyncUserRelays(actionSource.pubkey)
-            .then((userRelays) => userRelays.data.list);
+        final userRelays =
+            await _getUserRelays(actionSource.pubkey).then((userRelays) => userRelays.data.list);
 
         final relays = _userRelaysAvoidingDislikedUrls(userRelays, dislikedUrls)
             .map((relay) => relay.url)
@@ -161,39 +158,13 @@ class RelayCreation extends _$RelayCreation {
     return await ref.read(relayProvider(url, anonymous: anonymous).future);
   }
 
-  Future<UserRelaysEntity> _getAndSyncUserRelays(String pubkey) async {
-    final userRelays = await ref.read(userRelayProvider(pubkey).future);
+  Future<UserRelaysEntity> _getUserRelays(String pubkey) async {
+    final userRelays = ref.read(isCurrentUserSelectorProvider(pubkey))
+        ? await ref.read(currentUserIdentityRelaysProvider.future)
+        : await ref.read(userRelayProvider(pubkey).future);
     if (userRelays == null) {
       throw UserRelaysNotFoundException(pubkey);
     }
-
-    if (ref.read(isCurrentUserSelectorProvider(pubkey))) {
-      return _syncCurrentUserRelays(userRelays);
-    }
-
-    return userRelays;
-  }
-
-  Future<UserRelaysEntity> _syncCurrentUserRelays(UserRelaysEntity userRelays) async {
-    final identity = await ref.read(currentUserIdentityProvider.future);
-    final identityConnectRelays = identity?.ionConnectRelays;
-
-    if (identityConnectRelays == null) {
-      throw UserRelaysNotAssignedException();
-    }
-
-    if (!listEquals(userRelays.urls, identityConnectRelays)) {
-      final updatedUserRelays = UserRelaysData(
-        list: identityConnectRelays.map((url) => UserRelay(url: url)).toList(),
-      );
-      final relays =
-          await ref.read(ionConnectNotifierProvider.notifier).sendEntityData<UserRelaysEntity>(
-                updatedUserRelays,
-                actionSource: const ActionSourceIndexers(),
-              );
-      return relays!;
-    }
-
     return userRelays;
   }
 
