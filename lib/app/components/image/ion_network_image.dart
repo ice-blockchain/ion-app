@@ -2,8 +2,7 @@
 
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
-import 'package:ion/app/extensions/extensions.dart';
-import 'package:ion/generated/assets.gen.dart';
+import 'package:ion/app/components/placeholder/ion_placeholder.dart';
 
 class IonNetworkImage extends CachedNetworkImage {
   IonNetworkImage({
@@ -25,15 +24,7 @@ class IonNetworkImage extends CachedNetworkImage {
   }) : super(
           // Do not log image loading errors
           errorListener: (_) {},
-          errorWidget: errorWidget ??
-              (context, url, error) => ColoredBox(
-                    color: context.theme.appColors.tertararyBackground,
-                    child: Center(
-                      child: Assets.svg.iconFeedStories.icon(
-                        size: 40.0.s,
-                        color: context.theme.appColors.sheetLine,
-                      ),
-                    ),
-                  ),
+          // Default error widget
+          errorWidget: errorWidget ?? (context, url, error) => const IonPlaceholder(),
         );
 }

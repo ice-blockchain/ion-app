@@ -3,6 +3,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:ion/app/components/image/ion_network_image.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/feed/data/models/entities/modifiable_post_data.c.dart';
 import 'package:ion/app/features/feed/views/components/overlay_menu/user_info_menu.dart';
@@ -88,17 +89,25 @@ class _VideoContainer extends StatelessWidget {
       height: size.height,
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(16.0.s),
-        image: DecorationImage(
-          image: CachedNetworkImageProvider(thumbnailUrl),
-          fit: BoxFit.cover,
-        ),
       ),
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          _TopControls(eventReference: eventReference),
-          TrendingVideoAuthor(pubkey: eventReference.pubkey),
-        ],
+      child: ClipRRect(
+        borderRadius: BorderRadius.circular(16.0.s),
+        child: Stack(
+          fit: StackFit.expand,
+          children: [
+            IonNetworkImage(
+              imageUrl: thumbnailUrl,
+              fit: BoxFit.cover,
+            ),
+            Column(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                _TopControls(eventReference: eventReference),
+                TrendingVideoAuthor(pubkey: eventReference.pubkey),
+              ],
+            ),
+          ],
+        ),
       ),
     );
   }
