@@ -104,7 +104,7 @@ class _AddressDescription extends StatelessWidget {
                 color: context.theme.appColors.primaryText,
               ),
               embeddedImageStyle: QrEmbeddedImageStyle(size: Size(40.0.s, 40.0.s)),
-              embeddedImage: AssetImage(Assets.images.qrCode.centerQr.path),
+              embeddedImage: AssetImage(Assets.images.qrCode.qrCodeLogo.path),
               data: address,
               size: 150.0.s,
             ),
