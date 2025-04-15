@@ -265,8 +265,11 @@ class ChatPreview extends HookConsumerWidget {
               MessageType.document => lastMessageContent,
               MessageType.requestFunds => context.i18n.chat_money_request_title,
               MessageType.profile => ref
-                      .watch(userMetadataProvider(
-                          EventReference.fromEncoded(lastMessageContent).pubkey))
+                      .watch(
+                        userMetadataProvider(
+                          EventReference.fromEncoded(lastMessageContent).pubkey,
+                        ),
+                      )
                       .valueOrNull
                       ?.data
                       .displayName ??
