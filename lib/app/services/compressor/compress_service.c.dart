@@ -118,20 +118,44 @@ class CompressionService {
     int? width,
     int? height,
     int quality = 80,
+    bool shouldCompressGif = false,
   }) async {
     try {
       final output = await _generateOutputPath();
-      final session = await _executeFFmpeg([
-        '-i',
-        file.path,
-        '-c:v',
-        'libwebp',
-        '-vf',
-        'scale=${width ?? '-1'}:${height ?? '-1'}:force_original_aspect_ratio=decrease',
-        '-q:v',
-        quality.toString(),
-        output,
-      ]);
+
+      List<String> command;
+      if (file.mimeType == 'image/gif' && shouldCompressGif) {
+        command = [
+          '-i',
+          file.path,
+          '-c:v',
+          'libwebp',
+          '-lossless',
+          '0',
+          '-q:v',
+          '80',
+          '-preset',
+          'default',
+          '-loop',
+          '0',
+          '-an',
+          output,
+        ];
+      } else {
+        command = [
+          '-i',
+          file.path,
+          '-c:v',
+          'libwebp',
+          '-vf',
+          'scale=${width ?? '-1'}:${height ?? '-1'}:force_original_aspect_ratio=decrease',
+          '-q:v',
+          quality.toString(),
+          output,
+        ];
+      }
+
+      final session = await _executeFFmpeg(command);
 
       final returnCode = await session.getReturnCode();
       if (!ReturnCode.isSuccess(returnCode)) {
