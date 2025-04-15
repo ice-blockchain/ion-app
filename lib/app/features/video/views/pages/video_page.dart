@@ -33,6 +33,7 @@ class VideoPage extends HookConsumerWidget {
   final bool looping;
   final Widget? videoInfo;
   final Widget? bottomOverlay;
+
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final videoPath = videoUrl;
@@ -112,9 +113,15 @@ class VideoPage extends HookConsumerWidget {
               }
             },
             child: Center(
-              child: AspectRatio(
-                aspectRatio: playerController.value.aspectRatio,
-                child: CachedVideoPlayerPlus(playerController),
+              child: SizedBox.expand(
+                child: FittedBox(
+                  fit: BoxFit.cover,
+                  child: SizedBox(
+                    height: playerController.value.size.height,
+                    width: playerController.value.size.width,
+                    child: CachedVideoPlayerPlus(playerController),
+                  ),
+                ),
               ),
             ),
           ),
@@ -154,6 +161,16 @@ class VideoPage extends HookConsumerWidget {
                 ),
                 if (bottomOverlay != null) bottomOverlay!,
               ],
+            ),
+          ),
+          Align(
+            alignment: Alignment.bottomCenter,
+            child: ColoredBox(
+              color: context.theme.appColors.primaryText,
+              child: SizedBox(
+                height: MediaQuery.paddingOf(context).bottom,
+                width: double.infinity,
+              ),
             ),
           ),
         ],
