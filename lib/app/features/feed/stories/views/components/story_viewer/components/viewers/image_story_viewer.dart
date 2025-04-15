@@ -27,7 +27,6 @@ class ImageStoryViewer extends ConsumerWidget {
       placeholderFadeInDuration: Duration.zero,
       filterQuality: FilterQuality.high,
       progressIndicatorBuilder: (_, __, ___) => const CenteredLoadingIndicator(),
-      errorWidget: (_, __, ___) => const SizedBox.shrink(),
       imageBuilder: (context, imageProvider) {
         WidgetsBinding.instance.addPostFrameCallback((_) {
           if (context.mounted) {

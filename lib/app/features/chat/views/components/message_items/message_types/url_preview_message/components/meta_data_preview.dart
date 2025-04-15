@@ -81,7 +81,6 @@ class _MetaImage extends StatelessWidget {
           imageUrl: imageUrl,
           width: double.infinity,
           fit: BoxFit.cover,
-          errorWidget: (context, url, error) => const SizedBox.shrink(),
         ),
       ),
     );
@@ -109,7 +108,6 @@ class _MetaSiteInfo extends StatelessWidget {
             imageUrl: favIconUrl,
             width: 16.0.s,
             height: 16.0.s,
-            errorWidget: (context, url, error) => const SizedBox.shrink(),
           ),
           SizedBox(width: 6.0.s),
           Text(
