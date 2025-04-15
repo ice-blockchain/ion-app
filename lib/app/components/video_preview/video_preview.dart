@@ -105,7 +105,7 @@ class VideoPreview extends HookConsumerWidget {
                 isLoading: !(controller?.value.hasError ?? false),
               ),
             ),
-          if (controller != null && controller.value.isInitialized && !controller.value.hasError)
+          if (controller != null && !controller.value.hasError)
             Positioned.fill(
               child: FittedBox(
                 fit: BoxFit.cover,
