@@ -54,7 +54,11 @@ dependencies:
   flutter_keyboard_visibility: ^6.0.0
   flutter_localizations:
     sdk: flutter
-  flutter_quill: ^11.0.0
+  flutter_quill:
+    git:
+      url: https://github.com/singerdmx/flutter-quill.git
+      ref: 542ab43e61a6774a3993b57de686577ad2e8fa81
+
   flutter_screenutil: ^5.9.0
   flutter_secure_storage: ^9.2.4
   flutter_staggered_grid_view: ^0.7.0
@@ -77,8 +81,8 @@ dependencies:
   markdown: ^7.3.0
   markdown_quill:
     git:
-      url: https://github.com/ice-blockchain/markdown_quill
-      ref: master
+      url: https://github.com/ice-blockchain/markdown_quill.git
+      ref: chore/flutter-quill-git-dependency
   meta: ^1.15.0
   mime: ^2.0.0
   mocktail: ^1.0.4

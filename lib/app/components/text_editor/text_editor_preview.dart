@@ -9,7 +9,6 @@ import 'package:ion/app/components/text_editor/components/custom_blocks/text_edi
 import 'package:ion/app/components/text_editor/components/custom_blocks/text_editor_single_image_block/text_editor_single_image_block.dart';
 import 'package:ion/app/components/text_editor/components/custom_blocks/unknown/text_editor_unknown_embed_builder.dart';
 import 'package:ion/app/components/text_editor/custom_recognizer_builder.dart';
-import 'package:ion/app/components/text_editor/utils/quill_text_span_builder.dart';
 import 'package:ion/app/components/text_editor/utils/text_editor_styles.dart';
 import 'package:ion/app/features/ion_connect/model/media_attachment.dart';
 
@@ -46,94 +45,23 @@ class TextEditorPreview extends HookWidget {
       return const SizedBox.shrink();
     }
 
-    return enableInteractiveSelection
-        ? _SelectableContentText(
-            controller: controller,
-            customStyles: customStyles,
-          )
-        : _QuillFormattedContent(
-            controller: controller,
-            customStyles: customStyles,
-            media: media,
-            maxHeight: maxHeight,
-            scrollable: scrollable,
-          );
+    return _QuillFormattedContent(
+      controller: controller,
+      customStyles: customStyles,
+      media: media,
+      maxHeight: maxHeight,
+      scrollable: scrollable,
+      enableInteractiveSelection: enableInteractiveSelection,
+    );
   }
 
   bool _isEmptyContent(Delta delta) => delta.length == 1 && delta.first.value == '\n';
 }
 
-class _SelectableContentText extends StatelessWidget {
-  const _SelectableContentText({
-    required this.controller,
-    this.customStyles,
-  });
-
-  final QuillController controller;
-  final DefaultStyles? customStyles;
-
-  @override
-  Widget build(BuildContext context) {
-    final effectiveStyles = customStyles ?? textEditorStyles(context);
-    final delta = controller.document.toDelta();
-
-    return SelectableText.rich(
-      QuillTextSpanBuilder.buildFromDelta(
-        delta,
-        context: context,
-        styles: effectiveStyles,
-      ),
-      textAlign: TextAlign.start,
-      contextMenuBuilder: (context, editableTextState) => _ExtendedContextMenu(
-        editableTextState: editableTextState,
-      ),
-    );
-  }
-}
-
-class _ExtendedContextMenu extends StatelessWidget {
-  const _ExtendedContextMenu({
-    required this.editableTextState,
-  });
-
-  final EditableTextState editableTextState;
-
-  @override
-  Widget build(BuildContext context) {
-    final buttonItems = editableTextState.contextMenuButtonItems;
-
-    final hasSelectAll = buttonItems.any(
-      (item) => item.type == ContextMenuButtonType.selectAll,
-    );
-
-    if (!hasSelectAll) {
-      final copyIndex = buttonItems.indexWhere(
-        (item) => item.type == ContextMenuButtonType.copy,
-      );
-
-      final insertIndex = copyIndex != -1 ? copyIndex + 1 : 0;
-
-      buttonItems.insert(
-        insertIndex,
-        ContextMenuButtonItem(
-          type: ContextMenuButtonType.selectAll,
-          onPressed: () {
-            editableTextState.selectAll(SelectionChangedCause.toolbar);
-          },
-        ),
-      );
-    }
-
-    return AdaptiveTextSelectionToolbar.buttonItems(
-      anchors: editableTextState.contextMenuAnchors,
-      buttonItems: buttonItems,
-    );
-  }
-}
-
 class _QuillFormattedContent extends StatelessWidget {
   const _QuillFormattedContent({
     required this.controller,
+    required this.enableInteractiveSelection,
     this.customStyles,
     this.media,
     this.maxHeight,
@@ -141,6 +69,7 @@ class _QuillFormattedContent extends StatelessWidget {
   });
 
   final QuillController controller;
+  final bool enableInteractiveSelection;
   final DefaultStyles? customStyles;
   final Map<String, MediaAttachment>? media;
   final double? maxHeight;
@@ -156,7 +85,7 @@ class _QuillFormattedContent extends StatelessWidget {
         floatingCursorDisabled: true,
         showCursor: false,
         scrollable: scrollable,
-        enableInteractiveSelection: false,
+        enableInteractiveSelection: enableInteractiveSelection,
         customStyles: effectiveStyles,
         maxHeight: maxHeight,
         embedBuilders: [
