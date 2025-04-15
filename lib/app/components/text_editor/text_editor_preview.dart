@@ -153,7 +153,6 @@ class _QuillFormattedContent extends StatelessWidget {
     return QuillEditor.basic(
       controller: controller,
       config: QuillEditorConfig(
-        enableSelectionToolbar: false,
         floatingCursorDisabled: true,
         showCursor: false,
         scrollable: scrollable,
