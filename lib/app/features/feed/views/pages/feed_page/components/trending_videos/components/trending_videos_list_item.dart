@@ -90,24 +90,21 @@ class _VideoContainer extends StatelessWidget {
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(16.0.s),
       ),
-      child: ClipRRect(
-        borderRadius: BorderRadius.circular(16.0.s),
-        child: Stack(
-          fit: StackFit.expand,
-          children: [
-            IonNetworkImage(
-              imageUrl: thumbnailUrl,
-              fit: BoxFit.cover,
-            ),
-            Column(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                _TopControls(eventReference: eventReference),
-                TrendingVideoAuthor(pubkey: eventReference.pubkey),
-              ],
-            ),
-          ],
-        ),
+      child: Stack(
+        fit: StackFit.expand,
+        children: [
+          IonNetworkImage(
+            imageUrl: thumbnailUrl,
+            fit: BoxFit.cover,
+          ),
+          Column(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              _TopControls(eventReference: eventReference),
+              TrendingVideoAuthor(pubkey: eventReference.pubkey),
+            ],
+          ),
+        ],
       ),
     );
   }
