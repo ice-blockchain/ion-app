@@ -1518,9 +1518,9 @@ packages:
     dependency: "direct main"
     description:
       path: "."
-      ref: "chore/flutter-quill-git-dependency"
-      resolved-ref: "9705dface70749dd7b4805596a23f3c5bebfacf3"
-      url: "https://github.com/ice-blockchain/markdown_quill.git"
+      ref: master
+      resolved-ref: "3a98730edf701c6be478bead1b8d05c05b44f657"
+      url: "https://github.com/ice-blockchain/markdown_quill"
     source: git
     version: "4.2.0"
   matcher:

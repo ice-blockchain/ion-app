@@ -81,8 +81,8 @@ dependencies:
   markdown: ^7.3.0
   markdown_quill:
     git:
-      url: https://github.com/ice-blockchain/markdown_quill.git
-      ref: chore/flutter-quill-git-dependency
+      url: https://github.com/ice-blockchain/markdown_quill
+      ref: master
   meta: ^1.15.0
   mime: ^2.0.0
   mocktail: ^1.0.4
