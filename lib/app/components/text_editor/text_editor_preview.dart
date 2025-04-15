@@ -41,19 +41,52 @@ class TextEditorPreview extends HookWidget {
       [content],
     );
 
-    if (content.length == 1 && content.first.value == '\n') {
+    if (_isEmptyContent(content)) {
       return const SizedBox.shrink();
     }
+
+    return _QuillFormattedContent(
+      controller: controller,
+      customStyles: customStyles,
+      media: media,
+      maxHeight: maxHeight,
+      scrollable: scrollable,
+      enableInteractiveSelection: enableInteractiveSelection,
+    );
+  }
+
+  bool _isEmptyContent(Delta delta) => delta.length == 1 && delta.first.value == '\n';
+}
+
+class _QuillFormattedContent extends StatelessWidget {
+  const _QuillFormattedContent({
+    required this.controller,
+    required this.enableInteractiveSelection,
+    this.customStyles,
+    this.media,
+    this.maxHeight,
+    this.scrollable = true,
+  });
+
+  final QuillController controller;
+  final bool enableInteractiveSelection;
+  final DefaultStyles? customStyles;
+  final Map<String, MediaAttachment>? media;
+  final double? maxHeight;
+  final bool scrollable;
+
+  @override
+  Widget build(BuildContext context) {
+    final effectiveStyles = customStyles ?? textEditorStyles(context);
 
     return QuillEditor.basic(
       controller: controller,
       config: QuillEditorConfig(
-        enableSelectionToolbar: enableInteractiveSelection,
         floatingCursorDisabled: true,
         showCursor: false,
         scrollable: scrollable,
         enableInteractiveSelection: enableInteractiveSelection,
-        customStyles: customStyles ?? textEditorStyles(context),
+        customStyles: effectiveStyles,
         maxHeight: maxHeight,
         embedBuilders: [
           TextEditorSingleImageBuilder(media: media),
@@ -61,7 +94,7 @@ class TextEditorPreview extends HookWidget {
           TextEditorCodeBuilder(readOnly: true),
         ],
         unknownEmbedBuilder: TextEditorUnknownEmbedBuilder(),
-        disableClipboard: !enableInteractiveSelection,
+        disableClipboard: true,
         customStyleBuilder: (attribute) => customTextStyleBuilder(attribute, context),
         customRecognizerBuilder: (attribute, leaf) => customRecognizerBuilder(context, attribute),
       ),

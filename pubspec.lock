@@ -965,10 +965,11 @@ packages:
   flutter_quill:
     dependency: "direct main"
     description:
-      name: flutter_quill
-      sha256: "6b9a29b5e054fd90373988f710e8060e3f44e9f875dd5e02bf0c10bc22e53133"
-      url: "https://pub.dev"
-    source: hosted
+      path: "."
+      ref: "542ab43e61a6774a3993b57de686577ad2e8fa81"
+      resolved-ref: "542ab43e61a6774a3993b57de686577ad2e8fa81"
+      url: "https://github.com/singerdmx/flutter-quill.git"
+    source: git
     version: "11.2.0"
   flutter_quill_delta_from_html:
     dependency: transitive
@@ -1517,9 +1518,9 @@ packages:
     dependency: "direct main"
     description:
       path: "."
-      ref: master
-      resolved-ref: "832259d48e7f37be8dc55c390a266bfb1daa25fc"
-      url: "https://github.com/ice-blockchain/markdown_quill"
+      ref: "chore/flutter-quill-git-dependency"
+      resolved-ref: "9705dface70749dd7b4805596a23f3c5bebfacf3"
+      url: "https://github.com/ice-blockchain/markdown_quill.git"
     source: git
     version: "4.2.0"
   matcher:
