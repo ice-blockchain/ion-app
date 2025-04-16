@@ -275,17 +275,18 @@ class ChatPreview extends HookConsumerWidget {
         RecentChatMessageIcon(messageType: messageType, color: textColor),
         Flexible(
           child: StreamBuilder(
-              stream: storyReaction,
-              builder: (context, snapshot) {
-                return Text(
-                  snapshot.hasData ? snapshot.data ?? content : content,
-                  maxLines: maxLines,
-                  overflow: TextOverflow.ellipsis,
-                  style: context.theme.appTextThemes.body2.copyWith(
-                    color: textColor ?? context.theme.appColors.onTertararyBackground,
-                  ),
-                );
-              }),
+            stream: storyReaction,
+            builder: (context, snapshot) {
+              return Text(
+                snapshot.hasData ? snapshot.data ?? content : content,
+                maxLines: maxLines,
+                overflow: TextOverflow.ellipsis,
+                style: context.theme.appTextThemes.body2.copyWith(
+                  color: textColor ?? context.theme.appColors.onTertararyBackground,
+                ),
+              );
+            },
+          ),
         ),
       ],
     );
