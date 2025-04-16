@@ -24,6 +24,7 @@ class LikesRepository implements IonNotificationRepository {
 
   final LikesDao _likesDao;
 
+  @override
   Future<void> save(IonConnectEntity entity) {
     if (entity is! ReactionEntity) {
       throw UnsupportedEventReference(entity.toEventReference());
@@ -53,5 +54,9 @@ class LikesRepository implements IonNotificationRepository {
 
   Future<DateTime?> lastCreatedAt() async {
     return _likesDao.getLastCreatedAt();
+  }
+
+  Future<DateTime?> firstCreatedAt({DateTime? after}) async {
+    return _likesDao.getFirstCreatedAt(after: after);
   }
 }

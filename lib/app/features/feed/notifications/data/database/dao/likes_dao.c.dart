@@ -30,6 +30,15 @@ class LikesDao extends DatabaseAccessor<NotificationsDatabase> with _$LikesDaoMi
         .getSingleOrNull();
   }
 
+  Future<DateTime?> getFirstCreatedAt({DateTime? after}) async {
+    final firstCreatedAt = likesTable.createdAt.min();
+    final query = selectOnly(likesTable)..addColumns([firstCreatedAt]);
+    if (after != null) {
+      query.where(likesTable.createdAt.isBiggerThanValue(after));
+    }
+    return query.map((row) => row.read(firstCreatedAt)).getSingleOrNull();
+  }
+
   Stream<int> watchUnreadCount({required DateTime? after}) {
     final unreadCount = likesTable.eventReference.count();
     final query = selectOnly(likesTable)..addColumns([unreadCount]);

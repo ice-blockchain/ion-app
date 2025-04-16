@@ -30,6 +30,15 @@ class FollowersDao extends DatabaseAccessor<NotificationsDatabase> with _$Follow
         .getSingleOrNull();
   }
 
+  Future<DateTime?> getFirstCreatedAt({DateTime? after}) async {
+    final firstCreatedAt = followersTable.createdAt.min();
+    final query = selectOnly(followersTable)..addColumns([firstCreatedAt]);
+    if (after != null) {
+      query.where(followersTable.createdAt.isBiggerThanValue(after));
+    }
+    return query.map((row) => row.read(firstCreatedAt)).getSingleOrNull();
+  }
+
   Stream<int> watchUnreadCount({required DateTime? after}) {
     final unreadCount = followersTable.pubkey.count();
     final query = selectOnly(followersTable)..addColumns([unreadCount]);
