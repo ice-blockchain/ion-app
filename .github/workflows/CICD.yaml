@@ -252,7 +252,6 @@ jobs:
         id: deploy-app
         run: |
           cd main-repo
-          bundle exec fastlane ios deploy target:$DEPLOYMENT_TARGET release_notes:$RELEASE_NOTES
       - name: Slack Notification
         if: ${{ always() && github.event_name == 'push' }}
         uses: act10ns/slack@v2
@@ -342,7 +341,6 @@ jobs:
         id: deploy-app
         run: |
           cd main-repo
-          bundle exec fastlane android deploy target:$DEPLOYMENT_TARGET release_status:$RELEASE_STATUS release_notes:$RELEASE_NOTES
       - name: Slack Notification
         if: ${{ always() && github.event_name == 'push' }}
         uses: act10ns/slack@v2
