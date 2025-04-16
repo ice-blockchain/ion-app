@@ -12,7 +12,7 @@ class IonPlaceholder extends StatelessWidget {
     return ColoredBox(
       color: context.theme.appColors.tertararyBackground,
       child: Center(
-        child: Assets.svg.iconFeedStories.icon(
+        child: Assets.svg.iconFeedUnavailable.icon(
           size: 40.0.s,
           color: context.theme.appColors.sheetLine,
         ),
