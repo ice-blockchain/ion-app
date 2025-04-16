@@ -35,13 +35,28 @@ on:
 env:
   APP_ENV: ${{ inputs.environment || (startsWith(github.ref, 'refs/heads/release/') && 'production') || 'staging' }}
   DEPLOYMENT_TYPE: ${{ inputs.deployment || (startsWith(github.ref, 'refs/heads/release/') && 'store') || 'firebase' }}
-  APP_VERSION: ${{ inputs.version || (startsWith(github.ref, 'refs/heads/release/') && github.ref_name.replace('release/v', '')) || '9.9.9' }}
 
 jobs:
   flutter:
     name: Flutter -- verify, build, test
     runs-on: macos-15
+    outputs:
+      app_version: ${{ steps.set_version.outputs.version }}
     steps:
+      - name: Determine App Version
+        id: set_version
+        run: |
+          APP_VERSION=""
+          if [[ "${{ startsWith(github.ref, 'refs/heads/release/') }}" == 'true' ]]; then
+            temp_ref_name="${{ github.ref_name }}"
+            APP_VERSION="${temp_ref_name#release/v}"
+          elif [[ -n "${{ github.event.inputs.version }}" ]]; then
+            APP_VERSION="${{ github.event.inputs.version }}"
+          else
+            APP_VERSION="9.9.9"
+          fi
+          echo "App Version: $APP_VERSION"
+          echo "version=$APP_VERSION" >> $GITHUB_OUTPUT
       - name: Checkout main repo
         id: checkout-main-repo
         uses: actions/checkout@v3
@@ -168,6 +183,7 @@ jobs:
     env:
       FASTLANE_XCODEBUILD_SETTINGS_TIMEOUT: 180
       FASTLANE_XCODEBUILD_SETTINGS_RETRIES: 10
+      APP_VERSION: ${{ needs.flutter.outputs.app_version }}
     steps:
       - uses: actions/cache@v3
         id: cache_all
@@ -251,6 +267,8 @@ jobs:
     name: Android -- build, deploy
     needs: [flutter]
     runs-on: macos-15
+    env:
+      APP_VERSION: ${{ needs.flutter.outputs.app_version }}
     steps:
       - uses: actions/cache@v3
         id: cache_all
