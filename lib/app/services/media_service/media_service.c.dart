@@ -278,7 +278,6 @@ class MediaService {
           throw AssetEntityFileNotFoundException();
         }
 
-        // Use the utility method to get the appropriate file for asset
         final assetFileFuture = getAssetFile(assetEntity);
 
         final (mimeType, file) = await (assetEntity.mimeTypeAsync, assetFileFuture).wait;
