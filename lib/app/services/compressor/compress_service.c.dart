@@ -21,6 +21,7 @@ import 'package:ion/app/services/media_service/ffmpeg_args/ffmpeg_video_codec_ar
 import 'package:ion/app/services/media_service/ffmpeg_commands_config.dart';
 import 'package:ion/app/services/media_service/media_service.c.dart';
 import 'package:ion/app/services/uuid/uuid.dart';
+import 'package:ion/app/utils/image_path.dart';
 import 'package:path/path.dart' as path;
 import 'package:path_provider/path_provider.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
@@ -117,7 +118,7 @@ class CompressionService {
       final output = await _generateOutputPath();
 
       List<String> command;
-      if (file.mimeType == 'image/gif' && shouldCompressGif) {
+      if (file.mimeType == 'image/gif' && file.path.isGif && shouldCompressGif) {
         command = FFmpegCommands.gifToAnimatedWebP(
           inputPath: file.path,
           outputPath: output,

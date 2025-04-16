@@ -14,11 +14,6 @@ Future<bool> isGifAsset(AssetEntity assetEntity) async {
     return true;
   }
 
-  final title = await assetEntity.titleAsync;
-  if (title.toLowerCase().contains('gif')) {
-    return true;
-  }
-
   final file = await assetEntity.originFile;
   final path = file?.path;
   if (path != null && path.isGif) {
