@@ -1,6 +1,7 @@
 // SPDX-License-Identifier: ice License 1.0
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart' hide TextInput;
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:ion/app/components/inputs/text_input/components/text_input_icons.dart';
 import 'package:ion/app/components/inputs/text_input/text_input.dart';
@@ -21,6 +22,7 @@ class GeneralUserDataInput extends HookWidget {
     this.isLive = false,
     this.showNoErrorsIndicator = false,
     this.prefix,
+    this.inputFormatters,
     super.key,
   });
 
@@ -36,6 +38,7 @@ class GeneralUserDataInput extends HookWidget {
   final bool isLive;
   final bool showNoErrorsIndicator;
   final Widget? prefix;
+  final List<TextInputFormatter>? inputFormatters;
 
   @override
   Widget build(BuildContext context) {
@@ -58,6 +61,7 @@ class GeneralUserDataInput extends HookWidget {
       minLines: minLines,
       initialValue: initialValue,
       isLive: isLive,
+      inputFormatters: inputFormatters,
       verified: isValid.value,
       onTapOutside: (_) => FocusManager.instance.primaryFocus?.unfocus(),
       suffixIcon: isValid.value && showNoErrorsIndicator
