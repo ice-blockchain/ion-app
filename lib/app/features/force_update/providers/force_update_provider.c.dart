@@ -33,7 +33,7 @@ class ForceUpdate extends _$ForceUpdate {
       final minVersion = await repository.getMinVersion();
 
       final appInfo = await ref.read(appInfoProvider.future);
-      final appVersion = appInfo.version;
+      final appVersion = '${appInfo.version}.${appInfo.buildNumber}';
 
       return compareVersions(appVersion, minVersion) == -1;
     } catch (error, stackTrace) {
