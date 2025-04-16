@@ -3,11 +3,12 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/features/gallery/providers/gallery_provider.c.dart';
 import 'package:ion/app/services/media_service/aspect_ratio.dart';
 
-class ImageBlockLocalImage extends ConsumerStatefulWidget {
+class ImageBlockLocalImage extends HookConsumerWidget {
   const ImageBlockLocalImage({
     required this.path,
     super.key,
@@ -16,53 +17,44 @@ class ImageBlockLocalImage extends ConsumerStatefulWidget {
   final String path;
 
   @override
-  ConsumerState<ImageBlockLocalImage> createState() => _ImageBlockLocalImageState();
-}
+  Widget build(BuildContext context, WidgetRef ref) {
+    final file = useState<File?>(null);
+    final aspectRatio = useState<double?>(null);
+    final isLoading = useState(true);
 
-class _ImageBlockLocalImageState extends ConsumerState<ImageBlockLocalImage>
-    with AutomaticKeepAliveClientMixin {
-  File? _file;
-  double? _aspectRatio;
-  bool _isLoading = true;
+    useEffect(
+      () {
+        Future<void> loadImageData() async {
+          try {
+            final assetEntity = ref.read(assetEntityProvider(path)).valueOrNull;
+            if (assetEntity != null) {
+              aspectRatio.value = attachedMediaAspectRatio(
+                [MediaAspectRatio.fromAssetEntity(assetEntity)],
+              ).aspectRatio;
 
-  @override
-  void initState() {
-    super.initState();
-    _loadImageData();
-  }
+              file.value = await assetEntity.originFile;
+            }
+          } finally {
+            if (context.mounted) {
+              isLoading.value = false;
+            }
+          }
+        }
 
-  Future<void> _loadImageData() async {
-    try {
-      final assetEntity = ref.read(assetEntityProvider(widget.path)).valueOrNull;
-      if (assetEntity != null) {
-        _aspectRatio = attachedMediaAspectRatio(
-          [MediaAspectRatio.fromAssetEntity(assetEntity)],
-        ).aspectRatio;
+        loadImageData();
+        return null;
+      },
+      [path],
+    );
 
-        _file = await assetEntity.originFile;
-      }
-    } finally {
-      if (mounted) {
-        setState(() => _isLoading = false);
-      }
-    }
-  }
-
-  @override
-  bool get wantKeepAlive => true;
-
-  @override
-  Widget build(BuildContext context) {
-    super.build(context);
-
-    if (_aspectRatio == null || _isLoading || _file == null) {
+    if (aspectRatio.value == null || isLoading.value || file.value == null) {
       return const SizedBox.shrink();
     }
 
     return AspectRatio(
-      aspectRatio: _aspectRatio!,
+      aspectRatio: aspectRatio.value!,
       child: Image.file(
-        _file!,
+        file.value!,
         fit: BoxFit.cover,
         width: double.infinity,
       ),

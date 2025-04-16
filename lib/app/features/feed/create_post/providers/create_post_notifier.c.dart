@@ -343,18 +343,14 @@ class CreatePostNotifier extends _$CreatePostNotifier {
     Logger.info(
       'Uploading image: width=${file.width}, height=${file.height}, path=${file.path}',
     );
-    var fileToUpload = file;
 
-    if (fileToUpload.mimeType != null) {
-      final compressedImage = await ref.read(compressServiceProvider).compressImage(
-            fileToUpload,
-            shouldCompressGif: true,
-          );
-      fileToUpload = compressedImage;
-    }
+    final compressedImage = await ref.read(compressServiceProvider).compressImage(
+          file,
+          shouldCompressGif: true,
+        );
 
     final uploadResult = await ref.read(ionConnectUploadNotifierProvider.notifier).upload(
-          fileToUpload,
+          compressedImage,
           alt: _getFileAlt(),
         );
 

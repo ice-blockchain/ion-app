@@ -133,7 +133,7 @@ class CompressionService {
           '-lossless',
           '0',
           '-q:v',
-          '80',
+          quality.toString(),
           '-preset',
           'default',
           '-loop',
