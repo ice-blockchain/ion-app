@@ -1,6 +1,8 @@
 // SPDX-License-Identifier: ice License 1.0
 
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:flutter/material.dart';
+import 'package:ion/app/components/placeholder/ion_placeholder.dart';
 
 class IonNetworkImage extends CachedNetworkImage {
   IonNetworkImage({
@@ -9,7 +11,6 @@ class IonNetworkImage extends CachedNetworkImage {
     super.imageBuilder,
     super.placeholder,
     super.progressIndicatorBuilder,
-    super.errorWidget,
     super.fadeOutDuration,
     super.fadeInDuration = Duration.zero,
     super.placeholderFadeInDuration,
@@ -19,7 +20,11 @@ class IonNetworkImage extends CachedNetworkImage {
     super.alignment,
     super.filterQuality,
     super.cacheManager,
-  }) :
-        // Do not log image loading errors
-        super(errorListener: (_) {});
+    Widget Function(BuildContext, String, Object)? errorWidget,
+  }) : super(
+          // Do not log image loading errors
+          errorListener: (_) {},
+          // Default error widget
+          errorWidget: errorWidget ?? (context, url, error) => const IonPlaceholder(),
+        );
 }

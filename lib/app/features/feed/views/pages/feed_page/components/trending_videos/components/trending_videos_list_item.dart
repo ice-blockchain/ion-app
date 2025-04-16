@@ -1,8 +1,8 @@
 // SPDX-License-Identifier: ice License 1.0
 
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:ion/app/components/image/ion_network_image.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/feed/data/models/entities/modifiable_post_data.c.dart';
 import 'package:ion/app/features/feed/views/components/overlay_menu/user_info_menu.dart';
@@ -83,22 +83,27 @@ class _VideoContainer extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
+    return SizedBox(
       width: size.width,
       height: size.height,
-      decoration: BoxDecoration(
+      child: ClipRRect(
         borderRadius: BorderRadius.circular(16.0.s),
-        image: DecorationImage(
-          image: CachedNetworkImageProvider(thumbnailUrl),
-          fit: BoxFit.cover,
+        child: Stack(
+          fit: StackFit.expand,
+          children: [
+            IonNetworkImage(
+              imageUrl: thumbnailUrl,
+              fit: BoxFit.cover,
+            ),
+            Column(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                _TopControls(eventReference: eventReference),
+                TrendingVideoAuthor(pubkey: eventReference.pubkey),
+              ],
+            ),
+          ],
         ),
-      ),
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          _TopControls(eventReference: eventReference),
-          TrendingVideoAuthor(pubkey: eventReference.pubkey),
-        ],
       ),
     );
   }

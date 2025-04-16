@@ -36,7 +36,6 @@ class UserBanner extends ConsumerWidget {
                   imageUrl: banner,
                   fit: BoxFit.cover,
                   alignment: Alignment.topCenter,
-                  errorWidget: (context, url, error) => const SizedBox.shrink(),
                 )
               : ColoredBox(
                   color: context.theme.appColors.onSecondaryBackground,

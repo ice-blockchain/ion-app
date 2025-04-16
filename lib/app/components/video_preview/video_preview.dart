@@ -6,6 +6,8 @@ import 'package:cached_video_player_plus/cached_video_player_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:ion/app/components/image/ion_network_image.dart';
+import 'package:ion/app/components/placeholder/ion_placeholder.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/core/providers/mute_provider.c.dart';
 import 'package:ion/app/features/core/providers/video_player_provider.c.dart';
@@ -103,7 +105,7 @@ class VideoPreview extends HookConsumerWidget {
                 isLoading: !(controller?.value.hasError ?? false),
               ),
             ),
-          if (controller != null)
+          if (controller != null && !controller.value.hasError)
             Positioned.fill(
               child: FittedBox(
                 fit: BoxFit.cover,
@@ -113,6 +115,10 @@ class VideoPreview extends HookConsumerWidget {
                   child: CachedVideoPlayerPlus(controller),
                 ),
               ),
+            ),
+          if (controller != null && controller.value.hasError)
+            const Positioned.fill(
+              child: IonPlaceholder(),
             ),
           if (controller != null)
             PositionedDirectional(
@@ -230,13 +236,9 @@ class _BlurredThumbnail extends HookWidget {
         AnimatedOpacity(
           duration: const Duration(milliseconds: 100),
           opacity: isImageLoaded.value ? 1 : 0,
-          child: Container(
-            decoration: BoxDecoration(
-              image: DecorationImage(
-                image: NetworkImage(thumbnailUrl),
-                fit: BoxFit.cover,
-              ),
-            ),
+          child: IonNetworkImage(
+            imageUrl: thumbnailUrl,
+            fit: BoxFit.cover,
           ),
         ),
         if (isLoading)
