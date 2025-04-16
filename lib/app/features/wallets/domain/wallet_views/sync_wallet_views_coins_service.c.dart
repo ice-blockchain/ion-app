@@ -49,7 +49,7 @@ class SyncWalletViewCoinsService {
       // We need to be sure, that coins from the WalletView already in the DB,
       // so we wait to get them from there. This is the entry point to the queue,
       // so before we start the periodic sync, we need to make sure that it only contains the coins
-      // that are in WalletViews. So if the isQueueIsNotReady returns false in the stream,
+      // that are in WalletViews. So if the isQueueNotReady returns false in the stream,
       // we tell the sync method to remove the coins that are not in WalletViews from the queue
       // and add new ones.
       final coins =
