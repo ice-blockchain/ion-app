@@ -12,6 +12,7 @@ import 'package:ion/app/features/ion_connect/ion_connect.dart';
 import 'package:ion/app/features/ion_connect/model/entity_data_with_media_content.dart';
 import 'package:ion/app/features/ion_connect/model/event_reference.c.dart';
 import 'package:ion/app/features/ion_connect/model/media_attachment.dart';
+import 'package:ion/app/features/ion_connect/model/quoted_event.c.dart';
 import 'package:ion/app/features/ion_connect/model/related_event.c.dart';
 import 'package:ion/app/features/ion_connect/model/related_pubkey.c.dart';
 import 'package:ion/app/features/ion_connect/model/rich_text.c.dart';
@@ -74,6 +75,7 @@ class PrivateDirectMessageData with _$PrivateDirectMessageData, EntityDataWithMe
     RichText? richText,
     String? relatedGroupImagePath,
     RelatedSubject? relatedSubject,
+    QuotedImmutableEvent? quotedEvent,
     List<RelatedEvent>? relatedEvents,
     List<RelatedPubkey>? relatedPubkeys,
     CommunityIdentifierTag? relatedConversationId,
@@ -86,6 +88,8 @@ class PrivateDirectMessageData with _$PrivateDirectMessageData, EntityDataWithMe
       content: eventMessage.content,
       media: EntityDataWithMediaContent.parseImeta(tags[MediaAttachment.tagName]),
       relatedSubject: tags[RelatedSubject.tagName]?.map(RelatedSubject.fromTag).singleOrNull,
+      quotedEvent:
+          tags[QuotedImmutableEvent.tagName]?.map(QuotedImmutableEvent.fromTag).singleOrNull,
       relatedPubkeys: tags[RelatedPubkey.tagName]?.map(RelatedPubkey.fromTag).toList(),
       relatedEvents: tags[RelatedImmutableEvent.tagName]?.map(RelatedEvent.fromTag).toList(),
       uuid:
@@ -153,6 +157,8 @@ class PrivateDirectMessageData with _$PrivateDirectMessageData, EntityDataWithMe
           _ => MessageType.text,
         };
       }
+    } else if (quotedEvent != null) {
+      return MessageType.storyReply;
     }
 
     return MessageType.text;

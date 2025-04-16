@@ -40,7 +40,7 @@ enum AdvancedSearchCategory {
       AdvancedSearchCategory.people => context.i18n.feed_advanced_search_category_people,
       AdvancedSearchCategory.photos => context.i18n.feed_advanced_search_category_photos,
       AdvancedSearchCategory.videos => context.i18n.feed_advanced_search_category_videos,
-      AdvancedSearchCategory.chat => context.i18n.chat_title,
+      AdvancedSearchCategory.chat => context.i18n.chat_messages_title,
       AdvancedSearchCategory.groups => context.i18n.feed_advanced_search_category_groups,
       AdvancedSearchCategory.channels => context.i18n.feed_advanced_search_category_channels,
     };

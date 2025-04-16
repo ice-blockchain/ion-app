@@ -122,4 +122,21 @@ class ConversationMessageReactionDao extends DatabaseAccessor<ChatDatabase>
       }).toList();
     });
   }
+
+  Stream<String?> storyReaction(String? kind14Id) async* {
+    if (kind14Id == null) {
+      yield null;
+      return;
+    }
+
+    final stream = (select(reactionTable)
+          ..where((table) => table.isDeleted.equals(false))
+          ..where((table) => table.kind14Id.equals(kind14Id)))
+        .watchSingleOrNull()
+        .map((row) => row?.content);
+
+    await for (final value in stream) {
+      yield value;
+    }
+  }
 }

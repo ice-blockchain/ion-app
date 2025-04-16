@@ -9,6 +9,7 @@ import 'package:ion/app/features/chat/e2ee/model/entities/private_direct_message
 import 'package:ion/app/features/chat/model/message_type.dart';
 import 'package:ion/app/features/chat/views/components/message_items/components.dart';
 import 'package:ion/app/features/chat/views/components/message_items/message_types/document_message/document_message.dart';
+import 'package:ion/app/features/chat/views/components/message_items/message_types/story_reply_message/story_reply_message.dart';
 import 'package:ion/app/features/chat/views/components/message_items/message_types/visual_media_message/visual_media_message.dart';
 import 'package:ion/app/features/ion_connect/ion_connect.dart';
 
@@ -44,6 +45,7 @@ class OneToOneMessageList extends HookConsumerWidget {
                   (context, msgIndex) {
                     final message = entry.value[msgIndex];
                     final entity = PrivateDirectMessageEntity.fromEventMessage(message);
+
                     final previousMessage = msgIndex > 0 ? entry.value[msgIndex - 1] : null;
                     final isLastMessage = msgIndex == entry.value.length - 1;
 
@@ -63,10 +65,11 @@ class OneToOneMessageList extends HookConsumerWidget {
                         MessageType.text => TextMessage(eventMessage: message),
                         MessageType.emoji => EmojiMessage(eventMessage: message),
                         MessageType.audio => AudioMessage(eventMessage: message),
-                        MessageType.profile => ProfileShareMessage(eventMessage: message),
                         MessageType.document => DocumentMessage(eventMessage: message),
-                        MessageType.visualMedia => VisualMediaMessage(eventMessage: message),
                         MessageType.requestFunds => MoneyMessage(eventMessage: message),
+                        MessageType.profile => ProfileShareMessage(eventMessage: message),
+                        MessageType.storyReply => StoryReplyMessage(eventMessage: message),
+                        MessageType.visualMedia => VisualMediaMessage(eventMessage: message),
                       },
                     );
                   },

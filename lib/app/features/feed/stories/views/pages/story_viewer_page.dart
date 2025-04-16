@@ -2,6 +2,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_keyboard_visibility/flutter_keyboard_visibility.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/components/screen_offset/screen_bottom_offset.dart';
@@ -64,21 +65,25 @@ class StoryViewerPage extends HookConsumerWidget {
         child: Scaffold(
           resizeToAvoidBottomInset: false,
           backgroundColor: context.theme.appColors.primaryText,
-          body: SafeArea(
-            child: Column(
-              children: [
-                Expanded(
-                  child: StoriesSwiper(
-                    pubkey: pubkey,
-                    userStories: storyViewerState.userStories,
-                    currentUserIndex: storyViewerState.currentUserIndex,
-                  ),
+          body: KeyboardVisibilityBuilder(
+            builder: (context, isKeyboardVisible) {
+              return SafeArea(
+                child: Column(
+                  children: [
+                    Expanded(
+                      child: StoriesSwiper(
+                        pubkey: pubkey,
+                        userStories: storyViewerState.userStories,
+                        currentUserIndex: storyViewerState.currentUserIndex,
+                      ),
+                    ),
+                    if (!isKeyboardVisible) SizedBox(height: 28.0.s),
+                    if (!isKeyboardVisible) StoryProgressBarContainer(pubkey: pubkey),
+                    if (!isKeyboardVisible) ScreenBottomOffset(margin: 16.0.s),
+                  ],
                 ),
-                SizedBox(height: 28.0.s),
-                StoryProgressBarContainer(pubkey: pubkey),
-                ScreenBottomOffset(margin: 16.0.s),
-              ],
-            ),
+              );
+            },
           ),
         ),
       ),

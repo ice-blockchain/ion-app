@@ -5,6 +5,7 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/components/avatar/avatar.dart';
 import 'package:ion/app/extensions/extensions.dart';
+import 'package:ion/app/features/chat/model/database/chat_database.c.dart';
 import 'package:ion/app/features/chat/model/message_type.dart';
 import 'package:ion/app/features/chat/providers/muted_conversations_provider.c.dart';
 import 'package:ion/app/features/chat/recent_chats/model/conversation_list_item.c.dart';
@@ -18,29 +19,32 @@ import 'package:ion/generated/assets.gen.dart';
 
 class RecentChatTile extends HookConsumerWidget {
   const RecentChatTile({
-    required this.conversation,
     required this.name,
+    required this.onTap,
+    required this.messageType,
+    required this.conversation,
     required this.defaultAvatar,
     required this.lastMessageAt,
+    required this.lastMessageId,
     required this.lastMessageContent,
     required this.unreadMessagesCount,
-    required this.messageType,
-    required this.onTap,
     this.avatarUrl,
     this.avatarWidget,
     super.key,
   });
 
-  final ConversationListItem conversation;
   final String name;
   final String? avatarUrl;
+  final String? lastMessageId;
   final Widget? defaultAvatar;
   final DateTime lastMessageAt;
-  final String lastMessageContent;
   final int unreadMessagesCount;
+  final String lastMessageContent;
   final VoidCallback? onTap;
   final Widget? avatarWidget;
   final MessageType messageType;
+  final ConversationListItem conversation;
+
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final isEditMode = ref.watch(conversationsEditModeProvider);
@@ -145,8 +149,9 @@ class RecentChatTile extends HookConsumerWidget {
                             children: [
                               Expanded(
                                 child: ChatPreview(
-                                  content: lastMessageContent,
                                   messageType: messageType,
+                                  lastMessageId: lastMessageId,
+                                  lastMessageContent: lastMessageContent,
                                 ),
                               ),
                               UnreadCountBadge(unreadCount: unreadMessagesCount, isMuted: isMuted),
@@ -226,44 +231,61 @@ class ChatTimestamp extends StatelessWidget {
 
 class ChatPreview extends HookConsumerWidget {
   const ChatPreview({
-    required this.content,
     required this.messageType,
+    required this.lastMessageContent,
+    this.lastMessageId,
     this.textColor,
     this.maxLines = 2,
     super.key,
   });
 
-  final String content;
-  final Color? textColor;
   final int maxLines;
+  final String lastMessageContent;
+  final Color? textColor;
+  final String? lastMessageId;
   final MessageType messageType;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final content = switch (messageType) {
+      MessageType.text => lastMessageContent,
+      MessageType.emoji => lastMessageContent,
+      MessageType.storyReply => lastMessageContent,
+      MessageType.audio => context.i18n.common_voice_message,
+      MessageType.visualMedia => context.i18n.common_media,
+      MessageType.document => lastMessageContent,
+      MessageType.requestFunds => context.i18n.chat_money_request_title,
+      MessageType.profile => ref
+              .watch(
+                userMetadataProvider(
+                  EventReference.fromEncoded(lastMessageContent).pubkey,
+                ),
+              )
+              .valueOrNull
+              ?.data
+              .displayName ??
+          '',
+    };
+
+    final storyReaction =
+        ref.watch(conversationMessageReactionDaoProvider).storyReaction(lastMessageId);
+
     return Row(
       children: [
         RecentChatMessageIcon(messageType: messageType, color: textColor),
         Flexible(
-          child: Text(
-            switch (messageType) {
-              MessageType.text => content,
-              MessageType.emoji => content,
-              MessageType.audio => context.i18n.common_voice_message,
-              MessageType.visualMedia => context.i18n.common_media,
-              MessageType.document => content,
-              MessageType.requestFunds => context.i18n.chat_money_request_title,
-              MessageType.profile => ref
-                      .watch(userMetadataProvider(EventReference.fromEncoded(content).pubkey))
-                      .valueOrNull
-                      ?.data
-                      .displayName ??
-                  '',
+          child: StreamBuilder(
+            stream: storyReaction,
+            builder: (context, snapshot) {
+              return Text(
+                snapshot.hasData ? snapshot.data ?? content : content,
+                maxLines: maxLines,
+                overflow: TextOverflow.ellipsis,
+                style: context.theme.appTextThemes.body2.copyWith(
+                  color: textColor ?? context.theme.appColors.onTertararyBackground,
+                ),
+              );
             },
-            maxLines: maxLines,
-            overflow: TextOverflow.ellipsis,
-            style: context.theme.appTextThemes.body2.copyWith(
-              color: textColor ?? context.theme.appColors.onTertararyBackground,
-            ),
           ),
         ),
       ],
@@ -296,8 +318,8 @@ class RecentChatMessageIcon extends StatelessWidget {
   String? _getMessageIcon() => switch (messageType) {
         MessageType.text => null,
         MessageType.emoji => null,
+        MessageType.storyReply => null,
         MessageType.requestFunds => Assets.svg.iconProfileTips,
-        // MessageType.video => Assets.svg.iconFeedVideos,
         MessageType.audio => Assets.svg.iconChatVoicemessage,
         MessageType.profile => Assets.svg.iconProfileUsertab,
         MessageType.document => Assets.svg.iconChatFile,

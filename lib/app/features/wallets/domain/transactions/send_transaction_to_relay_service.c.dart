@@ -123,7 +123,7 @@ class SendTransactionToRelayService {
 
     final wrap = await wrapService.createWrap(
       event: seal,
-      contentKind: kind,
+      contentKinds: [kind.toString()],
       receiverPubkey: receiverPubkey,
       receiverMasterPubkey: receiverMasterPubkey,
       expirationTag: expirationTag,

@@ -40,7 +40,7 @@ class UserStoryPageView extends ConsumerWidget {
         onTapRight: () => storyState.currentStoryIndex < userStory.stories.length - 1
             ? onNextStory()
             : onNextUser(),
-        child: StoryContent(post: currentStory),
+        child: StoryContent(story: currentStory),
       ),
     );
   }

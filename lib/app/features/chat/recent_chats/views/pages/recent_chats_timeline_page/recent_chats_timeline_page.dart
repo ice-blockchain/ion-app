@@ -164,25 +164,26 @@ class CommunityRecentChatTile extends ConsumerWidget {
     }
 
     return RecentChatTile(
-      conversation: conversation,
       name: community.data.name,
+      conversation: conversation,
       avatarUrl: community.data.avatar?.url,
+      lastMessageId: conversation.latestMessage?.id,
       defaultAvatar: Container(
+        width: 40.0.s,
+        height: 40.0.s,
+        alignment: Alignment.center,
         decoration: BoxDecoration(
           color: context.theme.appColors.onTerararyFill,
           borderRadius: BorderRadius.circular(12.0.s),
         ),
-        alignment: Alignment.center,
-        width: 40.0.s,
-        height: 40.0.s,
         child: Assets.svg.iconChannelEmptychannel.icon(
           size: 26.0.s,
           color: context.theme.appColors.secondaryBackground,
         ),
       ),
+      unreadMessagesCount: unreadMessagesCount.valueOrNull ?? 0,
       lastMessageAt: conversation.latestMessage?.createdAt ?? conversation.joinedAt,
       lastMessageContent: conversation.latestMessage?.content ?? context.i18n.empty_message_history,
-      unreadMessagesCount: unreadMessagesCount.valueOrNull ?? 0,
       //TODO: add message type
       messageType: MessageType.text,
       onTap: () {
@@ -224,14 +225,15 @@ class E2eeRecentChatTile extends ConsumerWidget {
         ref.watch(getUnreadMessagesCountProvider(conversation.conversationId));
 
     return RecentChatTile(
+      defaultAvatar: null,
       conversation: conversation,
+      messageType: entity.messageType,
       name: userMetadata.data.displayName,
       avatarUrl: userMetadata.data.picture,
-      messageType: entity.messageType,
-      defaultAvatar: null,
-      lastMessageAt: conversation.latestMessage?.createdAt ?? conversation.joinedAt,
-      lastMessageContent: conversation.latestMessage?.content ?? '',
+      lastMessageId: conversation.latestMessage?.id,
       unreadMessagesCount: unreadMessagesCount.valueOrNull ?? 0,
+      lastMessageContent: conversation.latestMessage?.content ?? '',
+      lastMessageAt: conversation.latestMessage?.createdAt ?? conversation.joinedAt,
       onTap: () {
         ConversationRoute(receiverPubKey: receiverPubkey).push<void>(context);
       },
@@ -264,8 +266,9 @@ class EncryptedGroupRecentChatTile extends HookConsumerWidget {
     ).data;
 
     return RecentChatTile(
-      conversation: conversation,
       name: name,
+      conversation: conversation,
+      lastMessageId: conversation.latestMessage?.id,
       avatarWidget: groupImageFile != null ? Image.file(groupImageFile) : null,
       defaultAvatar: Assets.svg.iconChannelEmptychannel.icon(size: 40.0.s),
       lastMessageAt: conversation.latestMessage?.createdAt ?? conversation.joinedAt,

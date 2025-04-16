@@ -44,17 +44,20 @@ class SendE2eeChatMessageService {
 
   final Ref ref;
 
-  Future<void> sendMessage({
+  Future<EventMessage> sendMessage({
     required String conversationId,
     required List<String> participantsMasterPubkeys,
     required String content,
     required List<MediaFile> mediaFiles,
     String? subject,
-    List<String>? groupImageTag,
     String? failedEventMessageId,
     EventMessage? repliedMessage,
+    List<String>? groupImageTag,
+    List<String>? referencePostTag,
     List<String>? failedParticipantsMasterPubkeys,
   }) async {
+    late final EventMessage sentKind14Message;
+
     String? currentUserEventMessageId;
 
     try {
@@ -75,6 +78,7 @@ class SendE2eeChatMessageService {
         groupImageTag: groupImageTag,
         conversationId: conversationId,
         repliedMessage: repliedMessage,
+        referencePostTag: referencePostTag,
         masterPubkeys: participantsMasterPubkeys,
       );
 
@@ -128,12 +132,14 @@ class SendE2eeChatMessageService {
                 groupImageTag: groupImageTag,
                 conversationId: conversationId,
                 repliedMessage: repliedMessage,
+                referencePostTag: referencePostTag,
                 masterPubkeys: participantsMasterPubkeys,
               ),
               if (mediaTags != null) ...mediaTags,
             ];
 
             final isCurrentUser = ref.read(isCurrentUserSelectorProvider(masterPubkey));
+
             final event = await _createEventMessage(
               content: content,
               signer: eventSigner,
@@ -141,12 +147,14 @@ class SendE2eeChatMessageService {
               previousId: eventMessage.id,
             );
 
-            await _sendKind14Message(
+            await sendWrappedMessage(
               eventMessage: event,
               eventSigner: eventSigner,
               pubkey: pubkey,
               masterPubkey: masterPubkey,
             );
+
+            sentKind14Message = event;
 
             await ref.read(conversationMessageDataDaoProvider).add(
                   masterPubkey: masterPubkey,
@@ -169,13 +177,15 @@ class SendE2eeChatMessageService {
         for (final pubkey in participantsMasterPubkeys) {
           await ref.read(conversationMessageDataDaoProvider).add(
                 masterPubkey: pubkey,
-                eventMessageId: currentUserEventMessageId,
                 status: MessageDeliveryStatus.failed,
+                eventMessageId: currentUserEventMessageId,
               );
         }
       }
       throw SendEventException(e.toString());
     }
+
+    return sentKind14Message;
   }
 
   List<RelatedEvent> _buildRelatedEvents(EventMessage? repliedMessage) {
@@ -253,17 +263,19 @@ class SendE2eeChatMessageService {
     return mediaAttachmentsUsersBased;
   }
 
-  Future<void> _sendKind14Message({
+  Future<void> sendWrappedMessage({
     required String pubkey,
     required String masterPubkey,
     required EventSigner eventSigner,
     required EventMessage eventMessage,
+    List<String>? kinds,
   }) async {
     final giftWrap = await _createGiftWrap(
       signer: eventSigner,
       receiverPubkey: pubkey,
       eventMessage: eventMessage,
       receiverMasterPubkey: masterPubkey,
+      kinds: kinds ?? [PrivateDirectMessageEntity.kind.toString()],
     );
 
     await ref.read(ionConnectNotifierProvider.notifier).sendEvent(
@@ -278,6 +290,7 @@ class SendE2eeChatMessageService {
     required List<String> masterPubkeys,
     String? subject,
     List<String>? groupImageTag,
+    List<String>? referencePostTag,
     EventMessage? repliedMessage,
   }) {
     final currentUserMasterPubkey = ref.read(currentPubkeySelectorProvider);
@@ -290,6 +303,7 @@ class SendE2eeChatMessageService {
       ...relatedEventsTags,
       [CommunityIdentifierTag.tagName, conversationId],
       if (groupImageTag != null) groupImageTag,
+      if (referencePostTag != null) referencePostTag,
       ['b', currentUserMasterPubkey!],
     ];
 
@@ -328,11 +342,11 @@ class SendE2eeChatMessageService {
   }
 
   Future<EventMessage> _createGiftWrap({
+    required List<String> kinds,
     required String receiverPubkey,
     required String receiverMasterPubkey,
     required EventSigner signer,
     required EventMessage eventMessage,
-    int kind = PrivateDirectMessageEntity.kind,
   }) async {
     final env = ref.read(envProvider.notifier);
     final sealService = await ref.read(ionConnectSealServiceProvider.future);
@@ -352,7 +366,7 @@ class SendE2eeChatMessageService {
 
     final wrap = await wrapService.createWrap(
       event: seal,
-      contentKind: kind,
+      contentKinds: kinds,
       receiverPubkey: receiverPubkey,
       receiverMasterPubkey: receiverMasterPubkey,
       expirationTag: expirationTag,

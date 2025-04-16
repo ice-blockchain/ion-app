@@ -107,6 +107,7 @@ class ReplyMessage extends HookConsumerWidget {
         TextItem _ => null,
         EmojiItem _ => null,
         MoneyItem _ => null,
+        StoryReplyItem _ => null,
         LinkItem _ => Assets.svg.iconArticleLink,
         DocumentItem _ => Assets.svg.iconChatFile,
         MediaItem _ => Assets.svg.iconProfileCamera,

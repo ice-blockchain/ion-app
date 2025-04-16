@@ -11,6 +11,8 @@ import 'package:ion/app/features/chat/e2ee/model/entities/private_message_reacti
 import 'package:ion/app/features/chat/e2ee/providers/send_e2ee_message_provider.c.dart';
 import 'package:ion/app/features/chat/model/database/chat_database.c.dart';
 import 'package:ion/app/features/chat/providers/user_chat_relays_provider.c.dart';
+import 'package:ion/app/features/feed/data/models/entities/modifiable_post_data.c.dart';
+import 'package:ion/app/features/feed/data/models/generic_repost.c.dart';
 import 'package:ion/app/features/ion_connect/ion_connect.dart';
 import 'package:ion/app/features/ion_connect/model/action_source.c.dart';
 import 'package:ion/app/features/ion_connect/model/deletion_request.c.dart';
@@ -57,6 +59,7 @@ class E2eeMessagesSubscriber extends _$E2eeMessagesSubscriber {
           DeletionRequest.kind.toString(),
           PrivateDirectMessageEntity.kind.toString(),
           PrivateMessageReactionEntity.kind.toString(),
+          [GenericRepostEntity.kind.toString(), ModifiablePostEntity.kind.toString()],
         ],
         '#p': [masterPubkey],
       },
@@ -68,6 +71,7 @@ class E2eeMessagesSubscriber extends _$E2eeMessagesSubscriber {
     final giftWrapService = await ref.watch(ionConnectGiftWrapServiceProvider.future);
     final sendE2eeMessageService = await ref.watch(sendE2eeMessageServiceProvider.future);
     final conversationDao = ref.watch(conversationDaoProvider);
+    final eventMessageDao = ref.watch(eventMessageDaoProvider);
     final conversationMessageDao = ref.watch(conversationMessageDaoProvider);
     final conversationMessageStatusDao = ref.watch(conversationMessageDataDaoProvider);
     final conversationMessageReactionDao = ref.watch(conversationMessageReactionDaoProvider);
@@ -95,6 +99,7 @@ class E2eeMessagesSubscriber extends _$E2eeMessagesSubscriber {
 
       if (rumor != null) {
         if (rumor.kind != DeletionRequest.kind &&
+            rumor.kind != GenericRepostEntity.kind &&
             (rumor.tags.any((tag) => tag[0] == CommunityIdentifierTag.tagName) ||
                 rumor.kind == PrivateMessageReactionEntity.kind)) {
           // Try to get kind 14 event id from related event tag or use the rumor id
@@ -201,6 +206,8 @@ class E2eeMessagesSubscriber extends _$E2eeMessagesSubscriber {
               reactionEventId: deleteEventIds.single,
             );
           }
+        } else if (rumor.kind == GenericRepostEntity.kind) {
+          await eventMessageDao.add(rumor);
         }
       }
     });

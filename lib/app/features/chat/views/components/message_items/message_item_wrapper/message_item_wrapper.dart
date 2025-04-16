@@ -212,6 +212,7 @@ class MessageItemWrapper extends HookConsumerWidget {
 
     return switch (repliedEntity.data.messageType) {
       MessageType.profile => null,
+      MessageType.storyReply => null,
       MessageType.visualMedia => null,
       // TODO: implement replied funds request message item
       MessageType.requestFunds => null,
