@@ -2,6 +2,7 @@
 
 import 'package:flutter/material.dart' hide ConnectionState;
 import 'package:flutter_hooks/flutter_hooks.dart';
+import 'package:flutter_twemoji/flutter_twemoji.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/components/avatar/avatar.dart';
 import 'package:ion/app/extensions/extensions.dart';
@@ -31,7 +32,6 @@ class MessageReactions extends ConsumerWidget {
 
     final reactions =
         ref.watch(conversationMessageReactionDaoProvider).messageReactions(eventMessage);
-
     return StreamBuilder<List<MessageReactionGroup>>(
       stream: reactions,
       builder: (context, snapshot) {

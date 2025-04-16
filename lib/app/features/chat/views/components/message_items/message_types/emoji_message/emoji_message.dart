@@ -2,6 +2,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
+import 'package:flutter_twemoji/flutter_twemoji.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/auth/providers/auth_provider.c.dart';
@@ -39,8 +40,8 @@ class EmojiMessage extends HookConsumerWidget {
           Row(
             mainAxisSize: MainAxisSize.min,
             children: [
-              Text(
-                entity.data.content,
+              TwemojiText(
+                text: entity.data.content,
                 style: context.theme.appTextThemes.headline1.copyWith(height: 1),
               ),
               MessageMetaData(eventMessage: eventMessage),

@@ -34,7 +34,14 @@ class _MessageReactionChip extends HookConsumerWidget {
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(emoji, style: context.theme.appTextThemes.title.copyWith(height: 1)),
+            TwemojiText(
+              text: emoji,
+              style: context.theme.appTextThemes.title.copyWith(height: 1),
+              strutStyle: StrutStyle(
+                fontSize: context.theme.appTextThemes.title.fontSize,
+                height: 1,
+              ),
+            ),
             _AvatarStack(pubkeys: masterPubkeys),
           ],
         ),

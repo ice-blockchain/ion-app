@@ -1,6 +1,7 @@
 // SPDX-License-Identifier: ice License 1.0
 
 import 'package:flutter/material.dart';
+import 'package:flutter_twemoji/flutter_twemoji.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/auth/providers/auth_provider.c.dart';
@@ -98,8 +99,8 @@ class _TextMessageContent extends StatelessWidget {
       return Stack(
         alignment: AlignmentDirectional.bottomEnd,
         children: [
-          Text(
-            '${eventMessage.content}${wouldOverlap ? '\n' : ''}',
+          TwemojiText(
+            text: '${eventMessage.content}${wouldOverlap ? '\n' : ''}',
             style: textStyle,
           ),
           MessageMetaData(eventMessage: eventMessage),
