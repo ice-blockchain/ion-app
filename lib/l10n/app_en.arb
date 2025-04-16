@@ -643,6 +643,7 @@
   "delete_post_desc": "Are you sure you want to delete post?",
   "delete_article_desc": "Are you sure you want to delete article?",
   "chat_title": "Chats",
+  "chat_messages_title": "Messages",
   "chat_empty_description": "You have no conversations yet",
   "chat_new_message_button": "New message",
   "poll_length_modal_title": "Poll length time",

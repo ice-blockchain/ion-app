@@ -5,12 +5,12 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/components/avatar/avatar.dart';
 import 'package:ion/app/extensions/extensions.dart';
+import 'package:ion/app/features/chat/model/database/chat_database.c.dart';
 import 'package:ion/app/features/chat/model/message_type.dart';
 import 'package:ion/app/features/chat/providers/muted_conversations_provider.c.dart';
 import 'package:ion/app/features/chat/recent_chats/model/conversation_list_item.c.dart';
 import 'package:ion/app/features/chat/recent_chats/providers/conversations_edit_mode_provider.c.dart';
 import 'package:ion/app/features/chat/recent_chats/providers/selected_conversations_ids_provider.c.dart';
-import 'package:ion/app/features/chat/recent_chats/providers/story_reaction_provider.c.dart';
 import 'package:ion/app/features/chat/recent_chats/views/pages/recent_chat_overlay/recent_chat_overlay.dart';
 import 'package:ion/app/features/ion_connect/model/event_reference.c.dart';
 import 'package:ion/app/features/user/providers/user_metadata_provider.c.dart';
@@ -247,40 +247,45 @@ class ChatPreview extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final storyReplyContent = messageType == MessageType.storyReply && lastMessageContent.isEmpty
-        ? ref.watch(storyReactionProvider(lastMessageId)).valueOrNull ?? ''
-        : lastMessageContent;
+    final content = switch (messageType) {
+      MessageType.text => lastMessageContent,
+      MessageType.emoji => lastMessageContent,
+      MessageType.storyReply => lastMessageContent,
+      MessageType.audio => context.i18n.common_voice_message,
+      MessageType.visualMedia => context.i18n.common_media,
+      MessageType.document => lastMessageContent,
+      MessageType.requestFunds => context.i18n.chat_money_request_title,
+      MessageType.profile => ref
+              .watch(
+                userMetadataProvider(
+                  EventReference.fromEncoded(lastMessageContent).pubkey,
+                ),
+              )
+              .valueOrNull
+              ?.data
+              .displayName ??
+          '',
+    };
+
+    final storyReaction =
+        ref.watch(conversationMessageReactionDaoProvider).storyReaction(lastMessageId);
 
     return Row(
       children: [
         RecentChatMessageIcon(messageType: messageType, color: textColor),
         Flexible(
-          child: Text(
-            switch (messageType) {
-              MessageType.text => lastMessageContent,
-              MessageType.emoji => lastMessageContent,
-              MessageType.storyReply => storyReplyContent,
-              MessageType.audio => context.i18n.common_voice_message,
-              MessageType.visualMedia => context.i18n.common_media,
-              MessageType.document => lastMessageContent,
-              MessageType.requestFunds => context.i18n.chat_money_request_title,
-              MessageType.profile => ref
-                      .watch(
-                        userMetadataProvider(
-                          EventReference.fromEncoded(lastMessageContent).pubkey,
-                        ),
-                      )
-                      .valueOrNull
-                      ?.data
-                      .displayName ??
-                  '',
-            },
-            maxLines: maxLines,
-            overflow: TextOverflow.ellipsis,
-            style: context.theme.appTextThemes.body2.copyWith(
-              color: textColor ?? context.theme.appColors.onTertararyBackground,
-            ),
-          ),
+          child: StreamBuilder(
+              stream: storyReaction,
+              builder: (context, snapshot) {
+                return Text(
+                  snapshot.hasData ? snapshot.data ?? content : content,
+                  maxLines: maxLines,
+                  overflow: TextOverflow.ellipsis,
+                  style: context.theme.appTextThemes.body2.copyWith(
+                    color: textColor ?? context.theme.appColors.onTertararyBackground,
+                  ),
+                );
+              }),
         ),
       ],
     );
