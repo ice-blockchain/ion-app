@@ -22,6 +22,7 @@ class FollowersRepository implements IonNotificationRepository {
 
   final FollowersDao _followersDao;
 
+  @override
   Future<void> save(IonConnectEntity entity) {
     return _followersDao.insert(
       Follower(pubkey: entity.masterPubkey, createdAt: entity.createdAt),
@@ -44,5 +45,9 @@ class FollowersRepository implements IonNotificationRepository {
 
   Future<DateTime?> lastCreatedAt() async {
     return _followersDao.getLastCreatedAt();
+  }
+
+  Future<DateTime?> firstCreatedAt({DateTime? after}) async {
+    return _followersDao.getFirstCreatedAt(after: after);
   }
 }
