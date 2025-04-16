@@ -88,7 +88,9 @@ class UnsupportedRepostException extends IONException {
 }
 
 class AssetEntityFileNotFoundException extends IONException {
-  AssetEntityFileNotFoundException() : super(10018, 'Asset entity file not found');
+  AssetEntityFileNotFoundException({String? assetId})
+      : super(10100,
+            'Asset entity file not found${assetId != null ? ' for asset ID: $assetId' : ''}');
 }
 
 class UnknownEventCountResultType extends IONException {
