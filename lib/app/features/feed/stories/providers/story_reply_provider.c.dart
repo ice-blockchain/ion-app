@@ -29,106 +29,103 @@ class StoryReply extends _$StoryReply {
     String? replyText,
     String? replyEmoji,
   }) async {
-    state = const AsyncLoading();
+    state = await AsyncValue.guard(() async {
+      state = const AsyncLoading();
+      final eventSigner = await ref.read(currentUserIonConnectEventSignerProvider.future);
 
-    final eventSigner = await ref.read(currentUserIonConnectEventSignerProvider.future);
-
-    if (eventSigner == null) {
-      throw EventSignerNotFoundException();
-    }
-
-    final currentUserMasterPubkey = ref.read(currentPubkeySelectorProvider);
-
-    if (currentUserMasterPubkey == null) {
-      throw UserMasterPubkeyNotFoundException();
-    }
-
-    final sendChatMessageService = ref.read(sendE2eeChatMessageServiceProvider);
-
-    final existingConversationId =
-        await ref.read(existChatConversationIdProvider(story.masterPubkey).future);
-
-    final conversationId = existingConversationId ??
-        sendChatMessageService.generateConversationId(
-          receiverPubkey: story.masterPubkey,
-        );
-
-    final storyEventMessage = await story.toEventMessage(story.data);
-    final storyAsContent = jsonEncode(storyEventMessage.toJson().last);
-
-    final tags = [
-      ['h', conversationId],
-      ['k', ModifiablePostEntity.kind.toString()],
-      ['b', currentUserMasterPubkey],
-      ReplaceableEventReference(
-        pubkey: story.pubkey,
-        kind: ModifiablePostEntity.kind,
-        dTag: story.data.replaceableEventId.value,
-      ).toTag(),
-    ];
-
-    final id = EventMessage.calculateEventId(
-      tags: tags,
-      content: storyAsContent,
-      kind: GenericRepostEntity.kind,
-      publicKey: eventSigner.publicKey,
-      createdAt: DateTime.now(),
-    );
-
-    final kind16Rumor = EventMessage(
-      id: id,
-      tags: tags,
-      content: storyAsContent,
-      pubkey: eventSigner.publicKey,
-      kind: GenericRepostEntity.kind,
-      createdAt: storyEventMessage.createdAt,
-      sig: null,
-    );
-
-    final participantsMasterPubkeys = [
-      story.masterPubkey,
-      currentUserMasterPubkey,
-    ];
-
-    await ref.read(conversationPubkeysProvider.notifier).fetchUsersKeys(participantsMasterPubkeys);
-
-    for (final masterPubkey in participantsMasterPubkeys) {
-      final pubkey = ref.read(userMetadataProvider(masterPubkey)).valueOrNull?.pubkey;
-
-      if (pubkey == null) {
-        throw UserPubkeyNotFoundException(masterPubkey);
+      if (eventSigner == null) {
+        throw EventSignerNotFoundException();
       }
 
-      await ref.read(sendE2eeChatMessageServiceProvider).sendWrappedMessage(
-        pubkey: pubkey,
-        eventSigner: eventSigner,
-        masterPubkey: masterPubkey,
-        eventMessage: kind16Rumor,
-        kinds: [
-          GenericRepostEntity.kind.toString(),
-          ModifiablePostEntity.kind.toString(),
-        ],
+      final currentUserMasterPubkey = ref.read(currentPubkeySelectorProvider);
+
+      if (currentUserMasterPubkey == null) {
+        throw UserMasterPubkeyNotFoundException();
+      }
+
+      final sendChatMessageService = ref.read(sendE2eeChatMessageServiceProvider);
+
+      final existingConversationId =
+          await ref.read(existChatConversationIdProvider(story.masterPubkey).future);
+
+      final conversationId = existingConversationId ??
+          sendChatMessageService.generateConversationId(
+            receiverPubkey: story.masterPubkey,
+          );
+
+      final storyEventMessage = await story.toEventMessage(story.data);
+      final storyAsContent = jsonEncode(storyEventMessage.toJson().last);
+
+      final tags = [
+        ['h', conversationId],
+        ['k', ModifiablePostEntity.kind.toString()],
+        ['b', currentUserMasterPubkey],
+        story.toEventReference().toTag(),
+      ];
+
+      final id = EventMessage.calculateEventId(
+        tags: tags,
+        content: storyAsContent,
+        kind: GenericRepostEntity.kind,
+        publicKey: eventSigner.publicKey,
+        createdAt: DateTime.now(),
       );
-    }
 
-    final sentKind14EventMessage = await ref.read(sendE2eeChatMessageServiceProvider).sendMessage(
-      content: replyText ?? '',
-      conversationId: conversationId,
-      participantsMasterPubkeys: participantsMasterPubkeys,
-      referencePostTag: QuotedImmutableEvent(
-        eventReference:
-            ImmutableEventReference(eventId: kind16Rumor.id, pubkey: kind16Rumor.pubkey),
-      ).toTag(),
-      mediaFiles: [],
-    );
-
-    if (replyEmoji != null) {
-      await (await ref.read(sendE2eeMessageServiceProvider.future)).sendReaction(
-        content: replyEmoji,
-        kind14Rumor: sentKind14EventMessage,
+      final kind16Rumor = EventMessage(
+        id: id,
+        tags: tags,
+        content: storyAsContent,
+        pubkey: eventSigner.publicKey,
+        kind: GenericRepostEntity.kind,
+        createdAt: storyEventMessage.createdAt,
+        sig: null,
       );
-    }
 
-    state = const AsyncData(null);
+      final participantsMasterPubkeys = [
+        story.masterPubkey,
+        currentUserMasterPubkey,
+      ];
+
+      await ref
+          .read(conversationPubkeysProvider.notifier)
+          .fetchUsersKeys(participantsMasterPubkeys);
+
+      for (final masterPubkey in participantsMasterPubkeys) {
+        final pubkey = ref.read(userMetadataProvider(masterPubkey)).valueOrNull?.pubkey;
+
+        if (pubkey == null) {
+          throw UserPubkeyNotFoundException(masterPubkey);
+        }
+
+        await ref.read(sendE2eeChatMessageServiceProvider).sendWrappedMessage(
+          pubkey: pubkey,
+          eventSigner: eventSigner,
+          masterPubkey: masterPubkey,
+          eventMessage: kind16Rumor,
+          kinds: [
+            GenericRepostEntity.kind.toString(),
+            ModifiablePostEntity.kind.toString(),
+          ],
+        );
+      }
+
+      final sentKind14EventMessage = await ref.read(sendE2eeChatMessageServiceProvider).sendMessage(
+        content: replyText ?? '',
+        conversationId: conversationId,
+        participantsMasterPubkeys: participantsMasterPubkeys,
+        referencePostTag: QuotedImmutableEvent(
+          eventReference:
+              ImmutableEventReference(eventId: kind16Rumor.id, pubkey: kind16Rumor.pubkey),
+        ).toTag(),
+        mediaFiles: [],
+      );
+
+      if (replyEmoji != null) {
+        await (await ref.read(sendE2eeMessageServiceProvider.future)).sendReaction(
+          content: replyEmoji,
+          kind14Rumor: sentKind14EventMessage,
+        );
+      }
+    });
   }
 }
