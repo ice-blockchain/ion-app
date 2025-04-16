@@ -38,7 +38,7 @@ class SyncWalletViewCoinsService {
 
   Timer? _syncTimer;
   bool _syncInProgress = false;
-  bool _isSyncQueueIsRunning = false;
+  bool _isSyncQueueRunning = false;
 
   Future<void> start(List<CoinData> coins) async {
     final coinIds = coins.map((coin) => coin.id).toSet();
@@ -68,8 +68,8 @@ class SyncWalletViewCoinsService {
       }
     }
 
-    if (!_isSyncQueueIsRunning) {
-      _isSyncQueueIsRunning = true;
+    if (!_isSyncQueueRunning) {
+      _isSyncQueueRunning = true;
       await _scheduleNextSync();
     }
   }
@@ -86,11 +86,11 @@ class SyncWalletViewCoinsService {
 
     _syncTimer?.cancel();
     _syncTimer = null;
-    _isSyncQueueIsRunning = false;
+    _isSyncQueueRunning = false;
   }
 
   Future<void> _scheduleNextSync() async {
-    if (!_isSyncQueueIsRunning) return;
+    if (!_isSyncQueueRunning) return;
 
     final nextUpdate = await _coinsRepository.getNextSyncTime();
     if (nextUpdate == null) {
@@ -115,11 +115,11 @@ class SyncWalletViewCoinsService {
     _syncTimer = Timer(delay, () async {
       await _syncCoins();
 
-      if (_isSyncQueueIsRunning && (_syncTimer == null || !_syncTimer!.isActive)) {
+      if (_isSyncQueueRunning && (_syncTimer == null || !_syncTimer!.isActive)) {
         await _scheduleNextSync();
       } else {
         final reason =
-            !_isSyncQueueIsRunning ? 'Sync queue was stopped.' : 'Sync timer is already active.';
+            !_isSyncQueueRunning ? 'Sync queue was stopped.' : 'Sync timer is already active.';
         Logger.log('Skipping reschedule. $reason');
       }
     });
