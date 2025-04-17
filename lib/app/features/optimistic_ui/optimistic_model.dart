@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: ice License 1.0
+
 /// Marker‑interface for models that work with Optimistic UI.
 abstract interface class OptimisticModel {
   /// Unique identifier of the instance.
