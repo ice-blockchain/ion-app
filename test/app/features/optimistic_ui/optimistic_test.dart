@@ -177,7 +177,6 @@ void main() {
         ..initialize([TestModel('1', 'A')])
         ..dispose();
 
-      // attempt after dispose
       expect(
         () async {
           await mgr.perform(
@@ -186,7 +185,7 @@ void main() {
           );
         },
         throwsA(isA<StateError>()),
-      ); // StreamController closed
+      );
     });
   });
 }

@@ -1,9 +1,13 @@
 // SPDX-License-Identifier: ice License 1.0
 
-/// Marker‑interface for models that work with Optimistic UI.
+/// Contract for models used in optimistic UI operations.
+///
+/// Implement this interface for any model that participates in optimistic updates.
+/// The [optimisticId] must uniquely identify the entity for correct state tracking.
 abstract interface class OptimisticModel {
-  /// Unique identifier of the instance.
+  /// Unique identifier for optimistic state tracking.
   String get optimisticId;
 
+  /// Compares this model to another for optimistic equality.
   bool equals(covariant OptimisticModel other) => this == other;
 }
