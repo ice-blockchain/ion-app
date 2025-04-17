@@ -1,5 +1,5 @@
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:ion/app/features/optimistic-update/operation_manager.dart';
+import 'package:ion/app/features/optimistic_ui/operation_manager.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 @riverpod
