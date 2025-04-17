@@ -87,7 +87,6 @@ class VideoController extends _$VideoController {
         _activeController = controller;
       }
     } catch (error, stackTrace) {
-      //TODO::improve
       if (controller.dataSourceType == DataSourceType.network) {
         await ref.read(iONConnectMediaUrlFallbackProvider.notifier).failed(params.sourcePath);
       }
