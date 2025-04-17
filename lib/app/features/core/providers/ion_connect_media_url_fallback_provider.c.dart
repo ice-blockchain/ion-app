@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: ice License 1.0
+
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/user/providers/user_relays_manager.c.dart';
 import 'package:ion/app/utils/url.dart';
@@ -19,8 +21,10 @@ class IONConnectMediaUrlFallback extends _$IONConnectMediaUrlFallback {
     if (userRelays == null) {
       return;
     }
+
     final userRelayUri = Uri.parse(userRelays.urls.random);
     final assetUri = Uri.parse(url);
+
     state = {...state, url: assetUri.replace(host: userRelayUri.host).toString()};
   }
 }

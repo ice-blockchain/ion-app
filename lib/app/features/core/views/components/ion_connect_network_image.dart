@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: ice License 1.0
+
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_cache_manager/flutter_cache_manager.dart';
@@ -47,7 +49,9 @@ class IonConnectNetworkImage extends ConsumerWidget {
       width: width,
       height: height,
       errorListener: (error) {
-        ref.read(iONConnectMediaUrlFallbackProvider.notifier).failed(imageUrl);
+        if (ref.context.mounted) {
+          ref.read(iONConnectMediaUrlFallbackProvider.notifier).failed(imageUrl);
+        }
       },
     );
   }
