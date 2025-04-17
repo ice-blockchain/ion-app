@@ -34,6 +34,7 @@ class WebsiteInput extends StatelessWidget {
         ),
       ),
       prefixIconAssetName: Assets.svg.iconArticleLink,
+      keyboardType: TextInputType.url,
       labelText: context.i18n.profile_website,
       initialValue: initialValue,
       inputFormatters: [

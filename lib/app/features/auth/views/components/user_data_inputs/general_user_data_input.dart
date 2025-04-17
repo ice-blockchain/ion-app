@@ -22,6 +22,7 @@ class GeneralUserDataInput extends HookWidget {
     this.isLive = false,
     this.showNoErrorsIndicator = false,
     this.prefix,
+    this.keyboardType,
     this.inputFormatters,
     super.key,
   });
@@ -38,6 +39,7 @@ class GeneralUserDataInput extends HookWidget {
   final bool isLive;
   final bool showNoErrorsIndicator;
   final Widget? prefix;
+  final TextInputType? keyboardType;
   final List<TextInputFormatter>? inputFormatters;
 
   @override
@@ -51,6 +53,8 @@ class GeneralUserDataInput extends HookWidget {
       ),
       onChanged: onChanged,
       prefix: prefix,
+      keyboardType: keyboardType,
+      inputFormatters: inputFormatters,
       onValidated: (value) => isValid.value = value,
       labelText: labelText,
       controller: controller,
@@ -61,7 +65,6 @@ class GeneralUserDataInput extends HookWidget {
       minLines: minLines,
       initialValue: initialValue,
       isLive: isLive,
-      inputFormatters: inputFormatters,
       verified: isValid.value,
       onTapOutside: (_) => FocusManager.instance.primaryFocus?.unfocus(),
       suffixIcon: isValid.value && showNoErrorsIndicator
