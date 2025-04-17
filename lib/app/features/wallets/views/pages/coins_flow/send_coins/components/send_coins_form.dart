@@ -113,11 +113,13 @@ class SendCoinsForm extends HookConsumerWidget {
                   children: [
                     SelectCoinButton(
                       selectedCoin: coin?.selectedOption,
+                      enabled: formController.request == null,
                       onTap: () => context.push(selectCoinRouteLocationBuilder()),
                     ),
                     SizedBox(height: 12.0.s),
                     SelectNetworkButton(
                       selectedNetwork: formController.network,
+                      enabled: formController.request == null,
                       onTap: () {
                         if (coin?.selectedOption != null) {
                           context.push(selectNetworkRouteLocationBuilder());
@@ -164,6 +166,7 @@ class SendCoinsForm extends HookConsumerWidget {
                       controller: amountController,
                       maxValue: coin?.selectedOption?.amount ?? 0,
                       coinAbbreviation: coin?.coinsGroup.abbreviation ?? '',
+                      enabled: formController.request == null,
                     ),
                     SizedBox(height: 17.0.s),
                     const CoinsNetworkFeeSelector(),

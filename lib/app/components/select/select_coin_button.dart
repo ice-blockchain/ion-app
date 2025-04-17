@@ -15,19 +15,24 @@ class SelectCoinButton extends StatelessWidget {
   const SelectCoinButton({
     required this.selectedCoin,
     required this.onTap,
+    this.enabled = true,
     super.key,
   });
 
   final CoinInWalletData? selectedCoin;
+  final bool enabled;
   final VoidCallback onTap;
 
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: onTap,
+      onTap: enabled ? onTap : null,
       child: selectedCoin == null
           ? const _NoCoinSelected()
-          : _HasCoinSelected(selectedCoin: selectedCoin!),
+          : _HasCoinSelected(
+              selectedCoin: selectedCoin!,
+              enabled: enabled,
+            ),
     );
   }
 }
@@ -58,9 +63,11 @@ class _NoCoinSelected extends StatelessWidget {
 class _HasCoinSelected extends StatelessWidget {
   const _HasCoinSelected({
     required this.selectedCoin,
+    required this.enabled,
   });
 
   final CoinInWalletData selectedCoin;
+  final bool enabled;
 
   @override
   Widget build(BuildContext context) {
@@ -109,10 +116,13 @@ class _HasCoinSelected extends StatelessWidget {
                 ),
               ],
             ),
-            Padding(
-              padding: EdgeInsets.all(8.0.s),
-              child: Assets.svg.iconArrowDown.icon(),
-            ),
+            if (enabled)
+              Padding(
+                padding: EdgeInsets.all(8.0.s),
+                child: Assets.svg.iconArrowDown.icon(),
+              )
+            else
+              SizedBox.square(dimension: 10.0.s),
           ],
         ),
       ),

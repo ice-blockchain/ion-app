@@ -11,19 +11,24 @@ class SelectNetworkButton extends StatelessWidget {
   const SelectNetworkButton({
     required this.onTap,
     required this.selectedNetwork,
+    this.enabled = true,
     super.key,
   });
 
   final VoidCallback onTap;
   final NetworkData? selectedNetwork;
+  final bool enabled;
 
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: onTap,
+      onTap: enabled ? onTap : null,
       child: selectedNetwork == null
           ? const _NoNetworkSelected()
-          : _HasNetworkSelected(selectedNetwork: selectedNetwork!),
+          : _HasNetworkSelected(
+              selectedNetwork: selectedNetwork!,
+              enabled: enabled,
+            ),
     );
   }
 }
@@ -56,9 +61,11 @@ class _NoNetworkSelected extends StatelessWidget {
 class _HasNetworkSelected extends StatelessWidget {
   const _HasNetworkSelected({
     required this.selectedNetwork,
+    required this.enabled,
   });
 
   final NetworkData selectedNetwork;
+  final bool enabled;
 
   @override
   Widget build(BuildContext context) {
@@ -66,6 +73,7 @@ class _HasNetworkSelected extends StatelessWidget {
     final textTheme = context.theme.appTextThemes;
 
     return SelectContainer(
+      enabled: enabled,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [

@@ -14,6 +14,7 @@ class CoinAmountInput extends StatelessWidget {
     this.balanceUSD,
     this.maxValue,
     this.coinAbbreviation,
+    this.enabled = true,
     super.key,
   });
 
@@ -21,6 +22,7 @@ class CoinAmountInput extends StatelessWidget {
   final double? balanceUSD;
   final double? maxValue;
   final String? coinAbbreviation;
+  final bool enabled;
 
   @override
   Widget build(BuildContext context) {
@@ -31,6 +33,7 @@ class CoinAmountInput extends StatelessWidget {
     return Column(
       children: [
         TextInput(
+          enabled: enabled,
           controller: controller,
           keyboardType: const TextInputType.numberWithOptions(decimal: true),
           validator: (value) {
@@ -40,7 +43,7 @@ class CoinAmountInput extends StatelessWidget {
             return null;
           },
           labelText: locale.wallet_coin_amount(coinAbbreviation ?? ''),
-          suffixIcon: maxValue != null
+          suffixIcon: maxValue != null && enabled
               ? TextInputTextButton(
                   onPressed: () {
                     controller.text = formatCrypto(maxValue ?? 0);

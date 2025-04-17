@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:intl/intl.dart';
-import 'package:ion/app/components/button/button.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/extensions/object.dart';
 import 'package:ion/app/features/auth/providers/auth_provider.c.dart';
@@ -12,9 +11,11 @@ import 'package:ion/app/features/chat/model/message_list_item.c.dart';
 import 'package:ion/app/features/chat/model/money_message_type.dart';
 import 'package:ion/app/features/chat/recent_chats/providers/money_message_provider.c.dart';
 import 'package:ion/app/features/chat/views/components/message_items/components.dart';
+import 'package:ion/app/features/chat/views/components/message_items/message_types/money_message/components/money_message_button.dart';
 import 'package:ion/app/features/ion_connect/ion_connect.dart';
 import 'package:ion/app/features/ion_connect/model/event_reference.c.dart';
 import 'package:ion/app/features/wallets/model/coin_data.c.dart';
+import 'package:ion/app/features/wallets/model/entities/funds_request_entity.c.dart';
 import 'package:ion/app/features/wallets/model/network_data.c.dart';
 import 'package:ion/app/features/wallets/providers/coins_provider.c.dart';
 import 'package:ion/app/features/wallets/providers/networks_provider.c.dart';
@@ -62,6 +63,8 @@ class MoneyMessage extends HookConsumerWidget {
       network: network,
       coin: coin,
       eventMessage: eventMessage,
+      eventId: eventReference.eventId,
+      request: fundsRequest,
     );
   }
 }
@@ -75,6 +78,8 @@ class _MoneyMessageContent extends HookConsumerWidget {
     required this.network,
     required this.coin,
     required this.eventMessage,
+    required this.eventId,
+    required this.request,
   });
 
   final bool isMe;
@@ -84,6 +89,8 @@ class _MoneyMessageContent extends HookConsumerWidget {
   final NetworkData? network;
   final CoinData? coin;
   final EventMessage eventMessage;
+  final String eventId;
+  final FundsRequestEntity? request;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -97,33 +104,12 @@ class _MoneyMessageContent extends HookConsumerWidget {
       MoneyMessageType.requested => context.i18n.chat_money_request_title,
     };
 
-    final buttonLabel = switch ((isMe, type)) {
-      (true, MoneyMessageType.requested) => context.i18n.button_cancel,
-      (false, MoneyMessageType.requested) => context.i18n.button_send,
-      (_, MoneyMessageType.received) => context.i18n.chat_money_received_button,
-    };
-
-    final buttonType = switch (type) {
-      MoneyMessageType.requested => ButtonType.outlined,
-      MoneyMessageType.received => ButtonType.primary,
-    };
-
-    final buttonBackgroundColor = switch ((isMe, type)) {
-      (_, MoneyMessageType.received) => context.theme.appColors.darkBlue,
-      (true, MoneyMessageType.requested) => context.theme.appColors.tertararyBackground,
-      (false, MoneyMessageType.requested) => context.theme.appColors.darkBlue,
-    };
-
-    final buttonTextColor = switch ((isMe, type)) {
-      (_, MoneyMessageType.received) => context.theme.appColors.onPrimaryAccent,
-      (true, MoneyMessageType.requested) => context.theme.appColors.primaryText,
-      (false, MoneyMessageType.requested) => context.theme.appColors.onPrimaryAccent,
-    };
-
     final timeTextColor = switch (isMe) {
       true => context.theme.appColors.strokeElements,
       false => context.theme.appColors.quaternaryText,
     };
+
+    final isPaid = type == MoneyMessageType.received;
 
     return MessageItemWrapper(
       messageItem: ChatMessageInfoItem.money(
@@ -164,24 +150,18 @@ class _MoneyMessageContent extends HookConsumerWidget {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             crossAxisAlignment: CrossAxisAlignment.end,
             children: [
-              // TODO: implement reactions
-              Button.compact(
-                type: buttonType,
-                backgroundColor: buttonBackgroundColor,
-                tintColor: buttonType == ButtonType.primary ? buttonBackgroundColor : null,
-                minimumSize: Size(150.0.s, 32.0.s),
-                label: Text(
-                  buttonLabel,
-                  style: context.theme.appTextThemes.caption2.copyWith(color: buttonTextColor),
-                ),
-                onPressed: () {
-                  // TODO: implement cancel request
-                },
+              MoneyMessageButton(
+                isMe: isMe,
+                messageType: type,
+                eventId: eventId,
+                isPaid: isPaid,
+                request: request,
               ),
               Text(
                 toTimeDisplayValue(eventMessage.createdAt.millisecondsSinceEpoch),
                 style: context.theme.appTextThemes.caption4.copyWith(color: timeTextColor),
               ),
+              // TODO: implement reactions
             ],
           ),
         ],

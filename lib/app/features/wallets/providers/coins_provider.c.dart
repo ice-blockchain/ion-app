@@ -22,6 +22,16 @@ Future<List<CoinsGroup>> coinsInWallet(Ref ref) async {
 }
 
 @Riverpod(keepAlive: true)
+Future<List<CoinsGroup>> coinsInWalletView(Ref ref, String walletViewId) async {
+  final currentUser = ref.watch(currentIdentityKeyNameSelectorProvider);
+  if (currentUser == null) {
+    return [];
+  }
+  final walletData = await ref.watch(walletViewByIdProvider(id: walletViewId).future);
+  return walletData.coinGroups;
+}
+
+@Riverpod(keepAlive: true)
 Future<CoinData?> coinById(Ref ref, String coinId) async {
   final coinsService = await ref.watch(coinsServiceProvider.future);
   return coinsService.getCoinById(coinId);

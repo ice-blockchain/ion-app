@@ -4,6 +4,7 @@ import 'dart:async';
 
 import 'package:collection/collection.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:ion/app/features/core/providers/wallets_provider.c.dart';
 import 'package:ion/app/features/wallets/domain/wallet_views/wallet_views_service.c.dart';
 import 'package:ion/app/features/wallets/model/coin_data.c.dart';
 import 'package:ion/app/features/wallets/model/wallet_view_data.c.dart';
@@ -83,4 +84,23 @@ Future<WalletViewData> walletViewById(Ref ref, {required String id}) async {
   final wallets = await ref.watch(walletViewsDataNotifierProvider.future);
 
   return wallets.firstWhere((wallet) => wallet.id == id);
+}
+
+@riverpod
+Future<WalletViewData?> walletViewByAddress(
+  Ref ref,
+  String address,
+) async {
+  final wallets = await ref.watch(walletsNotifierProvider.future);
+  final wallet = wallets.firstWhereOrNull((wallet) => wallet.address == address);
+
+  if (wallet == null) {
+    return null;
+  }
+
+  final walletViews = await ref.watch(walletViewsDataNotifierProvider.future);
+
+  return walletViews.firstWhereOrNull(
+    (walletView) => walletView.coins.any((coin) => coin.walletId == wallet.id),
+  );
 }
