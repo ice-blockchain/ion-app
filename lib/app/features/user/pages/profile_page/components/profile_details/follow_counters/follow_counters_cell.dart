@@ -1,33 +1,24 @@
 // SPDX-License-Identifier: ice License 1.0
 
 import 'package:flutter/material.dart';
-import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/user/model/follow_type.dart';
-import 'package:ion/app/features/user/providers/follow_list_provider.c.dart';
-import 'package:ion/app/features/user/providers/followers_count_provider.c.dart';
 import 'package:ion/app/router/app_routes.c.dart';
 
-class FollowCountersCell extends ConsumerWidget {
+class FollowCountersCell extends StatelessWidget {
   const FollowCountersCell({
     required this.pubkey,
+    required this.usersNumber,
     required this.followType,
     super.key,
   });
 
   final String pubkey;
+  final int usersNumber;
   final FollowType followType;
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final usersNumber = followType == FollowType.following
-        ? ref.watch(followListProvider(pubkey)).valueOrNull?.data.list.length
-        : ref.watch(followersCountProvider(pubkey: pubkey)).valueOrNull;
-
-    if (usersNumber == null) {
-      return const SizedBox.shrink();
-    }
-
+  Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
         if (usersNumber > 0) {
