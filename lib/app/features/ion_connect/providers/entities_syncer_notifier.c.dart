@@ -17,6 +17,8 @@ class EntitiesSyncerNotifier extends _$EntitiesSyncerNotifier {
   @override
   String build(String syncPivotKey) => syncPivotKey;
 
+  /// IonConnectEntity version of syncEvents.
+  /// Proceed there for more detailed explanation of this method.
   Future<void> syncEntities({
     required List<RequestFilter> requestFilters,
     required void Function(IonConnectEntity entity) saveCallback,
@@ -46,6 +48,18 @@ class EntitiesSyncerNotifier extends _$EntitiesSyncerNotifier {
     );
   }
 
+  /// Synchronizes raw event messages in two stages: previous sync completion and new events sync.
+  ///
+  /// This method ensures no events are missed by overlapping sync ranges and tracking a persistent
+  /// pivot timestamp (stored using the provided sync key). The pivot marks the latest successfully
+  /// synced event time and is updated after each stage.
+  ///
+  /// Step-by-step:
+  /// 1. Loads the pivot timestamp from local storage.
+  /// 2. Tries running a "previous sync completion" in case the synchronization failed the last time,
+  /// causing it to fill the messages gap between the saved pivot and the last fetched event during the previous, interrupted sync.
+  /// 3. Runs a "new events sync" stage to fetch fresh events created after the last stored event.
+  /// 4. Updates the pivot timestamp using the youngest event's createdAt date
   Future<void> syncEvents({
     required List<RequestFilter> requestFilters,
     required void Function(EventMessage eventMessage) saveCallback,
