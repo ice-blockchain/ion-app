@@ -7,6 +7,7 @@ import 'package:cached_video_player_plus/cached_video_player_plus.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:ion/app/features/core/providers/ion_connect_media_url_fallback_provider.c.dart';
 import 'package:ion/app/features/core/providers/mute_provider.c.dart';
 import 'package:ion/app/services/logger/logger.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
@@ -47,8 +48,13 @@ class VideoController extends _$VideoController {
   Future<Raw<CachedVideoPlayerPlusController>> build(VideoControllerParams params) async {
     final isMuted = ref.watch(globalMuteProvider);
 
+    final sourcePath = ref.watch(
+      iONConnectMediaUrlFallbackProvider
+          .select((state) => state[params.sourcePath] ?? params.sourcePath),
+    );
+
     final controller = ref
-        .watch(videoPlayerControllerFactoryProvider(params.sourcePath))
+        .watch(videoPlayerControllerFactoryProvider(sourcePath))
         .createController(VideoPlayerOptions(mixWithOthers: isMuted));
 
     try {
@@ -81,6 +87,10 @@ class VideoController extends _$VideoController {
         _activeController = controller;
       }
     } catch (error, stackTrace) {
+      //TODO::improve
+      if (controller.dataSourceType == DataSourceType.network) {
+        await ref.read(iONConnectMediaUrlFallbackProvider.notifier).failed(params.sourcePath);
+      }
       Logger.log(
         'Error during video controller initialisation for source: ${params.sourcePath}',
         error: error,
