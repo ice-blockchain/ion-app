@@ -29,7 +29,7 @@ void main() {
   group('IonConnectGiftWrapService', () {
     test('creates wrap from event', () async {
       final event = await PrivateDirectMessageData.fromRawContent('test')
-          .toEventMessage(pubkey: senderSigner.publicKey);
+          .toEventMessage(senderSigner.publicKey);
 
       const masterPubkey = '0';
 
@@ -37,7 +37,7 @@ void main() {
         event: event,
         receiverMasterPubkey: masterPubkey,
         receiverPubkey: receiverSigner.publicKey,
-        contentKinds: [PrivateDirectMessageEntity.kind.toString()],
+        contentKinds: [ImmutablePrivateDirectMessageEntity.kind.toString()],
       );
 
       expect(wrap.kind, equals(1059));
@@ -53,13 +53,13 @@ void main() {
 
     test('decodes wrap back to original event on senders side', () async {
       final event = await PrivateDirectMessageData.fromRawContent('test')
-          .toEventMessage(pubkey: senderSigner.publicKey);
+          .toEventMessage(senderSigner.publicKey);
 
       final wrap = await giftWrapService.createWrap(
         event: event,
         receiverMasterPubkey: "Doesn't matter",
         receiverPubkey: senderSigner.publicKey,
-        contentKinds: [PrivateDirectMessageEntity.kind.toString()],
+        contentKinds: [ImmutablePrivateDirectMessageEntity.kind.toString()],
       );
 
       final decodedWrap = await giftWrapService.decodeWrap(
@@ -75,13 +75,13 @@ void main() {
 
     test('decodes wrap back to original event on receivers side', () async {
       final event = await PrivateDirectMessageData.fromRawContent('test')
-          .toEventMessage(pubkey: senderSigner.publicKey);
+          .toEventMessage(senderSigner.publicKey);
 
       final wrap = await giftWrapService.createWrap(
         event: event,
         receiverMasterPubkey: "Doesn't matter",
         receiverPubkey: receiverSigner.publicKey,
-        contentKinds: [PrivateDirectMessageEntity.kind.toString()],
+        contentKinds: [ImmutablePrivateDirectMessageEntity.kind.toString()],
       );
 
       final decodedWrap = await giftWrapService.decodeWrap(

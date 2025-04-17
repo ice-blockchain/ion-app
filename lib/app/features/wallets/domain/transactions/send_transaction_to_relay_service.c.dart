@@ -107,7 +107,7 @@ class SendTransactionToRelayService {
     required String receiverMasterPubkey,
     required EventSigner signer,
     required EventMessage eventMessage,
-    int kind = PrivateDirectMessageEntity.kind,
+    int kind = ImmutablePrivateDirectMessageEntity.kind,
   }) async {
     final expirationTag = EntityExpiration(
       value: DateTime.now().add(

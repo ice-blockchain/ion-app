@@ -6,7 +6,7 @@ import 'dart:convert';
 import 'package:collection/collection.dart';
 import 'package:ion/app/exceptions/exceptions.dart';
 import 'package:ion/app/features/auth/providers/auth_provider.c.dart';
-import 'package:ion/app/features/chat/community/models/entities/tags/community_identifier_tag.c.dart';
+import 'package:ion/app/features/chat/community/models/entities/tags/conversation_identifier.c.dart';
 import 'package:ion/app/features/chat/model/database/chat_database.c.dart';
 import 'package:ion/app/features/chat/recent_chats/model/conversation_list_item.c.dart';
 import 'package:ion/app/features/feed/data/models/bookmarks/bookmarks_set.c.dart';
@@ -139,7 +139,7 @@ class ToggleArchivedConversations extends _$ToggleArchivedConversations {
     final decryptedTags = await _decryptContent(initialBookmarkSet.content);
     final conversationIds = conversations.map((e) => e.conversationId).toList();
     final allConversationTags = conversations
-        .map((conversation) => CommunityIdentifierTag(value: conversation.conversationId).toTag())
+        .map((conversation) => ConversationIdentifier(value: conversation.conversationId).toTag())
         .toList();
 
     if (decryptedTags == null) {
@@ -147,7 +147,7 @@ class ToggleArchivedConversations extends _$ToggleArchivedConversations {
       updatedTags = allConversationTags;
     } else {
       for (final conversation in conversations) {
-        final conversationTag = CommunityIdentifierTag(value: conversation.conversationId).toTag();
+        final conversationTag = ConversationIdentifier(value: conversation.conversationId).toTag();
 
         final archivedConversationTag = decryptedTags.firstWhereOrNull(
           (tag) => tag.equals(conversationTag),

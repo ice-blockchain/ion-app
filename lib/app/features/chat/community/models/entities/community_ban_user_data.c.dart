@@ -4,7 +4,7 @@ import 'dart:async';
 import 'package:collection/collection.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:ion/app/extensions/extensions.dart';
-import 'package:ion/app/features/chat/community/models/entities/tags/community_identifier_tag.c.dart';
+import 'package:ion/app/features/chat/community/models/entities/tags/conversation_identifier.c.dart';
 import 'package:ion/app/features/ion_connect/model/event_serializable.dart';
 import 'package:ion/app/features/ion_connect/model/ion_connect_entity.dart';
 import 'package:nostr_dart/nostr_dart.dart';
@@ -56,9 +56,9 @@ class CommunityBanUserData with _$CommunityBanUserData implements EventSerializa
     final tags = groupBy(eventMessage.tags, (tag) => tag[0]);
 
     return CommunityBanUserData(
-      uuid: tags[CommunityIdentifierTag.tagName]!.map(CommunityIdentifierTag.fromTag).first.value,
+      uuid: tags[ConversationIdentifier.tagName]!.map(ConversationIdentifier.fromTag).first.value,
       bannedPubkey:
-          tags[CommunityIdentifierTag.tagName]!.map(CommunityIdentifierTag.fromTag).first.value,
+          tags[ConversationIdentifier.tagName]!.map(ConversationIdentifier.fromTag).first.value,
     );
   }
 
@@ -74,7 +74,7 @@ class CommunityBanUserData with _$CommunityBanUserData implements EventSerializa
       kind: CommunityBanUserEntity.kind,
       tags: [
         ...tags,
-        CommunityIdentifierTag(value: uuid).toTag(),
+        ConversationIdentifier(value: uuid).toTag(),
       ],
       content: '',
     );

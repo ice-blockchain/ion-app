@@ -38,7 +38,7 @@ String useCombinedConversationNames(
         } else {
           final latestMessageEntity =
               PrivateDirectMessageData.fromEventMessage(conversation.latestMessage!);
-          names.add(latestMessageEntity.relatedSubject?.value ?? '');
+          names.add(latestMessageEntity.groupSubject?.value ?? '');
         }
       }
       return names.join(', ');

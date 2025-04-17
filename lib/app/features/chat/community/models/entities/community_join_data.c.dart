@@ -6,7 +6,7 @@ import 'package:collection/collection.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/chat/community/models/entities/tags/authorization_tag.c.dart';
-import 'package:ion/app/features/chat/community/models/entities/tags/community_identifier_tag.c.dart';
+import 'package:ion/app/features/chat/community/models/entities/tags/conversation_identifier.c.dart';
 import 'package:ion/app/features/chat/community/models/entities/tags/pubkey_tag.c.dart';
 import 'package:ion/app/features/ion_connect/model/entity_expiration.c.dart';
 import 'package:ion/app/features/ion_connect/model/event_serializable.dart';
@@ -58,7 +58,7 @@ class CommunityJoinData with _$CommunityJoinData implements EventSerializable {
     final tags = groupBy(eventMessage.tags, (tag) => tag[0]);
 
     return CommunityJoinData(
-      uuid: tags[CommunityIdentifierTag.tagName]!.map(CommunityIdentifierTag.fromTag).first.value,
+      uuid: tags[ConversationIdentifier.tagName]!.map(ConversationIdentifier.fromTag).first.value,
       pubkey: tags[PubkeyTag.tagName]?.map(PubkeyTag.fromTag).first.value,
       auth: tags[AuthorizationTag.tagName]?.map(AuthorizationTag.fromTag).firstOrNull?.value,
       expiration: tags[EntityExpiration.tagName]?.map(EntityExpiration.fromTag).firstOrNull?.value,
@@ -77,7 +77,7 @@ class CommunityJoinData with _$CommunityJoinData implements EventSerializable {
       kind: CommunityJoinEntity.kind,
       tags: [
         ...tags,
-        CommunityIdentifierTag(value: uuid).toTag(),
+        ConversationIdentifier(value: uuid).toTag(),
         if (pubkey != null) PubkeyTag(value: pubkey).toTag(),
         if (auth != null) AuthorizationTag(value: auth!).toTag(),
         if (expiration != null) EntityExpiration(value: expiration!).toTag(),

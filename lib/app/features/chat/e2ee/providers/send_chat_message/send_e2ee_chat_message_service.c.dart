@@ -9,7 +9,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/exceptions/exceptions.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/auth/providers/auth_provider.c.dart';
-import 'package:ion/app/features/chat/community/models/entities/tags/community_identifier_tag.c.dart';
+import 'package:ion/app/features/chat/community/models/entities/tags/conversation_identifier.c.dart';
 import 'package:ion/app/features/chat/e2ee/model/entities/private_direct_message_data.c.dart';
 import 'package:ion/app/features/chat/e2ee/providers/send_chat_message/send_chat_media_provider.c.dart';
 import 'package:ion/app/features/chat/model/database/chat_database.c.dart';
@@ -275,7 +275,7 @@ class SendE2eeChatMessageService {
       receiverPubkey: pubkey,
       eventMessage: eventMessage,
       receiverMasterPubkey: masterPubkey,
-      kinds: kinds ?? [PrivateDirectMessageEntity.kind.toString()],
+      kinds: kinds ?? [ImmutablePrivateDirectMessageEntity.kind.toString()],
     );
 
     await ref.read(ionConnectNotifierProvider.notifier).sendEvent(
@@ -301,7 +301,7 @@ class SendE2eeChatMessageService {
       if (subject != null) ['subject', subject],
       ...masterPubkeys.map((pubkey) => ['p', pubkey]),
       ...relatedEventsTags,
-      [CommunityIdentifierTag.tagName, conversationId],
+      [ConversationIdentifier.tagName, conversationId],
       if (groupImageTag != null) groupImageTag,
       if (referencePostTag != null) referencePostTag,
       ['b', currentUserMasterPubkey!],
@@ -315,7 +315,7 @@ class SendE2eeChatMessageService {
     required EventSigner signer,
     required List<List<String>> tags,
     String? previousId,
-    int kind = PrivateDirectMessageEntity.kind,
+    int kind = ImmutablePrivateDirectMessageEntity.kind,
   }) async {
     final createdAt = DateTime.now().toUtc();
 
@@ -402,7 +402,7 @@ class SendE2eeChatMessageService {
     await sendMessage(
       mediaFiles: mediaFiles,
       content: messageEvent.content,
-      conversationId: entity.data.uuid,
+      conversationId: entity.data.conversationId,
       failedEventMessageId: messageEvent.id,
       participantsMasterPubkeys: entity.allPubkeys,
       failedParticipantsMasterPubkeys: failedParticipantsMasterPubkeys,

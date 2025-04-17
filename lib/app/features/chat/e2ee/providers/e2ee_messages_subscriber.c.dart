@@ -5,7 +5,7 @@ import 'dart:async';
 import 'package:collection/collection.dart';
 import 'package:ion/app/exceptions/exceptions.dart';
 import 'package:ion/app/features/auth/providers/auth_provider.c.dart';
-import 'package:ion/app/features/chat/community/models/entities/tags/community_identifier_tag.c.dart';
+import 'package:ion/app/features/chat/community/models/entities/tags/conversation_identifier.c.dart';
 import 'package:ion/app/features/chat/e2ee/model/entities/private_direct_message_data.c.dart';
 import 'package:ion/app/features/chat/e2ee/model/entities/private_message_reaction_data.c.dart';
 import 'package:ion/app/features/chat/e2ee/providers/send_e2ee_message_provider.c.dart';
@@ -42,7 +42,7 @@ class E2eeMessagesSubscriber extends _$E2eeMessagesSubscriber {
 
     final latestEventMessageDate = await ref
         .watch(conversationEventMessageDaoProvider)
-        .getLatestEventMessageDate(PrivateDirectMessageEntity.kind);
+        .getLatestEventMessageDate(ImmutablePrivateDirectMessageEntity.kind);
 
     final userChatRelays = await ref.watch(userChatRelaysProvider(masterPubkey).future);
 
@@ -57,7 +57,7 @@ class E2eeMessagesSubscriber extends _$E2eeMessagesSubscriber {
       tags: {
         '#k': [
           DeletionRequest.kind.toString(),
-          PrivateDirectMessageEntity.kind.toString(),
+          ImmutablePrivateDirectMessageEntity.kind.toString(),
           PrivateMessageReactionEntity.kind.toString(),
           [GenericRepostEntity.kind.toString(), ModifiablePostEntity.kind.toString()],
         ],
@@ -100,7 +100,7 @@ class E2eeMessagesSubscriber extends _$E2eeMessagesSubscriber {
       if (rumor != null) {
         if (rumor.kind != DeletionRequest.kind &&
             rumor.kind != GenericRepostEntity.kind &&
-            (rumor.tags.any((tag) => tag[0] == CommunityIdentifierTag.tagName) ||
+            (rumor.tags.any((tag) => tag[0] == ConversationIdentifier.tagName) ||
                 rumor.kind == PrivateMessageReactionEntity.kind)) {
           // Try to get kind 14 event id from related event tag or use the rumor id
           final kind14EventId = rumor.kind == PrivateMessageReactionEntity.kind
@@ -117,7 +117,7 @@ class E2eeMessagesSubscriber extends _$E2eeMessagesSubscriber {
           }
 
           // Only for kind 14
-          if (rumor.kind == PrivateDirectMessageEntity.kind) {
+          if (rumor.kind == ImmutablePrivateDirectMessageEntity.kind) {
             // Add conversation if that doesn't exist
             await ref.watch(conversationDaoProvider).add([rumor]);
             // Add message if that doesn't exist
@@ -180,7 +180,7 @@ class E2eeMessagesSubscriber extends _$E2eeMessagesSubscriber {
               .toList();
 
           final deleteConversationIds = rumor.tags
-              .where((tags) => tags[0] == CommunityIdentifierTag.tagName)
+              .where((tags) => tags[0] == ConversationIdentifier.tagName)
               .map((tag) => tag.elementAtOrNull(1))
               .nonNulls
               .toList();
@@ -191,7 +191,7 @@ class E2eeMessagesSubscriber extends _$E2eeMessagesSubscriber {
               deleteRequest: rumor,
               conversationIds: deleteConversationIds,
             );
-          } else if (deleteEventKind == PrivateDirectMessageEntity.kind.toString()) {
+          } else if (deleteEventKind == ImmutablePrivateDirectMessageEntity.kind.toString()) {
             if (deleteEventIds.isNotEmpty) {
               await conversationMessageDao.removeMessages(
                 ref: ref,

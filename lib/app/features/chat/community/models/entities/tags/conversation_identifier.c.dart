@@ -3,17 +3,17 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:ion/app/exceptions/exceptions.dart';
 
-part 'community_identifier_tag.c.freezed.dart';
+part 'conversation_identifier.c.freezed.dart';
 
 @freezed
-class CommunityIdentifierTag with _$CommunityIdentifierTag {
-  const factory CommunityIdentifierTag({
+class ConversationIdentifier with _$ConversationIdentifier {
+  const factory ConversationIdentifier({
     required String value,
-  }) = _CommunityIdentifierTag;
+  }) = _ConversationIdentifier;
 
-  const CommunityIdentifierTag._();
+  const ConversationIdentifier._();
 
-  factory CommunityIdentifierTag.fromTag(List<String> tag) {
+  factory ConversationIdentifier.fromTag(List<String> tag) {
     if (tag[0] != tagName) {
       throw IncorrectEventTagNameException(actual: tag[0], expected: tagName);
     }
@@ -21,7 +21,7 @@ class CommunityIdentifierTag with _$CommunityIdentifierTag {
       throw IncorrectEventTagException(tag: tag.toString());
     }
 
-    return CommunityIdentifierTag(value: tag[1]);
+    return ConversationIdentifier(value: tag[1]);
   }
 
   static const String tagName = 'h';
