@@ -32,7 +32,6 @@ void main() {
       await subscription.cancel();
     });
 
-    /// helper
     StreamSubscription<List<TestModel>> listen() =>
         operationManager.stream.listen((event) => emissions.add(List.of(event)));
 
