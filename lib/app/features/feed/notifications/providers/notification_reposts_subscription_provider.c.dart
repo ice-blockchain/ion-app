@@ -24,8 +24,6 @@ Future<void> notificationRepostsSubscription(Ref ref) async {
     throw UserMasterPubkeyNotFoundException();
   }
 
-  final lastCreatedAt = await commentsRepository.lastCreatedAt(CommentIonNotificationType.repost);
-
   final requestFilter = RequestFilter(
     kinds: const [GenericRepostEntity.kind],
     tags: {
@@ -42,14 +40,9 @@ Future<void> notificationRepostsSubscription(Ref ref) async {
         commentsRepository.save(entity);
       }
     },
-    lastEventDateBuilder: (pivotDate) async {
-      if (pivotDate == null) {
-        return lastCreatedAt;
-      }
-
-      return commentsRepository.firstCreatedAt(CommentIonNotificationType.repost, after: pivotDate);
-    },
-    newPivotDate: lastCreatedAt,
+    maxCreatedAtBuilder: () => commentsRepository.lastCreatedAt(CommentIonNotificationType.repost),
+    minCreatedAtBuilder: (since) =>
+        commentsRepository.firstCreatedAt(CommentIonNotificationType.repost, after: since),
   );
 
   final requestMessage = RequestMessage()..addFilter(requestFilter);

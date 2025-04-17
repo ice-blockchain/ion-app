@@ -31,6 +31,15 @@ class TransactionsDao extends DatabaseAccessor<WalletsDatabase> with _$Transacti
         .getSingleOrNull();
   }
 
+  Future<DateTime?> getFirstCreatedAt({DateTime? after}) async {
+    final firstCreatedAt = transactionsTable.createdAtInRelay.min();
+    final query = selectOnly(transactionsTable)..addColumns([firstCreatedAt]);
+    if (after != null) {
+      query.where(transactionsTable.createdAtInRelay.isBiggerThanValue(after));
+    }
+    return query.map((row) => row.read(firstCreatedAt)).getSingleOrNull();
+  }
+
   /// Returns true if there were changes in the database
   Future<bool> save(List<Transaction> transactions) {
     return transaction(() async {
