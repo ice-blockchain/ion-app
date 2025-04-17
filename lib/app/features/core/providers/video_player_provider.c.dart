@@ -88,7 +88,9 @@ class VideoController extends _$VideoController {
       }
     } catch (error, stackTrace) {
       if (controller.dataSourceType == DataSourceType.network) {
-        await ref.read(iONConnectMediaUrlFallbackProvider.notifier).failed(params.sourcePath);
+        await ref
+            .read(iONConnectMediaUrlFallbackProvider.notifier)
+            .generateFallback(params.sourcePath);
       }
       Logger.log(
         'Error during video controller initialisation for source: ${params.sourcePath}',

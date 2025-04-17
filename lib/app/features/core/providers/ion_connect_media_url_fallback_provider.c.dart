@@ -16,7 +16,7 @@ class IONConnectMediaUrlFallback extends _$IONConnectMediaUrlFallback {
   @override
   Map<String, String> build() => {};
 
-  Future<void> failed(String mediaUrl) async {
+  Future<void> generateFallback(String mediaUrl) async {
     if (!isNetworkUrl(mediaUrl) || state.containsKey(mediaUrl)) {
       return;
     }
