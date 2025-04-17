@@ -2,182 +2,120 @@ import 'dart:async';
 import 'dart:collection';
 import 'dart:math';
 
-import 'package:ion/app/features/optimistic_ui/operation.c.dart';
+import 'package:ion/app/features/optimistic_ui/optimistic_model.dart';
+import 'package:ion/app/features/optimistic_ui/optimistic_operation.c.dart';
 import 'package:uuid/uuid.dart';
 
-/// Interface for models that can be used with optimistic operations.
-///
-/// Any model that wants to use optimistic operations must implement this interface
-/// to ensure it has a unique identifier.
-abstract class OptimisticModel {
-  String get optimisticId;
-}
+typedef SyncCallback<T extends OptimisticModel> = Future<T> Function(
+  T previous,
+  T optimistic,
+);
 
-/// Manages optimistic operations for a specific model type.
-///
-/// This class handles queuing, processing, and reverting operations while maintaining
-/// a local state that can be optimistically updated before backend synchronization.
+typedef ErrorCallback = Future<bool> Function(String message, Object error);
+
 class OptimisticOperationManager<T extends OptimisticModel> {
   OptimisticOperationManager({
     required this.syncCallback,
     required this.onError,
-  })  : _stateController = StreamController<List<T>>.broadcast(),
-        _currentState = [],
-        _pendingOperations = Queue<OptimisticOperation<T>>();
+    this.maxRetries = 3,
+  })  : _state = [],
+        _pending = Queue<OptimisticOperation<T>>();
 
-  /// Callback function to synchronize changes with the backend.
-  final Future<void> Function(T previousState, T newState) syncCallback;
+  final SyncCallback<T> syncCallback;
+  final ErrorCallback onError;
+  final int maxRetries;
 
-  /// Callback function that handles errors and determines retry behavior.
-  ///
-  /// Returns a boolean indicating whether the operation should be retried:
-  /// - true: The operation will be retried with exponential backoff
-  /// - false: The operation will be marked as failed and local state will be reverted
-  final Future<bool> Function(String message, dynamic error) onError;
+  final _controller = StreamController<List<T>>.broadcast();
+  Stream<List<T>> get stream => _controller.stream;
 
-  final StreamController<List<T>> _stateController;
-  final List<T> _currentState;
-  final Queue<OptimisticOperation<T>> _pendingOperations;
-  bool _isSyncing = false;
+  final List<T> _state;
+  final Queue<OptimisticOperation<T>> _pending;
+  bool _busy = false;
 
-  /// Stream of the current state that UI can listen to for updates.
-  Stream<List<T>> get stateStream => _stateController.stream;
-
-  /// Initializes the manager with an initial state.
-  ///
-  /// This method should be called before performing any operations.
-  ///
-  /// [initialState] - The initial list of models to start with
-  void initialize(List<T> initialState) {
-    _currentState
+  void initialize(List<T> initial) {
+    _state
       ..clear()
-      ..addAll(initialState);
-    _stateController.add(_currentState);
+      ..addAll(initial);
+    _controller.add(List.unmodifiable(_state));
   }
 
-  /// Performs an optimistic operation on the model.
-  ///
-  /// Updates the local state immediately and queues the operation for backend sync.
-  ///
-  /// Parameters:
-  /// - [previousState]: The current state of the model before the operation
-  /// - [newState]: The desired state of the model after the operation
-  Future<void> performOperation({
-    required T previousState,
-    required T newState,
+  Future<void> perform({
+    required T previous,
+    required T optimistic,
   }) async {
-    final operation = OptimisticOperation<T>(
-      id: const Uuid().v4(),
-      type: T.toString(),
-      previousState: previousState,
-      newState: newState,
-      timestamp: DateTime.now(),
+    // coalesce — remove previous operations with the same id
+    _pending.removeWhere(
+      (op) => op.previousState.optimisticId == previous.optimisticId,
     );
 
-    if (!_currentState.any((item) => item.optimisticId == previousState.optimisticId)) {
-      _currentState.add(newState);
+    final op = OptimisticOperation<T>(
+      id: const Uuid().v4(),
+      type: T.toString(),
+      previousState: previous,
+      optimisticState: optimistic,
+    );
+
+    _applyLocal(op);
+    _pending.add(op);
+
+    if (!_busy) await _next();
+  }
+
+  void dispose() => _controller.close();
+
+  void _applyLocal(OptimisticOperation<T> op) {
+    final idx = _state.indexWhere((e) => e.optimisticId == op.previousState.optimisticId);
+    if (idx == -1) {
+      _state.add(op.optimisticState);
     } else {
-      _applyLocalUpdate(operation);
+      _state[idx] = op.optimisticState;
     }
-
-    _pendingOperations.add(operation);
-    _stateController.add(_currentState);
-
-    if (!_isSyncing) {
-      await _processNextOperation();
-    }
+    _controller.add(List.unmodifiable(_state));
   }
 
-  /// Applies an operation's changes to the local state.
-  void _applyLocalUpdate(OptimisticOperation<T> operation) {
-    final index = _currentState
-        .indexWhere((item) => item.optimisticId == operation.previousState.optimisticId);
-    if (index != -1) {
-      _currentState[index] = operation.newState;
-    }
-  }
+  Future<void> _next() async {
+    if (_pending.isEmpty) return;
+    _busy = true;
 
-  /// Processes the next operation in the queue.
-  ///
-  /// Attempts to sync with backend and handles retry logic based on user-defined criteria.
-  Future<void> _processNextOperation() async {
-    if (_pendingOperations.isEmpty || _isSyncing) return;
-
-    _isSyncing = true;
-    var operation = _pendingOperations.first;
+    var op = _pending.removeFirst();
 
     try {
-      operation = operation.copyWith(
-        status: OperationStatus.processing,
-        retryCount: operation.retryCount + 1,
-      );
+      op = op.copyWith(status: OperationStatus.processing);
+      final actual = await syncCallback(op.previousState, op.optimisticState);
 
-      await syncCallback(operation.previousState, operation.newState);
+      // compare UI state
+      final idx = _state.indexWhere((e) => e.optimisticId == actual.optimisticId);
+      final matches = idx != -1 && _state[idx].equals(actual);
 
-      operation = operation.copyWith(status: OperationStatus.completed);
-      _pendingOperations.removeFirst();
-
-      _isSyncing = false;
+      if (!matches) {
+        await perform(previous: _state[idx], optimistic: actual);
+      }
     } catch (e) {
-      _isSyncing = false;
-
-      final shouldRetry = await onError('Failed to sync Operation ${operation.id}', e);
-
-      if (shouldRetry && operation.retryCount < 3) {
-        await Future<void>.delayed(
-          Duration(seconds: _calculateBackoff(operation.retryCount)),
-          _processNextOperation,
+      final retry = await onError('Sync failed (${op.id})', e);
+      if (retry && op.retryCount < maxRetries) {
+        final wait = Duration(seconds: pow(2, op.retryCount).toInt());
+        await Future<void>.delayed(wait);
+        // add only one copy with incremented counter
+        _pending.addFirst(
+          op.copyWith(
+            retryCount: op.retryCount + 1,
+            status: OperationStatus.pending,
+          ),
         );
       } else {
-        operation = operation.copyWith(status: OperationStatus.failed);
-        _revertDependentOperations(operation);
+        _rollback(op);
       }
+    } finally {
+      _busy = false;
+      await _next(); // process the next element
     }
-
-    await _processNextOperation();
   }
 
-  /// Calculates the exponential backoff time for retries.
-  ///
-  /// [retryCount] - The number of retry attempts so far
-  /// Returns the number of seconds to wait before the next retry
-  int _calculateBackoff(int retryCount) {
-    return pow(2, retryCount).toInt();
-  }
-
-  /// Reverts all operations that depend on a failed operation.
-  ///
-  /// This ensures data consistency by rolling back any operations that
-  /// were based on the failed operation's state.
-  void _revertDependentOperations(OptimisticOperation<T> failedOperation) {
-    final dependentOps = _pendingOperations
-        .where((op) => op.previousState.optimisticId == failedOperation.newState.optimisticId)
-        .toList();
-
-    for (final op in dependentOps) {
-      _pendingOperations.remove(op);
-
-      final index =
-          _currentState.indexWhere((item) => item.optimisticId == op.newState.optimisticId);
-      if (index != -1) {
-        _currentState[index] = op.previousState;
-      }
+  void _rollback(OptimisticOperation<T> op) {
+    final idx = _state.indexWhere((e) => e.optimisticId == op.optimisticState.optimisticId);
+    if (idx != -1) {
+      _state[idx] = op.previousState;
+      _controller.add(List.unmodifiable(_state));
     }
-
-    final index = _currentState
-        .indexWhere((item) => item.optimisticId == failedOperation.newState.optimisticId);
-
-    if (index != -1) {
-      _currentState[index] = failedOperation.previousState;
-    }
-
-    _stateController.add(_currentState);
-  }
-
-  /// Closes the state stream controller.
-  ///
-  /// Should be called when the manager is no longer needed to prevent memory leaks.
-  void dispose() {
-    _stateController.close();
   }
 }
