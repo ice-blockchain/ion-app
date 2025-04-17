@@ -10,7 +10,7 @@ import 'package:uuid/uuid.dart';
 /// Any model that wants to use optimistic operations must implement this interface
 /// to ensure it has a unique identifier.
 abstract class OptimisticModel {
-  String get id;
+  String get optimisticId;
 }
 
 /// Manages optimistic operations for a specific model type.
@@ -74,7 +74,7 @@ class OptimisticOperationManager<T extends OptimisticModel> {
       timestamp: DateTime.now(),
     );
 
-    if (!_currentState.any((item) => item.id == previousState.id)) {
+    if (!_currentState.any((item) => item.optimisticId == previousState.optimisticId)) {
       _currentState.add(newState);
     } else {
       _applyLocalUpdate(operation);
@@ -90,7 +90,8 @@ class OptimisticOperationManager<T extends OptimisticModel> {
 
   /// Applies an operation's changes to the local state.
   void _applyLocalUpdate(OptimisticOperation<T> operation) {
-    final index = _currentState.indexWhere((item) => item.id == operation.previousState.id);
+    final index = _currentState
+        .indexWhere((item) => item.optimisticId == operation.previousState.optimisticId);
     if (index != -1) {
       _currentState[index] = operation.newState;
     }
@@ -123,7 +124,7 @@ class OptimisticOperationManager<T extends OptimisticModel> {
       final shouldRetry = await onError('Failed to sync Operation ${operation.id}', e);
 
       if (shouldRetry && operation.retryCount < 3) {
-        await Future.delayed(
+        await Future<void>.delayed(
           Duration(seconds: _calculateBackoff(operation.retryCount)),
           _processNextOperation,
         );
@@ -150,19 +151,21 @@ class OptimisticOperationManager<T extends OptimisticModel> {
   /// were based on the failed operation's state.
   void _revertDependentOperations(OptimisticOperation<T> failedOperation) {
     final dependentOps = _pendingOperations
-        .where((op) => op.previousState.id == failedOperation.newState.id)
+        .where((op) => op.previousState.optimisticId == failedOperation.newState.optimisticId)
         .toList();
 
     for (final op in dependentOps) {
       _pendingOperations.remove(op);
 
-      final index = _currentState.indexWhere((item) => item.id == op.newState.id);
+      final index =
+          _currentState.indexWhere((item) => item.optimisticId == op.newState.optimisticId);
       if (index != -1) {
         _currentState[index] = op.previousState;
       }
     }
 
-    final index = _currentState.indexWhere((item) => item.id == failedOperation.newState.id);
+    final index = _currentState
+        .indexWhere((item) => item.optimisticId == failedOperation.newState.optimisticId);
 
     if (index != -1) {
       _currentState[index] = failedOperation.previousState;
