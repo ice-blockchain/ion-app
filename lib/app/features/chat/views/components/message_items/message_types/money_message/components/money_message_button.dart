@@ -15,8 +15,6 @@ import 'package:ion/app/features/wallets/providers/send_asset_form_provider.c.da
 import 'package:ion/app/features/wallets/providers/wallet_view_data_provider.c.dart';
 import 'package:ion/app/router/app_routes.c.dart';
 
-final _defaultMinimumSize = Size(150.0.s, 32.0.s);
-
 class MoneyMessageButton extends StatelessWidget {
   const MoneyMessageButton({
     required this.isMe,
@@ -33,14 +31,16 @@ class MoneyMessageButton extends StatelessWidget {
   final bool isPaid;
   final FundsRequestEntity? request;
 
+  static Size get _defaultMinimumSize => Size(150.0.s, 32.0.s);
+
   @override
   Widget build(BuildContext context) {
     if (isPaid) {
-      return const ViewTransactionButton();
+      return const _ViewTransactionButton();
     } else if (isMe && messageType == MoneyMessageType.requested) {
-      return CancelMoneyRequestButton(eventId: eventId);
+      return _CancelMoneyRequestButton(eventId: eventId);
     } else if (!isMe && messageType == MoneyMessageType.requested) {
-      return SendMoneyButton(eventId: eventId, request: request);
+      return _SendMoneyButton(eventId: eventId, request: request);
     } else {
       // Default case - shouldn't happen with proper conditions
       throw ArgumentError('No appropriate button for the given parameters');
@@ -48,10 +48,9 @@ class MoneyMessageButton extends StatelessWidget {
   }
 }
 
-class CancelMoneyRequestButton extends ConsumerWidget {
-  const CancelMoneyRequestButton({
+class _CancelMoneyRequestButton extends ConsumerWidget {
+  const _CancelMoneyRequestButton({
     required this.eventId,
-    super.key,
   });
 
   final String eventId;
@@ -61,7 +60,7 @@ class CancelMoneyRequestButton extends ConsumerWidget {
     return Button.compact(
       type: ButtonType.outlined,
       backgroundColor: context.theme.appColors.tertararyBackground,
-      minimumSize: _defaultMinimumSize,
+      minimumSize: MoneyMessageButton._defaultMinimumSize,
       label: Text(
         context.i18n.button_cancel,
         style: context.theme.appTextThemes.caption2.copyWith(
@@ -75,11 +74,10 @@ class CancelMoneyRequestButton extends ConsumerWidget {
   }
 }
 
-class SendMoneyButton extends ConsumerWidget {
-  const SendMoneyButton({
+class _SendMoneyButton extends ConsumerWidget {
+  const _SendMoneyButton({
     required this.eventId,
     required this.request,
-    super.key,
   });
 
   final String eventId;
@@ -92,7 +90,7 @@ class SendMoneyButton extends ConsumerWidget {
     return Button.compact(
       type: ButtonType.outlined,
       backgroundColor: context.theme.appColors.darkBlue,
-      minimumSize: _defaultMinimumSize,
+      minimumSize: MoneyMessageButton._defaultMinimumSize,
       label: Text(
         context.i18n.button_send,
         style: context.theme.appTextThemes.caption2.copyWith(
@@ -163,17 +161,15 @@ class SendMoneyButton extends ConsumerWidget {
   }
 }
 
-class ViewTransactionButton extends ConsumerWidget {
-  const ViewTransactionButton({
-    super.key,
-  });
+class _ViewTransactionButton extends ConsumerWidget {
+  const _ViewTransactionButton();
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     return Button.compact(
       backgroundColor: context.theme.appColors.darkBlue,
       tintColor: context.theme.appColors.darkBlue,
-      minimumSize: _defaultMinimumSize,
+      minimumSize: MoneyMessageButton._defaultMinimumSize,
       label: Text(
         context.i18n.chat_money_received_button,
         style: context.theme.appTextThemes.caption2.copyWith(

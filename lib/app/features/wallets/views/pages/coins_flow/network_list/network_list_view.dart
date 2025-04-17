@@ -77,7 +77,7 @@ class NetworkListView extends ConsumerWidget {
       switch (type) {
         case NetworkListViewType.send:
           final state = ref.read(sendAssetFormControllerProvider);
-          final isNetworkValid = await validateNetwork(ref, state.contactPubkey, network);
+          final isNetworkValid = await checkWalletExists(ref, state.contactPubkey, network);
 
           if (!isNetworkValid) {
             return;
@@ -92,7 +92,7 @@ class NetworkListView extends ConsumerWidget {
           unawaited(ShareAddressRoute().push<void>(context));
         case NetworkListViewType.request:
           final form = ref.read(requestCoinsFormControllerProvider);
-          final isNetworkValid = await validateNetwork(ref, form.contactPubkey, network);
+          final isNetworkValid = await checkWalletExists(ref, form.contactPubkey, network);
 
           if (!isNetworkValid) {
             return;

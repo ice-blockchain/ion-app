@@ -7,11 +7,12 @@ import 'package:ion/app/features/user/providers/user_metadata_provider.c.dart';
 import 'package:ion/app/features/wallets/model/network_data.c.dart';
 import 'package:ion/app/features/wallets/views/pages/contact_without_wallet_error_modal.dart';
 
-Future<bool> validateNetwork(
+Future<bool> checkWalletExists(
   WidgetRef ref,
   String? pubkey,
-  NetworkData network,
-) async {
+  NetworkData network, {
+  bool showError = true,
+}) async {
   if (pubkey == null) {
     return true;
   }
@@ -20,7 +21,7 @@ Future<bool> validateNetwork(
   final walletsMap = user?.data.wallets ?? {};
 
   final hasProperWallet = walletsMap[network.id] != null;
-  if (!hasProperWallet && ref.context.mounted) {
+  if (!hasProperWallet && ref.context.mounted && showError) {
     unawaited(
       showContactWithoutWalletError(ref.context, user: user!, network: network),
     );
