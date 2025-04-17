@@ -21,45 +21,45 @@ class TestModel implements OptimisticModel {
 }
 
 void main() {
-  group('OptimisticOperationManager – extended coverage', () {
-    late OptimisticOperationManager<TestModel> mgr;
+  group('OptimisticOperationManager', () {
+    late OptimisticOperationManager<TestModel> operationManager;
     late List<List<TestModel>> emissions;
-    late StreamSubscription<List<TestModel>> sub;
+    late StreamSubscription<List<TestModel>> subscription;
 
     setUp(() => emissions = []);
 
     tearDown(() async {
-      await sub.cancel();
+      await subscription.cancel();
     });
 
     /// helper
     StreamSubscription<List<TestModel>> listen() =>
-        mgr.stream.listen((e) => emissions.add(List.of(e)));
+        operationManager.stream.listen((event) => emissions.add(List.of(event)));
 
     test('optimistic emission happens before syncCallback completes', () async {
       final optimisticEmitted = Completer<void>();
 
-      mgr = OptimisticOperationManager<TestModel>(
-        syncCallback: (p, o) async {
+      operationManager = OptimisticOperationManager<TestModel>(
+        syncCallback: (previous, optimistic) async {
           // Wait until UI publishes the optimistic state
           await optimisticEmitted.future;
-          return o;
+          return optimistic;
         },
         onError: (_, __) async => false,
       );
 
-      sub = listen();
-      mgr.initialize([TestModel('1', 'A')]);
+      subscription = listen();
+      operationManager.initialize([TestModel('1', 'A')]);
 
       // Complete the completer when we get the second emission (optimistic)
-      sub.onData((state) {
+      subscription.onData((state) {
         emissions.add(List.of(state));
         if (emissions.length == 2 && !optimisticEmitted.isCompleted) {
           optimisticEmitted.complete();
         }
       });
 
-      await mgr.perform(
+      await operationManager.perform(
         previous: TestModel('1', 'A'),
         optimistic: TestModel('1', 'B'),
       );
@@ -73,19 +73,19 @@ void main() {
 
     test('server stale triggers exactly one follow‑up sync', () async {
       var attempts = 0;
-      mgr = OptimisticOperationManager<TestModel>(
-        syncCallback: (p, o) async {
+      operationManager = OptimisticOperationManager<TestModel>(
+        syncCallback: (previous, optimistic) async {
           attempts++;
           // server is outdated – returns B when UI moved to C
-          return TestModel(o.optimisticId, 'B');
+          return TestModel(optimistic.optimisticId, 'B');
         },
         onError: (_, __) async => false,
       );
 
-      sub = listen();
-      mgr.initialize([TestModel('1', 'A')]);
+      subscription = listen();
+      operationManager.initialize([TestModel('1', 'A')]);
 
-      await mgr.perform(
+      await operationManager.perform(
         previous: TestModel('1', 'A'),
         optimistic: TestModel('1', 'C'),
       );
@@ -98,7 +98,7 @@ void main() {
 
     test('maxRetries limits attempts and rolls back state', () async {
       var attempts = 0;
-      mgr = OptimisticOperationManager<TestModel>(
+      operationManager = OptimisticOperationManager<TestModel>(
         maxRetries: 2,
         syncCallback: (_, __) async {
           attempts++;
@@ -107,11 +107,11 @@ void main() {
         onError: (_, __) async => true, // always try to retry
       );
 
-      sub = listen();
+      subscription = listen();
       final initial = TestModel('1', 'A');
-      mgr.initialize([initial]);
+      operationManager.initialize([initial]);
 
-      await mgr.perform(
+      await operationManager.perform(
         previous: initial,
         optimistic: TestModel('1', 'B'),
       );
@@ -129,25 +129,25 @@ void main() {
 
     test('parallel operations on different ids resolve correctly', () async {
       var attempts = 0;
-      mgr = OptimisticOperationManager<TestModel>(
-        syncCallback: (p, o) async {
+      operationManager = OptimisticOperationManager<TestModel>(
+        syncCallback: (previous, optimistic) async {
           attempts++;
-          return o;
+          return optimistic;
         },
         onError: (_, __) async => false,
       );
 
-      sub = listen();
-      mgr.initialize([
+      subscription = listen();
+      operationManager.initialize([
         TestModel('1', 'A'),
         TestModel('2', 'X'),
       ]);
 
-      await mgr.perform(
+      await operationManager.perform(
         previous: TestModel('1', 'A'),
         optimistic: TestModel('1', 'B'),
       );
-      await mgr.perform(
+      await operationManager.perform(
         previous: TestModel('2', 'X'),
         optimistic: TestModel('2', 'Y'),
       );
@@ -156,30 +156,30 @@ void main() {
 
       final state = emissions.last;
       expect(
-        state.firstWhere((e) => e.optimisticId == '1').value,
+        state.firstWhere((element) => element.optimisticId == '1').value,
         equals('B'),
       );
       expect(
-        state.firstWhere((e) => e.optimisticId == '2').value,
+        state.firstWhere((element) => element.optimisticId == '2').value,
         equals('Y'),
       );
       expect(attempts, equals(2));
     });
 
     test('dispose closes stream and prevents further emissions', () async {
-      mgr = OptimisticOperationManager<TestModel>(
-        syncCallback: (p, o) async => o,
+      operationManager = OptimisticOperationManager<TestModel>(
+        syncCallback: (previous, optimistic) async => optimistic,
         onError: (_, __) async => false,
       );
 
-      sub = listen();
-      mgr
+      subscription = listen();
+      operationManager
         ..initialize([TestModel('1', 'A')])
         ..dispose();
 
       expect(
         () async {
-          await mgr.perform(
+          await operationManager.perform(
             previous: TestModel('1', 'A'),
             optimistic: TestModel('1', 'B'),
           );

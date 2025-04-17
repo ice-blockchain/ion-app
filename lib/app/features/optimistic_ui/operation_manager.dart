@@ -51,30 +51,32 @@ class OptimisticOperationManager<T extends OptimisticModel> {
   }) async {
     // coalesce — remove previous operations with the same id
     _pending.removeWhere(
-      (op) => op.previousState.optimisticId == previous.optimisticId,
+      (operation) => operation.previousState.optimisticId == previous.optimisticId,
     );
 
-    final op = OptimisticOperation<T>(
+    final optimisticOperation = OptimisticOperation<T>(
       id: const Uuid().v4(),
       type: T.toString(),
       previousState: previous,
       optimisticState: optimistic,
     );
 
-    _applyLocal(op);
-    _pending.add(op);
+    _applyLocal(optimisticOperation);
+    _pending.add(optimisticOperation);
 
     if (!_busy) await _next();
   }
 
   void dispose() => _controller.close();
 
-  void _applyLocal(OptimisticOperation<T> op) {
-    final idx = _state.indexWhere((e) => e.optimisticId == op.previousState.optimisticId);
-    if (idx == -1) {
-      _state.add(op.optimisticState);
+  void _applyLocal(OptimisticOperation<T> optimisticOperation) {
+    final stateIndex = _state.indexWhere(
+      (model) => model.optimisticId == optimisticOperation.previousState.optimisticId,
+    );
+    if (stateIndex == -1) {
+      _state.add(optimisticOperation.optimisticState);
     } else {
-      _state[idx] = op.optimisticState;
+      _state[stateIndex] = optimisticOperation.optimisticState;
     }
     _controller.add(List.unmodifiable(_state));
   }
@@ -83,33 +85,37 @@ class OptimisticOperationManager<T extends OptimisticModel> {
     if (_pending.isEmpty) return;
     _busy = true;
 
-    var op = _pending.removeFirst();
+    var optimisticOperation = _pending.removeFirst();
 
     try {
-      op = op.copyWith(status: OperationStatus.processing);
-      final actual = await syncCallback(op.previousState, op.optimisticState);
+      optimisticOperation = optimisticOperation.copyWith(status: OperationStatus.processing);
+      final backendState = await syncCallback(
+        optimisticOperation.previousState,
+        optimisticOperation.optimisticState,
+      );
 
       // compare UI state
-      final idx = _state.indexWhere((e) => e.optimisticId == actual.optimisticId);
-      final matches = idx != -1 && _state[idx].equals(actual);
+      final stateIndex =
+          _state.indexWhere((model) => model.optimisticId == backendState.optimisticId);
+      final isStateMatching = stateIndex != -1 && _state[stateIndex].equals(backendState);
 
-      if (!matches) {
-        await perform(previous: _state[idx], optimistic: actual);
+      if (!isStateMatching) {
+        await perform(previous: _state[stateIndex], optimistic: backendState);
       }
-    } catch (e) {
-      final retry = await onError('Sync failed (${op.id})', e);
-      if (retry && op.retryCount < maxRetries) {
-        final wait = Duration(seconds: pow(2, op.retryCount).toInt());
-        await Future<void>.delayed(wait);
+    } catch (error) {
+      final shouldRetry = await onError('Sync failed (${optimisticOperation.id})', error);
+      if (shouldRetry && optimisticOperation.retryCount < maxRetries) {
+        final retryDelay = Duration(seconds: pow(2, optimisticOperation.retryCount).toInt());
+        await Future<void>.delayed(retryDelay);
         // add only one copy with incremented counter
         _pending.addFirst(
-          op.copyWith(
-            retryCount: op.retryCount + 1,
+          optimisticOperation.copyWith(
+            retryCount: optimisticOperation.retryCount + 1,
             status: OperationStatus.pending,
           ),
         );
       } else {
-        _rollback(op);
+        _rollback(optimisticOperation);
       }
     } finally {
       _busy = false;
@@ -117,10 +123,12 @@ class OptimisticOperationManager<T extends OptimisticModel> {
     }
   }
 
-  void _rollback(OptimisticOperation<T> op) {
-    final idx = _state.indexWhere((e) => e.optimisticId == op.optimisticState.optimisticId);
-    if (idx != -1) {
-      _state[idx] = op.previousState;
+  void _rollback(OptimisticOperation<T> optimisticOperation) {
+    final stateIndex = _state.indexWhere(
+      (model) => model.optimisticId == optimisticOperation.optimisticState.optimisticId,
+    );
+    if (stateIndex != -1) {
+      _state[stateIndex] = optimisticOperation.previousState;
       _controller.add(List.unmodifiable(_state));
     }
   }
