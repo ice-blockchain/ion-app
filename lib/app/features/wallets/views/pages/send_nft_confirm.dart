@@ -66,7 +66,7 @@ class SendNftConfirmPage extends ConsumerWidget {
                   SizedBox(height: 12.0.s),
                   ListItem.textWithIcon(
                     title: Text(locale.wallet_title),
-                    value: formData.wallet.name,
+                    value: formData.walletView!.name,
                     icon: Assets.svg.walletWalletblue.icon(
                       size: ScreenSideOffset.defaultSmallMargin,
                     ),

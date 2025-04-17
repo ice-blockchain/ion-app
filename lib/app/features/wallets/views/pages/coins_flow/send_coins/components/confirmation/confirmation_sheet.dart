@@ -104,7 +104,7 @@ class ConfirmationSheet extends ConsumerWidget {
                   if (formData.senderWallet?.address case final String address)
                     ListItem.textWithIcon(
                       title: Text(locale.wallet_title),
-                      value: formData.wallet.name,
+                      value: formData.walletView!.name,
                       icon: Assets.svg.walletWalletblue.icon(
                         size: ScreenSideOffset.defaultSmallMargin,
                       ),

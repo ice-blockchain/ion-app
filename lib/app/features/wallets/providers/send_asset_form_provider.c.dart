@@ -11,6 +11,7 @@ import 'package:ion/app/features/wallets/model/crypto_asset_to_send_data.c.dart'
 import 'package:ion/app/features/wallets/model/network_data.c.dart';
 import 'package:ion/app/features/wallets/model/network_fee_option.c.dart';
 import 'package:ion/app/features/wallets/model/send_asset_form_data.c.dart';
+import 'package:ion/app/features/wallets/model/wallet_view_data.c.dart';
 import 'package:ion/app/features/wallets/providers/connected_crypto_wallets_provider.c.dart';
 import 'package:ion/app/features/wallets/providers/network_fee_provider.c.dart';
 import 'package:ion/app/features/wallets/providers/wallet_view_data_provider.c.dart';
@@ -23,19 +24,18 @@ part 'send_asset_form_provider.c.g.dart';
 class SendAssetFormController extends _$SendAssetFormController {
   @override
   SendAssetFormData build() {
-    final walletView = ref.watch(currentWalletViewDataProvider).requireValue;
     return SendAssetFormData(
-      wallet: walletView,
       arrivalDateTime: DateTime.now(),
       receiverAddress: '',
       assetData: const CryptoAssetToSendData.notInitialized(),
     );
   }
 
-  void setCoin(CoinsGroup coin) {
+  Future<void> setCoin(CoinsGroup coin, [WalletViewData? walletView]) async {
     state = state.copyWith(
       assetData: CryptoAssetToSendData.coin(coinsGroup: coin),
       senderWallet: null,
+      walletView: walletView ?? await ref.read(currentWalletViewDataProvider.future),
       networkFeeOptions: [],
       selectedNetworkFeeOption: null,
     );
@@ -62,7 +62,9 @@ class SendAssetFormController extends _$SendAssetFormController {
   }
 
   Future<void> setNetwork(NetworkData network) async {
-    final wallets = await ref.read(currentWalletViewCryptoWalletsProvider.future);
+    final wallets = await ref.read(
+      walletViewCryptoWalletsProvider(walletViewId: state.walletView?.id).future,
+    );
 
     // Reset current information about network
     state = state.copyWith(

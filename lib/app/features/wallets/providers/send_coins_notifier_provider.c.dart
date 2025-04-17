@@ -102,7 +102,7 @@ class SendCoinsNotifier extends _$SendCoinsNotifier {
           rawAmount: result.requestBody['amount'].toString(),
         ),
         nativeCoin: nativeCoin,
-        walletViewName: form.wallet.name,
+        walletViewName: form.walletView!.name,
         senderAddress: senderWallet.address!,
         receiverAddress: form.receiverAddress,
         participantPubkey: form.contactPubkey,
