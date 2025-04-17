@@ -1,6 +1,7 @@
 // SPDX-License-Identifier: ice License 1.0
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/auth/views/components/user_data_inputs/general_user_data_input.dart';
 import 'package:ion/app/features/user/model/user_metadata.c.dart';
@@ -33,8 +34,12 @@ class WebsiteInput extends StatelessWidget {
         ),
       ),
       prefixIconAssetName: Assets.svg.iconArticleLink,
+      keyboardType: TextInputType.url,
       labelText: context.i18n.profile_website,
       initialValue: initialValue,
+      inputFormatters: [
+        FilteringTextInputFormatter.deny(RegExp(r'\s')),
+      ],
       validator: (String? value) {
         if (Validators.isEmpty(value)) return null;
         if (Validators.isInvalidUrl(value)) {
