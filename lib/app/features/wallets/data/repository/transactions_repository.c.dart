@@ -101,8 +101,8 @@ class TransactionsRepository {
   ) =>
       _transactionsDao.watchBroadcastedTransfersByCoins(coinIds);
 
-  Future<List<TransactionData>> getBroadcastedTransfers() =>
-      _transactionsDao.getBroadcastedTransfers();
+  Future<List<TransactionData>> getBroadcastedTransfers({String? walletAddress}) =>
+      _transactionsDao.getBroadcastedTransfers(walletAddress: walletAddress);
 
   Future<List<TransactionData>> getTransactions({
     required List<String> coinIds,
@@ -119,6 +119,17 @@ class TransactionsRepository {
       networkId: network?.id,
     );
   }
+
+  Future<WalletTransferRequests> loadTransfers(
+    String walletId, {
+    int? pageSize,
+    String? pageToken,
+  }) =>
+      _ionIdentityClient.wallets.getWalletTransferRequests(
+        walletId,
+        pageSize: pageSize,
+        pageToken: pageToken,
+      );
 
   Future<TransactionsPage> loadCoinTransactions(
     String walletId, {

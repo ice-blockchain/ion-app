@@ -41,13 +41,37 @@ class TransactionsDao extends DatabaseAccessor<WalletsDatabase> with _$Transacti
       final existingMap = {for (final e in existing) e.txHash: e};
 
       final newTransactions = transactions.where((t) => !existingMap.containsKey(t.txHash));
-      final updatedTransactions = transactions.where((t) {
+      final toInsert = transactions.map((toInsertRaw) {
+        final existing = existingMap[toInsertRaw.txHash];
+
+        if (existing == null) return toInsertRaw;
+
+        // We don't need to update next fields after initialization
+        return toInsertRaw.copyWith(
+          id: Value(existing.id ?? toInsertRaw.id),
+          fee: Value(existing.fee ?? toInsertRaw.fee),
+          dateRequested: Value(existing.dateRequested ?? toInsertRaw.dateRequested),
+          dateConfirmed: Value(existing.dateConfirmed ?? toInsertRaw.dateConfirmed),
+          createdAtInRelay: Value(existing.createdAtInRelay ?? toInsertRaw.createdAtInRelay),
+          userPubkey: Value(existing.userPubkey ?? toInsertRaw.userPubkey),
+          transferredAmount: Value(
+            existing.transferredAmount ?? toInsertRaw.transferredAmount,
+          ),
+          transferredAmountUsd: Value(
+            existing.transferredAmountUsd ?? toInsertRaw.transferredAmountUsd,
+          ),
+          balanceBeforeTransfer: Value(
+            existing.balanceBeforeTransfer ?? toInsertRaw.balanceBeforeTransfer,
+          ),
+        );
+      });
+      final updatedTransactions = toInsert.where((t) {
         final existing = existingMap[t.txHash];
         return existing != null && existing != t;
-      });
+      }).toList();
 
       await batch((batch) {
-        batch.insertAllOnConflictUpdate(transactionsTable, transactions);
+        batch.insertAllOnConflictUpdate(transactionsTable, toInsert);
       });
 
       return newTransactions.isNotEmpty || updatedTransactions.isNotEmpty;
@@ -120,17 +144,22 @@ class TransactionsDao extends DatabaseAccessor<WalletsDatabase> with _$Transacti
     }).get();
   }
 
-  Future<List<TransactionData>> getBroadcastedTransfers() {
+  Future<List<TransactionData>> getBroadcastedTransfers({String? walletAddress}) {
     final transactionCoinAlias = alias(coinsTable, 'transactionCoin');
     final nativeCoinAlias = alias(coinsTable, 'nativeCoin');
 
     final query = (select(transactionsTable)
-          ..where(
-            (tbl) =>
-                tbl.type.equals(TransactionType.send.value) &
+          ..where((tbl) {
+            var expr = tbl.type.equals(TransactionType.send.value) &
                 tbl.id.isNotNull() &
-                (tbl.status.isNull() | tbl.status.equals(TransactionStatus.broadcasted.toJson())),
-          ))
+                (tbl.status.isNull() | tbl.status.equals(TransactionStatus.broadcasted.toJson()));
+
+            if (walletAddress != null) {
+              expr = expr & tbl.senderWalletAddress.equals(walletAddress);
+            }
+
+            return expr;
+          }))
         .join([
       leftOuterJoin(
         networksTable,

@@ -2,6 +2,7 @@
 
 import 'dart:async';
 
+import 'package:collection/collection.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/features/core/providers/wallets_provider.c.dart';
 import 'package:ion/app/features/wallets/data/repository/crypto_wallets_repository.c.dart';
@@ -9,6 +10,7 @@ import 'package:ion/app/features/wallets/data/repository/networks_repository.c.d
 import 'package:ion/app/features/wallets/data/repository/transactions_repository.c.dart';
 import 'package:ion/app/features/wallets/model/network_data.c.dart';
 import 'package:ion/app/features/wallets/model/transaction_data.c.dart';
+import 'package:ion/app/features/wallets/model/transaction_status.c.dart';
 import 'package:ion/app/services/logger/logger.dart';
 import 'package:ion_identity_client/ion_identity.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
@@ -44,80 +46,154 @@ class SyncTransactionsService {
     final networks = await _networksRepository.getAllAsMap();
     await _userWallets.map((wallet) async {
       final network = networks[wallet.network];
-      return await _cryptoWalletsRepository.isHistoryLoadedForWallet(walletId: wallet.id)
-          ? _syncTransactionsByPages(wallet, network)
-          : _loadAllTransactions(wallet, network);
+      final isHistoryLoaded =
+          await _cryptoWalletsRepository.isHistoryLoadedForWallet(walletId: wallet.id);
+
+      if (isHistoryLoaded) {
+        await _syncTransactions(wallet, network);
+      } else {
+        await _loadAllTransactions(wallet, network);
+      }
     }).wait;
   }
 
-  Future<void> _syncTransactionsByPages(Wallet wallet, NetworkData? network) async {
-    if (!_canRequestHistory(network)) {
-      return;
+  Future<void> _syncTransactions(Wallet wallet, NetworkData? network) async {
+    if (network == null) return;
+
+    var wasHistorySyncSuccessful = false;
+
+    if (network.isIonHistorySupported) {
+      wasHistorySyncSuccessful = await _loadTransactions(wallet, isFullLoad: false);
     }
 
-    String? nextPageToken = '';
-
-    try {
-      while (nextPageToken != null) {
-        final result = await _transactionsRepository.loadCoinTransactions(
-          wallet.id,
-          pageToken: nextPageToken.isEmpty ? null : nextPageToken,
-        );
-
-        nextPageToken = result.nextPageToken;
-
-        if (result.transactions.isNotEmpty) {
-          final wereAnyUpdates =
-              await _transactionsRepository.saveTransactions(result.transactions);
-          if (!wereAnyUpdates) nextPageToken = null;
-        }
-      }
-    } catch (ex, stacktrace) {
-      Logger.error(
-        ex,
-        stackTrace: stacktrace,
-        message: 'Failed to sync wallet(${wallet.id}) history by pages',
-      );
+    if (!wasHistorySyncSuccessful) {
+      await _updateBroadcastedTransfers(wallet);
     }
   }
 
   Future<void> _loadAllTransactions(Wallet wallet, NetworkData? network) async {
-    String? nextPageToken = '';
-    final transactions = <TransactionData>[];
-
-    if (!_canRequestHistory(network)) {
+    if (network == null) {
       await _cryptoWalletsRepository.save(wallet: wallet, isHistoryLoaded: true);
       return;
     }
+
+    var wasHistorySyncSuccessful = false;
+
+    if (network.isIonHistorySupported) {
+      wasHistorySyncSuccessful = await _loadTransactions(wallet, isFullLoad: true);
+    }
+
+    if (!wasHistorySyncSuccessful) {
+      await _updateBroadcastedTransfers(wallet);
+    }
+
+    await _cryptoWalletsRepository.save(wallet: wallet, isHistoryLoaded: true);
+  }
+
+  // Return true if the load was successful
+  Future<bool> _loadTransactions(Wallet wallet, {required bool isFullLoad}) async {
+    String? nextPageToken = '';
+    final transactions = <TransactionData>[];
 
     try {
       while (nextPageToken != null) {
         final result = await _transactionsRepository.loadCoinTransactions(
           wallet.id,
-          pageSize: 500,
+          pageSize: isFullLoad ? 500 : null,
           pageToken: nextPageToken.isEmpty ? null : nextPageToken,
         );
 
         nextPageToken = result.nextPageToken;
 
         if (result.transactions.isNotEmpty) {
-          transactions.addAll(result.transactions);
+          if (isFullLoad) {
+            transactions.addAll(result.transactions);
+          } else {
+            final updated = await _transactionsRepository.saveTransactions(result.transactions);
+            // The first page of history is the same, as we have in DB.
+            // We can stop loading synchronization.
+            if (!updated || nextPageToken == null) {
+              return true;
+            }
+          }
         }
       }
 
-      if (transactions.isNotEmpty) {
+      if (isFullLoad && transactions.isNotEmpty) {
         await _transactionsRepository.saveTransactions(transactions);
       }
 
-      await _cryptoWalletsRepository.save(wallet: wallet, isHistoryLoaded: true);
+      return true;
     } catch (ex, stacktrace) {
       Logger.error(
         ex,
         stackTrace: stacktrace,
-        message: 'Failed to load all transactions of the wallet(${wallet.id})',
+        message:
+            'Failed to ${isFullLoad ? 'load all' : 'sync'} transactions of the wallet(${wallet.id})',
       );
     }
+
+    return false;
   }
 
-  bool _canRequestHistory(NetworkData? network) => network != null && network.isIonHistorySupported;
+  /// We cannot sync transactions for the tier 2 networks,
+  /// but we still can update status for transfers in these networks.
+  Future<void> _updateBroadcastedTransfers(Wallet wallet) async {
+    String? nextPageToken = '';
+
+    final broadcastedTransfers =
+        await _transactionsRepository.getBroadcastedTransfers(walletAddress: wallet.address);
+
+    if (broadcastedTransfers.isEmpty) {
+      return;
+    }
+
+    final updatedTransfers = <TransactionData>[];
+
+    try {
+      while (nextPageToken != null) {
+        final result = await _transactionsRepository.loadTransfers(
+          wallet.id,
+          pageToken: nextPageToken.isEmpty ? null : nextPageToken,
+        );
+
+        nextPageToken = result.nextPageToken;
+
+        final filtered =
+            result.items.where((e) => e.txHash != null && e.requestBody is CoinTransferRequestBody);
+
+        for (final transfer in filtered) {
+          // Find the transfer that matches the transaction in the DB
+          final transferTransaction =
+              broadcastedTransfers.firstWhereOrNull((t) => t.txHash == transfer.txHash);
+
+          // Update status for this transaction and remove it from broadcasted transfers list
+          if (transferTransaction != null) {
+            updatedTransfers.add(
+              transferTransaction.copyWith(
+                status: TransactionStatus.fromJson(transfer.status),
+                dateConfirmed: transfer.dateConfirmed,
+              ),
+            );
+            broadcastedTransfers.remove(transferTransaction);
+          }
+        }
+
+        // Since list of transfers to update is empty, we can stop sync
+        if (broadcastedTransfers.isEmpty) {
+          nextPageToken = null;
+        }
+      }
+    } catch (ex, stacktrace) {
+      Logger.error(
+        ex,
+        stackTrace: stacktrace,
+        message: 'Failed to load transfers of the wallet(${wallet.id})',
+      );
+    }
+
+    if (updatedTransfers.isNotEmpty) {
+      await _transactionsRepository.saveTransactions(updatedTransfers);
+    }
+  }
 }
