@@ -4,6 +4,8 @@ import 'dart:async';
 
 import 'package:ion/app/features/ion_connect/ion_connect.dart';
 import 'package:ion/app/features/ion_connect/model/ion_connect_entity.dart';
+import 'package:ion/app/features/ion_connect/providers/ion_connect_cache.c.dart';
+import 'package:ion/app/features/ion_connect/providers/ion_connect_event_parser.c.dart';
 import 'package:ion/app/features/ion_connect/providers/ion_connect_notifier.c.dart';
 import 'package:ion/app/services/storage/local_storage.c.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
@@ -18,72 +20,175 @@ class EntitiesSyncerNotifier extends _$EntitiesSyncerNotifier {
   Future<void> syncEntities({
     required List<RequestFilter> requestFilters,
     required void Function(IonConnectEntity entity) saveCallback,
-    required Future<DateTime?> Function(DateTime? pivotDate) lastEventDateBuilder,
-    required DateTime? newPivotDate,
+    required Future<DateTime?> Function() maxCreatedAtBuilder,
+    required Future<DateTime?> Function(DateTime? since) minCreatedAtBuilder,
     int limit = 100,
+  }) async {
+    await _completePreviousSync(
+      requestFilters: requestFilters,
+      saveCallback: (eventMessage) {
+        final entity = _parseAndCache(eventMessage);
+        saveCallback(entity);
+      },
+      minCreatedAtBuilder: minCreatedAtBuilder,
+      maxCreatedAtBuilder: maxCreatedAtBuilder,
+      limit: limit,
+    );
+
+    await _syncNewEvents(
+      requestFilters: requestFilters,
+      saveCallback: (eventMessage) {
+        final entity = _parseAndCache(eventMessage);
+        saveCallback(entity);
+      },
+      maxCreatedAtBuilder: maxCreatedAtBuilder,
+      limit: limit,
+    );
+
+    // Sync complete, save new pivot date
+    final maxCreatedAt = await maxCreatedAtBuilder();
+    if (maxCreatedAt != null) {
+      await ref.read(localStorageProvider).setString(state, maxCreatedAt.toIso8601String());
+    }
+  }
+
+  Future<void> syncEvents({
+    required List<RequestFilter> requestFilters,
+    required void Function(EventMessage eventMessage) saveCallback,
+    required Future<DateTime?> Function() maxCreatedAtBuilder,
+    required Future<DateTime?> Function(DateTime? since) minCreatedAtBuilder,
+    int limit = 100,
+    Duration overlap = const Duration(seconds: 2),
+  }) async {
+    await _completePreviousSync(
+      requestFilters: requestFilters,
+      saveCallback: saveCallback,
+      minCreatedAtBuilder: minCreatedAtBuilder,
+      maxCreatedAtBuilder: maxCreatedAtBuilder,
+      limit: limit,
+      overlap: overlap,
+    );
+
+    await _syncNewEvents(
+      requestFilters: requestFilters,
+      saveCallback: saveCallback,
+      maxCreatedAtBuilder: maxCreatedAtBuilder,
+      limit: limit,
+      overlap: overlap,
+    );
+
+    // Sync complete, save new pivot date
+    final maxCreatedAt = await maxCreatedAtBuilder();
+    if (maxCreatedAt != null) {
+      await ref.read(localStorageProvider).setString(state, maxCreatedAt.toIso8601String());
+    }
+  }
+
+  Future<void> _completePreviousSync({
+    required List<RequestFilter> requestFilters,
+    required void Function(EventMessage eventMessage) saveCallback,
+    required Future<DateTime?> Function(DateTime? since) minCreatedAtBuilder,
+    required Future<DateTime?> Function() maxCreatedAtBuilder,
+    int limit = 100,
+    Duration overlap = const Duration(seconds: 2),
   }) async {
     final pivotDateString = ref.read(localStorageProvider).getString(state);
     final pivotDate = pivotDateString != null ? DateTime.tryParse(pivotDateString) : null;
 
-    final lastEventDate = await lastEventDateBuilder(pivotDate);
-
-    // If there is no pivot, fetch since the youngest event date
-    final sinceDate = pivotDate ?? lastEventDate;
-    final sinceDateOverlapped = sinceDate?.subtract(const Duration(seconds: 2));
-
-    // If there is no pivot means no sync was done before, so fetch until now
-    final untilDate =
-        (pivotDate != null ? lastEventDate : DateTime.now())?.add(const Duration(seconds: 2));
-
-    // If pivot is null means new sync is starting, save the last event date as pivot
-    if (pivotDate == null && lastEventDate != null) {
-      await ref.read(localStorageProvider).setString(state, lastEventDate.toIso8601String());
+    final minCreatedAt = await minCreatedAtBuilder(pivotDate);
+    if (minCreatedAt == null) {
+      // No events to sync before, save new pivot
+      final maxCreatedAt = await maxCreatedAtBuilder();
+      if (maxCreatedAt != null) {
+        await ref.read(localStorageProvider).setString(state, maxCreatedAt.toIso8601String());
+      }
+      return;
     }
+
+    final untilDateOverlapped = minCreatedAt.add(overlap);
+    final pivotDateOverlapped = pivotDate?.subtract(overlap);
 
     final requestMessage = RequestMessage();
     for (final filter in requestFilters) {
       requestMessage.addFilter(
         filter.copyWith(
-          until: () => untilDate,
+          until: () => untilDateOverlapped,
+          since: () => pivotDateOverlapped,
+          limit: () => limit,
+        ),
+      );
+    }
+
+    await _fetchEvents(
+      requestMessage: requestMessage,
+      saveCallback: saveCallback,
+      sinceDate: pivotDate,
+      limit: limit,
+    );
+
+    // Sync complete, save new pivot date
+    final maxCreatedAt = await maxCreatedAtBuilder();
+    if (maxCreatedAt != null) {
+      await ref.read(localStorageProvider).setString(state, maxCreatedAt.toIso8601String());
+    }
+  }
+
+  Future<void> _syncNewEvents({
+    required List<RequestFilter> requestFilters,
+    required void Function(EventMessage eventMessage) saveCallback,
+    required Future<DateTime?> Function() maxCreatedAtBuilder,
+    int limit = 100,
+    Duration overlap = const Duration(seconds: 2),
+  }) async {
+    final pivotDateString = ref.read(localStorageProvider).getString(state);
+    final pivotDate = pivotDateString != null ? DateTime.tryParse(pivotDateString) : null;
+
+    final sinceDate = pivotDate;
+    final sinceDateOverlapped = sinceDate?.subtract(overlap);
+
+    final untilDateOverlapped = DateTime.now().add(overlap);
+
+    final requestMessage = RequestMessage();
+    for (final filter in requestFilters) {
+      requestMessage.addFilter(
+        filter.copyWith(
+          until: () => untilDateOverlapped,
           since: () => sinceDateOverlapped,
           limit: () => limit,
         ),
       );
     }
 
-    return _fetchEntities(
+    return _fetchEvents(
       requestMessage: requestMessage,
       saveCallback: saveCallback,
       sinceDate: sinceDate,
-      newPivotDate: newPivotDate,
+      limit: limit,
     );
   }
 
-  Future<void> _fetchEntities({
+  Future<void> _fetchEvents({
     required RequestMessage requestMessage,
-    required void Function(IonConnectEntity entity) saveCallback,
+    required void Function(EventMessage eventMessage) saveCallback,
     required DateTime? sinceDate,
-    required DateTime? newPivotDate,
+    required int limit,
   }) async {
-    final entitiesStream = ref.read(ionConnectNotifierProvider.notifier).requestEntities(
+    final eventsStream = ref.read(ionConnectNotifierProvider.notifier).requestEvents(
           requestMessage,
         );
 
     DateTime? lastEventTime;
-    await for (final entity in entitiesStream) {
-      lastEventTime = entity.createdAt;
+    var count = 0;
+    await for (final event in eventsStream) {
+      lastEventTime = event.createdAt;
       if (sinceDate == null || (lastEventTime.isAfter(sinceDate))) {
-        saveCallback(entity);
-      } else {
-        // If the entity is older than the pivot, sync is over, delete the pivot
-        await ref.read(localStorageProvider).remove(state);
-        return;
+        count++;
+        saveCallback(event);
       }
     }
 
-    if (lastEventTime == null) {
-      // Fetched all events, sync is over, delete the pivot
-      await ref.read(localStorageProvider).remove(state);
+    if (lastEventTime == null || count < limit) {
+      // No more events to sync, return
       return;
     }
 
@@ -96,11 +201,20 @@ class EntitiesSyncerNotifier extends _$EntitiesSyncerNotifier {
       );
     }
 
-    return _fetchEntities(
+    return _fetchEvents(
       requestMessage: newRequestMessage,
       saveCallback: saveCallback,
       sinceDate: sinceDate,
-      newPivotDate: newPivotDate,
+      limit: limit,
     );
+  }
+
+  IonConnectEntity _parseAndCache(EventMessage event) {
+    final parser = ref.read(eventParserProvider);
+    final entity = parser.parse(event);
+    if (entity is CacheableEntity) {
+      ref.read(ionConnectCacheProvider.notifier).cache(entity);
+    }
+    return entity;
   }
 }

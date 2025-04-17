@@ -23,8 +23,6 @@ Future<void> notificationFollowersSubscription(Ref ref) async {
     throw UserMasterPubkeyNotFoundException();
   }
 
-  final lastCreatedAt = await followersRepository.lastCreatedAt();
-
   final requestFilter = RequestFilter(
     kinds: const [FollowListEntity.kind],
     tags: {
@@ -48,14 +46,8 @@ Future<void> notificationFollowersSubscription(Ref ref) async {
         followersRepository.save(entity);
       }
     },
-    lastEventDateBuilder: (pivotDate) async {
-      if (pivotDate == null) {
-        return lastCreatedAt;
-      }
-
-      return followersRepository.firstCreatedAt(after: pivotDate);
-    },
-    newPivotDate: lastCreatedAt,
+    maxCreatedAtBuilder: followersRepository.lastCreatedAt,
+    minCreatedAtBuilder: (since) => followersRepository.firstCreatedAt(after: since),
   );
 
   final requestMessage = RequestMessage()..addFilter(requestFilter);

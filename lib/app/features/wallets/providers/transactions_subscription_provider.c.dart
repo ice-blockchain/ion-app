@@ -1,12 +1,12 @@
 // SPDX-License-Identifier: ice License 1.0
 
-import 'package:flutter_animate/flutter_animate.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/exceptions/exceptions.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/auth/providers/auth_provider.c.dart';
 import 'package:ion/app/features/auth/providers/onboarding_complete_provider.c.dart';
 import 'package:ion/app/features/ion_connect/ion_connect.dart';
+import 'package:ion/app/features/ion_connect/providers/entities_syncer_notifier.c.dart';
 import 'package:ion/app/features/ion_connect/providers/ion_connect_event_signer_provider.c.dart';
 import 'package:ion/app/features/ion_connect/providers/ion_connect_subscription_provider.c.dart';
 import 'package:ion/app/features/wallets/data/repository/request_assets_repository.c.dart';
@@ -50,53 +50,59 @@ Future<void> transactionsSubscription(Ref ref) async {
     return;
   }
 
-  final transactionLastCreatedAt = await transactionsRepository.getLastCreatedAt();
-  final requestLastCreatedAt = await requestAssetsRepository.getLastCreatedAt();
-
-  final lastCreatedAt = _getEarliestDateTime(transactionLastCreatedAt, requestLastCreatedAt);
-  final since = lastCreatedAt?.subtract(2.days);
-
-  final requestMessage = RequestMessage(
-    filters: [
-      RequestFilter(
-        kinds: const [IonConnectGiftWrapServiceImpl.kind],
-        since: since,
-        tags: {
-          '#k': [
-            FundsRequestEntity.kind.toString(),
-            WalletAssetEntity.kind.toString(),
-          ],
-          '#p': [currentPubkey],
-        },
-      ),
-    ],
+  final requestFilter = RequestFilter(
+    kinds: const [IonConnectGiftWrapServiceImpl.kind],
+    since: DateTime.now().subtract(const Duration(seconds: 2)),
+    tags: {
+      '#k': [
+        FundsRequestEntity.kind.toString(),
+        WalletAssetEntity.kind.toString(),
+      ],
+      '#p': [currentPubkey],
+    },
   );
+
+  await ref.watch(entitiesSyncerNotifierProvider('transactions').notifier).syncEvents(
+    requestFilters: [requestFilter],
+    saveCallback: (eventMessage) {
+      if (eventMessage.masterPubkey != currentPubkey) {
+        _saveEvent(
+          eventMessage: eventMessage,
+          privateKey: eventSigner.privateKey,
+          sealService: sealService,
+          giftWrapService: giftWrapService,
+          transactionsRepository: transactionsRepository,
+          requestAssetsRepository: requestAssetsRepository,
+        );
+      }
+    },
+    maxCreatedAtBuilder: () async {
+      final transactionLastCreatedAt = await transactionsRepository.getLastCreatedAt();
+      final requestLastCreatedAt = await requestAssetsRepository.getLastCreatedAt();
+      return _getEarliestDateTime(transactionLastCreatedAt, requestLastCreatedAt);
+    },
+    minCreatedAtBuilder: (since) async {
+      final transactionFirstCreatedAt = await transactionsRepository.firstCreatedAt(after: since);
+      final requestFirstCreatedAt = await requestAssetsRepository.firstCreatedAt(after: since);
+      return _getLatestDateTime(transactionFirstCreatedAt, requestFirstCreatedAt);
+    },
+    overlap: const Duration(days: 2),
+  );
+
+  final requestMessage = RequestMessage()..addFilter(requestFilter);
 
   final events = ref.watch(ionConnectEventsSubscriptionProvider(requestMessage));
 
-  final subscription = events.listen((eventMessage) async {
-    try {
-      final rumor = await _unwrapGift(
-        giftWrap: eventMessage,
-        privateKey: eventSigner.privateKey,
-        sealService: sealService,
-        giftWrapService: giftWrapService,
-      );
-
-      if (rumor != null) {
-        switch (rumor.kind) {
-          case WalletAssetEntity.kind:
-            final message = WalletAssetEntity.fromEventMessage(rumor);
-            await transactionsRepository.saveEntities([message]);
-          case FundsRequestEntity.kind:
-            final request = FundsRequestEntity.fromEventMessage(rumor);
-            await requestAssetsRepository.saveRequestAsset(request);
-        }
-      }
-    } on Exception catch (ex) {
-      Logger.error('Caught error in subscription: $ex');
-    }
-  });
+  final subscription = events.listen(
+    (eventMessage) => _saveEvent(
+      eventMessage: eventMessage,
+      privateKey: eventSigner.privateKey,
+      sealService: sealService,
+      giftWrapService: giftWrapService,
+      transactionsRepository: transactionsRepository,
+      requestAssetsRepository: requestAssetsRepository,
+    ),
+  );
 
   ref.onDispose(subscription.cancel);
 }
@@ -108,6 +114,46 @@ DateTime? _getEarliestDateTime(DateTime? first, DateTime? second) {
   if (first == null) return second;
   if (second == null) return first;
   return first.isBefore(second) ? first : second;
+}
+
+/// Returns the latest datetime between two optional datetimes.
+/// If both are null, returns null.
+/// If only one is null, returns the non-null one.
+DateTime? _getLatestDateTime(DateTime? first, DateTime? second) {
+  if (first == null) return second;
+  if (second == null) return first;
+  return first.isAfter(second) ? first : second;
+}
+
+Future<void> _saveEvent({
+  required EventMessage eventMessage,
+  required String privateKey,
+  required IonConnectSealService sealService,
+  required IonConnectGiftWrapService giftWrapService,
+  required TransactionsRepository transactionsRepository,
+  required RequestAssetsRepository requestAssetsRepository,
+}) async {
+  try {
+    final rumor = await _unwrapGift(
+      giftWrap: eventMessage,
+      privateKey: privateKey,
+      sealService: sealService,
+      giftWrapService: giftWrapService,
+    );
+
+    if (rumor != null) {
+      switch (rumor.kind) {
+        case WalletAssetEntity.kind:
+          final message = WalletAssetEntity.fromEventMessage(rumor);
+          await transactionsRepository.saveEntities([message]);
+        case FundsRequestEntity.kind:
+          final request = FundsRequestEntity.fromEventMessage(rumor);
+          await requestAssetsRepository.saveRequestAsset(request);
+      }
+    }
+  } on Exception catch (ex) {
+    Logger.error('Caught error in subscription: $ex');
+  }
 }
 
 Future<EventMessage?> _unwrapGift({

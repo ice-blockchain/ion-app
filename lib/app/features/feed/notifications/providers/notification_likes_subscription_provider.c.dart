@@ -23,8 +23,6 @@ Future<void> notificationLikesSubscription(Ref ref) async {
     throw UserMasterPubkeyNotFoundException();
   }
 
-  final lastCreatedAt = await likesRepository.lastCreatedAt();
-
   final requestFilter = RequestFilter(
     kinds: const [ReactionEntity.kind],
     tags: {
@@ -40,14 +38,8 @@ Future<void> notificationLikesSubscription(Ref ref) async {
         likesRepository.save(entity);
       }
     },
-    lastEventDateBuilder: (pivotDate) async {
-      if (pivotDate == null) {
-        return lastCreatedAt;
-      }
-
-      return likesRepository.firstCreatedAt(after: pivotDate);
-    },
-    newPivotDate: lastCreatedAt,
+    maxCreatedAtBuilder: likesRepository.lastCreatedAt,
+    minCreatedAtBuilder: (since) => likesRepository.firstCreatedAt(after: since),
   );
 
   final requestMessage = RequestMessage()..addFilter(requestFilter);
