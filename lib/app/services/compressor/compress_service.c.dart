@@ -18,8 +18,10 @@ import 'package:ion/app/services/media_service/ffmpeg_args/ffmpeg_pixel_format_a
 import 'package:ion/app/services/media_service/ffmpeg_args/ffmpeg_preset_arg.dart';
 import 'package:ion/app/services/media_service/ffmpeg_args/ffmpeg_scale_arg.dart';
 import 'package:ion/app/services/media_service/ffmpeg_args/ffmpeg_video_codec_arg.dart';
+import 'package:ion/app/services/media_service/ffmpeg_commands_config.dart';
 import 'package:ion/app/services/media_service/media_service.c.dart';
 import 'package:ion/app/services/uuid/uuid.dart';
+import 'package:ion/app/utils/image_path.dart';
 import 'package:path/path.dart' as path;
 import 'package:path_provider/path_provider.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
@@ -59,29 +61,21 @@ class CompressionService {
   }) async {
     try {
       final output = await _generateOutputPath(extension: 'mp4');
-      final args = [
-        '-i',
-        inputFile.path,
-        '-codec:v',
-        videoCodec.codec,
-        '-preset',
-        preset.value,
-        '-b:v',
-        videoBitrate.bitrate,
-        '-maxrate',
-        maxRate.bitrate,
-        '-bufsize',
-        bufSize.bitrate,
-        '-codec:a',
-        audioCodec.codec,
-        '-b:a',
-        audioBitrate.bitrate,
-        '-pix_fmt',
-        pixelFormat.name,
-        '-vf',
-        'scale=-2:${scale.resolution},fps=$fps',
-        output,
-      ];
+
+      final args = FFmpegCommands.compressVideo(
+        inputPath: inputFile.path,
+        outputPath: output,
+        videoCodec: videoCodec.codec,
+        preset: preset.value,
+        videoBitrate: videoBitrate.bitrate,
+        maxRate: maxRate.bitrate,
+        bufSize: bufSize.bitrate,
+        audioCodec: audioCodec.codec,
+        audioBitrate: audioBitrate.bitrate,
+        pixelFormat: pixelFormat.name,
+        scaleResolution: int.parse(scale.resolution),
+        fps: fps,
+      );
 
       final session = await _executeFFmpeg(args);
       final returnCode = await session.getReturnCode();
@@ -118,20 +112,29 @@ class CompressionService {
     int? width,
     int? height,
     int quality = 80,
+    bool shouldCompressGif = false,
   }) async {
     try {
       final output = await _generateOutputPath();
-      final session = await _executeFFmpeg([
-        '-i',
-        file.path,
-        '-c:v',
-        'libwebp',
-        '-vf',
-        'scale=${width ?? '-1'}:${height ?? '-1'}:force_original_aspect_ratio=decrease',
-        '-q:v',
-        quality.toString(),
-        output,
-      ]);
+
+      List<String> command;
+      if (file.mimeType == 'image/gif' && file.path.isGif && shouldCompressGif) {
+        command = FFmpegCommands.gifToAnimatedWebP(
+          inputPath: file.path,
+          outputPath: output,
+          quality: quality,
+        );
+      } else {
+        command = FFmpegCommands.imageToWebP(
+          inputPath: file.path,
+          outputPath: output,
+          quality: quality,
+          width: width,
+          height: height,
+        );
+      }
+
+      final session = await _executeFFmpeg(command);
 
       final returnCode = await session.getReturnCode();
       if (!ReturnCode.isSuccess(returnCode)) {
@@ -164,13 +167,13 @@ class CompressionService {
   Future<MediaFile> compressAudio(String inputPath) async {
     final outputPath = await _generateOutputPath(extension: 'opus');
     try {
-      final session = await _executeFFmpeg([
-        '-i',
-        inputPath,
-        '-c:a',
-        'libopus',
-        outputPath,
-      ]);
+      final session = await _executeFFmpeg(
+        FFmpegCommands.audioToOpus(
+          inputPath: inputPath,
+          outputPath: outputPath,
+        ),
+      );
+
       final returnCode = await session.getReturnCode();
       if (ReturnCode.isSuccess(returnCode)) {
         return MediaFile(
@@ -198,13 +201,13 @@ class CompressionService {
   Future<String> compressAudioToWav(String inputPath) async {
     final outputPath = await _generateOutputPath(extension: 'wav');
     try {
-      final session = await _executeFFmpeg([
-        '-i',
-        inputPath,
-        '-c:a',
-        'pcm_s16le',
-        outputPath,
-      ]);
+      final session = await _executeFFmpeg(
+        FFmpegCommands.audioToWav(
+          inputPath: inputPath,
+          outputPath: outputPath,
+        ),
+      );
+
       final returnCode = await session.getReturnCode();
       if (ReturnCode.isSuccess(returnCode)) {
         return outputPath;
@@ -235,15 +238,12 @@ class CompressionService {
       // If no external thumb was provided, extract a single frame from the video
       if (thumbPath == null) {
         final outputPath = await _generateOutputPath();
-        final session = await _executeFFmpeg([
-          '-i',
-          videoFile.path,
-          '-ss',
-          '00:00:01.000',
-          '-vframes',
-          '1',
-          outputPath,
-        ]);
+        final session = await _executeFFmpeg(
+          FFmpegCommands.extractThumbnail(
+            videoPath: videoFile.path,
+            outputPath: outputPath,
+          ),
+        );
 
         final returnCode = await session.getReturnCode();
         if (!ReturnCode.isSuccess(returnCode)) {

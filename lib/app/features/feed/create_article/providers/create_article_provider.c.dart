@@ -33,6 +33,7 @@ import 'package:ion/app/features/ion_connect/providers/ion_connect_upload_notifi
 import 'package:ion/app/services/compressor/compress_service.c.dart';
 import 'package:ion/app/services/markdown/quill.dart';
 import 'package:ion/app/services/media_service/media_service.c.dart';
+import 'package:ion/app/utils/image_path.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'create_article_provider.c.g.dart';
@@ -292,8 +293,8 @@ class CreateArticle extends _$CreateArticle {
     if (mediaIds != null && mediaIds.isNotEmpty) {
       await Future.wait(
         mediaIds.map((assetId) async {
-          final imagePath = await ref.read(assetFilePathProvider(assetId).future);
-          final (:fileMetadata, :mediaAttachment) = await _uploadImage(imagePath!);
+          final imagePath = await getOriginalAssetPath(assetId);
+          final (:fileMetadata, :mediaAttachment) = await _uploadImage(imagePath);
           uploadedUrls[assetId] = mediaAttachment.url;
           files.add(fileMetadata);
           mediaAttachments.add(mediaAttachment);
@@ -339,5 +340,29 @@ class CreateArticle extends _$CreateArticle {
           alt: FileAlt.article,
         );
     return result;
+  }
+
+  Future<String> getOriginalAssetPath(String assetId) async {
+    final assetEntity = await ref.read(assetEntityProvider(assetId).future);
+
+    if (assetEntity == null) {
+      throw AssetEntityFileNotFoundException(assetId: assetId);
+    }
+
+    final isGif = await isGifAsset(assetEntity);
+    if (isGif) {
+      final file = await assetEntity.originFile;
+      if (file == null) {
+        throw AssetEntityFileNotFoundException(assetId: assetId);
+      }
+      return file.path;
+    }
+
+    final defaultPath = await ref.read(assetFilePathProvider(assetId).future);
+    if (defaultPath == null || defaultPath.isEmpty) {
+      throw AssetEntityFileNotFoundException(assetId: assetId);
+    }
+
+    return defaultPath;
   }
 }

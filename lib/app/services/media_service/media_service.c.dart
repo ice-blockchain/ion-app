@@ -16,6 +16,7 @@ import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/gallery/providers/gallery_provider.c.dart';
 import 'package:ion/app/features/gallery/views/pages/media_picker_type.dart';
 import 'package:ion/app/services/logger/logger.dart';
+import 'package:ion/app/utils/image_path.dart';
 import 'package:path/path.dart' as p;
 import 'package:path_provider/path_provider.dart';
 import 'package:photo_manager/photo_manager.dart';
@@ -276,7 +277,10 @@ class MediaService {
         if (assetEntity == null) {
           throw AssetEntityFileNotFoundException();
         }
-        final (mimeType, file) = await (assetEntity.mimeTypeAsync, assetEntity.file).wait;
+
+        final assetFileFuture = getAssetFile(assetEntity);
+
+        final (mimeType, file) = await (assetEntity.mimeTypeAsync, assetFileFuture).wait;
         if (file == null) {
           throw AssetEntityFileNotFoundException();
         }

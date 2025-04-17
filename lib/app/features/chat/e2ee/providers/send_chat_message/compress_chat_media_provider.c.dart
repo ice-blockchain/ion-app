@@ -18,7 +18,7 @@ Raw<Future<MediaFile>> compressChatMedia(Ref ref, MediaFile mediaFile) async {
 
   switch (mediaType) {
     case MediaType.image:
-      return compressService.compressImage(mediaFile);
+      return compressService.compressImage(mediaFile, shouldCompressGif: true);
     case MediaType.video:
       return compressService.compressVideo(mediaFile);
     case MediaType.audio:
