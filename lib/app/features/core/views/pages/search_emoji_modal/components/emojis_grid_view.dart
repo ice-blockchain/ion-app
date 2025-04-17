@@ -38,8 +38,8 @@ class _EmojisGridView extends ConsumerWidget {
                       ref.read(recentEmojiReactionsProvider.notifier).addEmoji(emoji);
                       context.pop<String>(emoji);
                     },
-                    child: Text(
-                      emoji,
+                    child: TwemojiText(
+                      text: emoji,
                       style: context.theme.appTextThemes.headline1.copyWith(
                         height: 1,
                       ),
