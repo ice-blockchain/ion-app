@@ -45,11 +45,12 @@ class OptimisticOperationManager<T extends OptimisticModel> {
     _controller.add(List.unmodifiable(_state));
   }
 
+  /// Adds a new optimistic operation and triggers processing if idle.
   Future<void> perform({
     required T previous,
     required T optimistic,
   }) async {
-    // coalesce — remove previous operations with the same id
+    // Remove any pending operations for the same id to avoid conflicts.
     _pending.removeWhere(
       (operation) => operation.previousState.optimisticId == previous.optimisticId,
     );
@@ -69,6 +70,7 @@ class OptimisticOperationManager<T extends OptimisticModel> {
 
   void dispose() => _controller.close();
 
+  /// Applies the optimistic state locally and emits the updated state to the stream.
   void _applyLocal(OptimisticOperation<T> optimisticOperation) {
     final stateIndex = _state.indexWhere(
       (model) => model.optimisticId == optimisticOperation.previousState.optimisticId,
@@ -81,6 +83,8 @@ class OptimisticOperationManager<T extends OptimisticModel> {
     _controller.add(List.unmodifiable(_state));
   }
 
+  /// Schedules and processes the next optimistic operation in the queue.
+  /// Handles retries, backend sync, and triggers rollback on failure.
   Future<void> _next() async {
     if (_pending.isEmpty) return;
     _busy = true;
@@ -94,7 +98,7 @@ class OptimisticOperationManager<T extends OptimisticModel> {
         optimisticOperation.optimisticState,
       );
 
-      // compare UI state
+      // If backend state differs from UI, schedule a follow-up sync.
       final stateIndex =
           _state.indexWhere((model) => model.optimisticId == backendState.optimisticId);
       final isStateMatching = stateIndex != -1 && _state[stateIndex].equals(backendState);
@@ -103,11 +107,12 @@ class OptimisticOperationManager<T extends OptimisticModel> {
         await perform(previous: _state[stateIndex], optimistic: backendState);
       }
     } catch (error) {
+      // If error occurs, decide whether to retry or rollback.
       final shouldRetry = await onError('Sync failed (${optimisticOperation.id})', error);
       if (shouldRetry && optimisticOperation.retryCount < maxRetries) {
         final retryDelay = Duration(seconds: pow(2, optimisticOperation.retryCount).toInt());
         await Future<void>.delayed(retryDelay);
-        // add only one copy with incremented counter
+        // Re-add operation with incremented retry count.
         _pending.addFirst(
           optimisticOperation.copyWith(
             retryCount: optimisticOperation.retryCount + 1,
@@ -119,10 +124,11 @@ class OptimisticOperationManager<T extends OptimisticModel> {
       }
     } finally {
       _busy = false;
-      await _next(); // process the next element
+      await _next(); // Continue processing the queue.
     }
   }
 
+  /// Rolls back the optimistic state to the previous state in case of failure.
   void _rollback(OptimisticOperation<T> optimisticOperation) {
     final stateIndex = _state.indexWhere(
       (model) => model.optimisticId == optimisticOperation.optimisticState.optimisticId,
