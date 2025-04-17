@@ -19,10 +19,11 @@ class IonNetworkImage extends CachedNetworkImage {
     super.alignment,
     super.filterQuality,
     super.cacheManager,
+    ValueChanged<Object>? errorListener,
     Widget Function(BuildContext, String, Object)? errorWidget,
   }) : super(
           // Do not log image loading errors
-          errorListener: (_) {},
+          errorListener: errorListener ?? (_) {},
           errorWidget: errorWidget ?? (context, url, error) => const IonPlaceholder(),
         );
 }
