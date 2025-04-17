@@ -5,7 +5,6 @@ import 'dart:async';
 import 'package:ion/app/features/ion_connect/ion_connect.dart';
 import 'package:ion/app/features/ion_connect/model/action_source.c.dart';
 import 'package:ion/app/features/ion_connect/model/ion_connect_entity.dart';
-import 'package:ion/app/features/ion_connect/providers/ion_connect_cache.c.dart';
 import 'package:ion/app/features/ion_connect/providers/ion_connect_event_parser.c.dart';
 import 'package:ion/app/features/ion_connect/providers/ion_connect_notifier.c.dart';
 import 'package:ion/app/services/storage/local_storage.c.dart';
@@ -28,7 +27,7 @@ class EntitiesSyncerNotifier extends _$EntitiesSyncerNotifier {
     await _completePreviousSync(
       requestFilters: requestFilters,
       saveCallback: (eventMessage) {
-        final entity = _parseAndCache(eventMessage);
+        final entity = _parseToEntity(eventMessage);
         saveCallback(entity);
       },
       minCreatedAtBuilder: minCreatedAtBuilder,
@@ -39,18 +38,12 @@ class EntitiesSyncerNotifier extends _$EntitiesSyncerNotifier {
     await _syncNewEvents(
       requestFilters: requestFilters,
       saveCallback: (eventMessage) {
-        final entity = _parseAndCache(eventMessage);
+        final entity = _parseToEntity(eventMessage);
         saveCallback(entity);
       },
       maxCreatedAtBuilder: maxCreatedAtBuilder,
       limit: limit,
     );
-
-    // Sync complete, save new pivot date
-    final maxCreatedAt = await maxCreatedAtBuilder();
-    if (maxCreatedAt != null) {
-      await ref.read(localStorageProvider).setString(state, maxCreatedAt.toIso8601String());
-    }
   }
 
   Future<void> syncEvents({
@@ -80,12 +73,6 @@ class EntitiesSyncerNotifier extends _$EntitiesSyncerNotifier {
       limit: limit,
       overlap: overlap,
     );
-
-    // Sync complete, save new pivot date
-    final maxCreatedAt = await maxCreatedAtBuilder();
-    if (maxCreatedAt != null) {
-      await ref.read(localStorageProvider).setString(state, maxCreatedAt.toIso8601String());
-    }
   }
 
   Future<void> _completePreviousSync({
@@ -166,13 +153,19 @@ class EntitiesSyncerNotifier extends _$EntitiesSyncerNotifier {
       );
     }
 
-    return _fetchEvents(
+    await _fetchEvents(
       requestMessage: requestMessage,
       saveCallback: saveCallback,
       sinceDate: sinceDate,
       limit: limit,
       actionSource: actionSource,
     );
+
+    // Sync complete, save new pivot date
+    final maxCreatedAt = await maxCreatedAtBuilder();
+    if (maxCreatedAt != null) {
+      await ref.read(localStorageProvider).setString(state, maxCreatedAt.toIso8601String());
+    }
   }
 
   Future<void> _fetchEvents({
@@ -220,12 +213,8 @@ class EntitiesSyncerNotifier extends _$EntitiesSyncerNotifier {
     );
   }
 
-  IonConnectEntity _parseAndCache(EventMessage event) {
+  IonConnectEntity _parseToEntity(EventMessage event) {
     final parser = ref.read(eventParserProvider);
-    final entity = parser.parse(event);
-    if (entity is CacheableEntity) {
-      ref.read(ionConnectCacheProvider.notifier).cache(entity);
-    }
-    return entity;
+    return parser.parse(event);
   }
 }
