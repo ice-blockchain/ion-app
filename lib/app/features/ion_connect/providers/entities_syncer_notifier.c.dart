@@ -3,6 +3,7 @@
 import 'dart:async';
 
 import 'package:ion/app/features/ion_connect/ion_connect.dart';
+import 'package:ion/app/features/ion_connect/model/action_source.c.dart';
 import 'package:ion/app/features/ion_connect/model/ion_connect_entity.dart';
 import 'package:ion/app/features/ion_connect/providers/ion_connect_cache.c.dart';
 import 'package:ion/app/features/ion_connect/providers/ion_connect_event_parser.c.dart';
@@ -57,6 +58,7 @@ class EntitiesSyncerNotifier extends _$EntitiesSyncerNotifier {
     required void Function(EventMessage eventMessage) saveCallback,
     required Future<DateTime?> Function() maxCreatedAtBuilder,
     required Future<DateTime?> Function(DateTime? since) minCreatedAtBuilder,
+    ActionSource actionSource = const ActionSourceCurrentUser(),
     int limit = 100,
     Duration overlap = const Duration(seconds: 2),
   }) async {
@@ -65,6 +67,7 @@ class EntitiesSyncerNotifier extends _$EntitiesSyncerNotifier {
       saveCallback: saveCallback,
       minCreatedAtBuilder: minCreatedAtBuilder,
       maxCreatedAtBuilder: maxCreatedAtBuilder,
+      actionSource: actionSource,
       limit: limit,
       overlap: overlap,
     );
@@ -73,6 +76,7 @@ class EntitiesSyncerNotifier extends _$EntitiesSyncerNotifier {
       requestFilters: requestFilters,
       saveCallback: saveCallback,
       maxCreatedAtBuilder: maxCreatedAtBuilder,
+      actionSource: actionSource,
       limit: limit,
       overlap: overlap,
     );
@@ -89,6 +93,7 @@ class EntitiesSyncerNotifier extends _$EntitiesSyncerNotifier {
     required void Function(EventMessage eventMessage) saveCallback,
     required Future<DateTime?> Function(DateTime? since) minCreatedAtBuilder,
     required Future<DateTime?> Function() maxCreatedAtBuilder,
+    ActionSource actionSource = const ActionSourceCurrentUser(),
     int limit = 100,
     Duration overlap = const Duration(seconds: 2),
   }) async {
@@ -124,6 +129,7 @@ class EntitiesSyncerNotifier extends _$EntitiesSyncerNotifier {
       saveCallback: saveCallback,
       sinceDate: pivotDate,
       limit: limit,
+      actionSource: actionSource,
     );
 
     // Sync complete, save new pivot date
@@ -137,6 +143,7 @@ class EntitiesSyncerNotifier extends _$EntitiesSyncerNotifier {
     required List<RequestFilter> requestFilters,
     required void Function(EventMessage eventMessage) saveCallback,
     required Future<DateTime?> Function() maxCreatedAtBuilder,
+    ActionSource actionSource = const ActionSourceCurrentUser(),
     int limit = 100,
     Duration overlap = const Duration(seconds: 2),
   }) async {
@@ -164,6 +171,7 @@ class EntitiesSyncerNotifier extends _$EntitiesSyncerNotifier {
       saveCallback: saveCallback,
       sinceDate: sinceDate,
       limit: limit,
+      actionSource: actionSource,
     );
   }
 
@@ -172,9 +180,11 @@ class EntitiesSyncerNotifier extends _$EntitiesSyncerNotifier {
     required void Function(EventMessage eventMessage) saveCallback,
     required DateTime? sinceDate,
     required int limit,
+    required ActionSource actionSource,
   }) async {
     final eventsStream = ref.read(ionConnectNotifierProvider.notifier).requestEvents(
           requestMessage,
+          actionSource: actionSource,
         );
 
     DateTime? lastEventTime;
@@ -206,6 +216,7 @@ class EntitiesSyncerNotifier extends _$EntitiesSyncerNotifier {
       saveCallback: saveCallback,
       sinceDate: sinceDate,
       limit: limit,
+      actionSource: actionSource,
     );
   }
 

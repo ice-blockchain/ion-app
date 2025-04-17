@@ -58,4 +58,25 @@ class ConversationEventMessageDao extends DatabaseAccessor<ChatDatabase>
 
     return row?.createdAt;
   }
+
+  ///
+  /// Get the creation date of the oldest event message of a specific kind
+  /// Returns null if no messages of that kind exist
+  ///
+  Future<DateTime?> getEarliestEventMessageDate(int kind, {DateTime? after}) async {
+    final query = select(eventMessageTable)
+      ..where((t) => t.kind.equals(kind));
+
+    if (after != null) {
+      query.where((t) => t.createdAt.isBiggerThanValue(after));
+    }
+
+    query
+      ..orderBy([(t) => OrderingTerm.asc(t.createdAt)])
+      ..limit(1);
+
+    final row = await query.getSingleOrNull();
+
+    return row?.createdAt;
+  }
 }

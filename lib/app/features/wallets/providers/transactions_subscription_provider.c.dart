@@ -52,7 +52,7 @@ Future<void> transactionsSubscription(Ref ref) async {
 
   final requestFilter = RequestFilter(
     kinds: const [IonConnectGiftWrapServiceImpl.kind],
-    since: DateTime.now().subtract(const Duration(seconds: 2)),
+    since: DateTime.now().subtract(const Duration(days: 2)),
     tags: {
       '#k': [
         FundsRequestEntity.kind.toString(),
