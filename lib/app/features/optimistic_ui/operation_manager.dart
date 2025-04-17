@@ -15,6 +15,10 @@ typedef SyncCallback<T extends OptimisticModel> = Future<T> Function(
 
 typedef ErrorCallback = Future<bool> Function(String message, Object error);
 
+/// Manages optimistic UI operations and state synchronization with the backend.
+///
+/// Handles optimistic updates, retries, rollback, and error management for a list of [OptimisticModel]s.
+/// Emits state changes via a broadcast stream for UI consumption.
 class OptimisticOperationManager<T extends OptimisticModel> {
   OptimisticOperationManager({
     required this.syncCallback,
@@ -45,7 +49,7 @@ class OptimisticOperationManager<T extends OptimisticModel> {
     required T previous,
     required T optimistic,
   }) async {
-    // coalesce — remove previous operations with the same id
+    // coalesce — remove previous operations with the same id
     _pending.removeWhere(
       (op) => op.previousState.optimisticId == previous.optimisticId,
     );

@@ -7,7 +7,10 @@ part 'optimistic_operation.c.freezed.dart';
 
 enum OperationStatus { pending, processing, completed, failed }
 
-/// Universal operation record.
+/// Universal operation record for optimistic UI updates.
+///
+/// Stores the previous and optimistic states, operation type, status, and retry count.
+/// Used by the OptimisticOperationManager to manage and synchronize optimistic changes.
 @freezed
 class OptimisticOperation<T extends OptimisticModel> with _$OptimisticOperation<T> {
   const factory OptimisticOperation({
