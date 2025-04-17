@@ -50,7 +50,7 @@ class IonConnectNetworkImage extends ConsumerWidget {
       height: height,
       errorListener: (error) {
         if (ref.context.mounted) {
-          ref.read(iONConnectMediaUrlFallbackProvider.notifier).failed(imageUrl);
+          ref.read(iONConnectMediaUrlFallbackProvider.notifier).generateFallback(imageUrl);
         }
       },
     );
