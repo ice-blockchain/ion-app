@@ -6,7 +6,7 @@ import 'package:collection/collection.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:ion/app/exceptions/exceptions.dart';
 import 'package:ion/app/extensions/extensions.dart';
-import 'package:ion/app/features/chat/community/models/entities/tags/community_identifier_tag.c.dart';
+import 'package:ion/app/features/chat/community/models/entities/tags/conversation_identifier.c.dart';
 import 'package:ion/app/features/ion_connect/ion_connect.dart';
 import 'package:ion/app/features/ion_connect/model/entity_data_with_media_content.dart';
 import 'package:ion/app/features/ion_connect/model/entity_data_with_parent.dart';
@@ -119,7 +119,7 @@ class ModifiablePostData
       relatedHashtags: tags[RelatedHashtag.tagName]?.map(RelatedHashtag.fromTag).toList(),
       settings: tags[EventSetting.settingTagName]?.map(EventSetting.fromTag).toList(),
       communityId:
-          tags[CommunityIdentifierTag.tagName]?.map(CommunityIdentifierTag.fromTag).first.value,
+          tags[ConversationIdentifier.tagName]?.map(ConversationIdentifier.fromTag).first.value,
       richText:
           tags[RichText.tagName] != null ? RichText.fromTag(tags[RichText.tagName]!.first) : null,
     );
@@ -150,7 +150,7 @@ class ModifiablePostData
         if (relatedEvents != null) ...relatedEvents!.map((event) => event.toTag()),
         if (media.isNotEmpty) ...media.values.map((mediaAttachment) => mediaAttachment.toTag()),
         if (settings != null) ...settings!.map((setting) => setting.toTag()),
-        if (communityId != null) CommunityIdentifierTag(value: communityId!).toTag(),
+        if (communityId != null) ConversationIdentifier(value: communityId!).toTag(),
         if (richText != null) richText!.toTag(),
       ],
     );

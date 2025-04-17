@@ -77,7 +77,7 @@ class SendE2eeMessageService {
       signer: eventSigner!,
       kind: PrivateMessageReactionEntity.kind,
       tags: [
-        ['k', PrivateDirectMessageEntity.kind.toString()],
+        ['k', ImmutablePrivateDirectMessageEntity.kind.toString()],
         [PubkeyTag.tagName, kind14Rumor.pubkey],
         [RelatedImmutableEvent.tagName, kind14Rumor.id],
         ['b', currentUserMasterPubkey],
@@ -132,7 +132,7 @@ class SendE2eeMessageService {
       signer: eventSigner!,
       kind: PrivateMessageReactionEntity.kind,
       tags: [
-        ['k', PrivateDirectMessageEntity.kind.toString()],
+        ['k', ImmutablePrivateDirectMessageEntity.kind.toString()],
         [PubkeyTag.tagName, kind14Rumor.pubkey],
         [RelatedImmutableEvent.tagName, kind14Rumor.id],
         ['b', currentUserMasterPubkey],
@@ -182,7 +182,7 @@ class SendE2eeMessageService {
     required EventSigner signer,
     required List<List<String>> tags,
     String? previousId,
-    int kind = PrivateDirectMessageEntity.kind,
+    int kind = ImmutablePrivateDirectMessageEntity.kind,
   }) async {
     final createdAt = DateTime.now().toUtc();
 
@@ -215,7 +215,7 @@ class SendE2eeMessageService {
     required EventMessage eventMessage,
     List<String>? kinds,
   }) async {
-    final contentKinds = kinds ?? [PrivateDirectMessageEntity.kind.toString()];
+    final contentKinds = kinds ?? [ImmutablePrivateDirectMessageEntity.kind.toString()];
 
     final expirationTag = EntityExpiration(
       value: DateTime.now().add(

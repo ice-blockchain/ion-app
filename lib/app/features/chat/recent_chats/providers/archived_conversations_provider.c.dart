@@ -6,7 +6,7 @@ import 'dart:convert';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/exceptions/exceptions.dart';
 import 'package:ion/app/features/auth/providers/auth_provider.c.dart';
-import 'package:ion/app/features/chat/community/models/entities/tags/community_identifier_tag.c.dart';
+import 'package:ion/app/features/chat/community/models/entities/tags/conversation_identifier.c.dart';
 import 'package:ion/app/features/chat/model/database/chat_database.c.dart';
 import 'package:ion/app/features/feed/data/models/bookmarks/bookmarks_set.c.dart';
 import 'package:ion/app/features/feed/providers/bookmarks_notifier.c.dart';
@@ -49,7 +49,7 @@ Future<List<String>> archivedConversations(Ref ref) async {
   final encrpytedConversationCommunityIds = decryptedContent.isNotEmpty
       ? (jsonDecode(decryptedContent) as List<dynamic>)
           .map(
-            (e) => CommunityIdentifierTag.fromTag(
+            (e) => ConversationIdentifier.fromTag(
               (e as List<dynamic>).map((s) => s.toString()).toList(),
             ).value,
           )

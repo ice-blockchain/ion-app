@@ -254,7 +254,7 @@ class EncryptedGroupRecentChatTile extends HookConsumerWidget {
 
     final entity = PrivateDirectMessageData.fromEventMessage(conversation.latestMessage!);
 
-    final name = entity.relatedSubject?.value ?? '';
+    final name = entity.groupSubject?.value ?? '';
 
     final unreadMessagesCount =
         ref.watch(getUnreadMessagesCountProvider(conversation.conversationId));

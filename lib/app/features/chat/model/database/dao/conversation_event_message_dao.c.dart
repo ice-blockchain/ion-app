@@ -26,7 +26,7 @@ class ConversationEventMessageDao extends DatabaseAccessor<ChatDatabase>
   /// The chat_message mapping is only inserted if it doesn't already exist.
   Future<void> add(EventMessage event) async {
     final conversationId =
-        event.tags.firstWhere((tag) => tag[0] == CommunityIdentifierTag.tagName).lastOrNull;
+        event.tags.firstWhere((tag) => tag[0] == ConversationIdentifier.tagName).lastOrNull;
 
     if (conversationId == null) {
       return;

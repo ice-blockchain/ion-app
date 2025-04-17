@@ -6,10 +6,10 @@ import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/chat/community/models/entities/community_definition_data.c.dart';
 import 'package:ion/app/features/chat/community/models/entities/tags/community_admin_tag.c.dart';
-import 'package:ion/app/features/chat/community/models/entities/tags/community_identifier_tag.c.dart';
 import 'package:ion/app/features/chat/community/models/entities/tags/community_moderator_tag.c.dart';
 import 'package:ion/app/features/chat/community/models/entities/tags/community_openness_tag.c.dart';
 import 'package:ion/app/features/chat/community/models/entities/tags/community_visibility_tag.c.dart';
+import 'package:ion/app/features/chat/community/models/entities/tags/conversation_identifier.c.dart';
 import 'package:ion/app/features/chat/community/models/entities/tags/description_tag.c.dart';
 import 'package:ion/app/features/chat/community/models/entities/tags/name_tag.c.dart';
 import 'package:ion/app/features/ion_connect/model/event_serializable.dart';
@@ -88,7 +88,7 @@ class CommunityUpdateData with _$CommunityUpdateData implements EventSerializabl
     final tags = groupBy(eventMessage.tags, (tag) => tag[0]);
 
     return CommunityUpdateData(
-      uuid: tags[CommunityIdentifierTag.tagName]!.map(CommunityIdentifierTag.fromTag).first.value,
+      uuid: tags[ConversationIdentifier.tagName]!.map(ConversationIdentifier.fromTag).first.value,
       name: tags[NameTag.tagName]!.map(NameTag.fromTag).first.value,
       description: tags[DescriptionTag.tagName]?.map(DescriptionTag.fromTag).first.value,
       avatar: tags[MediaAttachment.tagName]?.map(MediaAttachment.fromTag).first,
@@ -119,7 +119,7 @@ class CommunityUpdateData with _$CommunityUpdateData implements EventSerializabl
       kind: CommunityUpdateEntity.kind,
       tags: [
         ...tags,
-        CommunityIdentifierTag(value: uuid).toTag(),
+        ConversationIdentifier(value: uuid).toTag(),
         NameTag(value: name).toTag(),
         if (description != null) DescriptionTag(value: description).toTag(),
         if (avatar != null) avatar!.toTag(),

@@ -5,10 +5,10 @@ import 'package:collection/collection.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/chat/community/models/entities/tags/community_admin_tag.c.dart';
-import 'package:ion/app/features/chat/community/models/entities/tags/community_identifier_tag.c.dart';
 import 'package:ion/app/features/chat/community/models/entities/tags/community_moderator_tag.c.dart';
 import 'package:ion/app/features/chat/community/models/entities/tags/community_openness_tag.c.dart';
 import 'package:ion/app/features/chat/community/models/entities/tags/community_visibility_tag.c.dart';
+import 'package:ion/app/features/chat/community/models/entities/tags/conversation_identifier.c.dart';
 import 'package:ion/app/features/chat/community/models/entities/tags/description_tag.c.dart';
 import 'package:ion/app/features/chat/community/models/entities/tags/name_tag.c.dart';
 import 'package:ion/app/features/ion_connect/model/event_serializable.dart';
@@ -104,7 +104,7 @@ class CommunityDefinitionData with _$CommunityDefinitionData implements EventSer
     final tags = groupBy(eventMessage.tags, (tag) => tag[0]);
 
     return CommunityDefinitionData(
-      uuid: tags[CommunityIdentifierTag.tagName]!.map(CommunityIdentifierTag.fromTag).first.value,
+      uuid: tags[ConversationIdentifier.tagName]!.map(ConversationIdentifier.fromTag).first.value,
       id: tags[ReplaceableEventIdentifier.tagName]!
           .map(ReplaceableEventIdentifier.fromTag)
           .first
@@ -139,7 +139,7 @@ class CommunityDefinitionData with _$CommunityDefinitionData implements EventSer
       kind: CommunityDefinitionEntity.kind,
       tags: [
         ...tags,
-        CommunityIdentifierTag(value: uuid).toTag(),
+        ConversationIdentifier(value: uuid).toTag(),
         ReplaceableEventIdentifier(value: uuid).toTag(),
         NameTag(value: name).toTag(),
         if (description != null) DescriptionTag(value: description).toTag(),

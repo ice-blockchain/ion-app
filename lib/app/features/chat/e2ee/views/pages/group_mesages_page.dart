@@ -58,7 +58,7 @@ class GroupMessagesPage extends HookConsumerWidget {
                   throw UserMasterPubkeyNotFoundException();
                 }
 
-                final privateMesssageEntity =
+                final privateMessageEntity =
                     PrivateDirectMessageData.fromEventMessage(lastMessage);
 
                 final conversationMessageManagementService =
@@ -71,9 +71,9 @@ class GroupMessagesPage extends HookConsumerWidget {
                   content: content ?? '',
                   mediaFiles: mediaFiles ?? [],
                   groupImageTag: groupImageTag,
-                  subject: privateMesssageEntity.relatedSubject?.value,
+                  subject: privateMessageEntity.groupSubject?.value,
                   participantsMasterPubkeys:
-                      privateMesssageEntity.relatedPubkeys?.map((e) => e.value).toList() ?? [],
+                      privateMessageEntity.relatedPubkeys?.map((e) => e.value).toList() ?? [],
                 );
               },
             ),
@@ -99,7 +99,7 @@ class _Header extends HookConsumerWidget {
 
     return MessagingHeader(
       imageWidget: groupImageFile != null ? Image.file(groupImageFile) : null,
-      name: entity.relatedSubject?.value ?? '',
+      name: entity.groupSubject?.value ?? '',
       subtitle: MemberCountTile(count: entity.relatedPubkeys?.length ?? 0),
       conversationId: '', //TODO: set when groups are impl
     );

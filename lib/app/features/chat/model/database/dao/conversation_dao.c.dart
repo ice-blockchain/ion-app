@@ -54,17 +54,17 @@ class ConversationDao extends DatabaseAccessor<ChatDatabase> with _$Conversation
   }
 
   String? _getCommunityIdentifier(Map<String, List<List<String>>> tags) {
-    return tags[CommunityIdentifierTag.tagName]
-        ?.map(CommunityIdentifierTag.fromTag)
+    return tags[ConversationIdentifier.tagName]
+        ?.map(ConversationIdentifier.fromTag)
         .firstOrNull
         ?.value;
   }
 
-  RelatedSubject? _getSubject(Map<String, List<List<String>>> tags) {
-    return tags[RelatedSubject.tagName]?.map(RelatedSubject.fromTag).firstOrNull;
+  GroupSubject? _getSubject(Map<String, List<List<String>>> tags) {
+    return tags[GroupSubject.tagName]?.map(GroupSubject.fromTag).firstOrNull;
   }
 
-  ConversationType _determineConversationType(int kind, RelatedSubject? subject) {
+  ConversationType _determineConversationType(int kind, GroupSubject? subject) {
     if (kind == CommunityJoinEntity.kind) {
       return ConversationType.community;
     }
@@ -173,7 +173,7 @@ class ConversationDao extends DatabaseAccessor<ChatDatabase> with _$Conversation
       ..where(conversationTable.type.equals(ConversationType.oneToOne.index))
       ..where(conversationTable.isDeleted.equals(false))
       ..where(eventMessageTable.tags.contains(receiverMasterPubkey))
-      ..where(eventMessageTable.kind.equals(PrivateDirectMessageEntity.kind))
+      ..where(eventMessageTable.kind.equals(ImmutablePrivateDirectMessageEntity.kind))
       ..orderBy([OrderingTerm.desc(eventMessageTable.createdAt)])
       ..limit(1);
 
