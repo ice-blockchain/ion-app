@@ -19,8 +19,6 @@ part 'send_nft_form_provider.c.g.dart';
 class SendNftFormController extends _$SendNftFormController {
   @override
   SendNftFormData build() {
-    final walletView = ref.watch(currentWalletViewDataProvider).requireValue;
-
     listenSelf((previous, next) {
       if (previous?.nft != next.nft) {
         _loadNetworkFeeOptions(next);
@@ -28,19 +26,19 @@ class SendNftFormController extends _$SendNftFormController {
     });
 
     return SendNftFormData(
-      wallet: walletView,
       arrivalDateTime: DateTime.now(),
       receiverAddress: '',
       nft: null,
     );
   }
 
-  void setNft(NftData nft) {
+  Future<void> setNft(NftData nft) async {
     state = state.copyWith(
       nft: nft,
       senderWallet: null,
       networkFeeOptions: [],
       selectedNetworkFeeOption: null,
+      walletView: await ref.read(currentWalletViewDataProvider.future),
     );
   }
 
@@ -65,7 +63,7 @@ class SendNftFormController extends _$SendNftFormController {
   }
 
   Future<void> _loadNetworkFeeOptions(SendNftFormData form) async {
-    final wallets = await ref.read(currentWalletViewCryptoWalletsProvider.future);
+    final wallets = await ref.read(walletViewCryptoWalletsProvider().future);
     final wallet = wallets.firstWhereOrNull(
       (wallet) => wallet.network == form.nft!.network.id,
     );

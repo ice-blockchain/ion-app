@@ -20,10 +20,14 @@ Future<List<Wallet>> connectedCryptoWallets(Ref ref) async {
   return cryptoWallets.filterByIds(walletIds);
 }
 
-/// Returns crypto wallets of the current WalletView
+/// Returns crypto wallets of the specieied WalletView. If the [walletViewId] is not provided,
+/// the current WalletView will be used.
 @riverpod
-Future<List<Wallet>> currentWalletViewCryptoWallets(Ref ref) async {
-  final walletView = await ref.watch(currentWalletViewDataProvider.future);
+Future<List<Wallet>> walletViewCryptoWallets(Ref ref, {String? walletViewId}) async {
+  final walletView = walletViewId == null
+      ? await ref.watch(currentWalletViewDataProvider.future)
+      : await ref.watch(walletViewByIdProvider(id: walletViewId).future);
+
   final cryptoWallets = await ref.watch(walletsNotifierProvider.future);
 
   final walletIds = walletView.coins.map((coin) => coin.walletId).nonNulls.toList();

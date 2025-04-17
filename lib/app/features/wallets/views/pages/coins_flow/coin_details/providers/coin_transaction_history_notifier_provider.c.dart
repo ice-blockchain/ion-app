@@ -33,7 +33,7 @@ class CoinTransactionHistoryNotifier extends _$CoinTransactionHistoryNotifier {
   @override
   CoinTransactionHistoryState? build({required String symbolGroup}) {
     _coinWalletAddresses = ref
-        .watch(currentWalletViewCryptoWalletsProvider)
+        .watch(walletViewCryptoWalletsProvider())
         .valueOrNull
         ?.map((w) => w.address)
         .nonNulls
