@@ -5,7 +5,6 @@ import 'dart:async';
 import 'package:collection/collection.dart';
 import 'package:ion/app/exceptions/exceptions.dart';
 import 'package:ion/app/features/auth/providers/auth_provider.c.dart';
-import 'package:ion/app/features/chat/community/models/entities/tags/community_identifier_tag.c.dart';
 import 'package:ion/app/features/chat/community/models/entities/tags/conversation_identifier.c.dart';
 import 'package:ion/app/features/chat/e2ee/model/entities/private_direct_message_data.c.dart';
 import 'package:ion/app/features/chat/e2ee/model/entities/private_message_reaction_data.c.dart';
@@ -94,10 +93,10 @@ class E2eeMessagesSubscriber extends _$E2eeMessagesSubscriber {
       ),
       maxCreatedAtBuilder: () => ref
           .watch(conversationEventMessageDaoProvider)
-          .getLatestEventMessageDate(PrivateDirectMessageEntity.kind),
+          .getLatestEventMessageDate(ImmutablePrivateDirectMessageEntity.kind),
       minCreatedAtBuilder: (since) => ref
           .watch(conversationEventMessageDaoProvider)
-          .getEarliestEventMessageDate(PrivateDirectMessageEntity.kind, after: since),
+          .getEarliestEventMessageDate(ImmutablePrivateDirectMessageEntity.kind, after: since),
       overlap: const Duration(days: 2),
       actionSource: const ActionSourceCurrentUserChat(),
     );
@@ -147,12 +146,12 @@ class E2eeMessagesSubscriber extends _$E2eeMessagesSubscriber {
     ConversationMessageDataDao conversationMessageStatusDao,
     ConversationMessageReactionDao conversationMessageReactionDao,
   ) async {
-    if (eventSigner.publicKey != _receiverDevicePubkey(wrap)) {
+    if (eventSigner.publicKey != _receiverDevicePubkey(eventMessage)) {
       return;
     }
 
     final rumor = await _unwrapGift(
-      giftWrap: wrap,
+      giftWrap: eventMessage,
       sealService: sealService,
       giftWrapService: giftWrapService,
       privateKey: eventSigner.privateKey,

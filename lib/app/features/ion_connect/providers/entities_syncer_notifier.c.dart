@@ -24,7 +24,9 @@ class EntitiesSyncerNotifier extends _$EntitiesSyncerNotifier {
     required void Function(IonConnectEntity entity) saveCallback,
     required Future<DateTime?> Function() maxCreatedAtBuilder,
     required Future<DateTime?> Function(DateTime? since) minCreatedAtBuilder,
+    ActionSource actionSource = const ActionSourceCurrentUser(),
     int limit = 100,
+    Duration overlap = const Duration(seconds: 2),
   }) async {
     await _completePreviousSync(
       requestFilters: requestFilters,
@@ -34,7 +36,9 @@ class EntitiesSyncerNotifier extends _$EntitiesSyncerNotifier {
       },
       minCreatedAtBuilder: minCreatedAtBuilder,
       maxCreatedAtBuilder: maxCreatedAtBuilder,
+      actionSource: actionSource,
       limit: limit,
+      overlap: overlap,
     );
 
     await _syncNewEvents(
@@ -44,7 +48,9 @@ class EntitiesSyncerNotifier extends _$EntitiesSyncerNotifier {
         saveCallback(entity);
       },
       maxCreatedAtBuilder: maxCreatedAtBuilder,
+      actionSource: actionSource,
       limit: limit,
+      overlap: overlap,
     );
   }
 
@@ -94,9 +100,9 @@ class EntitiesSyncerNotifier extends _$EntitiesSyncerNotifier {
     required void Function(EventMessage eventMessage) saveCallback,
     required Future<DateTime?> Function(DateTime? since) minCreatedAtBuilder,
     required Future<DateTime?> Function() maxCreatedAtBuilder,
-    ActionSource actionSource = const ActionSourceCurrentUser(),
-    int limit = 100,
-    Duration overlap = const Duration(seconds: 2),
+    required ActionSource actionSource,
+    required int limit,
+    required Duration overlap,
   }) async {
     final pivotDateString = ref.read(localStorageProvider).getString(state);
     final pivotDate = pivotDateString != null ? DateTime.tryParse(pivotDateString) : null;
@@ -144,9 +150,9 @@ class EntitiesSyncerNotifier extends _$EntitiesSyncerNotifier {
     required List<RequestFilter> requestFilters,
     required void Function(EventMessage eventMessage) saveCallback,
     required Future<DateTime?> Function() maxCreatedAtBuilder,
-    ActionSource actionSource = const ActionSourceCurrentUser(),
-    int limit = 100,
-    Duration overlap = const Duration(seconds: 2),
+    required ActionSource actionSource,
+    required int limit,
+    required Duration overlap,
   }) async {
     final pivotDateString = ref.read(localStorageProvider).getString(state);
     final pivotDate = pivotDateString != null ? DateTime.tryParse(pivotDateString) : null;
