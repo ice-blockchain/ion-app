@@ -344,10 +344,17 @@ class CreatePostNotifier extends _$CreatePostNotifier {
       'Uploading image: width=${file.width}, height=${file.height}, path=${file.path}',
     );
 
-    final compressedImage = await ref.read(compressServiceProvider).compressImage(
-          file,
-          shouldCompressGif: true,
-        );
+    var compressedImage = file;
+
+    // Compress image if it's not a story
+    // The stories has its own compression logic in ImageProcessorNotifier
+
+    if (createOption != CreatePostOption.story) {
+      compressedImage = await ref.read(compressServiceProvider).compressImage(
+            file,
+            shouldCompressGif: true,
+          );
+    }
 
     final uploadResult = await ref.read(ionConnectUploadNotifierProvider.notifier).upload(
           compressedImage,
