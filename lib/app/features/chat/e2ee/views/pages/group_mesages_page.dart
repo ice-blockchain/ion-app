@@ -58,8 +58,7 @@ class GroupMessagesPage extends HookConsumerWidget {
                   throw UserMasterPubkeyNotFoundException();
                 }
 
-                final privateMessageEntity =
-                    PrivateDirectMessageData.fromEventMessage(lastMessage);
+                final privateMessageEntity = PrivateDirectMessageData.fromEventMessage(lastMessage);
 
                 final conversationMessageManagementService =
                     ref.read(sendE2eeChatMessageServiceProvider);
