@@ -119,7 +119,6 @@ class WalletAssetContent {
     this.assetId,
     this.amount,
     this.amountUsd,
-    this.balance,
   });
 
   factory WalletAssetContent.fromJson(Map<String, dynamic> json) =>
@@ -138,9 +137,6 @@ class WalletAssetContent {
 
   /// the decimal value amount priced in USD at the time of the transfer; used only for coins/fungible tokens
   final String? amountUsd;
-
-  /// the current balance of the user in that coin; only for coins/fungible tokens
-  final String? balance;
 
   Map<String, dynamic> toJson() => _$WalletAssetContentToJson(this);
 }
