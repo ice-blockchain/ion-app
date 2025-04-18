@@ -18,17 +18,9 @@ class FollowCounters extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final followingProvider = ref.watch(followListProvider(pubkey));
-    final followersProvider = ref.watch(followersCountProvider(pubkey: pubkey));
-
-    final followingAvailable = followingProvider.hasValue &&
-        !followingProvider.hasError &&
-        followingProvider.value != null;
-    final followersAvailable = followersProvider.hasValue &&
-        !followersProvider.hasError &&
-        followersProvider.value != null;
-
-    final bothAvailable = followingAvailable && followersAvailable;
+    final followingNumber = ref.watch(followListProvider(pubkey)).valueOrNull?.data.list.length;
+    final followersNumber = ref.watch(followersCountProvider(pubkey: pubkey)).valueOrNull;
+    final bothAvailable = followingNumber != null && followersNumber != null;
 
     return Container(
       height: 36.0.s,
@@ -43,7 +35,7 @@ class FollowCounters extends ConsumerWidget {
             child: bothAvailable
                 ? FollowCountersCell(
                     pubkey: pubkey,
-                    usersNumber: followingProvider.value!.data.list.length,
+                    usersNumber: followingNumber,
                     followType: FollowType.following,
                   )
                 : const SizedBox.shrink(),
@@ -59,7 +51,7 @@ class FollowCounters extends ConsumerWidget {
             child: bothAvailable
                 ? FollowCountersCell(
                     pubkey: pubkey,
-                    usersNumber: followersProvider.value!,
+                    usersNumber: followersNumber,
                     followType: FollowType.followers,
                   )
                 : const SizedBox.shrink(),
