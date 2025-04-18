@@ -5,6 +5,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/components/bookmarks/bookmarks_collection_tile.dart';
 import 'package:ion/app/features/feed/providers/bookmarks_notifier.c.dart';
+import 'package:ion/app/features/feed/providers/feed_bookmarks_notifier.c.dart';
 import 'package:ion/app/features/ion_connect/model/event_reference.c.dart';
 
 class AllBookmarksTile extends ConsumerWidget {
@@ -17,8 +18,10 @@ class AllBookmarksTile extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final isBookmarked = ref.watch(isBookmarkedProvider(eventReference)).value ?? false;
-    final bookmarksAmount = ref.watch(currentUserBookmarksTotalAmountProvider).value ?? 0;
+    final isBookmarked = ref.watch(isFeedBookmarkedProvider(eventReference));
+    final allBookmarksCollectionRefs =
+        ref.watch(currentUserAllBookmarksCollectionRefsProvider).valueOrNull;
+    final bookmarksAmount = allBookmarksCollectionRefs?.length ?? 0;
 
     ref.displayErrors(bookmarksNotifierProvider);
 

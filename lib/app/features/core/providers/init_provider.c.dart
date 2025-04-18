@@ -11,7 +11,9 @@ import 'package:ion/app/features/core/permissions/providers/permissions_provider
 import 'package:ion/app/features/core/providers/feature_flags_provider.c.dart';
 import 'package:ion/app/features/core/providers/template_provider.c.dart';
 import 'package:ion/app/features/core/providers/window_manager_provider.c.dart';
+import 'package:ion/app/features/feed/providers/feed_bookmarks_notifier.c.dart';
 import 'package:ion/app/features/force_update/providers/force_update_provider.c.dart';
+import 'package:ion/app/features/ion_connect/model/event_reference.c.dart';
 import 'package:ion/app/features/user/providers/update_user_metadata_notifier.c.dart';
 import 'package:ion/app/features/user/providers/user_relays_sync_provider.c.dart';
 import 'package:ion/app/features/wallets/providers/coins_sync_provider.c.dart';
@@ -49,12 +51,23 @@ Future<void> initApp(Ref ref) async {
   ref
     ..listen(coinsSyncProvider, noop)
     ..listen(transactionsSubscriptionProvider, noop)
-    ..listen(walletsInitializerNotifierProvider, noop)
+    ..listen(
+      walletsInitializerNotifierProvider,
+      noop,
+    )
     ..listen(mainCryptoWalletsProvider, (_, __) {
       ref.read(updateUserMetadataNotifierProvider.notifier).updatePublishedWallets();
     })
     ..listen(userRelaysSyncProvider, noop)
-    ..listen(userChatRelaysSyncProvider, noop);
+    ..listen(userChatRelaysSyncProvider, noop)
+    ..listen<AsyncValue<List<ReplaceableEventReference>>>(
+      currentUserAllBookmarksCollectionRefsProvider,
+      noop,
+    )
+    ..listen<AsyncValue<List<ReplaceableEventReference>>>(
+      currentUserBookmarksCollectionsRefsProvider,
+      noop,
+    );
 
   registerTimeagoLocalesForEnum();
 }
