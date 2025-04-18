@@ -284,34 +284,43 @@ class CreatePostNotifier extends _$CreatePostNotifier {
   }
 
   List<RelatedEvent> _buildRelatedEvents(IonConnectEntity parentEntity) {
-    if (parentEntity is ArticleEntity) {
+    final parentEventReference = parentEntity.toEventReference();
+
+    final parentRelatedEvents = switch (parentEntity) {
+      ModifiablePostEntity() => parentEntity.data.relatedEvents,
+      PostEntity() => parentEntity.data.relatedEvents,
+      _ => null,
+    };
+
+    final rootParentRelatedEvent = parentRelatedEvents
+        ?.firstWhereOrNull((relatedEvent) => relatedEvent.marker == RelatedEventMarker.root);
+
+    if (parentEventReference is ReplaceableEventReference) {
       return [
+        rootParentRelatedEvent ??
+            RelatedReplaceableEvent(
+              eventReference: parentEventReference,
+              pubkey: parentEntity.masterPubkey,
+              marker: RelatedEventMarker.root,
+            ),
         RelatedReplaceableEvent(
-          eventReference: parentEntity.toEventReference(),
+          eventReference: parentEventReference,
           pubkey: parentEntity.masterPubkey,
-          marker: RelatedEventMarker.root,
+          marker: RelatedEventMarker.reply,
         ),
       ];
-    } else if (parentEntity is ModifiablePostEntity) {
-      final rootRelatedEvent = parentEntity.data.relatedEvents
-          ?.firstWhereOrNull((relatedEvent) => relatedEvent.marker == RelatedEventMarker.root);
+    } else if (parentEventReference is ImmutableEventReference) {
       return [
-        if (rootRelatedEvent != null) rootRelatedEvent,
-        RelatedReplaceableEvent(
-          eventReference: parentEntity.toEventReference(),
-          pubkey: parentEntity.masterPubkey,
-          marker: rootRelatedEvent != null ? RelatedEventMarker.reply : RelatedEventMarker.root,
-        ),
-      ];
-    } else if (parentEntity is PostEntity) {
-      final rootRelatedEvent = parentEntity.data.relatedEvents
-          ?.firstWhereOrNull((relatedEvent) => relatedEvent.marker == RelatedEventMarker.root);
-      return [
-        if (rootRelatedEvent != null) rootRelatedEvent,
+        rootParentRelatedEvent ??
+            RelatedImmutableEvent(
+              eventReference: parentEventReference,
+              pubkey: parentEntity.masterPubkey,
+              marker: RelatedEventMarker.root,
+            ),
         RelatedImmutableEvent(
-          eventReference: parentEntity.toEventReference(),
+          eventReference: parentEventReference,
           pubkey: parentEntity.masterPubkey,
-          marker: rootRelatedEvent != null ? RelatedEventMarker.reply : RelatedEventMarker.root,
+          marker: RelatedEventMarker.reply,
         ),
       ];
     } else {

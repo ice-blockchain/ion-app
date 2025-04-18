@@ -34,7 +34,7 @@ Future<void> notificationRepliesSubscription(Ref ref) async {
     search: SearchExtensions([
       TagMarkerSearchExtension(
         tagName: RelatedReplaceableEvent.tagName,
-        marker: RelatedEventMarker.root.toShortString(),
+        marker: RelatedEventMarker.reply.toShortString(),
       ),
     ]).toString(),
     since: DateTime.now().subtract(const Duration(seconds: 2)),
