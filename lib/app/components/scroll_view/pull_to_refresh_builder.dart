@@ -6,6 +6,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
+import 'package:ion/app/components/scroll_view/ion_pull_to_refresh_loading_indicator.dart';
 
 class PullToRefreshBuilder extends HookWidget {
   const PullToRefreshBuilder({
@@ -32,13 +33,21 @@ class PullToRefreshBuilder extends HookWidget {
     if (!kIsWeb && Platform.isIOS) {
       return builder(context, [
         if (sliverAppBar != null) sliverAppBar!,
-        CupertinoSliverRefreshControl(onRefresh: onRefresh),
+        CupertinoSliverRefreshControl(
+          onRefresh: _onRefresh,
+          builder: (_, refreshState, pulledExtent, refreshTriggerPullDistance, ___) =>
+              IonPullToRefreshLoadingIndicator(
+            refreshState: refreshState,
+            pulledExtent: pulledExtent,
+            refreshTriggerPullDistance: refreshTriggerPullDistance,
+          ),
+        ),
         ...slivers,
       ]);
     }
 
     return RefreshIndicator(
-      onRefresh: onRefresh,
+      onRefresh: _onRefresh,
       edgeOffset: refreshIndicatorEdgeOffset,
       child: builder(context, [
         if (sliverAppBar != null) sliverAppBar!,
@@ -46,4 +55,7 @@ class PullToRefreshBuilder extends HookWidget {
       ]),
     );
   }
+
+  // Add some minimal delay to prevent the refresh indicator from hiding too quickly
+  Future<void> _onRefresh() => (onRefresh(), Future<void>.delayed(const Duration(seconds: 1))).wait;
 }

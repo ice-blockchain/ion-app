@@ -2,6 +2,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
+import 'package:ion/app/components/progress_bar/ion_loading_indicator.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/hooks/use_on_init.dart';
 
@@ -62,7 +63,7 @@ class LoadMoreBuilder extends HookWidget {
                 SliverToBoxAdapter(
                   child: Padding(
                     padding: EdgeInsetsDirectional.only(top: 8.0.s),
-                    child: const Center(child: CircularProgressIndicator.adaptive()),
+                    child: const Center(child: IONLoadingIndicatorThemed()),
                   ),
                 ),
               ]
