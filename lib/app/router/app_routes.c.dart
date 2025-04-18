@@ -297,7 +297,7 @@ class ErrorRoute extends BaseRouteData {
   routes: [...AuthRoutes.routes],
 )
 class IntroRoute extends BaseRouteData {
-  IntroRoute() : super(child: const IntroPage());
+  IntroRoute() : super(child: const IntroPage(), type: IceRouteType.singleWithoutTransition);
 }
 
 class FeedMainModalRoute extends BaseRouteData {
