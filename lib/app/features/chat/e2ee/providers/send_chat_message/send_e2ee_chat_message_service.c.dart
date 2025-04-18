@@ -204,17 +204,22 @@ class SendE2eeChatMessageService {
       final rootRelatedEvent = entity.data.relatedEvents
           ?.firstWhereOrNull((tag) => tag.marker == RelatedEventMarker.root);
 
-      final marker = rootRelatedEvent != null ? RelatedEventMarker.reply : RelatedEventMarker.root;
+      final repliedMessageReference = ImmutableEventReference(
+        eventId: repliedMessage.id,
+        pubkey: repliedMessage.masterPubkey,
+      );
 
       return [
-        if (rootRelatedEvent != null) rootRelatedEvent,
+        rootRelatedEvent ??
+            RelatedImmutableEvent(
+              eventReference: repliedMessageReference,
+              pubkey: repliedMessage.masterPubkey,
+              marker: RelatedEventMarker.root,
+            ),
         RelatedImmutableEvent(
-          marker: marker,
+          eventReference: repliedMessageReference,
           pubkey: repliedMessage.masterPubkey,
-          eventReference: ImmutableEventReference(
-            eventId: repliedMessage.id,
-            pubkey: repliedMessage.masterPubkey,
-          ),
+          marker: RelatedEventMarker.reply,
         ),
       ];
     }
