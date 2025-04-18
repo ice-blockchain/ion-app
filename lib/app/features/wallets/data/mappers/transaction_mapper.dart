@@ -31,7 +31,6 @@ class CoinTransactionsMapper {
       userPubkey: details.participantPubkey,
       transferredAmount: coinAssetData.rawAmount,
       transferredAmountUsd: coinAssetData.amountUSD,
-      balanceBeforeTransfer: balanceBeforeTransactions,
       status: details.status.toJson(),
       dateConfirmed: details.dateConfirmed,
       dateRequested: details.dateRequested,
@@ -69,7 +68,6 @@ class CoinTransactionsMapper {
           userPubkey: entity.data.pubkey,
           transferredAmount: content.amount,
           transferredAmountUsd: double.tryParse(content.amountUsd ?? '0'),
-          balanceBeforeTransfer: entity.data.content.balance,
         );
       }).toList();
 
@@ -97,7 +95,6 @@ class CoinTransactionsMapper {
           userPubkey: transaction.userPubkey,
           transferredAmount: coinTransactionAsset?.rawAmount,
           transferredAmountUsd: coinTransactionAsset?.amountUSD,
-          balanceBeforeTransfer: coinTransactionAsset?.balanceBeforeTransaction,
         );
       }).toList();
 }

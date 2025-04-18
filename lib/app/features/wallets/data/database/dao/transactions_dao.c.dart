@@ -60,9 +60,6 @@ class TransactionsDao extends DatabaseAccessor<WalletsDatabase> with _$Transacti
           transferredAmountUsd: Value(
             existing.transferredAmountUsd ?? toInsertRaw.transferredAmountUsd,
           ),
-          balanceBeforeTransfer: Value(
-            existing.balanceBeforeTransfer ?? toInsertRaw.balanceBeforeTransfer,
-          ),
         );
       });
       final updatedTransactions = toInsert.where((t) {
@@ -199,8 +196,7 @@ class TransactionsDao extends DatabaseAccessor<WalletsDatabase> with _$Transacti
                   (tbl.status.isNull() |
                       tbl.status.equals(TransactionStatus.broadcasted.toJson())) &
                   tbl.transferredAmount.isNotNull() &
-                  tbl.transferredAmountUsd.isNotNull() &
-                  tbl.balanceBeforeTransfer.isNotNull();
+                  tbl.transferredAmountUsd.isNotNull();
             },
           ))
         .join([
@@ -264,7 +260,6 @@ class TransactionsDao extends DatabaseAccessor<WalletsDatabase> with _$Transacti
       nativeCoin: CoinData.fromDB(nativeCoin!, domainNetwork),
       cryptoAsset: CoinTransactionAsset(
         coin: transferredCoin,
-        balanceBeforeTransaction: transaction.balanceBeforeTransfer ?? '0',
         amount: parseCryptoAmount(
           transferredAmount,
           transferredCoin.decimals,
