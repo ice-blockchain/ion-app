@@ -10,6 +10,7 @@ import 'package:ion/app/features/chat/model/group_subject.c.dart';
 import 'package:ion/app/features/chat/model/message_type.dart';
 import 'package:ion/app/features/ion_connect/ion_connect.dart';
 import 'package:ion/app/features/ion_connect/model/entity_data_with_media_content.dart';
+import 'package:ion/app/features/ion_connect/model/entity_data_with_parent.dart';
 import 'package:ion/app/features/ion_connect/model/event_reference.c.dart';
 import 'package:ion/app/features/ion_connect/model/media_attachment.dart';
 import 'package:ion/app/features/ion_connect/model/quoted_event.c.dart';
@@ -106,7 +107,8 @@ class ReplaceablePrivateDirectMessageEntity
 
 // -----------------------------------------------------------------------------
 @immutable
-abstract class PrivateDirectMessageData with EntityDataWithMediaContent {
+abstract class PrivateDirectMessageData
+    with EntityDataWithMediaContent, EntityDataWithRelatedEvents {
   factory PrivateDirectMessageData.fromEventMessage(EventMessage eventMessage) {
     if (eventMessage.kind == ImmutablePrivateDirectMessageEntity.kind) {
       return ImmutablePrivateDirectMessageData.fromEventMessage(eventMessage);
@@ -131,6 +133,7 @@ abstract class PrivateDirectMessageData with EntityDataWithMediaContent {
   String? get groupImagePath;
   GroupSubject? get groupSubject;
   QuotedImmutableEvent? get quotedEvent;
+  @override
   List<RelatedEvent>? get relatedEvents;
   List<RelatedPubkey>? get relatedPubkeys;
 
@@ -169,7 +172,10 @@ extension MessageTypes on PrivateDirectMessageData {
 
 @freezed
 class ImmutablePrivateDirectMessageData
-    with _$ImmutablePrivateDirectMessageData, EntityDataWithMediaContent
+    with
+        _$ImmutablePrivateDirectMessageData,
+        EntityDataWithMediaContent,
+        EntityDataWithRelatedEvents
     implements PrivateDirectMessageData {
   const factory ImmutablePrivateDirectMessageData({
     required String content,
@@ -239,7 +245,10 @@ class ImmutablePrivateDirectMessageData
 
 @freezed
 class ReplaceablePrivateDirectMessageData
-    with _$ReplaceablePrivateDirectMessageData, EntityDataWithMediaContent
+    with
+        _$ReplaceablePrivateDirectMessageData,
+        EntityDataWithMediaContent,
+        EntityDataWithRelatedEvents
     implements PrivateDirectMessageData {
   const factory ReplaceablePrivateDirectMessageData({
     required String content,

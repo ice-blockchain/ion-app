@@ -42,7 +42,6 @@ IonConnectEntity? ionConnectEntityWithCounters(
       [],
       currentPubkey: currentUserPubkey,
       forKind: eventReference.kind,
-      root: false,
     ).extensions,
   ]).toString();
 

@@ -25,14 +25,13 @@ class SearchExtensions {
     List<SearchExtension> extensions, {
     required String currentPubkey,
     int forKind = ModifiablePostEntity.kind,
-    bool root = true,
   }) {
     return SearchExtensions([
-      RepliesCountSearchExtension(root: root, forKind: forKind),
+      RepliesCountSearchExtension(forKind: forKind),
       GenericRepostsCountSearchExtension(forKind: forKind),
       QuotesCountSearchExtension(forKind: forKind),
       ReactionsCountSearchExtension(forKind: forKind),
-      ReplySampleSearchExtension(currentPubkey: currentPubkey, root: root, forKind: forKind),
+      ReplySampleSearchExtension(currentPubkey: currentPubkey, forKind: forKind),
       GenericRepostSampleSearchExtension(currentPubkey: currentPubkey, forKind: forKind),
       ReactionsSearchExtension(currentPubkey: currentPubkey, forKind: forKind),
       ...extensions,
@@ -67,7 +66,7 @@ class TopSearchExtension extends SearchExtension {
 
 /// For every kind [forKind] that the subscription finds also include the count of replies that it has
 class RepliesCountSearchExtension extends IncludeSearchExtension {
-  RepliesCountSearchExtension({this.root = true, this.forKind = ModifiablePostEntity.kind});
+  RepliesCountSearchExtension({this.root = false, this.forKind = ModifiablePostEntity.kind});
 
   final bool root;
 
@@ -126,7 +125,7 @@ class ReplySampleSearchExtension extends IncludeSearchExtension {
   ReplySampleSearchExtension({
     required this.currentPubkey,
     this.forKind = ModifiablePostEntity.kind,
-    this.root = true,
+    this.root = false,
   });
 
   final bool root;
