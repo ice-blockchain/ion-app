@@ -2,8 +2,8 @@
 
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:ion/app/components/image/ion_network_image.dart';
 import 'package:ion/app/components/progress_bar/centered_loading_indicator.dart';
+import 'package:ion/app/features/core/views/components/ion_connect_network_image.dart';
 import 'package:ion/app/features/feed/stories/providers/story_image_loading_provider.c.dart';
 
 class ImageStoryViewer extends ConsumerWidget {
@@ -20,11 +20,9 @@ class ImageStoryViewer extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final cacheManager = ref.watch(storyImageCacheManagerProvider);
 
-    return IonNetworkImage(
+    return IonConnectNetworkImage(
       imageUrl: path,
       cacheManager: cacheManager,
-      fadeOutDuration: Duration.zero,
-      placeholderFadeInDuration: Duration.zero,
       filterQuality: FilterQuality.high,
       progressIndicatorBuilder: (_, __, ___) => const CenteredLoadingIndicator(),
       imageBuilder: (context, imageProvider) {

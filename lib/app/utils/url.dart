@@ -50,3 +50,7 @@ String resolveImageUrl(String baseUrl, String imageUrl) {
       ? Uri.parse(Uri.parse(baseUrl).origin + imageUrl).toString()
       : imageUrl;
 }
+
+bool isNetworkUrl(String url) {
+  return url.startsWith('http://') || url.startsWith('https://');
+}
