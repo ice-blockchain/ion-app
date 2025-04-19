@@ -7,6 +7,7 @@ import 'package:ion/app/features/feed/data/models/entities/modifiable_post_data.
 import 'package:ion/app/features/feed/notifications/data/model/ion_notification.c.dart';
 import 'package:ion/app/features/feed/notifications/data/repository/comments_repository.c.dart';
 import 'package:ion/app/features/ion_connect/ion_connect.dart';
+import 'package:ion/app/features/ion_connect/providers/entities_syncer_notifier.c.dart';
 import 'package:ion/app/features/ion_connect/providers/ion_connect_subscription_provider.c.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
@@ -21,8 +22,6 @@ Future<void> notificationQuotesSubscription(Ref ref) async {
     throw UserMasterPubkeyNotFoundException();
   }
 
-  final since = await commentsRepository.lastCreatedAt(CommentIonNotificationType.quote);
-
   final requestFilter = RequestFilter(
     kinds: const [ModifiablePostEntity.kind],
     tags: {
@@ -30,8 +29,21 @@ Future<void> notificationQuotesSubscription(Ref ref) async {
         [null, null, currentPubkey],
       ],
     },
-    since: since?.subtract(const Duration(seconds: 2)),
+    since: DateTime.now().subtract(const Duration(seconds: 2)),
   );
+
+  await ref.watch(entitiesSyncerNotifierProvider('notifications-quotes').notifier).syncEntities(
+    requestFilters: [requestFilter],
+    saveCallback: (entity) {
+      if (entity.masterPubkey != currentPubkey) {
+        commentsRepository.save(entity);
+      }
+    },
+    maxCreatedAtBuilder: () => commentsRepository.lastCreatedAt(CommentIonNotificationType.quote),
+    minCreatedAtBuilder: (since) =>
+        commentsRepository.firstCreatedAt(CommentIonNotificationType.quote, after: since),
+  );
+
   final requestMessage = RequestMessage()..addFilter(requestFilter);
 
   final entities = ref.watch(ionConnectEntitiesSubscriptionProvider(requestMessage));
