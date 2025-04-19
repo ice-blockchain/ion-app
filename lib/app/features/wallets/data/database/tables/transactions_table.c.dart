@@ -30,7 +30,6 @@ class TransactionsTable extends Table {
   // If asset is coin
   TextColumn get transferredAmount => text().nullable()();
   RealColumn get transferredAmountUsd => real().nullable()();
-  TextColumn get balanceBeforeTransfer => text().nullable()();
 
   @override
   Set<Column> get primaryKey => {txHash};
