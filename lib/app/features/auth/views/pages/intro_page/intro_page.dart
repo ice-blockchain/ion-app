@@ -7,7 +7,6 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/components/button/button.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/core/providers/video_player_provider.c.dart';
-import 'package:ion/app/hooks/use_on_init.dart';
 import 'package:ion/app/router/app_routes.c.dart';
 import 'package:ion/generated/assets.gen.dart';
 
@@ -24,21 +23,11 @@ class IntroPage extends HookConsumerWidget {
             VideoControllerParams(
               sourcePath: Assets.videos.intro,
               looping: true,
+              autoPlay: true,
             ),
           ),
         )
         .value;
-
-    // Playing the intro video as soon as the widget is built.
-    // This ensures the video starts playing immediately after the page is displayed.
-    useOnInit(
-      () {
-        if (videoController?.value.isInitialized ?? false) {
-          videoController?.play();
-        }
-      },
-      [videoController],
-    );
 
     return Scaffold(
       resizeToAvoidBottomInset: false,

@@ -14,6 +14,7 @@ import 'package:smooth_sheets/smooth_sheets.dart';
 
 enum IceRouteType {
   single,
+  singleWithoutTransition,
   bottomSheet,
   slideFromLeft,
   fade,
@@ -47,6 +48,13 @@ abstract class BaseRouteData extends GoRouteData {
             },
             child: child,
           ),
+        ),
+      IceRouteType.singleWithoutTransition => CustomTransitionPage<void>(
+          key: state.pageKey,
+          transitionDuration: Duration.zero,
+          reverseTransitionDuration: Duration.zero,
+          transitionsBuilder: (context, animation, secondaryAnimation, child) => child,
+          child: child,
         ),
       IceRouteType.bottomSheet => FadeTransitionSheetPage(child: child, state: state),
       IceRouteType.slideFromLeft => SlideFromLeftTransitionPage(child: child, state: state),
