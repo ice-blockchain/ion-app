@@ -16,10 +16,12 @@ enum IndicatorType {
 class IONLoadingIndicatorThemed extends ConsumerWidget {
   const IONLoadingIndicatorThemed({
     this.size,
+    this.value,
     super.key,
   });
 
   final Size? size;
+  final double? value;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -28,6 +30,7 @@ class IONLoadingIndicatorThemed extends ConsumerWidget {
     return IONLoadingIndicator(
       type: isLightTheme ? IndicatorType.dark : IndicatorType.light,
       size: size,
+      value: value,
     );
   }
 }
@@ -36,15 +39,36 @@ class IONLoadingIndicator extends HookWidget {
   const IONLoadingIndicator({
     this.type = IndicatorType.light,
     this.size,
+    this.value,
     super.key,
   });
 
   final IndicatorType type;
   final Size? size;
+  final double? value;
 
   @override
   Widget build(BuildContext context) {
-    final animationController = useAnimationController();
+    final animationController = useAnimationController(
+      // Addition and division are used because this Lottie animation's empty state is at 0.5
+      initialValue: value != null ? (value! + 1) / 2 : 0,
+      keys: [value],
+    );
+    final duration = useRef<Duration?>(null);
+
+    useEffect(
+      () {
+        if (value == null && duration.value != null) {
+          animationController
+            ..duration = duration.value
+            ..repeat();
+        } else {
+          animationController.stop();
+        }
+        return null;
+      },
+      [value, animationController, duration.value],
+    );
 
     final loader =
         type == IndicatorType.light ? Assets.lottie.whiteLoader : Assets.lottie.darkLoader;
@@ -55,9 +79,7 @@ class IONLoadingIndicator extends HookWidget {
         frameRate: const FrameRate(60),
         controller: animationController,
         onLoaded: (composition) {
-          animationController
-            ..duration = composition.duration
-            ..repeat();
+          duration.value = composition.duration;
         },
       ),
     );
