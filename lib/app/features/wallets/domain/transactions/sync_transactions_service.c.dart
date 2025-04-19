@@ -49,11 +49,9 @@ class SyncTransactionsService {
       final isHistoryLoaded =
           await _cryptoWalletsRepository.isHistoryLoadedForWallet(walletId: wallet.id);
 
-      if (isHistoryLoaded) {
-        await _syncTransactions(wallet, network);
-      } else {
-        await _loadAllTransactions(wallet, network);
-      }
+      isHistoryLoaded
+          ? await _syncTransactions(wallet, network)
+          : await _loadAllTransactions(wallet, network);
     }).wait;
   }
 

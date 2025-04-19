@@ -50,13 +50,11 @@ class TransactionsDao extends DatabaseAccessor<WalletsDatabase> with _$Transacti
         return toInsertRaw.copyWith(
           id: Value(existing.id ?? toInsertRaw.id),
           fee: Value(existing.fee ?? toInsertRaw.fee),
+          userPubkey: Value(existing.userPubkey ?? toInsertRaw.userPubkey),
           dateRequested: Value(existing.dateRequested ?? toInsertRaw.dateRequested),
           dateConfirmed: Value(existing.dateConfirmed ?? toInsertRaw.dateConfirmed),
           createdAtInRelay: Value(existing.createdAtInRelay ?? toInsertRaw.createdAtInRelay),
-          userPubkey: Value(existing.userPubkey ?? toInsertRaw.userPubkey),
-          transferredAmount: Value(
-            existing.transferredAmount ?? toInsertRaw.transferredAmount,
-          ),
+          transferredAmount: Value(existing.transferredAmount ?? toInsertRaw.transferredAmount),
           transferredAmountUsd: Value(
             existing.transferredAmountUsd ?? toInsertRaw.transferredAmountUsd,
           ),
