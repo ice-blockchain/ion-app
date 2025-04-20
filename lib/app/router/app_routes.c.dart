@@ -282,14 +282,12 @@ class SelfProfileRoute extends BaseRouteData {
 
 @TypedGoRoute<ErrorRoute>(path: '/error')
 class ErrorRoute extends BaseRouteData {
-  ErrorRoute({this.$extra})
+  ErrorRoute({this.message})
       : super(
-          child: ErrorPage(
-            error: $extra ?? Exception('Unknown error'),
-          ),
+          child: ErrorPage(message: message),
         );
 
-  final Exception? $extra;
+  final String? message;
 }
 
 @TypedGoRoute<IntroRoute>(

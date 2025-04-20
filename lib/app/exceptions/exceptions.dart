@@ -469,3 +469,7 @@ class FormException extends IONException {
 class FailedToSendEmail extends IONException {
   FailedToSendEmail() : super(10092, 'Unable to send email');
 }
+
+class WalletsLoadingException extends IONException {
+  WalletsLoadingException() : super(10093, 'Failed to load wallets');
+}

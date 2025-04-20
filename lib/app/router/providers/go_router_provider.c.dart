@@ -41,7 +41,7 @@ GoRouter goRouter(Ref ref) {
 
       if (isInitError) {
         Logger.log('Init error', error: initState.error);
-        return ErrorRoute().location;
+        return ErrorRoute(message: initState.error.toString()).location;
       }
 
       if (isInitInProgress || !isSplashAnimationCompleted) {
@@ -52,7 +52,7 @@ GoRouter goRouter(Ref ref) {
       return _mainRedirect(location: state.matchedLocation, ref: ref);
     },
     routes: $appRoutes,
-    errorBuilder: (context, state) => ErrorPage(error: state.error ?? Exception('Unknown error')),
+    errorBuilder: (context, state) => ErrorPage(message: state.error?.toString()),
     initialLocation: SplashRoute().location,
     debugLogDiagnostics: ref.read(featureFlagsProvider.notifier).get(LoggerFeatureFlag.logRouters),
     navigatorKey: rootNavigatorKey,
@@ -64,7 +64,8 @@ Future<String?> _mainRedirect({
   required Ref ref,
 }) async {
   final isAuthenticated = (ref.read(authProvider).valueOrNull?.isAuthenticated).falseOrValue;
-  final onboardingComplete = ref.read(onboardingCompleteProvider).valueOrNull;
+  final onboardingState = ref.read(onboardingCompleteProvider);
+  final onboardingComplete = onboardingState.valueOrNull;
   final hasNotificationsPermission = ref.read(hasPermissionProvider(Permission.notifications));
   final forceUpdateRequired = ref.read(forceUpdateProvider).valueOrNull.falseOrValue;
 
@@ -112,5 +113,6 @@ Future<String?> _mainRedirect({
       return FeedRoute().location;
     }
   }
+
   return null;
 }
