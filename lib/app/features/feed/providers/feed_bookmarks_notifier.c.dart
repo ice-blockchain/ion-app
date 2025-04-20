@@ -3,14 +3,16 @@
 import 'dart:async';
 
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:ion/app/exceptions/exceptions.dart';
 import 'package:ion/app/features/auth/providers/auth_provider.c.dart';
+import 'package:ion/app/features/auth/providers/delegation_complete_provider.c.dart';
+import 'package:ion/app/features/feed/data/models/bookmarks/bookmarks.c.dart';
 import 'package:ion/app/features/feed/data/models/bookmarks/bookmarks_collection.c.dart';
 import 'package:ion/app/features/ion_connect/ion_connect.dart';
 import 'package:ion/app/features/ion_connect/model/action_source.c.dart';
 import 'package:ion/app/features/ion_connect/model/event_reference.c.dart';
 import 'package:ion/app/features/ion_connect/providers/ion_connect_notifier.c.dart';
 import 'package:ion/app/features/ion_connect/providers/ion_connect_subscription_provider.c.dart';
+import 'package:ion/app/services/uuid/uuid.dart';
 import 'package:nostr_dart/nostr_dart.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
@@ -21,7 +23,7 @@ Stream<BookmarksCollectionEntity?> bookmarksCollectionStream(
   Ref ref,
   String pubkey,
   String collectionDTag,
-) {
+) async* {
   final request = RequestMessage()
     ..addFilter(
       RequestFilter(
@@ -33,6 +35,13 @@ Stream<BookmarksCollectionEntity?> bookmarksCollectionStream(
       ),
     );
 
+  // Immediately check for existing event to avoid hanging
+  final firstEvent = await ref.read(ionConnectNotifierProvider.notifier).requestEvent(
+        request,
+        actionSource: ActionSourceUser(pubkey),
+      );
+  yield firstEvent != null ? BookmarksCollectionEntity.fromEventMessage(firstEvent) : null;
+
   final events = ref.watch(
     ionConnectEventsSubscriptionProvider(
       request,
@@ -40,102 +49,282 @@ Stream<BookmarksCollectionEntity?> bookmarksCollectionStream(
     ),
   );
 
-  return events.map(
-    BookmarksCollectionEntity.fromEventMessage,
-  );
-}
-
-@riverpod
-Future<List<ReplaceableEventReference>> currentUserBookmarksCollectionRefs(
-  Ref ref,
-  String collectionDTag,
-) async {
-  final currentPubkey = ref.watch(currentPubkeySelectorProvider);
-  if (currentPubkey == null) {
-    return [];
+  await for (final event in events) {
+    yield BookmarksCollectionEntity.fromEventMessage(event);
   }
-
-  final bookmarksCollection = await ref.watch(
-    bookmarksCollectionStreamProvider(
-      currentPubkey,
-      collectionDTag,
-    ).future,
-  );
-
-  return bookmarksCollection?.data.refs ?? [];
 }
 
 @Riverpod(keepAlive: true)
-Future<List<ReplaceableEventReference>> currentUserBookmarksCollectionsRefs(
-  Ref ref,
-) async {
-  final collectionsRefs = await ref.watch(
-    currentUserBookmarksCollectionRefsProvider(
-      BookmarksCollectionEntity.collectionsDTag,
-    ).future,
-  );
-  return collectionsRefs.where((ref) => ref.kind == BookmarksCollectionEntity.kind).toList();
-}
-
-@Riverpod(keepAlive: true)
-Future<List<ReplaceableEventReference>> currentUserAllBookmarksCollectionRefs(
-  Ref ref,
-) async {
-  final bookmarksCollectionRefs = await ref.watch(
-    currentUserBookmarksCollectionRefsProvider(
-      BookmarksCollectionEntity.defaultCollectionDTag,
-    ).future,
-  );
-  return bookmarksCollectionRefs;
-}
-
-@riverpod
-bool isFeedBookmarked(Ref ref, EventReference eventReference) {
-  if (eventReference is! ReplaceableEventReference) {
-    return false;
-  }
-
-  final allBookmarksRefs =
-      ref.watch(currentUserAllBookmarksCollectionRefsProvider).valueOrNull ?? [];
-
-  return allBookmarksRefs.contains(eventReference);
-}
-
-@riverpod
 class FeedBookmarksNotifier extends _$FeedBookmarksNotifier {
   @override
-  FutureOr<void> build() async {}
+  Future<BookmarksCollectionEntity?> build({
+    String collectionDTag = BookmarksCollectionEntity.defaultCollectionDTag,
+  }) async {
+    final currentPubkey = ref.watch(currentPubkeySelectorProvider);
+    // it hangs if to make a request before delegation is completed for a new user
+    // it causes constant rebuilds in a cycle if to use .future here on delegationCompleteProvider
+    final delegationComplete = ref.watch(delegationCompleteProvider).when(
+          data: (v) => v,
+          loading: () => false,
+          error: (_, __) => false,
+        );
+    if (currentPubkey == null || !delegationComplete) {
+      return null;
+    }
+
+    final bookmarksCollection = await ref.watch(
+      bookmarksCollectionStreamProvider(
+        currentPubkey,
+        collectionDTag,
+      ).future,
+    );
+    return bookmarksCollection;
+  }
 
   Future<void> toggleBookmark(EventReference eventReference) async {
     state = const AsyncValue.loading();
     state = await AsyncValue.guard(() async {
-      final currentPubkey = ref.read(currentPubkeySelectorProvider);
-      if (currentPubkey == null) {
-        throw UserMasterPubkeyNotFoundException();
+      final currentPubkey = ref.watch(currentPubkeySelectorProvider);
+      final bookmarksCollection = state.valueOrNull;
+      if (currentPubkey == null ||
+          bookmarksCollection == null ||
+          eventReference is! ReplaceableEventReference) {
+        return state.value;
       }
+      final newAllBookmarksRefs = <ReplaceableEventReference>[];
+      if (bookmarksCollection.data.refs.contains(eventReference)) {
+        newAllBookmarksRefs
+          ..addAll(bookmarksCollection.data.refs)
+          ..remove(eventReference);
 
-      final allBookmarksRefs = await ref.read(
-        currentUserAllBookmarksCollectionRefsProvider.future,
-      );
-
-      final newAllBookmarksRefs = Set<ReplaceableEventReference>.from(allBookmarksRefs);
-      if (eventReference is ReplaceableEventReference) {
-        if (newAllBookmarksRefs.contains(eventReference)) {
-          newAllBookmarksRefs.remove(eventReference);
-        } else {
-          newAllBookmarksRefs.add(eventReference);
+        // If toggling off in the default collection, also remove from all other collections
+        if (bookmarksCollection.data.type == BookmarksCollectionEntity.defaultCollectionDTag) {
+          final collectionsRefs = await ref.read(
+            feedBookmarkCollectionsNotifierProvider.future,
+          );
+          final collectionsDTags = collectionsRefs
+              .map((collectionRef) => collectionRef.dTag)
+              .whereType<String>()
+              .where((dTag) => dTag != BookmarksCollectionEntity.defaultCollectionDTag)
+              .toList();
+          await Future.wait(
+            collectionsDTags.map(
+              (dTag) async {
+                final isIncluded = (await ref.read(
+                      feedBookmarksNotifierProvider(
+                        collectionDTag: dTag,
+                      ).future,
+                    ))
+                        ?.data
+                        .refs
+                        .contains(eventReference) ??
+                    false;
+                if (isIncluded) {
+                  await ref
+                      .read(
+                        feedBookmarksNotifierProvider(
+                          collectionDTag: dTag,
+                        ).notifier,
+                      )
+                      .toggleBookmark(eventReference);
+                }
+              },
+            ),
+          );
+        }
+      } else {
+        newAllBookmarksRefs
+          ..add(eventReference)
+          ..addAll(bookmarksCollection.data.refs);
+        if (bookmarksCollection.data.type != BookmarksCollectionEntity.defaultCollectionDTag) {
+          final isIncluded = (await ref.read(
+                feedBookmarksNotifierProvider().future,
+              ))
+                  ?.data
+                  .refs
+                  .contains(eventReference) ??
+              false;
+          if (!isIncluded) {
+            await ref
+                .read(
+                  feedBookmarksNotifierProvider().notifier,
+                )
+                .toggleBookmark(eventReference);
+          }
         }
       }
 
       final newBookmarksCollectionData = BookmarksCollectionData(
-        type: BookmarksCollectionEntity.defaultCollectionDTag,
+        type: bookmarksCollection.data.type,
         refs: newAllBookmarksRefs.toList(),
+        title: bookmarksCollection.data.title,
       );
 
       await ref.read(ionConnectNotifierProvider.notifier).sendEntitiesData(
         [newBookmarksCollectionData],
         actionSource: ActionSourceUser(currentPubkey),
       );
+      return state.value;
     });
+  }
+}
+
+@riverpod
+bool isBookmarkedInCollection(
+  Ref ref,
+  EventReference eventReference, {
+  String collectionDTag = BookmarksCollectionEntity.defaultCollectionDTag,
+}) {
+  final feedBookmarksNotifierState =
+      ref.watch(feedBookmarksNotifierProvider(collectionDTag: collectionDTag));
+  return feedBookmarksNotifierState.valueOrNull?.data.refs.contains(eventReference) ?? false;
+}
+
+@Riverpod(keepAlive: true)
+class FeedBookmarkCollectionsNotifier extends _$FeedBookmarkCollectionsNotifier {
+  @override
+  Future<List<ReplaceableEventReference>> build() async {
+    final currentPubkey = ref.watch(currentPubkeySelectorProvider);
+    // it hangs if to make a request before delegation is completed for a new user
+    // it causes constant rebuilds in a cycle if to use .future here on delegationCompleteProvider
+    final delegationComplete = ref.watch(delegationCompleteProvider).when(
+          data: (v) => v,
+          loading: () => false,
+          error: (_, __) => false,
+        );
+    if (currentPubkey == null || !delegationComplete) {
+      return [];
+    }
+
+    final bookmarksCollection = await ref.watch(
+      bookmarksCollectionStreamProvider(
+        currentPubkey,
+        BookmarksCollectionEntity.collectionsDTag,
+      ).future,
+    );
+    final collectionsRefs = bookmarksCollection?.data.refs ?? [];
+
+    final bookmarkCollections = collectionsRefs
+        .where((collectionsRef) => collectionsRef.kind == BookmarksCollectionEntity.kind)
+        .toList();
+    if (!bookmarkCollections
+        .any((ref) => ref.dTag == BookmarksCollectionEntity.defaultCollectionDTag)) {
+      final bookmarksData = BookmarksData(
+        ids: [],
+        bookmarksSetRefs: [
+          ReplaceableEventReference(
+            pubkey: currentPubkey,
+            kind: BookmarksCollectionEntity.kind,
+            dTag: BookmarksCollectionEntity.collectionsDTag,
+          ),
+        ],
+      );
+      final collectionsData = BookmarksCollectionData(
+        type: BookmarksCollectionEntity.collectionsDTag,
+        refs: [
+          ReplaceableEventReference(
+            pubkey: currentPubkey,
+            kind: BookmarksCollectionEntity.kind,
+            dTag: BookmarksCollectionEntity.defaultCollectionDTag,
+          ),
+        ],
+      );
+      const defaultBookmarksCollectionData = BookmarksCollectionData(
+        type: BookmarksCollectionEntity.defaultCollectionDTag,
+        refs: [],
+      );
+
+      await ref.read(ionConnectNotifierProvider.notifier).sendEntitiesData(
+        [defaultBookmarksCollectionData, collectionsData, bookmarksData],
+        actionSource: ActionSourceUser(currentPubkey),
+      );
+    }
+
+    return bookmarkCollections;
+  }
+
+  Future<void> createCollection(String title) async {
+    final currentPubkey = ref.read(currentPubkeySelectorProvider);
+    final currentBookmarkCollectionsRefs = state.valueOrNull ?? [];
+    if (currentPubkey == null || currentBookmarkCollectionsRefs.isEmpty) {
+      return;
+    }
+
+    final newCollectionData = BookmarksCollectionData(
+      type: 'homefeed_collection_${generateUuid()}',
+      refs: [],
+      title: title,
+    );
+
+    final updatedCollectionsRefs = <ReplaceableEventReference>[
+      ...currentBookmarkCollectionsRefs,
+      ReplaceableEventReference(
+        pubkey: currentPubkey,
+        kind: BookmarksCollectionEntity.kind,
+        dTag: newCollectionData.type,
+      ),
+    ];
+    final updatedAllCollectionsData = BookmarksCollectionData(
+      type: BookmarksCollectionEntity.collectionsDTag,
+      refs: updatedCollectionsRefs,
+    );
+
+    await ref.read(ionConnectNotifierProvider.notifier).sendEntitiesData(
+      [newCollectionData, updatedAllCollectionsData],
+      actionSource: ActionSourceUser(currentPubkey),
+    );
+  }
+
+  Future<void> deleteCollection(String collectionDTag) async {
+    final currentPubkey = ref.read(currentPubkeySelectorProvider);
+    final currentBookmarkCollectionsRefs = state.valueOrNull ?? [];
+    if (currentPubkey == null ||
+        currentBookmarkCollectionsRefs.isEmpty ||
+        collectionDTag == BookmarksCollectionEntity.defaultCollectionDTag) {
+      return;
+    }
+
+    final updatedRootRefs =
+        currentBookmarkCollectionsRefs.where((ref) => ref.dTag != collectionDTag).toList();
+
+    final updatedAllCollectionsData = BookmarksCollectionData(
+      type: BookmarksCollectionEntity.collectionsDTag,
+      refs: updatedRootRefs,
+    );
+
+    final deleteCollectionData = BookmarksCollectionData(
+      type: collectionDTag,
+      refs: [],
+    );
+
+    await ref.read(ionConnectNotifierProvider.notifier).sendEntitiesData(
+      [deleteCollectionData, updatedAllCollectionsData],
+      actionSource: ActionSourceUser(currentPubkey),
+    );
+  }
+
+  Future<void> renameCollection(
+    BookmarksCollectionData bookmarksCollectionData,
+    String newTitle,
+  ) async {
+    final currentPubkey = ref.read(currentPubkeySelectorProvider);
+    final currentBookmarkCollectionsRefs = state.valueOrNull ?? [];
+    final collectionDTag = bookmarksCollectionData.type;
+    if (currentPubkey == null ||
+        collectionDTag == BookmarksCollectionEntity.defaultCollectionDTag ||
+        !currentBookmarkCollectionsRefs.any((ref) => ref.dTag == collectionDTag)) {
+      return;
+    }
+
+    final updatedCollectionData = BookmarksCollectionData(
+      type: collectionDTag,
+      refs: bookmarksCollectionData.refs,
+      title: newTitle,
+    );
+
+    await ref.read(ionConnectNotifierProvider.notifier).sendEntitiesData(
+      [updatedCollectionData],
+      actionSource: ActionSourceUser(currentPubkey),
+    );
   }
 }

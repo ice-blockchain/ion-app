@@ -34,7 +34,7 @@ class TabEntitiesList extends ConsumerWidget {
       type: TabEntityType.replies,
       pubkey: pubkey,
       builder: (entities) => EntitiesList(
-        entities: entities.toList(),
+        refs: entities.map((entity) => entity.toEventReference()).toList(),
         displayParent: true,
       ),
     );
@@ -68,7 +68,7 @@ class TabEntitiesList extends ConsumerWidget {
           builder != null
               ? builder!(entities.toList())
               : EntitiesList(
-                  entities: entities.toList(),
+                  refs: entities.map((entity) => entity.toEventReference()).toList(),
                   onVideoTap: ({
                     required String eventReference,
                     required int initialMediaIndex,

@@ -7,7 +7,8 @@ import 'package:ion/app/components/screen_offset/screen_side_offset.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/components/bookmarks/bookmarks_collection_tile.dart';
 import 'package:ion/app/features/components/bookmarks/new_bookmarks_collection_button.dart';
-import 'package:ion/app/features/feed/providers/bookmarks_notifier.c.dart';
+import 'package:ion/app/features/feed/data/models/bookmarks/bookmarks_collection.c.dart';
+import 'package:ion/app/features/feed/providers/feed_bookmarks_notifier.c.dart';
 import 'package:ion/app/features/user/pages/edit_bookmarks_page/components/edit_bookmarks_header.dart';
 
 class EditBookmarksPage extends HookConsumerWidget {
@@ -17,23 +18,25 @@ class EditBookmarksPage extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final bookmarksAmount = ref.watch(currentUserBookmarksTotalAmountProvider);
+    final bookmarksCollections = ref.watch(feedBookmarkCollectionsNotifierProvider);
     return Scaffold(
       appBar: const EditBookmarksHeader(),
       body: ScreenSideOffset.small(
         child: CustomScrollView(
-          slivers: bookmarksAmount.when(
+          slivers: bookmarksCollections.when(
             data: (data) {
+              final collectionsDTags = data
+                  .map((eventReference) => eventReference.dTag)
+                  .whereType<String>()
+                  .where((dTag) => dTag != BookmarksCollectionEntity.defaultCollectionDTag)
+                  .toList();
               return [
                 SliverList.separated(
-                  itemCount: 1,
+                  itemCount: collectionsDTags.length,
                   separatorBuilder: (BuildContext context, int index) => SizedBox(height: 16.0.s),
                   itemBuilder: (BuildContext context, int index) {
                     return BookmarksCollectionTile(
-                      mode: BookmarksCollectionTileMode.menu,
-                      isSelected: false,
-                      collectionName: context.i18n.core_all,
-                      bookmarksAmount: data,
+                      collectionDTag: collectionsDTags[index],
                     );
                   },
                 ),

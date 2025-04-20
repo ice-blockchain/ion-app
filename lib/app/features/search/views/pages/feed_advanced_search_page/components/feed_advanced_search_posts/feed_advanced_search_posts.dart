@@ -42,7 +42,7 @@ class FeedAdvancedSearchPosts extends HookConsumerWidget {
           NothingIsFound(title: context.i18n.search_nothing_found)
         else
           EntitiesList(
-            entities: entities,
+            refs: entities.map((entity) => entity.toEventReference()).toList(),
             onVideoTap: ({
               required String eventReference,
               required int initialMediaIndex,

@@ -27,17 +27,21 @@ class BookmarkButton extends ConsumerWidget {
       return const SizedBox.shrink();
     }
 
-    final isBookmarked = ref.watch(isFeedBookmarkedProvider(eventReference!));
+    final bookmarkState = ref.watch(feedBookmarksNotifierProvider());
+    final isLoading = bookmarkState.isLoading;
+    final isBookmarked = ref.watch(isBookmarkedInCollectionProvider(eventReference!));
 
-    ref.displayErrors(feedBookmarksNotifierProvider);
+    ref.displayErrors(feedBookmarksNotifierProvider());
 
     return GestureDetector(
-      onTap: () {
-        ref.read(feedBookmarksNotifierProvider.notifier).toggleBookmark(eventReference!);
-        if (!isBookmarked) {
-          AddBookmarkRoute(eventReference: eventReference!.encode()).push<void>(context);
-        }
-      },
+      onTap: isLoading
+          ? null
+          : () {
+              ref.read(feedBookmarksNotifierProvider().notifier).toggleBookmark(eventReference!);
+              if (!isBookmarked) {
+                AddBookmarkRoute(eventReference: eventReference!.encode()).push<void>(context);
+              }
+            },
       behavior: HitTestBehavior.opaque,
       child: Padding(
         padding: EdgeInsetsDirectional.symmetric(horizontal: 8.0.s) +

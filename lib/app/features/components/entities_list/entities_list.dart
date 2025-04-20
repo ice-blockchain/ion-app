@@ -23,14 +23,14 @@ import 'package:ion/app/typedefs/typedefs.dart';
 
 class EntitiesList extends HookWidget {
   const EntitiesList({
-    required this.entities,
+    required this.refs,
     this.displayParent = false,
     this.separatorHeight,
     this.onVideoTap,
     super.key,
   });
 
-  final List<IonConnectEntity> entities;
+  final List<EventReference> refs;
   final double? separatorHeight;
   final bool displayParent;
   final OnVideoTapCallback? onVideoTap;
@@ -38,9 +38,9 @@ class EntitiesList extends HookWidget {
   @override
   Widget build(BuildContext context) {
     return SliverList.builder(
-      itemCount: entities.length,
+      itemCount: refs.length,
       itemBuilder: (BuildContext context, int index) {
-        final eventReference = entities[index].toEventReference();
+        final eventReference = refs[index];
         return _EntityListItem(
           key: ValueKey(eventReference),
           eventReference: eventReference,

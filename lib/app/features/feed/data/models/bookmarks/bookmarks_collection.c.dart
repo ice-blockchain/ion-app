@@ -73,13 +73,20 @@ class BookmarksCollectionData
       );
     }
 
+    final content = eventMessage.content;
+
+    final titleTag =
+        eventMessage.tags.firstWhereOrNull((tag) => tag.isNotEmpty && tag.first == 'title');
+    final title = titleTag != null && titleTag.length > 1 ? titleTag[1] : '';
+
     return BookmarksCollectionData(
-      content: eventMessage.content,
+      content: content,
       refs: eventMessage.tags
           .where((tag) => tag.isNotEmpty && tag.first == ReplaceableEventReference.tagName)
           .map(ReplaceableEventReference.fromTag)
           .toList(),
       type: typeName,
+      title: title,
     );
   }
 
@@ -99,6 +106,7 @@ class BookmarksCollectionData
         ...tags,
         ReplaceableEventIdentifier(value: type).toTag(),
         ...refs.map((ref) => ref.toTag()),
+        ['title', title],
       ],
     );
   }

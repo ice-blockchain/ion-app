@@ -9,6 +9,7 @@ import 'package:ion/app/components/card/info_card.dart';
 import 'package:ion/app/components/inputs/text_input/components/text_input_clear_button.dart';
 import 'package:ion/app/components/inputs/text_input/components/text_input_icons.dart';
 import 'package:ion/app/components/inputs/text_input/text_input.dart';
+import 'package:ion/app/components/progress_bar/ion_loading_indicator.dart';
 import 'package:ion/app/components/screen_offset/screen_bottom_offset.dart';
 import 'package:ion/app/components/screen_offset/screen_side_offset.dart';
 import 'package:ion/app/extensions/extensions.dart';
@@ -32,7 +33,7 @@ class BookmarksCollectionNamePopup extends HookConsumerWidget {
   final String title;
   final String desc;
   final String action;
-  final Future<void> Function() onAction;
+  final Future<void> Function(String collectionName) onAction;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -103,9 +104,9 @@ class BookmarksCollectionNamePopup extends HookConsumerWidget {
                       if (formKey.value.currentState!.validate()) {
                         isProcessing.value = true;
                         try {
-                          await onAction();
+                          await onAction(collectionName.value);
                           if (context.mounted) {
-                            context.pop(true);
+                            context.pop();
                           }
                         } finally {
                           isProcessing.value = false;
@@ -113,6 +114,7 @@ class BookmarksCollectionNamePopup extends HookConsumerWidget {
                       }
                     },
                     label: Text(action),
+                    trailingIcon: isProcessing.value ? const IONLoadingIndicator() : null,
                     disabled: collectionName.value.isEmpty || isProcessing.value,
                     type: collectionName.value.isEmpty ? ButtonType.disabled : ButtonType.primary,
                     mainAxisSize: MainAxisSize.max,
@@ -126,7 +128,9 @@ class BookmarksCollectionNamePopup extends HookConsumerWidget {
         PositionedDirectional(
           top: 12.0.s,
           end: 10.0.s,
-          child: const NavigationCloseButton(),
+          child: NavigationCloseButton(
+            onPressed: () => context.pop(),
+          ),
         ),
       ],
     );

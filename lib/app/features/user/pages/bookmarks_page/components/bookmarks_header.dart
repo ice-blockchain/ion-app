@@ -5,7 +5,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/components/inputs/search_input/search_input.dart';
 import 'package:ion/app/components/screen_offset/screen_side_offset.dart';
 import 'package:ion/app/extensions/extensions.dart';
-import 'package:ion/app/features/feed/providers/bookmarks_notifier.c.dart';
+import 'package:ion/app/features/feed/providers/feed_bookmarks_notifier.c.dart';
 import 'package:ion/app/router/app_routes.c.dart';
 import 'package:ion/app/router/components/navigation_app_bar/navigation_app_bar.dart';
 import 'package:ion/generated/assets.gen.dart';
@@ -17,7 +17,11 @@ class BookmarksHeader extends HookConsumerWidget implements PreferredSizeWidget 
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final isEmptyState = (ref.watch(currentUserBookmarksTotalAmountProvider).value ?? 0) == 0;
+    final collectionsAmount =
+        ref.watch(feedBookmarkCollectionsNotifierProvider).valueOrNull?.length ?? 0;
+    final hasCustomCollections =
+        collectionsAmount > 1; // there is always 1 default collection which cannot be edited
+
     return Column(
       children: [
         NavigationAppBar.screen(
@@ -25,9 +29,8 @@ class BookmarksHeader extends HookConsumerWidget implements PreferredSizeWidget 
             context.i18n.bookmarks_title,
             style: context.theme.appTextThemes.subtitle2,
           ),
-          actions: isEmptyState
-              ? []
-              : [
+          actions: hasCustomCollections
+              ? [
                   IconButton(
                     padding: EdgeInsets.zero,
                     icon: Assets.svg.iconEditLink.icon(
@@ -38,7 +41,8 @@ class BookmarksHeader extends HookConsumerWidget implements PreferredSizeWidget 
                       EditBookmarksRoute().push<void>(context);
                     },
                   ),
-                ],
+                ]
+              : [],
         ),
         ScreenSideOffset.small(
           child: GestureDetector(
