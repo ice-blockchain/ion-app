@@ -54,16 +54,20 @@ class RequestCoinsSubmitNotifier extends _$RequestCoinsSubmitNotifier {
         receiverPubkeys: pubkeys.receiver,
       );
 
-      final message = ImmutableEventReference(
+      final eventReference = ImmutableEventReference(
         eventId: event.id,
         pubkey: currentUserPubkey,
         kind: event.kind,
-      ).encode();
+      );
+
+      final content = eventReference.encode();
+      final tag = eventReference.toTag();
 
       final chatService = await ref.read(sendChatMessageServiceProvider.future);
       await chatService.send(
         receiverPubkey: pubkeys.receiver.masterPubkey,
-        content: message,
+        content: content,
+        tags: [tag],
       );
     });
   }

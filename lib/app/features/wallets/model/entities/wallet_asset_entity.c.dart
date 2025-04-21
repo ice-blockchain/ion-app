@@ -7,11 +7,13 @@ import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:ion/app/exceptions/exceptions.dart';
 import 'package:ion/app/features/ion_connect/ion_connect.dart';
 import 'package:ion/app/features/ion_connect/model/related_pubkey.c.dart';
+import 'package:ion/app/features/wallets/model/entities/funds_request_entity.c.dart';
 import 'package:ion/app/features/wallets/model/entities/tags/asset_address_tag.c.dart';
 import 'package:ion/app/features/wallets/model/entities/tags/asset_class_tag.c.dart';
 import 'package:ion/app/features/wallets/model/entities/tags/label_namespace_tag.c.dart';
 import 'package:ion/app/features/wallets/model/entities/tags/label_tag.c.dart';
 import 'package:ion/app/features/wallets/model/entities/tags/network_tag.c.dart';
+import 'package:ion/app/features/wallets/model/entities/tags/request_tag.c.dart';
 
 part 'wallet_asset_entity.c.freezed.dart';
 part 'wallet_asset_entity.c.g.dart';
@@ -54,7 +56,7 @@ class WalletAssetData with _$WalletAssetData {
     required String assetAddress,
     String? walletAddress,
     String? pubkey,
-    String? request, // TODO: Not implemented
+    String? request,
   }) = _WalletAssetData;
 
   const WalletAssetData._();
@@ -69,10 +71,14 @@ class WalletAssetData with _$WalletAssetData {
       assetClass: tags[AssetClassTag.tagName]!.map(AssetClassTag.fromTag).first.value,
       assetAddress: tags[AssetAddressTag.tagName]!.map(AssetAddressTag.fromTag).first.value,
       walletAddress: tags[LabelTag.tagName]?.map(LabelTag.fromTag).first.value,
+      request: tags[RequestTag.tagName]?.map(RequestTag.fromTag).first.value,
     );
   }
 
-  EventMessage toEventMessage({required String currentUserPubkey}) {
+  EventMessage toEventMessage({
+    required String currentUserPubkey,
+    FundsRequestEntity? requestEntity,
+  }) {
     final tags = [
       NetworkTag(value: networkId).toTag(),
       AssetClassTag(value: assetClass).toTag(),
@@ -83,6 +89,7 @@ class WalletAssetData with _$WalletAssetData {
         LabelNamespaceTag.walletAddress().toTag(),
         LabelTag(value: walletAddress!).toTag(),
       ],
+      if (requestEntity != null) RequestTag(value: requestEntity.data.request!).toTag(),
     ];
 
     final createdAt = DateTime.now();

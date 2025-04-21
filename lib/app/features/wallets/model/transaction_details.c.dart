@@ -24,7 +24,7 @@ class TransactionDetails with _$TransactionDetails {
     required String senderAddress,
     required String receiverAddress,
     required CoinData nativeCoin,
-    required String walletViewName,
+    required String? walletViewName,
     required String? id,
     required String? participantPubkey,
     required DateTime? dateRequested,
@@ -36,7 +36,7 @@ class TransactionDetails with _$TransactionDetails {
   factory TransactionDetails.fromTransactionData(
     TransactionData transaction, {
     required CoinsGroup coinsGroup,
-    required String walletViewName,
+    String? walletViewName,
   }) {
     final feeAmount = transaction.fee != null
         ? parseCryptoAmount(transaction.fee!, transaction.nativeCoin.decimals)

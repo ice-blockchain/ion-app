@@ -4,13 +4,16 @@ import 'dart:async';
 
 import 'package:ion/app/exceptions/exceptions.dart';
 import 'package:ion/app/features/auth/providers/auth_provider.c.dart';
+import 'package:ion/app/features/chat/e2ee/providers/send_chat_message_service.c.dart';
 import 'package:ion/app/features/ion_connect/ion_connect.dart';
+import 'package:ion/app/features/ion_connect/model/event_reference.c.dart';
 import 'package:ion/app/features/user/providers/user_delegation_provider.c.dart';
 import 'package:ion/app/features/wallets/data/repository/coins_repository.c.dart';
 import 'package:ion/app/features/wallets/data/repository/transactions_repository.c.dart';
 import 'package:ion/app/features/wallets/domain/coins/coins_service.c.dart';
 import 'package:ion/app/features/wallets/domain/transactions/send_transaction_to_relay_service.c.dart';
 import 'package:ion/app/features/wallets/model/crypto_asset_to_send_data.c.dart';
+import 'package:ion/app/features/wallets/model/entities/funds_request_entity.c.dart';
 import 'package:ion/app/features/wallets/model/entities/wallet_asset_entity.c.dart';
 import 'package:ion/app/features/wallets/model/transaction_details.c.dart';
 import 'package:ion/app/features/wallets/model/transaction_status.c.dart';
@@ -115,6 +118,7 @@ class SendCoinsNotifier extends _$SendCoinsNotifier {
           transferResult: result,
           sendableAsset: sendableAsset,
           coinAssetData: coinAssetData,
+          requestEntity: form.request,
         );
       } on SendEventException catch (e, stacktrace) {
         Logger.error('Failed to send event $e', stackTrace: stacktrace);
@@ -134,6 +138,7 @@ class SendCoinsNotifier extends _$SendCoinsNotifier {
     required TransactionDetails details,
     required TransferResult transferResult,
     required CoinAssetToSendData coinAssetData,
+    required FundsRequestEntity? requestEntity,
   }) async {
     // Save transaction into DB
     await ref.read(transactionsRepositoryProvider.future).then(
@@ -178,11 +183,28 @@ class SendCoinsNotifier extends _$SendCoinsNotifier {
     );
 
     final sendToRelayService = await ref.read(sendTransactionToRelayServiceProvider.future);
-    await sendToRelayService.sendTransactionEntity(
-      createEventMessage: (currentUserPubkey) =>
-          entityData.toEventMessage(currentUserPubkey: currentUserPubkey),
+    final event = await sendToRelayService.sendTransactionEntity(
+      createEventMessage: (currentUserPubkey) => entityData.toEventMessage(
+        currentUserPubkey: currentUserPubkey,
+        requestEntity: requestEntity,
+      ),
       senderPubkeys: senderPubkeys,
       receiverPubkeys: receiverPubkeys,
+    );
+
+    final eventReference = ImmutableEventReference(
+      eventId: event.id,
+      pubkey: currentUserPubkey,
+      kind: event.kind,
+    );
+    final content = eventReference.encode();
+    final tag = eventReference.toTag();
+
+    final chatService = await ref.read(sendChatMessageServiceProvider.future);
+    await chatService.send(
+      receiverPubkey: details.participantPubkey!,
+      content: content,
+      tags: [tag],
     );
   }
 }

@@ -1,6 +1,7 @@
 // SPDX-License-Identifier: ice License 1.0
 
 import 'package:drift/drift.dart';
+import 'package:ion/app/features/wallets/data/database/tables/transactions_table.c.dart';
 
 @DataClassName('FundsRequest')
 class FundsRequestsTable extends Table {
@@ -20,6 +21,6 @@ class FundsRequestsTable extends Table {
   TextColumn get assetId => text().nullable()();
   TextColumn get amount => text().nullable()();
   TextColumn get amountUsd => text().nullable()();
-  BoolColumn get isPending => boolean().withDefault(const Constant(true))();
+  TextColumn get transactionId => text().nullable().references(TransactionsTable, #txHash)();
   TextColumn get request => text().nullable()();
 }

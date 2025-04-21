@@ -12,6 +12,7 @@ import 'package:ion/app/features/wallets/model/entities/tags/asset_class_tag.c.d
 import 'package:ion/app/features/wallets/model/entities/tags/label_namespace_tag.c.dart';
 import 'package:ion/app/features/wallets/model/entities/tags/label_tag.c.dart';
 import 'package:ion/app/features/wallets/model/entities/tags/network_tag.c.dart';
+import 'package:ion/app/features/wallets/model/transaction_data.c.dart';
 
 part 'funds_request_entity.c.freezed.dart';
 part 'funds_request_entity.c.g.dart';
@@ -54,7 +55,8 @@ class FundsRequestData with _$FundsRequestData {
     required String assetAddress,
     String? walletAddress,
     String? pubkey,
-    String? request, // TODO: Not implemented
+    String? request,
+    TransactionData? transaction,
   }) = _FundsRequestData;
 
   const FundsRequestData._();
@@ -62,6 +64,7 @@ class FundsRequestData with _$FundsRequestData {
   factory FundsRequestData.fromEventMessage(EventMessage eventMessage) {
     final tags = groupBy(eventMessage.tags, (tag) => tag[0]);
     final decodedContent = jsonDecode(eventMessage.content) as Map<String, dynamic>;
+
     return FundsRequestData(
       content: FundsRequestContent.fromJson(decodedContent),
       pubkey: tags[RelatedPubkey.tagName]?.map(RelatedPubkey.fromTag).first.value,
@@ -69,6 +72,7 @@ class FundsRequestData with _$FundsRequestData {
       assetClass: tags[AssetClassTag.tagName]!.map(AssetClassTag.fromTag).first.value,
       assetAddress: tags[AssetAddressTag.tagName]!.map(AssetAddressTag.fromTag).first.value,
       walletAddress: tags[LabelTag.tagName]?.map(LabelTag.fromTag).first.value,
+      request: jsonEncode(eventMessage.toJson()),
     );
   }
 

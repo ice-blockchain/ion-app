@@ -43,6 +43,12 @@ abstract class RelatedEvent {
 
   // Intentionally returns not a List<String> to keep backwards compatibility on BE
   MapEntry<String, List<List<String>>> toFilterEntry();
+
+  static bool hasValidLength(List<String> tag) {
+    return tag.length >= minTagLength;
+  }
+
+  static const int minTagLength = 5;
 }
 
 @freezed
@@ -61,7 +67,7 @@ class RelatedImmutableEvent with _$RelatedImmutableEvent implements RelatedEvent
       throw IncorrectEventTagNameException(actual: tag[0], expected: tagName);
     }
 
-    if (tag.length < 5) {
+    if (tag.length < RelatedEvent.minTagLength) {
       throw IncorrectEventTagException(tag: tag.toString());
     }
 
@@ -103,7 +109,7 @@ class RelatedReplaceableEvent with _$RelatedReplaceableEvent implements RelatedE
       throw IncorrectEventTagNameException(actual: tag[0], expected: tagName);
     }
 
-    if (tag.length < 5) {
+    if (tag.length < RelatedEvent.minTagLength) {
       throw IncorrectEventTagException(tag: tag.toString());
     }
 

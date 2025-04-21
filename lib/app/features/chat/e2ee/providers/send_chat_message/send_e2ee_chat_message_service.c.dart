@@ -51,6 +51,7 @@ class SendE2eeChatMessageService {
     required List<MediaFile> mediaFiles,
     required List<String> participantsMasterPubkeys,
     int kind = ReplaceablePrivateDirectMessageEntity.kind,
+    List<List<String>>? tags,
     String? subject,
     String? existingMessageId,
     String? failedEventMessageId,
@@ -95,7 +96,11 @@ class SendE2eeChatMessageService {
         kind: kind,
         content: content,
         signer: eventSigner,
-        tags: conversationTags..addAll(mediaAttachments.map((a) => a.toTag())),
+        tags: [
+          ...conversationTags,
+          ...mediaAttachments.map((a) => a.toTag()),
+          if (tags != null) ...(tags),
+        ],
         previousId: failedEventMessageId,
       );
 
@@ -143,6 +148,7 @@ class SendE2eeChatMessageService {
                 messageId: kind == ReplaceablePrivateDirectMessageEntity.kind ? messageId : null,
               ),
               if (mediaTags != null) ...mediaTags,
+              if (tags != null) ...(tags),
             ];
 
             final isCurrentUser = ref.read(isCurrentUserSelectorProvider(masterPubkey));

@@ -1,5 +1,7 @@
 // SPDX-License-Identifier: ice License 1.0
 
+import 'dart:convert';
+
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/exceptions/exceptions.dart';
 import 'package:ion/app/extensions/extensions.dart';
@@ -14,6 +16,7 @@ import 'package:ion/app/features/wallets/data/repository/transactions_repository
 import 'package:ion/app/features/wallets/model/entities/funds_request_entity.c.dart';
 import 'package:ion/app/features/wallets/model/entities/wallet_asset_entity.c.dart';
 import 'package:ion/app/features/wallets/providers/wallets_initializer_provider.c.dart';
+import 'package:ion/app/features/wallets/utils/tag_finder.dart';
 import 'package:ion/app/services/ion_connect/ion_connect_gift_wrap_service.c.dart';
 import 'package:ion/app/services/ion_connect/ion_connect_seal_service.c.dart';
 import 'package:ion/app/services/logger/logger.dart';
@@ -144,16 +147,61 @@ Future<void> _saveEvent({
     if (rumor != null) {
       switch (rumor.kind) {
         case WalletAssetEntity.kind:
-          final message = WalletAssetEntity.fromEventMessage(rumor);
-          await transactionsRepository.saveEntities([message]);
+          await _handleWalletAssetEntity(
+            rumor: rumor,
+            transactionsRepository: transactionsRepository,
+            requestAssetsRepository: requestAssetsRepository,
+          );
         case FundsRequestEntity.kind:
-          final request = FundsRequestEntity.fromEventMessage(rumor);
-          await requestAssetsRepository.saveRequestAsset(request);
+          await _handleFundsRequestEntity(
+            rumor: rumor,
+            requestAssetsRepository: requestAssetsRepository,
+          );
       }
     }
   } on Exception catch (ex) {
     Logger.error('Caught error in subscription: $ex');
   }
+}
+
+/// Handle a WalletAssetEntity event
+Future<void> _handleWalletAssetEntity({
+  required EventMessage rumor,
+  required TransactionsRepository transactionsRepository,
+  required RequestAssetsRepository requestAssetsRepository,
+}) async {
+  final message = WalletAssetEntity.fromEventMessage(rumor);
+  await transactionsRepository.saveEntities([message]);
+
+  // Check if this transaction is associated with a funds request
+  final requestJson = findTagValue(rumor.tags, 'request');
+  if (requestJson != null) {
+    try {
+      // Parse the request JSON
+      final decodedJson = jsonDecode(requestJson) as Map;
+
+      final requestId = decodedJson['id'] as String;
+      final txHash = message.data.content.txHash;
+      await requestAssetsRepository.markRequestAsPaid(requestId, txHash);
+    } catch (e) {
+      Logger.error('Failed to parse request JSON: $e');
+    }
+  }
+}
+
+/// Handle a FundsRequestEntity event
+Future<void> _handleFundsRequestEntity({
+  required EventMessage rumor,
+  required RequestAssetsRepository requestAssetsRepository,
+}) async {
+  final request = FundsRequestEntity.fromEventMessage(rumor);
+
+  final updatedData = request.data.copyWith(request: jsonEncode(rumor.jsonPayload));
+  final updatedRequest = request.copyWith(data: updatedData);
+
+  await requestAssetsRepository.saveRequestAsset(updatedRequest);
+
+  Logger.info('Saved funds request ${request.id} with original event JSON');
 }
 
 Future<EventMessage?> _unwrapGift({

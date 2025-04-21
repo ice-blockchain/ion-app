@@ -40,20 +40,24 @@ class MoneyMessage extends HookConsumerWidget {
 
     final isMe = ref.watch(isCurrentUserSelectorProvider(eventReference.pubkey));
 
-    final fundsRequestAsync = ref.watch(fundsRequestForMessageProvider(eventReference.eventId));
+    final fundsRequestAsync = ref.watch(fundsRequestForMessageProvider(eventMessage));
     final fundsRequest = fundsRequestAsync.value;
 
-    final networkId = fundsRequest?.data.networkId;
+    if (fundsRequest == null) {
+      return const SizedBox.shrink();
+    }
+
+    final networkId = fundsRequest.data.networkId;
     final network = ref.watch(networkByIdProvider(networkId.emptyOrValue)).value;
 
-    final assetId = fundsRequest?.data.content.assetId?.emptyOrValue;
+    final assetId = fundsRequest.data.content.assetId?.emptyOrValue;
     final coin = ref.watch(coinByIdProvider(assetId.emptyOrValue)).value;
 
-    // TODO: currently hardcoded, will be dynamic when we implement paid requests.
-    const type = MoneyMessageType.requested;
+    final type =
+        fundsRequest.data.transaction == null ? MoneyMessageType.requested : MoneyMessageType.sent;
 
-    final amount = fundsRequest?.data.content.amount?.let(double.parse) ?? 0.0;
-    final equivalentUsd = fundsRequest?.data.content.amountUsd?.let(double.parse) ?? 0.0;
+    final amount = fundsRequest.data.content.amount?.let(double.parse) ?? 0.0;
+    final equivalentUsd = fundsRequest.data.content.amountUsd?.let(double.parse) ?? 0.0;
 
     return _MoneyMessageContent(
       isMe: isMe,
@@ -100,7 +104,7 @@ class _MoneyMessageContent extends HookConsumerWidget {
     };
 
     final title = switch (type) {
-      MoneyMessageType.received => context.i18n.chat_money_received_title,
+      MoneyMessageType.sent => context.i18n.chat_money_received_title,
       MoneyMessageType.requested => context.i18n.chat_money_request_title,
     };
 
@@ -109,7 +113,7 @@ class _MoneyMessageContent extends HookConsumerWidget {
       false => context.theme.appColors.quaternaryText,
     };
 
-    final isPaid = type == MoneyMessageType.received;
+    final isPaid = type == MoneyMessageType.sent;
 
     return MessageItemWrapper(
       messageItem: ChatMessageInfoItem.money(
