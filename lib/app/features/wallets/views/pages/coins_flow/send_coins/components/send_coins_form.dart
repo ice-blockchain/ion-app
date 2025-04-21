@@ -72,10 +72,9 @@ class SendCoinsForm extends HookConsumerWidget {
       () {
         void listener() {
           final numValue = parseAmount(amountController.value.text);
-          if (numValue != null && numValue > maxAmount) {
-            amountController.text = formatCrypto(maxAmount);
+          if (numValue != null && numValue <= maxAmount && numValue > 0) {
+            notifier.setCoinsAmount(amountController.text);
           }
-          notifier.setCoinsAmount(amountController.text);
         }
 
         amountController.addListener(listener);
