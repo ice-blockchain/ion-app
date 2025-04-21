@@ -5,7 +5,7 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/auth/providers/auth_provider.c.dart';
-import 'package:ion/app/features/chat/model/database/chat_database.c.dart';
+import 'package:ion/app/features/chat/hooks/use_has_reaction.dart';
 import 'package:ion/app/features/chat/model/message_list_item.c.dart';
 import 'package:ion/app/features/chat/recent_chats/providers/replied_message_list_item_provider.c.dart';
 import 'package:ion/app/features/chat/views/components/message_items/message_item_wrapper/message_item_wrapper.dart';
@@ -30,17 +30,12 @@ class TextMessage extends HookConsumerWidget {
       color: isMe ? context.theme.appColors.onPrimaryAccent : context.theme.appColors.primaryText,
     );
 
-    final reactionsStream = useMemoized(
-      () => ref.watch(conversationMessageReactionDaoProvider).messageReactions(eventMessage),
-      [eventMessage],
-    );
+    final hasReactions = useHasReaction(eventMessage, ref);
 
     final messageItem = TextItem(
       eventMessage: eventMessage,
       contentDescription: eventMessage.content,
     );
-
-    final hasReactions = useStream(reactionsStream).data?.isNotEmpty ?? false;
 
     final repliedEventMessage = ref.watch(repliedMessageListItemProvider(messageItem));
 
