@@ -11,10 +11,7 @@ import 'package:ion/app/features/chat/e2ee/providers/send_e2ee_message_provider.
 import 'package:ion/app/features/chat/model/database/chat_database.c.dart';
 import 'package:ion/app/features/chat/model/message_list_item.c.dart';
 import 'package:ion/app/features/chat/model/message_type.dart';
-import 'package:ion/app/features/chat/recent_chats/providers/replied_message_list_item_provider.c.dart';
-import 'package:ion/app/features/chat/views/components/message_items/components.dart';
 import 'package:ion/app/features/chat/views/components/message_items/message_reaction_dialog/message_reaction_dialog.dart';
-import 'package:ion/app/features/chat/views/components/message_items/message_types/reply_message/reply_message.dart';
 import 'package:ion/app/features/ion_connect/ion_connect.dart';
 import 'package:ion/app/features/ion_connect/model/event_reference.c.dart';
 import 'package:ion/app/features/user/providers/user_metadata_provider.c.dart';
@@ -44,12 +41,12 @@ class MessageItemWrapper extends HookConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final messageItemKey = useMemoized(GlobalKey.new);
 
-    final repliedEventMessage = ref.watch(repliedMessageListItemProvider(messageItem));
+    // final repliedEventMessage = ref.watch(repliedMessageListItemProvider(messageItem));
 
-    final repliedMessageItem = getRepliedMessageListItem(
-      ref: ref,
-      repliedEventMessage: repliedEventMessage.valueOrNull,
-    );
+    // final repliedMessageItem = getRepliedMessageListItem(
+    //   ref: ref,
+    //   repliedEventMessage: repliedEventMessage.valueOrNull,
+    // );
 
     final deliveryStatus =
         ref.watch(conversationMessageDataDaoProvider).messageStatus(messageItem.eventMessage.id);
@@ -130,37 +127,7 @@ class MessageItemWrapper extends HookConsumerWidget {
                             isMe && isLastMessageFromAuthor ? Radius.zero : Radius.circular(12.0.s),
                       ),
                     ),
-                    child: repliedMessageItem == null
-                        ? messageItem is! TextItem ||
-                                (messageItem is TextItem && (messageItem as TextItem).multiline)
-                            ? child
-                            : Row(
-                                mainAxisSize: MainAxisSize.min,
-                                children: [
-                                  child,
-                                  MessageMetaData(eventMessage: messageItem.eventMessage),
-                                ],
-                              )
-                        : Column(
-                            children: [
-                              ReplyMessage(messageItem, repliedMessageItem),
-                              Align(
-                                alignment: AlignmentDirectional.centerEnd,
-                                child: messageItem is! TextItem ||
-                                        (messageItem is TextItem &&
-                                            (messageItem as TextItem).multiline)
-                                    ? child
-                                    : Row(
-                                        mainAxisSize: MainAxisSize.min,
-                                        children: [
-                                          child,
-                                          const Spacer(),
-                                          MessageMetaData(eventMessage: messageItem.eventMessage),
-                                        ],
-                                      ),
-                              ),
-                            ],
-                          ),
+                    child: child,
                   ),
                   if (snapshot.hasData && snapshot.data == MessageDeliveryStatus.failed)
                     Row(
