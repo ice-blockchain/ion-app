@@ -64,8 +64,7 @@ Future<String?> _mainRedirect({
   required Ref ref,
 }) async {
   final isAuthenticated = (ref.read(authProvider).valueOrNull?.isAuthenticated).falseOrValue;
-  final onboardingState = ref.read(onboardingCompleteProvider);
-  final onboardingComplete = onboardingState.valueOrNull;
+  final onboardingComplete = ref.read(onboardingCompleteProvider).valueOrNull;
   final hasNotificationsPermission = ref.read(hasPermissionProvider(Permission.notifications));
   final forceUpdateRequired = ref.read(forceUpdateProvider).valueOrNull.falseOrValue;
 

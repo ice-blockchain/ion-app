@@ -4,12 +4,10 @@ import 'package:flutter/material.dart';
 
 class ErrorPage extends StatelessWidget {
   const ErrorPage({
-    this.errorCode,
     this.message,
     super.key,
   });
 
-  final int? errorCode;
   final String? message;
 
   @override
