@@ -35,19 +35,17 @@ class TextMessage extends HookConsumerWidget {
 
     final hasReactions = useStream(reactionsStream).data?.isNotEmpty ?? false;
 
-    print('hasReactions: $hasReactions');
-
-    return IntrinsicWidth(
-      child: MessageItemWrapper(
-        isMe: isMe,
-        messageItem: TextItem(
-          eventMessage: eventMessage,
-          contentDescription: eventMessage.content,
-        ),
-        contentPadding: EdgeInsets.symmetric(
-          horizontal: 12.0.s,
-          vertical: 12.0.s,
-        ),
+    return MessageItemWrapper(
+      isMe: isMe,
+      messageItem: TextItem(
+        eventMessage: eventMessage,
+        contentDescription: eventMessage.content,
+      ),
+      contentPadding: EdgeInsets.symmetric(
+        horizontal: 12.0.s,
+        vertical: 12.0.s,
+      ),
+      child: IntrinsicWidth(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -57,21 +55,16 @@ class TextMessage extends HookConsumerWidget {
               hasReactions: hasReactions,
             ),
             if (hasReactions)
-              IntrinsicWidth(
-                child: Align(
-                  alignment: Alignment.centerRight,
-                  child: Row(
-                    mainAxisSize: MainAxisSize.min,
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    crossAxisAlignment: CrossAxisAlignment.end,
-                    children: [
-                      Flexible(
-                        child: MessageReactions(isMe: isMe, eventMessage: eventMessage),
-                      ),
-                      MessageMetaData(eventMessage: eventMessage),
-                    ],
+              Row(
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.end,
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Expanded(
+                    child: MessageReactions(isMe: isMe, eventMessage: eventMessage),
                   ),
-                ),
+                  MessageMetaData(eventMessage: eventMessage, startPadding: 0.0.s),
+                ],
               ),
           ],
         ),
@@ -93,7 +86,24 @@ class _TextMessageContent extends HookWidget {
   @override
   Widget build(BuildContext context) {
     final maxAvailableWidth = MessageItemWrapper.maxWidth - (12.0.s * 2) - 32.0.s;
-    const content = 'a a a a  a a a a a a a a a a';
+    final content = eventMessage.content;
+
+    final metadataRef = useRef(GlobalKey());
+
+    final metadataWidth = useState<double>(0);
+
+    useEffect(
+      () {
+        WidgetsBinding.instance.addPostFrameCallback((_) {
+          final box = metadataRef.value.currentContext?.findRenderObject() as RenderBox?;
+          if (box != null && box.hasSize && box.size.width > 0) {
+            metadataWidth.value = box.size.width;
+          }
+        });
+        return null;
+      },
+      [eventMessage],
+    );
 
     final oneLineTextPainter = TextPainter(
       text: TextSpan(
@@ -102,13 +112,17 @@ class _TextMessageContent extends HookWidget {
       ),
       textDirection: TextDirection.ltr,
       textWidthBasis: TextWidthBasis.longestLine,
-    )..layout(maxWidth: maxAvailableWidth);
+    )..layout(maxWidth: maxAvailableWidth - metadataWidth.value.s);
 
     final oneLineMetrics = oneLineTextPainter.computeLineMetrics();
     final multiline = oneLineMetrics.length > 1;
 
     if (hasReactions) {
-      return Text(content, style: textStyle);
+      return Text(
+        content,
+        style: textStyle,
+        textAlign: TextAlign.start,
+      );
     }
     if (!multiline) {
       return Row(
@@ -116,7 +130,7 @@ class _TextMessageContent extends HookWidget {
         crossAxisAlignment: CrossAxisAlignment.end,
         children: [
           Text(content, style: textStyle),
-          MessageMetaData(eventMessage: eventMessage),
+          MessageMetaData(eventMessage: eventMessage, key: metadataRef.value),
         ],
       );
     } else {
@@ -136,7 +150,7 @@ class _TextMessageContent extends HookWidget {
             '$content${wouldOverlap ? '\n' : ''}',
             style: textStyle,
           ),
-          MessageMetaData(eventMessage: eventMessage),
+          MessageMetaData(eventMessage: eventMessage, key: metadataRef.value),
         ],
       );
     }

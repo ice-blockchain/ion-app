@@ -40,41 +40,43 @@ class MessageReactions extends ConsumerWidget {
             builder: (context) => Padding(
               padding: EdgeInsetsDirectional.only(top: 8.0.s),
               child: Wrap(
-                spacing: 4.0.s,
+                spacing: 0.0.s,
                 runSpacing: 4.0.s,
-                children: snapshot.data!.map((reactionGroup) {
-                  final reactionMasterPubkeys =
-                      reactionGroup.eventMessages.map((e) => e.masterPubkey).toList();
+                children: [
+                  ...snapshot.data!.map((reactionGroup) {
+                    final reactionMasterPubkeys =
+                        reactionGroup.eventMessages.map((e) => e.masterPubkey).toList();
 
-                  final isCurrentUserHasReaction = useMemoized(
-                    () => reactionMasterPubkeys.contains(currentMasterPubkey),
-                    [reactionMasterPubkeys, currentMasterPubkey],
-                  );
+                    final isCurrentUserHasReaction = useMemoized(
+                      () => reactionMasterPubkeys.contains(currentMasterPubkey),
+                      [reactionMasterPubkeys, currentMasterPubkey],
+                    );
 
-                  return _MessageReactionChip(
-                    isMe: isMe,
-                    emoji: reactionGroup.emoji,
-                    masterPubkeys: reactionMasterPubkeys,
-                    currentUserHasReaction: isCurrentUserHasReaction,
-                    onTap: () {
-                      if (isCurrentUserHasReaction) {
-                        final messageEntity =
-                            PrivateDirectMessageEntity.fromEventMessage(eventMessage);
+                    return _MessageReactionChip(
+                      isMe: isMe,
+                      emoji: reactionGroup.emoji,
+                      masterPubkeys: reactionMasterPubkeys,
+                      currentUserHasReaction: isCurrentUserHasReaction,
+                      onTap: () {
+                        if (isCurrentUserHasReaction) {
+                          final messageEntity =
+                              PrivateDirectMessageEntity.fromEventMessage(eventMessage);
 
-                        final userReactionEventMessage = reactionGroup.eventMessages.firstWhere(
-                          (e) => e.masterPubkey == currentMasterPubkey,
-                        );
+                          final userReactionEventMessage = reactionGroup.eventMessages.firstWhere(
+                            (e) => e.masterPubkey == currentMasterPubkey,
+                          );
 
-                        ref.read(
-                          e2eeDeleteReactionProvider(
-                            reactionEvent: userReactionEventMessage,
-                            participantsMasterPubkeys: messageEntity.allPubkeys,
-                          ),
-                        );
-                      }
-                    },
-                  );
-                }).toList(),
+                          ref.read(
+                            e2eeDeleteReactionProvider(
+                              reactionEvent: userReactionEventMessage,
+                              participantsMasterPubkeys: messageEntity.allPubkeys,
+                            ),
+                          );
+                        }
+                      },
+                    );
+                  }),
+                ],
               ),
             ),
           );
