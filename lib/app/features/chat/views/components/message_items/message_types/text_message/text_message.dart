@@ -7,9 +7,11 @@ import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/auth/providers/auth_provider.c.dart';
 import 'package:ion/app/features/chat/model/database/chat_database.c.dart';
 import 'package:ion/app/features/chat/model/message_list_item.c.dart';
+import 'package:ion/app/features/chat/recent_chats/providers/replied_message_list_item_provider.c.dart';
 import 'package:ion/app/features/chat/views/components/message_items/message_item_wrapper/message_item_wrapper.dart';
 import 'package:ion/app/features/chat/views/components/message_items/message_metadata/message_metadata.dart';
 import 'package:ion/app/features/chat/views/components/message_items/message_reactions/message_reactions.dart';
+import 'package:ion/app/features/chat/views/components/message_items/message_types/reply_message/reply_message.dart';
 import 'package:ion/app/features/ion_connect/ion_connect.dart';
 
 class TextMessage extends HookConsumerWidget {
@@ -33,14 +35,23 @@ class TextMessage extends HookConsumerWidget {
       [eventMessage],
     );
 
+    final messageItem = TextItem(
+      eventMessage: eventMessage,
+      contentDescription: eventMessage.content,
+    );
+
     final hasReactions = useStream(reactionsStream).data?.isNotEmpty ?? false;
+
+    final repliedEventMessage = ref.watch(repliedMessageListItemProvider(messageItem));
+
+    final repliedMessageItem = getRepliedMessageListItem(
+      ref: ref,
+      repliedEventMessage: repliedEventMessage.valueOrNull,
+    );
 
     return MessageItemWrapper(
       isMe: isMe,
-      messageItem: TextItem(
-        eventMessage: eventMessage,
-        contentDescription: eventMessage.content,
-      ),
+      messageItem: messageItem,
       contentPadding: EdgeInsets.symmetric(
         horizontal: 12.0.s,
         vertical: 12.0.s,
@@ -49,10 +60,12 @@ class TextMessage extends HookConsumerWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
+            if (repliedMessageItem != null) ReplyMessage(messageItem, repliedMessageItem),
             _TextMessageContent(
               textStyle: textStyle,
               eventMessage: eventMessage,
               hasReactions: hasReactions,
+              hasRepliedMessage: repliedMessageItem != null,
             ),
             if (hasReactions)
               Row(
@@ -78,11 +91,13 @@ class _TextMessageContent extends HookWidget {
     required this.textStyle,
     required this.eventMessage,
     required this.hasReactions,
+    required this.hasRepliedMessage,
   });
 
   final TextStyle textStyle;
   final EventMessage eventMessage;
   final bool hasReactions;
+  final bool hasRepliedMessage;
   @override
   Widget build(BuildContext context) {
     final maxAvailableWidth = MessageItemWrapper.maxWidth - (12.0.s * 2) - 32.0.s;
@@ -130,6 +145,7 @@ class _TextMessageContent extends HookWidget {
         crossAxisAlignment: CrossAxisAlignment.end,
         children: [
           Text(content, style: textStyle),
+          if (hasRepliedMessage) const Spacer(),
           MessageMetaData(eventMessage: eventMessage, key: metadataRef.value),
         ],
       );

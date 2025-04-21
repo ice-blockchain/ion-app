@@ -41,13 +41,6 @@ class MessageItemWrapper extends HookConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final messageItemKey = useMemoized(GlobalKey.new);
 
-    // final repliedEventMessage = ref.watch(repliedMessageListItemProvider(messageItem));
-
-    // final repliedMessageItem = getRepliedMessageListItem(
-    //   ref: ref,
-    //   repliedEventMessage: repliedEventMessage.valueOrNull,
-    // );
-
     final deliveryStatus =
         ref.watch(conversationMessageDataDaoProvider).messageStatus(messageItem.eventMessage.id);
 
@@ -147,58 +140,58 @@ class MessageItemWrapper extends HookConsumerWidget {
       },
     );
   }
+}
 
-  ChatMessageInfoItem? getRepliedMessageListItem({
-    required WidgetRef ref,
-    required EventMessage? repliedEventMessage,
-  }) {
-    if (repliedEventMessage == null) {
-      return null;
-    }
-
-    final repliedEntity = PrivateDirectMessageEntity.fromEventMessage(repliedEventMessage);
-
-    if (repliedEntity.data.messageType == MessageType.profile) {
-      final profilePubkey = EventReference.fromEncoded(repliedEntity.data.content).pubkey;
-
-      final userMetadata = ref.watch(userMetadataProvider(profilePubkey)).valueOrNull;
-      return ShareProfileItem(
-        eventMessage: repliedEventMessage,
-        contentDescription: userMetadata?.data.name ?? repliedEntity.data.content,
-      );
-    } else if (repliedEntity.data.messageType == MessageType.visualMedia) {
-      final messageMedias =
-          ref.watch(chatMediasProvider(eventMessageId: repliedEventMessage.id)).valueOrNull ?? [];
-
-      return MediaItem(
-        medias: messageMedias,
-        eventMessage: repliedEventMessage,
-        contentDescription: ref.context.i18n.common_media,
-      );
-    }
-
-    return switch (repliedEntity.data.messageType) {
-      MessageType.profile => null,
-      MessageType.storyReply => null,
-      MessageType.visualMedia => null,
-      // TODO: implement replied funds request message item
-      MessageType.requestFunds => null,
-      MessageType.text => TextItem(
-          eventMessage: repliedEventMessage,
-          contentDescription: repliedEntity.data.content,
-        ),
-      MessageType.emoji => EmojiItem(
-          eventMessage: repliedEventMessage,
-          contentDescription: repliedEntity.data.content,
-        ),
-      MessageType.audio => AudioItem(
-          eventMessage: repliedEventMessage,
-          contentDescription: ref.context.i18n.common_voice_message,
-        ),
-      MessageType.document => DocumentItem(
-          eventMessage: repliedEventMessage,
-          contentDescription: repliedEntity.data.content,
-        ),
-    };
+ChatMessageInfoItem? getRepliedMessageListItem({
+  required WidgetRef ref,
+  required EventMessage? repliedEventMessage,
+}) {
+  if (repliedEventMessage == null) {
+    return null;
   }
+
+  final repliedEntity = PrivateDirectMessageEntity.fromEventMessage(repliedEventMessage);
+
+  if (repliedEntity.data.messageType == MessageType.profile) {
+    final profilePubkey = EventReference.fromEncoded(repliedEntity.data.content).pubkey;
+
+    final userMetadata = ref.watch(userMetadataProvider(profilePubkey)).valueOrNull;
+    return ShareProfileItem(
+      eventMessage: repliedEventMessage,
+      contentDescription: userMetadata?.data.name ?? repliedEntity.data.content,
+    );
+  } else if (repliedEntity.data.messageType == MessageType.visualMedia) {
+    final messageMedias =
+        ref.watch(chatMediasProvider(eventMessageId: repliedEventMessage.id)).valueOrNull ?? [];
+
+    return MediaItem(
+      medias: messageMedias,
+      eventMessage: repliedEventMessage,
+      contentDescription: ref.context.i18n.common_media,
+    );
+  }
+
+  return switch (repliedEntity.data.messageType) {
+    MessageType.profile => null,
+    MessageType.storyReply => null,
+    MessageType.visualMedia => null,
+    // TODO: implement replied funds request message item
+    MessageType.requestFunds => null,
+    MessageType.text => TextItem(
+        eventMessage: repliedEventMessage,
+        contentDescription: repliedEntity.data.content,
+      ),
+    MessageType.emoji => EmojiItem(
+        eventMessage: repliedEventMessage,
+        contentDescription: repliedEntity.data.content,
+      ),
+    MessageType.audio => AudioItem(
+        eventMessage: repliedEventMessage,
+        contentDescription: ref.context.i18n.common_voice_message,
+      ),
+    MessageType.document => DocumentItem(
+        eventMessage: repliedEventMessage,
+        contentDescription: repliedEntity.data.content,
+      ),
+  };
 }
