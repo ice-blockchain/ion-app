@@ -30,7 +30,6 @@ class CoinAmountInput extends HookConsumerWidget {
     final locale = context.i18n;
     final colors = context.theme.appColors;
     final textTheme = context.theme.appTextThemes;
-    final formKey = useRef(GlobalKey<FormState>());
 
     final error = useState<String?>(null);
     final label = locale.wallet_coin_amount(coinAbbreviation ?? '');
@@ -61,66 +60,63 @@ class CoinAmountInput extends HookConsumerWidget {
       [controller, maxValue, coinAbbreviation],
     );
 
-    return Form(
-      key: formKey.value,
-      child: Column(
-        children: [
-          TextInput(
-            enabled: enabled,
-            controller: controller,
-            errorText: error.value,
-            autoValidateMode: AutovalidateMode.always,
-            keyboardType: const TextInputType.numberWithOptions(decimal: true),
-            validator: (value) {
-              final parsed = parseAmount(value ?? '');
+    return Column(
+      children: [
+        TextInput(
+          enabled: enabled,
+          controller: controller,
+          errorText: error.value,
+          autoValidateMode: AutovalidateMode.always,
+          keyboardType: const TextInputType.numberWithOptions(decimal: true),
+          validator: (value) {
+            final parsed = parseAmount(value ?? '');
 
-              // Error text will be displayed in the label, so pass an empty string here
-              const error = '';
+            // Error text will be displayed in the label, so pass an empty string here
+            const error = '';
 
-              if (parsed == null) return error;
-              if ((maxValue != null && parsed > maxValue!) || parsed < 0) return error;
+            if (parsed == null) return error;
+            if ((maxValue != null && parsed > maxValue!) || parsed < 0) return error;
 
-              return null;
-            },
-            labelText: label,
-            suffixIcon: maxValue != null && enabled
-                ? Padding(
-                    padding: EdgeInsetsDirectional.only(end: 16.0.s),
-                    child: TextButton(
-                      onPressed: () {
-                        controller.text = formatCrypto(maxValue ?? 0);
-                      },
-                      child: Text(
-                        locale.wallet_max,
-                        style: textTheme.caption.copyWith(
-                          color: error.value == null
-                              ? context.theme.appColors.primaryAccent
-                              : context.theme.appColors.attentionRed,
-                        ),
+            return null;
+          },
+          labelText: label,
+          suffixIcon: maxValue != null && enabled
+              ? Padding(
+                  padding: EdgeInsetsDirectional.only(end: 16.0.s),
+                  child: TextButton(
+                    onPressed: () {
+                      controller.text = formatCrypto(maxValue ?? 0);
+                    },
+                    child: Text(
+                      locale.wallet_max,
+                      style: textTheme.caption.copyWith(
+                        color: error.value == null
+                            ? context.theme.appColors.primaryAccent
+                            : context.theme.appColors.attentionRed,
                       ),
                     ),
-                  )
-                : null,
-          ),
-          if (balanceUSD != null)
-            Column(
-              children: [
-                SizedBox(height: 6.0.s),
-                Align(
-                  alignment: AlignmentDirectional.centerStart,
-                  child: Text(
-                    locale.wallet_approximate_in_usd(
-                      formatUSD(balanceUSD!),
-                    ),
-                    style: textTheme.caption2.copyWith(
-                      color: colors.tertararyText,
-                    ),
+                  ),
+                )
+              : null,
+        ),
+        if (balanceUSD != null)
+          Column(
+            children: [
+              SizedBox(height: 6.0.s),
+              Align(
+                alignment: AlignmentDirectional.centerStart,
+                child: Text(
+                  locale.wallet_approximate_in_usd(
+                    formatUSD(balanceUSD!),
+                  ),
+                  style: textTheme.caption2.copyWith(
+                    color: colors.tertararyText,
                   ),
                 ),
-              ],
-            ),
-        ],
-      ),
+              ),
+            ],
+          ),
+      ],
     );
   }
 }
