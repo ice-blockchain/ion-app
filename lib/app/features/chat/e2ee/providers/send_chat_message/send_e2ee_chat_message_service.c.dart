@@ -26,7 +26,7 @@ import 'package:ion/app/features/ion_connect/model/related_event_marker.dart';
 import 'package:ion/app/features/ion_connect/model/replaceable_event_identifier.c.dart';
 import 'package:ion/app/features/ion_connect/providers/ion_connect_event_signer_provider.c.dart';
 import 'package:ion/app/features/ion_connect/providers/ion_connect_notifier.c.dart';
-import 'package:ion/app/services/compressor/compress_service.c.dart';
+import 'package:ion/app/services/compressors/video_compressor.c.dart';
 import 'package:ion/app/services/ion_connect/ion_connect_gift_wrap_service.c.dart';
 import 'package:ion/app/services/ion_connect/ion_connect_seal_service.c.dart';
 import 'package:ion/app/services/media_service/media_service.c.dart';
@@ -442,7 +442,7 @@ class SendE2eeChatMessageService {
       final isVideo = MediaType.fromMimeType(mediaFile.mimeType ?? '') == MediaType.video;
 
       if (isVideo) {
-        final thumb = await ref.read(compressServiceProvider).getThumbnail(mediaFile);
+        final thumb = await ref.read(videoCompressorProvider).getThumbnail(mediaFile);
         await FileSaver.instance.saveFileOnly(name: fileName, file: File(thumb.path));
       } else {
         await FileSaver.instance.saveFileOnly(name: fileName, file: file);

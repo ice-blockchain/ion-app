@@ -89,12 +89,18 @@ class FFmpegCommands {
   static List<String> audioToOpus({
     required String inputPath,
     required String outputPath,
+    int bitrate = 64,
+    int sampleRate = 48000,
   }) =>
       [
         '-i',
         inputPath,
         '-c:a',
         'libopus',
+        '-b:a',
+        '${bitrate}k',
+        '-ar',
+        sampleRate.toString(),
         outputPath,
       ];
 

@@ -19,7 +19,7 @@ import 'package:ion/app/features/chat/views/components/message_items/message_typ
 import 'package:ion/app/features/ion_connect/ion_connect.dart';
 import 'package:ion/app/hooks/use_on_init.dart';
 import 'package:ion/app/services/audio_wave_playback_service/audio_wave_playback_service.c.dart';
-import 'package:ion/app/services/compressor/compress_service.c.dart';
+import 'package:ion/app/services/compressors/audio_compressor.c.dart';
 import 'package:ion/app/services/media_service/media_encryption_service.c.dart';
 import 'package:ion/app/utils/date.dart';
 import 'package:ion/app/utils/validators.dart';
@@ -59,7 +59,7 @@ class AudioMessage extends HookConsumerWidget {
                     entity.data.primaryAudio!,
                     authorPubkey: eventMessage.masterPubkey,
                   );
-          return ref.read(compressServiceProvider).compressAudioToWav(encryptedMedia.path);
+          return ref.read(audioCompressorProvider).compressAudioToWav(encryptedMedia.path);
         },
         [entity.data.primaryAudio!.url],
       ),

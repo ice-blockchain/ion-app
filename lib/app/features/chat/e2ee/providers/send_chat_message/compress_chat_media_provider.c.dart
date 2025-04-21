@@ -4,7 +4,10 @@ import 'dart:io';
 
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/features/core/model/media_type.dart';
-import 'package:ion/app/services/compressor/compress_service.c.dart';
+import 'package:ion/app/services/compressors/audio_compressor.c.dart';
+import 'package:ion/app/services/compressors/brotli_compressor.c.dart';
+import 'package:ion/app/services/compressors/image_compressor.c.dart';
+import 'package:ion/app/services/compressors/video_compressor.c.dart';
 import 'package:ion/app/services/media_service/media_service.c.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
@@ -14,16 +17,14 @@ part 'compress_chat_media_provider.c.g.dart';
 Raw<Future<MediaFile>> compressChatMedia(Ref ref, MediaFile mediaFile) async {
   final mediaType = MediaType.fromMimeType(mediaFile.mimeType ?? '');
 
-  final compressService = ref.watch(compressServiceProvider);
-
   switch (mediaType) {
     case MediaType.image:
-      return compressService.compressImage(mediaFile, shouldCompressGif: true);
+      return ref.watch(imageCompressorProvider).compressImage(mediaFile, shouldCompressGif: true);
     case MediaType.video:
-      return compressService.compressVideo(mediaFile);
+      return ref.watch(videoCompressorProvider).compressVideo(mediaFile);
     case MediaType.audio:
-      return compressService.compressAudio(mediaFile.path);
+      return ref.watch(audioCompressorProvider).compressAudio(mediaFile.path);
     case MediaType.unknown:
-      return compressService.compressWithBrotli(File(mediaFile.path));
+      return ref.watch(brotliCompressorProvider).compressWithBrotli(File(mediaFile.path));
   }
 }

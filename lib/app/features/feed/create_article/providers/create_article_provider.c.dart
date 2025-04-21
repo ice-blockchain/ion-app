@@ -30,7 +30,7 @@ import 'package:ion/app/features/ion_connect/providers/ion_connect_delete_file_n
 import 'package:ion/app/features/ion_connect/providers/ion_connect_entity_provider.c.dart';
 import 'package:ion/app/features/ion_connect/providers/ion_connect_notifier.c.dart';
 import 'package:ion/app/features/ion_connect/providers/ion_connect_upload_notifier.c.dart';
-import 'package:ion/app/services/compressor/compress_service.c.dart';
+import 'package:ion/app/services/compressors/image_compressor.c.dart';
 import 'package:ion/app/services/markdown/quill.dart';
 import 'package:ion/app/services/media_service/media_service.c.dart';
 import 'package:ion/app/utils/image_path.dart';
@@ -329,13 +329,14 @@ class CreateArticle extends _$CreateArticle {
   }
 
   Future<UploadResult> _uploadImage(String imagePath, {bool extractColor = false}) async {
-    final dimension = await ref.read(compressServiceProvider).getImageDimension(path: imagePath);
+    final imageCompressor = ref.read(imageCompressorProvider);
+    final dimension = await imageCompressor.getImageDimension(path: imagePath);
     final file = MediaFile(
       path: imagePath,
       width: dimension.width,
       height: dimension.height,
     );
-    final compressedImage = await ref.read(compressServiceProvider).compressImage(file);
+    final compressedImage = await imageCompressor.compressImage(file);
 
     final result = await ref.read(ionConnectUploadNotifierProvider.notifier).upload(
           compressedImage,

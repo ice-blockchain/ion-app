@@ -3,7 +3,7 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:ion/app/exceptions/exceptions.dart';
 import 'package:ion/app/features/gallery/providers/gallery_provider.c.dart';
-import 'package:ion/app/services/compressor/compress_service.c.dart';
+import 'package:ion/app/services/compressors/image_compressor.c.dart';
 import 'package:ion/app/services/logger/logger.dart';
 import 'package:ion/app/services/media_service/image_proccessing_config.dart';
 import 'package:ion/app/services/media_service/media_service.c.dart';
@@ -32,7 +32,6 @@ class ImageProcessorNotifier extends _$ImageProcessorNotifier {
     required CropImageUiSettings cropUiSettings,
   }) async {
     final mediaService = ref.read(mediaServiceProvider);
-    final compressService = ref.read(compressServiceProvider);
     final config = type.config;
 
     try {
@@ -71,12 +70,12 @@ class ImageProcessorNotifier extends _$ImageProcessorNotifier {
 
       state = ImageProcessorState.cropped(file: croppedImage);
 
-      final compressedImage = await compressService.compressImage(
-        croppedImage,
-        width: config.targetWidth,
-        height: config.targetHeight,
-        quality: config.quality,
-      );
+      final compressedImage = await ref.read(imageCompressorProvider).compressImage(
+            croppedImage,
+            width: config.targetWidth,
+            height: config.targetHeight,
+            quality: config.quality,
+          );
       state = ImageProcessorState.processed(file: compressedImage);
 
       Logger.info(

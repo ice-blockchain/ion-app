@@ -12,7 +12,7 @@ import 'package:ion/app/features/ion_connect/model/file_alt.dart';
 import 'package:ion/app/features/ion_connect/model/media_attachment.dart';
 import 'package:ion/app/features/ion_connect/providers/ion_connect_notifier.c.dart';
 import 'package:ion/app/features/ion_connect/providers/ion_connect_upload_notifier.c.dart';
-import 'package:ion/app/services/compressor/compress_service.c.dart';
+import 'package:ion/app/services/compressors/video_compressor.c.dart';
 import 'package:ion/app/services/ion_connect/ed25519_key_store.dart';
 import 'package:ion/app/services/media_service/blurhash_service.c.dart';
 import 'package:ion/app/services/media_service/media_encryption_service.c.dart';
@@ -100,7 +100,7 @@ class SendChatMedia extends _$SendChatMedia {
     String? thumbUrl;
 
     if (isVideo) {
-      final thumbMediaFile = await ref.read(compressServiceProvider).getThumbnail(mediaFile);
+      final thumbMediaFile = await ref.read(videoCompressorProvider).getThumbnail(mediaFile);
       blurHash = await ref.read(generateBlurhashProvider(thumbMediaFile));
       final thumbMediaAttachment = (await _processMedia(thumbMediaFile, masterPubkey)).first;
       mediaAttachments.add(thumbMediaAttachment);

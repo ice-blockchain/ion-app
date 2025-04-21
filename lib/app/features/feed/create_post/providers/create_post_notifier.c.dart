@@ -40,7 +40,8 @@ import 'package:ion/app/features/ion_connect/providers/ion_connect_delete_file_n
 import 'package:ion/app/features/ion_connect/providers/ion_connect_entity_provider.c.dart';
 import 'package:ion/app/features/ion_connect/providers/ion_connect_notifier.c.dart';
 import 'package:ion/app/features/ion_connect/providers/ion_connect_upload_notifier.c.dart';
-import 'package:ion/app/services/compressor/compress_service.c.dart';
+import 'package:ion/app/services/compressors/image_compressor.c.dart';
+import 'package:ion/app/services/compressors/video_compressor.c.dart';
 import 'package:ion/app/services/logger/logger.dart';
 import 'package:ion/app/services/markdown/quill.dart';
 import 'package:ion/app/services/media_service/media_service.c.dart';
@@ -350,7 +351,7 @@ class CreatePostNotifier extends _$CreatePostNotifier {
     // The stories has its own compression logic in ImageProcessorNotifier
 
     if (createOption != CreatePostOption.story) {
-      compressedImage = await ref.read(compressServiceProvider).compressImage(
+      compressedImage = await ref.read(imageCompressorProvider).compressImage(
             file,
             shouldCompressGif: true,
           );
@@ -374,14 +375,14 @@ class CreatePostNotifier extends _$CreatePostNotifier {
   Future<({List<FileMetadata> fileMetadatas, MediaAttachment mediaAttachment})> _uploadVideo(
     MediaFile file,
   ) async {
-    final compressedVideo = await ref.read(compressServiceProvider).compressVideo(file);
+    final videoCompressor = ref.read(videoCompressorProvider);
+    final compressedVideo = await videoCompressor.compressVideo(file);
 
     final videoUploadResult = await ref
         .read(ionConnectUploadNotifierProvider.notifier)
         .upload(compressedVideo, alt: _getFileAlt());
 
-    final thumbImage =
-        await ref.read(compressServiceProvider).getThumbnail(compressedVideo, thumb: file.thumb);
+    final thumbImage = await videoCompressor.getThumbnail(compressedVideo, thumb: file.thumb);
 
     final thumbUploadResult = await ref
         .read(ionConnectUploadNotifierProvider.notifier)
