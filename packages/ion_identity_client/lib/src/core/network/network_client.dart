@@ -2,7 +2,6 @@
 
 import 'package:dio/dio.dart';
 import 'package:ion_identity_client/ion_identity.dart';
-import 'package:ion_identity_client/src/core/network/network_exception.dart';
 
 typedef Decoder<T> = T Function(dynamic response);
 

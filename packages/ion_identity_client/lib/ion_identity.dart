@@ -8,6 +8,7 @@ export 'src/auth/services/credentials/models/recovery_credentials.c.dart';
 export 'src/auth/services/twofa/models/twofa_type.c.dart';
 export 'src/coins/models/coin.c.dart';
 export 'src/coins/models/network.c.dart';
+export 'src/core/network/network_exception.dart';
 export 'src/core/types/biometrics_state.dart';
 export 'src/core/types/ion_exception.dart';
 export 'src/core/types/local_passkey_creds_state.dart';

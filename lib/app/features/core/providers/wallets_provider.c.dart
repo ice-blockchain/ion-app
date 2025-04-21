@@ -1,5 +1,6 @@
 // SPDX-License-Identifier: ice License 1.0
 
+import 'package:ion/app/exceptions/exceptions.dart';
 import 'package:ion/app/services/ion_identity/ion_identity_client_provider.c.dart';
 import 'package:ion_identity_client/ion_identity.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
@@ -10,8 +11,12 @@ part 'wallets_provider.c.g.dart';
 class WalletsNotifier extends _$WalletsNotifier {
   @override
   Future<List<Wallet>> build() async {
-    final ionIdentity = await ref.watch(ionIdentityClientProvider.future);
-    return ionIdentity.wallets.getWallets();
+    try {
+      final ionIdentity = await ref.watch(ionIdentityClientProvider.future);
+      return await ionIdentity.wallets.getWallets();
+    } on NetworkException {
+      throw WalletsLoadingException();
+    }
   }
 
   Future<void> addWallet(Wallet wallet) async {

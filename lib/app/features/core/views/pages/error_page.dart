@@ -3,15 +3,23 @@
 import 'package:flutter/material.dart';
 
 class ErrorPage extends StatelessWidget {
-  const ErrorPage({required this.error, super.key});
+  const ErrorPage({
+    this.message,
+    super.key,
+  });
 
-  final Exception error;
+  final String? message;
 
   @override
   Widget build(BuildContext context) {
+    final errorMessage = message ?? 'Unknown error';
+
     return Scaffold(
       body: Center(
-        child: Text('Oops: $error'),
+        child: Padding(
+          padding: const EdgeInsets.all(16),
+          child: Text('Oops: $errorMessage'),
+        ),
       ),
     );
   }

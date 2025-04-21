@@ -12,7 +12,8 @@ part 'main_wallet_provider.c.g.dart';
 
 @Riverpod(keepAlive: true)
 Future<Wallet?> mainWallet(Ref ref) async {
-  final userAvailable = ref.watch(currentIdentityKeyNameSelectorProvider) != null;
+  final userAvailable =
+      await ref.watch(authProvider.selectAsync((state) => state.currentIdentityKeyName)) != null;
   if (!userAvailable) {
     return null;
   }
