@@ -161,7 +161,6 @@ class SendCoinsNotifier extends _$SendCoinsNotifier {
       content: WalletAssetContent(
         amount: transferResult.requestBody['amount'] as String?,
         amountUsd: coinAssetData.amountUSD.toString(),
-        balance: sendableAsset.balance, // number of coins before transfer
         txHash: details.txHash,
         txUrl: details.transactionExplorerUrl,
         from: details.senderAddress,
