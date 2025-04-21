@@ -4,8 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/components/screen_offset/screen_side_offset.dart';
-import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/core/model/media_type.dart';
+import 'package:ion/app/features/feed/views/components/post/components/post_body/components/post_media/components/post_media_index_indicator.dart';
 import 'package:ion/app/features/feed/views/components/post/components/post_body/components/post_media/components/post_media_item.dart';
 import 'package:ion/app/features/ion_connect/model/event_reference.c.dart';
 import 'package:ion/app/features/ion_connect/model/media_attachment.dart';
@@ -55,22 +55,9 @@ class PostMediaCarouselHorizontal extends HookConsumerWidget {
             ],
           ),
         ),
-        PositionedDirectional(
-          top: 8.0.s,
-          end: 24.0.s,
-          child: Container(
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.all(Radius.circular(6.0.s)),
-              color: context.theme.appColors.backgroundSheet,
-            ),
-            padding: EdgeInsets.symmetric(horizontal: 4.0.s, vertical: 1.0.s),
-            child: Text(
-              '${currentIndex.value + 1}/${media.length}',
-              style: context.theme.appTextThemes.caption.copyWith(
-                color: context.theme.appColors.primaryBackground,
-              ),
-            ),
-          ),
+        PostMediaIndexIndicator(
+          currentIndex: currentIndex.value,
+          mediaCount: media.length,
         ),
       ],
     );
