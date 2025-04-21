@@ -473,3 +473,7 @@ class FailedToSendEmail extends IONException {
 class WalletsLoadingException extends IONException {
   WalletsLoadingException() : super(10093, 'Failed to load wallets');
 }
+
+class FailedToGenerateMediaUrlFallback extends IONException {
+  FailedToGenerateMediaUrlFallback() : super(10094, 'Failed to generate media fallback url');
+}

@@ -11,19 +11,23 @@ part 'ion_connect_media_url_fallback_provider.c.g.dart';
 ///
 /// When a media URL fails to load, this provider replaces it with
 /// a fallback URL using one of the user's available relays.
-@riverpod
+@Riverpod(keepAlive: true)
 class IONConnectMediaUrlFallback extends _$IONConnectMediaUrlFallback {
   @override
   Map<String, String> build() => {};
 
-  Future<void> generateFallback(String mediaUrl) async {
-    if (!isNetworkUrl(mediaUrl) || state.containsKey(mediaUrl)) {
-      return;
+  Future<String?> generateFallback(String mediaUrl) async {
+    if (state.containsKey(mediaUrl)) {
+      return state[mediaUrl];
+    }
+
+    if (!isNetworkUrl(mediaUrl)) {
+      return null;
     }
 
     final userRelays = await ref.read(currentUserRelayProvider.future);
     if (userRelays == null) {
-      return;
+      return null;
     }
 
     final userRelayUri = Uri.parse(userRelays.urls.random);
@@ -31,5 +35,7 @@ class IONConnectMediaUrlFallback extends _$IONConnectMediaUrlFallback {
     final fallbackUrl = assetUri.replace(host: userRelayUri.host).toString();
 
     state = {...state, mediaUrl: fallbackUrl};
+
+    return fallbackUrl;
   }
 }

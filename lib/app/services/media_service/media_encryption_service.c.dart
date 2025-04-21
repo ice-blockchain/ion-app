@@ -10,6 +10,7 @@ import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/exceptions/exceptions.dart';
 import 'package:ion/app/features/core/model/media_type.dart';
+import 'package:ion/app/features/core/providers/ion_connect_media_url_fallback_provider.c.dart';
 import 'package:ion/app/features/ion_connect/model/media_attachment.dart';
 import 'package:ion/app/services/compressor/compress_service.c.dart';
 import 'package:ion/app/services/file_cache/ion_file_cache_manager.c.dart';
@@ -24,10 +25,12 @@ class MediaEncryptionService {
   MediaEncryptionService({
     required this.fileCacheService,
     required this.compressionService,
+    required this.generateMediaUrlFallback,
   });
 
   final FileCacheService fileCacheService;
   final CompressionService compressionService;
+  final Future<String?> Function(String url) generateMediaUrlFallback;
 
   Future<File> retrieveEncryptedMedia(MediaAttachment attachment) async {
     try {
@@ -45,7 +48,7 @@ class MediaEncryptionService {
           return cacheFileInfo.file;
         }
 
-        final file = await fileCacheService.getFile(url);
+        final file = await _downloadFile(url);
 
         final fileBytes = await compute(
           (file) {
@@ -163,12 +166,32 @@ class MediaEncryptionService {
       rethrow;
     }
   }
+
+  Future<File> _downloadFile(String url, {bool withFallback = true}) async {
+    try {
+      return await fileCacheService.getFile(url);
+    } catch (error) {
+      if (!withFallback) {
+        rethrow;
+      }
+
+      final fallbackUrl = await generateMediaUrlFallback(url);
+
+      if (fallbackUrl == null) {
+        throw FailedToGenerateMediaUrlFallback();
+      }
+
+      return _downloadFile(fallbackUrl, withFallback: false);
+    }
+  }
 }
 
 @riverpod
 MediaEncryptionService mediaEncryptionService(Ref ref) => MediaEncryptionService(
       fileCacheService: ref.read(fileCacheServiceProvider),
       compressionService: ref.read(compressServiceProvider),
+      generateMediaUrlFallback:
+          ref.read(iONConnectMediaUrlFallbackProvider.notifier).generateFallback,
     );
 
 @freezed

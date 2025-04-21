@@ -89,7 +89,7 @@ class VideoController extends _$VideoController {
     } catch (error, stackTrace) {
       if (controller.dataSourceType == DataSourceType.network) {
         await ref
-            .read(iONConnectMediaUrlFallbackProvider.notifier)
+            .watch(iONConnectMediaUrlFallbackProvider.notifier)
             .generateFallback(params.sourcePath);
       }
       Logger.log(
