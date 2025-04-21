@@ -32,8 +32,6 @@ class CoinAmountInput extends HookConsumerWidget {
     final textTheme = context.theme.appTextThemes;
     final formKey = useRef(GlobalKey<FormState>());
 
-    bool isFormValid() => formKey.value.currentState?.validate() ?? false;
-
     final error = useState<String?>(null);
     final label = locale.wallet_coin_amount(coinAbbreviation ?? '');
 
@@ -45,7 +43,8 @@ class CoinAmountInput extends HookConsumerWidget {
           final errorText = switch (parsed) {
             null => label,
             double() when parsed < 0 => label,
-            double() when maxValue != null && parsed > maxValue! => 'Insufficient funds',
+            double() when maxValue != null && parsed > maxValue! =>
+              locale.wallet_coin_amount_insufficient_funds,
             _ => null,
           };
 
@@ -94,7 +93,7 @@ class CoinAmountInput extends HookConsumerWidget {
                       child: Text(
                         locale.wallet_max,
                         style: textTheme.caption.copyWith(
-                          color: isFormValid()
+                          color: error.value == null
                               ? context.theme.appColors.primaryAccent
                               : context.theme.appColors.attentionRed,
                         ),
