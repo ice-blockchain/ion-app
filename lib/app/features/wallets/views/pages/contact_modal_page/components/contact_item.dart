@@ -16,18 +16,18 @@ class ContactItem extends StatelessWidget {
     super.key,
   });
 
-  final UserMetadata userMetadata;
+  final UserMetadataEntity userMetadata;
 
   @override
   Widget build(BuildContext context) {
     return Column(
       children: [
-        ContactItemAvatar(userMetadata: userMetadata),
+        ContactItemAvatar(pubkey: userMetadata.masterPubkey),
         SizedBox(height: 8.0.s),
-        ContactItemName(userMetadata: userMetadata),
+        ContactItemName(userMetadata: userMetadata.data),
         SizedBox(height: 4.0.s),
         Text(
-          prefixUsername(username: userMetadata.name, context: context),
+          prefixUsername(username: userMetadata.data.name, context: context),
           style: context.theme.appTextThemes.caption
               .copyWith(color: context.theme.appColors.tertararyText),
         ),

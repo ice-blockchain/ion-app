@@ -2,9 +2,9 @@
 
 import 'package:flutter/material.dart';
 import 'package:ion/app/components/avatar/default_avatar.dart';
+import 'package:ion/app/components/image/ion_network_image.dart';
 import 'package:ion/app/components/shapes/hexagon_path.dart';
 import 'package:ion/app/components/shapes/shape.dart';
-import 'package:ion/app/features/core/views/components/ion_connect_network_image.dart';
 
 class Avatar extends StatelessWidget {
   Avatar({
@@ -35,7 +35,7 @@ class Avatar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final image = imageUrl != null
-        ? IonConnectNetworkImage(
+        ? IonNetworkImage(
             imageUrl: imageUrl!,
             width: size,
             height: size,

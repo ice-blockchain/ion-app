@@ -1,10 +1,8 @@
 // SPDX-License-Identifier: ice License 1.0
 
 import 'package:flutter/material.dart';
-import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:ion/app/components/avatar/avatar.dart';
 import 'package:ion/app/extensions/extensions.dart';
-import 'package:ion/app/features/user/providers/user_metadata_provider.c.dart';
+import 'package:ion/app/features/components/ion_connect_avatar/ion_connect_avatar.dart';
 
 class FollowedByAvatars extends StatelessWidget {
   const FollowedByAvatars({required this.pubkeys, super.key});
@@ -32,7 +30,7 @@ class FollowedByAvatars extends StatelessWidget {
   }
 }
 
-class _FollowedAvatar extends ConsumerWidget {
+class _FollowedAvatar extends StatelessWidget {
   const _FollowedAvatar({required this.pubkey});
 
   final String pubkey;
@@ -42,19 +40,17 @@ class _FollowedAvatar extends ConsumerWidget {
   double get borderWidth => 1.0.s;
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final userMetadata = ref.watch(cachedUserMetadataProvider(pubkey));
-
+  Widget build(BuildContext context) {
     return Container(
       padding: EdgeInsets.all(borderWidth),
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(6.0.s),
       ),
-      child: Avatar(
+      child: IonConnectAvatar(
         size: avatarSize - borderWidth * 2,
         fit: BoxFit.cover,
-        imageUrl: userMetadata?.data.picture,
+        pubkey: pubkey,
         borderRadius: BorderRadius.circular(6.0.s),
       ),
     );

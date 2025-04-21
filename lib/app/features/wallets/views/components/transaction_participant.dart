@@ -33,7 +33,7 @@ class TransactionParticipant extends ConsumerWidget {
             ListItem.user(
               title: Text(userMetadata.data.displayName),
               subtitle: Text(userMetadata.data.name),
-              profilePicture: userMetadata.data.picture,
+              pubkey: userMetadata.masterPubkey,
             ),
             SizedBox(height: 12.0.s),
             Align(

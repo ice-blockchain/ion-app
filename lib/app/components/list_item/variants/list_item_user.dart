@@ -4,6 +4,7 @@ part of '../list_item.dart';
 
 class _ListItemUser extends ListItem {
   _ListItemUser({
+    required String pubkey,
     required Widget title,
     required Widget subtitle,
     super.key,
@@ -17,12 +18,8 @@ class _ListItemUser extends ListItem {
     EdgeInsetsGeometry? contentPadding,
     EdgeInsetsGeometry? leadingPadding,
     BoxConstraints? constraints,
-    String? profilePicture,
-    Widget? profilePictureWidget,
     bool verifiedBadge = false,
     bool iceBadge = false,
-    bool showProfilePictureIceBadge = false,
-    bool ntfAvatar = false,
     super.isSelected,
 
     /// Pass a resized value (e.g., 30.0.s) instead of a raw value (e.g., 30.0)
@@ -30,12 +27,9 @@ class _ListItemUser extends ListItem {
     double? avatarSize,
   }) : super(
           leading: leading ??
-              Avatar(
+              IonConnectAvatar(
                 size: avatarSize ?? ListItem.defaultAvatarSize,
-                imageUrl: profilePicture,
-                badge: showProfilePictureIceBadge ? const _IceBadge() : null,
-                imageWidget: profilePictureWidget,
-                hexagon: ntfAvatar,
+                pubkey: pubkey,
               ),
           borderRadius: borderRadius ?? BorderRadius.zero,
           contentPadding: contentPadding ?? EdgeInsets.zero,
@@ -88,36 +82,6 @@ class _ListItemUser extends ListItem {
       color: (isSelected ?? false)
           ? context.theme.appColors.onPrimaryAccent
           : context.theme.appColors.tertararyText,
-    );
-  }
-}
-
-class _IceBadge extends StatelessWidget {
-  const _IceBadge();
-
-  @override
-  Widget build(BuildContext context) {
-    return PositionedDirectional(
-      bottom: -2.0.s,
-      end: -2.0.s,
-      child: Container(
-        width: 12.0.s,
-        height: 12.0.s,
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(3.5.s),
-          border: Border.all(
-            width: 1.0.s,
-            color: context.theme.appColors.secondaryBackground,
-          ),
-          color: context.theme.appColors.darkBlue,
-        ),
-        child: Center(
-          child: Assets.svg.iconIcelogoSecuredby.icon(
-            color: context.theme.appColors.secondaryBackground,
-            size: 10.0.s,
-          ),
-        ),
-      ),
     );
   }
 }

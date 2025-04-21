@@ -2,10 +2,10 @@
 
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:ion/app/components/avatar/avatar.dart';
 import 'package:ion/app/extensions/build_context.dart';
 import 'package:ion/app/extensions/num.dart';
 import 'package:ion/app/extensions/theme_data.dart';
+import 'package:ion/app/features/components/ion_connect_avatar/ion_connect_avatar.dart';
 import 'package:ion/app/features/user/providers/user_metadata_provider.c.dart';
 import 'package:ion/app/router/app_routes.c.dart';
 
@@ -43,9 +43,9 @@ class TrendingVideoAuthor extends ConsumerWidget {
           padding: EdgeInsets.all(4.0.s),
           child: Row(
             children: [
-              Avatar(
+              IonConnectAvatar(
                 size: 20.0.s,
-                imageUrl: userMetadata.data.picture,
+                pubkey: pubkey,
               ),
               Flexible(
                 child: Padding(

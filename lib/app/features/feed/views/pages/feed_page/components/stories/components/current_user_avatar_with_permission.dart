@@ -40,7 +40,7 @@ class CurrentUserAvatarWithPermission extends StatelessWidget {
         return GestureDetector(
           onTap: onPressed,
           child: StoryItemContent(
-            imageUrl: imageUrl,
+            pubkey: pubkey,
             name: context.i18n.common_you,
             gradient: gradient,
             isViewed: isViewed,

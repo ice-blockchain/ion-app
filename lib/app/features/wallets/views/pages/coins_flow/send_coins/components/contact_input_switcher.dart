@@ -42,7 +42,7 @@ class ContactInputSwitcher extends ConsumerWidget {
     }
 
     return ContactButton(
-      userMetadata: userMetadata.data,
+      userMetadata: userMetadata,
       onContactTap: onContactTap,
       onClearTap: () => onClearTap(null),
     );

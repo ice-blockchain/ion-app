@@ -4,7 +4,7 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:ion/app/extensions/num.dart';
-import 'package:ion/app/features/core/views/components/ion_connect_network_image.dart';
+import 'package:ion/app/features/components/ion_connect_network_image/ion_connect_network_image.dart';
 import 'package:ion/app/features/feed/views/components/article/components/article_image/read_time_tile.dart';
 import 'package:ion/app/features/feed/views/components/article/constants.dart';
 import 'package:ion/app/services/media_service/media_service.c.dart';

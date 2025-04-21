@@ -41,7 +41,7 @@ class SelectableUserListItem extends ConsumerWidget {
           onTap: () => onUserSelected(user),
           title: Text(user.data.displayName),
           subtitle: Text(prefixUsername(username: user.data.name, context: context)),
-          profilePicture: user.data.picture,
+          pubkey: masterPubkey,
           contentPadding: EdgeInsets.symmetric(
             vertical: 8.0.s,
             horizontal: ScreenSideOffset.defaultSmallMargin,

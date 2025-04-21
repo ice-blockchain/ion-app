@@ -3,6 +3,7 @@
 import 'package:flutter/material.dart';
 import 'package:ion/app/components/avatar/avatar.dart';
 import 'package:ion/app/extensions/extensions.dart';
+import 'package:ion/app/features/components/ion_connect_avatar/ion_connect_avatar.dart';
 import 'package:ion/generated/assets.gen.dart';
 
 part './variants/list_item_dapp.dart';
@@ -35,6 +36,7 @@ class ListItem extends StatelessWidget {
         constraints = constraints ?? defaultConstraints;
 
   factory ListItem.user({
+    required String pubkey,
     required Widget title,
     required Widget subtitle,
     Key? key,
@@ -48,12 +50,8 @@ class ListItem extends StatelessWidget {
     BoxConstraints? constraints,
     Color? backgroundColor,
     VoidCallback? onTap,
-    String? profilePicture,
-    Widget? profilePictureWidget,
     bool verifiedBadge,
     bool iceBadge,
-    bool showProfilePictureIceBadge,
-    bool ntfAvatar,
     bool isSelected,
     double? avatarSize,
   }) = _ListItemUser;

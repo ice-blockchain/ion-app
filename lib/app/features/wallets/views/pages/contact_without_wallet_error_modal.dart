@@ -1,12 +1,12 @@
 // SPDX-License-Identifier: ice License 1.0
 
 import 'package:flutter/material.dart';
-import 'package:ion/app/components/avatar/avatar.dart';
 import 'package:ion/app/components/button/button.dart';
 import 'package:ion/app/components/card/info_card.dart';
 import 'package:ion/app/components/screen_offset/screen_bottom_offset.dart';
 import 'package:ion/app/components/screen_offset/screen_side_offset.dart';
 import 'package:ion/app/extensions/extensions.dart';
+import 'package:ion/app/features/components/ion_connect_avatar/ion_connect_avatar.dart';
 import 'package:ion/app/features/user/model/user_metadata.c.dart';
 import 'package:ion/app/features/wallets/model/network_data.c.dart';
 import 'package:ion/app/router/utils/show_simple_bottom_sheet.dart';
@@ -45,9 +45,9 @@ class ContactWithoutWalletError extends StatelessWidget {
                     ),
                     children: [
                       WidgetSpan(
-                        child: Avatar(
+                        child: IonConnectAvatar(
                           size: 20.0.s,
-                          imageUrl: user.data.picture,
+                          pubkey: user.masterPubkey,
                         ),
                         alignment: PlaceholderAlignment.middle,
                       ),

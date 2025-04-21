@@ -33,7 +33,7 @@ class ContactPage extends ConsumerWidget {
             children: [
               Padding(
                 padding: EdgeInsetsDirectional.only(top: 20.0.s),
-                child: ContactItem(userMetadata: userMetadata.data),
+                child: ContactItem(userMetadata: userMetadata),
               ),
             ],
           ),

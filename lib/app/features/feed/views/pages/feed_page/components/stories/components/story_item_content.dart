@@ -2,13 +2,13 @@
 
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:ion/app/components/avatar/avatar.dart';
 import 'package:ion/app/extensions/extensions.dart';
+import 'package:ion/app/features/components/ion_connect_avatar/ion_connect_avatar.dart';
 import 'package:ion/app/features/feed/views/pages/feed_page/components/stories/components/story_colored_border.dart';
 
 class StoryItemContent extends HookConsumerWidget {
   const StoryItemContent({
-    required this.imageUrl,
+    required this.pubkey,
     required this.name,
     required this.onTap,
     this.gradient,
@@ -17,7 +17,7 @@ class StoryItemContent extends HookConsumerWidget {
     super.key,
   });
 
-  final String? imageUrl;
+  final String pubkey;
   final String name;
   final Gradient? gradient;
   final VoidCallback onTap;
@@ -51,16 +51,16 @@ class StoryItemContent extends HookConsumerWidget {
                     child: StoryColoredBorder(
                       size: width - borderSize * 2,
                       color: context.theme.appColors.secondaryBackground,
-                      child: Avatar(
+                      child: IonConnectAvatar(
                         size: width - borderSize * 4,
-                        imageUrl: imageUrl,
+                        pubkey: pubkey,
                       ),
                     ),
                   )
                 else
-                  Avatar(
+                  IonConnectAvatar(
                     size: width - borderSize * 2,
-                    imageUrl: imageUrl,
+                    pubkey: pubkey,
                   ),
                 if (child != null) child!,
               ],
