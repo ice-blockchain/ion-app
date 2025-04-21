@@ -23,7 +23,7 @@ class _MessageReactionChip extends HookConsumerWidget {
     return GestureDetector(
       onTap: onTap,
       child: Container(
-        margin: EdgeInsets.only(right: 4.0.s),
+        margin: EdgeInsetsDirectional.only(end: 4.0.s),
         padding: EdgeInsets.symmetric(vertical: 4.0.s, horizontal: 6.0.s),
         decoration: BoxDecoration(
           color: currentUserHasReaction & !isMe
