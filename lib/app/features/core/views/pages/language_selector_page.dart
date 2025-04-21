@@ -9,6 +9,7 @@ import 'package:ion/app/components/separated/separator.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/auth/views/components/auth_scrolled_body/auth_header.dart';
 import 'package:ion/app/features/auth/views/pages/select_languages/language_list_item.dart';
+import 'package:ion/app/features/core/providers/app_locale_provider.c.dart';
 import 'package:ion/app/hooks/use_languages.dart';
 import 'package:ion/app/router/components/navigation_app_bar/collapsing_app_bar.dart';
 import 'package:ion/app/router/components/navigation_app_bar/navigation_app_bar.dart';
@@ -35,7 +36,8 @@ class LanguageSelectorPage extends HookConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final searchQuery = useState('');
-    final languages = useLanguages(query: searchQuery.value);
+    final preferredLang = ref.watch(localePreferredLanguageProvider);
+    final languages = useLanguages(query: searchQuery.value, preferredLang: preferredLang);
 
     final mayContinue = selectedLanguages.isNotEmpty;
 
