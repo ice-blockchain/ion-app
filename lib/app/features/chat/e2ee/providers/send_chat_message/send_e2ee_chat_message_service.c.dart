@@ -56,7 +56,7 @@ class SendE2eeChatMessageService {
     List<String>? referencePostTag,
     List<String>? failedParticipantsMasterPubkeys,
   }) async {
-    late final EventMessage sentKind14Message;
+    EventMessage? sentKind14Message;
 
     String? currentUserEventMessageId;
 
@@ -185,7 +185,7 @@ class SendE2eeChatMessageService {
       throw SendEventException(e.toString());
     }
 
-    return sentKind14Message;
+    return sentKind14Message!;
   }
 
   List<RelatedEvent> _buildRelatedEvents(EventMessage? repliedMessage) {
