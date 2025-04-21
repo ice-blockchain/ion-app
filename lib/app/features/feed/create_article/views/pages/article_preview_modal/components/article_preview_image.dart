@@ -13,6 +13,7 @@ class ArticlePreviewImage extends StatelessWidget {
   const ArticlePreviewImage({
     this.mediaFile,
     this.imageUrl,
+    this.authorPubkey,
     this.minutesToRead,
     this.minutesToReadAlignment = AlignmentDirectional.bottomEnd,
     super.key,
@@ -20,6 +21,7 @@ class ArticlePreviewImage extends StatelessWidget {
 
   final MediaFile? mediaFile;
   final String? imageUrl;
+  final String? authorPubkey;
   final int? minutesToRead;
   final AlignmentDirectional minutesToReadAlignment;
 
@@ -32,9 +34,10 @@ class ArticlePreviewImage extends StatelessWidget {
         children: [
           AspectRatio(
             aspectRatio: ArticleConstants.headerImageAspectRation,
-            child: (imageUrl != null)
+            child: (imageUrl != null && authorPubkey != null)
                 ? IonConnectNetworkImage(
                     imageUrl: imageUrl!,
+                    authorPubkey: authorPubkey!,
                     fit: BoxFit.cover,
                   )
                 : (mediaFile != null)

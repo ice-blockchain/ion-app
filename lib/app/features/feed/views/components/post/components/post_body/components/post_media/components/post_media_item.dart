@@ -54,9 +54,11 @@ class PostMediaItem extends HookWidget {
             MediaType.image => IonConnectNetworkImage(
                 imageUrl: mediaItem.url,
                 fit: BoxFit.cover,
+                authorPubkey: eventReference.pubkey,
               ),
             MediaType.video => VideoPreview(
                 videoUrl: mediaItem.url,
+                authorPubkey: eventReference.pubkey,
                 thumbnailUrl: mediaItem.thumb,
                 framedEventReference: framedEventReference,
               ),

@@ -34,6 +34,7 @@ class UserBanner extends ConsumerWidget {
           : banner != null
               ? IonConnectNetworkImage(
                   imageUrl: banner,
+                  authorPubkey: pubkey,
                   fit: BoxFit.cover,
                   alignment: Alignment.topCenter,
                 )

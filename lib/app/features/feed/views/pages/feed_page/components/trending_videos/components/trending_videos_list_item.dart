@@ -93,6 +93,7 @@ class _VideoContainer extends StatelessWidget {
           children: [
             IonConnectNetworkImage(
               imageUrl: thumbnailUrl,
+              authorPubkey: eventReference.pubkey,
               fit: BoxFit.cover,
             ),
             Column(

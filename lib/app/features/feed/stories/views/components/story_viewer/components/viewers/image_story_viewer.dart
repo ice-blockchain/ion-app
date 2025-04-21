@@ -8,12 +8,14 @@ import 'package:ion/app/features/feed/stories/providers/story_image_loading_prov
 
 class ImageStoryViewer extends ConsumerWidget {
   const ImageStoryViewer({
-    required this.path,
+    required this.imageUrl,
+    required this.authorPubkey,
     required this.storyId,
     super.key,
   });
 
-  final String path;
+  final String imageUrl;
+  final String authorPubkey;
   final String storyId;
 
   @override
@@ -21,7 +23,8 @@ class ImageStoryViewer extends ConsumerWidget {
     final cacheManager = ref.watch(storyImageCacheManagerProvider);
 
     return IonConnectNetworkImage(
-      imageUrl: path,
+      imageUrl: imageUrl,
+      authorPubkey: authorPubkey,
       cacheManager: cacheManager,
       filterQuality: FilterQuality.high,
       progressIndicatorBuilder: (_, __, ___) => const CenteredLoadingIndicator(),

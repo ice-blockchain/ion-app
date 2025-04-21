@@ -3,6 +3,7 @@
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/extensions/extensions.dart';
+import 'package:ion/app/features/auth/providers/auth_provider.c.dart';
 import 'package:ion/app/features/core/views/components/ion_connect_network_image.dart';
 import 'package:ion/app/features/gallery/providers/gallery_provider.c.dart';
 import 'package:ion/app/features/ion_connect/model/media_attachment.dart';
@@ -92,7 +93,12 @@ class _PreviewItem extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final currentPubkey = ref.watch(currentPubkeySelectorProvider);
     AssetEntity? assetEntity;
+
+    if (currentPubkey == null) {
+      return const SizedBox.shrink();
+    }
 
     if (path != null) {
       assetEntity = ref.watch(assetEntityProvider(path!)).valueOrNull;
@@ -122,6 +128,7 @@ class _PreviewItem extends ConsumerWidget {
                       )
                     : IonConnectNetworkImage(
                         imageUrl: url!,
+                        authorPubkey: currentPubkey,
                         fit: BoxFit.cover,
                       ),
               ),

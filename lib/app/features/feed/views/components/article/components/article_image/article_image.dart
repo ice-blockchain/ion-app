@@ -8,11 +8,14 @@ import 'package:ion/app/features/feed/views/components/article/constants.dart';
 
 class ArticleImage extends StatelessWidget {
   const ArticleImage({
+    required this.authorPubkey,
     this.imageUrl,
     this.minutesToRead,
     this.minutesToReadAlignment = AlignmentDirectional.bottomEnd,
     super.key,
   });
+
+  final String authorPubkey;
 
   final String? imageUrl;
 
@@ -33,6 +36,7 @@ class ArticleImage extends StatelessWidget {
                 ? IonConnectNetworkImage(
                     imageUrl: imageUrl!,
                     fit: BoxFit.fill,
+                    authorPubkey: authorPubkey,
                   )
                 : const ColoredBox(color: Colors.grey),
           ),

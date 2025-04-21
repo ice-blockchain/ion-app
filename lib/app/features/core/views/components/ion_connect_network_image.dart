@@ -10,6 +10,7 @@ import 'package:ion/app/features/core/providers/ion_connect_media_url_fallback_p
 class IonConnectNetworkImage extends ConsumerWidget {
   const IonConnectNetworkImage({
     required this.imageUrl,
+    required this.authorPubkey,
     this.imageBuilder,
     this.progressIndicatorBuilder,
     this.width,
@@ -22,11 +23,12 @@ class IonConnectNetworkImage extends ConsumerWidget {
     super.key,
   });
 
+  final String imageUrl;
+  final String authorPubkey;
   final BaseCacheManager? cacheManager;
   final ImageWidgetBuilder? imageBuilder;
   final ProgressIndicatorBuilder? progressIndicatorBuilder;
   final LoadingErrorWidgetBuilder? errorWidget;
-  final String imageUrl;
   final BoxFit? fit;
   final FilterQuality filterQuality;
   final Alignment alignment;
@@ -50,7 +52,10 @@ class IonConnectNetworkImage extends ConsumerWidget {
       height: height,
       errorListener: (error) {
         if (ref.context.mounted) {
-          ref.read(iONConnectMediaUrlFallbackProvider.notifier).generateFallback(imageUrl);
+          ref.read(iONConnectMediaUrlFallbackProvider.notifier).generateFallback(
+                imageUrl,
+                authorPubkey: authorPubkey,
+              );
         }
       },
     );

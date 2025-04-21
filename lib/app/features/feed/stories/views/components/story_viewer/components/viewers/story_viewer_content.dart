@@ -23,7 +23,8 @@ class StoryViewerContent extends StatelessWidget {
     }
 
     return switch (media.mediaType) {
-      MediaType.image => ImageStoryViewer(path: media.url, storyId: post.id),
+      MediaType.image =>
+        ImageStoryViewer(imageUrl: media.url, authorPubkey: post.masterPubkey, storyId: post.id),
       MediaType.video => VideoStoryViewer(videoPath: media.url),
       _ => const CenteredLoadingIndicator()
     };

@@ -34,6 +34,7 @@ class ArticleDetailsHeader extends StatelessWidget {
             SizedBox(height: 10.0.s),
             ArticleImage(
               imageUrl: article.data.image,
+              authorPubkey: article.masterPubkey,
               minutesToRead: calculateReadingTime(article.data.content),
             ),
             SizedBox(height: 12.0.s),

@@ -21,12 +21,14 @@ import 'package:visibility_detector/visibility_detector.dart';
 class VideoPreview extends HookConsumerWidget {
   const VideoPreview({
     required this.videoUrl,
+    required this.authorPubkey,
     this.thumbnailUrl,
     this.framedEventReference,
     super.key,
   });
 
   final String videoUrl;
+  final String authorPubkey;
   final String? thumbnailUrl;
   final EventReference? framedEventReference;
 
@@ -102,6 +104,7 @@ class VideoPreview extends HookConsumerWidget {
             Positioned.fill(
               child: _BlurredThumbnail(
                 thumbnailUrl: thumbnailUrl!,
+                authorPubkey: authorPubkey,
                 isLoading: !(controller?.value.hasError ?? false),
               ),
             ),
@@ -207,10 +210,12 @@ class _MuteButton extends StatelessWidget {
 class _BlurredThumbnail extends HookWidget {
   const _BlurredThumbnail({
     required this.thumbnailUrl,
+    required this.authorPubkey,
     required this.isLoading,
   });
 
   final String thumbnailUrl;
+  final String authorPubkey;
   final bool isLoading;
 
   @override
@@ -238,6 +243,7 @@ class _BlurredThumbnail extends HookWidget {
           opacity: isImageLoaded.value ? 1 : 0,
           child: IonConnectNetworkImage(
             imageUrl: thumbnailUrl,
+            authorPubkey: authorPubkey,
             fit: BoxFit.cover,
           ),
         ),

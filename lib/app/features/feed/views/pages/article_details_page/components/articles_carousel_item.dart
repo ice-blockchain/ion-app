@@ -76,6 +76,7 @@ class ArticlesCarouselItem extends ConsumerWidget {
                       child: article.data.image != null
                           ? IonConnectNetworkImage(
                               imageUrl: article.data.image!,
+                              authorPubkey: article.masterPubkey,
                               fit: BoxFit.cover,
                             )
                           : const ColoredBox(color: Colors.grey),
