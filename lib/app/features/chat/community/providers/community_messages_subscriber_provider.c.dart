@@ -8,6 +8,7 @@ import 'package:ion/app/features/core/providers/feature_flags_provider.c.dart';
 import 'package:ion/app/features/feed/data/models/entities/modifiable_post_data.c.dart';
 import 'package:ion/app/features/ion_connect/ion_connect.dart';
 import 'package:ion/app/features/ion_connect/model/action_source.c.dart';
+import 'package:ion/app/features/ion_connect/providers/entities_syncer_notifier.c.dart';
 import 'package:ion/app/features/ion_connect/providers/ion_connect_subscription_provider.c.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
@@ -28,20 +29,14 @@ class CommunityMessagesSubscriber extends _$CommunityMessagesSubscriber {
 
     final communityIds = joinedCommunities.accepted.map((e) => e.data.uuid).toList();
 
-    final latestEventMessageDate = await ref
-        .watch(conversationEventMessageDaoProvider)
-        .getLatestEventMessageDate(ModifiablePostEntity.kind);
-
-    final sinceDate = latestEventMessageDate?.add(const Duration(days: -2));
-
     for (final communityId in communityIds) {
-      await _fetchCommunityMessages(communityId, sinceDate);
+      await _fetchCommunityMessages(communityId);
     }
 
     yield null;
   }
 
-  Future<void> _fetchCommunityMessages(String communityId, DateTime? sinceDate) async {
+  Future<void> _fetchCommunityMessages(String communityId) async {
     final ownerPubkey = await ref
         .watch(communityMetadataProvider(communityId).selectAsync((data) => data.ownerPubkey));
 
@@ -50,7 +45,24 @@ class CommunityMessagesSubscriber extends _$CommunityMessagesSubscriber {
       tags: {
         '#h': [communityId],
       },
-      since: sinceDate,
+      since: DateTime.now().subtract(const Duration(days: 2)),
+    );
+
+    await ref.watch(entitiesSyncerNotifierProvider('community-messages').notifier).syncEvents(
+      requestFilters: [requestFilter],
+      saveCallback: (eventMessage) {
+        if (eventMessage.kind == ModifiablePostEntity.kind) {
+          ref.read(conversationEventMessageDaoProvider).add(eventMessage);
+        }
+      },
+      maxCreatedAtBuilder: () => ref
+          .watch(conversationEventMessageDaoProvider)
+          .getLatestEventMessageDate(ModifiablePostEntity.kind),
+      minCreatedAtBuilder: (since) => ref
+          .watch(conversationEventMessageDaoProvider)
+          .getEarliestEventMessageDate(ModifiablePostEntity.kind, after: since),
+      overlap: const Duration(days: 2),
+      actionSource: ActionSourceUser(ownerPubkey),
     );
 
     final requestMessage = RequestMessage()..addFilter(requestFilter);

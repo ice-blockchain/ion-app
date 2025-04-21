@@ -26,6 +26,7 @@ class CommentsRepository implements IonNotificationRepository {
 
   final CommentsDao _commentsDao;
 
+  @override
   Future<void> save(IonConnectEntity entity) {
     final type = switch (entity) {
       ModifiablePostEntity() when entity.data.quotedEvent != null => CommentType.quote,
@@ -66,5 +67,14 @@ class CommentsRepository implements IonNotificationRepository {
       CommentIonNotificationType.repost => CommentType.repost,
     };
     return _commentsDao.getLastCreatedAt(commentType);
+  }
+
+  Future<DateTime?> firstCreatedAt(CommentIonNotificationType type, {DateTime? after}) async {
+    final commentType = switch (type) {
+      CommentIonNotificationType.quote => CommentType.quote,
+      CommentIonNotificationType.reply => CommentType.reply,
+      CommentIonNotificationType.repost => CommentType.repost,
+    };
+    return _commentsDao.getFirstCreatedAt(commentType, after: after);
   }
 }

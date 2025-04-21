@@ -33,6 +33,17 @@ class CommentsDao extends DatabaseAccessor<NotificationsDatabase> with _$Comment
         .getSingleOrNull();
   }
 
+  Future<DateTime?> getFirstCreatedAt(CommentType type, {DateTime? after}) async {
+    final firstCreatedAt = commentsTable.createdAt.min();
+    final query = selectOnly(commentsTable)
+      ..addColumns([firstCreatedAt])
+      ..where(commentsTable.type.equalsValue(type));
+    if (after != null) {
+      query.where(commentsTable.createdAt.isBiggerThanValue(after));
+    }
+    return query.map((row) => row.read(firstCreatedAt)).getSingleOrNull();
+  }
+
   Stream<int> watchUnreadCount({required DateTime? after}) {
     final unreadCount = commentsTable.eventReference.count();
     final query = selectOnly(commentsTable)..addColumns([unreadCount]);

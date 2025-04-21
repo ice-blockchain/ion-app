@@ -24,6 +24,19 @@ class FundsRequestsDao {
     return result?.createdAt;
   }
 
+  Future<DateTime?> getFirstCreatedAt({DateTime? after}) async {
+    final query = _db.select(_db.fundsRequestsTable);
+    if (after != null) {
+      query.where((t) => t.createdAt.isBiggerThanValue(after));
+    }
+    query
+      ..orderBy([(t) => OrderingTerm.asc(t.createdAt)])
+      ..limit(1);
+
+    final result = await query.getSingleOrNull();
+    return result?.createdAt;
+  }
+
   Future<FundsRequest?> getFundsRequestById(String eventId) =>
       (_db.select(_db.fundsRequestsTable)..where((t) => t.eventId.equals(eventId)))
           .getSingleOrNull();

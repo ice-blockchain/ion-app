@@ -22,6 +22,10 @@ class RequestAssetsRepository {
 
   Future<DateTime?> getLastCreatedAt() => _dao.getLastCreatedAt();
 
+  Future<DateTime?> firstCreatedAt({DateTime? after}) async {
+    return _dao.getFirstCreatedAt(after: after);
+  }
+
   Future<FundsRequestEntity?> getRequestAssetById(String id) async {
     final request = await _dao.getFundsRequestById(id);
     return request != null ? _mapper.toDomain(request) : null;

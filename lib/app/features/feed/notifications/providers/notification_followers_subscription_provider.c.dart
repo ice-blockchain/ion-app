@@ -6,6 +6,7 @@ import 'package:ion/app/features/auth/providers/auth_provider.c.dart';
 import 'package:ion/app/features/feed/notifications/data/repository/followers_repository.c.dart';
 import 'package:ion/app/features/ion_connect/ion_connect.dart';
 import 'package:ion/app/features/ion_connect/model/search_extension.dart';
+import 'package:ion/app/features/ion_connect/providers/entities_syncer_notifier.c.dart';
 import 'package:ion/app/features/ion_connect/providers/ion_connect_subscription_provider.c.dart';
 import 'package:ion/app/features/user/model/follow_list.c.dart';
 import 'package:ion/app/features/user/model/user_metadata.c.dart';
@@ -22,8 +23,6 @@ Future<void> notificationFollowersSubscription(Ref ref) async {
     throw UserMasterPubkeyNotFoundException();
   }
 
-  final since = await followersRepository.lastCreatedAt();
-
   final requestFilter = RequestFilter(
     kinds: const [FollowListEntity.kind],
     tags: {
@@ -37,8 +36,20 @@ Future<void> notificationFollowersSubscription(Ref ref) async {
         ),
       ],
     ).toString(),
-    since: since?.subtract(const Duration(seconds: 2)),
+    since: DateTime.now().subtract(const Duration(seconds: 2)),
   );
+
+  await ref.watch(entitiesSyncerNotifierProvider('notifications-followers').notifier).syncEntities(
+    requestFilters: [requestFilter],
+    saveCallback: (entity) {
+      if (entity.masterPubkey != currentPubkey) {
+        followersRepository.save(entity);
+      }
+    },
+    maxCreatedAtBuilder: followersRepository.lastCreatedAt,
+    minCreatedAtBuilder: (since) => followersRepository.firstCreatedAt(after: since),
+  );
+
   final requestMessage = RequestMessage()..addFilter(requestFilter);
 
   final entities = ref.watch(ionConnectEntitiesSubscriptionProvider(requestMessage));

@@ -56,6 +56,10 @@ class TransactionsRepository {
 
   Future<DateTime?> getLastCreatedAt() => _transactionsDao.lastCreatedAt();
 
+  Future<DateTime?> firstCreatedAt({DateTime? after}) async {
+    return _transactionsDao.getFirstCreatedAt(after: after);
+  }
+
   Future<void> saveTransactionDetails({
     required TransactionDetails details,
     String? balanceBeforeTransfer,

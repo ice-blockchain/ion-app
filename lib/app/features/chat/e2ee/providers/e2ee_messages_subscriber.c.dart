@@ -17,6 +17,7 @@ import 'package:ion/app/features/ion_connect/ion_connect.dart';
 import 'package:ion/app/features/ion_connect/model/action_source.c.dart';
 import 'package:ion/app/features/ion_connect/model/deletion_request.c.dart';
 import 'package:ion/app/features/ion_connect/model/related_event.c.dart';
+import 'package:ion/app/features/ion_connect/providers/entities_syncer_notifier.c.dart';
 import 'package:ion/app/features/ion_connect/providers/ion_connect_event_signer_provider.c.dart';
 import 'package:ion/app/features/ion_connect/providers/ion_connect_subscription_provider.c.dart';
 import 'package:ion/app/services/ion_connect/ion_connect_gift_wrap_service.c.dart';
@@ -65,7 +66,6 @@ class E2eeMessagesSubscriber extends _$E2eeMessagesSubscriber {
       },
       since: sinceDate,
     );
-    final requestMessage = RequestMessage()..addFilter(requestFilter);
 
     final sealService = await ref.watch(ionConnectSealServiceProvider.future);
     final giftWrapService = await ref.watch(ionConnectGiftWrapServiceProvider.future);
@@ -76,6 +76,33 @@ class E2eeMessagesSubscriber extends _$E2eeMessagesSubscriber {
     final conversationMessageStatusDao = ref.watch(conversationMessageDataDaoProvider);
     final conversationMessageReactionDao = ref.watch(conversationMessageReactionDaoProvider);
 
+    await ref.watch(entitiesSyncerNotifierProvider('e2ee-messages').notifier).syncEvents(
+      requestFilters: [requestFilter],
+      saveCallback: (eventMessage) => _handleMessage(
+        eventMessage,
+        masterPubkey,
+        eventSigner,
+        sealService,
+        giftWrapService,
+        sendE2eeMessageService,
+        conversationDao,
+        eventMessageDao,
+        conversationMessageDao,
+        conversationMessageStatusDao,
+        conversationMessageReactionDao,
+      ),
+      maxCreatedAtBuilder: () => ref
+          .watch(conversationEventMessageDaoProvider)
+          .getLatestEventMessageDate(ImmutablePrivateDirectMessageEntity.kind),
+      minCreatedAtBuilder: (since) => ref
+          .watch(conversationEventMessageDaoProvider)
+          .getEarliestEventMessageDate(ImmutablePrivateDirectMessageEntity.kind, after: since),
+      overlap: const Duration(days: 2),
+      actionSource: const ActionSourceCurrentUserChat(),
+    );
+
+    final requestMessage = RequestMessage()..addFilter(requestFilter);
+
     // TODO Clear expired and deleted database messages later
 
     final events = ref.watch(
@@ -85,136 +112,163 @@ class E2eeMessagesSubscriber extends _$E2eeMessagesSubscriber {
       ),
     );
 
-    final subscription = events.listen((wrap) async {
-      if (eventSigner.publicKey != _receiverDevicePubkey(wrap)) {
-        return;
-      }
-
-      final rumor = await _unwrapGift(
-        giftWrap: wrap,
-        sealService: sealService,
-        giftWrapService: giftWrapService,
-        privateKey: eventSigner.privateKey,
-      );
-
-      if (rumor != null) {
-        if (rumor.kind != DeletionRequest.kind &&
-            rumor.kind != GenericRepostEntity.kind &&
-            (rumor.tags.any((tag) => tag[0] == ConversationIdentifier.tagName) ||
-                rumor.kind == PrivateMessageReactionEntity.kind)) {
-          // Try to get kind 14 event id from related event tag or use the rumor id
-          final kind14EventId = rumor.kind == PrivateMessageReactionEntity.kind
-              ? rumor.tags
-                  .firstWhereOrNull((tags) => tags[0] == RelatedImmutableEvent.tagName)
-                  ?.elementAtOrNull(1)
-              : rumor.id;
-          // Try to get sender master pubkey from tags ('b' tag present in all events)
-          final rumorMasterPubkey =
-              rumor.tags.firstWhereOrNull((tags) => tags[0] == 'b')?.elementAtOrNull(1);
-
-          if (kind14EventId == null || rumorMasterPubkey == null) {
-            throw ReceiverDevicePubkeyNotFoundException(rumor.id);
-          }
-
-          // Only for kind 14
-          if (rumor.kind == ImmutablePrivateDirectMessageEntity.kind) {
-            // Add conversation if that doesn't exist
-            await ref.watch(conversationDaoProvider).add([rumor]);
-            // Add message if that doesn't exist
-            await ref.watch(conversationEventMessageDaoProvider).add(rumor);
-
-            await _addMediaToDatabase(rumor);
-
-            // If user received another user message add "received" status
-            // for them both into the database, we don't know anything about
-            // other users in the conversation
-            //final sendTo = {masterPubkey, rumorMasterPubkey};
-
-            // Notify rest of the participants that the message was received
-            // by the current user
-            final currentStatus = await conversationMessageStatusDao.checkMessageStatus(
-              masterPubkey: masterPubkey,
-              eventMessageId: kind14EventId,
-            );
-
-            if (currentStatus == null ||
-                currentStatus.index < MessageDeliveryStatus.received.index) {
-              await sendE2eeMessageService.sendMessageStatus(rumor, MessageDeliveryStatus.received);
-            }
-
-            // Only for kind 7
-          } else if (rumor.kind == PrivateMessageReactionEntity.kind) {
-            // Identify kind 7 status message (received or read only)
-            if (rumor.content == MessageDeliveryStatus.received.name ||
-                rumor.content == MessageDeliveryStatus.read.name) {
-              final status = rumor.content == MessageDeliveryStatus.received.name
-                  ? MessageDeliveryStatus.received
-                  : MessageDeliveryStatus.read;
-
-              // Add corresponding status to the database for the sender master pubkey
-              // and the kind 14 event id, if that doesn't exist
-              await conversationMessageStatusDao.add(
-                status: status,
-                createdAt: rumor.createdAt,
-                eventMessageId: kind14EventId,
-                masterPubkey: rumorMasterPubkey,
-              );
-            } else {
-              await conversationMessageReactionDao.add(
-                ref: ref,
-                newReactionEvent: rumor,
-                kind14EventId: kind14EventId,
-                masterPubkey: rumorMasterPubkey,
-              );
-            }
-          }
-          // For kind 5
-        } else if (rumor.kind == DeletionRequest.kind) {
-          final deleteEventKind =
-              rumor.tags.firstWhereOrNull((tags) => tags[0] == 'k')?.elementAtOrNull(1);
-
-          final deleteEventIds = rumor.tags
-              .where((tags) => tags[0] == RelatedImmutableEvent.tagName)
-              .map((tag) => tag.elementAtOrNull(1))
-              .nonNulls
-              .toList();
-
-          final deleteConversationIds = rumor.tags
-              .where((tags) => tags[0] == ConversationIdentifier.tagName)
-              .map((tag) => tag.elementAtOrNull(1))
-              .nonNulls
-              .toList();
-
-          if (deleteConversationIds.isNotEmpty) {
-            await conversationDao.removeConversations(
-              ref: ref,
-              deleteRequest: rumor,
-              conversationIds: deleteConversationIds,
-            );
-          } else if (deleteEventKind == ImmutablePrivateDirectMessageEntity.kind.toString()) {
-            if (deleteEventIds.isNotEmpty) {
-              await conversationMessageDao.removeMessages(
-                ref: ref,
-                deleteRequest: rumor,
-                messageIds: deleteEventIds,
-              );
-            }
-          } else if (deleteEventKind == PrivateMessageReactionEntity.kind.toString()) {
-            await conversationMessageReactionDao.remove(
-              ref: ref,
-              deleteRequest: rumor,
-              reactionEventId: deleteEventIds.single,
-            );
-          }
-        } else if (rumor.kind == GenericRepostEntity.kind) {
-          await eventMessageDao.add(rumor);
-        }
-      }
-    });
+    final subscription = events.listen(
+      (wrap) => _handleMessage(
+        wrap,
+        masterPubkey,
+        eventSigner,
+        sealService,
+        giftWrapService,
+        sendE2eeMessageService,
+        conversationDao,
+        eventMessageDao,
+        conversationMessageDao,
+        conversationMessageStatusDao,
+        conversationMessageReactionDao,
+      ),
+    );
 
     ref.onDispose(subscription.cancel);
 
     yield null;
+  }
+
+  Future<void> _handleMessage(
+    EventMessage eventMessage,
+    String masterPubkey,
+    EventSigner eventSigner,
+    IonConnectSealService sealService,
+    IonConnectGiftWrapService giftWrapService,
+    SendE2eeMessageService sendE2eeMessageService,
+    ConversationDao conversationDao,
+    EventMessageDao eventMessageDao,
+    ConversationMessageDao conversationMessageDao,
+    ConversationMessageDataDao conversationMessageStatusDao,
+    ConversationMessageReactionDao conversationMessageReactionDao,
+  ) async {
+    if (eventSigner.publicKey != _receiverDevicePubkey(eventMessage)) {
+      return;
+    }
+
+    final rumor = await _unwrapGift(
+      giftWrap: eventMessage,
+      sealService: sealService,
+      giftWrapService: giftWrapService,
+      privateKey: eventSigner.privateKey,
+    );
+
+    if (rumor != null) {
+      if (rumor.kind != DeletionRequest.kind &&
+          rumor.kind != GenericRepostEntity.kind &&
+          (rumor.tags.any((tag) => tag[0] == ConversationIdentifier.tagName) ||
+              rumor.kind == PrivateMessageReactionEntity.kind)) {
+        // Try to get kind 14 event id from related event tag or use the rumor id
+        final kind14EventId = rumor.kind == PrivateMessageReactionEntity.kind
+            ? rumor.tags
+                .firstWhereOrNull((tags) => tags[0] == RelatedImmutableEvent.tagName)
+                ?.elementAtOrNull(1)
+            : rumor.id;
+        // Try to get sender master pubkey from tags ('b' tag present in all events)
+        final rumorMasterPubkey =
+            rumor.tags.firstWhereOrNull((tags) => tags[0] == 'b')?.elementAtOrNull(1);
+
+        if (kind14EventId == null || rumorMasterPubkey == null) {
+          throw ReceiverDevicePubkeyNotFoundException(rumor.id);
+        }
+
+        // Only for kind 14
+        if (rumor.kind == ImmutablePrivateDirectMessageEntity.kind) {
+          // Add conversation if that doesn't exist
+          await ref.watch(conversationDaoProvider).add([rumor]);
+          // Add message if that doesn't exist
+          await ref.watch(conversationEventMessageDaoProvider).add(rumor);
+
+          await _addMediaToDatabase(rumor);
+
+          // If user received another user message add "received" status
+          // for them both into the database, we don't know anything about
+          // other users in the conversation
+          //final sendTo = {masterPubkey, rumorMasterPubkey};
+
+          // Notify rest of the participants that the message was received
+          // by the current user
+          final currentStatus = await conversationMessageStatusDao.checkMessageStatus(
+            masterPubkey: masterPubkey,
+            eventMessageId: kind14EventId,
+          );
+
+          if (currentStatus == null || currentStatus.index < MessageDeliveryStatus.received.index) {
+            await sendE2eeMessageService.sendMessageStatus(rumor, MessageDeliveryStatus.received);
+          }
+
+          // Only for kind 7
+        } else if (rumor.kind == PrivateMessageReactionEntity.kind) {
+          // Identify kind 7 status message (received or read only)
+          if (rumor.content == MessageDeliveryStatus.received.name ||
+              rumor.content == MessageDeliveryStatus.read.name) {
+            final status = rumor.content == MessageDeliveryStatus.received.name
+                ? MessageDeliveryStatus.received
+                : MessageDeliveryStatus.read;
+
+            // Add corresponding status to the database for the sender master pubkey
+            // and the kind 14 event id, if that doesn't exist
+            await conversationMessageStatusDao.add(
+              status: status,
+              createdAt: rumor.createdAt,
+              eventMessageId: kind14EventId,
+              masterPubkey: rumorMasterPubkey,
+            );
+          } else {
+            await conversationMessageReactionDao.add(
+              ref: ref,
+              newReactionEvent: rumor,
+              kind14EventId: kind14EventId,
+              masterPubkey: rumorMasterPubkey,
+            );
+          }
+        }
+        // For kind 5
+      } else if (rumor.kind == DeletionRequest.kind) {
+        final deleteEventKind =
+            rumor.tags.firstWhereOrNull((tags) => tags[0] == 'k')?.elementAtOrNull(1);
+
+        final deleteEventIds = rumor.tags
+            .where((tags) => tags[0] == RelatedImmutableEvent.tagName)
+            .map((tag) => tag.elementAtOrNull(1))
+            .nonNulls
+            .toList();
+
+        final deleteConversationIds = rumor.tags
+            .where((tags) => tags[0] == ConversationIdentifier.tagName)
+            .map((tag) => tag.elementAtOrNull(1))
+            .nonNulls
+            .toList();
+
+        if (deleteConversationIds.isNotEmpty) {
+          await conversationDao.removeConversations(
+            ref: ref,
+            deleteRequest: rumor,
+            conversationIds: deleteConversationIds,
+          );
+        } else if (deleteEventKind == ImmutablePrivateDirectMessageEntity.kind.toString()) {
+          if (deleteEventIds.isNotEmpty) {
+            await conversationMessageDao.removeMessages(
+              ref: ref,
+              deleteRequest: rumor,
+              messageIds: deleteEventIds,
+            );
+          }
+        } else if (deleteEventKind == PrivateMessageReactionEntity.kind.toString()) {
+          await conversationMessageReactionDao.remove(
+            ref: ref,
+            deleteRequest: rumor,
+            reactionEventId: deleteEventIds.single,
+          );
+        }
+      } else if (rumor.kind == GenericRepostEntity.kind) {
+        await eventMessageDao.add(rumor);
+      }
+    }
   }
 
   String _receiverDevicePubkey(EventMessage wrap) {
