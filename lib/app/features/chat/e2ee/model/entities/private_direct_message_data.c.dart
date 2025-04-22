@@ -5,6 +5,7 @@ import 'dart:async';
 import 'package:collection/collection.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:ion/app/exceptions/exceptions.dart';
+import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/chat/community/models/entities/tags/conversation_identifier.c.dart';
 import 'package:ion/app/features/chat/model/group_subject.c.dart';
 import 'package:ion/app/features/chat/model/message_type.dart';
@@ -37,6 +38,7 @@ abstract class PrivateDirectMessageEntity {
 
   String get id;
   String get pubkey;
+  String get masterPubkey;
   DateTime get createdAt;
   PrivateDirectMessageData get data;
 
@@ -61,6 +63,7 @@ class ImmutablePrivateDirectMessageEntity
   const factory ImmutablePrivateDirectMessageEntity({
     required String id,
     required String pubkey,
+    required String masterPubkey,
     required DateTime createdAt,
     required PrivateDirectMessageData data,
   }) = _ImmutablePrivateDirectMessageEntity;
@@ -71,6 +74,7 @@ class ImmutablePrivateDirectMessageEntity
     return ImmutablePrivateDirectMessageEntity(
       id: eventMessage.id,
       pubkey: eventMessage.pubkey,
+      masterPubkey: eventMessage.masterPubkey,
       createdAt: eventMessage.createdAt,
       data: ImmutablePrivateDirectMessageData.fromEventMessage(eventMessage),
     );
@@ -86,6 +90,7 @@ class ReplaceablePrivateDirectMessageEntity
   const factory ReplaceablePrivateDirectMessageEntity({
     required String id,
     required String pubkey,
+    required String masterPubkey,
     required DateTime createdAt,
     required PrivateDirectMessageData data,
   }) = _ReplaceablePrivateDirectMessageEntity;
@@ -96,6 +101,7 @@ class ReplaceablePrivateDirectMessageEntity
     return ReplaceablePrivateDirectMessageEntity(
       id: eventMessage.id,
       pubkey: eventMessage.pubkey,
+      masterPubkey: eventMessage.masterPubkey,
       createdAt: eventMessage.createdAt,
       data: ImmutablePrivateDirectMessageData.fromEventMessage(eventMessage),
     );

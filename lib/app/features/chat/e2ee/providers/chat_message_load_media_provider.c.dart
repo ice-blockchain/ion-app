@@ -45,7 +45,7 @@ Raw<Future<File?>> chatMessageLoadMedia(
   // Load encrypted thumbnail
   final encryptedMedia = await ref
       .watch(mediaEncryptionServiceProvider)
-      .retrieveEncryptedMedia(mediaAttachmentToLoad, authorPubkey: entity.pubkey);
+      .retrieveEncryptedMedia(mediaAttachmentToLoad, authorPubkey: entity.masterPubkey);
 
   return encryptedMedia;
 }
