@@ -14,7 +14,7 @@ Raw<Future<MediaFile>> compressChatMedia(Ref ref, MediaFile mediaFile) async {
   final mediaType = MediaType.fromMimeType(mediaFile.mimeType ?? '');
 
   final compressor = ref.watch(compressorProvider(mediaType));
-  if (mediaType == MediaType.unknown) {
+  if (mediaType == MediaType.image) {
     return compressor.compress(
       mediaFile,
       settings: const ImageCompressionSettings(shouldCompressGif: true),
