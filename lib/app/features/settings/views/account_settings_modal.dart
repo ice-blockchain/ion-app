@@ -12,8 +12,7 @@ import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/core/model/language.dart';
 import 'package:ion/app/features/core/providers/app_locale_provider.c.dart';
 import 'package:ion/app/features/settings/views/delete_confirm_modal.dart';
-import 'package:ion/app/features/user/model/interest_set.c.dart';
-import 'package:ion/app/features/user/providers/user_interests_set_provider.c.dart';
+import 'package:ion/app/features/settings/providers/optimistic_content_language_providers.dart';
 import 'package:ion/app/router/app_routes.c.dart';
 import 'package:ion/app/router/components/navigation_app_bar/navigation_app_bar.dart';
 import 'package:ion/app/router/components/navigation_app_bar/navigation_close_button.dart';
@@ -26,13 +25,12 @@ class AccountSettingsModal extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final languageInterestSet =
-        ref.watch(currentUserInterestsSetProvider(InterestSetType.languages)).valueOrNull;
+    final contentLangSet = ref.watch(contentLangSetStreamProvider).valueOrNull;
     final contentLanguages = useMemoized(
       () {
-        return languageInterestSet?.data.hashtags.map(Language.fromIsoCode).nonNulls.toList();
+        return contentLangSet?.hashtags.map(Language.fromIsoCode).nonNulls.toList();
       },
-      [languageInterestSet],
+      [contentLangSet],
     );
 
     final primaryColor = context.theme.appColors.primaryAccent;
