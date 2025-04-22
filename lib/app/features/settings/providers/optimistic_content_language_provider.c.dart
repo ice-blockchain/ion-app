@@ -15,46 +15,59 @@ part 'optimistic_content_language_provider.c.g.dart';
 
 @riverpod
 OptimisticOperationManager<ContentLangSet> optimisticContentLangManager(Ref ref) {
-  final api = ref.read(ionConnectNotifierProvider.notifier);
+  final ionConnectNotifier = ref.read(ionConnectNotifierProvider.notifier);
 
   final manager = OptimisticOperationManager<ContentLangSet>(
     syncCallback: (previous, optimistic) async {
-      final data = InterestSetData(
-        type: InterestSetType.languages,
-        hashtags: optimistic.hashtags,
+      await ionConnectNotifier.sendEntityData<InterestSetEntity>(
+        InterestSetData(
+          type: InterestSetType.languages,
+          hashtags: optimistic.hashtags,
+        ),
       );
-
-      await api.sendEntityData<InterestSetEntity>(data);
       return optimistic;
     },
-    onError: (_, __) async => false, // rollback silently
+    onError: (_, __) async => false,
   );
 
-  ref
-    ..listen<AsyncValue<InterestSetEntity?>>(
-      currentUserInterestsSetProvider(InterestSetType.languages),
-      (prev, next) {
-        next.whenData((entity) {
-          if (entity == null) return;
+  final pubkey = ref.read(currentPubkeySelectorProvider);
 
-          manager.initialize([
-            ContentLangSet(
-              pubkey: entity.pubkey,
-              hashtags: entity.data.hashtags,
-            ).sorted,
-          ]);
-        });
-      },
-    )
-    ..onDispose(manager.dispose);
+  if (pubkey != null) {
+    manager.initialize([
+      ContentLangSet(
+        pubkey: pubkey,
+        hashtags: const [],
+      ).sorted,
+    ]);
+  }
+
+  ref.watch(currentUserInterestsSetProvider(InterestSetType.languages)).whenData((entity) {
+    if (entity == null) return;
+    manager.initialize([
+      ContentLangSet(
+        pubkey: entity.pubkey,
+        hashtags: entity.data.hashtags,
+      ).sorted,
+    ]);
+  });
+
+  ref.onDispose(manager.dispose);
+
   return manager;
 }
 
-/// Stream provider – always emits the latest content language set including optimistic changes.
 @riverpod
-Stream<ContentLangSet?> contentLangSet(Ref ref) {
+Stream<ContentLangSet?> contentLangSet(Ref ref) async* {
+  // final manager = ref.watch(optimisticContentLangManagerProvider);
+  // return manager.stream.map((e) => e.isEmpty ? null : e.first);
+
   final mgr = ref.watch(optimisticContentLangManagerProvider);
-  return mgr.stream.map((list) => list.isEmpty ? null : list.first);
+
+  if (mgr.snapshot.isNotEmpty) {
+    yield mgr.snapshot.first;
+  }
+
+  yield* mgr.stream.map((list) => list.isEmpty ? null : list.first);
 }
 
 @riverpod
@@ -62,21 +75,23 @@ class ContentLangSetNotifier extends _$ContentLangSetNotifier {
   @override
   void build() {}
 
-  void toggle(String langIso) {
+  void toggle(String iso) {
     final pubkey = ref.read(currentPubkeySelectorProvider);
     if (pubkey == null) return;
 
-    final current = ref.read(contentLangSetProvider).valueOrNull ??
+    final current = ref.read(contentLangSetProvider).maybeWhen(
+              data: (value) => value,
+              orElse: () => null,
+            ) ??
         ContentLangSet(pubkey: pubkey, hashtags: const []);
 
-    final updated = List<String>.from(current.hashtags);
-    updated.contains(langIso) ? updated.remove(langIso) : updated.add(langIso);
-
+    final updated = [...current.hashtags];
+    updated.contains(iso) ? updated.remove(iso) : updated.add(iso);
     if (updated.isEmpty) return;
 
     ref.read(optimisticContentLangManagerProvider).perform(
           previous: current,
-          optimistic: ContentLangSet(pubkey: current.pubkey, hashtags: updated).sorted,
+          optimistic: current.copyWith(hashtags: updated).sorted,
         );
   }
 }

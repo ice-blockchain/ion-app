@@ -34,6 +34,8 @@ class OptimisticOperationManager<T extends OptimisticModel> {
   final _controller = StreamController<List<T>>.broadcast();
   Stream<List<T>> get stream => _controller.stream;
 
+  List<T> get snapshot => List.unmodifiable(_state);
+
   final List<T> _state;
   final Queue<OptimisticOperation<T>> _pending;
   bool _busy = false;

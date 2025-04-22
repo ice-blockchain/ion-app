@@ -25,12 +25,11 @@ class AccountSettingsModal extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final contentLangSet = ref.watch(contentLangSetProvider).valueOrNull;
+    final contentLangsAsync = ref.watch(contentLangSetProvider);
+
     final contentLanguages = useMemoized(
-      () {
-        return contentLangSet?.hashtags.map(Language.fromIsoCode).nonNulls.toList();
-      },
-      [contentLangSet],
+      () => contentLangsAsync.valueOrNull?.hashtags.map(Language.fromIsoCode).nonNulls.toList(),
+      [contentLangsAsync.valueOrNull],
     );
 
     final primaryColor = context.theme.appColors.primaryAccent;
@@ -41,9 +40,7 @@ class AccountSettingsModal extends HookConsumerWidget {
         children: [
           NavigationAppBar.modal(
             title: Text(context.i18n.common_account),
-            actions: const [
-              NavigationCloseButton(),
-            ],
+            actions: const [NavigationCloseButton()],
           ),
           ScreenSideOffset.small(
             child: SeparatedColumn(
@@ -51,63 +48,45 @@ class AccountSettingsModal extends HookConsumerWidget {
               mainAxisSize: MainAxisSize.min,
               children: [
                 ModalActionButton(
-                  icon: Assets.svg.iconProfileUser.icon(
-                    color: primaryColor,
-                  ),
+                  icon: Assets.svg.iconProfileUser.icon(color: primaryColor),
                   label: context.i18n.settings_profile_edit,
-                  onTap: () {
-                    ProfileEditRoute().go(context);
-                  },
+                  onTap: () => ProfileEditRoute().go(context),
                 ),
                 ModalActionButton(
-                  icon: Assets.svg.iconProfileBlockUser.icon(
-                    color: primaryColor,
-                  ),
+                  icon: Assets.svg.iconProfileBlockUser.icon(color: primaryColor),
                   label: context.i18n.settings_blocked_users,
-                  onTap: () {
-                    BlockedUsersRoute().push<void>(context);
-                  },
+                  onTap: () => BlockedUsersRoute().push<void>(context),
                 ),
                 ModalActionButton(
-                  icon: Assets.svg.iconSelectLanguage.icon(
-                    color: primaryColor,
-                  ),
+                  icon: Assets.svg.iconSelectLanguage.icon(color: primaryColor),
                   label: context.i18n.settings_app_language,
                   trailing: Text(
                     ref.watch(localePreferredLanguageProvider).name,
                     style: context.theme.appTextThemes.caption.copyWith(color: primaryColor),
                   ),
-                  onTap: () {
-                    AppLanguagesRoute().push<void>(context);
-                  },
+                  onTap: () => AppLanguagesRoute().push<void>(context),
                 ),
-                if (contentLanguages != null)
-                  ModalActionButton(
-                    icon: Assets.svg.iconSelectLanguage.icon(
-                      color: primaryColor,
-                    ),
+                contentLangsAsync.maybeWhen(
+                  orElse: () => const ItemLoadingState(),
+                  data: (_) => ModalActionButton(
+                    icon: Assets.svg.iconSelectLanguage.icon(color: primaryColor),
                     label: context.i18n.settings_content_language,
                     trailing: Row(
                       mainAxisSize: MainAxisSize.min,
                       children: [
-                        if (contentLanguages.length > 1)
-                          _RemainingLanguagesLabel(
-                            value: contentLanguages.length,
-                          )
-                        else if (contentLanguages.isNotEmpty)
+                        if ((contentLanguages?.length ?? 0) > 1)
+                          _RemainingLanguagesLabel(value: contentLanguages!.length)
+                        else if (contentLanguages?.isNotEmpty ?? false)
                           Text(
-                            contentLanguages.first.name,
+                            contentLanguages!.first.name,
                             style:
                                 context.theme.appTextThemes.caption.copyWith(color: primaryColor),
                           ),
                       ],
                     ),
-                    onTap: () {
-                      ContentLanguagesRoute().push<void>(context);
-                    },
-                  )
-                else
-                  const ItemLoadingState(),
+                    onTap: () => ContentLanguagesRoute().push<void>(context),
+                  ),
+                ),
                 ModalActionButton(
                   icon: Assets.svg.iconBlockDelete.icon(
                     color: context.theme.appColors.attentionRed,
