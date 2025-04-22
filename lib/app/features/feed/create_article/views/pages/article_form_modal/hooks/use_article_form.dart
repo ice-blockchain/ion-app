@@ -30,6 +30,8 @@ class ArticleFormState {
     required this.media,
     required this.titleOverflowCount,
     required this.isTitleLengthValid,
+    required this.descriptionOverflowCount,
+    required this.isDescriptionLengthValid,
   });
 
   final ValueNotifier<MediaFile?> selectedImage;
@@ -45,6 +47,8 @@ class ArticleFormState {
   final ValueNotifier<Map<String, MediaAttachment>?> media;
   final ValueNotifier<int> titleOverflowCount;
   final ValueNotifier<bool> isTitleLengthValid;
+  final ValueNotifier<int> descriptionOverflowCount;
+  final ValueNotifier<bool> isDescriptionLengthValid;
 }
 
 ArticleFormState useArticleForm(WidgetRef ref, {EventReference? modifiedEvent}) {
@@ -61,7 +65,10 @@ ArticleFormState useArticleForm(WidgetRef ref, {EventReference? modifiedEvent}) 
   final isTextValid = useState(false);
   final titleOverflowCount = useState<int>(0);
   final isTitleLengthValid = useState(true);
+  final descriptionOverflowCount = useState<int>(0);
+  final isDescriptionLengthValid = useState(true);
   const titleMaxLength = 120;
+  const descriptionMaxLength = 25000;
 
   useEffect(
     () {
@@ -114,7 +121,13 @@ ArticleFormState useArticleForm(WidgetRef ref, {EventReference? modifiedEvent}) 
           );
 
           textEditorController.document = Document.fromDelta(delta);
-          isTextValid.value = textEditorController.document.toPlainText().trim().isNotEmpty;
+          final descriptionText = textEditorController.document.toPlainText();
+          isTextValid.value = descriptionText.trim().isNotEmpty;
+
+          if (descriptionText.length > descriptionMaxLength) {
+            descriptionOverflowCount.value = descriptionText.length - descriptionMaxLength;
+            isDescriptionLengthValid.value = false;
+          }
 
           if (modifiableEntity.data.image != null) {
             selectedImageUrl.value = modifiableEntity.data.image;
@@ -154,7 +167,16 @@ ArticleFormState useArticleForm(WidgetRef ref, {EventReference? modifiedEvent}) 
   useEffect(
     () {
       void listener() {
-        isTextValid.value = textEditorController.document.toPlainText().trim().isNotEmpty;
+        final descriptionText = textEditorController.document.toPlainText();
+        isTextValid.value = descriptionText.trim().isNotEmpty;
+
+        if (descriptionText.length > descriptionMaxLength) {
+          descriptionOverflowCount.value = descriptionText.length - descriptionMaxLength;
+          isDescriptionLengthValid.value = false;
+        } else {
+          descriptionOverflowCount.value = 0;
+          isDescriptionLengthValid.value = true;
+        }
       }
 
       textEditorController.addListener(listener);
@@ -178,7 +200,8 @@ ArticleFormState useArticleForm(WidgetRef ref, {EventReference? modifiedEvent}) 
       return (selectedImage.value != null || selectedImageUrl.value != null) &&
           titleFilled.value &&
           isTextValid.value &&
-          isTitleLengthValid.value;
+          isTitleLengthValid.value &&
+          isDescriptionLengthValid.value;
     },
     [
       selectedImage.value,
@@ -186,6 +209,7 @@ ArticleFormState useArticleForm(WidgetRef ref, {EventReference? modifiedEvent}) 
       titleFilled.value,
       isTextValid.value,
       isTitleLengthValid.value,
+      isDescriptionLengthValid.value,
     ],
   );
 
@@ -203,5 +227,7 @@ ArticleFormState useArticleForm(WidgetRef ref, {EventReference? modifiedEvent}) 
     media: media,
     titleOverflowCount: titleOverflowCount,
     isTitleLengthValid: isTitleLengthValid,
+    descriptionOverflowCount: descriptionOverflowCount,
+    isDescriptionLengthValid: isDescriptionLengthValid,
   );
 }

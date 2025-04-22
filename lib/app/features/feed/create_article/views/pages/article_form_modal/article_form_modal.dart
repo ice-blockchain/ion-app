@@ -160,13 +160,27 @@ class ArticleFormModal extends HookConsumerWidget {
                         child: ValueListenableBuilder<bool>(
                           valueListenable: articleState.editorFocusNotifier,
                           builder: (context, isFocused, child) {
-                            return TextEditor(
-                              autoFocus: isFocused,
-                              media: modifiedEvent != null ? articleState.media.value : null,
-                              articleState.textEditorController,
-                              placeholder: context.i18n.create_article_story_placeholder,
-                              key: textEditorKey,
-                              scrollController: scrollController,
+                            return Column(
+                              children: [
+                                TextEditor(
+                                  autoFocus: isFocused,
+                                  media: modifiedEvent != null ? articleState.media.value : null,
+                                  articleState.textEditorController,
+                                  placeholder: context.i18n.create_article_story_placeholder,
+                                  key: textEditorKey,
+                                  scrollController: scrollController,
+                                ),
+                                if (articleState.descriptionOverflowCount.value > 0)
+                                  Padding(
+                                    padding: EdgeInsets.only(top: 4.0.s),
+                                    child: Text(
+                                      '-${articleState.descriptionOverflowCount.value}',
+                                      style: context.theme.appTextThemes.caption2.copyWith(
+                                        color: context.theme.appColors.attentionRed,
+                                      ),
+                                    ),
+                                  ),
+                              ],
                             );
                           },
                         ),
