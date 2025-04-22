@@ -159,7 +159,7 @@ class ConversationDao extends DatabaseAccessor<ChatDatabase> with _$Conversation
   /// Get the id of the conversation with the given receiver master pubkey
   /// Only searches for non-deleted conversations of type [ConversationType.oneToOne]
   ///
-  Future<String?> getExistOnetOneConversationId(String receiverMasterPubkey) async {
+  Future<String?> getExistOneToOneConversationId(String receiverMasterPubkey) async {
     final query = select(conversationTable).join([
       innerJoin(
         conversationMessageTable,
@@ -173,7 +173,12 @@ class ConversationDao extends DatabaseAccessor<ChatDatabase> with _$Conversation
       ..where(conversationTable.type.equals(ConversationType.oneToOne.index))
       ..where(conversationTable.isDeleted.equals(false))
       ..where(eventMessageTable.tags.contains(receiverMasterPubkey))
-      ..where(eventMessageTable.kind.equals(ImmutablePrivateDirectMessageEntity.kind))
+      ..where(
+        eventMessageTable.kind.isIn([
+          ImmutablePrivateDirectMessageEntity.kind,
+          ReplaceablePrivateDirectMessageEntity.kind,
+        ]),
+      )
       ..orderBy([OrderingTerm.desc(eventMessageTable.createdAt)])
       ..limit(1);
 

@@ -102,7 +102,7 @@ class StoryReply extends _$StoryReply {
           eventSigner: eventSigner,
           masterPubkey: masterPubkey,
           eventMessage: kind16Rumor,
-          kinds: [
+          wrappedKinds: [
             GenericRepostEntity.kind.toString(),
             ModifiablePostEntity.kind.toString(),
           ],

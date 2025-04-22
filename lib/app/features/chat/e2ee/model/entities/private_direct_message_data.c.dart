@@ -16,6 +16,7 @@ import 'package:ion/app/features/ion_connect/model/media_attachment.dart';
 import 'package:ion/app/features/ion_connect/model/quoted_event.c.dart';
 import 'package:ion/app/features/ion_connect/model/related_event.c.dart';
 import 'package:ion/app/features/ion_connect/model/related_pubkey.c.dart';
+import 'package:ion/app/features/ion_connect/model/replaceable_event_identifier.c.dart';
 import 'package:ion/app/features/ion_connect/model/rich_text.c.dart';
 import 'package:ion/app/features/wallets/model/entities/funds_request_entity.c.dart';
 import 'package:ion/app/services/ion_connect/ion_connect_protocol_identifier_type.dart';
@@ -249,6 +250,7 @@ class ReplaceablePrivateDirectMessageData
     implements PrivateDirectMessageData {
   const factory ReplaceablePrivateDirectMessageData({
     required String content,
+    required String messageId,
     required String conversationId,
     required Map<String, MediaAttachment> media,
     RichText? richText,
@@ -264,9 +266,17 @@ class ReplaceablePrivateDirectMessageData
   factory ReplaceablePrivateDirectMessageData.fromEventMessage(EventMessage eventMessage) {
     final tags = groupBy(eventMessage.tags, (tag) => tag[0]);
 
+    if (tags[ReplaceableEventIdentifier.tagName] == null) {
+      throw ReplaceablePrivateDirectMessageDecodeException(eventMessage.id);
+    }
+
     return ReplaceablePrivateDirectMessageData(
       content: eventMessage.content,
       media: EntityDataWithMediaContent.parseImeta(tags[MediaAttachment.tagName]),
+      messageId: tags[ReplaceableEventIdentifier.tagName]!
+          .map(ReplaceableEventIdentifier.fromTag)
+          .singleOrNull!
+          .value,
       relatedPubkeys: tags[RelatedPubkey.tagName]?.map(RelatedPubkey.fromTag).toList(),
       relatedEvents: tags[RelatedReplaceableEvent.tagName]?.map(RelatedEvent.fromTag).toList(),
       groupSubject: tags[GroupSubject.tagName]?.map(GroupSubject.fromTag).singleOrNull,
@@ -288,7 +298,9 @@ class ReplaceablePrivateDirectMessageData
       if (relatedEvents != null) ...relatedEvents!.map((event) => event.toTag()),
       if (relatedPubkeys != null) ...relatedPubkeys!.map((pubkey) => pubkey.toTag()),
       if (media.isNotEmpty) ...media.values.map((mediaAttachment) => mediaAttachment.toTag()),
+      ReplaceableEventIdentifier(value: messageId).toTag(),
       ConversationIdentifier(value: conversationId).toTag(),
+     
     ];
 
     final createdAt = DateTime.now();

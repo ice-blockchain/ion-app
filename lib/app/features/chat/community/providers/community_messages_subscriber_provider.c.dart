@@ -57,10 +57,10 @@ class CommunityMessagesSubscriber extends _$CommunityMessagesSubscriber {
       },
       maxCreatedAtBuilder: () => ref
           .watch(conversationEventMessageDaoProvider)
-          .getLatestEventMessageDate(ModifiablePostEntity.kind),
+          .getLatestEventMessageDate([ModifiablePostEntity.kind]),
       minCreatedAtBuilder: (since) => ref
           .watch(conversationEventMessageDaoProvider)
-          .getEarliestEventMessageDate(ModifiablePostEntity.kind, after: since),
+          .getEarliestEventMessageDate([ModifiablePostEntity.kind], after: since),
       overlap: const Duration(days: 2),
       actionSource: ActionSourceUser(ownerPubkey),
     );

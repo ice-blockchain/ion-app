@@ -44,14 +44,13 @@ class ConversationEventMessageDao extends DatabaseAccessor<ChatDatabase>
     );
   }
 
-  ///
-  /// Get the creation date of the most recent event message of a specific kind
-  /// Returns null if no messages of that kind exist
-  ///
-  Future<DateTime?> getLatestEventMessageDate(int kind) async {
+  
+  /// Get the creation date of the most recent event messages of specific kinds
+  /// Returns null if no messages of those kinds exist
+  Future<DateTime?> getLatestEventMessageDate(List<int> kinds) async {
     final query = select(eventMessageTable)
       ..orderBy([(t) => OrderingTerm.desc(t.createdAt)])
-      ..where((t) => t.kind.equals(kind))
+      ..where((t) => t.kind.isIn(kinds))
       ..limit(1);
 
     final row = await query.getSingleOrNull();
@@ -59,12 +58,11 @@ class ConversationEventMessageDao extends DatabaseAccessor<ChatDatabase>
     return row?.createdAt;
   }
 
-  ///
-  /// Get the creation date of the oldest event message of a specific kind
-  /// Returns null if no messages of that kind exist
-  ///
-  Future<DateTime?> getEarliestEventMessageDate(int kind, {DateTime? after}) async {
-    final query = select(eventMessageTable)..where((t) => t.kind.equals(kind));
+  /// Get the creation date of the oldest event messages of specific kinds
+  /// Returns null if no messages of those kinds exist
+  Future<DateTime?> getEarliestEventMessageDate(List<int> kinds, {DateTime? after}) async {
+    final query = select(eventMessageTable)
+      ..where((t) => t.kind.isIn(kinds));
 
     if (after != null) {
       query.where((t) => t.createdAt.isBiggerThanValue(after));

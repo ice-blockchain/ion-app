@@ -477,3 +477,13 @@ class WalletsLoadingException extends IONException {
 class FailedToGenerateMediaUrlFallback extends IONException {
   FailedToGenerateMediaUrlFallback() : super(10094, 'Failed to generate media fallback url');
 }
+
+class ImmutablePrivateDirectMessageDecodeException extends IONException {
+  ImmutablePrivateDirectMessageDecodeException(String id)
+      : super(10095, 'Failed to convert event message with id $id');
+}
+
+class ReplaceablePrivateDirectMessageDecodeException extends IONException {
+  ReplaceablePrivateDirectMessageDecodeException(String id)
+      : super(10096, 'Failed to convert event message with id $id');
+}
