@@ -23,6 +23,7 @@ import 'package:ion/app/features/ion_connect/model/event_reference.c.dart';
 import 'package:ion/app/features/ion_connect/model/media_attachment.dart';
 import 'package:ion/app/features/ion_connect/model/related_event.c.dart';
 import 'package:ion/app/features/ion_connect/model/related_event_marker.dart';
+import 'package:ion/app/features/ion_connect/model/replaceable_event_identifier.c.dart';
 import 'package:ion/app/features/ion_connect/providers/ion_connect_event_signer_provider.c.dart';
 import 'package:ion/app/features/ion_connect/providers/ion_connect_notifier.c.dart';
 import 'package:ion/app/services/compressor/compress_service.c.dart';
@@ -45,11 +46,13 @@ class SendE2eeChatMessageService {
   final Ref ref;
 
   Future<EventMessage> sendMessage({
-    required String conversationId,
-    required List<String> participantsMasterPubkeys,
     required String content,
+    required String conversationId,
     required List<MediaFile> mediaFiles,
+    required List<String> participantsMasterPubkeys,
+    int kind = ReplaceablePrivateDirectMessageEntity.kind,
     String? subject,
+    String? existingMessageId,
     String? failedEventMessageId,
     EventMessage? repliedMessage,
     List<String>? groupImageTag,
@@ -59,6 +62,7 @@ class SendE2eeChatMessageService {
     EventMessage? sentKind14Message;
 
     String? currentUserEventMessageId;
+    final messageId = existingMessageId ?? generateUuid();
 
     try {
       final eventSigner = await ref.read(currentUserIonConnectEventSignerProvider.future);
@@ -75,6 +79,7 @@ class SendE2eeChatMessageService {
 
       final conversationTags = _generateConversationTags(
         subject: subject,
+        messageId: messageId,
         groupImageTag: groupImageTag,
         conversationId: conversationId,
         repliedMessage: repliedMessage,
@@ -87,6 +92,7 @@ class SendE2eeChatMessageService {
       }).toList();
 
       final eventMessage = await _createEventMessage(
+        kind: kind,
         content: content,
         signer: eventSigner,
         tags: conversationTags..addAll(mediaAttachments.map((a) => a.toTag())),
@@ -134,6 +140,7 @@ class SendE2eeChatMessageService {
                 repliedMessage: repliedMessage,
                 referencePostTag: referencePostTag,
                 masterPubkeys: participantsMasterPubkeys,
+                messageId: kind == ReplaceablePrivateDirectMessageEntity.kind ? messageId : null,
               ),
               if (mediaTags != null) ...mediaTags,
             ];
@@ -141,17 +148,19 @@ class SendE2eeChatMessageService {
             final isCurrentUser = ref.read(isCurrentUserSelectorProvider(masterPubkey));
 
             final event = await _createEventMessage(
+              kind: kind,
               content: content,
               signer: eventSigner,
-              tags: conversationTagsWithMediaTags,
               previousId: eventMessage.id,
+              tags: conversationTagsWithMediaTags,
             );
 
             await sendWrappedMessage(
+              pubkey: pubkey,
               eventMessage: event,
               eventSigner: eventSigner,
-              pubkey: pubkey,
               masterPubkey: masterPubkey,
+              wrappedKinds: [kind.toString()],
             );
 
             sentKind14Message = event;
@@ -268,14 +277,14 @@ class SendE2eeChatMessageService {
     required String masterPubkey,
     required EventSigner eventSigner,
     required EventMessage eventMessage,
-    List<String>? kinds,
+    required List<String> wrappedKinds,
   }) async {
     final giftWrap = await _createGiftWrap(
       signer: eventSigner,
+      kinds: wrappedKinds,
       receiverPubkey: pubkey,
       eventMessage: eventMessage,
       receiverMasterPubkey: masterPubkey,
-      kinds: kinds ?? [ImmutablePrivateDirectMessageEntity.kind.toString()],
     );
 
     await ref.read(ionConnectNotifierProvider.notifier).sendEvent(
@@ -289,6 +298,7 @@ class SendE2eeChatMessageService {
     required String conversationId,
     required List<String> masterPubkeys,
     String? subject,
+    String? messageId,
     List<String>? groupImageTag,
     List<String>? referencePostTag,
     EventMessage? repliedMessage,
@@ -298,12 +308,13 @@ class SendE2eeChatMessageService {
     final relatedEventsTags = _buildRelatedEvents(repliedMessage).map((tag) => tag.toTag());
 
     final tags = [
-      if (subject != null) ['subject', subject],
       ...masterPubkeys.map((pubkey) => ['p', pubkey]),
       ...relatedEventsTags,
       [ConversationIdentifier.tagName, conversationId],
+      if (subject != null) ['subject', subject],
       if (groupImageTag != null) groupImageTag,
       if (referencePostTag != null) referencePostTag,
+      if (messageId != null) [ReplaceableEventIdentifier.tagName, messageId],
       ['b', currentUserMasterPubkey!],
     ];
 
@@ -311,11 +322,11 @@ class SendE2eeChatMessageService {
   }
 
   Future<EventMessage> _createEventMessage({
+    required int kind,
     required String content,
     required EventSigner signer,
     required List<List<String>> tags,
     String? previousId,
-    int kind = ImmutablePrivateDirectMessageEntity.kind,
   }) async {
     final createdAt = DateTime.now().toUtc();
 

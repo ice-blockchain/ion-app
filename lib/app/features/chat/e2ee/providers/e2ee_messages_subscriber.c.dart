@@ -42,9 +42,11 @@ class E2eeMessagesSubscriber extends _$E2eeMessagesSubscriber {
       throw EventSignerNotFoundException();
     }
 
-    final latestEventMessageDate = await ref
-        .watch(conversationEventMessageDaoProvider)
-        .getLatestEventMessageDate(ImmutablePrivateDirectMessageEntity.kind);
+    final latestEventMessageDate =
+        await ref.watch(conversationEventMessageDaoProvider).getLatestEventMessageDate([
+      ImmutablePrivateDirectMessageEntity.kind,
+      ReplaceablePrivateDirectMessageEntity.kind,
+    ]);
 
     final userChatRelays = await ref.watch(userChatRelaysProvider(masterPubkey).future);
 
@@ -59,8 +61,9 @@ class E2eeMessagesSubscriber extends _$E2eeMessagesSubscriber {
       tags: {
         '#k': [
           DeletionRequest.kind.toString(),
-          ImmutablePrivateDirectMessageEntity.kind.toString(),
           PrivateMessageReactionEntity.kind.toString(),
+          ImmutablePrivateDirectMessageEntity.kind.toString(),
+          ReplaceablePrivateDirectMessageEntity.kind.toString(),
           [GenericRepostEntity.kind.toString(), ModifiablePostEntity.kind.toString()],
         ],
         '#p': [masterPubkey],
@@ -92,12 +95,19 @@ class E2eeMessagesSubscriber extends _$E2eeMessagesSubscriber {
         conversationMessageStatusDao,
         conversationMessageReactionDao,
       ),
-      maxCreatedAtBuilder: () => ref
-          .watch(conversationEventMessageDaoProvider)
-          .getLatestEventMessageDate(ImmutablePrivateDirectMessageEntity.kind),
-      minCreatedAtBuilder: (since) => ref
-          .watch(conversationEventMessageDaoProvider)
-          .getEarliestEventMessageDate(ImmutablePrivateDirectMessageEntity.kind, after: since),
+      maxCreatedAtBuilder: () =>
+          ref.watch(conversationEventMessageDaoProvider).getLatestEventMessageDate([
+        ImmutablePrivateDirectMessageEntity.kind,
+        ReplaceablePrivateDirectMessageEntity.kind,
+      ]),
+      minCreatedAtBuilder: (since) =>
+          ref.watch(conversationEventMessageDaoProvider).getEarliestEventMessageDate(
+        [
+          ImmutablePrivateDirectMessageEntity.kind,
+          ReplaceablePrivateDirectMessageEntity.kind,
+        ],
+        after: since,
+      ),
       overlap: const Duration(days: 2),
       actionSource: const ActionSourceCurrentUserChat(),
     );
@@ -177,8 +187,9 @@ class E2eeMessagesSubscriber extends _$E2eeMessagesSubscriber {
           throw ReceiverDevicePubkeyNotFoundException(rumor.id);
         }
 
-        // Only for kind 14
-        if (rumor.kind == ImmutablePrivateDirectMessageEntity.kind) {
+        // Only for kind 14 or kind 30014
+        if (rumor.kind == ImmutablePrivateDirectMessageEntity.kind ||
+            rumor.kind == ReplaceablePrivateDirectMessageEntity.kind) {
           // Add conversation if that doesn't exist
           await ref.watch(conversationDaoProvider).add([rumor]);
           // Add message if that doesn't exist
@@ -251,7 +262,8 @@ class E2eeMessagesSubscriber extends _$E2eeMessagesSubscriber {
             deleteRequest: rumor,
             conversationIds: deleteConversationIds,
           );
-        } else if (deleteEventKind == ImmutablePrivateDirectMessageEntity.kind.toString()) {
+        } else if (deleteEventKind == ImmutablePrivateDirectMessageEntity.kind.toString() ||
+            deleteEventKind == ReplaceablePrivateDirectMessageEntity.kind.toString()) {
           if (deleteEventIds.isNotEmpty) {
             await conversationMessageDao.removeMessages(
               ref: ref,

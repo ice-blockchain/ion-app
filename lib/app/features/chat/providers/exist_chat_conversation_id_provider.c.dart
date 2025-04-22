@@ -8,5 +8,5 @@ part 'exist_chat_conversation_id_provider.c.g.dart';
 
 @riverpod
 Future<String?> existChatConversationId(Ref ref, String receiverMasterPubKey) async {
-  return ref.watch(conversationDaoProvider).getExistOnetOneConversationId(receiverMasterPubKey);
+  return ref.watch(conversationDaoProvider).getExistOneToOneConversationId(receiverMasterPubKey);
 }

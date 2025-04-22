@@ -50,9 +50,9 @@ class SendChatMessageService {
         );
 
     await sendChatMessageService.sendMessage(
-      conversationId: conversationId,
       content: content,
       mediaFiles: mediaFiles,
+      conversationId: conversationId,
       participantsMasterPubkeys: [receiverPubkey, currentPubkey],
     );
   }
