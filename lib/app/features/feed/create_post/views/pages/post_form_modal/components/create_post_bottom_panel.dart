@@ -19,7 +19,6 @@ import 'package:ion/app/features/feed/views/components/toolbar_buttons/toolbar_b
 import 'package:ion/app/features/feed/views/components/toolbar_buttons/toolbar_image_button.dart';
 import 'package:ion/app/features/feed/views/components/toolbar_buttons/toolbar_italic_button.dart';
 import 'package:ion/app/features/feed/views/components/toolbar_buttons/toolbar_poll_button.dart';
-import 'package:ion/app/features/feed/views/components/toolbar_buttons/toolbar_regular_button.dart';
 import 'package:ion/app/features/feed/views/pages/who_can_reply_settings_modal/who_can_reply_settings_modal.dart';
 import 'package:ion/app/features/ion_connect/model/event_reference.c.dart';
 import 'package:ion/app/features/ion_connect/providers/ion_connect_entity_provider.c.dart';
@@ -175,7 +174,6 @@ class _ActionsSection extends StatelessWidget {
             textEditorController: textEditorController,
             enabled: !isVideo,
           ),
-          ToolbarRegularButton(textEditorController: textEditorController),
           ToolbarItalicButton(textEditorController: textEditorController),
           ToolbarBoldButton(textEditorController: textEditorController),
         ],
