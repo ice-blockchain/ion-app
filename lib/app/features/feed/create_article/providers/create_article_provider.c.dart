@@ -336,7 +336,7 @@ class CreateArticle extends _$CreateArticle {
       width: dimension.width,
       height: dimension.height,
     );
-    final compressedImage = await imageCompressor.compressImage(file);
+    final compressedImage = await imageCompressor.compress(file);
 
     final result = await ref.read(ionConnectUploadNotifierProvider.notifier).upload(
           compressedImage,

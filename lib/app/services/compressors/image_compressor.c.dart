@@ -7,6 +7,7 @@ import 'package:ffmpeg_kit_flutter/return_code.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/exceptions/exceptions.dart';
 import 'package:ion/app/services/compressors/compress_executor.c.dart';
+import 'package:ion/app/services/compressors/compressor.c.dart';
 import 'package:ion/app/services/compressors/output_path_generator.dart';
 import 'package:ion/app/services/logger/logger.dart';
 import 'package:ion/app/services/media_service/ffmpeg_commands_config.dart';
@@ -16,7 +17,21 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'image_compressor.c.g.dart';
 
-class ImageCompressor {
+class ImageCompressionSettings {
+  const ImageCompressionSettings({
+    this.quality = 80,
+    this.shouldCompressGif = false,
+    this.width,
+    this.height,
+  });
+
+  final int quality;
+  final bool shouldCompressGif;
+  final int? width;
+  final int? height;
+}
+
+class ImageCompressor implements Compressor<ImageCompressionSettings> {
   const ImageCompressor({required this.compressExecutor});
 
   final CompressExecutor compressExecutor;
@@ -26,30 +41,28 @@ class ImageCompressor {
   /// If success, returns a new [MediaFile] with the compressed image.
   /// If fails, throws an exception.
   ///
-  Future<MediaFile> compressImage(
+  @override
+  Future<MediaFile> compress(
     MediaFile file, {
-    int? width,
-    int? height,
-    int quality = 80,
-    bool shouldCompressGif = false,
+    ImageCompressionSettings settings = const ImageCompressionSettings(),
   }) async {
     try {
       final output = await generateOutputPath();
 
       List<String> command;
-      if (file.mimeType == 'image/gif' && file.path.isGif && shouldCompressGif) {
+      if (file.mimeType == 'image/gif' && file.path.isGif && settings.shouldCompressGif) {
         command = FFmpegCommands.gifToAnimatedWebP(
           inputPath: file.path,
           outputPath: output,
-          quality: quality,
+          quality: settings.quality,
         );
       } else {
         command = FFmpegCommands.imageToWebP(
           inputPath: file.path,
           outputPath: output,
-          quality: quality,
-          width: width,
-          height: height,
+          quality: settings.quality,
+          width: settings.width,
+          height: settings.height,
         );
       }
 

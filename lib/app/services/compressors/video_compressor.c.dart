@@ -5,6 +5,7 @@ import 'package:ffmpeg_kit_flutter/return_code.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/exceptions/exceptions.dart';
 import 'package:ion/app/services/compressors/compress_executor.c.dart';
+import 'package:ion/app/services/compressors/compressor.c.dart';
 import 'package:ion/app/services/compressors/image_compressor.c.dart';
 import 'package:ion/app/services/compressors/output_path_generator.dart';
 import 'package:ion/app/services/logger/logger.dart';
@@ -21,8 +22,8 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'video_compressor.c.g.dart';
 
-class VideoCompressionConfig {
-  const VideoCompressionConfig({
+class VideoCompressionSettings {
+  const VideoCompressionSettings({
     required this.videoCodec,
     required this.preset,
     required this.videoBitrate,
@@ -35,7 +36,7 @@ class VideoCompressionConfig {
     required this.pixelFormat,
   });
 
-  static const balanced = VideoCompressionConfig(
+  static const balanced = VideoCompressionSettings(
     videoCodec: FFmpegVideoCodecArg.libx264,
     preset: FfmpegPresetArg.medium,
     videoBitrate: FfmpegBitrateArg.medium,
@@ -60,7 +61,7 @@ class VideoCompressionConfig {
   final FfmpegPixelFormatArg pixelFormat;
 }
 
-class VideoCompressor {
+class VideoCompressor implements Compressor<VideoCompressionSettings> {
   VideoCompressor({
     required this.compressExecutor,
     required this.imageCompressor,
@@ -74,26 +75,27 @@ class VideoCompressor {
   /// If success, returns a new [MediaFile] with the compressed video.
   /// If fails, throws an exception.
   ///
-  Future<MediaFile> compressVideo(
-    MediaFile inputFile, {
-    VideoCompressionConfig config = VideoCompressionConfig.balanced,
+  @override
+  Future<MediaFile> compress(
+    MediaFile file, {
+    VideoCompressionSettings settings = VideoCompressionSettings.balanced,
   }) async {
     try {
       final output = await generateOutputPath(extension: 'mp4');
 
       final args = FFmpegCommands.compressVideo(
-        inputPath: inputFile.path,
+        inputPath: file.path,
         outputPath: output,
-        videoCodec: config.videoCodec.codec,
-        preset: config.preset.value,
-        videoBitrate: config.videoBitrate.bitrate,
-        maxRate: config.maxRate.bitrate,
-        bufSize: config.bufSize.bitrate,
-        audioCodec: config.audioCodec.codec,
-        audioBitrate: config.audioBitrate.bitrate,
-        pixelFormat: config.pixelFormat.name,
-        scaleResolution: int.parse(config.scale.resolution),
-        fps: config.fps,
+        videoCodec: settings.videoCodec.codec,
+        preset: settings.preset.value,
+        videoBitrate: settings.videoBitrate.bitrate,
+        maxRate: settings.maxRate.bitrate,
+        bufSize: settings.bufSize.bitrate,
+        audioCodec: settings.audioCodec.codec,
+        audioBitrate: settings.audioBitrate.bitrate,
+        pixelFormat: settings.pixelFormat.name,
+        scaleResolution: int.parse(settings.scale.resolution),
+        fps: settings.fps,
       );
 
       final session = await compressExecutor.execute(args);
@@ -113,7 +115,7 @@ class VideoCompressor {
         mimeType: 'video/mp4',
         width: outWidth,
         height: outHeight,
-        duration: inputFile.duration,
+        duration: file.duration,
       );
     } catch (error, stackTrace) {
       Logger.log('Error during video compression!', error: error, stackTrace: stackTrace);
@@ -162,10 +164,12 @@ class VideoCompressor {
       // We only pass one dimension to keep aspect ratio
       // If the video is wider, specify the max width;
       // otherwise specify the max height
-      final compressedImage = await imageCompressor.compressImage(
+      final compressedImage = await imageCompressor.compress(
         MediaFile(path: thumbPath),
-        width: width > height ? maxDimension : null,
-        height: height > width ? maxDimension : null,
+        settings: ImageCompressionSettings(
+          width: width > height ? maxDimension : null,
+          height: height > width ? maxDimension : null,
+        ),
       );
 
       return compressedImage;

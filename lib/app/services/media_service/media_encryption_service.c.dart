@@ -88,7 +88,7 @@ class MediaEncryptionService {
         );
 
         if (attachment.mediaType == MediaType.unknown) {
-          final decompressedFile = await brotliCompressor.decompressBrotli(decryptedFileBytes);
+          final decompressedFile = await brotliCompressor.decompress(decryptedFileBytes);
 
           return decompressedFile;
         } else {

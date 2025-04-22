@@ -4,6 +4,7 @@ import 'package:ffmpeg_kit_flutter/return_code.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/exceptions/exceptions.dart';
 import 'package:ion/app/services/compressors/compress_executor.c.dart';
+import 'package:ion/app/services/compressors/compressor.c.dart';
 import 'package:ion/app/services/compressors/output_path_generator.dart';
 import 'package:ion/app/services/logger/logger.dart';
 import 'package:ion/app/services/media_service/ffmpeg_commands_config.dart';
@@ -12,22 +13,19 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'audio_compressor.c.g.dart';
 
-class AudioCompressorConfig {
-  const AudioCompressorConfig({
+enum AudioCompressionSettings {
+  mediumQuality(bitrate: 96, sampleRate: 24000);
+
+  const AudioCompressionSettings({
     required this.bitrate,
     required this.sampleRate,
   });
 
   final int bitrate;
   final int sampleRate;
-
-  static const AudioCompressorConfig mediumQuality = AudioCompressorConfig(
-    bitrate: 96,
-    sampleRate: 24000,
-  );
 }
 
-class AudioCompressor {
+class AudioCompressor implements Compressor<AudioCompressionSettings> {
   const AudioCompressor({
     required this.compressExecutor,
   });
@@ -39,18 +37,19 @@ class AudioCompressor {
   /// If success, returns the path to the compressed audio file.
   /// If fails, throws an exception.
   ///
-  Future<MediaFile> compressAudio(
-    String inputPath, {
-    AudioCompressorConfig config = AudioCompressorConfig.mediumQuality,
+  @override
+  Future<MediaFile> compress(
+    MediaFile file, {
+    AudioCompressionSettings settings = AudioCompressionSettings.mediumQuality,
   }) async {
     final outputPath = await generateOutputPath(extension: 'opus');
     try {
       final session = await compressExecutor.execute(
         FFmpegCommands.audioToOpus(
-          inputPath: inputPath,
+          inputPath: file.path,
           outputPath: outputPath,
-          bitrate: config.bitrate,
-          sampleRate: config.sampleRate,
+          bitrate: settings.bitrate,
+          sampleRate: settings.sampleRate,
         ),
       );
 

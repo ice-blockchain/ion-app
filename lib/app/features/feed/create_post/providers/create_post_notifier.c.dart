@@ -351,9 +351,9 @@ class CreatePostNotifier extends _$CreatePostNotifier {
     // The stories has its own compression logic in ImageProcessorNotifier
 
     if (createOption != CreatePostOption.story) {
-      compressedImage = await ref.read(imageCompressorProvider).compressImage(
+      compressedImage = await ref.read(imageCompressorProvider).compress(
             file,
-            shouldCompressGif: true,
+            settings: const ImageCompressionSettings(shouldCompressGif: true),
           );
     }
 
@@ -376,7 +376,7 @@ class CreatePostNotifier extends _$CreatePostNotifier {
     MediaFile file,
   ) async {
     final videoCompressor = ref.read(videoCompressorProvider);
-    final compressedVideo = await videoCompressor.compressVideo(file);
+    final compressedVideo = await videoCompressor.compress(file);
 
     final videoUploadResult = await ref
         .read(ionConnectUploadNotifierProvider.notifier)

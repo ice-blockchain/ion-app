@@ -70,11 +70,13 @@ class ImageProcessorNotifier extends _$ImageProcessorNotifier {
 
       state = ImageProcessorState.cropped(file: croppedImage);
 
-      final compressedImage = await ref.read(imageCompressorProvider).compressImage(
+      final compressedImage = await ref.read(imageCompressorProvider).compress(
             croppedImage,
-            width: config.targetWidth,
-            height: config.targetHeight,
-            quality: config.quality,
+            settings: ImageCompressionSettings(
+              quality: config.quality,
+              width: config.targetWidth,
+              height: config.targetHeight,
+            ),
           );
       state = ImageProcessorState.processed(file: compressedImage);
 

@@ -5,6 +5,7 @@ import 'dart:io';
 import 'package:es_compression/brotli.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/exceptions/exceptions.dart';
+import 'package:ion/app/services/compressors/compressor.c.dart';
 import 'package:ion/app/services/compressors/output_path_generator.dart';
 import 'package:ion/app/services/logger/logger.dart';
 import 'package:ion/app/services/media_service/media_service.c.dart';
@@ -12,15 +13,24 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'brotli_compressor.c.g.dart';
 
-class BrotliCompressor {
+class BrotliCompressionSettings {
+  const BrotliCompressionSettings({
+    this.quality = 11,
+  });
+
+  final int quality;
+}
+
+class BrotliCompressor implements Compressor<BrotliCompressionSettings> {
   final _brotliCodec = BrotliCodec();
 
   ///
   /// Compresses a file using the Brotli algorithm.
   ///
-  Future<MediaFile> compressWithBrotli(File inputFile) async {
+  @override
+  Future<MediaFile> compress(MediaFile file, {BrotliCompressionSettings? settings}) async {
     try {
-      final inputData = await inputFile.readAsBytes();
+      final inputData = await File(file.path).readAsBytes();
       final compressedData = _brotliCodec.encode(inputData);
       return _saveBytesIntoFile(bytes: compressedData, extension: 'br');
     } catch (error, stackTrace) {
@@ -32,7 +42,7 @@ class BrotliCompressor {
   ///
   /// Decompresses a Brotli-compressed file.
   ///
-  Future<File> decompressBrotli(List<int> compressedData, {String outputExtension = ''}) async {
+  Future<File> decompress(List<int> compressedData, {String outputExtension = ''}) async {
     try {
       final decompressedData = _brotliCodec.decode(compressedData);
       final outputFile =

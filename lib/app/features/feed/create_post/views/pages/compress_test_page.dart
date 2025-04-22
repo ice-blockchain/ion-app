@@ -80,8 +80,7 @@ class VideoCompressTab extends HookConsumerWidget {
             '${(await pickedFile.xFiles.first.length() / 1024 / 1024).toStringAsFixed(2)} MB';
         isCompressing.value = true;
         final pickedXFile = pickedFile.xFiles.first;
-        final compressedFile =
-            await videoCompressor.compressVideo(MediaFile(path: pickedXFile.path));
+        final compressedFile = await videoCompressor.compress(MediaFile(path: pickedXFile.path));
 
         // Here you would invoke the compression logic
         // For demo purposes, we are directly playing the selected video
@@ -153,10 +152,12 @@ class ImageCompressTab extends HookConsumerWidget {
         isCompressing.value = true;
 
         final pickedXFile = XFile(pickedFile.files.first.path!);
-        final compressedFile = await ref.read(imageCompressorProvider).compressImage(
+        final compressedFile = await ref.read(imageCompressorProvider).compress(
               MediaFile(path: pickedXFile.path),
-              width: 1280,
-              height: 720,
+              settings: const ImageCompressionSettings(
+                width: 1280,
+                height: 720,
+              ),
             );
 
         // Display the compressed image size in MB
