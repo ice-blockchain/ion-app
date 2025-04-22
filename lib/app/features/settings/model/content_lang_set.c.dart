@@ -21,11 +21,9 @@ class ContentLangSet with _$ContentLangSet implements OptimisticModel {
   @override
   bool equals(Object other) {
     if (other is! ContentLangSet) return false;
-    return pubkey == other.pubkey &&
-        const ListEquality<String>().equals(hashtags, other.hashtags);
+    return pubkey == other.pubkey && const ListEquality<String>().equals(hashtags, other.hashtags);
   }
 
   /// Returns a copy with hashtags sorted alphabetically.
-  ContentLangSet get sorted =>
-      copyWith(hashtags: List.of(hashtags)..sort());
+  ContentLangSet get sorted => copyWith(hashtags: List.of(hashtags)..sort());
 }
