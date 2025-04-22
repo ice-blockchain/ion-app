@@ -11,8 +11,8 @@ import 'package:ion/app/components/separated/separated_column.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/core/model/language.dart';
 import 'package:ion/app/features/core/providers/app_locale_provider.c.dart';
+import 'package:ion/app/features/settings/providers/optimistic_content_language_provider.c.dart';
 import 'package:ion/app/features/settings/views/delete_confirm_modal.dart';
-import 'package:ion/app/features/settings/providers/optimistic_content_language_providers.dart';
 import 'package:ion/app/router/app_routes.c.dart';
 import 'package:ion/app/router/components/navigation_app_bar/navigation_app_bar.dart';
 import 'package:ion/app/router/components/navigation_app_bar/navigation_close_button.dart';
@@ -25,7 +25,7 @@ class AccountSettingsModal extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final contentLangSet = ref.watch(contentLangSetStreamProvider).valueOrNull;
+    final contentLangSet = ref.watch(contentLangSetProvider).valueOrNull;
     final contentLanguages = useMemoized(
       () {
         return contentLangSet?.hashtags.map(Language.fromIsoCode).nonNulls.toList();

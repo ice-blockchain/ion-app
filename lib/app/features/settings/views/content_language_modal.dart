@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/core/views/pages/language_selector_page.dart';
-import 'package:ion/app/features/settings/providers/optimistic_content_language_providers.dart';
+import 'package:ion/app/features/settings/providers/optimistic_content_language_provider.c.dart';
 import 'package:ion/app/router/components/navigation_app_bar/navigation_app_bar.dart';
 import 'package:ion/app/router/components/navigation_app_bar/navigation_close_button.dart';
 
@@ -13,14 +13,14 @@ class ContentLanguageModal extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final contentLangSetAsync = ref.watch(contentLangSetStreamProvider);
+    final contentLangSetAsync = ref.watch(contentLangSetProvider);
     final selectedLanguages = contentLangSetAsync.valueOrNull?.hashtags;
 
     return LanguageSelectorPage(
       title: context.i18n.content_language_title,
       description: context.i18n.content_language_description,
       toggleLanguageSelection: (String lang) {
-        ref.read(contentLangSetControllerProvider).toggle(lang);
+        ref.read(contentLangSetNotifierProvider.notifier).toggle(lang);
       },
       selectedLanguages: selectedLanguages ?? const [],
       appBar: NavigationAppBar.modal(
