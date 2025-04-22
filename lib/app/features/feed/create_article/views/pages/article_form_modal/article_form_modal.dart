@@ -133,10 +133,10 @@ class ArticleFormModal extends HookConsumerWidget {
                           focusNode: articleState.titleFocusNode,
                           autofocus: true,
                           textInputAction: TextInputAction.next,
+                          maxLines: null,
                           onSubmitted: (_) {
                             articleState.editorFocusNotifier.value = true;
                           },
-                          inputFormatters: articleState.titleInputFormatters,
                           style: context.theme.appTextThemes.headline2.copyWith(
                             color: context.theme.appColors.primaryText,
                           ),
@@ -149,6 +149,13 @@ class ArticleFormModal extends HookConsumerWidget {
                           ),
                         ),
                       ),
+                      if (articleState.titleOverflowCount.value > 0)
+                        Text(
+                          '-${articleState.titleOverflowCount.value}',
+                          style: context.theme.appTextThemes.caption2.copyWith(
+                            color: context.theme.appColors.attentionRed,
+                          ),
+                        ),
                       ScreenSideOffset.small(
                         child: ValueListenableBuilder<bool>(
                           valueListenable: articleState.editorFocusNotifier,
