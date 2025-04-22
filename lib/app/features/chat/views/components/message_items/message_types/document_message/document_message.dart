@@ -66,7 +66,7 @@ class DocumentMessage extends HookConsumerWidget {
         });
         return null;
       },
-      [messageMedia?.cacheKey, mediaAttachment],
+      [messageMedia?.cacheKey, mediaAttachment?.url],
     );
 
     final hasReactions = useHasReaction(eventMessage, ref);
