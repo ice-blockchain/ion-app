@@ -126,7 +126,6 @@ class ArticleFormModal extends HookConsumerWidget {
                           start: ScreenSideOffset.defaultSmallMargin,
                           end: ScreenSideOffset.defaultSmallMargin,
                           top: ScreenSideOffset.defaultSmallMargin,
-                          bottom: 6.0.s,
                         ),
                         child: TextField(
                           controller: articleState.titleController,
@@ -149,11 +148,24 @@ class ArticleFormModal extends HookConsumerWidget {
                           ),
                         ),
                       ),
+                      if (articleState.titleOverflowCount.value <= 0)
+                        SizedBox(
+                          height: 16.0.s,
+                        ),
                       if (articleState.titleOverflowCount.value > 0)
-                        Text(
-                          '-${articleState.titleOverflowCount.value}',
-                          style: context.theme.appTextThemes.caption2.copyWith(
-                            color: context.theme.appColors.attentionRed,
+                        Padding(
+                          padding: EdgeInsetsDirectional.only(
+                            bottom: 4.0.s,
+                            start: ScreenSideOffset.defaultSmallMargin,
+                          ),
+                          child: Align(
+                            alignment: AlignmentDirectional.centerStart,
+                            child: Text(
+                              '-${articleState.titleOverflowCount.value}',
+                              style: context.theme.appTextThemes.caption2.copyWith(
+                                color: context.theme.appColors.attentionRed,
+                              ),
+                            ),
                           ),
                         ),
                       ScreenSideOffset.small(
@@ -170,21 +182,27 @@ class ArticleFormModal extends HookConsumerWidget {
                                   key: textEditorKey,
                                   scrollController: scrollController,
                                 ),
-                                if (articleState.descriptionOverflowCount.value > 0)
-                                  Padding(
-                                    padding: EdgeInsets.only(top: 4.0.s),
-                                    child: Text(
-                                      '-${articleState.descriptionOverflowCount.value}',
-                                      style: context.theme.appTextThemes.caption2.copyWith(
-                                        color: context.theme.appColors.attentionRed,
-                                      ),
-                                    ),
-                                  ),
                               ],
                             );
                           },
                         ),
                       ),
+                      if (articleState.descriptionOverflowCount.value > 0)
+                        Padding(
+                          padding: EdgeInsetsDirectional.only(
+                            start: ScreenSideOffset.defaultSmallMargin,
+                            top: 6.0.s,
+                          ),
+                          child: Align(
+                            alignment: AlignmentDirectional.centerStart,
+                            child: Text(
+                              '-${articleState.descriptionOverflowCount.value}',
+                              style: context.theme.appTextThemes.caption2.copyWith(
+                                color: context.theme.appColors.attentionRed,
+                              ),
+                            ),
+                          ),
+                        ),
                       SizedBox(
                         height: 16.0.s,
                       ),
