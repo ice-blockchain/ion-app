@@ -27,7 +27,7 @@ Future<void> userChatRelaysSync(Ref ref) async {
 
   final currentPubkey = ref.watch(currentPubkeySelectorProvider);
   final delegationComplete = ref.watch(delegationCompleteProvider).valueOrNull.falseOrValue;
-  final userRelays = ref.watch(currentUserRelayProvider).valueOrNull;
+  final userRelays = await ref.watch(currentUserRelayProvider.future);
 
   if (currentPubkey == null || userRelays == null || !delegationComplete) {
     return;
