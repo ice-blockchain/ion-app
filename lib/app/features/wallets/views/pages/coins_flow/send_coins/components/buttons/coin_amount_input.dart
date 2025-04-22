@@ -2,14 +2,13 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
-import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/components/inputs/text_input/text_input.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/wallets/views/utils/amount_parser.dart';
 import 'package:ion/app/features/wallets/views/utils/crypto_formatter.dart';
 import 'package:ion/app/utils/num.dart';
 
-class CoinAmountInput extends HookConsumerWidget {
+class CoinAmountInput extends HookWidget {
   const CoinAmountInput({
     required this.controller,
     this.balanceUSD,
@@ -26,7 +25,7 @@ class CoinAmountInput extends HookConsumerWidget {
   final bool enabled;
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  Widget build(BuildContext context) {
     final locale = context.i18n;
     final colors = context.theme.appColors;
     final textTheme = context.theme.appTextThemes;
