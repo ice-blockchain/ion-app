@@ -20,6 +20,7 @@ class VideoPage extends HookConsumerWidget {
   const VideoPage({
     this.onVideoEnded,
     this.videoUrl,
+    this.authorPubkey,
     this.looping = false,
     this.framedEventReference,
     this.videoInfo,
@@ -29,6 +30,7 @@ class VideoPage extends HookConsumerWidget {
 
   final VoidCallback? onVideoEnded;
   final String? videoUrl;
+  final String? authorPubkey;
   final EventReference? framedEventReference;
   final bool looping;
   final Widget? videoInfo;
@@ -46,6 +48,7 @@ class VideoPage extends HookConsumerWidget {
           videoControllerProvider(
             VideoControllerParams(
               sourcePath: videoPath,
+              authorPubkey: authorPubkey,
               autoPlay: true,
               looping: looping,
               uniqueId: framedEventReference?.encode() ?? '',

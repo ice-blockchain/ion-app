@@ -41,6 +41,7 @@ class VideoPreview extends HookConsumerWidget {
           videoControllerProvider(
             VideoControllerParams(
               sourcePath: videoUrl,
+              authorPubkey: authorPubkey,
               looping: true,
               uniqueId: framedEventReference?.encode() ?? '',
             ),

@@ -39,6 +39,8 @@ class SingleMediaView extends HookWidget {
       return VideoPage(
         videoInfo: VideoPostInfo(videoPost: post),
         bottomOverlay: VideoActions(eventReference: eventReference),
+        videoUrl: media.url,
+        authorPubkey: eventReference.pubkey,
         framedEventReference: framedEventReference,
         looping: true,
       );

@@ -9,17 +9,19 @@ import 'package:ion/app/features/core/providers/video_player_provider.c.dart';
 class VideoStoryViewer extends HookConsumerWidget {
   const VideoStoryViewer({
     required this.videoPath,
+    required this.authorPubkey,
     super.key,
   });
 
   final String videoPath;
+  final String authorPubkey;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final videoController = ref
         .watch(
           videoControllerProvider(
-            VideoControllerParams(sourcePath: videoPath),
+            VideoControllerParams(sourcePath: videoPath, authorPubkey: authorPubkey),
           ),
         )
         .value;

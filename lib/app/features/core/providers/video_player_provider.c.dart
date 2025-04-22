@@ -18,12 +18,14 @@ part 'video_player_provider.c.g.dart';
 class VideoControllerParams {
   const VideoControllerParams({
     required this.sourcePath,
+    this.authorPubkey,
     this.uniqueId = '',
     this.autoPlay = false,
     this.looping = false,
   });
 
   final String sourcePath;
+  final String? authorPubkey;
   final String
       uniqueId; // an optional uniqueId parameter which should be used when needed independent controllers for the same sourcePath
   final bool autoPlay;
@@ -87,10 +89,11 @@ class VideoController extends _$VideoController {
         _activeController = controller;
       }
     } catch (error, stackTrace) {
-      if (controller.dataSourceType == DataSourceType.network) {
+      final authorPubkey = params.authorPubkey;
+      if (controller.dataSourceType == DataSourceType.network && authorPubkey != null) {
         await ref
             .watch(iONConnectMediaUrlFallbackProvider.notifier)
-            .generateFallback(params.sourcePath);
+            .generateFallback(params.sourcePath, authorPubkey: authorPubkey);
       }
       Logger.log(
         'Error during video controller initialisation for source: ${params.sourcePath}',

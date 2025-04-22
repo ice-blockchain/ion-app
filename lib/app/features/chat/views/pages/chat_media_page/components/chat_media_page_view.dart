@@ -100,6 +100,7 @@ class _ChatMediaItem extends HookConsumerWidget {
       return VideoPage(
         key: ValueKey('video_${media.id}'),
         videoUrl: path,
+        authorPubkey: entity.masterPubkey,
       );
     }
 
