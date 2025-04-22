@@ -17,19 +17,15 @@ class BookmarkButton extends ConsumerWidget {
     super.key,
   });
 
-  final EventReference? eventReference;
+  final EventReference eventReference;
   final double? size;
   final Color? color;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    if (eventReference == null) {
-      return const SizedBox.shrink();
-    }
-
     final bookmarkState = ref.watch(feedBookmarksNotifierProvider());
     final isLoading = bookmarkState.isLoading;
-    final isBookmarked = ref.watch(isBookmarkedInCollectionProvider(eventReference!));
+    final isBookmarked = ref.watch(isBookmarkedInCollectionProvider(eventReference));
 
     ref.displayErrors(feedBookmarksNotifierProvider());
 
@@ -37,9 +33,9 @@ class BookmarkButton extends ConsumerWidget {
       onTap: isLoading
           ? null
           : () {
-              ref.read(feedBookmarksNotifierProvider().notifier).toggleBookmark(eventReference!);
+              ref.read(feedBookmarksNotifierProvider().notifier).toggleBookmark(eventReference);
               if (!isBookmarked) {
-                AddBookmarkRoute(eventReference: eventReference!.encode()).push<void>(context);
+                AddBookmarkRoute(eventReference: eventReference.encode()).push<void>(context);
               }
             },
       behavior: HitTestBehavior.opaque,

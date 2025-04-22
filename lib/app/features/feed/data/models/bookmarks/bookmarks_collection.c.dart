@@ -68,9 +68,7 @@ class BookmarksCollectionData
         .firstWhereOrNull((tag) => tag[0] == ReplaceableEventIdentifier.tagName)?[1];
 
     if (typeName == null) {
-      throw Exception(
-        'BookmarksCollection event should have `${ReplaceableEventIdentifier.tagName}` tag',
-      );
+      throw IncorrectEventTagsException(eventId: eventMessage.id);
     }
 
     final content = eventMessage.content;
