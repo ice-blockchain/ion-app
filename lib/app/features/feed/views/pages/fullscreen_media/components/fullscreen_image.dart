@@ -1,20 +1,22 @@
 // SPDX-License-Identifier: ice License 1.0
 
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/components/progress_bar/centered_loading_indicator.dart';
 import 'package:ion/app/extensions/extensions.dart';
+import 'package:ion/app/features/components/ion_connect_network_image/ion_connect_network_image.dart';
 import 'package:ion/app/features/feed/views/pages/fullscreen_media/hooks/use_image_zoom.dart';
 
 class FullscreenImage extends HookConsumerWidget {
   const FullscreenImage({
     required this.imageUrl,
+    required this.authorPubkey,
     this.bottomOverlayBuilder,
     super.key,
   });
 
   final String imageUrl;
+  final String authorPubkey;
   final Widget Function(BuildContext)? bottomOverlayBuilder;
 
   @override
@@ -39,8 +41,9 @@ class FullscreenImage extends HookConsumerWidget {
               onInteractionStart: zoomController.onInteractionStart,
               onInteractionUpdate: zoomController.onInteractionUpdate,
               onInteractionEnd: zoomController.onInteractionEnd,
-              child: CachedNetworkImage(
+              child: IonConnectNetworkImage(
                 imageUrl: imageUrl,
+                authorPubkey: authorPubkey,
                 placeholder: (_, __) => const CenteredLoadingIndicator(),
                 fit: BoxFit.contain,
               ),

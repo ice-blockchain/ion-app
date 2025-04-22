@@ -20,6 +20,7 @@ class IonConnectNetworkImage extends ConsumerWidget {
     this.cacheManager,
     this.fit,
     this.errorWidget,
+    this.placeholder,
     super.key,
   });
 
@@ -29,6 +30,7 @@ class IonConnectNetworkImage extends ConsumerWidget {
   final ImageWidgetBuilder? imageBuilder;
   final ProgressIndicatorBuilder? progressIndicatorBuilder;
   final LoadingErrorWidgetBuilder? errorWidget;
+  final PlaceholderWidgetBuilder? placeholder;
   final BoxFit? fit;
   final FilterQuality filterQuality;
   final Alignment alignment;
@@ -44,6 +46,7 @@ class IonConnectNetworkImage extends ConsumerWidget {
       imageUrl: sourcePath,
       cacheManager: cacheManager,
       imageBuilder: imageBuilder,
+      placeholder: placeholder,
       progressIndicatorBuilder: progressIndicatorBuilder,
       fit: fit,
       filterQuality: filterQuality,

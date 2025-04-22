@@ -19,6 +19,7 @@ class IonNetworkImage extends CachedNetworkImage {
     super.alignment,
     super.filterQuality,
     super.cacheManager,
+    super.placeholder,
     ValueChanged<Object>? errorListener,
     Widget Function(BuildContext, String, Object)? errorWidget,
   }) : super(

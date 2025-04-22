@@ -48,6 +48,7 @@ class SingleMediaView extends HookWidget {
 
     return FullscreenImage(
       imageUrl: media.url,
+      authorPubkey: eventReference.pubkey,
       bottomOverlayBuilder: (context) => SafeArea(
         top: false,
         child: ColoredBox(
