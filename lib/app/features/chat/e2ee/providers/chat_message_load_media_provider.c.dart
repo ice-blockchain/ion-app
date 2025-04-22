@@ -14,7 +14,7 @@ part 'chat_message_load_media_provider.c.g.dart';
 @Riverpod(keepAlive: true)
 Raw<Future<File?>> chatMessageLoadMedia(
   Ref ref, {
-  required PrivateDirectMessageData entity,
+  required PrivateDirectMessageEntity entity,
   String? cacheKey,
   MediaAttachment? mediaAttachment,
   bool loadThumbnail = true,
@@ -35,7 +35,7 @@ Raw<Future<File?>> chatMessageLoadMedia(
   final MediaAttachment mediaAttachmentToLoad;
   if (loadThumbnail) {
     // Get thumbnail from media attachments
-    mediaAttachmentToLoad = entity.media.values.firstWhere(
+    mediaAttachmentToLoad = entity.data.media.values.firstWhere(
       (e) => e.url == mediaAttachment.thumb,
     );
   } else {
@@ -43,8 +43,9 @@ Raw<Future<File?>> chatMessageLoadMedia(
   }
 
   // Load encrypted thumbnail
-  final encryptedMedia =
-      await ref.watch(mediaEncryptionServiceProvider).retrieveEncryptedMedia(mediaAttachmentToLoad);
+  final encryptedMedia = await ref
+      .watch(mediaEncryptionServiceProvider)
+      .retrieveEncryptedMedia(mediaAttachmentToLoad, authorPubkey: entity.pubkey);
 
   return encryptedMedia;
 }

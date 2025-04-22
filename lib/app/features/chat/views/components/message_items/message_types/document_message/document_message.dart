@@ -43,16 +43,16 @@ class DocumentMessage extends HookConsumerWidget {
     final messageMedia =
         ref.watch(chatMediasProvider(eventMessageId: eventMessage.id)).valueOrNull?.firstOrNull;
 
-    final entityData = PrivateDirectMessageData.fromEventMessage(eventMessage);
+    final entity = PrivateDirectMessageEntity.fromEventMessage(eventMessage);
     final mediaAttachment =
-        messageMedia?.remoteUrl == null ? null : entityData.media[messageMedia?.remoteUrl!];
+        messageMedia?.remoteUrl == null ? null : entity.data.media[messageMedia?.remoteUrl!];
 
     useEffect(
       () {
         ref
             .read(
           chatMessageLoadMediaProvider(
-            entity: entityData,
+            entity: entity,
             mediaAttachment: mediaAttachment,
             cacheKey: messageMedia?.cacheKey,
             loadThumbnail: false,
@@ -73,7 +73,7 @@ class DocumentMessage extends HookConsumerWidget {
 
     final messageItem = DocumentItem(
       eventMessage: eventMessage,
-      contentDescription: entityData.content,
+      contentDescription: entity.data.content,
     );
 
     final repliedEventMessage = ref.watch(repliedMessageListItemProvider(messageItem));
@@ -91,7 +91,7 @@ class DocumentMessage extends HookConsumerWidget {
       isMe: isMe,
       messageItem: DocumentItem(
         eventMessage: eventMessage,
-        contentDescription: entityData.content,
+        contentDescription: entity.data.content,
       ),
       contentPadding: EdgeInsets.symmetric(
         horizontal: 12.0.s,
@@ -102,7 +102,7 @@ class DocumentMessage extends HookConsumerWidget {
           if (repliedMessageItem != null) ReplyMessage(messageItem, repliedMessageItem),
           GestureDetector(
             onTap: () {
-              shareFile(localFile.value?.path ?? '', name: entityData.content);
+              shareFile(localFile.value?.path ?? '', name: entity.data.content);
             },
             child: Row(
               crossAxisAlignment: CrossAxisAlignment.end,
@@ -126,7 +126,7 @@ class DocumentMessage extends HookConsumerWidget {
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: <Widget>[
                                 Text(
-                                  entityData.content,
+                                  entity.data.content,
                                   style: context.theme.appTextThemes.body2.copyWith(
                                     color: isMe
                                         ? context.theme.appColors.onPrimaryAccent

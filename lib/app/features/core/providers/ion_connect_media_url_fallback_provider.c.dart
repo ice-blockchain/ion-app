@@ -16,7 +16,7 @@ class IONConnectMediaUrlFallback extends _$IONConnectMediaUrlFallback {
   @override
   Map<String, String> build() => {};
 
-  Future<String?> generateFallback(String mediaUrl) async {
+  Future<String?> generateFallback(String mediaUrl, {required String authorPubkey}) async {
     if (state.containsKey(mediaUrl)) {
       return state[mediaUrl];
     }
@@ -25,7 +25,7 @@ class IONConnectMediaUrlFallback extends _$IONConnectMediaUrlFallback {
       return null;
     }
 
-    final userRelays = await ref.read(currentUserRelayProvider.future);
+    final userRelays = await ref.read(userRelayProvider(authorPubkey).future);
     if (userRelays == null) {
       return null;
     }

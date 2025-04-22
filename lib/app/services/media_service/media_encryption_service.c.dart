@@ -30,9 +30,13 @@ class MediaEncryptionService {
 
   final FileCacheService fileCacheService;
   final CompressionService compressionService;
-  final Future<String?> Function(String url) generateMediaUrlFallback;
+  final Future<String?> Function(String url, {required String authorPubkey})
+      generateMediaUrlFallback;
 
-  Future<File> retrieveEncryptedMedia(MediaAttachment attachment) async {
+  Future<File> retrieveEncryptedMedia(
+    MediaAttachment attachment, {
+    required String authorPubkey,
+  }) async {
     try {
       if (attachment.encryptionKey != null &&
           attachment.encryptionNonce != null &&
@@ -48,7 +52,7 @@ class MediaEncryptionService {
           return cacheFileInfo.file;
         }
 
-        final file = await _downloadFile(url);
+        final file = await _downloadFile(url, authorPubkey: authorPubkey);
 
         final fileBytes = await compute(
           (file) {
@@ -167,7 +171,8 @@ class MediaEncryptionService {
     }
   }
 
-  Future<File> _downloadFile(String url, {bool withFallback = true}) async {
+  Future<File> _downloadFile(String url,
+      {required String authorPubkey, bool withFallback = true}) async {
     try {
       return await fileCacheService.getFile(url);
     } catch (error) {
@@ -175,13 +180,13 @@ class MediaEncryptionService {
         rethrow;
       }
 
-      final fallbackUrl = await generateMediaUrlFallback(url);
+      final fallbackUrl = await generateMediaUrlFallback(url, authorPubkey: authorPubkey);
 
       if (fallbackUrl == null) {
         throw FailedToGenerateMediaUrlFallback();
       }
 
-      return _downloadFile(fallbackUrl, withFallback: false);
+      return _downloadFile(fallbackUrl, authorPubkey: authorPubkey, withFallback: false);
     }
   }
 }

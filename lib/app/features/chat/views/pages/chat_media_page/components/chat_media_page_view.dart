@@ -28,7 +28,7 @@ class ChatMediaPageView extends HookConsumerWidget {
   });
 
   final List<MessageMediaTableData> medias;
-  final PrivateDirectMessageData entity;
+  final PrivateDirectMessageEntity entity;
   final double bottomHeight;
   final int initialIndex;
   final ImageZoomController zoomController;
@@ -46,7 +46,7 @@ class ChatMediaPageView extends HookConsumerWidget {
           return _ChatMediaItem(
             media: medias[index],
             mediaAttachment:
-                entity.visualMedias.firstWhere((e) => e.url == medias[index].remoteUrl),
+                entity.data.visualMedias.firstWhere((e) => e.url == medias[index].remoteUrl),
             entity: entity,
             zoomController: zoomController,
             bottomHeight: bottomHeight,
@@ -68,7 +68,7 @@ class _ChatMediaItem extends HookConsumerWidget {
 
   final MessageMediaTableData media;
   final MediaAttachment mediaAttachment;
-  final PrivateDirectMessageData entity;
+  final PrivateDirectMessageEntity entity;
   final ImageZoomController zoomController;
   final double bottomHeight;
 

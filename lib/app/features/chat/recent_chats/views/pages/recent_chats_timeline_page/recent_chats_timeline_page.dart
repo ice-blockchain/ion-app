@@ -249,11 +249,13 @@ class EncryptedGroupRecentChatTile extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    if (conversation.latestMessage == null) {
+    final ConversationListItem(:latestMessage) = conversation;
+
+    if (latestMessage == null) {
       return const SizedBox.shrink();
     }
 
-    final entity = PrivateDirectMessageData.fromEventMessage(conversation.latestMessage!);
+    final entity = PrivateDirectMessageData.fromEventMessage(latestMessage);
 
     final name = entity.groupSubject?.value ?? '';
 
@@ -263,6 +265,7 @@ class EncryptedGroupRecentChatTile extends HookConsumerWidget {
     final groupImageFile = useFuture(
       ref.watch(mediaEncryptionServiceProvider).retrieveEncryptedMedia(
             entity.primaryMedia!,
+            authorPubkey: latestMessage.masterPubkey,
           ),
     ).data;
 
