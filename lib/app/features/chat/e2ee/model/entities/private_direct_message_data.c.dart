@@ -300,7 +300,6 @@ class ReplaceablePrivateDirectMessageData
       if (media.isNotEmpty) ...media.values.map((mediaAttachment) => mediaAttachment.toTag()),
       ReplaceableEventIdentifier(value: messageId).toTag(),
       ConversationIdentifier(value: conversationId).toTag(),
-     
     ];
 
     final createdAt = DateTime.now();
