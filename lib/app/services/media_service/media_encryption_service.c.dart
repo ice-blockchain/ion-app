@@ -171,8 +171,11 @@ class MediaEncryptionService {
     }
   }
 
-  Future<File> _downloadFile(String url,
-      {required String authorPubkey, bool withFallback = true}) async {
+  Future<File> _downloadFile(
+    String url, {
+    required String authorPubkey,
+    bool withFallback = true,
+  }) async {
     try {
       return await fileCacheService.getFile(url);
     } catch (error) {

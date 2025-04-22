@@ -54,10 +54,11 @@ class AudioMessage extends HookConsumerWidget {
           if (Validators.isInvalidUrl(entity.data.primaryAudio!.url)) {
             return null;
           }
-          final encryptedMedia = await ref
-              .read(mediaEncryptionServiceProvider)
-              .retrieveEncryptedMedia(entity.data.primaryAudio!,
-                  authorPubkey: eventMessage.masterPubkey);
+          final encryptedMedia =
+              await ref.read(mediaEncryptionServiceProvider).retrieveEncryptedMedia(
+                    entity.data.primaryAudio!,
+                    authorPubkey: eventMessage.masterPubkey,
+                  );
           return ref.read(compressServiceProvider).compressAudioToWav(encryptedMedia.path);
         },
         [entity.data.primaryAudio!.url],
