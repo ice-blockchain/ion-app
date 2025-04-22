@@ -19,7 +19,7 @@ abstract interface class Compressor<CompressionSettings> {
 }
 
 @riverpod
-Compressor<void> compressor(Ref ref, MediaType type) {
+Compressor<dynamic> compressor(Ref ref, MediaType type) {
   return switch (type) {
     MediaType.image => ref.watch(imageCompressorProvider),
     MediaType.video => ref.watch(videoCompressorProvider),
