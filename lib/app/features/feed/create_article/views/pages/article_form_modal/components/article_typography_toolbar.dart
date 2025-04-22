@@ -26,7 +26,6 @@ class ArticleTypographyToolbar extends StatelessWidget {
         ToolbarH1Button(textEditorController: textEditorController),
         ToolbarH2Button(textEditorController: textEditorController),
         ToolbarH3Button(textEditorController: textEditorController),
-        ToolbarRegularButton(textEditorController: textEditorController),
         ToolbarBoldButton(textEditorController: textEditorController),
         ToolbarItalicButton(textEditorController: textEditorController),
         ToolbarUnderlineButton(textEditorController: textEditorController),
