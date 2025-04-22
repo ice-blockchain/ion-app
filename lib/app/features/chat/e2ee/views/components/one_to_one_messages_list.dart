@@ -47,7 +47,7 @@ class OneToOneMessageList extends HookConsumerWidget {
                     final entity = PrivateDirectMessageEntity.fromEventMessage(message);
 
                     final previousMessage = msgIndex > 0 ? entry.value[msgIndex - 1] : null;
-                    final isLastMessage = msgIndex == entry.value.length - 1;
+                    final isLastMessage = msgIndex == 0;
 
                     final isLastMessageFromAuthor =
                         previousMessage == null || previousMessage.pubkey == message.pubkey;
@@ -59,7 +59,7 @@ class OneToOneMessageList extends HookConsumerWidget {
                             ? 20.0.s
                             : isLastMessageFromAuthor
                                 ? 8.0.s
-                                : 12.0.s,
+                                : 16.0.s,
                       ),
                       child: switch (entity.data.messageType) {
                         MessageType.text => TextMessage(eventMessage: message),
