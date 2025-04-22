@@ -37,7 +37,7 @@ class BlockedUserListItem extends ConsumerWidget {
               context: context,
             ),
           ),
-          profilePicture: userMetadata.data.picture,
+          pubkey: pubkey,
         );
       },
       orElse: () => ItemLoadingState(itemHeight: itemHeight),

@@ -43,7 +43,7 @@ class ParentEntity extends ConsumerWidget {
         ListItem.user(
           title: Text(userMetadata.data.displayName),
           subtitle: Text(prefixUsername(username: userMetadata.data.name, context: context)),
-          profilePicture: userMetadata.data.picture,
+          pubkey: userMetadata.masterPubkey,
           trailing: UserInfoMenu(
             eventReference: eventReference,
           ),

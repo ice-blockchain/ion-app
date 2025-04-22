@@ -59,6 +59,7 @@ class VideoCarousel extends HookWidget {
           videoInfo: VideoPostInfo(videoPost: post),
           bottomOverlay: VideoActions(eventReference: eventReference),
           videoUrl: videoUrl,
+          authorPubkey: post.masterPubkey,
           framedEventReference: framedEventReference,
           onVideoEnded: () {
             final nextPage = (index + 1) % videos.length;

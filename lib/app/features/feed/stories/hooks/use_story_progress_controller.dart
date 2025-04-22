@@ -46,7 +46,7 @@ StoryProgressControllerResult useStoryProgressController({
   final videoResult = useVideoStoryProgress(
     ref: ref,
     isVideo: isVideo,
-    storyId: post.id,
+    authorPubkey: post.masterPubkey,
     videoUrl: videoUrl,
     isCurrent: isCurrent,
     isPaused: isPaused,

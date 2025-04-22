@@ -6,7 +6,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_quill/flutter_quill.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:ion/app/components/avatar/avatar.dart';
 import 'package:ion/app/components/inputs/hooks/use_node_focused.dart';
 import 'package:ion/app/components/screen_offset/screen_side_offset.dart';
 import 'package:ion/app/components/text_editor/hooks/use_quill_controller.dart';
@@ -15,6 +14,8 @@ import 'package:ion/app/extensions/asset_gen_image.dart';
 import 'package:ion/app/extensions/build_context.dart';
 import 'package:ion/app/extensions/num.dart';
 import 'package:ion/app/extensions/theme_data.dart';
+import 'package:ion/app/features/auth/providers/auth_provider.c.dart';
+import 'package:ion/app/features/components/ion_connect_avatar/ion_connect_avatar.dart';
 import 'package:ion/app/features/feed/create_post/model/create_post_option.dart';
 import 'package:ion/app/features/feed/create_post/views/components/character_limit_exceed_indicator/character_limit_exceed_indicator.dart';
 import 'package:ion/app/features/feed/create_post/views/components/post_submit_button/post_submit_button.dart';
@@ -29,7 +30,6 @@ import 'package:ion/app/features/feed/views/components/toolbar_buttons/toolbar_p
 import 'package:ion/app/features/feed/views/components/toolbar_buttons/toolbar_regular_button.dart';
 import 'package:ion/app/features/ion_connect/model/event_reference.c.dart';
 import 'package:ion/app/features/ion_connect/model/media_attachment.dart';
-import 'package:ion/app/features/user/providers/user_metadata_provider.c.dart';
 import 'package:ion/app/router/app_routes.c.dart';
 import 'package:ion/app/services/media_service/media_service.c.dart';
 import 'package:ion/app/typedefs/typedefs.dart';
@@ -72,7 +72,7 @@ class ReplyInputField extends HookConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final textEditorController = useQuillController();
     final textEditorKey = useMemoized(TextEditorKeys.replyInput);
-    final currentUserMetadata = ref.watch(currentUserMetadataProvider).valueOrNull;
+    final currentPubkey = ref.watch(currentPubkeySelectorProvider);
 
     final inputContainerKey = useRef(GlobalKey());
     final focusNode = useFocusNode();
@@ -91,9 +91,9 @@ class ReplyInputField extends HookConsumerWidget {
             ),
           Row(
             children: [
-              if (!hasFocus.value && currentUserMetadata != null)
-                Avatar(
-                  imageUrl: currentUserMetadata.data.picture,
+              if (!hasFocus.value && currentPubkey != null)
+                IonConnectAvatar(
+                  pubkey: currentPubkey,
                   size: 36.0.s,
                   borderRadius: BorderRadius.all(Radius.circular(12.0.s)),
                 ),

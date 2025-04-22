@@ -6,9 +6,9 @@ import 'package:cached_video_player_plus/cached_video_player_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:ion/app/components/image/ion_network_image.dart';
 import 'package:ion/app/components/placeholder/ion_placeholder.dart';
 import 'package:ion/app/extensions/extensions.dart';
+import 'package:ion/app/features/components/ion_connect_network_image/ion_connect_network_image.dart';
 import 'package:ion/app/features/core/providers/mute_provider.c.dart';
 import 'package:ion/app/features/core/providers/video_player_provider.c.dart';
 import 'package:ion/app/features/ion_connect/model/event_reference.c.dart';
@@ -21,12 +21,14 @@ import 'package:visibility_detector/visibility_detector.dart';
 class VideoPreview extends HookConsumerWidget {
   const VideoPreview({
     required this.videoUrl,
+    required this.authorPubkey,
     this.thumbnailUrl,
     this.framedEventReference,
     super.key,
   });
 
   final String videoUrl;
+  final String authorPubkey;
   final String? thumbnailUrl;
   final EventReference? framedEventReference;
 
@@ -39,6 +41,7 @@ class VideoPreview extends HookConsumerWidget {
           videoControllerProvider(
             VideoControllerParams(
               sourcePath: videoUrl,
+              authorPubkey: authorPubkey,
               looping: true,
               uniqueId: framedEventReference?.encode() ?? '',
             ),
@@ -102,6 +105,7 @@ class VideoPreview extends HookConsumerWidget {
             Positioned.fill(
               child: _BlurredThumbnail(
                 thumbnailUrl: thumbnailUrl!,
+                authorPubkey: authorPubkey,
                 isLoading: !(controller?.value.hasError ?? false),
               ),
             ),
@@ -207,10 +211,12 @@ class _MuteButton extends StatelessWidget {
 class _BlurredThumbnail extends HookWidget {
   const _BlurredThumbnail({
     required this.thumbnailUrl,
+    required this.authorPubkey,
     required this.isLoading,
   });
 
   final String thumbnailUrl;
+  final String authorPubkey;
   final bool isLoading;
 
   @override
@@ -236,8 +242,9 @@ class _BlurredThumbnail extends HookWidget {
         AnimatedOpacity(
           duration: const Duration(milliseconds: 100),
           opacity: isImageLoaded.value ? 1 : 0,
-          child: IonNetworkImage(
+          child: IonConnectNetworkImage(
             imageUrl: thumbnailUrl,
+            authorPubkey: authorPubkey,
             fit: BoxFit.cover,
           ),
         ),

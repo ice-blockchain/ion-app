@@ -39,7 +39,7 @@ class StoryListItem extends HookConsumerWidget {
     return Material(
       color: Colors.transparent,
       child: StoryItemContent(
-        imageUrl: userMetadata.data.picture,
+        pubkey: pubkey,
         name: userMetadata.data.name,
         gradient: gradient,
         isViewed: allStoriesViewed,

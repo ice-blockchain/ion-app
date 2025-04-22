@@ -27,6 +27,7 @@ class NotificationListItem extends StatelessWidget {
     return Padding(
       padding: EdgeInsets.symmetric(horizontal: 43.0.s),
       child: ListItem.user(
+        pubkey: '', // that is a mock notification
         title: Text(
           title,
           style: context.theme.appTextThemes.body.copyWith(
@@ -39,7 +40,7 @@ class NotificationListItem extends StatelessWidget {
             color: context.theme.appColors.secondaryBackground,
           ),
         ),
-        profilePictureWidget: image,
+        leading: image,
         backgroundColor: context.theme.appColors.primaryAccent,
         contentPadding: EdgeInsets.all(12.0.s),
         borderRadius: BorderRadius.circular(16.0.s),

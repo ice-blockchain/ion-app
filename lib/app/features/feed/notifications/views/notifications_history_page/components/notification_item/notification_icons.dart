@@ -3,8 +3,9 @@
 import 'package:flutter/material.dart';
 import 'package:ion/app/components/screen_offset/screen_side_offset.dart';
 import 'package:ion/app/extensions/extensions.dart';
+import 'package:ion/app/features/components/ion_connect_avatar/ion_connect_avatar.dart';
 import 'package:ion/app/features/feed/notifications/data/model/ion_notification.c.dart';
-import 'package:ion/app/features/feed/notifications/views/notifications_history_page/components/notification_item/user_avatar.dart';
+import 'package:ion/app/router/app_routes.c.dart';
 
 class NotificationIcons extends StatelessWidget {
   const NotificationIcons({
@@ -39,9 +40,14 @@ class NotificationIcons extends StatelessWidget {
         ...notification.pubkeys.take(iconsCount - 1).map((pubkey) {
           return Padding(
             padding: EdgeInsetsDirectional.only(start: separator),
-            child: UserAvatar(
-              pubkey: pubkey,
-              avatarSize: iconSize,
+            child: GestureDetector(
+              onTap: () => ProfileRoute(pubkey: pubkey).push<void>(context),
+              child: IonConnectAvatar(
+                size: iconSize,
+                fit: BoxFit.cover,
+                pubkey: pubkey,
+                borderRadius: BorderRadius.circular(10.0.s),
+              ),
             ),
           );
         }),

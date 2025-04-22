@@ -9,22 +9,22 @@ class IonNetworkImage extends CachedNetworkImage {
     required super.imageUrl,
     super.key,
     super.imageBuilder,
-    super.placeholder,
     super.progressIndicatorBuilder,
-    super.fadeOutDuration,
+    super.fadeOutDuration = Duration.zero,
     super.fadeInDuration = Duration.zero,
-    super.placeholderFadeInDuration,
+    super.placeholderFadeInDuration = Duration.zero,
     super.width,
     super.height,
     super.fit,
     super.alignment,
     super.filterQuality,
     super.cacheManager,
+    super.placeholder,
+    ValueChanged<Object>? errorListener,
     Widget Function(BuildContext, String, Object)? errorWidget,
   }) : super(
           // Do not log image loading errors
-          errorListener: (_) {},
-          // Default error widget
+          errorListener: errorListener ?? (_) {},
           errorWidget: errorWidget ?? (context, url, error) => const IonPlaceholder(),
         );
 }

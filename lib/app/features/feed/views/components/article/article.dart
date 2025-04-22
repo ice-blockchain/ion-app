@@ -152,6 +152,7 @@ class Article extends ConsumerWidget {
                             ],
                             ArticleImage(
                               imageUrl: entity.data.image,
+                              authorPubkey: eventReference.pubkey,
                               minutesToRead: calculateReadingTime(entity.data.content),
                             ),
                             SizedBox(height: 10.0.s),

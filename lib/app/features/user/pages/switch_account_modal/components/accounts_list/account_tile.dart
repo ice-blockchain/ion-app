@@ -44,7 +44,7 @@ class AccountsTile extends ConsumerWidget {
       },
       title: Text(userMetadataValue.data.displayName),
       subtitle: Text(prefixUsername(username: userMetadataValue.data.name, context: context)),
-      profilePicture: userMetadataValue.data.picture,
+      pubkey: userMetadataValue.masterPubkey,
       trailing: isCurrentUser == true
           ? Assets.svg.iconBlockCheckboxOnblue.icon(color: context.theme.appColors.onPrimaryAccent)
           : null,

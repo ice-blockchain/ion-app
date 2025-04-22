@@ -51,7 +51,7 @@ class ChatSearchResultListItem extends ConsumerWidget {
                 children: [
                   Expanded(
                     child: ListItem.user(
-                      profilePicture: userMetadata.data.picture,
+                      pubkey: userMetadata.masterPubkey,
                       title: Text(userMetadata.data.displayName),
                       subtitle: pubkeyAndContent.$2.isNotEmpty && showLastMessage
                           ? Text(

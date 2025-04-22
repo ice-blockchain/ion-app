@@ -31,7 +31,7 @@ class ReplyAuthorHeader extends ConsumerWidget {
         ListItem.user(
           title: Text(currentUserMetadata.data.displayName),
           subtitle: Text(prefixUsername(username: currentUserMetadata.data.name, context: context)),
-          profilePicture: currentUserMetadata.data.picture,
+          pubkey: currentUserMetadata.masterPubkey,
         ),
         SizedBox(height: 6.0.s),
         ReplyingTo(name: userMetadata.data.name),

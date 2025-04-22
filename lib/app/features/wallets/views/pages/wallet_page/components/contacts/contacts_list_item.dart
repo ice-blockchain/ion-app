@@ -3,11 +3,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:ion/app/components/avatar/avatar.dart';
 import 'package:ion/app/components/skeleton/container_skeleton.dart';
 import 'package:ion/app/extensions/build_context.dart';
 import 'package:ion/app/extensions/num.dart';
 import 'package:ion/app/extensions/theme_data.dart';
+import 'package:ion/app/features/components/ion_connect_avatar/ion_connect_avatar.dart';
 import 'package:ion/app/features/user/providers/user_metadata_provider.c.dart';
 import 'package:ion/app/utils/username.dart';
 
@@ -56,9 +56,9 @@ class ContactsListItem extends ConsumerWidget {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Avatar(
+                IonConnectAvatar(
                   size: imageWidth,
-                  imageUrl: userMetadata?.data.picture,
+                  pubkey: pubkey,
                   borderRadius: BorderRadius.circular(14.0.s),
                 ),
                 Text(

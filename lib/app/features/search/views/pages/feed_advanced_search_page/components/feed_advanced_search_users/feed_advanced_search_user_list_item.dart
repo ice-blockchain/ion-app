@@ -34,7 +34,7 @@ class FeedAdvancedSearchUserListItem extends ConsumerWidget {
               subtitle: Text(
                 prefixUsername(username: name, context: context),
               ),
-              profilePicture: picture,
+              pubkey: user.masterPubkey,
               trailing: FollowUserButton(pubkey: user.masterPubkey),
             ),
             if (about != null) ...[

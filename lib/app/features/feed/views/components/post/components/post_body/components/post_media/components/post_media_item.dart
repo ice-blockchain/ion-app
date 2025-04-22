@@ -2,9 +2,9 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
-import 'package:ion/app/components/image/ion_network_image.dart';
 import 'package:ion/app/components/video_preview/video_preview.dart';
 import 'package:ion/app/extensions/extensions.dart';
+import 'package:ion/app/features/components/ion_connect_network_image/ion_connect_network_image.dart';
 import 'package:ion/app/features/core/model/media_type.dart';
 import 'package:ion/app/features/ion_connect/model/event_reference.c.dart';
 import 'package:ion/app/features/ion_connect/model/media_attachment.dart';
@@ -51,12 +51,14 @@ class PostMediaItem extends HookWidget {
         child: AspectRatio(
           aspectRatio: aspectRatio,
           child: switch (mediaItem.mediaType) {
-            MediaType.image => IonNetworkImage(
+            MediaType.image => IonConnectNetworkImage(
                 imageUrl: mediaItem.url,
                 fit: BoxFit.cover,
+                authorPubkey: eventReference.pubkey,
               ),
             MediaType.video => VideoPreview(
                 videoUrl: mediaItem.url,
+                authorPubkey: eventReference.pubkey,
                 thumbnailUrl: mediaItem.thumb,
                 framedEventReference: framedEventReference,
               ),

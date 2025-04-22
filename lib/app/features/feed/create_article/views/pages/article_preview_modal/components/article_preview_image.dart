@@ -3,8 +3,8 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
-import 'package:ion/app/components/image/ion_network_image.dart';
 import 'package:ion/app/extensions/num.dart';
+import 'package:ion/app/features/components/ion_connect_network_image/ion_connect_network_image.dart';
 import 'package:ion/app/features/feed/views/components/article/components/article_image/read_time_tile.dart';
 import 'package:ion/app/features/feed/views/components/article/constants.dart';
 import 'package:ion/app/services/media_service/media_service.c.dart';
@@ -13,6 +13,7 @@ class ArticlePreviewImage extends StatelessWidget {
   const ArticlePreviewImage({
     this.mediaFile,
     this.imageUrl,
+    this.authorPubkey,
     this.minutesToRead,
     this.minutesToReadAlignment = AlignmentDirectional.bottomEnd,
     super.key,
@@ -20,6 +21,7 @@ class ArticlePreviewImage extends StatelessWidget {
 
   final MediaFile? mediaFile;
   final String? imageUrl;
+  final String? authorPubkey;
   final int? minutesToRead;
   final AlignmentDirectional minutesToReadAlignment;
 
@@ -32,9 +34,10 @@ class ArticlePreviewImage extends StatelessWidget {
         children: [
           AspectRatio(
             aspectRatio: ArticleConstants.headerImageAspectRation,
-            child: (imageUrl != null)
-                ? IonNetworkImage(
+            child: (imageUrl != null && authorPubkey != null)
+                ? IonConnectNetworkImage(
                     imageUrl: imageUrl!,
+                    authorPubkey: authorPubkey!,
                     fit: BoxFit.cover,
                   )
                 : (mediaFile != null)

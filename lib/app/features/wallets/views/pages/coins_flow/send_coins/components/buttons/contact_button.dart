@@ -16,7 +16,7 @@ class ContactButton extends ConsumerWidget {
     super.key,
   });
 
-  final UserMetadata userMetadata;
+  final UserMetadataEntity userMetadata;
   final VoidCallback onContactTap;
   final VoidCallback onClearTap;
 
@@ -37,9 +37,9 @@ class ContactButton extends ConsumerWidget {
           bottom: 10.0.s,
           end: 8.0.s,
         ),
-        title: Text(userMetadata.displayName),
-        subtitle: Text(userMetadata.name),
-        profilePicture: userMetadata.picture,
+        title: Text(userMetadata.data.displayName),
+        subtitle: Text(userMetadata.data.name),
+        pubkey: userMetadata.masterPubkey,
         trailing: IconButton(
           onPressed: onClearTap,
           icon: Assets.svg.iconSheetClose.icon(

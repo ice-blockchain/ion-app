@@ -3,12 +3,14 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
-import 'package:ion/app/components/image/ion_network_image.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/extensions/extensions.dart';
+import 'package:ion/app/features/auth/providers/auth_provider.c.dart';
+import 'package:ion/app/features/components/ion_connect_network_image/ion_connect_network_image.dart';
 import 'package:ion/app/services/media_service/media_service.c.dart';
 import 'package:ion/generated/assets.gen.dart';
 
-class ArticleImageView extends StatelessWidget {
+class ArticleImageView extends ConsumerWidget {
   const ArticleImageView({
     required this.selectedImage,
     required this.onClearImage,
@@ -21,13 +23,20 @@ class ArticleImageView extends StatelessWidget {
   final VoidCallback onClearImage;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final currentPubkey = ref.watch(currentPubkeySelectorProvider);
+
+    if (currentPubkey == null) {
+      return const SizedBox.shrink();
+    }
+
     return Stack(
       children: [
         Positioned.fill(
           child: (imageUrl != null)
-              ? IonNetworkImage(
+              ? IonConnectNetworkImage(
                   imageUrl: imageUrl!,
+                  authorPubkey: currentPubkey,
                   fit: BoxFit.cover,
                 )
               : selectedImage != null

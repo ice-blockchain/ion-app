@@ -59,6 +59,7 @@ class ArticlePreview extends ConsumerWidget {
                   ArticlePreviewImage(
                     mediaFile: image,
                     imageUrl: imageUrl,
+                    authorPubkey: currentPubkey,
                     minutesToRead: calculateReadingTime(content.toString()),
                   ),
                   SizedBox(height: 10.0.s),

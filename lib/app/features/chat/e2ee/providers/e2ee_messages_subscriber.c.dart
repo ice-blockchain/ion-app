@@ -4,6 +4,7 @@ import 'dart:async';
 
 import 'package:collection/collection.dart';
 import 'package:ion/app/exceptions/exceptions.dart';
+import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/auth/providers/auth_provider.c.dart';
 import 'package:ion/app/features/chat/community/models/entities/tags/conversation_identifier.c.dart';
 import 'package:ion/app/features/chat/e2ee/model/entities/private_direct_message_data.c.dart';
@@ -310,7 +311,9 @@ class E2eeMessagesSubscriber extends _$E2eeMessagesSubscriber {
     final entity = PrivateDirectMessageEntity.fromEventMessage(rumor);
     if (entity.data.media.isNotEmpty) {
       for (final media in entity.data.media.values) {
-        await ref.read(mediaEncryptionServiceProvider).retrieveEncryptedMedia(media);
+        await ref
+            .read(mediaEncryptionServiceProvider)
+            .retrieveEncryptedMedia(media, authorPubkey: rumor.masterPubkey);
         final isThumb =
             entity.data.media.values.any((m) => m.url != media.url && m.thumb == media.url);
 

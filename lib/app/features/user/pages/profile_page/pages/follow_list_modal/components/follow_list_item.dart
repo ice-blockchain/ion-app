@@ -41,9 +41,9 @@ class FollowListItem extends ConsumerWidget {
                 context: context,
               ),
             ),
-            profilePicture: userMetadata.data.picture,
+            pubkey: pubkey,
             onTap: () {
-              ProfileRoute(pubkey: userMetadata.masterPubkey).push<void>(context);
+              ProfileRoute(pubkey: pubkey).push<void>(context);
             },
           );
         },

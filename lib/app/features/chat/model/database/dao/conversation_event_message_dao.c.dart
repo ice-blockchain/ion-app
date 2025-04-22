@@ -64,8 +64,7 @@ class ConversationEventMessageDao extends DatabaseAccessor<ChatDatabase>
   /// Returns null if no messages of that kind exist
   ///
   Future<DateTime?> getEarliestEventMessageDate(int kind, {DateTime? after}) async {
-    final query = select(eventMessageTable)
-      ..where((t) => t.kind.equals(kind));
+    final query = select(eventMessageTable)..where((t) => t.kind.equals(kind));
 
     if (after != null) {
       query.where((t) => t.createdAt.isBiggerThanValue(after));

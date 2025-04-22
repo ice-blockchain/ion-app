@@ -2,7 +2,7 @@
 
 part of '../message_reactions.dart';
 
-class _MessageReactionChip extends HookConsumerWidget {
+class _MessageReactionChip extends StatelessWidget {
   const _MessageReactionChip({
     required this.onTap,
     required this.isMe,
@@ -19,7 +19,7 @@ class _MessageReactionChip extends HookConsumerWidget {
   final void Function()? onTap;
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  Widget build(BuildContext context) {
     return GestureDetector(
       onTap: onTap,
       child: Container(
@@ -49,7 +49,7 @@ class _MessageReactionChip extends HookConsumerWidget {
   }
 }
 
-class _AvatarStack extends ConsumerWidget {
+class _AvatarStack extends StatelessWidget {
   const _AvatarStack({
     required this.pubkeys,
   });
@@ -57,15 +57,13 @@ class _AvatarStack extends ConsumerWidget {
   final List<String> pubkeys;
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  Widget build(BuildContext context) {
     return Stack(
       children: [
         //TODO: show only 3 reactions if there are more than 3 reactions when figma is ready
         for (int i = pubkeys.length - 1; i >= 0; i--)
           Builder(
             builder: (context) {
-              final userPicture =
-                  ref.watch(userMetadataProvider(pubkeys[i])).valueOrNull?.data.picture;
               return Padding(
                 padding: EdgeInsetsDirectional.only(start: i * 8.0.s),
                 child: DecoratedBox(
@@ -75,10 +73,10 @@ class _AvatarStack extends ConsumerWidget {
                   ),
                   child: Padding(
                     padding: EdgeInsets.all(1.0.s),
-                    child: Avatar(
+                    child: IonConnectAvatar(
                       size: 16.0.s,
                       borderRadius: BorderRadius.circular(5),
-                      imageUrl: userPicture,
+                      pubkey: pubkeys[i],
                     ),
                   ),
                 ),

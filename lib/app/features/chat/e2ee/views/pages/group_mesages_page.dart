@@ -93,6 +93,7 @@ class _Header extends HookConsumerWidget {
     final groupImageFile = useFuture(
       ref.watch(mediaEncryptionServiceProvider).retrieveEncryptedMedia(
             entity.primaryMedia!,
+            authorPubkey: lastMessage.masterPubkey,
           ),
     ).data;
 

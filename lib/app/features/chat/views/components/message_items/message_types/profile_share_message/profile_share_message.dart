@@ -148,7 +148,7 @@ class _ProfileSummary extends StatelessWidget {
                 : context.theme.appColors.onTertararyBackground,
           ),
         ),
-        profilePicture: userMetadata.data.picture,
+        pubkey: userMetadata.masterPubkey,
         avatarSize: 40.0.s,
       ),
     );

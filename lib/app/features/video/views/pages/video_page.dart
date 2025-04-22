@@ -18,8 +18,9 @@ import 'package:visibility_detector/visibility_detector.dart';
 
 class VideoPage extends HookConsumerWidget {
   const VideoPage({
+    required this.videoUrl,
     this.onVideoEnded,
-    this.videoUrl,
+    this.authorPubkey,
     this.looping = false,
     this.framedEventReference,
     this.videoInfo,
@@ -28,7 +29,8 @@ class VideoPage extends HookConsumerWidget {
   });
 
   final VoidCallback? onVideoEnded;
-  final String? videoUrl;
+  final String videoUrl;
+  final String? authorPubkey;
   final EventReference? framedEventReference;
   final bool looping;
   final Widget? videoInfo;
@@ -36,8 +38,7 @@ class VideoPage extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final videoPath = videoUrl;
-    if (videoPath == null || videoPath.isEmpty) {
+    if (videoUrl.isEmpty) {
       return Text(context.i18n.video_not_found);
     }
 
@@ -45,7 +46,8 @@ class VideoPage extends HookConsumerWidget {
         .watch(
           videoControllerProvider(
             VideoControllerParams(
-              sourcePath: videoPath,
+              sourcePath: videoUrl,
+              authorPubkey: authorPubkey,
               autoPlay: true,
               looping: looping,
               uniqueId: framedEventReference?.encode() ?? '',
@@ -90,7 +92,7 @@ class VideoPage extends HookConsumerWidget {
     });
 
     return VisibilityDetector(
-      key: ValueKey(videoPath),
+      key: ValueKey(videoUrl),
       onVisibilityChanged: (info) {
         if (!context.mounted) return;
         if (info.visibleFraction <= 0.5) {

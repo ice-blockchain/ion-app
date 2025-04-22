@@ -9,14 +9,20 @@ import 'package:ion/app/features/core/providers/video_player_provider.c.dart';
 CachedVideoPlayerPlusController? useVideoStoryProgress({
   required WidgetRef ref,
   required bool isVideo,
-  required String storyId,
+  required String authorPubkey,
   required String videoUrl,
   required bool isCurrent,
   required bool isPaused,
   required VoidCallback onCompleted,
 }) {
   final videoController = isVideo
-      ? ref.watch(videoControllerProvider(VideoControllerParams(sourcePath: videoUrl))).value
+      ? ref
+          .watch(
+            videoControllerProvider(
+              VideoControllerParams(sourcePath: videoUrl, authorPubkey: authorPubkey),
+            ),
+          )
+          .value
       : null;
 
   final wasCurrentRef = useRef<bool>(false);
