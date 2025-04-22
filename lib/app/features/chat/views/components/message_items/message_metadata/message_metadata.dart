@@ -13,9 +13,11 @@ class MessageMetaData extends ConsumerWidget {
   const MessageMetaData({
     required this.eventMessage,
     super.key,
+    this.startPadding = 8.0,
   });
 
   final EventMessage eventMessage;
+  final double startPadding;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -26,7 +28,7 @@ class MessageMetaData extends ConsumerWidget {
     final isMe = ref.watch(isCurrentUserSelectorProvider(eventMessage.masterPubkey));
 
     return Padding(
-      padding: EdgeInsetsDirectional.only(start: 8.0.s),
+      padding: EdgeInsetsDirectional.only(start: startPadding.s),
       child: Row(
         mainAxisSize: MainAxisSize.min,
         children: [

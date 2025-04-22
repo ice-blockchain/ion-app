@@ -11,11 +11,14 @@ import 'package:ion/app/features/auth/providers/auth_provider.c.dart';
 import 'package:ion/app/features/chat/e2ee/model/entities/private_direct_message_data.c.dart';
 import 'package:ion/app/features/chat/e2ee/providers/chat_medias_provider.c.dart';
 import 'package:ion/app/features/chat/e2ee/providers/chat_message_load_media_provider.c.dart';
+import 'package:ion/app/features/chat/hooks/use_has_reaction.dart';
 import 'package:ion/app/features/chat/model/database/chat_database.c.dart';
 import 'package:ion/app/features/chat/model/message_list_item.c.dart';
+import 'package:ion/app/features/chat/recent_chats/providers/replied_message_list_item_provider.c.dart';
 import 'package:ion/app/features/chat/views/components/message_items/message_item_wrapper/message_item_wrapper.dart';
 import 'package:ion/app/features/chat/views/components/message_items/message_metadata/message_metadata.dart';
 import 'package:ion/app/features/chat/views/components/message_items/message_reactions/message_reactions.dart';
+import 'package:ion/app/features/chat/views/components/message_items/message_types/reply_message/reply_message.dart';
 import 'package:ion/app/features/ion_connect/ion_connect.dart';
 import 'package:ion/app/services/share/share.dart';
 import 'package:ion/app/utils/filesize.dart';
@@ -66,6 +69,20 @@ class DocumentMessage extends HookConsumerWidget {
       [messageMedia?.cacheKey, mediaAttachment],
     );
 
+    final hasReactions = useHasReaction(eventMessage, ref);
+
+    final messageItem = DocumentItem(
+      eventMessage: eventMessage,
+      contentDescription: entityData.content,
+    );
+
+    final repliedEventMessage = ref.watch(repliedMessageListItemProvider(messageItem));
+
+    final repliedMessageItem = getRepliedMessageListItem(
+      ref: ref,
+      repliedEventMessage: repliedEventMessage.valueOrNull,
+    );
+
     if (messageMedia == null) {
       return const SizedBox.shrink();
     }
@@ -80,67 +97,72 @@ class DocumentMessage extends HookConsumerWidget {
         horizontal: 12.0.s,
         vertical: 12.0.s,
       ),
-      child: GestureDetector(
-        onTap: () {
-          shareFile(localFile.value?.path ?? '', name: entityData.content);
-        },
-        child: Row(
-          crossAxisAlignment: CrossAxisAlignment.end,
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Flexible(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Row(
+      child: Column(
+        children: [
+          if (repliedMessageItem != null) ReplyMessage(messageItem, repliedMessageItem),
+          GestureDetector(
+            onTap: () {
+              shareFile(localFile.value?.path ?? '', name: entityData.content);
+            },
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.end,
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Flexible(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      _DocumentIcon(
-                        isLoading: messageMedia.status == MessageMediaStatus.processing,
-                      ),
-                      SizedBox(
-                        width: 12.0.s,
-                      ),
-                      Expanded(
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: <Widget>[
-                            Text(
-                              entityData.content,
-                              style: context.theme.appTextThemes.body2.copyWith(
-                                color: isMe
-                                    ? context.theme.appColors.onPrimaryAccent
-                                    : context.theme.appColors.primaryText,
-                              ),
-                              overflow: TextOverflow.ellipsis,
-                              maxLines: 1,
+                      Row(
+                        children: [
+                          _DocumentIcon(
+                            isLoading: messageMedia.status == MessageMediaStatus.processing,
+                          ),
+                          SizedBox(
+                            width: 12.0.s,
+                          ),
+                          Expanded(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: <Widget>[
+                                Text(
+                                  entityData.content,
+                                  style: context.theme.appTextThemes.body2.copyWith(
+                                    color: isMe
+                                        ? context.theme.appColors.onPrimaryAccent
+                                        : context.theme.appColors.primaryText,
+                                  ),
+                                  overflow: TextOverflow.ellipsis,
+                                  maxLines: 1,
+                                ),
+                                Text(
+                                  fileSizeInFormat.value ?? '',
+                                  style: context.theme.appTextThemes.caption2.copyWith(
+                                    color: isMe
+                                        ? context.theme.appColors.onPrimaryAccent
+                                        : context.theme.appColors.primaryText,
+                                  ),
+                                ),
+                              ],
                             ),
-                            Text(
-                              fileSizeInFormat.value ?? '',
-                              style: context.theme.appTextThemes.caption2.copyWith(
-                                color: isMe
-                                    ? context.theme.appColors.onPrimaryAccent
-                                    : context.theme.appColors.primaryText,
-                              ),
-                            ),
-                          ],
-                        ),
+                          ),
+                        ],
+                      ),
+                      MessageReactions(
+                        isMe: isMe,
+                        eventMessage: eventMessage,
                       ),
                     ],
                   ),
-                  MessageReactions(
-                    isMe: isMe,
-                    eventMessage: eventMessage,
-                  ),
-                ],
-              ),
+                ),
+                MessageMetaData(
+                  eventMessage: eventMessage,
+                  startPadding: hasReactions ? 0.0.s : 8.0.s,
+                ),
+              ],
             ),
-            const SizedBox(width: 8),
-            MessageMetaData(
-              eventMessage: eventMessage,
-            ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }

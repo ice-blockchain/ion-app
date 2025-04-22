@@ -11,10 +11,7 @@ import 'package:ion/app/features/chat/e2ee/providers/send_e2ee_message_provider.
 import 'package:ion/app/features/chat/model/database/chat_database.c.dart';
 import 'package:ion/app/features/chat/model/message_list_item.c.dart';
 import 'package:ion/app/features/chat/model/message_type.dart';
-import 'package:ion/app/features/chat/recent_chats/providers/replied_message_list_item_provider.c.dart';
-import 'package:ion/app/features/chat/views/components/message_items/components.dart';
 import 'package:ion/app/features/chat/views/components/message_items/message_reaction_dialog/message_reaction_dialog.dart';
-import 'package:ion/app/features/chat/views/components/message_items/message_types/reply_message/reply_message.dart';
 import 'package:ion/app/features/ion_connect/ion_connect.dart';
 import 'package:ion/app/features/ion_connect/model/event_reference.c.dart';
 import 'package:ion/app/features/user/providers/user_metadata_provider.c.dart';
@@ -43,13 +40,6 @@ class MessageItemWrapper extends HookConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final messageItemKey = useMemoized(GlobalKey.new);
-
-    final repliedEventMessage = ref.watch(repliedMessageListItemProvider(messageItem));
-
-    final repliedMessageItem = getRepliedMessageListItem(
-      ref: ref,
-      repliedEventMessage: repliedEventMessage.valueOrNull,
-    );
 
     final deliveryStatus =
         ref.watch(conversationMessageDataDaoProvider).messageStatus(messageItem.eventMessage.id);
@@ -130,37 +120,7 @@ class MessageItemWrapper extends HookConsumerWidget {
                             isMe && isLastMessageFromAuthor ? Radius.zero : Radius.circular(12.0.s),
                       ),
                     ),
-                    child: repliedMessageItem == null
-                        ? messageItem is! TextItem ||
-                                (messageItem is TextItem && (messageItem as TextItem).multiline)
-                            ? child
-                            : Row(
-                                mainAxisSize: MainAxisSize.min,
-                                children: [
-                                  child,
-                                  MessageMetaData(eventMessage: messageItem.eventMessage),
-                                ],
-                              )
-                        : Column(
-                            children: [
-                              ReplyMessage(messageItem, repliedMessageItem),
-                              Align(
-                                alignment: AlignmentDirectional.centerEnd,
-                                child: messageItem is! TextItem ||
-                                        (messageItem is TextItem &&
-                                            (messageItem as TextItem).multiline)
-                                    ? child
-                                    : Row(
-                                        mainAxisSize: MainAxisSize.min,
-                                        children: [
-                                          child,
-                                          const Spacer(),
-                                          MessageMetaData(eventMessage: messageItem.eventMessage),
-                                        ],
-                                      ),
-                              ),
-                            ],
-                          ),
+                    child: child,
                   ),
                   if (snapshot.hasData && snapshot.data == MessageDeliveryStatus.failed)
                     Row(
@@ -180,58 +140,58 @@ class MessageItemWrapper extends HookConsumerWidget {
       },
     );
   }
+}
 
-  ChatMessageInfoItem? getRepliedMessageListItem({
-    required WidgetRef ref,
-    required EventMessage? repliedEventMessage,
-  }) {
-    if (repliedEventMessage == null) {
-      return null;
-    }
-
-    final repliedEntity = PrivateDirectMessageEntity.fromEventMessage(repliedEventMessage);
-
-    if (repliedEntity.data.messageType == MessageType.profile) {
-      final profilePubkey = EventReference.fromEncoded(repliedEntity.data.content).pubkey;
-
-      final userMetadata = ref.watch(userMetadataProvider(profilePubkey)).valueOrNull;
-      return ShareProfileItem(
-        eventMessage: repliedEventMessage,
-        contentDescription: userMetadata?.data.name ?? repliedEntity.data.content,
-      );
-    } else if (repliedEntity.data.messageType == MessageType.visualMedia) {
-      final messageMedias =
-          ref.watch(chatMediasProvider(eventMessageId: repliedEventMessage.id)).valueOrNull ?? [];
-
-      return MediaItem(
-        medias: messageMedias,
-        eventMessage: repliedEventMessage,
-        contentDescription: ref.context.i18n.common_media,
-      );
-    }
-
-    return switch (repliedEntity.data.messageType) {
-      MessageType.profile => null,
-      MessageType.storyReply => null,
-      MessageType.visualMedia => null,
-      // TODO: implement replied funds request message item
-      MessageType.requestFunds => null,
-      MessageType.text => TextItem(
-          eventMessage: repliedEventMessage,
-          contentDescription: repliedEntity.data.content,
-        ),
-      MessageType.emoji => EmojiItem(
-          eventMessage: repliedEventMessage,
-          contentDescription: repliedEntity.data.content,
-        ),
-      MessageType.audio => AudioItem(
-          eventMessage: repliedEventMessage,
-          contentDescription: ref.context.i18n.common_voice_message,
-        ),
-      MessageType.document => DocumentItem(
-          eventMessage: repliedEventMessage,
-          contentDescription: repliedEntity.data.content,
-        ),
-    };
+ChatMessageInfoItem? getRepliedMessageListItem({
+  required WidgetRef ref,
+  required EventMessage? repliedEventMessage,
+}) {
+  if (repliedEventMessage == null) {
+    return null;
   }
+
+  final repliedEntity = PrivateDirectMessageEntity.fromEventMessage(repliedEventMessage);
+
+  if (repliedEntity.data.messageType == MessageType.profile) {
+    final profilePubkey = EventReference.fromEncoded(repliedEntity.data.content).pubkey;
+
+    final userMetadata = ref.watch(userMetadataProvider(profilePubkey)).valueOrNull;
+    return ShareProfileItem(
+      eventMessage: repliedEventMessage,
+      contentDescription: userMetadata?.data.name ?? repliedEntity.data.content,
+    );
+  } else if (repliedEntity.data.messageType == MessageType.visualMedia) {
+    final messageMedias =
+        ref.watch(chatMediasProvider(eventMessageId: repliedEventMessage.id)).valueOrNull ?? [];
+
+    return MediaItem(
+      medias: messageMedias,
+      eventMessage: repliedEventMessage,
+      contentDescription: ref.context.i18n.common_media,
+    );
+  }
+
+  return switch (repliedEntity.data.messageType) {
+    MessageType.profile => null,
+    MessageType.storyReply => null,
+    MessageType.visualMedia => null,
+    // TODO: implement replied funds request message item
+    MessageType.requestFunds => null,
+    MessageType.text => TextItem(
+        eventMessage: repliedEventMessage,
+        contentDescription: repliedEntity.data.content,
+      ),
+    MessageType.emoji => EmojiItem(
+        eventMessage: repliedEventMessage,
+        contentDescription: repliedEntity.data.content,
+      ),
+    MessageType.audio => AudioItem(
+        eventMessage: repliedEventMessage,
+        contentDescription: ref.context.i18n.common_voice_message,
+      ),
+    MessageType.document => DocumentItem(
+        eventMessage: repliedEventMessage,
+        contentDescription: repliedEntity.data.content,
+      ),
+  };
 }

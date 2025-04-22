@@ -23,6 +23,7 @@ class _MessageReactionChip extends HookConsumerWidget {
     return GestureDetector(
       onTap: onTap,
       child: Container(
+        margin: EdgeInsetsDirectional.only(end: 4.0.s),
         padding: EdgeInsets.symmetric(vertical: 4.0.s, horizontal: 6.0.s),
         decoration: BoxDecoration(
           color: currentUserHasReaction & !isMe
@@ -34,7 +35,12 @@ class _MessageReactionChip extends HookConsumerWidget {
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(emoji, style: context.theme.appTextThemes.title.copyWith(height: 1)),
+            Text(
+              emoji,
+              style: context.theme.appTextThemes.title.copyWith(
+                height: 1,
+              ),
+            ),
             _AvatarStack(pubkeys: masterPubkeys),
           ],
         ),
