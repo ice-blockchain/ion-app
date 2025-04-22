@@ -12,7 +12,7 @@ import 'package:ion/app/exceptions/exceptions.dart';
 import 'package:ion/app/features/core/model/media_type.dart';
 import 'package:ion/app/features/core/providers/ion_connect_media_url_fallback_provider.c.dart';
 import 'package:ion/app/features/ion_connect/model/media_attachment.dart';
-import 'package:ion/app/services/compressor/compress_service.c.dart';
+import 'package:ion/app/services/compressors/brotli_compressor.c.dart';
 import 'package:ion/app/services/file_cache/ion_file_cache_manager.c.dart';
 import 'package:ion/app/services/media_service/media_service.c.dart';
 import 'package:path_provider/path_provider.dart';
@@ -24,12 +24,12 @@ part 'media_encryption_service.c.g.dart';
 class MediaEncryptionService {
   MediaEncryptionService({
     required this.fileCacheService,
-    required this.compressionService,
+    required this.brotliCompressor,
     required this.generateMediaUrlFallback,
   });
 
   final FileCacheService fileCacheService;
-  final CompressionService compressionService;
+  final BrotliCompressor brotliCompressor;
   final Future<String?> Function(String url, {required String authorPubkey})
       generateMediaUrlFallback;
 
@@ -88,7 +88,7 @@ class MediaEncryptionService {
         );
 
         if (attachment.mediaType == MediaType.unknown) {
-          final decompressedFile = await compressionService.decompressBrotli(decryptedFileBytes);
+          final decompressedFile = await brotliCompressor.decompress(decryptedFileBytes);
 
           return decompressedFile;
         } else {
@@ -197,7 +197,7 @@ class MediaEncryptionService {
 @riverpod
 MediaEncryptionService mediaEncryptionService(Ref ref) => MediaEncryptionService(
       fileCacheService: ref.read(fileCacheServiceProvider),
-      compressionService: ref.read(compressServiceProvider),
+      brotliCompressor: ref.read(brotliCompressorProvider),
       generateMediaUrlFallback:
           ref.read(iONConnectMediaUrlFallbackProvider.notifier).generateFallback,
     );
