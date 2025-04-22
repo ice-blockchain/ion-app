@@ -37,8 +37,8 @@ class PermissionAwareWidget extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final compositeKey = '${permissionType.name}_$requestId';
-    final activeRequestId = ref.watch(activePermissionRequestIdProvider(compositeKey));
+    final permissionKey = permissionType.name;
+    final activeRequestId = ref.watch(activePermissionRequestIdProvider(permissionKey));
     final hasPermission = ref.watch(hasPermissionProvider(permissionType));
 
     ref.listen<bool>(
@@ -53,12 +53,10 @@ class PermissionAwareWidget extends ConsumerWidget {
     return builder(
       context,
       () {
-        if (hasPermission) {
-          if (_shouldExecuteOnGranted(context, activeRequestId)) {
-            onGranted();
-          }
+        if (hasPermission && onGrantedPredicate()) {
+          onGranted();
         } else {
-          _handlePermissionRequest(context, ref, compositeKey);
+          _handlePermissionRequest(context, ref, permissionKey);
         }
       },
     );
@@ -79,9 +77,9 @@ class PermissionAwareWidget extends ConsumerWidget {
   Future<void> _handlePermissionRequest(
     BuildContext context,
     WidgetRef ref,
-    String compositeKey,
+    String permissionKey,
   ) async {
-    ref.read(activePermissionRequestIdProvider(compositeKey).notifier).requestId = requestId;
+    ref.read(activePermissionRequestIdProvider(permissionKey).notifier).requestId = requestId;
 
     final isPermanentlyDenied = ref.read(isPermanentlyDeniedProvider(permissionType));
     final permissionsNotifier = ref.read(permissionsProvider.notifier);

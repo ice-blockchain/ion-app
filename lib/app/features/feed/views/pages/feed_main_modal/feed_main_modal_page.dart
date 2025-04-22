@@ -48,6 +48,7 @@ class FeedMainModalPage extends ConsumerWidget {
               if (type == FeedType.story) {
                 return PermissionAwareWidget(
                   permissionType: Permission.camera,
+                  requestId: 'story_record',
                   builder: (_, onPressed) => MainModalItem(
                     item: type,
                     onTap: onPressed,

@@ -21,6 +21,7 @@ class PlusButtonWithPermission extends StatelessWidget {
       bottom: iconPosition,
       child: PermissionAwareWidget(
         permissionType: Permission.camera,
+        requestId: 'story_record',
         onGrantedPredicate: () =>
             GoRouter.of(context).state.fullPath?.startsWith(FeedRoute().location) ?? false,
         onGranted: () => StoryRecordRoute().push<void>(context),
