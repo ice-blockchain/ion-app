@@ -2,6 +2,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
+import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/components/inputs/search_input/search_input.dart';
@@ -75,9 +76,9 @@ class RecentChatsTimelinePage extends HookConsumerWidget {
         ),
         if (scrollController.hasClients && !isArchivedConversationsEmpty)
           SliverToBoxAdapter(
-            child: AnimatedContainer(
-              height: archiveVisible.value ? 60.0.s : 0,
-              duration: const Duration(milliseconds: 100),
+            child: AnimatedOpacity(
+              opacity: archiveVisible.value ? 1.0 : 0.0,
+              duration: 500.milliseconds,
               child: archiveVisible.value ? const ArchiveChatTile() : const SizedBox.shrink(),
             ),
           ),
