@@ -128,12 +128,14 @@ abstract class PrivateDirectMessageData with EntityDataWithMediaContent {
     return ImmutablePrivateDirectMessageData(
       content: content,
       media: {},
+      messageId: generateUuid(),
       conversationId: generateUuid(),
     );
   }
 
   FutureOr<EventMessage> toEventMessage(String pubkey);
 
+  String get messageId;
   String get conversationId;
   String? get groupImagePath;
   GroupSubject? get groupSubject;
@@ -180,6 +182,7 @@ class ImmutablePrivateDirectMessageData
     implements PrivateDirectMessageData {
   const factory ImmutablePrivateDirectMessageData({
     required String content,
+    required String messageId,
     required String conversationId,
     required Map<String, MediaAttachment> media,
     RichText? richText,
@@ -201,6 +204,10 @@ class ImmutablePrivateDirectMessageData
       relatedPubkeys: tags[RelatedPubkey.tagName]?.map(RelatedPubkey.fromTag).toList(),
       relatedEvents: tags[RelatedImmutableEvent.tagName]?.map(RelatedEvent.fromTag).toList(),
       groupSubject: tags[GroupSubject.tagName]?.map(GroupSubject.fromTag).singleOrNull,
+      messageId: tags[ReplaceableEventIdentifier.tagName]!
+          .map(ReplaceableEventIdentifier.fromTag)
+          .singleOrNull!
+          .value,
       quotedEvent:
           tags[QuotedImmutableEvent.tagName]?.map(QuotedImmutableEvent.fromTag).singleOrNull,
       conversationId: tags[ConversationIdentifier.tagName]
@@ -219,6 +226,7 @@ class ImmutablePrivateDirectMessageData
       if (relatedEvents != null) ...relatedEvents!.map((event) => event.toTag()),
       if (relatedPubkeys != null) ...relatedPubkeys!.map((pubkey) => pubkey.toTag()),
       if (media.isNotEmpty) ...media.values.map((mediaAttachment) => mediaAttachment.toTag()),
+      ReplaceableEventIdentifier(value: messageId).toTag(),
       ConversationIdentifier(value: conversationId).toTag(),
     ];
 
