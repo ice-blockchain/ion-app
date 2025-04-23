@@ -11,8 +11,12 @@ import 'package:ion/app/features/ion_connect/model/event_reference.c.dart';
 import 'package:ion/app/features/ion_connect/providers/ion_connect_cache.c.dart';
 import 'package:ion/app/features/ion_connect/providers/ion_connect_notifier.c.dart';
 import 'package:ion/app/features/optimistic_ui/operation_manager.dart';
+import 'package:riverpod_annotation/riverpod_annotation.dart';
 
-final optimisticLikesManagerProvider = Provider<OptimisticOperationManager<PostLike>>((ref) {
+part 'optimistic_likes_manager.c.g.dart';
+
+@riverpod
+OptimisticOperationManager<PostLike> optimisticLikesManager(Ref ref) {
   final ionNotifier = ref.read(ionConnectNotifierProvider.notifier);
 
   final manager = OptimisticOperationManager<PostLike>(
@@ -51,17 +55,19 @@ final optimisticLikesManagerProvider = Provider<OptimisticOperationManager<PostL
   ref.onDispose(manager.dispose);
 
   return manager;
-});
+}
 
 /// Exposes a stream of [PostLike] for a specific [EventReference].
-final optimisticPostLikeStreamProvider =
-    StreamProvider.family<PostLike?, EventReference>((ref, eventReference) async* {
+@riverpod
+Stream<PostLike?> optimisticPostLikeStream(Ref ref, EventReference eventReference) async* {
   final manager = ref.watch(optimisticLikesManagerProvider);
 
   // Synchronous first value.
-  yield manager.snapshot.firstWhereOrNull((e) => e.optimisticId == eventReference.toString());
+  yield manager.snapshot
+      .firstWhereOrNull((PostLike e) => e.optimisticId == eventReference.toString());
 
   yield* manager.stream.map(
-    (list) => list.firstWhereOrNull((e) => e.optimisticId == eventReference.toString()),
+    (List<PostLike> list) =>
+        list.firstWhereOrNull((PostLike e) => e.optimisticId == eventReference.toString()),
   );
-});
+}
