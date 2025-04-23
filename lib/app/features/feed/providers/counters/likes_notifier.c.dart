@@ -1,13 +1,11 @@
 // SPDX-License-Identifier: ice License 1.0
 
-import 'package:ion/app/features/feed/data/models/entities/post_data.c.dart';
-import 'package:ion/app/features/feed/data/models/entities/reaction_data.c.dart';
+import 'package:collection/collection.dart';
+import 'package:ion/app/features/feed/likes/model/post_like.dart';
+import 'package:ion/app/features/feed/likes/providers/optimistic_likes_manager.dart';
 import 'package:ion/app/features/feed/providers/counters/like_reaction_provider.c.dart';
 import 'package:ion/app/features/feed/providers/counters/likes_count_provider.c.dart';
-import 'package:ion/app/features/ion_connect/model/deletion_request.c.dart';
 import 'package:ion/app/features/ion_connect/model/event_reference.c.dart';
-import 'package:ion/app/features/ion_connect/providers/ion_connect_cache.c.dart';
-import 'package:ion/app/features/ion_connect/providers/ion_connect_notifier.c.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'likes_notifier.c.g.dart';
@@ -18,32 +16,25 @@ class LikesNotifier extends _$LikesNotifier {
   FutureOr<void> build(EventReference eventReference) {}
 
   Future<void> toggle() async {
-    if (state.isLoading) {
-      return;
-    }
+    final manager = ref.read(optimisticLikesManagerProvider);
 
-    state = const AsyncValue.loading();
+    var current = manager.snapshot.firstWhereOrNull(
+      (p) => p.optimisticId == eventReference.toString(),
+    );
 
-    state = await AsyncValue.guard(() async {
-      final likeEntity = ref.read(likeReactionProvider(eventReference));
-      final eventRef = eventReference;
+    current ??= PostLike(
+      eventReference: eventReference,
+      likesCount: ref.read(likesCountProvider(eventReference)),
+      likedByMe: ref.read(isLikedProvider(eventReference)),
+    );
 
-      if (likeEntity != null) {
-        final data = DeletionRequest(
-          events: [EventToDelete(eventId: likeEntity.id, kind: ReactionEntity.kind)],
-        );
-        await ref.read(ionConnectNotifierProvider.notifier).sendEntityData(data, cache: false);
-        ref.read(ionConnectCacheProvider.notifier).remove(likeEntity.cacheKey);
-        ref.read(likesCountProvider(eventRef).notifier).removeOne();
-      } else {
-        final data = ReactionData(
-          content: ReactionEntity.likeSymbol,
-          eventReference: eventRef,
-          kind: eventRef is ReplaceableEventReference ? eventRef.kind : PostEntity.kind,
-        );
-        await ref.read(ionConnectNotifierProvider.notifier).sendEntityData(data);
-        ref.read(likesCountProvider(eventRef).notifier).addOne();
-      }
-    });
+    final toggledLiked = !current.likedByMe;
+    final nextCount = current.likesCount + (toggledLiked ? 1 : -1);
+
+    final optimistic = current.copyWith(likedByMe: toggledLiked, likesCount: nextCount);
+
+    await manager.perform(previous: current, optimistic: optimistic);
+
+    state = const AsyncValue.data(null);
   }
 }
