@@ -70,7 +70,12 @@ class AcceptToCreateLocalPasskeyCredsNotifier extends _$AcceptToCreateLocalPassk
 
     state = await AsyncValue.guard(() async {
       final ionIdentity = await ref.read(ionIdentityProvider.future);
-      await ionIdentity(username: username).auth.createLocalPasskeyCreds();
+
+      try {
+        await ionIdentity(username: username).auth.createLocalPasskeyCreds();
+      } on PasskeyCancelledException {
+        return;
+      }
     });
   }
 }

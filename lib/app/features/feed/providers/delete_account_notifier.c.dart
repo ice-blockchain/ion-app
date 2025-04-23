@@ -46,9 +46,13 @@ class DeleteAccountNotifier extends _$DeleteAccountNotifier {
 
       // clean ion identity data
       final ionIdentity = await ref.read(ionIdentityProvider.future);
-      await ionIdentity(username: currentIdentityKeyName).auth.deleteUser(
-            base64Kind5Event: base64.encode(utf8.encode(json.encode(event.toJson().last))),
-          );
+      try {
+        await ionIdentity(username: currentIdentityKeyName).auth.deleteUser(
+              base64Kind5Event: base64.encode(utf8.encode(json.encode(event.toJson().last))),
+            );
+      } on PasskeyCancelledException {
+        return;
+      }
 
       // clean local storage data
       final localStorage =

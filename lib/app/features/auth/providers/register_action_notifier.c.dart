@@ -1,6 +1,7 @@
 // SPDX-License-Identifier: ice License 1.0
 
 import 'package:ion/app/services/ion_identity/ion_identity_provider.c.dart';
+import 'package:ion_identity_client/ion_identity.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'register_action_notifier.c.g.dart';
@@ -15,7 +16,11 @@ class RegisterActionNotifier extends _$RegisterActionNotifier {
 
     state = await AsyncValue.guard(() async {
       final ionIdentity = await ref.read(ionIdentityProvider.future);
-      await ionIdentity(username: keyName).auth.registerUser();
+      try {
+        await ionIdentity(username: keyName).auth.registerUser();
+      } on PasskeyCancelledException {
+        return;
+      }
     });
   }
 
@@ -24,7 +29,11 @@ class RegisterActionNotifier extends _$RegisterActionNotifier {
 
     state = await AsyncValue.guard(() async {
       final ionIdentity = await ref.read(ionIdentityProvider.future);
-      await ionIdentity(username: keyName).auth.registerUserWithPassword(password);
+      try {
+        await ionIdentity(username: keyName).auth.registerUserWithPassword(password);
+      } on PasskeyCancelledException {
+        return;
+      }
     });
   }
 }

@@ -43,12 +43,15 @@ class InitUserRecoveryActionNotifier extends _$InitUserRecoveryActionNotifier {
           TwoFaTypeAdapter(entry.key, entry.value).twoFAType,
       ];
 
-      final challenge = await ionIdentity(username: username).auth.initRecovery(
-            credentialId: credentialId,
-            twoFATypes: twoFATypes,
-          );
-
-      return InitUserRecoveryActionState.success(challenge);
+      try {
+        final challenge = await ionIdentity(username: username).auth.initRecovery(
+              credentialId: credentialId,
+              twoFATypes: twoFATypes,
+            );
+        return InitUserRecoveryActionState.success(challenge);
+      } on PasskeyCancelledException {
+        return const InitUserRecoveryActionState.initial();
+      }
     });
   }
 }
