@@ -5,14 +5,19 @@ import 'package:ion/app/features/wallets/views/components/qr_scanner_bottom_shee
 import 'package:ion/app/router/components/sheet_content/sheet_content.dart';
 
 class WalletScanModalPage extends StatelessWidget {
-  const WalletScanModalPage({super.key});
+  const WalletScanModalPage({
+    super.key,
+    this.trimPrefix = true,
+  });
+
+  final bool trimPrefix;
 
   @override
   Widget build(BuildContext context) {
-    return const SheetContent(
+    return SheetContent(
       bottomPadding: 0,
       topPadding: 0,
-      body: QRScannerBottomSheet(),
+      body: QRScannerBottomSheet(shouldTrimPrefix: trimPrefix),
     );
   }
 }
