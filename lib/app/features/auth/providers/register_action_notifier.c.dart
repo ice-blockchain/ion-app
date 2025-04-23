@@ -29,11 +29,7 @@ class RegisterActionNotifier extends _$RegisterActionNotifier {
 
     state = await AsyncValue.guard(() async {
       final ionIdentity = await ref.read(ionIdentityProvider.future);
-      try {
-        await ionIdentity(username: keyName).auth.registerUserWithPassword(password);
-      } on PasskeyCancelledException {
-        return;
-      }
+      await ionIdentity(username: keyName).auth.registerUserWithPassword(password);
     });
   }
 }
