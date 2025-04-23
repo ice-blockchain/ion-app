@@ -10,6 +10,7 @@ import 'package:ion/app/features/auth/providers/auth_provider.c.dart';
 import 'package:ion/app/features/auth/providers/login_action_notifier.c.dart';
 import 'package:ion/app/features/auth/views/components/identity_key_name_input/identity_key_name_input.dart';
 import 'package:ion/generated/assets.gen.dart';
+import 'package:ion_identity_client/ion_identity.dart';
 
 class LoginForm extends HookConsumerWidget {
   const LoginForm({
@@ -32,7 +33,10 @@ class LoginForm extends HookConsumerWidget {
       child: Column(
         children: [
           IdentityKeyNameInput(
-            errorText: loginActionState.error?.toString(),
+            errorText: switch (loginActionState.error) {
+              final IONIdentityException identityException => identityException.title(context),
+              _ => loginActionState.error?.toString()
+            },
             controller: identityKeyNameController,
             scrollPadding: EdgeInsetsDirectional.only(bottom: 190.0.s),
           ),
