@@ -94,7 +94,7 @@ class VideoCompressor implements Compressor<VideoCompressionSettings> {
         audioCodec: settings.audioCodec.codec,
         audioBitrate: settings.audioBitrate.bitrate,
         pixelFormat: settings.pixelFormat.name,
-        scaleResolution: int.parse(settings.scale.resolution),
+        scaleResolution: settings.scale.resolution,
         fps: settings.fps,
       );
 
@@ -133,7 +133,6 @@ class VideoCompressor implements Compressor<VideoCompressionSettings> {
     String? thumb,
   }) async {
     try {
-      const maxDimension = 720;
       var thumbPath = thumb;
 
       // If no external thumb was provided, extract a single frame from the video
@@ -153,23 +152,11 @@ class VideoCompressor implements Compressor<VideoCompressionSettings> {
         thumbPath = outputPath;
       }
 
-      // If width/height are null, let's probe the video
-      var (width, height) = (videoFile.width, videoFile.height);
-      if (width == null || height == null) {
-        final dims = await getVideoDimensions(videoFile.path);
-        width = dims.width;
-        height = dims.height;
-      }
-
       // We only pass one dimension to keep aspect ratio
       // If the video is wider, specify the max width;
       // otherwise specify the max height
       final compressedImage = await imageCompressor.compress(
         MediaFile(path: thumbPath),
-        settings: ImageCompressionSettings(
-          width: width > height ? maxDimension : null,
-          height: height > width ? maxDimension : null,
-        ),
       );
 
       return compressedImage;
