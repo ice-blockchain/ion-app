@@ -6,6 +6,7 @@ import 'dart:math';
 
 import 'package:ion/app/features/optimistic_ui/optimistic_model.dart';
 import 'package:ion/app/features/optimistic_ui/optimistic_operation.c.dart';
+import 'package:ion/app/services/logger/logger.dart';
 import 'package:uuid/uuid.dart';
 
 typedef SyncCallback<T extends OptimisticModel> = Future<T> Function(
@@ -63,7 +64,9 @@ class OptimisticOperationManager<T extends OptimisticModel> {
       previousState: previous,
       optimisticState: optimistic,
     );
-
+    Logger.info(
+      '[Optimistic UI - ${optimisticOperation.type}] Performing operation: ${optimisticOperation.id}, Optimistic ID: ${previous.optimisticId}',
+    );
     _applyLocal(optimisticOperation);
     _pending.add(optimisticOperation);
 
@@ -76,6 +79,9 @@ class OptimisticOperationManager<T extends OptimisticModel> {
   void _applyLocal(OptimisticOperation<T> optimisticOperation) {
     final stateIndex = _state.indexWhere(
       (model) => model.optimisticId == optimisticOperation.previousState.optimisticId,
+    );
+    Logger.info(
+      '[Optimistic UI - ${optimisticOperation.type}] Applying local state for operation: ${optimisticOperation.id}, Optimistic ID: ${optimisticOperation.previousState.optimisticId}',
     );
     if (stateIndex == -1) {
       _state.add(optimisticOperation.optimisticState);
@@ -92,6 +98,9 @@ class OptimisticOperationManager<T extends OptimisticModel> {
     _busy = true;
 
     var optimisticOperation = _pending.removeFirst();
+    Logger.info(
+      '[Optimistic UI - ${optimisticOperation.type}] Processing operation: ${optimisticOperation.id}, Optimistic ID: ${optimisticOperation.previousState.optimisticId}, Attempt: ${optimisticOperation.retryCount + 1}',
+    );
 
     try {
       optimisticOperation = optimisticOperation.copyWith(status: OperationStatus.processing);
@@ -99,22 +108,38 @@ class OptimisticOperationManager<T extends OptimisticModel> {
         optimisticOperation.previousState,
         optimisticOperation.optimisticState,
       );
+      Logger.info(
+        '[Optimistic UI - ${optimisticOperation.type}] Sync successful for operation: ${optimisticOperation.id}, Optimistic ID: ${optimisticOperation.previousState.optimisticId}',
+      );
 
       // If backend state differs from UI, schedule a follow-up sync.
       final stateIndex =
           _state.indexWhere((model) => model.optimisticId == backendState.optimisticId);
-      final isStateMatching = stateIndex != -1 && _state[stateIndex].equals(backendState);
+      final bool isStateMatching;
+      if (stateIndex != -1) {
+        isStateMatching = _state[stateIndex] == backendState;
+      } else {
+        isStateMatching = false;
+      }
 
       if (!isStateMatching) {
-        await perform(previous: _state[stateIndex], optimistic: backendState);
+        Logger.info(
+          '[Optimistic UI - ${optimisticOperation.type}] Backend state mismatch for operation: ${optimisticOperation.id}. Scheduling follow-up sync.',
+        );
+        final currentLocalState = stateIndex != -1 ? _state[stateIndex] : optimisticOperation.optimisticState;
+        await perform(previous: currentLocalState, optimistic: backendState);
       }
-    } catch (error) {
-      // If error occurs, decide whether to retry or rollback.
+    } catch (error, stackTrace) {
+      Logger.warning(
+        '[Optimistic UI - ${optimisticOperation.type}] Sync failed for operation: ${optimisticOperation.id}. Error: $error',
+      );
       final shouldRetry = await onError('Sync failed (${optimisticOperation.id})', error);
       if (shouldRetry && optimisticOperation.retryCount < maxRetries) {
         final retryDelay = Duration(seconds: pow(2, optimisticOperation.retryCount).toInt());
+        Logger.info(
+          '[Optimistic UI - ${optimisticOperation.type}] Retrying operation: ${optimisticOperation.id} after ${retryDelay.inSeconds}s (Attempt ${optimisticOperation.retryCount + 2})',
+        );
         await Future<void>.delayed(retryDelay);
-        // Re-add operation with incremented retry count.
         _pending.addFirst(
           optimisticOperation.copyWith(
             retryCount: optimisticOperation.retryCount + 1,
@@ -122,11 +147,16 @@ class OptimisticOperationManager<T extends OptimisticModel> {
           ),
         );
       } else {
+        Logger.error(
+          error,
+          stackTrace: stackTrace,
+          message: '[Optimistic UI - ${optimisticOperation.type}] Operation failed permanently: ${optimisticOperation.id}. Initiating rollback.',
+        );
         _rollback(optimisticOperation);
       }
     } finally {
       _busy = false;
-      await _next(); // Continue processing the queue.
+      await _next();
     }
   }
 
@@ -134,6 +164,9 @@ class OptimisticOperationManager<T extends OptimisticModel> {
   void _rollback(OptimisticOperation<T> optimisticOperation) {
     final stateIndex = _state.indexWhere(
       (model) => model.optimisticId == optimisticOperation.optimisticState.optimisticId,
+    );
+    Logger.info(
+      '[Optimistic UI - ${optimisticOperation.type}] Rolling back state for operation: ${optimisticOperation.id}, Optimistic ID: ${optimisticOperation.optimisticState.optimisticId}',
     );
     if (stateIndex != -1) {
       _state[stateIndex] = optimisticOperation.previousState;
