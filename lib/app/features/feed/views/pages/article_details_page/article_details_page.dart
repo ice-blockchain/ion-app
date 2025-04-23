@@ -103,6 +103,7 @@ class ArticleDetailsPage extends HookConsumerWidget {
                         child: TextEditorPreview(
                           content: delta,
                           media: articleEntity.data.media,
+                          enableInteractiveSelection: true,
                         ),
                       ),
                     ],
