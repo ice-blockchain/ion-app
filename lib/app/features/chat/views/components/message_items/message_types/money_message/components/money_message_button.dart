@@ -34,14 +34,14 @@ class MoneyMessageButton extends StatelessWidget {
   final MoneyMessageType messageType;
   final String eventId;
   final bool isPaid;
-  final FundsRequestEntity? request;
+  final FundsRequestEntity request;
 
   static Size get _defaultMinimumSize => Size(150.0.s, 32.0.s);
 
   @override
   Widget build(BuildContext context) {
     if (isPaid) {
-      return _ViewTransactionButton(request: request!);
+      return _ViewTransactionButton(request: request);
     } else if (isMe && messageType == MoneyMessageType.requested) {
       return _CancelMoneyRequestButton(eventId: eventId);
     } else if (!isMe && messageType == MoneyMessageType.requested) {
@@ -186,7 +186,12 @@ class _ViewTransactionButton extends ConsumerWidget {
         ),
       ),
       onPressed: () async {
-        final coinData = await ref.read(coinByIdProvider(request.data.content.assetId!).future);
+        final assetId = request.data.content.assetId;
+        if (assetId == null) {
+          return;
+        }
+
+        final coinData = await ref.read(coinByIdProvider(assetId).future);
         if (coinData == null) {
           return;
         }

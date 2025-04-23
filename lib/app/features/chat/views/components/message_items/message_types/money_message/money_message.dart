@@ -94,7 +94,7 @@ class _MoneyMessageContent extends HookConsumerWidget {
   final CoinData? coin;
   final EventMessage eventMessage;
   final String eventId;
-  final FundsRequestEntity? request;
+  final FundsRequestEntity request;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
