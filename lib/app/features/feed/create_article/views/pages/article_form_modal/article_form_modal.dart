@@ -126,17 +126,16 @@ class ArticleFormModal extends HookConsumerWidget {
                           start: ScreenSideOffset.defaultSmallMargin,
                           end: ScreenSideOffset.defaultSmallMargin,
                           top: ScreenSideOffset.defaultSmallMargin,
-                          bottom: 6.0.s,
                         ),
                         child: TextField(
                           controller: articleState.titleController,
                           focusNode: articleState.titleFocusNode,
                           autofocus: true,
                           textInputAction: TextInputAction.next,
+                          maxLines: null,
                           onSubmitted: (_) {
                             articleState.editorFocusNotifier.value = true;
                           },
-                          inputFormatters: articleState.titleInputFormatters,
                           style: context.theme.appTextThemes.headline2.copyWith(
                             color: context.theme.appColors.primaryText,
                           ),
@@ -149,6 +148,20 @@ class ArticleFormModal extends HookConsumerWidget {
                           ),
                         ),
                       ),
+                      if (articleState.titleOverflowCount.value <= 0)
+                        SizedBox(
+                          height: 16.0.s,
+                        )
+                      else
+                        Padding(
+                          padding: EdgeInsetsDirectional.only(
+                            start: ScreenSideOffset.defaultSmallMargin,
+                            bottom: 4.0.s,
+                          ),
+                          child: _TextLimitIndicator(
+                            value: articleState.titleOverflowCount.value,
+                          ),
+                        ),
                       ScreenSideOffset.small(
                         child: ValueListenableBuilder<bool>(
                           valueListenable: articleState.editorFocusNotifier,
@@ -164,6 +177,16 @@ class ArticleFormModal extends HookConsumerWidget {
                           },
                         ),
                       ),
+                      if (articleState.descriptionOverflowCount.value > 0)
+                        Padding(
+                          padding: EdgeInsetsDirectional.only(
+                            start: ScreenSideOffset.defaultSmallMargin,
+                            top: 6.0.s,
+                          ),
+                          child: _TextLimitIndicator(
+                            value: articleState.descriptionOverflowCount.value,
+                          ),
+                        ),
                       SizedBox(
                         height: 16.0.s,
                       ),
@@ -196,6 +219,25 @@ class ArticleFormModal extends HookConsumerWidget {
               ],
             ),
           ],
+        ),
+      ),
+    );
+  }
+}
+
+class _TextLimitIndicator extends StatelessWidget {
+  const _TextLimitIndicator({required this.value});
+
+  final int value;
+
+  @override
+  Widget build(BuildContext context) {
+    return Align(
+      alignment: AlignmentDirectional.centerStart,
+      child: Text(
+        '-$value',
+        style: context.theme.appTextThemes.caption2.copyWith(
+          color: context.theme.appColors.attentionRed,
         ),
       ),
     );

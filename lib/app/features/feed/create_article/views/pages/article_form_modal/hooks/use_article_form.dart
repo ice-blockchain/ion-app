@@ -1,7 +1,6 @@
 // SPDX-License-Identifier: ice License 1.0
 
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_quill/flutter_quill.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
@@ -26,10 +25,13 @@ class ArticleFormState {
     required this.isButtonEnabled,
     required this.editorFocusNotifier,
     required this.onNext,
-    required this.titleInputFormatters,
     required this.titleFocusNode,
     required this.isTitleFocused,
     required this.media,
+    required this.titleOverflowCount,
+    required this.isTitleLengthValid,
+    required this.descriptionOverflowCount,
+    required this.isDescriptionLengthValid,
   });
 
   final ValueNotifier<MediaFile?> selectedImage;
@@ -40,10 +42,13 @@ class ArticleFormState {
   final bool isButtonEnabled;
   final ValueNotifier<bool> editorFocusNotifier;
   final void Function() onNext;
-  final List<TextInputFormatter> titleInputFormatters;
   final FocusNode titleFocusNode;
   final ValueNotifier<bool> isTitleFocused;
   final ValueNotifier<Map<String, MediaAttachment>?> media;
+  final ValueNotifier<int> titleOverflowCount;
+  final ValueNotifier<bool> isTitleLengthValid;
+  final ValueNotifier<int> descriptionOverflowCount;
+  final ValueNotifier<bool> isDescriptionLengthValid;
 }
 
 ArticleFormState useArticleForm(WidgetRef ref, {EventReference? modifiedEvent}) {
@@ -58,7 +63,12 @@ ArticleFormState useArticleForm(WidgetRef ref, {EventReference? modifiedEvent}) 
   final titleFocusNode = useFocusNode();
   final isTitleFocused = useState(false);
   final isTextValid = useState(false);
+  final titleOverflowCount = useState<int>(0);
+  final isTitleLengthValid = useState(true);
+  final descriptionOverflowCount = useState<int>(0);
+  final isDescriptionLengthValid = useState(true);
   const titleMaxLength = 120;
+  const descriptionMaxLength = 25000;
 
   useEffect(
     () {
@@ -70,20 +80,6 @@ ArticleFormState useArticleForm(WidgetRef ref, {EventReference? modifiedEvent}) 
       return () => titleFocusNode.removeListener(onFocusChange);
     },
     [titleFocusNode],
-  );
-
-  final titleInputFormatters = useMemoized(
-    () => [
-      LengthLimitingTextInputFormatter(titleMaxLength),
-      TextInputFormatter.withFunction((oldValue, newValue) {
-        if (newValue.text.length > oldValue.text.length + 1 &&
-            newValue.text.length > titleMaxLength) {
-          return oldValue;
-        }
-        return newValue;
-      }),
-    ],
-    [titleMaxLength],
   );
 
   final processorState =
@@ -111,6 +107,12 @@ ArticleFormState useArticleForm(WidgetRef ref, {EventReference? modifiedEvent}) 
           if (modifiableEntity.data.title != null) {
             titleController.text = modifiableEntity.data.title!;
             titleFilled.value = true;
+
+            final currentLength = titleController.text.length;
+            if (currentLength > titleMaxLength) {
+              titleOverflowCount.value = currentLength - titleMaxLength;
+              isTitleLengthValid.value = false;
+            }
           }
 
           final delta = parseAndConvertDelta(
@@ -119,7 +121,13 @@ ArticleFormState useArticleForm(WidgetRef ref, {EventReference? modifiedEvent}) 
           );
 
           textEditorController.document = Document.fromDelta(delta);
-          isTextValid.value = textEditorController.document.toPlainText().trim().isNotEmpty;
+          final descriptionText = textEditorController.document.toPlainText();
+          isTextValid.value = descriptionText.trim().isNotEmpty;
+
+          if (descriptionText.length > descriptionMaxLength) {
+            descriptionOverflowCount.value = descriptionText.length - descriptionMaxLength;
+            isDescriptionLengthValid.value = false;
+          }
 
           if (modifiableEntity.data.image != null) {
             selectedImageUrl.value = modifiableEntity.data.image;
@@ -137,12 +145,14 @@ ArticleFormState useArticleForm(WidgetRef ref, {EventReference? modifiedEvent}) 
   useEffect(
     () {
       void listener() {
-        if (titleController.text.length > titleMaxLength) {
-          titleController
-            ..text = titleController.text.substring(0, titleMaxLength)
-            ..selection = TextSelection.fromPosition(
-              const TextPosition(offset: titleMaxLength),
-            );
+        final currentLength = titleController.text.length;
+
+        if (currentLength > titleMaxLength) {
+          titleOverflowCount.value = currentLength - titleMaxLength;
+          isTitleLengthValid.value = false;
+        } else {
+          titleOverflowCount.value = 0;
+          isTitleLengthValid.value = true;
         }
 
         titleFilled.value = titleController.text.trim().isNotEmpty;
@@ -157,7 +167,13 @@ ArticleFormState useArticleForm(WidgetRef ref, {EventReference? modifiedEvent}) 
   useEffect(
     () {
       void listener() {
-        isTextValid.value = textEditorController.document.toPlainText().trim().isNotEmpty;
+        final descriptionText = textEditorController.document.toPlainText();
+        isTextValid.value = descriptionText.trim().isNotEmpty;
+
+        final isLengthValid = descriptionText.length <= descriptionMaxLength;
+        descriptionOverflowCount.value =
+            isLengthValid ? 0 : descriptionText.length - descriptionMaxLength;
+        isDescriptionLengthValid.value = isLengthValid;
       }
 
       textEditorController.addListener(listener);
@@ -180,9 +196,18 @@ ArticleFormState useArticleForm(WidgetRef ref, {EventReference? modifiedEvent}) 
     () {
       return (selectedImage.value != null || selectedImageUrl.value != null) &&
           titleFilled.value &&
-          isTextValid.value;
+          isTextValid.value &&
+          isTitleLengthValid.value &&
+          isDescriptionLengthValid.value;
     },
-    [selectedImage.value, selectedImageUrl.value, titleFilled.value, isTextValid.value],
+    [
+      selectedImage.value,
+      selectedImageUrl.value,
+      titleFilled.value,
+      isTextValid.value,
+      isTitleLengthValid.value,
+      isDescriptionLengthValid.value,
+    ],
   );
 
   return ArticleFormState(
@@ -194,9 +219,12 @@ ArticleFormState useArticleForm(WidgetRef ref, {EventReference? modifiedEvent}) 
     isButtonEnabled: isButtonEnabled,
     editorFocusNotifier: editorFocusNotifier,
     onNext: onNext,
-    titleInputFormatters: titleInputFormatters,
     titleFocusNode: titleFocusNode,
     isTitleFocused: isTitleFocused,
     media: media,
+    titleOverflowCount: titleOverflowCount,
+    isTitleLengthValid: isTitleLengthValid,
+    descriptionOverflowCount: descriptionOverflowCount,
+    isDescriptionLengthValid: isDescriptionLengthValid,
   );
 }
