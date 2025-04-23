@@ -73,7 +73,13 @@ Stream<ContentLangSet?> contentLangSet(Ref ref) async* {
 @riverpod
 class ContentLangSetNotifier extends _$ContentLangSetNotifier {
   @override
-  void build() {}
+  AsyncValue<ContentLangSet> build() {
+    final manager = ref.read(optimisticContentLangManagerProvider);
+    final initial = manager.snapshot.isNotEmpty
+        ? manager.snapshot.first
+        : ContentLangSet(pubkey: ref.read(currentPubkeySelectorProvider)!, hashtags: []);
+    return AsyncValue.data(initial);
+  }
 
   void toggle(String iso) {
     final pubkey = ref.read(currentPubkeySelectorProvider);
