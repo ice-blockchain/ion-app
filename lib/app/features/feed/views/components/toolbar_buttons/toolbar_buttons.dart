@@ -14,7 +14,6 @@ export 'toolbar_list_button.dart';
 export 'toolbar_list_quote_button.dart';
 export 'toolbar_mention_button.dart';
 export 'toolbar_poll_button.dart';
-export 'toolbar_regular_button.dart';
 export 'toolbar_send_button.dart';
 export 'toolbar_separator_button.dart';
 export 'toolbar_typography_button.dart';
