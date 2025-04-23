@@ -1,5 +1,6 @@
 // SPDX-License-Identifier: ice License 1.0
 
+import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/features/feed/data/models/entities/event_count_result_data.c.dart';
 import 'package:ion/app/features/feed/data/models/entities/reaction_data.c.dart';
 import 'package:ion/app/features/feed/likes/providers/optimistic_likes_manager.c.dart';
@@ -10,49 +11,26 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 part 'likes_count_provider.c.g.dart';
 
 @riverpod
-class LikesCount extends _$LikesCount {
-  @override
-  int build(EventReference eventReference) {
-    final optimisticAsync = ref.watch(optimisticPostLikeStreamProvider(eventReference));
-    final optimistic = optimisticAsync.maybeWhen(data: (data) => data, orElse: () => null);
+int likesCount(Ref ref, EventReference eventReference) {
+  final optimistic =
+      ref.watch(optimisticPostLikeStreamProvider(eventReference)).valueOrNull?.likesCount;
 
-    if (optimistic != null) {
-      return optimistic.likesCount;
-    }
+  if (optimistic != null) return optimistic;
 
-    final reactionsCountEntity = ref.watch(
-      ionConnectCacheProvider.select(
-        cacheSelector<EventCountResultEntity>(
-          EventCountResultEntity.cacheKeyBuilder(
-            key: eventReference.toString(),
-            type: EventCountResultType.reactions,
-          ),
+  final counterEntity = ref.watch(
+    ionConnectCacheProvider.select(
+      cacheSelector<EventCountResultEntity>(
+        EventCountResultEntity.cacheKeyBuilder(
+          key: eventReference.toString(),
+          type: EventCountResultType.reactions,
         ),
       ),
-    );
+    ),
+  );
 
-    if (reactionsCountEntity == null) {
-      return 0;
-    }
+  if (counterEntity == null) return 0;
 
-    final content = reactionsCountEntity.data.content as Map<String, dynamic>;
-    return (content[ReactionEntity.likeSymbol] ?? 0) as int;
-  }
-
-  void addOne() {
-    state = state + 1;
-  }
-
-  void removeOne() {
-    if (state > 1) {
-      state = state - 1;
-    } else if (state == 1) {
-      ref.read(ionConnectCacheProvider.notifier).remove(
-            EventCountResultEntity.cacheKeyBuilder(
-              key: eventReference.toString(),
-              type: EventCountResultType.reactions,
-            ),
-          );
-    }
-  }
+  final reactionsCount = counterEntity.data.content as Map<String, dynamic>;
+  
+  return (reactionsCount[ReactionEntity.likeSymbol] ?? 0) as int;
 }
