@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: ice License 1.0
+
 import 'package:flutter/widgets.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion_identity_client/ion_identity.dart';
