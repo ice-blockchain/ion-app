@@ -81,17 +81,22 @@ class MediaEncryptionService {
         await file.delete();
         await fileCacheService.removeFile(url);
 
-        final decryptedFile = await fileCacheService.putFile(
-          url: url,
-          bytes: decryptedFileBytes,
-          fileExtension: fileExtension,
-        );
-
         if (attachment.mediaType == MediaType.unknown) {
           final decompressedFile = await brotliCompressor.decompress(decryptedFileBytes);
 
-          return decompressedFile;
+          final decryptedFile = await fileCacheService.putFile(
+            url: url,
+            bytes: decompressedFile.readAsBytesSync(),
+            fileExtension: fileExtension,
+          );
+
+          return decryptedFile;
         } else {
+          final decryptedFile = await fileCacheService.putFile(
+            url: url,
+            bytes: decryptedFileBytes,
+            fileExtension: 'pdf',
+          );
           return decryptedFile;
         }
       } else {
