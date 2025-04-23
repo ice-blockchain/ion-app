@@ -50,7 +50,7 @@ class VideoPage extends HookConsumerWidget {
               authorPubkey: authorPubkey,
               autoPlay: true,
               looping: looping,
-              uniqueId: framedEventReference?.encode() ?? '',
+              uniqueId: "${framedEventReference?.encode() ?? ''}-video-page",
             ),
           ),
         )
