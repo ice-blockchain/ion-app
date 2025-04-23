@@ -6,10 +6,13 @@ import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/components/button/button.dart';
+import 'package:ion/app/components/progress_bar/ion_loading_indicator.dart';
 import 'package:ion/app/exceptions/exceptions.dart';
 import 'package:ion/app/extensions/extensions.dart';
+import 'package:ion/app/features/chat/e2ee/providers/e2ee_delete_event_provider.c.dart';
 import 'package:ion/app/features/chat/model/money_message_type.dart';
 import 'package:ion/app/features/core/views/pages/error_modal.dart';
+import 'package:ion/app/features/ion_connect/ion_connect.dart';
 import 'package:ion/app/features/wallets/model/coins_group.c.dart';
 import 'package:ion/app/features/wallets/model/entities/funds_request_entity.c.dart';
 import 'package:ion/app/features/wallets/model/transaction_details.c.dart';
@@ -26,6 +29,7 @@ class MoneyMessageButton extends StatelessWidget {
     required this.messageType,
     required this.eventId,
     required this.isPaid,
+    required this.eventMessage,
     required this.request,
     super.key,
   });
@@ -35,6 +39,7 @@ class MoneyMessageButton extends StatelessWidget {
   final String eventId;
   final bool isPaid;
   final FundsRequestEntity request;
+  final EventMessage eventMessage;
 
   static Size get _defaultMinimumSize => Size(150.0.s, 32.0.s);
 
@@ -43,7 +48,7 @@ class MoneyMessageButton extends StatelessWidget {
     if (isPaid) {
       return _ViewTransactionButton(request: request);
     } else if (isMe && messageType == MoneyMessageType.requested) {
-      return _CancelMoneyRequestButton(eventId: eventId);
+      return _CancelMoneyRequestButton(eventMessage: eventMessage);
     } else if (!isMe && messageType == MoneyMessageType.requested) {
       return _SendMoneyButton(eventId: eventId, request: request);
     } else {
@@ -55,25 +60,33 @@ class MoneyMessageButton extends StatelessWidget {
 
 class _CancelMoneyRequestButton extends ConsumerWidget {
   const _CancelMoneyRequestButton({
-    required this.eventId,
+    required this.eventMessage,
   });
 
-  final String eventId;
+  final EventMessage eventMessage;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final isLoading =
+        ref.watch(e2eeDeleteMessageNotifierProvider(eventMessage: eventMessage)).isLoading;
+
     return Button.compact(
       type: ButtonType.outlined,
       backgroundColor: context.theme.appColors.tertararyBackground,
       minimumSize: MoneyMessageButton._defaultMinimumSize,
-      label: Text(
-        context.i18n.button_cancel,
-        style: context.theme.appTextThemes.caption2.copyWith(
-          color: context.theme.appColors.primaryText,
-        ),
-      ),
+      disabled: isLoading,
+      label: isLoading
+          ? const IONLoadingIndicator()
+          : Text(
+              context.i18n.button_cancel,
+              style: context.theme.appTextThemes.caption2.copyWith(
+                color: context.theme.appColors.primaryText,
+              ),
+            ),
       onPressed: () {
-        // TODO: send cancel request
+        ref
+            .read(e2eeDeleteMessageNotifierProvider(eventMessage: eventMessage).notifier)
+            .deleteMessage(forEveryone: true);
       },
     );
   }
