@@ -114,7 +114,7 @@ class OptimisticOperationManager<T extends OptimisticModel> {
 
       final stateIndex =
           _state.indexWhere((model) => model.optimisticId == backendState.optimisticId);
-      final isStateMatching = optimisticOperation.optimisticState.equals(backendState);
+      final isStateMatching = optimisticOperation.optimisticState == backendState;
 
       if (!isStateMatching) {
         Logger.info(

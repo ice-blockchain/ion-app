@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: ice License 1.0
 
 import 'package:collection/collection.dart';
-import 'package:ion/app/features/feed/likes/model/post_like.dart';
+import 'package:ion/app/features/feed/likes/model/post_like.c.dart';
 import 'package:ion/app/features/feed/likes/providers/optimistic_likes_manager.c.dart';
 import 'package:ion/app/features/feed/providers/counters/like_reaction_provider.c.dart';
 import 'package:ion/app/features/feed/providers/counters/likes_count_provider.c.dart';

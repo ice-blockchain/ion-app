@@ -13,10 +13,6 @@ class TestModel implements OptimisticModel {
   final String value;
 
   @override
-  bool equals(Object other) =>
-      other is TestModel && optimisticId == other.optimisticId && value == other.value;
-
-  @override
   String toString() => '[$optimisticId:$value]';
 }
 

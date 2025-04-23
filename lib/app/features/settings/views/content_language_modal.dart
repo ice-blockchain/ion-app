@@ -13,8 +13,11 @@ class ContentLanguageModal extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final langsAsync = ref.watch(contentLangSetProvider);
-    final selectedLanguages = langsAsync.valueOrNull?.hashtags ?? [];
+    final selectedLanguages = ref.watch(
+      contentLangSetProvider.select(
+        (async) => async.valueOrNull?.hashtags ?? const <String>[],
+      ),
+    );
 
     return LanguageSelectorPage(
       title: context.i18n.content_language_title,

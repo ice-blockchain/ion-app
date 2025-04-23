@@ -7,7 +7,4 @@
 abstract interface class OptimisticModel {
   /// Unique identifier for optimistic state tracking.
   String get optimisticId;
-
-  /// Compares this model to another for optimistic equality.
-  bool equals(covariant OptimisticModel other) => this == other;
 }
