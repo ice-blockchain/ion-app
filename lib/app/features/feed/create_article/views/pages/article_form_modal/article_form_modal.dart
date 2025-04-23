@@ -151,38 +151,28 @@ class ArticleFormModal extends HookConsumerWidget {
                       if (articleState.titleOverflowCount.value <= 0)
                         SizedBox(
                           height: 16.0.s,
-                        ),
-                      if (articleState.titleOverflowCount.value > 0)
+                        )
+                      else
                         Padding(
                           padding: EdgeInsetsDirectional.only(
-                            bottom: 4.0.s,
                             start: ScreenSideOffset.defaultSmallMargin,
+                            bottom: 4.0.s,
                           ),
-                          child: Align(
-                            alignment: AlignmentDirectional.centerStart,
-                            child: Text(
-                              '-${articleState.titleOverflowCount.value}',
-                              style: context.theme.appTextThemes.caption2.copyWith(
-                                color: context.theme.appColors.attentionRed,
-                              ),
-                            ),
+                          child: _TextLimitIndicator(
+                            value: articleState.titleOverflowCount.value,
                           ),
                         ),
                       ScreenSideOffset.small(
                         child: ValueListenableBuilder<bool>(
                           valueListenable: articleState.editorFocusNotifier,
                           builder: (context, isFocused, child) {
-                            return Column(
-                              children: [
-                                TextEditor(
-                                  autoFocus: isFocused,
-                                  media: modifiedEvent != null ? articleState.media.value : null,
-                                  articleState.textEditorController,
-                                  placeholder: context.i18n.create_article_story_placeholder,
-                                  key: textEditorKey,
-                                  scrollController: scrollController,
-                                ),
-                              ],
+                            return TextEditor(
+                              autoFocus: isFocused,
+                              media: modifiedEvent != null ? articleState.media.value : null,
+                              articleState.textEditorController,
+                              placeholder: context.i18n.create_article_story_placeholder,
+                              key: textEditorKey,
+                              scrollController: scrollController,
                             );
                           },
                         ),
@@ -193,14 +183,8 @@ class ArticleFormModal extends HookConsumerWidget {
                             start: ScreenSideOffset.defaultSmallMargin,
                             top: 6.0.s,
                           ),
-                          child: Align(
-                            alignment: AlignmentDirectional.centerStart,
-                            child: Text(
-                              '-${articleState.descriptionOverflowCount.value}',
-                              style: context.theme.appTextThemes.caption2.copyWith(
-                                color: context.theme.appColors.attentionRed,
-                              ),
-                            ),
+                          child: _TextLimitIndicator(
+                            value: articleState.descriptionOverflowCount.value,
                           ),
                         ),
                       SizedBox(
@@ -235,6 +219,25 @@ class ArticleFormModal extends HookConsumerWidget {
               ],
             ),
           ],
+        ),
+      ),
+    );
+  }
+}
+
+class _TextLimitIndicator extends StatelessWidget {
+  const _TextLimitIndicator({required this.value});
+
+  final int value;
+
+  @override
+  Widget build(BuildContext context) {
+    return Align(
+      alignment: AlignmentDirectional.centerStart,
+      child: Text(
+        '-$value',
+        style: context.theme.appTextThemes.caption2.copyWith(
+          color: context.theme.appColors.attentionRed,
         ),
       ),
     );
