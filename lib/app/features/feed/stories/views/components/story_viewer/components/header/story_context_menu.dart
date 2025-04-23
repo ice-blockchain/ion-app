@@ -36,17 +36,7 @@ class StoryContextMenu extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final menuWidth = useState<double>(100.0.s);
     final isDeletingStory = useState(false);
-
-    final updateWidth = useCallback(
-      (Size size) {
-        if (size.width > menuWidth.value) {
-          menuWidth.value = size.width;
-        }
-      },
-      [],
-    );
 
     final handleDeleteConfirmation = useCallback(
       () async {
@@ -86,7 +76,6 @@ class StoryContextMenu extends HookConsumerWidget {
         child: _StoryContextMenuContent(
           pubkey: pubkey,
           isCurrentUser: isCurrentUser,
-          onUpdateWidth: updateWidth,
           onClose: closeMenu,
           onDeleteRequest: () {
             closeMenu();
@@ -103,14 +92,12 @@ class _StoryContextMenuContent extends HookConsumerWidget {
   const _StoryContextMenuContent({
     required this.pubkey,
     required this.isCurrentUser,
-    required this.onUpdateWidth,
     required this.onClose,
     required this.onDeleteRequest,
   });
 
   final String pubkey;
   final bool isCurrentUser;
-  final void Function(Size) onUpdateWidth;
   final VoidCallback onClose;
   final VoidCallback onDeleteRequest;
 
@@ -122,13 +109,11 @@ class _StoryContextMenuContent extends HookConsumerWidget {
         if (isCurrentUser)
           _CurrentUserMenuItems(
             onDeleteRequest: onDeleteRequest,
-            onUpdateWidth: onUpdateWidth,
           )
         else
           _OtherUserMenuItems(
             pubkey: pubkey,
             onClose: onClose,
-            onUpdateWidth: onUpdateWidth,
           ),
       ],
     );
@@ -138,11 +123,9 @@ class _StoryContextMenuContent extends HookConsumerWidget {
 class _CurrentUserMenuItems extends ConsumerWidget {
   const _CurrentUserMenuItems({
     required this.onDeleteRequest,
-    required this.onUpdateWidth,
   });
 
   final VoidCallback onDeleteRequest;
-  final void Function(Size) onUpdateWidth;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -153,7 +136,6 @@ class _CurrentUserMenuItems extends ConsumerWidget {
       label: i18n.button_delete,
       iconAsset: Assets.svg.iconBlockDelete,
       onPressed: onDeleteRequest,
-      onLayout: onUpdateWidth,
       textColor: colors.attentionRed,
       iconColor: colors.attentionRed,
     );
@@ -164,12 +146,10 @@ class _OtherUserMenuItems extends ConsumerWidget {
   const _OtherUserMenuItems({
     required this.pubkey,
     required this.onClose,
-    required this.onUpdateWidth,
   });
 
   final String pubkey;
   final VoidCallback onClose;
-  final void Function(Size) onUpdateWidth;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -188,14 +168,12 @@ class _OtherUserMenuItems extends ConsumerWidget {
             onClose();
             ref.read(reportNotifierProvider.notifier).report(ReportReason.user(pubkey: pubkey));
           },
-          onLayout: onUpdateWidth,
         ),
         const ContextMenuItemDivider(),
         ContextMenuItem(
           label: isMuted ? i18n.button_unmute : i18n.button_mute,
           iconAsset: isMuted ? Assets.svg.iconChannelUnmute : Assets.svg.iconChannelMute,
           onPressed: () => ref.read(globalMuteProvider.notifier).toggle(),
-          onLayout: onUpdateWidth,
         ),
         const ContextMenuItemDivider(),
         ContextMenuItem(
@@ -208,7 +186,6 @@ class _OtherUserMenuItems extends ConsumerWidget {
               child: UnfollowUserModal(pubkey: pubkey),
             );
           },
-          onLayout: onUpdateWidth,
         ),
       ],
     );

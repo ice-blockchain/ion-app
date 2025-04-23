@@ -1,7 +1,6 @@
 // SPDX-License-Identifier: ice License 1.0
 
 import 'package:flutter/material.dart';
-import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/components/overlay_menu/overlay_menu.dart';
 import 'package:ion/app/components/overlay_menu/overlay_menu_container.dart';
@@ -18,7 +17,7 @@ import 'package:ion/app/router/app_routes.c.dart';
 import 'package:ion/app/router/utils/show_simple_bottom_sheet.dart';
 import 'package:ion/generated/assets.gen.dart';
 
-class ContextMenu extends HookConsumerWidget {
+class ContextMenu extends ConsumerWidget {
   const ContextMenu({
     required this.pubkey,
     this.opacity = 1,
@@ -30,17 +29,6 @@ class ContextMenu extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final menuWidth = useState<double>(100.0.s);
-
-    final updateWidth = useCallback(
-      (Size size) {
-        if (size.width > menuWidth.value) {
-          menuWidth.value = size.width;
-        }
-      },
-      [],
-    );
-
     ref.displayErrors(reportNotifierProvider);
 
     return OverlayMenu(
@@ -59,12 +47,10 @@ class ContextMenu extends HookConsumerWidget {
                           .encode(),
                 ).push<void>(context);
               },
-              onLayout: updateWidth,
             ),
             const ContextMenuItemDivider(),
             _BlockUserMenuItem(
               pubkey: pubkey,
-              onLayout: updateWidth,
               closeMenu: closeMenu,
             ),
             const ContextMenuItemDivider(),
@@ -75,7 +61,6 @@ class ContextMenu extends HookConsumerWidget {
                 closeMenu();
                 ref.read(reportNotifierProvider.notifier).report(ReportReason.user(pubkey: pubkey));
               },
-              onLayout: updateWidth,
             ),
           ],
         ),
@@ -93,12 +78,10 @@ class ContextMenu extends HookConsumerWidget {
 class _BlockUserMenuItem extends ConsumerWidget {
   const _BlockUserMenuItem({
     required this.pubkey,
-    required this.onLayout,
     required this.closeMenu,
   });
 
   final String pubkey;
-  final void Function(Size) onLayout;
   final VoidCallback closeMenu;
 
   @override
@@ -107,7 +90,6 @@ class _BlockUserMenuItem extends ConsumerWidget {
     return ContextMenuItem(
       label: isBlocked ? context.i18n.button_unblock : context.i18n.button_block,
       iconAsset: Assets.svg.iconBlockClose3,
-      onLayout: onLayout,
       onPressed: () {
         closeMenu();
         if (!isBlocked) {

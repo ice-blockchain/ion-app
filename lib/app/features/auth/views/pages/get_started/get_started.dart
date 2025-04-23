@@ -12,7 +12,6 @@ import 'package:ion/app/features/auth/views/pages/two_fa/twofa_input_step.dart';
 import 'package:ion/app/features/auth/views/pages/two_fa/twofa_options_step.dart';
 import 'package:ion/app/features/components/biometrics/hooks/use_on_suggest_biometrics.dart';
 import 'package:ion/app/features/components/passkey/hooks/use_on_suggest_to_create_local_passkey_creds.dart';
-import 'package:ion/app/features/components/passkey/identity_not_found_popup.dart';
 import 'package:ion/app/features/components/passkey/no_local_passkey_creds_popup.dart';
 import 'package:ion/app/features/components/verify_identity/verify_identity_prompt_dialog_helper.dart';
 import 'package:ion/app/features/protect_account/secure_account/providers/selected_two_fa_types_provider.c.dart';
@@ -43,7 +42,6 @@ class GetStartedPage extends HookConsumerWidget {
       excludedExceptions: {
         TwoFARequiredException,
         NoLocalPasskeyCredsFoundIONIdentityException,
-        IdentityNotFoundIONIdentityException,
       },
     );
 
@@ -59,14 +57,7 @@ class GetStartedPage extends HookConsumerWidget {
                 );
             final loginState = ref.watch(loginActionNotifierProvider);
             if (loginState.hasError) {
-              if (loginState.error is IdentityNotFoundIONIdentityException) {
-                if (context.mounted) {
-                  await showSimpleBottomSheet<void>(
-                    context: context,
-                    child: const IdentityNotFoundPopup(),
-                  );
-                }
-              } else if (loginState.error is TwoFARequiredException) {
+              if (loginState.error is TwoFARequiredException) {
                 final e = loginState.error! as TwoFARequiredException;
                 twoFAOptionsCount.value = e.twoFAOptionsCount;
                 step.value = GetStartedPageStep.twoFAOptions;

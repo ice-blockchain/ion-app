@@ -42,11 +42,15 @@ class OnboardingCompleteNotifier extends _$OnboardingCompleteNotifier {
         final userRelaysEvent = await _buildAndCacheUserRelays(relayUrls: relayUrls);
 
         // Send user delegation event in advance so all subsequent events pass delegation attestation
-        final userDelegationEvent = await _buildUserDelegation(onVerifyIdentity: onVerifyIdentity);
-
-        await ref
-            .read(ionConnectNotifierProvider.notifier)
-            .sendEvents([userDelegationEvent, userRelaysEvent]);
+        try {
+          final userDelegationEvent =
+              await _buildUserDelegation(onVerifyIdentity: onVerifyIdentity);
+          await ref
+              .read(ionConnectNotifierProvider.notifier)
+              .sendEvents([userDelegationEvent, userRelaysEvent]);
+        } on PasskeyCancelledException {
+          return;
+        }
 
         final uploadedAvatar = await _uploadAvatar();
 

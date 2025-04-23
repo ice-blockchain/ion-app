@@ -191,3 +191,7 @@ class InvalidSignatureException extends IONIdentityException {
     }
   }
 }
+
+class PasskeyCancelledException extends IONIdentityException {
+  const PasskeyCancelledException() : super('Passkey cancelled by user');
+}

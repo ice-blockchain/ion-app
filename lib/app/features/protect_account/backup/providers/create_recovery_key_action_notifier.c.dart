@@ -27,11 +27,15 @@ class CreateRecoveryKeyActionNotifier extends _$CreateRecoveryKeyActionNotifier 
       }
 
       final ionIdentity = await ref.read(ionIdentityProvider.future);
-      final response = await ionIdentity(username: selectedUser)
-          .auth
-          .createRecoveryCredentials(onVerifyIdentity);
-      ref.read(recoveryCredentialsEnabledProvider.notifier).setEnabled();
-      return response;
+      try {
+        final response = await ionIdentity(username: selectedUser)
+            .auth
+            .createRecoveryCredentials(onVerifyIdentity);
+        ref.read(recoveryCredentialsEnabledProvider.notifier).setEnabled();
+        return response;
+      } on PasskeyCancelledException {
+        return null;
+      }
     });
   }
 }

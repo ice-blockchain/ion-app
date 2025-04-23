@@ -31,9 +31,10 @@ class SignUpPasskeyForm extends HookConsumerWidget {
       child: Column(
         children: [
           IdentityKeyNameInput(
-            errorText: registerActionState.error is UserAlreadyExistsException
-                ? context.i18n.sign_up_passkey_identity_key_name_taken
-                : registerActionState.error?.toString(),
+            errorText: switch (registerActionState.error) {
+              final IONIdentityException identityException => identityException.title(context),
+              _ => registerActionState.error?.toString()
+            },
             controller: identityKeyNameController,
           ),
           SizedBox(height: 16.0.s),

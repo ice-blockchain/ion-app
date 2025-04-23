@@ -37,11 +37,15 @@ class LoginActionNotifier extends _$LoginActionNotifier {
           TwoFaTypeAdapter(entry.key, entry.value).twoFAType,
       ];
 
-      await ionIdentity(username: keyName).auth.loginUser(
-            onVerifyIdentity: onVerifyIdentity,
-            twoFATypes: twoFATypes,
-            localCredsOnly: localCredsOnly,
-          );
+      try {
+        await ionIdentity(username: keyName).auth.loginUser(
+              onVerifyIdentity: onVerifyIdentity,
+              twoFATypes: twoFATypes,
+              localCredsOnly: localCredsOnly,
+            );
+      } on PasskeyCancelledException {
+        return;
+      }
     });
   }
 }

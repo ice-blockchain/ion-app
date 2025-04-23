@@ -53,55 +53,59 @@ class PasskeysSigner {
   /// The registration process involves interacting with a passkey authenticator
   /// and relies on the options specified in [PasskeysOptions].
   Future<CredentialRequestData> register(UserRegistrationChallenge challenge) async {
-    final registerResponse = await PasskeyAuthenticator().register(
-      RegisterRequestType(
-        challenge: challenge.challenge,
-        relyingParty: RelyingPartyType(
-          name: challenge.rp.name,
-          id: challenge.rp.id,
-        ),
-        user: UserType(
-          displayName: challenge.user.displayName,
-          name: challenge.user.name,
-          id: base64UrlEncode(utf8.encode(challenge.user.id)),
-        ),
-        authSelectionType: AuthenticatorSelectionType(
-          authenticatorAttachment:
-              challenge.authenticatorSelection?.authenticatorAttachment ?? 'platform',
-          requireResidentKey: challenge.authenticatorSelection?.requireResidentKey ?? false,
-          residentKey: challenge.authenticatorSelection?.residentKey ?? 'required',
-          userVerification: challenge.authenticatorSelection?.userVerification ?? 'required',
-        ),
-        pubKeyCredParams: List<PubKeyCredParamType>.from(
-          challenge.pubKeyCredParams.map(
-            (e) => PubKeyCredParamType(
-              type: e.type,
-              alg: e.alg,
-            ),
+    final requestType = RegisterRequestType(
+      challenge: challenge.challenge,
+      relyingParty: RelyingPartyType(
+        name: challenge.rp.name,
+        id: challenge.rp.id,
+      ),
+      user: UserType(
+        displayName: challenge.user.displayName,
+        name: challenge.user.name,
+        id: base64UrlEncode(utf8.encode(challenge.user.id)),
+      ),
+      authSelectionType: AuthenticatorSelectionType(
+        authenticatorAttachment:
+            challenge.authenticatorSelection?.authenticatorAttachment ?? 'platform',
+        requireResidentKey: challenge.authenticatorSelection?.requireResidentKey ?? false,
+        residentKey: challenge.authenticatorSelection?.residentKey ?? 'required',
+        userVerification: challenge.authenticatorSelection?.userVerification ?? 'required',
+      ),
+      pubKeyCredParams: List<PubKeyCredParamType>.from(
+        challenge.pubKeyCredParams.map(
+          (e) => PubKeyCredParamType(
+            type: e.type,
+            alg: e.alg,
           ),
         ),
-        timeout: options.timeout,
-        attestation: challenge.attestation,
-        excludeCredentials: List<CredentialType>.from(
-          challenge.excludeCredentials.map(
-            (e) => CredentialType(
-              type: e.type,
-              id: e.id,
-              transports: [],
-            ),
+      ),
+      timeout: options.timeout,
+      attestation: challenge.attestation,
+      excludeCredentials: List<CredentialType>.from(
+        challenge.excludeCredentials.map(
+          (e) => CredentialType(
+            type: e.type,
+            id: e.id,
+            transports: [],
           ),
         ),
       ),
     );
 
-    return CredentialRequestData(
-      credentialInfo: CredentialInfo(
-        attestationData: registerResponse.attestationObject,
-        clientData: registerResponse.clientDataJSON,
-        credId: registerResponse.rawId,
-      ),
-      credentialKind: CredentialKind.Fido2,
-    );
+    try {
+      final registerResponse = await PasskeyAuthenticator().register(requestType);
+
+      return CredentialRequestData(
+        credentialInfo: CredentialInfo(
+          attestationData: registerResponse.attestationObject,
+          clientData: registerResponse.clientDataJSON,
+          credId: registerResponse.rawId,
+        ),
+        credentialKind: CredentialKind.Fido2,
+      );
+    } on PasskeyAuthCancelledException {
+      throw const PasskeyCancelledException();
+    }
   }
 
   /// Logs in a user based on the provided [challenge].
@@ -139,6 +143,8 @@ class PasskeysSigner {
       }
       throw const NoLocalPasskeyCredsFoundIONIdentityException();
       // return assertionRequestData;
+    } on PasskeyAuthCancelledException {
+      throw const PasskeyCancelledException();
     }
   }
 
@@ -183,6 +189,8 @@ class PasskeysSigner {
       );
     } on NoCredentialsAvailableException {
       rethrow;
+    } on PasskeyAuthCancelledException {
+      throw const PasskeyCancelledException();
     } catch (e) {
       throw const PasskeyValidationException();
     }
