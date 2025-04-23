@@ -112,15 +112,9 @@ class OptimisticOperationManager<T extends OptimisticModel> {
         '[Optimistic UI - ${optimisticOperation.type}] Sync successful for operation: ${optimisticOperation.id}, Optimistic ID: ${optimisticOperation.previousState.optimisticId}',
       );
 
-      // If backend state differs from UI, schedule a follow-up sync.
       final stateIndex =
           _state.indexWhere((model) => model.optimisticId == backendState.optimisticId);
-      final bool isStateMatching;
-      if (stateIndex != -1) {
-        isStateMatching = _state[stateIndex] == backendState;
-      } else {
-        isStateMatching = false;
-      }
+      final isStateMatching = optimisticOperation.optimisticState.equals(backendState);
 
       if (!isStateMatching) {
         Logger.info(
