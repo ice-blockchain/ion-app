@@ -8,12 +8,19 @@ import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/extensions/build_context.dart';
 import 'package:ion/app/extensions/num.dart';
+import 'package:ion/app/extensions/object.dart';
 import 'package:ion/app/extensions/theme_data.dart';
+import 'package:ion/app/features/wallets/utils/prefix_trimmer.dart';
 import 'package:ion/app/router/components/navigation_app_bar/navigation_app_bar.dart';
 import 'package:qr_code_scanner_plus/qr_code_scanner_plus.dart';
 
 class QRScannerBottomSheet extends HookConsumerWidget {
-  const QRScannerBottomSheet({super.key});
+  const QRScannerBottomSheet({
+    super.key,
+    this.shouldTrimPrefix = true,
+  });
+
+  final bool shouldTrimPrefix;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -25,8 +32,10 @@ class QRScannerBottomSheet extends HookConsumerWidget {
       (QRViewController controller) {
         controllerRef.value = controller;
         subscriptionRef.value = controller.scannedDataStream.listen((scanData) {
-          if (scanData.code != null && context.mounted) {
-            context.pop(scanData.code);
+          if (context.mounted) {
+            scanData.code
+                ?.map((code) => shouldTrimPrefix ? trimPrefix(code) : code)
+                .let(context.pop);
           }
         });
       },
