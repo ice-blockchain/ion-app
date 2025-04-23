@@ -18,7 +18,6 @@ import 'package:ion/app/features/feed/views/pages/who_can_reply_settings_modal/w
 import 'package:ion/app/router/app_routes.c.dart';
 import 'package:ion/app/router/components/navigation_app_bar/navigation_app_bar.dart';
 import 'package:ion/app/router/utils/show_simple_bottom_sheet.dart';
-import 'package:ion/app/services/compressors/image_compressor.c.dart';
 import 'package:ion/app/services/media_service/media_service.c.dart';
 import 'package:ion/generated/assets.gen.dart';
 
@@ -119,17 +118,11 @@ class StoryPreviewPage extends HookConsumerWidget {
                               whoCanReply: whoCanReply,
                             );
                           } else if (mediaType == MediaType.image) {
-                            final dimension = await ref
-                                .read(imageCompressorProvider)
-                                .getImageDimension(path: path);
-
                             await createPostNotifier.create(
                               mediaFiles: [
                                 MediaFile(
                                   path: path,
                                   mimeType: mimeType,
-                                  width: dimension.width,
-                                  height: dimension.height,
                                 ),
                               ],
                               whoCanReply: whoCanReply,
