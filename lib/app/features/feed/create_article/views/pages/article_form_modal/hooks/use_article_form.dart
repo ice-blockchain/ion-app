@@ -170,13 +170,10 @@ ArticleFormState useArticleForm(WidgetRef ref, {EventReference? modifiedEvent}) 
         final descriptionText = textEditorController.document.toPlainText();
         isTextValid.value = descriptionText.trim().isNotEmpty;
 
-        if (descriptionText.length > descriptionMaxLength) {
-          descriptionOverflowCount.value = descriptionText.length - descriptionMaxLength;
-          isDescriptionLengthValid.value = false;
-        } else {
-          descriptionOverflowCount.value = 0;
-          isDescriptionLengthValid.value = true;
-        }
+        final isLengthValid = descriptionText.length <= descriptionMaxLength;
+        descriptionOverflowCount.value =
+            isLengthValid ? 0 : descriptionText.length - descriptionMaxLength;
+        isDescriptionLengthValid.value = isLengthValid;
       }
 
       textEditorController.addListener(listener);
