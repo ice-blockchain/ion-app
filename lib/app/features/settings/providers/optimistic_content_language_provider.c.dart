@@ -58,9 +58,6 @@ OptimisticOperationManager<ContentLangSet> optimisticContentLangManager(Ref ref)
 
 @riverpod
 Stream<ContentLangSet?> contentLangSet(Ref ref) async* {
-  // final manager = ref.watch(optimisticContentLangManagerProvider);
-  // return manager.stream.map((e) => e.isEmpty ? null : e.first);
-
   final mgr = ref.watch(optimisticContentLangManagerProvider);
 
   if (mgr.snapshot.isNotEmpty) {

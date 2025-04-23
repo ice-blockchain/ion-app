@@ -126,7 +126,8 @@ class OptimisticOperationManager<T extends OptimisticModel> {
         Logger.info(
           '[Optimistic UI - ${optimisticOperation.type}] Backend state mismatch for operation: ${optimisticOperation.id}. Scheduling follow-up sync.',
         );
-        final currentLocalState = stateIndex != -1 ? _state[stateIndex] : optimisticOperation.optimisticState;
+        final currentLocalState =
+            stateIndex != -1 ? _state[stateIndex] : optimisticOperation.optimisticState;
         await perform(previous: currentLocalState, optimistic: backendState);
       }
     } catch (error, stackTrace) {
@@ -150,7 +151,8 @@ class OptimisticOperationManager<T extends OptimisticModel> {
         Logger.error(
           error,
           stackTrace: stackTrace,
-          message: '[Optimistic UI - ${optimisticOperation.type}] Operation failed permanently: ${optimisticOperation.id}. Initiating rollback.',
+          message:
+              '[Optimistic UI - ${optimisticOperation.type}] Operation failed permanently: ${optimisticOperation.id}. Initiating rollback.',
         );
         _rollback(optimisticOperation);
       }
