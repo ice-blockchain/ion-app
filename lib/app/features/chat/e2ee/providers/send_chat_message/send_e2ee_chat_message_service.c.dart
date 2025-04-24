@@ -129,6 +129,9 @@ class SendE2eeChatMessageService {
             final pubkey = participantsKeysMap[masterPubkey];
             if (pubkey == null) throw UserPubkeyNotFoundException(masterPubkey);
 
+            final isAlreadySent = await _isAlreadySent(masterPubkey, currentUserEventMessageId!);
+            if (isAlreadySent) return;
+
             final attachments = mediaAttachmentsUsersBased[masterPubkey];
             final mediaTags = attachments?.map((a) => a.toTag()).toList();
 
@@ -163,11 +166,9 @@ class SendE2eeChatMessageService {
               wrappedKinds: [kind.toString()],
             );
 
-            sentKind14Message = event;
-
             await ref.read(conversationMessageDataDaoProvider).add(
                   masterPubkey: masterPubkey,
-                  eventMessageId: currentUserEventMessageId!,
+                  eventMessageId: currentUserEventMessageId,
                   status: isCurrentUser ? MessageDeliveryStatus.read : MessageDeliveryStatus.sent,
                 );
           } catch (e) {
@@ -195,6 +196,18 @@ class SendE2eeChatMessageService {
     }
 
     return sentKind14Message!;
+  }
+
+  Future<bool> _isAlreadySent(String masterPubkey, String eventMessageId) async {
+    final currentUserMessageStatus =
+        await ref.read(conversationMessageDataDaoProvider).checkMessageStatus(
+              masterPubkey: masterPubkey,
+              eventMessageId: eventMessageId,
+            );
+
+    return currentUserMessageStatus != null &&
+        (currentUserMessageStatus == MessageDeliveryStatus.sent ||
+            currentUserMessageStatus == MessageDeliveryStatus.read);
   }
 
   List<RelatedEvent> _buildRelatedEvents(EventMessage? repliedMessage) {
