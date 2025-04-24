@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: ice License 1.0
+
 import 'package:btc_address_validate_swan/btc_address_validate_swan.dart' as btc;
 
 typedef _WalletValidator = bool Function(String address);
