@@ -13,7 +13,6 @@ class EventMessageTable extends Table {
   TextColumn get tags => text()();
   DateTimeColumn get createdAt => dateTime()();
   TextColumn get sig => text().nullable()();
-  
 
   @override
   Set<Column<Object>> get primaryKey => {id};
