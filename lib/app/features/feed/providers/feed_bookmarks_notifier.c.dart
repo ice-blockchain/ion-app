@@ -2,9 +2,9 @@
 
 import 'dart:async';
 
+import 'package:collection/collection.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/features/auth/providers/auth_provider.c.dart';
-import 'package:ion/app/features/auth/providers/delegation_complete_provider.c.dart';
 import 'package:ion/app/features/feed/data/models/bookmarks/bookmarks.c.dart';
 import 'package:ion/app/features/feed/data/models/bookmarks/bookmarks_collection.c.dart';
 import 'package:ion/app/features/ion_connect/ion_connect.dart';
@@ -23,7 +23,8 @@ Stream<BookmarksCollectionEntity?> bookmarksCollectionStream(
   Ref ref,
   String pubkey,
   String collectionDTag,
-) async* {
+) {
+  final streamController = StreamController<BookmarksCollectionEntity?>.broadcast();
   final request = RequestMessage()
     ..addFilter(
       RequestFilter(
@@ -35,23 +36,28 @@ Stream<BookmarksCollectionEntity?> bookmarksCollectionStream(
       ),
     );
 
-  // Immediately check for existing event to avoid hanging
-  final firstEvent = await ref.read(ionConnectNotifierProvider.notifier).requestEvent(
-        request,
-        actionSource: ActionSourceUser(pubkey),
-      );
-  yield firstEvent != null ? BookmarksCollectionEntity.fromEventMessage(firstEvent) : null;
+  var receivedAnyEvents = false;
+  void onEndOfStoredEvents() {
+    if (!receivedAnyEvents) {
+      streamController.add(null);
+    }
+  }
 
   final events = ref.watch(
     ionConnectEventsSubscriptionProvider(
       request,
       actionSource: ActionSourceUser(pubkey),
+      onEndOfStoredEvents: onEndOfStoredEvents,
     ),
   );
 
-  await for (final event in events) {
-    yield BookmarksCollectionEntity.fromEventMessage(event);
-  }
+  final subscription = events.listen((event) {
+    receivedAnyEvents = true;
+    streamController.add(BookmarksCollectionEntity.fromEventMessage(event));
+  });
+  streamController.onCancel = subscription.cancel;
+
+  return streamController.stream;
 }
 
 @Riverpod(keepAlive: true)
@@ -61,14 +67,7 @@ class FeedBookmarksNotifier extends _$FeedBookmarksNotifier {
     String collectionDTag = BookmarksCollectionEntity.defaultCollectionDTag,
   }) async {
     final currentPubkey = ref.watch(currentPubkeySelectorProvider);
-    // it hangs if to make a request before delegation is completed for a new user
-    // it causes constant rebuilds in a cycle if to use .future here on delegationCompleteProvider
-    final delegationComplete = ref.watch(delegationCompleteProvider).when(
-          data: (v) => v,
-          loading: () => false,
-          error: (_, __) => false,
-        );
-    if (currentPubkey == null || !delegationComplete) {
+    if (currentPubkey == null) {
       return null;
     }
 
@@ -185,14 +184,7 @@ class FeedBookmarkCollectionsNotifier extends _$FeedBookmarkCollectionsNotifier 
   @override
   Future<List<ReplaceableEventReference>> build() async {
     final currentPubkey = ref.watch(currentPubkeySelectorProvider);
-    // it hangs if to make a request before delegation is completed for a new user
-    // it causes constant rebuilds in a cycle if to use .future here on delegationCompleteProvider
-    final delegationComplete = ref.watch(delegationCompleteProvider).when(
-          data: (v) => v,
-          loading: () => false,
-          error: (_, __) => false,
-        );
-    if (currentPubkey == null || !delegationComplete) {
+    if (currentPubkey == null) {
       return [];
     }
 
@@ -207,8 +199,8 @@ class FeedBookmarkCollectionsNotifier extends _$FeedBookmarkCollectionsNotifier 
     final bookmarkCollections = collectionsRefs
         .where((collectionsRef) => collectionsRef.kind == BookmarksCollectionEntity.kind)
         .toList();
-    if (!bookmarkCollections
-        .any((ref) => ref.dTag == BookmarksCollectionEntity.defaultCollectionDTag)) {
+    if (bookmarkCollections
+        .none((ref) => ref.dTag == BookmarksCollectionEntity.defaultCollectionDTag)) {
       final bookmarksData = BookmarksData(
         ids: [],
         bookmarksSetRefs: [

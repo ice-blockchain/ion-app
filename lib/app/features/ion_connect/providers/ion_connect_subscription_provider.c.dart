@@ -1,5 +1,6 @@
 // SPDX-License-Identifier: ice License 1.0
 
+import 'package:flutter/foundation.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/features/ion_connect/ion_connect.dart';
 import 'package:ion/app/features/ion_connect/model/action_source.c.dart';
@@ -17,6 +18,7 @@ Raw<Stream<EventMessage>> ionConnectEventsSubscription(
   Ref ref,
   RequestMessage requestMessage, {
   ActionSource actionSource = const ActionSourceCurrentUser(),
+  VoidCallback? onEndOfStoredEvents,
 }) {
   final events = ref.watch(ionConnectNotifierProvider.notifier).requestEvents(
     requestMessage,
@@ -30,6 +32,7 @@ Raw<Stream<EventMessage>> ionConnectEventsSubscription(
       }
       return subscription.messages;
     },
+    onEose: onEndOfStoredEvents,
   );
 
   return events;

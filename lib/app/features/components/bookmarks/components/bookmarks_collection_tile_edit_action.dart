@@ -40,7 +40,6 @@ class BookmarksCollectionTileEditAction extends ConsumerWidget {
                   ),
                 );
               },
-              onLayout: (_) {},
             ),
             const ContextMenuItemDivider(),
             ContextMenuItem(
@@ -57,7 +56,6 @@ class BookmarksCollectionTileEditAction extends ConsumerWidget {
                   ),
                 );
               },
-              onLayout: (_) {},
             ),
           ],
         ),
