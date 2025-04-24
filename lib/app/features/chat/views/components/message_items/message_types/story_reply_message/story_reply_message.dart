@@ -26,7 +26,7 @@ class StoryReplyMessage extends HookConsumerWidget {
     final story = entity.data.quotedEvent != null
         ? ref
             .watch(
-              storyReplyMessageProvider(entity.data.quotedEvent!.eventReference.eventId),
+              storyReplyMessageProvider(entity.data.quotedEvent!.eventReference.dTag!),
             )
             .valueOrNull
         : null;

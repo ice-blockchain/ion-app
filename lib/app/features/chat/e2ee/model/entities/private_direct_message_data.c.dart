@@ -28,9 +28,7 @@ part 'private_direct_message_data.c.freezed.dart';
 @immutable
 abstract class PrivateDirectMessageEntity {
   factory PrivateDirectMessageEntity.fromEventMessage(EventMessage eventMessage) {
-    if (eventMessage.kind == ImmutablePrivateDirectMessageEntity.kind) {
-      return ImmutablePrivateDirectMessageEntity.fromEventMessage(eventMessage);
-    } else if (eventMessage.kind == ReplaceablePrivateDirectMessageEntity.kind) {
+    if (eventMessage.kind == ReplaceablePrivateDirectMessageEntity.kind) {
       return ReplaceablePrivateDirectMessageEntity.fromEventMessage(eventMessage);
     } else {
       throw IncorrectEventKindException(eventMessage.id, kind: eventMessage.kind);
@@ -58,33 +56,6 @@ extension Pubkeys on PrivateDirectMessageEntity {
 }
 
 @freezed
-class ImmutablePrivateDirectMessageEntity
-    with _$ImmutablePrivateDirectMessageEntity
-    implements PrivateDirectMessageEntity {
-  const factory ImmutablePrivateDirectMessageEntity({
-    required String id,
-    required String pubkey,
-    required String masterPubkey,
-    required DateTime createdAt,
-    required PrivateDirectMessageData data,
-  }) = _ImmutablePrivateDirectMessageEntity;
-
-  const ImmutablePrivateDirectMessageEntity._();
-
-  factory ImmutablePrivateDirectMessageEntity.fromEventMessage(EventMessage eventMessage) {
-    return ImmutablePrivateDirectMessageEntity(
-      id: eventMessage.id,
-      pubkey: eventMessage.pubkey,
-      masterPubkey: eventMessage.masterPubkey,
-      createdAt: eventMessage.createdAt,
-      data: ImmutablePrivateDirectMessageData.fromEventMessage(eventMessage),
-    );
-  }
-
-  static const kind = 14;
-}
-
-@freezed
 class ReplaceablePrivateDirectMessageEntity
     with _$ReplaceablePrivateDirectMessageEntity
     implements PrivateDirectMessageEntity {
@@ -102,9 +73,9 @@ class ReplaceablePrivateDirectMessageEntity
     return ReplaceablePrivateDirectMessageEntity(
       id: eventMessage.id,
       pubkey: eventMessage.pubkey,
-      masterPubkey: eventMessage.masterPubkey,
       createdAt: eventMessage.createdAt,
-      data: ImmutablePrivateDirectMessageData.fromEventMessage(eventMessage),
+      masterPubkey: eventMessage.masterPubkey,
+      data: ReplaceablePrivateDirectMessageData.fromEventMessage(eventMessage),
     );
   }
 
@@ -115,19 +86,17 @@ class ReplaceablePrivateDirectMessageEntity
 @immutable
 abstract class PrivateDirectMessageData with EntityDataWithMediaContent {
   factory PrivateDirectMessageData.fromEventMessage(EventMessage eventMessage) {
-    if (eventMessage.kind == ImmutablePrivateDirectMessageEntity.kind) {
-      return ImmutablePrivateDirectMessageData.fromEventMessage(eventMessage);
-    } else if (eventMessage.kind == ReplaceablePrivateDirectMessageEntity.kind) {
-      return ImmutablePrivateDirectMessageData.fromEventMessage(eventMessage);
+    if (eventMessage.kind == ReplaceablePrivateDirectMessageEntity.kind) {
+      return ReplaceablePrivateDirectMessageData.fromEventMessage(eventMessage);
     } else {
       throw IncorrectEventKindException(eventMessage.id, kind: eventMessage.kind);
     }
   }
 
   factory PrivateDirectMessageData.fromRawContent(String content) {
-    return ImmutablePrivateDirectMessageData(
-      content: content,
+    return ReplaceablePrivateDirectMessageData(
       media: {},
+      content: content,
       messageId: generateUuid(),
       conversationId: generateUuid(),
     );
@@ -139,7 +108,7 @@ abstract class PrivateDirectMessageData with EntityDataWithMediaContent {
   String get conversationId;
   String? get groupImagePath;
   GroupSubject? get groupSubject;
-  QuotedImmutableEvent? get quotedEvent;
+  QuotedReplaceableEvent? get quotedEvent;
   List<RelatedEvent>? get relatedEvents;
   List<RelatedPubkey>? get relatedPubkeys;
 
@@ -162,7 +131,7 @@ extension MessageTypes on PrivateDirectMessageData {
     } else if (media.isNotEmpty) {
       return MessageType.document;
     } else if (IonConnectProtocolIdentifierTypeValidator.isEventIdentifier(content)) {
-      if (EventReference.fromEncoded(content) case final ImmutableEventReference eventReference) {
+      if (EventReference.fromEncoded(content) case final ReplaceableEventReference eventReference) {
         return switch (eventReference.kind) {
           FundsRequestEntity.kind => MessageType.requestFunds,
           _ => MessageType.text,
@@ -173,82 +142,6 @@ extension MessageTypes on PrivateDirectMessageData {
     }
 
     return MessageType.text;
-  }
-}
-
-@freezed
-class ImmutablePrivateDirectMessageData
-    with _$ImmutablePrivateDirectMessageData, EntityDataWithMediaContent
-    implements PrivateDirectMessageData {
-  const factory ImmutablePrivateDirectMessageData({
-    required String content,
-    required String messageId,
-    required String conversationId,
-    required Map<String, MediaAttachment> media,
-    RichText? richText,
-    String? groupImagePath,
-    GroupSubject? groupSubject,
-    QuotedImmutableEvent? quotedEvent,
-    List<RelatedEvent>? relatedEvents,
-    List<RelatedPubkey>? relatedPubkeys,
-  }) = _ImmutablePrivateDirectMessageData;
-
-  const ImmutablePrivateDirectMessageData._();
-
-  factory ImmutablePrivateDirectMessageData.fromEventMessage(EventMessage eventMessage) {
-    final tags = groupBy(eventMessage.tags, (tag) => tag[0]);
-
-    return ImmutablePrivateDirectMessageData(
-      content: eventMessage.content,
-      media: EntityDataWithMediaContent.parseImeta(tags[MediaAttachment.tagName]),
-      relatedPubkeys: tags[RelatedPubkey.tagName]?.map(RelatedPubkey.fromTag).toList(),
-      relatedEvents: tags[RelatedImmutableEvent.tagName]?.map(RelatedEvent.fromTag).toList(),
-      groupSubject: tags[GroupSubject.tagName]?.map(GroupSubject.fromTag).singleOrNull,
-      messageId: tags[ReplaceableEventIdentifier.tagName]!
-          .map(ReplaceableEventIdentifier.fromTag)
-          .singleOrNull!
-          .value,
-      quotedEvent:
-          tags[QuotedImmutableEvent.tagName]?.map(QuotedImmutableEvent.fromTag).singleOrNull,
-      conversationId: tags[ConversationIdentifier.tagName]
-              ?.map(ConversationIdentifier.fromTag)
-              .singleOrNull
-              ?.value ??
-          '',
-    );
-  }
-
-  @override
-  FutureOr<EventMessage> toEventMessage(String pubkey) {
-    final tags = [
-      if (quotedEvent != null) quotedEvent!.toTag(),
-      if (groupSubject != null) groupSubject!.toTag(),
-      if (relatedEvents != null) ...relatedEvents!.map((event) => event.toTag()),
-      if (relatedPubkeys != null) ...relatedPubkeys!.map((pubkey) => pubkey.toTag()),
-      if (media.isNotEmpty) ...media.values.map((mediaAttachment) => mediaAttachment.toTag()),
-      ReplaceableEventIdentifier(value: messageId).toTag(),
-      ConversationIdentifier(value: conversationId).toTag(),
-    ];
-
-    final createdAt = DateTime.now();
-
-    final kind14EventId = EventMessage.calculateEventId(
-      tags: tags,
-      content: content,
-      publicKey: pubkey,
-      createdAt: createdAt,
-      kind: ImmutablePrivateDirectMessageEntity.kind,
-    );
-
-    return EventMessage(
-      sig: null,
-      tags: tags,
-      pubkey: pubkey,
-      content: content,
-      id: kind14EventId,
-      createdAt: createdAt,
-      kind: ImmutablePrivateDirectMessageEntity.kind,
-    );
   }
 }
 
@@ -264,9 +157,9 @@ class ReplaceablePrivateDirectMessageData
     RichText? richText,
     String? groupImagePath,
     GroupSubject? groupSubject,
-    QuotedImmutableEvent? quotedEvent,
     List<RelatedEvent>? relatedEvents,
     List<RelatedPubkey>? relatedPubkeys,
+    QuotedReplaceableEvent? quotedEvent,
   }) = _ReplaceablePrivateDirectMessageData;
 
   const ReplaceablePrivateDirectMessageData._();
@@ -289,7 +182,7 @@ class ReplaceablePrivateDirectMessageData
       relatedEvents: tags[RelatedReplaceableEvent.tagName]?.map(RelatedEvent.fromTag).toList(),
       groupSubject: tags[GroupSubject.tagName]?.map(GroupSubject.fromTag).singleOrNull,
       quotedEvent:
-          tags[QuotedImmutableEvent.tagName]?.map(QuotedImmutableEvent.fromTag).singleOrNull,
+          tags[QuotedReplaceableEvent.tagName]?.map(QuotedReplaceableEvent.fromTag).singleOrNull,
       conversationId: tags[ConversationIdentifier.tagName]
               ?.map(ConversationIdentifier.fromTag)
               .singleOrNull

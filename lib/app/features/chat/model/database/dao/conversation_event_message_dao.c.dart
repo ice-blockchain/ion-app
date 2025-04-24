@@ -35,13 +35,16 @@ class ConversationEventMessageDao extends DatabaseAccessor<ChatDatabase>
     await into(db.eventMessageTable)
         .insert(EventMessageRowClass.fromEventMessage(event), mode: InsertMode.insertOrReplace);
 
-    await into(db.conversationMessageTable).insert(
-      ConversationMessageTableCompanion(
-        conversationId: Value(conversationId),
-        eventMessageId: Value(event.id),
-      ),
-      mode: InsertMode.insertOrReplace,
-    );
+    if (event.sharedId != null) {
+      await into(db.conversationMessageTable).insert(
+        ConversationMessageTableCompanion(
+          sharedId: Value(event.sharedId!),
+          eventMessageId: Value(event.id),
+          conversationId: Value(conversationId),
+        ),
+        mode: InsertMode.insertOrReplace,
+      );
+    }
   }
 
   /// Get the creation date of the most recent event messages of specific kinds

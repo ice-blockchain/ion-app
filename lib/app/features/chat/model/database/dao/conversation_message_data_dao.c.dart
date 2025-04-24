@@ -7,110 +7,62 @@ ConversationMessageDataDao conversationMessageDataDao(Ref ref) =>
     ConversationMessageDataDao(ref.watch(chatDatabaseProvider));
 
 @DriftAccessor(
-  tables: [
-    MessageStatusTable,
-    EventMessageTable,
-    ConversationMessageTable,
-  ],
+  tables: [MessageStatusTable],
 )
 class ConversationMessageDataDao extends DatabaseAccessor<ChatDatabase>
     with _$ConversationMessageDataDaoMixin {
   ConversationMessageDataDao(super.db);
 
   Future<void> add({
+    required String pubkey,
+    required String sharedId,
     required String masterPubkey,
-    required String eventMessageId,
     required MessageDeliveryStatus status,
-    DateTime? createdAt,
   }) async {
-    if (status == MessageDeliveryStatus.read && createdAt != null) {
-      final existingRow = await (select(messageStatusTable)
-            ..where((table) => table.masterPubkey.equals(masterPubkey))
-            ..where((table) => table.eventMessageId.equals(eventMessageId))
-            ..limit(1))
-          .getSingleOrNull();
+    print('Adding message status: $pubkey, $sharedId, $masterPubkey, $status');
+    // Check if the status is already present in the database for given pubkey
+    // (user device) and sharedId (message id)
+    final existingStatus = await (select(messageStatusTable)
+          ..where((table) => table.pubkey.equals(pubkey))
+          ..where((table) => table.sharedId.equals(sharedId))
+          ..limit(1))
+        .getSingleOrNull();
 
-      if (existingRow == null) {
-        await into(messageStatusTable).insert(
-          MessageStatusTableCompanion(
-            status: Value(status),
-            masterPubkey: Value(masterPubkey),
-            eventMessageId: Value(eventMessageId),
-          ),
-          mode: InsertMode.insertOrReplace,
-        );
-      }
-      final conversationMessageTableData = await (select(conversationMessageTable)
-            ..where((table) => table.eventMessageId.equals(eventMessageId))
-            ..limit(1))
-          .getSingleOrNull();
-
-      if (conversationMessageTableData != null) {
-        final conversationId = conversationMessageTableData.conversationId;
-
-        final conversationMessageTableDataList = await (select(conversationMessageTable)
-              ..where((table) => table.conversationId.equals(conversationId)))
-            .get();
-
-        final allEventMessagesId =
-            conversationMessageTableDataList.map((e) => e.eventMessageId).toList();
-
-        final eventMessagesBeforeEvent = await (select(eventMessageTable)
-              ..where((table) => table.id.isIn(allEventMessagesId))
-              ..where((table) => table.createdAt.isSmallerThanValue(createdAt)))
-            .get();
-
-        final eventMessagesId = eventMessagesBeforeEvent.map((e) => e.id).toList()
-          ..add(eventMessageId);
-
-        final messageStatusTableData = await (select(messageStatusTable)
-              ..where((table) => table.eventMessageId.isIn(eventMessagesId))
-              ..where((table) => table.masterPubkey.equals(masterPubkey))
-              ..where((table) => table.status.isIn([MessageDeliveryStatus.received.index])))
-            .get();
-
-        await batch((batch) {
-          final rows = messageStatusTableData.map((row) => row.copyWith(status: status)).toList();
-
-          batch.replaceAll(messageStatusTable, rows);
-        });
-      }
+    // If the status is already present and the new status is higher than the
+    // existing status, update the existing status
+    if (existingStatus != null && status.index > existingStatus.status.index) {
+      await (update(messageStatusTable)
+            ..where((table) => table.pubkey.equals(pubkey))
+            ..where((table) => table.sharedId.equals(sharedId)))
+          .write(
+        MessageStatusTableCompanion(
+          pubkey: Value(pubkey),
+          status: Value(status),
+          sharedId: Value(sharedId),
+          masterPubkey: Value(masterPubkey),
+        ),
+      );
+      // If the status is not present, insert a new row
     } else {
-      final existingRow = await (select(messageStatusTable)
-            ..where((table) => table.masterPubkey.equals(masterPubkey))
-            ..where((table) => table.eventMessageId.equals(eventMessageId))
-            ..limit(1))
-          .getSingleOrNull();
-
-      if (existingRow != null) {
-        if (status.index > existingRow.status.index) {
-          await update(messageStatusTable).replace(existingRow.copyWith(status: status));
-        }
-      } else {
-        final eventMessageExists = await (select(eventMessageTable)
-              ..where((table) => table.id.equals(eventMessageId))
-              ..limit(1))
-            .getSingleOrNull();
-
-        if (eventMessageExists == null) {
-          return;
-        }
-
-        await into(messageStatusTable).insert(
-          MessageStatusTableCompanion(
-            status: Value(status),
-            masterPubkey: Value(masterPubkey),
-            eventMessageId: Value(eventMessageId),
-          ),
-          mode: InsertMode.insertOrReplace,
-        );
-      }
+      await into(messageStatusTable).insert(
+        MessageStatusTableCompanion(
+          status: Value(status),
+          pubkey: Value(pubkey),
+          sharedId: Value(sharedId),
+          masterPubkey: Value(masterPubkey),
+        ),
+        mode: InsertMode.insertOrReplace,
+      );
     }
   }
 
-  Stream<MessageDeliveryStatus> messageStatus(String eventMessageId) {
+  Stream<MessageDeliveryStatus> messageStatus({
+    required String sharedId,
+    required String masterPubkey,
+  }) {
     return (select(messageStatusTable)
-          ..where((table) => table.eventMessageId.equals(eventMessageId)))
+          ..where((table) => table.sharedId.equals(sharedId))
+          ..where((table) => table.pubkey.equals(masterPubkey)))
         .watch()
         .map((rows) {
       if (rows.every((row) => row.status == MessageDeliveryStatus.deleted)) {
@@ -120,16 +72,16 @@ class ConversationMessageDataDao extends DatabaseAccessor<ChatDatabase>
       if (rows.any((row) => row.status == MessageDeliveryStatus.failed)) {
         return MessageDeliveryStatus.failed;
       } else
-      // Check if all rows are have read status
-      if (rows.every((row) => row.status == MessageDeliveryStatus.read)) {
+      // Check if any row (user device) have read status which we consider as read
+      if (rows.any((row) => row.status == MessageDeliveryStatus.read)) {
         return MessageDeliveryStatus.read;
       } else
-      // Check if all rows are have received status
-      if (rows.every((row) => row.status.index >= MessageDeliveryStatus.received.index)) {
+      // Check if any row (user device) have received status which we consider as received
+      if (rows.any((row) => row.status.index >= MessageDeliveryStatus.received.index)) {
         return MessageDeliveryStatus.received;
       } else
-      // Check if all rows have delivery status or higher
-      if (rows.every((row) => row.status.index > MessageDeliveryStatus.created.index)) {
+      // Check if any row (user device) have higher status then created
+      if (rows.any((row) => row.status.index > MessageDeliveryStatus.created.index)) {
         return MessageDeliveryStatus.sent;
       }
 
@@ -137,28 +89,32 @@ class ConversationMessageDataDao extends DatabaseAccessor<ChatDatabase>
     });
   }
 
-  Future<Map<String, MessageDeliveryStatus>> messageStatuses(String eventMessageId) async {
+  Future<Map<String, MessageDeliveryStatus>> messageStatuses({
+    required String sharedId,
+    required String masterPubkey,
+  }) async {
     final existingRows = await (select(messageStatusTable)
-          ..where((table) => table.eventMessageId.equals(eventMessageId)))
+          ..where((table) => table.sharedId.equals(sharedId))
+          ..where((table) => table.pubkey.equals(masterPubkey)))
         .get();
 
     return {for (final row in existingRows) row.masterPubkey: row.status};
   }
 
   Future<MessageDeliveryStatus?> checkMessageStatus({
+    required String sharedId,
     required String masterPubkey,
-    required String eventMessageId,
   }) async {
-    final existingStatus = (select(messageStatusTable)
-          ..where((table) => table.masterPubkey.equals(masterPubkey))
-          ..where(
-            (table) => table.eventMessageId.equals(eventMessageId),
-          )
-          ..limit(1))
-        .getSingleOrNull()
-        .then((value) => value?.status);
+    final existingDeviceStatuses = await (select(messageStatusTable)
+          ..where((table) => table.sharedId.equals(sharedId))
+          ..where((table) => table.masterPubkey.equals(masterPubkey)))
+        .get();
 
-    return existingStatus;
+    return existingDeviceStatuses.isNotEmpty
+        ? existingDeviceStatuses
+            .map((row) => row.status)
+            .reduce((a, b) => a.index > b.index ? a : b)
+        : null;
   }
 }
 

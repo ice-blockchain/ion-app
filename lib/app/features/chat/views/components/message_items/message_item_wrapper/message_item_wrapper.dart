@@ -41,8 +41,10 @@ class MessageItemWrapper extends HookConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final messageItemKey = useMemoized(GlobalKey.new);
 
-    final deliveryStatus =
-        ref.watch(conversationMessageDataDaoProvider).messageStatus(messageItem.eventMessage.id);
+    final deliveryStatus = ref.watch(conversationMessageDataDaoProvider).messageStatus(
+          sharedId: messageItem.eventMessage.sharedId!,
+          masterPubkey: messageItem.eventMessage.masterPubkey,
+        );
 
     final showReactDialog = useCallback(
       () async {

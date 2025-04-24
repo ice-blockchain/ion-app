@@ -42,11 +42,9 @@ class E2eeMessagesSubscriber extends _$E2eeMessagesSubscriber {
       throw EventSignerNotFoundException();
     }
 
-    final latestEventMessageDate =
-        await ref.watch(conversationEventMessageDaoProvider).getLatestEventMessageDate([
-      ImmutablePrivateDirectMessageEntity.kind,
-      ReplaceablePrivateDirectMessageEntity.kind,
-    ]);
+    final latestEventMessageDate = await ref
+        .watch(conversationEventMessageDaoProvider)
+        .getLatestEventMessageDate([ReplaceablePrivateDirectMessageEntity.kind]);
 
     final userChatRelays = await ref.watch(userChatRelaysProvider(masterPubkey).future);
 
@@ -62,7 +60,6 @@ class E2eeMessagesSubscriber extends _$E2eeMessagesSubscriber {
         '#k': [
           DeletionRequest.kind.toString(),
           PrivateMessageReactionEntity.kind.toString(),
-          ImmutablePrivateDirectMessageEntity.kind.toString(),
           ReplaceablePrivateDirectMessageEntity.kind.toString(),
           [GenericRepostEntity.kind.toString(), ModifiablePostEntity.kind.toString()],
         ],
@@ -95,17 +92,12 @@ class E2eeMessagesSubscriber extends _$E2eeMessagesSubscriber {
         conversationMessageStatusDao,
         conversationMessageReactionDao,
       ),
-      maxCreatedAtBuilder: () =>
-          ref.watch(conversationEventMessageDaoProvider).getLatestEventMessageDate([
-        ImmutablePrivateDirectMessageEntity.kind,
-        ReplaceablePrivateDirectMessageEntity.kind,
-      ]),
+      maxCreatedAtBuilder: () => ref
+          .watch(conversationEventMessageDaoProvider)
+          .getLatestEventMessageDate([ReplaceablePrivateDirectMessageEntity.kind]),
       minCreatedAtBuilder: (since) =>
           ref.watch(conversationEventMessageDaoProvider).getEarliestEventMessageDate(
-        [
-          ImmutablePrivateDirectMessageEntity.kind,
-          ReplaceablePrivateDirectMessageEntity.kind,
-        ],
+        [ReplaceablePrivateDirectMessageEntity.kind],
         after: since,
       ),
       overlap: const Duration(days: 2),
@@ -187,9 +179,8 @@ class E2eeMessagesSubscriber extends _$E2eeMessagesSubscriber {
           throw ReceiverDevicePubkeyNotFoundException(rumor.id);
         }
 
-        // Only for kind 14 or kind 30014
-        if (rumor.kind == ImmutablePrivateDirectMessageEntity.kind ||
-            rumor.kind == ReplaceablePrivateDirectMessageEntity.kind) {
+        // Only for kind 30014
+        if (rumor.kind == ReplaceablePrivateDirectMessageEntity.kind) {
           // Add conversation if that doesn't exist
           await ref.watch(conversationDaoProvider).add([rumor]);
           // Add message if that doesn't exist
@@ -205,8 +196,8 @@ class E2eeMessagesSubscriber extends _$E2eeMessagesSubscriber {
           // Notify rest of the participants that the message was received
           // by the current user
           final currentStatus = await conversationMessageStatusDao.checkMessageStatus(
+            sharedId: rumor.sharedId!,
             masterPubkey: masterPubkey,
-            eventMessageId: kind14EventId,
           );
 
           if (currentStatus == null || currentStatus.index < MessageDeliveryStatus.received.index) {
@@ -224,12 +215,14 @@ class E2eeMessagesSubscriber extends _$E2eeMessagesSubscriber {
 
             // Add corresponding status to the database for the sender master pubkey
             // and the kind 14 event id, if that doesn't exist
-            await conversationMessageStatusDao.add(
-              status: status,
-              createdAt: rumor.createdAt,
-              eventMessageId: kind14EventId,
-              masterPubkey: rumorMasterPubkey,
-            );
+            if (rumor.sharedId != null) {
+              await conversationMessageStatusDao.add(
+                status: status,
+                pubkey: rumor.pubkey,
+                sharedId: rumor.sharedId!,
+                masterPubkey: rumorMasterPubkey,
+              );
+            }
           } else {
             await conversationMessageReactionDao.add(
               ref: ref,
@@ -262,7 +255,7 @@ class E2eeMessagesSubscriber extends _$E2eeMessagesSubscriber {
             deleteRequest: rumor,
             conversationIds: deleteConversationIds,
           );
-        } else if (deleteEventKind == ImmutablePrivateDirectMessageEntity.kind.toString() ||
+        } else if (deleteEventKind == ReplaceablePrivateDirectMessageEntity.kind.toString() ||
             deleteEventKind == ReplaceablePrivateDirectMessageEntity.kind.toString()) {
           if (deleteEventIds.isNotEmpty) {
             await conversationMessageDao.removeMessages(
