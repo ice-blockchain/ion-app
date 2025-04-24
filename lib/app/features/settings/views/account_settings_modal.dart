@@ -11,7 +11,7 @@ import 'package:ion/app/components/separated/separated_column.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/core/model/language.dart';
 import 'package:ion/app/features/core/providers/app_locale_provider.c.dart';
-import 'package:ion/app/features/settings/providers/optimistic_content_language_provider.c.dart';
+import 'package:ion/app/features/optimistic_ui/features/language/language_sync_strategy_provider.c.dart';
 import 'package:ion/app/features/settings/views/delete_confirm_modal.dart';
 import 'package:ion/app/router/app_routes.c.dart';
 import 'package:ion/app/router/components/navigation_app_bar/navigation_app_bar.dart';
@@ -25,10 +25,10 @@ class AccountSettingsModal extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final contentLangsAsync = ref.watch(contentLangSetProvider);
+    final contentLangsAsync = ref.watch(contentLanguageWatchProvider);
 
     final contentLanguages = useMemoized(
-      () => contentLangsAsync.valueOrNull?.hashtags.map(Language.fromIsoCode).nonNulls.toList(),
+      () => contentLangsAsync.valueOrNull?.hashtags ?? const <String>[],
       [contentLangsAsync.valueOrNull],
     );
 
@@ -74,11 +74,12 @@ class AccountSettingsModal extends HookConsumerWidget {
                     trailing: Row(
                       mainAxisSize: MainAxisSize.min,
                       children: [
-                        if ((contentLanguages?.length ?? 0) > 1)
-                          _RemainingLanguagesLabel(value: contentLanguages!.length)
-                        else if (contentLanguages?.isNotEmpty ?? false)
+                        if (contentLanguages.length > 1)
+                          _RemainingLanguagesLabel(value: contentLanguages.length)
+                        else if (contentLanguages.isNotEmpty)
                           Text(
-                            contentLanguages!.first.name,
+                            Language.fromIsoCode(contentLanguages.first)?.name ??
+                                contentLanguages.first,
                             style:
                                 context.theme.appTextThemes.caption.copyWith(color: primaryColor),
                           ),
@@ -110,22 +111,19 @@ class AccountSettingsModal extends HookConsumerWidget {
 
 class _RemainingLanguagesLabel extends StatelessWidget {
   const _RemainingLanguagesLabel({required this.value});
-
   final int value;
 
   @override
-  Widget build(BuildContext context) {
-    return Container(
-      padding: EdgeInsets.symmetric(horizontal: 6.0.s),
-      decoration: BoxDecoration(
-        color: context.theme.appColors.onTerararyFill,
-        borderRadius: BorderRadius.circular(12),
-      ),
-      child: Text(
-        value.toString(),
-        style: context.theme.appTextThemes.caption
-            .copyWith(color: context.theme.appColors.primaryAccent),
-      ),
-    );
-  }
+  Widget build(BuildContext context) => Container(
+        padding: EdgeInsets.symmetric(horizontal: 6.0.s),
+        decoration: BoxDecoration(
+          color: context.theme.appColors.onTerararyFill,
+          borderRadius: BorderRadius.circular(12),
+        ),
+        child: Text(
+          value.toString(),
+          style: context.theme.appTextThemes.caption
+              .copyWith(color: context.theme.appColors.primaryAccent),
+        ),
+      );
 }
