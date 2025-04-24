@@ -8,6 +8,7 @@ import 'package:ion/app/components/button/button.dart';
 import 'package:ion/app/components/inputs/text_input/components/text_input_clear_button.dart';
 import 'package:ion/app/components/inputs/text_input/components/text_input_icons.dart';
 import 'package:ion/app/components/inputs/text_input/text_input.dart';
+import 'package:ion/app/components/progress_bar/ion_loading_indicator.dart';
 import 'package:ion/app/components/screen_offset/screen_side_offset.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/wallets/providers/create_wallet_view_provider.c.dart';
@@ -22,6 +23,8 @@ class CreateNewWalletModal extends HookConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final walletName = useState('');
     final controller = useTextEditingController();
+
+    final isCreating = ref.watch(createWalletViewNotifierProvider).isLoading;
 
     return SheetContent(
       body: SingleChildScrollView(
@@ -53,16 +56,21 @@ class CreateNewWalletModal extends HookConsumerWidget {
             ),
             ScreenSideOffset.small(
               child: Button(
-                onPressed: () {
-                  if (walletName.value.isNotEmpty) {
-                    ref
-                        .read(createWalletViewNotifierProvider.notifier)
-                        .createWalletView(name: walletName.value);
+                onPressed: () async {
+                  if (walletName.value.isEmpty) {
+                    return;
+                  }
+                  await ref
+                      .read(createWalletViewNotifierProvider.notifier)
+                      .createWalletView(name: walletName.value);
+
+                  if (context.mounted) {
                     context.pop();
                   }
                 },
+                trailingIcon: isCreating ? const IONLoadingIndicator() : null,
                 label: Text(context.i18n.wallet_create),
-                disabled: walletName.value.isEmpty,
+                disabled: walletName.value.isEmpty || isCreating,
                 mainAxisSize: MainAxisSize.max,
               ),
             ),

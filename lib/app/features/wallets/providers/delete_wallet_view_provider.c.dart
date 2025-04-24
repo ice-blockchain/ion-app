@@ -8,11 +8,9 @@ part 'delete_wallet_view_provider.c.g.dart';
 @riverpod
 class DeleteWalletViewNotifier extends _$DeleteWalletViewNotifier {
   @override
-  Future<void> build() async {
-    state = const AsyncData(null);
-  }
+  FutureOr<void> build({required String walletViewId}) {}
 
-  Future<void> delete({required String walletViewId}) async {
+  Future<void> delete() async {
     if (state.isLoading) return;
 
     state = const AsyncLoading();

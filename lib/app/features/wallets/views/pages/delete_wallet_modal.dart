@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/components/button/button.dart';
+import 'package:ion/app/components/progress_bar/ion_loading_indicator.dart';
 import 'package:ion/app/components/screen_offset/screen_side_offset.dart';
 import 'package:ion/app/extensions/asset_gen_image.dart';
 import 'package:ion/app/extensions/build_context.dart';
@@ -24,6 +25,9 @@ class DeleteWalletModal extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final buttonMinimalSize = Size(buttonsSize, buttonsSize);
+
+    final isDeleting =
+        ref.watch(deleteWalletViewNotifierProvider(walletViewId: walletId)).isLoading;
 
     return SheetContent(
       body: ScreenSideOffset.small(
@@ -75,14 +79,17 @@ class DeleteWalletModal extends ConsumerWidget {
                 ),
                 Expanded(
                   child: Button.compact(
-                    label: Text(
-                      context.i18n.button_delete,
-                    ),
-                    onPressed: () {
-                      ref
-                          .read(deleteWalletViewNotifierProvider.notifier)
-                          .delete(walletViewId: walletId);
-                      context.pop();
+                    label: Text(context.i18n.button_delete),
+                    disabled: isDeleting,
+                    trailingIcon: isDeleting ? const IONLoadingIndicator() : null,
+                    onPressed: () async {
+                      await ref
+                          .read(deleteWalletViewNotifierProvider(walletViewId: walletId).notifier)
+                          .delete();
+
+                      if (context.mounted) {
+                        context.pop();
+                      }
                     },
                     minimumSize: buttonMinimalSize,
                     backgroundColor: context.theme.appColors.attentionRed,
