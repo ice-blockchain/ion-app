@@ -3,8 +3,6 @@
 
 import 'package:btc_address_validate_swan/btc_address_validate_swan.dart' as btc;
 
-typedef _WalletValidator = bool Function(String address);
-
 class WalletAddressValidator {
   WalletAddressValidator(String networkId) {
     _validator = switch (networkId) {
@@ -57,7 +55,7 @@ class WalletAddressValidator {
 
   static const _base58Chars = '[1-9A-HJ-NP-Za-km-z]';
 
-  late final _WalletValidator _validator;
+  late final bool Function(String address) _validator;
 
   bool validate(String? walletAddress) => walletAddress != null && _validator(walletAddress.trim());
 
