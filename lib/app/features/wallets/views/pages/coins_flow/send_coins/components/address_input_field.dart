@@ -5,12 +5,15 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:ion/app/components/inputs/text_input/components/text_input_icons.dart';
 import 'package:ion/app/components/inputs/text_input/text_input.dart';
 import 'package:ion/app/extensions/extensions.dart';
+import 'package:ion/app/features/wallets/model/network_data.c.dart';
+import 'package:ion/app/features/wallets/utils/wallet_address_validator.dart';
 import 'package:ion/generated/assets.gen.dart';
 
 class AddressInputField extends HookWidget {
   const AddressInputField({
     required this.onOpenContactList,
     required this.onAddressChanged,
+    this.network,
     this.onScanPressed,
     this.initialValue,
     super.key,
@@ -22,15 +25,27 @@ class AddressInputField extends HookWidget {
   final VoidCallback? onScanPressed;
   final ValueChanged<String> onAddressChanged;
   final String? initialValue;
+  final NetworkData? network;
 
   @override
   Widget build(BuildContext context) {
     final controller = useTextEditingController(text: initialValue);
+    // If network is null, the default validator will be created
+    final validator = useMemoized(() => WalletAddressValidator(network?.id ?? ''), [network]);
+    final isValidInput = useState(true);
+
     return TextInput(
       maxLines: maxLines,
       controller: controller,
       labelText: context.i18n.wallet_enter_address,
       onChanged: onAddressChanged,
+      autoValidateMode: AutovalidateMode.onUserInteraction,
+      onValidated: (isValid) {
+        isValidInput.value = isValid;
+      },
+      validator: (String? value) {
+        return validator.validate(value) ? null : context.i18n.wallet_address_is_invalid;
+      },
       contentPadding: EdgeInsets.symmetric(
         vertical: 6.0.s,
         horizontal: 16.0.s,
@@ -38,14 +53,20 @@ class AddressInputField extends HookWidget {
       suffixIcon: TextInputIcons(
         icons: [
           IconButton(
-            icon: Assets.svg.iconContactList.icon(),
+            icon: Assets.svg.iconContactList.icon(
+              color: isValidInput.value
+                  ? context.theme.appColors.primaryAccent
+                  : context.theme.appColors.attentionRed,
+            ),
             onPressed: onOpenContactList,
           ),
           if (onScanPressed != null)
             IconButton(
               icon: ColorFiltered(
                 colorFilter: ColorFilter.mode(
-                  context.theme.appColors.primaryAccent,
+                  isValidInput.value
+                      ? context.theme.appColors.primaryAccent
+                      : context.theme.appColors.attentionRed,
                   BlendMode.srcIn,
                 ),
                 child: Assets.svg.iconHeaderScan1.icon(),

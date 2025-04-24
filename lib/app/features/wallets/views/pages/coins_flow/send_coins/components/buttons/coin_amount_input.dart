@@ -30,48 +30,21 @@ class CoinAmountInput extends HookWidget {
     final colors = context.theme.appColors;
     final textTheme = context.theme.appTextThemes;
 
-    final error = useState<String?>(null);
     final label = locale.wallet_coin_amount(coinAbbreviation ?? '');
-
-    useEffect(
-      () {
-        void validate() {
-          final value = controller.text;
-          final parsed = parseAmount(value);
-          final errorText = switch (parsed) {
-            null => label,
-            double() when parsed < 0 => label,
-            double() when maxValue != null && parsed > maxValue! =>
-              locale.wallet_coin_amount_insufficient_funds,
-            _ => null,
-          };
-
-          if (error.value != errorText) {
-            error.value = errorText;
-          }
-        }
-
-        controller.addListener(validate);
-        validate(); // Initial check
-
-        return () => controller.removeListener(validate);
-      },
-      [controller, maxValue, coinAbbreviation],
-    );
+    final isValidInput = useState(true);
 
     return Column(
       children: [
         TextInput(
           enabled: enabled,
           controller: controller,
-          errorText: error.value,
           autoValidateMode: AutovalidateMode.always,
           keyboardType: const TextInputType.numberWithOptions(decimal: true),
+          onValidated: (isValid) => isValidInput.value = isValid,
           validator: (value) {
             final parsed = parseAmount(value ?? '');
 
-            // Error text will be displayed in the label, so pass an empty string here
-            const error = '';
+            final error = locale.wallet_coin_amount_insufficient_funds;
 
             if (parsed == null) return error;
             if ((maxValue != null && parsed > maxValue!) || parsed < 0) return error;
@@ -89,7 +62,7 @@ class CoinAmountInput extends HookWidget {
                     child: Text(
                       locale.wallet_max,
                       style: textTheme.caption.copyWith(
-                        color: error.value == null
+                        color: isValidInput.value
                             ? context.theme.appColors.primaryAccent
                             : context.theme.appColors.attentionRed,
                       ),

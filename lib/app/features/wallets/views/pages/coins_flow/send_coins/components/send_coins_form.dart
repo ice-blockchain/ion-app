@@ -17,6 +17,7 @@ import 'package:ion/app/features/user/pages/profile_page/components/user_payment
 import 'package:ion/app/features/user/providers/user_metadata_provider.c.dart';
 import 'package:ion/app/features/wallets/model/crypto_asset_to_send_data.c.dart';
 import 'package:ion/app/features/wallets/providers/send_asset_form_provider.c.dart';
+import 'package:ion/app/features/wallets/utils/wallet_address_validator.dart';
 import 'package:ion/app/features/wallets/views/pages/coins_flow/send_coins/components/buttons/coin_amount_input.dart';
 import 'package:ion/app/features/wallets/views/pages/coins_flow/send_coins/components/coins_network_fee_selector.dart';
 import 'package:ion/app/features/wallets/views/pages/coins_flow/send_coins/components/contact_input_switcher.dart';
@@ -86,10 +87,13 @@ class SendCoinsForm extends HookConsumerWidget {
       orElse: () => false,
     );
 
+    final network = useRef(formController.network);
+    final validator = useRef(WalletAddressValidator(network.value?.id ?? ''));
+
     final isContinueButtonEnabled = formController.canCoverNetworkFee &&
         validAmount &&
-        formController.receiverAddress.isNotEmpty &&
-        formController.senderWallet?.address != null;
+        formController.senderWallet?.address != null &&
+        validator.value.validate(formController.receiverAddress);
 
     return SheetContent(
       body: KeyboardDismissOnTap(
@@ -133,13 +137,14 @@ class SendCoinsForm extends HookConsumerWidget {
                       ContactInputSwitcher(
                         pubkey: selectedContactPubkey,
                         address: formController.receiverAddress,
+                        network: formController.network,
                         onClearTap: (pubkey) {
                           notifier
                             ..setContact(null)
                             ..setReceiverAddress('');
                         },
                         onWalletAddressChanged: (String? value) {
-                          if (value != null && value.isNotEmpty) {
+                          if (value != null) {
                             notifier.setReceiverAddress(value);
                           }
                         },
