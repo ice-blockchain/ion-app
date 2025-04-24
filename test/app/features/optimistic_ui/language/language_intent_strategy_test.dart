@@ -1,4 +1,4 @@
-// SPDX-License-Identifier: ICE License 1.0
+// SPDX-License-Identifier: ice License 1.0
 
 import 'package:flutter_test/flutter_test.dart';
 import 'package:ion/app/features/optimistic_ui/features/language/change_language_intent.dart';

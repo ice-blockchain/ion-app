@@ -1,4 +1,5 @@
-// SPDX-License-Identifier: ICE License 1.0
+// SPDX-License-Identifier: ice License 1.0
+
 import 'dart:async';
 
 import 'package:hooks_riverpod/hooks_riverpod.dart';
