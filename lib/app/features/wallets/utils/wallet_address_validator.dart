@@ -1,4 +1,5 @@
 // SPDX-License-Identifier: ice License 1.0
+// ignore_for_file: unnecessary_raw_strings
 
 import 'package:btc_address_validate_swan/btc_address_validate_swan.dart' as btc;
 
@@ -157,9 +158,6 @@ class WalletAddressValidator {
   bool _icpValidator(String address) {
     final principalIdRegex = RegExp(r'^[a-z2-7]{5,7}(-[a-z2-7]{5,7})*$');
     final accountIdRegex = RegExp(r'^[0-9a-fA-F]{64}$');
-
-    final result1 = principalIdRegex.hasMatch(address);
-    final result2 = accountIdRegex.hasMatch(address);
 
     return principalIdRegex.hasMatch(address) || accountIdRegex.hasMatch(address);
   }
