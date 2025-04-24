@@ -5,7 +5,7 @@ import 'dart:async';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/features/auth/providers/auth_provider.c.dart';
 import 'package:ion/app/features/ion_connect/providers/ion_connect_notifier.c.dart';
-import 'package:ion/app/features/optimistic_ui/operation_manager.dart';
+import 'package:ion/app/features/optimistic_ui/core/operation_manager.dart';
 import 'package:ion/app/features/settings/model/content_lang_set.c.dart';
 import 'package:ion/app/features/user/model/interest_set.c.dart';
 import 'package:ion/app/features/user/providers/user_interests_set_provider.c.dart';

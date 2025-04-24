@@ -1,19 +1,51 @@
 // SPDX-License-Identifier: ice License 1.0
-
 import 'dart:async';
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:ion/app/features/optimistic_ui/operation_manager.dart';
-import 'package:ion/app/features/optimistic_ui/optimistic_model.dart';
+import 'package:ion/app/features/optimistic_ui/core/operation_manager.dart';
+import 'package:ion/app/features/optimistic_ui/core/optimistic_intent.dart';
+import 'package:ion/app/features/optimistic_ui/core/optimistic_model.dart';
+import 'package:ion/app/features/optimistic_ui/core/optimistic_service.dart';
+import 'package:ion/app/features/optimistic_ui/core/optimistic_sync_strategy.dart';
 
+@immutable
 class TestModel implements OptimisticModel {
-  TestModel(this.optimisticId, this.value);
+  const TestModel(this.optimisticId, this.value);
+
   @override
   final String optimisticId;
   final String value;
 
   @override
   String toString() => '[$optimisticId:$value]';
+
+  @override
+  bool operator ==(Object other) =>
+      other is TestModel && other.optimisticId == optimisticId && other.value == value;
+
+  @override
+  int get hashCode => Object.hash(optimisticId, value);
+}
+
+class ToggleValueIntent implements OptimisticIntent<TestModel> {
+  @override
+  TestModel optimistic(TestModel current) =>
+      TestModel(current.optimisticId, current.value == 'A' ? 'B' : 'A');
+
+  @override
+  Future<TestModel> sync(TestModel prev, TestModel next) => Future.value(next);
+}
+
+class DummySyncStrategy implements SyncStrategy<TestModel> {
+  DummySyncStrategy(this.delay);
+  final Duration delay;
+
+  @override
+  Future<TestModel> send(TestModel prev, TestModel optimistic) async {
+    await Future<void>.delayed(delay);
+    return optimistic;
+  }
 }
 
 void main() {
@@ -24,71 +56,66 @@ void main() {
 
     setUp(() => emissions = []);
 
-    tearDown(() async {
-      await subscription.cancel();
-    });
+    tearDown(() async => subscription.cancel());
 
     StreamSubscription<List<TestModel>> listen() =>
-        operationManager.stream.listen((event) => emissions.add(List.of(event)));
+        operationManager.stream.listen((e) => emissions.add(List.of(e)));
 
     test('optimistic emission happens before syncCallback completes', () async {
       final optimisticEmitted = Completer<void>();
 
       operationManager = OptimisticOperationManager<TestModel>(
-        syncCallback: (previous, optimistic) async {
-          // Wait until UI publishes the optimistic state
+        syncCallback: (prev, opt) async {
           await optimisticEmitted.future;
-          return optimistic;
+          return opt;
         },
         onError: (_, __) async => false,
       );
 
       subscription = listen();
-      operationManager.initialize([TestModel('1', 'A')]);
+      operationManager.initialize([const TestModel('1', 'A')]);
 
-      // Complete the completer when we get the second emission (optimistic)
       subscription.onData((state) {
         emissions.add(List.of(state));
-        if (emissions.length == 2 && !optimisticEmitted.isCompleted) {
+        if (state.any((m) => m.value == 'B') && !optimisticEmitted.isCompleted) {
           optimisticEmitted.complete();
         }
       });
 
       await operationManager.perform(
-        previous: TestModel('1', 'A'),
-        optimistic: TestModel('1', 'B'),
+        previous: const TestModel('1', 'A'),
+        optimistic: const TestModel('1', 'B'),
       );
 
-      // Wait for the optimistic emission
       await optimisticEmitted.future;
 
-      expect(emissions.length, equals(2)); // initial + optimistic
-      expect(emissions.last.single.value, 'B'); // optimistic value
+      expect(emissions.length, 2);
+      expect(emissions.last.single.value, 'B');
     });
 
-    test('server stale triggers exactly one follow‑up sync', () async {
+    test('server stale triggers exactly one follow-up sync', () async {
       var attempts = 0;
       operationManager = OptimisticOperationManager<TestModel>(
-        syncCallback: (previous, optimistic) async {
+        syncCallback: (prev, opt) async {
           attempts++;
-          // server is outdated – returns B when UI moved to C
-          return TestModel(optimistic.optimisticId, 'B');
+          // server returns stale value -> manager will make follow-up
+          return TestModel(opt.optimisticId, 'B');
         },
         onError: (_, __) async => false,
       );
 
       subscription = listen();
-      operationManager.initialize([TestModel('1', 'A')]);
+      operationManager.initialize([const TestModel('1', 'A')]);
 
       await operationManager.perform(
-        previous: TestModel('1', 'A'),
-        optimistic: TestModel('1', 'C'),
+        previous: const TestModel('1', 'A'),
+        optimistic: const TestModel('1', 'C'),
       );
 
       await Future<void>.delayed(const Duration(milliseconds: 300));
 
-      expect(attempts, equals(2), reason: 'should have follow‑up request');
-      expect(emissions.last.single.value, equals('B'));
+      expect(attempts, 2);
+      expect(emissions.last.single.value, 'B');
     });
 
     test('maxRetries limits attempts and rolls back state', () async {
@@ -99,88 +126,101 @@ void main() {
           attempts++;
           throw Exception('permanent');
         },
-        onError: (_, __) async => true, // always try to retry
+        onError: (_, __) async => true, // always retry
       );
 
       subscription = listen();
-      final initial = TestModel('1', 'A');
+      const initial = TestModel('1', 'A');
       operationManager.initialize([initial]);
 
       await operationManager.perform(
         previous: initial,
-        optimistic: TestModel('1', 'B'),
+        optimistic: const TestModel('1', 'B'),
       );
 
-      // 1 (init) + 2 retries + check >2 not executed
       await Future<void>.delayed(const Duration(seconds: 1));
 
-      expect(attempts, equals(3)); // initial try + 2 retries
-      expect(
-        emissions.last.single.value,
-        equals('A'),
-        reason: 'should roll back to the initial state',
-      );
+      expect(attempts, 3); // initial + 2 retries
+      expect(emissions.last.single.value, 'A'); // rollback
     });
 
     test('parallel operations on different ids resolve correctly', () async {
       var attempts = 0;
       operationManager = OptimisticOperationManager<TestModel>(
-        syncCallback: (previous, optimistic) async {
+        syncCallback: (prev, opt) async {
           attempts++;
-          return optimistic;
+          return opt;
         },
         onError: (_, __) async => false,
       );
 
       subscription = listen();
       operationManager.initialize([
-        TestModel('1', 'A'),
-        TestModel('2', 'X'),
+        const TestModel('1', 'A'),
+        const TestModel('2', 'X'),
       ]);
 
       await operationManager.perform(
-        previous: TestModel('1', 'A'),
-        optimistic: TestModel('1', 'B'),
+        previous: const TestModel('1', 'A'),
+        optimistic: const TestModel('1', 'B'),
       );
       await operationManager.perform(
-        previous: TestModel('2', 'X'),
-        optimistic: TestModel('2', 'Y'),
+        previous: const TestModel('2', 'X'),
+        optimistic: const TestModel('2', 'Y'),
       );
 
       await Future<void>.delayed(const Duration(milliseconds: 200));
 
       final state = emissions.last;
-      expect(
-        state.firstWhere((element) => element.optimisticId == '1').value,
-        equals('B'),
-      );
-      expect(
-        state.firstWhere((element) => element.optimisticId == '2').value,
-        equals('Y'),
-      );
-      expect(attempts, equals(2));
+      expect(state.firstWhere((m) => m.optimisticId == '1').value, 'B');
+      expect(state.firstWhere((m) => m.optimisticId == '2').value, 'Y');
+      expect(attempts, 2);
     });
 
     test('dispose closes stream and prevents further emissions', () async {
       operationManager = OptimisticOperationManager<TestModel>(
-        syncCallback: (previous, optimistic) async => optimistic,
+        syncCallback: (prev, opt) async => opt,
         onError: (_, __) async => false,
       );
 
       subscription = listen();
       operationManager
-        ..initialize([TestModel('1', 'A')])
+        ..initialize([const TestModel('1', 'A')])
         ..dispose();
 
       expect(
-        () async {
-          await operationManager.perform(
-            previous: TestModel('1', 'A'),
-            optimistic: TestModel('1', 'B'),
-          );
-        },
+        () => operationManager.perform(
+          previous: const TestModel('1', 'A'),
+          optimistic: const TestModel('1', 'B'),
+        ),
         throwsA(isA<StateError>()),
       );
+    });
+  });
+
+  group('OptimisticService', () {
+    test('dispatch emits optimistic value before sync completes', () async {
+      final manager = OptimisticOperationManager<TestModel>(
+        syncCallback: DummySyncStrategy(const Duration(milliseconds: 200)).send,
+        onError: (_, __) async => false,
+      )..initialize([const TestModel('1', 'A')]);
+
+      final service = OptimisticService<TestModel>(manager: manager);
+      final emissions = <TestModel?>[];
+
+      final sub = service.watch('1').listen(emissions.add);
+
+      await service.dispatch(
+        ToggleValueIntent(),
+        const TestModel('1', 'A'),
+      );
+
+      await Future<void>.delayed(const Duration(milliseconds: 50));
+
+      expect(emissions.last!.value, 'B');
+      expect(emissions.length, 1);
+
+      await sub.cancel();
     });
   });
 }

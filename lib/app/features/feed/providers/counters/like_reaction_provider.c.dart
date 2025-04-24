@@ -3,9 +3,9 @@
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/features/auth/providers/auth_provider.c.dart';
 import 'package:ion/app/features/feed/data/models/entities/reaction_data.c.dart';
-import 'package:ion/app/features/feed/likes/providers/optimistic_likes_manager.c.dart';
 import 'package:ion/app/features/ion_connect/model/event_reference.c.dart';
 import 'package:ion/app/features/ion_connect/providers/ion_connect_cache.c.dart';
+import 'package:ion/app/features/optimistic_ui/features/likes/post_like_provider.c.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'like_reaction_provider.c.g.dart';
@@ -34,9 +34,11 @@ ReactionEntity? likeReaction(Ref ref, EventReference eventReference) {
 
 @riverpod
 bool isLiked(Ref ref, EventReference eventReference) {
-  final optimisticAsync = ref.watch(optimisticPostLikeStreamProvider(eventReference));
-  final optimistic = optimisticAsync.maybeWhen(data: (postLike) => postLike, orElse: () => null);
-  if (optimistic != null) return optimistic.likedByMe;
+  final optimistic = ref.watch(postLikeWatchProvider(eventReference.toString())).valueOrNull;
+
+  if (optimistic != null) {
+    return optimistic.likedByMe;
+  }
 
   return ref.watch(likeReactionProvider(eventReference)) != null;
 }

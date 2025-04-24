@@ -8,9 +8,9 @@ import 'package:ion/app/features/core/model/media_type.dart';
 import 'package:ion/app/features/core/providers/mute_provider.c.dart';
 import 'package:ion/app/features/feed/data/models/entities/modifiable_post_data.c.dart';
 import 'package:ion/app/features/feed/providers/counters/like_reaction_provider.c.dart';
-import 'package:ion/app/features/feed/providers/counters/likes_notifier.c.dart';
 import 'package:ion/app/features/feed/stories/providers/story_pause_provider.c.dart';
 import 'package:ion/app/features/feed/stories/views/components/story_capture/components.dart';
+import 'package:ion/app/features/optimistic_ui/features/likes/post_like_provider.c.dart';
 import 'package:ion/app/router/app_routes.c.dart';
 import 'package:ion/generated/assets.gen.dart';
 
@@ -112,8 +112,6 @@ class _LikeButton extends ConsumerWidget {
     final color = isLiked ? appColors.attentionRed : appColors.onPrimaryAccent;
     final icon = isLiked ? Assets.svg.iconVideoLikeOn : Assets.svg.iconVideoLikeOff;
 
-    ref.displayErrors(likesNotifierProvider(eventReference));
-
     return StoryControlButton(
       icon: icon.icon(
         color: color,
@@ -123,7 +121,7 @@ class _LikeButton extends ConsumerWidget {
       iconPadding: 8.0.s,
       onPressed: () {
         HapticFeedback.lightImpact();
-        ref.read(likesNotifierProvider(eventReference).notifier).toggle();
+        ref.read(toggleLikeNotifierProvider.notifier).toggle(eventReference);
       },
     );
   }

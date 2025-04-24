@@ -4,8 +4,8 @@ import 'dart:async';
 import 'dart:collection';
 import 'dart:math';
 
-import 'package:ion/app/features/optimistic_ui/optimistic_model.dart';
-import 'package:ion/app/features/optimistic_ui/optimistic_operation.c.dart';
+import 'package:ion/app/features/optimistic_ui/core/optimistic_model.dart';
+import 'package:ion/app/features/optimistic_ui/core/optimistic_operation.c.dart';
 import 'package:ion/app/services/logger/logger.dart';
 import 'package:uuid/uuid.dart';
 
