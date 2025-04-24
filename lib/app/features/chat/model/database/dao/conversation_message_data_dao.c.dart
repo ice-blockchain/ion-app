@@ -19,7 +19,6 @@ class ConversationMessageDataDao extends DatabaseAccessor<ChatDatabase>
     required String masterPubkey,
     required MessageDeliveryStatus status,
   }) async {
-    print('Adding message status: $pubkey, $sharedId, $masterPubkey, $status');
     // Check if the status is already present in the database for given pubkey
     // (user device) and sharedId (message id)
     final existingStatus = await (select(messageStatusTable)
