@@ -25,16 +25,16 @@ class ConversationMessageDao extends DatabaseAccessor<ChatDatabase>
     final query = select(conversationMessageTable).join([
       innerJoin(
         eventMessageTable,
-        eventMessageTable.id.equalsExp(conversationMessageTable.eventMessageId),
+        eventMessageTable.sharedId.equalsExp(conversationMessageTable.sharedId),
       ),
       innerJoin(
         messageStatusTable,
-        messageStatusTable.eventMessageId.equalsExp(conversationMessageTable.eventMessageId),
+        messageStatusTable.sharedId.equalsExp(conversationMessageTable.sharedId),
       ),
     ])
       ..where(conversationMessageTable.conversationId.equals(conversationId))
-      ..where(messageStatusTable.status.equals(MessageDeliveryStatus.received.index))
-      ..where(messageStatusTable.masterPubkey.equals(currentUserMasterPubkey));
+      ..where(messageStatusTable.masterPubkey.equals(currentUserMasterPubkey))
+      ..where(messageStatusTable.status.equals(MessageDeliveryStatus.received.index));
 
     return query.watch().map((rows) => rows.length);
   }
@@ -45,16 +45,16 @@ class ConversationMessageDao extends DatabaseAccessor<ChatDatabase>
     final query = select(messageStatusTable).join([
       innerJoin(
         conversationMessageTable,
-        conversationMessageTable.eventMessageId.equalsExp(messageStatusTable.eventMessageId),
+        conversationMessageTable.sharedId.equalsExp(messageStatusTable.sharedId),
       ),
       innerJoin(
         conversationTable,
         conversationTable.id.equalsExp(conversationMessageTable.conversationId),
       ),
     ])
-      ..where(messageStatusTable.status.equals(MessageDeliveryStatus.received.index))
+      ..where(conversationTable.isArchived.equals(true))
       ..where(messageStatusTable.masterPubkey.equals(currentUserMasterPubkey))
-      ..where(conversationTable.isArchived.equals(true));
+      ..where(messageStatusTable.status.equals(MessageDeliveryStatus.received.index));
 
     return query.watch().map((rows) => rows.length);
   }
@@ -66,7 +66,7 @@ class ConversationMessageDao extends DatabaseAccessor<ChatDatabase>
     final query = select(messageStatusTable).join([
       innerJoin(
         eventMessageTable,
-        eventMessageTable.id.equalsExp(messageStatusTable.eventMessageId),
+        eventMessageTable.sharedId.equalsExp(messageStatusTable.sharedId),
       ),
       innerJoin(
         conversationMessageTable,
@@ -89,17 +89,19 @@ class ConversationMessageDao extends DatabaseAccessor<ChatDatabase>
     final query = select(conversationMessageTable).join([
       innerJoin(
         eventMessageTable,
-        eventMessageTable.id.equalsExp(conversationMessageTable.eventMessageId),
+        eventMessageTable.sharedId.equalsExp(conversationMessageTable.sharedId),
       ),
       innerJoin(
         messageStatusTable,
-        messageStatusTable.eventMessageId.equalsExp(conversationMessageTable.eventMessageId),
+        messageStatusTable.sharedId.equalsExp(conversationMessageTable.sharedId),
       ),
     ])
       ..where(conversationMessageTable.conversationId.equals(conversationId))
       ..where(messageStatusTable.masterPubkey.equals(currentUserMasterPubkey))
       ..where(messageStatusTable.status.isNotIn([MessageDeliveryStatus.deleted.index]))
-      ..orderBy([OrderingTerm.desc(eventMessageTable.createdAt)]);
+      ..orderBy([OrderingTerm.desc(eventMessageTable.createdAt)])
+      ..groupBy([eventMessageTable.sharedId])
+      ..addColumns([eventMessageTable.createdAt.max()]);
 
     return query.watch().map((rows) {
       final groupedMessages = <DateTime, List<EventMessage>>{};
@@ -129,15 +131,12 @@ class ConversationMessageDao extends DatabaseAccessor<ChatDatabase>
 
   Future<void> removeMessages({
     required Ref ref,
-    required EventMessage deleteRequest,
     required List<String> messageIds,
+    required EventMessage deleteRequest,
   }) async {
-    final eventMessageDao = ref.read(eventMessageDaoProvider);
+    await ref.read(eventMessageDaoProvider).add(deleteRequest);
 
-    await eventMessageDao.add(deleteRequest);
-
-    await (update(messageStatusTable)..where((table) => table.eventMessageId.isIn(messageIds)))
-        .write(
+    await (update(messageStatusTable)..where((table) => table.sharedId.isIn(messageIds))).write(
       const MessageStatusTableCompanion(
         status: Value(MessageDeliveryStatus.deleted),
       ),

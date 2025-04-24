@@ -37,7 +37,7 @@ void main() {
         event: event,
         receiverMasterPubkey: masterPubkey,
         receiverPubkey: receiverSigner.publicKey,
-        contentKinds: [ImmutablePrivateDirectMessageEntity.kind.toString()],
+        contentKinds: [ReplaceablePrivateDirectMessageEntity.kind.toString()],
       );
 
       expect(wrap.kind, equals(1059));
@@ -59,7 +59,7 @@ void main() {
         event: event,
         receiverMasterPubkey: "Doesn't matter",
         receiverPubkey: senderSigner.publicKey,
-        contentKinds: [ImmutablePrivateDirectMessageEntity.kind.toString()],
+        contentKinds: [ReplaceablePrivateDirectMessageEntity.kind.toString()],
       );
 
       final decodedWrap = await giftWrapService.decodeWrap(
@@ -81,7 +81,7 @@ void main() {
         event: event,
         receiverMasterPubkey: "Doesn't matter",
         receiverPubkey: receiverSigner.publicKey,
-        contentKinds: [ImmutablePrivateDirectMessageEntity.kind.toString()],
+        contentKinds: [ReplaceablePrivateDirectMessageEntity.kind.toString()],
       );
 
       final decodedWrap = await giftWrapService.decodeWrap(
