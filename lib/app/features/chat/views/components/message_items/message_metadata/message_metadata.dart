@@ -22,7 +22,8 @@ class MessageMetaData extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final deliveryStatus = ref.watch(conversationMessageDataDaoProvider).messageStatus(
-          eventMessage.id,
+          sharedId: eventMessage.sharedId!,
+          masterPubkey: eventMessage.masterPubkey,
         );
 
     final isMe = ref.watch(isCurrentUserSelectorProvider(eventMessage.masterPubkey));

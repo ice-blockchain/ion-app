@@ -64,10 +64,7 @@ class PrivateMessageReactionEntityData with _$PrivateMessageReactionEntityData {
 
     if (eventId == null ||
         pubkey == null ||
-        ![
-          ImmutablePrivateDirectMessageEntity.kind.toString(),
-          ReplaceablePrivateDirectMessageEntity.kind.toString(),
-        ].contains(kind)) {
+        kind != ReplaceablePrivateDirectMessageEntity.kind.toString()) {
       throw IncorrectEventTagsException(eventId: eventMessage.id);
     }
 

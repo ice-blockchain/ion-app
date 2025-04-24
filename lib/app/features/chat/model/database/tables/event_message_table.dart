@@ -2,15 +2,18 @@
 
 part of '../chat_database.c.dart';
 
+// Preserver the order of the columns as they are used in the DB viewer
 @UseRowClass(EventMessageRowClass)
 class EventMessageTable extends Table {
   TextColumn get id => text()();
-  TextColumn get sig => text().nullable()();
-  TextColumn get tags => text()();
-  TextColumn get pubkey => text()();
   IntColumn get kind => integer()();
+  TextColumn get sharedId => text().nullable()();
   TextColumn get content => text()();
+  TextColumn get pubkey => text()();
+  TextColumn get tags => text()();
   DateTimeColumn get createdAt => dateTime()();
+  TextColumn get sig => text().nullable()();
+  
 
   @override
   Set<Column<Object>> get primaryKey => {id};
@@ -24,6 +27,7 @@ class EventMessageRowClass implements Insertable<EventMessageRowClass> {
     required this.tags,
     required this.pubkey,
     required this.content,
+    required this.sharedId,
     required this.createdAt,
     this.sig,
     this.conversationId,
@@ -36,6 +40,7 @@ class EventMessageRowClass implements Insertable<EventMessageRowClass> {
       kind: eventMessage.kind,
       pubkey: eventMessage.pubkey,
       content: eventMessage.content,
+      sharedId: eventMessage.sharedId,
       createdAt: eventMessage.createdAt,
       tags: jsonEncode(eventMessage.tags),
     );
@@ -61,6 +66,7 @@ class EventMessageRowClass implements Insertable<EventMessageRowClass> {
   final String pubkey;
   final String content;
   final String? sig;
+  final String? sharedId;
   final String? conversationId;
   final DateTime createdAt;
 
@@ -73,6 +79,7 @@ class EventMessageRowClass implements Insertable<EventMessageRowClass> {
       tags: Value(tags),
       pubkey: Value(pubkey),
       content: Value(content),
+      sharedId: Value(sharedId),
       createdAt: Value(createdAt),
     ).toColumns(nullToAbsent);
   }
@@ -84,6 +91,7 @@ class EventMessageRowClass implements Insertable<EventMessageRowClass> {
     String? tags,
     String? pubkey,
     String? content,
+    String? sharedId,
     String? conversationId,
     DateTime? createdAt,
   }) {
@@ -94,6 +102,7 @@ class EventMessageRowClass implements Insertable<EventMessageRowClass> {
       tags: tags ?? this.tags,
       pubkey: pubkey ?? this.pubkey,
       content: content ?? this.content,
+      sharedId: sharedId ?? this.sharedId,
       createdAt: createdAt ?? this.createdAt,
       conversationId: conversationId ?? this.conversationId,
     );
