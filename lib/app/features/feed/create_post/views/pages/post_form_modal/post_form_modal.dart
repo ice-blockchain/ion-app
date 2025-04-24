@@ -217,7 +217,7 @@ class PostFormModal extends HookConsumerWidget {
             ),
       child: SheetContent(
         topPadding: 0,
-        bottomPadding: MediaQuery.of(context).padding.bottom,
+        bottomPadding: MediaQuery.paddingOf(context).bottom,
         body: Column(
           children: [
             CreatePostAppBar(
