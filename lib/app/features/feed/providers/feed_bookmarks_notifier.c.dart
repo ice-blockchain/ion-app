@@ -77,6 +77,7 @@ class FeedBookmarksNotifier extends _$FeedBookmarksNotifier {
         collectionDTag,
       ).future,
     );
+
     return bookmarksCollection;
   }
 
