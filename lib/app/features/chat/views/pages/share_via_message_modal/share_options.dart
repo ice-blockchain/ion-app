@@ -10,7 +10,7 @@ import 'package:ion/app/extensions/build_context.dart';
 import 'package:ion/app/extensions/num.dart';
 import 'package:ion/app/extensions/theme_data.dart';
 import 'package:ion/app/features/feed/data/models/entities/modifiable_post_data.c.dart';
-import 'package:ion/app/features/feed/providers/bookmarks_notifier.c.dart';
+import 'package:ion/app/features/feed/providers/feed_bookmarks_notifier.c.dart';
 import 'package:ion/app/features/ion_connect/model/event_reference.c.dart';
 import 'package:ion/app/features/ion_connect/providers/ion_connect_entity_provider.c.dart';
 import 'package:ion/app/services/clipboard/clipboard.dart';
@@ -65,7 +65,9 @@ class ShareOptions extends ConsumerWidget {
                 icon: Assets.svg.iconBookmarks.icon(size: iconSize, color: Colors.black),
                 label: context.i18n.button_bookmark,
                 onPressed: () async {
-                  await ref.read(bookmarksNotifierProvider.notifier).toggleBookmark(eventReference);
+                  await ref
+                      .read(feedBookmarksNotifierProvider().notifier)
+                      .toggleBookmark(eventReference);
                   if (context.mounted) {
                     context.pop();
                   }

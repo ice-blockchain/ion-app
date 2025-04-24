@@ -36,7 +36,7 @@ class FeedPostsList extends HookConsumerWidget {
     }
 
     return EntitiesList(
-      entities: entities,
+      refs: entities.map((entity) => entity.toEventReference()).toList(),
       onVideoTap: ({
         required String eventReference,
         required int initialMediaIndex,

@@ -45,7 +45,7 @@ class ReplyList extends ConsumerWidget {
           const _EmptyState()
         else
           EntitiesList(
-            entities: entities.toList(),
+            refs: entities.map((entity) => entity.toEventReference()).toList(),
             separatorHeight: 1.0.s,
             onVideoTap: ({
               required String eventReference,

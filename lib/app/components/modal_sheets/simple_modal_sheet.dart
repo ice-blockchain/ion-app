@@ -39,6 +39,7 @@ class SimpleModalSheet extends StatelessWidget {
     String? buttonText,
     VoidCallback? onPressed,
     Widget? button,
+    double? bottomOffset,
     bool isBottomSheet = false,
   }) {
     return SimpleModalSheet._(
@@ -48,6 +49,7 @@ class SimpleModalSheet extends StatelessWidget {
       buttonText: buttonText,
       onPressed: onPressed,
       button: button,
+      bottomOffset: bottomOffset,
       offsetType: OffsetType.small,
       isBottomSheet: isBottomSheet,
     );
@@ -61,6 +63,7 @@ class SimpleModalSheet extends StatelessWidget {
     this.buttonText,
     this.onPressed,
     this.button,
+    this.bottomOffset,
     this.isBottomSheet = false,
   }) : assert(
           (button != null) || (buttonText != null && onPressed != null),
@@ -75,6 +78,7 @@ class SimpleModalSheet extends StatelessWidget {
   final Widget? button;
   final OffsetType offsetType;
   final bool isBottomSheet;
+  final double? bottomOffset;
 
   @override
   Widget build(BuildContext context) {
@@ -97,7 +101,7 @@ class SimpleModalSheet extends StatelessWidget {
               onPressed: onPressed!,
               offsetType: offsetType,
             ),
-        ScreenBottomOffset(margin: 36.0.s),
+        ScreenBottomOffset(margin: bottomOffset ?? 36.0.s),
       ],
     );
 

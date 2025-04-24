@@ -17,14 +17,8 @@ part 'archived_conversations_provider.c.g.dart';
 
 @riverpod
 Future<List<String>> archivedConversations(Ref ref) async {
-  final archivedConversationBookmarksSet = ref.watch(currentUserBookmarksProvider).valueOrNull;
-
-  if (archivedConversationBookmarksSet == null) {
-    return [];
-  }
-
   final archivedConversationBookmarksSetData =
-      archivedConversationBookmarksSet[BookmarksSetType.chats]?.data ??
+      ref.watch(currentUserChatBookmarksDataProvider).valueOrNull ??
           const BookmarksSetData(
             type: BookmarksSetType.chats,
             postsRefs: [],

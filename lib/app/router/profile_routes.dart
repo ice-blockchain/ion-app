@@ -7,6 +7,8 @@ class ProfileRoutes {
     TypedGoRoute<ProfileRoute>(path: 'user/:pubkey'),
     TypedGoRoute<ProfileVideosRoute>(path: 'user-videos-fullstack/:pubkey'),
     TypedGoRoute<ProfileEditRoute>(path: 'profile_edit'),
+    TypedGoRoute<BookmarksRoute>(path: 'bookmarks'),
+    TypedGoRoute<EditBookmarksRoute>(path: 'bookmarks_edit'),
     TypedGoRoute<FollowListRoute>(path: 'follow-list-fullstack'),
     TypedShellRoute<ModalShellRouteData>(
       routes: [
@@ -206,5 +208,19 @@ class RequestCoinsFormRoute extends BaseRouteData {
       : super(
           child: const RequestCoinsFormModal(),
           type: IceRouteType.bottomSheet,
+        );
+}
+
+class BookmarksRoute extends BaseRouteData {
+  BookmarksRoute()
+      : super(
+          child: const BookmarksPage(),
+        );
+}
+
+class EditBookmarksRoute extends BaseRouteData {
+  EditBookmarksRoute()
+      : super(
+          child: const EditBookmarksPage(),
         );
 }

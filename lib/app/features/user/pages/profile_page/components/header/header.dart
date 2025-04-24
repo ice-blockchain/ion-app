@@ -56,12 +56,26 @@ class Header extends ConsumerWidget {
                 ),
               ),
               if (isCurrentUserProfile)
-                HeaderAction(
-                  onPressed: () {
-                    SettingsRoute().push<void>(context);
-                  },
-                  assetName: Assets.svg.iconProfileSettings,
-                  opacity: 1,
+                Row(
+                  children: [
+                    HeaderAction(
+                      onPressed: () {
+                        BookmarksRoute().push<void>(context);
+                      },
+                      assetName: Assets.svg.iconBookmarks,
+                      opacity: 1,
+                    ),
+                    SizedBox(
+                      width: 16.0.s,
+                    ),
+                    HeaderAction(
+                      onPressed: () {
+                        SettingsRoute().push<void>(context);
+                      },
+                      assetName: Assets.svg.iconProfileSettings,
+                      opacity: 1,
+                    ),
+                  ],
                 )
               else
                 ContextMenu(

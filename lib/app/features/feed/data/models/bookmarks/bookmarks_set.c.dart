@@ -18,9 +18,6 @@ import 'package:ion/app/features/ion_connect/providers/ion_connect_cache.c.dart'
 part 'bookmarks_set.c.freezed.dart';
 
 enum BookmarksSetType {
-  posts(dTagName: 'posts'),
-  videos(dTagName: 'videos'),
-  articles(dTagName: 'articles'),
   chats(dTagName: 'archived_conversations'),
   unknown(dTagName: 'unknown');
 

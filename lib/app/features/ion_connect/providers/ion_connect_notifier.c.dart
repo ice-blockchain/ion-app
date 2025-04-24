@@ -3,6 +3,7 @@
 import 'dart:async';
 
 import 'package:collection/collection.dart';
+import 'package:flutter/foundation.dart';
 import 'package:ion/app/exceptions/exceptions.dart';
 import 'package:ion/app/features/auth/providers/auth_provider.c.dart';
 import 'package:ion/app/features/core/providers/main_wallet_provider.c.dart';
@@ -114,6 +115,7 @@ class IonConnectNotifier extends _$IonConnectNotifier {
     ActionSource actionSource = const ActionSourceCurrentUser(),
     Stream<RelayMessage> Function(RequestMessage requestMessage, NostrRelay relay)?
         subscriptionBuilder,
+    VoidCallback? onEose,
   }) async* {
     final dislikedRelaysUrls = <String>{};
     IonConnectRelay? relay;
@@ -143,6 +145,8 @@ class IonConnectNotifier extends _$IonConnectNotifier {
             );
           } else if (event is EventMessage) {
             yield event;
+          } else if (event is EoseMessage && onEose != null) {
+            onEose();
           }
         }
       },

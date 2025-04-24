@@ -36,7 +36,7 @@ class ArticlesFromAuthorPage extends ConsumerWidget {
           if (entities == null)
             const EntitiesListSkeleton()
           else
-            EntitiesList(entities: entities.toList()),
+            EntitiesList(refs: entities.map((entity) => entity.toEventReference()).toList()),
         ],
       ),
     );
