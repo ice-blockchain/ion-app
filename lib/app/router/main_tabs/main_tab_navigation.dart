@@ -28,7 +28,7 @@ class MainTabNavigation extends HookWidget {
     final currentTab = TabItem.fromNavigationIndex(shell.currentIndex);
 
     return PopScope(
-      canPop: false,
+      canPop: !Navigator.of(context).canPop() && tabHistory.value.length <= 1,
       onPopInvokedWithResult: (didPop, result) async {
         if (!didPop) {
           if (Navigator.of(context).canPop()) {
