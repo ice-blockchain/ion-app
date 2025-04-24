@@ -24,9 +24,9 @@ class MentionsHashtagsHandler extends TextEditorTypingListener {
     _reapplyAllTags(text);
 
     final activeTag = _findActiveTagNearCursor(text, cursorIndex);
-    if (isBackspace && activeTag == null) {
+    if (activeTag == null) {
       ref.invalidate(suggestionsNotifierProvider);
-    } else if (activeTag != null) {
+    } else {
       ref
           .read(suggestionsNotifierProvider.notifier)
           .updateSuggestions(activeTag.text, activeTag.tagChar);
