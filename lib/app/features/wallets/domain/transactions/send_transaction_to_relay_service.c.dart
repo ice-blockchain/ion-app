@@ -121,7 +121,7 @@ class SendTransactionToRelayService {
     required EventSigner signer,
     required EventMessage eventMessage,
     // TODO: Use ReplaceablePrivateDirectMessageEntity.kind when migration is done
-    int kind = ImmutablePrivateDirectMessageEntity.kind,
+    int kind = ReplaceablePrivateDirectMessageEntity.kind,
   }) async {
     final expirationTag = EntityExpiration(
       value: DateTime.now().add(

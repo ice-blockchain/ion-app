@@ -8,22 +8,20 @@ ConversationDao conversationDao(Ref ref) => ConversationDao(ref.watch(chatDataba
 @DriftAccessor(
   tables: [
     ConversationTable,
-    ConversationMessageTable,
     EventMessageTable,
     MessageStatusTable,
+    ConversationMessageTable,
   ],
 )
 class ConversationDao extends DatabaseAccessor<ChatDatabase> with _$ConversationDaoMixin {
   ConversationDao(super.db);
 
-  ///
   /// Adds events to database and creates conversations
   ///
   /// Creates conversations from [EventMessage] list by extracting tags,
   /// setting type, and batch inserting into conversation table
   ///
   /// Skips events without community ID. Uses insertOrIgnore mode.
-  ///
   Future<void> add(List<EventMessage> events) async {
     final companions = await _createConversationCompanions(events);
     await _batchInsertConversations(companions);
@@ -105,7 +103,7 @@ class ConversationDao extends DatabaseAccessor<ChatDatabase> with _$Conversation
   /// - Join date if conversation has no messages
   ///
   /// The list is sorted in descending order (newest first)
-  ///
+
   Stream<List<ConversationListItem>> watch() {
     final query = select(conversationTable).join([
       leftOuterJoin(
@@ -114,24 +112,18 @@ class ConversationDao extends DatabaseAccessor<ChatDatabase> with _$Conversation
       ),
       leftOuterJoin(
         eventMessageTable,
-        eventMessageTable.id.equalsExp(conversationMessageTable.eventMessageId),
+        eventMessageTable.sharedId.equalsExp(conversationMessageTable.sharedId),
       ),
     ])
       ..where(
         notExistsQuery(
           select(messageStatusTable)
-            ..where(
-              (tbl) => tbl.eventMessageId.equalsExp(conversationMessageTable.eventMessageId),
-            )
-            ..where((tbl) => tbl.status.equals(MessageDeliveryStatus.deleted.index)),
+            ..where((tbl) => tbl.status.equals(MessageDeliveryStatus.deleted.index))
+            ..where((table) => table.sharedId.equalsExp(conversationMessageTable.sharedId)),
         ),
       )
-      ..addColumns([
-        eventMessageTable.createdAt.max(),
-      ])
-      ..groupBy([
-        conversationTable.id,
-      ])
+      ..addColumns([eventMessageTable.createdAt.max()])
+      ..groupBy([conversationTable.id])
       ..distinct;
 
     return query.watch().map((rows) {
@@ -143,10 +135,10 @@ class ConversationDao extends DatabaseAccessor<ChatDatabase> with _$Conversation
       )
           .map((row) {
         return ConversationListItem(
-          conversationId: row.readTable(conversationTable).id,
           type: row.readTable(conversationTable).type,
-          isArchived: row.readTable(conversationTable).isArchived,
           joinedAt: row.readTable(conversationTable).joinedAt,
+          conversationId: row.readTable(conversationTable).id,
+          isArchived: row.readTable(conversationTable).isArchived,
           latestMessage: row.readTableOrNull(eventMessageTable)?.toEventMessage(),
         );
       }).toList();
@@ -174,10 +166,7 @@ class ConversationDao extends DatabaseAccessor<ChatDatabase> with _$Conversation
       ..where(conversationTable.isDeleted.equals(false))
       ..where(eventMessageTable.tags.contains(receiverMasterPubkey))
       ..where(
-        eventMessageTable.kind.isIn([
-          ImmutablePrivateDirectMessageEntity.kind,
-          ReplaceablePrivateDirectMessageEntity.kind,
-        ]),
+        eventMessageTable.kind.isIn([ReplaceablePrivateDirectMessageEntity.kind]),
       )
       ..orderBy([OrderingTerm.desc(eventMessageTable.createdAt)])
       ..limit(1);
@@ -253,29 +242,27 @@ class ConversationDao extends DatabaseAccessor<ChatDatabase> with _$Conversation
 
   Future<void> removeConversations({
     required Ref ref,
-    required List<String> conversationIds,
     required EventMessage deleteRequest,
+    required List<String> conversationIds,
   }) async {
-    final eventMessageDao = ref.read(eventMessageDaoProvider);
+    await ref.read(eventMessageDaoProvider).add(deleteRequest);
 
-    await eventMessageDao.add(deleteRequest);
-
-    final eventMessageIds = await (select(conversationMessageTable).join([
+    final sharedMessageId = await (select(conversationMessageTable).join([
       innerJoin(
         eventMessageTable,
-        eventMessageTable.id.equalsExp(conversationMessageTable.eventMessageId),
+        eventMessageTable.sharedId.equalsExp(conversationMessageTable.sharedId),
       ),
     ])
           ..where(conversationMessageTable.conversationId.isIn(conversationIds))
           ..where(eventMessageTable.createdAt.isSmallerThanValue(deleteRequest.createdAt)))
-        .map((row) => row.readTable(eventMessageTable).id)
+        .map((row) => row.readTable(eventMessageTable).sharedId ?? '')
         .get();
 
     await batch((b) {
       b.update(
         messageStatusTable,
         const MessageStatusTableCompanion(status: Value(MessageDeliveryStatus.deleted)),
-        where: (tbl) => tbl.eventMessageId.isIn(eventMessageIds),
+        where: (table) => table.sharedId.isIn(sharedMessageId),
       );
     });
   }

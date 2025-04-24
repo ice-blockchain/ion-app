@@ -3,6 +3,7 @@
 import 'package:collection/collection.dart';
 import 'package:ion/app/exceptions/exceptions.dart';
 import 'package:ion/app/features/ion_connect/ion_connect.dart';
+import 'package:ion/app/features/ion_connect/model/replaceable_event_identifier.c.dart';
 
 extension MasterKeyExtensions on EventMessage {
   String get masterPubkey {
@@ -14,4 +15,7 @@ extension MasterKeyExtensions on EventMessage {
 
     return masterPubkey;
   }
+
+  String? get sharedId =>
+      tags.firstWhereOrNull((tag) => tag.first == ReplaceableEventIdentifier.tagName)?.last;
 }
