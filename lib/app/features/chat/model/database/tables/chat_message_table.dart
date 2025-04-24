@@ -6,7 +6,7 @@ class ConversationMessageTable extends Table {
   late final conversationId = text().references(ConversationTable, #id)();
   late final eventMessageId = text().references(EventMessageTable, #id)();
   late final sharedId = text()();
-  
+
   @override
   Set<Column<Object>> get primaryKey => {eventMessageId};
 }
