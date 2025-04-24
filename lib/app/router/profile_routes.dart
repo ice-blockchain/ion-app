@@ -9,9 +9,9 @@ class ProfileRoutes {
     TypedGoRoute<ProfileEditRoute>(path: 'profile_edit'),
     TypedGoRoute<BookmarksRoute>(path: 'bookmarks'),
     TypedGoRoute<EditBookmarksRoute>(path: 'bookmarks_edit'),
-    TypedGoRoute<FollowListRoute>(path: 'follow-list-fullstack'),
     TypedShellRoute<ModalShellRouteData>(
       routes: [
+        TypedGoRoute<FollowListRoute>(path: 'follow-list-fullstack/:'),
         TypedGoRoute<CategorySelectRoute>(path: 'category-selector'),
         TypedGoRoute<SelectCoinProfileRoute>(path: 'coin-selector'),
         TypedGoRoute<SelectNetworkProfileRoute>(path: 'network-selector'),
@@ -80,7 +80,7 @@ class FollowListRoute extends BaseRouteData {
             followType: followType,
             pubkey: pubkey,
           ),
-          type: IceRouteType.simpleModalSheet,
+          type: IceRouteType.bottomSheet,
         );
 
   final FollowType followType;
