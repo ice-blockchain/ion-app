@@ -28,7 +28,6 @@ class RelevantFollowersList extends ConsumerWidget {
     final entitiesPagedData = ref.watch(entitiesPagedDataProvider(dataSource));
     final entities = entitiesPagedData?.data.items?.toList();
 
-    // TODO: clarify how to get relevant followers count
     final followersCount = entities?.length ?? 0;
 
     final slivers = [
