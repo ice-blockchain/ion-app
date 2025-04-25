@@ -7,6 +7,7 @@ import 'package:collection/collection.dart';
 import 'package:flutter_quill/flutter_quill.dart';
 import 'package:flutter_quill/quill_delta.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:ion/app/components/text_editor/components/custom_blocks/text_editor_profile_block/text_editor_profile_block.dart';
 import 'package:ion/app/components/text_editor/utils/build_empty_delta.dart';
 import 'package:ion/app/components/text_editor/utils/extract_tags.dart';
 import 'package:ion/app/exceptions/exceptions.dart';
@@ -19,7 +20,6 @@ import 'package:ion/app/features/feed/data/models/entities/post_data.c.dart';
 import 'package:ion/app/features/feed/data/models/who_can_reply_settings_option.dart';
 import 'package:ion/app/features/feed/providers/counters/replies_count_provider.c.dart';
 import 'package:ion/app/features/feed/providers/counters/reposts_count_provider.c.dart';
-import 'package:ion/app/features/feed/providers/reference_encoded_mentions_operations_provider.c.dart';
 import 'package:ion/app/features/ion_connect/model/entity_data_with_settings.dart';
 import 'package:ion/app/features/ion_connect/model/entity_editing_ended_at.c.dart';
 import 'package:ion/app/features/ion_connect/model/entity_expiration.c.dart';
@@ -69,7 +69,6 @@ class CreatePostNotifier extends _$CreatePostNotifier {
     EventReference? quotedEvent,
     List<MediaFile>? mediaFiles,
     String? communityId,
-    Map<String, String> mentions = const {},
   }) async {
     state = const AsyncValue.loading();
 
@@ -82,10 +81,9 @@ class CreatePostNotifier extends _$CreatePostNotifier {
       );
 
       final postData = ModifiablePostData(
-        content: await _buildContentWithMediaLinksAndMentions(
+        content: await _buildContentWithMediaLinks(
           content: postContent,
           media: media.values.toList(),
-          mentions: mentions,
         ),
         media: media,
         replaceableEventId: ReplaceableEventIdentifier.generate(),
@@ -94,14 +92,13 @@ class CreatePostNotifier extends _$CreatePostNotifier {
         relatedHashtags: extractTags(postContent).map((tag) => RelatedHashtag(value: tag)).toList(),
         quotedEvent: quotedEvent != null ? _buildQuotedEvent(quotedEvent) : null,
         relatedEvents: parentEntity != null ? _buildRelatedEvents(parentEntity) : null,
-        relatedPubkeys: _buildRelatedPubkeys(parentEntity, mentions.values),
+        relatedPubkeys: _buildRelatedPubkeys(postContent, parentEntity),
         settings: EntityDataWithSettings.build(whoCanReply: whoCanReply),
         expiration: _buildExpiration(),
         communityId: communityId,
-        richText: await _buildRichTextContentWithMediaLinksAndMentions(
+        richText: await _buildRichTextContentWithMediaLinks(
           content: postContent,
           media: media.values.toList(),
-          mentions: mentions,
         ),
       );
 
@@ -123,7 +120,6 @@ class CreatePostNotifier extends _$CreatePostNotifier {
     List<MediaFile>? mediaFiles,
     Map<String, MediaAttachment> mediaAttachments = const {},
     WhoCanReplySettingsOption? whoCanReply,
-    Map<String, String> mentions = const {},
   }) async {
     state = const AsyncValue.loading();
 
@@ -143,15 +139,13 @@ class CreatePostNotifier extends _$CreatePostNotifier {
       final removedMediaHashes = originalMediaHashes.difference(attachedMediaHashes).toList();
 
       final postData = modifiedEntity.data.copyWith(
-        content: await _buildContentWithMediaLinksAndMentions(
+        content: await _buildContentWithMediaLinks(
           content: postContent,
           media: modifiedMedia.values.toList(),
-          mentions: mentions,
         ),
-        richText: await _buildRichTextContentWithMediaLinksAndMentions(
+        richText: await _buildRichTextContentWithMediaLinks(
           content: postContent,
           media: modifiedMedia.values.toList(),
-          mentions: mentions,
         ),
         media: modifiedMedia,
         relatedHashtags: extractTags(postContent).map((tag) => RelatedHashtag(value: tag)).toList(),
@@ -260,15 +254,13 @@ class CreatePostNotifier extends _$CreatePostNotifier {
     };
   }
 
-  Future<RichText> _buildRichTextContentWithMediaLinksAndMentions({
+  Future<RichText> _buildRichTextContentWithMediaLinks({
     required Delta content,
     required List<MediaAttachment> media,
-    required Map<String, String> mentions,
   }) async {
-    final contentWithMedia = await _buildContentWithMediaLinksAndMentionsDelta(
+    final contentWithMedia = await _buildContentWithMediaLinksDelta(
       content: content,
       media: media,
-      mentions: mentions,
     );
 
     final richText = RichText(
@@ -279,32 +271,23 @@ class CreatePostNotifier extends _$CreatePostNotifier {
     return richText;
   }
 
-  Future<String> _buildContentWithMediaLinksAndMentions({
+  Future<String> _buildContentWithMediaLinks({
     required Delta content,
     required List<MediaAttachment> media,
-    required Map<String, String> mentions,
   }) async {
-    final contentWithMedia = await _buildContentWithMediaLinksAndMentionsDelta(
+    final contentWithMediaAndMentions = await _buildContentWithMediaLinksDelta(
       content: content,
       media: media,
-      mentions: mentions,
     );
-    return deltaToMarkdown(contentWithMedia);
+    return deltaToMarkdown(contentWithMediaAndMentions);
   }
 
-  Future<Delta> _buildContentWithMediaLinksAndMentionsDelta({
+  Future<Delta> _buildContentWithMediaLinksDelta({
     required Delta content,
     required List<MediaAttachment> media,
-    required Map<String, String> mentions,
   }) async {
     final currentOperations = content.operations.toList();
-    final mappedMentionsOperations = await ref.read(
-      referenceEncodedMentionsOperationsProvider(
-        currentOperations,
-        mentions: mentions,
-      ).future,
-    );
-    final newContentDelta = Delta.fromOperations(mappedMentionsOperations);
+    final newContentDelta = Delta.fromOperations(currentOperations);
 
     return Delta.fromOperations(
       media
@@ -361,20 +344,33 @@ class CreatePostNotifier extends _$CreatePostNotifier {
   }
 
   List<RelatedPubkey>? _buildRelatedPubkeys(
+    Delta content,
     IonConnectEntity? parentEntity,
-    Iterable<String> mentionedPubkeys,
   ) {
-    if (parentEntity == null && mentionedPubkeys.isEmpty) {
-      return null;
-    }
+    final pubkeys = _extractPubkeys(content);
     return <RelatedPubkey>{
-      ...mentionedPubkeys.map((pubkey) => RelatedPubkey(value: pubkey)),
+      ...pubkeys.map((pubkey) => RelatedPubkey(value: pubkey)),
       if (parentEntity != null) ...{
         RelatedPubkey(value: parentEntity.masterPubkey),
         if (parentEntity is ModifiablePostEntity) ...(parentEntity.data.relatedPubkeys ?? []),
         if (parentEntity is PostEntity) ...(parentEntity.data.relatedPubkeys ?? []),
       },
     }.toList();
+  }
+
+  List<String> _extractPubkeys(Delta content) {
+    final pubkeys = <String>[];
+    for (final op in content.operations) {
+      if (op.key == 'insert' && op.data is Map) {
+        final attributes = op.data! as Map<String, dynamic>;
+        if (attributes.containsKey(textEditorProfileKey)) {
+          final encodedRef = attributes[textEditorProfileKey] as String;
+          final eventReference = EventReference.fromEncoded(encodedRef);
+          pubkeys.add(eventReference.pubkey);
+        }
+      }
+    }
+    return pubkeys;
   }
 
   Future<({List<FileMetadata> fileMetadatas, MediaAttachment mediaAttachment})> _uploadMedia(

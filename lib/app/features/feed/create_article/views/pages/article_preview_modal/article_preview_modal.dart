@@ -56,7 +56,6 @@ class ArticlePreviewModal extends HookConsumerWidget {
       :content,
       :imageColor,
       :imageUrl,
-      :mentions
     ) = ref.watch(draftArticleProvider);
     final whoCanReply = ref.watch(selectedWhoCanReplyOptionProvider);
     final selectedTopics = ref.watch(selectTopicsProvider);
@@ -113,7 +112,6 @@ class ArticlePreviewModal extends HookConsumerWidget {
                             imageColor: imageColor,
                             originalImageUrl: imageUrl,
                             eventReference: modifiedEvent!,
-                            mentions: mentions,
                           );
                     } else {
                       ref.read(createArticleProvider(type).notifier).create(
@@ -124,7 +122,6 @@ class ArticlePreviewModal extends HookConsumerWidget {
                             mediaIds: imageIds,
                             whoCanReply: whoCanReply,
                             imageColor: imageColor,
-                            mentions: mentions,
                           );
                     }
 

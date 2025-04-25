@@ -42,6 +42,7 @@ class ProfileBlock extends ConsumerWidget {
         '@${metadata.data.name}',
         style: context.theme.appTextThemes.body2.copyWith(
           color: context.theme.appColors.primaryAccent,
+          decoration: TextDecoration.none,
         ),
       ),
     );

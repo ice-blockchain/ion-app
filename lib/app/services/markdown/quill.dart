@@ -5,6 +5,7 @@ import 'dart:convert';
 import 'package:flutter_quill/flutter_quill.dart';
 import 'package:flutter_quill/quill_delta.dart';
 import 'package:ion/app/components/text_editor/attributes.dart';
+import 'package:ion/app/components/text_editor/components/custom_blocks/text_editor_profile_block/text_editor_profile_block.dart';
 import 'package:ion/app/components/text_editor/components/custom_blocks/text_editor_single_image_block/text_editor_single_image_block.dart';
 import 'package:ion/app/services/text_parser/model/text_matcher.dart';
 import 'package:ion/app/services/text_parser/text_parser.dart';
@@ -61,6 +62,10 @@ final deltaToMd = DeltaToMarkdown(
     'text-editor-code': (embed, out) {
       final content = embed.value.data;
       out.write('\n```\n$content\n```\n');
+    },
+    textEditorProfileKey: (embed, out) {
+      final encodedReference = embed.value.data;
+      out.write(encodedReference);
     },
   },
   visitLineHandleNewLine: (style, out) {
@@ -133,7 +138,6 @@ void _processMatches(Operation op, Delta processedDelta) {
           ...?op.attributes,
           ...switch (match.matcher) {
             HashtagMatcher() => {HashtagAttribute.attributeKey: match.text},
-            MentionMatcher() => {MentionAttribute.attributeKey: match.text},
             CashtagMatcher() => {CashtagAttribute.attributeKey: match.text},
             UrlMatcher() => {Attribute.link.key: match.text},
             _ => {},

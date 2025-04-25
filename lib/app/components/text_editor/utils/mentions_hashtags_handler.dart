@@ -1,5 +1,6 @@
 // SPDX-License-Identifier: ice License 1.0
 
+import 'package:flutter/material.dart';
 import 'package:flutter_quill/flutter_quill.dart';
 import 'package:ion/app/components/text_editor/attributes.dart';
 import 'package:ion/app/components/text_editor/components/custom_blocks/text_editor_profile_block/text_editor_profile_block.dart';
@@ -39,7 +40,7 @@ class MentionsHashtagsHandler extends TextEditorTypingListener {
     ref.invalidate(suggestionsNotifierProvider);
   }
 
-  void onSuggestionSelected(({String pubkey, String username}) pubkeyUsernamePair) {
+  void onMentionSuggestionSelected(({String pubkey, String username}) pubkeyUsernamePair) {
     final userMetadata = ref.read(cachedUserMetadataProvider(pubkeyUsernamePair.pubkey));
     if (userMetadata == null) {
       return;
@@ -57,37 +58,52 @@ class MentionsHashtagsHandler extends TextEditorTypingListener {
 
     if (tag.start == -1) return;
 
-    controller.removeListener(editorListener);
+    controller
+      ..removeListener(editorListener)
+      ..replaceText(tag.start, tag.length, '', null, shouldNotifyListeners: false);
 
-    controller.replaceText(tag.start, tag.length, '', null);
     controller.document.insert(tag.start, TextEditorProfileEmbed(userMetadataEncoded));
     controller.document.insert(tag.start + 1, ' ');
-    controller.moveCursorToPosition(tag.start + 2);
 
-    print(controller.document.length);
+    controller
+      ..addListener(editorListener)
+      ..moveCursorToPosition(tag.start + 2);
+  }
 
-    // final attribute = _getAttribute(tag.tagChar);
-    //
-    // if (attribute != null) {
-    //   controller.removeListener(editorListener);
-    //   try {
-    //     final suggestionWithTagChar =
-    //         suggestion.startsWith(tag.tagChar) ? suggestion : '${tag.tagChar}$suggestion';
-    //     controller
-    //       ..replaceText(tag.start, tag.length, suggestionWithTagChar, null)
-    //       ..formatText(tag.start, suggestionWithTagChar.length, attribute)
-    //       ..replaceText(tag.start + suggestionWithTagChar.length, 0, ' ', null)
-    //       ..updateSelection(
-    //         TextSelection.collapsed(offset: tag.start + suggestionWithTagChar.length + 1),
-    //         ChangeSource.local,
-    //       );
-    //   } finally {
-    //     controller.addListener(editorListener);
-    //   }
-    //
-    //   _reapplyAllTags(controller.document.toPlainText());
-    //   ref.invalidate(suggestionsNotifierProvider);
-    // }
+  void onSuggestionSelected(String suggestion) {
+    final fullText = controller.document.toPlainText();
+    final cursorIndex = controller.selection.baseOffset;
+
+    final tags = _extractTags(fullText);
+    final tag = tags.lastWhere(
+      (t) => t.start < cursorIndex && t.start + t.length >= cursorIndex - 1,
+      orElse: () => _TagInfo(start: -1, length: 0, text: '', tagChar: ''),
+    );
+
+    if (tag.start == -1) return;
+
+    final attribute = _getAttribute(tag.tagChar);
+
+    if (attribute != null) {
+      controller.removeListener(editorListener);
+      try {
+        final suggestionWithTagChar =
+            suggestion.startsWith(tag.tagChar) ? suggestion : '${tag.tagChar}$suggestion';
+        controller
+          ..replaceText(tag.start, tag.length, suggestionWithTagChar, null)
+          ..formatText(tag.start, suggestionWithTagChar.length, attribute)
+          ..replaceText(tag.start + suggestionWithTagChar.length, 0, ' ', null)
+          ..updateSelection(
+            TextSelection.collapsed(offset: tag.start + suggestionWithTagChar.length + 1),
+            ChangeSource.local,
+          );
+      } finally {
+        controller.addListener(editorListener);
+      }
+
+      _reapplyAllTags(controller.document.toPlainText());
+      ref.invalidate(suggestionsNotifierProvider);
+    }
   }
 
   void _reapplyAllTags(String fullText) {
@@ -121,7 +137,6 @@ class MentionsHashtagsHandler extends TextEditorTypingListener {
 
     controller
       ..formatText(0, docLength, const HashtagAttribute.unset())
-      ..formatText(0, docLength, const MentionAttribute.unset())
       ..formatText(0, docLength, const CashtagAttribute.unset());
 
     for (final tag in tags) {
@@ -144,7 +159,6 @@ class MentionsHashtagsHandler extends TextEditorTypingListener {
 
   Attribute<String?>? _getAttribute(String tagChar) {
     return switch (tagChar) {
-      // '@' => MentionAttribute.withValue(tagChar),
       '#' => HashtagAttribute.withValue(tagChar),
       r'$' => CashtagAttribute.withValue(tagChar),
       _ => null,

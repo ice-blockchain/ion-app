@@ -66,8 +66,7 @@ DefaultStyles textEditorStyles(BuildContext context, {Color? color}) {
 }
 
 TextStyle customTextStyleBuilder(Attribute<dynamic> attribute, BuildContext context) {
-  if (attribute.key == MentionAttribute.attributeKey ||
-      attribute.key == HashtagAttribute.attributeKey ||
+  if (attribute.key == HashtagAttribute.attributeKey ||
       attribute.key == CashtagAttribute.attributeKey) {
     return TextStyle(
       color: context.theme.appColors.primaryAccent,

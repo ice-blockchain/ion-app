@@ -30,7 +30,6 @@ class PostSubmitButton extends HookConsumerWidget {
     this.mediaFiles = const [],
     this.mediaAttachments = const {},
     this.onSubmitted,
-    this.mentionsMap = const {},
   });
 
   final QuillController textEditorController;
@@ -48,8 +47,6 @@ class PostSubmitButton extends HookConsumerWidget {
   final CreatePostOption createOption;
 
   final VoidCallback? onSubmitted;
-
-  final Map<String, String> mentionsMap;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -90,7 +87,6 @@ class PostSubmitButton extends HookConsumerWidget {
               mediaAttachments: mediaAttachments,
               eventReference: modifiedEvent!,
               whoCanReply: whoCanReply,
-              mentions: mentionsMap,
             ),
           );
         } else {
@@ -101,7 +97,6 @@ class PostSubmitButton extends HookConsumerWidget {
               quotedEvent: quotedEvent,
               mediaFiles: filesToUpload,
               whoCanReply: whoCanReply,
-              mentions: mentionsMap,
             ),
           );
         }

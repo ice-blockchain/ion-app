@@ -97,7 +97,9 @@ class DeleteWalletModal extends ConsumerWidget {
                 ),
               ],
             ),
-            SizedBox(height: MediaQuery.paddingOf(context).bottom + 20.0.s),
+            SizedBox(
+              height: MediaQuery.paddingOf(context).bottom + 20.0.s,
+            ),
           ],
         ),
       ),

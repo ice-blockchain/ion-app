@@ -17,18 +17,11 @@ class SuggestionsContainer extends HookConsumerWidget {
   const SuggestionsContainer({
     required this.scrollController,
     required this.editorKey,
-    required this.onMentionSuggestionSelected,
     super.key,
   });
 
   final ScrollController scrollController;
   final GlobalKey<TextEditorState> editorKey;
-  final void Function(({String pubkey, String username})) onMentionSuggestionSelected;
-
-  void _onSuggestionSelected(({String pubkey, String username}) pubkeyUsernamePair) {
-    final textEditorState = editorKey.currentState;
-    textEditorState?.mentionsHashtagsHandler.onSuggestionSelected(pubkeyUsernamePair);
-  }
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -57,26 +50,31 @@ class SuggestionsContainer extends HookConsumerWidget {
           color: context.theme.appColors.secondaryBackground,
           child: switch (suggestionsState.taggingCharacter) {
             '@' => MentionsSuggestions(
-                suggestions: ['fe61193b4d0ddb8922ccd065c3805b1d622745aa619c26b0b0816327c9a731db'],
-                onSuggestionSelected: (pubkeyUsernamePair) {
-                  onMentionSuggestionSelected(pubkeyUsernamePair);
-                  _onSuggestionSelected(pubkeyUsernamePair);
-                },
+                suggestions: suggestionsState.suggestions,
+                onSuggestionSelected: _onMentionSuggestionSelected,
               ),
             '#' => HashtagsSuggestions(
                 suggestions: suggestionsState.suggestions,
-                onSuggestionSelected: (suggestion) =>
-                    _onSuggestionSelected((pubkey: '', username: suggestion)),
+                onSuggestionSelected: _onSuggestionSelected,
               ),
             r'$' => CashtagsSuggestions(
                 suggestions: suggestionsState.suggestions,
-                onSuggestionSelected: (suggestion) =>
-                    _onSuggestionSelected((pubkey: '', username: suggestion)),
+                onSuggestionSelected: _onSuggestionSelected,
               ),
             _ => const SizedBox.shrink(),
           },
         ),
       ],
     );
+  }
+
+  void _onMentionSuggestionSelected(({String pubkey, String username}) pubkeyUsernamePair) {
+    final textEditorState = editorKey.currentState;
+    textEditorState?.mentionsHashtagsHandler.onMentionSuggestionSelected(pubkeyUsernamePair);
+  }
+
+  void _onSuggestionSelected(String suggestion) {
+    final textEditorState = editorKey.currentState;
+    textEditorState?.mentionsHashtagsHandler.onSuggestionSelected(suggestion);
   }
 }

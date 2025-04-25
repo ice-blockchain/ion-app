@@ -183,7 +183,6 @@ class PostFormModal extends HookConsumerWidget {
           : null,
     );
     final attachedMediaLinksNotifier = useState<Map<String, MediaAttachment>>({});
-    final mentionsMapNotifier = useState<Map<String, String>>({});
 
     if (modifiedEvent != null) {
       useEffect(
@@ -249,7 +248,6 @@ class PostFormModal extends HookConsumerWidget {
               createOption: createOption,
               scrollController: scrollController,
               textEditorKey: textEditorKey,
-              mentionsMapNotifier: mentionsMapNotifier,
             ),
           ],
         ),
