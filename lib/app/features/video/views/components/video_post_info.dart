@@ -39,7 +39,6 @@ class VideoPostInfo extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              // TODO: fix route issue, route to another route tree
               UserInfo(
                 pubkey: videoPost.masterPubkey,
                 createdAt: videoPost.data.publishedAt.value,
