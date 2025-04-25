@@ -21,6 +21,7 @@ import 'package:ion/app/features/user/providers/block_list_notifier.c.dart';
 import 'package:ion/app/features/user/providers/followers_count_provider.c.dart';
 import 'package:ion/app/features/user/providers/user_metadata_provider.c.dart';
 import 'package:ion/app/hooks/use_on_init.dart';
+import 'package:ion/app/router/components/navigation_app_bar/navigation_app_bar.dart';
 
 class ProfilePage extends HookConsumerWidget {
   const ProfilePage({
@@ -37,11 +38,18 @@ class ProfilePage extends HookConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final isBlocked = ref.watch(isBlockedProvider(pubkey));
-    final isBlocking = ref.watch(isBlockingProvider(pubkey)).valueOrNull ?? false;
-    final isBlockedOrBlocking = isBlocked || isBlocking;
+    final isBlocking = ref.watch(isBlockingProvider(pubkey)).valueOrNull;
     final userMetadata = ref.watch(userMetadataProvider(pubkey));
 
-    if ((!userMetadata.isLoading && !userMetadata.hasValue) || isBlockedOrBlocking) {
+    if (userMetadata.isLoading || isBlocking == null) {
+      return const Scaffold(
+        appBar: NavigationAppBar(useScreenTopOffset: true),
+        body: SizedBox(),
+      );
+    }
+
+    final isBlockedOrBlocking = isBlocked || isBlocking;
+    if (!userMetadata.hasValue || isBlockedOrBlocking) {
       return const CantFindProfilePage();
     }
 
