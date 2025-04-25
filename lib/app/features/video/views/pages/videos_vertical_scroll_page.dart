@@ -7,9 +7,11 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/extensions/extensions.dart';
+import 'package:ion/app/features/auth/providers/auth_provider.c.dart';
 import 'package:ion/app/features/feed/data/models/entities/modifiable_post_data.c.dart';
 import 'package:ion/app/features/feed/providers/feed_posts_provider.c.dart';
 import 'package:ion/app/features/feed/providers/ion_connect_entity_with_counters_provider.c.dart';
+import 'package:ion/app/features/feed/views/components/overlay_menu/own_entity_menu.dart';
 import 'package:ion/app/features/feed/views/components/overlay_menu/user_info_menu.dart';
 import 'package:ion/app/features/ion_connect/model/event_reference.c.dart';
 import 'package:ion/app/features/ion_connect/model/media_attachment.dart';
@@ -105,6 +107,9 @@ class VideosVerticalScrollPage extends HookConsumerWidget {
     final userPageController = usePageController(initialPage: initialPage);
     final currentEventReference = useState<EventReference>(eventReference);
 
+    final isOwnedByCurrentUser =
+        ref.watch(isCurrentUserSelectorProvider(currentEventReference.value.pubkey));
+
     return AnnotatedRegion<SystemUiOverlayStyle>(
       value: SystemUiOverlayStyle(
         statusBarColor: primaryTextColor,
@@ -129,10 +134,20 @@ class VideosVerticalScrollPage extends HookConsumerWidget {
           actions: [
             Padding(
               padding: EdgeInsetsDirectional.only(end: rightPadding),
-              child: UserInfoMenu(
-                eventReference: currentEventReference.value,
-                iconColor: secondaryBackgroundColor,
-              ),
+              child: isOwnedByCurrentUser
+                  ? OwnEntityMenu(
+                      eventReference: currentEventReference.value,
+                      iconColor: secondaryBackgroundColor,
+                      onDelete: () {
+                        if (context.canPop()) {
+                          context.pop();
+                        }
+                      },
+                    )
+                  : UserInfoMenu(
+                      eventReference: currentEventReference.value,
+                      iconColor: secondaryBackgroundColor,
+                    ),
             ),
           ],
         ),
