@@ -25,9 +25,9 @@ class SuggestionsContainer extends HookConsumerWidget {
   final GlobalKey<TextEditorState> editorKey;
   final void Function(({String pubkey, String username})) onMentionSuggestionSelected;
 
-  void _onSuggestionSelected(String suggestion) {
+  void _onSuggestionSelected(({String pubkey, String username}) pubkeyUsernamePair) {
     final textEditorState = editorKey.currentState;
-    textEditorState?.mentionsHashtagsHandler.onSuggestionSelected(suggestion);
+    textEditorState?.mentionsHashtagsHandler.onSuggestionSelected(pubkeyUsernamePair);
   }
 
   @override
@@ -57,19 +57,21 @@ class SuggestionsContainer extends HookConsumerWidget {
           color: context.theme.appColors.secondaryBackground,
           child: switch (suggestionsState.taggingCharacter) {
             '@' => MentionsSuggestions(
-                suggestions: suggestionsState.suggestions,
+                suggestions: ['fe61193b4d0ddb8922ccd065c3805b1d622745aa619c26b0b0816327c9a731db'],
                 onSuggestionSelected: (pubkeyUsernamePair) {
                   onMentionSuggestionSelected(pubkeyUsernamePair);
-                  _onSuggestionSelected(pubkeyUsernamePair.username);
+                  _onSuggestionSelected(pubkeyUsernamePair);
                 },
               ),
             '#' => HashtagsSuggestions(
                 suggestions: suggestionsState.suggestions,
-                onSuggestionSelected: _onSuggestionSelected,
+                onSuggestionSelected: (suggestion) =>
+                    _onSuggestionSelected((pubkey: '', username: suggestion)),
               ),
             r'$' => CashtagsSuggestions(
                 suggestions: suggestionsState.suggestions,
-                onSuggestionSelected: _onSuggestionSelected,
+                onSuggestionSelected: (suggestion) =>
+                    _onSuggestionSelected((pubkey: '', username: suggestion)),
               ),
             _ => const SizedBox.shrink(),
           },

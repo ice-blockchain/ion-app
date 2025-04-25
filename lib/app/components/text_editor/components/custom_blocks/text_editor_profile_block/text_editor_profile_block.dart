@@ -21,7 +21,9 @@ class TextEditorProfileEmbed extends CustomBlockEmbed {
 /// Embed builder for [TextEditorProfileEmbed].
 ///
 class TextEditorProfileBuilder extends EmbedBuilder {
-  TextEditorProfileBuilder();
+  TextEditorProfileBuilder({this.profileNavigationEnabled = true});
+
+  final bool profileNavigationEnabled;
 
   @override
   String get key => textEditorProfileKey;
@@ -34,6 +36,9 @@ class TextEditorProfileBuilder extends EmbedBuilder {
     final encodedReference = embedContext.node.value.data as String;
     final reference = EventReference.fromEncoded(encodedReference);
 
-    return ProfileBlock(reference: reference);
+    return ProfileBlock(
+      reference: reference,
+      profileNavigationEnabled: profileNavigationEnabled,
+    );
   }
 }

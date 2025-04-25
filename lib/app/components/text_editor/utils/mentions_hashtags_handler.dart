@@ -1,10 +1,11 @@
 // SPDX-License-Identifier: ice License 1.0
 
-import 'package:flutter/material.dart';
 import 'package:flutter_quill/flutter_quill.dart';
 import 'package:ion/app/components/text_editor/attributes.dart';
+import 'package:ion/app/components/text_editor/components/custom_blocks/text_editor_profile_block/text_editor_profile_block.dart';
 import 'package:ion/app/components/text_editor/utils/text_editor_typing_listener.dart';
 import 'package:ion/app/features/feed/providers/article/suggestions_notifier_provider.c.dart';
+import 'package:ion/app/features/user/providers/user_metadata_provider.c.dart';
 
 class MentionsHashtagsHandler extends TextEditorTypingListener {
   MentionsHashtagsHandler({
@@ -38,7 +39,13 @@ class MentionsHashtagsHandler extends TextEditorTypingListener {
     ref.invalidate(suggestionsNotifierProvider);
   }
 
-  void onSuggestionSelected(String suggestion) {
+  void onSuggestionSelected(({String pubkey, String username}) pubkeyUsernamePair) {
+    final userMetadata = ref.read(cachedUserMetadataProvider(pubkeyUsernamePair.pubkey));
+    if (userMetadata == null) {
+      return;
+    }
+    final userMetadataEncoded = userMetadata.toEventReference().encode();
+
     final fullText = controller.document.toPlainText();
     final cursorIndex = controller.selection.baseOffset;
 
@@ -50,28 +57,37 @@ class MentionsHashtagsHandler extends TextEditorTypingListener {
 
     if (tag.start == -1) return;
 
-    final attribute = _getAttribute(tag.tagChar);
+    controller.removeListener(editorListener);
 
-    if (attribute != null) {
-      controller.removeListener(editorListener);
-      try {
-        final suggestionWithTagChar =
-            suggestion.startsWith(tag.tagChar) ? suggestion : '${tag.tagChar}$suggestion';
-        controller
-          ..replaceText(tag.start, tag.length, suggestionWithTagChar, null)
-          ..formatText(tag.start, suggestionWithTagChar.length, attribute)
-          ..replaceText(tag.start + suggestionWithTagChar.length, 0, ' ', null)
-          ..updateSelection(
-            TextSelection.collapsed(offset: tag.start + suggestionWithTagChar.length + 1),
-            ChangeSource.local,
-          );
-      } finally {
-        controller.addListener(editorListener);
-      }
+    controller.replaceText(tag.start, tag.length, '', null);
+    controller.document.insert(tag.start, TextEditorProfileEmbed(userMetadataEncoded));
+    controller.document.insert(tag.start + 1, ' ');
+    controller.moveCursorToPosition(tag.start + 2);
 
-      _reapplyAllTags(controller.document.toPlainText());
-      ref.invalidate(suggestionsNotifierProvider);
-    }
+    print(controller.document.length);
+
+    // final attribute = _getAttribute(tag.tagChar);
+    //
+    // if (attribute != null) {
+    //   controller.removeListener(editorListener);
+    //   try {
+    //     final suggestionWithTagChar =
+    //         suggestion.startsWith(tag.tagChar) ? suggestion : '${tag.tagChar}$suggestion';
+    //     controller
+    //       ..replaceText(tag.start, tag.length, suggestionWithTagChar, null)
+    //       ..formatText(tag.start, suggestionWithTagChar.length, attribute)
+    //       ..replaceText(tag.start + suggestionWithTagChar.length, 0, ' ', null)
+    //       ..updateSelection(
+    //         TextSelection.collapsed(offset: tag.start + suggestionWithTagChar.length + 1),
+    //         ChangeSource.local,
+    //       );
+    //   } finally {
+    //     controller.addListener(editorListener);
+    //   }
+    //
+    //   _reapplyAllTags(controller.document.toPlainText());
+    //   ref.invalidate(suggestionsNotifierProvider);
+    // }
   }
 
   void _reapplyAllTags(String fullText) {
@@ -128,7 +144,7 @@ class MentionsHashtagsHandler extends TextEditorTypingListener {
 
   Attribute<String?>? _getAttribute(String tagChar) {
     return switch (tagChar) {
-      '@' => MentionAttribute.withValue(tagChar),
+      // '@' => MentionAttribute.withValue(tagChar),
       '#' => HashtagAttribute.withValue(tagChar),
       r'$' => CashtagAttribute.withValue(tagChar),
       _ => null,

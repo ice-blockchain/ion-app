@@ -14,6 +14,7 @@ class MentionsSuggestions extends StatelessWidget {
     required this.onSuggestionSelected,
     super.key,
   });
+
   final List<String> suggestions;
   final void Function(({String pubkey, String username})) onSuggestionSelected;
 

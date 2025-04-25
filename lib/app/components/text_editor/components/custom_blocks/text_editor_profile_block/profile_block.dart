@@ -9,9 +9,14 @@ import 'package:ion/app/features/user/model/user_metadata.c.dart';
 import 'package:ion/app/router/app_routes.c.dart';
 
 class ProfileBlock extends ConsumerWidget {
-  const ProfileBlock({required this.reference, super.key});
+  const ProfileBlock({
+    required this.reference,
+    required this.profileNavigationEnabled,
+    super.key,
+  });
 
   final EventReference reference;
+  final bool profileNavigationEnabled;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -28,9 +33,11 @@ class ProfileBlock extends ConsumerWidget {
     }
 
     return GestureDetector(
-      onTap: () {
-        ProfileRoute(pubkey: metadata.masterPubkey).push<void>(context);
-      },
+      onTap: profileNavigationEnabled
+          ? () {
+              ProfileRoute(pubkey: metadata.masterPubkey).push<void>(context);
+            }
+          : null,
       child: Text(
         '@${metadata.data.name}',
         style: context.theme.appTextThemes.body2.copyWith(
