@@ -36,9 +36,9 @@ class TextMessage extends HookConsumerWidget {
 
     final firstUrl = RegExp(const UrlMatcher().pattern).firstMatch(eventMessage.content)?.group(0);
 
-    final metadata = firstUrl != null ? ref.watch(urlMetadataProvider(firstUrl)).valueOrNull : null;
+    final metadata = firstUrl != null ? ref.watch(urlMetadataProvider(firstUrl)) : null;
 
-    final hasReactions = useHasReaction(eventMessage, ref) || metadata != null;
+    final hasReactionsOrMetadata = useHasReaction(eventMessage, ref) || metadata != null;
 
     final messageItem = TextItem(
       eventMessage: eventMessage,
@@ -67,7 +67,7 @@ class TextMessage extends HookConsumerWidget {
             _TextMessageContent(
               textStyle: textStyle,
               eventMessage: eventMessage,
-              hasReactions: hasReactions,
+              hasReactionsOrMetadata: hasReactionsOrMetadata,
               hasRepliedMessage: repliedMessageItem != null,
             ),
             if (metadata != null)
@@ -77,7 +77,7 @@ class TextMessage extends HookConsumerWidget {
                   isMe: isMe,
                 ),
               ),
-            if (hasReactions)
+            if (hasReactionsOrMetadata)
               Row(
                 mainAxisSize: MainAxisSize.min,
                 crossAxisAlignment: CrossAxisAlignment.end,
@@ -100,13 +100,13 @@ class _TextMessageContent extends HookWidget {
   const _TextMessageContent({
     required this.textStyle,
     required this.eventMessage,
-    required this.hasReactions,
+    required this.hasReactionsOrMetadata,
     required this.hasRepliedMessage,
   });
 
   final TextStyle textStyle;
   final EventMessage eventMessage;
-  final bool hasReactions;
+  final bool hasReactionsOrMetadata;
   final bool hasRepliedMessage;
   @override
   Widget build(BuildContext context) {
@@ -142,7 +142,7 @@ class _TextMessageContent extends HookWidget {
     final oneLineMetrics = oneLineTextPainter.computeLineMetrics();
     final multiline = oneLineMetrics.length > 1;
 
-    if (hasReactions) {
+    if (hasReactionsOrMetadata) {
       return _TextRichContent(text: content, textStyle: textStyle);
     }
     if (!multiline) {

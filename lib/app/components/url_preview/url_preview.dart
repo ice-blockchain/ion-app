@@ -13,10 +13,14 @@ class UrlPreview extends HookConsumerWidget {
   });
 
   final String url;
-  final Widget Function(OgpData? meta, String favIconUrl) builder;
+  final Widget Function(OgpData? meta, String? favIconUrl) builder;
 
-  String _resolveFavIconUrl(String baseUrl) {
-    return '${Uri.parse(baseUrl).origin}/favicon.ico';
+  String? _resolveFavIconUrl(String baseUrl) {
+    final uri = Uri.tryParse(baseUrl);
+    if (uri == null || uri.scheme.isEmpty) {
+      return null;
+    }
+    return '${uri.origin}/favicon.ico';
   }
 
   @override

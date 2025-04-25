@@ -12,7 +12,7 @@ class _MetaDataPreview extends StatelessWidget {
 
   final OgpData meta;
   final String url;
-  final String favIconUrl;
+  final String? favIconUrl;
   final bool isMe;
 
   @override
@@ -93,7 +93,7 @@ class _MetaSiteInfo extends StatelessWidget {
   });
 
   final String siteName;
-  final String favIconUrl;
+  final String? favIconUrl;
   final bool isMe;
 
   @override
@@ -103,7 +103,7 @@ class _MetaSiteInfo extends StatelessWidget {
       child: Row(
         children: [
           IonNetworkImage(
-            imageUrl: favIconUrl,
+            imageUrl: favIconUrl ?? '',
             width: 16.0.s,
             height: 16.0.s,
           ),

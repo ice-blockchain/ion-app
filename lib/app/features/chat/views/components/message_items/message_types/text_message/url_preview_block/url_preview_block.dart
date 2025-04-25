@@ -5,9 +5,9 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:ion/app/components/image/ion_network_image.dart';
 import 'package:ion/app/components/url_preview/url_preview.dart';
 import 'package:ion/app/extensions/extensions.dart';
+import 'package:ion/app/services/browser/browser.dart';
 import 'package:ion/app/utils/url.dart';
 import 'package:ogp_data_extract/ogp_data_extract.dart';
-import 'package:url_launcher/url_launcher.dart';
 
 part 'components/meta_data_preview.dart';
 
@@ -25,7 +25,7 @@ class UrlPreviewBlock extends HookWidget {
   Widget build(BuildContext context) {
     useAutomaticKeepAlive();
     return GestureDetector(
-      onTap: () => launchUrl(Uri.parse(url)),
+      onTap: () => openUrlInAppBrowser(url),
       child: UrlPreview(
         url: url,
         builder: (meta, favIconUrl) {
