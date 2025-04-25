@@ -49,7 +49,7 @@ class SecurityRisks extends StatelessWidget {
                 ..onTap = () {
                   showSimpleBottomSheet<void>(
                     context: context,
-                    child: const AboutImportTokenAbout(),
+                    child: const AboutImportTokenDialog(),
                   );
                 },
             ),

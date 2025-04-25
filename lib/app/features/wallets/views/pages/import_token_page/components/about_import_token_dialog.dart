@@ -9,8 +9,8 @@ import 'package:ion/app/router/components/navigation_app_bar/navigation_app_bar.
 import 'package:ion/app/router/components/navigation_app_bar/navigation_close_button.dart';
 import 'package:ion/generated/assets.gen.dart';
 
-class AboutImportTokenAbout extends ConsumerWidget {
-  const AboutImportTokenAbout({
+class AboutImportTokenDialog extends ConsumerWidget {
+  const AboutImportTokenDialog({
     super.key,
   });
 
