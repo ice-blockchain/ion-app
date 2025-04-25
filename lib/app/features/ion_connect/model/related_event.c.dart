@@ -41,7 +41,8 @@ abstract class RelatedEvent {
 
   List<String> toTag();
 
-  MapEntry<String, List<String>> toFilterEntry();
+  // Intentionally returns not a List<String> to keep backwards compatibility on BE
+  MapEntry<String, List<List<String>>> toFilterEntry();
 }
 
 @freezed
@@ -77,8 +78,10 @@ class RelatedImmutableEvent with _$RelatedImmutableEvent implements RelatedEvent
   }
 
   @override
-  MapEntry<String, List<String>> toFilterEntry() {
-    return MapEntry('#$tagName', [eventReference.toString(), '', marker.name]);
+  MapEntry<String, List<List<String>>> toFilterEntry() {
+    return MapEntry('#$tagName', [
+      [eventReference.toString(), '', marker.name],
+    ]);
   }
 
   static const String tagName = 'e';
@@ -117,8 +120,10 @@ class RelatedReplaceableEvent with _$RelatedReplaceableEvent implements RelatedE
   }
 
   @override
-  MapEntry<String, List<String>> toFilterEntry() {
-    return MapEntry('#$tagName', [eventReference.toString(), '', marker.name]);
+  MapEntry<String, List<List<String>>> toFilterEntry() {
+    return MapEntry('#$tagName', [
+      [eventReference.toString(), '', marker.name],
+    ]);
   }
 
   static const String tagName = 'a';
