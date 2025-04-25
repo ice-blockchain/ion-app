@@ -17,6 +17,7 @@ import 'package:ion/app/features/chat/views/components/message_items/message_typ
 import 'package:ion/app/features/ion_connect/ion_connect.dart';
 import 'package:ion/app/services/text_parser/model/text_matcher.dart';
 import 'package:ion/app/services/text_parser/text_parser.dart';
+import 'package:ion/app/utils/url.dart';
 
 class TextMessage extends HookConsumerWidget {
   const TextMessage({
@@ -34,7 +35,7 @@ class TextMessage extends HookConsumerWidget {
       color: isMe ? context.theme.appColors.onPrimaryAccent : context.theme.appColors.primaryText,
     );
 
-    final firstUrl = RegExp(const UrlMatcher().pattern).firstMatch(eventMessage.content)?.group(0);
+    final firstUrl = extractFirstUrl(eventMessage.content);
 
     final metadata = firstUrl != null ? ref.watch(urlMetadataProvider(firstUrl)) : null;
 

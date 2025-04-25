@@ -1,5 +1,7 @@
 // SPDX-License-Identifier: ice License 1.0
 
+import 'package:ion/app/services/text_parser/model/text_matcher.dart';
+
 String? removeHttpsPrefix(String? url) {
   // Replace the https:// prefix with an empty string if it exists.
   return url?.replaceFirst(RegExp('^https://'), '');
@@ -53,4 +55,8 @@ String resolveImageUrl(String baseUrl, String imageUrl) {
 
 bool isNetworkUrl(String url) {
   return url.startsWith('http://') || url.startsWith('https://');
+}
+
+String? extractFirstUrl(String text) {
+  return RegExp(const UrlMatcher().pattern).firstMatch(text)?.group(0);
 }
