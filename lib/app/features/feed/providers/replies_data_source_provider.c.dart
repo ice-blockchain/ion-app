@@ -7,6 +7,8 @@ import 'package:ion/app/features/feed/data/models/entities/post_data.c.dart';
 import 'package:ion/app/features/ion_connect/ion_connect.dart';
 import 'package:ion/app/features/ion_connect/model/action_source.c.dart';
 import 'package:ion/app/features/ion_connect/model/event_reference.c.dart';
+import 'package:ion/app/features/ion_connect/model/related_event.c.dart';
+import 'package:ion/app/features/ion_connect/model/related_event_marker.dart';
 import 'package:ion/app/features/ion_connect/model/search_extension.dart';
 import 'package:ion/app/features/ion_connect/providers/entities_paged_data_provider.c.dart';
 import 'package:ion/app/features/ion_connect/providers/ion_connect_entity_provider.c.dart';
@@ -28,6 +30,10 @@ List<EntitiesDataSource>? repliesDataSource(
     return null;
   }
 
+  final relatedTags =
+      RelatedEvent.fromEventReference(eventReference, marker: RelatedEventMarker.reply)
+          .toFilterEntry();
+
   final dataSources = [
     EntitiesDataSource(
       actionSource: ActionSourceUser(eventReference.pubkey),
@@ -38,7 +44,7 @@ List<EntitiesDataSource>? repliesDataSource(
       requestFilters: [
         RequestFilter(
           kinds: const [ModifiablePostEntity.kind],
-          tags: Map.fromEntries([eventReference.toFilterEntry()]),
+          tags: Map.fromEntries([relatedTags]),
           search: SearchExtensions(
             [
               ...SearchExtensions.withCounters(
@@ -61,7 +67,7 @@ List<EntitiesDataSource>? repliesDataSource(
         ),
         RequestFilter(
           kinds: const [PostEntity.kind],
-          tags: Map.fromEntries([eventReference.toFilterEntry()]),
+          tags: Map.fromEntries([relatedTags]),
           search: SearchExtensions(
             [
               ...SearchExtensions.withCounters(
