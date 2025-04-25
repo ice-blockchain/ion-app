@@ -1,9 +1,9 @@
 // SPDX-License-Identifier: ice License 1.0
 
 import 'package:collection/collection.dart';
-import 'package:ion/app/features/feed/providers/counters/likes_notifier.c.dart';
 import 'package:ion/app/features/feed/stories/data/models/models.dart';
 import 'package:ion/app/features/feed/stories/providers/stories_provider.c.dart';
+import 'package:ion/app/features/optimistic_ui/features/likes/post_like_provider.c.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'story_viewing_provider.c.g.dart';
@@ -81,7 +81,7 @@ class StoryViewingController extends _$StoryViewingController {
     if (userStory != null) {
       final post = userStory.getStoryById(postId)!;
       final eventReference = post.toEventReference();
-      ref.read(likesNotifierProvider(eventReference).notifier).toggle();
+      ref.read(toggleLikeNotifierProvider.notifier).toggle(eventReference);
     }
   }
 }

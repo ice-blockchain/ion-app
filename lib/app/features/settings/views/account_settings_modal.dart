@@ -11,9 +11,8 @@ import 'package:ion/app/components/separated/separated_column.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/core/model/language.dart';
 import 'package:ion/app/features/core/providers/app_locale_provider.c.dart';
+import 'package:ion/app/features/optimistic_ui/features/language/language_sync_strategy_provider.c.dart';
 import 'package:ion/app/features/settings/views/delete_confirm_modal.dart';
-import 'package:ion/app/features/user/model/interest_set.c.dart';
-import 'package:ion/app/features/user/providers/user_interests_set_provider.c.dart';
 import 'package:ion/app/router/app_routes.c.dart';
 import 'package:ion/app/router/components/navigation_app_bar/navigation_app_bar.dart';
 import 'package:ion/app/router/components/navigation_app_bar/navigation_close_button.dart';
@@ -26,13 +25,11 @@ class AccountSettingsModal extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final languageInterestSet =
-        ref.watch(currentUserInterestsSetProvider(InterestSetType.languages)).valueOrNull;
+    final contentLangsAsync = ref.watch(contentLanguageWatchProvider);
+
     final contentLanguages = useMemoized(
-      () {
-        return languageInterestSet?.data.hashtags.map(Language.fromIsoCode).nonNulls.toList();
-      },
-      [languageInterestSet],
+      () => contentLangsAsync.valueOrNull?.hashtags ?? const <String>[],
+      [contentLangsAsync.valueOrNull],
     );
 
     final primaryColor = context.theme.appColors.primaryAccent;
@@ -43,9 +40,7 @@ class AccountSettingsModal extends HookConsumerWidget {
         children: [
           NavigationAppBar.modal(
             title: Text(context.i18n.common_account),
-            actions: const [
-              NavigationCloseButton(),
-            ],
+            actions: const [NavigationCloseButton()],
           ),
           ScreenSideOffset.small(
             child: SeparatedColumn(
@@ -53,63 +48,46 @@ class AccountSettingsModal extends HookConsumerWidget {
               mainAxisSize: MainAxisSize.min,
               children: [
                 ModalActionButton(
-                  icon: Assets.svg.iconProfileUser.icon(
-                    color: primaryColor,
-                  ),
+                  icon: Assets.svg.iconProfileUser.icon(color: primaryColor),
                   label: context.i18n.settings_profile_edit,
-                  onTap: () {
-                    ProfileEditRoute().go(context);
-                  },
+                  onTap: () => ProfileEditRoute().go(context),
                 ),
                 ModalActionButton(
-                  icon: Assets.svg.iconProfileBlockUser.icon(
-                    color: primaryColor,
-                  ),
+                  icon: Assets.svg.iconProfileBlockUser.icon(color: primaryColor),
                   label: context.i18n.settings_blocked_users,
-                  onTap: () {
-                    BlockedUsersRoute().push<void>(context);
-                  },
+                  onTap: () => BlockedUsersRoute().push<void>(context),
                 ),
                 ModalActionButton(
-                  icon: Assets.svg.iconSelectLanguage.icon(
-                    color: primaryColor,
-                  ),
+                  icon: Assets.svg.iconSelectLanguage.icon(color: primaryColor),
                   label: context.i18n.settings_app_language,
                   trailing: Text(
                     ref.watch(localePreferredLanguageProvider).name,
                     style: context.theme.appTextThemes.caption.copyWith(color: primaryColor),
                   ),
-                  onTap: () {
-                    AppLanguagesRoute().push<void>(context);
-                  },
+                  onTap: () => AppLanguagesRoute().push<void>(context),
                 ),
-                if (contentLanguages != null)
-                  ModalActionButton(
-                    icon: Assets.svg.iconSelectLanguage.icon(
-                      color: primaryColor,
-                    ),
+                contentLangsAsync.maybeWhen(
+                  orElse: () => const ItemLoadingState(),
+                  data: (_) => ModalActionButton(
+                    icon: Assets.svg.iconSelectLanguage.icon(color: primaryColor),
                     label: context.i18n.settings_content_language,
                     trailing: Row(
                       mainAxisSize: MainAxisSize.min,
                       children: [
                         if (contentLanguages.length > 1)
-                          _RemainingLanguagesLabel(
-                            value: contentLanguages.length,
-                          )
+                          _RemainingLanguagesLabel(value: contentLanguages.length)
                         else if (contentLanguages.isNotEmpty)
                           Text(
-                            contentLanguages.first.name,
+                            Language.fromIsoCode(contentLanguages.first)?.name ??
+                                contentLanguages.first,
                             style:
                                 context.theme.appTextThemes.caption.copyWith(color: primaryColor),
                           ),
                       ],
                     ),
-                    onTap: () {
-                      ContentLanguagesRoute().push<void>(context);
-                    },
-                  )
-                else
-                  const ItemLoadingState(),
+                    onTap: () => ContentLanguagesRoute().push<void>(context),
+                  ),
+                ),
                 ModalActionButton(
                   icon: Assets.svg.iconBlockDelete.icon(
                     color: context.theme.appColors.attentionRed,
@@ -133,22 +111,19 @@ class AccountSettingsModal extends HookConsumerWidget {
 
 class _RemainingLanguagesLabel extends StatelessWidget {
   const _RemainingLanguagesLabel({required this.value});
-
   final int value;
 
   @override
-  Widget build(BuildContext context) {
-    return Container(
-      padding: EdgeInsets.symmetric(horizontal: 6.0.s),
-      decoration: BoxDecoration(
-        color: context.theme.appColors.onTerararyFill,
-        borderRadius: BorderRadius.circular(12),
-      ),
-      child: Text(
-        value.toString(),
-        style: context.theme.appTextThemes.caption
-            .copyWith(color: context.theme.appColors.primaryAccent),
-      ),
-    );
-  }
+  Widget build(BuildContext context) => Container(
+        padding: EdgeInsets.symmetric(horizontal: 6.0.s),
+        decoration: BoxDecoration(
+          color: context.theme.appColors.onTerararyFill,
+          borderRadius: BorderRadius.circular(12),
+        ),
+        child: Text(
+          value.toString(),
+          style: context.theme.appTextThemes.caption
+              .copyWith(color: context.theme.appColors.primaryAccent),
+        ),
+      );
 }

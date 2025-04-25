@@ -7,8 +7,8 @@ import 'package:ion/app/components/counter_items_footer/text_action_button.dart'
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/feed/providers/counters/like_reaction_provider.c.dart';
 import 'package:ion/app/features/feed/providers/counters/likes_count_provider.c.dart';
-import 'package:ion/app/features/feed/providers/counters/likes_notifier.c.dart';
 import 'package:ion/app/features/ion_connect/model/event_reference.c.dart';
+import 'package:ion/app/features/optimistic_ui/features/likes/post_like_provider.c.dart';
 import 'package:ion/app/utils/num.dart';
 import 'package:ion/generated/assets.gen.dart';
 
@@ -27,13 +27,11 @@ class LikesCounterButton extends ConsumerWidget {
     final likesCount = ref.watch(likesCountProvider(eventReference));
     final isLiked = ref.watch(isLikedProvider(eventReference));
 
-    ref.displayErrors(likesNotifierProvider(eventReference));
-
     return GestureDetector(
       behavior: HitTestBehavior.opaque,
       onTap: () {
         HapticFeedback.lightImpact();
-        ref.read(likesNotifierProvider(eventReference).notifier).toggle();
+        ref.read(toggleLikeNotifierProvider.notifier).toggle(eventReference);
       },
       child: Container(
         constraints: BoxConstraints(minWidth: 50.0.s),
