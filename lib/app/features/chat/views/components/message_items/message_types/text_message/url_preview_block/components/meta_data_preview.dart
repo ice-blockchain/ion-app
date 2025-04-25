@@ -78,7 +78,7 @@ class _MetaImage extends StatelessWidget {
         child: IonNetworkImage(
           imageUrl: imageUrl,
           fit: BoxFit.cover,
-          height: 146.0.s,
+          errorWidget: (context, url, error) => const SizedBox.shrink(),
         ),
       ),
     );

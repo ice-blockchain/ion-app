@@ -26,22 +26,24 @@ class UrlPreviewBlock extends HookWidget {
     useAutomaticKeepAlive();
     return GestureDetector(
       onTap: () => openUrlInAppBrowser(url),
-      child: UrlPreview(
-        url: url,
-        builder: (meta, favIconUrl) {
-          if (meta == null) {
-            return const SizedBox.shrink();
-          }
-          return Padding(
-            padding: EdgeInsetsDirectional.only(top: 8.0.s),
-            child: _MetaDataPreview(
-              meta: meta,
-              favIconUrl: favIconUrl,
-              url: url,
-              isMe: isMe,
-            ),
-          );
-        },
+      child: IntrinsicHeight(
+        child: UrlPreview(
+          url: url,
+          builder: (meta, favIconUrl) {
+            if (meta == null) {
+              return const SizedBox.shrink();
+            }
+            return Padding(
+              padding: EdgeInsetsDirectional.only(top: 8.0.s),
+              child: _MetaDataPreview(
+                meta: meta,
+                favIconUrl: favIconUrl,
+                url: url,
+                isMe: isMe,
+              ),
+            );
+          },
+        ),
       ),
     );
   }

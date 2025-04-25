@@ -71,11 +71,9 @@ class TextMessage extends HookConsumerWidget {
               hasRepliedMessage: repliedMessageItem != null,
             ),
             if (metadata != null)
-              IntrinsicHeight(
-                child: UrlPreviewBlock(
-                  url: firstUrl!,
-                  isMe: isMe,
-                ),
+              UrlPreviewBlock(
+                url: firstUrl!,
+                isMe: isMe,
               ),
             if (hasReactionsOrMetadata)
               Row(
