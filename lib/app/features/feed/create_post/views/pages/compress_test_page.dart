@@ -88,6 +88,7 @@ class VideoCompressTab extends HookConsumerWidget {
         await compressedVideoController.value!.play();
         compressedSize.value = formattedFileSize(compressedFile.path) ?? '';
         isCompressing.value = false;
+        print(compressedFile.path);
       }
     }
 
@@ -161,6 +162,8 @@ class ImageCompressTab extends HookConsumerWidget {
 
         compressedImage.value = compressedFile;
         isCompressing.value = false;
+
+        print(compressedFile.path);
       }
     }
 
