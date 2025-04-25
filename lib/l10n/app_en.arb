@@ -474,7 +474,7 @@
   "video_not_found": "Video not found",
   "turn_notifications_title": "Turn on notifications",
   "turn_notifications_description": "Receive notifications when you transfer and receive funds",
-  "turn_notifications_receive": "Receive notifications when your sending or receiving assets",
+  "turn_notifications_receive": "Receive notifications when you are sending or receiving assets",
   "turn_notifications_stay_up": "Stay up to date with the latest news",
   "turn_notifications_chat": "Chat and receive notifications even if the application is closed",
   "turn_notifications_sent_title": "Sent ICE",
