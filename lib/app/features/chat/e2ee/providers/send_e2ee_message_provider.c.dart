@@ -4,16 +4,19 @@ import 'dart:async';
 
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/exceptions/exceptions.dart';
+import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/auth/providers/auth_provider.c.dart';
 import 'package:ion/app/features/chat/community/models/entities/tags/pubkey_tag.c.dart';
 import 'package:ion/app/features/chat/e2ee/model/entities/private_direct_message_data.c.dart';
 import 'package:ion/app/features/chat/e2ee/model/entities/private_message_reaction_data.c.dart';
+import 'package:ion/app/features/chat/e2ee/providers/send_chat_message/send_e2ee_chat_message_service.c.dart';
 import 'package:ion/app/features/chat/model/database/chat_database.c.dart';
 import 'package:ion/app/features/chat/providers/conversation_pubkeys_provider.c.dart';
 import 'package:ion/app/features/core/providers/env_provider.c.dart';
 import 'package:ion/app/features/ion_connect/ion_connect.dart';
 import 'package:ion/app/features/ion_connect/model/action_source.c.dart';
 import 'package:ion/app/features/ion_connect/model/entity_expiration.c.dart';
+import 'package:ion/app/features/ion_connect/model/event_reference.c.dart';
 import 'package:ion/app/features/ion_connect/model/related_event.c.dart';
 import 'package:ion/app/features/ion_connect/providers/ion_connect_event_signer_provider.c.dart';
 import 'package:ion/app/features/ion_connect/providers/ion_connect_notifier.c.dart';
@@ -64,59 +67,46 @@ class SendE2eeMessageService {
   final allowedStatus = [MessageDeliveryStatus.received, MessageDeliveryStatus.read];
 
   // TODO: Create a separate provider for message status updates
-  Future<void> sendMessageStatus(
-    EventMessage kind14Rumor,
-    MessageDeliveryStatus status,
-  ) async {
+  Future<void> sendMessageStatus({
+    required Ref ref,
+    required MessageDeliveryStatus status,
+    required EventMessage messageEventMessage,
+  }) async {
     if (!allowedStatus.contains(status)) {
       return;
     }
-
+    
     final eventMessage = await createEventMessage(
       content: status.name,
       signer: eventSigner!,
       kind: PrivateMessageReactionEntity.kind,
       tags: [
-        ['k', ReplaceablePrivateDirectMessageEntity.kind.toString()],
-        [PubkeyTag.tagName, kind14Rumor.pubkey],
-        [RelatedImmutableEvent.tagName, kind14Rumor.id],
+        ReplaceableEventReference(
+          kind: messageEventMessage.kind,
+          pubkey: messageEventMessage.pubkey,
+          dTag: messageEventMessage.sharedId,
+        ).toTag(),
         ['b', currentUserMasterPubkey],
       ],
     );
 
-    final privateDirectMessageEntity = PrivateDirectMessageData.fromEventMessage(kind14Rumor);
-
-    final participantsMasterPubkeys =
-        privateDirectMessageEntity.relatedPubkeys?.map((tag) => tag.value).toList();
-
-    if (participantsMasterPubkeys == null) {
-      throw ParticipantsMasterPubkeysNotFoundException(kind14Rumor.id);
-    }
-
     await Future.wait(
-      participantsMasterPubkeys.map((masterPubkey) async {
-        final currentUser = currentUserMasterPubkey == masterPubkey;
+      messageEventMessage.participantsMasterPubkeys.map((masterPubkey) async {
+        final participantsKeysMap = await conversationPubkeysNotifier
+            .fetchUsersKeys(messageEventMessage.participantsMasterPubkeys);
 
-        final participantsKeysMap =
-            await conversationPubkeysNotifier.fetchUsersKeys(participantsMasterPubkeys);
         final pubkey = participantsKeysMap[masterPubkey];
 
         if (pubkey == null) {
           throw UserPubkeyNotFoundException(masterPubkey);
         }
 
-        final giftWrap = await createGiftWrap(
-          signer: eventSigner!,
+        await ref.read(sendE2eeChatMessageServiceProvider).sendWrappedMessage(
+          pubkey: pubkey,
+          eventSigner: eventSigner!,
           eventMessage: eventMessage,
-          receiverMasterPubkey: masterPubkey,
-          kinds: [PrivateMessageReactionEntity.kind.toString()],
-          receiverPubkey: currentUser ? eventSigner!.publicKey : pubkey,
-        );
-
-        await ionConnectNotifier.sendEvent(
-          giftWrap,
-          cache: false,
-          actionSource: ActionSourceUserChat(masterPubkey, anonymous: true),
+          masterPubkey: masterPubkey,
+          wrappedKinds: [PrivateMessageReactionEntity.kind.toString()],
         );
       }),
     );

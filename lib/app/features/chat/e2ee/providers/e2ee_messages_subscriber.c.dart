@@ -163,22 +163,8 @@ class E2eeMessagesSubscriber extends _$E2eeMessagesSubscriber {
     if (rumor != null) {
       if (rumor.kind != DeletionRequest.kind &&
           rumor.kind != GenericRepostEntity.kind &&
-          (rumor.tags.any((tag) => tag[0] == ConversationIdentifier.tagName) ||
-              rumor.kind == PrivateMessageReactionEntity.kind)) {
-        // Try to get kind 14 event id from related event tag or use the rumor id
-        final kind14EventId = rumor.kind == PrivateMessageReactionEntity.kind
-            ? rumor.tags
-                .firstWhereOrNull((tags) => tags[0] == RelatedImmutableEvent.tagName)
-                ?.elementAtOrNull(1)
-            : rumor.id;
-        // Try to get sender master pubkey from tags ('b' tag present in all events)
-        final rumorMasterPubkey =
-            rumor.tags.firstWhereOrNull((tags) => tags[0] == 'b')?.elementAtOrNull(1);
-
-        if (kind14EventId == null || rumorMasterPubkey == null) {
-          throw ReceiverDevicePubkeyNotFoundException(rumor.id);
-        }
-
+          (rumor.kind == PrivateMessageReactionEntity.kind ||
+              rumor.kind == ReplaceablePrivateDirectMessageEntity.kind)) {
         // Only for kind 30014
         if (rumor.kind == ReplaceablePrivateDirectMessageEntity.kind) {
           // Add conversation if that doesn't exist
@@ -188,11 +174,6 @@ class E2eeMessagesSubscriber extends _$E2eeMessagesSubscriber {
 
           await _addMediaToDatabase(rumor);
 
-          // If user received another user message add "received" status
-          // for them both into the database, we don't know anything about
-          // other users in the conversation
-          //final sendTo = {masterPubkey, rumorMasterPubkey};
-
           // Notify rest of the participants that the message was received
           // by the current user
           final currentStatus = await conversationMessageStatusDao.checkMessageStatus(
@@ -201,35 +182,40 @@ class E2eeMessagesSubscriber extends _$E2eeMessagesSubscriber {
           );
 
           if (currentStatus == null || currentStatus.index < MessageDeliveryStatus.received.index) {
-            await sendE2eeMessageService.sendMessageStatus(rumor, MessageDeliveryStatus.received);
+            await sendE2eeMessageService.sendMessageStatus(
+              ref: ref,
+              messageEventMessage: rumor,
+              status: MessageDeliveryStatus.received,
+            );
           }
 
           // Only for kind 7
         } else if (rumor.kind == PrivateMessageReactionEntity.kind) {
+          final reactionEntity = PrivateMessageReactionEntity.fromEventMessage(rumor);
           // Identify kind 7 status message (received or read only)
-          if (rumor.content == MessageDeliveryStatus.received.name ||
-              rumor.content == MessageDeliveryStatus.read.name) {
-            final status = rumor.content == MessageDeliveryStatus.received.name
+          if (reactionEntity.data.content == MessageDeliveryStatus.received.name ||
+              reactionEntity.data.content == MessageDeliveryStatus.read.name) {
+            final status = reactionEntity.data.content == MessageDeliveryStatus.received.name
                 ? MessageDeliveryStatus.received
                 : MessageDeliveryStatus.read;
 
-            // Add corresponding status to the database for the sender master pubkey
-            // and the kind 14 event id, if that doesn't exist
-            if (rumor.sharedId != null) {
-              await conversationMessageStatusDao.add(
+            // Add corresponding status to the database for the sender pubkey
+            // and the kind 30014 shared id, if that doesn't exist
+            if (reactionEntity.data.reference.dTag != null) {
+              await conversationMessageStatusDao.addOrUpdateStatus(
                 status: status,
                 pubkey: rumor.pubkey,
-                sharedId: rumor.sharedId!,
-                masterPubkey: rumorMasterPubkey,
+                masterPubkey: rumor.masterPubkey,
+                sharedId: reactionEntity.data.reference.dTag!,
               );
             }
           } else {
-            await conversationMessageReactionDao.add(
-              ref: ref,
-              newReactionEvent: rumor,
-              kind14EventId: kind14EventId,
-              masterPubkey: rumorMasterPubkey,
-            );
+            //  await conversationMessageReactionDao.add(
+            //    ref: ref,
+            //    newReactionEvent: rumor,
+            //    kind14EventId: kind14EventId,
+            //    masterPubkey: rumor.masterPubkey,
+            //  );
           }
         }
         // For kind 5
