@@ -16,7 +16,6 @@ import 'package:ion/app/features/wallets/data/repository/transactions_repository
 import 'package:ion/app/features/wallets/model/entities/funds_request_entity.c.dart';
 import 'package:ion/app/features/wallets/model/entities/wallet_asset_entity.c.dart';
 import 'package:ion/app/features/wallets/providers/wallets_initializer_provider.c.dart';
-import 'package:ion/app/features/wallets/utils/tag_finder.dart';
 import 'package:ion/app/services/ion_connect/ion_connect_gift_wrap_service.c.dart';
 import 'package:ion/app/services/ion_connect/ion_connect_seal_service.c.dart';
 import 'package:ion/app/services/logger/logger.dart';
@@ -173,11 +172,9 @@ Future<void> _handleWalletAssetEntity({
   final message = WalletAssetEntity.fromEventMessage(rumor);
   await transactionsRepository.saveEntities([message]);
 
-  // Check if this transaction is associated with a funds request
-  final requestJson = findTagValue(rumor.tags, 'request');
+  final requestJson = message.data.request;
   if (requestJson != null) {
     try {
-      // Parse the request JSON
       final decodedJson = jsonDecode(requestJson) as Map;
 
       final requestId = decodedJson['id'] as String;

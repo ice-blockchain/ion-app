@@ -150,10 +150,11 @@ class _SendMoneyButton extends ConsumerWidget {
       sendAssetFormController
         ..setRequest(request!)
         ..setContact(receiverPubkey, isContactPreselected: true)
-        ..setReceiverAddress(receiverAddress ?? '')
-        ..setCoinsAmount(amount ?? '');
+        ..setReceiverAddress(receiverAddress ?? '');
 
       await sendAssetFormController.setNetwork(network);
+
+      sendAssetFormController.setCoinsAmount(amount ?? '');
 
       if (!context.mounted) return;
 

@@ -71,7 +71,7 @@ class WalletsDatabase extends _$WalletsDatabase {
           await m.dropColumn(schema.transactionsTable, 'balance_before_transfer');
         },
         from4To5: (m, schema) async {
-          await m.dropColumn(schema.fundsRequestsTable, 'isPending');
+          await m.dropColumn(schema.fundsRequestsTable, 'is_pending');
           await m.addColumn(schema.fundsRequestsTable, schema.fundsRequestsTable.transactionId);
         },
       ),

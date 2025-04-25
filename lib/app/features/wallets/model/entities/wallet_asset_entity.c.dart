@@ -10,7 +10,6 @@ import 'package:ion/app/features/ion_connect/model/related_pubkey.c.dart';
 import 'package:ion/app/features/wallets/model/entities/funds_request_entity.c.dart';
 import 'package:ion/app/features/wallets/model/entities/tags/asset_address_tag.c.dart';
 import 'package:ion/app/features/wallets/model/entities/tags/asset_class_tag.c.dart';
-import 'package:ion/app/features/wallets/model/entities/tags/label_namespace_tag.c.dart';
 import 'package:ion/app/features/wallets/model/entities/tags/label_tag.c.dart';
 import 'package:ion/app/features/wallets/model/entities/tags/network_tag.c.dart';
 import 'package:ion/app/features/wallets/model/entities/tags/request_tag.c.dart';
@@ -83,12 +82,7 @@ class WalletAssetData with _$WalletAssetData {
       NetworkTag(value: networkId).toTag(),
       AssetClassTag(value: assetClass).toTag(),
       AssetAddressTag(value: assetAddress).toTag(),
-      if (pubkey != null)
-        RelatedPubkey(value: pubkey!).toTag()
-      else if (walletAddress != null) ...[
-        LabelNamespaceTag.walletAddress().toTag(),
-        LabelTag(value: walletAddress!).toTag(),
-      ],
+      if (pubkey != null) RelatedPubkey(value: pubkey!).toTag(),
       if (requestEntity != null) RequestTag(value: requestEntity.data.request!).toTag(),
     ];
 

@@ -9,7 +9,6 @@ import 'package:ion/app/features/ion_connect/ion_connect.dart';
 import 'package:ion/app/features/ion_connect/model/related_pubkey.c.dart';
 import 'package:ion/app/features/wallets/model/entities/tags/asset_address_tag.c.dart';
 import 'package:ion/app/features/wallets/model/entities/tags/asset_class_tag.c.dart';
-import 'package:ion/app/features/wallets/model/entities/tags/label_namespace_tag.c.dart';
 import 'package:ion/app/features/wallets/model/entities/tags/label_tag.c.dart';
 import 'package:ion/app/features/wallets/model/entities/tags/network_tag.c.dart';
 import 'package:ion/app/features/wallets/model/transaction_data.c.dart';
@@ -81,12 +80,7 @@ class FundsRequestData with _$FundsRequestData {
       NetworkTag(value: networkId).toTag(),
       AssetClassTag(value: assetClass).toTag(),
       AssetAddressTag(value: assetAddress).toTag(),
-      if (pubkey != null)
-        RelatedPubkey(value: pubkey!).toTag()
-      else if (walletAddress != null) ...[
-        LabelNamespaceTag.walletAddress().toTag(),
-        LabelTag(value: walletAddress!).toTag(),
-      ],
+      if (pubkey != null) RelatedPubkey(value: pubkey!).toTag(),
     ];
 
     final createdAt = DateTime.now();
