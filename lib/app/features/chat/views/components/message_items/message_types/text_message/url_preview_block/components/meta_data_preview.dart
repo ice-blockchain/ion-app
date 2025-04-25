@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: ice License 1.0
 
-part of '../url_preview_message.dart';
+part of '../url_preview_block.dart';
 
 class _MetaDataPreview extends StatelessWidget {
   const _MetaDataPreview({
@@ -17,27 +17,25 @@ class _MetaDataPreview extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return IntrinsicHeight(
-      child: Row(
-        children: [
-          _SideVerticalDivider(isMe: isMe),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                if (meta.image != null)
-                  _MetaImage(
-                    imageUrl: resolveImageUrl(url, meta.image!),
-                  ),
-                if (meta.siteName != null)
-                  _MetaSiteInfo(meta.siteName!, favIconUrl: favIconUrl, isMe: isMe),
-                if (meta.title != null) _MetaTitle(meta.title!, isMe: isMe),
-                if (meta.description != null) _MetaDescription(meta.description!, isMe: isMe),
-              ],
-            ),
+    return Row(
+      children: [
+        _SideVerticalDivider(isMe: isMe),
+        Expanded(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              if (meta.image != null)
+                _MetaImage(
+                  imageUrl: resolveImageUrl(url, meta.image!),
+                ),
+              if (meta.siteName != null)
+                _MetaSiteInfo(meta.siteName!, favIconUrl: favIconUrl, isMe: isMe),
+              if (meta.title != null) _MetaTitle(meta.title!, isMe: isMe),
+              if (meta.description != null) _MetaDescription(meta.description!, isMe: isMe),
+            ],
           ),
-        ],
-      ),
+        ),
+      ],
     );
   }
 }
@@ -79,8 +77,8 @@ class _MetaImage extends StatelessWidget {
         borderRadius: BorderRadius.circular(12.0.s),
         child: IonNetworkImage(
           imageUrl: imageUrl,
-          width: double.infinity,
           fit: BoxFit.cover,
+          height: 146.0.s,
         ),
       ),
     );

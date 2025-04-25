@@ -3,16 +3,20 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:ion/app/components/text_span_builder/hooks/use_text_span_builder.dart';
+import 'package:ion/app/components/text_span_builder/text_span_builder.dart';
+import 'package:ion/app/components/url_preview/providers/url_metadata_provider.c.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/auth/providers/auth_provider.c.dart';
 import 'package:ion/app/features/chat/hooks/use_has_reaction.dart';
 import 'package:ion/app/features/chat/model/message_list_item.c.dart';
 import 'package:ion/app/features/chat/recent_chats/providers/replied_message_list_item_provider.c.dart';
-import 'package:ion/app/features/chat/views/components/message_items/message_item_wrapper/message_item_wrapper.dart';
-import 'package:ion/app/features/chat/views/components/message_items/message_metadata/message_metadata.dart';
+import 'package:ion/app/features/chat/views/components/message_items/components.dart';
 import 'package:ion/app/features/chat/views/components/message_items/message_reactions/message_reactions.dart';
 import 'package:ion/app/features/chat/views/components/message_items/message_types/reply_message/reply_message.dart';
 import 'package:ion/app/features/ion_connect/ion_connect.dart';
+import 'package:ion/app/services/text_parser/model/text_matcher.dart';
+import 'package:ion/app/services/text_parser/text_parser.dart';
 
 class TextMessage extends HookConsumerWidget {
   const TextMessage({
@@ -30,7 +34,11 @@ class TextMessage extends HookConsumerWidget {
       color: isMe ? context.theme.appColors.onPrimaryAccent : context.theme.appColors.primaryText,
     );
 
-    final hasReactions = useHasReaction(eventMessage, ref);
+    final firstUrl = RegExp(const UrlMatcher().pattern).firstMatch(eventMessage.content)?.group(0);
+
+    final metadata = firstUrl != null ? ref.watch(urlMetadataProvider(firstUrl)).valueOrNull : null;
+
+    final hasReactions = useHasReaction(eventMessage, ref) || metadata != null;
 
     final messageItem = TextItem(
       eventMessage: eventMessage,
@@ -62,6 +70,13 @@ class TextMessage extends HookConsumerWidget {
               hasReactions: hasReactions,
               hasRepliedMessage: repliedMessageItem != null,
             ),
+            if (metadata != null)
+              IntrinsicHeight(
+                child: UrlPreviewBlock(
+                  url: firstUrl!,
+                  isMe: isMe,
+                ),
+              ),
             if (hasReactions)
               Row(
                 mainAxisSize: MainAxisSize.min,
@@ -128,18 +143,14 @@ class _TextMessageContent extends HookWidget {
     final multiline = oneLineMetrics.length > 1;
 
     if (hasReactions) {
-      return Text(
-        content,
-        style: textStyle,
-        textAlign: TextAlign.start,
-      );
+      return _TextRichContent(text: content, textStyle: textStyle);
     }
     if (!multiline) {
       return Row(
         mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.end,
         children: [
-          Text(content, style: textStyle),
+          _TextRichContent(text: content, textStyle: textStyle),
           if (hasRepliedMessage) const Spacer(),
           MessageMetaData(eventMessage: eventMessage, key: metadataRef.value),
         ],
@@ -157,13 +168,39 @@ class _TextMessageContent extends HookWidget {
       return Stack(
         alignment: AlignmentDirectional.bottomEnd,
         children: [
-          Text(
-            '$content${wouldOverlap ? '\n' : ''}',
-            style: textStyle,
-          ),
+          _TextRichContent(text: wouldOverlap ? '$content\n' : content, textStyle: textStyle),
           MessageMetaData(eventMessage: eventMessage, key: metadataRef.value),
         ],
       );
     }
+  }
+}
+
+class _TextRichContent extends HookWidget {
+  const _TextRichContent({
+    required this.textStyle,
+    required this.text,
+  });
+
+  final TextStyle textStyle;
+  final String text;
+
+  @override
+  Widget build(BuildContext context) {
+    return Text.rich(
+      useTextSpanBuilder(
+        context,
+        defaultStyle: textStyle,
+        matcherStyles: {
+          const UrlMatcher(): textStyle.copyWith(
+            decoration: TextDecoration.underline,
+            decorationColor: textStyle.color,
+          ),
+        },
+      ).build(
+        TextParser(matchers: {const UrlMatcher()}).parse(text),
+        onTap: (match) => TextSpanBuilder.defaultOnTap(context, match: match),
+      ),
+    );
   }
 }
