@@ -46,7 +46,11 @@ class AboutImportTokenDialog extends ConsumerWidget {
               ),
               SizedBox(height: 8.0.s),
               Text(
-                locales.wallet_import_token_about_description,
+                [
+                  locales.wallet_import_token_about_description_1,
+                  locales.wallet_import_token_about_description_2,
+                  locales.wallet_import_token_about_description_3,
+                ].join('\n\n'),
                 textAlign: TextAlign.center,
                 style: textStyles.body2.copyWith(color: colors.secondaryText),
               ),
