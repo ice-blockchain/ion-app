@@ -13,36 +13,20 @@ class ConversationMessageDataDao extends DatabaseAccessor<ChatDatabase>
     with _$ConversationMessageDataDaoMixin {
   ConversationMessageDataDao(super.db);
 
-  Future<void> add({
+  Future<void> addOrUpdateStatus({
     required String pubkey,
     required String sharedId,
     required String masterPubkey,
     required MessageDeliveryStatus status,
   }) async {
-    // Check if the status is already present in the database for given pubkey
-    // (user device) and sharedId (message id)
+    // Fetch the existing status for the given pubkey and sharedId
     final existingStatus = await (select(messageStatusTable)
           ..where((table) => table.pubkey.equals(pubkey))
-          ..where((table) => table.sharedId.equals(sharedId))
-          ..limit(1))
+          ..where((table) => table.sharedId.equals(sharedId)))
         .getSingleOrNull();
 
-    // If the status is already present and the new status is higher than the
-    // existing status, update the existing status
-    if (existingStatus != null && status.index > existingStatus.status.index) {
-      await (update(messageStatusTable)
-            ..where((table) => table.pubkey.equals(pubkey))
-            ..where((table) => table.sharedId.equals(sharedId)))
-          .write(
-        MessageStatusTableCompanion(
-          pubkey: Value(pubkey),
-          status: Value(status),
-          sharedId: Value(sharedId),
-          masterPubkey: Value(masterPubkey),
-        ),
-      );
-      // If the status is not present, insert a new row
-    } else {
+    if (existingStatus == null) {
+      // Insert a new row if no existing status is found
       await into(messageStatusTable).insert(
         MessageStatusTableCompanion(
           status: Value(status),
@@ -50,40 +34,59 @@ class ConversationMessageDataDao extends DatabaseAccessor<ChatDatabase>
           sharedId: Value(sharedId),
           masterPubkey: Value(masterPubkey),
         ),
-        mode: InsertMode.insertOrReplace,
+      );
+    } else if (status.index > existingStatus.status.index) {
+      // Update the row if the new status has a higher priority
+      await (update(messageStatusTable)
+            ..where((table) => table.pubkey.equals(pubkey))
+            ..where((table) => table.sharedId.equals(sharedId)))
+          .write(
+        MessageStatusTableCompanion(
+          status: Value(status),
+        ),
       );
     }
   }
 
   Stream<MessageDeliveryStatus> messageStatus({
     required String sharedId,
-    required String masterPubkey,
+    required String currentUserMasterPubkey,
   }) {
-    return (select(messageStatusTable)
-          ..where((table) => table.sharedId.equals(sharedId))
-          ..where((table) => table.pubkey.equals(masterPubkey)))
+    return (select(messageStatusTable)..where((table) => table.sharedId.equals(sharedId)))
         .watch()
         .map((rows) {
-      if (rows.every((row) => row.status == MessageDeliveryStatus.deleted)) {
+      // If any of the rows are deleted, we consider the message as deleted
+      if (rows.any((row) => row.status == MessageDeliveryStatus.deleted)) {
         return MessageDeliveryStatus.deleted;
       } else
-      // First check if any of the rows are failed
+      // Check if any of the rows failed (message is not sent, only local copy is
+      // written to the database)
       if (rows.any((row) => row.status == MessageDeliveryStatus.failed)) {
         return MessageDeliveryStatus.failed;
       } else
-      // Check if any row (user device) have read status which we consider as read
-      if (rows.any((row) => row.status == MessageDeliveryStatus.read)) {
+      // Check if any received user device have read status which we consider as read
+      if (rows.any(
+        (row) =>
+            row.status == MessageDeliveryStatus.read && row.masterPubkey != currentUserMasterPubkey,
+      )) {
         return MessageDeliveryStatus.read;
       } else
-      // Check if any row (user device) have received status which we consider as received
-      if (rows.any((row) => row.status.index >= MessageDeliveryStatus.received.index)) {
+      // Check if any received user device have received status which we consider as received
+      if (rows.any(
+        (row) =>
+            row.status.index == MessageDeliveryStatus.received.index &&
+            row.masterPubkey != currentUserMasterPubkey,
+      )) {
         return MessageDeliveryStatus.received;
       } else
-      // Check if any row (user device) have higher status then created
-      if (rows.any((row) => row.status.index > MessageDeliveryStatus.created.index)) {
+      // Check if any received user device have higher status then created
+      if (rows.any(
+        (row) =>
+            row.status.index == MessageDeliveryStatus.sent.index &&
+            row.masterPubkey != currentUserMasterPubkey,
+      )) {
         return MessageDeliveryStatus.sent;
       }
-
       return MessageDeliveryStatus.created;
     });
   }
