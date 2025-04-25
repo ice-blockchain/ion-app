@@ -75,7 +75,7 @@ class SendE2eeMessageService {
     if (!allowedStatus.contains(status)) {
       return;
     }
-    
+
     final eventMessage = await createEventMessage(
       content: status.name,
       signer: eventSigner!,
