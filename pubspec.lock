@@ -102,6 +102,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "7.0.3"
+  base58check:
+    dependency: transitive
+    description:
+      name: base58check
+      sha256: "6c300dfc33e598d2fe26319e13f6243fea81eaf8204cb4c6b69ef20a625319a5"
+      url: "https://pub.dev"
+    source: hosted
+    version: "2.0.0"
   bdk_flutter:
     dependency: transitive
     description:
@@ -151,6 +159,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.1.1"
+  btc_address_validate_swan:
+    dependency: "direct main"
+    description:
+      name: btc_address_validate_swan
+      sha256: fd9ee27302c75ddcb439f046c631d5778f8af053adad09905e97ea508050cc3a
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.2.1"
   build:
     dependency: transitive
     description:
@@ -471,6 +487,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "0.6.10"
+  dart_bech32:
+    dependency: transitive
+    description:
+      name: dart_bech32
+      sha256: "18029aba0d4aa422be9b6939c7283e42e53baeac8a2fd0e131631e45b80424b9"
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.0.1"
   dart_quill_delta:
     dependency: transitive
     description:

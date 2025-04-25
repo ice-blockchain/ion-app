@@ -61,6 +61,7 @@ class SendNftForm extends ConsumerWidget {
                     ContactInputSwitcher(
                       pubkey: selectedContactPubkey,
                       address: formController.receiverAddress,
+                      network: selectedNft.network,
                       onWalletAddressChanged: (value) {
                         if (value != null && value.isNotEmpty) {
                           notifier.setReceiverAddress(value);
