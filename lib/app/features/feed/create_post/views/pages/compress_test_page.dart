@@ -14,6 +14,7 @@ import 'package:ion/app/hooks/use_on_init.dart';
 import 'package:ion/app/services/compressors/image_compressor.c.dart';
 import 'package:ion/app/services/compressors/video_compressor.c.dart';
 import 'package:ion/app/services/media_service/media_service.c.dart';
+import 'package:ion/app/utils/filesize.dart';
 
 Timer? debounce;
 
@@ -68,12 +69,9 @@ class VideoCompressTab extends HookConsumerWidget {
 
       if (pickedFile != null) {
         final videoCompressor = ref.read(videoCompressorProvider);
-        thumbnail.value =
-            await videoCompressor.getThumbnail(MediaFile(path: pickedFile.xFiles.first.path));
 
         await compressedVideoController.value?.dispose();
         compressedVideoController.value = null;
-        compressedSize.value = '';
 
         // Display the original video size in mb
         originalSize.value =
@@ -88,6 +86,7 @@ class VideoCompressTab extends HookConsumerWidget {
             CachedVideoPlayerPlusController.file(File(compressedFile.path));
         await compressedVideoController.value!.initialize();
         await compressedVideoController.value!.play();
+        compressedSize.value = formattedFileSize(compressedFile.path) ?? '';
         isCompressing.value = false;
       }
     }

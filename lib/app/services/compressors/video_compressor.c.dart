@@ -38,7 +38,7 @@ class VideoCompressionSettings {
 
   static const balanced = VideoCompressionSettings(
     videoCodec: FFmpegVideoCodecArg.libx264,
-    preset: FfmpegPresetArg.medium,
+    preset: FfmpegPresetArg.slow,
     videoBitrate: FfmpegBitrateArg.medium,
     maxRate: FfmpegBitrateArg.medium,
     bufSize: FfmpegBitrateArg.medium,
