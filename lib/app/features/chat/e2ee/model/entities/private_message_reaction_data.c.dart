@@ -3,8 +3,8 @@
 import 'package:collection/collection.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:ion/app/exceptions/exceptions.dart';
-import 'package:ion/app/features/chat/e2ee/model/entities/private_direct_message_data.c.dart';
 import 'package:ion/app/features/ion_connect/ion_connect.dart';
+import 'package:ion/app/features/ion_connect/model/event_reference.c.dart';
 
 part 'private_message_reaction_data.c.freezed.dart';
 
@@ -35,8 +35,6 @@ class PrivateMessageReactionEntity with _$PrivateMessageReactionEntity {
 
   static const int kind = 7;
 
-  static const String likeSymbol = '+';
-
   @override
   bool operator ==(Object other) {
     return other is PrivateMessageReactionEntity && id == other.id;
@@ -49,29 +47,24 @@ class PrivateMessageReactionEntity with _$PrivateMessageReactionEntity {
 @freezed
 class PrivateMessageReactionEntityData with _$PrivateMessageReactionEntityData {
   const factory PrivateMessageReactionEntityData({
-    required String pubkey,
     required String content,
-    required String eventId,
+    required ReplaceableEventReference reference,
   }) = _PrivateMessageReactionEntityData;
 
   const PrivateMessageReactionEntityData._();
 
   factory PrivateMessageReactionEntityData.fromEventMessage(EventMessage eventMessage) {
     final tags = groupBy(eventMessage.tags, (tag) => tag[0]);
-    final kind = tags['k']?.first[1];
-    final eventId = tags['e']?.first[1];
-    final pubkey = tags['p']?.first[1];
 
-    if (eventId == null ||
-        pubkey == null ||
-        kind != ReplaceablePrivateDirectMessageEntity.kind.toString()) {
+    final identifierTag = tags[ReplaceableEventReference.tagName]?.first;
+
+    if (identifierTag == null) {
       throw IncorrectEventTagsException(eventId: eventMessage.id);
     }
 
     return PrivateMessageReactionEntityData(
-      eventId: eventId,
-      pubkey: pubkey,
       content: eventMessage.content,
+      reference: ReplaceableEventReference.fromTag(identifierTag),
     );
   }
 }

@@ -166,7 +166,7 @@ class SendE2eeChatMessageService {
               eventMessage: remoteEventMessage,
             );
 
-            await ref.read(conversationMessageDataDaoProvider).add(
+            await ref.read(conversationMessageDataDaoProvider).addOrUpdateStatus(
                   pubkey: pubkey,
                   sharedId: sharedId,
                   masterPubkey: masterPubkey,
@@ -174,7 +174,7 @@ class SendE2eeChatMessageService {
                 );
           } catch (e) {
             if (pubkey != null) {
-              await ref.read(conversationMessageDataDaoProvider).add(
+              await ref.read(conversationMessageDataDaoProvider).addOrUpdateStatus(
                     pubkey: pubkey,
                     sharedId: sharedId,
                     masterPubkey: masterPubkey,
@@ -188,8 +188,8 @@ class SendE2eeChatMessageService {
       for (final masterPubkey in participantsMasterPubkeys) {
         final pubkey = participantsPubkeysMap[masterPubkey];
 
-        if (pubkey != null) {
-          await ref.read(conversationMessageDataDaoProvider).add(
+        if (pubkey != null && sentMessage != null) {
+          await ref.read(conversationMessageDataDaoProvider).addOrUpdateStatus(
                 pubkey: pubkey,
                 sharedId: sharedId,
                 masterPubkey: masterPubkey,
@@ -481,11 +481,11 @@ class SendE2eeChatMessageService {
     await ref.read(chatDatabaseProvider).transaction(() async {
       await ref.read(conversationDaoProvider).add([localEventMessage]);
       await ref.read(conversationEventMessageDaoProvider).add(localEventMessage);
-      await ref.read(conversationMessageDataDaoProvider).add(
+      await ref.read(conversationMessageDataDaoProvider).addOrUpdateStatus(
             sharedId: sharedId,
             pubkey: localEventMessage.pubkey,
-            masterPubkey: localEventMessage.masterPubkey,
             status: MessageDeliveryStatus.created,
+            masterPubkey: localEventMessage.masterPubkey,
           );
 
       messageMediaIds = await ref.read(messageMediaDaoProvider).addBatch(

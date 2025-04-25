@@ -5,6 +5,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/extensions/extensions.dart';
+import 'package:ion/app/features/auth/providers/auth_provider.c.dart';
 import 'package:ion/app/features/chat/e2ee/model/entities/private_direct_message_data.c.dart';
 import 'package:ion/app/features/chat/e2ee/providers/chat_medias_provider.c.dart';
 import 'package:ion/app/features/chat/e2ee/providers/send_e2ee_message_provider.c.dart';
@@ -41,9 +42,11 @@ class MessageItemWrapper extends HookConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final messageItemKey = useMemoized(GlobalKey.new);
 
+    final currentUserMasterPubkey = ref.watch(currentPubkeySelectorProvider);
+
     final deliveryStatus = ref.watch(conversationMessageDataDaoProvider).messageStatus(
           sharedId: messageItem.eventMessage.sharedId!,
-          masterPubkey: messageItem.eventMessage.masterPubkey,
+          currentUserMasterPubkey: currentUserMasterPubkey!,
         );
 
     final showReactDialog = useCallback(
@@ -85,7 +88,7 @@ class MessageItemWrapper extends HookConsumerWidget {
 
     return StreamBuilder<MessageDeliveryStatus>(
       stream: deliveryStatus,
-      initialData: MessageDeliveryStatus.deleted,
+      initialData: MessageDeliveryStatus.created,
       builder: (context, snapshot) {
         if (snapshot.hasData && snapshot.data == MessageDeliveryStatus.deleted) {
           return const SizedBox.shrink();
