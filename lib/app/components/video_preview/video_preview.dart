@@ -71,6 +71,7 @@ class VideoPreview extends HookConsumerWidget {
       [isFullyVisible, context],
     );
 
+    final wasOffScreen = useRef(false);
     useOnInit(
       () {
         if (controller == null || !controller.value.isInitialized) {
@@ -82,9 +83,10 @@ class VideoPreview extends HookConsumerWidget {
             (!isFullyVisible.value || !isRouteFocused.value) && controller.value.isPlaying;
         if (shouldBeActive) {
           controller.play();
-        } else if (shouldBePaused) {
+        } else if (shouldBePaused && !wasOffScreen.value) {
           controller.pause();
         }
+        wasOffScreen.value = !isFullyVisible.value || !isRouteFocused.value;
       },
       [isFullyVisible.value, isRouteFocused.value, controller],
     );
