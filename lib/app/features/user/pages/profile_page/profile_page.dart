@@ -10,14 +10,18 @@ import 'package:ion/app/features/user/model/tab_entity_type.dart';
 import 'package:ion/app/features/user/model/user_content_type.dart';
 import 'package:ion/app/features/user/pages/components/header_action/header_action.dart';
 import 'package:ion/app/features/user/pages/components/profile_avatar/profile_avatar.dart';
+import 'package:ion/app/features/user/pages/profile_page/cant_find_profile_page.dart';
 import 'package:ion/app/features/user/pages/profile_page/components/header/header.dart';
 import 'package:ion/app/features/user/pages/profile_page/components/profile_details/profile_details.dart';
 import 'package:ion/app/features/user/pages/profile_page/components/tabs/content_separator.dart';
 import 'package:ion/app/features/user/pages/profile_page/components/tabs/tab_entities_list.dart';
 import 'package:ion/app/features/user/pages/profile_page/components/tabs/tabs_header/tabs_header.dart';
 import 'package:ion/app/features/user/pages/profile_page/hooks/use_animated_opacity_on_scroll.dart';
+import 'package:ion/app/features/user/providers/block_list_notifier.c.dart';
 import 'package:ion/app/features/user/providers/followers_count_provider.c.dart';
+import 'package:ion/app/features/user/providers/user_metadata_provider.c.dart';
 import 'package:ion/app/hooks/use_on_init.dart';
+import 'package:ion/app/router/components/navigation_app_bar/navigation_app_bar.dart';
 
 class ProfilePage extends HookConsumerWidget {
   const ProfilePage({
@@ -33,6 +37,22 @@ class ProfilePage extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final isBlocked = ref.watch(isBlockedProvider(pubkey));
+    final isBlocking = ref.watch(isBlockingProvider(pubkey)).valueOrNull;
+    final userMetadata = ref.watch(userMetadataProvider(pubkey));
+
+    if (userMetadata.isLoading || isBlocking == null) {
+      return const Scaffold(
+        appBar: NavigationAppBar(useScreenTopOffset: true),
+        body: SizedBox(),
+      );
+    }
+
+    final isBlockedOrBlocking = isBlocked || isBlocking;
+    if (!userMetadata.hasValue || isBlockedOrBlocking) {
+      return const CantFindProfilePage();
+    }
+
     useOnInit(
       () {
         ref.invalidate(followersCountProvider(pubkey: pubkey));

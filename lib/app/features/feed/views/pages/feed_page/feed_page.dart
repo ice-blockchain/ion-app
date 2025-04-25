@@ -84,6 +84,7 @@ class FeedPage extends HookConsumerWidget {
 
   Future<void> _onRefresh(WidgetRef ref) async {
     ref
+      // order matters here, otherwise multiple requests can happen
       // invalidate feedFilterRelaysProvider to trigger provider rebuild with new relays
       ..invalidate(feedFilterRelaysProvider)
       ..invalidate(entitiesPagedDataProvider(ref.read(feedStoriesDataSourceProvider)))
