@@ -64,28 +64,39 @@ class _SideVerticalDivider extends StatelessWidget {
   }
 }
 
-class _MetaImage extends StatelessWidget {
+class _MetaImage extends HookWidget {
   const _MetaImage({required this.imageUrl});
 
   final String imageUrl;
 
   @override
   Widget build(BuildContext context) {
+    final hasError = useState(false);
+
     return Padding(
-      padding: EdgeInsetsDirectional.only(top: 8.0.s),
+      padding: EdgeInsetsDirectional.symmetric(
+        vertical: hasError.value ? 0.0 : 8.0.s,
+      ),
       child: ClipRRect(
         borderRadius: BorderRadius.circular(12.0.s),
         child: IonNetworkImage(
           imageUrl: imageUrl,
           fit: BoxFit.cover,
-          errorWidget: (context, url, error) => const SizedBox.shrink(),
+          errorWidget: (context, url, error) {
+            if (!hasError.value) {
+              WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+                hasError.value = true;
+              });
+            }
+            return const SizedBox.shrink();
+          },
         ),
       ),
     );
   }
 }
 
-class _MetaSiteInfo extends StatelessWidget {
+class _MetaSiteInfo extends HookWidget {
   const _MetaSiteInfo(
     this.siteName, {
     required this.favIconUrl,
@@ -98,26 +109,34 @@ class _MetaSiteInfo extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: EdgeInsetsDirectional.only(top: 8.0.s),
-      child: Row(
-        children: [
+    final hasError = useState(false);
+
+    return Row(
+      children: [
+        if (favIconUrl != null)
           IonNetworkImage(
-            imageUrl: favIconUrl ?? '',
-            width: 16.0.s,
-            height: 16.0.s,
+            imageUrl: favIconUrl!,
+            width: hasError.value ? 0.0 : 16.0.s,
+            height: hasError.value ? 0.0 : 16.0.s,
+            errorWidget: (context, url, error) {
+              if (!hasError.value) {
+                WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+                  hasError.value = true;
+                });
+              }
+              return const SizedBox.shrink();
+            },
           ),
-          SizedBox(width: 6.0.s),
-          Text(
-            siteName,
-            style: context.theme.appTextThemes.body2.copyWith(
-              color: isMe
-                  ? context.theme.appColors.onPrimaryAccent
-                  : context.theme.appColors.primaryText,
-            ),
+        if (!hasError.value) SizedBox(width: 6.0.s),
+        Text(
+          siteName,
+          style: context.theme.appTextThemes.body2.copyWith(
+            color: isMe
+                ? context.theme.appColors.onPrimaryAccent
+                : context.theme.appColors.primaryText,
           ),
-        ],
-      ),
+        ),
+      ],
     );
   }
 }
