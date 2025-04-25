@@ -48,7 +48,7 @@ void main() {
       expect(wrap.tags[0][1], equals(masterPubkey));
       expect(wrap.tags[0][3], equals(receiverSigner.publicKey));
       expect(wrap.tags[1][0], equals('k'));
-      expect(wrap.tags[1][1], equals('14'));
+      expect(wrap.tags[1][1], equals(ReplaceablePrivateDirectMessageEntity.kind.toString()));
     });
 
     test('decodes wrap back to original event on senders side', () async {
@@ -68,7 +68,7 @@ void main() {
         privateKey: senderSigner.privateKey,
       );
 
-      expect(decodedWrap.kind, equals(14));
+      expect(decodedWrap.kind, equals(ReplaceablePrivateDirectMessageEntity.kind));
       expect(decodedWrap.content, equals(event.content));
       expect(decodedWrap.tags, equals(event.tags));
     });
@@ -90,7 +90,7 @@ void main() {
         privateKey: receiverSigner.privateKey,
       );
 
-      expect(decodedWrap.kind, equals(14));
+      expect(decodedWrap.kind, equals(ReplaceablePrivateDirectMessageEntity.kind));
       expect(decodedWrap.content, equals(event.content));
       expect(decodedWrap.tags, equals(event.tags));
     });
