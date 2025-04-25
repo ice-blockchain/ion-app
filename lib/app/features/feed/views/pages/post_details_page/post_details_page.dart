@@ -5,7 +5,6 @@ import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/components/separated/separator.dart';
 import 'package:ion/app/extensions/extensions.dart';
-import 'package:ion/app/features/components/entities_list/components/bookmark_button/bookmark_button.dart';
 import 'package:ion/app/features/feed/create_post/views/components/reply_input_field/reply_input_field.dart';
 import 'package:ion/app/features/feed/providers/can_reply_notifier.c.dart';
 import 'package:ion/app/features/feed/views/components/list_separator/list_separator.dart';
@@ -31,9 +30,6 @@ class PostDetailsPage extends HookConsumerWidget {
     return Scaffold(
       appBar: NavigationAppBar.screen(
         title: Text(context.i18n.post_page_title),
-        actions: [
-          BookmarkButton(eventReference: eventReference),
-        ],
       ),
       body: Column(
         children: [
