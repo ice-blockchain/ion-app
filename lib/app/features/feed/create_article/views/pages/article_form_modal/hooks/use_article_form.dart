@@ -68,7 +68,7 @@ ArticleFormState useArticleForm(WidgetRef ref, {EventReference? modifiedEvent}) 
   final descriptionOverflowCount = useState<int>(0);
   final isDescriptionLengthValid = useState(true);
   const titleMaxLength = 120;
-  const descriptionMaxLength = 25000;
+  const descriptionMaxLength = 25001;
 
   useEffect(
     () {
