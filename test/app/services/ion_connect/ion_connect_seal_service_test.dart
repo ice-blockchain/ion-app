@@ -58,7 +58,7 @@ void main() {
         senderSigner.privateKey,
       );
 
-      expect(decodedSeal.kind, equals(14));
+      expect(decodedSeal.kind, equals(ReplaceablePrivateDirectMessageEntity.kind));
       expect(decodedSeal.content, equals(rumor.content));
       expect(decodedSeal.tags, equals(rumor.tags));
     });
@@ -79,7 +79,7 @@ void main() {
         receiverSigner.privateKey,
       );
 
-      expect(decodedSeal.kind, equals(14));
+      expect(decodedSeal.kind, equals(ReplaceablePrivateDirectMessageEntity.kind));
       expect(decodedSeal.content, equals(rumor.content));
       expect(decodedSeal.tags, equals(rumor.tags));
     });
