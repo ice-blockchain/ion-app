@@ -10,6 +10,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/components/text_editor/utils/build_empty_delta.dart';
 import 'package:ion/app/components/text_editor/utils/extract_tags.dart';
 import 'package:ion/app/exceptions/exceptions.dart';
+import 'package:ion/app/extensions/delta.dart';
 import 'package:ion/app/features/core/model/media_type.dart';
 import 'package:ion/app/features/core/providers/env_provider.c.dart';
 import 'package:ion/app/features/feed/create_post/model/create_post_option.dart';
@@ -80,7 +81,10 @@ class CreatePostNotifier extends _$CreatePostNotifier {
       );
 
       final postData = ModifiablePostData(
-        content: _buildContentWithMediaLinks(content: postContent, media: media.values.toList()),
+        content: await _buildContentWithMediaLinks(
+          content: postContent,
+          media: media.values.toList(),
+        ),
         media: media,
         replaceableEventId: ReplaceableEventIdentifier.generate(),
         publishedAt: _buildEntityPublishedAt(),
@@ -88,12 +92,14 @@ class CreatePostNotifier extends _$CreatePostNotifier {
         relatedHashtags: extractTags(postContent).map((tag) => RelatedHashtag(value: tag)).toList(),
         quotedEvent: quotedEvent != null ? _buildQuotedEvent(quotedEvent) : null,
         relatedEvents: parentEntity != null ? _buildRelatedEvents(parentEntity) : null,
-        relatedPubkeys: parentEntity != null ? _buildRelatedPubkeys(parentEntity) : null,
+        relatedPubkeys: _buildRelatedPubkeys(postContent, parentEntity),
         settings: EntityDataWithSettings.build(whoCanReply: whoCanReply),
         expiration: _buildExpiration(),
         communityId: communityId,
-        richText:
-            _buildRichTextContentWithMediaLinks(content: postContent, media: media.values.toList()),
+        richText: await _buildRichTextContentWithMediaLinks(
+          content: postContent,
+          media: media.values.toList(),
+        ),
       );
 
       final posts = await _sendPostEntities([...files, postData]);
@@ -133,11 +139,11 @@ class CreatePostNotifier extends _$CreatePostNotifier {
       final removedMediaHashes = originalMediaHashes.difference(attachedMediaHashes).toList();
 
       final postData = modifiedEntity.data.copyWith(
-        content: _buildContentWithMediaLinks(
+        content: await _buildContentWithMediaLinks(
           content: postContent,
           media: modifiedMedia.values.toList(),
         ),
-        richText: _buildRichTextContentWithMediaLinks(
+        richText: await _buildRichTextContentWithMediaLinks(
           content: postContent,
           media: modifiedMedia.values.toList(),
         ),
@@ -248,11 +254,14 @@ class CreatePostNotifier extends _$CreatePostNotifier {
     };
   }
 
-  RichText _buildRichTextContentWithMediaLinks({
+  Future<RichText> _buildRichTextContentWithMediaLinks({
     required Delta content,
     required List<MediaAttachment> media,
-  }) {
-    final contentWithMedia = _buildContentWithMediaLinksDelta(content: content, media: media);
+  }) async {
+    final contentWithMedia = await _buildContentWithMediaLinksDelta(
+      content: content,
+      media: media,
+    );
 
     final richText = RichText(
       protocol: 'quill_delta',
@@ -262,25 +271,31 @@ class CreatePostNotifier extends _$CreatePostNotifier {
     return richText;
   }
 
-  String _buildContentWithMediaLinks({
+  Future<String> _buildContentWithMediaLinks({
     required Delta content,
     required List<MediaAttachment> media,
-  }) {
-    final contentWithMedia = _buildContentWithMediaLinksDelta(content: content, media: media);
-    return deltaToMarkdown(contentWithMedia);
+  }) async {
+    final contentWithMediaAndMentions = await _buildContentWithMediaLinksDelta(
+      content: content,
+      media: media,
+    );
+    return deltaToMarkdown(contentWithMediaAndMentions);
   }
 
-  Delta _buildContentWithMediaLinksDelta({
+  Future<Delta> _buildContentWithMediaLinksDelta({
     required Delta content,
     required List<MediaAttachment> media,
-  }) {
+  }) async {
+    final currentOperations = content.operations.toList();
+    final newContentDelta = Delta.fromOperations(currentOperations);
+
     return Delta.fromOperations(
       media
           .map(
             (mediaItem) => Operation.insert(mediaItem.url, {Attribute.link.key: mediaItem.url}),
           )
           .toList(),
-    ).concat(content);
+    ).concat(newContentDelta);
   }
 
   List<RelatedEvent> _buildRelatedEvents(IonConnectEntity parentEntity) {
@@ -328,11 +343,18 @@ class CreatePostNotifier extends _$CreatePostNotifier {
     }
   }
 
-  List<RelatedPubkey> _buildRelatedPubkeys(IonConnectEntity parentEntity) {
+  List<RelatedPubkey>? _buildRelatedPubkeys(
+    Delta content,
+    IonConnectEntity? parentEntity,
+  ) {
+    final pubkeys = content.extractPubkeys();
     return <RelatedPubkey>{
-      RelatedPubkey(value: parentEntity.masterPubkey),
-      if (parentEntity is ModifiablePostEntity) ...(parentEntity.data.relatedPubkeys ?? []),
-      if (parentEntity is PostEntity) ...(parentEntity.data.relatedPubkeys ?? []),
+      ...pubkeys.map((pubkey) => RelatedPubkey(value: pubkey)),
+      if (parentEntity != null) ...{
+        RelatedPubkey(value: parentEntity.masterPubkey),
+        if (parentEntity is ModifiablePostEntity) ...(parentEntity.data.relatedPubkeys ?? []),
+        if (parentEntity is PostEntity) ...(parentEntity.data.relatedPubkeys ?? []),
+      },
     }.toList();
   }
 

@@ -2,17 +2,6 @@
 
 import 'package:flutter_quill/flutter_quill.dart';
 
-class MentionAttribute extends Attribute<String?> {
-  const MentionAttribute(String? mentionValue)
-      : super(attributeKey, AttributeScope.inline, mentionValue);
-
-  const MentionAttribute.withValue(String value) : this(value);
-
-  const MentionAttribute.unset() : this(null);
-
-  static const String attributeKey = 'mention';
-}
-
 class HashtagAttribute extends Attribute<String?> {
   const HashtagAttribute(String? hashtagValue)
       : super(attributeKey, AttributeScope.inline, hashtagValue);

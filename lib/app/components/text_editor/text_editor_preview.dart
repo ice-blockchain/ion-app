@@ -5,6 +5,7 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_quill/flutter_quill.dart';
 import 'package:flutter_quill/quill_delta.dart';
 import 'package:ion/app/components/text_editor/components/custom_blocks/text_editor_code_block/text_editor_code_block.dart';
+import 'package:ion/app/components/text_editor/components/custom_blocks/text_editor_profile_block/text_editor_profile_block.dart';
 import 'package:ion/app/components/text_editor/components/custom_blocks/text_editor_separator_block/text_editor_separator_block.dart';
 import 'package:ion/app/components/text_editor/components/custom_blocks/text_editor_single_image_block/text_editor_single_image_block.dart';
 import 'package:ion/app/components/text_editor/components/custom_blocks/unknown/text_editor_unknown_embed_builder.dart';
@@ -92,11 +93,15 @@ class _QuillFormattedContent extends StatelessWidget {
           TextEditorSingleImageBuilder(media: media),
           TextEditorSeparatorBuilder(readOnly: true),
           TextEditorCodeBuilder(readOnly: true),
+          TextEditorProfileBuilder(),
         ],
         unknownEmbedBuilder: TextEditorUnknownEmbedBuilder(),
         disableClipboard: true,
         customStyleBuilder: (attribute) => customTextStyleBuilder(attribute, context),
-        customRecognizerBuilder: (attribute, leaf) => customRecognizerBuilder(context, attribute),
+        customRecognizerBuilder: (attribute, leaf) => customRecognizerBuilder(
+          context,
+          attribute,
+        ),
       ),
     );
   }

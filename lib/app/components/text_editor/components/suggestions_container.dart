@@ -23,11 +23,6 @@ class SuggestionsContainer extends HookConsumerWidget {
   final ScrollController scrollController;
   final GlobalKey<TextEditorState> editorKey;
 
-  void _onSuggestionSelected(String suggestion) {
-    final textEditorState = editorKey.currentState;
-    textEditorState?.mentionsHashtagsHandler.onSuggestionSelected(suggestion);
-  }
-
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final suggestionsState = useTextEditorSuggestions(
@@ -56,7 +51,7 @@ class SuggestionsContainer extends HookConsumerWidget {
           child: switch (suggestionsState.taggingCharacter) {
             '@' => MentionsSuggestions(
                 suggestions: suggestionsState.suggestions,
-                onSuggestionSelected: _onSuggestionSelected,
+                onSuggestionSelected: _onMentionSuggestionSelected,
               ),
             '#' => HashtagsSuggestions(
                 suggestions: suggestionsState.suggestions,
@@ -71,5 +66,15 @@ class SuggestionsContainer extends HookConsumerWidget {
         ),
       ],
     );
+  }
+
+  void _onMentionSuggestionSelected(({String pubkey, String username}) pubkeyUsernamePair) {
+    final textEditorState = editorKey.currentState;
+    textEditorState?.mentionsHashtagsHandler.onMentionSuggestionSelected(pubkeyUsernamePair);
+  }
+
+  void _onSuggestionSelected(String suggestion) {
+    final textEditorState = editorKey.currentState;
+    textEditorState?.mentionsHashtagsHandler.onSuggestionSelected(suggestion);
   }
 }

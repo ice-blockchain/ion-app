@@ -24,6 +24,7 @@ class ArticlePreviewModal extends HookConsumerWidget {
   factory ArticlePreviewModal({
     Key? key,
   }) = ArticlePreviewModal.create;
+
   const ArticlePreviewModal._({super.key, this.modifiedEvent});
 
   factory ArticlePreviewModal.create({
@@ -48,8 +49,14 @@ class ArticlePreviewModal extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final DraftArticleState(:title, :image, :imageIds, :content, :imageColor, :imageUrl) =
-        ref.watch(draftArticleProvider);
+    final DraftArticleState(
+      :title,
+      :image,
+      :imageIds,
+      :content,
+      :imageColor,
+      :imageUrl,
+    ) = ref.watch(draftArticleProvider);
     final whoCanReply = ref.watch(selectedWhoCanReplyOptionProvider);
     final selectedTopics = ref.watch(selectTopicsProvider);
 

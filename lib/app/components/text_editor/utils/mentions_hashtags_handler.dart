@@ -3,8 +3,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_quill/flutter_quill.dart';
 import 'package:ion/app/components/text_editor/attributes.dart';
+import 'package:ion/app/components/text_editor/components/custom_blocks/text_editor_profile_block/text_editor_profile_block.dart';
 import 'package:ion/app/components/text_editor/utils/text_editor_typing_listener.dart';
 import 'package:ion/app/features/feed/providers/article/suggestions_notifier_provider.c.dart';
+import 'package:ion/app/features/user/providers/user_metadata_provider.c.dart';
 
 class MentionsHashtagsHandler extends TextEditorTypingListener {
   MentionsHashtagsHandler({
@@ -36,6 +38,36 @@ class MentionsHashtagsHandler extends TextEditorTypingListener {
   @override
   void onFocusLost() {
     ref.invalidate(suggestionsNotifierProvider);
+  }
+
+  void onMentionSuggestionSelected(({String pubkey, String username}) pubkeyUsernamePair) {
+    final userMetadata = ref.read(cachedUserMetadataProvider(pubkeyUsernamePair.pubkey));
+    if (userMetadata == null) {
+      return;
+    }
+    final userMetadataEncoded = userMetadata.toEventReference().encode();
+
+    final fullText = controller.document.toPlainText();
+    final cursorIndex = controller.selection.baseOffset;
+
+    final tags = _extractTags(fullText);
+    final tag = tags.lastWhere(
+      (t) => t.start < cursorIndex && t.start + t.length >= cursorIndex - 1,
+      orElse: () => _TagInfo(start: -1, length: 0, text: '', tagChar: ''),
+    );
+
+    if (tag.start == -1) return;
+
+    controller
+      ..removeListener(editorListener)
+      ..replaceText(tag.start, tag.length, '', null, shouldNotifyListeners: false);
+
+    controller.document.insert(tag.start, TextEditorProfileEmbed(userMetadataEncoded));
+    controller.document.insert(tag.start + 1, ' ');
+
+    controller
+      ..addListener(editorListener)
+      ..moveCursorToPosition(tag.start + 2);
   }
 
   void onSuggestionSelected(String suggestion) {
@@ -105,7 +137,6 @@ class MentionsHashtagsHandler extends TextEditorTypingListener {
 
     controller
       ..formatText(0, docLength, const HashtagAttribute.unset())
-      ..formatText(0, docLength, const MentionAttribute.unset())
       ..formatText(0, docLength, const CashtagAttribute.unset());
 
     for (final tag in tags) {
@@ -128,7 +159,6 @@ class MentionsHashtagsHandler extends TextEditorTypingListener {
 
   Attribute<String?>? _getAttribute(String tagChar) {
     return switch (tagChar) {
-      '@' => MentionAttribute.withValue(tagChar),
       '#' => HashtagAttribute.withValue(tagChar),
       r'$' => CashtagAttribute.withValue(tagChar),
       _ => null,
