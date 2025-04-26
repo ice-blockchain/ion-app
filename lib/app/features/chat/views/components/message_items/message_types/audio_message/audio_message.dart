@@ -13,6 +13,7 @@ import 'package:ion/app/features/chat/e2ee/providers/chat_message_load_media_pro
 import 'package:ion/app/features/chat/hooks/use_audio_playback_controller.dart';
 import 'package:ion/app/features/chat/hooks/use_has_reaction.dart';
 import 'package:ion/app/features/chat/model/message_list_item.c.dart';
+import 'package:ion/app/features/chat/providers/active_audio_message_provider.c.dart';
 import 'package:ion/app/features/chat/recent_chats/providers/replied_message_list_item_provider.c.dart';
 import 'package:ion/app/features/chat/views/components/message_items/message_item_wrapper/message_item_wrapper.dart';
 import 'package:ion/app/features/chat/views/components/message_items/message_metadata/message_metadata.dart';
@@ -24,7 +25,6 @@ import 'package:ion/app/services/audio_wave_playback_service/audio_wave_playback
 import 'package:ion/app/services/compressors/audio_compressor.c.dart';
 import 'package:ion/app/utils/date.dart';
 import 'package:ion/generated/assets.gen.dart';
-import 'package:visibility_detector/visibility_detector.dart';
 
 part 'components/audio_wave_form_display.dart';
 part 'components/play_pause_button.dart';
@@ -145,6 +145,14 @@ class AudioMessage extends HookConsumerWidget {
       }
     });
 
+    ref.listen(activeAudioMessageProvider, (previous, next) {
+      if (next == eventMessage.id) {
+        audioPlaybackController.startPlayer();
+      } else {
+        audioPlaybackController.pausePlayer();
+      }
+    });
+
     final messageItem = AudioItem(
       eventMessage: eventMessage,
       contentDescription: context.i18n.common_voice_message,
@@ -164,54 +172,47 @@ class AudioMessage extends HookConsumerWidget {
         contentDescription: context.i18n.common_voice_message,
       ),
       contentPadding: contentPadding,
-      child: VisibilityDetector(
-        key: ValueKey(audioUrl),
-        onVisibilityChanged: (info) {
-          if (info.visibleFraction == 0) {
-            audioPlaybackController.pausePlayer();
-          }
-        },
-        child: Column(
-          children: [
-            if (repliedMessageItem != null) ReplyMessage(messageItem, repliedMessageItem),
-            Row(
-              crossAxisAlignment: CrossAxisAlignment.end,
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Flexible(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Row(
-                        children: [
-                          _PlayPauseButton(
-                            audioPlaybackController: audioPlaybackController,
-                            audioPlaybackState: audioPlaybackState,
-                          ),
-                          SizedBox(width: 8.0.s),
-                          _AudioWaveformDisplay(
-                            audioPlaybackController: audioPlaybackController,
-                            audioPlaybackState: audioPlaybackState,
-                            playerWaveStyle: playerWaveStyle,
-                            isMe: isMe,
-                          ),
-                        ],
-                      ),
-                      MessageReactions(
-                        isMe: isMe,
-                        eventMessage: eventMessage,
-                      ),
-                    ],
-                  ),
+      child: Column(
+        children: [
+          if (repliedMessageItem != null) ReplyMessage(messageItem, repliedMessageItem),
+          Row(
+            crossAxisAlignment: CrossAxisAlignment.end,
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Flexible(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Row(
+                      children: [
+                        _PlayPauseButton(
+                          audioPlaybackController: audioPlaybackController,
+                          audioPlaybackState: audioPlaybackState,
+                          eventMessageId: eventMessage.id,
+                        ),
+                        SizedBox(width: 8.0.s),
+                        _AudioWaveformDisplay(
+                          audioPlaybackController: audioPlaybackController,
+                          audioPlaybackState: audioPlaybackState,
+                          playerWaveStyle: playerWaveStyle,
+                          isMe: isMe,
+                        ),
+                      ],
+                    ),
+                    MessageReactions(
+                      isMe: isMe,
+                      eventMessage: eventMessage,
+                    ),
+                  ],
                 ),
-                MessageMetaData(
-                  eventMessage: eventMessage,
-                  startPadding: hasReactions ? 0.0.s : 8.0.s,
-                ),
-              ],
-            ),
-          ],
-        ),
+              ),
+              MessageMetaData(
+                eventMessage: eventMessage,
+                startPadding: hasReactions ? 0.0.s : 8.0.s,
+              ),
+            ],
+          ),
+        ],
       ),
     );
   }
