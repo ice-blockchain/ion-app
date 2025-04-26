@@ -35,7 +35,7 @@ dependencies:
   es_compression: ^2.0.13
   extended_text: ^14.1.0
   extension_google_sign_in_as_googleapis_auth: ^2.0.12
-  external_app_launcher: ^4.0.1
+  external_app_launcher: ^4.0.3
   ffmpeg_kit_flutter:
     git:
       url: https://github.com/ice-blockchain/ffmpeg-kit
