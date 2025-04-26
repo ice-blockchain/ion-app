@@ -8,6 +8,8 @@ import 'package:ion/app/components/progress_bar/ion_loading_indicator.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/auth/providers/auth_provider.c.dart';
 import 'package:ion/app/features/chat/e2ee/model/entities/private_direct_message_data.c.dart';
+import 'package:ion/app/features/chat/e2ee/providers/chat_medias_provider.c.dart';
+import 'package:ion/app/features/chat/e2ee/providers/chat_message_load_media_provider.c.dart';
 import 'package:ion/app/features/chat/hooks/use_audio_playback_controller.dart';
 import 'package:ion/app/features/chat/hooks/use_has_reaction.dart';
 import 'package:ion/app/features/chat/model/message_list_item.c.dart';
@@ -20,9 +22,7 @@ import 'package:ion/app/features/ion_connect/ion_connect.dart';
 import 'package:ion/app/hooks/use_on_init.dart';
 import 'package:ion/app/services/audio_wave_playback_service/audio_wave_playback_service.c.dart';
 import 'package:ion/app/services/compressors/audio_compressor.c.dart';
-import 'package:ion/app/services/media_service/media_encryption_service.c.dart';
 import 'package:ion/app/utils/date.dart';
-import 'package:ion/app/utils/validators.dart';
 import 'package:ion/generated/assets.gen.dart';
 import 'package:visibility_detector/visibility_detector.dart';
 
@@ -48,29 +48,53 @@ class AudioMessage extends HookConsumerWidget {
 
     final hasReactions = useHasReaction(eventMessage, ref);
 
-    final audioData = useFuture(
-      useMemoized(
-        () async {
-          if (Validators.isInvalidUrl(entity.data.primaryAudio!.url)) {
-            return null;
+    final messageMedia =
+        ref.watch(chatMediasProvider(eventMessageId: eventMessage.id)).valueOrNull?.firstOrNull;
+
+    final mediaAttachment =
+        messageMedia?.remoteUrl == null ? null : entity.data.media[messageMedia?.remoteUrl!];
+
+    useEffect(
+      () {
+        if (mediaAttachment?.url == null) return null;
+        ref
+            .read(
+          chatMessageLoadMediaProvider(
+            entity: entity,
+            mediaAttachment: mediaAttachment,
+            loadThumbnail: false,
+          ),
+        )
+            .then((value) {
+          if (value != null) {
+            ref.read(audioCompressorProvider).compressAudioToWav(value.path).then((value) {
+              audioUrl.value = value;
+            });
           }
-          final encryptedMedia =
-              await ref.read(mediaEncryptionServiceProvider).retrieveEncryptedMedia(
-                    entity.data.primaryAudio!,
-                    authorPubkey: eventMessage.masterPubkey,
-                  );
-          return ref.read(audioCompressorProvider).compressAudioToWav(encryptedMedia.path);
-        },
-        [entity.data.primaryAudio!.url],
-      ),
+        });
+        return null;
+      },
+      [messageMedia?.cacheKey, mediaAttachment?.url],
     );
 
     useEffect(
       () {
-        if (audioData.data != null) audioUrl.value = audioData.data;
+        ref
+            .read(
+          chatMessageLoadMediaProvider(
+            entity: entity,
+            mediaAttachment: mediaAttachment,
+            cacheKey: messageMedia?.cacheKey,
+          ),
+        )
+            .then((value) {
+          if (context.mounted) {
+            audioUrl.value = value?.path;
+          }
+        });
         return null;
       },
-      [audioData.data],
+      [mediaAttachment?.thumb, messageMedia?.cacheKey],
     );
 
     final audioPlaybackState = useState<PlayerState?>(null);
