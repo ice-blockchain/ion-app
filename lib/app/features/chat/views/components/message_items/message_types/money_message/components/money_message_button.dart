@@ -1,5 +1,7 @@
 // SPDX-License-Identifier: ice License 1.0
 
+import 'dart:async';
+
 import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
@@ -8,10 +10,13 @@ import 'package:ion/app/exceptions/exceptions.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/chat/model/money_message_type.dart';
 import 'package:ion/app/features/core/views/pages/error_modal.dart';
+import 'package:ion/app/features/wallets/model/coins_group.c.dart';
 import 'package:ion/app/features/wallets/model/entities/funds_request_entity.c.dart';
+import 'package:ion/app/features/wallets/model/transaction_details.c.dart';
 import 'package:ion/app/features/wallets/providers/coins_provider.c.dart';
 import 'package:ion/app/features/wallets/providers/networks_provider.c.dart';
 import 'package:ion/app/features/wallets/providers/send_asset_form_provider.c.dart';
+import 'package:ion/app/features/wallets/providers/transaction_provider.c.dart';
 import 'package:ion/app/features/wallets/providers/wallet_view_data_provider.c.dart';
 import 'package:ion/app/router/app_routes.c.dart';
 
@@ -29,14 +34,14 @@ class MoneyMessageButton extends StatelessWidget {
   final MoneyMessageType messageType;
   final String eventId;
   final bool isPaid;
-  final FundsRequestEntity? request;
+  final FundsRequestEntity request;
 
   static Size get _defaultMinimumSize => Size(150.0.s, 32.0.s);
 
   @override
   Widget build(BuildContext context) {
     if (isPaid) {
-      return const _ViewTransactionButton();
+      return _ViewTransactionButton(request: request);
     } else if (isMe && messageType == MoneyMessageType.requested) {
       return _CancelMoneyRequestButton(eventId: eventId);
     } else if (!isMe && messageType == MoneyMessageType.requested) {
@@ -145,10 +150,11 @@ class _SendMoneyButton extends ConsumerWidget {
       sendAssetFormController
         ..setRequest(request!)
         ..setContact(receiverPubkey, isContactPreselected: true)
-        ..setReceiverAddress(receiverAddress ?? '')
-        ..setCoinsAmount(amount ?? '');
+        ..setReceiverAddress(receiverAddress ?? '');
 
       await sendAssetFormController.setNetwork(network);
+
+      sendAssetFormController.setCoinsAmount(amount ?? '');
 
       if (!context.mounted) return;
 
@@ -162,7 +168,11 @@ class _SendMoneyButton extends ConsumerWidget {
 }
 
 class _ViewTransactionButton extends ConsumerWidget {
-  const _ViewTransactionButton();
+  const _ViewTransactionButton({
+    required this.request,
+  });
+
+  final FundsRequestEntity request;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -176,8 +186,29 @@ class _ViewTransactionButton extends ConsumerWidget {
           color: context.theme.appColors.onPrimaryAccent,
         ),
       ),
-      onPressed: () {
-        // TODO: view transaction
+      onPressed: () async {
+        final assetId = request.data.content.assetId;
+        if (assetId == null) {
+          return;
+        }
+
+        final coinData = await ref.read(coinByIdProvider(assetId).future);
+        if (coinData == null) {
+          return;
+        }
+
+        final coinGroup = CoinsGroup.fromCoin(coinData);
+
+        ref.read(transactionNotifierProvider.notifier).details =
+            TransactionDetails.fromTransactionData(
+          request.data.transaction!,
+          coinsGroup: coinGroup,
+        );
+
+        if (!context.mounted) {
+          return;
+        }
+        unawaited(CoinTransactionResultChatRoute().push<void>(context));
       },
     );
   }

@@ -244,6 +244,36 @@ class TransactionsDao extends DatabaseAccessor<WalletsDatabase> with _$Transacti
     });
   }
 
+  Future<TransactionData?> getTransactionByTxHash(String txHash) {
+    final transactionCoinAlias = alias(coinsTable, 'transactionCoin');
+    final nativeCoinAlias = alias(coinsTable, 'nativeCoin');
+
+    final query = (select(transactionsTable)..where((tbl) => tbl.txHash.equals(txHash))).join([
+      leftOuterJoin(
+        networksTable,
+        networksTable.id.equalsExp(transactionsTable.networkId),
+      ),
+      leftOuterJoin(
+        transactionCoinAlias,
+        transactionCoinAlias.id.equalsExp(transactionsTable.coinId),
+      ),
+      leftOuterJoin(
+        nativeCoinAlias,
+        nativeCoinAlias.id.equalsExp(transactionsTable.nativeCoinId),
+      ),
+    ]);
+
+    return query
+        .map(
+          (row) => _mapRowToDomainModel(
+            row,
+            transactionCoinAlias: transactionCoinAlias,
+            nativeCoinAlias: nativeCoinAlias,
+          ),
+        )
+        .getSingleOrNull();
+  }
+
   TransactionData _mapRowToDomainModel(
     TypedResult row, {
     required $CoinsTableTable nativeCoinAlias,

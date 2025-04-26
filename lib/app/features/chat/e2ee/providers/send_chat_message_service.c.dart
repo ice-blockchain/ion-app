@@ -35,6 +35,7 @@ class SendChatMessageService {
     required String receiverPubkey,
     required String content,
     List<MediaFile> mediaFiles = const [],
+    List<List<String>>? tags,
   }) async {
     final currentPubkey = currentUserMasterPubkey;
 
@@ -54,6 +55,7 @@ class SendChatMessageService {
       mediaFiles: mediaFiles,
       conversationId: conversationId,
       participantsMasterPubkeys: [receiverPubkey, currentPubkey],
+      tags: tags,
     );
   }
 }

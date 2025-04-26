@@ -20,6 +20,7 @@ import 'package:ion/app/features/ion_connect/model/related_pubkey.c.dart';
 import 'package:ion/app/features/ion_connect/model/replaceable_event_identifier.c.dart';
 import 'package:ion/app/features/ion_connect/model/rich_text.c.dart';
 import 'package:ion/app/features/wallets/model/entities/funds_request_entity.c.dart';
+import 'package:ion/app/features/wallets/model/entities/wallet_asset_entity.c.dart';
 import 'package:ion/app/services/ion_connect/ion_connect_protocol_identifier_type.dart';
 import 'package:ion/app/services/uuid/uuid.dart';
 import 'package:ion/app/utils/string.dart';
@@ -165,7 +166,7 @@ extension MessageTypes on PrivateDirectMessageData {
     } else if (IonConnectProtocolIdentifierTypeValidator.isEventIdentifier(content)) {
       if (EventReference.fromEncoded(content) case final ImmutableEventReference eventReference) {
         return switch (eventReference.kind) {
-          FundsRequestEntity.kind => MessageType.requestFunds,
+          FundsRequestEntity.kind || WalletAssetEntity.kind => MessageType.requestFunds,
           _ => MessageType.text,
         };
       }
@@ -194,6 +195,7 @@ class ImmutablePrivateDirectMessageData
     QuotedImmutableEvent? quotedEvent,
     List<RelatedEvent>? relatedEvents,
     List<RelatedPubkey>? relatedPubkeys,
+    List<ImmutableEventReference>? relatedEventRefs,
   }) = _ImmutablePrivateDirectMessageData;
 
   const ImmutablePrivateDirectMessageData._();
@@ -205,7 +207,10 @@ class ImmutablePrivateDirectMessageData
       content: eventMessage.content,
       media: EntityDataWithMediaContent.parseImeta(tags[MediaAttachment.tagName]),
       relatedPubkeys: tags[RelatedPubkey.tagName]?.map(RelatedPubkey.fromTag).toList(),
-      relatedEvents: tags[RelatedImmutableEvent.tagName]?.map(RelatedEvent.fromTag).toList(),
+      relatedEvents: tags[RelatedImmutableEvent.tagName]
+          ?.where(RelatedEvent.hasValidLength)
+          .map(RelatedEvent.fromTag)
+          .toList(),
       groupSubject: tags[GroupSubject.tagName]?.map(GroupSubject.fromTag).singleOrNull,
       quotedEvent:
           tags[QuotedImmutableEvent.tagName]?.map(QuotedImmutableEvent.fromTag).singleOrNull,
@@ -214,6 +219,10 @@ class ImmutablePrivateDirectMessageData
               .singleOrNull
               ?.value ??
           '',
+      relatedEventRefs: tags[ImmutableEventReference.tagName]
+          ?.where(ImmutableEventReference.hasValidLength)
+          .map(ImmutableEventReference.fromTag)
+          .toList(),
     );
   }
 

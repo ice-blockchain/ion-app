@@ -1,5 +1,7 @@
 // SPDX-License-Identifier: ice License 1.0
 
+import 'dart:convert';
+
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/exceptions/exceptions.dart';
 import 'package:ion/app/extensions/extensions.dart';
@@ -144,16 +146,59 @@ Future<void> _saveEvent({
     if (rumor != null) {
       switch (rumor.kind) {
         case WalletAssetEntity.kind:
-          final message = WalletAssetEntity.fromEventMessage(rumor);
-          await transactionsRepository.saveEntities([message]);
+          await _handleWalletAssetEntity(
+            rumor: rumor,
+            transactionsRepository: transactionsRepository,
+            requestAssetsRepository: requestAssetsRepository,
+          );
         case FundsRequestEntity.kind:
-          final request = FundsRequestEntity.fromEventMessage(rumor);
-          await requestAssetsRepository.saveRequestAsset(request);
+          await _handleFundsRequestEntity(
+            rumor: rumor,
+            requestAssetsRepository: requestAssetsRepository,
+          );
       }
     }
   } on Exception catch (ex) {
     Logger.error('Caught error in subscription: $ex');
   }
+}
+
+/// Handle a WalletAssetEntity event
+Future<void> _handleWalletAssetEntity({
+  required EventMessage rumor,
+  required TransactionsRepository transactionsRepository,
+  required RequestAssetsRepository requestAssetsRepository,
+}) async {
+  final message = WalletAssetEntity.fromEventMessage(rumor);
+  await transactionsRepository.saveEntities([message]);
+
+  final requestJson = message.data.request;
+  if (requestJson != null) {
+    try {
+      final decodedJson = jsonDecode(requestJson) as Map;
+
+      final requestId = decodedJson['id'] as String;
+      final txHash = message.data.content.txHash;
+      await requestAssetsRepository.markRequestAsPaid(requestId, txHash);
+    } catch (e) {
+      Logger.error('Failed to parse request JSON: $e');
+    }
+  }
+}
+
+/// Handle a FundsRequestEntity event
+Future<void> _handleFundsRequestEntity({
+  required EventMessage rumor,
+  required RequestAssetsRepository requestAssetsRepository,
+}) async {
+  final request = FundsRequestEntity.fromEventMessage(rumor);
+
+  final updatedData = request.data.copyWith(request: jsonEncode(rumor.jsonPayload));
+  final updatedRequest = request.copyWith(data: updatedData);
+
+  await requestAssetsRepository.saveRequestAsset(updatedRequest);
+
+  Logger.info('Saved funds request ${request.id} with original event JSON');
 }
 
 Future<EventMessage?> _unwrapGift({

@@ -2,5 +2,5 @@
 
 enum MoneyMessageType {
   requested,
-  received,
+  sent,
 }

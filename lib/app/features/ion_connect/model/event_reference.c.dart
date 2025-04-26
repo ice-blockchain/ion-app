@@ -106,7 +106,12 @@ class ImmutableEventReference with _$ImmutableEventReference implements EventRef
     return eventId;
   }
 
+  static bool hasValidLength(List<String> tag) {
+    return tag.length <= maxTagLength;
+  }
+
   static const String tagName = 'e';
+  static const int maxTagLength = 4;
 }
 
 @Freezed(toStringOverride: false)

@@ -2,11 +2,10 @@
 
 import 'package:ion/app/features/wallets/data/database/wallets_database.c.dart';
 import 'package:ion/app/features/wallets/model/entities/funds_request_entity.c.dart';
+import 'package:ion/app/features/wallets/model/transaction_data.c.dart';
 
 class FundsRequestMapper {
   FundsRequest toDatabase(FundsRequestEntity entity) {
-    final content = entity.data.content;
-
     return FundsRequest(
       eventId: entity.id,
       pubkey: entity.pubkey,
@@ -14,48 +13,43 @@ class FundsRequestMapper {
       networkId: entity.data.networkId,
       assetClass: entity.data.assetClass,
       assetAddress: entity.data.assetAddress,
-      from: content.from,
-      to: content.to,
+      from: entity.data.content.from,
+      to: entity.data.content.to,
       walletAddress: entity.data.walletAddress,
       userPubkey: entity.data.pubkey,
-      assetId: content.assetId,
-      amount: content.amount,
-      amountUsd: content.amountUsd,
-      isPending: true,
+      assetId: entity.data.content.assetId,
+      amount: entity.data.content.amount,
+      amountUsd: entity.data.content.amountUsd,
       request: entity.data.request,
+      transactionId: entity.data.transaction?.id,
     );
   }
 
-  FundsRequestEntity toDomain(FundsRequest request) {
-    final content = FundsRequestContent(
-      from: request.from,
-      to: request.to,
-      assetId: request.assetId,
-      amount: request.amount,
-      amountUsd: request.amountUsd,
-    );
+  List<FundsRequest> listToDatabase(List<FundsRequestEntity> entities) {
+    return entities.map(toDatabase).toList();
+  }
 
-    final data = FundsRequestData(
-      content: content,
-      networkId: request.networkId,
-      assetClass: request.assetClass,
-      assetAddress: request.assetAddress,
-      walletAddress: request.walletAddress,
-      pubkey: request.userPubkey,
-      request: request.request,
-    );
-
+  FundsRequestEntity toDomain(FundsRequest db, TransactionData? transaction) {
     return FundsRequestEntity(
-      id: request.eventId,
-      pubkey: request.pubkey,
-      createdAt: request.createdAt,
-      data: data,
+      id: db.eventId,
+      pubkey: db.pubkey,
+      createdAt: db.createdAt,
+      data: FundsRequestData(
+        content: FundsRequestContent(
+          from: db.from,
+          to: db.to,
+          assetId: db.assetId,
+          amount: db.amount,
+          amountUsd: db.amountUsd,
+        ),
+        networkId: db.networkId,
+        assetClass: db.assetClass,
+        assetAddress: db.assetAddress,
+        walletAddress: db.walletAddress,
+        pubkey: db.userPubkey,
+        request: db.request,
+        transaction: transaction,
+      ),
     );
   }
-
-  List<FundsRequest> listToDatabase(List<FundsRequestEntity> entities) =>
-      entities.map(toDatabase).toList();
-
-  List<FundsRequestEntity> listToDomain(List<FundsRequest> requests) =>
-      requests.map(toDomain).toList();
 }
