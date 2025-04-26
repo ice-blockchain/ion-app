@@ -1,10 +1,7 @@
 // SPDX-License-Identifier: ice License 1.0
 
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:ion/app/exceptions/exceptions.dart';
-import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/auth/providers/auth_provider.c.dart';
-import 'package:ion/app/features/feed/data/models/entities/article_data.c.dart';
 import 'package:ion/app/features/feed/data/models/entities/modifiable_post_data.c.dart';
 import 'package:ion/app/features/feed/data/models/entities/post_data.c.dart';
 import 'package:ion/app/features/ion_connect/ion_connect.dart';
@@ -33,12 +30,9 @@ List<EntitiesDataSource>? repliesDataSource(
     return null;
   }
 
-  final hasParent = switch (entity) {
-    ArticleEntity() => false,
-    ModifiablePostEntity() => entity.data.parentEvent != null,
-    PostEntity() => entity.data.parentEvent != null,
-    _ => throw UnsupportedEventReference(eventReference)
-  };
+  final relatedTags =
+      RelatedEvent.fromEventReference(eventReference, marker: RelatedEventMarker.reply)
+          .toFilterEntry();
 
   final dataSources = [
     EntitiesDataSource(
@@ -50,16 +44,11 @@ List<EntitiesDataSource>? repliesDataSource(
       requestFilters: [
         RequestFilter(
           kinds: const [ModifiablePostEntity.kind],
-          tags: Map.fromEntries([eventReference.toFilterEntry()]),
+          tags: Map.fromEntries([relatedTags]),
           search: SearchExtensions(
             [
               ...SearchExtensions.withCounters(
                 [
-                  TagMarkerSearchExtension(
-                    tagName: RelatedReplaceableEvent.tagName,
-                    marker: RelatedEventMarker.reply.toShortString(),
-                    negative: !hasParent,
-                  ),
                   GenericIncludeSearchExtension(
                     forKind: ModifiablePostEntity.kind,
                     includeKind: UserMetadataEntity.kind,
@@ -70,7 +59,6 @@ List<EntitiesDataSource>? repliesDataSource(
                   ),
                 ],
                 currentPubkey: currentPubkey,
-                root: false,
               ).extensions,
               ExpirationSearchExtension(expiration: false),
             ],
@@ -79,16 +67,11 @@ List<EntitiesDataSource>? repliesDataSource(
         ),
         RequestFilter(
           kinds: const [PostEntity.kind],
-          tags: Map.fromEntries([eventReference.toFilterEntry()]),
+          tags: Map.fromEntries([relatedTags]),
           search: SearchExtensions(
             [
               ...SearchExtensions.withCounters(
                 [
-                  TagMarkerSearchExtension(
-                    tagName: RelatedImmutableEvent.tagName,
-                    marker: RelatedEventMarker.reply.toShortString(),
-                    negative: !hasParent,
-                  ),
                   GenericIncludeSearchExtension(
                     forKind: PostEntity.kind,
                     includeKind: UserMetadataEntity.kind,
@@ -99,7 +82,6 @@ List<EntitiesDataSource>? repliesDataSource(
                   ),
                 ],
                 currentPubkey: currentPubkey,
-                root: false,
                 forKind: PostEntity.kind,
               ).extensions,
               ExpirationSearchExtension(expiration: false),

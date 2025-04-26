@@ -26,7 +26,6 @@ void main() {
         [],
         currentPubkey: testPubkey,
         forKind: ArticleEntity.kind,
-        root: false,
       );
 
       expect(extensions.extensions.length, 7);
@@ -51,10 +50,9 @@ void main() {
   group('Count Search Extensions', () {
     test('RepliesCountSearchExtension formats query correctly', () {
       final extension = RepliesCountSearchExtension();
-      expect(extension.toString(), 'include:dependencies:kind30175>kind6400+kind30175+group+root');
+      expect(extension.toString(), 'include:dependencies:kind30175>kind6400+kind30175+group+reply');
 
-      final nonRootExtension =
-          RepliesCountSearchExtension(root: false, forKind: ArticleEntity.kind);
+      final nonRootExtension = RepliesCountSearchExtension(forKind: ArticleEntity.kind);
       expect(
         nonRootExtension.toString(),
         'include:dependencies:kind30023>kind6400+kind30175+group+reply',
@@ -88,12 +86,11 @@ void main() {
       final extension = ReplySampleSearchExtension(
         currentPubkey: testPubkey,
       );
-      expect(extension.toString(), 'include:dependencies:kind30175>test_pubkey@kind30175+e+root');
+      expect(extension.toString(), 'include:dependencies:kind30175>test_pubkey@kind30175+e+reply');
 
       final nonRootExtension = ReplySampleSearchExtension(
         currentPubkey: testPubkey,
         forKind: ArticleEntity.kind,
-        root: false,
       );
       expect(
         nonRootExtension.toString(),

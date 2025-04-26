@@ -16,11 +16,33 @@ abstract class RelatedEvent {
     };
   }
 
+  factory RelatedEvent.fromEventReference(
+    EventReference eventReference, {
+    required RelatedEventMarker marker,
+  }) {
+    return switch (eventReference) {
+      ImmutableEventReference() => RelatedImmutableEvent(
+          eventReference: eventReference,
+          pubkey: eventReference.pubkey,
+          marker: marker,
+        ),
+      ReplaceableEventReference() => RelatedReplaceableEvent(
+          eventReference: eventReference,
+          pubkey: eventReference.pubkey,
+          marker: marker,
+        ),
+      _ => throw UnsupportedEventReference(eventReference),
+    };
+  }
+
   EventReference get eventReference;
 
   RelatedEventMarker get marker;
 
   List<String> toTag();
+
+  // Intentionally returns not a List<String> to keep backwards compatibility on BE
+  MapEntry<String, List<List<String>>> toFilterEntry();
 }
 
 @freezed
@@ -53,6 +75,13 @@ class RelatedImmutableEvent with _$RelatedImmutableEvent implements RelatedEvent
   @override
   List<String> toTag() {
     return [tagName, eventReference.toString(), '', marker.name, pubkey];
+  }
+
+  @override
+  MapEntry<String, List<List<String>>> toFilterEntry() {
+    return MapEntry('#$tagName', [
+      [eventReference.toString(), '', marker.name],
+    ]);
   }
 
   static const String tagName = 'e';
@@ -88,6 +117,13 @@ class RelatedReplaceableEvent with _$RelatedReplaceableEvent implements RelatedE
   @override
   List<String> toTag() {
     return [tagName, eventReference.toString(), '', marker.name, pubkey];
+  }
+
+  @override
+  MapEntry<String, List<List<String>>> toFilterEntry() {
+    return MapEntry('#$tagName', [
+      [eventReference.toString(), '', marker.name],
+    ]);
   }
 
   static const String tagName = 'a';
