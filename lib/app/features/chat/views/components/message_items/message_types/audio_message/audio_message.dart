@@ -98,7 +98,8 @@ class AudioMessage extends HookConsumerWidget {
     );
 
     final audioPlaybackState = useState<PlayerState?>(null);
-    final audioPlaybackController = useAudioWavePlaybackController();
+    final audioPlaybackController = useAudioWavePlaybackController()
+      ..setFinishMode(finishMode: FinishMode.pause);
 
     final playerWaveStyle = useMemoized(
       () => PlayerWaveStyle(
@@ -124,10 +125,10 @@ class AudioMessage extends HookConsumerWidget {
 
         // Listen to player state changes
         audioPlaybackController.onPlayerStateChanged.listen((event) {
-          if (event == PlayerState.stopped) {
-            audioPlaybackState.value = null;
-          } else {
+          if (event != PlayerState.stopped) {
             audioPlaybackState.value = event;
+          } else {
+            ref.read(activeAudioMessageProvider.notifier).activeAudioMessage = null;
           }
         });
 

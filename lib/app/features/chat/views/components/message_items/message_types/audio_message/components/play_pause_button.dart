@@ -19,6 +19,7 @@ class _PlayPauseButton extends ConsumerWidget {
         if (audioPlaybackState.value?.isPlaying ?? false) {
           ref.read(activeAudioMessageProvider.notifier).activeAudioMessage = null;
         } else {
+          ref.invalidate(activeAudioMessageProvider);
           ref.read(activeAudioMessageProvider.notifier).activeAudioMessage = eventMessageId;
         }
       },
