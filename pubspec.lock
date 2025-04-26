@@ -1104,6 +1104,14 @@ packages:
     description: flutter
     source: sdk
     version: "0.0.0"
+  flutter_video_info:
+    dependency: "direct main"
+    description:
+      name: flutter_video_info
+      sha256: bb1e37b5a33e7ea7a3207a7ebb2fa78f401091c2945c9bd14ccf2231b24891db
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.3.3"
   flutter_web_plugins:
     dependency: transitive
     description: flutter
@@ -1563,6 +1571,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "0.11.1"
+  media_data_extractor:
+    dependency: "direct main"
+    description:
+      name: media_data_extractor
+      sha256: "37b0d51ab56626eb3a389bb989dd8fba2d379a02cea271e7380343fefbe60042"
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.0.6"
   melos:
     dependency: "direct dev"
     description:

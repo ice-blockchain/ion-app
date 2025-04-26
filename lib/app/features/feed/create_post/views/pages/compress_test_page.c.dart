@@ -4,10 +4,13 @@ import 'dart:async';
 import 'dart:io';
 
 import 'package:cached_video_player_plus/cached_video_player_plus.dart';
+import 'package:collection/collection.dart';
 import 'package:cross_file/cross_file.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
+import 'package:flutter_video_info/flutter_video_info.dart';
+import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/features/core/providers/video_player_provider.c.dart';
 import 'package:ion/app/hooks/use_on_init.dart';
@@ -15,6 +18,9 @@ import 'package:ion/app/services/compressors/image_compressor.c.dart';
 import 'package:ion/app/services/compressors/video_compressor.c.dart';
 import 'package:ion/app/services/media_service/media_service.c.dart';
 import 'package:ion/app/utils/filesize.dart';
+import 'package:media_data_extractor/media_data_extractor.dart';
+
+part 'compress_test_page.c.freezed.dart';
 
 Timer? debounce;
 
@@ -55,41 +61,85 @@ class VideoCompressTab extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final compressedVideoController = useRef<CachedVideoPlayerPlusController?>(null);
     final isCompressing = useState<bool>(false);
-    final originalSize = useState<String>('');
-    final compressedSize = useState<String>('');
-    final thumbnail = useState<MediaFile?>(null);
-
     Future<void> pickAndCompressVideo() async {
-      final pickedFile = await FilePicker.platform.pickFiles(
+      final pickedFiles = await FilePicker.platform.pickFiles(
         allowCompression: false,
+        allowMultiple: true,
         type: FileType.video,
       );
 
-      if (pickedFile != null) {
-        final videoCompressor = ref.read(videoCompressorProvider);
-
-        await compressedVideoController.value?.dispose();
-        compressedVideoController.value = null;
-
-        // Display the original video size in mb
-        originalSize.value =
-            '${(await pickedFile.xFiles.first.length() / 1024 / 1024).toStringAsFixed(2)} MB';
-        isCompressing.value = true;
-        final pickedXFile = pickedFile.xFiles.first;
-        final compressedFile = await videoCompressor.compress(MediaFile(path: pickedXFile.path));
-
-        // Here you would invoke the compression logic
-        // For demo purposes, we are directly playing the selected video
-        compressedVideoController.value =
-            CachedVideoPlayerPlusController.file(File(compressedFile.path));
-        await compressedVideoController.value!.initialize();
-        await compressedVideoController.value!.play();
-        compressedSize.value = formattedFileSize(compressedFile.path) ?? '';
-        isCompressing.value = false;
-        print(compressedFile.path);
+      if (pickedFiles == null) {
+        return;
       }
+
+      final videoInfo = FlutterVideoInfo();
+
+      isCompressing.value = true;
+      final mediaDataExtractorPlugin = MediaDataExtractor();
+
+      final compressedVideos = <VideoInfoModel>[];
+
+      late String compressDirectory;
+
+      final files = pickedFiles.files.sortedBy<num>((e) => e.size);
+
+      for (final file in files) {
+        final index = files.indexOf(file);
+        final videoCompressor = ref.read(videoCompressorProvider);
+        final compressedFile = await videoCompressor.compress(
+          MediaFile(path: file.path!),
+        );
+        final newPath = '${File(compressedFile.path).parent.path}/${index + 1}.mp4';
+        File(file.path!).copySync(newPath);
+        // File(compressedFile.path).renameSync(newPath);
+        print(compressedFile.path);
+
+        final controller =
+            CachedVideoPlayerPlusController.file(File(newPath)); // or .network() / .asset()
+
+        await controller.initialize();
+        final duration = controller.value.duration;
+        final info = await videoInfo.getVideoInfo(newPath);
+
+        compressedVideos.add(
+          VideoInfoModel(
+            name: '${index + 1}.mp4',
+            originalSize: formattedFileSize(file.path!)!,
+            compressedSize: formattedFileSize(newPath)!,
+            duration: duration.toString(),
+            size: '${compressedFile.width}x${compressedFile.height}',
+            fps: '',
+            bitRate: '',
+          ),
+        );
+        compressDirectory = File(compressedFile.path).parent.path;
+      }
+
+      final file = File(
+        '$compressDirectory/compressed_videos_info.txt',
+      );
+      final buffer = StringBuffer();
+      buffer.writeln('Compressed Videos:');
+      buffer.writeln(
+        '| Name           | Original Size  | Compressed Size | Duration       | Size    ',
+      );
+      buffer.writeln(
+        '|----------------|----------------|-----------------|----------------|----------',
+      );
+      for (final video in compressedVideos) {
+        buffer.writeln(
+          '| ${video.name.padRight(14)} | '
+          '${video.originalSize.padRight(14)} | '
+          '${video.compressedSize.padRight(15)} | '
+          '${video.duration.padRight(13)} | '
+          '${video.size.padRight(8)}',
+        );
+      }
+      await file.writeAsString(buffer.toString());
+      print('Video compression info saved to: ${file.path}');
+
+      isCompressing.value = false;
     }
 
     return Column(
@@ -98,29 +148,8 @@ class VideoCompressTab extends HookConsumerWidget {
           onPressed: pickAndCompressVideo,
           child: const Text('Pick and Compress Video'),
         ),
-        if (isCompressing.value) const CircularProgressIndicator(),
-        if (originalSize.value.isNotEmpty) Text('Original Size: ${originalSize.value}'),
-        if (compressedSize.value.isNotEmpty) Text('Compressed Size: ${compressedSize.value}'),
-        if (thumbnail.value != null)
-          Column(
-            children: <Widget>[
-              Image.file(
-                File(thumbnail.value!.path),
-                height: 200,
-                width: 300,
-                fit: BoxFit.cover,
-              ),
-              const SizedBox(height: 20),
-            ],
-          ),
-        if (compressedVideoController.value != null)
-          Expanded(
-            child: AspectRatio(
-              aspectRatio: compressedVideoController.value!.value.aspectRatio,
-              child: CachedVideoPlayerPlus(compressedVideoController.value!),
-            ),
-          ),
         const SizedBox(height: 40),
+        if (isCompressing.value) const CircularProgressIndicator(),
       ],
     );
   }
@@ -351,4 +380,17 @@ class VideoPlayerTab extends HookConsumerWidget {
       ),
     );
   }
+}
+
+@freezed
+class VideoInfoModel with _$VideoInfoModel {
+  const factory VideoInfoModel({
+    required String name,
+    required String originalSize,
+    required String compressedSize,
+    required String duration,
+    required String size,
+    required String fps,
+    required String bitRate,
+  }) = _VideoInfoModel;
 }
