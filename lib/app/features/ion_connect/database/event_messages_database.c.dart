@@ -5,9 +5,9 @@ import 'package:drift_flutter/drift_flutter.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/exceptions/exceptions.dart';
 import 'package:ion/app/features/auth/providers/auth_provider.c.dart';
-import 'package:ion/app/features/feed/bookmarks/data/database/converters/event_tags_converter.dart';
-import 'package:ion/app/features/feed/bookmarks/data/database/tables/event_messages_table.c.dart';
 import 'package:ion/app/features/feed/notifications/data/database/converters/event_reference_converter.c.dart';
+import 'package:ion/app/features/ion_connect/database/converters/event_tags_converter.dart';
+import 'package:ion/app/features/ion_connect/database/tables/event_messages_table.c.dart';
 import 'package:ion/app/features/ion_connect/model/event_reference.c.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 

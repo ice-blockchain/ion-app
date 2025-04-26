@@ -1,8 +1,8 @@
 // SPDX-License-Identifier: ice License 1.0
 
 import 'package:drift/drift.dart';
-import 'package:ion/app/features/feed/bookmarks/data/database/converters/event_tags_converter.dart';
 import 'package:ion/app/features/feed/notifications/data/database/converters/event_reference_converter.c.dart';
+import 'package:ion/app/features/ion_connect/database/converters/event_tags_converter.dart';
 
 @DataClassName('EventMessage')
 class EventMessagesTable extends Table {
