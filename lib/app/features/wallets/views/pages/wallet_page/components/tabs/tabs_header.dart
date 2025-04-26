@@ -11,6 +11,7 @@ import 'package:ion/app/extensions/theme_data.dart';
 import 'package:ion/app/features/core/model/feature_flags.dart';
 import 'package:ion/app/features/core/providers/feature_flags_provider.c.dart';
 import 'package:ion/app/features/wallets/views/pages/wallet_page/components/tabs/tabs_header_tab.dart';
+import 'package:ion/app/features/wallets/views/pages/wallet_page/helpers/cancel_search_helper.dart';
 import 'package:ion/app/features/wallets/views/pages/wallet_page/providers/search_visibility_provider.c.dart';
 import 'package:ion/app/features/wallets/views/pages/wallet_page/tab_type.dart';
 import 'package:ion/app/router/app_routes.c.dart';
@@ -64,7 +65,12 @@ class WalletTabsHeader extends ConsumerWidget {
           const Spacer(),
           TextButton(
             onPressed: () {
-              ref.read(searchVisibleProvider.notifier).isVisible = true;
+              final isSearchVisible = ref.read(searchVisibleProvider);
+              if (isSearchVisible) {
+                cancelSearch(ref, activeTab);
+              } else {
+                ref.read(searchVisibleProvider.notifier).isVisible = true;
+              }
             },
             child: Padding(
               padding: EdgeInsets.all(UiConstants.hitSlop),
