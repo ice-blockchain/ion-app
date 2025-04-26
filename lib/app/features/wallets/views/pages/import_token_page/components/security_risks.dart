@@ -4,6 +4,8 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_keyboard_visibility/flutter_keyboard_visibility.dart';
 import 'package:ion/app/extensions/extensions.dart';
+import 'package:ion/app/features/wallets/views/pages/import_token_page/components/about_import_token_dialog.dart';
+import 'package:ion/app/router/utils/show_simple_bottom_sheet.dart';
 import 'package:ion/generated/assets.gen.dart';
 
 class SecurityRisks extends StatelessWidget {
@@ -45,7 +47,10 @@ class SecurityRisks extends StatelessWidget {
               ),
               recognizer: TapGestureRecognizer()
                 ..onTap = () {
-                  // TODO: there are no requirements yet
+                  showSimpleBottomSheet<void>(
+                    context: context,
+                    child: const AboutImportTokenDialog(),
+                  );
                 },
             ),
           ),
