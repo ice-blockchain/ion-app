@@ -7,10 +7,10 @@ import 'package:collection/collection.dart';
 import 'package:flutter_quill/flutter_quill.dart';
 import 'package:flutter_quill/quill_delta.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:ion/app/components/text_editor/components/custom_blocks/text_editor_profile_block/text_editor_profile_block.dart';
 import 'package:ion/app/components/text_editor/utils/build_empty_delta.dart';
 import 'package:ion/app/components/text_editor/utils/extract_tags.dart';
 import 'package:ion/app/exceptions/exceptions.dart';
+import 'package:ion/app/extensions/delta.dart';
 import 'package:ion/app/features/core/model/media_type.dart';
 import 'package:ion/app/features/core/providers/env_provider.c.dart';
 import 'package:ion/app/features/feed/create_post/model/create_post_option.dart';
@@ -347,7 +347,7 @@ class CreatePostNotifier extends _$CreatePostNotifier {
     Delta content,
     IonConnectEntity? parentEntity,
   ) {
-    final pubkeys = _extractPubkeys(content);
+    final pubkeys = content.extractPubkeys();
     return <RelatedPubkey>{
       ...pubkeys.map((pubkey) => RelatedPubkey(value: pubkey)),
       if (parentEntity != null) ...{
@@ -356,21 +356,6 @@ class CreatePostNotifier extends _$CreatePostNotifier {
         if (parentEntity is PostEntity) ...(parentEntity.data.relatedPubkeys ?? []),
       },
     }.toList();
-  }
-
-  List<String> _extractPubkeys(Delta content) {
-    final pubkeys = <String>[];
-    for (final op in content.operations) {
-      if (op.key == 'insert' && op.data is Map) {
-        final attributes = op.data! as Map<String, dynamic>;
-        if (attributes.containsKey(textEditorProfileKey)) {
-          final encodedRef = attributes[textEditorProfileKey] as String;
-          final eventReference = EventReference.fromEncoded(encodedRef);
-          pubkeys.add(eventReference.pubkey);
-        }
-      }
-    }
-    return pubkeys;
   }
 
   Future<({List<FileMetadata> fileMetadatas, MediaAttachment mediaAttachment})> _uploadMedia(

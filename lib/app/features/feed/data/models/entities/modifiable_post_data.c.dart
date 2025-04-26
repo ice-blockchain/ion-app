@@ -10,6 +10,7 @@ import 'package:ion/app/features/chat/community/models/entities/tags/conversatio
 import 'package:ion/app/features/ion_connect/ion_connect.dart';
 import 'package:ion/app/features/ion_connect/model/entity_data_with_media_content.dart';
 import 'package:ion/app/features/ion_connect/model/entity_data_with_parent.dart';
+import 'package:ion/app/features/ion_connect/model/entity_data_with_related_pubkeys.dart';
 import 'package:ion/app/features/ion_connect/model/entity_data_with_settings.dart';
 import 'package:ion/app/features/ion_connect/model/entity_editing_ended_at.c.dart';
 import 'package:ion/app/features/ion_connect/model/entity_expiration.c.dart';
@@ -78,6 +79,7 @@ class ModifiablePostData
         EntityDataWithMediaContent,
         EntityDataWithSettings,
         EntityDataWithRelatedEvents,
+        EntityDataWithRelatedPubkeys,
         _$ModifiablePostData
     implements EventSerializable, ReplaceableEntityData {
   const factory ModifiablePostData({
@@ -115,7 +117,7 @@ class ModifiablePostData
           : null,
       quotedEvent: quotedEventTag != null ? QuotedEvent.fromTag(quotedEventTag.first) : null,
       relatedEvents: EntityDataWithRelatedEvents.fromTags(tags),
-      relatedPubkeys: tags[RelatedPubkey.tagName]?.map(RelatedPubkey.fromTag).toList(),
+      relatedPubkeys: EntityDataWithRelatedPubkeys.fromTags(tags),
       relatedHashtags: tags[RelatedHashtag.tagName]?.map(RelatedHashtag.fromTag).toList(),
       settings: tags[EventSetting.settingTagName]?.map(EventSetting.fromTag).toList(),
       communityId:

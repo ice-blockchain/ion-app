@@ -9,6 +9,7 @@ import 'package:ion/app/features/feed/data/models/article_topic.dart';
 import 'package:ion/app/features/ion_connect/ion_connect.dart';
 import 'package:ion/app/features/ion_connect/model/color_label.c.dart';
 import 'package:ion/app/features/ion_connect/model/entity_data_with_media_content.dart';
+import 'package:ion/app/features/ion_connect/model/entity_data_with_related_pubkeys.dart';
 import 'package:ion/app/features/ion_connect/model/entity_data_with_settings.dart';
 import 'package:ion/app/features/ion_connect/model/entity_editing_ended_at.c.dart';
 import 'package:ion/app/features/ion_connect/model/entity_published_at.c.dart';
@@ -18,6 +19,7 @@ import 'package:ion/app/features/ion_connect/model/event_setting.c.dart';
 import 'package:ion/app/features/ion_connect/model/ion_connect_entity.dart';
 import 'package:ion/app/features/ion_connect/model/media_attachment.dart';
 import 'package:ion/app/features/ion_connect/model/related_hashtag.c.dart';
+import 'package:ion/app/features/ion_connect/model/related_pubkey.c.dart';
 import 'package:ion/app/features/ion_connect/model/replaceable_event_identifier.c.dart';
 import 'package:ion/app/features/ion_connect/model/rich_text.c.dart';
 import 'package:ion/app/features/ion_connect/model/soft_deletable_entity.dart';
@@ -64,7 +66,12 @@ class ArticleEntity
 
 @freezed
 class ArticleData
-    with SoftDeletableEntityData, EntityDataWithMediaContent, EntityDataWithSettings, _$ArticleData
+    with
+        SoftDeletableEntityData,
+        EntityDataWithMediaContent,
+        EntityDataWithSettings,
+        EntityDataWithRelatedPubkeys,
+        _$ArticleData
     implements EventSerializable, ReplaceableEntityData {
   const factory ArticleData({
     required String content,
@@ -76,6 +83,7 @@ class ArticleData
     String? image,
     String? summary,
     List<RelatedHashtag>? relatedHashtags,
+    List<RelatedPubkey>? relatedPubkeys,
     List<EventSetting>? settings,
     ColorLabel? colorLabel,
     EntityEditingEndedAt? editingEndedAt,
@@ -101,6 +109,7 @@ class ArticleData
       replaceableEventId:
           ReplaceableEventIdentifier.fromTag(tags[ReplaceableEventIdentifier.tagName]!.first),
       relatedHashtags: tags[RelatedHashtag.tagName]?.map(RelatedHashtag.fromTag).toList(),
+      relatedPubkeys: EntityDataWithRelatedPubkeys.fromTags(tags),
       settings: tags[EventSetting.settingTagName]?.map(EventSetting.fromTag).toList(),
       colorLabel: ColorLabel.fromTags(tags, eventId: eventMessage.id),
       richText:
@@ -119,6 +128,7 @@ class ArticleData
     String? summary,
     DateTime? publishedAt,
     List<RelatedHashtag>? relatedHashtags,
+    List<RelatedPubkey>? relatedPubkeys,
     List<EventSetting>? settings,
     String? imageColor,
     RichText? richText,
@@ -133,6 +143,7 @@ class ArticleData
       publishedAt: EntityPublishedAt(value: publishedAt ?? DateTime.now()),
       replaceableEventId: ReplaceableEventIdentifier.generate(),
       relatedHashtags: relatedHashtags,
+      relatedPubkeys: relatedPubkeys,
       settings: settings,
       colorLabel: imageColor != null ? ColorLabel(value: imageColor) : null,
       richText: richText,
@@ -162,6 +173,7 @@ class ArticleData
         if (colorLabel != null) colorLabel!.toValueTag(),
         if (settings != null) ...settings!.map((setting) => setting.toTag()),
         if (relatedHashtags != null) ...relatedHashtags!.map((hashtag) => hashtag.toTag()),
+        if (relatedPubkeys != null) ...relatedPubkeys!.map((pubkey) => pubkey.toTag()),
         if (richText != null) richText!.toTag(),
         if (editingEndedAt != null) editingEndedAt!.toTag(),
       ],

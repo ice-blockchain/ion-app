@@ -8,6 +8,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/components/text_editor/components/custom_blocks/text_editor_single_image_block/text_editor_single_image_block.dart';
 import 'package:ion/app/components/text_editor/utils/extract_tags.dart';
 import 'package:ion/app/exceptions/exceptions.dart';
+import 'package:ion/app/extensions/delta.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/core/providers/env_provider.c.dart';
 import 'package:ion/app/features/feed/create_article/providers/draft_article_provider.c.dart';
@@ -25,6 +26,7 @@ import 'package:ion/app/features/ion_connect/model/file_metadata.c.dart';
 import 'package:ion/app/features/ion_connect/model/ion_connect_entity.dart';
 import 'package:ion/app/features/ion_connect/model/media_attachment.dart';
 import 'package:ion/app/features/ion_connect/model/related_hashtag.c.dart';
+import 'package:ion/app/features/ion_connect/model/related_pubkey.c.dart';
 import 'package:ion/app/features/ion_connect/model/rich_text.c.dart';
 import 'package:ion/app/features/ion_connect/providers/ion_connect_delete_file_notifier.c.dart';
 import 'package:ion/app/features/ion_connect/providers/ion_connect_entity_provider.c.dart';
@@ -106,6 +108,8 @@ class CreateArticle extends _$CreateArticle {
           for (final attachment in mediaAttachments) attachment.url: attachment,
         },
         relatedHashtags: relatedHashtags,
+        relatedPubkeys:
+            updatedContent.extractPubkeys().map((pubkey) => RelatedPubkey(value: pubkey)).toList(),
         publishedAt: publishedAt,
         settings: EntityDataWithSettings.build(whoCanReply: whoCanReply),
         imageColor: imageColor,
