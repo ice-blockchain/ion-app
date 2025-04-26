@@ -55,13 +55,6 @@ sealed class ChatMessageInfoItem with _$ChatMessageInfoItem {
   }) = DocumentItem;
 
   @Implements<MessageInfo>()
-  const factory ChatMessageInfoItem.link({
-    required String url,
-    required EventMessage eventMessage,
-    required String contentDescription,
-  }) = LinkItem;
-
-  @Implements<MessageInfo>()
   const factory ChatMessageInfoItem.shareProfile({
     required EventMessage eventMessage,
     required String contentDescription,

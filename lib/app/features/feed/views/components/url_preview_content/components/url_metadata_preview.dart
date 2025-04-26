@@ -12,7 +12,7 @@ class _UrlMetadataPreview extends StatelessWidget {
 
   final OgpData meta;
   final String url;
-  final String favIconUrl;
+  final String? favIconUrl;
 
   @override
   Widget build(BuildContext context) {
@@ -64,7 +64,7 @@ class _UrlMetadataSiteInfo extends StatelessWidget {
   });
 
   final String siteName;
-  final String favIconUrl;
+  final String? favIconUrl;
 
   @override
   Widget build(BuildContext context) {
@@ -72,19 +72,20 @@ class _UrlMetadataSiteInfo extends StatelessWidget {
       padding: EdgeInsetsDirectional.only(start: 12.0.s, end: 12.0.s, top: 12.0.s),
       child: Row(
         children: [
-          IonNetworkImage(
-            imageUrl: favIconUrl,
-            imageBuilder: (context, imageProvider) => Row(
-              children: [
-                Image(
-                  image: imageProvider,
-                  width: 13.0.s,
-                  height: 13.0.s,
-                ),
-                SizedBox(width: 6.0.s),
-              ],
+          if (favIconUrl != null)
+            IonNetworkImage(
+              imageUrl: favIconUrl!,
+              imageBuilder: (context, imageProvider) => Row(
+                children: [
+                  Image(
+                    image: imageProvider,
+                    width: 13.0.s,
+                    height: 13.0.s,
+                  ),
+                  SizedBox(width: 6.0.s),
+                ],
+              ),
             ),
-          ),
           Text(
             siteName,
             style: context.theme.appTextThemes.caption.copyWith(

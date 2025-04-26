@@ -6,7 +6,6 @@ import 'package:ion/app/components/image/ion_network_image.dart';
 import 'package:ion/app/components/url_preview/url_preview.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/utils/url.dart';
-import 'package:ion/app/utils/validators.dart';
 import 'package:ogp_data_extract/ogp_data_extract.dart';
 
 part 'components/url_metadata_preview.dart';
@@ -21,15 +20,9 @@ class UrlPreviewContent extends HookWidget {
 
   @override
   Widget build(BuildContext context) {
-    if (Validators.isInvalidUrl(url)) {
-      return const SizedBox.shrink();
-    }
-
-    final normalizedUrl = useMemoized(() => normalizeUrl(url), [url]);
-
     return UrlPreview(
-      key: ValueKey(normalizedUrl),
-      url: normalizedUrl,
+      key: ValueKey(url),
+      url: url,
       builder: (meta, favIconUrl) {
         if (meta == null || meta.title == null || meta.title!.isEmpty) {
           return const SizedBox.shrink();

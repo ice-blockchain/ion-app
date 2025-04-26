@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: ice License 1.0
 
-part of '../url_preview_message.dart';
+part of '../url_preview_block.dart';
 
 class _MetaDataPreview extends StatelessWidget {
   const _MetaDataPreview({
@@ -12,32 +12,30 @@ class _MetaDataPreview extends StatelessWidget {
 
   final OgpData meta;
   final String url;
-  final String favIconUrl;
+  final String? favIconUrl;
   final bool isMe;
 
   @override
   Widget build(BuildContext context) {
-    return IntrinsicHeight(
-      child: Row(
-        children: [
-          _SideVerticalDivider(isMe: isMe),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                if (meta.image != null)
-                  _MetaImage(
-                    imageUrl: resolveImageUrl(url, meta.image!),
-                  ),
-                if (meta.siteName != null)
-                  _MetaSiteInfo(meta.siteName!, favIconUrl: favIconUrl, isMe: isMe),
-                if (meta.title != null) _MetaTitle(meta.title!, isMe: isMe),
-                if (meta.description != null) _MetaDescription(meta.description!, isMe: isMe),
-              ],
-            ),
+    return Row(
+      children: [
+        _SideVerticalDivider(isMe: isMe),
+        Expanded(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              if (meta.image != null)
+                _MetaImage(
+                  imageUrl: resolveImageUrl(url, meta.image!),
+                ),
+              if (meta.siteName != null)
+                _MetaSiteInfo(meta.siteName!, favIconUrl: favIconUrl, isMe: isMe),
+              if (meta.title != null) _MetaTitle(meta.title!, isMe: isMe),
+              if (meta.description != null) _MetaDescription(meta.description!, isMe: isMe),
+            ],
           ),
-        ],
-      ),
+        ),
+      ],
     );
   }
 }
@@ -66,28 +64,39 @@ class _SideVerticalDivider extends StatelessWidget {
   }
 }
 
-class _MetaImage extends StatelessWidget {
+class _MetaImage extends HookWidget {
   const _MetaImage({required this.imageUrl});
 
   final String imageUrl;
 
   @override
   Widget build(BuildContext context) {
+    final hasError = useState(false);
+
     return Padding(
-      padding: EdgeInsetsDirectional.only(top: 8.0.s),
+      padding: EdgeInsetsDirectional.symmetric(
+        vertical: hasError.value ? 0.0 : 8.0.s,
+      ),
       child: ClipRRect(
         borderRadius: BorderRadius.circular(12.0.s),
         child: IonNetworkImage(
           imageUrl: imageUrl,
-          width: double.infinity,
           fit: BoxFit.cover,
+          errorWidget: (context, url, error) {
+            if (!hasError.value) {
+              WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+                hasError.value = true;
+              });
+            }
+            return const SizedBox.shrink();
+          },
         ),
       ),
     );
   }
 }
 
-class _MetaSiteInfo extends StatelessWidget {
+class _MetaSiteInfo extends HookWidget {
   const _MetaSiteInfo(
     this.siteName, {
     required this.favIconUrl,
@@ -95,31 +104,39 @@ class _MetaSiteInfo extends StatelessWidget {
   });
 
   final String siteName;
-  final String favIconUrl;
+  final String? favIconUrl;
   final bool isMe;
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: EdgeInsetsDirectional.only(top: 8.0.s),
-      child: Row(
-        children: [
+    final hasError = useState(false);
+
+    return Row(
+      children: [
+        if (favIconUrl != null)
           IonNetworkImage(
-            imageUrl: favIconUrl,
-            width: 16.0.s,
-            height: 16.0.s,
+            imageUrl: favIconUrl!,
+            width: hasError.value ? 0.0 : 16.0.s,
+            height: hasError.value ? 0.0 : 16.0.s,
+            errorWidget: (context, url, error) {
+              if (!hasError.value) {
+                WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+                  hasError.value = true;
+                });
+              }
+              return const SizedBox.shrink();
+            },
           ),
-          SizedBox(width: 6.0.s),
-          Text(
-            siteName,
-            style: context.theme.appTextThemes.body2.copyWith(
-              color: isMe
-                  ? context.theme.appColors.onPrimaryAccent
-                  : context.theme.appColors.primaryText,
-            ),
+        if (!hasError.value) SizedBox(width: 6.0.s),
+        Text(
+          siteName,
+          style: context.theme.appTextThemes.body2.copyWith(
+            color: isMe
+                ? context.theme.appColors.onPrimaryAccent
+                : context.theme.appColors.primaryText,
           ),
-        ],
-      ),
+        ),
+      ],
     );
   }
 }

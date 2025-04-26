@@ -9,7 +9,7 @@ export 'message_types/money_message/money_message.dart';
 export 'message_types/poll_message/poll_message.dart';
 export 'message_types/profile_share_message/profile_share_message.dart';
 export 'message_types/text_message/text_message.dart';
-export 'message_types/url_preview_message/url_preview_message.dart';
+export 'message_types/text_message/url_preview_block/url_preview_block.dart';
 export 'messages_context_menu/messages_context_menu.dart';
 export 'messaging_bottom_bar/messaging_bottom_bar.dart';
 export 'messaging_bottom_bar/messaging_bottom_bar_initial.dart';
