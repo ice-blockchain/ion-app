@@ -95,7 +95,7 @@ class MediaEncryptionService {
           final decryptedFile = await fileCacheService.putFile(
             url: url,
             bytes: decryptedFileBytes,
-            fileExtension: 'pdf',
+            fileExtension: fileExtension,
           );
           return decryptedFile;
         }

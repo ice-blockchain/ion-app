@@ -101,6 +101,7 @@ class DocumentMessage extends HookConsumerWidget {
         children: [
           if (repliedMessageItem != null) ReplyMessage(messageItem, repliedMessageItem),
           GestureDetector(
+            behavior: HitTestBehavior.opaque,
             onTap: () {
               shareFile(localFile.value?.path ?? '', name: entity.data.content);
             },

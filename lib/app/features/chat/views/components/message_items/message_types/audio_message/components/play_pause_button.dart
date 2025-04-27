@@ -2,25 +2,24 @@
 
 part of '../audio_message.dart';
 
-class _PlayPauseButton extends StatelessWidget {
+class _PlayPauseButton extends ConsumerWidget {
   const _PlayPauseButton({
     required this.audioPlaybackController,
     required this.audioPlaybackState,
+    required this.eventMessageId,
   });
 
   final PlayerController audioPlaybackController;
   final ValueNotifier<PlayerState?> audioPlaybackState;
-
+  final String eventMessageId;
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     return GestureDetector(
       onTap: () {
         if (audioPlaybackState.value?.isPlaying ?? false) {
-          audioPlaybackController.pausePlayer();
+          ref.read(activeAudioMessageProvider.notifier).activeAudioMessage = null;
         } else {
-          audioPlaybackController
-            ..setFinishMode(finishMode: FinishMode.pause)
-            ..startPlayer();
+          ref.read(activeAudioMessageProvider.notifier).activeAudioMessage = eventMessageId;
         }
       },
       child: Container(
