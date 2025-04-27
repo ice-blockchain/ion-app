@@ -110,7 +110,7 @@
   "common_paste": "Paste",
   "common_post": "post",
   "common_article": "article",
-  "common_reply": "comment",
+  "common_comment": "comment",
   "common_story": "story",
   "auth_secured_by": "Secured by",
   "auth_link_new_device_title": "Link new device",

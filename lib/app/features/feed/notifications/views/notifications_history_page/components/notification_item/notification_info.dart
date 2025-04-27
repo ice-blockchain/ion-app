@@ -115,7 +115,7 @@ class NotificationInfo extends HookConsumerWidget {
       ModifiablePostEntity(:final data) when data.expiration != null =>
         ref.context.i18n.common_story,
       ModifiablePostEntity(:final data) when data.parentEvent != null =>
-        ref.context.i18n.common_reply,
+        ref.context.i18n.common_comment,
       ModifiablePostEntity() => ref.context.i18n.common_post,
       ArticleEntity() => ref.context.i18n.common_article,
       _ => '',
