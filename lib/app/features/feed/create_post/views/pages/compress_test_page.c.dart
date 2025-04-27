@@ -9,16 +9,15 @@ import 'package:cross_file/cross_file.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
-import 'package:flutter_video_info/flutter_video_info.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/features/core/providers/video_player_provider.c.dart';
 import 'package:ion/app/hooks/use_on_init.dart';
 import 'package:ion/app/services/compressors/image_compressor.c.dart';
 import 'package:ion/app/services/compressors/video_compressor.c.dart';
+import 'package:ion/app/services/logger/logger.dart';
 import 'package:ion/app/services/media_service/media_service.c.dart';
 import 'package:ion/app/utils/filesize.dart';
-import 'package:media_data_extractor/media_data_extractor.dart';
 
 part 'compress_test_page.c.freezed.dart';
 
@@ -73,10 +72,7 @@ class VideoCompressTab extends HookConsumerWidget {
         return;
       }
 
-      final videoInfo = FlutterVideoInfo();
-
       isCompressing.value = true;
-      final mediaDataExtractorPlugin = MediaDataExtractor();
 
       final compressedVideos = <VideoInfoModel>[];
 
@@ -91,16 +87,14 @@ class VideoCompressTab extends HookConsumerWidget {
           MediaFile(path: file.path!),
         );
         final newPath = '${File(compressedFile.path).parent.path}/${index + 1}.mp4';
-        File(file.path!).copySync(newPath);
-        // File(compressedFile.path).renameSync(newPath);
-        print(compressedFile.path);
+        File(compressedFile.path).renameSync(newPath);
+        Logger.info('Compressed video saved to: $newPath');
 
         final controller =
             CachedVideoPlayerPlusController.file(File(newPath)); // or .network() / .asset()
 
         await controller.initialize();
         final duration = controller.value.duration;
-        final info = await videoInfo.getVideoInfo(newPath);
 
         compressedVideos.add(
           VideoInfoModel(
@@ -119,14 +113,14 @@ class VideoCompressTab extends HookConsumerWidget {
       final file = File(
         '$compressDirectory/compressed_videos_info.txt',
       );
-      final buffer = StringBuffer();
-      buffer.writeln('Compressed Videos:');
-      buffer.writeln(
-        '| Name           | Original Size  | Compressed Size | Duration       | Size    ',
-      );
-      buffer.writeln(
-        '|----------------|----------------|-----------------|----------------|----------',
-      );
+      final buffer = StringBuffer()
+        ..writeln('Compressed Videos:')
+        ..writeln(
+          '| Name           | Original Size  | Compressed Size | Duration       | Size    ',
+        )
+        ..writeln(
+          '|----------------|----------------|-----------------|----------------|----------',
+        );
       for (final video in compressedVideos) {
         buffer.writeln(
           '| ${video.name.padRight(14)} | '
@@ -137,7 +131,7 @@ class VideoCompressTab extends HookConsumerWidget {
         );
       }
       await file.writeAsString(buffer.toString());
-      print('Video compression info saved to: ${file.path}');
+      Logger.info('Video compression info saved to: ${file.path}');
 
       isCompressing.value = false;
     }
@@ -192,7 +186,7 @@ class ImageCompressTab extends HookConsumerWidget {
         compressedImage.value = compressedFile;
         isCompressing.value = false;
 
-        print(compressedFile.path);
+        Logger.info('Compressed image saved to: ${compressedFile.path}');
       }
     }
 

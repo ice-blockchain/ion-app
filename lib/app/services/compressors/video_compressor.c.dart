@@ -12,6 +12,7 @@ import 'package:ion/app/services/logger/logger.dart';
 import 'package:ion/app/services/media_service/ffmpeg_args/ffmpeg_audio_bitrate_arg.dart';
 import 'package:ion/app/services/media_service/ffmpeg_args/ffmpeg_audio_codec_arg.dart';
 import 'package:ion/app/services/media_service/ffmpeg_args/ffmpeg_bitrate_arg.dart';
+import 'package:ion/app/services/media_service/ffmpeg_args/ffmpeg_movflag_arg.dart';
 import 'package:ion/app/services/media_service/ffmpeg_args/ffmpeg_pixel_format_arg.dart';
 import 'package:ion/app/services/media_service/ffmpeg_args/ffmpeg_preset_arg.dart';
 import 'package:ion/app/services/media_service/ffmpeg_args/ffmpeg_scale_arg.dart';
@@ -26,39 +27,48 @@ class VideoCompressionSettings {
   const VideoCompressionSettings({
     required this.videoCodec,
     required this.preset,
-    required this.videoBitrate,
     required this.maxRate,
     required this.bufSize,
     required this.scale,
-    required this.fps,
     required this.audioCodec,
     required this.audioBitrate,
     required this.pixelFormat,
+    required this.movFlags,
   });
 
   static const balanced = VideoCompressionSettings(
     videoCodec: FFmpegVideoCodecArg.libx264,
     preset: FfmpegPresetArg.slow,
-    videoBitrate: FfmpegBitrateArg.medium,
     maxRate: FfmpegBitrateArg.medium,
     bufSize: FfmpegBitrateArg.medium,
     scale: FfmpegScaleArg.fullHd,
-    fps: 24,
     audioCodec: FfmpegAudioCodecArg.aac,
     audioBitrate: FfmpegAudioBitrateArg.medium,
     pixelFormat: FfmpegPixelFormatArg.yuv420p,
+    movFlags: FfmpegMovFlagArg.faststart,
+  );
+
+  static const highQuality = VideoCompressionSettings(
+    videoCodec: FFmpegVideoCodecArg.libx264,
+    preset: FfmpegPresetArg.slow,
+    maxRate: FfmpegBitrateArg.high,
+    bufSize: FfmpegBitrateArg.highest,
+    scale: FfmpegScaleArg.fullHd,
+    audioCodec: FfmpegAudioCodecArg.aac,
+    audioBitrate: FfmpegAudioBitrateArg.medium,
+    pixelFormat: FfmpegPixelFormatArg.yuv420p,
+    movFlags: FfmpegMovFlagArg.faststart,
   );
 
   final FFmpegVideoCodecArg videoCodec;
   final FfmpegPresetArg preset;
-  final FfmpegBitrateArg videoBitrate;
   final FfmpegBitrateArg maxRate;
   final FfmpegBitrateArg bufSize;
   final FfmpegScaleArg scale;
-  final int fps;
   final FfmpegAudioCodecArg audioCodec;
   final FfmpegAudioBitrateArg audioBitrate;
   final FfmpegPixelFormatArg pixelFormat;
+  final FfmpegMovFlagArg movFlags;
 }
 
 class VideoCompressor implements Compressor<VideoCompressionSettings> {
@@ -78,7 +88,7 @@ class VideoCompressor implements Compressor<VideoCompressionSettings> {
   @override
   Future<MediaFile> compress(
     MediaFile file, {
-    VideoCompressionSettings settings = VideoCompressionSettings.balanced,
+    VideoCompressionSettings settings = VideoCompressionSettings.highQuality,
   }) async {
     try {
       final output = await generateOutputPath(extension: 'mp4');
@@ -88,14 +98,13 @@ class VideoCompressor implements Compressor<VideoCompressionSettings> {
         outputPath: output,
         videoCodec: settings.videoCodec.codec,
         preset: settings.preset.value,
-        videoBitrate: settings.videoBitrate.bitrate,
         maxRate: settings.maxRate.bitrate,
         bufSize: settings.bufSize.bitrate,
         audioCodec: settings.audioCodec.codec,
         audioBitrate: settings.audioBitrate.bitrate,
         pixelFormat: settings.pixelFormat.name,
         scaleResolution: settings.scale.resolution,
-        fps: settings.fps,
+        movFlags: settings.movFlags.value,
       );
 
       final session = await compressExecutor.execute(args);
