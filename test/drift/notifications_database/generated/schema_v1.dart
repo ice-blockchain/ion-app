@@ -1,11 +1,10 @@
-// SPDX-License-Identifier: ice License 1.0
-
 // dart format width=80
 // GENERATED CODE, DO NOT EDIT BY HAND.
 // ignore_for_file: type=lint
 import 'package:drift/drift.dart';
 
-class CommentsTable extends Table with TableInfo<CommentsTable, CommentsTableData> {
+class CommentsTable extends Table
+    with TableInfo<CommentsTable, CommentsTableData> {
   @override
   final GeneratedDatabase attachedDatabase;
   final String? _alias;
@@ -16,7 +15,8 @@ class CommentsTable extends Table with TableInfo<CommentsTable, CommentsTableDat
   late final GeneratedColumn<DateTime> createdAt = GeneratedColumn<DateTime>(
       'created_at', aliasedName, false,
       type: DriftSqlType.dateTime, requiredDuringInsert: true);
-  late final GeneratedColumn<int> type = GeneratedColumn<int>('type', aliasedName, false,
+  late final GeneratedColumn<int> type = GeneratedColumn<int>(
+      'type', aliasedName, false,
       type: DriftSqlType.int, requiredDuringInsert: true);
   @override
   List<GeneratedColumn> get $columns => [eventReference, createdAt, type];
@@ -31,11 +31,12 @@ class CommentsTable extends Table with TableInfo<CommentsTable, CommentsTableDat
   CommentsTableData map(Map<String, dynamic> data, {String? tablePrefix}) {
     final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
     return CommentsTableData(
-      eventReference: attachedDatabase.typeMapping
-          .read(DriftSqlType.string, data['${effectivePrefix}event_reference'])!,
+      eventReference: attachedDatabase.typeMapping.read(
+          DriftSqlType.string, data['${effectivePrefix}event_reference'])!,
       createdAt: attachedDatabase.typeMapping
           .read(DriftSqlType.dateTime, data['${effectivePrefix}created_at'])!,
-      type: attachedDatabase.typeMapping.read(DriftSqlType.int, data['${effectivePrefix}type'])!,
+      type: attachedDatabase.typeMapping
+          .read(DriftSqlType.int, data['${effectivePrefix}type'])!,
     );
   }
 
@@ -45,12 +46,15 @@ class CommentsTable extends Table with TableInfo<CommentsTable, CommentsTableDat
   }
 }
 
-class CommentsTableData extends DataClass implements Insertable<CommentsTableData> {
+class CommentsTableData extends DataClass
+    implements Insertable<CommentsTableData> {
   final String eventReference;
   final DateTime createdAt;
   final int type;
   const CommentsTableData(
-      {required this.eventReference, required this.createdAt, required this.type});
+      {required this.eventReference,
+      required this.createdAt,
+      required this.type});
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
     final map = <String, Expression>{};
@@ -68,7 +72,8 @@ class CommentsTableData extends DataClass implements Insertable<CommentsTableDat
     );
   }
 
-  factory CommentsTableData.fromJson(Map<String, dynamic> json, {ValueSerializer? serializer}) {
+  factory CommentsTableData.fromJson(Map<String, dynamic> json,
+      {ValueSerializer? serializer}) {
     serializer ??= driftRuntimeOptions.defaultSerializer;
     return CommentsTableData(
       eventReference: serializer.fromJson<String>(json['event_reference']),
@@ -86,7 +91,8 @@ class CommentsTableData extends DataClass implements Insertable<CommentsTableDat
     };
   }
 
-  CommentsTableData copyWith({String? eventReference, DateTime? createdAt, int? type}) =>
+  CommentsTableData copyWith(
+          {String? eventReference, DateTime? createdAt, int? type}) =>
       CommentsTableData(
         eventReference: eventReference ?? this.eventReference,
         createdAt: createdAt ?? this.createdAt,
@@ -94,7 +100,9 @@ class CommentsTableData extends DataClass implements Insertable<CommentsTableDat
       );
   CommentsTableData copyWithCompanion(CommentsTableCompanion data) {
     return CommentsTableData(
-      eventReference: data.eventReference.present ? data.eventReference.value : this.eventReference,
+      eventReference: data.eventReference.present
+          ? data.eventReference.value
+          : this.eventReference,
       createdAt: data.createdAt.present ? data.createdAt.value : this.createdAt,
       type: data.type.present ? data.type.value : this.type,
     );

@@ -65,7 +65,7 @@ class ChatDatabase extends _$ChatDatabase {
   final String pubkey;
 
   @override
-  int get schemaVersion => 5;
+  int get schemaVersion => 6;
 
   @override
   MigrationStrategy get migration => MigrationStrategy(
@@ -81,7 +81,7 @@ class ChatDatabase extends _$ChatDatabase {
             await m.renameColumn(
               schema.reactionTable,
               Schema2(database: m.database).reactionTable.eventMessageId.name,
-              reactionTable.kind14Id,
+              reactionTable.kind14SharedId,
             );
             await m.alterTable(
               TableMigration(
@@ -98,6 +98,13 @@ class ChatDatabase extends _$ChatDatabase {
           from4To5: (m, schema) async {
             await m.deleteTable(schema.messageMediaTable.actualTableName);
             await m.createTable(schema.messageMediaTable);
+          },
+          from5To6: (m, schema) async {
+            await m.renameColumn(
+              schema.reactionTable,
+              Schema5(database: m.database).reactionTable.id.name,
+              reactionTable.kind14SharedId,
+            );
           },
         ),
       );
