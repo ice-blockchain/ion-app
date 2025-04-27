@@ -161,9 +161,6 @@ class VideoCompressor implements Compressor<VideoCompressionSettings> {
         thumbPath = outputPath;
       }
 
-      // We only pass one dimension to keep aspect ratio
-      // If the video is wider, specify the max width;
-      // otherwise specify the max height
       final compressedImage = await imageCompressor.compress(
         MediaFile(path: thumbPath),
       );
