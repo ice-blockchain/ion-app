@@ -119,7 +119,7 @@ class StoryPreviewPage extends HookConsumerWidget {
                               whoCanReply: whoCanReply,
                             );
                           } else if (mediaType == MediaType.image) {
-                            final dimension = await ref
+                            final dimensions = await ref
                                 .read(imageCompressorProvider)
                                 .getImageDimension(path: path);
 
@@ -128,8 +128,8 @@ class StoryPreviewPage extends HookConsumerWidget {
                                 MediaFile(
                                   path: path,
                                   mimeType: mimeType,
-                                  width: dimension.width,
-                                  height: dimension.height,
+                                  width: dimensions.width,
+                                  height: dimensions.height,
                                 ),
                               ],
                               whoCanReply: whoCanReply,

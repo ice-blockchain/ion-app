@@ -334,11 +334,9 @@ class CreateArticle extends _$CreateArticle {
 
   Future<UploadResult> _uploadImage(String imagePath, {bool extractColor = false}) async {
     final imageCompressor = ref.read(imageCompressorProvider);
-    final dimension = await imageCompressor.getImageDimension(path: imagePath);
+
     final file = MediaFile(
       path: imagePath,
-      width: dimension.width,
-      height: dimension.height,
     );
     final compressedImage = await imageCompressor.compress(file);
 

@@ -74,8 +74,6 @@ class ImageProcessorNotifier extends _$ImageProcessorNotifier {
             croppedImage,
             settings: ImageCompressionSettings(
               quality: config.quality,
-              width: config.targetWidth,
-              height: config.targetHeight,
             ),
           );
       state = ImageProcessorState.processed(file: compressedImage);

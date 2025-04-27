@@ -9,38 +9,38 @@ class FFmpegCommands {
     required String outputPath,
     required String videoCodec,
     required String preset,
-    required String videoBitrate,
     required String maxRate,
     required String bufSize,
     required String audioCodec,
     required String audioBitrate,
     required String pixelFormat,
-    required int scaleResolution,
-    required int fps,
-  }) =>
-      [
-        '-i',
-        inputPath,
-        '-codec:v',
-        videoCodec,
-        '-preset',
-        preset,
-        '-b:v',
-        videoBitrate,
-        '-maxrate',
-        maxRate,
-        '-bufsize',
-        bufSize,
-        '-codec:a',
-        audioCodec,
-        '-b:a',
-        audioBitrate,
-        '-pix_fmt',
-        pixelFormat,
-        '-vf',
-        'scale=-2:$scaleResolution,fps=$fps',
-        outputPath,
-      ];
+    required String scaleResolution,
+    required String movFlags,
+  }) {
+    return [
+      '-i',
+      inputPath,
+      '-codec:v',
+      videoCodec,
+      '-preset',
+      preset,
+      '-maxrate',
+      maxRate,
+      '-bufsize',
+      bufSize,
+      '-movflags',
+      movFlags,
+      '-codec:a',
+      audioCodec,
+      '-b:a',
+      audioBitrate,
+      '-pix_fmt',
+      pixelFormat,
+      '-vf',
+      scaleResolution,
+      outputPath,
+    ];
+  }
 
   /// Commands for converting/compressing GIF to animated WebP
   static List<String> gifToAnimatedWebP({
@@ -70,8 +70,7 @@ class FFmpegCommands {
     required String inputPath,
     required String outputPath,
     required int quality,
-    int? width,
-    int? height,
+    required String scaleResolution,
   }) =>
       [
         '-i',
@@ -79,9 +78,11 @@ class FFmpegCommands {
         '-c:v',
         'libwebp',
         '-vf',
-        'scale=${width ?? '-1'}:${height ?? '-1'}:force_original_aspect_ratio=decrease',
+        scaleResolution,
         '-q:v',
         quality.toString(),
+        '-map_metadata',
+        '-1',
         outputPath,
       ];
 

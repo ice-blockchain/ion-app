@@ -10,6 +10,7 @@ import 'package:ion/app/services/compressors/compress_executor.c.dart';
 import 'package:ion/app/services/compressors/compressor.c.dart';
 import 'package:ion/app/services/compressors/output_path_generator.dart';
 import 'package:ion/app/services/logger/logger.dart';
+import 'package:ion/app/services/media_service/ffmpeg_args/ffmpeg_scale_arg.dart';
 import 'package:ion/app/services/media_service/ffmpeg_commands_config.dart';
 import 'package:ion/app/services/media_service/media_service.c.dart';
 import 'package:ion/app/utils/image_path.dart';
@@ -19,16 +20,14 @@ part 'image_compressor.c.g.dart';
 
 class ImageCompressionSettings {
   const ImageCompressionSettings({
-    this.quality = 80,
+    this.quality = 70,
     this.shouldCompressGif = false,
-    this.width,
-    this.height,
+    this.scaleResolution = FfmpegScaleArg.fullHd,
   });
 
   final int quality;
   final bool shouldCompressGif;
-  final int? width;
-  final int? height;
+  final FfmpegScaleArg scaleResolution;
 }
 
 class ImageCompressor implements Compressor<ImageCompressionSettings> {
@@ -61,8 +60,7 @@ class ImageCompressor implements Compressor<ImageCompressionSettings> {
           inputPath: file.path,
           outputPath: output,
           quality: settings.quality,
-          width: settings.width,
-          height: settings.height,
+          scaleResolution: settings.scaleResolution.resolution,
         );
       }
 
