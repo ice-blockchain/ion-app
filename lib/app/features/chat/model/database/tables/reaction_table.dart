@@ -7,7 +7,7 @@ class ReactionTable extends Table {
   late final id = text().references(EventMessageTable, #id)();
 
   @ReferenceName('reactionSourceMessageRef')
-  late final kind14Id = text().references(EventMessageTable, #id)();
+  late final kind14SharedId = text()();
 
   late final content = text()();
   late final masterPubkey = text()();

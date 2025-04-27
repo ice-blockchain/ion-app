@@ -210,12 +210,12 @@ class E2eeMessagesSubscriber extends _$E2eeMessagesSubscriber {
               );
             }
           } else {
-            //  await conversationMessageReactionDao.add(
-            //    ref: ref,
-            //    newReactionEvent: rumor,
-            //    kind14EventId: kind14EventId,
-            //    masterPubkey: rumor.masterPubkey,
-            //  );
+            await conversationMessageReactionDao.add(
+              ref: ref,
+              newReactionEvent: rumor,
+              kind14SharedId: reactionEntity.data.reference.dTag!,
+              masterPubkey: rumor.masterPubkey,
+            );
           }
         }
         // For kind 5
