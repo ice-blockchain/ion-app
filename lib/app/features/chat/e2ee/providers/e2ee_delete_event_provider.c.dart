@@ -8,7 +8,6 @@ import 'package:ion/app/features/chat/e2ee/model/entities/private_direct_message
 import 'package:ion/app/features/chat/model/database/chat_database.c.dart';
 import 'package:ion/app/features/chat/providers/conversation_pubkeys_provider.c.dart';
 import 'package:ion/app/features/core/providers/env_provider.c.dart';
-
 import 'package:ion/app/features/ion_connect/ion_connect.dart';
 import 'package:ion/app/features/ion_connect/model/action_source.c.dart';
 import 'package:ion/app/features/ion_connect/model/deletion_request.c.dart';
@@ -45,6 +44,28 @@ Future<void> e2eeDeleteMessage(
     messageEvents: messageEvents,
     forEveryone: forEveryone,
   );
+}
+
+@riverpod
+class E2eeDeleteMessageNotifier extends _$E2eeDeleteMessageNotifier {
+  @override
+  FutureOr<void> build({required EventMessage eventMessage}) {}
+
+  Future<void> deleteMessage({
+    bool forEveryone = false,
+  }) async {
+    state = const AsyncLoading();
+
+    state = await AsyncValue.guard(
+      () async {
+        await _deleteMessages(
+          ref: ref,
+          messageEvents: [eventMessage],
+          forEveryone: forEveryone,
+        );
+      },
+    );
+  }
 }
 
 @riverpod

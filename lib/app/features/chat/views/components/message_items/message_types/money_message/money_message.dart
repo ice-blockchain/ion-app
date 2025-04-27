@@ -160,6 +160,7 @@ class _MoneyMessageContent extends HookConsumerWidget {
                 eventId: eventId,
                 isPaid: isPaid,
                 request: request,
+                eventMessage: eventMessage,
               ),
               Text(
                 toTimeDisplayValue(eventMessage.createdAt.millisecondsSinceEpoch),
