@@ -2,6 +2,7 @@
 
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/exceptions/exceptions.dart';
+import 'package:ion/app/features/auth/providers/auth_provider.c.dart';
 import 'package:ion/app/features/core/providers/main_wallet_provider.c.dart';
 import 'package:ion/app/features/ion_connect/ion_connect.dart';
 import 'package:ion/app/features/ion_connect/model/action_source.c.dart';
@@ -21,6 +22,13 @@ Future<UserDelegationEntity?> userDelegation(Ref ref, String pubkey) async {
 
   if (userDelegation != null) {
     return userDelegation;
+  }
+
+  // Added an authentication check to prevent the provider from getting stuck in an error state
+  // when user delegation is missing and a network request is attempted while logged out.
+  final authState = await ref.watch(authProvider.future);
+  if (!authState.isAuthenticated) {
+    return null;
   }
 
   final requestMessage = RequestMessage()
