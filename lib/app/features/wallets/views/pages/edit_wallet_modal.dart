@@ -30,7 +30,6 @@ class EditWalletModal extends HookConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final walletView = ref.watch(walletViewByIdProvider(id: walletId)).valueOrNull;
 
-    // TODO: add loading and error states
     if (walletView == null) {
       return const SizedBox.shrink();
     }

@@ -11,7 +11,6 @@ import 'package:ion/app/features/wallets/model/transaction_data.c.dart';
 import 'package:ion/app/features/wallets/model/transaction_details.c.dart';
 import 'package:ion/app/features/wallets/model/transaction_type.dart';
 
-// TODO: As for now it supports only coins
 class CoinTransactionsMapper {
   db.Transaction fromTransactionDetails({
     required TransactionDetails details,
