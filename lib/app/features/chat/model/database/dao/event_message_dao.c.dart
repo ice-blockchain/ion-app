@@ -18,6 +18,14 @@ class EventMessageDao extends DatabaseAccessor<ChatDatabase> with _$EventMessage
   EventMessageDao(super.db);
 
   Future<void> add(EventMessage event) async {
+    final existingEventMessage = await (select(db.eventMessageTable)
+          ..where((table) => table.sharedId.equals(event.sharedId!)))
+        .getSingleOrNull();
+
+    if (existingEventMessage != null) {
+      return;
+    }
+
     await into(db.eventMessageTable)
         .insert(EventMessageRowClass.fromEventMessage(event), mode: InsertMode.insertOrReplace);
   }
