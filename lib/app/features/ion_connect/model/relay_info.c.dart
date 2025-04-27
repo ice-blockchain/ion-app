@@ -1,3 +1,6 @@
+import 'dart:io';
+
+import 'package:flutter/foundation.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
 part 'relay_info.c.freezed.dart';
@@ -18,12 +21,24 @@ class RelayInfo with _$RelayInfo {
     required String version,
     required String privacyPolicy,
     required String termsOfService,
-    required List<RelayFcmConfig> fcmAndroidConfigs,
-    required List<RelayFcmConfig> fcmIosConfigs,
-    required List<RelayFcmConfig> fcmWebConfigs,
+    List<RelayFcmConfig>? fcmAndroidConfigs,
+    List<RelayFcmConfig>? fcmIosConfigs,
+    List<RelayFcmConfig>? fcmWebConfigs,
   }) = _RelayInfo;
 
   factory RelayInfo.fromJson(Map<String, dynamic> json) => _$RelayInfoFromJson(json);
+
+  List<RelayFcmConfig>? getFcmConfigsForPlatform() {
+    if (kIsWeb) {
+      return fcmWebConfigs;
+    } else if (Platform.isAndroid) {
+      return fcmAndroidConfigs;
+    } else if (Platform.isIOS) {
+      return fcmIosConfigs;
+    } else {
+      throw UnsupportedError('Unsupported platform');
+    }
+  }
 }
 
 /// https://github.com/ice-blockchain/subzero/blob/master/.ion-connect-protocol/ICIP-8000.md#fcm-client-configuration
