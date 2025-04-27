@@ -67,34 +67,16 @@ class AudioMessage extends HookConsumerWidget {
         )
             .then((value) {
           if (value != null) {
-            ref.read(audioCompressorProvider).compressAudioToWav(value.path).then((value) {
-              audioUrl.value = value;
-            });
+            if (context.mounted) {
+              ref.read(audioCompressorProvider).compressAudioToWav(value.path).then((value) {
+                audioUrl.value = value;
+              });
+            }
           }
         });
         return null;
       },
       [messageMedia?.cacheKey, mediaAttachment?.url],
-    );
-
-    useEffect(
-      () {
-        ref
-            .read(
-          chatMessageLoadMediaProvider(
-            entity: entity,
-            mediaAttachment: mediaAttachment,
-            cacheKey: messageMedia?.cacheKey,
-          ),
-        )
-            .then((value) {
-          if (context.mounted) {
-            audioUrl.value = value?.path;
-          }
-        });
-        return null;
-      },
-      [mediaAttachment?.thumb, messageMedia?.cacheKey],
     );
 
     final audioPlaybackState = useState<PlayerState?>(null);
