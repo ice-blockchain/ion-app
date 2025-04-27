@@ -66,9 +66,12 @@ class StoryViewingController extends _$StoryViewingController {
 
   void moveToPreviousUser() {
     if (state.hasPreviousUser) {
+      final prevUserIndex = state.currentUserIndex - 1;
+      final lastStoryIndex = state.userStories[prevUserIndex].stories.length - 1;
+
       state = state.copyWith(
-        currentUserIndex: state.currentUserIndex - 1,
-        currentStoryIndex: 0,
+        currentUserIndex: prevUserIndex,
+        currentStoryIndex: lastStoryIndex,
       );
     }
   }
