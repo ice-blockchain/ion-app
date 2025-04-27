@@ -38,10 +38,6 @@ class WalletPage extends HookConsumerWidget {
     final shouldShowLoader = ref.watch(shouldShowFriendsLoaderProvider);
     final showFriendsSection = ref.watch(shouldShowFriendsSectionProvider);
 
-    final footer = SizedBox(
-      height: ScreenSideOffset.defaultSmallMargin,
-    );
-
     return Scaffold(
       body: SafeArea(
         child: PullToRefreshBuilder(
@@ -57,7 +53,11 @@ class WalletPage extends HookConsumerWidget {
                   if (showFriendsSection) ...[
                     const Delimiter(),
                     if (shouldShowLoader)
-                      FriendsListLoader(footer: footer)
+                      FriendsListLoader(
+                        footer: SizedBox(
+                          height: ScreenSideOffset.defaultSmallMargin,
+                        ),
+                      )
                     else
                       const FriendsList(),
                   ],

@@ -11,12 +11,9 @@ class WalletTabsHeaderLoader extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ScreenSideOffset.small(
-      child: Column(
-        children: [
-          SizedBox(height: 8.0.s),
-          SkeletonBox(height: 40.0.s),
-          SizedBox(height: 2.0.s),
-        ],
+      child: Padding(
+        padding: EdgeInsetsDirectional.only(top: 8.0.s, bottom: 2.0.s),
+        child: SkeletonBox(height: 40.0.s),
       ),
     );
   }
