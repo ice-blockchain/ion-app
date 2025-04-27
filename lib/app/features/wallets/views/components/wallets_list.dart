@@ -20,7 +20,6 @@ class WalletsList extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final walletViews = ref.watch(walletViewsDataNotifierProvider).valueOrNull;
 
-    // TODO: add loading and error states
     if (walletViews == null) {
       return const SizedBox.shrink();
     }

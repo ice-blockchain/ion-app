@@ -77,8 +77,7 @@ class SendTransactionToRelayService {
 
       final event = createEventMessage(eventSigner.publicKey);
 
-      // TODO: Optimize it to use sendEvents with master pubkey
-      await pubkeyCombinations.map((pubkeys) async {
+      final masterPubkeyToGiftWrap = await pubkeyCombinations.map((pubkeys) async {
         final (:masterPubkey, :devicePubkey) = pubkeys;
 
         final giftWrap = await _createGiftWrap(
@@ -89,12 +88,26 @@ class SendTransactionToRelayService {
           kind: event.kind,
         );
 
-        await ionConnectNotifier.sendEvent(
-          giftWrap,
-          cache: false,
-          actionSource: ActionSourceUser(masterPubkey, anonymous: true),
-        );
+        return (masterPubkey, giftWrap);
       }).wait;
+
+      final groupedEvents = <String, List<EventMessage>>{};
+      for (final (masterPubkey, giftWrap) in masterPubkeyToGiftWrap) {
+        groupedEvents.putIfAbsent(masterPubkey, () => []).add(giftWrap);
+      }
+
+      await Future.wait(
+        groupedEvents.entries.map((entry) async {
+          final masterPubkey = entry.key;
+          final events = entry.value;
+
+          await ionConnectNotifier.sendEvents(
+            events,
+            cache: false,
+            actionSource: ActionSourceUser(masterPubkey, anonymous: true),
+          );
+        }),
+      );
 
       return event;
     } catch (e) {

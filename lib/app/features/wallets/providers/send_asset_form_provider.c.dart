@@ -90,7 +90,6 @@ class SendAssetFormController extends _$SendAssetFormController {
         (e) => e.coin.network == network,
       );
 
-      // TODO: Do we need if (selectedOption == null) code block below? Looks like it will never work
       if (selectedOption == null) {
         final coinData = await (await ref.watch(coinsServiceProvider.future))
             .getCoinsByFilters(

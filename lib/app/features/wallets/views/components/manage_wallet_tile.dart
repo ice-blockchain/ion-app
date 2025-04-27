@@ -26,7 +26,6 @@ class ManageWalletTile extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final walletData = ref.watch(walletViewByIdProvider(id: walletViewId)).valueOrNull;
 
-    // TODO: add loading and error states
     if (walletData == null) {
       return Padding(
         padding: EdgeInsets.symmetric(vertical: 8.0.s),
