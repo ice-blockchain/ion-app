@@ -8,7 +8,7 @@ import 'package:ion/app/features/ion_connect/ion_connect.dart' hide requestEvent
 import 'package:ion/app/features/ion_connect/ion_connect.dart';
 import 'package:ion/app/features/ion_connect/model/action_source.c.dart';
 import 'package:ion/app/features/ion_connect/providers/active_relays_provider.c.dart';
-import 'package:ion/app/features/ion_connect/providers/relays_provider.c.dart';
+import 'package:ion/app/features/ion_connect/providers/relay_provider.c.dart';
 import 'package:ion/app/features/user/model/user_chat_relays.c.dart';
 import 'package:ion/app/features/user/model/user_relays.c.dart';
 import 'package:ion/app/features/user/providers/current_user_identity_provider.c.dart';

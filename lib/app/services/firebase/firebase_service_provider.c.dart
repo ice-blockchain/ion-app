@@ -4,8 +4,8 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
-part 'firebase_app_config.c.freezed.dart';
-part 'firebase_app_config.c.g.dart';
+part 'firebase_service_provider.c.freezed.dart';
+part 'firebase_service_provider.c.g.dart';
 
 class FirebaseService {
   Future<void> configureApp(
