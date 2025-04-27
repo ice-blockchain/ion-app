@@ -6,7 +6,6 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/exceptions/exceptions.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/auth/providers/auth_provider.c.dart';
-import 'package:ion/app/features/chat/community/models/entities/tags/pubkey_tag.c.dart';
 import 'package:ion/app/features/chat/e2ee/model/entities/private_direct_message_data.c.dart';
 import 'package:ion/app/features/chat/e2ee/model/entities/private_message_reaction_data.c.dart';
 import 'package:ion/app/features/chat/e2ee/providers/send_chat_message/send_e2ee_chat_message_service.c.dart';
@@ -17,7 +16,6 @@ import 'package:ion/app/features/ion_connect/ion_connect.dart';
 import 'package:ion/app/features/ion_connect/model/action_source.c.dart';
 import 'package:ion/app/features/ion_connect/model/entity_expiration.c.dart';
 import 'package:ion/app/features/ion_connect/model/event_reference.c.dart';
-import 'package:ion/app/features/ion_connect/model/related_event.c.dart';
 import 'package:ion/app/features/ion_connect/providers/ion_connect_event_signer_provider.c.dart';
 import 'package:ion/app/features/ion_connect/providers/ion_connect_notifier.c.dart';
 import 'package:ion/app/services/ion_connect/ion_connect_gift_wrap_service.c.dart';
@@ -122,9 +120,11 @@ class SendE2eeMessageService {
       signer: eventSigner!,
       kind: PrivateMessageReactionEntity.kind,
       tags: [
-        ['k', ReplaceablePrivateDirectMessageEntity.kind.toString()],
-        [PubkeyTag.tagName, kind14Rumor.pubkey],
-        [RelatedImmutableEvent.tagName, kind14Rumor.id],
+        ReplaceableEventReference(
+          kind: kind14Rumor.kind,
+          pubkey: kind14Rumor.pubkey,
+          dTag: kind14Rumor.sharedId,
+        ).toTag(),
         ['b', currentUserMasterPubkey],
       ],
     );

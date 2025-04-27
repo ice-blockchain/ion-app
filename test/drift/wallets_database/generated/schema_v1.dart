@@ -1,5 +1,3 @@
-// SPDX-License-Identifier: ice License 1.0
-
 // dart format width=80
 // GENERATED CODE, DO NOT EDIT BY HAND.
 // ignore_for_file: type=lint
@@ -10,17 +8,20 @@ class CoinsTable extends Table with TableInfo<CoinsTable, CoinsTableData> {
   final GeneratedDatabase attachedDatabase;
   final String? _alias;
   CoinsTable(this.attachedDatabase, [this._alias]);
-  late final GeneratedColumn<String> id = GeneratedColumn<String>('id', aliasedName, false,
+  late final GeneratedColumn<String> id = GeneratedColumn<String>(
+      'id', aliasedName, false,
       type: DriftSqlType.string, requiredDuringInsert: true);
   late final GeneratedColumn<String> contractAddress = GeneratedColumn<String>(
       'contract_address', aliasedName, false,
       type: DriftSqlType.string, requiredDuringInsert: true);
-  late final GeneratedColumn<int> decimals = GeneratedColumn<int>('decimals', aliasedName, false,
+  late final GeneratedColumn<int> decimals = GeneratedColumn<int>(
+      'decimals', aliasedName, false,
       type: DriftSqlType.int, requiredDuringInsert: true);
   late final GeneratedColumn<String> iconURL = GeneratedColumn<String>(
       'icon_u_r_l', aliasedName, false,
       type: DriftSqlType.string, requiredDuringInsert: true);
-  late final GeneratedColumn<String> name = GeneratedColumn<String>('name', aliasedName, false,
+  late final GeneratedColumn<String> name = GeneratedColumn<String>(
+      'name', aliasedName, false,
       type: DriftSqlType.string, requiredDuringInsert: true);
   late final GeneratedColumn<String> networkId = GeneratedColumn<String>(
       'network_id', aliasedName, false,
@@ -28,7 +29,8 @@ class CoinsTable extends Table with TableInfo<CoinsTable, CoinsTableData> {
   late final GeneratedColumn<double> priceUSD = GeneratedColumn<double>(
       'price_u_s_d', aliasedName, false,
       type: DriftSqlType.double, requiredDuringInsert: true);
-  late final GeneratedColumn<String> symbol = GeneratedColumn<String>('symbol', aliasedName, false,
+  late final GeneratedColumn<String> symbol = GeneratedColumn<String>(
+      'symbol', aliasedName, false,
       type: DriftSqlType.string, requiredDuringInsert: true);
   late final GeneratedColumn<String> symbolGroup = GeneratedColumn<String>(
       'symbol_group', aliasedName, false,
@@ -60,20 +62,22 @@ class CoinsTable extends Table with TableInfo<CoinsTable, CoinsTableData> {
   CoinsTableData map(Map<String, dynamic> data, {String? tablePrefix}) {
     final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
     return CoinsTableData(
-      id: attachedDatabase.typeMapping.read(DriftSqlType.string, data['${effectivePrefix}id'])!,
-      contractAddress: attachedDatabase.typeMapping
-          .read(DriftSqlType.string, data['${effectivePrefix}contract_address'])!,
-      decimals:
-          attachedDatabase.typeMapping.read(DriftSqlType.int, data['${effectivePrefix}decimals'])!,
+      id: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}id'])!,
+      contractAddress: attachedDatabase.typeMapping.read(
+          DriftSqlType.string, data['${effectivePrefix}contract_address'])!,
+      decimals: attachedDatabase.typeMapping
+          .read(DriftSqlType.int, data['${effectivePrefix}decimals'])!,
       iconURL: attachedDatabase.typeMapping
           .read(DriftSqlType.string, data['${effectivePrefix}icon_u_r_l'])!,
-      name: attachedDatabase.typeMapping.read(DriftSqlType.string, data['${effectivePrefix}name'])!,
+      name: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}name'])!,
       networkId: attachedDatabase.typeMapping
           .read(DriftSqlType.string, data['${effectivePrefix}network_id'])!,
       priceUSD: attachedDatabase.typeMapping
           .read(DriftSqlType.double, data['${effectivePrefix}price_u_s_d'])!,
-      symbol:
-          attachedDatabase.typeMapping.read(DriftSqlType.string, data['${effectivePrefix}symbol'])!,
+      symbol: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}symbol'])!,
       symbolGroup: attachedDatabase.typeMapping
           .read(DriftSqlType.string, data['${effectivePrefix}symbol_group'])!,
       syncFrequency: attachedDatabase.typeMapping
@@ -140,7 +144,8 @@ class CoinsTableData extends DataClass implements Insertable<CoinsTableData> {
     );
   }
 
-  factory CoinsTableData.fromJson(Map<String, dynamic> json, {ValueSerializer? serializer}) {
+  factory CoinsTableData.fromJson(Map<String, dynamic> json,
+      {ValueSerializer? serializer}) {
     serializer ??= driftRuntimeOptions.defaultSerializer;
     return CoinsTableData(
       id: serializer.fromJson<String>(json['id']),
@@ -198,16 +203,20 @@ class CoinsTableData extends DataClass implements Insertable<CoinsTableData> {
   CoinsTableData copyWithCompanion(CoinsTableCompanion data) {
     return CoinsTableData(
       id: data.id.present ? data.id.value : this.id,
-      contractAddress:
-          data.contractAddress.present ? data.contractAddress.value : this.contractAddress,
+      contractAddress: data.contractAddress.present
+          ? data.contractAddress.value
+          : this.contractAddress,
       decimals: data.decimals.present ? data.decimals.value : this.decimals,
       iconURL: data.iconURL.present ? data.iconURL.value : this.iconURL,
       name: data.name.present ? data.name.value : this.name,
       networkId: data.networkId.present ? data.networkId.value : this.networkId,
       priceUSD: data.priceUSD.present ? data.priceUSD.value : this.priceUSD,
       symbol: data.symbol.present ? data.symbol.value : this.symbol,
-      symbolGroup: data.symbolGroup.present ? data.symbolGroup.value : this.symbolGroup,
-      syncFrequency: data.syncFrequency.present ? data.syncFrequency.value : this.syncFrequency,
+      symbolGroup:
+          data.symbolGroup.present ? data.symbolGroup.value : this.symbolGroup,
+      syncFrequency: data.syncFrequency.present
+          ? data.syncFrequency.value
+          : this.syncFrequency,
     );
   }
 
@@ -229,8 +238,8 @@ class CoinsTableData extends DataClass implements Insertable<CoinsTableData> {
   }
 
   @override
-  int get hashCode => Object.hash(id, contractAddress, decimals, iconURL, name, networkId, priceUSD,
-      symbol, symbolGroup, syncFrequency);
+  int get hashCode => Object.hash(id, contractAddress, decimals, iconURL, name,
+      networkId, priceUSD, symbol, symbolGroup, syncFrequency);
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
@@ -407,12 +416,14 @@ class CoinsTableCompanion extends UpdateCompanion<CoinsTableData> {
   }
 }
 
-class SyncCoinsTable extends Table with TableInfo<SyncCoinsTable, SyncCoinsTableData> {
+class SyncCoinsTable extends Table
+    with TableInfo<SyncCoinsTable, SyncCoinsTableData> {
   @override
   final GeneratedDatabase attachedDatabase;
   final String? _alias;
   SyncCoinsTable(this.attachedDatabase, [this._alias]);
-  late final GeneratedColumn<String> coinId = GeneratedColumn<String>('coin_id', aliasedName, false,
+  late final GeneratedColumn<String> coinId = GeneratedColumn<String>(
+      'coin_id', aliasedName, false,
       type: DriftSqlType.string, requiredDuringInsert: true);
   late final GeneratedColumn<DateTime> syncAfter = GeneratedColumn<DateTime>(
       'sync_after', aliasedName, false,
@@ -443,7 +454,8 @@ class SyncCoinsTable extends Table with TableInfo<SyncCoinsTable, SyncCoinsTable
   }
 }
 
-class SyncCoinsTableData extends DataClass implements Insertable<SyncCoinsTableData> {
+class SyncCoinsTableData extends DataClass
+    implements Insertable<SyncCoinsTableData> {
   final String coinId;
   final DateTime syncAfter;
   const SyncCoinsTableData({required this.coinId, required this.syncAfter});
@@ -462,7 +474,8 @@ class SyncCoinsTableData extends DataClass implements Insertable<SyncCoinsTableD
     );
   }
 
-  factory SyncCoinsTableData.fromJson(Map<String, dynamic> json, {ValueSerializer? serializer}) {
+  factory SyncCoinsTableData.fromJson(Map<String, dynamic> json,
+      {ValueSerializer? serializer}) {
     serializer ??= driftRuntimeOptions.defaultSerializer;
     return SyncCoinsTableData(
       coinId: serializer.fromJson<String>(json['coin_id']),
@@ -478,7 +491,8 @@ class SyncCoinsTableData extends DataClass implements Insertable<SyncCoinsTableD
     };
   }
 
-  SyncCoinsTableData copyWith({String? coinId, DateTime? syncAfter}) => SyncCoinsTableData(
+  SyncCoinsTableData copyWith({String? coinId, DateTime? syncAfter}) =>
+      SyncCoinsTableData(
         coinId: coinId ?? this.coinId,
         syncAfter: syncAfter ?? this.syncAfter,
       );
@@ -570,20 +584,24 @@ class SyncCoinsTableCompanion extends UpdateCompanion<SyncCoinsTableData> {
   }
 }
 
-class NetworksTable extends Table with TableInfo<NetworksTable, NetworksTableData> {
+class NetworksTable extends Table
+    with TableInfo<NetworksTable, NetworksTableData> {
   @override
   final GeneratedDatabase attachedDatabase;
   final String? _alias;
   NetworksTable(this.attachedDatabase, [this._alias]);
-  late final GeneratedColumn<String> id = GeneratedColumn<String>('id', aliasedName, false,
+  late final GeneratedColumn<String> id = GeneratedColumn<String>(
+      'id', aliasedName, false,
       type: DriftSqlType.string, requiredDuringInsert: true);
-  late final GeneratedColumn<String> image = GeneratedColumn<String>('image', aliasedName, false,
+  late final GeneratedColumn<String> image = GeneratedColumn<String>(
+      'image', aliasedName, false,
       type: DriftSqlType.string, requiredDuringInsert: true);
   late final GeneratedColumn<bool> isTestnet = GeneratedColumn<bool>(
       'is_testnet', aliasedName, false,
       type: DriftSqlType.bool,
       requiredDuringInsert: true,
-      defaultConstraints: GeneratedColumn.constraintIsAlways('CHECK ("is_testnet" IN (0, 1))'));
+      defaultConstraints:
+          GeneratedColumn.constraintIsAlways('CHECK ("is_testnet" IN (0, 1))'));
   late final GeneratedColumn<String> displayName = GeneratedColumn<String>(
       'display_name', aliasedName, false,
       type: DriftSqlType.string, requiredDuringInsert: true);
@@ -591,7 +609,8 @@ class NetworksTable extends Table with TableInfo<NetworksTable, NetworksTableDat
       'explorer_url', aliasedName, false,
       type: DriftSqlType.string, requiredDuringInsert: true);
   @override
-  List<GeneratedColumn> get $columns => [id, image, isTestnet, displayName, explorerUrl];
+  List<GeneratedColumn> get $columns =>
+      [id, image, isTestnet, displayName, explorerUrl];
   @override
   String get aliasedName => _alias ?? actualTableName;
   @override
@@ -603,9 +622,10 @@ class NetworksTable extends Table with TableInfo<NetworksTable, NetworksTableDat
   NetworksTableData map(Map<String, dynamic> data, {String? tablePrefix}) {
     final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
     return NetworksTableData(
-      id: attachedDatabase.typeMapping.read(DriftSqlType.string, data['${effectivePrefix}id'])!,
-      image:
-          attachedDatabase.typeMapping.read(DriftSqlType.string, data['${effectivePrefix}image'])!,
+      id: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}id'])!,
+      image: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}image'])!,
       isTestnet: attachedDatabase.typeMapping
           .read(DriftSqlType.bool, data['${effectivePrefix}is_testnet'])!,
       displayName: attachedDatabase.typeMapping
@@ -621,7 +641,8 @@ class NetworksTable extends Table with TableInfo<NetworksTable, NetworksTableDat
   }
 }
 
-class NetworksTableData extends DataClass implements Insertable<NetworksTableData> {
+class NetworksTableData extends DataClass
+    implements Insertable<NetworksTableData> {
   final String id;
   final String image;
   final bool isTestnet;
@@ -654,7 +675,8 @@ class NetworksTableData extends DataClass implements Insertable<NetworksTableDat
     );
   }
 
-  factory NetworksTableData.fromJson(Map<String, dynamic> json, {ValueSerializer? serializer}) {
+  factory NetworksTableData.fromJson(Map<String, dynamic> json,
+      {ValueSerializer? serializer}) {
     serializer ??= driftRuntimeOptions.defaultSerializer;
     return NetworksTableData(
       id: serializer.fromJson<String>(json['id']),
@@ -677,7 +699,11 @@ class NetworksTableData extends DataClass implements Insertable<NetworksTableDat
   }
 
   NetworksTableData copyWith(
-          {String? id, String? image, bool? isTestnet, String? displayName, String? explorerUrl}) =>
+          {String? id,
+          String? image,
+          bool? isTestnet,
+          String? displayName,
+          String? explorerUrl}) =>
       NetworksTableData(
         id: id ?? this.id,
         image: image ?? this.image,
@@ -690,8 +716,10 @@ class NetworksTableData extends DataClass implements Insertable<NetworksTableDat
       id: data.id.present ? data.id.value : this.id,
       image: data.image.present ? data.image.value : this.image,
       isTestnet: data.isTestnet.present ? data.isTestnet.value : this.isTestnet,
-      displayName: data.displayName.present ? data.displayName.value : this.displayName,
-      explorerUrl: data.explorerUrl.present ? data.explorerUrl.value : this.explorerUrl,
+      displayName:
+          data.displayName.present ? data.displayName.value : this.displayName,
+      explorerUrl:
+          data.explorerUrl.present ? data.explorerUrl.value : this.explorerUrl,
     );
   }
 
@@ -708,7 +736,8 @@ class NetworksTableData extends DataClass implements Insertable<NetworksTableDat
   }
 
   @override
-  int get hashCode => Object.hash(id, image, isTestnet, displayName, explorerUrl);
+  int get hashCode =>
+      Object.hash(id, image, isTestnet, displayName, explorerUrl);
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
@@ -829,7 +858,8 @@ class DatabaseAtV1 extends GeneratedDatabase {
   Iterable<TableInfo<Table, Object?>> get allTables =>
       allSchemaEntities.whereType<TableInfo<Table, Object?>>();
   @override
-  List<DatabaseSchemaEntity> get allSchemaEntities => [coinsTable, syncCoinsTable, networksTable];
+  List<DatabaseSchemaEntity> get allSchemaEntities =>
+      [coinsTable, syncCoinsTable, networksTable];
   @override
   int get schemaVersion => 1;
 }

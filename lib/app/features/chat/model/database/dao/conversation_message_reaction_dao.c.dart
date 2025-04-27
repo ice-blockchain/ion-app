@@ -16,13 +16,13 @@ class ConversationMessageReactionDao extends DatabaseAccessor<ChatDatabase>
   Future<void> add({
     required Ref ref,
     required String masterPubkey,
-    required String kind14EventId,
+    required String kind14SharedId,
     required EventMessage newReactionEvent,
   }) async {
     final eventMessageDao = ref.read(eventMessageDaoProvider);
 
     final kind14EventMessage = await (select(db.eventMessageTable)
-          ..where((table) => table.id.equals(kind14EventId)))
+          ..where((table) => table.sharedId.equals(kind14SharedId)))
         .getSingleOrNull();
 
     if (kind14EventMessage == null) return;
@@ -30,7 +30,7 @@ class ConversationMessageReactionDao extends DatabaseAccessor<ChatDatabase>
     final existingReactionRow = await (select(reactionTable)
           ..where((table) => table.content.equals(newReactionEvent.content))
           ..where((table) => table.masterPubkey.equals(masterPubkey))
-          ..where((table) => table.kind14Id.equals(kind14EventId)))
+          ..where((table) => table.kind14SharedId.equals(kind14SharedId)))
         .getSingleOrNull();
 
     if (existingReactionRow == null) {
@@ -38,7 +38,7 @@ class ConversationMessageReactionDao extends DatabaseAccessor<ChatDatabase>
       await into(reactionTable).insert(
         ReactionTableCompanion(
           id: Value(newReactionEvent.id),
-          kind14Id: Value(kind14EventId),
+          kind14SharedId: Value(kind14SharedId),
           masterPubkey: Value(masterPubkey),
           content: Value(newReactionEvent.content),
         ),
@@ -95,7 +95,7 @@ class ConversationMessageReactionDao extends DatabaseAccessor<ChatDatabase>
   Stream<List<MessageReactionGroup>> messageReactions(EventMessage kind14EventMessage) async* {
     final existingRows = (select(reactionTable)
           ..where((table) => table.isDeleted.equals(false))
-          ..where((table) => table.kind14Id.equals(kind14EventMessage.id)))
+          ..where((table) => table.kind14SharedId.equals(kind14EventMessage.sharedId!)))
         .watch();
 
     yield* existingRows.asyncMap((rows) async {
@@ -123,15 +123,15 @@ class ConversationMessageReactionDao extends DatabaseAccessor<ChatDatabase>
     });
   }
 
-  Stream<String?> storyReaction(String? kind14Id) async* {
-    if (kind14Id == null) {
+  Stream<String?> storyReaction(String? kind14SharedId) async* {
+    if (kind14SharedId == null) {
       yield null;
       return;
     }
 
     final stream = (select(reactionTable)
           ..where((table) => table.isDeleted.equals(false))
-          ..where((table) => table.kind14Id.equals(kind14Id)))
+          ..where((table) => table.kind14SharedId.equals(kind14SharedId)))
         .watchSingleOrNull()
         .map((row) => row?.content);
 

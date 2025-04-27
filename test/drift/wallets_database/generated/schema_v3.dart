@@ -608,9 +608,14 @@ class NetworksTable extends Table
   late final GeneratedColumn<String> explorerUrl = GeneratedColumn<String>(
       'explorer_url', aliasedName, false,
       type: DriftSqlType.string, requiredDuringInsert: true);
+  late final GeneratedColumn<int> tier = GeneratedColumn<int>(
+      'tier', aliasedName, false,
+      type: DriftSqlType.int,
+      requiredDuringInsert: false,
+      defaultValue: const CustomExpression('1'));
   @override
   List<GeneratedColumn> get $columns =>
-      [id, image, isTestnet, displayName, explorerUrl];
+      [id, image, isTestnet, displayName, explorerUrl, tier];
   @override
   String get aliasedName => _alias ?? actualTableName;
   @override
@@ -632,6 +637,8 @@ class NetworksTable extends Table
           .read(DriftSqlType.string, data['${effectivePrefix}display_name'])!,
       explorerUrl: attachedDatabase.typeMapping
           .read(DriftSqlType.string, data['${effectivePrefix}explorer_url'])!,
+      tier: attachedDatabase.typeMapping
+          .read(DriftSqlType.int, data['${effectivePrefix}tier'])!,
     );
   }
 
@@ -648,12 +655,14 @@ class NetworksTableData extends DataClass
   final bool isTestnet;
   final String displayName;
   final String explorerUrl;
+  final int tier;
   const NetworksTableData(
       {required this.id,
       required this.image,
       required this.isTestnet,
       required this.displayName,
-      required this.explorerUrl});
+      required this.explorerUrl,
+      required this.tier});
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
     final map = <String, Expression>{};
@@ -662,6 +671,7 @@ class NetworksTableData extends DataClass
     map['is_testnet'] = Variable<bool>(isTestnet);
     map['display_name'] = Variable<String>(displayName);
     map['explorer_url'] = Variable<String>(explorerUrl);
+    map['tier'] = Variable<int>(tier);
     return map;
   }
 
@@ -672,6 +682,7 @@ class NetworksTableData extends DataClass
       isTestnet: Value(isTestnet),
       displayName: Value(displayName),
       explorerUrl: Value(explorerUrl),
+      tier: Value(tier),
     );
   }
 
@@ -684,6 +695,7 @@ class NetworksTableData extends DataClass
       isTestnet: serializer.fromJson<bool>(json['is_testnet']),
       displayName: serializer.fromJson<String>(json['display_name']),
       explorerUrl: serializer.fromJson<String>(json['explorer_url']),
+      tier: serializer.fromJson<int>(json['tier']),
     );
   }
   @override
@@ -695,6 +707,7 @@ class NetworksTableData extends DataClass
       'is_testnet': serializer.toJson<bool>(isTestnet),
       'display_name': serializer.toJson<String>(displayName),
       'explorer_url': serializer.toJson<String>(explorerUrl),
+      'tier': serializer.toJson<int>(tier),
     };
   }
 
@@ -703,13 +716,15 @@ class NetworksTableData extends DataClass
           String? image,
           bool? isTestnet,
           String? displayName,
-          String? explorerUrl}) =>
+          String? explorerUrl,
+          int? tier}) =>
       NetworksTableData(
         id: id ?? this.id,
         image: image ?? this.image,
         isTestnet: isTestnet ?? this.isTestnet,
         displayName: displayName ?? this.displayName,
         explorerUrl: explorerUrl ?? this.explorerUrl,
+        tier: tier ?? this.tier,
       );
   NetworksTableData copyWithCompanion(NetworksTableCompanion data) {
     return NetworksTableData(
@@ -720,6 +735,7 @@ class NetworksTableData extends DataClass
           data.displayName.present ? data.displayName.value : this.displayName,
       explorerUrl:
           data.explorerUrl.present ? data.explorerUrl.value : this.explorerUrl,
+      tier: data.tier.present ? data.tier.value : this.tier,
     );
   }
 
@@ -730,14 +746,15 @@ class NetworksTableData extends DataClass
           ..write('image: $image, ')
           ..write('isTestnet: $isTestnet, ')
           ..write('displayName: $displayName, ')
-          ..write('explorerUrl: $explorerUrl')
+          ..write('explorerUrl: $explorerUrl, ')
+          ..write('tier: $tier')
           ..write(')'))
         .toString();
   }
 
   @override
   int get hashCode =>
-      Object.hash(id, image, isTestnet, displayName, explorerUrl);
+      Object.hash(id, image, isTestnet, displayName, explorerUrl, tier);
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
@@ -746,7 +763,8 @@ class NetworksTableData extends DataClass
           other.image == this.image &&
           other.isTestnet == this.isTestnet &&
           other.displayName == this.displayName &&
-          other.explorerUrl == this.explorerUrl);
+          other.explorerUrl == this.explorerUrl &&
+          other.tier == this.tier);
 }
 
 class NetworksTableCompanion extends UpdateCompanion<NetworksTableData> {
@@ -755,6 +773,7 @@ class NetworksTableCompanion extends UpdateCompanion<NetworksTableData> {
   final Value<bool> isTestnet;
   final Value<String> displayName;
   final Value<String> explorerUrl;
+  final Value<int> tier;
   final Value<int> rowid;
   const NetworksTableCompanion({
     this.id = const Value.absent(),
@@ -762,6 +781,7 @@ class NetworksTableCompanion extends UpdateCompanion<NetworksTableData> {
     this.isTestnet = const Value.absent(),
     this.displayName = const Value.absent(),
     this.explorerUrl = const Value.absent(),
+    this.tier = const Value.absent(),
     this.rowid = const Value.absent(),
   });
   NetworksTableCompanion.insert({
@@ -770,6 +790,7 @@ class NetworksTableCompanion extends UpdateCompanion<NetworksTableData> {
     required bool isTestnet,
     required String displayName,
     required String explorerUrl,
+    this.tier = const Value.absent(),
     this.rowid = const Value.absent(),
   })  : id = Value(id),
         image = Value(image),
@@ -782,6 +803,7 @@ class NetworksTableCompanion extends UpdateCompanion<NetworksTableData> {
     Expression<bool>? isTestnet,
     Expression<String>? displayName,
     Expression<String>? explorerUrl,
+    Expression<int>? tier,
     Expression<int>? rowid,
   }) {
     return RawValuesInsertable({
@@ -790,6 +812,7 @@ class NetworksTableCompanion extends UpdateCompanion<NetworksTableData> {
       if (isTestnet != null) 'is_testnet': isTestnet,
       if (displayName != null) 'display_name': displayName,
       if (explorerUrl != null) 'explorer_url': explorerUrl,
+      if (tier != null) 'tier': tier,
       if (rowid != null) 'rowid': rowid,
     });
   }
@@ -800,6 +823,7 @@ class NetworksTableCompanion extends UpdateCompanion<NetworksTableData> {
       Value<bool>? isTestnet,
       Value<String>? displayName,
       Value<String>? explorerUrl,
+      Value<int>? tier,
       Value<int>? rowid}) {
     return NetworksTableCompanion(
       id: id ?? this.id,
@@ -807,6 +831,7 @@ class NetworksTableCompanion extends UpdateCompanion<NetworksTableData> {
       isTestnet: isTestnet ?? this.isTestnet,
       displayName: displayName ?? this.displayName,
       explorerUrl: explorerUrl ?? this.explorerUrl,
+      tier: tier ?? this.tier,
       rowid: rowid ?? this.rowid,
     );
   }
@@ -829,6 +854,9 @@ class NetworksTableCompanion extends UpdateCompanion<NetworksTableData> {
     if (explorerUrl.present) {
       map['explorer_url'] = Variable<String>(explorerUrl.value);
     }
+    if (tier.present) {
+      map['tier'] = Variable<int>(tier.value);
+    }
     if (rowid.present) {
       map['rowid'] = Variable<int>(rowid.value);
     }
@@ -843,6 +871,7 @@ class NetworksTableCompanion extends UpdateCompanion<NetworksTableData> {
           ..write('isTestnet: $isTestnet, ')
           ..write('displayName: $displayName, ')
           ..write('explorerUrl: $explorerUrl, ')
+          ..write('tier: $tier, ')
           ..write('rowid: $rowid')
           ..write(')'))
         .toString();
@@ -2430,8 +2459,8 @@ class FundsRequestsTableCompanion
   }
 }
 
-class DatabaseAtV2 extends GeneratedDatabase {
-  DatabaseAtV2(QueryExecutor e) : super(e);
+class DatabaseAtV3 extends GeneratedDatabase {
+  DatabaseAtV3(QueryExecutor e) : super(e);
   late final CoinsTable coinsTable = CoinsTable(this);
   late final SyncCoinsTable syncCoinsTable = SyncCoinsTable(this);
   late final NetworksTable networksTable = NetworksTable(this);
@@ -2451,5 +2480,5 @@ class DatabaseAtV2 extends GeneratedDatabase {
         fundsRequestsTable
       ];
   @override
-  int get schemaVersion => 2;
+  int get schemaVersion => 3;
 }
