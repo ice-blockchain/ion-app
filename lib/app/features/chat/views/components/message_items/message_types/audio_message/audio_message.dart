@@ -127,9 +127,11 @@ class AudioMessage extends HookConsumerWidget {
         audioPlaybackController.onPlayerStateChanged.listen((event) {
           if (event != PlayerState.stopped) {
             audioPlaybackState.value = event;
-          } else {
-            ref.read(activeAudioMessageProvider.notifier).activeAudioMessage = null;
           }
+        });
+
+        audioPlaybackController.onCompletion.listen((event) {
+          ref.read(activeAudioMessageProvider.notifier).activeAudioMessage = null;
         });
 
         return null;
