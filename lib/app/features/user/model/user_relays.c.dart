@@ -15,7 +15,8 @@ part 'user_relays.c.freezed.dart';
 
 @Freezed(equal: false)
 class UserRelaysEntity
-    with IonConnectEntity, CacheableEntity, ReplaceableEntity, _$UserRelaysEntity {
+    with IonConnectEntity, CacheableEntity, ReplaceableEntity, _$UserRelaysEntity
+    implements EntityEventSerializable {
   const factory UserRelaysEntity({
     required String id,
     required String pubkey,
@@ -42,6 +43,9 @@ class UserRelaysEntity
       data: UserRelaysData.fromEventMessage(eventMessage),
     );
   }
+
+  @override
+  FutureOr<EventMessage> toEntityEventMessage() => toEventMessage(data);
 
   List<String> get urls => data.list.map((relay) => relay.url).toList();
 
