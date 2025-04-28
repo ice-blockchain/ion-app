@@ -17,7 +17,7 @@ import 'package:ion/app/features/feed/data/models/generic_repost.c.dart';
 import 'package:ion/app/features/ion_connect/ion_connect.dart';
 import 'package:ion/app/features/ion_connect/model/action_source.c.dart';
 import 'package:ion/app/features/ion_connect/model/deletion_request.c.dart';
-import 'package:ion/app/features/ion_connect/model/related_event.c.dart';
+import 'package:ion/app/features/ion_connect/model/event_reference.c.dart';
 import 'package:ion/app/features/ion_connect/providers/entities_syncer_notifier.c.dart';
 import 'package:ion/app/features/ion_connect/providers/ion_connect_event_signer_provider.c.dart';
 import 'package:ion/app/features/ion_connect/providers/ion_connect_subscription_provider.c.dart';
@@ -220,15 +220,7 @@ class E2eeMessagesSubscriber extends _$E2eeMessagesSubscriber {
         }
         // For kind 5
       } else if (rumor.kind == DeletionRequest.kind) {
-        final deleteEventKind =
-            rumor.tags.firstWhereOrNull((tags) => tags[0] == 'k')?.elementAtOrNull(1);
-
-        final deleteEventIds = rumor.tags
-            .where((tags) => tags[0] == RelatedImmutableEvent.tagName)
-            .map((tag) => tag.elementAtOrNull(1))
-            .nonNulls
-            .toList();
-
+        print(rumor);
         final deleteConversationIds = rumor.tags
             .where((tags) => tags[0] == ConversationIdentifier.tagName)
             .map((tag) => tag.elementAtOrNull(1))
@@ -236,26 +228,41 @@ class E2eeMessagesSubscriber extends _$E2eeMessagesSubscriber {
             .toList();
 
         if (deleteConversationIds.isNotEmpty) {
-          await conversationDao.removeConversations(
-            ref: ref,
-            deleteRequest: rumor,
-            conversationIds: deleteConversationIds,
-          );
-        } else if (deleteEventKind == ReplaceablePrivateDirectMessageEntity.kind.toString() ||
-            deleteEventKind == ReplaceablePrivateDirectMessageEntity.kind.toString()) {
-          if (deleteEventIds.isNotEmpty) {
-            await conversationMessageDao.removeMessages(
+          await ref.watch(conversationDaoProvider).removeConversations(
+                ref: ref,
+                deleteRequest: rumor,
+                conversationIds: deleteConversationIds,
+              );
+        } else {
+          final eventsToDelete = DeletionRequest.fromEventMessage(rumor).events;
+
+          final eventToDeleteReferences =
+              eventsToDelete.map((event) => (event as EventToDelete).reference).toList();
+
+          final deleteEventKind = eventToDeleteReferences.first is ImmutableEventReference
+              ? (eventToDeleteReferences.first as ImmutableEventReference).kind
+              : (eventToDeleteReferences.first as ReplaceableEventReference).kind;
+
+          final deleteEventIds = eventToDeleteReferences.first is ImmutableEventReference
+              ? eventToDeleteReferences.map((e) => (e as ImmutableEventReference).eventId)
+              : eventToDeleteReferences.map((e) => (e as ReplaceableEventReference).dTag!);
+
+          if (deleteEventKind == ReplaceablePrivateDirectMessageEntity.kind) {
+            print(deleteEventIds);
+            if (deleteEventIds.isNotEmpty) {
+              await conversationMessageDao.removeMessages(
+                ref: ref,
+                deleteRequest: rumor,
+                sharedIds: deleteEventIds.toList(),
+              );
+            }
+          } else if (deleteEventKind == PrivateMessageReactionEntity.kind) {
+            await conversationMessageReactionDao.remove(
               ref: ref,
               deleteRequest: rumor,
-              messageIds: deleteEventIds,
+              reactionEventId: deleteEventIds.single,
             );
           }
-        } else if (deleteEventKind == PrivateMessageReactionEntity.kind.toString()) {
-          await conversationMessageReactionDao.remove(
-            ref: ref,
-            deleteRequest: rumor,
-            reactionEventId: deleteEventIds.single,
-          );
         }
       } else if (rumor.kind == GenericRepostEntity.kind) {
         await eventMessageDao.add(rumor);

@@ -127,8 +127,8 @@ class MessageReactionContextMenu extends ConsumerWidget {
                     final messageEventsList = [messageItem.eventMessage];
                     ref.read(
                       e2eeDeleteMessageProvider(
-                        messageEvents: messageEventsList,
                         forEveryone: forEveryone,
+                        messageEvents: messageEventsList,
                       ),
                     );
                     context.pop();
