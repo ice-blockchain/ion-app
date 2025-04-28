@@ -15,13 +15,12 @@ part 'configure_firebase_provider.c.g.dart';
 class ConfigureFirebase extends _$ConfigureFirebase {
   @override
   Future<void> build() async {
-    final authState = await ref.watch(authProvider.future);
     final firebaseService = ref.watch(firebaseServiceProvider);
 
-    onLogout(ref, () async {
-      //TODO: test recovery keys gd sync feature - it depends on the auth fb service
-      await firebaseService.deleteApp();
-    });
+    // onLogout should be at the top of the build method
+    onLogout(ref, firebaseService.deleteApp);
+
+    final authState = await ref.watch(authProvider.future);
 
     if (!authState.isAuthenticated || firebaseService.hasApp()) {
       return;
