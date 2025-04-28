@@ -34,6 +34,7 @@
 			<string>lastpassmfa</string>
 			<string>authy</string>
 			<string>userlock</string>
+			<string>mailto</string>
 		</array>
 		<key>LSRequiresIPhoneOS</key>
 		<true />
