@@ -11,6 +11,7 @@ import 'package:ion/app/features/core/views/components/content_scaler.dart';
 import 'package:ion/app/router/components/app_router_builder.dart';
 import 'package:ion/app/router/components/modal_wrapper/sheet_scope.dart';
 import 'package:ion/app/router/providers/go_router_provider.c.dart';
+import 'package:ion/app/services/logger/logger.dart';
 import 'package:ion/app/services/logger/logger_initializer.dart';
 import 'package:ion/app/services/storage/secure_storage.c.dart';
 import 'package:ion/app/theme/theme.dart';
@@ -20,7 +21,7 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await SecureStorage().clearOnReinstall();
 
-  final container = ProviderContainer();
+  final container = ProviderContainer(observers: [Logger.talkerRiverpodObserver]);
   LoggerInitializer.initialize(container);
 
   runApp(
