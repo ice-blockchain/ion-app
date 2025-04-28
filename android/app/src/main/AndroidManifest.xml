@@ -30,6 +30,11 @@
             <data android:scheme="https" />
         </intent>
 
+        <intent>
+            <action android:name="android.intent.action.VIEW" />
+            <data android:scheme="mailto" />
+        </intent>
+
         <package android:name="com.google.android.apps.authenticator2" />
         <package android:name="com.azure.authenticator" />
         <package android:name="com.lastpass.authenticator" />
