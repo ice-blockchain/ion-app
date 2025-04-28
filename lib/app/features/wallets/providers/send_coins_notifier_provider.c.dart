@@ -142,10 +142,7 @@ class SendCoinsNotifier extends _$SendCoinsNotifier {
   }) async {
     // Save transaction into DB
     await ref.read(transactionsRepositoryProvider.future).then(
-          (repo) => repo.saveTransactionDetails(
-            details: details,
-            balanceBeforeTransfer: sendableAsset.balance,
-          ),
+          (repo) => repo.saveTransactionDetails(details),
         );
 
     if (details.participantPubkey == null) return;
