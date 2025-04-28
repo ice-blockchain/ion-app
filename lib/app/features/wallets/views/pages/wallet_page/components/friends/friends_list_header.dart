@@ -8,8 +8,8 @@ import 'package:ion/app/extensions/num.dart';
 import 'package:ion/app/extensions/theme_data.dart';
 import 'package:ion/app/router/app_routes.c.dart';
 
-class ContactListHeader extends StatelessWidget {
-  const ContactListHeader({super.key});
+class FriendsListHeader extends StatelessWidget {
+  const FriendsListHeader({super.key});
 
   @override
   Widget build(BuildContext context) {

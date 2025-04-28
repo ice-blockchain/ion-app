@@ -5,14 +5,13 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/components/screen_offset/screen_side_offset.dart';
 import 'package:ion/app/extensions/num.dart';
 import 'package:ion/app/features/user/providers/follow_list_provider.c.dart';
-import 'package:ion/app/features/wallets/views/pages/wallet_page/components/contacts/contacts_list_header.dart';
-import 'package:ion/app/features/wallets/views/pages/wallet_page/components/contacts/contacts_list_item.dart';
-import 'package:ion/app/features/wallets/views/pages/wallet_page/components/contacts/contacts_list_loader.dart';
+import 'package:ion/app/features/wallets/views/pages/wallet_page/components/friends/friends_list_header.dart';
+import 'package:ion/app/features/wallets/views/pages/wallet_page/components/friends/friends_list_item.dart';
+import 'package:ion/app/features/wallets/views/pages/wallet_page/components/friends/friends_list_loader.dart';
 import 'package:ion/app/router/app_routes.c.dart';
 
-// TODO: rename to FriendsList along with `contacts_list_{header,item,loader}` and others
-class ContactsList extends ConsumerWidget {
-  const ContactsList({super.key});
+class FriendsList extends ConsumerWidget {
+  const FriendsList({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -29,9 +28,9 @@ class ContactsList extends ConsumerWidget {
 
         return Column(
           children: [
-            const ContactListHeader(),
+            const FriendsListHeader(),
             SizedBox(
-              height: ContactsListItem.height,
+              height: FriendsListItem.height,
               child: ListView.separated(
                 padding: EdgeInsets.symmetric(
                   horizontal: ScreenSideOffset.defaultSmallMargin,
@@ -44,7 +43,7 @@ class ContactsList extends ConsumerWidget {
                 itemBuilder: (BuildContext context, int index) {
                   final friendPubkey = friendsPubkeys[index];
 
-                  return ContactsListItem(
+                  return FriendsListItem(
                     pubkey: friendPubkey,
                     onTap: () async {
                       final needToEnable2FA =
@@ -64,7 +63,7 @@ class ContactsList extends ConsumerWidget {
           ],
         );
       },
-      orElse: () => ContactsListLoader(footer: footer),
+      orElse: () => FriendsListLoader(footer: footer),
     );
   }
 }

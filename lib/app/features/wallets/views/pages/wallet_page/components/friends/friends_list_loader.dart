@@ -4,10 +4,10 @@ import 'package:flutter/material.dart';
 import 'package:ion/app/components/screen_offset/screen_side_offset.dart';
 import 'package:ion/app/components/skeleton/container_skeleton.dart';
 import 'package:ion/app/extensions/num.dart';
-import 'package:ion/app/features/wallets/views/pages/wallet_page/components/contacts/contacts_list_item.dart';
+import 'package:ion/app/features/wallets/views/pages/wallet_page/components/friends/friends_list_item.dart';
 
-class ContactsListLoader extends StatelessWidget {
-  const ContactsListLoader({
+class FriendsListLoader extends StatelessWidget {
+  const FriendsListLoader({
     required this.footer,
     super.key,
   });
@@ -24,7 +24,7 @@ class ContactsListLoader extends StatelessWidget {
           margin: EdgeInsets.symmetric(vertical: 16.0.s),
         ),
         SizedBox(
-          height: ContactsListItem.height,
+          height: FriendsListItem.height,
           child: ListView.separated(
             padding: EdgeInsets.symmetric(
               horizontal: ScreenSideOffset.defaultSmallMargin,
@@ -40,8 +40,8 @@ class ContactsListLoader extends StatelessWidget {
                 width: size,
                 height: size,
                 margin: EdgeInsets.symmetric(
-                  vertical: (ContactsListItem.height - size) / 2,
-                  horizontal: (ContactsListItem.width - size) / 2,
+                  vertical: (FriendsListItem.height - size) / 2,
+                  horizontal: (FriendsListItem.width - size) / 2,
                 ),
               );
             },

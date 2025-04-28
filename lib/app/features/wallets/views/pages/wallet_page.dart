@@ -3,18 +3,20 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:ion/app/components/screen_offset/screen_side_offset.dart';
 import 'package:ion/app/components/scroll_view/pull_to_refresh_builder.dart';
 import 'package:ion/app/features/feed/views/pages/feed_page/components/feed_controls/feed_controls.dart';
 import 'package:ion/app/features/ion_connect/providers/ion_connect_cache.c.dart';
 import 'package:ion/app/features/user/providers/follow_list_provider.c.dart';
-import 'package:ion/app/features/user/providers/should_show_friends_selector_provider.c.dart';
+import 'package:ion/app/features/user/providers/friends_section_providers.c.dart';
 import 'package:ion/app/features/wallets/domain/transactions/sync_transactions_service.c.dart';
 import 'package:ion/app/features/wallets/providers/wallet_view_data_provider.c.dart';
 import 'package:ion/app/features/wallets/views/pages/wallet_page/components/balance/balance.dart';
 import 'package:ion/app/features/wallets/views/pages/wallet_page/components/coins/coins_tab.dart';
 import 'package:ion/app/features/wallets/views/pages/wallet_page/components/coins/coins_tab_header.dart';
-import 'package:ion/app/features/wallets/views/pages/wallet_page/components/contacts/contacts_list.dart';
 import 'package:ion/app/features/wallets/views/pages/wallet_page/components/delimiter/delimiter.dart';
+import 'package:ion/app/features/wallets/views/pages/wallet_page/components/friends/friends_list.dart';
+import 'package:ion/app/features/wallets/views/pages/wallet_page/components/friends/friends_list_loader.dart';
 import 'package:ion/app/features/wallets/views/pages/wallet_page/components/header/header.dart';
 import 'package:ion/app/features/wallets/views/pages/wallet_page/components/nfts/nfts_tab.dart';
 import 'package:ion/app/features/wallets/views/pages/wallet_page/components/nfts/nfts_tab_header.dart';
@@ -33,7 +35,8 @@ class WalletPage extends HookConsumerWidget {
 
     final activeTab = useState<WalletTabType>(WalletTabType.coins);
 
-    final showFriends = ref.watch(shouldShowFriendsSelectorProvider).valueOrNull ?? true;
+    final shouldShowLoader = ref.watch(shouldShowFriendsLoaderProvider);
+    final showFriendsSection = ref.watch(shouldShowFriendsSectionProvider);
 
     return Scaffold(
       body: SafeArea(
@@ -47,9 +50,16 @@ class WalletPage extends HookConsumerWidget {
               child: Column(
                 children: [
                   const Balance(),
-                  if (showFriends) ...[
+                  if (showFriendsSection) ...[
                     const Delimiter(),
-                    const ContactsList(),
+                    if (shouldShowLoader)
+                      FriendsListLoader(
+                        footer: SizedBox(
+                          height: ScreenSideOffset.defaultSmallMargin,
+                        ),
+                      )
+                    else
+                      const FriendsList(),
                   ],
                   const Delimiter(),
                   WalletTabsHeader(

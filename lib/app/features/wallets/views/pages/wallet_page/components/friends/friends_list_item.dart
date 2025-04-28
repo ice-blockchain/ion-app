@@ -11,8 +11,8 @@ import 'package:ion/app/features/components/ion_connect_avatar/ion_connect_avata
 import 'package:ion/app/features/user/providers/user_metadata_provider.c.dart';
 import 'package:ion/app/utils/username.dart';
 
-class ContactsListItem extends ConsumerWidget {
-  const ContactsListItem({
+class FriendsListItem extends ConsumerWidget {
+  const FriendsListItem({
     required this.pubkey,
     required this.onTap,
     super.key,
@@ -42,8 +42,8 @@ class ContactsListItem extends ConsumerWidget {
           width: size,
           height: size,
           margin: EdgeInsets.symmetric(
-            vertical: (ContactsListItem.height - size) / 2,
-            horizontal: (ContactsListItem.width - size) / 2,
+            vertical: (FriendsListItem.height - size) / 2,
+            horizontal: (FriendsListItem.width - size) / 2,
           ),
         );
       },
