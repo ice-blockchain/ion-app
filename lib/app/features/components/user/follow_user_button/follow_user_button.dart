@@ -12,12 +12,10 @@ import 'package:ion/app/router/utils/show_simple_bottom_sheet.dart';
 class FollowUserButton extends ConsumerWidget {
   const FollowUserButton({
     required this.pubkey,
-    this.followLabel,
     super.key,
   });
 
   final String pubkey;
-  final String? followLabel;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -30,6 +28,8 @@ class FollowUserButton extends ConsumerWidget {
     ref.displayErrors(followListManagerProvider);
 
     final following = ref.watch(isCurrentUserFollowingSelectorProvider(pubkey));
+    final isCurrentUserFollowed = ref.watch(isCurrentUserFollowedProvider(pubkey));
+
     return FollowButton(
       onPressed: () {
         if (following) {
@@ -44,7 +44,7 @@ class FollowUserButton extends ConsumerWidget {
         }
       },
       following: following,
-      followLabel: followLabel,
+      followLabel: isCurrentUserFollowed && !following ? context.i18n.button_follow_back : null,
     );
   }
 }

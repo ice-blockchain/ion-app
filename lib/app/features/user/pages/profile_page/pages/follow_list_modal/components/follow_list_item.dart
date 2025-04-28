@@ -34,7 +34,9 @@ class FollowListItem extends ConsumerWidget {
 
           return ListItem.user(
             title: Text(userMetadata.data.displayName),
-            trailing: FollowUserButton(pubkey: pubkey),
+            trailing: FollowUserButton(
+              pubkey: pubkey,
+            ),
             subtitle: Text(
               prefixUsername(
                 username: userMetadata.data.name,
