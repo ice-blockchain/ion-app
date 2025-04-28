@@ -78,9 +78,13 @@ class OnboardingCompleteNotifier extends _$OnboardingCompleteNotifier {
       () async {
         final isDelegationComplete = await ref.read(delegationCompleteProvider.future);
         if (!isDelegationComplete) {
-          final userDelegationEvent =
-              await _buildUserDelegation(onVerifyIdentity: onVerifyIdentity);
-          await ref.read(ionConnectNotifierProvider.notifier).sendEvents([userDelegationEvent]);
+          try {
+            final userDelegationEvent =
+                await _buildUserDelegation(onVerifyIdentity: onVerifyIdentity);
+            await ref.read(ionConnectNotifierProvider.notifier).sendEvents([userDelegationEvent]);
+          } on PasskeyCancelledException {
+            return;
+          }
         }
       },
     );

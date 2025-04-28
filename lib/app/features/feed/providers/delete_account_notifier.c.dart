@@ -32,21 +32,23 @@ class DeleteAccountNotifier extends _$DeleteAccountNotifier {
       if (currentIdentityKeyName == null) {
         return;
       }
-      final event = await ref
-          .read(ionConnectNotifierProvider.notifier)
-          .buildEventFromTagsAndSignWithMasterKey(
-        tags: [
-          ['b', mainWallet.signingKey.publicKey],
-        ],
-        kind: DeletionRequest.kind,
-        onVerifyIdentity: onVerifyIdentity,
-      );
 
-      await ref.read(ionConnectNotifierProvider.notifier).sendEvent(event, cache: false);
-
-      // clean ion identity data
-      final ionIdentity = await ref.read(ionIdentityProvider.future);
       try {
+        final event = await ref
+            .read(ionConnectNotifierProvider.notifier)
+            .buildEventFromTagsAndSignWithMasterKey(
+          tags: [
+            ['b', mainWallet.signingKey.publicKey],
+          ],
+          kind: DeletionRequest.kind,
+          onVerifyIdentity: onVerifyIdentity,
+        );
+
+        await ref.read(ionConnectNotifierProvider.notifier).sendEvent(event, cache: false);
+
+        // clean ion identity data
+        final ionIdentity = await ref.read(ionIdentityProvider.future);
+
         await ionIdentity(username: currentIdentityKeyName).auth.deleteUser(
               base64Kind5Event: base64.encode(utf8.encode(json.encode(event.toJson().last))),
             );
