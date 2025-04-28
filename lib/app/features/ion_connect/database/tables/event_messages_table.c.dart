@@ -4,7 +4,7 @@ import 'package:drift/drift.dart';
 import 'package:ion/app/features/feed/notifications/data/database/converters/event_reference_converter.c.dart';
 import 'package:ion/app/features/ion_connect/database/converters/event_tags_converter.dart';
 
-@DataClassName('EventMessage')
+@DataClassName('EventMessageDbModel')
 class EventMessagesTable extends Table {
   TextColumn get id => text()();
   IntColumn get kind => integer()();

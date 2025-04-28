@@ -18,14 +18,28 @@ class EventMessagesDao extends DatabaseAccessor<EventMessagesDatabase>
     with _$EventMessagesDaoMixin {
   EventMessagesDao({required EventMessagesDatabase db}) : super(db);
 
-  Future<void> insert(EventMessage eventMessage) async {
+  Future<void> insert(EventMessageDbModel eventMessage) async {
     await into(db.eventMessagesTable).insert(eventMessage, mode: InsertMode.insertOrReplace);
   }
 
-  Future<void> insertAll(List<EventMessage> eventMessages) {
+  Future<void> insertAll(List<EventMessageDbModel> eventMessages) {
     return batch((batch) {
       batch.insertAll(db.eventMessagesTable, eventMessages, mode: InsertMode.insertOrReplace);
     });
+  }
+
+  Stream<EventMessageDbModel?> watch(EventReference eventReference) {
+    final query = select(db.eventMessagesTable)
+      ..where((event) => event.eventReference.equalsValue(eventReference));
+
+    return query.watchSingleOrNull();
+  }
+
+  Stream<List<EventMessageDbModel>> watchAll(List<EventReference> eventReferences) {
+    final query = select(db.eventMessagesTable)
+      ..where((event) => event.eventReference.isInValues(eventReferences));
+
+    return query.watch();
   }
 
   Future<Set<EventReference>> nonExistingReferences(Set<EventReference> eventReferences) async {
