@@ -39,7 +39,15 @@ class LikeSyncStrategy implements SyncStrategy<PostLike> {
       final likeEntity = getLikeEntity(optimistic.eventReference);
       if (likeEntity != null && likeEntity.id.isNotEmpty) {
         final deletion = DeletionRequest(
-          events: [EventToDelete(eventId: likeEntity.id, kind: ReactionEntity.kind)],
+          events: [
+            EventToDelete(
+              ImmutableEventReference(
+                eventId: likeEntity.id,
+                kind: ReactionEntity.kind,
+                pubkey: likeEntity.pubkey,
+              ),
+            ),
+          ],
         );
         await deleteReaction(deletion);
         removeFromCache(likeEntity.cacheKey);

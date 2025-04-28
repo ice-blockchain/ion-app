@@ -131,12 +131,12 @@ class ConversationMessageDao extends DatabaseAccessor<ChatDatabase>
 
   Future<void> removeMessages({
     required Ref ref,
-    required List<String> messageIds,
+    required List<String> sharedIds,
     required EventMessage deleteRequest,
   }) async {
     await ref.read(eventMessageDaoProvider).add(deleteRequest);
 
-    await (update(messageStatusTable)..where((table) => table.sharedId.isIn(messageIds))).write(
+    await (update(messageStatusTable)..where((table) => table.sharedId.isIn(sharedIds))).write(
       const MessageStatusTableCompanion(
         status: Value(MessageDeliveryStatus.deleted),
       ),

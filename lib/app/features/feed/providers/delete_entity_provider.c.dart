@@ -97,7 +97,15 @@ Future<void> _deleteFromServer(Ref ref, IonConnectEntity entity) async {
   };
 
   final deletionRequest = DeletionRequest(
-    events: [EventToDelete(eventId: entity.id, kind: entityKind)],
+    events: [
+      EventToDelete(
+        ImmutableEventReference(
+          kind: entityKind,
+          eventId: entity.id,
+          pubkey: entity.pubkey,
+        ),
+      ),
+    ],
   );
   await ref.read(ionConnectNotifierProvider.notifier).sendEntityData(deletionRequest, cache: false);
 }
