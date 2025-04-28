@@ -54,7 +54,7 @@ class IONLoadingIndicator extends HookWidget {
       initialValue: value != null ? (value! + 1) / 2 : 0,
       keys: [value],
     );
-    final duration = useRef<Duration?>(null);
+    final duration = useState<Duration?>(null);
 
     useEffect(
       () {
