@@ -2,10 +2,9 @@
 
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:riverpod_annotation/riverpod_annotation.dart';
 
-final firebaseMessagingServiceProvider = Provider((Ref ref) {
-  return FirebaseMessagingService();
-});
+part 'firebase_messaging_service_provider.c.g.dart';
 
 class FirebaseMessagingService {
   /// Registers to receive remote notifications through Apple Push Notification service.
@@ -19,3 +18,10 @@ class FirebaseMessagingService {
     return FirebaseMessaging.instance.getToken();
   }
 }
+
+final firebaseMessagingServiceProvider = Provider((Ref ref) {
+  return FirebaseMessagingService();
+});
+
+@Riverpod(keepAlive: true)
+FirebaseMessagingService firebaseService(Ref ref) => FirebaseMessagingService();

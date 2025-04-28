@@ -13,6 +13,7 @@ import 'package:ion/app/features/core/providers/template_provider.c.dart';
 import 'package:ion/app/features/core/providers/window_manager_provider.c.dart';
 import 'package:ion/app/features/feed/providers/feed_bookmarks_notifier.c.dart';
 import 'package:ion/app/features/force_update/providers/force_update_provider.c.dart';
+import 'package:ion/app/features/push_notifications/providers/configure_firebase_provider.c.dart';
 import 'package:ion/app/features/user/providers/update_user_metadata_notifier.c.dart';
 import 'package:ion/app/features/user/providers/user_relays_sync_provider.c.dart';
 import 'package:ion/app/features/wallets/providers/coins_sync_provider.c.dart';
@@ -56,7 +57,8 @@ Future<void> initApp(Ref ref) async {
     })
     ..listen(userRelaysSyncProvider, noop)
     ..listen(userChatRelaysSyncProvider, noop)
-    ..listen(feedBookmarksNotifierProvider(), noop);
+    ..listen(feedBookmarksNotifierProvider(), noop)
+    ..listen(configureFirebaseProvider, noop);
 
   registerTimeagoLocalesForEnum();
 }

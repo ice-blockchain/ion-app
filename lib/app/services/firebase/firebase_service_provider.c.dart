@@ -3,6 +3,7 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'firebase_service_provider.c.freezed.dart';
 part 'firebase_service_provider.c.g.dart';
@@ -51,6 +52,5 @@ class FirebaseAppConfig with _$FirebaseAppConfig {
       _$FirebaseAppConfigFromJson(json);
 }
 
-final firebaseServiceProvider = Provider((Ref ref) {
-  return FirebaseService();
-});
+@Riverpod(keepAlive: true)
+FirebaseService firebaseService(Ref ref) => FirebaseService();

@@ -3,21 +3,26 @@
 import 'dart:convert';
 
 import 'package:dio/dio.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/exceptions/exceptions.dart';
 import 'package:ion/app/features/core/providers/dio_provider.c.dart';
 import 'package:ion/app/features/ion_connect/model/relay_info.c.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
+part 'relay_info_provider.c.g.dart';
+
 /// https://github.com/nostr-protocol/nips/blob/master/11.md
-final relayInfoProvider = FutureProvider.family<RelayInfo, String>((ref, relayUrl) async {
+@Riverpod(keepAlive: true)
+Future<RelayInfo> relayInfo(Ref ref, String relayUrl) async {
   final repository = ref.watch(relayInfoRepositoryProvider);
   return repository.getRelayInfo(relayUrl);
-});
+}
 
-final relayInfoRepositoryProvider = Provider<RelayInfoRepository>((ref) {
+@Riverpod(keepAlive: true)
+RelayInfoRepository relayInfoRepository(Ref ref) {
   final dio = ref.watch(dioProvider);
   return RelayInfoRepository(dio);
-});
+}
 
 class RelayInfoRepository {
   RelayInfoRepository(this._dio);

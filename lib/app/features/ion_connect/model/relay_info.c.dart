@@ -28,6 +28,8 @@ class RelayInfo with _$RelayInfo {
     List<RelayFcmConfig>? fcmWebConfigs,
   }) = _RelayInfo;
 
+  const RelayInfo._();
+
   factory RelayInfo.fromJson(Map<String, dynamic> json) => _$RelayInfoFromJson(json);
 
   List<RelayFcmConfig>? getFcmConfigsForPlatform() {
