@@ -4,7 +4,9 @@ import 'dart:async';
 
 import 'package:collection/collection.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/auth/providers/auth_provider.c.dart';
+import 'package:ion/app/features/auth/providers/delegation_complete_provider.c.dart';
 import 'package:ion/app/features/feed/data/models/bookmarks/bookmarks.c.dart';
 import 'package:ion/app/features/feed/data/models/bookmarks/bookmarks_collection.c.dart';
 import 'package:ion/app/features/ion_connect/ion_connect.dart';
@@ -12,7 +14,6 @@ import 'package:ion/app/features/ion_connect/model/action_source.c.dart';
 import 'package:ion/app/features/ion_connect/model/event_reference.c.dart';
 import 'package:ion/app/features/ion_connect/providers/ion_connect_notifier.c.dart';
 import 'package:ion/app/features/ion_connect/providers/ion_connect_subscription_provider.c.dart';
-import 'package:ion/app/features/user/providers/user_relays_manager.c.dart';
 import 'package:ion/app/services/uuid/uuid.dart';
 import 'package:nostr_dart/nostr_dart.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
@@ -67,9 +68,15 @@ class FeedBookmarksNotifier extends _$FeedBookmarksNotifier {
   Future<BookmarksCollectionEntity?> build({
     String collectionDTag = BookmarksCollectionEntity.defaultCollectionDTag,
   }) async {
+    final authState = await ref.watch(authProvider.future);
+
+    if (!authState.isAuthenticated) {
+      return null;
+    }
+
     final currentPubkey = ref.watch(currentPubkeySelectorProvider);
-    final userRelays = await ref.watch(currentUserRelayProvider.future);
-    if (currentPubkey == null || userRelays == null) {
+    final delegationComplete = ref.watch(delegationCompleteProvider).valueOrNull.falseOrValue;
+    if (currentPubkey == null || !delegationComplete) {
       return null;
     }
 
