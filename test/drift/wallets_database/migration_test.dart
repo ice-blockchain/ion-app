@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: ice License 1.0
+
 // // dart format width=80
 // // ignore_for_file: unused_local_variable, unused_import
 // import 'package:drift/drift.dart';
