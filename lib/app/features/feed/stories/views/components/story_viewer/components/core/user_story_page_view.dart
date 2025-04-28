@@ -27,10 +27,10 @@ class UserStoryPageView extends ConsumerWidget {
   final VoidCallback onNextUser;
   final VoidCallback onPreviousUser;
   final String pubkey;
+
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final storyState = ref.watch(storyViewingControllerProvider(pubkey));
-
     final currentStory =
         isCurrentUser ? userStory.stories[storyState.currentStoryIndex] : userStory.stories[0];
 
@@ -41,7 +41,10 @@ class UserStoryPageView extends ConsumerWidget {
         onTapRight: () => storyState.currentStoryIndex < userStory.stories.length - 1
             ? onNextStory()
             : onNextUser(),
-        child: StoryContent(story: currentStory),
+        child: StoryContent(
+          story: currentStory,
+          viewerPubkey: pubkey,
+        ),
       ),
     );
   }

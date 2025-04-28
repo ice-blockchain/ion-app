@@ -9,24 +9,31 @@ import 'package:ion/app/features/feed/stories/views/components/story_viewer/comp
 class StoryViewerContent extends StatelessWidget {
   const StoryViewerContent({
     required this.post,
+    required this.viewerPubkey,
     super.key,
   });
 
   final ModifiablePostEntity post;
+  final String viewerPubkey;
 
   @override
   Widget build(BuildContext context) {
     final media = post.data.primaryMedia;
-
-    if (media == null) {
-      return const SizedBox.shrink();
-    }
+    if (media == null) return const SizedBox.shrink();
 
     return switch (media.mediaType) {
-      MediaType.image =>
-        ImageStoryViewer(imageUrl: media.url, authorPubkey: post.masterPubkey, storyId: post.id),
-      MediaType.video => VideoStoryViewer(videoPath: media.url, authorPubkey: post.masterPubkey),
-      _ => const CenteredLoadingIndicator()
+      MediaType.image => ImageStoryViewer(
+          imageUrl: media.url,
+          authorPubkey: post.masterPubkey,
+          storyId: post.id,
+        ),
+      MediaType.video => VideoStoryViewer(
+          videoPath: media.url,
+          authorPubkey: post.masterPubkey,
+          storyId: post.id,
+          viewerPubkey: viewerPubkey,
+        ),
+      _ => const CenteredLoadingIndicator(),
     };
   }
 }
