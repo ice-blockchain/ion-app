@@ -201,19 +201,17 @@ class E2eeMessagesSubscriber extends _$E2eeMessagesSubscriber {
 
             // Add corresponding status to the database for the sender pubkey
             // and the kind 30014 shared id, if that doesn't exist
-            if (reactionEntity.data.reference.dTag != null) {
-              await conversationMessageStatusDao.addOrUpdateStatus(
-                status: status,
-                pubkey: rumor.pubkey,
-                masterPubkey: rumor.masterPubkey,
-                sharedId: reactionEntity.data.reference.dTag!,
-              );
-            }
+            await conversationMessageStatusDao.addOrUpdateStatus(
+              status: status,
+              pubkey: rumor.pubkey,
+              masterPubkey: rumor.masterPubkey,
+              sharedId: reactionEntity.data.reference.dTag,
+            );
           } else {
             await conversationMessageReactionDao.add(
               ref: ref,
               newReactionEvent: rumor,
-              kind14SharedId: reactionEntity.data.reference.dTag!,
+              kind14SharedId: reactionEntity.data.reference.dTag,
               masterPubkey: rumor.masterPubkey,
             );
           }
@@ -253,10 +251,9 @@ class E2eeMessagesSubscriber extends _$E2eeMessagesSubscriber {
 
           final deleteEventIds = eventToDeleteReferences.first is ImmutableEventReference
               ? eventToDeleteReferences.map((e) => (e as ImmutableEventReference).eventId)
-              : eventToDeleteReferences.map((e) => (e as ReplaceableEventReference).dTag!);
+              : eventToDeleteReferences.map((e) => (e as ReplaceableEventReference).dTag);
 
           if (deleteEventKind == ReplaceablePrivateDirectMessageEntity.kind) {
-            print(deleteEventIds);
             if (deleteEventIds.isNotEmpty) {
               await conversationMessageDao.removeMessages(
                 ref: ref,
