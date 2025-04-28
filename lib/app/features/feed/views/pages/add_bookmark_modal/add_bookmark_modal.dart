@@ -28,6 +28,7 @@ class AddBookmarkModal extends ConsumerWidget {
     return SheetContent(
       body: ScreenSideOffset.small(
         child: CustomScrollView(
+          shrinkWrap: true,
           slivers: bookmarksCollections.when(
             data: (data) {
               final collectionsDTags = data
