@@ -218,7 +218,6 @@ class E2eeMessagesSubscriber extends _$E2eeMessagesSubscriber {
         }
         // For kind 5
       } else if (rumor.kind == DeletionRequest.kind) {
-        print(rumor);
         final deleteConversationIds = rumor.tags
             .where((tags) => tags[0] == ConversationIdentifier.tagName)
             .map((tag) => tag.elementAtOrNull(1))
@@ -246,7 +245,6 @@ class E2eeMessagesSubscriber extends _$E2eeMessagesSubscriber {
               : eventToDeleteReferences.map((e) => (e! as ReplaceableEventReference).dTag);
 
           if (deleteEventKind == ReplaceablePrivateDirectMessageEntity.kind) {
-            print(deleteEventIds);
             if (deleteEventIds.isNotEmpty) {
               await conversationMessageDao.removeMessages(
                 ref: ref,
