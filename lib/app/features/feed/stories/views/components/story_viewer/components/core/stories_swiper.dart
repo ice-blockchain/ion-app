@@ -26,25 +26,38 @@ class StoriesSwiper extends HookConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final userPageController = usePageController(initialPage: currentUserIndex);
 
-    ref.listen<StoryViewerState>(storyViewingControllerProvider(pubkey), (previous, next) {
-      if (previous?.currentUserIndex != next.currentUserIndex) {
-        userPageController.animateToPage(
-          next.currentUserIndex,
-          duration: 300.ms,
-          curve: Curves.easeInOut,
-        );
-      }
-    });
+    ref.listen<StoryViewerState>(
+      storyViewingControllerProvider(pubkey),
+      (prev, next) {
+        if (prev?.currentUserIndex != next.currentUserIndex && userPageController.hasClients) {
+          userPageController.animateToPage(
+            next.currentUserIndex,
+            duration: 300.ms,
+            curve: Curves.easeInOut,
+          );
+        }
+      },
+    );
+
+    final storyNotifier = ref.read(
+      storyViewingControllerProvider(pubkey).notifier,
+    );
 
     return CubePageView.builder(
       controller: userPageController,
       itemCount: userStories.length,
-      onPageChanged: ref.read(storyViewingControllerProvider(pubkey).notifier).moveToUser,
+      onPageChanged: (newIndex) {
+        final currentIndex = ref.read(storyViewingControllerProvider(pubkey)).currentUserIndex;
+
+        if (newIndex != currentIndex) {
+          storyNotifier.moveToUser(newIndex);
+        }
+      },
       itemBuilder: (context, userIndex, pageNotifier) {
         final userStory = userStories[userIndex];
         final isCurrentUser = userIndex == currentUserIndex;
 
-        final storyNotifier = ref.read(storyViewingControllerProvider(pubkey).notifier);
+        void closeViewer() => context.pop();
 
         return CubeWidget(
           index: userIndex,
@@ -53,20 +66,28 @@ class StoriesSwiper extends HookConsumerWidget {
             pubkey: pubkey,
             userStory: userStory,
             isCurrentUser: isCurrentUser,
-            onNextStory: storyNotifier.moveToNextStory,
-            onPreviousStory: storyNotifier.moveToPreviousStory,
-            onNextUser: () => userPageController.hasClients && userIndex < userStories.length - 1
-                ? userPageController.nextPage(
-                    duration: 300.ms,
-                    curve: Curves.easeInOut,
-                  )
-                : context.pop(),
-            onPreviousUser: () => userPageController.hasClients && userIndex > 0
-                ? userPageController.previousPage(
-                    duration: 300.ms,
-                    curve: Curves.easeInOut,
-                  )
-                : context.pop(),
+            onNextStory: () => storyNotifier.advance(onClose: closeViewer),
+            onPreviousStory: () => storyNotifier.rewind(onClose: closeViewer),
+            onNextUser: () {
+              if (userPageController.hasClients && userIndex < userStories.length - 1) {
+                userPageController.nextPage(
+                  duration: 300.ms,
+                  curve: Curves.easeInOut,
+                );
+              } else {
+                closeViewer();
+              }
+            },
+            onPreviousUser: () {
+              if (userPageController.hasClients && userIndex > 0) {
+                userPageController.previousPage(
+                  duration: 300.ms,
+                  curve: Curves.easeInOut,
+                );
+              } else {
+                closeViewer();
+              }
+            },
           ),
         );
       },

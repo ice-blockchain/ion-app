@@ -15,98 +15,83 @@ void main() {
   const alice = 'alice';
   const bob = 'bob';
 
-  final aliceStories = UserStories(
+  final aliceUserStories = UserStories(
     pubkey: alice,
     stories: [buildPost('a1'), buildPost('a2')],
   );
 
-  final bobStories = UserStories(
+  final bobUserStories = UserStories(
     pubkey: bob,
     stories: [buildPost('b1')],
   );
 
-  ProviderContainer buildContainer() => createStoriesContainer(
+  ProviderContainer createContainer() => createStoriesContainer(
         overrides: [
           storiesProvider.overrideWith(
-            (ref) => [aliceStories, bobStories],
+            (_) => [aliceUserStories, bobUserStories],
           ),
         ],
       );
 
   group('StoryViewingController navigation', () {
     test('initial state starts at user 0, story 0', () {
-      final container = buildContainer();
+      final container = createContainer();
       final state = container.read(storyViewingControllerProvider(alice));
 
       expect(state.currentUserIndex, 0);
       expect(state.currentStoryIndex, 0);
     });
 
-    test('moveToNextStory increments story index within the same user', () {
-      final container = buildContainer();
-      container.read(storyViewingControllerProvider(alice).notifier).moveToNextStory();
+    test('advance increments story index within the same user', () {
+      final container = createContainer();
+
+      container.read(storyViewingControllerProvider(alice).notifier).advance(); // a2
 
       final state = container.read(storyViewingControllerProvider(alice));
 
       expect(state.currentUserIndex, 0);
-      expect(state.currentStoryIndex, 1); // a2
+      expect(state.currentStoryIndex, 1);
     });
 
-    test('moveToNextStory on last story jumps to next user', () {
-      final container = buildContainer();
+    test('advance on last story jumps to next user (story 0)', () {
+      final container = createContainer();
+
       container.read(storyViewingControllerProvider(alice).notifier)
-        ..moveToNextStory() // a2
-        ..moveToNextStory(); // bob/b1
+        ..advance() // a2
+        ..advance(); // bob/b1
 
       final state = container.read(storyViewingControllerProvider(alice));
 
       expect(state.currentUserIndex, 1); // Bob
-      expect(state.currentStoryIndex, 0); // first story of Bob
+      expect(state.currentStoryIndex, 0);
     });
 
-    test('moveToPreviousStory at first story jumps to previous user', () {
-      final container = buildContainer();
+    test('rewind at first story jumps to previous user (story 0)', () {
+      final container = createContainer();
+
       container.read(storyViewingControllerProvider(alice).notifier)
-        ..moveToNextStory() // a2
-        ..moveToNextStory() // bob/b1
-        ..moveToPreviousStory(); // back to Alice/a2
+        ..advance() // a2
+        ..advance() // bob/b1
+        ..rewind(); // back to Alice/a1
 
       final state = container.read(storyViewingControllerProvider(alice));
 
       expect(state.currentUserIndex, 0);
-      expect(state.currentStoryIndex, 1); // a2
-    });
-
-    test('moveToNextUser / moveToPreviousUser work at boundaries', () {
-      final container = buildContainer();
-      final notifier = container.read(storyViewingControllerProvider(alice).notifier)
-        ..moveToNextUser(); // Bob
-
-      var state = container.read(storyViewingControllerProvider(alice));
-      expect(state.currentUserIndex, 1);
       expect(state.currentStoryIndex, 0);
-
-      // Back to Alice
-      notifier.moveToPreviousUser();
-      state = container.read(storyViewingControllerProvider(alice));
-      expect(state.currentUserIndex, 0);
-      expect(state.currentStoryIndex, 1);
     });
 
-    test('moveToUser sets indices and chooses first/last story correctly', () {
-      final container = buildContainer();
+    test('moveToUser always resets story index to 0', () {
+      final container = createContainer();
       final notifier = container.read(storyViewingControllerProvider(alice).notifier)
         ..moveToUser(1); // Bob
-
       var state = container.read(storyViewingControllerProvider(alice));
       expect(state.currentUserIndex, 1);
       expect(state.currentStoryIndex, 0);
 
-      // Back to Alice
-      notifier.moveToUser(0);
+      notifier.moveToUser(0); // Alice
       state = container.read(storyViewingControllerProvider(alice));
       expect(state.currentUserIndex, 0);
-      expect(state.currentStoryIndex, 1);
+      expect(state.currentStoryIndex, 0);
     });
   });
 }

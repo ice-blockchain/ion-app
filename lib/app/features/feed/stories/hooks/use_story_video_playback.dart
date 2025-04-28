@@ -7,6 +7,8 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/features/feed/stories/providers/story_pause_provider.c.dart';
 import 'package:ion/app/features/feed/stories/providers/story_viewing_provider.c.dart';
 
+void _post(VoidCallback action) => WidgetsBinding.instance.addPostFrameCallback((_) => action());
+
 void useStoryVideoPlayback({
   required WidgetRef ref,
   required CachedVideoPlayerPlusController? controller,
@@ -20,25 +22,35 @@ void useStoryVideoPlayback({
   final viewing = ref.watch(storyViewingControllerProvider(viewerPubkey));
   final isCurrent = viewing.currentStory?.id == storyId;
 
-  final hasStarted = useRef<bool>(false);
+  final hasStarted = useRef(false);
+  final completedSent = useRef(false);
+
+  useEffect(
+    () {
+      if (!isCurrent) completedSent.value = false;
+      return null;
+    },
+    [isCurrent],
+  );
 
   useEffect(
     () {
       if (isCurrent) {
         if (paused) {
-          controller.pause();
+          _post(controller.pause);
         } else if (!controller.value.isPlaying) {
           if (!hasStarted.value) {
-            controller
-              ..seekTo(Duration.zero)
-              ..play();
+            _post(() async {
+              await controller.seekTo(Duration.zero);
+              await controller.play();
+            });
             hasStarted.value = true;
           } else {
-            controller.play();
+            _post(controller.play);
           }
         }
       } else {
-        controller.pause();
+        _post(controller.pause);
         hasStarted.value = false;
       }
       return null;
@@ -50,7 +62,12 @@ void useStoryVideoPlayback({
     () {
       void listener() {
         final v = controller.value;
-        if (v.position >= v.duration && isCurrent) onCompleted();
+        final finished = v.position >= v.duration;
+
+        if (isCurrent && finished && !completedSent.value) {
+          completedSent.value = true;
+          onCompleted();
+        }
       }
 
       controller.addListener(listener);

@@ -2,6 +2,7 @@
 
 import 'package:cached_video_player_plus/cached_video_player_plus.dart';
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/components/progress_bar/centered_loading_indicator.dart';
 import 'package:ion/app/features/core/providers/video_player_provider.c.dart';
@@ -42,12 +43,9 @@ class VideoStoryViewer extends HookConsumerWidget {
       storyId: storyId,
       viewerPubkey: viewerPubkey,
       onCompleted: () {
-        final notifier = ref.read(storyViewingControllerProvider(viewerPubkey).notifier);
-        if (ref.read(storyViewingControllerProvider(viewerPubkey)).hasNextStory) {
-          notifier.moveToNextStory();
-        } else {
-          notifier.moveToNextUser();
-        }
+        ref
+            .read(storyViewingControllerProvider(viewerPubkey).notifier)
+            .advance(onClose: () => context.pop());
       },
     );
 

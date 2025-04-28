@@ -21,7 +21,7 @@ class StoryProgressTracker extends HookConsumerWidget {
   final ModifiablePostEntity post;
   final bool isCurrent;
   final bool isPreviousStory;
-  final VoidCallback onCompleted;
+  final VoidCallback? onCompleted;
   final EdgeInsetsGeometry? margin;
 
   @override
@@ -33,7 +33,7 @@ class StoryProgressTracker extends HookConsumerWidget {
       post: post,
       isCurrent: isCurrent,
       isPaused: isPaused,
-      onCompleted: onCompleted,
+      onCompleted: onCompleted ?? () {},
     );
 
     return StoryProgressSegment(

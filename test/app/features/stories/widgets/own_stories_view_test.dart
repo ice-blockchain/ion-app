@@ -25,7 +25,7 @@ void main() {
     stories: [buildPost('b1')],
   );
 
-  ProviderContainer buildContainer() => createStoriesContainer(
+  ProviderContainer createContainer() => createStoriesContainer(
         overrides: [
           storiesProvider.overrideWith((_) => [myStories, otherStories]),
           filteredStoriesByPubkeyProvider(me).overrideWith((_) => [myStories]),
@@ -36,17 +36,17 @@ void main() {
     test(
       'controller receives only current user stories → switching to other authors is impossible',
       () {
-        final container = buildContainer();
-        final state = container.read(storyViewingControllerProvider(me));
+        final container = createContainer();
+        final initial = container.read(storyViewingControllerProvider(me));
 
         expect(
-          state.userStories.length,
+          initial.userStories.length,
           1,
-          reason: 'The list should contain only the current author',
+          reason: 'List should contain only the current author',
         );
-        expect(state.hasNextUser, isFalse);
+        expect(initial.hasNextUser, isFalse);
 
-        container.read(storyViewingControllerProvider(me).notifier).moveToNextUser();
+        container.read(storyViewingControllerProvider(me).notifier).moveToUser(1);
 
         final after = container.read(storyViewingControllerProvider(me));
         expect(after.currentUserIndex, 0);
