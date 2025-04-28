@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/components/screen_offset/screen_side_offset.dart';
 import 'package:ion/app/extensions/extensions.dart';
-import 'package:ion/app/features/feed/data/models/entities/article_data.c.dart';
 import 'package:ion/app/features/feed/data/models/generic_repost.c.dart';
 import 'package:ion/app/features/feed/notifications/data/model/ion_notification.c.dart';
 import 'package:ion/app/features/feed/notifications/views/notifications_history_page/components/notification_item/notification_icons.dart';
@@ -93,7 +92,7 @@ class NotificationItem extends ConsumerWidget {
       _ => entity.toEventReference(),
     };
 
-    if (eventReference is ReplaceableEventReference && eventReference.kind == ArticleEntity.kind) {
+    if (eventReference.isArticleReference) {
       ArticleDetailsRoute(eventReference: eventReference.encode()).push<void>(context);
     } else {
       PostDetailsRoute(eventReference: eventReference.encode()).push<void>(context);

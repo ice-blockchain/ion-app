@@ -2,7 +2,6 @@
 
 import 'package:flutter/material.dart';
 import 'package:ion/app/extensions/extensions.dart';
-import 'package:ion/app/features/feed/data/models/entities/article_data.c.dart';
 import 'package:ion/app/features/feed/data/models/generic_repost.c.dart';
 import 'package:ion/app/features/feed/notifications/data/model/ion_notification.c.dart';
 import 'package:ion/app/features/feed/views/components/article/article.dart';
@@ -24,7 +23,7 @@ class NotificationRelatedEntity extends StatelessWidget {
       _ => entity.toEventReference(),
     };
 
-    if (eventReference is ReplaceableEventReference && eventReference.kind == ArticleEntity.kind) {
+    if (eventReference.isArticleReference) {
       return Padding(
         padding: EdgeInsetsDirectional.only(top: 12.0.s, end: 16.0.s),
         child: Article(
