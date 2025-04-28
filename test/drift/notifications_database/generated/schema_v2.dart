@@ -3,8 +3,7 @@
 // ignore_for_file: type=lint
 import 'package:drift/drift.dart';
 
-class CommentsTable extends Table
-    with TableInfo<CommentsTable, CommentsTableData> {
+class CommentsTable extends Table with TableInfo<CommentsTable, CommentsTableData> {
   @override
   final GeneratedDatabase attachedDatabase;
   final String? _alias;
@@ -15,8 +14,7 @@ class CommentsTable extends Table
   late final GeneratedColumn<DateTime> createdAt = GeneratedColumn<DateTime>(
       'created_at', aliasedName, false,
       type: DriftSqlType.dateTime, requiredDuringInsert: true);
-  late final GeneratedColumn<int> type = GeneratedColumn<int>(
-      'type', aliasedName, false,
+  late final GeneratedColumn<int> type = GeneratedColumn<int>('type', aliasedName, false,
       type: DriftSqlType.int, requiredDuringInsert: true);
   @override
   List<GeneratedColumn> get $columns => [eventReference, createdAt, type];
@@ -31,12 +29,11 @@ class CommentsTable extends Table
   CommentsTableData map(Map<String, dynamic> data, {String? tablePrefix}) {
     final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
     return CommentsTableData(
-      eventReference: attachedDatabase.typeMapping.read(
-          DriftSqlType.string, data['${effectivePrefix}event_reference'])!,
+      eventReference: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}event_reference'])!,
       createdAt: attachedDatabase.typeMapping
           .read(DriftSqlType.dateTime, data['${effectivePrefix}created_at'])!,
-      type: attachedDatabase.typeMapping
-          .read(DriftSqlType.int, data['${effectivePrefix}type'])!,
+      type: attachedDatabase.typeMapping.read(DriftSqlType.int, data['${effectivePrefix}type'])!,
     );
   }
 
@@ -46,15 +43,12 @@ class CommentsTable extends Table
   }
 }
 
-class CommentsTableData extends DataClass
-    implements Insertable<CommentsTableData> {
+class CommentsTableData extends DataClass implements Insertable<CommentsTableData> {
   final String eventReference;
   final DateTime createdAt;
   final int type;
   const CommentsTableData(
-      {required this.eventReference,
-      required this.createdAt,
-      required this.type});
+      {required this.eventReference, required this.createdAt, required this.type});
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
     final map = <String, Expression>{};
@@ -72,8 +66,7 @@ class CommentsTableData extends DataClass
     );
   }
 
-  factory CommentsTableData.fromJson(Map<String, dynamic> json,
-      {ValueSerializer? serializer}) {
+  factory CommentsTableData.fromJson(Map<String, dynamic> json, {ValueSerializer? serializer}) {
     serializer ??= driftRuntimeOptions.defaultSerializer;
     return CommentsTableData(
       eventReference: serializer.fromJson<String>(json['event_reference']),
@@ -91,8 +84,7 @@ class CommentsTableData extends DataClass
     };
   }
 
-  CommentsTableData copyWith(
-          {String? eventReference, DateTime? createdAt, int? type}) =>
+  CommentsTableData copyWith({String? eventReference, DateTime? createdAt, int? type}) =>
       CommentsTableData(
         eventReference: eventReference ?? this.eventReference,
         createdAt: createdAt ?? this.createdAt,
@@ -100,9 +92,7 @@ class CommentsTableData extends DataClass
       );
   CommentsTableData copyWithCompanion(CommentsTableCompanion data) {
     return CommentsTableData(
-      eventReference: data.eventReference.present
-          ? data.eventReference.value
-          : this.eventReference,
+      eventReference: data.eventReference.present ? data.eventReference.value : this.eventReference,
       createdAt: data.createdAt.present ? data.createdAt.value : this.createdAt,
       type: data.type.present ? data.type.value : this.type,
     );
@@ -213,8 +203,7 @@ class LikesTable extends Table with TableInfo<LikesTable, LikesTableData> {
   late final GeneratedColumn<String> eventReference = GeneratedColumn<String>(
       'event_reference', aliasedName, false,
       type: DriftSqlType.string, requiredDuringInsert: true);
-  late final GeneratedColumn<String> pubkey = GeneratedColumn<String>(
-      'pubkey', aliasedName, false,
+  late final GeneratedColumn<String> pubkey = GeneratedColumn<String>('pubkey', aliasedName, false,
       type: DriftSqlType.string, requiredDuringInsert: true);
   late final GeneratedColumn<DateTime> createdAt = GeneratedColumn<DateTime>(
       'created_at', aliasedName, false,
@@ -232,10 +221,10 @@ class LikesTable extends Table with TableInfo<LikesTable, LikesTableData> {
   LikesTableData map(Map<String, dynamic> data, {String? tablePrefix}) {
     final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
     return LikesTableData(
-      eventReference: attachedDatabase.typeMapping.read(
-          DriftSqlType.string, data['${effectivePrefix}event_reference'])!,
-      pubkey: attachedDatabase.typeMapping
-          .read(DriftSqlType.string, data['${effectivePrefix}pubkey'])!,
+      eventReference: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}event_reference'])!,
+      pubkey:
+          attachedDatabase.typeMapping.read(DriftSqlType.string, data['${effectivePrefix}pubkey'])!,
       createdAt: attachedDatabase.typeMapping
           .read(DriftSqlType.dateTime, data['${effectivePrefix}created_at'])!,
     );
@@ -252,9 +241,7 @@ class LikesTableData extends DataClass implements Insertable<LikesTableData> {
   final String pubkey;
   final DateTime createdAt;
   const LikesTableData(
-      {required this.eventReference,
-      required this.pubkey,
-      required this.createdAt});
+      {required this.eventReference, required this.pubkey, required this.createdAt});
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
     final map = <String, Expression>{};
@@ -272,8 +259,7 @@ class LikesTableData extends DataClass implements Insertable<LikesTableData> {
     );
   }
 
-  factory LikesTableData.fromJson(Map<String, dynamic> json,
-      {ValueSerializer? serializer}) {
+  factory LikesTableData.fromJson(Map<String, dynamic> json, {ValueSerializer? serializer}) {
     serializer ??= driftRuntimeOptions.defaultSerializer;
     return LikesTableData(
       eventReference: serializer.fromJson<String>(json['event_reference']),
@@ -291,8 +277,7 @@ class LikesTableData extends DataClass implements Insertable<LikesTableData> {
     };
   }
 
-  LikesTableData copyWith(
-          {String? eventReference, String? pubkey, DateTime? createdAt}) =>
+  LikesTableData copyWith({String? eventReference, String? pubkey, DateTime? createdAt}) =>
       LikesTableData(
         eventReference: eventReference ?? this.eventReference,
         pubkey: pubkey ?? this.pubkey,
@@ -300,9 +285,7 @@ class LikesTableData extends DataClass implements Insertable<LikesTableData> {
       );
   LikesTableData copyWithCompanion(LikesTableCompanion data) {
     return LikesTableData(
-      eventReference: data.eventReference.present
-          ? data.eventReference.value
-          : this.eventReference,
+      eventReference: data.eventReference.present ? data.eventReference.value : this.eventReference,
       pubkey: data.pubkey.present ? data.pubkey.value : this.pubkey,
       createdAt: data.createdAt.present ? data.createdAt.value : this.createdAt,
     );
@@ -405,14 +388,12 @@ class LikesTableCompanion extends UpdateCompanion<LikesTableData> {
   }
 }
 
-class FollowersTable extends Table
-    with TableInfo<FollowersTable, FollowersTableData> {
+class FollowersTable extends Table with TableInfo<FollowersTable, FollowersTableData> {
   @override
   final GeneratedDatabase attachedDatabase;
   final String? _alias;
   FollowersTable(this.attachedDatabase, [this._alias]);
-  late final GeneratedColumn<String> pubkey = GeneratedColumn<String>(
-      'pubkey', aliasedName, false,
+  late final GeneratedColumn<String> pubkey = GeneratedColumn<String>('pubkey', aliasedName, false,
       type: DriftSqlType.string, requiredDuringInsert: true);
   late final GeneratedColumn<DateTime> createdAt = GeneratedColumn<DateTime>(
       'created_at', aliasedName, false,
@@ -430,8 +411,8 @@ class FollowersTable extends Table
   FollowersTableData map(Map<String, dynamic> data, {String? tablePrefix}) {
     final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
     return FollowersTableData(
-      pubkey: attachedDatabase.typeMapping
-          .read(DriftSqlType.string, data['${effectivePrefix}pubkey'])!,
+      pubkey:
+          attachedDatabase.typeMapping.read(DriftSqlType.string, data['${effectivePrefix}pubkey'])!,
       createdAt: attachedDatabase.typeMapping
           .read(DriftSqlType.dateTime, data['${effectivePrefix}created_at'])!,
     );
@@ -443,8 +424,7 @@ class FollowersTable extends Table
   }
 }
 
-class FollowersTableData extends DataClass
-    implements Insertable<FollowersTableData> {
+class FollowersTableData extends DataClass implements Insertable<FollowersTableData> {
   final String pubkey;
   final DateTime createdAt;
   const FollowersTableData({required this.pubkey, required this.createdAt});
@@ -463,8 +443,7 @@ class FollowersTableData extends DataClass
     );
   }
 
-  factory FollowersTableData.fromJson(Map<String, dynamic> json,
-      {ValueSerializer? serializer}) {
+  factory FollowersTableData.fromJson(Map<String, dynamic> json, {ValueSerializer? serializer}) {
     serializer ??= driftRuntimeOptions.defaultSerializer;
     return FollowersTableData(
       pubkey: serializer.fromJson<String>(json['pubkey']),
@@ -480,8 +459,7 @@ class FollowersTableData extends DataClass
     };
   }
 
-  FollowersTableData copyWith({String? pubkey, DateTime? createdAt}) =>
-      FollowersTableData(
+  FollowersTableData copyWith({String? pubkey, DateTime? createdAt}) => FollowersTableData(
         pubkey: pubkey ?? this.pubkey,
         createdAt: createdAt ?? this.createdAt,
       );
@@ -582,8 +560,7 @@ class DatabaseAtV2 extends GeneratedDatabase {
   Iterable<TableInfo<Table, Object?>> get allTables =>
       allSchemaEntities.whereType<TableInfo<Table, Object?>>();
   @override
-  List<DatabaseSchemaEntity> get allSchemaEntities =>
-      [commentsTable, likesTable, followersTable];
+  List<DatabaseSchemaEntity> get allSchemaEntities => [commentsTable, likesTable, followersTable];
   @override
   int get schemaVersion => 2;
 }

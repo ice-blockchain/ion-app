@@ -3,17 +3,14 @@
 // ignore_for_file: type=lint
 import 'package:drift/drift.dart';
 
-class ConversationTable extends Table
-    with TableInfo<ConversationTable, ConversationTableData> {
+class ConversationTable extends Table with TableInfo<ConversationTable, ConversationTableData> {
   @override
   final GeneratedDatabase attachedDatabase;
   final String? _alias;
   ConversationTable(this.attachedDatabase, [this._alias]);
-  late final GeneratedColumn<String> id = GeneratedColumn<String>(
-      'id', aliasedName, false,
+  late final GeneratedColumn<String> id = GeneratedColumn<String>('id', aliasedName, false,
       type: DriftSqlType.string, requiredDuringInsert: true);
-  late final GeneratedColumn<int> type = GeneratedColumn<int>(
-      'type', aliasedName, false,
+  late final GeneratedColumn<int> type = GeneratedColumn<int>('type', aliasedName, false,
       type: DriftSqlType.int, requiredDuringInsert: true);
   late final GeneratedColumn<DateTime> joinedAt = GeneratedColumn<DateTime>(
       'joined_at', aliasedName, false,
@@ -22,19 +19,16 @@ class ConversationTable extends Table
       'is_archived', aliasedName, false,
       type: DriftSqlType.bool,
       requiredDuringInsert: false,
-      defaultConstraints:
-          GeneratedColumn.constraintIsAlways('CHECK ("is_archived" IN (0, 1))'),
+      defaultConstraints: GeneratedColumn.constraintIsAlways('CHECK ("is_archived" IN (0, 1))'),
       defaultValue: const CustomExpression('0'));
   late final GeneratedColumn<bool> isDeleted = GeneratedColumn<bool>(
       'is_deleted', aliasedName, false,
       type: DriftSqlType.bool,
       requiredDuringInsert: false,
-      defaultConstraints:
-          GeneratedColumn.constraintIsAlways('CHECK ("is_deleted" IN (0, 1))'),
+      defaultConstraints: GeneratedColumn.constraintIsAlways('CHECK ("is_deleted" IN (0, 1))'),
       defaultValue: const CustomExpression('0'));
   @override
-  List<GeneratedColumn> get $columns =>
-      [id, type, joinedAt, isArchived, isDeleted];
+  List<GeneratedColumn> get $columns => [id, type, joinedAt, isArchived, isDeleted];
   @override
   String get aliasedName => _alias ?? actualTableName;
   @override
@@ -46,10 +40,8 @@ class ConversationTable extends Table
   ConversationTableData map(Map<String, dynamic> data, {String? tablePrefix}) {
     final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
     return ConversationTableData(
-      id: attachedDatabase.typeMapping
-          .read(DriftSqlType.string, data['${effectivePrefix}id'])!,
-      type: attachedDatabase.typeMapping
-          .read(DriftSqlType.int, data['${effectivePrefix}type'])!,
+      id: attachedDatabase.typeMapping.read(DriftSqlType.string, data['${effectivePrefix}id'])!,
+      type: attachedDatabase.typeMapping.read(DriftSqlType.int, data['${effectivePrefix}type'])!,
       joinedAt: attachedDatabase.typeMapping
           .read(DriftSqlType.dateTime, data['${effectivePrefix}joined_at'])!,
       isArchived: attachedDatabase.typeMapping
@@ -65,8 +57,7 @@ class ConversationTable extends Table
   }
 }
 
-class ConversationTableData extends DataClass
-    implements Insertable<ConversationTableData> {
+class ConversationTableData extends DataClass implements Insertable<ConversationTableData> {
   final String id;
   final int type;
   final DateTime joinedAt;
@@ -99,8 +90,7 @@ class ConversationTableData extends DataClass
     );
   }
 
-  factory ConversationTableData.fromJson(Map<String, dynamic> json,
-      {ValueSerializer? serializer}) {
+  factory ConversationTableData.fromJson(Map<String, dynamic> json, {ValueSerializer? serializer}) {
     serializer ??= driftRuntimeOptions.defaultSerializer;
     return ConversationTableData(
       id: serializer.fromJson<String>(json['id']),
@@ -123,11 +113,7 @@ class ConversationTableData extends DataClass
   }
 
   ConversationTableData copyWith(
-          {String? id,
-          int? type,
-          DateTime? joinedAt,
-          bool? isArchived,
-          bool? isDeleted}) =>
+          {String? id, int? type, DateTime? joinedAt, bool? isArchived, bool? isDeleted}) =>
       ConversationTableData(
         id: id ?? this.id,
         type: type ?? this.type,
@@ -140,8 +126,7 @@ class ConversationTableData extends DataClass
       id: data.id.present ? data.id.value : this.id,
       type: data.type.present ? data.type.value : this.type,
       joinedAt: data.joinedAt.present ? data.joinedAt.value : this.joinedAt,
-      isArchived:
-          data.isArchived.present ? data.isArchived.value : this.isArchived,
+      isArchived: data.isArchived.present ? data.isArchived.value : this.isArchived,
       isDeleted: data.isDeleted.present ? data.isDeleted.value : this.isDeleted,
     );
   }
@@ -171,8 +156,7 @@ class ConversationTableData extends DataClass
           other.isDeleted == this.isDeleted);
 }
 
-class ConversationTableCompanion
-    extends UpdateCompanion<ConversationTableData> {
+class ConversationTableCompanion extends UpdateCompanion<ConversationTableData> {
   final Value<String> id;
   final Value<int> type;
   final Value<DateTime> joinedAt;
@@ -270,17 +254,14 @@ class ConversationTableCompanion
   }
 }
 
-class EventMessageTable extends Table
-    with TableInfo<EventMessageTable, EventMessageTableData> {
+class EventMessageTable extends Table with TableInfo<EventMessageTable, EventMessageTableData> {
   @override
   final GeneratedDatabase attachedDatabase;
   final String? _alias;
   EventMessageTable(this.attachedDatabase, [this._alias]);
-  late final GeneratedColumn<String> id = GeneratedColumn<String>(
-      'id', aliasedName, false,
+  late final GeneratedColumn<String> id = GeneratedColumn<String>('id', aliasedName, false,
       type: DriftSqlType.string, requiredDuringInsert: true);
-  late final GeneratedColumn<int> kind = GeneratedColumn<int>(
-      'kind', aliasedName, false,
+  late final GeneratedColumn<int> kind = GeneratedColumn<int>('kind', aliasedName, false,
       type: DriftSqlType.int, requiredDuringInsert: true);
   late final GeneratedColumn<String> sharedId = GeneratedColumn<String>(
       'shared_id', aliasedName, true,
@@ -288,21 +269,17 @@ class EventMessageTable extends Table
   late final GeneratedColumn<String> content = GeneratedColumn<String>(
       'content', aliasedName, false,
       type: DriftSqlType.string, requiredDuringInsert: true);
-  late final GeneratedColumn<String> pubkey = GeneratedColumn<String>(
-      'pubkey', aliasedName, false,
+  late final GeneratedColumn<String> pubkey = GeneratedColumn<String>('pubkey', aliasedName, false,
       type: DriftSqlType.string, requiredDuringInsert: true);
-  late final GeneratedColumn<String> tags = GeneratedColumn<String>(
-      'tags', aliasedName, false,
+  late final GeneratedColumn<String> tags = GeneratedColumn<String>('tags', aliasedName, false,
       type: DriftSqlType.string, requiredDuringInsert: true);
   late final GeneratedColumn<DateTime> createdAt = GeneratedColumn<DateTime>(
       'created_at', aliasedName, false,
       type: DriftSqlType.dateTime, requiredDuringInsert: true);
-  late final GeneratedColumn<String> sig = GeneratedColumn<String>(
-      'sig', aliasedName, true,
+  late final GeneratedColumn<String> sig = GeneratedColumn<String>('sig', aliasedName, true,
       type: DriftSqlType.string, requiredDuringInsert: false);
   @override
-  List<GeneratedColumn> get $columns =>
-      [id, kind, sharedId, content, pubkey, tags, createdAt, sig];
+  List<GeneratedColumn> get $columns => [id, kind, sharedId, content, pubkey, tags, createdAt, sig];
   @override
   String get aliasedName => _alias ?? actualTableName;
   @override
@@ -314,22 +291,18 @@ class EventMessageTable extends Table
   EventMessageTableData map(Map<String, dynamic> data, {String? tablePrefix}) {
     final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
     return EventMessageTableData(
-      id: attachedDatabase.typeMapping
-          .read(DriftSqlType.string, data['${effectivePrefix}id'])!,
-      kind: attachedDatabase.typeMapping
-          .read(DriftSqlType.int, data['${effectivePrefix}kind'])!,
+      id: attachedDatabase.typeMapping.read(DriftSqlType.string, data['${effectivePrefix}id'])!,
+      kind: attachedDatabase.typeMapping.read(DriftSqlType.int, data['${effectivePrefix}kind'])!,
       sharedId: attachedDatabase.typeMapping
           .read(DriftSqlType.string, data['${effectivePrefix}shared_id']),
       content: attachedDatabase.typeMapping
           .read(DriftSqlType.string, data['${effectivePrefix}content'])!,
-      pubkey: attachedDatabase.typeMapping
-          .read(DriftSqlType.string, data['${effectivePrefix}pubkey'])!,
-      tags: attachedDatabase.typeMapping
-          .read(DriftSqlType.string, data['${effectivePrefix}tags'])!,
+      pubkey:
+          attachedDatabase.typeMapping.read(DriftSqlType.string, data['${effectivePrefix}pubkey'])!,
+      tags: attachedDatabase.typeMapping.read(DriftSqlType.string, data['${effectivePrefix}tags'])!,
       createdAt: attachedDatabase.typeMapping
           .read(DriftSqlType.dateTime, data['${effectivePrefix}created_at'])!,
-      sig: attachedDatabase.typeMapping
-          .read(DriftSqlType.string, data['${effectivePrefix}sig']),
+      sig: attachedDatabase.typeMapping.read(DriftSqlType.string, data['${effectivePrefix}sig']),
     );
   }
 
@@ -339,8 +312,7 @@ class EventMessageTable extends Table
   }
 }
 
-class EventMessageTableData extends DataClass
-    implements Insertable<EventMessageTableData> {
+class EventMessageTableData extends DataClass implements Insertable<EventMessageTableData> {
   final String id;
   final int kind;
   final String? sharedId;
@@ -380,9 +352,7 @@ class EventMessageTableData extends DataClass
     return EventMessageTableCompanion(
       id: Value(id),
       kind: Value(kind),
-      sharedId: sharedId == null && nullToAbsent
-          ? const Value.absent()
-          : Value(sharedId),
+      sharedId: sharedId == null && nullToAbsent ? const Value.absent() : Value(sharedId),
       content: Value(content),
       pubkey: Value(pubkey),
       tags: Value(tags),
@@ -391,8 +361,7 @@ class EventMessageTableData extends DataClass
     );
   }
 
-  factory EventMessageTableData.fromJson(Map<String, dynamic> json,
-      {ValueSerializer? serializer}) {
+  factory EventMessageTableData.fromJson(Map<String, dynamic> json, {ValueSerializer? serializer}) {
     serializer ??= driftRuntimeOptions.defaultSerializer;
     return EventMessageTableData(
       id: serializer.fromJson<String>(json['id']),
@@ -468,8 +437,7 @@ class EventMessageTableData extends DataClass
   }
 
   @override
-  int get hashCode =>
-      Object.hash(id, kind, sharedId, content, pubkey, tags, createdAt, sig);
+  int get hashCode => Object.hash(id, kind, sharedId, content, pubkey, tags, createdAt, sig);
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
@@ -484,8 +452,7 @@ class EventMessageTableData extends DataClass
           other.sig == this.sig);
 }
 
-class EventMessageTableCompanion
-    extends UpdateCompanion<EventMessageTableData> {
+class EventMessageTableCompanion extends UpdateCompanion<EventMessageTableData> {
   final Value<String> id;
   final Value<int> kind;
   final Value<String?> sharedId;
@@ -629,20 +596,18 @@ class ConversationMessageTable extends Table
       'conversation_id', aliasedName, false,
       type: DriftSqlType.string,
       requiredDuringInsert: true,
-      defaultConstraints: GeneratedColumn.constraintIsAlways(
-          'REFERENCES conversation_table (id)'));
+      defaultConstraints: GeneratedColumn.constraintIsAlways('REFERENCES conversation_table (id)'));
   late final GeneratedColumn<String> eventMessageId = GeneratedColumn<String>(
       'event_message_id', aliasedName, false,
       type: DriftSqlType.string,
       requiredDuringInsert: true,
-      defaultConstraints: GeneratedColumn.constraintIsAlways(
-          'REFERENCES event_message_table (id)'));
+      defaultConstraints:
+          GeneratedColumn.constraintIsAlways('REFERENCES event_message_table (id)'));
   late final GeneratedColumn<String> sharedId = GeneratedColumn<String>(
       'shared_id', aliasedName, false,
       type: DriftSqlType.string, requiredDuringInsert: true);
   @override
-  List<GeneratedColumn> get $columns =>
-      [conversationId, eventMessageId, sharedId];
+  List<GeneratedColumn> get $columns => [conversationId, eventMessageId, sharedId];
   @override
   String get aliasedName => _alias ?? actualTableName;
   @override
@@ -651,14 +616,13 @@ class ConversationMessageTable extends Table
   @override
   Set<GeneratedColumn> get $primaryKey => {eventMessageId};
   @override
-  ConversationMessageTableData map(Map<String, dynamic> data,
-      {String? tablePrefix}) {
+  ConversationMessageTableData map(Map<String, dynamic> data, {String? tablePrefix}) {
     final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
     return ConversationMessageTableData(
-      conversationId: attachedDatabase.typeMapping.read(
-          DriftSqlType.string, data['${effectivePrefix}conversation_id'])!,
-      eventMessageId: attachedDatabase.typeMapping.read(
-          DriftSqlType.string, data['${effectivePrefix}event_message_id'])!,
+      conversationId: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}conversation_id'])!,
+      eventMessageId: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}event_message_id'])!,
       sharedId: attachedDatabase.typeMapping
           .read(DriftSqlType.string, data['${effectivePrefix}shared_id'])!,
     );
@@ -676,9 +640,7 @@ class ConversationMessageTableData extends DataClass
   final String eventMessageId;
   final String sharedId;
   const ConversationMessageTableData(
-      {required this.conversationId,
-      required this.eventMessageId,
-      required this.sharedId});
+      {required this.conversationId, required this.eventMessageId, required this.sharedId});
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
     final map = <String, Expression>{};
@@ -722,15 +684,10 @@ class ConversationMessageTableData extends DataClass
         eventMessageId: eventMessageId ?? this.eventMessageId,
         sharedId: sharedId ?? this.sharedId,
       );
-  ConversationMessageTableData copyWithCompanion(
-      ConversationMessageTableCompanion data) {
+  ConversationMessageTableData copyWithCompanion(ConversationMessageTableCompanion data) {
     return ConversationMessageTableData(
-      conversationId: data.conversationId.present
-          ? data.conversationId.value
-          : this.conversationId,
-      eventMessageId: data.eventMessageId.present
-          ? data.eventMessageId.value
-          : this.eventMessageId,
+      conversationId: data.conversationId.present ? data.conversationId.value : this.conversationId,
+      eventMessageId: data.eventMessageId.present ? data.eventMessageId.value : this.eventMessageId,
       sharedId: data.sharedId.present ? data.sharedId.value : this.sharedId,
     );
   }
@@ -756,8 +713,7 @@ class ConversationMessageTableData extends DataClass
           other.sharedId == this.sharedId);
 }
 
-class ConversationMessageTableCompanion
-    extends UpdateCompanion<ConversationMessageTableData> {
+class ConversationMessageTableCompanion extends UpdateCompanion<ConversationMessageTableData> {
   final Value<String> conversationId;
   final Value<String> eventMessageId;
   final Value<String> sharedId;
@@ -833,34 +789,28 @@ class ConversationMessageTableCompanion
   }
 }
 
-class MessageStatusTable extends Table
-    with TableInfo<MessageStatusTable, MessageStatusTableData> {
+class MessageStatusTable extends Table with TableInfo<MessageStatusTable, MessageStatusTableData> {
   @override
   final GeneratedDatabase attachedDatabase;
   final String? _alias;
   MessageStatusTable(this.attachedDatabase, [this._alias]);
-  late final GeneratedColumn<int> id = GeneratedColumn<int>(
-      'id', aliasedName, false,
+  late final GeneratedColumn<int> id = GeneratedColumn<int>('id', aliasedName, false,
       hasAutoIncrement: true,
       type: DriftSqlType.int,
       requiredDuringInsert: false,
-      defaultConstraints:
-          GeneratedColumn.constraintIsAlways('PRIMARY KEY AUTOINCREMENT'));
+      defaultConstraints: GeneratedColumn.constraintIsAlways('PRIMARY KEY AUTOINCREMENT'));
   late final GeneratedColumn<String> sharedId = GeneratedColumn<String>(
       'shared_id', aliasedName, false,
       type: DriftSqlType.string, requiredDuringInsert: true);
-  late final GeneratedColumn<String> pubkey = GeneratedColumn<String>(
-      'pubkey', aliasedName, false,
+  late final GeneratedColumn<String> pubkey = GeneratedColumn<String>('pubkey', aliasedName, false,
       type: DriftSqlType.string, requiredDuringInsert: true);
   late final GeneratedColumn<String> masterPubkey = GeneratedColumn<String>(
       'master_pubkey', aliasedName, false,
       type: DriftSqlType.string, requiredDuringInsert: true);
-  late final GeneratedColumn<int> status = GeneratedColumn<int>(
-      'status', aliasedName, false,
+  late final GeneratedColumn<int> status = GeneratedColumn<int>('status', aliasedName, false,
       type: DriftSqlType.int, requiredDuringInsert: true);
   @override
-  List<GeneratedColumn> get $columns =>
-      [id, sharedId, pubkey, masterPubkey, status];
+  List<GeneratedColumn> get $columns => [id, sharedId, pubkey, masterPubkey, status];
   @override
   String get aliasedName => _alias ?? actualTableName;
   @override
@@ -872,16 +822,15 @@ class MessageStatusTable extends Table
   MessageStatusTableData map(Map<String, dynamic> data, {String? tablePrefix}) {
     final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
     return MessageStatusTableData(
-      id: attachedDatabase.typeMapping
-          .read(DriftSqlType.int, data['${effectivePrefix}id'])!,
+      id: attachedDatabase.typeMapping.read(DriftSqlType.int, data['${effectivePrefix}id'])!,
       sharedId: attachedDatabase.typeMapping
           .read(DriftSqlType.string, data['${effectivePrefix}shared_id'])!,
-      pubkey: attachedDatabase.typeMapping
-          .read(DriftSqlType.string, data['${effectivePrefix}pubkey'])!,
+      pubkey:
+          attachedDatabase.typeMapping.read(DriftSqlType.string, data['${effectivePrefix}pubkey'])!,
       masterPubkey: attachedDatabase.typeMapping
           .read(DriftSqlType.string, data['${effectivePrefix}master_pubkey'])!,
-      status: attachedDatabase.typeMapping
-          .read(DriftSqlType.int, data['${effectivePrefix}status'])!,
+      status:
+          attachedDatabase.typeMapping.read(DriftSqlType.int, data['${effectivePrefix}status'])!,
     );
   }
 
@@ -891,8 +840,7 @@ class MessageStatusTable extends Table
   }
 }
 
-class MessageStatusTableData extends DataClass
-    implements Insertable<MessageStatusTableData> {
+class MessageStatusTableData extends DataClass implements Insertable<MessageStatusTableData> {
   final int id;
   final String sharedId;
   final String pubkey;
@@ -949,11 +897,7 @@ class MessageStatusTableData extends DataClass
   }
 
   MessageStatusTableData copyWith(
-          {int? id,
-          String? sharedId,
-          String? pubkey,
-          String? masterPubkey,
-          int? status}) =>
+          {int? id, String? sharedId, String? pubkey, String? masterPubkey, int? status}) =>
       MessageStatusTableData(
         id: id ?? this.id,
         sharedId: sharedId ?? this.sharedId,
@@ -966,9 +910,7 @@ class MessageStatusTableData extends DataClass
       id: data.id.present ? data.id.value : this.id,
       sharedId: data.sharedId.present ? data.sharedId.value : this.sharedId,
       pubkey: data.pubkey.present ? data.pubkey.value : this.pubkey,
-      masterPubkey: data.masterPubkey.present
-          ? data.masterPubkey.value
-          : this.masterPubkey,
+      masterPubkey: data.masterPubkey.present ? data.masterPubkey.value : this.masterPubkey,
       status: data.status.present ? data.status.value : this.status,
     );
   }
@@ -998,8 +940,7 @@ class MessageStatusTableData extends DataClass
           other.status == this.status);
 }
 
-class MessageStatusTableCompanion
-    extends UpdateCompanion<MessageStatusTableData> {
+class MessageStatusTableCompanion extends UpdateCompanion<MessageStatusTableData> {
   final Value<int> id;
   final Value<String> sharedId;
   final Value<String> pubkey;
@@ -1087,24 +1028,22 @@ class MessageStatusTableCompanion
   }
 }
 
-class ReactionTable extends Table
-    with TableInfo<ReactionTable, ReactionTableData> {
+class ReactionTable extends Table with TableInfo<ReactionTable, ReactionTableData> {
   @override
   final GeneratedDatabase attachedDatabase;
   final String? _alias;
   ReactionTable(this.attachedDatabase, [this._alias]);
-  late final GeneratedColumn<String> id = GeneratedColumn<String>(
-      'id', aliasedName, false,
+  late final GeneratedColumn<String> id = GeneratedColumn<String>('id', aliasedName, false,
       type: DriftSqlType.string,
       requiredDuringInsert: true,
-      defaultConstraints: GeneratedColumn.constraintIsAlways(
-          'REFERENCES event_message_table (id)'));
+      defaultConstraints:
+          GeneratedColumn.constraintIsAlways('REFERENCES event_message_table (id)'));
   late final GeneratedColumn<String> kind14SharedId = GeneratedColumn<String>(
       'kind14_shared_id', aliasedName, false,
       type: DriftSqlType.string,
       requiredDuringInsert: true,
-      defaultConstraints: GeneratedColumn.constraintIsAlways(
-          'REFERENCES event_message_table (shared_id)'));
+      defaultConstraints:
+          GeneratedColumn.constraintIsAlways('REFERENCES event_message_table (shared_id)'));
   late final GeneratedColumn<String> content = GeneratedColumn<String>(
       'content', aliasedName, false,
       type: DriftSqlType.string, requiredDuringInsert: true);
@@ -1115,12 +1054,10 @@ class ReactionTable extends Table
       'is_deleted', aliasedName, false,
       type: DriftSqlType.bool,
       requiredDuringInsert: false,
-      defaultConstraints:
-          GeneratedColumn.constraintIsAlways('CHECK ("is_deleted" IN (0, 1))'),
+      defaultConstraints: GeneratedColumn.constraintIsAlways('CHECK ("is_deleted" IN (0, 1))'),
       defaultValue: const CustomExpression('0'));
   @override
-  List<GeneratedColumn> get $columns =>
-      [id, kind14SharedId, content, masterPubkey, isDeleted];
+  List<GeneratedColumn> get $columns => [id, kind14SharedId, content, masterPubkey, isDeleted];
   @override
   String get aliasedName => _alias ?? actualTableName;
   @override
@@ -1132,10 +1069,9 @@ class ReactionTable extends Table
   ReactionTableData map(Map<String, dynamic> data, {String? tablePrefix}) {
     final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
     return ReactionTableData(
-      id: attachedDatabase.typeMapping
-          .read(DriftSqlType.string, data['${effectivePrefix}id'])!,
-      kind14SharedId: attachedDatabase.typeMapping.read(
-          DriftSqlType.string, data['${effectivePrefix}kind14_shared_id'])!,
+      id: attachedDatabase.typeMapping.read(DriftSqlType.string, data['${effectivePrefix}id'])!,
+      kind14SharedId: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}kind14_shared_id'])!,
       content: attachedDatabase.typeMapping
           .read(DriftSqlType.string, data['${effectivePrefix}content'])!,
       masterPubkey: attachedDatabase.typeMapping
@@ -1151,8 +1087,7 @@ class ReactionTable extends Table
   }
 }
 
-class ReactionTableData extends DataClass
-    implements Insertable<ReactionTableData> {
+class ReactionTableData extends DataClass implements Insertable<ReactionTableData> {
   final String id;
   final String kind14SharedId;
   final String content;
@@ -1185,8 +1120,7 @@ class ReactionTableData extends DataClass
     );
   }
 
-  factory ReactionTableData.fromJson(Map<String, dynamic> json,
-      {ValueSerializer? serializer}) {
+  factory ReactionTableData.fromJson(Map<String, dynamic> json, {ValueSerializer? serializer}) {
     serializer ??= driftRuntimeOptions.defaultSerializer;
     return ReactionTableData(
       id: serializer.fromJson<String>(json['id']),
@@ -1224,13 +1158,9 @@ class ReactionTableData extends DataClass
   ReactionTableData copyWithCompanion(ReactionTableCompanion data) {
     return ReactionTableData(
       id: data.id.present ? data.id.value : this.id,
-      kind14SharedId: data.kind14SharedId.present
-          ? data.kind14SharedId.value
-          : this.kind14SharedId,
+      kind14SharedId: data.kind14SharedId.present ? data.kind14SharedId.value : this.kind14SharedId,
       content: data.content.present ? data.content.value : this.content,
-      masterPubkey: data.masterPubkey.present
-          ? data.masterPubkey.value
-          : this.masterPubkey,
+      masterPubkey: data.masterPubkey.present ? data.masterPubkey.value : this.masterPubkey,
       isDeleted: data.isDeleted.present ? data.isDeleted.value : this.isDeleted,
     );
   }
@@ -1248,8 +1178,7 @@ class ReactionTableData extends DataClass
   }
 
   @override
-  int get hashCode =>
-      Object.hash(id, kind14SharedId, content, masterPubkey, isDeleted);
+  int get hashCode => Object.hash(id, kind14SharedId, content, masterPubkey, isDeleted);
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
@@ -1360,21 +1289,17 @@ class ReactionTableCompanion extends UpdateCompanion<ReactionTableData> {
   }
 }
 
-class MessageMediaTable extends Table
-    with TableInfo<MessageMediaTable, MessageMediaTableData> {
+class MessageMediaTable extends Table with TableInfo<MessageMediaTable, MessageMediaTableData> {
   @override
   final GeneratedDatabase attachedDatabase;
   final String? _alias;
   MessageMediaTable(this.attachedDatabase, [this._alias]);
-  late final GeneratedColumn<int> id = GeneratedColumn<int>(
-      'id', aliasedName, false,
+  late final GeneratedColumn<int> id = GeneratedColumn<int>('id', aliasedName, false,
       hasAutoIncrement: true,
       type: DriftSqlType.int,
       requiredDuringInsert: false,
-      defaultConstraints:
-          GeneratedColumn.constraintIsAlways('PRIMARY KEY AUTOINCREMENT'));
-  late final GeneratedColumn<int> status = GeneratedColumn<int>(
-      'status', aliasedName, false,
+      defaultConstraints: GeneratedColumn.constraintIsAlways('PRIMARY KEY AUTOINCREMENT'));
+  late final GeneratedColumn<int> status = GeneratedColumn<int>('status', aliasedName, false,
       type: DriftSqlType.int, requiredDuringInsert: true);
   late final GeneratedColumn<String> remoteUrl = GeneratedColumn<String>(
       'remote_url', aliasedName, true,
@@ -1386,11 +1311,10 @@ class MessageMediaTable extends Table
       'event_message_id', aliasedName, false,
       type: DriftSqlType.string,
       requiredDuringInsert: true,
-      defaultConstraints: GeneratedColumn.constraintIsAlways(
-          'REFERENCES event_message_table (id)'));
+      defaultConstraints:
+          GeneratedColumn.constraintIsAlways('REFERENCES event_message_table (id)'));
   @override
-  List<GeneratedColumn> get $columns =>
-      [id, status, remoteUrl, cacheKey, eventMessageId];
+  List<GeneratedColumn> get $columns => [id, status, remoteUrl, cacheKey, eventMessageId];
   @override
   String get aliasedName => _alias ?? actualTableName;
   @override
@@ -1402,16 +1326,15 @@ class MessageMediaTable extends Table
   MessageMediaTableData map(Map<String, dynamic> data, {String? tablePrefix}) {
     final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
     return MessageMediaTableData(
-      id: attachedDatabase.typeMapping
-          .read(DriftSqlType.int, data['${effectivePrefix}id'])!,
-      status: attachedDatabase.typeMapping
-          .read(DriftSqlType.int, data['${effectivePrefix}status'])!,
+      id: attachedDatabase.typeMapping.read(DriftSqlType.int, data['${effectivePrefix}id'])!,
+      status:
+          attachedDatabase.typeMapping.read(DriftSqlType.int, data['${effectivePrefix}status'])!,
       remoteUrl: attachedDatabase.typeMapping
           .read(DriftSqlType.string, data['${effectivePrefix}remote_url']),
       cacheKey: attachedDatabase.typeMapping
           .read(DriftSqlType.string, data['${effectivePrefix}cache_key']),
-      eventMessageId: attachedDatabase.typeMapping.read(
-          DriftSqlType.string, data['${effectivePrefix}event_message_id'])!,
+      eventMessageId: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}event_message_id'])!,
     );
   }
 
@@ -1421,8 +1344,7 @@ class MessageMediaTable extends Table
   }
 }
 
-class MessageMediaTableData extends DataClass
-    implements Insertable<MessageMediaTableData> {
+class MessageMediaTableData extends DataClass implements Insertable<MessageMediaTableData> {
   final int id;
   final int status;
   final String? remoteUrl;
@@ -1453,18 +1375,13 @@ class MessageMediaTableData extends DataClass
     return MessageMediaTableCompanion(
       id: Value(id),
       status: Value(status),
-      remoteUrl: remoteUrl == null && nullToAbsent
-          ? const Value.absent()
-          : Value(remoteUrl),
-      cacheKey: cacheKey == null && nullToAbsent
-          ? const Value.absent()
-          : Value(cacheKey),
+      remoteUrl: remoteUrl == null && nullToAbsent ? const Value.absent() : Value(remoteUrl),
+      cacheKey: cacheKey == null && nullToAbsent ? const Value.absent() : Value(cacheKey),
       eventMessageId: Value(eventMessageId),
     );
   }
 
-  factory MessageMediaTableData.fromJson(Map<String, dynamic> json,
-      {ValueSerializer? serializer}) {
+  factory MessageMediaTableData.fromJson(Map<String, dynamic> json, {ValueSerializer? serializer}) {
     serializer ??= driftRuntimeOptions.defaultSerializer;
     return MessageMediaTableData(
       id: serializer.fromJson<int>(json['id']),
@@ -1505,9 +1422,7 @@ class MessageMediaTableData extends DataClass
       status: data.status.present ? data.status.value : this.status,
       remoteUrl: data.remoteUrl.present ? data.remoteUrl.value : this.remoteUrl,
       cacheKey: data.cacheKey.present ? data.cacheKey.value : this.cacheKey,
-      eventMessageId: data.eventMessageId.present
-          ? data.eventMessageId.value
-          : this.eventMessageId,
+      eventMessageId: data.eventMessageId.present ? data.eventMessageId.value : this.eventMessageId,
     );
   }
 
@@ -1524,8 +1439,7 @@ class MessageMediaTableData extends DataClass
   }
 
   @override
-  int get hashCode =>
-      Object.hash(id, status, remoteUrl, cacheKey, eventMessageId);
+  int get hashCode => Object.hash(id, status, remoteUrl, cacheKey, eventMessageId);
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
@@ -1537,8 +1451,7 @@ class MessageMediaTableData extends DataClass
           other.eventMessageId == this.eventMessageId);
 }
 
-class MessageMediaTableCompanion
-    extends UpdateCompanion<MessageMediaTableData> {
+class MessageMediaTableCompanion extends UpdateCompanion<MessageMediaTableData> {
   final Value<int> id;
   final Value<int> status;
   final Value<String?> remoteUrl;
@@ -1628,8 +1541,7 @@ class DatabaseAtV6 extends GeneratedDatabase {
   DatabaseAtV6(QueryExecutor e) : super(e);
   late final ConversationTable conversationTable = ConversationTable(this);
   late final EventMessageTable eventMessageTable = EventMessageTable(this);
-  late final ConversationMessageTable conversationMessageTable =
-      ConversationMessageTable(this);
+  late final ConversationMessageTable conversationMessageTable = ConversationMessageTable(this);
   late final MessageStatusTable messageStatusTable = MessageStatusTable(this);
   late final ReactionTable reactionTable = ReactionTable(this);
   late final MessageMediaTable messageMediaTable = MessageMediaTable(this);

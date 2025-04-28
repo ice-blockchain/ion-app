@@ -8,20 +8,17 @@ class CoinsTable extends Table with TableInfo<CoinsTable, CoinsTableData> {
   final GeneratedDatabase attachedDatabase;
   final String? _alias;
   CoinsTable(this.attachedDatabase, [this._alias]);
-  late final GeneratedColumn<String> id = GeneratedColumn<String>(
-      'id', aliasedName, false,
+  late final GeneratedColumn<String> id = GeneratedColumn<String>('id', aliasedName, false,
       type: DriftSqlType.string, requiredDuringInsert: true);
   late final GeneratedColumn<String> contractAddress = GeneratedColumn<String>(
       'contract_address', aliasedName, false,
       type: DriftSqlType.string, requiredDuringInsert: true);
-  late final GeneratedColumn<int> decimals = GeneratedColumn<int>(
-      'decimals', aliasedName, false,
+  late final GeneratedColumn<int> decimals = GeneratedColumn<int>('decimals', aliasedName, false,
       type: DriftSqlType.int, requiredDuringInsert: true);
   late final GeneratedColumn<String> iconURL = GeneratedColumn<String>(
       'icon_u_r_l', aliasedName, false,
       type: DriftSqlType.string, requiredDuringInsert: true);
-  late final GeneratedColumn<String> name = GeneratedColumn<String>(
-      'name', aliasedName, false,
+  late final GeneratedColumn<String> name = GeneratedColumn<String>('name', aliasedName, false,
       type: DriftSqlType.string, requiredDuringInsert: true);
   late final GeneratedColumn<String> networkId = GeneratedColumn<String>(
       'network_id', aliasedName, false,
@@ -29,8 +26,7 @@ class CoinsTable extends Table with TableInfo<CoinsTable, CoinsTableData> {
   late final GeneratedColumn<double> priceUSD = GeneratedColumn<double>(
       'price_u_s_d', aliasedName, false,
       type: DriftSqlType.double, requiredDuringInsert: true);
-  late final GeneratedColumn<String> symbol = GeneratedColumn<String>(
-      'symbol', aliasedName, false,
+  late final GeneratedColumn<String> symbol = GeneratedColumn<String>('symbol', aliasedName, false,
       type: DriftSqlType.string, requiredDuringInsert: true);
   late final GeneratedColumn<String> symbolGroup = GeneratedColumn<String>(
       'symbol_group', aliasedName, false,
@@ -62,22 +58,20 @@ class CoinsTable extends Table with TableInfo<CoinsTable, CoinsTableData> {
   CoinsTableData map(Map<String, dynamic> data, {String? tablePrefix}) {
     final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
     return CoinsTableData(
-      id: attachedDatabase.typeMapping
-          .read(DriftSqlType.string, data['${effectivePrefix}id'])!,
-      contractAddress: attachedDatabase.typeMapping.read(
-          DriftSqlType.string, data['${effectivePrefix}contract_address'])!,
-      decimals: attachedDatabase.typeMapping
-          .read(DriftSqlType.int, data['${effectivePrefix}decimals'])!,
+      id: attachedDatabase.typeMapping.read(DriftSqlType.string, data['${effectivePrefix}id'])!,
+      contractAddress: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}contract_address'])!,
+      decimals:
+          attachedDatabase.typeMapping.read(DriftSqlType.int, data['${effectivePrefix}decimals'])!,
       iconURL: attachedDatabase.typeMapping
           .read(DriftSqlType.string, data['${effectivePrefix}icon_u_r_l'])!,
-      name: attachedDatabase.typeMapping
-          .read(DriftSqlType.string, data['${effectivePrefix}name'])!,
+      name: attachedDatabase.typeMapping.read(DriftSqlType.string, data['${effectivePrefix}name'])!,
       networkId: attachedDatabase.typeMapping
           .read(DriftSqlType.string, data['${effectivePrefix}network_id'])!,
       priceUSD: attachedDatabase.typeMapping
           .read(DriftSqlType.double, data['${effectivePrefix}price_u_s_d'])!,
-      symbol: attachedDatabase.typeMapping
-          .read(DriftSqlType.string, data['${effectivePrefix}symbol'])!,
+      symbol:
+          attachedDatabase.typeMapping.read(DriftSqlType.string, data['${effectivePrefix}symbol'])!,
       symbolGroup: attachedDatabase.typeMapping
           .read(DriftSqlType.string, data['${effectivePrefix}symbol_group'])!,
       syncFrequency: attachedDatabase.typeMapping
@@ -144,8 +138,7 @@ class CoinsTableData extends DataClass implements Insertable<CoinsTableData> {
     );
   }
 
-  factory CoinsTableData.fromJson(Map<String, dynamic> json,
-      {ValueSerializer? serializer}) {
+  factory CoinsTableData.fromJson(Map<String, dynamic> json, {ValueSerializer? serializer}) {
     serializer ??= driftRuntimeOptions.defaultSerializer;
     return CoinsTableData(
       id: serializer.fromJson<String>(json['id']),
@@ -203,20 +196,16 @@ class CoinsTableData extends DataClass implements Insertable<CoinsTableData> {
   CoinsTableData copyWithCompanion(CoinsTableCompanion data) {
     return CoinsTableData(
       id: data.id.present ? data.id.value : this.id,
-      contractAddress: data.contractAddress.present
-          ? data.contractAddress.value
-          : this.contractAddress,
+      contractAddress:
+          data.contractAddress.present ? data.contractAddress.value : this.contractAddress,
       decimals: data.decimals.present ? data.decimals.value : this.decimals,
       iconURL: data.iconURL.present ? data.iconURL.value : this.iconURL,
       name: data.name.present ? data.name.value : this.name,
       networkId: data.networkId.present ? data.networkId.value : this.networkId,
       priceUSD: data.priceUSD.present ? data.priceUSD.value : this.priceUSD,
       symbol: data.symbol.present ? data.symbol.value : this.symbol,
-      symbolGroup:
-          data.symbolGroup.present ? data.symbolGroup.value : this.symbolGroup,
-      syncFrequency: data.syncFrequency.present
-          ? data.syncFrequency.value
-          : this.syncFrequency,
+      symbolGroup: data.symbolGroup.present ? data.symbolGroup.value : this.symbolGroup,
+      syncFrequency: data.syncFrequency.present ? data.syncFrequency.value : this.syncFrequency,
     );
   }
 
@@ -238,8 +227,8 @@ class CoinsTableData extends DataClass implements Insertable<CoinsTableData> {
   }
 
   @override
-  int get hashCode => Object.hash(id, contractAddress, decimals, iconURL, name,
-      networkId, priceUSD, symbol, symbolGroup, syncFrequency);
+  int get hashCode => Object.hash(id, contractAddress, decimals, iconURL, name, networkId, priceUSD,
+      symbol, symbolGroup, syncFrequency);
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
@@ -416,14 +405,12 @@ class CoinsTableCompanion extends UpdateCompanion<CoinsTableData> {
   }
 }
 
-class SyncCoinsTable extends Table
-    with TableInfo<SyncCoinsTable, SyncCoinsTableData> {
+class SyncCoinsTable extends Table with TableInfo<SyncCoinsTable, SyncCoinsTableData> {
   @override
   final GeneratedDatabase attachedDatabase;
   final String? _alias;
   SyncCoinsTable(this.attachedDatabase, [this._alias]);
-  late final GeneratedColumn<String> coinId = GeneratedColumn<String>(
-      'coin_id', aliasedName, false,
+  late final GeneratedColumn<String> coinId = GeneratedColumn<String>('coin_id', aliasedName, false,
       type: DriftSqlType.string, requiredDuringInsert: true);
   late final GeneratedColumn<DateTime> syncAfter = GeneratedColumn<DateTime>(
       'sync_after', aliasedName, false,
@@ -454,8 +441,7 @@ class SyncCoinsTable extends Table
   }
 }
 
-class SyncCoinsTableData extends DataClass
-    implements Insertable<SyncCoinsTableData> {
+class SyncCoinsTableData extends DataClass implements Insertable<SyncCoinsTableData> {
   final String coinId;
   final DateTime syncAfter;
   const SyncCoinsTableData({required this.coinId, required this.syncAfter});
@@ -474,8 +460,7 @@ class SyncCoinsTableData extends DataClass
     );
   }
 
-  factory SyncCoinsTableData.fromJson(Map<String, dynamic> json,
-      {ValueSerializer? serializer}) {
+  factory SyncCoinsTableData.fromJson(Map<String, dynamic> json, {ValueSerializer? serializer}) {
     serializer ??= driftRuntimeOptions.defaultSerializer;
     return SyncCoinsTableData(
       coinId: serializer.fromJson<String>(json['coin_id']),
@@ -491,8 +476,7 @@ class SyncCoinsTableData extends DataClass
     };
   }
 
-  SyncCoinsTableData copyWith({String? coinId, DateTime? syncAfter}) =>
-      SyncCoinsTableData(
+  SyncCoinsTableData copyWith({String? coinId, DateTime? syncAfter}) => SyncCoinsTableData(
         coinId: coinId ?? this.coinId,
         syncAfter: syncAfter ?? this.syncAfter,
       );
@@ -584,24 +568,20 @@ class SyncCoinsTableCompanion extends UpdateCompanion<SyncCoinsTableData> {
   }
 }
 
-class NetworksTable extends Table
-    with TableInfo<NetworksTable, NetworksTableData> {
+class NetworksTable extends Table with TableInfo<NetworksTable, NetworksTableData> {
   @override
   final GeneratedDatabase attachedDatabase;
   final String? _alias;
   NetworksTable(this.attachedDatabase, [this._alias]);
-  late final GeneratedColumn<String> id = GeneratedColumn<String>(
-      'id', aliasedName, false,
+  late final GeneratedColumn<String> id = GeneratedColumn<String>('id', aliasedName, false,
       type: DriftSqlType.string, requiredDuringInsert: true);
-  late final GeneratedColumn<String> image = GeneratedColumn<String>(
-      'image', aliasedName, false,
+  late final GeneratedColumn<String> image = GeneratedColumn<String>('image', aliasedName, false,
       type: DriftSqlType.string, requiredDuringInsert: true);
   late final GeneratedColumn<bool> isTestnet = GeneratedColumn<bool>(
       'is_testnet', aliasedName, false,
       type: DriftSqlType.bool,
       requiredDuringInsert: true,
-      defaultConstraints:
-          GeneratedColumn.constraintIsAlways('CHECK ("is_testnet" IN (0, 1))'));
+      defaultConstraints: GeneratedColumn.constraintIsAlways('CHECK ("is_testnet" IN (0, 1))'));
   late final GeneratedColumn<String> displayName = GeneratedColumn<String>(
       'display_name', aliasedName, false,
       type: DriftSqlType.string, requiredDuringInsert: true);
@@ -609,8 +589,7 @@ class NetworksTable extends Table
       'explorer_url', aliasedName, false,
       type: DriftSqlType.string, requiredDuringInsert: true);
   @override
-  List<GeneratedColumn> get $columns =>
-      [id, image, isTestnet, displayName, explorerUrl];
+  List<GeneratedColumn> get $columns => [id, image, isTestnet, displayName, explorerUrl];
   @override
   String get aliasedName => _alias ?? actualTableName;
   @override
@@ -622,10 +601,9 @@ class NetworksTable extends Table
   NetworksTableData map(Map<String, dynamic> data, {String? tablePrefix}) {
     final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
     return NetworksTableData(
-      id: attachedDatabase.typeMapping
-          .read(DriftSqlType.string, data['${effectivePrefix}id'])!,
-      image: attachedDatabase.typeMapping
-          .read(DriftSqlType.string, data['${effectivePrefix}image'])!,
+      id: attachedDatabase.typeMapping.read(DriftSqlType.string, data['${effectivePrefix}id'])!,
+      image:
+          attachedDatabase.typeMapping.read(DriftSqlType.string, data['${effectivePrefix}image'])!,
       isTestnet: attachedDatabase.typeMapping
           .read(DriftSqlType.bool, data['${effectivePrefix}is_testnet'])!,
       displayName: attachedDatabase.typeMapping
@@ -641,8 +619,7 @@ class NetworksTable extends Table
   }
 }
 
-class NetworksTableData extends DataClass
-    implements Insertable<NetworksTableData> {
+class NetworksTableData extends DataClass implements Insertable<NetworksTableData> {
   final String id;
   final String image;
   final bool isTestnet;
@@ -675,8 +652,7 @@ class NetworksTableData extends DataClass
     );
   }
 
-  factory NetworksTableData.fromJson(Map<String, dynamic> json,
-      {ValueSerializer? serializer}) {
+  factory NetworksTableData.fromJson(Map<String, dynamic> json, {ValueSerializer? serializer}) {
     serializer ??= driftRuntimeOptions.defaultSerializer;
     return NetworksTableData(
       id: serializer.fromJson<String>(json['id']),
@@ -699,11 +675,7 @@ class NetworksTableData extends DataClass
   }
 
   NetworksTableData copyWith(
-          {String? id,
-          String? image,
-          bool? isTestnet,
-          String? displayName,
-          String? explorerUrl}) =>
+          {String? id, String? image, bool? isTestnet, String? displayName, String? explorerUrl}) =>
       NetworksTableData(
         id: id ?? this.id,
         image: image ?? this.image,
@@ -716,10 +688,8 @@ class NetworksTableData extends DataClass
       id: data.id.present ? data.id.value : this.id,
       image: data.image.present ? data.image.value : this.image,
       isTestnet: data.isTestnet.present ? data.isTestnet.value : this.isTestnet,
-      displayName:
-          data.displayName.present ? data.displayName.value : this.displayName,
-      explorerUrl:
-          data.explorerUrl.present ? data.explorerUrl.value : this.explorerUrl,
+      displayName: data.displayName.present ? data.displayName.value : this.displayName,
+      explorerUrl: data.explorerUrl.present ? data.explorerUrl.value : this.explorerUrl,
     );
   }
 
@@ -736,8 +706,7 @@ class NetworksTableData extends DataClass
   }
 
   @override
-  int get hashCode =>
-      Object.hash(id, image, isTestnet, displayName, explorerUrl);
+  int get hashCode => Object.hash(id, image, isTestnet, displayName, explorerUrl);
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
@@ -849,66 +818,59 @@ class NetworksTableCompanion extends UpdateCompanion<NetworksTableData> {
   }
 }
 
-class TransactionsTable extends Table
-    with TableInfo<TransactionsTable, TransactionsTableData> {
+class TransactionsTable extends Table with TableInfo<TransactionsTable, TransactionsTableData> {
   @override
   final GeneratedDatabase attachedDatabase;
   final String? _alias;
   TransactionsTable(this.attachedDatabase, [this._alias]);
-  late final GeneratedColumn<String> type = GeneratedColumn<String>(
-      'type', aliasedName, false,
+  late final GeneratedColumn<String> type = GeneratedColumn<String>('type', aliasedName, false,
       type: DriftSqlType.string, requiredDuringInsert: true);
-  late final GeneratedColumn<String> txHash = GeneratedColumn<String>(
-      'tx_hash', aliasedName, false,
+  late final GeneratedColumn<String> txHash = GeneratedColumn<String>('tx_hash', aliasedName, false,
       type: DriftSqlType.string, requiredDuringInsert: true);
   late final GeneratedColumn<String> networkId = GeneratedColumn<String>(
       'network_id', aliasedName, false,
       type: DriftSqlType.string, requiredDuringInsert: true);
-  late final GeneratedColumn<String> coinId = GeneratedColumn<String>(
-      'coin_id', aliasedName, true,
+  late final GeneratedColumn<String> coinId = GeneratedColumn<String>('coin_id', aliasedName, true,
       type: DriftSqlType.string, requiredDuringInsert: false);
-  late final GeneratedColumn<String> senderWalletAddress =
-      GeneratedColumn<String>('sender_wallet_address', aliasedName, false,
-          type: DriftSqlType.string, requiredDuringInsert: true);
-  late final GeneratedColumn<String> receiverWalletAddress =
-      GeneratedColumn<String>('receiver_wallet_address', aliasedName, false,
-          type: DriftSqlType.string, requiredDuringInsert: true);
-  late final GeneratedColumn<String> id = GeneratedColumn<String>(
-      'id', aliasedName, true,
+  late final GeneratedColumn<String> senderWalletAddress = GeneratedColumn<String>(
+      'sender_wallet_address', aliasedName, false,
+      type: DriftSqlType.string, requiredDuringInsert: true);
+  late final GeneratedColumn<String> receiverWalletAddress = GeneratedColumn<String>(
+      'receiver_wallet_address', aliasedName, false,
+      type: DriftSqlType.string, requiredDuringInsert: true);
+  late final GeneratedColumn<String> id = GeneratedColumn<String>('id', aliasedName, true,
       type: DriftSqlType.string, requiredDuringInsert: false);
-  late final GeneratedColumn<String> fee = GeneratedColumn<String>(
-      'fee', aliasedName, true,
+  late final GeneratedColumn<String> fee = GeneratedColumn<String>('fee', aliasedName, true,
       type: DriftSqlType.string, requiredDuringInsert: false);
-  late final GeneratedColumn<String> status = GeneratedColumn<String>(
-      'status', aliasedName, true,
+  late final GeneratedColumn<String> status = GeneratedColumn<String>('status', aliasedName, true,
       type: DriftSqlType.string, requiredDuringInsert: false);
   late final GeneratedColumn<String> nativeCoinId = GeneratedColumn<String>(
       'native_coin_id', aliasedName, true,
       type: DriftSqlType.string, requiredDuringInsert: false);
-  late final GeneratedColumn<DateTime> dateConfirmed =
-      GeneratedColumn<DateTime>('date_confirmed', aliasedName, true,
-          type: DriftSqlType.dateTime, requiredDuringInsert: false);
-  late final GeneratedColumn<DateTime> dateRequested =
-      GeneratedColumn<DateTime>('date_requested', aliasedName, true,
-          type: DriftSqlType.dateTime, requiredDuringInsert: false);
-  late final GeneratedColumn<DateTime> createdAtInRelay =
-      GeneratedColumn<DateTime>('created_at_in_relay', aliasedName, true,
-          type: DriftSqlType.dateTime, requiredDuringInsert: false);
+  late final GeneratedColumn<DateTime> dateConfirmed = GeneratedColumn<DateTime>(
+      'date_confirmed', aliasedName, true,
+      type: DriftSqlType.dateTime, requiredDuringInsert: false);
+  late final GeneratedColumn<DateTime> dateRequested = GeneratedColumn<DateTime>(
+      'date_requested', aliasedName, true,
+      type: DriftSqlType.dateTime, requiredDuringInsert: false);
+  late final GeneratedColumn<DateTime> createdAtInRelay = GeneratedColumn<DateTime>(
+      'created_at_in_relay', aliasedName, true,
+      type: DriftSqlType.dateTime, requiredDuringInsert: false);
   late final GeneratedColumn<String> userPubkey = GeneratedColumn<String>(
       'user_pubkey', aliasedName, true,
       type: DriftSqlType.string, requiredDuringInsert: false);
   late final GeneratedColumn<String> assetId = GeneratedColumn<String>(
       'asset_id', aliasedName, true,
       type: DriftSqlType.string, requiredDuringInsert: false);
-  late final GeneratedColumn<String> transferredAmount =
-      GeneratedColumn<String>('transferred_amount', aliasedName, true,
-          type: DriftSqlType.string, requiredDuringInsert: false);
-  late final GeneratedColumn<double> transferredAmountUsd =
-      GeneratedColumn<double>('transferred_amount_usd', aliasedName, true,
-          type: DriftSqlType.double, requiredDuringInsert: false);
-  late final GeneratedColumn<String> balanceBeforeTransfer =
-      GeneratedColumn<String>('balance_before_transfer', aliasedName, true,
-          type: DriftSqlType.string, requiredDuringInsert: false);
+  late final GeneratedColumn<String> transferredAmount = GeneratedColumn<String>(
+      'transferred_amount', aliasedName, true,
+      type: DriftSqlType.string, requiredDuringInsert: false);
+  late final GeneratedColumn<double> transferredAmountUsd = GeneratedColumn<double>(
+      'transferred_amount_usd', aliasedName, true,
+      type: DriftSqlType.double, requiredDuringInsert: false);
+  late final GeneratedColumn<String> balanceBeforeTransfer = GeneratedColumn<String>(
+      'balance_before_transfer', aliasedName, true,
+      type: DriftSqlType.string, requiredDuringInsert: false);
   @override
   List<GeneratedColumn> get $columns => [
         type,
@@ -941,46 +903,39 @@ class TransactionsTable extends Table
   TransactionsTableData map(Map<String, dynamic> data, {String? tablePrefix}) {
     final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
     return TransactionsTableData(
-      type: attachedDatabase.typeMapping
-          .read(DriftSqlType.string, data['${effectivePrefix}type'])!,
+      type: attachedDatabase.typeMapping.read(DriftSqlType.string, data['${effectivePrefix}type'])!,
       txHash: attachedDatabase.typeMapping
           .read(DriftSqlType.string, data['${effectivePrefix}tx_hash'])!,
       networkId: attachedDatabase.typeMapping
           .read(DriftSqlType.string, data['${effectivePrefix}network_id'])!,
-      coinId: attachedDatabase.typeMapping
-          .read(DriftSqlType.string, data['${effectivePrefix}coin_id']),
-      senderWalletAddress: attachedDatabase.typeMapping.read(
-          DriftSqlType.string,
-          data['${effectivePrefix}sender_wallet_address'])!,
-      receiverWalletAddress: attachedDatabase.typeMapping.read(
-          DriftSqlType.string,
-          data['${effectivePrefix}receiver_wallet_address'])!,
-      id: attachedDatabase.typeMapping
-          .read(DriftSqlType.string, data['${effectivePrefix}id']),
-      fee: attachedDatabase.typeMapping
-          .read(DriftSqlType.string, data['${effectivePrefix}fee']),
-      status: attachedDatabase.typeMapping
-          .read(DriftSqlType.string, data['${effectivePrefix}status']),
+      coinId:
+          attachedDatabase.typeMapping.read(DriftSqlType.string, data['${effectivePrefix}coin_id']),
+      senderWalletAddress: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}sender_wallet_address'])!,
+      receiverWalletAddress: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}receiver_wallet_address'])!,
+      id: attachedDatabase.typeMapping.read(DriftSqlType.string, data['${effectivePrefix}id']),
+      fee: attachedDatabase.typeMapping.read(DriftSqlType.string, data['${effectivePrefix}fee']),
+      status:
+          attachedDatabase.typeMapping.read(DriftSqlType.string, data['${effectivePrefix}status']),
       nativeCoinId: attachedDatabase.typeMapping
           .read(DriftSqlType.string, data['${effectivePrefix}native_coin_id']),
-      dateConfirmed: attachedDatabase.typeMapping.read(
-          DriftSqlType.dateTime, data['${effectivePrefix}date_confirmed']),
-      dateRequested: attachedDatabase.typeMapping.read(
-          DriftSqlType.dateTime, data['${effectivePrefix}date_requested']),
-      createdAtInRelay: attachedDatabase.typeMapping.read(
-          DriftSqlType.dateTime, data['${effectivePrefix}created_at_in_relay']),
+      dateConfirmed: attachedDatabase.typeMapping
+          .read(DriftSqlType.dateTime, data['${effectivePrefix}date_confirmed']),
+      dateRequested: attachedDatabase.typeMapping
+          .read(DriftSqlType.dateTime, data['${effectivePrefix}date_requested']),
+      createdAtInRelay: attachedDatabase.typeMapping
+          .read(DriftSqlType.dateTime, data['${effectivePrefix}created_at_in_relay']),
       userPubkey: attachedDatabase.typeMapping
           .read(DriftSqlType.string, data['${effectivePrefix}user_pubkey']),
       assetId: attachedDatabase.typeMapping
           .read(DriftSqlType.string, data['${effectivePrefix}asset_id']),
-      transferredAmount: attachedDatabase.typeMapping.read(
-          DriftSqlType.string, data['${effectivePrefix}transferred_amount']),
-      transferredAmountUsd: attachedDatabase.typeMapping.read(
-          DriftSqlType.double,
-          data['${effectivePrefix}transferred_amount_usd']),
-      balanceBeforeTransfer: attachedDatabase.typeMapping.read(
-          DriftSqlType.string,
-          data['${effectivePrefix}balance_before_transfer']),
+      transferredAmount: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}transferred_amount']),
+      transferredAmountUsd: attachedDatabase.typeMapping
+          .read(DriftSqlType.double, data['${effectivePrefix}transferred_amount_usd']),
+      balanceBeforeTransfer: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}balance_before_transfer']),
     );
   }
 
@@ -990,8 +945,7 @@ class TransactionsTable extends Table
   }
 }
 
-class TransactionsTableData extends DataClass
-    implements Insertable<TransactionsTableData> {
+class TransactionsTableData extends DataClass implements Insertable<TransactionsTableData> {
   final String type;
   final String txHash;
   final String networkId;
@@ -1084,32 +1038,22 @@ class TransactionsTableData extends DataClass
       type: Value(type),
       txHash: Value(txHash),
       networkId: Value(networkId),
-      coinId:
-          coinId == null && nullToAbsent ? const Value.absent() : Value(coinId),
+      coinId: coinId == null && nullToAbsent ? const Value.absent() : Value(coinId),
       senderWalletAddress: Value(senderWalletAddress),
       receiverWalletAddress: Value(receiverWalletAddress),
       id: id == null && nullToAbsent ? const Value.absent() : Value(id),
       fee: fee == null && nullToAbsent ? const Value.absent() : Value(fee),
-      status:
-          status == null && nullToAbsent ? const Value.absent() : Value(status),
-      nativeCoinId: nativeCoinId == null && nullToAbsent
-          ? const Value.absent()
-          : Value(nativeCoinId),
-      dateConfirmed: dateConfirmed == null && nullToAbsent
-          ? const Value.absent()
-          : Value(dateConfirmed),
-      dateRequested: dateRequested == null && nullToAbsent
-          ? const Value.absent()
-          : Value(dateRequested),
-      createdAtInRelay: createdAtInRelay == null && nullToAbsent
-          ? const Value.absent()
-          : Value(createdAtInRelay),
-      userPubkey: userPubkey == null && nullToAbsent
-          ? const Value.absent()
-          : Value(userPubkey),
-      assetId: assetId == null && nullToAbsent
-          ? const Value.absent()
-          : Value(assetId),
+      status: status == null && nullToAbsent ? const Value.absent() : Value(status),
+      nativeCoinId:
+          nativeCoinId == null && nullToAbsent ? const Value.absent() : Value(nativeCoinId),
+      dateConfirmed:
+          dateConfirmed == null && nullToAbsent ? const Value.absent() : Value(dateConfirmed),
+      dateRequested:
+          dateRequested == null && nullToAbsent ? const Value.absent() : Value(dateRequested),
+      createdAtInRelay:
+          createdAtInRelay == null && nullToAbsent ? const Value.absent() : Value(createdAtInRelay),
+      userPubkey: userPubkey == null && nullToAbsent ? const Value.absent() : Value(userPubkey),
+      assetId: assetId == null && nullToAbsent ? const Value.absent() : Value(assetId),
       transferredAmount: transferredAmount == null && nullToAbsent
           ? const Value.absent()
           : Value(transferredAmount),
@@ -1122,34 +1066,27 @@ class TransactionsTableData extends DataClass
     );
   }
 
-  factory TransactionsTableData.fromJson(Map<String, dynamic> json,
-      {ValueSerializer? serializer}) {
+  factory TransactionsTableData.fromJson(Map<String, dynamic> json, {ValueSerializer? serializer}) {
     serializer ??= driftRuntimeOptions.defaultSerializer;
     return TransactionsTableData(
       type: serializer.fromJson<String>(json['type']),
       txHash: serializer.fromJson<String>(json['tx_hash']),
       networkId: serializer.fromJson<String>(json['network_id']),
       coinId: serializer.fromJson<String?>(json['coin_id']),
-      senderWalletAddress:
-          serializer.fromJson<String>(json['sender_wallet_address']),
-      receiverWalletAddress:
-          serializer.fromJson<String>(json['receiver_wallet_address']),
+      senderWalletAddress: serializer.fromJson<String>(json['sender_wallet_address']),
+      receiverWalletAddress: serializer.fromJson<String>(json['receiver_wallet_address']),
       id: serializer.fromJson<String?>(json['id']),
       fee: serializer.fromJson<String?>(json['fee']),
       status: serializer.fromJson<String?>(json['status']),
       nativeCoinId: serializer.fromJson<String?>(json['native_coin_id']),
       dateConfirmed: serializer.fromJson<DateTime?>(json['date_confirmed']),
       dateRequested: serializer.fromJson<DateTime?>(json['date_requested']),
-      createdAtInRelay:
-          serializer.fromJson<DateTime?>(json['created_at_in_relay']),
+      createdAtInRelay: serializer.fromJson<DateTime?>(json['created_at_in_relay']),
       userPubkey: serializer.fromJson<String?>(json['user_pubkey']),
       assetId: serializer.fromJson<String?>(json['asset_id']),
-      transferredAmount:
-          serializer.fromJson<String?>(json['transferred_amount']),
-      transferredAmountUsd:
-          serializer.fromJson<double?>(json['transferred_amount_usd']),
-      balanceBeforeTransfer:
-          serializer.fromJson<String?>(json['balance_before_transfer']),
+      transferredAmount: serializer.fromJson<String?>(json['transferred_amount']),
+      transferredAmountUsd: serializer.fromJson<double?>(json['transferred_amount_usd']),
+      balanceBeforeTransfer: serializer.fromJson<String?>(json['balance_before_transfer']),
     );
   }
   @override
@@ -1161,8 +1098,7 @@ class TransactionsTableData extends DataClass
       'network_id': serializer.toJson<String>(networkId),
       'coin_id': serializer.toJson<String?>(coinId),
       'sender_wallet_address': serializer.toJson<String>(senderWalletAddress),
-      'receiver_wallet_address':
-          serializer.toJson<String>(receiverWalletAddress),
+      'receiver_wallet_address': serializer.toJson<String>(receiverWalletAddress),
       'id': serializer.toJson<String?>(id),
       'fee': serializer.toJson<String?>(fee),
       'status': serializer.toJson<String?>(status),
@@ -1173,10 +1109,8 @@ class TransactionsTableData extends DataClass
       'user_pubkey': serializer.toJson<String?>(userPubkey),
       'asset_id': serializer.toJson<String?>(assetId),
       'transferred_amount': serializer.toJson<String?>(transferredAmount),
-      'transferred_amount_usd':
-          serializer.toJson<double?>(transferredAmountUsd),
-      'balance_before_transfer':
-          serializer.toJson<String?>(balanceBeforeTransfer),
+      'transferred_amount_usd': serializer.toJson<double?>(transferredAmountUsd),
+      'balance_before_transfer': serializer.toJson<String?>(balanceBeforeTransfer),
     };
   }
 
@@ -1205,28 +1139,20 @@ class TransactionsTableData extends DataClass
         networkId: networkId ?? this.networkId,
         coinId: coinId.present ? coinId.value : this.coinId,
         senderWalletAddress: senderWalletAddress ?? this.senderWalletAddress,
-        receiverWalletAddress:
-            receiverWalletAddress ?? this.receiverWalletAddress,
+        receiverWalletAddress: receiverWalletAddress ?? this.receiverWalletAddress,
         id: id.present ? id.value : this.id,
         fee: fee.present ? fee.value : this.fee,
         status: status.present ? status.value : this.status,
-        nativeCoinId:
-            nativeCoinId.present ? nativeCoinId.value : this.nativeCoinId,
-        dateConfirmed:
-            dateConfirmed.present ? dateConfirmed.value : this.dateConfirmed,
-        dateRequested:
-            dateRequested.present ? dateRequested.value : this.dateRequested,
-        createdAtInRelay: createdAtInRelay.present
-            ? createdAtInRelay.value
-            : this.createdAtInRelay,
+        nativeCoinId: nativeCoinId.present ? nativeCoinId.value : this.nativeCoinId,
+        dateConfirmed: dateConfirmed.present ? dateConfirmed.value : this.dateConfirmed,
+        dateRequested: dateRequested.present ? dateRequested.value : this.dateRequested,
+        createdAtInRelay: createdAtInRelay.present ? createdAtInRelay.value : this.createdAtInRelay,
         userPubkey: userPubkey.present ? userPubkey.value : this.userPubkey,
         assetId: assetId.present ? assetId.value : this.assetId,
-        transferredAmount: transferredAmount.present
-            ? transferredAmount.value
-            : this.transferredAmount,
-        transferredAmountUsd: transferredAmountUsd.present
-            ? transferredAmountUsd.value
-            : this.transferredAmountUsd,
+        transferredAmount:
+            transferredAmount.present ? transferredAmount.value : this.transferredAmount,
+        transferredAmountUsd:
+            transferredAmountUsd.present ? transferredAmountUsd.value : this.transferredAmountUsd,
         balanceBeforeTransfer: balanceBeforeTransfer.present
             ? balanceBeforeTransfer.value
             : this.balanceBeforeTransfer,
@@ -1246,24 +1172,15 @@ class TransactionsTableData extends DataClass
       id: data.id.present ? data.id.value : this.id,
       fee: data.fee.present ? data.fee.value : this.fee,
       status: data.status.present ? data.status.value : this.status,
-      nativeCoinId: data.nativeCoinId.present
-          ? data.nativeCoinId.value
-          : this.nativeCoinId,
-      dateConfirmed: data.dateConfirmed.present
-          ? data.dateConfirmed.value
-          : this.dateConfirmed,
-      dateRequested: data.dateRequested.present
-          ? data.dateRequested.value
-          : this.dateRequested,
-      createdAtInRelay: data.createdAtInRelay.present
-          ? data.createdAtInRelay.value
-          : this.createdAtInRelay,
-      userPubkey:
-          data.userPubkey.present ? data.userPubkey.value : this.userPubkey,
+      nativeCoinId: data.nativeCoinId.present ? data.nativeCoinId.value : this.nativeCoinId,
+      dateConfirmed: data.dateConfirmed.present ? data.dateConfirmed.value : this.dateConfirmed,
+      dateRequested: data.dateRequested.present ? data.dateRequested.value : this.dateRequested,
+      createdAtInRelay:
+          data.createdAtInRelay.present ? data.createdAtInRelay.value : this.createdAtInRelay,
+      userPubkey: data.userPubkey.present ? data.userPubkey.value : this.userPubkey,
       assetId: data.assetId.present ? data.assetId.value : this.assetId,
-      transferredAmount: data.transferredAmount.present
-          ? data.transferredAmount.value
-          : this.transferredAmount,
+      transferredAmount:
+          data.transferredAmount.present ? data.transferredAmount.value : this.transferredAmount,
       transferredAmountUsd: data.transferredAmountUsd.present
           ? data.transferredAmountUsd.value
           : this.transferredAmountUsd,
@@ -1342,8 +1259,7 @@ class TransactionsTableData extends DataClass
           other.balanceBeforeTransfer == this.balanceBeforeTransfer);
 }
 
-class TransactionsTableCompanion
-    extends UpdateCompanion<TransactionsTableData> {
+class TransactionsTableCompanion extends UpdateCompanion<TransactionsTableData> {
   final Value<String> type;
   final Value<String> txHash;
   final Value<String> networkId;
@@ -1435,10 +1351,8 @@ class TransactionsTableCompanion
       if (txHash != null) 'tx_hash': txHash,
       if (networkId != null) 'network_id': networkId,
       if (coinId != null) 'coin_id': coinId,
-      if (senderWalletAddress != null)
-        'sender_wallet_address': senderWalletAddress,
-      if (receiverWalletAddress != null)
-        'receiver_wallet_address': receiverWalletAddress,
+      if (senderWalletAddress != null) 'sender_wallet_address': senderWalletAddress,
+      if (receiverWalletAddress != null) 'receiver_wallet_address': receiverWalletAddress,
       if (id != null) 'id': id,
       if (fee != null) 'fee': fee,
       if (status != null) 'status': status,
@@ -1449,10 +1363,8 @@ class TransactionsTableCompanion
       if (userPubkey != null) 'user_pubkey': userPubkey,
       if (assetId != null) 'asset_id': assetId,
       if (transferredAmount != null) 'transferred_amount': transferredAmount,
-      if (transferredAmountUsd != null)
-        'transferred_amount_usd': transferredAmountUsd,
-      if (balanceBeforeTransfer != null)
-        'balance_before_transfer': balanceBeforeTransfer,
+      if (transferredAmountUsd != null) 'transferred_amount_usd': transferredAmountUsd,
+      if (balanceBeforeTransfer != null) 'balance_before_transfer': balanceBeforeTransfer,
       if (rowid != null) 'rowid': rowid,
     });
   }
@@ -1483,8 +1395,7 @@ class TransactionsTableCompanion
       networkId: networkId ?? this.networkId,
       coinId: coinId ?? this.coinId,
       senderWalletAddress: senderWalletAddress ?? this.senderWalletAddress,
-      receiverWalletAddress:
-          receiverWalletAddress ?? this.receiverWalletAddress,
+      receiverWalletAddress: receiverWalletAddress ?? this.receiverWalletAddress,
       id: id ?? this.id,
       fee: fee ?? this.fee,
       status: status ?? this.status,
@@ -1496,8 +1407,7 @@ class TransactionsTableCompanion
       assetId: assetId ?? this.assetId,
       transferredAmount: transferredAmount ?? this.transferredAmount,
       transferredAmountUsd: transferredAmountUsd ?? this.transferredAmountUsd,
-      balanceBeforeTransfer:
-          balanceBeforeTransfer ?? this.balanceBeforeTransfer,
+      balanceBeforeTransfer: balanceBeforeTransfer ?? this.balanceBeforeTransfer,
       rowid: rowid ?? this.rowid,
     );
   }
@@ -1518,12 +1428,10 @@ class TransactionsTableCompanion
       map['coin_id'] = Variable<String>(coinId.value);
     }
     if (senderWalletAddress.present) {
-      map['sender_wallet_address'] =
-          Variable<String>(senderWalletAddress.value);
+      map['sender_wallet_address'] = Variable<String>(senderWalletAddress.value);
     }
     if (receiverWalletAddress.present) {
-      map['receiver_wallet_address'] =
-          Variable<String>(receiverWalletAddress.value);
+      map['receiver_wallet_address'] = Variable<String>(receiverWalletAddress.value);
     }
     if (id.present) {
       map['id'] = Variable<String>(id.value);
@@ -1556,12 +1464,10 @@ class TransactionsTableCompanion
       map['transferred_amount'] = Variable<String>(transferredAmount.value);
     }
     if (transferredAmountUsd.present) {
-      map['transferred_amount_usd'] =
-          Variable<double>(transferredAmountUsd.value);
+      map['transferred_amount_usd'] = Variable<double>(transferredAmountUsd.value);
     }
     if (balanceBeforeTransfer.present) {
-      map['balance_before_transfer'] =
-          Variable<String>(balanceBeforeTransfer.value);
+      map['balance_before_transfer'] = Variable<String>(balanceBeforeTransfer.value);
     }
     if (rowid.present) {
       map['rowid'] = Variable<int>(rowid.value);
@@ -1596,14 +1502,12 @@ class TransactionsTableCompanion
   }
 }
 
-class CryptoWalletsTable extends Table
-    with TableInfo<CryptoWalletsTable, CryptoWalletsTableData> {
+class CryptoWalletsTable extends Table with TableInfo<CryptoWalletsTable, CryptoWalletsTableData> {
   @override
   final GeneratedDatabase attachedDatabase;
   final String? _alias;
   CryptoWalletsTable(this.attachedDatabase, [this._alias]);
-  late final GeneratedColumn<String> id = GeneratedColumn<String>(
-      'id', aliasedName, false,
+  late final GeneratedColumn<String> id = GeneratedColumn<String>('id', aliasedName, false,
       type: DriftSqlType.string, requiredDuringInsert: true);
   late final GeneratedColumn<String> address = GeneratedColumn<String>(
       'address', aliasedName, false,
@@ -1615,12 +1519,11 @@ class CryptoWalletsTable extends Table
       'is_history_loaded', aliasedName, false,
       type: DriftSqlType.bool,
       requiredDuringInsert: false,
-      defaultConstraints: GeneratedColumn.constraintIsAlways(
-          'CHECK ("is_history_loaded" IN (0, 1))'),
+      defaultConstraints:
+          GeneratedColumn.constraintIsAlways('CHECK ("is_history_loaded" IN (0, 1))'),
       defaultValue: const CustomExpression('0'));
   @override
-  List<GeneratedColumn> get $columns =>
-      [id, address, networkId, isHistoryLoaded];
+  List<GeneratedColumn> get $columns => [id, address, networkId, isHistoryLoaded];
   @override
   String get aliasedName => _alias ?? actualTableName;
   @override
@@ -1632,14 +1535,13 @@ class CryptoWalletsTable extends Table
   CryptoWalletsTableData map(Map<String, dynamic> data, {String? tablePrefix}) {
     final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
     return CryptoWalletsTableData(
-      id: attachedDatabase.typeMapping
-          .read(DriftSqlType.string, data['${effectivePrefix}id'])!,
+      id: attachedDatabase.typeMapping.read(DriftSqlType.string, data['${effectivePrefix}id'])!,
       address: attachedDatabase.typeMapping
           .read(DriftSqlType.string, data['${effectivePrefix}address'])!,
       networkId: attachedDatabase.typeMapping
           .read(DriftSqlType.string, data['${effectivePrefix}network_id'])!,
-      isHistoryLoaded: attachedDatabase.typeMapping.read(
-          DriftSqlType.bool, data['${effectivePrefix}is_history_loaded'])!,
+      isHistoryLoaded: attachedDatabase.typeMapping
+          .read(DriftSqlType.bool, data['${effectivePrefix}is_history_loaded'])!,
     );
   }
 
@@ -1649,8 +1551,7 @@ class CryptoWalletsTable extends Table
   }
 }
 
-class CryptoWalletsTableData extends DataClass
-    implements Insertable<CryptoWalletsTableData> {
+class CryptoWalletsTableData extends DataClass implements Insertable<CryptoWalletsTableData> {
   final String id;
   final String address;
   final String networkId;
@@ -1701,10 +1602,7 @@ class CryptoWalletsTableData extends DataClass
   }
 
   CryptoWalletsTableData copyWith(
-          {String? id,
-          String? address,
-          String? networkId,
-          bool? isHistoryLoaded}) =>
+          {String? id, String? address, String? networkId, bool? isHistoryLoaded}) =>
       CryptoWalletsTableData(
         id: id ?? this.id,
         address: address ?? this.address,
@@ -1716,9 +1614,8 @@ class CryptoWalletsTableData extends DataClass
       id: data.id.present ? data.id.value : this.id,
       address: data.address.present ? data.address.value : this.address,
       networkId: data.networkId.present ? data.networkId.value : this.networkId,
-      isHistoryLoaded: data.isHistoryLoaded.present
-          ? data.isHistoryLoaded.value
-          : this.isHistoryLoaded,
+      isHistoryLoaded:
+          data.isHistoryLoaded.present ? data.isHistoryLoaded.value : this.isHistoryLoaded,
     );
   }
 
@@ -1745,8 +1642,7 @@ class CryptoWalletsTableData extends DataClass
           other.isHistoryLoaded == this.isHistoryLoaded);
 }
 
-class CryptoWalletsTableCompanion
-    extends UpdateCompanion<CryptoWalletsTableData> {
+class CryptoWalletsTableCompanion extends UpdateCompanion<CryptoWalletsTableData> {
   final Value<String> id;
   final Value<String> address;
   final Value<String> networkId;
@@ -1833,8 +1729,7 @@ class CryptoWalletsTableCompanion
   }
 }
 
-class FundsRequestsTable extends Table
-    with TableInfo<FundsRequestsTable, FundsRequestsTableData> {
+class FundsRequestsTable extends Table with TableInfo<FundsRequestsTable, FundsRequestsTableData> {
   @override
   final GeneratedDatabase attachedDatabase;
   final String? _alias;
@@ -1842,8 +1737,7 @@ class FundsRequestsTable extends Table
   late final GeneratedColumn<String> eventId = GeneratedColumn<String>(
       'event_id', aliasedName, false,
       type: DriftSqlType.string, requiredDuringInsert: true);
-  late final GeneratedColumn<String> pubkey = GeneratedColumn<String>(
-      'pubkey', aliasedName, false,
+  late final GeneratedColumn<String> pubkey = GeneratedColumn<String>('pubkey', aliasedName, false,
       type: DriftSqlType.string, requiredDuringInsert: true);
   late final GeneratedColumn<DateTime> createdAt = GeneratedColumn<DateTime>(
       'created_at', aliasedName, false,
@@ -1857,11 +1751,9 @@ class FundsRequestsTable extends Table
   late final GeneratedColumn<String> assetAddress = GeneratedColumn<String>(
       'asset_address', aliasedName, false,
       type: DriftSqlType.string, requiredDuringInsert: true);
-  late final GeneratedColumn<String> from = GeneratedColumn<String>(
-      'from', aliasedName, false,
+  late final GeneratedColumn<String> from = GeneratedColumn<String>('from', aliasedName, false,
       type: DriftSqlType.string, requiredDuringInsert: true);
-  late final GeneratedColumn<String> to = GeneratedColumn<String>(
-      'to', aliasedName, false,
+  late final GeneratedColumn<String> to = GeneratedColumn<String>('to', aliasedName, false,
       type: DriftSqlType.string, requiredDuringInsert: true);
   late final GeneratedColumn<String> walletAddress = GeneratedColumn<String>(
       'wallet_address', aliasedName, true,
@@ -1872,8 +1764,7 @@ class FundsRequestsTable extends Table
   late final GeneratedColumn<String> assetId = GeneratedColumn<String>(
       'asset_id', aliasedName, true,
       type: DriftSqlType.string, requiredDuringInsert: false);
-  late final GeneratedColumn<String> amount = GeneratedColumn<String>(
-      'amount', aliasedName, true,
+  late final GeneratedColumn<String> amount = GeneratedColumn<String>('amount', aliasedName, true,
       type: DriftSqlType.string, requiredDuringInsert: false);
   late final GeneratedColumn<String> amountUsd = GeneratedColumn<String>(
       'amount_usd', aliasedName, true,
@@ -1882,11 +1773,9 @@ class FundsRequestsTable extends Table
       'is_pending', aliasedName, false,
       type: DriftSqlType.bool,
       requiredDuringInsert: false,
-      defaultConstraints:
-          GeneratedColumn.constraintIsAlways('CHECK ("is_pending" IN (0, 1))'),
+      defaultConstraints: GeneratedColumn.constraintIsAlways('CHECK ("is_pending" IN (0, 1))'),
       defaultValue: const CustomExpression('1'));
-  late final GeneratedColumn<String> request = GeneratedColumn<String>(
-      'request', aliasedName, true,
+  late final GeneratedColumn<String> request = GeneratedColumn<String>('request', aliasedName, true,
       type: DriftSqlType.string, requiredDuringInsert: false);
   @override
   List<GeneratedColumn> get $columns => [
@@ -1919,8 +1808,8 @@ class FundsRequestsTable extends Table
     return FundsRequestsTableData(
       eventId: attachedDatabase.typeMapping
           .read(DriftSqlType.string, data['${effectivePrefix}event_id'])!,
-      pubkey: attachedDatabase.typeMapping
-          .read(DriftSqlType.string, data['${effectivePrefix}pubkey'])!,
+      pubkey:
+          attachedDatabase.typeMapping.read(DriftSqlType.string, data['${effectivePrefix}pubkey'])!,
       createdAt: attachedDatabase.typeMapping
           .read(DriftSqlType.dateTime, data['${effectivePrefix}created_at'])!,
       networkId: attachedDatabase.typeMapping
@@ -1929,24 +1818,22 @@ class FundsRequestsTable extends Table
           .read(DriftSqlType.string, data['${effectivePrefix}asset_class'])!,
       assetAddress: attachedDatabase.typeMapping
           .read(DriftSqlType.string, data['${effectivePrefix}asset_address'])!,
-      from: attachedDatabase.typeMapping
-          .read(DriftSqlType.string, data['${effectivePrefix}from'])!,
-      to: attachedDatabase.typeMapping
-          .read(DriftSqlType.string, data['${effectivePrefix}to'])!,
+      from: attachedDatabase.typeMapping.read(DriftSqlType.string, data['${effectivePrefix}from'])!,
+      to: attachedDatabase.typeMapping.read(DriftSqlType.string, data['${effectivePrefix}to'])!,
       walletAddress: attachedDatabase.typeMapping
           .read(DriftSqlType.string, data['${effectivePrefix}wallet_address']),
       userPubkey: attachedDatabase.typeMapping
           .read(DriftSqlType.string, data['${effectivePrefix}user_pubkey']),
       assetId: attachedDatabase.typeMapping
           .read(DriftSqlType.string, data['${effectivePrefix}asset_id']),
-      amount: attachedDatabase.typeMapping
-          .read(DriftSqlType.string, data['${effectivePrefix}amount']),
+      amount:
+          attachedDatabase.typeMapping.read(DriftSqlType.string, data['${effectivePrefix}amount']),
       amountUsd: attachedDatabase.typeMapping
           .read(DriftSqlType.string, data['${effectivePrefix}amount_usd']),
       isPending: attachedDatabase.typeMapping
           .read(DriftSqlType.bool, data['${effectivePrefix}is_pending'])!,
-      request: attachedDatabase.typeMapping
-          .read(DriftSqlType.string, data['${effectivePrefix}request']),
+      request:
+          attachedDatabase.typeMapping.read(DriftSqlType.string, data['${effectivePrefix}request']),
     );
   }
 
@@ -1956,8 +1843,7 @@ class FundsRequestsTable extends Table
   }
 }
 
-class FundsRequestsTableData extends DataClass
-    implements Insertable<FundsRequestsTableData> {
+class FundsRequestsTableData extends DataClass implements Insertable<FundsRequestsTableData> {
   final String eventId;
   final String pubkey;
   final DateTime createdAt;
@@ -2032,24 +1918,14 @@ class FundsRequestsTableData extends DataClass
       assetAddress: Value(assetAddress),
       from: Value(from),
       to: Value(to),
-      walletAddress: walletAddress == null && nullToAbsent
-          ? const Value.absent()
-          : Value(walletAddress),
-      userPubkey: userPubkey == null && nullToAbsent
-          ? const Value.absent()
-          : Value(userPubkey),
-      assetId: assetId == null && nullToAbsent
-          ? const Value.absent()
-          : Value(assetId),
-      amount:
-          amount == null && nullToAbsent ? const Value.absent() : Value(amount),
-      amountUsd: amountUsd == null && nullToAbsent
-          ? const Value.absent()
-          : Value(amountUsd),
+      walletAddress:
+          walletAddress == null && nullToAbsent ? const Value.absent() : Value(walletAddress),
+      userPubkey: userPubkey == null && nullToAbsent ? const Value.absent() : Value(userPubkey),
+      assetId: assetId == null && nullToAbsent ? const Value.absent() : Value(assetId),
+      amount: amount == null && nullToAbsent ? const Value.absent() : Value(amount),
+      amountUsd: amountUsd == null && nullToAbsent ? const Value.absent() : Value(amountUsd),
       isPending: Value(isPending),
-      request: request == null && nullToAbsent
-          ? const Value.absent()
-          : Value(request),
+      request: request == null && nullToAbsent ? const Value.absent() : Value(request),
     );
   }
 
@@ -2121,8 +1997,7 @@ class FundsRequestsTableData extends DataClass
         assetAddress: assetAddress ?? this.assetAddress,
         from: from ?? this.from,
         to: to ?? this.to,
-        walletAddress:
-            walletAddress.present ? walletAddress.value : this.walletAddress,
+        walletAddress: walletAddress.present ? walletAddress.value : this.walletAddress,
         userPubkey: userPubkey.present ? userPubkey.value : this.userPubkey,
         assetId: assetId.present ? assetId.value : this.assetId,
         amount: amount.present ? amount.value : this.amount,
@@ -2136,18 +2011,12 @@ class FundsRequestsTableData extends DataClass
       pubkey: data.pubkey.present ? data.pubkey.value : this.pubkey,
       createdAt: data.createdAt.present ? data.createdAt.value : this.createdAt,
       networkId: data.networkId.present ? data.networkId.value : this.networkId,
-      assetClass:
-          data.assetClass.present ? data.assetClass.value : this.assetClass,
-      assetAddress: data.assetAddress.present
-          ? data.assetAddress.value
-          : this.assetAddress,
+      assetClass: data.assetClass.present ? data.assetClass.value : this.assetClass,
+      assetAddress: data.assetAddress.present ? data.assetAddress.value : this.assetAddress,
       from: data.from.present ? data.from.value : this.from,
       to: data.to.present ? data.to.value : this.to,
-      walletAddress: data.walletAddress.present
-          ? data.walletAddress.value
-          : this.walletAddress,
-      userPubkey:
-          data.userPubkey.present ? data.userPubkey.value : this.userPubkey,
+      walletAddress: data.walletAddress.present ? data.walletAddress.value : this.walletAddress,
+      userPubkey: data.userPubkey.present ? data.userPubkey.value : this.userPubkey,
       assetId: data.assetId.present ? data.assetId.value : this.assetId,
       amount: data.amount.present ? data.amount.value : this.amount,
       amountUsd: data.amountUsd.present ? data.amountUsd.value : this.amountUsd,
@@ -2179,22 +2048,8 @@ class FundsRequestsTableData extends DataClass
   }
 
   @override
-  int get hashCode => Object.hash(
-      eventId,
-      pubkey,
-      createdAt,
-      networkId,
-      assetClass,
-      assetAddress,
-      from,
-      to,
-      walletAddress,
-      userPubkey,
-      assetId,
-      amount,
-      amountUsd,
-      isPending,
-      request);
+  int get hashCode => Object.hash(eventId, pubkey, createdAt, networkId, assetClass, assetAddress,
+      from, to, walletAddress, userPubkey, assetId, amount, amountUsd, isPending, request);
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
@@ -2216,8 +2071,7 @@ class FundsRequestsTableData extends DataClass
           other.request == this.request);
 }
 
-class FundsRequestsTableCompanion
-    extends UpdateCompanion<FundsRequestsTableData> {
+class FundsRequestsTableCompanion extends UpdateCompanion<FundsRequestsTableData> {
   final Value<String> eventId;
   final Value<String> pubkey;
   final Value<DateTime> createdAt;
