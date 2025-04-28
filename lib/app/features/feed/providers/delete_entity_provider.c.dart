@@ -138,10 +138,10 @@ Future<void> _deleteFromServer(Ref ref, IonConnectEntity entity) async {
   final deletionRequest = DeletionRequest(
     events: [
       EventToDelete(
-        eventReference: ImmutableEventReference(
-          pubkey: entity.masterPubkey,
-          eventId: entity.id,
+        ImmutableEventReference(
           kind: entityKind,
+          eventId: entity.id,
+          pubkey: entity.pubkey,
         ),
       ),
     ],
