@@ -16,7 +16,7 @@ List<EntitiesDataSource>? followersDataSource(Ref ref, String pubkey) {
   return [
     EntitiesDataSource(
       actionSource: ActionSourceUser(pubkey),
-      entityFilter: (entity) => entity is UserMetadataEntity,
+      entityFilter: (entity) => entity is FollowListEntity,
       requestFilters: [
         RequestFilter(
           kinds: const [FollowListEntity.kind],
@@ -31,7 +31,7 @@ List<EntitiesDataSource>? followersDataSource(Ref ref, String pubkey) {
               ),
             ],
           ).toString(),
-          limit: 20,
+          limit: 12,
         ),
       ],
     ),
