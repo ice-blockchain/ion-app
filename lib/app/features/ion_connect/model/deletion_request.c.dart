@@ -48,9 +48,7 @@ class DeletionRequestEntity with IonConnectEntity, ImmutableEntity, _$DeletionRe
 
 @freezed
 class DeletionRequest with _$DeletionRequest implements EventSerializable {
-  const factory DeletionRequest({
-    required List<DeletableEvent> events,
-  }) = _DeletionRequest;
+  const factory DeletionRequest({required List<DeletableEvent> events}) = _DeletionRequest;
 
   const DeletionRequest._();
 

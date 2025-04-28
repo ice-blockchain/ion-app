@@ -17,7 +17,7 @@ import 'package:ion/app/features/feed/data/models/generic_repost.c.dart';
 import 'package:ion/app/features/ion_connect/ion_connect.dart';
 import 'package:ion/app/features/ion_connect/model/action_source.c.dart';
 import 'package:ion/app/features/ion_connect/model/deletion_request.c.dart';
-import 'package:ion/app/features/ion_connect/model/related_event.c.dart';
+import 'package:ion/app/features/ion_connect/model/event_reference.c.dart';
 import 'package:ion/app/features/ion_connect/providers/entities_syncer_notifier.c.dart';
 import 'package:ion/app/features/ion_connect/providers/ion_connect_event_signer_provider.c.dart';
 import 'package:ion/app/features/ion_connect/providers/ion_connect_subscription_provider.c.dart';
@@ -201,34 +201,24 @@ class E2eeMessagesSubscriber extends _$E2eeMessagesSubscriber {
 
             // Add corresponding status to the database for the sender pubkey
             // and the kind 30014 shared id, if that doesn't exist
-            if (reactionEntity.data.reference.dTag != null) {
-              await conversationMessageStatusDao.addOrUpdateStatus(
-                status: status,
-                pubkey: rumor.pubkey,
-                masterPubkey: rumor.masterPubkey,
-                sharedId: reactionEntity.data.reference.dTag!,
-              );
-            }
+            await conversationMessageStatusDao.addOrUpdateStatus(
+              status: status,
+              pubkey: rumor.pubkey,
+              masterPubkey: rumor.masterPubkey,
+              sharedId: reactionEntity.data.reference.dTag,
+            );
           } else {
             await conversationMessageReactionDao.add(
               ref: ref,
               newReactionEvent: rumor,
-              kind14SharedId: reactionEntity.data.reference.dTag!,
+              kind14SharedId: reactionEntity.data.reference.dTag,
               masterPubkey: rumor.masterPubkey,
             );
           }
         }
         // For kind 5
-      } else if (rumor.kind == DeletionRequestEntity.kind) {
-        final deleteEventKind =
-            rumor.tags.firstWhereOrNull((tags) => tags[0] == 'k')?.elementAtOrNull(1);
-
-        final deleteEventIds = rumor.tags
-            .where((tags) => tags[0] == RelatedImmutableEvent.tagName)
-            .map((tag) => tag.elementAtOrNull(1))
-            .nonNulls
-            .toList();
-
+      } else if (rumor.kind == DeletionRequest.kind) {
+        print(rumor);
         final deleteConversationIds = rumor.tags
             .where((tags) => tags[0] == ConversationIdentifier.tagName)
             .map((tag) => tag.elementAtOrNull(1))
@@ -236,26 +226,41 @@ class E2eeMessagesSubscriber extends _$E2eeMessagesSubscriber {
             .toList();
 
         if (deleteConversationIds.isNotEmpty) {
-          await conversationDao.removeConversations(
-            ref: ref,
-            deleteRequest: rumor,
-            conversationIds: deleteConversationIds,
-          );
-        } else if (deleteEventKind == ReplaceablePrivateDirectMessageEntity.kind.toString() ||
-            deleteEventKind == ReplaceablePrivateDirectMessageEntity.kind.toString()) {
-          if (deleteEventIds.isNotEmpty) {
-            await conversationMessageDao.removeMessages(
+          await ref.watch(conversationDaoProvider).removeConversations(
+                ref: ref,
+                deleteRequest: rumor,
+                conversationIds: deleteConversationIds,
+              );
+        } else {
+          final eventsToDelete = DeletionRequest.fromEventMessage(rumor).events;
+
+          final eventToDeleteReferences =
+              eventsToDelete.map((event) => (event as EventToDelete).reference).toList();
+
+          final deleteEventKind = eventToDeleteReferences.first is ImmutableEventReference
+              ? (eventToDeleteReferences.first as ImmutableEventReference).kind
+              : (eventToDeleteReferences.first as ReplaceableEventReference).kind;
+
+          final deleteEventIds = eventToDeleteReferences.first is ImmutableEventReference
+              ? eventToDeleteReferences.map((e) => (e! as ImmutableEventReference).eventId)
+              : eventToDeleteReferences.map((e) => (e! as ReplaceableEventReference).dTag);
+
+          if (deleteEventKind == ReplaceablePrivateDirectMessageEntity.kind) {
+            print(deleteEventIds);
+            if (deleteEventIds.isNotEmpty) {
+              await conversationMessageDao.removeMessages(
+                ref: ref,
+                deleteRequest: rumor,
+                sharedIds: deleteEventIds.toList(),
+              );
+            }
+          } else if (deleteEventKind == PrivateMessageReactionEntity.kind) {
+            await conversationMessageReactionDao.remove(
               ref: ref,
               deleteRequest: rumor,
-              messageIds: deleteEventIds,
+              reactionEventId: deleteEventIds.single,
             );
           }
-        } else if (deleteEventKind == PrivateMessageReactionEntity.kind.toString()) {
-          await conversationMessageReactionDao.remove(
-            ref: ref,
-            deleteRequest: rumor,
-            reactionEventId: deleteEventIds.single,
-          );
         }
       } else if (rumor.kind == GenericRepostEntity.kind) {
         await eventMessageDao.add(rumor);
