@@ -1,22 +1,14 @@
 // SPDX-License-Identifier: ice License 1.0
 
 import 'package:flutter_test/flutter_test.dart';
-import 'package:ion/app/features/feed/data/models/entities/modifiable_post_data.c.dart';
 import 'package:ion/app/features/feed/stories/data/models/story.c.dart';
 import 'package:ion/app/features/feed/stories/data/models/story_viewer_state.c.dart';
-import 'package:mocktail/mocktail.dart';
 
-class _MockPost extends Mock implements ModifiablePostEntity {}
-
-ModifiablePostEntity _post(String id) {
-  final p = _MockPost();
-  when(() => p.id).thenReturn(id);
-  return p;
-}
+import '../helpers/story_test_models.dart';
 
 void main() {
-  final userA = UserStories(pubkey: 'alice', stories: [_post('a1'), _post('a2')]);
-  final userB = UserStories(pubkey: 'bob', stories: [_post('b1')]);
+  final userA = UserStories(pubkey: 'alice', stories: [buildPost('a1'), buildPost('a2')]);
+  final userB = UserStories(pubkey: 'bob', stories: [buildPost('b1')]);
 
   group('StoryViewerState navigation getters', () {
     test('hasNextStory / hasPreviousStory behave at boundaries', () {

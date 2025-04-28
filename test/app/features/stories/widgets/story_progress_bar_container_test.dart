@@ -4,43 +4,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:ion/app/features/core/model/media_type.dart';
 import 'package:ion/app/features/core/views/components/content_scaler.dart';
-import 'package:ion/app/features/feed/data/models/entities/modifiable_post_data.c.dart';
 import 'package:ion/app/features/feed/stories/data/models/story.c.dart';
 import 'package:ion/app/features/feed/stories/providers/stories_provider.c.dart';
 import 'package:ion/app/features/feed/stories/providers/story_viewing_provider.c.dart';
 import 'package:ion/app/features/feed/stories/views/components/story_viewer/components/progress/story_progress_bar_container.dart';
 import 'package:ion/app/features/feed/stories/views/components/story_viewer/components/progress/story_progress_segment.dart';
-import 'package:ion/app/features/ion_connect/model/media_attachment.dart';
-import 'package:mocktail/mocktail.dart';
 
-class _MockPost extends Mock implements ModifiablePostEntity {}
-
-class _FakeAttachment extends Fake implements MediaAttachment {
-  _FakeAttachment(this.mediaType);
-  @override
-  final MediaType mediaType;
-  @override
-  String get url => 'dummy';
-}
-
-class _FakePostData extends Fake implements ModifiablePostData {
-  _FakePostData(this.mediaType);
-  final MediaType mediaType;
-  @override
-  Map<String, MediaAttachment> get media => {'0': _FakeAttachment(mediaType)};
-  @override
-  MediaAttachment? get primaryMedia => _FakeAttachment(mediaType);
-}
-
-ModifiablePostEntity _post(String id) {
-  final p = _MockPost();
-  when(() => p.id).thenReturn(id);
-  when(() => p.masterPubkey).thenReturn('alice');
-  when(() => p.data).thenReturn(_FakePostData(MediaType.image));
-  return p;
-}
+import '../helpers/story_test_models.dart';
 
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
@@ -49,13 +20,10 @@ void main() {
   const pubkey = 'alice';
   final userStories = UserStories(
     pubkey: pubkey,
-    stories: [_post('s1'), _post('s2')],
+    stories: [buildPost('s1'), buildPost('s2')],
   );
 
-  setUpAll(() {
-    registerFallbackValue(_FakeAttachment(MediaType.image));
-    registerFallbackValue(_FakePostData(MediaType.image));
-  });
+  setUpAll(registerStoriesFallbacks);
 
   Future<void> pumpContainer(
     WidgetTester tester, {

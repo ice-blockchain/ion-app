@@ -8,33 +8,11 @@ import 'package:ion/app/features/feed/data/models/entities/modifiable_post_data.
 import 'package:ion/app/features/feed/providers/feed_stories_data_source_provider.c.dart';
 import 'package:ion/app/features/feed/stories/providers/stories_provider.c.dart';
 import 'package:ion/app/features/ion_connect/model/action_source.c.dart';
-import 'package:ion/app/features/ion_connect/model/media_attachment.dart';
 import 'package:ion/app/features/ion_connect/providers/entities_paged_data_provider.c.dart';
 import 'package:mocktail/mocktail.dart';
 
-import '../../../test_utils.dart';
-
-class _MockPost extends Mock implements ModifiablePostEntity {}
-
-class _FakeMedia extends Fake implements MediaAttachment {
-  _FakeMedia(this.mediaType);
-  @override
-  final MediaType mediaType;
-
-  @override
-  String get url => '';
-
-  @override
-  int? get duration => null;
-}
-
-class _FakePostData extends Fake implements ModifiablePostData {
-  _FakePostData(this.mediaType);
-  final MediaType mediaType;
-
-  @override
-  Map<String, MediaAttachment> get media => {'0': _FakeMedia(mediaType)};
-}
+import '../helpers/story_test_models.dart';
+import '../helpers/story_test_utils.dart';
 
 class _FakeEntitiesPagedData extends EntitiesPagedData {
   _FakeEntitiesPagedData(this._state);
@@ -50,11 +28,8 @@ ModifiablePostEntity _post({
   required MediaType mediaType,
   required DateTime createdAt,
 }) {
-  final p = _MockPost();
-  when(() => p.id).thenReturn(id);
-  when(() => p.masterPubkey).thenReturn(author);
+  final p = buildPost(id, author: author, mediaType: mediaType);
   when(() => p.createdAt).thenReturn(createdAt);
-  when(() => p.data).thenReturn(_FakePostData(mediaType));
   return p;
 }
 
@@ -71,7 +46,7 @@ ProviderContainer _containerWith(List<ModifiablePostEntity> posts) {
   const dataSources = <EntitiesDataSource>[];
   final fakeState = _stateWith(posts);
 
-  return createContainer(
+  return createStoriesContainer(
     overrides: [
       feedStoriesDataSourceProvider.overrideWith((_) => dataSources),
       entitiesPagedDataProvider(dataSources).overrideWith(
@@ -82,7 +57,9 @@ ProviderContainer _containerWith(List<ModifiablePostEntity> posts) {
 }
 
 void main() {
-  group('storiesProvider - transformation logic', () {
+  setUpAll(registerStoriesFallbacks);
+
+  group('storiesProvider – transformation logic', () {
     test('filters out posts with non-image/video media', () {
       final posts = [
         _post(

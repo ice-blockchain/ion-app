@@ -8,8 +8,8 @@ import 'package:ion/app/services/storage/local_storage.c.dart';
 import 'package:ion/app/services/storage/user_preferences_service.c.dart';
 import 'package:mocktail/mocktail.dart';
 
-import '../../../mocks.dart';
-import '../../../test_utils.dart';
+import '../../../../mocks.dart';
+import '../helpers/story_test_utils.dart';
 
 void main() {
   const identity = 'user1';
@@ -20,14 +20,13 @@ void main() {
 
   setUp(() {
     mockStorage = MockLocalStorage();
-
     when(() => mockStorage.setStringList(any(), any<List<String>>())).thenAnswer((_) async => true);
   });
 
   ProviderContainer buildContainer({List<String>? initialIds}) {
     when(() => mockStorage.getStringList(prefKey)).thenReturn(initialIds);
 
-    return createContainer(
+    return createStoriesContainer(
       overrides: [
         currentIdentityKeyNameSelectorProvider.overrideWith((_) => identity),
         localStorageProvider.overrideWithValue(mockStorage),

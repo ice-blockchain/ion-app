@@ -1,21 +1,13 @@
 // SPDX-License-Identifier: ice License 1.0
 
 import 'package:flutter_test/flutter_test.dart';
-import 'package:ion/app/features/feed/data/models/entities/modifiable_post_data.c.dart';
 import 'package:ion/app/features/feed/stories/data/models/story.c.dart';
-import 'package:mocktail/mocktail.dart';
 
-class _MockPost extends Mock implements ModifiablePostEntity {}
-
-ModifiablePostEntity _post(String id) {
-  final p = _MockPost();
-  when(() => p.id).thenReturn(id);
-  return p;
-}
+import '../helpers/story_test_models.dart';
 
 void main() {
   const pubkey = 'alice_pub';
-  final posts = [_post('s1'), _post('s2'), _post('s3')];
+  final posts = [buildPost('s1'), buildPost('s2'), buildPost('s3')];
 
   group('UserStories helpers', () {
     late UserStories userStories;
