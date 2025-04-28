@@ -105,23 +105,17 @@ class DeletionRequest with _$DeletionRequest implements EventSerializable {
 @freezed
 class EventToDelete with _$EventToDelete implements DeletableEvent {
   const factory EventToDelete({
-    required EventReference eventReference,
+    required int kind,
+    required String eventId,
   }) = _EventToDelete;
 
   const EventToDelete._();
 
   @override
   List<List<String>> toTags() {
-    return switch (eventReference) {
-      ReplaceableEventReference() => [eventReference.toTag()],
-      final ImmutableEventReference immutableEventReference
-          // kind is optional in ImmutableEventReference, but we need it here for the `k` tag
-          when immutableEventReference.kind != null =>
-        [
-          [ImmutableEventReference.tagName, immutableEventReference.eventId],
-          ['k', immutableEventReference.kind.toString()],
-        ],
-      _ => throw UnsupportedEventReference(eventReference),
-    };
+    return [
+      [ImmutableEventReference.tagName, eventId],
+      ['k', kind.toString()],
+    ];
   }
 }
