@@ -12,6 +12,7 @@ import 'package:ion/app/features/ion_connect/model/action_source.c.dart';
 import 'package:ion/app/features/ion_connect/model/event_reference.c.dart';
 import 'package:ion/app/features/ion_connect/providers/ion_connect_notifier.c.dart';
 import 'package:ion/app/features/ion_connect/providers/ion_connect_subscription_provider.c.dart';
+import 'package:ion/app/features/user/providers/user_relays_manager.c.dart';
 import 'package:ion/app/services/uuid/uuid.dart';
 import 'package:nostr_dart/nostr_dart.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
@@ -67,7 +68,8 @@ class FeedBookmarksNotifier extends _$FeedBookmarksNotifier {
     String collectionDTag = BookmarksCollectionEntity.defaultCollectionDTag,
   }) async {
     final currentPubkey = ref.watch(currentPubkeySelectorProvider);
-    if (currentPubkey == null) {
+    final userRelays = await ref.watch(currentUserRelayProvider.future);
+    if (currentPubkey == null || userRelays == null) {
       return null;
     }
 
