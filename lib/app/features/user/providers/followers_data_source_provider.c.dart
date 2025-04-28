@@ -31,7 +31,7 @@ List<EntitiesDataSource>? followersDataSource(Ref ref, String pubkey) {
               ),
             ],
           ).toString(),
-          limit: 12,
+          limit: 20,
         ),
       ],
     ),
