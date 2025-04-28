@@ -7,9 +7,11 @@ import 'package:ion/app/features/ion_connect/ion_connect.dart';
 import 'package:ion/app/features/ion_connect/model/action_source.c.dart';
 import 'package:ion/app/features/ion_connect/model/event_reference.c.dart';
 import 'package:ion/app/features/ion_connect/providers/ion_connect_cache.c.dart';
+import 'package:ion/app/features/ion_connect/providers/ion_connect_db_cache_notifier.c.dart';
 import 'package:ion/app/features/ion_connect/providers/ion_connect_notifier.c.dart';
 import 'package:ion/app/features/user/model/user_relays.c.dart';
 import 'package:ion/app/features/user/providers/current_user_identity_provider.c.dart';
+import 'package:ion/app/features/user/providers/relays_reachability_provider.c.dart';
 import 'package:ion/app/services/ion_identity/ion_identity_client_provider.c.dart';
 import 'package:ion/app/services/logger/logger.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
@@ -62,19 +64,24 @@ class UserRelaysManager extends _$UserRelaysManager {
   }) async {
     final result = <UserRelaysEntity>[];
     final pubkeysToFetch = <String>[];
+    final fetchedRelays = <UserRelaysEntity>[];
+
+    final eventReferences = pubkeys
+        .map(
+          (pubkey) => ReplaceableEventReference(
+            pubkey: pubkey,
+            kind: UserRelaysEntity.kind,
+          ),
+        )
+        .toList();
+    final dbCachedRelays = (await ref.read(ionConnectDbCacheProvider.notifier).get(eventReferences))
+        .cast<UserRelaysEntity?>()
+        .nonNulls
+        .toList();
 
     for (final pubkey in pubkeys) {
-      final cached = ref.read(
-        ionConnectCacheProvider.select(
-          cacheSelector<UserRelaysEntity>(
-            CacheableEntity.cacheKeyBuilder(
-              eventReference:
-                  ReplaceableEventReference(pubkey: pubkey, kind: UserRelaysEntity.kind),
-            ),
-          ),
-        ),
-      );
-      if (cached != null) {
+      final cached = dbCachedRelays.where((relay) => relay.pubkey == pubkey).firstOrNull;
+      if (cached != null && !_needsRefresh(cached)) {
         result.add(cached);
       } else {
         pubkeysToFetch.add(pubkey);
@@ -97,6 +104,7 @@ class UserRelaysManager extends _$UserRelaysManager {
     await for (final entity in entitiesStream) {
       if (entity is UserRelaysEntity) {
         result.add(entity);
+        fetchedRelays.add(entity);
         pubkeysToFetch.removeWhere((pubkey) {
           // In some corner cases we might use `pubkey` instead on `masterPubkey`,
           // For example for kind14 chat events that don't have masterPubkey
@@ -108,7 +116,12 @@ class UserRelaysManager extends _$UserRelaysManager {
     if (pubkeysToFetch.isNotEmpty) {
       final userRelays = await _fetchRelaysFromIdentityFor(pubkeys: pubkeysToFetch);
 
+      fetchedRelays.addAll(userRelays);
       result.addAll(userRelays);
+    }
+
+    if (fetchedRelays.isNotEmpty) {
+      await ref.read(ionConnectDbCacheProvider.notifier).saveAll(fetchedRelays);
     }
 
     return result;
@@ -143,5 +156,18 @@ class UserRelaysManager extends _$UserRelaysManager {
     ]..forEach(ref.read(ionConnectCacheProvider.notifier).cache);
 
     return userRelays;
+  }
+
+  bool _needsRefresh(UserRelaysEntity relaysEntity) {
+    final reachabilityInfoNotifier = ref.read(relayReachabilityProvider.notifier);
+    final reachabilityInfos = relaysEntity.data.list
+        .map((relay) => reachabilityInfoNotifier.get(relay.url))
+        .whereType<RelayReachabilityInfo>();
+    final deadRelays = reachabilityInfos
+        .where((reachabilityInfo) => reachabilityInfo.failedToReachCount >= 3)
+        .toList();
+
+    // needs refresh when 50% + 1 or more are dead
+    return deadRelays.length >= (relaysEntity.data.list.length / 2 + 1).floor();
   }
 }
