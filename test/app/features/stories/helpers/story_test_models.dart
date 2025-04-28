@@ -2,6 +2,7 @@
 
 import 'package:ion/app/features/core/model/media_type.dart';
 import 'package:ion/app/features/feed/data/models/entities/modifiable_post_data.c.dart';
+import 'package:ion/app/features/ion_connect/model/event_reference.c.dart';
 import 'package:ion/app/features/ion_connect/model/media_attachment.dart';
 import 'package:mocktail/mocktail.dart';
 
@@ -29,6 +30,8 @@ class FakePostData extends Fake implements ModifiablePostData {
   MediaAttachment? get primaryMedia => FakeAttachment(mediaType);
 }
 
+class FakeEventRef extends Fake implements ReplaceableEventReference {}
+
 ModifiablePostEntity buildPost(
   String id, {
   String author = 'alice',
@@ -38,10 +41,12 @@ ModifiablePostEntity buildPost(
   when(() => post.id).thenReturn(id);
   when(() => post.masterPubkey).thenReturn(author);
   when(() => post.data).thenReturn(FakePostData(mediaType));
+  when(post.toEventReference).thenReturn(FakeEventRef());
   return post;
 }
 
 void registerStoriesFallbacks() {
   registerFallbackValue(FakeAttachment(MediaType.image));
   registerFallbackValue(FakePostData(MediaType.image));
+  registerFallbackValue(FakeEventRef());
 }

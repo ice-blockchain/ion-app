@@ -93,5 +93,26 @@ void main() {
       expect(state.currentUserIndex, 0);
       expect(state.currentStoryIndex, 0);
     });
+
+    test(
+      'advance does not overwrite indices when moveToUser is called '
+      'with the current user (CubePageView onPageChanged)',
+      () {
+        final container = createContainer();
+        final notifier = container.read(storyViewingControllerProvider(alice).notifier)
+          // Alice/a1 → Alice/a2  (user = 0, story = 1)
+          ..advance();
+
+        var state = container.read(storyViewingControllerProvider(alice));
+        expect(state.currentUserIndex, 0);
+        expect(state.currentStoryIndex, 1);
+
+        notifier.moveToUser(state.currentUserIndex);
+
+        state = container.read(storyViewingControllerProvider(alice));
+        expect(state.currentUserIndex, 0);
+        expect(state.currentStoryIndex, 1);
+      },
+    );
   });
 }

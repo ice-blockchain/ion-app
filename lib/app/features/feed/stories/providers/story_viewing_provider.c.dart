@@ -69,12 +69,15 @@ class StoryViewingController extends _$StoryViewingController {
   }
 
   void moveToUser(int userIndex) {
-    if (userIndex < 0 || userIndex >= state.userStories.length) return;
+    // Do nothing if this is the same author
+    if (userIndex == state.currentUserIndex) return;
 
-    state = state.copyWith(
-      currentUserIndex: userIndex,
-      currentStoryIndex: 0,
-    );
+    if (userIndex >= 0 && userIndex < state.userStories.length) {
+      state = state.copyWith(
+        currentUserIndex: userIndex,
+        currentStoryIndex: 0,
+      );
+    }
   }
 
   void toggleLike(String postId) {

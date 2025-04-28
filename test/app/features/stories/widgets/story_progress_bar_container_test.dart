@@ -88,5 +88,41 @@ void main() {
         );
       },
     );
+
+    testWidgets(
+      'advance() past last story moves to next user with storyIndex 0',
+      (tester) async {
+        // stories: viewer (alice) – 2 stories, bob – 2 more stories
+        final bobStories = UserStories(
+          pubkey: 'bob',
+          stories: [buildPost('b1', author: 'bob'), buildPost('b2', author: 'bob')],
+        );
+
+        await pumpViewer(tester, stories: [viewerStories, bobStories]);
+
+        final element = tester.element(find.byType(StoryProgressBarContainer));
+        final container = ProviderScope.containerOf(element);
+
+        // Step 1: on alice/s1  →  advance() → alice/s2
+        // Step 2: advance()     → bob/b1  (storyIndex should become 0)
+        container.read(storyViewingControllerProvider(viewerPubkey).notifier)
+          ..advance()
+          ..advance();
+
+        await tester.pump();
+
+        final state = container.read(storyViewingControllerProvider(viewerPubkey));
+        expect(state.currentUserIndex, 1); // switched to Bob
+        expect(state.currentStoryIndex, 0); // first story of Bob
+
+        final segments =
+            tester.widgetList<StoryProgressSegment>(find.byType(StoryProgressSegment)).toList();
+
+        expect(segments.length, 2); // for Bob draw 2 segments
+        expect(segments.first.isCurrent, isTrue); // current – first
+        expect(segments[1].isCurrent, isFalse);
+        expect(segments[1].isPreviousStory, isFalse);
+      },
+    );
   });
 }
