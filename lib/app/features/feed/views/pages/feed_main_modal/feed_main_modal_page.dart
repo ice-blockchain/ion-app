@@ -74,25 +74,20 @@ class FeedMainModalPage extends ConsumerWidget {
                         ),
                       );
 
-                      var finishedEditing = false;
-                      while (result != null &&
-                          result.isNotEmpty &&
-                          context.mounted &&
-                          !finishedEditing) {
+                      if (result != null && result.isNotEmpty && context.mounted) {
                         final editedPath = await ref.read(editMediaProvider(result[0]).future);
-
                         if (!context.mounted) return;
-
-                        finishedEditing = await CreateVideoRoute(
+                        final editingResult = await CreateVideoRoute(
                               videoPath: editedPath,
                               mimeType: result[0].mimeType ?? '',
                             ).push<bool>(context) ??
                             false;
-                      }
-                      if (context.mounted) {
-                        context.go(
-                          GoRouterState.of(context).currentTab.baseRouteLocation,
-                        );
+
+                        if (editingResult && context.mounted) {
+                          context.go(
+                            GoRouterState.of(context).currentTab.baseRouteLocation,
+                          );
+                        }
                       }
                     }
 
