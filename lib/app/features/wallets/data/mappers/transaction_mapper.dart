@@ -12,10 +12,7 @@ import 'package:ion/app/features/wallets/model/transaction_details.c.dart';
 import 'package:ion/app/features/wallets/model/transaction_type.dart';
 
 class CoinTransactionsMapper {
-  db.Transaction fromTransactionDetails({
-    required TransactionDetails details,
-    String? balanceBeforeTransactions,
-  }) {
+  db.Transaction fromTransactionDetails(TransactionDetails details) {
     final coinAssetData = details.assetData as CoinAssetToSendData;
 
     return db.Transaction(
@@ -70,9 +67,7 @@ class CoinTransactionsMapper {
         );
       }).toList();
 
-  List<db.Transaction> fromDomainToDB(
-    Iterable<TransactionData> transactions,
-  ) =>
+  List<db.Transaction> fromDomainToDB(Iterable<TransactionData> transactions) =>
       transactions.map((transaction) {
         final coinTransactionAsset = transaction.cryptoAsset.as<CoinTransactionAsset>();
 

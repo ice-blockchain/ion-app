@@ -128,28 +128,38 @@ class WalletViewsService {
     _updatesSubscription?.cancel();
     _updatesSubscription = _transactionsRepository
         .watchBroadcastedTransfersByCoins(coinIds.toList())
+        .map((transactions) {
+          // Filter out tier 2 networks, since we don't need to apply balance hack for them.
+          // It will be applied on the ion side automatically.
+
+          return Map.fromEntries(
+            transactions.entries.where(
+              (e) => e.key.network.tier == 1,
+            ),
+          );
+        })
         .combineLatest(
           _coinsRepository.watchCoins(coinIds),
           (Map<CoinData, List<TransactionData>> transactions, List<CoinData> coins) =>
               (coins, transactions),
         )
         .listen((combined) {
-      final (updatedCoins, transactions) = combined;
+          final (updatedCoins, transactions) = combined;
 
-      if (_originWalletViews.isEmpty) return;
+          if (_originWalletViews.isEmpty) return;
 
-      final updatedViews = _updateWalletViews(
-        _originWalletViews,
-        updatedCoins: updatedCoins,
-        transactions: transactions,
-      );
+          final updatedViews = _updateWalletViews(
+            _originWalletViews,
+            updatedCoins: updatedCoins,
+            transactions: transactions,
+          );
 
-      _updateEmittedWalletViews(
-        walletViews: updatedViews,
-        refreshSubscriptions: false,
-        updatePeriodicCoinsSync: false,
-      );
-    });
+          _updateEmittedWalletViews(
+            walletViews: updatedViews,
+            refreshSubscriptions: false,
+            updatePeriodicCoinsSync: false,
+          );
+        });
   }
 
   List<WalletViewData> _updateWalletViews(
@@ -220,6 +230,8 @@ class WalletViewsService {
     required Map<CoinData, List<TransactionData>> transactions,
     required CoinInWalletData coinInWallet,
   }) {
+    var updatedCoin = coinInWallet;
+
     if (transactions.isNotEmpty) {
       final key = transactions.keys.firstWhereOrNull(
         (key) => key.id == coinInWallet.coin.id,
@@ -229,31 +241,31 @@ class WalletViewsService {
         (w) => w.id == coinInWallet.walletId,
       );
 
+      var adjustedRawAmount = BigInt.parse(coinInWallet.rawAmount);
+
       for (final transaction in coinTransactions) {
         final isTransactionRelatedToCoin = transaction.senderWalletAddress == wallet?.address;
         final transactionCoin = transaction.cryptoAsset;
 
         if (isTransactionRelatedToCoin && transactionCoin is CoinTransactionAsset) {
-          final adjustedRawAmount =
-              (BigInt.parse(coinInWallet.rawAmount) - BigInt.parse(transactionCoin.rawAmount))
-                  .toString();
-
-          final adjustedAmount = parseCryptoAmount(
-            adjustedRawAmount,
-            coinInWallet.coin.decimals,
-          );
-          final adjustedBalanceUSD = adjustedAmount * coinInWallet.coin.priceUSD;
-
-          return coinInWallet.copyWith(
-            amount: adjustedAmount,
-            balanceUSD: adjustedBalanceUSD,
-            rawAmount: adjustedRawAmount,
-          );
+          adjustedRawAmount -= BigInt.parse(transactionCoin.rawAmount);
         }
       }
+
+      final adjustedAmount = parseCryptoAmount(
+        adjustedRawAmount.toString(),
+        coinInWallet.coin.decimals,
+      );
+      final adjustedBalanceUSD = adjustedAmount * coinInWallet.coin.priceUSD;
+
+      updatedCoin = coinInWallet.copyWith(
+        amount: adjustedAmount,
+        balanceUSD: adjustedBalanceUSD,
+        rawAmount: adjustedRawAmount.toString(),
+      );
     }
 
-    return coinInWallet;
+    return updatedCoin;
   }
 
   Future<WalletViewData> create(String name) async {

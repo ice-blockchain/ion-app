@@ -60,14 +60,8 @@ class TransactionsRepository {
     return _transactionsDao.getFirstCreatedAt(after: after);
   }
 
-  Future<void> saveTransactionDetails({
-    required TransactionDetails details,
-    String? balanceBeforeTransfer,
-  }) async {
-    final mapped = _coinMapper.fromTransactionDetails(
-      details: details,
-      balanceBeforeTransactions: balanceBeforeTransfer,
-    );
+  Future<void> saveTransactionDetails(TransactionDetails details) async {
+    final mapped = _coinMapper.fromTransactionDetails(details);
     await _transactionsDao.save([mapped]);
   }
 
