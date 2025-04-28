@@ -27,11 +27,13 @@ class FirebaseService {
     );
   }
 
-  Future<void> deleteApp(String name) {
-    return Firebase.app(name).delete();
+  Future<void> deleteApp([String name = defaultFirebaseAppName]) async {
+    if (hasApp(name)) {
+      return Firebase.app(name).delete();
+    }
   }
 
-  bool hasApp(String name) {
+  bool hasApp([String name = defaultFirebaseAppName]) {
     return Firebase.apps.any((app) => app.name == name);
   }
 }

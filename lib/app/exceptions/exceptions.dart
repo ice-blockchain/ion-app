@@ -492,3 +492,7 @@ class GetRelayInfoException extends IONException {
   GetRelayInfoException(dynamic error, {required String relayUrl})
       : super(10097, 'Failed to get relay info for $relayUrl, $error');
 }
+
+class ConfigureFirebaseAppException extends IONException {
+  ConfigureFirebaseAppException() : super(10098, 'Failed to configure firebase app');
+}
