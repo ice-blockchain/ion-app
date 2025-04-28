@@ -11,7 +11,7 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'followers_count_provider.c.g.dart';
 
-@Riverpod(keepAlive: true)
+@riverpod
 FutureOr<int?> followersCount(
   Ref ref, {
   required String pubkey,

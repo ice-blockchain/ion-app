@@ -18,9 +18,7 @@ import 'package:ion/app/features/user/pages/profile_page/components/tabs/tab_ent
 import 'package:ion/app/features/user/pages/profile_page/components/tabs/tabs_header/tabs_header.dart';
 import 'package:ion/app/features/user/pages/profile_page/hooks/use_animated_opacity_on_scroll.dart';
 import 'package:ion/app/features/user/providers/block_list_notifier.c.dart';
-import 'package:ion/app/features/user/providers/followers_count_provider.c.dart';
 import 'package:ion/app/features/user/providers/user_metadata_provider.c.dart';
-import 'package:ion/app/hooks/use_on_init.dart';
 import 'package:ion/app/router/components/navigation_app_bar/navigation_app_bar.dart';
 
 class ProfilePage extends HookConsumerWidget {
@@ -52,12 +50,6 @@ class ProfilePage extends HookConsumerWidget {
     if (!userMetadata.hasValue || isBlockedOrBlocking) {
       return const CantFindProfilePage();
     }
-
-    useOnInit(
-      () {
-        ref.invalidate(followersCountProvider(pubkey: pubkey));
-      },
-    );
 
     final scrollController = useScrollController();
     final (:opacity) = useAnimatedOpacityOnScroll(scrollController, topOffset: paddingTop);
