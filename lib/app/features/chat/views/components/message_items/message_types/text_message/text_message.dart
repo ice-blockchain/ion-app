@@ -179,7 +179,7 @@ class _TextMessageContent extends HookWidget {
         alignment: AlignmentDirectional.bottomEnd,
         children: [
           Padding(
-            padding: EdgeInsets.only(right: wouldPadding),
+            padding: EdgeInsetsDirectional.only(end: wouldPadding),
             child:
                 _TextRichContent(text: wouldOverlap ? '$content\n' : content, textStyle: textStyle),
           ),
