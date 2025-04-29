@@ -7,6 +7,7 @@ import 'package:ion/app/components/inputs/text_input/text_input.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/wallets/model/network_data.c.dart';
 import 'package:ion/app/features/wallets/utils/wallet_address_validator.dart';
+import 'package:ion/app/hooks/use_on_init.dart';
 import 'package:ion/generated/assets.gen.dart';
 
 class AddressInputField extends HookWidget {
@@ -15,7 +16,7 @@ class AddressInputField extends HookWidget {
     required this.onAddressChanged,
     this.network,
     this.onScanPressed,
-    this.initialValue,
+    this.address,
     super.key,
   });
 
@@ -24,15 +25,20 @@ class AddressInputField extends HookWidget {
   final VoidCallback onOpenContactList;
   final VoidCallback? onScanPressed;
   final ValueChanged<String> onAddressChanged;
-  final String? initialValue;
+  final String? address;
   final NetworkData? network;
 
   @override
   Widget build(BuildContext context) {
-    final controller = useTextEditingController(text: initialValue);
+    final controller = useTextEditingController();
     // If network is null, the default validator will be created
     final validator = useMemoized(() => WalletAddressValidator(network?.id ?? ''), [network]);
     final isValidInput = useState(true);
+
+    useOnInit(
+      () => controller.text = address ?? '',
+      [address],
+    );
 
     return TextInput(
       maxLines: maxLines,

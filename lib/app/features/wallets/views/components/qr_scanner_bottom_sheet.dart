@@ -25,22 +25,7 @@ class QRScannerBottomSheet extends HookConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final qrKey = useMemoized(GlobalKey.new);
-    final controllerRef = useRef<QRViewController?>(null);
     final subscriptionRef = useRef<StreamSubscription<Barcode>?>(null);
-
-    final onQRViewCreated = useCallback(
-      (QRViewController controller) {
-        controllerRef.value = controller;
-        subscriptionRef.value = controller.scannedDataStream.listen((scanData) {
-          if (context.mounted) {
-            scanData.code
-                ?.map((code) => shouldTrimPrefix ? trimPrefix(code) : code)
-                .let(context.pop);
-          }
-        });
-      },
-      [],
-    );
 
     useEffect(
       () => subscriptionRef.value?.cancel,
@@ -59,7 +44,18 @@ class QRScannerBottomSheet extends HookConsumerWidget {
           child: Stack(
             children: [
               QRView(
-                onQRViewCreated: onQRViewCreated,
+                onQRViewCreated: (controller) {
+                  subscriptionRef.value = controller.scannedDataStream.listen(
+                    (scanData) {
+                      if (context.mounted) {
+                        subscriptionRef.value?.cancel();
+                        scanData.code
+                            ?.map((code) => shouldTrimPrefix ? trimPrefix(code) : code)
+                            .let(context.pop);
+                      }
+                    },
+                  );
+                },
                 overlay: QrScannerOverlayShape(
                   borderColor: context.theme.appColors.primaryAccent,
                   borderRadius: 10.0.s,
