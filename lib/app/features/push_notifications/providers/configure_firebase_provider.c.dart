@@ -12,6 +12,7 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'configure_firebase_provider.c.g.dart';
 
+//TODO:remove to ConfigureFirebaseApp
 @Riverpod(keepAlive: true)
 class ConfigureFirebase extends _$ConfigureFirebase {
   static const String _configuredFirebaseRelayKey = 'configured_firebase_relay_key';

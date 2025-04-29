@@ -60,7 +60,7 @@ class PushNotificationsSettings extends HookConsumerWidget {
           ),
           Expanded(
             child: ScreenBottomOffset(
-              margin: 32.0.s,
+              margin: 40.0.s,
               child: SingleChildScrollView(
                 child: ScreenSideOffset.small(
                   child: SeparatedColumn(
