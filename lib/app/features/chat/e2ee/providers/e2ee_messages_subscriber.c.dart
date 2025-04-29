@@ -183,7 +183,6 @@ class E2eeMessagesSubscriber extends _$E2eeMessagesSubscriber {
 
           if (currentStatus == null || currentStatus.index < MessageDeliveryStatus.received.index) {
             await sendE2eeMessageService.sendMessageStatus(
-              ref: ref,
               messageEventMessage: rumor,
               status: MessageDeliveryStatus.received,
             );
@@ -205,6 +204,7 @@ class E2eeMessagesSubscriber extends _$E2eeMessagesSubscriber {
               await conversationMessageStatusDao.addOrUpdateStatus(
                 status: status,
                 pubkey: rumor.pubkey,
+                updateAllBefore: rumor.createdAt,
                 masterPubkey: rumor.masterPubkey,
                 sharedId: reactionEntity.data.reference.dTag!,
               );
