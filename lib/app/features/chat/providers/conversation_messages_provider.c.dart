@@ -32,7 +32,6 @@ class ConversationMessages extends _$ConversationMessages {
 
       // There is no other options rather send read status for the last message
       await (await ref.watch(sendE2eeMessageServiceProvider.future)).sendMessageStatus(
-        ref: ref,
         messageEventMessage: lastMessage,
         status: MessageDeliveryStatus.read,
       );

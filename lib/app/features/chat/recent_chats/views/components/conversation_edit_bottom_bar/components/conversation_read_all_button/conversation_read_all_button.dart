@@ -3,6 +3,8 @@
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/extensions/extensions.dart';
+import 'package:ion/app/features/chat/e2ee/providers/send_e2ee_message_provider.c.dart';
+import 'package:ion/app/features/chat/model/database/chat_database.c.dart';
 //import 'package:ion/app/features/chat/e2ee/providers/send_e2ee_message_provider.c.dart';
 //import 'package:ion/app/features/chat/model/database/chat_database.c.dart';
 import 'package:ion/app/features/chat/providers/conversations_provider.c.dart';
@@ -28,15 +30,12 @@ class ConversationReadAllButton extends ConsumerWidget {
 
         await Future.wait(
           conversationsToManage.map((conversation) async {
-            if (conversation.latestMessage == null) {
-              return;
+            if (conversation.latestMessage != null) {
+              await (await ref.read(sendE2eeMessageServiceProvider.future)).sendMessageStatus(
+                status: MessageDeliveryStatus.read,
+                messageEventMessage: conversation.latestMessage!,
+              );
             }
-            // TODO Fix ref
-            // await (await ref.read(sendE2eeMessageServiceProvider.future)).sendMessageStatus(
-            //   ref: ref.read,
-            //   status: MessageDeliveryStatus.read,
-            //   messageEventMessage: conversation.latestMessage!,
-            // );
           }),
         );
 

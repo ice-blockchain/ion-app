@@ -7,7 +7,7 @@ ConversationMessageDataDao conversationMessageDataDao(Ref ref) =>
     ConversationMessageDataDao(ref.watch(chatDatabaseProvider));
 
 @DriftAccessor(
-  tables: [MessageStatusTable],
+  tables: [MessageStatusTable, EventMessageTable],
 )
 class ConversationMessageDataDao extends DatabaseAccessor<ChatDatabase>
     with _$ConversationMessageDataDaoMixin {
@@ -18,33 +18,61 @@ class ConversationMessageDataDao extends DatabaseAccessor<ChatDatabase>
     required String sharedId,
     required String masterPubkey,
     required MessageDeliveryStatus status,
+    DateTime? updateAllBefore,
   }) async {
-    // Fetch the existing status for the given pubkey and sharedId
-    final existingStatus = await (select(messageStatusTable)
-          ..where((table) => table.pubkey.equals(pubkey))
-          ..where((table) => table.sharedId.equals(sharedId)))
-        .getSingleOrNull();
+    if (updateAllBefore != null && status == MessageDeliveryStatus.read) {
+      // Mark all previous received messages as read prior to the given date
+      final unreadResults = await (select(messageStatusTable)
+            ..where((table) => table.masterPubkey.equals(masterPubkey))
+            ..where((table) => table.status.equals(MessageDeliveryStatus.received.index))
+            ..join([
+              innerJoin(
+                eventMessageTable,
+                eventMessageTable.sharedId.equalsExp(messageStatusTable.sharedId) &
+                    eventMessageTable.createdAt.isSmallerThanValue(updateAllBefore),
+              ),
+            ]))
+          .get();
 
-    if (existingStatus == null) {
-      // Insert a new row if no existing status is found
-      await into(messageStatusTable).insert(
-        MessageStatusTableCompanion(
-          status: Value(status),
-          pubkey: Value(pubkey),
-          sharedId: Value(sharedId),
-          masterPubkey: Value(masterPubkey),
-        ),
-      );
-    } else if (status.index > existingStatus.status.index) {
-      // Update the row if the new status has a higher priority
-      await (update(messageStatusTable)
+      // Batch update the status of all previous messages to read
+      await batch((batch) {
+        for (final row in unreadResults) {
+          batch.update(
+            messageStatusTable,
+            const MessageStatusTableCompanion(status: Value(MessageDeliveryStatus.read)),
+            where: (table) =>
+                table.sharedId.equals(row.sharedId) & table.masterPubkey.equals(row.masterPubkey),
+          );
+        }
+      });
+    } else {
+      // Fetch the existing status for the given pubkey and sharedId
+      final existingStatus = await (select(messageStatusTable)
             ..where((table) => table.pubkey.equals(pubkey))
             ..where((table) => table.sharedId.equals(sharedId)))
-          .write(
-        MessageStatusTableCompanion(
-          status: Value(status),
-        ),
-      );
+          .getSingleOrNull();
+
+      if (existingStatus == null) {
+        // Insert a new row if no existing status is found
+        await into(messageStatusTable).insert(
+          MessageStatusTableCompanion(
+            status: Value(status),
+            pubkey: Value(pubkey),
+            sharedId: Value(sharedId),
+            masterPubkey: Value(masterPubkey),
+          ),
+        );
+      } else if (status.index > existingStatus.status.index) {
+        // Update the row if the new status has a higher priority
+        await (update(messageStatusTable)
+              ..where((table) => table.pubkey.equals(pubkey))
+              ..where((table) => table.sharedId.equals(sharedId)))
+            .write(
+          MessageStatusTableCompanion(
+            status: Value(status),
+          ),
+        );
+      }
     }
   }
 
