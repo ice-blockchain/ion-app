@@ -1,5 +1,8 @@
 // SPDX-License-Identifier: ice License 1.0
 
+import 'package:collection/collection.dart';
+import 'package:ion/app/features/user/model/user_chat_relays.c.dart';
+import 'package:ion/app/features/user/model/user_relays.c.dart';
 import 'package:ion/app/services/storage/local_storage.c.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
@@ -15,6 +18,8 @@ final class RelayReachabilityInfo {
   final String relayUrl;
   final int failedToReachCount;
   final DateTime lastFailedToReachDate;
+
+  bool get isUnreachable => failedToReachCount >= 3;
 }
 
 @riverpod
@@ -39,10 +44,42 @@ class RelayReachability extends _$RelayReachability {
     );
   }
 
-  void save(RelayReachabilityInfo relayReachabilityInfo) {
+  List<RelayReachabilityInfo> getAll(List<String> relayUrls) {
+    return relayUrls.map(get).nonNulls.toList();
+  }
+
+  UserRelaysEntity? getFilteredRelayEntity(UserRelaysEntity? relaysEntity) {
+    if (relaysEntity == null) return null;
+    final reachableRelays = _getReachableRelaysSorted(relaysEntity.data.list);
+    if (reachableRelays == null) {
+      return null;
+    }
+
+    return relaysEntity.copyWith(
+      data: UserRelaysData(
+        list: reachableRelays,
+      ),
+    );
+  }
+
+  UserChatRelaysEntity? getFilteredChatRelayEntity(UserChatRelaysEntity? chatRelaysEntity) {
+    if (chatRelaysEntity == null) return null;
+    final reachableRelays = _getReachableRelaysSorted(chatRelaysEntity.data.list);
+    if (reachableRelays == null) {
+      return null;
+    }
+
+    return chatRelaysEntity.copyWith(
+      data: UserChatRelaysData(
+        list: reachableRelays,
+      ),
+    );
+  }
+
+  Future<void> save(RelayReachabilityInfo relayReachabilityInfo) {
     final localStorage = ref.read(localStorageProvider);
     final key = _getKey(relayReachabilityInfo.relayUrl);
-    localStorage.setStringList(
+    return localStorage.setStringList(
       key,
       [
         relayReachabilityInfo.failedToReachCount.toString(),
@@ -51,7 +88,31 @@ class RelayReachability extends _$RelayReachability {
     );
   }
 
+  Future<void> clear(String relayUrl) {
+    final localStorage = ref.read(localStorageProvider);
+    final key = _getKey(relayUrl);
+    return localStorage.remove(key);
+  }
+
   String _getKey(String relayUrl) {
     return 'relay_reachability_info_$relayUrl';
+  }
+
+  List<UserRelay>? _getReachableRelaysSorted(List<UserRelay> relaysList) {
+    final reachabilityInfoNotifier = ref.read(relayReachabilityProvider.notifier);
+    final reachabilityInfos = relaysList
+        .map((relay) => reachabilityInfoNotifier.get(relay.url))
+        .whereType<RelayReachabilityInfo>();
+    final deadRelays =
+        reachabilityInfos.where((reachabilityInfo) => reachabilityInfo.isUnreachable).toList();
+
+    // needs refresh when 50% + 1 or more are dead
+    if (deadRelays.length >= (relaysList.length / 2 + 1).floor()) {
+      return null;
+    }
+
+    return relaysList
+        .where((relay) => deadRelays.none((deadRelay) => deadRelay.relayUrl == relay.url))
+        .toList();
   }
 }

@@ -1,7 +1,6 @@
 // SPDX-License-Identifier: ice License 1.0
 
 import 'package:async/async.dart';
-import 'package:ion/app/features/ion_connect/ion_connect.dart';
 import 'package:ion/app/features/ion_connect/model/event_reference.c.dart';
 import 'package:ion/app/features/ion_connect/model/event_serializable.dart';
 import 'package:ion/app/features/ion_connect/model/ion_connect_entity.dart';
@@ -40,14 +39,7 @@ class IonConnectDbCache extends _$IonConnectDbCache {
     if (eventSerializables.isEmpty) return;
     final eventMessages = await Future.wait(
       eventSerializables.map(
-        (eventSerializable) {
-          final eventMessage = eventSerializable.toEntityEventMessage();
-          if (eventMessage is Future) {
-            return eventMessage as Future<EventMessage>;
-          } else {
-            return Future<EventMessage>.value(eventMessage);
-          }
-        },
+        (eventSerializable) => Future.value(eventSerializable.toEntityEventMessage()),
       ),
     );
     final eventReferences = eventSerializables
