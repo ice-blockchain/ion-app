@@ -433,7 +433,8 @@ class SendE2eeChatMessageService {
       conversationId: entity.data.conversationId,
       failedEventMessageId: messageEvent.id,
       participantsMasterPubkeys: entity.allPubkeys,
-      failedParticipantsMasterPubkeys: failedParticipantsMasterPubkeys,
+      failedParticipantsMasterPubkeys:
+          failedParticipantsMasterPubkeys.isNotEmpty ? failedParticipantsMasterPubkeys : null,
     );
   }
 
