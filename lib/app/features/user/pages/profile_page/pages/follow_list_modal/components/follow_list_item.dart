@@ -8,7 +8,6 @@ import 'package:ion/app/components/list_items_loading_state/item_loading_state.d
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/components/user/follow_user_button/follow_user_button.dart';
 import 'package:ion/app/features/user/providers/user_metadata_provider.c.dart';
-import 'package:ion/app/router/app_routes.c.dart';
 import 'package:ion/app/utils/username.dart';
 
 class FollowListItem extends ConsumerWidget {
@@ -45,10 +44,7 @@ class FollowListItem extends ConsumerWidget {
               ),
             ),
             pubkey: pubkey,
-            onTap: () {
-              context.pop();
-              ProfileRoute(pubkey: pubkey).push<void>(context);
-            },
+            onTap: () => context.pop(pubkey),
           );
         },
         orElse: () => ItemLoadingState(itemHeight: itemHeight),
