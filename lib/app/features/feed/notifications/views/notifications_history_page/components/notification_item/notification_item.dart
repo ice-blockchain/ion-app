@@ -41,8 +41,9 @@ class NotificationItem extends ConsumerWidget {
       }
     }
 
-    return InkWell(
+    return GestureDetector(
       onTap: () => _onTap(context, entity),
+      behavior: HitTestBehavior.opaque,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
