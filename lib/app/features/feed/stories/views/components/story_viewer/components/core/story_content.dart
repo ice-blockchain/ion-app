@@ -110,7 +110,7 @@ class _FooterArea extends HookConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final bottomPadding =
-        isKeyboardShown ? MediaQuery.of(context).viewInsets.bottom + 16.0.s : 16.0.s;
+        isKeyboardShown ? MediaQuery.viewInsetsOf(context).bottom + 16.0.s : 16.0.s;
 
     Future<void> onSubmit(String? txt) async {
       if (txt == null || txt.isEmpty) return;
