@@ -44,7 +44,6 @@ class StoryViewerPage extends HookConsumerWidget {
     );
 
     final currentStory = storyViewerState.currentStory;
-
     useOnInit(
       () {
         if (currentStory != null) {
@@ -77,9 +76,21 @@ class StoryViewerPage extends HookConsumerWidget {
                         currentUserIndex: storyViewerState.currentUserIndex,
                       ),
                     ),
-                    if (!isKeyboardVisible) SizedBox(height: 28.0.s),
-                    if (!isKeyboardVisible) StoryProgressBarContainer(pubkey: pubkey),
-                    if (!isKeyboardVisible) ScreenBottomOffset(margin: 16.0.s),
+                    AnimatedOpacity(
+                      opacity: isKeyboardVisible ? 0 : 1,
+                      duration: const Duration(milliseconds: 150),
+                      child: IgnorePointer(
+                        ignoring: isKeyboardVisible,
+                        child: Column(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            SizedBox(height: 28.0.s),
+                            StoryProgressBarContainer(pubkey: pubkey),
+                            ScreenBottomOffset(margin: 16.0.s),
+                          ],
+                        ),
+                      ),
+                    ),
                   ],
                 ),
               );

@@ -1,6 +1,7 @@
 // SPDX-License-Identifier: ice License 1.0
 
 import 'package:collection/collection.dart';
+import 'package:flutter/foundation.dart';
 import 'package:ion/app/features/feed/stories/data/models/models.dart';
 import 'package:ion/app/features/feed/stories/providers/stories_provider.c.dart';
 import 'package:ion/app/features/optimistic_ui/features/likes/post_like_provider.c.dart';
@@ -16,72 +17,74 @@ part 'story_viewing_provider.c.g.dart';
 class StoryViewingController extends _$StoryViewingController {
   @override
   StoryViewerState build(String pubkey) {
-    final userStories = ref.watch(filteredStoriesByPubkeyProvider(pubkey));
-
+    final stories = ref.watch(filteredStoriesByPubkeyProvider(pubkey));
     return StoryViewerState(
-      userStories: userStories,
+      userStories: stories,
       currentUserIndex: 0,
       currentStoryIndex: 0,
     );
   }
 
-  void moveToNextStory() {
-    if (state.hasNextStory) {
-      state = state.copyWith(currentStoryIndex: state.currentStoryIndex + 1);
-    } else {
-      moveToNextUser();
-    }
-  }
+  void _moveToNextStory() => state = state.copyWith(currentStoryIndex: state.currentStoryIndex + 1);
 
-  void moveToPreviousStory() {
-    if (state.hasPreviousStory) {
-      state = state.copyWith(
-        currentStoryIndex: state.currentStoryIndex - 1,
-      );
-    } else {
-      moveToPreviousUser();
-    }
-  }
+  void _moveToPreviousStory() =>
+      state = state.copyWith(currentStoryIndex: state.currentStoryIndex - 1);
 
-  void moveToUser(int userIndex) {
-    if (userIndex >= 0 && userIndex < state.userStories.length) {
-      final newStoryIndex =
-          userIndex > state.currentUserIndex ? 0 : state.userStories[userIndex].stories.length - 1;
-
-      state = state.copyWith(
-        currentUserIndex: userIndex,
-        currentStoryIndex: newStoryIndex,
-      );
-    }
-  }
-
-  void moveToNextUser() {
-    if (state.hasNextUser) {
-      state = state.copyWith(
+  void _moveToNextUser() => state = state.copyWith(
         currentUserIndex: state.currentUserIndex + 1,
         currentStoryIndex: 0,
       );
+
+  void _moveToPreviousUser() => state = state.copyWith(
+        currentUserIndex: state.currentUserIndex - 1,
+        currentStoryIndex: 0,
+      );
+
+  /// story → nextStory → nextUser → close
+  bool advance({VoidCallback? onClose}) {
+    if (state.hasNextStory) {
+      _moveToNextStory();
+      return true;
     }
+    if (state.hasNextUser) {
+      _moveToNextUser();
+      return true;
+    }
+    onClose?.call();
+    return false;
   }
 
-  void moveToPreviousUser() {
+  /// story ← prevStory ← prevUser ← close
+  bool rewind({VoidCallback? onClose}) {
+    if (state.hasPreviousStory) {
+      _moveToPreviousStory();
+      return true;
+    }
     if (state.hasPreviousUser) {
+      _moveToPreviousUser();
+      return true;
+    }
+    onClose?.call();
+    return false;
+  }
+
+  void moveToUser(int userIndex) {
+    // Do nothing if this is the same author
+    if (userIndex == state.currentUserIndex) return;
+
+    if (userIndex >= 0 && userIndex < state.userStories.length) {
       state = state.copyWith(
-        currentUserIndex: state.currentUserIndex - 1,
+        currentUserIndex: userIndex,
         currentStoryIndex: 0,
       );
     }
   }
 
   void toggleLike(String postId) {
-    final userStory = state.userStories.firstWhereOrNull(
-      (user) => user.getStoryById(postId) != null,
-    );
+    final userStory = state.userStories.firstWhereOrNull((u) => u.getStoryById(postId) != null);
+    if (userStory == null) return;
 
-    if (userStory != null) {
-      final post = userStory.getStoryById(postId)!;
-      final eventReference = post.toEventReference();
-      ref.read(toggleLikeNotifierProvider.notifier).toggle(eventReference);
-    }
+    final post = userStory.getStoryById(postId)!;
+    ref.read(toggleLikeNotifierProvider.notifier).toggle(post.toEventReference());
   }
 }

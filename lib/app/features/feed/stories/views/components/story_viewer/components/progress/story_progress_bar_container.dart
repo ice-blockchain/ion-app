@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/extensions/extensions.dart';
+import 'package:ion/app/features/core/model/media_type.dart';
 import 'package:ion/app/features/feed/stories/providers/story_viewing_provider.c.dart';
 import 'package:ion/app/features/feed/stories/views/components/story_viewer/components/progress/progress.dart';
 
@@ -17,7 +18,6 @@ class StoryProgressBarContainer extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final storyState = ref.watch(storyViewingControllerProvider(pubkey));
     final userStories =
         ref.watch(storyViewingControllerProvider(pubkey).select((s) => s.userStories));
     final currentStoryIndex =
@@ -36,23 +36,19 @@ class StoryProgressBarContainer extends ConsumerWidget {
       child: Row(
         children: posts!.asMap().entries.map((post) {
           final index = post.key;
+          final mediaType = post.value.data.primaryMedia?.mediaType ?? MediaType.unknown;
+          final isVideo = mediaType == MediaType.video;
           return Expanded(
             child: StoryProgressTracker(
               key: ValueKey(post.value.id),
               post: post.value,
               isCurrent: index == currentStoryIndex,
               isPreviousStory: index < currentStoryIndex,
-              onCompleted: () {
-                final notifier = ref.read(storyViewingControllerProvider(pubkey).notifier);
-
-                if (storyState.hasNextStory) {
-                  notifier.moveToNextStory();
-                } else if (storyState.hasNextUser) {
-                  notifier.moveToNextUser();
-                } else {
-                  context.pop();
-                }
-              },
+              onCompleted: isVideo
+                  ? null
+                  : () => ref
+                      .read(storyViewingControllerProvider(pubkey).notifier)
+                      .advance(onClose: () => context.pop()),
               margin: index > 0 ? EdgeInsetsDirectional.only(start: 4.0.s) : null,
             ),
           );

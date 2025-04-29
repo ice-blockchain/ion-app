@@ -21,10 +21,12 @@ import 'package:ion/app/features/feed/stories/views/components/story_viewer/comp
 class StoryContent extends HookConsumerWidget {
   const StoryContent({
     required this.story,
+    required this.viewerPubkey,
     super.key,
   });
 
   final ModifiablePostEntity story;
+  final String viewerPubkey;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -33,39 +35,7 @@ class StoryContent extends HookConsumerWidget {
     final isKeyboardVisible = KeyboardVisibilityProvider.isKeyboardVisible(context);
     final canReply = ref.watch(canReplyProvider(story.toEventReference())).valueOrNull ?? false;
     final currentPubkey = ref.watch(currentPubkeySelectorProvider);
-    final isCurrentUserStory = currentPubkey == story.masterPubkey;
-
-    ref.listen(
-      storyReplyProvider,
-      (_, next) => ref.read(storyPauseControllerProvider.notifier).paused = next.isLoading,
-    );
-
-    final bottomPadding =
-        isKeyboardVisible ? MediaQuery.of(context).viewInsets.bottom + 16.0.s : 16.0.s;
-
-    final onSubmitted = useCallback(
-      (String? content) async {
-        if (content == null || content.isEmpty) return;
-
-        final text = textController.text;
-
-        textController.clear();
-
-        FocusScope.of(context).unfocus();
-
-        await ref.read(storyReplyProvider.notifier).sendReply(
-              story,
-              replyText: text,
-            );
-      },
-      [story.masterPubkey],
-    );
-
-    final isPaused = ref.watch(storyPauseControllerProvider);
-    final isReplyLoading = ref.watch(storyReplyProvider).isLoading;
-    final isMenuOpen = ref.watch(storyMenuControllerProvider);
-
-    final shouldShowElements = isReplyLoading || !isPaused || isMenuOpen || isKeyboardVisible;
+    final isOwnerStory = currentPubkey == story.masterPubkey;
 
     return ClipRRect(
       borderRadius: isKeyboardVisible
@@ -80,13 +50,14 @@ class StoryContent extends HookConsumerWidget {
           Stack(
             fit: StackFit.expand,
             children: [
-              StoryViewerContent(post: story),
-              if (isReplyLoading)
+              StoryViewerContent(
+                post: story,
+                viewerPubkey: viewerPubkey,
+              ),
+              if (ref.watch(storyReplyProvider).isLoading)
                 BackdropFilter(
                   filter: ImageFilter.blur(sigmaX: 15, sigmaY: 15),
-                  child: Center(
-                    child: IONLoadingIndicator(size: Size.square(54.0.s)),
-                  ),
+                  child: Center(child: IONLoadingIndicator(size: Size.square(54.0.s))),
                 ),
             ],
           ),
@@ -96,37 +67,81 @@ class StoryContent extends HookConsumerWidget {
               StoryViewerHeader(currentPost: story),
             ],
           )
-              .animate(target: shouldShowElements ? 1 : 0)
+              .animate(target: _shouldShowUI(ref, isKeyboardVisible) ? 1 : 0)
               .fade(duration: 300.ms)
               .slideY(begin: -0.1, end: 0, duration: 300.ms),
-          Stack(
-            children: [
-              if (canReply && !isCurrentUserStory)
-                StoryInputField(
-                  controller: textController,
-                  bottomPadding: bottomPadding,
-                  onSubmitted: onSubmitted,
-                ),
-              StoryViewerActionButtons(
-                post: story,
-                bottomPadding: bottomPadding,
-              ),
-              if (isKeyboardVisible)
-                StoryReactionOverlay(
-                  story: story,
-                  textController: textController,
-                ),
-            ],
-          )
-              .animate(target: shouldShowElements ? 1 : 0)
-              .fade(duration: 300.ms)
-              .slideY(begin: 0.1, end: 0, duration: 300.ms),
+          _FooterArea(
+            story: story,
+            viewerPubkey: viewerPubkey,
+            textController: textController,
+            isKeyboardShown: isKeyboardVisible,
+            canReply: canReply && !isOwnerStory,
+          ),
           if (emojiState.showNotification && emojiState.selectedEmoji != null)
-            StoryReactionNotification(
-              emoji: emojiState.selectedEmoji!,
-            ),
+            StoryReactionNotification(emoji: emojiState.selectedEmoji!),
         ],
       ),
+    );
+  }
+
+  bool _shouldShowUI(WidgetRef ref, bool isKeyboardShown) {
+    final paused = ref.watch(storyPauseControllerProvider);
+    final loading = ref.watch(storyReplyProvider).isLoading;
+    final menuOpen = ref.watch(storyMenuControllerProvider);
+    return loading || !paused || menuOpen || isKeyboardShown;
+  }
+}
+
+class _FooterArea extends HookConsumerWidget {
+  const _FooterArea({
+    required this.story,
+    required this.viewerPubkey,
+    required this.textController,
+    required this.isKeyboardShown,
+    required this.canReply,
+  });
+
+  final ModifiablePostEntity story;
+  final String viewerPubkey;
+  final TextEditingController textController;
+  final bool isKeyboardShown;
+  final bool canReply;
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final bottomPadding =
+        isKeyboardShown ? MediaQuery.viewInsetsOf(context).bottom + 16.0.s : 16.0.s;
+
+    Future<void> onSubmit(String? txt) async {
+      if (txt == null || txt.isEmpty) return;
+      textController.clear();
+      FocusScope.of(context).unfocus();
+      await ref.read(storyReplyProvider.notifier).sendReply(story, replyText: txt);
+    }
+
+    ref.listen(
+      storyReplyProvider,
+      (_, next) => ref.read(storyPauseControllerProvider.notifier).paused = next.isLoading,
+    );
+
+    return Stack(
+      children: [
+        if (canReply)
+          StoryInputField(
+            controller: textController,
+            bottomPadding: bottomPadding,
+            onSubmitted: onSubmit,
+          ),
+        StoryViewerActionButtons(
+          post: story,
+          bottomPadding: bottomPadding,
+        ),
+        if (isKeyboardShown)
+          StoryReactionOverlay(
+            story: story,
+            textController: textController,
+          ),
+      ],
     );
   }
 }

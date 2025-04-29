@@ -2675,7 +2675,7 @@ packages:
     source: hosted
     version: "2.7.0"
   video_player_platform_interface:
-    dependency: transitive
+    dependency: "direct dev"
     description:
       name: video_player_platform_interface
       sha256: df534476c341ab2c6a835078066fc681b8265048addd853a1e3c78740316a844
