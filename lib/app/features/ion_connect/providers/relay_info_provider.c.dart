@@ -31,8 +31,14 @@ class RelayInfoRepository {
 
   Future<RelayInfo> getRelayInfo(String relayUrl) async {
     try {
-      final response = await _dio.get<Map<String, dynamic>>(
-        relayUrl,
+      final relayUri = Uri.parse(relayUrl);
+      final infoUri = Uri(
+        scheme: 'https',
+        host: relayUri.host,
+        port: relayUri.hasPort ? relayUri.port : null,
+      );
+      final response = await _dio.getUri<dynamic>(
+        infoUri,
         options: Options(
           headers: {
             'Accept': 'application/nostr+json',
