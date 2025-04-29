@@ -18,8 +18,9 @@ class ConfigureFirebase extends _$ConfigureFirebase {
 
   @override
   Future<void> build() async {
+    //TODO::on logout invalidate the token (when firebase messaging is impl), cuz deliting the app has no effect
     // onLogout should be at the top of the build method
-    onLogout(ref, _deleteConfiguredFirebaseApp);
+    // onLogout(ref, _deleteConfiguredFirebaseApp);
 
     final authState = await ref.watch(authProvider.future);
     if (!authState.isAuthenticated) {
@@ -85,9 +86,7 @@ class ConfigureFirebase extends _$ConfigureFirebase {
   }
 
   Future<bool> _hasConfiguredAppForRelays(List<String> relayUrls) async {
-    final firebaseService = ref.watch(firebaseServiceProvider);
-
-    if (!firebaseService.hasApp()) {
+    if (ref.read(localStorageProvider).getString(_configuredFirebaseRelayKey) == null) {
       return false;
     }
 
