@@ -32,7 +32,7 @@ class SecureStorage {
 
     if (prefs.getBool(key) == null) {
       await Future.wait([
-        const FlutterSecureStorage().deleteAll(),
+        _storage.deleteAll(),
         prefs.setBool(key, true),
       ]);
     }
