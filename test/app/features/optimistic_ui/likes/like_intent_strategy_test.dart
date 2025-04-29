@@ -81,6 +81,7 @@ void main() {
       final like = _MockReactionEntity();
       when(() => like.id).thenReturn('abc');
       when(() => like.cacheKey).thenReturn('cache/abc');
+      when(() => like.pubkey).thenReturn('pubkey');
 
       const prev = PostLike(eventReference: ref, likesCount: 1, likedByMe: true);
       final opt = prev.copyWith(likedByMe: false, likesCount: 0);
