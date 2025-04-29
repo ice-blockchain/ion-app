@@ -14,18 +14,15 @@ class RelayInfo with _$RelayInfo {
   const factory RelayInfo({
     required String name,
     required String description,
-    required String banner,
     required String icon,
     required String pubkey,
     required String contact,
-    required List<int> supportedNips,
+    @JsonKey(name: 'supported_nips') required List<int> supportedNips,
     required String software,
     required String version,
-    required String privacyPolicy,
-    required String termsOfService,
-    List<RelayFcmConfig>? fcmAndroidConfigs,
-    List<RelayFcmConfig>? fcmIosConfigs,
-    List<RelayFcmConfig>? fcmWebConfigs,
+    @JsonKey(name: 'fcm_android_configs') List<RelayFcmConfig>? fcmAndroidConfigs,
+    @JsonKey(name: 'fcm_ios_configs') List<RelayFcmConfig>? fcmIosConfigs,
+    @JsonKey(name: 'fcm_web_configs') List<RelayFcmConfig>? fcmWebConfigs,
   }) = _RelayInfo;
 
   const RelayInfo._();
