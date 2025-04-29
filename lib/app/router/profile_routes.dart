@@ -11,7 +11,7 @@ class ProfileRoutes {
     TypedGoRoute<EditBookmarksRoute>(path: 'bookmarks_edit'),
     TypedShellRoute<ModalShellRouteData>(
       routes: [
-        TypedGoRoute<FollowListRoute>(path: 'follow-list-fullstack/:'),
+        TypedGoRoute<FollowListRoute>(path: 'follow-list-fullstack'),
         TypedGoRoute<CategorySelectRoute>(path: 'category-selector'),
         TypedGoRoute<SelectCoinProfileRoute>(path: 'coin-selector'),
         TypedGoRoute<SelectNetworkProfileRoute>(path: 'network-selector'),
