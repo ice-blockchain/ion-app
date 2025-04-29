@@ -167,19 +167,14 @@ class _TextMessageContent extends HookWidget {
       final wouldOverlap =
           lineMetrics.last.width.s > (maxAvailableWidth - metadataWidth.value.s + 32.0.s);
 
-      final maxLineWidth = lineMetrics.map((e) => e.width).reduce((a, b) => a > b ? a : b);
-      final wouldPadding = () {
-        if (maxLineWidth.s > maxAvailableWidth) {
-          return 0.0.s;
-        }
-        return metadataWidth.value.s + 8.0.s;
-      }();
+      final contentPadding =
+          _calculateContentPadding(lineMetrics, maxAvailableWidth, metadataWidth.value);
 
       return Stack(
         alignment: AlignmentDirectional.bottomEnd,
         children: [
           Padding(
-            padding: EdgeInsetsDirectional.only(end: wouldPadding),
+            padding: EdgeInsetsDirectional.only(end: contentPadding),
             child:
                 _TextRichContent(text: wouldOverlap ? '$content\n' : content, textStyle: textStyle),
           ),
@@ -190,6 +185,18 @@ class _TextMessageContent extends HookWidget {
         ],
       );
     }
+  }
+
+  double _calculateContentPadding(
+    List<LineMetrics> lineMetrics,
+    double maxAvailableWidth,
+    double metadataWidth,
+  ) {
+    final maxLineWidth = lineMetrics.map((e) => e.width).reduce((a, b) => a > b ? a : b);
+    if (maxLineWidth.s > maxAvailableWidth) {
+      return 0.0.s;
+    }
+    return metadataWidth.s + 8.0.s;
   }
 }
 
