@@ -32,15 +32,6 @@ class ConversationEventMessageDao extends DatabaseAccessor<ChatDatabase>
       return;
     }
 
-    final existingEventMessage = await (select(db.eventMessageTable)
-          ..where((table) => table.sharedId.equalsNullable(event.sharedId)))
-        .getSingleOrNull();
-
-    if (existingEventMessage != null) {
-      await delete(db.conversationMessageTable).delete(
-          ConversationMessageTableCompanion(eventMessageId: Value(existingEventMessage.id)));
-    }
-
     await into(db.eventMessageTable)
         .insert(EventMessageRowClass.fromEventMessage(event), mode: InsertMode.insertOrReplace);
 
