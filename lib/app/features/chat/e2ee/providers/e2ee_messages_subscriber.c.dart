@@ -183,7 +183,6 @@ class E2eeMessagesSubscriber extends _$E2eeMessagesSubscriber {
 
           if (currentStatus == null || currentStatus.index < MessageDeliveryStatus.received.index) {
             await sendE2eeMessageService.sendMessageStatus(
-              ref: ref,
               messageEventMessage: rumor,
               status: MessageDeliveryStatus.received,
             );

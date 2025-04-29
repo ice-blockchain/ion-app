@@ -13,8 +13,6 @@ import 'package:ion/app/features/chat/model/database/chat_database.c.dart';
 import 'package:ion/app/features/chat/providers/conversation_pubkeys_provider.c.dart';
 import 'package:ion/app/features/core/providers/env_provider.c.dart';
 import 'package:ion/app/features/ion_connect/ion_connect.dart';
-import 'package:ion/app/features/ion_connect/model/action_source.c.dart';
-import 'package:ion/app/features/ion_connect/model/entity_expiration.c.dart';
 import 'package:ion/app/features/ion_connect/model/event_reference.c.dart';
 import 'package:ion/app/features/ion_connect/providers/ion_connect_event_signer_provider.c.dart';
 import 'package:ion/app/features/ion_connect/providers/ion_connect_notifier.c.dart';
@@ -33,6 +31,7 @@ Future<SendE2eeMessageService> sendE2eeMessageService(
   final eventSigner = await ref.watch(currentUserIonConnectEventSignerProvider.future);
 
   return SendE2eeMessageService(
+    ref: ref,
     eventSigner: eventSigner,
     sealService: sealService,
     wrapService: wrapService,
@@ -45,6 +44,7 @@ Future<SendE2eeMessageService> sendE2eeMessageService(
 
 class SendE2eeMessageService {
   SendE2eeMessageService({
+    required this.ref,
     required this.env,
     required this.wrapService,
     required this.sealService,
@@ -54,6 +54,7 @@ class SendE2eeMessageService {
     required this.currentUserMasterPubkey,
   });
 
+  final Ref ref;
   final Env env;
   final EventSigner? eventSigner;
   final IonConnectNotifier ionConnectNotifier;
@@ -66,7 +67,6 @@ class SendE2eeMessageService {
 
   // TODO: Create a separate provider for message status updates
   Future<void> sendMessageStatus({
-    required Ref ref,
     required MessageDeliveryStatus status,
     required EventMessage messageEventMessage,
   }) async {
@@ -75,8 +75,8 @@ class SendE2eeMessageService {
     }
 
     final eventMessage = await createEventMessage(
-      content: status.name,
       signer: eventSigner!,
+      content: status.name,
       kind: PrivateMessageReactionEntity.kind,
       tags: [
         ReplaceableEventReference(
@@ -150,18 +150,12 @@ class SendE2eeMessageService {
           throw UserPubkeyNotFoundException(masterPubkey);
         }
 
-        final giftWrap = await createGiftWrap(
-          signer: eventSigner!,
+        await ref.read(sendE2eeChatMessageServiceProvider).sendWrappedMessage(
+          eventSigner: eventSigner!,
           eventMessage: eventMessage,
-          receiverMasterPubkey: masterPubkey,
-          kinds: [PrivateMessageReactionEntity.kind.toString()],
-          receiverPubkey: currentUser ? eventSigner!.publicKey : pubkey,
-        );
-
-        await ionConnectNotifier.sendEvent(
-          giftWrap,
-          cache: false,
-          actionSource: ActionSourceUserChat(masterPubkey, anonymous: true),
+          masterPubkey: masterPubkey,
+          pubkey: currentUser ? eventSigner!.publicKey : pubkey,
+          wrappedKinds: [PrivateMessageReactionEntity.kind.toString()],
         );
       }),
     );
@@ -196,37 +190,5 @@ class SendE2eeMessageService {
     );
 
     return eventMessage;
-  }
-
-  Future<EventMessage> createGiftWrap({
-    required String receiverPubkey,
-    required String receiverMasterPubkey,
-    required EventSigner signer,
-    required EventMessage eventMessage,
-    List<String>? kinds,
-  }) async {
-    final contentKinds = kinds ?? [ReplaceablePrivateDirectMessageEntity.kind.toString()];
-
-    final expirationTag = EntityExpiration(
-      value: DateTime.now().add(
-        Duration(hours: env.get<int>(EnvVariable.GIFT_WRAP_EXPIRATION_HOURS)),
-      ),
-    ).toTag();
-
-    final seal = await sealService.createSeal(
-      eventMessage,
-      signer,
-      receiverPubkey,
-    );
-
-    final wrap = await wrapService.createWrap(
-      event: seal,
-      contentKinds: contentKinds,
-      receiverPubkey: receiverPubkey,
-      receiverMasterPubkey: receiverMasterPubkey,
-      expirationTag: expirationTag,
-    );
-
-    return wrap;
   }
 }
