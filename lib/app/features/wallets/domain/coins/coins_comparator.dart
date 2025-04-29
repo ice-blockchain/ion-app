@@ -10,10 +10,12 @@ class CoinsComparator {
     double balanceA,
     double balanceB,
     String symbolA,
-    String symbolB, [
+    String symbolB, {
     String? networkA,
     String? networkB,
-  ]) {
+    bool isNativeA = false,
+    bool isNativeB = false,
+  }) {
     // 1. Compare by balanceUSD in descending order
     final balanceComparison = balanceB.compareTo(balanceA);
     if (balanceComparison != 0) return balanceComparison;
@@ -35,7 +37,12 @@ class CoinsComparator {
     final symbolComparison = symbolA.compareTo(symbolB);
     if (symbolComparison != 0) return symbolComparison;
 
-    // 4. If symbols are equal, compare by networks
+    // 4. If coin is native for network, it should be displayed before other coins,
+    // sorted by network
+    if (isNativeA && !isNativeB) return -1;
+    if (isNativeB && !isNativeA) return 1;
+
+    // 5. If symbols are equal, compare by networks
     if (networkA != null && networkB != null) {
       return networkA.compareTo(networkB);
     }
@@ -61,8 +68,10 @@ class CoinsComparator {
       b.balanceUSD,
       a.coin.abbreviation,
       b.coin.abbreviation,
-      a.coin.network.displayName,
-      b.coin.network.displayName,
+      networkA: a.coin.network.displayName,
+      networkB: b.coin.network.displayName,
+      isNativeA: a.coin.isNative,
+      isNativeB: b.coin.isNative,
     );
   }
 }
