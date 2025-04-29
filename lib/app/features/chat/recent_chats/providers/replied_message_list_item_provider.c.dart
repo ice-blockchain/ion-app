@@ -16,20 +16,21 @@ part 'replied_message_list_item_provider.c.g.dart';
 class RepliedMessageListItem extends _$RepliedMessageListItem {
   @override
   Future<EventMessage?> build(ChatMessageInfoItem messageItem) async {
-    final entity = PrivateDirectMessageEntity.fromEventMessage(messageItem.eventMessage);
+    final entityData =
+        ReplaceablePrivateDirectMessageData.fromEventMessage(messageItem.eventMessage);
 
-    RelatedEvent? relatedEvent;
+    RelatedReplaceableEvent? relatedEvent;
 
-    if (entity.data.relatedEvents?.length == 1) {
-      relatedEvent = entity.data.relatedEvents!.first;
+    if (entityData.relatedEvents?.length == 1) {
+      relatedEvent = entityData.relatedEvents!.single;
     } else {
-      relatedEvent = entity.data.relatedEvents
+      relatedEvent = entityData.relatedEvents
           ?.firstWhereOrNull((event) => event.marker != RelatedEventMarker.root);
     }
 
     if (relatedEvent != null) {
       final repliedMessageEvent = await ref.watch(conversationMessageDaoProvider).getEventMessage(
-            messageId: (relatedEvent as RelatedImmutableEvent).eventReference.eventId,
+            relatedEvent.eventReference.dTag!,
           );
 
       return repliedMessageEvent;

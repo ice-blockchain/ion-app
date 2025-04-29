@@ -157,9 +157,9 @@ class ReplaceablePrivateDirectMessageData
     RichText? richText,
     String? groupImagePath,
     GroupSubject? groupSubject,
-    List<RelatedEvent>? relatedEvents,
     List<RelatedPubkey>? relatedPubkeys,
     QuotedReplaceableEvent? quotedEvent,
+    List<RelatedReplaceableEvent>? relatedEvents,
   }) = _ReplaceablePrivateDirectMessageData;
 
   const ReplaceablePrivateDirectMessageData._();
@@ -179,7 +179,8 @@ class ReplaceablePrivateDirectMessageData
           .singleOrNull!
           .value,
       relatedPubkeys: tags[RelatedPubkey.tagName]?.map(RelatedPubkey.fromTag).toList(),
-      relatedEvents: tags[RelatedReplaceableEvent.tagName]?.map(RelatedEvent.fromTag).toList(),
+      relatedEvents:
+          tags[RelatedReplaceableEvent.tagName]?.map(RelatedReplaceableEvent.fromTag).toList(),
       groupSubject: tags[GroupSubject.tagName]?.map(GroupSubject.fromTag).singleOrNull,
       quotedEvent:
           tags[QuotedReplaceableEvent.tagName]?.map(QuotedReplaceableEvent.fromTag).singleOrNull,

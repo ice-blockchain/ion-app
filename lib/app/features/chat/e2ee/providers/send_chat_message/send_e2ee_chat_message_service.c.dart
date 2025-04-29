@@ -210,12 +210,13 @@ class SendE2eeChatMessageService {
 
       return [
         if (rootRelatedEvent != null) rootRelatedEvent,
-        RelatedImmutableEvent(
+        RelatedReplaceableEvent(
           marker: marker,
           pubkey: repliedMessage.masterPubkey,
-          eventReference: ImmutableEventReference(
-            eventId: repliedMessage.id,
-            pubkey: repliedMessage.masterPubkey,
+          eventReference: ReplaceableEventReference(
+            kind: repliedMessage.kind,
+            dTag: repliedMessage.sharedId,
+            pubkey: repliedMessage.pubkey,
           ),
         ),
       ];
@@ -302,9 +303,9 @@ class SendE2eeChatMessageService {
     String? subject,
     String? messageId,
     List<String>? groupImageTag,
+    EventMessage? repliedMessage,
     List<List<String>>? mediaTags,
     List<String>? referencePostTag,
-    EventMessage? repliedMessage,
   }) {
     final currentUserMasterPubkey = ref.read(currentPubkeySelectorProvider);
 
