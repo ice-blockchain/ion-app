@@ -15,10 +15,10 @@ class WalletRoutes {
         TypedGoRoute<ExploreTransactionDetailsRoute>(path: 'explore-transaction-details'),
         ...coinSendRoutes,
         ...coinReceiveRoutes,
+        ...nftSendRoutes,
       ],
     ),
     ...walletManagementRoutes,
-    ...nftSendRoutes,
     TypedShellRoute<ModalShellRouteData>(
       routes: [TypedGoRoute<ScanWalletRoute>(path: 'scan-wallet')],
     ),
@@ -41,16 +41,11 @@ class WalletRoutes {
   ];
 
   static const nftSendRoutes = <TypedRoute<RouteData>>[
-    TypedShellRoute<ModalShellRouteData>(
+    TypedGoRoute<NftDetailsRoute>(path: 'nft-details'),
+    TypedGoRoute<NftSendFormRoute>(
+      path: 'nft-send',
       routes: [
-        TypedGoRoute<NftDetailsRoute>(path: 'nft-details'),
-        TypedGoRoute<ManageNftsRoute>(path: 'manage-nfts'),
-        TypedGoRoute<NftSendFormRoute>(
-          path: 'nft-send',
-          routes: [
-            TypedGoRoute<NftSelectContactRoute>(path: 'select-contact-to-send-nft'),
-          ],
-        ),
+        TypedGoRoute<NftSelectContactRoute>(path: 'select-contact-to-send-nft'),
         TypedGoRoute<NftSendScanRoute>(path: 'scan-receiver-wallet'),
         TypedGoRoute<SendNftConfirmRoute>(path: 'nft-confirm'),
         TypedGoRoute<NftTransactionResultRoute>(path: 'nft-transaction-result'),

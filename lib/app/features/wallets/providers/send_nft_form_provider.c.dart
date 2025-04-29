@@ -65,7 +65,7 @@ class SendNftFormController extends _$SendNftFormController {
   Future<void> _loadNetworkFeeOptions(SendNftFormData form) async {
     final wallets = await ref.read(walletViewCryptoWalletsProvider().future);
     final wallet = wallets.firstWhereOrNull(
-      (wallet) => wallet.network == form.nft!.network.id,
+      (wallet) => wallet.network == form.nft?.network.id,
     );
 
     // Reset current information about network

@@ -79,6 +79,12 @@ class SendNftForm extends ConsumerWidget {
 
                         pubkey?.let(notifier.setContact);
                       },
+                      onScanPressed: () async {
+                        final address = await NftSendScanRoute().push<String?>(context);
+                        if (address != null) {
+                          notifier.setReceiverAddress(address);
+                        }
+                      },
                     ),
                     SizedBox(height: 17.0.s),
                     const NftNetworkFeeSelector(),

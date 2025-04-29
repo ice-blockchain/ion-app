@@ -31,7 +31,7 @@ class ContactInputSwitcher extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     if (pubkey == null) {
       return AddressInputField(
-        initialValue: address,
+        address: address,
         onOpenContactList: onContactTap,
         onAddressChanged: onWalletAddressChanged,
         onScanPressed: onScanPressed,
