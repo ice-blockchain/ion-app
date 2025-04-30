@@ -10,7 +10,7 @@ import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/user/model/user_metadata.c.dart';
 import 'package:ion/app/features/user/pages/user_picker_sheet/user_picker_sheet.dart';
 import 'package:ion/app/features/wallets/providers/networks_provider.c.dart';
-import 'package:ion/app/features/wallets/views/pages/contact_without_wallet_error_modal.dart';
+import 'package:ion/app/features/wallets/views/pages/contact_wallet_error_modals.dart';
 import 'package:ion/app/router/components/navigation_app_bar/navigation_app_bar.dart';
 import 'package:ion/app/router/components/navigation_app_bar/navigation_close_button.dart';
 import 'package:ion/app/router/components/sheet_content/sheet_content.dart';
@@ -40,12 +40,18 @@ class ContactPickerModal extends HookConsumerWidget {
         final network = await ref.read(networkByIdProvider(networkId!).future);
         if (network == null) return false;
 
-        final address = user.data.wallets?[network.id];
+        final wallets = user.data.wallets;
+        final address = wallets?[network.id];
         if (address != null) return true;
 
         if (context.mounted) {
           unawaited(
-            showContactWithoutWalletError(context, user: user, network: network),
+            showContactWalletError(
+              ref.context,
+              user: user,
+              network: network,
+              isPrivate: wallets == null,
+            ),
           );
         }
 

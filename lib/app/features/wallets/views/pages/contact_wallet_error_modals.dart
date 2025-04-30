@@ -1,5 +1,3 @@
-// SPDX-License-Identifier: ice License 1.0
-
 import 'package:flutter/material.dart';
 import 'package:ion/app/components/button/button.dart';
 import 'package:ion/app/components/card/info_card.dart';
@@ -12,14 +10,18 @@ import 'package:ion/app/features/wallets/model/network_data.c.dart';
 import 'package:ion/app/router/utils/show_simple_bottom_sheet.dart';
 import 'package:ion/generated/assets.gen.dart';
 
-class ContactWithoutWalletError extends StatelessWidget {
-  const ContactWithoutWalletError({
+class ContactWalletErrorModal extends StatelessWidget {
+  const ContactWalletErrorModal({
     required this.user,
-    required this.network,
+    required this.title,
+    required this.iconPath,
+    required this.description,
     super.key,
   });
 
-  final NetworkData network;
+  final String title;
+  final String iconPath;
+  final String description;
   final UserMetadataEntity user;
 
   @override
@@ -35,8 +37,8 @@ class ContactWithoutWalletError extends StatelessWidget {
             Padding(
               padding: EdgeInsetsDirectional.only(start: 29.0.s, end: 28.0.s, top: 30.0.s),
               child: InfoCard(
-                iconAsset: Assets.svg.actionwalleterrorwallet,
-                title: context.i18n.contact_wallet_not_found_title,
+                iconAsset: iconPath,
+                title: title,
                 descriptionWidget: RichText(
                   textAlign: TextAlign.center,
                   text: TextSpan(
@@ -58,9 +60,7 @@ class ContactWithoutWalletError extends StatelessWidget {
                       ),
                       textSeparator,
                       TextSpan(
-                        text: context.i18n.contact_wallet_not_found_description(
-                          network.displayName,
-                        ),
+                        text: description,
                         style: context.theme.appTextThemes.body2,
                       ),
                     ],
@@ -84,12 +84,30 @@ class ContactWithoutWalletError extends StatelessWidget {
   }
 }
 
-Future<void> showContactWithoutWalletError(
+Future<void> showContactWalletError(
   BuildContext context, {
   required NetworkData network,
   required UserMetadataEntity user,
-}) =>
-    showSimpleBottomSheet<void>(
-      context: context,
-      child: ContactWithoutWalletError(user: user, network: network),
-    );
+  required bool isPrivate,
+}) {
+  final title = isPrivate
+      ? context.i18n.contact_wallet_is_private_title
+      : context.i18n.contact_wallet_not_found_title;
+
+  final description = isPrivate
+      ? context.i18n.contact_wallet_is_private_description
+      : context.i18n.contact_wallet_not_found_description(network.displayName);
+
+  final iconPath =
+      isPrivate ? Assets.svg.actionwalletprivatewallet : Assets.svg.actionwalleterrorwallet;
+
+  return showSimpleBottomSheet<void>(
+    context: context,
+    child: ContactWalletErrorModal(
+      user: user,
+      title: title,
+      iconPath: iconPath,
+      description: description,
+    ),
+  );
+}
