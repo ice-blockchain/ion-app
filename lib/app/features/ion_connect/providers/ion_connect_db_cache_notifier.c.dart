@@ -10,6 +10,8 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'ion_connect_db_cache_notifier.c.g.dart';
 
+abstract class DbCacheableEntity implements EntityEventSerializable {}
+
 @riverpod
 class IonConnectDbCache extends _$IonConnectDbCache {
   @override

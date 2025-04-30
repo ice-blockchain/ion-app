@@ -53,10 +53,7 @@ class UserChatRelaysManager extends _$UserChatRelaysManager {
         );
 
     if (relay != null && relay is UserChatRelaysEntity) {
-      await (
-        ref.read(ionConnectDbCacheProvider.notifier).save(relay),
-        _clearReachabilityInfoFor(relay.urls)
-      ).wait;
+      await _clearReachabilityInfoFor(relay.urls);
     }
 
     return relay as UserChatRelaysEntity?;
