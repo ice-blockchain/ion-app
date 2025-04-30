@@ -38,7 +38,7 @@ Future<Map<String, List<String>>> feedForYouFilterRelays(Ref ref) async {
           )
       : <UserRelaysEntity>[];
 
-  final userRelays = await ref.watch(currentUserRelayProvider.future);
+  final userRelays = await ref.watch(currentUserRelaysProvider.future);
   if (userRelays == null) {
     throw UserRelaysNotFoundException();
   }

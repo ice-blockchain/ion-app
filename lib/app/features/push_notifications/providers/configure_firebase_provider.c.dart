@@ -27,7 +27,7 @@ class ConfigureFirebase extends _$ConfigureFirebase {
       return;
     }
 
-    final userRelay = await ref.watch(currentUserRelayProvider.future);
+    final userRelay = await ref.watch(currentUserRelaysProvider.future);
     if (userRelay == null) {
       return;
     }

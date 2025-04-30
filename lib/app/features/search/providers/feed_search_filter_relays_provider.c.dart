@@ -26,7 +26,7 @@ Future<Map<String, List<String>>> feedSearchFilterRelays(Ref ref, FeedSearchSour
 
   switch (source) {
     case FeedSearchSource.anyone:
-      final userRelays = await ref.watch(currentUserRelayProvider.future);
+      final userRelays = await ref.watch(currentUserRelaysProvider.future);
       if (userRelays == null) {
         throw UserRelaysNotFoundException();
       }

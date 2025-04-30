@@ -30,16 +30,7 @@ Future<UserRelaysEntity?> userRelay(Ref ref, String pubkey) async {
 }
 
 @riverpod
-Future<UserRelaysEntity?> currentUserRelay(Ref ref) async {
-  final currentPubkey = ref.watch(currentPubkeySelectorProvider);
-  if (currentPubkey == null) {
-    return null;
-  }
-  return ref.watch(userRelayProvider(currentPubkey).future);
-}
-
-@riverpod
-Future<UserRelaysEntity?> currentUserIdentityRelays(Ref ref) async {
+Future<UserRelaysEntity?> currentUserRelays(Ref ref) async {
   final userIdentity = await ref.watch(currentUserIdentityProvider.future);
   final identityConnectRelays = userIdentity?.ionConnectRelays;
   if (userIdentity == null || identityConnectRelays == null) {
