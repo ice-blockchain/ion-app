@@ -68,10 +68,6 @@ class ConversationMessageDao extends DatabaseAccessor<ChatDatabase>
         conversationMessageTable,
         conversationMessageTable.sharedId.equalsExp(messageStatusTable.sharedId),
       ),
-      innerJoin(
-        conversationMessageTable,
-        conversationMessageTable.eventReferenceId.equalsExp(eventMessageTable.eventReference),
-      ),
     ])
       ..where(
         conversationMessageTable.conversationId.isNotIn(mutedConversationIds),
@@ -79,7 +75,9 @@ class ConversationMessageDao extends DatabaseAccessor<ChatDatabase>
       ..where(messageStatusTable.status.equals(MessageDeliveryStatus.received.index))
       ..where(messageStatusTable.masterPubkey.equals(currentUserMasterPubkey));
 
-    return query.watch().map((rows) => rows.length);
+    return query.watch().map((rows) {
+      return rows.length;
+    });
   }
 
   Stream<Map<DateTime, List<EventMessage>>> getMessages({

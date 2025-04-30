@@ -29,6 +29,9 @@ class TextMessage extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    print('--------------------------------');
+    print(eventMessage.masterPubkey);
+    print('--------------------------------');
     final isMe = ref.watch(isCurrentUserSelectorProvider(eventMessage.masterPubkey));
 
     final textStyle = context.theme.appTextThemes.body2.copyWith(
