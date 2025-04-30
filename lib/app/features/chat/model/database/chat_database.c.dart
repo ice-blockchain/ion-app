@@ -69,6 +69,6 @@ class ChatDatabase extends _$ChatDatabase {
   int get schemaVersion => 1;
 
   static QueryExecutor _openConnection(String pubkey) {
-    return driftDatabase(name: 'chat_database_$pubkey');
+    return driftDatabase(name: 'conversation_database_$pubkey');
   }
 }
