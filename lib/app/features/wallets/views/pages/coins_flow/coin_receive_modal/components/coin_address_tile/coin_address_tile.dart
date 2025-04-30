@@ -43,43 +43,40 @@ class CoinAddressTile extends HookConsumerWidget {
       ),
       child: Row(
         children: [
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  CoinIconWidget(
-                    imageUrl: coinsGroup.iconUrl,
-                    size: 16.0.s,
-                  ),
-                  SizedBox(
-                    width: 6.0.s,
-                  ),
-                  Text(
-                    context.i18n.wallet_coin_address(coinsGroup.name),
-                    style: context.theme.appTextThemes.body.copyWith(
-                      color: context.theme.appColors.primaryText,
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                Row(
+                  children: [
+                    CoinIconWidget(
+                      imageUrl: coinsGroup.iconUrl,
+                      size: 16.0.s,
                     ),
-                  ),
-                  SizedBox(
-                    width: 6.0.s,
-                  ),
-                  Assets.svg.iconBlockInformation.icon(size: 20.0.s),
-                ],
-              ),
-              SizedBox(
-                height: 7.0.s,
-              ),
-              Text(
-                shortenAddress(address),
-                style: context.theme.appTextThemes.caption.copyWith(
-                  color: context.theme.appColors.tertararyText,
+                    SizedBox(width: 6.0.s),
+                    Expanded(
+                      child: Text(
+                        context.i18n.wallet_coin_address(coinsGroup.name),
+                        style: context.theme.appTextThemes.body.copyWith(
+                          color: context.theme.appColors.primaryText,
+                        ),
+                      ),
+                    ),
+                    SizedBox(width: 6.0.s),
+                    Assets.svg.iconBlockInformation.icon(size: 20.0.s),
+                    SizedBox(width: 6.0.s),
+                  ],
                 ),
-              ),
-            ],
+                SizedBox(height: 7.0.s),
+                Text(
+                  shortenAddress(address),
+                  style: context.theme.appTextThemes.caption.copyWith(
+                    color: context.theme.appColors.tertararyText,
+                  ),
+                ),
+              ],
+            ),
           ),
-          const Spacer(),
           Stack(
             clipBehavior: Clip.none,
             children: [
@@ -112,9 +109,7 @@ class CoinAddressTile extends HookConsumerWidget {
               ),
             ],
           ),
-          SizedBox(
-            width: 16.0.s,
-          ),
+          SizedBox(width: 16.0.s),
           NavigationButton(
             size: buttonSize,
             icon: Assets.svg.iconButtonQrcode.icon(
