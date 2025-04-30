@@ -216,7 +216,8 @@ class _MediaBottomOverlay extends ConsumerWidget {
                   ),
                   GestureDetector(
                     onTap: () {
-                      ref.read(selectedReplyMessageProvider.notifier).selectedReplyMessage = MediaItem(
+                      ref.read(selectedReplyMessageProvider.notifier).selectedReplyMessage =
+                          MediaItem(
                         medias: messageMedias,
                         eventMessage: eventMessage,
                         contentDescription: context.i18n.common_media,

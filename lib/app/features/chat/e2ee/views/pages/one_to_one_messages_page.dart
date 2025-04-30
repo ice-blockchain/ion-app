@@ -60,7 +60,7 @@ class OneToOneMessagesPage extends HookConsumerWidget {
         }
 
         final repliedMessage = ref.read(selectedReplyMessageProvider);
-        
+
         ref.read(selectedEditMessageProvider.notifier).clear();
         ref.read(selectedReplyMessageProvider.notifier).clear();
 
