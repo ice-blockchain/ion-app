@@ -97,7 +97,9 @@ Future<void> showContactWalletError(
       : context.i18n.contact_wallet_not_found_title;
 
   final description = isPrivate
-      ? context.i18n.contact_wallet_is_private_description
+      ? '''
+${context.i18n.contact_wallet_is_private_description_1}
+${context.i18n.contact_wallet_is_private_description_2}'''
       : context.i18n.contact_wallet_not_found_description(network.displayName);
 
   final iconPath =
