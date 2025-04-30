@@ -74,7 +74,7 @@ class ReplaceablePrivateDirectMessageData
     RichText? richText,
     String? groupImagePath,
     GroupSubject? groupSubject,
-    List<RelatedEvent>? relatedEvents,
+    List<RelatedReplaceableEvent>? relatedEvents,
     List<RelatedPubkey>? relatedPubkeys,
     QuotedReplaceableEvent? quotedEvent,
   }) = _ReplaceablePrivateDirectMessageData;
@@ -105,7 +105,8 @@ class ReplaceablePrivateDirectMessageData
           .first
           .value,
       relatedPubkeys: tags[RelatedPubkey.tagName]?.map(RelatedPubkey.fromTag).toList(),
-      relatedEvents: tags[RelatedReplaceableEvent.tagName]?.map(RelatedEvent.fromTag).toList(),
+      relatedEvents:
+          tags[RelatedReplaceableEvent.tagName]?.map(RelatedReplaceableEvent.fromTag).toList(),
       groupSubject: tags[GroupSubject.tagName]?.map(GroupSubject.fromTag).singleOrNull,
       quotedEvent:
           tags[QuotedReplaceableEvent.tagName]?.map(QuotedReplaceableEvent.fromTag).singleOrNull,

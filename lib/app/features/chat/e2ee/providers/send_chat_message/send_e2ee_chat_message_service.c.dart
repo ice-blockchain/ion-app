@@ -187,27 +187,21 @@ class SendE2eeChatMessageService {
     return sentMessage;
   }
 
-  List<RelatedEvent> _generateRelatedEvents(EventMessage? repliedMessage) {
+  List<RelatedReplaceableEvent> _generateRelatedEvents(EventMessage? repliedMessage) {
     if (repliedMessage != null) {
       final entity = ReplaceablePrivateDirectMessageEntity.fromEventMessage(repliedMessage);
 
       final rootRelatedEvent = entity.data.relatedEvents
           ?.firstWhereOrNull((tag) => tag.marker == RelatedEventMarker.root);
 
-      final repliedMessageReference = ImmutableEventReference(
-        eventId: repliedMessage.id,
-        pubkey: repliedMessage.masterPubkey,
-      );
-
       return [
-        rootRelatedEvent ??
-            RelatedImmutableEvent(
-              eventReference: repliedMessageReference,
-              pubkey: repliedMessage.masterPubkey,
-              marker: RelatedEventMarker.root,
-            ),
-        RelatedImmutableEvent(
-          eventReference: repliedMessageReference,
+        if (rootRelatedEvent != null) rootRelatedEvent,
+        RelatedReplaceableEvent(
+          eventReference: ReplaceableEventReference(
+            kind: repliedMessage.kind,
+            dTag: repliedMessage.sharedId,
+            pubkey: repliedMessage.pubkey,
+          ),
           pubkey: repliedMessage.masterPubkey,
           marker: RelatedEventMarker.reply,
         ),

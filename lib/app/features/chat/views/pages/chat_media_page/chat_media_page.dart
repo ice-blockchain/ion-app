@@ -11,7 +11,7 @@ import 'package:ion/app/features/chat/e2ee/model/entities/private_direct_message
 import 'package:ion/app/features/chat/e2ee/providers/chat_medias_provider.c.dart';
 import 'package:ion/app/features/chat/model/database/chat_database.c.dart';
 import 'package:ion/app/features/chat/model/message_list_item.c.dart';
-import 'package:ion/app/features/chat/recent_chats/providers/selected_message_provider.c.dart';
+import 'package:ion/app/features/chat/recent_chats/providers/selected_reply_message_provider.c.dart';
 import 'package:ion/app/features/chat/views/pages/chat_media_page/components/chat_media_context_menu.dart';
 import 'package:ion/app/features/chat/views/pages/chat_media_page/components/chat_media_metadata.dart';
 import 'package:ion/app/features/chat/views/pages/chat_media_page/components/chat_media_page_view.dart';
@@ -216,7 +216,8 @@ class _MediaBottomOverlay extends ConsumerWidget {
                   ),
                   GestureDetector(
                     onTap: () {
-                      ref.read(selectedMessageProvider.notifier).selectedMessage = MediaItem(
+                      ref.read(selectedReplyMessageProvider.notifier).selectedReplyMessage =
+                          MediaItem(
                         medias: messageMedias,
                         eventMessage: eventMessage,
                         contentDescription: context.i18n.common_media,

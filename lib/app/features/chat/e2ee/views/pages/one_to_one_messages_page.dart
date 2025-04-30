@@ -15,7 +15,8 @@ import 'package:ion/app/features/chat/model/database/chat_database.c.dart';
 import 'package:ion/app/features/chat/providers/conversation_messages_provider.c.dart';
 import 'package:ion/app/features/chat/providers/exist_chat_conversation_id_provider.c.dart';
 import 'package:ion/app/features/chat/providers/muted_conversations_provider.c.dart';
-import 'package:ion/app/features/chat/recent_chats/providers/selected_message_provider.c.dart';
+import 'package:ion/app/features/chat/recent_chats/providers/selected_reply_message_provider.c.dart';
+import 'package:ion/app/features/chat/views/components/message_items/edit_message_info/edit_message_info.dart';
 import 'package:ion/app/features/chat/views/components/message_items/messaging_bottom_bar/messaging_bottom_bar.dart';
 import 'package:ion/app/features/chat/views/components/message_items/replied_message_info/replied_message_info.dart';
 import 'package:ion/app/features/user/providers/user_metadata_provider.c.dart';
@@ -57,9 +58,9 @@ class OneToOneMessagesPage extends HookConsumerWidget {
           throw UserMasterPubkeyNotFoundException();
         }
 
-        final repliedMessage = ref.read(selectedMessageProvider);
+        final repliedMessage = ref.read(selectedReplyMessageProvider);
 
-        ref.read(selectedMessageProvider.notifier).clear();
+        ref.read(selectedReplyMessageProvider.notifier).clear();
 
         await ref.read(sendE2eeChatMessageServiceProvider).sendMessage(
           content: content ?? '',
@@ -82,6 +83,7 @@ class OneToOneMessagesPage extends HookConsumerWidget {
               conversationId: conversationId.value ?? '',
             ),
             _MessagesList(conversationId: conversationId.value),
+            const EditMessageInfo(),
             const RepliedMessageInfo(),
             MessagingBottomBar(onSubmitted: onSubmitted),
           ],
