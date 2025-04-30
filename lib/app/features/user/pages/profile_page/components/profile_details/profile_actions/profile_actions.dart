@@ -25,7 +25,10 @@ class ProfileActions extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final userNotificationsTypes = ref.watch(userNotificationsNotifierProvider);
     final notificationsEnabled = !userNotificationsTypes.contains(UserNotificationsType.none);
-    final hasPrivateWallets = ref.read(userMetadataProvider(pubkey)).value?.data.wallets == null;
+
+    final walletsState =
+        ref.watch(userMetadataProvider(pubkey).select((state) => state.value?.data.wallets));
+    final hasPrivateWallets = walletsState == null;
 
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
