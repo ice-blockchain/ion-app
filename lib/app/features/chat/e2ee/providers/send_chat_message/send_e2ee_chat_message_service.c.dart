@@ -205,7 +205,7 @@ class SendE2eeChatMessageService {
 
   List<RelatedEvent> _generateRelatedEvents(EventMessage? repliedMessage) {
     if (repliedMessage != null) {
-      final entity = PrivateDirectMessageEntity.fromEventMessage(repliedMessage);
+      final entity = ReplaceablePrivateDirectMessageEntity.fromEventMessage(repliedMessage);
 
       final rootRelatedEvent = entity.data.relatedEvents
           ?.firstWhereOrNull((tag) => tag.marker == RelatedEventMarker.root);
@@ -404,7 +404,7 @@ class SendE2eeChatMessageService {
   Future<void> resendMessage({
     required EventMessage messageEvent,
   }) async {
-    final entity = PrivateDirectMessageEntity.fromEventMessage(messageEvent);
+    final entity = ReplaceablePrivateDirectMessageEntity.fromEventMessage(messageEvent);
 
     final messageStatuses = await ref.read(conversationMessageDataDaoProvider).messageStatuses(
           sharedId: messageEvent.sharedId!,

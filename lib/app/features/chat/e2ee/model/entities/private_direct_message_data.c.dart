@@ -13,6 +13,7 @@ import 'package:ion/app/features/ion_connect/ion_connect.dart';
 import 'package:ion/app/features/ion_connect/model/entity_data_with_media_content.dart';
 import 'package:ion/app/features/ion_connect/model/entity_data_with_parent.dart';
 import 'package:ion/app/features/ion_connect/model/event_reference.c.dart';
+import 'package:ion/app/features/ion_connect/model/ion_connect_entity.dart';
 import 'package:ion/app/features/ion_connect/model/media_attachment.dart';
 import 'package:ion/app/features/ion_connect/model/quoted_event.c.dart';
 import 'package:ion/app/features/ion_connect/model/related_event.c.dart';
@@ -27,40 +28,14 @@ import 'package:ion/app/utils/string.dart';
 
 part 'private_direct_message_data.c.freezed.dart';
 
-@immutable
-abstract class PrivateDirectMessageEntity {
-  factory PrivateDirectMessageEntity.fromEventMessage(EventMessage eventMessage) {
-    if (eventMessage.kind == ReplaceablePrivateDirectMessageEntity.kind) {
-      return ReplaceablePrivateDirectMessageEntity.fromEventMessage(eventMessage);
-    } else {
-      throw IncorrectEventKindException(eventMessage.id, kind: eventMessage.kind);
-    }
-  }
-
-  String get id;
-  String get pubkey;
-  String get masterPubkey;
-  DateTime get createdAt;
-  PrivateDirectMessageData get data;
-
-  @override
-  bool operator ==(Object other) {
-    return other is PrivateDirectMessageEntity && id == other.id;
-  }
-
-  @override
-  int get hashCode => id.hashCode;
-}
-
-extension Pubkeys on PrivateDirectMessageEntity {
+extension Pubkeys on ReplaceablePrivateDirectMessageEntity {
   List<String> get allPubkeys => data.relatedPubkeys?.map((pubkey) => pubkey.value).toList() ?? []
     ..sort();
 }
 
 @freezed
 class ReplaceablePrivateDirectMessageEntity
-    with _$ReplaceablePrivateDirectMessageEntity
-    implements PrivateDirectMessageEntity {
+    with IonConnectEntity, ReplaceableEntity, _$ReplaceablePrivateDirectMessageEntity {
   const factory ReplaceablePrivateDirectMessageEntity({
     required String id,
     required String pubkey,
@@ -81,13 +56,17 @@ class ReplaceablePrivateDirectMessageEntity
     );
   }
 
+  @override
+  String get signature => '';
+
   static const kind = 30014;
 }
 
 // -----------------------------------------------------------------------------
 @immutable
 abstract class PrivateDirectMessageData
-    with EntityDataWithMediaContent, EntityDataWithRelatedEvents {
+    with EntityDataWithMediaContent, EntityDataWithRelatedEvents
+    implements ReplaceableEntityData {
   factory PrivateDirectMessageData.fromEventMessage(EventMessage eventMessage) {
     if (eventMessage.kind == ReplaceablePrivateDirectMessageEntity.kind) {
       return ReplaceablePrivateDirectMessageData.fromEventMessage(eventMessage);
@@ -155,7 +134,7 @@ class ReplaceablePrivateDirectMessageData
         _$ReplaceablePrivateDirectMessageData,
         EntityDataWithMediaContent,
         EntityDataWithRelatedEvents
-    implements PrivateDirectMessageData {
+    implements PrivateDirectMessageData, ReplaceableEntityData {
   const factory ReplaceablePrivateDirectMessageData({
     required String content,
     required String messageId,
@@ -228,6 +207,15 @@ class ReplaceablePrivateDirectMessageData
       id: kind14EventId,
       createdAt: createdAt,
       kind: ReplaceablePrivateDirectMessageEntity.kind,
+    );
+  }
+
+  @override
+  ReplaceableEventReference toReplaceableEventReference(String pubkey) {
+    return ReplaceableEventReference(
+      kind: ReplaceablePrivateDirectMessageEntity.kind,
+      dTag: messageId,
+      pubkey: pubkey,
     );
   }
 }

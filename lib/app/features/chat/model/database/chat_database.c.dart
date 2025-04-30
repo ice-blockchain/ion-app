@@ -1,7 +1,5 @@
 // SPDX-License-Identifier: ice License 1.0
 
-import 'dart:convert';
-
 import 'package:collection/collection.dart';
 import 'package:drift/drift.dart';
 import 'package:drift_flutter/drift_flutter.dart';
@@ -16,7 +14,10 @@ import 'package:ion/app/features/chat/model/database/chat_database.c.steps.dart'
 import 'package:ion/app/features/chat/model/group_subject.c.dart';
 import 'package:ion/app/features/chat/model/message_reaction_group.c.dart';
 import 'package:ion/app/features/chat/recent_chats/model/conversation_list_item.c.dart';
+import 'package:ion/app/features/feed/notifications/data/database/converters/event_reference_converter.c.dart';
+import 'package:ion/app/features/ion_connect/database/converters/event_tags_converter.dart';
 import 'package:ion/app/features/ion_connect/ion_connect.dart';
+import 'package:ion/app/features/ion_connect/model/event_reference.c.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'chat_database.c.g.dart';
