@@ -267,18 +267,3 @@ class ConversationDao extends DatabaseAccessor<ChatDatabase> with _$Conversation
     });
   }
 }
-
-extension EventMessageDbModelExtensions on EventMessageDbModel {
-  EventMessage toEventMessage() {
-    return EventMessage(
-      id: id,
-      kind: kind,
-      pubkey: pubkey,
-      createdAt: createdAt,
-      sig: sig,
-      content: content,
-      subscriptionId: subscriptionId,
-      tags: tags,
-    );
-  }
-}
