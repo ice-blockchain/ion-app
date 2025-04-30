@@ -53,34 +53,64 @@ class StoryViewerPage extends HookConsumerWidget {
       [currentStory?.id],
     );
 
-    return Material(
-      color: Colors.transparent,
-      child: AnnotatedRegion<SystemUiOverlayStyle>(
-        value: SystemUiOverlayStyle(
-          statusBarColor: context.theme.appColors.primaryText,
-          statusBarIconBrightness: Brightness.light,
-          statusBarBrightness: Brightness.dark,
-        ),
-        child: Scaffold(
-          resizeToAvoidBottomInset: false,
-          backgroundColor: context.theme.appColors.primaryText,
-          body: KeyboardVisibilityBuilder(
-            builder: (context, isKeyboardVisible) {
-              return SafeArea(
-                child: Column(
-                  children: [
-                    Expanded(
-                      child: StoriesSwiper(
-                        pubkey: pubkey,
-                        userStories: storyViewerState.userStories,
-                        currentUserIndex: storyViewerState.currentUserIndex,
-                      ),
+    return KeyboardVisibilityBuilder(
+      builder: (context, isKeyboardVisible) {
+        final media = MediaQuery.of(context);
+        final fixedTop = MediaQuery.paddingOf(context).top;
+        final size = MediaQuery.sizeOf(context);
+        final footerHeight = 82.0.s;
+
+        return AnnotatedRegion<SystemUiOverlayStyle>(
+          value: SystemUiOverlayStyle(
+            statusBarColor: context.theme.appColors.primaryText,
+            statusBarIconBrightness: Brightness.light,
+            statusBarBrightness: Brightness.dark,
+          ),
+          child: MediaQuery(
+            data: media
+                .removeViewInsets(removeBottom: true)
+                .removeViewPadding(removeBottom: true, removeTop: true),
+            child: Scaffold(
+              resizeToAvoidBottomInset: false,
+              backgroundColor: context.theme.appColors.primaryText,
+              body: Stack(
+                children: [
+                  PositionedDirectional(
+                    top: fixedTop,
+                    width: size.width,
+                    height: size.height - fixedTop - footerHeight,
+                    child: StoriesSwiper(
+                      pubkey: pubkey,
+                      userStories: storyViewerState.userStories,
+                      currentUserIndex: storyViewerState.currentUserIndex,
                     ),
-                    AnimatedOpacity(
+                  ),
+                  PositionedDirectional(
+                    start: 0,
+                    end: 0,
+                    bottom: 0,
+                    height: footerHeight,
+                    child: AnimatedOpacity(
                       opacity: isKeyboardVisible ? 0 : 1,
                       duration: const Duration(milliseconds: 150),
                       child: IgnorePointer(
                         ignoring: isKeyboardVisible,
+                        child: ColoredBox(
+                          color: context.theme.appColors.primaryText,
+                        ),
+                      ),
+                    ),
+                  ),
+                  PositionedDirectional(
+                    start: 0,
+                    end: 0,
+                    bottom: 0,
+                    height: footerHeight,
+                    child: IgnorePointer(
+                      ignoring: isKeyboardVisible,
+                      child: AnimatedOpacity(
+                        opacity: isKeyboardVisible ? 0 : 1,
+                        duration: const Duration(milliseconds: 150),
                         child: Column(
                           mainAxisSize: MainAxisSize.min,
                           children: [
@@ -91,13 +121,13 @@ class StoryViewerPage extends HookConsumerWidget {
                         ),
                       ),
                     ),
-                  ],
-                ),
-              );
-            },
+                  ),
+                ],
+              ),
+            ),
           ),
-        ),
-      ),
+        );
+      },
     );
   }
 }

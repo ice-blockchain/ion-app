@@ -3,7 +3,6 @@
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
-import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_keyboard_visibility/flutter_keyboard_visibility.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
@@ -16,7 +15,9 @@ import 'package:ion/app/features/feed/stories/providers/emoji_reaction_provider.
 import 'package:ion/app/features/feed/stories/providers/story_pause_provider.c.dart';
 import 'package:ion/app/features/feed/stories/providers/story_reply_provider.c.dart';
 import 'package:ion/app/features/feed/stories/views/components/story_viewer/components/components.dart';
-import 'package:ion/app/features/feed/stories/views/components/story_viewer/components/header/header.dart';
+import 'package:ion/app/features/feed/stories/views/components/story_viewer/components/header/story_header_gradient.dart';
+import 'package:ion/app/features/feed/stories/views/components/story_viewer/components/header/story_viewer_header.dart';
+import 'package:ion/app/utils/future.dart';
 
 class StoryContent extends HookConsumerWidget {
   const StoryContent({
@@ -109,8 +110,7 @@ class _FooterArea extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final bottomPadding =
-        isKeyboardShown ? MediaQuery.viewInsetsOf(context).bottom + 16.0.s : 16.0.s;
+    final bottomPadding = isKeyboardShown ? 250.0.s : 16.0.s;
 
     Future<void> onSubmit(String? txt) async {
       if (txt == null || txt.isEmpty) return;

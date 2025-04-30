@@ -49,35 +49,31 @@ class StoryReactionOverlay extends HookConsumerWidget {
       [textController],
     );
 
-    final keyboardHeight = MediaQuery.viewInsetsOf(context).bottom;
     final screenHeight = MediaQuery.sizeOf(context).height;
-    final contentPadding = (screenHeight - keyboardHeight) * 0.25;
+    final contentPadding = screenHeight * 0.48;
 
     return KeyboardVisibilityBuilder(
       builder: (context, isKeyboardVisible) {
-        return Stack(
-          children: [
-            if (isKeyboardVisible)
-              PositionedDirectional(
-                bottom: keyboardHeight + contentPadding,
-                start: 0,
-                end: 0,
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    _EmojiRow(
-                      emojis: emojis.sublist(0, 3),
-                      onEmojiSelected: handleEmojiSelected,
-                    ),
-                    SizedBox(height: 40.0.s),
-                    _EmojiRow(
-                      emojis: emojis.sublist(3, 6),
-                      onEmojiSelected: handleEmojiSelected,
-                    ),
-                  ],
-                ),
+        if (!isKeyboardVisible) return const SizedBox.shrink();
+
+        return PositionedDirectional(
+          bottom: contentPadding,
+          start: 0,
+          end: 0,
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              _EmojiRow(
+                emojis: emojis.sublist(0, 3),
+                onEmojiSelected: handleEmojiSelected,
               ),
-          ],
+              SizedBox(height: 40.0.s),
+              _EmojiRow(
+                emojis: emojis.sublist(3, 6),
+                onEmojiSelected: handleEmojiSelected,
+              ),
+            ],
+          ),
         );
       },
     );
