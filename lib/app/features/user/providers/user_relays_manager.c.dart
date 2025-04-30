@@ -126,10 +126,7 @@ class UserRelaysManager extends _$UserRelaysManager {
     }
 
     if (fetchedRelays.isNotEmpty) {
-      await (
-        ref.read(ionConnectDbCacheProvider.notifier).saveAll(fetchedRelays),
-        _clearReachabilityInfoFor(fetchedRelays),
-      ).wait;
+      await _clearReachabilityInfoFor(fetchedRelays);
     }
 
     return result;
