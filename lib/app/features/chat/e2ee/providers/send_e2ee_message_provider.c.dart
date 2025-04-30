@@ -129,7 +129,8 @@ class SendE2eeMessageService {
       ],
     );
 
-    final privateDirectMessageEntity = PrivateDirectMessageData.fromEventMessage(kind14Rumor);
+    final privateDirectMessageEntity =
+        ReplaceablePrivateDirectMessageData.fromEventMessage(kind14Rumor);
 
     final participantsMasterPubkeys =
         privateDirectMessageEntity.relatedPubkeys?.map((tag) => tag.value).toList();

@@ -21,20 +21,6 @@ class ConversationMessageReactionDao extends DatabaseAccessor<ChatDatabase>
   }) async {
     final eventMessageDao = ref.read(eventMessageDaoProvider);
 
-    final kind14EventMessage = await (select(db.eventMessageTable)
-          ..join(
-            [
-              innerJoin(
-                conversationMessageTable,
-                conversationMessageTable.sharedId.equalsExp(reactionTable.kind14SharedId),
-              ),
-            ],
-          )
-          ..where((table) => conversationMessageTable.sharedId.equals(kind14SharedId)))
-        .getSingleOrNull();
-
-    if (kind14EventMessage == null) return;
-
     final existingReactionRow = await (select(reactionTable)
           ..where((table) => table.content.equals(newReactionEvent.content))
           ..where((table) => table.masterPubkey.equals(masterPubkey))

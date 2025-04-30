@@ -205,7 +205,8 @@ class E2eeRecentChatTile extends ConsumerWidget {
       return const SizedBox.shrink();
     }
 
-    final entity = PrivateDirectMessageData.fromEventMessage(conversation.latestMessage!);
+    final entity =
+        ReplaceablePrivateDirectMessageData.fromEventMessage(conversation.latestMessage!);
 
     final currentUserPubkey = ref.watch(currentPubkeySelectorProvider);
 
@@ -255,7 +256,7 @@ class EncryptedGroupRecentChatTile extends HookConsumerWidget {
       return const SizedBox.shrink();
     }
 
-    final entity = PrivateDirectMessageData.fromEventMessage(latestMessage);
+    final entity = ReplaceablePrivateDirectMessageData.fromEventMessage(latestMessage);
 
     final name = entity.groupSubject?.value ?? '';
 

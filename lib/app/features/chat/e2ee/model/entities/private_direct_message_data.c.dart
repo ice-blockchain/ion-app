@@ -13,6 +13,7 @@ import 'package:ion/app/features/ion_connect/ion_connect.dart';
 import 'package:ion/app/features/ion_connect/model/entity_data_with_media_content.dart';
 import 'package:ion/app/features/ion_connect/model/entity_data_with_parent.dart';
 import 'package:ion/app/features/ion_connect/model/event_reference.c.dart';
+import 'package:ion/app/features/ion_connect/model/event_serializable.dart';
 import 'package:ion/app/features/ion_connect/model/ion_connect_entity.dart';
 import 'package:ion/app/features/ion_connect/model/media_attachment.dart';
 import 'package:ion/app/features/ion_connect/model/quoted_event.c.dart';
@@ -28,12 +29,7 @@ import 'package:ion/app/utils/string.dart';
 
 part 'private_direct_message_data.c.freezed.dart';
 
-extension Pubkeys on ReplaceablePrivateDirectMessageEntity {
-  List<String> get allPubkeys => data.relatedPubkeys?.map((pubkey) => pubkey.value).toList() ?? []
-    ..sort();
-}
-
-@freezed
+@Freezed(equal: false)
 class ReplaceablePrivateDirectMessageEntity
     with IonConnectEntity, ReplaceableEntity, _$ReplaceablePrivateDirectMessageEntity {
   const factory ReplaceablePrivateDirectMessageEntity({
@@ -41,7 +37,7 @@ class ReplaceablePrivateDirectMessageEntity
     required String pubkey,
     required String masterPubkey,
     required DateTime createdAt,
-    required PrivateDirectMessageData data,
+    required ReplaceablePrivateDirectMessageData data,
   }) = _ReplaceablePrivateDirectMessageEntity;
 
   const ReplaceablePrivateDirectMessageEntity._();
@@ -62,20 +58,27 @@ class ReplaceablePrivateDirectMessageEntity
   static const kind = 30014;
 }
 
-// -----------------------------------------------------------------------------
-@immutable
-abstract class PrivateDirectMessageData
-    with EntityDataWithMediaContent, EntityDataWithRelatedEvents
-    implements ReplaceableEntityData {
-  factory PrivateDirectMessageData.fromEventMessage(EventMessage eventMessage) {
-    if (eventMessage.kind == ReplaceablePrivateDirectMessageEntity.kind) {
-      return ReplaceablePrivateDirectMessageData.fromEventMessage(eventMessage);
-    } else {
-      throw IncorrectEventKindException(eventMessage.id, kind: eventMessage.kind);
-    }
-  }
+@freezed
+class ReplaceablePrivateDirectMessageData
+    with
+        EntityDataWithMediaContent,
+        EntityDataWithRelatedEvents,
+        _$ReplaceablePrivateDirectMessageData
+    implements EventSerializable, ReplaceableEntityData {
+  const factory ReplaceablePrivateDirectMessageData({
+    required String content,
+    required String messageId,
+    required String conversationId,
+    required Map<String, MediaAttachment> media,
+    RichText? richText,
+    String? groupImagePath,
+    GroupSubject? groupSubject,
+    List<RelatedEvent>? relatedEvents,
+    List<RelatedPubkey>? relatedPubkeys,
+    QuotedReplaceableEvent? quotedEvent,
+  }) = _ReplaceablePrivateDirectMessageData;
 
-  factory PrivateDirectMessageData.fromRawContent(String content) {
+  factory ReplaceablePrivateDirectMessageData.fromRawContent(String content) {
     return ReplaceablePrivateDirectMessageData(
       media: {},
       content: content,
@@ -84,16 +87,65 @@ abstract class PrivateDirectMessageData
     );
   }
 
-  FutureOr<EventMessage> toEventMessage(String pubkey);
+  factory ReplaceablePrivateDirectMessageData.fromEventMessage(EventMessage eventMessage) {
+    final tags = groupBy(eventMessage.tags, (tag) => tag[0]);
 
-  String get messageId;
-  String get conversationId;
-  String? get groupImagePath;
-  GroupSubject? get groupSubject;
-  QuotedReplaceableEvent? get quotedEvent;
+    if (tags[ReplaceableEventIdentifier.tagName] == null) {
+      throw ReplaceablePrivateDirectMessageDecodeException(eventMessage.id);
+    }
+
+    return ReplaceablePrivateDirectMessageData(
+      content: eventMessage.content,
+      media: EntityDataWithMediaContent.parseImeta(tags[MediaAttachment.tagName]),
+      messageId: tags[ReplaceableEventIdentifier.tagName]!
+          .map(ReplaceableEventIdentifier.fromTag)
+          .first
+          .value,
+      relatedPubkeys: tags[RelatedPubkey.tagName]?.map(RelatedPubkey.fromTag).toList(),
+      relatedEvents: tags[RelatedReplaceableEvent.tagName]?.map(RelatedEvent.fromTag).toList(),
+      groupSubject: tags[GroupSubject.tagName]?.map(GroupSubject.fromTag).singleOrNull,
+      quotedEvent:
+          tags[QuotedReplaceableEvent.tagName]?.map(QuotedReplaceableEvent.fromTag).singleOrNull,
+      conversationId:
+          tags[ConversationIdentifier.tagName]!.map(ConversationIdentifier.fromTag).first.value,
+    );
+  }
+
+  const ReplaceablePrivateDirectMessageData._();
+
   @override
-  List<RelatedEvent>? get relatedEvents;
-  List<RelatedPubkey>? get relatedPubkeys;
+  FutureOr<EventMessage> toEventMessage(
+    EventSigner signer, {
+    List<List<String>> tags = const [],
+    DateTime? createdAt,
+  }) {
+    final createdAt = DateTime.now();
+    return EventMessage.fromData(
+      signer: signer,
+      createdAt: createdAt,
+      kind: ReplaceablePrivateDirectMessageEntity.kind,
+      content: content,
+      tags: [
+        ...tags,
+        if (quotedEvent != null) quotedEvent!.toTag(),
+        if (groupSubject != null) groupSubject!.toTag(),
+        if (relatedEvents != null) ...relatedEvents!.map((event) => event.toTag()),
+        if (relatedPubkeys != null) ...relatedPubkeys!.map((pubkey) => pubkey.toTag()),
+        if (media.isNotEmpty) ...media.values.map((mediaAttachment) => mediaAttachment.toTag()),
+        ReplaceableEventIdentifier(value: messageId).toTag(),
+        ConversationIdentifier(value: conversationId).toTag(),
+      ],
+    );
+  }
+
+  @override
+  ReplaceableEventReference toReplaceableEventReference(String pubkey) {
+    return ReplaceableEventReference(
+      kind: ReplaceablePrivateDirectMessageEntity.kind,
+      dTag: messageId,
+      pubkey: pubkey,
+    );
+  }
 
   static const textMessageLimit = 4096;
   static const videoDurationLimitInSeconds = 300;
@@ -101,7 +153,12 @@ abstract class PrivateDirectMessageData
   static const fileMessageSizeLimit = 25 * 1024 * 1024;
 }
 
-extension MessageTypes on PrivateDirectMessageData {
+extension Pubkeys on ReplaceablePrivateDirectMessageEntity {
+  List<String> get allPubkeys => data.relatedPubkeys?.map((pubkey) => pubkey.value).toList() ?? []
+    ..sort();
+}
+
+extension MessageTypes on ReplaceablePrivateDirectMessageData {
   MessageType get messageType {
     if (primaryAudio != null) {
       return MessageType.audio;
@@ -125,97 +182,5 @@ extension MessageTypes on PrivateDirectMessageData {
     }
 
     return MessageType.text;
-  }
-}
-
-@freezed
-class ReplaceablePrivateDirectMessageData
-    with
-        _$ReplaceablePrivateDirectMessageData,
-        EntityDataWithMediaContent,
-        EntityDataWithRelatedEvents
-    implements PrivateDirectMessageData, ReplaceableEntityData {
-  const factory ReplaceablePrivateDirectMessageData({
-    required String content,
-    required String messageId,
-    required String conversationId,
-    required Map<String, MediaAttachment> media,
-    RichText? richText,
-    String? groupImagePath,
-    GroupSubject? groupSubject,
-    List<RelatedEvent>? relatedEvents,
-    List<RelatedPubkey>? relatedPubkeys,
-    QuotedReplaceableEvent? quotedEvent,
-  }) = _ReplaceablePrivateDirectMessageData;
-
-  const ReplaceablePrivateDirectMessageData._();
-
-  factory ReplaceablePrivateDirectMessageData.fromEventMessage(EventMessage eventMessage) {
-    final tags = groupBy(eventMessage.tags, (tag) => tag[0]);
-
-    if (tags[ReplaceableEventIdentifier.tagName] == null) {
-      throw ReplaceablePrivateDirectMessageDecodeException(eventMessage.id);
-    }
-
-    return ReplaceablePrivateDirectMessageData(
-      content: eventMessage.content,
-      media: EntityDataWithMediaContent.parseImeta(tags[MediaAttachment.tagName]),
-      messageId: tags[ReplaceableEventIdentifier.tagName]!
-          .map(ReplaceableEventIdentifier.fromTag)
-          .singleOrNull!
-          .value,
-      relatedPubkeys: tags[RelatedPubkey.tagName]?.map(RelatedPubkey.fromTag).toList(),
-      relatedEvents: tags[RelatedReplaceableEvent.tagName]?.map(RelatedEvent.fromTag).toList(),
-      groupSubject: tags[GroupSubject.tagName]?.map(GroupSubject.fromTag).singleOrNull,
-      quotedEvent:
-          tags[QuotedReplaceableEvent.tagName]?.map(QuotedReplaceableEvent.fromTag).singleOrNull,
-      conversationId: tags[ConversationIdentifier.tagName]
-              ?.map(ConversationIdentifier.fromTag)
-              .singleOrNull
-              ?.value ??
-          '',
-    );
-  }
-
-  @override
-  FutureOr<EventMessage> toEventMessage(String pubkey) {
-    final tags = [
-      if (quotedEvent != null) quotedEvent!.toTag(),
-      if (groupSubject != null) groupSubject!.toTag(),
-      if (relatedEvents != null) ...relatedEvents!.map((event) => event.toTag()),
-      if (relatedPubkeys != null) ...relatedPubkeys!.map((pubkey) => pubkey.toTag()),
-      if (media.isNotEmpty) ...media.values.map((mediaAttachment) => mediaAttachment.toTag()),
-      ReplaceableEventIdentifier(value: messageId).toTag(),
-      ConversationIdentifier(value: conversationId).toTag(),
-    ];
-
-    final createdAt = DateTime.now();
-
-    final kind14EventId = EventMessage.calculateEventId(
-      tags: tags,
-      content: content,
-      publicKey: pubkey,
-      createdAt: createdAt,
-      kind: ReplaceablePrivateDirectMessageEntity.kind,
-    );
-
-    return EventMessage(
-      sig: null,
-      tags: tags,
-      pubkey: pubkey,
-      content: content,
-      id: kind14EventId,
-      createdAt: createdAt,
-      kind: ReplaceablePrivateDirectMessageEntity.kind,
-    );
-  }
-
-  @override
-  ReplaceableEventReference toReplaceableEventReference(String pubkey) {
-    return ReplaceableEventReference(
-      kind: ReplaceablePrivateDirectMessageEntity.kind,
-      dTag: messageId,
-      pubkey: pubkey,
-    );
   }
 }
