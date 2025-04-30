@@ -47,7 +47,7 @@ class BottomBarRecordingView extends HookConsumerWidget {
         final durationSubscription = recorderController.onCurrentDuration.listen((currentDuration) {
           duration.value = formatDuration(currentDuration);
           if (currentDuration.inSeconds ==
-              PrivateDirectMessageData.audioMessageDurationLimitInSeconds) {
+              ReplaceablePrivateDirectMessageData.audioMessageDurationLimitInSeconds) {
             ref.read(messagingBottomBarActiveStateProvider.notifier).setVoicePaused();
             return;
           }

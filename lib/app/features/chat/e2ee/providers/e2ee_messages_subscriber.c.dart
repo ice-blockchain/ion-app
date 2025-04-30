@@ -172,50 +172,57 @@ class E2eeMessagesSubscriber extends _$E2eeMessagesSubscriber {
           // Add message if that doesn't exist
           await ref.watch(conversationEventMessageDaoProvider).add(rumor);
 
-          await _addMediaToDatabase(rumor);
+    if (rumor.kind == ReplaceablePrivateDirectMessageEntity.kind) {
+      // Add conversation if that doesn't exist
+      await ref.watch(conversationDaoProvider).add([rumor]);
+      // Add message if that doesn't exist
+      await ref.watch(conversationEventMessageDaoProvider).add(rumor);
 
-          // Notify rest of the participants that the message was received
-          // by the current user
-          final currentStatus = await conversationMessageStatusDao.checkMessageStatus(
-            sharedId: rumor.sharedId!,
-            masterPubkey: masterPubkey,
+      await _addMediaToDatabase(rumor);
+
+      // Notify rest of the participants that the message was received
+      // by the current user
+      final currentStatus = await conversationMessageStatusDao.checkMessageStatus(
+        sharedId: rumor.sharedId!,
+        masterPubkey: masterPubkey,
+      );
+
+      if (currentStatus == null || currentStatus.index < MessageDeliveryStatus.received.index) {
+        await sendE2eeMessageService.sendMessageStatus(
+          messageEventMessage: rumor,
+          status: MessageDeliveryStatus.received,
+        );
+      }
+
+      // Only for kind 7
+    } else if (rumor.kind == PrivateMessageReactionEntity.kind) {
+      final reactionEntity = PrivateMessageReactionEntity.fromEventMessage(rumor);
+      // Identify kind 7 status message (received or read only)
+      if (reactionEntity.data.content == MessageDeliveryStatus.received.name ||
+          reactionEntity.data.content == MessageDeliveryStatus.read.name) {
+        final status = reactionEntity.data.content == MessageDeliveryStatus.received.name
+            ? MessageDeliveryStatus.received
+            : MessageDeliveryStatus.read;
+
+        // Add corresponding status to the database for the sender pubkey
+        // and the kind 30014 shared id, if that doesn't exist
+        await conversationMessageStatusDao.addOrUpdateStatus(
+          status: status,
+          pubkey: rumor.pubkey,
+          updateAllBefore: rumor.createdAt,
+          masterPubkey: rumor.masterPubkey,
+          sharedId: reactionEntity.data.reference.dTag,
+        );
+
+        if (currentStatus == null || currentStatus.index < MessageDeliveryStatus.received.index) {
+          await sendE2eeMessageService.sendMessageStatus(
+            messageEventMessage: rumor,
+            status: MessageDeliveryStatus.received,
           );
-
-          if (currentStatus == null || currentStatus.index < MessageDeliveryStatus.received.index) {
-            await sendE2eeMessageService.sendMessageStatus(
-              messageEventMessage: rumor,
-              status: MessageDeliveryStatus.received,
-            );
-          }
-
-          // Only for kind 7
-        } else if (rumor.kind == PrivateMessageReactionEntity.kind) {
-          final reactionEntity = PrivateMessageReactionEntity.fromEventMessage(rumor);
-          // Identify kind 7 status message (received or read only)
-          if (reactionEntity.data.content == MessageDeliveryStatus.received.name ||
-              reactionEntity.data.content == MessageDeliveryStatus.read.name) {
-            final status = reactionEntity.data.content == MessageDeliveryStatus.received.name
-                ? MessageDeliveryStatus.received
-                : MessageDeliveryStatus.read;
-
-            // Add corresponding status to the database for the sender pubkey
-            // and the kind 30014 shared id, if that doesn't exist
-            await conversationMessageStatusDao.addOrUpdateStatus(
-              status: status,
-              pubkey: rumor.pubkey,
-              masterPubkey: rumor.masterPubkey,
-              sharedId: reactionEntity.data.reference.dTag,
-            );
-          } else {
-            await conversationMessageReactionDao.add(
-              ref: ref,
-              newReactionEvent: rumor,
-              kind14SharedId: reactionEntity.data.reference.dTag,
-              masterPubkey: rumor.masterPubkey,
-            );
-          }
         }
-        // For kind 5
+
+        // Only for kind 7
+              // For kind 5
       } else if (rumor.kind == DeletionRequestEntity.kind) {
         final deleteEventKind =
             rumor.tags.firstWhereOrNull((tags) => tags[0] == 'k')?.elementAtOrNull(1);
@@ -264,17 +271,44 @@ class E2eeMessagesSubscriber extends _$E2eeMessagesSubscriber {
             await conversationMessageReactionDao.remove(
               ref: ref,
               deleteRequest: rumor,
-              reactionEventId: deleteEventIds.single,
+              conversationIds: deleteConversationIds,
+            );
+      } else {
+        final eventsToDelete = DeletionRequest.fromEventMessage(rumor).events;
+
+        final eventToDeleteReferences =
+            eventsToDelete.map((event) => (event as EventToDelete).reference).toList();
+
+        final deleteEventKind = eventToDeleteReferences.first is ImmutableEventReference
+            ? (eventToDeleteReferences.first as ImmutableEventReference).kind
+            : (eventToDeleteReferences.first as ReplaceableEventReference).kind;
+
+        final deleteEventIds = eventToDeleteReferences.first is ImmutableEventReference
+            ? eventToDeleteReferences.map((e) => (e as ImmutableEventReference).eventId)
+            : eventToDeleteReferences.map((e) => (e as ReplaceableEventReference).dTag);
+
+        if (deleteEventKind == ReplaceablePrivateDirectMessageEntity.kind) {
+          if (deleteEventIds.isNotEmpty) {
+            await conversationMessageDao.removeMessages(
+              ref: ref,
+              deleteRequest: rumor,
+              sharedIds: deleteEventIds.toList(),
             );
           }
+        } else if (deleteEventKind == PrivateMessageReactionEntity.kind) {
+          await conversationMessageReactionDao.remove(
+            ref: ref,
+            deleteRequest: rumor,
+            reactionEventId: deleteEventIds.single,
+          );
         }
-      } else if (rumor.kind == GenericRepostEntity.kind) {
-        await eventMessageDao.add(rumor);
       }
+    } else if (rumor.kind == GenericRepostEntity.kind) {
+      await eventMessageDao.add(rumor);
     }
   }
 
-  String _receiverDevicePubkey(EventMessage wrap) {
+  String receiverDevicePubkey(EventMessage wrap) {
     final senderPubkey = wrap.tags.firstWhereOrNull((tags) => tags[0] == 'p')?.elementAtOrNull(3);
 
     if (senderPubkey == null) {
@@ -284,7 +318,7 @@ class E2eeMessagesSubscriber extends _$E2eeMessagesSubscriber {
     return senderPubkey;
   }
 
-  Future<EventMessage?> _unwrapGift({
+  Future<EventMessage?> unwrapGift({
     required EventMessage giftWrap,
     required String privateKey,
     required IonConnectSealService sealService,
@@ -307,7 +341,7 @@ class E2eeMessagesSubscriber extends _$E2eeMessagesSubscriber {
     }
   }
 
-  Future<void> _addMediaToDatabase(
+  Future<void> addMediaToDatabase(
     EventMessage rumor,
   ) async {
     final entity = ReplaceablePrivateDirectMessageEntity.fromEventMessage(rumor);

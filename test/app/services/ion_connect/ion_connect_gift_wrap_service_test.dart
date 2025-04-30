@@ -28,8 +28,8 @@ void main() {
 
   group('IonConnectGiftWrapService', () {
     test('creates wrap from event', () async {
-      final event = await PrivateDirectMessageData.fromRawContent('test')
-          .toEventMessage(senderSigner.publicKey);
+      final event = await ReplaceablePrivateDirectMessageData.fromRawContent('test')
+          .toEventMessage(senderSigner);
 
       const masterPubkey = '0';
 
@@ -52,8 +52,8 @@ void main() {
     });
 
     test('decodes wrap back to original event on senders side', () async {
-      final event = await PrivateDirectMessageData.fromRawContent('test')
-          .toEventMessage(senderSigner.publicKey);
+      final event = await ReplaceablePrivateDirectMessageData.fromRawContent('test')
+          .toEventMessage(senderSigner);
 
       final wrap = await giftWrapService.createWrap(
         event: event,
@@ -74,8 +74,8 @@ void main() {
     });
 
     test('decodes wrap back to original event on receivers side', () async {
-      final event = await PrivateDirectMessageData.fromRawContent('test')
-          .toEventMessage(senderSigner.publicKey);
+      final event = await ReplaceablePrivateDirectMessageData.fromRawContent('test')
+          .toEventMessage(senderSigner);
 
       final wrap = await giftWrapService.createWrap(
         event: event,
