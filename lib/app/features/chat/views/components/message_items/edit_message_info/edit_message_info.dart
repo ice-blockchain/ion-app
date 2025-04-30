@@ -3,20 +3,18 @@
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/extensions/extensions.dart';
-import 'package:ion/app/features/chat/model/message_list_item.c.dart';
-import 'package:ion/app/features/chat/recent_chats/providers/selected_reply_message_provider.c.dart';
+import 'package:ion/app/features/chat/recent_chats/providers/selected_edit_message_provider.c.dart';
 import 'package:ion/app/features/chat/recent_chats/views/components/recent_chat_tile/recent_chat_tile.dart';
-import 'package:ion/app/features/chat/views/components/message_items/message_types/visual_media_message/visual_media_custom_grid.dart';
 import 'package:ion/generated/assets.gen.dart';
 
-class RepliedMessageInfo extends HookConsumerWidget {
-  const RepliedMessageInfo({super.key});
+class EditMessageInfo extends HookConsumerWidget {
+  const EditMessageInfo({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final repliedMessage = ref.watch(selectedReplyMessageProvider);
+    final editMessage = ref.watch(selectedEditMessageProvider);
 
-    if (repliedMessage == null) {
+    if (editMessage == null) {
       return const SizedBox();
     }
 
@@ -29,26 +27,13 @@ class RepliedMessageInfo extends HookConsumerWidget {
           mainAxisSize: MainAxisSize.min,
           children: [
             const _SideVerticalDivider(),
-            if (repliedMessage is MediaItem)
-              Padding(
-                padding: EdgeInsetsDirectional.only(start: 6.0.s, end: 12.0.s),
-                child: SizedBox(
-                  width: 30.0.s,
-                  child: VisualMediaCustomGrid(
-                    customSpacing: 2.0.s,
-                    customHeight: repliedMessage.medias.length > 1 ? 18.0.s : 30.0.s,
-                    messageMedias: repliedMessage.medias,
-                    eventMessage: repliedMessage.eventMessage,
-                  ),
-                ),
-              ),
             Flexible(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  SenderSummary(pubkey: repliedMessage.eventMessage.masterPubkey, isReply: true),
+                  SenderSummary(pubkey: editMessage.eventMessage.masterPubkey, isEdit: true),
                   Text(
-                    repliedMessage.contentDescription,
+                    editMessage.contentDescription,
                     style: context.theme.appTextThemes.body2.copyWith(
                       color: context.theme.appColors.onTertararyBackground,
                     ),
@@ -59,7 +44,7 @@ class RepliedMessageInfo extends HookConsumerWidget {
               ),
             ),
             GestureDetector(
-              onTap: ref.read(selectedReplyMessageProvider.notifier).clear,
+              onTap: ref.read(selectedEditMessageProvider.notifier).clear,
               child: Assets.svg.iconSheetClose.icon(
                 size: 20.0.s,
                 color: context.theme.appColors.tertararyText,
