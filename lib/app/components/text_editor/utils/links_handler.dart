@@ -1,5 +1,7 @@
 // SPDX-License-Identifier: ice License 1.0
 
+import 'dart:async';
+
 import 'package:flutter_quill/flutter_quill.dart';
 import 'package:ion/app/components/text_editor/utils/text_editor_typing_listener.dart';
 import 'package:ion/app/services/text_parser/model/text_matcher.dart';
@@ -13,6 +15,8 @@ class LinksHandler extends TextEditorTypingListener {
   });
 
   final _urlMatcher = const UrlMatcher();
+  bool _isFormatting = false;
+  Timer? _debounceTimer;
 
   @override
   void onTextChanged(
@@ -21,60 +25,33 @@ class LinksHandler extends TextEditorTypingListener {
     required bool isBackspace,
     required bool cursorMoved,
   }) {
-    _cleanAndReformatLinks(text);
-
-    if (cursorIndex > 0) {
-      final char = text.substring(cursorIndex - 1, cursorIndex);
-      if (isWordBoundary(char)) {
-        _checkAndFormatLink(text, cursorIndex);
-      }
-    }
+    if (_isFormatting) return;
+    _debounceTimer?.cancel();
+    _debounceTimer = Timer(const Duration(milliseconds: 150), () {
+      _formatLinks(text);
+    });
   }
 
   @override
   void onFocusLost() {
-    _cleanAndReformatLinks(controller.document.toPlainText());
+    if (_isFormatting) return;
+    _formatLinks(controller.document.toPlainText());
   }
 
-  void _cleanAndReformatLinks(String text) {
-    controller.removeListener(editorListener);
-
-    try {
-      final matches = RegExp(_urlMatcher.pattern).allMatches(text);
-      for (final match in matches) {
-        final url = match.group(0);
-        if (url != null) {
-          controller.formatText(
-            match.start,
-            match.end - match.start,
-            LinkAttribute(url),
-          );
-        }
-      }
-    } finally {
-      controller.addListener(editorListener);
-    }
-  }
-
-  void _checkAndFormatLink(String text, int cursorIndex) {
+  void _formatLinks(String text) {
+    _isFormatting = true;
     final matches = RegExp(_urlMatcher.pattern).allMatches(text);
+    final doc = controller.document;
     for (final match in matches) {
-      if (match.end == cursorIndex) {
-        final url = match.group(0);
-        if (url != null) {
-          controller.removeListener(editorListener);
-          try {
-            controller.formatText(
-              match.start,
-              match.end - match.start,
-              LinkAttribute(url),
-            );
-          } finally {
-            controller.addListener(editorListener);
-          }
-        }
-        break;
+      final url = match.group(0);
+      if (url == null) continue;
+      final attrs = doc.collectStyle(match.start, match.end - match.start).attributes;
+      final isAlreadyLink =
+          attrs.containsKey(Attribute.link.key) && attrs[Attribute.link.key]?.value == url;
+      if (!isAlreadyLink) {
+        controller.formatText(match.start, match.end - match.start, LinkAttribute(url));
       }
     }
+    _isFormatting = false;
   }
 }
