@@ -10,13 +10,14 @@ import 'package:ion/app/features/ion_connect/model/event_reference.c.dart';
 import 'package:ion/app/features/ion_connect/model/event_serializable.dart';
 import 'package:ion/app/features/ion_connect/model/ion_connect_entity.dart';
 import 'package:ion/app/features/ion_connect/providers/ion_connect_cache.c.dart';
+import 'package:ion/app/features/ion_connect/providers/ion_connect_db_cache_notifier.c.dart';
 
 part 'user_relays.c.freezed.dart';
 
 @Freezed(equal: false)
 class UserRelaysEntity
     with IonConnectEntity, CacheableEntity, ReplaceableEntity, _$UserRelaysEntity
-    implements EntityEventSerializable {
+    implements DbCacheableEntity {
   const factory UserRelaysEntity({
     required String id,
     required String pubkey,

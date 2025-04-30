@@ -10,6 +10,7 @@ import 'package:ion/app/features/ion_connect/model/event_reference.c.dart';
 import 'package:ion/app/features/ion_connect/model/event_serializable.dart';
 import 'package:ion/app/features/ion_connect/model/ion_connect_entity.dart';
 import 'package:ion/app/features/ion_connect/providers/ion_connect_cache.c.dart';
+import 'package:ion/app/features/ion_connect/providers/ion_connect_db_cache_notifier.c.dart';
 import 'package:ion/app/features/user/model/user_relays.c.dart';
 
 part 'user_chat_relays.c.freezed.dart';
@@ -17,7 +18,7 @@ part 'user_chat_relays.c.freezed.dart';
 @Freezed(equal: false)
 class UserChatRelaysEntity
     with IonConnectEntity, CacheableEntity, ReplaceableEntity, _$UserChatRelaysEntity
-    implements EntityEventSerializable {
+    implements DbCacheableEntity {
   const factory UserChatRelaysEntity({
     required String id,
     required String pubkey,
