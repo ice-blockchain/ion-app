@@ -70,6 +70,7 @@ class ReplaceablePrivateDirectMessageData
     required String messageId,
     required String conversationId,
     required Map<String, MediaAttachment> media,
+    required String masterPubkey,
     RichText? richText,
     String? groupImagePath,
     GroupSubject? groupSubject,
@@ -84,6 +85,7 @@ class ReplaceablePrivateDirectMessageData
       content: content,
       messageId: generateUuid(),
       conversationId: generateUuid(),
+      masterPubkey: '',
     );
   }
 
@@ -96,6 +98,7 @@ class ReplaceablePrivateDirectMessageData
 
     return ReplaceablePrivateDirectMessageData(
       content: eventMessage.content,
+      masterPubkey: eventMessage.masterPubkey,
       media: EntityDataWithMediaContent.parseImeta(tags[MediaAttachment.tagName]),
       messageId: tags[ReplaceableEventIdentifier.tagName]!
           .map(ReplaceableEventIdentifier.fromTag)
@@ -127,6 +130,7 @@ class ReplaceablePrivateDirectMessageData
       content: content,
       tags: [
         ...tags,
+        ['b', masterPubkey],
         if (quotedEvent != null) quotedEvent!.toTag(),
         if (groupSubject != null) groupSubject!.toTag(),
         if (relatedEvents != null) ...relatedEvents!.map((event) => event.toTag()),

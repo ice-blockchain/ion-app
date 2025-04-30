@@ -116,28 +116,29 @@ class MessageReactionContextMenu extends ConsumerWidget {
                 ],
               ],
               const OverlayMenuItemSeparator(),
-              if (isMe)
-                OverlayMenuItem(
-                  label: context.i18n.button_delete,
-                  labelColor: context.theme.appColors.attentionRed,
-                  verticalPadding: 12.0.s,
-                  icon: Assets.svg.iconBlockDelete
-                      .icon(size: iconSize, color: context.theme.appColors.attentionRed),
-                  onPressed: () async {
-                    final forEveryone = await DeleteMessageRoute().push<bool>(context);
+              OverlayMenuItem(
+                label: context.i18n.button_delete,
+                labelColor: context.theme.appColors.attentionRed,
+                verticalPadding: 12.0.s,
+                icon: Assets.svg.iconBlockDelete
+                    .icon(size: iconSize, color: context.theme.appColors.attentionRed),
+                onPressed: () async {
+                  final forEveryone = await DeleteMessageRoute(
+                    isMe: isMe,
+                  ).push<bool>(context);
 
-                    if (forEveryone != null && context.mounted) {
-                      final messageEventsList = [messageItem.eventMessage];
-                      ref.read(
-                        e2eeDeleteMessageProvider(
-                          forEveryone: forEveryone,
-                          messageEvents: messageEventsList,
-                        ),
-                      );
-                      context.pop();
-                    }
-                  },
-                ),
+                  if (forEveryone != null && context.mounted) {
+                    final messageEventsList = [messageItem.eventMessage];
+                    ref.read(
+                      e2eeDeleteMessageProvider(
+                        forEveryone: forEveryone,
+                        messageEvents: messageEventsList,
+                      ),
+                    );
+                    context.pop();
+                  }
+                },
+              ),
             ],
           ),
         ),
