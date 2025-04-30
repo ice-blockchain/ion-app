@@ -79,7 +79,7 @@ class ChatMediaPage extends HookConsumerWidget {
       return const SizedBox.shrink();
     }
     final eventMessage = eventMessageFuture.data!;
-    final entity = PrivateDirectMessageEntity.fromEventMessage(eventMessage);
+    final entity = ReplaceablePrivateDirectMessageEntity.fromEventMessage(eventMessage);
 
     final medias = ref.watch(chatMediasProvider(eventMessageId: eventMessageId)).valueOrNull;
 

@@ -14,7 +14,7 @@ part 'chat_message_load_media_provider.c.g.dart';
 @Riverpod(keepAlive: true)
 Raw<Future<File?>> chatMessageLoadMedia(
   Ref ref, {
-  required PrivateDirectMessageEntity entity,
+  required ReplaceablePrivateDirectMessageEntity entity,
   String? cacheKey,
   MediaAttachment? mediaAttachment,
   bool loadThumbnail = true,

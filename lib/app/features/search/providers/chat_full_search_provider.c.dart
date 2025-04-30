@@ -29,7 +29,7 @@ Future<List<(String, String)>?> chatFullSearch(Ref ref, String query) async {
       [];
 
   final lastConversationEntities = lastConversationMessages
-      .map(PrivateDirectMessageEntity.fromEventMessage)
+      .map(ReplaceablePrivateDirectMessageEntity.fromEventMessage)
       .toList()
     ..sortBy((message) => message.createdAt);
 
@@ -55,7 +55,8 @@ Future<List<(String, String)>?> chatFullSearch(Ref ref, String query) async {
 
   final eventMessageDao = ref.watch(eventMessageDaoProvider);
   final messagesSearchResults = await eventMessageDao.search(caseInsensitiveQuery);
-  final entities = messagesSearchResults.map(PrivateDirectMessageEntity.fromEventMessage);
+  final entities =
+      messagesSearchResults.map(ReplaceablePrivateDirectMessageEntity.fromEventMessage);
 
   final messagesTuples = entities
       .sortedBy((entity) => entity.createdAt)

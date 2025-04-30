@@ -42,7 +42,7 @@ class AudioMessage extends HookConsumerWidget {
     useAutomaticKeepAlive();
 
     final isMe = ref.watch(isCurrentUserSelectorProvider(eventMessage.masterPubkey));
-    final entity = PrivateDirectMessageEntity.fromEventMessage(eventMessage);
+    final entity = ReplaceablePrivateDirectMessageEntity.fromEventMessage(eventMessage);
 
     final audioUrl = useState<String?>(null);
 

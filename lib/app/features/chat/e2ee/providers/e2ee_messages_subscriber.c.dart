@@ -304,7 +304,7 @@ class E2eeMessagesSubscriber extends _$E2eeMessagesSubscriber {
   Future<void> _addMediaToDatabase(
     EventMessage rumor,
   ) async {
-    final entity = PrivateDirectMessageEntity.fromEventMessage(rumor);
+    final entity = ReplaceablePrivateDirectMessageEntity.fromEventMessage(rumor);
     if (entity.data.media.isNotEmpty) {
       for (final media in entity.data.media.values) {
         await ref
