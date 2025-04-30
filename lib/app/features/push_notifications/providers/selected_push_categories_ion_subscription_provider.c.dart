@@ -47,7 +47,7 @@ class SelectedPushCategoriesIonSubscription extends _$SelectedPushCategoriesIonS
     }
 
     final encryptedMessageService = await ref.watch(encryptedMessageServiceProvider.future);
-    return encryptedMessageService.encryptMessage(fcmToken);
+    return encryptedMessageService.encryptMessage(fcmToken); //TODO:pass relay's pubkey
   }
 
   Future<List<RequestFilter>> _getFilters() async {
