@@ -12,6 +12,7 @@ import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/auth/providers/auth_provider.c.dart';
 import 'package:ion/app/features/feed/data/models/entities/modifiable_post_data.c.dart';
 import 'package:ion/app/features/feed/providers/can_reply_notifier.c.dart';
+import 'package:ion/app/features/feed/stories/hooks/use_keyboard_height.dart';
 import 'package:ion/app/features/feed/stories/providers/emoji_reaction_provider.c.dart';
 import 'package:ion/app/features/feed/stories/providers/story_pause_provider.c.dart';
 import 'package:ion/app/features/feed/stories/providers/story_reply_provider.c.dart';
@@ -128,12 +129,9 @@ class _StoryControlsPanel extends HookConsumerWidget {
     final keyboardHeight = useKeyboardHeight();
     final safeArea = MediaQuery.viewPaddingOf(context).bottom;
 
-    const baselineInset = 16.0;
-    final baseline = safeArea + baselineInset.s;
+    final baseline = safeArea + 16.0.s;
     final linear = keyboardHeight + safeArea - controlsHeight.value;
     final bottomPadding = math.max(baseline, linear);
-
-    dumpMetrics('_StoryControls', keyboardHeight, safeArea, bottomPadding);
 
     Future<void> onSubmit(String? txt) async {
       if (txt == null || txt.isEmpty) return;
@@ -177,35 +175,4 @@ class _StoryControlsPanel extends HookConsumerWidget {
       ],
     );
   }
-}
-
-double _logicalInset(FlutterView v) => v.viewInsets.bottom / v.devicePixelRatio;
-
-double useKeyboardHeight() {
-  final dispatcher = WidgetsBinding.instance.platformDispatcher;
-  final height = useState<double>(_logicalInset(dispatcher.views.first));
-
-  useEffect(
-    () {
-      final obs = _MetricsObserver(
-        onMetricsChanged: () => height.value = _logicalInset(dispatcher.views.first),
-      );
-      WidgetsBinding.instance.addObserver(obs);
-      return () => WidgetsBinding.instance.removeObserver(obs);
-    },
-    [dispatcher],
-  );
-
-  return height.value;
-}
-
-class _MetricsObserver with WidgetsBindingObserver {
-  _MetricsObserver({required this.onMetricsChanged});
-  final VoidCallback onMetricsChanged;
-  @override
-  void didChangeMetrics() => onMetricsChanged();
-}
-
-void dumpMetrics(String tag, double kh, double safe, double pad) {
-  debugPrint('$tag  keyboard=$kh  safe=$safe  bottomPadding=$pad');
 }
