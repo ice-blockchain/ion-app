@@ -42,12 +42,21 @@ class CoinAmountInput extends HookWidget {
           keyboardType: const TextInputType.numberWithOptions(decimal: true),
           onValidated: (isValid) => isValidInput.value = isValid,
           validator: (value) {
-            final parsed = parseAmount(value);
+            final trimmedValue = value?.trim() ?? '';
+            if (trimmedValue.isEmpty) {
+              return null;
+            }
 
-            final error = locale.wallet_coin_amount_insufficient_funds;
+            final parsed = parseAmount(trimmedValue);
+            if (parsed == null) return '';
 
-            if (parsed == null) return error;
-            if ((maxValue != null && parsed > maxValue!) || parsed < 0) return error;
+            if (maxValue != null && (parsed > maxValue! || parsed <= 0)) {
+              return locale.wallet_coin_amount_insufficient_funds;
+            } else if (parsed < 0) {
+              return locale.wallet_coin_amount_must_be_positive;
+            } else if (parsed == 0) {
+              return '';
+            }
 
             return null;
           },

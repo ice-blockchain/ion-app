@@ -391,6 +391,7 @@
   "wallet_approximate_in_usd": "~ ${amount}",
   "wallet_coin_amount": "{coin} amount",
   "wallet_coin_amount_insufficient_funds": "Insufficient funds",
+  "wallet_coin_amount_must_be_positive": "Amount must be positive",
   "wallet_address_is_invalid": "Invalid address",
   "wallet_import_token_title": "Import token",
   "wallet_import_token_address_label": "Token address",
