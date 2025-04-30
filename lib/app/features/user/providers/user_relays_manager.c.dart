@@ -1,5 +1,6 @@
 // SPDX-License-Identifier: ice License 1.0
 
+import 'package:collection/collection.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/exceptions/exceptions.dart';
 import 'package:ion/app/features/auth/providers/auth_provider.c.dart';
@@ -80,9 +81,13 @@ class UserRelaysManager extends _$UserRelaysManager {
         .toList();
 
     for (final pubkey in pubkeys) {
-      final cached = dbCachedRelays.where((relay) => relay.pubkey == pubkey).firstOrNull;
-      if (cached != null && !_needsRefresh(cached)) {
-        result.add(cached);
+      final cachedRelaysEntity =
+          dbCachedRelays.where((relay) => relay.masterPubkey == pubkey).firstOrNull;
+      final filteredRelayEntity =
+          ref.read(relayReachabilityProvider.notifier).getFilteredRelayEntity(cachedRelaysEntity);
+
+      if (filteredRelayEntity != null) {
+        result.add(filteredRelayEntity);
       } else {
         pubkeysToFetch.add(pubkey);
       }
@@ -121,7 +126,10 @@ class UserRelaysManager extends _$UserRelaysManager {
     }
 
     if (fetchedRelays.isNotEmpty) {
-      await ref.read(ionConnectDbCacheProvider.notifier).saveAll(fetchedRelays);
+      await (
+        ref.read(ionConnectDbCacheProvider.notifier).saveAll(fetchedRelays),
+        _clearReachabilityInfoFor(fetchedRelays),
+      ).wait;
     }
 
     return result;
@@ -158,16 +166,13 @@ class UserRelaysManager extends _$UserRelaysManager {
     return userRelays;
   }
 
-  bool _needsRefresh(UserRelaysEntity relaysEntity) {
+  Future<void> _clearReachabilityInfoFor(
+    List<UserRelaysEntity> relays,
+  ) async {
     final reachabilityInfoNotifier = ref.read(relayReachabilityProvider.notifier);
-    final reachabilityInfos = relaysEntity.data.list
-        .map((relay) => reachabilityInfoNotifier.get(relay.url))
-        .whereType<RelayReachabilityInfo>();
-    final deadRelays = reachabilityInfos
-        .where((reachabilityInfo) => reachabilityInfo.failedToReachCount >= 3)
-        .toList();
-
-    // needs refresh when 50% + 1 or more are dead
-    return deadRelays.length >= (relaysEntity.data.list.length / 2 + 1).floor();
+    final relayUrls = relays.map((relay) => relay.urls).expand((element) => element).toSet();
+    for (final url in relayUrls) {
+      await reachabilityInfoNotifier.clear(url);
+    }
   }
 }

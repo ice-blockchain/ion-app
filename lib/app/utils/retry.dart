@@ -3,7 +3,6 @@
 import 'dart:async';
 import 'dart:math';
 
-import 'package:flutter/foundation.dart';
 import 'package:ion/app/services/logger/logger.dart';
 
 Future<T> withRetry<T>(
@@ -14,7 +13,7 @@ Future<T> withRetry<T>(
   double multiplier = 3,
   double minJitter = 0.5,
   double maxJitter = 1.5,
-  VoidCallback? onRetry,
+  void Function(Object? error)? onRetry,
   bool Function(Object)? retryWhen,
 }) async {
   return withRetryStream<T>(
@@ -38,7 +37,7 @@ Stream<T> withRetryStream<T>(
   double multiplier = 3,
   double minJitter = 0.5,
   double maxJitter = 1.5,
-  VoidCallback? onRetry,
+  void Function(Object? error)? onRetry,
   bool Function(Object)? retryWhen,
 }) async* {
   var attempt = 0;
@@ -78,7 +77,7 @@ Stream<T> withRetryStream<T>(
       Logger.log('Retry #$attempt after ${delay.inMilliseconds}ms...');
       await Future<void>.delayed(delay);
     }
-    onRetry?.call();
+    onRetry?.call(lastError);
   }
 
   throw Exception('Unreachable');

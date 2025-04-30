@@ -70,9 +70,15 @@ class IonConnectNotifier extends _$IonConnectNotifier {
         return null;
       },
       retryWhen: (error) =>
-          error is RelayRequestFailedException || RelayAuthService.isRelayAuthError(error),
-      onRetry: () {
-        if (relay != null) dislikedRelaysUrls.add(relay!.url);
+          error is RelayRequestFailedException ||
+          RelayAuthService.isRelayAuthError(error) ||
+          (error is RelayUnreachableException && !dislikedRelaysUrls.contains(error.relayUrl)),
+      onRetry: (error) {
+        if (relay != null) {
+          dislikedRelaysUrls.add(relay!.url);
+        } else if (error is RelayUnreachableException) {
+          dislikedRelaysUrls.add(error.relayUrl);
+        }
       },
     );
   }
@@ -151,9 +157,15 @@ class IonConnectNotifier extends _$IonConnectNotifier {
         }
       },
       retryWhen: (error) =>
-          error is RelayRequestFailedException || RelayAuthService.isRelayAuthError(error),
-      onRetry: () {
-        if (relay != null) dislikedRelaysUrls.add(relay!.url);
+          error is RelayRequestFailedException ||
+          RelayAuthService.isRelayAuthError(error) ||
+          (error is RelayUnreachableException && !dislikedRelaysUrls.contains(error.relayUrl)),
+      onRetry: (error) {
+        if (relay != null) {
+          dislikedRelaysUrls.add(relay!.url);
+        } else if (error is RelayUnreachableException) {
+          dislikedRelaysUrls.add(error.relayUrl);
+        }
       },
     );
   }
