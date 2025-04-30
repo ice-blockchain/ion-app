@@ -5,7 +5,7 @@ import 'dart:async';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/features/user/providers/user_metadata_provider.c.dart';
 import 'package:ion/app/features/wallets/model/network_data.c.dart';
-import 'package:ion/app/features/wallets/views/pages/contact_without_wallet_error_modal.dart';
+import 'package:ion/app/features/wallets/views/pages/contact_wallet_error_modals.dart';
 
 Future<bool> checkWalletExists(
   WidgetRef ref,
@@ -18,12 +18,17 @@ Future<bool> checkWalletExists(
   }
 
   final user = await ref.read(userMetadataProvider(pubkey).future);
-  final walletsMap = user?.data.wallets ?? {};
+  final walletsMap = user?.data.wallets;
 
-  final hasProperWallet = walletsMap[network.id] != null;
+  final hasProperWallet = walletsMap?[network.id] != null;
   if (!hasProperWallet && ref.context.mounted && showError) {
     unawaited(
-      showContactWithoutWalletError(ref.context, user: user!, network: network),
+      showContactWalletError(
+        ref.context,
+        user: user!,
+        network: network,
+        isPrivate: walletsMap == null,
+      ),
     );
   }
 
