@@ -21,26 +21,26 @@ import 'package:ion/app/features/push_notifications/data/models/push_subscriptio
 part 'push_subscription.c.freezed.dart';
 
 @Freezed(equal: false)
-class PushSubscription
-    with IonConnectEntity, CacheableEntity, ReplaceableEntity, _$PushSubscription {
-  const factory PushSubscription({
+class PushSubscriptionEntity
+    with IonConnectEntity, CacheableEntity, ReplaceableEntity, _$PushSubscriptionEntity {
+  const factory PushSubscriptionEntity({
     required String id,
     required String pubkey,
     required String masterPubkey,
     required String signature,
     required DateTime createdAt,
     required PushSubscriptionData data,
-  }) = _PushSubscription;
+  }) = _PushSubscriptionEntity;
 
-  const PushSubscription._();
+  const PushSubscriptionEntity._();
 
   /// https://github.com/ice-blockchain/subzero/blob/master/.ion-connect-protocol/ICIP-8000.md#registering-device-tokens
-  factory PushSubscription.fromEventMessage(EventMessage eventMessage) {
+  factory PushSubscriptionEntity.fromEventMessage(EventMessage eventMessage) {
     if (eventMessage.kind != kind) {
       throw IncorrectEventKindException(eventMessage.id, kind: kind);
     }
 
-    return PushSubscription(
+    return PushSubscriptionEntity(
       id: eventMessage.id,
       pubkey: eventMessage.pubkey,
       masterPubkey: eventMessage.masterPubkey,

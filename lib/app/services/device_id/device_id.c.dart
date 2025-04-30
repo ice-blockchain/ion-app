@@ -13,7 +13,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 part 'device_id.c.g.dart';
 
-class DeviceId {
+class DeviceIdService {
   final DeviceIdDelegate _delegate = DeviceIdDelegate.forPlatform();
 
   String? _deviceId;
@@ -82,4 +82,4 @@ class IOSDeviceIdDelegate implements DeviceIdDelegate {
 }
 
 @Riverpod(keepAlive: true)
-DeviceId deviceId(Ref ref) => DeviceId();
+DeviceIdService deviceIdService(Ref ref) => DeviceIdService();
