@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: ice License 1.0
 
 import 'package:ion/app/features/auth/providers/auth_provider.c.dart';
-import 'package:ion/app/features/ion_connect/providers/relays_provider.c.dart';
+import 'package:ion/app/features/ion_connect/providers/relay_provider.c.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'active_relays_provider.c.g.dart';

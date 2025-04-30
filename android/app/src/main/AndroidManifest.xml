@@ -49,6 +49,14 @@
             android:icon="@mipmap/ic_launcher"
             android:usesCleartextTraffic="true"
             android:allowBackup="false">
+
+        <!-- Prevent default firebase app from init, so that we could configure it afterwards in runtime -->
+        <provider
+            android:name="com.google.firebase.provider.FirebaseInitProvider"
+            android:authorities="${applicationId}.firebaseinitprovider"
+            tools:node="remove"
+        />
+
         <activity
                 android:name=".MainActivity"
                 android:exported="true"

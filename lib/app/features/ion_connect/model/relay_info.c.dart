@@ -1,0 +1,56 @@
+// SPDX-License-Identifier: ice License 1.0
+
+import 'dart:io';
+
+import 'package:flutter/foundation.dart';
+import 'package:freezed_annotation/freezed_annotation.dart';
+
+part 'relay_info.c.freezed.dart';
+part 'relay_info.c.g.dart';
+
+/// https://github.com/nostr-protocol/nips/blob/master/11.md
+@freezed
+class RelayInfo with _$RelayInfo {
+  const factory RelayInfo({
+    required String name,
+    required String description,
+    required String icon,
+    required String pubkey,
+    required String contact,
+    @JsonKey(name: 'supported_nips') required List<int> supportedNips,
+    required String software,
+    required String version,
+    @JsonKey(name: 'fcm_android_configs') List<RelayFcmConfig>? fcmAndroidConfigs,
+    @JsonKey(name: 'fcm_ios_configs') List<RelayFcmConfig>? fcmIosConfigs,
+    @JsonKey(name: 'fcm_web_configs') List<RelayFcmConfig>? fcmWebConfigs,
+  }) = _RelayInfo;
+
+  const RelayInfo._();
+
+  factory RelayInfo.fromJson(Map<String, dynamic> json) => _$RelayInfoFromJson(json);
+
+  List<RelayFcmConfig>? getFcmConfigsForPlatform() {
+    if (kIsWeb) {
+      return fcmWebConfigs;
+    } else if (Platform.isAndroid) {
+      return fcmAndroidConfigs;
+    } else if (Platform.isIOS) {
+      return fcmIosConfigs;
+    } else {
+      throw UnsupportedError('Unsupported platform');
+    }
+  }
+}
+
+/// https://github.com/ice-blockchain/subzero/blob/master/.ion-connect-protocol/ICIP-8000.md#fcm-client-configuration
+@freezed
+class RelayFcmConfig with _$RelayFcmConfig {
+  const factory RelayFcmConfig({
+    required String apiKey,
+    required String appId,
+    required String messagingSenderId,
+    required String projectId,
+  }) = _RelayFcmConfig;
+
+  factory RelayFcmConfig.fromJson(Map<String, dynamic> json) => _$RelayFcmConfigFromJson(json);
+}

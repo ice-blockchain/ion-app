@@ -45,6 +45,14 @@ dependencies:
   file_picker: ^8.1.2
   file_saver: ^0.2.12
   filesize: ^2.0.1
+  firebase_core:
+    git:
+      url: https://github.com/ice-blockchain/flutterfire.git
+      path: packages/firebase_core/firebase_core
+  firebase_messaging:
+    git:
+      url: https://github.com/ice-blockchain/flutterfire.git
+      path: packages/firebase_messaging/firebase_messaging
   flutter:
     sdk: flutter
   flutter_animate: ^4.5.0
@@ -59,7 +67,6 @@ dependencies:
     git:
       url: https://github.com/singerdmx/flutter-quill.git
       ref: 542ab43e61a6774a3993b57de686577ad2e8fa81
-
   flutter_screenutil: ^5.9.0
   flutter_secure_storage: ^9.2.4
   flutter_staggered_grid_view: ^0.7.0

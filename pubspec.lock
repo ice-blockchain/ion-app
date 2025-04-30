@@ -17,6 +17,15 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "76.0.0"
+  _flutterfire_internals:
+    dependency: transitive
+    description:
+      path: "packages/_flutterfire_internals"
+      ref: HEAD
+      resolved-ref: "90450eb7f2c7f0267938fab164758f946745a868"
+      url: "https://github.com/ice-blockchain/flutterfire.git"
+    source: git
+    version: "1.3.54"
   _macros:
     dependency: transitive
     description: dart
@@ -768,6 +777,60 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.0.1"
+  firebase_core:
+    dependency: "direct main"
+    description:
+      path: "packages/firebase_core/firebase_core"
+      ref: HEAD
+      resolved-ref: "90450eb7f2c7f0267938fab164758f946745a868"
+      url: "https://github.com/ice-blockchain/flutterfire.git"
+    source: git
+    version: "3.13.0"
+  firebase_core_platform_interface:
+    dependency: transitive
+    description:
+      path: "packages/firebase_core/firebase_core_platform_interface"
+      ref: HEAD
+      resolved-ref: "90450eb7f2c7f0267938fab164758f946745a868"
+      url: "https://github.com/ice-blockchain/flutterfire.git"
+    source: git
+    version: "5.4.0"
+  firebase_core_web:
+    dependency: transitive
+    description:
+      path: "packages/firebase_core/firebase_core_web"
+      ref: HEAD
+      resolved-ref: "90450eb7f2c7f0267938fab164758f946745a868"
+      url: "https://github.com/ice-blockchain/flutterfire.git"
+    source: git
+    version: "2.22.0"
+  firebase_messaging:
+    dependency: "direct main"
+    description:
+      path: "packages/firebase_messaging/firebase_messaging"
+      ref: HEAD
+      resolved-ref: "90450eb7f2c7f0267938fab164758f946745a868"
+      url: "https://github.com/ice-blockchain/flutterfire.git"
+    source: git
+    version: "15.2.5"
+  firebase_messaging_platform_interface:
+    dependency: transitive
+    description:
+      path: "packages/firebase_messaging/firebase_messaging_platform_interface"
+      ref: HEAD
+      resolved-ref: "90450eb7f2c7f0267938fab164758f946745a868"
+      url: "https://github.com/ice-blockchain/flutterfire.git"
+    source: git
+    version: "4.6.5"
+  firebase_messaging_web:
+    dependency: transitive
+    description:
+      path: "packages/firebase_messaging/firebase_messaging_web"
+      ref: HEAD
+      resolved-ref: "90450eb7f2c7f0267938fab164758f946745a868"
+      url: "https://github.com/ice-blockchain/flutterfire.git"
+    source: git
+    version: "3.10.5"
   fixnum:
     dependency: transitive
     description:

@@ -9,7 +9,7 @@ import 'package:ion/app/features/ion_connect/providers/mixins/relay_closed_mixin
 import 'package:ion/app/features/ion_connect/providers/mixins/relay_timer_mixin.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
-part 'relays_provider.c.g.dart';
+part 'relay_provider.c.g.dart';
 
 typedef RelaysState = Map<String, IonConnectRelay>;
 
