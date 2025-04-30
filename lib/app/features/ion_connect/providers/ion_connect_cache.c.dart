@@ -5,7 +5,9 @@ import 'dart:async';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/features/auth/providers/auth_provider.c.dart';
 import 'package:ion/app/features/ion_connect/model/event_reference.c.dart';
+import 'package:ion/app/features/ion_connect/model/event_serializable.dart';
 import 'package:ion/app/features/ion_connect/model/ion_connect_entity.dart';
+import 'package:ion/app/features/ion_connect/providers/ion_connect_db_cache_notifier.c.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'ion_connect_cache.c.g.dart';
@@ -48,6 +50,10 @@ class IonConnectCache extends _$IonConnectCache {
     state = {...state, entity.cacheKey: entry};
 
     _ionConnectCacheStreamController.sink.add(entity);
+
+    if (entity is EntityEventSerializable) {
+      ref.read(ionConnectDbCacheProvider.notifier).save(entity as EntityEventSerializable);
+    }
   }
 
   void remove(String key) {
