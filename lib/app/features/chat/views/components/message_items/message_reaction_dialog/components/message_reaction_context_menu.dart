@@ -13,7 +13,7 @@ import 'package:ion/app/features/chat/e2ee/providers/e2ee_delete_event_provider.
 import 'package:ion/app/features/chat/e2ee/providers/send_chat_message/send_e2ee_chat_message_service.c.dart';
 import 'package:ion/app/features/chat/model/database/chat_database.c.dart';
 import 'package:ion/app/features/chat/model/message_list_item.c.dart';
-import 'package:ion/app/features/chat/recent_chats/providers/selected_message_provider.c.dart';
+import 'package:ion/app/features/chat/recent_chats/providers/selected_reply_message_provider.c.dart';
 import 'package:ion/app/features/core/model/feature_flags.dart';
 import 'package:ion/app/features/core/providers/feature_flags_provider.c.dart';
 import 'package:ion/app/router/app_routes.c.dart';
@@ -76,7 +76,8 @@ class MessageReactionContextMenu extends ConsumerWidget {
                     color: context.theme.appColors.quaternaryText,
                   ),
                   onPressed: () {
-                    ref.read(selectedMessageProvider.notifier).selectedMessage = messageItem;
+                    ref.read(selectedReplyMessageProvider.notifier).selectedReplyMessage =
+                        messageItem;
                     context.pop();
                   },
                   minWidth: 140.0.s,
