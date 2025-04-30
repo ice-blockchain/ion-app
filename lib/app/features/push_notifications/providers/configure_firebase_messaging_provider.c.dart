@@ -10,7 +10,7 @@ part 'configure_firebase_messaging_provider.c.g.dart';
 @Riverpod(keepAlive: true)
 class ConfigureFirebaseMessaging extends _$ConfigureFirebaseMessaging {
   @override
-  Future<void> build() async {
+  Future<bool> build() async {
     // onLogout should be at the top of the build method
     onLogout(ref, _deleteFcmToken);
 
@@ -25,7 +25,10 @@ class ConfigureFirebaseMessaging extends _$ConfigureFirebaseMessaging {
       // because it leads to `didRegisterForRemoteNotificationsWithDeviceToken` delegate method call
       // And eventually to `[[FIRMessaging messaging] setAPNSToken:deviceToken]`
       await ref.watch(firebaseMessagingServiceProvider).registerForRemoteNotifications();
+      return true;
     }
+
+    return false;
   }
 
   void _deleteFcmToken() {

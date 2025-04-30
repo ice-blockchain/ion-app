@@ -95,7 +95,7 @@ class PushSubscriptionData
     return EventMessage.fromData(
       signer: signer,
       createdAt: createdAt,
-      kind: PushSubscription.kind,
+      kind: PushSubscriptionEntity.kind,
       content: jsonEncode(filters),
       tags: [
         ...tags,
@@ -110,7 +110,7 @@ class PushSubscriptionData
   @override
   ReplaceableEventReference toReplaceableEventReference(String pubkey) {
     return ReplaceableEventReference(
-      kind: PushSubscription.kind,
+      kind: PushSubscriptionEntity.kind,
       pubkey: pubkey,
       dTag: deviceId,
     );
