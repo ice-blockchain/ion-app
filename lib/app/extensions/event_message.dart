@@ -74,3 +74,18 @@ extension IonConnectEventMessageDbModelExtensions on event_messages_db.EventMess
     );
   }
 }
+
+extension ChatEventMessageDbModelExtensions on chat_db.EventMessageDbModel {
+  EventMessage toEventMessage() {
+    return EventMessage(
+      id: id,
+      kind: kind,
+      pubkey: pubkey,
+      createdAt: createdAt,
+      sig: sig,
+      content: content,
+      subscriptionId: subscriptionId,
+      tags: tags,
+    );
+  }
+}
