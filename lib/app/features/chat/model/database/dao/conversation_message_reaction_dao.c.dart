@@ -19,6 +19,7 @@ class ConversationMessageReactionDao extends DatabaseAccessor<ChatDatabase>
     required String kind14SharedId,
     required EventMessage newReactionEvent,
   }) async {
+    final entity = PrivateMessageReactionEntity.fromEventMessage(newReactionEvent);
     final eventMessageDao = ref.read(eventMessageDaoProvider);
 
     final existingReactionRow = await (select(reactionTable)
@@ -35,6 +36,7 @@ class ConversationMessageReactionDao extends DatabaseAccessor<ChatDatabase>
           kind14SharedId: Value(kind14SharedId),
           masterPubkey: Value(masterPubkey),
           content: Value(newReactionEvent.content),
+          sharedId: Value(entity.data.sharedId),
         ),
         mode: InsertMode.insertOrIgnore,
       );
@@ -60,28 +62,9 @@ class ConversationMessageReactionDao extends DatabaseAccessor<ChatDatabase>
 
   Future<void> remove({
     required Ref ref,
-    required String reactionEventId,
-    required EventMessage deleteRequest,
+    required String sharedId,
   }) async {
-    final eventMessageDao = ref.read(eventMessageDaoProvider);
-
-    await eventMessageDao.add(deleteRequest);
-
-    final existingReactionEvent = await (select(db.eventMessageTable)
-          ..where((table) => table.id.equals(reactionEventId)))
-        .getSingleOrNull();
-
-    final existingReactionRow = await (select(db.reactionTable)
-          ..where((table) => table.id.equals(reactionEventId)))
-        .getSingleOrNull();
-
-    if (existingReactionRow == null ||
-        existingReactionEvent == null ||
-        deleteRequest.createdAt.isBefore(existingReactionEvent.createdAt)) {
-      return;
-    }
-
-    await (update(reactionTable)..where((table) => table.id.equals(existingReactionRow.id))).write(
+    await (update(reactionTable)..where((table) => table.sharedId.equals(sharedId))).write(
       const ReactionTableCompanion(isDeleted: Value(true)),
     );
   }

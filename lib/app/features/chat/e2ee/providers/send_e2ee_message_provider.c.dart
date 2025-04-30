@@ -14,10 +14,12 @@ import 'package:ion/app/features/chat/providers/conversation_pubkeys_provider.c.
 import 'package:ion/app/features/core/providers/env_provider.c.dart';
 import 'package:ion/app/features/ion_connect/ion_connect.dart';
 import 'package:ion/app/features/ion_connect/model/event_reference.c.dart';
+import 'package:ion/app/features/ion_connect/model/ion_connect_entity.dart';
 import 'package:ion/app/features/ion_connect/providers/ion_connect_event_signer_provider.c.dart';
 import 'package:ion/app/features/ion_connect/providers/ion_connect_notifier.c.dart';
 import 'package:ion/app/services/ion_connect/ion_connect_gift_wrap_service.c.dart';
 import 'package:ion/app/services/ion_connect/ion_connect_seal_service.c.dart';
+import 'package:ion/app/services/uuid/uuid.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'send_e2ee_message_provider.c.g.dart';
@@ -74,18 +76,15 @@ class SendE2eeMessageService {
       return;
     }
 
-    final eventMessage = await createEventMessage(
-      signer: eventSigner!,
+    final messageReactionData = PrivateMessageReactionEntityData(
       content: status.name,
-      kind: PrivateMessageReactionEntity.kind,
-      tags: [
-        ReplaceableEventReference(
-          kind: messageEventMessage.kind,
-          pubkey: messageEventMessage.pubkey,
-          dTag: messageEventMessage.sharedId,
-        ).toTag(),
-        ['b', currentUserMasterPubkey],
-      ],
+      reference: ReplaceableEventReference(
+        kind: messageEventMessage.kind,
+        pubkey: messageEventMessage.pubkey,
+        dTag: messageEventMessage.sharedId,
+      ),
+      masterPubkey: currentUserMasterPubkey,
+      sharedId: generateUuid(),
     );
 
     await Future.wait(
@@ -102,7 +101,7 @@ class SendE2eeMessageService {
         await ref.read(sendE2eeChatMessageServiceProvider).sendWrappedMessage(
           pubkey: pubkey,
           eventSigner: eventSigner!,
-          eventMessage: eventMessage,
+          eventMessage: await messageReactionData.toEventMessage(SimpleSigner(pubkey, '')),
           masterPubkey: masterPubkey,
           wrappedKinds: [PrivateMessageReactionEntity.kind.toString()],
         );
@@ -115,18 +114,15 @@ class SendE2eeMessageService {
     required String content,
     required EventMessage kind14Rumor,
   }) async {
-    final eventMessage = await createEventMessage(
+    final messageReactionData = PrivateMessageReactionEntityData(
       content: content,
-      signer: eventSigner!,
-      kind: PrivateMessageReactionEntity.kind,
-      tags: [
-        ReplaceableEventReference(
-          kind: kind14Rumor.kind,
-          pubkey: kind14Rumor.pubkey,
-          dTag: kind14Rumor.sharedId,
-        ).toTag(),
-        ['b', currentUserMasterPubkey],
-      ],
+      reference: ReplaceableEventReference(
+        kind: kind14Rumor.kind,
+        pubkey: kind14Rumor.pubkey,
+        dTag: kind14Rumor.sharedId,
+      ),
+      masterPubkey: currentUserMasterPubkey,
+      sharedId: generateUuid(),
     );
 
     final privateDirectMessageEntity =
@@ -153,43 +149,12 @@ class SendE2eeMessageService {
 
         await ref.read(sendE2eeChatMessageServiceProvider).sendWrappedMessage(
           eventSigner: eventSigner!,
-          eventMessage: eventMessage,
+          eventMessage: await messageReactionData.toEventMessage(SimpleSigner(pubkey, '')),
           masterPubkey: masterPubkey,
           pubkey: currentUser ? eventSigner!.publicKey : pubkey,
           wrappedKinds: [PrivateMessageReactionEntity.kind.toString()],
         );
       }),
     );
-  }
-
-  Future<EventMessage> createEventMessage({
-    required String content,
-    required EventSigner signer,
-    required List<List<String>> tags,
-    String? previousId,
-    int kind = ReplaceablePrivateDirectMessageEntity.kind,
-  }) async {
-    final createdAt = DateTime.now().toUtc();
-
-    final id = previousId ??
-        EventMessage.calculateEventId(
-          tags: tags,
-          kind: kind,
-          content: content,
-          createdAt: createdAt,
-          publicKey: signer.publicKey,
-        );
-
-    final eventMessage = EventMessage(
-      id: id,
-      tags: tags,
-      kind: kind,
-      content: content,
-      createdAt: createdAt,
-      pubkey: signer.publicKey,
-      sig: null,
-    );
-
-    return eventMessage;
   }
 }

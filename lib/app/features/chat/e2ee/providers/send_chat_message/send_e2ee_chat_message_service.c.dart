@@ -9,10 +9,10 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/exceptions/exceptions.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/auth/providers/auth_provider.c.dart';
-import 'package:ion/app/features/chat/community/models/entities/tags/conversation_identifier.c.dart';
 import 'package:ion/app/features/chat/e2ee/model/entities/private_direct_message_data.c.dart';
 import 'package:ion/app/features/chat/e2ee/providers/send_chat_message/send_chat_media_provider.c.dart';
 import 'package:ion/app/features/chat/model/database/chat_database.c.dart';
+import 'package:ion/app/features/chat/model/group_subject.c.dart';
 import 'package:ion/app/features/chat/providers/conversation_pubkeys_provider.c.dart';
 import 'package:ion/app/features/core/model/media_type.dart';
 import 'package:ion/app/features/core/providers/env_provider.c.dart';
@@ -20,10 +20,11 @@ import 'package:ion/app/features/ion_connect/ion_connect.dart';
 import 'package:ion/app/features/ion_connect/model/action_source.c.dart';
 import 'package:ion/app/features/ion_connect/model/entity_expiration.c.dart';
 import 'package:ion/app/features/ion_connect/model/event_reference.c.dart';
+import 'package:ion/app/features/ion_connect/model/ion_connect_entity.dart';
 import 'package:ion/app/features/ion_connect/model/media_attachment.dart';
 import 'package:ion/app/features/ion_connect/model/related_event.c.dart';
 import 'package:ion/app/features/ion_connect/model/related_event_marker.dart';
-import 'package:ion/app/features/ion_connect/model/replaceable_event_identifier.c.dart';
+import 'package:ion/app/features/ion_connect/model/related_pubkey.c.dart';
 import 'package:ion/app/features/ion_connect/providers/ion_connect_event_signer_provider.c.dart';
 import 'package:ion/app/features/ion_connect/providers/ion_connect_notifier.c.dart';
 import 'package:ion/app/services/compressors/video_compressor.c.dart';
@@ -81,31 +82,20 @@ class SendE2eeChatMessageService {
         throw UserMasterPubkeyNotFoundException();
       }
 
-      final localMediaTags =
-          mediaFiles.map(MediaAttachment.fromMediaFile).map((a) => a.toTag()).toList();
-
-      final conversationTagsWithLocalMedia = _generateConversationTags(
-        subject: subject,
-        messageId: sharedId,
-        mediaTags: localMediaTags,
-        groupImageTag: groupImageTag,
-        conversationId: conversationId,
-        repliedMessage: repliedMessage,
-        referencePostTag: referencePostTag,
-        masterPubkeys: participantsMasterPubkeys,
-      );
-
-      final localEventMessage = await _createEventMessage(
-        kind: kind,
-        isLocal: true,
+      final localEventMessage = await ReplaceablePrivateDirectMessageData(
         content: content,
-        signer: eventSigner,
-        tags: [
-          ...tags ?? [],
-          ...conversationTagsWithLocalMedia,
-        ],
-        failedEventMessageId: failedEventMessageId,
-      );
+        messageId: sharedId,
+        conversationId: conversationId,
+        media: {
+          for (final attachment in mediaFiles.map(MediaAttachment.fromMediaFile))
+            attachment.url: attachment,
+        },
+        masterPubkey: currentUserMasterPubkey,
+        groupSubject: subject.isNotEmpty ? GroupSubject(subject!) : null,
+        relatedPubkeys:
+            participantsMasterPubkeys.map((pubkey) => RelatedPubkey(value: pubkey)).toList(),
+        relatedEvents: _generateRelatedEvents(repliedMessage),
+      ).toEventMessage(SimpleSigner(eventSigner.publicKey, ''));
 
       sentMessage = localEventMessage;
 
@@ -134,29 +124,23 @@ class SendE2eeChatMessageService {
           try {
             if (pubkey == null) throw UserPubkeyNotFoundException(masterPubkey);
 
-            final attachments = mediaAttachmentsUsersBased[masterPubkey];
-            final mediaTagsWithRemoteMedia = attachments?.map((a) => a.toTag()).toList();
-
-            final conversationTagsWithRemoteMedia = _generateConversationTags(
-              subject: subject,
-              messageId: sharedId,
-              groupImageTag: groupImageTag,
-              conversationId: conversationId,
-              repliedMessage: repliedMessage,
-              referencePostTag: referencePostTag,
-              mediaTags: mediaTagsWithRemoteMedia,
-              masterPubkeys: participantsMasterPubkeys,
-            );
+            final attachments = mediaAttachmentsUsersBased[masterPubkey] ?? [];
 
             final isCurrentUser = ref.read(isCurrentUserSelectorProvider(masterPubkey));
 
-            final remoteEventMessage = await _createEventMessage(
-              kind: kind,
+            final remoteEventMessage = await ReplaceablePrivateDirectMessageData(
               content: content,
-              signer: eventSigner,
-              tags: conversationTagsWithRemoteMedia,
-              failedEventMessageId: failedEventMessageId,
-            );
+              messageId: sharedId,
+              conversationId: conversationId,
+              media: {
+                for (final attachment in attachments) attachment.url: attachment,
+              },
+              masterPubkey: currentUserMasterPubkey,
+              relatedPubkeys:
+                  participantsMasterPubkeys.map((pubkey) => RelatedPubkey(value: pubkey)).toList(),
+              groupSubject: subject.isNotEmpty ? GroupSubject(subject!) : null,
+              relatedEvents: _generateRelatedEvents(repliedMessage),
+            ).toEventMessage(SimpleSigner(pubkey, ''));
 
             await sendWrappedMessage(
               pubkey: pubkey,
@@ -303,68 +287,6 @@ class SendE2eeChatMessageService {
           cache: false,
           actionSource: ActionSourceUserChat(masterPubkey, anonymous: true),
         );
-  }
-
-  List<List<String>> _generateConversationTags({
-    required String conversationId,
-    required List<String> masterPubkeys,
-    String? subject,
-    String? messageId,
-    List<String>? groupImageTag,
-    List<List<String>>? mediaTags,
-    List<String>? referencePostTag,
-    EventMessage? repliedMessage,
-  }) {
-    final currentUserMasterPubkey = ref.read(currentPubkeySelectorProvider);
-
-    final relatedEventsTags = _generateRelatedEvents(repliedMessage).map((tag) => tag.toTag());
-
-    final tags = [
-      ...relatedEventsTags,
-      ...masterPubkeys.map((pubkey) => ['p', pubkey]),
-      [ConversationIdentifier.tagName, conversationId],
-      if (mediaTags != null) ...mediaTags,
-      if (subject != null) ['subject', subject],
-      if (groupImageTag != null) groupImageTag,
-      if (referencePostTag != null) referencePostTag,
-      if (messageId != null) [ReplaceableEventIdentifier.tagName, messageId],
-      ['b', currentUserMasterPubkey!],
-    ];
-
-    return tags;
-  }
-
-  Future<EventMessage> _createEventMessage({
-    required int kind,
-    required String content,
-    required EventSigner signer,
-    required List<List<String>> tags,
-    bool isLocal = false,
-    String? failedEventMessageId,
-  }) async {
-    final createdAt =
-        isLocal ? DateTime.now().subtract(const Duration(seconds: 1)) : DateTime.now();
-
-    final id = failedEventMessageId ??
-        EventMessage.calculateEventId(
-          tags: tags,
-          kind: kind,
-          content: content,
-          createdAt: createdAt,
-          publicKey: signer.publicKey,
-        );
-
-    final eventMessage = EventMessage(
-      id: id,
-      tags: tags,
-      kind: kind,
-      content: content,
-      createdAt: createdAt,
-      pubkey: signer.publicKey,
-      sig: null,
-    );
-
-    return eventMessage;
   }
 
   Future<EventMessage> _createGiftWrap({

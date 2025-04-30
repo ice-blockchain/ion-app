@@ -117,11 +117,13 @@ class DeleteConversationRoute extends BaseRouteData {
 }
 
 class DeleteMessageRoute extends BaseRouteData {
-  DeleteMessageRoute()
+  DeleteMessageRoute({required this.isMe})
       : super(
-          child: const DeleteMessageModal(),
+          child: DeleteMessageModal(isMe: isMe),
           type: IceRouteType.bottomSheet,
         );
+
+  final bool isMe;
 }
 
 class NewChatModalRoute extends BaseRouteData {

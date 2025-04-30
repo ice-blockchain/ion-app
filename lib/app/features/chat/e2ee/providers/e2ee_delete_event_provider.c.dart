@@ -5,6 +5,7 @@ import 'package:ion/app/exceptions/exceptions.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/auth/providers/auth_provider.c.dart';
 import 'package:ion/app/features/chat/e2ee/model/conversation_to_delete.c.dart';
+import 'package:ion/app/features/chat/e2ee/model/entities/private_message_reaction_data.c.dart';
 import 'package:ion/app/features/chat/e2ee/providers/send_chat_message/send_e2ee_chat_message_service.c.dart';
 import 'package:ion/app/features/chat/model/database/chat_database.c.dart';
 import 'package:ion/app/features/chat/providers/conversation_pubkeys_provider.c.dart';
@@ -99,13 +100,16 @@ Future<void> _deleteReaction({
     throw PubkeysDoNotMatchException();
   }
 
+  final reactionEntity = PrivateMessageReactionEntity.fromEventMessage(reactionEvent);
+
   final deleteRequest = DeletionRequest(
     events: [
+      //TODO: confirm reaction event should be replaceable
       EventToDelete(
-        ImmutableEventReference(
+        ReplaceableEventReference(
           kind: reactionEvent.kind,
-          pubkey: eventSigner.publicKey,
-          eventId: reactionEvent.id,
+          pubkey: reactionEntity.pubkey,
+          dTag: reactionEntity.data.sharedId,
         ),
       ),
     ],

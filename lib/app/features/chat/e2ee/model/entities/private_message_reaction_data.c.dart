@@ -10,6 +10,7 @@ import 'package:ion/app/features/ion_connect/ion_connect.dart';
 import 'package:ion/app/features/ion_connect/model/event_reference.c.dart';
 import 'package:ion/app/features/ion_connect/model/event_serializable.dart';
 import 'package:ion/app/features/ion_connect/model/ion_connect_entity.dart';
+import 'package:ion/app/features/ion_connect/model/replaceable_event_identifier.c.dart';
 
 part 'private_message_reaction_data.c.freezed.dart';
 
@@ -56,10 +57,14 @@ class PrivateMessageReactionEntity
 }
 
 @freezed
-class PrivateMessageReactionEntityData with _$PrivateMessageReactionEntityData {
+class PrivateMessageReactionEntityData
+    with _$PrivateMessageReactionEntityData
+    implements EventSerializable {
   const factory PrivateMessageReactionEntityData({
     required String content,
     required ReplaceableEventReference reference,
+    required String masterPubkey,
+    required String sharedId,
   }) = _PrivateMessageReactionEntityData;
 
   const PrivateMessageReactionEntityData._();
@@ -76,6 +81,31 @@ class PrivateMessageReactionEntityData with _$PrivateMessageReactionEntityData {
     return PrivateMessageReactionEntityData(
       content: eventMessage.content,
       reference: ReplaceableEventReference.fromTag(identifierTag),
+      masterPubkey: eventMessage.masterPubkey,
+      sharedId: tags[ReplaceableEventIdentifier.tagName]!
+          .map(ReplaceableEventIdentifier.fromTag)
+          .first
+          .value,
+    );
+  }
+
+  @override
+  FutureOr<EventMessage> toEventMessage(
+    EventSigner signer, {
+    List<List<String>> tags = const [],
+    DateTime? createdAt,
+  }) {
+    return EventMessage.fromData(
+      signer: signer,
+      kind: PrivateMessageReactionEntity.kind,
+      content: content,
+      tags: [
+        ...tags,
+        reference.toTag(),
+        ['b', masterPubkey],
+        ReplaceableEventIdentifier(value: sharedId).toTag(),
+      ],
+      createdAt: createdAt,
     );
   }
 }

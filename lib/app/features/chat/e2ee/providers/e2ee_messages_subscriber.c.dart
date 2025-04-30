@@ -253,8 +253,7 @@ class E2eeMessagesSubscriber extends _$E2eeMessagesSubscriber {
         } else if (deleteEventKind == PrivateMessageReactionEntity.kind) {
           await conversationMessageReactionDao.remove(
             ref: ref,
-            deleteRequest: rumor,
-            reactionEventId: deleteEventIds.single,
+            sharedId: deleteEventIds.single,
           );
         }
       }

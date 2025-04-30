@@ -11,7 +11,6 @@ import 'package:ion/app/features/chat/community/models/entities/community_join_d
 import 'package:ion/app/features/chat/community/models/entities/tags/conversation_identifier.c.dart';
 import 'package:ion/app/features/chat/e2ee/model/entities/private_direct_message_data.c.dart';
 import 'package:ion/app/features/chat/e2ee/model/entities/private_message_reaction_data.c.dart';
-import 'package:ion/app/features/chat/model/database/chat_database.c.steps.dart';
 import 'package:ion/app/features/chat/model/group_subject.c.dart';
 import 'package:ion/app/features/chat/model/message_reaction_group.c.dart';
 import 'package:ion/app/features/chat/recent_chats/model/conversation_list_item.c.dart';
@@ -67,49 +66,7 @@ class ChatDatabase extends _$ChatDatabase {
   final String pubkey;
 
   @override
-  int get schemaVersion => 6;
-
-  @override
-  MigrationStrategy get migration => MigrationStrategy(
-        beforeOpen: (_) async {
-          await customStatement('PRAGMA foreign_keys = ON');
-        },
-        onCreate: (migration) => migration.createAll(),
-        onUpgrade: stepByStep(
-          from1To2: (m, schema) async {
-            await m.createTable(schema.reactionTable);
-          },
-          from2To3: (m, schema) async {
-            await m.renameColumn(
-              schema.reactionTable,
-              Schema2(database: m.database).reactionTable.eventMessageId.name,
-              reactionTable.kind14SharedId,
-            );
-            await m.alterTable(
-              TableMigration(
-                schema.reactionTable,
-                columnTransformer: {
-                  reactionTable.id: reactionTable.id.cast<String>(),
-                },
-              ),
-            );
-          },
-          from3To4: (m, schema) async {
-            await m.createTable(schema.messageMediaTable);
-          },
-          from4To5: (m, schema) async {
-            await m.deleteTable(schema.messageMediaTable.actualTableName);
-            await m.createTable(schema.messageMediaTable);
-          },
-          from5To6: (m, schema) async {
-            await m.renameColumn(
-              schema.reactionTable,
-              Schema5(database: m.database).reactionTable.id.name,
-              reactionTable.kind14SharedId,
-            );
-          },
-        ),
-      );
+  int get schemaVersion => 1;
 
   static QueryExecutor _openConnection(String pubkey) {
     return driftDatabase(name: 'chat_database_$pubkey');

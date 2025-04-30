@@ -12,4 +12,6 @@ class ReactionTable extends Table {
   late final content = text()();
   late final masterPubkey = text()();
   late final isDeleted = boolean().withDefault(const Constant(false))();
+
+  late final sharedId = text()();
 }
