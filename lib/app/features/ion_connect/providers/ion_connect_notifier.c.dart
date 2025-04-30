@@ -215,13 +215,13 @@ class IonConnectNotifier extends _$IonConnectNotifier {
     EventSerializable entityData, {
     bool includeMasterPubkey = true,
   }) async {
-    final mainWallet = ref.read(mainWalletProvider).valueOrNull;
+    final mainWallet = await ref.read(mainWalletProvider.future);
 
     if (mainWallet == null) {
       throw MainWalletNotFoundException();
     }
 
-    final eventSigner = ref.read(currentUserIonConnectEventSignerProvider).valueOrNull;
+    final eventSigner = await ref.read(currentUserIonConnectEventSignerProvider.future);
 
     if (eventSigner == null) {
       throw EventSignerNotFoundException();
