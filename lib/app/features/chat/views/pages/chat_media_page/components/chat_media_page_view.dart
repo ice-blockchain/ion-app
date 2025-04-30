@@ -28,7 +28,7 @@ class ChatMediaPageView extends HookConsumerWidget {
   });
 
   final List<MessageMediaTableData> medias;
-  final PrivateDirectMessageEntity entity;
+  final ReplaceablePrivateDirectMessageEntity entity;
   final double bottomHeight;
   final int initialIndex;
   final ImageZoomController zoomController;
@@ -68,7 +68,7 @@ class _ChatMediaItem extends HookConsumerWidget {
 
   final MessageMediaTableData media;
   final MediaAttachment mediaAttachment;
-  final PrivateDirectMessageEntity entity;
+  final ReplaceablePrivateDirectMessageEntity entity;
   final ImageZoomController zoomController;
   final double bottomHeight;
 

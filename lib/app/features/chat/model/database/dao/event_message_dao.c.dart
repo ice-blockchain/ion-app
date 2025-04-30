@@ -18,8 +18,13 @@ class EventMessageDao extends DatabaseAccessor<ChatDatabase> with _$EventMessage
   EventMessageDao(super.db);
 
   Future<void> add(EventMessage event) async {
-    await into(db.eventMessageTable)
-        .insert(EventMessageRowClass.fromEventMessage(event), mode: InsertMode.insertOrReplace);
+    final eventReference = ReplaceablePrivateDirectMessageEntity.fromEventMessage(event)
+        .data
+        .toReplaceableEventReference(event.pubkey);
+
+    final dbModel = event.toChatDbModel(eventReference);
+
+    await into(db.eventMessageTable).insert(dbModel, mode: InsertMode.insertOrReplace);
   }
 
   Future<List<EventMessage>> search(String query) async {

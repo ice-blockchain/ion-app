@@ -7,7 +7,7 @@ class MessageMediaTable extends Table {
   IntColumn get status => intEnum<MessageMediaStatus>()();
   TextColumn get remoteUrl => text().nullable()();
   TextColumn get cacheKey => text().nullable()();
-  TextColumn get eventMessageId => text().references(EventMessageTable, #id)();
+  TextColumn get eventMessageId => text()();
 }
 
 enum MessageMediaStatus {

@@ -21,7 +21,8 @@ class StoryReplyMessage extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final entity = useMemoized(() => PrivateDirectMessageEntity.fromEventMessage(eventMessage));
+    final entity =
+        useMemoized(() => ReplaceablePrivateDirectMessageEntity.fromEventMessage(eventMessage));
     final isMe = ref.watch(isCurrentUserSelectorProvider(eventMessage.masterPubkey));
     final story = entity.data.quotedEvent != null
         ? ref

@@ -7,7 +7,7 @@ ConversationMessageDataDao conversationMessageDataDao(Ref ref) =>
     ConversationMessageDataDao(ref.watch(chatDatabaseProvider));
 
 @DriftAccessor(
-  tables: [MessageStatusTable, EventMessageTable],
+  tables: [MessageStatusTable, EventMessageTable, ConversationMessageTable],
 )
 class ConversationMessageDataDao extends DatabaseAccessor<ChatDatabase>
     with _$ConversationMessageDataDaoMixin {
@@ -27,8 +27,14 @@ class ConversationMessageDataDao extends DatabaseAccessor<ChatDatabase>
             ..where((table) => table.status.equals(MessageDeliveryStatus.received.index))
             ..join([
               innerJoin(
+                conversationMessageTable,
+                conversationMessageTable.sharedId.equalsExp(messageStatusTable.sharedId) &
+                    eventMessageTable.createdAt.isSmallerThanValue(updateAllBefore),
+              ),
+              innerJoin(
                 eventMessageTable,
-                eventMessageTable.sharedId.equalsExp(messageStatusTable.sharedId) &
+                eventMessageTable.eventReference
+                        .equalsExp(conversationMessageTable.eventReferenceId) &
                     eventMessageTable.createdAt.isSmallerThanValue(updateAllBefore),
               ),
             ]))

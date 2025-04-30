@@ -22,7 +22,7 @@ Future<List<(String, String)>?> chatMessagesSearch(Ref ref, String query) async 
 
   final searchResults = await eventMessageDao.search(caseInsensitiveQuery);
 
-  final entities = searchResults.map(PrivateDirectMessageEntity.fromEventMessage);
+  final entities = searchResults.map(ReplaceablePrivateDirectMessageEntity.fromEventMessage);
 
   final tuples = entities
       .sortedBy((entity) => entity.createdAt)

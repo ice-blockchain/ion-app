@@ -4,7 +4,7 @@ part of '../chat_database.c.dart';
 
 class ReactionTable extends Table {
   @ReferenceName('reactionEventRef')
-  late final id = text().references(EventMessageTable, #id)();
+  late final id = text()();
 
   @ReferenceName('reactionSourceMessageRef')
   late final kind14SharedId = text()();

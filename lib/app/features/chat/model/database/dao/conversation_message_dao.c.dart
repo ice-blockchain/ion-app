@@ -25,7 +25,7 @@ class ConversationMessageDao extends DatabaseAccessor<ChatDatabase>
     final query = select(conversationMessageTable).join([
       innerJoin(
         eventMessageTable,
-        eventMessageTable.sharedId.equalsExp(conversationMessageTable.sharedId),
+        eventMessageTable.eventReference.equalsExp(conversationMessageTable.eventReferenceId),
       ),
       innerJoin(
         messageStatusTable,
@@ -65,12 +65,12 @@ class ConversationMessageDao extends DatabaseAccessor<ChatDatabase>
   ) {
     final query = select(messageStatusTable).join([
       innerJoin(
-        eventMessageTable,
-        eventMessageTable.sharedId.equalsExp(messageStatusTable.sharedId),
+        conversationMessageTable,
+        conversationMessageTable.sharedId.equalsExp(messageStatusTable.sharedId),
       ),
       innerJoin(
         conversationMessageTable,
-        conversationMessageTable.eventMessageId.equalsExp(eventMessageTable.id),
+        conversationMessageTable.eventReferenceId.equalsExp(eventMessageTable.eventReference),
       ),
     ])
       ..where(
@@ -89,7 +89,7 @@ class ConversationMessageDao extends DatabaseAccessor<ChatDatabase>
     final query = select(conversationMessageTable).join([
       innerJoin(
         eventMessageTable,
-        eventMessageTable.sharedId.equalsExp(conversationMessageTable.sharedId),
+        eventMessageTable.eventReference.equalsExp(conversationMessageTable.eventReferenceId),
       ),
       innerJoin(
         messageStatusTable,
@@ -100,7 +100,7 @@ class ConversationMessageDao extends DatabaseAccessor<ChatDatabase>
       ..where(messageStatusTable.masterPubkey.equals(currentUserMasterPubkey))
       ..where(messageStatusTable.status.isNotIn([MessageDeliveryStatus.deleted.index]))
       ..orderBy([OrderingTerm.desc(eventMessageTable.createdAt)])
-      ..groupBy([eventMessageTable.sharedId])
+      ..groupBy([messageStatusTable.sharedId])
       ..addColumns([eventMessageTable.createdAt.max()]);
 
     return query.watch().map((rows) {

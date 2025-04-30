@@ -34,7 +34,7 @@ class VisualMediaContent extends HookConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final localFile = useState<File?>(null);
-    final entity = PrivateDirectMessageEntity.fromEventMessage(eventMessage);
+    final entity = ReplaceablePrivateDirectMessageEntity.fromEventMessage(eventMessage);
     final mediaAttachment = entity.data.media[messageMediaTableData.remoteUrl];
 
     useEffect(

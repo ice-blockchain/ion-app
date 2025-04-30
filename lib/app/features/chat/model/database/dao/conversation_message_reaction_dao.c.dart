@@ -7,7 +7,7 @@ ConversationMessageReactionDao conversationMessageReactionDao(Ref ref) =>
     ConversationMessageReactionDao(ref.watch(chatDatabaseProvider));
 
 @DriftAccessor(
-  tables: [ReactionTable],
+  tables: [ReactionTable, ConversationMessageTable, EventMessageTable],
 )
 class ConversationMessageReactionDao extends DatabaseAccessor<ChatDatabase>
     with _$ConversationMessageReactionDaoMixin {
@@ -22,7 +22,15 @@ class ConversationMessageReactionDao extends DatabaseAccessor<ChatDatabase>
     final eventMessageDao = ref.read(eventMessageDaoProvider);
 
     final kind14EventMessage = await (select(db.eventMessageTable)
-          ..where((table) => table.sharedId.equals(kind14SharedId)))
+          ..join(
+            [
+              innerJoin(
+                conversationMessageTable,
+                conversationMessageTable.sharedId.equalsExp(reactionTable.kind14SharedId),
+              ),
+            ],
+          )
+          ..where((table) => conversationMessageTable.sharedId.equals(kind14SharedId)))
         .getSingleOrNull();
 
     if (kind14EventMessage == null) return;
