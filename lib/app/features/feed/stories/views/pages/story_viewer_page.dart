@@ -67,6 +67,7 @@ class StoryViewerPage extends HookConsumerWidget {
             statusBarBrightness: Brightness.dark,
           ),
           child: MediaQuery(
+            // Prevent story's content from shrinking on keyboard open
             data: media
                 .removeViewInsets(removeBottom: true)
                 .removeViewPadding(removeBottom: true, removeTop: true),
@@ -83,22 +84,6 @@ class StoryViewerPage extends HookConsumerWidget {
                       pubkey: pubkey,
                       userStories: storyViewerState.userStories,
                       currentUserIndex: storyViewerState.currentUserIndex,
-                    ),
-                  ),
-                  PositionedDirectional(
-                    start: 0,
-                    end: 0,
-                    bottom: 0,
-                    height: footerHeight,
-                    child: AnimatedOpacity(
-                      opacity: isKeyboardVisible ? 0 : 1,
-                      duration: const Duration(milliseconds: 150),
-                      child: IgnorePointer(
-                        ignoring: isKeyboardVisible,
-                        child: ColoredBox(
-                          color: context.theme.appColors.primaryText,
-                        ),
-                      ),
                     ),
                   ),
                   PositionedDirectional(

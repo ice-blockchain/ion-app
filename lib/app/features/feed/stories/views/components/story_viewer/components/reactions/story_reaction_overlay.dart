@@ -49,8 +49,9 @@ class StoryReactionOverlay extends HookConsumerWidget {
       [textController],
     );
 
+    final keyboardHeight = MediaQuery.viewInsetsOf(context).bottom;
     final screenHeight = MediaQuery.sizeOf(context).height;
-    final contentPadding = screenHeight * 0.48;
+    final contentPadding = (screenHeight - keyboardHeight) * 0.45.s;
 
     return KeyboardVisibilityBuilder(
       builder: (context, isKeyboardVisible) {

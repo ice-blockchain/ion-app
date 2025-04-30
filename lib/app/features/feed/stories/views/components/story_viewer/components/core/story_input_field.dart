@@ -15,13 +15,11 @@ import 'package:ion/app/hooks/use_on_init.dart';
 class StoryInputField extends HookConsumerWidget {
   const StoryInputField({
     required this.controller,
-    required this.bottomPadding,
     required this.onSubmitted,
     super.key,
   });
 
   final TextEditingController controller;
-  final double bottomPadding;
   final ValueChanged<String?> onSubmitted;
 
   @override
@@ -43,84 +41,71 @@ class StoryInputField extends HookConsumerWidget {
 
     useEffect(
       () {
-        void onTextChanged() {
-          isTextNotEmpty.value = controller.text.isNotEmpty;
-        }
-
+        void onTextChanged() => isTextNotEmpty.value = controller.text.isNotEmpty;
         controller.addListener(onTextChanged);
-
-        return () {
-          controller.removeListener(onTextChanged);
-        };
+        return () => controller.removeListener(onTextChanged);
       },
       [controller],
     );
 
-    return PositionedDirectional(
-      bottom: bottomPadding,
-      start: 16.0.s,
-      end: 68.0.s,
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Padding(
-            padding: EdgeInsetsDirectional.only(
-              start: 16.0.s,
-              end: 16.0.s,
-            ),
-            child: ClipRRect(
-              borderRadius: BorderRadius.circular(16.0.s),
-              child: Container(
-                constraints: BoxConstraints(
-                  minHeight: 36.0.s,
-                ),
-                child: BackdropFilter(
-                  filter: ImageFilter.blur(sigmaX: 3, sigmaY: 3),
-                  child: Stack(
-                    children: [
-                      TextField(
-                        minLines: 1,
-                        maxLines: 4,
-                        scrollPhysics: const BouncingScrollPhysics(),
-                        cursorColor: onPrimaryAccent,
-                        controller: controller,
-                        focusNode: focusNode,
-                        decoration: InputDecoration(
-                          filled: true,
-                          fillColor: appColors.primaryText.withValues(alpha: 0.5),
-                          contentPadding: EdgeInsetsDirectional.only(
-                            start: 12.0.s,
-                            top: 9.0.s,
-                            bottom: 9.0.s,
-                            end: 58.0.s,
-                          ),
-                          border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(16.0.s),
-                            borderSide: BorderSide.none,
-                          ),
-                          hintText: context.i18n.write_a_message,
-                          hintStyle: body2.copyWith(color: onPrimaryAccent),
-                          isDense: true,
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        Padding(
+          padding: EdgeInsetsDirectional.only(
+            start: 16.0.s,
+            end: 16.0.s,
+          ),
+          child: ClipRRect(
+            borderRadius: BorderRadius.circular(16.0.s),
+            child: Container(
+              constraints: BoxConstraints(minHeight: 36.0.s),
+              child: BackdropFilter(
+                filter: ImageFilter.blur(sigmaX: 3, sigmaY: 3),
+                child: Stack(
+                  children: [
+                    TextField(
+                      minLines: 1,
+                      maxLines: 4,
+                      scrollPhysics: const BouncingScrollPhysics(),
+                      cursorColor: onPrimaryAccent,
+                      controller: controller,
+                      focusNode: focusNode,
+                      decoration: InputDecoration(
+                        filled: true,
+                        fillColor: appColors.primaryText.withValues(alpha: 0.5),
+                        contentPadding: EdgeInsetsDirectional.only(
+                          start: 12.0.s,
+                          top: 9.0.s,
+                          bottom: 9.0.s,
+                          end: 58.0.s,
                         ),
-                        style: body2.copyWith(color: onPrimaryAccent),
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(16.0.s),
+                          borderSide: BorderSide.none,
+                        ),
+                        hintText: context.i18n.write_a_message,
+                        hintStyle: body2.copyWith(color: onPrimaryAccent),
+                        isDense: true,
                       ),
-                      if (isTextNotEmpty.value)
-                        PositionedDirectional(
-                          bottom: 4.0.s,
-                          end: 4.0.s,
-                          child: ToolbarSendButton(
-                            enabled: true,
-                            onPressed: () => onSubmitted(controller.text),
-                          ),
+                      style: body2.copyWith(color: onPrimaryAccent),
+                    ),
+                    if (isTextNotEmpty.value)
+                      PositionedDirectional(
+                        bottom: 4.0.s,
+                        end: 4.0.s,
+                        child: ToolbarSendButton(
+                          enabled: true,
+                          onPressed: () => onSubmitted(controller.text),
                         ),
-                    ],
-                  ),
+                      ),
+                  ],
                 ),
               ),
             ),
           ),
-        ],
-      ),
+        ),
+      ],
     );
   }
 }

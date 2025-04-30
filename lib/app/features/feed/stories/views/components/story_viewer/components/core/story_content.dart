@@ -1,5 +1,6 @@
 // SPDX-License-Identifier: ice License 1.0
 
+import 'dart:math' as math;
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
@@ -71,7 +72,7 @@ class StoryContent extends HookConsumerWidget {
               .animate(target: _shouldShowUI(ref, isKeyboardVisible) ? 1 : 0)
               .fade(duration: 300.ms)
               .slideY(begin: -0.1, end: 0, duration: 300.ms),
-          _FooterArea(
+          _StoryControlsPanel(
             story: story,
             viewerPubkey: viewerPubkey,
             textController: textController,
@@ -93,8 +94,8 @@ class StoryContent extends HookConsumerWidget {
   }
 }
 
-class _FooterArea extends HookConsumerWidget {
-  const _FooterArea({
+class _StoryControlsPanel extends HookConsumerWidget {
+  const _StoryControlsPanel({
     required this.story,
     required this.viewerPubkey,
     required this.textController,
@@ -110,7 +111,29 @@ class _FooterArea extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final bottomPadding = isKeyboardShown ? 250.0.s : 16.0.s;
+    final panelKey = useMemoized(GlobalKey.new);
+    final controlsHeight = useState<double>(65.0.s);
+
+    useEffect(
+      () {
+        WidgetsBinding.instance.addPostFrameCallback((_) {
+          final box = panelKey.currentContext?.findRenderObject() as RenderBox?;
+          if (box != null) controlsHeight.value = box.size.height;
+        });
+        return null;
+      },
+      const [],
+    );
+
+    final keyboardHeight = useKeyboardHeight();
+    final safeArea = MediaQuery.viewPaddingOf(context).bottom;
+
+    const baselineInset = 16.0;
+    final baseline = safeArea + baselineInset.s;
+    final linear = keyboardHeight + safeArea - controlsHeight.value;
+    final bottomPadding = math.max(baseline, linear);
+
+    dumpMetrics('_StoryControls', keyboardHeight, safeArea, bottomPadding);
 
     Future<void> onSubmit(String? txt) async {
       if (txt == null || txt.isEmpty) return;
@@ -127,14 +150,24 @@ class _FooterArea extends HookConsumerWidget {
     return Stack(
       children: [
         if (canReply)
-          StoryInputField(
-            controller: textController,
-            bottomPadding: bottomPadding,
-            onSubmitted: onSubmit,
+          AnimatedPositionedDirectional(
+            key: panelKey,
+            duration: 50.ms,
+            curve: Curves.easeOut,
+            bottom: bottomPadding,
+            start: 16.0.s,
+            end: 68.0.s,
+            child: StoryInputField(
+              controller: textController,
+              onSubmitted: onSubmit,
+            ),
           ),
-        StoryViewerActionButtons(
-          post: story,
-          bottomPadding: bottomPadding,
+        AnimatedPositionedDirectional(
+          duration: 50.ms,
+          curve: Curves.easeOut,
+          bottom: bottomPadding,
+          end: 16.0.s,
+          child: StoryViewerActionButtons(post: story),
         ),
         if (isKeyboardShown)
           StoryReactionOverlay(
@@ -144,4 +177,35 @@ class _FooterArea extends HookConsumerWidget {
       ],
     );
   }
+}
+
+double _logicalInset(FlutterView v) => v.viewInsets.bottom / v.devicePixelRatio;
+
+double useKeyboardHeight() {
+  final dispatcher = WidgetsBinding.instance.platformDispatcher;
+  final height = useState<double>(_logicalInset(dispatcher.views.first));
+
+  useEffect(
+    () {
+      final obs = _MetricsObserver(
+        onMetricsChanged: () => height.value = _logicalInset(dispatcher.views.first),
+      );
+      WidgetsBinding.instance.addObserver(obs);
+      return () => WidgetsBinding.instance.removeObserver(obs);
+    },
+    [dispatcher],
+  );
+
+  return height.value;
+}
+
+class _MetricsObserver with WidgetsBindingObserver {
+  _MetricsObserver({required this.onMetricsChanged});
+  final VoidCallback onMetricsChanged;
+  @override
+  void didChangeMetrics() => onMetricsChanged();
+}
+
+void dumpMetrics(String tag, double kh, double safe, double pad) {
+  debugPrint('$tag  keyboard=$kh  safe=$safe  bottomPadding=$pad');
 }
