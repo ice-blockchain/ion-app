@@ -17,6 +17,13 @@ class ConfigureFirebaseMessaging extends _$ConfigureFirebaseMessaging {
     final firebaseAppConfigured = await ref.watch(configureFirebaseAppProvider.future);
 
     if (firebaseAppConfigured) {
+      // When we remove the default app on iOS, the firebase apns token is also gets removed from
+      // the native FIRMessaging lib. So if we try to init a firebase app after removing the default one,
+      // it fails to generate a fcm token (it can't be generated without apns one).
+      //
+      // To make it work we need to call `registerForRemoteNotifications`,
+      // because it leads to `didRegisterForRemoteNotificationsWithDeviceToken` delegate method call
+      // And eventually to `[[FIRMessaging messaging] setAPNSToken:deviceToken]`
       await ref.watch(firebaseMessagingServiceProvider).registerForRemoteNotifications();
     }
   }
