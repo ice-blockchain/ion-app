@@ -170,10 +170,7 @@ class UserRelaysManager extends _$UserRelaysManager {
     List<UserRelaysEntity> relays,
   ) async {
     final reachabilityInfoNotifier = ref.read(relayReachabilityProvider.notifier);
-    final relayUrls = relays
-        .map((relay) => relay.data.list.map((e) => e.url))
-        .expand((element) => element)
-        .toSet();
+    final relayUrls = relays.map((relay) => relay.urls).expand((element) => element).toSet();
     for (final url in relayUrls) {
       await reachabilityInfoNotifier.clear(url);
     }
