@@ -810,7 +810,7 @@
   "contact_wallet_not_found_title": "Wallet not found",
   "contact_wallet_not_found_description": "doesn't have a wallet in the {network} network",
   "contact_wallet_is_private_title": "Private wallet",
-  "contact_wallet_is_private_description": "wallet is private.\nYou can't send / request funds",
+  "contact_wallet_is_private_description": "wallet is private.\nYou can't send or request funds",
   "upload_limit_error_title": "Upload limit reached",
   "video_upload_limit_modal_description": "You can upload a video of up to 5 minutes",
   "file_upload_limit_modal_description": "You can upload a file of up to 25 megabytes",
