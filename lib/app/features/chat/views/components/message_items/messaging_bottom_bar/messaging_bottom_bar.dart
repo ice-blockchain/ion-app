@@ -29,7 +29,7 @@ class MessagingBottomBar extends HookConsumerWidget {
       () {
         void onTextChanged() {
           isTextLimitReached.value =
-              controller.text.length > PrivateDirectMessageData.textMessageLimit;
+              controller.text.length > ReplaceablePrivateDirectMessageData.textMessageLimit;
         }
 
         controller.addListener(onTextChanged);

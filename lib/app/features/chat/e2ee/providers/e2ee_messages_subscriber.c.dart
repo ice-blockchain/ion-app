@@ -160,109 +160,106 @@ class E2eeMessagesSubscriber extends _$E2eeMessagesSubscriber {
       privateKey: eventSigner.privateKey,
     );
 
-    if (rumor != null) {
-      if (rumor.kind != DeletionRequestEntity.kind &&
-          rumor.kind != GenericRepostEntity.kind &&
-          (rumor.kind == PrivateMessageReactionEntity.kind ||
-              rumor.kind == ReplaceablePrivateDirectMessageEntity.kind)) {
-        // Only for kind 30014
-        if (rumor.kind == ReplaceablePrivateDirectMessageEntity.kind) {
-          // Add conversation if that doesn't exist
-          await ref.watch(conversationDaoProvider).add([rumor]);
-          // Add message if that doesn't exist
-          await ref.watch(conversationEventMessageDaoProvider).add(rumor);
+    if (rumor == null) {
+      return;
+    }
 
-          await _addMediaToDatabase(rumor);
+    if (rumor.kind == ReplaceablePrivateDirectMessageEntity.kind) {
+      // Add conversation if that doesn't exist
+      await ref.watch(conversationDaoProvider).add([rumor]);
+      // Add message if that doesn't exist
+      await ref.watch(conversationEventMessageDaoProvider).add(rumor);
 
-          // Notify rest of the participants that the message was received
-          // by the current user
-          final currentStatus = await conversationMessageStatusDao.checkMessageStatus(
-            sharedId: rumor.sharedId!,
-            masterPubkey: masterPubkey,
-          );
+      await _addMediaToDatabase(rumor);
 
-          if (currentStatus == null || currentStatus.index < MessageDeliveryStatus.received.index) {
-            await sendE2eeMessageService.sendMessageStatus(
-              messageEventMessage: rumor,
-              status: MessageDeliveryStatus.received,
-            );
-          }
+      // Notify rest of the participants that the message was received
+      // by the current user
+      final currentStatus = await conversationMessageStatusDao.checkMessageStatus(
+        sharedId: rumor.sharedId!,
+        masterPubkey: masterPubkey,
+      );
 
-          // Only for kind 7
-        } else if (rumor.kind == PrivateMessageReactionEntity.kind) {
-          final reactionEntity = PrivateMessageReactionEntity.fromEventMessage(rumor);
-          // Identify kind 7 status message (received or read only)
-          if (reactionEntity.data.content == MessageDeliveryStatus.received.name ||
-              reactionEntity.data.content == MessageDeliveryStatus.read.name) {
-            final status = reactionEntity.data.content == MessageDeliveryStatus.received.name
-                ? MessageDeliveryStatus.received
-                : MessageDeliveryStatus.read;
+      if (currentStatus == null || currentStatus.index < MessageDeliveryStatus.received.index) {
+        await sendE2eeMessageService.sendMessageStatus(
+          messageEventMessage: rumor,
+          status: MessageDeliveryStatus.received,
+        );
+      }
 
-            // Add corresponding status to the database for the sender pubkey
-            // and the kind 30014 shared id, if that doesn't exist
-            await conversationMessageStatusDao.addOrUpdateStatus(
-              status: status,
-              pubkey: rumor.pubkey,
-              updateAllBefore: rumor.createdAt,
-              masterPubkey: rumor.masterPubkey,
-              sharedId: reactionEntity.data.reference.dTag,
-            );
-          } else {
-            await conversationMessageReactionDao.add(
-              ref: ref,
-              newReactionEvent: rumor,
-              kind14SharedId: reactionEntity.data.reference.dTag,
-              masterPubkey: rumor.masterPubkey,
-            );
-          }
-        }
-        // For kind 5
-      } else if (rumor.kind == DeletionRequest.kind) {
-        final deleteConversationIds = rumor.tags
-            .where((tags) => tags[0] == ConversationIdentifier.tagName)
-            .map((tag) => tag.elementAtOrNull(1))
-            .nonNulls
-            .toList();
+      // Only for kind 7
+    } else if (rumor.kind == PrivateMessageReactionEntity.kind) {
+      final reactionEntity = PrivateMessageReactionEntity.fromEventMessage(rumor);
+      // Identify kind 7 status message (received or read only)
+      if (reactionEntity.data.content == MessageDeliveryStatus.received.name ||
+          reactionEntity.data.content == MessageDeliveryStatus.read.name) {
+        final status = reactionEntity.data.content == MessageDeliveryStatus.received.name
+            ? MessageDeliveryStatus.received
+            : MessageDeliveryStatus.read;
 
-        if (deleteConversationIds.isNotEmpty) {
-          await ref.watch(conversationDaoProvider).removeConversations(
-                ref: ref,
-                deleteRequest: rumor,
-                conversationIds: deleteConversationIds,
-              );
-        } else {
-          final eventsToDelete = DeletionRequest.fromEventMessage(rumor).events;
+        // Add corresponding status to the database for the sender pubkey
+        // and the kind 30014 shared id, if that doesn't exist
+        await conversationMessageStatusDao.addOrUpdateStatus(
+          status: status,
+          pubkey: rumor.pubkey,
+          updateAllBefore: rumor.createdAt,
+          masterPubkey: rumor.masterPubkey,
+          sharedId: reactionEntity.data.reference.dTag,
+        );
+      } else {
+        await conversationMessageReactionDao.add(
+          ref: ref,
+          newReactionEvent: rumor,
+          kind14SharedId: reactionEntity.data.reference.dTag,
+          masterPubkey: rumor.masterPubkey,
+        );
+      }
+    }
+    // For kind 5
+    else if (rumor.kind == DeletionRequest.kind) {
+      final deleteConversationIds = rumor.tags
+          .where((tags) => tags[0] == ConversationIdentifier.tagName)
+          .map((tag) => tag.elementAtOrNull(1))
+          .nonNulls
+          .toList();
 
-          final eventToDeleteReferences =
-              eventsToDelete.map((event) => (event as EventToDelete).reference).toList();
-
-          final deleteEventKind = eventToDeleteReferences.first is ImmutableEventReference
-              ? (eventToDeleteReferences.first as ImmutableEventReference).kind
-              : (eventToDeleteReferences.first as ReplaceableEventReference).kind;
-
-          final deleteEventIds = eventToDeleteReferences.first is ImmutableEventReference
-              ? eventToDeleteReferences.map((e) => (e! as ImmutableEventReference).eventId)
-              : eventToDeleteReferences.map((e) => (e! as ReplaceableEventReference).dTag);
-
-          if (deleteEventKind == ReplaceablePrivateDirectMessageEntity.kind) {
-            if (deleteEventIds.isNotEmpty) {
-              await conversationMessageDao.removeMessages(
-                ref: ref,
-                deleteRequest: rumor,
-                sharedIds: deleteEventIds.toList(),
-              );
-            }
-          } else if (deleteEventKind == PrivateMessageReactionEntity.kind) {
-            await conversationMessageReactionDao.remove(
+      if (deleteConversationIds.isNotEmpty) {
+        await ref.watch(conversationDaoProvider).removeConversations(
               ref: ref,
               deleteRequest: rumor,
-              reactionEventId: deleteEventIds.single,
+              conversationIds: deleteConversationIds,
+            );
+      } else {
+        final eventsToDelete = DeletionRequest.fromEventMessage(rumor).events;
+
+        final eventToDeleteReferences =
+            eventsToDelete.map((event) => (event as EventToDelete).reference).toList();
+
+        final deleteEventKind = eventToDeleteReferences.first is ImmutableEventReference
+            ? (eventToDeleteReferences.first as ImmutableEventReference).kind
+            : (eventToDeleteReferences.first as ReplaceableEventReference).kind;
+
+        final deleteEventIds = eventToDeleteReferences.first is ImmutableEventReference
+            ? eventToDeleteReferences.map((e) => (e! as ImmutableEventReference).eventId)
+            : eventToDeleteReferences.map((e) => (e! as ReplaceableEventReference).dTag);
+
+        if (deleteEventKind == ReplaceablePrivateDirectMessageEntity.kind) {
+          if (deleteEventIds.isNotEmpty) {
+            await conversationMessageDao.removeMessages(
+              ref: ref,
+              deleteRequest: rumor,
+              sharedIds: deleteEventIds.toList(),
             );
           }
+        } else if (deleteEventKind == PrivateMessageReactionEntity.kind) {
+          await conversationMessageReactionDao.remove(
+            ref: ref,
+            deleteRequest: rumor,
+            reactionEventId: deleteEventIds.single,
+          );
         }
-      } else if (rumor.kind == GenericRepostEntity.kind) {
-        await eventMessageDao.add(rumor);
       }
+    } else if (rumor.kind == GenericRepostEntity.kind) {
+      await eventMessageDao.add(rumor);
     }
   }
 

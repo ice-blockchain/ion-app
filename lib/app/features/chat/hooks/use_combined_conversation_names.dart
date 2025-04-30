@@ -21,7 +21,7 @@ String useCombinedConversationNames(
       for (final conversation in conversations) {
         if (conversation.type == ConversationType.oneToOne) {
           final latestMessageEntity =
-              PrivateDirectMessageData.fromEventMessage(conversation.latestMessage!);
+              ReplaceablePrivateDirectMessageData.fromEventMessage(conversation.latestMessage!);
 
           final receiver = latestMessageEntity.relatedPubkeys!
               .firstWhere((pubkey) => pubkey.value != currentUserMasterPubkey)
@@ -37,7 +37,7 @@ String useCombinedConversationNames(
           names.add(community.data.name);
         } else {
           final latestMessageEntity =
-              PrivateDirectMessageData.fromEventMessage(conversation.latestMessage!);
+              ReplaceablePrivateDirectMessageData.fromEventMessage(conversation.latestMessage!);
           names.add(latestMessageEntity.groupSubject?.value ?? '');
         }
       }

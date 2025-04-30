@@ -23,8 +23,8 @@ class TextMessageLimitLabel extends HookConsumerWidget {
     useEffect(
       () {
         void onTextChanged() {
-          exceededLimit.value =
-              textEditingController.text.length - PrivateDirectMessageData.textMessageLimit;
+          exceededLimit.value = textEditingController.text.length -
+              ReplaceablePrivateDirectMessageData.textMessageLimit;
         }
 
         textEditingController.addListener(onTextChanged);

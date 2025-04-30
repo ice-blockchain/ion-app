@@ -1,19 +1,26 @@
 // SPDX-License-Identifier: ice License 1.0
 
+import 'dart:async';
+
 import 'package:collection/collection.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:ion/app/exceptions/exceptions.dart';
+import 'package:ion/app/extensions/event_message.dart';
 import 'package:ion/app/features/ion_connect/ion_connect.dart';
 import 'package:ion/app/features/ion_connect/model/event_reference.c.dart';
+import 'package:ion/app/features/ion_connect/model/event_serializable.dart';
+import 'package:ion/app/features/ion_connect/model/ion_connect_entity.dart';
 
 part 'private_message_reaction_data.c.freezed.dart';
 
 @immutable
 @Freezed(equal: false)
-class PrivateMessageReactionEntity with _$PrivateMessageReactionEntity {
+class PrivateMessageReactionEntity
+    with IonConnectEntity, ImmutableEntity, _$PrivateMessageReactionEntity {
   const factory PrivateMessageReactionEntity({
     required String id,
     required String pubkey,
+    required String masterPubkey,
     required DateTime createdAt,
     required PrivateMessageReactionEntityData data,
   }) = _PrivateMessageReactionEntity;
@@ -28,20 +35,24 @@ class PrivateMessageReactionEntity with _$PrivateMessageReactionEntity {
     return PrivateMessageReactionEntity(
       id: eventMessage.id,
       pubkey: eventMessage.pubkey,
+      masterPubkey: eventMessage.masterPubkey,
       createdAt: eventMessage.createdAt,
       data: PrivateMessageReactionEntityData.fromEventMessage(eventMessage),
+    );
+  }
+
+  @override
+  FutureOr<EventMessage> toEventMessage(EventSerializable data) {
+    return data.toEventMessage(
+      createdAt: createdAt,
+      SimpleSigner(pubkey, signature),
     );
   }
 
   static const int kind = 7;
 
   @override
-  bool operator ==(Object other) {
-    return other is PrivateMessageReactionEntity && id == other.id;
-  }
-
-  @override
-  int get hashCode => id.hashCode;
+  String get signature => '';
 }
 
 @freezed

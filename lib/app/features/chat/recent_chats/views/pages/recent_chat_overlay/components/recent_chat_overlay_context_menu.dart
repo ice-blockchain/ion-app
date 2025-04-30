@@ -76,7 +76,7 @@ class RecentChatOverlayContextMenu extends ConsumerWidget {
                           .icon(size: iconSize, color: context.theme.appColors.quaternaryText),
                   onPressed: () {
                     final currentUserPubkey = ref.watch(currentPubkeySelectorProvider);
-                    final receiverPubkey = PrivateDirectMessageData.fromEventMessage(
+                    final receiverPubkey = ReplaceablePrivateDirectMessageData.fromEventMessage(
                       conversation.latestMessage!,
                     ).relatedPubkeys?.firstWhereOrNull((p) => p.value != currentUserPubkey)?.value;
 
@@ -108,7 +108,7 @@ class RecentChatOverlayContextMenu extends ConsumerWidget {
                       .icon(size: iconSize, color: context.theme.appColors.quaternaryText),
                   onPressed: () {
                     final currentUserPubkey = ref.watch(currentPubkeySelectorProvider);
-                    final receiverPubkey = PrivateDirectMessageData.fromEventMessage(
+                    final receiverPubkey = ReplaceablePrivateDirectMessageData.fromEventMessage(
                       conversation.latestMessage!,
                     ).relatedPubkeys?.firstWhereOrNull((p) => p.value != currentUserPubkey)?.value;
 

@@ -18,9 +18,16 @@ class EventMessageDao extends DatabaseAccessor<ChatDatabase> with _$EventMessage
   EventMessageDao(super.db);
 
   Future<void> add(EventMessage event) async {
-    final eventReference = ReplaceablePrivateDirectMessageEntity.fromEventMessage(event)
-        .data
-        .toReplaceableEventReference(event.pubkey);
+    final EventReference eventReference;
+    switch (event.kind) {
+      case ReplaceablePrivateDirectMessageEntity.kind:
+        eventReference =
+            ReplaceablePrivateDirectMessageEntity.fromEventMessage(event).toEventReference();
+      case PrivateMessageReactionEntity.kind:
+        eventReference = PrivateMessageReactionEntity.fromEventMessage(event).toEventReference();
+      default:
+        return;
+    }
 
     final dbModel = event.toChatDbModel(eventReference);
 
