@@ -2,6 +2,7 @@
 
 import 'package:ion/app/features/ion_connect/model/action_source.c.dart';
 import 'package:ion/app/features/ion_connect/providers/ion_connect_notifier.c.dart';
+import 'package:ion/app/features/push_notifications/providers/push_subscription_provider.c.dart';
 import 'package:ion/app/features/push_notifications/providers/selected_push_categories_ion_subscription_provider.c.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
@@ -13,9 +14,10 @@ class PushSubscriptionSync extends _$PushSubscriptionSync {
   Future<void> build() async {
     final selectedPushCategoriesIonSubscription =
         await ref.watch(selectedPushCategoriesIonSubscriptionProvider.future);
-    const publishedIonSubscription = null;
+    final publishedIonSubscription = await ref.watch(currentUserPushSubscriptionProvider.future);
+    //TODO:wait for delegation complete
     if (selectedPushCategoriesIonSubscription != null &&
-        selectedPushCategoriesIonSubscription != publishedIonSubscription) {
+        selectedPushCategoriesIonSubscription != publishedIonSubscription?.data) {
       await ref.watch(ionConnectNotifierProvider.notifier).sendEntityData(
             selectedPushCategoriesIonSubscription,
             actionSource: ActionSourceRelayUrl(selectedPushCategoriesIonSubscription.relay.url),

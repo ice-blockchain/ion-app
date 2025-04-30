@@ -58,6 +58,7 @@ Future<void> initApp(Ref ref) async {
     ..listen(userRelaysSyncProvider, noop)
     ..listen(userChatRelaysSyncProvider, noop)
     ..listen(feedBookmarksNotifierProvider(), noop)
+    //TODO:combine these 3
     ..listen(configureFirebaseAppProvider, noop)
     ..listen(configureFirebaseMessagingProvider, noop)
     ..listen(pushSubscriptionSyncProvider, noop);
