@@ -108,7 +108,7 @@ abstract class PrivateDirectMessageData with EntityDataWithMediaContent {
   String get conversationId;
   String? get groupImagePath;
   GroupSubject? get groupSubject;
-  QuotedReplaceableEvent? get quotedEvent;
+  QuotedImmutableEvent? get quotedEvent;
   List<RelatedEvent>? get relatedEvents;
   List<RelatedPubkey>? get relatedPubkeys;
 
@@ -158,7 +158,7 @@ class ReplaceablePrivateDirectMessageData
     String? groupImagePath,
     GroupSubject? groupSubject,
     List<RelatedPubkey>? relatedPubkeys,
-    QuotedReplaceableEvent? quotedEvent,
+    QuotedImmutableEvent? quotedEvent,
     List<RelatedReplaceableEvent>? relatedEvents,
   }) = _ReplaceablePrivateDirectMessageData;
 
@@ -183,7 +183,7 @@ class ReplaceablePrivateDirectMessageData
           tags[RelatedReplaceableEvent.tagName]?.map(RelatedReplaceableEvent.fromTag).toList(),
       groupSubject: tags[GroupSubject.tagName]?.map(GroupSubject.fromTag).singleOrNull,
       quotedEvent:
-          tags[QuotedReplaceableEvent.tagName]?.map(QuotedReplaceableEvent.fromTag).singleOrNull,
+          tags[QuotedImmutableEvent.tagName]?.map(QuotedImmutableEvent.fromTag).singleOrNull,
       conversationId: tags[ConversationIdentifier.tagName]
               ?.map(ConversationIdentifier.fromTag)
               .singleOrNull

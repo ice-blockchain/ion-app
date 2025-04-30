@@ -25,7 +25,7 @@ class RecentChatTile extends HookConsumerWidget {
     required this.conversation,
     required this.defaultAvatar,
     required this.lastMessageAt,
-    required this.lastMessageId,
+    required this.lastMessageSharedId,
     required this.lastMessageContent,
     required this.unreadMessagesCount,
     this.avatarUrl,
@@ -35,8 +35,8 @@ class RecentChatTile extends HookConsumerWidget {
 
   final String name;
   final String? avatarUrl;
-  final String? lastMessageId;
   final Widget? defaultAvatar;
+  final String? lastMessageSharedId;
   final DateTime lastMessageAt;
   final int unreadMessagesCount;
   final String lastMessageContent;
@@ -150,7 +150,7 @@ class RecentChatTile extends HookConsumerWidget {
                               Expanded(
                                 child: ChatPreview(
                                   messageType: messageType,
-                                  lastMessageId: lastMessageId,
+                                  lastMessageId: lastMessageSharedId,
                                   lastMessageContent: lastMessageContent,
                                 ),
                               ),
@@ -176,10 +176,12 @@ class SenderSummary extends ConsumerWidget {
     required this.pubkey,
     this.textColor,
     this.isReply = false,
+    this.isEdit = false,
     super.key,
   });
 
   final bool isReply;
+  final bool isEdit;
   final String pubkey;
 
   final Color? textColor;
@@ -202,8 +204,16 @@ class SenderSummary extends ConsumerWidget {
               color: context.theme.appColors.quaternaryText,
             ),
           ),
+        if (isEdit)
+          Padding(
+            padding: EdgeInsetsDirectional.only(end: 4.0.s),
+            child: Assets.svg.iconEditLink.icon(
+              size: 16.0.s,
+              color: context.theme.appColors.quaternaryText,
+            ),
+          ),
         Text(
-          user.name,
+          isEdit ? context.i18n.button_edit : user.name,
           style: context.theme.appTextThemes.subtitle3.copyWith(
             color: textColor ?? context.theme.appColors.primaryText,
           ),

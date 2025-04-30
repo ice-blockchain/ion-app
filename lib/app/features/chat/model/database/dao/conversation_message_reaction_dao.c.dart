@@ -16,13 +16,15 @@ class ConversationMessageReactionDao extends DatabaseAccessor<ChatDatabase>
   Future<void> add({
     required Ref ref,
     required String masterPubkey,
-    required String kind14SharedId,
+    required String messageSharedId,
     required EventMessage newReactionEvent,
   }) async {
     final eventMessageDao = ref.read(eventMessageDaoProvider);
 
     final kind14EventMessage = await (select(db.eventMessageTable)
-          ..where((table) => table.sharedId.equals(kind14SharedId)))
+          ..where((table) => table.sharedId.equals(messageSharedId))
+          ..orderBy([(table) => OrderingTerm.desc(table.createdAt)])
+          ..limit(1))
         .getSingleOrNull();
 
     if (kind14EventMessage == null) return;
@@ -30,7 +32,7 @@ class ConversationMessageReactionDao extends DatabaseAccessor<ChatDatabase>
     final existingReactionRow = await (select(reactionTable)
           ..where((table) => table.content.equals(newReactionEvent.content))
           ..where((table) => table.masterPubkey.equals(masterPubkey))
-          ..where((table) => table.kind14SharedId.equals(kind14SharedId)))
+          ..where((table) => table.kind14SharedId.equals(messageSharedId)))
         .getSingleOrNull();
 
     if (existingReactionRow == null) {
@@ -38,7 +40,7 @@ class ConversationMessageReactionDao extends DatabaseAccessor<ChatDatabase>
       await into(reactionTable).insert(
         ReactionTableCompanion(
           id: Value(newReactionEvent.id),
-          kind14SharedId: Value(kind14SharedId),
+          kind14SharedId: Value(messageSharedId),
           masterPubkey: Value(masterPubkey),
           content: Value(newReactionEvent.content),
         ),
@@ -131,7 +133,8 @@ class ConversationMessageReactionDao extends DatabaseAccessor<ChatDatabase>
 
     final stream = (select(reactionTable)
           ..where((table) => table.isDeleted.equals(false))
-          ..where((table) => table.kind14SharedId.equals(kind14SharedId)))
+          ..where((table) => table.kind14SharedId.equals(kind14SharedId))
+          ..limit(1))
         .watchSingleOrNull()
         .map((row) => row?.content);
 

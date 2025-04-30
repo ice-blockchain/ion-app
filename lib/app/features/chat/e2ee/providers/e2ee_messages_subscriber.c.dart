@@ -34,6 +34,7 @@ class E2eeMessagesSubscriber extends _$E2eeMessagesSubscriber {
   Stream<void> build() async* {
     final masterPubkey = ref.watch(currentPubkeySelectorProvider);
     final eventSigner = await ref.watch(currentUserIonConnectEventSignerProvider.future);
+
     if (masterPubkey == null) {
       throw UserMasterPubkeyNotFoundException();
     }
@@ -213,8 +214,8 @@ class E2eeMessagesSubscriber extends _$E2eeMessagesSubscriber {
             await conversationMessageReactionDao.add(
               ref: ref,
               newReactionEvent: rumor,
-              kind14SharedId: reactionEntity.data.reference.dTag!,
               masterPubkey: rumor.masterPubkey,
+              messageSharedId: reactionEntity.data.reference.dTag!,
             );
           }
         }
