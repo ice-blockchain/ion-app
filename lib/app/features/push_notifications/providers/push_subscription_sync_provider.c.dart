@@ -1,6 +1,5 @@
 // SPDX-License-Identifier: ice License 1.0
 
-import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/auth/providers/delegation_complete_provider.c.dart';
 import 'package:ion/app/features/ion_connect/model/action_source.c.dart';
 import 'package:ion/app/features/ion_connect/model/deletion_request.c.dart';
@@ -17,29 +16,29 @@ part 'push_subscription_sync_provider.c.g.dart';
 class PushSubscriptionSync extends _$PushSubscriptionSync {
   @override
   Future<void> build() async {
-    final selectedPushCategoriesIonSubscription =
+    final selectedCategoriesSubscription =
         await ref.watch(selectedPushCategoriesIonSubscriptionProvider.future);
-    final publishedIonSubscription = await ref.watch(currentUserPushSubscriptionProvider.future);
+    final publishedSubscription = await ref.watch(currentUserPushSubscriptionProvider.future);
 
-    final delegationComplete = ref.watch(delegationCompleteProvider).valueOrNull.falseOrValue;
+    final delegationComplete = await ref.watch(delegationCompleteProvider.future);
 
     if (!delegationComplete) {
       return;
     }
 
-    if (selectedPushCategoriesIonSubscription != null &&
-        selectedPushCategoriesIonSubscription.filters.isEmpty &&
-        publishedIonSubscription != null) {
-      await _deleteSubscription(publishedIonSubscription);
+    if (selectedCategoriesSubscription != null &&
+        selectedCategoriesSubscription.filters.isEmpty &&
+        publishedSubscription != null) {
+      await _deleteSubscription(publishedSubscription);
       return;
     }
 
-    if (selectedPushCategoriesIonSubscription != null &&
-        selectedPushCategoriesIonSubscription.filters.isNotEmpty &&
-        selectedPushCategoriesIonSubscription != publishedIonSubscription?.data) {
+    if (selectedCategoriesSubscription != null &&
+        selectedCategoriesSubscription.filters.isNotEmpty &&
+        selectedCategoriesSubscription != publishedSubscription?.data) {
       await ref.watch(ionConnectNotifierProvider.notifier).sendEntityData(
-            selectedPushCategoriesIonSubscription,
-            actionSource: ActionSourceRelayUrl(selectedPushCategoriesIonSubscription.relay.url),
+            selectedCategoriesSubscription,
+            actionSource: ActionSourceRelayUrl(selectedCategoriesSubscription.relay.url),
           );
     }
   }

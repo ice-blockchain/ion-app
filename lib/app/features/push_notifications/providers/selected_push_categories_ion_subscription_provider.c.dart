@@ -13,13 +13,13 @@ import 'package:ion/app/features/push_notifications/data/models/push_notificatio
 import 'package:ion/app/features/push_notifications/data/models/push_subscription.c.dart';
 import 'package:ion/app/features/push_notifications/data/models/push_subscription_platform.c.dart';
 import 'package:ion/app/features/push_notifications/providers/configure_firebase_messaging_provider.c.dart';
+import 'package:ion/app/features/push_notifications/providers/firebase_messaging_token_provider.c.dart';
 import 'package:ion/app/features/push_notifications/providers/relay_firebase_app_config_provider.c.dart';
 import 'package:ion/app/features/push_notifications/providers/selected_push_categories_provider.c.dart';
 import 'package:ion/app/features/user/model/follow_list.c.dart';
 import 'package:ion/app/features/wallets/model/entities/funds_request_entity.c.dart';
 import 'package:ion/app/features/wallets/model/entities/wallet_asset_entity.c.dart';
 import 'package:ion/app/services/device_id/device_id.c.dart';
-import 'package:ion/app/services/firebase/firebase_messaging_service_provider.c.dart';
 import 'package:ion/app/services/ion_connect/ion_connect_gift_wrap_service.c.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
@@ -52,7 +52,7 @@ class SelectedPushCategoriesIonSubscription extends _$SelectedPushCategoriesIonS
   }
 
   Future<String?> _getEncryptedFcmToken({required String relayPubkey}) async {
-    final fcmToken = await ref.watch(firebaseMessagingServiceProvider).getToken();
+    final fcmToken = await ref.watch(firebaseMessagingTokenProvider.future);
     if (fcmToken == null) {
       return null;
     }
@@ -152,9 +152,9 @@ class SelectedPushCategoriesIonSubscription extends _$SelectedPushCategoriesIonS
       RequestFilter(
         kinds: const [IonConnectGiftWrapServiceImpl.kind],
         tags: {
-          '#k': const [
-            ReplaceablePrivateDirectMessageEntity.kind,
-            ImmutablePrivateDirectMessageEntity.kind,
+          '#k': [
+            ReplaceablePrivateDirectMessageEntity.kind.toString(),
+            ImmutablePrivateDirectMessageEntity.kind.toString(),
           ],
           '#p': [currentUserPubkey],
         },
@@ -169,7 +169,7 @@ class SelectedPushCategoriesIonSubscription extends _$SelectedPushCategoriesIonS
       RequestFilter(
         kinds: const [IonConnectGiftWrapServiceImpl.kind],
         tags: {
-          '#k': const [FundsRequestEntity.kind],
+          '#k': [FundsRequestEntity.kind.toString()],
           '#p': [currentUserPubkey],
         },
       ),
@@ -183,7 +183,7 @@ class SelectedPushCategoriesIonSubscription extends _$SelectedPushCategoriesIonS
       RequestFilter(
         kinds: const [IonConnectGiftWrapServiceImpl.kind],
         tags: {
-          '#k': const [WalletAssetEntity.kind],
+          '#k': [WalletAssetEntity.kind.toString()],
           '#p': [currentUserPubkey],
         },
       ),

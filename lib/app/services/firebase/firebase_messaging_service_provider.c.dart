@@ -21,6 +21,10 @@ class FirebaseMessagingService {
   Future<void> deleteToken() {
     return FirebaseMessaging.instance.deleteToken();
   }
+
+  Stream<String> onTokenRefresh() {
+    return FirebaseMessaging.instance.onTokenRefresh;
+  }
 }
 
 @Riverpod(keepAlive: true)
