@@ -1,86 +1,53 @@
 // SPDX-License-Identifier: ice License 1.0
 
-import 'package:flutter/material.dart';
-import 'package:flutter_keyboard_visibility/flutter_keyboard_visibility.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/features/feed/stories/providers/story_pause_provider.c.dart';
 import 'package:ion/app/features/feed/stories/views/components/story_viewer/components/core/story_gesture_handler.dart';
 
-class _Flags {
-  static bool leftTapped = false;
-  static bool rightTapped = false;
-  static void reset() => leftTapped = rightTapped = false;
-}
-
-class _StoryGestureWrapper extends HookConsumerWidget {
-  const _StoryGestureWrapper();
-
-  @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    return KeyboardVisibilityProvider(
-      child: StoryGestureHandler(
-        onTapLeft: () => _Flags.leftTapped = true,
-        onTapRight: () => _Flags.rightTapped = true,
-        child: const SizedBox.expand(child: ColoredBox(color: Colors.white)),
-      ),
-    );
-  }
-}
+import '../../../../robots/stories/story_gesture_robot.dart';
 
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
 
-  group('StoryGestureHandler – golden', () {
+  group('StoryGestureHandler', () {
     testWidgets('tap left / right triggers correct callbacks', (tester) async {
-      _Flags.reset();
+      final robot = StoryGestureRobot(tester);
 
-      await tester.pumpWidget(
-        const ProviderScope(
-          child: MaterialApp(home: Scaffold(body: _StoryGestureWrapper())),
-        ),
-      );
+      await tester.pumpWidget(robot.buildHost());
+      await robot.attach();
 
-      final handler = find.byType(StoryGestureHandler);
-      final size = tester.getSize(handler);
+      await robot.tapLeft();
+      robot
+        ..expectLeftTapped()
+        ..expectRightTapped(value: false);
 
-      await tester.tapAt(Offset(size.width * .25, size.height * .5));
-      await tester.pump();
-      expect(_Flags.leftTapped, isTrue);
-      expect(_Flags.rightTapped, isFalse);
-
-      await tester.tapAt(Offset(size.width * .75, size.height * .5));
-      await tester.pump();
-      expect(_Flags.rightTapped, isTrue);
+      await robot.tapRight();
+      robot.expectRightTapped();
     });
 
-    testWidgets('long tap sets and removes pause', (tester) async {
-      await tester.pumpWidget(
-        const ProviderScope(
-          child: MaterialApp(home: Scaffold(body: _StoryGestureWrapper())),
-        ),
+    testWidgets('long press sets and clears pause flag', (tester) async {
+      final robot = StoryGestureRobot(tester);
+
+      await tester.pumpWidget(robot.buildHost());
+      await robot.attach();
+
+      final container = ProviderScope.containerOf(
+        tester.element(find.byType(StoryGestureHandler)),
       );
-
-      final handler = find.byType(StoryGestureHandler);
-      final element = tester.element(handler);
-      final container = ProviderScope.containerOf(element);
-
       final pauseSub = container.listen<bool>(
         storyPauseControllerProvider,
         (_, __) {},
         fireImmediately: true,
       );
 
-      final size = tester.getSize(handler);
-      final center = Offset(size.width / 2, size.height / 2);
-
-      final gesture = await tester.startGesture(center);
+      final gesture = await robot.startPressCenter();
       await tester.pump(const Duration(milliseconds: 600));
-      expect(pauseSub.read(), isTrue);
+      expect(pauseSub.read(), isTrue, reason: 'should be paused while holding');
 
       await gesture.up();
       await tester.pump();
-      expect(pauseSub.read(), isFalse);
+      expect(pauseSub.read(), isFalse, reason: 'should resume after release');
     });
   });
 }
