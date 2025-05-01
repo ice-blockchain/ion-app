@@ -1,9 +1,9 @@
 // SPDX-License-Identifier: ice License 1.0
 
+import 'dart:math' as math;
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
-import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_keyboard_visibility/flutter_keyboard_visibility.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
@@ -12,11 +12,14 @@ import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/auth/providers/auth_provider.c.dart';
 import 'package:ion/app/features/feed/data/models/entities/modifiable_post_data.c.dart';
 import 'package:ion/app/features/feed/providers/can_reply_notifier.c.dart';
+import 'package:ion/app/features/feed/stories/hooks/use_keyboard_height.dart';
 import 'package:ion/app/features/feed/stories/providers/emoji_reaction_provider.c.dart';
 import 'package:ion/app/features/feed/stories/providers/story_pause_provider.c.dart';
 import 'package:ion/app/features/feed/stories/providers/story_reply_provider.c.dart';
 import 'package:ion/app/features/feed/stories/views/components/story_viewer/components/components.dart';
-import 'package:ion/app/features/feed/stories/views/components/story_viewer/components/header/header.dart';
+import 'package:ion/app/features/feed/stories/views/components/story_viewer/components/header/story_header_gradient.dart';
+import 'package:ion/app/features/feed/stories/views/components/story_viewer/components/header/story_viewer_header.dart';
+import 'package:ion/app/utils/future.dart';
 
 class StoryContent extends HookConsumerWidget {
   const StoryContent({
@@ -70,7 +73,7 @@ class StoryContent extends HookConsumerWidget {
               .animate(target: _shouldShowUI(ref, isKeyboardVisible) ? 1 : 0)
               .fade(duration: 300.ms)
               .slideY(begin: -0.1, end: 0, duration: 300.ms),
-          _FooterArea(
+          _StoryControlsPanel(
             story: story,
             viewerPubkey: viewerPubkey,
             textController: textController,
@@ -92,8 +95,8 @@ class StoryContent extends HookConsumerWidget {
   }
 }
 
-class _FooterArea extends HookConsumerWidget {
-  const _FooterArea({
+class _StoryControlsPanel extends HookConsumerWidget {
+  const _StoryControlsPanel({
     required this.story,
     required this.viewerPubkey,
     required this.textController,
@@ -109,8 +112,26 @@ class _FooterArea extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final bottomPadding =
-        isKeyboardShown ? MediaQuery.viewInsetsOf(context).bottom + 16.0.s : 16.0.s;
+    final panelKey = useMemoized(GlobalKey.new);
+    final controlsHeight = useState<double>(65.0.s);
+
+    useEffect(
+      () {
+        WidgetsBinding.instance.addPostFrameCallback((_) {
+          final box = panelKey.currentContext?.findRenderObject() as RenderBox?;
+          if (box != null) controlsHeight.value = box.size.height;
+        });
+        return null;
+      },
+      const [],
+    );
+
+    final keyboardHeight = useKeyboardHeight();
+    final safeArea = MediaQuery.viewPaddingOf(context).bottom;
+
+    final baseline = safeArea + 16.0.s;
+    final linear = keyboardHeight + safeArea - controlsHeight.value;
+    final bottomPadding = math.max(baseline, linear);
 
     Future<void> onSubmit(String? txt) async {
       if (txt == null || txt.isEmpty) return;
@@ -127,14 +148,24 @@ class _FooterArea extends HookConsumerWidget {
     return Stack(
       children: [
         if (canReply)
-          StoryInputField(
-            controller: textController,
-            bottomPadding: bottomPadding,
-            onSubmitted: onSubmit,
+          AnimatedPositionedDirectional(
+            key: panelKey,
+            duration: 50.ms,
+            curve: Curves.easeOut,
+            bottom: bottomPadding,
+            start: 16.0.s,
+            end: 68.0.s,
+            child: StoryInputField(
+              controller: textController,
+              onSubmitted: onSubmit,
+            ),
           ),
-        StoryViewerActionButtons(
-          post: story,
-          bottomPadding: bottomPadding,
+        AnimatedPositionedDirectional(
+          duration: 50.ms,
+          curve: Curves.easeOut,
+          bottom: bottomPadding,
+          end: 16.0.s,
+          child: StoryViewerActionButtons(post: story),
         ),
         if (isKeyboardShown)
           StoryReactionOverlay(

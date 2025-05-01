@@ -17,45 +17,40 @@ import 'package:ion/generated/assets.gen.dart';
 class StoryViewerActionButtons extends ConsumerWidget {
   const StoryViewerActionButtons({
     required this.post,
-    required this.bottomPadding,
     super.key,
   });
 
   final ModifiablePostEntity post;
-  final double bottomPadding;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final shareColor = context.theme.appColors.onPrimaryAccent;
 
-    return PositionedDirectional(
-      bottom: bottomPadding,
-      end: 16.0.s,
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          _SoundButton(post: post),
-          SizedBox(height: 16.0.s),
-          StoryControlButton(
-            borderRadius: 16.0.s,
-            iconPadding: 8.0.s,
-            icon: Assets.svg.iconBlockShare.icon(
-              color: shareColor,
-              size: 20.0.s,
-            ),
-            onPressed: () async {
-              ref.read(storyPauseControllerProvider.notifier).paused = true;
-
-              await ShareViaMessageModalRoute(eventReference: post.toEventReference().encode())
-                  .push<void>(context);
-
-              ref.read(storyPauseControllerProvider.notifier).paused = false;
-            },
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        _SoundButton(post: post),
+        SizedBox(height: 16.0.s),
+        StoryControlButton(
+          borderRadius: 16.0.s,
+          iconPadding: 8.0.s,
+          icon: Assets.svg.iconBlockShare.icon(
+            color: shareColor,
+            size: 20.0.s,
           ),
-          SizedBox(height: 16.0.s),
-          _LikeButton(post: post),
-        ],
-      ),
+          onPressed: () async {
+            ref.read(storyPauseControllerProvider.notifier).paused = true;
+
+            await ShareViaMessageModalRoute(
+              eventReference: post.toEventReference().encode(),
+            ).push<void>(context);
+
+            ref.read(storyPauseControllerProvider.notifier).paused = false;
+          },
+        ),
+        SizedBox(height: 16.0.s),
+        _LikeButton(post: post),
+      ],
     );
   }
 }
