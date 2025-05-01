@@ -55,7 +55,7 @@ class SendE2eeChatMessageService {
     List<List<String>>? tags,
     String? subject,
     String? existingSharedId,
-    String? failedEventMessageId,
+    EventMessage? failedEventMessage,
     EventMessage? repliedMessage,
     List<String>? groupImageTag,
     List<String>? referencePostTag,
@@ -322,15 +322,13 @@ class SendE2eeChatMessageService {
   }) async {
     final entity = ReplaceablePrivateDirectMessageEntity.fromEventMessage(messageEvent);
 
-    final messageStatuses = await ref.read(conversationMessageDataDaoProvider).messageStatuses(
-          sharedId: messageEvent.sharedId!,
-          masterPubkey: messageEvent.masterPubkey,
-        );
+    await ref
+        .read(conversationMessageDataDaoProvider)
+        .reinitializeFailedStatus(sharedId: messageEvent.sharedId!);
 
-    final failedParticipantsMasterPubkeysMap = messageStatuses
-      ..removeWhere((key, value) => value != MessageDeliveryStatus.failed);
-
-    final failedParticipantsMasterPubkeys = failedParticipantsMasterPubkeysMap.keys.toList();
+    final failedParticipantsMasterPubkeys = await ref
+        .read(conversationMessageDataDaoProvider)
+        .getFailedParticipants(sharedId: messageEvent.sharedId!);
 
     final mediaFiles = entity.data.media.values
         .map(
@@ -347,7 +345,8 @@ class SendE2eeChatMessageService {
       mediaFiles: mediaFiles,
       content: messageEvent.content,
       conversationId: entity.data.conversationId,
-      failedEventMessageId: messageEvent.id,
+      existingSharedId: messageEvent.sharedId,
+      failedEventMessage: messageEvent,
       participantsMasterPubkeys: entity.allPubkeys,
       failedParticipantsMasterPubkeys:
           failedParticipantsMasterPubkeys.isNotEmpty ? failedParticipantsMasterPubkeys : null,

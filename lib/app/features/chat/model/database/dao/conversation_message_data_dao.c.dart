@@ -55,6 +55,7 @@ class ConversationMessageDataDao extends DatabaseAccessor<ChatDatabase>
       // Fetch the existing status for the given pubkey and sharedId
       final existingStatus = await (select(messageStatusTable)
             ..where((table) => table.pubkey.equals(pubkey))
+            ..where((table) => table.masterPubkey.equals(masterPubkey))
             ..where((table) => table.sharedId.equals(sharedId)))
           .getSingleOrNull();
 
@@ -72,7 +73,8 @@ class ConversationMessageDataDao extends DatabaseAccessor<ChatDatabase>
         // Update the row if the new status has a higher priority
         await (update(messageStatusTable)
               ..where((table) => table.pubkey.equals(pubkey))
-              ..where((table) => table.sharedId.equals(sharedId)))
+              ..where((table) => table.sharedId.equals(sharedId))
+              ..where((table) => table.masterPubkey.equals(masterPubkey)))
             .write(
           MessageStatusTableCompanion(
             status: Value(status),
@@ -131,10 +133,21 @@ class ConversationMessageDataDao extends DatabaseAccessor<ChatDatabase>
   }) async {
     final existingRows = await (select(messageStatusTable)
           ..where((table) => table.sharedId.equals(sharedId))
-          ..where((table) => table.pubkey.equals(masterPubkey)))
+          ..where((table) => table.masterPubkey.equals(masterPubkey)))
         .get();
 
     return {for (final row in existingRows) row.masterPubkey: row.status};
+  }
+
+  Future<List<String>> getFailedParticipants({
+    required String sharedId,
+  }) async {
+    final existingRows = await (select(messageStatusTable)
+          ..where((table) => table.sharedId.equals(sharedId))
+          ..where((table) => table.status.equals(MessageDeliveryStatus.failed.index)))
+        .get();
+
+    return existingRows.map((row) => row.masterPubkey).toList();
   }
 
   Future<MessageDeliveryStatus?> checkMessageStatus({
@@ -151,6 +164,19 @@ class ConversationMessageDataDao extends DatabaseAccessor<ChatDatabase>
             .map((row) => row.status)
             .reduce((a, b) => a.index > b.index ? a : b)
         : null;
+  }
+
+  Future<void> reinitializeFailedStatus({
+    required String sharedId,
+  }) async {
+    await (update(messageStatusTable)
+          ..where((table) => table.sharedId.equals(sharedId))
+          ..where((table) => table.status.equals(MessageDeliveryStatus.failed.index)))
+        .write(
+      const MessageStatusTableCompanion(
+        status: Value(MessageDeliveryStatus.created),
+      ),
+    );
   }
 }
 

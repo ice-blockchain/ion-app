@@ -13,6 +13,7 @@ import 'package:ion/app/features/chat/e2ee/providers/e2ee_delete_event_provider.
 import 'package:ion/app/features/chat/e2ee/providers/send_chat_message/send_e2ee_chat_message_service.c.dart';
 import 'package:ion/app/features/chat/model/database/chat_database.c.dart';
 import 'package:ion/app/features/chat/model/message_list_item.c.dart';
+import 'package:ion/app/features/chat/recent_chats/providers/selected_edit_message_provider.c.dart';
 import 'package:ion/app/features/chat/recent_chats/providers/selected_reply_message_provider.c.dart';
 import 'package:ion/app/features/core/model/feature_flags.dart';
 import 'package:ion/app/features/core/providers/feature_flags_provider.c.dart';
@@ -84,15 +85,29 @@ class MessageReactionContextMenu extends ConsumerWidget {
                   verticalPadding: 12.0.s,
                 ),
                 const OverlayMenuItemSeparator(),
-                OverlayMenuItem(
-                  label: context.i18n.button_forward,
-                  verticalPadding: 12.0.s,
-                  icon: Assets.svg.iconChatForward
-                      .icon(size: iconSize, color: context.theme.appColors.quaternaryText),
-                  onPressed: () {
-                    Navigator.of(context).pop();
-                  },
-                ),
+                if (isMe && (messageItem is TextItem || messageItem is EmojiItem))
+                  OverlayMenuItem(
+                    label: context.i18n.button_edit,
+                    verticalPadding: 12.0.s,
+                    icon: Assets.svg.iconEditLink
+                        .icon(size: iconSize, color: context.theme.appColors.quaternaryText),
+                    onPressed: () {
+                      ref.read(selectedReplyMessageProvider.notifier).clear();
+                      ref.read(selectedEditMessageProvider.notifier).selectedEditMessage =
+                          messageItem;
+                      context.pop();
+                    },
+                  )
+                else
+                  OverlayMenuItem(
+                    label: context.i18n.button_forward,
+                    verticalPadding: 12.0.s,
+                    icon: Assets.svg.iconChatForward
+                        .icon(size: iconSize, color: context.theme.appColors.quaternaryText),
+                    onPressed: () {
+                      Navigator.of(context).pop();
+                    },
+                  ),
                 const OverlayMenuItemSeparator(),
                 OverlayMenuItem(
                   label: context.i18n.button_copy,
