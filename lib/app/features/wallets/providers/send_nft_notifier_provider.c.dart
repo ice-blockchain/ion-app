@@ -73,7 +73,7 @@ class SendNftNotifier extends _$SendNftNotifier {
         dateBroadcasted: result.dateBroadcasted,
         assetData: CryptoAssetToSendData.nft(nft: nft),
         walletViewName: form.walletView!.name,
-        senderAddress: form.senderWallet!.address!,
+        senderAddress: form.senderWallet!.address,
         receiverAddress: form.receiverAddress,
         participantPubkey: form.contactPubkey,
         type: TransactionType.send,
