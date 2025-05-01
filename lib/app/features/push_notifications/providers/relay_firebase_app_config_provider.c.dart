@@ -57,7 +57,11 @@ class RelayFirebaseAppConfig extends _$RelayFirebaseAppConfig {
     if (firebaseConfigs == null) {
       return null;
     }
-    return RelayFirebaseConfig(firebaseConfig: firebaseConfigs.random, relayUrl: relayUrl);
+    return RelayFirebaseConfig(
+      firebaseConfig: firebaseConfigs.random,
+      relayUrl: relayUrl,
+      relayPubkey: relayInfo.pubkey,
+    );
   }
 
   Future<void> saveConfig(RelayFirebaseConfig relayFirebaseConfig) async {
@@ -92,6 +96,7 @@ class RelayFirebaseAppConfig extends _$RelayFirebaseAppConfig {
 class RelayFirebaseConfig with _$RelayFirebaseConfig {
   const factory RelayFirebaseConfig({
     required String relayUrl,
+    required String relayPubkey,
     required FirebaseConfig firebaseConfig,
   }) = _RelayFirebaseConfig;
 

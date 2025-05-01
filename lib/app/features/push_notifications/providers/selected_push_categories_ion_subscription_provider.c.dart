@@ -10,7 +10,6 @@ import 'package:ion/app/features/push_notifications/providers/relay_firebase_app
 import 'package:ion/app/features/push_notifications/providers/selected_push_categories_provider.c.dart';
 import 'package:ion/app/services/device_id/device_id.c.dart';
 import 'package:ion/app/services/firebase/firebase_messaging_service_provider.c.dart';
-import 'package:ion/app/services/ion_connect/encrypted_message_service.c.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'selected_push_categories_ion_subscription_provider.c.g.dart';
@@ -26,7 +25,8 @@ class SelectedPushCategoriesIonSubscription extends _$SelectedPushCategoriesIonS
       return null;
     }
 
-    final encryptedFcmToken = await _getEncryptedFcmToken();
+    final encryptedFcmToken =
+        await _getEncryptedFcmToken(relayPubkey: relaysFirebaseConfig.relayPubkey);
     if (encryptedFcmToken == null) {
       return null;
     }
@@ -40,14 +40,16 @@ class SelectedPushCategoriesIonSubscription extends _$SelectedPushCategoriesIonS
     );
   }
 
-  Future<String?> _getEncryptedFcmToken() async {
+  Future<String?> _getEncryptedFcmToken({required String relayPubkey}) async {
     final fcmToken = await ref.watch(firebaseMessagingServiceProvider).getToken();
     if (fcmToken == null) {
       return null;
     }
 
-    final encryptedMessageService = await ref.watch(encryptedMessageServiceProvider.future);
-    return encryptedMessageService.encryptMessage(fcmToken); //TODO:pass relay's pubkey
+    return fcmToken;
+    // TODO: do not encrypt it for now until BE is ready
+    // final encryptedMessageService = await ref.watch(encryptedMessageServiceProvider.future);
+    // return encryptedMessageService.encryptMessage(fcmToken, publicKey: relayPubkey);
   }
 
   Future<List<RequestFilter>> _getFilters() async {
