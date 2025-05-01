@@ -27,12 +27,15 @@ class PushSubscriptionSync extends _$PushSubscriptionSync {
       return;
     }
 
-    if (selectedPushCategoriesIonSubscription == null && publishedIonSubscription != null) {
+    if (selectedPushCategoriesIonSubscription != null &&
+        selectedPushCategoriesIonSubscription.filters.isEmpty &&
+        publishedIonSubscription != null) {
       await _deleteSubscription(publishedIonSubscription);
       return;
     }
 
     if (selectedPushCategoriesIonSubscription != null &&
+        selectedPushCategoriesIonSubscription.filters.isNotEmpty &&
         selectedPushCategoriesIonSubscription != publishedIonSubscription?.data) {
       await ref.watch(ionConnectNotifierProvider.notifier).sendEntityData(
             selectedPushCategoriesIonSubscription,

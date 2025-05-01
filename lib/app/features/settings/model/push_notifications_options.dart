@@ -2,10 +2,15 @@
 
 import 'package:flutter/material.dart';
 import 'package:ion/app/extensions/extensions.dart';
+import 'package:ion/app/features/push_notifications/data/models/push_notification_category.c.dart';
 import 'package:ion/app/features/settings/model/selectable_option.dart';
 import 'package:ion/generated/assets.gen.dart';
 
-enum SocialNotificationOption implements SelectableOption {
+abstract interface class PushNotificationOption {
+  PushNotificationCategory get category;
+}
+
+enum SocialNotificationOption implements SelectableOption, PushNotificationOption {
   posts,
   mentionsAndReplies,
   reposts,
@@ -35,9 +40,18 @@ enum SocialNotificationOption implements SelectableOption {
 
     return icon.icon(color: context.theme.appColors.primaryAccent);
   }
+
+  @override
+  PushNotificationCategory get category => switch (this) {
+        SocialNotificationOption.posts => PushNotificationCategory.posts,
+        SocialNotificationOption.mentionsAndReplies => PushNotificationCategory.mentionsAndReplies,
+        SocialNotificationOption.reposts => PushNotificationCategory.reposts,
+        SocialNotificationOption.likes => PushNotificationCategory.likes,
+        SocialNotificationOption.newFollowers => PushNotificationCategory.newFollowers,
+      };
 }
 
-enum ChatNotificationOption implements SelectableOption {
+enum ChatNotificationOption implements SelectableOption, PushNotificationOption {
   directMessages,
   groupChats,
   channels;
@@ -60,9 +74,16 @@ enum ChatNotificationOption implements SelectableOption {
 
     return icon.icon(color: context.theme.appColors.primaryAccent);
   }
+
+  @override
+  PushNotificationCategory get category => switch (this) {
+        ChatNotificationOption.directMessages => PushNotificationCategory.directMessages,
+        ChatNotificationOption.groupChats => PushNotificationCategory.groupChats,
+        ChatNotificationOption.channels => PushNotificationCategory.channels,
+      };
 }
 
-enum WalletNotificationOption implements SelectableOption {
+enum WalletNotificationOption implements SelectableOption, PushNotificationOption {
   paymentRequest,
   paymentReceived;
 
@@ -83,9 +104,15 @@ enum WalletNotificationOption implements SelectableOption {
 
     return icon.icon(color: context.theme.appColors.primaryAccent);
   }
+
+  @override
+  PushNotificationCategory get category => switch (this) {
+        WalletNotificationOption.paymentRequest => PushNotificationCategory.paymentRequest,
+        WalletNotificationOption.paymentReceived => PushNotificationCategory.paymentReceived,
+      };
 }
 
-enum SystemNotificationOption implements SelectableOption {
+enum SystemNotificationOption implements SelectableOption, PushNotificationOption {
   updates;
 
   @override
@@ -95,4 +122,7 @@ enum SystemNotificationOption implements SelectableOption {
   Widget getIcon(BuildContext context) {
     return Assets.svg.iconNotificationsUpdates.icon(color: context.theme.appColors.primaryAccent);
   }
+
+  @override
+  PushNotificationCategory get category => PushNotificationCategory.updates;
 }

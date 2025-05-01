@@ -54,7 +54,7 @@ class SelectedPushCategoriesIonSubscription extends _$SelectedPushCategoriesIonS
 
   Future<List<RequestFilter>> _getFilters() async {
     final selectedPushCategories = ref.watch(selectedPushCategoriesProvider);
-    if (selectedPushCategories.isEmpty) {
+    if (selectedPushCategories.categories.isEmpty || selectedPushCategories.suspended) {
       return [];
     }
     //TODO: add filters
