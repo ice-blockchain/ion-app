@@ -82,6 +82,10 @@ class SelectedPushCategoriesState with _$SelectedPushCategoriesState {
     required bool suspended,
   }) = _SelectedPushCategoriesState;
 
+  const SelectedPushCategoriesState._();
+
   factory SelectedPushCategoriesState.fromJson(Map<String, dynamic> json) =>
       _$SelectedPushCategoriesStateFromJson(json);
+
+  List<PushNotificationCategory> get enabledCategories => suspended ? [] : categories;
 }
