@@ -1,5 +1,7 @@
 // SPDX-License-Identifier: ice License 1.0
 
+import 'package:ion/app/extensions/extensions.dart';
+import 'package:ion/app/features/auth/providers/delegation_complete_provider.c.dart';
 import 'package:ion/app/features/ion_connect/model/action_source.c.dart';
 import 'package:ion/app/features/ion_connect/providers/ion_connect_notifier.c.dart';
 import 'package:ion/app/features/push_notifications/providers/push_subscription_provider.c.dart';
@@ -15,7 +17,13 @@ class PushSubscriptionSync extends _$PushSubscriptionSync {
     final selectedPushCategoriesIonSubscription =
         await ref.watch(selectedPushCategoriesIonSubscriptionProvider.future);
     final publishedIonSubscription = await ref.watch(currentUserPushSubscriptionProvider.future);
-    //TODO:wait for delegation complete
+
+    final delegationComplete = ref.watch(delegationCompleteProvider).valueOrNull.falseOrValue;
+
+    if (!delegationComplete) {
+      return;
+    }
+
     if (selectedPushCategoriesIonSubscription != null &&
         selectedPushCategoriesIonSubscription != publishedIonSubscription?.data) {
       await ref.watch(ionConnectNotifierProvider.notifier).sendEntityData(
