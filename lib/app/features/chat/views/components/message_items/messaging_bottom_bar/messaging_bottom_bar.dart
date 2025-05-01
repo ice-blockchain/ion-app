@@ -6,6 +6,7 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/features/chat/e2ee/model/entities/private_direct_message_data.c.dart';
 import 'package:ion/app/features/chat/providers/messaging_bottom_bar_state_provider.c.dart';
+import 'package:ion/app/features/chat/recent_chats/providers/selected_edit_message_provider.c.dart';
 import 'package:ion/app/features/chat/views/components/message_items/components.dart';
 import 'package:ion/app/features/chat/views/components/message_items/messaging_bottom_bar/components/components.dart';
 import 'package:ion/app/features/chat/views/components/message_items/messaging_bottom_bar/components/text_message_limit_label.dart';
@@ -24,6 +25,14 @@ class MessagingBottomBar extends HookConsumerWidget {
     final recordedMediaFile = useState<MediaFile?>(null);
     final recorderController = useRef(RecorderController());
     final isTextLimitReached = useState<bool>(false);
+
+    ref.listen(selectedEditMessageProvider, (_, next) {
+      if (next != null) {
+        controller.text = next.contentDescription;
+      } else {
+        controller.clear();
+      }
+    });
 
     useEffect(
       () {
