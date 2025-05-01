@@ -53,7 +53,7 @@ class SelectedPushCategoriesIonSubscription extends _$SelectedPushCategoriesIonS
   }
 
   Future<List<RequestFilter>> _getFilters() async {
-    final selectedPushCategories = await ref.watch(selectedPushCategoriesProvider.future);
+    final selectedPushCategories = ref.watch(selectedPushCategoriesProvider);
     if (selectedPushCategories.isEmpty) {
       return [];
     }
