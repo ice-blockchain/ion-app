@@ -3,7 +3,10 @@
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/auth/providers/delegation_complete_provider.c.dart';
 import 'package:ion/app/features/ion_connect/model/action_source.c.dart';
+import 'package:ion/app/features/ion_connect/model/deletion_request.c.dart';
+import 'package:ion/app/features/ion_connect/providers/ion_connect_cache.c.dart';
 import 'package:ion/app/features/ion_connect/providers/ion_connect_notifier.c.dart';
+import 'package:ion/app/features/push_notifications/data/models/push_subscription.c.dart';
 import 'package:ion/app/features/push_notifications/providers/push_subscription_provider.c.dart';
 import 'package:ion/app/features/push_notifications/providers/selected_push_categories_ion_subscription_provider.c.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
@@ -24,6 +27,11 @@ class PushSubscriptionSync extends _$PushSubscriptionSync {
       return;
     }
 
+    if (selectedPushCategoriesIonSubscription == null && publishedIonSubscription != null) {
+      await _deleteSubscription(publishedIonSubscription);
+      return;
+    }
+
     if (selectedPushCategoriesIonSubscription != null &&
         selectedPushCategoriesIonSubscription != publishedIonSubscription?.data) {
       await ref.watch(ionConnectNotifierProvider.notifier).sendEntityData(
@@ -31,5 +39,15 @@ class PushSubscriptionSync extends _$PushSubscriptionSync {
             actionSource: ActionSourceRelayUrl(selectedPushCategoriesIonSubscription.relay.url),
           );
     }
+  }
+
+  Future<void> _deleteSubscription(PushSubscriptionEntity entity) async {
+    await ref.read(ionConnectNotifierProvider.notifier).sendEntityData(
+          DeletionRequest(
+            events: [EventToDelete(eventId: entity.id, kind: PushSubscriptionEntity.kind)],
+          ),
+          cache: false,
+        );
+    ref.read(ionConnectCacheProvider.notifier).remove(entity.cacheKey);
   }
 }
