@@ -26,7 +26,7 @@ class RelayFirebaseAppConfig extends _$RelayFirebaseAppConfig {
       return null;
     }
 
-    final userRelay = await ref.watch(currentUserRelayProvider.future);
+    final userRelay = await ref.watch(currentUserRelaysProvider.future);
     if (userRelay == null) {
       return null;
     }
