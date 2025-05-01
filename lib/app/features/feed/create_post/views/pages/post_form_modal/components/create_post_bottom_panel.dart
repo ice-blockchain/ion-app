@@ -162,12 +162,16 @@ class _ActionsSection extends StatelessWidget {
   Widget build(BuildContext context) {
     final isVideo = createOption == CreatePostOption.video;
 
+    final alreadyAttachedMediaCount =
+        attachedMediaNotifier.value.length + attachedMediaLinksNotifier.value.length;
+
     return ScreenSideOffset.small(
       child: ActionsToolbar(
         actions: [
           ToolbarMediaButton(
             delegate: AttachedMediaHandler(attachedMediaNotifier),
-            maxMedia: isVideo ? 1 : ModifiablePostEntity.contentMediaLimit,
+            maxMedia:
+                isVideo ? 1 : ModifiablePostEntity.contentMediaLimit - alreadyAttachedMediaCount,
             enabled: !isVideo,
           ),
           ToolbarPollButton(
