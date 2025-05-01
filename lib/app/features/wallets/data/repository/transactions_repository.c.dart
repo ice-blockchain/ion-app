@@ -152,10 +152,7 @@ class TransactionsRepository {
 
     final transactions = await result.items
         .map((transaction) async {
-          final contract = _isNativeKind(transaction.kind) ? '' : transaction.contract;
-
-          // Contract cannot be null for non-native transfers
-          if (contract == null) return null;
+          final contract = transaction.contract ?? '';
 
           // Try to find coin by symbol, if not native coin
           var coin = contract.isEmpty
@@ -176,13 +173,26 @@ class TransactionsRepository {
           final rawAmount = transaction.value;
           final amount = parseCryptoAmount(rawAmount.emptyOrValue, coin.decimals);
           final amountUSD = amount * coin.priceUSD;
+          final type = TransactionType.fromDirection(transaction.direction);
+          final from = switch (transaction.from) {
+            final String from => from,
+            null when transaction.froms?.length == 1 => transaction.froms!.first,
+            null when type.isSend => wallet.address,
+            _ => null,
+          };
+          final to = switch (transaction.to) {
+            final String to => to,
+            null when transaction.tos?.length == 1 => transaction.tos!.first,
+            null when !type.isSend => wallet.address,
+            _ => null,
+          };
 
           return TransactionData(
             txHash: transaction.txHash,
             network: network,
-            type: TransactionType.fromDirection(transaction.direction),
-            senderWalletAddress: transaction.from,
-            receiverWalletAddress: transaction.to,
+            type: type,
+            senderWalletAddress: from,
+            receiverWalletAddress: to,
             nativeCoin: nativeCoin,
             fee: transaction.fee,
             dateConfirmed: transaction.timestamp,

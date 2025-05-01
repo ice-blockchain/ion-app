@@ -52,8 +52,12 @@ Future<void> initApp(Ref ref) async {
     ..listen(coinsSyncProvider, noop)
     ..listen(transactionsSubscriptionProvider, noop)
     ..listen(walletsInitializerNotifierProvider, noop)
-    ..listen(mainCryptoWalletsProvider, (_, __) {
-      ref.read(updateUserMetadataNotifierProvider.notifier).updatePublishedWallets();
+    ..listen(mainCryptoWalletsProvider, (_, __) async {
+      final authState = await ref.watch(authProvider.future);
+
+      if (!authState.isAuthenticated) return;
+
+      await ref.read(updateUserMetadataNotifierProvider.notifier).updatePublishedWallets();
     })
     ..listen(userRelaysSyncProvider, noop)
     ..listen(userChatRelaysSyncProvider, noop)

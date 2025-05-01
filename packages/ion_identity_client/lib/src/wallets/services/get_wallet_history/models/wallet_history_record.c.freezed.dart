@@ -30,10 +30,12 @@ mixin _$WalletHistoryRecord {
   String? get index => throw _privateConstructorUsedError;
   String? get contract => throw _privateConstructorUsedError;
   String? get tokenId => throw _privateConstructorUsedError;
-  String get from => throw _privateConstructorUsedError;
-  String get to => throw _privateConstructorUsedError;
+  String? get from => throw _privateConstructorUsedError;
+  String? get to => throw _privateConstructorUsedError;
+  List<String>? get tos => throw _privateConstructorUsedError;
+  List<String>? get froms => throw _privateConstructorUsedError;
   String? get value => throw _privateConstructorUsedError;
-  String get fee => throw _privateConstructorUsedError;
+  String? get fee => throw _privateConstructorUsedError;
   WalletHistoryMetadata get metadata => throw _privateConstructorUsedError;
 
   /// Serializes this WalletHistoryRecord to a JSON map.
@@ -63,10 +65,12 @@ abstract class $WalletHistoryRecordCopyWith<$Res> {
       String? index,
       String? contract,
       String? tokenId,
-      String from,
-      String to,
+      String? from,
+      String? to,
+      List<String>? tos,
+      List<String>? froms,
       String? value,
-      String fee,
+      String? fee,
       WalletHistoryMetadata metadata});
 
   $WalletHistoryMetadataCopyWith<$Res> get metadata;
@@ -97,10 +101,12 @@ class _$WalletHistoryRecordCopyWithImpl<$Res, $Val extends WalletHistoryRecord>
     Object? index = freezed,
     Object? contract = freezed,
     Object? tokenId = freezed,
-    Object? from = null,
-    Object? to = null,
+    Object? from = freezed,
+    Object? to = freezed,
+    Object? tos = freezed,
+    Object? froms = freezed,
     Object? value = freezed,
-    Object? fee = null,
+    Object? fee = freezed,
     Object? metadata = null,
   }) {
     return _then(_value.copyWith(
@@ -144,22 +150,30 @@ class _$WalletHistoryRecordCopyWithImpl<$Res, $Val extends WalletHistoryRecord>
           ? _value.tokenId
           : tokenId // ignore: cast_nullable_to_non_nullable
               as String?,
-      from: null == from
+      from: freezed == from
           ? _value.from
           : from // ignore: cast_nullable_to_non_nullable
-              as String,
-      to: null == to
+              as String?,
+      to: freezed == to
           ? _value.to
           : to // ignore: cast_nullable_to_non_nullable
-              as String,
+              as String?,
+      tos: freezed == tos
+          ? _value.tos
+          : tos // ignore: cast_nullable_to_non_nullable
+              as List<String>?,
+      froms: freezed == froms
+          ? _value.froms
+          : froms // ignore: cast_nullable_to_non_nullable
+              as List<String>?,
       value: freezed == value
           ? _value.value
           : value // ignore: cast_nullable_to_non_nullable
               as String?,
-      fee: null == fee
+      fee: freezed == fee
           ? _value.fee
           : fee // ignore: cast_nullable_to_non_nullable
-              as String,
+              as String?,
       metadata: null == metadata
           ? _value.metadata
           : metadata // ignore: cast_nullable_to_non_nullable
@@ -197,10 +211,12 @@ abstract class _$$WalletHistoryRecordImplCopyWith<$Res>
       String? index,
       String? contract,
       String? tokenId,
-      String from,
-      String to,
+      String? from,
+      String? to,
+      List<String>? tos,
+      List<String>? froms,
       String? value,
-      String fee,
+      String? fee,
       WalletHistoryMetadata metadata});
 
   @override
@@ -230,10 +246,12 @@ class __$$WalletHistoryRecordImplCopyWithImpl<$Res>
     Object? index = freezed,
     Object? contract = freezed,
     Object? tokenId = freezed,
-    Object? from = null,
-    Object? to = null,
+    Object? from = freezed,
+    Object? to = freezed,
+    Object? tos = freezed,
+    Object? froms = freezed,
     Object? value = freezed,
-    Object? fee = null,
+    Object? fee = freezed,
     Object? metadata = null,
   }) {
     return _then(_$WalletHistoryRecordImpl(
@@ -277,22 +295,30 @@ class __$$WalletHistoryRecordImplCopyWithImpl<$Res>
           ? _value.tokenId
           : tokenId // ignore: cast_nullable_to_non_nullable
               as String?,
-      from: null == from
+      from: freezed == from
           ? _value.from
           : from // ignore: cast_nullable_to_non_nullable
-              as String,
-      to: null == to
+              as String?,
+      to: freezed == to
           ? _value.to
           : to // ignore: cast_nullable_to_non_nullable
-              as String,
+              as String?,
+      tos: freezed == tos
+          ? _value._tos
+          : tos // ignore: cast_nullable_to_non_nullable
+              as List<String>?,
+      froms: freezed == froms
+          ? _value._froms
+          : froms // ignore: cast_nullable_to_non_nullable
+              as List<String>?,
       value: freezed == value
           ? _value.value
           : value // ignore: cast_nullable_to_non_nullable
               as String?,
-      fee: null == fee
+      fee: freezed == fee
           ? _value.fee
           : fee // ignore: cast_nullable_to_non_nullable
-              as String,
+              as String?,
       metadata: null == metadata
           ? _value.metadata
           : metadata // ignore: cast_nullable_to_non_nullable
@@ -317,9 +343,13 @@ class _$WalletHistoryRecordImpl implements _WalletHistoryRecord {
       required this.tokenId,
       required this.from,
       required this.to,
+      required final List<String>? tos,
+      required final List<String>? froms,
       required this.value,
       required this.fee,
-      required this.metadata});
+      required this.metadata})
+      : _tos = tos,
+        _froms = froms;
 
   factory _$WalletHistoryRecordImpl.fromJson(Map<String, dynamic> json) =>
       _$$WalletHistoryRecordImplFromJson(json);
@@ -345,19 +375,39 @@ class _$WalletHistoryRecordImpl implements _WalletHistoryRecord {
   @override
   final String? tokenId;
   @override
-  final String from;
+  final String? from;
   @override
-  final String to;
+  final String? to;
+  final List<String>? _tos;
+  @override
+  List<String>? get tos {
+    final value = _tos;
+    if (value == null) return null;
+    if (_tos is EqualUnmodifiableListView) return _tos;
+    // ignore: implicit_dynamic_type
+    return EqualUnmodifiableListView(value);
+  }
+
+  final List<String>? _froms;
+  @override
+  List<String>? get froms {
+    final value = _froms;
+    if (value == null) return null;
+    if (_froms is EqualUnmodifiableListView) return _froms;
+    // ignore: implicit_dynamic_type
+    return EqualUnmodifiableListView(value);
+  }
+
   @override
   final String? value;
   @override
-  final String fee;
+  final String? fee;
   @override
   final WalletHistoryMetadata metadata;
 
   @override
   String toString() {
-    return 'WalletHistoryRecord(walletId: $walletId, network: $network, kind: $kind, direction: $direction, blockNumber: $blockNumber, timestamp: $timestamp, txHash: $txHash, index: $index, contract: $contract, tokenId: $tokenId, from: $from, to: $to, value: $value, fee: $fee, metadata: $metadata)';
+    return 'WalletHistoryRecord(walletId: $walletId, network: $network, kind: $kind, direction: $direction, blockNumber: $blockNumber, timestamp: $timestamp, txHash: $txHash, index: $index, contract: $contract, tokenId: $tokenId, from: $from, to: $to, tos: $tos, froms: $froms, value: $value, fee: $fee, metadata: $metadata)';
   }
 
   @override
@@ -382,6 +432,8 @@ class _$WalletHistoryRecordImpl implements _WalletHistoryRecord {
             (identical(other.tokenId, tokenId) || other.tokenId == tokenId) &&
             (identical(other.from, from) || other.from == from) &&
             (identical(other.to, to) || other.to == to) &&
+            const DeepCollectionEquality().equals(other._tos, _tos) &&
+            const DeepCollectionEquality().equals(other._froms, _froms) &&
             (identical(other.value, value) || other.value == value) &&
             (identical(other.fee, fee) || other.fee == fee) &&
             (identical(other.metadata, metadata) ||
@@ -404,6 +456,8 @@ class _$WalletHistoryRecordImpl implements _WalletHistoryRecord {
       tokenId,
       from,
       to,
+      const DeepCollectionEquality().hash(_tos),
+      const DeepCollectionEquality().hash(_froms),
       value,
       fee,
       metadata);
@@ -437,10 +491,12 @@ abstract class _WalletHistoryRecord implements WalletHistoryRecord {
           required final String? index,
           required final String? contract,
           required final String? tokenId,
-          required final String from,
-          required final String to,
+          required final String? from,
+          required final String? to,
+          required final List<String>? tos,
+          required final List<String>? froms,
           required final String? value,
-          required final String fee,
+          required final String? fee,
           required final WalletHistoryMetadata metadata}) =
       _$WalletHistoryRecordImpl;
 
@@ -468,13 +524,17 @@ abstract class _WalletHistoryRecord implements WalletHistoryRecord {
   @override
   String? get tokenId;
   @override
-  String get from;
+  String? get from;
   @override
-  String get to;
+  String? get to;
+  @override
+  List<String>? get tos;
+  @override
+  List<String>? get froms;
   @override
   String? get value;
   @override
-  String get fee;
+  String? get fee;
   @override
   WalletHistoryMetadata get metadata;
 

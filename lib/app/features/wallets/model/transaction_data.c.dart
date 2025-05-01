@@ -15,8 +15,6 @@ class TransactionData with _$TransactionData {
     required String txHash,
     required NetworkData network,
     required TransactionType type,
-    required String senderWalletAddress,
-    required String receiverWalletAddress,
     required CoinData nativeCoin,
     required TransactionCryptoAsset cryptoAsset,
     String? id,
@@ -24,6 +22,8 @@ class TransactionData with _$TransactionData {
     DateTime? dateConfirmed,
     DateTime? dateRequested,
     DateTime? createdAtInRelay,
+    String? senderWalletAddress,
+    String? receiverWalletAddress,
     @Default(TransactionStatus.broadcasted) TransactionStatus status,
     String? userPubkey,
   }) = _TransactionData;

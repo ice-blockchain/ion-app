@@ -111,21 +111,22 @@ class TransactionDetailsPage extends ConsumerWidget {
                       pubkey: transactionData.participantPubkey,
                     ),
                     SizedBox(height: 12.0.s),
-                    ListItem.textWithIcon(
-                      title: Text(locale.wallet_title),
-                      value: transactionData.walletViewName,
-                      icon: Assets.svg.walletWalletblue.icon(
-                        size: ScreenSideOffset.defaultSmallMargin,
-                      ),
-                      secondary: Align(
-                        alignment: AlignmentDirectional.centerEnd,
-                        child: Text(
-                          transactionData.senderAddress,
-                          textAlign: TextAlign.right,
-                          style: context.theme.appTextThemes.caption3.copyWith(),
+                    if (transactionData.senderAddress case final String senderAddress)
+                      ListItem.textWithIcon(
+                        title: Text(locale.wallet_title),
+                        value: transactionData.walletViewName,
+                        icon: Assets.svg.walletWalletblue.icon(
+                          size: ScreenSideOffset.defaultSmallMargin,
+                        ),
+                        secondary: Align(
+                          alignment: AlignmentDirectional.centerEnd,
+                          child: Text(
+                            senderAddress,
+                            textAlign: TextAlign.right,
+                            style: context.theme.appTextThemes.caption3.copyWith(),
+                          ),
                         ),
                       ),
-                    ),
                     ...transactionData.assetData.maybeMap(
                           coin: (coin) => [
                             SizedBox(height: 16.0.s),

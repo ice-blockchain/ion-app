@@ -22,10 +22,11 @@ class WalletsInitializerNotifier extends _$WalletsInitializerNotifier {
     // If so, we need to create a new one.
     _completer = _completer == null || _completer!.isCompleted ? Completer<void>() : _completer;
 
-    // Just wait here, until user becomes authenticated
+    // Just wait here, until user becomes authenticated and required data loaded
     final authState = await ref.watch(authProvider.future);
+    final pubkey = ref.watch(currentPubkeySelectorProvider);
 
-    if (authState.isAuthenticated) {
+    if (authState.isAuthenticated && pubkey != null) {
       final coinInitializer = ref.watch(coinInitializerProvider);
       final networksInitializer = ref.watch(networksInitializerProvider);
       final syncServiceFuture = ref.watch(syncTransactionsServiceProvider.future);

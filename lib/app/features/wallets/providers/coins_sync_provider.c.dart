@@ -16,15 +16,15 @@ part 'coins_sync_provider.c.g.dart';
 class CoinsSync extends _$CoinsSync {
   @override
   Future<void> build() async {
-    // Wait until all necessary wallets components are initialized
-    await ref.watch(walletsInitializerNotifierProvider.future);
-
     final authState = await ref.watch(authProvider.future);
     final appState = ref.watch(appLifecycleProvider);
 
     if (!authState.isAuthenticated || appState != AppLifecycleState.resumed) {
       return;
     }
+
+    // Wait until all necessary wallets components are initialized
+    await ref.watch(walletsInitializerNotifierProvider.future);
 
     final coinSyncService = await ref.watch(coinsSyncServiceProvider.future);
     final walletViewsCoinsSyncService = await ref.watch(syncWalletViewCoinsServiceProvider.future);
