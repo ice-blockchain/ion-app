@@ -34,7 +34,7 @@ Future<String> generateAuthorizationToken({
 
 // TODO: handle delegatedToUrl when migrating to common relays
 Future<String> getFileStorageApiUrl(Ref ref) async {
-  final userRelays = await ref.read(currentUserRelayProvider.future);
+  final userRelays = await ref.read(currentUserRelaysProvider.future);
   if (userRelays == null) {
     throw UserRelaysNotFoundException();
   }

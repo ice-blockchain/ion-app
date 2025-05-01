@@ -8,7 +8,6 @@ import 'package:ion/app/features/ion_connect/ion_connect.dart';
 import 'package:ion/app/features/ion_connect/model/file_alt.dart';
 import 'package:ion/app/features/ion_connect/model/file_metadata.c.dart';
 import 'package:ion/app/features/ion_connect/model/media_attachment.dart';
-import 'package:ion/app/features/ion_connect/providers/ion_connect_cache.c.dart';
 import 'package:ion/app/features/ion_connect/providers/ion_connect_event_signer_provider.c.dart';
 import 'package:ion/app/features/ion_connect/providers/ion_connect_notifier.c.dart';
 import 'package:ion/app/features/ion_connect/providers/ion_connect_upload_notifier.c.dart';
@@ -38,8 +37,8 @@ class OnboardingCompleteNotifier extends _$OnboardingCompleteNotifier {
       () async {
         final relayUrls = await _assignUserRelays();
 
-        // Build and cache user relays first because it is used to `sendEvents`, upload avatar
-        final userRelaysEvent = await _buildAndCacheUserRelays(relayUrls: relayUrls);
+        // BE requires sending user relays alongside the user delegation event
+        final userRelaysEvent = await _buildUserRelaysEvent(relayUrls: relayUrls);
 
         // Send user delegation event in advance so all subsequent events pass delegation attestation
         try {
@@ -100,18 +99,12 @@ class OnboardingCompleteNotifier extends _$OnboardingCompleteNotifier {
     return ref.read(currentUserIdentityProvider.notifier).assignUserRelays(followees: followees);
   }
 
-  Future<EventMessage> _buildAndCacheUserRelays({required List<String> relayUrls}) async {
+  Future<EventMessage> _buildUserRelaysEvent({required List<String> relayUrls}) async {
     final userRelays = UserRelaysData(
       list: relayUrls.map((url) => UserRelay(url: url)).toList(),
     );
 
-    final userRelaysEvent = await ref.read(ionConnectNotifierProvider.notifier).sign(userRelays);
-
-    ref
-        .read(ionConnectCacheProvider.notifier)
-        .cache(UserRelaysEntity.fromEventMessage(userRelaysEvent));
-
-    return userRelaysEvent;
+    return ref.read(ionConnectNotifierProvider.notifier).sign(userRelays);
   }
 
   Future<UserMetadata> _buildUserMetadata({MediaAttachment? avatarAttachment}) async {
