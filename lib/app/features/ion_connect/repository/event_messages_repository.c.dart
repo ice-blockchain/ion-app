@@ -21,7 +21,6 @@ extension on EventMessage {
       createdAt: createdAt,
       sig: sig,
       content: content,
-      subscriptionId: subscriptionId,
       tags: tags,
       eventReference: eventReference,
     );
@@ -37,7 +36,6 @@ extension on EventMessageDbModel {
       createdAt: createdAt,
       sig: sig,
       content: content,
-      subscriptionId: subscriptionId,
       tags: tags,
     );
   }
