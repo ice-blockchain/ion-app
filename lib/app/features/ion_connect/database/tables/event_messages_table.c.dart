@@ -13,7 +13,6 @@ class EventMessagesTable extends Table {
   DateTimeColumn get createdAt => dateTime()();
   TextColumn get sig => text().nullable()();
   TextColumn get content => text()();
-  TextColumn get subscriptionId => text().nullable()();
   TextColumn get tags => text().map(const EventTagsConverter())();
   TextColumn get eventReference => text().map(const EventReferenceConverter())();
 
