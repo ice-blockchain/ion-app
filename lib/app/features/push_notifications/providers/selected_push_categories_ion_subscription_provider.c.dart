@@ -92,7 +92,7 @@ class SelectedPushCategoriesIonSubscription extends _$SelectedPushCategoriesIonS
       RequestFilter(
         kinds: const [ModifiablePostEntity.kind],
         tags: {
-          '${#RelatedPubkey.tagName}': [currentUserPubkey],
+          '#p': [currentUserPubkey],
         },
       ),
     ];
