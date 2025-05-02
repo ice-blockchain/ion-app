@@ -20,6 +20,7 @@ class EntitiesDataSource with _$EntitiesDataSource {
     required ActionSource actionSource,
     required List<RequestFilter> requestFilters,
     required bool Function(IonConnectEntity entity) entityFilter,
+    bool Function(IonConnectEntity entity)? pagedFilter,
   }) = _EntitiesDataSource;
 }
 
@@ -120,9 +121,18 @@ class EntitiesPagedData extends _$EntitiesPagedData {
         );
 
     DateTime? lastEventTime;
+    final pagedFilter = dataSource.pagedFilter ?? dataSource.entityFilter;
+
     await for (final entity in entitiesStream) {
-      if (dataSource.entityFilter(entity) && !(state?.data.items?.contains(entity)).falseOrValue) {
+      final stateFilter = !(state?.data.items?.contains(entity)).falseOrValue;
+
+      // Update pagination params
+      if (pagedFilter(entity) && stateFilter) {
         lastEventTime = entity.createdAt;
+      }
+
+      // Update state
+      if (dataSource.entityFilter(entity) && stateFilter) {
         state = state?.copyWith(
           data: Paged.loading(
             {...state!.data.items ?? {}}..add(entity),

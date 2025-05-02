@@ -12,11 +12,16 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 part 'followers_data_source_provider.c.g.dart';
 
 @riverpod
-List<EntitiesDataSource>? followersDataSource(Ref ref, String pubkey) {
+List<EntitiesDataSource>? followersDataSource(
+  Ref ref,
+  String pubkey, {
+  String? query,
+}) {
   return [
     EntitiesDataSource(
       actionSource: ActionSourceUser(pubkey),
-      entityFilter: (entity) => entity is FollowListEntity,
+      entityFilter: (entity) => entity is UserMetadataEntity || entity is FollowListEntity,
+      pagedFilter: (entity) => entity is FollowListEntity,
       requestFilters: [
         RequestFilter(
           kinds: const [FollowListEntity.kind],
@@ -25,6 +30,7 @@ List<EntitiesDataSource>? followersDataSource(Ref ref, String pubkey) {
           },
           search: SearchExtensions(
             [
+              if (query != null) QuerySearchExtension(searchQuery: query),
               GenericIncludeSearchExtension(
                 forKind: FollowListEntity.kind,
                 includeKind: UserMetadataEntity.kind,
