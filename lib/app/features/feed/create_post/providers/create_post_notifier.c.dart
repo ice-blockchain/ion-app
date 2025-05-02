@@ -15,11 +15,15 @@ import 'package:ion/app/features/core/model/media_type.dart';
 import 'package:ion/app/features/core/providers/env_provider.c.dart';
 import 'package:ion/app/features/feed/create_post/model/create_post_option.dart';
 import 'package:ion/app/features/feed/data/models/entities/article_data.c.dart';
+import 'package:ion/app/features/feed/data/models/entities/event_count_request_data.c.dart';
+import 'package:ion/app/features/feed/data/models/entities/event_count_result_data.c.dart';
 import 'package:ion/app/features/feed/data/models/entities/modifiable_post_data.c.dart';
 import 'package:ion/app/features/feed/data/models/entities/post_data.c.dart';
 import 'package:ion/app/features/feed/data/models/who_can_reply_settings_option.dart';
 import 'package:ion/app/features/feed/providers/counters/replies_count_provider.c.dart';
 import 'package:ion/app/features/feed/providers/counters/reposts_count_provider.c.dart';
+import 'package:ion/app/features/ion_connect/ion_connect.dart';
+import 'package:ion/app/features/ion_connect/model/action_source.c.dart';
 import 'package:ion/app/features/ion_connect/model/entity_data_with_settings.dart';
 import 'package:ion/app/features/ion_connect/model/entity_editing_ended_at.c.dart';
 import 'package:ion/app/features/ion_connect/model/entity_expiration.c.dart';
@@ -41,9 +45,9 @@ import 'package:ion/app/features/ion_connect/providers/ion_connect_delete_file_n
 import 'package:ion/app/features/ion_connect/providers/ion_connect_entity_provider.c.dart';
 import 'package:ion/app/features/ion_connect/providers/ion_connect_notifier.c.dart';
 import 'package:ion/app/features/ion_connect/providers/ion_connect_upload_notifier.c.dart';
+import 'package:ion/app/features/user/providers/count_provider.c.dart';
 import 'package:ion/app/services/compressors/image_compressor.c.dart';
 import 'package:ion/app/services/compressors/video_compressor.c.dart';
-import 'package:ion/app/services/logger/logger.dart';
 import 'package:ion/app/services/markdown/quill.dart';
 import 'package:ion/app/services/media_service/media_service.c.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
@@ -109,7 +113,27 @@ class CreatePostNotifier extends _$CreatePostNotifier {
         ref.read(repostsCountProvider(quotedEvent).notifier).addOne();
       }
       if (parentEvent != null) {
-        ref.read(repliesCountProvider(parentEvent).notifier).addOne();
+        await RepliesCountService(ref).incrementReplies(parentEvent);
+        final relatedTags = RelatedEvent.fromEventReference(
+          parentEvent,
+          marker: RelatedEventMarker.reply,
+        ).toFilterEntry();
+        await ref.read(
+          countProvider(
+            key: parentEvent.toString(),
+            type: EventCountResultType.replies,
+            requestData: EventCountRequestData(
+              filters: [
+                RequestFilter(
+                  kinds: const [ModifiablePostEntity.kind],
+                  tags: Map.fromEntries([relatedTags]),
+                  limit: 1,
+                ),
+              ],
+            ),
+            actionSource: ActionSource.user(parentEvent.pubkey),
+          ).future,
+        );
       }
     });
   }
@@ -190,7 +214,6 @@ class CreatePostNotifier extends _$CreatePostNotifier {
   }
 
   Future<List<IonConnectEntity>?> _sendPostEntities(List<EventSerializable> entitiesData) async {
-    //TODO: check the event json according to notion when defined
     return ref.read(ionConnectNotifierProvider.notifier).sendEntitiesData(entitiesData);
   }
 
@@ -372,14 +395,7 @@ class CreatePostNotifier extends _$CreatePostNotifier {
   Future<({List<FileMetadata> fileMetadatas, MediaAttachment mediaAttachment})> _uploadImage(
     MediaFile file,
   ) async {
-    Logger.info(
-      'Uploading image: width=${file.width}, height=${file.height}, path=${file.path}',
-    );
-
     var compressedImage = file;
-
-    // Compress image if it's not a story
-    // The stories has its own compression logic in ImageProcessorNotifier
 
     if (createOption != CreatePostOption.story) {
       compressedImage = await ref.read(imageCompressorProvider).compress(
@@ -392,10 +408,6 @@ class CreatePostNotifier extends _$CreatePostNotifier {
           compressedImage,
           alt: _getFileAlt(),
         );
-
-    Logger.info(
-      'Image uploaded successfully: fileUrl=${uploadResult.fileMetadata.url}',
-    );
 
     return (
       fileMetadatas: [uploadResult.fileMetadata],
