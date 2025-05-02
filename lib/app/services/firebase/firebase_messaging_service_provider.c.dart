@@ -17,11 +17,11 @@ class FirebaseMessagingService {
   Future<String?> getToken() {
     return FirebaseMessaging.instance.getToken();
   }
+
+  Future<void> deleteToken() {
+    return FirebaseMessaging.instance.deleteToken();
+  }
 }
 
-final firebaseMessagingServiceProvider = Provider((Ref ref) {
-  return FirebaseMessagingService();
-});
-
 @Riverpod(keepAlive: true)
-FirebaseMessagingService firebaseService(Ref ref) => FirebaseMessagingService();
+FirebaseMessagingService firebaseMessagingService(Ref ref) => FirebaseMessagingService();

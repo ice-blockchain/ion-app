@@ -8,21 +8,17 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 part 'firebase_service_provider.c.freezed.dart';
 part 'firebase_service_provider.c.g.dart';
 
-class FirebaseService {
-  Future<void> configureApp(
-    FirebaseAppConfig config, {
+class FirebaseAppService {
+  Future<void> initializeApp(
+    FirebaseAppOptions options, {
     String name = defaultFirebaseAppName,
   }) async {
-    if (hasApp(name)) {
-      await deleteApp(name);
-    }
-
     await Firebase.initializeApp(
       options: FirebaseOptions(
-        apiKey: config.apiKey,
-        appId: config.appId,
-        messagingSenderId: config.messagingSenderId,
-        projectId: config.projectId,
+        apiKey: options.apiKey,
+        appId: options.appId,
+        messagingSenderId: options.messagingSenderId,
+        projectId: options.projectId,
       ),
       name: name,
     );
@@ -40,17 +36,17 @@ class FirebaseService {
 }
 
 @freezed
-class FirebaseAppConfig with _$FirebaseAppConfig {
-  const factory FirebaseAppConfig({
+class FirebaseAppOptions with _$FirebaseAppOptions {
+  const factory FirebaseAppOptions({
     required String apiKey,
     required String appId,
     required String messagingSenderId,
     required String projectId,
-  }) = _FirebaseAppConfig;
+  }) = _FirebaseAppOptions;
 
-  factory FirebaseAppConfig.fromJson(Map<String, dynamic> json) =>
-      _$FirebaseAppConfigFromJson(json);
+  factory FirebaseAppOptions.fromJson(Map<String, dynamic> json) =>
+      _$FirebaseAppOptionsFromJson(json);
 }
 
 @Riverpod(keepAlive: true)
-FirebaseService firebaseService(Ref ref) => FirebaseService();
+FirebaseAppService firebaseAppService(Ref ref) => FirebaseAppService();

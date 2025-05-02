@@ -20,22 +20,22 @@ class RelayInfo with _$RelayInfo {
     @JsonKey(name: 'supported_nips') required List<int> supportedNips,
     required String software,
     required String version,
-    @JsonKey(name: 'fcm_android_configs') List<RelayFcmConfig>? fcmAndroidConfigs,
-    @JsonKey(name: 'fcm_ios_configs') List<RelayFcmConfig>? fcmIosConfigs,
-    @JsonKey(name: 'fcm_web_configs') List<RelayFcmConfig>? fcmWebConfigs,
+    @JsonKey(name: 'fcm_android_configs') List<FirebaseConfig>? firebaseAndroidConfigs,
+    @JsonKey(name: 'fcm_ios_configs') List<FirebaseConfig>? firebaseIosConfigs,
+    @JsonKey(name: 'fcm_web_configs') List<FirebaseConfig>? firebaseWebConfigs,
   }) = _RelayInfo;
 
   const RelayInfo._();
 
   factory RelayInfo.fromJson(Map<String, dynamic> json) => _$RelayInfoFromJson(json);
 
-  List<RelayFcmConfig>? getFcmConfigsForPlatform() {
+  List<FirebaseConfig>? getFirebaseConfigsForPlatform() {
     if (kIsWeb) {
-      return fcmWebConfigs;
+      return firebaseWebConfigs;
     } else if (Platform.isAndroid) {
-      return fcmAndroidConfigs;
+      return firebaseAndroidConfigs;
     } else if (Platform.isIOS) {
-      return fcmIosConfigs;
+      return firebaseIosConfigs;
     } else {
       throw UnsupportedError('Unsupported platform');
     }
@@ -44,13 +44,13 @@ class RelayInfo with _$RelayInfo {
 
 /// https://github.com/ice-blockchain/subzero/blob/master/.ion-connect-protocol/ICIP-8000.md#fcm-client-configuration
 @freezed
-class RelayFcmConfig with _$RelayFcmConfig {
-  const factory RelayFcmConfig({
+class FirebaseConfig with _$FirebaseConfig {
+  const factory FirebaseConfig({
     required String apiKey,
     required String appId,
     required String messagingSenderId,
     required String projectId,
-  }) = _RelayFcmConfig;
+  }) = _RelayFirebaseConfig;
 
-  factory RelayFcmConfig.fromJson(Map<String, dynamic> json) => _$RelayFcmConfigFromJson(json);
+  factory FirebaseConfig.fromJson(Map<String, dynamic> json) => _$FirebaseConfigFromJson(json);
 }

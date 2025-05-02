@@ -1,6 +1,7 @@
 // SPDX-License-Identifier: ice License 1.0
 
-import 'package:ion/app/features/push_notifications/data/models/push_notification_category.c.dart';
+import 'package:ion/app/features/auth/providers/auth_provider.c.dart';
+import 'package:ion/app/services/firebase/firebase_messaging_service_provider.c.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'configure_firebase_messaging_provider.c.g.dart';
@@ -8,15 +9,12 @@ part 'configure_firebase_messaging_provider.c.g.dart';
 @Riverpod(keepAlive: true)
 class ConfigureFirebaseMessaging extends _$ConfigureFirebaseMessaging {
   @override
-  Future<void> build() async {}
+  Future<void> build() async {
+    // onLogout should be at the top of the build method
+    onLogout(ref, _deleteFcmToken);
+  }
 
-  void _test(List<PushNotificationCategory> categories) {
-    for (final category in categories) {
-      if (category is IonConnectPushNotificationCategory) {
-        // Handle IonConnectPushNotificationCategory
-      } else {
-        // Handle other categories
-      }
-    }
+  void _deleteFcmToken() {
+    ref.read(firebaseMessagingServiceProvider).deleteToken();
   }
 }
