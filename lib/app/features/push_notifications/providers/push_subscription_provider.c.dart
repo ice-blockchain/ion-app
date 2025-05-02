@@ -10,7 +10,7 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'push_subscription_provider.c.g.dart';
 
-@riverpod
+@Riverpod(keepAlive: true)
 Future<PushSubscriptionEntity?> currentUserPushSubscription(Ref ref) async {
   final currentPubkey = ref.watch(currentPubkeySelectorProvider);
   if (currentPubkey == null) {

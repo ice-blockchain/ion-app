@@ -21,7 +21,7 @@ class ConfigureFirebaseApp extends _$ConfigureFirebaseApp {
 
   Future<bool> _initializeFirebaseApp(RelayFirebaseConfig relayFirebaseConfig) async {
     try {
-      final firebaseAppService = ref.read(firebaseAppServiceProvider);
+      final firebaseAppService = ref.watch(firebaseAppServiceProvider);
 
       if (firebaseAppService.hasApp()) {
         await firebaseAppService.deleteApp();
@@ -37,7 +37,7 @@ class ConfigureFirebaseApp extends _$ConfigureFirebaseApp {
         ),
       );
 
-      await ref.read(relayFirebaseAppConfigProvider.notifier).saveConfig(relayFirebaseConfig);
+      await ref.watch(relayFirebaseAppConfigProvider.notifier).saveConfig(relayFirebaseConfig);
       return true;
     } catch (error, stackTrace) {
       Logger.error(
