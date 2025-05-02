@@ -128,7 +128,7 @@ class TransactionDetailsPage extends ConsumerWidget {
                           child: Text(
                             userAddress,
                             textAlign: TextAlign.right,
-                            style: context.theme.appTextThemes.caption3.copyWith(),
+                            style: context.theme.appTextThemes.caption3,
                           ),
                         ),
                       ),
