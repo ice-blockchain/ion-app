@@ -174,18 +174,16 @@ class TransactionsRepository {
           final amount = parseCryptoAmount(rawAmount.emptyOrValue, coin.decimals);
           final amountUSD = amount * coin.priceUSD;
           final type = TransactionType.fromDirection(transaction.direction);
-          final from = switch (transaction.from) {
-            final String from => from,
-            null when transaction.froms?.length == 1 => transaction.froms!.first,
-            null when type.isSend => wallet.address,
-            _ => null,
-          };
-          final to = switch (transaction.to) {
-            final String to => to,
-            null when transaction.tos?.length == 1 => transaction.tos!.first,
-            null when !type.isSend => wallet.address,
-            _ => null,
-          };
+          final from = _resolveTransactionAddress(
+            direct: transaction.from,
+            alternatives: transaction.froms,
+            fallbackAddress: type.isSend ? wallet.address : null,
+          );
+          final to = _resolveTransactionAddress(
+            direct: transaction.to,
+            alternatives: transaction.tos,
+            fallbackAddress: !type.isSend ? wallet.address : null,
+          );
 
           return TransactionData(
             txHash: transaction.txHash,
@@ -208,6 +206,16 @@ class TransactionsRepository {
         .wait
         .then((result) => result.toList());
     return (transactions: transactions.nonNulls.toList(), nextPageToken: result.nextPageToken);
+  }
+
+  String? _resolveTransactionAddress({
+    required String? direct,
+    required List<String>? alternatives,
+    required String? fallbackAddress,
+  }) {
+    if (direct != null) return direct;
+    if (alternatives?.length == 1) return alternatives!.first;
+    return fallbackAddress;
   }
 
   Future<TransactionData?> loadCoinTransferById({
