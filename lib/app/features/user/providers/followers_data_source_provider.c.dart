@@ -20,9 +20,8 @@ List<EntitiesDataSource>? followersDataSource(
   return [
     EntitiesDataSource(
       actionSource: ActionSourceUser(pubkey),
-      // Search not working for kind 3, so we use kind 0
-      entityFilter: (entity) =>
-          query != null ? entity is UserMetadataEntity : entity is FollowListEntity,
+      entityFilter: (entity) => entity is UserMetadataEntity || entity is FollowListEntity,
+      pagedFilter: (entity) => entity is FollowListEntity,
       requestFilters: [
         RequestFilter(
           kinds: const [FollowListEntity.kind],

@@ -9,6 +9,7 @@ import 'package:ion/app/components/scroll_view/load_more_builder.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/ion_connect/providers/entities_paged_data_provider.c.dart';
 import 'package:ion/app/features/user/model/follow_type.dart';
+import 'package:ion/app/features/user/model/user_metadata.c.dart';
 import 'package:ion/app/features/user/pages/profile_page/pages/follow_list_modal/components/follow_app_bar.dart';
 import 'package:ion/app/features/user/pages/profile_page/pages/follow_list_modal/components/follow_list_item.dart';
 import 'package:ion/app/features/user/pages/profile_page/pages/follow_list_modal/components/follow_list_loading.dart';
@@ -30,7 +31,7 @@ class FollowersList extends HookConsumerWidget {
 
     final dataSource = ref.watch(followersDataSourceProvider(pubkey, query: debouncedQuery));
     final entitiesPagedData = ref.watch(entitiesPagedDataProvider(dataSource));
-    final entities = entitiesPagedData?.data.items?.toList();
+    final entities = entitiesPagedData?.data.items?.whereType<UserMetadataEntity>().toList();
 
     final slivers = [
       FollowAppBar(title: FollowType.followers.getTitleWithCounter(context, followersCount ?? 0)),
