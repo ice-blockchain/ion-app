@@ -45,10 +45,13 @@ class TransactionDetailsPage extends ConsumerWidget {
         ? DateFormat('dd.MM.yyyy HH:mm:ss').format(transactionData.dateConfirmed!.toLocal())
         : transactionData.networkFeeOption?.getDisplayArrivalTime(context);
 
-    final participantAddress = switch (transactionData.type) {
-      TransactionType.send => transactionData.receiverAddress,
-      TransactionType.receive => transactionData.senderAddress,
-    };
+    final participantAddress = transactionData.type.isSend
+        ? transactionData.receiverAddress
+        : transactionData.senderAddress;
+
+    final currentUserAddress = transactionData.type.isSend
+        ? transactionData.senderAddress
+        : transactionData.receiverAddress;
 
     return SheetContent(
       body: SingleChildScrollView(
@@ -113,7 +116,7 @@ class TransactionDetailsPage extends ConsumerWidget {
                       pubkey: transactionData.participantPubkey,
                     ),
                     SizedBox(height: 12.0.s),
-                    if (transactionData.senderAddress case final String senderAddress)
+                    if (currentUserAddress case final String userAddress)
                       ListItem.textWithIcon(
                         title: Text(locale.wallet_title),
                         value: transactionData.walletViewName,
@@ -123,7 +126,7 @@ class TransactionDetailsPage extends ConsumerWidget {
                         secondary: Align(
                           alignment: AlignmentDirectional.centerEnd,
                           child: Text(
-                            senderAddress,
+                            userAddress,
                             textAlign: TextAlign.right,
                             style: context.theme.appTextThemes.caption3.copyWith(),
                           ),
