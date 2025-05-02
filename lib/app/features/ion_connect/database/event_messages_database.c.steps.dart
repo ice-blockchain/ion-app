@@ -38,53 +38,38 @@ final class Schema2 extends i0.VersionedSchema {
 
 class Shape0 extends i0.VersionedTable {
   Shape0({required super.source, required super.alias}) : super.aliased();
-  i1.GeneratedColumn<String> get id =>
-      columnsByName['id']! as i1.GeneratedColumn<String>;
-  i1.GeneratedColumn<int> get kind =>
-      columnsByName['kind']! as i1.GeneratedColumn<int>;
-  i1.GeneratedColumn<String> get pubkey =>
-      columnsByName['pubkey']! as i1.GeneratedColumn<String>;
+  i1.GeneratedColumn<String> get id => columnsByName['id']! as i1.GeneratedColumn<String>;
+  i1.GeneratedColumn<int> get kind => columnsByName['kind']! as i1.GeneratedColumn<int>;
+  i1.GeneratedColumn<String> get pubkey => columnsByName['pubkey']! as i1.GeneratedColumn<String>;
   i1.GeneratedColumn<String> get masterPubkey =>
       columnsByName['master_pubkey']! as i1.GeneratedColumn<String>;
   i1.GeneratedColumn<DateTime> get createdAt =>
       columnsByName['created_at']! as i1.GeneratedColumn<DateTime>;
-  i1.GeneratedColumn<String> get sig =>
-      columnsByName['sig']! as i1.GeneratedColumn<String>;
-  i1.GeneratedColumn<String> get content =>
-      columnsByName['content']! as i1.GeneratedColumn<String>;
-  i1.GeneratedColumn<String> get tags =>
-      columnsByName['tags']! as i1.GeneratedColumn<String>;
+  i1.GeneratedColumn<String> get sig => columnsByName['sig']! as i1.GeneratedColumn<String>;
+  i1.GeneratedColumn<String> get content => columnsByName['content']! as i1.GeneratedColumn<String>;
+  i1.GeneratedColumn<String> get tags => columnsByName['tags']! as i1.GeneratedColumn<String>;
   i1.GeneratedColumn<String> get eventReference =>
       columnsByName['event_reference']! as i1.GeneratedColumn<String>;
 }
 
 i1.GeneratedColumn<String> _column_0(String aliasedName) =>
-    i1.GeneratedColumn<String>('id', aliasedName, false,
-        type: i1.DriftSqlType.string);
+    i1.GeneratedColumn<String>('id', aliasedName, false, type: i1.DriftSqlType.string);
 i1.GeneratedColumn<int> _column_1(String aliasedName) =>
-    i1.GeneratedColumn<int>('kind', aliasedName, false,
-        type: i1.DriftSqlType.int);
+    i1.GeneratedColumn<int>('kind', aliasedName, false, type: i1.DriftSqlType.int);
 i1.GeneratedColumn<String> _column_2(String aliasedName) =>
-    i1.GeneratedColumn<String>('pubkey', aliasedName, false,
-        type: i1.DriftSqlType.string);
+    i1.GeneratedColumn<String>('pubkey', aliasedName, false, type: i1.DriftSqlType.string);
 i1.GeneratedColumn<String> _column_3(String aliasedName) =>
-    i1.GeneratedColumn<String>('master_pubkey', aliasedName, false,
-        type: i1.DriftSqlType.string);
+    i1.GeneratedColumn<String>('master_pubkey', aliasedName, false, type: i1.DriftSqlType.string);
 i1.GeneratedColumn<DateTime> _column_4(String aliasedName) =>
-    i1.GeneratedColumn<DateTime>('created_at', aliasedName, false,
-        type: i1.DriftSqlType.dateTime);
+    i1.GeneratedColumn<DateTime>('created_at', aliasedName, false, type: i1.DriftSqlType.dateTime);
 i1.GeneratedColumn<String> _column_5(String aliasedName) =>
-    i1.GeneratedColumn<String>('sig', aliasedName, true,
-        type: i1.DriftSqlType.string);
+    i1.GeneratedColumn<String>('sig', aliasedName, true, type: i1.DriftSqlType.string);
 i1.GeneratedColumn<String> _column_6(String aliasedName) =>
-    i1.GeneratedColumn<String>('content', aliasedName, false,
-        type: i1.DriftSqlType.string);
+    i1.GeneratedColumn<String>('content', aliasedName, false, type: i1.DriftSqlType.string);
 i1.GeneratedColumn<String> _column_7(String aliasedName) =>
-    i1.GeneratedColumn<String>('tags', aliasedName, false,
-        type: i1.DriftSqlType.string);
+    i1.GeneratedColumn<String>('tags', aliasedName, false, type: i1.DriftSqlType.string);
 i1.GeneratedColumn<String> _column_8(String aliasedName) =>
-    i1.GeneratedColumn<String>('event_reference', aliasedName, false,
-        type: i1.DriftSqlType.string);
+    i1.GeneratedColumn<String>('event_reference', aliasedName, false, type: i1.DriftSqlType.string);
 i0.MigrationStepWithVersion migrationSteps({
   required Future<void> Function(i1.Migrator m, Schema2 schema) from1To2,
 }) {
