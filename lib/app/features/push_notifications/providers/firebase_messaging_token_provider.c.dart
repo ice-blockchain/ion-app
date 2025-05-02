@@ -22,5 +22,5 @@ Stream<String?> firebaseMessagingToken(Ref ref) {
     controller.close();
   });
 
-  return controller.stream;
+  return controller.stream.distinct();
 }
