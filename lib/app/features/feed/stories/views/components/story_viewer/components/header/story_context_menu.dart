@@ -45,7 +45,7 @@ class StoryContextMenu extends HookConsumerWidget {
 
         final storyState = ref.read(storyViewingControllerProvider(pubkey));
         final currentStory = storyState.currentStory;
-        
+
         if (currentStory == null) {
           isDeletingStory.value = false;
           return;
