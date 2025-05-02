@@ -45,6 +45,11 @@ class TransactionDetailsPage extends ConsumerWidget {
         ? DateFormat('dd.MM.yyyy HH:mm:ss').format(transactionData.dateConfirmed!.toLocal())
         : transactionData.networkFeeOption?.getDisplayArrivalTime(context);
 
+    final participantAddress = switch (transactionData.type) {
+      TransactionType.send => transactionData.receiverAddress,
+      TransactionType.receive => transactionData.senderAddress,
+    };
+
     return SheetContent(
       body: SingleChildScrollView(
         child: Column(
@@ -103,10 +108,7 @@ class TransactionDetailsPage extends ConsumerWidget {
                     ),
                     SizedBox(height: 16.0.s),
                     TransactionParticipant(
-                      address: switch (transactionData.type) {
-                        TransactionType.send => transactionData.senderAddress,
-                        TransactionType.receive => transactionData.receiverAddress,
-                      },
+                      address: participantAddress,
                       transactionType: transactionData.type,
                       pubkey: transactionData.participantPubkey,
                     ),
