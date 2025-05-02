@@ -3,6 +3,7 @@
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/features/auth/providers/auth_provider.c.dart';
 import 'package:ion/app/features/auth/providers/delegation_complete_provider.c.dart';
+import 'package:ion/app/features/settings/model/privacy_options.dart';
 import 'package:ion/app/features/user/providers/update_user_metadata_notifier.c.dart';
 import 'package:ion/app/features/user/providers/user_metadata_provider.c.dart';
 import 'package:ion/app/features/wallets/providers/connected_crypto_wallets_provider.c.dart';
@@ -30,5 +31,11 @@ Future<void> userPublicWalletsSync(Ref ref) async {
     return;
   }
 
-  await walletsUpdater.updatePublishedWallets();
+  final currentPublished = userMetadata.data.wallets;
+  final currentPrivacy = WalletAddressPrivacyOption.fromWalletsMap(currentPublished);
+  final isWalletsPublic = currentPrivacy == WalletAddressPrivacyOption.public;
+
+  if (isWalletsPublic) {
+    await walletsUpdater.publishWallets(currentPrivacy);
+  }
 }
