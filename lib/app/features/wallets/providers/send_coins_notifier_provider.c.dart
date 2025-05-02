@@ -106,7 +106,7 @@ class SendCoinsNotifier extends _$SendCoinsNotifier {
         ),
         nativeCoin: nativeCoin,
         walletViewName: form.walletView!.name,
-        senderAddress: senderWallet.address!,
+        senderAddress: senderWallet.address,
         receiverAddress: form.receiverAddress,
         participantPubkey: form.contactPubkey,
         networkFeeOption: form.selectedNetworkFeeOption,
@@ -119,6 +119,8 @@ class SendCoinsNotifier extends _$SendCoinsNotifier {
           sendableAsset: sendableAsset,
           coinAssetData: coinAssetData,
           requestEntity: form.request,
+          senderAddress: senderWallet.address,
+          receiverAddress: form.receiverAddress,
         );
       } on SendEventException catch (e, stacktrace) {
         Logger.error('Failed to send event $e', stackTrace: stacktrace);
@@ -139,13 +141,17 @@ class SendCoinsNotifier extends _$SendCoinsNotifier {
     required TransferResult transferResult,
     required CoinAssetToSendData coinAssetData,
     required FundsRequestEntity? requestEntity,
+    required String? senderAddress,
+    required String? receiverAddress,
   }) async {
     // Save transaction into DB
     await ref.read(transactionsRepositoryProvider.future).then(
           (repo) => repo.saveTransactionDetails(details),
         );
 
-    if (details.participantPubkey == null) return;
+    if (details.participantPubkey == null || senderAddress == null || receiverAddress == null) {
+      return;
+    }
 
     // Send transaction to the relay
     final receiverDelegation = await ref.read(
@@ -165,8 +171,8 @@ class SendCoinsNotifier extends _$SendCoinsNotifier {
         amountUsd: coinAssetData.amountUSD.toString(),
         txHash: details.txHash,
         txUrl: details.transactionExplorerUrl,
-        from: details.senderAddress,
-        to: details.receiverAddress,
+        from: senderAddress,
+        to: receiverAddress,
       ),
     );
 

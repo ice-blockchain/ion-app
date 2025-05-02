@@ -20,7 +20,7 @@ Future<List<Wallet>> connectedCryptoWallets(Ref ref) async {
   return cryptoWallets.filterByIds(walletIds);
 }
 
-/// Returns crypto wallets of the specieied WalletView. If the [walletViewId] is not provided,
+/// Returns crypto wallets of the specified WalletView. If the [walletViewId] is not provided,
 /// the current WalletView will be used.
 @riverpod
 Future<List<Wallet>> walletViewCryptoWallets(Ref ref, {String? walletViewId}) async {

@@ -16,7 +16,7 @@ class TransactionParticipant extends ConsumerWidget {
     super.key,
   });
 
-  final String address;
+  final String? address;
   final String? pubkey;
   final TransactionType transactionType;
 
@@ -35,18 +35,22 @@ class TransactionParticipant extends ConsumerWidget {
               subtitle: Text(userMetadata.data.name),
               pubkey: userMetadata.masterPubkey,
             ),
-            SizedBox(height: 12.0.s),
-            Align(
-              alignment: AlignmentDirectional.centerStart,
-              child: Text(
-                address,
-                style: context.theme.appTextThemes.caption3,
+            if (address != null) ...[
+              SizedBox(height: 12.0.s),
+              Align(
+                alignment: AlignmentDirectional.centerStart,
+                child: Text(
+                  address!,
+                  style: context.theme.appTextThemes.caption3,
+                ),
               ),
-            ),
+            ],
           ],
         ),
       );
-    } else {
+    }
+
+    if (address != null) {
       final title = switch (transactionType) {
         TransactionType.send => locale.wallet_send_to,
         TransactionType.receive => locale.wallet_from,
@@ -56,12 +60,14 @@ class TransactionParticipant extends ConsumerWidget {
         secondary: Align(
           alignment: AlignmentDirectional.centerEnd,
           child: Text(
-            address,
+            address!,
             textAlign: TextAlign.center,
             style: context.theme.appTextThemes.caption3,
           ),
         ),
       );
     }
+
+    return const SizedBox();
   }
 }

@@ -19,10 +19,13 @@ _$WalletHistoryRecordImpl _$$WalletHistoryRecordImplFromJson(
       index: json['index'] as String?,
       contract: json['contract'] as String?,
       tokenId: json['tokenId'] as String?,
-      from: json['from'] as String,
-      to: json['to'] as String,
+      from: json['from'] as String?,
+      to: json['to'] as String?,
+      tos: (json['tos'] as List<dynamic>?)?.map((e) => e as String).toList(),
+      froms:
+          (json['froms'] as List<dynamic>?)?.map((e) => e as String).toList(),
       value: json['value'] as String?,
-      fee: json['fee'] as String,
+      fee: json['fee'] as String?,
       metadata: WalletHistoryMetadata.fromJson(
           json['metadata'] as Map<String, dynamic>),
     );
@@ -42,6 +45,8 @@ Map<String, dynamic> _$$WalletHistoryRecordImplToJson(
       'tokenId': instance.tokenId,
       'from': instance.from,
       'to': instance.to,
+      'tos': instance.tos,
+      'froms': instance.froms,
       'value': instance.value,
       'fee': instance.fee,
       'metadata': instance.metadata.toJson(),

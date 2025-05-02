@@ -30,6 +30,8 @@ enum TransactionType {
 
   final String value;
 
+  bool get isSend => this == TransactionType.send;
+
   String getDisplayName(BuildContext context) {
     return switch (this) {
       TransactionType.send => context.i18n.wallet_sent,

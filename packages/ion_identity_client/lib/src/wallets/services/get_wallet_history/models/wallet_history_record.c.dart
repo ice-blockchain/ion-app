@@ -19,10 +19,12 @@ class WalletHistoryRecord with _$WalletHistoryRecord {
     required String? index,
     required String? contract,
     required String? tokenId,
-    required String from,
-    required String to,
+    required String? from,
+    required String? to,
+    required List<String>? tos,
+    required List<String>? froms,
     required String? value,
-    required String fee,
+    required String? fee,
     required WalletHistoryMetadata metadata,
   }) = _WalletHistoryRecord;
 

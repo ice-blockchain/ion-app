@@ -152,10 +152,7 @@ class TransactionsRepository {
 
     final transactions = await result.items
         .map((transaction) async {
-          final contract = _isNativeKind(transaction.kind) ? '' : transaction.contract;
-
-          // Contract cannot be null for non-native transfers
-          if (contract == null) return null;
+          final contract = transaction.contract ?? '';
 
           // Try to find coin by symbol, if not native coin
           var coin = contract.isEmpty
@@ -176,13 +173,24 @@ class TransactionsRepository {
           final rawAmount = transaction.value;
           final amount = parseCryptoAmount(rawAmount.emptyOrValue, coin.decimals);
           final amountUSD = amount * coin.priceUSD;
+          final type = TransactionType.fromDirection(transaction.direction);
+          final from = _resolveTransactionAddress(
+            direct: transaction.from,
+            alternatives: transaction.froms,
+            fallbackAddress: type.isSend ? wallet.address : null,
+          );
+          final to = _resolveTransactionAddress(
+            direct: transaction.to,
+            alternatives: transaction.tos,
+            fallbackAddress: !type.isSend ? wallet.address : null,
+          );
 
           return TransactionData(
             txHash: transaction.txHash,
             network: network,
-            type: TransactionType.fromDirection(transaction.direction),
-            senderWalletAddress: transaction.from,
-            receiverWalletAddress: transaction.to,
+            type: type,
+            senderWalletAddress: from,
+            receiverWalletAddress: to,
             nativeCoin: nativeCoin,
             fee: transaction.fee,
             dateConfirmed: transaction.timestamp,
@@ -198,6 +206,16 @@ class TransactionsRepository {
         .wait
         .then((result) => result.toList());
     return (transactions: transactions.nonNulls.toList(), nextPageToken: result.nextPageToken);
+  }
+
+  String? _resolveTransactionAddress({
+    required String? direct,
+    required List<String>? alternatives,
+    required String? fallbackAddress,
+  }) {
+    if (direct != null) return direct;
+    if (alternatives?.length == 1) return alternatives!.first;
+    return fallbackAddress;
   }
 
   Future<TransactionData?> loadCoinTransferById({

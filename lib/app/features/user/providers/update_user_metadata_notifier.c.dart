@@ -82,16 +82,6 @@ class UpdateUserMetadataNotifier extends _$UpdateUserMetadataNotifier {
     }
   }
 
-  Future<void> updatePublishedWallets() async {
-    final userMetadata = await ref.read(currentUserMetadataProvider.future);
-    if (userMetadata != null) {
-      final walletPrivacy = WalletAddressPrivacyOption.fromWalletsMap(userMetadata.data.wallets);
-      if (walletPrivacy == WalletAddressPrivacyOption.public) {
-        await publishWallets(WalletAddressPrivacyOption.public);
-      }
-    }
-  }
-
   Future<UploadResult?> _upload(MediaFile? file, {required FileAlt alt}) {
     return file != null
         ? ref.read(ionConnectUploadNotifierProvider.notifier).upload(file, alt: alt)

@@ -45,6 +45,14 @@ class TransactionDetailsPage extends ConsumerWidget {
         ? DateFormat('dd.MM.yyyy HH:mm:ss').format(transactionData.dateConfirmed!.toLocal())
         : transactionData.networkFeeOption?.getDisplayArrivalTime(context);
 
+    final participantAddress = transactionData.type.isSend
+        ? transactionData.receiverAddress
+        : transactionData.senderAddress;
+
+    final currentUserAddress = transactionData.type.isSend
+        ? transactionData.senderAddress
+        : transactionData.receiverAddress;
+
     return SheetContent(
       body: SingleChildScrollView(
         child: Column(
@@ -103,29 +111,27 @@ class TransactionDetailsPage extends ConsumerWidget {
                     ),
                     SizedBox(height: 16.0.s),
                     TransactionParticipant(
-                      address: switch (transactionData.type) {
-                        TransactionType.send => transactionData.senderAddress,
-                        TransactionType.receive => transactionData.receiverAddress,
-                      },
+                      address: participantAddress,
                       transactionType: transactionData.type,
                       pubkey: transactionData.participantPubkey,
                     ),
                     SizedBox(height: 12.0.s),
-                    ListItem.textWithIcon(
-                      title: Text(locale.wallet_title),
-                      value: transactionData.walletViewName,
-                      icon: Assets.svg.walletWalletblue.icon(
-                        size: ScreenSideOffset.defaultSmallMargin,
-                      ),
-                      secondary: Align(
-                        alignment: AlignmentDirectional.centerEnd,
-                        child: Text(
-                          transactionData.senderAddress,
-                          textAlign: TextAlign.right,
-                          style: context.theme.appTextThemes.caption3.copyWith(),
+                    if (currentUserAddress case final String userAddress)
+                      ListItem.textWithIcon(
+                        title: Text(locale.wallet_title),
+                        value: transactionData.walletViewName,
+                        icon: Assets.svg.walletWalletblue.icon(
+                          size: ScreenSideOffset.defaultSmallMargin,
+                        ),
+                        secondary: Align(
+                          alignment: AlignmentDirectional.centerEnd,
+                          child: Text(
+                            userAddress,
+                            textAlign: TextAlign.right,
+                            style: context.theme.appTextThemes.caption3,
+                          ),
                         ),
                       ),
-                    ),
                     ...transactionData.assetData.maybeMap(
                           coin: (coin) => [
                             SizedBox(height: 16.0.s),
