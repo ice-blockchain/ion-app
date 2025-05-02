@@ -3,8 +3,12 @@
 import 'package:ion/app/exceptions/exceptions.dart';
 import 'package:ion/app/features/auth/providers/auth_provider.c.dart';
 import 'package:ion/app/features/chat/e2ee/model/entities/private_direct_message_data.c.dart';
+import 'package:ion/app/features/chat/e2ee/model/entities/private_message_reaction_data.c.dart';
+import 'package:ion/app/features/feed/data/models/entities/article_data.c.dart';
 import 'package:ion/app/features/feed/data/models/entities/modifiable_post_data.c.dart';
+import 'package:ion/app/features/feed/data/models/entities/post_data.c.dart';
 import 'package:ion/app/features/feed/data/models/entities/reaction_data.c.dart';
+import 'package:ion/app/features/feed/data/models/entities/repost_data.c.dart';
 import 'package:ion/app/features/feed/data/models/generic_repost.c.dart';
 import 'package:ion/app/features/ion_connect/ion_connect.dart';
 import 'package:ion/app/features/ion_connect/model/related_relay.c.dart';
@@ -90,7 +94,7 @@ class SelectedPushCategoriesIonSubscription extends _$SelectedPushCategoriesIonS
     if (currentUserPubkey == null) throw UserMasterPubkeyNotFoundException();
     return [
       RequestFilter(
-        kinds: const [ModifiablePostEntity.kind],
+        kinds: const [ModifiablePostEntity.kind, ArticleEntity.kind],
         tags: {
           '#p': [currentUserPubkey],
         },
@@ -106,12 +110,27 @@ class SelectedPushCategoriesIonSubscription extends _$SelectedPushCategoriesIonS
         kinds: const [GenericRepostEntity.kind],
         tags: {
           '#p': [currentUserPubkey],
+          '#k': [ModifiablePostEntity.kind.toString(), ArticleEntity.kind.toString()],
+        },
+      ),
+      RequestFilter(
+        kinds: const [RepostEntity.kind],
+        tags: {
+          '#p': [currentUserPubkey],
         },
       ),
       RequestFilter(
         kinds: const [ModifiablePostEntity.kind],
         tags: {
           '#Q': [
+            [null, null, currentUserPubkey],
+          ],
+        },
+      ),
+      RequestFilter(
+        kinds: const [PostEntity.kind],
+        tags: {
+          '#q': [
             [null, null, currentUserPubkey],
           ],
         },
@@ -126,6 +145,15 @@ class SelectedPushCategoriesIonSubscription extends _$SelectedPushCategoriesIonS
       RequestFilter(
         kinds: const [ReactionEntity.kind],
         tags: {
+          '#p': [currentUserPubkey],
+        },
+      ),
+      RequestFilter(
+        kinds: const [IonConnectGiftWrapServiceImpl.kind],
+        tags: {
+          '#k': [
+            PrivateMessageReactionEntity.kind.toString(),
+          ],
           '#p': [currentUserPubkey],
         },
       ),
