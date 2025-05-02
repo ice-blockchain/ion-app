@@ -40,7 +40,6 @@ extension KeysExtensions on EventMessage {
       createdAt: createdAt,
       sig: sig,
       content: content,
-      subscriptionId: subscriptionId,
       tags: tags,
       eventReference: eventReference,
     );
@@ -69,7 +68,6 @@ extension IonConnectEventMessageDbModelExtensions on event_messages_db.EventMess
       createdAt: createdAt,
       sig: sig,
       content: content,
-      subscriptionId: subscriptionId,
       tags: tags,
     );
   }
