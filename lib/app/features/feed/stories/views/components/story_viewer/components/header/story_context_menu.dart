@@ -11,6 +11,7 @@ import 'package:ion/app/features/core/views/pages/unfollow_user_page.dart';
 import 'package:ion/app/features/feed/data/models/delete/delete_confirmation_type.dart';
 import 'package:ion/app/features/feed/data/models/entities/modifiable_post_data.c.dart';
 import 'package:ion/app/features/feed/stories/providers/story_pause_provider.c.dart';
+import 'package:ion/app/features/feed/stories/providers/story_viewing_provider.c.dart';
 import 'package:ion/app/features/feed/views/pages/entity_delete_confirmation_modal/entity_delete_confirmation_modal.dart';
 import 'package:ion/app/features/user/pages/profile_page/components/header/context_menu_item.dart';
 import 'package:ion/app/features/user/pages/profile_page/components/header/context_menu_item_divider.dart';
@@ -42,10 +43,18 @@ class StoryContextMenu extends HookConsumerWidget {
       () async {
         isDeletingStory.value = true;
 
+        final storyState = ref.read(storyViewingControllerProvider(pubkey));
+        final currentStory = storyState.currentStory;
+        
+        if (currentStory == null) {
+          isDeletingStory.value = false;
+          return;
+        }
+
         final confirmed = await showSimpleBottomSheet<bool>(
           context: context,
           child: EntityDeleteConfirmationModal(
-            eventReference: post.toEventReference(),
+            eventReference: currentStory.toEventReference(),
             deleteConfirmationType: DeleteConfirmationType.story,
           ),
         );
@@ -58,7 +67,7 @@ class StoryContextMenu extends HookConsumerWidget {
 
         isDeletingStory.value = false;
       },
-      [],
+      [pubkey],
     );
 
     return OverlayMenu(
