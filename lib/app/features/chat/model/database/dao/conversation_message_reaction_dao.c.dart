@@ -32,28 +32,31 @@ class ConversationMessageReactionDao extends DatabaseAccessor<ChatDatabase>
       await eventMessageDao.add(newReactionEvent);
       await into(reactionTable).insert(
         ReactionTableCompanion(
-          id: Value(newReactionEvent.id),
+          eventReferenceId: Value(entity.toEventReference()),
           kind14SharedId: Value(kind14SharedId),
           masterPubkey: Value(masterPubkey),
           content: Value(newReactionEvent.content),
-          sharedId: Value(entity.data.sharedId),
         ),
         mode: InsertMode.insertOrIgnore,
       );
     } else {
       final previousReactionEvent = await (select(db.eventMessageTable)
-            ..where((table) => table.id.equals(existingReactionRow.id)))
+            ..where(
+              (table) => table.eventReference.equalsValue(existingReactionRow.eventReferenceId),
+            ))
           .getSingleOrNull();
 
       await eventMessageDao.add(newReactionEvent);
 
       if (previousReactionEvent != null &&
           previousReactionEvent.createdAt.isBefore(newReactionEvent.createdAt)) {
-        await (update(reactionTable)..where((table) => table.id.equals(existingReactionRow.id)))
+        await (update(reactionTable)
+              ..where(
+                (table) => table.eventReferenceId.equalsValue(existingReactionRow.eventReferenceId),
+              ))
             .write(
-          ReactionTableCompanion(
-            id: Value(newReactionEvent.id),
-            isDeleted: const Value(false),
+          const ReactionTableCompanion(
+            isDeleted: Value(false),
           ),
         );
       }
@@ -62,9 +65,18 @@ class ConversationMessageReactionDao extends DatabaseAccessor<ChatDatabase>
 
   Future<void> remove({
     required Ref ref,
-    required String sharedId,
+    required String id,
   }) async {
-    await (update(reactionTable)..where((table) => table.sharedId.equals(sharedId))).write(
+    final eventMessage =
+        await (select(eventMessageTable)..where((table) => table.id.equals(id))).getSingleOrNull();
+
+    if (eventMessage == null) {
+      return;
+    }
+
+    await (update(reactionTable)
+          ..where((table) => table.eventReferenceId.equalsValue(eventMessage.eventReference)))
+        .write(
       const ReactionTableCompanion(isDeleted: Value(true)),
     );
   }
@@ -80,7 +92,7 @@ class ConversationMessageReactionDao extends DatabaseAccessor<ChatDatabase>
 
       for (final row in rows) {
         final eventMessageDataRow = await (select(db.eventMessageTable)
-              ..where((table) => table.id.equals(row.id)))
+              ..where((table) => table.eventReference.equalsValue(row.eventReferenceId)))
             .getSingleOrNull();
 
         if (eventMessageDataRow != null) {

@@ -102,14 +102,15 @@ Future<void> _deleteReaction({
 
   final reactionEntity = PrivateMessageReactionEntity.fromEventMessage(reactionEvent);
 
+  final eventReference = reactionEntity.toEventReference();
+
   final deleteRequest = DeletionRequest(
     events: [
-      //TODO: confirm reaction event should be replaceable
       EventToDelete(
-        ReplaceableEventReference(
-          kind: reactionEvent.kind,
-          pubkey: reactionEntity.pubkey,
-          dTag: reactionEntity.data.sharedId,
+        ImmutableEventReference(
+          eventId: eventReference.eventId,
+          kind: PrivateMessageReactionEntity.kind,
+          pubkey: eventReference.pubkey,
         ),
       ),
     ],
@@ -173,7 +174,7 @@ Future<void> _deleteMessages({
             ReplaceableEventReference(
               kind: event.kind,
               dTag: event.sharedId,
-              pubkey: eventSigner.publicKey,
+              pubkey: event.pubkey,
             ),
           ),
         )

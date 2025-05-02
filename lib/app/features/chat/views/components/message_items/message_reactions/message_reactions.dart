@@ -64,7 +64,6 @@ class MessageReactions extends ConsumerWidget {
                           final userReactionEventMessage = reactionGroup.eventMessages.firstWhere(
                             (e) => e.masterPubkey == currentMasterPubkey,
                           );
-
                           ref.read(
                             e2eeDeleteReactionProvider(
                               reactionEvent: userReactionEventMessage,

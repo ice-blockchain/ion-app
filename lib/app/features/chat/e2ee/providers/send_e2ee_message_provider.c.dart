@@ -14,12 +14,10 @@ import 'package:ion/app/features/chat/providers/conversation_pubkeys_provider.c.
 import 'package:ion/app/features/core/providers/env_provider.c.dart';
 import 'package:ion/app/features/ion_connect/ion_connect.dart';
 import 'package:ion/app/features/ion_connect/model/event_reference.c.dart';
-import 'package:ion/app/features/ion_connect/model/ion_connect_entity.dart';
 import 'package:ion/app/features/ion_connect/providers/ion_connect_event_signer_provider.c.dart';
 import 'package:ion/app/features/ion_connect/providers/ion_connect_notifier.c.dart';
 import 'package:ion/app/services/ion_connect/ion_connect_gift_wrap_service.c.dart';
 import 'package:ion/app/services/ion_connect/ion_connect_seal_service.c.dart';
-import 'package:ion/app/services/uuid/uuid.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'send_e2ee_message_provider.c.g.dart';
@@ -84,7 +82,6 @@ class SendE2eeMessageService {
         dTag: messageEventMessage.sharedId,
       ),
       masterPubkey: currentUserMasterPubkey,
-      sharedId: generateUuid(),
     );
 
     await Future.wait(
@@ -101,7 +98,7 @@ class SendE2eeMessageService {
         await ref.read(sendE2eeChatMessageServiceProvider).sendWrappedMessage(
           pubkey: pubkey,
           eventSigner: eventSigner!,
-          eventMessage: await messageReactionData.toEventMessage(SimpleSigner(pubkey, '')),
+          eventMessage: await messageReactionData.toEventMessage(NoPrivateSigner(pubkey)),
           masterPubkey: masterPubkey,
           wrappedKinds: [PrivateMessageReactionEntity.kind.toString()],
         );
@@ -114,16 +111,12 @@ class SendE2eeMessageService {
     required String content,
     required EventMessage kind14Rumor,
   }) async {
-    final messageReactionData = PrivateMessageReactionEntityData(
+    final kind14Event = ReplaceablePrivateDirectMessageEntity.fromEventMessage(kind14Rumor);
+    final messageReactionEventMessage = await PrivateMessageReactionEntityData(
       content: content,
-      reference: ReplaceableEventReference(
-        kind: kind14Rumor.kind,
-        pubkey: kind14Rumor.pubkey,
-        dTag: kind14Rumor.sharedId,
-      ),
+      reference: kind14Event.toEventReference(),
       masterPubkey: currentUserMasterPubkey,
-      sharedId: generateUuid(),
-    );
+    ).toEventMessage(NoPrivateSigner(eventSigner!.publicKey));
 
     final privateDirectMessageEntity =
         ReplaceablePrivateDirectMessageData.fromEventMessage(kind14Rumor);
@@ -137,8 +130,6 @@ class SendE2eeMessageService {
 
     await Future.wait(
       participantsMasterPubkeys.map((masterPubkey) async {
-        final currentUser = currentUserMasterPubkey == masterPubkey;
-
         final participantsKeysMap =
             await conversationPubkeysNotifier.fetchUsersKeys(participantsMasterPubkeys);
         final pubkey = participantsKeysMap[masterPubkey];
@@ -149,9 +140,9 @@ class SendE2eeMessageService {
 
         await ref.read(sendE2eeChatMessageServiceProvider).sendWrappedMessage(
           eventSigner: eventSigner!,
-          eventMessage: await messageReactionData.toEventMessage(SimpleSigner(pubkey, '')),
+          eventMessage: messageReactionEventMessage,
           masterPubkey: masterPubkey,
-          pubkey: currentUser ? eventSigner!.publicKey : pubkey,
+          pubkey: pubkey,
           wrappedKinds: [PrivateMessageReactionEntity.kind.toString()],
         );
       }),

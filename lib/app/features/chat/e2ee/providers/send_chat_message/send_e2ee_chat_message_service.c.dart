@@ -20,7 +20,6 @@ import 'package:ion/app/features/ion_connect/ion_connect.dart';
 import 'package:ion/app/features/ion_connect/model/action_source.c.dart';
 import 'package:ion/app/features/ion_connect/model/entity_expiration.c.dart';
 import 'package:ion/app/features/ion_connect/model/event_reference.c.dart';
-import 'package:ion/app/features/ion_connect/model/ion_connect_entity.dart';
 import 'package:ion/app/features/ion_connect/model/media_attachment.dart';
 import 'package:ion/app/features/ion_connect/model/related_event.c.dart';
 import 'package:ion/app/features/ion_connect/model/related_event_marker.dart';
@@ -95,7 +94,7 @@ class SendE2eeChatMessageService {
         relatedPubkeys:
             participantsMasterPubkeys.map((pubkey) => RelatedPubkey(value: pubkey)).toList(),
         relatedEvents: _generateRelatedEvents(repliedMessage),
-      ).toEventMessage(SimpleSigner(eventSigner.publicKey, ''));
+      ).toEventMessage(NoPrivateSigner(eventSigner.publicKey));
 
       sentMessage = localEventMessage;
 
@@ -140,7 +139,7 @@ class SendE2eeChatMessageService {
                   participantsMasterPubkeys.map((pubkey) => RelatedPubkey(value: pubkey)).toList(),
               groupSubject: subject.isNotEmpty ? GroupSubject(subject!) : null,
               relatedEvents: _generateRelatedEvents(repliedMessage),
-            ).toEventMessage(SimpleSigner(pubkey, ''));
+            ).toEventMessage(NoPrivateSigner(pubkey));
 
             await sendWrappedMessage(
               pubkey: pubkey,

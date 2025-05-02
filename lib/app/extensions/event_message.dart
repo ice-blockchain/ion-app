@@ -82,10 +82,9 @@ extension ChatEventMessageDbModelExtensions on chat_db.EventMessageDbModel {
       kind: kind,
       pubkey: pubkey,
       createdAt: createdAt,
-      sig: sig,
       content: content,
-      subscriptionId: subscriptionId,
       tags: tags,
+      sig: null,
     );
   }
 }

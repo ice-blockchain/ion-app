@@ -189,6 +189,7 @@ class E2eeMessagesSubscriber extends _$E2eeMessagesSubscriber {
       // Only for kind 7
     } else if (rumor.kind == PrivateMessageReactionEntity.kind) {
       final reactionEntity = PrivateMessageReactionEntity.fromEventMessage(rumor);
+
       // Identify kind 7 status message (received or read only)
       if (reactionEntity.data.content == MessageDeliveryStatus.received.name ||
           reactionEntity.data.content == MessageDeliveryStatus.read.name) {
@@ -234,27 +235,20 @@ class E2eeMessagesSubscriber extends _$E2eeMessagesSubscriber {
         final eventToDeleteReferences =
             eventsToDelete.map((event) => (event as EventToDelete).reference).toList();
 
-        final deleteEventKind = eventToDeleteReferences.first is ImmutableEventReference
-            ? (eventToDeleteReferences.first as ImmutableEventReference).kind
-            : (eventToDeleteReferences.first as ReplaceableEventReference).kind;
-
-        final deleteEventIds = eventToDeleteReferences.first is ImmutableEventReference
-            ? eventToDeleteReferences.map((e) => (e! as ImmutableEventReference).eventId)
-            : eventToDeleteReferences.map((e) => (e! as ReplaceableEventReference).dTag);
-
-        if (deleteEventKind == ReplaceablePrivateDirectMessageEntity.kind) {
-          if (deleteEventIds.isNotEmpty) {
-            await conversationMessageDao.removeMessages(
-              ref: ref,
-              deleteRequest: rumor,
-              sharedIds: deleteEventIds.toList(),
-            );
+        for (final eventReference in eventToDeleteReferences) {
+          switch (eventReference) {
+            case ReplaceableEventReference():
+              await conversationMessageDao.removeMessages(
+                ref: ref,
+                deleteRequest: rumor,
+                sharedIds: [eventReference.dTag],
+              );
+            case ImmutableEventReference():
+              await conversationMessageReactionDao.remove(
+                ref: ref,
+                id: eventReference.eventId,
+              );
           }
-        } else if (deleteEventKind == PrivateMessageReactionEntity.kind) {
-          await conversationMessageReactionDao.remove(
-            ref: ref,
-            sharedId: deleteEventIds.single,
-          );
         }
       }
     } else if (rumor.kind == GenericRepostEntity.kind) {
