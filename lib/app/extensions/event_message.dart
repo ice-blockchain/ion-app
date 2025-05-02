@@ -6,6 +6,7 @@ import 'package:ion/app/features/chat/model/database/chat_database.c.dart' as ch
 import 'package:ion/app/features/ion_connect/database/event_messages_database.c.dart'
     as event_messages_db;
 import 'package:ion/app/features/ion_connect/ion_connect.dart';
+import 'package:ion/app/features/ion_connect/model/entity_published_at.c.dart';
 import 'package:ion/app/features/ion_connect/model/event_reference.c.dart';
 import 'package:ion/app/features/ion_connect/model/related_pubkey.c.dart';
 import 'package:ion/app/features/ion_connect/model/replaceable_event_identifier.c.dart';
@@ -30,6 +31,10 @@ extension KeysExtensions on EventMessage {
 
   String? get sharedId =>
       tags.firstWhereOrNull((tag) => tag.first == ReplaceableEventIdentifier.tagName)?.last;
+
+  DateTime get publishedAt => EntityPublishedAt.fromTag(
+        tags.firstWhereOrNull((tag) => tag.first == EntityPublishedAt.tagName)!,
+      ).value;
 
   event_messages_db.EventMessageDbModel toIonConnectDbModel(EventReference eventReference) {
     return event_messages_db.EventMessageDbModel(

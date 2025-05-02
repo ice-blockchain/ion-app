@@ -3,12 +3,14 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/components/overlay_menu/components/overlay_menu_item.dart';
 import 'package:ion/app/components/overlay_menu/components/overlay_menu_item_separator.dart';
 import 'package:ion/app/components/overlay_menu/overlay_menu_container.dart';
 import 'package:ion/app/extensions/extensions.dart';
+import 'package:ion/app/features/chat/e2ee/model/entities/private_direct_message_data.c.dart';
 import 'package:ion/app/features/chat/e2ee/providers/e2ee_delete_event_provider.c.dart';
 import 'package:ion/app/features/chat/e2ee/providers/send_chat_message/send_e2ee_chat_message_service.c.dart';
 import 'package:ion/app/features/chat/model/database/chat_database.c.dart';
@@ -20,7 +22,7 @@ import 'package:ion/app/features/core/providers/feature_flags_provider.c.dart';
 import 'package:ion/app/router/app_routes.c.dart';
 import 'package:ion/generated/assets.gen.dart';
 
-class MessageReactionContextMenu extends ConsumerWidget {
+class MessageReactionContextMenu extends HookConsumerWidget {
   const MessageReactionContextMenu({
     required this.isMe,
     required this.height,
@@ -38,6 +40,13 @@ class MessageReactionContextMenu extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final canEdit = useMemoized(
+      () {
+        final entityData =
+            ReplaceablePrivateDirectMessageData.fromEventMessage(messageItem.eventMessage);
+        return entityData.editingEndedAt.value.isAfter(DateTime.now());
+      },
+    );
     final hideChatBookmark =
         ref.watch(featureFlagsProvider.notifier).get(ChatFeatureFlag.hideChatBookmark);
 
@@ -85,7 +94,7 @@ class MessageReactionContextMenu extends ConsumerWidget {
                   verticalPadding: 12.0.s,
                 ),
                 const OverlayMenuItemSeparator(),
-                if (isMe && (messageItem is TextItem || messageItem is EmojiItem))
+                if (isMe && canEdit && (messageItem is TextItem || messageItem is EmojiItem))
                   OverlayMenuItem(
                     label: context.i18n.button_edit,
                     verticalPadding: 12.0.s,

@@ -12,6 +12,8 @@ import 'package:ion/app/features/chat/model/message_type.dart';
 import 'package:ion/app/features/ion_connect/ion_connect.dart';
 import 'package:ion/app/features/ion_connect/model/entity_data_with_media_content.dart';
 import 'package:ion/app/features/ion_connect/model/entity_data_with_parent.dart';
+import 'package:ion/app/features/ion_connect/model/entity_editing_ended_at.c.dart';
+import 'package:ion/app/features/ion_connect/model/entity_published_at.c.dart';
 import 'package:ion/app/features/ion_connect/model/event_reference.c.dart';
 import 'package:ion/app/features/ion_connect/model/event_serializable.dart';
 import 'package:ion/app/features/ion_connect/model/ion_connect_entity.dart';
@@ -68,9 +70,11 @@ class ReplaceablePrivateDirectMessageData
   const factory ReplaceablePrivateDirectMessageData({
     required String content,
     required String messageId,
+    required String masterPubkey,
     required String conversationId,
     required Map<String, MediaAttachment> media,
-    required String masterPubkey,
+    required EntityPublishedAt publishedAt,
+    required EntityEditingEndedAt editingEndedAt,
     RichText? richText,
     String? groupImagePath,
     GroupSubject? groupSubject,
@@ -83,9 +87,11 @@ class ReplaceablePrivateDirectMessageData
     return ReplaceablePrivateDirectMessageData(
       media: {},
       content: content,
+      masterPubkey: '',
       messageId: generateUuid(),
       conversationId: generateUuid(),
-      masterPubkey: '',
+      publishedAt: EntityPublishedAt(value: DateTime.now()),
+      editingEndedAt: EntityEditingEndedAt(value: DateTime.now()),
     );
   }
 
@@ -100,6 +106,8 @@ class ReplaceablePrivateDirectMessageData
       content: eventMessage.content,
       masterPubkey: eventMessage.masterPubkey,
       media: EntityDataWithMediaContent.parseImeta(tags[MediaAttachment.tagName]),
+      publishedAt: EntityPublishedAt.fromTag(tags[EntityPublishedAt.tagName]!.first),
+      editingEndedAt: EntityEditingEndedAt.fromTag(tags[EntityEditingEndedAt.tagName]!.first),
       messageId: tags[ReplaceableEventIdentifier.tagName]!
           .map(ReplaceableEventIdentifier.fromTag)
           .first
@@ -122,8 +130,10 @@ class ReplaceablePrivateDirectMessageData
     EventSigner signer, {
     List<List<String>> tags = const [],
     DateTime? createdAt,
+    DateTime? publishedAtTime,
   }) {
     final createdAt = DateTime.now();
+
     return EventMessage.fromData(
       signer: signer,
       createdAt: createdAt,
@@ -132,6 +142,8 @@ class ReplaceablePrivateDirectMessageData
       tags: [
         ...tags,
         ['b', masterPubkey],
+        publishedAt.toTag(),
+        editingEndedAt.toTag(),
         if (quotedEvent != null) quotedEvent!.toTag(),
         if (groupSubject != null) groupSubject!.toTag(),
         if (relatedEvents != null) ...relatedEvents!.map((event) => event.toTag()),

@@ -96,10 +96,7 @@ class ConversationMessageDao extends DatabaseAccessor<ChatDatabase>
     ])
       ..where(conversationMessageTable.conversationId.equals(conversationId))
       ..where(messageStatusTable.masterPubkey.equals(currentUserMasterPubkey))
-      ..where(messageStatusTable.status.isNotIn([MessageDeliveryStatus.deleted.index]))
-      ..orderBy([OrderingTerm.desc(eventMessageTable.createdAt)])
-      ..groupBy([messageStatusTable.sharedId])
-      ..addColumns([eventMessageTable.createdAt.max()]);
+      ..where(messageStatusTable.status.isNotIn([MessageDeliveryStatus.deleted.index]));
 
     return query.watch().map((rows) {
       final groupedMessages = <DateTime, List<EventMessage>>{};
@@ -108,12 +105,14 @@ class ConversationMessageDao extends DatabaseAccessor<ChatDatabase>
         final eventMessage = row.readTable(eventMessageTable).toEventMessage();
 
         final dateKey = DateTime(
-          eventMessage.createdAt.year,
-          eventMessage.createdAt.month,
-          eventMessage.createdAt.day,
+          eventMessage.publishedAt.year,
+          eventMessage.publishedAt.month,
+          eventMessage.publishedAt.day,
         );
 
         groupedMessages.putIfAbsent(dateKey, () => []).add(eventMessage);
+
+        groupedMessages[dateKey]!.sort((a, b) => b.publishedAt.compareTo(a.publishedAt));
       }
 
       return groupedMessages;

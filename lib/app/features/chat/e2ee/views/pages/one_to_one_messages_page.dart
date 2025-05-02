@@ -15,6 +15,7 @@ import 'package:ion/app/features/chat/model/database/chat_database.c.dart';
 import 'package:ion/app/features/chat/providers/conversation_messages_provider.c.dart';
 import 'package:ion/app/features/chat/providers/exist_chat_conversation_id_provider.c.dart';
 import 'package:ion/app/features/chat/providers/muted_conversations_provider.c.dart';
+import 'package:ion/app/features/chat/recent_chats/providers/selected_edit_message_provider.c.dart';
 import 'package:ion/app/features/chat/recent_chats/providers/selected_reply_message_provider.c.dart';
 import 'package:ion/app/features/chat/views/components/message_items/edit_message_info/edit_message_info.dart';
 import 'package:ion/app/features/chat/views/components/message_items/messaging_bottom_bar/messaging_bottom_bar.dart';
@@ -59,13 +60,16 @@ class OneToOneMessagesPage extends HookConsumerWidget {
         }
 
         final repliedMessage = ref.read(selectedReplyMessageProvider);
+        final editedMessage = ref.read(selectedEditMessageProvider);
 
+        ref.read(selectedEditMessageProvider.notifier).clear();
         ref.read(selectedReplyMessageProvider.notifier).clear();
 
         await ref.read(sendE2eeChatMessageServiceProvider).sendMessage(
           content: content ?? '',
           mediaFiles: mediaFiles ?? [],
           conversationId: conversationId.value!,
+          editedMessage: editedMessage?.eventMessage,
           repliedMessage: repliedMessage?.eventMessage,
           participantsMasterPubkeys: [receiverPubKey, currentPubkey],
         );

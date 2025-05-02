@@ -36,6 +36,18 @@ class ConversationEventMessageDao extends DatabaseAccessor<ChatDatabase>
         .data
         .toReplaceableEventReference(event.pubkey);
 
+    final existingEvent = await (select(db.eventMessageTable)
+          ..where((table) {
+            return table.eventReference.equalsValue(eventReference);
+          }))
+        .getSingleOrNull();
+
+    // If the event already exists and its creation date is after the new event's creation date, do nothing
+    if (existingEvent != null &&
+        existingEvent.toEventMessage().createdAt.isAfter(event.createdAt)) {
+      return;
+    }
+
     final dbModel = event.toChatDbModel(eventReference);
 
     await into(db.eventMessageTable).insert(

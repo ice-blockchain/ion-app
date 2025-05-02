@@ -18,7 +18,9 @@ import 'package:ion/app/features/core/model/media_type.dart';
 import 'package:ion/app/features/core/providers/env_provider.c.dart';
 import 'package:ion/app/features/ion_connect/ion_connect.dart';
 import 'package:ion/app/features/ion_connect/model/action_source.c.dart';
+import 'package:ion/app/features/ion_connect/model/entity_editing_ended_at.c.dart';
 import 'package:ion/app/features/ion_connect/model/entity_expiration.c.dart';
+import 'package:ion/app/features/ion_connect/model/entity_published_at.c.dart';
 import 'package:ion/app/features/ion_connect/model/event_reference.c.dart';
 import 'package:ion/app/features/ion_connect/model/media_attachment.dart';
 import 'package:ion/app/features/ion_connect/model/related_event.c.dart';
@@ -53,22 +55,34 @@ class SendE2eeChatMessageService {
     int kind = ReplaceablePrivateDirectMessageEntity.kind,
     List<List<String>>? tags,
     String? subject,
-    String? existingSharedId,
-    EventMessage? failedEventMessage,
+    EventMessage? editedMessage,
     EventMessage? repliedMessage,
+    EventMessage? failedEventMessage,
     List<String>? groupImageTag,
     List<String>? referencePostTag,
     List<String>? failedParticipantsMasterPubkeys,
   }) async {
     EventMessage? sentMessage;
 
-    final sharedId = existingSharedId ?? generateUuid();
+    final sharedId = editedMessage?.sharedId ?? generateUuid();
+
+    final editedMessageEntity = editedMessage != null
+        ? ReplaceablePrivateDirectMessageData.fromEventMessage(editedMessage)
+        : null;
 
     final participantsPubkeysMap = await ref
         .read(conversationPubkeysProvider.notifier)
         .fetchUsersKeys(failedParticipantsMasterPubkeys ?? participantsMasterPubkeys);
 
     try {
+      final publishedAt =
+          editedMessageEntity?.publishedAt ?? EntityPublishedAt(value: DateTime.now());
+
+      final editingEndedAt = editedMessageEntity?.editingEndedAt ??
+          EntityEditingEndedAt.build(
+            ref.read(envProvider.notifier).get<int>(EnvVariable.EDIT_MESSAGE_ALLOWED_MINUTES),
+          );
+
       final eventSigner = await ref.read(currentUserIonConnectEventSignerProvider.future);
 
       if (eventSigner == null) {
@@ -84,6 +98,8 @@ class SendE2eeChatMessageService {
       final localEventMessage = await ReplaceablePrivateDirectMessageData(
         content: content,
         messageId: sharedId,
+        publishedAt: publishedAt,
+        editingEndedAt: editingEndedAt,
         conversationId: conversationId,
         media: {
           for (final attachment in mediaFiles.map(MediaAttachment.fromMediaFile))
@@ -130,6 +146,8 @@ class SendE2eeChatMessageService {
             final remoteEventMessage = await ReplaceablePrivateDirectMessageData(
               content: content,
               messageId: sharedId,
+              publishedAt: publishedAt,
+              editingEndedAt: editingEndedAt,
               conversationId: conversationId,
               media: {
                 for (final attachment in attachments) attachment.url: attachment,
@@ -343,9 +361,8 @@ class SendE2eeChatMessageService {
     await sendMessage(
       mediaFiles: mediaFiles,
       content: messageEvent.content,
-      conversationId: entity.data.conversationId,
-      existingSharedId: messageEvent.sharedId,
       failedEventMessage: messageEvent,
+      conversationId: entity.data.conversationId,
       participantsMasterPubkeys: entity.allPubkeys,
       failedParticipantsMasterPubkeys:
           failedParticipantsMasterPubkeys.isNotEmpty ? failedParticipantsMasterPubkeys : null,
