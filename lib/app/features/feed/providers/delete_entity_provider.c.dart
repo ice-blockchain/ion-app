@@ -14,6 +14,7 @@ import 'package:ion/app/features/feed/providers/counters/replies_count_provider.
 import 'package:ion/app/features/feed/providers/counters/reposted_events_notifier.c.dart';
 import 'package:ion/app/features/feed/providers/counters/reposts_count_provider.c.dart';
 import 'package:ion/app/features/feed/providers/feed_posts_data_source_provider.c.dart';
+import 'package:ion/app/features/feed/providers/feed_stories_data_source_provider.c.dart';
 import 'package:ion/app/features/feed/providers/user_posts_data_source_provider.c.dart';
 import 'package:ion/app/features/feed/providers/user_videos_data_source_provider.c.dart';
 import 'package:ion/app/features/ion_connect/model/deletion_request.c.dart';
@@ -63,6 +64,8 @@ class DeleteEntityController extends _$DeleteEntityController {
             await ref
                 .read(createPostNotifierProvider(CreatePostOption.softDelete).notifier)
                 .softDelete(eventReference: eventReference);
+
+            _deleteFromDataSources(ref, entity);
           }
         case ArticleEntity():
           {
@@ -107,6 +110,7 @@ void _deleteFromDataSources(Ref ref, IonConnectEntity entity) {
     ref.read(userVideosDataSourceProvider(entity.masterPubkey)),
     ref.read(userPostsDataSourceProvider(entity.masterPubkey)),
     ref.read(feedPostsDataSourceProvider),
+    ref.read(feedStoriesDataSourceProvider),
   ];
 
   for (final dataSource in dataSources) {
