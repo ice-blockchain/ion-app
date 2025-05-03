@@ -33,6 +33,7 @@ dependencies:
   drift: ^2.24.0
   drift_flutter: ^0.2.4
   email_validator: ^3.0.0
+  equatable: ^2.0.7
   es_compression: ^2.0.13
   extended_text: ^14.1.0
   extension_google_sign_in_as_googleapis_auth: ^2.0.12

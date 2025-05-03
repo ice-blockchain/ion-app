@@ -1,25 +1,36 @@
 // SPDX-License-Identifier: ice License 1.0
 
-import 'package:flutter/material.dart';
+import 'package:equatable/equatable.dart';
+import 'package:flutter/widgets.dart';
+import 'package:ion/app/components/global_notification_bar/components/global_notification_view.dart';
+import 'package:ion/app/components/global_notification_bar/models/global_notification.dart';
 import 'package:ion/app/components/progress_bar/ion_loading_indicator.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/generated/assets.gen.dart';
 
-class GlobalNotificationData {
-  const GlobalNotificationData({
+class FeedGlobalNotification extends Equatable implements GlobalNotification {
+  const FeedGlobalNotification({
     required this.status,
     required this.type,
   });
 
-  final NotificationStatus status;
-  final NotificationContentType type;
+  final FeedNotificationStatus status;
+  final FeedNotificationContentType type;
 
-  Widget? getIcon(BuildContext context) => status.getIcon(context);
-  String getMessage(BuildContext context) => type.getMessage(context, status);
-  Color getBackgroundColor(BuildContext context) => status.getBackgroundColor(context);
+  @override
+  Widget buildWidget(BuildContext context) {
+    return GlobalNotificationView(
+      message: type.getMessage(context, status),
+      backgroundColor: status.getBackgroundColor(context),
+      icon: status.getIcon(context),
+    );
+  }
+
+  @override
+  List<Object?> get props => [status, type];
 }
 
-enum NotificationStatus {
+enum FeedNotificationStatus {
   loading,
   published,
   success;
@@ -37,7 +48,7 @@ enum NotificationStatus {
       };
 }
 
-enum NotificationContentType {
+enum FeedNotificationContentType {
   video,
   story,
   post,
@@ -47,22 +58,22 @@ enum NotificationContentType {
   modify,
   delete;
 
-  GlobalNotificationData loading() => GlobalNotificationData(
-        status: NotificationStatus.loading,
+  FeedGlobalNotification loading() => FeedGlobalNotification(
+        status: FeedNotificationStatus.loading,
         type: this,
       );
 
-  GlobalNotificationData ready() => GlobalNotificationData(
-        status: this == NotificationContentType.repost
-            ? NotificationStatus.success
-            : NotificationStatus.published,
+  FeedGlobalNotification ready() => FeedGlobalNotification(
+        status: this == FeedNotificationContentType.repost
+            ? FeedNotificationStatus.success
+            : FeedNotificationStatus.published,
         type: this,
       );
 
-  String getMessage(BuildContext context, NotificationStatus state) {
+  String getMessage(BuildContext context, FeedNotificationStatus state) {
     final locale = context.i18n;
     return switch (state) {
-      NotificationStatus.loading => switch (this) {
+      FeedNotificationStatus.loading => switch (this) {
           video => locale.notification_video_loading,
           story => locale.notification_story_loading,
           post => locale.notification_post_loading,
@@ -72,7 +83,7 @@ enum NotificationContentType {
           modify => locale.notification_modify_loading,
           delete => locale.notification_delete_loading,
         },
-      NotificationStatus.published => switch (this) {
+      FeedNotificationStatus.published => switch (this) {
           video => locale.notification_video_published,
           story => locale.notification_story_published,
           post => locale.notification_post_published,
@@ -82,7 +93,7 @@ enum NotificationContentType {
           delete => locale.notification_delete_published,
           repost => throw ArgumentError('No published state for $this'),
         },
-      NotificationStatus.success => switch (this) {
+      FeedNotificationStatus.success => switch (this) {
           repost => locale.notification_repost_successful,
           _ => throw ArgumentError('No success state for $this'),
         },
