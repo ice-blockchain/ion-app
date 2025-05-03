@@ -68,9 +68,7 @@ class VideoController extends _$VideoController {
 
         if (_activeController != null) {
           final prevController = _activeController!;
-          final isPlaying = prevController.value.isLooping ||
-              prevController.value.isBuffering ||
-              prevController.value.isPlaying;
+          final isPlaying = prevController.value.isBuffering || prevController.value.isPlaying;
           await controller.seekTo(prevController.value.position);
           if (isPlaying) {
             unawaited(controller.play());

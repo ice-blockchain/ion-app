@@ -13,6 +13,7 @@ import 'package:ion/app/features/video/views/components/video_button.dart';
 import 'package:ion/app/features/video/views/components/video_progress.dart';
 import 'package:ion/app/features/video/views/components/video_slider.dart';
 import 'package:ion/app/features/video/views/hooks/use_video_ended.dart';
+import 'package:ion/app/hooks/use_route_presence.dart';
 import 'package:ion/generated/assets.gen.dart';
 import 'package:visibility_detector/visibility_detector.dart';
 
@@ -77,6 +78,19 @@ class VideoPage extends HookConsumerWidget {
     useVideoEnded(
       playerController: playerController,
       onVideoEnded: onVideoEnded,
+    );
+
+    useRoutePresence(
+      onBecameInactive: () {
+        if (playerController.value.isPlaying) {
+          playerController.pause();
+        }
+      },
+      onBecameActive: () {
+        if (playerController.value.isInitialized && !playerController.value.isPlaying) {
+          playerController.play();
+        }
+      },
     );
 
     ref.listen(appLifecycleProvider, (_, current) {
