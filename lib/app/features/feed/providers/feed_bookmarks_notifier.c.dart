@@ -95,12 +95,10 @@ class FeedBookmarksNotifier extends _$FeedBookmarksNotifier {
     state = await AsyncValue.guard(() async {
       final currentPubkey = ref.watch(currentPubkeySelectorProvider);
       final bookmarksCollection = state.valueOrNull;
-      if (currentPubkey == null ||
-          bookmarksCollection == null ||
-          eventReference is! ReplaceableEventReference) {
+      if (currentPubkey == null || bookmarksCollection == null) {
         return state.value;
       }
-      final newAllBookmarksRefs = <ReplaceableEventReference>[];
+      final newAllBookmarksRefs = <EventReference>[];
       if (bookmarksCollection.data.refs.contains(eventReference)) {
         newAllBookmarksRefs
           ..addAll(bookmarksCollection.data.refs)
@@ -207,7 +205,12 @@ class FeedBookmarkCollectionsNotifier extends _$FeedBookmarkCollectionsNotifier 
     final collectionsRefs = bookmarksCollection?.data.refs ?? [];
 
     final bookmarkCollections = collectionsRefs
-        .where((collectionsRef) => collectionsRef.kind == BookmarksCollectionEntity.kind)
+        .where(
+          (collectionsRef) =>
+              collectionsRef is ReplaceableEventReference &&
+              collectionsRef.kind == BookmarksCollectionEntity.kind,
+        )
+        .cast<ReplaceableEventReference>()
         .toList();
     if (bookmarkCollections
         .none((ref) => ref.dTag == BookmarksCollectionEntity.defaultCollectionDTag)) {

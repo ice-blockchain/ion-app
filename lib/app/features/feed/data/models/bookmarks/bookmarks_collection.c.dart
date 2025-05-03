@@ -56,7 +56,7 @@ class BookmarksCollectionData
     implements EventSerializable, ReplaceableEntityData {
   const factory BookmarksCollectionData({
     required String type,
-    required List<ReplaceableEventReference> refs,
+    required List<EventReference> refs,
     @Default('') String title,
     @Default('') String content,
   }) = _BookmarksCollectionData;
@@ -80,8 +80,13 @@ class BookmarksCollectionData
     return BookmarksCollectionData(
       content: content,
       refs: eventMessage.tags
-          .where((tag) => tag.isNotEmpty && tag.first == ReplaceableEventReference.tagName)
-          .map(ReplaceableEventReference.fromTag)
+          .where(
+            (tag) =>
+                tag.isNotEmpty &&
+                (tag.first == ReplaceableEventReference.tagName ||
+                    tag.first == ImmutableEventReference.tagName),
+          )
+          .map(EventReference.fromTag)
           .toList(),
       type: typeName,
       title: title,
