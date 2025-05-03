@@ -133,7 +133,9 @@ Future<void> _deleteFromCounters(Ref ref, IonConnectEntity entity) async {
 
     case ModifiablePostEntity():
       if (entity.data.parentEvent != null) {
-        await RepliesCountService(ref).decrementReplies(entity.data.parentEvent!.eventReference);
+        ref
+            .read(repliesCountProvider(entity.data.parentEvent!.eventReference).notifier)
+            .removeOne();
       } else if (entity.data.quotedEvent != null) {
         ref
             .read(repostsCountProvider(entity.data.quotedEvent!.eventReference).notifier)
