@@ -1,21 +1,23 @@
 // SPDX-License-Identifier: ice License 1.0
 
-import 'package:equatable/equatable.dart';
 import 'package:flutter/widgets.dart';
+import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:ion/app/components/global_notification_bar/components/global_notification_view.dart';
 import 'package:ion/app/components/global_notification_bar/models/global_notification.dart';
 import 'package:ion/app/components/progress_bar/ion_loading_indicator.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/generated/assets.gen.dart';
 
-class FeedGlobalNotification extends Equatable implements GlobalNotification {
-  const FeedGlobalNotification({
-    required this.status,
-    required this.type,
-  });
+part 'feed_global_notification.c.freezed.dart';
 
-  final FeedNotificationStatus status;
-  final FeedNotificationContentType type;
+@freezed
+class FeedGlobalNotification with _$FeedGlobalNotification implements GlobalNotification {
+  factory FeedGlobalNotification({
+    required FeedNotificationStatus status,
+    required FeedNotificationContentType type,
+  }) = _FeedGlobalNotification;
+
+  const FeedGlobalNotification._();
 
   @override
   Widget buildWidget(BuildContext context) {
@@ -25,9 +27,6 @@ class FeedGlobalNotification extends Equatable implements GlobalNotification {
       icon: status.getIcon(context),
     );
   }
-
-  @override
-  List<Object?> get props => [status, type];
 }
 
 enum FeedNotificationStatus {
