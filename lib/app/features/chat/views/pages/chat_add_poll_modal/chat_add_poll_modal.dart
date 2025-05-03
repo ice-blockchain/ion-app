@@ -31,7 +31,6 @@ class ChatAddPollModal extends HookConsumerWidget {
     );
 
     return SheetContent(
-      bottomPadding: 0,
       body: Column(
         mainAxisSize: MainAxisSize.min,
         children: [

@@ -114,7 +114,6 @@ class CoinReceiveModal extends HookConsumerWidget {
                 },
               ),
             ),
-          ScreenBottomOffset(margin: 20.0.s),
         ],
       ),
     );

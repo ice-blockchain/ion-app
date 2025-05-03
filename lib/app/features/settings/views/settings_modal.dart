@@ -67,7 +67,7 @@ class SettingsModal extends ConsumerWidget {
                 ],
               ),
             ),
-            ScreenBottomOffset(margin: 32.0.s),
+            ScreenBottomOffset(margin: 12.0.s),
           ],
         ),
       ),
