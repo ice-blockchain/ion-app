@@ -22,17 +22,20 @@ class TabEntitiesList extends ConsumerWidget {
     required this.type,
     required this.pubkey,
     this.builder,
+    this.onRefresh,
     super.key,
   });
 
   factory TabEntitiesList.replies({
     required String pubkey,
+    VoidCallback? onRefresh,
     Key? key,
   }) {
     return TabEntitiesList(
       key: key,
       type: TabEntityType.replies,
       pubkey: pubkey,
+      onRefresh: onRefresh,
       builder: (entities) => EntitiesList(
         refs: entities.map((entity) => entity.toEventReference()).toList(),
         displayParent: true,
@@ -45,6 +48,8 @@ class TabEntitiesList extends ConsumerWidget {
   final Widget Function(List<IonConnectEntity> entities)? builder;
 
   final TabEntityType type;
+
+  final VoidCallback? onRefresh;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -83,7 +88,10 @@ class TabEntitiesList extends ConsumerWidget {
                   ).push<void>(context),
                 ),
       ],
-      onRefresh: () async => ref.invalidate(entitiesPagedDataProvider(dataSource)),
+      onRefresh: () async {
+        ref.invalidate(entitiesPagedDataProvider(dataSource));
+        onRefresh?.call();
+      },
       builder: (context, slivers) => LoadMoreBuilder(
         slivers: slivers,
         onLoadMore: ref.read(entitiesPagedDataProvider(dataSource).notifier).fetchEntities,
