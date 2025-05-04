@@ -115,8 +115,6 @@ class SendE2eeChatMessageService {
 
       eventReference = localEventMessageData.toReplaceableEventReference(currentUserMasterPubkey);
 
-      print('eventReference: $eventReference');
-
       final localEventMessage =
           await localEventMessageData.toEventMessage(NoPrivateSigner(eventSigner.publicKey));
 
