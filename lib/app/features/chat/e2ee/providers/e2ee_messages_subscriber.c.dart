@@ -211,7 +211,7 @@ class E2eeMessagesSubscriber extends _$E2eeMessagesSubscriber {
       }
     }
     // For kind 5
-    else if (rumor.kind == DeletionRequest.kind) {
+    else if (rumor.kind == DeletionRequestEntity.kind) {
       final deleteConversationIds = rumor.tags
           .where((tags) => tags[0] == ConversationIdentifier.tagName)
           .map((tag) => tag.elementAtOrNull(1))
@@ -228,7 +228,7 @@ class E2eeMessagesSubscriber extends _$E2eeMessagesSubscriber {
         final eventsToDelete = DeletionRequest.fromEventMessage(rumor).events;
 
         final eventToDeleteReferences =
-            eventsToDelete.map((event) => (event as EventToDelete).reference).toList();
+            eventsToDelete.map((event) => (event as EventToDelete).eventReference).toList();
 
         for (final eventReference in eventToDeleteReferences) {
           switch (eventReference) {

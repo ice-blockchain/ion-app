@@ -218,11 +218,7 @@ class SendE2eeChatMessageService {
       return [
         if (rootRelatedEvent != null) rootRelatedEvent,
         RelatedReplaceableEvent(
-          eventReference: ReplaceableEventReference(
-            kind: repliedMessage.kind,
-            dTag: repliedMessage.sharedId,
-            pubkey: repliedMessage.masterPubkey,
-          ),
+          eventReference: entity.toEventReference(),
           pubkey: repliedMessage.masterPubkey,
           marker: RelatedEventMarker.reply,
         ),

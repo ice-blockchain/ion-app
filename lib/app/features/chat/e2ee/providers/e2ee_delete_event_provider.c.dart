@@ -5,13 +5,13 @@ import 'package:ion/app/exceptions/exceptions.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/auth/providers/auth_provider.c.dart';
 import 'package:ion/app/features/chat/e2ee/model/conversation_to_delete.c.dart';
+import 'package:ion/app/features/chat/e2ee/model/entities/private_direct_message_data.c.dart';
 import 'package:ion/app/features/chat/e2ee/model/entities/private_message_reaction_data.c.dart';
 import 'package:ion/app/features/chat/e2ee/providers/send_chat_message/send_e2ee_chat_message_service.c.dart';
 import 'package:ion/app/features/chat/model/database/chat_database.c.dart';
 import 'package:ion/app/features/chat/providers/conversation_pubkeys_provider.c.dart';
 import 'package:ion/app/features/ion_connect/ion_connect.dart';
 import 'package:ion/app/features/ion_connect/model/deletion_request.c.dart';
-import 'package:ion/app/features/ion_connect/model/event_reference.c.dart';
 import 'package:ion/app/features/ion_connect/providers/ion_connect_event_signer_provider.c.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
@@ -106,9 +106,7 @@ Future<void> _deleteReaction({
 
   final deleteRequest = DeletionRequest(
     events: [
-      EventToDelete(
-        eventReference,
-      ),
+      EventToDelete(eventReference: eventReference),
     ],
   );
 
@@ -131,7 +129,7 @@ Future<void> _deleteReaction({
             eventSigner: eventSigner,
             masterPubkey: masterPubkey,
             eventMessage: eventMessage,
-            wrappedKinds: [DeletionRequest.kind.toString()],
+            wrappedKinds: [DeletionRequestEntity.kind.toString()],
             pubkey: currentUser ? eventSigner.publicKey : pubkey,
           );
     }),
@@ -163,11 +161,8 @@ Future<void> _deleteMessages({
     events: messageEvents
         .map(
           (event) => EventToDelete(
-            ReplaceableEventReference(
-              kind: event.kind,
-              dTag: event.sharedId,
-              pubkey: event.masterPubkey,
-            ),
+            eventReference:
+                ReplaceablePrivateDirectMessageEntity.fromEventMessage(event).toEventReference(),
           ),
         )
         .toList(),
@@ -192,7 +187,7 @@ Future<void> _deleteMessages({
             eventSigner: eventSigner,
             masterPubkey: masterPubkey,
             eventMessage: eventMessage,
-            wrappedKinds: [DeletionRequest.kind.toString()],
+            wrappedKinds: [DeletionRequestEntity.kind.toString()],
             pubkey: currentUser ? eventSigner.publicKey : pubkey,
           );
     }),
@@ -246,7 +241,7 @@ Future<void> _deleteConversations({
                   eventSigner: eventSigner,
                   masterPubkey: masterPubkey,
                   eventMessage: eventMessage,
-                  wrappedKinds: [DeletionRequest.kind.toString()],
+                  wrappedKinds: [DeletionRequestEntity.kind.toString()],
                   pubkey: currentUser ? eventSigner.publicKey : pubkey,
                 );
           }),

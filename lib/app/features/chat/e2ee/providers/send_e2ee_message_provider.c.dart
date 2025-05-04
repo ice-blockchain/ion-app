@@ -13,7 +13,6 @@ import 'package:ion/app/features/chat/model/database/chat_database.c.dart';
 import 'package:ion/app/features/chat/providers/conversation_pubkeys_provider.c.dart';
 import 'package:ion/app/features/core/providers/env_provider.c.dart';
 import 'package:ion/app/features/ion_connect/ion_connect.dart';
-import 'package:ion/app/features/ion_connect/model/event_reference.c.dart';
 import 'package:ion/app/features/ion_connect/providers/ion_connect_event_signer_provider.c.dart';
 import 'package:ion/app/features/ion_connect/providers/ion_connect_notifier.c.dart';
 import 'package:ion/app/services/ion_connect/ion_connect_gift_wrap_service.c.dart';
@@ -74,13 +73,13 @@ class SendE2eeMessageService {
       return;
     }
 
+    final eventReference =
+        ReplaceablePrivateDirectMessageEntity.fromEventMessage(messageEventMessage)
+            .toEventReference();
+
     final messageReactionData = PrivateMessageReactionEntityData(
       content: status.name,
-      reference: ReplaceableEventReference(
-        kind: messageEventMessage.kind,
-        pubkey: messageEventMessage.masterPubkey,
-        dTag: messageEventMessage.sharedId,
-      ),
+      reference: eventReference,
       masterPubkey: currentUserMasterPubkey,
     );
 
