@@ -16,6 +16,7 @@ import 'package:ion/app/extensions/object.dart';
 import 'package:ion/app/features/user/pages/profile_page/components/user_payment_flow_card/user_payment_flow_card.dart';
 import 'package:ion/app/features/user/providers/user_metadata_provider.c.dart';
 import 'package:ion/app/features/wallets/model/crypto_asset_to_send_data.c.dart';
+import 'package:ion/app/features/wallets/model/network_data.c.dart';
 import 'package:ion/app/features/wallets/providers/send_asset_form_provider.c.dart';
 import 'package:ion/app/features/wallets/utils/wallet_address_validator.dart';
 import 'package:ion/app/features/wallets/views/pages/coins_flow/send_coins/components/buttons/coin_amount_input.dart';
@@ -30,7 +31,6 @@ import 'package:ion/app/router/components/navigation_app_bar/navigation_app_bar.
 import 'package:ion/app/router/components/navigation_app_bar/navigation_close_button.dart';
 import 'package:ion/app/router/components/sheet_content/sheet_content.dart';
 import 'package:ion/generated/assets.gen.dart';
-import 'package:ion_identity_client/ion_identity.dart';
 
 class SendCoinsForm extends HookConsumerWidget {
   const SendCoinsForm({
@@ -154,54 +154,48 @@ class SendCoinsForm extends HookConsumerWidget {
                               selectContactRouteLocationBuilder!(formController.network!.id),
                             );
 
-                            if (pubkey != null) notifier.setContact(pubkey);
-                          },
-                          onScanPressed: () async {
-                            final address = await context.push<String?>(
-                              scanAddressRouteLocationBuilder!(),
-                            );
-                            if (address != null) {
-                              notifier.setReceiverAddress(address);
-                            }
-                          },
-                        ),
-                      SizedBox(height: 12.0.s),
-                      CoinAmountInput(
-                        controller: amountController,
-                        maxValue: coin?.selectedOption?.amount ?? 0,
-                        coinAbbreviation: coin?.coinsGroup.abbreviation ?? '',
-                        enabled: formController.request == null,
+                          if (pubkey != null) notifier.setContact(pubkey);
+                        },
+                        onScanPressed: () async {
+                          final address = await context.push<String?>(
+                            scanAddressRouteLocationBuilder!(),
+                          );
+                          if (address != null) {
+                            notifier.setReceiverAddress(address);
+                          }
+                        },
                       ),
-                      SizedBox(height: 17.0.s),
-                      const CoinsNetworkFeeSelector(),
-                      if (formController.canCoverNetworkFee)
-                        SizedBox(height: 45.0.s)
-                      else if (formController.networkNativeToken
-                          case final WalletAsset networkToken)
-                        NotEnoughMoneyForNetworkFeeMessage(
-                          coinAsset: coin!,
-                          networkToken: networkToken,
-                          network: formController.network!,
-                        ),
-                      Button(
-                        label: Text(
-                          locale.button_continue,
-                        ),
-                        type: isContinueButtonEnabled ? ButtonType.primary : ButtonType.disabled,
-                        mainAxisSize: MainAxisSize.max,
-                        disabled: !isContinueButtonEnabled,
-                        trailingIcon: ColorFiltered(
-                          colorFilter: ColorFilter.mode(
-                            colors.primaryBackground,
-                            BlendMode.srcIn,
-                          ),
-                          child: Assets.svg.iconButtonNext.icon(),
-                        ),
-                        onPressed: () => context.push(confirmRouteLocationBuilder()),
+                    SizedBox(height: 12.0.s),
+                    CoinAmountInput(
+                      controller: amountController,
+                      maxValue: coin?.selectedOption?.amount ?? 0,
+                      coinAbbreviation: coin?.coinsGroup.abbreviation ?? '',
+                      enabled: formController.request == null,
+                    ),
+                    SizedBox(height: 17.0.s),
+                    const CoinsNetworkFeeSelector(),
+                    if (formController.canCoverNetworkFee)
+                      SizedBox(height: 45.0.s)
+                    else if (formController.network case final NetworkData network)
+                      NotEnoughMoneyForNetworkFeeMessage(network: network),
+                    Button(
+                      label: Text(
+                        locale.button_continue,
                       ),
-                      SizedBox(height: 16.0.s),
-                    ],
-                  ),
+                      type: isContinueButtonEnabled ? ButtonType.primary : ButtonType.disabled,
+                      mainAxisSize: MainAxisSize.max,
+                      disabled: !isContinueButtonEnabled,
+                      trailingIcon: ColorFiltered(
+                        colorFilter: ColorFilter.mode(
+                          colors.primaryBackground,
+                          BlendMode.srcIn,
+                        ),
+                        child: Assets.svg.iconButtonNext.icon(),
+                      ),
+                      onPressed: () => context.push(confirmRouteLocationBuilder()),
+                    ),
+                    SizedBox(height: 16.0.s),
+                  ],
                 ),
               ),
             ),

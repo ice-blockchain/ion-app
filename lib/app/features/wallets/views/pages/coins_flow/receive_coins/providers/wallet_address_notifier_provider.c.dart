@@ -3,6 +3,7 @@
 import 'package:collection/collection.dart';
 import 'package:ion/app/features/core/providers/wallets_provider.c.dart';
 import 'package:ion/app/features/wallets/model/network_data.c.dart';
+import 'package:ion/app/features/wallets/providers/connected_crypto_wallets_provider.c.dart';
 import 'package:ion/app/features/wallets/providers/wallet_view_data_provider.c.dart';
 import 'package:ion/app/features/wallets/views/pages/coins_flow/receive_coins/providers/receive_coins_form_provider.c.dart';
 import 'package:ion/app/services/ion_identity/ion_identity_client_provider.c.dart';
@@ -42,21 +43,29 @@ class WalletAddressNotifier extends _$WalletAddressNotifier {
   }
 
   Future<String?> loadWalletAddress() async {
-    final receiveCoinsForm = ref.read(receiveCoinsFormControllerProvider);
+    final form = ref.read(receiveCoinsFormControllerProvider);
+    final network = form.selectedNetwork;
+    final selectedCoin = form.selectedCoin;
 
-    final coin = receiveCoinsForm.selectedCoin?.coins.firstWhereOrNull(
-      (coinInWallet) => coinInWallet.coin.network == receiveCoinsForm.selectedNetwork,
+    final coin = selectedCoin?.coins.firstWhereOrNull(
+      (coinInWallet) => coinInWallet.coin.network == network,
     );
 
-    // Get address from CoinInWallet if exists
-    var address = coin?.walletAddress;
+    // Get address from CoinInWalletData if exists
+    if (coin?.walletAddress != null) return coin!.walletAddress;
 
-    // Attempt to get address from existed wallets
-    if (address == null && coin?.walletId != null) {
-      final wallets = await ref.read(walletsNotifierProvider.future);
-      address = wallets.firstWhereOrNull((wallet) => wallet.id == coin?.walletId)?.address;
-    }
+    final currentWalletViewId = await ref.read(currentWalletViewIdProvider.future);
+    final wallets = await ref.read(
+      walletViewCryptoWalletsProvider(walletViewId: currentWalletViewId).future,
+    );
 
-    return address;
+    // Try to find wallet by coin's walletId
+    var wallet = wallets.firstWhereOrNull((w) => w.id == coin?.walletId);
+    if (wallet?.address != null) return wallet!.address;
+
+    // Try to find wallet by network id
+    wallet = network != null ? wallets.firstWhereOrNull((w) => w.network == network.id) : null;
+
+    return wallet?.address;
   }
 }
