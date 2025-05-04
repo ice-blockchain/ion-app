@@ -10,6 +10,7 @@ environment:
   flutter: "3.27.4"
 
 dependencies:
+  android_id: ^0.4.0
   async: ^2.11.0
   audio_waveforms: ^1.1.1
   back_button_interceptor: ^7.0.3

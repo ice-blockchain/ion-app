@@ -493,10 +493,6 @@ class GetRelayInfoException extends IONException {
       : super(10097, 'Failed to get relay info for $relayUrl, $error');
 }
 
-class ConfigureFirebaseAppException extends IONException {
-  ConfigureFirebaseAppException() : super(10098, 'Failed to configure firebase app');
-}
-
 class RelayUnreachableException extends IONException {
   RelayUnreachableException(this.relayUrl) : super(10099, 'Unable to connect to relay: $relayUrl');
 

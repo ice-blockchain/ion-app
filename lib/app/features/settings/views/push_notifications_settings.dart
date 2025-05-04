@@ -1,7 +1,6 @@
 // SPDX-License-Identifier: ice License 1.0
 
 import 'package:flutter/material.dart';
-import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/components/button/button.dart';
 import 'package:ion/app/components/list_item/list_item.dart';
@@ -13,40 +12,24 @@ import 'package:ion/app/features/core/permissions/data/models/permissions_types.
 import 'package:ion/app/features/core/permissions/providers/permissions_provider.c.dart';
 import 'package:ion/app/features/core/permissions/views/components/permission_aware_widget.dart';
 import 'package:ion/app/features/core/permissions/views/components/permission_dialogs/permission_request_sheet.dart';
+import 'package:ion/app/features/push_notifications/data/models/push_notification_category.c.dart';
+import 'package:ion/app/features/push_notifications/providers/selected_push_categories_provider.c.dart';
 import 'package:ion/app/features/settings/components/selectable_options_group.dart';
 import 'package:ion/app/features/settings/model/push_notifications_options.dart';
-import 'package:ion/app/hooks/use_selected_state.dart';
 import 'package:ion/app/router/components/navigation_app_bar/navigation_app_bar.dart';
 import 'package:ion/app/router/components/navigation_app_bar/navigation_close_button.dart';
 import 'package:ion/app/router/components/sheet_content/sheet_content.dart';
 import 'package:ion/generated/assets.gen.dart';
 
-class PushNotificationsSettings extends HookConsumerWidget {
+class PushNotificationsSettings extends ConsumerWidget {
   const PushNotificationsSettings({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final appLevelPermissionNotifier = useState<bool>(true);
+    final SelectedPushCategoriesState(categories: selectedCategories, :suspended) =
+        ref.watch(selectedPushCategoriesProvider);
     final hasPermissionOnDeviceLevel = ref.watch(hasPermissionProvider(Permission.notifications));
-    final hasNotificationsPermission =
-        hasPermissionOnDeviceLevel && appLevelPermissionNotifier.value;
-
-    // TODO: Replace stub with implementation
-    final (socialNotifications, toggleSocialNotification) =
-        useSelectedState<SocialNotificationOption>(
-      SocialNotificationOption.values,
-    );
-    final (chatNotifications, toggleChatNotification) = useSelectedState<ChatNotificationOption>(
-      ChatNotificationOption.values,
-    );
-    final (walletNotifications, toggleWalletNotification) =
-        useSelectedState<WalletNotificationOption>(
-      WalletNotificationOption.values,
-    );
-    final (systemNotifications, toggleSystemNotification) =
-        useSelectedState<SystemNotificationOption>(
-      SystemNotificationOption.values,
-    );
+    final hasNotificationsPermission = hasPermissionOnDeviceLevel && !suspended;
 
     return SheetContent(
       body: Column(
@@ -60,7 +43,7 @@ class PushNotificationsSettings extends HookConsumerWidget {
           ),
           Expanded(
             child: ScreenBottomOffset(
-              margin: 32.0.s,
+              margin: 40.0.s,
               child: SingleChildScrollView(
                 child: ScreenSideOffset.small(
                   child: SeparatedColumn(
@@ -69,36 +52,55 @@ class PushNotificationsSettings extends HookConsumerWidget {
                       _DevicePermissionButton(
                         hasPermission: hasNotificationsPermission,
                         hasPermissionOnDeviceLevel: hasPermissionOnDeviceLevel,
-                        onChangeAppLevelPermission: () {
-                          appLevelPermissionNotifier.value = !appLevelPermissionNotifier.value;
-                        },
+                        onChangeAppLevelPermission:
+                            ref.read(selectedPushCategoriesProvider.notifier).toggleSuspended,
                       ),
                       SelectableOptionsGroup(
                         title: context.i18n.push_notification_social_group_title,
-                        selected: socialNotifications,
+                        selected: _filterSelectedOptions(
+                          SocialNotificationOption.values,
+                          selected: selectedCategories,
+                        ),
                         options: SocialNotificationOption.values,
-                        onSelected: toggleSocialNotification,
+                        onSelected: (option) => ref
+                            .read(selectedPushCategoriesProvider.notifier)
+                            .toggleCategory(option.category),
                         enabled: hasNotificationsPermission,
                       ),
                       SelectableOptionsGroup(
                         title: context.i18n.push_notification_chat_group_title,
-                        selected: chatNotifications,
+                        selected: _filterSelectedOptions(
+                          ChatNotificationOption.values,
+                          selected: selectedCategories,
+                        ),
                         options: ChatNotificationOption.values,
-                        onSelected: toggleChatNotification,
+                        onSelected: (option) => ref
+                            .read(selectedPushCategoriesProvider.notifier)
+                            .toggleCategory(option.category),
                         enabled: hasNotificationsPermission,
                       ),
                       SelectableOptionsGroup(
                         title: context.i18n.push_notification_wallet_group_title,
-                        selected: walletNotifications,
+                        selected: _filterSelectedOptions(
+                          WalletNotificationOption.values,
+                          selected: selectedCategories,
+                        ),
                         options: WalletNotificationOption.values,
-                        onSelected: toggleWalletNotification,
+                        onSelected: (option) => ref
+                            .read(selectedPushCategoriesProvider.notifier)
+                            .toggleCategory(option.category),
                         enabled: hasNotificationsPermission,
                       ),
                       SelectableOptionsGroup(
                         title: context.i18n.push_notification_system_group_title,
-                        selected: systemNotifications,
+                        selected: _filterSelectedOptions(
+                          SystemNotificationOption.values,
+                          selected: selectedCategories,
+                        ),
                         options: SystemNotificationOption.values,
-                        onSelected: toggleSystemNotification,
+                        onSelected: (option) => ref
+                            .read(selectedPushCategoriesProvider.notifier)
+                            .toggleCategory(option.category),
                         enabled: hasNotificationsPermission,
                       ),
                     ],
@@ -110,6 +112,13 @@ class PushNotificationsSettings extends HookConsumerWidget {
         ],
       ),
     );
+  }
+
+  List<T> _filterSelectedOptions<T extends PushNotificationOption>(
+    List<T> options, {
+    required List<PushNotificationCategory> selected,
+  }) {
+    return options.where((option) => selected.contains(option.category)).toList();
   }
 }
 
