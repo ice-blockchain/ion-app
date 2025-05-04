@@ -371,6 +371,7 @@ class CreatePostNotifier extends _$CreatePostNotifier {
   ) async {
     var compressedImage = file;
 
+    // Compress image if it's not a story
     if (createOption != CreatePostOption.story) {
       compressedImage = await ref.read(imageCompressorProvider).compress(
             file,
