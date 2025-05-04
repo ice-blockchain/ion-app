@@ -41,15 +41,12 @@ class StoryContextMenu extends HookConsumerWidget {
 
     final handleDeleteConfirmation = useCallback(
       () async {
-        isDeletingStory.value = true;
-
-        final storyState = ref.read(storyViewingControllerProvider(pubkey));
-        final currentStory = storyState.currentStory;
-
+        final currentStory = ref.read(storyViewingControllerProvider(pubkey)).currentStory;
         if (currentStory == null) {
-          isDeletingStory.value = false;
           return;
         }
+
+        isDeletingStory.value = true;
 
         final confirmed = await showSimpleBottomSheet<bool>(
           context: context,
