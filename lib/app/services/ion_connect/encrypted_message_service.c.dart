@@ -42,54 +42,62 @@ class EncryptedMessageService {
   final String currentUserPubkey;
 
   Future<String> encryptMessage(String message, {String? publicKey, String? privateKey}) async {
-    final x25519Pk = Uint8List.fromList(List.filled(32, 0));
-    final ed25519Pk = Uint8List.fromList(hex.decode(publicKey ?? currentUserPubkey));
-    TweetNaClExt.crypto_sign_ed25519_pk_to_x25519_pk(x25519Pk, ed25519Pk);
-    final x25519PublicKey = hex.encode(x25519Pk);
+    final x25519PublicKey = _convertEd25519PkToX25519(publicKey ?? currentUserPubkey);
+    final x25519PrivateKey = _convertEd25519SkToX25519(privateKey ?? eventSigner.privateKey);
 
-    final x25519Sk = Uint8List.fromList(List.filled(32, 0));
-    final ed25519Sk = Uint8List.fromList(hex.decode(privateKey ?? eventSigner.privateKey));
-    TweetNaClExt.crypto_sign_ed25519_sk_to_x25519_sk(x25519Sk, ed25519Sk);
-    final x25519PrivateKey = hex.encode(x25519Sk);
-
-    final conversationKey = await Ed25519KeyStore.getX25519SharedSecret(
-      privateKey: x25519PrivateKey,
-      publicKey: x25519PublicKey,
+    final conversationKey = await _buildConversationKey(
+      x25519PrivateKey: x25519PrivateKey,
+      x25519PublicKey: x25519PublicKey,
     );
 
-    final decryptedMessage = await Nip44.encryptMessage(
+    return Nip44.encryptMessage(
       message,
       x25519PrivateKey,
       x25519PublicKey,
       customConversationKey: conversationKey,
     );
-
-    return decryptedMessage;
   }
 
   Future<String> decryptMessage(String message, {String? publicKey, String? privateKey}) async {
-    final x25519Pk = Uint8List.fromList(List.filled(32, 0));
-    final ed25519Pk = Uint8List.fromList(hex.decode(publicKey ?? currentUserPubkey));
-    TweetNaClExt.crypto_sign_ed25519_pk_to_x25519_pk(x25519Pk, ed25519Pk);
-    final x25519PublicKey = hex.encode(x25519Pk);
+    final x25519PublicKey = _convertEd25519PkToX25519(publicKey ?? currentUserPubkey);
+    final x25519PrivateKey = _convertEd25519SkToX25519(privateKey ?? eventSigner.privateKey);
 
-    final x25519Sk = Uint8List.fromList(List.filled(32, 0));
-    final ed25519Sk = Uint8List.fromList(hex.decode(privateKey ?? eventSigner.privateKey));
-    TweetNaClExt.crypto_sign_ed25519_sk_to_x25519_sk(x25519Sk, ed25519Sk);
-    final x25519PrivateKey = hex.encode(x25519Sk);
-
-    final conversationKey = await Ed25519KeyStore.getX25519SharedSecret(
-      publicKey: x25519PublicKey,
-      privateKey: x25519PrivateKey,
+    final conversationKey = await _buildConversationKey(
+      x25519PrivateKey: x25519PrivateKey,
+      x25519PublicKey: x25519PublicKey,
     );
 
-    final decryptedMessage = await Nip44.decryptMessage(
+    return Nip44.decryptMessage(
       message,
       x25519PrivateKey,
       x25519PublicKey,
       customConversationKey: conversationKey,
     );
+  }
 
-    return decryptedMessage;
+  String _convertEd25519PkToX25519(String publicKey) {
+    final x25519Pk = Uint8List.fromList(List.filled(32, 0));
+    final ed25519Pk = Uint8List.fromList(hex.decode(publicKey));
+    TweetNaClExt.crypto_sign_ed25519_pk_to_x25519_pk(x25519Pk, ed25519Pk);
+    return hex.encode(x25519Pk);
+  }
+
+  String _convertEd25519SkToX25519(String privateKey) {
+    final x25519Sk = Uint8List.fromList(List.filled(32, 0));
+    final ed25519Sk = Uint8List.fromList(hex.decode(privateKey));
+    TweetNaClExt.crypto_sign_ed25519_sk_to_x25519_sk(x25519Sk, ed25519Sk);
+    return hex.encode(x25519Sk);
+  }
+
+  Future<Uint8List> _buildConversationKey({
+    required String x25519PublicKey,
+    required String x25519PrivateKey,
+  }) async {
+    final sharedSecret = await Ed25519KeyStore.getX25519SharedSecret(
+      privateKey: x25519PrivateKey,
+      publicKey: x25519PublicKey,
+    );
+
+    return Nip44.deriveConversationKey(sharedSecret);
   }
 }
