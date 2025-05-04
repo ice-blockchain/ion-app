@@ -61,7 +61,6 @@ class ArticlePreviewModal extends HookConsumerWidget {
     final selectedTopics = ref.watch(selectTopicsProvider);
 
     return SheetContent(
-      bottomPadding: 0,
       body: Column(
         children: [
           NavigationAppBar.modal(

@@ -32,7 +32,7 @@ class SheetContent extends StatelessWidget {
       bottomBar: const SizedBox.shrink(),
       body: SheetShape(
         backgroundColor: backgroundColor,
-        bottomPadding: bottomPadding,
+        bottomPadding: bottomPadding ?? MediaQuery.paddingOf(context).bottom,
         child: body,
       ),
     );

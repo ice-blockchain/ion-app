@@ -53,7 +53,6 @@ class WalletsModal extends StatelessWidget {
                 type: ButtonType.secondary,
               ),
             ),
-            SizedBox(height: 16.0.s),
           ],
         ),
       ),

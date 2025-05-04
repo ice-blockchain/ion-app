@@ -52,7 +52,6 @@ class FillProfile extends HookConsumerWidget {
     });
 
     return SheetContent(
-      bottomPadding: 0,
       body: KeyboardDismissOnTap(
         child: AuthScrollContainer(
           title: context.i18n.fill_profile_title,

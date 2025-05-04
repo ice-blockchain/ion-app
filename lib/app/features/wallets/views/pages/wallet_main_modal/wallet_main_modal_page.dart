@@ -19,7 +19,6 @@ class WalletMainModalPage extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     return SheetContent(
       topPadding: 0.0.s,
-      bottomPadding: 3.0.s,
       body: SingleChildScrollView(
         child: Column(
           mainAxisSize: MainAxisSize.min,

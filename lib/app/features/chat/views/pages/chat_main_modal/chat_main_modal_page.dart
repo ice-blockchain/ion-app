@@ -26,7 +26,6 @@ class ChatMainModalPage extends ConsumerWidget {
     return SheetContent(
       backgroundColor: context.theme.appColors.secondaryBackground,
       topPadding: 0.0.s,
-      bottomPadding: 3.0.s,
       body: Column(
         mainAxisSize: MainAxisSize.min,
         children: [

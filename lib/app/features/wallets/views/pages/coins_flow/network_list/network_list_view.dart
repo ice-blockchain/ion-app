@@ -5,7 +5,6 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:ion/app/components/screen_offset/screen_bottom_offset.dart';
 import 'package:ion/app/components/screen_offset/screen_side_offset.dart';
 import 'package:ion/app/components/skeleton/skeleton.dart';
 import 'package:ion/app/extensions/extensions.dart';
@@ -119,23 +118,20 @@ class NetworkListView extends ConsumerWidget {
             ),
           ),
           Flexible(
-            child: ScreenBottomOffset(
-              margin: 32.0.s,
-              child: ScreenSideOffset.small(
-                child: coinsState.maybeMap(
-                  data: (data) => _NetworksList(
-                    itemCount: data.value.length,
-                    itemBuilder: (BuildContext context, int index) {
-                      final coin = data.value[index];
-                      return NetworkItem(
-                        coinInWallet: coin,
-                        network: coin.coin.network,
-                        onTap: () => onTap(coin.coin.network),
-                      );
-                    },
-                  ),
-                  orElse: () => const _LoadingState(),
+            child: ScreenSideOffset.small(
+              child: coinsState.maybeMap(
+                data: (data) => _NetworksList(
+                  itemCount: data.value.length,
+                  itemBuilder: (BuildContext context, int index) {
+                    final coin = data.value[index];
+                    return NetworkItem(
+                      coinInWallet: coin,
+                      network: coin.coin.network,
+                      onTap: () => onTap(coin.coin.network),
+                    );
+                  },
                 ),
+                orElse: () => const _LoadingState(),
               ),
             ),
           ),

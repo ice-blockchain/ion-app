@@ -22,6 +22,8 @@
 
     <style name="CustomIntegrationAppTheme" parent="VideoCreationTheme">
         <item name="android:windowBackground">@color/backgroundGlobalPrimary</item>
+        <item name="android:fitsSystemWindows">true</item>
+        <item name="android:windowFullscreen">false</item>
 
         <!-- WARNING: Here are the styles for Gallery module (ve-gallery-sdk). Gallery is
          an Optional module. Add these styles in the app if you use
