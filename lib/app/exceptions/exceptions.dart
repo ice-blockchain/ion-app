@@ -498,3 +498,8 @@ class RelayUnreachableException extends IONException {
 
   final String relayUrl;
 }
+
+class UserEventsMetadataBuilderException extends IONException {
+  UserEventsMetadataBuilderException()
+      : super(10100, 'Unable to create user events metadata builder');
+}
