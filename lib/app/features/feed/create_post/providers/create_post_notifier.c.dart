@@ -106,7 +106,8 @@ class CreatePostNotifier extends _$CreatePostNotifier {
 
       if (quotedEvent != null) {
         ref.read(repostsCountProvider(quotedEvent).notifier).addOne();
-      } else if (parentEvent != null) {
+      }
+      if (parentEvent != null) {
         ref.read(repliesCountProvider(parentEvent).notifier).addOne();
       }
     });
@@ -188,6 +189,7 @@ class CreatePostNotifier extends _$CreatePostNotifier {
   }
 
   Future<List<IonConnectEntity>?> _sendPostEntities(List<EventSerializable> entitiesData) async {
+    //TODO: check the event json according to notion when defined
     return ref.read(ionConnectNotifierProvider.notifier).sendEntitiesData(entitiesData);
   }
 
@@ -372,6 +374,7 @@ class CreatePostNotifier extends _$CreatePostNotifier {
     var compressedImage = file;
 
     // Compress image if it's not a story
+    // The stories has its own compression logic in ImageProcessorNotifier
     if (createOption != CreatePostOption.story) {
       compressedImage = await ref.read(imageCompressorProvider).compress(
             file,
