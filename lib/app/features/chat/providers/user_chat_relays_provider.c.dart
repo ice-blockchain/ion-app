@@ -42,7 +42,7 @@ class UserChatRelaysManager extends _$UserChatRelaysManager {
           kinds: [eventReference.kind],
           authors: [eventReference.pubkey],
           tags: {
-            if (eventReference.dTag != null) '#d': [eventReference.dTag.toString()],
+            if (eventReference.dTag.isNotEmpty) '#d': [eventReference.dTag],
           },
           limit: 1,
         ),
