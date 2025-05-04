@@ -201,6 +201,7 @@ class E2eeMessagesSubscriber extends _$E2eeMessagesSubscriber {
           pubkey: rumor.pubkey,
           masterPubkey: rumor.masterPubkey,
           status: MessageDeliveryStatus.values.byName(reactionEntity.data.content),
+          updateAllBefore: rumor.createdAt,
         );
       } else {
         await conversationMessageReactionDao.add(

@@ -21,39 +21,38 @@ class ConversationMessageDataDao extends DatabaseAccessor<ChatDatabase>
     DateTime? updateAllBefore,
   }) async {
     if (updateAllBefore != null && status == MessageDeliveryStatus.read) {
-      //TODO: implement this
-      // // Mark all previous received messages as read prior to the given date
-      // final unreadResults = await (select(messageStatusTable)
-      //       ..where((table) => table.masterPubkey.equals(masterPubkey))
-      //       ..where((table) => table.status.equals(MessageDeliveryStatus.received.index))
-      //       ..join([
-      //         innerJoin(
-      //           conversationMessageTable,
-      //           conversationMessageTable.messageEventReference
-      //                   .equalsExp(messageStatusTable.messageEventReference) &
-      //               eventMessageTable.createdAt.isSmallerThanValue(updateAllBefore),
-      //         ),
-      //         innerJoin(
-      //           eventMessageTable,
-      //           eventMessageTable.eventReference
-      //                   .equalsExp(conversationMessageTable.messageEventReference) &
-      //               eventMessageTable.createdAt.isSmallerThanValue(updateAllBefore),
-      //         ),
-      //       ]))
-      //     .get();
+      // Mark all previous received messages as read prior to the given date
+      final unreadResults = await (select(messageStatusTable)
+            ..where((table) => table.masterPubkey.equals(masterPubkey))
+            ..where((table) => table.status.equals(MessageDeliveryStatus.received.index))
+            ..join([
+              innerJoin(
+                conversationMessageTable,
+                conversationMessageTable.messageEventReference
+                        .equalsExp(messageStatusTable.messageEventReference) &
+                    eventMessageTable.createdAt.isSmallerThanValue(updateAllBefore),
+              ),
+              innerJoin(
+                eventMessageTable,
+                eventMessageTable.eventReference
+                        .equalsExp(conversationMessageTable.messageEventReference) &
+                    eventMessageTable.createdAt.isSmallerThanValue(updateAllBefore),
+              ),
+            ]))
+          .get();
 
       // Batch update the status of all previous messages to read
-      // await batch((batch) {
-      //   for (final row in unreadResults) {
-      //     batch.update(
-      //       messageStatusTable,
-      //       const MessageStatusTableCompanion(status: Value(MessageDeliveryStatus.read)),
-      //       where: (table) =>
-      //           table.messageEventReference.equalsValue(row.messageEventReference) &
-      //           table.masterPubkey.equals(row.masterPubkey),
-      //     );
-      //   }
-      // });
+      await batch((batch) {
+        for (final row in unreadResults) {
+          batch.update(
+            messageStatusTable,
+            const MessageStatusTableCompanion(status: Value(MessageDeliveryStatus.read)),
+            where: (table) =>
+                table.messageEventReference.equalsValue(row.messageEventReference) &
+                table.masterPubkey.equals(row.masterPubkey),
+          );
+        }
+      });
     } else {
       // Fetch the existing status for the given pubkey and eventReference
       final existingStatus = await (select(messageStatusTable)
