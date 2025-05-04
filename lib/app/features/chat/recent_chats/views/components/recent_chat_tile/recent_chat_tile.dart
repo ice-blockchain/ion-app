@@ -25,7 +25,7 @@ class RecentChatTile extends HookConsumerWidget {
     required this.conversation,
     required this.defaultAvatar,
     required this.lastMessageAt,
-    required this.lastMessageSharedId,
+    required this.eventReference,
     required this.lastMessageContent,
     required this.unreadMessagesCount,
     this.avatarUrl,
@@ -36,7 +36,7 @@ class RecentChatTile extends HookConsumerWidget {
   final String name;
   final String? avatarUrl;
   final Widget? defaultAvatar;
-  final String? lastMessageSharedId;
+  final EventReference? eventReference;
   final DateTime lastMessageAt;
   final int unreadMessagesCount;
   final String lastMessageContent;
@@ -150,7 +150,7 @@ class RecentChatTile extends HookConsumerWidget {
                               Expanded(
                                 child: ChatPreview(
                                   messageType: messageType,
-                                  lastMessageId: lastMessageSharedId,
+                                  eventReference: eventReference,
                                   lastMessageContent: lastMessageContent,
                                 ),
                               ),
@@ -243,7 +243,7 @@ class ChatPreview extends HookConsumerWidget {
   const ChatPreview({
     required this.messageType,
     required this.lastMessageContent,
-    this.lastMessageId,
+    this.eventReference,
     this.textColor,
     this.maxLines = 2,
     super.key,
@@ -252,7 +252,7 @@ class ChatPreview extends HookConsumerWidget {
   final int maxLines;
   final String lastMessageContent;
   final Color? textColor;
-  final String? lastMessageId;
+  final EventReference? eventReference;
   final MessageType messageType;
 
   @override
@@ -278,7 +278,7 @@ class ChatPreview extends HookConsumerWidget {
     };
 
     final storyReaction =
-        ref.watch(conversationMessageReactionDaoProvider).storyReaction(lastMessageId);
+        ref.watch(conversationMessageReactionDaoProvider).storyReaction(eventReference);
 
     return Row(
       children: [

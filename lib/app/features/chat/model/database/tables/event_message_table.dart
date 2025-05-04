@@ -12,6 +12,7 @@ class EventMessageTable extends Table {
   TextColumn get content => text()();
   TextColumn get tags => text().map(const EventTagsConverter())();
   TextColumn get eventReference => text().map(const EventReferenceConverter())();
+
   @override
   Set<Column> get primaryKey => {eventReference};
 }

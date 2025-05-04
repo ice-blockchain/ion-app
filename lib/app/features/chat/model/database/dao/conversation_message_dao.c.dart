@@ -25,11 +25,12 @@ class ConversationMessageDao extends DatabaseAccessor<ChatDatabase>
     final query = select(conversationMessageTable).join([
       innerJoin(
         eventMessageTable,
-        eventMessageTable.eventReference.equalsExp(conversationMessageTable.eventReferenceId),
+        eventMessageTable.eventReference.equalsExp(conversationMessageTable.messageEventReference),
       ),
       innerJoin(
         messageStatusTable,
-        messageStatusTable.sharedId.equalsExp(conversationMessageTable.sharedId),
+        messageStatusTable.messageEventReference
+            .equalsExp(conversationMessageTable.messageEventReference),
       ),
     ])
       ..where(conversationMessageTable.conversationId.equals(conversationId))
@@ -45,7 +46,8 @@ class ConversationMessageDao extends DatabaseAccessor<ChatDatabase>
     final query = select(messageStatusTable).join([
       innerJoin(
         conversationMessageTable,
-        conversationMessageTable.sharedId.equalsExp(messageStatusTable.sharedId),
+        conversationMessageTable.messageEventReference
+            .equalsExp(messageStatusTable.messageEventReference),
       ),
       innerJoin(
         conversationTable,
@@ -66,7 +68,8 @@ class ConversationMessageDao extends DatabaseAccessor<ChatDatabase>
     final query = select(messageStatusTable).join([
       innerJoin(
         conversationMessageTable,
-        conversationMessageTable.sharedId.equalsExp(messageStatusTable.sharedId),
+        conversationMessageTable.messageEventReference
+            .equalsExp(messageStatusTable.messageEventReference),
       ),
     ])
       ..where(
@@ -87,16 +90,17 @@ class ConversationMessageDao extends DatabaseAccessor<ChatDatabase>
     final query = select(conversationMessageTable).join([
       innerJoin(
         eventMessageTable,
-        eventMessageTable.eventReference.equalsExp(conversationMessageTable.eventReferenceId),
+        eventMessageTable.eventReference.equalsExp(conversationMessageTable.messageEventReference),
       ),
       innerJoin(
         messageStatusTable,
-        messageStatusTable.sharedId.equalsExp(conversationMessageTable.sharedId),
+        messageStatusTable.messageEventReference.equalsExp(eventMessageTable.eventReference),
       ),
     ])
       ..where(conversationMessageTable.conversationId.equals(conversationId))
-      ..where(messageStatusTable.masterPubkey.equals(currentUserMasterPubkey))
-      ..where(messageStatusTable.status.isNotIn([MessageDeliveryStatus.deleted.index]));
+      ..where(messageStatusTable.status.isNotIn([MessageDeliveryStatus.deleted.index]))
+      ..groupBy([eventMessageTable.eventReference])
+      ..distinct;
 
     return query.watch().map((rows) {
       final groupedMessages = <DateTime, List<EventMessage>>{};
@@ -119,26 +123,24 @@ class ConversationMessageDao extends DatabaseAccessor<ChatDatabase>
     });
   }
 
-  Future<EventMessage> getEventMessage({required String sharedId}) async {
-    final eventReference = await (select(conversationMessageTable)
-          ..where((table) => table.sharedId.equals(sharedId)))
+  Future<EventMessage> getEventMessage({required EventReference eventReference}) async {
+    final message = await (select(eventMessageTable)
+          ..where((table) => table.eventReference.equalsValue(eventReference)))
         .getSingle();
 
-    final message = await (select(eventMessageTable)
-          ..where((table) => table.eventReference.equalsValue(eventReference.eventReferenceId)))
-        .get();
-
-    return message.first.toEventMessage();
+    return message.toEventMessage();
   }
 
   Future<void> removeMessages({
     required Ref ref,
-    required List<String> sharedIds,
+    required List<EventReference> eventReferences,
     required EventMessage deleteRequest,
   }) async {
     await ref.read(eventMessageDaoProvider).add(deleteRequest);
 
-    await (update(messageStatusTable)..where((table) => table.sharedId.isIn(sharedIds))).write(
+    await (update(messageStatusTable)
+          ..where((table) => table.messageEventReference.isInValues(eventReferences)))
+        .write(
       const MessageStatusTableCompanion(
         status: Value(MessageDeliveryStatus.deleted),
       ),

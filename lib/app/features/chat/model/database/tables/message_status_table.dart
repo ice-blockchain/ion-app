@@ -4,7 +4,8 @@ part of '../chat_database.c.dart';
 
 class MessageStatusTable extends Table {
   IntColumn get id => integer().autoIncrement()();
-  TextColumn get sharedId => text()();
+  TextColumn get messageEventReference =>
+      text().map(const EventReferenceConverter()).references(EventMessageTable, #eventReference)();
   TextColumn get pubkey => text()();
   TextColumn get masterPubkey => text()();
   IntColumn get status => intEnum<MessageDeliveryStatus>()();

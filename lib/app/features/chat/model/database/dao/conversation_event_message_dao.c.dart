@@ -34,19 +34,7 @@ class ConversationEventMessageDao extends DatabaseAccessor<ChatDatabase>
 
     final eventReference = ReplaceablePrivateDirectMessageEntity.fromEventMessage(event)
         .data
-        .toReplaceableEventReference(event.pubkey);
-
-    final existingEvent = await (select(db.eventMessageTable)
-          ..where((table) {
-            return table.eventReference.equalsValue(eventReference);
-          }))
-        .getSingleOrNull();
-
-    // If the event already exists and its creation date is after the new event's creation date, do nothing
-    if (existingEvent != null &&
-        existingEvent.toEventMessage().createdAt.isAfter(event.createdAt)) {
-      return;
-    }
+        .toReplaceableEventReference(event.masterPubkey);
 
     final dbModel = event.toChatDbModel(eventReference);
 
@@ -55,16 +43,13 @@ class ConversationEventMessageDao extends DatabaseAccessor<ChatDatabase>
       mode: InsertMode.insertOrReplace,
     );
 
-    if (eventReference.dTag != null) {
-      await into(db.conversationMessageTable).insert(
-        ConversationMessageTableCompanion(
-          sharedId: Value(eventReference.dTag!),
-          eventReferenceId: Value(eventReference),
-          conversationId: Value(conversationId),
-        ),
-        mode: InsertMode.insertOrReplace,
-      );
-    }
+    await into(db.conversationMessageTable).insert(
+      ConversationMessageTableCompanion(
+        messageEventReference: Value(eventReference),
+        conversationId: Value(conversationId),
+      ),
+      mode: InsertMode.insertOrReplace,
+    );
   }
 
   /// Get the creation date of the most recent event messages of specific kinds
@@ -75,9 +60,7 @@ class ConversationEventMessageDao extends DatabaseAccessor<ChatDatabase>
       ..where((t) => t.kind.isIn(kinds))
       ..limit(1);
 
-    final row = await query.getSingleOrNull();
-
-    return row?.createdAt;
+    return (await query.getSingleOrNull())?.createdAt;
   }
 
   /// Get the creation date of the oldest event messages of specific kinds
@@ -93,8 +76,6 @@ class ConversationEventMessageDao extends DatabaseAccessor<ChatDatabase>
       ..orderBy([(t) => OrderingTerm.asc(t.createdAt)])
       ..limit(1);
 
-    final row = await query.getSingleOrNull();
-
-    return row?.createdAt;
+    return (await query.getSingleOrNull())?.createdAt;
   }
 }

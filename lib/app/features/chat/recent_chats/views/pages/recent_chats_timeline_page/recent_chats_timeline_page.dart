@@ -164,11 +164,15 @@ class CommunityRecentChatTile extends ConsumerWidget {
       return const SizedBox.shrink();
     }
 
+    final eventReference = ReplaceablePrivateDirectMessageEntity.fromEventMessage(
+      conversation.latestMessage!,
+    ).toEventReference();
+
     return RecentChatTile(
       name: community.data.name,
       conversation: conversation,
       avatarUrl: community.data.avatar?.url,
-      lastMessageSharedId: conversation.latestMessage?.id,
+      eventReference: eventReference,
       defaultAvatar: Container(
         width: 40.0.s,
         height: 40.0.s,
@@ -226,13 +230,17 @@ class E2eeRecentChatTile extends ConsumerWidget {
     final unreadMessagesCount =
         ref.watch(getUnreadMessagesCountProvider(conversation.conversationId));
 
+    final eventReference = ReplaceablePrivateDirectMessageEntity.fromEventMessage(
+      conversation.latestMessage!,
+    ).toEventReference();
+
     return RecentChatTile(
       defaultAvatar: null,
       conversation: conversation,
       messageType: entity.messageType,
       name: userMetadata.data.displayName,
       avatarUrl: userMetadata.data.picture,
-      lastMessageSharedId: conversation.latestMessage?.id,
+      eventReference: eventReference,
       unreadMessagesCount: unreadMessagesCount.valueOrNull ?? 0,
       lastMessageContent: conversation.latestMessage?.content ?? '',
       lastMessageAt: conversation.latestMessage?.createdAt ?? conversation.joinedAt,
@@ -270,10 +278,14 @@ class EncryptedGroupRecentChatTile extends HookConsumerWidget {
           ),
     ).data;
 
+    final eventReference = ReplaceablePrivateDirectMessageEntity.fromEventMessage(
+      conversation.latestMessage!,
+    ).toEventReference();
+
     return RecentChatTile(
       name: name,
       conversation: conversation,
-      lastMessageSharedId: conversation.latestMessage?.id,
+      eventReference: eventReference,
       avatarWidget: groupImageFile != null ? Image.file(groupImageFile) : null,
       defaultAvatar: Assets.svg.iconChannelEmptychannel.icon(size: 40.0.s),
       lastMessageAt: conversation.latestMessage?.createdAt ?? conversation.joinedAt,

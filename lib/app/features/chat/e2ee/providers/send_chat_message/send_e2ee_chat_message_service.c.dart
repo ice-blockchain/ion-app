@@ -65,6 +65,7 @@ class SendE2eeChatMessageService {
     EventMessage? sentMessage;
 
     final sharedId = editedMessage?.sharedId ?? generateUuid();
+    ReplaceableEventReference? eventReference;
 
     final editedMessageEntity = editedMessage != null
         ? ReplaceablePrivateDirectMessageData.fromEventMessage(editedMessage)
@@ -95,7 +96,7 @@ class SendE2eeChatMessageService {
         throw UserMasterPubkeyNotFoundException();
       }
 
-      final localEventMessage = await ReplaceablePrivateDirectMessageData(
+      final localEventMessageData = ReplaceablePrivateDirectMessageData(
         content: content,
         messageId: sharedId,
         publishedAt: publishedAt,
@@ -110,12 +111,19 @@ class SendE2eeChatMessageService {
         relatedPubkeys:
             participantsMasterPubkeys.map((pubkey) => RelatedPubkey(value: pubkey)).toList(),
         relatedEvents: _generateRelatedEvents(repliedMessage),
-      ).toEventMessage(NoPrivateSigner(eventSigner.publicKey));
+      );
+
+      eventReference = localEventMessageData.toReplaceableEventReference(currentUserMasterPubkey);
+
+      print('eventReference: $eventReference');
+
+      final localEventMessage =
+          await localEventMessageData.toEventMessage(NoPrivateSigner(eventSigner.publicKey));
 
       sentMessage = localEventMessage;
 
       final messageMediaIds = await _addDbEntities(
-        sharedId: sharedId,
+        eventReference: eventReference,
         mediaFiles: mediaFiles,
         localEventMessage: localEventMessage,
       );
@@ -123,7 +131,7 @@ class SendE2eeChatMessageService {
       final mediaAttachmentsUsersBased = await _sendMediaFiles(
         mediaFiles: mediaFiles,
         messageMediaIds: messageMediaIds,
-        eventMessageId: localEventMessage.id,
+        eventReference: eventReference,
         participantsMasterPubkeys: failedParticipantsMasterPubkeys ?? participantsMasterPubkeys,
       );
 
@@ -135,13 +143,13 @@ class SendE2eeChatMessageService {
 
       await Future.wait(
         participantsMasterPubkeys.map((masterPubkey) async {
-          final pubkey = participantsPubkeysMap[masterPubkey];
+          final pubkeyDevice = participantsPubkeysMap[masterPubkey];
           try {
-            if (pubkey == null) throw UserPubkeyNotFoundException(masterPubkey);
+            if (pubkeyDevice == null) throw UserPubkeyNotFoundException(masterPubkey);
 
             final attachments = mediaAttachmentsUsersBased[masterPubkey] ?? [];
 
-            final isCurrentUser = ref.read(isCurrentUserSelectorProvider(masterPubkey));
+            final isCurrentUser = currentUserMasterPubkey == masterPubkey;
 
             final remoteEventMessage = await ReplaceablePrivateDirectMessageData(
               content: content,
@@ -157,10 +165,10 @@ class SendE2eeChatMessageService {
                   participantsMasterPubkeys.map((pubkey) => RelatedPubkey(value: pubkey)).toList(),
               groupSubject: subject.isNotEmpty ? GroupSubject(subject!) : null,
               relatedEvents: _generateRelatedEvents(repliedMessage),
-            ).toEventMessage(NoPrivateSigner(pubkey));
+            ).toEventMessage(NoPrivateSigner(eventSigner.publicKey));
 
             await sendWrappedMessage(
-              pubkey: pubkey,
+              pubkey: pubkeyDevice,
               eventSigner: eventSigner,
               masterPubkey: masterPubkey,
               wrappedKinds: [kind.toString()],
@@ -168,20 +176,18 @@ class SendE2eeChatMessageService {
             );
 
             await ref.read(conversationMessageDataDaoProvider).addOrUpdateStatus(
-                  pubkey: pubkey,
-                  sharedId: sharedId,
+                  pubkey: eventReference!.pubkey,
+                  messageEventReference: eventReference,
                   masterPubkey: masterPubkey,
                   status: isCurrentUser ? MessageDeliveryStatus.read : MessageDeliveryStatus.sent,
                 );
           } catch (e) {
-            if (pubkey != null) {
-              await ref.read(conversationMessageDataDaoProvider).addOrUpdateStatus(
-                    pubkey: pubkey,
-                    sharedId: sharedId,
-                    masterPubkey: masterPubkey,
-                    status: MessageDeliveryStatus.failed,
-                  );
-            }
+            await ref.read(conversationMessageDataDaoProvider).addOrUpdateStatus(
+                  pubkey: eventReference!.pubkey,
+                  messageEventReference: eventReference,
+                  masterPubkey: masterPubkey,
+                  status: MessageDeliveryStatus.failed,
+                );
           }
         }),
       );
@@ -189,10 +195,10 @@ class SendE2eeChatMessageService {
       for (final masterPubkey in participantsMasterPubkeys) {
         final pubkey = participantsPubkeysMap[masterPubkey];
 
-        if (pubkey != null && sentMessage != null) {
+        if (pubkey != null && sentMessage != null && eventReference != null) {
           await ref.read(conversationMessageDataDaoProvider).addOrUpdateStatus(
                 pubkey: pubkey,
-                sharedId: sharedId,
+                messageEventReference: eventReference,
                 masterPubkey: masterPubkey,
                 status: MessageDeliveryStatus.failed,
               );
@@ -217,7 +223,7 @@ class SendE2eeChatMessageService {
           eventReference: ReplaceableEventReference(
             kind: repliedMessage.kind,
             dTag: repliedMessage.sharedId,
-            pubkey: repliedMessage.pubkey,
+            pubkey: repliedMessage.masterPubkey,
           ),
           pubkey: repliedMessage.masterPubkey,
           marker: RelatedEventMarker.reply,
@@ -229,7 +235,7 @@ class SendE2eeChatMessageService {
   }
 
   Future<Map<String, List<MediaAttachment>>> _sendMediaFiles({
-    required String eventMessageId,
+    required EventReference eventReference,
     required List<int> messageMediaIds,
     required List<MediaFile> mediaFiles,
     required List<String> participantsMasterPubkeys,
@@ -254,7 +260,7 @@ class SendE2eeChatMessageService {
 
         await ref.read(messageMediaDaoProvider).updateById(
               id,
-              eventMessageId,
+              eventReference,
               currentUserSendResult.$2.first.url,
               MessageMediaStatus.completed,
             );
@@ -338,14 +344,15 @@ class SendE2eeChatMessageService {
     required EventMessage messageEvent,
   }) async {
     final entity = ReplaceablePrivateDirectMessageEntity.fromEventMessage(messageEvent);
+    final eventReference = entity.toEventReference();
 
     await ref
         .read(conversationMessageDataDaoProvider)
-        .reinitializeFailedStatus(sharedId: messageEvent.sharedId!);
+        .reinitializeFailedStatus(eventReference: eventReference);
 
     final failedParticipantsMasterPubkeys = await ref
         .read(conversationMessageDataDaoProvider)
-        .getFailedParticipants(sharedId: messageEvent.sharedId!);
+        .getFailedParticipants(eventReference: eventReference);
 
     final mediaFiles = entity.data.media.values
         .map(
@@ -403,7 +410,7 @@ class SendE2eeChatMessageService {
   }
 
   Future<List<int>> _addDbEntities({
-    required String sharedId,
+    required EventReference eventReference,
     required List<MediaFile> mediaFiles,
     required EventMessage localEventMessage,
   }) async {
@@ -414,7 +421,7 @@ class SendE2eeChatMessageService {
       await ref.read(conversationDaoProvider).add([localEventMessage]);
       await ref.read(conversationEventMessageDaoProvider).add(localEventMessage);
       await ref.read(conversationMessageDataDaoProvider).addOrUpdateStatus(
-            sharedId: sharedId,
+            messageEventReference: eventReference,
             pubkey: localEventMessage.pubkey,
             status: MessageDeliveryStatus.created,
             masterPubkey: localEventMessage.masterPubkey,
@@ -422,7 +429,7 @@ class SendE2eeChatMessageService {
 
       messageMediaIds = await ref.read(messageMediaDaoProvider).addBatch(
             cacheKeys: cacheKeys,
-            eventMessageId: localEventMessage.id,
+            eventReference: eventReference,
           );
     });
 

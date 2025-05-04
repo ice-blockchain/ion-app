@@ -43,9 +43,12 @@ class MessageItemWrapper extends HookConsumerWidget {
     final messageItemKey = useMemoized(GlobalKey.new);
 
     final currentUserMasterPubkey = ref.watch(currentPubkeySelectorProvider);
+    final eventReference =
+        ReplaceablePrivateDirectMessageEntity.fromEventMessage(messageItem.eventMessage)
+            .toEventReference();
 
     final deliveryStatus = ref.watch(conversationMessageDataDaoProvider).messageStatus(
-          sharedId: messageItem.eventMessage.sharedId!,
+          eventReference: eventReference,
           currentUserMasterPubkey: currentUserMasterPubkey!,
         );
 
@@ -71,11 +74,23 @@ class MessageItemWrapper extends HookConsumerWidget {
           );
 
           if (emoji != null) {
-            final e2eeMessageService = await ref.read(sendE2eeMessageServiceProvider.future);
-            await e2eeMessageService.sendReaction(
-              content: emoji,
-              kind14Rumor: messageItem.eventMessage,
-            );
+            final messageEventReference =
+                ReplaceablePrivateDirectMessageEntity.fromEventMessage(messageItem.eventMessage)
+                    .toEventReference();
+            final currentUserMasterPubkey = ref.watch(currentPubkeySelectorProvider);
+            final isExist = await ref.read(conversationMessageReactionDaoProvider).isReactionExist(
+                  messageEventReference: messageEventReference,
+                  emoji: emoji,
+                  masterPubkey: currentUserMasterPubkey!,
+                );
+
+            if (!isExist) {
+              final e2eeMessageService = await ref.read(sendE2eeMessageServiceProvider.future);
+              await e2eeMessageService.sendReaction(
+                content: emoji,
+                kind14Rumor: messageItem.eventMessage,
+              );
+            }
           }
 
           await subscription.cancel();
@@ -166,8 +181,10 @@ ChatMessageInfoItem? getRepliedMessageListItem({
       contentDescription: userMetadata?.data.name ?? repliedEntity.data.content,
     );
   } else if (repliedEntity.data.messageType == MessageType.visualMedia) {
-    final messageMedias =
-        ref.watch(chatMediasProvider(eventMessageId: repliedEventMessage.id)).valueOrNull ?? [];
+    final messageMedias = ref
+            .watch(chatMediasProvider(eventReference: repliedEntity.toEventReference()))
+            .valueOrNull ??
+        [];
 
     return MediaItem(
       medias: messageMedias,

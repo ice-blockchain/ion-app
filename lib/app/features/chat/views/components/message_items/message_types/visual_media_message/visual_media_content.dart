@@ -66,7 +66,7 @@ class VisualMediaContent extends HookConsumerWidget {
     return GestureDetector(
       onTap: () async {
         final messageMedias =
-            await ref.read(chatMediasProvider(eventMessageId: eventMessage.id).future);
+            await ref.read(chatMediasProvider(eventReference: entity.toEventReference()).future);
 
         if (context.mounted) {
           await ChatMediaRoute(

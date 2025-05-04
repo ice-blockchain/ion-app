@@ -165,6 +165,9 @@ class E2eeMessagesSubscriber extends _$E2eeMessagesSubscriber {
     }
 
     if (rumor.kind == ReplaceablePrivateDirectMessageEntity.kind) {
+      final entity = ReplaceablePrivateDirectMessageEntity.fromEventMessage(rumor);
+      final eventReference = entity.toEventReference();
+
       // Add conversation if that doesn't exist
       await ref.watch(conversationDaoProvider).add([rumor]);
       // Add message if that doesn't exist
@@ -175,7 +178,7 @@ class E2eeMessagesSubscriber extends _$E2eeMessagesSubscriber {
       // Notify rest of the participants that the message was received
       // by the current user
       final currentStatus = await conversationMessageStatusDao.checkMessageStatus(
-        sharedId: rumor.sharedId!,
+        eventReference: eventReference,
         masterPubkey: masterPubkey,
       );
 
@@ -193,25 +196,16 @@ class E2eeMessagesSubscriber extends _$E2eeMessagesSubscriber {
       // Identify kind 7 status message (received or read only)
       if (reactionEntity.data.content == MessageDeliveryStatus.received.name ||
           reactionEntity.data.content == MessageDeliveryStatus.read.name) {
-        final status = reactionEntity.data.content == MessageDeliveryStatus.received.name
-            ? MessageDeliveryStatus.received
-            : MessageDeliveryStatus.read;
-
-        // Add corresponding status to the database for the sender pubkey
-        // and the kind 30014 shared id, if that doesn't exist
         await conversationMessageStatusDao.addOrUpdateStatus(
-          status: status,
+          messageEventReference: reactionEntity.data.reference,
           pubkey: rumor.pubkey,
-          updateAllBefore: rumor.createdAt,
           masterPubkey: rumor.masterPubkey,
-          sharedId: reactionEntity.data.reference.dTag,
+          status: MessageDeliveryStatus.values.byName(reactionEntity.data.content),
         );
       } else {
         await conversationMessageReactionDao.add(
           ref: ref,
-          newReactionEvent: rumor,
-          kind14SharedId: reactionEntity.data.reference.dTag,
-          masterPubkey: rumor.masterPubkey,
+          reactionEvent: rumor,
         );
       }
     }
@@ -241,12 +235,12 @@ class E2eeMessagesSubscriber extends _$E2eeMessagesSubscriber {
               await conversationMessageDao.removeMessages(
                 ref: ref,
                 deleteRequest: rumor,
-                sharedIds: [eventReference.dTag],
+                eventReferences: [eventReference],
               );
             case ImmutableEventReference():
               await conversationMessageReactionDao.remove(
                 ref: ref,
-                id: eventReference.eventId,
+                reactionEventReference: eventReference,
               );
           }
         }
@@ -305,7 +299,7 @@ class E2eeMessagesSubscriber extends _$E2eeMessagesSubscriber {
           continue;
         }
         await ref.watch(messageMediaDaoProvider).add(
-              eventMessageId: rumor.id,
+              eventReference: entity.toEventReference(),
               status: MessageMediaStatus.completed,
               remoteUrl: media.url,
             );

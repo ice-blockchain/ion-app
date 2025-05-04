@@ -81,7 +81,8 @@ class ChatMediaPage extends HookConsumerWidget {
     final eventMessage = eventMessageFuture.data!;
     final entity = ReplaceablePrivateDirectMessageEntity.fromEventMessage(eventMessage);
 
-    final medias = ref.watch(chatMediasProvider(eventMessageId: eventMessageId)).valueOrNull;
+    final medias =
+        ref.watch(chatMediasProvider(eventReference: entity.toEventReference())).valueOrNull;
 
     useOnInit(
       () {

@@ -78,7 +78,7 @@ class SendE2eeMessageService {
       content: status.name,
       reference: ReplaceableEventReference(
         kind: messageEventMessage.kind,
-        pubkey: messageEventMessage.pubkey,
+        pubkey: messageEventMessage.masterPubkey,
         dTag: messageEventMessage.sharedId,
       ),
       masterPubkey: currentUserMasterPubkey,
@@ -98,7 +98,8 @@ class SendE2eeMessageService {
         await ref.read(sendE2eeChatMessageServiceProvider).sendWrappedMessage(
           pubkey: pubkey,
           eventSigner: eventSigner!,
-          eventMessage: await messageReactionData.toEventMessage(NoPrivateSigner(pubkey)),
+          eventMessage:
+              await messageReactionData.toEventMessage(NoPrivateSigner(eventSigner!.publicKey)),
           masterPubkey: masterPubkey,
           wrappedKinds: [PrivateMessageReactionEntity.kind.toString()],
         );

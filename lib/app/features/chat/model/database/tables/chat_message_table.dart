@@ -4,10 +4,9 @@ part of '../chat_database.c.dart';
 
 class ConversationMessageTable extends Table {
   late final conversationId = text().references(ConversationTable, #id)();
-  late final eventReferenceId =
+  late final messageEventReference =
       text().map(const EventReferenceConverter()).references(EventMessageTable, #eventReference)();
-  late final sharedId = text()();
 
   @override
-  Set<Column<Object>> get primaryKey => {eventReferenceId};
+  Set<Column<Object>> get primaryKey => {messageEventReference};
 }

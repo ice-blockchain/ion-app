@@ -5,6 +5,7 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/auth/providers/auth_provider.c.dart';
+import 'package:ion/app/features/chat/e2ee/model/entities/private_direct_message_data.c.dart';
 import 'package:ion/app/features/chat/e2ee/providers/chat_medias_provider.c.dart';
 import 'package:ion/app/features/chat/model/message_list_item.c.dart';
 import 'package:ion/app/features/chat/views/components/message_items/message_item_wrapper/message_item_wrapper.dart';
@@ -26,9 +27,12 @@ class VisualMediaMessage extends HookConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     useAutomaticKeepAlive();
 
+    final eventReference =
+        ReplaceablePrivateDirectMessageEntity.fromEventMessage(eventMessage).toEventReference();
+
     final isMe = ref.watch(isCurrentUserSelectorProvider(eventMessage.masterPubkey));
     final messageMedias =
-        ref.watch(chatMediasProvider(eventMessageId: eventMessage.id)).valueOrNull ?? [];
+        ref.watch(chatMediasProvider(eventReference: eventReference)).valueOrNull ?? [];
 
     return MessageItemWrapper(
       isMe: isMe,

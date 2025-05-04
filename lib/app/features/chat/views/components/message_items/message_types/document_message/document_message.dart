@@ -40,8 +40,11 @@ class DocumentMessage extends HookConsumerWidget {
 
     final isMe = ref.watch(isCurrentUserSelectorProvider(eventMessage.masterPubkey));
 
+    final eventReference =
+        ReplaceablePrivateDirectMessageEntity.fromEventMessage(eventMessage).toEventReference();
+
     final messageMedia =
-        ref.watch(chatMediasProvider(eventMessageId: eventMessage.id)).valueOrNull?.firstOrNull;
+        ref.watch(chatMediasProvider(eventReference: eventReference)).valueOrNull?.firstOrNull;
 
     final entity = ReplaceablePrivateDirectMessageEntity.fromEventMessage(eventMessage);
     final mediaAttachment =

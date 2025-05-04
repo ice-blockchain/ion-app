@@ -14,20 +14,20 @@ class MessageMediaDao extends DatabaseAccessor<ChatDatabase> with _$MessageMedia
   MessageMediaDao(super.db);
 
   Future<int> add({
-    required String eventMessageId,
+    required EventReference eventReference,
     required MessageMediaStatus status,
     String? cacheKey,
     String? remoteUrl,
   }) async {
     final existRecord = await (select(messageMediaTable)
-          ..where((t) => t.eventMessageId.equals(eventMessageId))
+          ..where((t) => t.messageEventReference.equalsValue(eventReference))
           ..where((t) => t.remoteUrl.equalsNullable(remoteUrl)))
         .getSingleOrNull();
 
     if (existRecord != null) {
       await updateById(
         existRecord.id,
-        eventMessageId,
+        eventReference,
         remoteUrl!,
         status,
       );
@@ -35,7 +35,7 @@ class MessageMediaDao extends DatabaseAccessor<ChatDatabase> with _$MessageMedia
     }
     return into(messageMediaTable).insert(
       MessageMediaTableCompanion(
-        eventMessageId: Value(eventMessageId),
+        messageEventReference: Value(eventReference),
         status: Value(status),
         cacheKey: Value(cacheKey),
         remoteUrl: Value(remoteUrl),
@@ -43,19 +43,21 @@ class MessageMediaDao extends DatabaseAccessor<ChatDatabase> with _$MessageMedia
     );
   }
 
-  Stream<List<MessageMediaTableData>> watchByEventId(String eventId) {
-    return (select(messageMediaTable)..where((t) => t.eventMessageId.equals(eventId))).watch();
+  Stream<List<MessageMediaTableData>> watchByEventId(EventReference eventReference) {
+    return (select(messageMediaTable)
+          ..where((t) => t.messageEventReference.equalsValue(eventReference)))
+        .watch();
   }
 
   Future<void> updateById(
     int id,
-    String eventMessageId,
+    EventReference eventReference,
     String remoteUrl,
     MessageMediaStatus status,
   ) async {
     await (update(messageMediaTable)..where((t) => t.id.equals(id))).write(
       MessageMediaTableCompanion(
-        eventMessageId: Value(eventMessageId),
+        messageEventReference: Value(eventReference),
         remoteUrl: Value(remoteUrl),
         status: Value(status),
       ),
@@ -67,21 +69,21 @@ class MessageMediaDao extends DatabaseAccessor<ChatDatabase> with _$MessageMedia
   }
 
   Future<List<int>> addBatch({
-    required String eventMessageId,
+    required EventReference eventReference,
     required List<String> cacheKeys,
   }) async {
     await batch((b) {
       b
         ..deleteWhere(
           messageMediaTable,
-          (t) => t.eventMessageId.equals(eventMessageId),
+          (t) => t.messageEventReference.equalsValue(eventReference),
         )
         ..insertAll(
           messageMediaTable,
           cacheKeys
               .map(
                 (cacheKey) => MessageMediaTableCompanion(
-                  eventMessageId: Value(eventMessageId),
+                  messageEventReference: Value(eventReference),
                   cacheKey: Value(cacheKey),
                   status: const Value(MessageMediaStatus.processing),
                 ),
@@ -91,7 +93,7 @@ class MessageMediaDao extends DatabaseAccessor<ChatDatabase> with _$MessageMedia
         );
     });
     final result = await (select(messageMediaTable)
-          ..where((t) => t.eventMessageId.equals(eventMessageId)))
+          ..where((t) => t.messageEventReference.equalsValue(eventReference)))
         .get();
     return result.map((e) => e.id).toList();
   }

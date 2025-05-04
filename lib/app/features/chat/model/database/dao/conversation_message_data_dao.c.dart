@@ -14,66 +14,69 @@ class ConversationMessageDataDao extends DatabaseAccessor<ChatDatabase>
   ConversationMessageDataDao(super.db);
 
   Future<void> addOrUpdateStatus({
+    required EventReference messageEventReference,
     required String pubkey,
-    required String sharedId,
     required String masterPubkey,
     required MessageDeliveryStatus status,
     DateTime? updateAllBefore,
   }) async {
     if (updateAllBefore != null && status == MessageDeliveryStatus.read) {
-      // Mark all previous received messages as read prior to the given date
-      final unreadResults = await (select(messageStatusTable)
-            ..where((table) => table.masterPubkey.equals(masterPubkey))
-            ..where((table) => table.status.equals(MessageDeliveryStatus.received.index))
-            ..join([
-              innerJoin(
-                conversationMessageTable,
-                conversationMessageTable.sharedId.equalsExp(messageStatusTable.sharedId) &
-                    eventMessageTable.createdAt.isSmallerThanValue(updateAllBefore),
-              ),
-              innerJoin(
-                eventMessageTable,
-                eventMessageTable.eventReference
-                        .equalsExp(conversationMessageTable.eventReferenceId) &
-                    eventMessageTable.createdAt.isSmallerThanValue(updateAllBefore),
-              ),
-            ]))
-          .get();
+      //TODO: implement this
+      // // Mark all previous received messages as read prior to the given date
+      // final unreadResults = await (select(messageStatusTable)
+      //       ..where((table) => table.masterPubkey.equals(masterPubkey))
+      //       ..where((table) => table.status.equals(MessageDeliveryStatus.received.index))
+      //       ..join([
+      //         innerJoin(
+      //           conversationMessageTable,
+      //           conversationMessageTable.messageEventReference
+      //                   .equalsExp(messageStatusTable.messageEventReference) &
+      //               eventMessageTable.createdAt.isSmallerThanValue(updateAllBefore),
+      //         ),
+      //         innerJoin(
+      //           eventMessageTable,
+      //           eventMessageTable.eventReference
+      //                   .equalsExp(conversationMessageTable.messageEventReference) &
+      //               eventMessageTable.createdAt.isSmallerThanValue(updateAllBefore),
+      //         ),
+      //       ]))
+      //     .get();
 
       // Batch update the status of all previous messages to read
-      await batch((batch) {
-        for (final row in unreadResults) {
-          batch.update(
-            messageStatusTable,
-            const MessageStatusTableCompanion(status: Value(MessageDeliveryStatus.read)),
-            where: (table) =>
-                table.sharedId.equals(row.sharedId) & table.masterPubkey.equals(row.masterPubkey),
-          );
-        }
-      });
+      // await batch((batch) {
+      //   for (final row in unreadResults) {
+      //     batch.update(
+      //       messageStatusTable,
+      //       const MessageStatusTableCompanion(status: Value(MessageDeliveryStatus.read)),
+      //       where: (table) =>
+      //           table.messageEventReference.equalsValue(row.messageEventReference) &
+      //           table.masterPubkey.equals(row.masterPubkey),
+      //     );
+      //   }
+      // });
     } else {
-      // Fetch the existing status for the given pubkey and sharedId
+      // Fetch the existing status for the given pubkey and eventReference
       final existingStatus = await (select(messageStatusTable)
             ..where((table) => table.pubkey.equals(pubkey))
             ..where((table) => table.masterPubkey.equals(masterPubkey))
-            ..where((table) => table.sharedId.equals(sharedId)))
+            ..where((table) => table.messageEventReference.equalsValue(messageEventReference)))
           .getSingleOrNull();
 
       if (existingStatus == null) {
         // Insert a new row if no existing status is found
         await into(messageStatusTable).insert(
-          MessageStatusTableCompanion(
-            status: Value(status),
-            pubkey: Value(pubkey),
-            sharedId: Value(sharedId),
-            masterPubkey: Value(masterPubkey),
+          MessageStatusTableCompanion.insert(
+            status: status,
+            pubkey: pubkey,
+            messageEventReference: messageEventReference,
+            masterPubkey: masterPubkey,
           ),
         );
       } else if (status.index > existingStatus.status.index) {
         // Update the row if the new status has a higher priority
         await (update(messageStatusTable)
               ..where((table) => table.pubkey.equals(pubkey))
-              ..where((table) => table.sharedId.equals(sharedId))
+              ..where((table) => table.messageEventReference.equalsValue(messageEventReference))
               ..where((table) => table.masterPubkey.equals(masterPubkey)))
             .write(
           MessageStatusTableCompanion(
@@ -85,10 +88,11 @@ class ConversationMessageDataDao extends DatabaseAccessor<ChatDatabase>
   }
 
   Stream<MessageDeliveryStatus> messageStatus({
-    required String sharedId,
+    required EventReference eventReference,
     required String currentUserMasterPubkey,
   }) {
-    return (select(messageStatusTable)..where((table) => table.sharedId.equals(sharedId)))
+    return (select(messageStatusTable)
+          ..where((table) => table.messageEventReference.equalsValue(eventReference)))
         .watch()
         .map((rows) {
       // If any of the rows are deleted, we consider the message as deleted
@@ -127,23 +131,11 @@ class ConversationMessageDataDao extends DatabaseAccessor<ChatDatabase>
     });
   }
 
-  Future<Map<String, MessageDeliveryStatus>> messageStatuses({
-    required String sharedId,
-    required String masterPubkey,
-  }) async {
-    final existingRows = await (select(messageStatusTable)
-          ..where((table) => table.sharedId.equals(sharedId))
-          ..where((table) => table.masterPubkey.equals(masterPubkey)))
-        .get();
-
-    return {for (final row in existingRows) row.masterPubkey: row.status};
-  }
-
   Future<List<String>> getFailedParticipants({
-    required String sharedId,
+    required EventReference eventReference,
   }) async {
     final existingRows = await (select(messageStatusTable)
-          ..where((table) => table.sharedId.equals(sharedId))
+          ..where((table) => table.messageEventReference.equalsValue(eventReference))
           ..where((table) => table.status.equals(MessageDeliveryStatus.failed.index)))
         .get();
 
@@ -151,11 +143,11 @@ class ConversationMessageDataDao extends DatabaseAccessor<ChatDatabase>
   }
 
   Future<MessageDeliveryStatus?> checkMessageStatus({
-    required String sharedId,
+    required EventReference eventReference,
     required String masterPubkey,
   }) async {
     final existingDeviceStatuses = await (select(messageStatusTable)
-          ..where((table) => table.sharedId.equals(sharedId))
+          ..where((table) => table.messageEventReference.equalsValue(eventReference))
           ..where((table) => table.masterPubkey.equals(masterPubkey)))
         .get();
 
@@ -167,10 +159,10 @@ class ConversationMessageDataDao extends DatabaseAccessor<ChatDatabase>
   }
 
   Future<void> reinitializeFailedStatus({
-    required String sharedId,
+    required EventReference eventReference,
   }) async {
     await (update(messageStatusTable)
-          ..where((table) => table.sharedId.equals(sharedId))
+          ..where((table) => table.messageEventReference.equalsValue(eventReference))
           ..where((table) => table.status.equals(MessageDeliveryStatus.failed.index)))
         .write(
       const MessageStatusTableCompanion(

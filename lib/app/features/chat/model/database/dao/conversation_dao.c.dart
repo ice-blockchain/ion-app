@@ -112,14 +112,17 @@ class ConversationDao extends DatabaseAccessor<ChatDatabase> with _$Conversation
       ),
       leftOuterJoin(
         eventMessageTable,
-        eventMessageTable.eventReference.equalsExp(conversationMessageTable.eventReferenceId),
+        eventMessageTable.eventReference.equalsExp(conversationMessageTable.messageEventReference),
       ),
     ])
       ..where(
         notExistsQuery(
           select(messageStatusTable)
             ..where((tbl) => tbl.status.equals(MessageDeliveryStatus.deleted.index))
-            ..where((table) => table.sharedId.equalsExp(conversationMessageTable.sharedId)),
+            ..where(
+              (table) => table.messageEventReference
+                  .equalsExp(conversationMessageTable.messageEventReference),
+            ),
         ),
       )
       ..addColumns([eventMessageTable.createdAt.max()])
@@ -159,12 +162,12 @@ class ConversationDao extends DatabaseAccessor<ChatDatabase> with _$Conversation
       ),
       innerJoin(
         eventMessageTable,
-        eventMessageTable.eventReference.equalsExp(conversationMessageTable.eventReferenceId),
+        eventMessageTable.eventReference.equalsExp(conversationMessageTable.messageEventReference),
       ),
     ])
       ..where(conversationTable.type.equals(ConversationType.oneToOne.index))
       ..where(conversationTable.isDeleted.equals(false))
-      ..where(eventMessageTable.tags.contains(receiverMasterPubkey))
+      ..where(eventMessageTable.masterPubkey.equals(receiverMasterPubkey))
       ..where(
         eventMessageTable.kind.equals(ReplaceablePrivateDirectMessageEntity.kind),
       )
@@ -222,7 +225,7 @@ class ConversationDao extends DatabaseAccessor<ChatDatabase> with _$Conversation
     final query = select(eventMessageTable).join([
       innerJoin(
         conversationMessageTable,
-        conversationMessageTable.eventReferenceId.equalsExp(eventMessageTable.eventReference),
+        conversationMessageTable.messageEventReference.equalsExp(eventMessageTable.eventReference),
       ),
     ])
       ..where(conversationMessageTable.conversationId.equals(conversationId))
@@ -247,22 +250,22 @@ class ConversationDao extends DatabaseAccessor<ChatDatabase> with _$Conversation
   }) async {
     await ref.read(eventMessageDaoProvider).add(deleteRequest);
 
-    final sharedMessageId = await (select(conversationMessageTable).join([
+    final messageEventReference = await (select(conversationMessageTable).join([
       innerJoin(
         eventMessageTable,
-        eventMessageTable.eventReference.equalsExp(conversationMessageTable.eventReferenceId),
+        eventMessageTable.eventReference.equalsExp(conversationMessageTable.messageEventReference),
       ),
     ])
           ..where(conversationMessageTable.conversationId.isIn(conversationIds))
           ..where(eventMessageTable.createdAt.isSmallerThanValue(deleteRequest.createdAt)))
-        .map((row) => row.readTable(conversationMessageTable).sharedId)
+        .map((row) => row.readTable(conversationMessageTable).messageEventReference)
         .get();
 
     await batch((b) {
       b.update(
         messageStatusTable,
         const MessageStatusTableCompanion(status: Value(MessageDeliveryStatus.deleted)),
-        where: (table) => table.sharedId.isIn(sharedMessageId),
+        where: (table) => table.messageEventReference.isInValues(messageEventReference),
       );
     });
   }

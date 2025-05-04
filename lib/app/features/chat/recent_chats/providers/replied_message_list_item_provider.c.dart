@@ -4,7 +4,6 @@ import 'package:ion/app/features/chat/e2ee/model/entities/private_direct_message
 import 'package:ion/app/features/chat/model/database/chat_database.c.dart';
 import 'package:ion/app/features/chat/model/message_list_item.c.dart';
 import 'package:ion/app/features/ion_connect/ion_connect.dart';
-import 'package:ion/app/features/ion_connect/model/event_reference.c.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'replied_message_list_item_provider.c.g.dart';
@@ -18,15 +17,11 @@ class RepliedMessageListItem extends _$RepliedMessageListItem {
     final repliedEvent = entity.data.parentEvent;
 
     if (repliedEvent != null) {
-      final dTag = (repliedEvent.eventReference as ReplaceableEventReference).dTag;
+      final repliedMessageEvent = await ref.watch(conversationMessageDaoProvider).getEventMessage(
+            eventReference: repliedEvent.eventReference,
+          );
 
-      if (dTag != null) {
-        final repliedMessageEvent = await ref.watch(conversationMessageDaoProvider).getEventMessage(
-              sharedId: dTag,
-            );
-
-        return repliedMessageEvent;
-      }
+      return repliedMessageEvent;
     }
 
     return null;

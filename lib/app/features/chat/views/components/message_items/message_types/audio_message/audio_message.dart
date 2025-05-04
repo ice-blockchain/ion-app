@@ -48,8 +48,10 @@ class AudioMessage extends HookConsumerWidget {
 
     final hasReactions = useHasReaction(eventMessage, ref);
 
-    final messageMedia =
-        ref.watch(chatMediasProvider(eventMessageId: eventMessage.id)).valueOrNull?.firstOrNull;
+    final messageMedia = ref
+        .watch(chatMediasProvider(eventReference: entity.toEventReference()))
+        .valueOrNull
+        ?.firstOrNull;
 
     final mediaAttachment =
         messageMedia?.remoteUrl == null ? null : entity.data.media[messageMedia?.remoteUrl!];

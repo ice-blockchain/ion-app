@@ -24,9 +24,11 @@ class MessageMetaData extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final currentUserMasterPubkey = ref.watch(currentPubkeySelectorProvider);
+    final eventReference =
+        ReplaceablePrivateDirectMessageEntity.fromEventMessage(eventMessage).toEventReference();
 
     final deliveryStatus = ref.watch(conversationMessageDataDaoProvider).messageStatus(
-          sharedId: eventMessage.sharedId!,
+          eventReference: eventReference,
           currentUserMasterPubkey: currentUserMasterPubkey!,
         );
 

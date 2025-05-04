@@ -107,11 +107,7 @@ Future<void> _deleteReaction({
   final deleteRequest = DeletionRequest(
     events: [
       EventToDelete(
-        ImmutableEventReference(
-          eventId: eventReference.eventId,
-          kind: PrivateMessageReactionEntity.kind,
-          pubkey: eventReference.pubkey,
-        ),
+        eventReference,
       ),
     ],
   );
@@ -160,10 +156,6 @@ Future<void> _deleteMessages({
     throw UserMasterPubkeyNotFoundException();
   }
 
-  if (messageEvents.any((event) => event.pubkey != eventSigner.publicKey)) {
-    throw PubkeysDoNotMatchException();
-  }
-
   final participantsMasterPubkeys =
       forEveryone ? messageEvents.first.participantsMasterPubkeys : [currentUserMasterPubkey];
 
@@ -174,7 +166,7 @@ Future<void> _deleteMessages({
             ReplaceableEventReference(
               kind: event.kind,
               dTag: event.sharedId,
-              pubkey: event.pubkey,
+              pubkey: event.masterPubkey,
             ),
           ),
         )
