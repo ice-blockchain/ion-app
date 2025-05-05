@@ -35,8 +35,8 @@ class PrivateMessageReactionEntity
     return PrivateMessageReactionEntity(
       id: eventMessage.id,
       pubkey: eventMessage.pubkey,
-      masterPubkey: eventMessage.masterPubkey,
       createdAt: eventMessage.createdAt,
+      masterPubkey: eventMessage.masterPubkey,
       data: PrivateMessageReactionEntityData.fromEventMessage(eventMessage),
     );
   }

@@ -104,11 +104,7 @@ Future<void> _deleteReaction({
 
   final eventReference = reactionEntity.toEventReference();
 
-  final deleteRequest = DeletionRequest(
-    events: [
-      EventToDelete(eventReference: eventReference),
-    ],
-  );
+  final deleteRequest = DeletionRequest(events: [EventToDelete(eventReference)]);
 
   final eventMessage = await deleteRequest.toEventMessage(eventSigner);
 
