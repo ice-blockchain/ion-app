@@ -199,6 +199,7 @@ class SendCoinsForm extends HookConsumerWidget {
                 ),
               ),
             ),
+            ),
           ],
         ),
       ),
