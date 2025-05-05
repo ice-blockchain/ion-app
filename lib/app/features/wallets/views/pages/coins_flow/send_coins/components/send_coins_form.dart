@@ -16,6 +16,7 @@ import 'package:ion/app/extensions/object.dart';
 import 'package:ion/app/features/user/pages/profile_page/components/user_payment_flow_card/user_payment_flow_card.dart';
 import 'package:ion/app/features/user/providers/user_metadata_provider.c.dart';
 import 'package:ion/app/features/wallets/model/crypto_asset_to_send_data.c.dart';
+import 'package:ion/app/features/wallets/model/network_data.c.dart';
 import 'package:ion/app/features/wallets/providers/send_asset_form_provider.c.dart';
 import 'package:ion/app/features/wallets/utils/wallet_address_validator.dart';
 import 'package:ion/app/features/wallets/views/pages/coins_flow/send_coins/components/buttons/coin_amount_input.dart';
@@ -30,7 +31,6 @@ import 'package:ion/app/router/components/navigation_app_bar/navigation_app_bar.
 import 'package:ion/app/router/components/navigation_app_bar/navigation_close_button.dart';
 import 'package:ion/app/router/components/sheet_content/sheet_content.dart';
 import 'package:ion/generated/assets.gen.dart';
-import 'package:ion_identity_client/ion_identity.dart';
 
 class SendCoinsForm extends HookConsumerWidget {
   const SendCoinsForm({
@@ -176,13 +176,8 @@ class SendCoinsForm extends HookConsumerWidget {
                       const CoinsNetworkFeeSelector(),
                       if (formController.canCoverNetworkFee)
                         SizedBox(height: 45.0.s)
-                      else if (formController.networkNativeToken
-                          case final WalletAsset networkToken)
-                        NotEnoughMoneyForNetworkFeeMessage(
-                          coinAsset: coin!,
-                          networkToken: networkToken,
-                          network: formController.network!,
-                        ),
+                      else if (formController.network case final NetworkData network)
+                        NotEnoughMoneyForNetworkFeeMessage(network: network),
                       Button(
                         label: Text(
                           locale.button_continue,
