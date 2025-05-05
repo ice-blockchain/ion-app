@@ -2,6 +2,7 @@
 
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/features/feed/providers/counters/like_reaction_provider.c.dart';
+import 'package:ion/app/features/feed/providers/delete_entity_provider.c.dart';
 import 'package:ion/app/features/ion_connect/model/action_source.c.dart';
 import 'package:ion/app/features/ion_connect/providers/ion_connect_cache.c.dart';
 import 'package:ion/app/features/ion_connect/providers/ion_connect_notifier.c.dart';
@@ -20,7 +21,6 @@ SyncStrategy<PostLike> likeSyncStrategy(Ref ref) {
   return LikeSyncStrategy(
     sendReaction: (reaction) async {
       final userEventsMetadataBuilder = await ref.read(userEventsMetadataBuilderProvider.future);
-
       await Future.wait([
         ionNotifier.sendEntityData(reaction),
         ionNotifier.sendEntityData(
@@ -32,7 +32,9 @@ SyncStrategy<PostLike> likeSyncStrategy(Ref ref) {
       ]);
     },
     getLikeEntity: (eventReference) => ref.read(likeReactionProvider(eventReference)),
-    deleteReaction: (deletion) async => ionNotifier.sendEntityData(deletion, cache: false),
+    deleteReaction: (reactionEntity) async {
+      await ref.read(deleteEntityControllerProvider.notifier).deleteEntity(reactionEntity);
+    },
     removeFromCache: (cacheKey) => ref.read(ionConnectCacheProvider.notifier).remove(cacheKey),
   );
 }
