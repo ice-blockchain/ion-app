@@ -88,20 +88,22 @@ class SendE2eeMessageService {
         final participantsKeysMap = await conversationPubkeysNotifier
             .fetchUsersKeys(messageEventMessage.participantsMasterPubkeys);
 
-        final pubkey = participantsKeysMap[masterPubkey];
+        final pubkeys = participantsKeysMap[masterPubkey];
 
-        if (pubkey == null) {
+        if (pubkeys == null) {
           throw UserPubkeyNotFoundException(masterPubkey);
         }
 
-        await ref.read(sendE2eeChatMessageServiceProvider).sendWrappedMessage(
-          pubkey: pubkey,
-          eventSigner: eventSigner!,
-          eventMessage:
-              await messageReactionData.toEventMessage(NoPrivateSigner(eventSigner!.publicKey)),
-          masterPubkey: masterPubkey,
-          wrappedKinds: [PrivateMessageReactionEntity.kind.toString()],
-        );
+        for (final pubkey in pubkeys) {
+          await ref.read(sendE2eeChatMessageServiceProvider).sendWrappedMessage(
+            pubkey: pubkey,
+            eventSigner: eventSigner!,
+            eventMessage:
+                await messageReactionData.toEventMessage(NoPrivateSigner(eventSigner!.publicKey)),
+            masterPubkey: masterPubkey,
+            wrappedKinds: [PrivateMessageReactionEntity.kind.toString()],
+          );
+        }
       }),
     );
   }
@@ -132,19 +134,21 @@ class SendE2eeMessageService {
       participantsMasterPubkeys.map((masterPubkey) async {
         final participantsKeysMap =
             await conversationPubkeysNotifier.fetchUsersKeys(participantsMasterPubkeys);
-        final pubkey = participantsKeysMap[masterPubkey];
+        final pubkeys = participantsKeysMap[masterPubkey];
 
-        if (pubkey == null) {
+        if (pubkeys == null) {
           throw UserPubkeyNotFoundException(masterPubkey);
         }
 
-        await ref.read(sendE2eeChatMessageServiceProvider).sendWrappedMessage(
-          eventSigner: eventSigner!,
-          eventMessage: messageReactionEventMessage,
-          masterPubkey: masterPubkey,
-          pubkey: pubkey,
-          wrappedKinds: [PrivateMessageReactionEntity.kind.toString()],
-        );
+        for (final pubkey in pubkeys) {
+          await ref.read(sendE2eeChatMessageServiceProvider).sendWrappedMessage(
+            eventSigner: eventSigner!,
+            eventMessage: messageReactionEventMessage,
+            masterPubkey: masterPubkey,
+            pubkey: pubkey,
+            wrappedKinds: [PrivateMessageReactionEntity.kind.toString()],
+          );
+        }
       }),
     );
   }

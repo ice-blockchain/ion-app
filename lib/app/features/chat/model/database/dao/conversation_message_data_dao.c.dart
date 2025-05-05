@@ -22,27 +22,20 @@ class ConversationMessageDataDao extends DatabaseAccessor<ChatDatabase>
   }) async {
     if (updateAllBefore != null && status == MessageDeliveryStatus.read) {
       // Mark all previous received messages as read prior to the given date
-      final unreadResults = await (select(messageStatusTable)
-            ..where((table) => table.masterPubkey.equals(masterPubkey))
-            ..where((table) => table.status.equals(MessageDeliveryStatus.received.index))
-            ..join([
-              innerJoin(
-                conversationMessageTable,
-                conversationMessageTable.messageEventReference
-                        .equalsExp(messageStatusTable.messageEventReference) &
-                    eventMessageTable.createdAt.isSmallerThanValue(updateAllBefore),
-              ),
-              innerJoin(
-                eventMessageTable,
-                eventMessageTable.eventReference
-                        .equalsExp(conversationMessageTable.messageEventReference) &
-                    eventMessageTable.createdAt.isSmallerThanValue(updateAllBefore),
-              ),
-            ]))
+      final unreadResults = await (select(messageStatusTable).join([
+        innerJoin(
+          eventMessageTable,
+          eventMessageTable.eventReference.equalsExp(messageStatusTable.messageEventReference),
+        ),
+      ])
+            ..where(eventMessageTable.createdAt.isSmallerThanValue(updateAllBefore))
+            ..where(messageStatusTable.masterPubkey.equals(masterPubkey))
+            ..where(messageStatusTable.status.equals(MessageDeliveryStatus.received.index)))
+          .map((row) => row.readTable(messageStatusTable))
           .get();
 
       // Batch update the status of all previous messages to read
-      await batch((batch) {
+      await batch((batch) async {
         for (final row in unreadResults) {
           batch.update(
             messageStatusTable,

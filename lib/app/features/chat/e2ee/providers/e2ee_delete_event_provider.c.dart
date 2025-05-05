@@ -114,24 +114,23 @@ Future<void> _deleteReaction({
 
   await Future.wait(
     participantsMasterPubkeys.map((masterPubkey) async {
-      final currentUser = currentUserMasterPubkey == masterPubkey;
-
       final participantsKeysMap =
           await conversationPubkeysNotifier.fetchUsersKeys(participantsMasterPubkeys);
 
-      final pubkey = participantsKeysMap[masterPubkey];
+      final pubkeys = participantsKeysMap[masterPubkey];
 
-      if (pubkey == null) {
+      if (pubkeys == null) {
         throw UserPubkeyNotFoundException(masterPubkey);
       }
-
-      await ref.read(sendE2eeChatMessageServiceProvider).sendWrappedMessage(
-            eventSigner: eventSigner,
-            masterPubkey: masterPubkey,
-            eventMessage: eventMessage,
-            wrappedKinds: [DeletionRequestEntity.kind.toString()],
-            pubkey: currentUser ? eventSigner.publicKey : pubkey,
-          );
+      for (final pubkey in pubkeys) {
+        await ref.read(sendE2eeChatMessageServiceProvider).sendWrappedMessage(
+              eventSigner: eventSigner,
+              masterPubkey: masterPubkey,
+              eventMessage: eventMessage,
+              wrappedKinds: [DeletionRequestEntity.kind.toString()],
+              pubkey: pubkey,
+            );
+      }
     }),
   );
 }
@@ -172,24 +171,24 @@ Future<void> _deleteMessages({
 
   await Future.wait(
     participantsMasterPubkeys.map((masterPubkey) async {
-      final currentUser = currentUserMasterPubkey == masterPubkey;
-
       final participantsKeysMap =
           await conversationPubkeysNotifier.fetchUsersKeys(participantsMasterPubkeys);
 
-      final pubkey = participantsKeysMap[masterPubkey];
+      final pubkeys = participantsKeysMap[masterPubkey];
 
-      if (pubkey == null) {
+      if (pubkeys == null) {
         throw UserPubkeyNotFoundException(masterPubkey);
       }
 
-      await ref.read(sendE2eeChatMessageServiceProvider).sendWrappedMessage(
-            eventSigner: eventSigner,
-            masterPubkey: masterPubkey,
-            eventMessage: eventMessage,
-            wrappedKinds: [DeletionRequestEntity.kind.toString()],
-            pubkey: currentUser ? eventSigner.publicKey : pubkey,
-          );
+      for (final pubkey in pubkeys) {
+        await ref.read(sendE2eeChatMessageServiceProvider).sendWrappedMessage(
+              eventSigner: eventSigner,
+              masterPubkey: masterPubkey,
+              eventMessage: eventMessage,
+              wrappedKinds: [DeletionRequestEntity.kind.toString()],
+              pubkey: pubkey,
+            );
+      }
     }),
   );
 }
@@ -226,24 +225,24 @@ Future<void> _deleteConversations({
 
         return Future.wait(
           participantsMasterPubkeys.map((masterPubkey) async {
-            final currentUser = currentUserMasterPubkey == masterPubkey;
-
             final participantsKeysMap =
                 await conversationPubkeysNotifier.fetchUsersKeys(participantsMasterPubkeys);
 
-            final pubkey = participantsKeysMap[masterPubkey];
+            final pubkeys = participantsKeysMap[masterPubkey];
 
-            if (pubkey == null) {
+            if (pubkeys == null) {
               throw UserPubkeyNotFoundException(masterPubkey);
             }
 
-            await ref.read(sendE2eeChatMessageServiceProvider).sendWrappedMessage(
-                  eventSigner: eventSigner,
-                  masterPubkey: masterPubkey,
-                  eventMessage: eventMessage,
-                  wrappedKinds: [DeletionRequestEntity.kind.toString()],
-                  pubkey: currentUser ? eventSigner.publicKey : pubkey,
-                );
+            for (final pubkey in pubkeys) {
+              await ref.read(sendE2eeChatMessageServiceProvider).sendWrappedMessage(
+                    eventSigner: eventSigner,
+                    masterPubkey: masterPubkey,
+                    eventMessage: eventMessage,
+                    wrappedKinds: [DeletionRequestEntity.kind.toString()],
+                    pubkey: pubkey,
+                  );
+            }
           }),
         );
       },

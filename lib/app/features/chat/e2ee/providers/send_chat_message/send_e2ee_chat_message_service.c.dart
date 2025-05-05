@@ -141,44 +141,47 @@ class SendE2eeChatMessageService {
 
       await Future.wait(
         participantsMasterPubkeys.map((masterPubkey) async {
-          final pubkeyDevice = participantsPubkeysMap[masterPubkey];
+          final pubkeyDevices = participantsPubkeysMap[masterPubkey];
           try {
-            if (pubkeyDevice == null) throw UserPubkeyNotFoundException(masterPubkey);
+            if (pubkeyDevices == null) throw UserPubkeyNotFoundException(masterPubkey);
 
             final attachments = mediaAttachmentsUsersBased[masterPubkey] ?? [];
 
             final isCurrentUser = currentUserMasterPubkey == masterPubkey;
 
-            final remoteEventMessage = await ReplaceablePrivateDirectMessageData(
-              content: content,
-              messageId: sharedId,
-              publishedAt: publishedAt,
-              editingEndedAt: editingEndedAt,
-              conversationId: conversationId,
-              media: {
-                for (final attachment in attachments) attachment.url: attachment,
-              },
-              masterPubkey: currentUserMasterPubkey,
-              relatedPubkeys:
-                  participantsMasterPubkeys.map((pubkey) => RelatedPubkey(value: pubkey)).toList(),
-              groupSubject: subject.isNotEmpty ? GroupSubject(subject!) : null,
-              relatedEvents: _generateRelatedEvents(repliedMessage),
-            ).toEventMessage(NoPrivateSigner(eventSigner.publicKey));
+            for (final pubkey in pubkeyDevices) {
+              final remoteEventMessage = await ReplaceablePrivateDirectMessageData(
+                content: content,
+                messageId: sharedId,
+                publishedAt: publishedAt,
+                editingEndedAt: editingEndedAt,
+                conversationId: conversationId,
+                media: {
+                  for (final attachment in attachments) attachment.url: attachment,
+                },
+                masterPubkey: currentUserMasterPubkey,
+                relatedPubkeys: participantsMasterPubkeys
+                    .map((pubkey) => RelatedPubkey(value: pubkey))
+                    .toList(),
+                groupSubject: subject.isNotEmpty ? GroupSubject(subject!) : null,
+                relatedEvents: _generateRelatedEvents(repliedMessage),
+              ).toEventMessage(NoPrivateSigner(eventSigner.publicKey));
 
-            await sendWrappedMessage(
-              pubkey: pubkeyDevice,
-              eventSigner: eventSigner,
-              masterPubkey: masterPubkey,
-              wrappedKinds: [kind.toString()],
-              eventMessage: remoteEventMessage,
-            );
+              await sendWrappedMessage(
+                pubkey: pubkey,
+                eventSigner: eventSigner,
+                masterPubkey: masterPubkey,
+                wrappedKinds: [kind.toString()],
+                eventMessage: remoteEventMessage,
+              );
 
-            await ref.read(conversationMessageDataDaoProvider).addOrUpdateStatus(
-                  pubkey: eventReference!.pubkey,
-                  messageEventReference: eventReference,
-                  masterPubkey: masterPubkey,
-                  status: isCurrentUser ? MessageDeliveryStatus.read : MessageDeliveryStatus.sent,
-                );
+              await ref.read(conversationMessageDataDaoProvider).addOrUpdateStatus(
+                    pubkey: eventReference!.pubkey,
+                    messageEventReference: eventReference,
+                    masterPubkey: masterPubkey,
+                    status: isCurrentUser ? MessageDeliveryStatus.read : MessageDeliveryStatus.sent,
+                  );
+            }
           } catch (e) {
             await ref.read(conversationMessageDataDaoProvider).addOrUpdateStatus(
                   pubkey: eventReference!.pubkey,
@@ -190,16 +193,18 @@ class SendE2eeChatMessageService {
         }),
       );
     } catch (e) {
-      for (final masterPubkey in participantsMasterPubkeys) {
-        final pubkey = participantsPubkeysMap[masterPubkey];
-
-        if (pubkey != null && sentMessage != null && eventReference != null) {
-          await ref.read(conversationMessageDataDaoProvider).addOrUpdateStatus(
-                pubkey: pubkey,
-                messageEventReference: eventReference,
-                masterPubkey: masterPubkey,
-                status: MessageDeliveryStatus.failed,
-              );
+      if (eventReference != null) {
+        for (final masterPubkey in participantsMasterPubkeys) {
+          final pubkeyDevices = participantsPubkeysMap[masterPubkey];
+          if (pubkeyDevices == null) continue;
+          for (final pubkey in pubkeyDevices) {
+            await ref.read(conversationMessageDataDaoProvider).addOrUpdateStatus(
+                  pubkey: pubkey,
+                  messageEventReference: eventReference,
+                  masterPubkey: masterPubkey,
+                  status: MessageDeliveryStatus.failed,
+                );
+          }
         }
       }
       throw SendEventException(e.toString());

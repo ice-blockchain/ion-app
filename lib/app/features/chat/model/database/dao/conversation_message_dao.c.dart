@@ -35,7 +35,8 @@ class ConversationMessageDao extends DatabaseAccessor<ChatDatabase>
     ])
       ..where(conversationMessageTable.conversationId.equals(conversationId))
       ..where(messageStatusTable.masterPubkey.equals(currentUserMasterPubkey))
-      ..where(messageStatusTable.status.equals(MessageDeliveryStatus.received.index));
+      ..where(messageStatusTable.status.equals(MessageDeliveryStatus.received.index))
+      ..groupBy([messageStatusTable.messageEventReference]);
 
     return query.watch().map((rows) => rows.length);
   }
@@ -56,13 +57,14 @@ class ConversationMessageDao extends DatabaseAccessor<ChatDatabase>
     ])
       ..where(conversationTable.isArchived.equals(true))
       ..where(messageStatusTable.masterPubkey.equals(currentUserMasterPubkey))
-      ..where(messageStatusTable.status.equals(MessageDeliveryStatus.received.index));
+      ..where(messageStatusTable.status.equals(MessageDeliveryStatus.received.index))
+      ..groupBy([messageStatusTable.messageEventReference]);
 
     return query.watch().map((rows) => rows.length);
   }
 
   Stream<int> getAllUnreadMessagesCount(
-    String currentUserMasterPubkey,
+    String masterPubkey,
     List<String> mutedConversationIds,
   ) {
     final query = select(messageStatusTable).join([
@@ -76,7 +78,8 @@ class ConversationMessageDao extends DatabaseAccessor<ChatDatabase>
         conversationMessageTable.conversationId.isNotIn(mutedConversationIds),
       )
       ..where(messageStatusTable.status.equals(MessageDeliveryStatus.received.index))
-      ..where(messageStatusTable.masterPubkey.equals(currentUserMasterPubkey));
+      ..where(messageStatusTable.masterPubkey.equals(masterPubkey))
+      ..groupBy([messageStatusTable.messageEventReference]);
 
     return query.watch().map((rows) {
       return rows.length;
