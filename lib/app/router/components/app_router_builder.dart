@@ -5,6 +5,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/components/global_notification_bar/global_notification_bar_wrapper.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/debug/views/debug_rotate_gesture.dart';
+import 'package:ion/app/features/feed/global_notifications/helpers/feed_global_notifications_helper.dart';
 import 'package:ion/app/features/protect_account/secure_account/views/components/two_fa_signature_wrapper.dart';
 import 'package:ion/app/services/ui_event_queue/ui_event_queue_listener.dart';
 
@@ -18,6 +19,7 @@ class AppRouterBuilder extends HookConsumerWidget {
     return Material(
       color: context.theme.appColors.secondaryBackground,
       child: GlobalNotificationBarWrapper(
+        setUpListeners: setupFeedGlobalNotificationsListeners,
         children: [
           const UiEventQueueListener(),
           Expanded(
