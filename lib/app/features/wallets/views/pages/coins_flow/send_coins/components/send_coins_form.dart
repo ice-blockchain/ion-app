@@ -97,112 +97,115 @@ class SendCoinsForm extends HookConsumerWidget {
 
     return SheetContent(
       body: KeyboardDismissOnTap(
-        child: SingleChildScrollView(
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Padding(
-                padding: EdgeInsets.symmetric(vertical: 8.0.s),
-                child: NavigationAppBar.screen(
-                  title: Text(locale.wallet_send_coins),
-                  actions: const [
-                    NavigationCloseButton(),
-                  ],
-                ),
+        child: Column(
+          children: [
+            Padding(
+              padding: EdgeInsets.symmetric(vertical: 8.0.s),
+              child: NavigationAppBar.screen(
+                title: Text(locale.wallet_send_coins),
+                actions: const [
+                  NavigationCloseButton(),
+                ],
               ),
-              ScreenSideOffset.small(
-                child: Column(
-                  children: [
-                    SelectCoinButton(
-                      selectedCoin: coin?.selectedOption,
-                      enabled: formController.request == null,
-                      onTap: () => context.push(selectCoinRouteLocationBuilder()),
-                    ),
-                    SizedBox(height: 12.0.s),
-                    SelectNetworkButton(
-                      selectedNetwork: formController.network,
-                      enabled: formController.request == null,
-                      onTap: () {
-                        if (coin?.selectedOption != null) {
-                          context.push(selectNetworkRouteLocationBuilder());
-                        } else {
-                          context.push(selectCoinRouteLocationBuilder());
-                        }
-                      },
-                    ),
-                    SizedBox(height: 12.0.s),
-                    if (formController.isContactPreselected && formController.contactPubkey != null)
-                      UserPaymentFlowCard(pubkey: formController.contactPubkey!)
-                    else
-                      ContactInputSwitcher(
-                        pubkey: selectedContactPubkey,
-                        address: formController.receiverAddress,
-                        network: formController.network,
-                        onClearTap: (pubkey) {
-                          notifier
-                            ..setContact(null)
-                            ..setReceiverAddress('');
-                        },
-                        onWalletAddressChanged: (String? value) {
-                          if (value != null) {
-                            notifier.setReceiverAddress(value);
+            ),
+            Expanded(
+              child: SingleChildScrollView(
+                child: ScreenSideOffset.small(
+                  child: Column(
+                    children: [
+                      SelectCoinButton(
+                        selectedCoin: coin?.selectedOption,
+                        enabled: formController.request == null,
+                        onTap: () => context.push(selectCoinRouteLocationBuilder()),
+                      ),
+                      SizedBox(height: 12.0.s),
+                      SelectNetworkButton(
+                        selectedNetwork: formController.network,
+                        enabled: formController.request == null,
+                        onTap: () {
+                          if (coin?.selectedOption != null) {
+                            context.push(selectNetworkRouteLocationBuilder());
+                          } else {
+                            context.push(selectCoinRouteLocationBuilder());
                           }
                         },
-                        onContactTap: () async {
-                          final pubkey = await context.push<String>(
-                            selectContactRouteLocationBuilder!(formController.network!.id),
-                          );
+                      ),
+                      SizedBox(height: 12.0.s),
+                      if (formController.isContactPreselected &&
+                          formController.contactPubkey != null)
+                        UserPaymentFlowCard(pubkey: formController.contactPubkey!)
+                      else
+                        ContactInputSwitcher(
+                          pubkey: selectedContactPubkey,
+                          address: formController.receiverAddress,
+                          network: formController.network,
+                          onClearTap: (pubkey) {
+                            notifier
+                              ..setContact(null)
+                              ..setReceiverAddress('');
+                          },
+                          onWalletAddressChanged: (String? value) {
+                            if (value != null) {
+                              notifier.setReceiverAddress(value);
+                            }
+                          },
+                          onContactTap: () async {
+                            final pubkey = await context.push<String>(
+                              selectContactRouteLocationBuilder!(formController.network!.id),
+                            );
 
-                          if (pubkey != null) notifier.setContact(pubkey);
-                        },
-                        onScanPressed: () async {
-                          final address = await context.push<String?>(
-                            scanAddressRouteLocationBuilder!(),
-                          );
-                          if (address != null) {
-                            notifier.setReceiverAddress(address);
-                          }
-                        },
-                      ),
-                    SizedBox(height: 12.0.s),
-                    CoinAmountInput(
-                      controller: amountController,
-                      maxValue: coin?.selectedOption?.amount ?? 0,
-                      coinAbbreviation: coin?.coinsGroup.abbreviation ?? '',
-                      enabled: formController.request == null,
-                    ),
-                    SizedBox(height: 17.0.s),
-                    const CoinsNetworkFeeSelector(),
-                    if (formController.canCoverNetworkFee)
-                      SizedBox(height: 45.0.s)
-                    else if (formController.networkNativeToken case final WalletAsset networkToken)
-                      NotEnoughMoneyForNetworkFeeMessage(
-                        coinAsset: coin!,
-                        networkToken: networkToken,
-                        network: formController.network!,
-                      ),
-                    Button(
-                      label: Text(
-                        locale.button_continue,
-                      ),
-                      type: isContinueButtonEnabled ? ButtonType.primary : ButtonType.disabled,
-                      mainAxisSize: MainAxisSize.max,
-                      disabled: !isContinueButtonEnabled,
-                      trailingIcon: ColorFiltered(
-                        colorFilter: ColorFilter.mode(
-                          colors.primaryBackground,
-                          BlendMode.srcIn,
+                            if (pubkey != null) notifier.setContact(pubkey);
+                          },
+                          onScanPressed: () async {
+                            final address = await context.push<String?>(
+                              scanAddressRouteLocationBuilder!(),
+                            );
+                            if (address != null) {
+                              notifier.setReceiverAddress(address);
+                            }
+                          },
                         ),
-                        child: Assets.svg.iconButtonNext.icon(),
+                      SizedBox(height: 12.0.s),
+                      CoinAmountInput(
+                        controller: amountController,
+                        maxValue: coin?.selectedOption?.amount ?? 0,
+                        coinAbbreviation: coin?.coinsGroup.abbreviation ?? '',
+                        enabled: formController.request == null,
                       ),
-                      onPressed: () => context.push(confirmRouteLocationBuilder()),
-                    ),
-                    SizedBox(height: 16.0.s),
-                  ],
+                      SizedBox(height: 17.0.s),
+                      const CoinsNetworkFeeSelector(),
+                      if (formController.canCoverNetworkFee)
+                        SizedBox(height: 45.0.s)
+                      else if (formController.networkNativeToken
+                          case final WalletAsset networkToken)
+                        NotEnoughMoneyForNetworkFeeMessage(
+                          coinAsset: coin!,
+                          networkToken: networkToken,
+                          network: formController.network!,
+                        ),
+                      Button(
+                        label: Text(
+                          locale.button_continue,
+                        ),
+                        type: isContinueButtonEnabled ? ButtonType.primary : ButtonType.disabled,
+                        mainAxisSize: MainAxisSize.max,
+                        disabled: !isContinueButtonEnabled,
+                        trailingIcon: ColorFiltered(
+                          colorFilter: ColorFilter.mode(
+                            colors.primaryBackground,
+                            BlendMode.srcIn,
+                          ),
+                          child: Assets.svg.iconButtonNext.icon(),
+                        ),
+                        onPressed: () => context.push(confirmRouteLocationBuilder()),
+                      ),
+                      SizedBox(height: 16.0.s),
+                    ],
+                  ),
                 ),
               ),
-            ],
-          ),
+            ),
+          ],
         ),
       ),
     );
