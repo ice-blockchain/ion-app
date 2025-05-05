@@ -13,12 +13,14 @@ class NetworkFeeSelector extends ConsumerWidget {
     required this.options,
     required this.selectedOption,
     required this.onChanged,
+    this.padding,
     super.key,
   });
 
   final List<NetworkFeeOption> options;
   final NetworkFeeOption? selectedOption;
   final ValueChanged<int>? onChanged;
+  final EdgeInsetsGeometry? padding;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -26,19 +28,22 @@ class NetworkFeeSelector extends ConsumerWidget {
       return const SizedBox.shrink();
     }
 
-    return Column(
-      children: [
-        ArrivalTime(option: selectedOption!),
-        SizedBox(height: 12.0.s),
-        AppSlider(
-          maxValue: options.length - 1,
-          stops: List.generate(options.length, (i) => i.toDouble()),
-          initialValue: options.indexOf(selectedOption!).toDouble(),
-          onChanged: (value) => onChanged?.call(value.toInt()),
-        ),
-        SizedBox(height: 8.0.s),
-        NetworkFeeOptionWidget(feeOption: selectedOption!),
-      ],
+    return Padding(
+      padding: padding ?? EdgeInsets.zero,
+      child: Column(
+        children: [
+          ArrivalTime(option: selectedOption!),
+          SizedBox(height: 12.0.s),
+          AppSlider(
+            maxValue: options.length - 1,
+            stops: List.generate(options.length, (i) => i.toDouble()),
+            initialValue: options.indexOf(selectedOption!).toDouble(),
+            onChanged: (value) => onChanged?.call(value.toInt()),
+          ),
+          SizedBox(height: 8.0.s),
+          NetworkFeeOptionWidget(feeOption: selectedOption!),
+        ],
+      ),
     );
   }
 }

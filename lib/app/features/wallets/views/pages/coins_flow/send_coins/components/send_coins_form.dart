@@ -8,6 +8,7 @@ import 'package:flutter_keyboard_visibility/flutter_keyboard_visibility.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/components/button/button.dart';
+import 'package:ion/app/components/screen_offset/screen_bottom_offset.dart';
 import 'package:ion/app/components/screen_offset/screen_side_offset.dart';
 import 'package:ion/app/components/select/select_coin_button.dart';
 import 'package:ion/app/components/select/select_network_button.dart';
@@ -99,6 +100,7 @@ class SendCoinsForm extends HookConsumerWidget {
     return SheetContent(
       body: KeyboardDismissOnTap(
         child: Column(
+          mainAxisSize: MainAxisSize.min,
           children: [
             Padding(
               padding: EdgeInsets.symmetric(vertical: 8.0.s),
@@ -109,10 +111,11 @@ class SendCoinsForm extends HookConsumerWidget {
                 ],
               ),
             ),
-            Expanded(
+            Flexible(
               child: SingleChildScrollView(
                 child: ScreenSideOffset.small(
                   child: Column(
+                    mainAxisSize: MainAxisSize.min,
                     children: [
                       SelectCoinButton(
                         selectedCoin: coin?.selectedOption,
@@ -173,29 +176,31 @@ class SendCoinsForm extends HookConsumerWidget {
                         coinAbbreviation: coin?.coinsGroup.abbreviation ?? '',
                         enabled: formController.request == null,
                       ),
-                      SizedBox(height: 17.0.s),
-                      const CoinsNetworkFeeSelector(),
+                      CoinsNetworkFeeSelector(
+                        padding: EdgeInsetsDirectional.only(top: 17.0.s),
+                      ),
                       if (formController.canCoverNetworkFee)
-                        SizedBox(height: 45.0.s)
+                        SizedBox(height: 20.0.s)
                       else if (formController.network case final NetworkData network)
                         NotEnoughMoneyForNetworkFeeMessage(network: network),
-                      Button(
-                        label: Text(
-                          locale.button_continue,
-                        ),
-                        type: isContinueButtonEnabled ? ButtonType.primary : ButtonType.disabled,
-                        mainAxisSize: MainAxisSize.max,
-                        disabled: !isContinueButtonEnabled,
-                        trailingIcon: ColorFiltered(
-                          colorFilter: ColorFilter.mode(
-                            colors.primaryBackground,
-                            BlendMode.srcIn,
+                      ScreenBottomOffset(
+                        child: Button(
+                          label: Text(
+                            locale.button_continue,
                           ),
-                          child: Assets.svg.iconButtonNext.icon(),
+                          type: isContinueButtonEnabled ? ButtonType.primary : ButtonType.disabled,
+                          mainAxisSize: MainAxisSize.max,
+                          disabled: !isContinueButtonEnabled,
+                          trailingIcon: ColorFiltered(
+                            colorFilter: ColorFilter.mode(
+                              colors.primaryBackground,
+                              BlendMode.srcIn,
+                            ),
+                            child: Assets.svg.iconButtonNext.icon(),
+                          ),
+                          onPressed: () => context.push(confirmRouteLocationBuilder()),
                         ),
-                        onPressed: () => context.push(confirmRouteLocationBuilder()),
                       ),
-                      SizedBox(height: 16.0.s),
                     ],
                   ),
                 ),

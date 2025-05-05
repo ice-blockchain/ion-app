@@ -6,7 +6,9 @@ import 'package:ion/app/features/wallets/providers/send_asset_form_provider.c.da
 import 'package:ion/app/features/wallets/views/components/arrival_time/network_fee_selector.dart';
 
 class CoinsNetworkFeeSelector extends ConsumerWidget {
-  const CoinsNetworkFeeSelector({super.key});
+  const CoinsNetworkFeeSelector({this.padding, super.key});
+
+  final EdgeInsetsGeometry? padding;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -17,6 +19,7 @@ class CoinsNetworkFeeSelector extends ConsumerWidget {
     return NetworkFeeSelector(
       options: options,
       selectedOption: selectedOption,
+      padding: padding,
       onChanged: (value) {
         ref.read(sendAssetFormControllerProvider.notifier).selectNetworkFeeOption(options[value]);
       },
