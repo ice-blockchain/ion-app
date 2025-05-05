@@ -147,20 +147,21 @@ Future<void> _deleteFromServer(Ref ref, IonConnectEntity entity) async {
     ],
   );
 
+  final ionNotifier = ref.read(ionConnectNotifierProvider.notifier);
+
+  final deletionEvent = await ionNotifier.sign(deletionRequest);
+
   final userEventsMetadataBuilder = await ref.read(userEventsMetadataBuilderProvider.future);
 
   await Future.wait([
-    ref.read(ionConnectNotifierProvider.notifier).sendEntityData(
-          deletionRequest,
-          cache: false,
-        ),
+    ionNotifier.sendEvent(deletionEvent, cache: false),
     for (final pubkey in pubkeysToPublish)
-      ref.read(ionConnectNotifierProvider.notifier).sendEntityData(
-            deletionRequest,
-            actionSource: ActionSourceUser(pubkey),
-            metadataBuilders: [userEventsMetadataBuilder],
-            cache: false,
-          ),
+      ionNotifier.sendEvent(
+        deletionEvent,
+        actionSource: ActionSourceUser(pubkey),
+        metadataBuilders: [userEventsMetadataBuilder],
+        cache: false,
+      ),
   ]);
 }
 

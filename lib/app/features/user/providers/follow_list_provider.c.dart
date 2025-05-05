@@ -107,15 +107,19 @@ class FollowListManager extends _$FollowListManager {
       followees.add(Followee(pubkey: pubkey));
     }
 
+    final ionNotifier = ref.read(ionConnectNotifierProvider.notifier);
     final updatedFollowList = followListEntity.data.copyWith(list: followees);
-    await ref.read(ionConnectNotifierProvider.notifier).sendEntityData(updatedFollowList);
-
+    final updatedFollowListEvent = await ionNotifier.sign(updatedFollowList);
     final userEventsMetadataBuilder = await ref.read(userEventsMetadataBuilderProvider.future);
-    await ref.read(ionConnectNotifierProvider.notifier).sendEntityData(
-          updatedFollowList,
-          actionSource: ActionSourceUser(pubkey),
-          metadataBuilders: [userEventsMetadataBuilder],
-          cache: false,
-        );
+
+    await Future.wait([
+      ionNotifier.sendEvent(updatedFollowListEvent),
+      ionNotifier.sendEvent(
+        updatedFollowListEvent,
+        actionSource: ActionSourceUser(pubkey),
+        metadataBuilders: [userEventsMetadataBuilder],
+        cache: false,
+      ),
+    ]);
   }
 }

@@ -44,7 +44,7 @@ class RepostNotifier extends _$RepostNotifier {
         throw EntityNotFoundException(eventReference);
       }
 
-      final data = switch (entity) {
+      final repostData = switch (entity) {
         PostEntity() => RepostData(
             eventReference: entity.toEventReference(),
             repostedEvent: await entity.toEventMessage(entity.data),
@@ -62,16 +62,20 @@ class RepostNotifier extends _$RepostNotifier {
         _ => throw UnsupportedRepostException(entity.toEventReference()),
       };
 
+      final ionNotifier = ref.read(ionConnectNotifierProvider.notifier);
+
+      final repostEvent = await ionNotifier.sign(repostData);
+
       final userEventsMetadataBuilder = await ref.read(userEventsMetadataBuilderProvider.future);
 
       final (repostEntity, _) = await (
-        ref.read(ionConnectNotifierProvider.notifier).sendEntityData(data),
-        ref.read(ionConnectNotifierProvider.notifier).sendEntityData(
-              data,
-              actionSource: ActionSourceUser(eventReference.pubkey),
-              metadataBuilders: [userEventsMetadataBuilder],
-              cache: false,
-            )
+        ionNotifier.sendEvent(repostEvent),
+        ionNotifier.sendEvent(
+          repostEvent,
+          actionSource: ActionSourceUser(eventReference.pubkey),
+          metadataBuilders: [userEventsMetadataBuilder],
+          cache: false,
+        )
       ).wait;
 
       if (repostEntity != null) {

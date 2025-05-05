@@ -37,7 +37,7 @@ class IonConnectNotifier extends _$IonConnectNotifier {
   @override
   FutureOr<void> build() {}
 
-  Future<List<IonConnectEntity>?> sendEvents(
+  Future<List<IonConnectEntity>?> _sendEvents(
     List<EventMessage> events, {
     ActionSource actionSource = const ActionSourceCurrentUser(),
     bool cache = true,
@@ -84,9 +84,28 @@ class IonConnectNotifier extends _$IonConnectNotifier {
     );
   }
 
+  Future<List<IonConnectEntity>?> sendEvents(
+    List<EventMessage> events, {
+    ActionSource actionSource = const ActionSourceCurrentUser(),
+    List<EventsMetadataBuilder> metadataBuilders = const [],
+    bool cache = true,
+    IonConnectRelay? relay,
+  }) async {
+    final eventsToSend = [...events];
+    if (metadataBuilders.isNotEmpty) {
+      final metadataEvents = await _buildMetadata(
+        events: events,
+        metadataBuilders: metadataBuilders,
+      );
+      eventsToSend.addAll(metadataEvents);
+    }
+    return _sendEvents(eventsToSend, actionSource: actionSource, cache: cache, relay: relay);
+  }
+
   Future<IonConnectEntity?> sendEvent(
     EventMessage event, {
     ActionSource actionSource = const ActionSourceCurrentUser(),
+    List<EventsMetadataBuilder> metadataBuilders = const [],
     bool cache = true,
     IonConnectRelay? relay,
   }) async {
@@ -95,6 +114,7 @@ class IonConnectNotifier extends _$IonConnectNotifier {
       cache: cache,
       relay: relay,
       actionSource: actionSource,
+      metadataBuilders: metadataBuilders,
     );
     return result?.elementAtOrNull(0);
   }
@@ -106,14 +126,12 @@ class IonConnectNotifier extends _$IonConnectNotifier {
     bool cache = true,
   }) async {
     final events = await Future.wait(entitiesData.map(sign));
-    if (metadataBuilders.isNotEmpty) {
-      final metadataEvents = await _buildMetadata(
-        events: events,
-        metadataBuilders: metadataBuilders,
-      );
-      events.addAll(metadataEvents);
-    }
-    return sendEvents(events, actionSource: actionSource, cache: cache);
+    return sendEvents(
+      events,
+      actionSource: actionSource,
+      cache: cache,
+      metadataBuilders: metadataBuilders,
+    );
   }
 
   Future<T?> sendEntityData<T extends IonConnectEntity>(
@@ -128,7 +146,7 @@ class IonConnectNotifier extends _$IonConnectNotifier {
       metadataBuilders: metadataBuilders,
       cache: cache,
     );
-    return entities?.elementAtOrNull(0) as T?;
+    return entities?.whereType<T>().elementAtOrNull(0);
   }
 
   Stream<EventMessage> requestEvents(

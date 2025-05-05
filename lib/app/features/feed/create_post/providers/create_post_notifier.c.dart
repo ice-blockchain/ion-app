@@ -100,7 +100,7 @@ class CreatePostNotifier extends _$CreatePostNotifier {
         ),
       );
 
-      final entities = await _publishPost(
+      final post = await _publishPost(
         postData,
         files: files,
         mentions: mentions,
@@ -108,7 +108,7 @@ class CreatePostNotifier extends _$CreatePostNotifier {
         parentEvent: parentEvent,
       );
 
-      entities?.whereType<ModifiablePostEntity>().forEach(_createPostNotifierStreamController.add);
+      _createPostNotifierStreamController.add(post);
 
       if (quotedEvent != null) {
         ref.read(repostsCountProvider(quotedEvent).notifier).addOne();
@@ -233,16 +233,18 @@ class CreatePostNotifier extends _$CreatePostNotifier {
     });
   }
 
-  Future<List<IonConnectEntity>?> _publishPost(
+  Future<ModifiablePostEntity> _publishPost(
     ModifiablePostData postData, {
     EventReference? quotedEvent,
     EventReference? parentEvent,
     List<FileMetadata> files = const [],
     List<RelatedPubkey> mentions = const [],
   }) async {
-    final dataToPublish = [...files, postData];
-    final createdEntities =
-        await ref.read(ionConnectNotifierProvider.notifier).sendEntitiesData(dataToPublish);
+    final ionNotifier = ref.read(ionConnectNotifierProvider.notifier);
+
+    final postEvent = await ionNotifier.sign(postData);
+    final fileEvents = await Future.wait(files.map(ionNotifier.sign));
+    final eventsToPublish = [...fileEvents, postEvent];
 
     final pubkeysToPublish = mentions.map((mention) => mention.value).toSet();
 
@@ -255,16 +257,17 @@ class CreatePostNotifier extends _$CreatePostNotifier {
     final userEventsMetadataBuilder = await ref.read(userEventsMetadataBuilderProvider.future);
 
     await Future.wait([
+      ionNotifier.sendEvents(eventsToPublish),
       for (final pubkey in pubkeysToPublish)
-        ref.read(ionConnectNotifierProvider.notifier).sendEntitiesData(
-              dataToPublish,
+        ref.read(ionConnectNotifierProvider.notifier).sendEvents(
+              eventsToPublish,
               actionSource: ActionSourceUser(pubkey),
               metadataBuilders: [userEventsMetadataBuilder],
               cache: false,
             ),
     ]);
 
-    return createdEntities;
+    return ModifiablePostEntity.fromEventMessage(postEvent);
   }
 
   EntityPublishedAt _buildEntityPublishedAt() {

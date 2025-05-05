@@ -20,11 +20,12 @@ SyncStrategy<PostLike> likeSyncStrategy(Ref ref) {
 
   return LikeSyncStrategy(
     sendReaction: (reaction) async {
+      final reactionEvent = await ionNotifier.sign(reaction);
       final userEventsMetadataBuilder = await ref.read(userEventsMetadataBuilderProvider.future);
       await Future.wait([
-        ionNotifier.sendEntityData(reaction),
-        ionNotifier.sendEntityData(
-          reaction,
+        ionNotifier.sendEvent(reactionEvent),
+        ionNotifier.sendEvent(
+          reactionEvent,
           actionSource: ActionSourceUser(reaction.eventReference.pubkey),
           metadataBuilders: [userEventsMetadataBuilder],
           cache: false,

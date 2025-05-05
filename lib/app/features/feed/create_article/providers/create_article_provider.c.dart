@@ -119,12 +119,13 @@ class CreateArticle extends _$CreateArticle {
         editingEndedAt: editingEndedAt,
       );
 
-      final entities = await _sendArticleEntities(
+      final article = await _sendArticleEntities(
         articleData,
         files: files,
         mentions: mentions,
       );
-      entities?.whereType<ArticleEntity>().forEach(_createArticleNotifierStreamController.add);
+
+      _createArticleNotifierStreamController.add(article);
 
       ref.read(draftArticleProvider.notifier).clear();
     });
@@ -278,30 +279,33 @@ class CreateArticle extends _$CreateArticle {
     });
   }
 
-  Future<List<IonConnectEntity>?> _sendArticleEntities(
+  Future<ArticleEntity> _sendArticleEntities(
     ArticleData articleData, {
     List<FileMetadata> files = const [],
     List<RelatedPubkey> mentions = const [],
   }) async {
-    final dataToPublish = [...files, articleData];
-    final createdEntities =
-        await ref.read(ionConnectNotifierProvider.notifier).sendEntitiesData(dataToPublish);
+    final ionNotifier = ref.read(ionConnectNotifierProvider.notifier);
+
+    final articleEvent = await ionNotifier.sign(articleData);
+    final fileEvents = await Future.wait(files.map(ionNotifier.sign));
+    final eventsToPublish = [...fileEvents, articleEvent];
 
     final pubkeysToPublish = mentions.map((mention) => mention.value).toSet();
 
     final userEventsMetadataBuilder = await ref.read(userEventsMetadataBuilderProvider.future);
 
     await Future.wait([
+      ionNotifier.sendEvents(eventsToPublish),
       for (final pubkey in pubkeysToPublish)
-        ref.read(ionConnectNotifierProvider.notifier).sendEntitiesData(
-              dataToPublish,
-              actionSource: ActionSourceUser(pubkey),
-              metadataBuilders: [userEventsMetadataBuilder],
-              cache: false,
-            ),
+        ionNotifier.sendEvents(
+          eventsToPublish,
+          actionSource: ActionSourceUser(pubkey),
+          metadataBuilders: [userEventsMetadataBuilder],
+          cache: false,
+        ),
     ]);
 
-    return createdEntities;
+    return ArticleEntity.fromEventMessage(articleEvent);
   }
 
   Future<String?> _uploadCoverImage(
