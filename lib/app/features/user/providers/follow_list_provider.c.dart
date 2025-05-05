@@ -95,7 +95,7 @@ class FollowListManager extends _$FollowListManager {
     final currentUserPubkey = ref.read(currentPubkeySelectorProvider);
 
     // Remove current user from the list to prevent self follow error
-    // TODO: remove it after the release
+    // TODO: delete it after the release
     followees.removeWhere((followee) => followee.pubkey == currentUserPubkey);
 
     final followee = followees.firstWhereOrNull((followee) => followee.pubkey == pubkey);
