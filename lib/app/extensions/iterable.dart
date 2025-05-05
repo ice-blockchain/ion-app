@@ -15,3 +15,10 @@ extension IntersperseExtensions<T> on Iterable<T> {
     return utils.intersperse(element, this);
   }
 }
+
+extension DistinctBy<T, K> on Iterable<T> {
+  List<T> distinctBy(K Function(T) key) {
+    final seen = <K>{};
+    return where((e) => seen.add(key(e))).toList();
+  }
+}

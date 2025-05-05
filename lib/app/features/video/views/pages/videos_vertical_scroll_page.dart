@@ -95,7 +95,8 @@ class VideosVerticalScrollPage extends HookConsumerWidget {
             }
           }
         }
-        return result;
+        final distinctResult = result.distinctBy((video) => video.media.url);
+        return distinctResult;
       },
       [entities],
     );
