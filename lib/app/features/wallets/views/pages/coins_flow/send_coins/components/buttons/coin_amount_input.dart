@@ -50,12 +50,10 @@ class CoinAmountInput extends HookWidget {
             final parsed = parseAmount(trimmedValue);
             if (parsed == null) return '';
 
-            if (maxValue != null && (parsed > maxValue! || parsed <= 0)) {
+            if (maxValue != null && (parsed > maxValue! || parsed < 0)) {
               return locale.wallet_coin_amount_insufficient_funds;
             } else if (parsed < 0) {
               return locale.wallet_coin_amount_must_be_positive;
-            } else if (parsed == 0) {
-              return '';
             }
 
             return null;
