@@ -1,5 +1,7 @@
 // SPDX-License-Identifier: ice License 1.0
 
+import 'dart:async';
+
 import 'package:collection/collection.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/widgets.dart';
@@ -87,7 +89,9 @@ class NotEnoughMoneyForNetworkFeeMessage extends HookConsumerWidget {
                   )
                     ..setCoin(group ?? CoinsGroup.fromCoin(nativeCoin))
                     ..setNetwork(network);
-                  await ShareAddressDepositRoute().push<void>(context);
+                  unawaited(
+                    ShareAddressDepositRoute().push<void>(context),
+                  );
                 },
             ),
           ],
