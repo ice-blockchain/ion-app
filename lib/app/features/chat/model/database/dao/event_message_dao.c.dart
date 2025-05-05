@@ -20,6 +20,8 @@ class EventMessageDao extends DatabaseAccessor<ChatDatabase> with _$EventMessage
   Future<void> add(EventMessage event) async {
     final EventReference eventReference;
     switch (event.kind) {
+      case GenericRepostEntity.kind:
+        eventReference = GenericRepostEntity.fromEventMessage(event).toEventReference();
       case ReplaceablePrivateDirectMessageEntity.kind:
         eventReference =
             ReplaceablePrivateDirectMessageEntity.fromEventMessage(event).toEventReference();
@@ -28,6 +30,8 @@ class EventMessageDao extends DatabaseAccessor<ChatDatabase> with _$EventMessage
       default:
         return;
     }
+
+    log(eventReference.toString(), name: 'EventMessageDao.add');
 
     final dbModel = event.toChatDbModel(eventReference);
 

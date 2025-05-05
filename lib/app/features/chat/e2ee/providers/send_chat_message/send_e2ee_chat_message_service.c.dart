@@ -110,7 +110,8 @@ class SendE2eeChatMessageService {
         groupSubject: subject.isNotEmpty ? GroupSubject(subject!) : null,
         relatedPubkeys:
             participantsMasterPubkeys.map((pubkey) => RelatedPubkey(value: pubkey)).toList(),
-        relatedEvents: _generateRelatedEvents(repliedMessage),
+        quotedEvent: editedMessageEntity?.quotedEvent,
+        relatedEvents: editedMessageEntity?.relatedEvents ?? _generateRelatedEvents(repliedMessage),
       );
 
       eventReference = localEventMessageData.toReplaceableEventReference(currentUserMasterPubkey);

@@ -38,9 +38,9 @@ class GenericRepostEntity
     return GenericRepostEntity(
       id: eventMessage.id,
       pubkey: eventMessage.pubkey,
-      masterPubkey: eventMessage.masterPubkey,
-      signature: eventMessage.sig!,
+      signature: eventMessage.sig ?? '',
       createdAt: eventMessage.createdAt,
+      masterPubkey: eventMessage.masterPubkey,
       data: GenericRepostData.fromEventMessage(eventMessage),
     );
   }
