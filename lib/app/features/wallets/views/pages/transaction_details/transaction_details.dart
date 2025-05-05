@@ -79,6 +79,7 @@ class TransactionDetailsPage extends ConsumerWidget {
                                   icon: CoinIconWidget(
                                     imageUrl: coin.coinsGroup.iconUrl,
                                   ),
+                                  transactionType: transactionData.type,
                                 ),
                                 nft: (nft) => Padding(
                                   padding: EdgeInsets.symmetric(

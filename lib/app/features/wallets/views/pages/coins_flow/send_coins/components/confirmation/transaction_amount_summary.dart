@@ -2,6 +2,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:ion/app/extensions/extensions.dart';
+import 'package:ion/app/features/wallets/model/transaction_type.dart';
 import 'package:ion/app/features/wallets/views/utils/crypto_formatter.dart';
 import 'package:ion/app/utils/num.dart';
 
@@ -11,6 +12,7 @@ class TransactionAmountSummary extends StatelessWidget {
     required this.currency,
     required this.usdAmount,
     required this.icon,
+    required this.transactionType,
     super.key,
   });
 
@@ -18,6 +20,7 @@ class TransactionAmountSummary extends StatelessWidget {
   final String currency;
   final double usdAmount;
   final Widget icon;
+  final TransactionType transactionType;
 
   @override
   Widget build(BuildContext context) {
@@ -32,7 +35,7 @@ class TransactionAmountSummary extends StatelessWidget {
             icon,
             SizedBox(width: 8.0.s),
             Text(
-              '-${formatCrypto(amount, currency)}',
+              '${transactionType.sign}${formatCrypto(amount, currency)}',
               style: textTheme.headline2,
             ),
           ],
