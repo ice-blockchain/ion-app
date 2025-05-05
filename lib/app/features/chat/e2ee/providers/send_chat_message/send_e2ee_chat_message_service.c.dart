@@ -61,7 +61,7 @@ class SendE2eeChatMessageService {
     EventMessage? failedEventMessage,
     List<String>? groupImageTag,
     QuotedImmutableEvent? storyReply,
-    List<String>? failedParticipantsMasterPubkeys,
+    Map<String, List<String>>? failedParticipantsMasterPubkeys,
   }) async {
     EventMessage? sentMessage;
 
@@ -72,9 +72,10 @@ class SendE2eeChatMessageService {
         ? ReplaceablePrivateDirectMessageData.fromEventMessage(editedMessage)
         : null;
 
-    final participantsPubkeysMap = await ref
-        .read(conversationPubkeysProvider.notifier)
-        .fetchUsersKeys(failedParticipantsMasterPubkeys ?? participantsMasterPubkeys);
+    final participantsPubkeysMap = failedParticipantsMasterPubkeys ??
+        await ref
+            .read(conversationPubkeysProvider.notifier)
+            .fetchUsersKeys(participantsMasterPubkeys);
 
     try {
       final publishedAt =
@@ -132,7 +133,7 @@ class SendE2eeChatMessageService {
         mediaFiles: mediaFiles,
         messageMediaIds: messageMediaIds,
         eventReference: eventReference,
-        participantsMasterPubkeys: failedParticipantsMasterPubkeys ?? participantsMasterPubkeys,
+        participantsMasterPubkeys: participantsPubkeysMap.keys.toList(),
       );
 
       participantsMasterPubkeys.sort((a, b) {
@@ -144,14 +145,15 @@ class SendE2eeChatMessageService {
       await Future.wait(
         participantsMasterPubkeys.map((masterPubkey) async {
           final pubkeyDevices = participantsPubkeysMap[masterPubkey];
-          try {
-            if (pubkeyDevices == null) throw UserPubkeyNotFoundException(masterPubkey);
 
-            final attachments = mediaAttachmentsUsersBased[masterPubkey] ?? [];
+          if (pubkeyDevices == null) throw UserPubkeyNotFoundException(masterPubkey);
 
-            final isCurrentUser = currentUserMasterPubkey == masterPubkey;
+          final attachments = mediaAttachmentsUsersBased[masterPubkey] ?? [];
 
-            for (final pubkey in pubkeyDevices) {
+          final isCurrentUser = currentUserMasterPubkey == masterPubkey;
+
+          for (final pubkey in pubkeyDevices) {
+            try {
               final remoteEventMessage = await ReplaceablePrivateDirectMessageData(
                 content: content,
                 messageId: sharedId,
@@ -179,20 +181,25 @@ class SendE2eeChatMessageService {
                 eventMessage: remoteEventMessage,
               );
 
-              await ref.read(conversationMessageDataDaoProvider).addOrUpdateStatus(
-                    pubkey: eventReference!.pubkey,
-                    messageEventReference: eventReference,
-                    masterPubkey: masterPubkey,
-                    status: isCurrentUser ? MessageDeliveryStatus.read : MessageDeliveryStatus.sent,
-                  );
+              if (eventReference != null) {
+                await ref.read(conversationMessageDataDaoProvider).addOrUpdateStatus(
+                      pubkey: pubkey,
+                      messageEventReference: eventReference,
+                      masterPubkey: masterPubkey,
+                      status:
+                          isCurrentUser ? MessageDeliveryStatus.read : MessageDeliveryStatus.sent,
+                    );
+              }
+            } catch (e) {
+              if (eventReference != null) {
+                await ref.read(conversationMessageDataDaoProvider).addOrUpdateStatus(
+                      pubkey: pubkey,
+                      messageEventReference: eventReference,
+                      masterPubkey: masterPubkey,
+                      status: MessageDeliveryStatus.failed,
+                    );
+              }
             }
-          } catch (e) {
-            await ref.read(conversationMessageDataDaoProvider).addOrUpdateStatus(
-                  pubkey: eventReference!.pubkey,
-                  messageEventReference: eventReference,
-                  masterPubkey: masterPubkey,
-                  status: MessageDeliveryStatus.failed,
-                );
           }
         }),
       );

@@ -123,7 +123,7 @@ class ConversationMessageDataDao extends DatabaseAccessor<ChatDatabase>
     });
   }
 
-  Future<List<String>> getFailedParticipants({
+  Future<Map<String, List<String>>> getFailedParticipants({
     required EventReference eventReference,
   }) async {
     final existingRows = await (select(messageStatusTable)
@@ -131,7 +131,11 @@ class ConversationMessageDataDao extends DatabaseAccessor<ChatDatabase>
           ..where((table) => table.status.equals(MessageDeliveryStatus.failed.index)))
         .get();
 
-    return existingRows.map((row) => row.masterPubkey).toList();
+    final groupedByMasterPubkey = existingRows.groupListsBy((row) => row.masterPubkey).map(
+          (masterPubkey, rows) => MapEntry(masterPubkey, rows.map((row) => row.pubkey).toList()),
+        );
+
+    return groupedByMasterPubkey;
   }
 
   Future<MessageDeliveryStatus?> checkMessageStatus({
