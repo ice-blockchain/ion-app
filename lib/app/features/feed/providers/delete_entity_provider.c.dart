@@ -29,6 +29,7 @@ import 'package:ion/app/features/ion_connect/providers/ion_connect_cache.c.dart'
 import 'package:ion/app/features/ion_connect/providers/ion_connect_delete_file_notifier.c.dart';
 import 'package:ion/app/features/ion_connect/providers/ion_connect_entity_provider.c.dart';
 import 'package:ion/app/features/ion_connect/providers/ion_connect_notifier.c.dart';
+import 'package:ion/app/features/user/providers/user_events_metadata_provider.c.dart';
 import 'package:ion/app/services/logger/logger.dart';
 import 'package:ion/app/services/markdown/quill.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
@@ -135,8 +136,18 @@ Future<void> _deleteFromServer(Ref ref, IonConnectEntity entity) async {
   };
 
   final deletionRequest = DeletionRequest(
-    events: [EventToDelete(eventId: entity.id, kind: entityKind)],
+    events: [
+      EventToDelete(
+        eventReference: ImmutableEventReference(
+          pubkey: entity.masterPubkey,
+          eventId: entity.id,
+          kind: entityKind,
+        ),
+      ),
+    ],
   );
+
+  final userEventsMetadataBuilder = await ref.read(userEventsMetadataBuilderProvider.future);
 
   await Future.wait([
     ref.read(ionConnectNotifierProvider.notifier).sendEntityData(
@@ -147,6 +158,7 @@ Future<void> _deleteFromServer(Ref ref, IonConnectEntity entity) async {
       ref.read(ionConnectNotifierProvider.notifier).sendEntityData(
             deletionRequest,
             actionSource: ActionSourceUser(pubkey),
+            metadataBuilders: [userEventsMetadataBuilder],
             cache: false,
           ),
   ]);

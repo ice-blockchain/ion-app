@@ -60,7 +60,7 @@ class E2eeMessagesSubscriber extends _$E2eeMessagesSubscriber {
       kinds: const [IonConnectGiftWrapServiceImpl.kind],
       tags: {
         '#k': [
-          DeletionRequest.kind.toString(),
+          DeletionRequestEntity.kind.toString(),
           PrivateMessageReactionEntity.kind.toString(),
           ImmutablePrivateDirectMessageEntity.kind.toString(),
           ReplaceablePrivateDirectMessageEntity.kind.toString(),
@@ -169,7 +169,7 @@ class E2eeMessagesSubscriber extends _$E2eeMessagesSubscriber {
     );
 
     if (rumor != null) {
-      if (rumor.kind != DeletionRequest.kind &&
+      if (rumor.kind != DeletionRequestEntity.kind &&
           rumor.kind != GenericRepostEntity.kind &&
           (rumor.tags.any((tag) => tag[0] == ConversationIdentifier.tagName) ||
               rumor.kind == PrivateMessageReactionEntity.kind)) {
@@ -240,7 +240,7 @@ class E2eeMessagesSubscriber extends _$E2eeMessagesSubscriber {
           }
         }
         // For kind 5
-      } else if (rumor.kind == DeletionRequest.kind) {
+      } else if (rumor.kind == DeletionRequestEntity.kind) {
         final deleteEventKind =
             rumor.tags.firstWhereOrNull((tags) => tags[0] == 'k')?.elementAtOrNull(1);
 
