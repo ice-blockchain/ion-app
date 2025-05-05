@@ -7,7 +7,7 @@ import 'package:internet_connection_checker_plus/internet_connection_checker_plu
 import 'package:ion/app/components/global_notification_bar/components/no_internet_connection_notification_view.dart';
 import 'package:ion/app/components/global_notification_bar/global_notification_bar.dart';
 import 'package:ion/app/components/global_notification_bar/providers/global_notification_notifier_provider.c.dart';
-import 'package:ion/app/features/core/hooks/internet_connection_state_hook.dart';
+import 'package:ion/app/features/core/providers/internet_status_stream_provider.c.dart';
 import 'package:ion/app/hooks/use_interval.dart';
 
 class GlobalNotificationBarWrapper extends HookConsumerWidget {
@@ -25,7 +25,8 @@ class GlobalNotificationBarWrapper extends HookConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final notification = ref.watch(globalNotificationNotifierProvider);
-    final hasInternetConnection = useConnectivityState() == InternetStatus.connected;
+    final hasInternetConnection =
+        ref.watch(internetStatusStreamProvider).valueOrNull != InternetStatus.disconnected;
     final showNotification = notification != null || !hasInternetConnection;
 
     final isShowSafeArea = useState(false);
