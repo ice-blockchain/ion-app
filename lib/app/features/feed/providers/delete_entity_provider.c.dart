@@ -85,12 +85,12 @@ class DeleteEntityController extends _$DeleteEntityController {
           if (entity is PostEntity) _deleteMedia(ref, entity.data);
           _deleteFromDataSources(ref, entity);
           _deleteFromCache(ref, entity);
-          await _deleteFromCounters(ref, entity);
+          _deleteFromCounters(ref, entity);
           _deleteFromProviders(ref, entity);
         }
       case ModifiablePostEntity():
         {
-          await _deleteFromCounters(ref, entity);
+          _deleteFromCounters(ref, entity);
           await ref
               .read(createPostNotifierProvider(CreatePostOption.softDelete).notifier)
               .softDelete(eventReference: entity.toEventReference());
@@ -171,7 +171,7 @@ void _deleteFromCache(Ref ref, IonConnectEntity entity) {
   }
 }
 
-Future<void> _deleteFromCounters(Ref ref, IonConnectEntity entity) async {
+void _deleteFromCounters(Ref ref, IonConnectEntity entity) {
   switch (entity) {
     case RepostEntity():
       ref.read(repostsCountProvider(entity.data.eventReference).notifier).removeOne();
