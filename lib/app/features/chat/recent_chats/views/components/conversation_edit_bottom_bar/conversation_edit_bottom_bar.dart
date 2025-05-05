@@ -16,7 +16,7 @@ class ConversationEditBottomBar extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final archiveOpened = ref.read(archiveStateProvider).falseOrValue;
+    final archiveOpened = ref.watch(archiveStateProvider).falseOrValue;
 
     return PositionedDirectional(
       top: 0,

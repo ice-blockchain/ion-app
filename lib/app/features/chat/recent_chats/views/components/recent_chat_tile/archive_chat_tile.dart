@@ -56,9 +56,8 @@ class ArchiveChatTile extends HookConsumerWidget {
       child: GestureDetector(
         onTap: () async {
           if (!isEditMode) {
-            ref.read(archiveStateProvider.notifier).toggle();
+            ref.read(archiveStateProvider.notifier).value = true;
             await ArchivedChatsMainRoute().push<void>(context);
-            ref.read(archiveStateProvider.notifier).toggle();
           }
         },
         behavior: HitTestBehavior.opaque,
