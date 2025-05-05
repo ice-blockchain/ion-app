@@ -161,11 +161,13 @@ class SendE2eeChatMessageService {
                   for (final attachment in attachments) attachment.url: attachment,
                 },
                 masterPubkey: currentUserMasterPubkey,
+                quotedEvent: editedMessageEntity?.quotedEvent,
                 relatedPubkeys: participantsMasterPubkeys
                     .map((pubkey) => RelatedPubkey(value: pubkey))
                     .toList(),
                 groupSubject: subject.isNotEmpty ? GroupSubject(subject!) : null,
-                relatedEvents: _generateRelatedEvents(repliedMessage),
+                relatedEvents:
+                    editedMessageEntity?.relatedEvents ?? _generateRelatedEvents(repliedMessage),
               ).toEventMessage(NoPrivateSigner(eventSigner.publicKey));
 
               await sendWrappedMessage(
