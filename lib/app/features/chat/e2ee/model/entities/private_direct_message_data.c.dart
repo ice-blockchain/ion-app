@@ -80,7 +80,7 @@ class ReplaceablePrivateDirectMessageData
     GroupSubject? groupSubject,
     List<RelatedReplaceableEvent>? relatedEvents,
     List<RelatedPubkey>? relatedPubkeys,
-    QuotedReplaceableEvent? quotedEvent,
+    QuotedImmutableEvent? quotedEvent,
   }) = _ReplaceablePrivateDirectMessageData;
 
   factory ReplaceablePrivateDirectMessageData.fromRawContent(String content) {
@@ -117,7 +117,7 @@ class ReplaceablePrivateDirectMessageData
           tags[RelatedReplaceableEvent.tagName]?.map(RelatedReplaceableEvent.fromTag).toList(),
       groupSubject: tags[GroupSubject.tagName]?.map(GroupSubject.fromTag).singleOrNull,
       quotedEvent:
-          tags[QuotedReplaceableEvent.tagName]?.map(QuotedReplaceableEvent.fromTag).singleOrNull,
+          tags[QuotedImmutableEvent.tagName]?.map(QuotedImmutableEvent.fromTag).singleOrNull,
       conversationId:
           tags[ConversationIdentifier.tagName]!.map(ConversationIdentifier.fromTag).first.value,
     );

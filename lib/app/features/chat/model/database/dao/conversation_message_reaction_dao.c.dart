@@ -137,7 +137,6 @@ class ConversationMessageReactionDao extends DatabaseAccessor<ChatDatabase>
       return;
     }
 
-    //TODO: refactor it to work with multiple reactions
     final stream = (select(reactionTable)
           ..where((table) => table.isDeleted.equals(false))
           ..where((table) => table.messageEventReference.equalsValue(eventReference)))

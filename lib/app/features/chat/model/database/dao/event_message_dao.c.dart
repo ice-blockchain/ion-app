@@ -47,9 +47,16 @@ class EventMessageDao extends DatabaseAccessor<ChatDatabase> with _$EventMessage
     return searchResults.map((row) => row.toEventMessage()).toList();
   }
 
+  Future<EventMessage> getByReference(EventReference eventReference) async {
+    final result = await (select(db.eventMessageTable)
+          ..where((table) => table.eventReference.equalsValue(eventReference)))
+        .getSingle();
+    return result.toEventMessage();
+  }
+
   Future<EventMessage> getById(String id) async {
     final result =
-        await (select(db.eventMessageTable)..where((tbl) => tbl.id.equals(id))).getSingle();
+        await (select(db.eventMessageTable)..where((table) => table.id.equals(id))).getSingle();
     return result.toEventMessage();
   }
 }

@@ -28,7 +28,7 @@ class StoryReplyMessage extends HookConsumerWidget {
     final story = entity.data.quotedEvent != null
         ? ref
             .watch(
-              storyReplyMessageProvider(entity.data.quotedEvent!.eventReference.dTag),
+              storyReplyMessageProvider(entity.data.quotedEvent!.eventReference),
             )
             .valueOrNull
         : null;
@@ -69,7 +69,7 @@ class StoryReplyMessage extends HookConsumerWidget {
                 ),
             ],
           ),
-          if (storyUrl.isNotEmpty)
+          if (storyUrl.isNotEmpty && eventMessage.content.isEmpty)
             PositionedDirectional(
               bottom: 6.0.s,
               start: 6.0.s,

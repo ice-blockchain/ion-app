@@ -40,13 +40,11 @@ class MessageReactionContextMenu extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final canEdit = useMemoized(
-      () {
-        final entityData =
-            ReplaceablePrivateDirectMessageData.fromEventMessage(messageItem.eventMessage);
-        return entityData.editingEndedAt.value.isAfter(DateTime.now());
-      },
+    final entityData = useMemoized(
+      () => ReplaceablePrivateDirectMessageData.fromEventMessage(messageItem.eventMessage),
     );
+
+    final canEdit = entityData.editingEndedAt.value.isAfter(DateTime.now());
     final hideChatBookmark =
         ref.watch(featureFlagsProvider.notifier).get(ChatFeatureFlag.hideChatBookmark);
 
@@ -94,7 +92,10 @@ class MessageReactionContextMenu extends HookConsumerWidget {
                   verticalPadding: 12.0.s,
                 ),
                 const OverlayMenuItemSeparator(),
-                if (isMe && canEdit && (messageItem is TextItem || messageItem is EmojiItem))
+                if (isMe &&
+                    canEdit &&
+                    (((messageItem is TextItem) && !(messageItem as TextItem).isStoryReply) ||
+                        messageItem is EmojiItem))
                   OverlayMenuItem(
                     label: context.i18n.button_edit,
                     verticalPadding: 12.0.s,
@@ -154,6 +155,7 @@ class MessageReactionContextMenu extends HookConsumerWidget {
 
                   if (forEveryone != null && context.mounted) {
                     final messageEventsList = [messageItem.eventMessage];
+
                     ref.read(
                       e2eeDeleteMessageProvider(
                         forEveryone: forEveryone,

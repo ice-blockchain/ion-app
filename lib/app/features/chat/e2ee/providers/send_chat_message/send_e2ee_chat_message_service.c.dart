@@ -23,6 +23,7 @@ import 'package:ion/app/features/ion_connect/model/entity_expiration.c.dart';
 import 'package:ion/app/features/ion_connect/model/entity_published_at.c.dart';
 import 'package:ion/app/features/ion_connect/model/event_reference.c.dart';
 import 'package:ion/app/features/ion_connect/model/media_attachment.dart';
+import 'package:ion/app/features/ion_connect/model/quoted_event.c.dart';
 import 'package:ion/app/features/ion_connect/model/related_event.c.dart';
 import 'package:ion/app/features/ion_connect/model/related_event_marker.dart';
 import 'package:ion/app/features/ion_connect/model/related_pubkey.c.dart';
@@ -59,7 +60,7 @@ class SendE2eeChatMessageService {
     EventMessage? repliedMessage,
     EventMessage? failedEventMessage,
     List<String>? groupImageTag,
-    List<String>? referencePostTag,
+    QuotedImmutableEvent? storyReply,
     List<String>? failedParticipantsMasterPubkeys,
   }) async {
     EventMessage? sentMessage;
@@ -110,7 +111,7 @@ class SendE2eeChatMessageService {
         groupSubject: subject.isNotEmpty ? GroupSubject(subject!) : null,
         relatedPubkeys:
             participantsMasterPubkeys.map((pubkey) => RelatedPubkey(value: pubkey)).toList(),
-        quotedEvent: editedMessageEntity?.quotedEvent,
+        quotedEvent: storyReply ?? editedMessageEntity?.quotedEvent,
         relatedEvents: editedMessageEntity?.relatedEvents ?? _generateRelatedEvents(repliedMessage),
       );
 

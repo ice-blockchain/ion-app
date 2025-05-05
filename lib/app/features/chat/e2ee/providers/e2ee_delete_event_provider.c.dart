@@ -158,12 +158,19 @@ Future<void> _deleteMessages({
 
   final deleteRequest = DeletionRequest(
     events: messageEvents
-        .map(
-          (event) => EventToDelete(
-            eventReference:
-                ReplaceablePrivateDirectMessageEntity.fromEventMessage(event).toEventReference(),
-          ),
-        )
+        .map((event) {
+          final entity = ReplaceablePrivateDirectMessageEntity.fromEventMessage(event);
+
+          if (entity.data.quotedEvent != null) {
+            return [
+              EventToDelete(entity.data.quotedEvent!.eventReference),
+              EventToDelete(entity.toEventReference()),
+            ];
+          }
+
+          return [EventToDelete(entity.toEventReference())];
+        })
+        .expand((element) => element)
         .toList(),
   );
 

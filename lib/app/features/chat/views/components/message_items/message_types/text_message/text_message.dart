@@ -8,6 +8,7 @@ import 'package:ion/app/components/text_span_builder/text_span_builder.dart';
 import 'package:ion/app/components/url_preview/providers/url_metadata_provider.c.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/auth/providers/auth_provider.c.dart';
+import 'package:ion/app/features/chat/e2ee/model/entities/private_direct_message_data.c.dart';
 import 'package:ion/app/features/chat/hooks/use_has_reaction.dart';
 import 'package:ion/app/features/chat/model/message_list_item.c.dart';
 import 'package:ion/app/features/chat/recent_chats/providers/replied_message_list_item_provider.c.dart';
@@ -31,6 +32,8 @@ class TextMessage extends HookConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final isMe = ref.watch(isCurrentUserSelectorProvider(eventMessage.masterPubkey));
 
+    final entityData = ReplaceablePrivateDirectMessageData.fromEventMessage(eventMessage);
+
     final textStyle = context.theme.appTextThemes.body2.copyWith(
       color: isMe ? context.theme.appColors.onPrimaryAccent : context.theme.appColors.primaryText,
     );
@@ -44,6 +47,7 @@ class TextMessage extends HookConsumerWidget {
     final messageItem = TextItem(
       eventMessage: eventMessage,
       contentDescription: eventMessage.content,
+      isStoryReply: entityData.quotedEvent != null,
     );
 
     final repliedEventMessage = ref.watch(repliedMessageListItemProvider(messageItem));
