@@ -241,7 +241,7 @@ class CreatePostNotifier extends _$CreatePostNotifier {
     List<RelatedPubkey> mentions = const [],
   }) async {
     final dataToPublish = [...files, postData];
-    final postEntity =
+    final createdEntities =
         await ref.read(ionConnectNotifierProvider.notifier).sendEntitiesData(dataToPublish);
 
     final pubkeysToPublish = mentions.map((mention) => mention.value).toSet();
@@ -264,7 +264,7 @@ class CreatePostNotifier extends _$CreatePostNotifier {
             ),
     ]);
 
-    return postEntity;
+    return createdEntities;
   }
 
   EntityPublishedAt _buildEntityPublishedAt() {

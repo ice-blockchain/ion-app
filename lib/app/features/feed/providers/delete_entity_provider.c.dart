@@ -68,7 +68,6 @@ class DeleteEntityController extends _$DeleteEntityController {
           }
         case ArticleEntity():
           {
-            _deleteMedia(ref, entity.data);
             await ref
                 .read(createArticleProvider(CreateArticleOption.softDelete).notifier)
                 .softDelete(eventReference: eventReference);

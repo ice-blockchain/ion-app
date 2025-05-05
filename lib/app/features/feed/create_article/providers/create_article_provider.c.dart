@@ -16,11 +16,11 @@ import 'package:ion/app/features/feed/data/models/article_topic.dart';
 import 'package:ion/app/features/feed/data/models/entities/article_data.c.dart';
 import 'package:ion/app/features/feed/data/models/who_can_reply_settings_option.dart';
 import 'package:ion/app/features/gallery/providers/gallery_provider.c.dart';
+import 'package:ion/app/features/ion_connect/model/action_source.c.dart';
 import 'package:ion/app/features/ion_connect/model/color_label.c.dart';
 import 'package:ion/app/features/ion_connect/model/entity_data_with_settings.dart';
 import 'package:ion/app/features/ion_connect/model/entity_editing_ended_at.c.dart';
 import 'package:ion/app/features/ion_connect/model/event_reference.c.dart';
-import 'package:ion/app/features/ion_connect/model/event_serializable.dart';
 import 'package:ion/app/features/ion_connect/model/file_alt.dart';
 import 'package:ion/app/features/ion_connect/model/file_metadata.c.dart';
 import 'package:ion/app/features/ion_connect/model/ion_connect_entity.dart';
@@ -32,6 +32,7 @@ import 'package:ion/app/features/ion_connect/providers/ion_connect_delete_file_n
 import 'package:ion/app/features/ion_connect/providers/ion_connect_entity_provider.c.dart';
 import 'package:ion/app/features/ion_connect/providers/ion_connect_notifier.c.dart';
 import 'package:ion/app/features/ion_connect/providers/ion_connect_upload_notifier.c.dart';
+import 'package:ion/app/features/user/providers/user_events_metadata_provider.c.dart';
 import 'package:ion/app/services/compressors/image_compressor.c.dart';
 import 'package:ion/app/services/markdown/quill.dart';
 import 'package:ion/app/services/media_service/media_service.c.dart';
@@ -99,6 +100,8 @@ class CreateArticle extends _$CreateArticle {
         ref.read(envProvider.notifier).get<int>(EnvVariable.EDIT_POST_ALLOWED_MINUTES),
       );
 
+      final mentions = _buildMentions(updatedContent);
+
       final articleData = ArticleData.fromData(
         title: title,
         summary: summary,
@@ -108,8 +111,7 @@ class CreateArticle extends _$CreateArticle {
           for (final attachment in mediaAttachments) attachment.url: attachment,
         },
         relatedHashtags: relatedHashtags,
-        relatedPubkeys:
-            updatedContent.extractPubkeys().map((pubkey) => RelatedPubkey(value: pubkey)).toList(),
+        relatedPubkeys: mentions,
         publishedAt: publishedAt,
         settings: EntityDataWithSettings.build(whoCanReply: whoCanReply),
         imageColor: imageColor,
@@ -117,7 +119,11 @@ class CreateArticle extends _$CreateArticle {
         editingEndedAt: editingEndedAt,
       );
 
-      final entities = await _sendArticleEntities([...files, articleData]);
+      final entities = await _sendArticleEntities(
+        articleData,
+        files: files,
+        mentions: mentions,
+      );
       entities?.whereType<ArticleEntity>().forEach(_createArticleNotifierStreamController.add);
 
       ref.read(draftArticleProvider.notifier).clear();
@@ -149,7 +155,18 @@ class CreateArticle extends _$CreateArticle {
         editingEndedAt: null,
       );
 
-      await _sendArticleEntities([articleData]);
+      final media = entity.data.media.values;
+      final fileHashes = media.map((e) => e.originalFileHash).toList();
+
+      final contentDelta = parseAndConvertDelta(
+        entity.data.richText?.content,
+        entity.data.content,
+      );
+
+      await Future.wait([
+        ref.read(ionConnectDeleteFileNotifierProvider.notifier).deleteMultiple(fileHashes),
+        _sendArticleEntities(articleData, mentions: _buildMentions(contentDelta)),
+      ]);
     });
   }
 
@@ -225,6 +242,15 @@ class CreateArticle extends _$CreateArticle {
         cleanedMedia[attachment.url] = attachment;
       }
 
+      final mentions = _buildMentions(updatedContent);
+
+      final originalContentDelta = parseAndConvertDelta(
+        modifiedEntity.data.richText?.content,
+        modifiedEntity.data.content,
+      );
+
+      final originalMentions = _buildMentions(originalContentDelta);
+
       final articleData = modifiedEntity.data.copyWith(
         title: title,
         summary: summary,
@@ -232,6 +258,7 @@ class CreateArticle extends _$CreateArticle {
         content: deltaToMarkdown(updatedContent),
         media: cleanedMedia,
         relatedHashtags: relatedHashtags,
+        relatedPubkeys: mentions,
         settings: EntityDataWithSettings.build(whoCanReply: whoCanReply),
         colorLabel: imageColor != null ? ColorLabel(value: imageColor) : null,
         richText: richText,
@@ -242,13 +269,39 @@ class CreateArticle extends _$CreateArticle {
             .read(ionConnectDeleteFileNotifierProvider.notifier)
             .deleteMultiple(unusedMediaFileHashes);
       }
-      await _sendArticleEntities([...files, articleData]);
+      await _sendArticleEntities(
+        articleData,
+        files: files,
+        mentions: <RelatedPubkey>{...originalMentions, ...mentions}.toList(),
+      );
       ref.read(draftArticleProvider.notifier).clear();
     });
   }
 
-  Future<List<IonConnectEntity>?> _sendArticleEntities(List<EventSerializable> entitiesData) async {
-    return ref.read(ionConnectNotifierProvider.notifier).sendEntitiesData(entitiesData);
+  Future<List<IonConnectEntity>?> _sendArticleEntities(
+    ArticleData articleData, {
+    List<FileMetadata> files = const [],
+    List<RelatedPubkey> mentions = const [],
+  }) async {
+    final dataToPublish = [...files, articleData];
+    final createdEntities =
+        await ref.read(ionConnectNotifierProvider.notifier).sendEntitiesData(dataToPublish);
+
+    final pubkeysToPublish = mentions.map((mention) => mention.value).toSet();
+
+    final userEventsMetadataBuilder = await ref.read(userEventsMetadataBuilderProvider.future);
+
+    await Future.wait([
+      for (final pubkey in pubkeysToPublish)
+        ref.read(ionConnectNotifierProvider.notifier).sendEntitiesData(
+              dataToPublish,
+              actionSource: ActionSourceUser(pubkey),
+              metadataBuilders: [userEventsMetadataBuilder],
+              cache: false,
+            ),
+    ]);
+
+    return createdEntities;
   }
 
   Future<String?> _uploadCoverImage(
@@ -308,6 +361,10 @@ class CreateArticle extends _$CreateArticle {
     }
 
     return updatedContent;
+  }
+
+  List<RelatedPubkey> _buildMentions(Delta content) {
+    return content.extractPubkeys().map((pubkey) => RelatedPubkey(value: pubkey)).toList();
   }
 
   Delta _replaceImagePathsWithUrls(
