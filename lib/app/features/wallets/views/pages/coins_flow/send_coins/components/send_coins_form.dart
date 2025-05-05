@@ -154,51 +154,51 @@ class SendCoinsForm extends HookConsumerWidget {
                               selectContactRouteLocationBuilder!(formController.network!.id),
                             );
 
-                          if (pubkey != null) notifier.setContact(pubkey);
-                        },
-                        onScanPressed: () async {
-                          final address = await context.push<String?>(
-                            scanAddressRouteLocationBuilder!(),
-                          );
-                          if (address != null) {
-                            notifier.setReceiverAddress(address);
-                          }
-                        },
-                      ),
-                    SizedBox(height: 12.0.s),
-                    CoinAmountInput(
-                      controller: amountController,
-                      maxValue: coin?.selectedOption?.amount ?? 0,
-                      coinAbbreviation: coin?.coinsGroup.abbreviation ?? '',
-                      enabled: formController.request == null,
-                    ),
-                    SizedBox(height: 17.0.s),
-                    const CoinsNetworkFeeSelector(),
-                    if (formController.canCoverNetworkFee)
-                      SizedBox(height: 45.0.s)
-                    else if (formController.network case final NetworkData network)
-                      NotEnoughMoneyForNetworkFeeMessage(network: network),
-                    Button(
-                      label: Text(
-                        locale.button_continue,
-                      ),
-                      type: isContinueButtonEnabled ? ButtonType.primary : ButtonType.disabled,
-                      mainAxisSize: MainAxisSize.max,
-                      disabled: !isContinueButtonEnabled,
-                      trailingIcon: ColorFiltered(
-                        colorFilter: ColorFilter.mode(
-                          colors.primaryBackground,
-                          BlendMode.srcIn,
+                            if (pubkey != null) notifier.setContact(pubkey);
+                          },
+                          onScanPressed: () async {
+                            final address = await context.push<String?>(
+                              scanAddressRouteLocationBuilder!(),
+                            );
+                            if (address != null) {
+                              notifier.setReceiverAddress(address);
+                            }
+                          },
                         ),
-                        child: Assets.svg.iconButtonNext.icon(),
+                      SizedBox(height: 12.0.s),
+                      CoinAmountInput(
+                        controller: amountController,
+                        maxValue: coin?.selectedOption?.amount ?? 0,
+                        coinAbbreviation: coin?.coinsGroup.abbreviation ?? '',
+                        enabled: formController.request == null,
                       ),
-                      onPressed: () => context.push(confirmRouteLocationBuilder()),
-                    ),
-                    SizedBox(height: 16.0.s),
-                  ],
+                      SizedBox(height: 17.0.s),
+                      const CoinsNetworkFeeSelector(),
+                      if (formController.canCoverNetworkFee)
+                        SizedBox(height: 45.0.s)
+                      else if (formController.network case final NetworkData network)
+                        NotEnoughMoneyForNetworkFeeMessage(network: network),
+                      Button(
+                        label: Text(
+                          locale.button_continue,
+                        ),
+                        type: isContinueButtonEnabled ? ButtonType.primary : ButtonType.disabled,
+                        mainAxisSize: MainAxisSize.max,
+                        disabled: !isContinueButtonEnabled,
+                        trailingIcon: ColorFiltered(
+                          colorFilter: ColorFilter.mode(
+                            colors.primaryBackground,
+                            BlendMode.srcIn,
+                          ),
+                          child: Assets.svg.iconButtonNext.icon(),
+                        ),
+                        onPressed: () => context.push(confirmRouteLocationBuilder()),
+                      ),
+                      SizedBox(height: 16.0.s),
+                    ],
+                  ),
                 ),
               ),
-            ),
             ),
           ],
         ),
