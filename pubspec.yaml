@@ -22,6 +22,7 @@ dependencies:
   camera: ^0.11.0+2
   charcode: ^1.4.0
   collection: ^1.18.0
+  connectivity_plus: ^6.1.4
   convert: ^3.1.2
   cross_file: ^0.3.4+2
   cryptography: ^2.7.0
@@ -80,6 +81,7 @@ dependencies:
   hooks_riverpod: ^2.6.1
   icloud_storage: ^2.2.0
   image_cropper: ^8.1.0
+  internet_connection_checker_plus: ^2.7.1
   intl: any
   ion_identity_client:
     path: packages/ion_identity_client
