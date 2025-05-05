@@ -43,7 +43,6 @@ import 'package:ion/app/features/ion_connect/providers/ion_connect_notifier.c.da
 import 'package:ion/app/features/ion_connect/providers/ion_connect_upload_notifier.c.dart';
 import 'package:ion/app/services/compressors/image_compressor.c.dart';
 import 'package:ion/app/services/compressors/video_compressor.c.dart';
-import 'package:ion/app/services/logger/logger.dart';
 import 'package:ion/app/services/markdown/quill.dart';
 import 'package:ion/app/services/media_service/media_service.c.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
@@ -372,15 +371,10 @@ class CreatePostNotifier extends _$CreatePostNotifier {
   Future<({List<FileMetadata> fileMetadatas, MediaAttachment mediaAttachment})> _uploadImage(
     MediaFile file,
   ) async {
-    Logger.info(
-      'Uploading image: width=${file.width}, height=${file.height}, path=${file.path}',
-    );
-
     var compressedImage = file;
 
     // Compress image if it's not a story
     // The stories has its own compression logic in ImageProcessorNotifier
-
     if (createOption != CreatePostOption.story) {
       compressedImage = await ref.read(imageCompressorProvider).compress(
             file,
@@ -392,10 +386,6 @@ class CreatePostNotifier extends _$CreatePostNotifier {
           compressedImage,
           alt: _getFileAlt(),
         );
-
-    Logger.info(
-      'Image uploaded successfully: fileUrl=${uploadResult.fileMetadata.url}',
-    );
 
     return (
       fileMetadatas: [uploadResult.fileMetadata],

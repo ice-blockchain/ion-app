@@ -31,9 +31,29 @@ class RepliesCount extends _$RepliesCount {
 
   void addOne() {
     state = state + 1;
+    _updateCache(eventReference, state);
   }
 
   void removeOne() {
     state = state - 1;
+    _updateCache(eventReference, state);
+  }
+
+  void _updateCache(EventReference eventReference, int newCount) {
+    final cacheKey = EventCountResultEntity.cacheKeyBuilder(
+      key: eventReference.toString(),
+      type: EventCountResultType.replies,
+    );
+
+    final cacheEntry =
+        ref.read(ionConnectCacheProvider.select(cacheSelector<EventCountResultEntity>(cacheKey)));
+
+    if (cacheEntry == null) {
+      return;
+    }
+
+    ref.read(ionConnectCacheProvider.notifier).cache(
+          cacheEntry.copyWith(data: cacheEntry.data.copyWith(content: newCount)),
+        );
   }
 }
