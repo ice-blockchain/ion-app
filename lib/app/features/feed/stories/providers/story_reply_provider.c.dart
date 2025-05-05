@@ -17,7 +17,6 @@ import 'package:ion/app/features/ion_connect/model/event_reference.c.dart';
 import 'package:ion/app/features/ion_connect/model/quoted_event.c.dart';
 import 'package:ion/app/features/ion_connect/model/related_pubkey.c.dart';
 import 'package:ion/app/features/ion_connect/providers/ion_connect_event_signer_provider.c.dart';
-import 'package:ion/app/features/user/providers/user_metadata_provider.c.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'story_reply_provider.c.g.dart';
@@ -90,27 +89,29 @@ class StoryReply extends _$StoryReply {
         currentUserMasterPubkey,
       ];
 
-      await ref
-          .read(conversationPubkeysProvider.notifier)
-          .fetchUsersKeys(participantsMasterPubkeys);
+      final conversationPubkeysNotifier = ref.read(conversationPubkeysProvider.notifier);
 
       for (final masterPubkey in participantsMasterPubkeys) {
-        final pubkey = ref.read(userMetadataProvider(masterPubkey)).valueOrNull?.pubkey;
+        final participantsKeysMap =
+            await conversationPubkeysNotifier.fetchUsersKeys(participantsMasterPubkeys);
+        final pubkeys = participantsKeysMap[masterPubkey];
 
-        if (pubkey == null) {
+        if (pubkeys == null) {
           throw UserPubkeyNotFoundException(masterPubkey);
         }
 
-        await ref.read(sendE2eeChatMessageServiceProvider).sendWrappedMessage(
-          pubkey: pubkey,
-          eventSigner: eventSigner,
-          masterPubkey: masterPubkey,
-          eventMessage: kind16Rumor,
-          wrappedKinds: [
-            GenericRepostEntity.kind.toString(),
-            ModifiablePostEntity.kind.toString(),
-          ],
-        );
+        for (final pubkey in pubkeys) {
+          await ref.read(sendE2eeChatMessageServiceProvider).sendWrappedMessage(
+            pubkey: pubkey,
+            eventSigner: eventSigner,
+            masterPubkey: masterPubkey,
+            eventMessage: kind16Rumor,
+            wrappedKinds: [
+              GenericRepostEntity.kind.toString(),
+              ModifiablePostEntity.kind.toString(),
+            ],
+          );
+        }
       }
 
       final sentKind14EventMessage = await ref.read(sendE2eeChatMessageServiceProvider).sendMessage(
