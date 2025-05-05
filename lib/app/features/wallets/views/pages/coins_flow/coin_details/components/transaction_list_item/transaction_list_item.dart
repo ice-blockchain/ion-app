@@ -60,7 +60,7 @@ class TransactionListItem extends StatelessWidget {
         children: [
           Text(
             '${transactionData.transactionType.sign}'
-            '${formatCrypto(transactionData.coinAmount, '')} '
+            '${formatCrypto(transactionData.coinAmount, '')}'
             '${coinData.abbreviation}',
             style: context.theme.appTextThemes.body.copyWith(
               color: _getTextColor(context),
