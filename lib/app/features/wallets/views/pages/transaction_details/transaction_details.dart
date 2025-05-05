@@ -54,139 +54,146 @@ class TransactionDetailsPage extends ConsumerWidget {
         : transactionData.receiverAddress;
 
     return SheetContent(
-      body: SingleChildScrollView(
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            NavigationAppBar.modal(
-              title: Text(context.i18n.transaction_details_title),
-              actions: const [NavigationCloseButton()],
-            ),
-            ScreenSideOffset.small(
-              child: SingleChildScrollView(
-                padding: EdgeInsetsDirectional.only(top: 10.0.s),
-                child: Column(
-                  children: [
-                    transactionData.assetData.maybeMap(
-                          coin: (coin) => TransactionAmountSummary(
-                            amount: coin.amount,
-                            currency: coin.coinsGroup.abbreviation,
-                            usdAmount: coin.amountUSD,
-                            icon: CoinIconWidget(
-                              imageUrl: coin.coinsGroup.iconUrl,
-                            ),
+      body: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          NavigationAppBar.modal(
+            title: Text(context.i18n.transaction_details_title),
+            actions: const [NavigationCloseButton()],
+          ),
+          Flexible(
+            child: SingleChildScrollView(
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  ScreenSideOffset.small(
+                    child: SingleChildScrollView(
+                      padding: EdgeInsetsDirectional.only(top: 10.0.s),
+                      child: Column(
+                        children: [
+                          transactionData.assetData.maybeMap(
+                                coin: (coin) => TransactionAmountSummary(
+                                  amount: coin.amount,
+                                  currency: coin.coinsGroup.abbreviation,
+                                  usdAmount: coin.amountUSD,
+                                  icon: CoinIconWidget(
+                                    imageUrl: coin.coinsGroup.iconUrl,
+                                  ),
+                                ),
+                                nft: (nft) => Padding(
+                                  padding: EdgeInsets.symmetric(
+                                    horizontal: 52.0.s,
+                                  ),
+                                  child: NftItem(
+                                    nftData: nft.nft,
+                                    backgroundColor: Colors.transparent,
+                                  ),
+                                ),
+                                orElse: () => const SizedBox(),
+                              ) ??
+                              const SizedBox(),
+                          SizedBox(height: 12.0.s),
+                          Timeline(
+                            items: [
+                              TimelineItemData(
+                                title: locale.transaction_details_timeline_pending,
+                                isDone: true,
+                                date: transactionData.dateRequested,
+                              ),
+                              TimelineItemData(
+                                title: locale.transaction_details_timeline_executing,
+                                isDone: transactionData.dateBroadcasted != null ||
+                                    transactionData.status == TransactionStatus.confirmed ||
+                                    transactionData.status == TransactionStatus.broadcasted,
+                              ),
+                              TimelineItemData(
+                                title: locale.transaction_details_timeline_successful,
+                                isDone: transactionData.dateConfirmed != null &&
+                                    transactionData.status == TransactionStatus.confirmed,
+                              ),
+                            ],
                           ),
-                          nft: (nft) => Padding(
-                            padding: EdgeInsets.symmetric(
-                              horizontal: 52.0.s,
-                            ),
-                            child: NftItem(
-                              nftData: nft.nft,
-                              backgroundColor: Colors.transparent,
-                            ),
+                          SizedBox(height: 16.0.s),
+                          TransactionParticipant(
+                            address: participantAddress,
+                            transactionType: transactionData.type,
+                            pubkey: transactionData.participantPubkey,
                           ),
-                          orElse: () => const SizedBox(),
-                        ) ??
-                        const SizedBox(),
-                    SizedBox(height: 12.0.s),
-                    Timeline(
-                      items: [
-                        TimelineItemData(
-                          title: locale.transaction_details_timeline_pending,
-                          isDone: true,
-                          date: transactionData.dateRequested,
-                        ),
-                        TimelineItemData(
-                          title: locale.transaction_details_timeline_executing,
-                          isDone: transactionData.dateBroadcasted != null ||
-                              transactionData.status == TransactionStatus.confirmed ||
-                              transactionData.status == TransactionStatus.broadcasted,
-                        ),
-                        TimelineItemData(
-                          title: locale.transaction_details_timeline_successful,
-                          isDone: transactionData.dateConfirmed != null &&
-                              transactionData.status == TransactionStatus.confirmed,
-                        ),
-                      ],
-                    ),
-                    SizedBox(height: 16.0.s),
-                    TransactionParticipant(
-                      address: participantAddress,
-                      transactionType: transactionData.type,
-                      pubkey: transactionData.participantPubkey,
-                    ),
-                    SizedBox(height: 12.0.s),
-                    if (currentUserAddress case final String userAddress)
-                      ListItem.textWithIcon(
-                        title: Text(locale.wallet_title),
-                        value: transactionData.walletViewName,
-                        icon: Assets.svg.walletWalletblue.icon(
-                          size: ScreenSideOffset.defaultSmallMargin,
-                        ),
-                        secondary: Align(
-                          alignment: AlignmentDirectional.centerEnd,
-                          child: Text(
-                            userAddress,
-                            textAlign: TextAlign.right,
-                            style: context.theme.appTextThemes.caption3,
-                          ),
-                        ),
-                      ),
-                    ...transactionData.assetData.maybeMap(
-                          coin: (coin) => [
-                            SizedBox(height: 16.0.s),
+                          SizedBox(height: 12.0.s),
+                          if (currentUserAddress case final String userAddress)
                             ListItem.textWithIcon(
-                              title: Text(locale.wallet_asset),
-                              value: coin.coinsGroup.name,
-                              icon: CoinIconWidget(
-                                imageUrl: coin.coinsGroup.iconUrl,
+                              title: Text(locale.wallet_title),
+                              value: transactionData.walletViewName,
+                              icon: Assets.svg.walletWalletblue.icon(
                                 size: ScreenSideOffset.defaultSmallMargin,
                               ),
+                              secondary: Align(
+                                alignment: AlignmentDirectional.centerEnd,
+                                child: Text(
+                                  userAddress,
+                                  textAlign: TextAlign.right,
+                                  style: context.theme.appTextThemes.caption3,
+                                ),
+                              ),
                             ),
+                          ...transactionData.assetData.maybeMap(
+                                coin: (coin) => [
+                                  SizedBox(height: 16.0.s),
+                                  ListItem.textWithIcon(
+                                    title: Text(locale.wallet_asset),
+                                    value: coin.coinsGroup.name,
+                                    icon: CoinIconWidget(
+                                      imageUrl: coin.coinsGroup.iconUrl,
+                                      size: ScreenSideOffset.defaultSmallMargin,
+                                    ),
+                                  ),
+                                ],
+                                orElse: () => const [SizedBox.shrink()],
+                              ) ??
+                              const [SizedBox.shrink()],
+                          SizedBox(height: 12.0.s),
+                          ListItem.textWithIcon(
+                            title: Text(context.i18n.send_nft_confirm_network),
+                            value: transactionData.network.displayName,
+                            icon: NetworkIconWidget(
+                              size: 16.0.s,
+                              imageUrl: transactionData.network.image,
+                            ),
+                          ),
+                          SizedBox(height: 12.0.s),
+                          if (arrivalTime != null) ...[
+                            ListItemArrivalTime(formattedTime: arrivalTime),
+                            SizedBox(height: 12.0.s),
                           ],
-                          orElse: () => const [SizedBox.shrink()],
-                        ) ??
-                        const [SizedBox.shrink()],
-                    SizedBox(height: 12.0.s),
-                    ListItem.textWithIcon(
-                      title: Text(context.i18n.send_nft_confirm_network),
-                      value: transactionData.network.displayName,
-                      icon: NetworkIconWidget(
-                        size: 16.0.s,
-                        imageUrl: transactionData.network.image,
+                          if (transactionData.networkFeeOption != null &&
+                              transactionData.type == TransactionType.send) ...[
+                            ListItemNetworkFee(
+                              value: formatCrypto(
+                                transactionData.networkFeeOption!.amount,
+                                transactionData.networkFeeOption!.symbol,
+                              ),
+                            ),
+                            SizedBox(height: 15.0.s),
+                          ],
+                          TransactionDetailsActions(
+                            onViewOnExplorer: () {
+                              final url = transactionData.transactionExplorerUrl;
+                              final location = exploreRouteLocationBuilder(url);
+                              context.push<void>(location);
+                            },
+                            onShare: () => shareContent(transactionData.transactionExplorerUrl),
+                          ),
+                          SizedBox(height: 8.0.s),
+                        ],
                       ),
                     ),
-                    SizedBox(height: 12.0.s),
-                    if (arrivalTime != null) ...[
-                      ListItemArrivalTime(formattedTime: arrivalTime),
-                      SizedBox(height: 12.0.s),
-                    ],
-                    if (transactionData.networkFeeOption != null &&
-                        transactionData.type == TransactionType.send) ...[
-                      ListItemNetworkFee(
-                        value: formatCrypto(
-                          transactionData.networkFeeOption!.amount,
-                          transactionData.networkFeeOption!.symbol,
-                        ),
-                      ),
-                      SizedBox(height: 15.0.s),
-                    ],
-                    TransactionDetailsActions(
-                      onViewOnExplorer: () {
-                        final url = transactionData.transactionExplorerUrl;
-                        final location = exploreRouteLocationBuilder(url);
-                        context.push<void>(location);
-                      },
-                      onShare: () => shareContent(transactionData.transactionExplorerUrl),
-                    ),
-                    SizedBox(height: 8.0.s),
-                  ],
-                ),
+                  ),
+                  ScreenBottomOffset(),
+                ],
               ),
             ),
-            ScreenBottomOffset(),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }
