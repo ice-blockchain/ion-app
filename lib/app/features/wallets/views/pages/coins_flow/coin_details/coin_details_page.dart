@@ -8,6 +8,7 @@ import 'package:ion/app/components/coins/coin_icon.dart';
 import 'package:ion/app/components/list_items_loading_state/list_items_loading_state.dart';
 import 'package:ion/app/components/screen_offset/screen_side_offset.dart';
 import 'package:ion/app/components/scroll_view/load_more_builder.dart';
+import 'package:ion/app/components/scroll_view/pull_to_refresh_builder.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/wallets/model/coin_transaction_data.c.dart';
 import 'package:ion/app/features/wallets/model/transaction_details.c.dart';
@@ -64,9 +65,7 @@ class CoinDetailsPage extends HookConsumerWidget {
           ],
         ),
       ),
-      body: LoadMoreBuilder(
-        hasMore: history?.hasMore ?? false,
-        onLoadMore: historyNotifier.loadMore,
+      body: PullToRefreshBuilder(
         slivers: [
           SliverToBoxAdapter(
             child: Column(
@@ -131,6 +130,16 @@ class CoinDetailsPage extends HookConsumerWidget {
               ),
             ],
         ],
+        onRefresh: () async {
+          ref
+            ..invalidate(walletViewsDataNotifierProvider)
+            ..invalidate(coinTransactionHistoryNotifierProvider(symbolGroup: symbolGroup));
+        },
+        builder: (context, slivers) => LoadMoreBuilder(
+          hasMore: history?.hasMore ?? false,
+          onLoadMore: historyNotifier.loadMore,
+          slivers: slivers,
+        ),
       ),
     );
   }
