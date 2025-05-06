@@ -25,7 +25,7 @@ class TimeAgo extends ConsumerWidget {
     final locale = ref.watch(appLocaleProvider);
     final formattedTime = timeFormat == TimestampFormat.detailed
         ? formatDetailedTimestamp(time, locale: locale)
-        : formatShortTimestamp(time, locale: locale);
+        : formatShortTimestamp(time, locale: locale, context: context);
 
     return Text(
       formattedTime,

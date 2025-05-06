@@ -126,11 +126,16 @@ String toTimeagoShortLocale(Locale locale) {
 /// it's under or over 12 months old.
 ///
 /// **Important**: If the post is newer than 1 minute (i.e. < 60 seconds),
-/// we show "1m" as the minimum value (no "0m" or "now").
-String formatShortTimestamp(DateTime dateTime, {Locale? locale}) {
+/// we show "just now" localized.
+String formatShortTimestamp(DateTime dateTime, {Locale? locale, BuildContext? context}) {
   locale ??= const Locale('en');
   final now = DateTime.now();
   final diff = now.difference(dateTime.toLocal());
+
+  // If less than 60 seconds, show "Just now"
+  if (diff.inSeconds < 60 && context != null) {
+    return context.i18n.date_just_now;
+  }
 
   final diffInDays = diff.inDays;
   // If under 8 days, use timeago short.
