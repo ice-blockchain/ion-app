@@ -142,6 +142,11 @@ class SendE2eeChatMessageService {
         return a.compareTo(b);
       });
 
+      if (mediaAttachmentsUsersBased.isEmpty && content.isEmpty) {
+        await ref.read(eventMessageDaoProvider).deleteByEventReference(eventReference);
+        return sentMessage;
+      }
+
       await Future.wait(
         participantsMasterPubkeys.map((masterPubkey) async {
           final pubkeyDevices = participantsPubkeysMap[masterPubkey];
