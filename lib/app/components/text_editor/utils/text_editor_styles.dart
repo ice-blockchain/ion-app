@@ -6,7 +6,7 @@ import 'package:ion/app/components/text_editor/attributes.dart';
 import 'package:ion/app/extensions/extensions.dart';
 
 DefaultStyles textEditorStyles(BuildContext context, {Color? color}) {
-  final textColor = color ?? context.theme.appColors.secondaryText;
+  final textColor = color ?? context.theme.appColors.postContent;
   return DefaultStyles(
     paragraph: DefaultTextBlockStyle(
       context.theme.appTextThemes.body2.copyWith(

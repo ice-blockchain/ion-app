@@ -31,6 +31,7 @@ class AppColorsExtension extends ThemeExtension<AppColorsExtension> {
     required this.attentionBlock,
     required this.pink,
     required this.medBlue,
+    required this.postContent,
   });
 
   factory AppColorsExtension.fromTemplate(TemplateColors templateColors) {
@@ -61,6 +62,7 @@ class AppColorsExtension extends ThemeExtension<AppColorsExtension> {
       attentionBlock: templateColors.attentionBlock,
       pink: templateColors.pink,
       medBlue: templateColors.medBlue,
+      postContent: templateColors.postContent,
     );
   }
 
@@ -92,6 +94,7 @@ class AppColorsExtension extends ThemeExtension<AppColorsExtension> {
       attentionBlock: const Color(0xFFEEF1FF),
       pink: const Color(0xFFA640FF),
       medBlue: const Color(0xFF4340FF),
+      postContent: const Color(0xFF0F1419),
     );
   }
 
@@ -121,6 +124,7 @@ class AppColorsExtension extends ThemeExtension<AppColorsExtension> {
   final Color attentionBlock;
   final Color pink;
   final Color medBlue;
+  final Color postContent;
 
   @override
   ThemeExtension<AppColorsExtension> copyWith({
@@ -150,6 +154,7 @@ class AppColorsExtension extends ThemeExtension<AppColorsExtension> {
     Color? attentionBlock,
     Color? pink,
     Color? medBlue,
+    Color? postContent,
   }) {
     return AppColorsExtension(
       primaryAccent: primaryAccent ?? this.primaryAccent,
@@ -178,6 +183,7 @@ class AppColorsExtension extends ThemeExtension<AppColorsExtension> {
       attentionBlock: attentionBlock ?? this.attentionBlock,
       pink: pink ?? this.pink,
       medBlue: medBlue ?? this.medBlue,
+      postContent: postContent ?? this.postContent,
     );
   }
 
@@ -217,6 +223,7 @@ class AppColorsExtension extends ThemeExtension<AppColorsExtension> {
       attentionBlock: Color.lerp(attentionBlock, other.attentionBlock, t)!,
       pink: Color.lerp(pink, other.pink, t)!,
       medBlue: Color.lerp(medBlue, other.medBlue, t)!,
+      postContent: Color.lerp(postContent, other.postContent, t)!,
     );
   }
 }
