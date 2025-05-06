@@ -12,8 +12,6 @@ import 'package:ion/app/features/chat/model/database/chat_database.c.dart';
 import 'package:ion/app/features/chat/model/message_list_item.c.dart';
 import 'package:ion/app/features/chat/views/components/message_items/message_reaction_dialog/components/message_reaction_context_menu.dart';
 import 'package:ion/app/features/chat/views/components/message_items/message_reaction_dialog/components/message_reaction_emoji_bar.dart';
-import 'package:ion/app/features/core/model/feature_flags.dart';
-import 'package:ion/app/features/core/providers/feature_flags_provider.c.dart';
 import 'package:ion/app/services/media_service/media_service.c.dart';
 
 class MessageReactionDialog extends HookConsumerWidget {
@@ -34,24 +32,27 @@ class MessageReactionDialog extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final contextMenuHeight = useMemoized(() {
-      final hideChatBookmark =
-          ref.read(featureFlagsProvider.notifier).get(ChatFeatureFlag.hideChatBookmark);
+    final contextMenuKey = useMemoized(GlobalKey.new);
+    final contextMenuHeight = useState<double>(180.0.s);
 
-      final heightOfFailedMessageOverlayMenu = 103.0.s;
-      final heightOfSuccessMessageOverlayMenu = 185.0.s;
-      final heightOfSuccessMessageOverlayMenuWithBookmark = 203.0.s;
+    useEffect(
+      () {
+        void measureHeight() {
+          WidgetsBinding.instance.addPostFrameCallback((_) {
+            final box = contextMenuKey.currentContext?.findRenderObject() as RenderBox?;
+            if (box != null && box.hasSize) {
+              contextMenuHeight.value = box.size.height;
+            } else {
+              measureHeight();
+            }
+          });
+        }
 
-      if (messageStatus == MessageDeliveryStatus.failed) {
-        return heightOfFailedMessageOverlayMenu;
-      }
-
-      if (hideChatBookmark) {
-        return heightOfSuccessMessageOverlayMenu;
-      }
-
-      return heightOfSuccessMessageOverlayMenuWithBookmark;
-    });
+        measureHeight();
+        return null;
+      },
+      const [],
+    );
 
     final capturedImage = useFuture(
       useMemoized(
@@ -69,7 +70,7 @@ class MessageReactionDialog extends HookConsumerWidget {
     /// The available height for the message content in the dialog
     final availableHeight = MediaQuery.sizeOf(context).height -
         MessageReactionEmojiBar.height -
-        contextMenuHeight -
+        contextMenuHeight.value -
         MediaQuery.paddingOf(context).bottom -
         MediaQuery.paddingOf(context).top;
 
@@ -86,7 +87,7 @@ class MessageReactionDialog extends HookConsumerWidget {
     final overflowBottomSize = MediaQuery.sizeOf(context).height -
         // bottomdY -
         (position.dy > 0 ? (isHugeComponent ? 0 : bottomdY) : bottomdY) -
-        contextMenuHeight -
+        contextMenuHeight.value -
         MediaQuery.paddingOf(context).bottom;
 
     /// The y-coordinate of the top of the message content in the dialog
@@ -134,9 +135,9 @@ class MessageReactionDialog extends HookConsumerWidget {
                 ),
                 IntrinsicWidth(
                   child: MessageReactionContextMenu(
+                    key: contextMenuKey,
                     isMe: isMe,
                     messageItem: messageItem,
-                    height: contextMenuHeight,
                     messageStatus: messageStatus,
                   ),
                 ),
