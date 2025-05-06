@@ -12,6 +12,7 @@ import 'package:ion/app/features/chat/model/database/chat_database.c.dart';
 import 'package:ion/app/features/chat/providers/conversation_pubkeys_provider.c.dart';
 import 'package:ion/app/features/ion_connect/ion_connect.dart';
 import 'package:ion/app/features/ion_connect/model/deletion_request.c.dart';
+import 'package:ion/app/features/ion_connect/model/event_reference.c.dart';
 import 'package:ion/app/features/ion_connect/providers/ion_connect_event_signer_provider.c.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
@@ -96,17 +97,24 @@ Future<void> _deleteReaction({
     throw UserMasterPubkeyNotFoundException();
   }
 
-  if (reactionEvent.pubkey != eventSigner.publicKey) {
-    throw PubkeysDoNotMatchException();
-  }
+  print('currentUserMasterPubkey: $currentUserMasterPubkey');
 
-  final reactionEntity = PrivateMessageReactionEntity.fromEventMessage(reactionEvent);
+  final deleteRequest = DeletionRequest(
+    events: [
+      EventToDelete(
+        eventReference: ImmutableEventReference(
+          eventId: reactionEvent.id,
+          pubkey: reactionEvent.masterPubkey,
+          kind: PrivateMessageReactionEntity.kind,
+        ),
+      ),
+    ],
+  );
 
-  final eventReference = reactionEntity.toEventReference();
-
-  final deleteRequest = DeletionRequest(events: [EventToDelete(eventReference: eventReference)]);
-
-  final eventMessage = await deleteRequest.toEventMessage(eventSigner);
+  final eventMessage = await deleteRequest.toEventMessage(
+    NoPrivateSigner(eventSigner.publicKey),
+    masterPubkey: currentUserMasterPubkey,
+  );
 
   await Future.wait(
     participantsMasterPubkeys.map((masterPubkey) async {
