@@ -30,44 +30,6 @@ class ConversationMessageReactionDao extends DatabaseAccessor<ChatDatabase>
       ),
       mode: InsertMode.insertOrIgnore,
     );
-
-    return;
-
-    // if (existingReactionRow == null) {
-    //   await eventMessageDao.add(reactionEvent);
-    //   await into(reactionTable).insert(
-    //     ReactionTableCompanion.insert(
-    //       reactionEventReference: reactionEntity.toEventReference(),
-    //       messageEventReference: reactionEntity.data.reference,
-    //       masterPubkey: masterPubkey,
-    //       content: reactionEntity.data.content,
-    //     ),
-    //     mode: InsertMode.insertOrIgnore,
-    //   );
-    // } else {
-    //   final previousReactionEvent = await (select(db.eventMessageTable)
-    //         ..where(
-    //           (table) =>
-    //               table.eventReference.equalsValue(existingReactionRow.messageEventReference),
-    //         ))
-    //       .getSingleOrNull();
-
-    //   await eventMessageDao.add(newReactionEvent);
-
-    //   if (previousReactionEvent != null &&
-    //       previousReactionEvent.createdAt.isBefore(newReactionEvent.createdAt)) {
-    //     await (update(reactionTable)
-    //           ..where(
-    //             (table) => table.messageEventReference
-    //                 .equalsValue(existingReactionRow.messageEventReference),
-    //           ))
-    //         .write(
-    //       const ReactionTableCompanion(
-    //         isDeleted: Value(false),
-    //       ),
-    //     );
-    //   }
-    // }
   }
 
   Future<void> remove({
