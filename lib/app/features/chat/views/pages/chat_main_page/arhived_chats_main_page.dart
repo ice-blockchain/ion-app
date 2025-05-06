@@ -41,7 +41,9 @@ class ArchivedChatsMainPage extends HookConsumerWidget {
         actions: [
           NavigationTextButton(
             label: editMode ? context.i18n.core_done : context.i18n.button_edit,
-            textStyle: context.theme.appTextThemes.subtitle2,
+            textStyle: context.theme.appTextThemes.subtitle2.copyWith(
+              color: context.theme.appColors.primaryAccent,
+            ),
             onPressed: () {
               ref.read(conversationsEditModeProvider.notifier).editMode = !editMode;
               ref.read(selectedConversationsProvider.notifier).clear();

@@ -3,6 +3,7 @@
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/extensions/extensions.dart';
+import 'package:ion/app/features/chat/providers/conversations_provider.c.dart';
 import 'package:ion/app/features/chat/recent_chats/providers/conversations_edit_mode_provider.c.dart';
 import 'package:ion/app/features/chat/recent_chats/providers/selected_conversations_ids_provider.c.dart';
 import 'package:ion/app/router/app_routes.c.dart';
@@ -16,15 +17,29 @@ class ChatMainAppBar extends ConsumerWidget implements PreferredSizeWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final editMode = ref.watch(conversationsEditModeProvider);
+    //.where((c) => !c.isArchived).toList()
+    final hasConversations = ref
+            .watch(conversationsProvider)
+            .valueOrNull
+            ?.where((c) => !c.isArchived)
+            .toList()
+            .isNotEmpty ??
+        false;
 
     return NavigationAppBar.screen(
       leading: NavigationTextButton(
         label: editMode ? context.i18n.core_done : context.i18n.button_edit,
-        textStyle: context.theme.appTextThemes.subtitle2,
-        onPressed: () {
-          ref.read(conversationsEditModeProvider.notifier).editMode = !editMode;
-          ref.read(selectedConversationsProvider.notifier).clear();
-        },
+        textStyle: context.theme.appTextThemes.subtitle2.copyWith(
+          color: hasConversations
+              ? context.theme.appColors.primaryAccent
+              : context.theme.appColors.sheetLine,
+        ),
+        onPressed: hasConversations
+            ? () {
+                ref.read(conversationsEditModeProvider.notifier).editMode = !editMode;
+                ref.read(selectedConversationsProvider.notifier).clear();
+              }
+            : null,
       ),
       title: GestureDetector(
         onDoubleTap: () {
