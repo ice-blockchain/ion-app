@@ -50,13 +50,72 @@ class UserRelaysManager extends _$UserRelaysManager {
   @override
   FutureOr<void> build() async {}
 
-  Future<List<UserRelaysEntity>> fetch(
-    List<String> pubkeys, {
-    ActionSource actionSource = const ActionSourceIndexers(),
+  Future<List<UserRelaysEntity>> fetch(List<String> pubkeys) async {
+    final result = <UserRelaysEntity>[];
+    final pubkeysToFetch = [...pubkeys];
+
+    final dbCachedRelays = await _getRelaysFromDb(pubkeys: pubkeys);
+    result.addAll(dbCachedRelays);
+
+    pubkeysToFetch
+        .removeWhere((pubkey) => dbCachedRelays.any((relay) => relay.masterPubkey == pubkey));
+
+    if (pubkeysToFetch.isEmpty) {
+      return result;
+    }
+
+    final fetchedRelays = <UserRelaysEntity>[];
+
+    final relaysFromIndexers = await _fetchRelaysFromIndexers(pubkeys: pubkeysToFetch);
+
+    fetchedRelays.addAll(relaysFromIndexers);
+    result.addAll(relaysFromIndexers);
+
+    pubkeysToFetch
+        .removeWhere((pubkey) => relaysFromIndexers.any((relay) => relay.masterPubkey == pubkey));
+
+    if (pubkeysToFetch.isEmpty) {
+      return result;
+    }
+
+    final relaysFromIdentity = await _fetchRelaysFromIdentity(pubkeys: pubkeysToFetch);
+
+    fetchedRelays.addAll(relaysFromIdentity);
+    result.addAll(relaysFromIdentity);
+
+    await _clearReachabilityInfoFor(fetchedRelays);
+
+    return result;
+  }
+
+  Future<List<UserRelaysEntity>> _fetchRelaysFromIndexers({
+    required List<String> pubkeys,
   }) async {
     final result = <UserRelaysEntity>[];
-    final pubkeysToFetch = <String>[];
-    final fetchedRelays = <UserRelaysEntity>[];
+    final indexers = await ref.read(currentUserIndexersProvider.future);
+    if (indexers != null && indexers.isNotEmpty) {
+      final requestMessage = RequestMessage()
+        ..addFilter(
+          RequestFilter(kinds: const [UserRelaysEntity.kind], authors: pubkeys),
+        );
+
+      final entitiesStream = ref
+          .read(ionConnectNotifierProvider.notifier)
+          .requestEntities(requestMessage, actionSource: const ActionSourceIndexers());
+
+      await for (final entity in entitiesStream) {
+        if (entity is UserRelaysEntity) {
+          result.add(entity);
+        }
+      }
+    }
+    return result;
+  }
+
+  Future<List<UserRelaysEntity>> _getRelaysFromDb({
+    required List<String> pubkeys,
+  }) async {
+    final result = <UserRelaysEntity>[];
 
     final eventReferences = pubkeys
         .map(
@@ -66,64 +125,25 @@ class UserRelaysManager extends _$UserRelaysManager {
           ),
         )
         .toList();
+
     final dbCachedRelays = (await ref.read(ionConnectDbCacheProvider.notifier).get(eventReferences))
         .cast<UserRelaysEntity?>()
         .nonNulls
         .toList();
 
-    for (final pubkey in pubkeys) {
-      final cachedRelaysEntity =
-          dbCachedRelays.where((relay) => relay.masterPubkey == pubkey).firstOrNull;
+    // Remove unreachable relays
+    for (final relay in dbCachedRelays) {
       final filteredRelayEntity =
-          ref.read(relayReachabilityProvider.notifier).getFilteredRelayEntity(cachedRelaysEntity);
-
+          ref.read(relayReachabilityProvider.notifier).getFilteredRelayEntity(relay);
       if (filteredRelayEntity != null) {
         result.add(filteredRelayEntity);
-      } else {
-        pubkeysToFetch.add(pubkey);
       }
-    }
-
-    if (pubkeysToFetch.isEmpty) {
-      return result;
-    }
-
-    final requestMessage = RequestMessage()
-      ..addFilter(
-        RequestFilter(kinds: const [UserRelaysEntity.kind], authors: pubkeysToFetch),
-      );
-
-    final entitiesStream = ref
-        .read(ionConnectNotifierProvider.notifier)
-        .requestEntities(requestMessage, actionSource: actionSource);
-
-    await for (final entity in entitiesStream) {
-      if (entity is UserRelaysEntity) {
-        result.add(entity);
-        fetchedRelays.add(entity);
-        pubkeysToFetch.removeWhere((pubkey) {
-          // In some corner cases we might use `pubkey` instead on `masterPubkey`,
-          // For example for kind14 chat events that don't have masterPubkey
-          return pubkey == entity.masterPubkey || pubkey == entity.pubkey;
-        });
-      }
-    }
-
-    if (pubkeysToFetch.isNotEmpty) {
-      final userRelays = await _fetchRelaysFromIdentityFor(pubkeys: pubkeysToFetch);
-
-      fetchedRelays.addAll(userRelays);
-      result.addAll(userRelays);
-    }
-
-    if (fetchedRelays.isNotEmpty) {
-      await _clearReachabilityInfoFor(fetchedRelays);
     }
 
     return result;
   }
 
-  Future<List<UserRelaysEntity>> _fetchRelaysFromIdentityFor({
+  Future<List<UserRelaysEntity>> _fetchRelaysFromIdentity({
     required List<String> pubkeys,
   }) async {
     final ionIdentity = await ref.read(ionIdentityClientProvider.future);

@@ -36,10 +36,9 @@ Future<UserDelegationEntity?> userDelegation(Ref ref, String pubkey) async {
       RequestFilter(kinds: const [UserDelegationEntity.kind], limit: 1, authors: [pubkey]),
     );
 
-  return ref.read(ionConnectNotifierProvider.notifier).requestEntity<UserDelegationEntity>(
-        requestMessage,
-        actionSource: const ActionSourceIndexers(),
-      );
+  return ref
+      .read(ionConnectNotifierProvider.notifier)
+      .requestEntity<UserDelegationEntity>(requestMessage, actionSource: ActionSourceUser(pubkey));
 }
 
 @riverpod

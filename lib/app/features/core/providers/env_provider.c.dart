@@ -19,6 +19,7 @@ enum EnvVariable {
   COMMUNITY_MEMBERS_COUNT_CACHE_MINUTES,
   GIFT_WRAP_EXPIRATION_HOURS,
   ICLOUD_CONTAINER_ID,
+  CONTENT_CREATORS_RELAY,
 }
 
 @Riverpod(keepAlive: true)
@@ -35,6 +36,8 @@ class Env extends _$Env {
       EnvVariable.ION_ORIGIN => const String.fromEnvironment('ION_ORIGIN') as T,
       EnvVariable.SHOW_DEBUG_INFO => const bool.fromEnvironment('SHOW_DEBUG_INFO') as T,
       EnvVariable.BANUBA_TOKEN => const String.fromEnvironment('BANUBA_TOKEN') as T,
+      EnvVariable.CONTENT_CREATORS_RELAY =>
+        const String.fromEnvironment('CONTENT_CREATORS_RELAY') as T,
       EnvVariable.STORY_EXPIRATION_HOURS =>
         const int.fromEnvironment('STORY_EXPIRATION_HOURS') as T,
       EnvVariable.VERSIONS_CONFIG_REFETCH_INTERVAL =>
