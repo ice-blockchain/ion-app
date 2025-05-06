@@ -52,44 +52,51 @@ class UserRelaysManager extends _$UserRelaysManager {
 
   Future<List<UserRelaysEntity>> fetch(List<String> pubkeys) async {
     final result = <UserRelaysEntity>[];
-    final pubkeysToFetch = <String>[];
-    final fetchedRelays = <UserRelaysEntity>[];
+    final pubkeysToFetch = [...pubkeys];
 
-    final eventReferences = pubkeys
-        .map(
-          (pubkey) => ReplaceableEventReference(
-            pubkey: pubkey,
-            kind: UserRelaysEntity.kind,
-          ),
-        )
-        .toList();
-    final dbCachedRelays = (await ref.read(ionConnectDbCacheProvider.notifier).get(eventReferences))
-        .cast<UserRelaysEntity?>()
-        .nonNulls
-        .toList();
+    final dbCachedRelays = await _getRelaysFromDb(pubkeys: pubkeys);
+    result.addAll(dbCachedRelays);
 
-    for (final pubkey in pubkeys) {
-      final cachedRelaysEntity =
-          dbCachedRelays.where((relay) => relay.masterPubkey == pubkey).firstOrNull;
-      final filteredRelayEntity =
-          ref.read(relayReachabilityProvider.notifier).getFilteredRelayEntity(cachedRelaysEntity);
-
-      if (filteredRelayEntity != null) {
-        result.add(filteredRelayEntity);
-      } else {
-        pubkeysToFetch.add(pubkey);
-      }
-    }
+    pubkeysToFetch
+        .removeWhere((pubkey) => dbCachedRelays.any((relay) => relay.masterPubkey == pubkey));
 
     if (pubkeysToFetch.isEmpty) {
       return result;
     }
 
+    final fetchedRelays = <UserRelaysEntity>[];
+
+    final relaysFromIndexers = await _fetchRelaysFromIndexers(pubkeys: pubkeysToFetch);
+
+    fetchedRelays.addAll(relaysFromIndexers);
+    result.addAll(relaysFromIndexers);
+
+    pubkeysToFetch
+        .removeWhere((pubkey) => relaysFromIndexers.any((relay) => relay.masterPubkey == pubkey));
+
+    if (pubkeysToFetch.isEmpty) {
+      return result;
+    }
+
+    final relaysFromIdentity = await _fetchRelaysFromIdentity(pubkeys: pubkeysToFetch);
+
+    fetchedRelays.addAll(relaysFromIdentity);
+    result.addAll(relaysFromIdentity);
+
+    await _clearReachabilityInfoFor(fetchedRelays);
+
+    return result;
+  }
+
+  Future<List<UserRelaysEntity>> _fetchRelaysFromIndexers({
+    required List<String> pubkeys,
+  }) async {
+    final result = <UserRelaysEntity>[];
     final indexers = await ref.read(currentUserIndexersProvider.future);
     if (indexers != null && indexers.isNotEmpty) {
       final requestMessage = RequestMessage()
         ..addFilter(
-          RequestFilter(kinds: const [UserRelaysEntity.kind], authors: pubkeysToFetch),
+          RequestFilter(kinds: const [UserRelaysEntity.kind], authors: pubkeys),
         );
 
       final entitiesStream = ref
@@ -99,21 +106,38 @@ class UserRelaysManager extends _$UserRelaysManager {
       await for (final entity in entitiesStream) {
         if (entity is UserRelaysEntity) {
           result.add(entity);
-          fetchedRelays.add(entity);
-          pubkeysToFetch.removeWhere((pubkey) => pubkey == entity.masterPubkey);
         }
       }
-
-      if (pubkeysToFetch.isNotEmpty) {
-        final userRelays = await _fetchRelaysFromIdentity(pubkeys: pubkeysToFetch);
-
-        fetchedRelays.addAll(userRelays);
-        result.addAll(userRelays);
-      }
     }
+    return result;
+  }
 
-    if (fetchedRelays.isNotEmpty) {
-      await _clearReachabilityInfoFor(fetchedRelays);
+  Future<List<UserRelaysEntity>> _getRelaysFromDb({
+    required List<String> pubkeys,
+  }) async {
+    final result = <UserRelaysEntity>[];
+
+    final eventReferences = pubkeys
+        .map(
+          (pubkey) => ReplaceableEventReference(
+            pubkey: pubkey,
+            kind: UserRelaysEntity.kind,
+          ),
+        )
+        .toList();
+
+    final dbCachedRelays = (await ref.read(ionConnectDbCacheProvider.notifier).get(eventReferences))
+        .cast<UserRelaysEntity?>()
+        .nonNulls
+        .toList();
+
+    // Remove unreachable relays
+    for (final relay in dbCachedRelays) {
+      final filteredRelayEntity =
+          ref.read(relayReachabilityProvider.notifier).getFilteredRelayEntity(relay);
+      if (filteredRelayEntity != null) {
+        result.add(filteredRelayEntity);
+      }
     }
 
     return result;

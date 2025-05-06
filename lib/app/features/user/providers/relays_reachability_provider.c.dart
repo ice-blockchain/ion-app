@@ -48,8 +48,7 @@ class RelayReachability extends _$RelayReachability {
     return relayUrls.map(get).nonNulls.toList();
   }
 
-  UserRelaysEntity? getFilteredRelayEntity(UserRelaysEntity? relaysEntity) {
-    if (relaysEntity == null) return null;
+  UserRelaysEntity? getFilteredRelayEntity(UserRelaysEntity relaysEntity) {
     final reachableRelays = _getReachableRelaysSorted(relaysEntity.data.list);
     if (reachableRelays == null) {
       return null;
