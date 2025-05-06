@@ -50,10 +50,7 @@ class UserRelaysManager extends _$UserRelaysManager {
   @override
   FutureOr<void> build() async {}
 
-  Future<List<UserRelaysEntity>> fetch(
-    List<String> pubkeys, {
-    ActionSource actionSource = const ActionSourceIndexers(),
-  }) async {
+  Future<List<UserRelaysEntity>> fetch(List<String> pubkeys) async {
     final result = <UserRelaysEntity>[];
     final pubkeysToFetch = <String>[];
     final fetchedRelays = <UserRelaysEntity>[];
@@ -88,32 +85,31 @@ class UserRelaysManager extends _$UserRelaysManager {
       return result;
     }
 
-    final requestMessage = RequestMessage()
-      ..addFilter(
-        RequestFilter(kinds: const [UserRelaysEntity.kind], authors: pubkeysToFetch),
-      );
+    final indexers = await ref.read(currentUserIndexersProvider.future);
+    if (indexers != null && indexers.isNotEmpty) {
+      final requestMessage = RequestMessage()
+        ..addFilter(
+          RequestFilter(kinds: const [UserRelaysEntity.kind], authors: pubkeysToFetch),
+        );
 
-    final entitiesStream = ref
-        .read(ionConnectNotifierProvider.notifier)
-        .requestEntities(requestMessage, actionSource: actionSource);
+      final entitiesStream = ref
+          .read(ionConnectNotifierProvider.notifier)
+          .requestEntities(requestMessage, actionSource: const ActionSourceIndexers());
 
-    await for (final entity in entitiesStream) {
-      if (entity is UserRelaysEntity) {
-        result.add(entity);
-        fetchedRelays.add(entity);
-        pubkeysToFetch.removeWhere((pubkey) {
-          // In some corner cases we might use `pubkey` instead on `masterPubkey`,
-          // For example for kind14 chat events that don't have masterPubkey
-          return pubkey == entity.masterPubkey || pubkey == entity.pubkey;
-        });
+      await for (final entity in entitiesStream) {
+        if (entity is UserRelaysEntity) {
+          result.add(entity);
+          fetchedRelays.add(entity);
+          pubkeysToFetch.removeWhere((pubkey) => pubkey == entity.masterPubkey);
+        }
       }
-    }
 
-    if (pubkeysToFetch.isNotEmpty) {
-      final userRelays = await _fetchRelaysFromIdentityFor(pubkeys: pubkeysToFetch);
+      if (pubkeysToFetch.isNotEmpty) {
+        final userRelays = await _fetchRelaysFromIdentity(pubkeys: pubkeysToFetch);
 
-      fetchedRelays.addAll(userRelays);
-      result.addAll(userRelays);
+        fetchedRelays.addAll(userRelays);
+        result.addAll(userRelays);
+      }
     }
 
     if (fetchedRelays.isNotEmpty) {
@@ -123,7 +119,7 @@ class UserRelaysManager extends _$UserRelaysManager {
     return result;
   }
 
-  Future<List<UserRelaysEntity>> _fetchRelaysFromIdentityFor({
+  Future<List<UserRelaysEntity>> _fetchRelaysFromIdentity({
     required List<String> pubkeys,
   }) async {
     final ionIdentity = await ref.read(ionIdentityClientProvider.future);

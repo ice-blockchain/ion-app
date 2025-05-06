@@ -4,7 +4,6 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/exceptions/exceptions.dart';
 import 'package:ion/app/features/feed/data/models/feed_filter.dart';
 import 'package:ion/app/features/feed/providers/feed_current_filter_provider.c.dart';
-import 'package:ion/app/features/ion_connect/model/action_source.c.dart';
 import 'package:ion/app/features/user/model/user_relays.c.dart';
 import 'package:ion/app/features/user/providers/follow_list_provider.c.dart';
 import 'package:ion/app/features/user/providers/user_relays_manager.c.dart';
@@ -32,10 +31,7 @@ Future<Map<String, List<String>>> feedForYouFilterRelays(Ref ref) async {
   final followList = await ref.watch(currentUserFollowListProvider.future);
 
   final followListRelays = followList != null
-      ? await ref.watch(userRelaysManagerProvider.notifier).fetch(
-            followList.pubkeys,
-            actionSource: const ActionSourceCurrentUser(),
-          )
+      ? await ref.watch(userRelaysManagerProvider.notifier).fetch(followList.pubkeys)
       : <UserRelaysEntity>[];
 
   final userRelays = await ref.watch(currentUserRelaysProvider.future);
@@ -54,10 +50,7 @@ Future<Map<String, List<String>>> feedFollowingFilterRelays(Ref ref) async {
   final followList = await ref.watch(currentUserFollowListProvider.future);
 
   final followListRelays = followList != null
-      ? await ref.watch(userRelaysManagerProvider.notifier).fetch(
-            followList.pubkeys,
-            actionSource: const ActionSourceCurrentUser(),
-          )
+      ? await ref.watch(userRelaysManagerProvider.notifier).fetch(followList.pubkeys)
       : <UserRelaysEntity>[];
 
   final options = {
