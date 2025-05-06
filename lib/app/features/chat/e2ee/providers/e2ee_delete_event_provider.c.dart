@@ -104,7 +104,7 @@ Future<void> _deleteReaction({
 
   final eventReference = reactionEntity.toEventReference();
 
-  final deleteRequest = DeletionRequest(events: [EventToDelete(eventReference)]);
+  final deleteRequest = DeletionRequest(events: [EventToDelete(eventReference: eventReference)]);
 
   final eventMessage = await deleteRequest.toEventMessage(eventSigner);
 
@@ -159,12 +159,12 @@ Future<void> _deleteMessages({
 
           if (entity.data.quotedEvent != null) {
             return [
-              EventToDelete(entity.data.quotedEvent!.eventReference),
-              EventToDelete(entity.toEventReference()),
+              EventToDelete(eventReference: entity.data.quotedEvent!.eventReference),
+              EventToDelete(eventReference: entity.toEventReference()),
             ];
           }
 
-          return [EventToDelete(entity.toEventReference())];
+          return [EventToDelete(eventReference: entity.toEventReference())];
         })
         .expand((element) => element)
         .toList(),
