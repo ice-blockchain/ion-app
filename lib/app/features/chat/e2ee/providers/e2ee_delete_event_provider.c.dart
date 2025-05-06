@@ -97,8 +97,6 @@ Future<void> _deleteReaction({
     throw UserMasterPubkeyNotFoundException();
   }
 
-  print('currentUserMasterPubkey: $currentUserMasterPubkey');
-
   final deleteRequest = DeletionRequest(
     events: [
       EventToDelete(
