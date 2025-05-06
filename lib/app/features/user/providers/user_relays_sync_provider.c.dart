@@ -6,7 +6,6 @@ import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/auth/providers/auth_provider.c.dart';
 import 'package:ion/app/features/auth/providers/delegation_complete_provider.c.dart';
 import 'package:ion/app/features/feed/providers/feed_filter_relays_provider.c.dart';
-import 'package:ion/app/features/ion_connect/model/action_source.c.dart';
 import 'package:ion/app/features/ion_connect/providers/ion_connect_notifier.c.dart';
 import 'package:ion/app/features/user/model/user_relays.c.dart';
 import 'package:ion/app/features/user/providers/current_user_identity_provider.c.dart';
@@ -45,10 +44,9 @@ Future<void> userRelaysSync(Ref ref) async {
     final updatedUserRelays = UserRelaysData(
       list: identityConnectRelays.map((url) => UserRelay(url: url)).toList(),
     );
-    await ref.watch(ionConnectNotifierProvider.notifier).sendEntityData<UserRelaysEntity>(
-          updatedUserRelays,
-          actionSource: const ActionSourceIndexers(),
-        );
+    await ref
+        .watch(ionConnectNotifierProvider.notifier)
+        .sendEntityData<UserRelaysEntity>(updatedUserRelays);
     ref
       ..invalidate(userRelayProvider(currentPubkey))
       // invalidate feedFilterRelaysProvider manually because ref.read is used there
