@@ -2,6 +2,7 @@
 
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/exceptions/exceptions.dart';
+import 'package:ion/app/features/ion_connect/model/action_source.c.dart';
 
 import 'package:ion/app/features/search/model/feed_search_source.dart';
 import 'package:ion/app/features/user/model/user_relays.c.dart';
@@ -17,7 +18,10 @@ Future<Map<String, List<String>>> feedSearchFilterRelays(Ref ref, FeedSearchSour
   final followList = await ref.watch(currentUserFollowListProvider.future);
 
   final followListRelays = followList != null
-      ? await ref.read(userRelaysManagerProvider.notifier).fetch(followList.pubkeys)
+      ? await ref.read(userRelaysManagerProvider.notifier).fetch(
+            followList.pubkeys,
+            actionSource: const ActionSourceCurrentUser(),
+          )
       : <UserRelaysEntity>[];
 
   switch (source) {
