@@ -111,7 +111,7 @@ class BottomBarInitialView extends HookConsumerWidget {
                   onChanged: onTextChanged,
                   maxLines: 5,
                   minLines: 1,
-                  textInputAction: TextInputAction.newline,
+                  textCapitalization: TextCapitalization.sentences,
                   decoration: InputDecoration(
                     isDense: true,
                     contentPadding: EdgeInsets.symmetric(
