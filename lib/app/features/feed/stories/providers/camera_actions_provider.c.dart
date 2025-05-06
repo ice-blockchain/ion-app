@@ -18,17 +18,24 @@ class CameraActionsController extends _$CameraActionsController {
 
   Future<void> takePhoto() async {
     final cameraNotifier = ref.read(cameraControllerNotifierProvider.notifier);
-    final picture = await cameraNotifier.takePicture();
+    
+    try {
+      final picture = await cameraNotifier.takePicture();
 
-    if (picture != null) {
-      final mediaFile = await ref.read(mediaServiceProvider).saveImageToGallery(File(picture.path));
+      if (picture != null) {
+        await cameraNotifier.pauseCamera();
+        
+        final mediaFile = await ref.read(mediaServiceProvider).saveImageToGallery(File(picture.path));
 
-      if (mediaFile != null) {
-        ref.invalidate(latestGalleryPreviewProvider);
-        state = CameraCaptureState.saved(file: mediaFile);
-      } else {
-        state = const CameraCaptureState.error(message: 'Failed to save photo.');
+        if (mediaFile != null) {
+          ref.invalidate(latestGalleryPreviewProvider);
+          state = CameraCaptureState.saved(file: mediaFile);
+        } else {
+          state = const CameraCaptureState.error(message: 'Failed to save photo.');
+        }
       }
+    } catch (e) {
+      state = CameraCaptureState.error(message: 'Error taking photo: $e');
     }
   }
 
@@ -46,6 +53,7 @@ class CameraActionsController extends _$CameraActionsController {
 
       if (mediaFile != null) {
         state = CameraCaptureState.saved(file: mediaFile);
+        await cameraNotifier.pauseCamera();
       }
     } else {
       state = const CameraCaptureState.error(message: 'Failed to stop video recording.');
