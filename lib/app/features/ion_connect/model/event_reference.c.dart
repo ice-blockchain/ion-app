@@ -120,7 +120,7 @@ class ReplaceableEventReference with _$ReplaceableEventReference implements Even
   const factory ReplaceableEventReference({
     required String pubkey,
     required int kind,
-    String? dTag,
+    @Default('') String dTag,
   }) = _ReplaceableEventReference;
 
   const ReplaceableEventReference._();
@@ -149,7 +149,7 @@ class ReplaceableEventReference with _$ReplaceableEventReference implements Even
       return ReplaceableEventReference(
         kind: kind,
         pubkey: author,
-        dTag: special.isNotEmpty ? special : null,
+        dTag: special,
       );
     }
   }
@@ -160,7 +160,7 @@ class ReplaceableEventReference with _$ReplaceableEventReference implements Even
     return ReplaceableEventReference(
       kind: int.parse(parts[0]),
       pubkey: parts[1],
-      dTag: parts.elementAtOrNull(2),
+      dTag: parts[2],
     );
   }
 
@@ -168,7 +168,7 @@ class ReplaceableEventReference with _$ReplaceableEventReference implements Even
   List<String> toTag() {
     return [
       tagName,
-      [kind, pubkey, dTag].nonNulls.join(EventReference.separator),
+      [kind, pubkey, dTag].join(EventReference.separator),
     ];
   }
 
@@ -185,7 +185,7 @@ class ReplaceableEventReference with _$ReplaceableEventReference implements Even
       return IonConnectUriProtocolService().encode(
         IonConnectUriIdentifierService(bech32Service: Bech32Service()).encodeShareableIdentifiers(
           prefix: IonConnectProtocolIdentifierType.naddr,
-          special: dTag ?? '',
+          special: dTag,
           author: pubkey,
           kind: kind,
         ),
@@ -200,7 +200,7 @@ class ReplaceableEventReference with _$ReplaceableEventReference implements Even
 
   @override
   String toString() {
-    return [kind, pubkey, dTag].nonNulls.join(EventReference.separator);
+    return [kind, pubkey, dTag].join(EventReference.separator);
   }
 
   static const String tagName = 'a';

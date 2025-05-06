@@ -51,7 +51,7 @@ Future<IonConnectEntity?> ionConnectNetworkEntity(
           kinds: [eventReference.kind],
           authors: [eventReference.pubkey],
           tags: {
-            if (eventReference.dTag != null) '#d': [eventReference.dTag.toString()],
+            if (eventReference.dTag.isNotEmpty) '#d': [eventReference.dTag],
           },
           search: search,
           limit: 1,

@@ -2,7 +2,6 @@
 
 import 'package:flutter_test/flutter_test.dart';
 import 'package:ion/app/features/feed/data/models/entities/reaction_data.c.dart';
-import 'package:ion/app/features/ion_connect/model/deletion_request.c.dart';
 import 'package:ion/app/features/ion_connect/model/event_reference.c.dart';
 import 'package:ion/app/features/optimistic_ui/features/likes/like_sync_strategy.dart';
 import 'package:ion/app/features/optimistic_ui/features/likes/model/post_like.c.dart';
@@ -48,7 +47,7 @@ void main() {
       return LikeSyncStrategy(
         sendReaction: (ReactionData _) async => reactionSent = true,
         getLikeEntity: (_) => likeEntity,
-        deleteReaction: (DeletionRequest _) async => deletionSent = true,
+        deleteReaction: (ReactionEntity _) async => deletionSent = true,
         removeFromCache: (key) => removedCacheKey = key,
       );
     }

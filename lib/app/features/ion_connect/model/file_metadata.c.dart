@@ -14,7 +14,8 @@ part 'file_metadata.c.freezed.dart';
 
 @Freezed(equal: false)
 class FileMetadataEntity
-    with _$FileMetadataEntity, IonConnectEntity, ImmutableEntity, CacheableEntity {
+    with _$FileMetadataEntity, IonConnectEntity, ImmutableEntity, CacheableEntity
+    implements EntityEventSerializable {
   const factory FileMetadataEntity({
     required String id,
     required String pubkey,
@@ -43,6 +44,9 @@ class FileMetadataEntity
   }
 
   static const int kind = 1063;
+
+  @override
+  FutureOr<EventMessage> toEntityEventMessage() => toEventMessage(data);
 }
 
 @freezed

@@ -18,7 +18,8 @@ part 'user_metadata.c.g.dart';
 
 @Freezed(equal: false)
 class UserMetadataEntity
-    with IonConnectEntity, CacheableEntity, ReplaceableEntity, _$UserMetadataEntity {
+    with IonConnectEntity, CacheableEntity, ReplaceableEntity, _$UserMetadataEntity
+    implements EntityEventSerializable {
   const factory UserMetadataEntity({
     required String id,
     required String pubkey,
@@ -45,6 +46,9 @@ class UserMetadataEntity
       data: UserMetadata.fromEventMessage(eventMessage),
     );
   }
+
+  @override
+  FutureOr<EventMessage> toEntityEventMessage() => toEventMessage(data);
 
   static const int kind = 0;
 

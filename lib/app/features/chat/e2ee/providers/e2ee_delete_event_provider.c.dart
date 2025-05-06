@@ -2,6 +2,7 @@
 
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/exceptions/exceptions.dart';
+import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/auth/providers/auth_provider.c.dart';
 import 'package:ion/app/features/chat/e2ee/model/conversation_to_delete.c.dart';
 import 'package:ion/app/features/chat/e2ee/model/entities/private_direct_message_data.c.dart';
@@ -12,6 +13,7 @@ import 'package:ion/app/features/ion_connect/ion_connect.dart';
 import 'package:ion/app/features/ion_connect/model/action_source.c.dart';
 import 'package:ion/app/features/ion_connect/model/deletion_request.c.dart';
 import 'package:ion/app/features/ion_connect/model/entity_expiration.c.dart';
+import 'package:ion/app/features/ion_connect/model/event_reference.c.dart';
 import 'package:ion/app/features/ion_connect/providers/ion_connect_event_signer_provider.c.dart';
 import 'package:ion/app/features/ion_connect/providers/ion_connect_notifier.c.dart';
 import 'package:ion/app/services/ion_connect/ion_connect_gift_wrap_service.c.dart';
@@ -105,7 +107,15 @@ Future<void> _deleteReaction({
   }
 
   final deleteRequest = DeletionRequest(
-    events: [EventToDelete(eventId: reactionEvent.id, kind: reactionEvent.kind)],
+    events: [
+      EventToDelete(
+        eventReference: ImmutableEventReference(
+          pubkey: reactionEvent.masterPubkey,
+          eventId: reactionEvent.id,
+          kind: reactionEvent.kind,
+        ),
+      ),
+    ],
   );
 
   final eventMessage = await deleteRequest.toEventMessage(signer);
@@ -167,8 +177,17 @@ Future<void> _deleteMessages({
       : [currentUserMasterPubkey];
 
   final deleteRequest = DeletionRequest(
-    events:
-        messageEvents.map((event) => EventToDelete(eventId: event.id, kind: event.kind)).toList(),
+    events: messageEvents
+        .map(
+          (event) => EventToDelete(
+            eventReference: ImmutableEventReference(
+              pubkey: event.masterPubkey,
+              eventId: event.id,
+              kind: event.kind,
+            ),
+          ),
+        )
+        .toList(),
   );
 
   final eventMessage = await deleteRequest.toEventMessage(signer);
@@ -293,7 +312,7 @@ Future<EventMessage> _createGiftWrap({
     event: seal,
     expirationTag: expirationTag,
     receiverPubkey: receiverPubkey,
-    contentKinds: [DeletionRequest.kind.toString()],
+    contentKinds: [DeletionRequestEntity.kind.toString()],
     receiverMasterPubkey: receiverMasterPubkey,
   );
 

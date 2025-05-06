@@ -4,6 +4,7 @@ import 'package:ion/app/features/auth/providers/auth_provider.c.dart';
 import 'package:ion/app/features/auth/providers/delegation_complete_provider.c.dart';
 import 'package:ion/app/features/ion_connect/model/action_source.c.dart';
 import 'package:ion/app/features/ion_connect/model/deletion_request.c.dart';
+import 'package:ion/app/features/ion_connect/model/event_reference.c.dart';
 import 'package:ion/app/features/ion_connect/providers/ion_connect_cache.c.dart';
 import 'package:ion/app/features/ion_connect/providers/ion_connect_notifier.c.dart';
 import 'package:ion/app/features/push_notifications/data/models/push_subscription.c.dart';
@@ -53,7 +54,15 @@ class PushSubscriptionSync extends _$PushSubscriptionSync {
   Future<void> _deleteSubscription(PushSubscriptionEntity entity) async {
     await ref.read(ionConnectNotifierProvider.notifier).sendEntityData(
           DeletionRequest(
-            events: [EventToDelete(eventId: entity.id, kind: PushSubscriptionEntity.kind)],
+            events: [
+              EventToDelete(
+                eventReference: ImmutableEventReference(
+                  pubkey: entity.masterPubkey,
+                  eventId: entity.id,
+                  kind: PushSubscriptionEntity.kind,
+                ),
+              ),
+            ],
           ),
           cache: false,
         );

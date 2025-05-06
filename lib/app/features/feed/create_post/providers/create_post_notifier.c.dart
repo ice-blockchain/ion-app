@@ -20,12 +20,12 @@ import 'package:ion/app/features/feed/data/models/entities/post_data.c.dart';
 import 'package:ion/app/features/feed/data/models/who_can_reply_settings_option.dart';
 import 'package:ion/app/features/feed/providers/counters/replies_count_provider.c.dart';
 import 'package:ion/app/features/feed/providers/counters/reposts_count_provider.c.dart';
+import 'package:ion/app/features/ion_connect/model/action_source.c.dart';
 import 'package:ion/app/features/ion_connect/model/entity_data_with_settings.dart';
 import 'package:ion/app/features/ion_connect/model/entity_editing_ended_at.c.dart';
 import 'package:ion/app/features/ion_connect/model/entity_expiration.c.dart';
 import 'package:ion/app/features/ion_connect/model/entity_published_at.c.dart';
 import 'package:ion/app/features/ion_connect/model/event_reference.c.dart';
-import 'package:ion/app/features/ion_connect/model/event_serializable.dart';
 import 'package:ion/app/features/ion_connect/model/file_alt.dart';
 import 'package:ion/app/features/ion_connect/model/file_metadata.c.dart';
 import 'package:ion/app/features/ion_connect/model/ion_connect_entity.dart';
@@ -41,6 +41,7 @@ import 'package:ion/app/features/ion_connect/providers/ion_connect_delete_file_n
 import 'package:ion/app/features/ion_connect/providers/ion_connect_entity_provider.c.dart';
 import 'package:ion/app/features/ion_connect/providers/ion_connect_notifier.c.dart';
 import 'package:ion/app/features/ion_connect/providers/ion_connect_upload_notifier.c.dart';
+import 'package:ion/app/features/user/providers/user_events_metadata_provider.c.dart';
 import 'package:ion/app/services/compressors/image_compressor.c.dart';
 import 'package:ion/app/services/compressors/video_compressor.c.dart';
 import 'package:ion/app/services/markdown/quill.dart';
@@ -75,9 +76,7 @@ class CreatePostNotifier extends _$CreatePostNotifier {
       final postContent = content ?? buildEmptyDelta();
       final parentEntity = parentEvent != null ? await _getParentEntity(parentEvent) : null;
       final (:files, :media) = await _uploadMediaFiles(mediaFiles: mediaFiles);
-      final editingEndedAt = EntityEditingEndedAt.build(
-        ref.read(envProvider.notifier).get<int>(EnvVariable.EDIT_POST_ALLOWED_MINUTES),
-      );
+      final mentions = _buildMentions(postContent);
 
       final postData = ModifiablePostData(
         content: await _buildContentWithMediaLinks(
@@ -87,11 +86,11 @@ class CreatePostNotifier extends _$CreatePostNotifier {
         media: media,
         replaceableEventId: ReplaceableEventIdentifier.generate(),
         publishedAt: _buildEntityPublishedAt(),
-        editingEndedAt: editingEndedAt,
+        editingEndedAt: _buildEditingEndedAt(),
         relatedHashtags: extractTags(postContent).map((tag) => RelatedHashtag(value: tag)).toList(),
         quotedEvent: quotedEvent != null ? _buildQuotedEvent(quotedEvent) : null,
         relatedEvents: parentEntity != null ? _buildRelatedEvents(parentEntity) : null,
-        relatedPubkeys: _buildRelatedPubkeys(postContent, parentEntity),
+        relatedPubkeys: _buildRelatedPubkeys(mentions: mentions, parentEntity: parentEntity),
         settings: EntityDataWithSettings.build(whoCanReply: whoCanReply),
         expiration: _buildExpiration(),
         communityId: communityId,
@@ -101,8 +100,15 @@ class CreatePostNotifier extends _$CreatePostNotifier {
         ),
       );
 
-      final posts = await _sendPostEntities([...files, postData]);
-      posts?.whereType<ModifiablePostEntity>().forEach(_createPostNotifierStreamController.add);
+      final post = await _publishPost(
+        postData,
+        files: files,
+        mentions: mentions,
+        quotedEvent: quotedEvent,
+        parentEvent: parentEvent,
+      );
+
+      _createPostNotifierStreamController.add(post);
 
       if (quotedEvent != null) {
         ref.read(repostsCountProvider(quotedEvent).notifier).addOne();
@@ -116,7 +122,9 @@ class CreatePostNotifier extends _$CreatePostNotifier {
   Future<void> modify({
     required EventReference eventReference,
     Delta? content,
+    // New media files added during the editing
     List<MediaFile>? mediaFiles,
+    // Media attachments left from the original post
     Map<String, MediaAttachment> mediaAttachments = const {},
     WhoCanReplySettingsOption? whoCanReply,
   }) async {
@@ -126,16 +134,18 @@ class CreatePostNotifier extends _$CreatePostNotifier {
       final postContent = content ?? buildEmptyDelta();
       final modifiedEntity =
           await ref.read(ionConnectEntityProvider(eventReference: eventReference).future);
+
       if (modifiedEntity is! ModifiablePostEntity) {
         throw UnsupportedEventReference(eventReference);
       }
 
+      final parentEvent = modifiedEntity.data.parentEvent?.eventReference;
+      final quotedEvent = modifiedEntity.data.quotedEvent?.eventReference;
+      final parentEntity = parentEvent != null ? await _getParentEntity(parentEvent) : null;
+      final mentions = _buildMentions(postContent);
+
       final (:files, :media) = await _uploadMediaFiles(mediaFiles: mediaFiles);
       final modifiedMedia = Map<String, MediaAttachment>.from(mediaAttachments)..addAll(media);
-      final originalMediaHashes =
-          modifiedEntity.data.media.values.map((e) => e.originalFileHash).toSet();
-      final attachedMediaHashes = mediaAttachments.values.map((e) => e.originalFileHash).toSet();
-      final removedMediaHashes = originalMediaHashes.difference(attachedMediaHashes).toList();
 
       final postData = modifiedEntity.data.copyWith(
         content: await _buildContentWithMediaLinks(
@@ -148,14 +158,34 @@ class CreatePostNotifier extends _$CreatePostNotifier {
         ),
         media: modifiedMedia,
         relatedHashtags: extractTags(postContent).map((tag) => RelatedHashtag(value: tag)).toList(),
+        relatedPubkeys:
+            _buildRelatedPubkeys(mentions: _buildMentions(postContent), parentEntity: parentEntity),
         settings: EntityDataWithSettings.build(
           whoCanReply: whoCanReply ?? modifiedEntity.data.whoCanReplySetting,
         ),
       );
 
+      final originalContentDelta = parseAndConvertDelta(
+        modifiedEntity.data.richText?.content,
+        modifiedEntity.data.content,
+      );
+
+      final originalMentions = _buildMentions(originalContentDelta);
+
+      final removedMediaHashes = _buildRemovedMediaHashes(
+        post: modifiedEntity,
+        mediaAttachments: mediaAttachments.values.toList(),
+      );
+
       await Future.wait([
         ref.read(ionConnectDeleteFileNotifierProvider.notifier).deleteMultiple(removedMediaHashes),
-        _sendPostEntities([...files, postData]),
+        _publishPost(
+          postData,
+          files: files,
+          mentions: <RelatedPubkey>{...originalMentions, ...mentions}.toList(),
+          quotedEvent: quotedEvent,
+          parentEvent: parentEvent,
+        ),
       ]);
     });
   }
@@ -184,17 +214,70 @@ class CreatePostNotifier extends _$CreatePostNotifier {
         richText: null,
       );
 
-      await _sendPostEntities([postData]);
+      final contentDelta = parseAndConvertDelta(
+        entity.data.richText?.content,
+        entity.data.content,
+      );
+
+      final removedMediaHashes = _buildRemovedMediaHashes(post: entity, mediaAttachments: []);
+
+      await Future.wait([
+        ref.read(ionConnectDeleteFileNotifierProvider.notifier).deleteMultiple(removedMediaHashes),
+        _publishPost(
+          postData,
+          mentions: _buildMentions(contentDelta),
+          quotedEvent: entity.data.quotedEvent?.eventReference,
+          parentEvent: entity.data.parentEvent?.eventReference,
+        ),
+      ]);
     });
   }
 
-  Future<List<IonConnectEntity>?> _sendPostEntities(List<EventSerializable> entitiesData) async {
-    //TODO: check the event json according to notion when defined
-    return ref.read(ionConnectNotifierProvider.notifier).sendEntitiesData(entitiesData);
+  Future<ModifiablePostEntity> _publishPost(
+    ModifiablePostData postData, {
+    EventReference? quotedEvent,
+    EventReference? parentEvent,
+    List<FileMetadata> files = const [],
+    List<RelatedPubkey> mentions = const [],
+  }) async {
+    final ionNotifier = ref.read(ionConnectNotifierProvider.notifier);
+
+    final postEvent = await ionNotifier.sign(postData);
+    final fileEvents = await Future.wait(files.map(ionNotifier.sign));
+    final eventsToPublish = [...fileEvents, postEvent];
+
+    final pubkeysToPublish = mentions.map((mention) => mention.value).toSet();
+
+    if (quotedEvent != null) {
+      pubkeysToPublish.add(quotedEvent.pubkey);
+    } else if (parentEvent != null) {
+      pubkeysToPublish.add(parentEvent.pubkey);
+    }
+
+    final userEventsMetadataBuilder = await ref.read(userEventsMetadataBuilderProvider.future);
+
+    await Future.wait([
+      ionNotifier.sendEvents(eventsToPublish),
+      for (final pubkey in pubkeysToPublish)
+        ref.read(ionConnectNotifierProvider.notifier).sendEvents(
+              eventsToPublish,
+              actionSource: ActionSourceUser(pubkey),
+              metadataBuilders: [userEventsMetadataBuilder],
+              cache: false,
+            ),
+    ]);
+
+    return ModifiablePostEntity.fromEventMessage(postEvent);
   }
 
   EntityPublishedAt _buildEntityPublishedAt() {
     return EntityPublishedAt(value: DateTime.now());
+  }
+
+  EntityEditingEndedAt _buildEditingEndedAt() {
+    return EntityEditingEndedAt.build(
+      ref.read(envProvider.notifier).get<int>(EnvVariable.EDIT_POST_ALLOWED_MINUTES),
+    );
   }
 
   EntityExpiration? _buildExpiration() {
@@ -342,19 +425,31 @@ class CreatePostNotifier extends _$CreatePostNotifier {
     }
   }
 
-  List<RelatedPubkey>? _buildRelatedPubkeys(
-    Delta content,
+  List<RelatedPubkey> _buildMentions(Delta content) {
+    return content.extractPubkeys().map((pubkey) => RelatedPubkey(value: pubkey)).toList();
+  }
+
+  List<RelatedPubkey> _buildRelatedPubkeys({
+    required List<RelatedPubkey> mentions,
     IonConnectEntity? parentEntity,
-  ) {
-    final pubkeys = content.extractPubkeys();
+  }) {
     return <RelatedPubkey>{
-      ...pubkeys.map((pubkey) => RelatedPubkey(value: pubkey)),
+      ...mentions,
       if (parentEntity != null) ...{
         RelatedPubkey(value: parentEntity.masterPubkey),
         if (parentEntity is ModifiablePostEntity) ...(parentEntity.data.relatedPubkeys ?? []),
         if (parentEntity is PostEntity) ...(parentEntity.data.relatedPubkeys ?? []),
       },
     }.toList();
+  }
+
+  List<String> _buildRemovedMediaHashes({
+    required ModifiablePostEntity post,
+    required List<MediaAttachment> mediaAttachments,
+  }) {
+    final originalMediaHashes = post.data.media.values.map((e) => e.originalFileHash).toSet();
+    final attachedMediaHashes = mediaAttachments.map((e) => e.originalFileHash).toSet();
+    return originalMediaHashes.difference(attachedMediaHashes).toList();
   }
 
   Future<({List<FileMetadata> fileMetadatas, MediaAttachment mediaAttachment})> _uploadMedia(

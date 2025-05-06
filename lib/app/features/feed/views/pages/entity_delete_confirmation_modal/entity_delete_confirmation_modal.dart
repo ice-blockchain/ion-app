@@ -75,7 +75,7 @@ class EntityDeleteConfirmationModal extends HookConsumerWidget {
                   label: Text(context.i18n.button_delete),
                   trailingIcon: deleteState.isLoading ? const IONLoadingIndicator() : null,
                   onPressed: () async {
-                    await ref.read(deleteEntityControllerProvider.notifier).deleteEntity(
+                    await ref.read(deleteEntityControllerProvider.notifier).deleteByReference(
                           eventReference,
                           onDelete: _getOnDeleteCallback(ref),
                         );

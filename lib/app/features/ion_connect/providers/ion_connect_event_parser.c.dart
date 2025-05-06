@@ -15,6 +15,7 @@ import 'package:ion/app/features/feed/data/models/entities/reaction_data.c.dart'
 import 'package:ion/app/features/feed/data/models/entities/repost_data.c.dart';
 import 'package:ion/app/features/feed/data/models/generic_repost.c.dart';
 import 'package:ion/app/features/ion_connect/ion_connect.dart';
+import 'package:ion/app/features/ion_connect/model/deletion_request.c.dart';
 import 'package:ion/app/features/ion_connect/model/file_metadata.c.dart';
 import 'package:ion/app/features/ion_connect/model/ion_connect_entity.dart';
 import 'package:ion/app/features/ion_connect/model/mute_set.c.dart';
@@ -59,6 +60,7 @@ class EventParser {
       CommunityJoinEntity.kind => CommunityJoinEntity.fromEventMessage(eventMessage),
       MuteSetEntity.kind => MuteSetEntity.fromEventMessage(eventMessage),
       PushSubscriptionEntity.kind => PushSubscriptionEntity.fromEventMessage(eventMessage),
+      DeletionRequestEntity.kind => DeletionRequestEntity.fromEventMessage(eventMessage),
       _ => throw UnknownEventException(eventId: eventMessage.id, kind: eventMessage.kind)
     };
   }

@@ -38,7 +38,8 @@ class ModifiablePostEntity
         CacheableEntity,
         ReplaceableEntity,
         SoftDeletableEntity<ModifiablePostData>,
-        _$ModifiablePostEntity {
+        _$ModifiablePostEntity
+    implements EntityEventSerializable {
   const factory ModifiablePostEntity({
     required String id,
     required String pubkey,
@@ -70,6 +71,9 @@ class ModifiablePostEntity
 
   static const contentCharacterLimit = 4000;
   static const contentMediaLimit = 10;
+
+  @override
+  FutureOr<EventMessage> toEntityEventMessage() => toEventMessage(data);
 }
 
 @freezed

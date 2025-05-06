@@ -10,10 +10,12 @@ import 'package:ion/app/features/feed/data/models/entities/post_data.c.dart';
 import 'package:ion/app/features/feed/data/models/entities/repost_data.c.dart';
 import 'package:ion/app/features/feed/data/models/generic_repost.c.dart';
 import 'package:ion/app/features/feed/providers/counters/reposts_count_provider.c.dart';
+import 'package:ion/app/features/ion_connect/model/action_source.c.dart';
 import 'package:ion/app/features/ion_connect/model/event_reference.c.dart';
 import 'package:ion/app/features/ion_connect/model/ion_connect_entity.dart';
 import 'package:ion/app/features/ion_connect/providers/ion_connect_entity_provider.c.dart';
 import 'package:ion/app/features/ion_connect/providers/ion_connect_notifier.c.dart';
+import 'package:ion/app/features/user/providers/user_events_metadata_provider.c.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'repost_notifier.c.g.dart';
@@ -42,7 +44,7 @@ class RepostNotifier extends _$RepostNotifier {
         throw EntityNotFoundException(eventReference);
       }
 
-      final data = switch (entity) {
+      final repostData = switch (entity) {
         PostEntity() => RepostData(
             eventReference: entity.toEventReference(),
             repostedEvent: await entity.toEventMessage(entity.data),
@@ -60,7 +62,22 @@ class RepostNotifier extends _$RepostNotifier {
         _ => throw UnsupportedRepostException(entity.toEventReference()),
       };
 
-      final repostEntity = await ref.read(ionConnectNotifierProvider.notifier).sendEntityData(data);
+      final ionNotifier = ref.read(ionConnectNotifierProvider.notifier);
+
+      final repostEvent = await ionNotifier.sign(repostData);
+
+      final userEventsMetadataBuilder = await ref.read(userEventsMetadataBuilderProvider.future);
+
+      final (repostEntity, _) = await (
+        ionNotifier.sendEvent(repostEvent),
+        ionNotifier.sendEvent(
+          repostEvent,
+          actionSource: ActionSourceUser(eventReference.pubkey),
+          metadataBuilders: [userEventsMetadataBuilder],
+          cache: false,
+        )
+      ).wait;
+
       if (repostEntity != null) {
         _createRepostNotifierStreamController.add(repostEntity);
       }

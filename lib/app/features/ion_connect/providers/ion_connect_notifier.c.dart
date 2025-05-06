@@ -12,6 +12,7 @@ import 'package:ion/app/features/ion_connect/ion_connect.dart' hide requestEvent
 import 'package:ion/app/features/ion_connect/model/action_source.c.dart';
 import 'package:ion/app/features/ion_connect/model/event_reference.c.dart';
 import 'package:ion/app/features/ion_connect/model/event_serializable.dart';
+import 'package:ion/app/features/ion_connect/model/events_metadata_builder.dart';
 import 'package:ion/app/features/ion_connect/model/file_metadata.c.dart';
 import 'package:ion/app/features/ion_connect/model/ion_connect_entity.dart';
 import 'package:ion/app/features/ion_connect/providers/ion_connect_cache.c.dart';
@@ -36,7 +37,7 @@ class IonConnectNotifier extends _$IonConnectNotifier {
   @override
   FutureOr<void> build() {}
 
-  Future<List<IonConnectEntity>?> sendEvents(
+  Future<List<IonConnectEntity>?> _sendEvents(
     List<EventMessage> events, {
     ActionSource actionSource = const ActionSourceCurrentUser(),
     bool cache = true,
@@ -83,9 +84,28 @@ class IonConnectNotifier extends _$IonConnectNotifier {
     );
   }
 
+  Future<List<IonConnectEntity>?> sendEvents(
+    List<EventMessage> events, {
+    ActionSource actionSource = const ActionSourceCurrentUser(),
+    List<EventsMetadataBuilder> metadataBuilders = const [],
+    bool cache = true,
+    IonConnectRelay? relay,
+  }) async {
+    final eventsToSend = [...events];
+    if (metadataBuilders.isNotEmpty) {
+      final metadataEvents = await _buildMetadata(
+        events: events,
+        metadataBuilders: metadataBuilders,
+      );
+      eventsToSend.addAll(metadataEvents);
+    }
+    return _sendEvents(eventsToSend, actionSource: actionSource, cache: cache, relay: relay);
+  }
+
   Future<IonConnectEntity?> sendEvent(
     EventMessage event, {
     ActionSource actionSource = const ActionSourceCurrentUser(),
+    List<EventsMetadataBuilder> metadataBuilders = const [],
     bool cache = true,
     IonConnectRelay? relay,
   }) async {
@@ -94,6 +114,7 @@ class IonConnectNotifier extends _$IonConnectNotifier {
       cache: cache,
       relay: relay,
       actionSource: actionSource,
+      metadataBuilders: metadataBuilders,
     );
     return result?.elementAtOrNull(0);
   }
@@ -101,19 +122,31 @@ class IonConnectNotifier extends _$IonConnectNotifier {
   Future<List<IonConnectEntity>?> sendEntitiesData(
     List<EventSerializable> entitiesData, {
     ActionSource actionSource = const ActionSourceCurrentUser(),
+    List<EventsMetadataBuilder> metadataBuilders = const [],
     bool cache = true,
   }) async {
     final events = await Future.wait(entitiesData.map(sign));
-    return sendEvents(events, actionSource: actionSource, cache: cache);
+    return sendEvents(
+      events,
+      actionSource: actionSource,
+      cache: cache,
+      metadataBuilders: metadataBuilders,
+    );
   }
 
   Future<T?> sendEntityData<T extends IonConnectEntity>(
     EventSerializable entityData, {
     ActionSource actionSource = const ActionSourceCurrentUser(),
+    List<EventsMetadataBuilder> metadataBuilders = const [],
     bool cache = true,
   }) async {
-    final entities = await sendEntitiesData([entityData], actionSource: actionSource, cache: cache);
-    return entities?.elementAtOrNull(0) as T?;
+    final entities = await sendEntitiesData(
+      [entityData],
+      actionSource: actionSource,
+      metadataBuilders: metadataBuilders,
+      cache: cache,
+    );
+    return entities?.whereType<T>().elementAtOrNull(0);
   }
 
   Stream<EventMessage> requestEvents(
@@ -290,6 +323,19 @@ class IonConnectNotifier extends _$IonConnectNotifier {
       content: '',
       sig: signature,
     );
+  }
+
+  Future<List<EventMessage>> _buildMetadata({
+    required List<EventMessage> events,
+    required List<EventsMetadataBuilder> metadataBuilders,
+  }) async {
+    final parser = ref.read(eventParserProvider);
+    final eventReferences =
+        events.map((eventMessage) => parser.parse(eventMessage).toEventReference()).toList();
+    final metadatas = await Future.wait(
+      metadataBuilders.map((metadataBuilder) => metadataBuilder.buildMetadata(eventReferences)),
+    );
+    return Future.wait(metadatas.expand((metadata) => metadata).map(sign).toList());
   }
 
   IonConnectEntity _parseAndCache(EventMessage event) {

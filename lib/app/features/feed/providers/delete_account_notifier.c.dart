@@ -40,7 +40,7 @@ class DeleteAccountNotifier extends _$DeleteAccountNotifier {
           tags: [
             ['b', mainWallet.signingKey.publicKey],
           ],
-          kind: DeletionRequest.kind,
+          kind: DeletionRequestEntity.kind,
           onVerifyIdentity: onVerifyIdentity,
         );
 
