@@ -14,6 +14,7 @@ import 'package:ion/app/features/components/verify_identity/verify_identity_prom
 import 'package:ion/app/features/wallets/model/crypto_asset_to_send_data.c.dart';
 import 'package:ion/app/features/wallets/model/network_data.c.dart';
 import 'package:ion/app/features/wallets/model/network_fee_option.c.dart';
+import 'package:ion/app/features/wallets/model/transaction_type.dart';
 import 'package:ion/app/features/wallets/providers/send_asset_form_provider.c.dart';
 import 'package:ion/app/features/wallets/providers/send_coins_notifier_provider.c.dart';
 import 'package:ion/app/features/wallets/providers/transaction_provider.c.dart';
@@ -84,6 +85,7 @@ class ConfirmationSheet extends ConsumerWidget {
                         imageUrl: coin.coinsGroup.iconUrl,
                         size: 36.0.s,
                       ),
+                      transactionType: TransactionType.send,
                     ),
                   SizedBox(height: 16.0.s),
                   TransactionParticipant(
