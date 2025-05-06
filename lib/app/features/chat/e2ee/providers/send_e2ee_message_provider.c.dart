@@ -13,7 +13,6 @@ import 'package:ion/app/features/chat/model/database/chat_database.c.dart';
 import 'package:ion/app/features/chat/providers/conversation_pubkeys_provider.c.dart';
 import 'package:ion/app/features/core/providers/env_provider.c.dart';
 import 'package:ion/app/features/ion_connect/ion_connect.dart';
-import 'package:ion/app/features/ion_connect/model/event_reference.c.dart';
 import 'package:ion/app/features/ion_connect/model/ion_connect_entity.dart';
 import 'package:ion/app/features/ion_connect/providers/ion_connect_event_signer_provider.c.dart';
 import 'package:ion/app/features/ion_connect/providers/ion_connect_notifier.c.dart';
@@ -76,13 +75,13 @@ class SendE2eeMessageService {
       return;
     }
 
+    final eventReference =
+        ReplaceablePrivateDirectMessageEntity.fromEventMessage(messageEventMessage)
+            .toEventReference();
+
     final messageReactionData = PrivateMessageReactionEntityData(
       content: status.name,
-      reference: ReplaceableEventReference(
-        kind: messageEventMessage.kind,
-        pubkey: messageEventMessage.pubkey,
-        dTag: messageEventMessage.sharedId,
-      ),
+      reference: eventReference,
       masterPubkey: currentUserMasterPubkey,
       sharedId: generateUuid(),
     );
@@ -114,13 +113,12 @@ class SendE2eeMessageService {
     required String content,
     required EventMessage kind14Rumor,
   }) async {
+    final eventReference =
+        ReplaceablePrivateDirectMessageEntity.fromEventMessage(kind14Rumor).toEventReference();
+
     final messageReactionData = PrivateMessageReactionEntityData(
       content: content,
-      reference: ReplaceableEventReference(
-        kind: kind14Rumor.kind,
-        pubkey: kind14Rumor.pubkey,
-        dTag: kind14Rumor.sharedId,
-      ),
+      reference: eventReference,
       masterPubkey: currentUserMasterPubkey,
       sharedId: generateUuid(),
     );

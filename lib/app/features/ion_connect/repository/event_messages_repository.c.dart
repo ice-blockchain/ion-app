@@ -10,36 +10,6 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'event_messages_repository.c.g.dart';
 
-extension on EventMessage {
-  EventMessageDbModel toDbModel(EventReference eventReference) {
-    return EventMessageDbModel(
-      id: id,
-      kind: kind,
-      pubkey: pubkey,
-      masterPubkey: masterPubkey,
-      createdAt: createdAt,
-      sig: sig,
-      content: content,
-      tags: tags,
-      eventReference: eventReference,
-    );
-  }
-}
-
-extension on EventMessageDbModel {
-  EventMessage toEventMessage() {
-    return EventMessage(
-      id: id,
-      kind: kind,
-      pubkey: pubkey,
-      createdAt: createdAt,
-      sig: sig,
-      content: content,
-      tags: tags,
-    );
-  }
-}
-
 @Riverpod(keepAlive: true)
 EventMessagesRepository eventMessagesRepository(Ref ref) => EventMessagesRepository(
       eventMessagesDao: ref.watch(eventMessagesDaoProvider),

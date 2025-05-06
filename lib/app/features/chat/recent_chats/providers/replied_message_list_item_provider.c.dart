@@ -20,13 +20,11 @@ class RepliedMessageListItem extends _$RepliedMessageListItem {
     if (repliedEvent != null) {
       final dTag = (repliedEvent.eventReference as ReplaceableEventReference).dTag;
 
-      if (dTag != null) {
-        final repliedMessageEvent = await ref.watch(conversationMessageDaoProvider).getEventMessage(
-              sharedId: dTag,
-            );
+      final repliedMessageEvent = await ref.watch(conversationMessageDaoProvider).getEventMessage(
+            sharedId: dTag,
+          );
 
-        return repliedMessageEvent;
-      }
+      return repliedMessageEvent;
     }
 
     return null;

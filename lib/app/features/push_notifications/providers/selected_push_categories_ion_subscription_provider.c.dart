@@ -182,7 +182,6 @@ class SelectedPushCategoriesIonSubscription extends _$SelectedPushCategoriesIonS
         tags: {
           '#k': [
             ReplaceablePrivateDirectMessageEntity.kind.toString(),
-            ImmutablePrivateDirectMessageEntity.kind.toString(),
           ],
           '#p': [currentUserPubkey],
         },

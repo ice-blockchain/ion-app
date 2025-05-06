@@ -19,7 +19,6 @@ import 'package:ion/app/features/core/providers/env_provider.c.dart';
 import 'package:ion/app/features/ion_connect/ion_connect.dart';
 import 'package:ion/app/features/ion_connect/model/action_source.c.dart';
 import 'package:ion/app/features/ion_connect/model/entity_expiration.c.dart';
-import 'package:ion/app/features/ion_connect/model/event_reference.c.dart';
 import 'package:ion/app/features/ion_connect/model/ion_connect_entity.dart';
 import 'package:ion/app/features/ion_connect/model/media_attachment.dart';
 import 'package:ion/app/features/ion_connect/model/related_event.c.dart';
@@ -194,14 +193,13 @@ class SendE2eeChatMessageService {
       final rootRelatedEvent = entity.data.relatedEvents
           ?.firstWhereOrNull((tag) => tag.marker == RelatedEventMarker.root);
 
+      final eventReference =
+          ReplaceablePrivateDirectMessageEntity.fromEventMessage(repliedMessage).toEventReference();
+
       return [
         if (rootRelatedEvent != null) rootRelatedEvent,
         RelatedReplaceableEvent(
-          eventReference: ReplaceableEventReference(
-            kind: repliedMessage.kind,
-            dTag: repliedMessage.sharedId,
-            pubkey: repliedMessage.pubkey,
-          ),
+          eventReference: eventReference,
           pubkey: repliedMessage.masterPubkey,
           marker: RelatedEventMarker.reply,
         ),
