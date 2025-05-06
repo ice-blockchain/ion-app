@@ -10,6 +10,7 @@ import 'package:ion/app/features/core/providers/app_lifecycle_provider.c.dart';
 import 'package:ion/app/features/core/providers/app_locale_provider.c.dart';
 import 'package:ion/app/features/core/providers/dio_provider.c.dart';
 import 'package:ion/app/features/core/providers/env_provider.c.dart';
+import 'package:ion/app/services/storage/local_storage.c.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
@@ -26,7 +27,7 @@ class PushTranslationsSync extends _$PushTranslationsSync {
       fireImmediately: true,
       (previous, next) {
         if (next == AppLifecycleState.resumed) {
-          repository.getTranslations();
+          repository.syncTranslations();
         }
       },
     );
@@ -38,6 +39,7 @@ PushTranslationsRepository pushTranslationsRepository(Ref ref) {
   return PushTranslationsRepository(
     dio: ref.watch(dioProvider),
     locale: ref.watch(appLocaleProvider),
+    localStorage: ref.watch(localStorageProvider),
     cacheDuration: Duration(
       minutes:
           ref.watch(envProvider.notifier).get<int>(EnvVariable.PUSH_TRANSLATIONS_CACHE_MINUTES),
@@ -49,19 +51,22 @@ class PushTranslationsRepository {
   PushTranslationsRepository({
     required Dio dio,
     required Locale locale,
+    required LocalStorage localStorage,
     required Duration cacheDuration,
   })  : _dio = dio,
         _locale = locale,
+        _localStorage = localStorage,
         _cacheMaxDuration = cacheDuration;
 
   final Dio _dio;
   final Locale _locale;
+  final LocalStorage _localStorage;
   final Duration _cacheMaxDuration;
 
-  Future<String> getTranslations() async {
+  Future<String> syncTranslations() async {
     final file = File(await _cachePath);
 
-    if (file.existsSync()) {
+    if (file.existsSync() && _fetchedForLocale(_locale)) {
       final cacheDuration = file.lastModifiedSync().difference(DateTime.now());
       if (cacheDuration < _cacheMaxDuration) {
         return file.readAsString();
@@ -70,7 +75,17 @@ class PushTranslationsRepository {
 
     final translations = await _fetchTranslations();
     await file.writeAsString(translations);
+    await _saveFetchedTranslationsLocale(_locale);
     return translations;
+  }
+
+  bool _fetchedForLocale(Locale locale) {
+    final cachedLocale = _localStorage.getString(_translationsLangKey);
+    return cachedLocale == locale.toLanguageTag();
+  }
+
+  Future<void> _saveFetchedTranslationsLocale(Locale locale) {
+    return _localStorage.setString(_translationsLangKey, _locale.toLanguageTag());
   }
 
   Future<String> _fetchTranslations() async {
@@ -90,4 +105,5 @@ class PushTranslationsRepository {
   }
 
   static const String _translationsFileName = 'push_translations.json';
+  static const String _translationsLangKey = 'push_translations_lang';
 }
