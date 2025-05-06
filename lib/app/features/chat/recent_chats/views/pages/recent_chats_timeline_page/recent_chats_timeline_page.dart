@@ -56,6 +56,7 @@ class RecentChatsTimelinePage extends HookConsumerWidget {
       sliverAppBar: SliverAppBar(
         pinned: true,
         backgroundColor: context.theme.appColors.secondaryBackground,
+        surfaceTintColor: context.theme.appColors.secondaryBackground,
         flexibleSpace: FlexibleSpaceBar(
           background: GestureDetector(
             behavior: HitTestBehavior.opaque,
