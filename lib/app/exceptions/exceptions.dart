@@ -499,7 +499,7 @@ class UserEventsMetadataBuilderException extends IONException {
       : super(10100, 'Unable to create user events metadata builder');
 }
 
-class GetPushTranslationsException extends IONException {
-  GetPushTranslationsException(dynamic error)
-      : super(10101, 'Failed to get push translations: $error');
+class FetchPushTranslationsException extends IONException {
+  FetchPushTranslationsException(dynamic error)
+      : super(10101, 'Failed to fetch push translations: $error');
 }
