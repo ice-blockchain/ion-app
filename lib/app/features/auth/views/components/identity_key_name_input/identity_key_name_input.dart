@@ -16,6 +16,7 @@ class IdentityKeyNameInput extends StatelessWidget {
     this.scrollPadding,
     this.notShowInfoIcon = false,
     this.errorText,
+    this.onFocused,
     super.key,
   });
 
@@ -27,6 +28,8 @@ class IdentityKeyNameInput extends StatelessWidget {
   final bool notShowInfoIcon;
 
   final String? errorText;
+
+  final ValueChanged<bool>? onFocused;
 
   @override
   Widget build(BuildContext context) {
@@ -58,9 +61,7 @@ class IdentityKeyNameInput extends StatelessWidget {
       labelText: context.i18n.common_identity_key_name,
       controller: controller,
       validator: (String? value) {
-        if (Validators.isEmpty(value)) return '';
-
-        if (Validators.isInvalidIdentityName(value)) {
+        if (Validators.isInvalidIdentityName(value) && !Validators.isEmpty(value)) {
           return context.i18n.error_identity_name_invalid;
         }
         return null;
@@ -68,6 +69,7 @@ class IdentityKeyNameInput extends StatelessWidget {
       textInputAction: textInputAction,
       scrollPadding: scrollPadding ?? EdgeInsetsDirectional.only(bottom: 100.0.s),
       errorText: errorText,
+      onFocused: onFocused,
     );
   }
 }

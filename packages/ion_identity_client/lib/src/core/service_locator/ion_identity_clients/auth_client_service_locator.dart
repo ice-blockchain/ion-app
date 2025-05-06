@@ -11,6 +11,7 @@ import 'package:ion_identity_client/src/auth/services/delegated_login/delegated_
 import 'package:ion_identity_client/src/auth/services/delete/data_sources/delete_user_data_source.dart';
 import 'package:ion_identity_client/src/auth/services/delete/delete_service.dart';
 import 'package:ion_identity_client/src/auth/services/extract_user_id/extract_user_id_service.dart';
+import 'package:ion_identity_client/src/auth/services/extract_username/extract_username_service.dart';
 import 'package:ion_identity_client/src/auth/services/key_service.dart';
 import 'package:ion_identity_client/src/auth/services/login/data_sources/login_data_source.dart';
 import 'package:ion_identity_client/src/auth/services/login/login_service.dart';
@@ -105,6 +106,7 @@ class AuthClientServiceLocator {
       tokenStorage: IONIdentityServiceLocator.tokenStorage(),
       privateKeyStorage: IONIdentityServiceLocator.privateKeyStorage(),
       biometricsStateStorage: IONIdentityServiceLocator.biometricsStateStorage(),
+      extractUsernameService: extractUsername(),
     );
   }
 
@@ -244,4 +246,6 @@ class AuthClientServiceLocator {
   ExtractUserIdService extractUserId() => ExtractUserIdService(
         tokenStorage: IONIdentityServiceLocator.tokenStorage(),
       );
+
+  ExtractUsernameService extractUsername() => const ExtractUsernameService();
 }
