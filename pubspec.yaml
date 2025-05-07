@@ -62,6 +62,7 @@ dependencies:
   flutter_hooks: ^0.20.5
   flutter_inappwebview: ^6.1.5
   flutter_keyboard_visibility: ^6.0.0
+  flutter_local_notifications: ^19.1.0
   flutter_localizations:
     sdk: flutter
   flutter_quill:
