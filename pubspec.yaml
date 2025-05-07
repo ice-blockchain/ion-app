@@ -10,7 +10,6 @@ environment:
   flutter: "3.27.4"
 
 dependencies:
-  sentry_flutter: ^8.14.2
   android_id: ^0.4.0
   async: ^2.11.0
   audio_waveforms: ^1.1.1
@@ -119,6 +118,7 @@ dependencies:
   riverpod_annotation: ^2.6.1
   scrollable_positioned_list: ^0.3.8
   sensors_plus: ^6.1.1
+  sentry_flutter: ^8.14.2
   share_plus: ^10.0.2
   shared_preferences: ^2.3.5
   shimmer: ^3.0.0
@@ -138,7 +138,6 @@ dependencies:
   window_manager: ^0.4.2
 
 dev_dependencies:
-  sentry_dart_plugin: ^2.4.1
   build_runner: ^2.4.13
   custom_lint: ^0.6.10
   drift_dev: ^2.22.0
@@ -155,6 +154,7 @@ dev_dependencies:
   melos: ^6.1.0
   riverpod_generator: ^2.6.1
   riverpod_lint: ^2.6.1
+  sentry_dart_plugin: ^2.4.1
   very_good_analysis: ^5.1.0
   video_player_platform_interface: ^6.3.0
 
