@@ -21,17 +21,29 @@ class ConversationMessageDataDao extends DatabaseAccessor<ChatDatabase>
     DateTime? updateAllBefore,
   }) async {
     if (updateAllBefore != null && status == MessageDeliveryStatus.read) {
+      final conversationId = await (select(conversationMessageTable)
+            ..where(
+              (table) => table.messageEventReference.equalsValue(messageEventReference),
+            ))
+          .map((row) => row.conversationId)
+          .getSingle();
+
       // Mark all previous received messages as read prior to the given date
       final unreadResults = await (select(messageStatusTable).join([
         innerJoin(
           eventMessageTable,
           eventMessageTable.eventReference.equalsExp(messageStatusTable.messageEventReference),
         ),
+        innerJoin(
+          conversationMessageTable,
+          conversationMessageTable.messageEventReference
+              .equalsExp(messageStatusTable.messageEventReference),
+        ),
       ])
             ..where(eventMessageTable.createdAt.isSmallerThanValue(updateAllBefore))
             ..where(messageStatusTable.masterPubkey.equals(masterPubkey))
-            ..where(messageStatusTable.messageEventReference.equalsValue(messageEventReference))
-            ..where(messageStatusTable.status.equals(MessageDeliveryStatus.received.index)))
+            ..where(messageStatusTable.status.equals(MessageDeliveryStatus.received.index))
+            ..where(conversationMessageTable.conversationId.equals(conversationId)))
           .map((row) => row.readTable(messageStatusTable))
           .get();
 
@@ -41,9 +53,7 @@ class ConversationMessageDataDao extends DatabaseAccessor<ChatDatabase>
           batch.update(
             messageStatusTable,
             const MessageStatusTableCompanion(status: Value(MessageDeliveryStatus.read)),
-            where: (table) =>
-                table.messageEventReference.equalsValue(row.messageEventReference) &
-                table.masterPubkey.equals(row.masterPubkey),
+            where: (table) => table.id.equals(row.id),
           );
         }
       });
