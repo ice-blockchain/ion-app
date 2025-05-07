@@ -22,6 +22,7 @@ enum EnvVariable {
   ICLOUD_CONTAINER_ID,
   CONTENT_CREATORS_RELAY,
   USER_SEARCH_RELAY,
+  SENTRY_DSN,
 }
 
 @Riverpod(keepAlive: true)
@@ -56,6 +57,7 @@ class Env extends _$Env {
       EnvVariable.GIFT_WRAP_EXPIRATION_HOURS =>
         const int.fromEnvironment('GIFT_WRAP_EXPIRATION_HOURS') as T,
       EnvVariable.ICLOUD_CONTAINER_ID => const String.fromEnvironment('ICLOUD_CONTAINER_ID') as T,
+      EnvVariable.SENTRY_DSN => const String.fromEnvironment('SENTRY_DSN') as T,
     };
   }
 }

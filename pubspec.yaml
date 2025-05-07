@@ -10,6 +10,7 @@ environment:
   flutter: "3.27.4"
 
 dependencies:
+  sentry_flutter: ^8.14.2
   android_id: ^0.4.0
   async: ^2.11.0
   audio_waveforms: ^1.1.1
@@ -137,6 +138,7 @@ dependencies:
   window_manager: ^0.4.2
 
 dev_dependencies:
+  sentry_dart_plugin: ^2.4.1
   build_runner: ^2.4.13
   custom_lint: ^0.6.10
   drift_dev: ^2.22.0
@@ -214,3 +216,9 @@ flutter_gen:
 # So, because ice depends on both qr_code_scanner ^1.0.1 and ion_identity_client from path, version solving failed.
 dependency_overrides:
   js: ^0.7.1
+
+sentry:
+  upload_debug_symbols: true
+  upload_source_maps: true
+  project: ion-app-testnet
+  org: sentry

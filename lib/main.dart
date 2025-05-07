@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_quill/flutter_quill.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/features/core/providers/app_locale_provider.c.dart';
+import 'package:ion/app/features/core/providers/env_provider.c.dart';
 import 'package:ion/app/features/core/providers/template_provider.c.dart';
 import 'package:ion/app/features/core/providers/theme_mode_provider.c.dart';
 import 'package:ion/app/features/core/views/components/app_lifecycle_observer.dart';
@@ -16,6 +17,7 @@ import 'package:ion/app/services/logger/logger_initializer.dart';
 import 'package:ion/app/services/storage/secure_storage.c.dart';
 import 'package:ion/app/theme/theme.dart';
 import 'package:ion/generated/app_localizations.dart';
+import 'package:sentry_flutter/sentry_flutter.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -24,10 +26,21 @@ void main() async {
   final container = ProviderContainer(observers: [Logger.talkerRiverpodObserver]);
   LoggerInitializer.initialize(container);
 
-  runApp(
-    UncontrolledProviderScope(
-      container: container,
-      child: const IONApp(),
+  await SentryFlutter.init(
+    (options) {
+      options
+        ..dsn = container.read(envProvider.notifier).get<String>(EnvVariable.SENTRY_DSN)
+        ..sendDefaultPii = true
+        ..tracesSampleRate = 1.0
+        ..profilesSampleRate = 1.0;
+    },
+    appRunner: () => runApp(
+      UncontrolledProviderScope(
+        container: container,
+        child: SentryWidget(
+          child: const IONApp(),
+        ),
+      ),
     ),
   );
 }
