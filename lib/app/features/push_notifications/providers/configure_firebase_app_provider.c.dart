@@ -1,6 +1,7 @@
 // SPDX-License-Identifier: ice License 1.0
 
 import 'package:ion/app/features/push_notifications/providers/relay_firebase_app_config_provider.c.dart';
+import 'package:ion/app/services/firebase/firebase_messaging_service_provider.c.dart';
 import 'package:ion/app/services/firebase/firebase_service_provider.c.dart';
 import 'package:ion/app/services/logger/logger.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
@@ -41,8 +42,11 @@ class ConfigureFirebaseApp extends _$ConfigureFirebaseApp {
   Future<bool> _initializeFirebaseApp(RelayFirebaseConfig relayFirebaseAppConfig) async {
     try {
       final firebaseAppService = ref.watch(firebaseAppServiceProvider);
+      final firebaseMessagingService = ref.watch(firebaseMessagingServiceProvider);
 
       if (firebaseAppService.hasApp()) {
+        // Without revoking the fcm token, the app will still receive notifications from the deleted app.
+        await firebaseMessagingService.deleteToken();
         await firebaseAppService.deleteApp();
       }
 
