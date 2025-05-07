@@ -18,10 +18,12 @@ import 'package:ion/app/features/ion_connect/ion_connect.dart';
 class EmojiMessage extends HookConsumerWidget {
   const EmojiMessage({
     required this.eventMessage,
+    this.onTapReply,
     super.key,
   });
 
   final EventMessage eventMessage;
+  final VoidCallback? onTapReply;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -52,7 +54,7 @@ class EmojiMessage extends HookConsumerWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            if (repliedMessageItem != null) ReplyMessage(messageItem, repliedMessageItem),
+            if (repliedMessageItem != null) ReplyMessage(messageItem, repliedMessageItem, onTapReply),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [

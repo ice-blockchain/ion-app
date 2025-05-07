@@ -16,9 +16,11 @@ import 'package:ion/app/features/ion_connect/ion_connect.dart';
 class VisualMediaMessage extends HookConsumerWidget {
   const VisualMediaMessage({
     required this.eventMessage,
+    this.onTapReply,
     super.key,
   });
 
+  final VoidCallback? onTapReply;
   final EventMessage eventMessage;
 
   static double get padding => 6.0.s;
@@ -50,9 +52,7 @@ class VisualMediaMessage extends HookConsumerWidget {
               messageMedias: messageMedias,
               eventMessage: eventMessage,
             ),
-            VisualMediaMetadata(
-              eventMessage: eventMessage,
-            ),
+            VisualMediaMetadata(eventMessage: eventMessage),
           ],
         ),
       ),

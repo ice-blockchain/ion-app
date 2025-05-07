@@ -27,9 +27,11 @@ import 'package:ion/generated/assets.gen.dart';
 class DocumentMessage extends HookConsumerWidget {
   const DocumentMessage({
     required this.eventMessage,
+    this.onTapReply,
     super.key,
   });
 
+  final VoidCallback? onTapReply;
   final EventMessage eventMessage;
 
   @override
@@ -102,7 +104,7 @@ class DocumentMessage extends HookConsumerWidget {
       ),
       child: Column(
         children: [
-          if (repliedMessageItem != null) ReplyMessage(messageItem, repliedMessageItem),
+          if (repliedMessageItem != null) ReplyMessage(messageItem, repliedMessageItem, onTapReply),
           GestureDetector(
             behavior: HitTestBehavior.opaque,
             onTap: () {

@@ -24,10 +24,12 @@ import 'package:ion/app/utils/username.dart';
 class ProfileShareMessage extends HookConsumerWidget {
   const ProfileShareMessage({
     required this.eventMessage,
+    this.onTapReply,
     super.key,
   });
 
   final EventMessage eventMessage;
+    final VoidCallback? onTapReply;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -66,7 +68,7 @@ class ProfileShareMessage extends HookConsumerWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            if (repliedMessageItem != null) ReplyMessage(messageItem, repliedMessageItem),
+            if (repliedMessageItem != null) ReplyMessage(messageItem, repliedMessageItem, onTapReply),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               crossAxisAlignment: CrossAxisAlignment.end,

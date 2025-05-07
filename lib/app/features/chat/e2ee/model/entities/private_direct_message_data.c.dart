@@ -201,3 +201,19 @@ extension MessageTypes on ReplaceablePrivateDirectMessageData {
     return MessageType.text;
   }
 }
+
+extension ConversationExtension on EventMessage {
+  List<String> get participantsMasterPubkeys {
+    final allTags = groupBy(tags, (tag) => tag[0]);
+    final masterPubkeys = allTags[RelatedPubkey.tagName]?.map(RelatedPubkey.fromTag).toList();
+
+    return masterPubkeys?.map((e) => e.value).toList() ?? [];
+  }
+
+  String? get sharedId =>
+      tags.firstWhereOrNull((tag) => tag.first == ReplaceableEventIdentifier.tagName)?.last;
+
+  DateTime get publishedAt => EntityPublishedAt.fromTag(
+        tags.firstWhereOrNull((tag) => tag.first == EntityPublishedAt.tagName)!,
+      ).value;
+}

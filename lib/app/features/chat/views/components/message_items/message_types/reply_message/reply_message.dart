@@ -11,8 +11,9 @@ import 'package:ion/app/features/chat/views/components/message_items/message_typ
 import 'package:ion/generated/assets.gen.dart';
 
 class ReplyMessage extends HookConsumerWidget {
-  const ReplyMessage(this.messageItem, this.repliedMessageItem, {super.key});
+  const ReplyMessage(this.messageItem, this.repliedMessageItem, this.onTap, {super.key});
 
+  final VoidCallback? onTap;
   final ChatMessageInfoItem messageItem;
   final ChatMessageInfoItem? repliedMessageItem;
 
@@ -42,63 +43,66 @@ class ReplyMessage extends HookConsumerWidget {
         ? (repliedMessageItem! as MediaItem)
         : null;
 
-    return Container(
-      margin: EdgeInsetsDirectional.only(bottom: 12.0.s),
-      padding: EdgeInsetsDirectional.fromSTEB(12.0.s, 5.0.s, 20.0.s, 5.0.s),
-      decoration: BoxDecoration(
-        color: bgColor,
-        borderRadius: BorderRadius.circular(10.0.s),
-      ),
-      child: Row(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          _SideVerticalDivider(isMyMessage: isMyMessage),
-          if (mediaItem != null)
-            SizedBox(
-              width: 50.0.s,
-              child: Padding(
-                padding: EdgeInsetsDirectional.only(start: 4.0.s, end: 8.0.s),
-                child: VisualMediaCustomGrid(
-                  customSpacing: 2.0.s,
-                  messageMedias: mediaItem.medias,
-                  customHeight: mediaItem.medias.length > 1 ? 16.0.s : 30.0.s,
-                  eventMessage: repliedMessageItem!.eventMessage,
-                  isReply: true,
+    return GestureDetector(
+      onTap: onTap,
+      child: Container(
+        margin: EdgeInsetsDirectional.only(bottom: 12.0.s),
+        padding: EdgeInsetsDirectional.fromSTEB(12.0.s, 5.0.s, 20.0.s, 5.0.s),
+        decoration: BoxDecoration(
+          color: bgColor,
+          borderRadius: BorderRadius.circular(10.0.s),
+        ),
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            _SideVerticalDivider(isMyMessage: isMyMessage),
+            if (mediaItem != null)
+              SizedBox(
+                width: 50.0.s,
+                child: Padding(
+                  padding: EdgeInsetsDirectional.only(start: 4.0.s, end: 8.0.s),
+                  child: VisualMediaCustomGrid(
+                    customSpacing: 2.0.s,
+                    messageMedias: mediaItem.medias,
+                    customHeight: mediaItem.medias.length > 1 ? 16.0.s : 30.0.s,
+                    eventMessage: repliedMessageItem!.eventMessage,
+                    isReply: true,
+                  ),
                 ),
               ),
-            ),
-          Flexible(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                SenderSummary(
-                  textColor: textColor,
-                  pubkey: repliedMessageItem!.eventMessage.masterPubkey,
-                ),
-                Row(
-                  children: [
-                    if (messageIconPath != null)
-                      Padding(
-                        padding: EdgeInsetsDirectional.only(end: 4.0.s),
-                        child: messageIconPath.icon(
-                          size: 16.0.s,
-                          color: textColor ?? context.theme.appColors.onTertararyBackground,
+            Flexible(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  SenderSummary(
+                    textColor: textColor,
+                    pubkey: repliedMessageItem!.eventMessage.masterPubkey,
+                  ),
+                  Row(
+                    children: [
+                      if (messageIconPath != null)
+                        Padding(
+                          padding: EdgeInsetsDirectional.only(end: 4.0.s),
+                          child: messageIconPath.icon(
+                            size: 16.0.s,
+                            color: textColor ?? context.theme.appColors.onTertararyBackground,
+                          ),
+                        ),
+                      Expanded(
+                        child: Text(
+                          repliedMessageItem!.contentDescription,
+                          style: context.theme.appTextThemes.body2.copyWith(color: textColor),
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
                         ),
                       ),
-                    Expanded(
-                      child: Text(
-                        repliedMessageItem!.contentDescription,
-                        style: context.theme.appTextThemes.body2.copyWith(color: textColor),
-                        maxLines: 1,
-                        overflow: TextOverflow.ellipsis,
-                      ),
-                    ),
-                  ],
-                ),
-              ],
+                    ],
+                  ),
+                ],
+              ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }

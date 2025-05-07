@@ -23,9 +23,11 @@ import 'package:ion/app/utils/url.dart';
 class TextMessage extends HookConsumerWidget {
   const TextMessage({
     required this.eventMessage,
+    this.onTapReply,
     super.key,
   });
 
+  final VoidCallback? onTapReply;
   final EventMessage eventMessage;
 
   @override
@@ -68,7 +70,8 @@ class TextMessage extends HookConsumerWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            if (repliedMessageItem != null) ReplyMessage(messageItem, repliedMessageItem),
+            if (repliedMessageItem != null)
+              ReplyMessage(messageItem, repliedMessageItem, onTapReply),
             _TextMessageContent(
               textStyle: textStyle,
               eventMessage: eventMessage,

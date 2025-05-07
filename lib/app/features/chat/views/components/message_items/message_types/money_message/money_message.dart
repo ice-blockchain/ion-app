@@ -28,9 +28,11 @@ part 'components/amount_display.dart';
 class MoneyMessage extends HookConsumerWidget {
   const MoneyMessage({
     required this.eventMessage,
+    this.onTapReply,
     super.key,
   });
 
+  final VoidCallback? onTapReply;
   final EventMessage eventMessage;
 
   @override
