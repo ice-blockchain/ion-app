@@ -66,7 +66,6 @@ class ActionButton extends HookConsumerWidget {
             );
             if (status == PermissionStatus.granted) {
               isRecordingCancelled.value = false;
-              await Future<void>.delayed(const Duration(milliseconds: 4000));
               await recorderController.record(bitRate: 44100);
               if (isRecordingCancelled.value) {
                 await recorderController.stop();
