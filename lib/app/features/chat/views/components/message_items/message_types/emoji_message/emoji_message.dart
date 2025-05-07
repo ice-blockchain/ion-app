@@ -54,7 +54,8 @@ class EmojiMessage extends HookConsumerWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            if (repliedMessageItem != null) ReplyMessage(messageItem, repliedMessageItem, onTapReply),
+            if (repliedMessageItem != null)
+              ReplyMessage(messageItem, repliedMessageItem, onTapReply),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [

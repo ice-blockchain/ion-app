@@ -166,7 +166,7 @@ class AudioMessage extends HookConsumerWidget {
       contentPadding: contentPadding,
       child: Column(
         children: [
-          if (repliedMessageItem != null) ReplyMessage(messageItem, repliedMessageItem,   onTapReply),
+          if (repliedMessageItem != null) ReplyMessage(messageItem, repliedMessageItem, onTapReply),
           Row(
             crossAxisAlignment: CrossAxisAlignment.end,
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
