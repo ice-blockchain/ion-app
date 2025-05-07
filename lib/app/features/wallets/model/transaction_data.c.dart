@@ -19,6 +19,7 @@ class TransactionData with _$TransactionData {
     required TransactionCryptoAsset cryptoAsset,
     String? id,
     String? fee,
+    String? externalHash,
     DateTime? dateConfirmed,
     DateTime? dateRequested,
     DateTime? createdAtInRelay,
