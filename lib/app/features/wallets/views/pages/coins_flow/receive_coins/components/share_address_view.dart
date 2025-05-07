@@ -5,10 +5,11 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/components/button/button.dart';
 import 'package:ion/app/components/screen_offset/screen_bottom_offset.dart';
 import 'package:ion/app/extensions/extensions.dart';
-import 'package:ion/app/features/wallets/hooks/use_load_wallet_to_receive_coins.dart';
+import 'package:ion/app/features/wallets/hooks/use_check_wallet_address_available.dart';
 import 'package:ion/app/features/wallets/views/pages/coins_flow/receive_coins/components/info_card.dart';
 import 'package:ion/app/features/wallets/views/pages/coins_flow/receive_coins/components/receive_info_card.dart';
 import 'package:ion/app/features/wallets/views/pages/coins_flow/receive_coins/providers/receive_coins_form_provider.c.dart';
+import 'package:ion/app/router/app_routes.c.dart';
 import 'package:ion/app/router/components/navigation_app_bar/navigation_app_bar.dart';
 import 'package:ion/app/router/components/navigation_app_bar/navigation_close_button.dart';
 import 'package:ion/app/router/components/sheet_content/sheet_content.dart';
@@ -20,7 +21,10 @@ class ShareAddressView extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    useLoadWalletToReceiveCoins(ref);
+    useCheckWalletAddressAvailable(
+      ref,
+      onAddressMissing: () => AddressNotFoundReceiveRoute().replace(ref.context),
+    );
 
     final walletAddress = ref.watch(
       receiveCoinsFormControllerProvider.select((state) => state.address),
