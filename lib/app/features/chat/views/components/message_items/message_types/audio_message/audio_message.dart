@@ -65,6 +65,7 @@ class AudioMessage extends HookConsumerWidget {
             entity: entity,
             mediaAttachment: mediaAttachment,
             loadThumbnail: false,
+            cacheKey: messageMedia?.cacheKey,
           ),
         )
             .then((value) {
