@@ -3,6 +3,7 @@
 import 'package:collection/collection.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/features/auth/providers/auth_provider.c.dart';
+import 'package:ion/app/features/core/providers/env_provider.c.dart';
 import 'package:ion/app/features/ion_connect/ion_connect.dart';
 import 'package:ion/app/features/ion_connect/model/action_source.c.dart';
 import 'package:ion/app/features/ion_connect/model/search_extension.dart';
@@ -52,9 +53,10 @@ class SearchUsers extends _$SearchUsers {
 
 @riverpod
 List<EntitiesDataSource> searchUsersDataSource(Ref ref, {required String query}) {
+  final relay = ref.watch(envProvider.notifier).get<String>(EnvVariable.USER_SEARCH_RELAY);
   return [
     EntitiesDataSource(
-      actionSource: const ActionSourceIndexers(),
+      actionSource: ActionSourceRelayUrl(relay),
       entityFilter: (entity) => entity is UserMetadataEntity,
       requestFilters: [
         RequestFilter(
