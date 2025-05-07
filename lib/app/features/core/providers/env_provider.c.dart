@@ -20,6 +20,7 @@ enum EnvVariable {
   GIFT_WRAP_EXPIRATION_HOURS,
   ICLOUD_CONTAINER_ID,
   CONTENT_CREATORS_RELAY,
+  USER_SEARCH_RELAY,
 }
 
 @Riverpod(keepAlive: true)
@@ -38,6 +39,7 @@ class Env extends _$Env {
       EnvVariable.BANUBA_TOKEN => const String.fromEnvironment('BANUBA_TOKEN') as T,
       EnvVariable.CONTENT_CREATORS_RELAY =>
         const String.fromEnvironment('CONTENT_CREATORS_RELAY') as T,
+      EnvVariable.USER_SEARCH_RELAY => const String.fromEnvironment('USER_SEARCH_RELAY') as T,
       EnvVariable.STORY_EXPIRATION_HOURS =>
         const int.fromEnvironment('STORY_EXPIRATION_HOURS') as T,
       EnvVariable.VERSIONS_CONFIG_REFETCH_INTERVAL =>
