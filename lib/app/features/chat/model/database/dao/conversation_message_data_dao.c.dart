@@ -30,6 +30,7 @@ class ConversationMessageDataDao extends DatabaseAccessor<ChatDatabase>
       ])
             ..where(eventMessageTable.createdAt.isSmallerThanValue(updateAllBefore))
             ..where(messageStatusTable.masterPubkey.equals(masterPubkey))
+            ..where(messageStatusTable.messageEventReference.equalsValue(messageEventReference))
             ..where(messageStatusTable.status.equals(MessageDeliveryStatus.received.index)))
           .map((row) => row.readTable(messageStatusTable))
           .get();
