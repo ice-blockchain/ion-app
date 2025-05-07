@@ -82,7 +82,7 @@ class CameraControllerNotifier extends _$CameraControllerNotifier {
   Future<CameraController> _createCameraController(CameraDescription camera) async {
     _cameraController = CameraController(
       camera,
-      ResolutionPreset.high,
+      ResolutionPreset.max,
     );
 
     try {
