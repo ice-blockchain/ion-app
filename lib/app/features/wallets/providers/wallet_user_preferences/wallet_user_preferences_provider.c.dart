@@ -1,5 +1,6 @@
 // SPDX-License-Identifier: ice License 1.0
 
+import 'package:ion/app/features/wallets/model/balance_display_order.dart';
 import 'package:ion/app/features/wallets/model/nft_layout_type.dart';
 import 'package:ion/app/features/wallets/model/nft_sorting_type.dart';
 import 'package:ion/app/features/wallets/model/user_preferences.c.dart';
@@ -14,6 +15,7 @@ class WalletUserPreferencesNotifier extends _$WalletUserPreferencesNotifier {
   static String isZeroValueAssetsVisibleKey = 'UserPreferences:isZeroValueAssetsVisible';
   static String nftLayoutTypeKey = 'UserPreferences:nftLayoutType';
   static String nftSortingTypeKey = 'UserPreferences:nftSortingType';
+  static String balanceDisplayOrderKey = 'UserPreference:balanceDisplayOrder';
 
   @override
   UserPreferences build({required String identityKeyName}) {
@@ -37,11 +39,18 @@ class WalletUserPreferencesNotifier extends _$WalletUserPreferencesNotifier {
         ) ??
         NftSortingType.desc;
 
+    final balanceDisplayOrder = userPreferencesService.getEnum<BalanceDisplayOrder>(
+          balanceDisplayOrderKey,
+          BalanceDisplayOrder.values,
+        ) ??
+        BalanceDisplayOrder.coinUsd;
+
     return UserPreferences(
       isBalanceVisible: isBalanceVisible,
       isZeroValueAssetsVisible: isZeroValueAssetsVisible,
       nftLayoutType: nftLayoutType,
       nftSortingType: nftSortingType,
+      balanceDisplayOrder: balanceDisplayOrder,
     );
   }
 
@@ -88,6 +97,18 @@ class WalletUserPreferencesNotifier extends _$WalletUserPreferencesNotifier {
     userPreferencesService.setEnum<NftSortingType>(
       nftSortingTypeKey,
       newNftSortingType,
+    );
+  }
+
+  void switchBalanceDisplayOrder() {
+    final userPreferencesService =
+        ref.read(userPreferencesServiceProvider(identityKeyName: identityKeyName));
+    state = state.copyWith(
+      balanceDisplayOrder: state.balanceDisplayOrder.toggled,
+    );
+    userPreferencesService.setValue(
+      balanceDisplayOrderKey,
+      state.balanceDisplayOrder,
     );
   }
 }

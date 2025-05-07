@@ -2,6 +2,7 @@
 
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/features/auth/providers/auth_provider.c.dart';
+import 'package:ion/app/features/wallets/model/balance_display_order.dart';
 import 'package:ion/app/features/wallets/model/nft_layout_type.dart';
 import 'package:ion/app/features/wallets/model/nft_sorting_type.dart';
 import 'package:ion/app/features/wallets/model/user_preferences.c.dart';
@@ -50,6 +51,17 @@ NftSortingType nftSortingTypeSelector(Ref ref) {
   return ref.watch(
     walletUserPreferencesNotifierProvider(identityKeyName: identityKeyName).select(
       (UserPreferences userPreferences) => userPreferences.nftSortingType,
+    ),
+  );
+}
+
+@riverpod
+BalanceDisplayOrder balanceDisplayOrder(Ref ref) {
+  final identityKeyName = ref.watch(currentIdentityKeyNameSelectorProvider) ?? '';
+
+  return ref.watch(
+    walletUserPreferencesNotifierProvider(identityKeyName: identityKeyName).select(
+      (UserPreferences userPreferences) => userPreferences.balanceDisplayOrder,
     ),
   );
 }
