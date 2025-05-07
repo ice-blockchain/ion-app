@@ -176,7 +176,10 @@ Future<void> _deleteMessages({
         .toList(),
   );
 
-  final eventMessage = await deleteRequest.toEventMessage(eventSigner);
+  final eventMessage = await deleteRequest.toEventMessage(
+    NoPrivateSigner(eventSigner.publicKey),
+    masterPubkey: currentUserMasterPubkey,
+  );
 
   await Future.wait(
     participantsMasterPubkeys.map((masterPubkey) async {
@@ -223,7 +226,10 @@ Future<void> _deleteConversations({
   final deleteRequest =
       DeletionRequest(events: conversationIds.map(ConversationToDelete.new).toList());
 
-  final eventMessage = await deleteRequest.toEventMessage(eventSigner);
+  final eventMessage = await deleteRequest.toEventMessage(
+    NoPrivateSigner(eventSigner.publicKey),
+    masterPubkey: currentUserMasterPubkey,
+  );
 
   await Future.wait(
     conversationIds.map(
