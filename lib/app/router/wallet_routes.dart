@@ -25,6 +25,7 @@ class WalletRoutes {
     TypedGoRoute<CoinsDetailsRoute>(path: 'coin-details'),
     TypedShellRoute<ModalShellRouteData>(
       routes: [
+        TypedGoRoute<AddressNotFoundRoute>(path: 'address-not-found'),
         TypedGoRoute<CoinReceiveRoute>(path: 'coin-receive'),
         TypedGoRoute<ShareAddressCoinDetailsRoute>(path: 'share-wallet-address'),
         TypedGoRoute<ChangeNetworkShareWalletRoute>(path: 'change-wallet-network'),
@@ -80,6 +81,7 @@ class WalletRoutes {
       ],
     ),
     TypedGoRoute<ShareAddressRoute>(path: 'share-address'),
+    TypedGoRoute<AddressNotFoundReceiveRoute>(path: 'address-not-found-receive'),
   ];
 
   static const walletManagementRoutes = <TypedRoute<RouteData>>[
@@ -352,6 +354,26 @@ class DeleteWalletRoute extends BaseRouteData {
         );
 
   final String walletId;
+}
+
+class AddressNotFoundRoute extends BaseRouteData {
+  AddressNotFoundRoute()
+      : super(
+          child: AddressNotFoundModal(
+            onContinue: (context) => CoinReceiveRoute().replace(context),
+          ),
+          type: IceRouteType.bottomSheet,
+        );
+}
+
+class AddressNotFoundReceiveRoute extends BaseRouteData {
+  AddressNotFoundReceiveRoute()
+      : super(
+          child: AddressNotFoundModal(
+            onContinue: (context) => ShareAddressRoute().replace(context),
+          ),
+          type: IceRouteType.bottomSheet,
+        );
 }
 
 class ContactRoute extends BaseRouteData {

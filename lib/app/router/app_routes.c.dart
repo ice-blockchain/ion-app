@@ -122,6 +122,7 @@ import 'package:ion/app/features/video/views/pages/feed_videos_page.dart';
 import 'package:ion/app/features/video/views/pages/profile_videos_page.dart';
 import 'package:ion/app/features/video/views/pages/reply_list_videos_page.dart';
 import 'package:ion/app/features/video/views/pages/trending_videos_page.dart';
+import 'package:ion/app/features/wallets/views/pages/address_not_found_modal.dart';
 import 'package:ion/app/features/wallets/views/pages/coins_flow/coin_details/coin_details_page.dart';
 import 'package:ion/app/features/wallets/views/pages/coins_flow/coin_receive_modal/coin_receive_modal.dart';
 import 'package:ion/app/features/wallets/views/pages/coins_flow/contact_picker/contact_picker_modal.dart';

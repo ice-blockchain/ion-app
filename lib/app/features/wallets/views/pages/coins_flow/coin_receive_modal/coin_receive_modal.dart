@@ -7,7 +7,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/components/list_item/list_item.dart';
 import 'package:ion/app/components/screen_offset/screen_side_offset.dart';
 import 'package:ion/app/extensions/extensions.dart';
-import 'package:ion/app/features/wallets/hooks/use_load_wallet_to_receive_coins.dart';
+import 'package:ion/app/features/wallets/hooks/use_check_wallet_address_available.dart';
 import 'package:ion/app/features/wallets/model/network_data.c.dart';
 import 'package:ion/app/features/wallets/providers/coins_by_filters_provider.c.dart';
 import 'package:ion/app/features/wallets/views/components/network_icon_widget.dart';
@@ -61,7 +61,11 @@ class CoinReceiveModal extends HookConsumerWidget {
       [coinsWithNetworkOptions],
     );
 
-    useLoadWalletToReceiveCoins(ref, [selectedNetwork]);
+    useCheckWalletAddressAvailable(
+      ref,
+      onAddressMissing: () => AddressNotFoundRoute().replace(ref.context),
+      keys: [selectedNetwork],
+    );
 
     final updateNetwork = useCallback(
       (NetworkData? network) {
