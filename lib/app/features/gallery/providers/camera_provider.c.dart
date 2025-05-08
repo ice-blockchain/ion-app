@@ -96,9 +96,7 @@ class CameraControllerNotifier extends _$CameraControllerNotifier {
   }
 
   Future<void> pauseCamera() async {
-    // Dispose controller completely to release hardware.
     if (_cameraController != null) {
-      // First update state to paused so UI knows camera is unavailable
       state = const CameraState.paused();
 
       Logger.log('Pausing camera - disposing controller');
@@ -106,10 +104,8 @@ class CameraControllerNotifier extends _$CameraControllerNotifier {
       final controllerToDispose = _cameraController;
       controllerToDispose?.removeListener(_onCameraControllerUpdate);
 
-      // Detach reference before disposing to avoid access after disposal
       _cameraController = null;
 
-      // Dispose immediately - the CustomCameraPreview has been updated to handle this safely
       try {
         await controllerToDispose?.dispose();
         Logger.log('Camera controller disposed');
@@ -126,20 +122,16 @@ class CameraControllerNotifier extends _$CameraControllerNotifier {
       return false;
     }
 
-    // Skip if already in loading state to prevent duplicate initializations
     if (state is CameraLoading) {
       Logger.log('Camera already loading, skipping resume request');
       return false;
     }
 
-    // Check if already initialized and ready
     if (state is CameraReady && (_cameraController?.value.isInitialized ?? false)) {
       Logger.log('Camera already ready, no need to resume');
       return true;
     }
 
-    // Force re-initialization regardless of current state
-    // This ensures that after pausing, we always attempt to reinitialize
     Logger.log('Resuming camera with full initialization');
     await _initializeCamera();
     final isReady = state is CameraReady;
@@ -151,11 +143,10 @@ class CameraControllerNotifier extends _$CameraControllerNotifier {
     if (hasPermission) {
       return resumeCamera();
     } else {
-      // If permission is lost, fully dispose the camera and reset state.
       Logger.log('Camera permission denied. Disposing camera.');
       if (_cameraController != null) {
         _cameraController?.removeListener(_onCameraControllerUpdate);
-        await _disposeCamera(); // This correctly disposes the controller
+        await _disposeCamera();
       }
       state = const CameraState.initial();
       return false;
@@ -165,9 +156,8 @@ class CameraControllerNotifier extends _$CameraControllerNotifier {
   Future<void> switchCamera() async {
     if (_cameraController == null) {
       Logger.log('Switch camera called but no current controller.');
-      // Attempt to initialize if no controller exists, perhaps user switched before init.
       await _initializeCamera();
-      if (_cameraController == null) return; // Still no controller after init attempt.
+      if (_cameraController == null) return;
     }
 
     final currentCamera = _cameraController!.description;
@@ -180,7 +170,6 @@ class CameraControllerNotifier extends _$CameraControllerNotifier {
     }
 
     Logger.log('Switching camera. Disposing current controller.');
-    // Dispose the current controller before creating a new one for the switched camera.
     _cameraController?.removeListener(_onCameraControllerUpdate);
     await _disposeCamera();
 
