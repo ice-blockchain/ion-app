@@ -89,11 +89,11 @@ class MessageReactionContextMenu extends HookConsumerWidget {
                 minWidth: 140.0.s,
                 verticalPadding: 12.0.s,
               ),
-              const OverlayMenuItemSeparator(),
               if (isMe &&
                   canEdit &&
                   (((messageItem is TextItem) && !(messageItem as TextItem).isStoryReply) ||
-                      messageItem is EmojiItem))
+                      messageItem is EmojiItem)) ...[
+                const OverlayMenuItemSeparator(),
                 OverlayMenuItem(
                   label: context.i18n.button_edit,
                   verticalPadding: 12.0.s,
@@ -105,17 +105,8 @@ class MessageReactionContextMenu extends HookConsumerWidget {
                         messageItem;
                     context.pop();
                   },
-                )
-              else
-                OverlayMenuItem(
-                  label: context.i18n.button_forward,
-                  verticalPadding: 12.0.s,
-                  icon: Assets.svg.iconChatForward
-                      .icon(size: iconSize, color: context.theme.appColors.quaternaryText),
-                  onPressed: () {
-                    Navigator.of(context).pop();
-                  },
                 ),
+              ],
               if (canCopy) ...[
                 const OverlayMenuItemSeparator(),
                 OverlayMenuItem(
