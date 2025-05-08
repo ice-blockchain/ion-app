@@ -17,7 +17,6 @@ class ChatMainAppBar extends ConsumerWidget implements PreferredSizeWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final editMode = ref.watch(conversationsEditModeProvider);
-    //.where((c) => !c.isArchived).toList()
     final hasConversations = ref
             .watch(conversationsProvider)
             .valueOrNull

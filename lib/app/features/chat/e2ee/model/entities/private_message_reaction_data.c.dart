@@ -45,7 +45,7 @@ class PrivateMessageReactionEntity
   FutureOr<EventMessage> toEventMessage(EventSerializable data) {
     return data.toEventMessage(
       createdAt: createdAt,
-      SimpleSigner(pubkey, signature),
+      NoPrivateSigner(pubkey),
     );
   }
 
