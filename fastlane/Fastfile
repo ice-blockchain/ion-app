@@ -40,7 +40,7 @@ platform :ios do
         match(
             type: sign_type,
             readonly: true,
-            app_identifier: APP_ID,
+            app_identifier: [APP_ID],
             keychain_name: temp_keystore_user,
             keychain_password: temp_keystore_password,
             api_key_path: "./fastlane/keys/appstore-connect-key.json",
