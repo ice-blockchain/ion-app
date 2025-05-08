@@ -67,7 +67,9 @@ class TransactionListItem extends StatelessWidget {
             ),
           ),
           Text(
-            '~ ${formatToCurrency(transactionData.usdAmount)}',
+            context.i18n.wallet_approximate_in_usd(
+              formatUSD(transactionData.usdAmount),
+            ),
             style: context.theme.appTextThemes.caption3.copyWith(
               color: context.theme.appColors.secondaryText,
             ),

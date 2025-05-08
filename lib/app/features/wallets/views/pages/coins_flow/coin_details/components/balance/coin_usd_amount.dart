@@ -22,7 +22,9 @@ class CoinUsdAmount extends HookConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final coinText = '${formatDouble(coinsGroup.totalAmount)} ${coinsGroup.abbreviation}';
-    final usdText = '~ ${formatToCurrency(coinsGroup.totalBalanceUSD)}';
+    final usdText = context.i18n.wallet_approximate_in_usd(
+      formatUSD(coinsGroup.totalBalanceUSD),
+    );
     final displayOrder = ref.watch(balanceDisplayOrderProvider);
 
     return Column(

@@ -43,7 +43,9 @@ class _AmountDisplay extends HookWidget {
             ),
             SizedBox(width: 4.0.s),
             Text(
-              '~ ${formatUSD(equivalentUsd)} USD',
+              context.i18n.wallet_approximate_in_usd(
+                formatUSD(equivalentUsd),
+              ),
               style: context.theme.appTextThemes.body2.copyWith(color: secondaryTextColor),
             ),
           ],

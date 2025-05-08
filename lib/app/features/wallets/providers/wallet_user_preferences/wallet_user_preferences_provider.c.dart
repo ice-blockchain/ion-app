@@ -106,7 +106,7 @@ class WalletUserPreferencesNotifier extends _$WalletUserPreferencesNotifier {
     state = state.copyWith(
       balanceDisplayOrder: state.balanceDisplayOrder.toggled,
     );
-    userPreferencesService.setValue(
+    userPreferencesService.setEnum<BalanceDisplayOrder>(
       balanceDisplayOrderKey,
       state.balanceDisplayOrder,
     );
