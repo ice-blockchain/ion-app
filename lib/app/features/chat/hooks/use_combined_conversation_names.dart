@@ -9,7 +9,7 @@ import 'package:ion/app/features/chat/model/database/chat_database.c.dart';
 import 'package:ion/app/features/chat/recent_chats/model/conversation_list_item.c.dart';
 import 'package:ion/app/features/user/providers/user_metadata_provider.c.dart';
 
-String useCombinedConversationNames(
+String? useCombinedConversationNames(
   List<ConversationListItem> conversations,
   WidgetRef ref,
 ) {
@@ -21,7 +21,7 @@ String useCombinedConversationNames(
       for (final conversation in conversations) {
         if (conversation.type == ConversationType.oneToOne) {
           final latestMessageEntity =
-              PrivateDirectMessageData.fromEventMessage(conversation.latestMessage!);
+              ReplaceablePrivateDirectMessageData.fromEventMessage(conversation.latestMessage!);
 
           final receiver = latestMessageEntity.relatedPubkeys!
               .firstWhere((pubkey) => pubkey.value != currentUserMasterPubkey)
@@ -37,7 +37,7 @@ String useCombinedConversationNames(
           names.add(community.data.name);
         } else {
           final latestMessageEntity =
-              PrivateDirectMessageData.fromEventMessage(conversation.latestMessage!);
+              ReplaceablePrivateDirectMessageData.fromEventMessage(conversation.latestMessage!);
           names.add(latestMessageEntity.groupSubject?.value ?? '');
         }
       }
@@ -47,5 +47,5 @@ String useCombinedConversationNames(
   );
 
   final snapshot = useFuture(future);
-  return snapshot.data ?? '';
+  return snapshot.data;
 }

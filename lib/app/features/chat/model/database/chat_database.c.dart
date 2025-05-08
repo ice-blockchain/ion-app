@@ -1,21 +1,26 @@
 // SPDX-License-Identifier: ice License 1.0
 
-import 'dart:convert';
+import 'dart:developer';
 
 import 'package:collection/collection.dart';
 import 'package:drift/drift.dart';
 import 'package:drift_flutter/drift_flutter.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/exceptions/exceptions.dart';
+import 'package:ion/app/extensions/event_message.dart';
 import 'package:ion/app/features/auth/providers/auth_provider.c.dart';
 import 'package:ion/app/features/chat/community/models/entities/community_join_data.c.dart';
 import 'package:ion/app/features/chat/community/models/entities/tags/conversation_identifier.c.dart';
 import 'package:ion/app/features/chat/e2ee/model/entities/private_direct_message_data.c.dart';
-import 'package:ion/app/features/chat/model/database/chat_database.c.steps.dart';
+import 'package:ion/app/features/chat/e2ee/model/entities/private_message_reaction_data.c.dart';
 import 'package:ion/app/features/chat/model/group_subject.c.dart';
 import 'package:ion/app/features/chat/model/message_reaction_group.c.dart';
 import 'package:ion/app/features/chat/recent_chats/model/conversation_list_item.c.dart';
+import 'package:ion/app/features/feed/data/models/generic_repost.c.dart';
+import 'package:ion/app/features/feed/notifications/data/database/converters/event_reference_converter.c.dart';
+import 'package:ion/app/features/ion_connect/database/converters/event_tags_converter.dart';
 import 'package:ion/app/features/ion_connect/ion_connect.dart';
+import 'package:ion/app/features/ion_connect/model/event_reference.c.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'chat_database.c.g.dart';
@@ -64,44 +69,9 @@ class ChatDatabase extends _$ChatDatabase {
   final String pubkey;
 
   @override
-  int get schemaVersion => 5;
-
-  @override
-  MigrationStrategy get migration => MigrationStrategy(
-        beforeOpen: (_) async {
-          await customStatement('PRAGMA foreign_keys = ON');
-        },
-        onCreate: (migration) => migration.createAll(),
-        onUpgrade: stepByStep(
-          from1To2: (m, schema) async {
-            await m.createTable(schema.reactionTable);
-          },
-          from2To3: (m, schema) async {
-            await m.renameColumn(
-              schema.reactionTable,
-              Schema2(database: m.database).reactionTable.eventMessageId.name,
-              reactionTable.kind14Id,
-            );
-            await m.alterTable(
-              TableMigration(
-                schema.reactionTable,
-                columnTransformer: {
-                  reactionTable.id: reactionTable.id.cast<String>(),
-                },
-              ),
-            );
-          },
-          from3To4: (m, schema) async {
-            await m.createTable(schema.messageMediaTable);
-          },
-          from4To5: (m, schema) async {
-            await m.deleteTable(schema.messageMediaTable.actualTableName);
-            await m.createTable(schema.messageMediaTable);
-          },
-        ),
-      );
+  int get schemaVersion => 1;
 
   static QueryExecutor _openConnection(String pubkey) {
-    return driftDatabase(name: 'chat_database_$pubkey');
+    return driftDatabase(name: 'conversation_database_$pubkey');
   }
 }

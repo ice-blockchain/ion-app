@@ -48,9 +48,7 @@ class DeletionRequestEntity with IonConnectEntity, ImmutableEntity, _$DeletionRe
 
 @freezed
 class DeletionRequest with _$DeletionRequest implements EventSerializable {
-  const factory DeletionRequest({
-    required List<DeletableEvent> events,
-  }) = _DeletionRequest;
+  const factory DeletionRequest({required List<DeletableEvent> events}) = _DeletionRequest;
 
   const DeletionRequest._();
 
@@ -71,7 +69,7 @@ class DeletionRequest with _$DeletionRequest implements EventSerializable {
         ImmutableEventReference(
           eventId: immutableEventIds[i].last,
           kind: int.parse(immutableEventKinds[i].last),
-          pubkey: eventMessage.pubkey,
+          pubkey: eventMessage.masterPubkey,
         ),
       ...replaceableEvents.map(ReplaceableEventReference.fromTag),
     ];
@@ -88,6 +86,7 @@ class DeletionRequest with _$DeletionRequest implements EventSerializable {
     EventSigner signer, {
     List<List<String>> tags = const [],
     DateTime? createdAt,
+    String? masterPubkey,
   }) {
     return EventMessage.fromData(
       signer: signer,
@@ -96,6 +95,7 @@ class DeletionRequest with _$DeletionRequest implements EventSerializable {
       content: '',
       tags: [
         ...tags,
+        if (signer is NoPrivateSigner) ['b', masterPubkey!],
         for (final event in events) ...event.toTags(),
       ],
     );

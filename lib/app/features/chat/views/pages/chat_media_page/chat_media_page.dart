@@ -5,23 +5,23 @@ import 'package:flutter/services.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:ion/app/components/list_item/list_item.dart';
 import 'package:ion/app/components/screen_offset/screen_side_offset.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/chat/e2ee/model/entities/private_direct_message_data.c.dart';
 import 'package:ion/app/features/chat/e2ee/providers/chat_medias_provider.c.dart';
 import 'package:ion/app/features/chat/model/database/chat_database.c.dart';
-import 'package:ion/app/features/chat/model/message_list_item.c.dart';
-import 'package:ion/app/features/chat/recent_chats/providers/selected_message_provider.c.dart';
 import 'package:ion/app/features/chat/views/pages/chat_media_page/components/chat_media_context_menu.dart';
-import 'package:ion/app/features/chat/views/pages/chat_media_page/components/chat_media_metadata.dart';
 import 'package:ion/app/features/chat/views/pages/chat_media_page/components/chat_media_page_view.dart';
+import 'package:ion/app/features/core/model/media_type.dart';
+import 'package:ion/app/features/core/providers/mute_provider.c.dart';
 import 'package:ion/app/features/feed/views/pages/fullscreen_media/hooks/use_image_zoom.dart';
 import 'package:ion/app/features/feed/views/pages/fullscreen_media/providers/image_zoom_provider.c.dart';
-import 'package:ion/app/features/ion_connect/ion_connect.dart';
+import 'package:ion/app/features/user/providers/user_metadata_provider.c.dart';
 import 'package:ion/app/features/video/views/hooks/use_status_bar_color.dart';
-import 'package:ion/app/hooks/use_on_init.dart';
 import 'package:ion/app/router/components/navigation_app_bar/navigation_app_bar.dart';
 import 'package:ion/app/router/components/navigation_app_bar/navigation_back_button.dart';
+import 'package:ion/app/utils/username.dart';
 import 'package:ion/generated/assets.gen.dart';
 
 class ChatMediaPage extends HookConsumerWidget {
@@ -37,8 +37,6 @@ class ChatMediaPage extends HookConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     useStatusBarColor();
     final currentPage = useState(initialIndex);
-    final messageDetailsKey = useRef(GlobalKey());
-    final bottomHeight = useState<double>(0);
 
     final pageController = usePageController(initialPage: initialIndex);
     final zoomController = useImageZoom(ref, withReset: true);
@@ -79,23 +77,10 @@ class ChatMediaPage extends HookConsumerWidget {
       return const SizedBox.shrink();
     }
     final eventMessage = eventMessageFuture.data!;
-    final entity = PrivateDirectMessageEntity.fromEventMessage(eventMessage);
+    final entity = ReplaceablePrivateDirectMessageEntity.fromEventMessage(eventMessage);
 
-    final medias = ref.watch(chatMediasProvider(eventMessageId: eventMessageId)).valueOrNull;
-
-    useOnInit(
-      () {
-        final context = messageDetailsKey.value.currentContext;
-        if (context != null && context.mounted) {
-          final box = context.findRenderObject() as RenderBox?;
-          if (box != null) {
-            bottomHeight.value = box.size.height;
-          }
-        }
-        return;
-      },
-      [medias],
-    );
+    final medias =
+        ref.watch(chatMediasProvider(eventReference: entity.toEventReference())).valueOrNull;
 
     if (medias == null) {
       return const SizedBox.shrink();
@@ -136,16 +121,15 @@ class ChatMediaPage extends HookConsumerWidget {
               ChatMediaPageView(
                 medias: medias,
                 entity: entity,
-                bottomHeight: bottomHeight.value,
                 initialIndex: initialIndex,
                 zoomController: zoomController,
                 isZoomed: isZoomed,
                 pageController: pageController,
               ),
               _MediaBottomOverlay(
-                eventMessage: eventMessage,
-                messageDetailsKey: messageDetailsKey.value,
+                messageEntity: entity,
                 messageMedias: medias,
+                currentIndex: currentPage.value,
               ),
             ],
           ),
@@ -177,59 +161,72 @@ class _MediaPagerCounter extends StatelessWidget {
 
 class _MediaBottomOverlay extends ConsumerWidget {
   const _MediaBottomOverlay({
-    required this.eventMessage,
-    required this.messageDetailsKey,
+    required this.messageEntity,
     required this.messageMedias,
+    required this.currentIndex,
   });
 
-  final EventMessage eventMessage;
-  final GlobalKey messageDetailsKey;
+  final ReplaceablePrivateDirectMessageEntity messageEntity;
   final List<MessageMediaTableData> messageMedias;
+  final int currentIndex;
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final userMetadata = ref.watch(userMetadataProvider(messageEntity.masterPubkey)).valueOrNull;
+
+    if (userMetadata == null) {
+      return const SizedBox.shrink();
+    }
+
+    final isVideo = messageEntity.data.visualMedias
+            .where((e) => e.url == messageMedias[currentIndex].remoteUrl)
+            .firstOrNull
+            ?.mediaType ==
+        MediaType.video;
+    final isMuted = ref.watch(globalMuteProvider);
+
     return PositionedDirectional(
       bottom: MediaQuery.paddingOf(context).bottom,
       start: 0,
       end: 0,
       child: ScreenSideOffset.small(
-        key: messageDetailsKey,
         child: Padding(
-          padding: EdgeInsetsDirectional.symmetric(vertical: 8.0.s),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
+          padding: EdgeInsetsDirectional.only(bottom: 20.0.s),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              if (eventMessage.content.isNotEmpty)
-                Padding(
-                  padding: EdgeInsetsDirectional.only(bottom: 24.0.s),
-                  child: Text(
-                    eventMessage.content,
-                    style: context.theme.appTextThemes.body2.copyWith(
+              Expanded(
+                child: ListItem.user(
+                  pubkey: messageEntity.masterPubkey,
+                  title: Text(
+                    userMetadata.data.displayName,
+                    style: context.theme.appTextThemes.subtitle3.copyWith(
+                      color: context.theme.appColors.onPrimaryAccent,
+                    ),
+                  ),
+                  subtitle: Text(
+                    prefixUsername(username: userMetadata.data.name, context: context),
+                    style: context.theme.appTextThemes.caption.copyWith(
                       color: context.theme.appColors.onPrimaryAccent,
                     ),
                   ),
                 ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  ChatMediaMetaData(
-                    eventMessage: eventMessage,
-                  ),
-                  GestureDetector(
-                    onTap: () {
-                      ref.read(selectedMessageProvider.notifier).selectedMessage = MediaItem(
-                        medias: messageMedias,
-                        eventMessage: eventMessage,
-                        contentDescription: context.i18n.common_media,
-                      );
-                      context.pop();
-                    },
-                    child: Assets.svg.iconChatReplymessage.icon(
-                      size: 20.0.s,
-                      color: context.theme.appColors.onPrimaryAccent,
-                    ),
-                  ),
-                ],
               ),
+              if (isVideo)
+                GestureDetector(
+                  onTap: () {
+                    HapticFeedback.lightImpact();
+                    ref.read(globalMuteProvider.notifier).toggle();
+                  },
+                  child: isMuted
+                      ? Assets.svg.iconChannelUnmute.icon(
+                          size: 24.0.s,
+                          color: context.theme.appColors.onPrimaryAccent,
+                        )
+                      : Assets.svg.iconChannelMute.icon(
+                          size: 24.0.s,
+                          color: context.theme.appColors.onPrimaryAccent,
+                        ),
+                ),
             ],
           ),
         ),

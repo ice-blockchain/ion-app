@@ -27,9 +27,11 @@ import 'package:ion/generated/assets.gen.dart';
 class DocumentMessage extends HookConsumerWidget {
   const DocumentMessage({
     required this.eventMessage,
+    this.onTapReply,
     super.key,
   });
 
+  final VoidCallback? onTapReply;
   final EventMessage eventMessage;
 
   @override
@@ -40,10 +42,13 @@ class DocumentMessage extends HookConsumerWidget {
 
     final isMe = ref.watch(isCurrentUserSelectorProvider(eventMessage.masterPubkey));
 
-    final messageMedia =
-        ref.watch(chatMediasProvider(eventMessageId: eventMessage.id)).valueOrNull?.firstOrNull;
+    final eventReference =
+        ReplaceablePrivateDirectMessageEntity.fromEventMessage(eventMessage).toEventReference();
 
-    final entity = PrivateDirectMessageEntity.fromEventMessage(eventMessage);
+    final messageMedia =
+        ref.watch(chatMediasProvider(eventReference: eventReference)).valueOrNull?.firstOrNull;
+
+    final entity = ReplaceablePrivateDirectMessageEntity.fromEventMessage(eventMessage);
     final mediaAttachment =
         messageMedia?.remoteUrl == null ? null : entity.data.media[messageMedia?.remoteUrl!];
 
@@ -99,7 +104,7 @@ class DocumentMessage extends HookConsumerWidget {
       ),
       child: Column(
         children: [
-          if (repliedMessageItem != null) ReplyMessage(messageItem, repliedMessageItem),
+          if (repliedMessageItem != null) ReplyMessage(messageItem, repliedMessageItem, onTapReply),
           GestureDetector(
             behavior: HitTestBehavior.opaque,
             onTap: () {

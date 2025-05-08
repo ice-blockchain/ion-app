@@ -28,12 +28,12 @@ class ConversationReadAllButton extends ConsumerWidget {
 
         await Future.wait(
           conversationsToManage.map((conversation) async {
-            if (conversation.latestMessage == null) {
-              return;
+            if (conversation.latestMessage != null) {
+              await (await ref.read(sendE2eeMessageServiceProvider.future)).sendMessageStatus(
+                status: MessageDeliveryStatus.read,
+                messageEventMessage: conversation.latestMessage!,
+              );
             }
-
-            await (await ref.read(sendE2eeMessageServiceProvider.future))
-                .sendMessageStatus(conversation.latestMessage!, MessageDeliveryStatus.read);
           }),
         );
 

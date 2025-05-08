@@ -45,7 +45,8 @@ class MoreContentView extends ConsumerWidget {
                 onGranted: () async {
                   final mediaFiles = await MediaPickerRoute(
                     maxSelection: 10,
-                    maxVideoDurationInSeconds: PrivateDirectMessageData.videoDurationLimitInSeconds,
+                    maxVideoDurationInSeconds:
+                        ReplaceablePrivateDirectMessageData.videoDurationLimitInSeconds,
                   ).push<List<MediaFile>>(context);
                   if (mediaFiles != null && mediaFiles.isNotEmpty && context.mounted) {
                     final convertedMediaFiles = await ref
@@ -68,7 +69,8 @@ class MoreContentView extends ConsumerWidget {
                 onGranted: () async {
                   final mediaFiles = await MediaPickerRoute(
                     maxSelection: 10,
-                    maxVideoDurationInSeconds: PrivateDirectMessageData.videoDurationLimitInSeconds,
+                    maxVideoDurationInSeconds:
+                        ReplaceablePrivateDirectMessageData.videoDurationLimitInSeconds,
                   ).push<List<MediaFile>>(context);
                   if (mediaFiles != null && mediaFiles.isNotEmpty && context.mounted) {
                     final convertedMediaFiles = await ref
@@ -123,7 +125,7 @@ class MoreContentView extends ConsumerWidget {
                   final firstFile = result?.files.first;
                   if (firstFile != null && context.mounted && firstFile.path != null) {
                     final mimeType = lookupMimeType(firstFile.path!);
-                    if (firstFile.size > PrivateDirectMessageData.fileMessageSizeLimit) {
+                    if (firstFile.size > ReplaceablePrivateDirectMessageData.fileMessageSizeLimit) {
                       unawaited(
                         showModalBottomSheet(
                           context: context,

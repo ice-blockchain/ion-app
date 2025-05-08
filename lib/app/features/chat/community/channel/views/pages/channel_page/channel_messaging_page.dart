@@ -148,6 +148,7 @@ class _ActionButton extends HookConsumerWidget {
                 communityId: communityId,
               );
         },
+        conversationId: communityId,
       );
     } else {
       return const _UnMuteButton();

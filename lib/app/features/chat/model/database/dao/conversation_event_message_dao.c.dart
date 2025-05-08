@@ -32,13 +32,21 @@ class ConversationEventMessageDao extends DatabaseAccessor<ChatDatabase>
       return;
     }
 
-    await into(db.eventMessageTable)
-        .insert(EventMessageRowClass.fromEventMessage(event), mode: InsertMode.insertOrReplace);
+    final eventReference = ReplaceablePrivateDirectMessageEntity.fromEventMessage(event)
+        .data
+        .toReplaceableEventReference(event.masterPubkey);
+
+    final dbModel = event.toChatDbModel(eventReference);
+
+    await into(db.eventMessageTable).insert(
+      dbModel,
+      mode: InsertMode.insertOrReplace,
+    );
 
     await into(db.conversationMessageTable).insert(
       ConversationMessageTableCompanion(
+        messageEventReference: Value(eventReference),
         conversationId: Value(conversationId),
-        eventMessageId: Value(event.id),
       ),
       mode: InsertMode.insertOrReplace,
     );
@@ -52,9 +60,7 @@ class ConversationEventMessageDao extends DatabaseAccessor<ChatDatabase>
       ..where((t) => t.kind.isIn(kinds))
       ..limit(1);
 
-    final row = await query.getSingleOrNull();
-
-    return row?.createdAt;
+    return (await query.getSingleOrNull())?.createdAt;
   }
 
   /// Get the creation date of the oldest event messages of specific kinds
@@ -70,8 +76,6 @@ class ConversationEventMessageDao extends DatabaseAccessor<ChatDatabase>
       ..orderBy([(t) => OrderingTerm.asc(t.createdAt)])
       ..limit(1);
 
-    final row = await query.getSingleOrNull();
-
-    return row?.createdAt;
+    return (await query.getSingleOrNull())?.createdAt;
   }
 }

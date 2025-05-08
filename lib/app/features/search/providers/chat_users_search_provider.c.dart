@@ -36,7 +36,7 @@ Future<List<(String, String)>?> chatUsersSearch(Ref ref, String query) async {
       [];
 
   final lastConversationEntities = lastConversationMessages
-      .map(PrivateDirectMessageEntity.fromEventMessage)
+      .map(ReplaceablePrivateDirectMessageEntity.fromEventMessage)
       .toList()
     ..sortBy((message) => message.createdAt);
 

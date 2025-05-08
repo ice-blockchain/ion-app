@@ -20,6 +20,7 @@ sealed class ChatMessageInfoItem with _$ChatMessageInfoItem {
   const factory ChatMessageInfoItem.text({
     required EventMessage eventMessage,
     required String contentDescription,
+    @Default(false) bool isStoryReply,
   }) = TextItem;
 
   @Implements<MessageInfo>()

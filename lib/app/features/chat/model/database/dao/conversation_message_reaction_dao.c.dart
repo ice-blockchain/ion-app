@@ -7,7 +7,7 @@ ConversationMessageReactionDao conversationMessageReactionDao(Ref ref) =>
     ConversationMessageReactionDao(ref.watch(chatDatabaseProvider));
 
 @DriftAccessor(
-  tables: [ReactionTable],
+  tables: [ReactionTable, ConversationMessageTable, EventMessageTable],
 )
 class ConversationMessageReactionDao extends DatabaseAccessor<ChatDatabase>
     with _$ConversationMessageReactionDaoMixin {
@@ -15,87 +15,42 @@ class ConversationMessageReactionDao extends DatabaseAccessor<ChatDatabase>
 
   Future<void> add({
     required Ref ref,
-    required String masterPubkey,
-    required String kind14EventId,
-    required EventMessage newReactionEvent,
+    required EventMessage reactionEvent,
   }) async {
+    final reactionEntity = PrivateMessageReactionEntity.fromEventMessage(reactionEvent);
     final eventMessageDao = ref.read(eventMessageDaoProvider);
 
-    final kind14EventMessage = await (select(db.eventMessageTable)
-          ..where((table) => table.id.equals(kind14EventId)))
-        .getSingleOrNull();
-
-    if (kind14EventMessage == null) return;
-
-    final existingReactionRow = await (select(reactionTable)
-          ..where((table) => table.content.equals(newReactionEvent.content))
-          ..where((table) => table.masterPubkey.equals(masterPubkey))
-          ..where((table) => table.kind14Id.equals(kind14EventId)))
-        .getSingleOrNull();
-
-    if (existingReactionRow == null) {
-      await eventMessageDao.add(newReactionEvent);
-      await into(reactionTable).insert(
-        ReactionTableCompanion(
-          id: Value(newReactionEvent.id),
-          kind14Id: Value(kind14EventId),
-          masterPubkey: Value(masterPubkey),
-          content: Value(newReactionEvent.content),
-        ),
-        mode: InsertMode.insertOrIgnore,
-      );
-    } else {
-      final previousReactionEvent = await (select(db.eventMessageTable)
-            ..where((table) => table.id.equals(existingReactionRow.id)))
-          .getSingleOrNull();
-
-      await eventMessageDao.add(newReactionEvent);
-
-      if (previousReactionEvent != null &&
-          previousReactionEvent.createdAt.isBefore(newReactionEvent.createdAt)) {
-        await (update(reactionTable)..where((table) => table.id.equals(existingReactionRow.id)))
-            .write(
-          ReactionTableCompanion(
-            id: Value(newReactionEvent.id),
-            isDeleted: const Value(false),
-          ),
-        );
-      }
-    }
+    await eventMessageDao.add(reactionEvent);
+    await into(reactionTable).insert(
+      ReactionTableCompanion.insert(
+        reactionEventReference: reactionEntity.toEventReference(),
+        messageEventReference: reactionEntity.data.reference,
+        masterPubkey: reactionEntity.masterPubkey,
+        content: reactionEntity.data.content,
+      ),
+      mode: InsertMode.insertOrIgnore,
+    );
   }
 
   Future<void> remove({
     required Ref ref,
-    required String reactionEventId,
-    required EventMessage deleteRequest,
+    required ImmutableEventReference reactionEventReference,
   }) async {
-    final eventMessageDao = ref.read(eventMessageDaoProvider);
-
-    await eventMessageDao.add(deleteRequest);
-
-    final existingReactionEvent = await (select(db.eventMessageTable)
-          ..where((table) => table.id.equals(reactionEventId)))
-        .getSingleOrNull();
-
-    final existingReactionRow = await (select(db.reactionTable)
-          ..where((table) => table.id.equals(reactionEventId)))
-        .getSingleOrNull();
-
-    if (existingReactionRow == null ||
-        existingReactionEvent == null ||
-        deleteRequest.createdAt.isBefore(existingReactionEvent.createdAt)) {
-      return;
-    }
-
-    await (update(reactionTable)..where((table) => table.id.equals(existingReactionRow.id))).write(
+    await (update(reactionTable)
+          ..where((table) => table.reactionEventReference.equalsValue(reactionEventReference)))
+        .write(
       const ReactionTableCompanion(isDeleted: Value(true)),
     );
   }
 
   Stream<List<MessageReactionGroup>> messageReactions(EventMessage kind14EventMessage) async* {
+    final eventReference =
+        ReplaceablePrivateDirectMessageEntity.fromEventMessage(kind14EventMessage)
+            .toEventReference();
+
     final existingRows = (select(reactionTable)
           ..where((table) => table.isDeleted.equals(false))
-          ..where((table) => table.kind14Id.equals(kind14EventMessage.id)))
+          ..where((table) => table.messageEventReference.equalsValue(eventReference)))
         .watch();
 
     yield* existingRows.asyncMap((rows) async {
@@ -103,7 +58,7 @@ class ConversationMessageReactionDao extends DatabaseAccessor<ChatDatabase>
 
       for (final row in rows) {
         final eventMessageDataRow = await (select(db.eventMessageTable)
-              ..where((table) => table.id.equals(row.id)))
+              ..where((table) => table.eventReference.equalsValue(row.reactionEventReference)))
             .getSingleOrNull();
 
         if (eventMessageDataRow != null) {
@@ -123,15 +78,30 @@ class ConversationMessageReactionDao extends DatabaseAccessor<ChatDatabase>
     });
   }
 
-  Stream<String?> storyReaction(String? kind14Id) async* {
-    if (kind14Id == null) {
+  Future<bool> isReactionExist({
+    required EventReference messageEventReference,
+    required String emoji,
+    required String masterPubkey,
+  }) async {
+    final row = await (select(reactionTable)
+          ..where((table) => table.isDeleted.equals(false))
+          ..where((table) => table.messageEventReference.equalsValue(messageEventReference))
+          ..where((table) => table.content.equals(emoji))
+          ..where((table) => table.masterPubkey.equals(masterPubkey)))
+        .get();
+
+    return row.isNotEmpty;
+  }
+
+  Stream<String?> storyReaction(EventReference? eventReference) async* {
+    if (eventReference == null) {
       yield null;
       return;
     }
 
     final stream = (select(reactionTable)
           ..where((table) => table.isDeleted.equals(false))
-          ..where((table) => table.kind14Id.equals(kind14Id)))
+          ..where((table) => table.messageEventReference.equalsValue(eventReference)))
         .watchSingleOrNull()
         .map((row) => row?.content);
 

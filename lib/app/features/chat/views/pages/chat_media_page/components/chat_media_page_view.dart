@@ -19,7 +19,6 @@ class ChatMediaPageView extends HookConsumerWidget {
   const ChatMediaPageView({
     required this.medias,
     required this.entity,
-    required this.bottomHeight,
     required this.initialIndex,
     required this.zoomController,
     required this.pageController,
@@ -28,8 +27,7 @@ class ChatMediaPageView extends HookConsumerWidget {
   });
 
   final List<MessageMediaTableData> medias;
-  final PrivateDirectMessageEntity entity;
-  final double bottomHeight;
+  final ReplaceablePrivateDirectMessageEntity entity;
   final int initialIndex;
   final ImageZoomController zoomController;
   final PageController pageController;
@@ -49,7 +47,6 @@ class ChatMediaPageView extends HookConsumerWidget {
                 entity.data.visualMedias.firstWhere((e) => e.url == medias[index].remoteUrl),
             entity: entity,
             zoomController: zoomController,
-            bottomHeight: bottomHeight,
           );
         },
       ),
@@ -63,14 +60,12 @@ class _ChatMediaItem extends HookConsumerWidget {
     required this.mediaAttachment,
     required this.entity,
     required this.zoomController,
-    required this.bottomHeight,
   });
 
   final MessageMediaTableData media;
   final MediaAttachment mediaAttachment;
-  final PrivateDirectMessageEntity entity;
+  final ReplaceablePrivateDirectMessageEntity entity;
   final ImageZoomController zoomController;
-  final double bottomHeight;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -106,7 +101,6 @@ class _ChatMediaItem extends HookConsumerWidget {
 
     return _ImagePreview(
       filePath: path,
-      bottomHeight: bottomHeight,
       zoomController: zoomController,
     );
   }
@@ -115,12 +109,10 @@ class _ChatMediaItem extends HookConsumerWidget {
 class _ImagePreview extends HookConsumerWidget {
   const _ImagePreview({
     required this.filePath,
-    required this.bottomHeight,
     required this.zoomController,
   });
 
   final String filePath;
-  final double bottomHeight;
   final ImageZoomController zoomController;
 
   @override
@@ -140,7 +132,7 @@ class _ImagePreview extends HookConsumerWidget {
           child: Container(
             padding: EdgeInsetsDirectional.only(
               top: MediaQuery.paddingOf(context).top,
-              bottom: bottomHeight + MediaQuery.paddingOf(context).bottom,
+              bottom: MediaQuery.paddingOf(context).bottom,
             ),
             child: Image.file(
               File(filePath),

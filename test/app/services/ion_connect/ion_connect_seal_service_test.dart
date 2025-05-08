@@ -26,8 +26,8 @@ void main() {
 
   group('IonConnectSealService', () {
     test('creates seal from rumor on sender side', () async {
-      final rumor = await PrivateDirectMessageData.fromRawContent('test')
-          .toEventMessage(senderSigner.publicKey);
+      final rumor = await ReplaceablePrivateDirectMessageData.fromRawContent('test')
+          .toEventMessage(senderSigner);
 
       final seal = await sealService.createSeal(
         rumor,
@@ -43,8 +43,8 @@ void main() {
     });
 
     test('decodes seal back to original event on senders side', () async {
-      final rumor = await PrivateDirectMessageData.fromRawContent('test')
-          .toEventMessage(senderSigner.publicKey);
+      final rumor = await ReplaceablePrivateDirectMessageData.fromRawContent('test')
+          .toEventMessage(senderSigner);
 
       final seal = await sealService.createSeal(
         rumor,
@@ -58,14 +58,14 @@ void main() {
         senderSigner.privateKey,
       );
 
-      expect(decodedSeal.kind, equals(14));
+      expect(decodedSeal.kind, equals(ReplaceablePrivateDirectMessageEntity.kind));
       expect(decodedSeal.content, equals(rumor.content));
       expect(decodedSeal.tags, equals(rumor.tags));
     });
 
     test('decodes seal back to original event on receivers side', () async {
-      final rumor = await PrivateDirectMessageData.fromRawContent('test')
-          .toEventMessage(senderSigner.publicKey);
+      final rumor = await ReplaceablePrivateDirectMessageData.fromRawContent('test')
+          .toEventMessage(senderSigner);
 
       final seal = await sealService.createSeal(
         rumor,
@@ -79,7 +79,7 @@ void main() {
         receiverSigner.privateKey,
       );
 
-      expect(decodedSeal.kind, equals(14));
+      expect(decodedSeal.kind, equals(ReplaceablePrivateDirectMessageEntity.kind));
       expect(decodedSeal.content, equals(rumor.content));
       expect(decodedSeal.tags, equals(rumor.tags));
     });

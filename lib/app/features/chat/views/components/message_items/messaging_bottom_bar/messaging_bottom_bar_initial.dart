@@ -111,7 +111,7 @@ class BottomBarInitialView extends HookConsumerWidget {
                   onChanged: onTextChanged,
                   maxLines: 5,
                   minLines: 1,
-                  textInputAction: TextInputAction.newline,
+                  textCapitalization: TextCapitalization.sentences,
                   decoration: InputDecoration(
                     isDense: true,
                     contentPadding: EdgeInsets.symmetric(
@@ -140,7 +140,7 @@ class BottomBarInitialView extends HookConsumerWidget {
                     final mediaFiles = await MediaPickerRoute(
                       maxSelection: 10,
                       maxVideoDurationInSeconds:
-                          PrivateDirectMessageData.videoDurationLimitInSeconds,
+                          ReplaceablePrivateDirectMessageData.videoDurationLimitInSeconds,
                     ).push<List<MediaFile>>(context);
                     if (mediaFiles != null && mediaFiles.isNotEmpty && context.mounted) {
                       final convertedMediaFiles = await ref

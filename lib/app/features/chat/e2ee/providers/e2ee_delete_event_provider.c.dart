@@ -6,18 +6,14 @@ import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/auth/providers/auth_provider.c.dart';
 import 'package:ion/app/features/chat/e2ee/model/conversation_to_delete.c.dart';
 import 'package:ion/app/features/chat/e2ee/model/entities/private_direct_message_data.c.dart';
+import 'package:ion/app/features/chat/e2ee/model/entities/private_message_reaction_data.c.dart';
+import 'package:ion/app/features/chat/e2ee/providers/send_chat_message/send_e2ee_chat_message_service.c.dart';
 import 'package:ion/app/features/chat/model/database/chat_database.c.dart';
 import 'package:ion/app/features/chat/providers/conversation_pubkeys_provider.c.dart';
-import 'package:ion/app/features/core/providers/env_provider.c.dart';
 import 'package:ion/app/features/ion_connect/ion_connect.dart';
-import 'package:ion/app/features/ion_connect/model/action_source.c.dart';
 import 'package:ion/app/features/ion_connect/model/deletion_request.c.dart';
-import 'package:ion/app/features/ion_connect/model/entity_expiration.c.dart';
 import 'package:ion/app/features/ion_connect/model/event_reference.c.dart';
 import 'package:ion/app/features/ion_connect/providers/ion_connect_event_signer_provider.c.dart';
-import 'package:ion/app/features/ion_connect/providers/ion_connect_notifier.c.dart';
-import 'package:ion/app/services/ion_connect/ion_connect_gift_wrap_service.c.dart';
-import 'package:ion/app/services/ion_connect/ion_connect_seal_service.c.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'e2ee_delete_event_provider.c.g.dart';
@@ -43,8 +39,8 @@ Future<void> e2eeDeleteMessage(
 }) async {
   await _deleteMessages(
     ref: ref,
-    messageEvents: messageEvents,
     forEveryone: forEveryone,
+    messageEvents: messageEvents,
   );
 }
 
@@ -89,78 +85,69 @@ Future<void> _deleteReaction({
   required List<String> participantsMasterPubkeys,
 }) async {
   final currentUserMasterPubkey = ref.watch(currentPubkeySelectorProvider);
-  final signer = await ref.watch(currentUserIonConnectEventSignerProvider.future);
+  final eventSigner = await ref.watch(currentUserIonConnectEventSignerProvider.future);
 
-  final ionConnectNotifier = ref.watch(ionConnectNotifierProvider.notifier);
   final conversationPubkeysNotifier = ref.watch(conversationPubkeysProvider.notifier);
 
-  if (signer == null) {
+  if (eventSigner == null) {
     throw EventSignerNotFoundException();
   }
 
   if (currentUserMasterPubkey == null) {
     throw UserMasterPubkeyNotFoundException();
-  }
-
-  if (reactionEvent.pubkey != signer.publicKey) {
-    throw PubkeysDoNotMatchException();
   }
 
   final deleteRequest = DeletionRequest(
     events: [
       EventToDelete(
         eventReference: ImmutableEventReference(
-          pubkey: reactionEvent.masterPubkey,
           eventId: reactionEvent.id,
-          kind: reactionEvent.kind,
+          pubkey: reactionEvent.masterPubkey,
+          kind: PrivateMessageReactionEntity.kind,
         ),
       ),
     ],
   );
 
-  final eventMessage = await deleteRequest.toEventMessage(signer);
+  final eventMessage = await deleteRequest.toEventMessage(
+    NoPrivateSigner(eventSigner.publicKey),
+    masterPubkey: currentUserMasterPubkey,
+  );
 
   await Future.wait(
     participantsMasterPubkeys.map((masterPubkey) async {
-      final currentUser = currentUserMasterPubkey == masterPubkey;
-
       final participantsKeysMap =
           await conversationPubkeysNotifier.fetchUsersKeys(participantsMasterPubkeys);
 
-      final pubkey = participantsKeysMap[masterPubkey];
+      final pubkeys = participantsKeysMap[masterPubkey];
 
-      if (pubkey == null) {
+      if (pubkeys == null) {
         throw UserPubkeyNotFoundException(masterPubkey);
       }
-      final giftWrap = await _createGiftWrap(
-        ref: ref,
-        signer: signer,
-        eventMessage: eventMessage,
-        receiverMasterPubkey: masterPubkey,
-        receiverPubkey: currentUser ? signer.publicKey : pubkey,
-      );
-
-      await ionConnectNotifier.sendEvent(
-        giftWrap,
-        cache: false,
-        actionSource: ActionSourceUserChat(masterPubkey, anonymous: true),
-      );
+      for (final pubkey in pubkeys) {
+        await ref.read(sendE2eeChatMessageServiceProvider).sendWrappedMessage(
+              eventSigner: eventSigner,
+              masterPubkey: masterPubkey,
+              eventMessage: eventMessage,
+              wrappedKinds: [DeletionRequestEntity.kind.toString()],
+              pubkey: pubkey,
+            );
+      }
     }),
   );
 }
 
 Future<void> _deleteMessages({
   required Ref ref,
-  required List<EventMessage> messageEvents,
   required bool forEveryone,
+  required List<EventMessage> messageEvents,
 }) async {
   final currentUserMasterPubkey = ref.watch(currentPubkeySelectorProvider);
-  final signer = await ref.watch(currentUserIonConnectEventSignerProvider.future);
+  final eventSigner = await ref.watch(currentUserIonConnectEventSignerProvider.future);
 
-  final ionConnectNotifier = ref.watch(ionConnectNotifierProvider.notifier);
   final conversationPubkeysNotifier = ref.watch(conversationPubkeysProvider.notifier);
 
-  if (signer == null) {
+  if (eventSigner == null) {
     throw EventSignerNotFoundException();
   }
 
@@ -168,83 +155,81 @@ Future<void> _deleteMessages({
     throw UserMasterPubkeyNotFoundException();
   }
 
-  if (messageEvents.any((event) => event.pubkey != signer.publicKey)) {
-    throw PubkeysDoNotMatchException();
-  }
-
-  final participantsMasterPubkeys = forEveryone
-      ? PrivateDirectMessageEntity.fromEventMessage(messageEvents.first).allPubkeys
-      : [currentUserMasterPubkey];
+  final participantsMasterPubkeys =
+      forEveryone ? messageEvents.first.participantsMasterPubkeys : [currentUserMasterPubkey];
 
   final deleteRequest = DeletionRequest(
     events: messageEvents
-        .map(
-          (event) => EventToDelete(
-            eventReference: ImmutableEventReference(
-              pubkey: event.masterPubkey,
-              eventId: event.id,
-              kind: event.kind,
-            ),
-          ),
-        )
+        .map((event) {
+          final entity = ReplaceablePrivateDirectMessageEntity.fromEventMessage(event);
+
+          if (entity.data.quotedEvent != null) {
+            return [
+              EventToDelete(eventReference: entity.data.quotedEvent!.eventReference),
+              EventToDelete(eventReference: entity.toEventReference()),
+            ];
+          }
+
+          return [EventToDelete(eventReference: entity.toEventReference())];
+        })
+        .expand((element) => element)
         .toList(),
   );
 
-  final eventMessage = await deleteRequest.toEventMessage(signer);
+  final eventMessage = await deleteRequest.toEventMessage(
+    NoPrivateSigner(eventSigner.publicKey),
+    masterPubkey: currentUserMasterPubkey,
+  );
 
   await Future.wait(
     participantsMasterPubkeys.map((masterPubkey) async {
-      final currentUser = currentUserMasterPubkey == masterPubkey;
-
       final participantsKeysMap =
           await conversationPubkeysNotifier.fetchUsersKeys(participantsMasterPubkeys);
 
-      final pubkey = participantsKeysMap[masterPubkey];
+      final pubkeys = participantsKeysMap[masterPubkey];
 
-      if (pubkey == null) {
+      if (pubkeys == null) {
         throw UserPubkeyNotFoundException(masterPubkey);
       }
-      final giftWrap = await _createGiftWrap(
-        ref: ref,
-        signer: signer,
-        eventMessage: eventMessage,
-        receiverMasterPubkey: masterPubkey,
-        receiverPubkey: currentUser ? signer.publicKey : pubkey,
-      );
 
-      await ionConnectNotifier.sendEvent(
-        giftWrap,
-        cache: false,
-        actionSource: ActionSourceUserChat(masterPubkey, anonymous: true),
-      );
+      for (final pubkey in pubkeys) {
+        await ref.read(sendE2eeChatMessageServiceProvider).sendWrappedMessage(
+              eventSigner: eventSigner,
+              masterPubkey: masterPubkey,
+              eventMessage: eventMessage,
+              wrappedKinds: [DeletionRequestEntity.kind.toString()],
+              pubkey: pubkey,
+            );
+      }
     }),
   );
 }
 
 Future<void> _deleteConversations({
   required Ref ref,
-  required List<String> conversationIds,
   required bool forEveryone,
+  required List<String> conversationIds,
 }) async {
   final currentUserMasterPubkey = ref.watch(currentPubkeySelectorProvider);
-  final signer = await ref.watch(currentUserIonConnectEventSignerProvider.future);
+  final eventSigner = await ref.watch(currentUserIonConnectEventSignerProvider.future);
 
-  final ionConnectNotifier = ref.watch(ionConnectNotifierProvider.notifier);
   final conversationPubkeysNotifier = ref.watch(conversationPubkeysProvider.notifier);
-
-  if (signer == null) {
-    throw EventSignerNotFoundException();
-  }
 
   if (currentUserMasterPubkey == null) {
     throw UserMasterPubkeyNotFoundException();
   }
 
-  final deleteRequest = DeletionRequest(
-    events: conversationIds.map(ConversationToDelete.new).toList(),
-  );
+  if (eventSigner == null) {
+    throw EventSignerNotFoundException();
+  }
 
-  final eventMessage = await deleteRequest.toEventMessage(signer);
+  final deleteRequest =
+      DeletionRequest(events: conversationIds.map(ConversationToDelete.new).toList());
+
+  final eventMessage = await deleteRequest.toEventMessage(
+    NoPrivateSigner(eventSigner.publicKey),
+    masterPubkey: currentUserMasterPubkey,
+  );
 
   await Future.wait(
     conversationIds.map(
@@ -255,66 +240,27 @@ Future<void> _deleteConversations({
 
         return Future.wait(
           participantsMasterPubkeys.map((masterPubkey) async {
-            final currentUser = currentUserMasterPubkey == masterPubkey;
-
             final participantsKeysMap =
                 await conversationPubkeysNotifier.fetchUsersKeys(participantsMasterPubkeys);
 
-            final pubkey = participantsKeysMap[masterPubkey];
+            final pubkeys = participantsKeysMap[masterPubkey];
 
-            if (pubkey == null) {
+            if (pubkeys == null) {
               throw UserPubkeyNotFoundException(masterPubkey);
             }
-            final giftWrap = await _createGiftWrap(
-              ref: ref,
-              signer: signer,
-              eventMessage: eventMessage,
-              receiverMasterPubkey: masterPubkey,
-              receiverPubkey: currentUser ? signer.publicKey : pubkey,
-            );
 
-            await ionConnectNotifier.sendEvent(
-              giftWrap,
-              cache: false,
-              actionSource: ActionSourceUserChat(masterPubkey, anonymous: true),
-            );
+            for (final pubkey in pubkeys) {
+              await ref.read(sendE2eeChatMessageServiceProvider).sendWrappedMessage(
+                    eventSigner: eventSigner,
+                    masterPubkey: masterPubkey,
+                    eventMessage: eventMessage,
+                    wrappedKinds: [DeletionRequestEntity.kind.toString()],
+                    pubkey: pubkey,
+                  );
+            }
           }),
         );
       },
     ),
   );
-}
-
-Future<EventMessage> _createGiftWrap({
-  required Ref ref,
-  required String receiverPubkey,
-  required String receiverMasterPubkey,
-  required EventSigner signer,
-  required EventMessage eventMessage,
-}) async {
-  final env = ref.read(envProvider.notifier);
-  final sealService = await ref.read(ionConnectSealServiceProvider.future);
-  final wrapService = await ref.read(ionConnectGiftWrapServiceProvider.future);
-
-  final expirationTag = EntityExpiration(
-    value: DateTime.now().add(
-      Duration(hours: env.get<int>(EnvVariable.GIFT_WRAP_EXPIRATION_HOURS)),
-    ),
-  ).toTag();
-
-  final seal = await sealService.createSeal(
-    eventMessage,
-    signer,
-    receiverPubkey,
-  );
-
-  final wrap = await wrapService.createWrap(
-    event: seal,
-    expirationTag: expirationTag,
-    receiverPubkey: receiverPubkey,
-    contentKinds: [DeletionRequestEntity.kind.toString()],
-    receiverMasterPubkey: receiverMasterPubkey,
-  );
-
-  return wrap;
 }

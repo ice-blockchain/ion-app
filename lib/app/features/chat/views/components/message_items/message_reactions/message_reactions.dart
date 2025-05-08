@@ -59,12 +59,11 @@ class MessageReactions extends ConsumerWidget {
                       onTap: () {
                         if (isCurrentUserHasReaction) {
                           final messageEntity =
-                              PrivateDirectMessageEntity.fromEventMessage(eventMessage);
+                              ReplaceablePrivateDirectMessageEntity.fromEventMessage(eventMessage);
 
                           final userReactionEventMessage = reactionGroup.eventMessages.firstWhere(
                             (e) => e.masterPubkey == currentMasterPubkey,
                           );
-
                           ref.read(
                             e2eeDeleteReactionProvider(
                               reactionEvent: userReactionEventMessage,

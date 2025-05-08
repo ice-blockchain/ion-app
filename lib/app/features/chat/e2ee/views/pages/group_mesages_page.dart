@@ -52,13 +52,15 @@ class GroupMessagesPage extends HookConsumerWidget {
             _Header(lastMessage: lastMessage),
             _MessagesList(conversationId: conversationId),
             MessagingBottomBar(
+              conversationId: conversationId,
               onSubmitted: ({content, mediaFiles}) async {
                 final currentPubkey = ref.read(currentPubkeySelectorProvider);
                 if (currentPubkey == null) {
                   throw UserMasterPubkeyNotFoundException();
                 }
 
-                final privateMessageEntity = PrivateDirectMessageData.fromEventMessage(lastMessage);
+                final privateMessageEntity =
+                    ReplaceablePrivateDirectMessageData.fromEventMessage(lastMessage);
 
                 final conversationMessageManagementService =
                     ref.read(sendE2eeChatMessageServiceProvider);
@@ -89,7 +91,7 @@ class _Header extends HookConsumerWidget {
   final EventMessage lastMessage;
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final entity = PrivateDirectMessageData.fromEventMessage(lastMessage);
+    final entity = ReplaceablePrivateDirectMessageData.fromEventMessage(lastMessage);
     final groupImageFile = useFuture(
       ref.watch(mediaEncryptionServiceProvider).retrieveEncryptedMedia(
             entity.primaryMedia!,

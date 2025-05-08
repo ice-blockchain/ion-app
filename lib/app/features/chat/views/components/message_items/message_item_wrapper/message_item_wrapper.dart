@@ -5,6 +5,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/extensions/extensions.dart';
+import 'package:ion/app/features/auth/providers/auth_provider.c.dart';
 import 'package:ion/app/features/chat/e2ee/model/entities/private_direct_message_data.c.dart';
 import 'package:ion/app/features/chat/e2ee/providers/chat_medias_provider.c.dart';
 import 'package:ion/app/features/chat/e2ee/providers/send_e2ee_message_provider.c.dart';
@@ -41,8 +42,15 @@ class MessageItemWrapper extends HookConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final messageItemKey = useMemoized(GlobalKey.new);
 
-    final deliveryStatus =
-        ref.watch(conversationMessageDataDaoProvider).messageStatus(messageItem.eventMessage.id);
+    final currentUserMasterPubkey = ref.watch(currentPubkeySelectorProvider);
+    final eventReference =
+        ReplaceablePrivateDirectMessageEntity.fromEventMessage(messageItem.eventMessage)
+            .toEventReference();
+
+    final deliveryStatus = ref.watch(conversationMessageDataDaoProvider).messageStatus(
+          eventReference: eventReference,
+          currentUserMasterPubkey: currentUserMasterPubkey!,
+        );
 
     final showReactDialog = useCallback(
       () async {
@@ -66,11 +74,23 @@ class MessageItemWrapper extends HookConsumerWidget {
           );
 
           if (emoji != null) {
-            final e2eeMessageService = await ref.read(sendE2eeMessageServiceProvider.future);
-            await e2eeMessageService.sendReaction(
-              content: emoji,
-              kind14Rumor: messageItem.eventMessage,
-            );
+            final messageEventReference =
+                ReplaceablePrivateDirectMessageEntity.fromEventMessage(messageItem.eventMessage)
+                    .toEventReference();
+            final currentUserMasterPubkey = ref.watch(currentPubkeySelectorProvider);
+            final isExist = await ref.read(conversationMessageReactionDaoProvider).isReactionExist(
+                  messageEventReference: messageEventReference,
+                  emoji: emoji,
+                  masterPubkey: currentUserMasterPubkey!,
+                );
+
+            if (!isExist) {
+              final e2eeMessageService = await ref.read(sendE2eeMessageServiceProvider.future);
+              await e2eeMessageService.sendReaction(
+                content: emoji,
+                kind14Rumor: messageItem.eventMessage,
+              );
+            }
           }
 
           await subscription.cancel();
@@ -83,7 +103,7 @@ class MessageItemWrapper extends HookConsumerWidget {
 
     return StreamBuilder<MessageDeliveryStatus>(
       stream: deliveryStatus,
-      initialData: MessageDeliveryStatus.deleted,
+      initialData: MessageDeliveryStatus.created,
       builder: (context, snapshot) {
         if (snapshot.hasData && snapshot.data == MessageDeliveryStatus.deleted) {
           return const SizedBox.shrink();
@@ -150,7 +170,7 @@ ChatMessageInfoItem? getRepliedMessageListItem({
     return null;
   }
 
-  final repliedEntity = PrivateDirectMessageEntity.fromEventMessage(repliedEventMessage);
+  final repliedEntity = ReplaceablePrivateDirectMessageEntity.fromEventMessage(repliedEventMessage);
 
   if (repliedEntity.data.messageType == MessageType.profile) {
     final profilePubkey = EventReference.fromEncoded(repliedEntity.data.content).pubkey;
@@ -161,8 +181,10 @@ ChatMessageInfoItem? getRepliedMessageListItem({
       contentDescription: userMetadata?.data.name ?? repliedEntity.data.content,
     );
   } else if (repliedEntity.data.messageType == MessageType.visualMedia) {
-    final messageMedias =
-        ref.watch(chatMediasProvider(eventMessageId: repliedEventMessage.id)).valueOrNull ?? [];
+    final messageMedias = ref
+            .watch(chatMediasProvider(eventReference: repliedEntity.toEventReference()))
+            .valueOrNull ??
+        [];
 
     return MediaItem(
       medias: messageMedias,

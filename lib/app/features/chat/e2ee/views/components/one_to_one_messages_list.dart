@@ -1,5 +1,6 @@
 // SPDX-License-Identifier: ice License 1.0
 
+import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
@@ -12,80 +13,123 @@ import 'package:ion/app/features/chat/views/components/message_items/message_typ
 import 'package:ion/app/features/chat/views/components/message_items/message_types/story_reply_message/story_reply_message.dart';
 import 'package:ion/app/features/chat/views/components/message_items/message_types/visual_media_message/visual_media_message.dart';
 import 'package:ion/app/features/ion_connect/ion_connect.dart';
+import 'package:ion/app/hooks/use_on_init.dart';
+import 'package:scrollable_positioned_list/scrollable_positioned_list.dart';
 
 class OneToOneMessageList extends HookConsumerWidget {
-  const OneToOneMessageList(
-    this.messages, {
-    super.key,
-    this.displayAuthorsIncomingMessages = false,
-  });
+  const OneToOneMessageList(this.messages, {super.key});
 
-  final bool displayAuthorsIncomingMessages;
   final Map<DateTime, List<EventMessage>> messages;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final scrollController = useScrollController();
+    final allMessages = messages.values.expand((e) => e).toList()..sortBy((e) => e.publishedAt);
+    final itemScrollController = useMemoized(ItemScrollController.new);
+
+    useOnInit(() {
+      if (allMessages.isNotEmpty && itemScrollController.isAttached) {
+        itemScrollController.scrollTo(
+          index: allMessages.length,
+          duration: const Duration(milliseconds: 300),
+        );
+      }
+    });
+
+    useEffect(
+      () {
+        if (itemScrollController.isAttached) {
+          itemScrollController.scrollTo(
+            index: allMessages.length,
+            duration: const Duration(milliseconds: 300),
+          );
+        }
+        return null;
+      },
+      [allMessages],
+    );
+
+    final onTapReply = useCallback(
+      (ReplaceablePrivateDirectMessageEntity entity) {
+        final replyMessage = entity.data.relatedEvents?.singleOrNull;
+
+        if (replyMessage != null) {
+          final replyMessageIndex = allMessages.indexWhere(
+            (element) => element.sharedId == replyMessage.eventReference.dTag,
+          );
+          itemScrollController.scrollTo(
+            index: replyMessageIndex,
+            duration: const Duration(milliseconds: 300),
+          );
+        }
+      },
+      [allMessages, itemScrollController],
+    );
 
     return ColoredBox(
       color: context.theme.appColors.primaryBackground,
       child: ScreenSideOffset.small(
-        child: CustomScrollView(
-          controller: scrollController,
+        child: ScrollablePositionedList.builder(
           physics: const ClampingScrollPhysics(),
-          reverse: true,
-          slivers: [
-            for (final entry in messages.entries) ...[
-              SliverList(
-                delegate: SliverChildBuilderDelegate(
-                  findChildIndexCallback: (key) {
-                    final valueKey = key as ValueKey<String>;
-                    return entry.value.indexWhere((e) => e.id == valueKey.value);
-                  },
-                  (context, msgIndex) {
-                    final message = entry.value[msgIndex];
-                    final entity = PrivateDirectMessageEntity.fromEventMessage(message);
+          itemCount: allMessages.length,
+          itemScrollController: itemScrollController,
+          itemBuilder: (context, index) {
+            final message = allMessages[index];
+            final entity = ReplaceablePrivateDirectMessageEntity.fromEventMessage(message);
+            final displayDate = messages.entries
+                .singleWhereOrNull((entry) => entry.value.last.id == message.id)
+                ?.key;
 
-                    final previousMessage = msgIndex > 0 ? entry.value[msgIndex - 1] : null;
-                    final isLastMessage = msgIndex == 0;
+            final previousMessage = index > 0 ? allMessages[index - 1] : null;
+            final isLastMessage = index == 0;
 
-                    final isLastMessageFromAuthor =
-                        previousMessage == null || previousMessage.pubkey == message.pubkey;
+            final isLastMessageFromAuthor =
+                previousMessage == null || previousMessage.pubkey == message.pubkey;
 
-                    return Padding(
-                      key: ValueKey(message.id),
-                      padding: EdgeInsetsDirectional.only(
-                        bottom: isLastMessage
-                            ? 20.0.s
-                            : isLastMessageFromAuthor
-                                ? 8.0.s
-                                : 16.0.s,
-                      ),
-                      child: switch (entity.data.messageType) {
-                        MessageType.text => TextMessage(eventMessage: message),
-                        MessageType.emoji => EmojiMessage(eventMessage: message),
-                        MessageType.audio => AudioMessage(eventMessage: message),
-                        MessageType.document => DocumentMessage(eventMessage: message),
-                        MessageType.requestFunds => MoneyMessage(eventMessage: message),
-                        MessageType.profile => ProfileShareMessage(eventMessage: message),
-                        MessageType.storyReply => StoryReplyMessage(eventMessage: message),
-                        MessageType.visualMedia => VisualMediaMessage(eventMessage: message),
-                      },
-                    );
-                  },
-                  childCount: entry.value.length,
-                ),
-              ),
-              SliverToBoxAdapter(
-                child: Center(
-                  child: Padding(
-                    padding: EdgeInsets.symmetric(vertical: 12.0.s),
-                    child: ChatDateHeaderText(date: entry.key),
+            return Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                if (displayDate != null)
+                  Center(
+                    child: Padding(
+                      padding: EdgeInsets.symmetric(vertical: 12.0.s),
+                      child: ChatDateHeaderText(date: displayDate),
+                    ),
                   ),
+                Padding(
+                  padding: EdgeInsetsDirectional.only(
+                    bottom: isLastMessage
+                        ? 20.0.s
+                        : isLastMessageFromAuthor
+                            ? 8.0.s
+                            : 16.0.s,
+                  ),
+                  child: switch (entity.data.messageType) {
+                    MessageType.text => TextMessage(
+                        eventMessage: message,
+                        onTapReply: () => onTapReply(entity),
+                      ),
+                    MessageType.storyReply => StoryReplyMessage(eventMessage: message),
+                    MessageType.profile => ProfileShareMessage(
+                        eventMessage: message,
+                        onTapReply: () => onTapReply(entity),
+                      ),
+                    MessageType.visualMedia => VisualMediaMessage(
+                        eventMessage: message,
+                        onTapReply: () => onTapReply(entity),
+                      ),
+                    MessageType.requestFunds =>
+                      MoneyMessage(eventMessage: message, onTapReply: () => onTapReply(entity)),
+                    MessageType.emoji =>
+                      EmojiMessage(eventMessage: message, onTapReply: () => onTapReply(entity)),
+                    MessageType.audio =>
+                      AudioMessage(eventMessage: message, onTapReply: () => onTapReply(entity)),
+                    MessageType.document =>
+                      DocumentMessage(eventMessage: message, onTapReply: () => onTapReply(entity)),
+                  },
                 ),
-              ),
-            ],
-          ],
+              ],
+            );
+          },
         ),
       ),
     );

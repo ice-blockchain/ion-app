@@ -35,6 +35,8 @@ class ActionButton extends HookConsumerWidget {
       await onSubmitted?.call();
     });
 
+    final isRecordingCancelled = useRef<bool>(false);
+
     Widget subButton() {
       switch (bottomBarState) {
         case MessagingBottomBarState.hasText:
@@ -62,13 +64,13 @@ class ActionButton extends HookConsumerWidget {
             final status = ref.read(
               permissionsProvider.select((value) => value.permissions[Permission.microphone]),
             );
-
             if (status == PermissionStatus.granted) {
-              unawaited(
-                recorderController.record(
-                  bitRate: 44100,
-                ),
-              );
+              isRecordingCancelled.value = false;
+              await recorderController.record(bitRate: 44100);
+              if (isRecordingCancelled.value) {
+                await recorderController.stop();
+                return;
+              }
               ref.read(messagingBottomBarActiveStateProvider.notifier).setVoice();
               unawaited(HapticFeedback.lightImpact());
             } else {
@@ -93,6 +95,8 @@ class ActionButton extends HookConsumerWidget {
             } else {
               ref.read(messagingBottomBarActiveStateProvider.notifier).setVoicePaused();
             }
+          } else {
+            isRecordingCancelled.value = true;
           }
         },
         child: AbsorbPointer(

@@ -103,7 +103,7 @@ dependencies:
   nostr_dart:
     git:
       url: https://github.com/ice-blockchain/nostr-dart
-      ref: 0.0.32
+      ref: 0.0.33
   ogp_data_extract: ^0.1.4
   package_info_plus: ^8.3.0
   palette_generator: ^0.3.3+5
@@ -116,6 +116,7 @@ dependencies:
   qr_code_scanner_plus: ^2.0.10+1
   qr_flutter: ^4.1.0
   riverpod_annotation: ^2.6.1
+  scrollable_positioned_list: ^0.3.8
   sensors_plus: ^6.1.1
   share_plus: ^10.0.2
   shared_preferences: ^2.3.5

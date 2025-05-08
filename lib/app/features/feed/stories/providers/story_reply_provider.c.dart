@@ -3,7 +3,9 @@
 import 'dart:convert';
 
 import 'package:ion/app/exceptions/exceptions.dart';
+import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/auth/providers/auth_provider.c.dart';
+import 'package:ion/app/features/chat/community/models/entities/tags/conversation_identifier.c.dart';
 import 'package:ion/app/features/chat/e2ee/providers/send_chat_message/send_e2ee_chat_message_service.c.dart';
 import 'package:ion/app/features/chat/e2ee/providers/send_e2ee_message_provider.c.dart';
 import 'package:ion/app/features/chat/providers/conversation_pubkeys_provider.c.dart';
@@ -13,8 +15,8 @@ import 'package:ion/app/features/feed/data/models/generic_repost.c.dart';
 import 'package:ion/app/features/ion_connect/ion_connect.dart';
 import 'package:ion/app/features/ion_connect/model/event_reference.c.dart';
 import 'package:ion/app/features/ion_connect/model/quoted_event.c.dart';
+import 'package:ion/app/features/ion_connect/model/related_pubkey.c.dart';
 import 'package:ion/app/features/ion_connect/providers/ion_connect_event_signer_provider.c.dart';
-import 'package:ion/app/features/user/providers/user_metadata_provider.c.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'story_reply_provider.c.g.dart';
@@ -57,9 +59,10 @@ class StoryReply extends _$StoryReply {
       final storyAsContent = jsonEncode(storyEventMessage.toJson().last);
 
       final tags = [
-        ['h', conversationId],
-        ['k', ModifiablePostEntity.kind.toString()],
         ['b', currentUserMasterPubkey],
+        ['k', ModifiablePostEntity.kind.toString()],
+        [RelatedPubkey.tagName, eventSigner.publicKey],
+        [ConversationIdentifier.tagName, conversationId],
         story.toEventReference().toTag(),
       ];
 
@@ -86,37 +89,42 @@ class StoryReply extends _$StoryReply {
         currentUserMasterPubkey,
       ];
 
-      await ref
-          .read(conversationPubkeysProvider.notifier)
-          .fetchUsersKeys(participantsMasterPubkeys);
+      final conversationPubkeysNotifier = ref.read(conversationPubkeysProvider.notifier);
 
       for (final masterPubkey in participantsMasterPubkeys) {
-        final pubkey = ref.read(userMetadataProvider(masterPubkey)).valueOrNull?.pubkey;
+        final participantsKeysMap =
+            await conversationPubkeysNotifier.fetchUsersKeys(participantsMasterPubkeys);
+        final pubkeys = participantsKeysMap[masterPubkey];
 
-        if (pubkey == null) {
+        if (pubkeys == null) {
           throw UserPubkeyNotFoundException(masterPubkey);
         }
 
-        await ref.read(sendE2eeChatMessageServiceProvider).sendWrappedMessage(
-          pubkey: pubkey,
-          eventSigner: eventSigner,
-          masterPubkey: masterPubkey,
-          eventMessage: kind16Rumor,
-          wrappedKinds: [
-            GenericRepostEntity.kind.toString(),
-            ModifiablePostEntity.kind.toString(),
-          ],
-        );
+        for (final pubkey in pubkeys) {
+          await ref.read(sendE2eeChatMessageServiceProvider).sendWrappedMessage(
+            pubkey: pubkey,
+            eventSigner: eventSigner,
+            masterPubkey: masterPubkey,
+            eventMessage: kind16Rumor,
+            wrappedKinds: [
+              GenericRepostEntity.kind.toString(),
+              ModifiablePostEntity.kind.toString(),
+            ],
+          );
+        }
       }
 
       final sentKind14EventMessage = await ref.read(sendE2eeChatMessageServiceProvider).sendMessage(
         content: replyText ?? '',
         conversationId: conversationId,
         participantsMasterPubkeys: participantsMasterPubkeys,
-        referencePostTag: QuotedImmutableEvent(
-          eventReference:
-              ImmutableEventReference(eventId: kind16Rumor.id, pubkey: kind16Rumor.pubkey),
-        ).toTag(),
+        storyReply: QuotedImmutableEvent(
+          eventReference: ImmutableEventReference(
+            eventId: kind16Rumor.id,
+            pubkey: kind16Rumor.masterPubkey,
+            kind: GenericRepostEntity.kind,
+          ),
+        ),
         mediaFiles: [],
       );
 

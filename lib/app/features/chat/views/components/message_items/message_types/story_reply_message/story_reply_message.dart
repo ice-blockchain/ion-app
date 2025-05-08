@@ -11,6 +11,7 @@ import 'package:ion/app/features/chat/views/components/message_items/components.
 import 'package:ion/app/features/chat/views/components/message_items/message_reactions/message_reactions.dart';
 import 'package:ion/app/features/components/ion_connect_network_image/ion_connect_network_image.dart';
 import 'package:ion/app/features/core/model/media_type.dart';
+import 'package:ion/app/features/core/providers/env_provider.c.dart';
 import 'package:ion/app/features/ion_connect/ion_connect.dart';
 import 'package:ion/generated/assets.gen.dart';
 
@@ -21,12 +22,13 @@ class StoryReplyMessage extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final entity = useMemoized(() => PrivateDirectMessageEntity.fromEventMessage(eventMessage));
+    final entity =
+        useMemoized(() => ReplaceablePrivateDirectMessageEntity.fromEventMessage(eventMessage));
     final isMe = ref.watch(isCurrentUserSelectorProvider(eventMessage.masterPubkey));
     final story = entity.data.quotedEvent != null
         ? ref
             .watch(
-              storyReplyMessageProvider(entity.data.quotedEvent!.eventReference.eventId),
+              storyReplyMessageProvider(entity.data.quotedEvent!.eventReference),
             )
             .valueOrNull
         : null;
@@ -34,6 +36,14 @@ class StoryReplyMessage extends HookConsumerWidget {
     final storyMedia = story?.data.media.values.firstOrNull;
     final storyUrl =
         (storyMedia?.mediaType == MediaType.video ? storyMedia?.thumb : storyMedia?.url) ?? '';
+
+    final storyExpired = DateTime.now().isAfter(
+      eventMessage.createdAt.add(
+        Duration(
+          hours: ref.read(envProvider.notifier).get<int>(EnvVariable.GIFT_WRAP_EXPIRATION_HOURS),
+        ),
+      ),
+    );
 
     return Align(
       alignment: isMe ? AlignmentDirectional.centerEnd : AlignmentDirectional.centerStart,
@@ -43,7 +53,7 @@ class StoryReplyMessage extends HookConsumerWidget {
             crossAxisAlignment: isMe ? CrossAxisAlignment.end : CrossAxisAlignment.start,
             children: [
               _SenderReceiverLabel(isMe: isMe),
-              if (storyUrl.isNotEmpty)
+              if (storyUrl.isNotEmpty && !storyExpired)
                 _StoryPreviewImage(
                   storyUrl: storyUrl,
                   isMe: isMe,
@@ -59,7 +69,7 @@ class StoryReplyMessage extends HookConsumerWidget {
                 ),
             ],
           ),
-          if (storyUrl.isNotEmpty)
+          if (storyUrl.isNotEmpty && eventMessage.content.isEmpty)
             PositionedDirectional(
               bottom: 6.0.s,
               start: 6.0.s,

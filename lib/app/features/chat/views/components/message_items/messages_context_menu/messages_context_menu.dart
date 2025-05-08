@@ -1,6 +1,7 @@
 // SPDX-License-Identifier: ice License 1.0
 
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/components/overlay_menu/components/overlay_menu_item.dart';
 import 'package:ion/app/components/overlay_menu/components/overlay_menu_item_separator.dart';
@@ -9,6 +10,7 @@ import 'package:ion/app/components/overlay_menu/overlay_menu_container.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/chat/providers/muted_conversations_provider.c.dart';
 import 'package:ion/app/features/user/providers/report_notifier.c.dart';
+import 'package:ion/app/router/app_routes.c.dart';
 import 'package:ion/generated/assets.gen.dart';
 
 class MessagingContextMenu extends ConsumerWidget {
@@ -70,7 +72,17 @@ class MessagingContextMenu extends ConsumerWidget {
                     labelColor: context.theme.appColors.attentionRed,
                     icon: Assets.svg.iconBlockDelete
                         .icon(size: iconSize, color: context.theme.appColors.attentionRed),
-                    onPressed: closeMenu,
+                    onPressed: () async {
+                      closeMenu();
+                      final deleted = await DeleteConversationRoute(
+                            conversationIds: [conversationId],
+                          ).push<bool>(context) ??
+                          false;
+
+                      if (deleted && context.mounted) {
+                        context.pop();
+                      }
+                    },
                   ),
                 ],
               ),

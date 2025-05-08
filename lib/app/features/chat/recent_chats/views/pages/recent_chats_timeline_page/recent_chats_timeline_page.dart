@@ -56,6 +56,7 @@ class RecentChatsTimelinePage extends HookConsumerWidget {
       sliverAppBar: SliverAppBar(
         pinned: true,
         backgroundColor: context.theme.appColors.secondaryBackground,
+        surfaceTintColor: context.theme.appColors.secondaryBackground,
         flexibleSpace: FlexibleSpaceBar(
           background: GestureDetector(
             behavior: HitTestBehavior.opaque,
@@ -164,11 +165,15 @@ class CommunityRecentChatTile extends ConsumerWidget {
       return const SizedBox.shrink();
     }
 
+    final eventReference = ReplaceablePrivateDirectMessageEntity.fromEventMessage(
+      conversation.latestMessage!,
+    ).toEventReference();
+
     return RecentChatTile(
       name: community.data.name,
       conversation: conversation,
       avatarUrl: community.data.avatar?.url,
-      lastMessageId: conversation.latestMessage?.id,
+      eventReference: eventReference,
       defaultAvatar: Container(
         width: 40.0.s,
         height: 40.0.s,
@@ -205,7 +210,8 @@ class E2eeRecentChatTile extends ConsumerWidget {
       return const SizedBox.shrink();
     }
 
-    final entity = PrivateDirectMessageData.fromEventMessage(conversation.latestMessage!);
+    final entity =
+        ReplaceablePrivateDirectMessageData.fromEventMessage(conversation.latestMessage!);
 
     final currentUserPubkey = ref.watch(currentPubkeySelectorProvider);
 
@@ -225,13 +231,17 @@ class E2eeRecentChatTile extends ConsumerWidget {
     final unreadMessagesCount =
         ref.watch(getUnreadMessagesCountProvider(conversation.conversationId));
 
+    final eventReference = ReplaceablePrivateDirectMessageEntity.fromEventMessage(
+      conversation.latestMessage!,
+    ).toEventReference();
+
     return RecentChatTile(
       defaultAvatar: null,
       conversation: conversation,
       messageType: entity.messageType,
       name: userMetadata.data.displayName,
       avatarUrl: userMetadata.data.picture,
-      lastMessageId: conversation.latestMessage?.id,
+      eventReference: eventReference,
       unreadMessagesCount: unreadMessagesCount.valueOrNull ?? 0,
       lastMessageContent: conversation.latestMessage?.content ?? '',
       lastMessageAt: conversation.latestMessage?.createdAt ?? conversation.joinedAt,
@@ -255,7 +265,7 @@ class EncryptedGroupRecentChatTile extends HookConsumerWidget {
       return const SizedBox.shrink();
     }
 
-    final entity = PrivateDirectMessageData.fromEventMessage(latestMessage);
+    final entity = ReplaceablePrivateDirectMessageData.fromEventMessage(latestMessage);
 
     final name = entity.groupSubject?.value ?? '';
 
@@ -269,10 +279,14 @@ class EncryptedGroupRecentChatTile extends HookConsumerWidget {
           ),
     ).data;
 
+    final eventReference = ReplaceablePrivateDirectMessageEntity.fromEventMessage(
+      conversation.latestMessage!,
+    ).toEventReference();
+
     return RecentChatTile(
       name: name,
       conversation: conversation,
-      lastMessageId: conversation.latestMessage?.id,
+      eventReference: eventReference,
       avatarWidget: groupImageFile != null ? Image.file(groupImageFile) : null,
       defaultAvatar: Assets.svg.iconChannelEmptychannel.icon(size: 40.0.s),
       lastMessageAt: conversation.latestMessage?.createdAt ?? conversation.joinedAt,

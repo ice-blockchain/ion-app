@@ -28,9 +28,10 @@ class NavigationTextButton extends StatelessWidget {
         padding: EdgeInsets.all(UiConstants.hitSlop),
         child: Text(
           label,
-          style: (textStyle ?? context.theme.appTextThemes.body).copyWith(
-            color: context.theme.appColors.primaryAccent,
-          ),
+          style: textStyle ??
+              context.theme.appTextThemes.body.copyWith(
+                color: context.theme.appColors.primaryAccent,
+              ),
         ),
       ),
     );

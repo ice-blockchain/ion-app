@@ -32,24 +32,28 @@ part 'components/play_pause_button.dart';
 class AudioMessage extends HookConsumerWidget {
   const AudioMessage({
     required this.eventMessage,
+    this.onTapReply,
     super.key,
   });
 
   final EventMessage eventMessage;
+  final VoidCallback? onTapReply;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     useAutomaticKeepAlive();
 
     final isMe = ref.watch(isCurrentUserSelectorProvider(eventMessage.masterPubkey));
-    final entity = PrivateDirectMessageEntity.fromEventMessage(eventMessage);
+    final entity = ReplaceablePrivateDirectMessageEntity.fromEventMessage(eventMessage);
 
     final audioUrl = useState<String?>(null);
 
     final hasReactions = useHasReaction(eventMessage, ref);
 
-    final messageMedia =
-        ref.watch(chatMediasProvider(eventMessageId: eventMessage.id)).valueOrNull?.firstOrNull;
+    final messageMedia = ref
+        .watch(chatMediasProvider(eventReference: entity.toEventReference()))
+        .valueOrNull
+        ?.firstOrNull;
 
     final mediaAttachment =
         messageMedia?.remoteUrl == null ? null : entity.data.media[messageMedia?.remoteUrl!];
@@ -63,6 +67,7 @@ class AudioMessage extends HookConsumerWidget {
             entity: entity,
             mediaAttachment: mediaAttachment,
             loadThumbnail: false,
+            cacheKey: messageMedia?.cacheKey,
           ),
         )
             .then((value) {
@@ -161,7 +166,7 @@ class AudioMessage extends HookConsumerWidget {
       contentPadding: contentPadding,
       child: Column(
         children: [
-          if (repliedMessageItem != null) ReplyMessage(messageItem, repliedMessageItem),
+          if (repliedMessageItem != null) ReplyMessage(messageItem, repliedMessageItem, onTapReply),
           Row(
             crossAxisAlignment: CrossAxisAlignment.end,
             mainAxisAlignment: MainAxisAlignment.spaceBetween,

@@ -1,8 +1,6 @@
 // SPDX-License-Identifier: ice License 1.0
 
-import 'package:ion/app/exceptions/exceptions.dart';
-import 'package:ion/app/features/user/model/user_metadata.c.dart';
-import 'package:ion/app/features/user/providers/user_metadata_provider.c.dart';
+import 'package:ion/app/features/user/providers/user_delegation_provider.c.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'conversation_pubkeys_provider.c.g.dart';
@@ -12,28 +10,18 @@ class ConversationPubkeys extends _$ConversationPubkeys {
   @override
   Future<void> build() async {}
 
-  Future<Map<String, String>> fetchUsersKeys(List<String> masterPubkeys) async {
-    final usersKeys = <String, String>{};
-    final users = await _fetchUsersMetadata(masterPubkeys);
+  Future<Map<String, List<String>>> fetchUsersKeys(List<String> masterPubkeys) async {
+    final usersKeys = <String, List<String>>{};
 
-    for (final user in users) {
-      usersKeys.addAll({user.masterPubkey: user.pubkey});
+    for (final masterPubkey in masterPubkeys) {
+      final delegation = await ref.read(userDelegationProvider(masterPubkey).future);
+      if (delegation == null) {
+        continue;
+      }
+
+      final pubkeys = delegation.data.delegates.map((delegate) => delegate.pubkey).toList();
+      usersKeys.addAll({masterPubkey: pubkeys});
     }
     return usersKeys;
-  }
-
-  Future<List<UserMetadataEntity>> _fetchUsersMetadata(List<String> masterPubkeys) async {
-    final result = await Future.wait<UserMetadataEntity>(
-      masterPubkeys.map((masterPubkey) async {
-        final userMetadata = await ref.watch(userMetadataProvider(masterPubkey).future);
-        if (userMetadata != null) {
-          return userMetadata;
-        } else {
-          throw UserMetadataNotFoundException(masterPubkey);
-        }
-      }),
-    );
-
-    return result;
   }
 }

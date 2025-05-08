@@ -34,7 +34,7 @@ class VisualMediaContent extends HookConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final localFile = useState<File?>(null);
-    final entity = PrivateDirectMessageEntity.fromEventMessage(eventMessage);
+    final entity = ReplaceablePrivateDirectMessageEntity.fromEventMessage(eventMessage);
     final mediaAttachment = entity.data.media[messageMediaTableData.remoteUrl];
 
     useEffect(
@@ -66,7 +66,7 @@ class VisualMediaContent extends HookConsumerWidget {
     return GestureDetector(
       onTap: () async {
         final messageMedias =
-            await ref.read(chatMediasProvider(eventMessageId: eventMessage.id).future);
+            await ref.read(chatMediasProvider(eventReference: entity.toEventReference()).future);
 
         if (context.mounted) {
           await ChatMediaRoute(
