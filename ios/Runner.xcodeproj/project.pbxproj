@@ -67,6 +67,9 @@
 		3D356FD30F1C3B66959C3BE3 /* Pods-Runner.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Runner.debug.xcconfig"; path = "Target Support Files/Pods-Runner/Pods-Runner.debug.xcconfig"; sourceTree = "<group>"; };
 		59A6085587CB790B0E730FB3 /* Pods_NotificationServiceExtension.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_NotificationServiceExtension.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		66E7EADE8739713C0B58DB28 /* Pods-NotificationServiceExtension.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-NotificationServiceExtension.debug.xcconfig"; path = "Target Support Files/Pods-NotificationServiceExtension/Pods-NotificationServiceExtension.debug.xcconfig"; sourceTree = "<group>"; };
+		6B010BD72DCCD8CC00E29E2E /* NotificationServiceExtensionDebug.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; name = NotificationServiceExtensionDebug.xcconfig; path = Flutter/NotificationServiceExtensionDebug.xcconfig; sourceTree = "<group>"; };
+		6B010BD82DCCD96700E29E2E /* NotificationServiceExtensionRelease.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; name = NotificationServiceExtensionRelease.xcconfig; path = Flutter/NotificationServiceExtensionRelease.xcconfig; sourceTree = "<group>"; };
+		6B010BD92DCCD99E00E29E2E /* NotificationServiceExtensionEnvironment.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; name = NotificationServiceExtensionEnvironment.xcconfig; path = Flutter/NotificationServiceExtensionEnvironment.xcconfig; sourceTree = "<group>"; };
 		6B02DE452A94B8A9008D3035 /* Environment.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; name = Environment.xcconfig; path = Flutter/Environment.xcconfig; sourceTree = "<group>"; };
 		6B3E8B712DCC8AA700817899 /* NotificationServiceExtension.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = NotificationServiceExtension.appex; sourceTree = BUILT_PRODUCTS_DIR; };
 		6B71B0D42A978051000F7A98 /* Runner.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = Runner.entitlements; sourceTree = "<group>"; };
@@ -161,6 +164,9 @@
 				7AFA3C8E1D35360C0083082E /* Release.xcconfig */,
 				9740EEB31CF90195004384FC /* Generated.xcconfig */,
 				6B02DE452A94B8A9008D3035 /* Environment.xcconfig */,
+				6B010BD72DCCD8CC00E29E2E /* NotificationServiceExtensionDebug.xcconfig */,
+				6B010BD82DCCD96700E29E2E /* NotificationServiceExtensionRelease.xcconfig */,
+				6B010BD92DCCD99E00E29E2E /* NotificationServiceExtensionEnvironment.xcconfig */,
 			);
 			name = Flutter;
 			sourceTree = "<group>";
@@ -570,8 +576,7 @@
 		};
 		6B3E8B7B2DCC8AA700817899 /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReferenceAnchor = 6B3E8B722DCC8AA700817899 /* NotificationServiceExtension */;
-			baseConfigurationReferenceRelativePath = Debug.xcconfig;
+			baseConfigurationReference = 6B010BD72DCCD8CC00E29E2E /* NotificationServiceExtensionDebug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
 				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
@@ -613,8 +618,7 @@
 		};
 		6B3E8B7C2DCC8AA700817899 /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReferenceAnchor = 6B3E8B722DCC8AA700817899 /* NotificationServiceExtension */;
-			baseConfigurationReferenceRelativePath = Release.xcconfig;
+			baseConfigurationReference = 6B010BD82DCCD96700E29E2E /* NotificationServiceExtensionRelease.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
 				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
@@ -653,8 +657,7 @@
 		};
 		6B3E8B7D2DCC8AA700817899 /* Profile */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReferenceAnchor = 6B3E8B722DCC8AA700817899 /* NotificationServiceExtension */;
-			baseConfigurationReferenceRelativePath = Release.xcconfig;
+			baseConfigurationReference = 6B010BD82DCCD96700E29E2E /* NotificationServiceExtensionRelease.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
 				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;

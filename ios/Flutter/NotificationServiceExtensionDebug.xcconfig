@@ -1,2 +1,2 @@
 #include? "Pods/Target Support Files/Pods-NotificationServiceExtension/Pods-NotificationServiceExtension.debug.xcconfig"
-#include "Environment.xcconfig"
+#include "NotificationServiceExtensionEnvironment.xcconfig"
