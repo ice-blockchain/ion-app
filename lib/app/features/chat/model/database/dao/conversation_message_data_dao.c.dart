@@ -26,7 +26,11 @@ class ConversationMessageDataDao extends DatabaseAccessor<ChatDatabase>
               (table) => table.messageEventReference.equalsValue(messageEventReference),
             ))
           .map((row) => row.conversationId)
-          .getSingle();
+          .getSingleOrNull();
+
+      if (conversationId == null) {
+        return;
+      }
 
       // Mark all previous received messages as read prior to the given date
       final unreadResults = await (select(messageStatusTable).join([
