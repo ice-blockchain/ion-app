@@ -17,7 +17,7 @@ class LeaveFeedbackNotifier extends _$LeaveFeedbackNotifier {
     state = const AsyncValue.loading();
     state = await AsyncValue.guard(() async {
       await sendEmail(
-        receiver: Emails.feedback,
+        receiver: Emails.support,
         subject: feedbackSubject,
         body: '',
       );
