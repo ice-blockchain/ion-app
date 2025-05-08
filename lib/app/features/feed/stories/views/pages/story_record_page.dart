@@ -30,13 +30,15 @@ class StoryRecordPage extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final camState = ref.watch(cameraControllerNotifierProvider);
-    final isRecording = camState.maybeWhen(
-      ready: (_, rec, __) => rec,
+    final cameraState = ref.watch(cameraControllerNotifierProvider);
+    final isRecording = cameraState.maybeWhen(
+      ready: (_, isRecording, __) => isRecording,
       orElse: () => false,
     );
-    final (recDur, recProg) = useRecordingProgress(ref, isRecording: isRecording);
-    final isCameraReady = camState is CameraReady;
+
+    final (recordingDuration, recordingProgress) =
+        useRecordingProgress(ref, isRecording: isRecording);
+    final isCameraReady = cameraState is CameraReady;
 
     ref
       ..listen<CameraCaptureState>(
@@ -107,12 +109,12 @@ class StoryRecordPage extends HookConsumerWidget {
           child: Stack(
             fit: StackFit.expand,
             children: [
-              camState.maybeWhen(
+              cameraState.maybeWhen(
                 ready: (ctrl, _, __) => CustomCameraPreview(controller: ctrl),
                 orElse: () => const CenteredLoadingIndicator(),
               ),
               if (isRecording)
-                CameraRecordingIndicator(recordingDuration: recDur)
+                CameraRecordingIndicator(recordingDuration: recordingDuration)
               else
                 CameraIdlePreview(
                   onGallerySelected: (file) async {
@@ -152,7 +154,7 @@ class StoryRecordPage extends HookConsumerWidget {
                   alignment: Alignment.bottomCenter,
                   child: CameraCaptureButton(
                     isRecording: isRecording,
-                    recordingProgress: recProg,
+                    recordingProgress: recordingProgress,
                     onCapturePhoto: isCameraReady ? capture.takePhoto : null,
                     onRecordingStart: isCameraReady ? capture.startVideoRecording : null,
                     onRecordingStop: isCameraReady ? capture.stopVideoRecording : null,
