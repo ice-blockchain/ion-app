@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/components/avatar/avatar.dart';
+import 'package:ion/app/components/progress_bar/ion_loading_indicator.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/chat/hooks/use_combined_conversation_names.dart';
 import 'package:ion/app/features/chat/model/message_type.dart';
@@ -95,13 +96,16 @@ class ArchiveChatTile extends HookConsumerWidget {
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            Expanded(
-                              child: ChatPreview(
-                                lastMessageContent: combinedConversationNames,
-                                maxLines: 1,
-                                messageType: MessageType.text,
+                            if (combinedConversationNames == null)
+                              const IONLoadingIndicator()
+                            else
+                              Expanded(
+                                child: ChatPreview(
+                                  lastMessageContent: combinedConversationNames,
+                                  maxLines: 1,
+                                  messageType: MessageType.text,
+                                ),
                               ),
-                            ),
                             UnreadCountBadge(
                               unreadCount: unreadMessagesCount,
                               isMuted: hasMutedConversation,

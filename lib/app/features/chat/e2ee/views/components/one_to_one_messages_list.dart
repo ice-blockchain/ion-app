@@ -13,6 +13,7 @@ import 'package:ion/app/features/chat/views/components/message_items/message_typ
 import 'package:ion/app/features/chat/views/components/message_items/message_types/story_reply_message/story_reply_message.dart';
 import 'package:ion/app/features/chat/views/components/message_items/message_types/visual_media_message/visual_media_message.dart';
 import 'package:ion/app/features/ion_connect/ion_connect.dart';
+import 'package:ion/app/hooks/use_on_init.dart';
 import 'package:scrollable_positioned_list/scrollable_positioned_list.dart';
 
 class OneToOneMessageList extends HookConsumerWidget {
@@ -22,8 +23,30 @@ class OneToOneMessageList extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final allMessages = messages.values.expand((e) => e).toList();
+    final allMessages = messages.values.expand((e) => e).toList()..sortBy((e) => e.publishedAt);
     final itemScrollController = useMemoized(ItemScrollController.new);
+
+    useOnInit(() {
+      if (allMessages.isNotEmpty && itemScrollController.isAttached) {
+        itemScrollController.scrollTo(
+          index: allMessages.length,
+          duration: const Duration(milliseconds: 300),
+        );
+      }
+    });
+
+    useEffect(
+      () {
+        if (itemScrollController.isAttached) {
+          itemScrollController.scrollTo(
+            index: allMessages.length,
+            duration: const Duration(milliseconds: 300),
+          );
+        }
+        return null;
+      },
+      [allMessages],
+    );
 
     final onTapReply = useCallback(
       (ReplaceablePrivateDirectMessageEntity entity) {
@@ -46,7 +69,6 @@ class OneToOneMessageList extends HookConsumerWidget {
       color: context.theme.appColors.primaryBackground,
       child: ScreenSideOffset.small(
         child: ScrollablePositionedList.builder(
-          reverse: true,
           physics: const ClampingScrollPhysics(),
           itemCount: allMessages.length,
           itemScrollController: itemScrollController,
@@ -84,21 +106,13 @@ class OneToOneMessageList extends HookConsumerWidget {
                   child: switch (entity.data.messageType) {
                     MessageType.text => TextMessage(
                         eventMessage: message,
-                        onTapReply: () {
-                          final replyMessage = entity.data.relatedEvents?.singleOrNull;
-
-                          if (replyMessage != null) {
-                            final replyMessageIndex = allMessages.indexWhere(
-                              (element) => element.sharedId == replyMessage.eventReference.dTag,
-                            );
-                            itemScrollController.scrollTo(
-                              index: replyMessageIndex,
-                              duration: const Duration(milliseconds: 300),
-                            );
-                          }
-                        },
+                        onTapReply: () => onTapReply(entity),
                       ),
                     MessageType.storyReply => StoryReplyMessage(eventMessage: message),
+                    MessageType.profile => ProfileShareMessage(
+                        eventMessage: message,
+                        onTapReply: () => onTapReply(entity),
+                      ),
                     MessageType.visualMedia => VisualMediaMessage(
                         eventMessage: message,
                         onTapReply: () => onTapReply(entity),
@@ -111,10 +125,6 @@ class OneToOneMessageList extends HookConsumerWidget {
                       AudioMessage(eventMessage: message, onTapReply: () => onTapReply(entity)),
                     MessageType.document =>
                       DocumentMessage(eventMessage: message, onTapReply: () => onTapReply(entity)),
-                    MessageType.profile => ProfileShareMessage(
-                        eventMessage: message,
-                        onTapReply: () => onTapReply(entity),
-                      ),
                   },
                 ),
               ],

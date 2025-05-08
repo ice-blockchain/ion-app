@@ -18,7 +18,7 @@ part 'archived_conversations_provider.c.g.dart';
 @riverpod
 Future<List<String>> archivedConversations(Ref ref) async {
   final archivedConversationBookmarksSetData =
-      ref.watch(currentUserChatBookmarksDataProvider).valueOrNull ??
+      await ref.watch(currentUserChatBookmarksDataProvider.future) ??
           const BookmarksSetData(
             type: BookmarksSetType.chats,
             postsRefs: [],
@@ -40,7 +40,7 @@ Future<List<String>> archivedConversations(Ref ref) async {
         )
       : archivedConversationBookmarksSetData.content;
 
-  final encrpytedConversationCommunityIds = decryptedContent.isNotEmpty
+  final encryptedConversationCommunityIds = decryptedContent.isNotEmpty
       ? (jsonDecode(decryptedContent) as List<dynamic>)
           .map(
             (e) => ConversationIdentifier.fromTag(
@@ -52,7 +52,7 @@ Future<List<String>> archivedConversations(Ref ref) async {
 
   final archivedConversations = [
     ...archivedConversationBookmarksSetData.communitiesIds,
-    if (encrpytedConversationCommunityIds != null) ...encrpytedConversationCommunityIds,
+    if (encryptedConversationCommunityIds != null) ...encryptedConversationCommunityIds,
   ];
 
   await ref.watch(conversationDaoProvider).updateArchivedConversations(archivedConversations);

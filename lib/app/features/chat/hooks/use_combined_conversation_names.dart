@@ -9,7 +9,7 @@ import 'package:ion/app/features/chat/model/database/chat_database.c.dart';
 import 'package:ion/app/features/chat/recent_chats/model/conversation_list_item.c.dart';
 import 'package:ion/app/features/user/providers/user_metadata_provider.c.dart';
 
-String useCombinedConversationNames(
+String? useCombinedConversationNames(
   List<ConversationListItem> conversations,
   WidgetRef ref,
 ) {
@@ -47,5 +47,5 @@ String useCombinedConversationNames(
   );
 
   final snapshot = useFuture(future);
-  return snapshot.data ?? '';
+  return snapshot.data;
 }
