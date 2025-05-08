@@ -11,6 +11,7 @@ enum SettingsAction {
   pushNotifications,
   privacyPolicy,
   termsConditions,
+  leaveFeedback,
   logout;
 
   String getLabel(BuildContext context) => switch (this) {
@@ -20,6 +21,7 @@ enum SettingsAction {
         SettingsAction.pushNotifications => context.i18n.settings_push_notifications,
         SettingsAction.privacyPolicy => context.i18n.settings_privacy_policy,
         SettingsAction.termsConditions => context.i18n.settings_terms_conditions,
+        SettingsAction.leaveFeedback => context.i18n.settings_leave_feedback,
         SettingsAction.logout => context.i18n.settings_logout,
       };
 
@@ -36,6 +38,7 @@ enum SettingsAction {
       SettingsAction.pushNotifications => Assets.svg.iconHomeNotification,
       SettingsAction.privacyPolicy => Assets.svg.iconProfilePrivacypolicy,
       SettingsAction.termsConditions => Assets.svg.iconProfileTerms,
+      SettingsAction.leaveFeedback => Assets.svg.iconProfileFeedback,
       SettingsAction.logout => Assets.svg.iconMenuLogout,
     };
 

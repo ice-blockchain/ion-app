@@ -12,6 +12,7 @@ import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/auth/providers/auth_provider.c.dart';
 import 'package:ion/app/features/core/providers/app_info_provider.c.dart';
 import 'package:ion/app/features/settings/model/settings_action.dart';
+import 'package:ion/app/features/settings/providers/leave_feedback_notifier.c.dart';
 import 'package:ion/app/router/app_routes.c.dart';
 import 'package:ion/app/router/components/navigation_app_bar/navigation_app_bar.dart';
 import 'package:ion/app/router/components/navigation_app_bar/navigation_close_button.dart';
@@ -34,6 +35,8 @@ class SettingsModal extends ConsumerWidget {
             PushNotificationsSettingsRoute().push<void>(context),
         SettingsAction.privacyPolicy => () => openUrlInAppBrowser(Links.privacy),
         SettingsAction.termsConditions => () => openUrlInAppBrowser(Links.terms),
+        SettingsAction.leaveFeedback => () =>
+            ref.read(leaveFeedbackNotifierProvider.notifier).leaveFeedback(),
         SettingsAction.logout => () => ConfirmLogoutRoute(pubkey: pubkey).push<void>(context),
       };
     }

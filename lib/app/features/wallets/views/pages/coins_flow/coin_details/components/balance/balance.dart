@@ -21,7 +21,6 @@ class Balance extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-
     return ScreenSideOffset.small(
       child: Column(
         children: [
