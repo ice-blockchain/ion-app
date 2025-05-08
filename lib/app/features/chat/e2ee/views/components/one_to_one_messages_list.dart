@@ -28,10 +28,7 @@ class OneToOneMessageList extends HookConsumerWidget {
 
     useOnInit(() {
       if (allMessages.isNotEmpty && itemScrollController.isAttached) {
-        itemScrollController.scrollTo(
-          index: allMessages.length,
-          duration: const Duration(milliseconds: 300),
-        );
+        itemScrollController.jumpTo(index: allMessages.length);
       }
     });
 
@@ -80,10 +77,10 @@ class OneToOneMessageList extends HookConsumerWidget {
                 ?.key;
 
             final previousMessage = index > 0 ? allMessages[index - 1] : null;
-            final isLastMessage = index == 0;
+            final isLastMessage = index == allMessages.length - 1;
 
-            final isLastMessageFromAuthor =
-                previousMessage == null || previousMessage.pubkey == message.pubkey;
+            final isMessageFromAnotherAuthor =
+                previousMessage == null || previousMessage.pubkey != message.pubkey;
 
             return Column(
               mainAxisSize: MainAxisSize.min,
@@ -97,11 +94,8 @@ class OneToOneMessageList extends HookConsumerWidget {
                   ),
                 Padding(
                   padding: EdgeInsetsDirectional.only(
-                    bottom: isLastMessage
-                        ? 20.0.s
-                        : isLastMessageFromAuthor
-                            ? 8.0.s
-                            : 16.0.s,
+                    bottom: isLastMessage ? 20.0.s : 8.0.s,
+                    top: isMessageFromAnotherAuthor ? 8.0.s : 0,
                   ),
                   child: switch (entity.data.messageType) {
                     MessageType.text => TextMessage(
