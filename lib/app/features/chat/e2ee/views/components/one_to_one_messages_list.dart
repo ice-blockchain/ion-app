@@ -2,6 +2,7 @@
 
 import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/components/screen_offset/screen_side_offset.dart';
 import 'package:ion/app/extensions/extensions.dart';
@@ -14,27 +15,33 @@ import 'package:ion/app/features/chat/views/components/message_items/message_typ
 import 'package:ion/app/features/ion_connect/ion_connect.dart';
 import 'package:scrollable_positioned_list/scrollable_positioned_list.dart';
 
-class OneToOneMessageList extends StatefulHookConsumerWidget {
-  const OneToOneMessageList(
-    this.messages, {
-    super.key,
-    this.displayAuthorsIncomingMessages = false,
-  });
+class OneToOneMessageList extends HookConsumerWidget {
+  const OneToOneMessageList(this.messages, {super.key});
 
-  final bool displayAuthorsIncomingMessages;
   final Map<DateTime, List<EventMessage>> messages;
 
   @override
-  ConsumerState<OneToOneMessageList> createState() => _OneToOneMessageListState();
-}
+  Widget build(BuildContext context, WidgetRef ref) {
+    final allMessages = messages.values.expand((e) => e).toList();
+    final itemScrollController = useMemoized(ItemScrollController.new);
 
-class _OneToOneMessageListState extends ConsumerState<OneToOneMessageList> {
-  final ItemScrollController itemScrollController = ItemScrollController();
+    final onTapReply = useCallback(
+      (ReplaceablePrivateDirectMessageEntity entity) {
+        final replyMessage = entity.data.relatedEvents?.singleOrNull;
 
-  late final allMessages = widget.messages.values.expand((e) => e).toList();
+        if (replyMessage != null) {
+          final replyMessageIndex = allMessages.indexWhere(
+            (element) => element.sharedId == replyMessage.eventReference.dTag,
+          );
+          itemScrollController.scrollTo(
+            index: replyMessageIndex,
+            duration: const Duration(milliseconds: 300),
+          );
+        }
+      },
+      [allMessages, itemScrollController],
+    );
 
-  @override
-  Widget build(BuildContext context) {
     return ColoredBox(
       color: context.theme.appColors.primaryBackground,
       child: ScreenSideOffset.small(
@@ -46,7 +53,7 @@ class _OneToOneMessageListState extends ConsumerState<OneToOneMessageList> {
           itemBuilder: (context, index) {
             final message = allMessages[index];
             final entity = ReplaceablePrivateDirectMessageEntity.fromEventMessage(message);
-            final displayDate = widget.messages.entries
+            final displayDate = messages.entries
                 .singleWhereOrNull((entry) => entry.value.last.id == message.id)
                 ?.key;
 
@@ -116,19 +123,5 @@ class _OneToOneMessageListState extends ConsumerState<OneToOneMessageList> {
         ),
       ),
     );
-  }
-
-  void onTapReply(ReplaceablePrivateDirectMessageEntity entity) {
-    final replyMessage = entity.data.relatedEvents?.singleOrNull;
-
-    if (replyMessage != null) {
-      final replyMessageIndex = allMessages.indexWhere(
-        (element) => element.sharedId == replyMessage.eventReference.dTag,
-      );
-      itemScrollController.scrollTo(
-        index: replyMessageIndex,
-        duration: const Duration(milliseconds: 300),
-      );
-    }
   }
 }
