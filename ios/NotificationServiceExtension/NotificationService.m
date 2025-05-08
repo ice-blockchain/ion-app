@@ -20,12 +20,7 @@
     self.contentHandler = contentHandler;
     self.bestAttemptContent = [request.content mutableCopy];
     
-    if (self.bestAttemptContent) {
-        self.bestAttemptContent.title = @"hello from ext";
-    }
-
     // TODO::
-    NSLog(@"extension");
     
     [[FIRMessaging extensionHelper] populateNotificationContent:self.bestAttemptContent withContentHandler:contentHandler];
 }

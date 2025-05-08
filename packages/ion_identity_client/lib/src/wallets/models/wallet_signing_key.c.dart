@@ -1,5 +1,7 @@
 // SPDX-License-Identifier: ice License 1.0
 
+// SPDX-License-Identifier: ice License 1.0
+
 import 'package:freezed_annotation/freezed_annotation.dart';
 
 part 'wallet_signing_key.c.freezed.dart';
