@@ -118,6 +118,7 @@ dependencies:
   riverpod_annotation: ^2.6.1
   scrollable_positioned_list: ^0.3.8
   sensors_plus: ^6.1.1
+  sentry_flutter: ^8.14.2
   share_plus: ^10.0.2
   shared_preferences: ^2.3.5
   shimmer: ^3.0.0
@@ -153,6 +154,7 @@ dev_dependencies:
   melos: ^6.1.0
   riverpod_generator: ^2.6.1
   riverpod_lint: ^2.6.1
+  sentry_dart_plugin: ^2.4.1
   very_good_analysis: ^5.1.0
   video_player_platform_interface: ^6.3.0
 
@@ -214,3 +216,9 @@ flutter_gen:
 # So, because ice depends on both qr_code_scanner ^1.0.1 and ion_identity_client from path, version solving failed.
 dependency_overrides:
   js: ^0.7.1
+
+sentry:
+  upload_debug_symbols: true
+  upload_source_maps: true
+  project: ion-app-testnet
+  org: sentry
