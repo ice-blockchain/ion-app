@@ -46,6 +46,18 @@ platform :ios do
             api_key_path: "./fastlane/keys/appstore-connect-key.json",
             git_url: MATCH_GIT_URL
         )
+
+        update_code_signing_settings(
+            path: "./ios/Runner.xcodeproj",
+            targets: ["Runner"],
+            profile_name: ENV["sigh_#{APP_ID}_#{sign_type}_profile-name"]
+        )
+
+        update_code_signing_settings(
+            path: "./ios/Runner.xcodeproj",
+            targets: ["NotificationServiceExtension"],
+            profile_name: ENV["sigh_#{APP_ID}.NotificationServiceExtension_#{sign_type}_profile-name"]
+        )
     end
 
     desc "Deploy iOS app"
