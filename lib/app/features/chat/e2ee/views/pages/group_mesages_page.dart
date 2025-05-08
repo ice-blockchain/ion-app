@@ -52,6 +52,7 @@ class GroupMessagesPage extends HookConsumerWidget {
             _Header(lastMessage: lastMessage),
             _MessagesList(conversationId: conversationId),
             MessagingBottomBar(
+              conversationId: conversationId,
               onSubmitted: ({content, mediaFiles}) async {
                 final currentPubkey = ref.read(currentPubkeySelectorProvider);
                 if (currentPubkey == null) {

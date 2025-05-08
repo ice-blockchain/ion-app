@@ -5,18 +5,20 @@ import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/features/chat/e2ee/model/entities/private_direct_message_data.c.dart';
+import 'package:ion/app/features/chat/providers/draft_message_provider.c.dart';
 import 'package:ion/app/features/chat/providers/messaging_bottom_bar_state_provider.c.dart';
 import 'package:ion/app/features/chat/recent_chats/providers/selected_edit_message_provider.c.dart';
 import 'package:ion/app/features/chat/views/components/message_items/components.dart';
 import 'package:ion/app/features/chat/views/components/message_items/messaging_bottom_bar/components/components.dart';
 import 'package:ion/app/features/chat/views/components/message_items/messaging_bottom_bar/components/text_message_limit_label.dart';
+import 'package:ion/app/hooks/use_on_init.dart';
 import 'package:ion/app/services/media_service/media_service.c.dart';
 
 class MessagingBottomBar extends HookConsumerWidget {
-  const MessagingBottomBar({required this.onSubmitted, super.key});
+  const MessagingBottomBar({required this.onSubmitted, required this.conversationId, super.key});
 
   final Future<void> Function({String? content, List<MediaFile>? mediaFiles}) onSubmitted;
-
+  final String? conversationId;
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final bottomBarState = ref.watch(messagingBottomBarActiveStateProvider);
@@ -34,9 +36,25 @@ class MessagingBottomBar extends HookConsumerWidget {
       }
     });
 
+    useOnInit(
+      () {
+        if (conversationId != null) {
+          final draftMessage = ref.read(draftMessageProvider(conversationId!));
+          if (draftMessage != null && draftMessage.isNotEmpty) {
+            controller.text = draftMessage;
+            ref.read(messagingBottomBarActiveStateProvider.notifier).setHasText();
+          }
+        }
+      },
+      [conversationId],
+    );
+
     useEffect(
       () {
         void onTextChanged() {
+          if (conversationId != null) {
+            ref.read(draftMessageProvider(conversationId!).notifier).draftMessage = controller.text;
+          }
           isTextLimitReached.value =
               controller.text.length > ReplaceablePrivateDirectMessageData.textMessageLimit;
         }
@@ -47,7 +65,7 @@ class MessagingBottomBar extends HookConsumerWidget {
           controller.removeListener(onTextChanged);
         };
       },
-      [controller],
+      [controller, conversationId],
     );
 
     return Stack(
