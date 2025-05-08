@@ -42,7 +42,9 @@ class TransactionAmountSummary extends StatelessWidget {
         ),
         SizedBox(height: 4.0.s),
         Text(
-          context.i18n.wallet_transaction_summary_usd_amount(formatUSD(usdAmount)),
+          context.i18n.wallet_approximate_in_usd(
+            formatUSD(usdAmount),
+          ),
           style: textTheme.caption2.copyWith(
             color: colors.secondaryText,
           ),
