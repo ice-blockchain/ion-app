@@ -3,6 +3,7 @@
 import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
+import 'package:flutter_keyboard_visibility/flutter_keyboard_visibility.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/components/screen_offset/screen_side_offset.dart';
 import 'package:ion/app/extensions/extensions.dart';
@@ -23,8 +24,9 @@ class OneToOneMessageList extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final allMessages = messages.values.expand((e) => e).toList()..sortBy((e) => e.publishedAt);
     final itemScrollController = useMemoized(ItemScrollController.new);
+    final keyboardController = useMemoized(KeyboardVisibilityController.new);
+    final allMessages = messages.values.expand((e) => e).toList()..sortBy((e) => e.publishedAt);
 
     useOnInit(() {
       if (allMessages.isNotEmpty && itemScrollController.isAttached) {
@@ -32,17 +34,30 @@ class OneToOneMessageList extends HookConsumerWidget {
       }
     });
 
+    usePrevious(allMessages.length);
+    {
+      final previous = usePrevious(allMessages.length);
+      if (previous != null && allMessages.length > previous) {
+        itemScrollController.scrollTo(
+          index: allMessages.length,
+          duration: const Duration(milliseconds: 300),
+        );
+      }
+    }
+
     useEffect(
       () {
-        if (itemScrollController.isAttached) {
-          itemScrollController.scrollTo(
-            index: allMessages.length,
-            duration: const Duration(milliseconds: 300),
-          );
-        }
-        return null;
+        final subscription = keyboardController.onChange.listen((isVisible) {
+          if (isVisible && itemScrollController.isAttached) {
+            itemScrollController.scrollTo(
+              index: allMessages.length,
+              duration: const Duration(milliseconds: 300),
+            );
+          }
+        });
+
+        return subscription.cancel;
       },
-      [allMessages],
     );
 
     final onTapReply = useCallback(
