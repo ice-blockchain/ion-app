@@ -92,7 +92,7 @@ class CoinTransactionHistoryNotifier extends _$CoinTransactionHistoryNotifier {
       walletAddresses: _coinWalletAddresses ?? [],
     );
     final filtered = transactions.where((t) {
-      final date = t.dateConfirmed ?? t.dateRequested ?? t.createdAtInRelay;
+      final date = t.dateRequested ?? t.createdAtInRelay ?? t.dateConfirmed;
       return t.cryptoAsset is CoinTransactionAsset && date != null;
     });
     _offset += transactions.length;
@@ -107,7 +107,7 @@ class CoinTransactionHistoryNotifier extends _$CoinTransactionHistoryNotifier {
             coinAmount: asset.amount,
             usdAmount: asset.amountUSD,
             timestamp:
-                (t.dateConfirmed ?? t.dateRequested ?? t.createdAtInRelay!).millisecondsSinceEpoch,
+                (t.dateRequested ?? t.createdAtInRelay ?? t.dateConfirmed!).millisecondsSinceEpoch,
             origin: t,
           );
         },

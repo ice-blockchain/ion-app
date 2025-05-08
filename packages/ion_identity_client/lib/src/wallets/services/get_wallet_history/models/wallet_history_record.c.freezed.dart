@@ -27,6 +27,7 @@ mixin _$WalletHistoryRecord {
   int get blockNumber => throw _privateConstructorUsedError;
   DateTime get timestamp => throw _privateConstructorUsedError;
   String get txHash => throw _privateConstructorUsedError;
+  String? get externalHash => throw _privateConstructorUsedError;
   String? get index => throw _privateConstructorUsedError;
   String? get contract => throw _privateConstructorUsedError;
   String? get tokenId => throw _privateConstructorUsedError;
@@ -62,6 +63,7 @@ abstract class $WalletHistoryRecordCopyWith<$Res> {
       int blockNumber,
       DateTime timestamp,
       String txHash,
+      String? externalHash,
       String? index,
       String? contract,
       String? tokenId,
@@ -98,6 +100,7 @@ class _$WalletHistoryRecordCopyWithImpl<$Res, $Val extends WalletHistoryRecord>
     Object? blockNumber = null,
     Object? timestamp = null,
     Object? txHash = null,
+    Object? externalHash = freezed,
     Object? index = freezed,
     Object? contract = freezed,
     Object? tokenId = freezed,
@@ -138,6 +141,10 @@ class _$WalletHistoryRecordCopyWithImpl<$Res, $Val extends WalletHistoryRecord>
           ? _value.txHash
           : txHash // ignore: cast_nullable_to_non_nullable
               as String,
+      externalHash: freezed == externalHash
+          ? _value.externalHash
+          : externalHash // ignore: cast_nullable_to_non_nullable
+              as String?,
       index: freezed == index
           ? _value.index
           : index // ignore: cast_nullable_to_non_nullable
@@ -208,6 +215,7 @@ abstract class _$$WalletHistoryRecordImplCopyWith<$Res>
       int blockNumber,
       DateTime timestamp,
       String txHash,
+      String? externalHash,
       String? index,
       String? contract,
       String? tokenId,
@@ -243,6 +251,7 @@ class __$$WalletHistoryRecordImplCopyWithImpl<$Res>
     Object? blockNumber = null,
     Object? timestamp = null,
     Object? txHash = null,
+    Object? externalHash = freezed,
     Object? index = freezed,
     Object? contract = freezed,
     Object? tokenId = freezed,
@@ -283,6 +292,10 @@ class __$$WalletHistoryRecordImplCopyWithImpl<$Res>
           ? _value.txHash
           : txHash // ignore: cast_nullable_to_non_nullable
               as String,
+      externalHash: freezed == externalHash
+          ? _value.externalHash
+          : externalHash // ignore: cast_nullable_to_non_nullable
+              as String?,
       index: freezed == index
           ? _value.index
           : index // ignore: cast_nullable_to_non_nullable
@@ -338,6 +351,7 @@ class _$WalletHistoryRecordImpl implements _WalletHistoryRecord {
       required this.blockNumber,
       required this.timestamp,
       required this.txHash,
+      required this.externalHash,
       required this.index,
       required this.contract,
       required this.tokenId,
@@ -368,6 +382,8 @@ class _$WalletHistoryRecordImpl implements _WalletHistoryRecord {
   final DateTime timestamp;
   @override
   final String txHash;
+  @override
+  final String? externalHash;
   @override
   final String? index;
   @override
@@ -407,7 +423,7 @@ class _$WalletHistoryRecordImpl implements _WalletHistoryRecord {
 
   @override
   String toString() {
-    return 'WalletHistoryRecord(walletId: $walletId, network: $network, kind: $kind, direction: $direction, blockNumber: $blockNumber, timestamp: $timestamp, txHash: $txHash, index: $index, contract: $contract, tokenId: $tokenId, from: $from, to: $to, tos: $tos, froms: $froms, value: $value, fee: $fee, metadata: $metadata)';
+    return 'WalletHistoryRecord(walletId: $walletId, network: $network, kind: $kind, direction: $direction, blockNumber: $blockNumber, timestamp: $timestamp, txHash: $txHash, externalHash: $externalHash, index: $index, contract: $contract, tokenId: $tokenId, from: $from, to: $to, tos: $tos, froms: $froms, value: $value, fee: $fee, metadata: $metadata)';
   }
 
   @override
@@ -426,6 +442,8 @@ class _$WalletHistoryRecordImpl implements _WalletHistoryRecord {
             (identical(other.timestamp, timestamp) ||
                 other.timestamp == timestamp) &&
             (identical(other.txHash, txHash) || other.txHash == txHash) &&
+            (identical(other.externalHash, externalHash) ||
+                other.externalHash == externalHash) &&
             (identical(other.index, index) || other.index == index) &&
             (identical(other.contract, contract) ||
                 other.contract == contract) &&
@@ -451,6 +469,7 @@ class _$WalletHistoryRecordImpl implements _WalletHistoryRecord {
       blockNumber,
       timestamp,
       txHash,
+      externalHash,
       index,
       contract,
       tokenId,
@@ -488,6 +507,7 @@ abstract class _WalletHistoryRecord implements WalletHistoryRecord {
           required final int blockNumber,
           required final DateTime timestamp,
           required final String txHash,
+          required final String? externalHash,
           required final String? index,
           required final String? contract,
           required final String? tokenId,
@@ -517,6 +537,8 @@ abstract class _WalletHistoryRecord implements WalletHistoryRecord {
   DateTime get timestamp;
   @override
   String get txHash;
+  @override
+  String? get externalHash;
   @override
   String? get index;
   @override

@@ -84,6 +84,7 @@ class TransactionsDao extends DatabaseAccessor<WalletsDatabase> with _$Transacti
 
   Future<List<TransactionData>> getTransactions({
     List<String> coinIds = const [],
+    List<String> txHashes = const [],
     List<String> walletAddresses = const [],
     int limit = 20,
     int? offset,
@@ -99,6 +100,10 @@ class TransactionsDao extends DatabaseAccessor<WalletsDatabase> with _$Transacti
 
             if (coinIds.isNotEmpty) {
               expr = expr & tbl.coinId.isIn(coinIds);
+            }
+
+            if (txHashes.isNotEmpty) {
+              expr = expr & tbl.txHash.isIn(txHashes);
             }
 
             if (symbol != null) {
@@ -314,5 +319,11 @@ class TransactionsDao extends DatabaseAccessor<WalletsDatabase> with _$Transacti
           : TransactionStatus.broadcasted,
       userPubkey: transaction.userPubkey,
     );
+  }
+
+  Future<void> remove(Iterable<String> txHashes) {
+    return transaction(() async {
+      await (delete(transactionsTable)..where((t) => t.txHash.isIn(txHashes))).go();
+    });
   }
 }

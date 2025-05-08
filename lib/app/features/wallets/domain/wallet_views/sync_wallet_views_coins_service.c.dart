@@ -143,7 +143,9 @@ class SyncWalletViewCoinsService {
       );
 
       final syncedCoins = coins.map((coinDB) {
-        final syncedData = syncedCoinsData.firstWhere((e) => e.symbolGroup == coinDB.symbolGroup);
+        final syncedData = syncedCoinsData.firstWhere(
+          (e) => e.symbolGroup == coinDB.symbolGroup && e.network == coinDB.networkId,
+        );
         return coinDB.copyWith(
           priceUSD: syncedData.priceUSD,
           syncFrequency: syncedData.syncFrequency,

@@ -16,6 +16,7 @@ class WalletHistoryRecord with _$WalletHistoryRecord {
     required int blockNumber,
     required DateTime timestamp,
     required String txHash,
+    required String? externalHash,
     required String? index,
     required String? contract,
     required String? tokenId,

@@ -102,15 +102,19 @@ class TransactionsRepository {
   Future<List<TransactionData>> getBroadcastedTransfers({String? walletAddress}) =>
       _transactionsDao.getBroadcastedTransfers(walletAddress: walletAddress);
 
+  Future<void> remove(Iterable<String> txHashes) => _transactionsDao.remove(txHashes);
+
   Future<List<TransactionData>> getTransactions({
-    required List<String> coinIds,
+    List<String> coinIds = const [],
+    List<String> txHashes = const [],
+    List<String> walletAddresses = const [],
     int limit = 20,
     int offset = 0,
     NetworkData? network,
-    List<String> walletAddresses = const [],
   }) {
     return _transactionsDao.getTransactions(
       walletAddresses: walletAddresses,
+      txHashes: txHashes,
       limit: limit,
       offset: offset,
       coinIds: coinIds,
@@ -187,6 +191,7 @@ class TransactionsRepository {
 
           return TransactionData(
             txHash: transaction.txHash,
+            externalHash: transaction.externalHash,
             network: network,
             type: type,
             senderWalletAddress: from,
@@ -216,70 +221,5 @@ class TransactionsRepository {
     if (direct != null) return direct;
     if (alternatives?.length == 1) return alternatives!.first;
     return fallbackAddress;
-  }
-
-  Future<TransactionData?> loadCoinTransferById({
-    required String transferId,
-    required String walletId,
-  }) async {
-    final dto = await _ionIdentityClient.wallets
-        .getWalletTransferRequestById(walletId: walletId, transferId: transferId);
-    final senderAddress = _userWallets.firstWhereOrNull((e) => e.id == dto.walletId)?.address;
-    final symbol = _extractSymbolFromDtoMetadata(dto.metadata);
-    final nativeCoin = await _coinsDao.getByFilters(
-      networks: [dto.network],
-      contractAddresses: [''],
-    ).then((result) => result.firstOrNull);
-    final transferredCoin = _isNativeKind(dto.requestBody.kind)
-        ? nativeCoin
-        : symbol == null
-            ? null
-            : await _coinsDao.getByFilters(
-                symbols: [symbol],
-                networks: [dto.network],
-              ).then((result) => result.firstOrNull);
-
-    if (dto.requestBody is! CoinTransferRequestBody ||
-        nativeCoin == null ||
-        senderAddress == null ||
-        transferredCoin == null) {
-      return null;
-    }
-
-    final rawAmount = (dto.requestBody as CoinTransferRequestBody).amount;
-    final convertedAmount = parseCryptoAmount(rawAmount, transferredCoin.decimals);
-    final amountUSD = convertedAmount * transferredCoin.priceUSD;
-
-    return TransactionData(
-      id: dto.id,
-      network: transferredCoin.network,
-      txHash: dto.txHash!,
-      type: TransactionType.send,
-      senderWalletAddress: senderAddress,
-      receiverWalletAddress: dto.requestBody.to,
-      nativeCoin: nativeCoin,
-      fee: dto.fee,
-      status: TransactionStatus.fromJson(dto.status),
-      dateConfirmed: dto.dateConfirmed,
-      dateRequested: dto.dateRequested,
-      cryptoAsset: CoinTransactionAsset(
-        coin: transferredCoin,
-        rawAmount: rawAmount,
-        amountUSD: amountUSD,
-        amount: convertedAmount,
-      ),
-    );
-  }
-
-  bool _isNativeKind(String kind) => kind.toLowerCase().contains('native');
-
-  String? _extractSymbolFromDtoMetadata(Map<String, dynamic>? metadata) {
-    final asset = metadata?['asset'];
-    if (asset is Map<String, dynamic>) {
-      final symbol = asset['symbol'];
-      if (symbol is String) return symbol;
-    }
-
-    return null;
   }
 }

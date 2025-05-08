@@ -46,10 +46,16 @@ class CoinDetailsPage extends HookConsumerWidget {
     final isTransactionsLoading = history == null;
 
     final coinTransactionsMap = useMemoized(
-      () => groupBy(
-        history?.transactions ?? <CoinTransactionData>[],
-        (CoinTransactionData tx) => toPastDateDisplayValue(tx.timestamp, context),
-      ),
+      () {
+        final sorted = (history?.transactions ?? <CoinTransactionData>[]).sorted(
+          (t1, t2) => t2.timestamp.compareTo(t1.timestamp),
+        );
+        final grouped = groupBy(
+          sorted,
+          (CoinTransactionData tx) => toPastDateDisplayValue(tx.timestamp, context),
+        );
+        return grouped;
+      },
       [history, context],
     );
 
