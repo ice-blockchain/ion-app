@@ -36,4 +36,6 @@ ExportOptions.plist
 
 GoogleService-Info.plist
 Flutter/Environment.xcconfig
+Flutter/NotificationServiceExtensionEnvironment.xcconfig
 Runner/Runner.entitlements
+NotificationServiceExtension/NotificationServiceExtension.entitlements
