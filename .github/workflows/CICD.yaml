@@ -301,7 +301,7 @@ jobs:
         uses: ruby/setup-ruby@v1
         with:
           working-directory: main-repo
-          ruby-version: "3.2.2"
+          ruby-version: "3.4.3"
           bundler-cache: true
       - name: Set Flutter
         id: set-flutter
