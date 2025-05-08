@@ -1,6 +1,7 @@
 // SPDX-License-Identifier: ice License 1.0
 
 import 'package:flutter/material.dart';
+import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_keyboard_visibility/flutter_keyboard_visibility.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/components/button/button.dart';
@@ -9,6 +10,7 @@ import 'package:ion/app/components/screen_offset/screen_side_offset.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/extensions/object.dart';
 import 'package:ion/app/features/wallets/providers/send_nft_form_provider.c.dart';
+import 'package:ion/app/features/wallets/utils/wallet_address_validator.dart';
 import 'package:ion/app/features/wallets/views/components/nft_name.dart';
 import 'package:ion/app/features/wallets/views/components/nft_picture.dart';
 import 'package:ion/app/features/wallets/views/pages/coins_flow/send_coins/components/contact_input_switcher.dart';
@@ -19,7 +21,7 @@ import 'package:ion/app/router/components/navigation_app_bar/navigation_close_bu
 import 'package:ion/app/router/components/sheet_content/sheet_content.dart';
 import 'package:ion/generated/assets.gen.dart';
 
-class SendNftForm extends ConsumerWidget {
+class SendNftForm extends HookConsumerWidget {
   const SendNftForm({super.key});
 
   @override
@@ -31,6 +33,15 @@ class SendNftForm extends ConsumerWidget {
     final notifier = ref.watch(sendNftFormControllerProvider.notifier);
     final selectedNft = formController.nft!;
     final selectedContactPubkey = formController.contactPubkey;
+
+    final addressValidator = useMemoized(
+      () => WalletAddressValidator(formController.nft?.network.id ?? ''),
+      [formController.nft?.network.id],
+    );
+
+    final isContinueButtonEnabled = selectedContactPubkey != null ||
+        (formController.receiverAddress.isNotEmpty &&
+            addressValidator.validate(formController.receiverAddress));
 
     return SheetContent(
       backgroundColor: colors.secondaryBackground,
@@ -90,10 +101,10 @@ class SendNftForm extends ConsumerWidget {
                     const NftNetworkFeeSelector(),
                     SizedBox(height: 45.0.s),
                     Button(
-                      label: Text(
-                        locale.button_continue,
-                      ),
+                      label: Text(locale.button_continue),
                       mainAxisSize: MainAxisSize.max,
+                      disabled: !isContinueButtonEnabled,
+                      type: isContinueButtonEnabled ? ButtonType.primary : ButtonType.disabled,
                       trailingIcon: ColorFiltered(
                         colorFilter: ColorFilter.mode(
                           colors.primaryBackground,
