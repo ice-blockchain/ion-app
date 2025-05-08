@@ -3,8 +3,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:ion/app/extensions/extensions.dart';
+import 'package:ion/app/features/core/views/pages/error_modal.dart';
 import 'package:ion/app/features/protect_account/components/two_fa_success_step.dart';
-import 'package:ion/app/features/protect_account/email/views/pages/delete_email/components/delete_email_cant_remove_modal.dart';
 import 'package:ion/app/features/protect_account/email/views/pages/delete_email/components/delete_email_initial_step.dart';
 import 'package:ion/app/features/protect_account/email/views/pages/delete_email/components/delete_email_input_step.dart';
 import 'package:ion/app/features/protect_account/email/views/pages/delete_email/components/delete_email_select_options_step.dart';
@@ -53,13 +54,20 @@ class EmailDeletePage extends HookConsumerWidget {
   void _onInitiateDelete(WidgetRef ref, ValueNotifier<DeleteTwoFAStep> step) {
     final enabledTwoFaOptions = ref.read(availableTwoFaTypesProvider);
     if (enabledTwoFaOptions.count > 1) {
-      showSimpleBottomSheet<void>(
-        context: ref.context,
-        isDismissible: false,
-        child: const DeleteEmailCantRemoveModal(),
-      );
+      _showCantRemoveEmailModal(ref);
     } else {
       step.value = DeleteTwoFAStep.selectOptions;
     }
+  }
+
+  void _showCantRemoveEmailModal(WidgetRef ref) {
+    showErrorModalFromDetails(
+      ref.context,
+      errorDetails: ErrorDetails(
+        title: ref.context.i18n.two_fa_delete_email_button,
+        description: ref.context.i18n.two_fa_delete_email_cant_remove_description,
+      ),
+      buttonTitle: ref.context.i18n.button_close,
+    );
   }
 }
