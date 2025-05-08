@@ -7,6 +7,7 @@ import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/wallets/views/utils/amount_parser.dart';
 import 'package:ion/app/features/wallets/views/utils/crypto_formatter.dart';
 import 'package:ion/app/utils/num.dart';
+import 'package:ion/app/utils/text_input_formatters.dart';
 
 class CoinAmountInput extends HookWidget {
   const CoinAmountInput({
@@ -41,6 +42,9 @@ class CoinAmountInput extends HookWidget {
           autoValidateMode: AutovalidateMode.always,
           keyboardType: const TextInputType.numberWithOptions(decimal: true),
           onValidated: (isValid) => isValidInput.value = isValid,
+          inputFormatters: [
+            decimalInputFormatter(maxDecimals: 18),
+          ],
           validator: (value) {
             final trimmedValue = value?.trim() ?? '';
             if (trimmedValue.isEmpty) {
