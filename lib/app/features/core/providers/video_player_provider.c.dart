@@ -45,11 +45,10 @@ class VideoControllerParams {
 @riverpod
 class VideoController extends _$VideoController {
   CachedVideoPlayerPlusController? _activeController;
+  bool _isDisposed = false;
 
   @override
   Future<Raw<CachedVideoPlayerPlusController>> build(VideoControllerParams params) async {
-    final isMuted = ref.watch(globalMuteProvider);
-
     final sourcePath = ref.watch(
       iONConnectMediaUrlFallbackProvider
           .select((state) => state[params.sourcePath] ?? params.sourcePath),
@@ -57,14 +56,12 @@ class VideoController extends _$VideoController {
 
     final controller = ref
         .watch(videoPlayerControllerFactoryProvider(sourcePath))
-        .createController(VideoPlayerOptions(mixWithOthers: isMuted));
+        .createController(VideoPlayerOptions(mixWithOthers: true));
 
     try {
       await controller.initialize();
       if (!controller.value.hasError) {
-        await Future.wait(
-          [controller.setLooping(params.looping), controller.setVolume(isMuted ? 0 : 1)],
-        );
+        await controller.setLooping(params.looping);
 
         if (_activeController != null) {
           final prevController = _activeController!;
@@ -85,6 +82,12 @@ class VideoController extends _$VideoController {
         }
 
         _activeController = controller;
+
+        ref.listen(globalMuteProvider, (previous, next) {
+          if (!_isDisposed && _activeController != null) {
+            _activeController!.setVolume(next ? 0 : 1);
+          }
+        });
       }
     } catch (error, stackTrace) {
       final authorPubkey = params.authorPubkey;
@@ -101,6 +104,7 @@ class VideoController extends _$VideoController {
     }
 
     ref.onCancel(() async {
+      _isDisposed = true;
       return controller.dispose();
     });
 
