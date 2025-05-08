@@ -64,7 +64,7 @@ class PushTranslationsRepository {
   final Duration _cacheMaxDuration;
 
   Future<String> syncTranslations() async {
-    final file = File(await _cachePath);
+    final file = File(await cachePath);
 
     if (file.existsSync() && _fetchedForLocale(_locale)) {
       final cacheDuration = file.lastModifiedSync().difference(DateTime.now());
@@ -99,7 +99,7 @@ class PushTranslationsRepository {
     }
   }
 
-  Future<String> get _cachePath async {
+  static Future<String> get cachePath async {
     final directory = await getApplicationDocumentsDirectory();
     return '${directory.path}/$_translationsFileName';
   }
