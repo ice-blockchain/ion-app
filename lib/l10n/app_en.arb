@@ -130,6 +130,7 @@
   "two_fa_auth": "Authenticator code",
   "two_fa_code_confirmation": "Please enter the code sent to",
   "two_fa_delete_email_button": "Delete email",
+  "two_fa_delete_email_cant_remove_description": "You can't remove your email while other 2FA methods are still active. Please remove those first.",
   "two_fa_edit_phone_button": "Update phone",
   "two_fa_deleting_email_title": "Deleting email",
   "two_fa_deleting_email_description": "To delete the email verification, you must confirm by selecting the options first",
