@@ -503,3 +503,13 @@ class FetchPushTranslationsException extends IONException {
   FetchPushTranslationsException(dynamic error)
       : super(10101, 'Failed to fetch push translations: $error');
 }
+
+class CombineAudioFilesException extends IONException {
+  CombineAudioFilesException({
+    required this.logs,
+    required this.stackTrace,
+  }) : super(10102, 'Failed to combine audio files');
+
+  final String logs;
+  final String stackTrace;
+}

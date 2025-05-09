@@ -3,20 +3,19 @@
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/extensions/extensions.dart';
-import 'package:ion/app/features/chat/providers/messaging_bottom_bar_state_provider.c.dart';
 import 'package:ion/generated/assets.gen.dart';
 
 class DeleteAudioButton extends ConsumerWidget {
   const DeleteAudioButton({
+    required this.onPressed,
     super.key,
   });
 
+  final VoidCallback onPressed;
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     return GestureDetector(
-      onTap: () {
-        ref.read(messagingBottomBarActiveStateProvider.notifier).setText();
-      },
+      onTap: onPressed,
       child: Padding(
         padding: EdgeInsetsDirectional.fromSTEB(12.0.s, 4.0.s, 4.0.s, 4.0.s),
         child: Assets.svg.iconBlockDelete.icon(

@@ -100,6 +100,38 @@ class AudioCompressor implements Compressor<AudioCompressionSettings> {
       rethrow;
     }
   }
+
+  ///
+  /// Combine multiple audio files into one.
+  /// If success, returns the path to the combined audio file.
+  ///
+  Future<MediaFile> combineAudioFiles(List<MediaFile> inputPaths) async {
+    final extension = inputPaths.last.mimeType?.split('/').last ?? '';
+    final outputPath = await generateOutputPath(extension: extension);
+    try {
+      final session = await compressExecutor.execute(
+        FFmpegCommands.combineAudioFiles(
+          inputPaths: inputPaths.map((e) => e.path).toList(),
+          outputPath: outputPath,
+        ),
+      );
+
+      final returnCode = await session.getReturnCode();
+      if (ReturnCode.isSuccess(returnCode)) {
+        return MediaFile(
+          path: outputPath,
+          mimeType: inputPaths.last.mimeType,
+        );
+      }
+      throw CombineAudioFilesException(
+        logs: await session.getAllLogsAsString() ?? '',
+        stackTrace: await session.getFailStackTrace() ?? '',
+      );
+    } catch (error, stackTrace) {
+      Logger.log('Error during audio compression!', error: error, stackTrace: stackTrace);
+      rethrow;
+    }
+  }
 }
 
 @Riverpod(keepAlive: true)

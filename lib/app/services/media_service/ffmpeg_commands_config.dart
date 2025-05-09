@@ -133,4 +133,27 @@ class FFmpegCommands {
         '1',
         outputPath,
       ];
+
+  static List<String> combineAudioFiles({
+    required List<String> inputPaths,
+    required String outputPath,
+  }) {
+    final args = <String>[];
+
+    for (final inputPath in inputPaths) {
+      args.addAll(['-i', inputPath]);
+    }
+
+    final inputs = List.generate(inputPaths.length, (i) => '[$i:a]').join();
+    final filter = '$inputs concat=n=${inputPaths.length}:v=0:a=1[outa]';
+
+    return [
+      ...args,
+      '-filter_complex',
+      filter,
+      '-map',
+      '[outa]',
+      outputPath,
+    ];
+  }
 }
