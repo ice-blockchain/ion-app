@@ -3,6 +3,7 @@
 import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
+import 'package:flutter_keyboard_visibility/flutter_keyboard_visibility.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/components/screen_offset/screen_side_offset.dart';
 import 'package:ion/app/extensions/extensions.dart';
@@ -23,29 +24,40 @@ class OneToOneMessageList extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final allMessages = messages.values.expand((e) => e).toList()..sortBy((e) => e.publishedAt);
     final itemScrollController = useMemoized(ItemScrollController.new);
+    final keyboardController = useMemoized(KeyboardVisibilityController.new);
+    final allMessages = messages.values.expand((e) => e).toList()..sortBy((e) => e.publishedAt);
 
     useOnInit(() {
       if (allMessages.isNotEmpty && itemScrollController.isAttached) {
+        itemScrollController.jumpTo(index: allMessages.length);
+      }
+    });
+
+    usePrevious(allMessages.length);
+    {
+      final previous = usePrevious(allMessages.length);
+      if (previous != null && allMessages.length > previous) {
         itemScrollController.scrollTo(
           index: allMessages.length,
           duration: const Duration(milliseconds: 300),
         );
       }
-    });
+    }
 
     useEffect(
       () {
-        if (itemScrollController.isAttached) {
-          itemScrollController.scrollTo(
-            index: allMessages.length,
-            duration: const Duration(milliseconds: 300),
-          );
-        }
-        return null;
+        final subscription = keyboardController.onChange.listen((isVisible) {
+          if (isVisible && itemScrollController.isAttached) {
+            itemScrollController.scrollTo(
+              index: allMessages.length,
+              duration: const Duration(milliseconds: 300),
+            );
+          }
+        });
+
+        return subscription.cancel;
       },
-      [allMessages],
     );
 
     final onTapReply = useCallback(
@@ -80,10 +92,10 @@ class OneToOneMessageList extends HookConsumerWidget {
                 ?.key;
 
             final previousMessage = index > 0 ? allMessages[index - 1] : null;
-            final isLastMessage = index == 0;
+            final isLastMessage = index == allMessages.length - 1;
 
-            final isLastMessageFromAuthor =
-                previousMessage == null || previousMessage.pubkey == message.pubkey;
+            final isMessageFromAnotherAuthor =
+                previousMessage == null || previousMessage.pubkey != message.pubkey;
 
             return Column(
               mainAxisSize: MainAxisSize.min,
@@ -97,11 +109,8 @@ class OneToOneMessageList extends HookConsumerWidget {
                   ),
                 Padding(
                   padding: EdgeInsetsDirectional.only(
-                    bottom: isLastMessage
-                        ? 20.0.s
-                        : isLastMessageFromAuthor
-                            ? 8.0.s
-                            : 16.0.s,
+                    bottom: isLastMessage ? 20.0.s : 8.0.s,
+                    top: isMessageFromAnotherAuthor ? 8.0.s : 0,
                   ),
                   child: switch (entity.data.messageType) {
                     MessageType.text => TextMessage(

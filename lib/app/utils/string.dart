@@ -2,11 +2,12 @@
 
 extension StringExtensions on String {
   static final RegExp emojiOnlyRegExp = RegExp(
-    r'^(?:\p{Emoji}|\p{Emoji_Presentation}|\p{Extended_Pictographic}|\uFE0F)$',
+    r'^(?:\p{Emoji}|\p{Emoji_Presentation}|\p{Extended_Pictographic})(?!\d)$',
     unicode: true,
   );
 
   bool get isEmoji {
+    if (RegExp(r'^\d+$').hasMatch(this)) return false;
     return emojiOnlyRegExp.hasMatch(this);
   }
 
