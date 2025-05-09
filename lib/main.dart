@@ -31,9 +31,7 @@ void main() async {
     appRunner: () => runApp(
       UncontrolledProviderScope(
         container: container,
-        child: SentryWidget(
-          child: const IONApp(),
-        ),
+        child: const IONApp(),
       ),
     ),
   );
