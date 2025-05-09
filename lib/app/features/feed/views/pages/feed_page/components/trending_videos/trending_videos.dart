@@ -37,7 +37,7 @@ class TrendingVideos extends ConsumerWidget {
           SizedBox(height: 10.0.s),
           const TrendingVideosListSkeleton(listOverlay: listOverlay),
           SizedBox(height: 18.0.s),
-          FeedListSeparator(),
+          FeedListSeparator(height: 4.0.s),
         ],
       );
     }
@@ -77,7 +77,7 @@ class TrendingVideos extends ConsumerWidget {
           ),
         ),
         SizedBox(height: 18.0.s),
-        FeedListSeparator(),
+        FeedListSeparator(height: 4.0.s),
       ],
     );
   }

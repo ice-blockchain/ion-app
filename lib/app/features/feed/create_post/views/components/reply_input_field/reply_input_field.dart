@@ -91,12 +91,14 @@ class ReplyInputField extends HookConsumerWidget {
           Row(
             children: [
               if (!hasFocus.value && currentPubkey != null)
-                IonConnectAvatar(
-                  pubkey: currentPubkey,
-                  size: 36.0.s,
-                  borderRadius: BorderRadius.all(Radius.circular(12.0.s)),
+                Padding(
+                  padding: EdgeInsetsDirectional.only(end: 6.0.s),
+                  child: IonConnectAvatar(
+                    pubkey: currentPubkey,
+                    size: 36.0.s,
+                    borderRadius: BorderRadius.all(Radius.circular(12.0.s)),
+                  ),
                 ),
-              SizedBox(width: 6.0.s),
               Expanded(
                 child: DecoratedBox(
                   decoration: BoxDecoration(
