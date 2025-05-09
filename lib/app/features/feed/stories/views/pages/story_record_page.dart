@@ -32,71 +32,27 @@ class StoryRecordPage extends HookConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final cameraState = ref.watch(cameraControllerNotifierProvider);
     final isRecording = cameraState.maybeWhen(
-      ready: (_, isRecording, __) => isRecording,
+      ready: (_, recording, __) => recording,
       orElse: () => false,
     );
 
     final (recordingDuration, recordingProgress) =
         useRecordingProgress(ref, isRecording: isRecording);
+
     final isCameraReady = cameraState is CameraReady;
+    final captureController = ref.watch(cameraCaptureControllerProvider.notifier);
 
     ref
       ..listen<CameraCaptureState>(
         cameraCaptureControllerProvider,
-        (prev, next) async {
-          await next.whenOrNull(
-            saved: (file) async {
-              final type = MediaType.fromMimeType(file.mimeType ?? '');
-
-              if (type == MediaType.video) {
-                final edited =
-                    await ref.read(mediaEditingServiceProvider).edit(file, resumeCamera: false);
-
-                if (edited != null && edited != file.path && context.mounted) {
-                  await StoryPreviewRoute(path: edited, mimeType: file.mimeType)
-                      .push<void>(context);
-                }
-                await ref.read(cameraControllerNotifierProvider.notifier).resumeCamera();
-                return;
-              }
-
-              if (type == MediaType.image) {
-                await ref
-                    .read(
-                      imageProcessorNotifierProvider(ImageProcessingType.story).notifier,
-                    )
-                    .process(
-                      assetId: file.path,
-                      cropUiSettings: ref.read(mediaServiceProvider).buildCropImageUiSettings(
-                        context,
-                        aspectRatioPresets: [CropAspectRatioPreset.ratio16x9],
-                      ),
-                    );
-                return;
-              }
-            },
-          );
-        },
+        (previous, next) => _handleCameraCaptureState(context, ref, next),
       )
       ..listen<ImageProcessorState>(
         imageProcessorNotifierProvider(ImageProcessingType.story),
-        (prev, next) async {
-          await next.whenOrNull(
-            processed: (file) async {
-              final edited = await ref
-                  .read(mediaEditingServiceProvider)
-                  .editExternalPhoto(file.path, resumeCamera: false);
-
-              if (edited != null && edited != file.path && context.mounted) {
-                await StoryPreviewRoute(path: edited, mimeType: file.mimeType).push<void>(context);
-              }
-              await ref.read(cameraControllerNotifierProvider.notifier).resumeCamera();
-            },
-          );
-        },
+        (previous, next) => _handleImageProcessorState(context, ref, next),
       );
 
-    final capture = ref.watch(cameraCaptureControllerProvider.notifier);
+    Future<void> onGallerySelected(MediaFile file) => _handleGallerySelection(context, ref, file);
 
     return PermissionAwareWidget(
       permissionType: Permission.camera,
@@ -110,43 +66,14 @@ class StoryRecordPage extends HookConsumerWidget {
             fit: StackFit.expand,
             children: [
               cameraState.maybeWhen(
-                ready: (ctrl, _, __) => CustomCameraPreview(controller: ctrl),
+                ready: (controller, _, __) => CustomCameraPreview(controller: controller),
                 orElse: () => const CenteredLoadingIndicator(),
               ),
               if (isRecording)
                 CameraRecordingIndicator(recordingDuration: recordingDuration)
               else
                 CameraIdlePreview(
-                  onGallerySelected: (file) async {
-                    final type = MediaType.fromMimeType(file.mimeType ?? '');
-
-                    if (type == MediaType.video) {
-                      final edited = await ref
-                          .read(mediaEditingServiceProvider)
-                          .edit(file, resumeCamera: false);
-
-                      if (edited != null && edited != file.path && context.mounted) {
-                        await StoryPreviewRoute(path: edited, mimeType: file.mimeType)
-                            .push<void>(context);
-                      }
-                      await ref.read(cameraControllerNotifierProvider.notifier).resumeCamera();
-                      return;
-                    }
-
-                    await ref
-                        .read(
-                          imageProcessorNotifierProvider(
-                            ImageProcessingType.story,
-                          ).notifier,
-                        )
-                        .process(
-                          assetId: file.path,
-                          cropUiSettings: ref.read(mediaServiceProvider).buildCropImageUiSettings(
-                            context,
-                            aspectRatioPresets: [CropAspectRatioPreset.ratio16x9],
-                          ),
-                        );
-                  },
+                  onGallerySelected: onGallerySelected,
                 ),
               Positioned.fill(
                 bottom: 16.0.s,
@@ -155,9 +82,9 @@ class StoryRecordPage extends HookConsumerWidget {
                   child: CameraCaptureButton(
                     isRecording: isRecording,
                     recordingProgress: recordingProgress,
-                    onCapturePhoto: isCameraReady ? capture.takePhoto : null,
-                    onRecordingStart: isCameraReady ? capture.startVideoRecording : null,
-                    onRecordingStop: isCameraReady ? capture.stopVideoRecording : null,
+                    onCapturePhoto: isCameraReady ? captureController.takePhoto : null,
+                    onRecordingStart: isCameraReady ? captureController.startVideoRecording : null,
+                    onRecordingStop: isCameraReady ? captureController.stopVideoRecording : null,
                   ),
                 ),
               ),
@@ -167,5 +94,87 @@ class StoryRecordPage extends HookConsumerWidget {
         ),
       ),
     );
+  }
+
+  Future<void> _handleCameraCaptureState(
+    BuildContext context,
+    WidgetRef ref,
+    CameraCaptureState state,
+  ) async {
+    await state.whenOrNull(
+      saved: (file) async {
+        final mediaType = MediaType.fromMimeType(file.mimeType ?? '');
+
+        if (mediaType == MediaType.video) {
+          final edited =
+              await ref.read(mediaEditingServiceProvider).edit(file, resumeCamera: false);
+
+          if (edited != null && edited != file.path && context.mounted) {
+            await StoryPreviewRoute(path: edited, mimeType: file.mimeType).push<void>(context);
+          }
+          await ref.read(cameraControllerNotifierProvider.notifier).resumeCamera();
+        } else if (mediaType == MediaType.image) {
+          await ref
+              .read(
+                imageProcessorNotifierProvider(ImageProcessingType.story).notifier,
+              )
+              .process(
+                assetId: file.path,
+                cropUiSettings: ref.read(mediaServiceProvider).buildCropImageUiSettings(
+                  context,
+                  aspectRatioPresets: [CropAspectRatioPreset.ratio16x9],
+                ),
+              );
+        }
+      },
+    );
+  }
+
+  Future<void> _handleImageProcessorState(
+    BuildContext context,
+    WidgetRef ref,
+    ImageProcessorState state,
+  ) async {
+    await state.whenOrNull(
+      processed: (file) async {
+        final edited = await ref
+            .read(mediaEditingServiceProvider)
+            .editExternalPhoto(file.path, resumeCamera: false);
+
+        if (edited != null && edited != file.path && context.mounted) {
+          await StoryPreviewRoute(path: edited, mimeType: file.mimeType).push<void>(context);
+        }
+        await ref.read(cameraControllerNotifierProvider.notifier).resumeCamera();
+      },
+    );
+  }
+
+  Future<void> _handleGallerySelection(
+    BuildContext context,
+    WidgetRef ref,
+    MediaFile file,
+  ) async {
+    final mediaType = MediaType.fromMimeType(file.mimeType ?? '');
+
+    if (mediaType == MediaType.video) {
+      final edited = await ref.read(mediaEditingServiceProvider).edit(file, resumeCamera: false);
+
+      if (edited != null && edited != file.path && context.mounted) {
+        await StoryPreviewRoute(path: edited, mimeType: file.mimeType).push<void>(context);
+      }
+      await ref.read(cameraControllerNotifierProvider.notifier).resumeCamera();
+    } else if (mediaType == MediaType.image) {
+      await ref
+          .read(
+            imageProcessorNotifierProvider(ImageProcessingType.story).notifier,
+          )
+          .process(
+            assetId: file.path,
+            cropUiSettings: ref.read(mediaServiceProvider).buildCropImageUiSettings(
+              context,
+              aspectRatioPresets: [CropAspectRatioPreset.ratio16x9],
+            ),
+          );
+    }
   }
 }

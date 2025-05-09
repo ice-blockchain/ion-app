@@ -20,13 +20,13 @@ class MediaEditingService {
 
   Future<String?> edit(MediaFile file, {bool resumeCamera = true}) async {
     final camera = _ref.read(cameraControllerNotifierProvider.notifier);
-    final wasPaused = _ref.read(cameraControllerNotifierProvider) is CameraPaused;
+    final isCameraPaused = _ref.read(cameraControllerNotifierProvider) is CameraPaused;
 
-    if (!wasPaused) await camera.pauseCamera();
+    if (!isCameraPaused) await camera.pauseCamera();
     try {
       return await _ref.read(editMediaProvider(file).future);
     } finally {
-      if (resumeCamera && !wasPaused) await camera.resumeCamera();
+      if (resumeCamera && !isCameraPaused) await camera.resumeCamera();
     }
   }
 
@@ -34,14 +34,14 @@ class MediaEditingService {
     String filePath, {
     bool resumeCamera = true,
   }) async {
-    final cam = _ref.read(cameraControllerNotifierProvider.notifier);
-    final wasPaused = _ref.read(cameraControllerNotifierProvider) is CameraPaused;
+    final camera = _ref.read(cameraControllerNotifierProvider.notifier);
+    final isCameraPaused = _ref.read(cameraControllerNotifierProvider) is CameraPaused;
 
-    if (!wasPaused) await cam.pauseCamera();
+    if (!isCameraPaused) await camera.pauseCamera();
     try {
       return await _ref.read(banubaServiceProvider).editPhoto(filePath);
     } finally {
-      if (resumeCamera && !wasPaused) await cam.resumeCamera();
+      if (resumeCamera && !isCameraPaused) await camera.resumeCamera();
     }
   }
 }
