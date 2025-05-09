@@ -17,8 +17,6 @@ part 'relay_firebase_app_config_provider.c.g.dart';
 
 @Riverpod(keepAlive: true)
 class RelayFirebaseAppConfig extends _$RelayFirebaseAppConfig {
-  static const String _configuredFirebaseAppKey = 'configured_firebase_app_key';
-
   @override
   Future<RelayFirebaseConfig?> build() async {
     final authState = await ref.watch(authProvider.future);
@@ -31,12 +29,12 @@ class RelayFirebaseAppConfig extends _$RelayFirebaseAppConfig {
       return null;
     }
 
+    final savedConfig = ref.watch(savedFirebaseAppConfigProvider);
+
     final relayUrls = [...userRelay.urls];
 
-    final savedFirebaseConfig = await _loadConfig();
-
-    if (savedFirebaseConfig != null && relayUrls.contains(savedFirebaseConfig.relayUrl)) {
-      return savedFirebaseConfig;
+    if (savedConfig != null && relayUrls.contains(savedConfig.relayUrl)) {
+      return savedConfig;
     }
 
     while (relayUrls.isNotEmpty) {
@@ -63,15 +61,32 @@ class RelayFirebaseAppConfig extends _$RelayFirebaseAppConfig {
       relayPubkey: relayInfo.pubkey,
     );
   }
+}
 
-  Future<void> saveConfig(RelayFirebaseConfig relayFirebaseConfig) async {
-    await ref.read(localStorageProvider).setString(
-          _configuredFirebaseAppKey,
-          jsonEncode(relayFirebaseConfig.toJson()),
-        );
+@Riverpod(keepAlive: true)
+class SavedFirebaseAppConfig extends _$SavedFirebaseAppConfig {
+  @override
+  RelayFirebaseConfig? build() {
+    listenSelf((_, next) => _saveConfig(next));
+    return _loadConfig();
   }
 
-  Future<RelayFirebaseConfig?> _loadConfig() async {
+  set config(RelayFirebaseConfig config) {
+    state = config;
+  }
+
+  Future<void> _saveConfig(RelayFirebaseConfig? relayFirebaseConfig) async {
+    if (relayFirebaseConfig == null) {
+      await ref.read(localStorageProvider).remove(_configuredFirebaseAppKey);
+    } else {
+      await ref.read(localStorageProvider).setString(
+            _configuredFirebaseAppKey,
+            jsonEncode(relayFirebaseConfig.toJson()),
+          );
+    }
+  }
+
+  RelayFirebaseConfig? _loadConfig() {
     try {
       final relayFirebaseConfigJson =
           ref.read(localStorageProvider).getString(_configuredFirebaseAppKey);
@@ -90,6 +105,8 @@ class RelayFirebaseAppConfig extends _$RelayFirebaseAppConfig {
       return null;
     }
   }
+
+  static const String _configuredFirebaseAppKey = 'configured_firebase_app_key';
 }
 
 @freezed

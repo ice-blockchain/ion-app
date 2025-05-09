@@ -40,7 +40,7 @@ platform :ios do
         match(
             type: sign_type,
             readonly: true,
-            app_identifier: APP_ID,
+            app_identifier: [APP_ID, "#{APP_ID}.NotificationServiceExtension"],
             keychain_name: temp_keystore_user,
             keychain_password: temp_keystore_password,
             api_key_path: "./fastlane/keys/appstore-connect-key.json",
@@ -49,7 +49,14 @@ platform :ios do
 
         update_code_signing_settings(
             path: "./ios/Runner.xcodeproj",
+            targets: ["Runner"],
             profile_name: ENV["sigh_#{APP_ID}_#{sign_type}_profile-name"]
+        )
+
+        update_code_signing_settings(
+            path: "./ios/Runner.xcodeproj",
+            targets: ["NotificationServiceExtension"],
+            profile_name: ENV["sigh_#{APP_ID}.NotificationServiceExtension_#{sign_type}_profile-name"]
         )
     end
 

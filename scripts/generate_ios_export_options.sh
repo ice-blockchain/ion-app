@@ -56,6 +56,8 @@ cat <<EOL > "$outputPath"
     <dict>
       <key>$bundleId</key>
       <string>match $profileType $bundleId</string>
+      <key>$bundleId.NotificationServiceExtension</key>
+      <string>match $profileType $bundleId.NotificationServiceExtension</string>
     </dict>
   </dict>
 </plist>
