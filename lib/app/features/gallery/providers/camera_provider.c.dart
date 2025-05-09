@@ -1,10 +1,9 @@
 // SPDX-License-Identifier: ice License 1.0
 
-import 'dart:ui';
-
 import 'package:camera/camera.dart';
 import 'package:collection/collection.dart';
 import 'package:file_saver/file_saver.dart';
+import 'package:flutter/scheduler.dart';
 import 'package:ion/app/features/core/permissions/data/models/permissions_types.dart';
 import 'package:ion/app/features/core/permissions/providers/permissions_provider.c.dart';
 import 'package:ion/app/features/core/providers/app_lifecycle_provider.c.dart';
@@ -98,55 +97,82 @@ class CameraControllerNotifier extends _$CameraControllerNotifier {
 
   Future<void> pauseCamera() async {
     if (_cameraController != null) {
-      _cameraController?.removeListener(_onCameraControllerUpdate);
-      await _disposeCamera();
-      state = const CameraState.initial();
+      state = const CameraState.paused();
+
+      Logger.log('Pausing camera - disposing controller');
+
+      final controllerToDispose = _cameraController;
+      controllerToDispose?.removeListener(_onCameraControllerUpdate);
+
+      _cameraController = null;
+
+      try {
+        await controllerToDispose?.dispose();
+        Logger.log('Camera controller disposed');
+      } catch (e) {
+        Logger.log('Error disposing camera controller', error: e);
+      }
     }
   }
 
   Future<bool> resumeCamera() async {
     final hasPermission = ref.read(hasPermissionProvider(Permission.camera));
-
     if (!hasPermission) {
+      Logger.log('Resume camera called without permission.');
       return false;
     }
 
-    final shouldSkipInitialization = state.maybeWhen(
-      loading: () => true,
-      ready: (_, __, ___) => true,
-      orElse: () => false,
-    );
-
-    if (shouldSkipInitialization) {
-      return state.maybeWhen(
-        ready: (_, __, ___) => true,
-        orElse: () => false,
-      );
+    if (state is CameraLoading) {
+      Logger.log('Camera already loading, skipping resume request');
+      return false;
     }
 
+    if (state is CameraReady && (_cameraController?.value.isInitialized ?? false)) {
+      Logger.log('Camera already ready, no need to resume');
+      return true;
+    }
+
+    Logger.log('Resuming camera with full initialization');
     await _initializeCamera();
-    return state is CameraReady;
+    final isReady = state is CameraReady;
+    Logger.log('Camera resume result: $isReady');
+    return isReady;
   }
 
   Future<bool> handlePermissionChange({required bool hasPermission}) async {
     if (hasPermission) {
       return resumeCamera();
     } else {
-      await pauseCamera();
+      Logger.log('Camera permission denied. Disposing camera.');
+      if (_cameraController != null) {
+        _cameraController?.removeListener(_onCameraControllerUpdate);
+        await _disposeCamera();
+      }
+      state = const CameraState.initial();
       return false;
     }
   }
 
   Future<void> switchCamera() async {
-    if (_cameraController == null) return;
+    if (_cameraController == null) {
+      Logger.log('Switch camera called but no current controller.');
+      await _initializeCamera();
+      if (_cameraController == null) return;
+    }
 
     final currentCamera = _cameraController!.description;
     final newCamera =
         currentCamera.lensDirection == CameraLensDirection.back ? _frontCamera : _backCamera;
 
-    if (newCamera == null) return;
+    if (newCamera == null) {
+      Logger.log('No other camera available to switch to.');
+      return;
+    }
 
-    await pauseCamera();
+    Logger.log('Switching camera. Disposing current controller.');
+    _cameraController?.removeListener(_onCameraControllerUpdate);
+    await _disposeCamera();
+
     state = const CameraState.loading();
     try {
       final controller = await _createCameraController(newCamera);
@@ -266,8 +292,14 @@ class CameraControllerNotifier extends _$CameraControllerNotifier {
 
   Future<void> _disposeCamera() async {
     if (_cameraController != null) {
-      await _cameraController?.dispose();
-      _cameraController = null;
+      try {
+        await _cameraController?.dispose();
+        Logger.log('Camera controller disposed in _disposeCamera');
+      } catch (e) {
+        Logger.log('Error disposing camera controller in _disposeCamera', error: e);
+      } finally {
+        _cameraController = null;
+      }
     }
   }
 }

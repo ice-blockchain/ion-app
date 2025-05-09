@@ -8,7 +8,7 @@ import 'package:ion/app/components/screen_offset/screen_bottom_offset.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/feed/stories/data/models/camera_capture_state.c.dart';
 import 'package:ion/app/features/feed/stories/hooks/use_recording_progress.dart';
-import 'package:ion/app/features/feed/stories/providers/camera_actions_provider.c.dart';
+import 'package:ion/app/features/feed/stories/providers/camera_capture_provider.c.dart';
 import 'package:ion/app/features/feed/stories/views/components/story_capture/camera/camera_idle_preview.dart';
 import 'package:ion/app/features/feed/stories/views/components/story_capture/camera/custom_camera_preview.dart';
 import 'package:ion/app/features/feed/stories/views/components/story_capture/controls/camera_capture_button.dart';
@@ -30,15 +30,14 @@ class GalleryCameraPage extends HookConsumerWidget {
     final cameraState = ref.watch(cameraControllerNotifierProvider);
 
     ref.listen<CameraCaptureState>(
-      cameraActionsControllerProvider,
-      (_, next) => next.whenOrNull(
-        saved: (file) {
-          if (context.mounted) {
-            context.pop(file);
-          }
-          return null;
-        },
-      ),
+      cameraCaptureControllerProvider,
+      (_, next) {
+        next.whenOrNull(
+          saved: (file) {
+            if (context.mounted) context.pop(file);
+          },
+        );
+      },
     );
 
     final isRecording = cameraState.maybeWhen(
@@ -51,13 +50,12 @@ class GalleryCameraPage extends HookConsumerWidget {
       isRecording: isRecording,
     );
 
+    final captureNotifier = ref.read(cameraCaptureControllerProvider.notifier);
     final isCameraReady = cameraState is CameraReady;
 
-    final storyCameraNotifier = ref.read(cameraActionsControllerProvider.notifier);
-
-    final capturePhotoAction = isCameraReady ? storyCameraNotifier.takePhoto : null;
-    final startVideoAction = isCameraReady ? storyCameraNotifier.startVideoRecording : null;
-    final stopVideoAction = isCameraReady ? storyCameraNotifier.stopVideoRecording : null;
+    final capturePhotoAction = isCameraReady ? captureNotifier.takePhoto : null;
+    final startVideoAction = isCameraReady ? captureNotifier.startVideoRecording : null;
+    final stopVideoAction = isCameraReady ? captureNotifier.stopVideoRecording : null;
 
     final (onCapturePhoto, onRecordingStart, onRecordingStop) = switch (type) {
       MediaPickerType.image => (capturePhotoAction, null, null),
@@ -78,7 +76,10 @@ class GalleryCameraPage extends HookConsumerWidget {
             if (isRecording)
               CameraRecordingIndicator(recordingDuration: recordingDuration)
             else
-              const CameraIdlePreview(showGalleryButton: false),
+              CameraIdlePreview(
+                showGalleryButton: false,
+                onGallerySelected: (_) async {},
+              ),
             Positioned.fill(
               bottom: 16.0.s,
               child: Align(

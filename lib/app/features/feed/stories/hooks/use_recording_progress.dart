@@ -3,7 +3,7 @@
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:ion/app/features/feed/stories/providers/camera_actions_provider.c.dart';
+import 'package:ion/app/features/feed/stories/providers/camera_capture_provider.c.dart';
 
 final Duration maxRecordingDuration = 20.seconds;
 
@@ -34,7 +34,7 @@ RecordingProgressResult useRecordingProgress(
         currentRecordingDuration.value = updatedDuration;
 
         if (animationController.isCompleted) {
-          ref.read(cameraActionsControllerProvider.notifier).stopVideoRecording();
+          ref.read(cameraCaptureControllerProvider.notifier).stopVideoRecording();
         }
       }
 
