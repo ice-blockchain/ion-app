@@ -70,7 +70,7 @@ class VisualMediaContent extends HookConsumerWidget {
 
         if (context.mounted) {
           await ChatMediaRoute(
-            eventMessageId: eventMessage.id,
+            eventReference: entity.toEventReference().encode(),
             initialIndex: messageMedias.indexOf(messageMediaTableData),
           ).push<void>(context);
         }
