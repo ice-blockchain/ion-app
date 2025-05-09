@@ -3,6 +3,7 @@
 import 'package:ion_identity_client/ion_identity.dart';
 import 'package:ion_identity_client/src/coins/ion_identity_coins.dart';
 import 'package:ion_identity_client/src/networks/ion_identity_networks.dart';
+import 'package:ion_identity_client/src/statistics/ion_identity_statistics.dart';
 import 'package:ion_identity_client/src/users/ion_identity_users.dart';
 import 'package:ion_identity_client/src/wallets/ion_identity_wallets.dart';
 
@@ -18,6 +19,7 @@ final class IONIdentityClient {
     required this.users,
     required this.coins,
     required this.networks,
+    required this.statistics,
   });
 
   /// Provides access to authentication-related operations for the user, such as registering
@@ -36,4 +38,7 @@ final class IONIdentityClient {
 
   /// Provides access to networks-related operations, such as getting estimate transaction fees.
   final IONIdentityNetworks networks;
+
+  /// Provides access to statistics-related operations, such as getting hashtags.
+  final IonIdentityStatistics statistics;
 }
