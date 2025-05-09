@@ -18,6 +18,8 @@ class SimpleModalSheet extends StatelessWidget {
     String? buttonText,
     VoidCallback? onPressed,
     Widget? button,
+    double? bottomOffset,
+    double? topOffset,
     bool isBottomSheet = false,
   }) {
     return SimpleModalSheet._(
@@ -29,6 +31,8 @@ class SimpleModalSheet extends StatelessWidget {
       button: button,
       offsetType: OffsetType.large,
       isBottomSheet: isBottomSheet,
+      bottomOffset: bottomOffset,
+      topOffset: topOffset,
     );
   }
 
@@ -40,6 +44,7 @@ class SimpleModalSheet extends StatelessWidget {
     VoidCallback? onPressed,
     Widget? button,
     double? bottomOffset,
+    double? topOffset,
     bool isBottomSheet = false,
   }) {
     return SimpleModalSheet._(
@@ -52,6 +57,7 @@ class SimpleModalSheet extends StatelessWidget {
       bottomOffset: bottomOffset,
       offsetType: OffsetType.small,
       isBottomSheet: isBottomSheet,
+      topOffset: topOffset,
     );
   }
 
@@ -65,9 +71,10 @@ class SimpleModalSheet extends StatelessWidget {
     this.button,
     this.bottomOffset,
     this.isBottomSheet = false,
+    this.topOffset,
   }) : assert(
-          (button != null) || (buttonText != null && onPressed != null),
-          'Either button or both buttonText and onPressed must be provided',
+          button != null || buttonText != null,
+          'Either button or both buttonText must be provided',
         );
 
   final String title;
@@ -79,13 +86,14 @@ class SimpleModalSheet extends StatelessWidget {
   final OffsetType offsetType;
   final bool isBottomSheet;
   final double? bottomOffset;
+  final double? topOffset;
 
   @override
   Widget build(BuildContext context) {
     final content = Column(
       mainAxisSize: MainAxisSize.min,
       children: [
-        SizedBox(height: 20.0.s),
+        SizedBox(height: topOffset ?? 20.0.s),
         Padding(
           padding: EdgeInsets.symmetric(horizontal: 24.0.s),
           child: InfoCard(
@@ -98,7 +106,7 @@ class SimpleModalSheet extends StatelessWidget {
         button ??
             _CommonButton(
               text: buttonText!,
-              onPressed: onPressed!,
+              onPressed: onPressed ?? () => Navigator.of(context).pop(),
               offsetType: offsetType,
             ),
         ScreenBottomOffset(margin: bottomOffset ?? 36.0.s),

@@ -3,8 +3,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:ion/app/components/modal_sheets/simple_modal_sheet.dart';
 import 'package:ion/app/extensions/extensions.dart';
-import 'package:ion/app/features/core/views/pages/error_modal.dart';
 import 'package:ion/app/features/protect_account/components/two_fa_success_step.dart';
 import 'package:ion/app/features/protect_account/email/views/pages/delete_email/components/delete_email_initial_step.dart';
 import 'package:ion/app/features/protect_account/email/views/pages/delete_email/components/delete_email_input_step.dart';
@@ -13,6 +13,7 @@ import 'package:ion/app/features/protect_account/model/two_fa_action_type.dart';
 import 'package:ion/app/features/protect_account/secure_account/data/models/delete_twofa_step.dart';
 import 'package:ion/app/features/protect_account/secure_account/providers/selected_two_fa_types_provider.c.dart';
 import 'package:ion/app/router/utils/show_simple_bottom_sheet.dart';
+import 'package:ion/generated/assets.gen.dart';
 
 class EmailDeletePage extends HookConsumerWidget {
   const EmailDeletePage({
@@ -61,13 +62,17 @@ class EmailDeletePage extends HookConsumerWidget {
   }
 
   void _showCantRemoveEmailModal(WidgetRef ref) {
-    showErrorModalFromDetails(
-      ref.context,
-      errorDetails: ErrorDetails(
+    showSimpleBottomSheet<void>(
+      context: ref.context,
+      child: SimpleModalSheet.alert(
+        iconAsset: Assets.svg.actionWalletKeyserror,
         title: ref.context.i18n.two_fa_delete_email_button,
         description: ref.context.i18n.two_fa_delete_email_cant_remove_description,
+        buttonText: ref.context.i18n.button_close,
+        isBottomSheet: true,
+        bottomOffset: 0.0.s,
+        topOffset: 30.0.s,
       ),
-      buttonTitle: ref.context.i18n.button_close,
     );
   }
 }
