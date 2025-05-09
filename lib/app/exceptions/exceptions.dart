@@ -499,9 +499,19 @@ class UserEventsMetadataBuilderException extends IONException {
       : super(10100, 'Unable to create user events metadata builder');
 }
 
-class FetchPushTranslationsException extends IONException {
-  FetchPushTranslationsException(dynamic error)
-      : super(10101, 'Failed to fetch push translations: $error');
+class FetchAppTranslationsException extends IONException {
+  FetchAppTranslationsException(dynamic error)
+      : super(10101, 'Failed to fetch app translations: $error');
+}
+
+class AppTranslationsCacheNotFoundException extends IONException {
+  AppTranslationsCacheNotFoundException(dynamic error)
+      : super(10102, 'Failed to find app translations cache: $error');
+}
+
+class ParseAppTranslationsException extends IONException {
+  ParseAppTranslationsException(dynamic error)
+      : super(10103, 'Failed to parse app translations: $error');
 }
 
 class CombineAudioFilesException extends IONException {

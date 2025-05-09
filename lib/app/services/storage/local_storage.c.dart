@@ -19,6 +19,13 @@ LocalStorage localStorage(Ref ref) {
   return LocalStorage(prefs.requireValue);
 }
 
+@Riverpod(keepAlive: true)
+Future<LocalStorage> localStorageAsync(Ref ref) async {
+  final prefs = await ref.watch(sharedPreferencesProvider.future);
+
+  return LocalStorage(prefs);
+}
+
 class LocalStorage {
   const LocalStorage(this._prefs);
 
