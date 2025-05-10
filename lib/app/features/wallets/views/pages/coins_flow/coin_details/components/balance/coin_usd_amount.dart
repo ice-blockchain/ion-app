@@ -11,6 +11,7 @@ import 'package:ion/app/features/wallets/model/balance_display_order.dart';
 import 'package:ion/app/features/wallets/model/coins_group.c.dart';
 import 'package:ion/app/features/wallets/providers/wallet_user_preferences/user_preferences_selectors.c.dart';
 import 'package:ion/app/features/wallets/providers/wallet_user_preferences/wallet_user_preferences_provider.c.dart';
+import 'package:ion/app/features/wallets/views/utils/crypto_formatter.dart';
 import 'package:ion/app/utils/num.dart';
 import 'package:ion/generated/assets.gen.dart';
 
@@ -21,7 +22,7 @@ class CoinUsdAmount extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final coinText = '${formatDouble(coinsGroup.totalAmount)} ${coinsGroup.abbreviation}';
+    final coinText = '${formatCrypto(coinsGroup.totalAmount)} ${coinsGroup.abbreviation}';
     final usdText = context.i18n.wallet_approximate_in_usd(
       formatUSD(coinsGroup.totalBalanceUSD),
     );

@@ -5,7 +5,6 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:ion/app/components/inputs/text_input/text_input.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/wallets/views/utils/amount_parser.dart';
-import 'package:ion/app/features/wallets/views/utils/crypto_formatter.dart';
 import 'package:ion/app/utils/num.dart';
 import 'package:ion/app/utils/text_input_formatters.dart';
 
@@ -68,7 +67,12 @@ class CoinAmountInput extends HookWidget {
                   padding: EdgeInsetsDirectional.only(end: 16.0.s),
                   child: TextButton(
                     onPressed: () {
-                      controller.text = formatCrypto(maxValue ?? 0);
+                      var converted = (maxValue ?? 0).toStringAsFixed(18);
+
+                      // Trim trailing zeroes but leave at least one digit after decimal
+                      converted = converted.replaceFirst(RegExp(r'\.?0+$'), '');
+
+                      controller.text = converted;
                     },
                     child: Text(
                       locale.wallet_max,
