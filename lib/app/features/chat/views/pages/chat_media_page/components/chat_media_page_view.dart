@@ -12,13 +12,16 @@ import 'package:ion/app/features/chat/e2ee/providers/chat_message_load_media_pro
 import 'package:ion/app/features/chat/model/database/chat_database.c.dart';
 import 'package:ion/app/features/core/model/media_type.dart';
 import 'package:ion/app/features/feed/views/pages/fullscreen_media/hooks/use_image_zoom.dart';
+import 'package:ion/app/features/ion_connect/model/event_reference.c.dart';
 import 'package:ion/app/features/ion_connect/model/media_attachment.dart';
 import 'package:ion/app/features/video/views/pages/video_page.dart';
+import 'package:ion/app/services/file_cache/ion_file_cache_manager.c.dart';
+import 'package:ion/app/utils/url.dart';
 
 class ChatMediaPageView extends HookConsumerWidget {
   const ChatMediaPageView({
     required this.medias,
-    required this.entity,
+    required this.eventReference,
     required this.initialIndex,
     required this.zoomController,
     required this.pageController,
@@ -26,8 +29,8 @@ class ChatMediaPageView extends HookConsumerWidget {
     super.key,
   });
 
-  final List<MessageMediaTableData> medias;
-  final ReplaceablePrivateDirectMessageEntity entity;
+  final List<MediaAttachment> medias;
+  final EventReference eventReference;
   final int initialIndex;
   final ImageZoomController zoomController;
   final PageController pageController;
@@ -35,6 +38,20 @@ class ChatMediaPageView extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final entityFeature = useFuture(
+      useMemoized(
+        () async {
+          final entity = await ref.watch(eventMessageDaoProvider).getByReference(eventReference);
+          return ReplaceablePrivateDirectMessageEntity.fromEventMessage(entity);
+        },
+        [eventReference],
+      ),
+    );
+
+    if (!entityFeature.hasData) {
+      return const Center(child: IONLoadingIndicator());
+    }
+
     return Align(
       child: PageView.builder(
         controller: pageController,
@@ -43,10 +60,8 @@ class ChatMediaPageView extends HookConsumerWidget {
         itemBuilder: (context, index) {
           return _ChatMediaItem(
             media: medias[index],
-            mediaAttachment:
-                entity.data.visualMedias.firstWhere((e) => e.url == medias[index].remoteUrl),
-            entity: entity,
             zoomController: zoomController,
+            entity: entityFeature.data!,
           );
         },
       ),
@@ -57,30 +72,41 @@ class ChatMediaPageView extends HookConsumerWidget {
 class _ChatMediaItem extends HookConsumerWidget {
   const _ChatMediaItem({
     required this.media,
-    required this.mediaAttachment,
-    required this.entity,
     required this.zoomController,
+    required this.entity,
   });
 
-  final MessageMediaTableData media;
-  final MediaAttachment mediaAttachment;
-  final ReplaceablePrivateDirectMessageEntity entity;
+  final MediaAttachment media;
   final ImageZoomController zoomController;
-
+  final ReplaceablePrivateDirectMessageEntity entity;
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final fileFuture = useFuture(
+    final fileFuture = useFuture<String?>(
       useMemoized(
-        () {
-          return ref.read(
-            chatMessageLoadMediaProvider(
-              entity: entity,
-              loadThumbnail: false,
-              mediaAttachment: mediaAttachment,
-            ),
-          );
+        () async {
+          final isRemoteUrl = isNetworkUrl(media.url);
+
+          if (!isRemoteUrl) {
+            return media.url;
+          }
+
+          final data = await ref.read(fileCacheServiceProvider).getFileFromCache(media.url);
+
+          if (data == null) {
+            final data = await ref.read(
+              chatMessageLoadMediaProvider(
+                entity: entity,
+                mediaAttachment: media,
+                loadThumbnail: false,
+              ),
+            );
+
+            return data?.path;
+          }
+
+          return data.file.path;
         },
-        [media.id],
+        [media.url],
       ),
     );
 
@@ -88,12 +114,11 @@ class _ChatMediaItem extends HookConsumerWidget {
       return const Center(child: IONLoadingIndicator());
     }
 
-    final path = fileFuture.data!.path;
-    final isVideo = mediaAttachment.mediaType == MediaType.video;
+    final path = fileFuture.data!;
 
-    if (isVideo) {
+    if (media.mediaType == MediaType.video) {
       return VideoPage(
-        key: ValueKey('video_${media.id}'),
+        key: ValueKey('video_${media.url}'),
         videoUrl: path,
         authorPubkey: entity.masterPubkey,
       );

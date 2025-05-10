@@ -326,19 +326,19 @@ class RequestCoinsFormChatRoute extends BaseRouteData {
         );
 }
 
-@TypedGoRoute<ChatMediaRoute>(path: '/chat-media')
+@TypedGoRoute<ChatMediaRoute>(path: '/chat-media/:eventReference/:initialIndex')
 class ChatMediaRoute extends BaseRouteData {
   ChatMediaRoute({
-    required this.eventMessageId,
+    required this.eventReference,
     required this.initialIndex,
   }) : super(
           child: ChatMediaPage(
-            eventMessageId: eventMessageId,
+            eventReference: EventReference.fromEncoded(eventReference),
             initialIndex: initialIndex,
           ),
           type: IceRouteType.swipeDismissible,
         );
 
-  final String eventMessageId;
+  final String eventReference;
   final int initialIndex;
 }

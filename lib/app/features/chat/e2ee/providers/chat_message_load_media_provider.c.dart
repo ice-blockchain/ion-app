@@ -42,7 +42,6 @@ Raw<Future<File?>> chatMessageLoadMedia(
     mediaAttachmentToLoad = mediaAttachment;
   }
 
-  // Load encrypted thumbnail
   final encryptedMedia = await ref
       .watch(mediaEncryptionServiceProvider)
       .retrieveEncryptedMedia(mediaAttachmentToLoad, authorPubkey: entity.masterPubkey);

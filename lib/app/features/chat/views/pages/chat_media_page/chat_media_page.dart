@@ -9,7 +9,6 @@ import 'package:ion/app/components/list_item/list_item.dart';
 import 'package:ion/app/components/screen_offset/screen_side_offset.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/chat/e2ee/model/entities/private_direct_message_data.c.dart';
-import 'package:ion/app/features/chat/e2ee/providers/chat_medias_provider.c.dart';
 import 'package:ion/app/features/chat/model/database/chat_database.c.dart';
 import 'package:ion/app/features/chat/views/pages/chat_media_page/components/chat_media_context_menu.dart';
 import 'package:ion/app/features/chat/views/pages/chat_media_page/components/chat_media_page_view.dart';
@@ -17,6 +16,8 @@ import 'package:ion/app/features/core/model/media_type.dart';
 import 'package:ion/app/features/core/providers/mute_provider.c.dart';
 import 'package:ion/app/features/feed/views/pages/fullscreen_media/hooks/use_image_zoom.dart';
 import 'package:ion/app/features/feed/views/pages/fullscreen_media/providers/image_zoom_provider.c.dart';
+import 'package:ion/app/features/ion_connect/model/event_reference.c.dart';
+import 'package:ion/app/features/ion_connect/model/media_attachment.dart';
 import 'package:ion/app/features/user/providers/user_metadata_provider.c.dart';
 import 'package:ion/app/features/video/views/hooks/use_status_bar_color.dart';
 import 'package:ion/app/router/components/navigation_app_bar/navigation_app_bar.dart';
@@ -26,12 +27,12 @@ import 'package:ion/generated/assets.gen.dart';
 
 class ChatMediaPage extends HookConsumerWidget {
   const ChatMediaPage({
-    required this.eventMessageId,
+    required this.eventReference,
     required this.initialIndex,
     super.key,
   });
 
-  final String eventMessageId;
+  final EventReference eventReference;
   final int initialIndex;
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -68,23 +69,20 @@ class ChatMediaPage extends HookConsumerWidget {
 
     final eventMessageFuture = useFuture(
       useMemoized(
-        () => ref.watch(eventMessageDaoProvider).getById(eventMessageId),
-        [eventMessageId],
+        () => ref.watch(eventMessageDaoProvider).getByReference(eventReference),
+        [eventReference],
       ),
     );
 
     if (!eventMessageFuture.hasData) {
       return const SizedBox.shrink();
     }
+
     final eventMessage = eventMessageFuture.data!;
     final entity = ReplaceablePrivateDirectMessageEntity.fromEventMessage(eventMessage);
-
-    final medias =
-        ref.watch(chatMediasProvider(eventReference: entity.toEventReference())).valueOrNull;
-
-    if (medias == null) {
-      return const SizedBox.shrink();
-    }
+    final medias = entity.data.visualMedias
+        .where((e) => !entity.data.visualMedias.any((c) => c.thumb == e.url && c.url != e.url))
+        .toList();
 
     return Material(
       color: context.theme.appColors.primaryText,
@@ -120,7 +118,7 @@ class ChatMediaPage extends HookConsumerWidget {
             children: [
               ChatMediaPageView(
                 medias: medias,
-                entity: entity,
+                eventReference: eventReference,
                 initialIndex: initialIndex,
                 zoomController: zoomController,
                 isZoomed: isZoomed,
@@ -128,7 +126,7 @@ class ChatMediaPage extends HookConsumerWidget {
               ),
               _MediaBottomOverlay(
                 messageEntity: entity,
-                messageMedias: medias,
+                medias: medias,
                 currentIndex: currentPage.value,
               ),
             ],
@@ -162,12 +160,12 @@ class _MediaPagerCounter extends StatelessWidget {
 class _MediaBottomOverlay extends ConsumerWidget {
   const _MediaBottomOverlay({
     required this.messageEntity,
-    required this.messageMedias,
+    required this.medias,
     required this.currentIndex,
   });
 
   final ReplaceablePrivateDirectMessageEntity messageEntity;
-  final List<MessageMediaTableData> messageMedias;
+  final List<MediaAttachment> medias;
   final int currentIndex;
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -177,11 +175,7 @@ class _MediaBottomOverlay extends ConsumerWidget {
       return const SizedBox.shrink();
     }
 
-    final isVideo = messageEntity.data.visualMedias
-            .where((e) => e.url == messageMedias[currentIndex].remoteUrl)
-            .firstOrNull
-            ?.mediaType ==
-        MediaType.video;
+    final isVideo = medias[currentIndex].mediaType == MediaType.video;
     final isMuted = ref.watch(globalMuteProvider);
 
     return PositionedDirectional(
