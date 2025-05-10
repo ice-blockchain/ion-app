@@ -5,7 +5,7 @@ import 'package:flutter_quill/flutter_quill.dart';
 import 'package:ion/app/components/text_editor/attributes.dart';
 import 'package:ion/app/components/text_editor/components/custom_blocks/text_editor_profile_block/text_editor_profile_block.dart';
 import 'package:ion/app/components/text_editor/utils/text_editor_typing_listener.dart';
-import 'package:ion/app/features/feed/providers/article/suggestions_notifier_provider.c.dart';
+import 'package:ion/app/features/feed/providers/suggestions/suggestions_notifier_provider.c.dart';
 import 'package:ion/app/features/user/providers/user_metadata_provider.c.dart';
 
 class MentionsHashtagsHandler extends TextEditorTypingListener {

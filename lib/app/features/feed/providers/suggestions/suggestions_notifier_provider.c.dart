@@ -1,9 +1,9 @@
 // SPDX-License-Identifier: ice License 1.0
 
 import 'package:ion/app/extensions/extensions.dart';
-import 'package:ion/app/features/feed/providers/article/cashtag_suggestions_provider.c.dart';
-import 'package:ion/app/features/feed/providers/article/hashtag_suggestions_provider.c.dart';
-import 'package:ion/app/features/feed/providers/article/mention_suggestions_provider.c.dart';
+import 'package:ion/app/features/feed/providers/suggestions/cashtags/cashtag_suggestions_provider.c.dart';
+import 'package:ion/app/features/feed/providers/suggestions/hashtags/hashtag_suggestions_provider.c.dart';
+import 'package:ion/app/features/feed/providers/suggestions/mentions/mention_suggestions_provider.c.dart';
 import 'package:ion/app/services/logger/logger.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
