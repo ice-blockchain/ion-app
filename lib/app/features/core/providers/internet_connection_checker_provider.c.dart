@@ -7,23 +7,36 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'internet_connection_checker_provider.c.g.dart';
 
-const _checkInterval = Duration(seconds: 8);
-const _timeoutDuration = Duration(seconds: 5);
+const _timeoutDuration = Duration(seconds: 8);
 
 @Riverpod(keepAlive: true)
 InternetConnection internetConnectionChecker(Ref ref) {
   final env = ref.watch(envProvider.notifier);
   final origin = env.get<String>(EnvVariable.ION_ORIGIN);
 
+  final uris = [
+    origin,
+    'https://1.1.1.1', // Cloudflare
+    'http://8.8.8.8', // Google
+    'http://9.9.9.9', // Quad9
+  ];
+
   return InternetConnection.createInstance(
-    checkInterval: _checkInterval,
     useDefaultOptions: false,
-    customCheckOptions: [
-      InternetCheckOption(
-        uri: Uri.parse(origin),
-        timeout: _timeoutDuration,
-        responseStatusFn: (response) => response.statusCode >= 200,
-      ),
-    ],
+    customCheckOptions: _createCheckOptions(uris),
   );
 }
+
+List<InternetCheckOption> _createCheckOptions(List<String> uris) {
+  return uris
+      .map(
+        (uri) => InternetCheckOption(
+          uri: Uri.parse(uri),
+          timeout: _timeoutDuration,
+          responseStatusFn: (response) => _checkStatus(response.statusCode),
+        ),
+      )
+      .toList();
+}
+
+bool _checkStatus(int statusCode) => statusCode >= 200;
