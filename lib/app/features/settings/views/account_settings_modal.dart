@@ -61,7 +61,7 @@ class AccountSettingsModal extends HookConsumerWidget {
                   icon: Assets.svg.iconSelectLanguage.icon(color: primaryColor),
                   label: context.i18n.settings_app_language,
                   trailing: Text(
-                    ref.watch(localePreferredLanguageProvider).name,
+                    ref.watch(localePreferredLanguagesProvider).first.name,
                     style: context.theme.appTextThemes.caption.copyWith(color: primaryColor),
                   ),
                   onTap: () => AppLanguagesRoute().push<void>(context),
@@ -111,6 +111,7 @@ class AccountSettingsModal extends HookConsumerWidget {
 
 class _RemainingLanguagesLabel extends StatelessWidget {
   const _RemainingLanguagesLabel({required this.value});
+
   final int value;
 
   @override
