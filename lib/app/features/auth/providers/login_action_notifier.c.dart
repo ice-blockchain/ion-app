@@ -45,6 +45,13 @@ class LoginActionNotifier extends _$LoginActionNotifier {
             );
       } on PasskeyCancelledException {
         return;
+      } on NoLocalPasskeyCredsFoundIONIdentityException {
+        // Are we trying to suggest a passkey for empty identity key name?
+        // If yes, and there're no local creds, do nothing
+        // If no, rethrow
+        if (keyName.isNotEmpty) {
+          rethrow;
+        }
       }
     });
   }

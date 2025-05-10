@@ -15,7 +15,7 @@ class LoginDataSource {
   static const loginCompletePath = '/auth/login';
 
   Future<UserActionChallenge> loginInit({
-    required String username,
+    String? username,
     List<TwoFAType>? twoFATypes,
   }) async {
     return networkClient.post(

@@ -39,10 +39,15 @@ class LoginForm extends HookConsumerWidget {
             },
             controller: identityKeyNameController,
             scrollPadding: EdgeInsetsDirectional.only(bottom: 190.0.s),
+            onFocused: (focused) {
+              final isIdentityKeyNameEmpty = identityKeyNameController.text.isEmpty;
+              if (!focused || !isIdentityKeyNameEmpty) {
+                return;
+              }
+              onLogin('');
+            },
           ),
-          SizedBox(
-            height: 16.0.s,
-          ),
+          SizedBox(height: 16.0.s),
           Button(
             disabled: loginActionState.isLoading,
             trailingIcon: loginActionState.isLoading ||
