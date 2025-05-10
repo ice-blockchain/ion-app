@@ -95,6 +95,7 @@ class WalletPage extends HookConsumerWidget {
           },
           builder: (context, slivers) => CustomScrollView(
             controller: scrollController,
+            physics: const AlwaysScrollableScrollPhysics(),
             slivers: slivers,
           ),
         ),

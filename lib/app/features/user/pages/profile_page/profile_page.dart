@@ -42,9 +42,12 @@ class ProfilePage extends HookConsumerWidget {
     final userMetadata = ref.watch(userMetadataProvider(pubkey));
 
     if (userMetadata.isLoading || isBlocking == null) {
-      return const Scaffold(
-        appBar: NavigationAppBar(useScreenTopOffset: true),
-        body: SizedBox(),
+      return Scaffold(
+        appBar: NavigationAppBar(
+          useScreenTopOffset: true,
+          showBackButton: showBackButton,
+        ),
+        body: const SizedBox(),
       );
     }
 
