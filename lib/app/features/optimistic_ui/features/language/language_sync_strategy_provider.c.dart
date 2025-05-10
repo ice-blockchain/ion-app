@@ -102,7 +102,7 @@ class ToggleLanguageNotifier extends _$ToggleLanguageNotifier {
 ContentLangSet _initialLangSet(Ref ref) {
   final pubkey = ref.read(currentPubkeySelectorProvider)!;
   final entity = ref.read(currentUserInterestsSetProvider(InterestSetType.languages)).value;
-  final appIso = ref.read(localePreferredLanguageProvider).isoCode;
+  final appIso = ref.read(localePreferredLanguagesProvider).first.isoCode;
 
   return ContentLangSet(
     pubkey: pubkey,

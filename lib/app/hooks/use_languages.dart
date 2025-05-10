@@ -6,16 +6,15 @@ import 'package:ion/app/features/core/model/language.dart';
 /// A hook that returns a filtered list of languages based on a search query.
 ///
 /// If the [query] is empty, it returns the full list of languages.
-/// If [preferredLang] is provided, it is moved to the top of the list.
-List<Language> useLanguages({String query = '', Language? preferredLang}) {
+/// If [preferredLangs] are provided, they are moved to the top of the list.
+List<Language> useLanguages({String query = '', List<Language> preferredLangs = const []}) {
   final languagesList = useMemoized(
     () {
-      if (preferredLang == null) return Language.values;
-      return [...Language.values]
-        ..remove(preferredLang)
-        ..insert(0, preferredLang);
+      if (preferredLangs.isEmpty) return Language.values;
+      final languagesSet = {...Language.values}..removeAll(preferredLangs);
+      return languagesSet.toList()..insertAll(0, preferredLangs);
     },
-    [preferredLang],
+    [preferredLangs],
   );
 
   return useMemoized(
