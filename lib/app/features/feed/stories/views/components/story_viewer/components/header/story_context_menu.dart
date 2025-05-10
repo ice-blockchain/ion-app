@@ -172,7 +172,15 @@ class _OtherUserMenuItems extends ConsumerWidget {
           iconAsset: Assets.svg.iconReport,
           onPressed: () {
             onClose();
-            ref.read(reportNotifierProvider.notifier).report(ReportReason.user(pubkey: pubkey));
+            final currentStory = ref.read(storyViewingControllerProvider(pubkey)).currentStory;
+
+            if (currentStory == null) {
+              return;
+            }
+
+            ref
+                .read(reportNotifierProvider.notifier)
+                .report(ReportReason.content(eventReference: currentStory.toEventReference()));
           },
         ),
         const ContextMenuItemDivider(),
