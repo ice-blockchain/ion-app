@@ -1,5 +1,8 @@
 // SPDX-License-Identifier: ice License 1.0
 
+import 'dart:async';
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
@@ -12,8 +15,23 @@ class LocalNotificationsService {
 
   final FlutterLocalNotificationsPlugin _plugin;
 
+  final _notificationResponseController = StreamController<Map<String, dynamic>>.broadcast();
+
+  Stream<Map<String, dynamic>> get notificationResponseStream =>
+      _notificationResponseController.stream;
+
   Future<void> initialize() async {
-    await _plugin.initialize(_settings);
+    await _plugin.initialize(
+      _settings,
+      onDidReceiveNotificationResponse: (details) {
+        final payload = details.payload;
+        if (payload != null) {
+          _notificationResponseController.sink.add(
+            jsonDecode(payload) as Map<String, dynamic>,
+          );
+        }
+      },
+    );
   }
 
   Future<void> showNotification({
@@ -29,6 +47,12 @@ class LocalNotificationsService {
       _notificationDetails,
       payload: payload,
     );
+  }
+
+  Future<Map<String, dynamic>?> getInitialNotificationData() async {
+    final initialNotification = await _plugin.getNotificationAppLaunchDetails();
+    final payload = initialNotification?.notificationResponse?.payload;
+    return payload != null ? jsonDecode(payload) as Map<String, dynamic> : null;
   }
 
   static InitializationSettings get _settings {

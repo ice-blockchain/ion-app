@@ -25,6 +25,11 @@ class FirebaseMessagingService {
   Stream<String> onTokenRefresh() {
     return FirebaseMessaging.instance.onTokenRefresh;
   }
+
+  Future<Map<String, dynamic>?> getInitialMessageData() async {
+    final initialMessage = await FirebaseMessaging.instance.getInitialMessage();
+    return initialMessage?.data;
+  }
 }
 
 @Riverpod(keepAlive: true)

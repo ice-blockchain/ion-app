@@ -8,7 +8,6 @@ import 'package:ion/app/features/ion_connect/providers/ion_connect_event_parser.
 part 'ion_connect_push_data_payload.c.freezed.dart';
 part 'ion_connect_push_data_payload.c.g.dart';
 
-//TODO: what fields are optional? what to do with imageUrl
 @Freezed(toJson: false)
 class IonConnectPushDataPayload with _$IonConnectPushDataPayload {
   const factory IonConnectPushDataPayload({
