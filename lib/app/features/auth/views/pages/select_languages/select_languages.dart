@@ -25,7 +25,7 @@ class SelectLanguages extends HookConsumerWidget {
 
     final (selectedLanguages, toggleLanguageSelection) = useSelectedState(
       ref.watch(onboardingDataProvider).languages ??
-          [ref.watch(localePreferredLanguageProvider).isoCode],
+          [ref.watch(localePreferredLanguagesProvider).first.isoCode],
     );
 
     final userIdentity = ref.watch(currentUserIdentityProvider).valueOrNull;

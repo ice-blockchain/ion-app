@@ -36,8 +36,8 @@ class LanguageSelectorPage extends HookConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final searchQuery = useState('');
-    final preferredLang = ref.watch(localePreferredLanguageProvider);
-    final languages = useLanguages(query: searchQuery.value, preferredLang: preferredLang);
+    final preferredLangs = ref.watch(localePreferredLanguagesProvider);
+    final languages = useLanguages(query: searchQuery.value, preferredLangs: preferredLangs);
 
     final mayContinue = selectedLanguages.isNotEmpty;
 
