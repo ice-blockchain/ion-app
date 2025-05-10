@@ -6,7 +6,7 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/foundation.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/features/push_notifications/background/app_translations_provider.c.dart';
-import 'package:ion/app/features/push_notifications/data/models/push_data_payload.c.dart';
+import 'package:ion/app/features/push_notifications/data/models/ion_connect_push_data_payload.c.dart';
 import 'package:ion/app/services/local_notifications/local_notifications.c.dart';
 import 'package:ion/app/services/logger/logger.dart';
 
