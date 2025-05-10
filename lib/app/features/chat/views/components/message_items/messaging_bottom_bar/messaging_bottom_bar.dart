@@ -12,6 +12,7 @@ import 'package:ion/app/features/chat/views/components/message_items/components.
 import 'package:ion/app/features/chat/views/components/message_items/messaging_bottom_bar/components/components.dart';
 import 'package:ion/app/features/chat/views/components/message_items/messaging_bottom_bar/components/text_message_limit_label.dart';
 import 'package:ion/app/hooks/use_on_init.dart';
+import 'package:ion/app/services/compressors/audio_compressor.c.dart';
 import 'package:ion/app/services/media_service/media_service.c.dart';
 
 class MessagingBottomBar extends HookConsumerWidget {
@@ -77,8 +78,21 @@ class MessagingBottomBar extends HookConsumerWidget {
         ),
         if (bottomBarState.isVoice || bottomBarState.isVoiceLocked || bottomBarState.isVoicePaused)
           BottomBarRecordingView(
-            onRecordingFinished: (mediaFile) {
-              recordedMediaFile.value = mediaFile;
+            onRecordingFinished: (mediaFile) async {
+              if (recordedMediaFile.value == null) {
+                recordedMediaFile.value = mediaFile;
+              } else {
+                recordedMediaFile.value =
+                    await ref.read(audioCompressorProvider).combineAudioFiles([
+                  recordedMediaFile.value!,
+                  mediaFile,
+                ]);
+              }
+              return recordedMediaFile.value!.path;
+            },
+            onCancelled: () {
+              ref.read(messagingBottomBarActiveStateProvider.notifier).setText();
+              recordedMediaFile.value = null;
             },
             recorderController: recorderController.value,
           ),

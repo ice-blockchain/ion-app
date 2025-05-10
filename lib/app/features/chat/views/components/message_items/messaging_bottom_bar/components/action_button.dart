@@ -35,19 +35,33 @@ class ActionButton extends HookConsumerWidget {
       await onSubmitted?.call();
     });
 
+    final startRecording = useCallback(
+      () async {
+        await recorderController.record(bitRate: 44100);
+      },
+      [recorderController],
+    );
+
     final isRecordingCancelled = useRef<bool>(false);
 
     Widget subButton() {
       switch (bottomBarState) {
         case MessagingBottomBarState.hasText:
-        case MessagingBottomBarState.voicePaused:
           return SendButton(
             onSend: onSend,
             disabled: onSubmitted == null,
           );
+        case MessagingBottomBarState.voicePaused:
         case MessagingBottomBarState.voice:
         case MessagingBottomBarState.voiceLocked:
-          return AudioRecordingButton(paddingBottom: paddingBottom.value);
+          return AudioRecordingButton(
+            paddingBottom: paddingBottom.value,
+            onSubmitted: onSend,
+            onResumeRecording: () async {
+              ref.read(messagingBottomBarActiveStateProvider.notifier).setVoiceLocked();
+              await startRecording();
+            },
+          );
         case MessagingBottomBarState.text:
         case MessagingBottomBarState.more:
           return const AudioRecordButton();
@@ -66,7 +80,7 @@ class ActionButton extends HookConsumerWidget {
             );
             if (status == PermissionStatus.granted) {
               isRecordingCancelled.value = false;
-              await recorderController.record(bitRate: 44100);
+              await startRecording();
               if (isRecordingCancelled.value) {
                 await recorderController.stop();
                 return;

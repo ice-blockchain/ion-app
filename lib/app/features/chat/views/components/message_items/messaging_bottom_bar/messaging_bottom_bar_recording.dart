@@ -1,15 +1,16 @@
 // SPDX-License-Identifier: ice License 1.0
 
+import 'dart:async';
+
 import 'package:audio_waveforms/audio_waveforms.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:ion/app/components/progress_bar/ion_loading_indicator.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/chat/e2ee/model/entities/private_direct_message_data.c.dart';
 import 'package:ion/app/features/chat/providers/messaging_bottom_bar_state_provider.c.dart';
 import 'package:ion/app/features/chat/views/components/message_items/messaging_bottom_bar/components/components.dart';
-import 'package:ion/app/services/audio_wave_playback_service/audio_wave_playback_service.c.dart';
+import 'package:ion/app/features/chat/views/components/message_items/messaging_bottom_bar/components/voice_message_preview_tile.dart';
 import 'package:ion/app/services/media_service/media_service.c.dart';
 import 'package:ion/app/utils/date.dart';
 import 'package:mime/mime.dart';
@@ -17,35 +18,33 @@ import 'package:mime/mime.dart';
 class BottomBarRecordingView extends HookConsumerWidget {
   const BottomBarRecordingView({
     required this.onRecordingFinished,
+    required this.onCancelled,
     required this.recorderController,
     super.key,
   });
 
-  final void Function(MediaFile mediaFile) onRecordingFinished;
+  final Future<String> Function(MediaFile mediaFile) onRecordingFinished;
+  final VoidCallback onCancelled;
   final RecorderController recorderController;
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final playerController = useRef(
-      PlayerController(),
-    );
-    final playerState = useState<PlayerState?>(null);
     final bottomBarState = ref.watch(messagingBottomBarActiveStateProvider);
     final duration = useState('00:00');
-
-    final playerWaveStyle = useMemoized(
-      () => PlayerWaveStyle(
-        liveWaveColor: context.theme.appColors.primaryText,
-        fixedWaveColor: context.theme.appColors.sheetLine,
-        seekLineColor: Colors.transparent,
-        waveThickness: 1.0.s,
-        spacing: 1.5.s,
-      ),
-    );
+    final previousDuration = useRef<Duration>(Duration.zero);
+    final audioPath = useState<String?>(null);
 
     useEffect(
       () {
+        final recorderStateSubscription = recorderController.onRecorderStateChanged.listen((state) {
+          if (state == RecorderState.stopped) {
+            previousDuration.value += recorderController.recordedDuration;
+          } else {
+            audioPath.value = null;
+          }
+        });
+
         final durationSubscription = recorderController.onCurrentDuration.listen((currentDuration) {
-          duration.value = formatDuration(currentDuration);
+          duration.value = formatDuration(currentDuration + previousDuration.value);
           if (currentDuration.inSeconds ==
               ReplaceablePrivateDirectMessageData.audioMessageDurationLimitInSeconds) {
             ref.read(messagingBottomBarActiveStateProvider.notifier).setVoicePaused();
@@ -53,36 +52,29 @@ class BottomBarRecordingView extends HookConsumerWidget {
           }
         });
 
-        final playerStateSubscription =
-            playerController.value.onPlayerStateChanged.listen((currentPlayerState) {
-          if (currentPlayerState != PlayerState.stopped) {
-            playerState.value = currentPlayerState;
-          }
-        });
-
         return () {
           durationSubscription.cancel();
-          playerStateSubscription.cancel();
-          playerController.value.dispose();
+          previousDuration.value = Duration.zero;
+          recorderStateSubscription.cancel();
           recorderController.reset();
         };
       },
       [],
     );
+
     useEffect(
       () {
         if (bottomBarState.isVoicePaused) {
-          recorderController.stop().then((path) {
+          recorderController.stop().then((path) async {
             if (path == null) {
               return;
             }
-            ref.read(audioWavePlaybackServiceProvider).preparePlayer(
-                  path,
-                  playerController.value,
-                  playerWaveStyle,
-                );
+
             final mimetype = lookupMimeType(path);
-            onRecordingFinished(MediaFile(path: path, mimeType: mimetype));
+            final newAudioPath =
+                await onRecordingFinished(MediaFile(path: path, mimeType: mimetype));
+
+            audioPath.value = newAudioPath;
           });
         }
         return null;
@@ -99,41 +91,15 @@ class BottomBarRecordingView extends HookConsumerWidget {
       child: Row(
         children: [
           if (bottomBarState.isVoicePaused) ...[
-            const DeleteAudioButton(),
-            SizedBox(width: 6.0.s),
-            Expanded(
-              child: Container(
-                padding: EdgeInsets.symmetric(vertical: 4.0.s, horizontal: 8.0.s),
-                decoration: BoxDecoration(
-                  color: context.theme.appColors.primaryBackground,
-                  borderRadius: BorderRadius.circular(16.0.s),
-                ),
-                child: Row(
-                  children: [
-                    if (playerState.value == null) ...[
-                      const IONLoadingIndicator(
-                        type: IndicatorType.dark,
-                      ),
-                    ] else if (playerState.value!.isPlaying) ...[
-                      PlayAudioButton(playerController: playerController),
-                    ] else
-                      PauseAudioButton(playerController: playerController),
-                    SizedBox(width: 6.0.s),
-                    AudioFileWaveforms(
-                      playerController: playerController.value,
-                      size: Size(169.0.s, 16.0.s),
-                      padding: EdgeInsets.zero,
-                      margin: EdgeInsets.zero,
-                      continuousWaveform: false,
-                      waveformType: WaveformType.fitWidth,
-                      playerWaveStyle: playerWaveStyle,
-                    ),
-                    const Spacer(),
-                    DurationText(duration: duration.value),
-                  ],
-                ),
-              ),
+            DeleteAudioButton(
+              onPressed: onCancelled,
             ),
+            SizedBox(width: 6.0.s),
+            if (audioPath.value != null)
+              VoiceMessagePreviewTile(
+                duration: duration.value,
+                path: audioPath.value!,
+              ),
           ] else ...[
             CancelRecordButton(recorderController: recorderController),
             const Spacer(),

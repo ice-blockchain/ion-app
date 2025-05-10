@@ -118,8 +118,10 @@ class SendE2eeChatMessageService {
 
       eventReference = localEventMessageData.toReplaceableEventReference(currentUserMasterPubkey);
 
-      final localEventMessage =
-          await localEventMessageData.toEventMessage(NoPrivateSigner(eventSigner.publicKey));
+      final localEventMessage = await localEventMessageData.toEventMessage(
+        NoPrivateSigner(eventSigner.publicKey),
+        createdAt: DateTime.now().subtract(const Duration(hours: 12)),
+      );
 
       sentMessage = localEventMessage;
 
@@ -176,7 +178,10 @@ class SendE2eeChatMessageService {
                 groupSubject: subject.isNotEmpty ? GroupSubject(subject!) : null,
                 relatedEvents:
                     editedMessageEntity?.relatedEvents ?? _generateRelatedEvents(repliedMessage),
-              ).toEventMessage(NoPrivateSigner(eventSigner.publicKey));
+              ).toEventMessage(
+                NoPrivateSigner(eventSigner.publicKey),
+                createdAt: DateTime.now().subtract(const Duration(hours: 12)),
+              );
 
               await sendWrappedMessage(
                 pubkey: pubkey,

@@ -95,7 +95,7 @@ class OneToOneMessageList extends HookConsumerWidget {
             final isLastMessage = index == allMessages.length - 1;
 
             final isMessageFromAnotherAuthor =
-                previousMessage == null || previousMessage.pubkey != message.pubkey;
+                previousMessage != null && previousMessage.masterPubkey != message.masterPubkey;
 
             return Column(
               mainAxisSize: MainAxisSize.min,

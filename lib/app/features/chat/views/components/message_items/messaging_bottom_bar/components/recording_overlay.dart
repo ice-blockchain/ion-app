@@ -9,11 +9,14 @@ import 'package:ion/generated/assets.gen.dart';
 class RecordingOverlay extends ConsumerWidget {
   const RecordingOverlay({
     required this.paddingBottom,
+    required this.onSubmitted,
+    required this.onResumeRecording,
     super.key,
   });
 
   final double paddingBottom;
-
+  final Future<void> Function() onSubmitted;
+  final Future<void> Function() onResumeRecording;
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final bottomBarState = ref.watch(messagingBottomBarActiveStateProvider);
@@ -47,6 +50,17 @@ class RecordingOverlay extends ConsumerWidget {
                     ),
                   ),
                 )
+              else if (bottomBarState.isVoicePaused)
+                GestureDetector(
+                  onTap: onResumeRecording,
+                  child: Padding(
+                    padding: EdgeInsetsDirectional.only(top: 8.0.s),
+                    child: Assets.svg.iconChatMicrophone.icon(
+                      color: context.theme.appColors.primaryAccent,
+                      size: 20.0.s,
+                    ),
+                  ),
+                )
               else
                 Padding(
                   padding: EdgeInsetsDirectional.only(top: 4.0.s),
@@ -73,10 +87,18 @@ class RecordingOverlay extends ConsumerWidget {
                   color: context.theme.appColors.primaryAccent,
                   borderRadius: BorderRadius.circular(12.0.s),
                 ),
-                child: Assets.svg.iconChatMicrophone.icon(
-                  color: context.theme.appColors.onPrimaryAccent,
-                  size: 24.0.s,
-                ),
+                child: bottomBarState.isVoicePaused
+                    ? GestureDetector(
+                        onTap: onSubmitted,
+                        child: Assets.svg.iconChatSendmessage.icon(
+                          color: context.theme.appColors.onPrimaryAccent,
+                          size: 24.0.s,
+                        ),
+                      )
+                    : Assets.svg.iconChatMicrophone.icon(
+                        color: context.theme.appColors.onPrimaryAccent,
+                        size: 24.0.s,
+                      ),
               ),
             ],
           ),

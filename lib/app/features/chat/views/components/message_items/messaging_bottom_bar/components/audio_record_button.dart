@@ -25,10 +25,16 @@ class AudioRecordButton extends ConsumerWidget {
 }
 
 class AudioRecordingButton extends HookConsumerWidget {
-  const AudioRecordingButton({required this.paddingBottom, super.key});
+  const AudioRecordingButton({
+    required this.paddingBottom,
+    required this.onSubmitted,
+    required this.onResumeRecording,
+    super.key,
+  });
 
   final double paddingBottom;
-
+  final Future<void> Function() onSubmitted;
+  final Future<void> Function() onResumeRecording;
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final overlayEntry = useRef<OverlayEntry?>(null);
@@ -41,6 +47,8 @@ class AudioRecordingButton extends HookConsumerWidget {
             builder: (context) {
               return RecordingOverlay(
                 paddingBottom: paddingBottom,
+                onSubmitted: onSubmitted,
+                onResumeRecording: onResumeRecording,
               );
             },
           );
