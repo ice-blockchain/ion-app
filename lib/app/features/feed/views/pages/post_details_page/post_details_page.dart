@@ -52,7 +52,7 @@ class PostDetailsPage extends HookConsumerWidget {
                     displayParent: true,
                   ),
                 ),
-                SliverToBoxAdapter(child: FeedListSeparator()),
+                SliverToBoxAdapter(child: FeedListSeparator(height: 4.0.s)),
               ],
             ),
           ),

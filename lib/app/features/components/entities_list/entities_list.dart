@@ -60,7 +60,7 @@ class _EntityListItem extends ConsumerWidget {
     this.onVideoTap,
     double? separatorHeight,
     super.key,
-  }) : separatorHeight = separatorHeight ?? 12.0.s;
+  }) : separatorHeight = separatorHeight ?? 4.0.s;
 
   final EventReference eventReference;
   final double separatorHeight;
