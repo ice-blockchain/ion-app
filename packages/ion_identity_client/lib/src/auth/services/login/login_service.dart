@@ -3,7 +3,7 @@
 import 'package:dio/dio.dart';
 import 'package:ion_identity_client/ion_identity.dart';
 import 'package:ion_identity_client/src/auth/dtos/private_key_data.c.dart';
-import 'package:ion_identity_client/src/auth/services/extract_username/extract_username_service.dart';
+import 'package:ion_identity_client/src/auth/helpers/extract_username_from_token_helper.dart';
 import 'package:ion_identity_client/src/auth/services/login/data_sources/login_data_source.dart';
 import 'package:ion_identity_client/src/core/storage/biometrics_state_storage.dart';
 import 'package:ion_identity_client/src/core/storage/private_key_storage.dart';
@@ -19,7 +19,6 @@ class LoginService {
     required this.tokenStorage,
     required this.privateKeyStorage,
     required this.biometricsStateStorage,
-    required this.extractUsernameService,
   });
 
   final String username;
@@ -28,7 +27,6 @@ class LoginService {
   final TokenStorage tokenStorage;
   final PrivateKeyStorage privateKeyStorage;
   final BiometricsStateStorage biometricsStateStorage;
-  final ExtractUsernameService extractUsernameService;
 
   /// Initializes the login process for the specified [username].
   ///
@@ -141,8 +139,7 @@ class LoginService {
       challengeIdentifier: challenge.challengeIdentifier,
       assertion: assertion,
     );
-    final tokenKeyUsername =
-        username.isEmpty ? extractUsernameService.extractUsernameFromToken(tokens.token) : username;
+    final tokenKeyUsername = username.isEmpty ? extractUsernameFromToken(tokens.token) : username;
 
     await tokenStorage.setTokens(
       username: tokenKeyUsername,

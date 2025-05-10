@@ -24,6 +24,18 @@ import 'package:ion/app/router/utils/show_simple_bottom_sheet.dart';
 import 'package:ion/generated/assets.gen.dart';
 import 'package:ion_identity_client/ion_identity.dart';
 
+typedef PromptSignInDialogCallback = Future<String?> Function(
+  WidgetRef ref, {
+  required String identityKeyName,
+  required bool localCredsOnly,
+  required Map<TwoFaType, String>? twoFaTypes,
+});
+
+typedef SuggestBiometricsCallback = Future<void> Function({
+  required String password,
+  required String username,
+});
+
 class SignInStep extends HookConsumerWidget {
   const SignInStep({
     required this.usernameRef,
@@ -39,12 +51,7 @@ class SignInStep extends HookConsumerWidget {
   final ObjectRef<int> twoFAOptionsCount;
   final ValueNotifier<GetStartedPageStep> step;
 
-  final Future<String?> Function(
-    WidgetRef ref, {
-    required String identityKeyName,
-    required bool localCredsOnly,
-    required Map<TwoFaType, String>? twoFaTypes,
-  }) showSignInDialog;
+  final PromptSignInDialogCallback showSignInDialog;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -73,9 +80,9 @@ class SignInStep extends HookConsumerWidget {
                     onLogin: (username) {
                       usernameRef.value = username;
                       if (username.isEmpty) {
-                        _suggestUsername(ref, alreadyAskedRef);
+                        _attemptAutoPasskeyLogin(ref, alreadyAskedRef);
                       } else {
-                        _loginWithUsername(
+                        _handleLoginWithPasswordFallback(
                           ref,
                           username: username,
                           onSuggestToCreatePasskeyCreds: onSuggestToCreatePasskeyCreds,
@@ -130,7 +137,7 @@ class SignInStep extends HookConsumerWidget {
     );
   }
 
-  void _suggestUsername(WidgetRef ref, ObjectRef<bool> alreadyAskedRef) {
+  void _attemptAutoPasskeyLogin(WidgetRef ref, ObjectRef<bool> alreadyAskedRef) {
     if (alreadyAskedRef.value) {
       return;
     }
@@ -149,14 +156,13 @@ class SignInStep extends HookConsumerWidget {
         );
   }
 
-  Future<void> _loginWithUsername(
+  /// Attempts to sign in using stored credentials or passkey.
+  /// Falls back to password prompt and biometric suggestion if necessary.
+  Future<void> _handleLoginWithPasswordFallback(
     WidgetRef ref, {
     required String username,
     required Future<void> Function(String username) onSuggestToCreatePasskeyCreds,
-    required Future<void> Function({
-      required String password,
-      required String username,
-    }) onSuggestToAddBiometrics,
+    required SuggestBiometricsCallback onSuggestToAddBiometrics,
   }) async {
     await ref.read(loginActionNotifierProvider.notifier).verifyUserLoginFlow(keyName: username);
     final loginState = ref.read(loginActionNotifierProvider);
