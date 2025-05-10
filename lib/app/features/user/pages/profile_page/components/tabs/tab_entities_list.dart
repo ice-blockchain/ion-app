@@ -59,7 +59,9 @@ class TabEntitiesList extends ConsumerWidget {
     final isBlockedOrMutedOrBlocking = ref.watch(isBlockedOrMutedOrBlockingProvider(pubkey));
     final entities = entitiesPagedData?.data.items;
 
-    return PullToRefreshBuilder(
+    return LoadMoreBuilder(
+      onLoadMore: ref.read(entitiesPagedDataProvider(dataSource).notifier).fetchEntities,
+      hasMore: entitiesPagedData?.hasMore ?? false,
       slivers: [
         if (entities == null)
           const EntitiesListSkeleton()
@@ -88,14 +90,15 @@ class TabEntitiesList extends ConsumerWidget {
                   ).push<void>(context),
                 ),
       ],
-      onRefresh: () async {
-        ref.invalidate(entitiesPagedDataProvider(dataSource));
-        onRefresh?.call();
-      },
-      builder: (context, slivers) => LoadMoreBuilder(
+      builder: (context, slivers) => PullToRefreshBuilder(
+        builder: (context, slivers) => CustomScrollView(
+          slivers: slivers,
+        ),
         slivers: slivers,
-        onLoadMore: ref.read(entitiesPagedDataProvider(dataSource).notifier).fetchEntities,
-        hasMore: entitiesPagedData?.hasMore ?? false,
+        onRefresh: () async {
+          ref.invalidate(entitiesPagedDataProvider(dataSource));
+          onRefresh?.call();
+        },
       ),
     );
   }
