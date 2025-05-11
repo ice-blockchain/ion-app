@@ -518,8 +518,13 @@ class CombineAudioFilesException extends IONException {
   CombineAudioFilesException({
     required this.logs,
     required this.stackTrace,
-  }) : super(10102, 'Failed to combine audio files');
+  }) : super(10104, 'Failed to combine audio files');
 
   final String logs;
   final String stackTrace;
+}
+
+class TranslationNotFoundException extends IONException {
+  TranslationNotFoundException(dynamic locale)
+      : super(10105, 'Translation not found for locale: $locale');
 }

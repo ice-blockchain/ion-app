@@ -8,14 +8,76 @@ import 'package:dio/dio.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/exceptions/exceptions.dart';
+import 'package:ion/app/features/core/providers/app_locale_provider.c.dart';
 import 'package:ion/app/features/core/providers/dio_provider.c.dart';
 import 'package:ion/app/features/core/providers/env_provider.c.dart';
+import 'package:ion/app/services/logger/logger.dart';
 import 'package:ion/app/services/storage/local_storage.c.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'app_translations_provider.c.g.dart';
 part 'app_translations_provider.c.freezed.dart';
+
+class Translator {
+  Translator({
+    required AppTranslationsRepository translationsRepository,
+    required Locale locale,
+  })  : _translationsRepository = translationsRepository,
+        _locale = locale;
+
+  final AppTranslationsRepository _translationsRepository;
+
+  final Locale _locale;
+
+  final Map<Locale, AppTranslations> translations = {};
+
+  Future<String?> translate(
+    String? Function(AppTranslations) selector,
+  ) async {
+    return _translate(selector, locale: _locale);
+  }
+
+  Future<String?> _translate(
+    String? Function(AppTranslations) selector, {
+    required Locale locale,
+  }) async {
+    try {
+      final translations = await _getTranslations(locale);
+      final translation = selector(translations);
+      if (translation == null) {
+        throw TranslationNotFoundException(locale);
+      }
+      return translation;
+    } catch (error, stackTrace) {
+      Logger.error(
+        error,
+        stackTrace: stackTrace,
+        message: 'Failed to translate for locale $locale',
+      );
+      if (locale != fallbackLocale) {
+        return _translate(selector, locale: fallbackLocale);
+      }
+      return null;
+    }
+  }
+
+  Future<AppTranslations> _getTranslations(Locale locale) async {
+    if (translations.containsKey(locale)) {
+      return translations[locale]!;
+    }
+    return translations[locale] = await _translationsRepository.getTranslations(locale: locale);
+  }
+
+  static const Locale fallbackLocale = Locale('en', 'US');
+}
+
+@Riverpod(keepAlive: true)
+Future<Translator> translator(Ref ref) async {
+  final appLocale = ref.watch(appLocaleProvider);
+  final translationsRepository = await ref.watch(appTranslationsRepositoryProvider.future);
+  return Translator(translationsRepository: translationsRepository, locale: appLocale);
+}
 
 @Riverpod(keepAlive: true)
 Future<AppTranslationsRepository> appTranslationsRepository(Ref ref) async {
