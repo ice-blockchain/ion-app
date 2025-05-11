@@ -47,7 +47,7 @@ void main() {
 
       when(
         () => mockLocalStorage.setString(any(), any()),
-      ).thenAnswer((_) => Future.value(true));
+      ).thenAnswer((_) => Future.value());
 
       notifier.selectedWalletId = 'newWalletId';
 
