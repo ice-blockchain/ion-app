@@ -4,268 +4,202 @@ import 'dart:math';
 
 import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
+import 'package:ion/app/services/logger/logger.dart';
 
 TextInputFormatter decimalInputFormatter({required int maxDecimals}) {
   return FilteringTextInputFormatter.allow(RegExp('^\\d*\\,?\\d{0,$maxDecimals}'));
 }
 
 class CoinInputFormatter extends TextInputFormatter {
-  // Maximum number of decimal places allowed (to avoid RangeError)
   static const int maxDecimalsNumber = 20;
+  static final _numberFormat = NumberFormat('#,###', 'en_US');
+  static final _commasRegex = RegExp('[^,]');
 
   @override
   TextEditingValue formatEditUpdate(TextEditingValue oldValue, TextEditingValue newValue) {
-    // Handle the removed symbol
     if (newValue.text.length < oldValue.text.length) {
-      final cursorPos = newValue.selection.end;
-      final normalized = newValue.text.replaceAll(',', '');
-      final decimalsNumber = _countDecimals(newValue.text);
+      return _handleDeletion(oldValue, newValue);
+    }
 
-      // Handle special case when removing character after the decimal point
-      if (oldValue.text.contains('.') && newValue.text.contains('.')) {
-        final oldDecimalPart = oldValue.text.split('.')[1];
-        final newDecimalPart = newValue.text.split('.')[1];
+    final enteredChar = _getEnteredCharacter(oldValue, newValue);
+    if (enteredChar == null) return oldValue;
 
-        if (newDecimalPart.length < oldDecimalPart.length) {
-          if (decimalsNumber > 0 || newValue.text.endsWith('.')) {
-            return newValue;
-          }
-        }
-      }
+    if (_isDecimalSeparator(enteredChar.newSymbol)) {
+      return _handleDecimalSeparator(oldValue, newValue, enteredChar.index);
+    }
 
-      // If not all symbols were removed
-      if (normalized.isNotEmpty) {
-        // Don't use double.tryParse here to preserve exact decimal digits
-        // Just reformat with commas as needed
-        if (normalized.contains('.')) {
-          final parts = normalized.split('.');
-          final intPart = parts[0].isEmpty ? '0' : parts[0];
-          final decimalPart = parts.length > 1 ? parts[1] : '';
+    return _handleDigitInput(oldValue, newValue);
+  }
 
-          try {
-            final formattedIntPart =
-                intPart == '0' ? '0' : NumberFormat('#,###', 'en_US').format(int.parse(intPart));
+  TextEditingValue _handleDeletion(TextEditingValue oldValue, TextEditingValue newValue) {
+    final cursorPos = newValue.selection.end;
+    final normalized = _normalizeInput(newValue.text);
 
-            final toDisplay = decimalPart.isNotEmpty || normalized.endsWith('.')
-                ? '$formattedIntPart.$decimalPart'
-                : formattedIntPart;
+    if (_isSpecialDecimalDeletion(oldValue, newValue)) {
+      return newValue;
+    }
 
-            // Calculate new cursor position
-            var newCursorPos = cursorPos;
-            final commasRegex = RegExp('[^,]');
-            final oldCommaCount =
-                oldValue.text.substring(0, cursorPos).replaceAll(commasRegex, '').length;
-            final newCommaCount = toDisplay
-                .substring(0, min(cursorPos, toDisplay.length))
-                .replaceAll(commasRegex, '')
-                .length;
-            newCursorPos += newCommaCount - oldCommaCount;
-
-            return TextEditingValue(
-              text: toDisplay,
-              selection:
-                  TextSelection.collapsed(offset: min(toDisplay.length, max(0, newCursorPos))),
-            );
-          } catch (e, st) {
-            return newValue;
-          }
-        } else {
-          // Just integers, no decimal part
-          try {
-            final toDisplay = normalized == '0'
-                ? '0'
-                : NumberFormat('#,###', 'en_US').format(int.parse(normalized));
-
-            // Calculate new cursor position
-            var newCursorPos = cursorPos;
-            final commasRegex = RegExp('[^,]');
-            final oldCommaCount =
-                oldValue.text.substring(0, cursorPos).replaceAll(commasRegex, '').length;
-            final newCommaCount = toDisplay
-                .substring(0, min(cursorPos, toDisplay.length))
-                .replaceAll(commasRegex, '')
-                .length;
-            newCursorPos += newCommaCount - oldCommaCount;
-
-            return TextEditingValue(
-              text: toDisplay,
-              selection:
-                  TextSelection.collapsed(offset: min(toDisplay.length, max(0, newCursorPos))),
-            );
-          } catch (e, st) {
-            return newValue;
-          }
-        }
-      }
-
-      // If nothing left or couldn't parse
+    if (normalized.isEmpty) {
       return TextEditingValue(
         text: normalized,
         selection: TextSelection.collapsed(offset: cursorPos),
       );
     }
 
-    // Handle addition of characters
-    final newText = newValue.text;
-    final enteredCharResult = _getEnteredCharacter(oldValue, newValue);
+    return _formatNumberWithCursor(oldValue, normalized, cursorPos);
+  }
 
-    // If no new character identified, return old value
-    if (enteredCharResult == null) {
+  bool _isSpecialDecimalDeletion(TextEditingValue oldValue, TextEditingValue newValue) {
+    if (!oldValue.text.contains('.') || !newValue.text.contains('.')) return false;
+
+    final oldDecimalPart = oldValue.text.split('.')[1];
+    final newDecimalPart = newValue.text.split('.')[1];
+    final decimalsNumber = _countDecimals(newValue.text);
+
+    return newDecimalPart.length < oldDecimalPart.length &&
+        (decimalsNumber > 0 || newValue.text.endsWith('.'));
+  }
+
+  TextEditingValue _handleDecimalSeparator(
+    TextEditingValue oldValue,
+    TextEditingValue newValue,
+    int index,
+  ) {
+    if (oldValue.text.contains('.')) {
       return oldValue;
     }
 
-    final index = enteredCharResult.index;
-    final newSymbol = enteredCharResult.newSymbol;
-    final isNewSymbolDecimalsSeparator = newSymbol == ',' || newSymbol == '.';
-    final isTheLastCharEntered = index == newValue.text.length - 1;
+    final isAppending = index == newValue.text.length - 1;
+    final normalized = _normalizeInput(
+      isAppending ? newValue.text.substring(0, newValue.text.length - 1) : newValue.text,
+    );
 
-    // Handle insertion of decimal separator
-    if (isNewSymbolDecimalsSeparator) {
-      // Old value already contains the decimals separator. It can be only one.
-      if (oldValue.text.contains('.')) {
-        return oldValue;
+    try {
+      if (isAppending) {
+        final formatted = '${_formatIntegerPart(normalized)}.';
+        return TextEditingValue(
+          text: formatted,
+          selection: TextSelection.collapsed(offset: formatted.length),
+        );
       }
 
-      // Insert decimal separator at the proper position
-      if (isTheLastCharEntered) {
-        // Handle appending decimal at the end
-        final normalized = newText.substring(0, newText.length - 1).replaceAll(',', '');
+      final beforePart = normalized.substring(0, index);
+      final afterPart = normalized.substring(index);
+      final formatted = '${_formatIntegerPart(beforePart)}.$afterPart';
+      return TextEditingValue(
+        text: formatted,
+        selection: TextSelection.collapsed(offset: formatted.indexOf('.') + 1),
+      );
+    } catch (e) {
+      Logger.error('Catcher error during handling entered decimal separator. Exception: $e');
+      return oldValue;
+    }
+  }
 
-        try {
-          final intValue = normalized.isEmpty ? 0 : int.parse(normalized);
-          final formattedText = '${NumberFormat('#,###', 'en_US').format(intValue)}.';
+  TextEditingValue _handleDigitInput(TextEditingValue oldValue, TextEditingValue newValue) {
+    final normalized = _normalizeInput(newValue.text);
+    return _formatNumberWithCursor(oldValue, normalized, newValue.selection.end);
+  }
 
-          return TextEditingValue(
-            text: formattedText,
-            selection: TextSelection.collapsed(offset: formattedText.length),
-          );
-        } catch (e, st) {
-          return oldValue;
-        }
-      } else {
-        // Handle inserting decimal in the middle
-        // Extract parts before and after the insertion point
-        final beforePart = newText.substring(0, index).replaceAll(',', '');
-        final afterPart = newText.substring(index + 1).replaceAll(',', '');
+  String _normalizeInput(String text) => text.replaceAll(',', '');
 
-        try {
-          // Format the integer part
-          final intValue = beforePart.isEmpty ? 0 : int.parse(beforePart);
-          final formattedIntPart = NumberFormat('#,###', 'en_US').format(intValue);
+  bool _isDecimalSeparator(String symbol) => symbol == ',' || symbol == '.';
 
-          // Combine with decimal part
-          final formattedText = '$formattedIntPart.$afterPart';
+  String _formatIntegerPart(String input) {
+    var inputToParse = input;
+    if (inputToParse.isEmpty || inputToParse == '0') return '0';
 
-          // Find position of the decimal point in formatted text
-          final decimalPos = formattedText.indexOf('.');
-
-          return TextEditingValue(
-            text: formattedText,
-            selection: TextSelection.collapsed(offset: decimalPos + 1),
-          );
-        } catch (e, st) {
-          return oldValue;
-        }
-      }
+    // Limit integer part to 16 digits (max safe integer has 16 digits)
+    if (inputToParse.length > 16) {
+      inputToParse = inputToParse.substring(0, 16);
     }
 
-    // Handle regular digit input
-    final normalized = newValue.text.replaceAll(',', '');
+    try {
+      return _numberFormat.format(int.parse(inputToParse));
+    } catch (e) {
+      Logger.error('Error during parsing $input to int.');
+      return '0';
+    }
+  }
 
-    // Check if we're dealing with a decimal number
-    if (normalized.contains('.')) {
+  TextEditingValue _formatNumberWithCursor(
+    TextEditingValue oldValue,
+    String normalized,
+    int cursorPos,
+  ) {
+    try {
       final parts = normalized.split('.');
-      final intPart = parts[0].isEmpty ? '0' : parts[0];
+      final intPart = parts[0];
       final decimalPart = parts.length > 1 ? parts[1] : '';
 
-      // Limit the decimal places to avoid errors
       final limitedDecimalPart = decimalPart.length > maxDecimalsNumber
           ? decimalPart.substring(0, maxDecimalsNumber)
           : decimalPart;
 
-      try {
-        final formattedIntPart =
-            intPart == '0' ? '0' : NumberFormat('#,###', 'en_US').format(int.parse(intPart));
+      final formattedIntPart = _formatIntegerPart(intPart);
+      final toDisplay =
+          decimalPart.isNotEmpty ? '$formattedIntPart.$limitedDecimalPart' : formattedIntPart;
 
-        final toDisplay = '$formattedIntPart.$limitedDecimalPart';
+      final newCursorPos = _calculateCursorPosition(
+        oldValue: oldValue,
+        newText: toDisplay,
+        oldCursorPos: cursorPos,
+        hasLimitedDecimals: decimalPart.length > maxDecimalsNumber,
+      );
 
-        // Calculate new cursor position
-        var newCursorPos = newValue.selection.end;
-        final oldCommaCount = oldValue.text
-            .substring(0, min(oldValue.text.length, newValue.selection.end - 1))
-            .replaceAll(RegExp('[^,]'), '')
-            .length;
-        final newCommaCount = toDisplay
-            .substring(0, min(toDisplay.length, newValue.selection.end))
-            .replaceAll(RegExp('[^,]'), '')
-            .length;
-        newCursorPos += newCommaCount - oldCommaCount;
-
-        // Adjust cursor if we've limited decimal places
-        if (decimalPart.length > maxDecimalsNumber && newCursorPos > toDisplay.length) {
-          newCursorPos = toDisplay.length;
-        }
-
-        return TextEditingValue(
-          text: toDisplay,
-          selection: TextSelection.collapsed(offset: min(toDisplay.length, max(0, newCursorPos))),
-        );
-      } catch (e, st) {
-        return oldValue;
-      }
-    } else {
-      // Integer part only
-      try {
-        // Avoid double conversion to preserve exact input
-        final toDisplay =
-            normalized == '0' ? '0' : NumberFormat('#,###', 'en_US').format(int.parse(normalized));
-
-        // Calculate new cursor position
-        var newCursorPos = newValue.selection.end;
-        final oldCommaCount = oldValue.text
-            .substring(0, min(oldValue.text.length, newValue.selection.end - 1))
-            .replaceAll(RegExp('[^,]'), '')
-            .length;
-        final newCommaCount = toDisplay
-            .substring(0, min(toDisplay.length, newValue.selection.end))
-            .replaceAll(RegExp('[^,]'), '')
-            .length;
-        newCursorPos += newCommaCount - oldCommaCount;
-
-        return TextEditingValue(
-          text: toDisplay,
-          selection: TextSelection.collapsed(offset: min(toDisplay.length, max(0, newCursorPos))),
-        );
-      } catch (e, st) {
-        return oldValue;
-      }
+      return TextEditingValue(
+        text: toDisplay,
+        selection: TextSelection.collapsed(
+          offset: min(toDisplay.length, max(0, newCursorPos)),
+        ),
+      );
+    } catch (e) {
+      Logger.error('Catcher error during formatting number. Exception: $e');
+      return oldValue;
     }
+  }
+
+  int _calculateCursorPosition({
+    required TextEditingValue oldValue,
+    required String newText,
+    required int oldCursorPos,
+    required bool hasLimitedDecimals,
+  }) {
+    var newPos = oldCursorPos;
+
+    final oldCommaCount = oldValue.text
+        .substring(0, min(oldValue.text.length, oldCursorPos - 1))
+        .replaceAll(_commasRegex, '')
+        .length;
+
+    final newCommaCount =
+        newText.substring(0, min(newText.length, oldCursorPos)).replaceAll(_commasRegex, '').length;
+
+    newPos += newCommaCount - oldCommaCount;
+
+    if (hasLimitedDecimals && newPos > newText.length) {
+      newPos = newText.length;
+    }
+
+    return newPos;
   }
 
   ({int index, String newSymbol})? _getEnteredCharacter(
     TextEditingValue oldValue,
     TextEditingValue newValue,
   ) {
-    final oldText = oldValue.text;
-    final newText = newValue.text;
-    final oldLength = oldText.length;
-    final newLength = newText.length;
+    if (newValue.text.length != oldValue.text.length + 1) return null;
 
-    // Check if a single character was added
-    if (newLength == oldLength + 1) {
-      for (var i = 0; i < newLength; i++) {
-        if (i >= oldLength || oldText[i] != newText[i]) {
-          return (index: i, newSymbol: newText[i]);
-        }
+    for (var i = 0; i < newValue.text.length; i++) {
+      if (i >= oldValue.text.length || oldValue.text[i] != newValue.text[i]) {
+        return (index: i, newSymbol: newValue.text[i]);
       }
     }
     return null;
   }
 
   int _countDecimals(String value) {
-    // Should be only one dot according to the selected format
     final dotIndex = value.indexOf('.');
-    if (dotIndex == -1) return 0; // No decimal point
-    return value.length - dotIndex - 1;
+    return dotIndex == -1 ? 0 : value.length - dotIndex - 1;
   }
 }
