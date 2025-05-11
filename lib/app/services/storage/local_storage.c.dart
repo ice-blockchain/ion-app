@@ -4,9 +4,11 @@ import 'dart:async';
 
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/extensions/enum.dart';
+import 'package:ion/app/features/core/providers/env_provider.c.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:shared_preferences/util/legacy_to_async_migration_util.dart';
+import 'package:shared_preferences_foundation/shared_preferences_foundation.dart';
 
 part 'local_storage.c.g.dart';
 
@@ -23,6 +25,15 @@ Future<SharedPreferencesWithCache> sharedPreferences(Ref ref) async {
   return SharedPreferencesWithCache.create(
     cacheOptions: const SharedPreferencesWithCacheOptions(),
   );
+}
+
+@riverpod
+Future<SharedPreferencesAsync> sharedPreferencesFoundation(Ref ref) async {
+  final appGroup = ref.watch(envProvider.notifier).get<String>(EnvVariable.FOUNDATION_APP_GROUP);
+  final foundationOptions = SharedPreferencesAsyncFoundationOptions(
+    suiteName: appGroup,
+  );
+  return SharedPreferencesAsync(options: foundationOptions);
 }
 
 @Riverpod(keepAlive: true)

@@ -24,6 +24,7 @@ enum EnvVariable {
   CONTENT_CREATORS_RELAY,
   USER_SEARCH_RELAY,
   SENTRY_DSN,
+  FOUNDATION_APP_GROUP,
 }
 
 @Riverpod(keepAlive: true)
@@ -61,6 +62,7 @@ class Env extends _$Env {
         const int.fromEnvironment('PUSH_TRANSLATIONS_CACHE_MINUTES') as T,
       EnvVariable.ICLOUD_CONTAINER_ID => const String.fromEnvironment('ICLOUD_CONTAINER_ID') as T,
       EnvVariable.SENTRY_DSN => const String.fromEnvironment('SENTRY_DSN') as T,
+      EnvVariable.FOUNDATION_APP_GROUP => const String.fromEnvironment('FOUNDATION_APP_GROUP') as T,
     };
   }
 }

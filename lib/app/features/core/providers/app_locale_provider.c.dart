@@ -8,6 +8,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:intl/intl.dart';
 import 'package:ion/app/features/auth/providers/auth_provider.c.dart';
 import 'package:ion/app/features/core/model/language.dart';
+import 'package:ion/app/services/storage/local_storage.c.dart';
 import 'package:ion/app/services/storage/user_preferences_service.c.dart';
 import 'package:ion/generated/app_localizations.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
@@ -41,12 +42,17 @@ class AppLocale extends _$AppLocale {
     return isSupported ? locale : const Locale('en');
   }
 
-  void _saveState(Locale? state) {
+  Future<void> _saveState(Locale state) async {
+    // Saving app locate using sharedPreferencesFoundation
+    // to be able to read this value in the iOS Notification Service Extension
+    final sharedPreferencesFoundation = await ref.read(sharedPreferencesFoundationProvider.future);
+    await sharedPreferencesFoundation.setString(_localePersistenceKey, state.languageCode);
+
     final identityKeyName = ref.read(currentIdentityKeyNameSelectorProvider);
-    if (identityKeyName == null || state == null) {
+    if (identityKeyName == null) {
       return;
     }
-    ref
+    await ref
         .read(userPreferencesServiceProvider(identityKeyName: identityKeyName))
         .setValue(_localePersistenceKey, json.encode(state.languageCode));
   }
