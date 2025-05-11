@@ -16,6 +16,7 @@ part 'local_storage.c.g.dart';
 Future<SharedPreferencesWithCache> sharedPreferences(Ref ref) async {
   const sharedPreferencesOptions = SharedPreferencesOptions();
   final prefs = await SharedPreferences.getInstance();
+  //TODO: migration might be removed after the release (test)
   await migrateLegacySharedPreferencesToSharedPreferencesAsyncIfNecessary(
     legacySharedPreferencesInstance: prefs,
     sharedPreferencesAsyncOptions: sharedPreferencesOptions,
