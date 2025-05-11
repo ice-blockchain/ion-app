@@ -120,12 +120,12 @@ class CurrentIdentityKeyNameStore extends _$CurrentIdentityKeyNameStore {
 
   @override
   Future<String?> build() async {
-    final localStorage = ref.watch(localStorageProvider);
+    final localStorage = await ref.watch(localStorageAsyncProvider.future);
     return localStorage.getString(_currentIdentityKeyNameKey);
   }
 
   Future<void> setCurrentIdentityKeyName(String identityKeyName) async {
-    final localStorage = ref.read(localStorageProvider);
+    final localStorage = await ref.read(localStorageAsyncProvider.future);
     await localStorage.setString(_currentIdentityKeyNameKey, identityKeyName);
     state = AsyncData(identityKeyName);
   }

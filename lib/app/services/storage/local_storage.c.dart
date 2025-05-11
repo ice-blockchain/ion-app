@@ -6,11 +6,24 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/extensions/enum.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:shared_preferences/util/legacy_to_async_migration_util.dart';
 
 part 'local_storage.c.g.dart';
 
 @Riverpod(keepAlive: true)
-Future<SharedPreferences> sharedPreferences(Ref ref) => SharedPreferences.getInstance();
+Future<SharedPreferencesWithCache> sharedPreferences(Ref ref) async {
+  const sharedPreferencesOptions = SharedPreferencesOptions();
+  final prefs = await SharedPreferences.getInstance();
+  //TODO: migration might be removed after release
+  await migrateLegacySharedPreferencesToSharedPreferencesAsyncIfNecessary(
+    legacySharedPreferencesInstance: prefs,
+    sharedPreferencesAsyncOptions: sharedPreferencesOptions,
+    migrationCompletedKey: 'migrationCompleted',
+  );
+  return SharedPreferencesWithCache.create(
+    cacheOptions: const SharedPreferencesWithCacheOptions(),
+  );
+}
 
 @Riverpod(keepAlive: true)
 LocalStorage localStorage(Ref ref) {
@@ -29,9 +42,9 @@ Future<LocalStorage> localStorageAsync(Ref ref) async {
 class LocalStorage {
   const LocalStorage(this._prefs);
 
-  final SharedPreferences _prefs;
+  final SharedPreferencesWithCache _prefs;
 
-  Future<bool> setBool({required String key, required bool value}) {
+  Future<void> setBool({required String key, required bool value}) {
     return _prefs.setBool(key, value);
   }
 
@@ -39,7 +52,7 @@ class LocalStorage {
     return _prefs.getBool(key);
   }
 
-  Future<bool> setDouble(String key, double value) {
+  Future<void> setDouble(String key, double value) {
     return _prefs.setDouble(key, value);
   }
 
@@ -47,7 +60,7 @@ class LocalStorage {
     return _prefs.getDouble(key);
   }
 
-  Future<bool> setInt(String key, int value) {
+  Future<void> setInt(String key, int value) {
     return _prefs.setInt(key, value);
   }
 
@@ -55,7 +68,7 @@ class LocalStorage {
     return _prefs.getInt(key);
   }
 
-  Future<bool> setString(String key, String value) {
+  Future<void> setString(String key, String value) {
     return _prefs.setString(key, value);
   }
 
@@ -63,7 +76,7 @@ class LocalStorage {
     return _prefs.getString(key);
   }
 
-  Future<bool> setEnum<T extends Enum>(String key, T value) {
+  Future<void> setEnum<T extends Enum>(String key, T value) {
     return _prefs.setString(key, value.toShortString());
   }
 
@@ -83,7 +96,7 @@ class LocalStorage {
     }
   }
 
-  Future<bool> setStringList(String key, List<String> value) {
+  Future<void> setStringList(String key, List<String> value) {
     return _prefs.setStringList(key, value);
   }
 
@@ -91,11 +104,11 @@ class LocalStorage {
     return _prefs.getStringList(key);
   }
 
-  Future<bool> remove(String key) {
+  Future<void> remove(String key) {
     return _prefs.remove(key);
   }
 
   Set<String> getKeys() {
-    return _prefs.getKeys();
+    return _prefs.keys;
   }
 }
