@@ -28,7 +28,6 @@ class CoinIconWidget extends StatelessWidget {
         width: iconSize,
         height: iconSize,
         decoration: BoxDecoration(
-          shape: BoxShape.circle,
           image: DecorationImage(
             image: imageProvider,
           ),

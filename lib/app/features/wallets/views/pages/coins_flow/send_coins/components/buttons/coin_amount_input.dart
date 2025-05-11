@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:ion/app/components/inputs/text_input/text_input.dart';
 import 'package:ion/app/extensions/extensions.dart';
-import 'package:ion/app/features/wallets/views/utils/amount_parser.dart';
+import 'package:ion/app/features/wallets/views/utils/crypto_formatter.dart';
 import 'package:ion/app/utils/num.dart';
 import 'package:ion/app/utils/text_input_formatters.dart';
 
@@ -42,7 +42,8 @@ class CoinAmountInput extends HookWidget {
           keyboardType: const TextInputType.numberWithOptions(decimal: true),
           onValidated: (isValid) => isValidInput.value = isValid,
           inputFormatters: [
-            decimalInputFormatter(maxDecimals: 18),
+            // decimalInputFormatter(maxDecimals: 18),
+            CoinInputFormatter(),
           ],
           validator: (value) {
             final trimmedValue = value?.trim() ?? '';
@@ -50,8 +51,10 @@ class CoinAmountInput extends HookWidget {
               return null;
             }
 
-            final parsed = parseAmount(trimmedValue);
-            if (parsed == null) return '';
+            final parsed = double.tryParse(trimmedValue.replaceAll(',', ''));
+            if (parsed == null) {
+              return '';
+            }
 
             if (maxValue != null && (parsed > maxValue! || parsed < 0)) {
               return locale.wallet_coin_amount_insufficient_funds;
@@ -67,12 +70,8 @@ class CoinAmountInput extends HookWidget {
                   padding: EdgeInsetsDirectional.only(end: 16.0.s),
                   child: TextButton(
                     onPressed: () {
-                      var converted = (maxValue ?? 0).toStringAsFixed(18);
-
-                      // Trim trailing zeroes but leave at least one digit after decimal
-                      converted = converted.replaceFirst(RegExp(r'\.?0+$'), '');
-
-                      controller.text = converted;
+                      // TODO: Not implemented
+                      controller.text = formatCrypto(maxValue ?? 0);
                     },
                     child: Text(
                       locale.wallet_max,
