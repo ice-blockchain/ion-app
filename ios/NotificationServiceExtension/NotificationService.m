@@ -20,13 +20,29 @@
     self.contentHandler = contentHandler;
     self.bestAttemptContent = [request.content mutableCopy];
     
-    // TODO::
+    NSString *appLocale = [self getAppLocale];
+
+    if (appLocale != nil) {
+        // Get translations
+        // Match translations with the data in the notification
+        self.bestAttemptContent.body = appLocale;
+    }
     
     [[FIRMessaging extensionHelper] populateNotificationContent:self.bestAttemptContent withContentHandler:contentHandler];
 }
 
 - (void)serviceExtensionTimeWillExpire {
     self.contentHandler(self.bestAttemptContent);
+}
+
+- (NSString *)getAppLocale {
+    NSString *appGroup = [[NSBundle mainBundle] objectForInfoDictionaryKey:@"APP_GROUP"];
+    if (appGroup) {
+        NSUserDefaults *userDefaults = [[NSUserDefaults alloc] initWithSuiteName:appGroup];
+        NSString *appLocale = [userDefaults objectForKey:@"app_locale"];
+        return appLocale;
+    }
+    return nil;
 }
 
 @end
