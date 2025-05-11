@@ -21,12 +21,12 @@ Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
 
   final riverpod = ProviderContainer(observers: [Logger.talkerRiverpodObserver]);
 
+  final data = IonConnectPushDataPayload.fromJson(message.data);
+
   final translator = await riverpod.read(translatorProvider.future);
   final translation = await translator.translate((translations) => translations.version.toString());
 
-  final data = IonConnectPushDataPayload.fromJson(message.data);
-
-  //TODO: parse translations and use for title and body + add fallback if no translations found
+  //TODO: map data to translations
 
   await notificationsService.showNotification(
     id: message.messageId.hashCode,
