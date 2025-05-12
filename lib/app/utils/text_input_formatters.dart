@@ -69,29 +69,44 @@ class CoinInputFormatter extends TextInputFormatter {
       return oldValue;
     }
 
+    final normalized = _normalizeInput(newValue.text);
     final isAppending = index == newValue.text.length - 1;
-    final normalized = _normalizeInput(
-      isAppending ? newValue.text.substring(0, newValue.text.length - 1) : newValue.text,
-    );
 
     try {
       if (isAppending) {
-        final formatted = '${_formatIntegerPart(normalized)}.';
+        // Handle appending decimal at the end
+        final beforeDecimal = normalized.substring(0, normalized.length);
+        final formatted = '${_formatIntegerPart(beforeDecimal)}.';
         return TextEditingValue(
           text: formatted,
           selection: TextSelection.collapsed(offset: formatted.length),
         );
       }
 
-      final beforePart = normalized.substring(0, index);
-      final afterPart = normalized.substring(index);
+      // If inserting at position with a comma in formatted text,
+      // we need to adjust the split position
+      final formattedBeforeInsertion = _formatIntegerPart(normalized);
+      var adjustedIndex = index;
+      var commaCount = 0;
+      for (var i = 0; i < formattedBeforeInsertion.length && i < index; i++) {
+        if (formattedBeforeInsertion[i] == ',') {
+          commaCount++;
+        }
+      }
+      adjustedIndex -= commaCount;
+
+      // Split the normalized number at the adjusted position
+      final beforePart = normalized.substring(0, adjustedIndex);
+      final afterPart = normalized.substring(adjustedIndex);
       final formatted = '${_formatIntegerPart(beforePart)}.$afterPart';
+      final decimalPos = formatted.indexOf('.');
+
       return TextEditingValue(
         text: formatted,
-        selection: TextSelection.collapsed(offset: formatted.indexOf('.') + 1),
+        selection: TextSelection.collapsed(offset: decimalPos + 1),
       );
     } catch (e) {
-      Logger.error('Catcher error during handling entered decimal separator. Exception: $e');
+      Logger.error('Caught error during handling entered decimal separator. Exception: $e');
       return oldValue;
     }
   }
@@ -154,7 +169,7 @@ class CoinInputFormatter extends TextInputFormatter {
         ),
       );
     } catch (e) {
-      Logger.error('Catcher error during formatting number. Exception: $e');
+      Logger.error('Caught error during formatting number. Exception: $e');
       return oldValue;
     }
   }
