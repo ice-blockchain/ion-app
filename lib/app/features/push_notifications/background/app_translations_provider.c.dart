@@ -109,46 +109,30 @@ class AppTranslationsRepository {
   final Duration _cacheMaxDuration;
 
   Future<AppTranslations> getTranslations({required Locale locale}) async {
-    //TODO:remoive
-    return AppTranslations.fromJson({
-      '_version': 1,
-      'notifications': {
-        'reply': 'You have a new reply from {{username}}',
-        'mention': 'You have a new mention from {{username}}',
-        'repost': 'You have a new repost from {{username}}',
-        'like': 'You have a new like from {{username}}',
-        'follower': '{{username}} followed you',
-        'chatReaction': 'You have a new reaction',
-        'chatMessage': 'You have a new message',
-        'paymentRequest': 'You have a new payment request',
-        'paymentReceived': 'New payment received',
-      },
-    });
+    final cacheFile = File(await _getCachePath(locale: locale));
 
-    // final cacheFile = File(await _getCachePath(locale: locale));
+    if (cacheFile.existsSync()) {
+      final cacheDuration = DateTime.now().difference(cacheFile.lastModifiedSync());
+      if (cacheDuration < _cacheMaxDuration) {
+        return _parseTranslations(await cacheFile.readAsString());
+      }
+    }
 
-    // if (cacheFile.existsSync()) {
-    //   final cacheDuration = DateTime.now().difference(cacheFile.lastModifiedSync());
-    //   if (cacheDuration < _cacheMaxDuration) {
-    //     return _parseTranslations(await cacheFile.readAsString());
-    //   }
-    // }
+    final translations = await _fetchTranslations(locale: locale);
+    if (translations == null) {
+      if (!cacheFile.existsSync()) {
+        // This should not happen, but just in case, to avoid getting stuck in a loop
+        await _localStorage.remove(_getCacheVersionKey(locale: locale));
+        throw AppTranslationsCacheNotFoundException(locale);
+      }
+      await cacheFile.setLastModified(DateTime.now());
+      return _parseTranslations(await cacheFile.readAsString());
+    }
 
-    // final translations = await _fetchTranslations(locale: locale);
-    // if (translations == null) {
-    //   if (!cacheFile.existsSync()) {
-    //     // This should not happen, but just in case, to avoid getting stuck in a loop
-    //     await _localStorage.remove(_getCacheVersionKey(locale: locale));
-    //     throw AppTranslationsCacheNotFoundException(locale);
-    //   }
-    //   await cacheFile.setLastModified(DateTime.now());
-    //   return _parseTranslations(await cacheFile.readAsString());
-    // }
-
-    // final appTranslations = _parseTranslations(translations);
-    // await cacheFile.writeAsString(translations);
-    // await _localStorage.setInt(_getCacheVersionKey(locale: locale), appTranslations.version);
-    // return appTranslations;
+    final appTranslations = _parseTranslations(translations);
+    await cacheFile.writeAsString(translations);
+    await _localStorage.setInt(_getCacheVersionKey(locale: locale), appTranslations.version);
+    return appTranslations;
   }
 
   AppTranslations _parseTranslations(String translations) {
@@ -193,26 +177,37 @@ class AppTranslationsRepository {
 class AppTranslations with _$AppTranslations {
   const factory AppTranslations({
     @JsonKey(name: '_version') required int version,
-    required AppTranslationsNotifications notifications,
+    PushNotificationTranslations? pushNotifications,
   }) = _AppTranslations;
 
   factory AppTranslations.fromJson(Map<String, dynamic> json) => _$AppTranslationsFromJson(json);
 }
 
 @freezed
-class AppTranslationsNotifications with _$AppTranslationsNotifications {
-  const factory AppTranslationsNotifications({
-    required String reply,
-    required String mention,
-    required String repost,
-    required String like,
-    required String follower,
-    required String chatReaction,
-    required String chatMessage,
-    required String paymentRequest,
-    required String paymentReceived,
-  }) = _AppTranslationsNotifications;
+class NotificationTranslation with _$NotificationTranslation {
+  const factory NotificationTranslation({
+    String? title,
+    String? body,
+  }) = _NotificationTranslation;
 
-  factory AppTranslationsNotifications.fromJson(Map<String, dynamic> json) =>
-      _$AppTranslationsNotificationsFromJson(json);
+  factory NotificationTranslation.fromJson(Map<String, dynamic> json) =>
+      _$NotificationTranslationFromJson(json);
+}
+
+@freezed
+class PushNotificationTranslations with _$PushNotificationTranslations {
+  const factory PushNotificationTranslations({
+    NotificationTranslation? reply,
+    NotificationTranslation? mention,
+    NotificationTranslation? repost,
+    NotificationTranslation? like,
+    NotificationTranslation? follower,
+    NotificationTranslation? chatReaction,
+    NotificationTranslation? chatMessage,
+    NotificationTranslation? paymentRequest,
+    NotificationTranslation? paymentReceived,
+  }) = _PushNotificationTranslations;
+
+  factory PushNotificationTranslations.fromJson(Map<String, dynamic> json) =>
+      _$PushNotificationTranslationsFromJson(json);
 }

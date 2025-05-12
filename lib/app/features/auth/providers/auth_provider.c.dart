@@ -91,14 +91,31 @@ String? currentIdentityKeyNameSelector(Ref ref) {
   );
 }
 
-@riverpod
-String? currentPubkeySelector(Ref ref) {
-  final currentIdentityKeyName = ref.watch(currentIdentityKeyNameSelectorProvider);
-  if (currentIdentityKeyName == null) {
-    return null;
+@Riverpod(keepAlive: true)
+class CurrentPubkeySelector extends _$CurrentPubkeySelector {
+  @override
+  String? build() {
+    listenSelf((_, next) => _saveState(next));
+    final currentIdentityKeyName = ref.watch(currentIdentityKeyNameSelectorProvider);
+    if (currentIdentityKeyName == null) {
+      return null;
+    }
+    final mainWallet = ref.watch(mainWalletProvider).valueOrNull;
+    return mainWallet?.signingKey.publicKey;
   }
-  final mainWallet = ref.watch(mainWalletProvider).valueOrNull;
-  return mainWallet?.signingKey.publicKey;
+
+  Future<void> _saveState(String? pubkey) async {
+    // Saving current master pubkey using sharedPreferencesFoundation
+    // to be able to read this value in the iOS Notification Service Extension
+    final sharedPreferencesFoundation = await ref.read(sharedPreferencesFoundationProvider.future);
+    if (pubkey == null) {
+      await sharedPreferencesFoundation.remove(persistenceKey);
+    } else {
+      await sharedPreferencesFoundation.setString(persistenceKey, pubkey);
+    }
+  }
+
+  static const persistenceKey = 'current_master_pubkey';
 }
 
 @riverpod
