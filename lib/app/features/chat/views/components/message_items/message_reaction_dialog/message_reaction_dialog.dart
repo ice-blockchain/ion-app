@@ -85,17 +85,21 @@ class MessageReactionDialog extends HookConsumerWidget {
 
     /// The overflow size of the message content in the dialog
     final overflowBottomSize = MediaQuery.sizeOf(context).height -
-        // bottomdY -
         (position.dy > 0 ? (isHugeComponent ? 0 : bottomdY) : bottomdY) -
         contextMenuHeight.value -
         MediaQuery.paddingOf(context).bottom;
 
     /// The y-coordinate of the top of the message content in the dialog
-    final topY = isHugeComponent
+    var topY = isHugeComponent
         ? null
         : overflowBottomSize < 0
             ? null
             : position.dy - MessageReactionEmojiBar.height - 2;
+
+    // if the y position exceeds the safe area, set the y position to the safe area
+    if (topY != null && topY < MediaQuery.paddingOf(context).top) {
+      topY = MediaQuery.paddingOf(context).top;
+    }
 
     return Stack(
       children: [
