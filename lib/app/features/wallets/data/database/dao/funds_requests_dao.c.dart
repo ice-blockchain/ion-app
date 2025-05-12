@@ -40,8 +40,8 @@ class FundsRequestsDao extends DatabaseAccessor<WalletsDatabase> with _$FundsReq
     return result?.createdAt;
   }
 
-  Future<FundsRequest?> getFundsRequestById(String eventId) =>
-      (select(fundsRequestsTable)..where((t) => t.eventId.equals(eventId))).getSingleOrNull();
+  Stream<FundsRequest?> watchFundsRequestById(String eventId) =>
+      (select(fundsRequestsTable)..where((t) => t.eventId.equals(eventId))).watchSingleOrNull();
 
   Future<int> saveFundsRequest(FundsRequest fundsRequest) => into(fundsRequestsTable).insert(
         fundsRequest,

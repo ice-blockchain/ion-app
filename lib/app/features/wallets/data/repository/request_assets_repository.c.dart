@@ -1,12 +1,12 @@
 // SPDX-License-Identifier: ice License 1.0
 
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:ion/app/extensions/object.dart';
 import 'package:ion/app/features/wallets/data/database/dao/funds_requests_dao.c.dart';
 import 'package:ion/app/features/wallets/data/database/dao/transactions_dao.c.dart';
 import 'package:ion/app/features/wallets/data/mappers/funds_request_mapper.dart';
 import 'package:ion/app/features/wallets/model/entities/funds_request_entity.c.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
+import 'package:stream_transform/stream_transform.dart';
 
 part 'request_assets_repository.c.g.dart';
 
@@ -34,19 +34,21 @@ class RequestAssetsRepository {
     return _fundsRequestDao.getFirstCreatedAt(after: after);
   }
 
-  Future<FundsRequestEntity?> getRequestAssetById(String id) async {
-    final request = await _fundsRequestDao.getFundsRequestById(id);
+  Stream<FundsRequestEntity?> watchRequestAssetById(String id) async* {
+    final requestStream = _fundsRequestDao.watchFundsRequestById(id);
 
-    final transactionFuture = request?.transactionId?.map(
-      (transactionId) async => _transactionsDao.getTransactionByTxHash(request.transactionId!),
+    final transactionStream = requestStream
+        .map((request) => request?.transactionId)
+        .whereNotNull()
+        .asyncMap(
+          (transactionId) async => _transactionsDao.getTransactionByTxHash(transactionId),
+        )
+        .startWith(null);
+
+    yield* requestStream.combineLatest(
+      transactionStream,
+      (request, transaction) => request == null ? null : _mapper.toDomain(request, transaction),
     );
-
-    return request != null
-        ? _mapper.toDomain(
-            request,
-            transactionFuture == null ? null : await transactionFuture,
-          )
-        : null;
   }
 
   Future<void> saveRequestAsset(FundsRequestEntity entity) async {
