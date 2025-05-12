@@ -193,9 +193,8 @@ class SearchEmojiRoute extends BaseRouteData {
 }
 
 class ShareViaMessageModalRoute extends BaseRouteData {
-  ShareViaMessageModalRoute({
-    required this.eventReference,
-  }) : super(
+  ShareViaMessageModalRoute({required this.eventReference})
+      : super(
           child: ShareViaMessageModal(
             eventReference: EventReference.fromEncoded(eventReference),
           ),

@@ -112,7 +112,7 @@ class SendE2eeChatMessageService {
         groupSubject: subject.isNotEmpty ? GroupSubject(subject!) : null,
         relatedPubkeys:
             participantsMasterPubkeys.map((pubkey) => RelatedPubkey(value: pubkey)).toList(),
-        quotedEvent: storyReply ?? editedMessageEntity?.quotedEvent,
+        quotedEvent: quotedEvent ?? editedMessageEntity?.quotedEvent,
         relatedEvents: editedMessageEntity?.relatedEvents ?? _generateRelatedEvents(repliedMessage),
       );
 
