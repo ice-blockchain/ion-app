@@ -115,18 +115,17 @@ class StoryReply extends _$StoryReply {
       }
 
       final sentKind14EventMessage = await ref.read(sendE2eeChatMessageServiceProvider).sendMessage(
-        content: replyText ?? '',
-        conversationId: conversationId,
-        participantsMasterPubkeys: participantsMasterPubkeys,
-        storyReply: QuotedImmutableEvent(
-          eventReference: ImmutableEventReference(
-            eventId: kind16Rumor.id,
-            pubkey: kind16Rumor.masterPubkey,
-            kind: GenericRepostEntity.kind,
-          ),
-        ),
-        mediaFiles: [],
-      );
+            content: replyText ?? '',
+            conversationId: conversationId,
+            participantsMasterPubkeys: participantsMasterPubkeys,
+            storyReply: QuotedImmutableEvent(
+              eventReference: ImmutableEventReference(
+                eventId: kind16Rumor.id,
+                pubkey: kind16Rumor.masterPubkey,
+                kind: GenericRepostEntity.kind,
+              ),
+            ),
+          );
 
       if (replyEmoji != null) {
         await (await ref.read(sendE2eeMessageServiceProvider.future)).sendReaction(
