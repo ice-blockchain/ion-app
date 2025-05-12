@@ -17,6 +17,9 @@ import 'package:ion/app/services/storage/local_storage.c.dart';
 import 'package:ion/app/services/storage/user_preferences_service.c.dart';
 import 'package:ion/generated/app_localizations.dart';
 import 'package:mocktail/mocktail.dart';
+import 'package:shared_preferences_platform_interface/in_memory_shared_preferences_async.dart';
+import 'package:shared_preferences_platform_interface/shared_preferences_async_platform_interface.dart';
+import 'package:shared_preferences_platform_interface/shared_preferences_platform_interface.dart';
 import 'package:video_player_platform_interface/video_player_platform_interface.dart';
 
 import '../helpers/fake_video_platform.dart';
@@ -30,6 +33,11 @@ void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
   ScreenUtil.ensureScreenSize();
   registerStoriesFallbacks();
+
+  setUp(() async {
+    SharedPreferencesStorePlatform.instance = InMemorySharedPreferencesStore.empty();
+    SharedPreferencesAsyncPlatform.instance = InMemorySharedPreferencesAsync.empty();
+  });
 
   const alice = 'alice';
   final lastVideoPost = buildPost('vid_last', mediaType: MediaType.video);
