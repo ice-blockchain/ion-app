@@ -8,7 +8,6 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/chat/e2ee/model/entities/private_direct_message_data.c.dart';
 import 'package:ion/app/features/chat/model/upload_limit_modal_type.dart';
-import 'package:ion/app/features/chat/providers/messaging_bottom_bar_state_provider.c.dart';
 import 'package:ion/app/features/chat/views/pages/upload_limit_reached_modal/upload_limit_reached_modal.dart';
 import 'package:ion/app/features/core/permissions/data/models/permissions_types.dart';
 import 'package:ion/app/features/core/permissions/views/components/permission_aware_widget.dart';
@@ -111,7 +110,6 @@ class MoreContentView extends ConsumerWidget {
                     );
 
                     unawaited(onSubmitted(content: eventReference.encode()));
-                    ref.read(messagingBottomBarActiveStateProvider.notifier).setText();
                   }
                 },
               ),
@@ -150,8 +148,6 @@ class MoreContentView extends ConsumerWidget {
                         ],
                       ),
                     );
-
-                    ref.read(messagingBottomBarActiveStateProvider.notifier).setText();
                   }
                 },
               ),

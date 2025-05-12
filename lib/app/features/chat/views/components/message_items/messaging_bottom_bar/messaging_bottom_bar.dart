@@ -1,5 +1,7 @@
 // SPDX-License-Identifier: ice License 1.0
 
+import 'dart:async';
+
 import 'package:audio_waveforms/audio_waveforms.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
@@ -74,7 +76,15 @@ class MessagingBottomBar extends HookConsumerWidget {
       children: [
         AbsorbPointer(
           absorbing: bottomBarState.isVoice,
-          child: BottomBarInitialView(controller: controller, onSubmitted: onSubmitted),
+          child: BottomBarInitialView(
+            controller: controller,
+            onSubmitted: ({content, mediaFiles}) async {
+              unawaited(onSubmitted(content: content, mediaFiles: mediaFiles));
+              if (controller.text.isNotEmpty) {
+                ref.read(messagingBottomBarActiveStateProvider.notifier).setHasText();
+              }
+            },
+          ),
         ),
         if (bottomBarState.isVoice || bottomBarState.isVoiceLocked || bottomBarState.isVoicePaused)
           BottomBarRecordingView(
@@ -104,13 +114,16 @@ class MessagingBottomBar extends HookConsumerWidget {
               ? null
               : () async {
                   if (recordedMediaFile.value != null) {
-                    await onSubmitted(
-                      content: controller.text,
-                      mediaFiles: [recordedMediaFile.value!],
+                    unawaited(
+                      onSubmitted(
+                        content: controller.text,
+                        mediaFiles: [recordedMediaFile.value!],
+                      ),
                     );
                   } else {
-                    await onSubmitted(content: controller.text);
+                    unawaited(onSubmitted(content: controller.text));
                   }
+                  controller.clear();
                   recordedMediaFile.value = null;
                 },
         ),

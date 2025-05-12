@@ -96,6 +96,8 @@ class BottomBarInitialView extends HookConsumerWidget {
                   onTap: () {
                     if (controller.text.isEmpty) {
                       ref.read(messagingBottomBarActiveStateProvider.notifier).setText();
+                    } else {
+                      ref.read(messagingBottomBarActiveStateProvider.notifier).setHasText();
                     }
                   },
                   onChanged: onTextChanged,
