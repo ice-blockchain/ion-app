@@ -39,6 +39,7 @@ class Post extends ConsumerWidget {
     this.header,
     this.footer,
     this.onDelete,
+    this.isShared = false,
     this.isTextSelectable = false,
     this.bodyMaxLines = 6,
     this.contentWrapper,
@@ -48,6 +49,7 @@ class Post extends ConsumerWidget {
 
   final EventReference eventReference;
   final EventReference? repostEventReference;
+  final bool isShared;
   final bool displayQuote;
   final bool displayParent;
   final double? topOffset;
@@ -94,7 +96,8 @@ class Post extends ConsumerWidget {
             children: [
               if (displayQuote && quotedEventReference != null)
                 _QuotedEvent(eventReference: quotedEventReference),
-              footer ?? CounterItemsFooter(eventReference: eventReference),
+              SizedBox(height: 8.0.s),
+              if (!isShared) footer ?? CounterItemsFooter(eventReference: eventReference),
             ],
           ),
         ),
@@ -115,9 +118,16 @@ class Post extends ConsumerWidget {
                     ? entity.data.publishedAt.value
                     : entity.createdAt,
                 timeFormat: timeFormat,
-                trailing: isOwnedByCurrentUser
-                    ? OwnEntityMenu(eventReference: eventReference, onDelete: onDelete)
-                    : UserInfoMenu(eventReference: eventReference),
+                textStyle: isShared
+                    ? context.theme.appTextThemes.caption.copyWith(
+                        color: context.theme.appColors.onPrimaryAccent,
+                      )
+                    : null,
+                trailing: isShared
+                    ? null
+                    : isOwnedByCurrentUser
+                        ? OwnEntityMenu(eventReference: eventReference, onDelete: onDelete)
+                        : UserInfoMenu(eventReference: eventReference),
               ),
         ),
         if (contentWrapper != null) contentWrapper!(content) else content,

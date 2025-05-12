@@ -57,7 +57,7 @@ class UserInfo extends HookConsumerWidget {
               ),
               if (createdAt != null) ...[
                 SizedBox(width: 4.0.s),
-                const Text('•'),
+                Text('•', style: textStyle),
                 SizedBox(width: 4.0.s),
                 TimeAgo(
                   time: createdAt!,

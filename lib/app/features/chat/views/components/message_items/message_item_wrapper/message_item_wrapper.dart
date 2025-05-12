@@ -120,8 +120,9 @@ class MessageItemWrapper extends HookConsumerWidget {
                     topEnd: Radius.circular(12.0.s),
                     bottomStart:
                         !isLastMessageFromAuthor || isMe ? Radius.circular(12.0.s) : Radius.zero,
-                    bottomEnd:
-                        isMe && isLastMessageFromAuthor ? Radius.zero : Radius.circular(12.0.s),
+                    bottomEnd: isMe && isLastMessageFromAuthor && (messageItem is! PostItem)
+                        ? Radius.zero
+                        : Radius.circular(12.0.s),
                   ),
                 ),
                 child: child,
@@ -177,7 +178,8 @@ ChatMessageInfoItem? getRepliedMessageListItem({
 
   return switch (repliedEntity.data.messageType) {
     MessageType.profile => null,
-    MessageType.storyReply => null,
+    MessageType.sharedPost => null,
+    MessageType.sharedStory => null,
     MessageType.visualMedia => null,
     // TODO: implement replied for money message
     MessageType.requestFunds => null,
