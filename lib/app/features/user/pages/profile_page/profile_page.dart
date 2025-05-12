@@ -38,13 +38,13 @@ class ProfilePage extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final isOnRefresh = useState(false);
+    final didRefresh = useState(false);
 
     final isBlocked = ref.watch(isBlockedProvider(pubkey));
     final isBlocking = ref.watch(isBlockingProvider(pubkey)).valueOrNull;
     final userMetadata = ref.watch(userMetadataProvider(pubkey));
 
-    if (!isOnRefresh.value && (userMetadata.isLoading || isBlocking == null)) {
+    if (!didRefresh.value && (userMetadata.isLoading || isBlocking == null)) {
       return Scaffold(
         appBar: NavigationAppBar(
           useScreenTopOffset: true,
@@ -107,7 +107,7 @@ class ProfilePage extends HookConsumerWidget {
                               ? TabEntitiesList.replies(
                                   pubkey: pubkey,
                                   onRefresh: () {
-                                    isOnRefresh.value = true;
+                                    didRefresh.value = true;
                                     _onRefresh(ref, userMetadata.value);
                                   },
                                 )
@@ -115,7 +115,7 @@ class ProfilePage extends HookConsumerWidget {
                                   pubkey: pubkey,
                                   type: type,
                                   onRefresh: () {
-                                    isOnRefresh.value = true;
+                                    didRefresh.value = true;
                                     _onRefresh(ref, userMetadata.value);
                                   },
                                 ),
