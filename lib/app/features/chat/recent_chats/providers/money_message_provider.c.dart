@@ -11,17 +11,17 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 part 'money_message_provider.c.g.dart';
 
 @riverpod
-Future<FundsRequestEntity?> fundsRequestForMessage(
+Stream<FundsRequestEntity?> fundsRequestForMessage(
   Ref ref,
   EventMessage eventMessage,
-) async {
+) async* {
   final eventReference =
       EventReference.fromEncoded(eventMessage.content) as ImmutableEventReference;
 
-  return switch (eventReference.kind) {
+  yield* switch (eventReference.kind) {
     FundsRequestEntity.kind =>
-      ref.watch(requestAssetsRepositoryProvider).getRequestAssetById(eventReference.eventId),
-    WalletAssetEntity.kind => null, // TODO: modify previous message
-    _ => null,
+      ref.watch(requestAssetsRepositoryProvider).watchRequestAssetById(eventReference.eventId),
+    WalletAssetEntity.kind => Stream.value(null), // TODO: modify previous message
+    _ => Stream.value(null),
   };
 }
