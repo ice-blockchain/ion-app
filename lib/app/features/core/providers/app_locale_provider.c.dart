@@ -80,6 +80,16 @@ List<Language> localePreferredLanguages(Ref ref) {
   }.nonNulls.toList();
 }
 
+@riverpod
+List<Language> localePreferredContentLanguages(Ref ref) {
+  final systemLocale = _systemLocale();
+  final systemLocaleLanguage = Language.fromIsoCode(systemLocale.languageCode);
+  return {
+    systemLocaleLanguage,
+    Language.english,
+  }.nonNulls.toList();
+}
+
 Locale _systemLocale() {
   final localeString = Platform.localeName;
   final localeCodes = localeString.split('_');

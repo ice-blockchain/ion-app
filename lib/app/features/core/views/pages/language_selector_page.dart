@@ -9,6 +9,7 @@ import 'package:ion/app/components/separated/separator.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/auth/views/components/auth_scrolled_body/auth_header.dart';
 import 'package:ion/app/features/auth/views/pages/select_languages/language_list_item.dart';
+import 'package:ion/app/features/core/model/language.dart';
 import 'package:ion/app/features/core/providers/app_locale_provider.c.dart';
 import 'package:ion/app/hooks/use_languages.dart';
 import 'package:ion/app/router/components/navigation_app_bar/collapsing_app_bar.dart';
@@ -23,6 +24,7 @@ class LanguageSelectorPage extends HookConsumerWidget {
     required this.toggleLanguageSelection,
     this.appBar,
     this.continueButton,
+    this.preferredLanguages,
     super.key,
   });
 
@@ -31,12 +33,14 @@ class LanguageSelectorPage extends HookConsumerWidget {
   final Widget? appBar;
   final Widget? continueButton;
   final List<String> selectedLanguages;
+  final List<Language>? preferredLanguages;
   final void Function(String) toggleLanguageSelection;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final searchQuery = useState('');
-    final preferredLangs = ref.watch(localePreferredLanguagesProvider);
+    final localePreferredLanguages = ref.watch(localePreferredContentLanguagesProvider);
+    final preferredLangs = preferredLanguages ?? localePreferredLanguages;
     final languages = useLanguages(query: searchQuery.value, preferredLangs: preferredLangs);
 
     final mayContinue = selectedLanguages.isNotEmpty;
