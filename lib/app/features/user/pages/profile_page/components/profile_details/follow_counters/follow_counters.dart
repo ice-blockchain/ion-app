@@ -19,7 +19,7 @@ class FollowCounters extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final followingNumber = ref.watch(followListProvider(pubkey)).valueOrNull?.data.list.length;
-    final followersNumber = ref.watch(followersCountProvider(pubkey: pubkey)).valueOrNull;
+    final followersNumber = ref.watch(followersCountProvider(pubkey)).valueOrNull;
     final bothAvailable = followingNumber != null && followersNumber != null;
 
     return Container(

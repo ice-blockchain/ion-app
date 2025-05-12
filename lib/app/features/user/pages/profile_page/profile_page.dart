@@ -6,6 +6,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/components/screen_offset/screen_top_offset.dart';
 import 'package:ion/app/components/separated/separator.dart';
 import 'package:ion/app/extensions/extensions.dart';
+import 'package:ion/app/features/feed/data/models/entities/event_count_result_data.c.dart';
 import 'package:ion/app/features/ion_connect/providers/ion_connect_cache.c.dart';
 import 'package:ion/app/features/user/model/tab_entity_type.dart';
 import 'package:ion/app/features/user/model/user_content_type.dart';
@@ -37,21 +38,25 @@ class ProfilePage extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final isOnRefresh = useState(false);
+
     final isBlocked = ref.watch(isBlockedProvider(pubkey));
     final isBlocking = ref.watch(isBlockingProvider(pubkey)).valueOrNull;
     final userMetadata = ref.watch(userMetadataProvider(pubkey));
 
-    if (userMetadata.isLoading || isBlocking == null) {
+    if (!isOnRefresh.value && (userMetadata.isLoading || isBlocking == null)) {
       return Scaffold(
         appBar: NavigationAppBar(
           useScreenTopOffset: true,
           showBackButton: showBackButton,
         ),
-        body: const SizedBox(),
+        body: const Center(
+          child: CircularProgressIndicator(),
+        ),
       );
     }
 
-    final isBlockedOrBlocking = isBlocked || isBlocking;
+    final isBlockedOrBlocking = isBlocked || isBlocking.falseOrValue;
     if (!userMetadata.hasValue || isBlockedOrBlocking) {
       return const CantFindProfilePage();
     }
@@ -101,12 +106,18 @@ class ProfilePage extends HookConsumerWidget {
                           (type) => type == TabEntityType.replies
                               ? TabEntitiesList.replies(
                                   pubkey: pubkey,
-                                  onRefresh: () => _onRefresh(ref, userMetadata.value),
+                                  onRefresh: () {
+                                    isOnRefresh.value = true;
+                                    _onRefresh(ref, userMetadata.value);
+                                  },
                                 )
                               : TabEntitiesList(
                                   pubkey: pubkey,
                                   type: type,
-                                  onRefresh: () => _onRefresh(ref, userMetadata.value),
+                                  onRefresh: () {
+                                    isOnRefresh.value = true;
+                                    _onRefresh(ref, userMetadata.value);
+                                  },
                                 ),
                         )
                         .toList(),
@@ -135,5 +146,11 @@ class ProfilePage extends HookConsumerWidget {
   void _onRefresh(WidgetRef ref, UserMetadataEntity? userMetadata) {
     if (userMetadata == null) return;
     ref.read(ionConnectCacheProvider.notifier).remove(userMetadata.cacheKey);
+    ref.read(ionConnectCacheProvider.notifier).remove(
+          EventCountResultEntity.cacheKeyBuilder(
+            key: pubkey,
+            type: EventCountResultType.followers,
+          ),
+        );
   }
 }
