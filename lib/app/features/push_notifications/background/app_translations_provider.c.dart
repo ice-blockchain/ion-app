@@ -109,30 +109,46 @@ class AppTranslationsRepository {
   final Duration _cacheMaxDuration;
 
   Future<AppTranslations> getTranslations({required Locale locale}) async {
-    final cacheFile = File(await _getCachePath(locale: locale));
+    //TODO:remoive
+    return AppTranslations.fromJson({
+      '_version': 1,
+      'notifications': {
+        'reply': 'You have a new reply from {{username}}',
+        'mention': 'You have a new mention from {{username}}',
+        'repost': 'You have a new repost from {{username}}',
+        'like': 'You have a new like from {{username}}',
+        'follower': '{{username}} followed you',
+        'chatReaction': 'You have a new reaction',
+        'chatMessage': 'You have a new message',
+        'paymentRequest': 'You have a new payment request',
+        'paymentReceived': 'New payment received',
+      },
+    });
 
-    if (cacheFile.existsSync()) {
-      final cacheDuration = DateTime.now().difference(cacheFile.lastModifiedSync());
-      if (cacheDuration < _cacheMaxDuration) {
-        return _parseTranslations(await cacheFile.readAsString());
-      }
-    }
+    // final cacheFile = File(await _getCachePath(locale: locale));
 
-    final translations = await _fetchTranslations(locale: locale);
-    if (translations == null) {
-      if (!cacheFile.existsSync()) {
-        // This should not happen, but just in case, to avoid getting stuck in a loop
-        await _localStorage.remove(_getCacheVersionKey(locale: locale));
-        throw AppTranslationsCacheNotFoundException(locale);
-      }
-      await cacheFile.setLastModified(DateTime.now());
-      return _parseTranslations(await cacheFile.readAsString());
-    }
+    // if (cacheFile.existsSync()) {
+    //   final cacheDuration = DateTime.now().difference(cacheFile.lastModifiedSync());
+    //   if (cacheDuration < _cacheMaxDuration) {
+    //     return _parseTranslations(await cacheFile.readAsString());
+    //   }
+    // }
 
-    final appTranslations = _parseTranslations(translations);
-    await cacheFile.writeAsString(translations);
-    await _localStorage.setInt(_getCacheVersionKey(locale: locale), appTranslations.version);
-    return appTranslations;
+    // final translations = await _fetchTranslations(locale: locale);
+    // if (translations == null) {
+    //   if (!cacheFile.existsSync()) {
+    //     // This should not happen, but just in case, to avoid getting stuck in a loop
+    //     await _localStorage.remove(_getCacheVersionKey(locale: locale));
+    //     throw AppTranslationsCacheNotFoundException(locale);
+    //   }
+    //   await cacheFile.setLastModified(DateTime.now());
+    //   return _parseTranslations(await cacheFile.readAsString());
+    // }
+
+    // final appTranslations = _parseTranslations(translations);
+    // await cacheFile.writeAsString(translations);
+    // await _localStorage.setInt(_getCacheVersionKey(locale: locale), appTranslations.version);
+    // return appTranslations;
   }
 
   AppTranslations _parseTranslations(String translations) {

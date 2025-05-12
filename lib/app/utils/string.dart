@@ -17,3 +17,24 @@ extension StringExtensions on String {
     return '${this[0].toUpperCase()}${substring(1)}';
   }
 }
+
+/// Replaces placeholders in the format `{{key}}` within the [input] string
+/// using corresponding values from the [placeholders] map.
+///
+/// Example:
+/// ```dart
+/// final template = 'Hello, {{name}}! Welcome to {{place}}.';
+/// final result = replacePlaceholders(template, {
+///   'name': 'Alice',
+///   'place': 'Wonderland',
+/// });
+/// print(result); // Hello, Alice! Welcome to Wonderland.
+/// ```
+///
+String replacePlaceholders(String input, Map<String, String> placeholders) {
+  final regex = RegExp('{{(.*?)}}');
+  return input.replaceAllMapped(regex, (match) {
+    final key = match.group(1)?.trim();
+    return placeholders[key] ?? match.group(0)!;
+  });
+}

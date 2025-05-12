@@ -5,7 +5,6 @@ import 'package:collection/collection.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/foundation.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:ion/app/features/auth/providers/auth_provider.c.dart';
 import 'package:ion/app/features/feed/data/models/entities/modifiable_post_data.c.dart';
 import 'package:ion/app/features/feed/data/models/entities/reaction_data.c.dart';
 import 'package:ion/app/features/feed/data/models/entities/repost_data.c.dart';
@@ -25,6 +24,7 @@ import 'package:ion/app/features/wallets/model/entities/wallet_asset_entity.c.da
 import 'package:ion/app/services/ion_connect/ion_connect.dart';
 import 'package:ion/app/services/local_notifications/local_notifications.c.dart';
 import 'package:ion/app/services/logger/logger.dart';
+import 'package:ion/app/utils/string.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 
 @pragma('vm:entry-point')
@@ -54,11 +54,14 @@ Future<({String title, String body})?> _parseNotificationData(
   final parser = EventParser();
   final riverpod = ProviderContainer(observers: [Logger.talkerRiverpodObserver]);
   final translator = await riverpod.read(translatorProvider.future);
-  final currentPubkey = riverpod.read(currentPubkeySelectorProvider);
 
-  if (currentPubkey == null) {
-    return null;
-  }
+  //orion350 ae967afb38e882f7233ad98c368b3175312d07525d079aeabc1179bda7d9e66f
+  const currentPubkey = 'ae967afb38e882f7233ad98c368b3175312d07525d079aeabc1179bda7d9e66f';
+  // final currentPubkey = riverpod.read(currentPubkeySelectorProvider);
+
+  // if (currentPubkey == null) {
+  //   return null;
+  // }
 
   final mainEntity = await data.event.validate() ? parser.parse(data.event) : null;
   final validRelatedEvents = await Future.wait(
@@ -74,8 +77,6 @@ Future<({String title, String body})?> _parseNotificationData(
     relatedEvents: validRelatedEvents.nonNulls.toList(),
   );
 
-  //TODO:wrap tranlate to try catch
-
   final notificationType =
       await _getNotificationType(mainEntity: mainEntity, currentPubkey: currentPubkey);
 
@@ -85,13 +86,22 @@ Future<({String title, String body})?> _parseNotificationData(
 
   final appName = (await PackageInfo.fromPlatform()).appName;
 
-  final body = await _getNotificationBody(
+  final bodyTranslation = await _getNotificationBodyTranslation(
     notificationType: notificationType,
     translator: translator,
     username: mainEntityUserMetadata?.data.displayName,
   );
 
-  return (title: appName, body: body ?? data.body);
+  final body = bodyTranslation != null
+      ? mainEntityUserMetadata != null
+          ? replacePlaceholders(
+              bodyTranslation,
+              {'username': mainEntityUserMetadata.data.displayName},
+            )
+          : bodyTranslation
+      : data.body;
+
+  return (title: appName, body: body);
 }
 
 UserMetadataEntity? _getUserMetadata({
@@ -156,31 +166,35 @@ Future<NotificationType?> _getNotificationType({
   return null;
 }
 
-Future<String?> _getNotificationBody({
+Future<String?> _getNotificationBodyTranslation({
   required NotificationType notificationType,
   required Translator translator,
   required String? username,
 }) async {
-  return switch (notificationType) {
-    NotificationType.reply =>
-      translator.translate((translations) => translations.notifications.reply),
-    NotificationType.mention =>
-      translator.translate((translations) => translations.notifications.mention),
-    NotificationType.repost =>
-      translator.translate((translations) => translations.notifications.repost),
-    NotificationType.like =>
-      translator.translate((translations) => translations.notifications.like),
-    NotificationType.follower =>
-      translator.translate((translations) => translations.notifications.follower),
-    NotificationType.chatReaction =>
-      translator.translate((translations) => translations.notifications.chatReaction),
-    NotificationType.chatMessage =>
-      translator.translate((translations) => translations.notifications.chatMessage),
-    NotificationType.paymentRequest =>
-      translator.translate((translations) => translations.notifications.paymentRequest),
-    NotificationType.paymentReceived =>
-      translator.translate((translations) => translations.notifications.paymentReceived),
-  };
+  try {
+    return switch (notificationType) {
+      NotificationType.reply =>
+        translator.translate((translations) => translations.notifications.reply),
+      NotificationType.mention =>
+        translator.translate((translations) => translations.notifications.mention),
+      NotificationType.repost =>
+        translator.translate((translations) => translations.notifications.repost),
+      NotificationType.like =>
+        translator.translate((translations) => translations.notifications.like),
+      NotificationType.follower =>
+        translator.translate((translations) => translations.notifications.follower),
+      NotificationType.chatReaction =>
+        translator.translate((translations) => translations.notifications.chatReaction),
+      NotificationType.chatMessage =>
+        translator.translate((translations) => translations.notifications.chatMessage),
+      NotificationType.paymentRequest =>
+        translator.translate((translations) => translations.notifications.paymentRequest),
+      NotificationType.paymentReceived =>
+        translator.translate((translations) => translations.notifications.paymentReceived),
+    };
+  } catch (e) {
+    return null;
+  }
 }
 
 void initFirebaseMessagingBackgroundHandler() {
