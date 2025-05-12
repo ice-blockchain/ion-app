@@ -5,7 +5,6 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/components/button/button.dart';
-import 'package:ion/app/components/progress_bar/ion_loading_indicator.dart';
 import 'package:ion/app/components/screen_offset/screen_bottom_offset.dart';
 import 'package:ion/app/components/screen_offset/screen_side_offset.dart';
 import 'package:ion/app/components/separated/separator.dart';
@@ -14,7 +13,6 @@ import 'package:ion/app/features/auth/providers/auth_provider.c.dart';
 import 'package:ion/app/features/auth/views/components/user_data_inputs/general_user_data_input.dart';
 import 'package:ion/app/features/chat/community/models/group_type.dart';
 import 'package:ion/app/features/chat/e2ee/providers/send_chat_message/send_e2ee_chat_message_service.c.dart';
-import 'package:ion/app/features/chat/e2ee/providers/send_e2ee_message_provider.c.dart';
 import 'package:ion/app/features/chat/providers/create_group_form_controller_provider.c.dart';
 import 'package:ion/app/features/chat/views/components/general_selection_button.dart';
 import 'package:ion/app/features/chat/views/components/type_selection_modal.dart';
@@ -49,9 +47,6 @@ class CreateGroupModal extends HookConsumerWidget {
             currentMasterPubkey,
           ]
         : <String>[];
-
-    final sendE2eeMessageNotifier = ref.watch(sendE2eeMessageServiceProvider);
-    ref.displayErrors(sendE2eeMessageServiceProvider);
 
     useEffect(
       () {
@@ -174,18 +169,19 @@ class CreateGroupModal extends HookConsumerWidget {
             margin: 32.0.s,
             child: ScreenSideOffset.large(
               child: Button(
-                disabled: sendE2eeMessageNotifier.maybeWhen(
-                  loading: () => true,
-                  orElse: () => false,
-                ),
-                mainAxisSize: MainAxisSize.max,
-                minimumSize: Size(56.0.s, 56.0.s),
-                leadingIcon: sendE2eeMessageNotifier.maybeWhen(
-                  loading: () => const IONLoadingIndicator(),
-                  orElse: () => Assets.svg.iconPlusCreatechannel.icon(
-                    color: context.theme.appColors.onPrimaryAccent,
-                  ),
-                ),
+                //TODO: handle loading state when creating group with different provider
+                // disabled: sendE2eeMessageNotifier.maybeWhen(
+                //   loading: () => true,
+                //   orElse: () => false,
+                // ),
+                // mainAxisSize: MainAxisSize.max,
+                // minimumSize: Size(56.0.s, 56.0.s),
+                // leadingIcon: sendE2eeMessageNotifier.maybeWhen(
+                //   loading: () => const IONLoadingIndicator(),
+                //   orElse: () => Assets.svg.iconPlusCreatechannel.icon(
+                //     color: context.theme.appColors.onPrimaryAccent,
+                //   ),
+                // ),
                 label: Text(context.i18n.group_create_create_button),
                 onPressed: () async {
                   if (formKey.currentState!.validate()) {
