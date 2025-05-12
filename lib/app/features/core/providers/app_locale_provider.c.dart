@@ -1,6 +1,7 @@
 // SPDX-License-Identifier: ice License 1.0
 
 import 'dart:convert';
+import 'dart:io';
 import 'dart:ui';
 
 import 'package:hooks_riverpod/hooks_riverpod.dart';
@@ -30,7 +31,7 @@ class AppLocale extends _$AppLocale {
   }
 
   Locale _getSystemLocale() {
-    return _validateLocale(PlatformDispatcher.instance.locale);
+    return _validateLocale(_systemLocale());
   }
 
   Locale _validateLocale(Locale locale) {
@@ -67,7 +68,35 @@ class AppLocale extends _$AppLocale {
 }
 
 @riverpod
-Language localePreferredLanguage(Ref ref) {
+List<Language> localePreferredLanguages(Ref ref) {
   final appLocale = ref.watch(appLocaleProvider);
-  return Language.fromIsoCode(appLocale.languageCode) ?? Language.english;
+  final systemLocale = _systemLocale();
+  final appLocaleLanguage = Language.fromIsoCode(appLocale.languageCode) ?? Language.english;
+  final systemLocaleLanguage = Language.fromIsoCode(systemLocale.languageCode);
+  return {
+    appLocaleLanguage,
+    systemLocaleLanguage,
+    Language.english,
+  }.nonNulls.toList();
+}
+
+@riverpod
+List<Language> localePreferredContentLanguages(Ref ref) {
+  final systemLocale = _systemLocale();
+  final systemLocaleLanguage = Language.fromIsoCode(systemLocale.languageCode);
+  return {
+    systemLocaleLanguage,
+    Language.english,
+  }.nonNulls.toList();
+}
+
+Locale _systemLocale() {
+  final localeString = Platform.localeName;
+  final localeCodes = localeString.split('_');
+  final languageCode = localeCodes.first;
+  final countryCode = localeCodes.length > 1 ? localeCodes[1] : null;
+  return Locale(
+    languageCode,
+    countryCode,
+  );
 }

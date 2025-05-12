@@ -22,10 +22,10 @@ class SelectLanguages extends HookConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final finishNotifier = ref.watch(onboardingCompleteNotifierProvider);
     ref.displayErrors(onboardingCompleteNotifierProvider);
+    final preferredLanguages = ref.watch(localePreferredContentLanguagesProvider);
 
     final (selectedLanguages, toggleLanguageSelection) = useSelectedState(
-      ref.watch(onboardingDataProvider).languages ??
-          [ref.watch(localePreferredLanguageProvider).isoCode],
+      ref.watch(onboardingDataProvider).languages ?? [preferredLanguages.first.isoCode],
     );
 
     final userIdentity = ref.watch(currentUserIdentityProvider).valueOrNull;
@@ -35,6 +35,7 @@ class SelectLanguages extends HookConsumerWidget {
       description: context.i18n.select_languages_description,
       toggleLanguageSelection: toggleLanguageSelection,
       selectedLanguages: selectedLanguages,
+      preferredLanguages: preferredLanguages,
       continueButton: Button(
         disabled: finishNotifier.isLoading,
         trailingIcon: finishNotifier.isLoading ? const IONLoadingIndicator() : null,
