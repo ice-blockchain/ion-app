@@ -43,13 +43,11 @@ class CoinAmountInput extends HookWidget {
           keyboardType: const TextInputType.numberWithOptions(decimal: true),
           onValidated: (isValid) => isValidInput.value = isValid,
           inputFormatters: [
-            decimalInputFormatter(maxDecimals: 18),
+            CoinInputFormatter(),
           ],
           validator: (value) {
             final trimmedValue = value?.trim() ?? '';
-            if (trimmedValue.isEmpty) {
-              return null;
-            }
+            if (trimmedValue.isEmpty) return null;
 
             final parsed = parseAmount(trimmedValue);
             if (parsed == null) return '';
