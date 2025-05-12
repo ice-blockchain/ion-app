@@ -8,7 +8,7 @@ import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/auth/providers/auth_provider.c.dart';
 import 'package:ion/app/features/chat/e2ee/model/entities/private_direct_message_data.c.dart';
 import 'package:ion/app/features/chat/e2ee/providers/chat_medias_provider.c.dart';
-import 'package:ion/app/features/chat/e2ee/providers/send_e2ee_message_provider.c.dart';
+import 'package:ion/app/features/chat/e2ee/providers/send_e2ee_reaction_provider.c.dart';
 import 'package:ion/app/features/chat/model/database/chat_database.c.dart';
 import 'package:ion/app/features/chat/model/message_list_item.c.dart';
 import 'package:ion/app/features/chat/model/message_type.dart';
@@ -85,8 +85,8 @@ class MessageItemWrapper extends HookConsumerWidget {
                 );
 
             if (!isExist) {
-              final e2eeMessageService = await ref.read(sendE2eeMessageServiceProvider.future);
-              await e2eeMessageService.sendReaction(
+              final e2eeReactionService = await ref.read(sendE2eeReactionServiceProvider.future);
+              await e2eeReactionService.sendReaction(
                 content: emoji,
                 kind14Rumor: messageItem.eventMessage,
               );

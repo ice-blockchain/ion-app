@@ -9,7 +9,7 @@ import 'package:ion/app/features/auth/providers/auth_provider.c.dart';
 import 'package:ion/app/features/chat/community/models/entities/tags/conversation_identifier.c.dart';
 import 'package:ion/app/features/chat/e2ee/model/entities/private_direct_message_data.c.dart';
 import 'package:ion/app/features/chat/e2ee/model/entities/private_message_reaction_data.c.dart';
-import 'package:ion/app/features/chat/e2ee/providers/send_e2ee_message_provider.c.dart';
+import 'package:ion/app/features/chat/e2ee/providers/send_e2ee_message_status_provider.c.dart';
 import 'package:ion/app/features/chat/model/database/chat_database.c.dart';
 import 'package:ion/app/features/chat/providers/user_chat_relays_provider.c.dart';
 import 'package:ion/app/features/feed/data/models/entities/modifiable_post_data.c.dart';
@@ -70,7 +70,8 @@ class E2eeMessagesSubscriber extends _$E2eeMessagesSubscriber {
 
     final sealService = await ref.watch(ionConnectSealServiceProvider.future);
     final giftWrapService = await ref.watch(ionConnectGiftWrapServiceProvider.future);
-    final sendE2eeMessageService = await ref.watch(sendE2eeMessageServiceProvider.future);
+    final sendE2eeMessageStatusService =
+        await ref.watch(sendE2eeMessageStatusServiceProvider.future);
     final conversationDao = ref.watch(conversationDaoProvider);
     final eventMessageDao = ref.watch(eventMessageDaoProvider);
     final conversationMessageDao = ref.watch(conversationMessageDaoProvider);
@@ -85,7 +86,7 @@ class E2eeMessagesSubscriber extends _$E2eeMessagesSubscriber {
         eventSigner,
         sealService,
         giftWrapService,
-        sendE2eeMessageService,
+        sendE2eeMessageStatusService,
         conversationDao,
         eventMessageDao,
         conversationMessageDao,
@@ -106,8 +107,6 @@ class E2eeMessagesSubscriber extends _$E2eeMessagesSubscriber {
 
     final requestMessage = RequestMessage()..addFilter(requestFilter);
 
-    // TODO Clear expired and deleted database messages later
-
     final events = ref.watch(
       ionConnectEventsSubscriptionProvider(
         requestMessage,
@@ -122,7 +121,7 @@ class E2eeMessagesSubscriber extends _$E2eeMessagesSubscriber {
         eventSigner,
         sealService,
         giftWrapService,
-        sendE2eeMessageService,
+        sendE2eeMessageStatusService,
         conversationDao,
         eventMessageDao,
         conversationMessageDao,
@@ -142,7 +141,7 @@ class E2eeMessagesSubscriber extends _$E2eeMessagesSubscriber {
     EventSigner eventSigner,
     IonConnectSealService sealService,
     IonConnectGiftWrapService giftWrapService,
-    SendE2eeMessageService sendE2eeMessageService,
+    SendE2eeMessageStatusService sendE2eeMessageStatusService,
     ConversationDao conversationDao,
     EventMessageDao eventMessageDao,
     ConversationMessageDao conversationMessageDao,
@@ -183,7 +182,7 @@ class E2eeMessagesSubscriber extends _$E2eeMessagesSubscriber {
       );
 
       if (currentStatus == null || currentStatus.index < MessageDeliveryStatus.received.index) {
-        await sendE2eeMessageService.sendMessageStatus(
+        await sendE2eeMessageStatusService.sendMessageStatus(
           messageEventMessage: rumor,
           status: MessageDeliveryStatus.received,
         );

@@ -12,6 +12,7 @@ ConversationMessageDao conversationMessageDao(Ref ref) =>
     EventMessageTable,
     MessageStatusTable,
     ConversationTable,
+    ReactionTable,
   ],
 )
 class ConversationMessageDao extends DatabaseAccessor<ChatDatabase>
@@ -143,8 +144,7 @@ class ConversationMessageDao extends DatabaseAccessor<ChatDatabase>
     required List<EventReference> eventReferences,
     required EventMessage deleteRequest,
   }) async {
-    await ref.read(eventMessageDaoProvider).add(deleteRequest);
-
+    await _removeExpiredMessages(ref, eventReferences);
     await (update(messageStatusTable)
           ..where((table) => table.messageEventReference.isInValues(eventReferences)))
         .write(
@@ -152,5 +152,39 @@ class ConversationMessageDao extends DatabaseAccessor<ChatDatabase>
         status: Value(MessageDeliveryStatus.deleted),
       ),
     );
+  }
+
+  Future<void> _removeExpiredMessages(Ref ref, List<EventReference> eventReferences) async {
+    final env = ref.read(envProvider.notifier);
+    final expiration = env.get<int>(EnvVariable.GIFT_WRAP_EXPIRATION_HOURS);
+
+    final expiredMessageEventReferences = await (select(eventMessageTable)
+          ..where(
+            (table) => table.createdAt
+                .isSmallerThanValue(DateTime.now().subtract(Duration(hours: expiration))),
+          )
+          ..where((table) => table.eventReference.isInValues(eventReferences)))
+        .map((e) => e.eventReference)
+        .get();
+
+    await batch((b) {
+      b
+        ..deleteWhere(
+          eventMessageTable,
+          (table) => table.eventReference.isInValues(expiredMessageEventReferences),
+        )
+        ..deleteWhere(
+          messageStatusTable,
+          (table) => table.messageEventReference.isInValues(expiredMessageEventReferences),
+        )
+        ..deleteWhere(
+          conversationMessageTable,
+          (table) => table.messageEventReference.isInValues(expiredMessageEventReferences),
+        )
+        ..deleteWhere(
+          reactionTable,
+          (table) => table.messageEventReference.isInValues(expiredMessageEventReferences),
+        );
+    });
   }
 }
