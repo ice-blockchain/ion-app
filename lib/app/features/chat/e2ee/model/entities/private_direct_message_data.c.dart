@@ -188,7 +188,7 @@ extension MessageTypes on ReplaceablePrivateDirectMessageData {
     } else if (media.isNotEmpty) {
       return MessageType.document;
     } else if (IonConnectProtocolIdentifierTypeValidator.isEventIdentifier(content)) {
-      if (EventReference.fromEncoded(content) case final ReplaceableEventReference eventReference) {
+      if (EventReference.fromEncoded(content) case final ImmutableEventReference eventReference) {
         return switch (eventReference.kind) {
           FundsRequestEntity.kind || WalletAssetEntity.kind => MessageType.requestFunds,
           _ => MessageType.text,

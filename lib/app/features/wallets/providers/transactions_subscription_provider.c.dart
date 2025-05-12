@@ -66,18 +66,14 @@ Future<void> transactionsSubscription(Ref ref) async {
 
   await ref.watch(entitiesSyncerNotifierProvider('transactions').notifier).syncEvents(
     requestFilters: [requestFilter],
-    saveCallback: (eventMessage) {
-      if (eventMessage.masterPubkey != currentPubkey) {
-        _saveEvent(
-          eventMessage: eventMessage,
-          privateKey: eventSigner.privateKey,
-          sealService: sealService,
-          giftWrapService: giftWrapService,
-          transactionsRepository: transactionsRepository,
-          requestAssetsRepository: requestAssetsRepository,
-        );
-      }
-    },
+    saveCallback: (eventMessage) => _saveEvent(
+      eventMessage: eventMessage,
+      privateKey: eventSigner.privateKey,
+      sealService: sealService,
+      giftWrapService: giftWrapService,
+      transactionsRepository: transactionsRepository,
+      requestAssetsRepository: requestAssetsRepository,
+    ),
     maxCreatedAtBuilder: () async {
       final transactionLastCreatedAt = await transactionsRepository.getLastCreatedAt();
       final requestLastCreatedAt = await requestAssetsRepository.getLastCreatedAt();
