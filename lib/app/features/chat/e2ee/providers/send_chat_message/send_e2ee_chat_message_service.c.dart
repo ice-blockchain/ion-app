@@ -51,7 +51,6 @@ class SendE2eeChatMessageService {
   Future<EventMessage> sendMessage({
     required String content,
     required String conversationId,
-    required List<MediaFile> mediaFiles,
     required List<String> participantsMasterPubkeys,
     int kind = ReplaceablePrivateDirectMessageEntity.kind,
     List<List<String>>? tags,
@@ -61,6 +60,7 @@ class SendE2eeChatMessageService {
     EventMessage? failedEventMessage,
     List<String>? groupImageTag,
     QuotedImmutableEvent? storyReply,
+    List<MediaFile> mediaFiles = const [],
     Map<String, List<String>>? failedParticipantsMasterPubkeys,
   }) async {
     EventMessage? sentMessage;
@@ -71,7 +71,6 @@ class SendE2eeChatMessageService {
     final editedMessageEntity = editedMessage != null
         ? ReplaceablePrivateDirectMessageData.fromEventMessage(editedMessage)
         : null;
-
     final participantsPubkeysMap = failedParticipantsMasterPubkeys ??
         await ref
             .read(conversationPubkeysProvider.notifier)
@@ -87,7 +86,6 @@ class SendE2eeChatMessageService {
           );
 
       final eventSigner = await ref.read(currentUserIonConnectEventSignerProvider.future);
-
       if (eventSigner == null) {
         throw EventSignerNotFoundException();
       }
@@ -126,8 +124,8 @@ class SendE2eeChatMessageService {
       sentMessage = localEventMessage;
 
       final messageMediaIds = await _addDbEntities(
-        eventReference: eventReference,
         mediaFiles: mediaFiles,
+        eventReference: eventReference,
         localEventMessage: localEventMessage,
       );
 
@@ -144,7 +142,7 @@ class SendE2eeChatMessageService {
         return a.compareTo(b);
       });
 
-      if (mediaAttachmentsUsersBased.isEmpty && content.isEmpty) {
+      if (mediaAttachmentsUsersBased.isEmpty && content.isEmpty && storyReply == null) {
         await ref.read(eventMessageDaoProvider).deleteByEventReference(eventReference);
         return sentMessage;
       }
@@ -171,7 +169,7 @@ class SendE2eeChatMessageService {
                   for (final attachment in attachments) attachment.url: attachment,
                 },
                 masterPubkey: currentUserMasterPubkey,
-                quotedEvent: editedMessageEntity?.quotedEvent,
+                quotedEvent: storyReply ?? editedMessageEntity?.quotedEvent,
                 relatedPubkeys: participantsMasterPubkeys
                     .map((pubkey) => RelatedPubkey(value: pubkey))
                     .toList(),
@@ -182,7 +180,6 @@ class SendE2eeChatMessageService {
                 NoPrivateSigner(eventSigner.publicKey),
                 createdAt: DateTime.now().subtract(const Duration(hours: 12)),
               );
-
               await sendWrappedMessage(
                 pubkey: pubkey,
                 eventSigner: eventSigner,
@@ -430,8 +427,8 @@ class SendE2eeChatMessageService {
   }
 
   Future<List<int>> _addDbEntities({
-    required EventReference eventReference,
     required List<MediaFile> mediaFiles,
+    required EventReference eventReference,
     required EventMessage localEventMessage,
   }) async {
     final cacheKeys = await _generateCacheKeys(mediaFiles);
