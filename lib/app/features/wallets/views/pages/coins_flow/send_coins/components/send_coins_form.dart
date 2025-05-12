@@ -62,18 +62,8 @@ class SendCoinsForm extends HookConsumerWidget {
 
     final amount = coin?.amount ?? 0.0;
     final amountController = useTextEditingController();
-    final isAmountControllerInitialized = useRef(false);
 
-    useEffect(
-      () {
-        if (!isAmountControllerInitialized.value) {
-          amountController.text = amount == 0.0 ? '' : formatCrypto(amount);
-          isAmountControllerInitialized.value = true;
-        }
-        return null;
-      },
-      [],
-    );
+    useOnInit(() => amountController.text = amount == 0.0 ? '' : formatCrypto(amount), []);
 
     if (formController.isContactPreselected) {
       _listenContactWallet(ref, formController.contactPubkey);
@@ -82,7 +72,7 @@ class SendCoinsForm extends HookConsumerWidget {
     useOnInit(
       () {
         void listener() {
-          final numValue = parseAmount(amountController.value.text.replaceAll(',', ''));
+          final numValue = parseAmount(amountController.value.text);
           final isValidAmount = numValue != null && numValue <= maxAmount && numValue > 0;
           notifier.setCoinsAmount(isValidAmount ? amountController.text : '');
         }

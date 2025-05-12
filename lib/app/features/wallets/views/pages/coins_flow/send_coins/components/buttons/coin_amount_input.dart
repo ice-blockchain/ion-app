@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:ion/app/components/inputs/text_input/text_input.dart';
 import 'package:ion/app/extensions/extensions.dart';
+import 'package:ion/app/features/wallets/views/utils/amount_parser.dart';
 import 'package:ion/app/features/wallets/views/utils/crypto_formatter.dart';
 import 'package:ion/app/utils/num.dart';
 import 'package:ion/app/utils/text_input_formatters.dart';
@@ -42,19 +43,14 @@ class CoinAmountInput extends HookWidget {
           keyboardType: const TextInputType.numberWithOptions(decimal: true),
           onValidated: (isValid) => isValidInput.value = isValid,
           inputFormatters: [
-            // decimalInputFormatter(maxDecimals: 18),
             CoinInputFormatter(),
           ],
           validator: (value) {
             final trimmedValue = value?.trim() ?? '';
-            if (trimmedValue.isEmpty) {
-              return null;
-            }
+            if (trimmedValue.isEmpty) return null;
 
-            final parsed = double.tryParse(trimmedValue.replaceAll(',', ''));
-            if (parsed == null) {
-              return '';
-            }
+            final parsed = parseAmount(trimmedValue);
+            if (parsed == null) return '';
 
             if (maxValue != null && (parsed > maxValue! || parsed < 0)) {
               return locale.wallet_coin_amount_insufficient_funds;
@@ -70,7 +66,6 @@ class CoinAmountInput extends HookWidget {
                   padding: EdgeInsetsDirectional.only(end: 16.0.s),
                   child: TextButton(
                     onPressed: () {
-                      // TODO: Not implemented
                       controller.text = formatCrypto(maxValue ?? 0);
                     },
                     child: Text(

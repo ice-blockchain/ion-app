@@ -21,11 +21,11 @@ class CoinInputFormatter extends TextInputFormatter {
       return _handleDeletion(oldValue, newValue);
     }
 
-    final enteredChar = _getEnteredCharacter(oldValue, newValue);
-    if (enteredChar == null) return oldValue;
+    final enteredSymbol = _getEnteredSymbol(oldValue, newValue);
+    if (enteredSymbol == null) return oldValue;
 
-    if (_isDecimalSeparator(enteredChar.newSymbol)) {
-      return _handleDecimalSeparator(oldValue, newValue, enteredChar.index);
+    if (_isDecimalSeparator(enteredSymbol.newSymbol)) {
+      return _handleDecimalSeparator(oldValue, newValue, enteredSymbol.index);
     }
 
     return _handleDigitInput(oldValue, newValue);
@@ -35,9 +35,7 @@ class CoinInputFormatter extends TextInputFormatter {
     final cursorPos = newValue.selection.end;
     final normalized = _normalizeInput(newValue.text);
 
-    if (_isSpecialDecimalDeletion(oldValue, newValue)) {
-      return newValue;
-    }
+    if (_isSpecialDecimalDeletion(oldValue, newValue)) return newValue;
 
     if (normalized.isEmpty) {
       return TextEditingValue(
@@ -65,9 +63,7 @@ class CoinInputFormatter extends TextInputFormatter {
     TextEditingValue newValue,
     int index,
   ) {
-    if (oldValue.text.contains('.')) {
-      return oldValue;
-    }
+    if (oldValue.text.contains('.')) return oldValue;
 
     final normalized = _normalizeInput(newValue.text);
     final isAppending = index == newValue.text.length - 1;
@@ -199,7 +195,7 @@ class CoinInputFormatter extends TextInputFormatter {
     return newPos;
   }
 
-  ({int index, String newSymbol})? _getEnteredCharacter(
+  ({int index, String newSymbol})? _getEnteredSymbol(
     TextEditingValue oldValue,
     TextEditingValue newValue,
   ) {

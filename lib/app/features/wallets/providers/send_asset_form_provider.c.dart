@@ -152,7 +152,7 @@ class SendAssetFormController extends _$SendAssetFormController {
 
   void setCoinsAmount(String amount) {
     if (state.assetData case final CoinAssetToSendData coin) {
-      final parsedAmount = parseAmount(amount.replaceAll(',', '')) ?? 0.0;
+      final parsedAmount = parseAmount(amount) ?? 0.0;
       state = state.copyWith(
         assetData: coin.copyWith(
           amount: parsedAmount,
