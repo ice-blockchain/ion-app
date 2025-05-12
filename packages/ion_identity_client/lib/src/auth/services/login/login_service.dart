@@ -3,6 +3,7 @@
 import 'package:dio/dio.dart';
 import 'package:ion_identity_client/ion_identity.dart';
 import 'package:ion_identity_client/src/auth/dtos/private_key_data.c.dart';
+import 'package:ion_identity_client/src/auth/helpers/extract_username_from_token_helper.dart';
 import 'package:ion_identity_client/src/auth/services/login/data_sources/login_data_source.dart';
 import 'package:ion_identity_client/src/core/storage/biometrics_state_storage.dart';
 import 'package:ion_identity_client/src/core/storage/private_key_storage.dart';
@@ -138,8 +139,10 @@ class LoginService {
       challengeIdentifier: challenge.challengeIdentifier,
       assertion: assertion,
     );
+    final tokenKeyUsername = username.isEmpty ? extractUsernameFromToken(tokens.token) : username;
+
     await tokenStorage.setTokens(
-      username: username,
+      username: tokenKeyUsername,
       newTokens: tokens,
     );
   }
