@@ -60,7 +60,7 @@ class SendE2eeChatMessageService {
     EventMessage? repliedMessage,
     EventMessage? failedEventMessage,
     List<String>? groupImageTag,
-    QuotedImmutableEvent? storyReply,
+    QuotedImmutableEvent? quotedEvent,
     List<MediaFile> mediaFiles = const [],
     Map<String, List<String>>? failedParticipantsMasterPubkeys,
   }) async {
@@ -142,7 +142,9 @@ class SendE2eeChatMessageService {
         return a.compareTo(b);
       });
 
-      if (mediaAttachmentsUsersBased.isEmpty && content.isEmpty && storyReply == null) {
+      if (quotedEvent == null) {
+        await ref.read(eventMessageDaoProvider).deleteByEventReference(eventReference);
+      } else if (mediaAttachmentsUsersBased.isEmpty && content.isEmpty) {
         await ref.read(eventMessageDaoProvider).deleteByEventReference(eventReference);
         return sentMessage;
       }
@@ -169,7 +171,7 @@ class SendE2eeChatMessageService {
                   for (final attachment in attachments) attachment.url: attachment,
                 },
                 masterPubkey: currentUserMasterPubkey,
-                quotedEvent: storyReply ?? editedMessageEntity?.quotedEvent,
+                quotedEvent: quotedEvent ?? editedMessageEntity?.quotedEvent,
                 relatedPubkeys: participantsMasterPubkeys
                     .map((pubkey) => RelatedPubkey(value: pubkey))
                     .toList(),

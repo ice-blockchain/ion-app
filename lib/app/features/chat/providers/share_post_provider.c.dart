@@ -32,28 +32,22 @@ class SharePost extends _$SharePost {
     required EventReference eventReference,
     required List<String> receiversMasterPubkeys,
   }) async {
-    state = await AsyncValue.guard(() async {
-      state = const AsyncLoading();
-      final eventSigner = await ref.read(currentUserIonConnectEventSignerProvider.future);
+    state = await AsyncValue.guard(
+      () async {
+        state = const AsyncLoading();
+        final eventSigner = await ref.read(currentUserIonConnectEventSignerProvider.future);
 
-      if (eventSigner == null) {
-        throw EventSignerNotFoundException();
-      }
+        if (eventSigner == null) {
+          throw EventSignerNotFoundException();
+        }
 
-      final currentUserMasterPubkey = ref.read(currentPubkeySelectorProvider);
+        final currentUserMasterPubkey = ref.read(currentPubkeySelectorProvider);
 
-      if (currentUserMasterPubkey == null) {
-        throw UserMasterPubkeyNotFoundException();
-      }
+        if (currentUserMasterPubkey == null) {
+          throw UserMasterPubkeyNotFoundException();
+        }
 
-      final sendChatMessageService = ref.read(sendE2eeChatMessageServiceProvider);
-
-      for (final masterPubkey in receiversMasterPubkeys) {
-        final existingConversationId =
-            await ref.read(existChatConversationIdProvider(masterPubkey).future);
-
-        final conversationId = existingConversationId ??
-            sendChatMessageService.generateConversationId(receiverPubkey: masterPubkey);
+        final sendChatMessageService = ref.read(sendE2eeChatMessageServiceProvider);
 
         final entity =
             ref.watch(ionConnectEntityWithCountersProvider(eventReference: eventReference));
@@ -72,76 +66,84 @@ class SharePost extends _$SharePost {
 
         final postAsContent = jsonEncode(postEventMessage.toJson().last);
 
-        final tags = [
-          ['b', currentUserMasterPubkey],
-          ['k', postEventMessage.kind.toString()],
-          [RelatedPubkey.tagName, eventSigner.publicKey],
-          [ConversationIdentifier.tagName, conversationId],
-          eventReference.toTag(),
-        ];
+        for (final masterPubkey in receiversMasterPubkeys) {
+          final existingConversationId =
+              await ref.read(existChatConversationIdProvider(masterPubkey).future);
 
-        final id = EventMessage.calculateEventId(
-          tags: tags,
-          content: postAsContent,
-          createdAt: DateTime.now(),
-          kind: GenericRepostEntity.kind,
-          publicKey: eventSigner.publicKey,
-        );
+          final conversationId = existingConversationId ??
+              sendChatMessageService.generateConversationId(receiverPubkey: masterPubkey);
 
-        final kind16Rumor = EventMessage(
-          id: id,
-          tags: tags,
-          content: postAsContent,
-          pubkey: eventSigner.publicKey,
-          kind: GenericRepostEntity.kind,
-          createdAt: postEventMessage.createdAt,
-          sig: null,
-        );
+          final tags = [
+            ['b', currentUserMasterPubkey],
+            ['k', postEventMessage.kind.toString()],
+            [RelatedPubkey.tagName, eventSigner.publicKey],
+            [ConversationIdentifier.tagName, conversationId],
+            eventReference.toTag(),
+          ];
 
-        final participantsMasterPubkeys = [
-          masterPubkey,
-          currentUserMasterPubkey,
-        ];
+          final id = EventMessage.calculateEventId(
+            tags: tags,
+            content: postAsContent,
+            createdAt: DateTime.now(),
+            kind: GenericRepostEntity.kind,
+            publicKey: eventSigner.publicKey,
+          );
 
-        final conversationPubkeysNotifier = ref.read(conversationPubkeysProvider.notifier);
+          final kind16Rumor = EventMessage(
+            id: id,
+            tags: tags,
+            content: postAsContent,
+            pubkey: eventSigner.publicKey,
+            kind: GenericRepostEntity.kind,
+            createdAt: postEventMessage.createdAt,
+            sig: null,
+          );
 
-        for (final masterPubkey in participantsMasterPubkeys) {
+          final participantsMasterPubkeys = [
+            masterPubkey,
+            currentUserMasterPubkey,
+          ];
+
+          final conversationPubkeysNotifier = ref.read(conversationPubkeysProvider.notifier);
+
           final participantsKeysMap =
               await conversationPubkeysNotifier.fetchUsersKeys(participantsMasterPubkeys);
-          final pubkeys = participantsKeysMap[masterPubkey];
 
-          if (pubkeys == null) {
-            throw UserPubkeyNotFoundException(masterPubkey);
-          }
+          for (final masterPubkey in participantsMasterPubkeys) {
+            final pubkeys = participantsKeysMap[masterPubkey];
 
-          for (final pubkey in pubkeys) {
-            await ref.read(sendE2eeChatMessageServiceProvider).sendWrappedMessage(
-              pubkey: pubkey,
-              eventMessage: kind16Rumor,
-              eventSigner: eventSigner,
-              masterPubkey: masterPubkey,
-              wrappedKinds: [
-                postEventMessage.kind.toString(),
-                GenericRepostEntity.kind.toString(),
-              ],
-            );
+            if (pubkeys == null) {
+              throw UserPubkeyNotFoundException(masterPubkey);
+            }
+
+            for (final pubkey in pubkeys) {
+              await ref.read(sendE2eeChatMessageServiceProvider).sendWrappedMessage(
+                pubkey: pubkey,
+                eventMessage: kind16Rumor,
+                eventSigner: eventSigner,
+                masterPubkey: masterPubkey,
+                wrappedKinds: [
+                  GenericRepostEntity.kind.toString(),
+                  postEventMessage.kind.toString(),
+                ],
+              );
+            }
+
+            await ref.read(sendE2eeChatMessageServiceProvider).sendMessage(
+                  content: '',
+                  conversationId: conversationId,
+                  participantsMasterPubkeys: participantsMasterPubkeys,
+                  quotedEvent: QuotedImmutableEvent(
+                    eventReference: ImmutableEventReference(
+                      eventId: kind16Rumor.id,
+                      pubkey: kind16Rumor.masterPubkey,
+                      kind: GenericRepostEntity.kind,
+                    ),
+                  ),
+                );
           }
         }
-
-        await ref.read(sendE2eeChatMessageServiceProvider).sendMessage(
-          content: '',
-          conversationId: conversationId,
-          participantsMasterPubkeys: participantsMasterPubkeys,
-          quotedEvent: QuotedImmutableEvent(
-            eventReference: ImmutableEventReference(
-              eventId: kind16Rumor.id,
-              pubkey: kind16Rumor.masterPubkey,
-              kind: GenericRepostEntity.kind,
-            ),
-          ),
-          mediaFiles: [],
-        );
-      }
-    });
+      },
+    );
   }
 }
