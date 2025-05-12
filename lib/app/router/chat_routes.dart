@@ -28,6 +28,7 @@ class ChatRoutes {
         TypedGoRoute<AddParticipantsToGroupModalRoute>(path: 'add-participants-to-group'),
         TypedGoRoute<CreateGroupModalRoute>(path: 'create-group'),
         TypedGoRoute<ShareViaMessageModalRoute>(path: 'share-via-message/:eventReference'),
+        TypedGoRoute<PaymentSelectionChatRoute>(path: 'select-payment-type'),
         TypedGoRoute<SelectCoinChatRoute>(path: 'coin-selector-chat'),
         TypedGoRoute<SelectNetworkChatRoute>(path: 'network-selector-chat'),
         TypedGoRoute<SendCoinsFormChatRoute>(path: 'send-coins-form-chat'),
@@ -203,6 +204,21 @@ class ShareViaMessageModalRoute extends BaseRouteData {
   final String eventReference;
 }
 
+class PaymentSelectionChatRoute extends BaseRouteData {
+  PaymentSelectionChatRoute({
+    required this.pubkey,
+  }) : super(
+          child: PaymentSelectionModal(
+            pubkey: pubkey,
+            selectCoinRouteLocationBuilder: (paymentType) =>
+                SelectCoinChatRoute(paymentType: paymentType).location,
+          ),
+          type: IceRouteType.bottomSheet,
+        );
+
+  final String pubkey;
+}
+
 class SelectCoinChatRoute extends BaseRouteData {
   SelectCoinChatRoute({required this.paymentType})
       : super(
@@ -211,7 +227,10 @@ class SelectCoinChatRoute extends BaseRouteData {
                 selectNetworkRouteLocationBuilder: () =>
                     SelectNetworkChatRoute(paymentType: paymentType).location,
               ),
-            PaymentType.request => const RequestCoinsModalPage(),
+            PaymentType.request => RequestCoinsModalPage(
+                selectNetworkLocationRouteBuilder: (paymentType) =>
+                    SelectNetworkChatRoute(paymentType: paymentType).location,
+              ),
           },
           type: IceRouteType.bottomSheet,
         );

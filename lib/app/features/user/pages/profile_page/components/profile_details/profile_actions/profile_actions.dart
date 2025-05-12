@@ -41,7 +41,7 @@ class ProfileActions extends ConsumerWidget {
           ProfileAction(
             onPressed: () async {
               final needToEnable2FA =
-                  await PaymentSelectionRoute(pubkey: pubkey).push<bool>(context);
+                  await PaymentSelectionProfileRoute(pubkey: pubkey).push<bool>(context);
               if (needToEnable2FA != null && needToEnable2FA == true && context.mounted) {
                 await SecureAccountModalRoute().push<void>(context);
               }

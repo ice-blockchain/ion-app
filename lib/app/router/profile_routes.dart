@@ -15,7 +15,7 @@ class ProfileRoutes {
         TypedGoRoute<CategorySelectRoute>(path: 'category-selector'),
         TypedGoRoute<SelectCoinProfileRoute>(path: 'coin-selector'),
         TypedGoRoute<SelectNetworkProfileRoute>(path: 'network-selector'),
-        TypedGoRoute<PaymentSelectionRoute>(path: 'payment-selector'),
+        TypedGoRoute<PaymentSelectionProfileRoute>(path: 'payment-selector'),
         TypedGoRoute<SendCoinsFormProfileRoute>(path: 'send-coins-form'),
         TypedGoRoute<SendCoinsConfirmationProfileRoute>(path: 'send-form-confirmation'),
         TypedGoRoute<CoinTransactionResultProfileRoute>(path: 'coin-transaction-result'),
@@ -98,12 +98,14 @@ class CategorySelectRoute extends BaseRouteData {
   final String? selectedCategory;
 }
 
-class PaymentSelectionRoute extends BaseRouteData {
-  PaymentSelectionRoute({
+class PaymentSelectionProfileRoute extends BaseRouteData {
+  PaymentSelectionProfileRoute({
     required this.pubkey,
   }) : super(
           child: PaymentSelectionModal(
             pubkey: pubkey,
+            selectCoinRouteLocationBuilder: (paymentType) =>
+                SelectCoinProfileRoute(paymentType: paymentType).location,
           ),
           type: IceRouteType.bottomSheet,
         );
@@ -119,7 +121,10 @@ class SelectCoinProfileRoute extends BaseRouteData {
                 selectNetworkRouteLocationBuilder: () =>
                     SelectNetworkProfileRoute(paymentType: paymentType).location,
               ),
-            PaymentType.request => const RequestCoinsModalPage(),
+            PaymentType.request => RequestCoinsModalPage(
+                selectNetworkLocationRouteBuilder: (paymentType) =>
+                    SelectNetworkProfileRoute(paymentType: paymentType).location,
+              ),
           },
           type: IceRouteType.bottomSheet,
         );
