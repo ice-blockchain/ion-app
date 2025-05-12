@@ -40,6 +40,7 @@ WalletsDatabase walletsDatabase(Ref ref) {
     SyncCoinsTable,
     NetworksTable,
     TransactionsTable,
+    TemporaryTransactionsTable,
     CryptoWalletsTable,
     FundsRequestsTable,
   ],
@@ -50,7 +51,7 @@ class WalletsDatabase extends _$WalletsDatabase {
   final String pubkey;
 
   @override
-  int get schemaVersion => 6;
+  int get schemaVersion => 7;
 
   static QueryExecutor _openConnection(String pubkey) {
     return driftDatabase(name: 'wallets_database_$pubkey');
@@ -78,6 +79,43 @@ class WalletsDatabase extends _$WalletsDatabase {
           await m.alterTable(
             TableMigration(transactionsTable),
           );
+        },
+        from6To7: (m, schema) async {
+          await m.createTable(temporaryTransactionsTable);
+
+          final tempTableName = temporaryTransactionsTable.actualTableName;
+          final txTableName = transactionsTable.actualTableName;
+
+          final tempCols = temporaryTransactionsTable.$columns;
+          final oldCols = transactionsTable.$columns;
+
+          final insertColumns = <String>[];
+          final selectColumns = <String>[];
+
+          for (final col in tempCols) {
+            final name = col.$name;
+            final existsInOld = oldCols.any((c) => c.$name == name);
+
+            insertColumns.add(name);
+            selectColumns.add(
+              // Use an empty string for the walletViewId as a default.
+              // It will be updated automatically by system in the future.
+              existsInOld ? name : "'' AS walletViewId",
+            );
+          }
+
+          final insertList = insertColumns.join(', ');
+          final selectList = selectColumns.join(', ');
+
+          // Copy date from the old table to the temp one
+          await customStatement('''
+INSERT INTO $tempTableName ($insertList)
+SELECT $selectList
+FROM $txTableName;
+''');
+
+          await m.deleteTable(txTableName);
+          await customStatement('ALTER TABLE $tempTableName RENAME TO $txTableName');
         },
       ),
     );

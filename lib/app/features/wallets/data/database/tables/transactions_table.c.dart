@@ -12,6 +12,7 @@ class TransactionsTable extends Table {
   TextColumn get coinId => text().nullable()();
   TextColumn get senderWalletAddress => text().nullable()();
   TextColumn get receiverWalletAddress => text().nullable()();
+  TextColumn get walletViewId => text()();
 
   // Fields, that will be available from ion service
   TextColumn get id => text().nullable()();
@@ -32,7 +33,32 @@ class TransactionsTable extends Table {
   RealColumn get transferredAmountUsd => real().nullable()();
 
   @override
-  Set<Column> get primaryKey => {txHash};
+  Set<Column> get primaryKey => {txHash, walletViewId};
+}
+
+@DataClassName('TemporaryTransaction')
+class TemporaryTransactionsTable extends Table {
+  TextColumn get type => text()();
+  TextColumn get txHash => text()();
+  TextColumn get networkId => text()();
+  TextColumn get walletViewId => text()();
+  TextColumn get coinId => text().nullable()();
+  TextColumn get senderWalletAddress => text().nullable()();
+  TextColumn get receiverWalletAddress => text().nullable()();
+  TextColumn get id => text().nullable()();
+  TextColumn get fee => text().nullable()();
+  TextColumn get status => text().nullable()();
+  TextColumn get nativeCoinId => text().nullable()();
+  DateTimeColumn get dateConfirmed => dateTime().nullable().map(const UtcDateTimeConverter())();
+  DateTimeColumn get dateRequested => dateTime().nullable().map(const UtcDateTimeConverter())();
+  DateTimeColumn get createdAtInRelay => dateTime().nullable().map(const UtcDateTimeConverter())();
+  TextColumn get userPubkey => text().nullable()();
+  TextColumn get assetId => text().nullable()();
+  TextColumn get transferredAmount => text().nullable()();
+  RealColumn get transferredAmountUsd => real().nullable()();
+
+  @override
+  Set<Column> get primaryKey => {txHash, walletViewId};
 }
 
 /// We need to be sure that the data in the db is stored in a single format,

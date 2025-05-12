@@ -13,6 +13,7 @@ part 'transaction_data.c.freezed.dart';
 class TransactionData with _$TransactionData {
   const factory TransactionData({
     required String txHash,
+    required String walletViewId,
     required NetworkData network,
     required TransactionType type,
     required CoinData nativeCoin,

@@ -22,6 +22,7 @@ class TransactionDetails with _$TransactionDetails {
     required CryptoAssetToSendData assetData,
     required TransactionStatus status,
     required CoinData nativeCoin,
+    required String walletViewId,
     required String? senderAddress,
     required String? receiverAddress,
     required String? walletViewName,
@@ -45,6 +46,7 @@ class TransactionDetails with _$TransactionDetails {
       id: transaction.id,
       txHash: transaction.txHash,
       network: transaction.network,
+      walletViewId: transaction.walletViewId,
       type: transaction.type,
       assetData: transaction.cryptoAsset.map(
         coin: (coin) => CryptoAssetToSendData.coin(
@@ -55,6 +57,7 @@ class TransactionDetails with _$TransactionDetails {
         ),
         nft: (nft) => CryptoAssetToSendData.nft(nft: nft.nft),
       ),
+      walletViewId: transaction.walletViewId,
       walletViewName: walletViewName,
       senderAddress: transaction.senderWalletAddress,
       receiverAddress: transaction.receiverWalletAddress,

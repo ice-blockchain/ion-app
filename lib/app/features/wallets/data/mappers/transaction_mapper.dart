@@ -19,6 +19,7 @@ class CoinTransactionsMapper {
       id: details.id,
       txHash: details.txHash,
       type: details.type.value,
+      walletViewId: details.walletViewId,
       networkId: details.network.id,
       coinId: coinAssetData.selectedOption!.coin.id,
       nativeCoinId: details.nativeCoin.id,
@@ -50,6 +51,7 @@ class CoinTransactionsMapper {
               );
 
         return db.Transaction(
+          walletViewId: entity.walletViewId,
           type: userWallets.contains(content.from)
               ? TransactionType.send.value
               : TransactionType.receive.value,
@@ -76,6 +78,7 @@ class CoinTransactionsMapper {
           txHash: transaction.txHash,
           id: transaction.id,
           fee: transaction.fee,
+          walletViewId: transaction.walletViewId,
           dateConfirmed: transaction.dateConfirmed,
           dateRequested: transaction.dateRequested,
           // assetId: , // Here should be nftId in case of nfts
