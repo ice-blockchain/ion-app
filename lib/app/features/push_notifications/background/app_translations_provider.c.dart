@@ -177,8 +177,26 @@ class AppTranslationsRepository {
 class AppTranslations with _$AppTranslations {
   const factory AppTranslations({
     @JsonKey(name: '_version') required int version,
-    List<String>? bogus1,
+    required AppTranslationsNotifications notifications,
   }) = _AppTranslations;
 
   factory AppTranslations.fromJson(Map<String, dynamic> json) => _$AppTranslationsFromJson(json);
+}
+
+@freezed
+class AppTranslationsNotifications with _$AppTranslationsNotifications {
+  const factory AppTranslationsNotifications({
+    required String reply,
+    required String mention,
+    required String repost,
+    required String like,
+    required String follower,
+    required String chatReaction,
+    required String chatMessage,
+    required String paymentRequest,
+    required String paymentReceived,
+  }) = _AppTranslationsNotifications;
+
+  factory AppTranslationsNotifications.fromJson(Map<String, dynamic> json) =>
+      _$AppTranslationsNotificationsFromJson(json);
 }
