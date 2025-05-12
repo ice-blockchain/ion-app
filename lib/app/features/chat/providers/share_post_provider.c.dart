@@ -32,7 +32,7 @@ class SharePost extends _$SharePost {
     required EventReference eventReference,
     required List<String> receiversMasterPubkeys,
   }) async {
-    state = await AsyncValue.guard(
+    await AsyncValue.guard(
       () async {
         state = const AsyncLoading();
         final eventSigner = await ref.read(currentUserIonConnectEventSignerProvider.future);
@@ -128,20 +128,20 @@ class SharePost extends _$SharePost {
                 ],
               );
             }
-
-            await ref.read(sendE2eeChatMessageServiceProvider).sendMessage(
-                  content: '',
-                  conversationId: conversationId,
-                  participantsMasterPubkeys: participantsMasterPubkeys,
-                  quotedEvent: QuotedImmutableEvent(
-                    eventReference: ImmutableEventReference(
-                      eventId: kind16Rumor.id,
-                      pubkey: kind16Rumor.masterPubkey,
-                      kind: GenericRepostEntity.kind,
-                    ),
-                  ),
-                );
           }
+
+          await ref.read(sendE2eeChatMessageServiceProvider).sendMessage(
+                content: '',
+                conversationId: conversationId,
+                participantsMasterPubkeys: participantsMasterPubkeys,
+                quotedEvent: QuotedImmutableEvent(
+                  eventReference: ImmutableEventReference(
+                    eventId: kind16Rumor.id,
+                    pubkey: kind16Rumor.masterPubkey,
+                    kind: GenericRepostEntity.kind,
+                  ),
+                ),
+              );
         }
       },
     );

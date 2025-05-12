@@ -88,6 +88,7 @@ class SendE2eeChatMessageService {
           );
 
       final eventSigner = await ref.read(currentUserIonConnectEventSignerProvider.future);
+
       if (eventSigner == null) {
         throw EventSignerNotFoundException();
       }
@@ -142,7 +143,7 @@ class SendE2eeChatMessageService {
         return a.compareTo(b);
       });
 
-      if (quotedEvent == null) {
+      if (quotedEvent != null) {
         await ref.read(eventMessageDaoProvider).deleteByEventReference(eventReference);
       } else if (mediaAttachmentsUsersBased.isEmpty && content.isEmpty) {
         await ref.read(eventMessageDaoProvider).deleteByEventReference(eventReference);
