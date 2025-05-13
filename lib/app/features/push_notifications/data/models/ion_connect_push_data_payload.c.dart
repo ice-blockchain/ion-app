@@ -107,7 +107,7 @@ class IonConnectPushDataPayload with _$IonConnectPushDataPayload {
     return false;
   }
 
-  Future<Map<String, String>> get placeholders async {
+  Map<String, String> get placeholders {
     final mainEntityUserMetadata = _getUserMetadata(pubkey: mainEntity.masterPubkey);
 
     if (mainEntityUserMetadata != null) {
@@ -150,10 +150,12 @@ class IonConnectPushDataPayload with _$IonConnectPushDataPayload {
 }
 
 EventMessage _entityFromEventJson(String stringifiedJson) {
+  // add brotli decompress when BE is impl
   return EventMessage.fromPayloadJson(jsonDecode(stringifiedJson) as Map<String, dynamic>);
 }
 
 List<EventMessage> _entityListFromEventListJson(String stringifiedJson) {
+  // add brotli decompress when BE is impl
   return (jsonDecode(stringifiedJson) as List<dynamic>)
       .map(
         (eventJson) => EventMessage.fromPayloadJson(eventJson as Map<String, dynamic>),

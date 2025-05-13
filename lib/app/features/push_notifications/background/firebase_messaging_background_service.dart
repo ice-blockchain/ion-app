@@ -67,7 +67,7 @@ Future<({String title, String body})?> _parseNotificationData(
   final (title, body) =
       await _getNotificationTranslation(notificationType: notificationType, translator: translator);
 
-  final placeholders = await data.placeholders;
+  final placeholders = data.placeholders;
 
   return (
     title: replacePlaceholders(title ?? data.title, placeholders),
