@@ -11,7 +11,7 @@ TextInputFormatter decimalInputFormatter({required int maxDecimals}) {
 }
 
 class CoinInputFormatter extends TextInputFormatter {
-  static const int maxDecimalsNumber = 20;
+  static const int maxDecimalsNumber = 18;
   final _numberFormat = NumberFormat('#,###', 'en_US');
   final _commasRegex = RegExp('[^,]');
   final _validationRegex = RegExp(r'^[0-9.,]+$');
