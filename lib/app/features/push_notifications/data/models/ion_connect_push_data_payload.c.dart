@@ -30,8 +30,9 @@ class IonConnectPushDataPayload with _$IonConnectPushDataPayload {
     required String body,
     required String? imageUrl,
     @JsonKey(fromJson: _entityFromEventJson) required EventMessage event,
+    @Default([])
     @JsonKey(name: 'related_events', fromJson: _entityListFromEventListJson)
-    required List<EventMessage> relatedEvents,
+    List<EventMessage> relatedEvents,
   }) = _IonConnectPushDataPayload;
 
   factory IonConnectPushDataPayload.fromJson(Map<String, dynamic> json) =>
