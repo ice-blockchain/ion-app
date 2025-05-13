@@ -173,7 +173,7 @@ class TransactionsRepository {
 
     if (deprecatedToRemove.isNotEmpty) {
       await _transactionsDao.remove(
-        deprecatedToRemove,
+        txHashes: deprecatedToRemove,
         walletViewIds: [TransactionsTable.defaultWalletViewIdForDeprecatedData],
       );
     }
@@ -189,7 +189,15 @@ class TransactionsRepository {
   Future<List<TransactionData>> getBroadcastedTransfers({String? walletAddress}) =>
       _transactionsDao.getBroadcastedTransfers(walletAddress: walletAddress);
 
-  Future<void> remove(Iterable<String> txHashes) => _transactionsDao.remove(txHashes);
+  Future<void> remove({
+    Iterable<String> txHashes = const [],
+    Iterable<String> walletViewIds = const [],
+  }) {
+    return _transactionsDao.remove(
+      txHashes: txHashes,
+      walletViewIds: walletViewIds,
+    );
+  }
 
   Future<List<TransactionData>> getTransactions({
     List<String> coinIds = const [],

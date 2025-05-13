@@ -56,8 +56,9 @@ class TransactionLoader {
 
           if (resultTransactions.any((t) => t.externalHash != null)) {
             resultTransactions = await _externalHashProcessor.process(resultTransactions);
-            await _transactionsRepository
-                .remove(resultTransactions.map((t) => t.externalHash).nonNulls);
+            await _transactionsRepository.remove(
+              txHashes: resultTransactions.map((t) => t.externalHash).nonNulls,
+            );
           }
 
           if (isFullLoad) {

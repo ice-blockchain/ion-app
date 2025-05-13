@@ -327,22 +327,33 @@ class TransactionsDao extends DatabaseAccessor<WalletsDatabase> with _$Transacti
     );
   }
 
-  Future<void> remove(Iterable<String> txHashes, {Iterable<String> walletViewIds = const []}) {
-    if (txHashes.isEmpty) {
-      throw Exception();
+  Future<void> remove({
+    Iterable<String> txHashes = const [],
+    Iterable<String> walletViewIds = const [],
+  }) async {
+    if (txHashes.isEmpty && walletViewIds.isEmpty) {
+      return;
     }
+
     return transaction(() async {
-      await (delete(transactionsTable)
-            ..where((t) {
-              var expr = t.txHash.isIn(txHashes);
+      final conditions = <Expression<bool>>[];
+      final deleteQuery = delete(transactionsTable);
 
-              if (walletViewIds.isNotEmpty) {
-                expr = expr & t.walletViewId.isIn(walletViewIds);
-              }
+      if (txHashes.isNotEmpty) {
+        conditions.add(transactionsTable.txHash.isIn(txHashes));
+      }
 
-              return expr;
-            }))
-          .go();
+      if (walletViewIds.isNotEmpty) {
+        conditions.add(transactionsTable.walletViewId.isIn(walletViewIds));
+      }
+
+      if (conditions.isEmpty) {
+        // Should never happen, but defensive
+        throw StateError('Attempted to delete transactions with no WHERE condition.');
+      }
+
+      deleteQuery.where((_) => conditions.reduce((a, b) => a & b));
+      await deleteQuery.go();
     });
   }
 }
