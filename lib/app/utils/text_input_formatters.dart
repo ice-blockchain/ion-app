@@ -65,9 +65,10 @@ class CoinInputFormatter extends TextInputFormatter {
 
       // If no decimal separator in old value, treat as regular input
       if (!oldText.contains('.')) {
+        var normalized = newValue.text;
         // Find the last decimal separator in the new value
-        final lastDotIndex = newValue.text.lastIndexOf('.');
-        final lastCommaIndex = newValue.text.lastIndexOf(',');
+        final lastDotIndex = normalized.lastIndexOf('.');
+        final lastCommaIndex = normalized.lastIndexOf(',');
         final lastSeparatorIndex = max(lastDotIndex, lastCommaIndex);
 
         if (lastSeparatorIndex != -1) {
@@ -79,17 +80,12 @@ class CoinInputFormatter extends TextInputFormatter {
           final normalizedIntPart = _normalizeInput(intPart).replaceAll('.', '');
           final normalizedDecimalPart = _normalizeInput(decimalPart).replaceAll('.', '');
 
-          final normalized = '$normalizedIntPart.$normalizedDecimalPart';
-          return _formatNumberWithCursor(
-            oldValue,
-            normalized,
-            newValue.selection.end,
-          );
+          normalized = '$normalizedIntPart.$normalizedDecimalPart';
         }
 
         return _formatNumberWithCursor(
           oldValue,
-          newValue.text,
+          normalized,
           newValue.selection.end,
         );
       }
