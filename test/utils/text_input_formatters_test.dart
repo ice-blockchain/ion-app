@@ -67,5 +67,52 @@ void main() {
       final result = applyFormatter('1,234.5', '1234.5');
       expect(result.text, '1,234.5');
     });
+
+    test('handles pasting whole numbers', () {
+      final result = applyFormatter('', '1000000');
+      expect(result.text, '1,000,000');
+    });
+
+    test('handles pasting decimal numbers', () {
+      final result = applyFormatter('', '1000000.50');
+      expect(result.text, '1,000,000.50');
+    });
+
+    test('handles pasting before the decimals delimiter', () {
+      const oldValue = TextEditingValue(
+        text: '1,234.56',
+        selection: TextSelection(baseOffset: 5, extentOffset: 5),
+      );
+      const newValue = TextEditingValue(
+        text: '1,234999.56',
+        selection: TextSelection.collapsed(offset: 8),
+      );
+      final result = formatter.formatEditUpdate(oldValue, newValue);
+      expect(result.text, '1,234,999.56');
+    });
+
+    test('handles pasting after the decimals delimiter', () {
+      const oldValue = TextEditingValue(
+        text: '1,234.56',
+        selection: TextSelection(baseOffset: 7, extentOffset: 7),
+      );
+      const newValue = TextEditingValue(
+        text: '1,234.59996',
+        selection: TextSelection.collapsed(offset: 10),
+      );
+      final result = formatter.formatEditUpdate(oldValue, newValue);
+      expect(result.text, '1,234.59996');
+    });
+
+    test('handles pasting invalid text', () {
+      const toInsert = '234oiejvoi29';
+      final result = applyFormatter('1,234.56', '1,234.5${toInsert}6');
+      expect(result.text, '1,234.56');
+    });
+
+    test('handles pasting with existing commas', () {
+      final result = applyFormatter('', '1,000.00');
+      expect(result.text, '1,000.00');
+    });
   });
 }

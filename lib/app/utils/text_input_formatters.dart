@@ -12,8 +12,9 @@ TextInputFormatter decimalInputFormatter({required int maxDecimals}) {
 
 class CoinInputFormatter extends TextInputFormatter {
   static const int maxDecimalsNumber = 20;
-  static final _numberFormat = NumberFormat('#,###', 'en_US');
-  static final _commasRegex = RegExp('[^,]');
+  final _numberFormat = NumberFormat('#,###', 'en_US');
+  final _commasRegex = RegExp('[^,]');
+  final _validationRegex = RegExp(r'^[0-9.,]+$');
 
   @override
   TextEditingValue formatEditUpdate(TextEditingValue oldValue, TextEditingValue newValue) {
@@ -21,6 +22,11 @@ class CoinInputFormatter extends TextInputFormatter {
       return _handleDeletion(oldValue, newValue);
     }
 
+    if ((newValue.text.length - oldValue.text.length) > 1) {
+      return _handlePaste(oldValue, newValue);
+    }
+
+    // Handle entering symbol by symbol
     final enteredSymbol = _getEnteredSymbol(oldValue, newValue);
     if (enteredSymbol == null) return oldValue;
 
@@ -46,6 +52,99 @@ class CoinInputFormatter extends TextInputFormatter {
 
     return _formatNumberWithCursor(oldValue, normalized, cursorPos);
   }
+
+  TextEditingValue _handlePaste(TextEditingValue oldValue, TextEditingValue newValue) {
+    // Validate pasted content
+    final isValid = _validationRegex.hasMatch(newValue.text);
+    if (!isValid) return oldValue;
+
+    try {
+      final oldText = oldValue.text;
+      final cursorPosition = oldValue.selection.baseOffset;
+      final pastedValue = _getPastedValue(oldValue, newValue);
+
+      // If no decimal separator in old value, treat as regular input
+      if (!oldText.contains('.')) {
+        var normalized = newValue.text;
+        // Find the last decimal separator in the new value
+        final lastDotIndex = normalized.lastIndexOf('.');
+        final lastCommaIndex = normalized.lastIndexOf(',');
+        final lastSeparatorIndex = max(lastDotIndex, lastCommaIndex);
+
+        if (lastSeparatorIndex != -1) {
+          // Split at the last separator
+          final intPart = newValue.text.substring(0, lastSeparatorIndex);
+          final decimalPart = newValue.text.substring(lastSeparatorIndex + 1);
+
+          // Normalize both parts separately
+          final normalizedIntPart = _normalizeInput(intPart).replaceAll('.', '');
+          final normalizedDecimalPart = _normalizeInput(decimalPart).replaceAll('.', '');
+
+          normalized = '$normalizedIntPart.$normalizedDecimalPart';
+        }
+
+        return _formatNumberWithCursor(
+          oldValue,
+          normalized,
+          newValue.selection.end,
+        );
+      }
+
+      final dotIndex = oldText.indexOf('.');
+      final isPastingAfterDot = cursorPosition > dotIndex;
+
+      // If pasting after dot, insert as the decimal part
+      if (isPastingAfterDot) {
+        final intPart = oldText.substring(0, dotIndex);
+        final oldDecimalPart = oldText.substring(dotIndex + 1);
+
+        // Calculate where to insert in decimal part
+        final decimalInsertPos = cursorPosition - dotIndex - 1;
+        final normalizedPaste = _normalizeInput(pastedValue).replaceAll('.', '');
+
+        final newDecimalPart = oldDecimalPart.substring(0, decimalInsertPos) +
+            normalizedPaste +
+            oldDecimalPart.substring(decimalInsertPos);
+
+        final limitedDecimalPart = newDecimalPart.length > maxDecimalsNumber
+            ? newDecimalPart.substring(0, maxDecimalsNumber)
+            : newDecimalPart;
+
+        final formatted = '$intPart.$limitedDecimalPart';
+
+        return TextEditingValue(
+          text: formatted,
+          selection: TextSelection.collapsed(
+            offset: min(
+              formatted.length,
+              dotIndex + 1 + decimalInsertPos + normalizedPaste.length,
+            ),
+          ),
+        );
+      }
+
+      // If pasting before dot, insert and format normally
+      final beforePaste = oldText.substring(0, cursorPosition);
+      final afterPaste = oldText.substring(cursorPosition);
+
+      // Normalize pasted value by removing all separators
+      final normalizedPaste = _normalizeInput(pastedValue).replaceAll('.', '');
+
+      final newText = beforePaste + normalizedPaste + afterPaste;
+      final normalized = _normalizeInput(newText);
+
+      // Calculate new cursor position after paste
+      final newCursorPos = cursorPosition + normalizedPaste.length;
+
+      return _formatNumberWithCursor(oldValue, normalized, newCursorPos);
+    } catch (e) {
+      Logger.error('Caught error during handling paste. Exception: $e');
+      return oldValue;
+    }
+  }
+
+  String _getPastedValue(TextEditingValue oldValue, TextEditingValue newValue) =>
+      newValue.text.substring(oldValue.selection.start, newValue.selection.end);
 
   bool _isSpecialDecimalDeletion(TextEditingValue oldValue, TextEditingValue newValue) {
     if (!oldValue.text.contains('.') || !newValue.text.contains('.')) return false;
