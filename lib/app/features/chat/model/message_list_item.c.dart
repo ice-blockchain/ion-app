@@ -51,13 +51,6 @@ sealed class ChatMessageInfoItem with _$ChatMessageInfoItem {
   }) = PostItem;
 
   @Implements<MessageInfo>()
-  const factory ChatMessageInfoItem.storyReply({
-    required EventMessage eventMessage,
-    required String contentDescription,
-    required List<MessageMediaTableData> medias,
-  }) = StoryReplyItem;
-
-  @Implements<MessageInfo>()
   const factory ChatMessageInfoItem.document({
     required EventMessage eventMessage,
     required String contentDescription,

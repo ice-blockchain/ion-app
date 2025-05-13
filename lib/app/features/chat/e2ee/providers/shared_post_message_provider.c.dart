@@ -4,24 +4,30 @@ import 'dart:convert';
 
 import 'package:ion/app/features/chat/model/database/chat_database.c.dart';
 import 'package:ion/app/features/feed/data/models/entities/modifiable_post_data.c.dart';
+import 'package:ion/app/features/feed/data/models/entities/post_data.c.dart';
 import 'package:ion/app/features/ion_connect/ion_connect.dart';
 import 'package:ion/app/features/ion_connect/model/event_reference.c.dart';
+import 'package:ion/app/features/ion_connect/model/ion_connect_entity.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
-part 'story_reply_message_provider.c.g.dart';
+part 'shared_post_message_provider.c.g.dart';
 
 @riverpod
-class StoryReplyMessage extends _$StoryReplyMessage {
+class SharedPostMessage extends _$SharedPostMessage {
   @override
-  Future<ModifiablePostEntity> build(EventReference eventReference) async {
+  Future<IonConnectEntity?> build(EventReference eventReference) async {
     final kind16EventMessage =
         await ref.watch(eventMessageDaoProvider).getByReference(eventReference);
-    final storyEventMessage = EventMessage.fromPayloadJson(
+    final postEventMessage = EventMessage.fromPayloadJson(
       jsonDecode(kind16EventMessage.content) as Map<String, dynamic>,
     );
 
-    final story = ModifiablePostEntity.fromEventMessage(storyEventMessage);
+    final postEntity = switch (postEventMessage.kind) {
+      ModifiablePostEntity.kind => ModifiablePostEntity.fromEventMessage(postEventMessage),
+      PostEntity.kind => PostEntity.fromEventMessage(postEventMessage),
+      _ => null,
+    };
 
-    return story;
+    return postEntity;
   }
 }

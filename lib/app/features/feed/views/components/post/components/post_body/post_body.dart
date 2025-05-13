@@ -22,6 +22,7 @@ import 'package:ion/app/typedefs/typedefs.dart';
 class PostBody extends HookConsumerWidget {
   const PostBody({
     required this.entity,
+    this.customStyles,
     this.isTextSelectable = false,
     this.maxLines = 6,
     this.framedEventReference,
@@ -30,6 +31,7 @@ class PostBody extends HookConsumerWidget {
     super.key,
   });
 
+  final DefaultStyles? customStyles;
   final IonConnectEntity entity;
   final bool isTextSelectable;
   final EventReference? framedEventReference;
@@ -78,7 +80,7 @@ class PostBody extends HookConsumerWidget {
             : _calculateMaxHeight(
                 context,
                 text: Document.fromDelta(content).toPlainText(),
-                style: context.theme.appTextThemes.body2,
+                style:context.theme.appTextThemes.body2,
                 maxWidth: constraints.maxWidth,
               );
 
@@ -95,6 +97,7 @@ class PostBody extends HookConsumerWidget {
                         height: maxHeight,
                         child: TextEditorPreview(
                           content: content,
+                          customStyles: customStyles,
                           enableInteractiveSelection: isTextSelectable,
                           scrollable: false,
                         ),

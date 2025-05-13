@@ -196,7 +196,7 @@ extension MessageTypes on ReplaceablePrivateDirectMessageData {
         };
       }
     } else if (quotedEvent != null) {
-      return MessageType.sharedStory;
+      return MessageType.sharedPost;
     }
 
     return MessageType.text;

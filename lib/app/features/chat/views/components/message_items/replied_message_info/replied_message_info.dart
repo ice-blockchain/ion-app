@@ -45,7 +45,7 @@ class RepliedMessageInfo extends HookConsumerWidget {
               ),
             if (repliedMessage is PostItem && repliedMessage.medias.isNotEmpty)
               Padding(
-                padding: EdgeInsetsDirectional.only(start: 6.0.s, end: 12.0.s),
+                padding: EdgeInsetsDirectional.only(end: 6.0.s),
                 child: SizedBox(
                   width: 30.0.s,
                   height: 30.0.s,
