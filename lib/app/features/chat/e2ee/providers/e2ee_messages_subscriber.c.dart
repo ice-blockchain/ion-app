@@ -56,6 +56,7 @@ class E2eeMessagesSubscriber extends _$E2eeMessagesSubscriber {
     final sinceDate = latestEventMessageDate?.add(const Duration(days: -2));
 
     final requestFilter = RequestFilter(
+      limit: -1,
       kinds: const [IonConnectGiftWrapEntity.kind],
       tags: {
         '#k': [
