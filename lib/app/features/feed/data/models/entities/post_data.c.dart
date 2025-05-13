@@ -25,7 +25,9 @@ import 'package:ion/app/features/ion_connect/providers/ion_connect_cache.c.dart'
 part 'post_data.c.freezed.dart';
 
 @Freezed(equal: false)
-class PostEntity with _$PostEntity, IonConnectEntity, ImmutableEntity, CacheableEntity {
+class PostEntity
+    with _$PostEntity, IonConnectEntity, ImmutableEntity, CacheableEntity
+    implements EntityEventSerializable {
   const factory PostEntity({
     required String id,
     required String pubkey,
@@ -54,6 +56,9 @@ class PostEntity with _$PostEntity, IonConnectEntity, ImmutableEntity, Cacheable
   }
 
   static const kind = 1;
+
+  @override
+  FutureOr<EventMessage> toEntityEventMessage() => toEventMessage(data);
 }
 
 @freezed

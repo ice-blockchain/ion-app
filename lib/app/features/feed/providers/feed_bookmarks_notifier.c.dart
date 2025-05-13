@@ -12,6 +12,7 @@ import 'package:ion/app/features/feed/data/models/bookmarks/bookmarks_collection
 import 'package:ion/app/features/ion_connect/ion_connect.dart';
 import 'package:ion/app/features/ion_connect/model/action_source.c.dart';
 import 'package:ion/app/features/ion_connect/model/event_reference.c.dart';
+import 'package:ion/app/features/ion_connect/providers/ion_connect_db_cache_notifier.c.dart';
 import 'package:ion/app/features/ion_connect/providers/ion_connect_notifier.c.dart';
 import 'package:ion/app/features/ion_connect/providers/ion_connect_subscription_provider.c.dart';
 import 'package:ion/app/services/uuid/uuid.dart';
@@ -143,6 +144,9 @@ class FeedBookmarksNotifier extends _$FeedBookmarksNotifier {
         newAllBookmarksRefs
           ..add(eventReference)
           ..addAll(bookmarksCollection.data.refs);
+        if (bookmarksCollection.data.type == BookmarksCollectionEntity.defaultCollectionDTag) {
+          unawaited(ref.read(ionConnectDbCacheProvider.notifier).saveRef(eventReference));
+        }
         if (bookmarksCollection.data.type != BookmarksCollectionEntity.defaultCollectionDTag) {
           final isIncluded = (await ref.read(
                 feedBookmarksNotifierProvider().future,

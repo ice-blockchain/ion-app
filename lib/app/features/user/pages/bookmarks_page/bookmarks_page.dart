@@ -49,6 +49,7 @@ class BookmarksPage extends HookConsumerWidget {
               else
                 EntitiesList(
                   refs: refs,
+                  readFromDB: true,
                 ),
             ];
           },

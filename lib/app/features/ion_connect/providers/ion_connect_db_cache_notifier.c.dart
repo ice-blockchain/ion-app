@@ -1,9 +1,9 @@
 // SPDX-License-Identifier: ice License 1.0
 
-import 'package:async/async.dart';
 import 'package:ion/app/features/ion_connect/model/event_reference.c.dart';
 import 'package:ion/app/features/ion_connect/model/event_serializable.dart';
 import 'package:ion/app/features/ion_connect/model/ion_connect_entity.dart';
+import 'package:ion/app/features/ion_connect/providers/ion_connect_entity_provider.c.dart';
 import 'package:ion/app/features/ion_connect/providers/ion_connect_event_parser.c.dart';
 import 'package:ion/app/features/ion_connect/repository/event_messages_repository.c.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
@@ -25,10 +25,21 @@ class IonConnectDbCache extends _$IonConnectDbCache {
   }
 
   Future<List<IonConnectEntity>> get(List<EventReference> eventReferences) async {
-    final eventMessages =
-        await ref.read(eventMessagesRepositoryProvider).watchAll(eventReferences).firstOrNull;
+    final eventMessages = await ref.read(eventMessagesRepositoryProvider).getAll(eventReferences);
     final parser = ref.read(eventParserProvider);
-    return eventMessages?.map(parser.parse).toList() ?? [];
+    return eventMessages.map(parser.parse).toList();
+  }
+
+  Future<void> saveRef(
+    EventReference eventReference, {
+    bool network = true,
+  }) async {
+    final entity = await ref.read(
+      ionConnectEntityProvider(eventReference: eventReference, network: network).future,
+    );
+    if (entity is EntityEventSerializable) {
+      await save(entity! as EntityEventSerializable);
+    }
   }
 
   Future<void> save(EntityEventSerializable eventSerializable) async {
@@ -48,5 +59,24 @@ class IonConnectDbCache extends _$IonConnectDbCache {
         .map((eventSerializable) => eventSerializable.toEventReference())
         .toList();
     await ref.read(eventMessagesRepositoryProvider).saveAll(eventMessages, eventReferences);
+  }
+
+  Future<void> saveAllNonExistingRefs(List<EventReference> eventRefs) async {
+    final nonExistingRefs =
+        await ref.read(eventMessagesRepositoryProvider).getNonSavedRefs(eventRefs);
+    const pageSize = 100;
+    final entities = <EntityEventSerializable>[];
+    for (var i = 0; i < nonExistingRefs.length; i += pageSize) {
+      final batch = nonExistingRefs.skip(i).take(pageSize);
+      final results = await Future.wait(
+        batch.map(
+          (eventReference) =>
+              ref.read(ionConnectEntityProvider(eventReference: eventReference).future),
+        ),
+      );
+      entities.addAll(results.whereType<EntityEventSerializable>());
+    }
+
+    return saveAll(entities);
   }
 }

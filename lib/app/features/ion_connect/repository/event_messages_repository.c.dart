@@ -54,6 +54,13 @@ class EventMessagesRepository {
     return dbEventMessages.map((eventsList) => eventsList.map((e) => e.toEventMessage()).toList());
   }
 
+  Future<List<EventMessage>> getAll(
+    List<EventReference> eventReferences,
+  ) async {
+    final eventsList = await _eventMessagesDao.get(eventReferences);
+    return eventsList.map((e) => e.toEventMessage()).toList();
+  }
+
   Future<List<EventReference>> getNonSavedRefs(
     List<EventReference> eventReferences,
   ) async {

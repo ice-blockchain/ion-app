@@ -42,6 +42,13 @@ class EventMessagesDao extends DatabaseAccessor<EventMessagesDatabase>
     return query.watch();
   }
 
+  Future<List<EventMessageDbModel>> get(List<EventReference> eventReferences) {
+    final query = select(db.eventMessagesTable)
+      ..where((event) => event.eventReference.isInValues(eventReferences));
+
+    return query.get();
+  }
+
   Future<Set<EventReference>> nonExistingReferences(Set<EventReference> eventReferences) async {
     final query = select(db.eventMessagesTable)
       ..where((event) => event.eventReference.isInValues(eventReferences));

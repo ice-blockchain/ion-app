@@ -34,7 +34,8 @@ class ArticleEntity
         CacheableEntity,
         ReplaceableEntity,
         SoftDeletableEntity<ArticleData>,
-        _$ArticleEntity {
+        _$ArticleEntity
+    implements EntityEventSerializable {
   const factory ArticleEntity({
     required String id,
     required String pubkey,
@@ -62,6 +63,9 @@ class ArticleEntity
   }
 
   static const kind = 30023;
+
+  @override
+  FutureOr<EventMessage> toEntityEventMessage() => toEventMessage(data);
 }
 
 @freezed
