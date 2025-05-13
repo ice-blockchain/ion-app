@@ -4,7 +4,6 @@ part of '../chat_database.c.dart';
 
 @DataClassName('EventMessageDbModel')
 class EventMessageTable extends Table {
-  // TextColumn get id => text()();
   late final id = text()();
   late final kind = integer()();
   late final pubkey = text()();

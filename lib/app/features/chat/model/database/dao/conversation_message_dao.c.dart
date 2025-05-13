@@ -115,23 +115,6 @@ class ConversationMessageDao extends DatabaseAccessor<ChatDatabase>
         );
   }
 
-  Stream<List<EventMessageDbModel>> getMessagesReferences({
-    required String conversationId,
-    required String currentUserMasterPubkey,
-  }) {
-    final query = select(conversationMessageTable).join([
-      innerJoin(
-        eventMessageTable,
-        eventMessageTable.eventReference.equalsExp(conversationMessageTable.messageEventReference),
-      ),
-    ])
-      ..where(conversationMessageTable.isDeleted.equals(false))
-      ..where(conversationMessageTable.conversationId.equals(conversationId))
-      ..distinct;
-
-    return query.watch().map((rows) => rows.map((e) => e.readTable(eventMessageTable)).toList());
-  }
-
   Future<EventMessage> getEventMessage({required EventReference eventReference}) async {
     final message = await (select(eventMessageTable)
           ..where((table) => table.eventReference.equalsValue(eventReference)))

@@ -11,6 +11,8 @@ import 'package:ion/app/features/chat/community/view/components/community_member
 import 'package:ion/app/features/chat/components/messaging_header/messaging_header.dart';
 import 'package:ion/app/features/chat/e2ee/model/entities/private_direct_message_data.c.dart';
 import 'package:ion/app/features/chat/e2ee/providers/send_chat_message/send_e2ee_chat_message_service.c.dart';
+import 'package:ion/app/features/chat/e2ee/views/components/e2ee_conversation_empty_view.dart';
+import 'package:ion/app/features/chat/e2ee/views/components/one_to_one_messages_list.dart';
 import 'package:ion/app/features/chat/model/database/chat_database.c.dart';
 import 'package:ion/app/features/chat/providers/conversation_messages_provider.c.dart';
 import 'package:ion/app/features/chat/views/components/message_items/messaging_bottom_bar/messaging_bottom_bar.dart';
@@ -109,19 +111,18 @@ class _MessagesList extends ConsumerWidget {
   final String conversationId;
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    return const SizedBox.shrink();
-    // final messages =
-    //     ref.watch(conversationMessagesProvider(conversationId, ConversationType.group));
-    // return Expanded(
-    //   child: messages.maybeWhen(
-    //     data: (messages) {
-    //       if (messages.isEmpty) {
-    //         return const E2eeConversationEmptyView();
-    //       }
-    //       return OneToOneMessageList(messages);
-    //     },
-    //     orElse: () => const SizedBox.expand(),
-    //   ),
-    // );
+    final messages =
+        ref.watch(conversationMessagesProvider(conversationId, ConversationType.group));
+    return Expanded(
+      child: messages.maybeWhen(
+        data: (messages) {
+          if (messages.isEmpty) {
+            return const E2eeConversationEmptyView();
+          }
+          return OneToOneMessageList(messages);
+        },
+        orElse: () => const SizedBox.expand(),
+      ),
+    );
   }
 }
