@@ -4,6 +4,7 @@ import 'package:drift/drift.dart';
 
 @DataClassName('Transaction')
 class TransactionsTable extends Table {
+  static const defaultWalletViewIdForDeprecatedData = '';
   // Transaction required fields
   TextColumn get type => text()(); // In, Out
   TextColumn get txHash => text()();

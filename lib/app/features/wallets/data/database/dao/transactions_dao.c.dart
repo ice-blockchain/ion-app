@@ -86,6 +86,7 @@ class TransactionsDao extends DatabaseAccessor<WalletsDatabase> with _$Transacti
     List<String> coinIds = const [],
     List<String> txHashes = const [],
     List<String> walletAddresses = const [],
+    List<String> walletViewIds = const [],
     int limit = 20,
     int? offset,
     String? symbol,
@@ -104,6 +105,10 @@ class TransactionsDao extends DatabaseAccessor<WalletsDatabase> with _$Transacti
 
             if (txHashes.isNotEmpty) {
               expr = expr & tbl.txHash.isIn(txHashes);
+            }
+
+            if (walletViewIds.isNotEmpty) {
+              expr = expr & tbl.walletViewId.isIn(walletViewIds);
             }
 
             if (symbol != null) {
@@ -322,9 +327,22 @@ class TransactionsDao extends DatabaseAccessor<WalletsDatabase> with _$Transacti
     );
   }
 
-  Future<void> remove(Iterable<String> txHashes) {
+  Future<void> remove(Iterable<String> txHashes, {Iterable<String> walletViewIds = const []}) {
+    if (txHashes.isEmpty) {
+      throw Exception();
+    }
     return transaction(() async {
-      await (delete(transactionsTable)..where((t) => t.txHash.isIn(txHashes))).go();
+      await (delete(transactionsTable)
+            ..where((t) {
+              var expr = t.txHash.isIn(txHashes);
+
+              if (walletViewIds.isNotEmpty) {
+                expr = expr & t.walletViewId.isIn(walletViewIds);
+              }
+
+              return expr;
+            }))
+          .go();
     });
   }
 }
