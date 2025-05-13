@@ -18,6 +18,7 @@ import 'package:ion/app/features/wallets/model/transaction_data.c.dart';
 import 'package:ion/app/features/wallets/model/transaction_details.c.dart';
 import 'package:ion/app/features/wallets/model/transaction_status.c.dart';
 import 'package:ion/app/features/wallets/model/transaction_type.dart';
+import 'package:ion/app/features/wallets/model/wallet_view_data.c.dart';
 import 'package:ion/app/features/wallets/utils/crypto_amount_parser.dart';
 import 'package:ion/app/services/ion_identity/ion_identity_client_provider.c.dart';
 import 'package:ion_identity_client/ion_identity.dart';
@@ -68,7 +69,21 @@ class TransactionsRepository {
   Future<bool> saveTransactions(List<TransactionData> transactions) =>
       _transactionsDao.save(_coinMapper.fromDomainToDB(transactions));
 
-  Future<void> saveEntities(List<WalletAssetEntity> entities) async {
+  Future<void> saveEntities(
+    List<WalletAssetEntity> entities,
+    List<WalletViewData> walletViews,
+  ) async {
+    final walletViewsToContainedKeys = Map.fromEntries(
+      walletViews.map((wv) {
+        return MapEntry(wv.id, wv.coins.map((e) => e.walletId).nonNulls);
+      }),
+    );
+
+    // .firstWhereOrNull(
+    //   (wv) => wv.coins.firstWhereOrNull((coin) => coin.walletId == wallet.id) != null,
+    // )
+    // ?.id;
+
     // Always add empty contract address to get native coin of the network
     final contractFilters = <String>{''};
     final networkFilters = <String>{};
@@ -85,7 +100,7 @@ class TransactionsRepository {
 
     final mapped = _coinMapper.fromEntityToDB(
       entities,
-      _userWallets.map((e) => e.address).nonNulls,
+      _userWallets.where((e) => e.address != null),
       coins,
     );
 
@@ -135,6 +150,7 @@ class TransactionsRepository {
 
   Future<TransactionsPage> loadCoinTransactions(
     String walletId, {
+    required String walletViewId,
     int? pageSize,
     String? pageToken,
   }) async {
@@ -191,6 +207,7 @@ class TransactionsRepository {
 
           return TransactionData(
             txHash: transaction.txHash,
+            walletViewId: walletViewId,
             externalHash: transaction.externalHash,
             network: network,
             type: type,

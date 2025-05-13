@@ -14,6 +14,7 @@ import 'package:ion/app/features/ion_connect/providers/ion_connect_event_signer_
 import 'package:ion/app/features/ion_connect/providers/ion_connect_subscription_provider.c.dart';
 import 'package:ion/app/features/wallets/data/repository/request_assets_repository.c.dart';
 import 'package:ion/app/features/wallets/data/repository/transactions_repository.c.dart';
+import 'package:ion/app/features/wallets/domain/wallet_views/wallet_views_service.c.dart';
 import 'package:ion/app/features/wallets/model/entities/funds_request_entity.c.dart';
 import 'package:ion/app/features/wallets/model/entities/wallet_asset_entity.c.dart';
 import 'package:ion/app/features/wallets/providers/wallets_initializer_provider.c.dart';
@@ -42,12 +43,14 @@ Future<void> transactionsSubscription(Ref ref) async {
   final sealService = ref.watch(ionConnectSealServiceProvider).valueOrNull;
   final giftWrapService = ref.watch(ionConnectGiftWrapServiceProvider).valueOrNull;
   final onboardingComplete = ref.watch(onboardingCompleteProvider).valueOrNull;
+  final walletViewsService = ref.watch(walletViewsServiceProvider).valueOrNull;
 
   if (currentPubkey == null ||
       eventSigner == null ||
       sealService == null ||
       giftWrapService == null ||
       transactionsRepository == null ||
+      walletViewsService == null ||
       // otherwise relays might not be assigned yet or delegation is not done
       !onboardingComplete.falseOrValue) {
     return;
@@ -72,6 +75,7 @@ Future<void> transactionsSubscription(Ref ref) async {
       privateKey: eventSigner.privateKey,
       sealService: sealService,
       giftWrapService: giftWrapService,
+      walletViewsService: walletViewsService,
       transactionsRepository: transactionsRepository,
       requestAssetsRepository: requestAssetsRepository,
     ),
@@ -98,6 +102,7 @@ Future<void> transactionsSubscription(Ref ref) async {
       privateKey: eventSigner.privateKey,
       sealService: sealService,
       giftWrapService: giftWrapService,
+      walletViewsService: walletViewsService,
       transactionsRepository: transactionsRepository,
       requestAssetsRepository: requestAssetsRepository,
     ),
@@ -129,6 +134,7 @@ Future<void> _saveEvent({
   required String privateKey,
   required IonConnectSealService sealService,
   required IonConnectGiftWrapService giftWrapService,
+  required WalletViewsService walletViewsService,
   required TransactionsRepository transactionsRepository,
   required RequestAssetsRepository requestAssetsRepository,
 }) async {
@@ -145,6 +151,7 @@ Future<void> _saveEvent({
         case WalletAssetEntity.kind:
           await _handleWalletAssetEntity(
             rumor: rumor,
+            walletViewsService: walletViewsService,
             transactionsRepository: transactionsRepository,
             requestAssetsRepository: requestAssetsRepository,
           );
@@ -163,11 +170,15 @@ Future<void> _saveEvent({
 /// Handle a WalletAssetEntity event
 Future<void> _handleWalletAssetEntity({
   required EventMessage rumor,
+  required WalletViewsService walletViewsService,
   required TransactionsRepository transactionsRepository,
   required RequestAssetsRepository requestAssetsRepository,
 }) async {
   final message = WalletAssetEntity.fromEventMessage(rumor);
-  await transactionsRepository.saveEntities([message]);
+  final walletViews = walletViewsService.lastEmitted.isNotEmpty
+      ? walletViewsService.lastEmitted
+      : await walletViewsService.walletViews.first;
+  await transactionsRepository.saveEntities([message], walletViews);
 
   final requestJson = message.data.request;
   if (requestJson != null) {

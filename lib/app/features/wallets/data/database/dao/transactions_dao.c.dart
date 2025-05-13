@@ -295,6 +295,7 @@ class TransactionsDao extends DatabaseAccessor<WalletsDatabase> with _$Transacti
 
     return TransactionData(
       txHash: transaction.txHash,
+      walletViewId: transaction.walletViewId,
       network: domainNetwork,
       type: TransactionType.fromValue(transaction.type),
       senderWalletAddress: transaction.senderWalletAddress,

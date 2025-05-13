@@ -322,7 +322,6 @@ class WalletViewsService {
     _updateEmittedWalletViews(walletViews: _originWalletViews);
   }
 
-  // TODO: Move parsing to the separate class
   WalletViewData _parseWalletView(
     WalletView viewDTO,
     Map<String, NetworkData> networks, {

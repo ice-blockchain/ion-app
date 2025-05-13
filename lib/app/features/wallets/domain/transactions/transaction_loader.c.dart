@@ -22,14 +22,19 @@ Future<TransactionLoader> transactionLoader(Ref ref) async {
 /// If transactions have been synced before, it does this page by page.
 /// If there were no changes to the saved data when trying to save a new page
 /// and all other transactions have already been loaded, stops sync.
+/// Information about wallet views are used to bind transactions to the proper wallet view.
 class TransactionLoader {
-  const TransactionLoader(this._transactionsRepository, this._externalHashProcessor);
+  const TransactionLoader(
+    this._transactionsRepository,
+    this._externalHashProcessor,
+  );
 
   final TransactionsRepository _transactionsRepository;
   final ExternalHashProcessor _externalHashProcessor;
 
   Future<bool> load({
     required Wallet wallet,
+    required String walletViewId,
     required bool isFullLoad,
   }) async {
     String? nextPageToken = '';
@@ -39,6 +44,7 @@ class TransactionLoader {
       while (nextPageToken != null) {
         final result = await _transactionsRepository.loadCoinTransactions(
           wallet.id,
+          walletViewId: walletViewId,
           pageSize: isFullLoad ? 500 : null,
           pageToken: nextPageToken.isEmpty ? null : nextPageToken,
         );

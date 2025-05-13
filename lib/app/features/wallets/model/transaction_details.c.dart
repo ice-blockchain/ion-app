@@ -57,7 +57,6 @@ class TransactionDetails with _$TransactionDetails {
         ),
         nft: (nft) => CryptoAssetToSendData.nft(nft: nft.nft),
       ),
-      walletViewId: transaction.walletViewId,
       walletViewName: walletViewName,
       senderAddress: transaction.senderWalletAddress,
       receiverAddress: transaction.receiverWalletAddress,

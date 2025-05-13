@@ -10,6 +10,7 @@ import 'package:ion/app/features/wallets/model/transaction_crypto_asset.c.dart';
 import 'package:ion/app/features/wallets/model/transaction_data.c.dart';
 import 'package:ion/app/features/wallets/model/transaction_details.c.dart';
 import 'package:ion/app/features/wallets/model/transaction_type.dart';
+import 'package:ion_identity_client/ion_identity.dart';
 
 class CoinTransactionsMapper {
   db.Transaction fromTransactionDetails(TransactionDetails details) {
@@ -36,8 +37,9 @@ class CoinTransactionsMapper {
 
   List<db.Transaction> fromEntityToDB(
     Iterable<WalletAssetEntity> transactions,
-    Iterable<String> userWallets,
+    Iterable<Wallet> userWallets,
     Iterable<CoinData> coins,
+    Iterable<({String walletViewId, List<String> walletIds})> walletViewsWithWallets,
   ) =>
       transactions.map((entity) {
         final content = entity.data.content;
