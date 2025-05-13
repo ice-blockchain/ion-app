@@ -68,7 +68,8 @@ class TransactionsRepository {
     }
 
     _transactionsDao.getTransactions(
-        walletViewIds: [TransactionsTable.defaultWalletViewIdForDeprecatedData]).then((txs) {
+      walletViewIds: [TransactionsTable.defaultWalletViewIdForDeprecatedData],
+    ).then((txs) {
       final mapped = Map.fromEntries(
         txs.map((tx) => MapEntry(tx.txHash, tx)),
       );
