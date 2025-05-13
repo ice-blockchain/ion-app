@@ -75,7 +75,6 @@ class MessageMetaData extends ConsumerWidget {
 
   Widget statusIcon(BuildContext context, MessageDeliveryStatus deliveryStatus) {
     return switch (deliveryStatus) {
-      MessageDeliveryStatus.deleted => const SizedBox.shrink(),
       MessageDeliveryStatus.created => const SizedBox.shrink(),
       MessageDeliveryStatus.failed => const SizedBox.shrink(),
       MessageDeliveryStatus.sent => Assets.svg.iconMessageSent.icon(

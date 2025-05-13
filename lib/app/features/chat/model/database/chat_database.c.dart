@@ -13,6 +13,7 @@ import 'package:ion/app/features/chat/community/models/entities/community_join_d
 import 'package:ion/app/features/chat/community/models/entities/tags/conversation_identifier.c.dart';
 import 'package:ion/app/features/chat/e2ee/model/entities/private_direct_message_data.c.dart';
 import 'package:ion/app/features/chat/e2ee/model/entities/private_message_reaction_data.c.dart';
+import 'package:ion/app/features/chat/model/database/chat_database.c.steps.dart';
 import 'package:ion/app/features/chat/model/group_subject.c.dart';
 import 'package:ion/app/features/chat/model/message_reaction_group.c.dart';
 import 'package:ion/app/features/chat/recent_chats/model/conversation_list_item.c.dart';
@@ -70,9 +71,24 @@ class ChatDatabase extends _$ChatDatabase {
   final String pubkey;
 
   @override
-  int get schemaVersion => 1;
+  int get schemaVersion => 2;
 
   static QueryExecutor _openConnection(String pubkey) {
     return driftDatabase(name: 'conversation_database_$pubkey');
+  }
+
+  @override
+  MigrationStrategy get migration {
+    return MigrationStrategy(
+      onCreate: (m) => m.createAll(),
+      onUpgrade: stepByStep(
+        from1To2: (m, schema) async {
+          await m.addColumn(
+            schema.conversationMessageTable,
+            schema.conversationMessageTable.isDeleted,
+          );
+        },
+      ),
+    );
   }
 }

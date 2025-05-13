@@ -115,16 +115,8 @@ class ConversationDao extends DatabaseAccessor<ChatDatabase> with _$Conversation
         eventMessageTable.eventReference.equalsExp(conversationMessageTable.messageEventReference),
       ),
     ])
-      ..where(
-        notExistsQuery(
-          select(messageStatusTable)
-            ..where((tbl) => tbl.status.equals(MessageDeliveryStatus.deleted.index))
-            ..where(
-              (table) => table.messageEventReference
-                  .equalsExp(conversationMessageTable.messageEventReference),
-            ),
-        ),
-      )
+      ..where(conversationTable.isDeleted.equals(false))
+      ..where(conversationMessageTable.isDeleted.equals(false))
       ..addColumns([eventMessageTable.createdAt.max()])
       ..groupBy([conversationTable.id])
       ..distinct;
@@ -250,7 +242,7 @@ class ConversationDao extends DatabaseAccessor<ChatDatabase> with _$Conversation
   }) async {
     await ref.read(eventMessageDaoProvider).add(deleteRequest);
 
-    final messageEventReference = await (select(conversationMessageTable).join([
+    final messageEventReferences = await (select(conversationMessageTable).join([
       innerJoin(
         eventMessageTable,
         eventMessageTable.eventReference.equalsExp(conversationMessageTable.messageEventReference),
@@ -263,9 +255,9 @@ class ConversationDao extends DatabaseAccessor<ChatDatabase> with _$Conversation
 
     await batch((b) {
       b.update(
-        messageStatusTable,
-        const MessageStatusTableCompanion(status: Value(MessageDeliveryStatus.deleted)),
-        where: (table) => table.messageEventReference.isInValues(messageEventReference),
+        conversationMessageTable,
+        const ConversationMessageTableCompanion(isDeleted: Value(true)),
+        where: (table) => table.messageEventReference.isInValues(messageEventReferences),
       );
     });
   }

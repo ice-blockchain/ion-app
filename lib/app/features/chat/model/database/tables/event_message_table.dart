@@ -4,15 +4,15 @@ part of '../chat_database.c.dart';
 
 @DataClassName('EventMessageDbModel')
 class EventMessageTable extends Table {
-  TextColumn get id => text()();
-  IntColumn get kind => integer()();
-  TextColumn get pubkey => text()();
-  TextColumn get masterPubkey => text()();
-  DateTimeColumn get createdAt => dateTime()();
-  TextColumn get content => text()();
-  TextColumn get tags => text().map(const EventTagsConverter())();
-  TextColumn get eventReference => text().map(const EventReferenceConverter())();
-
+  // TextColumn get id => text()();
+  late final id = text()();
+  late final kind = integer()();
+  late final pubkey = text()();
+  late final masterPubkey = text()();
+  late final createdAt = dateTime()();
+  late final content = text()();
+  late final tags = text().map(const EventTagsConverter())();
+  late final eventReference = text().map(const EventReferenceConverter())();
   @override
   Set<Column> get primaryKey => {eventReference};
 }

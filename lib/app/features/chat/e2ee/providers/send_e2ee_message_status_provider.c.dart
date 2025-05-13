@@ -3,7 +3,6 @@
 import 'dart:async';
 
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:ion/app/exceptions/exceptions.dart';
 import 'package:ion/app/features/auth/providers/auth_provider.c.dart';
 import 'package:ion/app/features/chat/e2ee/model/entities/private_direct_message_data.c.dart';
 import 'package:ion/app/features/chat/e2ee/model/entities/private_message_reaction_data.c.dart';
@@ -48,44 +47,43 @@ class SendE2eeMessageStatusService {
     required MessageDeliveryStatus status,
     required EventMessage messageEventMessage,
   }) async {
-    if (!allowedStatus.contains(status)) {
-      return;
-    }
+    if (!allowedStatus.contains(status)) return;
 
     final eventReference =
         ReplaceablePrivateDirectMessageEntity.fromEventMessage(messageEventMessage)
             .toEventReference();
 
-    final messageReactionData = PrivateMessageReactionEntityData(
+    final messageReactionEventMessage = await PrivateMessageReactionEntityData(
       content: status.name,
       reference: eventReference,
       masterPubkey: currentUserMasterPubkey,
-    );
+    ).toEventMessage(NoPrivateSigner(eventSigner!.publicKey));
 
-    await Future.wait(
-      messageEventMessage.participantsMasterPubkeys.map((masterPubkey) async {
-        final participantsKeysMap = await conversationPubkeysNotifier
-            .fetchUsersKeys(messageEventMessage.participantsMasterPubkeys);
+    final participantsKeysMap = await conversationPubkeysNotifier
+        .fetchUsersKeys(messageEventMessage.participantsMasterPubkeys);
 
-        final pubkeys = participantsKeysMap[masterPubkey];
+    final futures = <Future<void>>[];
 
-        if (pubkeys == null) {
-          throw UserPubkeyNotFoundException(masterPubkey);
-        }
+    for (final masterPubkey in messageEventMessage.participantsMasterPubkeys) {
+      final pubkeys = participantsKeysMap[masterPubkey];
 
-        await Future.wait(
-          pubkeys.map((pubkey) async {
-            await sendE2eeChatMessageService.sendWrappedMessage(
-              pubkey: pubkey,
-              eventSigner: eventSigner!,
-              masterPubkey: masterPubkey,
-              wrappedKinds: [PrivateMessageReactionEntity.kind.toString()],
-              eventMessage:
-                  await messageReactionData.toEventMessage(NoPrivateSigner(eventSigner!.publicKey)),
-            );
-          }),
+      if (pubkeys == null) {
+        continue;
+      }
+
+      for (final pubkey in pubkeys) {
+        futures.add(
+          sendE2eeChatMessageService.sendWrappedMessage(
+            pubkey: pubkey,
+            eventSigner: eventSigner!,
+            masterPubkey: masterPubkey,
+            wrappedKinds: [PrivateMessageReactionEntity.kind.toString()],
+            eventMessage: messageReactionEventMessage,
+          ),
         );
-      }),
-    );
+      }
+    }
+
+    unawaited(Future.wait(futures));
   }
 }

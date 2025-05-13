@@ -91,7 +91,7 @@ class ConversationMessageDao extends DatabaseAccessor<ChatDatabase>
     });
   }
 
-  Stream<Map<DateTime, List<EventMessage>>> getMessages({
+  Stream<List<EventMessage>> getMessages({
     required String conversationId,
     required String currentUserMasterPubkey,
   }) {
@@ -100,35 +100,36 @@ class ConversationMessageDao extends DatabaseAccessor<ChatDatabase>
         eventMessageTable,
         eventMessageTable.eventReference.equalsExp(conversationMessageTable.messageEventReference),
       ),
-      innerJoin(
-        messageStatusTable,
-        messageStatusTable.messageEventReference.equalsExp(eventMessageTable.eventReference),
-      ),
     ])
+      ..where(conversationMessageTable.isDeleted.equals(false))
       ..where(conversationMessageTable.conversationId.equals(conversationId))
-      ..where(messageStatusTable.status.isNotIn([MessageDeliveryStatus.deleted.index]))
-      ..groupBy([eventMessageTable.eventReference])
       ..distinct;
 
-    return query.watch().map((rows) {
-      final groupedMessages = <DateTime, List<EventMessage>>{};
-
-      for (final row in rows) {
-        final eventMessage = row.readTable(eventMessageTable).toEventMessage();
-
-        final dateKey = DateTime(
-          eventMessage.publishedAt.year,
-          eventMessage.publishedAt.month,
-          eventMessage.publishedAt.day,
+    return query.watch().map(
+          (rows) => rows
+              .map(
+                (e) => e.readTable(eventMessageTable).toEventMessage(),
+              )
+              .sortedBy((e) => e.publishedAt)
+              .toList(),
         );
+  }
 
-        groupedMessages.putIfAbsent(dateKey, () => []).add(eventMessage);
+  Stream<List<EventMessageDbModel>> getMessagesReferences({
+    required String conversationId,
+    required String currentUserMasterPubkey,
+  }) {
+    final query = select(conversationMessageTable).join([
+      innerJoin(
+        eventMessageTable,
+        eventMessageTable.eventReference.equalsExp(conversationMessageTable.messageEventReference),
+      ),
+    ])
+      ..where(conversationMessageTable.isDeleted.equals(false))
+      ..where(conversationMessageTable.conversationId.equals(conversationId))
+      ..distinct;
 
-        groupedMessages[dateKey]!.sort((a, b) => b.publishedAt.compareTo(a.publishedAt));
-      }
-
-      return groupedMessages;
-    });
+    return query.watch().map((rows) => rows.map((e) => e.readTable(eventMessageTable)).toList());
   }
 
   Future<EventMessage> getEventMessage({required EventReference eventReference}) async {
@@ -145,12 +146,10 @@ class ConversationMessageDao extends DatabaseAccessor<ChatDatabase>
     required EventMessage deleteRequest,
   }) async {
     await _removeExpiredMessages(ref, eventReferences);
-    await (update(messageStatusTable)
+    await (update(conversationMessageTable)
           ..where((table) => table.messageEventReference.isInValues(eventReferences)))
         .write(
-      const MessageStatusTableCompanion(
-        status: Value(MessageDeliveryStatus.deleted),
-      ),
+      const ConversationMessageTableCompanion(isDeleted: Value(true)),
     );
   }
 

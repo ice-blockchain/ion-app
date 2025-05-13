@@ -47,20 +47,18 @@ class MessageItemWrapper extends HookConsumerWidget {
         ReplaceablePrivateDirectMessageEntity.fromEventMessage(messageItem.eventMessage)
             .toEventReference();
 
-    final deliveryStatus = ref.watch(conversationMessageDataDaoProvider).messageStatus(
-          eventReference: eventReference,
-          currentUserMasterPubkey: currentUserMasterPubkey!,
-        );
+    final stream = useMemoized(() {
+      return ref.watch(conversationMessageDataDaoProvider).messageStatus(
+            eventReference: eventReference,
+            currentUserMasterPubkey: currentUserMasterPubkey!,
+          );
+    });
+
+    final deliveryStatus = useStream(stream);
 
     final showReactDialog = useCallback(
       () async {
         try {
-          var messageStatus = MessageDeliveryStatus.created;
-
-          final subscription = deliveryStatus.listen((status) {
-            messageStatus = status;
-          });
-
           final emoji = await showDialog<String>(
             context: context,
             barrierColor: Colors.transparent,
@@ -68,7 +66,7 @@ class MessageItemWrapper extends HookConsumerWidget {
             builder: (context) => MessageReactionDialog(
               isMe: isMe,
               messageItem: messageItem,
-              messageStatus: messageStatus,
+              messageStatus: deliveryStatus.data ?? MessageDeliveryStatus.created,
               renderObject: messageItemKey.currentContext!.findRenderObject()!,
             ),
           );
@@ -92,72 +90,59 @@ class MessageItemWrapper extends HookConsumerWidget {
               );
             }
           }
-
-          await subscription.cancel();
         } catch (e, st) {
           Logger.log('Error showing message reaction dialog:', error: e, stackTrace: st);
         }
       },
-      [messageItemKey, isMe, messageItem],
+      [messageItemKey, isMe, messageItem, deliveryStatus.data],
     );
 
-    return StreamBuilder<MessageDeliveryStatus>(
-      stream: deliveryStatus,
-      initialData: MessageDeliveryStatus.created,
-      builder: (context, snapshot) {
-        if (snapshot.hasData && snapshot.data == MessageDeliveryStatus.deleted) {
-          return const SizedBox.shrink();
-        }
-
-        return Align(
-          alignment: isMe ? AlignmentDirectional.centerEnd : AlignmentDirectional.centerStart,
-          child: GestureDetector(
-            onLongPress: () {
-              HapticFeedback.mediumImpact();
-              showReactDialog();
-            },
-            child: RepaintBoundary(
-              key: messageItemKey,
-              child: Row(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Container(
-                    padding: contentPadding,
-                    constraints: BoxConstraints(
-                      maxWidth: maxWidth,
-                    ),
-                    decoration: BoxDecoration(
-                      color: isMe
-                          ? context.theme.appColors.primaryAccent
-                          : context.theme.appColors.onPrimaryAccent,
-                      borderRadius: BorderRadiusDirectional.only(
-                        topStart: Radius.circular(12.0.s),
-                        topEnd: Radius.circular(12.0.s),
-                        bottomStart: !isLastMessageFromAuthor || isMe
-                            ? Radius.circular(12.0.s)
-                            : Radius.zero,
-                        bottomEnd:
-                            isMe && isLastMessageFromAuthor ? Radius.zero : Radius.circular(12.0.s),
-                      ),
-                    ),
-                    child: child,
+    return Align(
+      alignment: isMe ? AlignmentDirectional.centerEnd : AlignmentDirectional.centerStart,
+      child: GestureDetector(
+        onLongPress: () {
+          HapticFeedback.mediumImpact();
+          showReactDialog();
+        },
+        child: RepaintBoundary(
+          key: messageItemKey,
+          child: Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Container(
+                padding: contentPadding,
+                constraints: BoxConstraints(
+                  maxWidth: maxWidth,
+                ),
+                decoration: BoxDecoration(
+                  color: isMe
+                      ? context.theme.appColors.primaryAccent
+                      : context.theme.appColors.onPrimaryAccent,
+                  borderRadius: BorderRadiusDirectional.only(
+                    topStart: Radius.circular(12.0.s),
+                    topEnd: Radius.circular(12.0.s),
+                    bottomStart:
+                        !isLastMessageFromAuthor || isMe ? Radius.circular(12.0.s) : Radius.zero,
+                    bottomEnd:
+                        isMe && isLastMessageFromAuthor ? Radius.zero : Radius.circular(12.0.s),
                   ),
-                  if (snapshot.hasData && snapshot.data == MessageDeliveryStatus.failed)
-                    Row(
-                      children: [
-                        SizedBox(width: 6.0.s),
-                        Assets.svg.iconMessageFailed.icon(
-                          color: context.theme.appColors.attentionRed,
-                          size: 16.0.s,
-                        ),
-                      ],
-                    ),
-                ],
+                ),
+                child: child,
               ),
-            ),
+              if (deliveryStatus.data == MessageDeliveryStatus.failed)
+                Row(
+                  children: [
+                    SizedBox(width: 6.0.s),
+                    Assets.svg.iconMessageFailed.icon(
+                      color: context.theme.appColors.attentionRed,
+                      size: 16.0.s,
+                    ),
+                  ],
+                ),
+            ],
           ),
-        );
-      },
+        ),
+      ),
     );
   }
 }

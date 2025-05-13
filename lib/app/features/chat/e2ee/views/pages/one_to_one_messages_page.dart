@@ -84,7 +84,9 @@ class OneToOneMessagesPage extends HookConsumerWidget {
               receiverMasterPubKey: receiverPubKey,
               conversationId: conversationId.value ?? '',
             ),
-            _MessagesList(conversationId: conversationId.value),
+            Expanded(
+              child: _MessagesList(conversationId: conversationId.value),
+            ),
             const EditMessageInfo(),
             const RepliedMessageInfo(),
             MessagingBottomBar(onSubmitted: onSubmitted, conversationId: conversationId.value),
@@ -135,24 +137,22 @@ class _MessagesList extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     if (conversationId == null) {
-      return const Expanded(child: E2eeConversationEmptyView());
+      return const E2eeConversationEmptyView();
     }
 
     final messages =
         ref.watch(conversationMessagesProvider(conversationId!, ConversationType.oneToOne));
 
-    return Expanded(
-      child: GestureDetector(
-        onTap: FocusManager.instance.primaryFocus?.unfocus,
-        child: messages.maybeWhen(
-          data: (messages) {
-            if (messages.isEmpty) {
-              return const E2eeConversationEmptyView();
-            }
-            return OneToOneMessageList(messages);
-          },
-          orElse: E2eeConversationEmptyView.new,
-        ),
+    return GestureDetector(
+      onTap: FocusManager.instance.primaryFocus?.unfocus,
+      child: messages.maybeWhen(
+        data: (messages) {
+          if (messages.isEmpty) {
+            return const E2eeConversationEmptyView();
+          }
+          return OneToOneMessageList(messages);
+        },
+        orElse: E2eeConversationEmptyView.new,
       ),
     );
   }
