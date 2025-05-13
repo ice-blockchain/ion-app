@@ -4,6 +4,7 @@ import 'dart:convert';
 
 import 'package:collection/collection.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:ion/app/features/chat/e2ee/model/entities/private_direct_message_data.c.dart';
 import 'package:ion/app/features/feed/data/models/entities/modifiable_post_data.c.dart';
 import 'package:ion/app/features/feed/data/models/entities/post_data.c.dart';
 import 'package:ion/app/features/feed/data/models/entities/reaction_data.c.dart';
@@ -68,7 +69,7 @@ class IonConnectPushDataPayload with _$IonConnectPushDataPayload {
     } else if (entity is FollowListEntity) {
       return PushNotificationType.follower;
     } else if (entity is IonConnectGiftWrapEntity) {
-      if (entity.data.kinds.contains(ModifiablePostEntity.kind.toString())) {
+      if (entity.data.kinds.contains(ReplaceablePrivateDirectMessageEntity.kind.toString())) {
         return PushNotificationType.chatMessage;
       } else if (entity.data.kinds.contains(ReactionEntity.kind.toString())) {
         return PushNotificationType.chatReaction;
