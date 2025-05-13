@@ -9,14 +9,15 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:ion/app/components/scroll_view/ion_pull_to_refresh_loading_indicator.dart';
 
 class PullToRefreshBuilder extends HookWidget {
-  const PullToRefreshBuilder({
-    required this.builder,
+  PullToRefreshBuilder({
     required this.slivers,
     required this.onRefresh,
-    super.key,
+    Widget Function(BuildContext context, List<Widget> slivers)? builder,
     this.refreshIndicatorEdgeOffset = 0,
     this.sliverAppBar,
-  });
+    super.key,
+  }) : builder = builder ??
+            ((BuildContext context, List<Widget> slivers) => CustomScrollView(slivers: slivers));
 
   final Widget Function(BuildContext context, List<Widget> slivers) builder;
 
