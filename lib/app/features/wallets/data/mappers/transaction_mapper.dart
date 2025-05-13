@@ -10,6 +10,7 @@ import 'package:ion/app/features/wallets/model/transaction_crypto_asset.c.dart';
 import 'package:ion/app/features/wallets/model/transaction_data.c.dart';
 import 'package:ion/app/features/wallets/model/transaction_details.c.dart';
 import 'package:ion/app/features/wallets/model/transaction_type.dart';
+import 'package:ion/app/services/logger/logger.dart';
 import 'package:ion_identity_client/ion_identity.dart';
 
 class CoinTransactionsMapper {
@@ -36,40 +37,64 @@ class CoinTransactionsMapper {
   }
 
   List<db.Transaction> fromEntityToDB(
-    Iterable<WalletAssetEntity> transactions,
-    Iterable<Wallet> userWallets,
     Iterable<CoinData> coins,
-    Iterable<({String walletViewId, List<String> walletIds})> walletViewsWithWallets,
-  ) =>
-      transactions.map((entity) {
-        final content = entity.data.content;
-        final nativeCoin = coins.firstWhereOrNull(
-          (coin) => coin.contractAddress.isEmpty && coin.network.id == entity.data.networkId,
-        );
-        final coin = entity.data.assetClass.toLowerCase() == 'native'
-            ? nativeCoin
-            : coins.firstWhereOrNull(
-                (coin) => coin.contractAddress == entity.data.assetAddress,
-              );
+    Iterable<WalletAssetEntity> transactions,
+    Iterable<({String walletViewId, List<Wallet> wallets})> walletViewsWithWallets,
+  ) {
+    final walletAddresses = walletViewsWithWallets
+        .expand((wv) => wv.wallets.map((e) => e.address).nonNulls)
+        .nonNulls
+        .toList();
 
-        return db.Transaction(
-          walletViewId: entity.walletViewId,
-          type: userWallets.contains(content.from)
-              ? TransactionType.send.value
-              : TransactionType.receive.value,
-          txHash: content.txHash,
-          // assetId: , // Here should be nftId in case of nfts
-          networkId: entity.data.networkId,
-          coinId: coin?.id,
-          nativeCoinId: nativeCoin?.id,
-          senderWalletAddress: content.from,
-          receiverWalletAddress: content.to,
-          createdAtInRelay: entity.createdAt,
-          userPubkey: entity.data.pubkey,
-          transferredAmount: content.amount,
-          transferredAmountUsd: double.tryParse(content.amountUsd ?? '0'),
-        );
-      }).toList();
+    return transactions
+        .map((entity) {
+          final content = entity.data.content;
+          final nativeCoin = coins.firstWhereOrNull(
+            (coin) => coin.contractAddress.isEmpty && coin.network.id == entity.data.networkId,
+          );
+          final coin = entity.data.assetClass.toLowerCase() == 'native'
+              ? nativeCoin
+              : coins.firstWhereOrNull(
+                  (coin) => coin.contractAddress == entity.data.assetAddress,
+                );
+
+          // Each transaction should be associated with wallet view.
+          // Attempt to find wallet view with receiver/sender address.
+          final walletViewId = walletViewsWithWallets.firstWhereOrNull((wv) {
+            final currentUserWallet = wv.wallets.firstWhereOrNull(
+              (w) => w.address != null && (w.address == content.from || w.address == content.to),
+            );
+            return currentUserWallet != null;
+          })?.walletViewId;
+
+          if (walletViewId == null) {
+            Logger.error(
+              'Transaction ${content.txHash} cannot be associated with any connected wallet.',
+            );
+            return null;
+          }
+
+          return db.Transaction(
+            walletViewId: walletViewId,
+            type: walletAddresses.contains(content.from)
+                ? TransactionType.send.value
+                : TransactionType.receive.value,
+            txHash: content.txHash,
+            // assetId: , // Here should be nftId in case of nfts
+            networkId: entity.data.networkId,
+            coinId: coin?.id,
+            nativeCoinId: nativeCoin?.id,
+            senderWalletAddress: content.from,
+            receiverWalletAddress: content.to,
+            createdAtInRelay: entity.createdAt,
+            userPubkey: entity.data.pubkey,
+            transferredAmount: content.amount,
+            transferredAmountUsd: double.tryParse(content.amountUsd ?? '0'),
+          );
+        })
+        .nonNulls
+        .toList();
+  }
 
   List<db.Transaction> fromDomainToDB(Iterable<TransactionData> transactions) =>
       transactions.map((transaction) {

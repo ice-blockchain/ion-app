@@ -40,7 +40,6 @@ WalletsDatabase walletsDatabase(Ref ref) {
     SyncCoinsTable,
     NetworksTable,
     TransactionsTable,
-    TemporaryTransactionsTable,
     CryptoWalletsTable,
     FundsRequestsTable,
   ],
@@ -81,41 +80,24 @@ class WalletsDatabase extends _$WalletsDatabase {
           );
         },
         from6To7: (m, schema) async {
-          await m.createTable(temporaryTransactionsTable);
+          const oldTransactionsTableName = 'transactions_table';
+          await m.createTable(transactionsTable);
 
-          final tempTableName = temporaryTransactionsTable.actualTableName;
-          final txTableName = transactionsTable.actualTableName;
-
-          final tempCols = temporaryTransactionsTable.$columns;
-          final oldCols = transactionsTable.$columns;
-
-          final insertColumns = <String>[];
-          final selectColumns = <String>[];
-
-          for (final col in tempCols) {
-            final name = col.$name;
-            final existsInOld = oldCols.any((c) => c.$name == name);
-
-            insertColumns.add(name);
-            selectColumns.add(
-              // Use an empty string for the walletViewId as a default.
-              // It will be updated automatically by system in the future.
-              existsInOld ? name : "'' AS walletViewId",
-            );
-          }
-
-          final insertList = insertColumns.join(', ');
-          final selectList = selectColumns.join(', ');
-
-          // Copy date from the old table to the temp one
           await customStatement('''
-INSERT INTO $tempTableName ($insertList)
-SELECT $selectList
-FROM $txTableName;
-''');
-
-          await m.deleteTable(txTableName);
-          await customStatement('ALTER TABLE $tempTableName RENAME TO $txTableName');
+          INSERT INTO ${transactionsTable.tableName} (
+            wallet_view_id, type, tx_hash, network_id, coin_id, 
+            sender_wallet_address, receiver_wallet_address, id, fee, 
+            status, native_coin_id, date_confirmed, date_requested, 
+            created_at_in_relay, user_pubkey, asset_id, 
+            transferred_amount, transferred_amount_usd
+          )
+          SELECT 
+            '', type, tx_hash, network_id, coin_id, sender_wallet_address,  
+            receiver_wallet_address, id, fee, status, native_coin_id, date_confirmed, 
+            date_requested, created_at_in_relay, user_pubkey, 
+            asset_id, transferred_amount, transferred_amount_usd
+          FROM $oldTransactionsTableName;
+          ''');
         },
       ),
     );

@@ -73,17 +73,6 @@ class TransactionsRepository {
     List<WalletAssetEntity> entities,
     List<WalletViewData> walletViews,
   ) async {
-    final walletViewsToContainedKeys = Map.fromEntries(
-      walletViews.map((wv) {
-        return MapEntry(wv.id, wv.coins.map((e) => e.walletId).nonNulls);
-      }),
-    );
-
-    // .firstWhereOrNull(
-    //   (wv) => wv.coins.firstWhereOrNull((coin) => coin.walletId == wallet.id) != null,
-    // )
-    // ?.id;
-
     // Always add empty contract address to get native coin of the network
     final contractFilters = <String>{''};
     final networkFilters = <String>{};
@@ -98,10 +87,22 @@ class TransactionsRepository {
       contractAddresses: contractFilters,
     );
 
+    final walletViewsToConnectedWallets = walletViews.map((wv) {
+      return (
+        walletViewId: wv.id,
+        wallets: wv.coins
+            .map((e) => e.walletId)
+            .nonNulls
+            .map((id) => _userWallets.firstWhereOrNull((e) => e.id == id))
+            .nonNulls
+            .toList(),
+      );
+    });
+
     final mapped = _coinMapper.fromEntityToDB(
-      entities,
-      _userWallets.where((e) => e.address != null),
       coins,
+      entities,
+      walletViewsToConnectedWallets,
     );
 
     if (mapped.isEmpty) return;
