@@ -1,12 +1,13 @@
 // SPDX-License-Identifier: ice License 1.0
 
 import 'dart:io';
+
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/foundation.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/features/auth/providers/auth_provider.c.dart';
-import 'package:ion/app/features/push_notifications/background/app_translations_provider.c.dart';
 import 'package:ion/app/features/push_notifications/data/models/ion_connect_push_data_payload.c.dart';
+import 'package:ion/app/features/push_notifications/providers/app_translations_provider.c.dart';
 import 'package:ion/app/services/ion_connect/ion_connect.dart';
 import 'package:ion/app/services/local_notifications/local_notifications.c.dart';
 import 'package:ion/app/services/logger/logger.dart';
@@ -44,7 +45,7 @@ Future<({String title, String body})?> _parseNotificationData(
   IonConnectPushDataPayload data,
 ) async {
   final riverpod = ProviderContainer(observers: [Logger.talkerRiverpodObserver]);
-  final translator = await riverpod.read(translatorProvider.future);
+  final translator = await riverpod.read(pushTranslatorProvider.future);
   final prefs = await riverpod.read(sharedPreferencesFoundationProvider.future);
   final currentPubkey = await prefs.getString(CurrentPubkeySelector.persistenceKey);
 
@@ -77,46 +78,46 @@ Future<({String title, String body})?> _parseNotificationData(
 
 Future<(String? title, String? body)> _getNotificationTranslation({
   required PushNotificationType notificationType,
-  required Translator translator,
+  required Translator<PushNotificationTranslations> translator,
 }) async {
   try {
     return switch (notificationType) {
-      PushNotificationType.reply => await (
-          translator.translate((t) => t.pushNotifications?.reply?.title),
-          translator.translate((t) => t.pushNotifications?.reply?.body),
-        ).wait,
-      PushNotificationType.mention => await (
-          translator.translate((t) => t.pushNotifications?.mention?.title),
-          translator.translate((t) => t.pushNotifications?.mention?.body)
-        ).wait,
-      PushNotificationType.repost => await (
-          translator.translate((t) => t.pushNotifications?.repost?.title),
-          translator.translate((t) => t.pushNotifications?.repost?.body)
-        ).wait,
-      PushNotificationType.like => await (
-          translator.translate((t) => t.pushNotifications?.like?.title),
-          translator.translate((t) => t.pushNotifications?.like?.body)
-        ).wait,
-      PushNotificationType.follower => await (
-          translator.translate((t) => t.pushNotifications?.follower?.title),
-          translator.translate((t) => t.pushNotifications?.follower?.body)
-        ).wait,
-      PushNotificationType.chatReaction => await (
-          translator.translate((t) => t.pushNotifications?.chatReaction?.title),
-          translator.translate((t) => t.pushNotifications?.chatReaction?.body)
-        ).wait,
-      PushNotificationType.chatMessage => await (
-          translator.translate((t) => t.pushNotifications?.chatMessage?.title),
-          translator.translate((t) => t.pushNotifications?.chatMessage?.body)
-        ).wait,
-      PushNotificationType.paymentRequest => await (
-          translator.translate((t) => t.pushNotifications?.paymentRequest?.title),
-          translator.translate((t) => t.pushNotifications?.paymentRequest?.body)
-        ).wait,
-      PushNotificationType.paymentReceived => await (
-          translator.translate((t) => t.pushNotifications?.paymentReceived?.title),
-          translator.translate((t) => t.pushNotifications?.paymentReceived?.body)
-        ).wait,
+      PushNotificationType.reply => (
+          await translator.translate((t) => t.reply?.title),
+          await translator.translate((t) => t.reply?.body),
+        ),
+      PushNotificationType.mention => (
+          await translator.translate((t) => t.mention?.title),
+          await translator.translate((t) => t.mention?.body)
+        ),
+      PushNotificationType.repost => (
+          await translator.translate((t) => t.repost?.title),
+          await translator.translate((t) => t.repost?.body)
+        ),
+      PushNotificationType.like => (
+          await translator.translate((t) => t.like?.title),
+          await translator.translate((t) => t.like?.body)
+        ),
+      PushNotificationType.follower => (
+          await translator.translate((t) => t.follower?.title),
+          await translator.translate((t) => t.follower?.body)
+        ),
+      PushNotificationType.chatReaction => (
+          await translator.translate((t) => t.chatReaction?.title),
+          await translator.translate((t) => t.chatReaction?.body)
+        ),
+      PushNotificationType.chatMessage => (
+          await translator.translate((t) => t.chatMessage?.title),
+          await translator.translate((t) => t.chatMessage?.body)
+        ),
+      PushNotificationType.paymentRequest => (
+          await translator.translate((t) => t.paymentRequest?.title),
+          await translator.translate((t) => t.paymentRequest?.body)
+        ),
+      PushNotificationType.paymentReceived => (
+          await translator.translate((t) => t.paymentReceived?.title),
+          await translator.translate((t) => t.paymentReceived?.body)
+        ),
     };
   } catch (error) {
     return (null, null);

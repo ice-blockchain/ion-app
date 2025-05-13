@@ -19,27 +19,27 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 part 'app_translations_provider.c.g.dart';
 part 'app_translations_provider.c.freezed.dart';
 
-class Translator {
+class Translator<T extends TranslationWithVersion> {
   Translator({
-    required AppTranslationsRepository translationsRepository,
+    required AppTranslationsRepository<T> translationsRepository,
     required Locale locale,
   })  : _translationsRepository = translationsRepository,
         _locale = locale;
 
-  final AppTranslationsRepository _translationsRepository;
+  final AppTranslationsRepository<T> _translationsRepository;
 
   final Locale _locale;
 
-  final Map<Locale, AppTranslations> translations = {};
+  final Map<Locale, T> translations = {};
 
   Future<String?> translate(
-    String? Function(AppTranslations) selector,
+    String? Function(T) selector,
   ) async {
     return _translate(selector, locale: _locale);
   }
 
   Future<String?> _translate(
-    String? Function(AppTranslations) selector, {
+    String? Function(T) selector, {
     required Locale locale,
   }) async {
     try {
@@ -62,7 +62,7 @@ class Translator {
     }
   }
 
-  Future<AppTranslations> _getTranslations(Locale locale) async {
+  Future<T> _getTranslations(Locale locale) async {
     if (translations.containsKey(locale)) {
       return translations[locale]!;
     }
@@ -73,17 +73,20 @@ class Translator {
 }
 
 @Riverpod(keepAlive: true)
-Future<Translator> translator(Ref ref) async {
+Future<Translator<PushNotificationTranslations>> pushTranslator(Ref ref) async {
   final appLocale = ref.watch(appLocaleProvider);
-  final translationsRepository = await ref.watch(appTranslationsRepositoryProvider.future);
+  final translationsRepository = await ref.watch(pushTranslationsRepositoryProvider.future);
   return Translator(translationsRepository: translationsRepository, locale: appLocale);
 }
 
 @Riverpod(keepAlive: true)
-Future<AppTranslationsRepository> appTranslationsRepository(Ref ref) async {
+Future<AppTranslationsRepository<PushNotificationTranslations>> pushTranslationsRepository(
+  Ref ref,
+) async {
   return AppTranslationsRepository(
     dio: ref.watch(dioProvider),
     ionOrigin: ref.watch(envProvider.notifier).get<String>(EnvVariable.ION_ORIGIN),
+    path: 'ion-app_push-notifications_translations',
     localStorage: await ref.watch(localStorageAsyncProvider.future),
     cacheDuration: Duration(
       minutes:
@@ -92,23 +95,26 @@ Future<AppTranslationsRepository> appTranslationsRepository(Ref ref) async {
   );
 }
 
-class AppTranslationsRepository {
+class AppTranslationsRepository<T extends TranslationWithVersion> {
   AppTranslationsRepository({
     required Dio dio,
     required String ionOrigin,
+    required String path,
     required LocalStorage localStorage,
     required Duration cacheDuration,
   })  : _dio = dio,
         _ionOrigin = ionOrigin,
+        _path = path,
         _localStorage = localStorage,
         _cacheMaxDuration = cacheDuration;
 
   final Dio _dio;
   final String _ionOrigin;
+  final String _path;
   final LocalStorage _localStorage;
   final Duration _cacheMaxDuration;
 
-  Future<AppTranslations> getTranslations({required Locale locale}) async {
+  Future<T> getTranslations({required Locale locale}) async {
     final cacheFile = File(await _getCachePath(locale: locale));
 
     if (cacheFile.existsSync()) {
@@ -135,9 +141,15 @@ class AppTranslationsRepository {
     return appTranslations;
   }
 
-  AppTranslations _parseTranslations(String translations) {
+  T _parseTranslations(String translations) {
     try {
-      return AppTranslations.fromJson(jsonDecode(translations) as Map<String, dynamic>);
+      if (T == PushNotificationTranslations) {
+        return PushNotificationTranslations.fromJson(
+          jsonDecode(translations) as Map<String, dynamic>,
+        ) as T;
+      } else {
+        throw UnsupportedTranslationTypeException(T);
+      }
     } catch (error) {
       throw ParseAppTranslationsException(error);
     }
@@ -147,7 +159,7 @@ class AppTranslationsRepository {
     try {
       final cacheVersion = _localStorage.getInt(_getCacheVersionKey(locale: locale)) ?? 0;
       final uri = Uri.parse(_ionOrigin).replace(
-        path: '/v1/config/ion-app_translations_${locale.languageCode}',
+        path: '/v1/config/${_path}_${locale.languageCode}',
         queryParameters: {
           'version': cacheVersion.toString(),
         },
@@ -173,30 +185,16 @@ class AppTranslationsRepository {
   String _getCacheVersionKey({required Locale locale}) => 'cache_version_${locale.languageCode}';
 }
 
-@freezed
-class AppTranslations with _$AppTranslations {
-  const factory AppTranslations({
-    @JsonKey(name: '_version') required int version,
-    PushNotificationTranslations? pushNotifications,
-  }) = _AppTranslations;
-
-  factory AppTranslations.fromJson(Map<String, dynamic> json) => _$AppTranslationsFromJson(json);
+abstract class TranslationWithVersion {
+  int get version;
 }
 
 @freezed
-class NotificationTranslation with _$NotificationTranslation {
-  const factory NotificationTranslation({
-    String? title,
-    String? body,
-  }) = _NotificationTranslation;
-
-  factory NotificationTranslation.fromJson(Map<String, dynamic> json) =>
-      _$NotificationTranslationFromJson(json);
-}
-
-@freezed
-class PushNotificationTranslations with _$PushNotificationTranslations {
+class PushNotificationTranslations
+    with _$PushNotificationTranslations
+    implements TranslationWithVersion {
   const factory PushNotificationTranslations({
+    @JsonKey(name: '_version') required int version,
     NotificationTranslation? reply,
     NotificationTranslation? mention,
     NotificationTranslation? repost,
@@ -210,4 +208,15 @@ class PushNotificationTranslations with _$PushNotificationTranslations {
 
   factory PushNotificationTranslations.fromJson(Map<String, dynamic> json) =>
       _$PushNotificationTranslationsFromJson(json);
+}
+
+@freezed
+class NotificationTranslation with _$NotificationTranslation {
+  const factory NotificationTranslation({
+    String? title,
+    String? body,
+  }) = _NotificationTranslation;
+
+  factory NotificationTranslation.fromJson(Map<String, dynamic> json) =>
+      _$NotificationTranslationFromJson(json);
 }

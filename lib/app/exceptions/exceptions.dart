@@ -528,3 +528,8 @@ class TranslationNotFoundException extends IONException {
   TranslationNotFoundException(dynamic locale)
       : super(10105, 'Translation not found for locale: $locale');
 }
+
+class UnsupportedTranslationTypeException extends IONException {
+  UnsupportedTranslationTypeException(dynamic error)
+      : super(10106, 'Unsupported translation type: $error');
+}
