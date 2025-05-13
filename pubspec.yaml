@@ -122,6 +122,8 @@ dependencies:
   sentry_flutter: ^8.14.2
   share_plus: ^10.0.2
   shared_preferences: ^2.3.5
+  shared_preferences_foundation: ^2.5.4
+  shared_preferences_platform_interface: ^2.4.1
   shimmer: ^3.0.0
   smooth_sheets: ^1.0.0-f324.0.10.2
   stream_transform: ^2.1.1

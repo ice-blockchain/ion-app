@@ -499,17 +499,37 @@ class UserEventsMetadataBuilderException extends IONException {
       : super(10100, 'Unable to create user events metadata builder');
 }
 
-class FetchPushTranslationsException extends IONException {
-  FetchPushTranslationsException(dynamic error)
-      : super(10101, 'Failed to fetch push translations: $error');
+class FetchAppTranslationsException extends IONException {
+  FetchAppTranslationsException(dynamic error)
+      : super(10101, 'Failed to fetch app translations: $error');
+}
+
+class AppTranslationsCacheNotFoundException extends IONException {
+  AppTranslationsCacheNotFoundException(dynamic error)
+      : super(10102, 'Failed to find app translations cache: $error');
+}
+
+class ParseAppTranslationsException extends IONException {
+  ParseAppTranslationsException(dynamic error)
+      : super(10103, 'Failed to parse app translations: $error');
 }
 
 class CombineAudioFilesException extends IONException {
   CombineAudioFilesException({
     required this.logs,
     required this.stackTrace,
-  }) : super(10102, 'Failed to combine audio files');
+  }) : super(10104, 'Failed to combine audio files');
 
   final String logs;
   final String stackTrace;
+}
+
+class TranslationNotFoundException extends IONException {
+  TranslationNotFoundException(dynamic locale)
+      : super(10105, 'Translation not found for locale: $locale');
+}
+
+class UnsupportedTranslationTypeException extends IONException {
+  UnsupportedTranslationTypeException(dynamic error)
+      : super(10106, 'Unsupported translation type: $error');
 }

@@ -11,6 +11,7 @@ import 'package:ion/app/features/feed/data/models/entities/reaction_data.c.dart'
 import 'package:ion/app/features/feed/data/models/entities/repost_data.c.dart';
 import 'package:ion/app/features/feed/data/models/generic_repost.c.dart';
 import 'package:ion/app/features/ion_connect/ion_connect.dart';
+import 'package:ion/app/features/ion_connect/model/ion_connect_gift_wrap.c.dart';
 import 'package:ion/app/features/ion_connect/model/related_relay.c.dart';
 import 'package:ion/app/features/ion_connect/model/related_token.c.dart';
 import 'package:ion/app/features/push_notifications/data/models/push_notification_category.c.dart';
@@ -24,7 +25,6 @@ import 'package:ion/app/features/user/model/follow_list.c.dart';
 import 'package:ion/app/features/wallets/model/entities/funds_request_entity.c.dart';
 import 'package:ion/app/features/wallets/model/entities/wallet_asset_entity.c.dart';
 import 'package:ion/app/services/device_id/device_id.c.dart';
-import 'package:ion/app/services/ion_connect/ion_connect_gift_wrap_service.c.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'selected_push_categories_ion_subscription_provider.c.g.dart';
@@ -149,7 +149,7 @@ class SelectedPushCategoriesIonSubscription extends _$SelectedPushCategoriesIonS
         },
       ),
       RequestFilter(
-        kinds: const [IonConnectGiftWrapServiceImpl.kind],
+        kinds: const [IonConnectGiftWrapEntity.kind],
         tags: {
           '#k': [
             PrivateMessageReactionEntity.kind.toString(),
@@ -178,7 +178,7 @@ class SelectedPushCategoriesIonSubscription extends _$SelectedPushCategoriesIonS
     if (currentUserPubkey == null) throw UserMasterPubkeyNotFoundException();
     return [
       RequestFilter(
-        kinds: const [IonConnectGiftWrapServiceImpl.kind],
+        kinds: const [IonConnectGiftWrapEntity.kind],
         tags: {
           '#k': [
             ReplaceablePrivateDirectMessageEntity.kind.toString(),
@@ -194,7 +194,7 @@ class SelectedPushCategoriesIonSubscription extends _$SelectedPushCategoriesIonS
     if (currentUserPubkey == null) throw UserMasterPubkeyNotFoundException();
     return [
       RequestFilter(
-        kinds: const [IonConnectGiftWrapServiceImpl.kind],
+        kinds: const [IonConnectGiftWrapEntity.kind],
         tags: {
           '#k': [FundsRequestEntity.kind.toString()],
           '#p': [currentUserPubkey],
@@ -208,7 +208,7 @@ class SelectedPushCategoriesIonSubscription extends _$SelectedPushCategoriesIonS
     if (currentUserPubkey == null) throw UserMasterPubkeyNotFoundException();
     return [
       RequestFilter(
-        kinds: const [IonConnectGiftWrapServiceImpl.kind],
+        kinds: const [IonConnectGiftWrapEntity.kind],
         tags: {
           '#k': [WalletAssetEntity.kind.toString()],
           '#p': [currentUserPubkey],

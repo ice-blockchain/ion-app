@@ -3,6 +3,9 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:ion/app/services/storage/local_storage.c.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:shared_preferences_platform_interface/in_memory_shared_preferences_async.dart';
+import 'package:shared_preferences_platform_interface/shared_preferences_async_platform_interface.dart';
+import 'package:shared_preferences_platform_interface/shared_preferences_platform_interface.dart';
 
 enum TestEnum { one, two, three }
 
@@ -16,15 +19,17 @@ void main() {
   late LocalStorage localStorage;
 
   setUp(() async {
-    SharedPreferences.setMockInitialValues({});
-    final prefs = await SharedPreferences.getInstance();
+    SharedPreferencesStorePlatform.instance = InMemorySharedPreferencesStore.empty();
+    SharedPreferencesAsyncPlatform.instance = InMemorySharedPreferencesAsync.empty();
+    final prefs = await SharedPreferencesWithCache.create(
+      cacheOptions: const SharedPreferencesWithCacheOptions(),
+    );
     localStorage = LocalStorage(prefs);
   });
 
   group('LocalStorage', () {
     test('setBool() and getBool()', () {
       localStorage.setBool(key: testKey, value: testBoolValue);
-
       expect(localStorage.getBool(testKey), testBoolValue);
     });
 

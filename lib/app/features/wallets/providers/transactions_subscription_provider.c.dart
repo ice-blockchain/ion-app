@@ -8,6 +8,7 @@ import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/auth/providers/auth_provider.c.dart';
 import 'package:ion/app/features/auth/providers/onboarding_complete_provider.c.dart';
 import 'package:ion/app/features/ion_connect/ion_connect.dart';
+import 'package:ion/app/features/ion_connect/model/ion_connect_gift_wrap.c.dart';
 import 'package:ion/app/features/ion_connect/providers/entities_syncer_notifier.c.dart';
 import 'package:ion/app/features/ion_connect/providers/ion_connect_event_signer_provider.c.dart';
 import 'package:ion/app/features/ion_connect/providers/ion_connect_subscription_provider.c.dart';
@@ -53,7 +54,7 @@ Future<void> transactionsSubscription(Ref ref) async {
   }
 
   final requestFilter = RequestFilter(
-    kinds: const [IonConnectGiftWrapServiceImpl.kind],
+    kinds: const [IonConnectGiftWrapEntity.kind],
     since: DateTime.now().subtract(const Duration(days: 2)),
     tags: {
       '#k': [

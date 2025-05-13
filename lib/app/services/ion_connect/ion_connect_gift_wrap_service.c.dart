@@ -5,6 +5,7 @@ import 'dart:convert';
 
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/features/ion_connect/ion_connect.dart';
+import 'package:ion/app/features/ion_connect/model/ion_connect_gift_wrap.c.dart';
 import 'package:ion/app/features/ion_connect/model/related_pubkey.c.dart';
 import 'package:ion/app/services/ion_connect/ed25519_key_store.dart';
 import 'package:ion/app/services/ion_connect/encrypted_message_service.c.dart';
@@ -40,7 +41,6 @@ class IonConnectGiftWrapServiceImpl implements IonConnectGiftWrapService {
     required EncryptedMessageService encryptedMessageService,
   }) : _encryptedMessageService = encryptedMessageService;
 
-  static const int kind = 1059;
   final EncryptedMessageService _encryptedMessageService;
 
   @override
@@ -64,7 +64,7 @@ class IonConnectGiftWrapServiceImpl implements IonConnectGiftWrapService {
     );
 
     return EventMessage.fromData(
-      kind: kind,
+      kind: IonConnectGiftWrapEntity.kind,
       createdAt: createdAt,
       signer: oneTimeSigner,
       content: encryptedEvent,

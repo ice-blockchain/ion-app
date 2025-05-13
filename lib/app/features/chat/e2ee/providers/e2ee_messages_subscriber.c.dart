@@ -18,6 +18,7 @@ import 'package:ion/app/features/ion_connect/ion_connect.dart';
 import 'package:ion/app/features/ion_connect/model/action_source.c.dart';
 import 'package:ion/app/features/ion_connect/model/deletion_request.c.dart';
 import 'package:ion/app/features/ion_connect/model/event_reference.c.dart';
+import 'package:ion/app/features/ion_connect/model/ion_connect_gift_wrap.c.dart';
 import 'package:ion/app/features/ion_connect/providers/entities_syncer_notifier.c.dart';
 import 'package:ion/app/features/ion_connect/providers/ion_connect_event_signer_provider.c.dart';
 import 'package:ion/app/features/ion_connect/providers/ion_connect_subscription_provider.c.dart';
@@ -55,7 +56,7 @@ class E2eeMessagesSubscriber extends _$E2eeMessagesSubscriber {
     final sinceDate = latestEventMessageDate?.add(const Duration(days: -2));
 
     final requestFilter = RequestFilter(
-      kinds: const [IonConnectGiftWrapServiceImpl.kind],
+      kinds: const [IonConnectGiftWrapEntity.kind],
       tags: {
         '#k': [
           DeletionRequestEntity.kind.toString(),

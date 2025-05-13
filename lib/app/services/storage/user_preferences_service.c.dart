@@ -24,7 +24,7 @@ class UserPreferencesService {
   final String _identityKeyName;
   final LocalStorage _localStorage;
 
-  Future<bool> setValue<T>(String key, T value) {
+  Future<void> setValue<T>(String key, T value) {
     final userKey = _getUserKey(key);
     if (T == bool) {
       return _localStorage.setBool(key: userKey, value: value as bool);
@@ -77,7 +77,7 @@ class UserPreferencesService {
     return _localStorage.getEnum(userKey, values);
   }
 
-  Future<bool> remove(String key) {
+  Future<void> remove(String key) {
     final userKey = _getUserKey(key);
     return _localStorage.remove(userKey);
   }

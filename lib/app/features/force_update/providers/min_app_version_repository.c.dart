@@ -10,7 +10,6 @@ import 'package:ion/app/features/core/providers/dio_provider.c.dart';
 import 'package:ion/app/features/core/providers/env_provider.c.dart';
 import 'package:ion/app/services/storage/local_storage.c.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 part 'min_app_version_repository.c.g.dart';
 
@@ -43,13 +42,12 @@ enum MinAppVersionConfigName {
 
 @Riverpod(keepAlive: true)
 Future<MinAppVersionRepository> minAppVersionRepository(Ref ref) async {
-  final prefs = await ref.watch(sharedPreferencesProvider.future);
   return MinAppVersionRepository(
     dio: ref.watch(dioProvider),
     refreshInterval:
         ref.watch(envProvider.notifier).get<int>(EnvVariable.VERSIONS_CONFIG_REFETCH_INTERVAL),
     ionOrigin: ref.watch(envProvider.notifier).get<String>(EnvVariable.ION_ORIGIN),
-    prefs: prefs,
+    localStorage: await ref.watch(localStorageAsyncProvider.future),
   );
 }
 
@@ -58,16 +56,16 @@ class MinAppVersionRepository {
     required Dio dio,
     required int refreshInterval,
     required String ionOrigin,
-    required SharedPreferences prefs,
+    required LocalStorage localStorage,
   })  : _dio = dio,
         _refreshInterval = refreshInterval,
         _ionOrigin = ionOrigin,
-        _prefs = prefs;
+        _localStorage = localStorage;
 
   final Dio _dio;
   final int _refreshInterval;
   final String _ionOrigin;
-  final SharedPreferences _prefs;
+  final LocalStorage _localStorage;
 
   static const String _lastSyncDateKey = 'MinSupportedAppVersion:syncDate';
   static const String _minSupportedAppVersionKey = 'MinSupportedAppVersion:version';
@@ -95,7 +93,7 @@ class MinAppVersionRepository {
   }
 
   String? _getFromCache() {
-    final lastSyncDate = _prefs.getString(_lastSyncDateKey);
+    final lastSyncDate = _localStorage.getString(_lastSyncDateKey);
     final cacheAvailable = lastSyncDate != null &&
         DateTime.now().difference(DateTime.parse(lastSyncDate)).inMilliseconds < _refreshInterval;
 
@@ -103,13 +101,13 @@ class MinAppVersionRepository {
       return null;
     }
 
-    return _prefs.getString(_minSupportedAppVersionKey);
+    return _localStorage.getString(_minSupportedAppVersionKey);
   }
 
   Future<void> _saveToCache(String version) async {
     await Future.wait([
-      _prefs.setString(_lastSyncDateKey, DateTime.now().toIso8601String()),
-      _prefs.setString(_minSupportedAppVersionKey, version),
+      _localStorage.setString(_lastSyncDateKey, DateTime.now().toIso8601String()),
+      _localStorage.setString(_minSupportedAppVersionKey, version),
     ]);
   }
 }

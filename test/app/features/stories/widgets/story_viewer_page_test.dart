@@ -21,6 +21,9 @@ import 'package:ion/app/services/storage/local_storage.c.dart';
 import 'package:ion/app/services/storage/user_preferences_service.c.dart';
 import 'package:ion/generated/app_localizations.dart';
 import 'package:mocktail/mocktail.dart';
+import 'package:shared_preferences_platform_interface/in_memory_shared_preferences_async.dart';
+import 'package:shared_preferences_platform_interface/shared_preferences_async_platform_interface.dart';
+import 'package:shared_preferences_platform_interface/shared_preferences_platform_interface.dart';
 
 import '../../../../mocks.dart';
 import '../helpers/story_test_models.dart';
@@ -48,6 +51,11 @@ void main() {
   );
 
   setUpAll(registerStoriesFallbacks);
+
+  setUp(() async {
+    SharedPreferencesStorePlatform.instance = InMemorySharedPreferencesStore.empty();
+    SharedPreferencesAsyncPlatform.instance = InMemorySharedPreferencesAsync.empty();
+  });
 
   Future<void> pumpPage(
     WidgetTester tester, {
