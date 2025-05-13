@@ -22,6 +22,7 @@ import 'package:ion/app/features/chat/community/channel/views/pages/create_chann
 import 'package:ion/app/features/chat/community/channel/views/pages/edit_channel_page/edit_channel_page.dart';
 import 'package:ion/app/features/chat/recent_chats/views/pages/delete_conversation_modal/delete_conversation_modal.dart';
 import 'package:ion/app/features/chat/recent_chats/views/pages/delete_message_modal/delete_message_modal.dart';
+import 'package:ion/app/features/chat/views/components/message_items/message_types/money_message/components/address_not_found_chat_modal.dart';
 import 'package:ion/app/features/chat/views/pages/chat_add_poll_modal/chat_add_poll_modal.dart';
 import 'package:ion/app/features/chat/views/pages/chat_learn_more_modal/chat_learn_more_modal.dart';
 import 'package:ion/app/features/chat/views/pages/chat_main_modal/chat_main_modal_page.dart';
@@ -122,7 +123,7 @@ import 'package:ion/app/features/video/views/pages/feed_videos_page.dart';
 import 'package:ion/app/features/video/views/pages/profile_videos_page.dart';
 import 'package:ion/app/features/video/views/pages/reply_list_videos_page.dart';
 import 'package:ion/app/features/video/views/pages/trending_videos_page.dart';
-import 'package:ion/app/features/wallets/views/pages/address_not_found_modal.dart';
+import 'package:ion/app/features/wallets/views/pages/address_not_found_wallet_modal.dart';
 import 'package:ion/app/features/wallets/views/pages/coins_flow/coin_details/coin_details_page.dart';
 import 'package:ion/app/features/wallets/views/pages/coins_flow/coin_receive_modal/coin_receive_modal.dart';
 import 'package:ion/app/features/wallets/views/pages/coins_flow/contact_picker/contact_picker_modal.dart';

@@ -2,10 +2,10 @@
 
 import 'package:collection/collection.dart';
 import 'package:ion/app/features/core/providers/wallets_provider.c.dart';
+import 'package:ion/app/features/wallets/model/coins_group.c.dart';
 import 'package:ion/app/features/wallets/model/network_data.c.dart';
 import 'package:ion/app/features/wallets/providers/connected_crypto_wallets_provider.c.dart';
 import 'package:ion/app/features/wallets/providers/wallet_view_data_provider.c.dart';
-import 'package:ion/app/features/wallets/views/pages/coins_flow/receive_coins/providers/receive_coins_form_provider.c.dart';
 import 'package:ion/app/services/ion_identity/ion_identity_client_provider.c.dart';
 import 'package:ion_identity_client/ion_identity.dart' as ion;
 import 'package:riverpod_annotation/riverpod_annotation.dart';
@@ -42,12 +42,11 @@ class WalletAddressNotifier extends _$WalletAddressNotifier {
     return walletAddress;
   }
 
-  Future<String?> loadWalletAddress() async {
-    final form = ref.read(receiveCoinsFormControllerProvider);
-    final network = form.selectedNetwork;
-    final selectedCoin = form.selectedCoin;
-
-    final coin = selectedCoin?.coins.firstWhereOrNull(
+  Future<String?> loadWalletAddress({
+    required NetworkData? network,
+    required CoinsGroup? coinsGroup,
+  }) async {
+    final coin = coinsGroup?.coins.firstWhereOrNull(
       (coinInWallet) => coinInWallet.coin.network == network,
     );
 

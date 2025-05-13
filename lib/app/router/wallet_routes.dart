@@ -359,8 +359,8 @@ class DeleteWalletRoute extends BaseRouteData {
 class AddressNotFoundRoute extends BaseRouteData {
   AddressNotFoundRoute()
       : super(
-          child: AddressNotFoundModal(
-            onContinue: (context) => CoinReceiveRoute().replace(context),
+          child: AddressNotFoundWalletModal(
+            onWalletCreated: (context) => CoinReceiveRoute().replace(context),
           ),
           type: IceRouteType.bottomSheet,
         );
@@ -369,8 +369,8 @@ class AddressNotFoundRoute extends BaseRouteData {
 class AddressNotFoundReceiveRoute extends BaseRouteData {
   AddressNotFoundReceiveRoute()
       : super(
-          child: AddressNotFoundModal(
-            onContinue: (context) => ShareAddressRoute().replace(context),
+          child: AddressNotFoundWalletModal(
+            onWalletCreated: (context) => ShareAddressRoute().replace(context),
           ),
           type: IceRouteType.bottomSheet,
         );

@@ -1,6 +1,5 @@
 // SPDX-License-Identifier: ice License 1.0
 
-import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/components/button/button.dart';
@@ -10,11 +9,8 @@ import 'package:ion/app/components/screen_offset/screen_side_offset.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/components/verify_identity/verify_identity_prompt_dialog_helper.dart';
 import 'package:ion/app/features/wallets/model/network_data.c.dart';
-import 'package:ion/app/features/wallets/providers/coins_by_filters_provider.c.dart';
 import 'package:ion/app/features/wallets/views/components/network_icon_widget.dart';
-import 'package:ion/app/features/wallets/views/pages/coins_flow/receive_coins/providers/receive_coins_form_provider.c.dart';
 import 'package:ion/app/features/wallets/views/pages/coins_flow/receive_coins/providers/wallet_address_notifier_provider.c.dart';
-import 'package:ion/app/hooks/use_on_init.dart';
 import 'package:ion/app/router/components/navigation_app_bar/navigation_app_bar.dart';
 import 'package:ion/app/router/components/navigation_app_bar/navigation_close_button.dart';
 import 'package:ion/app/router/components/sheet_content/sheet_content.dart';
@@ -22,9 +18,14 @@ import 'package:ion/generated/assets.gen.dart';
 import 'package:ion_identity_client/ion_identity.dart';
 
 class AddressNotFoundModal extends HookConsumerWidget {
-  const AddressNotFoundModal({required this.onContinue, super.key});
+  const AddressNotFoundModal({
+    required this.network,
+    required this.onWalletCreated,
+    super.key,
+  });
 
-  final void Function(BuildContext context) onContinue;
+  final NetworkData? network;
+  final ValueChanged<String> onWalletCreated;
 
   static double get buttonsSize => 56.0.s;
 
@@ -32,48 +33,11 @@ class AddressNotFoundModal extends HookConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final buttonMinimalSize = Size(buttonsSize, buttonsSize);
 
-    final coinsGroup = ref.watch(
-      receiveCoinsFormControllerProvider.select((state) => state.selectedCoin),
-    )!;
-    final selectedNetwork = ref.watch(
-      receiveCoinsFormControllerProvider.select((state) => state.selectedNetwork),
-    );
-
-    final coinsWithNetworkOptions = ref.watch(
-      coinsByFiltersProvider(
-        symbol: coinsGroup.abbreviation,
-        symbolGroup: coinsGroup.symbolGroup,
-      ),
-    );
-
     final isCreatingWallet = ref.watch(
       walletAddressNotifierProvider.select((state) => state.isLoading),
     );
 
-    useOnInit(
-      () {
-        if (selectedNetwork == null) {
-          coinsWithNetworkOptions.maybeWhen(
-            data: (options) {
-              var coinInWallet = options.firstWhereOrNull(
-                (coinInWallet) => coinInWallet.walletId != null,
-              );
-              coinInWallet ??= options.firstOrNull;
-
-              if (coinInWallet != null) {
-                ref
-                    .read(receiveCoinsFormControllerProvider.notifier)
-                    .setNetwork(coinInWallet.coin.network);
-              }
-            },
-            orElse: () {},
-          );
-        }
-      },
-      [coinsWithNetworkOptions],
-    );
-
-    final networkDisplayName = selectedNetwork?.displayName ?? '';
+    final networkDisplayName = network?.displayName ?? '';
 
     return SheetContent(
       body: ScreenSideOffset.small(
@@ -86,9 +50,7 @@ class AddressNotFoundModal extends HookConsumerWidget {
             ),
             Padding(
               padding: EdgeInsetsDirectional.only(top: 22.0.s, bottom: 4.0.s),
-              child: _WalletNetworkIcon(
-                networkIconUrl: selectedNetwork?.image ?? '',
-              ),
+              child: _WalletNetworkIcon(networkIconUrl: network?.image ?? ''),
             ),
             Text(
               context.i18n.wallet_address_set_up(networkDisplayName),
@@ -119,7 +81,7 @@ class AddressNotFoundModal extends HookConsumerWidget {
                   color: context.theme.appColors.onPrimaryAccent,
                 ),
                 trailingIcon: isCreatingWallet ? const IONLoadingIndicator() : null,
-                onPressed: () => _createWalletAddress(ref, selectedNetwork),
+                onPressed: () => _createWalletAddress(ref, network),
                 minimumSize: buttonMinimalSize,
                 mainAxisSize: MainAxisSize.max,
               ),
@@ -154,8 +116,7 @@ class AddressNotFoundModal extends HookConsumerWidget {
     );
 
     if (address != null && ref.context.mounted) {
-      ref.read(receiveCoinsFormControllerProvider.notifier).setWalletAddress(address!);
-      onContinue(ref.context);
+      onWalletCreated(address!);
     }
   }
 }

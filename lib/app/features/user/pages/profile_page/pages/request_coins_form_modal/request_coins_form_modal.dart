@@ -3,6 +3,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_keyboard_visibility/flutter_keyboard_visibility.dart';
+import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/components/button/button.dart';
 import 'package:ion/app/components/list_items_loading_state/item_loading_state.dart';
@@ -16,6 +17,7 @@ import 'package:ion/app/features/user/model/payment_type.dart';
 import 'package:ion/app/features/user/pages/profile_page/components/user_payment_flow_card/user_payment_flow_card.dart';
 import 'package:ion/app/features/user/providers/request_coins_form_provider.c.dart';
 import 'package:ion/app/features/user/providers/request_coins_submit_notifier.c.dart';
+import 'package:ion/app/features/wallets/hooks/use_check_wallet_address_available.dart';
 import 'package:ion/app/features/wallets/model/coin_in_wallet_data.c.dart';
 import 'package:ion/app/features/wallets/model/crypto_asset_to_send_data.c.dart';
 import 'package:ion/app/features/wallets/views/pages/coins_flow/send_coins/components/buttons/coin_amount_input.dart';
@@ -27,10 +29,15 @@ import 'package:ion/app/router/components/navigation_app_bar/navigation_close_bu
 import 'package:ion/app/router/components/sheet_content/sheet_content.dart';
 import 'package:ion/generated/assets.gen.dart';
 
+typedef AddressNotFoundRouteLocationBuilder = String Function();
+
 class RequestCoinsFormModal extends HookConsumerWidget {
   const RequestCoinsFormModal({
+    required this.addressNotFoundRouteLocationBuilder,
     super.key,
   });
+
+  final AddressNotFoundRouteLocationBuilder addressNotFoundRouteLocationBuilder;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -52,6 +59,14 @@ class RequestCoinsFormModal extends HookConsumerWidget {
 
     final isLoading = ref.watch(requestCoinsSubmitNotifierProvider).isLoading;
     final isButtonDisabled = amountController.text.isEmpty || isLoading;
+
+    useCheckWalletAddressAvailable(
+      ref,
+      network: form.network,
+      coinsGroup: coin?.coinsGroup,
+      onAddressMissing: () => context.replace(addressNotFoundRouteLocationBuilder()),
+      keys: [form.network, coin?.coinsGroup],
+    );
 
     useOnInit(
       () {

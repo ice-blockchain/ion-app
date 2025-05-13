@@ -22,6 +22,7 @@ class ProfileRoutes {
         TypedGoRoute<CoinTransactionDetailsProfileRoute>(path: 'coin-transaction-details'),
         TypedGoRoute<ExploreTransactionDetailsProfileRoute>(path: 'coin-transaction-explore'),
         TypedGoRoute<RequestCoinsFormRoute>(path: 'request-coins-form'),
+        TypedGoRoute<AddressNotFoundProfileRoute>(path: 'address-not-found'),
         ...SettingsRoutes.routes,
       ],
     ),
@@ -151,6 +152,16 @@ class SelectNetworkProfileRoute extends BaseRouteData {
   final PaymentType paymentType;
 }
 
+class AddressNotFoundProfileRoute extends BaseRouteData {
+  AddressNotFoundProfileRoute()
+      : super(
+          child: AddressNotFoundChatModal(
+            onWalletCreated: (context) => RequestCoinsFormRoute().replace(context),
+          ),
+          type: IceRouteType.bottomSheet,
+        );
+}
+
 class SendCoinsFormProfileRoute extends BaseRouteData {
   SendCoinsFormProfileRoute()
       : super(
@@ -211,7 +222,9 @@ class ExploreTransactionDetailsProfileRoute extends BaseRouteData {
 class RequestCoinsFormRoute extends BaseRouteData {
   RequestCoinsFormRoute()
       : super(
-          child: const RequestCoinsFormModal(),
+          child: RequestCoinsFormModal(
+            addressNotFoundRouteLocationBuilder: () => AddressNotFoundProfileRoute().location,
+          ),
           type: IceRouteType.bottomSheet,
         );
 }

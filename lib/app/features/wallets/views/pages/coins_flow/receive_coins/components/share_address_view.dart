@@ -21,9 +21,21 @@ class ShareAddressView extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final network = ref.watch(
+      receiveCoinsFormControllerProvider.select((state) => state.selectedNetwork),
+    );
+    final coin = ref.watch(
+      receiveCoinsFormControllerProvider.select((state) => state.selectedCoin),
+    );
+
     useCheckWalletAddressAvailable(
       ref,
+      network: network,
+      coinsGroup: coin,
+      onAddressFound: (address) =>
+          ref.read(receiveCoinsFormControllerProvider.notifier).setWalletAddress(address),
       onAddressMissing: () => AddressNotFoundReceiveRoute().replace(ref.context),
+      keys: [network, coin],
     );
 
     final walletAddress = ref.watch(

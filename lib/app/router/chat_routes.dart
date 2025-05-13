@@ -39,6 +39,7 @@ class ChatRoutes {
         TypedGoRoute<CoinTransactionDetailsChatRoute>(path: 'coin-transaction-details-chat'),
         TypedGoRoute<ExploreTransactionDetailsChatRoute>(path: 'coin-transaction-explore-chat'),
         TypedGoRoute<RequestCoinsFormChatRoute>(path: 'request-coins-form-chat'),
+        TypedGoRoute<AddressNotFoundChatRoute>(path: 'address-not-found'),
       ],
     ),
   ];
@@ -257,6 +258,16 @@ class SelectNetworkChatRoute extends BaseRouteData {
   final PaymentType paymentType;
 }
 
+class AddressNotFoundChatRoute extends BaseRouteData {
+  AddressNotFoundChatRoute()
+      : super(
+          child: AddressNotFoundChatModal(
+            onWalletCreated: (context) => RequestCoinsFormChatRoute().replace(context),
+          ),
+          type: IceRouteType.bottomSheet,
+        );
+}
+
 class CoinSendScanChatRoute extends BaseRouteData {
   CoinSendScanChatRoute()
       : super(
@@ -340,7 +351,9 @@ class ExploreTransactionDetailsChatRoute extends BaseRouteData {
 class RequestCoinsFormChatRoute extends BaseRouteData {
   RequestCoinsFormChatRoute()
       : super(
-          child: const RequestCoinsFormModal(),
+          child: RequestCoinsFormModal(
+            addressNotFoundRouteLocationBuilder: () => AddressNotFoundChatRoute().location,
+          ),
           type: IceRouteType.bottomSheet,
         );
 }

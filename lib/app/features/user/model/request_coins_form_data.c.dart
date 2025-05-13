@@ -11,7 +11,6 @@ part 'request_coins_form_data.c.freezed.dart';
 @freezed
 class RequestCoinsFormData with _$RequestCoinsFormData {
   const factory RequestCoinsFormData({
-    required WalletViewData wallet,
     CoinAssetToSendData? assetData,
     NetworkData? network,
     Wallet? toWallet,
