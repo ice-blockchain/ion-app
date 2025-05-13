@@ -13,9 +13,9 @@ part 'followers_count_provider.c.g.dart';
 
 @riverpod
 FutureOr<int?> followersCount(
-  Ref ref, {
-  required String pubkey,
-}) async {
+  Ref ref,
+  String pubkey,
+) async {
   final filters = [
     RequestFilter(
       kinds: const [FollowListEntity.kind],
@@ -31,7 +31,6 @@ FutureOr<int?> followersCount(
       requestData: EventCountRequestData(filters: filters),
       key: pubkey,
       type: EventCountResultType.followers,
-      cache: false,
     ).future,
   ) as FutureOr<int?>;
 }

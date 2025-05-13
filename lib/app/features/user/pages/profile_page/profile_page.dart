@@ -6,10 +6,11 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/components/screen_offset/screen_top_offset.dart';
 import 'package:ion/app/components/separated/separator.dart';
 import 'package:ion/app/extensions/extensions.dart';
+import 'package:ion/app/features/feed/data/models/entities/event_count_result_data.c.dart';
 import 'package:ion/app/features/ion_connect/providers/ion_connect_cache.c.dart';
 import 'package:ion/app/features/user/model/tab_entity_type.dart';
 import 'package:ion/app/features/user/model/user_content_type.dart';
-import 'package:ion/app/features/user/model/user_metadata.c.dart';
+
 import 'package:ion/app/features/user/pages/components/header_action/header_action.dart';
 import 'package:ion/app/features/user/pages/components/profile_avatar/profile_avatar.dart';
 import 'package:ion/app/features/user/pages/profile_page/cant_find_profile_page.dart';
@@ -41,17 +42,21 @@ class ProfilePage extends HookConsumerWidget {
     final isBlocking = ref.watch(isBlockingProvider(pubkey)).valueOrNull;
     final userMetadata = ref.watch(userMetadataProvider(pubkey));
 
-    if (userMetadata.isLoading || isBlocking == null) {
+    final didRefresh = useState(false);
+
+    if (!didRefresh.value && (userMetadata.isLoading || isBlocking == null)) {
       return Scaffold(
         appBar: NavigationAppBar(
           useScreenTopOffset: true,
           showBackButton: showBackButton,
         ),
-        body: const SizedBox(),
+        body: const Center(
+          child: CircularProgressIndicator(),
+        ),
       );
     }
 
-    final isBlockedOrBlocking = isBlocked || isBlocking;
+    final isBlockedOrBlocking = isBlocked || isBlocking.falseOrValue;
     if (!userMetadata.hasValue || isBlockedOrBlocking) {
       return const CantFindProfilePage();
     }
@@ -60,6 +65,21 @@ class ProfilePage extends HookConsumerWidget {
     final (:opacity) = useAnimatedOpacityOnScroll(scrollController, topOffset: paddingTop);
 
     final backgroundColor = context.theme.appColors.secondaryBackground;
+
+    final onRefresh = useCallback(
+      () {
+        didRefresh.value = true;
+        if (userMetadata.value == null) return;
+        ref.read(ionConnectCacheProvider.notifier).remove(userMetadata.value!.cacheKey);
+        ref.read(ionConnectCacheProvider.notifier).remove(
+              EventCountResultEntity.cacheKeyBuilder(
+                key: pubkey,
+                type: EventCountResultType.followers,
+              ),
+            );
+      },
+      [userMetadata.value?.cacheKey],
+    );
 
     return Scaffold(
       body: ColoredBox(
@@ -101,12 +121,12 @@ class ProfilePage extends HookConsumerWidget {
                           (type) => type == TabEntityType.replies
                               ? TabEntitiesList.replies(
                                   pubkey: pubkey,
-                                  onRefresh: () => _onRefresh(ref, userMetadata.value),
+                                  onRefresh: onRefresh,
                                 )
                               : TabEntitiesList(
                                   pubkey: pubkey,
                                   type: type,
-                                  onRefresh: () => _onRefresh(ref, userMetadata.value),
+                                  onRefresh: onRefresh,
                                 ),
                         )
                         .toList(),
@@ -130,10 +150,5 @@ class ProfilePage extends HookConsumerWidget {
         ),
       ),
     );
-  }
-
-  void _onRefresh(WidgetRef ref, UserMetadataEntity? userMetadata) {
-    if (userMetadata == null) return;
-    ref.read(ionConnectCacheProvider.notifier).remove(userMetadata.cacheKey);
   }
 }

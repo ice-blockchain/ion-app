@@ -24,7 +24,7 @@ class FollowersList extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final followersCount = ref.watch(followersCountProvider(pubkey: pubkey)).valueOrNull;
+    final followersCount = ref.watch(followersCountProvider(pubkey)).valueOrNull;
 
     final searchQuery = useState('');
     final debouncedQuery = useDebounced(searchQuery.value, const Duration(milliseconds: 300)) ?? '';
