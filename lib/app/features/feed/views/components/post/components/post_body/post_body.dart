@@ -7,6 +7,7 @@ import 'package:flutter_quill/flutter_quill.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/components/text_editor/text_editor_preview.dart';
 import 'package:ion/app/components/text_editor/utils/is_attributed_operation.dart';
+import 'package:ion/app/extensions/delta.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/feed/data/models/entities/modifiable_post_data.c.dart';
 import 'package:ion/app/features/feed/data/models/entities/post_data.c.dart';
@@ -88,7 +89,7 @@ class PostBody extends HookConsumerWidget {
               padding: EdgeInsets.symmetric(horizontal: sidePadding ?? 16.0.s),
               child: Column(
                 children: [
-                  if (content.isNotEmpty)
+                  if (content.isNotEmpty && !content.isSingleLinkOnly)
                     ClipRect(
                       child: SizedBox(
                         height: maxHeight,
