@@ -71,7 +71,7 @@ class CoinDetailsPage extends HookConsumerWidget {
           ],
         ),
       ),
-      body: PullToRefreshBuilder(
+      body: LoadMoreBuilder(
         slivers: [
           SliverToBoxAdapter(
             child: Column(
@@ -136,14 +136,14 @@ class CoinDetailsPage extends HookConsumerWidget {
               ),
             ],
         ],
-        onRefresh: () async {
-          ref
-            ..invalidate(walletViewsDataNotifierProvider)
-            ..invalidate(coinTransactionHistoryNotifierProvider(symbolGroup: symbolGroup));
-        },
-        builder: (context, slivers) => LoadMoreBuilder(
-          hasMore: history?.hasMore ?? false,
-          onLoadMore: historyNotifier.loadMore,
+        hasMore: history?.hasMore ?? false,
+        onLoadMore: historyNotifier.loadMore,
+        builder: (context, slivers) => PullToRefreshBuilder(
+          onRefresh: () async {
+            ref
+              ..invalidate(walletViewsDataNotifierProvider)
+              ..invalidate(coinTransactionHistoryNotifierProvider(symbolGroup: symbolGroup));
+          },
           slivers: slivers,
         ),
       ),

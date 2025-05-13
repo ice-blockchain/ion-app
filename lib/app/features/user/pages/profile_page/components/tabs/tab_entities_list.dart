@@ -91,9 +91,6 @@ class TabEntitiesList extends ConsumerWidget {
                 ),
       ],
       builder: (context, slivers) => PullToRefreshBuilder(
-        builder: (context, slivers) => CustomScrollView(
-          slivers: slivers,
-        ),
         slivers: slivers,
         onRefresh: () async {
           ref.invalidate(entitiesPagedDataProvider(dataSource));
