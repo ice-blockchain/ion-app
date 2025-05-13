@@ -49,7 +49,12 @@ class IonConnectPushDataPayload with _$IonConnectPushDataPayload {
     required String currentPubkey,
   }) {
     final entity = mainEntity;
-    if (entity is ModifiablePostEntity || entity is PostEntity) {
+    if (entity is GenericRepostEntity ||
+        entity is RepostEntity ||
+        (entity is ModifiablePostEntity && entity.data.quotedEvent != null) ||
+        (entity is PostEntity && entity.data.quotedEvent != null)) {
+      return PushNotificationType.repost;
+    } else if (entity is ModifiablePostEntity || entity is PostEntity) {
       final currentUserMention =
           ReplaceableEventReference(pubkey: currentPubkey, kind: UserMetadataEntity.kind).encode();
       final content = switch (entity) {
@@ -62,8 +67,6 @@ class IonConnectPushDataPayload with _$IonConnectPushDataPayload {
       } else {
         return PushNotificationType.reply;
       }
-    } else if (entity is GenericRepostEntity || entity is RepostEntity) {
-      return PushNotificationType.repost;
     } else if (entity is ReactionEntity) {
       return PushNotificationType.like;
     } else if (entity is FollowListEntity) {
