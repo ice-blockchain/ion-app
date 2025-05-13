@@ -76,9 +76,10 @@ class SendE2eeChatMessageService {
             .read(conversationPubkeysProvider.notifier)
             .fetchUsersKeys(participantsMasterPubkeys);
 
+    final createdAt = DateTime.now();
+
     try {
-      final publishedAt =
-          editedMessageEntity?.publishedAt ?? EntityPublishedAt(value: DateTime.now());
+      final publishedAt = editedMessageEntity?.publishedAt ?? EntityPublishedAt(value: createdAt);
 
       final editingEndedAt = editedMessageEntity?.editingEndedAt ??
           EntityEditingEndedAt.build(
@@ -116,9 +117,8 @@ class SendE2eeChatMessageService {
 
       eventReference = localEventMessageData.toReplaceableEventReference(currentUserMasterPubkey);
 
-      final localEventMessage = await localEventMessageData.toEventMessage(
-        NoPrivateSigner(eventSigner.publicKey),
-      );
+      final localEventMessage = await localEventMessageData
+          .toEventMessage(NoPrivateSigner(eventSigner.publicKey), createdAt: createdAt);
 
       sentMessage = localEventMessage;
 
@@ -175,7 +175,7 @@ class SendE2eeChatMessageService {
                 groupSubject: subject.isNotEmpty ? GroupSubject(subject!) : null,
                 relatedEvents:
                     editedMessageEntity?.relatedEvents ?? _generateRelatedEvents(repliedMessage),
-              ).toEventMessage(NoPrivateSigner(eventSigner.publicKey));
+              ).toEventMessage(NoPrivateSigner(eventSigner.publicKey), createdAt: createdAt);
 
               await sendWrappedMessage(
                 pubkey: pubkey,

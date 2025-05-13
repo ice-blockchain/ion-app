@@ -132,11 +132,9 @@ class ReplaceablePrivateDirectMessageData
     DateTime? createdAt,
     DateTime? publishedAtTime,
   }) {
-    final createdAt = DateTime.now();
-
     return EventMessage.fromData(
       signer: signer,
-      createdAt: createdAt,
+      createdAt: createdAt ?? DateTime.now(),
       kind: ReplaceablePrivateDirectMessageEntity.kind,
       content: content,
       tags: [
