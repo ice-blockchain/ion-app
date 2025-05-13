@@ -179,8 +179,7 @@ class AppTranslationsRepository<T extends TranslationWithVersion> {
     return '${directory.path}/${_getCacheFileName(locale: locale)}';
   }
 
-  String _getCacheFileName({required Locale locale}) =>
-      'app_translations.${locale.languageCode}.json';
+  String _getCacheFileName({required Locale locale}) => '$_path.${locale.languageCode}.json';
 
   String _getCacheVersionKey({required Locale locale}) => 'cache_version_${locale.languageCode}';
 }
