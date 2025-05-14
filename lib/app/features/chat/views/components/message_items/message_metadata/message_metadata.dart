@@ -1,6 +1,7 @@
 // SPDX-License-Identifier: ice License 1.0
 
 import 'package:flutter/material.dart';
+import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/auth/providers/auth_provider.c.dart';
@@ -11,7 +12,7 @@ import 'package:ion/app/features/ion_connect/ion_connect.dart';
 import 'package:ion/app/utils/date.dart';
 import 'package:ion/generated/assets.gen.dart';
 
-class MessageMetaData extends ConsumerWidget {
+class MessageMetaData extends HookConsumerWidget {
   const MessageMetaData({
     required this.eventMessage,
     super.key,
@@ -27,12 +28,18 @@ class MessageMetaData extends ConsumerWidget {
     final eventReference =
         ReplaceablePrivateDirectMessageEntity.fromEventMessage(eventMessage).toEventReference();
 
-    final deliveryStatus = ref.watch(conversationMessageDataDaoProvider).messageStatus(
-          eventReference: eventReference,
-          currentUserMasterPubkey: currentUserMasterPubkey!,
-        );
-
     final isMe = ref.watch(isCurrentUserSelectorProvider(eventMessage.masterPubkey));
+
+    final deliveryStatus = useStream(
+      useMemoized(
+        () => ref.watch(conversationMessageDataDaoProvider).messageStatus(
+              eventReference: eventReference,
+              currentUserMasterPubkey: currentUserMasterPubkey!,
+            ),
+        [eventReference, currentUserMasterPubkey],
+      ),
+    );
+
     final entityData = ReplaceablePrivateDirectMessageData.fromEventMessage(eventMessage);
 
     return Padding(
@@ -61,12 +68,9 @@ class MessageMetaData extends ConsumerWidget {
             ),
           ),
           if (isMe)
-            StreamBuilder<MessageDeliveryStatus>(
-              stream: deliveryStatus,
-              builder: (context, snapshot) => Padding(
-                padding: EdgeInsetsDirectional.only(start: 2.0.s),
-                child: statusIcon(context, snapshot.data ?? MessageDeliveryStatus.created),
-              ),
+            Padding(
+              padding: EdgeInsetsDirectional.only(start: 2.0.s),
+              child: statusIcon(context, deliveryStatus.data ?? MessageDeliveryStatus.created),
             ),
         ],
       ),

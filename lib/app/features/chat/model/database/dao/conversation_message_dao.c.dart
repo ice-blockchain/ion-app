@@ -37,6 +37,7 @@ class ConversationMessageDao extends DatabaseAccessor<ChatDatabase>
       ..where(conversationMessageTable.conversationId.equals(conversationId))
       ..where(messageStatusTable.masterPubkey.equals(currentUserMasterPubkey))
       ..where(messageStatusTable.status.equals(MessageDeliveryStatus.received.index))
+      ..where(conversationMessageTable.isDeleted.equals(false))
       ..groupBy([messageStatusTable.messageEventReference]);
 
     return query.watch().map((rows) => rows.length);
@@ -59,6 +60,7 @@ class ConversationMessageDao extends DatabaseAccessor<ChatDatabase>
       ..where(conversationTable.isArchived.equals(true))
       ..where(messageStatusTable.masterPubkey.equals(currentUserMasterPubkey))
       ..where(messageStatusTable.status.equals(MessageDeliveryStatus.received.index))
+      ..where(conversationMessageTable.isDeleted.equals(false))
       ..groupBy([messageStatusTable.messageEventReference]);
 
     return query.watch().map((rows) => rows.length);
@@ -84,6 +86,7 @@ class ConversationMessageDao extends DatabaseAccessor<ChatDatabase>
       )
       ..where(messageStatusTable.status.equals(MessageDeliveryStatus.received.index))
       ..where(messageStatusTable.masterPubkey.equals(masterPubkey))
+      ..where(conversationMessageTable.isDeleted.equals(false))
       ..groupBy([eventMessageTable.masterPubkey]);
 
     return query.watch().map((rows) {

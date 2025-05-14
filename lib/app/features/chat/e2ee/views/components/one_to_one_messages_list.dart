@@ -31,18 +31,14 @@ class OneToOneMessageList extends HookConsumerWidget {
       () {
         WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
           if (messages.isNotEmpty) {
-            Future<void>.delayed(const Duration(seconds: 2)).then((value) {
-              if (context.mounted) {
-                unawaited(
-                  ref.watch(sendE2eeMessageStatusServiceProvider.future).then((value) {
-                    value.sendMessageStatus(
-                      messageEventMessage: messages.last,
-                      status: MessageDeliveryStatus.read,
-                    );
-                  }),
+            unawaited(
+              ref.watch(sendE2eeMessageStatusServiceProvider.future).then((value) {
+                value.sendMessageStatus(
+                  messageEventMessage: messages.last,
+                  status: MessageDeliveryStatus.read,
                 );
-              }
-            });
+              }),
+            );
           }
         });
         return null;
@@ -89,6 +85,7 @@ class OneToOneMessageList extends HookConsumerWidget {
             final eventData = ReplaceablePrivateDirectMessageData.fromEventMessage(message);
             return Column(
               mainAxisSize: MainAxisSize.min,
+              key: ValueKey(message.sharedId),
               children: [
                 if (previousMessage == null ||
                     previousMessage.createdAt.day != message.createdAt.day)

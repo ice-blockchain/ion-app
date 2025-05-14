@@ -158,7 +158,7 @@ class _TextMessageContent extends HookWidget {
         children: [
           _TextRichContent(text: content, textStyle: textStyle),
           if (hasRepliedMessage) const Spacer(),
-          MessageMetaData(eventMessage: eventMessage, key: metadataRef.value),
+          MessageMetaData(eventMessage: eventMessage),
         ],
       );
     } else {
