@@ -91,7 +91,7 @@ class ConversationMessageDao extends DatabaseAccessor<ChatDatabase>
     });
   }
 
-  Stream<List<EventMessage>> getMessages({
+  Stream<List<EventMessageDbModel>> getMessages({
     required String conversationId,
     required String currentUserMasterPubkey,
   }) {
@@ -102,17 +102,9 @@ class ConversationMessageDao extends DatabaseAccessor<ChatDatabase>
       ),
     ])
       ..where(conversationMessageTable.isDeleted.equals(false))
-      ..where(conversationMessageTable.conversationId.equals(conversationId))
-      ..distinct;
+      ..where(conversationMessageTable.conversationId.equals(conversationId));
 
-    return query.watch().map(
-          (rows) => rows
-              .map(
-                (e) => e.readTable(eventMessageTable).toEventMessage(),
-              )
-              .sortedBy((e) => e.publishedAt)
-              .toList(),
-        );
+    return query.watch().map((rows) => rows.map((e) => e.readTable(eventMessageTable)).toList());
   }
 
   Future<EventMessage> getEventMessage({required EventReference eventReference}) async {

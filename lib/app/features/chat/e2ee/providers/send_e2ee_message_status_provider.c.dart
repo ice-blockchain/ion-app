@@ -3,6 +3,7 @@
 import 'dart:async';
 
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/auth/providers/auth_provider.c.dart';
 import 'package:ion/app/features/chat/e2ee/model/entities/private_direct_message_data.c.dart';
 import 'package:ion/app/features/chat/e2ee/model/entities/private_message_reaction_data.c.dart';
@@ -19,12 +20,14 @@ part 'send_e2ee_message_status_provider.c.g.dart';
 Future<SendE2eeMessageStatusService> sendE2eeMessageStatusService(Ref ref) async {
   final sendE2eeChatMessageService = ref.read(sendE2eeChatMessageServiceProvider);
   final eventSigner = await ref.watch(currentUserIonConnectEventSignerProvider.future);
+  final conversationMessageStatusDao = ref.watch(conversationMessageDataDaoProvider);
 
   return SendE2eeMessageStatusService(
     eventSigner: eventSigner,
     sendE2eeChatMessageService: sendE2eeChatMessageService,
     currentUserMasterPubkey: ref.watch(currentPubkeySelectorProvider) ?? '',
     conversationPubkeysNotifier: ref.watch(conversationPubkeysProvider.notifier),
+    conversationMessageStatusDao: conversationMessageStatusDao,
   );
 }
 
@@ -34,13 +37,14 @@ class SendE2eeMessageStatusService {
     required this.sendE2eeChatMessageService,
     required this.currentUserMasterPubkey,
     required this.conversationPubkeysNotifier,
+    required this.conversationMessageStatusDao,
   });
 
   final EventSigner? eventSigner;
   final SendE2eeChatMessageService sendE2eeChatMessageService;
   final String currentUserMasterPubkey;
   final ConversationPubkeys conversationPubkeysNotifier;
-
+  final ConversationMessageDataDao conversationMessageStatusDao;
   final allowedStatus = [MessageDeliveryStatus.received, MessageDeliveryStatus.read];
 
   Future<void> sendMessageStatus({
@@ -48,10 +52,22 @@ class SendE2eeMessageStatusService {
     required EventMessage messageEventMessage,
   }) async {
     if (!allowedStatus.contains(status)) return;
+    if (messageEventMessage.masterPubkey == currentUserMasterPubkey) {
+      return;
+    }
 
     final eventReference =
         ReplaceablePrivateDirectMessageEntity.fromEventMessage(messageEventMessage)
             .toEventReference();
+
+    final currentStatus = await conversationMessageStatusDao.checkMessageStatus(
+      eventReference: eventReference,
+      masterPubkey: currentUserMasterPubkey,
+    );
+
+    if (currentStatus == MessageDeliveryStatus.read) {
+      return;
+    }
 
     final messageReactionEventMessage = await PrivateMessageReactionEntityData(
       content: status.name,

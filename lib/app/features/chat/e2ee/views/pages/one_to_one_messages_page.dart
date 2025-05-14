@@ -137,7 +137,7 @@ class _MessagesList extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     if (conversationId == null) {
-      return const E2eeConversationEmptyView();
+      return const E2eeConversationLoadingView();
     }
 
     final messages =
@@ -152,6 +152,7 @@ class _MessagesList extends ConsumerWidget {
           }
           return OneToOneMessageList(messages);
         },
+        loading: () => const E2eeConversationLoadingView(),
         orElse: E2eeConversationEmptyView.new,
       ),
     );

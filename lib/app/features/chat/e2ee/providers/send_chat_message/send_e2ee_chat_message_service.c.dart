@@ -305,6 +305,11 @@ class SendE2eeChatMessageService {
     required EventMessage eventMessage,
     required List<String> wrappedKinds,
   }) async {
+    // print('----- SEND WRAPPED MESSAGE -----');
+    // print('---- pubkey: $pubkey');
+    // print('---- masterPubkey: $masterPubkey');
+    // print('---- eventMessage: ${eventMessage.content}');
+    // print('---- wrappedKinds: $wrappedKinds');
     final giftWrap = await _createGiftWrap(
       signer: eventSigner,
       kinds: wrappedKinds,
