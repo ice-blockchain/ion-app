@@ -182,7 +182,8 @@ ChatMessageInfoItem? getRepliedMessageListItem({
     );
   } else if (repliedEntity.data.messageType == MessageType.sharedPost) {
     final sharedEntity = useMemoized(
-        () => ReplaceablePrivateDirectMessageEntity.fromEventMessage(repliedEventMessage));
+      () => ReplaceablePrivateDirectMessageEntity.fromEventMessage(repliedEventMessage),
+    );
 
     final postEntity = sharedEntity.data.quotedEvent != null
         ? ref
