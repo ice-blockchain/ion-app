@@ -8,5 +8,6 @@ enum MessageType {
   document,
   visualMedia,
   requestFunds,
+  moneySent,
   storyReply,
 }

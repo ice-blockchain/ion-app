@@ -1235,6 +1235,197 @@ class Shape9 extends i0.VersionedTable {
 
 i1.GeneratedColumn<String> _column_51(String aliasedName) =>
     i1.GeneratedColumn<String>('wallet_view_id', aliasedName, false, type: i1.DriftSqlType.string);
+
+final class Schema8 extends i0.VersionedSchema {
+  Schema8({required super.database}) : super(version: 8);
+  @override
+  late final List<i1.DatabaseSchemaEntity> entities = [
+    coinsTable,
+    syncCoinsTable,
+    networksTable,
+    transactionsTableV2,
+    cryptoWalletsTable,
+    fundsRequestsTable,
+  ];
+  late final Shape0 coinsTable = Shape0(
+      source: i0.VersionedTable(
+        entityName: 'coins_table',
+        withoutRowId: false,
+        isStrict: false,
+        tableConstraints: [
+          'PRIMARY KEY(id)',
+        ],
+        columns: [
+          _column_0,
+          _column_1,
+          _column_2,
+          _column_3,
+          _column_4,
+          _column_5,
+          _column_6,
+          _column_7,
+          _column_8,
+          _column_9,
+        ],
+        attachedDatabase: database,
+      ),
+      alias: null);
+  late final Shape1 syncCoinsTable = Shape1(
+      source: i0.VersionedTable(
+        entityName: 'sync_coins_table',
+        withoutRowId: false,
+        isStrict: false,
+        tableConstraints: [
+          'PRIMARY KEY(coin_id)',
+        ],
+        columns: [
+          _column_10,
+          _column_11,
+        ],
+        attachedDatabase: database,
+      ),
+      alias: null);
+  late final Shape6 networksTable = Shape6(
+      source: i0.VersionedTable(
+        entityName: 'networks_table',
+        withoutRowId: false,
+        isStrict: false,
+        tableConstraints: [
+          'PRIMARY KEY(id)',
+        ],
+        columns: [
+          _column_0,
+          _column_12,
+          _column_13,
+          _column_14,
+          _column_15,
+          _column_47,
+        ],
+        attachedDatabase: database,
+      ),
+      alias: null);
+  late final Shape10 transactionsTableV2 = Shape10(
+      source: i0.VersionedTable(
+        entityName: 'transactions_table_v2',
+        withoutRowId: false,
+        isStrict: false,
+        tableConstraints: [
+          'PRIMARY KEY(tx_hash, wallet_view_id)',
+        ],
+        columns: [
+          _column_16,
+          _column_17,
+          _column_5,
+          _column_18,
+          _column_49,
+          _column_50,
+          _column_51,
+          _column_21,
+          _column_22,
+          _column_23,
+          _column_24,
+          _column_25,
+          _column_26,
+          _column_27,
+          _column_28,
+          _column_29,
+          _column_30,
+          _column_31,
+          _column_52,
+        ],
+        attachedDatabase: database,
+      ),
+      alias: null);
+  late final Shape4 cryptoWalletsTable = Shape4(
+      source: i0.VersionedTable(
+        entityName: 'crypto_wallets_table',
+        withoutRowId: false,
+        isStrict: false,
+        tableConstraints: [
+          'PRIMARY KEY(id)',
+        ],
+        columns: [
+          _column_0,
+          _column_33,
+          _column_5,
+          _column_34,
+        ],
+        attachedDatabase: database,
+      ),
+      alias: null);
+  late final Shape8 fundsRequestsTable = Shape8(
+      source: i0.VersionedTable(
+        entityName: 'funds_requests_table',
+        withoutRowId: false,
+        isStrict: false,
+        tableConstraints: [
+          'PRIMARY KEY(event_id)',
+        ],
+        columns: [
+          _column_35,
+          _column_36,
+          _column_37,
+          _column_5,
+          _column_38,
+          _column_39,
+          _column_40,
+          _column_41,
+          _column_42,
+          _column_28,
+          _column_29,
+          _column_43,
+          _column_44,
+          _column_53,
+          _column_46,
+        ],
+        attachedDatabase: database,
+      ),
+      alias: null);
+}
+
+class Shape10 extends i0.VersionedTable {
+  Shape10({required super.source, required super.alias}) : super.aliased();
+  i1.GeneratedColumn<String> get type => columnsByName['type']! as i1.GeneratedColumn<String>;
+  i1.GeneratedColumn<String> get txHash => columnsByName['tx_hash']! as i1.GeneratedColumn<String>;
+  i1.GeneratedColumn<String> get networkId =>
+      columnsByName['network_id']! as i1.GeneratedColumn<String>;
+  i1.GeneratedColumn<String> get coinId => columnsByName['coin_id']! as i1.GeneratedColumn<String>;
+  i1.GeneratedColumn<String> get senderWalletAddress =>
+      columnsByName['sender_wallet_address']! as i1.GeneratedColumn<String>;
+  i1.GeneratedColumn<String> get receiverWalletAddress =>
+      columnsByName['receiver_wallet_address']! as i1.GeneratedColumn<String>;
+  i1.GeneratedColumn<String> get walletViewId =>
+      columnsByName['wallet_view_id']! as i1.GeneratedColumn<String>;
+  i1.GeneratedColumn<String> get id => columnsByName['id']! as i1.GeneratedColumn<String>;
+  i1.GeneratedColumn<String> get fee => columnsByName['fee']! as i1.GeneratedColumn<String>;
+  i1.GeneratedColumn<String> get status => columnsByName['status']! as i1.GeneratedColumn<String>;
+  i1.GeneratedColumn<String> get nativeCoinId =>
+      columnsByName['native_coin_id']! as i1.GeneratedColumn<String>;
+  i1.GeneratedColumn<DateTime> get dateConfirmed =>
+      columnsByName['date_confirmed']! as i1.GeneratedColumn<DateTime>;
+  i1.GeneratedColumn<DateTime> get dateRequested =>
+      columnsByName['date_requested']! as i1.GeneratedColumn<DateTime>;
+  i1.GeneratedColumn<DateTime> get createdAtInRelay =>
+      columnsByName['created_at_in_relay']! as i1.GeneratedColumn<DateTime>;
+  i1.GeneratedColumn<String> get userPubkey =>
+      columnsByName['user_pubkey']! as i1.GeneratedColumn<String>;
+  i1.GeneratedColumn<String> get assetId =>
+      columnsByName['asset_id']! as i1.GeneratedColumn<String>;
+  i1.GeneratedColumn<String> get transferredAmount =>
+      columnsByName['transferred_amount']! as i1.GeneratedColumn<String>;
+  i1.GeneratedColumn<double> get transferredAmountUsd =>
+      columnsByName['transferred_amount_usd']! as i1.GeneratedColumn<double>;
+  i1.GeneratedColumn<String> get eventId =>
+      columnsByName['event_id']! as i1.GeneratedColumn<String>;
+}
+
+i1.GeneratedColumn<String> _column_52(String aliasedName) =>
+    i1.GeneratedColumn<String>('event_id', aliasedName, true, type: i1.DriftSqlType.string);
+i1.GeneratedColumn<String> _column_53(String aliasedName) =>
+    i1.GeneratedColumn<String>('transaction_id', aliasedName, true,
+        type: i1.DriftSqlType.string,
+        defaultConstraints:
+            i1.GeneratedColumn.constraintIsAlways('REFERENCES transactions_table_v2 (tx_hash)'));
 i0.MigrationStepWithVersion migrationSteps({
   required Future<void> Function(i1.Migrator m, Schema2 schema) from1To2,
   required Future<void> Function(i1.Migrator m, Schema3 schema) from2To3,
@@ -1242,6 +1433,7 @@ i0.MigrationStepWithVersion migrationSteps({
   required Future<void> Function(i1.Migrator m, Schema5 schema) from4To5,
   required Future<void> Function(i1.Migrator m, Schema6 schema) from5To6,
   required Future<void> Function(i1.Migrator m, Schema7 schema) from6To7,
+  required Future<void> Function(i1.Migrator m, Schema8 schema) from7To8,
 }) {
   return (currentVersion, database) async {
     switch (currentVersion) {
@@ -1275,6 +1467,11 @@ i0.MigrationStepWithVersion migrationSteps({
         final migrator = i1.Migrator(database, schema);
         await from6To7(migrator, schema);
         return 7;
+      case 7:
+        final schema = Schema8(database: database);
+        final migrator = i1.Migrator(database, schema);
+        await from7To8(migrator, schema);
+        return 8;
       default:
         throw ArgumentError.value('Unknown migration from $currentVersion');
     }
@@ -1288,6 +1485,7 @@ i1.OnUpgrade stepByStep({
   required Future<void> Function(i1.Migrator m, Schema5 schema) from4To5,
   required Future<void> Function(i1.Migrator m, Schema6 schema) from5To6,
   required Future<void> Function(i1.Migrator m, Schema7 schema) from6To7,
+  required Future<void> Function(i1.Migrator m, Schema8 schema) from7To8,
 }) =>
     i0.VersionedSchema.stepByStepHelper(
         step: migrationSteps(
@@ -1297,4 +1495,5 @@ i1.OnUpgrade stepByStep({
       from4To5: from4To5,
       from5To6: from5To6,
       from6To7: from6To7,
+      from7To8: from7To8,
     ));

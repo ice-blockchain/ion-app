@@ -16,6 +16,7 @@ import 'package:ion/app/features/ion_connect/ion_connect.dart';
 import 'package:ion/app/features/ion_connect/model/event_reference.c.dart';
 import 'package:ion/app/features/wallets/model/coin_data.c.dart';
 import 'package:ion/app/features/wallets/model/entities/funds_request_entity.c.dart';
+import 'package:ion/app/features/wallets/model/entities/wallet_asset_entity.c.dart';
 import 'package:ion/app/features/wallets/model/network_data.c.dart';
 import 'package:ion/app/features/wallets/providers/coins_provider.c.dart';
 import 'package:ion/app/features/wallets/providers/networks_provider.c.dart';
@@ -25,7 +26,7 @@ import 'package:ion/app/utils/num.dart';
 
 part 'components/amount_display.dart';
 
-class MoneyMessage extends HookConsumerWidget {
+class MoneyMessage extends StatelessWidget {
   const MoneyMessage({
     required this.eventMessage,
     this.onTapReply,
@@ -36,14 +37,38 @@ class MoneyMessage extends HookConsumerWidget {
   final EventMessage eventMessage;
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  Widget build(BuildContext context) {
     final eventReference =
         EventReference.fromEncoded(eventMessage.content) as ImmutableEventReference;
 
+    return switch (eventReference.kind) {
+      FundsRequestEntity.kind => _RequestedMoneyMessage(
+          eventMessage: eventMessage,
+          eventReference: eventReference,
+        ),
+      WalletAssetEntity.kind => _SentMoneyMessage(
+          eventMessage: eventMessage,
+          eventReference: eventReference,
+        ),
+      _ => const SizedBox.shrink(),
+    };
+  }
+}
+
+class _RequestedMoneyMessage extends ConsumerWidget {
+  const _RequestedMoneyMessage({
+    required this.eventMessage,
+    required this.eventReference,
+  });
+
+  final EventMessage eventMessage;
+  final ImmutableEventReference eventReference;
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
     final isMe = ref.watch(isCurrentUserSelectorProvider(eventReference.pubkey));
 
-    final fundsRequestAsync = ref.watch(fundsRequestForMessageProvider(eventMessage));
-    final fundsRequest = fundsRequestAsync.value;
+    final fundsRequest = ref.watch(fundsRequestForMessageProvider(eventMessage)).value;
 
     if (fundsRequest == null) {
       return const SizedBox.shrink();
@@ -55,22 +80,66 @@ class MoneyMessage extends HookConsumerWidget {
     final assetId = fundsRequest.data.content.assetId?.emptyOrValue;
     final coin = ref.watch(coinByIdProvider(assetId.emptyOrValue)).value;
 
-    final type =
-        fundsRequest.data.transaction == null ? MoneyMessageType.requested : MoneyMessageType.sent;
-
     final amount = fundsRequest.data.content.amount?.let(double.parse) ?? 0.0;
     final equivalentUsd = fundsRequest.data.content.amountUsd?.let(double.parse) ?? 0.0;
 
     return _MoneyMessageContent(
       isMe: isMe,
-      type: type,
+      type: MoneyMessageType.requested,
       amount: amount,
       equivalentUsd: equivalentUsd,
       network: network,
       coin: coin,
       eventMessage: eventMessage,
       eventId: eventReference.eventId,
-      request: fundsRequest,
+      button: RequestedMoneyMessageButton(
+        isMe: isMe,
+        eventId: eventReference.eventId,
+        isPaid: fundsRequest.data.transaction != null,
+        request: fundsRequest,
+        eventMessage: eventMessage,
+      ),
+    );
+  }
+}
+
+class _SentMoneyMessage extends ConsumerWidget {
+  const _SentMoneyMessage({
+    required this.eventMessage,
+    required this.eventReference,
+  });
+
+  final EventMessage eventMessage;
+  final ImmutableEventReference eventReference;
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final isMe = ref.watch(isCurrentUserSelectorProvider(eventReference.pubkey));
+
+    final transactionData = ref.watch(transactionDataForMessageProvider(eventMessage)).value;
+
+    if (transactionData == null) {
+      return const SizedBox.shrink();
+    }
+
+    final network = transactionData.network;
+    final asset = transactionData.cryptoAsset.mapOrNull(coin: (asset) => asset);
+
+    final coin = asset?.coin;
+
+    final amount = asset?.amount ?? 0.0;
+    final equivalentUsd = asset?.amountUSD ?? 0.0;
+
+    return _MoneyMessageContent(
+      isMe: isMe,
+      type: MoneyMessageType.sent,
+      amount: amount,
+      equivalentUsd: equivalentUsd,
+      network: network,
+      coin: coin,
+      eventMessage: eventMessage,
+      eventId: eventReference.eventId,
+      button: ViewTransactionButton(transactionData: transactionData),
     );
   }
 }
@@ -85,7 +154,7 @@ class _MoneyMessageContent extends HookConsumerWidget {
     required this.coin,
     required this.eventMessage,
     required this.eventId,
-    required this.request,
+    required this.button,
   });
 
   final bool isMe;
@@ -96,7 +165,7 @@ class _MoneyMessageContent extends HookConsumerWidget {
   final CoinData? coin;
   final EventMessage eventMessage;
   final String eventId;
-  final FundsRequestEntity request;
+  final Widget button;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -105,17 +174,16 @@ class _MoneyMessageContent extends HookConsumerWidget {
       false => context.theme.appColors.primaryText,
     };
 
-    final title = switch (type) {
-      MoneyMessageType.sent => context.i18n.chat_money_received_title,
-      MoneyMessageType.requested => context.i18n.chat_money_request_title,
+    final title = switch ((type, isMe)) {
+      (MoneyMessageType.sent, false) => context.i18n.chat_money_received_title,
+      (MoneyMessageType.sent, true) => context.i18n.chat_money_sent_title,
+      (MoneyMessageType.requested, _) => context.i18n.chat_money_request_title,
     };
 
     final timeTextColor = switch (isMe) {
       true => context.theme.appColors.strokeElements,
       false => context.theme.appColors.quaternaryText,
     };
-
-    final isPaid = type == MoneyMessageType.sent;
 
     return MessageItemWrapper(
       messageItem: ChatMessageInfoItem.money(
@@ -156,14 +224,7 @@ class _MoneyMessageContent extends HookConsumerWidget {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             crossAxisAlignment: CrossAxisAlignment.end,
             children: [
-              MoneyMessageButton(
-                isMe: isMe,
-                messageType: type,
-                eventId: eventId,
-                isPaid: isPaid,
-                request: request,
-                eventMessage: eventMessage,
-              ),
+              button,
               Text(
                 toTimeDisplayValue(eventMessage.createdAt.millisecondsSinceEpoch),
                 style: context.theme.appTextThemes.caption4.copyWith(color: timeTextColor),

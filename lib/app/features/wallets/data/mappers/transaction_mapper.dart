@@ -90,6 +90,7 @@ class CoinTransactionsMapper {
             userPubkey: entity.data.pubkey,
             transferredAmount: content.amount,
             transferredAmountUsd: double.tryParse(content.amountUsd ?? '0'),
+            eventId: entity.id,
           );
         })
         .nonNulls

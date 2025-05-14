@@ -696,6 +696,7 @@
   "chat_search_no_community_empty": "Search here for users, chats...",
   "chat_money_request_title": "Money requested",
   "chat_money_received_title": "Money received",
+  "chat_money_sent_title": "Money sent",
   "chat_money_received_button": "View transaction",
   "chat_profile_share_button": "Write a message",
   "chat_learn_more_modal_title": "Privacy First, Always",

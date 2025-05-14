@@ -197,8 +197,9 @@ ChatMessageInfoItem? getRepliedMessageListItem({
     MessageType.profile => null,
     MessageType.storyReply => null,
     MessageType.visualMedia => null,
-    // TODO: implement replied funds request message item
+    // TODO: implement replied for money message
     MessageType.requestFunds => null,
+    MessageType.moneySent => null,
     MessageType.text => TextItem(
         eventMessage: repliedEventMessage,
         contentDescription: repliedEntity.data.content,
