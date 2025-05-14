@@ -16,8 +16,12 @@ import 'package:ion/app/utils/string.dart';
 
 @pragma('vm:entry-point')
 Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
-  final notificationsService = LocalNotificationsService();
-  await notificationsService.initialize();
+  final riverpodContainer = ProviderContainer(observers: [Logger.talkerRiverpodObserver]);
+  final notificationsService =
+      await riverpodContainer.read(localNotificationsServiceProvider.future);
+  final translator = await riverpodContainer.read(pushTranslatorProvider.future);
+  final localStorage = await riverpodContainer.read(localStorageAsyncProvider.future);
+
   IonConnect.initialize(null);
 
   if (message.notification != null) {
@@ -25,7 +29,8 @@ Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
   }
 
   final data = IonConnectPushDataPayload.fromJson(message.data);
-  final parsedData = await _parseNotificationData(data);
+  final parsedData =
+      await _parseNotificationData(data, translator: translator, localStorage: localStorage);
 
   await notificationsService.showNotification(
     id: message.messageId.hashCode,
@@ -42,12 +47,11 @@ void initFirebaseMessagingBackgroundHandler() {
 }
 
 Future<({String title, String body})?> _parseNotificationData(
-  IonConnectPushDataPayload data,
-) async {
-  final riverpod = ProviderContainer(observers: [Logger.talkerRiverpodObserver]);
-  final translator = await riverpod.read(pushTranslatorProvider.future);
-  final prefs = await riverpod.read(sharedPreferencesFoundationProvider.future);
-  final currentPubkey = await prefs.getString(CurrentPubkeySelector.persistenceKey);
+  IonConnectPushDataPayload data, {
+  required Translator<PushNotificationTranslations> translator,
+  required LocalStorage localStorage,
+}) async {
+  final currentPubkey = localStorage.getString(CurrentPubkeySelector.persistenceKey);
 
   if (currentPubkey == null) {
     return null;
