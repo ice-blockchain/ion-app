@@ -4,6 +4,7 @@ import 'package:collection/collection.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/ion_connect/database/dao/event_messages_dao.c.dart';
+import 'package:ion/app/features/ion_connect/database/event_messages_database.c.dart';
 import 'package:ion/app/features/ion_connect/ion_connect.dart';
 import 'package:ion/app/features/ion_connect/model/event_reference.c.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
@@ -59,6 +60,12 @@ class EventMessagesRepository {
   ) async {
     final eventsList = await _eventMessagesDao.get(eventReferences);
     return eventsList.map((e) => e.toEventMessage()).toList();
+  }
+
+  Future<List<EventMessageDbModel>> getAllRaw(
+    List<EventReference> eventReferences,
+  ) {
+    return _eventMessagesDao.get(eventReferences);
   }
 
   Future<List<EventReference>> getNonSavedRefs(

@@ -12,6 +12,7 @@ import 'package:ion/app/features/feed/providers/feed_bookmarks_notifier.c.dart';
 import 'package:ion/app/features/feed/views/components/list_separator/list_separator.dart';
 import 'package:ion/app/features/user/pages/bookmarks_page/components/bookmarks_filters.dart';
 import 'package:ion/app/features/user/pages/bookmarks_page/components/bookmarks_header.dart';
+import 'package:ion/app/utils/future.dart';
 import 'package:ion/generated/assets.gen.dart';
 
 class BookmarksPage extends HookConsumerWidget {
@@ -22,14 +23,23 @@ class BookmarksPage extends HookConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final selectedCollectionDTag = useState(BookmarksCollectionEntity.defaultCollectionDTag);
-    final collectionEntityState =
-        ref.watch(feedBookmarksNotifierProvider(collectionDTag: selectedCollectionDTag.value));
+    final rawQuery = useState<String>('');
+    final query = useDebounced(rawQuery.value, 300.milliseconds) ?? '';
+    final collectionEntityState = ref.watch(
+      filteredBookmarksRefsProvider(
+        collectionDTag: selectedCollectionDTag.value,
+        query: query,
+      ),
+    );
+
     return Scaffold(
-      appBar: const BookmarksHeader(),
+      appBar: BookmarksHeader(
+        loading: collectionEntityState.isLoading && rawQuery.value.isNotEmpty,
+        onSearchQueryUpdated: (value) => rawQuery.value = value.trim(),
+      ),
       body: CustomScrollView(
         slivers: collectionEntityState.when(
-          data: (collectionEntity) {
-            final refs = collectionEntity?.data.refs ?? [];
+          data: (refs) {
             return [
               SliverToBoxAdapter(
                 child: BookmarksFilters(
