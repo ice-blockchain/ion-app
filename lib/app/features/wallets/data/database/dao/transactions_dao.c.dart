@@ -335,7 +335,7 @@ class TransactionsDao extends DatabaseAccessor<WalletsDatabase> with _$Transacti
       return;
     }
 
-    return transaction(() async {
+    await transaction(() async {
       final conditions = <Expression<bool>>[];
       final deleteQuery = delete(transactionsTable);
 

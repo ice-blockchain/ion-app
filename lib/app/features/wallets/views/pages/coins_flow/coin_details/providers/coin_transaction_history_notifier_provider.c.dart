@@ -9,6 +9,7 @@ import 'package:ion/app/features/wallets/model/network_data.c.dart';
 import 'package:ion/app/features/wallets/model/transaction_crypto_asset.c.dart';
 import 'package:ion/app/features/wallets/providers/connected_crypto_wallets_provider.c.dart';
 import 'package:ion/app/features/wallets/providers/synced_coins_by_symbol_group_provider.c.dart';
+import 'package:ion/app/features/wallets/providers/wallet_view_data_provider.c.dart';
 import 'package:ion/app/features/wallets/views/pages/coins_flow/coin_details/providers/network_selector_notifier.c.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
@@ -27,6 +28,7 @@ class CoinTransactionHistoryNotifier extends _$CoinTransactionHistoryNotifier {
 
   List<String>? _coinWalletAddresses;
   List<CoinInWalletData>? _coins;
+  String? _walletViewId;
   NetworkData? _network;
   var _offset = 0;
 
@@ -38,6 +40,8 @@ class CoinTransactionHistoryNotifier extends _$CoinTransactionHistoryNotifier {
         ?.map((w) => w.address)
         .nonNulls
         .toList();
+
+    _walletViewId = ref.watch(currentWalletViewIdProvider).valueOrNull;
     _network = ref.watch(
       networkSelectorNotifierProvider(symbolGroup: symbolGroup).select(
         (state) => state?.selected.whenOrNull(network: (network) => network),
@@ -46,7 +50,10 @@ class CoinTransactionHistoryNotifier extends _$CoinTransactionHistoryNotifier {
     _coins = ref.watch(syncedCoinsBySymbolGroupProvider(symbolGroup)).valueOrNull;
 
     _reset();
-    if (_coins != null && _coinWalletAddresses != null && _coinWalletAddresses!.isNotEmpty) {
+    if (_coins != null &&
+        _coinWalletAddresses != null &&
+        _coinWalletAddresses!.isNotEmpty &&
+        _walletViewId != null) {
       _loadNextPage();
     }
 
@@ -88,6 +95,7 @@ class CoinTransactionHistoryNotifier extends _$CoinTransactionHistoryNotifier {
     final transactions = await repository.getTransactions(
       offset: _offset,
       network: _network,
+      walletViewIds: [_walletViewId!],
       coinIds: coinIds ?? [],
       walletAddresses: _coinWalletAddresses ?? [],
     );

@@ -169,7 +169,9 @@ class TransactionsRepository {
                 userPubkey: Value.absentIfNull(deprecatedTx.userPubkey),
               ),
       );
-      if (deprecatedTx != null) deprecatedToRemove.add(tx.txHash);
+      if (deprecatedTx != null) {
+        deprecatedToRemove.add(tx.txHash);
+      }
     }
 
     if (deprecatedToRemove.isNotEmpty) {
@@ -204,6 +206,7 @@ class TransactionsRepository {
     List<String> coinIds = const [],
     List<String> txHashes = const [],
     List<String> walletAddresses = const [],
+    List<String> walletViewIds = const [],
     int limit = 20,
     int offset = 0,
     NetworkData? network,
@@ -215,6 +218,7 @@ class TransactionsRepository {
       offset: offset,
       coinIds: coinIds,
       networkId: network?.id,
+      walletViewIds: walletViewIds,
     );
   }
 
