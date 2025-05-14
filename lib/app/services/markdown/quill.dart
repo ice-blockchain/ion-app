@@ -115,7 +115,7 @@ Delta markdownToDelta(String markdown) {
     }
   }
 
-  return recoverFlattenLinks(processedDelta);
+  return withFullLinks(processedDelta);
 }
 
 void _processMatches(Operation op, Delta processedDelta) {
@@ -160,7 +160,7 @@ Delta processDelta(Delta delta) {
     }
   }
 
-  return recoverFlattenLinks(delta);
+  return withFullLinks(delta);
 }
 
 Delta parseAndConvertDelta(String? deltaContent, String fallbackMarkdown) {
@@ -188,7 +188,7 @@ Delta processDeltaMatches(Delta delta) {
   return newDelta;
 }
 
-Delta flattenLinks(Delta delta) {
+Delta withFlattenLinks(Delta delta) {
   final out = Delta();
   for (final op in delta.toList()) {
     final href = op.attributes?[Attribute.link.key];
@@ -201,7 +201,7 @@ Delta flattenLinks(Delta delta) {
   return out;
 }
 
-Delta recoverFlattenLinks(Delta delta) {
+Delta withFullLinks(Delta delta) {
   final out = Delta();
   for (final op in delta.toList()) {
     final href = op.attributes?[Attribute.link.key];

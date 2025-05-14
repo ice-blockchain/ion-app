@@ -78,6 +78,7 @@ class ArticleData
         _$ArticleData
     implements EventSerializable, ReplaceableEntityData {
   const factory ArticleData({
+    required String textContent,
     required Map<String, MediaAttachment> media,
     required ReplaceableEventIdentifier replaceableEventId,
     required EntityPublishedAt publishedAt,
@@ -103,6 +104,7 @@ class ArticleData
     final mediaAttachments = _buildMedia(tags[MediaAttachment.tagName]);
 
     return ArticleData(
+      textContent: eventMessage.content,
       media: mediaAttachments,
       title: title,
       image: image,
@@ -136,6 +138,7 @@ class ArticleData
     EntityEditingEndedAt? editingEndedAt,
   }) {
     return ArticleData(
+      textContent: '',
       media: media,
       title: title,
       image: image,
@@ -152,7 +155,7 @@ class ArticleData
   }
 
   @override
-  String get content => richText?.content ?? '';
+  String get content => richText?.content ?? textContent;
 
   @override
   FutureOr<EventMessage> toEventMessage(
@@ -164,7 +167,7 @@ class ArticleData
       signer: signer,
       createdAt: createdAt,
       kind: ArticleEntity.kind,
-      content: richText != null ? '' : content,
+      content: richText != null ? '' : textContent,
       tags: [
         ...tags,
         replaceableEventId.toTag(),

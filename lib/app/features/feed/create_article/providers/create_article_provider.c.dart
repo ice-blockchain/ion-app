@@ -146,6 +146,7 @@ class CreateArticle extends _$CreateArticle {
         title: null,
         summary: null,
         image: null,
+        textContent: '',
         relatedHashtags: [],
         media: {},
         colorLabel: null,
@@ -254,6 +255,7 @@ class CreateArticle extends _$CreateArticle {
         title: title,
         summary: summary,
         image: imageUrlToUpload,
+        textContent: '',
         media: cleanedMedia,
         relatedHashtags: relatedHashtags,
         relatedPubkeys: mentions,
@@ -361,7 +363,7 @@ class CreateArticle extends _$CreateArticle {
       updatedContent = _replaceImagePathsWithUrls(updatedContent, uploadedUrls);
     }
 
-    return updatedContent;
+    return withFlattenLinks(updatedContent);
   }
 
   List<RelatedPubkey> _buildMentions(Delta content) {

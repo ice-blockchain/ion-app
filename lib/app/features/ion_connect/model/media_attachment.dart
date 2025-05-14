@@ -17,8 +17,6 @@ class MediaAttachment {
     required this.mimeType,
     required this.dimension,
     required this.alt,
-    required this.torrentInfoHash,
-    required this.fileHash,
     required this.originalFileHash,
     this.encryptionKey,
     this.encryptionNonce,
@@ -35,8 +33,6 @@ class MediaAttachment {
       mimeType: mediaFile.mimeType ?? '',
       dimension: '${mediaFile.width}x${mediaFile.height}',
       alt: FileAlt.message,
-      torrentInfoHash: '',
-      fileHash: '',
       originalFileHash: '',
       image: mediaFile.path,
       blurhash: mediaFile.blurhash,
@@ -57,8 +53,6 @@ class MediaAttachment {
     String? thumb;
     String? image;
     String? alt;
-    String? torrentInfoHash;
-    String? fileHash;
     String? originalFileHash;
     String? encryptionKey;
     String? encryptionNonce;
@@ -87,10 +81,6 @@ class MediaAttachment {
           alt = value;
         case 'blurhash':
           blurhash = value;
-        case 'i':
-          torrentInfoHash = value;
-        case 'x':
-          fileHash = value;
         case 'ox':
           originalFileHash = value;
         case 'encryption-key':
@@ -110,8 +100,6 @@ class MediaAttachment {
       mimeType: mimeType!,
       dimension: dimension!,
       alt: EnumExtensions.fromShortString(FileAlt.values, alt!),
-      torrentInfoHash: torrentInfoHash ?? '',
-      fileHash: fileHash!,
       originalFileHash: originalFileHash!,
       thumb: thumb,
       image: image,
@@ -129,8 +117,6 @@ class MediaAttachment {
         mimeType: json['mimeType'] as String,
         dimension: json['dimension'] as String,
         alt: EnumExtensions.fromShortString(FileAlt.values, json['alt'] as String),
-        torrentInfoHash: json['torrentInfoHash'] as String,
-        fileHash: json['fileHash'] as String,
         originalFileHash: json['originalFileHash'] as String,
         encryptionKey: json['encryptionKey'] as String?,
         encryptionNonce: json['encryptionNonce'] as String?,
@@ -146,8 +132,6 @@ class MediaAttachment {
         'mimeType': mimeType,
         'dimension': dimension,
         'alt': alt.toShortString(),
-        'torrentInfoHash': torrentInfoHash,
-        'fileHash': fileHash,
         'originalFileHash': originalFileHash,
         'encryptionKey': encryptionKey,
         'encryptionNonce': encryptionNonce,
@@ -165,11 +149,7 @@ class MediaAttachment {
 
   final FileAlt alt;
 
-  final String fileHash;
-
   final String originalFileHash;
-
-  final String torrentInfoHash;
 
   final String? thumb;
 
@@ -227,9 +207,7 @@ class MediaAttachment {
       'url $url',
       'm $mimeType',
       'dim $dimension',
-      'i $torrentInfoHash',
       'alt ${alt.toShortString()}',
-      'x $fileHash',
       'ox $originalFileHash',
       if (encryptionKey != null && encryptionNonce != null)
         'encryption-key $encryptionKey $encryptionNonce $encryptionMac aes-gcm',
@@ -244,7 +222,7 @@ class MediaAttachment {
 
   @override
   String toString() {
-    return 'MediaAttachment(url: $url, mimeType: $mimeType, dimension: $dimension, alt: $alt, fileHash: $fileHash, originalFileHash: $originalFileHash, torrentInfoHash: $torrentInfoHash, thumb: $thumb, image: $image, blurhash: $blurhash, duration: $duration)';
+    return 'MediaAttachment(url: $url, mimeType: $mimeType, dimension: $dimension, alt: $alt, originalFileHash: $originalFileHash, thumb: $thumb, image: $image, blurhash: $blurhash, duration: $duration)';
   }
 
   MediaAttachment copyWith({
@@ -252,9 +230,7 @@ class MediaAttachment {
     String? mimeType,
     String? dimension,
     FileAlt? alt,
-    String? fileHash,
     String? originalFileHash,
-    String? torrentInfoHash,
     String? thumb,
     String? image,
     String? encryptionKey,
@@ -268,9 +244,7 @@ class MediaAttachment {
       mimeType: mimeType ?? this.mimeType,
       dimension: dimension ?? this.dimension,
       alt: alt ?? this.alt,
-      fileHash: fileHash ?? this.fileHash,
       originalFileHash: originalFileHash ?? this.originalFileHash,
-      torrentInfoHash: torrentInfoHash ?? this.torrentInfoHash,
       thumb: thumb ?? this.thumb,
       image: image ?? this.image,
       encryptionKey: encryptionKey ?? this.encryptionKey,
