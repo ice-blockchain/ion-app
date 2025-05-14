@@ -8,6 +8,7 @@ import 'package:ion/app/features/wallets/model/transaction_details.c.dart';
 import 'package:ion/app/features/wallets/model/transaction_status.c.dart';
 import 'package:ion/app/features/wallets/model/transaction_type.dart';
 import 'package:ion/app/features/wallets/providers/send_nft_form_provider.c.dart';
+import 'package:ion/app/features/wallets/providers/wallet_view_data_provider.c.dart';
 import 'package:ion/app/services/logger/logger.dart';
 import 'package:ion_identity_client/ion_identity.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
@@ -40,6 +41,7 @@ class SendNftNotifier extends _$SendNftNotifier {
     state = const AsyncValue.loading();
 
     state = await AsyncValue.guard(() async {
+      final walletViewId = await ref.read(currentWalletViewIdProvider.future);
       final sendNftUseCase = await ref.read(sendNftUseCaseProvider.future);
 
       final result = await sendNftUseCase.send(
@@ -65,6 +67,7 @@ class SendNftNotifier extends _$SendNftNotifier {
       final details = TransactionDetails(
         id: result.id,
         txHash: result.txHash!,
+        walletViewId: walletViewId,
         network: nft.network,
         status: result.status,
         nativeCoin: nativeCoin,

@@ -4,6 +4,7 @@ import 'package:drift/drift.dart';
 
 @DataClassName('Transaction')
 class TransactionsTable extends Table {
+  static const defaultWalletViewIdForDeprecated = '';
   // Transaction required fields
   TextColumn get type => text()(); // In, Out
   TextColumn get txHash => text()();
@@ -12,6 +13,7 @@ class TransactionsTable extends Table {
   TextColumn get coinId => text().nullable()();
   TextColumn get senderWalletAddress => text().nullable()();
   TextColumn get receiverWalletAddress => text().nullable()();
+  TextColumn get walletViewId => text()();
 
   // Fields, that will be available from ion service
   TextColumn get id => text().nullable()();
@@ -32,7 +34,10 @@ class TransactionsTable extends Table {
   RealColumn get transferredAmountUsd => real().nullable()();
 
   @override
-  Set<Column> get primaryKey => {txHash};
+  String? get tableName => 'transactions_table_v2';
+
+  @override
+  Set<Column> get primaryKey => {txHash, walletViewId};
 }
 
 /// We need to be sure that the data in the db is stored in a single format,

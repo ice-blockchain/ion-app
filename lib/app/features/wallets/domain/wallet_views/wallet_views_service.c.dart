@@ -317,12 +317,18 @@ class WalletViewsService {
 
   Future<void> delete({required String walletViewId}) async {
     await _identity.wallets.deleteWalletView(walletViewId);
+
+    unawaited(
+      _transactionsRepository.remove(
+        walletViewIds: [walletViewId],
+      ),
+    );
+
     _originWalletViews = _originWalletViews.where((view) => view.id != walletViewId).toList();
 
     _updateEmittedWalletViews(walletViews: _originWalletViews);
   }
 
-  // TODO: Move parsing to the separate class
   WalletViewData _parseWalletView(
     WalletView viewDTO,
     Map<String, NetworkData> networks, {

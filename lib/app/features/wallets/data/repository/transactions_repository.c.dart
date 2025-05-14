@@ -3,12 +3,15 @@
 import 'dart:async';
 
 import 'package:collection/collection.dart';
+import 'package:drift/drift.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/extensions/string.dart';
 import 'package:ion/app/features/core/providers/wallets_provider.c.dart';
 import 'package:ion/app/features/wallets/data/database/dao/coins_dao.c.dart';
 import 'package:ion/app/features/wallets/data/database/dao/networks_dao.c.dart';
 import 'package:ion/app/features/wallets/data/database/dao/transactions_dao.c.dart';
+import 'package:ion/app/features/wallets/data/database/tables/transactions_table.c.dart';
+import 'package:ion/app/features/wallets/data/database/wallets_database.c.dart' as db;
 import 'package:ion/app/features/wallets/data/mappers/transaction_mapper.dart';
 import 'package:ion/app/features/wallets/model/coin_data.c.dart';
 import 'package:ion/app/features/wallets/model/entities/wallet_asset_entity.c.dart';
@@ -18,8 +21,10 @@ import 'package:ion/app/features/wallets/model/transaction_data.c.dart';
 import 'package:ion/app/features/wallets/model/transaction_details.c.dart';
 import 'package:ion/app/features/wallets/model/transaction_status.c.dart';
 import 'package:ion/app/features/wallets/model/transaction_type.dart';
+import 'package:ion/app/features/wallets/model/wallet_view_data.c.dart';
 import 'package:ion/app/features/wallets/utils/crypto_amount_parser.dart';
 import 'package:ion/app/services/ion_identity/ion_identity_client_provider.c.dart';
+import 'package:ion/app/services/logger/logger.dart';
 import 'package:ion_identity_client/ion_identity.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
@@ -45,7 +50,9 @@ class TransactionsRepository {
     this._transactionsDao,
     this._ionIdentityClient,
     this._coinMapper,
-  );
+  ) {
+    _loadDeprecatedTransactions();
+  }
 
   final CoinsDao _coinsDao;
   final List<Wallet> _userWallets;
@@ -53,6 +60,25 @@ class TransactionsRepository {
   final TransactionsDao _transactionsDao;
   final IONIdentityClient _ionIdentityClient;
   final CoinTransactionsMapper _coinMapper;
+  final Completer<Map<String, TransactionData>> _deprecatedTransactionsCompleter = Completer();
+
+  void _loadDeprecatedTransactions() {
+    if (_deprecatedTransactionsCompleter.isCompleted) {
+      return;
+    }
+
+    _transactionsDao.getTransactions(
+      walletViewIds: [TransactionsTable.defaultWalletViewIdForDeprecated],
+    ).then((txs) {
+      final mapped = Map.fromEntries(
+        txs.map((tx) => MapEntry(tx.txHash, tx)),
+      );
+
+      _deprecatedTransactionsCompleter.complete(mapped);
+
+      return mapped;
+    });
+  }
 
   Future<DateTime?> getLastCreatedAt() => _transactionsDao.lastCreatedAt();
 
@@ -65,10 +91,18 @@ class TransactionsRepository {
     await _transactionsDao.save([mapped]);
   }
 
-  Future<bool> saveTransactions(List<TransactionData> transactions) =>
-      _transactionsDao.save(_coinMapper.fromDomainToDB(transactions));
+  Future<bool> saveTransactions(List<TransactionData> transactions) async {
+    final merged = await _mergeWithDeprecatedTransactions(
+      _coinMapper.fromDomainToDB(transactions),
+    );
 
-  Future<void> saveEntities(List<WalletAssetEntity> entities) async {
+    return _transactionsDao.save(merged);
+  }
+
+  Future<void> saveEntities(
+    List<WalletAssetEntity> entities,
+    List<WalletViewData> walletViews,
+  ) async {
     // Always add empty contract address to get native coin of the network
     final contractFilters = <String>{''};
     final networkFilters = <String>{};
@@ -83,15 +117,71 @@ class TransactionsRepository {
       contractAddresses: contractFilters,
     );
 
+    final walletViewsToConnectedWallets = walletViews.map((wv) {
+      return (
+        walletViewId: wv.id,
+        wallets: wv.coins
+            .map((e) => e.walletId)
+            .nonNulls
+            .map((id) => _userWallets.firstWhereOrNull((e) => e.id == id))
+            .nonNulls
+            .toList(),
+      );
+    });
+
     final mapped = _coinMapper.fromEntityToDB(
-      entities,
-      _userWallets.map((e) => e.address).nonNulls,
       coins,
+      entities,
+      walletViewsToConnectedWallets,
     );
 
-    if (mapped.isEmpty) return;
+    if (mapped.isEmpty) {
+      if (entities.isNotEmpty) {
+        Logger.error(
+          'Failed to map transaction entities to the DB models. Entity ids: \n'
+          '${entities.map((e) => e.id).join('\n')}',
+        );
+      }
+      return;
+    }
 
-    await _transactionsDao.save(mapped);
+    final mergedWithDeprecated = await _mergeWithDeprecatedTransactions(mapped);
+    await _transactionsDao.save(mergedWithDeprecated);
+  }
+
+  Future<List<db.Transaction>> _mergeWithDeprecatedTransactions(
+    List<db.Transaction> incomingTxs,
+  ) async {
+    final deprecated = await _deprecatedTransactionsCompleter.future;
+    if (deprecated.isEmpty) return incomingTxs;
+
+    final updatedTxs = <db.Transaction>[];
+    final deprecatedToRemove = <String>[];
+
+    for (final tx in incomingTxs) {
+      final deprecatedTx = deprecated[tx.txHash];
+
+      updatedTxs.add(
+        deprecatedTx == null
+            ? tx
+            : tx.copyWith(
+                createdAtInRelay: Value.absentIfNull(deprecatedTx.createdAtInRelay),
+                userPubkey: Value.absentIfNull(deprecatedTx.userPubkey),
+              ),
+      );
+      if (deprecatedTx != null) {
+        deprecatedToRemove.add(tx.txHash);
+      }
+    }
+
+    if (deprecatedToRemove.isNotEmpty) {
+      await _transactionsDao.remove(
+        txHashes: deprecatedToRemove,
+        walletViewIds: [TransactionsTable.defaultWalletViewIdForDeprecated],
+      );
+    }
+
+    return updatedTxs;
   }
 
   Stream<Map<CoinData, List<TransactionData>>> watchBroadcastedTransfersByCoins(
@@ -102,12 +192,21 @@ class TransactionsRepository {
   Future<List<TransactionData>> getBroadcastedTransfers({String? walletAddress}) =>
       _transactionsDao.getBroadcastedTransfers(walletAddress: walletAddress);
 
-  Future<void> remove(Iterable<String> txHashes) => _transactionsDao.remove(txHashes);
+  Future<void> remove({
+    Iterable<String> txHashes = const [],
+    Iterable<String> walletViewIds = const [],
+  }) {
+    return _transactionsDao.remove(
+      txHashes: txHashes,
+      walletViewIds: walletViewIds,
+    );
+  }
 
   Future<List<TransactionData>> getTransactions({
     List<String> coinIds = const [],
     List<String> txHashes = const [],
     List<String> walletAddresses = const [],
+    List<String> walletViewIds = const [],
     int limit = 20,
     int offset = 0,
     NetworkData? network,
@@ -119,6 +218,7 @@ class TransactionsRepository {
       offset: offset,
       coinIds: coinIds,
       networkId: network?.id,
+      walletViewIds: walletViewIds,
     );
   }
 
@@ -135,6 +235,7 @@ class TransactionsRepository {
 
   Future<TransactionsPage> loadCoinTransactions(
     String walletId, {
+    required String walletViewId,
     int? pageSize,
     String? pageToken,
   }) async {
@@ -191,6 +292,7 @@ class TransactionsRepository {
 
           return TransactionData(
             txHash: transaction.txHash,
+            walletViewId: walletViewId,
             externalHash: transaction.externalHash,
             network: network,
             type: type,

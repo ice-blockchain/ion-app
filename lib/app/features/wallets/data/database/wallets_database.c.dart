@@ -50,7 +50,7 @@ class WalletsDatabase extends _$WalletsDatabase {
   final String pubkey;
 
   @override
-  int get schemaVersion => 6;
+  int get schemaVersion => 7;
 
   static QueryExecutor _openConnection(String pubkey) {
     return driftDatabase(name: 'wallets_database_$pubkey');
@@ -78,6 +78,27 @@ class WalletsDatabase extends _$WalletsDatabase {
           await m.alterTable(
             TableMigration(transactionsTable),
           );
+        },
+        from6To7: (m, schema) async {
+          const oldTransactionsTableName = 'transactions_table';
+          await m.createTable(transactionsTable);
+
+          await customStatement('''
+          INSERT INTO ${transactionsTable.actualTableName} (
+            wallet_view_id, 
+            type, tx_hash, network_id, coin_id, sender_wallet_address, 
+            receiver_wallet_address, id, fee, status, native_coin_id, 
+            date_confirmed, date_requested, created_at_in_relay, user_pubkey, 
+            asset_id, transferred_amount, transferred_amount_usd
+          )
+          SELECT 
+            '', 
+            type, tx_hash, network_id, coin_id, sender_wallet_address, 
+            receiver_wallet_address, id, fee, status, native_coin_id, 
+            date_confirmed, date_requested, created_at_in_relay, user_pubkey, 
+            asset_id, transferred_amount, transferred_amount_usd
+          FROM $oldTransactionsTableName;
+          ''');
         },
       ),
     );

@@ -23,13 +23,17 @@ Future<TransactionLoader> transactionLoader(Ref ref) async {
 /// If there were no changes to the saved data when trying to save a new page
 /// and all other transactions have already been loaded, stops sync.
 class TransactionLoader {
-  const TransactionLoader(this._transactionsRepository, this._externalHashProcessor);
+  const TransactionLoader(
+    this._transactionsRepository,
+    this._externalHashProcessor,
+  );
 
   final TransactionsRepository _transactionsRepository;
   final ExternalHashProcessor _externalHashProcessor;
 
   Future<bool> load({
     required Wallet wallet,
+    required String walletViewId,
     required bool isFullLoad,
   }) async {
     String? nextPageToken = '';
@@ -39,6 +43,7 @@ class TransactionLoader {
       while (nextPageToken != null) {
         final result = await _transactionsRepository.loadCoinTransactions(
           wallet.id,
+          walletViewId: walletViewId,
           pageSize: isFullLoad ? 500 : null,
           pageToken: nextPageToken.isEmpty ? null : nextPageToken,
         );
@@ -50,8 +55,9 @@ class TransactionLoader {
 
           if (resultTransactions.any((t) => t.externalHash != null)) {
             resultTransactions = await _externalHashProcessor.process(resultTransactions);
-            await _transactionsRepository
-                .remove(resultTransactions.map((t) => t.externalHash).nonNulls);
+            await _transactionsRepository.remove(
+              txHashes: resultTransactions.map((t) => t.externalHash).nonNulls,
+            );
           }
 
           if (isFullLoad) {

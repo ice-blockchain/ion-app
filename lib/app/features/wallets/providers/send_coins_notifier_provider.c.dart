@@ -20,6 +20,7 @@ import 'package:ion/app/features/wallets/model/transaction_status.c.dart';
 import 'package:ion/app/features/wallets/model/transaction_type.dart';
 import 'package:ion/app/features/wallets/model/transfer_result.c.dart';
 import 'package:ion/app/features/wallets/providers/send_asset_form_provider.c.dart';
+import 'package:ion/app/features/wallets/providers/wallet_view_data_provider.c.dart';
 import 'package:ion/app/services/logger/logger.dart';
 import 'package:ion/app/utils/retry.dart';
 import 'package:ion_identity_client/ion_identity.dart';
@@ -58,6 +59,7 @@ class SendCoinsNotifier extends _$SendCoinsNotifier {
     state = const AsyncValue.loading();
 
     state = await AsyncValue.guard(() async {
+      final walletViewId = await ref.read(currentWalletViewIdProvider.future);
       final service = await ref.read(coinsServiceProvider.future);
 
       var result = await service.send(
@@ -94,6 +96,7 @@ class SendCoinsNotifier extends _$SendCoinsNotifier {
 
       final details = TransactionDetails(
         id: result.id,
+        walletViewId: walletViewId,
         txHash: result.txHash!,
         network: form.network!,
         status: result.status,
