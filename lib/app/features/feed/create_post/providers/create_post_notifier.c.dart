@@ -79,10 +79,7 @@ class CreatePostNotifier extends _$CreatePostNotifier {
       final mentions = _buildMentions(postContent);
 
       final postData = ModifiablePostData(
-        content: await _buildContentWithMediaLinks(
-          content: postContent,
-          media: media.values.toList(),
-        ),
+        // content: '',
         media: media,
         replaceableEventId: ReplaceableEventIdentifier.generate(),
         publishedAt: _buildEntityPublishedAt(),
@@ -148,10 +145,10 @@ class CreatePostNotifier extends _$CreatePostNotifier {
       final modifiedMedia = Map<String, MediaAttachment>.from(mediaAttachments)..addAll(media);
 
       final postData = modifiedEntity.data.copyWith(
-        content: await _buildContentWithMediaLinks(
-          content: postContent,
-          media: modifiedMedia.values.toList(),
-        ),
+        // content: await _buildContentWithMediaLinks(
+        //   content: postContent,
+        //   media: modifiedMedia.values.toList(),
+        // ),
         richText: await _buildRichTextContentWithMediaLinks(
           content: postContent,
           media: modifiedMedia.values.toList(),
@@ -203,7 +200,7 @@ class CreatePostNotifier extends _$CreatePostNotifier {
       }
 
       final postData = entity.data.copyWith(
-        content: '',
+        // content: '',
         editingEndedAt: null,
         relatedHashtags: [],
         relatedPubkeys: [],
@@ -374,7 +371,7 @@ class CreatePostNotifier extends _$CreatePostNotifier {
     return Delta.fromOperations(
       media
           .map(
-            (mediaItem) => Operation.insert(mediaItem.url, {Attribute.link.key: mediaItem.url}),
+            (mediaItem) => Operation.insert(' ', {Attribute.link.key: mediaItem.url}),
           )
           .toList(),
     ).concat(newContentDelta);
