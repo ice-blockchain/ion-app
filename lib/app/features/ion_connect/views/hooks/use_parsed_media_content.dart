@@ -72,18 +72,18 @@ import 'package:ion/app/services/markdown/quill.dart';
   var afterMedia = false;
   for (final operation in delta.operations) {
     final attributes = operation.attributes;
+    final value = operation.value;
     if (attributes != null &&
         attributes.containsKey(Attribute.link.key) &&
         media.containsKey(attributes[Attribute.link.key])) {
       afterMedia = true;
       mediaFromContent.add(media[attributes[Attribute.link.key]]!);
-    } else {
+    } else if (value is String) {
       // [afterMedia] and [trimmedValue] are needed to handle the case with
       // processing Delta, that is built upon a plain text -
       // there we insert media links as plain text in the beginning of the content,
       // dividing those with a whitespace.
       // After the links are extracted, we need to remove the whitespaces as well.
-      final value = operation.value as String;
       final trimmedValue =
           afterMedia && value.startsWith(' ') ? value.replaceFirst(' ', '') : value;
       afterMedia = false;
@@ -96,6 +96,9 @@ import 'package:ion/app/services/markdown/quill.dart';
               : Operation.insert(trimmedValue),
         );
       }
+    } else {
+      // Preserve non-string operations (e.g. embeds)
+      nonMediaOperations.add(operation);
     }
   }
 
