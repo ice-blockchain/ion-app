@@ -1,41 +1,51 @@
 // SPDX-License-Identifier: ice License 1.0
 
 import 'dart:async';
+import 'dart:collection';
 
-import 'package:async/async.dart';
-import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/services/firebase/firebase_messaging_service_provider.c.dart';
 import 'package:ion/app/services/local_notifications/local_notifications.c.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'notification_response_data_provider.c.g.dart';
 
-@riverpod
-Future<StreamQueue<Map<String, dynamic>>> notificationResponseData(Ref ref) async {
-  final firebaseMessagingService = ref.watch(firebaseMessagingServiceProvider);
-  final localNotificationsService = await ref.watch(localNotificationsServiceProvider.future);
+typedef QueueData = Map<String, dynamic>;
 
-  final controller = StreamController<Map<String, dynamic>>();
-  final streamQueue = StreamQueue(controller.stream.distinct());
-
-  final firebaseInitialMessageData = await firebaseMessagingService.getInitialMessageData();
-
-  if (firebaseInitialMessageData != null) {
-    controller.add(firebaseInitialMessageData);
+@Riverpod(keepAlive: true)
+class NotificationResponseData extends _$NotificationResponseData {
+  @override
+  Queue<QueueData> build() {
+    _initialize();
+    return Queue<QueueData>();
   }
 
-  final initialLocalNotificationData = await localNotificationsService.getInitialNotificationData();
-  if (initialLocalNotificationData != null) {
-    controller.add(initialLocalNotificationData);
+  Future<void> _initialize() async {
+    final firebaseMessagingService = ref.watch(firebaseMessagingServiceProvider);
+    final localNotificationsService = await ref.watch(localNotificationsServiceProvider.future);
+
+    final firebaseInitialMessageData = await firebaseMessagingService.getInitialMessageData();
+    if (firebaseInitialMessageData != null) {
+      _addLast(firebaseInitialMessageData);
+    }
+
+    final initialLocalNotificationData =
+        await localNotificationsService.getInitialNotificationData();
+    if (initialLocalNotificationData != null) {
+      _addLast(initialLocalNotificationData);
+    }
+
+    final subscription = localNotificationsService.notificationResponseStream.listen(_addLast);
+
+    ref.onDispose(subscription.cancel);
   }
 
-  final subscription = localNotificationsService.notificationResponseStream.listen(controller.add);
+  void _addLast(QueueData data) {
+    state = Queue.from(state)..addLast(data);
+  }
 
-  ref.onDispose(() {
-    subscription.cancel();
-    streamQueue.cancel();
-    controller.close();
-  });
-
-  return streamQueue;
+  void removeFirst() {
+    if (state.isNotEmpty) {
+      state = Queue.from(state)..removeFirst();
+    }
+  }
 }
