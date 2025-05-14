@@ -80,7 +80,7 @@ class PostBody extends HookConsumerWidget {
             : _calculateMaxHeight(
                 context,
                 text: Document.fromDelta(content).toPlainText(),
-                style:context.theme.appTextThemes.body2,
+                style: context.theme.appTextThemes.body2,
                 maxWidth: constraints.maxWidth,
               );
 
