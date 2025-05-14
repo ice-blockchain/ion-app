@@ -26,6 +26,7 @@ class MediaPickerPage extends HookConsumerWidget {
     this.title,
     this.isBottomSheet = false,
     this.maxVideoDurationInSeconds,
+    this.showCameraCell = true,
     super.key,
   });
 
@@ -34,6 +35,7 @@ class MediaPickerPage extends HookConsumerWidget {
   final String? title;
   final bool isBottomSheet;
   final int? maxVideoDurationInSeconds;
+  final bool showCameraCell;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -106,6 +108,7 @@ class MediaPickerPage extends HookConsumerWidget {
       GalleryGridView(
         type: type,
         showSelectionBadge: maxSelection > 1,
+        showCameraCell: showCameraCell,
         galleryState: galleryState.valueOrNull ??
             GalleryState(
               mediaData: [],

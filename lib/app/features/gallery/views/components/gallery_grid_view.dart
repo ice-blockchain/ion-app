@@ -15,6 +15,7 @@ class GalleryGridView extends ConsumerWidget {
     required this.galleryState,
     required this.showSelectionBadge,
     this.type = MediaPickerType.common,
+    this.showCameraCell = true,
     super.key,
   });
 
@@ -24,11 +25,17 @@ class GalleryGridView extends ConsumerWidget {
   final GalleryState galleryState;
   final MediaPickerType type;
   final bool showSelectionBadge;
+  final bool showCameraCell;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final hasLimitedPermission = ref.watch(hasLimitedPermissionProvider(Permission.photos));
-    final indexOffset = hasLimitedPermission ? 2 : 1; // +1 for CameraCell, +1 for AddCell
+
+    var indexOffset = 0;
+
+    if (showCameraCell) indexOffset += 1; // +1 for CameraCell
+    if (hasLimitedPermission) indexOffset += 1; // +1 for AddCell
+
     final totalCount = galleryState.mediaData.length + indexOffset;
 
     return SliverGrid(
@@ -39,15 +46,21 @@ class GalleryGridView extends ConsumerWidget {
       ),
       delegate: SliverChildBuilderDelegate(
         (context, index) {
-          if (index == 0) {
+          var currentIndex = index;
+
+          if (showCameraCell && index == 0) {
             return CameraCell(type: type);
+          } else if (showCameraCell) {
+            currentIndex -= 1;
           }
 
-          if (index == 1 && hasLimitedPermission) {
+          if (hasLimitedPermission && currentIndex == 0) {
             return AddMediaCell(type: type);
+          } else if (hasLimitedPermission && currentIndex > 0) {
+            currentIndex -= 1;
           }
 
-          final mediaData = galleryState.mediaData[index - indexOffset];
+          final mediaData = galleryState.mediaData[currentIndex];
           return GalleryGridCell(
             key: ValueKey(mediaData.path),
             mediaFile: mediaData,
