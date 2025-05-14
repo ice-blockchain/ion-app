@@ -187,8 +187,8 @@ class _OtherUserMenuItems extends ConsumerWidget {
         ContextMenuItem(
           label: isMuted ? i18n.button_unmute : i18n.button_mute,
           iconAsset: isMuted ? Assets.svg.iconChannelUnmute : Assets.svg.iconChannelMute,
-          onPressed: () {
-            ref.read(globalMuteNotifierProvider.notifier).toggle();
+          onPressed: () async {
+            await ref.read(globalMuteNotifierProvider.notifier).toggle();
           },
         ),
         const ContextMenuItemDivider(),

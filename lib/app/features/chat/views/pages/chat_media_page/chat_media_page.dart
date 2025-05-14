@@ -207,9 +207,9 @@ class _MediaBottomOverlay extends ConsumerWidget {
               ),
               if (isVideo)
                 GestureDetector(
-                  onTap: () {
-                    HapticFeedback.lightImpact();
-                    ref.read(globalMuteNotifierProvider.notifier).toggle();
+                  onTap: () async {
+                    await HapticFeedback.lightImpact();
+                    await ref.read(globalMuteNotifierProvider.notifier).toggle();
                   },
                   child: isMuted
                       ? Assets.svg.iconChannelUnmute.icon(

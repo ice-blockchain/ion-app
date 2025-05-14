@@ -85,9 +85,9 @@ class _SoundButton extends ConsumerWidget {
               color: muteColor,
               size: 20.0.s,
             ),
-      onPressed: () {
-        HapticFeedback.lightImpact();
-        ref.read(globalMuteNotifierProvider.notifier).toggle();
+      onPressed: () async {
+        await HapticFeedback.lightImpact();
+        await ref.read(globalMuteNotifierProvider.notifier).toggle();
       },
     );
   }
