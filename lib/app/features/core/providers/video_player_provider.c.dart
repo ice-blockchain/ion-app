@@ -45,7 +45,6 @@ class VideoControllerParams {
 @riverpod
 class VideoController extends _$VideoController {
   CachedVideoPlayerPlusController? _activeController;
-  bool _isDisposed = false;
 
   @override
   Future<Raw<CachedVideoPlayerPlusController>> build(VideoControllerParams params) async {
@@ -62,6 +61,10 @@ class VideoController extends _$VideoController {
       await controller.initialize();
       if (!controller.value.hasError) {
         await controller.setLooping(params.looping);
+
+        // Set initial volume based on global mute state
+        final isMuted = ref.read(globalMuteProvider);
+        await controller.setVolume(isMuted ? 0.0 : 1.0);
 
         if (_activeController != null) {
           final prevController = _activeController!;
@@ -84,8 +87,15 @@ class VideoController extends _$VideoController {
         _activeController = controller;
 
         ref.listen(globalMuteProvider, (previous, next) {
-          if (!_isDisposed && _activeController != null) {
-            _activeController!.setVolume(next ? 0 : 1);
+          if (_activeController != null && _activeController!.value.isInitialized) {
+            final isPlaying = _activeController!.value.isPlaying;
+            unawaited(
+              _activeController!.setVolume(next ? 0.0 : 1.0).then((_) {
+                if (isPlaying && !_activeController!.value.isPlaying) {
+                  _activeController!.play();
+                }
+              }),
+            );
           }
         });
       }
@@ -104,7 +114,6 @@ class VideoController extends _$VideoController {
     }
 
     ref.onCancel(() async {
-      _isDisposed = true;
       return controller.dispose();
     });
 

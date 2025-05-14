@@ -71,24 +71,45 @@ class VideoPreview extends HookConsumerWidget {
       [isFullyVisible, context],
     );
 
-    final wasOffScreen = useRef(false);
     useOnInit(
       () {
         if (controller == null || !controller.value.isInitialized) {
           return;
         }
-        final shouldBeActive =
-            isFullyVisible.value && !controller.value.isPlaying && isRouteFocused.value;
-        final shouldBePaused =
-            (!isFullyVisible.value || !isRouteFocused.value) && controller.value.isPlaying;
-        if (shouldBeActive) {
+        final shouldBeActive = isFullyVisible.value && isRouteFocused.value;
+        if (shouldBeActive && !controller.value.isPlaying) {
           controller.play();
-        } else if (shouldBePaused && !wasOffScreen.value) {
+        } else if (!shouldBeActive && controller.value.isPlaying) {
           controller.pause();
         }
-        wasOffScreen.value = !isFullyVisible.value || !isRouteFocused.value;
       },
       [isFullyVisible.value, isRouteFocused.value, controller],
+    );
+
+    useEffect(
+      () {
+        if (controller != null && controller.value.isInitialized) {
+          final isPlaying = controller.value.isPlaying;
+          controller.setVolume(isMuted ? 0.0 : 1.0).then((_) {
+            // If it was playing before volume change, ensure it's still playing
+            if (isPlaying && !controller.value.isPlaying) {
+              controller.play();
+            }
+          });
+        }
+        return null;
+      },
+      [isMuted, controller],
+    );
+
+    useEffect(
+      () {
+        if (controller != null && controller.value.isInitialized) {
+          controller.setVolume(isMuted ? 0.0 : 1.0);
+        }
+        return null;
+      },
+      [controller?.value.isInitialized],
     );
 
     return VisibilityDetector(
@@ -137,8 +158,8 @@ class VideoPreview extends HookConsumerWidget {
                   _VideoDurationLabel(controller: controller),
                   _MuteButton(
                     isMuted: isMuted,
-                    onToggle: () {
-                      ref.read(globalMuteProvider.notifier).toggle();
+                    onToggle: () async {
+                      await ref.read(globalMuteProvider.notifier).toggle();
                     },
                   ),
                 ],
@@ -187,14 +208,16 @@ class _MuteButton extends StatelessWidget {
   });
 
   final bool isMuted;
-  final VoidCallback onToggle;
+  final Future<void> Function() onToggle;
 
   @override
   Widget build(BuildContext context) {
     final icon = isMuted ? Assets.svg.iconChannelMute : Assets.svg.iconChannelUnmute;
 
     return GestureDetector(
-      onTap: onToggle,
+      onTap: () async {
+        await onToggle();
+      },
       child: Container(
         padding: EdgeInsets.all(6.0.s),
         decoration: BoxDecoration(

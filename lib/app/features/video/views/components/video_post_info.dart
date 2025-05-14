@@ -55,7 +55,9 @@ class VideoPostInfo extends StatelessWidget {
                               color: context.theme.appColors.secondaryBackground,
                               size: 20.0.s,
                             ),
-                      onPressed: () => ref.read(globalMuteProvider.notifier).toggle(),
+                      onPressed: () async {
+                        await ref.read(globalMuteProvider.notifier).toggle();
+                      },
                     );
                   },
                 ),
