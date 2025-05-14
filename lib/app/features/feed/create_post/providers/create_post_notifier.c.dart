@@ -365,8 +365,7 @@ class CreatePostNotifier extends _$CreatePostNotifier {
     required Delta content,
     required List<MediaAttachment> media,
   }) async {
-    final currentOperations = content.operations.toList();
-    final newContentDelta = Delta.fromOperations(currentOperations);
+    final newContentDelta = flattenLinks(content);
 
     return Delta.fromOperations(
       media
