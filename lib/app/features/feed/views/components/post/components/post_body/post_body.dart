@@ -7,7 +7,7 @@ import 'package:flutter_quill/flutter_quill.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/components/text_editor/text_editor_preview.dart';
 import 'package:ion/app/components/text_editor/utils/is_attributed_operation.dart';
-import 'package:ion/app/extensions/delta.dart';
+import 'package:ion/app/components/text_editor/utils/text_editor_styles.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/feed/data/models/entities/modifiable_post_data.c.dart';
 import 'package:ion/app/features/feed/data/models/entities/post_data.c.dart';
@@ -22,7 +22,7 @@ import 'package:ion/app/typedefs/typedefs.dart';
 class PostBody extends HookConsumerWidget {
   const PostBody({
     required this.entity,
-    this.customStyles,
+    this.isShared = false,
     this.isTextSelectable = false,
     this.maxLines = 6,
     this.framedEventReference,
@@ -31,7 +31,7 @@ class PostBody extends HookConsumerWidget {
     super.key,
   });
 
-  final DefaultStyles? customStyles;
+  final bool isShared;
   final IonConnectEntity entity;
   final bool isTextSelectable;
   final EventReference? framedEventReference;
@@ -96,10 +96,16 @@ class PostBody extends HookConsumerWidget {
                       child: SizedBox(
                         height: maxHeight,
                         child: TextEditorPreview(
-                          content: content,
-                          customStyles: customStyles,
-                          enableInteractiveSelection: isTextSelectable,
                           scrollable: false,
+                          content: content,
+                          customStyles: isShared
+                              ? textEditorStyles(
+                                  context,
+                                  color: context.theme.appColors.onPrimaryAccent,
+                                )
+                              : null,
+                          enableInteractiveSelection: isTextSelectable,
+                          tagsColor: isShared ? context.theme.appColors.lightBlue : null,
                         ),
                       ),
                     ),
@@ -109,7 +115,9 @@ class PostBody extends HookConsumerWidget {
                       child: Text(
                         context.i18n.common_show_more,
                         style: context.theme.appTextThemes.body2.copyWith(
-                          color: context.theme.appColors.darkBlue,
+                          color: isShared
+                              ? context.theme.appColors.primaryBackground
+                              : context.theme.appColors.darkBlue,
                         ),
                       ),
                     ),

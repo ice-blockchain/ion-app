@@ -6,7 +6,6 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/components/counter_items_footer/counter_items_footer.dart';
 import 'package:ion/app/components/screen_offset/screen_side_offset.dart';
 import 'package:ion/app/components/skeleton/skeleton.dart';
-import 'package:ion/app/components/text_editor/utils/text_editor_styles.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/auth/providers/auth_provider.c.dart';
 import 'package:ion/app/features/feed/create_post/views/pages/post_form_modal/components/parent_entity.dart';
@@ -41,8 +40,6 @@ class Post extends ConsumerWidget {
     this.footer,
     this.onDelete,
     this.isShared = false,
-    this.hideFooter = false,
-    this.hideHeaderTrailing = false,
     this.isTextSelectable = false,
     this.bodyMaxLines = 6,
     this.contentWrapper,
@@ -53,8 +50,6 @@ class Post extends ConsumerWidget {
   final EventReference eventReference;
   final EventReference? repostEventReference;
   final bool isShared;
-  final bool hideFooter;
-  final bool hideHeaderTrailing;
   final bool displayQuote;
   final bool displayParent;
   final double? topOffset;
@@ -91,10 +86,8 @@ class Post extends ConsumerWidget {
         SizedBox(height: headerOffset ?? 10.0.s),
         PostBody(
           entity: entity,
+          isShared: isShared,
           isTextSelectable: isTextSelectable,
-          customStyles: isShared
-              ? textEditorStyles(context, color: context.theme.appColors.onPrimaryAccent)
-              : null,
           maxLines: bodyMaxLines,
           onVideoTap: onVideoTap,
           framedEventReference: repostEventReference ?? quotedEventReference,
@@ -105,7 +98,7 @@ class Post extends ConsumerWidget {
               if (displayQuote && quotedEventReference != null)
                 _QuotedEvent(eventReference: quotedEventReference),
               SizedBox(height: 8.0.s),
-              if (!hideFooter) footer ?? CounterItemsFooter(eventReference: eventReference),
+              footer ?? CounterItemsFooter(eventReference: eventReference),
             ],
           ),
         ),
@@ -131,11 +124,9 @@ class Post extends ConsumerWidget {
                         color: context.theme.appColors.onPrimaryAccent,
                       )
                     : null,
-                trailing: hideHeaderTrailing
-                    ? null
-                    : isOwnedByCurrentUser
-                        ? OwnEntityMenu(eventReference: eventReference, onDelete: onDelete)
-                        : UserInfoMenu(eventReference: eventReference),
+                trailing: isOwnedByCurrentUser
+                    ? OwnEntityMenu(eventReference: eventReference, onDelete: onDelete)
+                    : UserInfoMenu(eventReference: eventReference),
               ),
         ),
         if (contentWrapper != null) contentWrapper!(content) else content,

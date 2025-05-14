@@ -65,11 +65,15 @@ DefaultStyles textEditorStyles(BuildContext context, {Color? color}) {
   );
 }
 
-TextStyle customTextStyleBuilder(Attribute<dynamic> attribute, BuildContext context) {
+TextStyle customTextStyleBuilder(
+  Attribute<dynamic> attribute,
+  BuildContext context, {
+  Color? tagsColor,
+}) {
   if (attribute.key == HashtagAttribute.attributeKey ||
       attribute.key == CashtagAttribute.attributeKey) {
     return TextStyle(
-      color: context.theme.appColors.primaryAccent,
+      color: tagsColor ?? context.theme.appColors.primaryAccent,
       decoration: TextDecoration.none,
     );
   } else if (attribute.key == Attribute.link.key) {

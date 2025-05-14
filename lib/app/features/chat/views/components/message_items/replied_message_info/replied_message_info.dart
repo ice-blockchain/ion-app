@@ -7,6 +7,7 @@ import 'package:ion/app/features/chat/model/message_list_item.c.dart';
 import 'package:ion/app/features/chat/recent_chats/providers/selected_reply_message_provider.c.dart';
 import 'package:ion/app/features/chat/recent_chats/views/components/recent_chat_tile/recent_chat_tile.dart';
 import 'package:ion/app/features/chat/views/components/message_items/message_types/visual_media_message/visual_media_custom_grid.dart';
+import 'package:ion/app/features/components/ion_connect_network_image/ion_connect_network_image.dart';
 import 'package:ion/app/features/core/model/media_type.dart';
 import 'package:ion/generated/assets.gen.dart';
 
@@ -51,8 +52,9 @@ class RepliedMessageInfo extends HookConsumerWidget {
                   height: 30.0.s,
                   child: ClipRRect(
                     borderRadius: BorderRadius.circular(8.0.s),
-                    child: Image.network(
-                      repliedMessage.medias.first.mediaType == MediaType.video &&
+                    child: IonConnectNetworkImage(
+                      authorPubkey: repliedMessage.eventMessage.masterPubkey,
+                      imageUrl: repliedMessage.medias.first.mediaType == MediaType.video &&
                               repliedMessage.medias.first.thumb != null
                           ? repliedMessage.medias.first.thumb!
                           : repliedMessage.medias.first.url,
