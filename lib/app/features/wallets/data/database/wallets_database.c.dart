@@ -92,7 +92,7 @@ class WalletsDatabase extends _$WalletsDatabase {
             transferred_amount, transferred_amount_usd
           )
           SELECT 
-            ${TransactionsTable.defaultWalletViewIdForDeprecatedData}, type, tx_hash, network_id, 
+            ${TransactionsTable.defaultWalletViewIdForDeprecated}, type, tx_hash, network_id, 
             coin_id, sender_wallet_address, receiver_wallet_address, id, fee, status, native_coin_id, 
             date_confirmed, date_requested, created_at_in_relay, user_pubkey, 
             asset_id, transferred_amount, transferred_amount_usd

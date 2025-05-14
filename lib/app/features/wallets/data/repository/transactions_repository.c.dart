@@ -68,7 +68,7 @@ class TransactionsRepository {
     }
 
     _transactionsDao.getTransactions(
-      walletViewIds: [TransactionsTable.defaultWalletViewIdForDeprecatedData],
+      walletViewIds: [TransactionsTable.defaultWalletViewIdForDeprecated],
     ).then((txs) {
       final mapped = Map.fromEntries(
         txs.map((tx) => MapEntry(tx.txHash, tx)),
@@ -175,7 +175,7 @@ class TransactionsRepository {
     if (deprecatedToRemove.isNotEmpty) {
       await _transactionsDao.remove(
         txHashes: deprecatedToRemove,
-        walletViewIds: [TransactionsTable.defaultWalletViewIdForDeprecatedData],
+        walletViewIds: [TransactionsTable.defaultWalletViewIdForDeprecated],
       );
     }
 
