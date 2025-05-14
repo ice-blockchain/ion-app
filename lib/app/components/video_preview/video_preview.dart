@@ -60,7 +60,7 @@ class VideoPreview extends HookConsumerWidget {
       },
     );
 
-    final isMuted = ref.watch(globalMuteProvider);
+    final isMuted = ref.watch(globalMuteNotifierProvider);
 
     final handleVisibilityChanged = useCallback(
       (VisibilityInfo info) {
@@ -159,7 +159,7 @@ class VideoPreview extends HookConsumerWidget {
                   _MuteButton(
                     isMuted: isMuted,
                     onToggle: () async {
-                      await ref.read(globalMuteProvider.notifier).toggle();
+                      await ref.read(globalMuteNotifierProvider.notifier).toggle();
                     },
                   ),
                 ],

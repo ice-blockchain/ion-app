@@ -160,7 +160,7 @@ class _OtherUserMenuItems extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final i18n = context.i18n;
-    final isMuted = ref.watch(globalMuteProvider);
+    final isMuted = ref.watch(globalMuteNotifierProvider);
 
     ref.displayErrors(reportNotifierProvider);
 
@@ -187,8 +187,8 @@ class _OtherUserMenuItems extends ConsumerWidget {
         ContextMenuItem(
           label: isMuted ? i18n.button_unmute : i18n.button_mute,
           iconAsset: isMuted ? Assets.svg.iconChannelUnmute : Assets.svg.iconChannelMute,
-          onPressed: () async {
-            await ref.read(globalMuteProvider.notifier).toggle();
+          onPressed: () {
+            ref.read(globalMuteNotifierProvider.notifier).toggle();
           },
         ),
         const ContextMenuItemDivider(),

@@ -71,7 +71,7 @@ class _SoundButton extends ConsumerWidget {
     }
 
     final muteColor = context.theme.appColors.onPrimaryAccent;
-    final isMuted = ref.watch(globalMuteProvider);
+    final isMuted = ref.watch(globalMuteNotifierProvider);
 
     return StoryControlButton(
       borderRadius: 16.0.s,
@@ -87,7 +87,7 @@ class _SoundButton extends ConsumerWidget {
             ),
       onPressed: () {
         HapticFeedback.lightImpact();
-        ref.read(globalMuteProvider.notifier).toggle();
+        ref.read(globalMuteNotifierProvider.notifier).toggle();
       },
     );
   }

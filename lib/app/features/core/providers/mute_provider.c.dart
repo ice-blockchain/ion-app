@@ -8,7 +8,7 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 part 'mute_provider.c.g.dart';
 
 @Riverpod(keepAlive: true)
-class GlobalMute extends _$GlobalMute {
+class GlobalMuteNotifier extends _$GlobalMuteNotifier {
   static const _channel = MethodChannel('audio_focus_channel');
 
   @override

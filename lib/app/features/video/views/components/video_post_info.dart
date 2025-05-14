@@ -44,7 +44,7 @@ class VideoPostInfo extends StatelessWidget {
                 createdAt: videoPost.data.publishedAt.value,
                 trailing: Consumer(
                   builder: (context, ref, child) {
-                    final isMuted = ref.watch(globalMuteProvider);
+                    final isMuted = ref.watch(globalMuteNotifierProvider);
                     return VideoButton(
                       icon: isMuted
                           ? Assets.svg.iconChannelMute.icon(
@@ -55,8 +55,8 @@ class VideoPostInfo extends StatelessWidget {
                               color: context.theme.appColors.secondaryBackground,
                               size: 20.0.s,
                             ),
-                      onPressed: () async {
-                        await ref.read(globalMuteProvider.notifier).toggle();
+                      onPressed: () {
+                        ref.read(globalMuteNotifierProvider.notifier).toggle();
                       },
                     );
                   },

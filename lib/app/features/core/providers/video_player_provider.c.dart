@@ -63,7 +63,7 @@ class VideoController extends _$VideoController {
         await controller.setLooping(params.looping);
 
         // Set initial volume based on global mute state
-        final isMuted = ref.read(globalMuteProvider);
+        final isMuted = ref.read(globalMuteNotifierProvider);
         await controller.setVolume(isMuted ? 0.0 : 1.0);
 
         if (_activeController != null) {
@@ -86,7 +86,7 @@ class VideoController extends _$VideoController {
 
         _activeController = controller;
 
-        ref.listen(globalMuteProvider, (_, next) {
+        ref.listen(globalMuteNotifierProvider, (_, next) {
           if (_activeController != null && _activeController!.value.isInitialized) {
             final isPlaying = _activeController!.value.isPlaying;
             unawaited(
