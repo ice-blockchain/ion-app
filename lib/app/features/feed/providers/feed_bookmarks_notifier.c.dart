@@ -205,13 +205,21 @@ Future<List<EventReference>> filteredBookmarksRefs(
 
   if (query.isEmpty) return allRefs;
 
-  final rawEvents = await ref.read(eventMessagesRepositoryProvider).getAllRaw(allRefs);
+  final rawEvents = await ref.read(eventMessagesRepositoryProvider).getFilteredRaw(allRefs, query);
+  return rawEvents.map((event) => event.eventReference).toList();
+}
 
-  final normalizedQuery = query.toLowerCase();
-  final filteredEvents = rawEvents.where(
-    (rawEvent) => rawEvent.content.toLowerCase().contains(normalizedQuery),
+@Riverpod(keepAlive: true)
+void feedBookmarksSync(Ref ref) {
+  ref.listen<AsyncValue<BookmarksCollectionEntity?>>(
+    feedBookmarksNotifierProvider(),
+    (previous, next) {
+      final collection = next.value;
+      if (collection != null) {
+        ref.read(ionConnectDbCacheProvider.notifier).saveAllNonExistingRefs(collection.data.refs);
+      }
+    },
   );
-  return filteredEvents.map((event) => event.eventReference).toList();
 }
 
 @Riverpod(keepAlive: true)

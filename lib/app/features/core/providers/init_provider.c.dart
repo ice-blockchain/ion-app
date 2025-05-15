@@ -13,10 +13,8 @@ import 'package:ion/app/features/core/providers/feature_flags_provider.c.dart';
 import 'package:ion/app/features/core/providers/template_provider.c.dart';
 import 'package:ion/app/features/core/providers/window_manager_provider.c.dart';
 import 'package:ion/app/features/core/views/components/widget_error_builder.dart';
-import 'package:ion/app/features/feed/data/models/bookmarks/bookmarks_collection.c.dart';
 import 'package:ion/app/features/feed/providers/feed_bookmarks_notifier.c.dart';
 import 'package:ion/app/features/force_update/providers/force_update_provider.c.dart';
-import 'package:ion/app/features/ion_connect/providers/ion_connect_db_cache_notifier.c.dart';
 import 'package:ion/app/features/push_notifications/background/firebase_messaging_background_service.dart';
 import 'package:ion/app/features/push_notifications/providers/configure_firebase_app_provider.c.dart';
 import 'package:ion/app/features/push_notifications/providers/configure_firebase_messaging_provider.c.dart';
@@ -63,16 +61,7 @@ Future<void> initApp(Ref ref) async {
     ..listen(userPublicWalletsSyncProvider, noop)
     ..listen(userRelaysSyncProvider, noop)
     ..listen(userChatRelaysSyncProvider, noop)
-    ..listen<AsyncValue<BookmarksCollectionEntity?>>(
-      feedBookmarksNotifierProvider(),
-      (previous, next) {
-        final collection = next.value;
-        if (collection != null) {
-          // Once bookmarks are loaded, sync them to the local DB
-          ref.read(ionConnectDbCacheProvider.notifier).saveAllNonExistingRefs(collection.data.refs);
-        }
-      },
-    )
+    ..listen(feedBookmarksSyncProvider, noop)
     ..listen(configureFirebaseAppProvider, noop)
     ..listen(configureFirebaseMessagingProvider, noop)
     ..listen(pushSubscriptionSyncProvider, noop);

@@ -62,10 +62,11 @@ class EventMessagesRepository {
     return eventsList.map((e) => e.toEventMessage()).toList();
   }
 
-  Future<List<EventMessageDbModel>> getAllRaw(
+  Future<List<EventMessageDbModel>> getFilteredRaw(
     List<EventReference> eventReferences,
+    String query,
   ) {
-    return _eventMessagesDao.get(eventReferences);
+    return _eventMessagesDao.getFiltered(eventReferences, query);
   }
 
   Future<List<EventReference>> getNonSavedRefs(
