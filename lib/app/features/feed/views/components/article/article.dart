@@ -22,7 +22,7 @@ import 'package:ion/app/features/ion_connect/model/event_reference.c.dart';
 import 'package:ion/app/utils/algorithm.dart';
 import 'package:ion/app/utils/color.dart';
 
-class Article extends HookConsumerWidget {
+class Article extends ConsumerWidget {
   const Article({
     required this.eventReference,
     this.accentTheme = false,

@@ -185,8 +185,6 @@ extension MessageTypes on ReplaceablePrivateDirectMessageData {
       return MessageType.visualMedia;
     } else if (media.isNotEmpty) {
       return MessageType.document;
-    } else if (IonConnectProtocolIdentifierTypeValidator.isAddressIdentifier(content)) {
-      return MessageType.sharedPost;
     } else if (IonConnectProtocolIdentifierTypeValidator.isEventIdentifier(content)) {
       if (EventReference.fromEncoded(content) case final ImmutableEventReference eventReference) {
         return switch (eventReference.kind) {
