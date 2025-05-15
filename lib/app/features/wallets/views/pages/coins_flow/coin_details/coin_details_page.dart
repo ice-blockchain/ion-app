@@ -6,6 +6,7 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/components/coins/coin_icon.dart';
 import 'package:ion/app/components/list_items_loading_state/list_items_loading_state.dart';
+import 'package:ion/app/components/screen_offset/screen_bottom_offset.dart';
 import 'package:ion/app/components/screen_offset/screen_side_offset.dart';
 import 'package:ion/app/components/scroll_view/load_more_builder.dart';
 import 'package:ion/app/components/scroll_view/pull_to_refresh_builder.dart';
@@ -135,6 +136,9 @@ class CoinDetailsPage extends HookConsumerWidget {
                 },
               ),
             ],
+          SliverToBoxAdapter(
+            child: ScreenBottomOffset(),
+          ),
         ],
         hasMore: history?.hasMore ?? false,
         onLoadMore: historyNotifier.loadMore,
