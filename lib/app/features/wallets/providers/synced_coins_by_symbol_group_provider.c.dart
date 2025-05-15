@@ -23,7 +23,7 @@ class SyncedCoinsBySymbolGroupNotifier extends _$SyncedCoinsBySymbolGroupNotifie
     // Reset state when isAuthenticated changes
     await ref.watch(authProvider.selectAsync((state) => state.isAuthenticated));
     // Reset state each time the wallet view changes
-    await ref.watch(currentWalletViewIdProvider.selectAsync((state) => state));
+    await ref.watch(currentWalletViewIdProvider.future);
 
     return {};
   }
