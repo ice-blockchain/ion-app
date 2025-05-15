@@ -3,6 +3,7 @@
 import 'dart:async';
 
 import 'package:collection/collection.dart';
+import 'package:flutter/foundation.dart';
 import 'package:ion/app/exceptions/exceptions.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/auth/providers/auth_provider.c.dart';
@@ -269,17 +270,25 @@ class E2eeMessagesSubscriber extends _$E2eeMessagesSubscriber {
     required IonConnectGiftWrapService giftWrapService,
   }) async {
     try {
-      final seal = await giftWrapService.decodeWrap(
-        privateKey: privateKey,
-        content: giftWrap.content,
-        senderPubkey: giftWrap.pubkey,
+      final seal = await compute(
+        (args) => giftWrapService.decodeWrap(
+          privateKey: args.$1,
+          content: args.$2,
+          senderPubkey: args.$3,
+        ),
+        (privateKey, giftWrap.content, giftWrap.pubkey),
       );
 
-      return await sealService.decodeSeal(
-        seal.content,
-        seal.pubkey,
-        privateKey,
+      final decodedSeal = await compute(
+        (args) => sealService.decodeSeal(
+          args.$1,
+          args.$2,
+          args.$3,
+        ),
+        (seal.content, seal.pubkey, privateKey),
       );
+
+      return decodedSeal;
     } catch (e) {
       throw DecodeE2EMessageException(giftWrap.id);
     }

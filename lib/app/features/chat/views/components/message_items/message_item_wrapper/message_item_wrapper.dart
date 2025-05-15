@@ -12,6 +12,7 @@ import 'package:ion/app/features/chat/e2ee/providers/send_e2ee_reaction_provider
 import 'package:ion/app/features/chat/model/database/chat_database.c.dart';
 import 'package:ion/app/features/chat/model/message_list_item.c.dart';
 import 'package:ion/app/features/chat/model/message_type.dart';
+import 'package:ion/app/features/chat/providers/message_status_provider.c.dart';
 import 'package:ion/app/features/chat/views/components/message_items/message_reaction_dialog/message_reaction_dialog.dart';
 import 'package:ion/app/features/ion_connect/ion_connect.dart';
 import 'package:ion/app/features/ion_connect/model/event_reference.c.dart';
@@ -42,15 +43,11 @@ class MessageItemWrapper extends HookConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final messageItemKey = useMemoized(GlobalKey.new);
 
-    final currentUserMasterPubkey = ref.watch(currentPubkeySelectorProvider);
     final eventReference =
         ReplaceablePrivateDirectMessageEntity.fromEventMessage(messageItem.eventMessage)
             .toEventReference();
 
-    final deliveryStatus = ref.watch(conversationMessageDataDaoProvider).messageStatus(
-          eventReference: eventReference,
-          currentUserMasterPubkey: currentUserMasterPubkey!,
-        );
+    final deliveryStatus = ref.watch(messageStatusProvider(eventReference: eventReference));
 
     final showReactDialog = useCallback(
       () async {

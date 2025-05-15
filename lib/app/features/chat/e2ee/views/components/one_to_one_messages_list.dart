@@ -3,7 +3,6 @@
 import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
-import 'package:flutter_keyboard_visibility/flutter_keyboard_visibility.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/components/screen_offset/screen_side_offset.dart';
 import 'package:ion/app/extensions/extensions.dart';
@@ -14,7 +13,6 @@ import 'package:ion/app/features/chat/views/components/message_items/message_typ
 import 'package:ion/app/features/chat/views/components/message_items/message_types/story_reply_message/story_reply_message.dart';
 import 'package:ion/app/features/chat/views/components/message_items/message_types/visual_media_message/visual_media_message.dart';
 import 'package:ion/app/features/ion_connect/ion_connect.dart';
-import 'package:ion/app/hooks/use_on_init.dart';
 import 'package:scrollable_positioned_list/scrollable_positioned_list.dart';
 
 class OneToOneMessageList extends HookConsumerWidget {
@@ -25,40 +23,8 @@ class OneToOneMessageList extends HookConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final itemScrollController = useMemoized(ItemScrollController.new);
-    final keyboardController = useMemoized(KeyboardVisibilityController.new);
-    final allMessages = messages.values.expand((e) => e).toList()..sortBy((e) => e.publishedAt);
-
-    useOnInit(() {
-      if (allMessages.isNotEmpty && itemScrollController.isAttached) {
-        itemScrollController.jumpTo(index: allMessages.length);
-      }
-    });
-
-    usePrevious(allMessages.length);
-    {
-      final previous = usePrevious(allMessages.length);
-      if (previous != null && allMessages.length > previous) {
-        itemScrollController.scrollTo(
-          index: allMessages.length,
-          duration: const Duration(milliseconds: 300),
-        );
-      }
-    }
-
-    useEffect(
-      () {
-        final subscription = keyboardController.onChange.listen((isVisible) {
-          if (isVisible && itemScrollController.isAttached) {
-            itemScrollController.scrollTo(
-              index: allMessages.length,
-              duration: const Duration(milliseconds: 300),
-            );
-          }
-        });
-
-        return subscription.cancel;
-      },
-    );
+    final allMessages = messages.values.expand((e) => e).toList()
+      ..sortByCompare((e) => e.publishedAt, (a, b) => b.compareTo(a));
 
     final onTapReply = useCallback(
       (ReplaceablePrivateDirectMessageEntity entity) {
@@ -84,6 +50,7 @@ class OneToOneMessageList extends HookConsumerWidget {
           physics: const ClampingScrollPhysics(),
           itemCount: allMessages.length,
           itemScrollController: itemScrollController,
+          reverse: true,
           itemBuilder: (context, index) {
             final message = allMessages[index];
             final entity = ReplaceablePrivateDirectMessageEntity.fromEventMessage(message);
@@ -92,12 +59,13 @@ class OneToOneMessageList extends HookConsumerWidget {
                 ?.key;
 
             final previousMessage = index > 0 ? allMessages[index - 1] : null;
-            final isLastMessage = index == allMessages.length - 1;
+            final isLastMessage = index == 0;
 
             final isMessageFromAnotherAuthor =
                 previousMessage != null && previousMessage.masterPubkey != message.masterPubkey;
 
             return Column(
+              key: Key(message.id),
               mainAxisSize: MainAxisSize.min,
               children: [
                 if (displayDate != null)

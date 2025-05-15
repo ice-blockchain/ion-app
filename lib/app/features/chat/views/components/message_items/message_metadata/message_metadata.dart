@@ -7,6 +7,7 @@ import 'package:ion/app/features/auth/providers/auth_provider.c.dart';
 import 'package:ion/app/features/chat/e2ee/model/entities/private_direct_message_data.c.dart';
 import 'package:ion/app/features/chat/model/database/chat_database.c.dart';
 import 'package:ion/app/features/chat/model/message_type.dart';
+import 'package:ion/app/features/chat/providers/message_status_provider.c.dart';
 import 'package:ion/app/features/ion_connect/ion_connect.dart';
 import 'package:ion/app/utils/date.dart';
 import 'package:ion/generated/assets.gen.dart';
@@ -23,14 +24,10 @@ class MessageMetaData extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final currentUserMasterPubkey = ref.watch(currentPubkeySelectorProvider);
     final eventReference =
         ReplaceablePrivateDirectMessageEntity.fromEventMessage(eventMessage).toEventReference();
 
-    final deliveryStatus = ref.watch(conversationMessageDataDaoProvider).messageStatus(
-          eventReference: eventReference,
-          currentUserMasterPubkey: currentUserMasterPubkey!,
-        );
+    final deliveryStatus = ref.watch(messageStatusProvider(eventReference: eventReference));
 
     final isMe = ref.watch(isCurrentUserSelectorProvider(eventMessage.masterPubkey));
     final entityData = ReplaceablePrivateDirectMessageData.fromEventMessage(eventMessage);
