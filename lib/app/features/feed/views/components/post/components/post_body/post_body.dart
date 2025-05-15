@@ -8,6 +8,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/components/text_editor/text_editor_preview.dart';
 import 'package:ion/app/components/text_editor/utils/is_attributed_operation.dart';
 import 'package:ion/app/components/text_editor/utils/text_editor_styles.dart';
+import 'package:ion/app/extensions/delta.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/feed/data/models/entities/modifiable_post_data.c.dart';
 import 'package:ion/app/features/feed/data/models/entities/post_data.c.dart';
