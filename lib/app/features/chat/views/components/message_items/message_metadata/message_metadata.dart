@@ -7,11 +7,12 @@ import 'package:ion/app/features/auth/providers/auth_provider.c.dart';
 import 'package:ion/app/features/chat/e2ee/model/entities/private_direct_message_data.c.dart';
 import 'package:ion/app/features/chat/model/database/chat_database.c.dart';
 import 'package:ion/app/features/chat/model/message_type.dart';
+import 'package:ion/app/features/chat/providers/message_status_provider.c.dart';
 import 'package:ion/app/features/ion_connect/ion_connect.dart';
 import 'package:ion/app/utils/date.dart';
 import 'package:ion/generated/assets.gen.dart';
 
-class MessageMetaData extends ConsumerWidget {
+class MessageMetaData extends HookConsumerWidget {
   const MessageMetaData({
     required this.eventMessage,
     super.key,
@@ -23,16 +24,13 @@ class MessageMetaData extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final currentUserMasterPubkey = ref.watch(currentPubkeySelectorProvider);
     final eventReference =
         ReplaceablePrivateDirectMessageEntity.fromEventMessage(eventMessage).toEventReference();
 
-    final deliveryStatus = ref.watch(conversationMessageDataDaoProvider).messageStatus(
-          eventReference: eventReference,
-          currentUserMasterPubkey: currentUserMasterPubkey!,
-        );
-
     final isMe = ref.watch(isCurrentUserSelectorProvider(eventMessage.masterPubkey));
+
+    final deliveryStatus = ref.watch(messageStatusProvider(eventReference));
+
     final entityData = ReplaceablePrivateDirectMessageData.fromEventMessage(eventMessage);
 
     return Padding(
@@ -61,11 +59,11 @@ class MessageMetaData extends ConsumerWidget {
             ),
           ),
           if (isMe)
-            StreamBuilder<MessageDeliveryStatus>(
-              stream: deliveryStatus,
-              builder: (context, snapshot) => Padding(
-                padding: EdgeInsetsDirectional.only(start: 2.0.s),
-                child: statusIcon(context, snapshot.data ?? MessageDeliveryStatus.created),
+            Padding(
+              padding: EdgeInsetsDirectional.only(start: 2.0.s),
+              child: statusIcon(
+                context,
+                deliveryStatus.valueOrNull ?? MessageDeliveryStatus.created,
               ),
             ),
         ],

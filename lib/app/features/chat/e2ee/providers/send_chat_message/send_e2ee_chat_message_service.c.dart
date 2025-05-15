@@ -5,6 +5,7 @@ import 'dart:io';
 
 import 'package:collection/collection.dart';
 import 'package:file_saver/file_saver.dart';
+import 'package:flutter/foundation.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/exceptions/exceptions.dart';
 import 'package:ion/app/extensions/extensions.dart';
@@ -337,18 +338,32 @@ class SendE2eeChatMessageService {
       ),
     ).toTag();
 
-    final seal = await sealService.createSeal(
-      eventMessage,
-      signer,
-      receiverPubkey,
-    );
+    final wrap = await compute(
+      (args) async {
+        final seal = await args.$1.createSeal(
+          args.$2,
+          args.$3,
+          args.$4,
+        );
 
-    final wrap = await wrapService.createWrap(
-      event: seal,
-      contentKinds: kinds,
-      receiverPubkey: receiverPubkey,
-      receiverMasterPubkey: receiverMasterPubkey,
-      expirationTag: expirationTag,
+        return args.$5.createWrap(
+          event: seal,
+          contentKinds: args.$6,
+          receiverPubkey: args.$4,
+          receiverMasterPubkey: args.$7,
+          expirationTag: args.$8,
+        );
+      },
+      (
+        sealService,
+        eventMessage,
+        signer,
+        receiverPubkey,
+        wrapService,
+        kinds,
+        receiverMasterPubkey,
+        expirationTag
+      ),
     );
 
     return wrap;

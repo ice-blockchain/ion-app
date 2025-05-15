@@ -12,6 +12,7 @@ import 'package:ion/app/features/chat/e2ee/providers/send_e2ee_reaction_provider
 import 'package:ion/app/features/chat/model/database/chat_database.c.dart';
 import 'package:ion/app/features/chat/model/message_list_item.c.dart';
 import 'package:ion/app/features/chat/model/message_type.dart';
+import 'package:ion/app/features/chat/providers/message_status_provider.c.dart';
 import 'package:ion/app/features/chat/views/components/message_items/message_reaction_dialog/message_reaction_dialog.dart';
 import 'package:ion/app/features/ion_connect/ion_connect.dart';
 import 'package:ion/app/features/ion_connect/model/event_reference.c.dart';
@@ -42,25 +43,15 @@ class MessageItemWrapper extends HookConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final messageItemKey = useMemoized(GlobalKey.new);
 
-    final currentUserMasterPubkey = ref.watch(currentPubkeySelectorProvider);
     final eventReference =
         ReplaceablePrivateDirectMessageEntity.fromEventMessage(messageItem.eventMessage)
             .toEventReference();
 
-    final deliveryStatus = ref.watch(conversationMessageDataDaoProvider).messageStatus(
-          eventReference: eventReference,
-          currentUserMasterPubkey: currentUserMasterPubkey!,
-        );
+    final deliveryStatus = ref.watch(messageStatusProvider(eventReference));
 
     final showReactDialog = useCallback(
       () async {
         try {
-          var messageStatus = MessageDeliveryStatus.created;
-
-          final subscription = deliveryStatus.listen((status) {
-            messageStatus = status;
-          });
-
           final emoji = await showDialog<String>(
             context: context,
             barrierColor: Colors.transparent,
@@ -68,7 +59,7 @@ class MessageItemWrapper extends HookConsumerWidget {
             builder: (context) => MessageReactionDialog(
               isMe: isMe,
               messageItem: messageItem,
-              messageStatus: messageStatus,
+              messageStatus: deliveryStatus.valueOrNull ?? MessageDeliveryStatus.created,
               renderObject: messageItemKey.currentContext!.findRenderObject()!,
             ),
           );
@@ -92,72 +83,63 @@ class MessageItemWrapper extends HookConsumerWidget {
               );
             }
           }
-
-          await subscription.cancel();
         } catch (e, st) {
           Logger.log('Error showing message reaction dialog:', error: e, stackTrace: st);
         }
       },
-      [messageItemKey, isMe, messageItem],
+      [messageItemKey, isMe, messageItem, deliveryStatus.valueOrNull],
     );
 
-    return StreamBuilder<MessageDeliveryStatus>(
-      stream: deliveryStatus,
-      initialData: MessageDeliveryStatus.created,
-      builder: (context, snapshot) {
-        if (snapshot.hasData && snapshot.data == MessageDeliveryStatus.deleted) {
-          return const SizedBox.shrink();
-        }
+    if (deliveryStatus.valueOrNull == MessageDeliveryStatus.deleted) {
+      return const SizedBox.shrink();
+    }
 
-        return Align(
-          alignment: isMe ? AlignmentDirectional.centerEnd : AlignmentDirectional.centerStart,
-          child: GestureDetector(
-            onLongPress: () {
-              HapticFeedback.mediumImpact();
-              showReactDialog();
-            },
-            child: RepaintBoundary(
-              key: messageItemKey,
-              child: Row(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Container(
-                    padding: contentPadding,
-                    constraints: BoxConstraints(
-                      maxWidth: maxWidth,
-                    ),
-                    decoration: BoxDecoration(
-                      color: isMe
-                          ? context.theme.appColors.primaryAccent
-                          : context.theme.appColors.onPrimaryAccent,
-                      borderRadius: BorderRadiusDirectional.only(
-                        topStart: Radius.circular(12.0.s),
-                        topEnd: Radius.circular(12.0.s),
-                        bottomStart: !isLastMessageFromAuthor || isMe
-                            ? Radius.circular(12.0.s)
-                            : Radius.zero,
-                        bottomEnd:
-                            isMe && isLastMessageFromAuthor ? Radius.zero : Radius.circular(12.0.s),
-                      ),
-                    ),
-                    child: child,
+    return Align(
+      alignment: isMe ? AlignmentDirectional.centerEnd : AlignmentDirectional.centerStart,
+      child: GestureDetector(
+        onLongPress: () {
+          HapticFeedback.mediumImpact();
+          showReactDialog();
+        },
+        child: RepaintBoundary(
+          key: messageItemKey,
+          child: Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Container(
+                padding: contentPadding,
+                constraints: BoxConstraints(
+                  maxWidth: maxWidth,
+                ),
+                decoration: BoxDecoration(
+                  color: isMe
+                      ? context.theme.appColors.primaryAccent
+                      : context.theme.appColors.onPrimaryAccent,
+                  borderRadius: BorderRadiusDirectional.only(
+                    topStart: Radius.circular(12.0.s),
+                    topEnd: Radius.circular(12.0.s),
+                    bottomStart:
+                        !isLastMessageFromAuthor || isMe ? Radius.circular(12.0.s) : Radius.zero,
+                    bottomEnd:
+                        isMe && isLastMessageFromAuthor ? Radius.zero : Radius.circular(12.0.s),
                   ),
-                  if (snapshot.hasData && snapshot.data == MessageDeliveryStatus.failed)
-                    Row(
-                      children: [
-                        SizedBox(width: 6.0.s),
-                        Assets.svg.iconMessageFailed.icon(
-                          color: context.theme.appColors.attentionRed,
-                          size: 16.0.s,
-                        ),
-                      ],
-                    ),
-                ],
+                ),
+                child: child,
               ),
-            ),
+              if (deliveryStatus.valueOrNull == MessageDeliveryStatus.failed)
+                Row(
+                  children: [
+                    SizedBox(width: 6.0.s),
+                    Assets.svg.iconMessageFailed.icon(
+                      color: context.theme.appColors.attentionRed,
+                      size: 16.0.s,
+                    ),
+                  ],
+                ),
+            ],
           ),
-        );
-      },
+        ),
+      ),
     );
   }
 }
