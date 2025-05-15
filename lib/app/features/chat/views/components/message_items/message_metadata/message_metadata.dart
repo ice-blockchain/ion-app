@@ -12,7 +12,7 @@ import 'package:ion/app/features/ion_connect/ion_connect.dart';
 import 'package:ion/app/utils/date.dart';
 import 'package:ion/generated/assets.gen.dart';
 
-class MessageMetaData extends ConsumerWidget {
+class MessageMetaData extends HookConsumerWidget {
   const MessageMetaData({
     required this.eventMessage,
     super.key,
@@ -27,9 +27,10 @@ class MessageMetaData extends ConsumerWidget {
     final eventReference =
         ReplaceablePrivateDirectMessageEntity.fromEventMessage(eventMessage).toEventReference();
 
-    final deliveryStatus = ref.watch(messageStatusProvider(eventReference: eventReference));
-
     final isMe = ref.watch(isCurrentUserSelectorProvider(eventMessage.masterPubkey));
+
+    final deliveryStatus = ref.watch(messageStatusProvider(eventReference));
+
     final entityData = ReplaceablePrivateDirectMessageData.fromEventMessage(eventMessage);
 
     return Padding(
@@ -58,11 +59,11 @@ class MessageMetaData extends ConsumerWidget {
             ),
           ),
           if (isMe)
-            StreamBuilder<MessageDeliveryStatus>(
-              stream: deliveryStatus,
-              builder: (context, snapshot) => Padding(
-                padding: EdgeInsetsDirectional.only(start: 2.0.s),
-                child: statusIcon(context, snapshot.data ?? MessageDeliveryStatus.created),
+            Padding(
+              padding: EdgeInsetsDirectional.only(start: 2.0.s),
+              child: statusIcon(
+                context,
+                deliveryStatus.valueOrNull ?? MessageDeliveryStatus.created,
               ),
             ),
         ],

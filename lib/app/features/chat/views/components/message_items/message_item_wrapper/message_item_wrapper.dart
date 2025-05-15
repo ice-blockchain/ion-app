@@ -47,17 +47,11 @@ class MessageItemWrapper extends HookConsumerWidget {
         ReplaceablePrivateDirectMessageEntity.fromEventMessage(messageItem.eventMessage)
             .toEventReference();
 
-    final deliveryStatus = ref.watch(messageStatusProvider(eventReference: eventReference));
+    final deliveryStatus = ref.watch(messageStatusProvider(eventReference));
 
     final showReactDialog = useCallback(
       () async {
         try {
-          var messageStatus = MessageDeliveryStatus.created;
-
-          final subscription = deliveryStatus.listen((status) {
-            messageStatus = status;
-          });
-
           final emoji = await showDialog<String>(
             context: context,
             barrierColor: Colors.transparent,
@@ -65,7 +59,7 @@ class MessageItemWrapper extends HookConsumerWidget {
             builder: (context) => MessageReactionDialog(
               isMe: isMe,
               messageItem: messageItem,
-              messageStatus: messageStatus,
+              messageStatus: deliveryStatus.valueOrNull ?? MessageDeliveryStatus.created,
               renderObject: messageItemKey.currentContext!.findRenderObject()!,
             ),
           );
@@ -89,13 +83,11 @@ class MessageItemWrapper extends HookConsumerWidget {
               );
             }
           }
-
-          await subscription.cancel();
         } catch (e, st) {
           Logger.log('Error showing message reaction dialog:', error: e, stackTrace: st);
         }
       },
-      [messageItemKey, isMe, messageItem],
+      [messageItemKey, isMe, messageItem, deliveryStatus],
     );
 
     return StreamBuilder<MessageDeliveryStatus>(
