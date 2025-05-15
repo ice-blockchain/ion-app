@@ -5,24 +5,25 @@ import 'package:ion/app/features/push_notifications/providers/app_translations_p
 import 'package:ion/app/services/storage/local_storage.c.dart';
 import 'package:ion/app/utils/string.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 part 'notification_data_parser_provider.c.g.dart';
 
 class NotificationDataParser {
   NotificationDataParser({
     required Translator<PushNotificationTranslations> translator,
-    required LocalStorage localStorage,
+    required SharedPreferencesAsync prefs,
   })  : _translator = translator,
-        _localStorage = localStorage;
+        _prefs = prefs;
 
-  final LocalStorage _localStorage;
+  final SharedPreferencesAsync _prefs;
   final Translator<PushNotificationTranslations> _translator;
 
   Future<({String title, String body})?> parse(
     IonConnectPushDataPayload data,
   ) async {
-    // reading from _localStorage because this method might be used from a background service
-    final currentPubkey = _localStorage.getString(CurrentPubkeySelector.persistenceKey);
+    // reading from shared prefs because this method might be used from a background service
+    final currentPubkey = await _prefs.getString(CurrentPubkeySelector.persistenceKey);
 
     if (currentPubkey == null) {
       return null;
@@ -105,10 +106,10 @@ class NotificationDataParser {
 @riverpod
 Future<NotificationDataParser> notificationDataParser(Ref ref) async {
   final translator = await ref.read(pushTranslatorProvider.future);
-  final localStorage = await ref.read(localStorageAsyncProvider.future);
+  final prefs = await ref.read(sharedPreferencesFoundationProvider.future);
 
   return NotificationDataParser(
     translator: translator,
-    localStorage: localStorage,
+    prefs: prefs,
   );
 }

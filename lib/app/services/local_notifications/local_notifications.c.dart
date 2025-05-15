@@ -63,6 +63,9 @@ class LocalNotificationsService {
       requestAlertPermission: false,
       requestBadgePermission: false,
       requestSoundPermission: false,
+      defaultPresentAlert: false,
+      defaultPresentBadge: false,
+      defaultPresentSound: false,
     );
     return const InitializationSettings(
       android: initializationSettingsAndroid,
