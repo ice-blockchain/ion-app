@@ -2,6 +2,7 @@
 
 import 'dart:async';
 
+import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/features/auth/providers/auth_provider.c.dart';
 import 'package:ion/app/features/auth/providers/onboarding_complete_provider.c.dart';
@@ -11,6 +12,7 @@ import 'package:ion/app/features/core/permissions/providers/permissions_provider
 import 'package:ion/app/features/core/providers/feature_flags_provider.c.dart';
 import 'package:ion/app/features/core/providers/template_provider.c.dart';
 import 'package:ion/app/features/core/providers/window_manager_provider.c.dart';
+import 'package:ion/app/features/core/views/components/widget_error_builder.dart';
 import 'package:ion/app/features/feed/providers/feed_bookmarks_notifier.c.dart';
 import 'package:ion/app/features/force_update/providers/force_update_provider.c.dart';
 import 'package:ion/app/features/push_notifications/background/firebase_messaging_background_service.dart';
@@ -35,6 +37,8 @@ part 'init_provider.c.g.dart';
 Future<void> initApp(Ref ref) async {
   final featureFlagsNotifier = ref.read(featureFlagsProvider.notifier);
   final logIonConnect = featureFlagsNotifier.get(LoggerFeatureFlag.logIonConnect);
+
+  ErrorWidget.builder = WidgetErrorBuilder.new;
 
   IonConnect.initialize(logIonConnect ? IonConnectLogger() : null);
 
