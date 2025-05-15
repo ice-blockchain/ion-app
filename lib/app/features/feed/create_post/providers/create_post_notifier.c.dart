@@ -79,10 +79,7 @@ class CreatePostNotifier extends _$CreatePostNotifier {
       final mentions = _buildMentions(postContent);
 
       final postData = ModifiablePostData(
-        content: await _buildContentWithMediaLinks(
-          content: postContent,
-          media: media.values.toList(),
-        ),
+        textContent: '',
         media: media,
         replaceableEventId: ReplaceableEventIdentifier.generate(),
         publishedAt: _buildEntityPublishedAt(),
@@ -148,10 +145,7 @@ class CreatePostNotifier extends _$CreatePostNotifier {
       final modifiedMedia = Map<String, MediaAttachment>.from(mediaAttachments)..addAll(media);
 
       final postData = modifiedEntity.data.copyWith(
-        content: await _buildContentWithMediaLinks(
-          content: postContent,
-          media: modifiedMedia.values.toList(),
-        ),
+        textContent: '',
         richText: await _buildRichTextContentWithMediaLinks(
           content: postContent,
           media: modifiedMedia.values.toList(),
@@ -203,7 +197,7 @@ class CreatePostNotifier extends _$CreatePostNotifier {
       }
 
       final postData = entity.data.copyWith(
-        content: '',
+        textContent: '',
         editingEndedAt: null,
         relatedHashtags: [],
         relatedPubkeys: [],
@@ -353,28 +347,16 @@ class CreatePostNotifier extends _$CreatePostNotifier {
     return richText;
   }
 
-  Future<String> _buildContentWithMediaLinks({
-    required Delta content,
-    required List<MediaAttachment> media,
-  }) async {
-    final contentWithMediaAndMentions = await _buildContentWithMediaLinksDelta(
-      content: content,
-      media: media,
-    );
-    return deltaToMarkdown(contentWithMediaAndMentions);
-  }
-
   Future<Delta> _buildContentWithMediaLinksDelta({
     required Delta content,
     required List<MediaAttachment> media,
   }) async {
-    final currentOperations = content.operations.toList();
-    final newContentDelta = Delta.fromOperations(currentOperations);
+    final newContentDelta = withFlattenLinks(content);
 
     return Delta.fromOperations(
       media
           .map(
-            (mediaItem) => Operation.insert(mediaItem.url, {Attribute.link.key: mediaItem.url}),
+            (mediaItem) => Operation.insert(' ', {Attribute.link.key: mediaItem.url}),
           )
           .toList(),
     ).concat(newContentDelta);

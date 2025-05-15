@@ -87,7 +87,7 @@ class ModifiablePostData
         _$ModifiablePostData
     implements EventSerializable, ReplaceableEntityData {
   const factory ModifiablePostData({
-    required String content,
+    required String textContent,
     required Map<String, MediaAttachment> media,
     required ReplaceableEventIdentifier replaceableEventId,
     required EntityPublishedAt publishedAt,
@@ -108,7 +108,7 @@ class ModifiablePostData
         tags[QuotedImmutableEvent.tagName] ?? tags[QuotedReplaceableEvent.tagName];
 
     return ModifiablePostData(
-      content: eventMessage.content,
+      textContent: eventMessage.content,
       media: EntityDataWithMediaContent.parseImeta(tags[MediaAttachment.tagName]),
       replaceableEventId:
           ReplaceableEventIdentifier.fromTag(tags[ReplaceableEventIdentifier.tagName]!.first),
@@ -134,6 +134,9 @@ class ModifiablePostData
   const ModifiablePostData._();
 
   @override
+  String get content => richText?.content ?? textContent;
+
+  @override
   FutureOr<EventMessage> toEventMessage(
     EventSigner signer, {
     List<List<String>> tags = const [],
@@ -143,7 +146,7 @@ class ModifiablePostData
       signer: signer,
       createdAt: createdAt,
       kind: ModifiablePostEntity.kind,
-      content: content,
+      content: richText != null ? '' : content,
       tags: [
         ...tags,
         replaceableEventId.toTag(),
@@ -173,6 +176,6 @@ class ModifiablePostData
 
   @override
   String toString() {
-    return 'ModifiablePostData($content)';
+    return 'ModifiablePostData(${richText?.content ?? content})';
   }
 }

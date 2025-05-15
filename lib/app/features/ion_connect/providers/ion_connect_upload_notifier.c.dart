@@ -67,8 +67,6 @@ class IonConnectUploadNotifier extends _$IonConnectUploadNotifier {
       url: fileMetadata.url,
       mimeType: fileMetadata.mimeType,
       dimension: dimension,
-      torrentInfoHash: fileMetadata.torrentInfoHash,
-      fileHash: fileMetadata.fileHash,
       originalFileHash: fileMetadata.originalFileHash,
       alt: alt,
       thumb: fileMetadata.thumb,

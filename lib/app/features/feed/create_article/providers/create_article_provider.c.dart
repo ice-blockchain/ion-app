@@ -106,7 +106,6 @@ class CreateArticle extends _$CreateArticle {
         title: title,
         summary: summary,
         image: imageUrl,
-        content: deltaToMarkdown(updatedContent),
         media: {
           for (final attachment in mediaAttachments) attachment.url: attachment,
         },
@@ -147,7 +146,7 @@ class CreateArticle extends _$CreateArticle {
         title: null,
         summary: null,
         image: null,
-        content: '',
+        textContent: '',
         relatedHashtags: [],
         media: {},
         colorLabel: null,
@@ -256,7 +255,7 @@ class CreateArticle extends _$CreateArticle {
         title: title,
         summary: summary,
         image: imageUrlToUpload,
-        content: deltaToMarkdown(updatedContent),
+        textContent: '',
         media: cleanedMedia,
         relatedHashtags: relatedHashtags,
         relatedPubkeys: mentions,
@@ -364,7 +363,7 @@ class CreateArticle extends _$CreateArticle {
       updatedContent = _replaceImagePathsWithUrls(updatedContent, uploadedUrls);
     }
 
-    return updatedContent;
+    return withFlattenLinks(updatedContent);
   }
 
   List<RelatedPubkey> _buildMentions(Delta content) {
@@ -384,7 +383,7 @@ class CreateArticle extends _$CreateArticle {
             operationData[textEditorSingleImageKey] != null &&
             uploadedUrls.containsKey(operationData[textEditorSingleImageKey])) {
           return Operation.insert(
-            uploadedUrls[operationData[textEditorSingleImageKey]],
+            ' ',
             {textEditorSingleImageKey: uploadedUrls[operationData[textEditorSingleImageKey]]},
           );
         }
