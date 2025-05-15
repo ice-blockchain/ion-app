@@ -21,9 +21,11 @@ class BottomBarInitialView extends HookConsumerWidget {
   const BottomBarInitialView({
     required this.controller,
     required this.onSubmitted,
+    this.receiverPubKey,
     super.key,
   });
 
+  final String? receiverPubKey;
   final TextEditingController controller;
   final Future<void> Function({String? content, List<MediaFile>? mediaFiles}) onSubmitted;
 
@@ -160,6 +162,7 @@ class BottomBarInitialView extends HookConsumerWidget {
         ),
         if (bottomBarState.isMore)
           MoreContentView(
+            receiverPubKey: receiverPubKey,
             onSubmitted: onSubmitted,
           ),
       ],

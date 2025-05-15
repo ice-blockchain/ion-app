@@ -315,6 +315,10 @@ class TransactionsRepository {
     return (transactions: transactions.nonNulls.toList(), nextPageToken: result.nextPageToken);
   }
 
+  Stream<TransactionData?> watchTransactionByEventId(String eventId) {
+    return _transactionsDao.watchTransactionByEventId(eventId);
+  }
+
   String? _resolveTransactionAddress({
     required String? direct,
     required List<String>? alternatives,

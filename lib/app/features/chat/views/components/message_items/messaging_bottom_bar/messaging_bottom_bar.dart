@@ -18,10 +18,17 @@ import 'package:ion/app/services/compressors/audio_compressor.c.dart';
 import 'package:ion/app/services/media_service/media_service.c.dart';
 
 class MessagingBottomBar extends HookConsumerWidget {
-  const MessagingBottomBar({required this.onSubmitted, required this.conversationId, super.key});
+  const MessagingBottomBar({
+    required this.onSubmitted,
+    required this.conversationId,
+    this.receiverPubKey,
+    super.key,
+  });
 
   final Future<void> Function({String? content, List<MediaFile>? mediaFiles}) onSubmitted;
   final String? conversationId;
+  final String? receiverPubKey;
+
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final bottomBarState = ref.watch(messagingBottomBarActiveStateProvider);
@@ -77,6 +84,7 @@ class MessagingBottomBar extends HookConsumerWidget {
         AbsorbPointer(
           absorbing: bottomBarState.isVoice,
           child: BottomBarInitialView(
+            receiverPubKey: receiverPubKey,
             controller: controller,
             onSubmitted: ({content, mediaFiles}) async {
               unawaited(onSubmitted(content: content, mediaFiles: mediaFiles));

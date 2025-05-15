@@ -23,8 +23,13 @@ import 'package:mime/mime.dart';
 final double moreContentHeight = 206.0.s;
 
 class MoreContentView extends ConsumerWidget {
-  const MoreContentView({required this.onSubmitted, super.key});
+  const MoreContentView({
+    required this.onSubmitted,
+    this.receiverPubKey,
+    super.key,
+  });
 
+  final String? receiverPubKey;
   final Future<void> Function({String? content, List<MediaFile>? mediaFiles}) onSubmitted;
 
   @override
@@ -90,7 +95,16 @@ class MoreContentView extends ConsumerWidget {
               _MoreContentItem(
                 iconPath: Assets.svg.walletChatIonpay,
                 title: context.i18n.common_ion_pay,
-                onTap: () {},
+                onTap: () async {
+                  if (receiverPubKey == null) {
+                    return;
+                  }
+                  final needToEnable2FA =
+                      await PaymentSelectionChatRoute(pubkey: receiverPubKey!).push<bool>(context);
+                  if (needToEnable2FA != null && needToEnable2FA == true && context.mounted) {
+                    await SecureAccountModalRoute().push<void>(context);
+                  }
+                },
               ),
             ],
           ),

@@ -3,28 +3,32 @@
 import 'package:flutter/foundation.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/features/components/verify_identity/verify_identity_prompt_dialog_helper.dart';
+import 'package:ion/app/features/wallets/model/coins_group.c.dart';
 import 'package:ion/app/features/wallets/model/network_data.c.dart';
-import 'package:ion/app/features/wallets/views/pages/coins_flow/receive_coins/providers/receive_coins_form_provider.c.dart';
 import 'package:ion/app/features/wallets/views/pages/coins_flow/receive_coins/providers/wallet_address_notifier_provider.c.dart';
 import 'package:ion/app/hooks/use_on_init.dart';
 import 'package:ion_identity_client/ion_identity.dart';
 
 void useCheckWalletAddressAvailable(
   WidgetRef ref, {
+  required NetworkData? network,
+  required CoinsGroup? coinsGroup,
   required VoidCallback onAddressMissing,
+  ValueChanged<String>? onAddressFound,
   List<Object?> keys = const [],
 }) {
   useOnInit(
     () async {
-      final network = ref.read(receiveCoinsFormControllerProvider).selectedNetwork;
-      final address = await ref.read(walletAddressNotifierProvider.notifier).loadWalletAddress();
+      final address = await ref
+          .read(walletAddressNotifierProvider.notifier)
+          .loadWalletAddress(network: network, coinsGroup: coinsGroup);
 
       if (!ref.context.mounted) return;
 
-      if (address != null) {
-        ref.read(receiveCoinsFormControllerProvider.notifier).setWalletAddress(address);
+      if (address != null && onAddressFound != null) {
+        onAddressFound(address);
       } else if (address == null && network?.displayName == 'ION') {
-        _createIonWallet(ref, network!);
+        _createIonWallet(ref, network!, onAddressFound);
       } else if (address == null && network != null) {
         onAddressMissing();
       }
@@ -36,6 +40,7 @@ void useCheckWalletAddressAvailable(
 void _createIonWallet(
   WidgetRef ref,
   NetworkData network,
+  ValueChanged<String>? onAddressFound,
 ) {
   guardPasskeyDialog(
     ref.context,
@@ -52,8 +57,8 @@ void _createIonWallet(
                 network: network,
               );
 
-          if (address != null) {
-            ref.read(receiveCoinsFormControllerProvider.notifier).setWalletAddress(address);
+          if (address != null && onAddressFound != null) {
+            onAddressFound(address);
           }
         },
         child: child,

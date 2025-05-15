@@ -50,7 +50,7 @@ class WalletsDatabase extends _$WalletsDatabase {
   final String pubkey;
 
   @override
-  int get schemaVersion => 7;
+  int get schemaVersion => 8;
 
   static QueryExecutor _openConnection(String pubkey) {
     return driftDatabase(name: 'wallets_database_$pubkey');
@@ -99,6 +99,9 @@ class WalletsDatabase extends _$WalletsDatabase {
             asset_id, transferred_amount, transferred_amount_usd
           FROM $oldTransactionsTableName;
           ''');
+        },
+        from7To8: (m, schema) async {
+          await m.addColumn(schema.transactionsTableV2, schema.transactionsTableV2.eventId);
         },
       ),
     );

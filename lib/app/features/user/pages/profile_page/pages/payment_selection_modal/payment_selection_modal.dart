@@ -2,6 +2,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
+import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/components/list_item/list_item.dart';
 import 'package:ion/app/components/screen_offset/screen_bottom_offset.dart';
@@ -11,19 +12,22 @@ import 'package:ion/app/features/user/model/payment_type.dart';
 import 'package:ion/app/features/user/providers/request_coins_form_provider.c.dart';
 import 'package:ion/app/features/wallets/providers/send_asset_form_provider.c.dart';
 import 'package:ion/app/hooks/use_on_receive_funds_flow.dart';
-import 'package:ion/app/router/app_routes.c.dart';
 import 'package:ion/app/router/components/navigation_app_bar/navigation_app_bar.dart';
 import 'package:ion/app/router/components/navigation_app_bar/navigation_close_button.dart';
 import 'package:ion/app/router/components/sheet_content/sheet_content.dart';
 import 'package:ion/generated/assets.gen.dart';
 
+typedef SelectCoinRouteLocationBuilder = String Function(PaymentType paymentType);
+
 class PaymentSelectionModal extends HookConsumerWidget {
   const PaymentSelectionModal({
     required this.pubkey,
+    required this.selectCoinRouteLocationBuilder,
     super.key,
   });
 
   final String pubkey;
+  final SelectCoinRouteLocationBuilder selectCoinRouteLocationBuilder;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -40,7 +44,7 @@ class PaymentSelectionModal extends HookConsumerWidget {
             ref.invalidate(requestCoinsFormControllerProvider);
             ref.read(requestCoinsFormControllerProvider.notifier).setContact(pubkey);
         }
-        SelectCoinProfileRoute(paymentType: paymentType).push<void>(context);
+        context.push(selectCoinRouteLocationBuilder(paymentType));
       },
       [],
     );

@@ -31,7 +31,7 @@ class GalleryGridView extends ConsumerWidget {
     var offset = 0;
     if (showCameraCell) offset += 1; // +1 for CameraCell
     if (hasLimitedPermission) offset += 1; // +1 for AddCell
-    
+
     return offset;
   }
 

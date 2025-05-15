@@ -284,6 +284,36 @@ class TransactionsDao extends DatabaseAccessor<WalletsDatabase> with _$Transacti
         .getSingleOrNull();
   }
 
+  Stream<TransactionData?> watchTransactionByEventId(String eventId) {
+    final transactionCoinAlias = alias(coinsTable, 'transactionCoin');
+    final nativeCoinAlias = alias(coinsTable, 'nativeCoin');
+
+    final query = (select(transactionsTable)..where((tbl) => tbl.eventId.equals(eventId))).join([
+      leftOuterJoin(
+        networksTable,
+        networksTable.id.equalsExp(transactionsTable.networkId),
+      ),
+      leftOuterJoin(
+        transactionCoinAlias,
+        transactionCoinAlias.id.equalsExp(transactionsTable.coinId),
+      ),
+      leftOuterJoin(
+        nativeCoinAlias,
+        nativeCoinAlias.id.equalsExp(transactionsTable.nativeCoinId),
+      ),
+    ]);
+
+    return query
+        .map(
+          (row) => _mapRowToDomainModel(
+            row,
+            transactionCoinAlias: transactionCoinAlias,
+            nativeCoinAlias: nativeCoinAlias,
+          ),
+        )
+        .watchSingleOrNull();
+  }
+
   TransactionData _mapRowToDomainModel(
     TypedResult row, {
     required $CoinsTableTable nativeCoinAlias,

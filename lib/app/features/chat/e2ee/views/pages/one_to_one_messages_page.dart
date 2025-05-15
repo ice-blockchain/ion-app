@@ -87,7 +87,11 @@ class OneToOneMessagesPage extends HookConsumerWidget {
             _MessagesList(conversationId: conversationId.value),
             const EditMessageInfo(),
             const RepliedMessageInfo(),
-            MessagingBottomBar(onSubmitted: onSubmitted, conversationId: conversationId.value),
+            MessagingBottomBar(
+              onSubmitted: onSubmitted,
+              conversationId: conversationId.value,
+              receiverPubKey: receiverPubKey,
+            ),
           ],
         ),
       ),

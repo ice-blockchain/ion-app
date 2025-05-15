@@ -63,8 +63,12 @@ class CoinReceiveModal extends HookConsumerWidget {
 
     useCheckWalletAddressAvailable(
       ref,
+      network: selectedNetwork,
+      coinsGroup: coinsGroup,
+      onAddressFound: (address) =>
+          ref.read(receiveCoinsFormControllerProvider.notifier).setWalletAddress(address),
       onAddressMissing: () => AddressNotFoundRoute().replace(ref.context),
-      keys: [selectedNetwork],
+      keys: [selectedNetwork, coinsGroup],
     );
 
     final updateNetwork = useCallback(

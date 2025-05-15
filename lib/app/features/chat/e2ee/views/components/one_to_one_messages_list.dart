@@ -126,7 +126,8 @@ class OneToOneMessageList extends HookConsumerWidget {
                         eventMessage: message,
                         onTapReply: () => onTapReply(entity),
                       ),
-                    MessageType.requestFunds =>
+                    MessageType.requestFunds ||
+                    MessageType.moneySent =>
                       MoneyMessage(eventMessage: message, onTapReply: () => onTapReply(entity)),
                     MessageType.emoji =>
                       EmojiMessage(eventMessage: message, onTapReply: () => onTapReply(entity)),

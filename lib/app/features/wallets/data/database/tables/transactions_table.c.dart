@@ -33,6 +33,9 @@ class TransactionsTable extends Table {
   TextColumn get transferredAmount => text().nullable()();
   RealColumn get transferredAmountUsd => real().nullable()();
 
+  // For 1756 event id
+  TextColumn get eventId => text().nullable()();
+
   @override
   String? get tableName => 'transactions_table_v2';
 
