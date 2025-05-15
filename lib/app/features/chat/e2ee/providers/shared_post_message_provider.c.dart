@@ -3,6 +3,7 @@
 import 'dart:convert';
 
 import 'package:ion/app/features/chat/model/database/chat_database.c.dart';
+import 'package:ion/app/features/feed/data/models/entities/article_data.c.dart';
 import 'package:ion/app/features/feed/data/models/entities/modifiable_post_data.c.dart';
 import 'package:ion/app/features/feed/data/models/entities/post_data.c.dart';
 import 'package:ion/app/features/ion_connect/ion_connect.dart';
@@ -23,8 +24,9 @@ class SharedPostMessage extends _$SharedPostMessage {
     );
 
     final postEntity = switch (postEventMessage.kind) {
-      ModifiablePostEntity.kind => ModifiablePostEntity.fromEventMessage(postEventMessage),
       PostEntity.kind => PostEntity.fromEventMessage(postEventMessage),
+      ArticleEntity.kind => ArticleEntity.fromEventMessage(postEventMessage),
+      ModifiablePostEntity.kind => ModifiablePostEntity.fromEventMessage(postEventMessage),
       _ => null,
     };
 

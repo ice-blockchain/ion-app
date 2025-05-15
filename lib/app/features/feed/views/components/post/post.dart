@@ -39,7 +39,7 @@ class Post extends ConsumerWidget {
     this.header,
     this.footer,
     this.onDelete,
-    this.isShared = false,
+    this.accentTheme = false,
     this.isTextSelectable = false,
     this.bodyMaxLines = 6,
     this.contentWrapper,
@@ -49,7 +49,7 @@ class Post extends ConsumerWidget {
 
   final EventReference eventReference;
   final EventReference? repostEventReference;
-  final bool isShared;
+  final bool accentTheme;
   final bool displayQuote;
   final bool displayParent;
   final double? topOffset;
@@ -86,7 +86,7 @@ class Post extends ConsumerWidget {
         SizedBox(height: headerOffset ?? 10.0.s),
         PostBody(
           entity: entity,
-          isShared: isShared,
+          accentTheme: accentTheme,
           isTextSelectable: isTextSelectable,
           maxLines: bodyMaxLines,
           onVideoTap: onVideoTap,
@@ -119,7 +119,7 @@ class Post extends ConsumerWidget {
                     ? entity.data.publishedAt.value
                     : entity.createdAt,
                 timeFormat: timeFormat,
-                textStyle: isShared
+                textStyle: accentTheme
                     ? context.theme.appTextThemes.caption.copyWith(
                         color: context.theme.appColors.onPrimaryAccent,
                       )

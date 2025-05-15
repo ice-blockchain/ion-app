@@ -9,8 +9,10 @@ import 'package:ion/app/features/auth/providers/auth_provider.c.dart';
 import 'package:ion/app/features/chat/model/message_list_item.c.dart';
 import 'package:ion/app/features/chat/views/components/message_items/message_item_wrapper/message_item_wrapper.dart';
 import 'package:ion/app/features/chat/views/components/message_items/message_reactions/message_reactions.dart';
+import 'package:ion/app/features/feed/data/models/entities/article_data.c.dart';
 import 'package:ion/app/features/feed/data/models/entities/modifiable_post_data.c.dart';
 import 'package:ion/app/features/feed/data/models/entities/post_data.c.dart';
+import 'package:ion/app/features/feed/views/components/article/article.dart';
 import 'package:ion/app/features/feed/views/components/post/post.dart';
 import 'package:ion/app/features/feed/views/components/user_info/user_info.dart';
 import 'package:ion/app/features/ion_connect/ion_connect.dart';
@@ -37,28 +39,31 @@ class SharedPostMessage extends HookConsumerWidget {
 
     final postData = useMemoized(
       () => switch (postEntity) {
-        final ModifiablePostEntity post => post.data,
         final PostEntity post => post.data,
+        final ArticleEntity article => article.data,
+        final ModifiablePostEntity post => post.data,
         _ => false,
       },
     );
 
     final createdAt = useMemoized(
       () => switch (postEntity) {
-        final ModifiablePostEntity post => post.data.publishedAt.value,
         final PostEntity post => post.createdAt,
+        final ArticleEntity article => article.data.publishedAt.value,
+        final ModifiablePostEntity post => post.data.publishedAt.value,
         _ => DateTime.now(),
       },
     );
 
-    final postDeleted = useMemoized(
+    final isDeleted = useMemoized(
       () => switch (postEntity) {
+        final ArticleEntity article => article.isDeleted,
         final ModifiablePostEntity post => post.isDeleted,
         _ => false,
       },
     );
 
-    if (postData is! EntityDataWithMediaContent || postDeleted) {
+    if (postData is! EntityDataWithMediaContent || isDeleted) {
       return const SizedBox.shrink();
     }
 
@@ -76,6 +81,15 @@ class SharedPostMessage extends HookConsumerWidget {
           contentAsPlainText.isEmpty ? context.i18n.post_page_title : contentAsPlainText,
     );
 
+    final userInfo = UserInfo(
+      createdAt: createdAt,
+      pubkey: postEntity.masterPubkey,
+      textStyle: isMe
+          ? context.theme.appTextThemes.caption.copyWith(
+              color: context.theme.appColors.onPrimaryAccent,
+            )
+          : null,
+    );
     return MessageItemWrapper(
       isMe: isMe,
       messageItem: messageItem,
@@ -83,25 +97,30 @@ class SharedPostMessage extends HookConsumerWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          GestureDetector(
-            onTap: () => PostDetailsRoute(eventReference: postEntity.toEventReference().encode())
-                .push<void>(context),
-            behavior: HitTestBehavior.opaque,
-            child: Post(
-              isShared: isMe,
-              header: UserInfo(
-                createdAt: createdAt,
-                pubkey: postEntity.masterPubkey,
-                textStyle: isMe
-                    ? context.theme.appTextThemes.caption.copyWith(
-                        color: context.theme.appColors.onPrimaryAccent,
-                      )
-                    : null,
+          if (postEntity is ArticleEntity)
+            GestureDetector(
+              onTap: () =>
+                  ArticleDetailsRoute(eventReference: postEntity.toEventReference().encode())
+                      .push<void>(context),
+              behavior: HitTestBehavior.opaque,
+              child: Article(
+                header: userInfo,
+                footer: const SizedBox.shrink(),
+                eventReference: postEntity.toEventReference(),
               ),
-              footer: const SizedBox.shrink(),
-              eventReference: postEntity.toEventReference(),
+            )
+          else
+            GestureDetector(
+              onTap: () => PostDetailsRoute(eventReference: postEntity.toEventReference().encode())
+                  .push<void>(context),
+              behavior: HitTestBehavior.opaque,
+              child: Post(
+                accentTheme: isMe,
+                header: userInfo,
+                footer: const SizedBox.shrink(),
+                eventReference: postEntity.toEventReference(),
+              ),
             ),
-          ),
           Padding(
             padding: EdgeInsets.symmetric(horizontal: 12.0.s, vertical: 0.0.s),
             child: Row(

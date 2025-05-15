@@ -10,6 +10,7 @@ import 'package:ion/app/features/chat/community/models/entities/tags/conversatio
 import 'package:ion/app/features/chat/e2ee/providers/send_chat_message/send_e2ee_chat_message_service.c.dart';
 import 'package:ion/app/features/chat/providers/conversation_pubkeys_provider.c.dart';
 import 'package:ion/app/features/chat/providers/exist_chat_conversation_id_provider.c.dart';
+import 'package:ion/app/features/feed/data/models/entities/article_data.c.dart';
 import 'package:ion/app/features/feed/data/models/entities/modifiable_post_data.c.dart';
 import 'package:ion/app/features/feed/data/models/entities/post_data.c.dart';
 import 'package:ion/app/features/feed/data/models/generic_repost.c.dart';
@@ -57,12 +58,12 @@ class SharePost extends _$SharePost {
             return entity.toEntityEventMessage();
           } else if (entity is PostEntity) {
             return entity.toEventMessage(entity.data);
+          } else if (entity is ArticleEntity) {
+            return entity.toEventMessage(entity.data);
+          } else {
+            throw EntityNotFoundException(eventReference);
           }
         });
-
-        if (entity == null || postEventMessage == null) {
-          throw EntityNotFoundException(eventReference);
-        }
 
         final postAsContent = jsonEncode(postEventMessage.toJson().last);
 

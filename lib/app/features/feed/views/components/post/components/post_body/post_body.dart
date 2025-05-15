@@ -22,7 +22,7 @@ import 'package:ion/app/typedefs/typedefs.dart';
 class PostBody extends HookConsumerWidget {
   const PostBody({
     required this.entity,
-    this.isShared = false,
+    this.accentTheme = false,
     this.isTextSelectable = false,
     this.maxLines = 6,
     this.framedEventReference,
@@ -31,7 +31,7 @@ class PostBody extends HookConsumerWidget {
     super.key,
   });
 
-  final bool isShared;
+  final bool accentTheme;
   final IonConnectEntity entity;
   final bool isTextSelectable;
   final EventReference? framedEventReference;
@@ -98,14 +98,14 @@ class PostBody extends HookConsumerWidget {
                         child: TextEditorPreview(
                           scrollable: false,
                           content: content,
-                          customStyles: isShared
+                          customStyles: accentTheme
                               ? textEditorStyles(
                                   context,
                                   color: context.theme.appColors.onPrimaryAccent,
                                 )
                               : null,
                           enableInteractiveSelection: isTextSelectable,
-                          tagsColor: isShared ? context.theme.appColors.lightBlue : null,
+                          tagsColor: accentTheme ? context.theme.appColors.lightBlue : null,
                         ),
                       ),
                     ),
@@ -115,7 +115,7 @@ class PostBody extends HookConsumerWidget {
                       child: Text(
                         context.i18n.common_show_more,
                         style: context.theme.appTextThemes.body2.copyWith(
-                          color: isShared
+                          color: accentTheme
                               ? context.theme.appColors.primaryBackground
                               : context.theme.appColors.darkBlue,
                         ),
