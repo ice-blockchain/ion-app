@@ -99,6 +99,8 @@ class WalletsDatabase extends _$WalletsDatabase {
             asset_id, transferred_amount, transferred_amount_usd
           FROM $oldTransactionsTableName;
           ''');
+
+          await m.deleteTable(oldTransactionsTableName);
         },
         from7To8: (m, schema) async {
           await m.addColumn(schema.transactionsTableV2, schema.transactionsTableV2.eventId);
