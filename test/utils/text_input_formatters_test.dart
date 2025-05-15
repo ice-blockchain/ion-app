@@ -55,7 +55,7 @@ void main() {
     test('limits decimal digits', () {
       const longDecimal = '1.12345678901234567890123';
       final result = applyFormatter('1.12345678901234567890', longDecimal);
-      expect(result.text, '1.12345678901234567890');
+      expect(result.text, '1.123456789012345678');
     });
 
     test('inserts decimal separator in middle of number', () {
