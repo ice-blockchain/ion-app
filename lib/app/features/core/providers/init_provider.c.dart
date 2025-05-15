@@ -19,6 +19,7 @@ import 'package:ion/app/features/push_notifications/background/firebase_messagin
 import 'package:ion/app/features/push_notifications/providers/configure_firebase_app_provider.c.dart';
 import 'package:ion/app/features/push_notifications/providers/configure_firebase_messaging_provider.c.dart';
 import 'package:ion/app/features/push_notifications/providers/notification_response_data_provider.c.dart';
+import 'package:ion/app/features/push_notifications/providers/notification_response_handler.c.dart';
 import 'package:ion/app/features/push_notifications/providers/push_subscription_sync_provider.c.dart';
 import 'package:ion/app/features/user/providers/user_relays_sync_provider.c.dart';
 import 'package:ion/app/features/wallets/providers/coins_sync_provider.c.dart';
@@ -66,7 +67,8 @@ Future<void> initApp(Ref ref) async {
     ..listen(configureFirebaseAppProvider, noop)
     ..listen(configureFirebaseMessagingProvider, noop)
     ..listen(pushSubscriptionSyncProvider, noop)
-    ..listen(notificationResponseDataProvider, noop);
+    ..listen(notificationResponseDataProvider, noop)
+    ..listen(notificationResponseHandlerProvider, noop);
 
   initFirebaseMessagingBackgroundHandler();
 
