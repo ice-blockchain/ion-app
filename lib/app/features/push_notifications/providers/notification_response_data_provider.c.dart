@@ -45,7 +45,8 @@ class NotificationResponseData extends _$NotificationResponseData {
     }
 
     // if the app is opened from a background state (not terminated) by pressing an FCM notification.
-    final firebaseNotificationHandler = firebaseMessagingService.onMessage().listen(_addLast);
+    final firebaseNotificationHandler =
+        firebaseMessagingService.onMessageOpenedApp().listen(_addLast);
 
     // if the app is opened from a background state (not terminated) by pressing an local notification.
     final localNotificationHandler =

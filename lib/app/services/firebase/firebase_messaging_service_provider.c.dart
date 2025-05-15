@@ -26,8 +26,12 @@ class FirebaseMessagingService {
     return FirebaseMessaging.instance.onTokenRefresh;
   }
 
-  Stream<Map<String, dynamic>> onMessage() {
+  Stream<Map<String, dynamic>> onMessageOpenedApp() {
     return FirebaseMessaging.onMessageOpenedApp.map((message) => message.data);
+  }
+
+  Stream<Map<String, dynamic>> onMessage() {
+    return FirebaseMessaging.onMessage.map((message) => message.data);
   }
 
   Future<Map<String, dynamic>?> getInitialMessageData() async {
