@@ -68,7 +68,11 @@ class Post extends ConsumerWidget {
     final entity = ref.watch(ionConnectEntityWithCountersProvider(eventReference: eventReference));
 
     if (entity == null) {
-      return ScreenSideOffset.small(child: const Skeleton(child: PostSkeleton()));
+      return ScreenSideOffset.small(
+        child: Skeleton(
+          child: PostSkeleton(color: accentTheme ? Colors.white.withValues(alpha: 0.1) : null),
+        ),
+      );
     }
 
     if (entity is ModifiablePostEntity && entity.isDeleted) {

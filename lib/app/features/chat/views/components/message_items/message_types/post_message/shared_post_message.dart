@@ -82,6 +82,7 @@ class SharedPostMessage extends HookConsumerWidget {
     );
 
     final userInfo = UserInfo(
+      accentTheme: isMe,
       createdAt: createdAt,
       pubkey: postEntity.masterPubkey,
       textStyle: isMe
@@ -103,10 +104,15 @@ class SharedPostMessage extends HookConsumerWidget {
                   ArticleDetailsRoute(eventReference: postEntity.toEventReference().encode())
                       .push<void>(context),
               behavior: HitTestBehavior.opaque,
-              child: Article(
-                header: userInfo,
-                footer: const SizedBox.shrink(),
-                eventReference: postEntity.toEventReference(),
+              child: Padding(
+                padding: EdgeInsetsDirectional.only(end: 12.0.s, top: 4.0.s, bottom: 4.0.s),
+                child: Article(
+                  header:
+                      Padding(padding: EdgeInsetsDirectional.only(bottom: 10.0.s), child: userInfo),
+                  accentTheme: isMe,
+                  footer: const SizedBox.shrink(),
+                  eventReference: postEntity.toEventReference(),
+                ),
               ),
             )
           else
@@ -115,8 +121,8 @@ class SharedPostMessage extends HookConsumerWidget {
                   .push<void>(context),
               behavior: HitTestBehavior.opaque,
               child: Post(
-                accentTheme: isMe,
                 header: userInfo,
+                accentTheme: isMe,
                 footer: const SizedBox.shrink(),
                 eventReference: postEntity.toEventReference(),
               ),

@@ -17,11 +17,13 @@ class UserInfo extends HookConsumerWidget {
     this.trailing,
     this.textStyle,
     this.createdAt,
+    this.accentTheme = false,
     this.timeFormat = TimestampFormat.short,
     super.key,
   });
 
   final String pubkey;
+  final bool accentTheme;
   final Widget? trailing;
   final TextStyle? textStyle;
   final DateTime? createdAt;
@@ -79,7 +81,9 @@ class UserInfo extends HookConsumerWidget {
           trailingPadding: EdgeInsetsDirectional.only(start: 34.0.s),
         );
       },
-      orElse: () => const Skeleton(child: ListItemUserShape()),
+      orElse: () => Skeleton(
+        child: ListItemUserShape(color: accentTheme ? Colors.white.withValues(alpha: 0.1) : null),
+      ),
     );
   }
 }

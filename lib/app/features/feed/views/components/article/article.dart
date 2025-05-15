@@ -22,9 +22,10 @@ import 'package:ion/app/features/ion_connect/model/event_reference.c.dart';
 import 'package:ion/app/utils/algorithm.dart';
 import 'package:ion/app/utils/color.dart';
 
-class Article extends ConsumerWidget {
+class Article extends HookConsumerWidget {
   const Article({
     required this.eventReference,
+    this.accentTheme = false,
     this.showActionButtons = true,
     this.timeFormat = TimestampFormat.short,
     this.header,
@@ -55,13 +56,19 @@ class Article extends ConsumerWidget {
   final Widget? header;
   final bool isReplied;
   final Widget? footer;
+  final bool accentTheme;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final entity = ref.watch(ionConnectEntityWithCountersProvider(eventReference: eventReference));
 
     if (entity is! ArticleEntity) {
-      return const Skeleton(child: PostSkeleton());
+      return Padding(
+        padding: EdgeInsetsDirectional.only(start: 12.0.s),
+        child: Skeleton(
+          child: PostSkeleton(color: accentTheme ? Colors.white.withValues(alpha: 0.1) : null),
+        ),
+      );
     }
 
     if (entity.isDeleted) {
@@ -74,7 +81,9 @@ class Article extends ConsumerWidget {
     final isOwnedByCurrentUser = ref.watch(isCurrentUserSelectorProvider(entity.masterPubkey));
 
     return ColoredBox(
-      color: context.theme.appColors.onPrimaryAccent,
+      color: accentTheme
+          ? context.theme.appColors.primaryAccent
+          : context.theme.appColors.onPrimaryAccent,
       child: Column(
         children: [
           if (isReplied && header != null)
@@ -156,7 +165,12 @@ class Article extends ConsumerWidget {
                               minutesToRead: calculateReadingTime(entity.data.content),
                             ),
                             SizedBox(height: 10.0.s),
-                            ArticleFooter(text: entity.data.title ?? ''),
+                            ArticleFooter(
+                              text: entity.data.title ?? '',
+                              color: accentTheme
+                                  ? context.theme.appColors.onPrimaryAccent
+                                  : context.theme.appColors.sharkText,
+                            ),
                             if (!isReplied)
                               footer ??
                                   CounterItemsFooter(

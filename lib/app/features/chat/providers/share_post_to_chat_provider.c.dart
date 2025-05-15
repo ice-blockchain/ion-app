@@ -22,10 +22,10 @@ import 'package:ion/app/features/ion_connect/model/related_pubkey.c.dart';
 import 'package:ion/app/features/ion_connect/providers/ion_connect_event_signer_provider.c.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
-part 'share_post_provider.c.g.dart';
+part 'share_post_to_chat_provider.c.g.dart';
 
 @riverpod
-class SharePost extends _$SharePost {
+class SharePostToChat extends _$SharePostToChat {
   @override
   FutureOr<void> build() {}
 
