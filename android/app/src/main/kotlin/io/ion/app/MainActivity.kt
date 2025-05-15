@@ -17,7 +17,7 @@ import com.banuba.sdk.pe.data.PhotoEditorConfig
 import com.banuba.sdk.pe.BanubaPhotoEditor
 import com.banuba.sdk.ve.flow.VideoCreationActivity
 import com.banuba.sdk.ve.ext.VideoEditorUtils.getKoin
-import com.ionapp.ion.AudioFocusHandler
+import io.ion.app.AudioFocusHandler
 import org.koin.core.context.stopKoin
 import org.koin.core.error.InstanceCreationException
 import io.flutter.embedding.android.FlutterActivity
