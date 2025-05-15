@@ -8,6 +8,7 @@ import 'package:ion/app/features/ion_connect/model/action_source.c.dart';
 import 'package:ion/app/features/ion_connect/model/event_reference.c.dart';
 import 'package:ion/app/features/ion_connect/model/ion_connect_entity.dart';
 import 'package:ion/app/features/ion_connect/providers/ion_connect_cache.c.dart';
+import 'package:ion/app/features/ion_connect/providers/ion_connect_db_cache_notifier.c.dart';
 import 'package:ion/app/features/ion_connect/providers/ion_connect_notifier.c.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
@@ -73,6 +74,7 @@ Future<IonConnectEntity?> ionConnectEntity(
   required EventReference eventReference,
   bool network = true,
   bool cache = true,
+  bool db = false,
   String? search,
 }) async {
   final currentUser = ref.watch(currentIdentityKeyNameSelectorProvider);
@@ -81,6 +83,14 @@ Future<IonConnectEntity?> ionConnectEntity(
   }
   if (cache) {
     final entity = ref.watch(ionConnectSyncEntityProvider(eventReference: eventReference));
+    if (entity != null) {
+      return entity;
+    }
+  }
+  if (db) {
+    final entity = (await ref.watch(ionConnectDbCacheProvider.notifier).get([eventReference]))
+        .nonNulls
+        .firstOrNull;
     if (entity != null) {
       return entity;
     }

@@ -61,7 +61,7 @@ Future<void> initApp(Ref ref) async {
     ..listen(userPublicWalletsSyncProvider, noop)
     ..listen(userRelaysSyncProvider, noop)
     ..listen(userChatRelaysSyncProvider, noop)
-    ..listen(feedBookmarksNotifierProvider(), noop)
+    ..listen(feedBookmarksSyncProvider, noop)
     ..listen(configureFirebaseAppProvider, noop)
     ..listen(configureFirebaseMessagingProvider, noop)
     ..listen(pushSubscriptionSyncProvider, noop);

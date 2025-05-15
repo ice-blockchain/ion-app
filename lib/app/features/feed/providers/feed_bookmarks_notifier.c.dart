@@ -12,8 +12,10 @@ import 'package:ion/app/features/feed/data/models/bookmarks/bookmarks_collection
 import 'package:ion/app/features/ion_connect/ion_connect.dart';
 import 'package:ion/app/features/ion_connect/model/action_source.c.dart';
 import 'package:ion/app/features/ion_connect/model/event_reference.c.dart';
+import 'package:ion/app/features/ion_connect/providers/ion_connect_db_cache_notifier.c.dart';
 import 'package:ion/app/features/ion_connect/providers/ion_connect_notifier.c.dart';
 import 'package:ion/app/features/ion_connect/providers/ion_connect_subscription_provider.c.dart';
+import 'package:ion/app/features/ion_connect/repository/event_messages_repository.c.dart';
 import 'package:ion/app/services/uuid/uuid.dart';
 import 'package:nostr_dart/nostr_dart.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
@@ -143,6 +145,9 @@ class FeedBookmarksNotifier extends _$FeedBookmarksNotifier {
         newAllBookmarksRefs
           ..add(eventReference)
           ..addAll(bookmarksCollection.data.refs);
+        if (bookmarksCollection.data.type == BookmarksCollectionEntity.defaultCollectionDTag) {
+          unawaited(ref.read(ionConnectDbCacheProvider.notifier).saveRef(eventReference));
+        }
         if (bookmarksCollection.data.type != BookmarksCollectionEntity.defaultCollectionDTag) {
           final isIncluded = (await ref.read(
                 feedBookmarksNotifierProvider().future,
@@ -185,6 +190,36 @@ bool isBookmarkedInCollection(
   final feedBookmarksNotifierState =
       ref.watch(feedBookmarksNotifierProvider(collectionDTag: collectionDTag));
   return feedBookmarksNotifierState.valueOrNull?.data.refs.contains(eventReference) ?? false;
+}
+
+@riverpod
+Future<List<EventReference>> filteredBookmarksRefs(
+  Ref ref, {
+  required String collectionDTag,
+  required String query,
+}) async {
+  final collectionEntity =
+      await ref.watch(feedBookmarksNotifierProvider(collectionDTag: collectionDTag).future);
+
+  final allRefs = collectionEntity?.data.refs ?? [];
+
+  if (query.isEmpty) return allRefs;
+
+  final rawEvents = await ref.read(eventMessagesRepositoryProvider).getFilteredRaw(allRefs, query);
+  return rawEvents.map((event) => event.eventReference).toList();
+}
+
+@Riverpod(keepAlive: true)
+void feedBookmarksSync(Ref ref) {
+  ref.listen<AsyncValue<BookmarksCollectionEntity?>>(
+    feedBookmarksNotifierProvider(),
+    (previous, next) {
+      final collection = next.value;
+      if (collection != null) {
+        ref.read(ionConnectDbCacheProvider.notifier).saveAllNonExistingRefs(collection.data.refs);
+      }
+    },
+  );
 }
 
 @Riverpod(keepAlive: true)

@@ -12,8 +12,13 @@ import 'package:ion/generated/assets.gen.dart';
 
 class BookmarksHeader extends HookConsumerWidget implements PreferredSizeWidget {
   const BookmarksHeader({
+    required this.onSearchQueryUpdated,
+    required this.loading,
     super.key,
   });
+
+  final void Function(String) onSearchQueryUpdated;
+  final bool loading;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -45,12 +50,9 @@ class BookmarksHeader extends HookConsumerWidget implements PreferredSizeWidget 
               : [],
         ),
         ScreenSideOffset.small(
-          child: GestureDetector(
-            behavior: HitTestBehavior.opaque,
-            onTap: () {},
-            child: const IgnorePointer(
-              child: SearchInput(),
-            ),
+          child: SearchInput(
+            onTextChanged: onSearchQueryUpdated,
+            loading: loading,
           ),
         ),
       ],

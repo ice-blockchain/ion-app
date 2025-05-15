@@ -27,6 +27,7 @@ class EntitiesList extends HookWidget {
     this.displayParent = false,
     this.separatorHeight,
     this.onVideoTap,
+    this.readFromDB = false,
     super.key,
   });
 
@@ -34,6 +35,7 @@ class EntitiesList extends HookWidget {
   final double? separatorHeight;
   final bool displayParent;
   final OnVideoTapCallback? onVideoTap;
+  final bool readFromDB;
 
   @override
   Widget build(BuildContext context) {
@@ -47,6 +49,7 @@ class EntitiesList extends HookWidget {
           displayParent: displayParent,
           separatorHeight: separatorHeight,
           onVideoTap: onVideoTap,
+          readFromDB: readFromDB,
         );
       },
     );
@@ -57,6 +60,7 @@ class _EntityListItem extends ConsumerWidget {
   _EntityListItem({
     required this.eventReference,
     required this.displayParent,
+    required this.readFromDB,
     this.onVideoTap,
     double? separatorHeight,
     super.key,
@@ -65,13 +69,16 @@ class _EntityListItem extends ConsumerWidget {
   final EventReference eventReference;
   final double separatorHeight;
   final bool displayParent;
+  final bool readFromDB;
   final OnVideoTapCallback? onVideoTap;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     // Subscribing to the entity here instead of passing it as param to get the updates
     // e.g. when the entity is deleted
-    final entity = ref.watch(ionConnectSyncEntityProvider(eventReference: eventReference));
+    final entity = ref
+        .watch(ionConnectEntityProvider(eventReference: eventReference, db: readFromDB))
+        .valueOrNull;
 
     if (entity == null ||
         _isBlockedOrMutedOrBlocking(ref, entity) ||
