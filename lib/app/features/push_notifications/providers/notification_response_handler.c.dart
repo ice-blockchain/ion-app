@@ -5,18 +5,18 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'notification_response_handler.c.g.dart';
 
-@riverpod
+@Riverpod(keepAlive: true)
 class NotificationResponseHandler extends _$NotificationResponseHandler {
   @override
   FutureOr<void> build() async {
     final notificationResponses = ref.watch(notificationResponseDataProvider);
     final notificationResponse = notificationResponses.firstOrNull;
     if (notificationResponse != null) {
-      handleNotificationResponse(notificationResponse);
+      _handleNotificationResponse(notificationResponse);
     }
   }
 
-  void handleNotificationResponse(Map<String, dynamic> response) {
+  void _handleNotificationResponse(Map<String, dynamic> response) {
     try {
       final notificationPayload = IonConnectPushDataPayload.fromJson(response);
       print(notificationPayload);
