@@ -48,7 +48,7 @@ class AddBookmarkModal extends ConsumerWidget {
                       ),
                       SizedBox(height: 16.0.s),
                       const HorizontalSeparator(),
-                      SizedBox(height: 16.0.s),
+                      if (collectionsDTags.isNotEmpty) SizedBox(height: 16.0.s),
                     ],
                   ),
                 ),
