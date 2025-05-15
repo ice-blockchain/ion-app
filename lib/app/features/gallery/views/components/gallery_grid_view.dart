@@ -27,15 +27,18 @@ class GalleryGridView extends ConsumerWidget {
   final bool showSelectionBadge;
   final bool showCameraCell;
 
+  int _getIndexOffset(bool hasLimitedPermission) {
+    var offset = 0;
+    if (showCameraCell) offset += 1; // +1 for CameraCell
+    if (hasLimitedPermission) offset += 1; // +1 for AddCell
+    
+    return offset;
+  }
+
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final hasLimitedPermission = ref.watch(hasLimitedPermissionProvider(Permission.photos));
-
-    var indexOffset = 0;
-
-    if (showCameraCell) indexOffset += 1; // +1 for CameraCell
-    if (hasLimitedPermission) indexOffset += 1; // +1 for AddCell
-
+    final indexOffset = _getIndexOffset(hasLimitedPermission);
     final totalCount = galleryState.mediaData.length + indexOffset;
 
     return SliverGrid(
