@@ -49,7 +49,6 @@ class OneToOneMessageList extends HookConsumerWidget {
         child: ScrollablePositionedList.builder(
           physics: const ClampingScrollPhysics(),
           itemCount: allMessages.length,
-          initialScrollIndex: allMessages.length - 1,
           itemScrollController: itemScrollController,
           reverse: true,
           itemBuilder: (context, index) {
