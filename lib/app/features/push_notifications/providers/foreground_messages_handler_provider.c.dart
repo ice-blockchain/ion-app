@@ -1,7 +1,5 @@
 import 'dart:convert';
-import 'dart:io';
 
-import 'package:flutter/foundation.dart';
 import 'package:ion/app/features/push_notifications/data/models/ion_connect_push_data_payload.c.dart';
 import 'package:ion/app/features/push_notifications/providers/configure_firebase_app_provider.c.dart';
 import 'package:ion/app/features/push_notifications/providers/notification_data_parser_provider.c.dart';
@@ -16,11 +14,6 @@ part 'foreground_messages_handler_provider.c.g.dart';
 class ForegroundMessagesHandler extends _$ForegroundMessagesHandler {
   @override
   FutureOr<void> build() async {
-    if (!kIsWeb && Platform.isIOS) {
-      // on iOS the apns messages are displayed automatically when the app is foreground
-      // that is configured by the DarwinInitializationSettings of flutter_local_notifications package
-      return;
-    }
     final firebaseAppConfigured = ref.watch(configureFirebaseAppProvider).valueOrNull ?? false;
     if (firebaseAppConfigured) {
       final firebaseMessagingService = ref.watch(firebaseMessagingServiceProvider);
