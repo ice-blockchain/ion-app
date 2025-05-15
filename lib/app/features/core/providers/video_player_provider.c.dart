@@ -48,8 +48,6 @@ class VideoController extends _$VideoController {
 
   @override
   Future<Raw<CachedVideoPlayerPlusController>> build(VideoControllerParams params) async {
-    final isMuted = ref.watch(globalMuteProvider);
-
     final sourcePath = ref.watch(
       iONConnectMediaUrlFallbackProvider
           .select((state) => state[params.sourcePath] ?? params.sourcePath),
@@ -57,14 +55,16 @@ class VideoController extends _$VideoController {
 
     final controller = ref
         .watch(videoPlayerControllerFactoryProvider(sourcePath))
-        .createController(VideoPlayerOptions(mixWithOthers: isMuted));
+        .createController(VideoPlayerOptions(mixWithOthers: true));
 
     try {
       await controller.initialize();
       if (!controller.value.hasError) {
-        await Future.wait(
-          [controller.setLooping(params.looping), controller.setVolume(isMuted ? 0 : 1)],
-        );
+        await controller.setLooping(params.looping);
+
+        // Set initial volume based on global mute state
+        final isMuted = ref.read(globalMuteNotifierProvider);
+        await controller.setVolume(isMuted ? 0.0 : 1.0);
 
         if (_activeController != null) {
           final prevController = _activeController!;
@@ -85,6 +85,19 @@ class VideoController extends _$VideoController {
         }
 
         _activeController = controller;
+
+        ref.listen(globalMuteNotifierProvider, (_, next) {
+          if (_activeController != null && _activeController!.value.isInitialized) {
+            final isPlaying = _activeController!.value.isPlaying;
+            unawaited(
+              _activeController!.setVolume(next ? 0.0 : 1.0).then((_) {
+                if (isPlaying && !_activeController!.value.isPlaying) {
+                  _activeController!.play();
+                }
+              }),
+            );
+          }
+        });
       }
     } catch (error, stackTrace) {
       final authorPubkey = params.authorPubkey;

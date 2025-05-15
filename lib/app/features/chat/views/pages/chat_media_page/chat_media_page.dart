@@ -176,7 +176,7 @@ class _MediaBottomOverlay extends ConsumerWidget {
     }
 
     final isVideo = medias[currentIndex].mediaType == MediaType.video;
-    final isMuted = ref.watch(globalMuteProvider);
+    final isMuted = ref.watch(globalMuteNotifierProvider);
 
     return PositionedDirectional(
       bottom: MediaQuery.paddingOf(context).bottom,
@@ -207,9 +207,9 @@ class _MediaBottomOverlay extends ConsumerWidget {
               ),
               if (isVideo)
                 GestureDetector(
-                  onTap: () {
-                    HapticFeedback.lightImpact();
-                    ref.read(globalMuteProvider.notifier).toggle();
+                  onTap: () async {
+                    await HapticFeedback.lightImpact();
+                    await ref.read(globalMuteNotifierProvider.notifier).toggle();
                   },
                   child: isMuted
                       ? Assets.svg.iconChannelUnmute.icon(

@@ -17,6 +17,7 @@ import com.banuba.sdk.pe.data.PhotoEditorConfig
 import com.banuba.sdk.pe.BanubaPhotoEditor
 import com.banuba.sdk.ve.flow.VideoCreationActivity
 import com.banuba.sdk.ve.ext.VideoEditorUtils.getKoin
+import com.ionapp.ion.AudioFocusHandler
 import org.koin.core.context.stopKoin
 import org.koin.core.error.InstanceCreationException
 import io.flutter.embedding.android.FlutterActivity
@@ -59,7 +60,8 @@ class MainActivity : FlutterFragmentActivity() {
     private var videoEditorSDK: BanubaVideoEditor? = null
     private var photoEditorSDK: BanubaPhotoEditor? = null
     private var videoEditorModule: VideoEditorModule? = null
-
+    
+    private lateinit var audioFocusHandler: AudioFocusHandler
 
     // Bundle for enabling Editor V2
     private val extras = bundleOf(
@@ -69,6 +71,8 @@ class MainActivity : FlutterFragmentActivity() {
     override fun configureFlutterEngine(flutterEngine: FlutterEngine) {
         GeneratedPluginRegistrant.registerWith(flutterEngine)
         super.configureFlutterEngine(flutterEngine)
+        
+        audioFocusHandler = AudioFocusHandler(applicationContext, flutterEngine)
 
         // Set up your MethodChannel here after registration
         MethodChannel(

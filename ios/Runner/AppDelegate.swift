@@ -1,8 +1,120 @@
 import UIKit
 import Flutter
 import AVKit
+import AVFoundation
 import BanubaAudioBrowserSDK
 import BanubaPhotoEditorSDK
+
+// Audio Focus Handler implementation
+class AudioFocusHandler: NSObject {
+    private let channel: FlutterMethodChannel
+    private var hasFocus = false
+    
+    init(flutterEngine: FlutterEngine) {
+        self.channel = FlutterMethodChannel(name: "audio_focus_channel", binaryMessenger: flutterEngine.binaryMessenger)
+        super.init()
+        
+        setupAudioSession()
+        setupMethodChannel()
+        
+        // Register for audio interruption notifications
+        NotificationCenter.default.addObserver(
+            self,
+            selector: #selector(handleAudioInterruption),
+            name: AVAudioSession.interruptionNotification,
+            object: nil
+        )
+    }
+    
+    private func setupAudioSession() {
+        do {
+            try AVAudioSession.sharedInstance().setCategory(.playback, mode: .default, options: [.mixWithOthers])
+        } catch {
+            print("Failed to set up audio session: \(error)")
+        }
+    }
+    
+    private func setupMethodChannel() {
+        channel.setMethodCallHandler { [weak self] (call, result) in
+            guard let self = self else { return }
+            
+            switch call.method {
+            case "initAudioFocus":
+                self.setupAudioSession()
+                result(true)
+                
+            case "requestAudioFocus":
+                do {
+                    // When requesting focus, use playback category without mixWithOthers
+                    // This will pause any external audio
+                    try AVAudioSession.sharedInstance().setCategory(.playback, mode: .default)
+                    try AVAudioSession.sharedInstance().setActive(true)
+                    self.hasFocus = true
+                    self.channel.invokeMethod("onAudioFocusChange", arguments: true)
+                    result(true)
+                } catch {
+                    print("Failed to request audio focus: \(error)")
+                    result(false)
+                }
+                
+            case "abandonAudioFocus":
+                do {
+                    // When abandoning focus, set back to mixWithOthers and deactivate
+                    // This will allow external audio to resume
+                    try AVAudioSession.sharedInstance().setCategory(.playback, mode: .default, options: [.mixWithOthers])
+                    try AVAudioSession.sharedInstance().setActive(false, options: .notifyOthersOnDeactivation)
+                    self.hasFocus = false
+                    self.channel.invokeMethod("onAudioFocusChange", arguments: false)
+                    result(true)
+                } catch {
+                    print("Failed to abandon audio focus: \(error)")
+                    result(false)
+                }
+                
+            default:
+                result(FlutterMethodNotImplemented)
+            }
+        }
+    }
+    
+    @objc private func handleAudioInterruption(notification: Notification) {
+        guard let userInfo = notification.userInfo,
+              let typeValue = userInfo[AVAudioSessionInterruptionTypeKey] as? UInt,
+              let type = AVAudioSession.InterruptionType(rawValue: typeValue) else {
+            return
+        }
+        
+        switch type {
+        case .began:
+            // Interruption began, another app started playing audio
+            hasFocus = false
+            channel.invokeMethod("onAudioFocusChange", arguments: false)
+            
+        case .ended:
+            // Interruption ended
+            if let optionsValue = userInfo[AVAudioSessionInterruptionOptionKey] as? UInt {
+                let options = AVAudioSession.InterruptionOptions(rawValue: optionsValue)
+                if options.contains(.shouldResume) {
+                    // Should resume playback
+                    do {
+                        try AVAudioSession.sharedInstance().setActive(true)
+                        hasFocus = true
+                        channel.invokeMethod("onAudioFocusChange", arguments: true)
+                    } catch {
+                        print("Failed to resume audio session: \(error)")
+                    }
+                }
+            }
+            
+        @unknown default:
+            break
+        }
+    }
+    
+    deinit {
+        NotificationCenter.default.removeObserver(self)
+    }
+}
 
 @main
 @objc class AppDelegate: FlutterAppDelegate {
@@ -24,6 +136,8 @@ import BanubaPhotoEditorSDK
     
     lazy var audioBrowserFlutterEngine = FlutterEngine(name: "audioBrowserEngine")
     
+    private var audioFocusHandler: AudioFocusHandler?
+    
     override func application(
         _ application: UIApplication,
         didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?
@@ -33,6 +147,10 @@ import BanubaPhotoEditorSDK
         
         if let controller = window?.rootViewController as? FlutterViewController,
            let binaryMessenger = controller as? FlutterBinaryMessenger {
+            
+            if let flutterEngine = controller.engine {
+                audioFocusHandler = AudioFocusHandler(flutterEngine: flutterEngine)
+            }
             
             let channel = FlutterMethodChannel(
                 name: "banubaSdkChannel",
