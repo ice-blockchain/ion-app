@@ -338,24 +338,32 @@ class SendE2eeChatMessageService {
       ),
     ).toTag();
 
-    final seal = await compute(
-      (args) => sealService.createSeal(
-        args.$1,
-        args.$2,
-        args.$3,
-      ),
-      (eventMessage, signer, receiverPubkey),
-    );
-
     final wrap = await compute(
-      (args) => wrapService.createWrap(
-        event: args.$1,
-        contentKinds: args.$2,
-        receiverPubkey: args.$3,
-        receiverMasterPubkey: args.$4,
-        expirationTag: args.$5,
+      (args) async {
+        final seal = await args.$1.createSeal(
+          args.$2,
+          args.$3,
+          args.$4,
+        );
+
+        return args.$5.createWrap(
+          event: seal,
+          contentKinds: args.$6,
+          receiverPubkey: args.$4,
+          receiverMasterPubkey: args.$7,
+          expirationTag: args.$8,
+        );
+      },
+      (
+        sealService,
+        eventMessage,
+        signer,
+        receiverPubkey,
+        wrapService,
+        kinds,
+        receiverMasterPubkey,
+        expirationTag
       ),
-      (seal, kinds, receiverPubkey, receiverMasterPubkey, expirationTag),
     );
 
     return wrap;

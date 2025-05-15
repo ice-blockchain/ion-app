@@ -87,66 +87,59 @@ class MessageItemWrapper extends HookConsumerWidget {
           Logger.log('Error showing message reaction dialog:', error: e, stackTrace: st);
         }
       },
-      [messageItemKey, isMe, messageItem, deliveryStatus],
+      [messageItemKey, isMe, messageItem, deliveryStatus.valueOrNull],
     );
 
-    return StreamBuilder<MessageDeliveryStatus>(
-      stream: deliveryStatus,
-      initialData: MessageDeliveryStatus.created,
-      builder: (context, snapshot) {
-        if (snapshot.hasData && snapshot.data == MessageDeliveryStatus.deleted) {
-          return const SizedBox.shrink();
-        }
+    if (deliveryStatus.valueOrNull == MessageDeliveryStatus.deleted) {
+      return const SizedBox.shrink();
+    }
 
-        return Align(
-          alignment: isMe ? AlignmentDirectional.centerEnd : AlignmentDirectional.centerStart,
-          child: GestureDetector(
-            onLongPress: () {
-              HapticFeedback.mediumImpact();
-              showReactDialog();
-            },
-            child: RepaintBoundary(
-              key: messageItemKey,
-              child: Row(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Container(
-                    padding: contentPadding,
-                    constraints: BoxConstraints(
-                      maxWidth: maxWidth,
-                    ),
-                    decoration: BoxDecoration(
-                      color: isMe
-                          ? context.theme.appColors.primaryAccent
-                          : context.theme.appColors.onPrimaryAccent,
-                      borderRadius: BorderRadiusDirectional.only(
-                        topStart: Radius.circular(12.0.s),
-                        topEnd: Radius.circular(12.0.s),
-                        bottomStart: !isLastMessageFromAuthor || isMe
-                            ? Radius.circular(12.0.s)
-                            : Radius.zero,
-                        bottomEnd:
-                            isMe && isLastMessageFromAuthor ? Radius.zero : Radius.circular(12.0.s),
-                      ),
-                    ),
-                    child: child,
+    return Align(
+      alignment: isMe ? AlignmentDirectional.centerEnd : AlignmentDirectional.centerStart,
+      child: GestureDetector(
+        onLongPress: () {
+          HapticFeedback.mediumImpact();
+          showReactDialog();
+        },
+        child: RepaintBoundary(
+          key: messageItemKey,
+          child: Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Container(
+                padding: contentPadding,
+                constraints: BoxConstraints(
+                  maxWidth: maxWidth,
+                ),
+                decoration: BoxDecoration(
+                  color: isMe
+                      ? context.theme.appColors.primaryAccent
+                      : context.theme.appColors.onPrimaryAccent,
+                  borderRadius: BorderRadiusDirectional.only(
+                    topStart: Radius.circular(12.0.s),
+                    topEnd: Radius.circular(12.0.s),
+                    bottomStart:
+                        !isLastMessageFromAuthor || isMe ? Radius.circular(12.0.s) : Radius.zero,
+                    bottomEnd:
+                        isMe && isLastMessageFromAuthor ? Radius.zero : Radius.circular(12.0.s),
                   ),
-                  if (snapshot.hasData && snapshot.data == MessageDeliveryStatus.failed)
-                    Row(
-                      children: [
-                        SizedBox(width: 6.0.s),
-                        Assets.svg.iconMessageFailed.icon(
-                          color: context.theme.appColors.attentionRed,
-                          size: 16.0.s,
-                        ),
-                      ],
-                    ),
-                ],
+                ),
+                child: child,
               ),
-            ),
+              if (deliveryStatus.valueOrNull == MessageDeliveryStatus.failed)
+                Row(
+                  children: [
+                    SizedBox(width: 6.0.s),
+                    Assets.svg.iconMessageFailed.icon(
+                      color: context.theme.appColors.attentionRed,
+                      size: 16.0.s,
+                    ),
+                  ],
+                ),
+            ],
           ),
-        );
-      },
+        ),
+      ),
     );
   }
 }

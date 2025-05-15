@@ -270,22 +270,21 @@ class E2eeMessagesSubscriber extends _$E2eeMessagesSubscriber {
     required IonConnectGiftWrapService giftWrapService,
   }) async {
     try {
-      final seal = await compute(
-        (args) => giftWrapService.decodeWrap(
-          privateKey: args.$1,
-          content: args.$2,
-          senderPubkey: args.$3,
-        ),
-        (privateKey, giftWrap.content, giftWrap.pubkey),
-      );
-
       final decodedSeal = await compute(
-        (args) => sealService.decodeSeal(
-          args.$1,
-          args.$2,
-          args.$3,
-        ),
-        (seal.content, seal.pubkey, privateKey),
+        (args) async {
+          final seal = await args.$1.decodeWrap(
+            privateKey: args.$3,
+            content: args.$4,
+            senderPubkey: args.$5,
+          );
+
+          return args.$2.decodeSeal(
+            seal.content,
+            seal.pubkey,
+            args.$3,
+          );
+        },
+        (giftWrapService, sealService, privateKey, giftWrap.content, giftWrap.pubkey),
       );
 
       return decodedSeal;
