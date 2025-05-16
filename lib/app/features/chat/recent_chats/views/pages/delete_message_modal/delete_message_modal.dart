@@ -68,7 +68,7 @@ class DeleteMessageModal extends ConsumerWidget {
                 ),
               ],
             ),
-            SizedBox(height: MediaQuery.paddingOf(context).bottom + 16.0.s),
+            SizedBox(height: 16.0.s),
           ],
         ),
       ),
