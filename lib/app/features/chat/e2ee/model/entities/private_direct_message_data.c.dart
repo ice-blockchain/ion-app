@@ -125,9 +125,6 @@ class ReplaceablePrivateDirectMessageData
 
   const ReplaceablePrivateDirectMessageData._();
 
-  String? getReceiverPubkey({required String currentUserPubkey}) =>
-      relatedPubkeys?.firstWhereOrNull((p) => p.value != currentUserPubkey)?.value;
-
   @override
   FutureOr<EventMessage> toEventMessage(
     EventSigner signer, {

@@ -1,5 +1,6 @@
 // SPDX-License-Identifier: ice License 1.0
 
+import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
@@ -77,7 +78,7 @@ class RecentChatOverlayContextMenu extends ConsumerWidget {
                     final currentUserPubkey = ref.watch(currentPubkeySelectorProvider);
                     final receiverPubkey = ReplaceablePrivateDirectMessageData.fromEventMessage(
                       conversation.latestMessage!,
-                    ).getReceiverPubkey(currentUserPubkey: currentUserPubkey!);
+                    ).relatedPubkeys?.firstWhereOrNull((p) => p.value != currentUserPubkey)?.value;
 
                     if (receiverPubkey == null) {
                       return;
@@ -109,7 +110,7 @@ class RecentChatOverlayContextMenu extends ConsumerWidget {
                     final currentUserPubkey = ref.watch(currentPubkeySelectorProvider);
                     final receiverPubkey = ReplaceablePrivateDirectMessageData.fromEventMessage(
                       conversation.latestMessage!,
-                    ).getReceiverPubkey(currentUserPubkey: currentUserPubkey!);
+                    ).relatedPubkeys?.firstWhereOrNull((p) => p.value != currentUserPubkey)?.value;
 
                     if (receiverPubkey == null) {
                       return;

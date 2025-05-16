@@ -84,16 +84,10 @@ class NotificationResponseHandler extends _$NotificationResponseHandler {
 
     switch (rumor.kind) {
       case ReplaceablePrivateDirectMessageEntity.kind:
-        final entity = ReplaceablePrivateDirectMessageEntity.fromEventMessage(rumor);
-        final receiverPubkey = entity.data.getReceiverPubkey(currentUserPubkey: currentPubkey);
-        if (receiverPubkey == null) {
-          throw ReceiverDevicePubkeyNotFoundException(giftWrap.id);
-        }
-        await _openChat(receiverPubkey);
       case PrivateMessageReactionEntity.kind:
       case FundsRequestEntity.kind:
       case WalletAssetEntity.kind:
-        await _openChat(giftWrap.masterPubkey);
+        await _openChat(rumor.masterPubkey);
       default:
         throw UnsupportedEntityType(rumor);
     }
