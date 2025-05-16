@@ -3,13 +3,13 @@
 import 'dart:async';
 
 import 'package:collection/collection.dart';
-import 'package:flutter/foundation.dart';
 import 'package:ion/app/exceptions/exceptions.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/auth/providers/auth_provider.c.dart';
 import 'package:ion/app/features/chat/community/models/entities/tags/conversation_identifier.c.dart';
 import 'package:ion/app/features/chat/e2ee/model/entities/private_direct_message_data.c.dart';
 import 'package:ion/app/features/chat/e2ee/model/entities/private_message_reaction_data.c.dart';
+import 'package:ion/app/features/chat/e2ee/providers/gift_unwrap_service_provider.c.dart';
 import 'package:ion/app/features/chat/e2ee/providers/send_e2ee_message_status_provider.c.dart';
 import 'package:ion/app/features/chat/model/database/chat_database.c.dart';
 import 'package:ion/app/features/chat/providers/user_chat_relays_provider.c.dart';
@@ -159,16 +159,9 @@ class E2eeMessagesSubscriber extends _$E2eeMessagesSubscriber {
       return;
     }
 
-    final rumor = await _unwrapGift(
-      giftWrap: eventMessage,
-      sealService: sealService,
-      giftWrapService: giftWrapService,
-      privateKey: eventSigner.privateKey,
-    );
+    final giftUnwrapService = await ref.watch(giftUnwrapServiceProvider.future);
 
-    if (rumor == null) {
-      return;
-    }
+    final rumor = await giftUnwrapService.unwrap(eventMessage);
 
     if (rumor.kind == ReplaceablePrivateDirectMessageEntity.kind) {
       final entity = ReplaceablePrivateDirectMessageEntity.fromEventMessage(rumor);
@@ -265,36 +258,6 @@ class E2eeMessagesSubscriber extends _$E2eeMessagesSubscriber {
     }
 
     return senderPubkey;
-  }
-
-  Future<EventMessage?> _unwrapGift({
-    required EventMessage giftWrap,
-    required String privateKey,
-    required IonConnectSealService sealService,
-    required IonConnectGiftWrapService giftWrapService,
-  }) async {
-    try {
-      final decodedSeal = await compute(
-        (args) async {
-          final seal = await args.$1.decodeWrap(
-            privateKey: args.$3,
-            content: args.$4,
-            senderPubkey: args.$5,
-          );
-
-          return args.$2.decodeSeal(
-            seal.content,
-            seal.pubkey,
-            args.$3,
-          );
-        },
-        (giftWrapService, sealService, privateKey, giftWrap.content, giftWrap.pubkey),
-      );
-
-      return decodedSeal;
-    } catch (e) {
-      throw DecodeE2EMessageException(giftWrap.id);
-    }
   }
 
   Future<void> _addMediaToDatabase(
