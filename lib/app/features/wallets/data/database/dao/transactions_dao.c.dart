@@ -335,7 +335,7 @@ class TransactionsDao extends DatabaseAccessor<WalletsDatabase> with _$Transacti
       type: TransactionType.fromValue(transaction.type),
       senderWalletAddress: transaction.senderWalletAddress,
       receiverWalletAddress: transaction.receiverWalletAddress,
-      nativeCoin: CoinData.fromDB(nativeCoin!, domainNetwork),
+      nativeCoin: nativeCoin != null ? CoinData.fromDB(nativeCoin, domainNetwork) : null,
       cryptoAsset: CoinTransactionAsset(
         coin: transferredCoin,
         amount: parseCryptoAmount(

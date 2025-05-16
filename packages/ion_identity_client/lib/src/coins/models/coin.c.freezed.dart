@@ -29,6 +29,7 @@ mixin _$Coin {
   double get priceUSD => throw _privateConstructorUsedError;
   String get symbol => throw _privateConstructorUsedError;
   String get symbolGroup => throw _privateConstructorUsedError;
+  bool get native => throw _privateConstructorUsedError;
   @SyncFrequencyConverter()
   Duration get syncFrequency => throw _privateConstructorUsedError;
 
@@ -56,6 +57,7 @@ abstract class $CoinCopyWith<$Res> {
       double priceUSD,
       String symbol,
       String symbolGroup,
+      bool native,
       @SyncFrequencyConverter() Duration syncFrequency});
 }
 
@@ -83,6 +85,7 @@ class _$CoinCopyWithImpl<$Res, $Val extends Coin>
     Object? priceUSD = null,
     Object? symbol = null,
     Object? symbolGroup = null,
+    Object? native = null,
     Object? syncFrequency = null,
   }) {
     return _then(_value.copyWith(
@@ -122,6 +125,10 @@ class _$CoinCopyWithImpl<$Res, $Val extends Coin>
           ? _value.symbolGroup
           : symbolGroup // ignore: cast_nullable_to_non_nullable
               as String,
+      native: null == native
+          ? _value.native
+          : native // ignore: cast_nullable_to_non_nullable
+              as bool,
       syncFrequency: null == syncFrequency
           ? _value.syncFrequency
           : syncFrequency // ignore: cast_nullable_to_non_nullable
@@ -147,6 +154,7 @@ abstract class _$$CoinImplCopyWith<$Res> implements $CoinCopyWith<$Res> {
       double priceUSD,
       String symbol,
       String symbolGroup,
+      bool native,
       @SyncFrequencyConverter() Duration syncFrequency});
 }
 
@@ -171,6 +179,7 @@ class __$$CoinImplCopyWithImpl<$Res>
     Object? priceUSD = null,
     Object? symbol = null,
     Object? symbolGroup = null,
+    Object? native = null,
     Object? syncFrequency = null,
   }) {
     return _then(_$CoinImpl(
@@ -210,6 +219,10 @@ class __$$CoinImplCopyWithImpl<$Res>
           ? _value.symbolGroup
           : symbolGroup // ignore: cast_nullable_to_non_nullable
               as String,
+      native: null == native
+          ? _value.native
+          : native // ignore: cast_nullable_to_non_nullable
+              as bool,
       syncFrequency: null == syncFrequency
           ? _value.syncFrequency
           : syncFrequency // ignore: cast_nullable_to_non_nullable
@@ -231,6 +244,7 @@ class _$CoinImpl implements _Coin {
       required this.priceUSD,
       required this.symbol,
       required this.symbolGroup,
+      this.native = false,
       @SyncFrequencyConverter() required this.syncFrequency});
 
   factory _$CoinImpl.fromJson(Map<String, dynamic> json) =>
@@ -255,12 +269,15 @@ class _$CoinImpl implements _Coin {
   @override
   final String symbolGroup;
   @override
+  @JsonKey()
+  final bool native;
+  @override
   @SyncFrequencyConverter()
   final Duration syncFrequency;
 
   @override
   String toString() {
-    return 'Coin(contractAddress: $contractAddress, decimals: $decimals, iconURL: $iconURL, id: $id, name: $name, network: $network, priceUSD: $priceUSD, symbol: $symbol, symbolGroup: $symbolGroup, syncFrequency: $syncFrequency)';
+    return 'Coin(contractAddress: $contractAddress, decimals: $decimals, iconURL: $iconURL, id: $id, name: $name, network: $network, priceUSD: $priceUSD, symbol: $symbol, symbolGroup: $symbolGroup, native: $native, syncFrequency: $syncFrequency)';
   }
 
   @override
@@ -281,14 +298,26 @@ class _$CoinImpl implements _Coin {
             (identical(other.symbol, symbol) || other.symbol == symbol) &&
             (identical(other.symbolGroup, symbolGroup) ||
                 other.symbolGroup == symbolGroup) &&
+            (identical(other.native, native) || other.native == native) &&
             (identical(other.syncFrequency, syncFrequency) ||
                 other.syncFrequency == syncFrequency));
   }
 
   @JsonKey(includeFromJson: false, includeToJson: false)
   @override
-  int get hashCode => Object.hash(runtimeType, contractAddress, decimals,
-      iconURL, id, name, network, priceUSD, symbol, symbolGroup, syncFrequency);
+  int get hashCode => Object.hash(
+      runtimeType,
+      contractAddress,
+      decimals,
+      iconURL,
+      id,
+      name,
+      network,
+      priceUSD,
+      symbol,
+      symbolGroup,
+      native,
+      syncFrequency);
 
   /// Create a copy of Coin
   /// with the given fields replaced by the non-null parameter values.
@@ -317,6 +346,7 @@ abstract class _Coin implements Coin {
           required final double priceUSD,
           required final String symbol,
           required final String symbolGroup,
+          final bool native,
           @SyncFrequencyConverter() required final Duration syncFrequency}) =
       _$CoinImpl;
 
@@ -340,6 +370,8 @@ abstract class _Coin implements Coin {
   String get symbol;
   @override
   String get symbolGroup;
+  @override
+  bool get native;
   @override
   @SyncFrequencyConverter()
   Duration get syncFrequency;

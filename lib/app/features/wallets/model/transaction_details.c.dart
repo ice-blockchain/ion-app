@@ -21,7 +21,6 @@ class TransactionDetails with _$TransactionDetails {
     required TransactionType type,
     required CryptoAssetToSendData assetData,
     required TransactionStatus status,
-    required CoinData nativeCoin,
     required String walletViewId,
     required String? senderAddress,
     required String? receiverAddress,
@@ -31,6 +30,7 @@ class TransactionDetails with _$TransactionDetails {
     required DateTime? dateRequested,
     required DateTime? dateConfirmed,
     required DateTime? dateBroadcasted,
+    required CoinData? nativeCoin,
     required NetworkFeeOption? networkFeeOption,
   }) = _TransactionDetails;
 
@@ -39,9 +39,11 @@ class TransactionDetails with _$TransactionDetails {
     required CoinsGroup coinsGroup,
     String? walletViewName,
   }) {
-    final feeAmount = transaction.fee != null
-        ? parseCryptoAmount(transaction.fee!, transaction.nativeCoin.decimals)
-        : null;
+    final fee = transaction.fee;
+    final nativeCoin = transaction.nativeCoin;
+    final isFeeAvailable = fee != null && nativeCoin != null;
+    final feeAmount = isFeeAvailable ? parseCryptoAmount(fee, nativeCoin.decimals) : null;
+
     return TransactionDetails(
       id: transaction.id,
       txHash: transaction.txHash,
@@ -65,11 +67,11 @@ class TransactionDetails with _$TransactionDetails {
       dateRequested: transaction.dateRequested,
       dateConfirmed: transaction.dateConfirmed,
       nativeCoin: transaction.nativeCoin,
-      networkFeeOption: feeAmount != null
+      networkFeeOption: feeAmount != null && nativeCoin != null
           ? NetworkFeeOption(
               amount: feeAmount,
-              symbol: transaction.nativeCoin.abbreviation,
-              priceUSD: feeAmount * transaction.nativeCoin.priceUSD,
+              symbol: nativeCoin.abbreviation,
+              priceUSD: feeAmount * nativeCoin.priceUSD,
               type: null,
             )
           : null,
