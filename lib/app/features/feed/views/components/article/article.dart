@@ -25,28 +25,39 @@ import 'package:ion/app/utils/color.dart';
 class Article extends ConsumerWidget {
   const Article({
     required this.eventReference,
+    this.header,
+    this.footer,
+    this.isReplied = false,
     this.accentTheme = false,
     this.showActionButtons = true,
     this.timeFormat = TimestampFormat.short,
-    this.header,
-    this.isReplied = false,
-    this.footer,
     super.key,
   });
 
   factory Article.quoted({
     required EventReference eventReference,
+    Widget? header,
+    bool accentTheme = false,
   }) {
-    return Article(eventReference: eventReference, showActionButtons: false);
+    return Article(
+      header: header,
+      showActionButtons: false,
+      accentTheme: accentTheme,
+      eventReference: eventReference,
+    );
   }
 
   factory Article.replied({
     required EventReference eventReference,
+    Widget? header,
+    bool accentTheme = false,
   }) {
     return Article(
-      eventReference: eventReference,
-      showActionButtons: false,
+      header: header,
       isReplied: true,
+      accentTheme: accentTheme,
+      showActionButtons: false,
+      eventReference: eventReference,
     );
   }
 
