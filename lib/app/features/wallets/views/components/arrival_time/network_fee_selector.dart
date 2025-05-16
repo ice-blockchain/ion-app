@@ -28,7 +28,7 @@ class NetworkFeeSelector extends ConsumerWidget {
       return const SizedBox.shrink();
     }
 
-    final showSlider = options.length > 2;
+    final showSlider = options.length > 1;
 
     return Padding(
       padding: padding ?? EdgeInsets.zero,
