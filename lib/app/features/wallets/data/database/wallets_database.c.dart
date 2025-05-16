@@ -103,7 +103,15 @@ class WalletsDatabase extends _$WalletsDatabase {
           await m.deleteTable(oldTransactionsTableName);
         },
         from7To8: (m, schema) async {
-          await m.addColumn(schema.transactionsTableV2, schema.transactionsTableV2.eventId);
+          final rows = await customSelect(
+            'PRAGMA table_info(${schema.transactionsTableV2.actualTableName})',
+          ).get();
+
+          final columnExists = rows.any((row) => row.data['name'] == 'event_id');
+
+          if (!columnExists) {
+            await m.addColumn(schema.transactionsTableV2, schema.transactionsTableV2.eventId);
+          }
         },
       ),
     );
