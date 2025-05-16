@@ -50,6 +50,7 @@ class SendCoinsNotifier extends _$SendCoinsNotifier {
     final coinAssetData = form.assetData as CoinAssetToSendData;
     final sendableAsset = coinAssetData.associatedAssetWithSelectedOption;
     final senderWallet = form.senderWallet;
+    final feeType = form.selectedNetworkFeeOption?.type;
 
     if (senderWallet == null || sendableAsset == null) {
       final missingComponent = senderWallet == null ? 'senderWallet' : 'sendableAsset';
@@ -71,6 +72,7 @@ class SendCoinsNotifier extends _$SendCoinsNotifier {
         sendableAsset: sendableAsset,
         onVerifyIdentity: onVerifyIdentity,
         receiverAddress: form.receiverAddress,
+        feeType: feeType,
       );
 
       bool isRetryStatus(TransactionStatus status) =>

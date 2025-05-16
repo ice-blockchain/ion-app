@@ -83,11 +83,13 @@ class CoinsService {
     required String receiverAddress,
     required WalletAsset sendableAsset,
     required OnVerifyIdentity<Map<String, dynamic>> onVerifyIdentity,
+    NetworkFeeType? feeType,
   }) async {
     final transfer = _TransferFactory().create(
       receiverAddress: receiverAddress,
       amountValue: amount,
       sendableAsset: sendableAsset,
+      networkFeeType: feeType,
     );
     final result = await _ionIdentityClient.wallets.makeTransfer(
       senderWallet,
