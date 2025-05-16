@@ -100,7 +100,11 @@ class Post extends ConsumerWidget {
           child: Column(
             children: [
               if (displayQuote && quotedEventReference != null)
-                _QuotedEvent(eventReference: quotedEventReference),
+                _QuotedEvent(
+                  accentTheme: accentTheme,
+                  eventReference: quotedEventReference,
+                  header: accentTheme && header != null ? header : null,
+                ),
               SizedBox(height: 8.0.s),
               footer ?? CounterItemsFooter(eventReference: eventReference),
             ],
@@ -114,7 +118,11 @@ class Post extends ConsumerWidget {
       children: [
         SizedBox(height: topOffset ?? 12.0.s),
         if (displayParent && parentEventReference != null)
-          _ParentEvent(eventReference: parentEventReference),
+          _ParentEvent(
+            accentTheme: accentTheme,
+            eventReference: parentEventReference,
+            header: accentTheme && header != null ? header : null,
+          ),
         ScreenSideOffset.small(
           child: header ??
               UserInfo(
@@ -156,8 +164,14 @@ class Post extends ConsumerWidget {
 }
 
 class _QuotedEvent extends StatelessWidget {
-  const _QuotedEvent({required this.eventReference});
+  const _QuotedEvent({
+    required this.eventReference,
+    this.header,
+    this.accentTheme = false,
+  });
 
+  final Widget? header;
+  final bool accentTheme;
   final EventReference eventReference;
 
   @override
@@ -166,16 +180,30 @@ class _QuotedEvent extends StatelessWidget {
       padding: EdgeInsetsDirectional.only(top: 12.0.s),
       child: _FramedEvent(
         eventReference: eventReference,
-        postWidget: _QuotedPost(eventReference: eventReference),
-        articleWidget: _QuotedArticle(eventReference: eventReference),
+        postWidget: _QuotedPost(
+          header: header,
+          accentTheme: accentTheme,
+          eventReference: eventReference,
+        ),
+        articleWidget: _QuotedArticle(
+          header: header,
+          accentTheme: accentTheme,
+          eventReference: eventReference,
+        ),
       ),
     );
   }
 }
 
 final class _ParentEvent extends StatelessWidget {
-  const _ParentEvent({required this.eventReference});
+  const _ParentEvent({
+    required this.eventReference,
+    this.header,
+    this.accentTheme = false,
+  });
 
+  final Widget? header;
+  final bool accentTheme;
   final EventReference eventReference;
 
   @override
@@ -183,8 +211,16 @@ final class _ParentEvent extends StatelessWidget {
     return _FramedEvent(
       eventReference: eventReference,
       isParent: true,
-      postWidget: _ParentPost(eventReference: eventReference),
-      articleWidget: _ParentArticle(eventReference: eventReference),
+      postWidget: _ParentPost(
+        header: header,
+        accentTheme: accentTheme,
+        eventReference: eventReference,
+      ),
+      articleWidget: _ParentArticle(
+        header: header,
+        accentTheme: accentTheme,
+        eventReference: eventReference,
+      ),
     );
   }
 }
@@ -262,8 +298,14 @@ final class _FramedEvent extends HookConsumerWidget {
 }
 
 final class _QuotedPost extends ConsumerWidget {
-  const _QuotedPost({required this.eventReference});
+  const _QuotedPost({
+    required this.eventReference,
+    this.header,
+    this.accentTheme = false,
+  });
 
+  final Widget? header;
+  final bool accentTheme;
   final EventReference eventReference;
 
   @override
@@ -278,14 +320,16 @@ final class _QuotedPost extends ConsumerWidget {
         },
         child: AbsorbPointer(
           child: Post(
+            accentTheme: accentTheme,
             eventReference: eventReference,
             displayQuote: false,
-            header: UserInfo(
-              pubkey: eventReference.pubkey,
-              createdAt: postEntity is ModifiablePostEntity
-                  ? postEntity.data.publishedAt.value
-                  : postEntity?.createdAt,
-            ),
+            header: header ??
+                UserInfo(
+                  pubkey: eventReference.pubkey,
+                  createdAt: postEntity is ModifiablePostEntity
+                      ? postEntity.data.publishedAt.value
+                      : postEntity?.createdAt,
+                ),
             footer: const SizedBox.shrink(),
           ),
         ),
@@ -295,8 +339,14 @@ final class _QuotedPost extends ConsumerWidget {
 }
 
 final class _QuotedArticle extends StatelessWidget {
-  const _QuotedArticle({required this.eventReference});
+  const _QuotedArticle({
+    required this.eventReference,
+    this.header,
+    this.accentTheme = false,
+  });
 
+  final Widget? header;
+  final bool accentTheme;
   final EventReference eventReference;
 
   @override
@@ -306,15 +356,27 @@ final class _QuotedArticle extends StatelessWidget {
         onTap: () {
           ArticleDetailsRoute(eventReference: eventReference.encode()).push<void>(context);
         },
-        child: AbsorbPointer(child: Article.quoted(eventReference: eventReference)),
+        child: AbsorbPointer(
+          child: Article.quoted(
+            header: header,
+            accentTheme: accentTheme,
+            eventReference: eventReference,
+          ),
+        ),
       ),
     );
   }
 }
 
 final class _ParentPost extends StatelessWidget {
-  const _ParentPost({required this.eventReference});
+  const _ParentPost({
+    required this.eventReference,
+    this.header,
+    this.accentTheme = false,
+  });
 
+  final Widget? header;
+  final bool accentTheme;
   final EventReference eventReference;
 
   @override
@@ -324,10 +386,12 @@ final class _ParentPost extends StatelessWidget {
         PostDetailsRoute(eventReference: eventReference.encode()).push<void>(context);
       },
       child: Post(
-        eventReference: eventReference,
-        displayQuote: false,
-        headerOffset: 0,
         topOffset: 0,
+        header: header,
+        headerOffset: 0,
+        displayQuote: false,
+        accentTheme: accentTheme,
+        eventReference: eventReference,
         contentWrapper: (content) {
           return ParentDottedLine(
             padding: EdgeInsetsDirectional.only(
@@ -345,8 +409,14 @@ final class _ParentPost extends StatelessWidget {
 }
 
 final class _ParentArticle extends StatelessWidget {
-  const _ParentArticle({required this.eventReference});
+  const _ParentArticle({
+    required this.eventReference,
+    this.header,
+    this.accentTheme = false,
+  });
 
+  final Widget? header;
+  final bool accentTheme;
   final EventReference eventReference;
 
   @override
@@ -358,7 +428,11 @@ final class _ParentArticle extends StatelessWidget {
       child: AbsorbPointer(
         child: Padding(
           padding: EdgeInsets.symmetric(horizontal: 16.0.s),
-          child: Article.replied(eventReference: eventReference),
+          child: Article.replied(
+            header: header,
+            accentTheme: accentTheme,
+            eventReference: eventReference,
+          ),
         ),
       ),
     );

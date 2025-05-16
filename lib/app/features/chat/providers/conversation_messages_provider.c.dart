@@ -20,10 +20,7 @@ class ConversationMessages extends _$ConversationMessages {
       return const Stream.empty();
     }
 
-    final stream = ref.watch(conversationMessageDaoProvider).getMessages(
-          conversationId: conversationId,
-          currentUserMasterPubkey: currentUserMasterPubkey,
-        );
+    final stream = ref.watch(conversationMessageDaoProvider).getMessages(conversationId);
 
     final subscription = stream.listen((event) async {
       if (type == ConversationType.community) return;
