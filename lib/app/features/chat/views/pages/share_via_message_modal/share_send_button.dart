@@ -7,20 +7,20 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/components/button/button.dart';
 import 'package:ion/app/components/progress_bar/ion_loading_indicator.dart';
 import 'package:ion/app/extensions/extensions.dart';
-import 'package:ion/app/features/chat/e2ee/providers/send_chat_message_service.c.dart';
+import 'package:ion/app/features/chat/providers/share_post_to_chat_provider.c.dart';
 import 'package:ion/app/features/core/views/pages/error_modal.dart';
 import 'package:ion/app/features/ion_connect/model/event_reference.c.dart';
 import 'package:ion/generated/assets.gen.dart';
 
 class ShareSendButton extends HookConsumerWidget {
   const ShareSendButton({
+    required this.masterPubkeys,
     required this.eventReference,
-    required this.pubkeys,
     super.key,
   });
 
+  final List<String> masterPubkeys;
   final EventReference eventReference;
-  final List<String> pubkeys;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -46,15 +46,13 @@ class ShareSendButton extends HookConsumerWidget {
           onPressed: () async {
             loading.value = true;
             try {
-              final service = await ref.read(sendChatMessageServiceProvider.future);
-              await Future.wait(
-                pubkeys.map(
-                  (pubkey) => service.send(
-                    receiverPubkey: pubkey,
-                    content: eventReference.encode(),
-                  ),
-                ),
+              final service = ref.read(sharePostToChatProvider.notifier);
+
+              await service.sharePost(
+                eventReference: eventReference,
+                receiversMasterPubkeys: masterPubkeys,
               );
+
               if (context.mounted) {
                 context.pop();
               }

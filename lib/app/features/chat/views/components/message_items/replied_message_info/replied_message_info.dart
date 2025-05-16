@@ -7,6 +7,7 @@ import 'package:ion/app/features/chat/model/message_list_item.c.dart';
 import 'package:ion/app/features/chat/recent_chats/providers/selected_reply_message_provider.c.dart';
 import 'package:ion/app/features/chat/recent_chats/views/components/recent_chat_tile/recent_chat_tile.dart';
 import 'package:ion/app/features/chat/views/components/message_items/message_types/visual_media_message/visual_media_custom_grid.dart';
+import 'package:ion/app/features/components/ion_connect_network_image/ion_connect_network_image.dart';
 import 'package:ion/generated/assets.gen.dart';
 
 class RepliedMessageInfo extends HookConsumerWidget {
@@ -39,6 +40,23 @@ class RepliedMessageInfo extends HookConsumerWidget {
                     customHeight: repliedMessage.medias.length > 1 ? 18.0.s : 30.0.s,
                     messageMedias: repliedMessage.medias,
                     eventMessage: repliedMessage.eventMessage,
+                  ),
+                ),
+              ),
+            if (repliedMessage is PostItem && repliedMessage.medias.isNotEmpty)
+              Padding(
+                padding: EdgeInsetsDirectional.only(end: 6.0.s),
+                child: SizedBox(
+                  width: 30.0.s,
+                  height: 30.0.s,
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.circular(8.0.s),
+                    child: IonConnectNetworkImage(
+                      authorPubkey: repliedMessage.eventMessage.masterPubkey,
+                      imageUrl:
+                          repliedMessage.medias.first.thumb ?? repliedMessage.medias.first.url,
+                      fit: BoxFit.fitWidth,
+                    ),
                   ),
                 ),
               ),

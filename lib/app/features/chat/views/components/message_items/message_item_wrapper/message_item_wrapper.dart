@@ -3,19 +3,25 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
+import 'package:flutter_quill/flutter_quill.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/auth/providers/auth_provider.c.dart';
 import 'package:ion/app/features/chat/e2ee/model/entities/private_direct_message_data.c.dart';
 import 'package:ion/app/features/chat/e2ee/providers/chat_medias_provider.c.dart';
 import 'package:ion/app/features/chat/e2ee/providers/send_e2ee_reaction_provider.c.dart';
+import 'package:ion/app/features/chat/e2ee/providers/shared_post_message_provider.c.dart';
 import 'package:ion/app/features/chat/model/database/chat_database.c.dart';
 import 'package:ion/app/features/chat/model/message_list_item.c.dart';
 import 'package:ion/app/features/chat/model/message_type.dart';
 import 'package:ion/app/features/chat/providers/message_status_provider.c.dart';
 import 'package:ion/app/features/chat/views/components/message_items/message_reaction_dialog/message_reaction_dialog.dart';
+import 'package:ion/app/features/feed/data/models/entities/modifiable_post_data.c.dart';
+import 'package:ion/app/features/feed/data/models/entities/post_data.c.dart';
 import 'package:ion/app/features/ion_connect/ion_connect.dart';
+import 'package:ion/app/features/ion_connect/model/entity_data_with_media_content.dart';
 import 'package:ion/app/features/ion_connect/model/event_reference.c.dart';
+import 'package:ion/app/features/ion_connect/views/hooks/use_parsed_media_content.dart';
 import 'package:ion/app/features/user/providers/user_metadata_provider.c.dart';
 import 'package:ion/app/services/logger/logger.dart';
 import 'package:ion/generated/assets.gen.dart';
@@ -120,8 +126,9 @@ class MessageItemWrapper extends HookConsumerWidget {
                     topEnd: Radius.circular(12.0.s),
                     bottomStart:
                         !isLastMessageFromAuthor || isMe ? Radius.circular(12.0.s) : Radius.zero,
-                    bottomEnd:
-                        isMe && isLastMessageFromAuthor ? Radius.zero : Radius.circular(12.0.s),
+                    bottomEnd: isMe && isLastMessageFromAuthor && (messageItem is! PostItem)
+                        ? Radius.zero
+                        : Radius.circular(12.0.s),
                   ),
                 ),
                 child: child,
@@ -173,11 +180,60 @@ ChatMessageInfoItem? getRepliedMessageListItem({
       eventMessage: repliedEventMessage,
       contentDescription: ref.context.i18n.common_media,
     );
+  } else if (repliedEntity.data.messageType == MessageType.sharedPost) {
+    final sharedEntity = useMemoized(
+      () => ReplaceablePrivateDirectMessageEntity.fromEventMessage(repliedEventMessage),
+    );
+
+    final postEntity = sharedEntity.data.quotedEvent != null
+        ? ref
+            .watch(
+              sharedPostMessageProvider(sharedEntity.data.quotedEvent!.eventReference),
+            )
+            .valueOrNull
+        : null;
+
+    final postData = useMemoized(
+      () => switch (postEntity) {
+        final ModifiablePostEntity post => post.data,
+        final PostEntity post => post.data,
+        _ => false,
+      },
+    );
+
+    final postDeleted = useMemoized(
+      () => switch (postEntity) {
+        final ModifiablePostEntity post => post.isDeleted,
+        _ => false,
+      },
+    );
+
+    if (postData is! EntityDataWithMediaContent || postDeleted) {
+      return PostItem(
+        eventMessage: repliedEventMessage,
+        contentDescription: ref.context.i18n.story_reply_not_available_receiver,
+        medias: [],
+      );
+    }
+
+    final (:content, :media) = useParsedMediaContent(
+      data: postData,
+      key: ValueKey(postData.hashCode),
+    );
+
+    final contentAsPlainText = useMemoized(() => Document.fromDelta(content).toPlainText().trim());
+
+    return PostItem(
+      medias: media,
+      eventMessage: repliedEventMessage,
+      contentDescription:
+          contentAsPlainText.isNotEmpty ? contentAsPlainText : ref.context.i18n.common_post,
+    );
   }
 
   return switch (repliedEntity.data.messageType) {
     MessageType.profile => null,
-    MessageType.storyReply => null,
+    MessageType.sharedPost => null,
     MessageType.visualMedia => null,
     // TODO: implement replied for money message
     MessageType.requestFunds => null,

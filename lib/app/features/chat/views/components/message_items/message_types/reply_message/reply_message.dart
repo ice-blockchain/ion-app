@@ -8,6 +8,7 @@ import 'package:ion/app/features/auth/providers/auth_provider.c.dart';
 import 'package:ion/app/features/chat/model/message_list_item.c.dart';
 import 'package:ion/app/features/chat/recent_chats/views/components/recent_chat_tile/recent_chat_tile.dart';
 import 'package:ion/app/features/chat/views/components/message_items/message_types/visual_media_message/visual_media_custom_grid.dart';
+import 'package:ion/app/features/components/ion_connect_network_image/ion_connect_network_image.dart';
 import 'package:ion/generated/assets.gen.dart';
 
 class ReplyMessage extends HookConsumerWidget {
@@ -43,6 +44,10 @@ class ReplyMessage extends HookConsumerWidget {
         ? (repliedMessageItem! as MediaItem)
         : null;
 
+    final postItem = repliedMessageItem != null && repliedMessageItem is PostItem
+        ? (repliedMessageItem! as PostItem)
+        : null;
+
     return GestureDetector(
       onTap: onTap,
       child: Container(
@@ -67,6 +72,22 @@ class ReplyMessage extends HookConsumerWidget {
                     customHeight: mediaItem.medias.length > 1 ? 16.0.s : 30.0.s,
                     eventMessage: repliedMessageItem!.eventMessage,
                     isReply: true,
+                  ),
+                ),
+              ),
+            if (postItem != null && postItem.medias.isNotEmpty)
+              Padding(
+                padding: EdgeInsetsDirectional.only(end: 6.0.s),
+                child: SizedBox(
+                  width: 30.0.s,
+                  height: 30.0.s,
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.circular(8.0.s),
+                    child: IonConnectNetworkImage(
+                      authorPubkey: postItem.eventMessage.masterPubkey,
+                      imageUrl: postItem.medias.first.thumb ?? postItem.medias.first.url,
+                      fit: BoxFit.fitWidth,
+                    ),
                   ),
                 ),
               ),
@@ -108,10 +129,10 @@ class ReplyMessage extends HookConsumerWidget {
   }
 
   String? _getMessageIcon() => switch (repliedMessageItem!) {
+        PostItem _ => null,
         TextItem _ => null,
         EmojiItem _ => null,
         MoneyItem _ => null,
-        StoryReplyItem _ => null,
         DocumentItem _ => Assets.svg.iconChatFile,
         MediaItem _ => Assets.svg.iconProfileCamera,
         AudioItem _ => Assets.svg.iconChatVoicemessage,

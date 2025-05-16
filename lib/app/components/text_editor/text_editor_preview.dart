@@ -20,6 +20,7 @@ class TextEditorPreview extends HookWidget {
     this.media,
     this.maxHeight,
     this.customStyles,
+    this.tagsColor,
     this.scrollable = true,
     super.key,
   });
@@ -30,6 +31,7 @@ class TextEditorPreview extends HookWidget {
   final DefaultStyles? customStyles;
   final double? maxHeight;
   final bool scrollable;
+  final Color? tagsColor;
 
   @override
   Widget build(BuildContext context) {
@@ -47,6 +49,7 @@ class TextEditorPreview extends HookWidget {
     }
 
     return _QuillFormattedContent(
+      tagsColor: tagsColor,
       controller: controller,
       customStyles: customStyles,
       media: media,
@@ -66,6 +69,7 @@ class _QuillFormattedContent extends StatelessWidget {
     this.customStyles,
     this.media,
     this.maxHeight,
+    this.tagsColor,
     this.scrollable = true,
   });
 
@@ -75,6 +79,7 @@ class _QuillFormattedContent extends StatelessWidget {
   final Map<String, MediaAttachment>? media;
   final double? maxHeight;
   final bool scrollable;
+  final Color? tagsColor;
 
   @override
   Widget build(BuildContext context) {
@@ -97,7 +102,8 @@ class _QuillFormattedContent extends StatelessWidget {
         ],
         unknownEmbedBuilder: TextEditorUnknownEmbedBuilder(),
         disableClipboard: true,
-        customStyleBuilder: (attribute) => customTextStyleBuilder(attribute, context),
+        customStyleBuilder: (attribute) =>
+            customTextStyleBuilder(attribute, context, tagsColor: tagsColor),
         customRecognizerBuilder: (attribute, leaf) => customRecognizerBuilder(
           context,
           attribute,

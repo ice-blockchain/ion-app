@@ -87,7 +87,9 @@ class _ListItemUser extends ListItem {
 }
 
 class ListItemUserShape extends StatelessWidget {
-  const ListItemUserShape({super.key});
+  const ListItemUserShape({this.color, super.key});
+
+  final Color? color;
 
   @override
   Widget build(BuildContext context) {
@@ -95,7 +97,7 @@ class ListItemUserShape extends StatelessWidget {
       height: 36.0.s,
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(10.0.s),
-        color: Colors.white,
+        color: color ?? Colors.white,
       ),
     );
   }

@@ -13,7 +13,9 @@ import 'package:ion/app/features/chat/e2ee/model/entities/private_message_reacti
 import 'package:ion/app/features/chat/e2ee/providers/send_e2ee_message_status_provider.c.dart';
 import 'package:ion/app/features/chat/model/database/chat_database.c.dart';
 import 'package:ion/app/features/chat/providers/user_chat_relays_provider.c.dart';
+import 'package:ion/app/features/feed/data/models/entities/article_data.c.dart';
 import 'package:ion/app/features/feed/data/models/entities/modifiable_post_data.c.dart';
+import 'package:ion/app/features/feed/data/models/entities/post_data.c.dart';
 import 'package:ion/app/features/feed/data/models/generic_repost.c.dart';
 import 'package:ion/app/features/ion_connect/ion_connect.dart';
 import 'package:ion/app/features/ion_connect/model/action_source.c.dart';
@@ -64,6 +66,8 @@ class E2eeMessagesSubscriber extends _$E2eeMessagesSubscriber {
           DeletionRequestEntity.kind.toString(),
           PrivateMessageReactionEntity.kind.toString(),
           ReplaceablePrivateDirectMessageEntity.kind.toString(),
+          [GenericRepostEntity.kind.toString(), PostEntity.kind.toString()],
+          [GenericRepostEntity.kind.toString(), ArticleEntity.kind.toString()],
           [GenericRepostEntity.kind.toString(), ModifiablePostEntity.kind.toString()],
         ],
         '#p': [masterPubkey],

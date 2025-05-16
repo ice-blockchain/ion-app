@@ -46,7 +46,7 @@ class ShareViaMessageModal extends HookWidget {
             child: selectedPubkeys.isEmpty
                 ? ShareOptions(eventReference: eventReference)
                 : ShareSendButton(
-                    pubkeys: selectedPubkeys,
+                    masterPubkeys: selectedPubkeys,
                     eventReference: eventReference,
                   ),
           ),

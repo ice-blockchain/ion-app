@@ -39,6 +39,7 @@ class Post extends ConsumerWidget {
     this.header,
     this.footer,
     this.onDelete,
+    this.accentTheme = false,
     this.isTextSelectable = false,
     this.bodyMaxLines = 6,
     this.contentWrapper,
@@ -48,6 +49,7 @@ class Post extends ConsumerWidget {
 
   final EventReference eventReference;
   final EventReference? repostEventReference;
+  final bool accentTheme;
   final bool displayQuote;
   final bool displayParent;
   final double? topOffset;
@@ -66,7 +68,11 @@ class Post extends ConsumerWidget {
     final entity = ref.watch(ionConnectEntityWithCountersProvider(eventReference: eventReference));
 
     if (entity == null) {
-      return ScreenSideOffset.small(child: const Skeleton(child: PostSkeleton()));
+      return ScreenSideOffset.small(
+        child: Skeleton(
+          child: PostSkeleton(color: accentTheme ? Colors.white.withValues(alpha: 0.1) : null),
+        ),
+      );
     }
 
     if (entity is ModifiablePostEntity && entity.isDeleted) {
@@ -84,6 +90,7 @@ class Post extends ConsumerWidget {
         SizedBox(height: headerOffset ?? 10.0.s),
         PostBody(
           entity: entity,
+          accentTheme: accentTheme,
           isTextSelectable: isTextSelectable,
           maxLines: bodyMaxLines,
           onVideoTap: onVideoTap,
@@ -94,6 +101,7 @@ class Post extends ConsumerWidget {
             children: [
               if (displayQuote && quotedEventReference != null)
                 _QuotedEvent(eventReference: quotedEventReference),
+              SizedBox(height: 8.0.s),
               footer ?? CounterItemsFooter(eventReference: eventReference),
             ],
           ),
@@ -115,6 +123,11 @@ class Post extends ConsumerWidget {
                     ? entity.data.publishedAt.value
                     : entity.createdAt,
                 timeFormat: timeFormat,
+                textStyle: accentTheme
+                    ? context.theme.appTextThemes.caption.copyWith(
+                        color: context.theme.appColors.onPrimaryAccent,
+                      )
+                    : null,
                 trailing: isOwnedByCurrentUser
                     ? OwnEntityMenu(eventReference: eventReference, onDelete: onDelete)
                     : UserInfoMenu(eventReference: eventReference),

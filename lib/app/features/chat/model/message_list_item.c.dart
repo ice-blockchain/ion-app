@@ -5,6 +5,7 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:ion/app/features/chat/model/database/chat_database.c.dart';
 import 'package:ion/app/features/ion_connect/ion_connect.dart';
+import 'package:ion/app/features/ion_connect/model/media_attachment.dart';
 
 part 'message_list_item.c.freezed.dart';
 
@@ -43,11 +44,11 @@ sealed class ChatMessageInfoItem with _$ChatMessageInfoItem {
   }) = MediaItem;
 
   @Implements<MessageInfo>()
-  const factory ChatMessageInfoItem.storyReply({
+  const factory ChatMessageInfoItem.post({
     required EventMessage eventMessage,
     required String contentDescription,
-    required List<MessageMediaTableData> medias,
-  }) = StoryReplyItem;
+    @Default([]) List<MediaAttachment> medias,
+  }) = PostItem;
 
   @Implements<MessageInfo>()
   const factory ChatMessageInfoItem.document({

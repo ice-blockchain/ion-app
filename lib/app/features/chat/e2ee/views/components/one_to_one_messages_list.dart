@@ -10,7 +10,7 @@ import 'package:ion/app/features/chat/e2ee/model/entities/private_direct_message
 import 'package:ion/app/features/chat/model/message_type.dart';
 import 'package:ion/app/features/chat/views/components/message_items/components.dart';
 import 'package:ion/app/features/chat/views/components/message_items/message_types/document_message/document_message.dart';
-import 'package:ion/app/features/chat/views/components/message_items/message_types/story_reply_message/story_reply_message.dart';
+import 'package:ion/app/features/chat/views/components/message_items/message_types/post_message/post_message.dart';
 import 'package:ion/app/features/chat/views/components/message_items/message_types/visual_media_message/visual_media_message.dart';
 import 'package:ion/app/features/ion_connect/ion_connect.dart';
 import 'package:scrollable_positioned_list/scrollable_positioned_list.dart';
@@ -85,7 +85,6 @@ class OneToOneMessageList extends HookConsumerWidget {
                         eventMessage: message,
                         onTapReply: () => onTapReply(entity),
                       ),
-                    MessageType.storyReply => StoryReplyMessage(eventMessage: message),
                     MessageType.profile => ProfileShareMessage(
                         eventMessage: message,
                         onTapReply: () => onTapReply(entity),
@@ -94,6 +93,8 @@ class OneToOneMessageList extends HookConsumerWidget {
                         eventMessage: message,
                         onTapReply: () => onTapReply(entity),
                       ),
+                    MessageType.sharedPost =>
+                      PostMessage(eventMessage: message, onTapReply: () => onTapReply(entity)),
                     MessageType.requestFunds ||
                     MessageType.moneySent =>
                       MoneyMessage(eventMessage: message, onTapReply: () => onTapReply(entity)),

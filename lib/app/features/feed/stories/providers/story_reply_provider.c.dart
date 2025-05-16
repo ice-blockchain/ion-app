@@ -118,7 +118,7 @@ class StoryReply extends _$StoryReply {
             content: replyText ?? '',
             conversationId: conversationId,
             participantsMasterPubkeys: participantsMasterPubkeys,
-            storyReply: QuotedImmutableEvent(
+            quotedEvent: QuotedImmutableEvent(
               eventReference: ImmutableEventReference(
                 eventId: kind16Rumor.id,
                 pubkey: kind16Rumor.masterPubkey,

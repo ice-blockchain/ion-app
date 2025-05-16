@@ -5,7 +5,9 @@ import 'package:ion/app/components/list_item/list_item.dart';
 import 'package:ion/app/extensions/num.dart';
 
 class PostSkeleton extends StatelessWidget {
-  const PostSkeleton({super.key});
+  const PostSkeleton({this.color, super.key});
+
+  final Color? color;
 
   @override
   Widget build(BuildContext context) {
@@ -15,14 +17,12 @@ class PostSkeleton extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           SizedBox(height: 12.0.s),
-          const ListItemUserShape(),
+          ListItemUserShape(color: color),
           SizedBox(height: 10.0.s),
-          const _PostSkeletonText(widthFactor: 0.8),
-          const _PostSkeletonText(),
-          const _PostSkeletonText(),
-          const _PostSkeletonText(
-            widthFactor: 0.4,
-          ),
+          _PostSkeletonText(widthFactor: 0.8, color: color),
+          _PostSkeletonText(color: color),
+          _PostSkeletonText(color: color),
+          _PostSkeletonText(widthFactor: 0.4, color: color),
         ],
       ),
     );
@@ -32,8 +32,10 @@ class PostSkeleton extends StatelessWidget {
 class _PostSkeletonText extends StatelessWidget {
   const _PostSkeletonText({
     this.widthFactor = 1,
+    this.color,
   });
 
+  final Color? color;
   final double widthFactor;
 
   @override
@@ -46,7 +48,7 @@ class _PostSkeletonText extends StatelessWidget {
           height: 12.0.s,
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(4.0.s),
-            color: Colors.white,
+            color: color ?? Colors.white,
           ),
         ),
       ),
