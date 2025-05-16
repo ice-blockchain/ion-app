@@ -212,12 +212,12 @@ final class _ParentEvent extends StatelessWidget {
       eventReference: eventReference,
       isParent: true,
       postWidget: _ParentPost(
-        header: null,
+        header: header,
         accentTheme: accentTheme,
         eventReference: eventReference,
       ),
       articleWidget: _ParentArticle(
-        header: null,
+        header: header,
         accentTheme: accentTheme,
         eventReference: eventReference,
       ),
