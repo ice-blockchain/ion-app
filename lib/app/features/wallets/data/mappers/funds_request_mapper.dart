@@ -33,6 +33,7 @@ class FundsRequestMapper {
     return FundsRequestEntity(
       id: db.eventId,
       pubkey: db.pubkey,
+      masterPubkey: db.pubkey,
       createdAt: db.createdAt,
       data: FundsRequestData(
         content: FundsRequestContent(

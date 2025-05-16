@@ -1,4 +1,5 @@
 import 'package:ion/app/exceptions/exceptions.dart';
+import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/auth/providers/auth_provider.c.dart';
 import 'package:ion/app/features/chat/e2ee/model/entities/private_direct_message_data.c.dart';
 import 'package:ion/app/features/chat/e2ee/model/entities/private_message_reaction_data.c.dart';
@@ -88,14 +89,9 @@ class NotificationResponseHandler extends _$NotificationResponseHandler {
         }
         await _openChat(receiverPubkey);
       case PrivateMessageReactionEntity.kind:
-        final entity = PrivateMessageReactionEntity.fromEventMessage(rumor);
-        await _openChat(entity.data.masterPubkey);
       case FundsRequestEntity.kind:
-        final entity = FundsRequestEntity.fromEventMessage(rumor);
-      //TODO?
       case WalletAssetEntity.kind:
-        final entity = WalletAssetEntity.fromEventMessage(rumor);
-      //TODO?
+        await _openChat(giftWrap.masterPubkey);
       default:
         throw UnsupportedEntityType(rumor);
     }
