@@ -69,12 +69,19 @@ Future<IonConnectEntity?> ionConnectNetworkEntity(
 }
 
 @riverpod
+Future<IonConnectEntity?> ionConnectDbEntity(
+  Ref ref, {
+  required EventReference eventReference,
+}) async {
+  return ref.read(ionConnectDbCacheProvider.notifier).get(eventReference);
+}
+
+@riverpod
 Future<IonConnectEntity?> ionConnectEntity(
   Ref ref, {
   required EventReference eventReference,
   bool network = true,
   bool cache = true,
-  bool db = false,
   String? search,
 }) async {
   final currentUser = ref.watch(currentIdentityKeyNameSelectorProvider);
@@ -83,14 +90,6 @@ Future<IonConnectEntity?> ionConnectEntity(
   }
   if (cache) {
     final entity = ref.watch(ionConnectSyncEntityProvider(eventReference: eventReference));
-    if (entity != null) {
-      return entity;
-    }
-  }
-  if (db) {
-    final entity = (await ref.watch(ionConnectDbCacheProvider.notifier).get([eventReference]))
-        .nonNulls
-        .firstOrNull;
     if (entity != null) {
       return entity;
     }
@@ -109,6 +108,7 @@ IonConnectEntity? ionConnectSyncEntity(
   required EventReference eventReference,
   bool network = true,
   bool cache = true,
+  bool db = false,
   String? search,
 }) {
   final currentUser = ref.watch(currentIdentityKeyNameSelectorProvider);
@@ -117,6 +117,17 @@ IonConnectEntity? ionConnectSyncEntity(
   }
   if (cache) {
     final entity = ref.watch(ionConnectCachedEntityProvider(eventReference: eventReference));
+    if (entity != null) {
+      return entity;
+    }
+  }
+
+  if (db) {
+    final entityState = ref.watch(ionConnectDbEntityProvider(eventReference: eventReference));
+    if (entityState.isLoading) {
+      return null;
+    }
+    final entity = entityState.valueOrNull;
     if (entity != null) {
       return entity;
     }

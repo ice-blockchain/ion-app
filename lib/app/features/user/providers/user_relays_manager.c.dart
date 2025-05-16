@@ -126,10 +126,11 @@ class UserRelaysManager extends _$UserRelaysManager {
         )
         .toList();
 
-    final dbCachedRelays = (await ref.read(ionConnectDbCacheProvider.notifier).get(eventReferences))
-        .cast<UserRelaysEntity?>()
-        .nonNulls
-        .toList();
+    final dbCachedRelays =
+        (await ref.read(ionConnectDbCacheProvider.notifier).getAll(eventReferences))
+            .cast<UserRelaysEntity?>()
+            .nonNulls
+            .toList();
 
     // Remove unreachable relays
     for (final relay in dbCachedRelays) {

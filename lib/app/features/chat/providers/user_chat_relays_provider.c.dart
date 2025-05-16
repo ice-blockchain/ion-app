@@ -25,7 +25,7 @@ class UserChatRelaysManager extends _$UserChatRelaysManager {
   Future<UserChatRelaysEntity?> fetch(String pubkey) async {
     final eventReference =
         ReplaceableEventReference(pubkey: pubkey, kind: UserChatRelaysEntity.kind);
-    final entity = (await ref.read(ionConnectDbCacheProvider.notifier).get([eventReference]))
+    final entity = (await ref.read(ionConnectDbCacheProvider.notifier).getAll([eventReference]))
         .cast<UserChatRelaysEntity?>()
         .nonNulls
         .firstOrNull;
