@@ -28,18 +28,22 @@ class NetworkFeeSelector extends ConsumerWidget {
       return const SizedBox.shrink();
     }
 
+    final showSlider = options.length > 2;
+
     return Padding(
       padding: padding ?? EdgeInsets.zero,
       child: Column(
         children: [
           ArrivalTime(option: selectedOption!),
-          SizedBox(height: 12.0.s),
-          AppSlider(
-            maxValue: options.length - 1,
-            stops: List.generate(options.length, (i) => i.toDouble()),
-            initialValue: options.indexOf(selectedOption!).toDouble(),
-            onChanged: (value) => onChanged?.call(value.toInt()),
-          ),
+          if (showSlider) ...[
+            SizedBox(height: 12.0.s),
+            AppSlider(
+              maxValue: options.length - 1,
+              stops: List.generate(options.length, (i) => i.toDouble()),
+              initialValue: options.indexOf(selectedOption!).toDouble(),
+              onChanged: (value) => onChanged?.call(value.toInt()),
+            ),
+          ],
           SizedBox(height: 8.0.s),
           NetworkFeeOptionWidget(feeOption: selectedOption!),
         ],
