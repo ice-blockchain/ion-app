@@ -5,7 +5,9 @@ import 'dart:convert';
 import 'package:collection/collection.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:ion/app/exceptions/exceptions.dart';
+import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/ion_connect/ion_connect.dart';
+import 'package:ion/app/features/ion_connect/model/ion_connect_entity.dart';
 import 'package:ion/app/features/ion_connect/model/related_pubkey.c.dart';
 import 'package:ion/app/features/wallets/model/entities/funds_request_entity.c.dart';
 import 'package:ion/app/features/wallets/model/entities/tags/asset_address_tag.c.dart';
@@ -18,10 +20,11 @@ part 'wallet_asset_entity.c.freezed.dart';
 part 'wallet_asset_entity.c.g.dart';
 
 @Freezed(equal: false)
-class WalletAssetEntity with _$WalletAssetEntity {
+class WalletAssetEntity with IonConnectEntity, ImmutableEntity, _$WalletAssetEntity {
   const factory WalletAssetEntity({
     required String id,
     required String pubkey,
+    required String masterPubkey,
     required DateTime createdAt,
     required WalletAssetData data,
   }) = _WalletAssetEntity;
@@ -36,6 +39,7 @@ class WalletAssetEntity with _$WalletAssetEntity {
     final parsed = WalletAssetEntity(
       id: eventMessage.id,
       pubkey: eventMessage.pubkey,
+      masterPubkey: eventMessage.masterPubkey,
       createdAt: eventMessage.createdAt,
       data: WalletAssetData.fromEventMessage(eventMessage),
     );
@@ -44,6 +48,9 @@ class WalletAssetEntity with _$WalletAssetEntity {
   }
 
   static const int kind = 1756;
+
+  @override
+  String get signature => '';
 }
 
 @freezed
@@ -75,10 +82,11 @@ class WalletAssetData with _$WalletAssetData {
   }
 
   EventMessage toEventMessage({
-    required String currentUserPubkey,
+    required String masterPubkey,
     FundsRequestEntity? requestEntity,
   }) {
     final tags = [
+      ['b', masterPubkey],
       NetworkTag(value: networkId).toTag(),
       AssetClassTag(value: assetClass).toTag(),
       AssetAddressTag(value: assetAddress).toTag(),
@@ -91,7 +99,7 @@ class WalletAssetData with _$WalletAssetData {
     final encodedContent = jsonEncode(content.toJson());
 
     final rumorId = EventMessage.calculateEventId(
-      publicKey: currentUserPubkey,
+      publicKey: masterPubkey,
       createdAt: createdAt,
       kind: WalletAssetEntity.kind,
       tags: tags,
@@ -100,7 +108,7 @@ class WalletAssetData with _$WalletAssetData {
 
     return EventMessage(
       id: rumorId,
-      pubkey: currentUserPubkey,
+      pubkey: masterPubkey,
       createdAt: createdAt,
       kind: WalletAssetEntity.kind,
       tags: tags,

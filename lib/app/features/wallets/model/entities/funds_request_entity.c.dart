@@ -5,7 +5,9 @@ import 'dart:convert';
 import 'package:collection/collection.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:ion/app/exceptions/exceptions.dart';
+import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/ion_connect/ion_connect.dart';
+import 'package:ion/app/features/ion_connect/model/ion_connect_entity.dart';
 import 'package:ion/app/features/ion_connect/model/related_pubkey.c.dart';
 import 'package:ion/app/features/wallets/model/entities/tags/asset_address_tag.c.dart';
 import 'package:ion/app/features/wallets/model/entities/tags/asset_class_tag.c.dart';
@@ -17,10 +19,11 @@ part 'funds_request_entity.c.freezed.dart';
 part 'funds_request_entity.c.g.dart';
 
 @Freezed(equal: false)
-class FundsRequestEntity with _$FundsRequestEntity {
+class FundsRequestEntity with IonConnectEntity, ImmutableEntity, _$FundsRequestEntity {
   const factory FundsRequestEntity({
     required String id,
     required String pubkey,
+    required String masterPubkey,
     required DateTime createdAt,
     required FundsRequestData data,
   }) = _FundsRequestEntity;
@@ -35,6 +38,7 @@ class FundsRequestEntity with _$FundsRequestEntity {
     final parsed = FundsRequestEntity(
       id: eventMessage.id,
       pubkey: eventMessage.pubkey,
+      masterPubkey: eventMessage.masterPubkey,
       createdAt: eventMessage.createdAt,
       data: FundsRequestData.fromEventMessage(eventMessage),
     );
@@ -43,6 +47,9 @@ class FundsRequestEntity with _$FundsRequestEntity {
   }
 
   static const int kind = 1755;
+
+  @override
+  String get signature => '';
 }
 
 @freezed
@@ -75,8 +82,9 @@ class FundsRequestData with _$FundsRequestData {
     );
   }
 
-  EventMessage toEventMessage({required String currentUserPubkey}) {
+  EventMessage toEventMessage({required String masterPubkey}) {
     final tags = [
+      ['b', masterPubkey],
       NetworkTag(value: networkId).toTag(),
       AssetClassTag(value: assetClass).toTag(),
       AssetAddressTag(value: assetAddress).toTag(),
@@ -88,7 +96,7 @@ class FundsRequestData with _$FundsRequestData {
     final encodedContent = jsonEncode(content.toJson());
 
     final rumorId = EventMessage.calculateEventId(
-      publicKey: currentUserPubkey,
+      publicKey: masterPubkey,
       createdAt: createdAt,
       kind: FundsRequestEntity.kind,
       tags: tags,
@@ -97,7 +105,7 @@ class FundsRequestData with _$FundsRequestData {
 
     return EventMessage(
       id: rumorId,
-      pubkey: currentUserPubkey,
+      pubkey: masterPubkey,
       createdAt: createdAt,
       kind: FundsRequestEntity.kind,
       tags: tags,
