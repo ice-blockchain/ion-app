@@ -17,6 +17,7 @@ class CoinsMapper {
             symbol: coin.symbol,
             symbolGroup: coin.symbolGroup,
             syncFrequency: coin.syncFrequency,
+            isNative: coin.native,
           ),
       ];
 }
