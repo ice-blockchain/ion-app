@@ -139,6 +139,22 @@ class ConversationMessageDao extends DatabaseAccessor<ChatDatabase>
     return message.toEventMessage();
   }
 
+  Stream<EventMessage?> watchEventMessage({required EventReference eventReference}) {
+    final query = select(eventMessageTable).join([
+      innerJoin(
+        messageStatusTable,
+        messageStatusTable.messageEventReference.equalsExp(eventMessageTable.eventReference),
+      ),
+    ])
+      ..where(messageStatusTable.status.isNotIn([MessageDeliveryStatus.deleted.index]))
+      ..where(eventMessageTable.eventReference.equalsValue(eventReference));
+
+    return query.watchSingleOrNull().map((row) {
+      if (row == null) return null;
+      return row.readTable(eventMessageTable).toEventMessage();
+    });
+  }
+
   Future<void> removeMessages({
     required Ref ref,
     required List<EventReference> eventReferences,
