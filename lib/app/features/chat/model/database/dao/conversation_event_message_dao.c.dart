@@ -38,18 +38,36 @@ class ConversationEventMessageDao extends DatabaseAccessor<ChatDatabase>
 
     final dbModel = event.toChatDbModel(eventReference);
 
-    await into(db.eventMessageTable).insert(
-      dbModel,
-      mode: InsertMode.insertOrReplace,
-    );
+    if (await _isEventMessageNewer(eventReference, dbModel)) {
+      await into(db.eventMessageTable).insert(
+        dbModel,
+        mode: InsertMode.insertOrReplace,
+      );
 
-    await into(db.conversationMessageTable).insert(
-      ConversationMessageTableCompanion(
-        messageEventReference: Value(eventReference),
-        conversationId: Value(conversationId),
-      ),
-      mode: InsertMode.insertOrReplace,
-    );
+      await into(db.conversationMessageTable).insert(
+        ConversationMessageTableCompanion(
+          messageEventReference: Value(eventReference),
+          conversationId: Value(conversationId),
+        ),
+        mode: InsertMode.insertOrReplace,
+      );
+    }
+  }
+
+  Future<bool> _isEventMessageNewer(
+    EventReference eventReference,
+    EventMessageDbModel newEvent,
+  ) async {
+    final existingEventMessage = await (select(eventMessageTable)
+          ..where((t) => t.eventReference.equalsValue(eventReference))
+          ..limit(1))
+        .getSingleOrNull();
+
+    if (existingEventMessage == null) {
+      return true;
+    }
+
+    return newEvent.createdAt.isAfter(existingEventMessage.createdAt);
   }
 
   /// Get the creation date of the most recent event messages of specific kinds
