@@ -50,7 +50,7 @@ class WalletsDatabase extends _$WalletsDatabase {
   final String pubkey;
 
   @override
-  int get schemaVersion => 8;
+  int get schemaVersion => 10;
 
   static QueryExecutor _openConnection(String pubkey) {
     return driftDatabase(name: 'wallets_database_$pubkey');
@@ -112,6 +112,21 @@ class WalletsDatabase extends _$WalletsDatabase {
           if (!columnExists) {
             await m.addColumn(schema.transactionsTableV2, schema.transactionsTableV2.eventId);
           }
+        },
+        from8To9: (Migrator m, Schema9 schema) async {
+          await m.alterTable(
+            TableMigration(
+              schema.coinsTable,
+              columnTransformer: {
+                schema.coinsTable.native: const Constant(false),
+              },
+              newColumns: [schema.coinsTable.native],
+            ),
+          );
+        },
+        from9To10: (Migrator m, Schema10 schema) async {
+          await m.addColumn(coinsTable, schema.coinsTable.prioritized);
+          await m.alterTable(TableMigration(coinsTable));
         },
       ),
     );
