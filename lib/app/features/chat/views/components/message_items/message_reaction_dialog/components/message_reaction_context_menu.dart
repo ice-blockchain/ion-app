@@ -15,6 +15,7 @@ import 'package:ion/app/features/chat/e2ee/providers/e2ee_delete_event_provider.
 import 'package:ion/app/features/chat/e2ee/providers/send_chat_message/send_e2ee_chat_message_service.c.dart';
 import 'package:ion/app/features/chat/model/database/chat_database.c.dart';
 import 'package:ion/app/features/chat/model/message_list_item.c.dart';
+import 'package:ion/app/features/chat/model/message_type.dart';
 import 'package:ion/app/features/chat/recent_chats/providers/selected_edit_message_provider.c.dart';
 import 'package:ion/app/features/chat/recent_chats/providers/selected_reply_message_provider.c.dart';
 import 'package:ion/app/features/core/model/feature_flags.dart';
@@ -46,7 +47,8 @@ class MessageReactionContextMenu extends HookConsumerWidget {
     final canEdit = entityData.editingEndedAt.value.isAfter(DateTime.now());
     final hideChatBookmark =
         ref.watch(featureFlagsProvider.notifier).get(ChatFeatureFlag.hideChatBookmark);
-    final canCopy = messageItem.eventMessage.content.isNotEmpty;
+    final canCopy =
+        entityData.messageType == MessageType.text || entityData.messageType == MessageType.emoji;
 
     return Padding(
       padding: EdgeInsetsDirectional.only(top: 6.0.s),
