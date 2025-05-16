@@ -33,6 +33,7 @@ class CashtagsSuggestions extends StatelessWidget {
                 final suggestion = suggestions[index];
                 return GestureDetector(
                   onTap: () => onSuggestionSelected(suggestion),
+                  behavior: HitTestBehavior.opaque,
                   child: ScreenSideOffset.small(
                     child: Container(
                       alignment: AlignmentDirectional.centerStart,
