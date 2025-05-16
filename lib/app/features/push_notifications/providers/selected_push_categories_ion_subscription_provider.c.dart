@@ -25,6 +25,7 @@ import 'package:ion/app/features/user/model/follow_list.c.dart';
 import 'package:ion/app/features/wallets/model/entities/funds_request_entity.c.dart';
 import 'package:ion/app/features/wallets/model/entities/wallet_asset_entity.c.dart';
 import 'package:ion/app/services/device_id/device_id.c.dart';
+import 'package:ion/app/services/ion_connect/encrypted_message_service.c.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'selected_push_categories_ion_subscription_provider.c.g.dart';
@@ -61,10 +62,8 @@ class SelectedPushCategoriesIonSubscription extends _$SelectedPushCategoriesIonS
       return null;
     }
 
-    return fcmToken;
-    // TODO: do not encrypt it for now until BE is ready
-    // final encryptedMessageService = await ref.watch(encryptedMessageServiceProvider.future);
-    // return encryptedMessageService.encryptMessage(fcmToken, publicKey: relayPubkey);
+    final encryptedMessageService = await ref.watch(encryptedMessageServiceProvider.future);
+    return encryptedMessageService.encryptMessage(fcmToken, publicKey: relayPubkey);
   }
 
   Future<List<RequestFilter>> _getFilters() async {
