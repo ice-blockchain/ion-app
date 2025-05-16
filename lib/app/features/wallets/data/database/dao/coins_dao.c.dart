@@ -105,7 +105,7 @@ class CoinsDao extends DatabaseAccessor<WalletsDatabase> with _$CoinsDaoMixin {
   }
 
   Future<CoinData?> getNativeCoin(String networkId) async {
-    final result = await getByFilters(contractAddresses: [''], networks: [networkId]);
+    final result = await getByFilters(isNative: true, networks: [networkId]);
     return result.firstOrNull;
   }
 
@@ -114,6 +114,7 @@ class CoinsDao extends DatabaseAccessor<WalletsDatabase> with _$CoinsDaoMixin {
     Iterable<String>? symbols,
     Iterable<String>? networks,
     Iterable<String>? contractAddresses,
+    bool? isNative,
   }) {
     final query = select(coinsTable).join([
       leftOuterJoin(networksTable, networksTable.id.equalsExp(coinsTable.networkId)),
@@ -134,6 +135,10 @@ class CoinsDao extends DatabaseAccessor<WalletsDatabase> with _$CoinsDaoMixin {
 
     if (contractAddresses?.isNotEmpty ?? false) {
       query.where(coinsTable.contractAddress.isIn(contractAddresses!));
+    }
+
+    if (isNative != null) {
+      query.where(coinsTable.isNative.equals(isNative));
     }
 
     return query.map(_toCoinData).get();

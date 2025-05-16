@@ -163,6 +163,7 @@ class _LoadingState extends StatelessWidget {
                 abbreviation: '',
                 symbolGroup: '',
                 syncFrequency: Duration.zero,
+                isNative: false,
               ),
             ),
             network: mockedNetwork,
