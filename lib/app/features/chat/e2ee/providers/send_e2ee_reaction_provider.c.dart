@@ -82,7 +82,11 @@ class SendE2eeReactionService {
               eventSigner: eventSigner!,
               masterPubkey: masterPubkey,
               eventMessage: messageReactionEventMessage,
-              wrappedKinds: [PrivateMessageReactionEntity.kind.toString()],
+              wrappedKinds: [
+                // Using doubled kind 7 to differentiate between reactions and statuses
+                PrivateMessageReactionEntity.kind.toString(),
+                PrivateMessageReactionEntity.kind.toString(),
+              ],
             );
           }),
         );
