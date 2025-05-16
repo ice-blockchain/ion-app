@@ -31,9 +31,19 @@ class BrotliCompressor implements Compressor<BrotliCompressionSettings> {
   @override
   Future<MediaFile> compress(MediaFile file, {BrotliCompressionSettings? settings}) async {
     try {
-      final inputData = await File(file.path).readAsBytes();
-      final compressedData = await compute(_brotliCodec.encode, inputData);
-      return _saveBytesIntoFile(bytes: compressedData, extension: 'br');
+      final outputFilePath = await generateOutputPath(extension: 'br');
+      return await compute(
+        (arg) async {
+          final inputData = await File(arg.path).readAsBytes();
+          final compressedData = _brotliCodec.encode(inputData);
+          return _saveBytesIntoFile(
+            bytes: compressedData,
+            extension: 'br',
+            outputFilePath: arg.outputFilePath,
+          );
+        },
+        (path: file.path, outputFilePath: outputFilePath),
+      );
     } catch (error, stackTrace) {
       Logger.log('Error during Brotli compression!', error: error, stackTrace: stackTrace);
       throw CompressWithBrotliException();
@@ -45,11 +55,23 @@ class BrotliCompressor implements Compressor<BrotliCompressionSettings> {
   ///
   Future<File> decompress(List<int> compressedData, {String outputExtension = ''}) async {
     try {
-      final decompressedData = _brotliCodec.decode(compressedData);
-      final outputFile =
-          await _saveBytesIntoFile(bytes: decompressedData, extension: outputExtension);
-
-      return File(outputFile.path);
+      final outputFilePath = await generateOutputPath(extension: outputExtension);
+      return await compute(
+        (arg) async {
+          final decompressedData = _brotliCodec.decode(arg.compressedData);
+          final outputFile = await _saveBytesIntoFile(
+            bytes: decompressedData,
+            extension: arg.outputExtension,
+            outputFilePath: arg.outputFilePath,
+          );
+          return File(outputFile.path);
+        },
+        (
+          compressedData: compressedData,
+          outputFilePath: outputFilePath,
+          outputExtension: outputExtension
+        ),
+      );
     } catch (error, stackTrace) {
       Logger.log('Error during Brotli decompression!', error: error, stackTrace: stackTrace);
       throw DecompressBrotliException();
@@ -59,8 +81,8 @@ class BrotliCompressor implements Compressor<BrotliCompressionSettings> {
   Future<MediaFile> _saveBytesIntoFile({
     required List<int> bytes,
     required String extension,
+    required String outputFilePath,
   }) async {
-    final outputFilePath = await generateOutputPath(extension: extension);
     final outputFile = File(outputFilePath);
     await outputFile.writeAsBytes(bytes);
 
