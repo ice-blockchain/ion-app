@@ -3,6 +3,7 @@
 import 'dart:io';
 
 import 'package:es_compression/brotli.dart';
+import 'package:flutter/foundation.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/exceptions/exceptions.dart';
 import 'package:ion/app/services/compressors/compressor.c.dart';
@@ -31,7 +32,7 @@ class BrotliCompressor implements Compressor<BrotliCompressionSettings> {
   Future<MediaFile> compress(MediaFile file, {BrotliCompressionSettings? settings}) async {
     try {
       final inputData = await File(file.path).readAsBytes();
-      final compressedData = _brotliCodec.encode(inputData);
+      final compressedData = await compute(_brotliCodec.encode, inputData);
       return _saveBytesIntoFile(bytes: compressedData, extension: 'br');
     } catch (error, stackTrace) {
       Logger.log('Error during Brotli compression!', error: error, stackTrace: stackTrace);
