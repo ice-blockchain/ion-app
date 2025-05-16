@@ -181,6 +181,7 @@ class WalletViewsService {
           modifiedCoin = _applyExecutingTransactions(
             coinInWallet: modifiedCoin,
             transactions: transactions,
+            walletViewId: walletView.id,
           );
 
           totalGroupAmount += modifiedCoin.amount;
@@ -227,8 +228,9 @@ class WalletViewsService {
 
   /// Subtracts sent coins from the existing number of coins.
   CoinInWalletData _applyExecutingTransactions({
-    required Map<CoinData, List<TransactionData>> transactions,
+    required String walletViewId,
     required CoinInWalletData coinInWallet,
+    required Map<CoinData, List<TransactionData>> transactions,
   }) {
     var updatedCoin = coinInWallet;
 
@@ -245,9 +247,12 @@ class WalletViewsService {
 
       for (final transaction in coinTransactions) {
         final isTransactionRelatedToCoin = transaction.senderWalletAddress == wallet?.address;
+        final isTransactionRelatedToWalletView = transaction.walletViewId == walletViewId;
         final transactionCoin = transaction.cryptoAsset;
 
-        if (isTransactionRelatedToCoin && transactionCoin is CoinTransactionAsset) {
+        if (isTransactionRelatedToCoin &&
+            transactionCoin is CoinTransactionAsset &&
+            isTransactionRelatedToWalletView) {
           adjustedRawAmount -= BigInt.parse(transactionCoin.rawAmount);
         }
       }

@@ -20,6 +20,7 @@ import 'package:ion/app/features/wallets/model/transaction_status.c.dart';
 import 'package:ion/app/features/wallets/model/transaction_type.dart';
 import 'package:ion/app/features/wallets/model/transfer_result.c.dart';
 import 'package:ion/app/features/wallets/providers/send_asset_form_provider.c.dart';
+import 'package:ion/app/features/wallets/providers/synced_coins_by_symbol_group_provider.c.dart';
 import 'package:ion/app/features/wallets/providers/wallet_view_data_provider.c.dart';
 import 'package:ion/app/services/logger/logger.dart';
 import 'package:ion/app/utils/retry.dart';
@@ -37,6 +38,8 @@ class SendCoinsNotifier extends _$SendCoinsNotifier {
   }
 
   Future<void> send(OnVerifyIdentity<Map<String, dynamic>> onVerifyIdentity) async {
+    if (state.isLoading) return;
+
     final form = ref.read(sendAssetFormControllerProvider);
 
     if (form.assetData is! CoinAssetToSendData) {
@@ -131,6 +134,12 @@ class SendCoinsNotifier extends _$SendCoinsNotifier {
 
       return details;
     });
+
+    unawaited(
+      ref.read(syncedCoinsBySymbolGroupNotifierProvider.notifier).refresh(
+        [coinAssetData.coinsGroup.symbolGroup],
+      ),
+    );
 
     if (state.hasError) {
       // Log to get the error stack trace
