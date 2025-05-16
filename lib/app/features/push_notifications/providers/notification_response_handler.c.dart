@@ -1,6 +1,7 @@
 import 'package:ion/app/exceptions/exceptions.dart';
 import 'package:ion/app/features/auth/providers/auth_provider.c.dart';
 import 'package:ion/app/features/chat/e2ee/model/entities/private_direct_message_data.c.dart';
+import 'package:ion/app/features/chat/e2ee/model/entities/private_message_reaction_data.c.dart';
 import 'package:ion/app/features/chat/e2ee/providers/gift_unwrap_service_provider.c.dart';
 import 'package:ion/app/features/feed/data/models/entities/article_data.c.dart';
 import 'package:ion/app/features/feed/data/models/entities/modifiable_post_data.c.dart';
@@ -15,6 +16,8 @@ import 'package:ion/app/features/ion_connect/providers/ion_connect_event_parser.
 import 'package:ion/app/features/push_notifications/data/models/ion_connect_push_data_payload.c.dart';
 import 'package:ion/app/features/push_notifications/providers/notification_response_data_provider.c.dart';
 import 'package:ion/app/features/user/model/follow_list.c.dart';
+import 'package:ion/app/features/wallets/model/entities/funds_request_entity.c.dart';
+import 'package:ion/app/features/wallets/model/entities/wallet_asset_entity.c.dart';
 import 'package:ion/app/router/app_routes.c.dart';
 import 'package:ion/app/services/logger/logger.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
@@ -84,6 +87,15 @@ class NotificationResponseHandler extends _$NotificationResponseHandler {
           throw ReceiverDevicePubkeyNotFoundException(giftWrap.id);
         }
         await _openChat(receiverPubkey);
+      case PrivateMessageReactionEntity.kind:
+        final entity = PrivateMessageReactionEntity.fromEventMessage(rumor);
+        await _openChat(entity.data.masterPubkey);
+      case FundsRequestEntity.kind:
+        final entity = FundsRequestEntity.fromEventMessage(rumor);
+      //TODO?
+      case WalletAssetEntity.kind:
+        final entity = WalletAssetEntity.fromEventMessage(rumor);
+      //TODO?
       default:
         throw UnsupportedEntityType(rumor);
     }
