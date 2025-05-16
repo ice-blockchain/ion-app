@@ -1,9 +1,20 @@
 import 'package:ion/app/exceptions/exceptions.dart';
+import 'package:ion/app/features/auth/providers/auth_provider.c.dart';
+import 'package:ion/app/features/chat/e2ee/model/entities/private_direct_message_data.c.dart';
+import 'package:ion/app/features/chat/e2ee/providers/gift_unwrap_service_provider.c.dart';
+import 'package:ion/app/features/feed/data/models/entities/article_data.c.dart';
 import 'package:ion/app/features/feed/data/models/entities/modifiable_post_data.c.dart';
+import 'package:ion/app/features/feed/data/models/entities/post_data.c.dart';
+import 'package:ion/app/features/feed/data/models/entities/reaction_data.c.dart';
+import 'package:ion/app/features/feed/data/models/entities/repost_data.c.dart';
+import 'package:ion/app/features/feed/data/models/generic_repost.c.dart';
+import 'package:ion/app/features/ion_connect/ion_connect.dart';
 import 'package:ion/app/features/ion_connect/model/event_reference.c.dart';
+import 'package:ion/app/features/ion_connect/model/ion_connect_gift_wrap.c.dart';
 import 'package:ion/app/features/ion_connect/providers/ion_connect_event_parser.c.dart';
 import 'package:ion/app/features/push_notifications/data/models/ion_connect_push_data_payload.c.dart';
 import 'package:ion/app/features/push_notifications/providers/notification_response_data_provider.c.dart';
+import 'package:ion/app/features/user/model/follow_list.c.dart';
 import 'package:ion/app/router/app_routes.c.dart';
 import 'package:ion/app/services/logger/logger.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
@@ -27,10 +38,24 @@ class NotificationResponseHandler extends _$NotificationResponseHandler {
       final eventParser = ref.read(eventParserProvider);
       final entity = eventParser.parse(notificationPayload.event);
 
-      if (entity is ModifiablePostEntity) {
-        await _openPostDetail(entity.toEventReference());
-      } else {
-        throw UnsupportedEntityType(entity);
+      switch (entity) {
+        case ModifiablePostEntity():
+        case PostEntity():
+          await _openPostDetail(entity.toEventReference());
+        case GenericRepostEntity() when entity.data.kind == ArticleEntity.kind:
+          await _openArticleDetail(entity.data.eventReference);
+        case GenericRepostEntity() when entity.data.kind == ModifiablePostEntity.kind:
+          await _openPostDetail(entity.data.eventReference);
+        case RepostEntity():
+          await _openPostDetail(entity.data.eventReference);
+        case ReactionEntity():
+          await _openPostDetail(entity.data.eventReference);
+        case FollowListEntity():
+          await _openProfileDetail(entity.masterPubkey);
+        case IonConnectGiftWrapEntity():
+          await _handleGiftWrap(notificationPayload.event);
+        default:
+          throw UnsupportedEntityType(entity);
       }
 
       ref.watch(notificationResponseDataProvider.notifier).removeFirst();
@@ -41,8 +66,44 @@ class NotificationResponseHandler extends _$NotificationResponseHandler {
     }
   }
 
+  Future<void> _handleGiftWrap(EventMessage giftWrap) async {
+    final giftUnwrapService = await ref.watch(giftUnwrapServiceProvider.future);
+    final currentPubkey = ref.watch(currentPubkeySelectorProvider);
+
+    if (currentPubkey == null) {
+      throw UserMasterPubkeyNotFoundException();
+    }
+
+    final rumor = await giftUnwrapService.unwrap(giftWrap);
+
+    switch (rumor.kind) {
+      case ReplaceablePrivateDirectMessageEntity.kind:
+        final entity = ReplaceablePrivateDirectMessageEntity.fromEventMessage(rumor);
+        final receiverPubkey = entity.data.getReceiverPubkey(currentUserPubkey: currentPubkey);
+        if (receiverPubkey == null) {
+          throw ReceiverDevicePubkeyNotFoundException(giftWrap.id);
+        }
+        await _openChat(receiverPubkey);
+      default:
+        throw UnsupportedEntityType(rumor);
+    }
+  }
+
   Future<void> _openPostDetail(EventReference eventReference) async {
     await PostDetailsRoute(eventReference: eventReference.encode())
         .push<void>(rootNavigatorKey.currentContext!);
+  }
+
+  Future<void> _openArticleDetail(EventReference eventReference) async {
+    await ArticleDetailsRoute(eventReference: eventReference.encode())
+        .push<void>(rootNavigatorKey.currentContext!);
+  }
+
+  Future<void> _openProfileDetail(String pubkey) async {
+    await ProfileRoute(pubkey: pubkey).push<void>(rootNavigatorKey.currentContext!);
+  }
+
+  Future<void> _openChat(String pubkey) async {
+    await ConversationRoute(receiverPubKey: pubkey).push<void>(rootNavigatorKey.currentContext!);
   }
 }
