@@ -147,7 +147,9 @@ class ConversationMessageDao extends DatabaseAccessor<ChatDatabase>
       ),
     ])
       ..where(messageStatusTable.status.isNotIn([MessageDeliveryStatus.deleted.index]))
-      ..where(eventMessageTable.eventReference.equalsValue(eventReference));
+      ..where(eventMessageTable.eventReference.equalsValue(eventReference))
+      ..groupBy([eventMessageTable.eventReference])
+      ..distinct;
 
     return query.watchSingleOrNull().map((row) {
       if (row == null) return null;
