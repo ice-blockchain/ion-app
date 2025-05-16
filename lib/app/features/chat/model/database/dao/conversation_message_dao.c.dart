@@ -91,42 +91,50 @@ class ConversationMessageDao extends DatabaseAccessor<ChatDatabase>
     });
   }
 
-  Stream<Map<DateTime, List<EventMessage>>> getMessages({
-    required String conversationId,
-    required String currentUserMasterPubkey,
-  }) {
-    final query = select(conversationMessageTable).join([
-      innerJoin(
-        eventMessageTable,
-        eventMessageTable.eventReference.equalsExp(conversationMessageTable.messageEventReference),
-      ),
-      innerJoin(
-        messageStatusTable,
-        messageStatusTable.messageEventReference.equalsExp(eventMessageTable.eventReference),
-      ),
-    ])
-      ..where(conversationMessageTable.conversationId.equals(conversationId))
-      ..where(messageStatusTable.status.isNotIn([MessageDeliveryStatus.deleted.index]))
-      ..groupBy([eventMessageTable.eventReference])
-      ..distinct;
+  Stream<Map<DateTime, List<EventMessage>>> getMessages(String conversationId) {
+    // Listen only to changes in conversationMessageTable
+    final query = select(conversationMessageTable)
+      ..where((tbl) => tbl.conversationId.equals(conversationId));
 
-    return query.watch().map((rows) {
-      final groupedMessages = <DateTime, List<EventMessage>>{};
+    return query.watch().asyncMap((conversationMessages) async {
+      // Get all event references from the conversation messages
+      final eventReferences = conversationMessages.map((msg) => msg.messageEventReference).toList();
 
-      for (final row in rows) {
-        final eventMessage = row.readTable(eventMessageTable).toEventMessage();
-
-        final dateKey = DateTime(
-          eventMessage.publishedAt.year,
-          eventMessage.publishedAt.month,
-          eventMessage.publishedAt.day,
-        );
-
-        groupedMessages.putIfAbsent(dateKey, () => []).add(eventMessage);
-
-        groupedMessages[dateKey]!.sort((a, b) => b.publishedAt.compareTo(a.publishedAt));
+      if (eventReferences.isEmpty) {
+        return <DateTime, List<EventMessage>>{};
       }
 
+      // Fetch corresponding event messages and statuses
+      final eventMessages = await (select(eventMessageTable)
+            ..where((tbl) => tbl.eventReference.isInValues(eventReferences)))
+          .get();
+
+      final statuses = await (select(messageStatusTable)
+            ..where(
+              (tbl) =>
+                  tbl.messageEventReference.isInValues(eventReferences) &
+                  tbl.status.isNotIn([MessageDeliveryStatus.deleted.index]),
+            ))
+          .get();
+
+      // Filter eventMessages by those that have a non-deleted status
+      final validEventReferences = statuses.map((status) => status.messageEventReference).toSet();
+
+      final filteredEventMessages =
+          eventMessages.where((msg) => validEventReferences.contains(msg.eventReference)).toList();
+
+      // Group by date
+      final groupedMessages = <DateTime, List<EventMessage>>{};
+      for (final eventMessage in filteredEventMessages) {
+        final em = eventMessage.toEventMessage();
+        final dateKey = DateTime(
+          em.publishedAt.year,
+          em.publishedAt.month,
+          em.publishedAt.day,
+        );
+        groupedMessages.putIfAbsent(dateKey, () => []).add(em);
+        groupedMessages[dateKey]!.sort((a, b) => b.publishedAt.compareTo(a.publishedAt));
+      }
       return groupedMessages;
     });
   }
