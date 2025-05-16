@@ -18,6 +18,8 @@ _$CoinImpl _$$CoinImplFromJson(Map<String, dynamic> json) => _$CoinImpl(
       symbolGroup: json['symbolGroup'] as String,
       syncFrequency: const SyncFrequencyConverter()
           .fromJson((json['syncFrequency'] as num).toInt()),
+      native: json['native'] as bool? ?? false,
+      prioritized: json['prioritized'] as bool? ?? false,
     );
 
 Map<String, dynamic> _$$CoinImplToJson(_$CoinImpl instance) =>
@@ -33,4 +35,6 @@ Map<String, dynamic> _$$CoinImplToJson(_$CoinImpl instance) =>
       'symbolGroup': instance.symbolGroup,
       'syncFrequency':
           const SyncFrequencyConverter().toJson(instance.syncFrequency),
+      'native': instance.native,
+      'prioritized': instance.prioritized,
     };

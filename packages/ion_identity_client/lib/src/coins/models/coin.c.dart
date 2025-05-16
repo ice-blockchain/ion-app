@@ -18,6 +18,8 @@ class Coin with _$Coin {
     required String symbol,
     required String symbolGroup,
     @SyncFrequencyConverter() required Duration syncFrequency,
+    @Default(false) bool? native,
+    @Default(false) bool? prioritized,
   }) = _Coin;
 
   factory Coin.fromJson(Map<String, dynamic> json) => _$CoinFromJson(json);
