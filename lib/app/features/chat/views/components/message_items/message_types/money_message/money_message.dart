@@ -10,8 +10,11 @@ import 'package:ion/app/features/auth/providers/auth_provider.c.dart';
 import 'package:ion/app/features/chat/model/message_list_item.c.dart';
 import 'package:ion/app/features/chat/model/money_message_type.dart';
 import 'package:ion/app/features/chat/recent_chats/providers/money_message_provider.c.dart';
+import 'package:ion/app/features/chat/recent_chats/providers/replied_message_list_item_provider.c.dart';
 import 'package:ion/app/features/chat/views/components/message_items/components.dart';
+import 'package:ion/app/features/chat/views/components/message_items/message_reactions/message_reactions.dart';
 import 'package:ion/app/features/chat/views/components/message_items/message_types/money_message/components/money_message_button.dart';
+import 'package:ion/app/features/chat/views/components/message_items/message_types/reply_message/reply_message.dart';
 import 'package:ion/app/features/ion_connect/ion_connect.dart';
 import 'package:ion/app/features/ion_connect/model/event_reference.c.dart';
 import 'package:ion/app/features/wallets/model/coin_data.c.dart';
@@ -45,10 +48,12 @@ class MoneyMessage extends StatelessWidget {
       FundsRequestEntity.kind => _RequestedMoneyMessage(
           eventMessage: eventMessage,
           eventReference: eventReference,
+          onTapReply: onTapReply,
         ),
       WalletAssetEntity.kind => _SentMoneyMessage(
           eventMessage: eventMessage,
           eventReference: eventReference,
+          onTapReply: onTapReply,
         ),
       _ => const SizedBox.shrink(),
     };
@@ -59,8 +64,10 @@ class _RequestedMoneyMessage extends ConsumerWidget {
   const _RequestedMoneyMessage({
     required this.eventMessage,
     required this.eventReference,
+    this.onTapReply,
   });
 
+  final VoidCallback? onTapReply;
   final EventMessage eventMessage;
   final ImmutableEventReference eventReference;
 
@@ -99,6 +106,7 @@ class _RequestedMoneyMessage extends ConsumerWidget {
         request: fundsRequest,
         eventMessage: eventMessage,
       ),
+      onTapReply: onTapReply,
     );
   }
 }
@@ -107,11 +115,12 @@ class _SentMoneyMessage extends ConsumerWidget {
   const _SentMoneyMessage({
     required this.eventMessage,
     required this.eventReference,
+    this.onTapReply,
   });
 
   final EventMessage eventMessage;
   final ImmutableEventReference eventReference;
-
+  final VoidCallback? onTapReply;
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final isMe = ref.watch(isCurrentUserSelectorProvider(eventReference.pubkey));
@@ -140,6 +149,7 @@ class _SentMoneyMessage extends ConsumerWidget {
       eventMessage: eventMessage,
       eventId: eventReference.eventId,
       button: ViewTransactionButton(transactionData: transactionData),
+      onTapReply: onTapReply,
     );
   }
 }
@@ -155,6 +165,7 @@ class _MoneyMessageContent extends HookConsumerWidget {
     required this.eventMessage,
     required this.eventId,
     required this.button,
+    this.onTapReply,
   });
 
   final bool isMe;
@@ -166,7 +177,7 @@ class _MoneyMessageContent extends HookConsumerWidget {
   final EventMessage eventMessage;
   final String eventId;
   final Widget button;
-
+  final VoidCallback? onTapReply;
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final textColor = switch (isMe) {
@@ -184,53 +195,66 @@ class _MoneyMessageContent extends HookConsumerWidget {
       true => context.theme.appColors.strokeElements,
       false => context.theme.appColors.quaternaryText,
     };
+    final messageItem = ChatMessageInfoItem.money(
+      eventMessage: eventMessage,
+      contentDescription: title,
+    );
+
+    final repliedEventMessage = ref.watch(repliedMessageListItemProvider(messageItem));
+
+    final repliedMessageItem = getRepliedMessageListItem(
+      ref: ref,
+      repliedEventMessage: repliedEventMessage.valueOrNull,
+    );
 
     return MessageItemWrapper(
-      messageItem: ChatMessageInfoItem.money(
-        eventMessage: eventMessage,
-        contentDescription: title,
-      ),
+      messageItem: messageItem,
       contentPadding: EdgeInsets.symmetric(
         horizontal: 12.0.s,
         vertical: 12.0.s,
       ),
       isMe: isMe,
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        crossAxisAlignment: CrossAxisAlignment.end,
         children: [
-          Text(
-            title,
-            style: context.theme.appTextThemes.body2.copyWith(color: textColor),
-          ),
-          SizedBox(height: 10.0.s),
-          Row(
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              NetworkIconWidget(
-                imageUrl: network?.image ?? '',
-                size: 36.0.s,
-              ),
-              SizedBox(width: 8.0.s),
-              _AmountDisplay(
-                amount: amount,
-                equivalentUsd: equivalentUsd,
-                chain: network?.displayName ?? '',
-                coin: coin?.abbreviation,
-                isMe: isMe,
-              ),
-            ],
-          ),
-          SizedBox(height: 8.0.s),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            crossAxisAlignment: CrossAxisAlignment.end,
-            children: [
-              button,
+              if (repliedMessageItem != null)
+                ReplyMessage(messageItem, repliedMessageItem, onTapReply),
               Text(
-                toTimeDisplayValue(eventMessage.createdAt.millisecondsSinceEpoch),
-                style: context.theme.appTextThemes.caption4.copyWith(color: timeTextColor),
+                title,
+                style: context.theme.appTextThemes.body2.copyWith(color: textColor),
               ),
-              // TODO: implement reactions
+              SizedBox(height: 10.0.s),
+              Row(
+                children: [
+                  NetworkIconWidget(
+                    imageUrl: network?.image ?? '',
+                    size: 36.0.s,
+                  ),
+                  SizedBox(width: 8.0.s),
+                  _AmountDisplay(
+                    amount: amount,
+                    equivalentUsd: equivalentUsd,
+                    chain: network?.displayName ?? '',
+                    coin: coin?.abbreviation,
+                    isMe: isMe,
+                  ),
+                ],
+              ),
+              SizedBox(height: 8.0.s),
+              button,
+              MessageReactions(
+                isMe: isMe,
+                eventMessage: eventMessage,
+              ),
             ],
+          ),
+          Text(
+            toTimeDisplayValue(eventMessage.createdAt.millisecondsSinceEpoch),
+            style: context.theme.appTextThemes.caption4.copyWith(color: timeTextColor),
           ),
         ],
       ),

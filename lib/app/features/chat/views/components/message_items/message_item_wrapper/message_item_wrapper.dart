@@ -235,9 +235,14 @@ ChatMessageInfoItem? getRepliedMessageListItem({
     MessageType.profile => null,
     MessageType.sharedPost => null,
     MessageType.visualMedia => null,
-    // TODO: implement replied for money message
-    MessageType.requestFunds => null,
-    MessageType.moneySent => null,
+    MessageType.requestFunds => MoneyItem(
+        eventMessage: repliedEventMessage,
+        contentDescription: ref.context.i18n.chat_money_request_title,
+      ),
+    MessageType.moneySent => MoneyItem(
+        eventMessage: repliedEventMessage,
+        contentDescription: ref.context.i18n.chat_money_received_title,
+      ),
     MessageType.text => TextItem(
         eventMessage: repliedEventMessage,
         contentDescription: repliedEntity.data.content,
