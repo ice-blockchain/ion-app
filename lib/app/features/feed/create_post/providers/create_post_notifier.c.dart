@@ -6,6 +6,7 @@ import 'dart:convert';
 import 'package:collection/collection.dart';
 import 'package:flutter_quill/flutter_quill.dart';
 import 'package:flutter_quill/quill_delta.dart';
+import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/components/text_editor/utils/build_empty_delta.dart';
 import 'package:ion/app/components/text_editor/utils/extract_tags.dart';
@@ -17,6 +18,7 @@ import 'package:ion/app/features/feed/create_post/model/create_post_option.dart'
 import 'package:ion/app/features/feed/data/models/entities/article_data.c.dart';
 import 'package:ion/app/features/feed/data/models/entities/modifiable_post_data.c.dart';
 import 'package:ion/app/features/feed/data/models/entities/post_data.c.dart';
+import 'package:ion/app/features/feed/data/models/poll/poll_data.c.dart';
 import 'package:ion/app/features/feed/data/models/who_can_reply_settings_option.dart';
 import 'package:ion/app/features/feed/providers/counters/replies_count_provider.c.dart';
 import 'package:ion/app/features/feed/providers/counters/reposts_count_provider.c.dart';
@@ -62,6 +64,37 @@ class CreatePostNotifier extends _$CreatePostNotifier {
   @override
   FutureOr<void> build(CreatePostOption createOption) {}
 
+  /// Create a post with a poll
+  Future<void> createWithPoll({
+    required String pollQuestion,
+    required List<String> pollOptions,
+    Delta? content,
+    int pollTtl = 0, // Time to live in seconds, 0 means no expiration
+    String pollType = 'single', // 'single' or 'multiple'
+    WhoCanReplySettingsOption whoCanReply = WhoCanReplySettingsOption.everyone,
+    EventReference? parentEvent,
+    EventReference? quotedEvent,
+    List<MediaFile>? mediaFiles,
+    String? communityId,
+  }) async {
+    final pollData = PollData(
+      type: pollType,
+      ttl: pollTtl,
+      title: pollQuestion,
+      options: pollOptions,
+    );
+
+    return create(
+      content: content,
+      whoCanReply: whoCanReply,
+      parentEvent: parentEvent,
+      quotedEvent: quotedEvent,
+      mediaFiles: mediaFiles,
+      communityId: communityId,
+      poll: pollData,
+    );
+  }
+
   Future<void> create({
     Delta? content,
     WhoCanReplySettingsOption whoCanReply = WhoCanReplySettingsOption.everyone,
@@ -69,6 +102,7 @@ class CreatePostNotifier extends _$CreatePostNotifier {
     EventReference? quotedEvent,
     List<MediaFile>? mediaFiles,
     String? communityId,
+    PollData? poll,
   }) async {
     state = const AsyncValue.loading();
 
@@ -95,6 +129,7 @@ class CreatePostNotifier extends _$CreatePostNotifier {
           content: postContent,
           media: media.values.toList(),
         ),
+        poll: poll,
       );
 
       final post = await _publishPost(
