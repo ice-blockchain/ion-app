@@ -395,25 +395,30 @@ class FeedSearchFiltersRoute extends BaseRouteData {
         );
 }
 
-@TypedGoRoute<StoryRecordRoute>(
-  path: '/story-record',
-  routes: [
-    TypedGoRoute<StoryPreviewRoute>(path: 'story-preview/:path'),
-  ],
-)
+@TypedGoRoute<StoryRecordRoute>(path: '/story-record')
 class StoryRecordRoute extends BaseRouteData {
   StoryRecordRoute() : super(child: const StoryRecordPage());
 }
 
+@TypedGoRoute<StoryPreviewRoute>(path: '/story-preview/:path')
 class StoryPreviewRoute extends BaseRouteData {
-  StoryPreviewRoute({required this.path, required this.mimeType})
-      : super(
-          child: StoryPreviewPage(path: path, mimeType: mimeType),
+  StoryPreviewRoute({
+    required this.path,
+    required this.mimeType,
+    this.eventReference,
+  }) : super(
+          child: StoryPreviewPage(
+            path: path,
+            mimeType: mimeType,
+            eventReference:
+                eventReference != null ? EventReference.fromEncoded(eventReference) : null,
+          ),
           type: IceRouteType.slideFromLeft,
         );
 
   final String path;
   final String? mimeType;
+  final String? eventReference;
 }
 
 class StoryViewerRoute extends BaseRouteData {

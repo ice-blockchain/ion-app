@@ -1,9 +1,13 @@
 // SPDX-License-Identifier: ice License 1.0
 
+import 'dart:io';
+
 import 'package:flutter/material.dart';
+import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/components/button/button.dart';
+import 'package:ion/app/components/progress_bar/centered_loading_indicator.dart';
 import 'package:ion/app/components/separated/separated_row.dart';
 import 'package:ion/app/extensions/asset_gen_image.dart';
 import 'package:ion/app/extensions/build_context.dart';
@@ -11,13 +15,18 @@ import 'package:ion/app/extensions/num.dart';
 import 'package:ion/app/extensions/theme_data.dart';
 import 'package:ion/app/features/feed/data/models/entities/modifiable_post_data.c.dart';
 import 'package:ion/app/features/feed/providers/feed_bookmarks_notifier.c.dart';
+import 'package:ion/app/features/feed/views/components/post/post.dart';
 import 'package:ion/app/features/ion_connect/model/event_reference.c.dart';
 import 'package:ion/app/features/ion_connect/providers/ion_connect_entity_provider.c.dart';
+import 'package:ion/app/router/app_routes.c.dart';
 import 'package:ion/app/services/clipboard/clipboard.dart';
+import 'package:ion/app/services/logger/logger.dart';
 import 'package:ion/app/services/share/share.dart';
 import 'package:ion/generated/assets.gen.dart';
+import 'package:path_provider/path_provider.dart';
+import 'package:screenshot/screenshot.dart';
 
-class ShareOptions extends ConsumerWidget {
+class ShareOptions extends HookConsumerWidget {
   const ShareOptions({required this.eventReference, super.key});
 
   final EventReference eventReference;
@@ -26,6 +35,9 @@ class ShareOptions extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final screenshotController = useMemoized(ScreenshotController.new);
+    final isCapturing = useState(false);
+
     final entity = ref.watch(ionConnectEntityProvider(eventReference: eventReference)).valueOrNull;
 
     if (entity == null) {
@@ -46,9 +58,62 @@ class ShareOptions extends ConsumerWidget {
             if (isPost)
               _ShareOptionsMenuItem(
                 buttonType: ButtonType.primary,
-                icon: Assets.svg.iconFeedStories.icon(size: iconSize),
+                icon: isCapturing.value
+                    ? const CenteredLoadingIndicator()
+                    : Assets.svg.iconFeedStories.icon(size: iconSize),
                 label: context.i18n.feed_add_story,
-                onPressed: () {},
+                onPressed: isCapturing.value
+                    ? () {}
+                    : () async {
+                        isCapturing.value = true;
+
+                        try {
+                          final imageBytes = await screenshotController.captureFromWidget(
+                            InheritedTheme.captureAll(
+                              context,
+                              UncontrolledProviderScope(
+                                container: ProviderScope.containerOf(context),
+                                child: Material(
+                                  child: Post(
+                                    eventReference: eventReference,
+                                    contentWrapper: (content) => Container(
+                                      decoration: BoxDecoration(
+                                        color: context.theme.appColors.primaryBackground,
+                                        borderRadius: BorderRadius.circular(16.0.s),
+                                      ),
+                                      padding: EdgeInsets.all(16.0.s),
+                                      child: content,
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ),
+                            pixelRatio: 2,
+                            delay: const Duration(milliseconds: 100),
+                          );
+
+                          final tempDir = await getTemporaryDirectory();
+                          final tempFile = File(
+                            '${tempDir.path}/post_story_${DateTime.now().millisecondsSinceEpoch}.png',
+                          );
+                          await tempFile.writeAsBytes(imageBytes);
+
+                          if (context.mounted) {
+                            context.pop();
+                          }
+
+                          if (context.mounted) {
+                            await StoryPreviewRoute(
+                              path: tempFile.path,
+                              mimeType: 'image/png',
+                              eventReference: eventReference.encode(),
+                            ).push<void>(context);
+                          }
+                        } catch (e) {
+                          Logger.error('Error capturing post screenshot: $e');
+                          isCapturing.value = false;
+                        }
+                      },
               ),
             _ShareOptionsMenuItem(
               buttonType: ButtonType.dropdown,

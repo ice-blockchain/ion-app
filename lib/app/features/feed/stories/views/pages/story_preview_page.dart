@@ -16,6 +16,7 @@ import 'package:ion/app/features/feed/stories/views/components/story_preview/act
 import 'package:ion/app/features/feed/stories/views/components/story_preview/media/story_image_preview.dart';
 import 'package:ion/app/features/feed/stories/views/components/story_preview/media/story_video_preview.dart';
 import 'package:ion/app/features/feed/views/pages/who_can_reply_settings_modal/who_can_reply_settings_modal.dart';
+import 'package:ion/app/features/ion_connect/model/event_reference.c.dart';
 import 'package:ion/app/features/ion_connect/providers/entities_paged_data_provider.c.dart';
 import 'package:ion/app/router/app_routes.c.dart';
 import 'package:ion/app/router/components/navigation_app_bar/navigation_app_bar.dart';
@@ -28,11 +29,13 @@ class StoryPreviewPage extends HookConsumerWidget {
   const StoryPreviewPage({
     required this.path,
     required this.mimeType,
+    this.eventReference,
     super.key,
   });
 
   final String path;
   final String? mimeType;
+  final EventReference? eventReference;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -73,12 +76,14 @@ class StoryPreviewPage extends HookConsumerWidget {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Flexible(
-                      child: switch (mediaType) {
-                        MediaType.video => StoryVideoPreview(path: path),
-                        MediaType.image => StoryImagePreview(path: path),
-                        MediaType.audio => const CenteredLoadingIndicator(),
-                        MediaType.unknown => const CenteredLoadingIndicator(),
-                      },
+                      child: eventReference != null
+                          ? StoryImagePreview(path: path)
+                          : switch (mediaType) {
+                              MediaType.video => StoryVideoPreview(path: path),
+                              MediaType.image => StoryImagePreview(path: path),
+                              MediaType.audio => const CenteredLoadingIndicator(),
+                              MediaType.unknown => const CenteredLoadingIndicator(),
+                            },
                     ),
                     SizedBox(height: 8.0.s),
                     ListItem(
@@ -120,12 +125,7 @@ class StoryPreviewPage extends HookConsumerWidget {
                             createPostNotifierProvider(CreatePostOption.story).notifier,
                           );
 
-                          if (mediaType == MediaType.video) {
-                            await createPostNotifier.create(
-                              mediaFiles: [MediaFile(path: path, mimeType: mimeType)],
-                              whoCanReply: whoCanReply,
-                            );
-                          } else if (mediaType == MediaType.image) {
+                          if (eventReference != null || mediaType == MediaType.image) {
                             final dimensions = await ref
                                 .read(imageCompressorProvider)
                                 .getImageDimension(path: path);
@@ -134,11 +134,16 @@ class StoryPreviewPage extends HookConsumerWidget {
                               mediaFiles: [
                                 MediaFile(
                                   path: path,
-                                  mimeType: mimeType,
+                                  mimeType: eventReference != null ? 'image/png' : mimeType,
                                   width: dimensions.width,
                                   height: dimensions.height,
                                 ),
                               ],
+                              whoCanReply: whoCanReply,
+                            );
+                          } else if (mediaType == MediaType.video) {
+                            await createPostNotifier.create(
+                              mediaFiles: [MediaFile(path: path, mimeType: mimeType)],
                               whoCanReply: whoCanReply,
                             );
                           }
