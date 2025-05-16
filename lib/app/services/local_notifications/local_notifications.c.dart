@@ -57,7 +57,16 @@ class LocalNotificationsService {
 
   static InitializationSettings get _settings {
     const initializationSettingsAndroid = AndroidInitializationSettings('ic_stat_ic_notification');
-    const initializationSettingsDarwin = DarwinInitializationSettings();
+    // Do not request permissions on iOS when the plugin is initialized
+    // We do that manually either during the onboarding or in the app settings
+    const initializationSettingsDarwin = DarwinInitializationSettings(
+      requestAlertPermission: false,
+      requestBadgePermission: false,
+      requestSoundPermission: false,
+      defaultPresentAlert: false,
+      defaultPresentBadge: false,
+      defaultPresentSound: false,
+    );
     return const InitializationSettings(
       android: initializationSettingsAndroid,
       iOS: initializationSettingsDarwin,
@@ -82,4 +91,8 @@ class LocalNotificationsService {
 }
 
 @Riverpod(keepAlive: true)
-LocalNotificationsService localNotificationsService(Ref ref) => LocalNotificationsService();
+Future<LocalNotificationsService> localNotificationsService(Ref ref) async {
+  final service = LocalNotificationsService();
+  await service.initialize();
+  return service;
+}

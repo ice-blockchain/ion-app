@@ -533,3 +533,7 @@ class UnsupportedTranslationTypeException extends IONException {
   UnsupportedTranslationTypeException(dynamic error)
       : super(10106, 'Unsupported translation type: $error');
 }
+
+class UnsupportedEntityType extends IONException {
+  UnsupportedEntityType(dynamic entity) : super(10107, 'Unsupported entity type $entity');
+}

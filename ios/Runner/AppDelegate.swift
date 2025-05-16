@@ -145,6 +145,10 @@ class AudioFocusHandler: NSObject {
         var photoEditor: PhotoEditorModule?
         let videoEditor = VideoEditorModule()
         
+        if #available(iOS 10.0, *) {
+          UNUserNotificationCenter.current().delegate = self as? UNUserNotificationCenterDelegate
+        }
+
         if let controller = window?.rootViewController as? FlutterViewController,
            let binaryMessenger = controller as? FlutterBinaryMessenger {
             

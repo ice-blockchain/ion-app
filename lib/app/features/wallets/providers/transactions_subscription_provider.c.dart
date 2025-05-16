@@ -3,14 +3,13 @@
 import 'dart:convert';
 
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:ion/app/exceptions/exceptions.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/auth/providers/auth_provider.c.dart';
 import 'package:ion/app/features/auth/providers/onboarding_complete_provider.c.dart';
+import 'package:ion/app/features/chat/e2ee/providers/gift_unwrap_service_provider.c.dart';
 import 'package:ion/app/features/ion_connect/ion_connect.dart';
 import 'package:ion/app/features/ion_connect/model/ion_connect_gift_wrap.c.dart';
 import 'package:ion/app/features/ion_connect/providers/entities_syncer_notifier.c.dart';
-import 'package:ion/app/features/ion_connect/providers/ion_connect_event_signer_provider.c.dart';
 import 'package:ion/app/features/ion_connect/providers/ion_connect_subscription_provider.c.dart';
 import 'package:ion/app/features/wallets/data/repository/request_assets_repository.c.dart';
 import 'package:ion/app/features/wallets/data/repository/transactions_repository.c.dart';
@@ -18,8 +17,6 @@ import 'package:ion/app/features/wallets/domain/wallet_views/wallet_views_servic
 import 'package:ion/app/features/wallets/model/entities/funds_request_entity.c.dart';
 import 'package:ion/app/features/wallets/model/entities/wallet_asset_entity.c.dart';
 import 'package:ion/app/features/wallets/providers/wallets_initializer_provider.c.dart';
-import 'package:ion/app/services/ion_connect/ion_connect_gift_wrap_service.c.dart';
-import 'package:ion/app/services/ion_connect/ion_connect_seal_service.c.dart';
 import 'package:ion/app/services/logger/logger.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
@@ -39,16 +36,11 @@ Future<void> transactionsSubscription(Ref ref) async {
   final currentPubkey = ref.watch(currentPubkeySelectorProvider);
   final transactionsRepository = ref.watch(transactionsRepositoryProvider).valueOrNull;
   final requestAssetsRepository = ref.watch(requestAssetsRepositoryProvider);
-  final eventSigner = ref.watch(currentUserIonConnectEventSignerProvider).valueOrNull;
-  final sealService = ref.watch(ionConnectSealServiceProvider).valueOrNull;
-  final giftWrapService = ref.watch(ionConnectGiftWrapServiceProvider).valueOrNull;
   final onboardingComplete = ref.watch(onboardingCompleteProvider).valueOrNull;
   final walletViewsService = ref.watch(walletViewsServiceProvider).valueOrNull;
+  final giftUnwrapService = await ref.watch(giftUnwrapServiceProvider.future);
 
   if (currentPubkey == null ||
-      eventSigner == null ||
-      sealService == null ||
-      giftWrapService == null ||
       transactionsRepository == null ||
       walletViewsService == null ||
       // otherwise relays might not be assigned yet or delegation is not done
@@ -72,9 +64,7 @@ Future<void> transactionsSubscription(Ref ref) async {
     requestFilters: [requestFilter],
     saveCallback: (eventMessage) => _saveEvent(
       eventMessage: eventMessage,
-      privateKey: eventSigner.privateKey,
-      sealService: sealService,
-      giftWrapService: giftWrapService,
+      giftUnwrapService: giftUnwrapService,
       walletViewsService: walletViewsService,
       transactionsRepository: transactionsRepository,
       requestAssetsRepository: requestAssetsRepository,
@@ -99,9 +89,7 @@ Future<void> transactionsSubscription(Ref ref) async {
   final subscription = events.listen(
     (eventMessage) => _saveEvent(
       eventMessage: eventMessage,
-      privateKey: eventSigner.privateKey,
-      sealService: sealService,
-      giftWrapService: giftWrapService,
+      giftUnwrapService: giftUnwrapService,
       walletViewsService: walletViewsService,
       transactionsRepository: transactionsRepository,
       requestAssetsRepository: requestAssetsRepository,
@@ -131,36 +119,27 @@ DateTime? _getLatestDateTime(DateTime? first, DateTime? second) {
 
 Future<void> _saveEvent({
   required EventMessage eventMessage,
-  required String privateKey,
-  required IonConnectSealService sealService,
-  required IonConnectGiftWrapService giftWrapService,
+  required GiftUnwrapService giftUnwrapService,
   required WalletViewsService walletViewsService,
   required TransactionsRepository transactionsRepository,
   required RequestAssetsRepository requestAssetsRepository,
 }) async {
   try {
-    final rumor = await _unwrapGift(
-      giftWrap: eventMessage,
-      privateKey: privateKey,
-      sealService: sealService,
-      giftWrapService: giftWrapService,
-    );
+    final rumor = await giftUnwrapService.unwrap(eventMessage);
 
-    if (rumor != null) {
-      switch (rumor.kind) {
-        case WalletAssetEntity.kind:
-          await _handleWalletAssetEntity(
-            rumor: rumor,
-            walletViewsService: walletViewsService,
-            transactionsRepository: transactionsRepository,
-            requestAssetsRepository: requestAssetsRepository,
-          );
-        case FundsRequestEntity.kind:
-          await _handleFundsRequestEntity(
-            rumor: rumor,
-            requestAssetsRepository: requestAssetsRepository,
-          );
-      }
+    switch (rumor.kind) {
+      case WalletAssetEntity.kind:
+        await _handleWalletAssetEntity(
+          rumor: rumor,
+          walletViewsService: walletViewsService,
+          transactionsRepository: transactionsRepository,
+          requestAssetsRepository: requestAssetsRepository,
+        );
+      case FundsRequestEntity.kind:
+        await _handleFundsRequestEntity(
+          rumor: rumor,
+          requestAssetsRepository: requestAssetsRepository,
+        );
     }
   } on Exception catch (ex) {
     Logger.error('Caught error in subscription: $ex');
@@ -207,27 +186,4 @@ Future<void> _handleFundsRequestEntity({
   await requestAssetsRepository.saveRequestAsset(updatedRequest);
 
   Logger.info('Saved funds request ${request.id} with original event JSON');
-}
-
-Future<EventMessage?> _unwrapGift({
-  required EventMessage giftWrap,
-  required String privateKey,
-  required IonConnectSealService sealService,
-  required IonConnectGiftWrapService giftWrapService,
-}) async {
-  try {
-    final seal = await giftWrapService.decodeWrap(
-      privateKey: privateKey,
-      content: giftWrap.content,
-      senderPubkey: giftWrap.pubkey,
-    );
-
-    return await sealService.decodeSeal(
-      seal.content,
-      seal.pubkey,
-      privateKey,
-    );
-  } catch (e) {
-    throw DecodeE2EMessageException(giftWrap.id);
-  }
 }

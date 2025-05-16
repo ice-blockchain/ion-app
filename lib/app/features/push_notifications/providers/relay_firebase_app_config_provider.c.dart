@@ -51,14 +51,15 @@ class RelayFirebaseAppConfig extends _$RelayFirebaseAppConfig {
 
   Future<RelayFirebaseConfig?> _getRelayFirebaseConfig(String relayUrl) async {
     final relayInfo = await ref.watch(relayInfoProvider(relayUrl).future);
+    final relayPubkey = relayInfo.pubkey;
     final firebaseConfigs = relayInfo.getFirebaseConfigsForPlatform();
-    if (firebaseConfigs == null) {
+    if (firebaseConfigs == null || relayPubkey == null || relayPubkey.isEmpty) {
       return null;
     }
     return RelayFirebaseConfig(
       firebaseConfig: firebaseConfigs.random,
       relayUrl: relayUrl,
-      relayPubkey: relayInfo.pubkey,
+      relayPubkey: relayPubkey,
     );
   }
 }
