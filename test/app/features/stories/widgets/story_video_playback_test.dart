@@ -1,7 +1,6 @@
 // SPDX-License-Identifier: ice License 1.0
 
 import 'package:flutter_test/flutter_test.dart';
-import 'package:ion/app/features/core/model/media_type.dart';
 import 'package:ion/app/features/feed/stories/data/models/story.c.dart';
 import 'package:ion/app/features/feed/stories/providers/stories_provider.c.dart';
 
@@ -17,7 +16,7 @@ void main() {
   const alice = 'alice';
   const bob = 'bob';
 
-  final aliceVideo = makePost('v1', author: alice, mediaType: MediaType.video);
+  final aliceVideo = makePost('v1', author: alice);
   final bobImage = makePost('i1', author: bob);
 
   final aliceStories = UserStories(pubkey: alice, stories: [aliceVideo]);

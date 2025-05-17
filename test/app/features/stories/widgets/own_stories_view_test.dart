@@ -6,6 +6,9 @@ import 'package:ion/app/features/feed/stories/data/models/story.c.dart';
 import 'package:ion/app/features/feed/stories/providers/stories_provider.c.dart'
     show filteredStoriesByPubkeyProvider;
 import 'package:ion/app/features/feed/stories/providers/stories_provider.c.dart';
+import 'package:shared_preferences_platform_interface/in_memory_shared_preferences_async.dart';
+import 'package:shared_preferences_platform_interface/shared_preferences_async_platform_interface.dart';
+import 'package:shared_preferences_platform_interface/shared_preferences_platform_interface.dart';
 
 import '../../../../fixtures/factories/post_factory.dart';
 import '../../../../robots/stories/story_viewer_robot.dart';
@@ -15,6 +18,11 @@ void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
   ScreenUtil.ensureScreenSize();
   registerStoriesFallbacks();
+
+  setUp(() async {
+    SharedPreferencesStorePlatform.instance = InMemorySharedPreferencesStore.empty();
+    SharedPreferencesAsyncPlatform.instance = InMemorySharedPreferencesAsync.empty();
+  });
 
   const myPubkey = 'alice';
   const otherPubkey = 'bob';
