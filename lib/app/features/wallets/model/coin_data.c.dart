@@ -21,6 +21,8 @@ class CoinData with _$CoinData {
     required String abbreviation,
     required String symbolGroup,
     required Duration syncFrequency,
+    @Default(false) bool native,
+    @Default(false) bool prioritized,
   }) = _CoinData;
 
   factory CoinData.fromDB(db.Coin coin, NetworkData network) {
@@ -35,6 +37,8 @@ class CoinData with _$CoinData {
       abbreviation: coin.symbol.toUpperCase(),
       symbolGroup: coin.symbolGroup,
       syncFrequency: coin.syncFrequency,
+      native: coin.native ?? false,
+      prioritized: coin.prioritized ?? false,
     );
   }
 
@@ -50,10 +54,10 @@ class CoinData with _$CoinData {
       abbreviation: coin.symbol.toUpperCase(),
       symbolGroup: coin.symbolGroup,
       syncFrequency: coin.syncFrequency,
+      native: coin.native ?? false,
+      prioritized: coin.prioritized ?? false,
     );
   }
 
   const CoinData._();
-
-  bool get isNative => contractAddress.isEmpty;
 }
