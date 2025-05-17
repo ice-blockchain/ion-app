@@ -182,7 +182,10 @@ class _TextInputSection extends HookConsumerWidget {
                       padding: EdgeInsetsDirectional.only(
                         top: 10.0.s,
                       ),
-                      child: UrlPreviewContent(url: links.first),
+                      child: UrlPreviewContent(
+                        url: links.first,
+                        clickable: false,
+                      ),
                     ),
                 ],
               ),
