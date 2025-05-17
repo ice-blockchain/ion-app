@@ -72,7 +72,7 @@ class SyncedCoinsBySymbolGroupNotifier extends _$SyncedCoinsBySymbolGroupNotifie
   ) {
     final result = coins.map((coin) {
       final fromWallet = walletCoins.firstWhereOrNull((e) => e.coin.id == coin.id);
-      return fromWallet ?? CoinInWalletData(coin: coin);
+      return fromWallet?.copyWith(coin: coin) ?? CoinInWalletData(coin: coin);
     }).toList();
 
     return result..sort(_coinsComparator.compareCoins);
