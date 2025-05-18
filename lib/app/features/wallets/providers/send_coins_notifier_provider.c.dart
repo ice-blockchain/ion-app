@@ -8,7 +8,6 @@ import 'package:ion/app/features/chat/e2ee/providers/send_chat_message_service.c
 import 'package:ion/app/features/ion_connect/ion_connect.dart';
 import 'package:ion/app/features/ion_connect/model/event_reference.c.dart';
 import 'package:ion/app/features/user/providers/user_delegation_provider.c.dart';
-import 'package:ion/app/features/wallets/data/repository/coins_repository.c.dart';
 import 'package:ion/app/features/wallets/data/repository/transactions_repository.c.dart';
 import 'package:ion/app/features/wallets/domain/coins/coins_service.c.dart';
 import 'package:ion/app/features/wallets/domain/transactions/send_transaction_to_relay_service.c.dart';
@@ -97,7 +96,7 @@ class SendCoinsNotifier extends _$SendCoinsNotifier {
 
       Logger.info('Transaction was successful. Hash: ${result.txHash}');
 
-      final nativeCoin = await ref.read(coinsRepositoryProvider).getNativeCoin(form.network!);
+      final nativeCoin = await service.getNativeCoin(form.network!);
 
       final details = TransactionDetails(
         id: result.id,

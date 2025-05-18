@@ -42,6 +42,8 @@ class CoinsService {
 
   Future<CoinData?> getCoinById(String coinId) => _coinsRepository.getCoinById(coinId);
 
+  Future<CoinData?> getNativeCoin(NetworkData network) => _coinsRepository.getNativeCoin(network);
+
   Future<Iterable<CoinData>> getCoinsByFilters({
     String? symbolGroup,
     String? symbol,

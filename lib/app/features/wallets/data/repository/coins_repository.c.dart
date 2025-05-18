@@ -100,9 +100,7 @@ class CoinsRepository {
 
   Future<CoinData?> getCoinById(String coinId) => _coinsDao.getById(coinId);
 
-  Future<CoinData> getNativeCoin(NetworkData network) =>
-      getCoinsByFilters(networks: [network.id], contractAddresses: [''])
-          .then((result) => result.first);
+  Future<CoinData?> getNativeCoin(NetworkData network) => _coinsDao.getNativeCoin(network.id);
 
   Future<List<CoinData>> getCoinsByFilters({
     Iterable<String>? symbolGroups,
