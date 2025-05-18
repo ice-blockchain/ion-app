@@ -14,14 +14,11 @@ import '../../../../fixtures/stories/story_fixtures.dart';
 import '../helpers/story_test_utils.dart';
 import '../helpers/story_test_video.dart';
 
-class _TestFlag {
-  static bool completed = false;
-}
-
 class _StoryConsumer extends HookConsumerWidget {
-  const _StoryConsumer({required this.post});
+  const _StoryConsumer({required this.post, required this.onCompleted});
 
   final ModifiablePostEntity post;
+  final VoidCallback onCompleted;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -30,10 +27,10 @@ class _StoryConsumer extends HookConsumerWidget {
       post: post,
       isCurrent: true,
       isPaused: false,
-      onCompleted: () => _TestFlag.completed = true,
+      onCompleted: onCompleted,
     );
 
-    final ctrl = ref
+    final videoController = ref
         .watch(
           videoControllerProvider(
             const VideoControllerParams(sourcePath: 'dummy', authorPubkey: 'alice'),
@@ -43,10 +40,10 @@ class _StoryConsumer extends HookConsumerWidget {
 
     useStoryVideoPlayback(
       ref: ref,
-      controller: ctrl,
+      controller: videoController,
       storyId: post.id,
       viewerPubkey: 'alice',
-      onCompleted: () => _TestFlag.completed = true,
+      onCompleted: onCompleted,
     );
 
     return const SizedBox.shrink();
@@ -58,14 +55,17 @@ void main() {
 
   group('useStoryProgressController', () {
     testWidgets('image story completes after 5 s', (tester) async {
-      final stories = StoryFixtures.singleStory();
-      final post = stories.firstStory;
-      _TestFlag.completed = false;
+      final userStories = StoryFixtures.singleStory();
+      final firstStory = userStories.stories.first;
+      var completed = false;
 
       await pumpWithOverrides(
         tester,
-        child: _StoryConsumer(post: post),
-        overrides: storyViewerOverrides(post),
+        child: _StoryConsumer(
+          post: firstStory,
+          onCompleted: () => completed = true,
+        ),
+        overrides: storyViewerOverrides(firstStory),
       );
 
       final container = ProviderScope.containerOf(
@@ -74,37 +74,40 @@ void main() {
 
       container
           .read(
-            storyImageLoadStatusProvider(post.id).notifier,
+            storyImageLoadStatusProvider(firstStory.id).notifier,
           )
           .markLoaded();
 
       await tester.pumpAndSettle(const Duration(seconds: 6));
-      expect(_TestFlag.completed, isTrue);
+      expect(completed, isTrue);
     });
 
     testWidgets('video story completes when position == duration', (tester) async {
-      const dur = Duration(seconds: 3);
-      final stories = StoryFixtures.singleStory(mediaType: MediaType.video);
-      final post = stories.firstStory;
-      final fakeCtrl = FakeVideoController(dur);
-      _TestFlag.completed = false;
+      const duration = Duration(seconds: 3);
+      final userStories = StoryFixtures.singleStory(mediaType: MediaType.video);
+      final firstStory = userStories.stories.first;
+      final videoController = FakeVideoController(duration);
+      var completed = false;
 
       await pumpWithOverrides(
         tester,
-        child: _StoryConsumer(post: post),
+        child: _StoryConsumer(
+          post: firstStory,
+          onCompleted: () => completed = true,
+        ),
         overrides: [
-          ...storyViewerOverrides(post),
+          ...storyViewerOverrides(firstStory),
           videoPlayerControllerFactoryProvider('dummy')
-              .overrideWith((_) => FakeVideoFactory(fakeCtrl)),
+              .overrideWith((_) => FakeVideoFactory(videoController)),
         ],
       );
 
-      fakeCtrl
-        ..value = fakeCtrl.value.copyWith(position: dur)
+      videoController
+        ..value = videoController.value.copyWith(position: duration)
         ..notifyListeners();
 
       await tester.pump();
-      expect(_TestFlag.completed, isTrue);
+      expect(completed, isTrue);
     });
   });
 }

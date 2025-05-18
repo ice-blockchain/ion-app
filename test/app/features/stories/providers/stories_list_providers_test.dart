@@ -29,9 +29,9 @@ ModifiablePostEntity _post({
   required MediaType mediaType,
   required DateTime createdAt,
 }) {
-  final p = buildPost(id, author: author, mediaType: mediaType);
-  when(() => p.createdAt).thenReturn(createdAt);
-  return p;
+  final post = buildPost(id, author: author, mediaType: mediaType);
+  when(() => post.createdAt).thenReturn(createdAt);
+  return post;
 }
 
 EntitiesPagedDataState _stateWith(List<ModifiablePostEntity> posts) => EntitiesPagedDataState(
