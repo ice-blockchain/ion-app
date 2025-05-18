@@ -3,7 +3,6 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/features/auth/providers/auth_provider.c.dart';
-import 'package:ion/app/features/feed/stories/data/models/story.c.dart';
 import 'package:ion/app/features/feed/stories/providers/stories_provider.c.dart';
 import 'package:ion/app/features/feed/stories/providers/story_viewing_provider.c.dart';
 import 'package:ion/app/features/feed/stories/providers/viewed_stories_provider.c.dart';
@@ -11,21 +10,23 @@ import 'package:ion/app/services/storage/local_storage.c.dart';
 import 'package:ion/app/services/storage/user_preferences_service.c.dart';
 import 'package:mocktail/mocktail.dart';
 
-import '../../../../fixtures/posts/post_fixtures.dart';
+import '../../../../fixtures/stories/story_fixtures.dart';
 import '../../../../mocks.dart';
 import '../../../../test_utils.dart';
 
 void main() {
-  const alice = 'alice';
-  const bob = 'bob';
+  const alice = StoryFixtures.alice;
+  const bob = StoryFixtures.bob;
 
-  final aliceUserStories = UserStories(
+  final aliceUserStories = StoryFixtures.simpleStories(
     pubkey: alice,
-    stories: ['a1', 'a2'].map(buildPost).toList(),
+    count: 2,
+    idPrefix: 'a',
   );
-  final bobUserStories = UserStories(
+  final bobUserStories = StoryFixtures.simpleStories(
     pubkey: bob,
-    stories: ['b1'].map(buildPost).toList(),
+    count: 1,
+    idPrefix: 'b',
   );
 
   final overrides = [

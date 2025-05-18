@@ -12,5 +12,5 @@ mixin ProviderScopeMixin on BaseRobot {
       ProviderScope.containerOf(tester.element(finder));
 
   ProviderContainer getContainerFromKey(Key key) =>
-      ProviderScope.containerOf(tester.element($(key)));
+      ProviderScope.containerOf(tester.element(byKey(key)));
 }

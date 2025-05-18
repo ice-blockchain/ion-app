@@ -19,6 +19,7 @@ import 'package:shared_preferences_platform_interface/shared_preferences_platfor
 import 'package:video_player_platform_interface/video_player_platform_interface.dart';
 
 import '../../../../fixtures/posts/post_fixtures.dart';
+import '../../../../fixtures/stories/story_fixtures.dart';
 import '../../../../mocks.dart';
 import '../../../../robots/stories/story_viewer_robot.dart';
 import '../helpers/fake_video_platform.dart';
@@ -33,22 +34,18 @@ void main() {
     SharedPreferencesAsyncPlatform.instance = InMemorySharedPreferencesAsync.empty();
   });
 
-  const viewerPubkey = 'alice';
-  const otherPubkey = 'bob';
+  const viewerPubkey = StoryFixtures.alice;
+  const otherPubkey = StoryFixtures.bob;
 
-  final aliceStories = UserStories(
+  final aliceStories = StoryFixtures.simpleStories(
     pubkey: viewerPubkey,
-    stories: [
-      buildPost('a1'),
-      buildPost('a2'),
-    ],
+    count: 2,
+    idPrefix: 'a',
   );
-  final bobStories = UserStories(
+  final bobStories = StoryFixtures.simpleStories(
     pubkey: otherPubkey,
-    stories: [
-      buildPost('b1', author: otherPubkey),
-      buildPost('b2', author: otherPubkey),
-    ],
+    count: 2,
+    idPrefix: 'b',
   );
 
   group('StoryViewerPage – gestures', () {

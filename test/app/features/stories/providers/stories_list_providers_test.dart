@@ -6,13 +6,13 @@ import 'package:ion/app/features/core/model/media_type.dart';
 import 'package:ion/app/features/core/model/paged.c.dart';
 import 'package:ion/app/features/feed/data/models/entities/modifiable_post_data.c.dart';
 import 'package:ion/app/features/feed/providers/feed_stories_data_source_provider.c.dart';
-import 'package:ion/app/features/feed/stories/data/models/story.c.dart';
 import 'package:ion/app/features/feed/stories/providers/stories_provider.c.dart';
 import 'package:ion/app/features/ion_connect/model/action_source.c.dart';
 import 'package:ion/app/features/ion_connect/providers/entities_paged_data_provider.c.dart';
 import 'package:mocktail/mocktail.dart';
 
 import '../../../../fixtures/posts/post_fixtures.dart';
+import '../../../../fixtures/stories/story_fixtures.dart';
 import '../../../../test_utils.dart';
 
 class _FakeEntitiesPagedData extends EntitiesPagedData {
@@ -144,10 +144,10 @@ void main() {
     const bob = 'bob_pub';
     const carol = 'carol_pub';
 
-    const dummyStories = [
-      UserStories(pubkey: alice, stories: []),
-      UserStories(pubkey: bob, stories: []),
-      UserStories(pubkey: carol, stories: []),
+    final dummyStories = [
+      StoryFixtures.simpleStories(pubkey: alice, count: 0),
+      StoryFixtures.simpleStories(pubkey: bob, count: 0),
+      StoryFixtures.simpleStories(pubkey: carol, count: 0),
     ];
 
     test('returns a list starting with the selected user', () {

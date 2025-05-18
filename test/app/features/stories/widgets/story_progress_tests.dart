@@ -2,9 +2,9 @@
 
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:ion/app/features/feed/stories/data/models/story.c.dart';
 
 import '../../../../fixtures/posts/post_fixtures.dart';
+import '../../../../fixtures/stories/story_fixtures.dart';
 import '../../../../robots/stories/image_progress_robot.dart';
 import '../../../../robots/stories/story_progress_bar_robot.dart';
 import '../helpers/story_test_utils.dart';
@@ -13,13 +13,10 @@ void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
   ScreenUtil.ensureScreenSize();
 
-  const viewerPubkey = 'alice';
-  final viewerStories = UserStories(
+  const viewerPubkey = StoryFixtures.alice;
+  final viewerStories = StoryFixtures.simpleStories(
     pubkey: viewerPubkey,
-    stories: [
-      buildPost('s1'),
-      buildPost('s2'),
-    ],
+    count: 2,
   );
 
   group('StoryProgressBarContainer', () {
@@ -46,12 +43,9 @@ void main() {
     });
 
     testWidgets('advance past last story moves to next user and resets index', (tester) async {
-      final bobStories = UserStories(
-        pubkey: 'bob',
-        stories: [
-          buildPost('b1', author: 'bob'),
-          buildPost('b2', author: 'bob'),
-        ],
+      final bobStories = StoryFixtures.simpleStories(
+        pubkey: StoryFixtures.bob,
+        count: 2,
       );
 
       final robot = await StoryProgressBarRobot.launch(

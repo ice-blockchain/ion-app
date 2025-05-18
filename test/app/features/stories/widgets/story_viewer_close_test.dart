@@ -6,7 +6,6 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:go_router/go_router.dart';
 import 'package:ion/app/features/core/model/media_type.dart';
 import 'package:ion/app/features/core/providers/video_player_provider.c.dart';
-import 'package:ion/app/features/feed/stories/data/models/story.c.dart';
 import 'package:ion/app/features/feed/stories/views/pages/story_viewer_page.dart';
 import 'package:ion/app/router/providers/go_router_provider.c.dart';
 import 'package:ion/app/services/storage/local_storage.c.dart';
@@ -17,7 +16,7 @@ import 'package:shared_preferences_platform_interface/shared_preferences_async_p
 import 'package:shared_preferences_platform_interface/shared_preferences_platform_interface.dart';
 import 'package:video_player_platform_interface/video_player_platform_interface.dart';
 
-import '../../../../fixtures/posts/post_fixtures.dart';
+import '../../../../fixtures/stories/story_fixtures.dart';
 import '../../../../mocks.dart';
 import '../../../../robots/stories/story_viewer_robot.dart';
 import '../helpers/fake_video_platform.dart';
@@ -32,9 +31,10 @@ void main() {
     SharedPreferencesAsyncPlatform.instance = InMemorySharedPreferencesAsync.empty();
   });
 
-  const alice = 'alice';
-  final lastVideoPost = buildPost('vid_last', mediaType: MediaType.video);
-  final aliceStories = UserStories(pubkey: alice, stories: [lastVideoPost]);
+  const alice = StoryFixtures.alice;
+  final aliceStories = StoryFixtures.singleStory(
+    mediaType: MediaType.video,
+  );
 
   const videoDuration = Duration(seconds: 3);
   final fakeCtrl = FakeVideoController(videoDuration);

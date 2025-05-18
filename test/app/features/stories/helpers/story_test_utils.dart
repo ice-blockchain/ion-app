@@ -7,6 +7,8 @@ import 'package:ion/app/features/feed/data/models/entities/modifiable_post_data.
 import 'package:ion/app/features/feed/stories/data/models/story.c.dart';
 import 'package:ion/app/features/feed/stories/providers/stories_provider.c.dart';
 
+import '../../../../fixtures/stories/story_fixtures.dart';
+
 Future<void> pumpWithOverrides(
   WidgetTester tester, {
   required Widget child,
@@ -25,9 +27,9 @@ Future<void> pumpWithOverrides(
 }
 
 List<Override> storyViewerOverrides(ModifiablePostEntity post) {
-  final stories = UserStories(pubkey: 'alice', stories: [post]);
+  final stories = UserStories(pubkey: StoryFixtures.alice, stories: [post]);
   return [
     storiesProvider.overrideWith((_) => [stories]),
-    filteredStoriesByPubkeyProvider('alice').overrideWith((_) => [stories]),
+    filteredStoriesByPubkeyProvider(StoryFixtures.alice).overrideWith((_) => [stories]),
   ];
 }

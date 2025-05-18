@@ -10,7 +10,7 @@ import 'package:ion/app/features/feed/stories/hooks/use_story_progress_controlle
 import 'package:ion/app/features/feed/stories/hooks/use_story_video_playback.dart';
 import 'package:ion/app/features/feed/stories/providers/story_image_loading_provider.c.dart';
 
-import '../../../../fixtures/posts/post_fixtures.dart';
+import '../../../../fixtures/stories/story_fixtures.dart';
 import '../helpers/story_test_utils.dart';
 import '../helpers/story_test_video.dart';
 
@@ -58,7 +58,8 @@ void main() {
 
   group('useStoryProgressController', () {
     testWidgets('image story completes after 5 s', (tester) async {
-      final post = buildPost('img_1');
+      final stories = StoryFixtures.singleStory();
+      final post = stories.firstStory;
       _TestFlag.completed = false;
 
       await pumpWithOverrides(
@@ -83,7 +84,8 @@ void main() {
 
     testWidgets('video story completes when position == duration', (tester) async {
       const dur = Duration(seconds: 3);
-      final post = buildPost('vid_1', mediaType: MediaType.video);
+      final stories = StoryFixtures.singleStory(mediaType: MediaType.video);
+      final post = stories.firstStory;
       final fakeCtrl = FakeVideoController(dur);
       _TestFlag.completed = false;
 

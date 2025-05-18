@@ -11,34 +11,34 @@ abstract class BaseRobot {
   @protected
   final WidgetTester tester;
 
-  Finder $(Key key) => find.byKey(key);
+  Finder byKey(Key key) => find.byKey(key);
 
   Future<void> tap(Key key) async {
-    await tester.tap($(key));
+    await tester.tap(byKey(key));
     await tester.pumpAndSettle();
   }
 
   Future<void> longPress(Key key, {Duration duration = const Duration(milliseconds: 600)}) async {
-    await tester.longPress($(key), warnIfMissed: false);
+    await tester.longPress(byKey(key), warnIfMissed: false);
     await tester.pump(duration);
     await tester.pumpAndSettle();
   }
 
   Future<void> enterText(Key key, String text) async {
-    await tester.enterText($(key), text);
+    await tester.enterText(byKey(key), text);
     await tester.pumpAndSettle();
   }
 
   Future<void> drag(Key key, Offset offset, {int speed = 1000}) async {
-    await tester.fling($(key), offset, speed.toDouble());
+    await tester.fling(byKey(key), offset, speed.toDouble());
     await tester.pumpAndSettle();
   }
 
   @protected
-  void expectVisible(Key key) => expect($(key), findsOneWidget);
+  void expectVisible(Key key) => expect(byKey(key), findsOneWidget);
 
   @protected
-  void expectAbsent(Key key) => expect($(key), findsNothing);
+  void expectAbsent(Key key) => expect(byKey(key), findsNothing);
 
   Future<bool> waitFor(
     bool Function() condition, {
@@ -74,7 +74,7 @@ abstract class BaseRobot {
   
   /// Waits until a widget with the given [key] is present
   Future<void> waitUntilPresent(Key key, {Duration timeout = const Duration(seconds: 5)}) async {
-    await waitUntilVisible($(key), timeout: timeout);
+    await waitUntilVisible(byKey(key), timeout: timeout);
   }
   
   /// Expects to find exactly one widget with the given [text]

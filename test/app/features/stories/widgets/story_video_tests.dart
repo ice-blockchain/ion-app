@@ -6,7 +6,6 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:go_router/go_router.dart';
 import 'package:ion/app/features/core/model/media_type.dart';
 import 'package:ion/app/features/core/providers/video_player_provider.c.dart';
-import 'package:ion/app/features/feed/stories/data/models/story.c.dart';
 import 'package:ion/app/features/feed/stories/providers/stories_provider.c.dart'
     show filteredStoriesByPubkeyProvider;
 import 'package:ion/app/features/feed/stories/providers/stories_provider.c.dart';
@@ -20,7 +19,7 @@ import 'package:shared_preferences_platform_interface/shared_preferences_async_p
 import 'package:shared_preferences_platform_interface/shared_preferences_platform_interface.dart';
 import 'package:video_player_platform_interface/video_player_platform_interface.dart';
 
-import '../../../../fixtures/posts/post_fixtures.dart';
+import '../../../../fixtures/stories/story_fixtures.dart';
 import '../../../../mocks.dart';
 import '../../../../robots/stories/story_viewer_robot.dart';
 import '../helpers/fake_video_platform.dart';
@@ -35,19 +34,18 @@ void main() {
     SharedPreferencesAsyncPlatform.instance = InMemorySharedPreferencesAsync.empty();
   });
 
-  const myPubkey = 'alice';
-  const otherPubkey = 'bob';
+  const myPubkey = StoryFixtures.alice;
+  const otherPubkey = StoryFixtures.bob;
 
-  final myStories = UserStories(
+  final myStories = StoryFixtures.simpleStories(
     pubkey: myPubkey,
-    stories: [
-      buildPost('a1'),
-      buildPost('a2'),
-    ],
+    count: 2,
+    idPrefix: 'a',
   );
-  final otherStories = UserStories(
+  final otherStories = StoryFixtures.simpleStories(
     pubkey: otherPubkey,
-    stories: [buildPost('b1', author: otherPubkey)],
+    count: 1,
+    idPrefix: 'b',
   );
 
   group('Own stories viewer', () {
@@ -68,8 +66,9 @@ void main() {
   });
 
   const videoDuration = Duration(seconds: 3);
-  final lastVideoPost = buildPost('vid_last', mediaType: MediaType.video);
-  final myStoriesWithVideo = UserStories(pubkey: myPubkey, stories: [lastVideoPost]);
+  final myStoriesWithVideo = StoryFixtures.singleStory(
+    mediaType: MediaType.video,
+  );
 
   final fakeCtrl = FakeVideoController(videoDuration);
   VideoPlayerPlatform.instance = FakeVideoPlayerPlatform();
