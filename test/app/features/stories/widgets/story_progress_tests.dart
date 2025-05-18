@@ -12,7 +12,6 @@ import '../helpers/story_test_utils.dart';
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
   ScreenUtil.ensureScreenSize();
-  registerStoriesFallbacks();
 
   const viewerPubkey = 'alice';
   final viewerStories = UserStories(

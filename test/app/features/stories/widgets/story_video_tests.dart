@@ -30,7 +30,6 @@ class _MockLocalStorage extends Mock implements LocalStorage {}
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
   ScreenUtil.ensureScreenSize();
-  registerStoriesFallbacks();
 
   setUp(() async {
     SharedPreferencesStorePlatform.instance = InMemorySharedPreferencesStore.empty();
