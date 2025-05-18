@@ -42,7 +42,9 @@ Future<void> notificationFollowersSubscription(Ref ref) async {
   await ref.watch(entitiesSyncerNotifierProvider('notifications-followers').notifier).syncEntities(
     requestFilters: [requestFilter],
     saveCallback: (entity) {
-      if (entity.masterPubkey != currentPubkey) {
+      if (entity is FollowListEntity &&
+          entity.data.list.isNotEmpty &&
+          entity.data.list.last.pubkey == currentPubkey) {
         followersRepository.save(entity);
       }
     },
@@ -54,7 +56,14 @@ Future<void> notificationFollowersSubscription(Ref ref) async {
 
   final entities = ref.watch(ionConnectEntitiesSubscriptionProvider(requestMessage));
 
-  final subscription = entities.listen(followersRepository.save);
+  final subscription = entities
+      .where(
+        (entity) =>
+            entity is FollowListEntity &&
+            entity.data.list.isNotEmpty &&
+            entity.data.list.last.pubkey == currentPubkey,
+      )
+      .listen(followersRepository.save);
 
   ref.onDispose(subscription.cancel);
 }
