@@ -6,6 +6,7 @@ import 'package:ion/app/features/core/model/media_type.dart';
 import 'package:ion/app/features/core/model/paged.c.dart';
 import 'package:ion/app/features/feed/data/models/entities/modifiable_post_data.c.dart';
 import 'package:ion/app/features/feed/providers/feed_stories_data_source_provider.c.dart';
+import 'package:ion/app/features/feed/stories/data/models/story.c.dart';
 import 'package:ion/app/features/feed/stories/providers/stories_provider.c.dart';
 import 'package:ion/app/features/ion_connect/model/action_source.c.dart';
 import 'package:ion/app/features/ion_connect/providers/entities_paged_data_provider.c.dart';
@@ -33,14 +34,12 @@ ModifiablePostEntity _post({
   return p;
 }
 
-EntitiesPagedDataState _stateWith(List<ModifiablePostEntity> posts) {
-  return EntitiesPagedDataState(
-    data: Paged.data(
-      posts.toSet(),
-      pagination: const <ActionSource, PaginationParams>{},
-    ),
-  );
-}
+EntitiesPagedDataState _stateWith(List<ModifiablePostEntity> posts) => EntitiesPagedDataState(
+      data: Paged.data(
+        posts.toSet(),
+        pagination: const <ActionSource, PaginationParams>{},
+      ),
+    );
 
 ProviderContainer _containerWith(List<ModifiablePostEntity> posts) {
   const dataSources = <EntitiesDataSource>[];
@@ -83,9 +82,9 @@ void main() {
       ];
 
       final container = _containerWith(posts);
-      final result = container.read(storiesProvider)!;
+      final result = container.read(storiesProvider);
 
-      final keptIds = result.expand((u) => u.stories).map((e) => e.id).toList();
+      final keptIds = result?.expand((u) => u.stories).map((e) => e.id).toList();
       expect(keptIds, unorderedEquals(['image_1', 'video_1']));
     });
 
@@ -135,10 +134,47 @@ void main() {
       ];
 
       final container = _containerWith(posts);
-      final list = container.read(storiesProvider)!;
+      final list = container.read(storiesProvider);
 
-      expect(list.length, 3);
-      expect(list.map((u) => u.pubkey).toSet(), equals({'alice', 'bob', 'carol'}));
+      expect(list?.length, 3);
+      expect(list?.map((u) => u.pubkey).toSet(), equals({'alice', 'bob', 'carol'}));
+    });
+  });
+
+  group('filteredStoriesByPubkeyProvider', () {
+    const alice = 'alice_pub';
+    const bob = 'bob_pub';
+    const carol = 'carol_pub';
+
+    const dummyStories = [
+      UserStories(pubkey: alice, stories: []),
+      UserStories(pubkey: bob, stories: []),
+      UserStories(pubkey: carol, stories: []),
+    ];
+
+    test('returns a list starting with the selected user', () {
+      final container = createStoriesContainer(
+        overrides: [
+          storiesProvider.overrideWith((_) => dummyStories),
+        ],
+      );
+
+      final result = container.read(filteredStoriesByPubkeyProvider(bob));
+
+      expect(result.first.pubkey, equals(bob));
+      expect(result.length, equals(2));
+    });
+
+    test('returns an empty list if pubkey is not found', () {
+      final container = createStoriesContainer(
+        overrides: [
+          storiesProvider.overrideWith((_) => dummyStories),
+        ],
+      );
+
+      final result = container.read(filteredStoriesByPubkeyProvider('unknown_pubkey'));
+
+      expect(result, isEmpty);
     });
   });
 }

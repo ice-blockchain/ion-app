@@ -7,12 +7,52 @@ import 'package:ion/app/features/feed/stories/data/models/story_viewer_state.c.d
 import '../helpers/story_test_models.dart';
 
 void main() {
-  final userA = UserStories(pubkey: 'alice', stories: [buildPost('a1'), buildPost('a2')]);
-  final userB = UserStories(pubkey: 'bob', stories: [buildPost('b1')]);
+  group('UserStories', () {
+    const pubkey = 'alice_pub';
+    final posts = [buildPost('s1'), buildPost('s2'), buildPost('s3')];
+
+    late UserStories userStories;
+
+    setUp(() {
+      userStories = UserStories(pubkey: pubkey, stories: posts);
+    });
+
+    test('hasStories returns true when list is not empty', () {
+      expect(userStories.hasStories, isTrue);
+    });
+
+    test('hasStories returns false when list is empty', () {
+      const empty = UserStories(pubkey: pubkey, stories: []);
+      expect(empty.hasStories, isFalse);
+    });
+
+    test('getStoryById returns the correct post or null', () {
+      expect(userStories.getStoryById('s2'), same(posts[1]));
+      expect(userStories.getStoryById('unknown'), isNull);
+    });
+
+    test('getStoryIndex returns index or -1 when not found', () {
+      expect(userStories.getStoryIndex('s3'), equals(2));
+      expect(userStories.getStoryIndex('missing'), equals(-1));
+    });
+
+    test('hasStoryWithId returns true only when id exists', () {
+      expect(userStories.hasStoryWithId('s1'), isTrue);
+      expect(userStories.hasStoryWithId('absent'), isFalse);
+    });
+  });
+
+  final userA = UserStories(
+    pubkey: 'alice',
+    stories: [buildPost('a1'), buildPost('a2')],
+  );
+  final userB = UserStories(
+    pubkey: 'bob',
+    stories: [buildPost('b1')],
+  );
 
   group('StoryViewerState navigation getters', () {
     test('hasNextStory / hasPreviousStory behave at boundaries', () {
-      // middle of userA
       var state = StoryViewerState(
         userStories: [userA, userB],
         currentUserIndex: 0,
@@ -21,14 +61,12 @@ void main() {
       expect(state.hasNextStory, isTrue);
       expect(state.hasPreviousStory, isFalse);
 
-      // last story of userA
       state = state.copyWith(currentStoryIndex: 1);
       expect(state.hasNextStory, isFalse);
       expect(state.hasPreviousStory, isTrue);
     });
 
     test('hasNextUser / hasPreviousUser behave at boundaries', () {
-      // first user
       var state = StoryViewerState(
         userStories: [userA, userB],
         currentUserIndex: 0,
@@ -37,7 +75,6 @@ void main() {
       expect(state.hasNextUser, isTrue);
       expect(state.hasPreviousUser, isFalse);
 
-      // last user
       state = state.copyWith(currentUserIndex: 1);
       expect(state.hasNextUser, isFalse);
       expect(state.hasPreviousUser, isTrue);
@@ -60,7 +97,7 @@ void main() {
       final state = StoryViewerState(
         userStories: [userA],
         currentUserIndex: 0,
-        currentStoryIndex: 5, // beyond list length
+        currentStoryIndex: 5,
       );
 
       expect(state.currentStory, isNull);

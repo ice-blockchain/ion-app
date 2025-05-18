@@ -5,6 +5,7 @@ import 'package:ion/app/features/feed/data/models/entities/modifiable_post_data.
 import 'package:ion/app/features/ion_connect/model/event_reference.c.dart';
 import 'package:ion/app/features/ion_connect/model/media_attachment.dart';
 import 'package:mocktail/mocktail.dart';
+import 'package:ion/app/features/feed/stories/data/models/story.c.dart';
 
 class MockPost extends Mock implements ModifiablePostEntity {}
 
@@ -44,6 +45,9 @@ ModifiablePostEntity buildPost(
   when(post.toEventReference).thenReturn(FakeEventRef());
   return post;
 }
+/// Helper to build a [UserStories] with posts created via [buildPost].
+UserStories buildUserStories(String pubkey, List<String> ids) =>
+    UserStories(pubkey: pubkey, stories: ids.map((id) => buildPost(id)).toList());
 
 void registerStoriesFallbacks() {
   registerFallbackValue(FakeAttachment(MediaType.image));
