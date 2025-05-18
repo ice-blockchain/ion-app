@@ -5,6 +5,7 @@ import 'package:ion/app/exceptions/exceptions.dart';
 import 'package:ion/app/features/auth/providers/auth_provider.c.dart';
 import 'package:ion/app/features/feed/notifications/data/repository/followers_repository.c.dart';
 import 'package:ion/app/features/ion_connect/ion_connect.dart';
+import 'package:ion/app/features/ion_connect/model/ion_connect_entity.dart';
 import 'package:ion/app/features/ion_connect/model/search_extension.dart';
 import 'package:ion/app/features/ion_connect/providers/entities_syncer_notifier.c.dart';
 import 'package:ion/app/features/ion_connect/providers/ion_connect_subscription_provider.c.dart';
@@ -39,12 +40,15 @@ Future<void> notificationFollowersSubscription(Ref ref) async {
     since: DateTime.now().subtract(const Duration(seconds: 2)),
   );
 
+  bool isCurrentUserLastAdded(IonConnectEntity entity) =>
+      entity is FollowListEntity &&
+      entity.data.list.isNotEmpty &&
+      entity.data.list.last.pubkey == currentPubkey;
+
   await ref.watch(entitiesSyncerNotifierProvider('notifications-followers').notifier).syncEntities(
     requestFilters: [requestFilter],
     saveCallback: (entity) {
-      if (entity is FollowListEntity &&
-          entity.data.list.isNotEmpty &&
-          entity.data.list.last.pubkey == currentPubkey) {
+      if (isCurrentUserLastAdded(entity)) {
         followersRepository.save(entity);
       }
     },
@@ -56,14 +60,7 @@ Future<void> notificationFollowersSubscription(Ref ref) async {
 
   final entities = ref.watch(ionConnectEntitiesSubscriptionProvider(requestMessage));
 
-  final subscription = entities
-      .where(
-        (entity) =>
-            entity is FollowListEntity &&
-            entity.data.list.isNotEmpty &&
-            entity.data.list.last.pubkey == currentPubkey,
-      )
-      .listen(followersRepository.save);
+  final subscription = entities.where(isCurrentUserLastAdded).listen(followersRepository.save);
 
   ref.onDispose(subscription.cancel);
 }
