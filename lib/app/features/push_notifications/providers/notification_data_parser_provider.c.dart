@@ -21,26 +21,28 @@ class NotificationDataParser {
   final SharedPreferencesAsync _prefs;
   final Translator<PushNotificationTranslations> _translator;
 
-  Future<({String title, String body})?> parse(
+  Future<({String title, String body})> parse(
     IonConnectPushDataPayload data,
   ) async {
+    final fallback = (title: data.title ?? '', body: data.body ?? '');
+
     // reading from shared prefs because this method might be used from a background service
     final currentPubkey = await _prefs.getString(CurrentPubkeySelector.persistenceKey);
 
     if (currentPubkey == null) {
-      return null;
+      return fallback;
     }
 
     final dataIsValid = await data.validate(currentPubkey: currentPubkey);
 
     if (!dataIsValid) {
-      return null;
+      return fallback;
     }
 
     final notificationType = data.getNotificationType(currentPubkey: currentPubkey);
 
     if (notificationType == null) {
-      return null;
+      return fallback;
     }
 
     final (title, body) = await _getNotificationTranslation(
@@ -51,8 +53,8 @@ class NotificationDataParser {
     final placeholders = data.placeholders;
 
     return (
-      title: replacePlaceholders(title ?? data.title, placeholders),
-      body: replacePlaceholders(body ?? data.body, placeholders)
+      title: replacePlaceholders(title ?? data.title ?? '', placeholders),
+      body: replacePlaceholders(body ?? data.body ?? '', placeholders)
     );
   }
 

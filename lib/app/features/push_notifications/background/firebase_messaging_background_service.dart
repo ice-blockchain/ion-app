@@ -31,8 +31,8 @@ Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
 
   await notificationsService.showNotification(
     id: generateUuid().hashCode,
-    title: parsedData?.title ?? data.title,
-    body: parsedData?.body ?? data.body,
+    title: parsedData.title,
+    body: parsedData.body,
     payload: jsonEncode(message.data),
   );
 }

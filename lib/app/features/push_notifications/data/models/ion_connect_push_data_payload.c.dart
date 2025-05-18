@@ -27,13 +27,13 @@ part 'ion_connect_push_data_payload.c.g.dart';
 @Freezed(toJson: false)
 class IonConnectPushDataPayload with _$IonConnectPushDataPayload {
   const factory IonConnectPushDataPayload({
-    required String title,
-    required String body,
-    required String? imageUrl,
     @JsonKey(fromJson: _entityFromEventJson) required EventMessage event,
     @Default([])
-    @JsonKey(name: 'related_events', fromJson: _entityListFromEventListJson)
-    List<EventMessage> relatedEvents,
+    @JsonKey(name: 'relevant_events', fromJson: _entityListFromEventListJson)
+    List<EventMessage> relevantEvents,
+    String? title,
+    String? body,
+    String? imageUrl,
   }) = _IonConnectPushDataPayload;
 
   factory IonConnectPushDataPayload.fromJson(Map<String, dynamic> json) =>
@@ -126,14 +126,14 @@ class IonConnectPushDataPayload with _$IonConnectPushDataPayload {
     final valid = await Future.wait(
       [
         event.validate(),
-        ...relatedEvents.map((event) => event.validate()),
+        ...relevantEvents.map((event) => event.validate()),
       ],
     );
     return valid.every((valid) => valid) && _isMainEventRelevant(currentPubkey: currentPubkey);
   }
 
   UserMetadataEntity? _getUserMetadata({required String pubkey}) {
-    final delegationEvent = relatedEvents.firstWhereOrNull((event) {
+    final delegationEvent = relevantEvents.firstWhereOrNull((event) {
       return event.kind == UserDelegationEntity.kind && event.pubkey == pubkey;
     });
     if (delegationEvent == null) {
@@ -142,7 +142,7 @@ class IonConnectPushDataPayload with _$IonConnectPushDataPayload {
     final eventParser = EventParser();
     final delegationEntity = eventParser.parse(delegationEvent) as UserDelegationEntity;
 
-    for (final event in relatedEvents) {
+    for (final event in relevantEvents) {
       if (event.kind == UserMetadataEntity.kind && delegationEntity.data.validate(event)) {
         final userMetadataEntity = eventParser.parse(event) as UserMetadataEntity;
         if (userMetadataEntity.masterPubkey == delegationEntity.pubkey) {
