@@ -15,7 +15,7 @@ import '../../../../mocks.dart';
 import '../../../../test_utils.dart';
 
 void main() {
-  setUpAll(registerStoriesFallbacks);
+  registerStoriesFallbacks();
 
   const alice = 'alice';
   const bob = 'bob';

@@ -56,7 +56,7 @@ ProviderContainer _containerWith(List<ModifiablePostEntity> posts) {
 }
 
 void main() {
-  setUpAll(registerStoriesFallbacks);
+  registerStoriesFallbacks();
 
   group('storiesProvider – transformation logic', () {
     test('filters out posts with non-image/video media', () {
