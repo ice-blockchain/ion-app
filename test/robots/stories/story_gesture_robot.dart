@@ -20,7 +20,7 @@ class StoryGestureRobot extends BaseRobot with ProviderScopeMixin {
 
   ProviderContainer get _container => getContainerFromFinder(_handler);
 
-  Widget buildHost() {
+  Widget buildGestureWidget() {
     return ProviderScope(
       child: MaterialApp(
         home: Scaffold(

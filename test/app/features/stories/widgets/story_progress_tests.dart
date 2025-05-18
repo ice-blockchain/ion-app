@@ -80,7 +80,7 @@ void main() {
 
         await pumpWithOverrides(
           tester,
-          child: robot.buildHost(),
+          child: robot.buildImageProgressWidget(),
           overrides: storyViewerOverrides(post),
         );
         await robot.attach();

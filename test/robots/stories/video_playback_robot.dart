@@ -13,8 +13,8 @@ import '../base_robot.dart';
 import '../mixins/provider_scope_mixin.dart';
 import '../mixins/story_state_mixin.dart';
 
-class _PlaybackHost extends HookConsumerWidget {
-  const _PlaybackHost({required this.post, required this.viewerPubkey});
+class _TestVideoPlayback extends HookConsumerWidget {
+  const _TestVideoPlayback({required this.post, required this.viewerPubkey});
 
   final ModifiablePostEntity post;
   final String viewerPubkey;
@@ -53,15 +53,15 @@ class VideoPlaybackRobot extends BaseRobot with ProviderScopeMixin, StoryStateMi
   final String viewerPubkey;
   final FakeVideoController _fake;
 
-  Finder get _hostFinder => find.byType(_PlaybackHost);
+  Finder get _finder => find.byType(_TestVideoPlayback);
 
-  ProviderContainer get container => getContainerFromFinder(_hostFinder);
+  ProviderContainer get container => getContainerFromFinder(_finder);
 
   Override get videoOverride => videoPlayerControllerFactoryProvider('dummy').overrideWith(
         (_) => FakeVideoFactory(_fake),
       );
 
-  Widget buildHost() => _PlaybackHost(post: post, viewerPubkey: viewerPubkey);
+  Widget buildVideoPlaybackWidget() => _TestVideoPlayback(post: post, viewerPubkey: viewerPubkey);
 
   Future<void> completeVideo() async {
     _fake

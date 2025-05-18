@@ -14,7 +14,7 @@ void main() {
     testWidgets('tap left / right triggers correct callbacks', (tester) async {
       final robot = StoryGestureRobot(tester);
 
-      await tester.pumpWidget(robot.buildHost());
+      await tester.pumpWidget(robot.buildGestureWidget());
       await robot.attach();
 
       await robot.tapLeft();
@@ -29,7 +29,7 @@ void main() {
     testWidgets('long press sets and clears pause flag', (tester) async {
       final robot = StoryGestureRobot(tester);
 
-      await tester.pumpWidget(robot.buildHost());
+      await tester.pumpWidget(robot.buildGestureWidget());
       await robot.attach();
 
       final container = ProviderScope.containerOf(

@@ -12,8 +12,8 @@ import 'package:ion/app/features/feed/stories/providers/story_pause_provider.c.d
 import '../base_robot.dart';
 import '../mixins/provider_scope_mixin.dart';
 
-class _ImageProgressHost extends HookConsumerWidget {
-  const _ImageProgressHost({
+class _TestImageProgress extends HookConsumerWidget {
+  const _TestImageProgress({
     required this.post,
     required this.onControllerReady,
     required this.onCompleted,
@@ -62,11 +62,11 @@ class ImageProgressRobot extends BaseRobot with ProviderScopeMixin {
   bool _completed = false;
   bool _controllerReady = false;
 
-  Finder get _host => find.byType(_ImageProgressHost);
+  Finder get _finder => find.byType(_TestImageProgress);
 
-  ProviderContainer get _container => getContainerFromFinder(_host);
+  ProviderContainer get _container => getContainerFromFinder(_finder);
 
-  Widget buildHost() => _ImageProgressHost(
+  Widget buildImageProgressWidget() => _TestImageProgress(
         post: post,
         onControllerReady: (c) {
           _ctrl = c;
@@ -76,7 +76,7 @@ class ImageProgressRobot extends BaseRobot with ProviderScopeMixin {
       );
 
   Future<void> attach() async {
-    await waitFor(() => tester.any(_host) && _controllerReady);
+    await waitFor(() => tester.any(_finder) && _controllerReady);
   }
 
   void markImageLoaded() =>
