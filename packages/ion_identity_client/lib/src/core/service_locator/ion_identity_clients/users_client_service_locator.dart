@@ -3,6 +3,8 @@
 import 'package:ion_identity_client/ion_identity.dart';
 import 'package:ion_identity_client/src/core/service_locator/ion_identity_clients/auth_client_service_locator.dart';
 import 'package:ion_identity_client/src/core/service_locator/ion_identity_service_locator.dart';
+import 'package:ion_identity_client/src/users/get_content_creators/content_creators_service.dart';
+import 'package:ion_identity_client/src/users/get_content_creators/data_sources/get_content_creators_data_source.dart';
 import 'package:ion_identity_client/src/users/ion_connect_indexers/data_sources/ion_connect_indexers_data_source.dart';
 import 'package:ion_identity_client/src/users/ion_connect_indexers/get_user_connect_indexers_service.dart';
 import 'package:ion_identity_client/src/users/ion_identity_users.dart';
@@ -38,6 +40,10 @@ class UsersClientServiceLocator {
           username: username,
           config: config,
         ),
+        _ionConnectContentCreators(
+          username: username,
+          config: config,
+        ),
         AuthClientServiceLocator().extractUserId(),
       );
 
@@ -60,6 +66,18 @@ class UsersClientServiceLocator {
       IONConnectIndexersService(
         username,
         IONConnectIndexersDataSource(
+          IONIdentityServiceLocator.networkClient(config: config),
+          IONIdentityServiceLocator.tokenStorage(),
+        ),
+      );
+
+  IONConnectContentCreatorsService _ionConnectContentCreators({
+    required String username,
+    required IONIdentityConfig config,
+  }) =>
+      IONConnectContentCreatorsService(
+        username,
+        IONContentCreatorsDataSource(
           IONIdentityServiceLocator.networkClient(config: config),
           IONIdentityServiceLocator.tokenStorage(),
         ),

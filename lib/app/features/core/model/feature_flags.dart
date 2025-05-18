@@ -29,16 +29,6 @@ final class LoggerFeatureFlag extends FeatureFlag {
   static const logIonIdentityClient = FeedFeatureFlag._(key: 'logIonIdentityClient');
 }
 
-///
-/// TODO: remove this once before production release
-/// It hides creators without picture from the discover creators page
-///
-final class UsersFeatureFlag extends FeatureFlag {
-  const UsersFeatureFlag._({required super.key});
-
-  static const hideCreatorsWithoutPicture = UsersFeatureFlag._(key: 'hideCreatorsWithoutPicture');
-}
-
 final class ChatFeatureFlag extends FeatureFlag {
   const ChatFeatureFlag._({required super.key});
 

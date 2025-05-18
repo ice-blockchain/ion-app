@@ -16,7 +16,6 @@ class FeatureFlags extends _$FeatureFlags {
       WalletFeatureFlag.dappsEnabled: false,
       FeedFeatureFlag.showTrendingVideo: true,
       FeedFeatureFlag.showSuggestions: true,
-      UsersFeatureFlag.hideCreatorsWithoutPicture: true,
       ChatFeatureFlag.hideCommunity: true,
       ChatFeatureFlag.hideChatBookmark: true,
 
