@@ -18,11 +18,10 @@ import 'package:shared_preferences_platform_interface/shared_preferences_platfor
 import 'package:video_player_platform_interface/video_player_platform_interface.dart';
 
 import '../../../../fixtures/stories/story_fixtures.dart';
+import '../../../../mocks.dart';
 import '../../../../robots/stories/story_viewer_robot.dart';
 import '../helpers/fake_video_platform.dart';
 import '../helpers/story_test_video.dart';
-
-class _MockLocalStorage extends Mock implements LocalStorage {}
 
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
@@ -41,7 +40,7 @@ void main() {
   final fakeCtrl = FakeVideoController(videoDuration);
   VideoPlayerPlatform.instance = FakeVideoPlayerPlatform();
 
-  final mockStorage = _MockLocalStorage();
+  final mockStorage = MockLocalStorage();
   when(() => mockStorage.getStringList(any())).thenReturn(<String>[]);
   when(() => mockStorage.setStringList(any(), any<List<String>>())).thenAnswer((_) async => true);
 
