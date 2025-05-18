@@ -21,10 +21,12 @@ import 'package:mocktail/mocktail.dart';
 
 import '../../mocks.dart';
 import '../base_robot.dart';
+import '../mixins/provider_scope_mixin.dart';
+import '../mixins/story_state_mixin.dart';
 
 typedef _GestureHandler = StoryGestureHandler;
 
-class StoryViewerRobot extends BaseRobot {
+class StoryViewerRobot extends BaseRobot with ProviderScopeMixin, StoryStateMixin {
   StoryViewerRobot(
     super.tester, {
     required this.viewerPubkey,
@@ -114,9 +116,7 @@ class StoryViewerRobot extends BaseRobot {
 
   Finder get _gesture => find.byKey(ValueKey('story_gesture_$viewerPubkey'));
 
-  ProviderContainer get _container => ProviderScope.containerOf(tester.element(_gesture));
-
-  ProviderContainer get container => _container;
+  ProviderContainer get container => getContainerFromFinder(_gesture);
 
   Future<void> swipeToNextUser() async {
     await tester.fling(_swiper, const Offset(-600, 0), 1000);
@@ -162,20 +162,33 @@ class StoryViewerRobot extends BaseRobot {
   }
 
   void expectStoryIndex(int index) {
-    final state = _container.read(storyViewingControllerProvider(viewerPubkey));
-    expect(
-      state.currentStoryIndex,
-      index,
-      reason: 'Expected currentStoryIndex == $index',
+    verifyViewerState(
+      viewerPubkey: viewerPubkey,
+      container: container,
+      userIndex: container.read(storyViewingControllerProvider(viewerPubkey)).currentUserIndex,
+      storyIndex: index,
     );
   }
 
   void expectUserIndex(int index) {
-    final state = _container.read(storyViewingControllerProvider(viewerPubkey));
-    expect(
-      state.currentUserIndex,
-      index,
-      reason: 'Expected currentUserIndex == $index',
+    verifyViewerState(
+      viewerPubkey: viewerPubkey,
+      container: container,
+      userIndex: index,
+      storyIndex: container.read(storyViewingControllerProvider(viewerPubkey)).currentStoryIndex,
+    );
+  }
+
+  @override
+  void expectViewerState({
+    required int userIndex,
+    required int storyIndex,
+  }) {
+    verifyViewerState(
+      viewerPubkey: viewerPubkey,
+      container: container,
+      userIndex: userIndex,
+      storyIndex: storyIndex,
     );
   }
 }

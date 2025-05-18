@@ -8,8 +8,9 @@ import 'package:ion/app/features/feed/stories/providers/story_pause_provider.c.d
 import 'package:ion/app/features/feed/stories/views/components/story_viewer/components/core/story_gesture_handler.dart';
 
 import '../base_robot.dart';
+import '../mixins/provider_scope_mixin.dart';
 
-class StoryGestureRobot extends BaseRobot {
+class StoryGestureRobot extends BaseRobot with ProviderScopeMixin {
   StoryGestureRobot(super.tester);
 
   bool _leftTapped = false;
@@ -17,7 +18,7 @@ class StoryGestureRobot extends BaseRobot {
 
   Finder get _handler => find.byType(StoryGestureHandler);
 
-  ProviderContainer get _container => ProviderScope.containerOf(tester.element(_handler));
+  ProviderContainer get _container => getContainerFromFinder(_handler);
 
   Widget buildHost() {
     return ProviderScope(

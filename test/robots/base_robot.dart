@@ -66,8 +66,23 @@ abstract class BaseRobot {
 
   Future<void> wait(Duration duration) async => tester.pump(duration);
 
+  /// Dumps the widget tree to the console
   void debugDumpTree({String header = 'WIDGET TREE'}) {
     if (!kDebugMode) return;
     Logger.log('\n=== $header ===\n${tester.binding.rootElement?.toStringDeep()}\n===============');
   }
+  
+  /// Waits until a widget with the given [key] is present
+  Future<void> waitUntilPresent(Key key, {Duration timeout = const Duration(seconds: 5)}) async {
+    await waitUntilVisible($(key), timeout: timeout);
+  }
+  
+  /// Expects to find exactly one widget with the given [text]
+  void expectText(String text) => expect(find.text(text), findsOneWidget);
+  
+  /// Expects no widget with the given [text] to be found
+  void expectNoText(String text) => expect(find.text(text), findsNothing);
+  
+  /// Expects to find exactly n widgets with the given [text]
+  void expectTextCount(String text, int count) => expect(find.text(text), findsNWidgets(count));
 }

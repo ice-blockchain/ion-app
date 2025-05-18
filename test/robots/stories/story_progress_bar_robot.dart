@@ -11,8 +11,10 @@ import 'package:ion/app/features/feed/stories/providers/story_viewing_provider.c
 import 'package:ion/app/features/feed/stories/views/components/story_viewer/components/components.dart';
 
 import '../base_robot.dart';
+import '../mixins/provider_scope_mixin.dart';
+import '../mixins/story_state_mixin.dart';
 
-class StoryProgressBarRobot extends BaseRobot {
+class StoryProgressBarRobot extends BaseRobot with ProviderScopeMixin, StoryStateMixin {
   StoryProgressBarRobot(
     super.tester, {
     required this.viewerPubkey,
@@ -49,9 +51,9 @@ class StoryProgressBarRobot extends BaseRobot {
   }
 
   Finder get _segmentFinder => find.byType(StoryProgressSegment);
+  Finder get _containerFinder => find.byType(StoryProgressBarContainer);
 
-  ProviderContainer get _container =>
-      ProviderScope.containerOf(tester.element(find.byType(StoryProgressBarContainer)));
+  ProviderContainer get _container => getContainerFromFinder(_containerFinder);
 
   void advance() =>
       _container.read(storyViewingControllerProvider(viewerPubkey).notifier).advance();
@@ -76,12 +78,16 @@ class StoryProgressBarRobot extends BaseRobot {
     );
   }
 
+  @override
   void expectViewerState({
-    required int userIndex,
+    required int userIndex,  
     required int storyIndex,
   }) {
-    final state = _container.read(storyViewingControllerProvider(viewerPubkey));
-    expect(state.currentUserIndex, userIndex, reason: 'currentUserIndex');
-    expect(state.currentStoryIndex, storyIndex, reason: 'currentStoryIndex');
+    verifyViewerState(
+      viewerPubkey: viewerPubkey,
+      container: _container,
+      userIndex: userIndex,
+      storyIndex: storyIndex,
+    );
   }
 }

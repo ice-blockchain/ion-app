@@ -10,6 +10,7 @@ import 'package:ion/app/features/feed/stories/providers/story_image_loading_prov
 import 'package:ion/app/features/feed/stories/providers/story_pause_provider.c.dart';
 
 import '../base_robot.dart';
+import '../mixins/provider_scope_mixin.dart';
 
 class _ImageProgressHost extends HookConsumerWidget {
   const _ImageProgressHost({
@@ -49,7 +50,7 @@ class _ImageProgressHost extends HookConsumerWidget {
   }
 }
 
-class ImageProgressRobot extends BaseRobot {
+class ImageProgressRobot extends BaseRobot with ProviderScopeMixin {
   ImageProgressRobot(
     super.tester, {
     required this.post,
@@ -63,9 +64,7 @@ class ImageProgressRobot extends BaseRobot {
 
   Finder get _host => find.byType(_ImageProgressHost);
 
-  ProviderContainer get _container => ProviderScope.containerOf(
-        tester.element(_host),
-      );
+  ProviderContainer get _container => getContainerFromFinder(_host);
 
   Widget buildHost() => _ImageProgressHost(
         post: post,

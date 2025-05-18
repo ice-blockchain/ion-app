@@ -10,6 +10,8 @@ import 'package:ion/app/features/feed/stories/providers/story_viewing_provider.c
 
 import '../../app/features/stories/helpers/story_test_video.dart';
 import '../base_robot.dart';
+import '../mixins/provider_scope_mixin.dart';
+import '../mixins/story_state_mixin.dart';
 
 class _PlaybackHost extends HookConsumerWidget {
   const _PlaybackHost({required this.post, required this.viewerPubkey});
@@ -39,7 +41,7 @@ class _PlaybackHost extends HookConsumerWidget {
   }
 }
 
-class VideoPlaybackRobot extends BaseRobot {
+class VideoPlaybackRobot extends BaseRobot with ProviderScopeMixin, StoryStateMixin {
   VideoPlaybackRobot(
     super.tester, {
     required this.post,
@@ -53,7 +55,7 @@ class VideoPlaybackRobot extends BaseRobot {
 
   Finder get _hostFinder => find.byType(_PlaybackHost);
 
-  ProviderContainer get _container => ProviderScope.containerOf(tester.element(_hostFinder));
+  ProviderContainer get container => getContainerFromFinder(_hostFinder);
 
   Override get videoOverride => videoPlayerControllerFactoryProvider('dummy').overrideWith(
         (_) => FakeVideoFactory(_fake),
@@ -68,9 +70,13 @@ class VideoPlaybackRobot extends BaseRobot {
     await tester.pump();
   }
 
-  void expectViewerState({required int user, required int story}) {
-    final state = _container.read(storyViewingControllerProvider(viewerPubkey));
-    expect(state.currentUserIndex, user, reason: 'currentUserIndex');
-    expect(state.currentStoryIndex, story, reason: 'currentStoryIndex');
+  @override
+  void expectViewerState({required int userIndex, required int storyIndex}) {
+    verifyViewerState(
+      viewerPubkey: viewerPubkey,
+      container: container,
+      userIndex: userIndex,
+      storyIndex: storyIndex,
+    );
   }
 }
