@@ -10,8 +10,8 @@ import 'package:ion/app/services/storage/local_storage.c.dart';
 import 'package:ion/app/services/storage/user_preferences_service.c.dart';
 import 'package:mocktail/mocktail.dart';
 
+import '../../../../fixtures/stories/story_fixtures.dart';
 import '../../../../mocks.dart';
-import '../helpers/story_test_models.dart';
 import '../helpers/story_test_utils.dart';
 
 void main() {

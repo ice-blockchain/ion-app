@@ -10,7 +10,7 @@ import 'package:ion/app/features/feed/stories/hooks/use_story_progress_controlle
 import 'package:ion/app/features/feed/stories/hooks/use_story_video_playback.dart';
 import 'package:ion/app/features/feed/stories/providers/story_image_loading_provider.c.dart';
 
-import '../helpers/story_test_models.dart';
+import '../../../../fixtures/stories/story_fixtures.dart';
 import '../helpers/story_test_utils.dart';
 import '../helpers/story_test_video.dart';
 

@@ -12,7 +12,7 @@ import 'package:ion/app/features/ion_connect/model/action_source.c.dart';
 import 'package:ion/app/features/ion_connect/providers/entities_paged_data_provider.c.dart';
 import 'package:mocktail/mocktail.dart';
 
-import '../helpers/story_test_models.dart';
+import '../../../../fixtures/stories/story_fixtures.dart';
 import '../helpers/story_test_utils.dart';
 
 class _FakeEntitiesPagedData extends EntitiesPagedData {

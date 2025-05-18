@@ -4,10 +4,9 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:ion/app/features/feed/stories/data/models/story.c.dart';
 
-import '../../../../fixtures/factories/post_factory.dart';
+import '../../../../fixtures/stories/story_fixtures.dart';
 import '../../../../robots/stories/image_progress_robot.dart';
 import '../../../../robots/stories/story_progress_bar_robot.dart';
-import '../helpers/story_test_models.dart';
 import '../helpers/story_test_utils.dart';
 
 void main() {
@@ -19,8 +18,8 @@ void main() {
   final viewerStories = UserStories(
     pubkey: viewerPubkey,
     stories: [
-      makePost('s1', author: viewerPubkey),
-      makePost('s2', author: viewerPubkey),
+      buildPost('s1'),
+      buildPost('s2'),
     ],
   );
 
@@ -51,8 +50,8 @@ void main() {
       final bobStories = UserStories(
         pubkey: 'bob',
         stories: [
-          makePost('b1', author: 'bob'),
-          makePost('b2', author: 'bob'),
+          buildPost('b1', author: 'bob'),
+          buildPost('b2', author: 'bob'),
         ],
       );
 

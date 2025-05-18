@@ -18,10 +18,9 @@ import 'package:shared_preferences_platform_interface/shared_preferences_async_p
 import 'package:shared_preferences_platform_interface/shared_preferences_platform_interface.dart';
 import 'package:video_player_platform_interface/video_player_platform_interface.dart';
 
-import '../../../../fixtures/factories/post_factory.dart';
+import '../../../../fixtures/stories/story_fixtures.dart';
 import '../../../../robots/stories/story_viewer_robot.dart';
 import '../helpers/fake_video_platform.dart';
-import '../helpers/story_test_models.dart';
 import '../helpers/story_test_video.dart';
 
 class _MockLocalStorage extends Mock implements LocalStorage {}
@@ -42,15 +41,15 @@ void main() {
   final aliceStories = UserStories(
     pubkey: viewerPubkey,
     stories: [
-      makePost('a1', author: viewerPubkey),
-      makePost('a2', author: viewerPubkey),
+      buildPost('a1'),
+      buildPost('a2'),
     ],
   );
   final bobStories = UserStories(
     pubkey: otherPubkey,
     stories: [
-      makePost('b1', author: otherPubkey),
-      makePost('b2', author: otherPubkey),
+      buildPost('b1', author: otherPubkey),
+      buildPost('b2', author: otherPubkey),
     ],
   );
 

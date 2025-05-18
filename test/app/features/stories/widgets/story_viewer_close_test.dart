@@ -17,9 +17,9 @@ import 'package:shared_preferences_platform_interface/shared_preferences_async_p
 import 'package:shared_preferences_platform_interface/shared_preferences_platform_interface.dart';
 import 'package:video_player_platform_interface/video_player_platform_interface.dart';
 
+import '../../../../fixtures/stories/story_fixtures.dart';
 import '../../../../robots/stories/story_viewer_robot.dart';
 import '../helpers/fake_video_platform.dart';
-import '../helpers/story_test_models.dart';
 import '../helpers/story_test_video.dart';
 
 class _MockLocalStorage extends Mock implements LocalStorage {}

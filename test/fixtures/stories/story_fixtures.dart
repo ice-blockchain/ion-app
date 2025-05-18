@@ -7,8 +7,10 @@ import 'package:ion/app/features/ion_connect/model/event_reference.c.dart';
 import 'package:ion/app/features/ion_connect/model/media_attachment.dart';
 import 'package:mocktail/mocktail.dart';
 
+/// A mock implementation of [ModifiablePostEntity] for building fake posts.
 class MockPost extends Mock implements ModifiablePostEntity {}
 
+/// A fake implementation of [MediaAttachment] for testing stories.
 class FakeAttachment extends Fake implements MediaAttachment {
   FakeAttachment(this.mediaType);
 
@@ -19,6 +21,7 @@ class FakeAttachment extends Fake implements MediaAttachment {
   String get url => 'dummy';
 }
 
+/// A fake implementation of [ModifiablePostData] for testing stories.
 class FakePostData extends Fake implements ModifiablePostData {
   FakePostData(this.mediaType);
 
@@ -31,8 +34,10 @@ class FakePostData extends Fake implements ModifiablePostData {
   MediaAttachment? get primaryMedia => FakeAttachment(mediaType);
 }
 
-class FakeEventRef extends Fake implements ReplaceableEventReference {}
+/// A fake implementation of [ReplaceableEventReference] for testing stories.
+class FakeEventReference extends Fake implements ReplaceableEventReference {}
 
+/// Builds a fake [ModifiablePostEntity] with given [id] and optional [author] and [mediaType].
 ModifiablePostEntity buildPost(
   String id, {
   String author = 'alice',
@@ -42,7 +47,7 @@ ModifiablePostEntity buildPost(
   when(() => post.id).thenReturn(id);
   when(() => post.masterPubkey).thenReturn(author);
   when(() => post.data).thenReturn(FakePostData(mediaType));
-  when(post.toEventReference).thenReturn(FakeEventRef());
+  when(post.toEventReference).thenReturn(FakeEventReference());
   return post;
 }
 
@@ -50,8 +55,9 @@ ModifiablePostEntity buildPost(
 UserStories buildUserStories(String pubkey, List<String> ids) =>
     UserStories(pubkey: pubkey, stories: ids.map(buildPost).toList());
 
+/// Registers fallback values for mocktail when testing stories.
 void registerStoriesFallbacks() {
   registerFallbackValue(FakeAttachment(MediaType.image));
   registerFallbackValue(FakePostData(MediaType.image));
-  registerFallbackValue(FakeEventRef());
+  registerFallbackValue(FakeEventReference());
 }
