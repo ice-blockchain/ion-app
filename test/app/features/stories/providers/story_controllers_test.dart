@@ -21,12 +21,10 @@ void main() {
   final aliceUserStories = StoryFixtures.simpleStories(
     pubkey: alice,
     count: 2,
-    idPrefix: 'a',
   );
   final bobUserStories = StoryFixtures.simpleStories(
     pubkey: bob,
     count: 1,
-    idPrefix: 'b',
   );
 
   final overrides = [

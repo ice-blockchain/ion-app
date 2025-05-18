@@ -22,7 +22,6 @@ class StoryFixtures {
   static UserStories simpleStories({
     required String pubkey,
     int count = 3,
-    String idPrefix = 'story',
   }) {
     if (count == 0) {
       return UserStories(pubkey: pubkey, stories: []);
@@ -32,7 +31,7 @@ class StoryFixtures {
       pubkey: pubkey,
       stories: List.generate(
         count,
-        (i) => buildPost('${idPrefix}_${pubkey}_$i', author: pubkey),
+        (i) => buildPost('${pubkey}_story_$i', author: pubkey),
       ),
     );
   }

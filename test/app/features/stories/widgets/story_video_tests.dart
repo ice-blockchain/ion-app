@@ -40,12 +40,10 @@ void main() {
   final myStories = StoryFixtures.simpleStories(
     pubkey: myPubkey,
     count: 2,
-    idPrefix: 'a',
   );
   final otherStories = StoryFixtures.simpleStories(
     pubkey: otherPubkey,
     count: 1,
-    idPrefix: 'b',
   );
 
   group('Own stories viewer', () {

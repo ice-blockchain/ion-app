@@ -40,12 +40,10 @@ void main() {
   final aliceStories = StoryFixtures.simpleStories(
     pubkey: viewerPubkey,
     count: 2,
-    idPrefix: 'a',
   );
   final bobStories = StoryFixtures.simpleStories(
     pubkey: otherPubkey,
     count: 2,
-    idPrefix: 'b',
   );
 
   group('StoryViewerPage – gestures', () {
