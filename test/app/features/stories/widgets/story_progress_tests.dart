@@ -4,7 +4,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:ion/app/features/feed/stories/data/models/story.c.dart';
 
-import '../../../../fixtures/stories/story_fixtures.dart';
+import '../../../../fixtures/posts/post_fixtures.dart';
 import '../../../../robots/stories/image_progress_robot.dart';
 import '../../../../robots/stories/story_progress_bar_robot.dart';
 import '../helpers/story_test_utils.dart';

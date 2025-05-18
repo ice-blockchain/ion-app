@@ -12,7 +12,7 @@ import 'package:ion/app/features/ion_connect/model/action_source.c.dart';
 import 'package:ion/app/features/ion_connect/providers/entities_paged_data_provider.c.dart';
 import 'package:mocktail/mocktail.dart';
 
-import '../../../../fixtures/stories/story_fixtures.dart';
+import '../../../../fixtures/posts/post_fixtures.dart';
 import '../../../../test_utils.dart';
 
 class _FakeEntitiesPagedData extends EntitiesPagedData {
@@ -56,8 +56,6 @@ ProviderContainer _containerWith(List<ModifiablePostEntity> posts) {
 }
 
 void main() {
-  registerStoriesFallbacks();
-
   group('storiesProvider – transformation logic', () {
     test('filters out posts with non-image/video media', () {
       final posts = [

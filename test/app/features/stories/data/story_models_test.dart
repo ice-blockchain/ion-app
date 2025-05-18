@@ -4,7 +4,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:ion/app/features/feed/stories/data/models/story.c.dart';
 import 'package:ion/app/features/feed/stories/data/models/story_viewer_state.c.dart';
 
-import '../../../../fixtures/stories/story_fixtures.dart';
+import '../../../../fixtures/posts/post_fixtures.dart';
 
 void main() {
   group('UserStories', () {

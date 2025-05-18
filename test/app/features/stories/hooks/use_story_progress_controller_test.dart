@@ -10,7 +10,7 @@ import 'package:ion/app/features/feed/stories/hooks/use_story_progress_controlle
 import 'package:ion/app/features/feed/stories/hooks/use_story_video_playback.dart';
 import 'package:ion/app/features/feed/stories/providers/story_image_loading_provider.c.dart';
 
-import '../../../../fixtures/stories/story_fixtures.dart';
+import '../../../../fixtures/posts/post_fixtures.dart';
 import '../helpers/story_test_utils.dart';
 import '../helpers/story_test_video.dart';
 
@@ -55,9 +55,8 @@ class _StoryConsumer extends HookConsumerWidget {
 
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
-  registerStoriesFallbacks();
 
-  group('useStoryProgressController – golden', () {
+  group('useStoryProgressController', () {
     testWidgets('image story completes after 5 s', (tester) async {
       final post = buildPost('img_1');
       _TestFlag.completed = false;

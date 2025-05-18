@@ -3,6 +3,7 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/features/auth/providers/auth_provider.c.dart';
+import 'package:ion/app/features/feed/stories/data/models/story.c.dart';
 import 'package:ion/app/features/feed/stories/providers/stories_provider.c.dart';
 import 'package:ion/app/features/feed/stories/providers/story_viewing_provider.c.dart';
 import 'package:ion/app/features/feed/stories/providers/viewed_stories_provider.c.dart';
@@ -10,18 +11,22 @@ import 'package:ion/app/services/storage/local_storage.c.dart';
 import 'package:ion/app/services/storage/user_preferences_service.c.dart';
 import 'package:mocktail/mocktail.dart';
 
-import '../../../../fixtures/stories/story_fixtures.dart';
+import '../../../../fixtures/posts/post_fixtures.dart';
 import '../../../../mocks.dart';
 import '../../../../test_utils.dart';
 
 void main() {
-  registerStoriesFallbacks();
-
   const alice = 'alice';
   const bob = 'bob';
 
-  final aliceUserStories = buildUserStories(alice, ['a1', 'a2']);
-  final bobUserStories = buildUserStories(bob, ['b1']);
+  final aliceUserStories = UserStories(
+    pubkey: alice,
+    stories: ['a1', 'a2'].map(buildPost).toList(),
+  );
+  final bobUserStories = UserStories(
+    pubkey: bob,
+    stories: ['b1'].map(buildPost).toList(),
+  );
 
   final overrides = [
     storiesProvider.overrideWith(
