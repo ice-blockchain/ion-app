@@ -13,7 +13,7 @@ import 'package:ion/app/features/ion_connect/providers/entities_paged_data_provi
 import 'package:mocktail/mocktail.dart';
 
 import '../../../../fixtures/stories/story_fixtures.dart';
-import '../helpers/story_test_utils.dart';
+import '../../../../test_utils.dart';
 
 class _FakeEntitiesPagedData extends EntitiesPagedData {
   _FakeEntitiesPagedData(this._state);
@@ -45,7 +45,7 @@ ProviderContainer _containerWith(List<ModifiablePostEntity> posts) {
   const dataSources = <EntitiesDataSource>[];
   final fakeState = _stateWith(posts);
 
-  return createStoriesContainer(
+  return createContainer(
     overrides: [
       feedStoriesDataSourceProvider.overrideWith((_) => dataSources),
       entitiesPagedDataProvider(dataSources).overrideWith(
@@ -153,7 +153,7 @@ void main() {
     ];
 
     test('returns a list starting with the selected user', () {
-      final container = createStoriesContainer(
+      final container = createContainer(
         overrides: [
           storiesProvider.overrideWith((_) => dummyStories),
         ],
@@ -166,7 +166,7 @@ void main() {
     });
 
     test('returns an empty list if pubkey is not found', () {
-      final container = createStoriesContainer(
+      final container = createContainer(
         overrides: [
           storiesProvider.overrideWith((_) => dummyStories),
         ],

@@ -12,7 +12,7 @@ import 'package:mocktail/mocktail.dart';
 
 import '../../../../fixtures/stories/story_fixtures.dart';
 import '../../../../mocks.dart';
-import '../helpers/story_test_utils.dart';
+import '../../../../test_utils.dart';
 
 void main() {
   setUpAll(registerStoriesFallbacks);
@@ -23,17 +23,15 @@ void main() {
   final aliceUserStories = buildUserStories(alice, ['a1', 'a2']);
   final bobUserStories = buildUserStories(bob, ['b1']);
 
-  ProviderContainer createContainer() => createStoriesContainer(
-        overrides: [
-          storiesProvider.overrideWith(
-            (_) => [aliceUserStories, bobUserStories],
-          ),
-        ],
-      );
+  final overrides = [
+    storiesProvider.overrideWith(
+      (_) => [aliceUserStories, bobUserStories],
+    ),
+  ];
 
   group('StoryViewingController navigation', () {
     test('initial state starts at user 0, story 0', () {
-      final container = createContainer();
+      final container = createContainer(overrides: overrides);
       final state = container.read(storyViewingControllerProvider(alice));
 
       expect(state.currentUserIndex, 0);
@@ -41,7 +39,7 @@ void main() {
     });
 
     test('advance increments story index within the same user', () {
-      final container = createContainer();
+      final container = createContainer(overrides: overrides);
 
       container.read(storyViewingControllerProvider(alice).notifier).advance(); // a2
 
@@ -52,7 +50,7 @@ void main() {
     });
 
     test('advance on last story jumps to next user (story 0)', () {
-      final container = createContainer();
+      final container = createContainer(overrides: overrides);
 
       container.read(storyViewingControllerProvider(alice).notifier)
         ..advance() // a2
@@ -65,7 +63,7 @@ void main() {
     });
 
     test('rewind at first story jumps to previous user (story 0)', () {
-      final container = createContainer();
+      final container = createContainer(overrides: overrides);
 
       container.read(storyViewingControllerProvider(alice).notifier)
         ..advance() // a2
@@ -79,7 +77,7 @@ void main() {
     });
 
     test('moveToUser always resets story index to 0', () {
-      final container = createContainer();
+      final container = createContainer(overrides: overrides);
       final notifier = container.read(storyViewingControllerProvider(alice).notifier)
         ..moveToUser(1); // Bob
       var state = container.read(storyViewingControllerProvider(alice));
@@ -96,7 +94,7 @@ void main() {
       'advance does not overwrite indices when moveToUser is called '
       'with the current user (CubePageView onPageChanged)',
       () {
-        final container = createContainer();
+        final container = createContainer(overrides: overrides);
         final notifier = container.read(storyViewingControllerProvider(alice).notifier)..advance();
 
         var state = container.read(storyViewingControllerProvider(alice));
@@ -128,7 +126,7 @@ void main() {
     ProviderContainer buildContainer({List<String>? initialIds}) {
       when(() => mockStorage.getStringList(prefKey)).thenReturn(initialIds);
 
-      return createStoriesContainer(
+      return createContainer(
         overrides: [
           currentIdentityKeyNameSelectorProvider.overrideWith((_) => identity),
           localStorageProvider.overrideWithValue(mockStorage),

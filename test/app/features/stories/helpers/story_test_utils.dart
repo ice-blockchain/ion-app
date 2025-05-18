@@ -7,8 +7,6 @@ import 'package:ion/app/features/feed/data/models/entities/modifiable_post_data.
 import 'package:ion/app/features/feed/stories/data/models/story.c.dart';
 import 'package:ion/app/features/feed/stories/providers/stories_provider.c.dart';
 
-import '../../../../test_utils.dart';
-
 Future<void> pumpWithOverrides(
   WidgetTester tester, {
   required Widget child,
@@ -33,9 +31,3 @@ List<Override> storyViewerOverrides(ModifiablePostEntity post) {
     filteredStoriesByPubkeyProvider('alice').overrideWith((_) => [stories]),
   ];
 }
-
-ProviderContainer createStoriesContainer({
-  List<Override> overrides = const [],
-  List<ProviderObserver>? observers,
-}) =>
-    createContainer(overrides: overrides, observers: observers);
