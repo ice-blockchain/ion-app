@@ -178,14 +178,4 @@ class StoryViewerRobot extends BaseRobot {
       reason: 'Expected currentUserIndex == $index',
     );
   }
-
-  Future<void> _tapFractional(Offset fraction) async {
-    final rect = tester.getRect(_gesture);
-    final position = Offset(
-      rect.left + rect.width * fraction.dx,
-      rect.top + rect.height * fraction.dy,
-    );
-    await tester.tapAt(position);
-    await tester.pumpAndSettle();
-  }
 }
