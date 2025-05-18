@@ -17,10 +17,10 @@ class WalletsInitializerNotifier extends _$WalletsInitializerNotifier {
 
   @override
   Future<void> build() async {
-    // Since this method may be retriggered if some dependency changes,
-    // we also need to check if the completer was completed earlier.
-    // If so, we need to create a new one.
-    _completer = _completer == null || _completer!.isCompleted ? Completer<void>() : _completer;
+    // Create a new completer only if it doesn't exist or was already completed
+    if (_completer == null || _completer!.isCompleted) {
+      _completer = Completer<void>();
+    }
 
     // Just wait here, until user becomes authenticated and required data loaded
     final authState = await ref.watch(authProvider.future);
@@ -41,7 +41,10 @@ class WalletsInitializerNotifier extends _$WalletsInitializerNotifier {
         syncService.sync(),
       );
 
-      _completer?.complete();
+      // Only complete if not already completed
+      if (!_completer!.isCompleted) {
+        _completer!.complete();
+      }
     } else {
       // Reset completer, if user logged out, so the services will be re-initialized after login
       _completer = Completer<void>();
