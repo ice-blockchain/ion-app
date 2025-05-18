@@ -35,9 +35,14 @@ GoRouter goRouter(Ref ref) {
     redirect: (context, state) async {
       final initState = ref.read(initAppProvider);
       final isSplashAnimationCompleted = ref.read(splashProvider);
-
+      final forceUpdateRequired = ref.read(forceUpdateProvider).valueOrNull.falseOrValue;
+      final isOnSplash = state.matchedLocation.startsWith(SplashRoute().location);
       final isInitInProgress = initState.isLoading;
       final isInitError = initState.hasError;
+
+      if (forceUpdateRequired && !isOnSplash) {
+        ref.read(uiEventQueueNotifierProvider.notifier).emit(const ShowAppUpdateModalEvent());
+      }
 
       if (isInitError) {
         Logger.log('Init error', error: initState.error);
@@ -66,16 +71,11 @@ Future<String?> _mainRedirect({
   final isAuthenticated = (ref.read(authProvider).valueOrNull?.isAuthenticated).falseOrValue;
   final onboardingComplete = ref.read(onboardingCompleteProvider).valueOrNull;
   final hasNotificationsPermission = ref.read(hasPermissionProvider(Permission.notifications));
-  final forceUpdateRequired = ref.read(forceUpdateProvider).valueOrNull.falseOrValue;
 
   final isOnSplash = location.startsWith(SplashRoute().location);
   final isOnAuth = location.contains('/${AuthRoutes.authPrefix}/');
   final isOnOnboarding = location.contains('/${AuthRoutes.onboardingPrefix}/');
   final isOnFeed = location == FeedRoute().location;
-
-  if (forceUpdateRequired && !isOnSplash) {
-    ref.read(uiEventQueueNotifierProvider.notifier).emit(const ShowAppUpdateModalEvent());
-  }
 
   if (!isAuthenticated && !isOnAuth) {
     return IntroRoute().location;
