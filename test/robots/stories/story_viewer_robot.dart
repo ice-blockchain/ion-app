@@ -1,5 +1,7 @@
 // SPDX-License-Identifier: ice License 1.0
 
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:go_router/go_router.dart';
@@ -36,22 +38,32 @@ class StoryViewerRobot extends BaseRobot {
     required String viewerPubkey,
     String identity = 'test_user',
     List<Override> extraOverrides = const [],
+    String initialLocation = '/viewer',
+
+    /// Whether to push '/viewer' route after initial pump (default false).
+    bool autoPush = false,
   }) async {
-    await _pumpViewer(
+    final router = await _pumpViewer(
       tester: tester,
       stories: stories,
       initialPubkey: viewerPubkey,
       identity: identity,
       extraOverrides: extraOverrides,
+      initialLocation: initialLocation,
     );
+    if (autoPush) {
+      unawaited(router.push('/viewer'));
+      await tester.pumpAndSettle();
+    }
     return StoryViewerRobot(tester, viewerPubkey: viewerPubkey);
   }
 
-  static Future<void> _pumpViewer({
+  static Future<GoRouter> _pumpViewer({
     required WidgetTester tester,
     required List<UserStories> stories,
     required String initialPubkey,
     required String identity,
+    required String initialLocation,
     List<Override> extraOverrides = const [],
   }) async {
     final mockStorage = MockLocalStorage();
@@ -67,7 +79,7 @@ class StoryViewerRobot extends BaseRobot {
           builder: (_, __) => StoryViewerPage(pubkey: initialPubkey),
         ),
       ],
-      initialLocation: '/viewer',
+      initialLocation: initialLocation,
     );
 
     await tester.pumpWidget(
@@ -93,6 +105,7 @@ class StoryViewerRobot extends BaseRobot {
     );
 
     await tester.pumpAndSettle();
+    return router;
   }
 
   Finder get _swiper => find.byWidgetPredicate(
@@ -102,6 +115,8 @@ class StoryViewerRobot extends BaseRobot {
   Finder get _gesture => find.byKey(ValueKey('story_gesture_$viewerPubkey'));
 
   ProviderContainer get _container => ProviderScope.containerOf(tester.element(_gesture));
+
+  ProviderContainer get container => _container;
 
   Future<void> swipeToNextUser() async {
     await tester.fling(_swiper, const Offset(-600, 0), 1000);

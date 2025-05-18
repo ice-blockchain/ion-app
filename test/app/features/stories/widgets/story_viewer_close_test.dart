@@ -1,30 +1,25 @@
 // SPDX-License-Identifier: ice License 1.0
 
-import 'dart:async';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:go_router/go_router.dart';
 import 'package:ion/app/features/core/model/media_type.dart';
 import 'package:ion/app/features/core/providers/video_player_provider.c.dart';
-import 'package:ion/app/features/core/views/components/content_scaler.dart';
 import 'package:ion/app/features/feed/stories/data/models/story.c.dart';
-import 'package:ion/app/features/feed/stories/providers/stories_provider.c.dart';
 import 'package:ion/app/features/feed/stories/views/pages/story_viewer_page.dart';
 import 'package:ion/app/router/providers/go_router_provider.c.dart';
 import 'package:ion/app/services/storage/local_storage.c.dart';
 import 'package:ion/app/services/storage/user_preferences_service.c.dart';
-import 'package:ion/generated/app_localizations.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:shared_preferences_platform_interface/in_memory_shared_preferences_async.dart';
 import 'package:shared_preferences_platform_interface/shared_preferences_async_platform_interface.dart';
 import 'package:shared_preferences_platform_interface/shared_preferences_platform_interface.dart';
 import 'package:video_player_platform_interface/video_player_platform_interface.dart';
 
+import '../../../../robots/stories/story_viewer_robot.dart';
 import '../helpers/fake_video_platform.dart';
 import '../helpers/story_test_models.dart';
-import '../helpers/story_test_utils.dart';
 import '../helpers/story_test_video.dart';
 
 class _MockLocalStorage extends Mock implements LocalStorage {}
@@ -63,19 +58,13 @@ void main() {
       initialLocation: '/',
     );
 
-    await pumpWithOverrides(
+    await StoryViewerRobot.launch(
       tester,
-      child: ContentScaler(
-        child: MaterialApp.router(
-          routerConfig: router,
-          localizationsDelegates: I18n.localizationsDelegates,
-          supportedLocales: I18n.supportedLocales,
-          locale: const Locale('en'),
-        ),
-      ),
-      overrides: [
-        storiesProvider.overrideWith((_) => [aliceStories]),
-        filteredStoriesByPubkeyProvider(alice).overrideWith((_) => [aliceStories]),
+      stories: [aliceStories],
+      viewerPubkey: alice,
+      initialLocation: '/',
+      autoPush: true,
+      extraOverrides: [
         videoPlayerControllerFactoryProvider('dummy')
             .overrideWith((_) => FakeVideoFactory(fakeCtrl)),
         localStorageProvider.overrideWithValue(mockStorage),
@@ -85,8 +74,6 @@ void main() {
       ],
     );
 
-    unawaited(router.push('/viewer'));
-    await tester.pumpAndSettle();
     expect(find.byType(StoryViewerPage), findsOneWidget);
 
     fakeCtrl
