@@ -22,8 +22,6 @@ import '../../../../fixtures/posts/post_fixtures.dart';
 import '../../../../fixtures/stories/story_fixtures.dart';
 import '../../../../mocks.dart';
 import '../../../../robots/stories/story_viewer_robot.dart';
-import '../helpers/fake_video_platform.dart';
-import '../helpers/story_test_video.dart';
 
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();

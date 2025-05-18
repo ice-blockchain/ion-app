@@ -22,8 +22,6 @@ import 'package:video_player_platform_interface/video_player_platform_interface.
 import '../../../../fixtures/stories/story_fixtures.dart';
 import '../../../../mocks.dart';
 import '../../../../robots/stories/story_viewer_robot.dart';
-import '../helpers/fake_video_platform.dart';
-import '../helpers/story_test_video.dart';
 
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();

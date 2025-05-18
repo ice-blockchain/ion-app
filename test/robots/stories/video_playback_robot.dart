@@ -8,7 +8,7 @@ import 'package:ion/app/features/feed/data/models/entities/modifiable_post_data.
 import 'package:ion/app/features/feed/stories/hooks/use_story_video_playback.dart';
 import 'package:ion/app/features/feed/stories/providers/story_viewing_provider.c.dart';
 
-import '../../app/features/stories/helpers/story_test_video.dart';
+import '../../mocks.dart';
 import '../base_robot.dart';
 import '../mixins/provider_scope_mixin.dart';
 import '../mixins/story_state_mixin.dart';
