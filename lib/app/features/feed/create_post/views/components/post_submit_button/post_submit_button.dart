@@ -6,8 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_quill/flutter_quill.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:ion/app/features/core/providers/poll/poll_answers_provider.c.dart';
-import 'package:ion/app/features/core/providers/poll/poll_title_notifier.c.dart';
+import 'package:ion/app/features/core/providers/poll/poll_draft_provider.c.dart';
 import 'package:ion/app/features/feed/create_post/model/create_post_option.dart';
 import 'package:ion/app/features/feed/create_post/providers/create_post_notifier.c.dart';
 import 'package:ion/app/features/feed/create_post/views/hooks/use_can_submit_post.dart';
@@ -55,7 +54,6 @@ class PostSubmitButton extends HookConsumerWidget {
       modifiedEntity =
           ref.read(ionConnectEntityProvider(eventReference: modifiedEvent!)).valueOrNull;
     }
-    final pollTitle = ref.watch(pollTitleNotifierProvider);
     final pollAnswers = ref.watch(pollAnswersNotifierProvider);
     final whoCanReply = ref.watch(selectedWhoCanReplyOptionProvider);
 
@@ -63,7 +61,6 @@ class PostSubmitButton extends HookConsumerWidget {
       textEditorController,
       mediaFiles,
       mediaAttachments,
-      pollTitle,
       pollAnswers,
       modifiedEntity,
     );

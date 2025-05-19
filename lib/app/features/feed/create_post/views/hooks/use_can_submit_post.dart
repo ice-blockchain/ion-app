@@ -8,7 +8,6 @@ import 'package:ion/app/features/feed/create_post/views/hooks/use_changed_media_
 import 'package:ion/app/features/feed/create_post/views/pages/post_form_modal/hooks/use_has_poll.dart';
 import 'package:ion/app/features/feed/data/models/entities/modifiable_post_data.c.dart';
 import 'package:ion/app/features/feed/data/models/poll/poll_answer.c.dart';
-import 'package:ion/app/features/feed/data/models/poll/poll_title_data.c.dart';
 import 'package:ion/app/features/ion_connect/model/ion_connect_entity.dart';
 import 'package:ion/app/features/ion_connect/model/media_attachment.dart';
 import 'package:ion/app/services/media_service/media_service.c.dart';
@@ -18,7 +17,6 @@ bool useCanSubmitPost(
   QuillController textEditorController,
   List<MediaFile> mediaFiles,
   Map<String, MediaAttachment> mediaAttachments,
-  PollTitleData pollTitle,
   List<PollAnswer> pollAnswers,
   IonConnectEntity? modifiedEvent,
 ) {
@@ -39,14 +37,13 @@ bool useCanSubmitPost(
     () {
       final isPollValid = !hasPoll ||
           Validators.isPollValid(
-            pollTitle.text,
             pollAnswers,
           );
       canSubmit.value =
           isPollValid && (hasContent || changedMediaAttachments) && !exceedsCharacterLimit;
       return null;
     },
-    [hasContent, exceedsCharacterLimit, hasPoll, changedMediaAttachments, pollTitle, pollAnswers],
+    [hasContent, exceedsCharacterLimit, hasPoll, changedMediaAttachments, pollAnswers],
   );
 
   return canSubmit.value;

@@ -74,9 +74,8 @@ class Validators {
     }
   }
 
-  static bool isPollValid(String pollTitle, List<PollAnswer> pollAnswers) {
-    return pollTitle.trim().isNotEmpty &&
-        pollAnswers.length >= 2 &&
+  static bool isPollValid(List<PollAnswer> pollAnswers) {
+    return pollAnswers.length >= 2 &&
         pollAnswers.every(
           (answer) {
             final answerText = answer.text.trim();

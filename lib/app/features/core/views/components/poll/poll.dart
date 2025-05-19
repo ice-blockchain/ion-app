@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:intl/intl.dart';
 import 'package:ion/app/extensions/extensions.dart';
-import 'package:ion/app/features/core/providers/poll/poll_length_time_provider.c.dart';
+import 'package:ion/app/features/core/providers/poll/poll_draft_provider.c.dart';
 import 'package:ion/app/features/core/views/components/poll/poll_add_answer_button.dart';
 import 'package:ion/app/features/core/views/components/poll/poll_answers_list_view.dart';
 import 'package:ion/app/features/core/views/components/poll/poll_close_button.dart';
@@ -25,8 +25,8 @@ class Poll extends ConsumerWidget {
     BuildContext context,
     WidgetRef ref,
   ) {
-    final selectedDay = ref.watch(selectedDayNotifierProvider);
-    final selectedHour = ref.watch(selectedHourNotifierProvider);
+    final draftPoll = ref.watch(pollDraftNotifierProvider);
+    final notifier = ref.read(pollDraftNotifierProvider.notifier);
 
     return Stack(
       clipBehavior: Clip.none,
@@ -58,17 +58,18 @@ class Poll extends ConsumerWidget {
                   onPollLengthPress: () {
                     _showPollLengthTimeModal(
                       context,
-                      selectedDay,
-                      selectedHour,
+                      draftPoll.lengthDays,
+                      draftPoll.lengthHours,
                       (newDay, newHour) {
-                        ref.read(selectedDayNotifierProvider.notifier).day = newDay;
-                        ref.read(selectedHourNotifierProvider.notifier).hour = newHour;
+                        notifier
+                          ..setLengthDays(newDay)
+                          ..setLengthHours(newHour);
                       },
                     );
                   },
                 ),
                 Text(
-                  getFormattedPollLength(context, selectedDay, selectedHour),
+                  getFormattedPollLength(context, draftPoll.lengthDays, draftPoll.lengthHours),
                   style: context.theme.appTextThemes.caption.copyWith(
                     color: context.theme.appColors.primaryAccent,
                   ),

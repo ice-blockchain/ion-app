@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/components/button/button.dart';
 import 'package:ion/app/extensions/extensions.dart';
-import 'package:ion/app/features/core/providers/poll/poll_answers_provider.c.dart';
+import 'package:ion/app/features/core/providers/poll/poll_draft_provider.c.dart';
 import 'package:ion/generated/assets.gen.dart';
 
 class PollAddAnswerButton extends ConsumerWidget {
@@ -12,9 +12,9 @@ class PollAddAnswerButton extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final answers = ref.watch(pollAnswersNotifierProvider);
+    final pollDraft = ref.watch(pollDraftNotifierProvider);
 
-    if (answers.length == 4) {
+    if (pollDraft.answers.length == 4) {
       return SizedBox(height: 10.0.s);
     }
 
@@ -37,7 +37,7 @@ class PollAddAnswerButton extends ConsumerWidget {
             Assets.svg.iconPostAddanswer.icon(color: context.theme.appColors.primaryAccent),
         leadingIconOffset: 0,
         onPressed: () {
-          ref.read(pollAnswersNotifierProvider.notifier).addAnswer();
+          ref.read(pollDraftNotifierProvider.notifier).addAnswer();
         },
       ),
     );
