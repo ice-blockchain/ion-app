@@ -106,6 +106,7 @@ class CoinTransactionsMapper {
           txHash: transaction.txHash,
           id: transaction.id,
           fee: transaction.fee,
+          externalHash: transaction.externalHash,
           walletViewId: transaction.walletViewId,
           dateConfirmed: transaction.dateConfirmed,
           dateRequested: transaction.dateRequested,

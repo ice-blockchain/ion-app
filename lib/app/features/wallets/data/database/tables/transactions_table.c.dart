@@ -14,6 +14,7 @@ class TransactionsTable extends Table {
   TextColumn get senderWalletAddress => text().nullable()();
   TextColumn get receiverWalletAddress => text().nullable()();
   TextColumn get walletViewId => text()();
+  TextColumn get externalHash => text().nullable()();
 
   // Fields, that will be available from ion service
   TextColumn get id => text().nullable()();
