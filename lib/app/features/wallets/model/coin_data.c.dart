@@ -37,8 +37,8 @@ class CoinData with _$CoinData {
       abbreviation: coin.symbol.toUpperCase(),
       symbolGroup: coin.symbolGroup,
       syncFrequency: coin.syncFrequency,
-      native: coin.native ?? false,
-      prioritized: coin.prioritized ?? false,
+      native: coin.native,
+      prioritized: coin.prioritized,
     );
   }
 
