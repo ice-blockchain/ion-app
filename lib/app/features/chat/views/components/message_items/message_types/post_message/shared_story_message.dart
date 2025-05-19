@@ -5,6 +5,7 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/auth/providers/auth_provider.c.dart';
+import 'package:ion/app/features/chat/e2ee/providers/e2ee_delete_event_provider.c.dart';
 import 'package:ion/app/features/chat/views/components/message_items/message_item_wrapper/message_item_wrapper.dart';
 import 'package:ion/app/features/chat/views/components/message_items/message_reactions/message_reactions.dart';
 import 'package:ion/app/features/chat/views/components/message_items/message_types/text_message/text_message.dart';
@@ -15,6 +16,7 @@ import 'package:ion/app/features/feed/data/models/entities/post_data.c.dart';
 import 'package:ion/app/features/ion_connect/ion_connect.dart';
 import 'package:ion/app/features/ion_connect/model/entity_data_with_media_content.dart';
 import 'package:ion/app/features/ion_connect/model/ion_connect_entity.dart';
+import 'package:ion/app/router/app_routes.c.dart';
 import 'package:ion/generated/assets.gen.dart';
 
 class SharedStoryMessage extends HookConsumerWidget {
@@ -73,31 +75,56 @@ class SharedStoryMessage extends HookConsumerWidget {
       alignment: isMe ? AlignmentDirectional.centerEnd : AlignmentDirectional.centerStart,
       child: Stack(
         children: [
-          Column(
-            crossAxisAlignment: isMe ? CrossAxisAlignment.end : CrossAxisAlignment.start,
-            children: [
-              _SenderReceiverLabel(isMe: isMe),
-              if (storyUrl.isNotEmpty && !storyExpired && !storyDeleted)
-                _StoryPreviewImage(
-                  isMe: isMe,
-                  storyUrl: storyUrl,
-                  replyEventMessage: replyEventMessage,
-                  isThumb: storyMedia.mediaType == MediaType.video,
-                )
-              else
-                _UnavailableStoryContainer(isMe: isMe, replyEventMessage: replyEventMessage),
-              if (replyEventMessage.content.isNotEmpty)
-                Padding(
-                  padding: EdgeInsetsDirectional.only(top: 4.0.s),
-                  child: TextMessage(eventMessage: replyEventMessage),
-                ),
-            ],
+          GestureDetector(
+            behavior: HitTestBehavior.opaque,
+            onTap: () => StoryViewerRoute(pubkey: storyEntity.masterPubkey).push<void>(context),
+            child: Column(
+              crossAxisAlignment: isMe ? CrossAxisAlignment.end : CrossAxisAlignment.start,
+              children: [
+                _SenderReceiverLabel(isMe: isMe),
+                if (storyUrl.isNotEmpty && !storyExpired && !storyDeleted)
+                  _StoryPreviewImage(
+                    isMe: isMe,
+                    storyUrl: storyUrl,
+                    replyEventMessage: replyEventMessage,
+                    isThumb: storyMedia.mediaType == MediaType.video,
+                  )
+                else
+                  _UnavailableStoryContainer(isMe: isMe, replyEventMessage: replyEventMessage),
+                if (replyEventMessage.content.isNotEmpty)
+                  Padding(
+                    padding: EdgeInsetsDirectional.only(top: 4.0.s),
+                    child: TextMessage(eventMessage: replyEventMessage),
+                  ),
+              ],
+            ),
           ),
           if (storyUrl.isNotEmpty && replyEventMessage.content.isEmpty)
             PositionedDirectional(
               start: 6.0.s,
               bottom: 6.0.s,
-              child: MessageReactions(eventMessage: replyEventMessage, isMe: isMe),
+              child: GestureDetector(
+                behavior: HitTestBehavior.opaque,
+                onTap: () async {
+                  final forEveryone = await DeleteMessageRoute(
+                    isMe: isMe,
+                  ).push<bool>(context);
+
+                  if (forEveryone != null && context.mounted) {
+                    final messageEventsList = [replyEventMessage];
+
+                    ref.read(
+                      e2eeDeleteMessageProvider(
+                        forEveryone: forEveryone,
+                        messageEvents: messageEventsList,
+                      ),
+                    );
+                  }
+                },
+                child: IgnorePointer(
+                  child: MessageReactions(eventMessage: replyEventMessage, isMe: isMe),
+                ),
+              ),
             ),
         ],
       ),
