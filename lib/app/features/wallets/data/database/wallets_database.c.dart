@@ -125,8 +125,17 @@ class WalletsDatabase extends _$WalletsDatabase {
           );
         },
         from9To10: (Migrator m, Schema10 schema) async {
-          await m.addColumn(coinsTable, schema.coinsTable.prioritized);
-          await m.alterTable(TableMigration(coinsTable));
+          final rows = await customSelect(
+            'PRAGMA table_info(${schema.coinsTable.actualTableName})',
+          ).get();
+
+          final columnExists = rows.any((row) => row.data['name'] == 'prioritized');
+
+          if (!columnExists) {
+            await m.addColumn(schema.coinsTable, schema.coinsTable.prioritized);
+          }
+
+          await m.alterTable(TableMigration(schema.coinsTable));
         },
         from10To11: (m, schema) async {
           await m.alterTable(
