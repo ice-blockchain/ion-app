@@ -51,11 +51,8 @@ Future<NetworkFeeInformation?> networkFee(
     return null;
   }
 
-  final nativeCoin = await _getNativeCoin(
-    coinsService: await ref.read(coinsServiceProvider.future),
-    asset: networkNativeToken,
-    network: network,
-  );
+  final nativeCoin =
+      await ref.read(coinsServiceProvider.future).then((service) => service.getNativeCoin(network));
 
   if (nativeCoin == null) {
     Logger.error('Cannot load fees info. nativeCoin is null.');
@@ -73,24 +70,6 @@ Future<NetworkFeeInformation?> networkFee(
     sendableAsset: sendableAsset,
     networkFeeOptions: networkFeeOptions,
   );
-}
-
-Future<CoinData?> _getNativeCoin({
-  required CoinsService coinsService,
-  required ion.WalletAsset asset,
-  required NetworkData network,
-}) async {
-  final nativeCoin = await coinsService
-      .getCoinsByFilters(symbol: asset.symbol, network: network)
-      .then((coins) => coins.firstOrNull);
-
-  if (nativeCoin != null) return nativeCoin;
-
-  // If search of a native token using the symbol and network failed,
-  // try using an empty contract address. It's usually for native to the network.
-  return coinsService
-      .getCoinsByFilters(network: network, contractAddress: '')
-      .then((coins) => coins.firstOrNull);
 }
 
 ion.WalletAsset? _getSendableAsset(List<ion.WalletAsset> assets, String? abbreviation) {

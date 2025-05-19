@@ -58,11 +58,9 @@ class SendNftNotifier extends _$SendNftNotifier {
       }
 
       Logger.info('Transaction was successful. Hash: ${result.txHash}');
-      final nativeCoin = await ref.read(coinsServiceProvider.future).then(
-            (service) => service
-                .getCoinsByFilters(contractAddress: '', network: nft.network)
-                .then((result) => result.first),
-          );
+      final nativeCoin = await ref
+          .read(coinsServiceProvider.future)
+          .then((service) => service.getNativeCoin(nft.network));
 
       final details = TransactionDetails(
         id: result.id,

@@ -251,7 +251,7 @@ class TransactionsRepository {
     final nativeCoin = await _coinsDao.getNativeCoin(wallet.network);
 
     // Check if we have all required fields to build transaction
-    if (wallet.address == null || network == null || nativeCoin == null) {
+    if (wallet.address == null || network == null) {
       return const (nextPageToken: null, transactions: <TransactionData>[]);
     }
 
@@ -273,7 +273,14 @@ class TransactionsRepository {
             networks: [network.id],
           ).then((result) => result.firstOrNull);
 
-          if (coin == null) return null;
+          if (coin == null) {
+            Logger.error(
+              'Coin not found for transaction ${transaction.txHash}. '
+              'Tried symbol: ${transaction.metadata.asset.symbol}, '
+              'contract: $contract, network: ${network.id}',
+            );
+            return null;
+          }
 
           final rawAmount = transaction.value;
           final amount = parseCryptoAmount(rawAmount.emptyOrValue, coin.decimals);
