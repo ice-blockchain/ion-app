@@ -7,8 +7,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/components/screen_offset/screen_side_offset.dart';
 import 'package:ion/app/components/separated/separator.dart';
 import 'package:ion/app/extensions/extensions.dart';
-import 'package:ion/app/features/core/providers/poll/poll_answers_provider.c.dart';
-import 'package:ion/app/features/core/providers/poll/poll_title_notifier.c.dart';
+import 'package:ion/app/features/core/providers/poll/poll_draft_provider.c.dart';
 import 'package:ion/app/features/core/views/components/poll/poll.dart';
 import 'package:ion/app/features/feed/views/components/actions_toolbar/actions_toolbar.dart';
 import 'package:ion/app/features/feed/views/components/toolbar_buttons/toolbar_buttons.dart';
@@ -22,12 +21,11 @@ class ChatAddPollModal extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final pollTitle = ref.watch(pollTitleNotifierProvider);
-    final pollAnswers = ref.watch(pollAnswersNotifierProvider);
+    final pollDraft = ref.watch(pollDraftNotifierProvider);
 
     final isPoolValid = useMemoized(
-      () => Validators.isPollValid(pollTitle.text, pollAnswers),
-      [pollTitle.text, pollAnswers],
+      () => Validators.isPollValid(pollDraft.answers),
+      [pollDraft.answers],
     );
 
     return SheetContent(
