@@ -52,7 +52,7 @@ class TransactionParticipant extends ConsumerWidget {
 
     if (address != null) {
       final title = switch (transactionType) {
-        TransactionType.send => locale.wallet_send_to,
+        TransactionType.send => locale.wallet_sent_to,
         TransactionType.receive => locale.wallet_from,
       };
       return ListItem.textWithIcon(
@@ -61,7 +61,7 @@ class TransactionParticipant extends ConsumerWidget {
           alignment: AlignmentDirectional.centerEnd,
           child: Text(
             address!,
-            textAlign: TextAlign.center,
+            textAlign: TextAlign.end,
             style: context.theme.appTextThemes.caption3,
           ),
         ),
