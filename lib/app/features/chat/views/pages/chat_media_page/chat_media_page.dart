@@ -106,8 +106,11 @@ class ChatMediaPage extends HookConsumerWidget {
               ),
             ),
             onBackPress: () => context.pop(),
-            actions: const [
-              ChatMediaContextMenu(),
+            actions: [
+              ChatMediaContextMenu(
+                eventMessage: eventMessage,
+                activeMedia: medias[currentPage.value],
+              ),
             ],
             title: _MediaPagerCounter(
               currentPage: currentPage.value,

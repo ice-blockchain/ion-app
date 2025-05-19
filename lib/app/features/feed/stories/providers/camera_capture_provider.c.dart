@@ -54,7 +54,7 @@ class CameraCaptureController extends _$CameraCaptureController {
       return;
     }
 
-    final mediaFile = await ref.read(mediaServiceProvider).saveVideoToGallery(xFile.path);
+    final mediaFile = await ref.read(mediaServiceProvider).saveVideoToGallery(File(xFile.path));
 
     if (mediaFile == null) {
       state = const CameraCaptureState.error(message: 'Failed to save video.');
