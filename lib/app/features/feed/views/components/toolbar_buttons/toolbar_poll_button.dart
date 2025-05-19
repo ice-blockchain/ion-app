@@ -11,12 +11,14 @@ import 'package:ion/generated/assets.gen.dart';
 class ToolbarPollButton extends HookWidget {
   const ToolbarPollButton({
     required this.textEditorController,
+    this.focusNode,
     this.onPressed,
     this.enabled = true,
     super.key,
   });
 
   final QuillController textEditorController;
+  final FocusNode? focusNode;
   final VoidCallback? onPressed;
   final bool enabled;
 
@@ -29,16 +31,30 @@ class ToolbarPollButton extends HookWidget {
       enabled: !hasPoll && enabled,
       onPressed: () {
         final index = textEditorController.selection.baseOffset;
+        final length =
+            textEditorController.selection.baseOffset - textEditorController.selection.extentOffset;
+        final text = textEditorController.document.toPlainText();
+        final before = text.substring(0, index);
+        final after = text.substring(index + length);
+
+        textEditorController.replaceText(
+          index,
+          length,
+          '\n\n$before$after',
+          TextSelection.collapsed(offset: index + 2),
+        );
 
         textEditorController.document.insert(
-          index,
+          index + 2,
           BlockEmbed.custom(
             TextEditorPollEmbed(),
           ),
         );
 
-        textEditorController.moveCursorToPosition(index + 1);
+        // Force refresh the document to update poll state
+        textEditorController.document = textEditorController.document;
 
+        focusNode?.unfocus();
         onPressed?.call();
       },
     );

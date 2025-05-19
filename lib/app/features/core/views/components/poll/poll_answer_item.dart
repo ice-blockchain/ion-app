@@ -9,7 +9,11 @@ import 'package:ion/app/features/core/providers/poll/poll_answers_provider.c.dar
 import 'package:ion/generated/assets.gen.dart';
 
 class PollAnswerItem extends HookConsumerWidget {
-  const PollAnswerItem({required this.index, this.isLast = false, super.key});
+  const PollAnswerItem({
+    required this.index,
+    this.isLast = false,
+    super.key,
+  });
 
   final int index;
   final bool isLast;
