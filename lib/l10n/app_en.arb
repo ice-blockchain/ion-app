@@ -694,6 +694,8 @@
   "chat_delete_modal_title": "Delete chats?",
   "chat_delete_modal_description_single": "Are you sure you want to delete this chat?",
   "chat_delete_modal_description": "Are you sure you want to delete all selected chats?",
+  "chat_message_delete_modal_title_single": "Delete message?",
+  "chat_message_delete_modal_description_single": "Are you sure you want to delete this message?",
   "chat_search_empty": "Search here for users, chats, groups, and channels...",
   "chat_search_no_community_empty": "Search here for users, chats...",
   "chat_money_request_title": "Money requested",
