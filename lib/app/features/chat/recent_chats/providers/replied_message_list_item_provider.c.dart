@@ -1,5 +1,6 @@
 // SPDX-License-Identifier: ice License 1.0
 
+import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/features/chat/e2ee/model/entities/private_direct_message_data.c.dart';
 import 'package:ion/app/features/chat/model/database/chat_database.c.dart';
 import 'package:ion/app/features/chat/model/message_list_item.c.dart';
@@ -9,21 +10,16 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 part 'replied_message_list_item_provider.c.g.dart';
 
 @riverpod
-class RepliedMessageListItem extends _$RepliedMessageListItem {
-  @override
-  Future<EventMessage?> build(ChatMessageInfoItem messageItem) async {
-    final entity = ReplaceablePrivateDirectMessageEntity.fromEventMessage(messageItem.eventMessage);
+Stream<EventMessage?> repliedMessageListItem(Ref ref, ChatMessageInfoItem messageItem) {
+  final entity = ReplaceablePrivateDirectMessageEntity.fromEventMessage(messageItem.eventMessage);
 
-    final repliedEvent = entity.data.parentEvent;
+  final repliedEvent = entity.data.parentEvent;
 
-    if (repliedEvent != null) {
-      final repliedMessageEvent = await ref.watch(conversationMessageDaoProvider).getEventMessage(
-            eventReference: repliedEvent.eventReference,
-          );
-
-      return repliedMessageEvent;
-    }
-
-    return null;
+  if (repliedEvent == null) {
+    return Stream.value(null);
   }
+
+  return ref.watch(conversationMessageDaoProvider).watchEventMessage(
+        eventReference: repliedEvent.eventReference,
+      );
 }
