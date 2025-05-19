@@ -30,8 +30,9 @@ class FakePostData extends Fake implements ModifiablePostData {
   MediaAttachment? get primaryMedia => FakeAttachment(mediaType);
 }
 
-class FakeEventRef extends Fake implements ReplaceableEventReference {}
+class FakeEventReference extends Fake implements ReplaceableEventReference {}
 
+/// Builds a fake [ModifiablePostEntity] with given [id] and optional [author] and [mediaType].
 ModifiablePostEntity buildPost(
   String id, {
   String author = 'alice',
@@ -41,12 +42,6 @@ ModifiablePostEntity buildPost(
   when(() => post.id).thenReturn(id);
   when(() => post.masterPubkey).thenReturn(author);
   when(() => post.data).thenReturn(FakePostData(mediaType));
-  when(post.toEventReference).thenReturn(FakeEventRef());
+  when(post.toEventReference).thenReturn(FakeEventReference());
   return post;
-}
-
-void registerStoriesFallbacks() {
-  registerFallbackValue(FakeAttachment(MediaType.image));
-  registerFallbackValue(FakePostData(MediaType.image));
-  registerFallbackValue(FakeEventRef());
 }

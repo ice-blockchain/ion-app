@@ -11,8 +11,9 @@ import 'package:ion/app/features/ion_connect/model/action_source.c.dart';
 import 'package:ion/app/features/ion_connect/providers/entities_paged_data_provider.c.dart';
 import 'package:mocktail/mocktail.dart';
 
-import '../helpers/story_test_models.dart';
-import '../helpers/story_test_utils.dart';
+import '../../../../fixtures/posts/post_fixtures.dart';
+import '../../../../fixtures/stories/story_fixtures.dart';
+import '../../../../test_utils.dart';
 
 class _FakeEntitiesPagedData extends EntitiesPagedData {
   _FakeEntitiesPagedData(this._state);
@@ -28,25 +29,23 @@ ModifiablePostEntity _post({
   required MediaType mediaType,
   required DateTime createdAt,
 }) {
-  final p = buildPost(id, author: author, mediaType: mediaType);
-  when(() => p.createdAt).thenReturn(createdAt);
-  return p;
+  final post = buildPost(id, author: author, mediaType: mediaType);
+  when(() => post.createdAt).thenReturn(createdAt);
+  return post;
 }
 
-EntitiesPagedDataState _stateWith(List<ModifiablePostEntity> posts) {
-  return EntitiesPagedDataState(
-    data: Paged.data(
-      posts.toSet(),
-      pagination: const <ActionSource, PaginationParams>{},
-    ),
-  );
-}
+EntitiesPagedDataState _stateWith(List<ModifiablePostEntity> posts) => EntitiesPagedDataState(
+      data: Paged.data(
+        posts.toSet(),
+        pagination: const <ActionSource, PaginationParams>{},
+      ),
+    );
 
 ProviderContainer _containerWith(List<ModifiablePostEntity> posts) {
   const dataSources = <EntitiesDataSource>[];
   final fakeState = _stateWith(posts);
 
-  return createStoriesContainer(
+  return createContainer(
     overrides: [
       feedStoriesDataSourceProvider.overrideWith((_) => dataSources),
       entitiesPagedDataProvider(dataSources).overrideWith(
@@ -57,8 +56,6 @@ ProviderContainer _containerWith(List<ModifiablePostEntity> posts) {
 }
 
 void main() {
-  setUpAll(registerStoriesFallbacks);
-
   group('storiesProvider – transformation logic', () {
     test('filters out posts with non-image/video media', () {
       final posts = [
@@ -83,9 +80,9 @@ void main() {
       ];
 
       final container = _containerWith(posts);
-      final result = container.read(storiesProvider)!;
+      final result = container.read(storiesProvider);
 
-      final keptIds = result.expand((u) => u.stories).map((e) => e.id).toList();
+      final keptIds = result?.expand((u) => u.stories).map((e) => e.id).toList();
       expect(keptIds, unorderedEquals(['image_1', 'video_1']));
     });
 
@@ -135,10 +132,47 @@ void main() {
       ];
 
       final container = _containerWith(posts);
-      final list = container.read(storiesProvider)!;
+      final list = container.read(storiesProvider);
 
-      expect(list.length, 3);
-      expect(list.map((u) => u.pubkey).toSet(), equals({'alice', 'bob', 'carol'}));
+      expect(list?.length, 3);
+      expect(list?.map((u) => u.pubkey).toSet(), equals({'alice', 'bob', 'carol'}));
+    });
+  });
+
+  group('filteredStoriesByPubkeyProvider', () {
+    const alice = 'alice_pub';
+    const bob = 'bob_pub';
+    const carol = 'carol_pub';
+
+    final dummyStories = [
+      StoryFixtures.simpleStories(pubkey: alice, count: 0),
+      StoryFixtures.simpleStories(pubkey: bob, count: 0),
+      StoryFixtures.simpleStories(pubkey: carol, count: 0),
+    ];
+
+    test('returns a list starting with the selected user', () {
+      final container = createContainer(
+        overrides: [
+          storiesProvider.overrideWith((_) => dummyStories),
+        ],
+      );
+
+      final result = container.read(filteredStoriesByPubkeyProvider(bob));
+
+      expect(result.first.pubkey, equals(bob));
+      expect(result.length, equals(2));
+    });
+
+    test('returns an empty list if pubkey is not found', () {
+      final container = createContainer(
+        overrides: [
+          storiesProvider.overrideWith((_) => dummyStories),
+        ],
+      );
+
+      final result = container.read(filteredStoriesByPubkeyProvider('unknown_pubkey'));
+
+      expect(result, isEmpty);
     });
   });
 }

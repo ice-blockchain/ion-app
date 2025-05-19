@@ -10,18 +10,16 @@ import 'package:ion/app/features/feed/stories/hooks/use_story_progress_controlle
 import 'package:ion/app/features/feed/stories/hooks/use_story_video_playback.dart';
 import 'package:ion/app/features/feed/stories/providers/story_image_loading_provider.c.dart';
 
-import '../helpers/story_test_models.dart';
-import '../helpers/story_test_utils.dart';
-import '../helpers/story_test_video.dart';
-
-class _TestFlag {
-  static bool completed = false;
-}
+import '../../../../fixtures/stories/story_fixtures.dart';
+import '../../../../helpers/robot_test_harness.dart';
+import '../../../../mocks.dart';
+import '../../../../robots/stories/story_viewer_robot.dart';
 
 class _StoryConsumer extends HookConsumerWidget {
-  const _StoryConsumer({required this.post});
+  const _StoryConsumer({required this.post, required this.onCompleted});
 
   final ModifiablePostEntity post;
+  final VoidCallback onCompleted;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -30,10 +28,10 @@ class _StoryConsumer extends HookConsumerWidget {
       post: post,
       isCurrent: true,
       isPaused: false,
-      onCompleted: () => _TestFlag.completed = true,
+      onCompleted: onCompleted,
     );
 
-    final ctrl = ref
+    final videoController = ref
         .watch(
           videoControllerProvider(
             const VideoControllerParams(sourcePath: 'dummy', authorPubkey: 'alice'),
@@ -43,10 +41,10 @@ class _StoryConsumer extends HookConsumerWidget {
 
     useStoryVideoPlayback(
       ref: ref,
-      controller: ctrl,
+      controller: videoController,
       storyId: post.id,
       viewerPubkey: 'alice',
-      onCompleted: () => _TestFlag.completed = true,
+      onCompleted: onCompleted,
     );
 
     return const SizedBox.shrink();
@@ -55,17 +53,22 @@ class _StoryConsumer extends HookConsumerWidget {
 
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
-  registerStoriesFallbacks();
 
-  group('useStoryProgressController – golden', () {
+  group('useStoryProgressController', () {
     testWidgets('image story completes after 5 s', (tester) async {
-      final post = buildPost('img_1');
-      _TestFlag.completed = false;
+      final userStories = StoryFixtures.singleStory();
+      final firstStory = userStories.stories.first;
+      var completed = false;
 
-      await pumpWithOverrides(
-        tester,
-        child: _StoryConsumer(post: post),
-        overrides: storyViewerOverrides(post),
+      await tester.pumpWithHarness(
+        childBuilder: (ref) => _StoryConsumer(
+          post: firstStory,
+          onCompleted: () => completed = true,
+        ),
+        overrides: StoryViewerRobot.storyViewerOverrides(
+          post: firstStory,
+          pubkey: StoryFixtures.alice,
+        ),
       );
 
       final container = ProviderScope.containerOf(
@@ -74,36 +77,45 @@ void main() {
 
       container
           .read(
-            storyImageLoadStatusProvider(post.id).notifier,
+            storyImageLoadStatusProvider(firstStory.id).notifier,
           )
           .markLoaded();
 
       await tester.pumpAndSettle(const Duration(seconds: 6));
-      expect(_TestFlag.completed, isTrue);
+      expect(completed, isTrue);
     });
 
     testWidgets('video story completes when position == duration', (tester) async {
-      const dur = Duration(seconds: 3);
-      final post = buildPost('vid_1', mediaType: MediaType.video);
-      final fakeCtrl = FakeVideoController(dur);
-      _TestFlag.completed = false;
+      const duration = Duration(seconds: 3);
+      final userStories = StoryFixtures.singleStory(mediaType: MediaType.video);
+      final firstStory = userStories.stories.first;
+      final videoController = FakeVideoController(duration);
+      var completed = false;
 
-      await pumpWithOverrides(
-        tester,
-        child: _StoryConsumer(post: post),
+      await tester.pumpWithHarness(
+        childBuilder: (ref) => _StoryConsumer(
+          post: firstStory,
+          onCompleted: () => completed = true,
+        ),
         overrides: [
-          ...storyViewerOverrides(post),
+          ...StoryViewerRobot.storyViewerOverrides(
+            post: firstStory,
+            pubkey: StoryFixtures.alice,
+          ),
           videoPlayerControllerFactoryProvider('dummy')
-              .overrideWith((_) => FakeVideoFactory(fakeCtrl)),
+              .overrideWith((_) => FakeVideoFactory(videoController)),
         ],
       );
 
-      fakeCtrl
-        ..value = fakeCtrl.value.copyWith(position: dur)
+      await tester.pump();
+
+      videoController
+        ..value = videoController.value.copyWith(position: duration)
         ..notifyListeners();
 
-      await tester.pump();
-      expect(_TestFlag.completed, isTrue);
+      await tester.pump(const Duration(milliseconds: 50));
+
+      expect(completed, isTrue);
     });
   });
 }

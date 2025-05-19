@@ -6,6 +6,9 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:go_router/go_router.dart';
 import 'package:ion/app/features/core/model/media_type.dart';
 import 'package:ion/app/features/core/providers/video_player_provider.c.dart';
+import 'package:ion/app/features/feed/stories/providers/stories_provider.c.dart'
+    show filteredStoriesByPubkeyProvider;
+import 'package:ion/app/features/feed/stories/providers/stories_provider.c.dart';
 import 'package:ion/app/features/feed/stories/views/pages/story_viewer_page.dart';
 import 'package:ion/app/router/providers/go_router_provider.c.dart';
 import 'package:ion/app/services/storage/local_storage.c.dart';
@@ -29,12 +32,40 @@ void main() {
     SharedPreferencesAsyncPlatform.instance = InMemorySharedPreferencesAsync.empty();
   });
 
-  const alice = StoryFixtures.alice;
-  final aliceStories = StoryFixtures.singleStory(
+  const myPubkey = StoryFixtures.alice;
+  const otherPubkey = StoryFixtures.bob;
+
+  final myStories = StoryFixtures.simpleStories(
+    pubkey: myPubkey,
+    count: 2,
+  );
+  final otherStories = StoryFixtures.simpleStories(
+    pubkey: otherPubkey,
+    count: 1,
+  );
+
+  group('Own stories viewer', () {
+    testWidgets('horizontal swipe does not switch to another user', (tester) async {
+      final robot = await StoryViewerRobot.launch(
+        tester,
+        stories: [myStories, otherStories],
+        viewerPubkey: myPubkey,
+        extraOverrides: [
+          filteredStoriesByPubkeyProvider(myPubkey).overrideWith((_) => [myStories]),
+        ],
+      );
+
+      robot.expectUserIndex(0);
+      await robot.swipeToNextUser();
+      robot.expectUserIndex(0);
+    });
+  });
+
+  const videoDuration = Duration(seconds: 3);
+  final myStoriesWithVideo = StoryFixtures.singleStory(
     mediaType: MediaType.video,
   );
 
-  const videoDuration = Duration(seconds: 3);
   final fakeCtrl = FakeVideoController(videoDuration);
   VideoPlayerPlatform.instance = FakeVideoPlayerPlatform();
 
@@ -48,7 +79,7 @@ void main() {
         GoRoute(path: '/', builder: (_, __) => const Scaffold()),
         GoRoute(
           path: '/viewer',
-          builder: (_, __) => const StoryViewerPage(pubkey: alice),
+          builder: (_, __) => const StoryViewerPage(pubkey: myPubkey),
         ),
       ],
       initialLocation: '/',
@@ -56,15 +87,15 @@ void main() {
 
     await StoryViewerRobot.launch(
       tester,
-      stories: [aliceStories],
-      viewerPubkey: alice,
+      stories: [myStoriesWithVideo],
+      viewerPubkey: myPubkey,
       autoPush: true,
       extraOverrides: [
         videoPlayerControllerFactoryProvider('dummy')
             .overrideWith((_) => FakeVideoFactory(fakeCtrl)),
         localStorageProvider.overrideWithValue(mockStorage),
-        userPreferencesServiceProvider(identityKeyName: alice)
-            .overrideWith((_) => UserPreferencesService(alice, mockStorage)),
+        userPreferencesServiceProvider(identityKeyName: myPubkey)
+            .overrideWith((_) => UserPreferencesService(myPubkey, mockStorage)),
         goRouterProvider.overrideWithValue(router),
       ],
     );

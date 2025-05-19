@@ -5,14 +5,14 @@ import 'package:ion/app/features/feed/stories/providers/emoji_reaction_provider.
 import 'package:ion/app/features/feed/stories/providers/story_image_loading_provider.c.dart';
 import 'package:ion/app/features/feed/stories/providers/story_pause_provider.c.dart';
 
-import '../helpers/story_test_utils.dart';
+import '../../../../test_utils.dart';
 
 void main() {
   group('StoryImageLoadStatus', () {
     const storyId = 'story_123';
 
     test('initial state is false, markLoaded() switches to true', () {
-      final container = createStoriesContainer();
+      final container = createContainer();
 
       expect(container.read(storyImageLoadStatusProvider(storyId)), isFalse);
 
@@ -24,7 +24,7 @@ void main() {
 
   group('StoryPause / StoryMenu controllers', () {
     test('pause flag toggles via setter', () {
-      final container = createStoriesContainer();
+      final container = createContainer();
 
       expect(container.read(storyPauseControllerProvider), isFalse);
 
@@ -33,7 +33,7 @@ void main() {
     });
 
     test('menuOpen flag toggles via setter', () {
-      final container = createStoriesContainer();
+      final container = createContainer();
 
       expect(container.read(storyMenuControllerProvider), isFalse);
 
@@ -44,7 +44,7 @@ void main() {
 
   group('EmojiReactionsController', () {
     test('showReaction() sets emoji and notification flag', () {
-      final container = createStoriesContainer();
+      final container = createContainer();
 
       container.read(emojiReactionsControllerProvider.notifier).showReaction('😊');
 
@@ -54,7 +54,7 @@ void main() {
     });
 
     test('hideNotification() resets both fields', () {
-      final container = createStoriesContainer();
+      final container = createContainer();
 
       container.read(emojiReactionsControllerProvider.notifier).showReaction('🔥');
       container.read(emojiReactionsControllerProvider.notifier).hideNotification();
