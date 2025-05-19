@@ -24,13 +24,13 @@ class MockSelectedWalletIdNotifier extends Notifier<String?>
 class MockWalletsDataNotifier extends AsyncNotifier<List<WalletViewData>>
     with Mock
     implements WalletViewsDataNotifier {
-  MockWalletsDataNotifier(this.data);
+  MockWalletsDataNotifier(this._data);
 
-  final List<WalletViewData> data;
+  final List<WalletViewData> _data;
 
   @override
   Future<List<WalletViewData>> build() async {
-    return data;
+    return _data;
   }
 }
 

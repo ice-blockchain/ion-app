@@ -7,22 +7,35 @@ import 'package:ion/app/features/feed/stories/providers/story_viewing_provider.c
 import '../base_robot.dart';
 
 mixin StoryStateMixin on BaseRobot {
-  /// Verifies the current viewer state matches expected indices
+  late final String viewerPubkey;
+  late final ProviderContainer container;
+
+  /// Initializes the story state mixin
+  /// Stores viewerPubkey and ProviderContainer for state checking
+  void initStoryState({
+    required String pubkey,
+    required ProviderContainer providerContainer,
+  }) {
+    viewerPubkey = pubkey;
+    container = providerContainer;
+  }
+
   void expectViewerState({
     required int userIndex,
     required int storyIndex,
   }) {
-    throw UnimplementedError('expectViewerState must be implemented by subclasses');
+    _verifyViewerState(
+      userIndex: userIndex,
+      storyIndex: storyIndex,
+    );
   }
 
-  /// Internal method for actual state verification
-  void verifyViewerState({
-    required String viewerPubkey,
-    required ProviderContainer container,
+  void _verifyViewerState({
     required int userIndex,
     required int storyIndex,
   }) {
     final state = container.read(storyViewingControllerProvider(viewerPubkey));
+
     expect(state.currentUserIndex, userIndex, reason: 'currentUserIndex');
     expect(state.currentStoryIndex, storyIndex, reason: 'currentStoryIndex');
   }

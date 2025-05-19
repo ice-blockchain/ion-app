@@ -5,10 +5,10 @@ import 'package:flutter_test/flutter_test.dart';
 
 import '../../../../fixtures/posts/post_fixtures.dart';
 import '../../../../fixtures/stories/story_fixtures.dart';
+import '../../../../helpers/robot_test_harness.dart';
 import '../../../../robots/stories/image_progress_robot.dart';
 import '../../../../robots/stories/story_progress_bar_robot.dart';
 import '../../../../robots/stories/story_viewer_robot.dart';
-import '../../../../test_utils.dart';
 
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
@@ -73,9 +73,8 @@ void main() {
         final post = buildPost('img_keyboard');
         final robot = ImageProgressRobot(tester, post: post);
 
-        await pumpWithOverrides(
-          tester,
-          child: robot.buildImageProgressWidget(),
+        await tester.pumpWithHarness(
+          childBuilder: (ref) => robot.buildImageProgressWidget(),
           overrides: StoryViewerRobot.storyViewerOverrides(
             post: post,
             pubkey: StoryFixtures.alice,

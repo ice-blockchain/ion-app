@@ -122,7 +122,6 @@ void main() {
           UserStories(pubkey: viewerPubkey, stories: [lastVideoPost]),
         ],
         viewerPubkey: viewerPubkey,
-        initialLocation: '/',
         autoPush: true,
         extraOverrides: [
           videoPlayerControllerFactoryProvider('dummy')

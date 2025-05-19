@@ -76,7 +76,7 @@ class ImageProgressRobot extends BaseRobot with ProviderScopeMixin {
       );
 
   Future<void> attach() async {
-    await waitFor(() => tester.any(_finder) && _controllerReady);
+    await waitForCondition(() => tester.any(_finder) && _controllerReady);
   }
 
   void markImageLoaded() =>

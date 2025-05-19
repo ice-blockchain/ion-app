@@ -8,6 +8,7 @@ import 'package:ion/app/features/feed/data/models/entities/modifiable_post_data.
 import 'package:ion/app/features/feed/stories/hooks/use_story_video_playback.dart';
 import 'package:ion/app/features/feed/stories/providers/story_viewing_provider.c.dart';
 
+import '../../helpers/robot_test_harness.dart';
 import '../../mocks.dart';
 import '../base_robot.dart';
 import '../mixins/provider_scope_mixin.dart';
@@ -45,38 +46,54 @@ class VideoPlaybackRobot extends BaseRobot with ProviderScopeMixin, StoryStateMi
   VideoPlaybackRobot(
     super.tester, {
     required this.post,
-    required this.viewerPubkey,
     required Duration duration,
   }) : _fake = FakeVideoController(duration);
 
   final ModifiablePostEntity post;
-  final String viewerPubkey;
   final FakeVideoController _fake;
 
-  Finder get _finder => find.byType(_TestVideoPlayback);
+  static Future<VideoPlaybackRobot> launch(
+    WidgetTester tester, {
+    required ModifiablePostEntity post,
+    required String viewerPubkey,
+    required Duration duration,
+  }) async {
+    final robot = VideoPlaybackRobot(
+      tester,
+      post: post,
+      duration: duration,
+    );
 
-  ProviderContainer get container => getContainerFromFinder(_finder);
+    await tester.pumpWidget(
+      RobotTestHarness(
+        childBuilder: (_) => _TestVideoPlayback(
+          post: post,
+          viewerPubkey: viewerPubkey,
+        ),
+        overrides: [
+          robot.videoOverride,
+        ],
+      ),
+    );
+
+    await tester.pumpAndSettle();
+
+    robot.initStoryState(
+      pubkey: viewerPubkey,
+      providerContainer: robot.getContainerFromFinder(find.byType(_TestVideoPlayback)),
+    );
+
+    return robot;
+  }
 
   Override get videoOverride => videoPlayerControllerFactoryProvider('dummy').overrideWith(
         (_) => FakeVideoFactory(_fake),
       );
-
-  Widget buildVideoPlaybackWidget() => _TestVideoPlayback(post: post, viewerPubkey: viewerPubkey);
 
   Future<void> completeVideo() async {
     _fake
       ..value = _fake.value.copyWith(position: _fake.value.duration)
       ..notifyListeners();
     await tester.pump();
-  }
-
-  @override
-  void expectViewerState({required int userIndex, required int storyIndex}) {
-    verifyViewerState(
-      viewerPubkey: viewerPubkey,
-      container: container,
-      userIndex: userIndex,
-      storyIndex: storyIndex,
-    );
   }
 }

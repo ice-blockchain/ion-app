@@ -58,7 +58,6 @@ void main() {
       tester,
       stories: [aliceStories],
       viewerPubkey: alice,
-      initialLocation: '/',
       autoPush: true,
       extraOverrides: [
         videoPlayerControllerFactoryProvider('dummy')

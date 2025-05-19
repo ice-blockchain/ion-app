@@ -21,17 +21,13 @@ class StoryGestureRobot extends BaseRobot with ProviderScopeMixin {
   ProviderContainer get _container => getContainerFromFinder(_handler);
 
   Widget buildGestureWidget() {
-    return ProviderScope(
-      child: MaterialApp(
-        home: Scaffold(
-          body: KeyboardVisibilityProvider(
-            child: StoryGestureHandler(
-              onTapLeft: _onLeftTap,
-              onTapRight: _onRightTap,
-              child: const SizedBox.expand(
-                child: ColoredBox(color: Colors.white),
-              ),
-            ),
+    return Scaffold(
+      body: KeyboardVisibilityProvider(
+        child: StoryGestureHandler(
+          onTapLeft: _onLeftTap,
+          onTapRight: _onRightTap,
+          child: const SizedBox.expand(
+            child: ColoredBox(color: Colors.white),
           ),
         ),
       ),
@@ -52,15 +48,11 @@ class StoryGestureRobot extends BaseRobot with ProviderScopeMixin {
   }
 
   Future<void> tapLeft() async {
-    final size = tester.getSize(_handler);
-    await tester.tapAt(Offset(size.width * .25, size.height * .5));
-    await tester.pump();
+    await tapRelative(_handler, dx: 0.25, dy: 0.5);
   }
 
   Future<void> tapRight() async {
-    final size = tester.getSize(_handler);
-    await tester.tapAt(Offset(size.width * .75, size.height * .5));
-    await tester.pump();
+    await tapRelative(_handler, dx: 0.75, dy: 0.5);
   }
 
   Future<void> longPressCenter({

@@ -10,13 +10,15 @@ import 'package:ion/app/features/feed/stories/providers/story_viewing_provider.c
 import 'package:ion/app/features/feed/stories/views/components/story_viewer/components/core/core.dart';
 import 'package:ion/app/utils/future.dart';
 
+const Key storiesSwiperKey = Key('stories_swiper');
+
 class StoriesSwiper extends HookConsumerWidget {
   const StoriesSwiper({
     required this.userStories,
     required this.currentUserIndex,
     required this.pubkey,
-    super.key,
-  });
+    Key? key,
+  }) : super(key: key ?? storiesSwiperKey);
 
   final List<UserStories> userStories;
   final int currentUserIndex;

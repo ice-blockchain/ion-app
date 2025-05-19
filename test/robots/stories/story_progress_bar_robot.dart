@@ -3,24 +3,18 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/features/feed/stories/data/models/story.c.dart';
 import 'package:ion/app/features/feed/stories/providers/stories_provider.c.dart';
 import 'package:ion/app/features/feed/stories/providers/story_viewing_provider.c.dart';
 import 'package:ion/app/features/feed/stories/views/components/story_viewer/components/components.dart';
 
-import '../../test_utils.dart';
+import '../../helpers/robot_test_harness.dart';
 import '../base_robot.dart';
 import '../mixins/provider_scope_mixin.dart';
 import '../mixins/story_state_mixin.dart';
 
 class StoryProgressBarRobot extends BaseRobot with ProviderScopeMixin, StoryStateMixin {
-  StoryProgressBarRobot(
-    super.tester, {
-    required this.viewerPubkey,
-  });
-
-  final String viewerPubkey;
+  StoryProgressBarRobot(super.tester);
 
   static Future<StoryProgressBarRobot> launch(
     WidgetTester tester, {
@@ -29,27 +23,33 @@ class StoryProgressBarRobot extends BaseRobot with ProviderScopeMixin, StoryStat
   }) async {
     await ScreenUtil.ensureScreenSize();
 
-    await pumpWithOverrides(
-      tester,
-      child: Scaffold(
-        body: StoryProgressBarContainer(pubkey: viewerPubkey),
+    final robot = StoryProgressBarRobot(tester);
+
+    await tester.pumpWidget(
+      RobotTestHarness(
+        childBuilder: (_) => Scaffold(
+          body: StoryProgressBarContainer(pubkey: viewerPubkey),
+        ),
+        overrides: [
+          storiesProvider.overrideWith((_) => stories),
+          filteredStoriesByPubkeyProvider(viewerPubkey).overrideWith((_) => stories),
+        ],
       ),
-      overrides: [
-        storiesProvider.overrideWith((_) => stories),
-        filteredStoriesByPubkeyProvider(viewerPubkey).overrideWith((_) => stories),
-      ],
     );
 
-    return StoryProgressBarRobot(tester, viewerPubkey: viewerPubkey);
+    await tester.pumpAndSettle();
+
+    robot.initStoryState(
+      pubkey: viewerPubkey,
+      providerContainer: robot.getContainerFromFinder(find.byType(StoryProgressBarContainer)),
+    );
+
+    return robot;
   }
 
   Finder get _segmentFinder => find.byType(StoryProgressSegment);
-  Finder get _containerFinder => find.byType(StoryProgressBarContainer);
 
-  ProviderContainer get _container => getContainerFromFinder(_containerFinder);
-
-  void advance() =>
-      _container.read(storyViewingControllerProvider(viewerPubkey).notifier).advance();
+  void advance() => container.read(storyViewingControllerProvider(viewerPubkey).notifier).advance();
 
   List<StoryProgressSegment> get segments =>
       tester.widgetList<StoryProgressSegment>(_segmentFinder).toList();
@@ -68,19 +68,6 @@ class StoryProgressBarRobot extends BaseRobot with ProviderScopeMixin, StoryStat
       segment.isPreviousStory,
       isPrevious,
       reason: 'segments[$index].isPreviousStory',
-    );
-  }
-
-  @override
-  void expectViewerState({
-    required int userIndex,  
-    required int storyIndex,
-  }) {
-    verifyViewerState(
-      viewerPubkey: viewerPubkey,
-      container: _container,
-      userIndex: userIndex,
-      storyIndex: storyIndex,
     );
   }
 }

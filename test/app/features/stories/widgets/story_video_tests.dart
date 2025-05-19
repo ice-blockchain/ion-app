@@ -89,7 +89,6 @@ void main() {
       tester,
       stories: [myStoriesWithVideo],
       viewerPubkey: myPubkey,
-      initialLocation: '/',
       autoPush: true,
       extraOverrides: [
         videoPlayerControllerFactoryProvider('dummy')

@@ -11,9 +11,9 @@ import 'package:ion/app/features/feed/stories/hooks/use_story_video_playback.dar
 import 'package:ion/app/features/feed/stories/providers/story_image_loading_provider.c.dart';
 
 import '../../../../fixtures/stories/story_fixtures.dart';
+import '../../../../helpers/robot_test_harness.dart';
 import '../../../../mocks.dart';
 import '../../../../robots/stories/story_viewer_robot.dart';
-import '../../../../test_utils.dart';
 
 class _StoryConsumer extends HookConsumerWidget {
   const _StoryConsumer({required this.post, required this.onCompleted});
@@ -60,9 +60,8 @@ void main() {
       final firstStory = userStories.stories.first;
       var completed = false;
 
-      await pumpWithOverrides(
-        tester,
-        child: _StoryConsumer(
+      await tester.pumpWithHarness(
+        childBuilder: (ref) => _StoryConsumer(
           post: firstStory,
           onCompleted: () => completed = true,
         ),
@@ -93,9 +92,8 @@ void main() {
       final videoController = FakeVideoController(duration);
       var completed = false;
 
-      await pumpWithOverrides(
-        tester,
-        child: _StoryConsumer(
+      await tester.pumpWithHarness(
+        childBuilder: (ref) => _StoryConsumer(
           post: firstStory,
           onCompleted: () => completed = true,
         ),
@@ -109,11 +107,14 @@ void main() {
         ],
       );
 
+      await tester.pump();
+
       videoController
         ..value = videoController.value.copyWith(position: duration)
         ..notifyListeners();
 
-      await tester.pump();
+      await tester.pump(const Duration(milliseconds: 50));
+
       expect(completed, isTrue);
     });
   });

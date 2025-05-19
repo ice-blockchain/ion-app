@@ -6,17 +6,23 @@ import 'package:flutter_keyboard_visibility/flutter_keyboard_visibility.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/features/feed/stories/providers/story_pause_provider.c.dart';
 
+const Key storyGestureHandlerKey = Key('story_gesture_handler');
+
+Key storyGestureKeyFor(String pubkey) => Key('story_gesture_$pubkey');
+
 class StoryGestureHandler extends HookConsumerWidget {
   const StoryGestureHandler({
     required this.child,
     required this.onTapLeft,
     required this.onTapRight,
+    this.viewerPubkey,
     super.key,
   });
 
   final Widget child;
   final VoidCallback onTapLeft;
   final VoidCallback onTapRight;
+  final String? viewerPubkey;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {

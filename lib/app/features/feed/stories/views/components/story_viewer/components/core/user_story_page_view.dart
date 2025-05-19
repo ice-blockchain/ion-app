@@ -36,7 +36,8 @@ class UserStoryPageView extends ConsumerWidget {
 
     return KeyboardVisibilityProvider(
       child: StoryGestureHandler(
-        key: ValueKey('story_gesture_$pubkey'),
+        key: storyGestureKeyFor(pubkey),
+        viewerPubkey: pubkey,
         onTapLeft: () => storyState.currentStoryIndex > 0 ? onPreviousStory() : onPreviousUser(),
         onTapRight: () => storyState.currentStoryIndex < userStory.stories.length - 1
             ? onNextStory()
