@@ -17,7 +17,6 @@ class Coin with _$Coin {
     required double priceUSD,
     required String symbol,
     required String symbolGroup,
-    @Default(false) bool native,
     @SyncFrequencyConverter() required Duration syncFrequency,
     @Default(false) bool? native,
     @Default(false) bool? prioritized,

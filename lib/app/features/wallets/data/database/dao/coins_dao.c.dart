@@ -138,7 +138,7 @@ class CoinsDao extends DatabaseAccessor<WalletsDatabase> with _$CoinsDaoMixin {
     }
 
     if (isNative != null) {
-      query.where(coinsTable.isNative.equals(isNative));
+      query.where(coinsTable.native.equals(isNative));
     }
 
     return query.map(_toCoinData).get();

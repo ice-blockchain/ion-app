@@ -16,7 +16,6 @@ _$CoinImpl _$$CoinImplFromJson(Map<String, dynamic> json) => _$CoinImpl(
       priceUSD: (json['priceUSD'] as num).toDouble(),
       symbol: json['symbol'] as String,
       symbolGroup: json['symbolGroup'] as String,
-      native: json['native'] as bool? ?? false,
       syncFrequency: const SyncFrequencyConverter()
           .fromJson((json['syncFrequency'] as num).toInt()),
       native: json['native'] as bool? ?? false,
@@ -34,7 +33,6 @@ Map<String, dynamic> _$$CoinImplToJson(_$CoinImpl instance) =>
       'priceUSD': instance.priceUSD,
       'symbol': instance.symbol,
       'symbolGroup': instance.symbolGroup,
-      'native': instance.native,
       'syncFrequency':
           const SyncFrequencyConverter().toJson(instance.syncFrequency),
       'native': instance.native,
