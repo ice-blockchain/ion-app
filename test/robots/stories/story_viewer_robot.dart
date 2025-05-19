@@ -7,7 +7,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/features/auth/providers/auth_provider.c.dart';
-import 'package:ion/app/features/core/views/components/content_scaler.dart';
+import 'package:ion/app/features/feed/data/models/entities/modifiable_post_data.c.dart';
 import 'package:ion/app/features/feed/stories/data/models/story.c.dart';
 import 'package:ion/app/features/feed/stories/providers/stories_provider.c.dart';
 import 'package:ion/app/features/feed/stories/providers/story_viewing_provider.c.dart';
@@ -20,6 +20,7 @@ import 'package:ion/generated/app_localizations.dart';
 import 'package:mocktail/mocktail.dart';
 
 import '../../mocks.dart';
+import '../../test_utils.dart';
 import '../base_robot.dart';
 import '../mixins/provider_scope_mixin.dart';
 import '../mixins/story_state_mixin.dart';
@@ -84,26 +85,21 @@ class StoryViewerRobot extends BaseRobot with ProviderScopeMixin, StoryStateMixi
       initialLocation: initialLocation,
     );
 
-    await tester.pumpWidget(
-      ProviderScope(
-        overrides: [
-          storiesProvider.overrideWith((_) => stories),
-          currentIdentityKeyNameSelectorProvider.overrideWith((_) => identity),
-          localStorageProvider.overrideWithValue(mockStorage),
-          userPreferencesServiceProvider(identityKeyName: identity)
-              .overrideWith((_) => UserPreferencesService(identity, mockStorage)),
-          goRouterProvider.overrideWith((_) => router),
-          ...extraOverrides,
-        ],
-        child: ContentScaler(
-          child: MaterialApp.router(
-            routerConfig: router,
-            localizationsDelegates: I18n.localizationsDelegates,
-            supportedLocales: I18n.supportedLocales,
-            locale: const Locale('en'),
-          ),
-        ),
-      ),
+    await pumpWithOverrides(
+      tester,
+      router: router,
+      overrides: [
+        storiesProvider.overrideWith((_) => stories),
+        currentIdentityKeyNameSelectorProvider.overrideWith((_) => identity),
+        localStorageProvider.overrideWithValue(mockStorage),
+        userPreferencesServiceProvider(identityKeyName: identity)
+            .overrideWith((_) => UserPreferencesService(identity, mockStorage)),
+        goRouterProvider.overrideWith((_) => router),
+        ...extraOverrides,
+      ],
+      localizationsDelegates: I18n.localizationsDelegates,
+      supportedLocales: I18n.supportedLocales,
+      locale: const Locale('en'),
     );
 
     await tester.pumpAndSettle();
@@ -190,5 +186,16 @@ class StoryViewerRobot extends BaseRobot with ProviderScopeMixin, StoryStateMixi
       userIndex: userIndex,
       storyIndex: storyIndex,
     );
+  }
+
+  static List<Override> storyViewerOverrides({
+    required ModifiablePostEntity post,
+    required String pubkey,
+  }) {
+    final stories = UserStories(pubkey: pubkey, stories: [post]);
+    return [
+      storiesProvider.overrideWith((_) => [stories]),
+      filteredStoriesByPubkeyProvider(pubkey).overrideWith((_) => [stories]),
+    ];
   }
 }

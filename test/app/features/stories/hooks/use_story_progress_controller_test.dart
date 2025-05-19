@@ -12,7 +12,8 @@ import 'package:ion/app/features/feed/stories/providers/story_image_loading_prov
 
 import '../../../../fixtures/stories/story_fixtures.dart';
 import '../../../../mocks.dart';
-import '../helpers/story_test_utils.dart';
+import '../../../../robots/stories/story_viewer_robot.dart';
+import '../../../../test_utils.dart';
 
 class _StoryConsumer extends HookConsumerWidget {
   const _StoryConsumer({required this.post, required this.onCompleted});
@@ -65,7 +66,10 @@ void main() {
           post: firstStory,
           onCompleted: () => completed = true,
         ),
-        overrides: storyViewerOverrides(firstStory),
+        overrides: StoryViewerRobot.storyViewerOverrides(
+          post: firstStory,
+          pubkey: StoryFixtures.alice,
+        ),
       );
 
       final container = ProviderScope.containerOf(
@@ -96,7 +100,10 @@ void main() {
           onCompleted: () => completed = true,
         ),
         overrides: [
-          ...storyViewerOverrides(firstStory),
+          ...StoryViewerRobot.storyViewerOverrides(
+            post: firstStory,
+            pubkey: StoryFixtures.alice,
+          ),
           videoPlayerControllerFactoryProvider('dummy')
               .overrideWith((_) => FakeVideoFactory(videoController)),
         ],

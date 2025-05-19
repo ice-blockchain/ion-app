@@ -7,7 +7,8 @@ import '../../../../fixtures/posts/post_fixtures.dart';
 import '../../../../fixtures/stories/story_fixtures.dart';
 import '../../../../robots/stories/image_progress_robot.dart';
 import '../../../../robots/stories/story_progress_bar_robot.dart';
-import '../helpers/story_test_utils.dart';
+import '../../../../robots/stories/story_viewer_robot.dart';
+import '../../../../test_utils.dart';
 
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
@@ -75,7 +76,10 @@ void main() {
         await pumpWithOverrides(
           tester,
           child: robot.buildImageProgressWidget(),
-          overrides: storyViewerOverrides(post),
+          overrides: StoryViewerRobot.storyViewerOverrides(
+            post: post,
+            pubkey: StoryFixtures.alice,
+          ),
         );
         await robot.attach();
 
