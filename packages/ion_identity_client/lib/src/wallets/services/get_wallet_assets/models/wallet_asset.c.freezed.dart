@@ -44,42 +44,60 @@ WalletAsset _$WalletAssetFromJson(Map<String, dynamic> json) {
 mixin _$WalletAsset {
   String get symbol => throw _privateConstructorUsedError;
   int get decimals => throw _privateConstructorUsedError;
+  @StringOrIntConverter()
   String get balance => throw _privateConstructorUsedError;
   String get kind => throw _privateConstructorUsedError;
   String? get name => throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
-    required TResult Function(String symbol, int decimals, String balance,
-            String kind, bool? verified, String? name)
+    required TResult Function(
+            String symbol,
+            int decimals,
+            @StringOrIntConverter() String balance,
+            String kind,
+            bool? verified,
+            String? name)
         native,
-    required TResult Function(String symbol, int decimals, String balance,
-            String kind, bool? verified, String? contract, String? name)
+    required TResult Function(
+            String symbol,
+            int decimals,
+            @StringOrIntConverter() String balance,
+            String kind,
+            bool? verified,
+            String? contract,
+            String? name)
         erc20,
-    required TResult Function(String assetId, String symbol, int decimals,
-            bool verified, String balance, String kind, String? name)
+    required TResult Function(
+            String assetId,
+            String symbol,
+            int decimals,
+            bool verified,
+            @StringOrIntConverter() String balance,
+            String kind,
+            String? name)
         asa,
     required TResult Function(String mint, String symbol, int decimals,
-            String balance, String kind, String? name)
+            @StringOrIntConverter() String balance, String kind, String? name)
         spl,
     required TResult Function(String mint, String symbol, int decimals,
-            String balance, String kind, String? name)
+            @StringOrIntConverter() String balance, String kind, String? name)
         spl2022,
     required TResult Function(String mint, String symbol, int decimals,
-            String balance, String kind, String? name)
+            @StringOrIntConverter() String balance, String kind, String? name)
         sep41,
     required TResult Function(String mint, String symbol, int decimals,
-            String balance, String kind, String? name)
+            @StringOrIntConverter() String balance, String kind, String? name)
         tep74,
     required TResult Function(String tokenId, String symbol, int decimals,
-            String balance, String kind, String? name)
+            @StringOrIntConverter() String balance, String kind, String? name)
         trc10,
     required TResult Function(String contract, String symbol, int decimals,
-            String balance, String kind, String? name)
+            @StringOrIntConverter() String balance, String kind, String? name)
         trc20,
     required TResult Function(
             String symbol,
             int decimals,
-            String balance,
+            @StringOrIntConverter() String balance,
             String kind,
             String? contract,
             String? name,
@@ -92,37 +110,54 @@ mixin _$WalletAsset {
       throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
-    TResult? Function(String symbol, int decimals, String balance, String kind,
-            bool? verified, String? name)?
+    TResult? Function(
+            String symbol,
+            int decimals,
+            @StringOrIntConverter() String balance,
+            String kind,
+            bool? verified,
+            String? name)?
         native,
-    TResult? Function(String symbol, int decimals, String balance, String kind,
-            bool? verified, String? contract, String? name)?
+    TResult? Function(
+            String symbol,
+            int decimals,
+            @StringOrIntConverter() String balance,
+            String kind,
+            bool? verified,
+            String? contract,
+            String? name)?
         erc20,
-    TResult? Function(String assetId, String symbol, int decimals,
-            bool verified, String balance, String kind, String? name)?
+    TResult? Function(
+            String assetId,
+            String symbol,
+            int decimals,
+            bool verified,
+            @StringOrIntConverter() String balance,
+            String kind,
+            String? name)?
         asa,
-    TResult? Function(String mint, String symbol, int decimals, String balance,
-            String kind, String? name)?
+    TResult? Function(String mint, String symbol, int decimals,
+            @StringOrIntConverter() String balance, String kind, String? name)?
         spl,
-    TResult? Function(String mint, String symbol, int decimals, String balance,
-            String kind, String? name)?
+    TResult? Function(String mint, String symbol, int decimals,
+            @StringOrIntConverter() String balance, String kind, String? name)?
         spl2022,
-    TResult? Function(String mint, String symbol, int decimals, String balance,
-            String kind, String? name)?
+    TResult? Function(String mint, String symbol, int decimals,
+            @StringOrIntConverter() String balance, String kind, String? name)?
         sep41,
-    TResult? Function(String mint, String symbol, int decimals, String balance,
-            String kind, String? name)?
+    TResult? Function(String mint, String symbol, int decimals,
+            @StringOrIntConverter() String balance, String kind, String? name)?
         tep74,
     TResult? Function(String tokenId, String symbol, int decimals,
-            String balance, String kind, String? name)?
+            @StringOrIntConverter() String balance, String kind, String? name)?
         trc10,
     TResult? Function(String contract, String symbol, int decimals,
-            String balance, String kind, String? name)?
+            @StringOrIntConverter() String balance, String kind, String? name)?
         trc20,
     TResult? Function(
             String symbol,
             int decimals,
-            String balance,
+            @StringOrIntConverter() String balance,
             String kind,
             String? contract,
             String? name,
@@ -135,37 +170,48 @@ mixin _$WalletAsset {
       throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
-    TResult Function(String symbol, int decimals, String balance, String kind,
-            bool? verified, String? name)?
+    TResult Function(
+            String symbol,
+            int decimals,
+            @StringOrIntConverter() String balance,
+            String kind,
+            bool? verified,
+            String? name)?
         native,
-    TResult Function(String symbol, int decimals, String balance, String kind,
-            bool? verified, String? contract, String? name)?
+    TResult Function(
+            String symbol,
+            int decimals,
+            @StringOrIntConverter() String balance,
+            String kind,
+            bool? verified,
+            String? contract,
+            String? name)?
         erc20,
     TResult Function(String assetId, String symbol, int decimals, bool verified,
-            String balance, String kind, String? name)?
+            @StringOrIntConverter() String balance, String kind, String? name)?
         asa,
-    TResult Function(String mint, String symbol, int decimals, String balance,
-            String kind, String? name)?
+    TResult Function(String mint, String symbol, int decimals,
+            @StringOrIntConverter() String balance, String kind, String? name)?
         spl,
-    TResult Function(String mint, String symbol, int decimals, String balance,
-            String kind, String? name)?
+    TResult Function(String mint, String symbol, int decimals,
+            @StringOrIntConverter() String balance, String kind, String? name)?
         spl2022,
-    TResult Function(String mint, String symbol, int decimals, String balance,
-            String kind, String? name)?
+    TResult Function(String mint, String symbol, int decimals,
+            @StringOrIntConverter() String balance, String kind, String? name)?
         sep41,
-    TResult Function(String mint, String symbol, int decimals, String balance,
-            String kind, String? name)?
+    TResult Function(String mint, String symbol, int decimals,
+            @StringOrIntConverter() String balance, String kind, String? name)?
         tep74,
     TResult Function(String tokenId, String symbol, int decimals,
-            String balance, String kind, String? name)?
+            @StringOrIntConverter() String balance, String kind, String? name)?
         trc10,
     TResult Function(String contract, String symbol, int decimals,
-            String balance, String kind, String? name)?
+            @StringOrIntConverter() String balance, String kind, String? name)?
         trc20,
     TResult Function(
             String symbol,
             int decimals,
-            String balance,
+            @StringOrIntConverter() String balance,
             String kind,
             String? contract,
             String? name,
@@ -238,7 +284,11 @@ abstract class $WalletAssetCopyWith<$Res> {
       _$WalletAssetCopyWithImpl<$Res, WalletAsset>;
   @useResult
   $Res call(
-      {String symbol, int decimals, String balance, String kind, String? name});
+      {String symbol,
+      int decimals,
+      @StringOrIntConverter() String balance,
+      String kind,
+      String? name});
 }
 
 /// @nodoc
@@ -298,7 +348,7 @@ abstract class _$$WalletAssetNativeImplCopyWith<$Res>
   $Res call(
       {String symbol,
       int decimals,
-      String balance,
+      @StringOrIntConverter() String balance,
       String kind,
       bool? verified,
       String? name});
@@ -359,7 +409,7 @@ class _$WalletAssetNativeImpl extends _WalletAssetNative {
   const _$WalletAssetNativeImpl(
       {required this.symbol,
       required this.decimals,
-      required this.balance,
+      @StringOrIntConverter() required this.balance,
       required this.kind,
       this.verified,
       this.name})
@@ -373,6 +423,7 @@ class _$WalletAssetNativeImpl extends _WalletAssetNative {
   @override
   final int decimals;
   @override
+  @StringOrIntConverter()
   final String balance;
   @override
   final String kind;
@@ -418,37 +469,54 @@ class _$WalletAssetNativeImpl extends _WalletAssetNative {
   @override
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
-    required TResult Function(String symbol, int decimals, String balance,
-            String kind, bool? verified, String? name)
+    required TResult Function(
+            String symbol,
+            int decimals,
+            @StringOrIntConverter() String balance,
+            String kind,
+            bool? verified,
+            String? name)
         native,
-    required TResult Function(String symbol, int decimals, String balance,
-            String kind, bool? verified, String? contract, String? name)
+    required TResult Function(
+            String symbol,
+            int decimals,
+            @StringOrIntConverter() String balance,
+            String kind,
+            bool? verified,
+            String? contract,
+            String? name)
         erc20,
-    required TResult Function(String assetId, String symbol, int decimals,
-            bool verified, String balance, String kind, String? name)
+    required TResult Function(
+            String assetId,
+            String symbol,
+            int decimals,
+            bool verified,
+            @StringOrIntConverter() String balance,
+            String kind,
+            String? name)
         asa,
     required TResult Function(String mint, String symbol, int decimals,
-            String balance, String kind, String? name)
+            @StringOrIntConverter() String balance, String kind, String? name)
         spl,
     required TResult Function(String mint, String symbol, int decimals,
-            String balance, String kind, String? name)
+            @StringOrIntConverter() String balance, String kind, String? name)
         spl2022,
     required TResult Function(String mint, String symbol, int decimals,
-            String balance, String kind, String? name)
+            @StringOrIntConverter() String balance, String kind, String? name)
         sep41,
     required TResult Function(String mint, String symbol, int decimals,
-            String balance, String kind, String? name)
+            @StringOrIntConverter() String balance, String kind, String? name)
         tep74,
     required TResult Function(String tokenId, String symbol, int decimals,
-            String balance, String kind, String? name)
+            @StringOrIntConverter() String balance, String kind, String? name)
         trc10,
     required TResult Function(String contract, String symbol, int decimals,
-            String balance, String kind, String? name)
+            @StringOrIntConverter() String balance, String kind, String? name)
         trc20,
     required TResult Function(
             String symbol,
             int decimals,
-            String balance,
+            @StringOrIntConverter() String balance,
             String kind,
             String? contract,
             String? name,
@@ -464,37 +532,54 @@ class _$WalletAssetNativeImpl extends _WalletAssetNative {
   @override
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
-    TResult? Function(String symbol, int decimals, String balance, String kind,
-            bool? verified, String? name)?
+    TResult? Function(
+            String symbol,
+            int decimals,
+            @StringOrIntConverter() String balance,
+            String kind,
+            bool? verified,
+            String? name)?
         native,
-    TResult? Function(String symbol, int decimals, String balance, String kind,
-            bool? verified, String? contract, String? name)?
+    TResult? Function(
+            String symbol,
+            int decimals,
+            @StringOrIntConverter() String balance,
+            String kind,
+            bool? verified,
+            String? contract,
+            String? name)?
         erc20,
-    TResult? Function(String assetId, String symbol, int decimals,
-            bool verified, String balance, String kind, String? name)?
+    TResult? Function(
+            String assetId,
+            String symbol,
+            int decimals,
+            bool verified,
+            @StringOrIntConverter() String balance,
+            String kind,
+            String? name)?
         asa,
-    TResult? Function(String mint, String symbol, int decimals, String balance,
-            String kind, String? name)?
+    TResult? Function(String mint, String symbol, int decimals,
+            @StringOrIntConverter() String balance, String kind, String? name)?
         spl,
-    TResult? Function(String mint, String symbol, int decimals, String balance,
-            String kind, String? name)?
+    TResult? Function(String mint, String symbol, int decimals,
+            @StringOrIntConverter() String balance, String kind, String? name)?
         spl2022,
-    TResult? Function(String mint, String symbol, int decimals, String balance,
-            String kind, String? name)?
+    TResult? Function(String mint, String symbol, int decimals,
+            @StringOrIntConverter() String balance, String kind, String? name)?
         sep41,
-    TResult? Function(String mint, String symbol, int decimals, String balance,
-            String kind, String? name)?
+    TResult? Function(String mint, String symbol, int decimals,
+            @StringOrIntConverter() String balance, String kind, String? name)?
         tep74,
     TResult? Function(String tokenId, String symbol, int decimals,
-            String balance, String kind, String? name)?
+            @StringOrIntConverter() String balance, String kind, String? name)?
         trc10,
     TResult? Function(String contract, String symbol, int decimals,
-            String balance, String kind, String? name)?
+            @StringOrIntConverter() String balance, String kind, String? name)?
         trc20,
     TResult? Function(
             String symbol,
             int decimals,
-            String balance,
+            @StringOrIntConverter() String balance,
             String kind,
             String? contract,
             String? name,
@@ -510,37 +595,48 @@ class _$WalletAssetNativeImpl extends _WalletAssetNative {
   @override
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
-    TResult Function(String symbol, int decimals, String balance, String kind,
-            bool? verified, String? name)?
+    TResult Function(
+            String symbol,
+            int decimals,
+            @StringOrIntConverter() String balance,
+            String kind,
+            bool? verified,
+            String? name)?
         native,
-    TResult Function(String symbol, int decimals, String balance, String kind,
-            bool? verified, String? contract, String? name)?
+    TResult Function(
+            String symbol,
+            int decimals,
+            @StringOrIntConverter() String balance,
+            String kind,
+            bool? verified,
+            String? contract,
+            String? name)?
         erc20,
     TResult Function(String assetId, String symbol, int decimals, bool verified,
-            String balance, String kind, String? name)?
+            @StringOrIntConverter() String balance, String kind, String? name)?
         asa,
-    TResult Function(String mint, String symbol, int decimals, String balance,
-            String kind, String? name)?
+    TResult Function(String mint, String symbol, int decimals,
+            @StringOrIntConverter() String balance, String kind, String? name)?
         spl,
-    TResult Function(String mint, String symbol, int decimals, String balance,
-            String kind, String? name)?
+    TResult Function(String mint, String symbol, int decimals,
+            @StringOrIntConverter() String balance, String kind, String? name)?
         spl2022,
-    TResult Function(String mint, String symbol, int decimals, String balance,
-            String kind, String? name)?
+    TResult Function(String mint, String symbol, int decimals,
+            @StringOrIntConverter() String balance, String kind, String? name)?
         sep41,
-    TResult Function(String mint, String symbol, int decimals, String balance,
-            String kind, String? name)?
+    TResult Function(String mint, String symbol, int decimals,
+            @StringOrIntConverter() String balance, String kind, String? name)?
         tep74,
     TResult Function(String tokenId, String symbol, int decimals,
-            String balance, String kind, String? name)?
+            @StringOrIntConverter() String balance, String kind, String? name)?
         trc10,
     TResult Function(String contract, String symbol, int decimals,
-            String balance, String kind, String? name)?
+            @StringOrIntConverter() String balance, String kind, String? name)?
         trc20,
     TResult Function(
             String symbol,
             int decimals,
-            String balance,
+            @StringOrIntConverter() String balance,
             String kind,
             String? contract,
             String? name,
@@ -624,7 +720,7 @@ abstract class _WalletAssetNative extends WalletAsset {
   const factory _WalletAssetNative(
       {required final String symbol,
       required final int decimals,
-      required final String balance,
+      @StringOrIntConverter() required final String balance,
       required final String kind,
       final bool? verified,
       final String? name}) = _$WalletAssetNativeImpl;
@@ -638,6 +734,7 @@ abstract class _WalletAssetNative extends WalletAsset {
   @override
   int get decimals;
   @override
+  @StringOrIntConverter()
   String get balance;
   @override
   String get kind;
@@ -664,7 +761,7 @@ abstract class _$$WalletAssetErc20ImplCopyWith<$Res>
   $Res call(
       {String symbol,
       int decimals,
-      String balance,
+      @StringOrIntConverter() String balance,
       String kind,
       bool? verified,
       String? contract,
@@ -731,7 +828,7 @@ class _$WalletAssetErc20Impl extends _WalletAssetErc20 {
   const _$WalletAssetErc20Impl(
       {required this.symbol,
       required this.decimals,
-      required this.balance,
+      @StringOrIntConverter() required this.balance,
       required this.kind,
       this.verified,
       this.contract,
@@ -746,6 +843,7 @@ class _$WalletAssetErc20Impl extends _WalletAssetErc20 {
   @override
   final int decimals;
   @override
+  @StringOrIntConverter()
   final String balance;
   @override
   final String kind;
@@ -795,37 +893,54 @@ class _$WalletAssetErc20Impl extends _WalletAssetErc20 {
   @override
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
-    required TResult Function(String symbol, int decimals, String balance,
-            String kind, bool? verified, String? name)
+    required TResult Function(
+            String symbol,
+            int decimals,
+            @StringOrIntConverter() String balance,
+            String kind,
+            bool? verified,
+            String? name)
         native,
-    required TResult Function(String symbol, int decimals, String balance,
-            String kind, bool? verified, String? contract, String? name)
+    required TResult Function(
+            String symbol,
+            int decimals,
+            @StringOrIntConverter() String balance,
+            String kind,
+            bool? verified,
+            String? contract,
+            String? name)
         erc20,
-    required TResult Function(String assetId, String symbol, int decimals,
-            bool verified, String balance, String kind, String? name)
+    required TResult Function(
+            String assetId,
+            String symbol,
+            int decimals,
+            bool verified,
+            @StringOrIntConverter() String balance,
+            String kind,
+            String? name)
         asa,
     required TResult Function(String mint, String symbol, int decimals,
-            String balance, String kind, String? name)
+            @StringOrIntConverter() String balance, String kind, String? name)
         spl,
     required TResult Function(String mint, String symbol, int decimals,
-            String balance, String kind, String? name)
+            @StringOrIntConverter() String balance, String kind, String? name)
         spl2022,
     required TResult Function(String mint, String symbol, int decimals,
-            String balance, String kind, String? name)
+            @StringOrIntConverter() String balance, String kind, String? name)
         sep41,
     required TResult Function(String mint, String symbol, int decimals,
-            String balance, String kind, String? name)
+            @StringOrIntConverter() String balance, String kind, String? name)
         tep74,
     required TResult Function(String tokenId, String symbol, int decimals,
-            String balance, String kind, String? name)
+            @StringOrIntConverter() String balance, String kind, String? name)
         trc10,
     required TResult Function(String contract, String symbol, int decimals,
-            String balance, String kind, String? name)
+            @StringOrIntConverter() String balance, String kind, String? name)
         trc20,
     required TResult Function(
             String symbol,
             int decimals,
-            String balance,
+            @StringOrIntConverter() String balance,
             String kind,
             String? contract,
             String? name,
@@ -841,37 +956,54 @@ class _$WalletAssetErc20Impl extends _WalletAssetErc20 {
   @override
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
-    TResult? Function(String symbol, int decimals, String balance, String kind,
-            bool? verified, String? name)?
+    TResult? Function(
+            String symbol,
+            int decimals,
+            @StringOrIntConverter() String balance,
+            String kind,
+            bool? verified,
+            String? name)?
         native,
-    TResult? Function(String symbol, int decimals, String balance, String kind,
-            bool? verified, String? contract, String? name)?
+    TResult? Function(
+            String symbol,
+            int decimals,
+            @StringOrIntConverter() String balance,
+            String kind,
+            bool? verified,
+            String? contract,
+            String? name)?
         erc20,
-    TResult? Function(String assetId, String symbol, int decimals,
-            bool verified, String balance, String kind, String? name)?
+    TResult? Function(
+            String assetId,
+            String symbol,
+            int decimals,
+            bool verified,
+            @StringOrIntConverter() String balance,
+            String kind,
+            String? name)?
         asa,
-    TResult? Function(String mint, String symbol, int decimals, String balance,
-            String kind, String? name)?
+    TResult? Function(String mint, String symbol, int decimals,
+            @StringOrIntConverter() String balance, String kind, String? name)?
         spl,
-    TResult? Function(String mint, String symbol, int decimals, String balance,
-            String kind, String? name)?
+    TResult? Function(String mint, String symbol, int decimals,
+            @StringOrIntConverter() String balance, String kind, String? name)?
         spl2022,
-    TResult? Function(String mint, String symbol, int decimals, String balance,
-            String kind, String? name)?
+    TResult? Function(String mint, String symbol, int decimals,
+            @StringOrIntConverter() String balance, String kind, String? name)?
         sep41,
-    TResult? Function(String mint, String symbol, int decimals, String balance,
-            String kind, String? name)?
+    TResult? Function(String mint, String symbol, int decimals,
+            @StringOrIntConverter() String balance, String kind, String? name)?
         tep74,
     TResult? Function(String tokenId, String symbol, int decimals,
-            String balance, String kind, String? name)?
+            @StringOrIntConverter() String balance, String kind, String? name)?
         trc10,
     TResult? Function(String contract, String symbol, int decimals,
-            String balance, String kind, String? name)?
+            @StringOrIntConverter() String balance, String kind, String? name)?
         trc20,
     TResult? Function(
             String symbol,
             int decimals,
-            String balance,
+            @StringOrIntConverter() String balance,
             String kind,
             String? contract,
             String? name,
@@ -888,37 +1020,48 @@ class _$WalletAssetErc20Impl extends _WalletAssetErc20 {
   @override
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
-    TResult Function(String symbol, int decimals, String balance, String kind,
-            bool? verified, String? name)?
+    TResult Function(
+            String symbol,
+            int decimals,
+            @StringOrIntConverter() String balance,
+            String kind,
+            bool? verified,
+            String? name)?
         native,
-    TResult Function(String symbol, int decimals, String balance, String kind,
-            bool? verified, String? contract, String? name)?
+    TResult Function(
+            String symbol,
+            int decimals,
+            @StringOrIntConverter() String balance,
+            String kind,
+            bool? verified,
+            String? contract,
+            String? name)?
         erc20,
     TResult Function(String assetId, String symbol, int decimals, bool verified,
-            String balance, String kind, String? name)?
+            @StringOrIntConverter() String balance, String kind, String? name)?
         asa,
-    TResult Function(String mint, String symbol, int decimals, String balance,
-            String kind, String? name)?
+    TResult Function(String mint, String symbol, int decimals,
+            @StringOrIntConverter() String balance, String kind, String? name)?
         spl,
-    TResult Function(String mint, String symbol, int decimals, String balance,
-            String kind, String? name)?
+    TResult Function(String mint, String symbol, int decimals,
+            @StringOrIntConverter() String balance, String kind, String? name)?
         spl2022,
-    TResult Function(String mint, String symbol, int decimals, String balance,
-            String kind, String? name)?
+    TResult Function(String mint, String symbol, int decimals,
+            @StringOrIntConverter() String balance, String kind, String? name)?
         sep41,
-    TResult Function(String mint, String symbol, int decimals, String balance,
-            String kind, String? name)?
+    TResult Function(String mint, String symbol, int decimals,
+            @StringOrIntConverter() String balance, String kind, String? name)?
         tep74,
     TResult Function(String tokenId, String symbol, int decimals,
-            String balance, String kind, String? name)?
+            @StringOrIntConverter() String balance, String kind, String? name)?
         trc10,
     TResult Function(String contract, String symbol, int decimals,
-            String balance, String kind, String? name)?
+            @StringOrIntConverter() String balance, String kind, String? name)?
         trc20,
     TResult Function(
             String symbol,
             int decimals,
-            String balance,
+            @StringOrIntConverter() String balance,
             String kind,
             String? contract,
             String? name,
@@ -1002,7 +1145,7 @@ abstract class _WalletAssetErc20 extends WalletAsset {
   const factory _WalletAssetErc20(
       {required final String symbol,
       required final int decimals,
-      required final String balance,
+      @StringOrIntConverter() required final String balance,
       required final String kind,
       final bool? verified,
       final String? contract,
@@ -1017,6 +1160,7 @@ abstract class _WalletAssetErc20 extends WalletAsset {
   @override
   int get decimals;
   @override
+  @StringOrIntConverter()
   String get balance;
   @override
   String get kind;
@@ -1046,7 +1190,7 @@ abstract class _$$WalletAssetAsaImplCopyWith<$Res>
       String symbol,
       int decimals,
       bool verified,
-      String balance,
+      @StringOrIntConverter() String balance,
       String kind,
       String? name});
 }
@@ -1113,7 +1257,7 @@ class _$WalletAssetAsaImpl extends _WalletAssetAsa {
       required this.symbol,
       required this.decimals,
       required this.verified,
-      required this.balance,
+      @StringOrIntConverter() required this.balance,
       required this.kind,
       this.name})
       : super._();
@@ -1130,6 +1274,7 @@ class _$WalletAssetAsaImpl extends _WalletAssetAsa {
   @override
   final bool verified;
   @override
+  @StringOrIntConverter()
   final String balance;
   @override
   final String kind;
@@ -1174,37 +1319,54 @@ class _$WalletAssetAsaImpl extends _WalletAssetAsa {
   @override
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
-    required TResult Function(String symbol, int decimals, String balance,
-            String kind, bool? verified, String? name)
+    required TResult Function(
+            String symbol,
+            int decimals,
+            @StringOrIntConverter() String balance,
+            String kind,
+            bool? verified,
+            String? name)
         native,
-    required TResult Function(String symbol, int decimals, String balance,
-            String kind, bool? verified, String? contract, String? name)
+    required TResult Function(
+            String symbol,
+            int decimals,
+            @StringOrIntConverter() String balance,
+            String kind,
+            bool? verified,
+            String? contract,
+            String? name)
         erc20,
-    required TResult Function(String assetId, String symbol, int decimals,
-            bool verified, String balance, String kind, String? name)
+    required TResult Function(
+            String assetId,
+            String symbol,
+            int decimals,
+            bool verified,
+            @StringOrIntConverter() String balance,
+            String kind,
+            String? name)
         asa,
     required TResult Function(String mint, String symbol, int decimals,
-            String balance, String kind, String? name)
+            @StringOrIntConverter() String balance, String kind, String? name)
         spl,
     required TResult Function(String mint, String symbol, int decimals,
-            String balance, String kind, String? name)
+            @StringOrIntConverter() String balance, String kind, String? name)
         spl2022,
     required TResult Function(String mint, String symbol, int decimals,
-            String balance, String kind, String? name)
+            @StringOrIntConverter() String balance, String kind, String? name)
         sep41,
     required TResult Function(String mint, String symbol, int decimals,
-            String balance, String kind, String? name)
+            @StringOrIntConverter() String balance, String kind, String? name)
         tep74,
     required TResult Function(String tokenId, String symbol, int decimals,
-            String balance, String kind, String? name)
+            @StringOrIntConverter() String balance, String kind, String? name)
         trc10,
     required TResult Function(String contract, String symbol, int decimals,
-            String balance, String kind, String? name)
+            @StringOrIntConverter() String balance, String kind, String? name)
         trc20,
     required TResult Function(
             String symbol,
             int decimals,
-            String balance,
+            @StringOrIntConverter() String balance,
             String kind,
             String? contract,
             String? name,
@@ -1220,37 +1382,54 @@ class _$WalletAssetAsaImpl extends _WalletAssetAsa {
   @override
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
-    TResult? Function(String symbol, int decimals, String balance, String kind,
-            bool? verified, String? name)?
+    TResult? Function(
+            String symbol,
+            int decimals,
+            @StringOrIntConverter() String balance,
+            String kind,
+            bool? verified,
+            String? name)?
         native,
-    TResult? Function(String symbol, int decimals, String balance, String kind,
-            bool? verified, String? contract, String? name)?
+    TResult? Function(
+            String symbol,
+            int decimals,
+            @StringOrIntConverter() String balance,
+            String kind,
+            bool? verified,
+            String? contract,
+            String? name)?
         erc20,
-    TResult? Function(String assetId, String symbol, int decimals,
-            bool verified, String balance, String kind, String? name)?
+    TResult? Function(
+            String assetId,
+            String symbol,
+            int decimals,
+            bool verified,
+            @StringOrIntConverter() String balance,
+            String kind,
+            String? name)?
         asa,
-    TResult? Function(String mint, String symbol, int decimals, String balance,
-            String kind, String? name)?
+    TResult? Function(String mint, String symbol, int decimals,
+            @StringOrIntConverter() String balance, String kind, String? name)?
         spl,
-    TResult? Function(String mint, String symbol, int decimals, String balance,
-            String kind, String? name)?
+    TResult? Function(String mint, String symbol, int decimals,
+            @StringOrIntConverter() String balance, String kind, String? name)?
         spl2022,
-    TResult? Function(String mint, String symbol, int decimals, String balance,
-            String kind, String? name)?
+    TResult? Function(String mint, String symbol, int decimals,
+            @StringOrIntConverter() String balance, String kind, String? name)?
         sep41,
-    TResult? Function(String mint, String symbol, int decimals, String balance,
-            String kind, String? name)?
+    TResult? Function(String mint, String symbol, int decimals,
+            @StringOrIntConverter() String balance, String kind, String? name)?
         tep74,
     TResult? Function(String tokenId, String symbol, int decimals,
-            String balance, String kind, String? name)?
+            @StringOrIntConverter() String balance, String kind, String? name)?
         trc10,
     TResult? Function(String contract, String symbol, int decimals,
-            String balance, String kind, String? name)?
+            @StringOrIntConverter() String balance, String kind, String? name)?
         trc20,
     TResult? Function(
             String symbol,
             int decimals,
-            String balance,
+            @StringOrIntConverter() String balance,
             String kind,
             String? contract,
             String? name,
@@ -1266,37 +1445,48 @@ class _$WalletAssetAsaImpl extends _WalletAssetAsa {
   @override
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
-    TResult Function(String symbol, int decimals, String balance, String kind,
-            bool? verified, String? name)?
+    TResult Function(
+            String symbol,
+            int decimals,
+            @StringOrIntConverter() String balance,
+            String kind,
+            bool? verified,
+            String? name)?
         native,
-    TResult Function(String symbol, int decimals, String balance, String kind,
-            bool? verified, String? contract, String? name)?
+    TResult Function(
+            String symbol,
+            int decimals,
+            @StringOrIntConverter() String balance,
+            String kind,
+            bool? verified,
+            String? contract,
+            String? name)?
         erc20,
     TResult Function(String assetId, String symbol, int decimals, bool verified,
-            String balance, String kind, String? name)?
+            @StringOrIntConverter() String balance, String kind, String? name)?
         asa,
-    TResult Function(String mint, String symbol, int decimals, String balance,
-            String kind, String? name)?
+    TResult Function(String mint, String symbol, int decimals,
+            @StringOrIntConverter() String balance, String kind, String? name)?
         spl,
-    TResult Function(String mint, String symbol, int decimals, String balance,
-            String kind, String? name)?
+    TResult Function(String mint, String symbol, int decimals,
+            @StringOrIntConverter() String balance, String kind, String? name)?
         spl2022,
-    TResult Function(String mint, String symbol, int decimals, String balance,
-            String kind, String? name)?
+    TResult Function(String mint, String symbol, int decimals,
+            @StringOrIntConverter() String balance, String kind, String? name)?
         sep41,
-    TResult Function(String mint, String symbol, int decimals, String balance,
-            String kind, String? name)?
+    TResult Function(String mint, String symbol, int decimals,
+            @StringOrIntConverter() String balance, String kind, String? name)?
         tep74,
     TResult Function(String tokenId, String symbol, int decimals,
-            String balance, String kind, String? name)?
+            @StringOrIntConverter() String balance, String kind, String? name)?
         trc10,
     TResult Function(String contract, String symbol, int decimals,
-            String balance, String kind, String? name)?
+            @StringOrIntConverter() String balance, String kind, String? name)?
         trc20,
     TResult Function(
             String symbol,
             int decimals,
-            String balance,
+            @StringOrIntConverter() String balance,
             String kind,
             String? contract,
             String? name,
@@ -1382,7 +1572,7 @@ abstract class _WalletAssetAsa extends WalletAsset {
       required final String symbol,
       required final int decimals,
       required final bool verified,
-      required final String balance,
+      @StringOrIntConverter() required final String balance,
       required final String kind,
       final String? name}) = _$WalletAssetAsaImpl;
   const _WalletAssetAsa._() : super._();
@@ -1397,6 +1587,7 @@ abstract class _WalletAssetAsa extends WalletAsset {
   int get decimals;
   bool get verified;
   @override
+  @StringOrIntConverter()
   String get balance;
   @override
   String get kind;
@@ -1423,7 +1614,7 @@ abstract class _$$WalletAssetSplImplCopyWith<$Res>
       {String mint,
       String symbol,
       int decimals,
-      String balance,
+      @StringOrIntConverter() String balance,
       String kind,
       String? name});
 }
@@ -1484,7 +1675,7 @@ class _$WalletAssetSplImpl extends _WalletAssetSpl {
       {required this.mint,
       required this.symbol,
       required this.decimals,
-      required this.balance,
+      @StringOrIntConverter() required this.balance,
       required this.kind,
       this.name})
       : super._();
@@ -1499,6 +1690,7 @@ class _$WalletAssetSplImpl extends _WalletAssetSpl {
   @override
   final int decimals;
   @override
+  @StringOrIntConverter()
   final String balance;
   @override
   final String kind;
@@ -1541,37 +1733,54 @@ class _$WalletAssetSplImpl extends _WalletAssetSpl {
   @override
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
-    required TResult Function(String symbol, int decimals, String balance,
-            String kind, bool? verified, String? name)
+    required TResult Function(
+            String symbol,
+            int decimals,
+            @StringOrIntConverter() String balance,
+            String kind,
+            bool? verified,
+            String? name)
         native,
-    required TResult Function(String symbol, int decimals, String balance,
-            String kind, bool? verified, String? contract, String? name)
+    required TResult Function(
+            String symbol,
+            int decimals,
+            @StringOrIntConverter() String balance,
+            String kind,
+            bool? verified,
+            String? contract,
+            String? name)
         erc20,
-    required TResult Function(String assetId, String symbol, int decimals,
-            bool verified, String balance, String kind, String? name)
+    required TResult Function(
+            String assetId,
+            String symbol,
+            int decimals,
+            bool verified,
+            @StringOrIntConverter() String balance,
+            String kind,
+            String? name)
         asa,
     required TResult Function(String mint, String symbol, int decimals,
-            String balance, String kind, String? name)
+            @StringOrIntConverter() String balance, String kind, String? name)
         spl,
     required TResult Function(String mint, String symbol, int decimals,
-            String balance, String kind, String? name)
+            @StringOrIntConverter() String balance, String kind, String? name)
         spl2022,
     required TResult Function(String mint, String symbol, int decimals,
-            String balance, String kind, String? name)
+            @StringOrIntConverter() String balance, String kind, String? name)
         sep41,
     required TResult Function(String mint, String symbol, int decimals,
-            String balance, String kind, String? name)
+            @StringOrIntConverter() String balance, String kind, String? name)
         tep74,
     required TResult Function(String tokenId, String symbol, int decimals,
-            String balance, String kind, String? name)
+            @StringOrIntConverter() String balance, String kind, String? name)
         trc10,
     required TResult Function(String contract, String symbol, int decimals,
-            String balance, String kind, String? name)
+            @StringOrIntConverter() String balance, String kind, String? name)
         trc20,
     required TResult Function(
             String symbol,
             int decimals,
-            String balance,
+            @StringOrIntConverter() String balance,
             String kind,
             String? contract,
             String? name,
@@ -1587,37 +1796,54 @@ class _$WalletAssetSplImpl extends _WalletAssetSpl {
   @override
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
-    TResult? Function(String symbol, int decimals, String balance, String kind,
-            bool? verified, String? name)?
+    TResult? Function(
+            String symbol,
+            int decimals,
+            @StringOrIntConverter() String balance,
+            String kind,
+            bool? verified,
+            String? name)?
         native,
-    TResult? Function(String symbol, int decimals, String balance, String kind,
-            bool? verified, String? contract, String? name)?
+    TResult? Function(
+            String symbol,
+            int decimals,
+            @StringOrIntConverter() String balance,
+            String kind,
+            bool? verified,
+            String? contract,
+            String? name)?
         erc20,
-    TResult? Function(String assetId, String symbol, int decimals,
-            bool verified, String balance, String kind, String? name)?
+    TResult? Function(
+            String assetId,
+            String symbol,
+            int decimals,
+            bool verified,
+            @StringOrIntConverter() String balance,
+            String kind,
+            String? name)?
         asa,
-    TResult? Function(String mint, String symbol, int decimals, String balance,
-            String kind, String? name)?
+    TResult? Function(String mint, String symbol, int decimals,
+            @StringOrIntConverter() String balance, String kind, String? name)?
         spl,
-    TResult? Function(String mint, String symbol, int decimals, String balance,
-            String kind, String? name)?
+    TResult? Function(String mint, String symbol, int decimals,
+            @StringOrIntConverter() String balance, String kind, String? name)?
         spl2022,
-    TResult? Function(String mint, String symbol, int decimals, String balance,
-            String kind, String? name)?
+    TResult? Function(String mint, String symbol, int decimals,
+            @StringOrIntConverter() String balance, String kind, String? name)?
         sep41,
-    TResult? Function(String mint, String symbol, int decimals, String balance,
-            String kind, String? name)?
+    TResult? Function(String mint, String symbol, int decimals,
+            @StringOrIntConverter() String balance, String kind, String? name)?
         tep74,
     TResult? Function(String tokenId, String symbol, int decimals,
-            String balance, String kind, String? name)?
+            @StringOrIntConverter() String balance, String kind, String? name)?
         trc10,
     TResult? Function(String contract, String symbol, int decimals,
-            String balance, String kind, String? name)?
+            @StringOrIntConverter() String balance, String kind, String? name)?
         trc20,
     TResult? Function(
             String symbol,
             int decimals,
-            String balance,
+            @StringOrIntConverter() String balance,
             String kind,
             String? contract,
             String? name,
@@ -1633,37 +1859,48 @@ class _$WalletAssetSplImpl extends _WalletAssetSpl {
   @override
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
-    TResult Function(String symbol, int decimals, String balance, String kind,
-            bool? verified, String? name)?
+    TResult Function(
+            String symbol,
+            int decimals,
+            @StringOrIntConverter() String balance,
+            String kind,
+            bool? verified,
+            String? name)?
         native,
-    TResult Function(String symbol, int decimals, String balance, String kind,
-            bool? verified, String? contract, String? name)?
+    TResult Function(
+            String symbol,
+            int decimals,
+            @StringOrIntConverter() String balance,
+            String kind,
+            bool? verified,
+            String? contract,
+            String? name)?
         erc20,
     TResult Function(String assetId, String symbol, int decimals, bool verified,
-            String balance, String kind, String? name)?
+            @StringOrIntConverter() String balance, String kind, String? name)?
         asa,
-    TResult Function(String mint, String symbol, int decimals, String balance,
-            String kind, String? name)?
+    TResult Function(String mint, String symbol, int decimals,
+            @StringOrIntConverter() String balance, String kind, String? name)?
         spl,
-    TResult Function(String mint, String symbol, int decimals, String balance,
-            String kind, String? name)?
+    TResult Function(String mint, String symbol, int decimals,
+            @StringOrIntConverter() String balance, String kind, String? name)?
         spl2022,
-    TResult Function(String mint, String symbol, int decimals, String balance,
-            String kind, String? name)?
+    TResult Function(String mint, String symbol, int decimals,
+            @StringOrIntConverter() String balance, String kind, String? name)?
         sep41,
-    TResult Function(String mint, String symbol, int decimals, String balance,
-            String kind, String? name)?
+    TResult Function(String mint, String symbol, int decimals,
+            @StringOrIntConverter() String balance, String kind, String? name)?
         tep74,
     TResult Function(String tokenId, String symbol, int decimals,
-            String balance, String kind, String? name)?
+            @StringOrIntConverter() String balance, String kind, String? name)?
         trc10,
     TResult Function(String contract, String symbol, int decimals,
-            String balance, String kind, String? name)?
+            @StringOrIntConverter() String balance, String kind, String? name)?
         trc20,
     TResult Function(
             String symbol,
             int decimals,
-            String balance,
+            @StringOrIntConverter() String balance,
             String kind,
             String? contract,
             String? name,
@@ -1748,7 +1985,7 @@ abstract class _WalletAssetSpl extends WalletAsset {
       {required final String mint,
       required final String symbol,
       required final int decimals,
-      required final String balance,
+      @StringOrIntConverter() required final String balance,
       required final String kind,
       final String? name}) = _$WalletAssetSplImpl;
   const _WalletAssetSpl._() : super._();
@@ -1762,6 +1999,7 @@ abstract class _WalletAssetSpl extends WalletAsset {
   @override
   int get decimals;
   @override
+  @StringOrIntConverter()
   String get balance;
   @override
   String get kind;
@@ -1788,7 +2026,7 @@ abstract class _$$WalletAssetSpl2022ImplCopyWith<$Res>
       {String mint,
       String symbol,
       int decimals,
-      String balance,
+      @StringOrIntConverter() String balance,
       String kind,
       String? name});
 }
@@ -1849,7 +2087,7 @@ class _$WalletAssetSpl2022Impl extends _WalletAssetSpl2022 {
       {required this.mint,
       required this.symbol,
       required this.decimals,
-      required this.balance,
+      @StringOrIntConverter() required this.balance,
       required this.kind,
       this.name})
       : super._();
@@ -1864,6 +2102,7 @@ class _$WalletAssetSpl2022Impl extends _WalletAssetSpl2022 {
   @override
   final int decimals;
   @override
+  @StringOrIntConverter()
   final String balance;
   @override
   final String kind;
@@ -1906,37 +2145,54 @@ class _$WalletAssetSpl2022Impl extends _WalletAssetSpl2022 {
   @override
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
-    required TResult Function(String symbol, int decimals, String balance,
-            String kind, bool? verified, String? name)
+    required TResult Function(
+            String symbol,
+            int decimals,
+            @StringOrIntConverter() String balance,
+            String kind,
+            bool? verified,
+            String? name)
         native,
-    required TResult Function(String symbol, int decimals, String balance,
-            String kind, bool? verified, String? contract, String? name)
+    required TResult Function(
+            String symbol,
+            int decimals,
+            @StringOrIntConverter() String balance,
+            String kind,
+            bool? verified,
+            String? contract,
+            String? name)
         erc20,
-    required TResult Function(String assetId, String symbol, int decimals,
-            bool verified, String balance, String kind, String? name)
+    required TResult Function(
+            String assetId,
+            String symbol,
+            int decimals,
+            bool verified,
+            @StringOrIntConverter() String balance,
+            String kind,
+            String? name)
         asa,
     required TResult Function(String mint, String symbol, int decimals,
-            String balance, String kind, String? name)
+            @StringOrIntConverter() String balance, String kind, String? name)
         spl,
     required TResult Function(String mint, String symbol, int decimals,
-            String balance, String kind, String? name)
+            @StringOrIntConverter() String balance, String kind, String? name)
         spl2022,
     required TResult Function(String mint, String symbol, int decimals,
-            String balance, String kind, String? name)
+            @StringOrIntConverter() String balance, String kind, String? name)
         sep41,
     required TResult Function(String mint, String symbol, int decimals,
-            String balance, String kind, String? name)
+            @StringOrIntConverter() String balance, String kind, String? name)
         tep74,
     required TResult Function(String tokenId, String symbol, int decimals,
-            String balance, String kind, String? name)
+            @StringOrIntConverter() String balance, String kind, String? name)
         trc10,
     required TResult Function(String contract, String symbol, int decimals,
-            String balance, String kind, String? name)
+            @StringOrIntConverter() String balance, String kind, String? name)
         trc20,
     required TResult Function(
             String symbol,
             int decimals,
-            String balance,
+            @StringOrIntConverter() String balance,
             String kind,
             String? contract,
             String? name,
@@ -1952,37 +2208,54 @@ class _$WalletAssetSpl2022Impl extends _WalletAssetSpl2022 {
   @override
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
-    TResult? Function(String symbol, int decimals, String balance, String kind,
-            bool? verified, String? name)?
+    TResult? Function(
+            String symbol,
+            int decimals,
+            @StringOrIntConverter() String balance,
+            String kind,
+            bool? verified,
+            String? name)?
         native,
-    TResult? Function(String symbol, int decimals, String balance, String kind,
-            bool? verified, String? contract, String? name)?
+    TResult? Function(
+            String symbol,
+            int decimals,
+            @StringOrIntConverter() String balance,
+            String kind,
+            bool? verified,
+            String? contract,
+            String? name)?
         erc20,
-    TResult? Function(String assetId, String symbol, int decimals,
-            bool verified, String balance, String kind, String? name)?
+    TResult? Function(
+            String assetId,
+            String symbol,
+            int decimals,
+            bool verified,
+            @StringOrIntConverter() String balance,
+            String kind,
+            String? name)?
         asa,
-    TResult? Function(String mint, String symbol, int decimals, String balance,
-            String kind, String? name)?
+    TResult? Function(String mint, String symbol, int decimals,
+            @StringOrIntConverter() String balance, String kind, String? name)?
         spl,
-    TResult? Function(String mint, String symbol, int decimals, String balance,
-            String kind, String? name)?
+    TResult? Function(String mint, String symbol, int decimals,
+            @StringOrIntConverter() String balance, String kind, String? name)?
         spl2022,
-    TResult? Function(String mint, String symbol, int decimals, String balance,
-            String kind, String? name)?
+    TResult? Function(String mint, String symbol, int decimals,
+            @StringOrIntConverter() String balance, String kind, String? name)?
         sep41,
-    TResult? Function(String mint, String symbol, int decimals, String balance,
-            String kind, String? name)?
+    TResult? Function(String mint, String symbol, int decimals,
+            @StringOrIntConverter() String balance, String kind, String? name)?
         tep74,
     TResult? Function(String tokenId, String symbol, int decimals,
-            String balance, String kind, String? name)?
+            @StringOrIntConverter() String balance, String kind, String? name)?
         trc10,
     TResult? Function(String contract, String symbol, int decimals,
-            String balance, String kind, String? name)?
+            @StringOrIntConverter() String balance, String kind, String? name)?
         trc20,
     TResult? Function(
             String symbol,
             int decimals,
-            String balance,
+            @StringOrIntConverter() String balance,
             String kind,
             String? contract,
             String? name,
@@ -1998,37 +2271,48 @@ class _$WalletAssetSpl2022Impl extends _WalletAssetSpl2022 {
   @override
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
-    TResult Function(String symbol, int decimals, String balance, String kind,
-            bool? verified, String? name)?
+    TResult Function(
+            String symbol,
+            int decimals,
+            @StringOrIntConverter() String balance,
+            String kind,
+            bool? verified,
+            String? name)?
         native,
-    TResult Function(String symbol, int decimals, String balance, String kind,
-            bool? verified, String? contract, String? name)?
+    TResult Function(
+            String symbol,
+            int decimals,
+            @StringOrIntConverter() String balance,
+            String kind,
+            bool? verified,
+            String? contract,
+            String? name)?
         erc20,
     TResult Function(String assetId, String symbol, int decimals, bool verified,
-            String balance, String kind, String? name)?
+            @StringOrIntConverter() String balance, String kind, String? name)?
         asa,
-    TResult Function(String mint, String symbol, int decimals, String balance,
-            String kind, String? name)?
+    TResult Function(String mint, String symbol, int decimals,
+            @StringOrIntConverter() String balance, String kind, String? name)?
         spl,
-    TResult Function(String mint, String symbol, int decimals, String balance,
-            String kind, String? name)?
+    TResult Function(String mint, String symbol, int decimals,
+            @StringOrIntConverter() String balance, String kind, String? name)?
         spl2022,
-    TResult Function(String mint, String symbol, int decimals, String balance,
-            String kind, String? name)?
+    TResult Function(String mint, String symbol, int decimals,
+            @StringOrIntConverter() String balance, String kind, String? name)?
         sep41,
-    TResult Function(String mint, String symbol, int decimals, String balance,
-            String kind, String? name)?
+    TResult Function(String mint, String symbol, int decimals,
+            @StringOrIntConverter() String balance, String kind, String? name)?
         tep74,
     TResult Function(String tokenId, String symbol, int decimals,
-            String balance, String kind, String? name)?
+            @StringOrIntConverter() String balance, String kind, String? name)?
         trc10,
     TResult Function(String contract, String symbol, int decimals,
-            String balance, String kind, String? name)?
+            @StringOrIntConverter() String balance, String kind, String? name)?
         trc20,
     TResult Function(
             String symbol,
             int decimals,
-            String balance,
+            @StringOrIntConverter() String balance,
             String kind,
             String? contract,
             String? name,
@@ -2113,7 +2397,7 @@ abstract class _WalletAssetSpl2022 extends WalletAsset {
       {required final String mint,
       required final String symbol,
       required final int decimals,
-      required final String balance,
+      @StringOrIntConverter() required final String balance,
       required final String kind,
       final String? name}) = _$WalletAssetSpl2022Impl;
   const _WalletAssetSpl2022._() : super._();
@@ -2127,6 +2411,7 @@ abstract class _WalletAssetSpl2022 extends WalletAsset {
   @override
   int get decimals;
   @override
+  @StringOrIntConverter()
   String get balance;
   @override
   String get kind;
@@ -2153,7 +2438,7 @@ abstract class _$$WalletAssetSep41ImplCopyWith<$Res>
       {String mint,
       String symbol,
       int decimals,
-      String balance,
+      @StringOrIntConverter() String balance,
       String kind,
       String? name});
 }
@@ -2214,7 +2499,7 @@ class _$WalletAssetSep41Impl extends _WalletAssetSep41 {
       {required this.mint,
       required this.symbol,
       required this.decimals,
-      required this.balance,
+      @StringOrIntConverter() required this.balance,
       required this.kind,
       this.name})
       : super._();
@@ -2229,6 +2514,7 @@ class _$WalletAssetSep41Impl extends _WalletAssetSep41 {
   @override
   final int decimals;
   @override
+  @StringOrIntConverter()
   final String balance;
   @override
   final String kind;
@@ -2271,37 +2557,54 @@ class _$WalletAssetSep41Impl extends _WalletAssetSep41 {
   @override
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
-    required TResult Function(String symbol, int decimals, String balance,
-            String kind, bool? verified, String? name)
+    required TResult Function(
+            String symbol,
+            int decimals,
+            @StringOrIntConverter() String balance,
+            String kind,
+            bool? verified,
+            String? name)
         native,
-    required TResult Function(String symbol, int decimals, String balance,
-            String kind, bool? verified, String? contract, String? name)
+    required TResult Function(
+            String symbol,
+            int decimals,
+            @StringOrIntConverter() String balance,
+            String kind,
+            bool? verified,
+            String? contract,
+            String? name)
         erc20,
-    required TResult Function(String assetId, String symbol, int decimals,
-            bool verified, String balance, String kind, String? name)
+    required TResult Function(
+            String assetId,
+            String symbol,
+            int decimals,
+            bool verified,
+            @StringOrIntConverter() String balance,
+            String kind,
+            String? name)
         asa,
     required TResult Function(String mint, String symbol, int decimals,
-            String balance, String kind, String? name)
+            @StringOrIntConverter() String balance, String kind, String? name)
         spl,
     required TResult Function(String mint, String symbol, int decimals,
-            String balance, String kind, String? name)
+            @StringOrIntConverter() String balance, String kind, String? name)
         spl2022,
     required TResult Function(String mint, String symbol, int decimals,
-            String balance, String kind, String? name)
+            @StringOrIntConverter() String balance, String kind, String? name)
         sep41,
     required TResult Function(String mint, String symbol, int decimals,
-            String balance, String kind, String? name)
+            @StringOrIntConverter() String balance, String kind, String? name)
         tep74,
     required TResult Function(String tokenId, String symbol, int decimals,
-            String balance, String kind, String? name)
+            @StringOrIntConverter() String balance, String kind, String? name)
         trc10,
     required TResult Function(String contract, String symbol, int decimals,
-            String balance, String kind, String? name)
+            @StringOrIntConverter() String balance, String kind, String? name)
         trc20,
     required TResult Function(
             String symbol,
             int decimals,
-            String balance,
+            @StringOrIntConverter() String balance,
             String kind,
             String? contract,
             String? name,
@@ -2317,37 +2620,54 @@ class _$WalletAssetSep41Impl extends _WalletAssetSep41 {
   @override
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
-    TResult? Function(String symbol, int decimals, String balance, String kind,
-            bool? verified, String? name)?
+    TResult? Function(
+            String symbol,
+            int decimals,
+            @StringOrIntConverter() String balance,
+            String kind,
+            bool? verified,
+            String? name)?
         native,
-    TResult? Function(String symbol, int decimals, String balance, String kind,
-            bool? verified, String? contract, String? name)?
+    TResult? Function(
+            String symbol,
+            int decimals,
+            @StringOrIntConverter() String balance,
+            String kind,
+            bool? verified,
+            String? contract,
+            String? name)?
         erc20,
-    TResult? Function(String assetId, String symbol, int decimals,
-            bool verified, String balance, String kind, String? name)?
+    TResult? Function(
+            String assetId,
+            String symbol,
+            int decimals,
+            bool verified,
+            @StringOrIntConverter() String balance,
+            String kind,
+            String? name)?
         asa,
-    TResult? Function(String mint, String symbol, int decimals, String balance,
-            String kind, String? name)?
+    TResult? Function(String mint, String symbol, int decimals,
+            @StringOrIntConverter() String balance, String kind, String? name)?
         spl,
-    TResult? Function(String mint, String symbol, int decimals, String balance,
-            String kind, String? name)?
+    TResult? Function(String mint, String symbol, int decimals,
+            @StringOrIntConverter() String balance, String kind, String? name)?
         spl2022,
-    TResult? Function(String mint, String symbol, int decimals, String balance,
-            String kind, String? name)?
+    TResult? Function(String mint, String symbol, int decimals,
+            @StringOrIntConverter() String balance, String kind, String? name)?
         sep41,
-    TResult? Function(String mint, String symbol, int decimals, String balance,
-            String kind, String? name)?
+    TResult? Function(String mint, String symbol, int decimals,
+            @StringOrIntConverter() String balance, String kind, String? name)?
         tep74,
     TResult? Function(String tokenId, String symbol, int decimals,
-            String balance, String kind, String? name)?
+            @StringOrIntConverter() String balance, String kind, String? name)?
         trc10,
     TResult? Function(String contract, String symbol, int decimals,
-            String balance, String kind, String? name)?
+            @StringOrIntConverter() String balance, String kind, String? name)?
         trc20,
     TResult? Function(
             String symbol,
             int decimals,
-            String balance,
+            @StringOrIntConverter() String balance,
             String kind,
             String? contract,
             String? name,
@@ -2363,37 +2683,48 @@ class _$WalletAssetSep41Impl extends _WalletAssetSep41 {
   @override
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
-    TResult Function(String symbol, int decimals, String balance, String kind,
-            bool? verified, String? name)?
+    TResult Function(
+            String symbol,
+            int decimals,
+            @StringOrIntConverter() String balance,
+            String kind,
+            bool? verified,
+            String? name)?
         native,
-    TResult Function(String symbol, int decimals, String balance, String kind,
-            bool? verified, String? contract, String? name)?
+    TResult Function(
+            String symbol,
+            int decimals,
+            @StringOrIntConverter() String balance,
+            String kind,
+            bool? verified,
+            String? contract,
+            String? name)?
         erc20,
     TResult Function(String assetId, String symbol, int decimals, bool verified,
-            String balance, String kind, String? name)?
+            @StringOrIntConverter() String balance, String kind, String? name)?
         asa,
-    TResult Function(String mint, String symbol, int decimals, String balance,
-            String kind, String? name)?
+    TResult Function(String mint, String symbol, int decimals,
+            @StringOrIntConverter() String balance, String kind, String? name)?
         spl,
-    TResult Function(String mint, String symbol, int decimals, String balance,
-            String kind, String? name)?
+    TResult Function(String mint, String symbol, int decimals,
+            @StringOrIntConverter() String balance, String kind, String? name)?
         spl2022,
-    TResult Function(String mint, String symbol, int decimals, String balance,
-            String kind, String? name)?
+    TResult Function(String mint, String symbol, int decimals,
+            @StringOrIntConverter() String balance, String kind, String? name)?
         sep41,
-    TResult Function(String mint, String symbol, int decimals, String balance,
-            String kind, String? name)?
+    TResult Function(String mint, String symbol, int decimals,
+            @StringOrIntConverter() String balance, String kind, String? name)?
         tep74,
     TResult Function(String tokenId, String symbol, int decimals,
-            String balance, String kind, String? name)?
+            @StringOrIntConverter() String balance, String kind, String? name)?
         trc10,
     TResult Function(String contract, String symbol, int decimals,
-            String balance, String kind, String? name)?
+            @StringOrIntConverter() String balance, String kind, String? name)?
         trc20,
     TResult Function(
             String symbol,
             int decimals,
-            String balance,
+            @StringOrIntConverter() String balance,
             String kind,
             String? contract,
             String? name,
@@ -2478,7 +2809,7 @@ abstract class _WalletAssetSep41 extends WalletAsset {
       {required final String mint,
       required final String symbol,
       required final int decimals,
-      required final String balance,
+      @StringOrIntConverter() required final String balance,
       required final String kind,
       final String? name}) = _$WalletAssetSep41Impl;
   const _WalletAssetSep41._() : super._();
@@ -2492,6 +2823,7 @@ abstract class _WalletAssetSep41 extends WalletAsset {
   @override
   int get decimals;
   @override
+  @StringOrIntConverter()
   String get balance;
   @override
   String get kind;
@@ -2518,7 +2850,7 @@ abstract class _$$WalletAssetTep74ImplCopyWith<$Res>
       {String mint,
       String symbol,
       int decimals,
-      String balance,
+      @StringOrIntConverter() String balance,
       String kind,
       String? name});
 }
@@ -2579,7 +2911,7 @@ class _$WalletAssetTep74Impl extends _WalletAssetTep74 {
       {required this.mint,
       required this.symbol,
       required this.decimals,
-      required this.balance,
+      @StringOrIntConverter() required this.balance,
       required this.kind,
       this.name})
       : super._();
@@ -2594,6 +2926,7 @@ class _$WalletAssetTep74Impl extends _WalletAssetTep74 {
   @override
   final int decimals;
   @override
+  @StringOrIntConverter()
   final String balance;
   @override
   final String kind;
@@ -2636,37 +2969,54 @@ class _$WalletAssetTep74Impl extends _WalletAssetTep74 {
   @override
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
-    required TResult Function(String symbol, int decimals, String balance,
-            String kind, bool? verified, String? name)
+    required TResult Function(
+            String symbol,
+            int decimals,
+            @StringOrIntConverter() String balance,
+            String kind,
+            bool? verified,
+            String? name)
         native,
-    required TResult Function(String symbol, int decimals, String balance,
-            String kind, bool? verified, String? contract, String? name)
+    required TResult Function(
+            String symbol,
+            int decimals,
+            @StringOrIntConverter() String balance,
+            String kind,
+            bool? verified,
+            String? contract,
+            String? name)
         erc20,
-    required TResult Function(String assetId, String symbol, int decimals,
-            bool verified, String balance, String kind, String? name)
+    required TResult Function(
+            String assetId,
+            String symbol,
+            int decimals,
+            bool verified,
+            @StringOrIntConverter() String balance,
+            String kind,
+            String? name)
         asa,
     required TResult Function(String mint, String symbol, int decimals,
-            String balance, String kind, String? name)
+            @StringOrIntConverter() String balance, String kind, String? name)
         spl,
     required TResult Function(String mint, String symbol, int decimals,
-            String balance, String kind, String? name)
+            @StringOrIntConverter() String balance, String kind, String? name)
         spl2022,
     required TResult Function(String mint, String symbol, int decimals,
-            String balance, String kind, String? name)
+            @StringOrIntConverter() String balance, String kind, String? name)
         sep41,
     required TResult Function(String mint, String symbol, int decimals,
-            String balance, String kind, String? name)
+            @StringOrIntConverter() String balance, String kind, String? name)
         tep74,
     required TResult Function(String tokenId, String symbol, int decimals,
-            String balance, String kind, String? name)
+            @StringOrIntConverter() String balance, String kind, String? name)
         trc10,
     required TResult Function(String contract, String symbol, int decimals,
-            String balance, String kind, String? name)
+            @StringOrIntConverter() String balance, String kind, String? name)
         trc20,
     required TResult Function(
             String symbol,
             int decimals,
-            String balance,
+            @StringOrIntConverter() String balance,
             String kind,
             String? contract,
             String? name,
@@ -2682,37 +3032,54 @@ class _$WalletAssetTep74Impl extends _WalletAssetTep74 {
   @override
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
-    TResult? Function(String symbol, int decimals, String balance, String kind,
-            bool? verified, String? name)?
+    TResult? Function(
+            String symbol,
+            int decimals,
+            @StringOrIntConverter() String balance,
+            String kind,
+            bool? verified,
+            String? name)?
         native,
-    TResult? Function(String symbol, int decimals, String balance, String kind,
-            bool? verified, String? contract, String? name)?
+    TResult? Function(
+            String symbol,
+            int decimals,
+            @StringOrIntConverter() String balance,
+            String kind,
+            bool? verified,
+            String? contract,
+            String? name)?
         erc20,
-    TResult? Function(String assetId, String symbol, int decimals,
-            bool verified, String balance, String kind, String? name)?
+    TResult? Function(
+            String assetId,
+            String symbol,
+            int decimals,
+            bool verified,
+            @StringOrIntConverter() String balance,
+            String kind,
+            String? name)?
         asa,
-    TResult? Function(String mint, String symbol, int decimals, String balance,
-            String kind, String? name)?
+    TResult? Function(String mint, String symbol, int decimals,
+            @StringOrIntConverter() String balance, String kind, String? name)?
         spl,
-    TResult? Function(String mint, String symbol, int decimals, String balance,
-            String kind, String? name)?
+    TResult? Function(String mint, String symbol, int decimals,
+            @StringOrIntConverter() String balance, String kind, String? name)?
         spl2022,
-    TResult? Function(String mint, String symbol, int decimals, String balance,
-            String kind, String? name)?
+    TResult? Function(String mint, String symbol, int decimals,
+            @StringOrIntConverter() String balance, String kind, String? name)?
         sep41,
-    TResult? Function(String mint, String symbol, int decimals, String balance,
-            String kind, String? name)?
+    TResult? Function(String mint, String symbol, int decimals,
+            @StringOrIntConverter() String balance, String kind, String? name)?
         tep74,
     TResult? Function(String tokenId, String symbol, int decimals,
-            String balance, String kind, String? name)?
+            @StringOrIntConverter() String balance, String kind, String? name)?
         trc10,
     TResult? Function(String contract, String symbol, int decimals,
-            String balance, String kind, String? name)?
+            @StringOrIntConverter() String balance, String kind, String? name)?
         trc20,
     TResult? Function(
             String symbol,
             int decimals,
-            String balance,
+            @StringOrIntConverter() String balance,
             String kind,
             String? contract,
             String? name,
@@ -2728,37 +3095,48 @@ class _$WalletAssetTep74Impl extends _WalletAssetTep74 {
   @override
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
-    TResult Function(String symbol, int decimals, String balance, String kind,
-            bool? verified, String? name)?
+    TResult Function(
+            String symbol,
+            int decimals,
+            @StringOrIntConverter() String balance,
+            String kind,
+            bool? verified,
+            String? name)?
         native,
-    TResult Function(String symbol, int decimals, String balance, String kind,
-            bool? verified, String? contract, String? name)?
+    TResult Function(
+            String symbol,
+            int decimals,
+            @StringOrIntConverter() String balance,
+            String kind,
+            bool? verified,
+            String? contract,
+            String? name)?
         erc20,
     TResult Function(String assetId, String symbol, int decimals, bool verified,
-            String balance, String kind, String? name)?
+            @StringOrIntConverter() String balance, String kind, String? name)?
         asa,
-    TResult Function(String mint, String symbol, int decimals, String balance,
-            String kind, String? name)?
+    TResult Function(String mint, String symbol, int decimals,
+            @StringOrIntConverter() String balance, String kind, String? name)?
         spl,
-    TResult Function(String mint, String symbol, int decimals, String balance,
-            String kind, String? name)?
+    TResult Function(String mint, String symbol, int decimals,
+            @StringOrIntConverter() String balance, String kind, String? name)?
         spl2022,
-    TResult Function(String mint, String symbol, int decimals, String balance,
-            String kind, String? name)?
+    TResult Function(String mint, String symbol, int decimals,
+            @StringOrIntConverter() String balance, String kind, String? name)?
         sep41,
-    TResult Function(String mint, String symbol, int decimals, String balance,
-            String kind, String? name)?
+    TResult Function(String mint, String symbol, int decimals,
+            @StringOrIntConverter() String balance, String kind, String? name)?
         tep74,
     TResult Function(String tokenId, String symbol, int decimals,
-            String balance, String kind, String? name)?
+            @StringOrIntConverter() String balance, String kind, String? name)?
         trc10,
     TResult Function(String contract, String symbol, int decimals,
-            String balance, String kind, String? name)?
+            @StringOrIntConverter() String balance, String kind, String? name)?
         trc20,
     TResult Function(
             String symbol,
             int decimals,
-            String balance,
+            @StringOrIntConverter() String balance,
             String kind,
             String? contract,
             String? name,
@@ -2843,7 +3221,7 @@ abstract class _WalletAssetTep74 extends WalletAsset {
       {required final String mint,
       required final String symbol,
       required final int decimals,
-      required final String balance,
+      @StringOrIntConverter() required final String balance,
       required final String kind,
       final String? name}) = _$WalletAssetTep74Impl;
   const _WalletAssetTep74._() : super._();
@@ -2857,6 +3235,7 @@ abstract class _WalletAssetTep74 extends WalletAsset {
   @override
   int get decimals;
   @override
+  @StringOrIntConverter()
   String get balance;
   @override
   String get kind;
@@ -2883,7 +3262,7 @@ abstract class _$$WalletAssetTrc10ImplCopyWith<$Res>
       {String tokenId,
       String symbol,
       int decimals,
-      String balance,
+      @StringOrIntConverter() String balance,
       String kind,
       String? name});
 }
@@ -2944,7 +3323,7 @@ class _$WalletAssetTrc10Impl extends _WalletAssetTrc10 {
       {required this.tokenId,
       required this.symbol,
       required this.decimals,
-      required this.balance,
+      @StringOrIntConverter() required this.balance,
       required this.kind,
       this.name})
       : super._();
@@ -2959,6 +3338,7 @@ class _$WalletAssetTrc10Impl extends _WalletAssetTrc10 {
   @override
   final int decimals;
   @override
+  @StringOrIntConverter()
   final String balance;
   @override
   final String kind;
@@ -3001,37 +3381,54 @@ class _$WalletAssetTrc10Impl extends _WalletAssetTrc10 {
   @override
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
-    required TResult Function(String symbol, int decimals, String balance,
-            String kind, bool? verified, String? name)
+    required TResult Function(
+            String symbol,
+            int decimals,
+            @StringOrIntConverter() String balance,
+            String kind,
+            bool? verified,
+            String? name)
         native,
-    required TResult Function(String symbol, int decimals, String balance,
-            String kind, bool? verified, String? contract, String? name)
+    required TResult Function(
+            String symbol,
+            int decimals,
+            @StringOrIntConverter() String balance,
+            String kind,
+            bool? verified,
+            String? contract,
+            String? name)
         erc20,
-    required TResult Function(String assetId, String symbol, int decimals,
-            bool verified, String balance, String kind, String? name)
+    required TResult Function(
+            String assetId,
+            String symbol,
+            int decimals,
+            bool verified,
+            @StringOrIntConverter() String balance,
+            String kind,
+            String? name)
         asa,
     required TResult Function(String mint, String symbol, int decimals,
-            String balance, String kind, String? name)
+            @StringOrIntConverter() String balance, String kind, String? name)
         spl,
     required TResult Function(String mint, String symbol, int decimals,
-            String balance, String kind, String? name)
+            @StringOrIntConverter() String balance, String kind, String? name)
         spl2022,
     required TResult Function(String mint, String symbol, int decimals,
-            String balance, String kind, String? name)
+            @StringOrIntConverter() String balance, String kind, String? name)
         sep41,
     required TResult Function(String mint, String symbol, int decimals,
-            String balance, String kind, String? name)
+            @StringOrIntConverter() String balance, String kind, String? name)
         tep74,
     required TResult Function(String tokenId, String symbol, int decimals,
-            String balance, String kind, String? name)
+            @StringOrIntConverter() String balance, String kind, String? name)
         trc10,
     required TResult Function(String contract, String symbol, int decimals,
-            String balance, String kind, String? name)
+            @StringOrIntConverter() String balance, String kind, String? name)
         trc20,
     required TResult Function(
             String symbol,
             int decimals,
-            String balance,
+            @StringOrIntConverter() String balance,
             String kind,
             String? contract,
             String? name,
@@ -3047,37 +3444,54 @@ class _$WalletAssetTrc10Impl extends _WalletAssetTrc10 {
   @override
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
-    TResult? Function(String symbol, int decimals, String balance, String kind,
-            bool? verified, String? name)?
+    TResult? Function(
+            String symbol,
+            int decimals,
+            @StringOrIntConverter() String balance,
+            String kind,
+            bool? verified,
+            String? name)?
         native,
-    TResult? Function(String symbol, int decimals, String balance, String kind,
-            bool? verified, String? contract, String? name)?
+    TResult? Function(
+            String symbol,
+            int decimals,
+            @StringOrIntConverter() String balance,
+            String kind,
+            bool? verified,
+            String? contract,
+            String? name)?
         erc20,
-    TResult? Function(String assetId, String symbol, int decimals,
-            bool verified, String balance, String kind, String? name)?
+    TResult? Function(
+            String assetId,
+            String symbol,
+            int decimals,
+            bool verified,
+            @StringOrIntConverter() String balance,
+            String kind,
+            String? name)?
         asa,
-    TResult? Function(String mint, String symbol, int decimals, String balance,
-            String kind, String? name)?
+    TResult? Function(String mint, String symbol, int decimals,
+            @StringOrIntConverter() String balance, String kind, String? name)?
         spl,
-    TResult? Function(String mint, String symbol, int decimals, String balance,
-            String kind, String? name)?
+    TResult? Function(String mint, String symbol, int decimals,
+            @StringOrIntConverter() String balance, String kind, String? name)?
         spl2022,
-    TResult? Function(String mint, String symbol, int decimals, String balance,
-            String kind, String? name)?
+    TResult? Function(String mint, String symbol, int decimals,
+            @StringOrIntConverter() String balance, String kind, String? name)?
         sep41,
-    TResult? Function(String mint, String symbol, int decimals, String balance,
-            String kind, String? name)?
+    TResult? Function(String mint, String symbol, int decimals,
+            @StringOrIntConverter() String balance, String kind, String? name)?
         tep74,
     TResult? Function(String tokenId, String symbol, int decimals,
-            String balance, String kind, String? name)?
+            @StringOrIntConverter() String balance, String kind, String? name)?
         trc10,
     TResult? Function(String contract, String symbol, int decimals,
-            String balance, String kind, String? name)?
+            @StringOrIntConverter() String balance, String kind, String? name)?
         trc20,
     TResult? Function(
             String symbol,
             int decimals,
-            String balance,
+            @StringOrIntConverter() String balance,
             String kind,
             String? contract,
             String? name,
@@ -3093,37 +3507,48 @@ class _$WalletAssetTrc10Impl extends _WalletAssetTrc10 {
   @override
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
-    TResult Function(String symbol, int decimals, String balance, String kind,
-            bool? verified, String? name)?
+    TResult Function(
+            String symbol,
+            int decimals,
+            @StringOrIntConverter() String balance,
+            String kind,
+            bool? verified,
+            String? name)?
         native,
-    TResult Function(String symbol, int decimals, String balance, String kind,
-            bool? verified, String? contract, String? name)?
+    TResult Function(
+            String symbol,
+            int decimals,
+            @StringOrIntConverter() String balance,
+            String kind,
+            bool? verified,
+            String? contract,
+            String? name)?
         erc20,
     TResult Function(String assetId, String symbol, int decimals, bool verified,
-            String balance, String kind, String? name)?
+            @StringOrIntConverter() String balance, String kind, String? name)?
         asa,
-    TResult Function(String mint, String symbol, int decimals, String balance,
-            String kind, String? name)?
+    TResult Function(String mint, String symbol, int decimals,
+            @StringOrIntConverter() String balance, String kind, String? name)?
         spl,
-    TResult Function(String mint, String symbol, int decimals, String balance,
-            String kind, String? name)?
+    TResult Function(String mint, String symbol, int decimals,
+            @StringOrIntConverter() String balance, String kind, String? name)?
         spl2022,
-    TResult Function(String mint, String symbol, int decimals, String balance,
-            String kind, String? name)?
+    TResult Function(String mint, String symbol, int decimals,
+            @StringOrIntConverter() String balance, String kind, String? name)?
         sep41,
-    TResult Function(String mint, String symbol, int decimals, String balance,
-            String kind, String? name)?
+    TResult Function(String mint, String symbol, int decimals,
+            @StringOrIntConverter() String balance, String kind, String? name)?
         tep74,
     TResult Function(String tokenId, String symbol, int decimals,
-            String balance, String kind, String? name)?
+            @StringOrIntConverter() String balance, String kind, String? name)?
         trc10,
     TResult Function(String contract, String symbol, int decimals,
-            String balance, String kind, String? name)?
+            @StringOrIntConverter() String balance, String kind, String? name)?
         trc20,
     TResult Function(
             String symbol,
             int decimals,
-            String balance,
+            @StringOrIntConverter() String balance,
             String kind,
             String? contract,
             String? name,
@@ -3208,7 +3633,7 @@ abstract class _WalletAssetTrc10 extends WalletAsset {
       {required final String tokenId,
       required final String symbol,
       required final int decimals,
-      required final String balance,
+      @StringOrIntConverter() required final String balance,
       required final String kind,
       final String? name}) = _$WalletAssetTrc10Impl;
   const _WalletAssetTrc10._() : super._();
@@ -3222,6 +3647,7 @@ abstract class _WalletAssetTrc10 extends WalletAsset {
   @override
   int get decimals;
   @override
+  @StringOrIntConverter()
   String get balance;
   @override
   String get kind;
@@ -3248,7 +3674,7 @@ abstract class _$$WalletAssetTrc20ImplCopyWith<$Res>
       {String contract,
       String symbol,
       int decimals,
-      String balance,
+      @StringOrIntConverter() String balance,
       String kind,
       String? name});
 }
@@ -3309,7 +3735,7 @@ class _$WalletAssetTrc20Impl extends _WalletAssetTrc20 {
       {required this.contract,
       required this.symbol,
       required this.decimals,
-      required this.balance,
+      @StringOrIntConverter() required this.balance,
       required this.kind,
       this.name})
       : super._();
@@ -3324,6 +3750,7 @@ class _$WalletAssetTrc20Impl extends _WalletAssetTrc20 {
   @override
   final int decimals;
   @override
+  @StringOrIntConverter()
   final String balance;
   @override
   final String kind;
@@ -3367,37 +3794,54 @@ class _$WalletAssetTrc20Impl extends _WalletAssetTrc20 {
   @override
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
-    required TResult Function(String symbol, int decimals, String balance,
-            String kind, bool? verified, String? name)
+    required TResult Function(
+            String symbol,
+            int decimals,
+            @StringOrIntConverter() String balance,
+            String kind,
+            bool? verified,
+            String? name)
         native,
-    required TResult Function(String symbol, int decimals, String balance,
-            String kind, bool? verified, String? contract, String? name)
+    required TResult Function(
+            String symbol,
+            int decimals,
+            @StringOrIntConverter() String balance,
+            String kind,
+            bool? verified,
+            String? contract,
+            String? name)
         erc20,
-    required TResult Function(String assetId, String symbol, int decimals,
-            bool verified, String balance, String kind, String? name)
+    required TResult Function(
+            String assetId,
+            String symbol,
+            int decimals,
+            bool verified,
+            @StringOrIntConverter() String balance,
+            String kind,
+            String? name)
         asa,
     required TResult Function(String mint, String symbol, int decimals,
-            String balance, String kind, String? name)
+            @StringOrIntConverter() String balance, String kind, String? name)
         spl,
     required TResult Function(String mint, String symbol, int decimals,
-            String balance, String kind, String? name)
+            @StringOrIntConverter() String balance, String kind, String? name)
         spl2022,
     required TResult Function(String mint, String symbol, int decimals,
-            String balance, String kind, String? name)
+            @StringOrIntConverter() String balance, String kind, String? name)
         sep41,
     required TResult Function(String mint, String symbol, int decimals,
-            String balance, String kind, String? name)
+            @StringOrIntConverter() String balance, String kind, String? name)
         tep74,
     required TResult Function(String tokenId, String symbol, int decimals,
-            String balance, String kind, String? name)
+            @StringOrIntConverter() String balance, String kind, String? name)
         trc10,
     required TResult Function(String contract, String symbol, int decimals,
-            String balance, String kind, String? name)
+            @StringOrIntConverter() String balance, String kind, String? name)
         trc20,
     required TResult Function(
             String symbol,
             int decimals,
-            String balance,
+            @StringOrIntConverter() String balance,
             String kind,
             String? contract,
             String? name,
@@ -3413,37 +3857,54 @@ class _$WalletAssetTrc20Impl extends _WalletAssetTrc20 {
   @override
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
-    TResult? Function(String symbol, int decimals, String balance, String kind,
-            bool? verified, String? name)?
+    TResult? Function(
+            String symbol,
+            int decimals,
+            @StringOrIntConverter() String balance,
+            String kind,
+            bool? verified,
+            String? name)?
         native,
-    TResult? Function(String symbol, int decimals, String balance, String kind,
-            bool? verified, String? contract, String? name)?
+    TResult? Function(
+            String symbol,
+            int decimals,
+            @StringOrIntConverter() String balance,
+            String kind,
+            bool? verified,
+            String? contract,
+            String? name)?
         erc20,
-    TResult? Function(String assetId, String symbol, int decimals,
-            bool verified, String balance, String kind, String? name)?
+    TResult? Function(
+            String assetId,
+            String symbol,
+            int decimals,
+            bool verified,
+            @StringOrIntConverter() String balance,
+            String kind,
+            String? name)?
         asa,
-    TResult? Function(String mint, String symbol, int decimals, String balance,
-            String kind, String? name)?
+    TResult? Function(String mint, String symbol, int decimals,
+            @StringOrIntConverter() String balance, String kind, String? name)?
         spl,
-    TResult? Function(String mint, String symbol, int decimals, String balance,
-            String kind, String? name)?
+    TResult? Function(String mint, String symbol, int decimals,
+            @StringOrIntConverter() String balance, String kind, String? name)?
         spl2022,
-    TResult? Function(String mint, String symbol, int decimals, String balance,
-            String kind, String? name)?
+    TResult? Function(String mint, String symbol, int decimals,
+            @StringOrIntConverter() String balance, String kind, String? name)?
         sep41,
-    TResult? Function(String mint, String symbol, int decimals, String balance,
-            String kind, String? name)?
+    TResult? Function(String mint, String symbol, int decimals,
+            @StringOrIntConverter() String balance, String kind, String? name)?
         tep74,
     TResult? Function(String tokenId, String symbol, int decimals,
-            String balance, String kind, String? name)?
+            @StringOrIntConverter() String balance, String kind, String? name)?
         trc10,
     TResult? Function(String contract, String symbol, int decimals,
-            String balance, String kind, String? name)?
+            @StringOrIntConverter() String balance, String kind, String? name)?
         trc20,
     TResult? Function(
             String symbol,
             int decimals,
-            String balance,
+            @StringOrIntConverter() String balance,
             String kind,
             String? contract,
             String? name,
@@ -3459,37 +3920,48 @@ class _$WalletAssetTrc20Impl extends _WalletAssetTrc20 {
   @override
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
-    TResult Function(String symbol, int decimals, String balance, String kind,
-            bool? verified, String? name)?
+    TResult Function(
+            String symbol,
+            int decimals,
+            @StringOrIntConverter() String balance,
+            String kind,
+            bool? verified,
+            String? name)?
         native,
-    TResult Function(String symbol, int decimals, String balance, String kind,
-            bool? verified, String? contract, String? name)?
+    TResult Function(
+            String symbol,
+            int decimals,
+            @StringOrIntConverter() String balance,
+            String kind,
+            bool? verified,
+            String? contract,
+            String? name)?
         erc20,
     TResult Function(String assetId, String symbol, int decimals, bool verified,
-            String balance, String kind, String? name)?
+            @StringOrIntConverter() String balance, String kind, String? name)?
         asa,
-    TResult Function(String mint, String symbol, int decimals, String balance,
-            String kind, String? name)?
+    TResult Function(String mint, String symbol, int decimals,
+            @StringOrIntConverter() String balance, String kind, String? name)?
         spl,
-    TResult Function(String mint, String symbol, int decimals, String balance,
-            String kind, String? name)?
+    TResult Function(String mint, String symbol, int decimals,
+            @StringOrIntConverter() String balance, String kind, String? name)?
         spl2022,
-    TResult Function(String mint, String symbol, int decimals, String balance,
-            String kind, String? name)?
+    TResult Function(String mint, String symbol, int decimals,
+            @StringOrIntConverter() String balance, String kind, String? name)?
         sep41,
-    TResult Function(String mint, String symbol, int decimals, String balance,
-            String kind, String? name)?
+    TResult Function(String mint, String symbol, int decimals,
+            @StringOrIntConverter() String balance, String kind, String? name)?
         tep74,
     TResult Function(String tokenId, String symbol, int decimals,
-            String balance, String kind, String? name)?
+            @StringOrIntConverter() String balance, String kind, String? name)?
         trc10,
     TResult Function(String contract, String symbol, int decimals,
-            String balance, String kind, String? name)?
+            @StringOrIntConverter() String balance, String kind, String? name)?
         trc20,
     TResult Function(
             String symbol,
             int decimals,
-            String balance,
+            @StringOrIntConverter() String balance,
             String kind,
             String? contract,
             String? name,
@@ -3574,7 +4046,7 @@ abstract class _WalletAssetTrc20 extends WalletAsset {
       {required final String contract,
       required final String symbol,
       required final int decimals,
-      required final String balance,
+      @StringOrIntConverter() required final String balance,
       required final String kind,
       final String? name}) = _$WalletAssetTrc20Impl;
   const _WalletAssetTrc20._() : super._();
@@ -3588,6 +4060,7 @@ abstract class _WalletAssetTrc20 extends WalletAsset {
   @override
   int get decimals;
   @override
+  @StringOrIntConverter()
   String get balance;
   @override
   String get kind;
@@ -3613,7 +4086,7 @@ abstract class _$$WalletAssetUnknownImplCopyWith<$Res>
   $Res call(
       {String symbol,
       int decimals,
-      String balance,
+      @StringOrIntConverter() String balance,
       String kind,
       String? contract,
       String? name,
@@ -3698,7 +4171,7 @@ class _$WalletAssetUnknownImpl extends _WalletAssetUnknown {
   const _$WalletAssetUnknownImpl(
       {required this.symbol,
       required this.decimals,
-      required this.balance,
+      @StringOrIntConverter() required this.balance,
       required this.kind,
       this.contract,
       this.name,
@@ -3716,6 +4189,7 @@ class _$WalletAssetUnknownImpl extends _WalletAssetUnknown {
   @override
   final int decimals;
   @override
+  @StringOrIntConverter()
   final String balance;
   @override
   final String kind;
@@ -3774,37 +4248,54 @@ class _$WalletAssetUnknownImpl extends _WalletAssetUnknown {
   @override
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
-    required TResult Function(String symbol, int decimals, String balance,
-            String kind, bool? verified, String? name)
+    required TResult Function(
+            String symbol,
+            int decimals,
+            @StringOrIntConverter() String balance,
+            String kind,
+            bool? verified,
+            String? name)
         native,
-    required TResult Function(String symbol, int decimals, String balance,
-            String kind, bool? verified, String? contract, String? name)
+    required TResult Function(
+            String symbol,
+            int decimals,
+            @StringOrIntConverter() String balance,
+            String kind,
+            bool? verified,
+            String? contract,
+            String? name)
         erc20,
-    required TResult Function(String assetId, String symbol, int decimals,
-            bool verified, String balance, String kind, String? name)
+    required TResult Function(
+            String assetId,
+            String symbol,
+            int decimals,
+            bool verified,
+            @StringOrIntConverter() String balance,
+            String kind,
+            String? name)
         asa,
     required TResult Function(String mint, String symbol, int decimals,
-            String balance, String kind, String? name)
+            @StringOrIntConverter() String balance, String kind, String? name)
         spl,
     required TResult Function(String mint, String symbol, int decimals,
-            String balance, String kind, String? name)
+            @StringOrIntConverter() String balance, String kind, String? name)
         spl2022,
     required TResult Function(String mint, String symbol, int decimals,
-            String balance, String kind, String? name)
+            @StringOrIntConverter() String balance, String kind, String? name)
         sep41,
     required TResult Function(String mint, String symbol, int decimals,
-            String balance, String kind, String? name)
+            @StringOrIntConverter() String balance, String kind, String? name)
         tep74,
     required TResult Function(String tokenId, String symbol, int decimals,
-            String balance, String kind, String? name)
+            @StringOrIntConverter() String balance, String kind, String? name)
         trc10,
     required TResult Function(String contract, String symbol, int decimals,
-            String balance, String kind, String? name)
+            @StringOrIntConverter() String balance, String kind, String? name)
         trc20,
     required TResult Function(
             String symbol,
             int decimals,
-            String balance,
+            @StringOrIntConverter() String balance,
             String kind,
             String? contract,
             String? name,
@@ -3821,37 +4312,54 @@ class _$WalletAssetUnknownImpl extends _WalletAssetUnknown {
   @override
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
-    TResult? Function(String symbol, int decimals, String balance, String kind,
-            bool? verified, String? name)?
+    TResult? Function(
+            String symbol,
+            int decimals,
+            @StringOrIntConverter() String balance,
+            String kind,
+            bool? verified,
+            String? name)?
         native,
-    TResult? Function(String symbol, int decimals, String balance, String kind,
-            bool? verified, String? contract, String? name)?
+    TResult? Function(
+            String symbol,
+            int decimals,
+            @StringOrIntConverter() String balance,
+            String kind,
+            bool? verified,
+            String? contract,
+            String? name)?
         erc20,
-    TResult? Function(String assetId, String symbol, int decimals,
-            bool verified, String balance, String kind, String? name)?
+    TResult? Function(
+            String assetId,
+            String symbol,
+            int decimals,
+            bool verified,
+            @StringOrIntConverter() String balance,
+            String kind,
+            String? name)?
         asa,
-    TResult? Function(String mint, String symbol, int decimals, String balance,
-            String kind, String? name)?
+    TResult? Function(String mint, String symbol, int decimals,
+            @StringOrIntConverter() String balance, String kind, String? name)?
         spl,
-    TResult? Function(String mint, String symbol, int decimals, String balance,
-            String kind, String? name)?
+    TResult? Function(String mint, String symbol, int decimals,
+            @StringOrIntConverter() String balance, String kind, String? name)?
         spl2022,
-    TResult? Function(String mint, String symbol, int decimals, String balance,
-            String kind, String? name)?
+    TResult? Function(String mint, String symbol, int decimals,
+            @StringOrIntConverter() String balance, String kind, String? name)?
         sep41,
-    TResult? Function(String mint, String symbol, int decimals, String balance,
-            String kind, String? name)?
+    TResult? Function(String mint, String symbol, int decimals,
+            @StringOrIntConverter() String balance, String kind, String? name)?
         tep74,
     TResult? Function(String tokenId, String symbol, int decimals,
-            String balance, String kind, String? name)?
+            @StringOrIntConverter() String balance, String kind, String? name)?
         trc10,
     TResult? Function(String contract, String symbol, int decimals,
-            String balance, String kind, String? name)?
+            @StringOrIntConverter() String balance, String kind, String? name)?
         trc20,
     TResult? Function(
             String symbol,
             int decimals,
-            String balance,
+            @StringOrIntConverter() String balance,
             String kind,
             String? contract,
             String? name,
@@ -3868,37 +4376,48 @@ class _$WalletAssetUnknownImpl extends _WalletAssetUnknown {
   @override
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
-    TResult Function(String symbol, int decimals, String balance, String kind,
-            bool? verified, String? name)?
+    TResult Function(
+            String symbol,
+            int decimals,
+            @StringOrIntConverter() String balance,
+            String kind,
+            bool? verified,
+            String? name)?
         native,
-    TResult Function(String symbol, int decimals, String balance, String kind,
-            bool? verified, String? contract, String? name)?
+    TResult Function(
+            String symbol,
+            int decimals,
+            @StringOrIntConverter() String balance,
+            String kind,
+            bool? verified,
+            String? contract,
+            String? name)?
         erc20,
     TResult Function(String assetId, String symbol, int decimals, bool verified,
-            String balance, String kind, String? name)?
+            @StringOrIntConverter() String balance, String kind, String? name)?
         asa,
-    TResult Function(String mint, String symbol, int decimals, String balance,
-            String kind, String? name)?
+    TResult Function(String mint, String symbol, int decimals,
+            @StringOrIntConverter() String balance, String kind, String? name)?
         spl,
-    TResult Function(String mint, String symbol, int decimals, String balance,
-            String kind, String? name)?
+    TResult Function(String mint, String symbol, int decimals,
+            @StringOrIntConverter() String balance, String kind, String? name)?
         spl2022,
-    TResult Function(String mint, String symbol, int decimals, String balance,
-            String kind, String? name)?
+    TResult Function(String mint, String symbol, int decimals,
+            @StringOrIntConverter() String balance, String kind, String? name)?
         sep41,
-    TResult Function(String mint, String symbol, int decimals, String balance,
-            String kind, String? name)?
+    TResult Function(String mint, String symbol, int decimals,
+            @StringOrIntConverter() String balance, String kind, String? name)?
         tep74,
     TResult Function(String tokenId, String symbol, int decimals,
-            String balance, String kind, String? name)?
+            @StringOrIntConverter() String balance, String kind, String? name)?
         trc10,
     TResult Function(String contract, String symbol, int decimals,
-            String balance, String kind, String? name)?
+            @StringOrIntConverter() String balance, String kind, String? name)?
         trc20,
     TResult Function(
             String symbol,
             int decimals,
-            String balance,
+            @StringOrIntConverter() String balance,
             String kind,
             String? contract,
             String? name,
@@ -3983,7 +4502,7 @@ abstract class _WalletAssetUnknown extends WalletAsset {
   const factory _WalletAssetUnknown(
       {required final String symbol,
       required final int decimals,
-      required final String balance,
+      @StringOrIntConverter() required final String balance,
       required final String kind,
       final String? contract,
       final String? name,
@@ -4001,6 +4520,7 @@ abstract class _WalletAssetUnknown extends WalletAsset {
   @override
   int get decimals;
   @override
+  @StringOrIntConverter()
   String get balance;
   @override
   String get kind;
