@@ -21,6 +21,8 @@ class CoinsTable extends Table {
   TextColumn get symbolGroup => text()();
   @JsonKey('syncFrequency')
   Column<Duration> get syncFrequency => customType(const DurationType())();
+  BoolColumn get native => boolean()();
+  BoolColumn get prioritized => boolean()();
 
   @override
   Set<Column> get primaryKey => {id};

@@ -15,12 +15,18 @@ class CoinsComparator {
     String? networkB,
     bool isNativeA = false,
     bool isNativeB = false,
+    bool isPrioritizedA = false,
+    bool isPrioritizedB = false,
   }) {
     // 1. Compare by balanceUSD in descending order
     final balanceComparison = balanceB.compareTo(balanceA);
     if (balanceComparison != 0) return balanceComparison;
 
-    // 2. Compare by priority list
+    // 2. If coin is prioritized, it should be displayed before other coins,
+    if (isPrioritizedA && !isPrioritizedB) return -1;
+    if (isPrioritizedB && !isPrioritizedA) return 1;
+
+    // 3. Compare by priority list
     final aPriority = _prioritizer.getPriorityIndex(symbolA.toUpperCase());
     final bPriority = _prioritizer.getPriorityIndex(symbolB.toUpperCase());
 
@@ -33,16 +39,16 @@ class CoinsComparator {
     if (aPriority != -1 && bPriority == -1) return -1;
     if (bPriority != -1 && aPriority == -1) return 1;
 
-    // 3. Compare by symbol
+    // 4. Compare by symbol
     final symbolComparison = symbolA.compareTo(symbolB);
     if (symbolComparison != 0) return symbolComparison;
 
-    // 4. If coin is native for network, it should be displayed before other coins,
+    // 5. If coin is native for network, it should be displayed before other coins,
     // sorted by network
     if (isNativeA && !isNativeB) return -1;
     if (isNativeB && !isNativeA) return 1;
 
-    // 5. If symbols are equal, compare by networks
+    // 6. If symbols are equal, compare by networks
     if (networkA != null && networkB != null) {
       return networkA.compareTo(networkB);
     }
@@ -70,8 +76,10 @@ class CoinsComparator {
       b.coin.abbreviation,
       networkA: a.coin.network.displayName,
       networkB: b.coin.network.displayName,
-      isNativeA: a.coin.isNative,
-      isNativeB: b.coin.isNative,
+      isNativeA: a.coin.native,
+      isNativeB: b.coin.native,
+      isPrioritizedA: a.coin.prioritized,
+      isPrioritizedB: b.coin.prioritized,
     );
   }
 }

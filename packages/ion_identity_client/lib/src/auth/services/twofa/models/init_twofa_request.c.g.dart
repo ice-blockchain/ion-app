@@ -19,18 +19,11 @@ _$InitTwoFARequestImpl _$$InitTwoFARequestImplFromJson(
     );
 
 Map<String, dynamic> _$$InitTwoFARequestImplToJson(
-    _$InitTwoFARequestImpl instance) {
-  final val = <String, dynamic>{};
-
-  void writeNotNull(String key, dynamic value) {
-    if (value != null) {
-      val[key] = value;
-    }
-  }
-
-  writeNotNull('2FAVerificationCodes', instance.verificationCodes);
-  writeNotNull('email', instance.email);
-  writeNotNull('phoneNumber', instance.phoneNumber);
-  writeNotNull('replace', instance.replace);
-  return val;
-}
+        _$InitTwoFARequestImpl instance) =>
+    <String, dynamic>{
+      if (instance.verificationCodes case final value?)
+        '2FAVerificationCodes': value,
+      if (instance.email case final value?) 'email': value,
+      if (instance.phoneNumber case final value?) 'phoneNumber': value,
+      if (instance.replace case final value?) 'replace': value,
+    };

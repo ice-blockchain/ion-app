@@ -18,23 +18,14 @@ _$NativeTokenTransferImpl _$$NativeTokenTransferImplFromJson(
     );
 
 Map<String, dynamic> _$$NativeTokenTransferImplToJson(
-    _$NativeTokenTransferImpl instance) {
-  final val = <String, dynamic>{
-    'to': instance.to,
-    'amount': instance.amount,
-    'kind': instance.kind,
-  };
-
-  void writeNotNull(String key, dynamic value) {
-    if (value != null) {
-      val[key] = value;
-    }
-  }
-
-  writeNotNull('priority', instance.priority?.toJson());
-  writeNotNull('memo', instance.memo);
-  return val;
-}
+        _$NativeTokenTransferImpl instance) =>
+    <String, dynamic>{
+      'to': instance.to,
+      'amount': instance.amount,
+      'kind': instance.kind,
+      if (instance.priority?.toJson() case final value?) 'priority': value,
+      if (instance.memo case final value?) 'memo': value,
+    };
 
 const _$TransferPriorityEnumMap = {
   TransferPriority.slow: 'slow',
@@ -68,23 +59,14 @@ _$Erc20TransferImpl _$$Erc20TransferImplFromJson(Map<String, dynamic> json) =>
           $enumDecodeNullable(_$TransferPriorityEnumMap, json['priority']),
     );
 
-Map<String, dynamic> _$$Erc20TransferImplToJson(_$Erc20TransferImpl instance) {
-  final val = <String, dynamic>{
-    'contract': instance.contract,
-    'to': instance.to,
-    'amount': instance.amount,
-    'kind': instance.kind,
-  };
-
-  void writeNotNull(String key, dynamic value) {
-    if (value != null) {
-      val[key] = value;
-    }
-  }
-
-  writeNotNull('priority', instance.priority?.toJson());
-  return val;
-}
+Map<String, dynamic> _$$Erc20TransferImplToJson(_$Erc20TransferImpl instance) =>
+    <String, dynamic>{
+      'contract': instance.contract,
+      'to': instance.to,
+      'amount': instance.amount,
+      'kind': instance.kind,
+      if (instance.priority?.toJson() case final value?) 'priority': value,
+    };
 
 _$Erc721TransferImpl _$$Erc721TransferImplFromJson(Map<String, dynamic> json) =>
     _$Erc721TransferImpl(
@@ -97,23 +79,14 @@ _$Erc721TransferImpl _$$Erc721TransferImplFromJson(Map<String, dynamic> json) =>
     );
 
 Map<String, dynamic> _$$Erc721TransferImplToJson(
-    _$Erc721TransferImpl instance) {
-  final val = <String, dynamic>{
-    'contract': instance.contract,
-    'to': instance.to,
-    'tokenId': instance.tokenId,
-    'kind': instance.kind,
-  };
-
-  void writeNotNull(String key, dynamic value) {
-    if (value != null) {
-      val[key] = value;
-    }
-  }
-
-  writeNotNull('priority', instance.priority?.toJson());
-  return val;
-}
+        _$Erc721TransferImpl instance) =>
+    <String, dynamic>{
+      'contract': instance.contract,
+      'to': instance.to,
+      'tokenId': instance.tokenId,
+      'kind': instance.kind,
+      if (instance.priority?.toJson() case final value?) 'priority': value,
+    };
 
 _$SplTransferImpl _$$SplTransferImplFromJson(Map<String, dynamic> json) =>
     _$SplTransferImpl(
@@ -124,23 +97,15 @@ _$SplTransferImpl _$$SplTransferImplFromJson(Map<String, dynamic> json) =>
       createDestinationAccount: json['createDestinationAccount'] as bool?,
     );
 
-Map<String, dynamic> _$$SplTransferImplToJson(_$SplTransferImpl instance) {
-  final val = <String, dynamic>{
-    'mint': instance.mint,
-    'to': instance.to,
-    'amount': instance.amount,
-    'kind': instance.kind,
-  };
-
-  void writeNotNull(String key, dynamic value) {
-    if (value != null) {
-      val[key] = value;
-    }
-  }
-
-  writeNotNull('createDestinationAccount', instance.createDestinationAccount);
-  return val;
-}
+Map<String, dynamic> _$$SplTransferImplToJson(_$SplTransferImpl instance) =>
+    <String, dynamic>{
+      'mint': instance.mint,
+      'to': instance.to,
+      'amount': instance.amount,
+      'kind': instance.kind,
+      if (instance.createDestinationAccount case final value?)
+        'createDestinationAccount': value,
+    };
 
 _$Spl2022TransferImpl _$$Spl2022TransferImplFromJson(
         Map<String, dynamic> json) =>
@@ -153,23 +118,15 @@ _$Spl2022TransferImpl _$$Spl2022TransferImplFromJson(
     );
 
 Map<String, dynamic> _$$Spl2022TransferImplToJson(
-    _$Spl2022TransferImpl instance) {
-  final val = <String, dynamic>{
-    'mint': instance.mint,
-    'to': instance.to,
-    'amount': instance.amount,
-    'kind': instance.kind,
-  };
-
-  void writeNotNull(String key, dynamic value) {
-    if (value != null) {
-      val[key] = value;
-    }
-  }
-
-  writeNotNull('createDestinationAccount', instance.createDestinationAccount);
-  return val;
-}
+        _$Spl2022TransferImpl instance) =>
+    <String, dynamic>{
+      'mint': instance.mint,
+      'to': instance.to,
+      'amount': instance.amount,
+      'kind': instance.kind,
+      if (instance.createDestinationAccount case final value?)
+        'createDestinationAccount': value,
+    };
 
 _$Sep41TransferImpl _$$Sep41TransferImplFromJson(Map<String, dynamic> json) =>
     _$Sep41TransferImpl(
@@ -181,24 +138,15 @@ _$Sep41TransferImpl _$$Sep41TransferImplFromJson(Map<String, dynamic> json) =>
       memo: json['memo'] as String?,
     );
 
-Map<String, dynamic> _$$Sep41TransferImplToJson(_$Sep41TransferImpl instance) {
-  final val = <String, dynamic>{
-    'issuer': instance.issuer,
-    'assetCode': instance.assetCode,
-    'to': instance.to,
-    'amount': instance.amount,
-    'kind': instance.kind,
-  };
-
-  void writeNotNull(String key, dynamic value) {
-    if (value != null) {
-      val[key] = value;
-    }
-  }
-
-  writeNotNull('memo', instance.memo);
-  return val;
-}
+Map<String, dynamic> _$$Sep41TransferImplToJson(_$Sep41TransferImpl instance) =>
+    <String, dynamic>{
+      'issuer': instance.issuer,
+      'assetCode': instance.assetCode,
+      'to': instance.to,
+      'amount': instance.amount,
+      'kind': instance.kind,
+      if (instance.memo case final value?) 'memo': value,
+    };
 
 _$Tep74TransferImpl _$$Tep74TransferImplFromJson(Map<String, dynamic> json) =>
     _$Tep74TransferImpl(
