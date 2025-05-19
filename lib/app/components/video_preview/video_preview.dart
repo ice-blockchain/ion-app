@@ -132,7 +132,7 @@ class VideoPreview extends HookConsumerWidget {
                 isLoading: !(controller?.value.hasError ?? false),
               ),
             ),
-          if (controller != null && !controller.value.hasError)
+          if (controller != null && controller.value.isInitialized && !controller.value.hasError)
             Positioned.fill(
               child: FittedBox(
                 fit: BoxFit.cover,
@@ -147,7 +147,7 @@ class VideoPreview extends HookConsumerWidget {
             const Positioned.fill(
               child: IonPlaceholder(),
             ),
-          if (controller != null)
+          if (controller != null && controller.value.isInitialized)
             PositionedDirectional(
               bottom: 5.0.s,
               start: 5.0.s,
@@ -264,13 +264,15 @@ class _BlurredThumbnail extends HookWidget {
 
     return Stack(
       children: [
-        AnimatedOpacity(
-          duration: const Duration(milliseconds: 100),
-          opacity: isImageLoaded.value ? 1 : 0,
-          child: IonConnectNetworkImage(
-            imageUrl: thumbnailUrl,
-            authorPubkey: authorPubkey,
-            fit: BoxFit.cover,
+        Positioned.fill(
+          child: AnimatedOpacity(
+            duration: const Duration(milliseconds: 100),
+            opacity: isImageLoaded.value ? 1 : 0,
+            child: IonConnectNetworkImage(
+              imageUrl: thumbnailUrl,
+              authorPubkey: authorPubkey,
+              fit: BoxFit.cover,
+            ),
           ),
         ),
         if (isLoading)
