@@ -387,7 +387,7 @@
   "wallet_network_fee": "Network fee",
   "wallet_network_fee_info": "A small cryptocurrency payment required to process and validate blockchain transactions. It is paid by the sender and helps maintain network security and efficiency. The fee amount varies based on transaction speed and network demand.",
   "wallet_max": "max",
-  "wallet_send_to": "Send to",
+  "wallet_sent_to": "Sent to",
   "wallet_from": "From",
   "wallet_asset": "Asset",
   "wallet_title": "Wallet",
