@@ -13,8 +13,10 @@ import 'package:ion/app/extensions/asset_gen_image.dart';
 import 'package:ion/app/extensions/build_context.dart';
 import 'package:ion/app/extensions/num.dart';
 import 'package:ion/app/extensions/theme_data.dart';
+import 'package:ion/app/features/auth/providers/auth_provider.c.dart';
 import 'package:ion/app/features/feed/data/models/entities/modifiable_post_data.c.dart';
 import 'package:ion/app/features/feed/providers/feed_bookmarks_notifier.c.dart';
+import 'package:ion/app/features/feed/providers/ion_connect_entity_with_counters_provider.c.dart';
 import 'package:ion/app/features/feed/views/components/post/post.dart';
 import 'package:ion/app/features/ion_connect/model/event_reference.c.dart';
 import 'package:ion/app/features/ion_connect/providers/ion_connect_entity_provider.c.dart';
@@ -69,20 +71,41 @@ class ShareOptions extends HookConsumerWidget {
 
                         try {
                           final imageBytes = await screenshotController.captureFromWidget(
-                            InheritedTheme.captureAll(
-                              context,
-                              UncontrolledProviderScope(
-                                container: ProviderScope.containerOf(context),
-                                child: Material(
-                                  child: Post(
-                                    eventReference: eventReference,
-                                    contentWrapper: (content) => Container(
-                                      decoration: BoxDecoration(
-                                        color: context.theme.appColors.primaryBackground,
-                                        borderRadius: BorderRadius.circular(16.0.s),
+                            Localizations.override(
+                              context: context,
+                              locale: Localizations.localeOf(context),
+                              child: MediaQuery(
+                                data: MediaQuery.of(context),
+                                child: Directionality(
+                                  textDirection: Directionality.of(context),
+                                  child: InheritedTheme.captureAll(
+                                    context,
+                                    ProviderScope(
+                                      overrides: [
+                                        currentIdentityKeyNameSelectorProvider.overrideWithValue(
+                                          ref.read(currentIdentityKeyNameSelectorProvider),
+                                        ),
+                                        currentPubkeySelectorProvider
+                                            .overrideWith(CurrentPubkeySelector.new),
+                                        ionConnectEntityWithCountersProvider(
+                                          eventReference: eventReference,
+                                        ).overrideWithValue(
+                                          entity,
+                                        ),
+                                      ],
+                                      child: Material(
+                                        child: Post(
+                                          eventReference: eventReference,
+                                          contentWrapper: (content) => Container(
+                                            decoration: BoxDecoration(
+                                              color: context.theme.appColors.primaryBackground,
+                                              borderRadius: BorderRadius.circular(16.0.s),
+                                            ),
+                                            padding: EdgeInsets.all(16.0.s),
+                                            child: content,
+                                          ),
+                                        ),
                                       ),
-                                      padding: EdgeInsets.all(16.0.s),
-                                      child: content,
                                     ),
                                   ),
                                 ),
