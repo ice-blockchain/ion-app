@@ -74,10 +74,11 @@ class ChatMediaContextMenu extends HookConsumerWidget {
         ).push<bool>(context);
 
         if (forEveryone != null && context.mounted) {
+          final deletedEvents = [eventMessage];
           ref.read(
             e2eeDeleteMessageProvider(
               forEveryone: forEveryone,
-              messageEvents: [eventMessage],
+              messageEvents: deletedEvents,
             ),
           );
           context.pop();
