@@ -1,6 +1,7 @@
 // SPDX-License-Identifier: ice License 1.0
 
 import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:ion_identity_client/src/core/helpers/converters/string_or_int_converter.dart';
 
 part 'wallet_asset.c.freezed.dart';
 part 'wallet_asset.c.g.dart';
@@ -19,7 +20,7 @@ sealed class WalletAsset with _$WalletAsset {
   const factory WalletAsset.native({
     required String symbol,
     required int decimals,
-    required String balance,
+    @StringOrIntConverter() required String balance,
     required String kind,
     bool? verified,
     String? name,
@@ -29,7 +30,7 @@ sealed class WalletAsset with _$WalletAsset {
   const factory WalletAsset.erc20({
     required String symbol,
     required int decimals,
-    required String balance,
+    @StringOrIntConverter() required String balance,
     required String kind,
     bool? verified,
     String? contract,
@@ -42,7 +43,7 @@ sealed class WalletAsset with _$WalletAsset {
     required String symbol,
     required int decimals,
     required bool verified,
-    required String balance,
+    @StringOrIntConverter() required String balance,
     required String kind,
     String? name,
   }) = _WalletAssetAsa;
@@ -52,7 +53,7 @@ sealed class WalletAsset with _$WalletAsset {
     required String mint,
     required String symbol,
     required int decimals,
-    required String balance,
+    @StringOrIntConverter() required String balance,
     required String kind,
     String? name,
   }) = _WalletAssetSpl;
@@ -62,7 +63,7 @@ sealed class WalletAsset with _$WalletAsset {
     required String mint,
     required String symbol,
     required int decimals,
-    required String balance,
+    @StringOrIntConverter() required String balance,
     required String kind,
     String? name,
   }) = _WalletAssetSpl2022;
@@ -72,7 +73,7 @@ sealed class WalletAsset with _$WalletAsset {
     required String mint,
     required String symbol,
     required int decimals,
-    required String balance,
+    @StringOrIntConverter() required String balance,
     required String kind,
     String? name,
   }) = _WalletAssetSep41;
@@ -82,7 +83,7 @@ sealed class WalletAsset with _$WalletAsset {
     required String mint,
     required String symbol,
     required int decimals,
-    required String balance,
+    @StringOrIntConverter() required String balance,
     required String kind,
     String? name,
   }) = _WalletAssetTep74;
@@ -92,7 +93,7 @@ sealed class WalletAsset with _$WalletAsset {
     required String tokenId,
     required String symbol,
     required int decimals,
-    required String balance,
+    @StringOrIntConverter() required String balance,
     required String kind,
     String? name,
   }) = _WalletAssetTrc10;
@@ -102,7 +103,7 @@ sealed class WalletAsset with _$WalletAsset {
     required String contract,
     required String symbol,
     required int decimals,
-    required String balance,
+    @StringOrIntConverter() required String balance,
     required String kind,
     String? name,
   }) = _WalletAssetTrc20;
@@ -110,7 +111,7 @@ sealed class WalletAsset with _$WalletAsset {
   const factory WalletAsset.unknown({
     required String symbol,
     required int decimals,
-    required String balance,
+    @StringOrIntConverter() required String balance,
     required String kind,
     String? contract,
     String? name,

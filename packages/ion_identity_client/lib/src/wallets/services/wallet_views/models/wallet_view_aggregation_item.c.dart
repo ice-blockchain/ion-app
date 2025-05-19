@@ -10,11 +10,10 @@ part 'wallet_view_aggregation_item.c.g.dart';
 @freezed
 class WalletViewAggregationItem with _$WalletViewAggregationItem {
   const factory WalletViewAggregationItem({
-    @JsonKey(defaultValue: [])
-    required List<WalletViewAggregationWallet> wallets,
-    @NumberToStringConverter()
-    required String totalBalance,
+    @JsonKey(defaultValue: []) required List<WalletViewAggregationWallet> wallets,
+    @NumberToStringConverter() required String totalBalance,
   }) = _WalletViewAggregationItem;
 
-  factory WalletViewAggregationItem.fromJson(Map<String, dynamic> json) => _$WalletViewAggregationItemFromJson(json);
+  factory WalletViewAggregationItem.fromJson(Map<String, dynamic> json) =>
+      _$WalletViewAggregationItemFromJson(json);
 }

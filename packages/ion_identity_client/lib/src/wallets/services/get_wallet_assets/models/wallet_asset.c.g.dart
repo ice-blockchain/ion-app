@@ -11,7 +11,7 @@ _$WalletAssetNativeImpl _$$WalletAssetNativeImplFromJson(
     _$WalletAssetNativeImpl(
       symbol: json['symbol'] as String,
       decimals: (json['decimals'] as num).toInt(),
-      balance: json['balance'] as String,
+      balance: const StringOrIntConverter().fromJson(json['balance']),
       kind: json['kind'] as String,
       verified: json['verified'] as bool?,
       name: json['name'] as String?,
@@ -22,7 +22,7 @@ Map<String, dynamic> _$$WalletAssetNativeImplToJson(
     <String, dynamic>{
       'symbol': instance.symbol,
       'decimals': instance.decimals,
-      'balance': instance.balance,
+      'balance': const StringOrIntConverter().toJson(instance.balance),
       'kind': instance.kind,
       'verified': instance.verified,
       'name': instance.name,
@@ -33,7 +33,7 @@ _$WalletAssetErc20Impl _$$WalletAssetErc20ImplFromJson(
     _$WalletAssetErc20Impl(
       symbol: json['symbol'] as String,
       decimals: (json['decimals'] as num).toInt(),
-      balance: json['balance'] as String,
+      balance: const StringOrIntConverter().fromJson(json['balance']),
       kind: json['kind'] as String,
       verified: json['verified'] as bool?,
       contract: json['contract'] as String?,
@@ -45,7 +45,7 @@ Map<String, dynamic> _$$WalletAssetErc20ImplToJson(
     <String, dynamic>{
       'symbol': instance.symbol,
       'decimals': instance.decimals,
-      'balance': instance.balance,
+      'balance': const StringOrIntConverter().toJson(instance.balance),
       'kind': instance.kind,
       'verified': instance.verified,
       'contract': instance.contract,
@@ -58,7 +58,7 @@ _$WalletAssetAsaImpl _$$WalletAssetAsaImplFromJson(Map<String, dynamic> json) =>
       symbol: json['symbol'] as String,
       decimals: (json['decimals'] as num).toInt(),
       verified: json['verified'] as bool,
-      balance: json['balance'] as String,
+      balance: const StringOrIntConverter().fromJson(json['balance']),
       kind: json['kind'] as String,
       name: json['name'] as String?,
     );
@@ -70,7 +70,7 @@ Map<String, dynamic> _$$WalletAssetAsaImplToJson(
       'symbol': instance.symbol,
       'decimals': instance.decimals,
       'verified': instance.verified,
-      'balance': instance.balance,
+      'balance': const StringOrIntConverter().toJson(instance.balance),
       'kind': instance.kind,
       'name': instance.name,
     };
@@ -80,7 +80,7 @@ _$WalletAssetSplImpl _$$WalletAssetSplImplFromJson(Map<String, dynamic> json) =>
       mint: json['mint'] as String,
       symbol: json['symbol'] as String,
       decimals: (json['decimals'] as num).toInt(),
-      balance: json['balance'] as String,
+      balance: const StringOrIntConverter().fromJson(json['balance']),
       kind: json['kind'] as String,
       name: json['name'] as String?,
     );
@@ -91,7 +91,7 @@ Map<String, dynamic> _$$WalletAssetSplImplToJson(
       'mint': instance.mint,
       'symbol': instance.symbol,
       'decimals': instance.decimals,
-      'balance': instance.balance,
+      'balance': const StringOrIntConverter().toJson(instance.balance),
       'kind': instance.kind,
       'name': instance.name,
     };
@@ -102,7 +102,7 @@ _$WalletAssetSpl2022Impl _$$WalletAssetSpl2022ImplFromJson(
       mint: json['mint'] as String,
       symbol: json['symbol'] as String,
       decimals: (json['decimals'] as num).toInt(),
-      balance: json['balance'] as String,
+      balance: const StringOrIntConverter().fromJson(json['balance']),
       kind: json['kind'] as String,
       name: json['name'] as String?,
     );
@@ -113,7 +113,7 @@ Map<String, dynamic> _$$WalletAssetSpl2022ImplToJson(
       'mint': instance.mint,
       'symbol': instance.symbol,
       'decimals': instance.decimals,
-      'balance': instance.balance,
+      'balance': const StringOrIntConverter().toJson(instance.balance),
       'kind': instance.kind,
       'name': instance.name,
     };
@@ -124,7 +124,7 @@ _$WalletAssetSep41Impl _$$WalletAssetSep41ImplFromJson(
       mint: json['mint'] as String,
       symbol: json['symbol'] as String,
       decimals: (json['decimals'] as num).toInt(),
-      balance: json['balance'] as String,
+      balance: const StringOrIntConverter().fromJson(json['balance']),
       kind: json['kind'] as String,
       name: json['name'] as String?,
     );
@@ -135,7 +135,7 @@ Map<String, dynamic> _$$WalletAssetSep41ImplToJson(
       'mint': instance.mint,
       'symbol': instance.symbol,
       'decimals': instance.decimals,
-      'balance': instance.balance,
+      'balance': const StringOrIntConverter().toJson(instance.balance),
       'kind': instance.kind,
       'name': instance.name,
     };
@@ -146,7 +146,7 @@ _$WalletAssetTep74Impl _$$WalletAssetTep74ImplFromJson(
       mint: json['mint'] as String,
       symbol: json['symbol'] as String,
       decimals: (json['decimals'] as num).toInt(),
-      balance: json['balance'] as String,
+      balance: const StringOrIntConverter().fromJson(json['balance']),
       kind: json['kind'] as String,
       name: json['name'] as String?,
     );
@@ -157,7 +157,7 @@ Map<String, dynamic> _$$WalletAssetTep74ImplToJson(
       'mint': instance.mint,
       'symbol': instance.symbol,
       'decimals': instance.decimals,
-      'balance': instance.balance,
+      'balance': const StringOrIntConverter().toJson(instance.balance),
       'kind': instance.kind,
       'name': instance.name,
     };
@@ -168,7 +168,7 @@ _$WalletAssetTrc10Impl _$$WalletAssetTrc10ImplFromJson(
       tokenId: json['tokenId'] as String,
       symbol: json['symbol'] as String,
       decimals: (json['decimals'] as num).toInt(),
-      balance: json['balance'] as String,
+      balance: const StringOrIntConverter().fromJson(json['balance']),
       kind: json['kind'] as String,
       name: json['name'] as String?,
     );
@@ -179,7 +179,7 @@ Map<String, dynamic> _$$WalletAssetTrc10ImplToJson(
       'tokenId': instance.tokenId,
       'symbol': instance.symbol,
       'decimals': instance.decimals,
-      'balance': instance.balance,
+      'balance': const StringOrIntConverter().toJson(instance.balance),
       'kind': instance.kind,
       'name': instance.name,
     };
@@ -190,7 +190,7 @@ _$WalletAssetTrc20Impl _$$WalletAssetTrc20ImplFromJson(
       contract: json['contract'] as String,
       symbol: json['symbol'] as String,
       decimals: (json['decimals'] as num).toInt(),
-      balance: json['balance'] as String,
+      balance: const StringOrIntConverter().fromJson(json['balance']),
       kind: json['kind'] as String,
       name: json['name'] as String?,
     );
@@ -201,7 +201,7 @@ Map<String, dynamic> _$$WalletAssetTrc20ImplToJson(
       'contract': instance.contract,
       'symbol': instance.symbol,
       'decimals': instance.decimals,
-      'balance': instance.balance,
+      'balance': const StringOrIntConverter().toJson(instance.balance),
       'kind': instance.kind,
       'name': instance.name,
     };
@@ -211,7 +211,7 @@ _$WalletAssetUnknownImpl _$$WalletAssetUnknownImplFromJson(
     _$WalletAssetUnknownImpl(
       symbol: json['symbol'] as String,
       decimals: (json['decimals'] as num).toInt(),
-      balance: json['balance'] as String,
+      balance: const StringOrIntConverter().fromJson(json['balance']),
       kind: json['kind'] as String,
       contract: json['contract'] as String?,
       name: json['name'] as String?,
@@ -226,7 +226,7 @@ Map<String, dynamic> _$$WalletAssetUnknownImplToJson(
     <String, dynamic>{
       'symbol': instance.symbol,
       'decimals': instance.decimals,
-      'balance': instance.balance,
+      'balance': const StringOrIntConverter().toJson(instance.balance),
       'kind': instance.kind,
       'contract': instance.contract,
       'name': instance.name,
