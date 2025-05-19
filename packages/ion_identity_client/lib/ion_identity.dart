@@ -21,6 +21,7 @@ export 'src/networks/services/get_estimate_fees/models/estimate_fee.c.dart';
 export 'src/networks/services/get_estimate_fees/models/network_fee.c.dart';
 export 'src/signer/dtos/assertion_request_data.c.dart';
 export 'src/signer/dtos/user_registration_challenge.c.dart';
+export 'src/users/get_content_creators/models/content_creator_response_data.c.dart';
 export 'src/users/ion_connect_indexers/models/ion_connect_indexers_response.c.dart';
 export 'src/users/set_ion_connect_relays/models/set_ion_connect_relays_response.c.dart';
 export 'src/users/user_details/models/user_details.c.dart';
