@@ -54,14 +54,14 @@ class PostSubmitButton extends HookConsumerWidget {
       modifiedEntity =
           ref.read(ionConnectEntityProvider(eventReference: modifiedEvent!)).valueOrNull;
     }
-    final pollAnswers = ref.watch(pollAnswersNotifierProvider);
+    final draftPoll = ref.watch(pollDraftNotifierProvider);
     final whoCanReply = ref.watch(selectedWhoCanReplyOptionProvider);
 
     final isSubmitButtonEnabled = useCanSubmitPost(
       textEditorController,
       mediaFiles,
       mediaAttachments,
-      pollAnswers,
+      draftPoll.answers,
       modifiedEntity,
     );
 
