@@ -67,7 +67,7 @@ class ChatMediaContextMenu extends HookConsumerWidget {
 
     final onDelete = useCallback(
       () async {
-        final isMe = ref.watch(isCurrentUserSelectorProvider(eventMessage.masterPubkey));
+        final isMe = ref.read(isCurrentUserSelectorProvider(eventMessage.masterPubkey));
 
         final forEveryone = await DeleteMessageRoute(
           isMe: isMe,
