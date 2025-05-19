@@ -35,9 +35,8 @@ class HashtagsSuggestions extends StatelessWidget {
               itemBuilder: (context, index) {
                 final suggestion = suggestions[index];
                 return GestureDetector(
-                  onTap: () {
-                    onSuggestionSelected(suggestion);
-                  },
+                  onTap: () => onSuggestionSelected(suggestion),
+                  behavior: HitTestBehavior.opaque,
                   child: ScreenSideOffset.small(
                     child: Container(
                       alignment: AlignmentDirectional.centerStart,

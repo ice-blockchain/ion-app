@@ -7,6 +7,7 @@ import 'package:ion/app/components/text_editor/components/custom_blocks/text_edi
 import 'package:ion/app/components/text_editor/utils/text_editor_typing_listener.dart';
 import 'package:ion/app/features/feed/providers/suggestions/suggestions_notifier_provider.c.dart';
 import 'package:ion/app/features/user/providers/user_metadata_provider.c.dart';
+import 'package:ion/app/services/text_parser/model/text_matcher.dart';
 
 class MentionsHashtagsHandler extends TextEditorTypingListener {
   MentionsHashtagsHandler({
@@ -117,7 +118,9 @@ class MentionsHashtagsHandler extends TextEditorTypingListener {
   }
 
   List<_TagInfo> _extractTags(String text) {
-    final regex = RegExp(r'(?:(?<=\s)|^)[@#$]\w+');
+    final regex = RegExp(
+      '${const CashtagMatcher().pattern}|${const HashtagMatcher().pattern}|${const MentionMatcher().pattern}',
+    );
     final matches = regex.allMatches(text);
 
     return matches.map((match) {
