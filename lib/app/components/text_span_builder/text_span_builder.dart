@@ -7,6 +7,7 @@ import 'package:ion/app/router/app_routes.c.dart';
 import 'package:ion/app/services/browser/browser.dart';
 import 'package:ion/app/services/text_parser/model/text_match.c.dart';
 import 'package:ion/app/services/text_parser/model/text_matcher.dart';
+import 'package:ion/app/utils/url.dart';
 
 /// Constructs TextSpan from TextMatch objects with customizable styles and tap handling.
 class TextSpanBuilder {
@@ -92,7 +93,7 @@ class TextSpanBuilder {
     BuildContext context, {
     required TextMatch match,
   }) {
-    if (match.matcher is UrlMatcher) openUrlInAppBrowser(match.text);
+    if (match.matcher is UrlMatcher) openUrlInAppBrowser(normalizeUrl(match.text));
     if (match.matcher is HashtagMatcher || match.matcher is CashtagMatcher) {
       FeedAdvancedSearchRoute(query: match.text).go(context);
     }
