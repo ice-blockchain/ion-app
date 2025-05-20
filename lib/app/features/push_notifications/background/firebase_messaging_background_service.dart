@@ -29,6 +29,10 @@ Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
   final parser = await riverpodContainer.read(notificationDataParserProvider.future);
   final parsedData = await parser.parse(data);
 
+  if (parsedData == null) {
+    return;
+  }
+
   await notificationsService.showNotification(
     id: generateUuid().hashCode,
     title: parsedData.title,

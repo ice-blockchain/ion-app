@@ -31,9 +31,6 @@ class IonConnectPushDataPayload with _$IonConnectPushDataPayload {
     @Default([])
     @JsonKey(name: 'relevant_events', fromJson: _entityListFromEventListJson)
     List<EventMessage> relevantEvents,
-    String? title,
-    String? body,
-    String? imageUrl,
   }) = _IonConnectPushDataPayload;
 
   factory IonConnectPushDataPayload.fromJson(Map<String, dynamic> json) =>
@@ -85,9 +82,33 @@ class IonConnectPushDataPayload with _$IonConnectPushDataPayload {
     return null;
   }
 
-  bool _isMainEventRelevant({
-    required String currentPubkey,
-  }) {
+  Map<String, String> get placeholders {
+    final mainEntityUserMetadata = _getUserMetadata(pubkey: mainEntity.masterPubkey);
+
+    if (mainEntityUserMetadata != null) {
+      return {'username': mainEntityUserMetadata.data.displayName};
+    }
+
+    return {};
+  }
+
+  Future<bool> validate({required String currentPubkey}) async {
+    return await _checkEventsSignatures() &&
+        _checkMainEventRelevant(currentPubkey: currentPubkey) &&
+        _checkRequiredRelevantEvents();
+  }
+
+  Future<bool> _checkEventsSignatures() async {
+    final valid = await Future.wait(
+      [
+        event.validate(),
+        ...relevantEvents.map((event) => event.validate()),
+      ],
+    );
+    return valid.every((valid) => valid);
+  }
+
+  bool _checkMainEventRelevant({required String currentPubkey}) {
     final entity = mainEntity;
     if (entity is ModifiablePostEntity || entity is PostEntity) {
       final relatedPubkeys = switch (entity) {
@@ -112,24 +133,20 @@ class IonConnectPushDataPayload with _$IonConnectPushDataPayload {
     return false;
   }
 
-  Map<String, String> get placeholders {
-    final mainEntityUserMetadata = _getUserMetadata(pubkey: mainEntity.masterPubkey);
-
-    if (mainEntityUserMetadata != null) {
-      return {'username': mainEntityUserMetadata.data.displayName};
+  bool _checkRequiredRelevantEvents() {
+    if (event.kind == IonConnectGiftWrapEntity.kind) {
+      return true;
+    } else {
+      // For all events except 1059 we need to check if delegation is present
+      // in the relevant events and the main event valid for it
+      final delegationEvent =
+          relevantEvents.firstWhereOrNull((event) => event.kind == UserDelegationEntity.kind);
+      if (delegationEvent == null) {
+        return false;
+      }
+      final delegationEntity = EventParser().parse(delegationEvent) as UserDelegationEntity;
+      return delegationEntity.data.validate(event);
     }
-
-    return {};
-  }
-
-  Future<bool> validate({required String currentPubkey}) async {
-    final valid = await Future.wait(
-      [
-        event.validate(),
-        ...relevantEvents.map((event) => event.validate()),
-      ],
-    );
-    return valid.every((valid) => valid) && _isMainEventRelevant(currentPubkey: currentPubkey);
   }
 
   UserMetadataEntity? _getUserMetadata({required String pubkey}) {

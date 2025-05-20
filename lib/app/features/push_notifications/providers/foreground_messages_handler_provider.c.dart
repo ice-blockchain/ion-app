@@ -38,6 +38,10 @@ class ForegroundMessagesHandler extends _$ForegroundMessagesHandler {
     final parser = await ref.read(notificationDataParserProvider.future);
     final parsedData = await parser.parse(data);
 
+    if (parsedData == null) {
+      return;
+    }
+
     final notificationsService = await ref.read(localNotificationsServiceProvider.future);
 
     await notificationsService.showNotification(
