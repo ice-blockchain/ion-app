@@ -201,7 +201,7 @@ class SendCoinsNotifier extends _$SendCoinsNotifier {
     final sendToRelayService = await ref.read(sendTransactionToRelayServiceProvider.future);
     final event = await sendToRelayService.sendTransactionEntity(
       createEventMessage: (currentUserPubkey) => entityData.toEventMessage(
-        currentUserPubkey: currentUserPubkey,
+        masterPubkey: currentUserPubkey,
         requestEntity: requestEntity,
       ),
       senderPubkeys: senderPubkeys,

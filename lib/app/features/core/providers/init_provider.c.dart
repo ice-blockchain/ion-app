@@ -16,9 +16,7 @@ import 'package:ion/app/features/core/views/components/widget_error_builder.dart
 import 'package:ion/app/features/feed/providers/feed_bookmarks_notifier.c.dart';
 import 'package:ion/app/features/force_update/providers/force_update_provider.c.dart';
 import 'package:ion/app/features/push_notifications/background/firebase_messaging_background_service.dart';
-import 'package:ion/app/features/push_notifications/providers/configure_firebase_app_provider.c.dart';
-import 'package:ion/app/features/push_notifications/providers/configure_firebase_messaging_provider.c.dart';
-import 'package:ion/app/features/push_notifications/providers/push_subscription_sync_provider.c.dart';
+import 'package:ion/app/features/push_notifications/providers/pushes_init_provider.c.dart';
 import 'package:ion/app/features/user/providers/user_relays_sync_provider.c.dart';
 import 'package:ion/app/features/wallets/providers/coins_sync_provider.c.dart';
 import 'package:ion/app/features/wallets/providers/transactions_subscription_provider.c.dart';
@@ -62,9 +60,7 @@ Future<void> initApp(Ref ref) async {
     ..listen(userRelaysSyncProvider, noop)
     ..listen(userChatRelaysSyncProvider, noop)
     ..listen(feedBookmarksSyncProvider, noop)
-    ..listen(configureFirebaseAppProvider, noop)
-    ..listen(configureFirebaseMessagingProvider, noop)
-    ..listen(pushSubscriptionSyncProvider, noop);
+    ..listen(pushesInitProvider, noop);
 
   initFirebaseMessagingBackgroundHandler();
 

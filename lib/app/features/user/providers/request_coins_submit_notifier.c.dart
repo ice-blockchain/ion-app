@@ -49,7 +49,7 @@ class RequestCoinsSubmitNotifier extends _$RequestCoinsSubmitNotifier {
 
       final sendToRelayService = await ref.read(sendTransactionToRelayServiceProvider.future);
       final event = await sendToRelayService.sendTransactionEntity(
-        createEventMessage: (_) => request.toEventMessage(currentUserPubkey: currentUserPubkey),
+        createEventMessage: (_) => request.toEventMessage(masterPubkey: currentUserPubkey),
         senderPubkeys: pubkeys.sender,
         receiverPubkeys: pubkeys.receiver,
       );

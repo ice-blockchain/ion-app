@@ -18,6 +18,8 @@ extension StringExtensions on String {
   }
 }
 
+final placeholderRegExp = RegExp('{{(.*?)}}');
+
 /// Replaces placeholders in the format `{{key}}` within the [input] string
 /// using corresponding values from the [placeholders] map.
 ///
@@ -32,9 +34,12 @@ extension StringExtensions on String {
 /// ```
 ///
 String replacePlaceholders(String input, Map<String, String> placeholders) {
-  final regex = RegExp('{{(.*?)}}');
-  return input.replaceAllMapped(regex, (match) {
+  return input.replaceAllMapped(placeholderRegExp, (match) {
     final key = match.group(1)?.trim();
     return placeholders[key] ?? match.group(0)!;
   });
+}
+
+bool hasPlaceholders(String input) {
+  return placeholderRegExp.hasMatch(input);
 }

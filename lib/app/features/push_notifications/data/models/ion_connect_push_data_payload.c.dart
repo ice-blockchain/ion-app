@@ -24,22 +24,33 @@ import 'package:ion/app/features/wallets/model/entities/wallet_asset_entity.c.da
 part 'ion_connect_push_data_payload.c.freezed.dart';
 part 'ion_connect_push_data_payload.c.g.dart';
 
-@Freezed(toJson: false)
-class IonConnectPushDataPayload with _$IonConnectPushDataPayload {
-  const factory IonConnectPushDataPayload({
-    required String title,
-    required String body,
-    required String? imageUrl,
-    @JsonKey(fromJson: _entityFromEventJson) required EventMessage event,
-    @Default([])
-    @JsonKey(name: 'related_events', fromJson: _entityListFromEventListJson)
-    List<EventMessage> relatedEvents,
-  }) = _IonConnectPushDataPayload;
+class IonConnectPushDataPayload {
+  const IonConnectPushDataPayload._({
+    required this.event,
+    required this.relevantEvents,
+  });
 
-  factory IonConnectPushDataPayload.fromJson(Map<String, dynamic> json) =>
-      _$IonConnectPushDataPayloadFromJson(json);
+  final EventMessage event;
+  final List<EventMessage> relevantEvents;
 
-  const IonConnectPushDataPayload._();
+  static Future<IonConnectPushDataPayload> fromEncoded(Map<String, dynamic> data) async {
+    final EncodedIonConnectPushData(:event, :relevantEvents) =
+        EncodedIonConnectPushData.fromJson(data);
+    //TODO:add decompression
+    final parsedEvent = EventMessage.fromPayloadJson(jsonDecode(event) as Map<String, dynamic>);
+    //TODO:add decompression
+    final parsedRelevantEvents = relevantEvents != null
+        ? ((jsonDecode(relevantEvents) as List<dynamic>)
+            .map(
+              (eventJson) => EventMessage.fromPayloadJson(eventJson as Map<String, dynamic>),
+            )
+            .toList())
+        : <EventMessage>[];
+    return IonConnectPushDataPayload._(
+      event: parsedEvent,
+      relevantEvents: parsedRelevantEvents,
+    );
+  }
 
   IonConnectEntity get mainEntity {
     return EventParser().parse(event);
@@ -85,9 +96,33 @@ class IonConnectPushDataPayload with _$IonConnectPushDataPayload {
     return null;
   }
 
-  bool _isMainEventRelevant({
-    required String currentPubkey,
-  }) {
+  Map<String, String> get placeholders {
+    final mainEntityUserMetadata = _getUserMetadata(pubkey: mainEntity.masterPubkey);
+
+    if (mainEntityUserMetadata != null) {
+      return {'username': mainEntityUserMetadata.data.displayName};
+    }
+
+    return {};
+  }
+
+  Future<bool> validate({required String currentPubkey}) async {
+    return await _checkEventsSignatures() &&
+        _checkMainEventRelevant(currentPubkey: currentPubkey) &&
+        _checkRequiredRelevantEvents();
+  }
+
+  Future<bool> _checkEventsSignatures() async {
+    final valid = await Future.wait(
+      [
+        event.validate(),
+        ...relevantEvents.map((event) => event.validate()),
+      ],
+    );
+    return valid.every((valid) => valid);
+  }
+
+  bool _checkMainEventRelevant({required String currentPubkey}) {
     final entity = mainEntity;
     if (entity is ModifiablePostEntity || entity is PostEntity) {
       final relatedPubkeys = switch (entity) {
@@ -112,28 +147,24 @@ class IonConnectPushDataPayload with _$IonConnectPushDataPayload {
     return false;
   }
 
-  Map<String, String> get placeholders {
-    final mainEntityUserMetadata = _getUserMetadata(pubkey: mainEntity.masterPubkey);
-
-    if (mainEntityUserMetadata != null) {
-      return {'username': mainEntityUserMetadata.data.displayName};
+  bool _checkRequiredRelevantEvents() {
+    if (event.kind == IonConnectGiftWrapEntity.kind) {
+      return true;
+    } else {
+      // For all events except 1059 we need to check if delegation is present
+      // in the relevant events and the main event valid for it
+      final delegationEvent =
+          relevantEvents.firstWhereOrNull((event) => event.kind == UserDelegationEntity.kind);
+      if (delegationEvent == null) {
+        return false;
+      }
+      final delegationEntity = EventParser().parse(delegationEvent) as UserDelegationEntity;
+      return delegationEntity.data.validate(event);
     }
-
-    return {};
-  }
-
-  Future<bool> validate({required String currentPubkey}) async {
-    final valid = await Future.wait(
-      [
-        event.validate(),
-        ...relatedEvents.map((event) => event.validate()),
-      ],
-    );
-    return valid.every((valid) => valid) && _isMainEventRelevant(currentPubkey: currentPubkey);
   }
 
   UserMetadataEntity? _getUserMetadata({required String pubkey}) {
-    final delegationEvent = relatedEvents.firstWhereOrNull((event) {
+    final delegationEvent = relevantEvents.firstWhereOrNull((event) {
       return event.kind == UserDelegationEntity.kind && event.pubkey == pubkey;
     });
     if (delegationEvent == null) {
@@ -142,7 +173,7 @@ class IonConnectPushDataPayload with _$IonConnectPushDataPayload {
     final eventParser = EventParser();
     final delegationEntity = eventParser.parse(delegationEvent) as UserDelegationEntity;
 
-    for (final event in relatedEvents) {
+    for (final event in relevantEvents) {
       if (event.kind == UserMetadataEntity.kind && delegationEntity.data.validate(event)) {
         final userMetadataEntity = eventParser.parse(event) as UserMetadataEntity;
         if (userMetadataEntity.masterPubkey == delegationEntity.pubkey) {
@@ -154,18 +185,15 @@ class IonConnectPushDataPayload with _$IonConnectPushDataPayload {
   }
 }
 
-EventMessage _entityFromEventJson(String stringifiedJson) {
-  // add brotli decompress when BE is impl
-  return EventMessage.fromPayloadJson(jsonDecode(stringifiedJson) as Map<String, dynamic>);
-}
+@Freezed(toJson: false)
+class EncodedIonConnectPushData with _$EncodedIonConnectPushData {
+  const factory EncodedIonConnectPushData({
+    required String event,
+    @JsonKey(name: 'relevant_events') String? relevantEvents,
+  }) = _EncodedIonConnectPushData;
 
-List<EventMessage> _entityListFromEventListJson(String stringifiedJson) {
-  // add brotli decompress when BE is impl
-  return (jsonDecode(stringifiedJson) as List<dynamic>)
-      .map(
-        (eventJson) => EventMessage.fromPayloadJson(eventJson as Map<String, dynamic>),
-      )
-      .toList();
+  factory EncodedIonConnectPushData.fromJson(Map<String, dynamic> json) =>
+      _$EncodedIonConnectPushDataFromJson(json);
 }
 
 enum PushNotificationType {
