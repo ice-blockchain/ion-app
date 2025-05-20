@@ -32,12 +32,14 @@ part 'components/amount_display.dart';
 class MoneyMessage extends StatelessWidget {
   const MoneyMessage({
     required this.eventMessage,
+    this.margin,
     this.onTapReply,
     super.key,
   });
 
   final VoidCallback? onTapReply;
   final EventMessage eventMessage;
+  final EdgeInsetsDirectional? margin;
 
   @override
   Widget build(BuildContext context) {
@@ -46,11 +48,13 @@ class MoneyMessage extends StatelessWidget {
 
     return switch (eventReference.kind) {
       FundsRequestEntity.kind => _RequestedMoneyMessage(
+          margin: margin,
           eventMessage: eventMessage,
           eventReference: eventReference,
           onTapReply: onTapReply,
         ),
       WalletAssetEntity.kind => _SentMoneyMessage(
+          margin: margin,
           eventMessage: eventMessage,
           eventReference: eventReference,
           onTapReply: onTapReply,
@@ -64,9 +68,11 @@ class _RequestedMoneyMessage extends ConsumerWidget {
   const _RequestedMoneyMessage({
     required this.eventMessage,
     required this.eventReference,
+    required this.margin,
     this.onTapReply,
   });
 
+  final EdgeInsetsDirectional? margin;
   final VoidCallback? onTapReply;
   final EventMessage eventMessage;
   final ImmutableEventReference eventReference;
@@ -92,6 +98,7 @@ class _RequestedMoneyMessage extends ConsumerWidget {
 
     return _MoneyMessageContent(
       isMe: isMe,
+      margin: margin,
       type: MoneyMessageType.requested,
       amount: amount,
       equivalentUsd: equivalentUsd,
@@ -115,12 +122,15 @@ class _SentMoneyMessage extends ConsumerWidget {
   const _SentMoneyMessage({
     required this.eventMessage,
     required this.eventReference,
+    required this.margin,
     this.onTapReply,
   });
 
   final EventMessage eventMessage;
   final ImmutableEventReference eventReference;
   final VoidCallback? onTapReply;
+  final EdgeInsetsDirectional? margin;
+
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final isMe = ref.watch(isCurrentUserSelectorProvider(eventReference.pubkey));
@@ -141,6 +151,7 @@ class _SentMoneyMessage extends ConsumerWidget {
 
     return _MoneyMessageContent(
       isMe: isMe,
+      margin: margin,
       type: MoneyMessageType.sent,
       amount: amount,
       equivalentUsd: equivalentUsd,
@@ -165,10 +176,12 @@ class _MoneyMessageContent extends HookConsumerWidget {
     required this.eventMessage,
     required this.eventId,
     required this.button,
+    required this.margin,
     this.onTapReply,
   });
 
   final bool isMe;
+  final EdgeInsetsDirectional? margin;
   final MoneyMessageType type;
   final double amount;
   final double equivalentUsd;
@@ -208,6 +221,7 @@ class _MoneyMessageContent extends HookConsumerWidget {
     );
 
     return MessageItemWrapper(
+      margin: margin,
       messageItem: messageItem,
       contentPadding: EdgeInsets.symmetric(
         horizontal: 12.0.s,

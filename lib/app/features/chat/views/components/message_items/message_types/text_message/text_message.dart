@@ -23,12 +23,14 @@ import 'package:ion/app/utils/url.dart';
 class TextMessage extends HookConsumerWidget {
   const TextMessage({
     required this.eventMessage,
+    this.margin,
     this.onTapReply,
     super.key,
   });
 
   final VoidCallback? onTapReply;
   final EventMessage eventMessage;
+  final EdgeInsetsDirectional? margin;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -61,6 +63,7 @@ class TextMessage extends HookConsumerWidget {
 
     return MessageItemWrapper(
       isMe: isMe,
+      margin: margin,
       messageItem: messageItem,
       contentPadding: EdgeInsets.symmetric(
         horizontal: 12.0.s,

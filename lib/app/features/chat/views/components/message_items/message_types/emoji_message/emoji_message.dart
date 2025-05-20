@@ -18,12 +18,14 @@ import 'package:ion/app/features/ion_connect/ion_connect.dart';
 class EmojiMessage extends HookConsumerWidget {
   const EmojiMessage({
     required this.eventMessage,
+    this.margin,
     this.onTapReply,
     super.key,
   });
 
   final EventMessage eventMessage;
   final VoidCallback? onTapReply;
+  final EdgeInsetsDirectional? margin;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -48,6 +50,7 @@ class EmojiMessage extends HookConsumerWidget {
 
     return MessageItemWrapper(
       isMe: isMe,
+      margin: margin,
       messageItem: messageItem,
       contentPadding: EdgeInsets.symmetric(horizontal: 12.0.s, vertical: 6.0.s),
       child: IntrinsicWidth(

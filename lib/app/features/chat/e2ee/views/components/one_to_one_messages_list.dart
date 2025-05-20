@@ -53,7 +53,9 @@ class OneToOneMessageList extends HookConsumerWidget {
           reverse: true,
           itemBuilder: (context, index) {
             final message = allMessages[index];
+
             final entity = ReplaceablePrivateDirectMessageEntity.fromEventMessage(message);
+
             final displayDate = messages.entries
                 .singleWhereOrNull((entry) => entry.value.last.id == message.id)
                 ?.key;
@@ -63,6 +65,11 @@ class OneToOneMessageList extends HookConsumerWidget {
 
             final isMessageFromAnotherAuthor =
                 previousMessage != null && previousMessage.masterPubkey != message.masterPubkey;
+
+            final margin = EdgeInsetsDirectional.only(
+              bottom: isLastMessage ? 20.0.s : 8.0.s,
+              top: isMessageFromAnotherAuthor ? 8.0.s : 0,
+            );
 
             return Column(
               key: Key(message.id),
@@ -75,37 +82,48 @@ class OneToOneMessageList extends HookConsumerWidget {
                       child: ChatDateHeaderText(date: displayDate),
                     ),
                   ),
-                Padding(
-                  padding: EdgeInsetsDirectional.only(
-                    bottom: isLastMessage ? 20.0.s : 8.0.s,
-                    top: isMessageFromAnotherAuthor ? 8.0.s : 0,
-                  ),
-                  child: switch (entity.data.messageType) {
-                    MessageType.text => TextMessage(
-                        eventMessage: message,
-                        onTapReply: () => onTapReply(entity),
-                      ),
-                    MessageType.profile => ProfileShareMessage(
-                        eventMessage: message,
-                        onTapReply: () => onTapReply(entity),
-                      ),
-                    MessageType.visualMedia => VisualMediaMessage(
-                        eventMessage: message,
-                        onTapReply: () => onTapReply(entity),
-                      ),
-                    MessageType.sharedPost =>
-                      PostMessage(eventMessage: message, onTapReply: () => onTapReply(entity)),
-                    MessageType.requestFunds ||
-                    MessageType.moneySent =>
-                      MoneyMessage(eventMessage: message, onTapReply: () => onTapReply(entity)),
-                    MessageType.emoji =>
-                      EmojiMessage(eventMessage: message, onTapReply: () => onTapReply(entity)),
-                    MessageType.audio =>
-                      AudioMessage(eventMessage: message, onTapReply: () => onTapReply(entity)),
-                    MessageType.document =>
-                      DocumentMessage(eventMessage: message, onTapReply: () => onTapReply(entity)),
-                  },
-                ),
+                switch (entity.data.messageType) {
+                  MessageType.text => TextMessage(
+                      margin: margin,
+                      eventMessage: message,
+                      onTapReply: () => onTapReply(entity),
+                    ),
+                  MessageType.profile => ProfileShareMessage(
+                      margin: margin,
+                      eventMessage: message,
+                      onTapReply: () => onTapReply(entity),
+                    ),
+                  MessageType.visualMedia => VisualMediaMessage(
+                      margin: margin,
+                      eventMessage: message,
+                      onTapReply: () => onTapReply(entity),
+                    ),
+                  MessageType.sharedPost => PostMessage(
+                      margin: margin,
+                      eventMessage: message,
+                      onTapReply: () => onTapReply(entity),
+                    ),
+                  MessageType.requestFunds || MessageType.moneySent => MoneyMessage(
+                      margin: margin,
+                      eventMessage: message,
+                      onTapReply: () => onTapReply(entity),
+                    ),
+                  MessageType.emoji => EmojiMessage(
+                      margin: margin,
+                      eventMessage: message,
+                      onTapReply: () => onTapReply(entity),
+                    ),
+                  MessageType.audio => AudioMessage(
+                      margin: margin,
+                      eventMessage: message,
+                      onTapReply: () => onTapReply(entity),
+                    ),
+                  MessageType.document => DocumentMessage(
+                      margin: margin,
+                      eventMessage: message,
+                      onTapReply: () => onTapReply(entity),
+                    ),
+                },
               ],
             );
           },

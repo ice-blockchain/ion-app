@@ -33,12 +33,14 @@ class MessageItemWrapper extends HookConsumerWidget {
     required this.messageItem,
     required this.contentPadding,
     this.isLastMessageFromAuthor = true,
+    this.margin,
     super.key,
   });
 
   final bool isMe;
   final Widget child;
   final bool isLastMessageFromAuthor;
+  final EdgeInsetsDirectional? margin;
   final ChatMessageInfoItem messageItem;
   final EdgeInsetsGeometry contentPadding;
 
@@ -53,7 +55,14 @@ class MessageItemWrapper extends HookConsumerWidget {
         ReplaceablePrivateDirectMessageEntity.fromEventMessage(messageItem.eventMessage)
             .toEventReference();
 
-    final deliveryStatus = ref.watch(messageStatusProvider(eventReference));
+    final deliveryStatus = ref.watch(
+      messageStatusProvider(eventReference)
+        ..selectAsync((status) => status == MessageDeliveryStatus.deleted),
+    );
+
+    if (deliveryStatus.valueOrNull == MessageDeliveryStatus.deleted) {
+      return const SizedBox.shrink();
+    }
 
     final showReactDialog = useCallback(
       () async {
@@ -96,54 +105,53 @@ class MessageItemWrapper extends HookConsumerWidget {
       [messageItemKey, isMe, messageItem, deliveryStatus.valueOrNull],
     );
 
-    if (deliveryStatus.valueOrNull == MessageDeliveryStatus.deleted) {
-      return const SizedBox.shrink();
-    }
-
-    return Align(
-      alignment: isMe ? AlignmentDirectional.centerEnd : AlignmentDirectional.centerStart,
-      child: GestureDetector(
-        onLongPress: () {
-          HapticFeedback.mediumImpact();
-          showReactDialog();
-        },
-        child: RepaintBoundary(
-          key: messageItemKey,
-          child: Row(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Container(
-                padding: contentPadding,
-                constraints: BoxConstraints(
-                  maxWidth: maxWidth,
-                ),
-                decoration: BoxDecoration(
-                  color: isMe
-                      ? context.theme.appColors.primaryAccent
-                      : context.theme.appColors.onPrimaryAccent,
-                  borderRadius: BorderRadiusDirectional.only(
-                    topStart: Radius.circular(12.0.s),
-                    topEnd: Radius.circular(12.0.s),
-                    bottomStart:
-                        !isLastMessageFromAuthor || isMe ? Radius.circular(12.0.s) : Radius.zero,
-                    bottomEnd: isMe && isLastMessageFromAuthor && (messageItem is! PostItem)
-                        ? Radius.zero
-                        : Radius.circular(12.0.s),
+    return Padding(
+      padding: margin ?? EdgeInsets.zero,
+      child: Align(
+        alignment: isMe ? AlignmentDirectional.centerEnd : AlignmentDirectional.centerStart,
+        child: GestureDetector(
+          onLongPress: () {
+            HapticFeedback.mediumImpact();
+            showReactDialog();
+          },
+          child: RepaintBoundary(
+            key: messageItemKey,
+            child: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Container(
+                  padding: contentPadding,
+                  constraints: BoxConstraints(
+                    maxWidth: maxWidth,
                   ),
-                ),
-                child: child,
-              ),
-              if (deliveryStatus.valueOrNull == MessageDeliveryStatus.failed)
-                Row(
-                  children: [
-                    SizedBox(width: 6.0.s),
-                    Assets.svg.iconMessageFailed.icon(
-                      color: context.theme.appColors.attentionRed,
-                      size: 16.0.s,
+                  decoration: BoxDecoration(
+                    color: isMe
+                        ? context.theme.appColors.primaryAccent
+                        : context.theme.appColors.onPrimaryAccent,
+                    borderRadius: BorderRadiusDirectional.only(
+                      topStart: Radius.circular(12.0.s),
+                      topEnd: Radius.circular(12.0.s),
+                      bottomStart:
+                          !isLastMessageFromAuthor || isMe ? Radius.circular(12.0.s) : Radius.zero,
+                      bottomEnd: isMe && isLastMessageFromAuthor && (messageItem is! PostItem)
+                          ? Radius.zero
+                          : Radius.circular(12.0.s),
                     ),
-                  ],
+                  ),
+                  child: child,
                 ),
-            ],
+                if (deliveryStatus.valueOrNull == MessageDeliveryStatus.failed)
+                  Row(
+                    children: [
+                      SizedBox(width: 6.0.s),
+                      Assets.svg.iconMessageFailed.icon(
+                        color: context.theme.appColors.attentionRed,
+                        size: 16.0.s,
+                      ),
+                    ],
+                  ),
+              ],
+            ),
           ),
         ),
       ),

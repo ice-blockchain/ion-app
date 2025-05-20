@@ -31,8 +31,6 @@ class EventMessageDao extends DatabaseAccessor<ChatDatabase> with _$EventMessage
         return;
     }
 
-    log(eventReference.toString(), name: 'EventMessageDao.add');
-
     final dbModel = event.toChatDbModel(eventReference);
 
     await into(db.eventMessageTable).insert(dbModel, mode: InsertMode.insertOrReplace);

@@ -27,12 +27,14 @@ import 'package:ion/generated/assets.gen.dart';
 class DocumentMessage extends HookConsumerWidget {
   const DocumentMessage({
     required this.eventMessage,
+    this.margin,
     this.onTapReply,
     super.key,
   });
 
   final VoidCallback? onTapReply;
   final EventMessage eventMessage;
+  final EdgeInsetsDirectional? margin;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -94,6 +96,7 @@ class DocumentMessage extends HookConsumerWidget {
 
     return MessageItemWrapper(
       isMe: isMe,
+      margin: margin,
       messageItem: DocumentItem(
         eventMessage: eventMessage,
         contentDescription: entity.data.content,
