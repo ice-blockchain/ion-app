@@ -22,7 +22,7 @@ packages:
     description:
       path: "packages/_flutterfire_internals"
       ref: HEAD
-      resolved-ref: "90450eb7f2c7f0267938fab164758f946745a868"
+      resolved-ref: "64b300dd19e2f9dedda4c9306b4a3e5d2fdc3081"
       url: "https://github.com/ice-blockchain/flutterfire.git"
     source: git
     version: "1.3.54"
@@ -806,7 +806,7 @@ packages:
     description:
       path: "packages/firebase_core/firebase_core"
       ref: HEAD
-      resolved-ref: "90450eb7f2c7f0267938fab164758f946745a868"
+      resolved-ref: "64b300dd19e2f9dedda4c9306b4a3e5d2fdc3081"
       url: "https://github.com/ice-blockchain/flutterfire.git"
     source: git
     version: "3.13.0"
@@ -815,7 +815,7 @@ packages:
     description:
       path: "packages/firebase_core/firebase_core_platform_interface"
       ref: HEAD
-      resolved-ref: "90450eb7f2c7f0267938fab164758f946745a868"
+      resolved-ref: "64b300dd19e2f9dedda4c9306b4a3e5d2fdc3081"
       url: "https://github.com/ice-blockchain/flutterfire.git"
     source: git
     version: "5.4.0"
@@ -824,7 +824,7 @@ packages:
     description:
       path: "packages/firebase_core/firebase_core_web"
       ref: HEAD
-      resolved-ref: "90450eb7f2c7f0267938fab164758f946745a868"
+      resolved-ref: "64b300dd19e2f9dedda4c9306b4a3e5d2fdc3081"
       url: "https://github.com/ice-blockchain/flutterfire.git"
     source: git
     version: "2.22.0"
@@ -833,7 +833,7 @@ packages:
     description:
       path: "packages/firebase_messaging/firebase_messaging"
       ref: HEAD
-      resolved-ref: "90450eb7f2c7f0267938fab164758f946745a868"
+      resolved-ref: "64b300dd19e2f9dedda4c9306b4a3e5d2fdc3081"
       url: "https://github.com/ice-blockchain/flutterfire.git"
     source: git
     version: "15.2.5"
@@ -842,7 +842,7 @@ packages:
     description:
       path: "packages/firebase_messaging/firebase_messaging_platform_interface"
       ref: HEAD
-      resolved-ref: "90450eb7f2c7f0267938fab164758f946745a868"
+      resolved-ref: "64b300dd19e2f9dedda4c9306b4a3e5d2fdc3081"
       url: "https://github.com/ice-blockchain/flutterfire.git"
     source: git
     version: "4.6.5"
@@ -851,7 +851,7 @@ packages:
     description:
       path: "packages/firebase_messaging/firebase_messaging_web"
       ref: HEAD
-      resolved-ref: "90450eb7f2c7f0267938fab164758f946745a868"
+      resolved-ref: "64b300dd19e2f9dedda4c9306b4a3e5d2fdc3081"
       url: "https://github.com/ice-blockchain/flutterfire.git"
     source: git
     version: "3.10.5"

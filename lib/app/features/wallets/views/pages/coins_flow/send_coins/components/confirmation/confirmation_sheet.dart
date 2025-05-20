@@ -96,7 +96,7 @@ class ConfirmationSheet extends ConsumerWidget {
                   if (coin != null)
                     ListItem.textWithIcon(
                       title: Text(locale.wallet_asset),
-                      value: coin.coinsGroup.name,
+                      value: coin.coinsGroup.abbreviation,
                       icon: CoinIconWidget(
                         imageUrl: coin.coinsGroup.iconUrl,
                         size: ScreenSideOffset.defaultSmallMargin,
