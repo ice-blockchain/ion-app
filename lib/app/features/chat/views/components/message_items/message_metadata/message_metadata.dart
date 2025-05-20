@@ -15,12 +15,14 @@ import 'package:ion/generated/assets.gen.dart';
 class MessageMetaData extends HookConsumerWidget {
   const MessageMetaData({
     required this.eventMessage,
+    this.displayTime = true,
     super.key,
     this.startPadding = 8.0,
   });
 
-  final EventMessage eventMessage;
+  final bool displayTime;
   final double startPadding;
+  final EventMessage eventMessage;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -50,14 +52,15 @@ class MessageMetaData extends HookConsumerWidget {
               ),
             ),
           SizedBox(width: 2.0.s),
-          Text(
-            toTimeDisplayValue(entityData.publishedAt.value.millisecondsSinceEpoch),
-            style: context.theme.appTextThemes.caption4.copyWith(
-              color: isMe
-                  ? context.theme.appColors.strokeElements
-                  : context.theme.appColors.quaternaryText,
+          if (displayTime)
+            Text(
+              toTimeDisplayValue(entityData.publishedAt.value.millisecondsSinceEpoch),
+              style: context.theme.appTextThemes.caption4.copyWith(
+                color: isMe
+                    ? context.theme.appColors.strokeElements
+                    : context.theme.appColors.quaternaryText,
+              ),
             ),
-          ),
           if (isMe)
             Padding(
               padding: EdgeInsetsDirectional.only(start: 2.0.s),

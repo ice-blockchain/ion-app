@@ -5,6 +5,7 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/components/avatar/avatar.dart';
 import 'package:ion/app/extensions/extensions.dart';
+import 'package:ion/app/features/auth/providers/auth_provider.c.dart';
 import 'package:ion/app/features/chat/model/database/chat_database.c.dart';
 import 'package:ion/app/features/chat/model/message_type.dart';
 import 'package:ion/app/features/chat/providers/muted_conversations_provider.c.dart';
@@ -12,6 +13,7 @@ import 'package:ion/app/features/chat/recent_chats/model/conversation_list_item.
 import 'package:ion/app/features/chat/recent_chats/providers/conversations_edit_mode_provider.c.dart';
 import 'package:ion/app/features/chat/recent_chats/providers/selected_conversations_ids_provider.c.dart';
 import 'package:ion/app/features/chat/recent_chats/views/pages/recent_chat_overlay/recent_chat_overlay.dart';
+import 'package:ion/app/features/chat/views/components/message_items/message_metadata/message_metadata.dart';
 import 'package:ion/app/features/ion_connect/model/event_reference.c.dart';
 import 'package:ion/app/features/user/providers/user_metadata_provider.c.dart';
 import 'package:ion/app/utils/date.dart';
@@ -57,6 +59,9 @@ class RecentChatTile extends HookConsumerWidget {
         false;
 
     final messageItemKey = useMemoized(GlobalKey.new);
+
+    final isMe = conversation.latestMessage != null &&
+        ref.watch(isCurrentUserSelectorProvider(conversation.latestMessage!.masterPubkey));
 
     final showRecentChatOverlay = useCallback(
       () {
@@ -154,7 +159,16 @@ class RecentChatTile extends HookConsumerWidget {
                                   lastMessageContent: lastMessageContent,
                                 ),
                               ),
-                              UnreadCountBadge(unreadCount: unreadMessagesCount, isMuted: isMuted),
+                              if (isMe)
+                                MessageMetaData(
+                                  displayTime: false,
+                                  eventMessage: conversation.latestMessage!,
+                                )
+                              else
+                                UnreadCountBadge(
+                                  isMuted: isMuted,
+                                  unreadCount: unreadMessagesCount,
+                                ),
                             ],
                           ),
                         ],
