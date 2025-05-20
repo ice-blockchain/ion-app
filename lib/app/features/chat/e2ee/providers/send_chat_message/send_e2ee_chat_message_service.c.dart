@@ -5,7 +5,6 @@ import 'dart:io';
 
 import 'package:collection/collection.dart';
 import 'package:file_saver/file_saver.dart';
-import 'package:flutter/foundation.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/exceptions/exceptions.dart';
 import 'package:ion/app/extensions/extensions.dart';
@@ -35,6 +34,7 @@ import 'package:ion/app/services/ion_connect/ion_connect_gift_wrap_service.c.dar
 import 'package:ion/app/services/ion_connect/ion_connect_seal_service.c.dart';
 import 'package:ion/app/services/media_service/media_service.c.dart';
 import 'package:ion/app/services/uuid/uuid.dart';
+import 'package:isolate_manager/isolate_manager.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'send_e2ee_chat_message_service.c.g.dart';
@@ -309,12 +309,29 @@ class SendE2eeChatMessageService {
     required EventMessage eventMessage,
     required List<String> wrappedKinds,
   }) async {
-    final giftWrap = await _createGiftWrap(
-      signer: eventSigner,
-      kinds: wrappedKinds,
-      receiverPubkey: pubkey,
-      eventMessage: eventMessage,
-      receiverMasterPubkey: masterPubkey,
+    final env = ref.read(envProvider.notifier);
+    final expirationDuration = Duration(
+      hours: env.get<int>(EnvVariable.GIFT_WRAP_EXPIRATION_HOURS),
+    );
+    final giftWrapService = await ref.read(ionConnectGiftWrapServiceProvider.future);
+    final sealService = await ref.read(ionConnectSealServiceProvider.future);
+
+    final expirationTag = EntityExpiration(
+      value: DateTime.now().add(expirationDuration),
+    ).toTag();
+
+    final giftWrap = await giftWrapSharedIsolate.compute(
+      createGiftWrapFn,
+      [
+        sealService,
+        giftWrapService,
+        eventMessage,
+        eventSigner,
+        pubkey,
+        masterPubkey,
+        expirationTag,
+        wrappedKinds,
+      ],
     );
 
     await ref.read(ionConnectNotifierProvider.notifier).sendEvent(
@@ -322,54 +339,6 @@ class SendE2eeChatMessageService {
           cache: false,
           actionSource: ActionSourceUserChat(masterPubkey, anonymous: true),
         );
-  }
-
-  Future<EventMessage> _createGiftWrap({
-    required List<String> kinds,
-    required String receiverPubkey,
-    required String receiverMasterPubkey,
-    required EventSigner signer,
-    required EventMessage eventMessage,
-  }) async {
-    final env = ref.read(envProvider.notifier);
-    final sealService = await ref.read(ionConnectSealServiceProvider.future);
-    final wrapService = await ref.read(ionConnectGiftWrapServiceProvider.future);
-
-    final expirationTag = EntityExpiration(
-      value: DateTime.now().add(
-        Duration(hours: env.get<int>(EnvVariable.GIFT_WRAP_EXPIRATION_HOURS)),
-      ),
-    ).toTag();
-
-    final wrap = await compute(
-      (args) async {
-        final seal = await args.$1.createSeal(
-          args.$2,
-          args.$3,
-          args.$4,
-        );
-
-        return args.$5.createWrap(
-          event: seal,
-          contentKinds: args.$6,
-          receiverPubkey: args.$4,
-          receiverMasterPubkey: args.$7,
-          expirationTag: args.$8,
-        );
-      },
-      (
-        sealService,
-        eventMessage,
-        signer,
-        receiverPubkey,
-        wrapService,
-        kinds,
-        receiverMasterPubkey,
-        expirationTag
-      ),
-    );
-
-    return wrap;
   }
 
   Future<void> resendMessage({
@@ -467,4 +436,32 @@ class SendE2eeChatMessageService {
 
     return messageMediaIds;
   }
+}
+
+final giftWrapSharedIsolate = IsolateManager.createShared(
+  workerMappings: {
+    createGiftWrapFn: 'createGiftWrapFn',
+  },
+);
+
+@pragma('vm:entry-point')
+Future<EventMessage> createGiftWrapFn(List<dynamic> args) async {
+  final sealService = args[0] as IonConnectSealService;
+  final giftWrapService = args[1] as IonConnectGiftWrapService;
+  final eventMessage = args[2] as EventMessage;
+  final signer = args[3] as EventSigner;
+  final receiverPubkey = args[4] as String;
+  final receiverMasterPubkey = args[5] as String;
+  final expirationTag = args[6] as List<String>;
+  final kinds = args[7] as List<String>;
+
+  final seal = await sealService.createSeal(eventMessage, signer, receiverPubkey);
+
+  return giftWrapService.createWrap(
+    event: seal,
+    contentKinds: kinds,
+    receiverPubkey: receiverPubkey,
+    receiverMasterPubkey: receiverMasterPubkey,
+    expirationTag: expirationTag,
+  );
 }
