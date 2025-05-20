@@ -62,7 +62,7 @@ class AudioMessage extends HookConsumerWidget {
 
     useEffect(
       () {
-        if (mediaAttachment?.url == null) return null;
+        if (audioUrl.value != null) return null;
         ref
             .read(
           chatMessageLoadMediaProvider(
@@ -74,22 +74,23 @@ class AudioMessage extends HookConsumerWidget {
         )
             .then((value) {
           if (value != null) {
-            if (context.mounted) {
-              ref.read(audioCompressorProvider).compressAudioToWav(value.path).then((value) {
-                audioUrl.value = value;
-              });
-            }
+            ref.read(audioCompressorProvider).compressAudioToWav(value.path).then((value) {
+              audioUrl.value = value;
+            });
           }
         });
         return null;
       },
-      [messageMedia?.cacheKey, mediaAttachment?.url],
+      [messageMedia, mediaAttachment?.url, audioUrl.value],
     );
+
+    if (audioUrl.value == null) {
+      return const SizedBox.shrink();
+    }
 
     final audioPlaybackState = useState<PlayerState?>(null);
     final audioPlaybackController = useAudioWavePlaybackController()
       ..setFinishMode(finishMode: FinishMode.pause);
-
     final playerWaveStyle = useMemoized(
       () => PlayerWaveStyle(
         liveWaveColor:
@@ -112,18 +113,24 @@ class AudioMessage extends HookConsumerWidget {
               playerWaveStyle,
             );
 
-        // Listen to player state changes
-        audioPlaybackController.onPlayerStateChanged.listen((event) {
-          if (event != PlayerState.stopped) {
-            audioPlaybackState.value = event;
+        final stateSubscription = audioPlaybackController.onPlayerStateChanged.listen((event) {
+          if (context.mounted) {
+            if (event != PlayerState.stopped) {
+              audioPlaybackState.value = event;
+            }
           }
         });
 
-        audioPlaybackController.onCompletion.listen((event) {
-          ref.read(activeAudioMessageProvider.notifier).activeAudioMessage = null;
+        final completionSubscription = audioPlaybackController.onCompletion.listen((event) {
+          if (context.mounted) {
+            ref.read(activeAudioMessageProvider.notifier).activeAudioMessage = null;
+          }
         });
 
-        return null;
+        return () {
+          stateSubscription.cancel();
+          completionSubscription.cancel();
+        };
       },
       [audioUrl.value],
     );
