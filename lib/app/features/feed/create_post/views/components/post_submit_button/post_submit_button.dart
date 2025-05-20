@@ -58,11 +58,12 @@ class PostSubmitButton extends HookConsumerWidget {
     final whoCanReply = ref.watch(selectedWhoCanReplyOptionProvider);
 
     final isSubmitButtonEnabled = useCanSubmitPost(
-      textEditorController,
-      mediaFiles,
-      mediaAttachments,
-      draftPoll.answers,
-      modifiedEntity,
+      textEditorController: textEditorController,
+      mediaFiles: mediaFiles,
+      mediaAttachments: mediaAttachments,
+      hasPoll: draftPoll.added,
+      pollAnswers: draftPoll.answers,
+      modifiedEvent: modifiedEntity,
     );
 
     return ToolbarSendButton(
