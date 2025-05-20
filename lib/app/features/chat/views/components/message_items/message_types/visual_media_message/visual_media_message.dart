@@ -25,7 +25,7 @@ class VisualMediaMessage extends HookConsumerWidget {
 
   final VoidCallback? onTapReply;
   final EventMessage eventMessage;
-   final EdgeInsetsDirectional? margin;
+  final EdgeInsetsDirectional? margin;
 
   static double get padding => 6.0.s;
 

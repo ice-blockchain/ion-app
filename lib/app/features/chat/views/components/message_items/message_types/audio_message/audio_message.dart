@@ -39,7 +39,7 @@ class AudioMessage extends HookConsumerWidget {
 
   final EventMessage eventMessage;
   final VoidCallback? onTapReply;
-   final EdgeInsetsDirectional? margin;
+  final EdgeInsetsDirectional? margin;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {

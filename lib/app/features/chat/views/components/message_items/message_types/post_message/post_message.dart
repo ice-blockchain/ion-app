@@ -22,7 +22,7 @@ class PostMessage extends HookConsumerWidget {
 
   final EventMessage eventMessage;
   final VoidCallback? onTapReply;
-   final EdgeInsetsDirectional? margin;
+  final EdgeInsetsDirectional? margin;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -49,7 +49,7 @@ class PostMessage extends HookConsumerWidget {
 
     return isStory
         ? SharedStoryMessage(
-          margin: margin,
+            margin: margin,
             storyEntity: postEntity,
             replyEventMessage: eventMessage,
           )

@@ -129,8 +129,8 @@ class _SentMoneyMessage extends ConsumerWidget {
   final EventMessage eventMessage;
   final ImmutableEventReference eventReference;
   final VoidCallback? onTapReply;
-   final EdgeInsetsDirectional? margin;
-   
+  final EdgeInsetsDirectional? margin;
+
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final isMe = ref.watch(isCurrentUserSelectorProvider(eventReference.pubkey));
