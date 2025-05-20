@@ -35,10 +35,7 @@ class _AmountDisplay extends HookWidget {
         Row(
           children: [
             Text(
-              NumberFormat.currency(
-                symbol: coin.emptyOrValue.isEmpty ? '' : '$coin ',
-                decimalDigits: 2,
-              ).format(amount),
+              formatCrypto(amount, coin.emptyOrValue.isEmpty ? '' : '$coin '),
               style: context.theme.appTextThemes.subtitle3.copyWith(color: textColor),
             ),
             SizedBox(width: 4.0.s),
