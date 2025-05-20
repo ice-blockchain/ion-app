@@ -224,9 +224,7 @@ class MediaService {
     );
   }
 
-  Future<MediaFile?> saveVideoToGallery(String videoPath) async {
-    final videoFile = File(videoPath);
-
+  Future<MediaFile?> saveVideoToGallery(File videoFile) async {
     final asset = await PhotoManager.editor.saveVideo(
       videoFile,
       title: 'Camera_${DateTime.now().millisecondsSinceEpoch}',
