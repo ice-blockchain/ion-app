@@ -14,6 +14,7 @@ import 'package:ion/app/exceptions/exceptions.dart';
 import 'package:ion/app/extensions/delta.dart';
 import 'package:ion/app/features/core/model/media_type.dart';
 import 'package:ion/app/features/core/providers/env_provider.c.dart';
+import 'package:ion/app/features/core/providers/poll/poll_draft_provider.c.dart';
 import 'package:ion/app/features/feed/create_post/model/create_post_option.dart';
 import 'package:ion/app/features/feed/data/models/entities/article_data.c.dart';
 import 'package:ion/app/features/feed/data/models/entities/modifiable_post_data.c.dart';
@@ -64,37 +65,6 @@ class CreatePostNotifier extends _$CreatePostNotifier {
   @override
   FutureOr<void> build(CreatePostOption createOption) {}
 
-  /// Create a post with a poll
-  Future<void> createWithPoll({
-    required String pollQuestion,
-    required List<String> pollOptions,
-    Delta? content,
-    int pollTtl = 0, // Time to live in seconds, 0 means no expiration
-    String pollType = 'single', // 'single' or 'multiple'
-    WhoCanReplySettingsOption whoCanReply = WhoCanReplySettingsOption.everyone,
-    EventReference? parentEvent,
-    EventReference? quotedEvent,
-    List<MediaFile>? mediaFiles,
-    String? communityId,
-  }) async {
-    final pollData = PollData(
-      type: pollType,
-      ttl: pollTtl,
-      title: pollQuestion,
-      options: pollOptions,
-    );
-
-    return create(
-      content: content,
-      whoCanReply: whoCanReply,
-      parentEvent: parentEvent,
-      quotedEvent: quotedEvent,
-      mediaFiles: mediaFiles,
-      communityId: communityId,
-      poll: pollData,
-    );
-  }
-
   Future<void> create({
     Delta? content,
     WhoCanReplySettingsOption whoCanReply = WhoCanReplySettingsOption.everyone,
@@ -111,6 +81,9 @@ class CreatePostNotifier extends _$CreatePostNotifier {
       final parentEntity = parentEvent != null ? await _getParentEntity(parentEvent) : null;
       final (:files, :media) = await _uploadMediaFiles(mediaFiles: mediaFiles);
       final mentions = _buildMentions(postContent);
+
+      final pollDraft = ref.read(pollDraftNotifierProvider);
+      final pollData = poll ?? (pollDraft.added ? _createPollDataFromDraft(pollDraft) : null);
 
       final postData = ModifiablePostData(
         textContent: '',
@@ -129,7 +102,7 @@ class CreatePostNotifier extends _$CreatePostNotifier {
           content: postContent,
           media: media.values.toList(),
         ),
-        poll: poll,
+        poll: pollData,
       );
 
       final post = await _publishPost(
@@ -541,5 +514,25 @@ class CreatePostNotifier extends _$CreatePostNotifier {
       CreatePostOption.story => FileAlt.story,
       _ => FileAlt.post
     };
+  }
+
+  PollData _createPollDataFromDraft(PollDraft pollDraft) {
+    final pollOptions = pollDraft.answers
+        .where((answer) => answer.text.trim().isNotEmpty)
+        .map((answer) => answer.text.trim())
+        .toList();
+
+    // Convert duration to Unix timestamp (seconds since epoch)
+    final ttlSeconds = pollDraft.ttlSeconds;
+    final expiryTimestamp = ttlSeconds > 0
+        ? (DateTime.now().millisecondsSinceEpoch / 1000).floor() + ttlSeconds
+        : 0; // 0 means never expires
+
+    return PollData(
+      type: 'single',
+      ttl: expiryTimestamp,
+      title: '',
+      options: pollOptions,
+    );
   }
 }
