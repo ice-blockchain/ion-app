@@ -1,7 +1,5 @@
 // SPDX-License-Identifier: ice License 1.0
 
-import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:go_router/go_router.dart';
@@ -25,10 +23,9 @@ import 'package:ion/app/features/user/providers/user_metadata_provider.c.dart';
 import 'package:ion/app/router/app_routes.c.dart';
 import 'package:ion/app/services/clipboard/clipboard.dart';
 import 'package:ion/app/services/logger/logger.dart';
+import 'package:ion/app/services/media_service/media_service.c.dart';
 import 'package:ion/app/services/share/share.dart';
 import 'package:ion/generated/assets.gen.dart';
-import 'package:path_provider/path_provider.dart';
-import 'package:screenshot/screenshot.dart';
 
 class ShareOptions extends HookConsumerWidget {
   const ShareOptions({required this.eventReference, super.key});
@@ -39,8 +36,8 @@ class ShareOptions extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final screenshotController = useMemoized(ScreenshotController.new);
     final isCapturing = useState(false);
+    final mediaService = ref.watch(mediaServiceProvider);
 
     final entity = ref.watch(ionConnectEntityProvider(eventReference: eventReference)).valueOrNull;
 
@@ -90,74 +87,60 @@ class ShareOptions extends HookConsumerWidget {
                             ionConnectEntityWithCountersProvider(eventReference: eventReference),
                           );
 
-                          final imageBytes = await screenshotController.captureFromWidget(
-                            Localizations.override(
-                              context: context,
-                              locale: Localizations.localeOf(context),
-                              child: MediaQuery(
-                                data: MediaQuery.of(context),
-                                child: Directionality(
-                                  textDirection: Directionality.of(context),
-                                  child: InheritedTheme.captureAll(
-                                    context,
-                                    ProviderScope(
-                                      overrides: [
-                                        currentIdentityKeyNameSelectorProvider.overrideWithValue(
-                                          ref.read(currentIdentityKeyNameSelectorProvider),
-                                        ),
-                                        currentPubkeySelectorProvider
-                                            .overrideWith(CurrentPubkeySelector.new),
-                                        ionConnectEntityWithCountersProvider(
-                                          eventReference: eventReference,
-                                        ).overrideWith(
-                                          (_) => postEntityAsyncValue,
-                                        ),
-                                        userMetadataProvider(eventReference.pubkey).overrideWith(
-                                          (_) async => userMetadataAsyncValue.valueOrNull,
-                                        ),
-                                      ],
-                                      child: Material(
-                                        color: context.theme.appColors.secondaryBackground,
-                                        child: Column(
-                                          mainAxisSize: MainAxisSize.min,
-                                          children: [
-                                            Padding(
-                                              padding: EdgeInsets.all(12.0.s),
-                                              child: Post(
-                                                eventReference: eventReference,
-                                                footer: const SizedBox.shrink(),
-                                                topOffset: 0,
-                                                header: UserInfo(
-                                                  pubkey: eventReference.pubkey,
-                                                  createdAt:
-                                                      postItselfEntity.data.publishedAt.value,
-                                                  trailing: const SizedBox.shrink(),
-                                                ),
-                                              ),
-                                            ),
-                                          ],
+                          // ignore: scoped_providers_should_specify_dependencies
+                          final postWidget = ProviderScope(
+                            overrides: [
+                              // ignore: scoped_providers_should_specify_dependencies
+                              currentIdentityKeyNameSelectorProvider.overrideWithValue(
+                                ref.read(currentIdentityKeyNameSelectorProvider),
+                              ),
+                              // ignore: scoped_providers_should_specify_dependencies
+                              ionConnectEntityWithCountersProvider(
+                                eventReference: eventReference,
+                              ).overrideWithValue(postEntityAsyncValue),
+                              // ignore: scoped_providers_should_specify_dependencies
+                              userMetadataProvider(eventReference.pubkey).overrideWith(
+                                (_) async => userMetadataAsyncValue.valueOrNull,
+                              ),
+                            ],
+                            child: Material(
+                              color: context.theme.appColors.secondaryBackground,
+                              child: SizedBox(
+                                width: 600.0.s,
+                                child: Column(
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: [
+                                    Padding(
+                                      padding: EdgeInsets.all(12.0.s),
+                                      child: Post(
+                                        eventReference: eventReference,
+                                        footer: const SizedBox.shrink(),
+                                        topOffset: 0,
+                                        header: UserInfo(
+                                          pubkey: eventReference.pubkey,
+                                          createdAt: postItselfEntity.data.publishedAt.value,
+                                          trailing: const SizedBox.shrink(),
                                         ),
                                       ),
                                     ),
-                                  ),
+                                  ],
                                 ),
                               ),
                             ),
-                            pixelRatio: 3,
-                            delay: const Duration(milliseconds: 300),
                           );
 
-                          final tempDir = await getTemporaryDirectory();
-                          final tempFile = File(
-                            '${tempDir.path}/post_story_${DateTime.now().millisecondsSinceEpoch}.png',
+                          final tempFile = await mediaService.captureWidgetScreenshot(
+                            context: context,
+                            widget: postWidget,
+                            customFileName:
+                                'post_story_${DateTime.now().millisecondsSinceEpoch}.png',
                           );
-                          await tempFile.writeAsBytes(imageBytes);
 
-                          if (context.mounted) {
+                          if (tempFile != null && context.mounted) {
                             context.pop();
                           }
 
-                          if (context.mounted) {
+                          if (tempFile != null && context.mounted) {
                             await StoryPreviewRoute(
                               path: tempFile.path,
                               mimeType: 'image/png',
