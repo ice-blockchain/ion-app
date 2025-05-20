@@ -19,6 +19,8 @@ Future<UserMetadataEntity?> userMetadata(
   return await ref.watch(
     ionConnectEntityProvider(
       eventReference: ReplaceableEventReference(pubkey: pubkey, kind: UserMetadataEntity.kind),
+      // TODO: if profile badges data for pubkey is already cached - no need for the search
+      search: UserMetadataEntity.search,
       cache: cache,
     ).future,
   ) as UserMetadataEntity?;
@@ -32,6 +34,7 @@ UserMetadataEntity? cachedUserMetadata(
   return ref.watch(
     ionConnectSyncEntityProvider(
       eventReference: ReplaceableEventReference(pubkey: pubkey, kind: UserMetadataEntity.kind),
+      search: UserMetadataEntity.search,
     ),
   ) as UserMetadataEntity?;
 }

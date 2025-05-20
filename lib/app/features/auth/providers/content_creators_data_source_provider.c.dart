@@ -63,6 +63,7 @@ class ContentCreators extends _$ContentCreators {
                 RequestFilter(
                   kinds: const [UserMetadataEntity.kind],
                   authors: [creator.masterPubKey],
+                  search: UserMetadataEntity.search,
                   limit: 1,
                 ),
               );

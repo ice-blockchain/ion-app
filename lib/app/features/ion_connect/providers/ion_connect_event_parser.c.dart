@@ -5,6 +5,9 @@ import 'package:ion/app/exceptions/exceptions.dart';
 import 'package:ion/app/features/chat/community/models/entities/community_definition_data.c.dart';
 import 'package:ion/app/features/chat/community/models/entities/community_join_data.c.dart';
 import 'package:ion/app/features/chat/community/models/entities/community_update_data.c.dart';
+import 'package:ion/app/features/feed/data/models/badges/badge_award.c.dart';
+import 'package:ion/app/features/feed/data/models/badges/badge_definition.c.dart';
+import 'package:ion/app/features/feed/data/models/badges/profile_badges.c.dart';
 import 'package:ion/app/features/feed/data/models/bookmarks/bookmarks.c.dart';
 import 'package:ion/app/features/feed/data/models/bookmarks/bookmarks_set.c.dart';
 import 'package:ion/app/features/feed/data/models/entities/article_data.c.dart';
@@ -63,6 +66,9 @@ class EventParser {
       PushSubscriptionEntity.kind => PushSubscriptionEntity.fromEventMessage(eventMessage),
       DeletionRequestEntity.kind => DeletionRequestEntity.fromEventMessage(eventMessage),
       IonConnectGiftWrapEntity.kind => IonConnectGiftWrapEntity.fromEventMessage(eventMessage),
+      BadgeDefinitionEntity.kind => BadgeDefinitionEntity.fromEventMessage(eventMessage),
+      ProfileBadgesEntity.kind => ProfileBadgesEntity.fromEventMessage(eventMessage),
+      BadgeAwardEntity.kind => BadgeAwardEntity.fromEventMessage(eventMessage),
       _ => throw UnknownEventException(eventId: eventMessage.id, kind: eventMessage.kind)
     };
   }
