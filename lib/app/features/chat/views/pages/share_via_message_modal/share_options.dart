@@ -12,17 +12,15 @@ import 'package:ion/app/extensions/build_context.dart';
 import 'package:ion/app/extensions/num.dart';
 import 'package:ion/app/extensions/theme_data.dart';
 import 'package:ion/app/features/auth/providers/auth_provider.c.dart';
+import 'package:ion/app/features/chat/views/pages/share_via_message_modal/components/share_post_to_story_content.dart';
 import 'package:ion/app/features/feed/data/models/entities/modifiable_post_data.c.dart';
 import 'package:ion/app/features/feed/providers/feed_bookmarks_notifier.c.dart';
 import 'package:ion/app/features/feed/providers/ion_connect_entity_with_counters_provider.c.dart';
-import 'package:ion/app/features/feed/views/components/post/post.dart';
-import 'package:ion/app/features/feed/views/components/user_info/user_info.dart';
 import 'package:ion/app/features/ion_connect/model/event_reference.c.dart';
 import 'package:ion/app/features/ion_connect/providers/ion_connect_entity_provider.c.dart';
 import 'package:ion/app/features/user/providers/user_metadata_provider.c.dart';
 import 'package:ion/app/router/app_routes.c.dart';
 import 'package:ion/app/services/clipboard/clipboard.dart';
-import 'package:ion/app/services/logger/logger.dart';
 import 'package:ion/app/services/media_service/media_service.c.dart';
 import 'package:ion/app/services/share/share.dart';
 import 'package:ion/generated/assets.gen.dart';
@@ -65,100 +63,12 @@ class ShareOptions extends HookConsumerWidget {
                 label: context.i18n.feed_add_story,
                 onPressed: isCapturing.value
                     ? () {}
-                    : () async {
-                        isCapturing.value = true;
-
-                        try {
-                          final postItselfEntity = ref
-                              .read(ionConnectEntityProvider(eventReference: eventReference))
-                              .valueOrNull;
-                          if (postItselfEntity == null ||
-                              postItselfEntity is! ModifiablePostEntity) {
-                            Logger.warning(
-                              'Post entity not available or not ModifiablePostEntity for screenshot',
-                            );
-                            isCapturing.value = false;
-                            return;
-                          }
-
-                          final userMetadataAsyncValue =
-                              ref.read(userMetadataProvider(eventReference.pubkey));
-                          final postEntityAsyncValue = ref.read(
-                            ionConnectEntityWithCountersProvider(eventReference: eventReference),
-                          );
-
-                          // ignore: scoped_providers_should_specify_dependencies
-                          final postWidget = ProviderScope(
-                            overrides: [
-                              // ignore: scoped_providers_should_specify_dependencies
-                              currentIdentityKeyNameSelectorProvider.overrideWithValue(
-                                ref.read(currentIdentityKeyNameSelectorProvider),
-                              ),
-                              // ignore: scoped_providers_should_specify_dependencies
-                              ionConnectEntityWithCountersProvider(
-                                eventReference: eventReference,
-                              ).overrideWithValue(postEntityAsyncValue),
-                              // ignore: scoped_providers_should_specify_dependencies
-                              userMetadataProvider(eventReference.pubkey).overrideWith(
-                                (_) async => userMetadataAsyncValue.valueOrNull,
-                              ),
-                            ],
-                            child: Material(
-                              color: context.theme.appColors.secondaryBackground,
-                              child: SizedBox(
-                                width: 600.0.s,
-                                child: Column(
-                                  mainAxisSize: MainAxisSize.min,
-                                  children: [
-                                    Padding(
-                                      padding: EdgeInsets.all(12.0.s),
-                                      child: Post(
-                                        eventReference: eventReference,
-                                        footer: const SizedBox.shrink(),
-                                        topOffset: 0,
-                                        header: UserInfo(
-                                          pubkey: eventReference.pubkey,
-                                          createdAt: postItselfEntity.data.publishedAt.value,
-                                          trailing: const SizedBox.shrink(),
-                                        ),
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            ),
-                          );
-
-                          final tempFile = await mediaService.captureWidgetScreenshot(
-                            context: context,
-                            widget: postWidget,
-                            customFileName:
-                                'post_story_${DateTime.now().millisecondsSinceEpoch}.png',
-                          );
-
-                          if (tempFile != null && context.mounted) {
-                            context.pop();
-                          }
-
-                          if (tempFile != null && context.mounted) {
-                            await StoryPreviewRoute(
-                              path: tempFile.path,
-                              mimeType: 'image/png',
-                              eventReference: eventReference.encode(),
-                              isPostScreenshot: true,
-                            ).push<void>(context);
-                          }
-                        } catch (e, s) {
-                          Logger.error(
-                            'Error capturing post screenshot: $e',
-                            stackTrace: s,
-                          );
-                        } finally {
-                          if (context.mounted) {
-                            isCapturing.value = false;
-                          }
-                        }
-                      },
+                    : () => _onSharePostToStory(
+                          context,
+                          ref,
+                          isCapturing,
+                          mediaService,
+                        ),
               ),
             _ShareOptionsMenuItem(
               buttonType: ButtonType.dropdown,
@@ -213,6 +123,71 @@ class ShareOptions extends HookConsumerWidget {
         ),
       ),
     );
+  }
+
+  Future<void> _onSharePostToStory(
+    BuildContext context,
+    WidgetRef ref,
+    ValueNotifier<bool> isCapturing,
+    MediaService mediaService,
+  ) async {
+    isCapturing.value = true;
+
+    try {
+      final postItselfEntity =
+          ref.read(ionConnectEntityProvider(eventReference: eventReference)).valueOrNull;
+      if (postItselfEntity == null || postItselfEntity is! ModifiablePostEntity) {
+        isCapturing.value = false;
+        return;
+      }
+
+      final userMetadataAsyncValue = ref.read(userMetadataProvider(eventReference.pubkey));
+      final postEntityAsyncValue = ref.read(
+        ionConnectEntityWithCountersProvider(eventReference: eventReference),
+      );
+
+      // ignore: scoped_providers_should_specify_dependencies
+      final postWidget = ProviderScope(
+        overrides: [
+          // ignore: scoped_providers_should_specify_dependencies
+          currentIdentityKeyNameSelectorProvider.overrideWithValue(
+            ref.read(currentIdentityKeyNameSelectorProvider),
+          ),
+          // ignore: scoped_providers_should_specify_dependencies
+          ionConnectEntityWithCountersProvider(
+            eventReference: eventReference,
+          ).overrideWithValue(postEntityAsyncValue),
+          // ignore: scoped_providers_should_specify_dependencies
+          userMetadataProvider(eventReference.pubkey).overrideWith(
+            (_) async => userMetadataAsyncValue.valueOrNull,
+          ),
+        ],
+        child: SharePostToStoryContent(
+          eventReference: eventReference,
+          postItselfEntity: postItselfEntity,
+        ),
+      );
+
+      final tempFile = await mediaService.captureWidgetScreenshot(
+        context: context,
+        widget: postWidget,
+        customFileName: 'post_story_${DateTime.now().millisecondsSinceEpoch}.png',
+      );
+
+      if (tempFile != null && context.mounted) {
+        context.pop();
+        await StoryPreviewRoute(
+          path: tempFile.path,
+          mimeType: 'image/png',
+          eventReference: eventReference.encode(),
+          isPostScreenshot: true,
+        ).push<void>(context);
+      }
+    } finally {
+      if (context.mounted) {
+        isCapturing.value = false;
+      }
+    }
   }
 }
 
