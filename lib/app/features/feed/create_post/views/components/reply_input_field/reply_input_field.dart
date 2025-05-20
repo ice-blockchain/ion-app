@@ -168,7 +168,6 @@ class ReplyInputField extends HookConsumerWidget {
                   maxMedia: ModifiablePostEntity.contentMediaLimit,
                 ),
                 ToolbarPollButton(
-                  textEditorController: textEditorController,
                   onPressed: () async {
                     await _openCreatePostRoute(
                       context: context,

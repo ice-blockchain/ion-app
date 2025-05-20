@@ -1,30 +1,26 @@
 // SPDX-License-Identifier: ice License 1.0
 
 import 'package:flutter/material.dart';
-import 'package:flutter_quill/flutter_quill.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/features/core/providers/poll/poll_draft_provider.c.dart';
-import 'package:ion/app/features/feed/create_post/views/pages/post_form_modal/hooks/use_has_poll.dart';
 import 'package:ion/app/features/feed/views/components/actions_toolbar_button/actions_toolbar_button.dart';
 import 'package:ion/generated/assets.gen.dart';
 
 class ToolbarPollButton extends HookConsumerWidget {
   const ToolbarPollButton({
-    required this.textEditorController,
     this.focusNode,
     this.onPressed,
     this.enabled = true,
     super.key,
   });
 
-  final QuillController textEditorController;
   final FocusNode? focusNode;
   final VoidCallback? onPressed;
   final bool enabled;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final hasPoll = useHasPoll(textEditorController);
+    final hasPoll = ref.watch(pollDraftNotifierProvider).added;
 
     return ActionsToolbarButton(
       icon: Assets.svg.iconPostPoll,

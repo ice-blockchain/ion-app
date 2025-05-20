@@ -176,7 +176,6 @@ class _ActionsSection extends StatelessWidget {
             enabled: !isVideo,
           ),
           ToolbarPollButton(
-            textEditorController: textEditorController,
             enabled: !isVideo,
           ),
           ToolbarItalicButton(textEditorController: textEditorController),
