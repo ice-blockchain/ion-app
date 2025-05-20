@@ -30,12 +30,14 @@ class StoryPreviewPage extends HookConsumerWidget {
     required this.path,
     required this.mimeType,
     this.eventReference,
+    this.isPostScreenshot = false,
     super.key,
   });
 
   final String path;
   final String? mimeType;
   final EventReference? eventReference;
+  final bool isPostScreenshot;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -76,8 +78,8 @@ class StoryPreviewPage extends HookConsumerWidget {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Flexible(
-                      child: eventReference != null
-                          ? StoryImagePreview(path: path)
+                      child: isPostScreenshot
+                          ? StoryImagePreview(path: path, isPostScreenshot: true)
                           : switch (mediaType) {
                               MediaType.video => StoryVideoPreview(path: path),
                               MediaType.image => StoryImagePreview(path: path),

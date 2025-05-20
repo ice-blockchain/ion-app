@@ -18,8 +18,10 @@ import 'package:ion/app/features/feed/data/models/entities/modifiable_post_data.
 import 'package:ion/app/features/feed/providers/feed_bookmarks_notifier.c.dart';
 import 'package:ion/app/features/feed/providers/ion_connect_entity_with_counters_provider.c.dart';
 import 'package:ion/app/features/feed/views/components/post/post.dart';
+import 'package:ion/app/features/feed/views/components/user_info/user_info.dart';
 import 'package:ion/app/features/ion_connect/model/event_reference.c.dart';
 import 'package:ion/app/features/ion_connect/providers/ion_connect_entity_provider.c.dart';
+import 'package:ion/app/features/user/providers/user_metadata_provider.c.dart';
 import 'package:ion/app/router/app_routes.c.dart';
 import 'package:ion/app/services/clipboard/clipboard.dart';
 import 'package:ion/app/services/logger/logger.dart';
@@ -70,6 +72,24 @@ class ShareOptions extends HookConsumerWidget {
                         isCapturing.value = true;
 
                         try {
+                          final postItselfEntity = ref
+                              .read(ionConnectEntityProvider(eventReference: eventReference))
+                              .valueOrNull;
+                          if (postItselfEntity == null ||
+                              postItselfEntity is! ModifiablePostEntity) {
+                            Logger.warning(
+                              'Post entity not available or not ModifiablePostEntity for screenshot',
+                            );
+                            isCapturing.value = false;
+                            return;
+                          }
+
+                          final userMetadataAsyncValue =
+                              ref.read(userMetadataProvider(eventReference.pubkey));
+                          final postEntityAsyncValue = ref.read(
+                            ionConnectEntityWithCountersProvider(eventReference: eventReference),
+                          );
+
                           final imageBytes = await screenshotController.captureFromWidget(
                             Localizations.override(
                               context: context,
@@ -89,21 +109,33 @@ class ShareOptions extends HookConsumerWidget {
                                             .overrideWith(CurrentPubkeySelector.new),
                                         ionConnectEntityWithCountersProvider(
                                           eventReference: eventReference,
-                                        ).overrideWithValue(
-                                          entity,
+                                        ).overrideWith(
+                                          (_) => postEntityAsyncValue,
+                                        ),
+                                        userMetadataProvider(eventReference.pubkey).overrideWith(
+                                          (_) async => userMetadataAsyncValue.valueOrNull,
                                         ),
                                       ],
                                       child: Material(
-                                        child: Post(
-                                          eventReference: eventReference,
-                                          contentWrapper: (content) => Container(
-                                            decoration: BoxDecoration(
-                                              color: context.theme.appColors.primaryBackground,
-                                              borderRadius: BorderRadius.circular(16.0.s),
+                                        color: context.theme.appColors.secondaryBackground,
+                                        child: Column(
+                                          mainAxisSize: MainAxisSize.min,
+                                          children: [
+                                            Padding(
+                                              padding: EdgeInsets.all(12.0.s),
+                                              child: Post(
+                                                eventReference: eventReference,
+                                                footer: const SizedBox.shrink(),
+                                                topOffset: 0,
+                                                header: UserInfo(
+                                                  pubkey: eventReference.pubkey,
+                                                  createdAt:
+                                                      postItselfEntity.data.publishedAt.value,
+                                                  trailing: const SizedBox.shrink(),
+                                                ),
+                                              ),
                                             ),
-                                            padding: EdgeInsets.all(16.0.s),
-                                            child: content,
-                                          ),
+                                          ],
                                         ),
                                       ),
                                     ),
@@ -111,8 +143,8 @@ class ShareOptions extends HookConsumerWidget {
                                 ),
                               ),
                             ),
-                            pixelRatio: 2,
-                            delay: const Duration(milliseconds: 100),
+                            pixelRatio: 3,
+                            delay: const Duration(milliseconds: 300),
                           );
 
                           final tempDir = await getTemporaryDirectory();
@@ -130,11 +162,18 @@ class ShareOptions extends HookConsumerWidget {
                               path: tempFile.path,
                               mimeType: 'image/png',
                               eventReference: eventReference.encode(),
+                              isPostScreenshot: true,
                             ).push<void>(context);
                           }
-                        } catch (e) {
-                          Logger.error('Error capturing post screenshot: $e');
-                          isCapturing.value = false;
+                        } catch (e, s) {
+                          Logger.error(
+                            'Error capturing post screenshot: $e',
+                            stackTrace: s,
+                          );
+                        } finally {
+                          if (context.mounted) {
+                            isCapturing.value = false;
+                          }
                         }
                       },
               ),
