@@ -32,12 +32,14 @@ part 'components/play_pause_button.dart';
 class AudioMessage extends HookConsumerWidget {
   const AudioMessage({
     required this.eventMessage,
+    this.margin,
     this.onTapReply,
     super.key,
   });
 
   final EventMessage eventMessage;
   final VoidCallback? onTapReply;
+   final EdgeInsetsDirectional? margin;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -159,6 +161,7 @@ class AudioMessage extends HookConsumerWidget {
 
     return MessageItemWrapper(
       isMe: isMe,
+      margin: margin,
       messageItem: AudioItem(
         eventMessage: eventMessage,
         contentDescription: context.i18n.common_voice_message,

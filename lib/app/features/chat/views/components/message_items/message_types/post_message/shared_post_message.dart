@@ -26,12 +26,14 @@ class SharedPostMessage extends HookConsumerWidget {
     required this.onTapReply,
     required this.postEntity,
     required this.sharedEventMessage,
+    this.margin,
     super.key,
   });
 
   final VoidCallback? onTapReply;
   final IonConnectEntity postEntity;
   final EventMessage sharedEventMessage;
+  final EdgeInsetsDirectional? margin;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -93,6 +95,7 @@ class SharedPostMessage extends HookConsumerWidget {
     );
     return MessageItemWrapper(
       isMe: isMe,
+      margin: margin,
       messageItem: messageItem,
       contentPadding: EdgeInsets.symmetric(horizontal: 0.0.s, vertical: 8.0.s),
       child: Column(

@@ -24,12 +24,14 @@ import 'package:ion/app/utils/username.dart';
 class ProfileShareMessage extends HookConsumerWidget {
   const ProfileShareMessage({
     required this.eventMessage,
+    this.margin,
     this.onTapReply,
     super.key,
   });
 
   final EventMessage eventMessage;
   final VoidCallback? onTapReply;
+  final EdgeInsetsDirectional? margin;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -58,6 +60,7 @@ class ProfileShareMessage extends HookConsumerWidget {
     }
 
     return MessageItemWrapper(
+      margin: margin,
       messageItem: ShareProfileItem(
         eventMessage: eventMessage,
         contentDescription: userMetadata.data.name,

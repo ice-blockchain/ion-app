@@ -23,11 +23,13 @@ class SharedStoryMessage extends HookConsumerWidget {
   const SharedStoryMessage({
     required this.storyEntity,
     required this.replyEventMessage,
+    this.margin,
     super.key,
   });
 
   final IonConnectEntity storyEntity;
   final EventMessage replyEventMessage;
+  final EdgeInsetsDirectional? margin;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {

@@ -15,12 +15,14 @@ import 'package:ion/app/features/ion_connect/ion_connect.dart';
 class PostMessage extends HookConsumerWidget {
   const PostMessage({
     required this.eventMessage,
+    this.margin,
     this.onTapReply,
     super.key,
   });
 
   final EventMessage eventMessage;
   final VoidCallback? onTapReply;
+   final EdgeInsetsDirectional? margin;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -47,10 +49,12 @@ class PostMessage extends HookConsumerWidget {
 
     return isStory
         ? SharedStoryMessage(
+          margin: margin,
             storyEntity: postEntity,
             replyEventMessage: eventMessage,
           )
         : shared_post_ui.SharedPostMessage(
+            margin: margin,
             onTapReply: onTapReply,
             postEntity: postEntity,
             sharedEventMessage: eventMessage,

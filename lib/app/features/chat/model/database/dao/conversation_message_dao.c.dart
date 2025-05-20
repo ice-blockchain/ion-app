@@ -104,28 +104,14 @@ class ConversationMessageDao extends DatabaseAccessor<ChatDatabase>
         return <DateTime, List<EventMessage>>{};
       }
 
-      // Fetch corresponding event messages and statuses
+      // Fetch corresponding event messages only
       final eventMessages = await (select(eventMessageTable)
             ..where((tbl) => tbl.eventReference.isInValues(eventReferences)))
           .get();
 
-      final statuses = await (select(messageStatusTable)
-            ..where(
-              (tbl) =>
-                  tbl.messageEventReference.isInValues(eventReferences) &
-                  tbl.status.isNotIn([MessageDeliveryStatus.deleted.index]),
-            ))
-          .get();
-
-      // Filter eventMessages by those that have a non-deleted status
-      final validEventReferences = statuses.map((status) => status.messageEventReference).toSet();
-
-      final filteredEventMessages =
-          eventMessages.where((msg) => validEventReferences.contains(msg.eventReference)).toList();
-
       // Group by date
       final groupedMessages = <DateTime, List<EventMessage>>{};
-      for (final eventMessage in filteredEventMessages) {
+      for (final eventMessage in eventMessages) {
         final em = eventMessage.toEventMessage();
         final dateKey = DateTime(
           em.publishedAt.year,
@@ -135,6 +121,7 @@ class ConversationMessageDao extends DatabaseAccessor<ChatDatabase>
         groupedMessages.putIfAbsent(dateKey, () => []).add(em);
         groupedMessages[dateKey]!.sort((a, b) => b.publishedAt.compareTo(a.publishedAt));
       }
+
       return groupedMessages;
     });
   }

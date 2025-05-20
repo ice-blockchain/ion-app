@@ -18,12 +18,14 @@ import 'package:ion/app/features/ion_connect/ion_connect.dart';
 class VisualMediaMessage extends HookConsumerWidget {
   const VisualMediaMessage({
     required this.eventMessage,
+    this.margin,
     this.onTapReply,
     super.key,
   });
 
   final VoidCallback? onTapReply;
   final EventMessage eventMessage;
+   final EdgeInsetsDirectional? margin;
 
   static double get padding => 6.0.s;
 
@@ -53,6 +55,7 @@ class VisualMediaMessage extends HookConsumerWidget {
 
     return MessageItemWrapper(
       isMe: isMe,
+      margin: margin,
       messageItem: MediaItem(
         medias: messageMedias,
         eventMessage: eventMessage,
