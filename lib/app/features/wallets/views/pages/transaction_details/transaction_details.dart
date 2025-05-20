@@ -142,7 +142,7 @@ class TransactionDetailsPage extends ConsumerWidget {
                                   SizedBox(height: 16.0.s),
                                   ListItem.textWithIcon(
                                     title: Text(locale.wallet_asset),
-                                    value: coin.coinsGroup.name,
+                                    value: coin.coinsGroup.abbreviation,
                                     icon: CoinIconWidget(
                                       imageUrl: coin.coinsGroup.iconUrl,
                                       size: ScreenSideOffset.defaultSmallMargin,

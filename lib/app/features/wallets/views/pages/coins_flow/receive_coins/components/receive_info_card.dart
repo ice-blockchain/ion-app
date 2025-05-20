@@ -50,7 +50,7 @@ class ReceiveInfoCard extends ConsumerWidget {
                 ),
                 SizedBox(height: 10.0.s),
                 Text(
-                  coinsGroup.name,
+                  coinsGroup.abbreviation,
                   style: context.theme.appTextThemes.body.copyWith(
                     color: context.theme.appColors.primaryText,
                   ),

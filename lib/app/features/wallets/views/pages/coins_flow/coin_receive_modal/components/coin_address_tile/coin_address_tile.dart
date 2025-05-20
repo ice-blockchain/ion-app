@@ -56,7 +56,7 @@ class CoinAddressTile extends HookConsumerWidget {
                     SizedBox(width: 6.0.s),
                     Expanded(
                       child: Text(
-                        context.i18n.wallet_coin_address(coinsGroup.name),
+                        context.i18n.wallet_coin_address(coinsGroup.abbreviation),
                         style: context.theme.appTextThemes.body.copyWith(
                           color: context.theme.appColors.primaryText,
                         ),
