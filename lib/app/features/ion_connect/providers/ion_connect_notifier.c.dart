@@ -10,6 +10,7 @@ import 'package:ion/app/features/core/providers/main_wallet_provider.c.dart';
 import 'package:ion/app/features/ion_connect/ion_connect.dart' as ion;
 import 'package:ion/app/features/ion_connect/ion_connect.dart' hide requestEvents;
 import 'package:ion/app/features/ion_connect/model/action_source.c.dart';
+import 'package:ion/app/features/ion_connect/model/disliked_relay_urls_collection.c.dart';
 import 'package:ion/app/features/ion_connect/model/event_reference.c.dart';
 import 'package:ion/app/features/ion_connect/model/event_serializable.dart';
 import 'package:ion/app/features/ion_connect/model/events_metadata_builder.dart';
@@ -19,6 +20,7 @@ import 'package:ion/app/features/ion_connect/model/ion_connect_gift_wrap.c.dart'
 import 'package:ion/app/features/ion_connect/providers/ion_connect_cache.c.dart';
 import 'package:ion/app/features/ion_connect/providers/ion_connect_event_parser.c.dart';
 import 'package:ion/app/features/ion_connect/providers/ion_connect_event_signer_provider.c.dart';
+import 'package:ion/app/features/ion_connect/providers/long_living_subscription_relay_provider.c.dart';
 import 'package:ion/app/features/ion_connect/providers/relay_auth_provider.c.dart';
 import 'package:ion/app/features/ion_connect/providers/relay_creation_provider.c.dart';
 import 'package:ion/app/features/user/model/user_delegation.c.dart';
@@ -51,7 +53,7 @@ class IonConnectNotifier extends _$IonConnectNotifier {
       ({error}) async {
         relay ??= await ref
             .read(relayCreationProvider.notifier)
-            .getRelay(actionSource, dislikedUrls: dislikedRelaysUrls);
+            .getRelay(actionSource, dislikedUrls: DislikedRelayUrlsCollection(dislikedRelaysUrls));
 
         await ref
             .read(relayAuthProvider(relay!))
@@ -161,9 +163,17 @@ class IonConnectNotifier extends _$IonConnectNotifier {
 
     yield* withRetryStream(
       ({error}) async* {
-        relay = await ref
-            .read(relayCreationProvider.notifier)
-            .getRelay(actionSource, dislikedUrls: dislikedRelaysUrls);
+        relay = subscriptionBuilder != null
+            ? await ref.read(
+                longLivingSubscriptionRelayProvider(
+                  actionSource,
+                  dislikedUrls: DislikedRelayUrlsCollection(dislikedRelaysUrls),
+                ).future,
+              )
+            : await ref.read(relayCreationProvider.notifier).getRelay(
+                  actionSource,
+                  dislikedUrls: DislikedRelayUrlsCollection(dislikedRelaysUrls),
+                );
 
         await ref
             .read(relayAuthProvider(relay!))

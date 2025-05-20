@@ -50,7 +50,6 @@ Stream<BookmarksCollectionEntity?> bookmarksCollectionStream(
   final events = ref.watch(
     ionConnectEventsSubscriptionProvider(
       request,
-      actionSource: ActionSourceUser(pubkey),
       onEndOfStoredEvents: onEndOfStoredEvents,
     ),
   );
