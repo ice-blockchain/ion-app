@@ -13,6 +13,7 @@ import 'package:ion/app/exceptions/exceptions.dart';
 import 'package:ion/app/extensions/delta.dart';
 import 'package:ion/app/features/core/model/media_type.dart';
 import 'package:ion/app/features/core/providers/env_provider.c.dart';
+import 'package:ion/app/features/core/providers/poll/poll_draft_provider.c.dart';
 import 'package:ion/app/features/feed/create_post/model/create_post_option.dart';
 import 'package:ion/app/features/feed/data/models/entities/article_data.c.dart';
 import 'package:ion/app/features/feed/data/models/entities/modifiable_post_data.c.dart';
@@ -83,6 +84,9 @@ class CreatePostNotifier extends _$CreatePostNotifier {
       final (:files, :media) = await _uploadMediaFiles(mediaFiles: mediaFiles);
       final mentions = _buildMentions(postContent);
 
+      final pollDraft = ref.read(pollDraftNotifierProvider);
+      final pollData = poll ?? (pollDraft.added ? _createPollDataFromDraft(pollDraft) : null);
+
       final postData = ModifiablePostData(
         textContent: '',
         media: media,
@@ -100,7 +104,7 @@ class CreatePostNotifier extends _$CreatePostNotifier {
           content: postContent,
           media: media.values.toList(),
         ),
-        poll: poll,
+        poll: pollData,
       );
 
       final post = await _publishPost(
@@ -529,5 +533,25 @@ class CreatePostNotifier extends _$CreatePostNotifier {
       CreatePostOption.story => FileAlt.story,
       _ => FileAlt.post
     };
+  }
+
+  PollData _createPollDataFromDraft(PollDraft pollDraft) {
+    final pollOptions = pollDraft.answers
+        .where((answer) => answer.text.trim().isNotEmpty)
+        .map((answer) => answer.text.trim())
+        .toList();
+
+    // Convert duration to Unix timestamp (seconds since epoch)
+    final ttlSeconds = pollDraft.ttlSeconds;
+    final expiryTimestamp = ttlSeconds > 0
+        ? (DateTime.now().millisecondsSinceEpoch / 1000).floor() + ttlSeconds
+        : 0; // 0 means never expires
+
+    return PollData(
+      type: 'single',
+      ttl: expiryTimestamp,
+      title: '',
+      options: pollOptions,
+    );
   }
 }

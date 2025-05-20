@@ -11,7 +11,7 @@ part 'poll_data.c.g.dart';
 class PollData with _$PollData {
   const factory PollData({
     required String type, // "single" or "multiple"
-    required int ttl, // Time to live in seconds
+    required int ttl, // Unix timestamp for expiration (seconds since epoch)
     required String title, // Poll question
     required List<String> options, // Poll options
   }) = _PollData;
@@ -77,12 +77,12 @@ class PollData with _$PollData {
 
   DateTime? get closingTime {
     if (ttl <= 0) return null;
-    final creationTime = DateTime.now();
-    return creationTime.add(Duration(seconds: ttl));
+    return DateTime.fromMillisecondsSinceEpoch(ttl * 1000);
   }
 
   bool get isClosed {
-    final closing = closingTime;
-    return closing != null && DateTime.now().isAfter(closing);
+    if (ttl <= 0) return false; // Never expires
+    final currentTime = (DateTime.now().millisecondsSinceEpoch / 1000).floor();
+    return currentTime > ttl;
   }
 }

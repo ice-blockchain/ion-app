@@ -24,6 +24,8 @@ class PollDraft {
   final int lengthHours;
   final bool added;
 
+  int get ttlSeconds => (lengthDays * 24 * 3600) + (lengthHours * 3600);
+
   PollDraft copyWith({
     List<PollAnswer>? answers,
     int? lengthDays,
