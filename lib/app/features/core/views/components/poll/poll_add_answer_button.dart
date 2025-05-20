@@ -21,21 +21,28 @@ class PollAddAnswerButton extends ConsumerWidget {
     return Align(
       alignment: AlignmentDirectional.centerStart,
       child: Button(
-        style: const ButtonStyle(
-          padding: WidgetStatePropertyAll<EdgeInsetsGeometry>(EdgeInsets.zero),
+        style: ButtonStyle(
+          padding: WidgetStatePropertyAll<EdgeInsetsGeometry>(
+            EdgeInsetsDirectional.only(top: 8.0.s, bottom: 10.0.s),
+          ),
+          minimumSize: WidgetStatePropertyAll<Size>(Size(0, 28.0.s)),
+          tapTargetSize: MaterialTapTargetSize.shrinkWrap,
         ),
         type: ButtonType.secondary,
         label: Text(
           context.i18n.poll_add_answer_button_title,
           style: context.theme.appTextThemes.caption.copyWith(
             color: context.theme.appColors.primaryAccent,
+            fontSize: 12.0.s,
           ),
         ),
         backgroundColor: context.theme.appColors.secondaryBackground,
         borderColor: context.theme.appColors.secondaryBackground,
-        leadingIcon:
-            Assets.svg.iconPostAddanswer.icon(color: context.theme.appColors.primaryAccent),
-        leadingIconOffset: 0,
+        leadingIcon: Assets.svg.iconPostAddanswer.icon(
+          color: context.theme.appColors.primaryAccent,
+          size: 16.0.s,
+        ),
+        leadingIconOffset: 4.0.s,
         onPressed: () {
           ref.read(pollDraftNotifierProvider.notifier).addAnswer();
         },

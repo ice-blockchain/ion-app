@@ -4,8 +4,9 @@ import 'dart:convert';
 
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_quill/flutter_quill.dart';
-import 'package:ion/app/components/text_editor/components/custom_blocks/text_editor_poll_block/text_editor_poll_block.dart';
 import 'package:ion/app/services/logger/logger.dart';
+
+const textEditorPollKey = 'text-editor-poll';
 
 bool useHasPoll(QuillController textEditorController) {
   final hasPoll = useState(false);

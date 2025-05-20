@@ -8,6 +8,8 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/components/screen_offset/screen_side_offset.dart';
 import 'package:ion/app/components/text_editor/text_editor.dart';
 import 'package:ion/app/extensions/extensions.dart';
+import 'package:ion/app/features/core/providers/poll/poll_draft_provider.c.dart';
+import 'package:ion/app/features/core/views/components/poll/poll.dart';
 import 'package:ion/app/features/feed/create_post/model/create_post_option.dart';
 import 'package:ion/app/features/feed/create_post/views/components/reply_input_field/attached_media_preview.dart';
 import 'package:ion/app/features/feed/create_post/views/pages/post_form_modal/components/current_user_avatar.dart';
@@ -120,6 +122,8 @@ class _TextInputSection extends HookConsumerWidget {
     final mediaFiles = attachedMediaNotifier.value;
     final mediaLinks = attachedMediaLinksNotifier.value.values.toList();
     final bottomInset = MediaQuery.of(context).viewInsets.bottom;
+    final draftPoll = ref.watch(pollDraftNotifierProvider);
+
     useEffect(
       () {
         if (bottomInset > 0 && textEditorKey.currentContext != null) {
@@ -170,6 +174,17 @@ class _TextInputSection extends HookConsumerWidget {
                     placeholder: createOption.getPlaceholder(context),
                     key: textEditorKey,
                   ),
+                  if (draftPoll.added) ...[
+                    SizedBox(height: 12.0.s),
+                    Padding(
+                      padding: EdgeInsetsDirectional.only(end: 23.0.s),
+                      child: Poll(
+                        onRemove: () {
+                          ref.read(pollDraftNotifierProvider.notifier).reset();
+                        },
+                      ),
+                    ),
+                  ],
                   if (mediaFiles.isNotEmpty || mediaLinks.isNotEmpty) ...[
                     SizedBox(height: 12.0.s),
                     AttachedMediaPreview(
