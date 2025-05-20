@@ -42,7 +42,11 @@ class Poll extends ConsumerWidget {
                 ),
               ),
               child: Padding(
-                padding: EdgeInsets.all(10.0.s),
+                padding: EdgeInsetsDirectional.only(
+                  top: 10.0.s,
+                  start: 10.0.s,
+                  end: 10.0.s,
+                ),
                 child: const Column(
                   children: [
                     PollAnswersListView(),
