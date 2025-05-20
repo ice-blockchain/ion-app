@@ -24,19 +24,33 @@ import 'package:ion/app/features/wallets/model/entities/wallet_asset_entity.c.da
 part 'ion_connect_push_data_payload.c.freezed.dart';
 part 'ion_connect_push_data_payload.c.g.dart';
 
-@Freezed(toJson: false)
-class IonConnectPushDataPayload with _$IonConnectPushDataPayload {
-  const factory IonConnectPushDataPayload({
-    @JsonKey(fromJson: _entityFromEventJson) required EventMessage event,
-    @Default([])
-    @JsonKey(name: 'relevant_events', fromJson: _entityListFromEventListJson)
-    List<EventMessage> relevantEvents,
-  }) = _IonConnectPushDataPayload;
+class IonConnectPushDataPayload {
+  const IonConnectPushDataPayload._({
+    required this.event,
+    required this.relevantEvents,
+  });
 
-  factory IonConnectPushDataPayload.fromJson(Map<String, dynamic> json) =>
-      _$IonConnectPushDataPayloadFromJson(json);
+  final EventMessage event;
+  final List<EventMessage> relevantEvents;
 
-  const IonConnectPushDataPayload._();
+  static Future<IonConnectPushDataPayload> fromEncoded(Map<String, dynamic> data) async {
+    final EncodedIonConnectPushData(:event, :relevantEvents) =
+        EncodedIonConnectPushData.fromJson(data);
+    //TODO:add decompression
+    final parsedEvent = EventMessage.fromPayloadJson(jsonDecode(event) as Map<String, dynamic>);
+    //TODO:add decompression
+    final parsedRelevantEvents = relevantEvents != null
+        ? ((jsonDecode(relevantEvents) as List<dynamic>)
+            .map(
+              (eventJson) => EventMessage.fromPayloadJson(eventJson as Map<String, dynamic>),
+            )
+            .toList())
+        : <EventMessage>[];
+    return IonConnectPushDataPayload._(
+      event: parsedEvent,
+      relevantEvents: parsedRelevantEvents,
+    );
+  }
 
   IonConnectEntity get mainEntity {
     return EventParser().parse(event);
@@ -171,18 +185,15 @@ class IonConnectPushDataPayload with _$IonConnectPushDataPayload {
   }
 }
 
-EventMessage _entityFromEventJson(String stringifiedJson) {
-  // TODO:add brotli decompress when BE is impl
-  return EventMessage.fromPayloadJson(jsonDecode(stringifiedJson) as Map<String, dynamic>);
-}
+@Freezed(toJson: false)
+class EncodedIonConnectPushData with _$EncodedIonConnectPushData {
+  const factory EncodedIonConnectPushData({
+    required String event,
+    @JsonKey(name: 'relevant_events') String? relevantEvents,
+  }) = _EncodedIonConnectPushData;
 
-List<EventMessage> _entityListFromEventListJson(String stringifiedJson) {
-  // TODO:add brotli decompress when BE is impl
-  return (jsonDecode(stringifiedJson) as List<dynamic>)
-      .map(
-        (eventJson) => EventMessage.fromPayloadJson(eventJson as Map<String, dynamic>),
-      )
-      .toList();
+  factory EncodedIonConnectPushData.fromJson(Map<String, dynamic> json) =>
+      _$EncodedIonConnectPushDataFromJson(json);
 }
 
 enum PushNotificationType {

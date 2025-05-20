@@ -29,7 +29,7 @@ class ForegroundMessagesHandler extends _$ForegroundMessagesHandler {
   }
 
   Future<void> _handleForegroundMessage(Map<String, dynamic> response) async {
-    final data = IonConnectPushDataPayload.fromJson(response);
+    final data = await IonConnectPushDataPayload.fromEncoded(response);
 
     if (await _shouldSkip(data: data)) {
       return;

@@ -25,7 +25,7 @@ Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
     return;
   }
 
-  final data = IonConnectPushDataPayload.fromJson(message.data);
+  final data = await IonConnectPushDataPayload.fromEncoded(message.data);
   final parser = await riverpodContainer.read(notificationDataParserProvider.future);
   final parsedData = await parser.parse(data);
 
