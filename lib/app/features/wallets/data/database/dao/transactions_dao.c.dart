@@ -87,6 +87,7 @@ class TransactionsDao extends DatabaseAccessor<WalletsDatabase> with _$Transacti
     List<String> txHashes = const [],
     List<String> walletAddresses = const [],
     List<String> walletViewIds = const [],
+    List<String> externalHashes = const [],
     int limit = 20,
     int? offset,
     String? symbol,
@@ -105,6 +106,10 @@ class TransactionsDao extends DatabaseAccessor<WalletsDatabase> with _$Transacti
 
             if (txHashes.isNotEmpty) {
               expr = expr & tbl.txHash.isIn(txHashes);
+            }
+
+            if (externalHashes.isNotEmpty) {
+              expr = expr & tbl.externalHash.isIn(externalHashes);
             }
 
             if (walletViewIds.isNotEmpty) {
@@ -347,6 +352,7 @@ class TransactionsDao extends DatabaseAccessor<WalletsDatabase> with _$Transacti
       ),
       id: transaction.id,
       fee: transaction.fee,
+      externalHash: transaction.externalHash,
       createdAtInRelay: transaction.createdAtInRelay,
       dateConfirmed: transaction.dateConfirmed,
       dateRequested: transaction.dateRequested,
