@@ -2,6 +2,7 @@
 
 import 'dart:async';
 
+import 'package:collection/collection.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/features/wallets/data/repository/coins_repository.c.dart';
 import 'package:ion/app/features/wallets/model/coin_data.c.dart';
@@ -143,9 +144,12 @@ class SyncWalletViewCoinsService {
       );
 
       final syncedCoins = coins.map((coinDB) {
-        final syncedData = syncedCoinsData.firstWhere(
+        final syncedData = syncedCoinsData.firstWhereOrNull(
           (e) => e.symbolGroup == coinDB.symbolGroup && e.network == coinDB.networkId,
         );
+
+        if (syncedData == null) return coinDB;
+
         return coinDB.copyWith(
           priceUSD: syncedData.priceUSD,
           syncFrequency: syncedData.syncFrequency,

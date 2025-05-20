@@ -22,7 +22,6 @@ class TransactionDetails with _$TransactionDetails {
     required CryptoAssetToSendData assetData,
     required TransactionStatus status,
     required String walletViewId,
-    required CoinData? nativeCoin,
     required String? senderAddress,
     required String? receiverAddress,
     required String? walletViewName,

@@ -1,5 +1,7 @@
 // SPDX-License-Identifier: ice License 1.0
 
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
@@ -11,6 +13,7 @@ import 'package:ion/app/components/screen_offset/screen_side_offset.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/extensions/object.dart';
 import 'package:ion/app/features/components/verify_identity/verify_identity_prompt_dialog_helper.dart';
+import 'package:ion/app/features/wallets/domain/transactions/sync_transactions_service.c.dart';
 import 'package:ion/app/features/wallets/model/crypto_asset_to_send_data.c.dart';
 import 'package:ion/app/features/wallets/model/network_data.c.dart';
 import 'package:ion/app/features/wallets/model/network_fee_option.c.dart';
@@ -49,8 +52,17 @@ class ConfirmationSheet extends ConsumerWidget {
 
     ref
       ..displayErrors(sendCoinsNotifierProvider)
-      ..listenSuccess(sendCoinsNotifierProvider, (transactionDetails) {
+      ..listenSuccess(sendCoinsNotifierProvider, (transactionDetails) async {
         ref.invalidate(walletViewsDataNotifierProvider);
+
+        // Since we will update wallet views after transfer, some old broadcasted transfers can be
+        // confirmed, so we need to update their status to avoid applying balance hack twice
+        final service = await ref.read(syncTransactionsServiceProvider.future);
+        unawaited(
+          ref
+              .read(walletViewsDataNotifierProvider.future)
+              .then((_) => service.syncBroadcastedTransfers()),
+        );
 
         if (context.mounted && transactionDetails != null) {
           ref.read(transactionNotifierProvider.notifier).details = transactionDetails;
