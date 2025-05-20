@@ -66,7 +66,7 @@ class SendE2eeChatMessageService {
   }) async {
     EventMessage? sentMessage;
 
-    final sharedId = editedMessage?.sharedId ?? generateUuid();
+    final sharedId = editedMessage?.sharedId ?? failedEventMessage?.sharedId ?? generateUuid();
     ReplaceableEventReference? eventReference;
 
     final editedMessageEntity = editedMessage != null
@@ -229,7 +229,7 @@ class SendE2eeChatMessageService {
       throw SendEventException(e.toString());
     }
 
-    return sentMessage;
+    return Future.value(sentMessage);
   }
 
   List<RelatedReplaceableEvent> _generateRelatedEvents(EventMessage? repliedMessage) {
