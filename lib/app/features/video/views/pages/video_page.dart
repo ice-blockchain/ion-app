@@ -26,6 +26,7 @@ class VideoPage extends HookConsumerWidget {
     this.framedEventReference,
     this.videoInfo,
     this.bottomOverlay,
+    this.videoBottomPadding = 42.0,
     super.key,
   });
 
@@ -36,6 +37,7 @@ class VideoPage extends HookConsumerWidget {
   final bool looping;
   final Widget? videoInfo;
   final Widget? bottomOverlay;
+  final double videoBottomPadding;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -105,6 +107,26 @@ class VideoPage extends HookConsumerWidget {
       }
     });
 
+    Widget videoPlayer = SizedBox(
+      height: playerController.value.size.height,
+      width: playerController.value.size.width,
+      child: CachedVideoPlayerPlus(playerController),
+    );
+
+    if (playerController.value.aspectRatio < 1) {
+      videoPlayer = SizedBox.expand(
+        child: FittedBox(
+          fit: BoxFit.cover,
+          child: videoPlayer,
+        ),
+      );
+    } else {
+      videoPlayer = AspectRatio(
+        aspectRatio: playerController.value.aspectRatio,
+        child: videoPlayer,
+      );
+    }
+
     return VisibilityDetector(
       key: ValueKey(videoUrl),
       onVisibilityChanged: (info) {
@@ -129,14 +151,11 @@ class VideoPage extends HookConsumerWidget {
               }
             },
             child: Center(
-              child: SizedBox.expand(
-                child: FittedBox(
-                  fit: BoxFit.cover,
-                  child: SizedBox(
-                    height: playerController.value.size.height,
-                    width: playerController.value.size.width,
-                    child: CachedVideoPlayerPlus(playerController),
-                  ),
+              child: SafeArea(
+                top: false,
+                child: Padding(
+                  padding: EdgeInsetsDirectional.only(bottom: videoBottomPadding.s),
+                  child: videoPlayer,
                 ),
               ),
             ),
