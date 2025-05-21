@@ -1,6 +1,7 @@
 // SPDX-License-Identifier: ice License 1.0
 
 import 'dart:convert';
+import 'dart:io';
 
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:ion/app/extensions/extensions.dart';
@@ -29,7 +30,7 @@ class RelayFirebaseAppConfig extends _$RelayFirebaseAppConfig {
       return null;
     }
 
-    final savedConfig = ref.watch(savedFirebaseAppConfigProvider);
+    final savedConfig = ref.watch(savedRelayFirebaseAppConfigProvider);
 
     final relayUrls = [...userRelay.urls];
 
@@ -65,7 +66,7 @@ class RelayFirebaseAppConfig extends _$RelayFirebaseAppConfig {
 }
 
 @Riverpod(keepAlive: true)
-class SavedFirebaseAppConfig extends _$SavedFirebaseAppConfig {
+class SavedRelayFirebaseAppConfig extends _$SavedRelayFirebaseAppConfig {
   @override
   RelayFirebaseConfig? build() {
     listenSelf((_, next) => _saveConfig(next));
@@ -108,6 +109,27 @@ class SavedFirebaseAppConfig extends _$SavedFirebaseAppConfig {
   }
 
   static const String _configuredFirebaseAppKey = 'configured_firebase_app_key';
+}
+
+@riverpod
+class BuildInFirebaseAppConfig extends _$BuildInFirebaseAppConfig {
+  @override
+  FirebaseConfig? build() {
+    //TODO:take from env
+    return Platform.isIOS
+        ? const FirebaseConfig(
+            apiKey: 'AIzaSyCVSlYwxgmES12dNonyBHiApGZ_tGUdJ1o',
+            appId: '1:65429012887:ios:4ab3e5dac82c7b278384d2',
+            messagingSenderId: '65429012887',
+            projectId: 'staging1-1c80c',
+          )
+        : const FirebaseConfig(
+            apiKey: 'AIzaSyDm5X4MLxFjBCxmDF-wHa0D5wfNBeyQhLM',
+            appId: '1:65429012887:android:9834c5a443c87a348384d2',
+            messagingSenderId: '65429012887',
+            projectId: 'staging1-1c80c',
+          );
+  }
 }
 
 @freezed

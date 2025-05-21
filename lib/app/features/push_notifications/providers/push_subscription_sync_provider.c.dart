@@ -24,11 +24,12 @@ class PushSubscriptionSync extends _$PushSubscriptionSync {
       return;
     }
 
-    final delegationComplete = await ref.watch(delegationCompleteProvider.future);
+    //TODO:uncomment
+    // final delegationComplete = await ref.watch(delegationCompleteProvider.future);
 
-    if (!delegationComplete) {
-      return;
-    }
+    // if (!delegationComplete) {
+    //   return;
+    // }
 
     final selectedCategoriesSubscription =
         await ref.watch(selectedPushCategoriesIonSubscriptionProvider.future);
