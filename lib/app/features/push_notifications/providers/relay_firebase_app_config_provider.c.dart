@@ -1,11 +1,11 @@
 // SPDX-License-Identifier: ice License 1.0
 
 import 'dart:convert';
-import 'dart:io';
 
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/auth/providers/auth_provider.c.dart';
+import 'package:ion/app/features/core/providers/env_provider.c.dart';
 import 'package:ion/app/features/ion_connect/model/relay_info.c.dart';
 import 'package:ion/app/features/ion_connect/providers/relay_info_provider.c.dart';
 import 'package:ion/app/features/user/providers/user_relays_manager.c.dart';
@@ -116,20 +116,19 @@ class SavedRelayFirebaseAppConfig extends _$SavedRelayFirebaseAppConfig {
 class BuildInFirebaseAppConfig extends _$BuildInFirebaseAppConfig {
   @override
   FirebaseConfig? build() {
-    //TODO:take from env
-    return Platform.isIOS
-        ? const FirebaseConfig(
-            apiKey: 'AIzaSyC62yCrHB3GTKzbfER0FbkPy06dMuDOZzI',
-            appId: '1:980906256117:ios:a6487cf873779f1c75c7bc',
-            messagingSenderId: '980906256117',
-            projectId: 'ice-staging-a3fa2',
-          )
-        : const FirebaseConfig(
-            apiKey: 'AIzaSyDlAqeKPc4bZB-ZYnRpP7di2x9h1ca_tbY',
-            appId: '1:980906256117:android:746c18fbfde99ff475c7bc',
-            messagingSenderId: '980906256117',
-            projectId: 'ice-staging-a3fa2',
-          );
+    try {
+      final env = ref.read(envProvider.notifier);
+      return FirebaseConfig.fromJson(
+        jsonDecode(env.get<String>(EnvVariable.FIREBASE_CONFIG)) as Map<String, dynamic>,
+      );
+    } catch (error, stackTrace) {
+      Logger.error(
+        error,
+        stackTrace: stackTrace,
+        message: 'Failed to load build-in Firebase app',
+      );
+      return null;
+    }
   }
 }
 

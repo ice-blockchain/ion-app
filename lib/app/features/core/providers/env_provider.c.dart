@@ -2,6 +2,7 @@
 
 // ignore_for_file: constant_identifier_names
 
+import 'package:flutter/foundation.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'env_provider.c.g.dart';
@@ -25,6 +26,7 @@ enum EnvVariable {
   USER_SEARCH_RELAY,
   SENTRY_DSN,
   FOUNDATION_APP_GROUP,
+  FIREBASE_CONFIG,
 }
 
 @Riverpod(keepAlive: true)
@@ -63,6 +65,11 @@ class Env extends _$Env {
       EnvVariable.ICLOUD_CONTAINER_ID => const String.fromEnvironment('ICLOUD_CONTAINER_ID') as T,
       EnvVariable.SENTRY_DSN => const String.fromEnvironment('SENTRY_DSN') as T,
       EnvVariable.FOUNDATION_APP_GROUP => const String.fromEnvironment('FOUNDATION_APP_GROUP') as T,
+      EnvVariable.FIREBASE_CONFIG => switch (defaultTargetPlatform) {
+          TargetPlatform.android => const String.fromEnvironment('FIREBASE_CONFIG_ANDROID') as T,
+          TargetPlatform.iOS => const String.fromEnvironment('FIREBASE_CONFIG_IOS') as T,
+          _ => throw UnsupportedError('Unsupported platform'),
+        },
     };
   }
 }
