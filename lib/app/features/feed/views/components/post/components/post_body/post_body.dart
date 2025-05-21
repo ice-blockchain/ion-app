@@ -64,14 +64,24 @@ class PostBody extends HookConsumerWidget {
       [content],
     );
 
+    final urlPreviewVisible = useState(false);
+
     final urlPreview = useMemoized(
       () => firstLinkOperation != null
           ? UrlPreviewContent(
               key: ValueKey(firstLinkOperation.value),
               url: firstLinkOperation.value as String,
+              onPreviewVisibilityChanged: (previewVisible) {
+                urlPreviewVisible.value = previewVisible;
+              },
             )
           : null,
       [firstLinkOperation],
+    );
+
+    final showTextContent = useMemoized(
+      () => content.isNotEmpty && (!content.isSingleLinkOnly || urlPreviewVisible.value),
+      [content, urlPreviewVisible.value],
     );
 
     return LayoutBuilder(
@@ -92,7 +102,7 @@ class PostBody extends HookConsumerWidget {
               padding: EdgeInsets.symmetric(horizontal: sidePadding ?? 16.0.s),
               child: Column(
                 children: [
-                  if (content.isNotEmpty && !content.isSingleLinkOnly)
+                  if (showTextContent)
                     ClipRect(
                       child: SizedBox(
                         height: maxHeight,

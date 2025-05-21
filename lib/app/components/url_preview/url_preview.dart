@@ -12,11 +12,13 @@ class UrlPreview extends HookConsumerWidget {
   const UrlPreview({
     required this.url,
     required this.builder,
+    this.listener,
     super.key,
   });
 
   final String url;
   final Widget Function(OgpData? meta, String? favIconUrl) builder;
+  final void Function(OgpData? meta)? listener;
 
   String? _resolveFavIconUrl(String baseUrl) {
     final uri = Uri.tryParse(baseUrl);
@@ -43,12 +45,17 @@ class UrlPreview extends HookConsumerWidget {
       return const SizedBox.shrink();
     }
 
+    final favIconUrl = _resolveFavIconUrl(normalizedUrl);
+
     final metadataAsync = ref.watch(urlMetadataProvider(normalizedUrl));
+    ref.listen(urlMetadataProvider(normalizedUrl), (_, next) {
+      listener?.call(metadataAsync.valueOrNull);
+    });
 
     if (metadataAsync.isLoading || metadataAsync.hasError) {
       return const SizedBox.shrink();
     }
 
-    return builder(metadataAsync.valueOrNull, _resolveFavIconUrl(normalizedUrl));
+    return builder(metadataAsync.valueOrNull, favIconUrl);
   }
 }
