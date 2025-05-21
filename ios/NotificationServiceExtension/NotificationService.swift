@@ -19,9 +19,7 @@ class NotificationService: UNNotificationServiceExtension {
             return
         }
 
-        // Create a Task to handle the async translation
         Task {
-            // Use the shared instance to benefit from in-memory caching
             let translation = await NotificationTranslationService.shared.translate(request.content.userInfo)
 
             if let title = translation.title, let body = translation.body {
@@ -29,7 +27,6 @@ class NotificationService: UNNotificationServiceExtension {
                 mutableNotificationContent.body = body
             }
 
-            // Call Firebase's service extension after we've processed our translations
             Messaging.serviceExtension().populateNotificationContent(
                 mutableNotificationContent,
                 withContentHandler: contentHandler

@@ -90,7 +90,6 @@ class NotificationTranslationService {
     // MARK: - Private helper methods
 
     private func getCurrentPubkey() -> String? {
-        // Read currentPubkey from UserDefaults with the app group identifier
         guard let appGroupIdentifier = Bundle.main.object(forInfoDictionaryKey: Constants.appGroupKey) as? String else {
             print("App group identifier not found in Info.plist")
             return nil
