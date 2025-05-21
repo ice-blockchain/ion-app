@@ -134,7 +134,9 @@ class TransactionsDao extends DatabaseAccessor<WalletsDatabase> with _$Transacti
           })
           ..orderBy([
             (tbl) => OrderingTerm(
-                  expression: tbl.dateRequested,
+                  expression: CustomExpression(
+                    'COALESCE(${tbl.dateRequested.name}, ${tbl.createdAtInRelay.name}, ${tbl.dateConfirmed.name})',
+                  ),
                   mode: OrderingMode.desc,
                 ),
           ])
