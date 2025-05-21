@@ -2,7 +2,6 @@
 
 import 'dart:async';
 
-import 'package:collection/collection.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/features/core/providers/wallets_provider.c.dart';
 import 'package:ion/app/features/wallets/data/repository/crypto_wallets_repository.c.dart';
@@ -50,17 +49,20 @@ class SyncTransactionsService {
   final TransactionLoader _transactionLoader;
   final TransferStatusUpdater _transferStatusUpdater;
 
-  Future<List<WalletViewData>> get _walletViews async => _walletViewsService.lastEmitted.isNotEmpty
-      ? _walletViewsService.lastEmitted
-      : await _walletViewsService.walletViews.first;
+  Future<Map<String, WalletViewData>> _getWalletViews() async {
+    final walletViews = _walletViewsService.lastEmitted.isNotEmpty
+        ? _walletViewsService.lastEmitted
+        : await _walletViewsService.walletViews.first;
+    return walletViews.walletIdToWalletView();
+  }
 
   Future<void> sync() async {
     final networks = await _networksRepository.getAllAsMap();
-    final walletViews = await _walletViews;
+    final walletViews = await _getWalletViews();
 
     await _userWallets.map((wallet) async {
       final network = networks[wallet.network];
-      final walletViewId = walletViews.getWalletViewIdByWallet(wallet);
+      final walletViewId = walletViews[wallet.id]?.id;
 
       final isHistoryLoaded =
           await _cryptoWalletsRepository.isHistoryLoadedForWallet(walletId: wallet.id);
@@ -99,10 +101,11 @@ class SyncTransactionsService {
   }
 
   Future<void> syncBroadcastedTransfers() async {
-    final walletViews = await _walletViews;
+    final walletViews = await _getWalletViews();
 
     await _userWallets.map((wallet) async {
-      final isConnectedToWalletView = walletViews.getWalletViewIdByWallet(wallet) != null;
+      final isConnectedToWalletView = walletViews[wallet.id] != null;
+
       if (isConnectedToWalletView) {
         await _transferStatusUpdater.update(wallet);
       }
@@ -111,9 +114,18 @@ class SyncTransactionsService {
 }
 
 extension on List<WalletViewData> {
-  String? getWalletViewIdByWallet(Wallet wallet) {
-    return firstWhereOrNull(
-      (wv) => wv.coins.firstWhereOrNull((coin) => coin.walletId == wallet.id) != null,
-    )?.id;
+  /// Returns a map of wallet IDs to the wallet views, that contains the wallet.
+  Map<String, WalletViewData> walletIdToWalletView() {
+    final walletIdToWalletView = <String, WalletViewData>{};
+
+    for (final walletView in this) {
+      for (final coin in walletView.coins) {
+        if (coin.walletId case final String walletId) {
+          walletIdToWalletView[walletId] = walletView;
+        }
+      }
+    }
+
+    return walletIdToWalletView;
   }
 }

@@ -148,8 +148,10 @@ class TransactionsRepository {
     }
 
     // Get transactions from the DB, where externalHash equals to the txHash from the entity
-    final txsWithEntityHashAsExternal = await _transactionsDao.getTransactions(
-      externalHashes: mapped.map((e) => e.txHash).toList(),
+    final txsWithEntityHashAsExternal = Map.fromEntries(
+      await _transactionsDao
+          .getTransactions(externalHashes: mapped.map((e) => e.txHash).toList())
+          .then((txs) => txs.map((tx) => MapEntry(tx.externalHash, tx))),
     );
 
     // If txsWithEntityHashAsExternal is not empty, we need to update transactions from entities
@@ -157,8 +159,8 @@ class TransactionsRepository {
     final txsToSave = txsWithEntityHashAsExternal.isEmpty
         ? mapped
         : mapped.map((entityTx) {
-            final savedTx = txsWithEntityHashAsExternal
-                .firstWhereOrNull((dbTx) => dbTx.externalHash == entityTx.txHash);
+            // txHash from entity should be equal to the externalHash from the saved transaction
+            final savedTx = txsWithEntityHashAsExternal[entityTx.txHash];
             return savedTx == null
                 ? entityTx
                 : entityTx.copyWith(
