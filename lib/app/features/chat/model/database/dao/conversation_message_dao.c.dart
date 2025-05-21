@@ -68,6 +68,10 @@ class ConversationMessageDao extends DatabaseAccessor<ChatDatabase>
     String masterPubkey,
     List<String> mutedConversationIds,
   ) {
+    final deletedRefs = selectOnly(messageStatusTable)
+      ..addColumns([messageStatusTable.messageEventReference])
+      ..where(messageStatusTable.status.equals(MessageDeliveryStatus.deleted.index));
+
     final query = select(messageStatusTable).join([
       innerJoin(
         conversationMessageTable,
@@ -83,6 +87,7 @@ class ConversationMessageDao extends DatabaseAccessor<ChatDatabase>
         conversationMessageTable.conversationId.isNotIn(mutedConversationIds),
       )
       ..where(messageStatusTable.status.equals(MessageDeliveryStatus.received.index))
+      ..where(messageStatusTable.messageEventReference.isNotInQuery(deletedRefs))
       ..where(messageStatusTable.masterPubkey.equals(masterPubkey))
       ..groupBy([eventMessageTable.masterPubkey]);
 
@@ -158,13 +163,43 @@ class ConversationMessageDao extends DatabaseAccessor<ChatDatabase>
     required EventMessage deleteRequest,
   }) async {
     await _removeExpiredMessages(ref, eventReferences);
-    await (update(messageStatusTable)
-          ..where((table) => table.messageEventReference.isInValues(eventReferences)))
-        .write(
-      const MessageStatusTableCompanion(
-        status: Value(MessageDeliveryStatus.deleted),
-      ),
-    );
+
+    final masterPubkey = ref.read(currentPubkeySelectorProvider);
+    final eventSigner = await ref.read(currentUserIonConnectEventSignerProvider.future);
+
+    if (masterPubkey == null || eventSigner == null) {
+      return;
+    }
+
+    for (final eventReference in eventReferences) {
+      final existingStatusRow = await (select(messageStatusTable)
+            ..where((table) => table.messageEventReference.equalsValue(eventReference))
+            ..where((table) => table.masterPubkey.equals(masterPubkey))
+            ..where((table) => table.pubkey.equals(eventSigner.publicKey)))
+          .getSingleOrNull();
+
+      if (existingStatusRow != null) {
+        await into(messageStatusTable).insert(
+          MessageStatusTableCompanion.insert(
+            messageEventReference: eventReference,
+            masterPubkey: masterPubkey,
+            pubkey: eventSigner.publicKey,
+            status: MessageDeliveryStatus.deleted,
+          ),
+        );
+        continue;
+      }
+
+      await (update(messageStatusTable)
+            ..where((table) => table.messageEventReference.equalsValue(eventReference))
+            ..where((table) => table.masterPubkey.equals(masterPubkey))
+            ..where((table) => table.pubkey.equals(eventSigner.publicKey)))
+          .write(
+        const MessageStatusTableCompanion(
+          status: Value(MessageDeliveryStatus.deleted),
+        ),
+      );
+    }
   }
 
   Future<void> _removeExpiredMessages(Ref ref, List<EventReference> eventReferences) async {
