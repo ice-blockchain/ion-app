@@ -31,7 +31,7 @@ class UrlPreviewContent extends HookWidget {
       child: UrlPreview(
         key: ValueKey(url),
         url: url,
-        listener: (meta) {
+        metaListener: (meta) {
           onPreviewVisibilityChanged?.call(meta?.title?.isNotEmpty ?? false);
         },
         builder: (meta, favIconUrl) {
