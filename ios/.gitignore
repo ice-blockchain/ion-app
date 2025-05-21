@@ -39,3 +39,4 @@ Flutter/Environment.xcconfig
 Flutter/NotificationServiceExtensionEnvironment.xcconfig
 Runner/Runner.entitlements
 NotificationServiceExtension/NotificationServiceExtension.entitlements
+NotificationServiceExtension/Configuration/Environment.swift
