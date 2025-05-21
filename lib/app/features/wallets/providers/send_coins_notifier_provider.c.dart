@@ -100,7 +100,12 @@ class SendCoinsNotifier extends _$SendCoinsNotifier {
 
       if (result.status == TransactionStatus.rejected ||
           result.status == TransactionStatus.failed) {
-        throw FailedToSendCryptoAssetsException(result.reason);
+        throw switch (result.reason) {
+          'paymentNoDestination' => PaymentNoDestinationException(
+              abbreviation: coinAssetData.coinsGroup.abbreviation,
+            ),
+          _ => FailedToSendCryptoAssetsException(result.reason),
+        };
       }
 
       Logger.info('Transaction was successful. Hash: ${result.txHash}');

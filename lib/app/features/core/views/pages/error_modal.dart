@@ -32,6 +32,8 @@ class ErrorModal extends ConsumerWidget {
     };
 
     final description = switch (error) {
+      final PaymentNoDestinationException ex =>
+        context.i18n.error_payment_no_destination_description(ex.abbreviation),
       final IONIdentityException identityException => identityException.description(context),
       Object _ when showDebugInfo => error.toString(),
       IONException(code: final int code) =>

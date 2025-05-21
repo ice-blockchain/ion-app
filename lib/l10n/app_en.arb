@@ -582,6 +582,8 @@
   "error_identity_no_local_passkey_creds_found_description": "Verify the ownership of this account by scanning a QR code on the next step using the device where your key is stored.",
   "error_identity_2fa_required_title": "2FA Authentication Required",
   "error_identity_2fa_required_description": "Two-factor authentication is required to access this account. Please complete the 2FA process to proceed.",
+  "error_payment_no_destination_title": "Unable to Transfer",
+  "error_payment_no_destination_description": "To receive this coin, the receiver must have an existing {abbreviation} balance",
   "warning_avoid_storing_keys": "Avoid storing keys on any device to prevent losing access to funds in case of a hack",
   "warning_authenticator_setup": "Keep this key safe to restore access if you lose your device.",
   "authenticator_setup_title": "Authenticator setup",

@@ -553,3 +553,9 @@ class AppConfigException extends IONException {
 class InappropriateTransferStatusException extends IONException {
   InappropriateTransferStatusException() : super(10110, 'Transfer has inappropriate status');
 }
+
+class PaymentNoDestinationException extends IONException {
+  const PaymentNoDestinationException({required this.abbreviation})
+      : super(10111, 'Payment no destination');
+  final String abbreviation;
+}
