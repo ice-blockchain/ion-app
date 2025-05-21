@@ -11,7 +11,7 @@ import 'package:ion/app/extensions/asset_gen_image.dart';
 import 'package:ion/app/extensions/build_context.dart';
 import 'package:ion/app/extensions/num.dart';
 import 'package:ion/app/features/auth/providers/auth_provider.c.dart';
-import 'package:ion/app/features/chat/views/pages/share_via_message_modal/components/share_options_menut_item.dart';
+import 'package:ion/app/features/chat/views/pages/share_via_message_modal/components/share_options_menu_item.dart';
 import 'package:ion/app/features/chat/views/pages/share_via_message_modal/components/share_post_to_story_content.dart';
 import 'package:ion/app/features/feed/data/models/entities/modifiable_post_data.c.dart';
 import 'package:ion/app/features/feed/providers/feed_bookmarks_notifier.c.dart';
@@ -21,8 +21,8 @@ import 'package:ion/app/features/ion_connect/providers/ion_connect_entity_provid
 import 'package:ion/app/features/user/providers/user_metadata_provider.c.dart';
 import 'package:ion/app/router/app_routes.c.dart';
 import 'package:ion/app/services/clipboard/clipboard.dart';
-import 'package:ion/app/services/media_service/media_service.c.dart';
 import 'package:ion/app/services/share/share.dart';
+import 'package:ion/app/utils/screenshot_utils.dart';
 import 'package:ion/generated/assets.gen.dart';
 
 class ShareOptions extends HookConsumerWidget {
@@ -35,7 +35,6 @@ class ShareOptions extends HookConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final isCapturing = useState(false);
-    final mediaService = ref.watch(mediaServiceProvider);
 
     final entity = ref.watch(ionConnectEntityProvider(eventReference: eventReference)).valueOrNull;
 
@@ -59,16 +58,9 @@ class ShareOptions extends HookConsumerWidget {
                 buttonType: ButtonType.primary,
                 icon: isCapturing.value
                     ? const CenteredLoadingIndicator()
-                    : Assets.svg.iconFeedStories.icon(size: iconSize),
+                    : Assets.svg.iconFeedStory.icon(size: iconSize),
                 label: context.i18n.feed_add_story,
-                onPressed: isCapturing.value
-                    ? () {}
-                    : () => _onSharePostToStory(
-                          context,
-                          ref,
-                          isCapturing,
-                          mediaService,
-                        ),
+                onPressed: isCapturing.value ? () {} : () => _onSharePostToStory(ref, isCapturing),
               ),
             ShareOptionsMenuItem(
               buttonType: ButtonType.dropdown,
@@ -125,12 +117,8 @@ class ShareOptions extends HookConsumerWidget {
     );
   }
 
-  Future<void> _onSharePostToStory(
-    BuildContext context,
-    WidgetRef ref,
-    ValueNotifier<bool> isCapturing,
-    MediaService mediaService,
-  ) async {
+  Future<void> _onSharePostToStory(WidgetRef ref, ValueNotifier<bool> isCapturing) async {
+    final context = ref.context;
     isCapturing.value = true;
 
     try {
@@ -168,7 +156,7 @@ class ShareOptions extends HookConsumerWidget {
         ),
       );
 
-      final tempFile = await mediaService.captureWidgetScreenshot(
+      final tempFile = await captureWidgetScreenshot(
         context: context,
         widget: postWidget,
       );

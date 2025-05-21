@@ -21,7 +21,6 @@ import 'package:path/path.dart' as p;
 import 'package:path_provider/path_provider.dart';
 import 'package:photo_manager/photo_manager.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
-import 'package:screenshot/screenshot.dart';
 
 part 'media_service.c.freezed.dart';
 part 'media_service.c.g.dart';
@@ -301,50 +300,6 @@ class MediaService {
     if (!file.existsSync()) return null;
 
     return file;
-  }
-
-  /// Captures a screenshot of a widget and saves it to a temporary file
-  ///
-  /// Returns a [File] with the screenshot image or null if capture failed
-  Future<File?> captureWidgetScreenshot({
-    required BuildContext context,
-    required Widget widget,
-  }) async {
-    try {
-      final pixelRatio = MediaQuery.devicePixelRatioOf(context);
-      final screenshotController = ScreenshotController();
-
-      final imageBytes = await screenshotController.captureFromWidget(
-        Material(
-          child: Localizations.override(
-            context: context,
-            locale: Localizations.localeOf(context),
-            child: MediaQuery(
-              data: MediaQuery.of(context),
-              child: Directionality(
-                textDirection: Directionality.of(context),
-                child: InheritedTheme.captureAll(
-                  context,
-                  widget,
-                ),
-              ),
-            ),
-          ),
-        ),
-        pixelRatio: pixelRatio,
-        delay: const Duration(milliseconds: 500),
-      );
-
-      final tempDir = await getTemporaryDirectory();
-      final fileName = 'screenshot_${DateTime.now().millisecondsSinceEpoch}.png';
-      final tempFile = File('${tempDir.path}/$fileName');
-      await tempFile.writeAsBytes(imageBytes);
-
-      return tempFile;
-    } catch (e, st) {
-      Logger.error('Error capturing widget screenshot:', stackTrace: st);
-      return null;
-    }
   }
 }
 
