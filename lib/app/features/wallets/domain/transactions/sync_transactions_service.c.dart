@@ -2,7 +2,6 @@
 
 import 'dart:async';
 
-import 'package:collection/collection.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/features/core/providers/wallets_provider.c.dart';
 import 'package:ion/app/features/wallets/data/repository/crypto_wallets_repository.c.dart';
@@ -10,13 +9,14 @@ import 'package:ion/app/features/wallets/data/repository/networks_repository.c.d
 import 'package:ion/app/features/wallets/domain/transactions/transaction_loader.c.dart';
 import 'package:ion/app/features/wallets/domain/transactions/transfer_status_updater.c.dart';
 import 'package:ion/app/features/wallets/domain/wallet_views/wallet_views_service.c.dart';
+import 'package:ion/app/features/wallets/model/wallet_view_data.c.dart';
 import 'package:ion/app/services/logger/logger.dart';
 import 'package:ion_identity_client/ion_identity.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'sync_transactions_service.c.g.dart';
 
-@riverpod
+@Riverpod(keepAlive: true)
 Future<SyncTransactionsService> syncTransactionsService(Ref ref) async {
   return SyncTransactionsService(
     await ref.watch(walletsNotifierProvider.future),
@@ -49,19 +49,20 @@ class SyncTransactionsService {
   final TransactionLoader _transactionLoader;
   final TransferStatusUpdater _transferStatusUpdater;
 
-  Future<void> sync() async {
-    final networks = await _networksRepository.getAllAsMap();
+  Future<Map<String, WalletViewData>> _getWalletViews() async {
     final walletViews = _walletViewsService.lastEmitted.isNotEmpty
         ? _walletViewsService.lastEmitted
         : await _walletViewsService.walletViews.first;
+    return walletViews.walletIdToWalletView();
+  }
+
+  Future<void> sync() async {
+    final networks = await _networksRepository.getAllAsMap();
+    final walletViews = await _getWalletViews();
 
     await _userWallets.map((wallet) async {
       final network = networks[wallet.network];
-      final walletViewId = walletViews
-          .firstWhereOrNull(
-            (wv) => wv.coins.firstWhereOrNull((coin) => coin.walletId == wallet.id) != null,
-          )
-          ?.id;
+      final walletViewId = walletViews[wallet.id]?.id;
 
       final isHistoryLoaded =
           await _cryptoWalletsRepository.isHistoryLoadedForWallet(walletId: wallet.id);
@@ -97,5 +98,34 @@ class SyncTransactionsService {
         await _cryptoWalletsRepository.save(wallet: wallet, isHistoryLoaded: true);
       }
     }).wait;
+  }
+
+  Future<void> syncBroadcastedTransfers() async {
+    final walletViews = await _getWalletViews();
+
+    await _userWallets.map((wallet) async {
+      final isConnectedToWalletView = walletViews[wallet.id] != null;
+
+      if (isConnectedToWalletView) {
+        await _transferStatusUpdater.update(wallet);
+      }
+    }).wait;
+  }
+}
+
+extension on List<WalletViewData> {
+  /// Returns a map of wallet IDs to the wallet views, that contains the wallet.
+  Map<String, WalletViewData> walletIdToWalletView() {
+    final walletIdToWalletView = <String, WalletViewData>{};
+
+    for (final walletView in this) {
+      for (final coin in walletView.coins) {
+        if (coin.walletId case final String walletId) {
+          walletIdToWalletView[walletId] = walletView;
+        }
+      }
+    }
+
+    return walletIdToWalletView;
   }
 }

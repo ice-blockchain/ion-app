@@ -46,15 +46,18 @@ class TransactionListItemLeadingIcon extends StatelessWidget {
     final showBroadcastedTransactionIcon = status == TransactionStatus.broadcasted;
     final mainIconSize = 36.0.s;
     final broadcastedIconMargin = 4.0.s;
-    final widgetSize = mainIconSize + broadcastedIconMargin;
+    final widgetWidth = mainIconSize + broadcastedIconMargin;
+
+    // Add broadcastedIconMargin twice to place the main icon at the vertical center
+    final widgetHeight = mainIconSize + broadcastedIconMargin + broadcastedIconMargin;
 
     return SizedBox(
-      height: widgetSize,
-      width: widgetSize,
+      height: widgetHeight,
+      width: widgetWidth,
       child: Stack(
         children: [
           Positioned.directional(
-            top: 0,
+            top: broadcastedIconMargin,
             start: 0,
             textDirection: direction,
             child: Container(

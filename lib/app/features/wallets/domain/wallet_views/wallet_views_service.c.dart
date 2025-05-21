@@ -258,7 +258,7 @@ class WalletViewsService {
       }
 
       final adjustedAmount = parseCryptoAmount(
-        adjustedRawAmount.toString(),
+        (adjustedRawAmount.isNegative ? 0 : adjustedRawAmount).toString(),
         coinInWallet.coin.decimals,
       );
       final adjustedBalanceUSD = adjustedAmount * coinInWallet.coin.priceUSD;

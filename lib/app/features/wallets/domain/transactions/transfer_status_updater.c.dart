@@ -11,7 +11,7 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'transfer_status_updater.c.g.dart';
 
-@riverpod
+@Riverpod(keepAlive: true)
 Future<TransferStatusUpdater> transferStatusUpdater(Ref ref) async {
   return TransferStatusUpdater(
     await ref.watch(transactionsRepositoryProvider.future),

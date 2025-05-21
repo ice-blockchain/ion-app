@@ -74,7 +74,9 @@ class TransactionsRepository {
         txs.map((tx) => MapEntry(tx.txHash, tx)),
       );
 
-      _deprecatedTransactionsCompleter.complete(mapped);
+      if (!_deprecatedTransactionsCompleter.isCompleted) {
+        _deprecatedTransactionsCompleter.complete(mapped);
+      }
 
       return mapped;
     });
@@ -145,7 +147,29 @@ class TransactionsRepository {
       return;
     }
 
-    final mergedWithDeprecated = await _mergeWithDeprecatedTransactions(mapped);
+    // Get transactions from the DB, where externalHash equals to the txHash from the entity
+    final txsWithEntityHashAsExternal = Map.fromEntries(
+      await _transactionsDao
+          .getTransactions(externalHashes: mapped.map((e) => e.txHash).toList())
+          .then((txs) => txs.map((tx) => MapEntry(tx.externalHash, tx))),
+    );
+
+    // If txsWithEntityHashAsExternal is not empty, we need to update transactions from entities
+    // to use the correct txHash and externalHash, so the right transactions will be updated in the DB
+    final txsToSave = txsWithEntityHashAsExternal.isEmpty
+        ? mapped
+        : mapped.map((entityTx) {
+            // txHash from entity should be equal to the externalHash from the saved transaction
+            final savedTx = txsWithEntityHashAsExternal[entityTx.txHash];
+            return savedTx == null
+                ? entityTx
+                : entityTx.copyWith(
+                    txHash: savedTx.txHash,
+                    externalHash: Value.absentIfNull(savedTx.externalHash),
+                  );
+          }).toList();
+
+    final mergedWithDeprecated = await _mergeWithDeprecatedTransactions(txsToSave);
     await _transactionsDao.save(mergedWithDeprecated);
   }
 
