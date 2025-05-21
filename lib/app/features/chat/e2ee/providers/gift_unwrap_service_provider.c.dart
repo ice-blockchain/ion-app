@@ -5,6 +5,8 @@ import 'package:ion/app/exceptions/exceptions.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/ion_connect/ion_connect.dart';
 import 'package:ion/app/features/ion_connect/providers/ion_connect_event_signer_provider.c.dart';
+import 'package:ion/app/features/user/model/user_delegation.c.dart';
+import 'package:ion/app/features/user/providers/user_delegation_provider.c.dart';
 import 'package:ion/app/services/ion_connect/ion_connect.dart';
 import 'package:ion/app/services/ion_connect/ion_connect_gift_wrap_service.c.dart';
 import 'package:ion/app/services/ion_connect/ion_connect_logger.dart';
@@ -14,24 +16,29 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'gift_unwrap_service_provider.c.g.dart';
 
+typedef VerifyDelegationCallback = Future<UserDelegationEntity?> Function(String pubkey);
+
 class GiftUnwrapService {
   GiftUnwrapService({
     required String privateKey,
     required IonConnectSealService sealService,
     required IonConnectGiftWrapService giftWrapService,
+    required VerifyDelegationCallback verifyDelegationCallback,
     this.logger,
   })  : _privateKey = privateKey,
+        _sealService = sealService,
         _giftWrapService = giftWrapService,
-        _sealService = sealService;
+        _verifyDelegationCallback = verifyDelegationCallback;
 
   final String _privateKey;
   final IonConnectLogger? logger;
   final IonConnectSealService _sealService;
   final IonConnectGiftWrapService _giftWrapService;
+  final VerifyDelegationCallback _verifyDelegationCallback;
 
   Future<EventMessage> unwrap(EventMessage giftWrap) async {
     try {
-      final rumor = await unwrapGiftSharedIsolate.compute(unwrapGiftFn, [
+      final (rumor, seal) = await unwrapGiftSharedIsolate.compute(unwrapGiftFn, [
         _giftWrapService,
         _sealService,
         _privateKey,
@@ -39,6 +46,12 @@ class GiftUnwrapService {
         giftWrap.pubkey,
         logger,
       ]);
+
+      final sealDelegation = await _verifyDelegationCallback(seal.masterPubkey);
+
+      if (sealDelegation == null || !sealDelegation.data.validate(seal)) {
+        throw DecodeE2EMessageException(giftWrap.id);
+      }
 
       return rumor;
     } catch (e) {
@@ -57,10 +70,15 @@ Future<GiftUnwrapService> giftUnwrapService(Ref ref) async {
     throw EventSignerNotFoundException();
   }
 
+  Future<UserDelegationEntity?> verifyDelegationCallback(String pubkey) async {
+    return ref.read(userDelegationProvider(pubkey).future);
+  }
+
   return GiftUnwrapService(
     sealService: sealService,
     giftWrapService: giftWrapService,
     privateKey: eventSigner.privateKey,
+    verifyDelegationCallback: verifyDelegationCallback,
   );
 }
 
@@ -72,7 +90,7 @@ final unwrapGiftSharedIsolate = IsolateManager.createShared(
 );
 
 @pragma('vm:entry-point')
-Future<EventMessage> unwrapGiftFn(List<dynamic> args) async {
+Future<(EventMessage, EventMessage)> unwrapGiftFn(List<dynamic> args) async {
   final giftWrapService = args[0] as IonConnectGiftWrapService;
   final sealService = args[1] as IonConnectSealService;
   final privateKey = args[2] as String;
@@ -99,11 +117,10 @@ Future<EventMessage> unwrapGiftFn(List<dynamic> args) async {
   // 1. The seal is valid (validated signature)
   // 2. The seal pubkey is the same as the rumor pubkey
   // 3. The seal masterPubkey is the same as the rumor masterPubkey
-  if (seal.sig != null &&
-      await seal.validate() &&
+  if (await seal.validate() &&
       seal.pubkey == rumor.pubkey &&
       seal.masterPubkey == rumor.masterPubkey) {
-    return rumor;
+    return (rumor, seal);
   } else {
     throw DecodeE2EMessageException(rumor.id);
   }

@@ -22,7 +22,9 @@ void main() {
     );
 
     sealService = IonConnectSealServiceImpl(
-        currentUserMasterPubkey: 'master pubkey', encryptedMessageService: encryptedMessageService);
+      currentUserMasterPubkey: 'master pubkey',
+      encryptedMessageService: encryptedMessageService,
+    );
   });
 
   group('IonConnectSealService', () {
