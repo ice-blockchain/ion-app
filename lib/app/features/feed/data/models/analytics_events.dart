@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: ice License 1.0
+
 import 'package:ion/app/features/ion_connect/model/event_reference.c.dart';
 import 'package:ion/app/services/analytics_service/analytics_service_provider.c.dart';
 
