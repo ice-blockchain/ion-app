@@ -76,7 +76,7 @@ class SharePostToChat extends _$SharePostToChat {
               sendChatMessageService.generateConversationId(receiverPubkey: masterPubkey);
 
           final tags = [
-            MasterPubkeyTag(value:  currentUserMasterPubkey).toTag(),
+            MasterPubkeyTag(value: currentUserMasterPubkey).toTag(),
             ['k', postEventMessage.kind.toString()],
             [RelatedPubkey.tagName, eventSigner.publicKey],
             [ConversationIdentifier.tagName, conversationId],

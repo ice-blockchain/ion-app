@@ -96,7 +96,7 @@ class PrivateMessageReactionEntityData
       content: content,
       tags: [
         ...tags,
-        MasterPubkeyTag(value:  masterPubkey).toTag(),
+        MasterPubkeyTag(value: masterPubkey).toTag(),
         reference.toTag(),
       ],
       createdAt: createdAt,

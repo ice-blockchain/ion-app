@@ -11,7 +11,8 @@ import 'package:ion/app/features/ion_connect/model/event_reference.c.dart';
 
 extension KeysExtensions on EventMessage {
   String get masterPubkey {
-    final masterPubkey = tags.firstWhereOrNull((tags) => tags[0] == MasterPubkeyTag.tagName)?.elementAtOrNull(1);
+    final masterPubkey =
+        tags.firstWhereOrNull((tags) => tags[0] == MasterPubkeyTag.tagName)?.elementAtOrNull(1);
 
     if (masterPubkey == null) {
       throw EventMasterPubkeyNotFoundException(eventId: id);

@@ -21,7 +21,8 @@ void main() {
       currentUserPubkey: senderSigner.publicKey,
     );
 
-    sealService = IonConnectSealServiceImpl(currentUserMasterPubkey: 'master pubkey',encryptedMessageService: encryptedMessageService);
+    sealService = IonConnectSealServiceImpl(
+        currentUserMasterPubkey: 'master pubkey', encryptedMessageService: encryptedMessageService);
   });
 
   group('IonConnectSealService', () {
