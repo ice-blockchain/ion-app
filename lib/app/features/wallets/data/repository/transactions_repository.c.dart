@@ -167,10 +167,6 @@ class TransactionsRepository {
                   );
           }).toList();
 
-    if (txsWithEntityHashAsExternal.isNotEmpty) {
-      print('Test');
-    }
-
     final mergedWithDeprecated = await _mergeWithDeprecatedTransactions(txsToSave);
     await _transactionsDao.save(mergedWithDeprecated);
   }
