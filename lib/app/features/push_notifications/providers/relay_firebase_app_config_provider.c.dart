@@ -58,30 +58,11 @@ class RelayFirebaseAppConfig extends _$RelayFirebaseAppConfig {
       return null;
     }
 
-    //TODO:uncomment
     return RelayFirebaseConfig(
+      firebaseConfig: firebaseConfigs.random,
       relayUrl: relayUrl,
       relayPubkey: relayPubkey,
-      firebaseConfig: Platform.isIOS
-          ? const FirebaseConfig(
-              apiKey: 'AIzaSyC62yCrHB3GTKzbfER0FbkPy06dMuDOZzI',
-              appId: '1:980906256117:ios:a6487cf873779f1c75c7bc',
-              messagingSenderId: '980906256117',
-              projectId: 'ice-staging-a3fa2',
-            )
-          : const FirebaseConfig(
-              apiKey: 'AIzaSyCBr_VW0Tw-7HdPTigTGei759HMfwUTMo0',
-              appId: '1:980906256117:android:746c18fbfde99ff475c7bc',
-              messagingSenderId: '980906256117',
-              projectId: 'ice-staging-a3fa2',
-            ),
     );
-
-    // return RelayFirebaseConfig(
-    //   firebaseConfig: firebaseConfigs.random,
-    //   relayUrl: relayUrl,
-    //   relayPubkey: relayPubkey,
-    // );
   }
 }
 
@@ -144,7 +125,7 @@ class BuildInFirebaseAppConfig extends _$BuildInFirebaseAppConfig {
             projectId: 'ice-staging-a3fa2',
           )
         : const FirebaseConfig(
-            apiKey: 'AIzaSyCBr_VW0Tw-7HdPTigTGei759HMfwUTMo0',
+            apiKey: 'AIzaSyDlAqeKPc4bZB-ZYnRpP7di2x9h1ca_tbY',
             appId: '1:980906256117:android:746c18fbfde99ff475c7bc',
             messagingSenderId: '980906256117',
             projectId: 'ice-staging-a3fa2',
