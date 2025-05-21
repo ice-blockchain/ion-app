@@ -1,7 +1,6 @@
 // SPDX-License-Identifier: ice License 1.0
 
 import 'package:flutter/widgets.dart';
-import 'package:ion/app/exceptions/exceptions.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion_identity_client/ion_identity.dart';
 
@@ -16,8 +15,6 @@ extension IONIdentityExceptionTranslation on IONIdentityException {
         return context.i18n.error_identity_no_local_passkey_creds_found_title;
       case TwoFARequiredException():
         return context.i18n.error_identity_2fa_required_title;
-      case PaymentNoDestinationException():
-        return context.i18n.error_payment_no_destination_title;
       default:
         return toString();
     }

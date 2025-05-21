@@ -28,6 +28,7 @@ class ErrorModal extends ConsumerWidget {
 
     final title = switch (error) {
       final IONIdentityException identityException => identityException.title(context),
+      PaymentNoDestinationException() => context.i18n.error_payment_no_destination_title,
       _ => context.i18n.error_general_title,
     };
 
