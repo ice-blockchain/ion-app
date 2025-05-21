@@ -178,7 +178,7 @@ class ConversationMessageDao extends DatabaseAccessor<ChatDatabase>
             ..where((table) => table.pubkey.equals(eventSigner.publicKey)))
           .getSingleOrNull();
 
-      if (existingStatusRow != null) {
+      if (existingStatusRow == null) {
         await into(messageStatusTable).insert(
           MessageStatusTableCompanion.insert(
             messageEventReference: eventReference,
