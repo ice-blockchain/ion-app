@@ -19,29 +19,36 @@ class SharePostToStoryContent extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final appColors = context.theme.appColors;
-
-    return Material(
-      color: appColors.secondaryBackground,
-      child: SizedBox(
-        width: 600.0.s,
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Padding(
-              padding: EdgeInsets.all(12.0.s),
-              child: Post(
-                eventReference: eventReference,
-                footer: const SizedBox.shrink(),
-                topOffset: 0,
-                header: UserInfo(
-                  pubkey: eventReference.pubkey,
-                  createdAt: postItselfEntity.data.publishedAt.value,
-                  trailing: const SizedBox.shrink(),
+    return ClipRRect(
+      borderRadius: BorderRadius.circular(16.0.s),
+      child: Container(
+        height: 600.0.s,
+        padding: EdgeInsets.symmetric(horizontal: 20.0.s, vertical: 42.0.s),
+        color: context.theme.appColors.attentionBlock,
+        child: ClipRRect(
+          borderRadius: BorderRadius.circular(16.0.s),
+          child: Material(
+            color: context.theme.appColors.secondaryBackground,
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 16.0.s, vertical: 12.0.s),
+                  child: Post(
+                    eventReference: eventReference,
+                    footer: const SizedBox.shrink(),
+                    topOffset: 0,
+                    header: UserInfo(
+                      pubkey: eventReference.pubkey,
+                      createdAt: postItselfEntity.data.publishedAt.value,
+                      trailing: const SizedBox.shrink(),
+                    ),
+                  ),
                 ),
-              ),
+              ],
             ),
-          ],
+          ),
         ),
       ),
     );

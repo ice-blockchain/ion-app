@@ -171,7 +171,6 @@ class ShareOptions extends HookConsumerWidget {
       final tempFile = await mediaService.captureWidgetScreenshot(
         context: context,
         widget: postWidget,
-        customFileName: 'post_story_${DateTime.now().millisecondsSinceEpoch}.png',
       );
 
       if (tempFile != null && context.mounted) {

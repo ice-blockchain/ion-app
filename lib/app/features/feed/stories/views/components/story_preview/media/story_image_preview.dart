@@ -20,15 +20,9 @@ class StoryImagePreview extends StatelessWidget {
     return ClipRRect(
       borderRadius: BorderRadius.circular(16.0.s),
       child: isPostScreenshot
-          ? Container(
-              padding: EdgeInsets.all(16.0.s),
-              color: context.theme.appColors.attentionBlock,
-              child: Center(
-                child: Image.file(
-                  File(path),
-                  fit: BoxFit.contain,
-                ),
-              ),
+          ? Image.file(
+              File(path),
+              fit: BoxFit.contain,
             )
           : AspectRatio(
               aspectRatio: 9 / 16,

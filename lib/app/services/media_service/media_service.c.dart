@@ -309,34 +309,34 @@ class MediaService {
   Future<File?> captureWidgetScreenshot({
     required BuildContext context,
     required Widget widget,
-    double pixelRatio = 3.0,
-    Duration delay = const Duration(milliseconds: 300),
-    String? customFileName,
   }) async {
     try {
+      final pixelRatio = MediaQuery.devicePixelRatioOf(context);
       final screenshotController = ScreenshotController();
 
       final imageBytes = await screenshotController.captureFromWidget(
-        Localizations.override(
-          context: context,
-          locale: Localizations.localeOf(context),
-          child: MediaQuery(
-            data: MediaQuery.of(context),
-            child: Directionality(
-              textDirection: Directionality.of(context),
-              child: InheritedTheme.captureAll(
-                context,
-                widget,
+        Material(
+          child: Localizations.override(
+            context: context,
+            locale: Localizations.localeOf(context),
+            child: MediaQuery(
+              data: MediaQuery.of(context),
+              child: Directionality(
+                textDirection: Directionality.of(context),
+                child: InheritedTheme.captureAll(
+                  context,
+                  widget,
+                ),
               ),
             ),
           ),
         ),
         pixelRatio: pixelRatio,
-        delay: delay,
+        delay: const Duration(milliseconds: 500),
       );
 
       final tempDir = await getTemporaryDirectory();
-      final fileName = customFileName ?? 'screenshot_${DateTime.now().millisecondsSinceEpoch}.png';
+      final fileName = 'screenshot_${DateTime.now().millisecondsSinceEpoch}.png';
       final tempFile = File('${tempDir.path}/$fileName');
       await tempFile.writeAsBytes(imageBytes);
 
