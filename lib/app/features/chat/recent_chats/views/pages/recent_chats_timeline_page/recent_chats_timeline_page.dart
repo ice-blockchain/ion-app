@@ -223,7 +223,7 @@ class E2eeRecentChatTile extends ConsumerWidget {
       return const SizedBox.shrink();
     }
 
-    final userMetadata = ref.watch(userMetadataProvider(receiverPubkey)).valueOrNull;
+    final userMetadata = ref.watch(cachedUserMetadataProvider(receiverPubkey));
 
     if (userMetadata == null) {
       return const RecentChatSkeletonItem();
