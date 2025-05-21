@@ -121,6 +121,7 @@ class _ChatMediaItem extends HookConsumerWidget {
         key: ValueKey('video_${media.url}'),
         videoUrl: path,
         authorPubkey: entity.masterPubkey,
+        videoBottomPadding: 0,
       );
     }
 
