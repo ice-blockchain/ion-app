@@ -1,23 +1,31 @@
 // SPDX-License-Identifier: ice License 1.0
 
 import 'package:flutter/material.dart';
+import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/components/button/button.dart';
+import 'package:ion/app/components/progress_bar/centered_loading_indicator.dart';
 import 'package:ion/app/components/separated/separated_row.dart';
 import 'package:ion/app/extensions/asset_gen_image.dart';
 import 'package:ion/app/extensions/build_context.dart';
 import 'package:ion/app/extensions/num.dart';
-import 'package:ion/app/extensions/theme_data.dart';
+import 'package:ion/app/features/auth/providers/auth_provider.c.dart';
+import 'package:ion/app/features/chat/views/pages/share_via_message_modal/components/share_options_menu_item.dart';
+import 'package:ion/app/features/chat/views/pages/share_via_message_modal/components/share_post_to_story_content.dart';
 import 'package:ion/app/features/feed/data/models/entities/modifiable_post_data.c.dart';
 import 'package:ion/app/features/feed/providers/feed_bookmarks_notifier.c.dart';
+import 'package:ion/app/features/feed/providers/ion_connect_entity_with_counters_provider.c.dart';
 import 'package:ion/app/features/ion_connect/model/event_reference.c.dart';
 import 'package:ion/app/features/ion_connect/providers/ion_connect_entity_provider.c.dart';
+import 'package:ion/app/features/user/providers/user_metadata_provider.c.dart';
+import 'package:ion/app/router/app_routes.c.dart';
 import 'package:ion/app/services/clipboard/clipboard.dart';
 import 'package:ion/app/services/share/share.dart';
+import 'package:ion/app/utils/screenshot_utils.dart';
 import 'package:ion/generated/assets.gen.dart';
 
-class ShareOptions extends ConsumerWidget {
+class ShareOptions extends HookConsumerWidget {
   const ShareOptions({required this.eventReference, super.key});
 
   final EventReference eventReference;
@@ -26,6 +34,8 @@ class ShareOptions extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final isCapturing = useState(false);
+
     final entity = ref.watch(ionConnectEntityProvider(eventReference: eventReference)).valueOrNull;
 
     if (entity == null) {
@@ -44,13 +54,15 @@ class ShareOptions extends ConsumerWidget {
           separator: SizedBox(width: 12.0.s),
           children: [
             if (isPost)
-              _ShareOptionsMenuItem(
+              ShareOptionsMenuItem(
                 buttonType: ButtonType.primary,
-                icon: Assets.svg.iconFeedStories.icon(size: iconSize),
+                icon: isCapturing.value
+                    ? const CenteredLoadingIndicator()
+                    : Assets.svg.iconFeedStory.icon(size: iconSize),
                 label: context.i18n.feed_add_story,
-                onPressed: () {},
+                onPressed: isCapturing.value ? () {} : () => _onSharePostToStory(ref, isCapturing),
               ),
-            _ShareOptionsMenuItem(
+            ShareOptionsMenuItem(
               buttonType: ButtonType.dropdown,
               icon: Assets.svg.iconBlockCopy1.icon(size: iconSize, color: Colors.black),
               label: context.i18n.feed_copy_link,
@@ -60,7 +72,7 @@ class ShareOptions extends ConsumerWidget {
               },
             ),
             if (isPost)
-              _ShareOptionsMenuItem(
+              ShareOptionsMenuItem(
                 buttonType: ButtonType.dropdown,
                 icon: Assets.svg.iconBookmarks.icon(size: iconSize, color: Colors.black),
                 label: context.i18n.button_bookmark,
@@ -73,25 +85,25 @@ class ShareOptions extends ConsumerWidget {
                   }
                 },
               ),
-            _ShareOptionsMenuItem(
+            ShareOptionsMenuItem(
               buttonType: ButtonType.dropdown,
               icon: Assets.svg.iconFeedWhatsapp.icon(size: iconSize),
               label: context.i18n.feed_whatsapp,
               onPressed: () {},
             ),
-            _ShareOptionsMenuItem(
+            ShareOptionsMenuItem(
               buttonType: ButtonType.dropdown,
               icon: Assets.svg.iconFeedTelegram.icon(size: iconSize),
               label: context.i18n.feed_telegram,
               onPressed: () {},
             ),
-            _ShareOptionsMenuItem(
+            ShareOptionsMenuItem(
               buttonType: ButtonType.dropdown,
               icon: Assets.svg.iconLoginXlogo.icon(size: iconSize),
               label: context.i18n.feed_x,
               onPressed: () {},
             ),
-            _ShareOptionsMenuItem(
+            ShareOptionsMenuItem(
               buttonType: ButtonType.dropdown,
               icon: Assets.svg.iconFeedMore.icon(size: iconSize),
               label: context.i18n.feed_more,
@@ -104,41 +116,64 @@ class ShareOptions extends ConsumerWidget {
       ),
     );
   }
-}
 
-class _ShareOptionsMenuItem extends StatelessWidget {
-  const _ShareOptionsMenuItem({
-    required this.icon,
-    required this.label,
-    required this.onPressed,
-    required this.buttonType,
-  });
+  Future<void> _onSharePostToStory(WidgetRef ref, ValueNotifier<bool> isCapturing) async {
+    final context = ref.context;
+    isCapturing.value = true;
 
-  final Widget icon;
-  final String label;
-  final VoidCallback onPressed;
-  final ButtonType buttonType;
+    try {
+      final postItselfEntity =
+          ref.read(ionConnectEntityProvider(eventReference: eventReference)).valueOrNull;
+      if (postItselfEntity == null || postItselfEntity is! ModifiablePostEntity) {
+        isCapturing.value = false;
+        return;
+      }
 
-  @override
-  Widget build(BuildContext context) {
-    return SizedBox(
-      width: 70.0.s,
-      child: Column(
-        children: [
-          Button.icon(
-            type: buttonType,
-            onPressed: onPressed,
-            icon: icon,
+      final userMetadataAsyncValue = ref.read(userMetadataProvider(eventReference.pubkey));
+      final postEntityAsyncValue = ref.read(
+        ionConnectEntityWithCountersProvider(eventReference: eventReference),
+      );
+
+      // ignore: scoped_providers_should_specify_dependencies
+      final postWidget = ProviderScope(
+        overrides: [
+          // ignore: scoped_providers_should_specify_dependencies
+          currentIdentityKeyNameSelectorProvider.overrideWithValue(
+            ref.read(currentIdentityKeyNameSelectorProvider),
           ),
-          SizedBox(height: 6.0.s),
-          Text(
-            label,
-            style: context.theme.appTextThemes.caption2,
-            textAlign: TextAlign.center,
-            overflow: TextOverflow.ellipsis,
+          // ignore: scoped_providers_should_specify_dependencies
+          ionConnectEntityWithCountersProvider(
+            eventReference: eventReference,
+          ).overrideWithValue(postEntityAsyncValue),
+          // ignore: scoped_providers_should_specify_dependencies
+          userMetadataProvider(eventReference.pubkey).overrideWith(
+            (_) async => userMetadataAsyncValue.valueOrNull,
           ),
         ],
-      ),
-    );
+        child: SharePostToStoryContent(
+          eventReference: eventReference,
+          postItselfEntity: postItselfEntity,
+        ),
+      );
+
+      final tempFile = await captureWidgetScreenshot(
+        context: context,
+        widget: postWidget,
+      );
+
+      if (tempFile != null && context.mounted) {
+        context.pop();
+        await StoryPreviewRoute(
+          path: tempFile.path,
+          mimeType: 'image/png',
+          eventReference: eventReference.encode(),
+          isPostScreenshot: true,
+        ).push<void>(context);
+      }
+    } finally {
+      if (context.mounted) {
+        isCapturing.value = false;
+      }
+    }
   }
 }
