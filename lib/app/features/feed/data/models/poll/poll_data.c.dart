@@ -21,7 +21,7 @@ class PollData with _$PollData {
   factory PollData.fromJson(Map<String, dynamic> json) => _$PollDataFromJson(json);
 
   static PollData? fromTag(List<String> tag) {
-    if (tag.isEmpty || tag[0] != 'poll' || tag.length < 5) {
+    if (tag.isEmpty || tag[0] != 'poll') {
       return null;
     }
 
@@ -39,17 +39,15 @@ class PollData with _$PollData {
       } else if (param.startsWith('title ')) {
         title = param.substring(6);
       } else if (param.startsWith('options ')) {
-        try {
-          final optionsJson = param.substring(8);
-          final decoded = jsonDecode(optionsJson);
-          if (decoded is List) {
-            options = decoded.cast<String>();
-          }
-        } catch (_) {}
+        final optionsJson = param.substring(8);
+        final decoded = jsonDecode(optionsJson);
+        if (decoded is List) {
+          options = decoded.cast<String>();
+        }
       }
     }
 
-    if (title.isEmpty || options.isEmpty) {
+    if (options.isEmpty) {
       return null;
     }
 
