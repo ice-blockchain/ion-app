@@ -87,10 +87,10 @@ class WalletAssetData with _$WalletAssetData {
     FundsRequestEntity? requestEntity,
   }) {
     final tags = [
+      MasterPubkeyTag(value: masterPubkey).toTag(),
       NetworkTag(value: networkId).toTag(),
       AssetClassTag(value: assetClass).toTag(),
       AssetAddressTag(value: assetAddress).toTag(),
-      MasterPubkeyTag(value: masterPubkey).toTag(),
       if (pubkey != null) RelatedPubkey(value: pubkey!).toTag(),
       if (requestEntity != null) RequestTag(value: requestEntity.data.request!).toTag(),
     ];

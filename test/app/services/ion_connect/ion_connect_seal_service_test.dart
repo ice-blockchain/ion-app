@@ -42,7 +42,7 @@ void main() {
       expect(seal.pubkey, equals(senderSigner.publicKey));
       expect(seal.content, isNotEmpty);
       expect(seal.content, isNot(equals(rumor.content)));
-      expect(seal.tags, isEmpty);
+      expect(seal.tags.length, equals(1));
     });
 
     test('decodes seal back to original event on senders side', () async {

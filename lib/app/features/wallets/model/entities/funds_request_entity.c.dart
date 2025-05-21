@@ -85,9 +85,9 @@ class FundsRequestData with _$FundsRequestData {
 
   EventMessage toEventMessage({required String masterPubkey}) {
     final tags = [
+      MasterPubkeyTag(value: masterPubkey).toTag(),
       NetworkTag(value: networkId).toTag(),
       AssetClassTag(value: assetClass).toTag(),
-      MasterPubkeyTag(value: masterPubkey).toTag(),
       AssetAddressTag(value: assetAddress).toTag(),
       if (pubkey != null) RelatedPubkey(value: pubkey!).toTag(),
     ];
