@@ -543,5 +543,9 @@ class AppConfigNotFoundException extends IONException {
 }
 
 class AppConfigException extends IONException {
-  AppConfigException(dynamic error) : super(10109, 'App config exception: $error');
+  AppConfigException(dynamic error, {String? configName, String? errorMessage})
+      : super(
+          10109,
+          'App config exception: $error, configName: $configName, errorMessage: $errorMessage',
+        );
 }

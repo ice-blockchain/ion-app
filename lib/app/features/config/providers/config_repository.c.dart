@@ -87,7 +87,11 @@ class ConfigRepository {
       }
     } catch (error) {
       Logger.error(error);
-      throw AppConfigException(error);
+      throw AppConfigException(
+        error,
+        configName: configName,
+        errorMessage: 'Error getting config from network',
+      );
     }
   }
 
@@ -120,7 +124,11 @@ class ConfigRepository {
       return null;
     } catch (error) {
       Logger.error(error);
-      throw AppConfigException(error);
+      throw AppConfigException(
+        error,
+        configName: configName,
+        errorMessage: 'Error getting config from cache',
+      );
     }
   }
 
@@ -151,7 +159,11 @@ class ConfigRepository {
       }
     } catch (error) {
       Logger.error(error);
-      throw AppConfigException(error);
+      throw AppConfigException(
+        error,
+        configName: configName,
+        errorMessage: 'Error saving config to cache',
+      );
     }
   }
 
