@@ -3,7 +3,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:ion/app/components/list_item/list_item.dart';
+import 'package:ion/app/components/list_item/badges_user_list_item.dart';
 import 'package:ion/app/components/screen_offset/screen_side_offset.dart';
 import 'package:ion/app/components/skeleton/skeleton.dart';
 import 'package:ion/app/extensions/extensions.dart';
@@ -50,7 +50,7 @@ class ChatSearchResultListItem extends ConsumerWidget {
               child: Row(
                 children: [
                   Expanded(
-                    child: ListItem.user(
+                    child: BadgesUserListItem(
                       pubkey: userMetadata.masterPubkey,
                       title: Text(userMetadata.data.displayName),
                       subtitle: pubkeyAndContent.$2.isNotEmpty && showLastMessage

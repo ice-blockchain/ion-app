@@ -71,6 +71,7 @@ EntitiesDataSource _buildArticlesDataSource({
         forKind: ArticleEntity.kind,
         includeKind: UserMetadataEntity.kind,
       ),
+      ProfileBadgesSearchExtension(forKind: ArticleEntity.kind),
       GenericIncludeSearchExtension(
         forKind: ArticleEntity.kind,
         includeKind: BlockListEntity.kind,
@@ -126,6 +127,7 @@ EntitiesDataSource _buildVideosDataSource({
           forKind: ModifiablePostEntity.kind,
           includeKind: UserMetadataEntity.kind,
         ),
+        ProfileBadgesSearchExtension(forKind: ModifiablePostEntity.kind),
         GenericIncludeSearchExtension(
           forKind: ModifiablePostEntity.kind,
           includeKind: BlockListEntity.kind,
@@ -144,6 +146,7 @@ EntitiesDataSource _buildVideosDataSource({
           forKind: PostEntity.kind,
           includeKind: UserMetadataEntity.kind,
         ),
+        ProfileBadgesSearchExtension(forKind: PostEntity.kind),
         GenericIncludeSearchExtension(
           forKind: PostEntity.kind,
           includeKind: BlockListEntity.kind,
@@ -214,6 +217,7 @@ EntitiesDataSource _buildPostsDataSource({
           forKind: ModifiablePostEntity.kind,
           includeKind: UserMetadataEntity.kind,
         ),
+        ProfileBadgesSearchExtension(forKind: ModifiablePostEntity.kind),
         GenericIncludeSearchExtension(
           forKind: ModifiablePostEntity.kind,
           includeKind: BlockListEntity.kind,
@@ -232,6 +236,7 @@ EntitiesDataSource _buildPostsDataSource({
           forKind: PostEntity.kind,
           includeKind: UserMetadataEntity.kind,
         ),
+        ProfileBadgesSearchExtension(forKind: PostEntity.kind),
         GenericIncludeSearchExtension(
           forKind: PostEntity.kind,
           includeKind: BlockListEntity.kind,
@@ -246,6 +251,7 @@ EntitiesDataSource _buildPostsDataSource({
           forKind: ArticleEntity.kind,
           includeKind: UserMetadataEntity.kind,
         ),
+        ProfileBadgesSearchExtension(forKind: ArticleEntity.kind),
         GenericIncludeSearchExtension(
           forKind: ArticleEntity.kind,
           includeKind: BlockListEntity.kind,

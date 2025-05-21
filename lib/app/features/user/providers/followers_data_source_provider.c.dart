@@ -7,6 +7,7 @@ import 'package:ion/app/features/ion_connect/model/search_extension.dart';
 import 'package:ion/app/features/ion_connect/providers/entities_paged_data_provider.c.dart';
 import 'package:ion/app/features/user/model/follow_list.c.dart';
 import 'package:ion/app/features/user/model/user_metadata.c.dart';
+import 'package:ion/app/features/user/providers/badges_notifier.c.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'followers_data_source_provider.c.g.dart';
@@ -35,6 +36,8 @@ List<EntitiesDataSource>? followersDataSource(
                 forKind: FollowListEntity.kind,
                 includeKind: UserMetadataEntity.kind,
               ),
+              if (ref.watch(cachedProfileBadgesDataProvider(pubkey)) == null)
+                ProfileBadgesSearchExtension(forKind: FollowListEntity.kind),
             ],
           ).toString(),
           limit: 20,

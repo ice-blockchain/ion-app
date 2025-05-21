@@ -3,7 +3,7 @@
 import 'package:dotted_border/dotted_border.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:ion/app/components/list_item/list_item.dart';
+import 'package:ion/app/components/list_item/badges_user_list_item.dart';
 import 'package:ion/app/components/skeleton/skeleton.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/feed/data/models/entities/article_data.c.dart';
@@ -40,7 +40,7 @@ class ParentEntity extends ConsumerWidget {
     return Column(
       children: [
         SizedBox(height: 6.0.s),
-        ListItem.user(
+        BadgesUserListItem(
           title: Text(userMetadata.data.displayName),
           subtitle: Text(prefixUsername(username: userMetadata.data.name, context: context)),
           pubkey: userMetadata.masterPubkey,

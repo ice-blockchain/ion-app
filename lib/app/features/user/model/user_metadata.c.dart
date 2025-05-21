@@ -54,8 +54,6 @@ class UserMetadataEntity
 
   static const locationCharacterLimit = 30;
   static const websiteCharacterLimit = 100;
-  static const String search =
-      'include:dependencies:kind0>kind30008+profile_badges>kind30009>kind8';
 }
 
 @freezed

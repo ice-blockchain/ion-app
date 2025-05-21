@@ -53,6 +53,7 @@ List<EntitiesDataSource>? repliesDataSource(
                     forKind: ModifiablePostEntity.kind,
                     includeKind: UserMetadataEntity.kind,
                   ),
+                  ProfileBadgesSearchExtension(forKind: ModifiablePostEntity.kind),
                   GenericIncludeSearchExtension(
                     forKind: ModifiablePostEntity.kind,
                     includeKind: BlockListEntity.kind,
@@ -76,6 +77,7 @@ List<EntitiesDataSource>? repliesDataSource(
                     forKind: PostEntity.kind,
                     includeKind: UserMetadataEntity.kind,
                   ),
+                  ProfileBadgesSearchExtension(forKind: PostEntity.kind),
                   GenericIncludeSearchExtension(
                     forKind: PostEntity.kind,
                     includeKind: BlockListEntity.kind,

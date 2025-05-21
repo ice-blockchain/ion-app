@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: ice License 1.0
 
 import 'package:flutter/material.dart';
-import 'package:ion/app/components/list_item/list_item.dart';
+import 'package:ion/app/components/list_item/badges_user_list_item.dart';
 import 'package:ion/app/extensions/build_context.dart';
 import 'package:ion/app/extensions/num.dart';
 import 'package:ion/app/extensions/theme_data.dart';
@@ -26,8 +26,9 @@ class NotificationListItem extends StatelessWidget {
   Widget build(BuildContext context) {
     return Padding(
       padding: EdgeInsets.symmetric(horizontal: 43.0.s),
-      child: ListItem.user(
-        pubkey: '', // that is a mock notification
+      child: BadgesUserListItem(
+        pubkey: '',
+        // that is a mock notification
         title: Text(
           title,
           style: context.theme.appTextThemes.body.copyWith(

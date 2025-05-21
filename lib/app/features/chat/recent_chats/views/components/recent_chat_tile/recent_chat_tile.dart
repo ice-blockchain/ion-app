@@ -32,6 +32,7 @@ class RecentChatTile extends HookConsumerWidget {
     required this.unreadMessagesCount,
     this.avatarUrl,
     this.avatarWidget,
+    this.isVerified = false,
     super.key,
   });
 
@@ -46,6 +47,7 @@ class RecentChatTile extends HookConsumerWidget {
   final Widget? avatarWidget;
   final MessageType messageType;
   final ConversationListItem conversation;
+  final bool isVerified;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -137,6 +139,11 @@ class RecentChatTile extends HookConsumerWidget {
                                         maxLines: 1,
                                       ),
                                     ),
+                                    if (isVerified)
+                                      Padding(
+                                        padding: EdgeInsetsDirectional.only(start: 4.0.s),
+                                        child: Assets.svg.iconBadgeVerify.icon(size: 16.0.s),
+                                      ),
                                     if (isMuted)
                                       Padding(
                                         padding: EdgeInsetsDirectional.only(start: 4.0.s),
@@ -366,6 +373,7 @@ class UnreadCountBadge extends StatelessWidget {
 
   final int unreadCount;
   final bool isMuted;
+
   @override
   Widget build(BuildContext context) {
     if (unreadCount == 0) {

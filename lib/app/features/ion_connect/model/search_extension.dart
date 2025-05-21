@@ -331,6 +331,17 @@ class MentionsSearchExtension extends IncludeSearchExtension {
   String get query => 'kind10002';
 }
 
+class ProfileBadgesSearchExtension extends SearchExtension {
+  ProfileBadgesSearchExtension({this.forKind});
+
+  final int? forKind;
+
+  @override
+  String get query => forKind != null
+      ? 'include:dependencies:kind$forKind>kind30008+profile_badges>kind30009>kind8'
+      : 'include:dependencies:kind30008+profile_badges>kind30009>kind8';
+}
+
 /// Wraps a search query in quotes to perform an exact match search
 class QuerySearchExtension extends SearchExtension {
   QuerySearchExtension({required this.searchQuery});

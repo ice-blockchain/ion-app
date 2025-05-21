@@ -3,7 +3,7 @@
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/components/button/follow_button.dart';
-import 'package:ion/app/components/list_item/list_item.dart';
+import 'package:ion/app/components/list_item/badges_user_list_item.dart';
 import 'package:ion/app/components/screen_offset/screen_side_offset.dart';
 import 'package:ion/app/extensions/build_context.dart';
 import 'package:ion/app/extensions/num.dart';
@@ -28,7 +28,7 @@ class CreatorListItem extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     return ScreenSideOffset.small(
-      child: ListItem.user(
+      child: BadgesUserListItem(
         title: Text(userMetadataEntity.data.displayName),
         subtitle: Text(prefixUsername(username: userMetadataEntity.data.name, context: context)),
         pubkey: userMetadataEntity.masterPubkey,

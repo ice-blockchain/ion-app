@@ -2,7 +2,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:ion/app/components/list_item/list_item.dart';
+import 'package:ion/app/components/list_item/badges_user_list_item.dart';
 import 'package:ion/app/components/list_items_loading_state/item_loading_state.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/chat/community/models/community_admin_type.dart';
@@ -25,6 +25,7 @@ class AdminCard extends ConsumerWidget {
   final VoidCallback? onTap;
   final CommunityAdminType communityAdminType;
   final bool createChannelFlow;
+
   static double get itemHeight => 60.0.s;
 
   @override
@@ -36,7 +37,7 @@ class AdminCard extends ConsumerWidget {
         if (userMetadata == null) {
           return const SizedBox.shrink();
         }
-        return ListItem.user(
+        return BadgesUserListItem(
           onTap: () {
             showSimpleBottomSheet<void>(
               context: context,
