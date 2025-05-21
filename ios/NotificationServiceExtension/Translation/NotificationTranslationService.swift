@@ -36,8 +36,6 @@ class NotificationTranslationService {
             cacheMaxAge: TimeInterval(Environment.pushTranslationsCacheMinutes * 60)
         )
 
-        print(appLocale)
-
         self.translator = Translator<PushNotificationTranslations>(
             translationsRepository: repository,
             locale: Locale(identifier: appLocale)
@@ -57,10 +55,10 @@ class NotificationTranslationService {
 
         let dataIsValid = data.validate(currentPubkey: currentPubkey)
 
-        if !dataIsValid {
-            print("Data validation failed")
-            return (title: nil, body: nil)
-        }
+       if !dataIsValid {
+           print("Data validation failed")
+           return (title: nil, body: nil)
+       }
 
         guard let notificationType = data.getNotificationType(currentPubkey: currentPubkey) else {
             print("Unknown notification type")

@@ -20,29 +20,58 @@ class IonConnectPushDataPayload: Decodable {
             forKey: .compression
         )
 
-        if let compression = compression, compression == "zlib" {
-            // TODO: add event decompression
-        } else {
-            // TODO: move raw events parsing here
-        }
-
         let eventString = try container.decode(String.self, forKey: .event)
-        let eventData = eventString.data(using: .utf8)
-        event = try JSONDecoder().decode(EventMessage.self, from: eventData!)
-
-        if let relatedEventsString = try container.decodeIfPresent(
-            String.self,
-            forKey: .relevantEvents
-        ),
-            !relatedEventsString.isEmpty,
-            let relevantEventsData = relatedEventsString.data(using: .utf8)
-        {
-            relevantEvents = try JSONDecoder().decode(
-                [EventMessage].self,
-                from: relevantEventsData
-            )
+        let relevantEventsString = try container.decodeIfPresent(String.self, forKey: .relevantEvents) ?? ""
+        
+        if let compression = compression, compression == "zlib" {
+            do {
+                let decompressedEventString = try Decompressor.decompressBase64String(eventString)
+                guard let eventData = decompressedEventString.data(using: .utf8) else {
+                    throw DecompressionError.jsonDataConversionFailed
+                }
+                event = try JSONDecoder().decode(EventMessage.self, from: eventData)
+                
+                if !relevantEventsString.isEmpty {
+                    let decompressedRelevantEventsString = try Decompressor.decompressBase64String(relevantEventsString)
+                    guard let relevantEventsData = decompressedRelevantEventsString.data(using: .utf8) else {
+                        throw DecompressionError.jsonDataConversionFailed
+                    }
+                    
+                    // Parse the string array and deserialize each element
+                    let stringArray = try JSONDecoder().decode([String].self, from: relevantEventsData)
+                    var parsedEvents: [EventMessage] = []
+                    
+                    for jsonString in stringArray {
+                        guard let eventData = jsonString.data(using: .utf8) else {
+                            throw DecompressionError.jsonDataConversionFailed
+                        }
+                        let parsedEvent = try JSONDecoder().decode(EventMessage.self, from: eventData)
+                        parsedEvents.append(parsedEvent)
+                    }
+                    
+                    relevantEvents = parsedEvents
+                } else {
+                    relevantEvents = []
+                }
+            } catch {
+                print("Error decompressing data: \(error)")
+                throw error
+            }
         } else {
-            relevantEvents = []
+            guard let eventData = eventString.data(using: .utf8) else {
+                throw DecompressionError.jsonDataConversionFailed
+            }
+            event = try JSONDecoder().decode(EventMessage.self, from: eventData)
+            
+            if !relevantEventsString.isEmpty,
+               let relevantEventsData = relevantEventsString.data(using: .utf8) {
+                relevantEvents = try JSONDecoder().decode(
+                    [EventMessage].self,
+                    from: relevantEventsData
+                )
+            } else {
+                relevantEvents = []
+            }
         }
     }
 
