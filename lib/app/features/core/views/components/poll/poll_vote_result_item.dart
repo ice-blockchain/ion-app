@@ -36,7 +36,7 @@ class PollResultItem extends HookWidget {
           Container(
             height: 48.0.s,
             decoration: BoxDecoration(
-              color: context.theme.appColors.onTerararyFill.withOpacity(0.3),
+              color: context.theme.appColors.onTerararyFill.withValues(alpha: 0.3),
               borderRadius: BorderRadius.circular(24.0.s),
             ),
           ),
@@ -45,13 +45,12 @@ class PollResultItem extends HookWidget {
           ClipRRect(
             borderRadius: BorderRadius.circular(24.0.s),
             child: Align(
-              alignment: Alignment.centerLeft,
+              alignment: AlignmentDirectional.centerStart,
               child: Container(
                 height: 48.0.s,
-                width: MediaQuery.of(context).size.width *
-                    percentage, // Match screen width % for visually accurate bar
+                width: MediaQuery.of(context).size.width * percentage,
                 decoration: BoxDecoration(
-                  color: context.theme.appColors.onTerararyFill.withOpacity(0.5),
+                  color: context.theme.appColors.onTerararyFill.withValues(alpha: 0.5),
                 ),
               ),
             ),
