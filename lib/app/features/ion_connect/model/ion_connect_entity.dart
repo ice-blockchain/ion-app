@@ -3,6 +3,7 @@
 import 'dart:async';
 
 import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:ion/app/features/chat/community/models/entities/tags/master_pubkey_tag.c.dart';
 import 'package:ion/app/features/ion_connect/ion_connect.dart';
 import 'package:ion/app/features/ion_connect/model/event_reference.c.dart';
 import 'package:ion/app/features/ion_connect/model/event_serializable.dart';
@@ -20,7 +21,7 @@ abstract mixin class IonConnectEntity implements IonConnectEntityReferenceable {
       SimpleSigner(pubkey, signature),
       createdAt: createdAt,
       tags: [
-        ['b', masterPubkey],
+        MasterPubkeyTag(value: masterPubkey).toTag(),
       ],
     );
   }

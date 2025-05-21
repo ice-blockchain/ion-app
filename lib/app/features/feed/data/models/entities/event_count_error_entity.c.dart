@@ -4,6 +4,7 @@ import 'package:collection/collection.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:ion/app/exceptions/exceptions.dart';
 import 'package:ion/app/extensions/extensions.dart';
+import 'package:ion/app/features/chat/community/models/entities/tags/master_pubkey_tag.c.dart';
 import 'package:ion/app/features/ion_connect/model/event_reference.c.dart';
 import 'package:ion/app/features/ion_connect/model/ion_connect_entity.dart';
 import 'package:nostr_dart/nostr_dart.dart';
@@ -65,7 +66,7 @@ class EventCountErrorData with _$EventCountErrorData {
     final expiration = int.parse(tags['expiration']!.first[1]);
     final eventId = tags['e']?.first[1];
     final pubkey = tags['p']!.first[1];
-    final masterPubkey = tags['b']!.first[1];
+    final masterPubkey = tags[MasterPubkeyTag.tagName]!.first[1];
 
     final eventReference =
         eventId != null ? ImmutableEventReference(eventId: eventId, pubkey: pubkey) : null;

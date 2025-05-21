@@ -6,6 +6,7 @@ import 'package:collection/collection.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:ion/app/exceptions/exceptions.dart';
 import 'package:ion/app/extensions/extensions.dart';
+import 'package:ion/app/features/chat/community/models/entities/tags/master_pubkey_tag.c.dart';
 import 'package:ion/app/features/ion_connect/ion_connect.dart';
 import 'package:ion/app/features/ion_connect/model/ion_connect_entity.dart';
 import 'package:ion/app/features/ion_connect/model/related_pubkey.c.dart';
@@ -84,9 +85,9 @@ class FundsRequestData with _$FundsRequestData {
 
   EventMessage toEventMessage({required String masterPubkey}) {
     final tags = [
-      ['b', masterPubkey],
       NetworkTag(value: networkId).toTag(),
       AssetClassTag(value: assetClass).toTag(),
+      MasterPubkeyTag(value: masterPubkey).toTag(),
       AssetAddressTag(value: assetAddress).toTag(),
       if (pubkey != null) RelatedPubkey(value: pubkey!).toTag(),
     ];

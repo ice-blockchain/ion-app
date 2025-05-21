@@ -7,6 +7,7 @@ import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/extensions/object.dart';
 import 'package:ion/app/features/auth/providers/auth_provider.c.dart';
 import 'package:ion/app/features/chat/community/models/entities/tags/conversation_identifier.c.dart';
+import 'package:ion/app/features/chat/community/models/entities/tags/master_pubkey_tag.c.dart';
 import 'package:ion/app/features/chat/e2ee/providers/send_chat_message/send_e2ee_chat_message_service.c.dart';
 import 'package:ion/app/features/chat/providers/conversation_pubkeys_provider.c.dart';
 import 'package:ion/app/features/chat/providers/exist_chat_conversation_id_provider.c.dart';
@@ -75,7 +76,7 @@ class SharePostToChat extends _$SharePostToChat {
               sendChatMessageService.generateConversationId(receiverPubkey: masterPubkey);
 
           final tags = [
-            ['b', currentUserMasterPubkey],
+            MasterPubkeyTag(value:  currentUserMasterPubkey).toTag(),
             ['k', postEventMessage.kind.toString()],
             [RelatedPubkey.tagName, eventSigner.publicKey],
             [ConversationIdentifier.tagName, conversationId],

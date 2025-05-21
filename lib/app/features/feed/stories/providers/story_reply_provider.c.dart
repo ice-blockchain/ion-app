@@ -6,6 +6,7 @@ import 'package:ion/app/exceptions/exceptions.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/auth/providers/auth_provider.c.dart';
 import 'package:ion/app/features/chat/community/models/entities/tags/conversation_identifier.c.dart';
+import 'package:ion/app/features/chat/community/models/entities/tags/master_pubkey_tag.c.dart';
 import 'package:ion/app/features/chat/e2ee/providers/send_chat_message/send_e2ee_chat_message_service.c.dart';
 import 'package:ion/app/features/chat/e2ee/providers/send_e2ee_reaction_provider.c.dart';
 import 'package:ion/app/features/chat/providers/conversation_pubkeys_provider.c.dart';
@@ -59,7 +60,7 @@ class StoryReply extends _$StoryReply {
       final storyAsContent = jsonEncode(storyEventMessage.toJson().last);
 
       final tags = [
-        ['b', currentUserMasterPubkey],
+        MasterPubkeyTag(value: currentUserMasterPubkey).toTag(),
         ['k', ModifiablePostEntity.kind.toString()],
         [RelatedPubkey.tagName, eventSigner.publicKey],
         [ConversationIdentifier.tagName, conversationId],

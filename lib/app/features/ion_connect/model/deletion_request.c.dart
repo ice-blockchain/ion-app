@@ -6,6 +6,7 @@ import 'package:collection/collection.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:ion/app/exceptions/exceptions.dart';
 import 'package:ion/app/extensions/extensions.dart';
+import 'package:ion/app/features/chat/community/models/entities/tags/master_pubkey_tag.c.dart';
 import 'package:ion/app/features/ion_connect/ion_connect.dart';
 import 'package:ion/app/features/ion_connect/model/deletable_event.dart';
 import 'package:ion/app/features/ion_connect/model/event_reference.c.dart';
@@ -95,7 +96,7 @@ class DeletionRequest with _$DeletionRequest implements EventSerializable {
       content: '',
       tags: [
         ...tags,
-        if (signer is NoPrivateSigner) ['b', masterPubkey!],
+        if (signer is NoPrivateSigner) MasterPubkeyTag(value: masterPubkey).toTag(),
         for (final event in events) ...event.toTags(),
       ],
     );
