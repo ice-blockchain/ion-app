@@ -44,7 +44,7 @@ struct UserMetadata {
 
         return UserMetadata(
             name: userData.name ?? "",
-            displayName: userData.displayName ?? "",
+            displayName: userData.displayName ?? ""
         )
     }
 }
