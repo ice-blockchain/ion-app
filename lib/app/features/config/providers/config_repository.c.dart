@@ -14,6 +14,7 @@ import 'package:ion/app/services/logger/logger.dart';
 import 'package:ion/app/services/storage/local_storage.c.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
+import 'package:synchronized/synchronized.dart';
 
 part 'config_repository.c.g.dart';
 
@@ -30,6 +31,9 @@ class ConfigRepository {
   final String _ionOrigin;
   final LocalStorage _localStorage;
 
+  // Lock map to prevent concurrent access per configName
+  final Map<String, Lock> _locks = {};
+
   Future<T> getConfig<T>(
     String configName, {
     required AppConfigCacheStrategy cacheStrategy,
@@ -37,26 +41,29 @@ class ConfigRepository {
     required T Function(String) parser,
     bool checkVersion = false,
   }) async {
-    final cachedData = await _getFromCache(configName, cacheStrategy, refreshInterval, parser);
-    if (cachedData != null) {
-      return cachedData;
-    }
-
-    final configData = await _getFromNetwork<T>(configName, parser, checkVersion) ?? cachedData;
-    if (configData == null) {
-      if (refreshInterval < 0) {
-        throw AppConfigNotFoundException(configName);
+    final lock = _locks.putIfAbsent(configName, Lock.new);
+    return lock.synchronized(() async {
+      final cachedData = await _getFromCache(configName, cacheStrategy, refreshInterval, parser);
+      if (cachedData != null) {
+        return cachedData;
       }
-      return getConfig<T>(
-        configName,
-        cacheStrategy: cacheStrategy,
-        refreshInterval: -1,
-        parser: parser,
-        checkVersion: checkVersion,
-      );
-    }
-    await _saveToCache(configName, configData, cacheStrategy);
-    return configData;
+
+      final configData = await _getFromNetwork<T>(configName, parser, checkVersion) ?? cachedData;
+      if (configData == null) {
+        if (refreshInterval < 0) {
+          throw AppConfigNotFoundException(configName);
+        }
+        return getConfig<T>(
+          configName,
+          cacheStrategy: cacheStrategy,
+          refreshInterval: -1,
+          parser: parser,
+          checkVersion: checkVersion,
+        );
+      }
+      await _saveToCache(configName, configData, cacheStrategy);
+      return configData;
+    });
   }
 
   Future<T?> _getFromNetwork<T>(
@@ -98,9 +105,7 @@ class ConfigRepository {
                 DateTime.now().difference(DateTime.parse(lastSyncDate)).inMilliseconds <
                     refreshInterval);
 
-        if (!cacheAvailable) {
-          return null;
-        }
+        if (!cacheAvailable) return null;
 
         return parser(_localStorage.getString(getDataKey(configName))!);
       } else {
@@ -108,8 +113,7 @@ class ConfigRepository {
         if (cacheFile.existsSync()) {
           final cacheDuration = DateTime.now().difference(cacheFile.lastModifiedSync());
           if (refreshInterval < 0 || cacheDuration < Duration(milliseconds: refreshInterval)) {
-            final data = parser(await cacheFile.readAsString());
-            return data;
+            return parser(await cacheFile.readAsString());
           }
         }
       }
@@ -142,8 +146,7 @@ class ConfigRepository {
         await cacheFile.setLastModified(DateTime.now());
       }
 
-      final checkVersion = data is AppConfigWithVersion;
-      if (checkVersion) {
+      if (data is AppConfigWithVersion) {
         await _localStorage.setInt(getCacheVersionKey(configName), data.version);
       }
     } catch (error) {
