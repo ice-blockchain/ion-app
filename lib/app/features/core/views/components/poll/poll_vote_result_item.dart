@@ -26,7 +26,7 @@ class PollResultItem extends HookWidget {
       [votes, totalVotes],
     );
 
-    final percentageDisplay = '${(percentage * 100).toInt()}%';
+    final percentageInt = (percentage * 100).toInt();
 
     return Container(
       margin: EdgeInsets.symmetric(vertical: 4.0.s),
@@ -34,53 +34,68 @@ class PollResultItem extends HookWidget {
         children: [
           // Background container
           Container(
-            height: 48.0.s,
+            height: 34.0.s,
             decoration: BoxDecoration(
-              color: context.theme.appColors.onTerararyFill.withValues(alpha: 0.3),
-              borderRadius: BorderRadius.circular(24.0.s),
+              borderRadius: BorderRadius.circular(12.0.s),
             ),
           ),
 
-          // Progress indicator
-          ClipRRect(
-            borderRadius: BorderRadius.circular(24.0.s),
-            child: Align(
+          // 0% progress indicator placegolder
+          if (percentageInt == 0)
+            Align(
               alignment: AlignmentDirectional.centerStart,
               child: Container(
-                height: 48.0.s,
-                width: MediaQuery.of(context).size.width * percentage,
+                height: 34.0.s,
+                width: 4.0.s,
                 decoration: BoxDecoration(
-                  color: context.theme.appColors.onTerararyFill.withValues(alpha: 0.5),
+                  color: context.theme.appColors.onTerararyFill,
+                  borderRadius: BorderRadius.circular(12.0.s),
                 ),
               ),
             ),
-          ),
+
+          // Progress indicator
+          if (percentageInt > 0)
+            ClipRRect(
+              borderRadius: BorderRadius.circular(12.0.s),
+              child: Align(
+                alignment: AlignmentDirectional.centerStart,
+                child: Container(
+                  height: 34.0.s,
+                  width: (MediaQuery.of(context).size.width * percentage)
+                      .clamp(4.0.s, double.infinity),
+                  decoration: BoxDecoration(
+                    color: context.theme.appColors.onTerararyFill,
+                    borderRadius: BorderRadius.circular(12.0.s),
+                  ),
+                ),
+              ),
+            ),
 
           // Text and percentage
           SizedBox(
-            height: 48.0.s,
+            height: 34.0.s,
             child: Padding(
-              padding: EdgeInsets.symmetric(horizontal: 16.0.s),
+              padding: EdgeInsetsDirectional.only(start: 12.0.s),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Expanded(
                     child: Text(
                       text,
-                      style: context.theme.appTextThemes.body.copyWith(
+                      style: context.theme.appTextThemes.caption2.copyWith(
                         color: context.theme.appColors.primaryText,
-                        fontWeight: FontWeight.w500,
+                        fontSize: 12.0.s,
                       ),
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
                     ),
                   ),
                   Text(
-                    percentageDisplay,
-                    style: context.theme.appTextThemes.body.copyWith(
+                    '$percentageInt%',
+                    style: context.theme.appTextThemes.caption2.copyWith(
                       color: context.theme.appColors.primaryText,
-                      fontWeight: FontWeight.w600,
-                      fontSize: 20.0.s,
+                      fontSize: 12.0.s,
                     ),
                   ),
                 ],

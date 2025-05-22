@@ -24,8 +24,9 @@ class PollVoteResultFooter extends StatelessWidget {
 
     return Text(
       footerText,
-      style: context.theme.appTextThemes.caption.copyWith(
-        color: context.theme.appColors.secondaryText,
+      style: context.theme.appTextThemes.caption2.copyWith(
+        color: context.theme.appColors.quaternaryText,
+        fontSize: 12.0.s,
       ),
     );
   }
