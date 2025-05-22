@@ -8,6 +8,8 @@ import 'package:ion/app/features/ion_connect/database/event_messages_database.c.
     as event_messages_db;
 import 'package:ion/app/features/ion_connect/ion_connect.dart';
 import 'package:ion/app/features/ion_connect/model/event_reference.c.dart';
+import 'package:ion/app/features/user_block/model/database/blocked_users_database.c.dart'
+    as blocked_users_db;
 
 extension KeysExtensions on EventMessage {
   String get masterPubkey {
@@ -47,6 +49,19 @@ extension KeysExtensions on EventMessage {
       eventReference: eventReference,
     );
   }
+
+  blocked_users_db.BlockEventDbModel toBlockEventDbModel(EventReference eventReference) {
+    return blocked_users_db.BlockEventDbModel(
+      id: id,
+      kind: kind,
+      pubkey: pubkey,
+      masterPubkey: masterPubkey,
+      createdAt: createdAt,
+      content: content,
+      tags: tags,
+      eventReference: eventReference,
+    );
+  }
 }
 
 extension IonConnectEventMessageDbModelExtensions on event_messages_db.EventMessageDbModel {
@@ -64,6 +79,20 @@ extension IonConnectEventMessageDbModelExtensions on event_messages_db.EventMess
 }
 
 extension ChatEventMessageDbModelExtensions on chat_db.EventMessageDbModel {
+  EventMessage toEventMessage() {
+    return EventMessage(
+      id: id,
+      kind: kind,
+      pubkey: pubkey,
+      createdAt: createdAt,
+      content: content,
+      tags: tags,
+      sig: null,
+    );
+  }
+}
+
+extension BlockEventDbModelExtensions on blocked_users_db.BlockEventDbModel {
   EventMessage toEventMessage() {
     return EventMessage(
       id: id,
