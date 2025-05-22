@@ -6,6 +6,7 @@ import 'package:collection/collection.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:ion/app/exceptions/exceptions.dart';
 import 'package:ion/app/extensions/event_message.dart';
+import 'package:ion/app/features/chat/community/models/entities/tags/master_pubkey_tag.c.dart';
 import 'package:ion/app/features/ion_connect/ion_connect.dart';
 import 'package:ion/app/features/ion_connect/model/event_reference.c.dart';
 import 'package:ion/app/features/ion_connect/model/event_serializable.dart';
@@ -92,8 +93,8 @@ class BlockedUserEntityData with _$BlockedUserEntityData implements EventSeriali
       content: content,
       tags: [
         ...tags,
-        ['b', masterPubkey],
         reference.toTag(),
+        MasterPubkeyTag(value: masterPubkey).toTag(),
       ],
       createdAt: createdAt,
     );

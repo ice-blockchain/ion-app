@@ -12,13 +12,8 @@ class BlockEventDao extends DatabaseAccessor<BlockedUsersDatabase> with _$BlockE
   Future<void> add(EventMessage event) async {
     final EventReference eventReference;
     switch (event.kind) {
-      case GenericRepostEntity.kind:
-        eventReference = GenericRepostEntity.fromEventMessage(event).toEventReference();
-      case ReplaceablePrivateDirectMessageEntity.kind:
-        eventReference =
-            ReplaceablePrivateDirectMessageEntity.fromEventMessage(event).toEventReference();
-      case PrivateMessageReactionEntity.kind:
-        eventReference = PrivateMessageReactionEntity.fromEventMessage(event).toEventReference();
+      case BlockedUserEntity.kind:
+        eventReference = BlockedUserEntity.fromEventMessage(event).toEventReference();
       default:
         return;
     }
@@ -28,22 +23,41 @@ class BlockEventDao extends DatabaseAccessor<BlockedUsersDatabase> with _$BlockE
     await into(db.blockEventTable).insert(dbModel, mode: InsertMode.insertOrReplace);
   }
 
-  Future<EventMessage> getByReference(EventReference eventReference) async {
-    final result = await (select(db.blockEventTable)
-          ..where((table) => table.eventReference.equalsValue(eventReference)))
-        .getSingle();
-    return result.toEventMessage();
+  Future<List<EventMessage>> getBlockedUsersEvents(String currentUserMasterPubkey) async {
+    final query = select(db.blockEventTable).join([
+      leftOuterJoin(
+        db.deletedBlockEventTable,
+        db.deletedBlockEventTable.eventReference.equalsExp(db.blockEventTable.eventReference) &
+            db.deletedBlockEventTable.isDeleted.equals(true),
+      ),
+    ])
+      ..where(db.blockEventTable.masterPubkey.equals(currentUserMasterPubkey))
+      ..where(db.deletedBlockEventTable.eventReference.isNull());
+
+    final result = await query.get();
+
+    return result.map((row) => row.readTable(db.blockEventTable).toEventMessage()).toList();
   }
 
-  Future<EventMessage> getById(String id) async {
-    final result =
-        await (select(db.blockEventTable)..where((table) => table.id.equals(id))).getSingle();
-    return result.toEventMessage();
+  Future<List<EventMessage>> getBlockedByUsersEvents(String currentUserMasterPubkey) async {
+    final query = select(db.blockEventTable).join([
+      leftOuterJoin(
+        db.deletedBlockEventTable,
+        db.deletedBlockEventTable.eventReference.equalsExp(db.blockEventTable.eventReference) &
+            db.deletedBlockEventTable.isDeleted.equals(true),
+      ),
+    ])
+      ..where(db.blockEventTable.masterPubkey.isNotValue(currentUserMasterPubkey))
+      ..where(db.deletedBlockEventTable.eventReference.isNull());
+
+    final result = await query.get();
+
+    return result.map((row) => row.readTable(db.blockEventTable).toEventMessage()).toList();
   }
 
-  Future<void> deleteByEventReference(EventReference eventReference) async {
-    await (delete(db.blockEventTable)
+  Future<void> markAsDeleted(EventReference eventReference) async {
+    await (update(db.deletedBlockEventTable)
           ..where((table) => table.eventReference.equalsValue(eventReference)))
-        .go();
+        .write(const DeletedBlockEventTableCompanion(isDeleted: Value(true)));
   }
 }
