@@ -3,7 +3,6 @@
 import 'dart:async';
 import 'dart:convert';
 
-import 'package:collection/collection.dart';
 import 'package:flutter_quill/flutter_quill.dart';
 import 'package:flutter_quill/quill_delta.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
@@ -21,6 +20,7 @@ import 'package:ion/app/features/feed/data/models/who_can_reply_settings_option.
 import 'package:ion/app/features/feed/providers/counters/replies_count_provider.c.dart';
 import 'package:ion/app/features/feed/providers/counters/reposts_count_provider.c.dart';
 import 'package:ion/app/features/ion_connect/model/action_source.c.dart';
+import 'package:ion/app/features/ion_connect/model/entity_data_with_parent.dart';
 import 'package:ion/app/features/ion_connect/model/entity_data_with_settings.dart';
 import 'package:ion/app/features/ion_connect/model/entity_editing_ended_at.c.dart';
 import 'package:ion/app/features/ion_connect/model/entity_expiration.c.dart';
@@ -245,7 +245,11 @@ class CreatePostNotifier extends _$CreatePostNotifier {
     if (quotedEvent != null) {
       pubkeysToPublish.add(quotedEvent.pubkey);
     } else if (parentEvent != null) {
-      pubkeysToPublish.add(parentEvent.pubkey);
+      final rootRelatedEvent = postData.rootRelatedEvent;
+      pubkeysToPublish.addAll([
+        parentEvent.pubkey,
+        if (rootRelatedEvent != null) rootRelatedEvent.eventReference.pubkey,
+      ]);
     }
 
     final userEventsMetadataBuilder = await ref.read(userEventsMetadataBuilderProvider.future);
@@ -307,7 +311,7 @@ class CreatePostNotifier extends _$CreatePostNotifier {
     );
   }
 
-  Future<IonConnectEntity?> _getParentEntity(EventReference parentEventReference) async {
+  Future<IonConnectEntity> _getParentEntity(EventReference parentEventReference) async {
     final parentEntity =
         await ref.read(ionConnectEntityProvider(eventReference: parentEventReference).future);
     if (parentEntity == null) {
@@ -365,14 +369,17 @@ class CreatePostNotifier extends _$CreatePostNotifier {
   List<RelatedEvent> _buildRelatedEvents(IonConnectEntity parentEntity) {
     final parentEventReference = parentEntity.toEventReference();
 
-    final parentRelatedEvents = switch (parentEntity) {
-      ModifiablePostEntity() => parentEntity.data.relatedEvents,
-      PostEntity() => parentEntity.data.relatedEvents,
+    final parentEntityData = switch (parentEntity) {
+      ModifiablePostEntity() => parentEntity.data,
+      PostEntity() => parentEntity.data,
       _ => null,
     };
 
-    final rootParentRelatedEvent = parentRelatedEvents
-        ?.firstWhereOrNull((relatedEvent) => relatedEvent.marker == RelatedEventMarker.root);
+    if (parentEntityData is! EntityDataWithRelatedEvents?) {
+      throw UnsupportedParentEntity(parentEntity);
+    }
+
+    final rootParentRelatedEvent = parentEntityData?.rootRelatedEvent;
 
     if (parentEventReference is ReplaceableEventReference) {
       return [

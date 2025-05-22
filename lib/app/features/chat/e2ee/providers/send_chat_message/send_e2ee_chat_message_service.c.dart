@@ -236,8 +236,7 @@ class SendE2eeChatMessageService {
     if (repliedMessage != null) {
       final entity = ReplaceablePrivateDirectMessageEntity.fromEventMessage(repliedMessage);
 
-      final rootRelatedEvent = entity.data.relatedEvents
-          ?.firstWhereOrNull((tag) => tag.marker == RelatedEventMarker.root);
+      final rootRelatedEvent = entity.data.rootRelatedEvent;
 
       return [
         if (rootRelatedEvent != null) rootRelatedEvent,
