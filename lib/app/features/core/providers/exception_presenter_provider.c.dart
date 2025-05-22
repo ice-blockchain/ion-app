@@ -31,7 +31,6 @@ class ExceptionPresentation {
   final String iconPath;
 }
 
-/// Localizes exception to display.
 class ExceptionPresenter {
   ExceptionPresenter({required this.showDebugInfo});
 
