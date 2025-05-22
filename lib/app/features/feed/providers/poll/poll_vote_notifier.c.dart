@@ -54,7 +54,6 @@ extension PollVoteDataX on PollVoteData {
       kind: 1754,
       tags: [
         ...tags,
-        ['b', signer.publicKey],
         ['e', pollEventId],
       ],
       content: jsonEncode(selectedOptionIndexes),
@@ -70,8 +69,8 @@ class PollVoteNotifier extends _$PollVoteNotifier {
 
   Future<bool> vote(EventReference postReference, String optionId) async {
     try {
-      final pubkey = ref.read(currentPubkeySelectorProvider);
-      if (pubkey == null) {
+      final masterPubkey = ref.read(currentPubkeySelectorProvider);
+      if (masterPubkey == null) {
         throw Exception('User must be logged in to vote');
       }
 
@@ -93,7 +92,12 @@ class PollVoteNotifier extends _$PollVoteNotifier {
         pollEventId: pollEventId,
         selectedOptionIndexes: [int.parse(optionId)],
       );
-      final voteEvent = await pollVoteData.toEventMessage(signer);
+      final voteEvent = await pollVoteData.toEventMessage(
+        signer,
+        tags: [
+          ['b', masterPubkey],
+        ],
+      );
 
       final result = await ref.read(ionConnectNotifierProvider.notifier).sendEvent(voteEvent);
 
