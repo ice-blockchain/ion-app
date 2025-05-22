@@ -63,8 +63,6 @@ class CoinTransactionHistoryNotifier extends _$CoinTransactionHistoryNotifier {
   }
 
   void _reset() {
-    Logger.info('$_tag Reset transactions history. \n${StackTrace.current}');
-
     _history.clear();
     _offset = 0;
   }
