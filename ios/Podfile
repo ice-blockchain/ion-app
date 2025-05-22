@@ -43,8 +43,9 @@ target 'Runner' do
   pod 'BanubaSDK', video_editor_sdk_version
   pod 'BanubaARCloudSDK', video_editor_sdk_version
   pod 'BanubaAudioBrowserSDK', video_editor_sdk_version
-
   pod 'BanubaPhotoEditorSDK', photo_editor_sdk_version
+
+  pod 'GoogleUtilities'
 
   flutter_install_all_ios_pods File.dirname(File.realpath(__FILE__))
 end
@@ -52,6 +53,7 @@ end
 target 'NotificationServiceExtension' do
   use_frameworks!
   pod 'Firebase/Messaging'
+  pod 'GoogleUtilities'
 end
 
 post_install do |installer|
