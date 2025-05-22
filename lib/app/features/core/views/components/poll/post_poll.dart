@@ -15,7 +15,6 @@ class PostPoll extends ConsumerWidget {
     required this.postReference,
     required this.hasVoted,
     required this.selectedOptionIndex,
-    required this.onVoted,
     super.key,
   });
 
@@ -24,7 +23,6 @@ class PostPoll extends ConsumerWidget {
   final EventReference postReference;
   final bool hasVoted;
   final int? selectedOptionIndex;
-  final VoidCallback onVoted;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -40,15 +38,10 @@ class PostPoll extends ConsumerWidget {
         pollData: pollData,
         selectedOptionIndex: selectedOptionIndex,
         onVote: (optionIndex) async {
-          // Call vote API
-          final voteSuccess = await ref.read(pollVoteNotifierProvider.notifier).vote(
+          await ref.read(pollVoteNotifierProvider.notifier).vote(
                 postReference,
                 optionIndex.toString(),
               );
-
-          if (voteSuccess) {
-            onVoted();
-          }
         },
       );
     }
