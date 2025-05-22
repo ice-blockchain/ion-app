@@ -16,9 +16,8 @@ class PollVoteResultFooter extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final formattedVotes = totalVotes >= 1000
-        ? '${(totalVotes / 1000).toStringAsFixed(0)}k ${totalVotes >= 2000 ? 'votes' : 'vote'}'
-        : '$totalVotes ${totalVotes == 1 ? 'vote' : 'votes'}';
+    final formattedVotes =
+        totalVotes >= 1000 ? '${(totalVotes / 1000).toStringAsFixed(0)}k}' : '$totalVotes ';
 
     final footerText = _getTimeRemainingText(context, formattedVotes);
 
@@ -34,9 +33,9 @@ class PollVoteResultFooter extends StatelessWidget {
   String _getTimeRemainingText(BuildContext context, String voteText) {
     final closingTime = pollData.closingTime;
 
-    if (closingTime == null) {
-      return 'Votes: $voteText';
-    } else {
+    if (pollData.isClosed) {
+      return 'Votes: $voteText •  Final results';
+    } else if (closingTime != null) {
       final remaining = closingTime.difference(DateTime.now());
       String timeText;
 
@@ -55,7 +54,9 @@ class PollVoteResultFooter extends StatelessWidget {
         timeText = 'less than a minute';
       }
 
-      return 'Votes: $voteText  •  Left: $timeText';
+      return 'Votes: $voteText • Left: $timeText';
     }
+
+    return 'Votes: $voteText';
   }
 }
