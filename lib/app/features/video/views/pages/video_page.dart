@@ -100,9 +100,7 @@ class VideoPage extends HookConsumerWidget {
 
       if (current == AppLifecycleState.resumed) {
         playerController.play();
-      } else if (current == AppLifecycleState.inactive ||
-          current == AppLifecycleState.paused ||
-          current == AppLifecycleState.hidden) {
+      } else if (current == AppLifecycleState.paused || current == AppLifecycleState.hidden) {
         playerController.pause();
       }
     });
