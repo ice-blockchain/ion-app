@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: ice License 1.0
+
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:ion/app/extensions/event_message.dart';
 import 'package:ion/app/features/feed/providers/poll/poll_vote_notifier.c.dart';
