@@ -21,35 +21,25 @@ class PollVoteResult extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final totalVotes = voteCounts.fold(0, (sum, votes) => sum + votes);
 
-    return Container(
-      padding: EdgeInsets.all(16.0.s),
-      decoration: BoxDecoration(
-        color: context.theme.appColors.onPrimaryAccent,
-        borderRadius: BorderRadius.circular(16.0.s),
-        border: Border.all(
-          color: context.theme.appColors.onTerararyFill,
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        ...List.generate(
+          pollData.options.length,
+          (index) {
+            return PollResultItem(
+              text: pollData.options[index],
+              votes: voteCounts[index],
+              totalVotes: totalVotes,
+            );
+          },
         ),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          ...List.generate(
-            pollData.options.length,
-            (index) {
-              return PollResultItem(
-                text: pollData.options[index],
-                votes: voteCounts[index],
-                totalVotes: totalVotes,
-              );
-            },
-          ),
-          SizedBox(height: 16.0.s),
-          PollVoteResultFooter(
-            pollData: pollData,
-            totalVotes: totalVotes,
-          ),
-        ],
-      ),
+        SizedBox(height: 6.0.s),
+        PollVoteResultFooter(
+          pollData: pollData,
+          totalVotes: totalVotes,
+        ),
+      ],
     );
   }
 }
