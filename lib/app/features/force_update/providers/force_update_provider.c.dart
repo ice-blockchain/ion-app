@@ -3,9 +3,12 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:ion/app/features/config/data/models/app_config_cache_strategy.dart';
+import 'package:ion/app/features/config/providers/config_repository.c.dart';
 import 'package:ion/app/features/core/providers/app_info_provider.c.dart';
 import 'package:ion/app/features/core/providers/app_lifecycle_provider.c.dart';
-import 'package:ion/app/features/force_update/providers/min_app_version_repository.c.dart';
+import 'package:ion/app/features/core/providers/env_provider.c.dart';
+import 'package:ion/app/features/force_update/model/min_app_version_config_name.dart';
 import 'package:ion/app/services/logger/logger.dart';
 import 'package:ion/app/utils/version.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
@@ -29,8 +32,15 @@ class ForceUpdate extends _$ForceUpdate {
 
   Future<bool> _isForceUpdateRequired() async {
     try {
-      final repository = await ref.read(minAppVersionRepositoryProvider.future);
-      final minVersion = await repository.getMinVersion();
+      final repository = await ref.read(configRepositoryProvider.future);
+
+      final minVersion = await repository.getConfig<String>(
+        MinAppVersionConfigName.fromPlatform().toString(),
+        cacheStrategy: AppConfigCacheStrategy.localStorage,
+        refreshInterval:
+            ref.read(envProvider.notifier).get<int>(EnvVariable.VERSIONS_CONFIG_REFETCH_INTERVAL),
+        parser: (data) => data,
+      );
 
       final appInfo = await ref.read(appInfoProvider.future);
       final appVersion = '${appInfo.version}.${appInfo.buildNumber}';

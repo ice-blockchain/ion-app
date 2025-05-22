@@ -537,3 +537,15 @@ class UnsupportedTranslationTypeException extends IONException {
 class UnsupportedEntityType extends IONException {
   UnsupportedEntityType(dynamic entity) : super(10107, 'Unsupported entity type $entity');
 }
+
+class AppConfigNotFoundException extends IONException {
+  AppConfigNotFoundException(String configName) : super(10108, 'App config not found: $configName');
+}
+
+class AppConfigException extends IONException {
+  AppConfigException(dynamic error, {String? configName, String? errorMessage})
+      : super(
+          10109,
+          'App config exception: $error, configName: $configName, errorMessage: $errorMessage',
+        );
+}
