@@ -56,7 +56,9 @@ class EventMessagesDao extends DatabaseAccessor<EventMessagesDatabase>
     final pattern = '%${query.toLowerCase()}%';
     final filteredQuery = select(db.eventMessagesTable)
       ..where(
-        (tbl) => tbl.eventReference.isInValues(eventReferences) & tbl.content.like(pattern),
+        (tbl) =>
+            tbl.eventReference.isInValues(eventReferences) &
+            (tbl.content.like(pattern) | tbl.tags.like(pattern)),
       );
     return filteredQuery.get();
   }
