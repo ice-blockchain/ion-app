@@ -54,6 +54,7 @@ class ConversationRoute extends BaseRouteData {
             conversationId: conversationId,
             receiverPubKey: receiverPubKey,
           ),
+          canPop: true,
         );
 
   final String? conversationId;
