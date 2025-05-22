@@ -54,6 +54,7 @@ extension PollVoteDataX on PollVoteData {
       kind: 1754,
       tags: [
         ...tags,
+        ['b', signer.publicKey],
         ['e', pollEventId],
       ],
       content: jsonEncode(selectedOptionIndexes),
