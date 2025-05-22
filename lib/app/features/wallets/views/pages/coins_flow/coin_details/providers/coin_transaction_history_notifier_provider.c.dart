@@ -11,6 +11,7 @@ import 'package:ion/app/features/wallets/providers/connected_crypto_wallets_prov
 import 'package:ion/app/features/wallets/providers/synced_coins_by_symbol_group_provider.c.dart';
 import 'package:ion/app/features/wallets/providers/wallet_view_data_provider.c.dart';
 import 'package:ion/app/features/wallets/views/pages/coins_flow/coin_details/providers/network_selector_notifier.c.dart';
+import 'package:ion/app/services/logger/logger.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'coin_transaction_history_notifier_provider.c.g.dart';
@@ -23,6 +24,7 @@ typedef CoinTransactionHistoryState = ({
 @riverpod
 class CoinTransactionHistoryNotifier extends _$CoinTransactionHistoryNotifier {
   static const int _pageSize = 20;
+  static const String _tag = 'CoinTransactionHistory: ';
 
   final List<CoinTransactionData> _history = [];
 
@@ -61,6 +63,8 @@ class CoinTransactionHistoryNotifier extends _$CoinTransactionHistoryNotifier {
   }
 
   void _reset() {
+    Logger.info('$_tag Reset transactions history. \n${StackTrace.current}');
+
     _history.clear();
     _offset = 0;
   }
@@ -92,6 +96,12 @@ class CoinTransactionHistoryNotifier extends _$CoinTransactionHistoryNotifier {
         .map((c) => c.coin.id)
         .toList();
 
+    Logger.info(
+      '$_tag Load the next page of the history with the next params: '
+      'offset: $_offset, network: ${_network?.id}, walletViewId: $_walletViewId, coinIds: $coinIds, '
+      'coinWalletAddresses: $_coinWalletAddresses',
+    );
+
     final transactions = await repository.getTransactions(
       offset: _offset,
       network: _network,
@@ -120,6 +130,21 @@ class CoinTransactionHistoryNotifier extends _$CoinTransactionHistoryNotifier {
           );
         },
       ),
+    );
+
+    final historyBuffer = StringBuffer();
+    for (final item in _history) {
+      final origin = item.origin;
+      historyBuffer.writeln(
+        'txHash: ${origin.txHash}, walletViewId: ${origin.walletViewId}, status: ${origin.status}, '
+        'amount: ${item.coinAmount}, type: ${item.transactionType.value}, id: ${origin.id}, '
+        'externalHash: ${origin.externalHash}, native coin: ${origin.nativeCoin?.abbreviation}, '
+        'userPubkey: ${origin.userPubkey}, network: ${item.network.id}, '
+        'dateRequested: ${origin.dateRequested}, createdAtInRelay: ${origin.createdAtInRelay}',
+      );
+    }
+    Logger.info(
+      '$_tag The next page of the history loaded. The full history information:\n$historyBuffer',
     );
 
     state = (

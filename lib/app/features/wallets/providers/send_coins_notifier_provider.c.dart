@@ -76,16 +76,25 @@ class SendCoinsNotifier extends _$SendCoinsNotifier {
 
       bool isRetryStatus(TransactionStatus status) =>
           status == TransactionStatus.pending || status == TransactionStatus.executing;
+
       if (isRetryStatus(result.status)) {
         // When executing or pending, txHash is still null, so we need to wait a bit
         result = await withRetry<TransferResult>(
-          ({Object? error}) => service.getTransfer(
-            walletId: senderWallet.id,
-            transferId: result.id,
-          ),
+          ({Object? error}) {
+            return service
+                .getTransfer(
+                  walletId: senderWallet.id,
+                  transferId: result.id,
+                )
+                .then(
+                  (response) => isRetryStatus(response.status)
+                      ? throw InappropriateTransferStatusException()
+                      : response,
+                );
+          },
           maxRetries: 5,
           initialDelay: const Duration(seconds: 1),
-          retryWhen: (result) => result is TransferResult && isRetryStatus(result.status),
+          retryWhen: (result) => result is InappropriateTransferStatusException,
         );
       }
 

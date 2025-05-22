@@ -21,6 +21,7 @@ import 'package:ion/app/features/wallets/model/transaction_data.c.dart';
 import 'package:ion/app/features/wallets/model/wallet_view_data.c.dart';
 import 'package:ion/app/features/wallets/utils/crypto_amount_parser.dart';
 import 'package:ion/app/services/ion_identity/ion_identity_client_provider.c.dart';
+import 'package:ion/app/services/logger/logger.dart';
 import 'package:ion_identity_client/ion_identity.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:stream_transform/stream_transform.dart';
@@ -235,6 +236,12 @@ class WalletViewsService {
     var updatedCoin = coinInWallet;
 
     if (transactions.isNotEmpty) {
+      Logger.info(
+        'Apply broadcasted transactions(${transactions.length}) '
+        'for ${coinInWallet.coin.abbreviation}(${coinInWallet.coin.name}). '
+        'Network: ${coinInWallet.coin.network.id}. Initial balance: ${coinInWallet.amount}.',
+      );
+
       final key = transactions.keys.firstWhereOrNull(
         (key) => key.id == coinInWallet.coin.id,
       );
@@ -254,6 +261,12 @@ class WalletViewsService {
             transactionCoin is CoinTransactionAsset &&
             isTransactionRelatedToWalletView) {
           adjustedRawAmount -= BigInt.parse(transactionCoin.rawAmount);
+
+          Logger.info(
+            'Reduce coin amount according to the next transactions: '
+            'amount: ${transactionCoin.amount} txHash: ${transaction.txHash}, '
+            'network: ${transaction.network.id}, coin: ${transactionCoin.coin}',
+          );
         }
       }
 
@@ -262,6 +275,8 @@ class WalletViewsService {
         coinInWallet.coin.decimals,
       );
       final adjustedBalanceUSD = adjustedAmount * coinInWallet.coin.priceUSD;
+
+      Logger.info('The reduction is complete. Adjusted amount: $adjustedAmount');
 
       updatedCoin = coinInWallet.copyWith(
         amount: adjustedAmount,

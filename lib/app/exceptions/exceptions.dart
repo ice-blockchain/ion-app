@@ -549,3 +549,7 @@ class AppConfigException extends IONException {
           'App config exception: $error, configName: $configName, errorMessage: $errorMessage',
         );
 }
+
+class InappropriateTransferStatusException extends IONException {
+  InappropriateTransferStatusException() : super(10110, 'Transfer has inappropriate status');
+}
