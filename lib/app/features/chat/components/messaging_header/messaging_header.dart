@@ -41,39 +41,46 @@ class MessagingHeader extends StatelessWidget {
             ),
           ),
           SizedBox(width: 12.0.s),
-          GestureDetector(
-            onTap: onTap,
-            child: Row(
-              children: [
-                Avatar(
-                  size: 36.0.s,
-                  imageUrl: imageWidget != null ? null : imageUrl,
-                  imageWidget: imageWidget,
-                ),
-                SizedBox(width: 10.0.s),
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Row(
+          Expanded(
+            child: GestureDetector(
+              onTap: onTap,
+              child: Row(
+                children: [
+                  Avatar(
+                    size: 36.0.s,
+                    imageUrl: imageWidget != null ? null : imageUrl,
+                    imageWidget: imageWidget,
+                  ),
+                  SizedBox(width: 10.0.s),
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text(
-                          name,
-                          style: context.theme.appTextThemes.subtitle3,
+                        Row(
+                          children: [
+                            Expanded(
+                              child: Text(
+                                name,
+                                style: context.theme.appTextThemes.subtitle3,
+                                overflow: TextOverflow.ellipsis,
+                                maxLines: 1,
+                              ),
+                            ),
+                            if (isVerified) ...[
+                              SizedBox(width: 3.0.s),
+                              Assets.svg.iconBadgeVerify.icon(size: 16.0.s),
+                            ],
+                          ],
                         ),
-                        if (isVerified) ...[
-                          SizedBox(width: 3.0.s),
-                          Assets.svg.iconBadgeVerify.icon(size: 16.0.s),
-                        ],
+                        SizedBox(height: 1.0.s),
+                        subtitle,
                       ],
                     ),
-                    SizedBox(height: 1.0.s),
-                    subtitle,
-                  ],
-                ),
-              ],
+                  ),
+                ],
+              ),
             ),
           ),
-          const Spacer(),
           MessagingContextMenu(
             conversationId: conversationId,
             onToggleMute: onToggleMute,
