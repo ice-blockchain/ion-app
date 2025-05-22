@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: ice License 1.0
+
 // Presentation class holds display info
 import 'package:flutter/widgets.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
