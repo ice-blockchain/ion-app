@@ -1,7 +1,6 @@
 // SPDX-License-Identifier: ice License 1.0
 
 import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/components/button/button.dart';
 import 'package:ion/app/components/list_item/badges_user_list_item.dart';
@@ -90,16 +89,13 @@ class ProfileShareMessage extends HookConsumerWidget {
                             type: ButtonType.outlined,
                             backgroundColor: context.theme.appColors.tertararyBackground,
                             onPressed: () {
-                              context.replace(
-                                ConversationRoute(receiverPubKey: userMetadata.masterPubkey)
-                                    .location,
-                              );
+                              ProfileRoute(pubkey: profilePubkey).push<void>(context);
                             },
                             minimumSize: Size(120.0.s, 32.0.s),
                             label: Padding(
                               padding: EdgeInsetsDirectional.only(bottom: 2.0.s),
                               child: Text(
-                                context.i18n.chat_profile_share_button,
+                                context.i18n.chat_profile_view_button,
                                 style: context.theme.appTextThemes.caption2.copyWith(
                                   color: context.theme.appColors.primaryText,
                                 ),
