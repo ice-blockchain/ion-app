@@ -8,6 +8,7 @@ import 'package:ion/app/features/chat/providers/user_chat_relays_provider.c.dart
 import 'package:ion/app/features/ion_connect/ion_connect.dart' hide requestEvents;
 import 'package:ion/app/features/ion_connect/ion_connect.dart';
 import 'package:ion/app/features/ion_connect/model/action_source.c.dart';
+import 'package:ion/app/features/ion_connect/model/disliked_relay_urls_collection.c.dart';
 import 'package:ion/app/features/ion_connect/providers/active_relays_provider.c.dart';
 import 'package:ion/app/features/ion_connect/providers/relay_provider.c.dart';
 import 'package:ion/app/features/user/model/user_chat_relays.c.dart';
@@ -26,7 +27,7 @@ class RelayCreation extends _$RelayCreation {
 
   Future<IonConnectRelay> getRelay(
     ActionSource actionSource, {
-    Set<String> dislikedUrls = const {},
+    DislikedRelayUrlsCollection dislikedUrls = const DislikedRelayUrlsCollection({}),
   }) async {
     switch (actionSource) {
       case ActionSourceCurrentUser():
@@ -137,7 +138,7 @@ class RelayCreation extends _$RelayCreation {
 
   Future<IonConnectRelay?> _getLastUsedRelay(
     List<String> userRelays,
-    Set<String> dislikedUrls,
+    DislikedRelayUrlsCollection dislikedUrls,
     bool anonymous,
   ) async {
     final activeRelaysSet = ref.read(activeRelaysProvider);
@@ -194,14 +195,17 @@ class RelayCreation extends _$RelayCreation {
 
   List<UserRelay> _userRelaysAvoidingDislikedUrls(
     List<UserRelay> relays,
-    Set<String> dislikedRelaysUrls,
+    DislikedRelayUrlsCollection dislikedRelaysUrls,
   ) {
     final urls = relays.where((relay) => !dislikedRelaysUrls.contains(relay.url)).toList();
     if (urls.isEmpty) return relays;
     return urls;
   }
 
-  List<String> _indexersAvoidingDislikedUrls(List<String> indexers, Set<String> dislikedUrls) {
+  List<String> _indexersAvoidingDislikedUrls(
+    List<String> indexers,
+    DislikedRelayUrlsCollection dislikedUrls,
+  ) {
     var urls = indexers.where((indexer) => !dislikedUrls.contains(indexer)).toList();
     if (urls.isEmpty) {
       urls = indexers;
