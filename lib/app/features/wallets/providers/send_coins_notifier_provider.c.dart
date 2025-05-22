@@ -74,10 +74,8 @@ class SendCoinsNotifier extends _$SendCoinsNotifier {
         feeType: feeType,
       );
 
-      bool isRetryStatus(TransactionStatus status) {
-        final result = status == TransactionStatus.pending || status == TransactionStatus.executing;
-        return result;
-      }
+      bool isRetryStatus(TransactionStatus status) =>
+          status == TransactionStatus.pending || status == TransactionStatus.executing;
 
       if (isRetryStatus(result.status)) {
         // When executing or pending, txHash is still null, so we need to wait a bit
