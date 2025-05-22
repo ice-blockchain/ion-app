@@ -280,7 +280,7 @@ class ChatPreview extends HookConsumerWidget {
       MessageType.visualMedia => context.i18n.common_media,
       MessageType.document => lastMessageContent,
       MessageType.requestFunds => context.i18n.chat_money_request_title,
-      MessageType.moneySent => context.i18n.chat_money_sent_title,
+      MessageType.moneySent => _getMoneySentTitle(ref, lastMessageContent),
       MessageType.profile => ref
               .watch(
                 userMetadataProvider(
@@ -316,6 +316,14 @@ class ChatPreview extends HookConsumerWidget {
         ),
       ],
     );
+  }
+
+  String _getMoneySentTitle(WidgetRef ref, String messageContent) {
+    final messagePubkey = EventReference.fromEncoded(lastMessageContent).pubkey;
+    final isMyPubkey = ref.watch(currentPubkeySelectorProvider) == messagePubkey;
+    return isMyPubkey
+        ? ref.context.i18n.chat_money_sent_title
+        : ref.context.i18n.chat_money_received_title;
   }
 }
 
