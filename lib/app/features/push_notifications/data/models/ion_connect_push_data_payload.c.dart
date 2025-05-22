@@ -211,8 +211,6 @@ class EncodedIonConnectPushData with _$EncodedIonConnectPushData {
 
 enum Compression {
   none,
-
-  @JsonValue('zlib')
   zlib,
 }
 
