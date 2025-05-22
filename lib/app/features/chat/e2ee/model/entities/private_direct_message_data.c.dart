@@ -65,7 +65,7 @@ class ReplaceablePrivateDirectMessageEntity
 class ReplaceablePrivateDirectMessageData
     with
         EntityDataWithMediaContent,
-        EntityDataWithRelatedEvents,
+        EntityDataWithRelatedEvents<RelatedReplaceableEvent>,
         _$ReplaceablePrivateDirectMessageData
     implements EventSerializable, ReplaceableEntityData {
   const factory ReplaceablePrivateDirectMessageData({
