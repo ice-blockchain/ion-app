@@ -23,6 +23,28 @@ class BlockEventDao extends DatabaseAccessor<BlockedUsersDatabase> with _$BlockE
     await into(db.blockEventTable).insert(dbModel, mode: InsertMode.insertOrReplace);
   }
 
+  Future<DateTime?> getLatestBlockEventDate() async {
+    final query = select(blockEventTable)
+      ..orderBy([(t) => OrderingTerm.desc(t.createdAt)])
+      ..limit(1);
+
+    return (await query.getSingleOrNull())?.createdAt;
+  }
+
+  Future<DateTime?> getEarliestBlockEventDate({DateTime? after}) async {
+    final query = select(blockEventTable);
+
+    if (after != null) {
+      query.where((t) => t.createdAt.isBiggerThanValue(after));
+    }
+
+    query
+      ..orderBy([(t) => OrderingTerm.asc(t.createdAt)])
+      ..limit(1);
+
+    return (await query.getSingleOrNull())?.createdAt;
+  }
+
   Future<List<EventMessage>> getBlockedUsersEvents(String currentUserMasterPubkey) async {
     final query = select(db.blockEventTable).join([
       leftOuterJoin(
@@ -55,9 +77,9 @@ class BlockEventDao extends DatabaseAccessor<BlockedUsersDatabase> with _$BlockE
     return result.map((row) => row.readTable(db.blockEventTable).toEventMessage()).toList();
   }
 
-  Future<void> markAsDeleted(EventReference eventReference) async {
+  Future<void> markAsDeleted(List<EventReference> eventReferences) async {
     await (update(db.deletedBlockEventTable)
-          ..where((table) => table.eventReference.equalsValue(eventReference)))
+          ..where((table) => table.eventReference.isInValues(eventReferences)))
         .write(const DeletedBlockEventTableCompanion(isDeleted: Value(true)));
   }
 }
