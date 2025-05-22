@@ -26,7 +26,8 @@ class PostPoll extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final shouldShowResults = pollData.isClosed || hasVoted;
+    final userHasVoted = selectedOptionIndex != null || hasVoted;
+    final shouldShowResults = pollData.isClosed || userHasVoted;
 
     if (shouldShowResults) {
       return PollVoteResult(
