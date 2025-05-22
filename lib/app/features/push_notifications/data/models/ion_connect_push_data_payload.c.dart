@@ -1,6 +1,7 @@
 // SPDX-License-Identifier: ice License 1.0
 
 import 'dart:convert';
+import 'dart:io';
 
 import 'package:collection/collection.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
@@ -34,13 +35,17 @@ class IonConnectPushDataPayload {
   final List<EventMessage> relevantEvents;
 
   static Future<IonConnectPushDataPayload> fromEncoded(Map<String, dynamic> data) async {
-    final EncodedIonConnectPushData(:event, :relevantEvents) =
+    final EncodedIonConnectPushData(:event, :relevantEvents, :compression) =
         EncodedIonConnectPushData.fromJson(data);
-    //TODO:add decompression
-    final parsedEvent = EventMessage.fromPayloadJson(jsonDecode(event) as Map<String, dynamic>);
-    //TODO:add decompression
-    final parsedRelevantEvents = relevantEvents != null
-        ? ((jsonDecode(relevantEvents) as List<dynamic>)
+
+    final rawEvent = _decompress(input: event, compression: compression);
+    final parsedEvent = EventMessage.fromPayloadJson(jsonDecode(rawEvent) as Map<String, dynamic>);
+
+    final rawRelevantEvents = relevantEvents != null
+        ? _decompress(input: relevantEvents, compression: compression)
+        : null;
+    final parsedRelevantEvents = rawRelevantEvents != null
+        ? ((jsonDecode(rawRelevantEvents) as List<dynamic>)
             .map(
               (eventJson) => EventMessage.fromPayloadJson(eventJson as Map<String, dynamic>),
             )
@@ -110,6 +115,13 @@ class IonConnectPushDataPayload {
     return await _checkEventsSignatures() &&
         _checkMainEventRelevant(currentPubkey: currentPubkey) &&
         _checkRequiredRelevantEvents();
+  }
+
+  static String _decompress({required String input, required Compression compression}) {
+    return switch (compression) {
+      Compression.zlib => utf8.decode(zlib.decode(base64.decode(input))),
+      Compression.none => input,
+    };
   }
 
   Future<bool> _checkEventsSignatures() async {
@@ -190,10 +202,18 @@ class EncodedIonConnectPushData with _$EncodedIonConnectPushData {
   const factory EncodedIonConnectPushData({
     required String event,
     @JsonKey(name: 'relevant_events') String? relevantEvents,
+    @Default(Compression.none) Compression compression,
   }) = _EncodedIonConnectPushData;
 
   factory EncodedIonConnectPushData.fromJson(Map<String, dynamic> json) =>
       _$EncodedIonConnectPushDataFromJson(json);
+}
+
+enum Compression {
+  none,
+
+  @JsonValue('zlib')
+  zlib,
 }
 
 enum PushNotificationType {
