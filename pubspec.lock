@@ -801,6 +801,33 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.0.1"
+  firebase_analytics:
+    dependency: "direct main"
+    description:
+      path: "packages/firebase_analytics/firebase_analytics"
+      ref: HEAD
+      resolved-ref: "64b300dd19e2f9dedda4c9306b4a3e5d2fdc3081"
+      url: "https://github.com/ice-blockchain/flutterfire.git"
+    source: git
+    version: "11.4.5"
+  firebase_analytics_platform_interface:
+    dependency: transitive
+    description:
+      path: "packages/firebase_analytics/firebase_analytics_platform_interface"
+      ref: HEAD
+      resolved-ref: "64b300dd19e2f9dedda4c9306b4a3e5d2fdc3081"
+      url: "https://github.com/ice-blockchain/flutterfire.git"
+    source: git
+    version: "4.3.5"
+  firebase_analytics_web:
+    dependency: transitive
+    description:
+      path: "packages/firebase_analytics/firebase_analytics_web"
+      ref: HEAD
+      resolved-ref: "64b300dd19e2f9dedda4c9306b4a3e5d2fdc3081"
+      url: "https://github.com/ice-blockchain/flutterfire.git"
+    source: git
+    version: "0.5.10+11"
   firebase_core:
     dependency: "direct main"
     description:
