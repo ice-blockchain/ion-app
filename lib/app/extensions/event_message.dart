@@ -2,6 +2,7 @@
 
 import 'package:collection/collection.dart';
 import 'package:ion/app/exceptions/exceptions.dart';
+import 'package:ion/app/features/chat/community/models/entities/tags/master_pubkey_tag.c.dart';
 import 'package:ion/app/features/chat/model/database/chat_database.c.dart' as chat_db;
 import 'package:ion/app/features/ion_connect/database/event_messages_database.c.dart'
     as event_messages_db;
@@ -10,7 +11,8 @@ import 'package:ion/app/features/ion_connect/model/event_reference.c.dart';
 
 extension KeysExtensions on EventMessage {
   String get masterPubkey {
-    final masterPubkey = tags.firstWhereOrNull((tags) => tags[0] == 'b')?.elementAtOrNull(1);
+    final masterPubkey =
+        tags.firstWhereOrNull((tags) => tags[0] == MasterPubkeyTag.tagName)?.elementAtOrNull(1);
 
     if (masterPubkey == null) {
       throw EventMasterPubkeyNotFoundException(eventId: id);

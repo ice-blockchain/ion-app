@@ -6,6 +6,7 @@ import 'package:collection/collection.dart';
 import 'package:flutter/foundation.dart';
 import 'package:ion/app/exceptions/exceptions.dart';
 import 'package:ion/app/features/auth/providers/auth_provider.c.dart';
+import 'package:ion/app/features/chat/community/models/entities/tags/master_pubkey_tag.c.dart';
 import 'package:ion/app/features/core/providers/main_wallet_provider.c.dart';
 import 'package:ion/app/features/ion_connect/ion_connect.dart' as ion;
 import 'package:ion/app/features/ion_connect/ion_connect.dart' hide requestEvents;
@@ -273,7 +274,7 @@ class IonConnectNotifier extends _$IonConnectNotifier {
     return entityData.toEventMessage(
       eventSigner,
       tags: [
-        if (includeMasterPubkey) ['b', mainWallet.signingKey.publicKey],
+        if (includeMasterPubkey) MasterPubkeyTag(value: mainWallet.signingKey.publicKey).toTag(),
       ],
     );
   }
@@ -364,7 +365,8 @@ class IonConnectNotifier extends _$IonConnectNotifier {
       UserDelegationEntity.kind,
     ];
     for (final event in events) {
-      if (!excludedKinds.contains(event.kind) && !event.tags.any((tag) => tag[0] == 'b')) {
+      if (!excludedKinds.contains(event.kind) &&
+          !event.tags.any((tag) => tag[0] == MasterPubkeyTag.tagName)) {
         Logger.error(
           EventMasterPubkeyNotFoundException(eventId: event.id),
           stackTrace: StackTrace.current,

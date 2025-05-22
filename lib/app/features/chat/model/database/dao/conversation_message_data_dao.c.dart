@@ -14,10 +14,10 @@ class ConversationMessageDataDao extends DatabaseAccessor<ChatDatabase>
   ConversationMessageDataDao(super.db);
 
   Future<void> addOrUpdateStatus({
-    required EventReference messageEventReference,
     required String pubkey,
     required String masterPubkey,
     required MessageDeliveryStatus status,
+    required EventReference messageEventReference,
     DateTime? updateAllBefore,
   }) async {
     if (updateAllBefore != null && status == MessageDeliveryStatus.read) {
@@ -44,7 +44,7 @@ class ConversationMessageDataDao extends DatabaseAccessor<ChatDatabase>
               .equalsExp(messageStatusTable.messageEventReference),
         ),
       ])
-            ..where(eventMessageTable.createdAt.isSmallerThanValue(updateAllBefore))
+            ..where(eventMessageTable.createdAt.isSmallerOrEqualValue(updateAllBefore))
             ..where(messageStatusTable.masterPubkey.equals(masterPubkey))
             ..where(messageStatusTable.status.equals(MessageDeliveryStatus.received.index))
             ..where(conversationMessageTable.conversationId.equals(conversationId)))

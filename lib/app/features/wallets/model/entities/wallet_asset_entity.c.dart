@@ -6,6 +6,7 @@ import 'package:collection/collection.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:ion/app/exceptions/exceptions.dart';
 import 'package:ion/app/extensions/extensions.dart';
+import 'package:ion/app/features/chat/community/models/entities/tags/master_pubkey_tag.c.dart';
 import 'package:ion/app/features/ion_connect/ion_connect.dart';
 import 'package:ion/app/features/ion_connect/model/ion_connect_entity.dart';
 import 'package:ion/app/features/ion_connect/model/related_pubkey.c.dart';
@@ -86,7 +87,7 @@ class WalletAssetData with _$WalletAssetData {
     FundsRequestEntity? requestEntity,
   }) {
     final tags = [
-      ['b', masterPubkey],
+      MasterPubkeyTag(value: masterPubkey).toTag(),
       NetworkTag(value: networkId).toTag(),
       AssetClassTag(value: assetClass).toTag(),
       AssetAddressTag(value: assetAddress).toTag(),

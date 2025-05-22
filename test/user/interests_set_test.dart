@@ -1,6 +1,7 @@
 // SPDX-License-Identifier: ice License 1.0
 
 import 'package:flutter_test/flutter_test.dart';
+import 'package:ion/app/features/chat/community/models/entities/tags/master_pubkey_tag.c.dart';
 import 'package:ion/app/features/ion_connect/ion_connect.dart';
 import 'package:ion/app/features/user/model/interest_set.c.dart';
 import 'package:ion/app/services/ion_connect/ed25519_key_store.dart';
@@ -16,7 +17,7 @@ void main() {
         signer: keyStore,
         kind: 30015,
         tags: const [
-          ['b', 'value'],
+          [MasterPubkeyTag.tagName, 'value'],
           ['d', 'languages'],
           ['t', 'en'],
           ['t', 'es'],

@@ -7,6 +7,7 @@ import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:ion/app/exceptions/exceptions.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/chat/community/models/entities/tags/conversation_identifier.c.dart';
+import 'package:ion/app/features/chat/community/models/entities/tags/master_pubkey_tag.c.dart';
 import 'package:ion/app/features/chat/model/group_subject.c.dart';
 import 'package:ion/app/features/chat/model/message_type.dart';
 import 'package:ion/app/features/ion_connect/ion_connect.dart';
@@ -139,7 +140,7 @@ class ReplaceablePrivateDirectMessageData
       content: content,
       tags: [
         ...tags,
-        ['b', masterPubkey],
+        MasterPubkeyTag(value: masterPubkey).toTag(),
         publishedAt.toTag(),
         editingEndedAt.toTag(),
         if (quotedEvent != null) quotedEvent!.toTag(),
