@@ -30,7 +30,7 @@ Future<void> notificationRepostsSubscription(Ref ref) async {
       '#p': [currentPubkey],
       '#k': [ModifiablePostEntity.kind.toString(), ArticleEntity.kind.toString()],
     },
-    since: DateTime.now().subtract(const Duration(seconds: 2)),
+    since: DateTime.now().subtract(const Duration(microseconds: 2)),
   );
 
   await ref.watch(entitiesSyncerNotifierProvider('notifications-reposts').notifier).syncEntities(
