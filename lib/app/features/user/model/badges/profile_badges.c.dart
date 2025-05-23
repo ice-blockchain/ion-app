@@ -47,7 +47,6 @@ class ProfileBadgesEntity
 
   static const int kind = 30008;
   static const String dTag = 'profile_badges';
-  static const String search = 'include:dependencies:kind30008+profile_badges>kind30009>kind8';
 }
 
 @freezed
@@ -75,7 +74,7 @@ class ProfileBadgesData
       if (a[0] != 'a' || e[0] != 'e' || a.length < 2 || e.length < 2) continue;
       entries.add(
         BadgeEntry(
-          definitionRef: a[1],
+          definitionRef: ReplaceableEventReference.fromString(a[1]),
           awardId: e[1],
         ),
       );
@@ -94,7 +93,7 @@ class ProfileBadgesData
     final built = <List<String>>[
       ['d', ProfileBadgesEntity.dTag],
       for (final entry in entries) ...[
-        ['a', entry.definitionRef],
+        entry.definitionRef.toTag(),
         ['e', entry.awardId],
       ],
     ];
@@ -123,6 +122,6 @@ class BadgeEntry {
     required this.awardId,
   });
 
-  final String definitionRef;
+  final ReplaceableEventReference definitionRef;
   final String awardId;
 }

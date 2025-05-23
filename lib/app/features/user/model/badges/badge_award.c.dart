@@ -8,6 +8,7 @@ import 'package:collection/collection.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:ion/app/exceptions/exceptions.dart';
 import 'package:ion/app/features/ion_connect/ion_connect.dart';
+import 'package:ion/app/features/ion_connect/model/event_reference.c.dart';
 import 'package:ion/app/features/ion_connect/model/event_serializable.dart';
 import 'package:ion/app/features/ion_connect/model/ion_connect_entity.dart';
 import 'package:ion/app/features/ion_connect/providers/ion_connect_cache.c.dart';
@@ -49,7 +50,7 @@ class BadgeAwardEntity with IonConnectEntity, ImmutableEntity, CacheableEntity, 
 class BadgeAwardData with _$BadgeAwardData implements EventSerializable {
   const factory BadgeAwardData({
     /// The definition reference (`a` tag)
-    required String badgeDefinitionRef,
+    required ReplaceableEventReference badgeDefinitionRef,
 
     /// One or more recipients pub keys (`p` tags)
     required List<String> recipientsPubKeys,
@@ -70,7 +71,7 @@ class BadgeAwardData with _$BadgeAwardData implements EventSerializable {
         .toList();
 
     return BadgeAwardData(
-      badgeDefinitionRef: badgeDefinitionRef,
+      badgeDefinitionRef: ReplaceableEventReference.fromString(badgeDefinitionRef),
       recipientsPubKeys: recipientsPubKeys,
     );
   }
@@ -83,7 +84,7 @@ class BadgeAwardData with _$BadgeAwardData implements EventSerializable {
     List<List<String>> tags = const [],
   }) {
     final built = <List<String>>[
-      ['a', badgeDefinitionRef],
+      badgeDefinitionRef.toTag(),
       for (final recipientPubKey in recipientsPubKeys) ['p', recipientPubKey],
     ];
     return EventMessage.fromData(

@@ -60,7 +60,7 @@ class BadgeDefinitionData
     implements EventSerializable, ReplaceableEntityData {
   const factory BadgeDefinitionData({
     /// The unique badge identifier (the `d` tag)
-    required String badge,
+    required ReplaceableEventIdentifier badge,
 
     /// Optional human-readable name (`name` tag)
     String? name,
@@ -113,7 +113,7 @@ class BadgeDefinitionData
         .toList();
 
     return BadgeDefinitionData(
-      badge: badge,
+      badge: ReplaceableEventIdentifier(value: badge),
       name: name,
       description: description,
       imageUrl: imageUrl,
@@ -130,7 +130,7 @@ class BadgeDefinitionData
     List<List<String>> tags = const [],
   }) {
     final built = <List<String>>[
-      ['d', badge],
+      badge.toTag(),
       if (name != null) ['name', name!],
       if (description != null) ['description', description!],
       if (imageUrl != null) ['image', imageUrl!, if (imageDimensions != null) imageDimensions!],
@@ -150,7 +150,7 @@ class BadgeDefinitionData
   ReplaceableEventReference toReplaceableEventReference(String pubkey) {
     return ReplaceableEventReference(
       pubkey: pubkey,
-      dTag: badge,
+      dTag: badge.value,
       kind: BadgeDefinitionEntity.kind,
     );
   }

@@ -85,7 +85,7 @@ Future<bool> isUserVerified(
   final pubkeys = await ref.watch(servicePubkeysProvider.future);
 
   return profileBadgesData?.entries.any((entry) {
-        final eventRef = ReplaceableEventReference.fromTag(['a', entry.definitionRef]);
+        final eventRef = entry.definitionRef;
         final isBadgeAwardValid =
             pubkeys.isEmpty || ref.watch(cachedBadgeAwardProvider(entry.awardId, pubkeys)) != null;
         final isBadgeDefinitionValid = eventRef.dTag == BadgeDefinitionEntity.verifiedBadgeDTag &&
@@ -178,8 +178,7 @@ void currentUserBadgesSync(Ref ref) {
     (previous, next) {
       next.whenData((badgeAwardEntity) async {
         final pubkeys = await ref.watch(servicePubkeysProvider.future);
-        final eventRef =
-            ReplaceableEventReference.fromTag(['a', badgeAwardEntity.data.badgeDefinitionRef]);
+        final eventRef = badgeAwardEntity.data.badgeDefinitionRef;
         if (eventRef.kind == BadgeDefinitionEntity.kind &&
             eventRef.dTag == BadgeDefinitionEntity.verifiedBadgeDTag &&
             (pubkeys.isEmpty || pubkeys.contains(eventRef.pubkey))) {
