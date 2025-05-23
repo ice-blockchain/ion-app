@@ -5,6 +5,7 @@ import 'dart:convert';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/auth/providers/auth_provider.c.dart';
+import 'package:ion/app/features/core/providers/env_provider.c.dart';
 import 'package:ion/app/features/ion_connect/model/relay_info.c.dart';
 import 'package:ion/app/features/ion_connect/providers/relay_info_provider.c.dart';
 import 'package:ion/app/features/user/providers/user_relays_manager.c.dart';
@@ -29,7 +30,7 @@ class RelayFirebaseAppConfig extends _$RelayFirebaseAppConfig {
       return null;
     }
 
-    final savedConfig = ref.watch(savedFirebaseAppConfigProvider);
+    final savedConfig = ref.watch(savedRelayFirebaseAppConfigProvider);
 
     final relayUrls = [...userRelay.urls];
 
@@ -56,6 +57,7 @@ class RelayFirebaseAppConfig extends _$RelayFirebaseAppConfig {
     if (firebaseConfigs == null || relayPubkey == null || relayPubkey.isEmpty) {
       return null;
     }
+
     return RelayFirebaseConfig(
       firebaseConfig: firebaseConfigs.random,
       relayUrl: relayUrl,
@@ -65,7 +67,7 @@ class RelayFirebaseAppConfig extends _$RelayFirebaseAppConfig {
 }
 
 @Riverpod(keepAlive: true)
-class SavedFirebaseAppConfig extends _$SavedFirebaseAppConfig {
+class SavedRelayFirebaseAppConfig extends _$SavedRelayFirebaseAppConfig {
   @override
   RelayFirebaseConfig? build() {
     listenSelf((_, next) => _saveConfig(next));
@@ -108,6 +110,26 @@ class SavedFirebaseAppConfig extends _$SavedFirebaseAppConfig {
   }
 
   static const String _configuredFirebaseAppKey = 'configured_firebase_app_key';
+}
+
+@riverpod
+class BuildInFirebaseAppConfig extends _$BuildInFirebaseAppConfig {
+  @override
+  FirebaseConfig? build() {
+    try {
+      final env = ref.read(envProvider.notifier);
+      return FirebaseConfig.fromJson(
+        jsonDecode(env.get<String>(EnvVariable.FIREBASE_CONFIG)) as Map<String, dynamic>,
+      );
+    } catch (error, stackTrace) {
+      Logger.error(
+        error,
+        stackTrace: stackTrace,
+        message: 'Failed to load build-in Firebase app',
+      );
+      return null;
+    }
+  }
 }
 
 @freezed
