@@ -9,3 +9,4 @@ jobs:
       - uses: peter-evans/rebase@v3
         with:
           base: master
+          exclude-drafts: true
