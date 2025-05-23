@@ -14,4 +14,5 @@ jobs:
       - uses: peter-evans/rebase@v3
         with:
           base: master
+          token: ${{ secrets.ICE_CI_CD_BOT_GH_PAT }}
           exclude-drafts: true
