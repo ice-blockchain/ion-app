@@ -9,11 +9,13 @@ class TransactionDetailsActions extends StatelessWidget {
   const TransactionDetailsActions({
     required this.onViewOnExplorer,
     required this.onShare,
+    this.disableExplorer = false,
     super.key,
   });
 
   final VoidCallback onViewOnExplorer;
   final VoidCallback onShare;
+  final bool disableExplorer;
 
   @override
   Widget build(BuildContext context) {
@@ -21,15 +23,18 @@ class TransactionDetailsActions extends StatelessWidget {
       children: [
         Expanded(
           child: Button(
-            type: ButtonType.outlined,
+            type: disableExplorer ? ButtonType.disabled : ButtonType.outlined,
+            disabled: disableExplorer,
             label: Text(
               context.i18n.transaction_details_view_on_explorer,
             ),
             mainAxisSize: MainAxisSize.max,
-            leadingIcon: Assets.svg.iconButtonInternet.icon(),
+            leadingIcon: Assets.svg.iconButtonInternet.icon(
+              color: disableExplorer ? context.theme.appColors.onPrimaryAccent : null,
+            ),
             onPressed: onViewOnExplorer,
-            backgroundColor: context.theme.appColors.tertararyBackground,
-            borderColor: context.theme.appColors.onTerararyFill,
+            backgroundColor: disableExplorer ? null : context.theme.appColors.tertararyBackground,
+            borderColor: disableExplorer ? null : context.theme.appColors.onTerararyFill,
           ),
         ),
         SizedBox(
