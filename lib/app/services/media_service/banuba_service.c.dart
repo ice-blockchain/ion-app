@@ -40,55 +40,93 @@ class BanubaService {
   }
 
   Future<String> editPhoto(String filePath) async {
+    Logger.log('[EDIT_PHOTO] editPhoto called with filePath: $filePath');
+    
     try {
       await _initPhotoEditor();
 
+      Logger.log('[EDIT_PHOTO] Calling methodStartPhotoEditor...');
       final dynamic result = await platformChannel.invokeMethod(
         methodStartPhotoEditor,
         {'imagePath': filePath},
       );
 
+      Logger.log('[EDIT_PHOTO] Result from methodStartPhotoEditor: $result');
+
+      if (result == null) {
+        Logger.log('[EDIT_PHOTO] User cancelled editing');
+        throw PlatformException(
+          code: 'USER_CANCELLED',
+          message: 'User cancelled photo editing',
+        );
+      }
+
       if (result is Map) {
         final exportedPhotoFilePath = result[argExportedPhotoFile];
 
         if (exportedPhotoFilePath == null) {
+          Logger.log('[EDIT_PHOTO] No exported file, returning original path');
           return filePath;
         }
 
         if (Platform.isAndroid) {
           final file = await toFile(exportedPhotoFilePath as String);
+          Logger.log('[EDIT_PHOTO] Exported photo file path (Android): ${file.path}');
           return file.path;
         }
 
+        Logger.log('[EDIT_PHOTO] Exported photo file path: $exportedPhotoFilePath');
         return exportedPhotoFilePath as String;
       }
+      
+      Logger.log('[EDIT_PHOTO] Unexpected result type, returning original path');
       return filePath;
     } on PlatformException catch (e) {
-      Logger.log(
-        'Start Photo Editor error',
-        error: e,
-        stackTrace: StackTrace.current,
-      );
+      Logger.log('[EDIT_PHOTO] Platform exception during photo editing', error: e);
       rethrow;
     }
   }
 
   Future<String> editVideo(String filePath) async {
-    await platformChannel.invokeMethod(
-      methodInitVideoEditor,
-      env.get<String>(EnvVariable.BANUBA_TOKEN),
-    );
+    try {
+      await platformChannel.invokeMethod(
+        methodInitVideoEditor,
+        env.get<String>(EnvVariable.BANUBA_TOKEN),
+      );
 
-    final result = await platformChannel.invokeMethod(
-      methodStartVideoEditorTrimmer,
-      filePath,
-    );
+      Logger.log('[EDIT_VIDEO] Calling methodStartVideoEditorTrimmer...');
+      final result = await platformChannel.invokeMethod(
+        methodStartVideoEditorTrimmer,
+        filePath,
+      );
 
-    if (result is Map) {
-      final exportedVideoFilePath = result[argExportedVideoFile];
-      return exportedVideoFilePath as String;
+      Logger.log('[EDIT_VIDEO] Result from methodStartVideoEditorTrimmer: $result');
+      
+      if (result == null) {
+        Logger.log('[EDIT_VIDEO] User cancelled editing');
+        throw PlatformException(
+          code: 'USER_CANCELLED',
+          message: 'User cancelled video editing',
+        );
+      }
+      
+      if (result is Map) {
+        final exportedVideoFilePath = result[argExportedVideoFile];
+        if (exportedVideoFilePath != null) {
+          Logger.log('[EDIT_VIDEO] Exported video file path: $exportedVideoFilePath');
+          return exportedVideoFilePath as String;
+        }
+      }
+      
+      Logger.log('[EDIT_VIDEO] No exported file, returning original path');
+      return filePath;
+    } on PlatformException catch (e) {
+      Logger.log('[EDIT_VIDEO] Platform exception during video editing', error: e);
+      rethrow;
+    } catch (e) {
+      Logger.log('[EDIT_VIDEO] Unexpected error during video editing', error: e);
+      return filePath;
     }
-    return filePath;
   }
 }
 
@@ -99,11 +137,29 @@ BanubaService banubaService(Ref ref) {
 
 @riverpod
 Future<String> editMedia(Ref ref, MediaFile mediaFile) async {
-  final filePath = await ref.read(assetFilePathProvider(mediaFile.path).future);
+  Logger.log('[EDIT_VIDEO] editMedia called with mediaFile.path: ${mediaFile.path}');
+  Logger.log('[EDIT_VIDEO] mediaFile.mimeType: ${mediaFile.mimeType}');
+  
+  // Check if the path is already a file path or an asset ID
+  String? filePath;
+  
+  // Check if it's an absolute file path (starts with '/' for both iOS and Android)
+  // or if the file exists at the given path
+  final isAbsolutePath = mediaFile.path.startsWith('/') || File(mediaFile.path).existsSync();
+  
+  if (isAbsolutePath) {
+    Logger.log('[EDIT_VIDEO] Path is already a file path, using directly: ${mediaFile.path}');
+    filePath = mediaFile.path;
+  } else {
+    // Otherwise, treat it as an asset ID and get the file path
+    Logger.log('[EDIT_VIDEO] Path appears to be an asset ID, fetching file path...');
+    filePath = await ref.read(assetFilePathProvider(mediaFile.path).future);
+    Logger.log('[EDIT_VIDEO] Fetched file path from asset ID: $filePath');
+  }
 
   if (filePath == null) {
     Logger.log(
-      'File path or mime type is null',
+      '[EDIT_VIDEO] File path or mime type is null',
       error: mediaFile,
       stackTrace: StackTrace.current,
     );

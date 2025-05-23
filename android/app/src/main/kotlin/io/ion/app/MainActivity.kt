@@ -102,22 +102,30 @@ class MainActivity : FlutterFragmentActivity() {
                 }
 
                 METHOD_START_VIDEO_EDITOR_TRIMMER -> {
+                    Log.d("EDIT_VIDEO", "🎬 Received video editor trimmer request")
                     val videoFilePath = call.arguments as? String
+                    Log.d("EDIT_VIDEO", "📁 Video file path: $videoFilePath")
+                    
                     val trimmerVideoUri = videoFilePath?.let { Uri.fromFile(File(it)) }
                     if (trimmerVideoUri == null) {
+                        Log.e("EDIT_VIDEO", "❌ Missing video file path")
                         exportResult?.error("ERR_START_TRIMMER_MISSING_VIDEO", "", null)
                     } else {
+                        Log.d("EDIT_VIDEO", "🔐 Checking SDK license...")
                         checkSdkLicenseVideoEditor(
                             callback = { isValid ->
                                 if (isValid) {
-                                    // ✅ The license is active
+                                    Log.d("EDIT_VIDEO", "✅ License is active, starting video editor")
                                     startVideoEditorModeTrimmer(trimmerVideoUri)
                                 } else {
-                                    // ❌ Use of SDK is restricted: the license is revoked or expired
+                                    Log.e("EDIT_VIDEO", "❌ SDK license is revoked or expired")
                                     result.error(ERR_CODE_SDK_LICENSE_REVOKED, "", null)
                                 }
                             },
-                            onError = { result.error(ERR_CODE_SDK_NOT_INITIALIZED, "", null) }
+                            onError = { 
+                                Log.e("EDIT_VIDEO", "❌ SDK not initialized")
+                                result.error(ERR_CODE_SDK_NOT_INITIALIZED, "", null) 
+                            }
                         )
                     }
                 }
@@ -180,23 +188,38 @@ class MainActivity : FlutterFragmentActivity() {
     // Observe export video results
     override fun onActivityResult(requestCode: Int, result: Int, intent: Intent?) {
         super.onActivityResult(requestCode, result, intent)
-        if (requestCode == VIDEO_EDITOR_REQUEST_CODE && result == RESULT_OK) {
-            val exportResult =
-                intent?.getParcelableExtra(EXTRA_EXPORTED_SUCCESS) as? ExportResult.Success
-            if (exportResult == null) {
-                this.exportResult?.error(
-                    "ERR_MISSING_EXPORT_RESULT",
-                    "",
-                    null
-                )
-            } else {
-                val data = prepareVideoExportData(exportResult)
-                this.exportResult?.success(data)
+        if (requestCode == VIDEO_EDITOR_REQUEST_CODE) {
+            if (result == RESULT_OK) {
+                Log.d("EDIT_VIDEO", "✅ Video editing completed successfully")
+                val exportResult =
+                    intent?.getParcelableExtra(EXTRA_EXPORTED_SUCCESS) as? ExportResult.Success
+                if (exportResult == null) {
+                    Log.e("EDIT_VIDEO", "❌ Missing export result")
+                    this.exportResult?.error(
+                        "ERR_MISSING_EXPORT_RESULT",
+                        "",
+                        null
+                    )
+                } else {
+                    val data = prepareVideoExportData(exportResult)
+                    Log.d("EDIT_VIDEO", "📤 Returning edited video data: ${data[ARG_EXPORTED_VIDEO_FILE]}")
+                    this.exportResult?.success(data)
+                }
+            } else if (result == RESULT_CANCELED) {
+                Log.d("EDIT_VIDEO", "🚫 User cancelled video editing")
+                // User cancelled video editing - return null to indicate cancellation
+                this.exportResult?.success(null)
             }
-
-        } else if (requestCode == PHOTO_EDITOR_REQUEST_CODE && result == RESULT_OK) {
-            val data = preparePhotoExportData(intent)
-            exportResult?.success(data)
+        } else if (requestCode == PHOTO_EDITOR_REQUEST_CODE) {
+            if (result == RESULT_OK) {
+                Log.d("EDIT_PHOTO", "✅ Photo editing completed successfully")
+                val data = preparePhotoExportData(intent)
+                exportResult?.success(data)
+            } else if (result == RESULT_CANCELED) {
+                Log.d("EDIT_PHOTO", "🚫 User cancelled photo editing")
+                // User cancelled photo editing - return null to indicate cancellation
+                exportResult?.success(null)
+            }
         }
     }
 
@@ -225,6 +248,18 @@ class MainActivity : FlutterFragmentActivity() {
     }
 
     private fun startVideoEditorModeTrimmer(trimmerVideo: Uri) {
+        Log.d("EDIT_VIDEO", "🎬 Opening video editor trimmer with URI: $trimmerVideo")
+        
+        // Create a safe copy of the video for editing
+        val safeEditingUri = copyVideoToSafeLocation(trimmerVideo)
+        val finalUri = safeEditingUri ?: trimmerVideo
+        
+        if (safeEditingUri != null) {
+            Log.d("EDIT_VIDEO", "✅ Created editing copy at: $safeEditingUri")
+        } else {
+            Log.w("EDIT_VIDEO", "⚠️ Failed to create editing copy, using original: $trimmerVideo")
+        }
+        
         startActivityForResult(
             VideoCreationActivity.startFromTrimmer(
                 context = this,
@@ -232,11 +267,48 @@ class MainActivity : FlutterFragmentActivity() {
                 additionalExportData = null,
                 // set TrackData object if you open VideoCreationActivity with preselected music track
                 audioTrackData = null,
-                // set Trimmer video configuration
-                predefinedVideos = arrayOf(trimmerVideo),
+                // set Trimmer video configuration with safe copy
+                predefinedVideos = arrayOf(finalUri),
                 extras = extras
             ), VIDEO_EDITOR_REQUEST_CODE
         )
+    }
+
+    private fun copyVideoToSafeLocation(originalUri: Uri): Uri? {
+        try {
+            val originalPath = originalUri.path
+            if (originalPath == null) {
+                Log.e("EDIT_VIDEO", "❌ Original URI path is null")
+                return null
+            }
+            
+            val originalFile = File(originalPath)
+            if (!originalFile.exists()) {
+                Log.e("EDIT_VIDEO", "❌ Original file does not exist: $originalPath")
+                return null
+            }
+            
+            // Use internal files directory for safe storage
+            val editingFileName = "editing_${System.currentTimeMillis()}.mp4"
+            val editingFile = File(filesDir, editingFileName)
+            
+            Log.d("EDIT_VIDEO", "📁 Copying from: $originalPath")
+            Log.d("EDIT_VIDEO", "📁 Copying to: ${editingFile.absolutePath}")
+            
+            // Remove existing file if it exists
+            if (editingFile.exists()) {
+                editingFile.delete()
+            }
+            
+            // Copy original to safe location
+            originalFile.copyTo(editingFile, overwrite = true)
+            
+            Log.d("EDIT_VIDEO", "✅ Successfully copied video for editing")
+            return Uri.fromFile(editingFile)
+        } catch (e: Exception) {
+            Log.e("EDIT_VIDEO", "❌ Failed to create editing copy: ${e.message}", e)
+            return null
+        }
     }
 
 

@@ -78,7 +78,9 @@ class _VideoPreviewSection extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ScreenSideOffset.small(
-      child: VideoPreviewCover(attachedVideoNotifier: attachedVideoNotifier),
+      child: VideoPreviewCover(
+        attachedVideoNotifier: attachedVideoNotifier,
+      ),
     );
   }
 }

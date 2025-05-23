@@ -44,7 +44,12 @@ class VideoPreviewCover extends HookConsumerWidget {
         .watch(
           videoControllerProvider(
             // local video - no need to pass authorPubkey for ion connect fallback
-            VideoControllerParams(sourcePath: filePath, looping: true),
+            VideoControllerParams(
+              sourcePath: filePath,
+              looping: true,
+              // Use name field which contains timestamp to force controller recreation
+              uniqueId: attachedVideo.name ?? '',
+            ),
           ),
         )
         .value;
@@ -108,7 +113,9 @@ class VideoPreviewCover extends HookConsumerWidget {
                   PositionedDirectional(
                     end: 12.0.s,
                     bottom: 12.0.s,
-                    child: VideoPreviewEditCover(attachedVideoNotifier: attachedVideoNotifier),
+                    child: VideoPreviewEditCover(
+                      attachedVideoNotifier: attachedVideoNotifier,
+                    ),
                   ),
                   PositionedDirectional(
                     start: 12.0.s,
