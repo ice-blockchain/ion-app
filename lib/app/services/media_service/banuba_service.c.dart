@@ -66,9 +66,13 @@ class BanubaService {
 
         return exportedPhotoFilePath as String;
       }
-
       return filePath;
-    } on PlatformException {
+    } on PlatformException catch (e) {
+      Logger.log(
+        'Start Photo Editor error',
+        error: e,
+        stackTrace: StackTrace.current,
+      );
       rethrow;
     }
   }

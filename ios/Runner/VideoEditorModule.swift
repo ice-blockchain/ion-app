@@ -19,9 +19,6 @@ class VideoEditorModule: VideoEditor {
     private var videoEditorSDK: BanubaVideoEditor?
     private var flutterResult: FlutterResult?
     
-    // Track current editing file URL (iOS: Banuba SDK auto-cleans, just for tracking)
-    private var currentEditingFileURL: URL?
-    
     // Use “true” if you want users could restore the last video editing session.
     private let restoreLastVideoEditingSession: Bool = false
     
@@ -108,7 +105,7 @@ class VideoEditorModule: VideoEditor {
         let trimmerLaunchConfig = VideoEditorLaunchConfig(
             entryPoint: .trimmer,
             hostController: controller,
-            videoItems: [safeEditingURL], // Use safe copy instead of original
+            videoItems: [safeEditingURL],
             musicTrack: nil,
             animated: true
         )
@@ -128,16 +125,11 @@ class VideoEditorModule: VideoEditor {
         let editingURL = documentsURL.appendingPathComponent(editingFileName)
         
         do {
-            // Remove existing file if it exists
             if fileManager.fileExists(atPath: editingURL.path) {
                 try fileManager.removeItem(at: editingURL)
             }
             
-            // Copy original to safe location
             try fileManager.copyItem(at: originalURL, to: editingURL)
-            
-            // Track this file for cleanup
-            currentEditingFileURL = editingURL
             return editingURL
         } catch {
             return nil
@@ -151,11 +143,8 @@ class VideoEditorModule: VideoEditor {
             return
         }
         
-        // Set delegate before each use to ensure callbacks work
         videoEditorSDK?.delegate = self
         
-        // Clear any previous session data before starting new editing session
-        // This ensures clean state but preserves files from previous cancelled sessions
         if self.restoreLastVideoEditingSession == false {
             self.videoEditorSDK?.clearSessionData()
         }
@@ -165,6 +154,7 @@ class VideoEditorModule: VideoEditor {
         videoEditorSDK?.getLicenseState(completion: { [weak self] isValid in
             guard let self else { return }
             if isValid {
+                print("✅ The license is active")
                 DispatchQueue.main.async {
                     self.videoEditorSDK?.presentVideoEditor(
                         withLaunchConfiguration: config,
@@ -176,6 +166,7 @@ class VideoEditorModule: VideoEditor {
                     self.videoEditorSDK?.clearSessionData()
                 }
                 self.videoEditorSDK = nil
+                print("❌ Use of SDK is restricted: the license is revoked or expired")
                 flutterResult(FlutterError(code: "ERR_SDK_LICENSE_REVOKED", message: "", details: nil))
             }
         })
@@ -199,7 +190,6 @@ extension VideoEditorModule {
         getTopViewController()?.present(progressView, animated: true)
         
         let manager = FileManager.default
-        // Generate unique file name with timestamp
         let timestamp = Int(Date().timeIntervalSince1970 * 1000)
         let fileName = "edited_video_\(timestamp).mov"
         let firstFileURL = manager.temporaryDirectory.appendingPathComponent(fileName)
@@ -264,11 +254,7 @@ extension VideoEditorModule {
                 print("Error while exporting video = \(String(describing: error))")
                 self.flutterResult?(FlutterError(code: "ERR_MISSING_EXPORT_RESULT", message: "", details: nil))
             }
-            
-            // Note: Banuba SDK automatically cleans up temporary files on iOS
-            // No manual cleanup needed - just reset our tracking variable
-            self.currentEditingFileURL = nil
-            
+
             // Remove strong reference to video editor sdk instance
             if self.restoreLastVideoEditingSession == false {
                 self.videoEditorSDK?.clearSessionData()
@@ -303,18 +289,8 @@ extension VideoEditorModule {
 // MARK: - BanubaVideoEditorSDKDelegate
 extension VideoEditorModule: BanubaVideoEditorDelegate {
     func videoEditorDidCancel(_ videoEditor: BanubaVideoEditor) {
-        // Don't clear session data immediately on cancel to preserve temporary files
-        // Session data will be cleared on next editor launch if needed
-        
         videoEditor.dismissVideoEditor(animated: true) {
-            // Note: Banuba SDK automatically cleans up temporary files on iOS  
-            // No manual cleanup needed - just reset our tracking variable
-            self.currentEditingFileURL = nil
-            
-            // Remove strong reference to video editor sdk instance
             self.videoEditorSDK = nil
-            
-            // Return nil to indicate cancellation
             self.flutterResult?(nil)
         }
     }

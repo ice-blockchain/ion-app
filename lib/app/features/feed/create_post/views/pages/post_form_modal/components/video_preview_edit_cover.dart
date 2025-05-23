@@ -23,11 +23,7 @@ class VideoPreviewEditCover extends ConsumerWidget {
         if (attachedVideo == null) return;
 
         try {
-          // Launch video editor for the attached video
           final editedPath = await ref.read(editMediaProvider(attachedVideo).future);
-
-          // If we reached here, Banuba returned successfully
-          // Always update the video to ensure the controller reloads
           final timestamp = DateTime.now().millisecondsSinceEpoch;
           attachedVideoNotifier.value = attachedVideo.copyWith(
             path: editedPath,
