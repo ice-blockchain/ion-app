@@ -52,6 +52,12 @@ class CoinTransactionHistoryNotifier extends _$CoinTransactionHistoryNotifier {
     _coins = ref.watch(syncedCoinsBySymbolGroupProvider(symbolGroup)).valueOrNull;
 
     _reset();
+    Logger.info(
+      '$_tag Build with the next params: symbolGroup: $symbolGroup, '
+      'network: ${_network?.id}, walletViewId: $_walletViewId, '
+      'coins: ${_coins?.map((c) => '(${c.coin.abbreviation} in ${c.coin.network.id})').toList()}, '
+      'coinWalletAddresses: $_coinWalletAddresses',
+    );
     if (_coins != null &&
         _coinWalletAddresses != null &&
         _coinWalletAddresses!.isNotEmpty &&
