@@ -97,16 +97,12 @@ class VideoEditorModule: VideoEditor {
     ) {
         self.flutterResult = flutterResult
 
-        print("[EDIT_VIDEO] 🎬 Opening video editor trimmer with URL: \(videoURL.path)")
-        
         // Create a copy of the video in Documents directory for safe editing
         let editingURL = createEditingCopy(of: videoURL)
         guard let safeEditingURL = editingURL else {
             flutterResult(FlutterError(code: "ERR_COPY_FAILED", message: "Failed to create editing copy", details: nil))
             return
         }
-        
-        print("[EDIT_VIDEO] ✅ Created editing copy at: \(safeEditingURL.path)")
 
         // Editor V2 is not available from Trimmer screen. Editor screen will be opened
         let trimmerLaunchConfig = VideoEditorLaunchConfig(
@@ -125,7 +121,6 @@ class VideoEditorModule: VideoEditor {
         
         // Use Documents directory instead of temp directory for persistence
         guard let documentsURL = fileManager.urls(for: .documentDirectory, in: .userDomainMask).first else {
-            print("[EDIT_VIDEO] ❌ Could not access Documents directory")
             return nil
         }
         
@@ -143,20 +138,8 @@ class VideoEditorModule: VideoEditor {
             
             // Track this file for cleanup
             currentEditingFileURL = editingURL
-            print("[EDIT_VIDEO] ✅ Successfully copied video for editing")
-            
-            // Immediately verify file exists after creation
-            let fileExists = fileManager.fileExists(atPath: editingURL.path)
-            print("[EDIT_VIDEO] 🔍 File exists immediately after creation: \(fileExists)")
-            if fileExists {
-                let attributes = try? fileManager.attributesOfItem(atPath: editingURL.path)
-                let fileSize = attributes?[.size] as? Int64 ?? 0
-                print("[EDIT_VIDEO] 📏 File size: \(fileSize) bytes")
-            }
-            
             return editingURL
         } catch {
-            print("[EDIT_VIDEO] ❌ Failed to create editing copy: \(error)")
             return nil
         }
     }
@@ -168,9 +151,8 @@ class VideoEditorModule: VideoEditor {
             return
         }
         
-        // CRITICAL: Set delegate before each use to ensure callbacks work
+        // Set delegate before each use to ensure callbacks work
         videoEditorSDK?.delegate = self
-        print("[EDIT_VIDEO] ✅ Delegate set to self")
         
         // Clear any previous session data before starting new editing session
         // This ensures clean state but preserves files from previous cancelled sessions
@@ -183,7 +165,6 @@ class VideoEditorModule: VideoEditor {
         videoEditorSDK?.getLicenseState(completion: { [weak self] isValid in
             guard let self else { return }
             if isValid {
-                print("[EDIT_VIDEO] ✅ The license is active")
                 DispatchQueue.main.async {
                     self.videoEditorSDK?.presentVideoEditor(
                         withLaunchConfiguration: config,
@@ -195,7 +176,6 @@ class VideoEditorModule: VideoEditor {
                     self.videoEditorSDK?.clearSessionData()
                 }
                 self.videoEditorSDK = nil
-                print("[EDIT_VIDEO] ❌ Use of SDK is restricted: the license is revoked or expired")
                 flutterResult(FlutterError(code: "ERR_SDK_LICENSE_REVOKED", message: "", details: nil))
             }
         })
@@ -262,7 +242,6 @@ extension VideoEditorModule {
     }
     
     private func completeExport(videoUrl: URL, error: Error?, coverImage: UIImage?) {
-        print("[EDIT_VIDEO] 📤 completeExport called")
         videoEditorSDK?.dismissVideoEditor(animated: true) {
             let success = error == nil
             if success {
@@ -288,7 +267,6 @@ extension VideoEditorModule {
             
             // Note: Banuba SDK automatically cleans up temporary files on iOS
             // No manual cleanup needed - just reset our tracking variable
-            print("[EDIT_VIDEO] 📤 Banuba SDK automatically cleaned up editing file")
             self.currentEditingFileURL = nil
             
             // Remove strong reference to video editor sdk instance
@@ -325,14 +303,12 @@ extension VideoEditorModule {
 // MARK: - BanubaVideoEditorSDKDelegate
 extension VideoEditorModule: BanubaVideoEditorDelegate {
     func videoEditorDidCancel(_ videoEditor: BanubaVideoEditor) {
-        print("[EDIT_VIDEO] 🚫 videoEditorDidCancel called")
         // Don't clear session data immediately on cancel to preserve temporary files
         // Session data will be cleared on next editor launch if needed
         
         videoEditor.dismissVideoEditor(animated: true) {
             // Note: Banuba SDK automatically cleans up temporary files on iOS  
             // No manual cleanup needed - just reset our tracking variable
-            print("[EDIT_VIDEO] 🚫 Banuba SDK automatically cleaned up editing file after cancel")
             self.currentEditingFileURL = nil
             
             // Remove strong reference to video editor sdk instance
@@ -344,7 +320,6 @@ extension VideoEditorModule: BanubaVideoEditorDelegate {
     }
     
     func videoEditorDone(_ videoEditor: BanubaVideoEditor) {
-        print("[EDIT_VIDEO] ✅ videoEditorDone called - starting export")
         exportVideo()
     }
 }
