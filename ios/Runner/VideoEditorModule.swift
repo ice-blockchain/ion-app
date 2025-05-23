@@ -19,6 +19,9 @@ class VideoEditorModule: VideoEditor {
     private var videoEditorSDK: BanubaVideoEditor?
     private var flutterResult: FlutterResult?
     
+    // Track current editing file URL (iOS: Banuba SDK auto-cleans, just for tracking)
+    private var currentEditingFileURL: URL?
+    
     // Use “true” if you want users could restore the last video editing session.
     private let restoreLastVideoEditingSession: Bool = false
     
@@ -137,7 +140,20 @@ class VideoEditorModule: VideoEditor {
             
             // Copy original to safe location
             try fileManager.copyItem(at: originalURL, to: editingURL)
+            
+            // Track this file for cleanup
+            currentEditingFileURL = editingURL
             print("[EDIT_VIDEO] ✅ Successfully copied video for editing")
+            
+            // Immediately verify file exists after creation
+            let fileExists = fileManager.fileExists(atPath: editingURL.path)
+            print("[EDIT_VIDEO] 🔍 File exists immediately after creation: \(fileExists)")
+            if fileExists {
+                let attributes = try? fileManager.attributesOfItem(atPath: editingURL.path)
+                let fileSize = attributes?[.size] as? Int64 ?? 0
+                print("[EDIT_VIDEO] 📏 File size: \(fileSize) bytes")
+            }
+            
             return editingURL
         } catch {
             print("[EDIT_VIDEO] ❌ Failed to create editing copy: \(error)")
@@ -145,11 +161,16 @@ class VideoEditorModule: VideoEditor {
         }
     }
     
+    
     func checkLicenseAndStartVideoEditor(with config: VideoEditorLaunchConfig, flutterResult: @escaping FlutterResult) {
         if videoEditorSDK == nil {
             flutterResult(FlutterError(code: AppDelegate.errEditorNotInitialized, message: "", details: nil))
             return
         }
+        
+        // CRITICAL: Set delegate before each use to ensure callbacks work
+        videoEditorSDK?.delegate = self
+        print("[EDIT_VIDEO] ✅ Delegate set to self")
         
         // Clear any previous session data before starting new editing session
         // This ensures clean state but preserves files from previous cancelled sessions
@@ -241,6 +262,7 @@ extension VideoEditorModule {
     }
     
     private func completeExport(videoUrl: URL, error: Error?, coverImage: UIImage?) {
+        print("[EDIT_VIDEO] 📤 completeExport called")
         videoEditorSDK?.dismissVideoEditor(animated: true) {
             let success = error == nil
             if success {
@@ -263,6 +285,11 @@ extension VideoEditorModule {
                 print("Error while exporting video = \(String(describing: error))")
                 self.flutterResult?(FlutterError(code: "ERR_MISSING_EXPORT_RESULT", message: "", details: nil))
             }
+            
+            // Note: Banuba SDK automatically cleans up temporary files on iOS
+            // No manual cleanup needed - just reset our tracking variable
+            print("[EDIT_VIDEO] 📤 Banuba SDK automatically cleaned up editing file")
+            self.currentEditingFileURL = nil
             
             // Remove strong reference to video editor sdk instance
             if self.restoreLastVideoEditingSession == false {
@@ -298,10 +325,16 @@ extension VideoEditorModule {
 // MARK: - BanubaVideoEditorSDKDelegate
 extension VideoEditorModule: BanubaVideoEditorDelegate {
     func videoEditorDidCancel(_ videoEditor: BanubaVideoEditor) {
+        print("[EDIT_VIDEO] 🚫 videoEditorDidCancel called")
         // Don't clear session data immediately on cancel to preserve temporary files
         // Session data will be cleared on next editor launch if needed
         
         videoEditor.dismissVideoEditor(animated: true) {
+            // Note: Banuba SDK automatically cleans up temporary files on iOS  
+            // No manual cleanup needed - just reset our tracking variable
+            print("[EDIT_VIDEO] 🚫 Banuba SDK automatically cleaned up editing file after cancel")
+            self.currentEditingFileURL = nil
+            
             // Remove strong reference to video editor sdk instance
             self.videoEditorSDK = nil
             
@@ -311,6 +344,7 @@ extension VideoEditorModule: BanubaVideoEditorDelegate {
     }
     
     func videoEditorDone(_ videoEditor: BanubaVideoEditor) {
+        print("[EDIT_VIDEO] ✅ videoEditorDone called - starting export")
         exportVideo()
     }
 }
