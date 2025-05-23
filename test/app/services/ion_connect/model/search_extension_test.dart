@@ -16,7 +16,7 @@ void main() {
         currentPubkey: testPubkey,
       );
 
-      expect(extensions.extensions.length, 7);
+      expect(extensions.extensions.length, 8);
       expect(extensions.toString().contains('test_pubkey'), isTrue);
       expect(extensions.toString().contains('kind6400'), isTrue);
     });
@@ -28,7 +28,7 @@ void main() {
         forKind: ArticleEntity.kind,
       );
 
-      expect(extensions.extensions.length, 7);
+      expect(extensions.extensions.length, 8);
       expect(extensions.toString().contains('kind30023'), isTrue);
     });
   });
@@ -78,6 +78,11 @@ void main() {
     test('ReactionsCountSearchExtension formats query correctly', () {
       final extension = ReactionsCountSearchExtension();
       expect(extension.toString(), 'include:dependencies:kind30175>kind6400+kind7+group+content');
+    });
+
+    test('PollVotesCountSearchExtension formats query correctly', () {
+      final extension = PollVotesCountSearchExtension();
+      expect(extension.toString(), 'include:dependencies:kind30175>kind6400+kind1754+group+e');
     });
   });
 
