@@ -291,7 +291,7 @@ class TransactionsDao extends DatabaseAccessor<WalletsDatabase> with _$Transacti
         .getSingleOrNull();
   }
 
-  Stream<TransactionData?> watchTransactionByEventId(String eventId) {
+  Stream<TransactionData?> watchTransactionByEventId(String eventId) async* {
     final transactionCoinAlias = alias(coinsTable, 'transactionCoin');
     final nativeCoinAlias = alias(coinsTable, 'nativeCoin');
 
@@ -310,7 +310,7 @@ class TransactionsDao extends DatabaseAccessor<WalletsDatabase> with _$Transacti
       ),
     ]);
 
-    return query
+    yield* query
         .map(
           (row) => _mapRowToDomainModel(
             row,
