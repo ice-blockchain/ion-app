@@ -39,7 +39,7 @@ class VideoPreviewEditCover extends ConsumerWidget {
             // User cancelled editing - do nothing
           } else {
             Logger.log(
-              '[EDIT_VIDEO] Failed to edit video',
+              'Failed to edit video',
               error: e,
               stackTrace: stackTrace,
             );
