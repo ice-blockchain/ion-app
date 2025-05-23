@@ -1,9 +1,11 @@
 // SPDX-License-Identifier: ice License 1.0
 
 import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
+import 'package:flutter/services.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/extensions/extensions.dart';
+import 'package:ion/app/services/logger/logger.dart';
+import 'package:ion/app/services/media_service/banuba_service.c.dart';
 import 'package:ion/app/services/media_service/media_service.c.dart';
 
 class VideoPreviewEditCover extends ConsumerWidget {
@@ -17,7 +19,33 @@ class VideoPreviewEditCover extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     return GestureDetector(
-      onTap: () => context.pop(),
+      onTap: () async {
+        final attachedVideo = attachedVideoNotifier.value;
+        if (attachedVideo == null) return;
+
+        try {
+          // Launch video editor for the attached video
+          final editedPath = await ref.read(editMediaProvider(attachedVideo).future);
+          
+          // If we reached here, Banuba returned successfully
+          // Always update the video to ensure the controller reloads
+          final timestamp = DateTime.now().millisecondsSinceEpoch;
+          attachedVideoNotifier.value = attachedVideo.copyWith(
+            path: editedPath,
+            name: 'edited_$timestamp',
+          );
+        } catch (e, stackTrace) {
+          if (e is PlatformException && e.code == 'USER_CANCELLED') {
+            // User cancelled editing - do nothing
+          } else {
+            Logger.log(
+              '[EDIT_VIDEO] Failed to edit video',
+              error: e,
+              stackTrace: stackTrace,
+            );
+          }
+        }
+      },
       child: DecoratedBox(
         decoration: BoxDecoration(
           color: context.theme.appColors.backgroundSheet,
