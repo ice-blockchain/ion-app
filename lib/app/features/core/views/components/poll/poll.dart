@@ -55,30 +55,23 @@ class Poll extends ConsumerWidget {
                 ),
               ),
             ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                PollLengthButton(
-                  onPollLengthPress: () {
-                    _showPollLengthTimeModal(
-                      context,
-                      draftPoll.lengthDays,
-                      draftPoll.lengthHours,
-                      (newDay, newHour) {
-                        notifier
-                          ..setLengthDays(newDay)
-                          ..setLengthHours(newHour);
-                      },
-                    );
-                  },
-                ),
-                Text(
-                  getFormattedPollLength(context, draftPoll.lengthDays, draftPoll.lengthHours),
-                  style: context.theme.appTextThemes.caption.copyWith(
-                    color: context.theme.appColors.primaryAccent,
+            GestureDetector(
+              behavior: HitTestBehavior.opaque,
+              onTap: () => _handlePollLengthTap(context, ref),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  PollLengthButton(
+                    onPollLengthPress: () => _handlePollLengthTap(context, ref),
                   ),
-                ),
-              ],
+                  Text(
+                    getFormattedPollLength(context, draftPoll.lengthDays, draftPoll.lengthHours),
+                    style: context.theme.appTextThemes.caption.copyWith(
+                      color: context.theme.appColors.primaryAccent,
+                    ),
+                  ),
+                ],
+              ),
             ),
           ],
         ),
@@ -87,6 +80,22 @@ class Poll extends ConsumerWidget {
             onClosePress: onRemove!,
           ),
       ],
+    );
+  }
+
+  void _handlePollLengthTap(BuildContext context, WidgetRef ref) {
+    final draftPoll = ref.read(pollDraftNotifierProvider);
+    final notifier = ref.read(pollDraftNotifierProvider.notifier);
+
+    _showPollLengthTimeModal(
+      context,
+      draftPoll.lengthDays,
+      draftPoll.lengthHours,
+      (newDay, newHour) {
+        notifier
+          ..setLengthDays(newDay)
+          ..setLengthHours(newHour);
+      },
     );
   }
 
