@@ -49,10 +49,7 @@ class BanubaService {
       );
 
       if (result == null) {
-        throw PlatformException(
-          code: 'USER_CANCELLED',
-          message: 'User cancelled photo editing',
-        );
+        return filePath;
       }
 
       if (result is Map) {
@@ -69,9 +66,9 @@ class BanubaService {
 
         return exportedPhotoFilePath as String;
       }
-      
+
       return filePath;
-    } on PlatformException catch (e) {
+    } on PlatformException {
       rethrow;
     }
   }
@@ -87,24 +84,19 @@ class BanubaService {
         methodStartVideoEditorTrimmer,
         filePath,
       );
-      
+
       if (result == null) {
-        throw PlatformException(
-          code: 'USER_CANCELLED',
-          message: 'User cancelled video editing',
-        );
+        return filePath;
       }
-      
+
       if (result is Map) {
         final exportedVideoFilePath = result[argExportedVideoFile];
         if (exportedVideoFilePath != null) {
           return exportedVideoFilePath as String;
         }
       }
-      
+
       return filePath;
-    } on PlatformException catch (e) {
-      rethrow;
     } catch (e) {
       return filePath;
     }
@@ -120,11 +112,11 @@ BanubaService banubaService(Ref ref) {
 Future<String> editMedia(Ref ref, MediaFile mediaFile) async {
   // Check if the path is already a file path or an asset ID
   String? filePath;
-  
+
   // Check if it's an absolute file path (starts with '/' for both iOS and Android)
   // or if the file exists at the given path
   final isAbsolutePath = mediaFile.path.startsWith('/') || File(mediaFile.path).existsSync();
-  
+
   if (isAbsolutePath) {
     filePath = mediaFile.path;
   } else {

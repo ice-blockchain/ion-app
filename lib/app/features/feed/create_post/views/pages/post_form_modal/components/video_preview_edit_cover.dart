@@ -1,7 +1,6 @@
 // SPDX-License-Identifier: ice License 1.0
 
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/services/logger/logger.dart';
@@ -26,7 +25,7 @@ class VideoPreviewEditCover extends ConsumerWidget {
         try {
           // Launch video editor for the attached video
           final editedPath = await ref.read(editMediaProvider(attachedVideo).future);
-          
+
           // If we reached here, Banuba returned successfully
           // Always update the video to ensure the controller reloads
           final timestamp = DateTime.now().millisecondsSinceEpoch;
@@ -35,15 +34,11 @@ class VideoPreviewEditCover extends ConsumerWidget {
             name: 'edited_$timestamp',
           );
         } catch (e, stackTrace) {
-          if (e is PlatformException && e.code == 'USER_CANCELLED') {
-            // User cancelled editing - do nothing
-          } else {
-            Logger.log(
-              'Failed to edit video',
-              error: e,
-              stackTrace: stackTrace,
-            );
-          }
+          Logger.log(
+            'Video editing failed or cancelled',
+            error: e,
+            stackTrace: stackTrace,
+          );
         }
       },
       child: DecoratedBox(
