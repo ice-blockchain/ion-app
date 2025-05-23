@@ -215,11 +215,11 @@ class _MediaBottomOverlay extends ConsumerWidget {
                     await ref.read(globalMuteNotifierProvider.notifier).toggle();
                   },
                   child: isMuted
-                      ? Assets.svg.iconChannelUnmute.icon(
+                      ? Assets.svg.iconChannelMute.icon(
                           size: 24.0.s,
                           color: context.theme.appColors.onPrimaryAccent,
                         )
-                      : Assets.svg.iconChannelMute.icon(
+                      : Assets.svg.iconChannelUnmute.icon(
                           size: 24.0.s,
                           color: context.theme.appColors.onPrimaryAccent,
                         ),
