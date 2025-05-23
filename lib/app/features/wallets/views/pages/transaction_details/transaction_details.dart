@@ -28,6 +28,8 @@ import 'package:ion/app/router/components/sheet_content/sheet_content.dart';
 import 'package:ion/app/services/share/share.dart';
 import 'package:ion/generated/assets.gen.dart';
 
+const _abbreviationsToExclude = {'TON', 'ION', 'ICE'};
+
 class TransactionDetailsPage extends ConsumerWidget {
   const TransactionDetailsPage({
     required this.exploreRouteLocationBuilder,
@@ -52,6 +54,12 @@ class TransactionDetailsPage extends ConsumerWidget {
     final currentUserAddress = transactionData.type.isSend
         ? transactionData.senderAddress
         : transactionData.receiverAddress;
+
+    final assetAbbreviation =
+        transactionData.assetData.mapOrNull(coin: (value) => value.coinsGroup)?.abbreviation;
+
+    final disableExplorer = _abbreviationsToExclude.contains(assetAbbreviation) &&
+        transactionData.status != TransactionStatus.confirmed;
 
     return SheetContent(
       body: Column(
@@ -177,6 +185,7 @@ class TransactionDetailsPage extends ConsumerWidget {
                             SizedBox(height: 15.0.s),
                           ],
                           TransactionDetailsActions(
+                            disableExplorer: disableExplorer,
                             onViewOnExplorer: () {
                               final url = transactionData.transactionExplorerUrl;
                               final location = exploreRouteLocationBuilder(url);
