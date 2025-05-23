@@ -31,6 +31,7 @@ class SearchExtensions {
       GenericRepostsCountSearchExtension(forKind: forKind),
       QuotesCountSearchExtension(forKind: forKind),
       ReactionsCountSearchExtension(forKind: forKind),
+      PollVotesCountSearchExtension(forKind: forKind),
       ReplySampleSearchExtension(currentPubkey: currentPubkey, forKind: forKind),
       GenericRepostSampleSearchExtension(currentPubkey: currentPubkey, forKind: forKind),
       ReactionsSearchExtension(currentPubkey: currentPubkey, forKind: forKind),
@@ -117,6 +118,17 @@ class ReactionsCountSearchExtension extends IncludeSearchExtension {
 
   @override
   final String query = 'kind6400+kind7+group+content';
+}
+
+/// For every kind [forKind] that the subscription finds also include the count of poll votes that it has
+class PollVotesCountSearchExtension extends IncludeSearchExtension {
+  PollVotesCountSearchExtension({this.forKind = ModifiablePostEntity.kind});
+
+  @override
+  final int forKind;
+
+  @override
+  final String query = 'kind6400+kind1754+group+e';
 }
 
 /// For every kind [forKind] that the subscription finds also include 1 root/not-root replay

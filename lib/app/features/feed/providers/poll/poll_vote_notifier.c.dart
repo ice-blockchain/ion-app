@@ -54,7 +54,6 @@ extension PollVoteDataX on PollVoteData {
       kind: 1754,
       tags: [
         ...tags,
-        ['e', pollEventId],
       ],
       content: jsonEncode(selectedOptionIndexes),
     );
@@ -87,15 +86,16 @@ class PollVoteNotifier extends _$PollVoteNotifier {
       }
 
       final pollEventId = pollEvent.id;
-
       final pollVoteData = PollVoteData(
         pollEventId: pollEventId,
         selectedOptionIndexes: [int.parse(optionId)],
       );
+
       final voteEvent = await pollVoteData.toEventMessage(
         signer,
         tags: [
           ['b', masterPubkey],
+          postReference.toTag(),
         ],
       );
 
