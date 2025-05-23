@@ -56,7 +56,11 @@ Future<NetworkFeeInformation?> networkFee(
 
   if (nativeCoin == null) {
     Logger.error('Cannot load fees info. nativeCoin is null.');
-    return null;
+    return NetworkFeeInformation(
+      networkNativeToken: networkNativeToken,
+      sendableAsset: sendableAsset,
+      networkFeeOptions: [],
+    );
   }
 
   final networkFeeOptions = _buildNetworkFeeOptions(
