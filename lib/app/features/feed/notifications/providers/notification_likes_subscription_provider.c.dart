@@ -28,7 +28,7 @@ Future<void> notificationLikesSubscription(Ref ref) async {
     tags: {
       '#p': [currentPubkey],
     },
-    since: DateTime.now().subtract(const Duration(seconds: 2)),
+    since: DateTime.now().subtract(const Duration(microseconds: 2)),
   );
 
   await ref.watch(entitiesSyncerNotifierProvider('notifications-likes').notifier).syncEntities(
