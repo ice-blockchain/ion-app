@@ -47,7 +47,6 @@ class VideoPreviewCover extends HookConsumerWidget {
             VideoControllerParams(
               sourcePath: filePath,
               looping: true,
-              // Use name field which contains timestamp to force controller recreation
               uniqueId: attachedVideo.name ?? '',
             ),
           ),
@@ -113,9 +112,7 @@ class VideoPreviewCover extends HookConsumerWidget {
                   PositionedDirectional(
                     end: 12.0.s,
                     bottom: 12.0.s,
-                    child: VideoPreviewEditCover(
-                      attachedVideoNotifier: attachedVideoNotifier,
-                    ),
+                    child: VideoPreviewEditCover(attachedVideoNotifier: attachedVideoNotifier),
                   ),
                   PositionedDirectional(
                     start: 12.0.s,

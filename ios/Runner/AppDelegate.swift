@@ -163,7 +163,6 @@ class AudioFocusHandler: NSObject {
 
             channel.setMethodCallHandler { methodCall, result in
                 let call = methodCall.method
-                print("[EDIT_VIDEO] 🔍 iOS AppDelegate received method call: \(call)")
                 switch call {
                 case AppDelegate.methodInitPhotoEditor:
                     guard let token = methodCall.arguments as? String else {
@@ -200,23 +199,20 @@ class AudioFocusHandler: NSObject {
                                         flutterResult: result
                                     )
                 case AppDelegate.methodStartVideoEditorTrimmer:
-                                    print("[EDIT_VIDEO] 📱 iOS received methodStartVideoEditorTrimmer call")
                                     let trimmerVideoFilePath = methodCall.arguments as? String
-                                    print("[EDIT_VIDEO] 📱 Trimmer video file path: \(String(describing: trimmerVideoFilePath))")
-                                    
+
                                     if let videoFilePath = trimmerVideoFilePath {
-                                        print("[EDIT_VIDEO] 📱 About to call openVideoEditorTrimmer with path: \(videoFilePath)")
                                         videoEditor.openVideoEditorTrimmer(
                                             fromViewController: controller,
                                             videoURL: URL(fileURLWithPath: videoFilePath),
                                             flutterResult: result
                                         )
                                     } else {
-                                        print("[EDIT_VIDEO] ❌ Cannot start video editor in trimmer mode: missing or invalid video!")
+                                        print("Cannot start video editor in trimmer mode: missing or invalid video!")
                                         result(FlutterError(code: "ERR_START_TRIMMER_MISSING_VIDEO", message: "", details: nil))
                                     }
                 default:
-                    print("[EDIT_VIDEO] ❌ Unknown Flutter method called: \(methodCall.method)")
+                    print("Flutter method is not implemented on platform.")
                     result(FlutterMethodNotImplemented)
                 }
             }

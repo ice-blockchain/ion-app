@@ -57,7 +57,7 @@ class MainActivity : FlutterFragmentActivity() {
 
     private var exportResult: MethodChannel.Result? = null
     
-    // Track current editing file for cleanup (Android: Manual cleanup required)
+    // Track current editing file for cleanup
     private var currentEditingFile: File? = null
 
     private var videoEditorSDK: BanubaVideoEditor? = null
@@ -198,12 +198,9 @@ class MainActivity : FlutterFragmentActivity() {
                     this.exportResult?.success(data)
                 }
                 
-                // Clean up temporary editing file
                 cleanupCurrentEditingFile()
             } else if (result == RESULT_CANCELED) {
-                // Clean up temporary editing file
                 cleanupCurrentEditingFile()
-                
                 // User cancelled video editing - return null to indicate cancellation
                 this.exportResult?.success(null)
             }
@@ -254,7 +251,7 @@ class MainActivity : FlutterFragmentActivity() {
                 additionalExportData = null,
                 // set TrackData object if you open VideoCreationActivity with preselected music track
                 audioTrackData = null,
-                // set Trimmer video configuration with safe copy
+                // set Trimmer video configuration
                 predefinedVideos = arrayOf(finalUri),
                 extras = extras
             ), VIDEO_EDITOR_REQUEST_CODE
@@ -277,7 +274,6 @@ class MainActivity : FlutterFragmentActivity() {
             val editingFileName = "editing_${System.currentTimeMillis()}.mp4"
             val editingFile = File(filesDir, editingFileName)
             
-            // Remove existing file if it exists
             if (editingFile.exists()) {
                 editingFile.delete()
             }
