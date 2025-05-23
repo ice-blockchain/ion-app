@@ -89,7 +89,7 @@ Future<IonConnectEntity?> ionConnectEntity(
     throw const CurrentUserNotFoundException();
   }
   if (cache) {
-    final entity = ref.watch(ionConnectSyncEntityProvider(eventReference: eventReference));
+    final entity = ref.watch(ionConnectCachedEntityProvider(eventReference: eventReference));
     if (entity != null) {
       return entity;
     }

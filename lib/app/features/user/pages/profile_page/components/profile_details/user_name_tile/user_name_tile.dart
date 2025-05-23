@@ -3,8 +3,10 @@
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/extensions/extensions.dart';
+import 'package:ion/app/features/user/providers/badges_notifier.c.dart';
 import 'package:ion/app/features/user/providers/user_metadata_provider.c.dart';
 import 'package:ion/app/utils/username.dart';
+import 'package:ion/generated/assets.gen.dart';
 
 class UserNameTile extends ConsumerWidget {
   const UserNameTile({
@@ -19,6 +21,7 @@ class UserNameTile extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final userMetadataValue = ref.watch(userMetadataProvider(pubkey)).valueOrNull;
+    final isUserVerified = ref.watch(isUserVerifiedProvider(pubkey)).valueOrNull.falseOrValue;
 
     if (userMetadataValue == null) {
       return const SizedBox.shrink();
@@ -38,6 +41,11 @@ class UserNameTile extends ConsumerWidget {
                 ),
               ),
             ),
+            if (isUserVerified)
+              Padding(
+                padding: EdgeInsetsDirectional.only(start: 4.0.s),
+                child: Assets.svg.iconBadgeVerify.icon(size: 16.0.s),
+              ),
           ],
         ),
         SizedBox(height: 3.0.s),

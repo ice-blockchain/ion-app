@@ -2,7 +2,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:ion/app/components/list_item/list_item.dart';
+import 'package:ion/app/components/list_item/badges_user_list_item.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/feed/data/models/entities/modifiable_post_data.c.dart';
 import 'package:ion/app/features/feed/stories/views/components/story_viewer/components/header/header.dart';
@@ -48,7 +48,7 @@ class StoryViewerHeader extends ConsumerWidget {
           end: 22.0.s,
           child: GestureDetector(
             onTap: () => ProfileRoute(pubkey: currentPost.masterPubkey).push<void>(context),
-            child: ListItem.user(
+            child: BadgesUserListItem(
               pubkey: userMetadata.masterPubkey,
               title: Text(
                 userMetadata.data.displayName,

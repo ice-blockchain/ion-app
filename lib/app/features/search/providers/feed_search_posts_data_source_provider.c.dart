@@ -131,6 +131,7 @@ List<RequestFilter> _buildFilters({
             forKind: ModifiablePostEntity.kind,
             includeKind: UserMetadataEntity.kind,
           ),
+          ProfileBadgesSearchExtension(forKind: ModifiablePostEntity.kind),
           GenericIncludeSearchExtension(
             forKind: ModifiablePostEntity.kind,
             includeKind: BlockListEntity.kind,
@@ -149,6 +150,7 @@ List<RequestFilter> _buildFilters({
             forKind: PostEntity.kind,
             includeKind: UserMetadataEntity.kind,
           ),
+          ProfileBadgesSearchExtension(forKind: PostEntity.kind),
           GenericIncludeSearchExtension(
             forKind: PostEntity.kind,
             includeKind: BlockListEntity.kind,
@@ -167,6 +169,7 @@ List<RequestFilter> _buildFilters({
             forKind: ArticleEntity.kind,
             includeKind: UserMetadataEntity.kind,
           ),
+          ProfileBadgesSearchExtension(forKind: ArticleEntity.kind),
           GenericIncludeSearchExtension(
             forKind: ArticleEntity.kind,
             includeKind: BlockListEntity.kind,

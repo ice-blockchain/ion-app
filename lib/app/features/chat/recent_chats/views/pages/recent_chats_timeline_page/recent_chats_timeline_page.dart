@@ -21,6 +21,7 @@ import 'package:ion/app/features/chat/recent_chats/providers/archived_conversati
 import 'package:ion/app/features/chat/recent_chats/views/components/recent_chat_skeleton/recent_chat_skeleton.dart';
 import 'package:ion/app/features/chat/recent_chats/views/components/recent_chat_tile/archive_chat_tile.dart';
 import 'package:ion/app/features/chat/recent_chats/views/components/recent_chat_tile/recent_chat_tile.dart';
+import 'package:ion/app/features/user/providers/badges_notifier.c.dart';
 import 'package:ion/app/features/user/providers/user_metadata_provider.c.dart';
 import 'package:ion/app/hooks/use_on_init.dart';
 import 'package:ion/app/router/app_routes.c.dart';
@@ -236,6 +237,9 @@ class E2eeRecentChatTile extends ConsumerWidget {
       conversation.latestMessage!,
     ).toEventReference();
 
+    final isUserVerified =
+        ref.watch(isUserVerifiedProvider(receiverPubkey)).valueOrNull.falseOrValue;
+
     return RecentChatTile(
       defaultAvatar: null,
       conversation: conversation,
@@ -246,6 +250,7 @@ class E2eeRecentChatTile extends ConsumerWidget {
       unreadMessagesCount: unreadMessagesCount.valueOrNull ?? 0,
       lastMessageContent: conversation.latestMessage?.content ?? '',
       lastMessageAt: conversation.latestMessage?.createdAt ?? conversation.joinedAt,
+      isVerified: isUserVerified,
       onTap: () {
         ConversationRoute(receiverPubKey: receiverPubkey).push<void>(context);
       },

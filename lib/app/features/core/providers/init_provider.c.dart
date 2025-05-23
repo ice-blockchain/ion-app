@@ -17,6 +17,7 @@ import 'package:ion/app/features/feed/providers/feed_bookmarks_notifier.c.dart';
 import 'package:ion/app/features/force_update/providers/force_update_provider.c.dart';
 import 'package:ion/app/features/push_notifications/background/firebase_messaging_background_service.dart';
 import 'package:ion/app/features/push_notifications/providers/pushes_init_provider.c.dart';
+import 'package:ion/app/features/user/providers/badges_notifier.c.dart';
 import 'package:ion/app/features/user/providers/user_relays_sync_provider.c.dart';
 import 'package:ion/app/features/wallets/providers/coins_sync_provider.c.dart';
 import 'package:ion/app/features/wallets/providers/transactions_subscription_provider.c.dart';
@@ -60,6 +61,7 @@ Future<void> initApp(Ref ref) async {
     ..listen(userRelaysSyncProvider, noop)
     ..listen(userChatRelaysSyncProvider, noop)
     ..listen(feedBookmarksSyncProvider, noop)
+    ..listen(currentUserBadgesSyncProvider, noop)
     ..listen(pushesInitProvider, noop);
 
   initFirebaseMessagingBackgroundHandler();

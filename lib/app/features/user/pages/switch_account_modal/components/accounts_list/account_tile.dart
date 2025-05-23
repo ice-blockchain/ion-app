@@ -2,6 +2,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:ion/app/components/list_item/badges_user_list_item.dart';
 import 'package:ion/app/components/list_item/list_item.dart';
 import 'package:ion/app/components/skeleton/skeleton.dart';
 import 'package:ion/app/extensions/extensions.dart';
@@ -35,7 +36,7 @@ class AccountsTile extends ConsumerWidget {
       return Skeleton(child: ListItem());
     }
 
-    return ListItem.user(
+    return BadgesUserListItem(
       isSelected: isCurrentUser,
       onTap: () {
         if (!isCurrentUser) {

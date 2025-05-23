@@ -2,7 +2,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:ion/app/components/list_item/list_item.dart';
+import 'package:ion/app/components/list_item/badges_user_list_item.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/feed/views/components/replying_to/replying_to.dart';
 import 'package:ion/app/features/user/providers/user_metadata_provider.c.dart';
@@ -28,7 +28,7 @@ class ReplyAuthorHeader extends ConsumerWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
-        ListItem.user(
+        BadgesUserListItem(
           title: Text(currentUserMetadata.data.displayName),
           subtitle: Text(prefixUsername(username: currentUserMetadata.data.name, context: context)),
           pubkey: currentUserMetadata.masterPubkey,

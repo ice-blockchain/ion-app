@@ -3,6 +3,7 @@
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/components/card/rounded_card.dart';
+import 'package:ion/app/components/list_item/badges_user_list_item.dart';
 import 'package:ion/app/components/list_item/list_item.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/user/providers/user_metadata_provider.c.dart';
@@ -30,7 +31,7 @@ class TransactionParticipant extends ConsumerWidget {
       return RoundedCard.filled(
         child: Column(
           children: [
-            ListItem.user(
+            BadgesUserListItem(
               title: Text(userMetadata.data.displayName),
               subtitle: Text(userMetadata.data.name),
               pubkey: userMetadata.masterPubkey,

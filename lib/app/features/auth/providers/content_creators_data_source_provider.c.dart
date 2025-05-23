@@ -5,6 +5,7 @@ import 'dart:async';
 import 'package:ion/app/features/ion_connect/ion_connect.dart';
 import 'package:ion/app/features/ion_connect/model/action_source.c.dart';
 import 'package:ion/app/features/ion_connect/model/event_reference.c.dart';
+import 'package:ion/app/features/ion_connect/model/search_extension.dart';
 import 'package:ion/app/features/ion_connect/providers/ion_connect_notifier.c.dart';
 import 'package:ion/app/features/user/model/user_metadata.c.dart';
 import 'package:ion/app/services/ion_identity/ion_identity_client_provider.c.dart';
@@ -63,6 +64,7 @@ class ContentCreators extends _$ContentCreators {
                 RequestFilter(
                   kinds: const [UserMetadataEntity.kind],
                   authors: [creator.masterPubKey],
+                  search: ProfileBadgesSearchExtension(forKind: UserMetadataEntity.kind).toString(),
                   limit: 1,
                 ),
               );

@@ -45,6 +45,7 @@ List<EntitiesDataSource>? feedTrendingVideosDataSource(Ref ref) {
                   forKind: ModifiablePostEntity.kind,
                   includeKind: UserMetadataEntity.kind,
                 ),
+                ProfileBadgesSearchExtension(forKind: ModifiablePostEntity.kind),
                 GenericIncludeSearchExtension(
                   forKind: ModifiablePostEntity.kind,
                   includeKind: BlockListEntity.kind,

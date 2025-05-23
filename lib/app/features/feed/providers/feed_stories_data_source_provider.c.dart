@@ -33,6 +33,7 @@ List<EntitiesDataSource>? feedStoriesDataSource(Ref ref) {
         forKind: ModifiablePostEntity.kind,
         includeKind: UserMetadataEntity.kind,
       ),
+      ProfileBadgesSearchExtension(forKind: ModifiablePostEntity.kind),
       GenericIncludeSearchExtension(
         forKind: ModifiablePostEntity.kind,
         includeKind: BlockListEntity.kind,
@@ -50,6 +51,7 @@ List<EntitiesDataSource>? feedStoriesDataSource(Ref ref) {
         forKind: ModifiablePostEntity.kind,
         includeKind: UserMetadataEntity.kind,
       ),
+      ProfileBadgesSearchExtension(forKind: ModifiablePostEntity.kind),
       GenericIncludeSearchExtension(
         forKind: ModifiablePostEntity.kind,
         includeKind: BlockListEntity.kind,

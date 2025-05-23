@@ -57,6 +57,7 @@ EntitiesDataSource _buildArticlesDataSource({
               forKind: ArticleEntity.kind,
               includeKind: UserMetadataEntity.kind,
             ),
+            ProfileBadgesSearchExtension(forKind: ArticleEntity.kind),
             GenericIncludeSearchExtension(
               forKind: ArticleEntity.kind,
               includeKind: BlockListEntity.kind,
