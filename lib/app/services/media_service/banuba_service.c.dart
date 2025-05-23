@@ -48,10 +48,6 @@ class BanubaService {
         {'imagePath': filePath},
       );
 
-      if (result == null) {
-        return filePath;
-      }
-
       if (result is Map) {
         final exportedPhotoFilePath = result[argExportedPhotoFile];
 
@@ -78,32 +74,21 @@ class BanubaService {
   }
 
   Future<String> editVideo(String filePath) async {
-    try {
-      await platformChannel.invokeMethod(
-        methodInitVideoEditor,
-        env.get<String>(EnvVariable.BANUBA_TOKEN),
-      );
+    await platformChannel.invokeMethod(
+      methodInitVideoEditor,
+      env.get<String>(EnvVariable.BANUBA_TOKEN),
+    );
 
-      final result = await platformChannel.invokeMethod(
-        methodStartVideoEditorTrimmer,
-        filePath,
-      );
+    final result = await platformChannel.invokeMethod(
+      methodStartVideoEditorTrimmer,
+      filePath,
+    );
 
-      if (result == null) {
-        return filePath;
-      }
-
-      if (result is Map) {
-        final exportedVideoFilePath = result[argExportedVideoFile];
-        if (exportedVideoFilePath != null) {
-          return exportedVideoFilePath as String;
-        }
-      }
-
-      return filePath;
-    } catch (e) {
-      return filePath;
+    if (result is Map) {
+      final exportedVideoFilePath = result[argExportedVideoFile];
+      return exportedVideoFilePath as String;
     }
+    return filePath;
   }
 }
 
@@ -114,17 +99,12 @@ BanubaService banubaService(Ref ref) {
 
 @riverpod
 Future<String> editMedia(Ref ref, MediaFile mediaFile) async {
-  // Check if the path is already a file path or an asset ID
   String? filePath;
-
-  // Check if it's an absolute file path (starts with '/' for both iOS and Android)
-  // or if the file exists at the given path
   final isAbsolutePath = mediaFile.path.startsWith('/') || File(mediaFile.path).existsSync();
 
   if (isAbsolutePath) {
     filePath = mediaFile.path;
   } else {
-    // Otherwise, treat it as an asset ID and get the file path
     filePath = await ref.read(assetFilePathProvider(mediaFile.path).future);
   }
 
