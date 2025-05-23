@@ -14,6 +14,7 @@ import 'package:ion/app/features/wallets/domain/transactions/send_transaction_to
 import 'package:ion/app/features/wallets/model/crypto_asset_to_send_data.c.dart';
 import 'package:ion/app/features/wallets/model/entities/funds_request_entity.c.dart';
 import 'package:ion/app/features/wallets/model/entities/wallet_asset_entity.c.dart';
+import 'package:ion/app/features/wallets/model/send_asset_form_data.c.dart';
 import 'package:ion/app/features/wallets/model/transaction_details.c.dart';
 import 'package:ion/app/features/wallets/model/transaction_status.c.dart';
 import 'package:ion/app/features/wallets/model/transaction_type.dart';
@@ -30,87 +31,43 @@ part 'send_coins_notifier_provider.c.g.dart';
 
 @riverpod
 class SendCoinsNotifier extends _$SendCoinsNotifier {
+  static const _formName = 'SendCoins';
+  static const _maxRetries = 5;
+  static const _initialRetryDelay = Duration(seconds: 1);
+
   @override
-  Future<TransactionDetails?> build() async {
-    state = const AsyncData(null);
+  FutureOr<TransactionDetails?> build() {
     return null;
   }
 
   Future<void> send(OnVerifyIdentity<Map<String, dynamic>> onVerifyIdentity) async {
     if (state.isLoading) return;
 
-    final form = ref.read(sendAssetFormControllerProvider);
-
-    if (form.assetData is! CoinAssetToSendData) {
-      Logger.error('Cannot send coins: asset data is not a coin asset');
-      return;
-    }
-
-    final coinAssetData = form.assetData as CoinAssetToSendData;
-    final sendableAsset = coinAssetData.associatedAssetWithSelectedOption;
-    final senderWallet = form.senderWallet;
-    final feeType = form.selectedNetworkFeeOption?.type;
-
-    if (senderWallet == null || sendableAsset == null) {
-      final missingComponent = senderWallet == null ? 'senderWallet' : 'sendableAsset';
-      Logger.error(
-        'Cannot send coins: $missingComponent is missing',
-      );
-      return;
-    }
-
     state = const AsyncValue.loading();
 
     state = await AsyncValue.guard(() async {
-      final walletViewId = await ref.read(currentWalletViewIdProvider.future);
-      final service = await ref.read(coinsServiceProvider.future);
+      final form = ref.read(sendAssetFormControllerProvider);
 
-      var result = await service.send(
-        amount: coinAssetData.amount,
+      final coinAssetData = _extractCoinAssetData(form);
+      final (senderWallet, sendableAsset) = _validateFormComponents(form, coinAssetData);
+
+      final walletViewId = await ref.read(currentWalletViewIdProvider.future);
+
+      var result = await _executeCoinTransfer(
+        coinAssetData: coinAssetData,
         senderWallet: senderWallet,
         sendableAsset: sendableAsset,
+        form: form,
         onVerifyIdentity: onVerifyIdentity,
-        receiverAddress: form.receiverAddress,
-        feeType: feeType,
       );
 
-      bool isRetryStatus(TransactionStatus status) =>
-          status == TransactionStatus.pending || status == TransactionStatus.executing;
-
-      if (isRetryStatus(result.status)) {
-        // When executing or pending, txHash is still null, so we need to wait a bit
-        result = await withRetry<TransferResult>(
-          ({Object? error}) {
-            return service
-                .getTransfer(
-                  walletId: senderWallet.id,
-                  transferId: result.id,
-                )
-                .then(
-                  (response) => isRetryStatus(response.status)
-                      ? throw InappropriateTransferStatusException()
-                      : response,
-                );
-          },
-          maxRetries: 5,
-          initialDelay: const Duration(seconds: 1),
-          retryWhen: (result) => result is InappropriateTransferStatusException,
-        );
-      }
-
-      if (result.status == TransactionStatus.rejected ||
-          result.status == TransactionStatus.failed) {
-        throw switch (result.reason) {
-          'paymentNoDestination' => PaymentNoDestinationException(
-              abbreviation: coinAssetData.coinsGroup.abbreviation,
-            ),
-          _ => FailedToSendCryptoAssetsException(result.reason),
-        };
-      }
+      result = await _waitForTransactionCompletion(senderWallet.id, result);
+      _validateTransactionResult(result, coinAssetData);
 
       Logger.info('Transaction was successful. Hash: ${result.txHash}');
 
-      final nativeCoin = await service.getNativeCoin(form.network!);
+      final coinsService = await ref.read(coinsServiceProvider.future);
+      final nativeCoin = await coinsService.getNativeCoin(form.network!);
 
       final details = TransactionDetails(
         id: result.id,
@@ -147,19 +104,117 @@ class SendCoinsNotifier extends _$SendCoinsNotifier {
         Logger.error('Failed to send event $e', stackTrace: stacktrace);
       }
 
+      unawaited(
+        ref.read(syncedCoinsBySymbolGroupNotifierProvider.notifier).refresh(
+          [coinAssetData.coinsGroup.symbolGroup],
+        ),
+      );
+
       return details;
     });
-
-    unawaited(
-      ref.read(syncedCoinsBySymbolGroupNotifierProvider.notifier).refresh(
-        [coinAssetData.coinsGroup.symbolGroup],
-      ),
-    );
 
     if (state.hasError) {
       // Log to get the error stack trace
       Logger.error(state.error!, stackTrace: state.stackTrace);
     }
+  }
+
+  CoinAssetToSendData _extractCoinAssetData(SendAssetFormData form) {
+    if (form.assetData is! CoinAssetToSendData) {
+      final error = FormException('Asset data must be CoinAssetToSendData', formName: _formName);
+      Logger.error(error, message: 'Cannot send coins: asset data is not a coin asset');
+      throw error;
+    }
+    return form.assetData as CoinAssetToSendData;
+  }
+
+  (Wallet senderWallet, WalletAsset sendableAsset) _validateFormComponents(
+    SendAssetFormData form,
+    CoinAssetToSendData coinAssetData,
+  ) {
+    final senderWallet = form.senderWallet;
+    final sendableAsset = coinAssetData.associatedAssetWithSelectedOption;
+
+    if (senderWallet == null) {
+      final error = FormException('Sender wallet is required', formName: _formName);
+      Logger.error(error, message: 'Cannot send coins: senderWallet is missing');
+      throw error;
+    }
+
+    if (sendableAsset == null) {
+      final error = FormException('Sendable asset is required', formName: _formName);
+      Logger.error(error, message: 'Cannot send coins: sendableAsset is missing');
+      throw error;
+    }
+
+    return (senderWallet, sendableAsset);
+  }
+
+  Future<TransferResult> _executeCoinTransfer({
+    required CoinAssetToSendData coinAssetData,
+    required Wallet senderWallet,
+    required WalletAsset sendableAsset,
+    required SendAssetFormData form,
+    required OnVerifyIdentity<Map<String, dynamic>> onVerifyIdentity,
+  }) async {
+    final coinsService = await ref.read(coinsServiceProvider.future);
+
+    return coinsService.send(
+      amount: coinAssetData.amount,
+      senderWallet: senderWallet,
+      sendableAsset: sendableAsset,
+      onVerifyIdentity: onVerifyIdentity,
+      receiverAddress: form.receiverAddress,
+      feeType: form.selectedNetworkFeeOption?.type,
+    );
+  }
+
+  Future<TransferResult> _waitForTransactionCompletion(
+    String walletId,
+    TransferResult result,
+  ) async {
+    final coinsService = await ref.read(coinsServiceProvider.future);
+
+    if (!_isRetryableStatus(result.status)) {
+      return result;
+    }
+
+    // Transaction is still processing, wait for completion
+    return withRetry<TransferResult>(
+      ({Object? error}) async {
+        final response = await coinsService.getTransfer(
+          walletId: walletId,
+          transferId: result.id,
+        );
+
+        if (_isRetryableStatus(response.status)) {
+          throw InappropriateTransferStatusException();
+        }
+
+        return response;
+      },
+      maxRetries: _maxRetries,
+      initialDelay: _initialRetryDelay,
+      retryWhen: (result) => result is InappropriateTransferStatusException,
+    );
+  }
+
+  bool _isRetryableStatus(TransactionStatus status) =>
+      status == TransactionStatus.pending || status == TransactionStatus.executing;
+
+  void _validateTransactionResult(TransferResult result, CoinAssetToSendData coinAssetData) {
+    if (result.status == TransactionStatus.rejected || result.status == TransactionStatus.failed) {
+      throw _createTransactionException(result.reason, coinAssetData);
+    }
+  }
+
+  Exception _createTransactionException(String? reason, CoinAssetToSendData coinAssetData) {
+    return switch (reason) {
+      'paymentNoDestination' => PaymentNoDestinationException(
+          abbreviation: coinAssetData.coinsGroup.abbreviation,
+        ),
+      _ => FailedToSendCryptoAssetsException(reason),
+    };
   }
 
   Future<void> _saveTransaction({
