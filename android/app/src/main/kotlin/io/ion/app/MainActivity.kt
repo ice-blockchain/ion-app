@@ -56,6 +56,9 @@ class MainActivity : FlutterFragmentActivity() {
     }
 
     private var exportResult: MethodChannel.Result? = null
+    
+    // Track current editing file for cleanup (Android: Manual cleanup required)
+    private var currentEditingFile: File? = null
 
     private var videoEditorSDK: BanubaVideoEditor? = null
     private var photoEditorSDK: BanubaPhotoEditor? = null
@@ -205,8 +208,15 @@ class MainActivity : FlutterFragmentActivity() {
                     Log.d("EDIT_VIDEO", "📤 Returning edited video data: ${data[ARG_EXPORTED_VIDEO_FILE]}")
                     this.exportResult?.success(data)
                 }
+                
+                // Clean up temporary editing file
+                cleanupCurrentEditingFile()
             } else if (result == RESULT_CANCELED) {
                 Log.d("EDIT_VIDEO", "🚫 User cancelled video editing")
+                
+                // Clean up temporary editing file
+                cleanupCurrentEditingFile()
+                
                 // User cancelled video editing - return null to indicate cancellation
                 this.exportResult?.success(null)
             }
@@ -303,6 +313,8 @@ class MainActivity : FlutterFragmentActivity() {
             // Copy original to safe location
             originalFile.copyTo(editingFile, overwrite = true)
             
+            // Track this file for cleanup
+            currentEditingFile = editingFile
             Log.d("EDIT_VIDEO", "✅ Successfully copied video for editing")
             return Uri.fromFile(editingFile)
         } catch (e: Exception) {
@@ -311,6 +323,34 @@ class MainActivity : FlutterFragmentActivity() {
         }
     }
 
+    private fun cleanupCurrentEditingFile() {
+        Log.d("EDIT_VIDEO", "🧹 cleanupCurrentEditingFile() called")
+        
+        val file = currentEditingFile ?: run {
+            Log.w("EDIT_VIDEO", "⚠️ No current editing file to cleanup")
+            return
+        }
+        
+        Log.d("EDIT_VIDEO", "🧹 Checking file: ${file.absolutePath}")
+        
+        try {
+            if (file.exists()) {
+                val deleted = file.delete()
+                if (deleted) {
+                    Log.d("EDIT_VIDEO", "🗑️ Manually cleaned up editing file: ${file.name}")
+                } else {
+                    Log.w("EDIT_VIDEO", "⚠️ Failed to delete editing file: ${file.name}")
+                }
+            } else {
+                Log.d("EDIT_VIDEO", "✅ File already cleaned up by Banuba SDK: ${file.name}")
+            }
+        } catch (e: Exception) {
+            Log.e("EDIT_VIDEO", "⚠️ Failed to cleanup editing file: ${e.message}", e)
+        }
+        
+        currentEditingFile = null
+        Log.d("EDIT_VIDEO", "🧹 Reset currentEditingFile to null")
+    }
 
     private fun checkSdkLicenseVideoEditor(
         callback: LicenseStateCallback,
