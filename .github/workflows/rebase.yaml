@@ -2,6 +2,11 @@ name: Rebase
 on:
   push:
     branches: [master]
+
+permissions:
+  contents: write
+  pull-requests: write
+
 jobs:
   rebase:
     runs-on: ubuntu-latest
