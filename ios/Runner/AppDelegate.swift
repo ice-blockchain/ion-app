@@ -200,7 +200,6 @@ class AudioFocusHandler: NSObject {
                                     )
                 case AppDelegate.methodStartVideoEditorTrimmer:
                                     let trimmerVideoFilePath = methodCall.arguments as? String
-                                    
                                     if let videoFilePath = trimmerVideoFilePath {
                                         videoEditor.openVideoEditorTrimmer(
                                             fromViewController: controller,

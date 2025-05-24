@@ -1,9 +1,10 @@
 // SPDX-License-Identifier: ice License 1.0
 
 import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/extensions/extensions.dart';
+import 'package:ion/app/services/logger/logger.dart';
+import 'package:ion/app/services/media_service/banuba_service.c.dart';
 import 'package:ion/app/services/media_service/media_service.c.dart';
 
 class VideoPreviewEditCover extends ConsumerWidget {
@@ -17,7 +18,28 @@ class VideoPreviewEditCover extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     return GestureDetector(
-      onTap: () => context.pop(),
+      onTap: () async {
+        final attachedVideo = attachedVideoNotifier.value;
+        if (attachedVideo == null) return;
+
+        try {
+          final editedPath = await ref.read(editMediaProvider(attachedVideo).future);
+
+          if (editedPath != attachedVideo.path) {
+            final timestamp = DateTime.now().millisecondsSinceEpoch;
+            attachedVideoNotifier.value = attachedVideo.copyWith(
+              path: editedPath,
+              name: 'edited_$timestamp',
+            );
+          }
+        } catch (e, stackTrace) {
+          Logger.log(
+            'Video editing failed or cancelled',
+            error: e,
+            stackTrace: stackTrace,
+          );
+        }
+      },
       child: DecoratedBox(
         decoration: BoxDecoration(
           color: context.theme.appColors.backgroundSheet,

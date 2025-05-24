@@ -56,6 +56,9 @@ class MainActivity : FlutterFragmentActivity() {
     }
 
     private var exportResult: MethodChannel.Result? = null
+    
+    // Track current editing file for cleanup
+    private var currentEditingFile: File? = null
 
     private var videoEditorSDK: BanubaVideoEditor? = null
     private var photoEditorSDK: BanubaPhotoEditor? = null
@@ -180,23 +183,35 @@ class MainActivity : FlutterFragmentActivity() {
     // Observe export video results
     override fun onActivityResult(requestCode: Int, result: Int, intent: Intent?) {
         super.onActivityResult(requestCode, result, intent)
-        if (requestCode == VIDEO_EDITOR_REQUEST_CODE && result == RESULT_OK) {
-            val exportResult =
-                intent?.getParcelableExtra(EXTRA_EXPORTED_SUCCESS) as? ExportResult.Success
-            if (exportResult == null) {
-                this.exportResult?.error(
-                    "ERR_MISSING_EXPORT_RESULT",
-                    "",
-                    null
-                )
-            } else {
-                val data = prepareVideoExportData(exportResult)
-                this.exportResult?.success(data)
+        if (requestCode == VIDEO_EDITOR_REQUEST_CODE) {
+            if (result == RESULT_OK) {
+                val exportResult =
+                    intent?.getParcelableExtra(EXTRA_EXPORTED_SUCCESS) as? ExportResult.Success
+                if (exportResult == null) {
+                    this.exportResult?.error(
+                        "ERR_MISSING_EXPORT_RESULT",
+                        "",
+                        null
+                    )
+                } else {
+                    val data = prepareVideoExportData(exportResult)
+                    this.exportResult?.success(data)
+                }
+                
+                cleanupCurrentEditingFile()
+            } else if (result == RESULT_CANCELED) {
+                cleanupCurrentEditingFile()
+                // User cancelled video editing - return null to indicate cancellation
+                this.exportResult?.success(null)
             }
-
-        } else if (requestCode == PHOTO_EDITOR_REQUEST_CODE && result == RESULT_OK) {
-            val data = preparePhotoExportData(intent)
-            exportResult?.success(data)
+        } else if (requestCode == PHOTO_EDITOR_REQUEST_CODE) {
+            if (result == RESULT_OK) {
+                val data = preparePhotoExportData(intent)
+                exportResult?.success(data)
+            } else if (result == RESULT_CANCELED) {
+                // User cancelled photo editing - return null to indicate cancellation
+                exportResult?.success(null)
+            }
         }
     }
 
@@ -225,6 +240,10 @@ class MainActivity : FlutterFragmentActivity() {
     }
 
     private fun startVideoEditorModeTrimmer(trimmerVideo: Uri) {
+        // Create a safe copy of the video for editing
+        val safeEditingUri = copyVideoToSafeLocation(trimmerVideo)
+        val finalUri = safeEditingUri ?: trimmerVideo
+        
         startActivityForResult(
             VideoCreationActivity.startFromTrimmer(
                 context = this,
@@ -233,12 +252,52 @@ class MainActivity : FlutterFragmentActivity() {
                 // set TrackData object if you open VideoCreationActivity with preselected music track
                 audioTrackData = null,
                 // set Trimmer video configuration
-                predefinedVideos = arrayOf(trimmerVideo),
+                predefinedVideos = arrayOf(finalUri),
                 extras = extras
             ), VIDEO_EDITOR_REQUEST_CODE
         )
     }
 
+    private fun copyVideoToSafeLocation(originalUri: Uri): Uri? {
+        try {
+            val originalPath = originalUri.path
+            if (originalPath == null) {
+                return null
+            }
+            
+            val originalFile = File(originalPath)
+            if (!originalFile.exists()) {
+                return null
+            }
+            
+            val editingFileName = "editing_${System.currentTimeMillis()}.mp4"
+            val editingFile = File(filesDir, editingFileName)
+            
+            if (editingFile.exists()) {
+                editingFile.delete()
+            }
+            
+            originalFile.copyTo(editingFile, overwrite = true)
+            currentEditingFile = editingFile
+            return Uri.fromFile(editingFile)
+        } catch (e: Exception) {
+            return null
+        }
+    }
+
+    private fun cleanupCurrentEditingFile() {
+        val file = currentEditingFile ?: return
+        
+        try {
+            if (file.exists() && !file.delete()) {
+                Log.w("EDIT_VIDEO", "Failed to delete editing file: ${file.name}")
+            }
+        } catch (e: Exception) {
+            Log.e("EDIT_VIDEO", "Failed to cleanup editing file: ${e.message}", e)
+        }
+        
+        currentEditingFile = null
+    }
 
     private fun checkSdkLicenseVideoEditor(
         callback: LicenseStateCallback,
