@@ -29,7 +29,7 @@ class CoinTransactionHistoryNotifier extends _$CoinTransactionHistoryNotifier {
   late String _walletViewId;
 
   NetworkData? _network;
-  int _offset = 0;
+  var _offset = 0;
 
   @override
   Future<CoinTransactionHistoryState> build({required String symbolGroup}) async {
