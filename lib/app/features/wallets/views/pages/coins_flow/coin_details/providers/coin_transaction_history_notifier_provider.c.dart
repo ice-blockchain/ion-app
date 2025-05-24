@@ -24,47 +24,30 @@ class CoinTransactionHistoryNotifier extends _$CoinTransactionHistoryNotifier {
 
   final List<CoinTransactionData> _history = [];
 
-  List<String>? _coinWalletAddresses;
-  List<CoinInWalletData>? _coins;
-  String? _walletViewId;
+  late List<String> _coinWalletAddresses;
+  late List<CoinInWalletData> _coins;
+  late String _walletViewId;
+
   NetworkData? _network;
   int _offset = 0;
 
   @override
-  CoinTransactionHistoryState build({required String symbolGroup}) {
-    _coinWalletAddresses = ref
-        .watch(walletViewCryptoWalletsProvider())
-        .valueOrNull
-        ?.map((w) => w.address)
-        .nonNulls
-        .toList();
+  Future<CoinTransactionHistoryState> build({required String symbolGroup}) async {
+    _walletViewId = await ref.watch(currentWalletViewIdProvider.future);
+    _coins = await ref.watch(syncedCoinsBySymbolGroupProvider(symbolGroup).future);
+    _coinWalletAddresses = await ref
+        .watch(walletViewCryptoWalletsProvider().future)
+        .then((wallets) => wallets.map((w) => w.address).nonNulls.toList());
 
-    _walletViewId = ref.watch(currentWalletViewIdProvider).valueOrNull;
     _network = ref.watch(
       networkSelectorNotifierProvider(symbolGroup: symbolGroup).select(
         (state) => state?.selected.whenOrNull(network: (network) => network),
       ),
     );
-    _coins = ref.watch(syncedCoinsBySymbolGroupProvider(symbolGroup)).valueOrNull;
 
     _reset();
 
-    Logger.info(
-      '$_tag Build with the next params: symbolGroup: $symbolGroup, '
-      'network: ${_network?.id}, walletViewId: $_walletViewId, '
-      'coins: ${_coins?.map((c) => '(${c.coin.abbreviation} in ${c.coin.network.id})').toList()}, '
-      'coinWalletAddresses: $_coinWalletAddresses',
-    );
-
-    if (_coins != null && _coinWalletAddresses != null && _walletViewId != null) {
-      _loadNextPage();
-    }
-
-    return CoinTransactionHistoryState(
-      transactions: _history,
-      hasMore: false,
-      isLoading: true,
-    );
+    return _getStateWithNewPage();
   }
 
   void _reset() {
@@ -73,34 +56,35 @@ class CoinTransactionHistoryNotifier extends _$CoinTransactionHistoryNotifier {
   }
 
   Future<void> loadMore() async {
-    if (state.hasMore) {
-      await _loadNextPage();
+    if (state.value?.hasMore ?? false) {
+      state = await AsyncValue.guard(_getStateWithNewPage);
     }
   }
 
-  bool _isValidState() {
-    if (_coinWalletAddresses == null || _coinWalletAddresses!.isEmpty) {
-      Logger.warning('$_tag No wallet addresses available');
-      return false;
-    }
-
-    if (_walletViewId == null) {
-      Logger.warning('$_tag No wallet view ID available');
+  bool _canLoadNextPage() {
+    if (_coinWalletAddresses.isEmpty) {
+      Logger.warning('$_tag wallet addresses list is empty');
       return false;
     }
 
     return true;
   }
 
-  Future<void> _loadNextPage() async {
-    if (!_isValidState()) {
-      state = state.copyWith(isLoading: false);
-      return;
+  Future<CoinTransactionHistoryState> _getStateWithNewPage() async {
+    if (!_canLoadNextPage()) {
+      return CoinTransactionHistoryState(
+        transactions: _history,
+        hasMore: false,
+        isLoading: false,
+      );
     }
 
     final repository = await ref.read(transactionsRepositoryProvider.future);
 
-    final coinIds = _getFilteredCoinIds();
+    final coinIds = _coins
+        .where((coin) => _network == null || coin.coin.network == _network)
+        .map((c) => c.coin.id)
+        .toList();
 
     Logger.info(
       '$_tag Load the next page of the history with the next params: '
@@ -111,27 +95,19 @@ class CoinTransactionHistoryNotifier extends _$CoinTransactionHistoryNotifier {
     final transactions = await repository.getTransactions(
       offset: _offset,
       network: _network,
-      walletViewIds: [_walletViewId!],
+      walletViewIds: [_walletViewId],
       coinIds: coinIds,
-      walletAddresses: _coinWalletAddresses!,
+      walletAddresses: _coinWalletAddresses,
     );
 
     _processTransactions(transactions);
     _logTransactionHistory();
 
-    state = state.copyWith(
+    return CoinTransactionHistoryState(
       isLoading: false,
       transactions: _history,
       hasMore: transactions.length >= _pageSize,
     );
-  }
-
-  List<String> _getFilteredCoinIds() {
-    return _coins
-            ?.where((coin) => _network == null || coin.coin.network == _network)
-            .map((c) => c.coin.id)
-            .toList() ??
-        [];
   }
 
   void _processTransactions(List<TransactionData> transactions) {
@@ -179,7 +155,8 @@ class CoinTransactionHistoryNotifier extends _$CoinTransactionHistoryNotifier {
         'amount: ${item.coinAmount}, type: ${item.transactionType.value}, id: ${origin.id}, '
         'externalHash: ${origin.externalHash}, native coin: ${origin.nativeCoin?.abbreviation}, '
         'userPubkey: ${origin.userPubkey}, network: ${item.network.id}, '
-        'dateRequested: ${origin.dateRequested}, createdAtInRelay: ${origin.createdAtInRelay}',
+        'dateRequested: ${origin.dateRequested}, createdAtInRelay: ${origin.createdAtInRelay} '
+        'dateConfirmed: ${origin.dateConfirmed}',
       );
     }
     Logger.info(
