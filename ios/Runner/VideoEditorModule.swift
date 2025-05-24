@@ -35,6 +35,7 @@ class VideoEditorModule: VideoEditor {
 
         config.featureConfiguration.supportsTrimRecordedVideo = true
         config.featureConfiguration.draftsConfig = .disabled
+        config.editorConfiguration.isVideoAspectFillEnabled = false
 
         // Make customization here
         
@@ -96,6 +97,21 @@ class VideoEditorModule: VideoEditor {
 
         // Editor V2 is not available from Trimmer screen. Editor screen will be opened
 
+        let asset = AVAsset(url: videoURL)
+        guard let track = asset.tracks(withMediaType: .video).first else {
+            fatalError("no video track!")
+        }
+        let size = track.naturalSize.applying(track.preferredTransform)
+        let width = abs(size.width)
+        let height = abs(size.height)
+        let aspectRatio = width / height
+        
+        let config = videoEditorSDK?.currentConfiguration
+        config?.videoEditorViewConfiguration.primaryAspectRatio = AspectRatio(videoAspectRatio: aspectRatio)
+        if let newConfig = config {
+            videoEditorSDK?.updateVideoEditorConfig(newConfig)
+        }
+        
         let trimmerLaunchConfig = VideoEditorLaunchConfig(
             entryPoint: .trimmer,
             hostController: controller,
