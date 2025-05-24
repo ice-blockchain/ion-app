@@ -113,14 +113,14 @@ class MainActivity : FlutterFragmentActivity() {
                         checkSdkLicenseVideoEditor(
                             callback = { isValid ->
                                 if (isValid) {
+                                    // ✅ The license is active
                                     startVideoEditorModeTrimmer(trimmerVideoUri)
                                 } else {
+                                    // ❌ Use of SDK is restricted: the license is revoked or expired
                                     result.error(ERR_CODE_SDK_LICENSE_REVOKED, "", null)
                                 }
                             },
-                            onError = { 
-                                result.error(ERR_CODE_SDK_NOT_INITIALIZED, "", null) 
-                            }
+                            onError = { result.error(ERR_CODE_SDK_NOT_INITIALIZED, "", null) }
                         )
                     }
                 }
@@ -270,7 +270,6 @@ class MainActivity : FlutterFragmentActivity() {
                 return null
             }
             
-            // Use internal files directory for safe storage
             val editingFileName = "editing_${System.currentTimeMillis()}.mp4"
             val editingFile = File(filesDir, editingFileName)
             
@@ -278,10 +277,7 @@ class MainActivity : FlutterFragmentActivity() {
                 editingFile.delete()
             }
             
-            // Copy original to safe location
             originalFile.copyTo(editingFile, overwrite = true)
-            
-            // Track this file for cleanup
             currentEditingFile = editingFile
             return Uri.fromFile(editingFile)
         } catch (e: Exception) {
