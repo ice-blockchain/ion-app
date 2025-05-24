@@ -24,11 +24,14 @@ class VideoPreviewEditCover extends ConsumerWidget {
 
         try {
           final editedPath = await ref.read(editMediaProvider(attachedVideo).future);
-          final timestamp = DateTime.now().millisecondsSinceEpoch;
-          attachedVideoNotifier.value = attachedVideo.copyWith(
-            path: editedPath,
-            name: 'edited_$timestamp',
-          );
+
+          if (editedPath != attachedVideo.path) {
+            final timestamp = DateTime.now().millisecondsSinceEpoch;
+            attachedVideoNotifier.value = attachedVideo.copyWith(
+              path: editedPath,
+              name: 'edited_$timestamp',
+            );
+          }
         } catch (e, stackTrace) {
           Logger.log(
             'Video editing failed or cancelled',
