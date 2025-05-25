@@ -2,6 +2,7 @@
 
 import 'package:ion_identity_client/ion_identity.dart';
 import 'package:ion_identity_client/src/auth/services/extract_user_id/extract_user_id_service.dart';
+import 'package:ion_identity_client/src/users/available_ion_connect_relays/available_ion_connect_relays_service.dart';
 import 'package:ion_identity_client/src/users/get_content_creators/content_creators_service.dart';
 import 'package:ion_identity_client/src/users/ion_connect_indexers/get_user_connect_indexers_service.dart';
 import 'package:ion_identity_client/src/users/set_ion_connect_relays/set_ion_connect_relays_service.dart';
@@ -15,6 +16,7 @@ class IONIdentityUsers {
     this._setIONConnectRelaysService,
     this._ionConnectContentCreatorsService,
     this._extractUserIdService,
+    this._availableIONConnectRelaysService,
   );
 
   final String username;
@@ -23,6 +25,7 @@ class IONIdentityUsers {
   final IONConnectContentCreatorsService _ionConnectContentCreatorsService;
   final SetIONConnectRelaysService _setIONConnectRelaysService;
   final ExtractUserIdService _extractUserIdService;
+  final AvailableIONConnectRelaysService _availableIONConnectRelaysService;
 
   Future<UserDetails> currentUserDetails() async {
     final userId = _extractUserIdService.extractUserId(username: username);
@@ -58,6 +61,16 @@ class IONIdentityUsers {
       limit: limit,
       userId: userId,
       excludeMasterPubKeys: excludeMasterPubKeys,
+    );
+  }
+
+  Future<List<String>> availableIonConnectRelays({
+    required String relayUrl,
+  }) async {
+    final userId = _extractUserIdService.extractUserId(username: username);
+    return _availableIONConnectRelaysService.allAvailableIonConnectRelays(
+      userId: userId,
+      relayUrl: relayUrl,
     );
   }
 }

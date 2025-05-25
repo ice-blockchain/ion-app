@@ -8,29 +8,30 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 part 'ion_connect_relays_ranker.c.g.dart';
 
 @riverpod
-IonConnectRelaysRanker ionConnectRelaysRanker(Ref ref, List<String> relaysUrls) {
+IonConnectRelaysRanker ionConnectRelaysRanker(Ref ref) {
   return IonConnectRelaysRanker(
     dio: ref.watch(dioProvider),
-    relaysUrls: relaysUrls,
   );
 }
 
 final class IonConnectRelaysRanker {
   const IonConnectRelaysRanker({
     required this.dio,
-    required this.relaysUrls,
   });
 
   final Dio dio;
-  final List<String> relaysUrls;
 
-  Future<List<String>> ranked() async {
-    final relaysMeasured = await Future.wait(relaysUrls.map(_getRelayRank));
+  Future<List<String>> ranked(List<String> relaysUrls, {CancelToken? cancelToken}) async {
+    final relaysMeasured =
+        await Future.wait(relaysUrls.map((url) => _getRelayRank(url, cancelToken)));
     relaysMeasured.sort((a, b) => a.time.compareTo(b.time));
     return relaysMeasured.map((e) => e.url).toList();
   }
 
-  Future<({String url, int time})> _getRelayRank(String relayUrl) async {
+  Future<({String url, int time})> _getRelayRank(
+    String relayUrl, [
+    CancelToken? cancelToken,
+  ]) async {
     try {
       final parsedRelayUrl = Uri.parse(relayUrl);
       final relayUri = Uri(
@@ -38,6 +39,7 @@ final class IonConnectRelaysRanker {
         host: parsedRelayUrl.host,
         port: parsedRelayUrl.hasPort ? parsedRelayUrl.port : null,
       );
+      const timeout = Duration(seconds: 30);
       final stopWatch = Stopwatch()..start();
       await dio.headUri<void>(
         relayUri,
@@ -45,7 +47,10 @@ final class IonConnectRelaysRanker {
           headers: {
             'Accept': 'application/nostr+json',
           },
+          sendTimeout: timeout,
+          receiveTimeout: timeout,
         ),
+        cancelToken: cancelToken,
       );
       stopWatch.stop();
       return (url: relayUrl, time: stopWatch.elapsedMilliseconds);
