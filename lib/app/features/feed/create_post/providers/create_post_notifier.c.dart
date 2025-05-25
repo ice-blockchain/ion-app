@@ -16,7 +16,7 @@ import 'package:ion/app/features/feed/create_post/model/create_post_option.dart'
 import 'package:ion/app/features/feed/data/models/entities/article_data.c.dart';
 import 'package:ion/app/features/feed/data/models/entities/modifiable_post_data.c.dart';
 import 'package:ion/app/features/feed/data/models/entities/post_data.c.dart';
-import 'package:ion/app/features/feed/data/models/who_can_reply_settings_option.dart';
+import 'package:ion/app/features/feed/data/models/who_can_reply_settings_option.c.dart';
 import 'package:ion/app/features/feed/providers/counters/replies_count_provider.c.dart';
 import 'package:ion/app/features/feed/providers/counters/reposts_count_provider.c.dart';
 import 'package:ion/app/features/ion_connect/model/action_source.c.dart';
@@ -64,7 +64,7 @@ class CreatePostNotifier extends _$CreatePostNotifier {
 
   Future<void> create({
     Delta? content,
-    WhoCanReplySettingsOption whoCanReply = WhoCanReplySettingsOption.everyone,
+    WhoCanReplySettingsOption whoCanReply = const WhoCanReplySettingsOption.everyone(),
     EventReference? parentEvent,
     EventReference? quotedEvent,
     List<MediaFile>? mediaFiles,

@@ -1,13 +1,17 @@
 // SPDX-License-Identifier: ice License 1.0
 
+import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/features/auth/providers/auth_provider.c.dart';
 import 'package:ion/app/features/feed/data/models/entities/article_data.c.dart';
 import 'package:ion/app/features/feed/data/models/entities/modifiable_post_data.c.dart';
-import 'package:ion/app/features/feed/data/models/who_can_reply_settings_option.dart';
+import 'package:ion/app/features/feed/data/models/who_can_reply_settings_option.c.dart';
 import 'package:ion/app/features/ion_connect/model/event_reference.c.dart';
 import 'package:ion/app/features/ion_connect/model/related_pubkey.c.dart';
 import 'package:ion/app/features/ion_connect/providers/ion_connect_entity_provider.c.dart';
+import 'package:ion/app/features/user/model/badges/badge_definition.c.dart';
+import 'package:ion/app/features/user/providers/badges_notifier.c.dart';
 import 'package:ion/app/features/user/providers/follow_list_provider.c.dart';
+import 'package:ion/app/features/user/providers/service_pubkeys_provider.c.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'can_reply_notifier.c.g.dart';
@@ -48,21 +52,31 @@ class CanReply extends _$CanReply {
       ArticleEntity() => entity.data.whoCanReplySetting,
       _ => null,
     };
-    if (whoCanReplySetting == null) {
-      return true;
-    }
+    final effectiveSetting = whoCanReplySetting ?? const WhoCanReplySettingsOption.everyone();
 
-    switch (whoCanReplySetting) {
-      case WhoCanReplySettingsOption.everyone:
-        return true;
-      case WhoCanReplySettingsOption.followedAccounts:
-        final followers =
-            await ref.watch(followListProvider(authorPubkey, cache: !_skipCache).future);
+    return await effectiveSetting.when(
+      everyone: () async => true,
+      followedAccounts: () async {
+        final followers = await ref.watch(
+          followListProvider(authorPubkey, cache: !_skipCache).future,
+        );
         if (followers == null) {
           return false;
         }
         return followers.data.list.any((followee) => followee.pubkey == currentPubkey);
-      case WhoCanReplySettingsOption.mentionedAccounts:
+      },
+      accountsWithBadge: (badgeRef) async {
+        final pubkeys = await ref.watch(servicePubkeysProvider.future);
+        final isBadgeDefinitionValid =
+            ref.watch(isValidVerifiedBadgeDefinitionProvider(badgeRef, pubkeys));
+        if (!isBadgeDefinitionValid) {
+          return false;
+        }
+        return await ref.watch(
+          isUserVerifiedProvider(currentPubkey).future,
+        );
+      },
+      mentionedAccounts: () async {
         final mentions = switch (entity) {
           // TODO: Add support for mentions inside posts and articles
           _ => <RelatedPubkey>[],
@@ -71,7 +85,8 @@ class CanReply extends _$CanReply {
           return false;
         }
         return mentions.any((pubKey) => pubKey.value == currentPubkey);
-    }
+      },
+    );
   }
 
   void refreshIfNeeded(EventReference eventReference) {
@@ -82,4 +97,18 @@ class CanReply extends _$CanReply {
       ref.invalidateSelf();
     }
   }
+}
+
+@riverpod
+Future<List<WhoCanReplySettingsOption>> whoCanReplySettingsOptions(Ref ref) async {
+  final pubkeys = await ref.watch(servicePubkeysProvider.future);
+  final badgeDefinitionEntity = ref
+      .watch(cachedBadgeDefinitionEntityProvider(BadgeDefinitionEntity.verifiedBadgeDTag, pubkeys));
+  return [
+    const WhoCanReplySettingsOption.everyone(),
+    const WhoCanReplySettingsOption.followedAccounts(),
+    if (badgeDefinitionEntity != null)
+      WhoCanReplySettingsOption.accountsWithBadge(badge: badgeDefinitionEntity.toEventReference()),
+    const WhoCanReplySettingsOption.mentionedAccounts(),
+  ];
 }

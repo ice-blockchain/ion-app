@@ -57,6 +57,32 @@ ProfileBadgesEntity? cachedProfileBadgesData(
 }
 
 @riverpod
+BadgeDefinitionEntity? cachedBadgeDefinitionEntity(
+  Ref ref,
+  String dTag,
+  List<String> servicePubkeys,
+) {
+  if (servicePubkeys.isEmpty) {
+    return null;
+  }
+
+  final badgeDefinitionEntityList = servicePubkeys.map((pubkey) {
+    final cacheKey = CacheableEntity.cacheKeyBuilder(
+      eventReference: ReplaceableEventReference(
+        pubkey: pubkey,
+        kind: BadgeDefinitionEntity.kind,
+        dTag: dTag,
+      ),
+    );
+    return ref.watch(
+      ionConnectCacheProvider.select(cacheSelector<BadgeDefinitionEntity>(cacheKey)),
+    );
+  }).toList();
+
+  return badgeDefinitionEntityList.firstOrNull;
+}
+
+@riverpod
 Future<ProfileBadgesData?> profileBadgesData(
   Ref ref,
   String pubkey,
@@ -75,6 +101,17 @@ Future<ProfileBadgesData?> profileBadgesData(
 }
 
 @riverpod
+bool isValidVerifiedBadgeDefinition(
+  Ref ref,
+  ReplaceableEventReference badgeRef,
+  List<String> servicePubkeys,
+) {
+  return badgeRef.dTag == BadgeDefinitionEntity.verifiedBadgeDTag &&
+      (servicePubkeys.isEmpty || servicePubkeys.contains(badgeRef.pubkey)) &&
+      badgeRef.kind == BadgeDefinitionEntity.kind;
+}
+
+@riverpod
 Future<bool> isUserVerified(
   Ref ref,
   String pubkey,
@@ -85,12 +122,10 @@ Future<bool> isUserVerified(
   final pubkeys = await ref.watch(servicePubkeysProvider.future);
 
   return profileBadgesData?.entries.any((entry) {
-        final eventRef = entry.definitionRef;
         final isBadgeAwardValid =
             pubkeys.isEmpty || ref.watch(cachedBadgeAwardProvider(entry.awardId, pubkeys)) != null;
-        final isBadgeDefinitionValid = eventRef.dTag == BadgeDefinitionEntity.verifiedBadgeDTag &&
-            (pubkeys.isEmpty || pubkeys.contains(eventRef.pubkey)) &&
-            eventRef.kind == BadgeDefinitionEntity.kind;
+        final isBadgeDefinitionValid =
+            ref.watch(isValidVerifiedBadgeDefinitionProvider(entry.definitionRef, pubkeys));
         return isBadgeDefinitionValid && isBadgeAwardValid;
       }) ??
       false;

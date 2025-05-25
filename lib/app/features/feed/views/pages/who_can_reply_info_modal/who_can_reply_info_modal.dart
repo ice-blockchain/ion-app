@@ -8,6 +8,7 @@ import 'package:ion/app/components/screen_offset/screen_bottom_offset.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/feed/data/models/entities/article_data.c.dart';
 import 'package:ion/app/features/feed/data/models/entities/modifiable_post_data.c.dart';
+import 'package:ion/app/features/feed/data/models/who_can_reply_settings_option.c.dart';
 import 'package:ion/app/features/ion_connect/model/event_reference.c.dart';
 import 'package:ion/app/features/ion_connect/providers/ion_connect_entity_provider.c.dart';
 import 'package:ion/app/features/user/providers/user_metadata_provider.c.dart';
@@ -20,11 +21,10 @@ class WhoCanReplyInfoModal extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final whoCanFollowSetting = useMemoized(
-      () => _getWhoCanFollowSetting(context, ref),
+    final description = useMemoized(
+      () => _getDescription(context, ref),
       [context, eventReference],
     );
-    final userMetadata = ref.watch(cachedUserMetadataProvider(eventReference.pubkey));
 
     return Column(
       children: [
@@ -34,10 +34,7 @@ class WhoCanReplyInfoModal extends HookConsumerWidget {
             child: InfoCard(
               iconAsset: Assets.svg.actionProfileFollow,
               title: context.i18n.who_can_reply_info_modal_title,
-              description: context.i18n.who_can_reply_info_modal_description(
-                userMetadata?.data.displayName ?? '',
-                whoCanFollowSetting,
-              ),
+              description: description,
             ),
           ),
         ),
@@ -46,7 +43,7 @@ class WhoCanReplyInfoModal extends HookConsumerWidget {
     );
   }
 
-  String _getWhoCanFollowSetting(BuildContext context, WidgetRef ref) {
+  String _getDescription(BuildContext context, WidgetRef ref) {
     final entity = ref.watch(ionConnectEntityProvider(eventReference: eventReference)).value;
     if (entity == null) {
       return '';
@@ -59,6 +56,17 @@ class WhoCanReplyInfoModal extends HookConsumerWidget {
     };
     if (whoCanReplySetting == null) return '';
 
-    return context.i18n.who_can_reply_info_modal_setting(whoCanReplySetting.name);
+    final userMetadata = ref.watch(cachedUserMetadataProvider(eventReference.pubkey));
+    String commonDescription() => context.i18n.who_can_reply_info_modal_description(
+          userMetadata?.data.displayName ?? '',
+          context.i18n.who_can_reply_info_modal_setting(whoCanReplySetting.tagValue),
+        );
+
+    return whoCanReplySetting.when(
+      everyone: () => '',
+      followedAccounts: commonDescription,
+      mentionedAccounts: commonDescription,
+      accountsWithBadge: (_) => context.i18n.who_can_reply_info_modal_only_verified_description,
+    );
   }
 }
