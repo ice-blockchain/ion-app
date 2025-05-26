@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: ice License 1.0
+
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:ion/app/features/feed/data/models/feed_interests_interaction.c.dart';
 
@@ -17,8 +19,8 @@ class FeedInterests with _$FeedInterests {
 
   /// Returns a copy of the interest with updated weights based on the interaction.
   ///
-  /// The interaction's weight is added to both category and subcategory levels.
-  /// Adding weight to subcategories also increases the weight of the parent category.
+  /// The interaction's score is added to both category and subcategory levels.
+  /// Adding score to subcategories also increases the weight of the parent category.
   FeedInterests applyInteraction(
     FeedInterestInteraction interaction,
     List<String> interactionCategories,
