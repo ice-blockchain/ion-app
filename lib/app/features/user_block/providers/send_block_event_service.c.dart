@@ -12,7 +12,6 @@ import 'package:ion/app/features/core/providers/env_provider.c.dart';
 import 'package:ion/app/features/ion_connect/ion_connect.dart';
 import 'package:ion/app/features/ion_connect/model/action_source.c.dart';
 import 'package:ion/app/features/ion_connect/model/deletion_request.c.dart';
-import 'package:ion/app/features/ion_connect/model/entity_expiration.c.dart';
 import 'package:ion/app/features/ion_connect/model/event_reference.c.dart';
 import 'package:ion/app/features/ion_connect/providers/ion_connect_event_signer_provider.c.dart';
 import 'package:ion/app/features/ion_connect/providers/ion_connect_notifier.c.dart';
@@ -125,16 +124,17 @@ class SendBlockEventService {
     }
   }
 
-  Future<void> sendDeleteBlockEvent(String dtag) async {
+  Future<void> sendDeleteBlockEvent(String dtag, String blockedUserMasterPubkey) async {
     try {
-      final participantsMasterPubkeys = [currentUserMasterPubkey, '']..sort((a, b) {
+      final participantsMasterPubkeys = [currentUserMasterPubkey, blockedUserMasterPubkey]
+        ..sort((a, b) {
           if (a == currentUserMasterPubkey) return 1;
           if (b == currentUserMasterPubkey) return -1;
           return a.compareTo(b);
         });
 
       final participantsPubkeysMap =
-          await devicePubkeysProvider.fetchUsersKeys([currentUserMasterPubkey]);
+          await devicePubkeysProvider.fetchUsersKeys(participantsMasterPubkeys);
 
       final eventToDelete = EventToDelete(
         eventReference: ReplaceableEventReference(
@@ -194,10 +194,6 @@ class SendBlockEventService {
       event: seal,
       receiverPubkey: pubkey,
       receiverMasterPubkey: masterPubkey,
-      // TODO: Remove this!!!
-      expirationTag: EntityExpiration(
-        value: DateTime.now().add(const Duration(days: 30)),
-      ).toTag(),
       contentKinds: [BlockedUserEntity.kind.toString()],
     );
 

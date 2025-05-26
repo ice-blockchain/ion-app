@@ -159,7 +159,7 @@ class BlockListNotifier extends _$BlockListNotifier {
       );
 
       if (blockedUserEntity != null) {
-        await _unblockUser(blockedUserEntity.data.sharedId);
+        await _unblockUser(blockedUserEntity.data.sharedId, masterPubkey);
       } else {
         await _blockUser(masterPubkey);
       }
@@ -180,13 +180,13 @@ class BlockListNotifier extends _$BlockListNotifier {
     ]);
   }
 
-  Future<void> _unblockUser(String sharedId) async {
+  Future<void> _unblockUser(String sharedId, String masterPubkey) async {
     final currentMasterPubkey = ref.read(currentPubkeySelectorProvider);
     if (currentMasterPubkey == null) {
       throw UserMasterPubkeyNotFoundException();
     }
 
     final sendBlockEventService = await ref.read(sendBlockEventServiceProvider.future);
-    await sendBlockEventService.sendDeleteBlockEvent(sharedId);
+    await sendBlockEventService.sendDeleteBlockEvent(sharedId, masterPubkey);
   }
 }

@@ -14,7 +14,9 @@ class ConversationPubkeys extends _$ConversationPubkeys {
     final usersKeys = <String, List<String>>{};
 
     for (final masterPubkey in masterPubkeys) {
+      print('Fetching delegation for $masterPubkey');
       final delegation = await ref.read(userDelegationProvider(masterPubkey).future);
+      print(delegation);
       if (delegation == null) {
         continue;
       }

@@ -20,9 +20,9 @@ import 'package:ion/app/features/user/pages/profile_page/components/tabs/content
 import 'package:ion/app/features/user/pages/profile_page/components/tabs/tab_entities_list.dart';
 import 'package:ion/app/features/user/pages/profile_page/components/tabs/tabs_header/tabs_header.dart';
 import 'package:ion/app/features/user/pages/profile_page/hooks/use_animated_opacity_on_scroll.dart';
+import 'package:ion/app/features/user/pages/profile_page/profile_skeleton.dart';
 import 'package:ion/app/features/user/providers/user_metadata_provider.c.dart';
 import 'package:ion/app/features/user_block/providers/block_list_notifier.c.dart';
-import 'package:ion/app/router/components/navigation_app_bar/navigation_app_bar.dart';
 
 class ProfilePage extends HookConsumerWidget {
   const ProfilePage({
@@ -45,15 +45,7 @@ class ProfilePage extends HookConsumerWidget {
     final didRefresh = useState(false);
 
     if (!didRefresh.value && (userMetadata.isLoading || isBlocked == null || isBlockedBy == null)) {
-      return Scaffold(
-        appBar: NavigationAppBar(
-          useScreenTopOffset: true,
-          showBackButton: showBackButton,
-        ),
-        body: const Center(
-          child: CircularProgressIndicator(),
-        ),
-      );
+      return ProfileSkeleton(showBackButton: showBackButton);
     }
 
     final isBlockedOrBlockedBy =
