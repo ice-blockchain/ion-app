@@ -4,9 +4,11 @@ import 'dart:async';
 
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/extensions/bool.dart';
+import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/auth/providers/auth_provider.c.dart';
 import 'package:ion/app/features/auth/providers/delegation_complete_provider.c.dart';
 import 'package:ion/app/features/ion_connect/ion_connect.dart';
+import 'package:ion/app/features/ion_connect/model/action_source.c.dart';
 import 'package:ion/app/features/ion_connect/model/event_reference.c.dart';
 import 'package:ion/app/features/ion_connect/model/search_extension.dart';
 import 'package:ion/app/features/ion_connect/providers/ion_connect_cache.c.dart';
@@ -57,29 +59,52 @@ ProfileBadgesEntity? cachedProfileBadgesData(
 }
 
 @riverpod
-BadgeDefinitionEntity? cachedBadgeDefinitionEntity(
+Future<BadgeDefinitionEntity?> badgeDefinitionEntity(
   Ref ref,
   String dTag,
   List<String> servicePubkeys,
-) {
+) async {
   if (servicePubkeys.isEmpty) {
     return null;
   }
 
-  final badgeDefinitionEntityList = servicePubkeys.map((pubkey) {
-    final cacheKey = CacheableEntity.cacheKeyBuilder(
-      eventReference: ReplaceableEventReference(
-        pubkey: pubkey,
-        kind: BadgeDefinitionEntity.kind,
-        dTag: dTag,
-      ),
-    );
-    return ref.watch(
-      ionConnectCacheProvider.select(cacheSelector<BadgeDefinitionEntity>(cacheKey)),
-    );
-  }).toList();
+  final badgeDefinitionEntityList = servicePubkeys
+      .map((pubkey) {
+        final cacheKey = CacheableEntity.cacheKeyBuilder(
+          eventReference: ReplaceableEventReference(
+            pubkey: pubkey,
+            kind: BadgeDefinitionEntity.kind,
+            dTag: dTag,
+          ),
+        );
+        return ref.watch(
+          ionConnectCacheProvider.select(cacheSelector<BadgeDefinitionEntity>(cacheKey)),
+        );
+      })
+      .nonNulls
+      .toList();
 
-  return badgeDefinitionEntityList.firstOrNull;
+  if (badgeDefinitionEntityList.isNotEmpty) {
+    return badgeDefinitionEntityList.first;
+  }
+
+  for (final pubkey in servicePubkeys) {
+    final fetchedEntity = await ref.watch(
+      ionConnectNetworkEntityProvider(
+        eventReference: ReplaceableEventReference(
+          pubkey: pubkey,
+          kind: BadgeDefinitionEntity.kind,
+          dTag: dTag,
+        ),
+        actionSource: const ActionSourceCurrentUser(),
+      ).future,
+    ) as BadgeDefinitionEntity?;
+    if (fetchedEntity != null) {
+      return fetchedEntity;
+    }
+  }
+
+  return null;
 }
 
 @riverpod

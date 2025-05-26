@@ -102,8 +102,9 @@ class CanReply extends _$CanReply {
 @riverpod
 Future<List<WhoCanReplySettingsOption>> whoCanReplySettingsOptions(Ref ref) async {
   final pubkeys = await ref.watch(servicePubkeysProvider.future);
-  final badgeDefinitionEntity = ref
-      .watch(cachedBadgeDefinitionEntityProvider(BadgeDefinitionEntity.verifiedBadgeDTag, pubkeys));
+  final badgeDefinitionEntity = await ref.watch(
+    badgeDefinitionEntityProvider(BadgeDefinitionEntity.verifiedBadgeDTag, pubkeys).future,
+  );
   return [
     const WhoCanReplySettingsOption.everyone(),
     const WhoCanReplySettingsOption.followedAccounts(),
