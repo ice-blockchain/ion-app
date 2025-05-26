@@ -67,7 +67,8 @@ class ConversationEventMessageDao extends DatabaseAccessor<ChatDatabase>
       return true;
     }
 
-    return newEvent.createdAt.isAfter(existingEventMessage.createdAt);
+    return newEvent.createdAt.isAfter(existingEventMessage.createdAt) ||
+        newEvent.createdAt.isAtSameMomentAs(existingEventMessage.createdAt);
   }
 
   /// Get the creation date of the most recent event messages of specific kinds
