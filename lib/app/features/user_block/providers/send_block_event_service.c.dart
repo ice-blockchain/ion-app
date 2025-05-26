@@ -133,12 +133,8 @@ class SendBlockEventService {
           return a.compareTo(b);
         });
 
-      print('Sending delete block event');
-
       final participantsPubkeysMap =
           await devicePubkeysProvider.fetchUsersKeys([currentUserMasterPubkey]);
-
-      print('Sending delete block event 2');
 
       final eventToDelete = EventToDelete(
         eventReference: ReplaceableEventReference(
