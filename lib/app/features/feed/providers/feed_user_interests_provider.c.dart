@@ -87,16 +87,44 @@ class FeedUserInterests extends _$FeedUserInterests {
   }
 
   Future<FeedInterests> _getRemoteState() async {
-    final repository = await ref.read(configRepositoryProvider.future);
-    final env = ref.read(envProvider.notifier);
-    final cacheDuration = env.get<Duration>(EnvVariable.GENERIC_CONFIG_CACHE_DURATION);
-    return repository.getConfig<FeedInterests>(
-      'TODO', //TODO: set url
-      cacheStrategy: AppConfigCacheStrategy.file,
-      refreshInterval: cacheDuration.inMilliseconds,
-      parser: (data) => FeedInterests.fromJson(jsonDecode(data) as Map<String, dynamic>),
-      checkVersion: true,
-    );
+    await Future<void>.delayed(const Duration(milliseconds: 500));
+    return FeedInterests.fromJson({
+      'sports': {
+        'weight': 4,
+        'children': {
+          'football': {'weight': 1},
+          'tennis': {'weight': 2},
+          'swimming': {'weight': 3},
+        },
+      },
+      'gaming': {
+        'weight': 10,
+        'children': {
+          'moba': {'weight': 1},
+          'fps': {'weight': 2},
+          'rpg': {'weight': 3},
+        },
+      },
+      'crypto': {
+        'weight': 3,
+        'children': {
+          'defi': {'weight': 1},
+          'stablecoins': {'weight': 2},
+          'nfts': {'weight': 3},
+        },
+      },
+    });
+
+    // final repository = await ref.read(configRepositoryProvider.future);
+    // final env = ref.read(envProvider.notifier);
+    // final cacheDuration = env.get<Duration>(EnvVariable.GENERIC_CONFIG_CACHE_DURATION);
+    // return repository.getConfig<FeedInterests>(
+    //   'TODO', //TODO: set url
+    //   cacheStrategy: AppConfigCacheStrategy.file,
+    //   refreshInterval: cacheDuration.inMilliseconds,
+    //   parser: (data) => FeedInterests.fromJson(jsonDecode(data) as Map<String, dynamic>),
+    //   checkVersion: true,
+    // );
   }
 
   FeedInterests? _loadSavedState() {
@@ -162,4 +190,22 @@ class FeedUserInterests extends _$FeedUserInterests {
   }
 
   String get _persistanceKey => 'feed_user_interests_${feedType.name}';
+}
+
+@riverpod
+class FeedUserInterestsNotifier extends _$FeedUserInterestsNotifier {
+  @override
+  void build() {}
+
+  Future<void> updateInterests(
+    FeedInterestInteraction interaction,
+    List<String> interactionCategories,
+  ) async {
+    await Future.wait([
+      for (final feedType in FeedType.values)
+        ref
+            .read(feedUserInterestsProvider(feedType).notifier)
+            .updateInterests(interaction, interactionCategories),
+    ]);
+  }
 }
