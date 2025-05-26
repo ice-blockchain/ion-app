@@ -94,12 +94,18 @@ class VideoEditorModule: VideoEditor {
     ) {
         self.flutterResult = flutterResult
 
-        // Editor V2 is not available from Trimmer screen. Editor screen will be opened
+        // Create a copy of the video in Documents directory for safe editing
+        let editingURL = createEditingCopy(of: videoURL)
+        guard let safeEditingURL = editingURL else {
+            flutterResult(FlutterError(code: "ERR_COPY_FAILED", message: "Failed to create editing copy", details: nil))
+            return
+        }
 
+        // Editor V2 is not available from Trimmer screen. Editor screen will be opened
         let trimmerLaunchConfig = VideoEditorLaunchConfig(
             entryPoint: .trimmer,
             hostController: controller,
-            videoItems: [videoURL],
+            videoItems: [safeEditingURL],
             musicTrack: nil,
             animated: true
         )
@@ -107,10 +113,40 @@ class VideoEditorModule: VideoEditor {
         checkLicenseAndStartVideoEditor(with: trimmerLaunchConfig, flutterResult: flutterResult)
     }
     
+    private func createEditingCopy(of originalURL: URL) -> URL? {
+        let fileManager = FileManager.default
+        
+        // Use Documents directory instead of temp directory for persistence
+        guard let documentsURL = fileManager.urls(for: .documentDirectory, in: .userDomainMask).first else {
+            return nil
+        }
+        
+        let editingFileName = "editing_\(UUID().uuidString).mov"
+        let editingURL = documentsURL.appendingPathComponent(editingFileName)
+        
+        do {
+            if fileManager.fileExists(atPath: editingURL.path) {
+                try fileManager.removeItem(at: editingURL)
+            }
+            
+            try fileManager.copyItem(at: originalURL, to: editingURL)
+            return editingURL
+        } catch {
+            return nil
+        }
+    }
+    
+    
     func checkLicenseAndStartVideoEditor(with config: VideoEditorLaunchConfig, flutterResult: @escaping FlutterResult) {
         if videoEditorSDK == nil {
             flutterResult(FlutterError(code: AppDelegate.errEditorNotInitialized, message: "", details: nil))
             return
+        }
+        
+        videoEditorSDK?.delegate = self
+        
+        if self.restoreLastVideoEditingSession == false {
+            self.videoEditorSDK?.clearSessionData()
         }
         
         // Checking the license might take around 1 sec in the worst case.
@@ -154,8 +190,9 @@ extension VideoEditorModule {
         getTopViewController()?.present(progressView, animated: true)
         
         let manager = FileManager.default
-        // File name
-        let firstFileURL = manager.temporaryDirectory.appendingPathComponent("banuba_demo_ve.mov")
+        let timestamp = Int(Date().timeIntervalSince1970 * 1000)
+        let fileName = "edited_video_\(timestamp).mov"
+        let firstFileURL = manager.temporaryDirectory.appendingPathComponent(fileName)
         if manager.fileExists(atPath: firstFileURL.path) {
             try? manager.removeItem(at: firstFileURL)
         }
@@ -217,7 +254,7 @@ extension VideoEditorModule {
                 print("Error while exporting video = \(String(describing: error))")
                 self.flutterResult?(FlutterError(code: "ERR_MISSING_EXPORT_RESULT", message: "", details: nil))
             }
-            
+
             // Remove strong reference to video editor sdk instance
             if self.restoreLastVideoEditingSession == false {
                 self.videoEditorSDK?.clearSessionData()
@@ -253,11 +290,8 @@ extension VideoEditorModule {
 extension VideoEditorModule: BanubaVideoEditorDelegate {
     func videoEditorDidCancel(_ videoEditor: BanubaVideoEditor) {
         videoEditor.dismissVideoEditor(animated: true) {
-            // remove strong reference to video editor sdk instance
-            if self.restoreLastVideoEditingSession == false {
-                self.videoEditorSDK?.clearSessionData()
-            }
             self.videoEditorSDK = nil
+            self.flutterResult?(nil)
         }
     }
     

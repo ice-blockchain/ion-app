@@ -44,7 +44,11 @@ class VideoPreviewCover extends HookConsumerWidget {
         .watch(
           videoControllerProvider(
             // local video - no need to pass authorPubkey for ion connect fallback
-            VideoControllerParams(sourcePath: filePath, looping: true),
+            VideoControllerParams(
+              sourcePath: filePath,
+              looping: true,
+              uniqueId: attachedVideo.name ?? '',
+            ),
           ),
         )
         .value;
