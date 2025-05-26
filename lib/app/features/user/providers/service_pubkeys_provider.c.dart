@@ -13,13 +13,12 @@ part 'service_pubkeys_provider.c.g.dart';
 @Riverpod(keepAlive: true)
 Future<List<String>> servicePubkeys(Ref ref) async {
   final env = ref.read(envProvider.notifier);
-  final cacheMinutes = env.get<int>(EnvVariable.PUSH_TRANSLATIONS_CACHE_MINUTES);
-  final refreshInterval = Duration(minutes: cacheMinutes).inMilliseconds;
+  final cacheDuration = env.get<Duration>(EnvVariable.GENERIC_CONFIG_CACHE_DURATION);
   final repo = await ref.watch(configRepositoryProvider.future);
   final result = await repo.getConfig<List<String>>(
     'service_pubkeys',
     cacheStrategy: AppConfigCacheStrategy.localStorage,
-    refreshInterval: refreshInterval,
+    refreshInterval: cacheDuration.inMilliseconds,
     parser: (data) => (jsonDecode(data) as List<dynamic>).cast<String>(),
     checkVersion: true,
   );
