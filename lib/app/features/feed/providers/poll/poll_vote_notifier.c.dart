@@ -26,7 +26,7 @@ class PollVoteData with _$PollVoteData {
 
   factory PollVoteData.fromEventMessage(EventMessage eventMessage) {
     final tags = groupBy(eventMessage.tags, (tag) => tag[0]);
-    final pollEventId = tags['e']?.first[1];
+    final pollEventId = tags['a']?.first[1];
     final decoded = jsonDecode(eventMessage.content);
 
     if (pollEventId == null) {
