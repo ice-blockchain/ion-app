@@ -31,43 +31,17 @@ class FeedUserInterests extends _$FeedUserInterests {
     return _syncState();
   }
 
-  /// Updates the user's interest weights based on an interaction.
-  ///
-  /// The interaction's weight is added to both category and subcategory levels.
-  /// Adding weight to subcategories also increases the weight of the parent category.
   Future<void> updateInterests(
     FeedInterestInteraction interaction,
     List<String> interactionCategories,
   ) async {
     //TODO:what if call a method from notifier without using provider?
     final interests = await _syncState();
-
-    final updatedCategories = <String, FeedInterestsCategory>{};
-
-    for (final MapEntry(key: categoryKey, value: category) in interests.categories.entries) {
-      var updatedCategoryWeight = interactionCategories.contains(categoryKey)
-          ? category.weight + interaction.weight
-          : category.weight;
-      final updatedSubcategories = <String, FeedInterestsSubcategory>{};
-
-      for (final MapEntry(key: subcategoryKey, value: subcategory) in category.children.entries) {
-        if (interactionCategories.contains(subcategoryKey)) {
-          updatedCategoryWeight += interaction.weight;
-          updatedSubcategories[subcategoryKey] = subcategory.copyWith(
-            weight: subcategory.weight + interaction.weight,
-          );
-        } else {
-          updatedSubcategories[subcategoryKey] = subcategory;
-        }
-      }
-
-      updatedCategories[categoryKey] = category.copyWith(
-        weight: updatedCategoryWeight,
-        children: updatedSubcategories,
-      );
-    }
-
-    state = AsyncData(FeedInterests(categories: updatedCategories));
+    final updatedInterests = interests.applyInteraction(
+      interaction,
+      interactionCategories,
+    );
+    state = AsyncData(updatedInterests);
   }
 
   Future<FeedInterests> _syncState() async {
