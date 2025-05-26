@@ -17,6 +17,7 @@ class LoginActionNotifier extends _$LoginActionNotifier {
       final ionIdentity = await ref.read(ionIdentityProvider.future);
       await ionIdentity(username: keyName).auth.loginUser(
         twoFATypes: [],
+        localCredsOnly: true,
         onVerifyIdentity: ({
           required onBiometricsFlow,
           required onPasskeyFlow,

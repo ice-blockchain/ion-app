@@ -16,11 +16,11 @@ class StatisticsClientServiceLocator {
   static final StatisticsClientServiceLocator _instance =
       StatisticsClientServiceLocator._internal();
 
-  IonIdentityStatistics statistics({
+  IONIdentityStatistics statistics({
     required String username,
     required IONIdentityConfig config,
   }) {
-    return IonIdentityStatistics(
+    return IONIdentityStatistics(
       username: username,
       hashtagsService: hashtags(username: username, config: config),
     );

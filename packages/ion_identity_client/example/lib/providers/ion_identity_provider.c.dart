@@ -15,7 +15,7 @@ Future<IONIdentity> ionIdentity(Ref ref) async {
   final appId = Platform.isAndroid
       ? const String.fromEnvironment('ION_ANDROID_APP_ID')
       : const String.fromEnvironment('ION_IOS_APP_ID');
-  final origin = dotenv.get('ION_ORIGIN');
+  const origin = String.fromEnvironment('ION_ORIGIN');
 
   final config = IONIdentityConfig(
     appId: appId,
