@@ -146,7 +146,15 @@ class ConversationMessageDao extends DatabaseAccessor<ChatDatabase>
         messageStatusTable.messageEventReference.equalsExp(eventMessageTable.eventReference),
       ),
     ])
-      ..where(messageStatusTable.status.isNotIn([MessageDeliveryStatus.deleted.index]))
+      ..where(
+        notExistsQuery(
+          select(messageStatusTable)
+            ..where((tbl) => tbl.status.equals(MessageDeliveryStatus.deleted.index))
+            ..where(
+              (table) => table.messageEventReference.equalsExp(eventMessageTable.eventReference),
+            ),
+        ),
+      )
       ..where(eventMessageTable.eventReference.equalsValue(eventReference))
       ..groupBy([eventMessageTable.eventReference])
       ..distinct;
