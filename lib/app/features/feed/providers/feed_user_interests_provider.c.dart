@@ -2,10 +2,7 @@ import 'dart:convert';
 import 'dart:ui';
 
 import 'package:ion/app/features/auth/providers/auth_provider.c.dart';
-import 'package:ion/app/features/config/data/models/app_config_cache_strategy.dart';
-import 'package:ion/app/features/config/providers/config_repository.c.dart';
 import 'package:ion/app/features/core/providers/app_lifecycle_provider.c.dart';
-import 'package:ion/app/features/core/providers/env_provider.c.dart';
 import 'package:ion/app/features/feed/data/models/feed_interests.c.dart';
 import 'package:ion/app/features/feed/data/models/feed_interests_interaction.c.dart';
 import 'package:ion/app/features/feed/data/models/feed_type.dart';
@@ -18,8 +15,7 @@ part 'feed_user_interests_provider.c.g.dart';
 @riverpod
 class FeedUserInterests extends _$FeedUserInterests {
   @override
-  Future<FeedInterests?> build(FeedType feedType) {
-    listenSelf((_, next) => _saveState(next.valueOrNull));
+  Future<FeedInterests> build(FeedType feedType) {
     ref.listen<AppLifecycleState>(
       appLifecycleProvider,
       (previous, next) async {
@@ -35,28 +31,33 @@ class FeedUserInterests extends _$FeedUserInterests {
     FeedInterestInteraction interaction,
     List<String> interactionCategories,
   ) async {
-    final interests = await _syncState();
+    final interests = await future;
     final updatedInterests = interests.applyInteraction(
       interaction,
       interactionCategories,
     );
+    await _saveState(updatedInterests);
     state = AsyncData(updatedInterests);
   }
 
   Future<FeedInterests> _syncState() async {
-    final localState = state.valueOrNull ?? _loadSavedState();
+    final localState = _loadSavedState();
     final remoteState = await _getRemoteState();
-    return _mergeStates(local: localState, remote: remoteState);
+    final mergedState = _mergeStates(local: localState, remote: remoteState);
+    if (mergedState != localState) {
+      await _saveState(mergedState);
+    }
+    return mergedState;
   }
 
-  void _saveState(FeedInterests? nextState) {
+  Future<void> _saveState(FeedInterests interests) async {
     final identityKeyName = ref.read(currentIdentityKeyNameSelectorProvider);
-    if (identityKeyName == null || nextState == null) {
+    if (identityKeyName == null) {
       return;
     }
-    ref
+    return ref
         .read(userPreferencesServiceProvider(identityKeyName: identityKeyName))
-        .setValue(_persistanceKey, jsonEncode(nextState.toJson()));
+        .setValue(_persistanceKey, jsonEncode(interests.categories));
   }
 
   Future<FeedInterests> _getRemoteState() async {
