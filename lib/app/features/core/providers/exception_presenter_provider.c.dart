@@ -49,11 +49,11 @@ class ExceptionPresenter {
     return switch (error) {
       final PaymentNoDestinationException ex =>
         locale.error_payment_no_destination_description(ex.abbreviation),
-      final IONIdentityException identityException => identityException.description(context),
+      final IONIdentityException identityException => identityException.title(context),
+      Object _ when showDebugInfo => error.toString(),
       IONException(code: final int code) => locale.error_general_description(
           locale.error_general_error_code(code),
         ),
-      Object _ when showDebugInfo => error.toString(),
       _ => locale.error_general_description('')
     };
   }
@@ -64,11 +64,10 @@ class ExceptionPresenter {
       final PaymentNoDestinationException ex =>
         locale.error_payment_no_destination_description(ex.abbreviation),
       final IONIdentityException identityException => identityException.description(context),
-      IONException(code: final int code) => locale.error_general_description(
-          locale.error_general_error_code(code),
-        ),
       Object _ when showDebugInfo => error.toString(),
-      _ => locale.error_general_description('')
+      IONException(code: final int code) =>
+        context.i18n.error_general_description(context.i18n.error_general_error_code(code)),
+      _ => context.i18n.error_general_description('')
     };
   }
 
