@@ -43,90 +43,98 @@ class OneToOneMessageList extends HookConsumerWidget {
       [allMessages, itemScrollController],
     );
 
-    return ColoredBox(
-      color: context.theme.appColors.primaryBackground,
-      child: ScreenSideOffset.small(
-        child: ScrollablePositionedList.builder(
-          physics: const ClampingScrollPhysics(),
-          itemCount: allMessages.length,
-          itemScrollController: itemScrollController,
-          reverse: true,
-          itemBuilder: (context, index) {
-            final message = allMessages[index];
+    return NotificationListener<ScrollUpdateNotification>(
+      onNotification: (notification) {
+        if (notification.scrollDelta != null && notification.scrollDelta! > 0) {
+          FocusManager.instance.primaryFocus?.unfocus();
+        }
+        return false;
+      },
+      child: ColoredBox(
+        color: context.theme.appColors.primaryBackground,
+        child: ScreenSideOffset.small(
+          child: ScrollablePositionedList.builder(
+            physics: const ClampingScrollPhysics(),
+            itemCount: allMessages.length,
+            itemScrollController: itemScrollController,
+            reverse: true,
+            itemBuilder: (context, index) {
+              final message = allMessages[index];
 
-            final entity = ReplaceablePrivateDirectMessageEntity.fromEventMessage(message);
+              final entity = ReplaceablePrivateDirectMessageEntity.fromEventMessage(message);
 
-            final displayDate = messages.entries
-                .singleWhereOrNull((entry) => entry.value.last.id == message.id)
-                ?.key;
+              final displayDate = messages.entries
+                  .singleWhereOrNull((entry) => entry.value.last.id == message.id)
+                  ?.key;
 
-            final previousMessage = index > 0 ? allMessages[index - 1] : null;
-            final isLastMessage = index == 0;
+              final previousMessage = index > 0 ? allMessages[index - 1] : null;
+              final isLastMessage = index == 0;
 
-            final isMessageFromAnotherAuthor =
-                previousMessage != null && previousMessage.masterPubkey != message.masterPubkey;
+              final isMessageFromAnotherAuthor =
+                  previousMessage != null && previousMessage.masterPubkey != message.masterPubkey;
 
-            final margin = EdgeInsetsDirectional.only(
-              bottom: isLastMessage ? 20.0.s : 8.0.s,
-              top: isMessageFromAnotherAuthor ? 8.0.s : 0,
-            );
+              final margin = EdgeInsetsDirectional.only(
+                bottom: isLastMessage ? 20.0.s : 8.0.s,
+                top: isMessageFromAnotherAuthor ? 8.0.s : 0,
+              );
 
-            return Column(
-              key: Key(message.id),
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                if (displayDate != null)
-                  Center(
-                    child: Padding(
-                      padding: EdgeInsets.symmetric(vertical: 12.0.s),
-                      child: ChatDateHeaderText(date: displayDate),
+              return Column(
+                key: Key(message.id),
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  if (displayDate != null)
+                    Center(
+                      child: Padding(
+                        padding: EdgeInsets.symmetric(vertical: 12.0.s),
+                        child: ChatDateHeaderText(date: displayDate),
+                      ),
                     ),
-                  ),
-                switch (entity.data.messageType) {
-                  MessageType.text => TextMessage(
-                      margin: margin,
-                      eventMessage: message,
-                      onTapReply: () => onTapReply(entity),
-                    ),
-                  MessageType.profile => ProfileShareMessage(
-                      margin: margin,
-                      eventMessage: message,
-                      onTapReply: () => onTapReply(entity),
-                    ),
-                  MessageType.visualMedia => VisualMediaMessage(
-                      margin: margin,
-                      eventMessage: message,
-                      onTapReply: () => onTapReply(entity),
-                    ),
-                  MessageType.sharedPost => PostMessage(
-                      margin: margin,
-                      eventMessage: message,
-                      onTapReply: () => onTapReply(entity),
-                    ),
-                  MessageType.requestFunds || MessageType.moneySent => MoneyMessage(
-                      margin: margin,
-                      eventMessage: message,
-                      onTapReply: () => onTapReply(entity),
-                    ),
-                  MessageType.emoji => EmojiMessage(
-                      margin: margin,
-                      eventMessage: message,
-                      onTapReply: () => onTapReply(entity),
-                    ),
-                  MessageType.audio => AudioMessage(
-                      margin: margin,
-                      eventMessage: message,
-                      onTapReply: () => onTapReply(entity),
-                    ),
-                  MessageType.document => DocumentMessage(
-                      margin: margin,
-                      eventMessage: message,
-                      onTapReply: () => onTapReply(entity),
-                    ),
-                },
-              ],
-            );
-          },
+                  switch (entity.data.messageType) {
+                    MessageType.text => TextMessage(
+                        margin: margin,
+                        eventMessage: message,
+                        onTapReply: () => onTapReply(entity),
+                      ),
+                    MessageType.profile => ProfileShareMessage(
+                        margin: margin,
+                        eventMessage: message,
+                        onTapReply: () => onTapReply(entity),
+                      ),
+                    MessageType.visualMedia => VisualMediaMessage(
+                        margin: margin,
+                        eventMessage: message,
+                        onTapReply: () => onTapReply(entity),
+                      ),
+                    MessageType.sharedPost => PostMessage(
+                        margin: margin,
+                        eventMessage: message,
+                        onTapReply: () => onTapReply(entity),
+                      ),
+                    MessageType.requestFunds || MessageType.moneySent => MoneyMessage(
+                        margin: margin,
+                        eventMessage: message,
+                        onTapReply: () => onTapReply(entity),
+                      ),
+                    MessageType.emoji => EmojiMessage(
+                        margin: margin,
+                        eventMessage: message,
+                        onTapReply: () => onTapReply(entity),
+                      ),
+                    MessageType.audio => AudioMessage(
+                        margin: margin,
+                        eventMessage: message,
+                        onTapReply: () => onTapReply(entity),
+                      ),
+                    MessageType.document => DocumentMessage(
+                        margin: margin,
+                        eventMessage: message,
+                        onTapReply: () => onTapReply(entity),
+                      ),
+                  },
+                ],
+              );
+            },
+          ),
         ),
       ),
     );
