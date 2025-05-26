@@ -13,7 +13,7 @@ class FeedInterests with _$FeedInterests {
   factory FeedInterests.fromJson(Map<String, dynamic> json) =>
       _$FeedInterestsFromJson({'categories': json});
 
-  FeedInterests._();
+  const FeedInterests._();
 
   /// Returns a copy of the interest with updated weights based on the interaction.
   ///
@@ -27,15 +27,17 @@ class FeedInterests with _$FeedInterests {
 
     for (final MapEntry(key: categoryKey, value: category) in categories.entries) {
       var updatedCategoryWeight = interactionCategories.contains(categoryKey)
-          ? category.weight + interaction.weight
+          ? category.weight + interaction.score
           : category.weight;
       final updatedSubcategories = <String, FeedInterestsSubcategory>{};
 
       for (final MapEntry(key: subcategoryKey, value: subcategory) in category.children.entries) {
         if (interactionCategories.contains(subcategoryKey)) {
-          updatedCategoryWeight += interaction.weight;
+          if (updatedCategoryWeight == category.weight) {
+            updatedCategoryWeight += interaction.score;
+          }
           updatedSubcategories[subcategoryKey] = subcategory.copyWith(
-            weight: subcategory.weight + interaction.weight,
+            weight: subcategory.weight + interaction.score,
           );
         } else {
           updatedSubcategories[subcategoryKey] = subcategory;

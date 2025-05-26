@@ -35,7 +35,6 @@ class FeedUserInterests extends _$FeedUserInterests {
     FeedInterestInteraction interaction,
     List<String> interactionCategories,
   ) async {
-    //TODO:what if call a method from notifier without using provider?
     final interests = await _syncState();
     final updatedInterests = interests.applyInteraction(
       interaction,

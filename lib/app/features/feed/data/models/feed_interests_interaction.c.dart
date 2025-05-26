@@ -8,7 +8,7 @@ enum FeedInterestInteraction {
   createPost(10),
   createArticle(20);
 
-  const FeedInterestInteraction(this.weight);
+  const FeedInterestInteraction(this.score);
 
-  final int weight;
+  final int score;
 }
