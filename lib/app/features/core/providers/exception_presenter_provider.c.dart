@@ -47,14 +47,9 @@ class ExceptionPresenter {
   String _getTitle(BuildContext context, Object error) {
     final locale = context.i18n;
     return switch (error) {
-      final PaymentNoDestinationException ex =>
-        locale.error_payment_no_destination_description(ex.abbreviation),
+      PaymentNoDestinationException() => locale.error_payment_no_destination_title,
       final IONIdentityException identityException => identityException.title(context),
-      Object _ when showDebugInfo => error.toString(),
-      IONException(code: final int code) => locale.error_general_description(
-          locale.error_general_error_code(code),
-        ),
-      _ => locale.error_general_description('')
+      _ => context.i18n.error_general_title,
     };
   }
 
