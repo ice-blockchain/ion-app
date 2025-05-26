@@ -19,8 +19,9 @@ class BlockUserButton extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final blocking = ref.watch(isBlockedProvider(pubkey));
+    final blocking = ref.watch(isBlockedNotifierProvider(pubkey)).valueOrNull ?? false;
     return _BlockButton(
+      blocking: blocking,
       onPressed: () {
         if (!blocking) {
           showSimpleBottomSheet<void>(
@@ -33,7 +34,6 @@ class BlockUserButton extends ConsumerWidget {
           ref.read(blockListNotifierProvider.notifier).toggleBlocked(pubkey);
         }
       },
-      blocking: blocking,
     );
   }
 }

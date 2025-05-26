@@ -12,17 +12,24 @@ class BlockedUsersAppBar extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final counter = ref.watch(currentUserBlockListProvider).valueOrNull?.data.pubkeys.length ?? 0;
+    final blockedUsers = ref.watch(currentUserBlockListNotifierProvider).valueOrNull;
+    final blockedCount = blockedUsers == null
+        ? 0
+        : blockedUsers.expand((e) => e.data.blockedMasterPubkeys).toSet().length;
 
     return SliverAppBar(
+      pinned: true,
       primary: false,
-      flexibleSpace: NavigationAppBar.modal(
-        actions: const [NavigationCloseButton()],
-        title: Text(context.i18n.settings_blocked_users_title_with_counter(counter)),
-      ),
       automaticallyImplyLeading: false,
       toolbarHeight: NavigationAppBar.modalHeaderHeight,
-      pinned: true,
+      flexibleSpace: NavigationAppBar.modal(
+        actions: const [NavigationCloseButton()],
+        title: Text(
+          context.i18n.settings_blocked_users_title_with_counter(blockedCount),
+          maxLines: 1,
+          overflow: TextOverflow.ellipsis,
+        ),
+      ),
     );
   }
 }

@@ -56,7 +56,8 @@ class TabEntitiesList extends ConsumerWidget {
     final userMetadata = ref.watch(userMetadataProvider(pubkey)).valueOrNull;
     final dataSource = ref.watch(tabDataSourceProvider(type: type, pubkey: pubkey));
     final entitiesPagedData = ref.watch(entitiesPagedDataProvider(dataSource));
-    final isBlockedOrMutedOrBlocking = ref.watch(isBlockedOrMutedOrBlockingProvider(pubkey));
+    final isBlockedOrMutedOrBlocking =
+        ref.watch(isBlockedOrMutedOrBlockingNotifierProvider(pubkey)).valueOrNull ?? false;
     final entities = entitiesPagedData?.data.items;
 
     return LoadMoreBuilder(

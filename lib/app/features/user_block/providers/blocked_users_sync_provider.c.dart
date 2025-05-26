@@ -9,6 +9,7 @@ import 'package:ion/app/features/auth/providers/delegation_complete_provider.c.d
 import 'package:ion/app/features/chat/e2ee/providers/gift_unwrap_service_provider.c.dart';
 import 'package:ion/app/features/ion_connect/ion_connect.dart';
 import 'package:ion/app/features/ion_connect/model/deletion_request.c.dart';
+import 'package:ion/app/features/ion_connect/model/event_reference.c.dart';
 import 'package:ion/app/features/ion_connect/model/ion_connect_gift_wrap.c.dart';
 import 'package:ion/app/features/ion_connect/providers/entities_syncer_notifier.c.dart';
 import 'package:ion/app/features/ion_connect/providers/ion_connect_event_signer_provider.c.dart';
@@ -125,8 +126,9 @@ class BlockedUsersSync extends _$BlockedUsersSync {
     } else if (rumor.kind == DeletionRequestEntity.kind) {
       final eventsToDelete = DeletionRequest.fromEventMessage(rumor).events;
 
-      final eventToDeleteReferences =
-          eventsToDelete.map((event) => (event as EventToDelete).eventReference).toList();
+      final eventToDeleteReferences = eventsToDelete
+          .map((event) => (event as EventToDelete).eventReference as ReplaceableEventReference)
+          .toList();
 
       await blockEventDao.markAsDeleted(eventToDeleteReferences);
     }

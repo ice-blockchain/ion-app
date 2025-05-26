@@ -7,15 +7,14 @@ import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:ion/app/exceptions/exceptions.dart';
 import 'package:ion/app/extensions/event_message.dart';
 import 'package:ion/app/features/chat/community/models/entities/tags/master_pubkey_tag.c.dart';
+import 'package:ion/app/features/chat/community/models/entities/tags/pubkey_tag.c.dart';
 import 'package:ion/app/features/ion_connect/ion_connect.dart';
-import 'package:ion/app/features/ion_connect/model/event_reference.c.dart';
 import 'package:ion/app/features/ion_connect/model/event_serializable.dart';
 import 'package:ion/app/features/ion_connect/model/ion_connect_entity.dart';
 
 part 'blocked_user_entity.c.freezed.dart';
 
-@immutable
-@Freezed(equal: false)
+@freezed
 class BlockedUserEntity with IonConnectEntity, ImmutableEntity, _$BlockedUserEntity {
   const factory BlockedUserEntity({
     required String id,
@@ -59,8 +58,9 @@ class BlockedUserEntity with IonConnectEntity, ImmutableEntity, _$BlockedUserEnt
 class BlockedUserEntityData with _$BlockedUserEntityData implements EventSerializable {
   const factory BlockedUserEntityData({
     required String content,
+    required String sharedId,
     required String masterPubkey,
-    required ImmutableEventReference reference,
+    required List<String> blockedMasterPubkeys,
   }) = _BlockedUserEntityData;
 
   const BlockedUserEntityData._();
@@ -68,16 +68,18 @@ class BlockedUserEntityData with _$BlockedUserEntityData implements EventSeriali
   factory BlockedUserEntityData.fromEventMessage(EventMessage eventMessage) {
     final tags = groupBy(eventMessage.tags, (tag) => tag[0]);
 
-    final identifierTag = tags[ImmutableEventReference.tagName]?.first;
+    final sharedId = tags['d']?.first[1];
 
-    if (identifierTag == null) {
-      throw IncorrectEventTagsException(eventId: eventMessage.id);
+    if (sharedId == null) {
+      throw ShareableIdentifierDecodeException(eventMessage.id);
     }
+    final blockedMasterPubkeys = tags[PubkeyTag.tagName]?.map((tag) => tag[1]).toList() ?? [];
 
     return BlockedUserEntityData(
+      sharedId: tags['d']?.first[1] ?? '',
       content: eventMessage.content,
       masterPubkey: eventMessage.masterPubkey,
-      reference: ImmutableEventReference.fromTag(identifierTag),
+      blockedMasterPubkeys: blockedMasterPubkeys,
     );
   }
 
@@ -89,12 +91,13 @@ class BlockedUserEntityData with _$BlockedUserEntityData implements EventSeriali
   }) {
     return EventMessage.fromData(
       signer: signer,
-      kind: BlockedUserEntity.kind,
       content: content,
+      kind: BlockedUserEntity.kind,
       tags: [
         ...tags,
-        reference.toTag(),
+        ['d', sharedId],
         MasterPubkeyTag(value: masterPubkey).toTag(),
+        ...blockedMasterPubkeys.map((pubkey) => PubkeyTag(value: pubkey).toTag()),
       ],
       createdAt: createdAt,
     );

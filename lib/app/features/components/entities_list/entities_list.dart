@@ -119,7 +119,7 @@ class _EntityListItem extends ConsumerWidget {
   }
 
   bool _isBlockedOrMutedOrBlocking(WidgetRef ref, IonConnectEntity entity) {
-    return ref.watch(isEntityBlockedOrMutedOrBlockingProvider(entity));
+    return ref.watch(isEntityBlockedOrMutedOrBlockingNotifierProvider(entity)).valueOrNull ?? false;
   }
 
   /// When we fetch lists (e.g. feed, search or data for tabs in profiles),

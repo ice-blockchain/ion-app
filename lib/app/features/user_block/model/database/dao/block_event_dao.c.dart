@@ -61,6 +61,22 @@ class BlockEventDao extends DatabaseAccessor<BlockedUsersDatabase> with _$BlockE
     return result.map((row) => row.readTable(db.blockEventTable).toEventMessage()).toList();
   }
 
+  Stream<List<EventMessage>> watchBlockedUsersEvents(String currentUserMasterPubkey) {
+    final query = select(db.blockEventTable).join([
+      leftOuterJoin(
+        db.deletedBlockEventTable,
+        db.deletedBlockEventTable.eventReference.equalsExp(db.blockEventTable.eventReference) &
+            db.deletedBlockEventTable.isDeleted.equals(true),
+      ),
+    ])
+      ..where(db.blockEventTable.masterPubkey.equals(currentUserMasterPubkey))
+      ..where(db.deletedBlockEventTable.eventReference.isNull());
+
+    return query.watch().map(
+          (rows) => rows.map((row) => row.readTable(db.blockEventTable).toEventMessage()).toList(),
+        );
+  }
+
   Future<List<EventMessage>> getBlockedByUsersEvents(String currentUserMasterPubkey) async {
     final query = select(db.blockEventTable).join([
       leftOuterJoin(
@@ -77,9 +93,36 @@ class BlockEventDao extends DatabaseAccessor<BlockedUsersDatabase> with _$BlockE
     return result.map((row) => row.readTable(db.blockEventTable).toEventMessage()).toList();
   }
 
-  Future<void> markAsDeleted(List<EventReference> eventReferences) async {
-    await (update(db.deletedBlockEventTable)
-          ..where((table) => table.eventReference.isInValues(eventReferences)))
-        .write(const DeletedBlockEventTableCompanion(isDeleted: Value(true)));
+  Stream<List<EventMessage>> watchBlockedByUsersEvents(String currentUserMasterPubkey) {
+    final query = select(db.blockEventTable).join([
+      leftOuterJoin(
+        db.deletedBlockEventTable,
+        db.deletedBlockEventTable.eventReference.equalsExp(db.blockEventTable.eventReference) &
+            db.deletedBlockEventTable.isDeleted.equals(true),
+      ),
+    ])
+      ..where(db.blockEventTable.masterPubkey.isNotValue(currentUserMasterPubkey))
+      ..where(db.deletedBlockEventTable.eventReference.isNull());
+
+    return query.watch().map(
+          (rows) => rows.map((row) => row.readTable(db.blockEventTable).toEventMessage()).toList(),
+        );
+  }
+
+  Future<void> markAsDeleted(List<ReplaceableEventReference> eventReferences) async {
+    final sharedIds = eventReferences.map((eventReference) => eventReference.dTag).toList();
+
+    final matchingEvents =
+        await (select(db.blockEventTable)..where((tbl) => tbl.sharedId.isIn(sharedIds))).get();
+
+    for (final event in matchingEvents) {
+      await into(db.deletedBlockEventTable).insertOnConflictUpdate(
+        DeletedBlockEventTableCompanion(
+          eventReference: Value(event.eventReference),
+          sharedId: Value(event.sharedId),
+          isDeleted: const Value(true),
+        ),
+      );
+    }
   }
 }

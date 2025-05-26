@@ -38,13 +38,13 @@ class ProfilePage extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final isBlocked = ref.watch(isBlockedProvider(pubkey));
-    final isBlocking = ref.watch(isBlockingProvider(pubkey)).valueOrNull;
+    final isBlocked = ref.watch(isBlockedNotifierProvider(pubkey)).valueOrNull;
+    final isBlockedBy = ref.watch(isBlockedByNotifierProvider(pubkey)).valueOrNull;
     final userMetadata = ref.watch(userMetadataProvider(pubkey));
 
     final didRefresh = useState(false);
 
-    if (!didRefresh.value && (userMetadata.isLoading || isBlocking == null)) {
+    if (!didRefresh.value && (userMetadata.isLoading || isBlocked == null || isBlockedBy == null)) {
       return Scaffold(
         appBar: NavigationAppBar(
           useScreenTopOffset: true,
@@ -56,8 +56,10 @@ class ProfilePage extends HookConsumerWidget {
       );
     }
 
-    final isBlockedOrBlocking = isBlocked || isBlocking.falseOrValue;
-    if (!userMetadata.hasValue || isBlockedOrBlocking) {
+    final isBlockedOrBlockedBy =
+        isBlocked != null && isBlocked || isBlockedBy != null && isBlockedBy;
+
+    if (!userMetadata.hasValue || isBlockedOrBlockedBy) {
       return const CantFindProfilePage();
     }
 

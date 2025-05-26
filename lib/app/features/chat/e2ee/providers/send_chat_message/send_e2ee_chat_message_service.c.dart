@@ -29,7 +29,6 @@ import 'package:ion/app/features/ion_connect/model/related_event_marker.dart';
 import 'package:ion/app/features/ion_connect/model/related_pubkey.c.dart';
 import 'package:ion/app/features/ion_connect/providers/ion_connect_event_signer_provider.c.dart';
 import 'package:ion/app/features/ion_connect/providers/ion_connect_notifier.c.dart';
-import 'package:ion/app/features/user_block/model/entities/blocked_user_entity.c.dart';
 import 'package:ion/app/services/compressors/video_compressor.c.dart';
 import 'package:ion/app/services/ion_connect/ion_connect_gift_wrap_service.c.dart';
 import 'package:ion/app/services/ion_connect/ion_connect_seal_service.c.dart';
@@ -316,11 +315,9 @@ class SendE2eeChatMessageService {
     final giftWrapService = await ref.read(ionConnectGiftWrapServiceProvider.future);
     final sealService = await ref.read(ionConnectSealServiceProvider.future);
 
-    final expirationTag = eventMessage.kind == BlockedUserEntity.kind
-        ? null
-        : EntityExpiration(
-            value: DateTime.now().add(expirationDuration),
-          ).toTag();
+    final expirationTag = EntityExpiration(
+      value: DateTime.now().add(expirationDuration),
+    ).toTag();
 
     final giftWrap = await giftWrapSharedIsolate.compute(
       createGiftWrapFn,

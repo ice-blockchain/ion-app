@@ -51,14 +51,21 @@ extension KeysExtensions on EventMessage {
   }
 
   blocked_users_db.BlockEventDbModel toBlockEventDbModel(EventReference eventReference) {
+    final sharedId = tags.firstWhereOrNull((tag) => tag.first == 'd')?.last;
+
+    if (sharedId == null) {
+      throw ShareableIdentifierDecodeException(id);
+    }
+
     return blocked_users_db.BlockEventDbModel(
       id: id,
       kind: kind,
-      pubkey: pubkey,
-      masterPubkey: masterPubkey,
-      createdAt: createdAt,
-      content: content,
       tags: tags,
+      pubkey: pubkey,
+      content: content,
+      sharedId: sharedId,
+      createdAt: createdAt,
+      masterPubkey: masterPubkey,
       eventReference: eventReference,
     );
   }
