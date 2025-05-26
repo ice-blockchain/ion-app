@@ -21,9 +21,14 @@ mixin EntityDataWithSettings {
     if (whoSetting == null) return false;
     // Check if any option is a verified badge restriction
     return whoSetting.values.any(
-      (option) =>
-          option.tagValue.startsWith('badge|') &&
-          option.tagValue.contains(BadgeDefinitionEntity.verifiedBadgeDTag),
+      (option) => option.when(
+        everyone: () => false,
+        followedAccounts: () => false,
+        mentionedAccounts: () => false,
+        accountsWithBadge: (badgeRef) =>
+            badgeRef.dTag == BadgeDefinitionEntity.verifiedBadgeDTag &&
+            badgeRef.kind == BadgeDefinitionEntity.kind,
+      ),
     );
   }
 
