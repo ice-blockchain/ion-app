@@ -2,6 +2,7 @@
 
 import 'dart:async';
 
+import 'package:collection/collection.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/extensions/bool.dart';
 import 'package:ion/app/extensions/extensions.dart';
@@ -18,6 +19,7 @@ import 'package:ion/app/features/ion_connect/providers/ion_connect_subscription_
 import 'package:ion/app/features/user/model/badges/badge_award.c.dart';
 import 'package:ion/app/features/user/model/badges/badge_definition.c.dart';
 import 'package:ion/app/features/user/model/badges/profile_badges.c.dart';
+import 'package:ion/app/features/user/model/badges/verified_badge_data.dart';
 import 'package:ion/app/features/user/providers/service_pubkeys_provider.c.dart';
 import 'package:nostr_dart/nostr_dart.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
@@ -264,4 +266,56 @@ void currentUserBadgesSync(Ref ref) {
     },
   );
   ref.onDispose(sub.close);
+}
+
+@riverpod
+Future<VerifiedBadgeEntities?> currentUserVerifiedBadgeData(Ref ref) async {
+  final currentPubkey = ref.watch(currentPubkeySelectorProvider);
+  if (currentPubkey == null) {
+    return null;
+  }
+
+  // Fetch service pubkeys
+  final servicePubkeys = await ref.watch(servicePubkeysProvider.future);
+
+  // 1. Load profile badges data from cache only
+  final profileEntity = ref.watch(
+    ionConnectCachedEntityProvider(
+      eventReference: ReplaceableEventReference(
+        pubkey: currentPubkey,
+        kind: ProfileBadgesEntity.kind,
+        dTag: ProfileBadgesEntity.dTag,
+      ),
+    ),
+  ) as ProfileBadgesEntity?;
+  final profileData = profileEntity?.data;
+
+  // 2. Find the 'verified' badge award entry
+  final verifiedEntry = profileData?.entries.firstWhereOrNull(
+    (entry) => entry.definitionRef.dTag == BadgeDefinitionEntity.verifiedBadgeDTag,
+  );
+
+  // Load the corresponding BadgeAwardEntity from cache only
+  final awardEntity = verifiedEntry != null
+      ? ref.watch(cachedBadgeAwardProvider(verifiedEntry.awardId, servicePubkeys))
+      : null;
+
+  // 3. Load the corresponding BadgeDefinitionEntity with 'verified' dTag from cache only
+  final definitionEntity = verifiedEntry != null
+      ? ref.watch(
+          ionConnectCachedEntityProvider(
+            eventReference: ReplaceableEventReference(
+              pubkey: verifiedEntry.definitionRef.pubkey,
+              kind: BadgeDefinitionEntity.kind,
+              dTag: BadgeDefinitionEntity.verifiedBadgeDTag,
+            ),
+          ),
+        ) as BadgeDefinitionEntity?
+      : null;
+
+  return VerifiedBadgeEntities(
+    profileEntity: profileEntity,
+    awardEntity: awardEntity,
+    definitionEntity: definitionEntity,
+  );
 }

@@ -18,7 +18,8 @@ part 'profile_badges.c.freezed.dart';
 
 @Freezed(equal: false)
 class ProfileBadgesEntity
-    with IonConnectEntity, CacheableEntity, ReplaceableEntity, _$ProfileBadgesEntity {
+    with IonConnectEntity, CacheableEntity, ReplaceableEntity, _$ProfileBadgesEntity
+    implements EntityEventSerializable {
   const factory ProfileBadgesEntity({
     required String id,
     required String pubkey,
@@ -44,6 +45,9 @@ class ProfileBadgesEntity
       data: ProfileBadgesData.fromEventMessage(ev),
     );
   }
+
+  @override
+  FutureOr<EventMessage> toEntityEventMessage() => toEventMessage(data);
 
   static const int kind = 30008;
   static const String dTag = 'profile_badges';

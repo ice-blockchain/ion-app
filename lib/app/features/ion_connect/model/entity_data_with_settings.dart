@@ -3,6 +3,7 @@
 import 'package:collection/collection.dart';
 import 'package:ion/app/features/feed/data/models/who_can_reply_settings_option.c.dart';
 import 'package:ion/app/features/ion_connect/model/event_setting.c.dart';
+import 'package:ion/app/features/user/model/badges/badge_definition.c.dart';
 
 mixin EntityDataWithSettings {
   List<EventSetting>? get settings;
@@ -12,6 +13,18 @@ mixin EntityDataWithSettings {
         settings?.firstWhereOrNull((setting) => setting is WhoCanReplyEventSetting)
             as WhoCanReplyEventSetting?;
     return whoCanReplySetting?.values.firstOrNull ?? const WhoCanReplySettingsOption.everyone();
+  }
+
+  bool get hasVerifiedUsersOnlyCanReplySettingOption {
+    final whoSetting = settings?.firstWhereOrNull((setting) => setting is WhoCanReplyEventSetting)
+        as WhoCanReplyEventSetting?;
+    if (whoSetting == null) return false;
+    // Check if any option is a verified badge restriction
+    return whoSetting.values.any(
+      (option) =>
+          option.tagValue.startsWith('badge|') &&
+          option.tagValue.contains(BadgeDefinitionEntity.verifiedBadgeDTag),
+    );
   }
 
   static List<EventSetting>? build({required WhoCanReplySettingsOption whoCanReply}) {
