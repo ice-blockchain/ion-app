@@ -24,7 +24,7 @@ class CoinIconWithNetwork extends StatelessWidget {
         network: network,
         coinSize: 36.0.s,
         networkSize: 16.0.s,
-        containerSize: 39.0.s,
+        containerSize: 40.0.s,
       );
 
   factory CoinIconWithNetwork.medium(
@@ -36,7 +36,7 @@ class CoinIconWithNetwork extends StatelessWidget {
         network: network,
         coinSize: 46.0.s,
         networkSize: 21.0.s,
-        containerSize: 50.0.s,
+        containerSize: 51.0.s,
       );
 
   final String iconUrl;
@@ -48,6 +48,9 @@ class CoinIconWithNetwork extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // Add 2 to handle the border
+    final networkContainerSize = networkSize + 2.0.s;
+
     return SizedBox.square(
       dimension: containerSize,
       child: Stack(
@@ -63,9 +66,20 @@ class CoinIconWithNetwork extends StatelessWidget {
           PositionedDirectional(
             bottom: 0,
             end: 0,
-            child: NetworkIconWidget(
-              size: networkSize,
-              imageUrl: network.image,
+            child: Container(
+              height: networkContainerSize,
+              width: networkContainerSize,
+              decoration: BoxDecoration(
+                border: Border.all(
+                  width: 1.0.s,
+                  color: context.theme.appColors.onPrimaryAccent,
+                ),
+                borderRadius: BorderRadius.circular(6.0.s),
+              ),
+              child: NetworkIconWidget(
+                size: networkSize,
+                imageUrl: network.image,
+              ),
             ),
           ),
         ],
