@@ -13,6 +13,7 @@ import 'package:ion/app/features/ion_connect/ion_connect.dart';
 import 'package:ion/app/features/ion_connect/model/file_alt.dart';
 import 'package:ion/app/features/ion_connect/model/file_metadata.c.dart';
 import 'package:ion/app/features/ion_connect/model/media_attachment.dart';
+import 'package:ion/app/features/ion_connect/providers/file_storage_url_provider.c.dart';
 import 'package:ion/app/features/ion_connect/utils/file_storage_utils.dart';
 import 'package:ion/app/services/media_service/media_service.c.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
@@ -38,7 +39,7 @@ class IonConnectUploadNotifier extends _$IonConnectUploadNotifier {
 
     final dimension = '${file.width}x${file.height}';
 
-    final url = await getFileStorageApiUrl(ref);
+    final url = await ref.read(fileStorageUrlProvider.future);
 
     final fileBytes = await File(file.path).readAsBytes();
 

@@ -7,6 +7,7 @@ import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:ion/app/exceptions/exceptions.dart';
 import 'package:ion/app/features/core/providers/dio_provider.c.dart';
 import 'package:ion/app/features/ion_connect/ion_connect.dart';
+import 'package:ion/app/features/ion_connect/providers/file_storage_url_provider.c.dart';
 import 'package:ion/app/features/ion_connect/utils/file_storage_utils.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
@@ -33,7 +34,7 @@ class IonConnectDeleteFileNotifier extends _$IonConnectDeleteFileNotifier {
       return;
     }
 
-    final storageUrl = await getFileStorageApiUrl(ref);
+    final storageUrl = await ref.read(fileStorageUrlProvider.future);
 
     await Future.wait(
       fileHashes.map(

@@ -99,3 +99,11 @@ extension ListenResultExtension on WidgetRef {
     }
   }
 }
+
+extension CacheForExtension on Ref {
+  void cacheFor(Duration duration) {
+    final link = keepAlive();
+    final timer = Timer(duration, link.close);
+    onDispose(timer.cancel);
+  }
+}

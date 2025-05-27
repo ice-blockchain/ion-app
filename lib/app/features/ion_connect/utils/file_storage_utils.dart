@@ -2,6 +2,7 @@
 
 import 'dart:convert';
 
+import 'package:dio/dio.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/exceptions/exceptions.dart';
 import 'package:ion/app/extensions/extensions.dart';
@@ -33,7 +34,10 @@ Future<String> generateAuthorizationToken({
 }
 
 // TODO: handle delegatedToUrl when migrating to common relays
-Future<String> getFileStorageApiUrl(Ref ref) async {
+Future<String> getFileStorageApiUrl(
+  Ref ref, {
+  CancelToken? cancelToken,
+}) async {
   final userRelays = await ref.read(currentUserRelaysProvider.future);
   if (userRelays == null) {
     throw UserRelaysNotFoundException();
@@ -49,7 +53,10 @@ Future<String> getFileStorageApiUrl(Ref ref) async {
       path: FileStorageMetadata.path,
     );
 
-    final response = await ref.read(dioProvider).getUri<dynamic>(metadataUri);
+    final response = await ref.read(dioProvider).getUri<dynamic>(
+          metadataUri,
+          cancelToken: cancelToken,
+        );
     final path = FileStorageMetadata.fromJson(
       json.decode(response.data as String) as Map<String, dynamic>,
     ).apiUrl;
