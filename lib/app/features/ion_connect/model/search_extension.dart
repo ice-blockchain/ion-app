@@ -35,6 +35,7 @@ class SearchExtensions {
       ReplySampleSearchExtension(currentPubkey: currentPubkey, forKind: forKind),
       GenericRepostSampleSearchExtension(currentPubkey: currentPubkey, forKind: forKind),
       ReactionsSearchExtension(currentPubkey: currentPubkey, forKind: forKind),
+      PollVotesSearchExtension(currentPubkey: currentPubkey, forKind: forKind),
       ...extensions,
     ]);
   }
@@ -128,7 +129,7 @@ class PollVotesCountSearchExtension extends IncludeSearchExtension {
   final int forKind;
 
   @override
-  final String query = 'kind6400+kind1754+group+e';
+  final String query = 'kind6400+kind1754+group+content';
 }
 
 /// For every kind [forKind] that the subscription finds also include 1 root/not-root replay
@@ -163,6 +164,20 @@ class ReactionsSearchExtension extends IncludeSearchExtension {
 
   @override
   String get query => '$currentPubkey@kind7';
+}
+
+/// For every kind [forKind] that the subscription finds also include 1 poll vote event
+/// that the logged in user made for it — if any
+class PollVotesSearchExtension extends IncludeSearchExtension {
+  PollVotesSearchExtension({required this.currentPubkey, this.forKind = ModifiablePostEntity.kind});
+
+  final String currentPubkey;
+
+  @override
+  final int forKind;
+
+  @override
+  String get query => '$currentPubkey@kind1754';
 }
 
 /// For every kind [forKind] that the subscription finds also include 1 quote post

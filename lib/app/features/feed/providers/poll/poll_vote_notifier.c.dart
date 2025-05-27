@@ -6,6 +6,7 @@ import 'dart:convert';
 import 'package:collection/collection.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:ion/app/features/auth/providers/auth_provider.c.dart';
+import 'package:ion/app/features/feed/providers/poll/poll_results_provider.c.dart';
 import 'package:ion/app/features/ion_connect/ion_connect.dart';
 import 'package:ion/app/features/ion_connect/model/event_reference.c.dart';
 import 'package:ion/app/features/ion_connect/providers/ion_connect_entity_provider.c.dart';
@@ -53,6 +54,7 @@ extension PollVoteDataX on PollVoteData {
       createdAt: createdAt,
       kind: 1754,
       tags: [
+        ['a', pollEventId],
         ...tags,
       ],
       content: jsonEncode(selectedOptionIndexes),
@@ -85,7 +87,7 @@ class PollVoteNotifier extends _$PollVoteNotifier {
         throw Exception('Poll event not loaded');
       }
 
-      final pollEventId = pollEvent.id;
+      final pollEventId = postReference.toString();
       final pollVoteData = PollVoteData(
         pollEventId: pollEventId,
         selectedOptionIndexes: [int.parse(optionId)],
@@ -95,14 +97,18 @@ class PollVoteNotifier extends _$PollVoteNotifier {
         signer,
         tags: [
           ['b', masterPubkey],
-          postReference.toTag(),
         ],
       );
 
       final result = await ref.read(ionConnectNotifierProvider.notifier).sendEvent(voteEvent);
 
       if (result != null) {
-        ref.invalidate(ionConnectEntityProvider(eventReference: postReference));
+        ref
+          ..invalidate(ionConnectEntityProvider(eventReference: postReference))
+          ..invalidate(userPollVoteProvider(postReference))
+          ..invalidate(userVotedOptionIndexProvider(postReference))
+          ..invalidate(hasUserVotedProvider(postReference))
+          ..invalidate(pollVoteCountsProvider);
         return true;
       }
 

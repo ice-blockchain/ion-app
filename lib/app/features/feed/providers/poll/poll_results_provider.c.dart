@@ -22,57 +22,88 @@ class PollResults {
 }
 
 @riverpod
-PollResults pollResults(
-  Ref ref,
-  EventReference pollEventReference,
-  PollData pollData,
-) {
-  final cacheKey = EventCountResultEntity.cacheKeyBuilder(
-    key: pollEventReference.toString(),
-    type: EventCountResultType.pollVotes,
-  );
-
-  final entity = ref.watch(
+List<int> pollVoteCounts(Ref ref, EventReference eventReference, PollData pollData) {
+  final counterEntity = ref.watch(
     ionConnectCacheProvider.select(
-      cacheSelector<EventCountResultEntity>(cacheKey),
+      cacheSelector<EventCountResultEntity>(
+        EventCountResultEntity.cacheKeyBuilder(
+          key: eventReference.toString(),
+          type: EventCountResultType.pollVotes,
+        ),
+      ),
     ),
   );
 
-  final countsMap = entity?.data.content as Map<String, dynamic>? ?? {};
-  final voteCounts = List<int>.generate(
-    pollData.options.length,
-    (i) => (countsMap['$i'] ?? 0) as int,
-  );
-
-  final currentUserPubkey = ref.watch(currentPubkeySelectorProvider);
-  int? userVotedOptionIndex;
-
-  if (currentUserPubkey != null) {
-    final pollEntity = ref.watch(
-      ionConnectCacheProvider.select(
-        cacheSelector(CacheableEntity.cacheKeyBuilder(eventReference: pollEventReference)),
-      ),
+  if (counterEntity != null) {
+    final votesCount = counterEntity.data.content as Map<String, dynamic>;
+    return List<int>.generate(
+      pollData.options.length,
+      (i) => (votesCount['$i'] ?? 0) as int,
     );
+  }
 
-    final allVoteEntities = ref.watch(
-      ionConnectCacheProvider.select(
-        (cache) => cache.values.map((entry) => entry.entity).whereType<PollVoteEntity>().toList(),
-      ),
-    );
+  final allCacheEntries = ref.watch(ionConnectCacheProvider);
+  final allPollVotes = allCacheEntries.values
+      .map((entry) => entry.entity)
+      .whereType<PollVoteEntity>()
+      .where((vote) => vote.data.pollEventId == eventReference.toString())
+      .toList();
 
-    final userVoteEntity = allVoteEntities.where(
-      (vote) {
-        final isCurrentUser = vote.masterPubkey == currentUserPubkey;
-        final targetEventId = pollEntity?.id;
-        final eventIdMatch = targetEventId != null && vote.data.pollEventId == targetEventId;
-        return isCurrentUser && eventIdMatch;
-      },
-    ).firstOrNull;
-
-    if (userVoteEntity != null && userVoteEntity.data.selectedOptionIndexes.isNotEmpty) {
-      userVotedOptionIndex = userVoteEntity.data.selectedOptionIndexes.first;
+  final voteCounts = List<int>.filled(pollData.options.length, 0);
+  for (final vote in allPollVotes) {
+    for (final optionIndex in vote.data.selectedOptionIndexes) {
+      if (optionIndex >= 0 && optionIndex < voteCounts.length) {
+        voteCounts[optionIndex]++;
+      }
     }
   }
+
+  return voteCounts;
+}
+
+@riverpod
+PollVoteEntity? userPollVote(Ref ref, EventReference eventReference) {
+  final currentUserPubkey = ref.watch(currentPubkeySelectorProvider);
+  if (currentUserPubkey == null) return null;
+
+  final allCacheEntries = ref.watch(ionConnectCacheProvider);
+  final allPollVotes = allCacheEntries.values
+      .map((entry) => entry.entity)
+      .whereType<PollVoteEntity>()
+      .where(
+        (vote) =>
+            vote.masterPubkey == currentUserPubkey &&
+            vote.data.pollEventId == eventReference.toString(),
+      )
+      .toList();
+
+  return allPollVotes.firstOrNull;
+}
+
+@riverpod
+int? userVotedOptionIndex(Ref ref, EventReference eventReference) {
+  final userVote = ref.watch(userPollVoteProvider(eventReference));
+
+  if (userVote != null && userVote.data.selectedOptionIndexes.isNotEmpty) {
+    return userVote.data.selectedOptionIndexes.first;
+  }
+
+  return null;
+}
+
+@riverpod
+bool hasUserVoted(Ref ref, EventReference eventReference) {
+  return ref.watch(userPollVoteProvider(eventReference)) != null;
+}
+
+@riverpod
+PollResults pollResults(
+  Ref ref,
+  EventReference eventReference,
+  PollData pollData,
+) {
+  final voteCounts = ref.watch(pollVoteCountsProvider(eventReference, pollData));
+  final userVotedOptionIndex = ref.watch(userVotedOptionIndexProvider(eventReference));
 
   return PollResults(
     voteCounts: voteCounts,
