@@ -38,7 +38,6 @@ class ProfilePage extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    return ProfileSkeleton(showBackButton: showBackButton);
     final isBlocked = ref.watch(isBlockedNotifierProvider(pubkey)).valueOrNull;
     final isBlockedBy = ref.watch(isBlockedByNotifierProvider(pubkey)).valueOrNull;
     final userMetadata = ref.watch(userMetadataProvider(pubkey));
