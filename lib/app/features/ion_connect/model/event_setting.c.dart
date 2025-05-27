@@ -47,7 +47,7 @@ class WhoCanReplyEventSetting with _$WhoCanReplyEventSetting implements EventSet
     }
 
     final values = tag[2].split(',').map(WhoCanReplySettingsOption.fromTagValue).toSet();
-    final timestamp = tag.length >= 4 ? int.tryParse(tag[3]) ?? 0 : 0;
+    final timestamp = int.tryParse(tag[3]) ?? 0;
     return WhoCanReplyEventSetting(values: values, timestamp: timestamp);
   }
 
