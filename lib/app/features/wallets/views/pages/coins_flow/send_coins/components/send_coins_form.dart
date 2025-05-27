@@ -95,6 +95,8 @@ class SendCoinsForm extends HookConsumerWidget {
         formController.senderWallet?.address != null &&
         validator.value.validate(formController.receiverAddress);
 
+    final feeSectionSpacing = SizedBox(height: 20.0.s);
+
     return SheetContent(
       body: KeyboardDismissOnTap(
         child: Column(
@@ -178,9 +180,12 @@ class SendCoinsForm extends HookConsumerWidget {
                         padding: EdgeInsetsDirectional.only(top: 17.0.s),
                       ),
                       if (formController.canCoverNetworkFee)
-                        SizedBox(height: 20.0.s)
+                        feeSectionSpacing
                       else if (formController.network case final NetworkData network)
-                        NotEnoughMoneyForNetworkFeeMessage(network: network),
+                        NotEnoughMoneyForNetworkFeeMessage(
+                          network: network,
+                          placeholder: feeSectionSpacing,
+                        ),
                       ScreenBottomOffset(
                         child: Button(
                           label: Text(
