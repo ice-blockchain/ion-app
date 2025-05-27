@@ -65,7 +65,7 @@ class CoinsSyncService {
     ).wait;
 
     if (response.networks.isNotEmpty) {
-      await _networksRepository.save(
+      await _networksRepository.setAll(
         response.networks.map(NetworkData.fromDTO).toList(),
       );
     }

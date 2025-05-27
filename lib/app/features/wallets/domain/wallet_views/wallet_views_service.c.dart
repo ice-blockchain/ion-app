@@ -236,12 +236,6 @@ class WalletViewsService {
     var updatedCoin = coinInWallet;
 
     if (transactions.isNotEmpty) {
-      Logger.info(
-        'Apply broadcasted transactions(${transactions.length}) '
-        'for ${coinInWallet.coin.abbreviation}(${coinInWallet.coin.name}). '
-        'Network: ${coinInWallet.coin.network.id}. Initial balance: ${coinInWallet.amount}.',
-      );
-
       final key = transactions.keys.firstWhereOrNull(
         (key) => key.id == coinInWallet.coin.id,
       );
@@ -251,6 +245,14 @@ class WalletViewsService {
       );
 
       var adjustedRawAmount = BigInt.parse(coinInWallet.rawAmount);
+
+      if (coinTransactions.isNotEmpty) {
+        Logger.info(
+          'Apply broadcasted transactions(${transactions.length}) '
+          'for ${coinInWallet.coin.abbreviation}(${coinInWallet.coin.name}). '
+          'Network: ${coinInWallet.coin.network.id}. Initial balance: ${coinInWallet.amount}.',
+        );
+      }
 
       for (final transaction in coinTransactions) {
         final isTransactionRelatedToCoin = transaction.senderWalletAddress == wallet?.address;
