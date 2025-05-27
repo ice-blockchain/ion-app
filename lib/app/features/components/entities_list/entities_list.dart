@@ -17,6 +17,7 @@ import 'package:ion/app/features/ion_connect/model/event_reference.c.dart';
 import 'package:ion/app/features/ion_connect/model/ion_connect_entity.dart';
 import 'package:ion/app/features/ion_connect/model/soft_deletable_entity.dart';
 import 'package:ion/app/features/ion_connect/providers/ion_connect_entity_provider.c.dart';
+import 'package:ion/app/features/user/providers/muted_users_notifier.c.dart';
 import 'package:ion/app/features/user/providers/user_metadata_provider.c.dart';
 import 'package:ion/app/features/user_block/providers/block_list_notifier.c.dart';
 import 'package:ion/app/typedefs/typedefs.dart';
@@ -119,7 +120,10 @@ class _EntityListItem extends ConsumerWidget {
   }
 
   bool _isBlockedOrMutedOrBlocking(WidgetRef ref, IonConnectEntity entity) {
-    return ref.watch(isEntityBlockedOrMutedOrBlockingNotifierProvider(entity)).valueOrNull ?? false;
+    final isMuted = ref.watch(isUserMutedProvider(entity.masterPubkey));
+    final isBlockedOrBlockedBy =
+        ref.watch(isEntityBlockedOrBlockedByNotifierProvider(entity)).valueOrNull ?? false;
+    return isMuted || isBlockedOrBlockedBy;
   }
 
   /// When we fetch lists (e.g. feed, search or data for tabs in profiles),

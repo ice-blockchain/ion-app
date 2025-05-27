@@ -8,7 +8,6 @@ import 'package:ion/app/features/feed/data/models/entities/modifiable_post_data.
 import 'package:ion/app/features/ion_connect/model/ion_connect_entity.dart';
 import 'package:ion/app/features/ion_connect/providers/ion_connect_entity_provider.c.dart';
 import 'package:ion/app/features/user/providers/follow_list_provider.c.dart';
-import 'package:ion/app/features/user/providers/muted_users_notifier.c.dart';
 import 'package:ion/app/features/user_block/model/database/blocked_users_database.c.dart';
 import 'package:ion/app/features/user_block/model/entities/blocked_user_entity.c.dart';
 import 'package:ion/app/features/user_block/providers/send_block_event_service.c.dart';
@@ -92,36 +91,36 @@ class IsBlockedByNotifier extends _$IsBlockedByNotifier {
 }
 
 @riverpod
-class IsBlockedOrMutedOrBlockingNotifier extends _$IsBlockedOrMutedOrBlockingNotifier {
+class IsBlockedOrBlockedByNotifier extends _$IsBlockedOrBlockedByNotifier {
   @override
   Future<bool> build(String pubkey) async {
     final isBlocked = await ref.watch(isBlockedNotifierProvider(pubkey).future);
     final isBlockedBy = await ref.watch(isBlockedByNotifierProvider(pubkey).future);
-    final isMuted = ref.watch(isUserMutedProvider(pubkey));
-    return isBlocked || isBlockedBy || isMuted;
+
+    return isBlocked || isBlockedBy;
   }
 }
 
 @riverpod
-class IsEntityBlockedOrMutedOrBlockingNotifier extends _$IsEntityBlockedOrMutedOrBlockingNotifier {
+class IsEntityBlockedOrBlockedByNotifier extends _$IsEntityBlockedOrBlockedByNotifier {
   @override
   Future<bool> build(IonConnectEntity entity) async {
     final isMainAuthorBlockedOrBlocking =
-        await ref.watch(isBlockedOrMutedOrBlockingNotifierProvider(entity.masterPubkey).future);
+        await ref.watch(isBlockedOrBlockedByNotifierProvider(entity.masterPubkey).future);
     if (isMainAuthorBlockedOrBlocking) return true;
     return switch (entity) {
       ModifiablePostEntity() =>
-        await ref.watch(isPostChildBlockedOrMutedOrBlockingNotifierProvider(entity).future),
+        await ref.watch(isPostChildBlockedOrBlockedByNotifierProvider(entity).future),
       GenericRepostEntity() => await ref
-          .watch(isGenericRepostChildBlockedOrMutedOrBlockingNotifierProvider(entity).future),
+          .watch(isGenericRepostChildBlockedOrBlockedByNotifierProvider(entity).future),
       _ => false,
     };
   }
 }
 
 @riverpod
-class IsPostChildBlockedOrMutedOrBlockingNotifier
-    extends _$IsPostChildBlockedOrMutedOrBlockingNotifier {
+class IsPostChildBlockedOrBlockedByNotifier
+    extends _$IsPostChildBlockedOrBlockedByNotifier {
   @override
   Future<bool> build(ModifiablePostEntity entity) {
     final quotedEvent = entity.data.quotedEvent;
@@ -130,19 +129,19 @@ class IsPostChildBlockedOrMutedOrBlockingNotifier
       ionConnectSyncEntityProvider(eventReference: quotedEvent.eventReference),
     );
     if (quotedPost == null) return Future.value(false);
-    return ref.watch(isEntityBlockedOrMutedOrBlockingNotifierProvider(quotedPost).future);
+    return ref.watch(isEntityBlockedOrBlockedByNotifierProvider(quotedPost).future);
   }
 }
 
 @riverpod
-class IsGenericRepostChildBlockedOrMutedOrBlockingNotifier
-    extends _$IsGenericRepostChildBlockedOrMutedOrBlockingNotifier {
+class IsGenericRepostChildBlockedOrBlockedByNotifier
+    extends _$IsGenericRepostChildBlockedOrBlockedByNotifier {
   @override
   Future<bool> build(GenericRepostEntity repost) {
     final entity =
         ref.watch(ionConnectSyncEntityProvider(eventReference: repost.data.eventReference));
     if (entity == null) return Future.value(false);
-    return ref.watch(isEntityBlockedOrMutedOrBlockingNotifierProvider(entity).future);
+    return ref.watch(isEntityBlockedOrBlockedByNotifierProvider(entity).future);
   }
 }
 
