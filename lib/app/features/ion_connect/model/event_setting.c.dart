@@ -53,9 +53,8 @@ class WhoCanReplyEventSetting with _$WhoCanReplyEventSetting implements EventSet
 
   @override
   List<String> toTag() {
-    final timestampValue = timestamp > 0
-        ? timestamp.toString()
-        : (DateTime.now().millisecondsSinceEpoch ~/ 1000).toString();
+    final timestampValue =
+        timestamp > 0 ? timestamp.toString() : DateTime.now().microsecondsSinceEpoch.toString();
 
     return [
       EventSetting.settingTagName,
