@@ -32,6 +32,7 @@ abstract class EventSetting {
 class WhoCanReplyEventSetting with _$WhoCanReplyEventSetting implements EventSetting {
   const factory WhoCanReplyEventSetting({
     required Set<WhoCanReplySettingsOption> values,
+    @Default(0) int timestamp,
   }) = _WhoCanReplyEventSetting;
 
   const WhoCanReplyEventSetting._();
@@ -46,16 +47,21 @@ class WhoCanReplyEventSetting with _$WhoCanReplyEventSetting implements EventSet
     }
 
     final values = tag[2].split(',').map(WhoCanReplySettingsOption.fromTagValue).toSet();
-    return WhoCanReplyEventSetting(values: values);
+    final timestamp = tag.length >= 4 ? int.tryParse(tag[3]) ?? 0 : 0;
+    return WhoCanReplyEventSetting(values: values, timestamp: timestamp);
   }
 
   @override
   List<String> toTag() {
+    final timestampValue = timestamp > 0
+        ? timestamp.toString()
+        : (DateTime.now().millisecondsSinceEpoch ~/ 1000).toString();
+
     return [
       EventSetting.settingTagName,
       tagName,
       values.map((value) => value.tagValue).nonNulls.join(','),
-      (DateTime.now().millisecondsSinceEpoch ~/ 1000).toString(),
+      timestampValue,
     ];
   }
 
