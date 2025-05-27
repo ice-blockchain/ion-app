@@ -105,9 +105,7 @@ class RecentChatOverlay extends HookConsumerWidget {
                   ),
                 ),
                 IntrinsicWidth(
-                  child: RecentChatOverlayContextMenu(
-                    conversation: conversation,
-                  ),
+                  child: RecentChatOverlayContextMenu(conversation: conversation),
                 ),
               ],
             ),

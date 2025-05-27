@@ -4,8 +4,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/components/avatar/avatar.dart';
+import 'package:ion/app/exceptions/exceptions.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/auth/providers/auth_provider.c.dart';
+import 'package:ion/app/features/chat/e2ee/model/entities/private_direct_message_data.c.dart';
 import 'package:ion/app/features/chat/model/database/chat_database.c.dart';
 import 'package:ion/app/features/chat/model/message_type.dart';
 import 'package:ion/app/features/chat/providers/muted_conversations_provider.c.dart';
@@ -16,6 +18,7 @@ import 'package:ion/app/features/chat/recent_chats/views/pages/recent_chat_overl
 import 'package:ion/app/features/chat/views/components/message_items/message_metadata/message_metadata.dart';
 import 'package:ion/app/features/ion_connect/model/event_reference.c.dart';
 import 'package:ion/app/features/user/providers/user_metadata_provider.c.dart';
+import 'package:ion/app/features/user_block/providers/block_list_notifier.c.dart';
 import 'package:ion/app/utils/date.dart';
 import 'package:ion/generated/assets.gen.dart';
 
@@ -65,6 +68,23 @@ class RecentChatTile extends HookConsumerWidget {
     final isMe = conversation.latestMessage != null &&
         ref.watch(isCurrentUserSelectorProvider(conversation.latestMessage!.masterPubkey));
 
+    final currentUserMasterPubkey = ref.watch(currentPubkeySelectorProvider);
+
+    if (currentUserMasterPubkey == null) {
+      throw UserMasterPubkeyNotFoundException();
+    }
+
+    final isBlockedBy = ref
+            .watch(
+              isBlockedByNotifierProvider(
+                conversation.latestMessage!.participantsMasterPubkeys.singleWhere(
+                  (pubkey) => pubkey != currentUserMasterPubkey,
+                ),
+              ),
+            )
+            .valueOrNull ??
+        false;
+
     final showRecentChatOverlay = useCallback(
       () {
         showDialog<void>(
@@ -112,12 +132,15 @@ class RecentChatTile extends HookConsumerWidget {
               Flexible(
                 child: Row(
                   children: [
-                    Avatar(
-                      imageUrl: avatarUrl,
-                      imageWidget: avatarWidget,
-                      defaultAvatar: defaultAvatar,
-                      size: 40.0.s,
-                    ),
+                    if (isBlockedBy)
+                      Avatar(size: 40.0.s)
+                    else
+                      Avatar(
+                        imageUrl: avatarUrl,
+                        imageWidget: avatarWidget,
+                        defaultAvatar: defaultAvatar,
+                        size: 40.0.s,
+                      ),
                     SizedBox(width: 12.0.s),
                     Expanded(
                       child: Column(

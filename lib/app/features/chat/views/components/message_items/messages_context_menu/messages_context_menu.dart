@@ -9,15 +9,26 @@ import 'package:ion/app/components/overlay_menu/overlay_menu.dart';
 import 'package:ion/app/components/overlay_menu/overlay_menu_container.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/chat/providers/muted_conversations_provider.c.dart';
+import 'package:ion/app/features/user/pages/profile_page/pages/block_user_modal/block_user_modal.dart';
 import 'package:ion/app/features/user/providers/report_notifier.c.dart';
+import 'package:ion/app/features/user_block/providers/block_list_notifier.c.dart';
 import 'package:ion/app/router/app_routes.c.dart';
+import 'package:ion/app/router/utils/show_simple_bottom_sheet.dart';
 import 'package:ion/generated/assets.gen.dart';
 
 class MessagingContextMenu extends ConsumerWidget {
-  const MessagingContextMenu({required this.conversationId, super.key, this.onToggleMute});
+  const MessagingContextMenu({
+    required this.isBlocked,
+    required this.conversationId,
+    required this.receiverMasterPubkey,
+    super.key,
+    this.onToggleMute,
+  });
 
+  final bool isBlocked;
   final String conversationId;
   final VoidCallback? onToggleMute;
+  final String receiverMasterPubkey;
   static double get iconSize => 20.0.s;
 
   @override
@@ -49,10 +60,23 @@ class MessagingContextMenu extends ConsumerWidget {
                   ),
                   const OverlayMenuItemSeparator(),
                   OverlayMenuItem(
-                    label: context.i18n.button_block,
+                    label: isBlocked ? context.i18n.button_unblock : context.i18n.button_block,
                     icon: Assets.svg.iconPhofileBlockuser
                         .icon(size: iconSize, color: context.theme.appColors.quaternaryText),
-                    onPressed: closeMenu,
+                    onPressed: () async {
+                      closeMenu();
+
+                      if (!isBlocked) {
+                        await showSimpleBottomSheet<void>(
+                          context: context,
+                          child: BlockUserModal(pubkey: receiverMasterPubkey),
+                        );
+                      } else {
+                        await ref
+                            .read(blockListNotifierProvider.notifier)
+                            .toggleBlocked(receiverMasterPubkey);
+                      }
+                    },
                   ),
                   const OverlayMenuItemSeparator(),
                   OverlayMenuItem(

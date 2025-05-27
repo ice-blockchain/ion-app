@@ -2,6 +2,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:ion/app/exceptions/exceptions.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/auth/providers/auth_provider.c.dart';
 import 'package:ion/app/features/chat/e2ee/model/entities/private_direct_message_data.c.dart';
@@ -9,6 +10,7 @@ import 'package:ion/app/features/chat/model/database/chat_database.c.dart';
 import 'package:ion/app/features/chat/model/message_type.dart';
 import 'package:ion/app/features/chat/providers/message_status_provider.c.dart';
 import 'package:ion/app/features/ion_connect/ion_connect.dart';
+import 'package:ion/app/features/user_block/providers/block_list_notifier.c.dart';
 import 'package:ion/app/utils/date.dart';
 import 'package:ion/generated/assets.gen.dart';
 
@@ -29,9 +31,24 @@ class MessageMetaData extends HookConsumerWidget {
     final eventReference =
         ReplaceablePrivateDirectMessageEntity.fromEventMessage(eventMessage).toEventReference();
 
+    final currentUserMasterPubkey = ref.watch(currentPubkeySelectorProvider);
+
+    if (currentUserMasterPubkey == null) {
+      throw UserMasterPubkeyNotFoundException();
+    }
     final isMe = ref.watch(isCurrentUserSelectorProvider(eventMessage.masterPubkey));
 
     final deliveryStatus = ref.watch(messageStatusProvider(eventReference));
+    final isBlockedBy = ref
+            .watch(
+              isBlockedByNotifierProvider(
+                eventMessage.participantsMasterPubkeys.firstWhere(
+                  (masterPubkey) => masterPubkey != currentUserMasterPubkey,
+                ),
+              ),
+            )
+            .valueOrNull ??
+        true;
 
     final entityData = ReplaceablePrivateDirectMessageData.fromEventMessage(eventMessage);
 
@@ -65,8 +82,9 @@ class MessageMetaData extends HookConsumerWidget {
             Padding(
               padding: EdgeInsetsDirectional.only(start: 2.0.s),
               child: statusIcon(
-                context,
-                deliveryStatus.valueOrNull ?? MessageDeliveryStatus.created,
+                context: context,
+                isBlockedBy: isBlockedBy,
+                deliveryStatus: deliveryStatus.valueOrNull ?? MessageDeliveryStatus.created,
               ),
             ),
         ],
@@ -74,7 +92,11 @@ class MessageMetaData extends HookConsumerWidget {
     );
   }
 
-  Widget statusIcon(BuildContext context, MessageDeliveryStatus deliveryStatus) {
+  Widget statusIcon({
+    required bool isBlockedBy,
+    required BuildContext context,
+    required MessageDeliveryStatus deliveryStatus,
+  }) {
     return switch (deliveryStatus) {
       MessageDeliveryStatus.deleted => const SizedBox.shrink(),
       MessageDeliveryStatus.created => const SizedBox.shrink(),
@@ -83,14 +105,24 @@ class MessageMetaData extends HookConsumerWidget {
           color: context.theme.appColors.strokeElements,
           size: 12.0.s,
         ),
-      MessageDeliveryStatus.received => Assets.svg.iconMessageDelivered.icon(
-          color: context.theme.appColors.strokeElements,
-          size: 12.0.s,
-        ),
-      MessageDeliveryStatus.read => Assets.svg.iconMessageDelivered.icon(
-          color: context.theme.appColors.success,
-          size: 12.0.s,
-        ),
+      MessageDeliveryStatus.received => isBlockedBy
+          ? Assets.svg.iconMessageSent.icon(
+              color: context.theme.appColors.strokeElements,
+              size: 12.0.s,
+            )
+          : Assets.svg.iconMessageDelivered.icon(
+              color: context.theme.appColors.strokeElements,
+              size: 12.0.s,
+            ),
+      MessageDeliveryStatus.read => isBlockedBy
+          ? Assets.svg.iconMessageSent.icon(
+              color: context.theme.appColors.strokeElements,
+              size: 12.0.s,
+            )
+          : Assets.svg.iconMessageDelivered.icon(
+              color: context.theme.appColors.success,
+              size: 12.0.s,
+            )
     };
   }
 }

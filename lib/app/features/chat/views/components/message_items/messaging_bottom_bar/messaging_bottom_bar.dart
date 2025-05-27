@@ -6,6 +6,7 @@ import 'package:audio_waveforms/audio_waveforms.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/chat/e2ee/model/entities/private_direct_message_data.c.dart';
 import 'package:ion/app/features/chat/providers/draft_message_provider.c.dart';
 import 'package:ion/app/features/chat/providers/messaging_bottom_bar_state_provider.c.dart';
@@ -13,21 +14,25 @@ import 'package:ion/app/features/chat/recent_chats/providers/selected_edit_messa
 import 'package:ion/app/features/chat/views/components/message_items/components.dart';
 import 'package:ion/app/features/chat/views/components/message_items/messaging_bottom_bar/components/components.dart';
 import 'package:ion/app/features/chat/views/components/message_items/messaging_bottom_bar/components/text_message_limit_label.dart';
+import 'package:ion/app/features/user_block/providers/block_list_notifier.c.dart';
 import 'package:ion/app/hooks/use_on_init.dart';
 import 'package:ion/app/services/compressors/audio_compressor.c.dart';
 import 'package:ion/app/services/media_service/media_service.c.dart';
+import 'package:ion/generated/assets.gen.dart';
 
 class MessagingBottomBar extends HookConsumerWidget {
   const MessagingBottomBar({
+    required this.isBlocked,
     required this.onSubmitted,
     required this.conversationId,
-    this.receiverPubKey,
+    this.receiverMasterPubkey,
     super.key,
   });
 
+  final bool isBlocked;
   final Future<void> Function({String? content, List<MediaFile>? mediaFiles}) onSubmitted;
   final String? conversationId;
-  final String? receiverPubKey;
+  final String? receiverMasterPubkey;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -78,13 +83,40 @@ class MessagingBottomBar extends HookConsumerWidget {
       [controller, conversationId],
     );
 
+    if (isBlocked) {
+      return SizedBox(
+        height: 45.0.s,
+        child: TextButton(
+          onPressed: () {
+            ref.read(blockListNotifierProvider.notifier).toggleBlocked(receiverMasterPubkey!);
+          },
+          style: TextButton.styleFrom(
+            minimumSize: Size(0, 40.0.s),
+            padding: EdgeInsetsDirectional.only(start: 8.0.s),
+          ),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Assets.svg.iconProfileBlockUser.icon(color: context.theme.appColors.primaryAccent),
+              SizedBox(width: 6.0.s),
+              Text(
+                context.i18n.button_unblock,
+                style: context.theme.appTextThemes.subtitle3
+                    .copyWith(color: context.theme.appColors.primaryAccent),
+              ),
+            ],
+          ),
+        ),
+      );
+    }
+
     return Stack(
       alignment: Alignment.center,
       children: [
         AbsorbPointer(
           absorbing: bottomBarState.isVoice,
           child: BottomBarInitialView(
-            receiverPubKey: receiverPubKey,
+            receiverPubKey: receiverMasterPubkey,
             controller: controller,
             onSubmitted: ({content, mediaFiles}) async {
               unawaited(onSubmitted(content: content, mediaFiles: mediaFiles));

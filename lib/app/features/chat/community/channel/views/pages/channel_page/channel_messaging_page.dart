@@ -61,6 +61,8 @@ class ChannelMessagingPage extends HookConsumerWidget {
         child: Column(
           children: [
             MessagingHeader(
+              isBlocked: false, //TODO: set when channels are impl
+              receiverMasterPubkey: '', //TODO: set when channels are impl
               onTap: () => ChannelDetailRoute(uuid: communityId).push<void>(context),
               imageWidget:
                   channel.data.avatar?.url != null ? Image.network(channel.data.avatar!.url) : null,
@@ -142,6 +144,7 @@ class _ActionButton extends HookConsumerWidget {
 
     if (canPost) {
       return MessagingBottomBar(
+        isBlocked: false, //TODO: set when channels are impl
         onSubmitted: ({content, mediaFiles}) async {
           await ref.read(createPostNotifierProvider(CreatePostOption.community).notifier).create(
                 content: content != null ? (Delta()..insert('$content\n')) : null,

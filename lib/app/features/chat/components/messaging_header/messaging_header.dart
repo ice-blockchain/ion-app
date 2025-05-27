@@ -1,14 +1,18 @@
 // SPDX-License-Identifier: ice License 1.0
 
 import 'package:flutter/material.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/components/avatar/avatar.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/chat/views/components/message_items/messages_context_menu/messages_context_menu.dart';
+import 'package:ion/app/features/user_block/providers/block_list_notifier.c.dart';
 import 'package:ion/generated/assets.gen.dart';
 
-class MessagingHeader extends StatelessWidget {
+class MessagingHeader extends ConsumerWidget {
   const MessagingHeader({
     required this.name,
+    required this.isBlocked,
+    required this.receiverMasterPubkey,
     required this.subtitle,
     required this.conversationId,
     this.isVerified = false,
@@ -20,6 +24,8 @@ class MessagingHeader extends StatelessWidget {
   });
 
   final String name;
+  final bool isBlocked;
+  final String receiverMasterPubkey;
   final Widget subtitle;
   final bool isVerified;
   final String? imageUrl;
@@ -28,7 +34,9 @@ class MessagingHeader extends StatelessWidget {
   final String conversationId;
   final VoidCallback? onToggleMute;
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final isBlockedBy =
+        ref.watch(isBlockedByNotifierProvider(receiverMasterPubkey)).valueOrNull ?? true;
     return Padding(
       padding: EdgeInsetsDirectional.fromSTEB(16.0.s, 8.0.s, 16.0.s, 12.0.s),
       child: Row(
@@ -46,11 +54,14 @@ class MessagingHeader extends StatelessWidget {
               onTap: onTap,
               child: Row(
                 children: [
-                  Avatar(
-                    size: 36.0.s,
-                    imageUrl: imageWidget != null ? null : imageUrl,
-                    imageWidget: imageWidget,
-                  ),
+                  if (isBlockedBy)
+                    Avatar(size: 36.0.s)
+                  else
+                    Avatar(
+                      size: 36.0.s,
+                      imageWidget: imageWidget,
+                      imageUrl: imageWidget != null ? null : imageUrl,
+                    ),
                   SizedBox(width: 10.0.s),
                   Expanded(
                     child: Column(
@@ -82,8 +93,10 @@ class MessagingHeader extends StatelessWidget {
             ),
           ),
           MessagingContextMenu(
-            conversationId: conversationId,
+            isBlocked: isBlocked,
             onToggleMute: onToggleMute,
+            conversationId: conversationId,
+            receiverMasterPubkey: receiverMasterPubkey,
           ),
         ],
       ),

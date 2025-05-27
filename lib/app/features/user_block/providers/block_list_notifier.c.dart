@@ -91,8 +91,8 @@ class IsBlockedOrMutedOrBlockingNotifier extends _$IsBlockedOrMutedOrBlockingNot
   Future<bool> build(String pubkey) async {
     final isBlocked = await ref.watch(isBlockedNotifierProvider(pubkey).future);
     final isBlockedBy = await ref.watch(isBlockedByNotifierProvider(pubkey).future);
-    final isMuted = ref.watch(isUserMutedProvider(pubkey));
-    return isBlocked || isBlockedBy || isMuted;
+    //final isMuted = ref.watch(isUserMutedProvider(pubkey));
+    return isBlocked || isBlockedBy; // || isMuted;
   }
 }
 

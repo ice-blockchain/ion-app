@@ -20,6 +20,7 @@ import 'package:ion/app/features/chat/views/components/message_items/edit_messag
 import 'package:ion/app/features/chat/views/components/message_items/messaging_bottom_bar/messaging_bottom_bar.dart';
 import 'package:ion/app/features/chat/views/components/message_items/replied_message_info/replied_message_info.dart';
 import 'package:ion/app/features/user/providers/user_metadata_provider.c.dart';
+import 'package:ion/app/features/user_block/providers/block_list_notifier.c.dart';
 import 'package:ion/app/router/app_routes.c.dart';
 import 'package:ion/app/services/media_service/media_service.c.dart';
 import 'package:ion/app/utils/username.dart';
@@ -75,12 +76,15 @@ class OneToOneMessagesPage extends HookConsumerWidget {
       [receiverPubKey],
     );
 
+    final isBlocked = ref.watch(isBlockedNotifierProvider(receiverPubKey)).valueOrNull ?? true;
+
     return Scaffold(
       backgroundColor: context.theme.appColors.secondaryBackground,
       body: SafeArea(
         child: Column(
           children: [
             _Header(
+              isBlocked: isBlocked,
               receiverMasterPubKey: receiverPubKey,
               conversationId: conversationId.value ?? '',
             ),
@@ -88,9 +92,10 @@ class OneToOneMessagesPage extends HookConsumerWidget {
             const EditMessageInfo(),
             const RepliedMessageInfo(),
             MessagingBottomBar(
+              isBlocked: isBlocked,
               onSubmitted: onSubmitted,
               conversationId: conversationId.value,
-              receiverPubKey: receiverPubKey,
+              receiverMasterPubkey: receiverPubKey,
             ),
           ],
         ),
@@ -100,8 +105,13 @@ class OneToOneMessagesPage extends HookConsumerWidget {
 }
 
 class _Header extends HookConsumerWidget {
-  const _Header({required this.receiverMasterPubKey, required this.conversationId});
+  const _Header({
+    required this.isBlocked,
+    required this.conversationId,
+    required this.receiverMasterPubKey,
+  });
 
+  final bool isBlocked;
   final String receiverMasterPubKey;
   final String conversationId;
 
@@ -114,8 +124,11 @@ class _Header extends HookConsumerWidget {
     }
 
     return MessagingHeader(
+      isBlocked: isBlocked,
+      conversationId: conversationId,
       imageUrl: receiver.data.picture,
       name: receiver.data.displayName,
+      receiverMasterPubkey: receiverMasterPubKey,
       onTap: () => ProfileRoute(pubkey: receiverMasterPubKey).push<void>(context),
       subtitle: Text(
         prefixUsername(username: receiver.data.name, context: context),
@@ -123,7 +136,6 @@ class _Header extends HookConsumerWidget {
           color: context.theme.appColors.quaternaryText,
         ),
       ),
-      conversationId: conversationId,
       onToggleMute: () {
         ref.read(mutedConversationsProvider.notifier).toggleMutedMasterPubkey(receiverMasterPubKey);
       },
