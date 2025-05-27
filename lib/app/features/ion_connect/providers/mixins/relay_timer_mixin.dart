@@ -9,7 +9,7 @@ import 'package:ion/app/services/timer/restartable_timer.dart';
 mixin RelayTimerMixin {
   late RestartableTimer _timer;
   late StreamSubscription<RelayMessage> _messagesSubscription;
-  late StreamSubscription<RelayMessage> _sentMessagesSubscription;
+  late StreamSubscription<RelayMessage> _outgoingMessagesSubscription;
   late StreamSubscription<int> _subscriptionsCountSubscription;
   int? _subscribersLength;
 
@@ -20,7 +20,7 @@ mixin RelayTimerMixin {
     );
 
     _messagesSubscription = relay.messages.listen((_) => _timer.reset());
-    _sentMessagesSubscription = relay.sentMessages.listen((_) => _timer.reset());
+    _outgoingMessagesSubscription = relay.outgoingMessages.listen((_) => _timer.reset());
     _subscriptionsCountSubscription = relay.subscriptionsCountStream.listen((length) {
       _subscribersLength = length;
       _processUpdate(relay, ref.invalidateSelf);
@@ -29,7 +29,7 @@ mixin RelayTimerMixin {
     ref.onDispose(() {
       _timer.cancel();
       _messagesSubscription.cancel();
-      _sentMessagesSubscription.cancel();
+      _outgoingMessagesSubscription.cancel();
       _subscriptionsCountSubscription.cancel();
     });
   }
