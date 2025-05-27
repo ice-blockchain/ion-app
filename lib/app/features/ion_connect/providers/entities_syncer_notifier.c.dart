@@ -26,7 +26,7 @@ class EntitiesSyncerNotifier extends _$EntitiesSyncerNotifier {
     required Future<DateTime?> Function(DateTime? since) minCreatedAtBuilder,
     ActionSource actionSource = const ActionSourceCurrentUser(),
     int limit = 100,
-    Duration overlap = const Duration(seconds: 2),
+    Duration overlap = const Duration(microseconds: 2),
   }) async {
     await _completePreviousSync(
       requestFilters: requestFilters,
@@ -73,7 +73,7 @@ class EntitiesSyncerNotifier extends _$EntitiesSyncerNotifier {
     required Future<DateTime?> Function(DateTime? since) minCreatedAtBuilder,
     ActionSource actionSource = const ActionSourceCurrentUser(),
     int limit = 100,
-    Duration overlap = const Duration(seconds: 2),
+    Duration overlap = const Duration(microseconds: 2),
   }) async {
     await _completePreviousSync(
       requestFilters: requestFilters,
