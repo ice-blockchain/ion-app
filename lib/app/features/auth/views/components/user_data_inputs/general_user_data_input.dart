@@ -24,6 +24,7 @@ class GeneralUserDataInput extends HookWidget {
     this.prefix,
     this.keyboardType,
     this.inputFormatters,
+    this.errorText,
     super.key,
   });
 
@@ -41,6 +42,7 @@ class GeneralUserDataInput extends HookWidget {
   final Widget? prefix;
   final TextInputType? keyboardType;
   final List<TextInputFormatter>? inputFormatters;
+  final String? errorText;
 
   @override
   Widget build(BuildContext context) {
@@ -72,6 +74,7 @@ class GeneralUserDataInput extends HookWidget {
               icons: [Assets.svg.iconBlockCheckboxOn.icon()],
             )
           : null,
+      errorText: errorText,
     );
   }
 }

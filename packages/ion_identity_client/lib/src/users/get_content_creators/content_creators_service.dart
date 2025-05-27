@@ -14,7 +14,6 @@ class IONConnectContentCreatorsService {
 
   Future<List<ContentCreatorResponseData>> contentCreators({
     required int limit,
-    required String userId,
     required List<String> excludeMasterPubKeys,
   }) async =>
       _dataSource.fetchIONContentCreators(

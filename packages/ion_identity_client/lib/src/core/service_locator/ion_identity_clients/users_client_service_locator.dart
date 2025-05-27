@@ -14,6 +14,8 @@ import 'package:ion_identity_client/src/users/set_ion_connect_relays/data_source
 import 'package:ion_identity_client/src/users/set_ion_connect_relays/set_ion_connect_relays_service.dart';
 import 'package:ion_identity_client/src/users/user_details/data_sources/user_details_data_source.dart';
 import 'package:ion_identity_client/src/users/user_details/user_details_service.dart';
+import 'package:ion_identity_client/src/users/verify_nickname_availability/data_sources/nickname_availability_data_source.dart';
+import 'package:ion_identity_client/src/users/verify_nickname_availability/nickname_availability_service.dart';
 
 class UsersClientServiceLocator {
   factory UsersClientServiceLocator() {
@@ -43,6 +45,10 @@ class UsersClientServiceLocator {
           config: config,
         ),
         _ionConnectContentCreators(
+          username: username,
+          config: config,
+        ),
+        _nicknameAvailability(
           username: username,
           config: config,
         ),
@@ -84,6 +90,18 @@ class UsersClientServiceLocator {
       IONConnectContentCreatorsService(
         username,
         IONContentCreatorsDataSource(
+          IONIdentityServiceLocator.networkClient(config: config),
+          IONIdentityServiceLocator.tokenStorage(),
+        ),
+      );
+
+  NicknameAvailabilityService _nicknameAvailability({
+    required String username,
+    required IONIdentityConfig config,
+  }) =>
+      NicknameAvailabilityService(
+        username,
+        NicknameAvailabilityDataSource(
           IONIdentityServiceLocator.networkClient(config: config),
           IONIdentityServiceLocator.tokenStorage(),
         ),

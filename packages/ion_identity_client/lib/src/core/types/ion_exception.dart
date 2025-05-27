@@ -151,6 +151,23 @@ class TwoFaMethodNotConfiguredException extends IONIdentityException {
   }
 }
 
+class InvalidNicknameException extends IONIdentityException {
+  InvalidNicknameException() : super('Invalid nickname');
+
+  static bool isMatch(DioException dioException) {
+    final responseData = dioException.response?.data;
+
+    try {
+      if (responseData is Map<String, dynamic>) {
+        return responseData['code'] == 'INVALID_USERNAME';
+      }
+      return false;
+    } catch (_) {
+      return false;
+    }
+  }
+}
+
 class InvalidRecoveryCredentialsException extends IONIdentityException {
   InvalidRecoveryCredentialsException() : super('Invalid recovery credentials');
 

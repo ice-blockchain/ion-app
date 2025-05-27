@@ -10,6 +10,7 @@ import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/user/model/user_metadata.c.dart';
 import 'package:ion/app/features/user/providers/image_proccessor_notifier.c.dart';
 import 'package:ion/app/features/user/providers/update_user_metadata_notifier.c.dart';
+import 'package:ion/app/features/user/providers/user_nickname_provider.c.dart';
 import 'package:ion/app/services/media_service/image_proccessing_config.dart';
 import 'package:ion/generated/assets.gen.dart';
 
@@ -31,16 +32,22 @@ class EditSubmitButton extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     ref.displayErrors(updateUserMetadataNotifierProvider);
 
+    final isLoading = ref.watch(updateUserMetadataNotifierProvider).isLoading ||
+        ref.watch(userNicknameNotifierProvider).isLoading;
+
     return Button(
-      disabled: !hasChanges,
+      disabled: !hasChanges || isLoading,
       type: hasChanges ? ButtonType.primary : ButtonType.disabled,
-      leadingIcon: ref.watch(updateUserMetadataNotifierProvider).isLoading
+      leadingIcon: isLoading
           ? const IONLoadingIndicator()
           : Assets.svg.iconProfileSave.icon(
               color: context.theme.appColors.onPrimaryAccent,
             ),
       onPressed: () async {
         if (formKey.currentState!.validate()) {
+          await ref
+              .read(userNicknameNotifierProvider.notifier)
+              .verifyNicknameAvailability(nickname: draftRef.value.name);
           final avatarFile = ref
               .read(imageProcessorNotifierProvider(ImageProcessingType.avatar))
               .whenOrNull(processed: (file) => file);

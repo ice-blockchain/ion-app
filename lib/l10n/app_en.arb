@@ -563,6 +563,7 @@
   "error_screenshots_arent_secure_description": "Anyone who has access to your keys can use your assets. We recommend writing with your hands.",
   "error_display_name_invalid": "Please use regular text only",
   "error_nickname_invalid": "Only letters, numbers, and dots are allowed",
+  "error_nickname_taken": "Nickname is already taken",
   "error_passwords_are_not_equal": "Passwords are not equal",
   "error_website_invalid": "Invalid website url",
   "error_general_title": "Something went wrong",
