@@ -111,15 +111,10 @@ class CoinTransactionHistoryNotifier extends _$CoinTransactionHistoryNotifier {
   }
 
   void _processTransactions(List<TransactionData> transactions) {
-    final filtered = transactions.where((t) {
-      final date = t.dateRequested ?? t.createdAtInRelay ?? t.dateConfirmed;
-      return t.cryptoAsset is CoinTransactionAsset && date != null;
-    });
-
     _offset += transactions.length;
 
     _history.addAll(
-      filtered.map(
+      transactions.where(_isValidTransaction).map(
         (t) {
           final asset = t.cryptoAsset.as<CoinTransactionAsset>();
           if (asset == null) {
@@ -144,6 +139,27 @@ class CoinTransactionHistoryNotifier extends _$CoinTransactionHistoryNotifier {
         },
       ).nonNulls,
     );
+  }
+
+  bool _isValidTransaction(TransactionData tx) {
+    if (tx.cryptoAsset is! CoinTransactionAsset) {
+      Logger.warning('$_tag Ignored non-coin transaction: ${tx.txHash}');
+      return false;
+    }
+
+    final hasTimestamp =
+        tx.dateRequested != null || tx.createdAtInRelay != null || tx.dateConfirmed != null;
+    if (!hasTimestamp) {
+      Logger.warning('$_tag Ignored transaction with missing date: ${tx.txHash}');
+      return false;
+    }
+
+    if (_history.any((h) => h.origin.txHash == tx.txHash)) {
+      Logger.warning('$_tag Ignored duplicate transaction: ${tx.txHash}');
+      return false;
+    }
+
+    return true;
   }
 
   void _logTransactionHistory() {

@@ -299,7 +299,7 @@ class TransactionsRepository {
 
           if (coin == null) {
             Logger.error(
-              'Coin not found for transaction ${transaction.txHash}. '
+              "Ignore transaction ${transaction.txHash}, because transferred coin wasn't found. "
               'Tried symbol: ${transaction.metadata.asset.symbol}, '
               'contract: $contract, network: ${network.id}',
             );
