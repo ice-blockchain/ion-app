@@ -10,6 +10,7 @@ import 'package:ion/app/features/ion_connect/model/event_reference.c.dart';
 import 'package:ion/app/features/ion_connect/model/event_serializable.dart';
 import 'package:ion/app/features/ion_connect/model/ion_connect_entity.dart';
 import 'package:ion/app/features/ion_connect/providers/ion_connect_cache.c.dart';
+import 'package:ion/app/utils/date.dart';
 
 part 'user_delegation.c.freezed.dart';
 
@@ -138,14 +139,14 @@ class UserDelegate with _$UserDelegate {
     final kindsString = (attestation.length > 2) ? attestation[2] : null;
 
     final status = DelegationStatus.values.byName(statusName);
-    final time = DateTime.fromMillisecondsSinceEpoch(int.parse(timestamp) * 1000);
+    final time = fromTimestamp(int.parse(timestamp));
     final kinds = kindsString?.split(',').map(int.parse).toList();
 
     return UserDelegate(pubkey: pubkey, relay: relay, status: status, time: time, kinds: kinds);
   }
 
   List<String> toTag() {
-    final attestationParts = [status.toShortString(), time.millisecondsSinceEpoch ~/ 1000];
+    final attestationParts = [status.toShortString(), time.microsecondsSinceEpoch];
     if (kinds.emptyOrValue.isNotEmpty) {
       attestationParts.add(kinds!.join(','));
     }

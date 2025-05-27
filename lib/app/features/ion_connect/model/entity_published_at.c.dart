@@ -2,6 +2,7 @@
 
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:ion/app/exceptions/exceptions.dart';
+import 'package:ion/app/utils/date.dart';
 
 part 'entity_published_at.c.freezed.dart';
 
@@ -19,12 +20,12 @@ class EntityPublishedAt with _$EntityPublishedAt {
     }
 
     return EntityPublishedAt(
-      value: DateTime.fromMillisecondsSinceEpoch(int.parse(tag[1]) * 1000),
+      value: fromTimestamp(int.parse(tag[1])),
     );
   }
 
   List<String> toTag() {
-    return [tagName, (value.millisecondsSinceEpoch ~/ 1000).toString()];
+    return [tagName, value.microsecondsSinceEpoch.toString()];
   }
 
   static const String tagName = 'published_at';
