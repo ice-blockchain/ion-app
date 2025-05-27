@@ -38,6 +38,6 @@ class NetworksInitializer {
         .map(NetworkData.fromDTO)
         .toList();
 
-    await _networksRepository.save(networks);
+    await _networksRepository.setAll(networks);
   }
 }

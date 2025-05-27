@@ -33,6 +33,11 @@ class NetworksRepository {
     return _networksDao.insertAll(dbNetworks);
   }
 
+  Future<void> setAll(List<NetworkData> networks) {
+    final dbNetworks = NetworksMapper().toDb(networks);
+    return _networksDao.setAll(dbNetworks);
+  }
+
   Future<List<NetworkData>> getAll() {
     return _networksDao.getAll().then((networks) => networks.toConvertedList());
   }
