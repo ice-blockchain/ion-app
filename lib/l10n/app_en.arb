@@ -154,7 +154,7 @@
   "two_fa_edit_phone_success": "Verification by phone was successfully changed",
   "two_fa_edit_phone_already_linked": "The entered number is already linked.\nUse a different number and try again.",
   "two_fa_success_desc": "Your identity key has been restored. You can now access your account securely",
-  "two_fa_success_warning_desc": "In order to secure your data, you need to log in to the app and re-create a backup of your keys. So the keys can be restored only once",
+  "two_fa_success_warning_desc": "All previous backups are permanently deleted after key recovery. To keep your account secure, re-create a backup of your keys",
   "two_fa_failure_title": "2FA Verification error",
   "two_fa_failure_desc": "Please ensure all codes are correct and try again",
   "two_fa_failure_invalid_code_desc": "Please ensure validation code you provided is correct and try again",
