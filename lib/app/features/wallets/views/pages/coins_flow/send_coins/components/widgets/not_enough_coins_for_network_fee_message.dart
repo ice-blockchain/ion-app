@@ -18,10 +18,12 @@ import 'package:ion/app/router/app_routes.c.dart';
 class NotEnoughMoneyForNetworkFeeMessage extends HookConsumerWidget {
   const NotEnoughMoneyForNetworkFeeMessage({
     required this.network,
+    this.placeholder,
     super.key,
   });
 
   final NetworkData network;
+  final Widget? placeholder;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -33,7 +35,7 @@ class NotEnoughMoneyForNetworkFeeMessage extends HookConsumerWidget {
     final nativeCoin = useFuture(nativeCoinFuture).data;
     final isLoading = nativeCoin == null;
 
-    if (isLoading) return const SizedBox();
+    if (isLoading) return placeholder ?? const SizedBox();
 
     return Container(
       margin: const EdgeInsetsDirectional.fromSTEB(0, 8, 0, 12),
