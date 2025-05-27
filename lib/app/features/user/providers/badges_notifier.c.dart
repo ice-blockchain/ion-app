@@ -2,11 +2,14 @@
 
 import 'dart:async';
 
+import 'package:collection/collection.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/extensions/bool.dart';
+import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/auth/providers/auth_provider.c.dart';
 import 'package:ion/app/features/auth/providers/delegation_complete_provider.c.dart';
 import 'package:ion/app/features/ion_connect/ion_connect.dart';
+import 'package:ion/app/features/ion_connect/model/action_source.c.dart';
 import 'package:ion/app/features/ion_connect/model/event_reference.c.dart';
 import 'package:ion/app/features/ion_connect/model/search_extension.dart';
 import 'package:ion/app/features/ion_connect/providers/ion_connect_cache.c.dart';
@@ -16,6 +19,7 @@ import 'package:ion/app/features/ion_connect/providers/ion_connect_subscription_
 import 'package:ion/app/features/user/model/badges/badge_award.c.dart';
 import 'package:ion/app/features/user/model/badges/badge_definition.c.dart';
 import 'package:ion/app/features/user/model/badges/profile_badges.c.dart';
+import 'package:ion/app/features/user/model/badges/verified_badge_data.dart';
 import 'package:ion/app/features/user/providers/service_pubkeys_provider.c.dart';
 import 'package:nostr_dart/nostr_dart.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
@@ -57,6 +61,55 @@ ProfileBadgesEntity? cachedProfileBadgesData(
 }
 
 @riverpod
+Future<BadgeDefinitionEntity?> badgeDefinitionEntity(
+  Ref ref,
+  String dTag,
+  List<String> servicePubkeys,
+) async {
+  if (servicePubkeys.isEmpty) {
+    return null;
+  }
+
+  final badgeDefinitionEntityList = servicePubkeys
+      .map((pubkey) {
+        final cacheKey = CacheableEntity.cacheKeyBuilder(
+          eventReference: ReplaceableEventReference(
+            pubkey: pubkey,
+            kind: BadgeDefinitionEntity.kind,
+            dTag: dTag,
+          ),
+        );
+        return ref.watch(
+          ionConnectCacheProvider.select(cacheSelector<BadgeDefinitionEntity>(cacheKey)),
+        );
+      })
+      .nonNulls
+      .toList();
+
+  if (badgeDefinitionEntityList.isNotEmpty) {
+    return badgeDefinitionEntityList.first;
+  }
+
+  for (final pubkey in servicePubkeys) {
+    final fetchedEntity = await ref.watch(
+      ionConnectNetworkEntityProvider(
+        eventReference: ReplaceableEventReference(
+          pubkey: pubkey,
+          kind: BadgeDefinitionEntity.kind,
+          dTag: dTag,
+        ),
+        actionSource: const ActionSourceCurrentUser(),
+      ).future,
+    ) as BadgeDefinitionEntity?;
+    if (fetchedEntity != null) {
+      return fetchedEntity;
+    }
+  }
+
+  return null;
+}
+
+@riverpod
 Future<ProfileBadgesData?> profileBadgesData(
   Ref ref,
   String pubkey,
@@ -75,6 +128,17 @@ Future<ProfileBadgesData?> profileBadgesData(
 }
 
 @riverpod
+bool isValidVerifiedBadgeDefinition(
+  Ref ref,
+  ReplaceableEventReference badgeRef,
+  List<String> servicePubkeys,
+) {
+  return badgeRef.dTag == BadgeDefinitionEntity.verifiedBadgeDTag &&
+      (servicePubkeys.isEmpty || servicePubkeys.contains(badgeRef.pubkey)) &&
+      badgeRef.kind == BadgeDefinitionEntity.kind;
+}
+
+@riverpod
 Future<bool> isUserVerified(
   Ref ref,
   String pubkey,
@@ -85,12 +149,10 @@ Future<bool> isUserVerified(
   final pubkeys = await ref.watch(servicePubkeysProvider.future);
 
   return profileBadgesData?.entries.any((entry) {
-        final eventRef = entry.definitionRef;
         final isBadgeAwardValid =
             pubkeys.isEmpty || ref.watch(cachedBadgeAwardProvider(entry.awardId, pubkeys)) != null;
-        final isBadgeDefinitionValid = eventRef.dTag == BadgeDefinitionEntity.verifiedBadgeDTag &&
-            (pubkeys.isEmpty || pubkeys.contains(eventRef.pubkey)) &&
-            eventRef.kind == BadgeDefinitionEntity.kind;
+        final isBadgeDefinitionValid =
+            ref.watch(isValidVerifiedBadgeDefinitionProvider(entry.definitionRef, pubkeys));
         return isBadgeDefinitionValid && isBadgeAwardValid;
       }) ??
       false;
@@ -204,4 +266,56 @@ void currentUserBadgesSync(Ref ref) {
     },
   );
   ref.onDispose(sub.close);
+}
+
+@riverpod
+Future<VerifiedBadgeEntities?> currentUserVerifiedBadgeData(Ref ref) async {
+  final currentPubkey = ref.watch(currentPubkeySelectorProvider);
+  if (currentPubkey == null) {
+    return null;
+  }
+
+  // Fetch service pubkeys
+  final servicePubkeys = await ref.watch(servicePubkeysProvider.future);
+
+  // 1. Load profile badges data from cache only
+  final profileEntity = ref.watch(
+    ionConnectCachedEntityProvider(
+      eventReference: ReplaceableEventReference(
+        pubkey: currentPubkey,
+        kind: ProfileBadgesEntity.kind,
+        dTag: ProfileBadgesEntity.dTag,
+      ),
+    ),
+  ) as ProfileBadgesEntity?;
+  final profileData = profileEntity?.data;
+
+  // 2. Find the 'verified' badge award entry
+  final verifiedEntry = profileData?.entries.firstWhereOrNull(
+    (entry) => entry.definitionRef.dTag == BadgeDefinitionEntity.verifiedBadgeDTag,
+  );
+
+  // Load the corresponding BadgeAwardEntity from cache only
+  final awardEntity = verifiedEntry != null
+      ? ref.watch(cachedBadgeAwardProvider(verifiedEntry.awardId, servicePubkeys))
+      : null;
+
+  // 3. Load the corresponding BadgeDefinitionEntity with 'verified' dTag from cache only
+  final definitionEntity = verifiedEntry != null
+      ? ref.watch(
+          ionConnectCachedEntityProvider(
+            eventReference: ReplaceableEventReference(
+              pubkey: verifiedEntry.definitionRef.pubkey,
+              kind: BadgeDefinitionEntity.kind,
+              dTag: BadgeDefinitionEntity.verifiedBadgeDTag,
+            ),
+          ),
+        ) as BadgeDefinitionEntity?
+      : null;
+
+  return VerifiedBadgeEntities(
+    profileEntity: profileEntity,
+    awardEntity: awardEntity,
+    definitionEntity: definitionEntity,
+  );
 }

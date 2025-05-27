@@ -16,7 +16,7 @@ import 'package:ion/app/features/feed/create_post/model/create_post_option.dart'
 import 'package:ion/app/features/feed/data/models/entities/article_data.c.dart';
 import 'package:ion/app/features/feed/data/models/entities/modifiable_post_data.c.dart';
 import 'package:ion/app/features/feed/data/models/entities/post_data.c.dart';
-import 'package:ion/app/features/feed/data/models/who_can_reply_settings_option.dart';
+import 'package:ion/app/features/feed/data/models/who_can_reply_settings_option.c.dart';
 import 'package:ion/app/features/feed/providers/counters/replies_count_provider.c.dart';
 import 'package:ion/app/features/feed/providers/counters/reposts_count_provider.c.dart';
 import 'package:ion/app/features/ion_connect/model/action_source.c.dart';
@@ -26,6 +26,7 @@ import 'package:ion/app/features/ion_connect/model/entity_editing_ended_at.c.dar
 import 'package:ion/app/features/ion_connect/model/entity_expiration.c.dart';
 import 'package:ion/app/features/ion_connect/model/entity_published_at.c.dart';
 import 'package:ion/app/features/ion_connect/model/event_reference.c.dart';
+import 'package:ion/app/features/ion_connect/model/events_metadata_builder.dart';
 import 'package:ion/app/features/ion_connect/model/file_alt.dart';
 import 'package:ion/app/features/ion_connect/model/file_metadata.c.dart';
 import 'package:ion/app/features/ion_connect/model/ion_connect_entity.dart';
@@ -42,6 +43,7 @@ import 'package:ion/app/features/ion_connect/providers/ion_connect_entity_provid
 import 'package:ion/app/features/ion_connect/providers/ion_connect_notifier.c.dart';
 import 'package:ion/app/features/ion_connect/providers/ion_connect_upload_notifier.c.dart';
 import 'package:ion/app/features/user/providers/user_events_metadata_provider.c.dart';
+import 'package:ion/app/features/user/providers/verified_user_events_metadata_provider.c.dart';
 import 'package:ion/app/services/compressors/image_compressor.c.dart';
 import 'package:ion/app/services/compressors/video_compressor.c.dart';
 import 'package:ion/app/services/markdown/quill.dart';
@@ -64,7 +66,7 @@ class CreatePostNotifier extends _$CreatePostNotifier {
 
   Future<void> create({
     Delta? content,
-    WhoCanReplySettingsOption whoCanReply = WhoCanReplySettingsOption.everyone,
+    WhoCanReplySettingsOption whoCanReply = const WhoCanReplySettingsOption.everyone(),
     EventReference? parentEvent,
     EventReference? quotedEvent,
     List<MediaFile>? mediaFiles,
@@ -102,7 +104,7 @@ class CreatePostNotifier extends _$CreatePostNotifier {
         files: files,
         mentions: mentions,
         quotedEvent: quotedEvent,
-        parentEvent: parentEvent,
+        parentEntity: parentEntity,
       );
 
       _createPostNotifierStreamController.add(post);
@@ -178,7 +180,7 @@ class CreatePostNotifier extends _$CreatePostNotifier {
           files: files,
           mentions: <RelatedPubkey>{...originalMentions, ...mentions}.toList(),
           quotedEvent: quotedEvent,
-          parentEvent: parentEvent,
+          parentEntity: parentEntity,
         ),
       ]);
     });
@@ -221,7 +223,9 @@ class CreatePostNotifier extends _$CreatePostNotifier {
           postData,
           mentions: _buildMentions(contentDelta),
           quotedEvent: entity.data.quotedEvent?.eventReference,
-          parentEvent: entity.data.parentEvent?.eventReference,
+          parentEntity: entity.data.parentEvent?.eventReference != null
+              ? await _getParentEntity(entity.data.parentEvent!.eventReference)
+              : null,
         ),
       ]);
     });
@@ -230,7 +234,7 @@ class CreatePostNotifier extends _$CreatePostNotifier {
   Future<ModifiablePostEntity> _publishPost(
     ModifiablePostData postData, {
     EventReference? quotedEvent,
-    EventReference? parentEvent,
+    IonConnectEntity? parentEntity,
     List<FileMetadata> files = const [],
     List<RelatedPubkey> mentions = const [],
   }) async {
@@ -241,18 +245,26 @@ class CreatePostNotifier extends _$CreatePostNotifier {
     final eventsToPublish = [...fileEvents, postEvent];
 
     final pubkeysToPublish = mentions.map((mention) => mention.value).toSet();
+    final metadataBuilders = <EventsMetadataBuilder>[];
 
     if (quotedEvent != null) {
       pubkeysToPublish.add(quotedEvent.pubkey);
-    } else if (parentEvent != null) {
+    } else if (parentEntity != null) {
       final rootRelatedEvent = postData.rootRelatedEvent;
       pubkeysToPublish.addAll([
-        parentEvent.pubkey,
+        parentEntity.masterPubkey,
         if (rootRelatedEvent != null) rootRelatedEvent.eventReference.pubkey,
       ]);
+      if (parentEntity is ModifiablePostEntity &&
+          parentEntity.data.hasVerifiedUsersOnlyCanReplySettingOption) {
+        final verifiedUserEventsMetadataBuilder =
+            await ref.read(verifiedUserEventsMetadataBuilderProvider.future);
+        metadataBuilders.add(verifiedUserEventsMetadataBuilder);
+      }
     }
 
     final userEventsMetadataBuilder = await ref.read(userEventsMetadataBuilderProvider.future);
+    metadataBuilders.add(userEventsMetadataBuilder);
 
     await Future.wait([
       ionNotifier.sendEvents(eventsToPublish),
@@ -260,7 +272,7 @@ class CreatePostNotifier extends _$CreatePostNotifier {
         ref.read(ionConnectNotifierProvider.notifier).sendEvents(
               eventsToPublish,
               actionSource: ActionSourceUser(pubkey),
-              metadataBuilders: [userEventsMetadataBuilder],
+              metadataBuilders: metadataBuilders,
               cache: false,
             ),
     ]);

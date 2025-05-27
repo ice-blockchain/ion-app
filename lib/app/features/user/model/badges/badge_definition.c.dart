@@ -23,7 +23,8 @@ class Thumbnail {
 
 @Freezed(equal: false)
 class BadgeDefinitionEntity
-    with IonConnectEntity, CacheableEntity, ReplaceableEntity, _$BadgeDefinitionEntity {
+    with IonConnectEntity, CacheableEntity, ReplaceableEntity, _$BadgeDefinitionEntity
+    implements EntityEventSerializable {
   const factory BadgeDefinitionEntity({
     required String id,
     required String pubkey,
@@ -49,6 +50,9 @@ class BadgeDefinitionEntity
       data: BadgeDefinitionData.fromEventMessage(eventMessage),
     );
   }
+
+  @override
+  FutureOr<EventMessage> toEntityEventMessage() => toEventMessage(data);
 
   static const int kind = 30009;
   static const String verifiedBadgeDTag = 'verified';

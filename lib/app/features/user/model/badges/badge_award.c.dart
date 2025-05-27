@@ -16,7 +16,9 @@ import 'package:ion/app/features/ion_connect/providers/ion_connect_cache.c.dart'
 part 'badge_award.c.freezed.dart';
 
 @Freezed(equal: false)
-class BadgeAwardEntity with IonConnectEntity, ImmutableEntity, CacheableEntity, _$BadgeAwardEntity {
+class BadgeAwardEntity
+    with IonConnectEntity, ImmutableEntity, CacheableEntity, _$BadgeAwardEntity
+    implements EntityEventSerializable {
   const factory BadgeAwardEntity({
     required String id,
     required String pubkey,
@@ -42,6 +44,9 @@ class BadgeAwardEntity with IonConnectEntity, ImmutableEntity, CacheableEntity, 
       data: BadgeAwardData.fromEventMessage(ev),
     );
   }
+
+  @override
+  FutureOr<EventMessage> toEntityEventMessage() => toEventMessage(data);
 
   static const int kind = 8;
 }

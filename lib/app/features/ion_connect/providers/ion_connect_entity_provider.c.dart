@@ -30,7 +30,9 @@ Future<IonConnectEntity?> ionConnectNetworkEntity(
   Ref ref, {
   required EventReference eventReference,
   String? search,
+  ActionSource? actionSource,
 }) async {
+  final aSource = actionSource ?? ActionSourceUser(eventReference.pubkey);
   if (eventReference is ImmutableEventReference) {
     final requestMessage = RequestMessage()
       ..addFilter(
@@ -42,7 +44,7 @@ Future<IonConnectEntity?> ionConnectNetworkEntity(
       );
     return ref.read(ionConnectNotifierProvider.notifier).requestEntity(
           requestMessage,
-          actionSource: ActionSourceUser(eventReference.pubkey),
+          actionSource: aSource,
           entityEventReference: eventReference,
         );
   } else if (eventReference is ReplaceableEventReference) {
@@ -60,7 +62,7 @@ Future<IonConnectEntity?> ionConnectNetworkEntity(
       );
     return ref.read(ionConnectNotifierProvider.notifier).requestEntity(
           requestMessage,
-          actionSource: ActionSourceUser(eventReference.pubkey),
+          actionSource: aSource,
           entityEventReference: eventReference,
         );
   } else {
