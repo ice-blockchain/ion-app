@@ -15,7 +15,7 @@ part 'feed_config_provider.c.g.dart';
 Future<FeedConfig> feedConfig(Ref ref) async {
   await Future<void>.delayed(const Duration(milliseconds: 500));
   return const FeedConfig(
-    notInterestedThreshold: 0.5,
+    interestedThreshold: 0.5,
     notInterestedCategoryChance: 0.3,
     notInterestedSubcategoryChance: 0.2,
     followingMaxAge: Duration(days: 7),

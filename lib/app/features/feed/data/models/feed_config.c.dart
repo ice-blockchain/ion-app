@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: ice License 1.0
+
 import 'package:freezed_annotation/freezed_annotation.dart';
 
 part 'feed_config.c.freezed.dart';
@@ -6,8 +8,15 @@ part 'feed_config.c.g.dart';
 @freezed
 class FeedConfig with _$FeedConfig {
   const factory FeedConfig({
-    required double notInterestedThreshold,
+    /// A category is considered "interesting" to the user if its weight
+    /// is bigger than this threshold multiplied by the total weight of all sibling
+    /// categories under the same parent.
+    required double interestedThreshold,
+
+    /// The chance of rolling a category that the user is not interested in.
     required double notInterestedCategoryChance,
+
+    /// The chance of rolling a subcategory that the user is not interested in.
     required double notInterestedSubcategoryChance,
     @DurationMillisecondsConverter() required Duration followingMaxAge,
     @DurationMillisecondsConverter() required Duration topMaxAge,

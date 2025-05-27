@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: ice License 1.0
+
 import 'dart:math';
 
 import 'package:flutter_test/flutter_test.dart';
@@ -17,7 +19,7 @@ void main() {
 
     setUp(() {
       config = const FeedConfig(
-        notInterestedThreshold: 0.5,
+        interestedThreshold: 0.5,
         notInterestedCategoryChance: 0.5,
         notInterestedSubcategoryChance: 0.5,
         followingMaxAge: Duration(days: 1),
@@ -25,24 +27,22 @@ void main() {
         trendingMaxAge: Duration(days: 1),
         exploreMaxAge: Duration(days: 1),
       );
-      interests = const FeedInterests(
-        categories: {
-          'music': FeedInterestsCategory(
-            weight: 2,
-            children: {
-              'rock': FeedInterestsSubcategory(weight: 10),
-              'pop': FeedInterestsSubcategory(weight: 1),
-            },
-          ),
-          'sports': FeedInterestsCategory(
-            weight: 10,
-            children: {
-              'basketball': FeedInterestsSubcategory(weight: 2),
-              'football': FeedInterestsSubcategory(weight: 5),
-            },
-          ),
+      interests = FeedInterests.fromJson({
+        'music': {
+          'weight': 2,
+          'children': {
+            'rock': {'weight': 10},
+            'pop': {'weight': 1},
+          },
         },
-      );
+        'sports': {
+          'weight': 10,
+          'children': {
+            'basketball': {'weight': 2},
+            'football': {'weight': 5},
+          },
+        },
+      });
       random = MockRandom();
 
       when(() => random.nextDouble()).thenReturn(Random().nextDouble());
