@@ -160,7 +160,7 @@ Delta processDelta(Delta delta) {
     }
   }
 
-  return withFullLinks(delta);
+  return withFullLinks(newDelta);
 }
 
 Delta parseAndConvertDelta(String? deltaContent, String fallbackMarkdown) {
