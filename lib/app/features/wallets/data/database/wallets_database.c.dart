@@ -149,9 +149,20 @@ class WalletsDatabase extends _$WalletsDatabase {
           );
         },
         from11To12: (m, schema) async {
-          await m.addColumn(schema.transactionsTableV2, schema.transactionsTableV2.externalHash);
+          final isExternalHashColumnExists = await isColumnExists(
+            tableName: schema.transactionsTableV2.actualTableName,
+            columnName: 'external_hash',
+          );
+          if (!isExternalHashColumnExists) {
+            await m.addColumn(schema.transactionsTableV2, schema.transactionsTableV2.externalHash);
+          }
         },
       ),
     );
+  }
+
+  Future<bool> isColumnExists({required String tableName, required String columnName}) async {
+    final rows = await customSelect('PRAGMA table_info($tableName)').get();
+    return rows.any((row) => row.data['name'] == columnName);
   }
 }
