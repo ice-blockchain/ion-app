@@ -2,6 +2,7 @@
 
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:ion/app/exceptions/exceptions.dart';
+import 'package:ion/app/utils/date.dart';
 
 part 'entity_editing_ended_at.c.freezed.dart';
 
@@ -19,7 +20,7 @@ class EntityEditingEndedAt with _$EntityEditingEndedAt {
     }
 
     return EntityEditingEndedAt(
-      value: DateTime.fromMillisecondsSinceEpoch(int.parse(tag[1]) * 1000),
+      value: fromTimestamp(int.parse(tag[1])),
     );
   }
 
@@ -34,7 +35,7 @@ class EntityEditingEndedAt with _$EntityEditingEndedAt {
   }
 
   List<String> toTag() {
-    return [tagName, (value.millisecondsSinceEpoch ~/ 1000).toString()];
+    return [tagName, value.microsecondsSinceEpoch.toString()];
   }
 
   static const String tagName = 'editing_ended_at';

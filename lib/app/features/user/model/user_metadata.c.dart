@@ -12,6 +12,7 @@ import 'package:ion/app/features/ion_connect/model/event_serializable.dart';
 import 'package:ion/app/features/ion_connect/model/ion_connect_entity.dart';
 import 'package:ion/app/features/ion_connect/model/media_attachment.dart';
 import 'package:ion/app/features/ion_connect/providers/ion_connect_cache.c.dart';
+import 'package:ion/app/utils/date.dart';
 
 part 'user_metadata.c.freezed.dart';
 part 'user_metadata.c.g.dart';
@@ -202,11 +203,9 @@ class UserDataEventMessageContent {
 
   Map<String, dynamic> toJson() => _$UserDataEventMessageContentToJson(this);
 
-  static int? _dateTimeToJson(DateTime? value) =>
-      value != null ? value.millisecondsSinceEpoch ~/ 1000 : null;
+  static int? _dateTimeToJson(DateTime? value) => value?.microsecondsSinceEpoch;
 
-  static DateTime? _dateTimeFromJson(int? value) =>
-      value != null ? DateTime.fromMillisecondsSinceEpoch(value * 1000) : null;
+  static DateTime? _dateTimeFromJson(int? value) => value != null ? fromTimestamp(value) : null;
 }
 
 enum WhoCanSetting {

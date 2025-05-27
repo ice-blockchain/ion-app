@@ -163,3 +163,13 @@ String formatDetailedTimestamp(DateTime dateTime, {Locale? locale}) {
 bool isSameDay(DateTime date1, DateTime date2) {
   return date1.year == date2.year && date1.month == date2.month && date1.day == date2.day;
 }
+
+DateTime fromTimestamp(int timestamp) {
+  if (timestamp.toString().length <= 10) {
+    // If the timestamp is in seconds, convert to milliseconds
+    return DateTime.fromMillisecondsSinceEpoch(timestamp * 1000);
+  } else {
+    // If the timestamp is already in milliseconds, use it directly
+    return DateTime.fromMillisecondsSinceEpoch(timestamp);
+  }
+}
