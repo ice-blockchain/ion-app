@@ -1,6 +1,5 @@
 // SPDX-License-Identifier: ice License 1.0
 
-import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:ion/app/utils/future.dart';
@@ -130,39 +129,17 @@ class DismissiblePage extends HookWidget {
       [isZoomed, animationController, onDismissed],
     );
 
-    // Select gesture recognizer based on direction.
-    final Map<Type, GestureRecognizerFactory> gestures;
-    if (direction == SwipeDismissDirection.vertical) {
-      gestures = {
-        VerticalDragGestureRecognizer:
-            GestureRecognizerFactoryWithHandlers<VerticalDragGestureRecognizer>(
-          VerticalDragGestureRecognizer.new,
-          (VerticalDragGestureRecognizer instance) {
-            instance
-              ..onStart = handleDragStart
-              ..onUpdate = handleDragUpdate
-              ..onEnd = handleDragEnd;
-          },
-        ),
-      };
-    } else if (direction == SwipeDismissDirection.multi) {
-      gestures = {
-        PanGestureRecognizer: GestureRecognizerFactoryWithHandlers<PanGestureRecognizer>(
-          PanGestureRecognizer.new,
-          (PanGestureRecognizer instance) {
-            instance
-              ..onStart = handleDragStart
-              ..onUpdate = handleDragUpdate
-              ..onEnd = handleDragEnd;
-          },
-        ),
-      };
-    } else {
-      gestures = {};
-    }
-
-    return RawGestureDetector(
-      gestures: gestures,
+    return GestureDetector(
+      onVerticalDragStart:
+          direction == SwipeDismissDirection.vertical && !isZoomed ? handleDragStart : null,
+      onVerticalDragUpdate:
+          direction == SwipeDismissDirection.vertical && !isZoomed ? handleDragUpdate : null,
+      onVerticalDragEnd:
+          direction == SwipeDismissDirection.vertical && !isZoomed ? handleDragEnd : null,
+      onPanStart: direction == SwipeDismissDirection.multi && !isZoomed ? handleDragStart : null,
+      onPanUpdate: direction == SwipeDismissDirection.multi && !isZoomed ? handleDragUpdate : null,
+      onPanEnd: direction == SwipeDismissDirection.multi && !isZoomed ? handleDragEnd : null,
+      behavior: HitTestBehavior.opaque,
       child: AnimatedContainer(
         duration: 100.ms,
         color: backgroundColor.withValues(alpha: opacity),
