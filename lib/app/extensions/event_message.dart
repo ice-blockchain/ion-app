@@ -8,8 +8,7 @@ import 'package:ion/app/features/ion_connect/database/event_messages_database.c.
     as event_messages_db;
 import 'package:ion/app/features/ion_connect/ion_connect.dart';
 import 'package:ion/app/features/ion_connect/model/event_reference.c.dart';
-import 'package:ion/app/features/user_block/model/database/blocked_users_database.c.dart'
-    as blocked_users_db;
+import 'package:ion/app/features/user_block/model/database/blocked_users_database.c.dart';
 
 extension KeysExtensions on EventMessage {
   String get masterPubkey {
@@ -50,14 +49,14 @@ extension KeysExtensions on EventMessage {
     );
   }
 
-  blocked_users_db.BlockEventDbModel toBlockEventDbModel(EventReference eventReference) {
+  BlockEventDbModel toBlockEventDbModel(EventReference eventReference) {
     final sharedId = tags.firstWhereOrNull((tag) => tag.first == 'd')?.last;
 
     if (sharedId == null) {
       throw ShareableIdentifierDecodeException(id);
     }
 
-    return blocked_users_db.BlockEventDbModel(
+    return BlockEventDbModel(
       id: id,
       kind: kind,
       tags: tags,
@@ -99,7 +98,7 @@ extension ChatEventMessageDbModelExtensions on chat_db.EventMessageDbModel {
   }
 }
 
-extension BlockEventDbModelExtensions on blocked_users_db.BlockEventDbModel {
+extension BlockEventDbModelExtensions on BlockEventDbModel {
   EventMessage toEventMessage() {
     return EventMessage(
       id: id,

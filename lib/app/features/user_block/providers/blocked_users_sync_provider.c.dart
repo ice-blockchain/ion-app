@@ -7,6 +7,7 @@ import 'package:ion/app/exceptions/exceptions.dart';
 import 'package:ion/app/features/auth/providers/auth_provider.c.dart';
 import 'package:ion/app/features/auth/providers/delegation_complete_provider.c.dart';
 import 'package:ion/app/features/chat/e2ee/providers/gift_unwrap_service_provider.c.dart';
+import 'package:ion/app/features/core/providers/env_provider.c.dart';
 import 'package:ion/app/features/ion_connect/ion_connect.dart';
 import 'package:ion/app/features/ion_connect/model/deletion_request.c.dart';
 import 'package:ion/app/features/ion_connect/model/event_reference.c.dart';
@@ -68,22 +69,24 @@ class BlockedUsersSync extends _$BlockedUsersSync {
     final sealService = await ref.watch(ionConnectSealServiceProvider.future);
     final giftWrapService = await ref.watch(ionConnectGiftWrapServiceProvider.future);
     final blockEventDao = ref.watch(blockEventDaoProvider);
+    final env = ref.watch(envProvider.notifier);
+    final overlap = env.get<int>(EnvVariable.BLOCKED_USERS_SYNC_OVERLAP_DAYS);
 
     await ref.watch(entitiesSyncerNotifierProvider('blocked-users').notifier).syncEvents(
-      requestFilters: [requestFilter],
-      overlap: const Duration(days: 2),
-      saveCallback: (wrap) => _handleBlockEvent(
-        eventMessage: wrap,
-        eventSigner: eventSigner,
-        sealService: sealService,
-        masterPubkey: masterPubkey,
-        blockEventDao: blockEventDao,
-        giftWrapService: giftWrapService,
-      ),
-      maxCreatedAtBuilder: () => ref.watch(blockEventDaoProvider).getLatestBlockEventDate(),
-      minCreatedAtBuilder: (since) =>
-          ref.watch(blockEventDaoProvider).getEarliestBlockEventDate(after: since),
-    );
+          overlap: Duration(days: overlap),
+          requestFilters: [requestFilter],
+          saveCallback: (wrap) => _handleBlockEvent(
+            eventMessage: wrap,
+            eventSigner: eventSigner,
+            sealService: sealService,
+            masterPubkey: masterPubkey,
+            blockEventDao: blockEventDao,
+            giftWrapService: giftWrapService,
+          ),
+          maxCreatedAtBuilder: () => ref.watch(blockEventDaoProvider).getLatestBlockEventDate(),
+          minCreatedAtBuilder: (since) =>
+              ref.watch(blockEventDaoProvider).getEarliestBlockEventDate(after: since),
+        );
 
     final requestMessage = RequestMessage()..addFilter(requestFilter);
 

@@ -12,23 +12,6 @@ class ProfileSkeleton extends StatelessWidget {
 
   final bool showBackButton;
 
-  Widget _skeletonBox({
-    required double width,
-    required double height,
-    double borderRadius = 16.0,
-  }) {
-    return Skeleton(
-      child: Container(
-        width: width,
-        height: height,
-        decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.circular(borderRadius),
-        ),
-      ),
-    );
-  }
-
   Widget _header(BuildContext context) {
     return ScreenSideOffset.small(
       child: Row(
@@ -36,11 +19,11 @@ class ProfileSkeleton extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           if (showBackButton) NavigationBackButton(context.pop),
-          _skeletonBox(
+          _SkeletonBox(
             width: 65.0.s,
             height: 65.0.s,
           ),
-          _skeletonBox(
+          _SkeletonBox(
             width: 24.0.s,
             height: 24.0.s,
             borderRadius: 8.0.s,
@@ -59,16 +42,16 @@ class ProfileSkeleton extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                _skeletonBox(
+                _SkeletonBox(
                   width: 24.0.s,
                   height: 24.0.s,
                   borderRadius: 8.0.s,
                 ),
-                _skeletonBox(
+                _SkeletonBox(
                   width: 65.0.s,
                   height: 65.0.s,
                 ),
-                _skeletonBox(
+                _SkeletonBox(
                   width: 24.0.s,
                   height: 24.0.s,
                   borderRadius: 8.0.s,
@@ -76,18 +59,18 @@ class ProfileSkeleton extends StatelessWidget {
               ],
             ),
           SizedBox(height: 16.0.s),
-          _skeletonBox(
+          _SkeletonBox(
             width: 320.0.s,
             height: 20.0.s,
             borderRadius: 8.0.s,
           ),
           SizedBox(height: 6.0.s),
-          _skeletonBox(
+          _SkeletonBox(
             width: 280.0.s,
             height: 16.0.s,
           ),
           SizedBox(height: 12.0.s),
-          _skeletonBox(
+          _SkeletonBox(
             width: 120.0.s,
             height: 28.0.s,
           ),
@@ -102,37 +85,37 @@ class ProfileSkeleton extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        _skeletonBox(
+        _SkeletonBox(
           width: 343.0.s,
           height: 36.0.s,
         ),
         SizedBox(height: 12.0.s),
-        _skeletonBox(
+        _SkeletonBox(
           width: 218.0.s,
           height: 16.0.s,
         ),
         SizedBox(height: 12.0.s),
-        _skeletonBox(
+        _SkeletonBox(
           width: 343.0.s,
           height: 16.0.s,
         ),
         SizedBox(height: 5.0.s),
-        _skeletonBox(
+        _SkeletonBox(
           width: 280.0.s,
           height: 16.0.s,
         ),
         SizedBox(height: 12.0.s),
-        _skeletonBox(
+        _SkeletonBox(
           width: 343.0.s,
           height: 16.0.s,
         ),
         SizedBox(height: 12.0.s),
-        _skeletonBox(
+        _SkeletonBox(
           width: 343.0.s,
           height: 16.0.s,
         ),
         SizedBox(height: 12.0.s),
-        _skeletonBox(
+        _SkeletonBox(
           width: 343.0.s,
           height: 30.0.s,
         ),
@@ -152,12 +135,12 @@ class ProfileSkeleton extends StatelessWidget {
       child: Column(
         children: [
           SizedBox(height: 12.0.s),
-          _skeletonBox(
+          _SkeletonBox(
             width: double.infinity,
             height: 35.0.s,
           ),
           SizedBox(height: 12.0.s),
-          _skeletonBox(
+          _SkeletonBox(
             width: double.infinity,
             height: 200.0.s,
           ),
@@ -186,6 +169,32 @@ class ProfileSkeleton extends StatelessWidget {
               ),
             ],
           ),
+        ),
+      ),
+    );
+  }
+}
+
+class _SkeletonBox extends StatelessWidget {
+  const _SkeletonBox({
+    required this.width,
+    required this.height,
+    this.borderRadius = 16.0,
+  });
+
+  final double width;
+  final double height;
+  final double borderRadius;
+
+  @override
+  Widget build(BuildContext context) {
+    return Skeleton(
+      child: Container(
+        width: width,
+        height: height,
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(borderRadius),
         ),
       ),
     );
