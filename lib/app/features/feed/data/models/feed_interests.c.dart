@@ -56,8 +56,12 @@ class FeedInterests with _$FeedInterests {
   }
 }
 
+abstract class CategoryWithWeight {
+  int get weight;
+}
+
 @freezed
-class FeedInterestsCategory with _$FeedInterestsCategory {
+class FeedInterestsCategory with _$FeedInterestsCategory implements CategoryWithWeight {
   const factory FeedInterestsCategory({
     required int weight,
     required Map<String, FeedInterestsSubcategory> children,
@@ -68,7 +72,7 @@ class FeedInterestsCategory with _$FeedInterestsCategory {
 }
 
 @freezed
-class FeedInterestsSubcategory with _$FeedInterestsSubcategory {
+class FeedInterestsSubcategory with _$FeedInterestsSubcategory implements CategoryWithWeight {
   const factory FeedInterestsSubcategory({
     required int weight,
   }) = _FeedInterestsSubcategory;
