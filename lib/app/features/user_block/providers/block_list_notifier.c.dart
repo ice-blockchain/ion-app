@@ -31,10 +31,13 @@ class CurrentUserBlockListNotifier extends _$CurrentUserBlockListNotifier {
     final initialEntities = initialEvents.map(BlockedUserEntity.fromEventMessage).toList();
     state = AsyncValue.data(initialEntities);
 
-    blockEventDao.watchBlockedUsersEvents(currentUserMasterPubkey).listen((blockEvents) {
+    final subscription =
+        blockEventDao.watchBlockedUsersEvents(currentUserMasterPubkey).listen((blockEvents) {
       final entities = blockEvents.map(BlockedUserEntity.fromEventMessage).toList();
       state = AsyncValue.data(entities);
     });
+
+    ref.onDispose(subscription.cancel);
 
     return initialEntities;
   }
@@ -71,7 +74,8 @@ class IsBlockedByNotifier extends _$IsBlockedByNotifier {
           entity.masterPubkey == masterPubkey,
     );
 
-    blockEventDao.watchBlockedByUsersEvents(currentUserMasterPubkey).listen((events) {
+    final subscription =
+        blockEventDao.watchBlockedByUsersEvents(currentUserMasterPubkey).listen((events) {
       final entities = events.map(BlockedUserEntity.fromEventMessage);
       final isBlocked = entities.any(
         (entity) =>
@@ -80,6 +84,8 @@ class IsBlockedByNotifier extends _$IsBlockedByNotifier {
       );
       state = AsyncValue.data(isBlocked);
     });
+
+    ref.onDispose(subscription.cancel);
 
     return initiallyBlocked;
   }
