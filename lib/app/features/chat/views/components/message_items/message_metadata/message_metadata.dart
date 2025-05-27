@@ -10,7 +10,6 @@ import 'package:ion/app/features/chat/model/database/chat_database.c.dart';
 import 'package:ion/app/features/chat/model/message_type.dart';
 import 'package:ion/app/features/chat/providers/message_status_provider.c.dart';
 import 'package:ion/app/features/ion_connect/ion_connect.dart';
-import 'package:ion/app/features/user_block/providers/block_list_notifier.c.dart';
 import 'package:ion/app/utils/date.dart';
 import 'package:ion/generated/assets.gen.dart';
 
@@ -39,16 +38,6 @@ class MessageMetaData extends HookConsumerWidget {
     final isMe = ref.watch(isCurrentUserSelectorProvider(eventMessage.masterPubkey));
 
     final deliveryStatus = ref.watch(messageStatusProvider(eventReference));
-    final isBlockedBy = ref
-            .watch(
-              isBlockedByNotifierProvider(
-                eventMessage.participantsMasterPubkeys.firstWhere(
-                  (masterPubkey) => masterPubkey != currentUserMasterPubkey,
-                ),
-              ),
-            )
-            .valueOrNull ??
-        true;
 
     final entityData = ReplaceablePrivateDirectMessageData.fromEventMessage(eventMessage);
 
@@ -83,7 +72,6 @@ class MessageMetaData extends HookConsumerWidget {
               padding: EdgeInsetsDirectional.only(start: 2.0.s),
               child: statusIcon(
                 context: context,
-                isBlockedBy: isBlockedBy,
                 deliveryStatus: deliveryStatus.valueOrNull ?? MessageDeliveryStatus.created,
               ),
             ),
@@ -93,7 +81,6 @@ class MessageMetaData extends HookConsumerWidget {
   }
 
   Widget statusIcon({
-    required bool isBlockedBy,
     required BuildContext context,
     required MessageDeliveryStatus deliveryStatus,
   }) {
@@ -105,24 +92,14 @@ class MessageMetaData extends HookConsumerWidget {
           color: context.theme.appColors.strokeElements,
           size: 12.0.s,
         ),
-      MessageDeliveryStatus.received => isBlockedBy
-          ? Assets.svg.iconMessageSent.icon(
-              color: context.theme.appColors.strokeElements,
-              size: 12.0.s,
-            )
-          : Assets.svg.iconMessageDelivered.icon(
-              color: context.theme.appColors.strokeElements,
-              size: 12.0.s,
-            ),
-      MessageDeliveryStatus.read => isBlockedBy
-          ? Assets.svg.iconMessageSent.icon(
-              color: context.theme.appColors.strokeElements,
-              size: 12.0.s,
-            )
-          : Assets.svg.iconMessageDelivered.icon(
-              color: context.theme.appColors.success,
-              size: 12.0.s,
-            )
+      MessageDeliveryStatus.received => Assets.svg.iconMessageDelivered.icon(
+          color: context.theme.appColors.strokeElements,
+          size: 12.0.s,
+        ),
+      MessageDeliveryStatus.read => Assets.svg.iconMessageDelivered.icon(
+          color: context.theme.appColors.success,
+          size: 12.0.s,
+        )
     };
   }
 }
