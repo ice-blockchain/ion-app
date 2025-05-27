@@ -111,16 +111,15 @@ class IsEntityBlockedOrBlockedByNotifier extends _$IsEntityBlockedOrBlockedByNot
     return switch (entity) {
       ModifiablePostEntity() =>
         await ref.watch(isPostChildBlockedOrBlockedByNotifierProvider(entity).future),
-      GenericRepostEntity() => await ref
-          .watch(isGenericRepostChildBlockedOrBlockedByNotifierProvider(entity).future),
+      GenericRepostEntity() =>
+        await ref.watch(isGenericRepostChildBlockedOrBlockedByNotifierProvider(entity).future),
       _ => false,
     };
   }
 }
 
 @riverpod
-class IsPostChildBlockedOrBlockedByNotifier
-    extends _$IsPostChildBlockedOrBlockedByNotifier {
+class IsPostChildBlockedOrBlockedByNotifier extends _$IsPostChildBlockedOrBlockedByNotifier {
   @override
   Future<bool> build(ModifiablePostEntity entity) {
     final quotedEvent = entity.data.quotedEvent;
