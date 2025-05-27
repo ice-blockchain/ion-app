@@ -55,14 +55,16 @@ class EventCountResultEntity
 
     final data = EventCountResultData.fromEventMessage(eventMessage);
     final type = data.getType();
+    final extractedKey = key ?? data.getKey(type);
+
     final summary = EventCountResultSummary(
-      key: key ?? data.getKey(type),
+      key: extractedKey,
       type: type,
       content: data.content,
       requestEventId: data.request.id,
     );
 
-    return EventCountResultEntity(
+    final entity = EventCountResultEntity(
       id: eventMessage.id,
       pubkey: eventMessage.pubkey,
       masterPubkey: eventMessage.masterPubkey,
@@ -70,6 +72,8 @@ class EventCountResultEntity
       createdAt: eventMessage.createdAt,
       data: summary,
     );
+
+    return entity;
   }
 
   @override
@@ -156,6 +160,7 @@ class EventCountResultData with _$EventCountResultData {
 
   String getKey(EventCountResultType type) {
     final tags = request.data.filters.first.tags;
+
     if (tags == null || tags.isEmpty) {
       throw UnknownEventCountResultKey(eventReference);
     }
@@ -170,6 +175,8 @@ class EventCountResultData with _$EventCountResultData {
         qTag != null && qTag.isNotEmpty ? (qTag.first! as List<dynamic>).first : null,
       EventCountResultType.followers =>
         pTag != null && pTag.isNotEmpty ? (pTag.first! as List<dynamic>).first : null,
+      EventCountResultType.pollVotes when aTag != null && aTag.isNotEmpty =>
+        aTag.first is List ? (aTag.first! as List<dynamic>).first : aTag.first!,
       _ when eTag != null => eTag.isNotEmpty ? (eTag.first! as List<dynamic>).first : null,
       _ when aTag != null => aTag.isNotEmpty ? (aTag.first! as List<dynamic>).first : null,
       _ => null

@@ -23,34 +23,62 @@ class PollResults {
 
 @riverpod
 List<int> pollVoteCounts(Ref ref, EventReference eventReference, PollData pollData) {
+  final cacheKey = EventCountResultEntity.cacheKeyBuilder(
+    key: eventReference.toString(),
+    type: EventCountResultType.pollVotes,
+  );
+
   final counterEntity = ref.watch(
     ionConnectCacheProvider.select(
-      cacheSelector<EventCountResultEntity>(
-        EventCountResultEntity.cacheKeyBuilder(
-          key: eventReference.toString(),
-          type: EventCountResultType.pollVotes,
-        ),
-      ),
+      cacheSelector<EventCountResultEntity>(cacheKey),
     ),
   );
 
-  if (counterEntity != null) {
-    final votesCount = counterEntity.data.content as Map<String, dynamic>;
+  final allCacheEntries = ref.watch(ionConnectCacheProvider);
+  final allCountEntries = allCacheEntries.values
+      .map((entry) => entry.entity)
+      .whereType<EventCountResultEntity>()
+      .toList();
+
+  var pollVoteCountEntity = counterEntity;
+  if (pollVoteCountEntity == null) {
+    final pollVoteCountEntities = allCountEntries
+        .where(
+          (entry) =>
+              entry.data.type == EventCountResultType.pollVotes &&
+              entry.data.key == eventReference.toString(),
+        )
+        .toList();
+
+    if (pollVoteCountEntities.isNotEmpty) {
+      pollVoteCountEntity = pollVoteCountEntities.first;
+    }
+  }
+
+  if (pollVoteCountEntity != null) {
+    final votesCount = pollVoteCountEntity.data.content as Map<String, dynamic>;
     return List<int>.generate(
       pollData.options.length,
       (i) => (votesCount['$i'] ?? 0) as int,
     );
   }
 
-  final allCacheEntries = ref.watch(ionConnectCacheProvider);
   final allPollVotes = allCacheEntries.values
       .map((entry) => entry.entity)
       .whereType<PollVoteEntity>()
       .where((vote) => vote.data.pollEventId == eventReference.toString())
       .toList();
 
-  final voteCounts = List<int>.filled(pollData.options.length, 0);
+  final votesByUser = <String, PollVoteEntity>{};
   for (final vote in allPollVotes) {
+    final existingVote = votesByUser[vote.masterPubkey];
+    if (existingVote == null || vote.createdAt.isAfter(existingVote.createdAt)) {
+      votesByUser[vote.masterPubkey] = vote;
+    }
+  }
+
+  final voteCounts = List<int>.filled(pollData.options.length, 0);
+  for (final vote in votesByUser.values) {
     for (final optionIndex in vote.data.selectedOptionIndexes) {
       if (optionIndex >= 0 && optionIndex < voteCounts.length) {
         voteCounts[optionIndex]++;
