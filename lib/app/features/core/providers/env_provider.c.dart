@@ -27,6 +27,7 @@ enum EnvVariable {
   SENTRY_DSN,
   FOUNDATION_APP_GROUP,
   FIREBASE_CONFIG,
+  RELAY_PING_INTERVAL_SECONDS,
 }
 
 @Riverpod(keepAlive: true)
@@ -70,6 +71,8 @@ class Env extends _$Env {
           TargetPlatform.iOS => const String.fromEnvironment('FIREBASE_CONFIG_IOS') as T,
           _ => throw UnsupportedError('Unsupported platform'),
         },
+      EnvVariable.RELAY_PING_INTERVAL_SECONDS =>
+        const int.fromEnvironment('RELAY_PING_INTERVAL_SECONDS') as T,
     };
   }
 }

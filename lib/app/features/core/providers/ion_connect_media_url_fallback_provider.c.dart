@@ -1,7 +1,6 @@
 // SPDX-License-Identifier: ice License 1.0
 
-import 'package:ion/app/extensions/extensions.dart';
-import 'package:ion/app/features/user/providers/user_relays_manager.c.dart';
+import 'package:ion/app/features/user/providers/ranked_user_relays_provider.c.dart';
 import 'package:ion/app/utils/url.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
@@ -27,12 +26,12 @@ class IONConnectMediaUrlFallback extends _$IONConnectMediaUrlFallback {
 
     // TODO: the fallback relays should be taken from the user with `authorPubkey` relays, so userRelayProvider(authorPubkey)
     // + if the fallback doesn't work we need to take the relays from the identity and persist those
-    final userRelays = await ref.read(currentUserRelaysProvider.future);
+    final userRelays = await ref.read(rankedCurrentUserRelaysProvider.future);
     if (userRelays == null) {
       return null;
     }
 
-    final userRelayUri = Uri.parse(userRelays.urls.random);
+    final userRelayUri = Uri.parse(userRelays.urls.first);
     final assetUri = Uri.parse(mediaUrl);
     final fallbackUrl = assetUri.replace(host: userRelayUri.host).toString();
 

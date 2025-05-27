@@ -1,6 +1,5 @@
 // SPDX-License-Identifier: ice License 1.0
 
-import 'package:collection/collection.dart';
 import 'package:ion/app/exceptions/exceptions.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/auth/providers/auth_provider.c.dart';
@@ -14,7 +13,8 @@ import 'package:ion/app/features/ion_connect/providers/relay_provider.c.dart';
 import 'package:ion/app/features/user/model/user_chat_relays.c.dart';
 import 'package:ion/app/features/user/model/user_relays.c.dart';
 import 'package:ion/app/features/user/providers/current_user_identity_provider.c.dart';
-import 'package:ion/app/features/user/providers/relays_reachability_provider.c.dart';
+import 'package:ion/app/features/user/providers/ranked_user_chat_relays_provider.c.dart';
+import 'package:ion/app/features/user/providers/ranked_user_relays_provider.c.dart';
 import 'package:ion/app/features/user/providers/user_relays_manager.c.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
@@ -48,7 +48,7 @@ class RelayCreation extends _$RelayCreation {
         );
         if (lastUsedRelays != null) return lastUsedRelays;
 
-        return _getRelay(relays, actionSource.anonymous);
+        return ref.read(relayProvider(relays.first, anonymous: actionSource.anonymous).future);
 
       case ActionSourceCurrentUserChat():
         final pubkey = ref.read(currentPubkeySelectorProvider);
@@ -70,9 +70,16 @@ class RelayCreation extends _$RelayCreation {
         );
         if (lastUsedRelays != null) return lastUsedRelays;
 
-        return _getRelay(relays, actionSource.anonymous);
+        return ref.read(relayProvider(relays.first, anonymous: actionSource.anonymous).future);
 
       case ActionSourceUser():
+        if (ref.read(isCurrentUserSelectorProvider(actionSource.pubkey))) {
+          return getRelay(
+            ActionSourceCurrentUser(anonymous: actionSource.anonymous),
+            dislikedUrls: dislikedUrls,
+          );
+        }
+
         final userRelays =
             await _getUserRelays(actionSource.pubkey).then((userRelays) => userRelays.data.list);
 
@@ -88,9 +95,16 @@ class RelayCreation extends _$RelayCreation {
 
         if (lastUsedRelays != null) return lastUsedRelays;
 
-        return _getRelay(relays, actionSource.anonymous);
+        return _getOtherUserRelay(relays, actionSource.anonymous);
 
       case ActionSourceUserChat():
+        if (ref.read(isCurrentUserSelectorProvider(actionSource.pubkey))) {
+          return getRelay(
+            ActionSourceCurrentUserChat(anonymous: actionSource.anonymous),
+            dislikedUrls: dislikedUrls,
+          );
+        }
+
         final userChatRelays = await _getUserChatRelays(actionSource.pubkey);
         final relays = _userRelaysAvoidingDislikedUrls(userChatRelays.data.list, dislikedUrls)
             .map((relay) => relay.url)
@@ -103,7 +117,7 @@ class RelayCreation extends _$RelayCreation {
         );
         if (lastUsedRelays != null) return lastUsedRelays;
 
-        return _getRelay(relays, actionSource.anonymous);
+        return _getOtherUserRelay(relays, actionSource.anonymous);
 
       case ActionSourceIndexers():
         final indexers = await ref.read(currentUserIndexersProvider.future);
@@ -120,7 +134,7 @@ class RelayCreation extends _$RelayCreation {
         );
         if (lastUsedRelays != null) return lastUsedRelays;
 
-        return _getRelay(relays, actionSource.anonymous);
+        return ref.read(relayProvider(relays.random, anonymous: actionSource.anonymous).future);
 
       case ActionSourceRelayUrl():
         final relay = actionSource.url;
@@ -132,7 +146,7 @@ class RelayCreation extends _$RelayCreation {
         );
         if (lastUsedRelays != null) return lastUsedRelays;
 
-        return _getRelay([relay], actionSource.anonymous);
+        return ref.read(relayProvider(relay, anonymous: actionSource.anonymous).future);
     }
   }
 
@@ -152,32 +166,14 @@ class RelayCreation extends _$RelayCreation {
 
     if (availableRelays.isEmpty) return null;
 
-    return _getRelay(availableRelays, anonymous);
-  }
-
-  Future<IonConnectRelay> _getRelay(List<String> urls, bool anonymous) async {
-    if (urls.length == 1) {
-      return ref.read(relayProvider(urls.first, anonymous: anonymous).future);
-    }
-
-    final reachabilityInfos = ref.read(relayReachabilityProvider.notifier).getAll(urls);
-    if (reachabilityInfos.isEmpty) {
-      return ref.read(relayProvider(urls.random, anonymous: anonymous).future);
-    }
-
-    final byHighestFailedCount = groupBy(reachabilityInfos, (info) => info.failedToReachCount);
-    final highestFailedCount = byHighestFailedCount.keys.reduce((a, b) => a > b ? a : b);
-    final highestFailedCountInfos = byHighestFailedCount[highestFailedCount]!;
-    final highestFailedCountUrls = highestFailedCountInfos.map((info) => info.relayUrl).toList();
-
-    return ref.read(relayProvider(highestFailedCountUrls.random, anonymous: anonymous).future);
+    return ref.read(relayProvider(availableRelays.first, anonymous: anonymous).future);
   }
 
   Future<UserRelaysEntity> _getUserRelays(String pubkey) async {
     // For the current user, we use the relays from Identity as the single source of truth.
     // Unlike Connect relays, Identity relays are always up to date.
     final userRelays = ref.read(isCurrentUserSelectorProvider(pubkey))
-        ? await ref.read(currentUserRelaysProvider.future)
+        ? await ref.read(rankedCurrentUserRelaysProvider.future)
         : await ref.read(userRelayProvider(pubkey).future);
     if (userRelays == null) {
       throw UserRelaysNotFoundException(pubkey);
@@ -186,7 +182,9 @@ class RelayCreation extends _$RelayCreation {
   }
 
   Future<UserChatRelaysEntity> _getUserChatRelays(String pubkey) async {
-    final userRelays = await ref.read(userChatRelaysProvider(pubkey).future);
+    final userRelays = ref.read(isCurrentUserSelectorProvider(pubkey))
+        ? await ref.read(rankedCurrentUserChatRelaysProvider.future)
+        : await ref.read(userChatRelaysProvider(pubkey).future);
     if (userRelays == null) {
       throw UserChatRelaysNotFoundException();
     }
@@ -211,5 +209,19 @@ class RelayCreation extends _$RelayCreation {
       urls = indexers;
     }
     return urls;
+  }
+
+  Future<IonConnectRelay> _getOtherUserRelay(List<String> urls, bool anonymous) async {
+    if (urls.length == 1) {
+      return ref.read(relayProvider(urls.first, anonymous: anonymous).future);
+    }
+
+    final relevantRelays = await ref.read(rankedRelevantCurrentUserRelaysUrlsProvider.future);
+    final commonRelays = relevantRelays.where((url) => urls.contains(url)).toList();
+    if (relevantRelays.isEmpty || commonRelays.isEmpty) {
+      return ref.read(relayProvider(urls.random, anonymous: anonymous).future);
+    }
+
+    return ref.read(relayProvider(commonRelays.first, anonymous: anonymous).future);
   }
 }
