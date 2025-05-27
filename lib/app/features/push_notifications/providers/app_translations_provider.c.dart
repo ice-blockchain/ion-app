@@ -77,6 +77,7 @@ class Translator<T extends AppConfigWithVersion> {
       refreshInterval: refreshInterval,
       parser: (data) =>
           PushNotificationTranslations.fromJson(jsonDecode(data) as Map<String, dynamic>),
+      checkVersion: true,
     );
   }
 
