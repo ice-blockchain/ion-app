@@ -44,7 +44,8 @@ class RecentChatOverlayContextMenu extends ConsumerWidget {
 
     final isBlocked = ref
         .watch(
-            isBlockedNotifierProvider(conversation.receiverMasterPubkey(currentUserMasterPubkey)))
+          isBlockedNotifierProvider(conversation.receiverMasterPubkey(currentUserMasterPubkey)),
+        )
         .valueOrNull;
 
     ref.displayErrors(reportNotifierProvider);
