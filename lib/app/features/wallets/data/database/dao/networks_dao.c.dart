@@ -21,6 +21,15 @@ class NetworksDao extends DatabaseAccessor<WalletsDatabase> with _$NetworksDaoMi
     });
   }
 
+  Future<void> setAll(List<Network> networks) async {
+    await transaction(() async {
+      await delete(networksTable).go();
+      await batch((batch) {
+        batch.insertAll(networksTable, networks);
+      });
+    });
+  }
+
   Future<List<Network>> getAll() {
     return select(networksTable).get();
   }

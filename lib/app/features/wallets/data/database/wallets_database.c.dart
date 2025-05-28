@@ -103,12 +103,10 @@ class WalletsDatabase extends _$WalletsDatabase {
           await m.deleteTable(oldTransactionsTableName);
         },
         from7To8: (m, schema) async {
-          final rows = await customSelect(
-            'PRAGMA table_info(${schema.transactionsTableV2.actualTableName})',
-          ).get();
-
-          final columnExists = rows.any((row) => row.data['name'] == 'event_id');
-
+          final columnExists = await isColumnExists(
+            tableName: schema.transactionsTableV2.actualTableName,
+            columnName: 'event_id',
+          );
           if (!columnExists) {
             await m.addColumn(schema.transactionsTableV2, schema.transactionsTableV2.eventId);
           }
@@ -125,17 +123,13 @@ class WalletsDatabase extends _$WalletsDatabase {
           );
         },
         from9To10: (Migrator m, Schema10 schema) async {
-          final rows = await customSelect(
-            'PRAGMA table_info(${schema.coinsTable.actualTableName})',
-          ).get();
-
-          final columnExists = rows.any((row) => row.data['name'] == 'prioritized');
-
+          final columnExists = await isColumnExists(
+            tableName: schema.coinsTable.actualTableName,
+            columnName: 'prioritized',
+          );
           if (!columnExists) {
             await m.addColumn(schema.coinsTable, schema.coinsTable.prioritized);
           }
-
-          await m.alterTable(TableMigration(schema.coinsTable));
         },
         from10To11: (m, schema) async {
           await m.alterTable(
@@ -149,9 +143,20 @@ class WalletsDatabase extends _$WalletsDatabase {
           );
         },
         from11To12: (m, schema) async {
-          await m.addColumn(schema.transactionsTableV2, schema.transactionsTableV2.externalHash);
+          final isExternalHashColumnExists = await isColumnExists(
+            tableName: schema.transactionsTableV2.actualTableName,
+            columnName: 'external_hash',
+          );
+          if (!isExternalHashColumnExists) {
+            await m.addColumn(schema.transactionsTableV2, schema.transactionsTableV2.externalHash);
+          }
         },
       ),
     );
+  }
+
+  Future<bool> isColumnExists({required String tableName, required String columnName}) async {
+    final rows = await customSelect('PRAGMA table_info($tableName)').get();
+    return rows.any((row) => row.data['name'] == columnName);
   }
 }
