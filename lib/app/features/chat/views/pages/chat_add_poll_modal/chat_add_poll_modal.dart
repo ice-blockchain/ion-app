@@ -8,7 +8,7 @@ import 'package:ion/app/components/screen_offset/screen_side_offset.dart';
 import 'package:ion/app/components/separated/separator.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/core/providers/poll/poll_draft_provider.c.dart';
-import 'package:ion/app/features/feed/polls/poll.dart';
+import 'package:ion/app/features/feed/polls/view/components/poll.dart';
 import 'package:ion/app/features/feed/views/components/actions_toolbar/actions_toolbar.dart';
 import 'package:ion/app/features/feed/views/components/toolbar_buttons/toolbar_buttons.dart';
 import 'package:ion/app/router/components/navigation_app_bar/navigation_app_bar.dart';

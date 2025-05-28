@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: ice License 1.0
 
 import 'package:freezed_annotation/freezed_annotation.dart';
-import 'package:ion/app/features/feed/data/models/poll/poll_answer.c.dart';
+import 'package:ion/app/features/feed/polls/models/poll_answer.c.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'poll_draft_provider.c.freezed.dart';

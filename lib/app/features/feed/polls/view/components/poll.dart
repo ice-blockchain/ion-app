@@ -5,10 +5,10 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:intl/intl.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/core/providers/poll/poll_draft_provider.c.dart';
-import 'package:ion/app/features/feed/polls/poll_add_answer_button.dart';
-import 'package:ion/app/features/feed/polls/poll_answers_list_view.dart';
-import 'package:ion/app/features/feed/polls/poll_close_button.dart';
-import 'package:ion/app/features/feed/polls/poll_length_button.dart';
+import 'package:ion/app/features/feed/polls/view/components/poll_add_answer_button.dart';
+import 'package:ion/app/features/feed/polls/view/components/poll_answers_list_view.dart';
+import 'package:ion/app/features/feed/polls/view/components/poll_close_button.dart';
+import 'package:ion/app/features/feed/polls/view/components/poll_length_button.dart';
 import 'package:ion/app/features/feed/views/pages/poll_length_time_modal/poll_length_time_modal.dart';
 import 'package:ion/app/router/utils/show_simple_bottom_sheet.dart';
 

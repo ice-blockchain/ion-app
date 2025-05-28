@@ -2,7 +2,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:ion/app/extensions/extensions.dart';
-import 'package:ion/app/features/feed/data/models/poll/poll_data.c.dart';
+import 'package:ion/app/features/feed/polls/models/poll_data.c.dart';
 
 class PollUtils {
   PollUtils._();

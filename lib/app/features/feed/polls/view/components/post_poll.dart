@@ -2,11 +2,11 @@
 
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:ion/app/features/feed/data/models/poll/poll_data.c.dart';
-import 'package:ion/app/features/feed/polls/poll_vote.dart';
-import 'package:ion/app/features/feed/polls/poll_vote_result.dart';
-import 'package:ion/app/features/feed/providers/poll/poll_results_provider.c.dart';
-import 'package:ion/app/features/feed/providers/poll/poll_vote_notifier.c.dart';
+import 'package:ion/app/features/feed/polls/models/poll_data.c.dart';
+import 'package:ion/app/features/feed/polls/providers/poll_results_provider.c.dart';
+import 'package:ion/app/features/feed/polls/providers/poll_vote_notifier.c.dart';
+import 'package:ion/app/features/feed/polls/view/components/poll_vote.dart';
+import 'package:ion/app/features/feed/polls/view/components/poll_vote_result.dart';
 import 'package:ion/app/features/ion_connect/model/event_reference.c.dart';
 
 class PostPoll extends ConsumerWidget {
