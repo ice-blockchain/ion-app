@@ -17,6 +17,7 @@ class KeyResponse with _$KeyResponse {
     required String scheme,
     required String curve,
     required String publicKey,
+    required String? name,
     required KeyStatus status,
     required bool custodial,
     required DateTime dateCreated,

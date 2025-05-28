@@ -1,7 +1,6 @@
 import 'package:ion_identity_client/ion_identity.dart';
 import 'package:ion_identity_client/src/keys/services/create_key/create_key_service.dart';
 import 'package:ion_identity_client/src/keys/services/derive/derive_service.dart';
-import 'package:ion_identity_client/src/keys/services/derive/models/derive_response.c.dart';
 import 'package:ion_identity_client/src/keys/services/list_keys/list_keys_service.dart';
 
 class IONIdentityKeys {
@@ -16,7 +15,7 @@ class IONIdentityKeys {
   final ListKeysService _listKeysService;
 
   Future<ListKeysResponse> listKeys({
-    required String owner,
+    String? owner,
     int? limit,
     String? paginationToken,
   }) =>

@@ -24,6 +24,7 @@ mixin _$KeyResponse {
   String get scheme => throw _privateConstructorUsedError;
   String get curve => throw _privateConstructorUsedError;
   String get publicKey => throw _privateConstructorUsedError;
+  String? get name => throw _privateConstructorUsedError;
   KeyStatus get status => throw _privateConstructorUsedError;
   bool get custodial => throw _privateConstructorUsedError;
   DateTime get dateCreated => throw _privateConstructorUsedError;
@@ -49,6 +50,7 @@ abstract class $KeyResponseCopyWith<$Res> {
       String scheme,
       String curve,
       String publicKey,
+      String? name,
       KeyStatus status,
       bool custodial,
       DateTime dateCreated});
@@ -73,6 +75,7 @@ class _$KeyResponseCopyWithImpl<$Res, $Val extends KeyResponse>
     Object? scheme = null,
     Object? curve = null,
     Object? publicKey = null,
+    Object? name = freezed,
     Object? status = null,
     Object? custodial = null,
     Object? dateCreated = null,
@@ -94,6 +97,10 @@ class _$KeyResponseCopyWithImpl<$Res, $Val extends KeyResponse>
           ? _value.publicKey
           : publicKey // ignore: cast_nullable_to_non_nullable
               as String,
+      name: freezed == name
+          ? _value.name
+          : name // ignore: cast_nullable_to_non_nullable
+              as String?,
       status: null == status
           ? _value.status
           : status // ignore: cast_nullable_to_non_nullable
@@ -123,6 +130,7 @@ abstract class _$$KeyResponseImplCopyWith<$Res>
       String scheme,
       String curve,
       String publicKey,
+      String? name,
       KeyStatus status,
       bool custodial,
       DateTime dateCreated});
@@ -145,6 +153,7 @@ class __$$KeyResponseImplCopyWithImpl<$Res>
     Object? scheme = null,
     Object? curve = null,
     Object? publicKey = null,
+    Object? name = freezed,
     Object? status = null,
     Object? custodial = null,
     Object? dateCreated = null,
@@ -166,6 +175,10 @@ class __$$KeyResponseImplCopyWithImpl<$Res>
           ? _value.publicKey
           : publicKey // ignore: cast_nullable_to_non_nullable
               as String,
+      name: freezed == name
+          ? _value.name
+          : name // ignore: cast_nullable_to_non_nullable
+              as String?,
       status: null == status
           ? _value.status
           : status // ignore: cast_nullable_to_non_nullable
@@ -190,6 +203,7 @@ class _$KeyResponseImpl implements _KeyResponse {
       required this.scheme,
       required this.curve,
       required this.publicKey,
+      required this.name,
       required this.status,
       required this.custodial,
       required this.dateCreated});
@@ -206,6 +220,8 @@ class _$KeyResponseImpl implements _KeyResponse {
   @override
   final String publicKey;
   @override
+  final String? name;
+  @override
   final KeyStatus status;
   @override
   final bool custodial;
@@ -214,7 +230,7 @@ class _$KeyResponseImpl implements _KeyResponse {
 
   @override
   String toString() {
-    return 'KeyResponse(id: $id, scheme: $scheme, curve: $curve, publicKey: $publicKey, status: $status, custodial: $custodial, dateCreated: $dateCreated)';
+    return 'KeyResponse(id: $id, scheme: $scheme, curve: $curve, publicKey: $publicKey, name: $name, status: $status, custodial: $custodial, dateCreated: $dateCreated)';
   }
 
   @override
@@ -227,6 +243,7 @@ class _$KeyResponseImpl implements _KeyResponse {
             (identical(other.curve, curve) || other.curve == curve) &&
             (identical(other.publicKey, publicKey) ||
                 other.publicKey == publicKey) &&
+            (identical(other.name, name) || other.name == name) &&
             (identical(other.status, status) || other.status == status) &&
             (identical(other.custodial, custodial) ||
                 other.custodial == custodial) &&
@@ -237,7 +254,7 @@ class _$KeyResponseImpl implements _KeyResponse {
   @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   int get hashCode => Object.hash(runtimeType, id, scheme, curve, publicKey,
-      status, custodial, dateCreated);
+      name, status, custodial, dateCreated);
 
   /// Create a copy of KeyResponse
   /// with the given fields replaced by the non-null parameter values.
@@ -261,6 +278,7 @@ abstract class _KeyResponse implements KeyResponse {
       required final String scheme,
       required final String curve,
       required final String publicKey,
+      required final String? name,
       required final KeyStatus status,
       required final bool custodial,
       required final DateTime dateCreated}) = _$KeyResponseImpl;
@@ -276,6 +294,8 @@ abstract class _KeyResponse implements KeyResponse {
   String get curve;
   @override
   String get publicKey;
+  @override
+  String? get name;
   @override
   KeyStatus get status;
   @override

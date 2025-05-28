@@ -1,5 +1,7 @@
 // SPDX-License-Identifier: ice License 1.0
 
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/extensions/extensions.dart';
@@ -23,6 +25,116 @@ Future<void> guardPasskeyDialog(
       ),
     ),
   );
+}
+
+/// Helper function for showing a dialog with multiple verification requests
+/// This version uses a more flexible approach to handle different return types
+Future<void> guardMultiplePasskeysDialog(
+  BuildContext context,
+  Future<void> Function(
+    Future<T> Function<T>({
+      required OnPasswordFlow<T> onPasswordFlow,
+      required OnPasskeyFlow<T> onPasskeyFlow,
+      required OnBiometricsFlow<T> onBiometricsFlow,
+    }) verifyIdentity,
+  ) executeRequests, {
+  String? identityKeyName,
+  void Function(Object error)? onError,
+}) async {
+  final completer = Completer<void>();
+
+  await showSimpleBottomSheet<void>(
+    context: context,
+    child: FlexibleVerifyIdentityRequestBuilder(
+      executeRequests: executeRequests,
+      identityKeyName: identityKeyName,
+      onComplete: completer.complete,
+      onError: (error) {
+        onError?.call(error);
+        if (!completer.isCompleted) {
+          completer.completeError(error);
+        }
+      },
+      child: VerifyIdentityPromptDialog(
+        identityKeyName: identityKeyName,
+      ),
+    ),
+  );
+
+  return completer.future;
+}
+
+/// A flexible builder that can handle multiple verification requests with different types
+class FlexibleVerifyIdentityRequestBuilder extends HookConsumerWidget {
+  const FlexibleVerifyIdentityRequestBuilder({
+    required this.child,
+    required this.executeRequests,
+    required this.onComplete,
+    this.onError,
+    this.identityKeyName,
+    super.key,
+  });
+
+  final Widget child;
+  final Future<void> Function(
+    Future<T> Function<T>({
+      required OnPasswordFlow<T> onPasswordFlow,
+      required OnPasskeyFlow<T> onPasskeyFlow,
+      required OnBiometricsFlow<T> onBiometricsFlow,
+    }) verifyIdentity,
+  ) executeRequests;
+  final VoidCallback onComplete;
+  final void Function(Object error)? onError;
+  final String? identityKeyName;
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final onGetPassword = useOnGetPassword();
+
+    useOnInit(
+      () {
+        _executeRequests(context, ref, onGetPassword);
+      },
+      <Object>[onGetPassword],
+    );
+
+    return child;
+  }
+
+  Future<void> _executeRequests(
+    BuildContext context,
+    WidgetRef ref,
+    Future<R> Function<R>(OnPasswordFlow<R> onPasswordFlow) onGetPassword,
+  ) async {
+    try {
+      await executeRequests(<T>({
+        required OnPasswordFlow<T> onPasswordFlow,
+        required OnPasskeyFlow<T> onPasskeyFlow,
+        required OnBiometricsFlow<T> onBiometricsFlow,
+      }) async {
+        return await ref.read(
+          verifyUserIdentityProvider(
+            onGetPassword: onGetPassword,
+            onPasswordFlow: onPasswordFlow,
+            onPasskeyFlow: onPasskeyFlow,
+            onBiometricsFlow: onBiometricsFlow,
+            localisedReasonForBiometricsDialog: context.i18n.verify_with_biometrics_title,
+            localisedCancelForBiometricsDialog: context.i18n.button_cancel,
+            identityKeyName: identityKeyName,
+          ).future,
+        );
+      });
+
+      onComplete();
+    } catch (error) {
+      onError?.call(error);
+      rethrow;
+    } finally {
+      if (context.mounted) {
+        Navigator.of(context).pop();
+      }
+    }
+  }
 }
 
 class RiverpodVerifyIdentityRequestBuilder<T, P> extends HookConsumerWidget {

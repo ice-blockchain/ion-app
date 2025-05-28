@@ -6,7 +6,6 @@ import 'package:ion_identity_client/src/core/network/network_client.dart';
 import 'package:ion_identity_client/src/core/network/utils.dart';
 import 'package:ion_identity_client/src/core/storage/token_storage.dart';
 import 'package:ion_identity_client/src/core/types/request_headers.dart';
-import 'package:ion_identity_client/src/keys/services/list_keys/models/list_keys_response.c.dart';
 
 class ListKeysDataSource {
   const ListKeysDataSource(
@@ -22,7 +21,7 @@ class ListKeysDataSource {
   static const keysPath = '/keys';
 
   Future<ListKeysResponse> listKeys({
-    required String owner,
+    String? owner,
     int? limit,
     String? paginationToken,
   }) async {
@@ -39,7 +38,7 @@ class ListKeysDataSource {
           username: username,
         ),
         queryParams: {
-          'owner': owner,
+          if (owner != null) 'owner': owner,
           if (limit != null) 'limit': limit,
           if (paginationToken != null) 'paginationToken': paginationToken,
         },

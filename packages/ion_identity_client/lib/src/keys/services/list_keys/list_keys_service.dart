@@ -11,7 +11,7 @@ class ListKeysService {
   final ListKeysDataSource _listKeysDataSource;
 
   Future<ListKeysResponse> listKeys({
-    required String owner,
+    String? owner,
     int? limit,
     String? paginationToken,
   }) async {
