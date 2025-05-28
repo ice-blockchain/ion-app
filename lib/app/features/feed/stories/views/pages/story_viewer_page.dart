@@ -11,6 +11,7 @@ import 'package:ion/app/features/feed/stories/providers/story_pause_provider.c.d
 import 'package:ion/app/features/feed/stories/providers/story_viewing_provider.c.dart';
 import 'package:ion/app/features/feed/stories/providers/viewed_stories_provider.c.dart';
 import 'package:ion/app/features/feed/stories/views/components/story_viewer/components/components.dart';
+import 'package:ion/app/features/ion_connect/model/event_reference.c.dart';
 import 'package:ion/app/features/video/views/hooks/use_status_bar_color.dart';
 import 'package:ion/app/hooks/use_on_init.dart';
 import 'package:ion/app/hooks/use_route_presence.dart';
@@ -18,12 +19,12 @@ import 'package:ion/app/hooks/use_route_presence.dart';
 class StoryViewerPage extends HookConsumerWidget {
   const StoryViewerPage({
     required this.pubkey,
-    this.storyIndex,
+    this.initialStoryReference,
     super.key,
   });
 
   final String pubkey;
-  final int? storyIndex;
+  final EventReference? initialStoryReference;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -42,8 +43,10 @@ class StoryViewerPage extends HookConsumerWidget {
 
     useOnInit(
       () async {
-        if (storyIndex != null) {
-          ref.watch(storyViewingControllerProvider(pubkey).notifier).moveToStory(storyIndex!);
+        if (initialStoryReference != null) {
+          ref
+              .watch(storyViewingControllerProvider(pubkey).notifier)
+              .moveToStory(initialStoryReference!);
         }
       },
       [storyViewerState.userStories.isEmpty],

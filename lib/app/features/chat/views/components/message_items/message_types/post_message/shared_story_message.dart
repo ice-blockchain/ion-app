@@ -40,7 +40,7 @@ class SharedStoryMessage extends HookConsumerWidget {
       () => switch (storyEntity) {
         final ModifiablePostEntity post => post.data,
         final PostEntity post => post.data,
-        _ => false,
+        _ => null,
       },
     );
 
@@ -90,8 +90,10 @@ class SharedStoryMessage extends HookConsumerWidget {
 
               if (storyIndex == -1) return;
 
-              StoryViewerRoute(pubkey: storyEntity.masterPubkey, storyIndex: storyIndex)
-                  .push<void>(context);
+              StoryViewerRoute(
+                pubkey: storyEntity.masterPubkey,
+                initialStoryReference: storyEntity.toEventReference().encode(),
+              ).push<void>(context);
             },
             child: Column(
               crossAxisAlignment: isMe ? CrossAxisAlignment.end : CrossAxisAlignment.start,

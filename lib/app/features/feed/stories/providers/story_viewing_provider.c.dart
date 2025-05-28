@@ -4,6 +4,7 @@ import 'package:collection/collection.dart';
 import 'package:flutter/foundation.dart';
 import 'package:ion/app/features/feed/stories/data/models/models.dart';
 import 'package:ion/app/features/feed/stories/providers/stories_provider.c.dart';
+import 'package:ion/app/features/ion_connect/model/event_reference.c.dart';
 import 'package:ion/app/features/optimistic_ui/features/likes/post_like_provider.c.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
@@ -81,19 +82,27 @@ class StoryViewingController extends _$StoryViewingController {
     }
   }
 
-  void moveToStory(int storyIndex) {
-    // Do nothing if this is the same story
-    print('Moving to story index: $storyIndex');
-    if (storyIndex == state.currentStoryIndex) return;
+  void moveToStory(EventReference storyReference) {
+    late final int storyIndex;
 
-    print('Moving to story index: $storyIndex');
-    print(state.userStories.length);
-    if (storyIndex >= 0 && storyIndex <= state.userStories.length) {
-      print('Moving to story index: $storyIndex');
-      state = state.copyWith(currentStoryIndex: storyIndex);
-      print(state.currentStory);
-      print(state.currentStoryIndex);
-    }
+    final userIndex = state.userStories.indexWhere(
+      (userStory) {
+        final index = userStory.getStoryIndexByReference(storyReference);
+        if (index != -1) {
+          storyIndex = index;
+          return true;
+        }
+
+        return false;
+      },
+    );
+
+    if (userIndex == -1) return;
+
+    state = state.copyWith(
+      currentUserIndex: userIndex,
+      currentStoryIndex: storyIndex,
+    );
   }
 
   void toggleLike(String postId) {
