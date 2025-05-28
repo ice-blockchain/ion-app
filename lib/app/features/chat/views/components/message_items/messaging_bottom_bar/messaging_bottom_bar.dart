@@ -22,17 +22,15 @@ import 'package:ion/generated/assets.gen.dart';
 
 class MessagingBottomBar extends HookConsumerWidget {
   const MessagingBottomBar({
-    required this.isBlocked,
     required this.onSubmitted,
     required this.conversationId,
-    this.receiverMasterPubkey,
+    required this.receiverMasterPubkey,
     super.key,
   });
 
-  final bool isBlocked;
   final Future<void> Function({String? content, List<MediaFile>? mediaFiles}) onSubmitted;
   final String? conversationId;
-  final String? receiverMasterPubkey;
+  final String receiverMasterPubkey;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -42,6 +40,9 @@ class MessagingBottomBar extends HookConsumerWidget {
     final recordedMediaFile = useState<MediaFile?>(null);
     final recorderController = useRef(RecorderController());
     final isTextLimitReached = useState<bool>(false);
+
+    final isBlocked =
+        ref.watch(isBlockedNotifierProvider(receiverMasterPubkey)).valueOrNull ?? true;
 
     ref.listen(selectedEditMessageProvider, (_, selectedMessage) {
       if (selectedMessage != null) {
@@ -88,7 +89,7 @@ class MessagingBottomBar extends HookConsumerWidget {
         height: 45.0.s,
         child: TextButton(
           onPressed: () {
-            ref.read(blockListNotifierProvider.notifier).toggleBlocked(receiverMasterPubkey!);
+            ref.read(blockListNotifierProvider.notifier).toggleBlocked(receiverMasterPubkey);
           },
           style: TextButton.styleFrom(
             minimumSize: Size(0, 40.0.s),

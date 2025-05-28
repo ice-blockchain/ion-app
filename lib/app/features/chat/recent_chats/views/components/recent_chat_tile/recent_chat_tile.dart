@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/components/avatar/avatar.dart';
-import 'package:ion/app/exceptions/exceptions.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/auth/providers/auth_provider.c.dart';
 import 'package:ion/app/features/chat/e2ee/model/entities/private_direct_message_data.c.dart';
@@ -71,7 +70,7 @@ class RecentChatTile extends HookConsumerWidget {
     final currentUserMasterPubkey = ref.watch(currentPubkeySelectorProvider);
 
     if (currentUserMasterPubkey == null) {
-      throw UserMasterPubkeyNotFoundException();
+      return const SizedBox.shrink();
     }
 
     final isBlockedBy = ref

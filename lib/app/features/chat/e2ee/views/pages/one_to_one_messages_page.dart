@@ -6,7 +6,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/exceptions/exceptions.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/auth/providers/auth_provider.c.dart';
-import 'package:ion/app/features/chat/components/messaging_header/messaging_header.dart';
+import 'package:ion/app/features/chat/components/messaging_header/one_to_one_messaging_header.dart';
 import 'package:ion/app/features/chat/e2ee/providers/send_chat_message/send_e2ee_chat_message_service.c.dart';
 import 'package:ion/app/features/chat/e2ee/views/components/e2ee_conversation_empty_view.dart';
 import 'package:ion/app/features/chat/e2ee/views/components/one_to_one_messages_list.dart';
@@ -20,18 +20,17 @@ import 'package:ion/app/features/chat/views/components/message_items/edit_messag
 import 'package:ion/app/features/chat/views/components/message_items/messaging_bottom_bar/messaging_bottom_bar.dart';
 import 'package:ion/app/features/chat/views/components/message_items/replied_message_info/replied_message_info.dart';
 import 'package:ion/app/features/user/providers/user_metadata_provider.c.dart';
-import 'package:ion/app/features/user_block/providers/block_list_notifier.c.dart';
 import 'package:ion/app/router/app_routes.c.dart';
 import 'package:ion/app/services/media_service/media_service.c.dart';
 import 'package:ion/app/utils/username.dart';
 
 class OneToOneMessagesPage extends HookConsumerWidget {
   const OneToOneMessagesPage({
-    required this.receiverPubKey,
+    required this.receiverMasterPubkey,
     super.key,
   });
 
-  final String receiverPubKey;
+  final String receiverMasterPubkey;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -39,11 +38,11 @@ class OneToOneMessagesPage extends HookConsumerWidget {
 
     useEffect(
       () {
-        ref.read(existChatConversationIdProvider(receiverPubKey).future).then(
+        ref.read(existChatConversationIdProvider(receiverMasterPubkey).future).then(
           (value) {
             conversationId.value = value ??
                 ref.read(sendE2eeChatMessageServiceProvider).generateConversationId(
-                      receiverPubkey: receiverPubKey,
+                      receiverPubkey: receiverMasterPubkey,
                     );
           },
         );
@@ -70,13 +69,11 @@ class OneToOneMessagesPage extends HookConsumerWidget {
           conversationId: conversationId.value!,
           editedMessage: editedMessage?.eventMessage,
           repliedMessage: repliedMessage?.eventMessage,
-          participantsMasterPubkeys: [receiverPubKey, currentPubkey],
+          participantsMasterPubkeys: [receiverMasterPubkey, currentPubkey],
         );
       },
-      [receiverPubKey],
+      [receiverMasterPubkey],
     );
-
-    final isBlocked = ref.watch(isBlockedNotifierProvider(receiverPubKey)).valueOrNull ?? true;
 
     return Scaffold(
       backgroundColor: context.theme.appColors.secondaryBackground,
@@ -84,18 +81,16 @@ class OneToOneMessagesPage extends HookConsumerWidget {
         child: Column(
           children: [
             _Header(
-              isBlocked: isBlocked,
-              receiverMasterPubKey: receiverPubKey,
+              receiverMasterPubkey: receiverMasterPubkey,
               conversationId: conversationId.value ?? '',
             ),
             _MessagesList(conversationId: conversationId.value),
             const EditMessageInfo(),
             const RepliedMessageInfo(),
             MessagingBottomBar(
-              isBlocked: isBlocked,
               onSubmitted: onSubmitted,
               conversationId: conversationId.value,
-              receiverMasterPubkey: receiverPubKey,
+              receiverMasterPubkey: receiverMasterPubkey,
             ),
           ],
         ),
@@ -106,30 +101,27 @@ class OneToOneMessagesPage extends HookConsumerWidget {
 
 class _Header extends HookConsumerWidget {
   const _Header({
-    required this.isBlocked,
     required this.conversationId,
-    required this.receiverMasterPubKey,
+    required this.receiverMasterPubkey,
   });
 
-  final bool isBlocked;
-  final String receiverMasterPubKey;
+  final String receiverMasterPubkey;
   final String conversationId;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final receiver = ref.watch(userMetadataProvider(receiverMasterPubKey)).valueOrNull;
+    final receiver = ref.watch(userMetadataProvider(receiverMasterPubkey)).valueOrNull;
 
     if (receiver == null) {
       return const SizedBox.shrink();
     }
 
-    return MessagingHeader(
-      isBlocked: isBlocked,
+    return OneToOneMessagingHeader(
       conversationId: conversationId,
       imageUrl: receiver.data.picture,
       name: receiver.data.displayName,
-      receiverMasterPubkey: receiverMasterPubKey,
-      onTap: () => ProfileRoute(pubkey: receiverMasterPubKey).push<void>(context),
+      receiverMasterPubkey: receiverMasterPubkey,
+      onTap: () => ProfileRoute(pubkey: receiverMasterPubkey).push<void>(context),
       subtitle: Text(
         prefixUsername(username: receiver.data.name, context: context),
         style: context.theme.appTextThemes.caption.copyWith(
@@ -137,7 +129,7 @@ class _Header extends HookConsumerWidget {
         ),
       ),
       onToggleMute: () {
-        ref.read(mutedConversationsProvider.notifier).toggleMutedMasterPubkey(receiverMasterPubKey);
+        ref.read(mutedConversationsProvider.notifier).toggleMutedMasterPubkey(receiverMasterPubkey);
       },
     );
   }

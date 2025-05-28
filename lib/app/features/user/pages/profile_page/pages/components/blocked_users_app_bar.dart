@@ -25,7 +25,9 @@ class BlockedUsersAppBar extends ConsumerWidget {
       flexibleSpace: NavigationAppBar.modal(
         actions: const [NavigationCloseButton()],
         title: Text(
-          context.i18n.settings_blocked_users_title_with_counter(blockedCount),
+          blockedUsers == null
+              ? context.i18n.settings_blocked_users
+              : context.i18n.settings_blocked_users_title_with_counter(blockedCount),
           maxLines: 1,
           overflow: TextOverflow.ellipsis,
         ),

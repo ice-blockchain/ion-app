@@ -54,7 +54,6 @@ class BlockedUsersSync extends _$BlockedUsersSync {
     final sinceDate = latestBlockEventDate?.add(const Duration(days: -2));
 
     final requestFilter = RequestFilter(
-      limit: -1,
       kinds: const [IonConnectGiftWrapEntity.kind],
       tags: {
         '#k': [
