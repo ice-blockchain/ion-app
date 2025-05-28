@@ -3,7 +3,7 @@
 // ignore_for_file: type=lint
 // ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target, unnecessary_question_mark
 
-part of 'create_key_response.c.dart';
+part of 'key_response.c.dart';
 
 // **************************************************************************
 // FreezedGenerator
@@ -14,12 +14,12 @@ T _$identity<T>(T value) => value;
 final _privateConstructorUsedError = UnsupportedError(
     'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models');
 
-CreateKeyResponse _$CreateKeyResponseFromJson(Map<String, dynamic> json) {
-  return _CreateKeyResponse.fromJson(json);
+KeyResponse _$KeyResponseFromJson(Map<String, dynamic> json) {
+  return _KeyResponse.fromJson(json);
 }
 
 /// @nodoc
-mixin _$CreateKeyResponse {
+mixin _$KeyResponse {
   String get id => throw _privateConstructorUsedError;
   String get scheme => throw _privateConstructorUsedError;
   String get curve => throw _privateConstructorUsedError;
@@ -28,21 +28,21 @@ mixin _$CreateKeyResponse {
   bool get custodial => throw _privateConstructorUsedError;
   DateTime get dateCreated => throw _privateConstructorUsedError;
 
-  /// Serializes this CreateKeyResponse to a JSON map.
+  /// Serializes this KeyResponse to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
 
-  /// Create a copy of CreateKeyResponse
+  /// Create a copy of KeyResponse
   /// with the given fields replaced by the non-null parameter values.
   @JsonKey(includeFromJson: false, includeToJson: false)
-  $CreateKeyResponseCopyWith<CreateKeyResponse> get copyWith =>
+  $KeyResponseCopyWith<KeyResponse> get copyWith =>
       throw _privateConstructorUsedError;
 }
 
 /// @nodoc
-abstract class $CreateKeyResponseCopyWith<$Res> {
-  factory $CreateKeyResponseCopyWith(
-          CreateKeyResponse value, $Res Function(CreateKeyResponse) then) =
-      _$CreateKeyResponseCopyWithImpl<$Res, CreateKeyResponse>;
+abstract class $KeyResponseCopyWith<$Res> {
+  factory $KeyResponseCopyWith(
+          KeyResponse value, $Res Function(KeyResponse) then) =
+      _$KeyResponseCopyWithImpl<$Res, KeyResponse>;
   @useResult
   $Res call(
       {String id,
@@ -55,16 +55,16 @@ abstract class $CreateKeyResponseCopyWith<$Res> {
 }
 
 /// @nodoc
-class _$CreateKeyResponseCopyWithImpl<$Res, $Val extends CreateKeyResponse>
-    implements $CreateKeyResponseCopyWith<$Res> {
-  _$CreateKeyResponseCopyWithImpl(this._value, this._then);
+class _$KeyResponseCopyWithImpl<$Res, $Val extends KeyResponse>
+    implements $KeyResponseCopyWith<$Res> {
+  _$KeyResponseCopyWithImpl(this._value, this._then);
 
   // ignore: unused_field
   final $Val _value;
   // ignore: unused_field
   final $Res Function($Val) _then;
 
-  /// Create a copy of CreateKeyResponse
+  /// Create a copy of KeyResponse
   /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
@@ -111,11 +111,11 @@ class _$CreateKeyResponseCopyWithImpl<$Res, $Val extends CreateKeyResponse>
 }
 
 /// @nodoc
-abstract class _$$CreateKeyResponseImplCopyWith<$Res>
-    implements $CreateKeyResponseCopyWith<$Res> {
-  factory _$$CreateKeyResponseImplCopyWith(_$CreateKeyResponseImpl value,
-          $Res Function(_$CreateKeyResponseImpl) then) =
-      __$$CreateKeyResponseImplCopyWithImpl<$Res>;
+abstract class _$$KeyResponseImplCopyWith<$Res>
+    implements $KeyResponseCopyWith<$Res> {
+  factory _$$KeyResponseImplCopyWith(
+          _$KeyResponseImpl value, $Res Function(_$KeyResponseImpl) then) =
+      __$$KeyResponseImplCopyWithImpl<$Res>;
   @override
   @useResult
   $Res call(
@@ -129,14 +129,14 @@ abstract class _$$CreateKeyResponseImplCopyWith<$Res>
 }
 
 /// @nodoc
-class __$$CreateKeyResponseImplCopyWithImpl<$Res>
-    extends _$CreateKeyResponseCopyWithImpl<$Res, _$CreateKeyResponseImpl>
-    implements _$$CreateKeyResponseImplCopyWith<$Res> {
-  __$$CreateKeyResponseImplCopyWithImpl(_$CreateKeyResponseImpl _value,
-      $Res Function(_$CreateKeyResponseImpl) _then)
+class __$$KeyResponseImplCopyWithImpl<$Res>
+    extends _$KeyResponseCopyWithImpl<$Res, _$KeyResponseImpl>
+    implements _$$KeyResponseImplCopyWith<$Res> {
+  __$$KeyResponseImplCopyWithImpl(
+      _$KeyResponseImpl _value, $Res Function(_$KeyResponseImpl) _then)
       : super(_value, _then);
 
-  /// Create a copy of CreateKeyResponse
+  /// Create a copy of KeyResponse
   /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
@@ -149,7 +149,7 @@ class __$$CreateKeyResponseImplCopyWithImpl<$Res>
     Object? custodial = null,
     Object? dateCreated = null,
   }) {
-    return _then(_$CreateKeyResponseImpl(
+    return _then(_$KeyResponseImpl(
       id: null == id
           ? _value.id
           : id // ignore: cast_nullable_to_non_nullable
@@ -184,8 +184,8 @@ class __$$CreateKeyResponseImplCopyWithImpl<$Res>
 
 /// @nodoc
 @JsonSerializable()
-class _$CreateKeyResponseImpl implements _CreateKeyResponse {
-  _$CreateKeyResponseImpl(
+class _$KeyResponseImpl implements _KeyResponse {
+  _$KeyResponseImpl(
       {required this.id,
       required this.scheme,
       required this.curve,
@@ -194,8 +194,8 @@ class _$CreateKeyResponseImpl implements _CreateKeyResponse {
       required this.custodial,
       required this.dateCreated});
 
-  factory _$CreateKeyResponseImpl.fromJson(Map<String, dynamic> json) =>
-      _$$CreateKeyResponseImplFromJson(json);
+  factory _$KeyResponseImpl.fromJson(Map<String, dynamic> json) =>
+      _$$KeyResponseImplFromJson(json);
 
   @override
   final String id;
@@ -214,14 +214,14 @@ class _$CreateKeyResponseImpl implements _CreateKeyResponse {
 
   @override
   String toString() {
-    return 'CreateKeyResponse(id: $id, scheme: $scheme, curve: $curve, publicKey: $publicKey, status: $status, custodial: $custodial, dateCreated: $dateCreated)';
+    return 'KeyResponse(id: $id, scheme: $scheme, curve: $curve, publicKey: $publicKey, status: $status, custodial: $custodial, dateCreated: $dateCreated)';
   }
 
   @override
   bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$CreateKeyResponseImpl &&
+            other is _$KeyResponseImpl &&
             (identical(other.id, id) || other.id == id) &&
             (identical(other.scheme, scheme) || other.scheme == scheme) &&
             (identical(other.curve, curve) || other.curve == curve) &&
@@ -239,35 +239,34 @@ class _$CreateKeyResponseImpl implements _CreateKeyResponse {
   int get hashCode => Object.hash(runtimeType, id, scheme, curve, publicKey,
       status, custodial, dateCreated);
 
-  /// Create a copy of CreateKeyResponse
+  /// Create a copy of KeyResponse
   /// with the given fields replaced by the non-null parameter values.
   @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   @pragma('vm:prefer-inline')
-  _$$CreateKeyResponseImplCopyWith<_$CreateKeyResponseImpl> get copyWith =>
-      __$$CreateKeyResponseImplCopyWithImpl<_$CreateKeyResponseImpl>(
-          this, _$identity);
+  _$$KeyResponseImplCopyWith<_$KeyResponseImpl> get copyWith =>
+      __$$KeyResponseImplCopyWithImpl<_$KeyResponseImpl>(this, _$identity);
 
   @override
   Map<String, dynamic> toJson() {
-    return _$$CreateKeyResponseImplToJson(
+    return _$$KeyResponseImplToJson(
       this,
     );
   }
 }
 
-abstract class _CreateKeyResponse implements CreateKeyResponse {
-  factory _CreateKeyResponse(
+abstract class _KeyResponse implements KeyResponse {
+  factory _KeyResponse(
       {required final String id,
       required final String scheme,
       required final String curve,
       required final String publicKey,
       required final KeyStatus status,
       required final bool custodial,
-      required final DateTime dateCreated}) = _$CreateKeyResponseImpl;
+      required final DateTime dateCreated}) = _$KeyResponseImpl;
 
-  factory _CreateKeyResponse.fromJson(Map<String, dynamic> json) =
-      _$CreateKeyResponseImpl.fromJson;
+  factory _KeyResponse.fromJson(Map<String, dynamic> json) =
+      _$KeyResponseImpl.fromJson;
 
   @override
   String get id;
@@ -284,10 +283,10 @@ abstract class _CreateKeyResponse implements CreateKeyResponse {
   @override
   DateTime get dateCreated;
 
-  /// Create a copy of CreateKeyResponse
+  /// Create a copy of KeyResponse
   /// with the given fields replaced by the non-null parameter values.
   @override
   @JsonKey(includeFromJson: false, includeToJson: false)
-  _$$CreateKeyResponseImplCopyWith<_$CreateKeyResponseImpl> get copyWith =>
+  _$$KeyResponseImplCopyWith<_$KeyResponseImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }

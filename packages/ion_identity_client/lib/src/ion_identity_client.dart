@@ -15,6 +15,7 @@ final class IONIdentityClient {
   /// Creates an instance of [IONIdentityClient] with the specified [auth] and [wallets] services.
   /// Both [auth] and [wallets] are required to interact with the respective user-related APIs.
   const IONIdentityClient({
+    required this.username,
     required this.auth,
     required this.wallets,
     required this.users,
@@ -23,6 +24,8 @@ final class IONIdentityClient {
     required this.statistics,
     required this.keys,
   });
+
+  final String username;
 
   /// Provides access to authentication-related operations for the user, such as registering
   /// or logging in.

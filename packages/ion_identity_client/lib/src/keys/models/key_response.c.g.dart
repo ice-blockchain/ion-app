@@ -1,14 +1,13 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'create_key_response.c.dart';
+part of 'key_response.c.dart';
 
 // **************************************************************************
 // JsonSerializableGenerator
 // **************************************************************************
 
-_$CreateKeyResponseImpl _$$CreateKeyResponseImplFromJson(
-        Map<String, dynamic> json) =>
-    _$CreateKeyResponseImpl(
+_$KeyResponseImpl _$$KeyResponseImplFromJson(Map<String, dynamic> json) =>
+    _$KeyResponseImpl(
       id: json['id'] as String,
       scheme: json['scheme'] as String,
       curve: json['curve'] as String,
@@ -18,8 +17,7 @@ _$CreateKeyResponseImpl _$$CreateKeyResponseImplFromJson(
       dateCreated: DateTime.parse(json['dateCreated'] as String),
     );
 
-Map<String, dynamic> _$$CreateKeyResponseImplToJson(
-        _$CreateKeyResponseImpl instance) =>
+Map<String, dynamic> _$$KeyResponseImplToJson(_$KeyResponseImpl instance) =>
     <String, dynamic>{
       'id': instance.id,
       'scheme': instance.scheme,

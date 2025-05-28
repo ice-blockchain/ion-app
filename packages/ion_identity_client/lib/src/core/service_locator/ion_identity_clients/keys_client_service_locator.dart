@@ -1,10 +1,13 @@
 import 'package:ion_identity_client/ion_identity.dart';
 import 'package:ion_identity_client/src/core/service_locator/ion_identity_clients/user_action_signer_service_locator.dart';
+import 'package:ion_identity_client/src/core/service_locator/ion_identity_service_locator.dart';
 import 'package:ion_identity_client/src/keys/ion_identity_keys.dart';
 import 'package:ion_identity_client/src/keys/services/create_key/create_key_service.dart';
 import 'package:ion_identity_client/src/keys/services/create_key/data_sources/create_key_data_source.dart';
 import 'package:ion_identity_client/src/keys/services/derive/data_sources/derive_data_source.dart';
 import 'package:ion_identity_client/src/keys/services/derive/derive_service.dart';
+import 'package:ion_identity_client/src/keys/services/list_keys/data_sources/list_keys_data_source.dart';
+import 'package:ion_identity_client/src/keys/services/list_keys/list_keys_service.dart';
 import 'package:ion_identity_client/src/signer/identity_signer.dart';
 
 class KeysClientServiceLocator {
@@ -31,6 +34,10 @@ class KeysClientServiceLocator {
         username: username,
         config: config,
         signer: identitySigner,
+      ),
+      _listKeysService(
+        username: username,
+        config: config,
       ),
     );
   }
@@ -59,6 +66,19 @@ class KeysClientServiceLocator {
       UserActionSignerServiceLocator().userActionSigner(
         config: config,
         identitySigner: signer,
+      ),
+    );
+  }
+
+  ListKeysService _listKeysService({
+    required String username,
+    required IONIdentityConfig config,
+  }) {
+    return ListKeysService(
+      ListKeysDataSource(
+        username,
+        IONIdentityServiceLocator.networkClient(config: config),
+        IONIdentityServiceLocator.tokenStorage(),
       ),
     );
   }

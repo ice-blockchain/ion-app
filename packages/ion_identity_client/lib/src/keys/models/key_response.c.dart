@@ -1,7 +1,7 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
 
-part 'create_key_response.c.freezed.dart';
-part 'create_key_response.c.g.dart';
+part 'key_response.c.freezed.dart';
+part 'key_response.c.g.dart';
 
 enum KeyStatus {
   @JsonValue('Active')
@@ -11,8 +11,8 @@ enum KeyStatus {
 }
 
 @freezed
-class CreateKeyResponse with _$CreateKeyResponse {
-  factory CreateKeyResponse({
+class KeyResponse with _$KeyResponse {
+  factory KeyResponse({
     required String id,
     required String scheme,
     required String curve,
@@ -20,8 +20,7 @@ class CreateKeyResponse with _$CreateKeyResponse {
     required KeyStatus status,
     required bool custodial,
     required DateTime dateCreated,
-  }) = _CreateKeyResponse;
+  }) = _KeyResponse;
 
-  factory CreateKeyResponse.fromJson(Map<String, dynamic> json) =>
-      _$CreateKeyResponseFromJson(json);
+  factory KeyResponse.fromJson(Map<String, dynamic> json) => _$KeyResponseFromJson(json);
 }

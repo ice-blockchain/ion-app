@@ -29,6 +29,7 @@ class ClientsServiceLocator {
     var client = _clients[username];
     if (client == null) {
       client = IONIdentityClient(
+        username: username,
         auth: AuthClientServiceLocator().auth(
           username: username,
           config: config,
