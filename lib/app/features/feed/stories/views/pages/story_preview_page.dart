@@ -135,7 +135,7 @@ class StoryPreviewPage extends HookConsumerWidget {
                               mediaFiles: [
                                 MediaFile(
                                   path: path,
-                                  mimeType: eventReference != null ? 'image/png' : mimeType,
+                                  mimeType: mimeType,
                                   width: dimensions.width,
                                   height: dimensions.height,
                                 ),
