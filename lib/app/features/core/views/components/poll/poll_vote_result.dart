@@ -3,6 +3,7 @@
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/extensions/extensions.dart';
+import 'package:ion/app/features/core/views/components/poll/poll_utils.dart';
 import 'package:ion/app/features/core/views/components/poll/poll_vote_result_footer.dart';
 import 'package:ion/app/features/core/views/components/poll/poll_vote_result_item.dart';
 import 'package:ion/app/features/feed/data/models/poll/poll_data.c.dart';
@@ -21,7 +22,7 @@ class PollVoteResult extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final totalVotes = voteCounts.fold(0, (sum, votes) => sum + votes);
+    final totalVotes = PollUtils.calculateTotalVotes(voteCounts);
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,

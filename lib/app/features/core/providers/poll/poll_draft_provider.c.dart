@@ -1,17 +1,20 @@
 // SPDX-License-Identifier: ice License 1.0
 
+import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:ion/app/features/feed/data/models/poll/poll_answer.c.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
+part 'poll_draft_provider.c.freezed.dart';
 part 'poll_draft_provider.c.g.dart';
 
-class PollDraft {
-  const PollDraft({
-    required this.answers,
-    required this.lengthDays,
-    required this.lengthHours,
-    required this.added,
-  });
+@freezed
+class PollDraft with _$PollDraft {
+  const factory PollDraft({
+    required List<PollAnswer> answers,
+    required int lengthDays,
+    required int lengthHours,
+    required bool added,
+  }) = _PollDraft;
 
   factory PollDraft.initial() => PollDraft(
         answers: [PollAnswer.empty()],
@@ -19,26 +22,10 @@ class PollDraft {
         lengthHours: 0,
         added: false,
       );
-  final List<PollAnswer> answers;
-  final int lengthDays;
-  final int lengthHours;
-  final bool added;
+}
 
+extension PollDraftExtension on PollDraft {
   int get ttlSeconds => (lengthDays * 24 * 3600) + (lengthHours * 3600);
-
-  PollDraft copyWith({
-    List<PollAnswer>? answers,
-    int? lengthDays,
-    int? lengthHours,
-    bool? added,
-  }) {
-    return PollDraft(
-      answers: answers ?? this.answers,
-      lengthDays: lengthDays ?? this.lengthDays,
-      lengthHours: lengthHours ?? this.lengthHours,
-      added: added ?? this.added,
-    );
-  }
 }
 
 @riverpod

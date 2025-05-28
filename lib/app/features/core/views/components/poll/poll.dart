@@ -57,7 +57,6 @@ class Poll extends ConsumerWidget {
             GestureDetector(
               behavior: HitTestBehavior.opaque,
               onTap: () => _handlePollLengthTap(
-                context,
                 ref,
                 draftPoll.lengthDays,
                 draftPoll.lengthHours,
@@ -67,7 +66,6 @@ class Poll extends ConsumerWidget {
                 children: [
                   PollLengthButton(
                     onPollLengthPress: () => _handlePollLengthTap(
-                      context,
                       ref,
                       draftPoll.lengthDays,
                       draftPoll.lengthHours,
@@ -92,11 +90,11 @@ class Poll extends ConsumerWidget {
     );
   }
 
-  void _handlePollLengthTap(BuildContext context, WidgetRef ref, int lengthDays, int lengthHours) {
+  void _handlePollLengthTap(WidgetRef ref, int lengthDays, int lengthHours) {
     final notifier = ref.read(pollDraftNotifierProvider.notifier);
 
     _showPollLengthTimeModal(
-      context,
+      ref.context,
       lengthDays,
       lengthHours,
       (newDay, newHour) {
