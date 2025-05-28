@@ -25,7 +25,8 @@ enum EventCountResultType {
   quotes,
   followers,
   reactions,
-  members;
+  members,
+  pollVotes,
 }
 
 @Freezed(equal: false)
