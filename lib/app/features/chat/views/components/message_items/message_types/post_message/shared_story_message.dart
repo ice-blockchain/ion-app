@@ -74,8 +74,6 @@ class SharedStoryMessage extends HookConsumerWidget {
       },
     );
 
-    final userStories = ref.watch(userStoriesByPubkeyProvider(storyEntity.masterPubkey));
-
     return Align(
       alignment: isMe ? AlignmentDirectional.centerEnd : AlignmentDirectional.centerStart,
       child: Stack(
@@ -83,13 +81,6 @@ class SharedStoryMessage extends HookConsumerWidget {
           GestureDetector(
             behavior: HitTestBehavior.opaque,
             onTap: () {
-              final storyIndex = userStories?.stories.indexWhere(
-                    (story) => story.toEventReference() == storyEntity.toEventReference(),
-                  ) ??
-                  -1;
-
-              if (storyIndex == -1) return;
-
               StoryViewerRoute(
                 pubkey: storyEntity.masterPubkey,
                 initialStoryReference: storyEntity.toEventReference().encode(),
