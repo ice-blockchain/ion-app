@@ -5,6 +5,7 @@ import 'dart:convert';
 
 import 'package:flutter_quill/flutter_quill.dart';
 import 'package:flutter_quill/quill_delta.dart';
+import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/components/text_editor/utils/build_empty_delta.dart';
 import 'package:ion/app/components/text_editor/utils/extract_tags.dart';
@@ -16,6 +17,7 @@ import 'package:ion/app/features/feed/create_post/model/create_post_option.dart'
 import 'package:ion/app/features/feed/data/models/entities/article_data.c.dart';
 import 'package:ion/app/features/feed/data/models/entities/modifiable_post_data.c.dart';
 import 'package:ion/app/features/feed/data/models/entities/post_data.c.dart';
+import 'package:ion/app/features/feed/data/models/poll/poll_data.c.dart';
 import 'package:ion/app/features/feed/data/models/who_can_reply_settings_option.c.dart';
 import 'package:ion/app/features/feed/providers/counters/replies_count_provider.c.dart';
 import 'package:ion/app/features/feed/providers/counters/reposts_count_provider.c.dart';
@@ -71,6 +73,7 @@ class CreatePostNotifier extends _$CreatePostNotifier {
     EventReference? quotedEvent,
     List<MediaFile>? mediaFiles,
     String? communityId,
+    PollData? poll,
   }) async {
     state = const AsyncValue.loading();
 
@@ -97,6 +100,7 @@ class CreatePostNotifier extends _$CreatePostNotifier {
           content: postContent,
           media: media.values.toList(),
         ),
+        poll: poll,
       );
 
       final post = await _publishPost(
