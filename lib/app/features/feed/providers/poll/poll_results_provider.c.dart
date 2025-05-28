@@ -9,7 +9,6 @@ import 'package:ion/app/features/ion_connect/model/pole_vote.c.dart';
 import 'package:ion/app/features/ion_connect/providers/ion_connect_cache.c.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
-// part directive for codegen
 part 'poll_results_provider.c.g.dart';
 
 class PollResults {

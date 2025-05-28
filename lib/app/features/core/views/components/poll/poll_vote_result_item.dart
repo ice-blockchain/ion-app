@@ -9,12 +9,14 @@ class PollResultItem extends HookWidget {
     required this.text,
     required this.votes,
     required this.totalVotes,
+    this.isSelected = false,
     super.key,
   });
 
   final String text;
   final int votes;
   final int totalVotes;
+  final bool isSelected;
 
   @override
   Widget build(BuildContext context) {
@@ -40,7 +42,7 @@ class PollResultItem extends HookWidget {
             ),
           ),
 
-          // 0% progress indicator placegolder
+          // 0% progress indicator placeholder
           if (percentageInt == 0)
             Align(
               alignment: AlignmentDirectional.centerStart,
@@ -48,7 +50,9 @@ class PollResultItem extends HookWidget {
                 height: 34.0.s,
                 width: 4.0.s,
                 decoration: BoxDecoration(
-                  color: context.theme.appColors.onTerararyFill,
+                  color: isSelected
+                      ? context.theme.appColors.primaryAccent.withValues(alpha: 0.3)
+                      : context.theme.appColors.onTerararyFill,
                   borderRadius: BorderRadius.circular(12.0.s),
                 ),
               ),
@@ -65,7 +69,9 @@ class PollResultItem extends HookWidget {
                   width: (MediaQuery.of(context).size.width * percentage)
                       .clamp(4.0.s, double.infinity),
                   decoration: BoxDecoration(
-                    color: context.theme.appColors.onTerararyFill,
+                    color: isSelected
+                        ? context.theme.appColors.primaryAccent.withValues(alpha: 0.3)
+                        : context.theme.appColors.onTerararyFill,
                     borderRadius: BorderRadius.circular(12.0.s),
                   ),
                 ),

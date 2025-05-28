@@ -11,11 +11,13 @@ class PollVoteResult extends ConsumerWidget {
   const PollVoteResult({
     required this.pollData,
     required this.voteCounts,
+    this.userVotedOptionIndex,
     super.key,
   });
 
   final PollData pollData;
   final List<int> voteCounts;
+  final int? userVotedOptionIndex;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -31,6 +33,7 @@ class PollVoteResult extends ConsumerWidget {
               text: pollData.options[index],
               votes: voteCounts[index],
               totalVotes: totalVotes,
+              isSelected: userVotedOptionIndex == index,
             );
           },
         ),

@@ -32,6 +32,7 @@ class PostPoll extends ConsumerWidget {
       return PollVoteResult(
         pollData: pollData,
         voteCounts: voteCounts,
+        userVotedOptionIndex: userVotedOptionIndex,
       );
     } else {
       return PollVote(
