@@ -7,7 +7,7 @@ import 'package:ion/app/features/ion_connect/ion_connect.dart';
 import 'package:ion/app/features/ion_connect/model/ion_connect_entity.dart';
 import 'package:ion/app/features/ion_connect/providers/ion_connect_cache.c.dart';
 
-part 'pole_vote.c.freezed.dart';
+part 'poll_vote.c.freezed.dart';
 
 @Freezed(equal: false)
 class PollVoteEntity with _$PollVoteEntity, IonConnectEntity, ImmutableEntity, CacheableEntity {
