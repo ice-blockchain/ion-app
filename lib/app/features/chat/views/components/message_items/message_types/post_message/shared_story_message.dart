@@ -13,6 +13,7 @@ import 'package:ion/app/features/components/ion_connect_network_image/ion_connec
 import 'package:ion/app/features/core/model/media_type.dart';
 import 'package:ion/app/features/feed/data/models/entities/modifiable_post_data.c.dart';
 import 'package:ion/app/features/feed/data/models/entities/post_data.c.dart';
+import 'package:ion/app/features/feed/stories/providers/stories_provider.c.dart';
 import 'package:ion/app/features/ion_connect/ion_connect.dart';
 import 'package:ion/app/features/ion_connect/model/entity_data_with_media_content.dart';
 import 'package:ion/app/features/ion_connect/model/ion_connect_entity.dart';
@@ -73,13 +74,25 @@ class SharedStoryMessage extends HookConsumerWidget {
       },
     );
 
+    final userStories = ref.watch(userStoriesByPubkeyProvider(storyEntity.masterPubkey));
+
     return Align(
       alignment: isMe ? AlignmentDirectional.centerEnd : AlignmentDirectional.centerStart,
       child: Stack(
         children: [
           GestureDetector(
             behavior: HitTestBehavior.opaque,
-            onTap: () => StoryViewerRoute(pubkey: storyEntity.masterPubkey).push<void>(context),
+            onTap: () {
+              final storyIndex = userStories?.stories.indexWhere(
+                    (story) => story.toEventReference() == storyEntity.toEventReference(),
+                  ) ??
+                  -1;
+
+              if (storyIndex == -1) return;
+
+              StoryViewerRoute(pubkey: storyEntity.masterPubkey, storyIndex: storyIndex)
+                  .push<void>(context);
+            },
             child: Column(
               crossAxisAlignment: isMe ? CrossAxisAlignment.end : CrossAxisAlignment.start,
               children: [

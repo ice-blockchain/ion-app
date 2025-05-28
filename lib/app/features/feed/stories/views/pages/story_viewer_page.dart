@@ -18,10 +18,12 @@ import 'package:ion/app/hooks/use_route_presence.dart';
 class StoryViewerPage extends HookConsumerWidget {
   const StoryViewerPage({
     required this.pubkey,
+    this.storyIndex,
     super.key,
   });
 
   final String pubkey;
+  final int? storyIndex;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -33,6 +35,15 @@ class StoryViewerPage extends HookConsumerWidget {
       () {
         if (storyViewerState.userStories.isEmpty && context.mounted && context.canPop()) {
           context.pop();
+        }
+      },
+      [storyViewerState.userStories.isEmpty],
+    );
+
+    useOnInit(
+      () async {
+        if (storyIndex != null) {
+          ref.watch(storyViewingControllerProvider(pubkey).notifier).moveToStory(storyIndex!);
         }
       },
       [storyViewerState.userStories.isEmpty],

@@ -81,6 +81,21 @@ class StoryViewingController extends _$StoryViewingController {
     }
   }
 
+  void moveToStory(int storyIndex) {
+    // Do nothing if this is the same story
+    print('Moving to story index: $storyIndex');
+    if (storyIndex == state.currentStoryIndex) return;
+
+    print('Moving to story index: $storyIndex');
+    print(state.userStories.length);
+    if (storyIndex >= 0 && storyIndex <= state.userStories.length) {
+      print('Moving to story index: $storyIndex');
+      state = state.copyWith(currentStoryIndex: storyIndex);
+      print(state.currentStory);
+      print(state.currentStoryIndex);
+    }
+  }
+
   void toggleLike(String postId) {
     final userStory = state.userStories.firstWhereOrNull((u) => u.getStoryById(postId) != null);
     if (userStory == null) return;

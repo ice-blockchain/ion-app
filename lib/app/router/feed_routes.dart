@@ -425,13 +425,14 @@ class StoryPreviewRoute extends BaseRouteData {
 }
 
 class StoryViewerRoute extends BaseRouteData {
-  StoryViewerRoute({required this.pubkey})
+  StoryViewerRoute({required this.pubkey, this.storyIndex})
       : super(
-          child: StoryViewerPage(pubkey: pubkey),
+          child: StoryViewerPage(pubkey: pubkey, storyIndex: storyIndex),
           type: IceRouteType.swipeDismissible,
         );
 
   final String pubkey;
+  final int? storyIndex;
 }
 
 class TrendingVideosRoute extends BaseRouteData {
