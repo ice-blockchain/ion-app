@@ -45,7 +45,7 @@ class TransactionDetailsPage extends ConsumerWidget {
     final arrivalTime = transactionData.status == TransactionStatus.confirmed &&
             transactionData.dateConfirmed != null
         ? DateFormat('dd.MM.yyyy HH:mm:ss')
-            .format(transactionData.dateConfirmed!.toDateTime.toLocal())
+            .format(transactionData.dateConfirmed!.toLocal())
         : transactionData.networkFeeOption?.getDisplayArrivalTime(context);
 
     final participantAddress = transactionData.type.isSend
@@ -108,7 +108,7 @@ class TransactionDetailsPage extends ConsumerWidget {
                               TimelineItemData(
                                 title: locale.transaction_details_timeline_pending,
                                 isDone: true,
-                                date: transactionData.dateRequested?.toDateTime,
+                                date: transactionData.dateRequested,
                               ),
                               TimelineItemData(
                                 title: locale.transaction_details_timeline_executing,

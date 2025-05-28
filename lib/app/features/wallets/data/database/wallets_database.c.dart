@@ -50,7 +50,7 @@ class WalletsDatabase extends _$WalletsDatabase {
   final String pubkey;
 
   @override
-  int get schemaVersion => 12;
+  int get schemaVersion => 13;
 
   static QueryExecutor _openConnection(String pubkey) {
     return driftDatabase(name: 'wallets_database_$pubkey');
@@ -150,6 +150,17 @@ class WalletsDatabase extends _$WalletsDatabase {
           if (!isExternalHashColumnExists) {
             await m.addColumn(schema.transactionsTableV2, schema.transactionsTableV2.externalHash);
           }
+        },
+        from12To13: (m, schema) async {
+          await m.alterTable(
+            TableMigration(
+              schema.fundsRequestsTable,
+              columnTransformer: {
+                schema.fundsRequestsTable.createdAt:
+                    schema.fundsRequestsTable.createdAt.cast<int>(),
+              },
+            ),
+          );
         },
       ),
     );

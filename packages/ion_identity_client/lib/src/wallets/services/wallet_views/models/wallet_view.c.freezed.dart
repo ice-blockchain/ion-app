@@ -29,8 +29,8 @@ mixin _$WalletView {
       throw _privateConstructorUsedError;
   @JsonKey(defaultValue: [])
   List<String> get symbolGroups => throw _privateConstructorUsedError;
-  int get createdAt => throw _privateConstructorUsedError;
-  int get updatedAt => throw _privateConstructorUsedError;
+  DateTime get createdAt => throw _privateConstructorUsedError;
+  DateTime get updatedAt => throw _privateConstructorUsedError;
   String get userId => throw _privateConstructorUsedError;
   List<WalletNft>? get nfts => throw _privateConstructorUsedError;
 
@@ -57,8 +57,8 @@ abstract class $WalletViewCopyWith<$Res> {
       @JsonKey(defaultValue: {})
       Map<String, WalletViewAggregationItem> aggregation,
       @JsonKey(defaultValue: []) List<String> symbolGroups,
-      int createdAt,
-      int updatedAt,
+      DateTime createdAt,
+      DateTime updatedAt,
       String userId,
       List<WalletNft>? nfts});
 }
@@ -112,11 +112,11 @@ class _$WalletViewCopyWithImpl<$Res, $Val extends WalletView>
       createdAt: null == createdAt
           ? _value.createdAt
           : createdAt // ignore: cast_nullable_to_non_nullable
-              as int,
+              as DateTime,
       updatedAt: null == updatedAt
           ? _value.updatedAt
           : updatedAt // ignore: cast_nullable_to_non_nullable
-              as int,
+              as DateTime,
       userId: null == userId
           ? _value.userId
           : userId // ignore: cast_nullable_to_non_nullable
@@ -144,8 +144,8 @@ abstract class _$$WalletViewImplCopyWith<$Res>
       @JsonKey(defaultValue: {})
       Map<String, WalletViewAggregationItem> aggregation,
       @JsonKey(defaultValue: []) List<String> symbolGroups,
-      int createdAt,
-      int updatedAt,
+      DateTime createdAt,
+      DateTime updatedAt,
       String userId,
       List<WalletNft>? nfts});
 }
@@ -197,11 +197,11 @@ class __$$WalletViewImplCopyWithImpl<$Res>
       createdAt: null == createdAt
           ? _value.createdAt
           : createdAt // ignore: cast_nullable_to_non_nullable
-              as int,
+              as DateTime,
       updatedAt: null == updatedAt
           ? _value.updatedAt
           : updatedAt // ignore: cast_nullable_to_non_nullable
-              as int,
+              as DateTime,
       userId: null == userId
           ? _value.userId
           : userId // ignore: cast_nullable_to_non_nullable
@@ -268,9 +268,9 @@ class _$WalletViewImpl implements _WalletView {
   }
 
   @override
-  final int createdAt;
+  final DateTime createdAt;
   @override
-  final int updatedAt;
+  final DateTime updatedAt;
   @override
   final String userId;
   final List<WalletNft>? _nfts;
@@ -346,8 +346,8 @@ abstract class _WalletView implements WalletView {
       @JsonKey(defaultValue: {})
       required final Map<String, WalletViewAggregationItem> aggregation,
       @JsonKey(defaultValue: []) required final List<String> symbolGroups,
-      required final int createdAt,
-      required final int updatedAt,
+      required final DateTime createdAt,
+      required final DateTime updatedAt,
       required final String userId,
       final List<WalletNft>? nfts}) = _$WalletViewImpl;
 
@@ -368,9 +368,9 @@ abstract class _WalletView implements WalletView {
   @JsonKey(defaultValue: [])
   List<String> get symbolGroups;
   @override
-  int get createdAt;
+  DateTime get createdAt;
   @override
-  int get updatedAt;
+  DateTime get updatedAt;
   @override
   String get userId;
   @override

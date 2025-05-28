@@ -91,7 +91,7 @@ class ConversationDao extends DatabaseAccessor<ChatDatabase> with _$Conversation
       ConversationTableCompanion(
         id: Value(communityId),
         type: const Value(ConversationType.community),
-        joinedAt: Value(DateTime.now()),
+        joinedAt: Value(DateTime.now().microsecondsSinceEpoch),
       ),
     );
   }
@@ -131,7 +131,7 @@ class ConversationDao extends DatabaseAccessor<ChatDatabase> with _$Conversation
 
     return query.watch().map((rows) {
       final sortedRows = rows
-          .sortedBy(
+          .sortedBy<num>(
         (e) =>
             e.readTableOrNull(eventMessageTable)?.createdAt ??
             e.readTable(conversationTable).joinedAt,

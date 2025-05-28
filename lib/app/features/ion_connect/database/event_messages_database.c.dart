@@ -36,14 +36,25 @@ class EventMessagesDatabase extends _$EventMessagesDatabase {
   final String pubkey;
 
   @override
-  int get schemaVersion => 2;
+  int get schemaVersion => 3;
 
   @override
   MigrationStrategy get migration => MigrationStrategy(
         onCreate: (migration) => migration.createAll(),
         onUpgrade: stepByStep(
           from1To2: (m, schema) {
-            return m.alterTable(TableMigration(eventMessagesTable));
+            return m.alterTable(TableMigration(schema.eventMessagesTable));
+          },
+          from2To3: (m, schema) {
+            return m.alterTable(
+              TableMigration(
+                schema.eventMessagesTable,
+                columnTransformer: {
+                  schema.eventMessagesTable.createdAt:
+                      schema.eventMessagesTable.createdAt.cast<int>(),
+                },
+              ),
+            );
           },
         ),
       );

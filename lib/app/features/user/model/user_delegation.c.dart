@@ -119,7 +119,7 @@ class UserDelegationData with _$UserDelegationData implements ReplaceableEntityD
 class UserDelegate with _$UserDelegate {
   const factory UserDelegate({
     required String pubkey,
-    required int time,
+    required DateTime time,
     required DelegationStatus status,
     @Default('') String relay,
     List<int>? kinds,
@@ -138,14 +138,14 @@ class UserDelegate with _$UserDelegate {
     final kindsString = (attestation.length > 2) ? attestation[2] : null;
 
     final status = DelegationStatus.values.byName(statusName);
-    final time = int.parse(timestamp);
+    final time = DateTime.fromMillisecondsSinceEpoch(int.parse(timestamp) * 1000);
     final kinds = kindsString?.split(',').map(int.parse).toList();
 
     return UserDelegate(pubkey: pubkey, relay: relay, status: status, time: time, kinds: kinds);
   }
 
   List<String> toTag() {
-    final attestationParts = [status.toShortString(), time];
+    final attestationParts = [status.toShortString(), time.millisecondsSinceEpoch ~/ 1000];
     if (kinds.emptyOrValue.isNotEmpty) {
       attestationParts.add(kinds!.join(','));
     }

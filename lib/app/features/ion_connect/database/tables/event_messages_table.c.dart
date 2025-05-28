@@ -10,7 +10,7 @@ class EventMessagesTable extends Table {
   IntColumn get kind => integer()();
   TextColumn get pubkey => text()();
   TextColumn get masterPubkey => text()();
-  DateTimeColumn get createdAt => dateTime()();
+  IntColumn get createdAt => integer()();
   TextColumn get sig => text().nullable()();
   TextColumn get content => text()();
   TextColumn get tags => text().map(const EventTagsConverter())();

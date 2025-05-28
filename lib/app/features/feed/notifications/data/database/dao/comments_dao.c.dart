@@ -2,6 +2,8 @@
 
 import 'package:drift/drift.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:ion/app/extensions/database.dart';
+import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/feed/notifications/data/database/notifications_database.c.dart';
 import 'package:ion/app/features/feed/notifications/data/database/tables/comments_table.c.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
@@ -25,23 +27,24 @@ class CommentsDao extends DatabaseAccessor<NotificationsDatabase> with _$Comment
   }
 
   Future<DateTime?> getLastCreatedAt(CommentType type) async {
-    final maxCreatedAt = commentsTable.createdAt.max();
-    return (selectOnly(commentsTable)
-          ..addColumns([maxCreatedAt])
-          ..where(commentsTable.type.equalsValue(type)))
-        .map((row) => row.read(maxCreatedAt))
-        .getSingleOrNull();
+    final max = await maxTimestamp(
+      commentsTable,
+      commentsTable.actualTableName,
+      commentsTable.createdAt.name,
+      additionalQuery: 'WHERE type = ${type.index}',
+    );
+    return max?.toDateTime;
   }
 
   Future<DateTime?> getFirstCreatedAt(CommentType type, {DateTime? after}) async {
-    final firstCreatedAt = commentsTable.createdAt.min();
-    final query = selectOnly(commentsTable)
-      ..addColumns([firstCreatedAt])
-      ..where(commentsTable.type.equalsValue(type));
-    if (after != null) {
-      query.where(commentsTable.createdAt.isBiggerThanValue(after));
-    }
-    return query.map((row) => row.read(firstCreatedAt)).getSingleOrNull();
+    final min = await minTimestamp(
+      commentsTable,
+      commentsTable.actualTableName,
+      commentsTable.createdAt.name,
+      after: after?.microsecondsSinceEpoch,
+      additionalQuery: 'WHERE type = ${type.index}',
+    );
+    return min?.toDateTime;
   }
 
   Stream<int> watchUnreadCount({required DateTime? after}) {
@@ -49,7 +52,8 @@ class CommentsDao extends DatabaseAccessor<NotificationsDatabase> with _$Comment
     final query = selectOnly(commentsTable)..addColumns([unreadCount]);
 
     if (after != null) {
-      query.where(commentsTable.createdAt.isBiggerThanValue(after));
+      // TODO: This might not work for old, seconds values
+      query.where(commentsTable.createdAt.isBiggerThanValue(after.microsecondsSinceEpoch));
     }
 
     return query.map((row) => row.read(unreadCount)!).watchSingle();

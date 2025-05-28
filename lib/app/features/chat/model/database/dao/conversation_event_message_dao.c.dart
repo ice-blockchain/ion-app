@@ -67,8 +67,8 @@ class ConversationEventMessageDao extends DatabaseAccessor<ChatDatabase>
       return true;
     }
 
-    return newEvent.createdAt.isAfter(existingEventMessage.createdAt) ||
-        newEvent.createdAt.isAtSameMomentAs(existingEventMessage.createdAt);
+    return newEvent.createdAt.toDateTime.isAfter(existingEventMessage.createdAt.toDateTime) ||
+        newEvent.createdAt.toDateTime.isAtSameMomentAs(existingEventMessage.createdAt.toDateTime);
   }
 
   /// Get the creation date of the most recent event messages of specific kinds
@@ -79,7 +79,7 @@ class ConversationEventMessageDao extends DatabaseAccessor<ChatDatabase>
       ..where((t) => t.kind.isIn(kinds))
       ..limit(1);
 
-    return (await query.getSingleOrNull())?.createdAt;
+    return (await query.getSingleOrNull())?.createdAt.toDateTime;
   }
 
   /// Get the creation date of the oldest event messages of specific kinds
@@ -87,14 +87,15 @@ class ConversationEventMessageDao extends DatabaseAccessor<ChatDatabase>
   Future<DateTime?> getEarliestEventMessageDate(List<int> kinds, {DateTime? after}) async {
     final query = select(eventMessageTable)..where((t) => t.kind.isIn(kinds));
 
+    // TODO: Check this
     if (after != null) {
-      query.where((t) => t.createdAt.isBiggerThanValue(after));
+      query.where((t) => t.createdAt.isBiggerThanValue(after.microsecondsSinceEpoch));
     }
 
     query
       ..orderBy([(t) => OrderingTerm.asc(t.createdAt)])
       ..limit(1);
 
-    return (await query.getSingleOrNull())?.createdAt;
+    return (await query.getSingleOrNull())?.createdAt.toDateTime;
   }
 }

@@ -27,8 +27,8 @@ mixin _$GenerateSignatureResponse {
   Map<String, dynamic> get requestBody => throw _privateConstructorUsedError;
   String get status => throw _privateConstructorUsedError;
   Map<String, dynamic> get signature => throw _privateConstructorUsedError;
-  int get dateRequested => throw _privateConstructorUsedError;
-  int get dateSigned => throw _privateConstructorUsedError;
+  DateTime get dateRequested => throw _privateConstructorUsedError;
+  DateTime get dateSigned => throw _privateConstructorUsedError;
 
   /// Serializes this GenerateSignatureResponse to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
@@ -53,8 +53,8 @@ abstract class $GenerateSignatureResponseCopyWith<$Res> {
       Map<String, dynamic> requestBody,
       String status,
       Map<String, dynamic> signature,
-      int dateRequested,
-      int dateSigned});
+      DateTime dateRequested,
+      DateTime dateSigned});
 
   $RequesterCopyWith<$Res> get requester;
 }
@@ -112,11 +112,11 @@ class _$GenerateSignatureResponseCopyWithImpl<$Res,
       dateRequested: null == dateRequested
           ? _value.dateRequested
           : dateRequested // ignore: cast_nullable_to_non_nullable
-              as int,
+              as DateTime,
       dateSigned: null == dateSigned
           ? _value.dateSigned
           : dateSigned // ignore: cast_nullable_to_non_nullable
-              as int,
+              as DateTime,
     ) as $Val);
   }
 
@@ -147,8 +147,8 @@ abstract class _$$GenerateSignatureResponseImplCopyWith<$Res>
       Map<String, dynamic> requestBody,
       String status,
       Map<String, dynamic> signature,
-      int dateRequested,
-      int dateSigned});
+      DateTime dateRequested,
+      DateTime dateSigned});
 
   @override
   $RequesterCopyWith<$Res> get requester;
@@ -206,11 +206,11 @@ class __$$GenerateSignatureResponseImplCopyWithImpl<$Res>
       dateRequested: null == dateRequested
           ? _value.dateRequested
           : dateRequested // ignore: cast_nullable_to_non_nullable
-              as int,
+              as DateTime,
       dateSigned: null == dateSigned
           ? _value.dateSigned
           : dateSigned // ignore: cast_nullable_to_non_nullable
-              as int,
+              as DateTime,
     ));
   }
 }
@@ -258,9 +258,9 @@ class _$GenerateSignatureResponseImpl implements _GenerateSignatureResponse {
   }
 
   @override
-  final int dateRequested;
+  final DateTime dateRequested;
   @override
-  final int dateSigned;
+  final DateTime dateSigned;
 
   @override
   String toString() {
@@ -325,8 +325,8 @@ abstract class _GenerateSignatureResponse implements GenerateSignatureResponse {
       required final Map<String, dynamic> requestBody,
       required final String status,
       required final Map<String, dynamic> signature,
-      required final int dateRequested,
-      required final int dateSigned}) = _$GenerateSignatureResponseImpl;
+      required final DateTime dateRequested,
+      required final DateTime dateSigned}) = _$GenerateSignatureResponseImpl;
 
   factory _GenerateSignatureResponse.fromJson(Map<String, dynamic> json) =
       _$GenerateSignatureResponseImpl.fromJson;
@@ -344,9 +344,9 @@ abstract class _GenerateSignatureResponse implements GenerateSignatureResponse {
   @override
   Map<String, dynamic> get signature;
   @override
-  int get dateRequested;
+  DateTime get dateRequested;
   @override
-  int get dateSigned;
+  DateTime get dateSigned;
 
   /// Create a copy of GenerateSignatureResponse
   /// with the given fields replaced by the non-null parameter values.

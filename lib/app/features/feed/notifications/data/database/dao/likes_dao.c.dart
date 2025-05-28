@@ -2,6 +2,8 @@
 
 import 'package:drift/drift.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:ion/app/extensions/database.dart';
+import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/feed/notifications/data/database/notifications_database.c.dart';
 import 'package:ion/app/features/feed/notifications/data/database/tables/likes_table.c.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
@@ -24,19 +26,22 @@ class LikesDao extends DatabaseAccessor<NotificationsDatabase> with _$LikesDaoMi
   }
 
   Future<DateTime?> getLastCreatedAt() async {
-    final maxCreatedAt = likesTable.createdAt.max();
-    return (selectOnly(likesTable)..addColumns([maxCreatedAt]))
-        .map((row) => row.read(maxCreatedAt))
-        .getSingleOrNull();
+    final max = await maxTimestamp(
+      likesTable,
+      likesTable.actualTableName,
+      likesTable.createdAt.name,
+    );
+    return max?.toDateTime;
   }
 
   Future<DateTime?> getFirstCreatedAt({DateTime? after}) async {
-    final firstCreatedAt = likesTable.createdAt.min();
-    final query = selectOnly(likesTable)..addColumns([firstCreatedAt]);
-    if (after != null) {
-      query.where(likesTable.createdAt.isBiggerThanValue(after));
-    }
-    return query.map((row) => row.read(firstCreatedAt)).getSingleOrNull();
+    final min = await minTimestamp(
+      likesTable,
+      likesTable.actualTableName,
+      likesTable.createdAt.name,
+      after: after?.microsecondsSinceEpoch,
+    );
+    return min?.toDateTime;
   }
 
   Stream<int> watchUnreadCount({required DateTime? after}) {
@@ -44,7 +49,8 @@ class LikesDao extends DatabaseAccessor<NotificationsDatabase> with _$LikesDaoMi
     final query = selectOnly(likesTable)..addColumns([unreadCount]);
 
     if (after != null) {
-      query.where(likesTable.createdAt.isBiggerThanValue(after));
+      // TODO: This might not work for old, seconds values
+      query.where(likesTable.createdAt.isBiggerThanValue(after.microsecondsSinceEpoch));
     }
 
     return query.map((row) => row.read(unreadCount)!).watchSingle();

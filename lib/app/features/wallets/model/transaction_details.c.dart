@@ -27,9 +27,9 @@ class TransactionDetails with _$TransactionDetails {
     required String? walletViewName,
     required String? id,
     required String? participantPubkey,
-    required int? dateRequested,
-    required int? dateConfirmed,
-    required int? dateBroadcasted,
+    required DateTime? dateRequested,
+    required DateTime? dateConfirmed,
+    required DateTime? dateBroadcasted,
     required CoinData? nativeCoin,
     required NetworkFeeOption? networkFeeOption,
   }) = _TransactionDetails;
