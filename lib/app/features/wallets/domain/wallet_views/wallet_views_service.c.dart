@@ -5,6 +5,7 @@ import 'dart:async';
 import 'package:collection/collection.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/exceptions/exceptions.dart';
+import 'package:ion/app/features/core/providers/main_wallet_provider.c.dart';
 import 'package:ion/app/features/core/providers/wallets_provider.c.dart';
 import 'package:ion/app/features/wallets/data/mappers/nft_mapper.dart';
 import 'package:ion/app/features/wallets/data/repository/coins_repository.c.dart';
@@ -34,6 +35,7 @@ Future<WalletViewsService> walletViewsService(Ref ref) async {
   final service = WalletViewsService(
     await ref.watch(ionIdentityClientProvider.future),
     await ref.watch(walletsNotifierProvider.future),
+    await ref.watch(mainWalletProvider.future),
     ref.watch(coinsRepositoryProvider),
     ref.watch(networksRepositoryProvider),
     await ref.watch(transactionsRepositoryProvider.future),
@@ -49,6 +51,7 @@ class WalletViewsService {
   WalletViewsService(
     this._identity,
     this._userWallets,
+    this._mainUserWallet,
     this._coinsRepository,
     this._networksRepository,
     this._transactionsRepository,
@@ -56,6 +59,7 @@ class WalletViewsService {
   );
 
   final List<Wallet> _userWallets;
+  final Wallet? _mainUserWallet;
   final IONIdentityClient _identity;
   final CoinsRepository _coinsRepository;
   final NetworksRepository _networksRepository;
@@ -314,6 +318,7 @@ class WalletViewsService {
       walletView: walletView,
       coinsList: updatedCoinsList,
       userWallets: _userWallets,
+      mainUserWallet: _mainUserWallet,
     );
 
     final updatedWalletView = await _identity.wallets.updateWalletView(walletView.id, request).then(

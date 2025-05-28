@@ -10,17 +10,23 @@ class _CreateUpdateRequestBuilder {
     WalletViewData? walletView,
     List<CoinData>? coinsList,
     List<Wallet>? userWallets,
+    Wallet? mainUserWallet,
   }) {
     if (name == null && walletView == null) {
       throw UpdateWalletViewRequestWithoutDataException();
     }
 
-    if (coinsList != null && userWallets == null) {
+    if (coinsList != null && (userWallets == null || mainUserWallet == null)) {
       throw UpdateWalletViewRequestNoUserWalletsException();
     }
 
     final (symbolGroups, items) = switch (coinsList) {
-      final List<CoinData> coins => _getRequestDataFromCoinsList(coins, userWallets!, walletView),
+      final List<CoinData> coins => _getRequestDataFromCoinsList(
+          coins,
+          mainUserWallet!,
+          userWallets!,
+          walletView,
+        ),
       null when walletView != null => _getRequestDataFromWalletView(walletView),
       _ => (const <String>{}, const <WalletViewCoinData>[]),
     };
@@ -56,6 +62,7 @@ class _CreateUpdateRequestBuilder {
 
   _RequestParams _getRequestDataFromCoinsList(
     List<CoinData> coins,
+    Wallet mainUserWallet,
     List<Wallet> userWallets,
     WalletViewData? walletView,
   ) {
@@ -69,8 +76,17 @@ class _CreateUpdateRequestBuilder {
     }
 
     for (final coin in coins) {
+      final walletViewId = walletView?.id;
+      final mainWalletId = mainUserWallet.id;
       final wallets = networkWithWallet[coin.network.id];
-      final walletId = wallets?.firstWhereOrNull((wallet) => wallet.name == walletView?.id)?.id;
+      final isMainWalletView = walletView?.isMainWalletView ?? false;
+
+      final walletId = wallets?.firstWhereOrNull((wallet) {
+        return isMainWalletView
+            ? wallet.name == walletViewId || wallet.id == mainWalletId
+            : wallet.name == walletViewId;
+      })?.id;
+
       symbolGroups.add(coin.symbolGroup);
       walletViewItems.add(
         WalletViewCoinData(
