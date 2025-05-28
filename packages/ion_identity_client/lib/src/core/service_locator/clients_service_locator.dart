@@ -30,6 +30,8 @@ class ClientsServiceLocator {
     if (client == null) {
       client = IONIdentityClient(
         username: username,
+        config: config,
+        identitySigner: identitySigner,
         auth: AuthClientServiceLocator().auth(
           username: username,
           config: config,

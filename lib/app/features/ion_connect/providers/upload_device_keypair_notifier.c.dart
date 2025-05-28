@@ -37,8 +37,7 @@ class UploadDeviceKeypairNotifier extends _$UploadDeviceKeypairNotifier {
   /// 5. Rename key to device-$fileId (TODO: requires API support)
   Future<void> uploadDeviceKeypair({
     required String identityKeyName,
-    required OnVerifyIdentity<KeyResponse> onVerifyIdentityForCreateKey,
-    required OnVerifyIdentity<DeriveResponse> onVerifyIdentityForDerive,
+    required UserActionSignerNew signer,
   }) async {
     state = const AsyncLoading();
     state = await AsyncValue.guard(() async {
@@ -66,7 +65,7 @@ class UploadDeviceKeypairNotifier extends _$UploadDeviceKeypairNotifier {
         scheme: _scheme,
         curve: _curve,
         name: _name,
-        onVerifyIdentity: onVerifyIdentityForCreateKey,
+        signer: signer,
       );
 
       // Step 4: Generate derivation with hex-encoded domain and seed
@@ -79,7 +78,7 @@ class UploadDeviceKeypairNotifier extends _$UploadDeviceKeypairNotifier {
         keyId: deviceKey.id,
         domain: domain,
         seed: seed,
-        onVerifyIdentity: onVerifyIdentityForDerive,
+        signer: signer,
       );
 
       // Step 5: Encrypt the device keypair with AES-GCM using derivation output
@@ -113,7 +112,7 @@ class UploadDeviceKeypairNotifier extends _$UploadDeviceKeypairNotifier {
   /// 4. Restore keypair to device
   Future<void> restoreDeviceKeypair({
     required String identityKeyName,
-    required OnVerifyIdentity<DeriveResponse> onVerifyIdentityForDerive,
+    required UserActionSignerNew signer,
   }) async {
     state = await AsyncValue.guard(() async {
       // Step 1: List all keys and find device-* keys
@@ -150,7 +149,7 @@ class UploadDeviceKeypairNotifier extends _$UploadDeviceKeypairNotifier {
         keyId: deviceKey.id,
         domain: domain,
         seed: seed,
-        onVerifyIdentity: onVerifyIdentityForDerive,
+        signer: signer,
       );
 
       // Step 4: Download and decrypt the keypair
@@ -165,7 +164,9 @@ class UploadDeviceKeypairNotifier extends _$UploadDeviceKeypairNotifier {
   /// Encrypts the device keypair using AES-GCM with the derivation output as the key
   Future<Uint8List> _encryptDeviceKeypair(String privateKey, String derivationOutput) async {
     // Use the derivation output as the encryption key
-    final keyBytes = hex.decode(derivationOutput);
+    final raw =
+        derivationOutput.startsWith('0x') ? derivationOutput.substring(2) : derivationOutput;
+    final keyBytes = hex.decode(raw);
     final secretKey = SecretKey(keyBytes.take(32).toList()); // Use first 32 bytes for AES-256
 
     // Encrypt the private key using AES-GCM
@@ -221,11 +222,13 @@ class UploadDeviceKeypairNotifier extends _$UploadDeviceKeypairNotifier {
   ) async {
     // Create a temporary file for upload
     final tempDir = await getTemporaryDirectory();
-    final tempFile = File('${tempDir.path}/device_keypair_backup.enc');
+    final tempFile = File('${tempDir.path}/device_keypair');
     await tempFile.writeAsBytes(encryptedData);
 
     // Create MediaFile for upload
     final mediaFile = MediaFile(
+      width: 1,
+      height: 1,
       path: tempFile.path,
       mimeType: 'application/octet-stream',
     );

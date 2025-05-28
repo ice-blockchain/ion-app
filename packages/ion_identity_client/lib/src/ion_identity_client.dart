@@ -2,8 +2,11 @@
 
 import 'package:ion_identity_client/ion_identity.dart';
 import 'package:ion_identity_client/src/coins/ion_identity_coins.dart';
+import 'package:ion_identity_client/src/core/service_locator/ion_identity_clients/user_action_signer_service_locator.dart';
 import 'package:ion_identity_client/src/keys/ion_identity_keys.dart';
 import 'package:ion_identity_client/src/networks/ion_identity_networks.dart';
+import 'package:ion_identity_client/src/signer/identity_signer.dart';
+import 'package:ion_identity_client/src/signer/user_action_signer.dart';
 import 'package:ion_identity_client/src/statistics/ion_identity_statistics.dart';
 import 'package:ion_identity_client/src/users/ion_identity_users.dart';
 import 'package:ion_identity_client/src/wallets/ion_identity_wallets.dart';
@@ -16,6 +19,8 @@ final class IONIdentityClient {
   /// Both [auth] and [wallets] are required to interact with the respective user-related APIs.
   const IONIdentityClient({
     required this.username,
+    required this.config,
+    required this.identitySigner,
     required this.auth,
     required this.wallets,
     required this.users,
@@ -26,6 +31,8 @@ final class IONIdentityClient {
   });
 
   final String username;
+  final IONIdentityConfig config;
+  final IdentitySigner identitySigner;
 
   /// Provides access to authentication-related operations for the user, such as registering
   /// or logging in.
@@ -49,4 +56,20 @@ final class IONIdentityClient {
 
   /// Provides access to keys-related operations, such as create new key, delete and others.
   final IONIdentityKeys keys;
+
+  /// Provides access to the UserActionSigner for advanced signing operations
+  UserActionSigner get userActionSigner {
+    return UserActionSignerServiceLocator().userActionSigner(
+      config: config,
+      identitySigner: identitySigner,
+    );
+  }
+
+  /// Creates a factory for UserActionSignerNew implementations
+  UserActionSignerFactory get userActionSignerFactory {
+    return UserActionSignerFactory(
+      userActionSigner: userActionSigner,
+      ionIdentityAuth: auth,
+    );
+  }
 }

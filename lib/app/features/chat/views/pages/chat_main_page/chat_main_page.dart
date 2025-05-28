@@ -25,10 +25,9 @@ class ChatMainPage extends HookConsumerWidget {
       ref
         ..read(communityJoinRequestsProvider)
         ..watch(e2eeMessagesSubscriberProvider)
-        ..watch(uploadDeviceKeypairNotifierProvider)
         ..read(communityMessagesSubscriberProvider);
     });
-
+    print('XXX: ${ref.watch(uploadDeviceKeypairNotifierProvider)}');
     final conversations = ref.watch(conversationsProvider);
 
     return Scaffold(
@@ -51,27 +50,21 @@ class ChatMainPage extends HookConsumerWidget {
           if (identityKeyName == null) {
             return;
           }
-
-          try {
-            await guardMultiplePasskeysDialog(
-              context,
-              (verifyIdentity) async {
-                await ref.read(uploadDeviceKeypairNotifierProvider.notifier).uploadDeviceKeypair(
-                      identityKeyName: identityKeyName,
-                      onVerifyIdentityForCreateKey: verifyIdentity,
-                      onVerifyIdentityForDerive: verifyIdentity,
-                    );
-              },
-              identityKeyName: identityKeyName,
-              onError: (error) {
-                print('Error during verification: $error');
-              },
-            );
-
-            print('Device keypair upload completed successfully!');
-          } catch (error) {
-            print('Failed to upload device keypair: $error');
-          }
+          await guardPasskeyDialog(
+            context,
+            (child) {
+              return RiverpodUserActionSignerRequestBuilder(
+                provider: uploadDeviceKeypairNotifierProvider,
+                request: (signer) {
+                  ref.read(uploadDeviceKeypairNotifierProvider.notifier).uploadDeviceKeypair(
+                        identityKeyName: identityKeyName,
+                        signer: signer,
+                      );
+                },
+                child: child,
+              );
+            },
+          );
         },
         child: const Icon(Icons.add),
       ),

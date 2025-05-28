@@ -29,25 +29,25 @@ class IONIdentityKeys {
     required String scheme,
     required String curve,
     required String name,
-    required OnVerifyIdentity<KeyResponse> onVerifyIdentity,
+    required UserActionSignerNew signer,
   }) =>
       _createKeyService.createKey(
         scheme: scheme,
         curve: curve,
         name: name,
-        onVerifyIdentity: onVerifyIdentity,
+        signer: signer,
       );
 
   Future<DeriveResponse> derive({
     required String keyId,
     required String domain,
     required String seed,
-    required OnVerifyIdentity<DeriveResponse> onVerifyIdentity,
+    required UserActionSignerNew signer,
   }) =>
       _deriveService.derive(
         keyId: keyId,
         domain: domain,
         seed: seed,
-        onVerifyIdentity: onVerifyIdentity,
+        signer: signer,
       );
 }
