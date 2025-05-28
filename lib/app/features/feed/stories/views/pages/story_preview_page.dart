@@ -143,6 +143,7 @@ class StoryPreviewPage extends HookConsumerWidget {
                                 ),
                               ],
                               whoCanReply: whoCanReply,
+                              quotedEvent: eventReference,
                             );
                           } else if (mediaType == MediaType.video) {
                             await createPostNotifier.create(
