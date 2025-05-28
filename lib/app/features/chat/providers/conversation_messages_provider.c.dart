@@ -22,9 +22,9 @@ class ConversationMessages extends _$ConversationMessages {
 
     final stream = ref.watch(conversationMessageDaoProvider).getMessages(conversationId);
 
-    final subscription = stream.listen((event) async {
+    final subscription = stream.listen((event) {
       final messages = event.entries.map((e) => e.value).expand((e) => e).toList();
-      await sendReadStatus(messages);
+      _sendReadStatus(messages);
     });
 
     ref.onDispose(subscription.cancel);
@@ -32,7 +32,7 @@ class ConversationMessages extends _$ConversationMessages {
     return stream;
   }
 
-  Future<void> sendReadStatus(List<EventMessage> messages) async {
+  Future<void> _sendReadStatus(List<EventMessage> messages) async {
     final currentUserMasterPubkey = ref.watch(currentPubkeySelectorProvider);
 
     if (currentUserMasterPubkey == null) {
