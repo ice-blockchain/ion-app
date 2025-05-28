@@ -34,29 +34,29 @@ class PollVoteResultFooter extends StatelessWidget {
     final closingTime = pollData.closingTime;
 
     if (pollData.isClosed) {
-      return 'Votes: $voteText •  Final results';
+      return '${context.i18n.poll_votes}: $voteText •  ${context.i18n.poll_final_results}';
     } else if (closingTime != null) {
       final remaining = closingTime.difference(DateTime.now());
       String timeText;
 
       if (remaining.inDays > 0) {
-        timeText = '${remaining.inDays} ${remaining.inDays == 1 ? 'day' : 'days'}';
+        timeText = context.i18n.poll_time_day(remaining.inDays);
 
         final remainingHours = remaining.inHours - (remaining.inDays * 24);
         if (remainingHours > 0) {
-          timeText += ' $remainingHours ${remainingHours == 1 ? 'hour' : 'hours'}';
+          timeText += ' ${context.i18n.poll_time_hour(remainingHours)}';
         }
       } else if (remaining.inHours > 0) {
-        timeText = '${remaining.inHours} ${remaining.inHours == 1 ? 'hour' : 'hours'}';
+        timeText = context.i18n.poll_time_hour(remaining.inHours);
       } else if (remaining.inMinutes > 0) {
-        timeText = '${remaining.inMinutes} ${remaining.inMinutes == 1 ? 'minute' : 'minutes'}';
+        timeText = context.i18n.poll_time_minute(remaining.inMinutes);
       } else {
-        timeText = 'less than a minute';
+        timeText = context.i18n.poll_time_less_than_minute;
       }
 
-      return 'Votes: $voteText • Left: $timeText';
+      return '${context.i18n.poll_votes}: $voteText • ${context.i18n.poll_time_left}: $timeText';
     }
 
-    return 'Votes: $voteText';
+    return '${context.i18n.poll_votes}: $voteText';
   }
 }
