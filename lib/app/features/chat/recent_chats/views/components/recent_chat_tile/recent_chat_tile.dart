@@ -275,7 +275,7 @@ class ChatTimestamp extends StatelessWidget {
   Widget build(BuildContext context) {
     return Text(
       formatMessageTimestamp(time),
-      style: context.theme.appTextThemes.body2.copyWith(
+      style: context.theme.appTextThemes.caption3.copyWith(
         color: context.theme.appColors.onTertararyBackground,
       ),
     );

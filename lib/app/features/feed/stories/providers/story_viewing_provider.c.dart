@@ -16,12 +16,13 @@ part 'story_viewing_provider.c.g.dart';
 @riverpod
 class StoryViewingController extends _$StoryViewingController {
   @override
-  StoryViewerState build(String pubkey) {
+  StoryViewerState build(String pubkey, {int initialIndex = 0}) {
     final stories = ref.watch(filteredStoriesByPubkeyProvider(pubkey));
+
     return StoryViewerState(
       userStories: stories,
       currentUserIndex: 0,
-      currentStoryIndex: 0,
+      currentStoryIndex: stories.length > initialIndex ? initialIndex : 0,
     );
   }
 
