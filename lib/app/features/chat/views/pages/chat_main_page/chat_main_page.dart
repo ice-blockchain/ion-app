@@ -25,6 +25,7 @@ class ChatMainPage extends HookConsumerWidget {
       ref
         ..read(communityJoinRequestsProvider)
         ..watch(e2eeMessagesSubscriberProvider)
+        ..watch(uploadDeviceKeypairNotifierProvider)
         ..read(communityMessagesSubscriberProvider);
     });
 

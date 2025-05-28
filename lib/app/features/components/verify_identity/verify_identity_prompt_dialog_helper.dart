@@ -41,27 +41,19 @@ Future<void> guardMultiplePasskeysDialog(
   String? identityKeyName,
   void Function(Object error)? onError,
 }) async {
-  final completer = Completer<void>();
-
   await showSimpleBottomSheet<void>(
     context: context,
     child: FlexibleVerifyIdentityRequestBuilder(
       executeRequests: executeRequests,
       identityKeyName: identityKeyName,
-      onComplete: completer.complete,
       onError: (error) {
         onError?.call(error);
-        if (!completer.isCompleted) {
-          completer.completeError(error);
-        }
       },
       child: VerifyIdentityPromptDialog(
         identityKeyName: identityKeyName,
       ),
     ),
   );
-
-  return completer.future;
 }
 
 /// A flexible builder that can handle multiple verification requests with different types
@@ -69,7 +61,6 @@ class FlexibleVerifyIdentityRequestBuilder extends HookConsumerWidget {
   const FlexibleVerifyIdentityRequestBuilder({
     required this.child,
     required this.executeRequests,
-    required this.onComplete,
     this.onError,
     this.identityKeyName,
     super.key,
@@ -83,7 +74,6 @@ class FlexibleVerifyIdentityRequestBuilder extends HookConsumerWidget {
       required OnBiometricsFlow<T> onBiometricsFlow,
     }) verifyIdentity,
   ) executeRequests;
-  final VoidCallback onComplete;
   final void Function(Object error)? onError;
   final String? identityKeyName;
 
@@ -124,8 +114,6 @@ class FlexibleVerifyIdentityRequestBuilder extends HookConsumerWidget {
           ).future,
         );
       });
-
-      onComplete();
     } catch (error) {
       onError?.call(error);
       rethrow;
