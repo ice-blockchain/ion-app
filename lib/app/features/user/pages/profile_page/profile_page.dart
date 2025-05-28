@@ -20,9 +20,9 @@ import 'package:ion/app/features/user/pages/profile_page/components/tabs/content
 import 'package:ion/app/features/user/pages/profile_page/components/tabs/tab_entities_list.dart';
 import 'package:ion/app/features/user/pages/profile_page/components/tabs/tabs_header/tabs_header.dart';
 import 'package:ion/app/features/user/pages/profile_page/hooks/use_animated_opacity_on_scroll.dart';
-import 'package:ion/app/features/user/providers/block_list_notifier.c.dart';
+import 'package:ion/app/features/user/pages/profile_page/profile_skeleton.dart';
 import 'package:ion/app/features/user/providers/user_metadata_provider.c.dart';
-import 'package:ion/app/router/components/navigation_app_bar/navigation_app_bar.dart';
+import 'package:ion/app/features/user_block/providers/block_list_notifier.c.dart';
 
 class ProfilePage extends HookConsumerWidget {
   const ProfilePage({
@@ -38,26 +38,20 @@ class ProfilePage extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final isBlocked = ref.watch(isBlockedProvider(pubkey));
-    final isBlocking = ref.watch(isBlockingProvider(pubkey)).valueOrNull;
+    final isBlocked = ref.watch(isBlockedNotifierProvider(pubkey)).valueOrNull;
+    final isBlockedBy = ref.watch(isBlockedByNotifierProvider(pubkey)).valueOrNull;
     final userMetadata = ref.watch(userMetadataProvider(pubkey));
 
     final didRefresh = useState(false);
 
-    if (!didRefresh.value && (userMetadata.isLoading || isBlocking == null)) {
-      return Scaffold(
-        appBar: NavigationAppBar(
-          useScreenTopOffset: true,
-          showBackButton: showBackButton,
-        ),
-        body: const Center(
-          child: CircularProgressIndicator(),
-        ),
-      );
+    if (!didRefresh.value && (userMetadata.isLoading || isBlocked == null || isBlockedBy == null)) {
+      return ProfileSkeleton(showBackButton: showBackButton);
     }
 
-    final isBlockedOrBlocking = isBlocked || isBlocking.falseOrValue;
-    if (!userMetadata.hasValue || isBlockedOrBlocking) {
+    final isBlockedOrBlockedBy =
+        isBlocked != null && isBlocked || isBlockedBy != null && isBlockedBy;
+
+    if (!userMetadata.hasValue || isBlockedOrBlockedBy) {
       return const CantFindProfilePage();
     }
 

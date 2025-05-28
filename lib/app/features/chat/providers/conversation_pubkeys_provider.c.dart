@@ -15,6 +15,7 @@ class ConversationPubkeys extends _$ConversationPubkeys {
 
     for (final masterPubkey in masterPubkeys) {
       final delegation = await ref.read(userDelegationProvider(masterPubkey).future);
+
       if (delegation == null) {
         continue;
       }

@@ -8,7 +8,6 @@ import 'package:ion/app/features/components/entities_list/entities_list.dart';
 import 'package:ion/app/features/components/entities_list/entities_list_skeleton.dart';
 import 'package:ion/app/features/feed/providers/feed_current_filter_provider.c.dart';
 import 'package:ion/app/features/feed/providers/feed_posts_provider.c.dart';
-import 'package:ion/app/features/user/providers/block_list_notifier.c.dart';
 import 'package:ion/app/features/user/providers/muted_users_notifier.c.dart';
 import 'package:ion/app/hooks/use_on_init.dart';
 import 'package:ion/app/router/app_routes.c.dart';
@@ -22,11 +21,9 @@ class FeedPostsList extends HookConsumerWidget {
     final posts = ref.watch(feedPostsProvider);
     final entities = posts?.data.items?.toList();
 
-    // Prefetching block and mute list here so it can be used later with sync provider
+    // Prefetching mute list here so it can be used later with sync provider
     useOnInit(() {
-      ref
-        ..read(currentUserBlockListProvider)
-        ..read(mutedUsersProvider);
+      ref.read(mutedUsersProvider);
     });
 
     if (entities == null) {

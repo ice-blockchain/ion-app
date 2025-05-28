@@ -11,8 +11,8 @@ import 'package:ion/app/features/user/pages/components/header_action/header_acti
 import 'package:ion/app/features/user/pages/profile_page/components/header/context_menu_item.dart';
 import 'package:ion/app/features/user/pages/profile_page/components/header/context_menu_item_divider.dart';
 import 'package:ion/app/features/user/pages/profile_page/pages/block_user_modal/block_user_modal.dart';
-import 'package:ion/app/features/user/providers/block_list_notifier.c.dart';
 import 'package:ion/app/features/user/providers/report_notifier.c.dart';
+import 'package:ion/app/features/user_block/providers/block_list_notifier.c.dart';
 import 'package:ion/app/router/app_routes.c.dart';
 import 'package:ion/app/router/utils/show_simple_bottom_sheet.dart';
 import 'package:ion/generated/assets.gen.dart';
@@ -86,7 +86,7 @@ class _BlockUserMenuItem extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final isBlocked = ref.watch(isBlockedProvider(pubkey));
+    final isBlocked = ref.watch(isBlockedNotifierProvider(pubkey)).valueOrNull ?? false;
     return ContextMenuItem(
       label: isBlocked ? context.i18n.button_unblock : context.i18n.button_block,
       iconAsset: Assets.svg.iconBlockClose3,

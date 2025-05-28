@@ -29,6 +29,7 @@ import 'package:ion/app/features/ion_connect/model/related_event_marker.dart';
 import 'package:ion/app/features/ion_connect/model/related_pubkey.c.dart';
 import 'package:ion/app/features/ion_connect/providers/ion_connect_event_signer_provider.c.dart';
 import 'package:ion/app/features/ion_connect/providers/ion_connect_notifier.c.dart';
+import 'package:ion/app/features/user_block/providers/block_list_notifier.c.dart';
 import 'package:ion/app/services/compressors/video_compressor.c.dart';
 import 'package:ion/app/services/ion_connect/ion_connect_gift_wrap_service.c.dart';
 import 'package:ion/app/services/ion_connect/ion_connect_seal_service.c.dart';
@@ -150,6 +151,12 @@ class SendE2eeChatMessageService {
         return sentMessage;
       }
 
+      final receiverMasterPubkey =
+          participantsMasterPubkeys.firstWhere((pubkey) => pubkey != currentUserMasterPubkey);
+
+      final isBlockedByReceiver =
+          await ref.read(isBlockedByNotifierProvider(receiverMasterPubkey).future);
+
       await Future.wait(
         participantsMasterPubkeys.map((masterPubkey) async {
           final pubkeyDevices = participantsPubkeysMap[masterPubkey];
@@ -168,6 +175,7 @@ class SendE2eeChatMessageService {
                 publishedAt: publishedAt,
                 editingEndedAt: editingEndedAt,
                 conversationId: conversationId,
+                groupSubject: subject.isNotEmpty ? GroupSubject(subject!) : null,
                 media: {
                   for (final attachment in attachments) attachment.url: attachment,
                 },
@@ -176,18 +184,19 @@ class SendE2eeChatMessageService {
                 relatedPubkeys: participantsMasterPubkeys
                     .map((pubkey) => RelatedPubkey(value: pubkey))
                     .toList(),
-                groupSubject: subject.isNotEmpty ? GroupSubject(subject!) : null,
                 relatedEvents:
                     editedMessageEntity?.relatedEvents ?? _generateRelatedEvents(repliedMessage),
               ).toEventMessage(NoPrivateSigner(eventSigner.publicKey), createdAt: createdAt);
 
-              await sendWrappedMessage(
-                pubkey: pubkey,
-                eventSigner: eventSigner,
-                masterPubkey: masterPubkey,
-                wrappedKinds: [kind.toString()],
-                eventMessage: remoteEventMessage,
-              );
+              if (!isBlockedByReceiver) {
+                await sendWrappedMessage(
+                  pubkey: pubkey,
+                  eventSigner: eventSigner,
+                  masterPubkey: masterPubkey,
+                  wrappedKinds: [kind.toString()],
+                  eventMessage: remoteEventMessage,
+                );
+              }
 
               if (eventReference != null) {
                 await ref.read(conversationMessageDataDaoProvider).addOrUpdateStatus(
@@ -340,9 +349,7 @@ class SendE2eeChatMessageService {
         );
   }
 
-  Future<void> resendMessage({
-    required EventMessage messageEvent,
-  }) async {
+  Future<void> resendMessage({required EventMessage messageEvent}) async {
     final entity = ReplaceablePrivateDirectMessageEntity.fromEventMessage(messageEvent);
     final eventReference = entity.toEventReference();
 

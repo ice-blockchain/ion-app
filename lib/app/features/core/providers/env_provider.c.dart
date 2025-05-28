@@ -28,6 +28,7 @@ enum EnvVariable {
   FOUNDATION_APP_GROUP,
   FIREBASE_CONFIG,
   RELAY_PING_INTERVAL_SECONDS,
+  BLOCKED_USERS_SYNC_OVERLAP_DAYS,
 }
 
 @Riverpod(keepAlive: true)
@@ -75,6 +76,8 @@ class Env extends _$Env {
           'RELAY_PING_INTERVAL_SECONDS',
           defaultValue: 3600,
         ) as T,
+      EnvVariable.BLOCKED_USERS_SYNC_OVERLAP_DAYS =>
+        const int.fromEnvironment('BLOCKED_USERS_SYNC_OVERLAP_DAYS') as T,
     };
   }
 }

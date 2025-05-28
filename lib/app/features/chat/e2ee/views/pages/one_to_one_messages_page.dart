@@ -6,7 +6,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/exceptions/exceptions.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/auth/providers/auth_provider.c.dart';
-import 'package:ion/app/features/chat/components/messaging_header/messaging_header.dart';
+import 'package:ion/app/features/chat/components/messaging_header/one_to_one_messaging_header.dart';
 import 'package:ion/app/features/chat/e2ee/providers/send_chat_message/send_e2ee_chat_message_service.c.dart';
 import 'package:ion/app/features/chat/e2ee/views/components/e2ee_conversation_empty_view.dart';
 import 'package:ion/app/features/chat/e2ee/views/components/one_to_one_messages_list.dart';
@@ -26,11 +26,11 @@ import 'package:ion/app/utils/username.dart';
 
 class OneToOneMessagesPage extends HookConsumerWidget {
   const OneToOneMessagesPage({
-    required this.receiverPubKey,
+    required this.receiverMasterPubkey,
     super.key,
   });
 
-  final String receiverPubKey;
+  final String receiverMasterPubkey;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -38,11 +38,11 @@ class OneToOneMessagesPage extends HookConsumerWidget {
 
     useEffect(
       () {
-        ref.read(existChatConversationIdProvider(receiverPubKey).future).then(
+        ref.read(existChatConversationIdProvider(receiverMasterPubkey).future).then(
           (value) {
             conversationId.value = value ??
                 ref.read(sendE2eeChatMessageServiceProvider).generateConversationId(
-                      receiverPubkey: receiverPubKey,
+                      receiverPubkey: receiverMasterPubkey,
                     );
           },
         );
@@ -69,10 +69,10 @@ class OneToOneMessagesPage extends HookConsumerWidget {
           conversationId: conversationId.value!,
           editedMessage: editedMessage?.eventMessage,
           repliedMessage: repliedMessage?.eventMessage,
-          participantsMasterPubkeys: [receiverPubKey, currentPubkey],
+          participantsMasterPubkeys: [receiverMasterPubkey, currentPubkey],
         );
       },
-      [receiverPubKey],
+      [receiverMasterPubkey],
     );
 
     return Scaffold(
@@ -81,7 +81,7 @@ class OneToOneMessagesPage extends HookConsumerWidget {
         child: Column(
           children: [
             _Header(
-              receiverMasterPubKey: receiverPubKey,
+              receiverMasterPubkey: receiverMasterPubkey,
               conversationId: conversationId.value ?? '',
             ),
             _MessagesList(conversationId: conversationId.value),
@@ -90,7 +90,7 @@ class OneToOneMessagesPage extends HookConsumerWidget {
             MessagingBottomBar(
               onSubmitted: onSubmitted,
               conversationId: conversationId.value,
-              receiverPubKey: receiverPubKey,
+              receiverMasterPubkey: receiverMasterPubkey,
             ),
           ],
         ),
@@ -100,32 +100,36 @@ class OneToOneMessagesPage extends HookConsumerWidget {
 }
 
 class _Header extends HookConsumerWidget {
-  const _Header({required this.receiverMasterPubKey, required this.conversationId});
+  const _Header({
+    required this.conversationId,
+    required this.receiverMasterPubkey,
+  });
 
-  final String receiverMasterPubKey;
+  final String receiverMasterPubkey;
   final String conversationId;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final receiver = ref.watch(userMetadataProvider(receiverMasterPubKey)).valueOrNull;
+    final receiver = ref.watch(userMetadataProvider(receiverMasterPubkey)).valueOrNull;
 
     if (receiver == null) {
       return const SizedBox.shrink();
     }
 
-    return MessagingHeader(
+    return OneToOneMessagingHeader(
+      conversationId: conversationId,
       imageUrl: receiver.data.picture,
       name: receiver.data.displayName,
-      onTap: () => ProfileRoute(pubkey: receiverMasterPubKey).push<void>(context),
+      receiverMasterPubkey: receiverMasterPubkey,
+      onTap: () => ProfileRoute(pubkey: receiverMasterPubkey).push<void>(context),
       subtitle: Text(
         prefixUsername(username: receiver.data.name, context: context),
         style: context.theme.appTextThemes.caption.copyWith(
           color: context.theme.appColors.quaternaryText,
         ),
       ),
-      conversationId: conversationId,
       onToggleMute: () {
-        ref.read(mutedConversationsProvider.notifier).toggleMutedMasterPubkey(receiverMasterPubKey);
+        ref.read(mutedConversationsProvider.notifier).toggleMutedMasterPubkey(receiverMasterPubkey);
       },
     );
   }

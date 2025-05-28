@@ -29,6 +29,11 @@ class MessageMetaData extends HookConsumerWidget {
     final eventReference =
         ReplaceablePrivateDirectMessageEntity.fromEventMessage(eventMessage).toEventReference();
 
+    final currentUserMasterPubkey = ref.watch(currentPubkeySelectorProvider);
+
+    if (currentUserMasterPubkey == null) {
+      return const SizedBox.shrink();
+    }
     final isMe = ref.watch(isCurrentUserSelectorProvider(eventMessage.masterPubkey));
 
     final deliveryStatus = ref.watch(messageStatusProvider(eventReference));
@@ -65,8 +70,8 @@ class MessageMetaData extends HookConsumerWidget {
             Padding(
               padding: EdgeInsetsDirectional.only(start: 2.0.s),
               child: statusIcon(
-                context,
-                deliveryStatus.valueOrNull ?? MessageDeliveryStatus.created,
+                context: context,
+                deliveryStatus: deliveryStatus.valueOrNull ?? MessageDeliveryStatus.created,
               ),
             ),
         ],
@@ -74,7 +79,10 @@ class MessageMetaData extends HookConsumerWidget {
     );
   }
 
-  Widget statusIcon(BuildContext context, MessageDeliveryStatus deliveryStatus) {
+  Widget statusIcon({
+    required BuildContext context,
+    required MessageDeliveryStatus deliveryStatus,
+  }) {
     return switch (deliveryStatus) {
       MessageDeliveryStatus.deleted => const SizedBox.shrink(),
       MessageDeliveryStatus.created => const SizedBox.shrink(),
@@ -90,7 +98,7 @@ class MessageMetaData extends HookConsumerWidget {
       MessageDeliveryStatus.read => Assets.svg.iconMessageDelivered.icon(
           color: context.theme.appColors.success,
           size: 12.0.s,
-        ),
+        )
     };
   }
 }

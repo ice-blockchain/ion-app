@@ -51,11 +51,11 @@ class SendChatMessageService {
         );
 
     await sendChatMessageService.sendMessage(
+      tags: tags,
       content: content,
       mediaFiles: mediaFiles,
       conversationId: conversationId,
       participantsMasterPubkeys: [receiverPubkey, currentPubkey],
-      tags: tags,
     );
   }
 }

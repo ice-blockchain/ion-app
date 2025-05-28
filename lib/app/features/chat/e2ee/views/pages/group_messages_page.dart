@@ -49,6 +49,7 @@ class GroupMessagesPage extends HookConsumerWidget {
             _Header(lastMessage: lastMessage),
             _MessagesList(conversationId: conversationId),
             MessagingBottomBar(
+              receiverMasterPubkey: '', //TODO: set when groups are impl
               conversationId: conversationId,
               onSubmitted: ({content, mediaFiles}) async {
                 final currentPubkey = ref.read(currentPubkeySelectorProvider);
@@ -97,10 +98,10 @@ class _Header extends HookConsumerWidget {
     ).data;
 
     return MessagingHeader(
+      conversationId: '', //TODO: set when groups are impl
       imageWidget: groupImageFile != null ? Image.file(groupImageFile) : null,
       name: entity.groupSubject?.value ?? '',
       subtitle: MemberCountTile(count: entity.relatedPubkeys?.length ?? 0),
-      conversationId: '', //TODO: set when groups are impl
     );
   }
 }

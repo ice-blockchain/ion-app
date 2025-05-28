@@ -142,6 +142,7 @@ class _ActionButton extends HookConsumerWidget {
 
     if (canPost) {
       return MessagingBottomBar(
+        receiverMasterPubkey: '', //TODO: set when channels are impl
         onSubmitted: ({content, mediaFiles}) async {
           await ref.read(createPostNotifierProvider(CreatePostOption.community).notifier).create(
                 content: content != null ? (Delta()..insert('$content\n')) : null,

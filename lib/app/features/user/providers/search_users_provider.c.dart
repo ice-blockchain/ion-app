@@ -9,6 +9,7 @@ import 'package:ion/app/features/ion_connect/model/action_source.c.dart';
 import 'package:ion/app/features/ion_connect/model/search_extension.dart';
 import 'package:ion/app/features/ion_connect/providers/entities_paged_data_provider.c.dart';
 import 'package:ion/app/features/user/model/user_metadata.c.dart';
+import 'package:ion/app/features/user_block/providers/block_list_notifier.c.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'search_users_provider.c.g.dart';
@@ -24,6 +25,13 @@ class SearchUsers extends _$SearchUsers {
     final masterPubkey = ref.watch(currentPubkeySelectorProvider);
     final dataSource = ref.watch(searchUsersDataSourceProvider(query: query));
     final entitiesPagedData = ref.watch(entitiesPagedDataProvider(dataSource));
+    final blockedUsersMasterPubkeys = ref
+            .watch(currentUserBlockListNotifierProvider)
+            .valueOrNull
+            ?.map((blockUser) => blockUser.data.blockedMasterPubkeys)
+            .expand((pubkey) => pubkey)
+            .toList() ??
+        [];
 
     if (entitiesPagedData == null) {
       return null;
@@ -33,7 +41,12 @@ class SearchUsers extends _$SearchUsers {
         ?.whereType<UserMetadataEntity>()
         .whereNot((user) => user.masterPubkey == masterPubkey)
         .toList();
-    return (users: users, hasMore: entitiesPagedData.hasMore, dataSource: dataSource);
+
+    final filteredUsers = users?.where((user) {
+      return !blockedUsersMasterPubkeys.contains(user.masterPubkey);
+    }).toList();
+
+    return (users: filteredUsers, hasMore: entitiesPagedData.hasMore, dataSource: dataSource);
   }
 
   Future<void> loadMore() async {

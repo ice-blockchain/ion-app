@@ -13,8 +13,11 @@ import 'package:ion/app/features/chat/e2ee/model/entities/private_direct_message
 import 'package:ion/app/features/chat/providers/muted_conversations_provider.c.dart';
 import 'package:ion/app/features/chat/recent_chats/model/conversation_list_item.c.dart';
 import 'package:ion/app/features/chat/recent_chats/providers/toggle_archive_conversation_provider.c.dart';
+import 'package:ion/app/features/user/pages/profile_page/pages/block_user_modal/block_user_modal.dart';
 import 'package:ion/app/features/user/providers/report_notifier.c.dart';
+import 'package:ion/app/features/user_block/providers/block_list_notifier.c.dart';
 import 'package:ion/app/router/app_routes.c.dart';
+import 'package:ion/app/router/utils/show_simple_bottom_sheet.dart';
 import 'package:ion/generated/assets.gen.dart';
 
 class RecentChatOverlayContextMenu extends ConsumerWidget {
@@ -31,11 +34,19 @@ class RecentChatOverlayContextMenu extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final currentUserMasterPubkey = ref.watch(currentPubkeySelectorProvider);
+
     final isMuted = ref
             .watch(mutedConversationIdsProvider)
             .valueOrNull
             ?.contains(conversation.conversationId) ??
         false;
+
+    final isBlocked = ref
+        .watch(
+          isBlockedNotifierProvider(conversation.receiverMasterPubkey(currentUserMasterPubkey)),
+        )
+        .valueOrNull;
 
     ref.displayErrors(reportNotifierProvider);
 
@@ -90,16 +101,34 @@ class RecentChatOverlayContextMenu extends ConsumerWidget {
                     Navigator.of(context).pop();
                   },
                 ),
-                const OverlayMenuItemSeparator(),
-                OverlayMenuItem(
-                  label: context.i18n.button_block,
-                  verticalPadding: 12.0.s,
-                  icon: Assets.svg.iconPhofileBlockuser
-                      .icon(size: iconSize, color: context.theme.appColors.quaternaryText),
-                  onPressed: () {
-                    Navigator.of(context).pop();
-                  },
-                ),
+                if (isBlocked != null && currentUserMasterPubkey != null)
+                  Column(
+                    children: [
+                      const OverlayMenuItemSeparator(),
+                      OverlayMenuItem(
+                        label: isBlocked ? context.i18n.button_unblock : context.i18n.button_block,
+                        verticalPadding: 12.0.s,
+                        icon: Assets.svg.iconPhofileBlockuser
+                            .icon(size: iconSize, color: context.theme.appColors.quaternaryText),
+                        onPressed: () {
+                          context.pop();
+                          final masterPubkey =
+                              conversation.receiverMasterPubkey(currentUserMasterPubkey);
+
+                          if (!isBlocked) {
+                            showSimpleBottomSheet<void>(
+                              context: context,
+                              child: BlockUserModal(pubkey: masterPubkey),
+                            );
+                          } else {
+                            ref
+                                .read(blockListNotifierProvider.notifier)
+                                .toggleBlocked(masterPubkey);
+                          }
+                        },
+                      ),
+                    ],
+                  ),
                 const OverlayMenuItemSeparator(),
                 OverlayMenuItem(
                   label: context.i18n.button_report,

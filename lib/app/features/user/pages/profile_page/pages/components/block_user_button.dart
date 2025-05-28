@@ -5,7 +5,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/components/button/button.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/user/pages/profile_page/pages/block_user_modal/block_user_modal.dart';
-import 'package:ion/app/features/user/providers/block_list_notifier.c.dart';
+import 'package:ion/app/features/user_block/providers/block_list_notifier.c.dart';
 import 'package:ion/app/router/utils/show_simple_bottom_sheet.dart';
 import 'package:ion/generated/assets.gen.dart';
 
@@ -19,8 +19,9 @@ class BlockUserButton extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final blocking = ref.watch(isBlockedProvider(pubkey));
+    final blocking = ref.watch(isBlockedNotifierProvider(pubkey)).valueOrNull ?? false;
     return _BlockButton(
+      blocking: blocking,
       onPressed: () {
         if (!blocking) {
           showSimpleBottomSheet<void>(
@@ -33,7 +34,6 @@ class BlockUserButton extends ConsumerWidget {
           ref.read(blockListNotifierProvider.notifier).toggleBlocked(pubkey);
         }
       },
-      blocking: blocking,
     );
   }
 }
