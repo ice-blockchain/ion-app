@@ -79,14 +79,12 @@ class StoryPreviewPage extends HookConsumerWidget {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Flexible(
-                      child: isPostScreenshot
-                          ? StoryImagePreview(path: path, isPostScreenshot: true)
-                          : switch (mediaType) {
-                              MediaType.video => StoryVideoPreview(path: path),
-                              MediaType.image => StoryImagePreview(path: path),
-                              MediaType.audio => const CenteredLoadingIndicator(),
-                              MediaType.unknown => const CenteredLoadingIndicator(),
-                            },
+                      child: switch (mediaType) {
+                        MediaType.video => StoryVideoPreview(path: path),
+                        MediaType.image => StoryImagePreview(path: path),
+                        MediaType.audio => const CenteredLoadingIndicator(),
+                        MediaType.unknown => const CenteredLoadingIndicator(),
+                      },
                     ),
                     SizedBox(height: 8.0.s),
                     ListItem(

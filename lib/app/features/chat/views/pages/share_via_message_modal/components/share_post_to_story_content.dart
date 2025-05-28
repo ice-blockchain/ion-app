@@ -24,8 +24,6 @@ class SharePostToStoryContent extends StatelessWidget {
     return ClipRRect(
       borderRadius: BorderRadius.circular(16.0.s),
       child: Container(
-        width: 600.0.s,
-        height: 600.0.s,
         padding: EdgeInsets.symmetric(horizontal: 20.0.s, vertical: 42.0.s),
         color: context.theme.appColors.attentionBlock,
         child: Column(
