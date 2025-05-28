@@ -10,8 +10,10 @@ import 'package:ion/app/components/text_editor/utils/is_attributed_operation.dar
 import 'package:ion/app/components/text_editor/utils/text_editor_styles.dart';
 import 'package:ion/app/extensions/delta.dart';
 import 'package:ion/app/extensions/extensions.dart';
+import 'package:ion/app/features/core/views/components/poll/post_poll.dart';
 import 'package:ion/app/features/feed/data/models/entities/modifiable_post_data.c.dart';
 import 'package:ion/app/features/feed/data/models/entities/post_data.c.dart';
+import 'package:ion/app/features/feed/data/models/poll/poll_data.c.dart';
 import 'package:ion/app/features/feed/views/components/post/components/post_body/components/post_media/post_media.dart';
 import 'package:ion/app/features/feed/views/components/url_preview_content/url_preview_content.dart';
 import 'package:ion/app/features/ion_connect/model/entity_data_with_media_content.dart';
@@ -84,6 +86,16 @@ class PostBody extends HookConsumerWidget {
       [content, urlPreviewVisible.value],
     );
 
+    // Extract poll data from post
+    final pollData = _getPollData(postData);
+    final hasVoted = useState<bool>(false);
+    final selectedOptionIndex = useState<int?>(null);
+
+    // Vote counts for each option (mock data for now)
+    final voteCounts = useState<List<int>>(
+      pollData != null ? List.generate(pollData.options.length, (index) => 0) : [],
+    );
+
     return LayoutBuilder(
       builder: (context, constraints) {
         final maxHeight = maxLines == null
@@ -135,6 +147,23 @@ class PostBody extends HookConsumerWidget {
                 ],
               ),
             ),
+
+            // Poll component
+            if (pollData != null)
+              Padding(
+                padding: EdgeInsets.symmetric(horizontal: sidePadding ?? 16.0.s),
+                child: PostPoll(
+                  pollData: pollData,
+                  voteCounts: voteCounts.value,
+                  postReference: entity.toEventReference(),
+                  hasVoted: hasVoted.value,
+                  selectedOptionIndex: selectedOptionIndex.value,
+                  onVoted: () {
+                    hasVoted.value = true;
+                  },
+                ),
+              ),
+
             if (media.isNotEmpty)
               Padding(
                 padding: EdgeInsetsDirectional.only(top: 10.0.s),
@@ -156,6 +185,13 @@ class PostBody extends HookConsumerWidget {
         );
       },
     );
+  }
+
+  PollData? _getPollData(dynamic postData) {
+    if (postData is ModifiablePostData) {
+      return postData.poll;
+    }
+    return null;
   }
 
   double? _calculateMaxHeight(
