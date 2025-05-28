@@ -2,6 +2,7 @@
 
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/exceptions/exceptions.dart';
+import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/auth/providers/auth_provider.c.dart';
 import 'package:ion/app/features/chat/community/models/community_join_requests_state.c.dart';
 import 'package:ion/app/features/chat/community/models/entities/community_join_data.c.dart';
@@ -62,7 +63,8 @@ FutureOr<CommunityJoinRequestsState> communityJoinRequests(Ref ref) async {
       accepted.add(entity);
       acceptedEvents.add(event);
     } else {
-      if (entity.data.expiration != null && entity.data.expiration!.isAfter(DateTime.now())) {
+      if (entity.data.expiration != null &&
+          entity.data.expiration!.toDateTime.isAfter(DateTime.now())) {
         waitingApproval.add(entity);
       }
     }

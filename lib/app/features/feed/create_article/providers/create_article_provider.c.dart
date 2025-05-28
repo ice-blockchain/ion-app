@@ -111,7 +111,7 @@ class CreateArticle extends _$CreateArticle {
         },
         relatedHashtags: relatedHashtags,
         relatedPubkeys: mentions,
-        publishedAt: publishedAt,
+        publishedAt: publishedAt?.microsecondsSinceEpoch,
         settings: EntityDataWithSettings.build(whoCanReply: whoCanReply),
         imageColor: imageColor,
         richText: richText,

@@ -5,6 +5,7 @@ import 'dart:async';
 import 'package:collection/collection.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/exceptions/exceptions.dart';
+import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/core/providers/main_wallet_provider.c.dart';
 import 'package:ion/app/features/core/providers/wallets_provider.c.dart';
 import 'package:ion/app/features/wallets/data/mappers/nft_mapper.dart';
@@ -68,9 +69,11 @@ class WalletViewsService {
 
   final StreamController<List<WalletViewData>> _walletViewsController =
       StreamController.broadcast();
+
   Stream<List<WalletViewData>> get walletViews => _walletViewsController.stream;
   List<WalletViewData> _originWalletViews = [];
   List<WalletViewData> _modifiedWalletViews = [];
+
   List<WalletViewData> get lastEmitted => _modifiedWalletViews;
 
   StreamSubscription<(List<CoinData>, Map<CoinData, List<TransactionData>>)>? _updatesSubscription;
@@ -84,7 +87,9 @@ class WalletViewsService {
     final networks = await _networksRepository.getAllAsMap();
     final mainWalletViewId = viewsDetailsDTO.isEmpty
         ? '' // if there no wallet views, we haven't the main one
-        : viewsDetailsDTO.reduce((a, b) => a.createdAt.isBefore(b.createdAt) ? a : b).id;
+        : viewsDetailsDTO
+            .reduce((a, b) => a.createdAt.toDateTime.isBefore(b.createdAt.toDateTime) ? a : b)
+            .id;
 
     _originWalletViews = viewsDetailsDTO
         .map(

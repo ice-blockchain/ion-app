@@ -39,7 +39,7 @@ class ReplaceablePrivateDirectMessageEntity
     required String id,
     required String pubkey,
     required String masterPubkey,
-    required DateTime createdAt,
+    required int createdAt,
     required ReplaceablePrivateDirectMessageData data,
   }) = _ReplaceablePrivateDirectMessageEntity;
 
@@ -91,8 +91,8 @@ class ReplaceablePrivateDirectMessageData
       masterPubkey: '',
       messageId: generateUuid(),
       conversationId: generateUuid(),
-      publishedAt: EntityPublishedAt(value: DateTime.now()),
-      editingEndedAt: EntityEditingEndedAt(value: DateTime.now()),
+      publishedAt: EntityPublishedAt(value: DateTime.now().microsecondsSinceEpoch),
+      editingEndedAt: EntityEditingEndedAt(value: DateTime.now().microsecondsSinceEpoch),
     );
   }
 
@@ -130,12 +130,12 @@ class ReplaceablePrivateDirectMessageData
   FutureOr<EventMessage> toEventMessage(
     EventSigner signer, {
     List<List<String>> tags = const [],
-    DateTime? createdAt,
-    DateTime? publishedAtTime,
+    int? createdAt,
+    int? publishedAtTime,
   }) {
     return EventMessage.fromData(
       signer: signer,
-      createdAt: createdAt ?? DateTime.now(),
+      createdAt: createdAt ?? DateTime.now().microsecondsSinceEpoch,
       kind: ReplaceablePrivateDirectMessageEntity.kind,
       content: content,
       tags: [
@@ -213,7 +213,7 @@ extension ConversationExtension on EventMessage {
   String? get sharedId =>
       tags.firstWhereOrNull((tag) => tag.first == ReplaceableEventIdentifier.tagName)?.last;
 
-  DateTime get publishedAt => EntityPublishedAt.fromTag(
+  int get publishedAt => EntityPublishedAt.fromTag(
         tags.firstWhereOrNull((tag) => tag.first == EntityPublishedAt.tagName)!,
       ).value;
 }

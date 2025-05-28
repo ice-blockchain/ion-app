@@ -133,7 +133,7 @@ class CoinTransactionHistoryNotifier extends _$CoinTransactionHistoryNotifier {
             transactionType: t.type,
             coinAmount: asset.amount,
             usdAmount: asset.amountUSD,
-            timestamp: timestamp.millisecondsSinceEpoch,
+            timestamp: timestamp,
             origin: t,
           );
         },

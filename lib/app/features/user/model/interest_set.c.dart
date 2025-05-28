@@ -25,7 +25,7 @@ class InterestSetEntity
     required String pubkey,
     required String masterPubkey,
     required String signature,
-    required DateTime createdAt,
+    required int createdAt,
     required InterestSetData data,
   }) = _InterestSetEntity;
 
@@ -77,7 +77,7 @@ class InterestSetData with _$InterestSetData implements EventSerializable, Repla
   FutureOr<EventMessage> toEventMessage(
     EventSigner signer, {
     List<List<String>> tags = const [],
-    DateTime? createdAt,
+    int? createdAt,
   }) {
     return EventMessage.fromData(
       signer: signer,

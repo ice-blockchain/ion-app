@@ -2,14 +2,13 @@
 
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:ion/app/exceptions/exceptions.dart';
-import 'package:ion/app/utils/date.dart';
 
 part 'entity_expiration.c.freezed.dart';
 
 @freezed
 class EntityExpiration with _$EntityExpiration {
   const factory EntityExpiration({
-    required DateTime value,
+    required int value,
   }) = _EntityExpiration;
 
   const EntityExpiration._();
@@ -21,12 +20,12 @@ class EntityExpiration with _$EntityExpiration {
     }
 
     return EntityExpiration(
-      value: fromTimestamp(int.parse(tag[1])),
+      value: int.parse(tag[1]),
     );
   }
 
   List<String> toTag() {
-    return [tagName, value.microsecondsSinceEpoch.toString()];
+    return [tagName, value.toString()];
   }
 
   static const String tagName = 'expiration';

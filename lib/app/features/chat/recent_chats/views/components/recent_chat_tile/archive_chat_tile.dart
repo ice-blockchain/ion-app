@@ -34,7 +34,7 @@ class ArchiveChatTile extends HookConsumerWidget {
       () => conversations.isEmpty
           ? null
           : conversations
-              .map((c) => c.latestMessage?.createdAt ?? c.joinedAt)
+              .map((c) => c.latestMessage?.createdAt.toDateTime ?? c.joinedAt.toDateTime)
               .reduce((a, b) => a.isAfter(b) ? a : b),
       [conversations],
     );

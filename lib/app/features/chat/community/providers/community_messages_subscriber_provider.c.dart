@@ -45,7 +45,7 @@ class CommunityMessagesSubscriber extends _$CommunityMessagesSubscriber {
       tags: {
         '#h': [communityId],
       },
-      since: DateTime.now().subtract(const Duration(days: 2)),
+      since: DateTime.now().subtract(const Duration(days: 2)).microsecondsSinceEpoch,
     );
 
     await ref.watch(entitiesSyncerNotifierProvider('community-messages').notifier).syncEvents(

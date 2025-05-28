@@ -24,7 +24,7 @@ class BadgeAwardEntity
     required String pubkey,
     required String masterPubkey,
     required String signature,
-    required DateTime createdAt,
+    required int createdAt,
     required BadgeAwardData data,
   }) = _BadgeAwardEntity;
 
@@ -84,7 +84,7 @@ class BadgeAwardData with _$BadgeAwardData implements EventSerializable {
   @override
   FutureOr<EventMessage> toEventMessage(
     EventSigner signer, {
-    DateTime? createdAt,
+    int? createdAt,
     String content = '',
     List<List<String>> tags = const [],
   }) {

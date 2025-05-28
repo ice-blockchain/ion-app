@@ -302,7 +302,7 @@ class IonConnectNotifier extends _$IonConnectNotifier {
 
     final eventId = EventMessage.calculateEventId(
       publicKey: masterPubkey,
-      createdAt: createdAt,
+      createdAt: createdAt.microsecondsSinceEpoch,
       kind: kind,
       tags: tags,
       content: '',
@@ -328,7 +328,7 @@ class IonConnectNotifier extends _$IonConnectNotifier {
     return EventMessage(
       id: eventId,
       pubkey: masterPubkey,
-      createdAt: createdAt,
+      createdAt: createdAt.microsecondsSinceEpoch,
       kind: kind,
       tags: tags,
       content: '',

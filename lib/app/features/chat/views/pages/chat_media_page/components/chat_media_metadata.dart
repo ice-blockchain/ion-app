@@ -35,7 +35,7 @@ class ChatMediaMetaData extends HookConsumerWidget {
           ),
         ),
         Text(
-          formatMessageTimestamp(messageData.publishedAt.value),
+          formatMessageTimestamp(messageData.publishedAt.value.toDateTime),
           style: context.theme.appTextThemes.caption2.copyWith(
             color: context.theme.appColors.onPrimaryAccent,
           ),

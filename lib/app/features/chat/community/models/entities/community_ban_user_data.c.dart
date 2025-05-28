@@ -18,7 +18,7 @@ class CommunityBanUserEntity with _$CommunityBanUserEntity, IonConnectEntity, Im
     required String pubkey,
     required String masterPubkey,
     required String signature,
-    required DateTime createdAt,
+    required int createdAt,
     required CommunityBanUserData data,
   }) = _CommunityBanUserEntity;
 
@@ -66,7 +66,7 @@ class CommunityBanUserData with _$CommunityBanUserData implements EventSerializa
   FutureOr<EventMessage> toEventMessage(
     EventSigner signer, {
     List<List<String>> tags = const [],
-    DateTime? createdAt,
+    int? createdAt,
   }) {
     return EventMessage.fromData(
       signer: signer,

@@ -10,7 +10,6 @@ import 'package:ion/app/features/ion_connect/model/event_reference.c.dart';
 import 'package:ion/app/features/ion_connect/model/event_serializable.dart';
 import 'package:ion/app/features/ion_connect/model/ion_connect_entity.dart';
 import 'package:ion/app/features/ion_connect/providers/ion_connect_cache.c.dart';
-import 'package:ion/app/utils/date.dart';
 
 part 'user_delegation.c.freezed.dart';
 
@@ -25,7 +24,7 @@ class UserDelegationEntity
     required String pubkey,
     required String masterPubkey,
     required String signature,
-    required DateTime createdAt,
+    required int createdAt,
     required UserDelegationData data,
   }) = _UserDelegationEntity;
 
@@ -120,7 +119,7 @@ class UserDelegationData with _$UserDelegationData implements ReplaceableEntityD
 class UserDelegate with _$UserDelegate {
   const factory UserDelegate({
     required String pubkey,
-    required DateTime time,
+    required int time,
     required DelegationStatus status,
     @Default('') String relay,
     List<int>? kinds,
@@ -139,14 +138,14 @@ class UserDelegate with _$UserDelegate {
     final kindsString = (attestation.length > 2) ? attestation[2] : null;
 
     final status = DelegationStatus.values.byName(statusName);
-    final time = fromTimestamp(int.parse(timestamp));
+    final time = int.parse(timestamp);
     final kinds = kindsString?.split(',').map(int.parse).toList();
 
     return UserDelegate(pubkey: pubkey, relay: relay, status: status, time: time, kinds: kinds);
   }
 
   List<String> toTag() {
-    final attestationParts = [status.toShortString(), time.microsecondsSinceEpoch];
+    final attestationParts = [status.toShortString(), time];
     if (kinds.emptyOrValue.isNotEmpty) {
       attestationParts.add(kinds!.join(','));
     }

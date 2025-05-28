@@ -37,7 +37,7 @@ Future<void> notificationFollowersSubscription(Ref ref) async {
         ),
       ],
     ).toString(),
-    since: DateTime.now().subtract(const Duration(microseconds: 2)),
+    since: DateTime.now().subtract(const Duration(microseconds: 2)).microsecondsSinceEpoch,
   );
 
   bool isCurrentUserLastAdded(IonConnectEntity entity) =>

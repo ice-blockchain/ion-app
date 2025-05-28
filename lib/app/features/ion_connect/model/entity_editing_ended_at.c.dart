@@ -2,14 +2,13 @@
 
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:ion/app/exceptions/exceptions.dart';
-import 'package:ion/app/utils/date.dart';
 
 part 'entity_editing_ended_at.c.freezed.dart';
 
 @freezed
 class EntityEditingEndedAt with _$EntityEditingEndedAt {
   const factory EntityEditingEndedAt({
-    required DateTime value,
+    required int value,
   }) = _EntityEditingEndedAt;
 
   const EntityEditingEndedAt._();
@@ -20,22 +19,24 @@ class EntityEditingEndedAt with _$EntityEditingEndedAt {
     }
 
     return EntityEditingEndedAt(
-      value: fromTimestamp(int.parse(tag[1])),
+      value: int.parse(tag[1]),
     );
   }
 
   factory EntityEditingEndedAt.build(int minutes) {
     return EntityEditingEndedAt(
-      value: DateTime.now().add(
-        Duration(
-          minutes: minutes,
-        ),
-      ),
+      value: DateTime.now()
+          .add(
+            Duration(
+              minutes: minutes,
+            ),
+          )
+          .microsecondsSinceEpoch,
     );
   }
 
   List<String> toTag() {
-    return [tagName, value.microsecondsSinceEpoch.toString()];
+    return [tagName, value.toString()];
   }
 
   static const String tagName = 'editing_ended_at';

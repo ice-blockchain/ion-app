@@ -12,7 +12,6 @@ import 'package:ion/app/features/ion_connect/model/event_serializable.dart';
 import 'package:ion/app/features/ion_connect/model/ion_connect_entity.dart';
 import 'package:ion/app/features/ion_connect/model/media_attachment.dart';
 import 'package:ion/app/features/ion_connect/providers/ion_connect_cache.c.dart';
-import 'package:ion/app/utils/date.dart';
 
 part 'user_metadata.c.freezed.dart';
 part 'user_metadata.c.g.dart';
@@ -26,7 +25,7 @@ class UserMetadataEntity
     required String pubkey,
     required String masterPubkey,
     required String signature,
-    required DateTime createdAt,
+    required int createdAt,
     required UserMetadata data,
   }) = _UserMetadataEntity;
 
@@ -67,7 +66,7 @@ class UserMetadata with _$UserMetadata implements EventSerializable, Replaceable
     String? website,
     String? location,
     String? category,
-    DateTime? registeredAt,
+    int? registeredAt,
     String? banner,
     @Default({}) Map<String, MediaAttachment> media,
     Map<String, String>? wallets,
@@ -111,7 +110,7 @@ class UserMetadata with _$UserMetadata implements EventSerializable, Replaceable
   FutureOr<EventMessage> toEventMessage(
     EventSigner signer, {
     List<List<String>> tags = const [],
-    DateTime? createdAt,
+    int? createdAt,
   }) {
     return EventMessage.fromData(
       signer: signer,
@@ -184,12 +183,8 @@ class UserDataEventMessageContent {
 
   final String? category;
 
-  @JsonKey(
-    name: 'registered_at',
-    toJson: _dateTimeToJson,
-    fromJson: _dateTimeFromJson,
-  )
-  final DateTime? registeredAt;
+  @JsonKey(name: 'registered_at')
+  final int? registeredAt;
 
   final String? banner;
 
@@ -202,10 +197,6 @@ class UserDataEventMessageContent {
   final Map<String, String>? wallets;
 
   Map<String, dynamic> toJson() => _$UserDataEventMessageContentToJson(this);
-
-  static int? _dateTimeToJson(DateTime? value) => value?.microsecondsSinceEpoch;
-
-  static DateTime? _dateTimeFromJson(int? value) => value != null ? fromTimestamp(value) : null;
 }
 
 enum WhoCanSetting {

@@ -78,7 +78,7 @@ class SendE2eeChatMessageService {
             .read(conversationPubkeysProvider.notifier)
             .fetchUsersKeys(participantsMasterPubkeys);
 
-    final createdAt = DateTime.now();
+    final createdAt = DateTime.now().microsecondsSinceEpoch;
 
     try {
       final publishedAt = editedMessageEntity?.publishedAt ?? EntityPublishedAt(value: createdAt);
@@ -325,7 +325,7 @@ class SendE2eeChatMessageService {
     final sealService = await ref.read(ionConnectSealServiceProvider.future);
 
     final expirationTag = EntityExpiration(
-      value: DateTime.now().add(expirationDuration),
+      value: DateTime.now().add(expirationDuration).microsecondsSinceEpoch,
     ).toTag();
 
     final giftWrap = await giftWrapSharedIsolate.compute(

@@ -25,7 +25,7 @@ mixin _$WalletHistoryRecord {
   String get kind => throw _privateConstructorUsedError;
   String get direction => throw _privateConstructorUsedError;
   int get blockNumber => throw _privateConstructorUsedError;
-  DateTime get timestamp => throw _privateConstructorUsedError;
+  int get timestamp => throw _privateConstructorUsedError;
   String get txHash => throw _privateConstructorUsedError;
   String? get externalHash => throw _privateConstructorUsedError;
   String? get index => throw _privateConstructorUsedError;
@@ -61,7 +61,7 @@ abstract class $WalletHistoryRecordCopyWith<$Res> {
       String kind,
       String direction,
       int blockNumber,
-      DateTime timestamp,
+      int timestamp,
       String txHash,
       String? externalHash,
       String? index,
@@ -136,7 +136,7 @@ class _$WalletHistoryRecordCopyWithImpl<$Res, $Val extends WalletHistoryRecord>
       timestamp: null == timestamp
           ? _value.timestamp
           : timestamp // ignore: cast_nullable_to_non_nullable
-              as DateTime,
+              as int,
       txHash: null == txHash
           ? _value.txHash
           : txHash // ignore: cast_nullable_to_non_nullable
@@ -213,7 +213,7 @@ abstract class _$$WalletHistoryRecordImplCopyWith<$Res>
       String kind,
       String direction,
       int blockNumber,
-      DateTime timestamp,
+      int timestamp,
       String txHash,
       String? externalHash,
       String? index,
@@ -287,7 +287,7 @@ class __$$WalletHistoryRecordImplCopyWithImpl<$Res>
       timestamp: null == timestamp
           ? _value.timestamp
           : timestamp // ignore: cast_nullable_to_non_nullable
-              as DateTime,
+              as int,
       txHash: null == txHash
           ? _value.txHash
           : txHash // ignore: cast_nullable_to_non_nullable
@@ -379,7 +379,7 @@ class _$WalletHistoryRecordImpl implements _WalletHistoryRecord {
   @override
   final int blockNumber;
   @override
-  final DateTime timestamp;
+  final int timestamp;
   @override
   final String txHash;
   @override
@@ -505,7 +505,7 @@ abstract class _WalletHistoryRecord implements WalletHistoryRecord {
           required final String kind,
           required final String direction,
           required final int blockNumber,
-          required final DateTime timestamp,
+          required final int timestamp,
           required final String txHash,
           required final String? externalHash,
           required final String? index,
@@ -534,7 +534,7 @@ abstract class _WalletHistoryRecord implements WalletHistoryRecord {
   @override
   int get blockNumber;
   @override
-  DateTime get timestamp;
+  int get timestamp;
   @override
   String get txHash;
   @override

@@ -72,7 +72,7 @@ class E2eeMessagesSubscriber extends _$E2eeMessagesSubscriber {
         ],
         '#p': [masterPubkey],
       },
-      since: sinceDate,
+      since: sinceDate?.microsecondsSinceEpoch,
     );
 
     final sealService = await ref.watch(ionConnectSealServiceProvider.future);

@@ -25,7 +25,7 @@ class AuthEvent with _$AuthEvent implements EventSerializable {
   FutureOr<EventMessage> toEventMessage(
     EventSigner signer, {
     List<List<String>> tags = const [],
-    DateTime? createdAt,
+    int? createdAt,
   }) {
     final authTags = [
       ['challenge', challenge],

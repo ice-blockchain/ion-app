@@ -61,7 +61,7 @@ class IonConnectGiftWrapServiceImpl implements IonConnectGiftWrapService {
 
     final createdAt = randomDateBefore(
       const Duration(days: 2),
-    );
+    ).microsecondsSinceEpoch;
 
     return EventMessage.fromData(
       kind: IonConnectGiftWrapEntity.kind,

@@ -21,7 +21,7 @@ class BookmarksEntity with IonConnectEntity, CacheableEntity, ReplaceableEntity,
     required String pubkey,
     required String masterPubkey,
     required String signature,
-    required DateTime createdAt,
+    required int createdAt,
     required BookmarksData data,
   }) = _BookmarksEntity;
 
@@ -70,7 +70,7 @@ class BookmarksData with _$BookmarksData implements EventSerializable, Replaceab
   FutureOr<EventMessage> toEventMessage(
     EventSigner signer, {
     List<List<String>> tags = const [],
-    DateTime? createdAt,
+    int? createdAt,
   }) {
     return EventMessage.fromData(
       signer: signer,

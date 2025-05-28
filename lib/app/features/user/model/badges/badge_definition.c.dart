@@ -30,7 +30,7 @@ class BadgeDefinitionEntity
     required String pubkey,
     required String masterPubkey,
     required String signature,
-    required DateTime createdAt,
+    required int createdAt,
     required BadgeDefinitionData data,
   }) = _BadgeDefinitionEntity;
 
@@ -129,7 +129,7 @@ class BadgeDefinitionData
   @override
   FutureOr<EventMessage> toEventMessage(
     EventSigner signer, {
-    DateTime? createdAt,
+    int? createdAt,
     String content = '',
     List<List<String>> tags = const [],
   }) {

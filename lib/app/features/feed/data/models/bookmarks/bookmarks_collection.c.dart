@@ -23,7 +23,7 @@ class BookmarksCollectionEntity
     required String pubkey,
     required String masterPubkey,
     required String signature,
-    required DateTime createdAt,
+    required int createdAt,
     required BookmarksCollectionData data,
   }) = _BookmarksCollectionEntity;
 
@@ -96,7 +96,7 @@ class BookmarksCollectionData
   @override
   FutureOr<EventMessage> toEventMessage(
     EventSigner signer, {
-    DateTime? createdAt,
+    int? createdAt,
     String content = '',
     List<List<String>> tags = const [],
   }) {

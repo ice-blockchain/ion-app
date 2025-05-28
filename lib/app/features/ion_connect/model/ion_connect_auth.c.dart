@@ -26,7 +26,7 @@ class IonConnectAuth with _$IonConnectAuth implements EventSerializable {
   Future<EventMessage> toEventMessage(
     EventSigner signer, {
     List<List<String>> tags = const [],
-    DateTime? createdAt,
+    int? createdAt,
   }) async {
     final eventTags = [
       ...tags,

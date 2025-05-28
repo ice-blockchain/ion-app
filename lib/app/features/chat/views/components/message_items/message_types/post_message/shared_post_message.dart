@@ -53,7 +53,7 @@ class SharedPostMessage extends HookConsumerWidget {
         final PostEntity post => post.createdAt,
         final ArticleEntity article => article.data.publishedAt.value,
         final ModifiablePostEntity post => post.data.publishedAt.value,
-        _ => DateTime.now(),
+        _ => DateTime.now().microsecondsSinceEpoch,
       },
     );
 

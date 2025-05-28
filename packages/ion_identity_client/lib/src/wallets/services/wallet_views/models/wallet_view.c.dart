@@ -14,8 +14,8 @@ class WalletView with _$WalletView {
     @CoinInWalletListConverter() required List<CoinInWallet> coins,
     @JsonKey(defaultValue: {}) required Map<String, WalletViewAggregationItem> aggregation,
     @JsonKey(defaultValue: []) required List<String> symbolGroups,
-    required DateTime createdAt,
-    required DateTime updatedAt,
+    required int createdAt,
+    required int updatedAt,
     required String userId,
     List<WalletNft>? nfts,
   }) = _WalletView;

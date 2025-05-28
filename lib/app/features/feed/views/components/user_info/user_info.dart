@@ -27,7 +27,7 @@ class UserInfo extends HookConsumerWidget {
   final bool accentTheme;
   final Widget? trailing;
   final TextStyle? textStyle;
-  final DateTime? createdAt;
+  final int? createdAt;
   final TimestampFormat timeFormat;
 
   @override
@@ -63,7 +63,7 @@ class UserInfo extends HookConsumerWidget {
                 Text('•', style: textStyle),
                 SizedBox(width: 4.0.s),
                 TimeAgo(
-                  time: createdAt!,
+                  time: createdAt!.toDateTime,
                   timeFormat: timeFormat,
                   style: textStyle,
                 ),

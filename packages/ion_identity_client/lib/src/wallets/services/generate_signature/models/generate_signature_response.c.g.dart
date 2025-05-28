@@ -15,8 +15,8 @@ _$GenerateSignatureResponseImpl _$$GenerateSignatureResponseImplFromJson(
       requestBody: json['requestBody'] as Map<String, dynamic>,
       status: json['status'] as String,
       signature: json['signature'] as Map<String, dynamic>,
-      dateRequested: DateTime.parse(json['dateRequested'] as String),
-      dateSigned: DateTime.parse(json['dateSigned'] as String),
+      dateRequested: (json['dateRequested'] as num).toInt(),
+      dateSigned: (json['dateSigned'] as num).toInt(),
     );
 
 Map<String, dynamic> _$$GenerateSignatureResponseImplToJson(
@@ -28,6 +28,6 @@ Map<String, dynamic> _$$GenerateSignatureResponseImplToJson(
       'requestBody': instance.requestBody,
       'status': instance.status,
       'signature': instance.signature,
-      'dateRequested': instance.dateRequested.toIso8601String(),
-      'dateSigned': instance.dateSigned.toIso8601String(),
+      'dateRequested': instance.dateRequested,
+      'dateSigned': instance.dateSigned,
     };

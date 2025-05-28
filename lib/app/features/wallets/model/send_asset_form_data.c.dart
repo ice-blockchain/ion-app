@@ -13,7 +13,7 @@ part 'send_asset_form_data.c.freezed.dart';
 @freezed
 class SendAssetFormData with _$SendAssetFormData {
   const factory SendAssetFormData({
-    required DateTime arrivalDateTime,
+    required int arrivalDateTime,
     required String receiverAddress,
     required CryptoAssetToSendData assetData,
     WalletViewData? walletView,

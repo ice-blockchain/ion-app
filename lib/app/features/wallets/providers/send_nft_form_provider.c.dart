@@ -26,7 +26,7 @@ class SendNftFormController extends _$SendNftFormController {
     });
 
     return SendNftFormData(
-      arrivalDateTime: DateTime.now(),
+      arrivalDateTime: DateTime.now().microsecondsSinceEpoch,
       receiverAddress: '',
       nft: null,
     );

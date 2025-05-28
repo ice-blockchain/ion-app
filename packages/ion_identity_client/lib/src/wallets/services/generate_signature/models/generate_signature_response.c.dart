@@ -15,8 +15,8 @@ class GenerateSignatureResponse with _$GenerateSignatureResponse {
     required Map<String, dynamic> requestBody,
     required String status,
     required Map<String, dynamic> signature,
-    required DateTime dateRequested,
-    required DateTime dateSigned,
+    required int dateRequested,
+    required int dateSigned,
   }) = _GenerateSignatureResponse;
 
   factory GenerateSignatureResponse.fromJson(Map<String, dynamic> json) =>

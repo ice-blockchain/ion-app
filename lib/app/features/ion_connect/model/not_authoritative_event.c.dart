@@ -18,7 +18,7 @@ class NotAuthoritativeEvent with _$NotAuthoritativeEvent, IonConnectEntity, Immu
     required String pubkey,
     required String masterPubkey,
     required String signature,
-    required DateTime createdAt,
+    required int createdAt,
     required NotAuthoritativeEventData data,
   }) = _NotAuthoritativeEvent;
 
@@ -60,7 +60,7 @@ class NotAuthoritativeEventData with _$NotAuthoritativeEventData implements Even
   FutureOr<EventMessage> toEventMessage(
     EventSigner signer, {
     List<List<String>> tags = const [],
-    DateTime? createdAt,
+    int? createdAt,
   }) {
     return EventMessage.fromData(
       signer: signer,

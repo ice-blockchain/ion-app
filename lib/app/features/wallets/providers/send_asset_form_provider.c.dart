@@ -26,7 +26,7 @@ class SendAssetFormController extends _$SendAssetFormController {
   @override
   SendAssetFormData build() {
     return SendAssetFormData(
-      arrivalDateTime: DateTime.now(),
+      arrivalDateTime: DateTime.now().microsecondsSinceEpoch,
       receiverAddress: '',
       assetData: const CryptoAssetToSendData.notInitialized(),
     );
