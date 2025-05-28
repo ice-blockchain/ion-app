@@ -22,30 +22,37 @@ class ConversationMessages extends _$ConversationMessages {
 
     final stream = ref.watch(conversationMessageDaoProvider).getMessages(conversationId);
 
-    final subscription = stream.listen((event) async {
-      if (type == ConversationType.community) return;
-
-      final lastMessage = event.entries.lastOrNull?.value.first;
-
-      if (lastMessage == null) return;
-
-      // There is no other options rather send read status for the last message
-
-      if (lastMessage.masterPubkey == currentUserMasterPubkey) return;
-      final entity = ReplaceablePrivateDirectMessageEntity.fromEventMessage(lastMessage);
-      final status = await ref.watch(conversationMessageDataDaoProvider).checkMessageStatus(
-            eventReference: entity.toEventReference(),
-            masterPubkey: currentUserMasterPubkey,
-          );
-      if (status == MessageDeliveryStatus.read) return;
-      await (await ref.watch(sendE2eeMessageStatusServiceProvider.future)).sendMessageStatus(
-        messageEventMessage: lastMessage,
-        status: MessageDeliveryStatus.read,
-      );
+    final subscription = stream.listen((event) {
+      final messages = event.entries.map((e) => e.value).expand((e) => e).toList();
+      _sendReadStatus(messages);
     });
 
     ref.onDispose(subscription.cancel);
 
     return stream;
+  }
+
+  Future<void> _sendReadStatus(List<EventMessage> messages) async {
+    final currentUserMasterPubkey = ref.watch(currentPubkeySelectorProvider);
+
+    if (currentUserMasterPubkey == null) {
+      return;
+    }
+
+    final lastMessageFromOther =
+        messages.where((e) => e.masterPubkey != currentUserMasterPubkey).firstOrNull;
+
+    if (lastMessageFromOther == null) return;
+
+    final entity = ReplaceablePrivateDirectMessageEntity.fromEventMessage(lastMessageFromOther);
+    final status = await ref.watch(conversationMessageDataDaoProvider).checkMessageStatus(
+          eventReference: entity.toEventReference(),
+          masterPubkey: currentUserMasterPubkey,
+        );
+    if (status == MessageDeliveryStatus.read) return;
+    await (await ref.watch(sendE2eeMessageStatusServiceProvider.future)).sendMessageStatus(
+      messageEventMessage: lastMessageFromOther,
+      status: MessageDeliveryStatus.read,
+    );
   }
 }
