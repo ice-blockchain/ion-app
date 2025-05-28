@@ -5,11 +5,15 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/components/inputs/hooks/use_node_focused.dart';
 import 'package:ion/app/extensions/extensions.dart';
-import 'package:ion/app/features/core/providers/poll/poll_answers_provider.c.dart';
+import 'package:ion/app/features/feed/polls/providers/poll_draft_provider.c.dart';
 import 'package:ion/generated/assets.gen.dart';
 
 class PollAnswerItem extends HookConsumerWidget {
-  const PollAnswerItem({required this.index, this.isLast = false, super.key});
+  const PollAnswerItem({
+    required this.index,
+    this.isLast = false,
+    super.key,
+  });
 
   final int index;
   final bool isLast;
@@ -23,7 +27,7 @@ class PollAnswerItem extends HookConsumerWidget {
     final focusNode = useFocusNode();
     final hasFocus = useNodeFocused(focusNode);
 
-    final answer = ref.watch(pollAnswersNotifierProvider)[index];
+    final answer = ref.watch(pollDraftNotifierProvider).answers[index];
     final textController = useTextEditingController(text: answer.text);
 
     const characterLimit = 25;
@@ -62,7 +66,7 @@ class PollAnswerItem extends HookConsumerWidget {
                         controller: textController,
                         focusNode: focusNode,
                         onChanged: (value) {
-                          ref.read(pollAnswersNotifierProvider.notifier).updateAnswer(index, value);
+                          ref.read(pollDraftNotifierProvider.notifier).updateAnswer(index, value);
                         },
                         style: textThemes.body2,
                         decoration: InputDecoration(
@@ -97,7 +101,7 @@ class PollAnswerItem extends HookConsumerWidget {
           child: isLast
               ? GestureDetector(
                   onTap: () {
-                    ref.read(pollAnswersNotifierProvider.notifier).removeAnswer(index);
+                    ref.read(pollDraftNotifierProvider.notifier).removeAnswer(index);
                   },
                   child: Assets.svg.iconBlockDelete
                       .icon(size: 20.0.s, color: context.theme.appColors.quaternaryText),

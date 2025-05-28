@@ -6,11 +6,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_quill/flutter_quill.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:ion/app/features/core/providers/poll/poll_answers_provider.c.dart';
-import 'package:ion/app/features/core/providers/poll/poll_title_notifier.c.dart';
 import 'package:ion/app/features/feed/create_post/model/create_post_option.dart';
 import 'package:ion/app/features/feed/create_post/providers/create_post_notifier.c.dart';
 import 'package:ion/app/features/feed/create_post/views/hooks/use_can_submit_post.dart';
+import 'package:ion/app/features/feed/polls/providers/poll_draft_provider.c.dart';
 import 'package:ion/app/features/feed/providers/selected_who_can_reply_option_provider.c.dart';
 import 'package:ion/app/features/feed/views/components/toolbar_buttons/toolbar_send_button.dart';
 import 'package:ion/app/features/ion_connect/model/event_reference.c.dart';
@@ -55,17 +54,16 @@ class PostSubmitButton extends HookConsumerWidget {
       modifiedEntity =
           ref.read(ionConnectEntityProvider(eventReference: modifiedEvent!)).valueOrNull;
     }
-    final pollTitle = ref.watch(pollTitleNotifierProvider);
-    final pollAnswers = ref.watch(pollAnswersNotifierProvider);
+    final draftPoll = ref.watch(pollDraftNotifierProvider);
     final whoCanReply = ref.watch(selectedWhoCanReplyOptionProvider);
 
     final isSubmitButtonEnabled = useCanSubmitPost(
-      textEditorController,
-      mediaFiles,
-      mediaAttachments,
-      pollTitle,
-      pollAnswers,
-      modifiedEntity,
+      textEditorController: textEditorController,
+      mediaFiles: mediaFiles,
+      mediaAttachments: mediaAttachments,
+      hasPoll: draftPoll.added,
+      pollAnswers: draftPoll.answers,
+      modifiedEvent: modifiedEntity,
     );
 
     return ToolbarSendButton(

@@ -12,6 +12,8 @@ import 'package:ion/app/extensions/delta.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/feed/data/models/entities/modifiable_post_data.c.dart';
 import 'package:ion/app/features/feed/data/models/entities/post_data.c.dart';
+import 'package:ion/app/features/feed/polls/models/poll_data.c.dart';
+import 'package:ion/app/features/feed/polls/view/components/post_poll.dart';
 import 'package:ion/app/features/feed/views/components/post/components/post_body/components/post_media/post_media.dart';
 import 'package:ion/app/features/feed/views/components/url_preview_content/url_preview_content.dart';
 import 'package:ion/app/features/ion_connect/model/entity_data_with_media_content.dart';
@@ -84,6 +86,9 @@ class PostBody extends HookConsumerWidget {
       [content, urlPreviewVisible.value],
     );
 
+    // Extract poll data from post
+    final pollData = _getPollData(postData);
+
     return LayoutBuilder(
       builder: (context, constraints) {
         final maxHeight = maxLines == null
@@ -135,6 +140,19 @@ class PostBody extends HookConsumerWidget {
                 ],
               ),
             ),
+
+            // Poll component
+            if (pollData != null) ...[
+              SizedBox(height: 10.0.s),
+              Padding(
+                padding: EdgeInsets.symmetric(horizontal: sidePadding ?? 16.0.s),
+                child: PostPoll(
+                  pollData: pollData,
+                  postReference: entity.toEventReference(),
+                ),
+              ),
+            ],
+
             if (media.isNotEmpty)
               Padding(
                 padding: EdgeInsetsDirectional.only(top: 10.0.s),
@@ -156,6 +174,13 @@ class PostBody extends HookConsumerWidget {
         );
       },
     );
+  }
+
+  PollData? _getPollData(dynamic postData) {
+    if (postData is ModifiablePostData) {
+      return postData.poll;
+    }
+    return null;
   }
 
   double? _calculateMaxHeight(

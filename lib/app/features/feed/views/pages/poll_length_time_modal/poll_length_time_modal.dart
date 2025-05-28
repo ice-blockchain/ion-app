@@ -62,6 +62,9 @@ class PollLengthTimeModal extends HookConsumerWidget {
                 onApply(tempSelectedDay.value, tempSelectedHour.value);
                 context.pop();
               },
+              type: tempSelectedDay.value == 0 && tempSelectedHour.value == 0
+                  ? ButtonType.disabled
+                  : ButtonType.primary,
               mainAxisSize: MainAxisSize.max,
               label: Text(
                 context.i18n.button_apply,

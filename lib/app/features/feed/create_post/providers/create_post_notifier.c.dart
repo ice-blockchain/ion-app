@@ -5,6 +5,7 @@ import 'dart:convert';
 
 import 'package:flutter_quill/flutter_quill.dart';
 import 'package:flutter_quill/quill_delta.dart';
+import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/components/text_editor/utils/build_empty_delta.dart';
 import 'package:ion/app/components/text_editor/utils/extract_tags.dart';
@@ -17,6 +18,8 @@ import 'package:ion/app/features/feed/data/models/entities/article_data.c.dart';
 import 'package:ion/app/features/feed/data/models/entities/modifiable_post_data.c.dart';
 import 'package:ion/app/features/feed/data/models/entities/post_data.c.dart';
 import 'package:ion/app/features/feed/data/models/who_can_reply_settings_option.c.dart';
+import 'package:ion/app/features/feed/polls/models/poll_data.c.dart';
+import 'package:ion/app/features/feed/polls/providers/poll_draft_provider.c.dart';
 import 'package:ion/app/features/feed/providers/counters/replies_count_provider.c.dart';
 import 'package:ion/app/features/feed/providers/counters/reposts_count_provider.c.dart';
 import 'package:ion/app/features/ion_connect/model/action_source.c.dart';
@@ -71,6 +74,7 @@ class CreatePostNotifier extends _$CreatePostNotifier {
     EventReference? quotedEvent,
     List<MediaFile>? mediaFiles,
     String? communityId,
+    PollData? poll,
   }) async {
     state = const AsyncValue.loading();
 
@@ -79,6 +83,9 @@ class CreatePostNotifier extends _$CreatePostNotifier {
       final parentEntity = parentEvent != null ? await _getParentEntity(parentEvent) : null;
       final (:files, :media) = await _uploadMediaFiles(mediaFiles: mediaFiles);
       final mentions = _buildMentions(postContent);
+
+      final pollDraft = ref.read(pollDraftNotifierProvider);
+      final pollData = poll ?? (pollDraft.added ? _createPollDataFromDraft(pollDraft) : null);
 
       final postData = ModifiablePostData(
         textContent: '',
@@ -97,6 +104,7 @@ class CreatePostNotifier extends _$CreatePostNotifier {
           content: postContent,
           media: media.values.toList(),
         ),
+        poll: pollData,
       );
 
       final post = await _publishPost(
@@ -208,6 +216,7 @@ class CreatePostNotifier extends _$CreatePostNotifier {
         settings: null,
         expiration: null,
         richText: null,
+        poll: null,
       );
 
       final contentDelta = parseAndConvertDelta(
@@ -525,5 +534,25 @@ class CreatePostNotifier extends _$CreatePostNotifier {
       CreatePostOption.story => FileAlt.story,
       _ => FileAlt.post
     };
+  }
+
+  PollData _createPollDataFromDraft(PollDraft pollDraft) {
+    final pollOptions = pollDraft.answers
+        .where((answer) => answer.text.trim().isNotEmpty)
+        .map((answer) => answer.text.trim())
+        .toList();
+
+    // Convert duration to Unix timestamp (seconds since epoch)
+    final ttlSeconds = pollDraft.ttlSeconds;
+    final expiryTimestamp = ttlSeconds > 0
+        ? (DateTime.now().millisecondsSinceEpoch / 1000).floor() + ttlSeconds
+        : 0; // 0 means never expires
+
+    return PollData(
+      type: 'single',
+      ttl: expiryTimestamp,
+      title: '',
+      options: pollOptions,
+    );
   }
 }

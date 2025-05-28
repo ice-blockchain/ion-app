@@ -7,6 +7,7 @@ import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:ion/app/exceptions/exceptions.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/chat/community/models/entities/tags/conversation_identifier.c.dart';
+import 'package:ion/app/features/feed/polls/models/poll_data.c.dart';
 import 'package:ion/app/features/ion_connect/ion_connect.dart';
 import 'package:ion/app/features/ion_connect/model/entity_data_with_media_content.dart';
 import 'package:ion/app/features/ion_connect/model/entity_data_with_parent.dart';
@@ -100,6 +101,7 @@ class ModifiablePostData
     List<EventSetting>? settings,
     String? communityId,
     RichText? richText,
+    PollData? poll,
   }) = _ModifiablePostData;
 
   factory ModifiablePostData.fromEventMessage(EventMessage eventMessage) {
@@ -128,6 +130,7 @@ class ModifiablePostData
           tags[ConversationIdentifier.tagName]?.map(ConversationIdentifier.fromTag).first.value,
       richText:
           tags[RichText.tagName] != null ? RichText.fromTag(tags[RichText.tagName]!.first) : null,
+      poll: tags['poll']?.firstOrNull != null ? PollData.fromTag(tags['poll']!.first) : null,
     );
   }
 
@@ -161,6 +164,7 @@ class ModifiablePostData
         if (settings != null) ...settings!.map((setting) => setting.toTag()),
         if (communityId != null) ConversationIdentifier(value: communityId!).toTag(),
         if (richText != null) richText!.toTag(),
+        if (poll != null) poll!.toTag(),
       ],
     );
   }

@@ -31,9 +31,11 @@ class SearchExtensions {
       GenericRepostsCountSearchExtension(forKind: forKind),
       QuotesCountSearchExtension(forKind: forKind),
       ReactionsCountSearchExtension(forKind: forKind),
+      PollVotesCountSearchExtension(forKind: forKind),
       ReplySampleSearchExtension(currentPubkey: currentPubkey, forKind: forKind),
       GenericRepostSampleSearchExtension(currentPubkey: currentPubkey, forKind: forKind),
       ReactionsSearchExtension(currentPubkey: currentPubkey, forKind: forKind),
+      PollVotesSearchExtension(currentPubkey: currentPubkey, forKind: forKind),
       ...extensions,
     ]);
   }
@@ -119,6 +121,17 @@ class ReactionsCountSearchExtension extends IncludeSearchExtension {
   final String query = 'kind6400+kind7+group+content';
 }
 
+/// For every kind [forKind] that the subscription finds also include the count of poll votes that it has
+class PollVotesCountSearchExtension extends IncludeSearchExtension {
+  PollVotesCountSearchExtension({this.forKind = ModifiablePostEntity.kind});
+
+  @override
+  final int forKind;
+
+  @override
+  final String query = 'kind6400+kind1754+group+content';
+}
+
 /// For every kind [forKind] that the subscription finds also include 1 root/not-root replay
 /// that the logged in user made to it — if any
 class ReplySampleSearchExtension extends IncludeSearchExtension {
@@ -151,6 +164,20 @@ class ReactionsSearchExtension extends IncludeSearchExtension {
 
   @override
   String get query => '$currentPubkey@kind7';
+}
+
+/// For every kind [forKind] that the subscription finds also include 1 poll vote event
+/// that the logged in user made for it — if any
+class PollVotesSearchExtension extends IncludeSearchExtension {
+  PollVotesSearchExtension({required this.currentPubkey, this.forKind = ModifiablePostEntity.kind});
+
+  final String currentPubkey;
+
+  @override
+  final int forKind;
+
+  @override
+  String get query => '$currentPubkey@kind1754';
 }
 
 /// For every kind [forKind] that the subscription finds also include 1 quote post

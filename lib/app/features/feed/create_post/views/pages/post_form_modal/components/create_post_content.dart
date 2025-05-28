@@ -15,6 +15,8 @@ import 'package:ion/app/features/feed/create_post/views/pages/post_form_modal/co
 import 'package:ion/app/features/feed/create_post/views/pages/post_form_modal/components/quoted_entity.dart';
 import 'package:ion/app/features/feed/create_post/views/pages/post_form_modal/components/video_preview_cover.dart';
 import 'package:ion/app/features/feed/create_post/views/pages/post_form_modal/hooks/use_url_links.dart';
+import 'package:ion/app/features/feed/polls/providers/poll_draft_provider.c.dart';
+import 'package:ion/app/features/feed/polls/view/components/poll.dart';
 import 'package:ion/app/features/feed/views/components/url_preview_content/url_preview_content.dart';
 import 'package:ion/app/features/ion_connect/model/event_reference.c.dart';
 import 'package:ion/app/services/media_service/media_service.c.dart';
@@ -120,6 +122,8 @@ class _TextInputSection extends HookConsumerWidget {
     final mediaFiles = attachedMediaNotifier.value;
     final mediaLinks = attachedMediaLinksNotifier.value.values.toList();
     final bottomInset = MediaQuery.of(context).viewInsets.bottom;
+    final draftPoll = ref.watch(pollDraftNotifierProvider);
+
     useEffect(
       () {
         if (bottomInset > 0 && textEditorKey.currentContext != null) {
@@ -170,6 +174,17 @@ class _TextInputSection extends HookConsumerWidget {
                     placeholder: createOption.getPlaceholder(context),
                     key: textEditorKey,
                   ),
+                  if (draftPoll.added) ...[
+                    SizedBox(height: 12.0.s),
+                    Padding(
+                      padding: EdgeInsetsDirectional.only(end: 23.0.s),
+                      child: Poll(
+                        onRemove: () {
+                          ref.read(pollDraftNotifierProvider.notifier).reset();
+                        },
+                      ),
+                    ),
+                  ],
                   if (mediaFiles.isNotEmpty || mediaLinks.isNotEmpty) ...[
                     SizedBox(height: 12.0.s),
                     AttachedMediaPreview(

@@ -16,7 +16,7 @@ void main() {
         currentPubkey: testPubkey,
       );
 
-      expect(extensions.extensions.length, 7);
+      expect(extensions.extensions.length, 9);
       expect(extensions.toString().contains('test_pubkey'), isTrue);
       expect(extensions.toString().contains('kind6400'), isTrue);
     });
@@ -28,7 +28,7 @@ void main() {
         forKind: ArticleEntity.kind,
       );
 
-      expect(extensions.extensions.length, 7);
+      expect(extensions.extensions.length, 9);
       expect(extensions.toString().contains('kind30023'), isTrue);
     });
   });
@@ -79,6 +79,14 @@ void main() {
       final extension = ReactionsCountSearchExtension();
       expect(extension.toString(), 'include:dependencies:kind30175>kind6400+kind7+group+content');
     });
+
+    test('PollVotesCountSearchExtension formats query correctly', () {
+      final extension = PollVotesCountSearchExtension();
+      expect(
+        extension.toString(),
+        'include:dependencies:kind30175>kind6400+kind1754+group+content',
+      );
+    });
   });
 
   group('Sample Search Extensions', () {
@@ -103,6 +111,13 @@ void main() {
         currentPubkey: testPubkey,
       );
       expect(extension.toString(), 'include:dependencies:kind30175>test_pubkey@kind7');
+    });
+
+    test('PollVotesSearchExtension formats query correctly', () {
+      final extension = PollVotesSearchExtension(
+        currentPubkey: testPubkey,
+      );
+      expect(extension.toString(), 'include:dependencies:kind30175>test_pubkey@kind1754');
     });
 
     test('QuoteSampleSearchExtension formats query correctly', () {

@@ -4,12 +4,11 @@ import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:intl/intl.dart';
 import 'package:ion/app/extensions/extensions.dart';
-import 'package:ion/app/features/core/providers/poll/poll_length_time_provider.c.dart';
-import 'package:ion/app/features/core/views/components/poll/poll_add_answer_button.dart';
-import 'package:ion/app/features/core/views/components/poll/poll_answers_list_view.dart';
-import 'package:ion/app/features/core/views/components/poll/poll_close_button.dart';
-import 'package:ion/app/features/core/views/components/poll/poll_length_button.dart';
-import 'package:ion/app/features/core/views/components/poll/poll_title.dart';
+import 'package:ion/app/features/feed/polls/providers/poll_draft_provider.c.dart';
+import 'package:ion/app/features/feed/polls/view/components/poll_add_answer_button.dart';
+import 'package:ion/app/features/feed/polls/view/components/poll_answers_list_view.dart';
+import 'package:ion/app/features/feed/polls/view/components/poll_close_button.dart';
+import 'package:ion/app/features/feed/polls/view/components/poll_length_button.dart';
 import 'package:ion/app/features/feed/views/pages/poll_length_time_modal/poll_length_time_modal.dart';
 import 'package:ion/app/router/utils/show_simple_bottom_sheet.dart';
 
@@ -17,19 +16,16 @@ class Poll extends ConsumerWidget {
   const Poll({
     super.key,
     this.onRemove,
-    this.autoFocusToQuestion = false,
   });
 
   final VoidCallback? onRemove;
-  final bool autoFocusToQuestion;
 
   @override
   Widget build(
     BuildContext context,
     WidgetRef ref,
   ) {
-    final selectedDay = ref.watch(selectedDayNotifierProvider);
-    final selectedHour = ref.watch(selectedHourNotifierProvider);
+    final draftPoll = ref.watch(pollDraftNotifierProvider);
 
     return Stack(
       clipBehavior: Clip.none,
@@ -45,41 +41,44 @@ class Poll extends ConsumerWidget {
                 ),
               ),
               child: Padding(
-                padding: EdgeInsets.symmetric(horizontal: 10.0.s),
-                child: Column(
+                padding: EdgeInsetsDirectional.only(
+                  top: 10.0.s,
+                  start: 10.0.s,
+                  end: 10.0.s,
+                ),
+                child: const Column(
                   children: [
-                    PollTitle(
-                      autoFocus: autoFocusToQuestion,
-                    ),
-                    const PollAnswersListView(),
-                    const PollAddAnswerButton(),
+                    PollAnswersListView(),
+                    PollAddAnswerButton(),
                   ],
                 ),
               ),
             ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                PollLengthButton(
-                  onPollLengthPress: () {
-                    _showPollLengthTimeModal(
-                      context,
-                      selectedDay,
-                      selectedHour,
-                      (newDay, newHour) {
-                        ref.read(selectedDayNotifierProvider.notifier).day = newDay;
-                        ref.read(selectedHourNotifierProvider.notifier).hour = newHour;
-                      },
-                    );
-                  },
-                ),
-                Text(
-                  getFormattedPollLength(context, selectedDay, selectedHour),
-                  style: context.theme.appTextThemes.caption.copyWith(
-                    color: context.theme.appColors.primaryAccent,
+            GestureDetector(
+              behavior: HitTestBehavior.opaque,
+              onTap: () => _handlePollLengthTap(
+                ref,
+                draftPoll.lengthDays,
+                draftPoll.lengthHours,
+              ),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  PollLengthButton(
+                    onPollLengthPress: () => _handlePollLengthTap(
+                      ref,
+                      draftPoll.lengthDays,
+                      draftPoll.lengthHours,
+                    ),
                   ),
-                ),
-              ],
+                  Text(
+                    getFormattedPollLength(context, draftPoll.lengthDays, draftPoll.lengthHours),
+                    style: context.theme.appTextThemes.caption.copyWith(
+                      color: context.theme.appColors.primaryAccent,
+                    ),
+                  ),
+                ],
+              ),
             ),
           ],
         ),
@@ -88,6 +87,21 @@ class Poll extends ConsumerWidget {
             onClosePress: onRemove!,
           ),
       ],
+    );
+  }
+
+  void _handlePollLengthTap(WidgetRef ref, int lengthDays, int lengthHours) {
+    final notifier = ref.read(pollDraftNotifierProvider.notifier);
+
+    _showPollLengthTimeModal(
+      ref.context,
+      lengthDays,
+      lengthHours,
+      (newDay, newHour) {
+        notifier
+          ..setLengthDays(newDay)
+          ..setLengthHours(newHour);
+      },
     );
   }
 

@@ -11,6 +11,7 @@ import 'package:ion/app/features/feed/data/models/entities/event_count_request_d
 import 'package:ion/app/features/feed/data/models/entities/generic_repost.c.dart';
 import 'package:ion/app/features/feed/data/models/entities/reaction_data.c.dart';
 import 'package:ion/app/features/feed/data/models/entities/repost_data.c.dart';
+import 'package:ion/app/features/feed/polls/models/poll_vote.c.dart';
 import 'package:ion/app/features/ion_connect/ion_connect.dart';
 import 'package:ion/app/features/ion_connect/model/event_reference.c.dart';
 import 'package:ion/app/features/ion_connect/model/ion_connect_entity.dart';
@@ -25,7 +26,8 @@ enum EventCountResultType {
   quotes,
   followers,
   reactions,
-  members;
+  members,
+  pollVotes,
 }
 
 @Freezed(equal: false)
@@ -53,14 +55,16 @@ class EventCountResultEntity
 
     final data = EventCountResultData.fromEventMessage(eventMessage);
     final type = data.getType();
+    final extractedKey = key ?? data.getKey(type);
+
     final summary = EventCountResultSummary(
-      key: key ?? data.getKey(type),
+      key: extractedKey,
       type: type,
       content: data.content,
       requestEventId: data.request.id,
     );
 
-    return EventCountResultEntity(
+    final entity = EventCountResultEntity(
       id: eventMessage.id,
       pubkey: eventMessage.pubkey,
       masterPubkey: eventMessage.masterPubkey,
@@ -68,6 +72,8 @@ class EventCountResultEntity
       createdAt: eventMessage.createdAt,
       data: summary,
     );
+
+    return entity;
   }
 
   @override
@@ -138,6 +144,8 @@ class EventCountResultData with _$EventCountResultData {
       return EventCountResultType.reactions;
     } else if (filter.kinds != null && filter.kinds!.contains(FollowListEntity.kind)) {
       return EventCountResultType.followers;
+    } else if (filter.kinds != null && filter.kinds!.contains(PollVoteEntity.kind)) {
+      return EventCountResultType.pollVotes;
     } else if (filter.tags != null &&
         (filter.tags!.containsKey('#a') || filter.tags!.containsKey('#e'))) {
       return EventCountResultType.replies;
@@ -152,6 +160,7 @@ class EventCountResultData with _$EventCountResultData {
 
   String getKey(EventCountResultType type) {
     final tags = request.data.filters.first.tags;
+
     if (tags == null || tags.isEmpty) {
       throw UnknownEventCountResultKey(eventReference);
     }
@@ -166,6 +175,8 @@ class EventCountResultData with _$EventCountResultData {
         qTag != null && qTag.isNotEmpty ? (qTag.first! as List<dynamic>).first : null,
       EventCountResultType.followers =>
         pTag != null && pTag.isNotEmpty ? (pTag.first! as List<dynamic>).first : null,
+      EventCountResultType.pollVotes when aTag != null && aTag.isNotEmpty =>
+        aTag.first is List ? (aTag.first! as List<dynamic>).first : aTag.first!,
       _ when eTag != null => eTag.isNotEmpty ? (eTag.first! as List<dynamic>).first : null,
       _ when aTag != null => aTag.isNotEmpty ? (aTag.first! as List<dynamic>).first : null,
       _ => null

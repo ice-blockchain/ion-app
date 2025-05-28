@@ -14,7 +14,7 @@ class PollCloseButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return PositionedDirectional(
       top: -10.0.s,
-      end: 13.0.s,
+      end: -10.0.s,
       child: Button.icon(
         size: 24.0.s,
         type: ButtonType.outlined,
