@@ -65,13 +65,3 @@ List<UserStories> filteredStoriesByPubkey(Ref ref, String pubkey) {
 
   return stories.sublist(userIndex);
 }
-
-@riverpod
-UserStories? userStoriesByPubkey(Ref ref, String pubkey) {
-  final stories = ref.watch(storiesProvider) ?? [];
-  final userIndex = stories.indexWhere((userStories) => userStories.pubkey == pubkey);
-
-  if (userIndex == -1) return null;
-
-  return stories[userIndex];
-}
