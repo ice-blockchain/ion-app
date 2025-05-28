@@ -9,7 +9,6 @@ import 'package:ion/app/features/core/views/components/poll/poll_add_answer_butt
 import 'package:ion/app/features/core/views/components/poll/poll_answers_list_view.dart';
 import 'package:ion/app/features/core/views/components/poll/poll_close_button.dart';
 import 'package:ion/app/features/core/views/components/poll/poll_length_button.dart';
-import 'package:ion/app/features/core/views/components/poll/poll_title.dart';
 import 'package:ion/app/features/feed/views/pages/poll_length_time_modal/poll_length_time_modal.dart';
 import 'package:ion/app/router/utils/show_simple_bottom_sheet.dart';
 
@@ -17,11 +16,9 @@ class Poll extends ConsumerWidget {
   const Poll({
     super.key,
     this.onRemove,
-    this.autoFocusToQuestion = false,
   });
 
   final VoidCallback? onRemove;
-  final bool autoFocusToQuestion;
 
   @override
   Widget build(
@@ -45,14 +42,11 @@ class Poll extends ConsumerWidget {
                 ),
               ),
               child: Padding(
-                padding: EdgeInsets.symmetric(horizontal: 10.0.s),
-                child: Column(
+                padding: EdgeInsets.all(10.0.s),
+                child: const Column(
                   children: [
-                    PollTitle(
-                      autoFocus: autoFocusToQuestion,
-                    ),
-                    const PollAnswersListView(),
-                    const PollAddAnswerButton(),
+                    PollAnswersListView(),
+                    PollAddAnswerButton(),
                   ],
                 ),
               ),
