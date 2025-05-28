@@ -71,8 +71,10 @@ class Env extends _$Env {
           TargetPlatform.iOS => const String.fromEnvironment('FIREBASE_CONFIG_IOS') as T,
           _ => throw UnsupportedError('Unsupported platform'),
         },
-      EnvVariable.RELAY_PING_INTERVAL_SECONDS =>
-        const int.fromEnvironment('RELAY_PING_INTERVAL_SECONDS') as T,
+      EnvVariable.RELAY_PING_INTERVAL_SECONDS => const int.fromEnvironment(
+          'RELAY_PING_INTERVAL_SECONDS',
+          defaultValue: 3600,
+        ) as T,
     };
   }
 }
