@@ -206,9 +206,12 @@ class MediaService {
   }
 
   Future<MediaFile?> saveImageToGallery(File imageFile) async {
-    final asset = await PhotoManager.editor.saveImageWithPath(
-      imageFile.path,
-      title: 'Camera_${DateTime.now().millisecondsSinceEpoch}.jpg',
+    final bytes = await imageFile.readAsBytes();
+
+    final asset = await PhotoManager.editor.saveImage(
+      bytes,
+      filename:
+          'Camera_${DateTime.now().millisecondsSinceEpoch.toString() + p.extension(imageFile.path)}',
     );
     final file = await asset.file;
 
@@ -225,13 +228,18 @@ class MediaService {
   }
 
   Future<MediaFile?> saveVideoToGallery(File videoFile) async {
+    final bytes = await videoFile.readAsBytes();
+
+    final tempDir = Directory.systemTemp;
+    final tempPath =
+        '${tempDir.path}/video_${DateTime.now().millisecondsSinceEpoch.toString() + p.extension(videoFile.path)}';
+    final tempFile = await File(tempPath).writeAsBytes(bytes);
+
     final asset = await PhotoManager.editor.saveVideo(
-      videoFile,
+      tempFile,
       title: 'Camera_${DateTime.now().millisecondsSinceEpoch}',
     );
-
     final file = await asset.file;
-
     if (file == null) return null;
 
     final mimeType = await asset.mimeTypeAsync;
