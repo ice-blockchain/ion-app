@@ -72,7 +72,7 @@ class StoryReply extends _$StoryReply {
         content: storyAsContent,
         kind: GenericRepostEntity.kind,
         publicKey: eventSigner.publicKey,
-        createdAt: DateTime.now(),
+        createdAt: DateTime.now().microsecondsSinceEpoch,
       );
 
       final kind16Rumor = EventMessage(

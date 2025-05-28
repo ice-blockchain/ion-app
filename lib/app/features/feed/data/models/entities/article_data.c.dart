@@ -41,7 +41,7 @@ class ArticleEntity
     required String pubkey,
     required String masterPubkey,
     required String signature,
-    required DateTime createdAt,
+    required int createdAt,
     required ArticleData data,
   }) = _ArticleEntity;
 
@@ -129,7 +129,7 @@ class ArticleData
     String? title,
     String? image,
     String? summary,
-    DateTime? publishedAt,
+    int? publishedAt,
     List<RelatedHashtag>? relatedHashtags,
     List<RelatedPubkey>? relatedPubkeys,
     List<EventSetting>? settings,
@@ -143,7 +143,7 @@ class ArticleData
       title: title,
       image: image,
       summary: summary,
-      publishedAt: EntityPublishedAt(value: publishedAt ?? DateTime.now()),
+      publishedAt: EntityPublishedAt(value: publishedAt ?? DateTime.now().microsecondsSinceEpoch),
       replaceableEventId: ReplaceableEventIdentifier.generate(),
       relatedHashtags: relatedHashtags,
       relatedPubkeys: relatedPubkeys,
@@ -161,7 +161,7 @@ class ArticleData
   FutureOr<EventMessage> toEventMessage(
     EventSigner signer, {
     List<List<String>> tags = const [],
-    DateTime? createdAt,
+    int? createdAt,
   }) {
     return EventMessage.fromData(
       signer: signer,

@@ -23,7 +23,7 @@ class GenericRepostEntity
     required String pubkey,
     required String masterPubkey,
     required String signature,
-    required DateTime createdAt,
+    required int createdAt,
     required GenericRepostData data,
   }) = _GenericRepostEntity;
 
@@ -89,7 +89,7 @@ class GenericRepostData with _$GenericRepostData implements EventSerializable {
   FutureOr<EventMessage> toEventMessage(
     EventSigner signer, {
     List<List<String>> tags = const [],
-    DateTime? createdAt,
+    int? createdAt,
   }) {
     return EventMessage.fromData(
       signer: signer,

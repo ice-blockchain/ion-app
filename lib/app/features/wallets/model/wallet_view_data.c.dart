@@ -17,8 +17,8 @@ class WalletViewData with _$WalletViewData {
     required Set<String> symbolGroups,
     required List<NftData> nfts,
     required double usdBalance,
-    required DateTime createdAt,
-    required DateTime updatedAt,
+    required int createdAt,
+    required int updatedAt,
     required bool isMainWalletView,
   }) = _WalletViewData;
 

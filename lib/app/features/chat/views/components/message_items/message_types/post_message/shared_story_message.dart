@@ -60,8 +60,9 @@ class SharedStoryMessage extends HookConsumerWidget {
 
     final storyExpired = useMemoized(
       () => switch (storyEntity) {
-        final ModifiablePostEntity post => post.data.expiration!.value.isBefore(DateTime.now()),
-        final PostEntity post => post.data.expiration!.value.isBefore(DateTime.now()),
+        final ModifiablePostEntity post =>
+          post.data.expiration!.value.toDateTime.isBefore(DateTime.now()),
+        final PostEntity post => post.data.expiration!.value.toDateTime.isBefore(DateTime.now()),
         _ => true,
       },
     );

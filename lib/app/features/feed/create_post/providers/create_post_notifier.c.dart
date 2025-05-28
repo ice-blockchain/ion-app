@@ -291,7 +291,7 @@ class CreatePostNotifier extends _$CreatePostNotifier {
   }
 
   EntityPublishedAt _buildEntityPublishedAt() {
-    return EntityPublishedAt(value: DateTime.now());
+    return EntityPublishedAt(value: DateTime.now().microsecondsSinceEpoch);
   }
 
   EntityEditingEndedAt _buildEditingEndedAt() {
@@ -303,11 +303,13 @@ class CreatePostNotifier extends _$CreatePostNotifier {
   EntityExpiration? _buildExpiration() {
     if (createOption == CreatePostOption.story) {
       return EntityExpiration(
-        value: DateTime.now().add(
-          Duration(
-            hours: ref.read(envProvider.notifier).get<int>(EnvVariable.STORY_EXPIRATION_HOURS),
-          ),
-        ),
+        value: DateTime.now()
+            .add(
+              Duration(
+                hours: ref.read(envProvider.notifier).get<int>(EnvVariable.STORY_EXPIRATION_HOURS),
+              ),
+            )
+            .microsecondsSinceEpoch,
       );
     }
     return null;

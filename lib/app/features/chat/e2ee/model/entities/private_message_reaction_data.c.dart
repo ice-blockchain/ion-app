@@ -22,7 +22,7 @@ class PrivateMessageReactionEntity
     required String id,
     required String pubkey,
     required String masterPubkey,
-    required DateTime createdAt,
+    required int createdAt,
     required PrivateMessageReactionEntityData data,
   }) = _PrivateMessageReactionEntity;
 
@@ -88,7 +88,7 @@ class PrivateMessageReactionEntityData
   FutureOr<EventMessage> toEventMessage(
     EventSigner signer, {
     List<List<String>> tags = const [],
-    DateTime? createdAt,
+    int? createdAt,
   }) {
     return EventMessage.fromData(
       signer: signer,

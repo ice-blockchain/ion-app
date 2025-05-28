@@ -22,7 +22,7 @@ class CommunityJoinEntity with _$CommunityJoinEntity, IonConnectEntity, Immutabl
     required String pubkey,
     required String masterPubkey,
     required String signature,
-    required DateTime createdAt,
+    required int createdAt,
     required CommunityJoinData data,
   }) = _CommunityJoinEntity;
 
@@ -49,7 +49,7 @@ class CommunityJoinData with _$CommunityJoinData implements EventSerializable {
     required String uuid,
     String? pubkey,
     String? auth,
-    DateTime? expiration,
+    int? expiration,
   }) = _CommunityJoinData;
 
   const CommunityJoinData._();
@@ -68,7 +68,7 @@ class CommunityJoinData with _$CommunityJoinData implements EventSerializable {
   @override
   FutureOr<EventMessage> toEventMessage(
     EventSigner eventSigner, {
-    DateTime? createdAt,
+    int? createdAt,
     List<List<String>> tags = const [],
   }) {
     return EventMessage.fromData(

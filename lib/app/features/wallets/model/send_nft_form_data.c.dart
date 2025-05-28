@@ -11,7 +11,7 @@ part 'send_nft_form_data.c.freezed.dart';
 @freezed
 class SendNftFormData with _$SendNftFormData {
   const factory SendNftFormData({
-    required DateTime arrivalDateTime,
+    required int arrivalDateTime,
     required String receiverAddress,
     required NftData? nft,
     WalletViewData? walletView,

@@ -12,7 +12,7 @@ class ConversationListItem with _$ConversationListItem {
   const factory ConversationListItem({
     required String conversationId,
     required ConversationType type,
-    required DateTime joinedAt,
+    required int joinedAt,
     required bool isArchived,
     EventMessage? latestMessage,
   }) = _ConversationListItem;

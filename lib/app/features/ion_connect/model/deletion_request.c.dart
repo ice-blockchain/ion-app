@@ -22,7 +22,7 @@ class DeletionRequestEntity with IonConnectEntity, ImmutableEntity, _$DeletionRe
     required String pubkey,
     required String masterPubkey,
     required String signature,
-    required DateTime createdAt,
+    required int createdAt,
     required DeletionRequest data,
   }) = _DeletionRequestEntity;
 
@@ -86,7 +86,7 @@ class DeletionRequest with _$DeletionRequest implements EventSerializable {
   FutureOr<EventMessage> toEventMessage(
     EventSigner signer, {
     List<List<String>> tags = const [],
-    DateTime? createdAt,
+    int? createdAt,
     String? masterPubkey,
   }) {
     return EventMessage.fromData(

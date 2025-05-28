@@ -101,7 +101,7 @@ class UserDelegationManager extends _$UserDelegationManager {
         ...delegation.delegates,
         UserDelegate(
           pubkey: pubkey,
-          time: DateTime.now(),
+          time: DateTime.now().microsecondsSinceEpoch,
           status: DelegationStatus.active,
         ),
       ],

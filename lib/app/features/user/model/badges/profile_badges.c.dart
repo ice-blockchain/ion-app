@@ -25,7 +25,7 @@ class ProfileBadgesEntity
     required String pubkey,
     required String masterPubkey,
     required String signature,
-    required DateTime createdAt,
+    required int createdAt,
     required ProfileBadgesData data,
   }) = _ProfileBadgesEntity;
 
@@ -90,7 +90,7 @@ class ProfileBadgesData
   @override
   FutureOr<EventMessage> toEventMessage(
     EventSigner signer, {
-    DateTime? createdAt,
+    int? createdAt,
     String content = '',
     List<List<String>> tags = const [],
   }) {

@@ -26,7 +26,7 @@ class PollMessage extends HookWidget {
   });
 
   final bool isMe;
-  final DateTime createdAt;
+  final int createdAt;
   final MessageAuthor? author;
   final EventMessage eventMessage;
   final bool isLastMessageFromAuthor;
@@ -40,7 +40,7 @@ class PollMessage extends HookWidget {
       return PollResultMessage(
         isMe: isMe,
         reactions: reactions,
-        createdAt: createdAt,
+        createdAt: createdAt.toDateTime,
         eventMessage: eventMessage,
       );
     }

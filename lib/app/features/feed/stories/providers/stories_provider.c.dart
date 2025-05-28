@@ -2,6 +2,7 @@
 
 import 'package:collection/collection.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/core/model/media_type.dart';
 import 'package:ion/app/features/feed/data/models/entities/modifiable_post_data.c.dart';
 import 'package:ion/app/features/feed/providers/feed_stories_data_source_provider.c.dart';
@@ -29,7 +30,7 @@ List<UserStories>? stories(Ref ref) {
         final mediaType = post.data.media.values.firstOrNull?.mediaType;
         return mediaType == MediaType.image || mediaType == MediaType.video;
       })
-      .sortedBy((post) => post.createdAt)
+      .sortedBy((post) => post.createdAt.toDateTime)
       .toList();
 
   final groupedStories = groupBy<ModifiablePostEntity, String>(

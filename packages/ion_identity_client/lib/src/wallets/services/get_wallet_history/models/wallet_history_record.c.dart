@@ -14,7 +14,7 @@ class WalletHistoryRecord with _$WalletHistoryRecord {
     required String kind,
     required String direction,
     required int blockNumber,
-    required DateTime timestamp,
+    required int timestamp,
     required String txHash,
     required String? externalHash,
     required String? index,
