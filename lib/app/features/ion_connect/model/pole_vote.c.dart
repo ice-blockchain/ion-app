@@ -1,0 +1,37 @@
+import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:ion/app/extensions/event_message.dart';
+import 'package:ion/app/features/feed/providers/poll/poll_vote_notifier.c.dart';
+import 'package:ion/app/features/ion_connect/ion_connect.dart';
+import 'package:ion/app/features/ion_connect/model/ion_connect_entity.dart';
+
+part 'pole_vote.c.freezed.dart';
+
+@Freezed(equal: false)
+class PollVoteEntity with _$PollVoteEntity, IonConnectEntity, ImmutableEntity {
+  const factory PollVoteEntity({
+    required String id,
+    required String pubkey,
+    required String masterPubkey,
+    required String signature,
+    required DateTime createdAt,
+    required PollVoteData data,
+  }) = _PollVoteEntity;
+
+  const PollVoteEntity._();
+
+  factory PollVoteEntity.fromEventMessage(EventMessage eventMessage) {
+    if (eventMessage.kind != kind) {
+      throw Exception('Incorrect event kind ${eventMessage.kind}, expected $kind');
+    }
+    return PollVoteEntity(
+      id: eventMessage.id,
+      pubkey: eventMessage.pubkey,
+      masterPubkey: eventMessage.masterPubkey,
+      signature: eventMessage.sig!,
+      createdAt: eventMessage.createdAt,
+      data: PollVoteData.fromEventMessage(eventMessage),
+    );
+  }
+
+  static const kind = 1754;
+}
