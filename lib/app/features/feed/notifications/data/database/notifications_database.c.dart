@@ -91,7 +91,7 @@ class NotificationsDatabase extends _$NotificationsDatabase {
   final String pubkey;
 
   @override
-  int get schemaVersion => 2;
+  int get schemaVersion => 3;
 
   @override
   MigrationStrategy get migration {
@@ -101,6 +101,34 @@ class NotificationsDatabase extends _$NotificationsDatabase {
           await Future.wait([
             m.createTable(schema.followersTable),
             m.createTable(schema.likesTable),
+          ]);
+        },
+        from2To3: (m, schema) async {
+          await Future.wait([
+            m.alterTable(
+              TableMigration(
+                schema.commentsTable,
+                columnTransformer: {
+                  schema.commentsTable.createdAt: schema.commentsTable.createdAt.cast<int>(),
+                },
+              ),
+            ),
+            m.alterTable(
+              TableMigration(
+                schema.followersTable,
+                columnTransformer: {
+                  schema.followersTable.createdAt: schema.followersTable.createdAt.cast<int>(),
+                },
+              ),
+            ),
+            m.alterTable(
+              TableMigration(
+                schema.likesTable,
+                columnTransformer: {
+                  schema.likesTable.createdAt: schema.likesTable.createdAt.cast<int>(),
+                },
+              ),
+            ),
           ]);
         },
       ),

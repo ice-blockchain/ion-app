@@ -28,21 +28,21 @@ class BlockEventDao extends DatabaseAccessor<BlockedUsersDatabase> with _$BlockE
       ..orderBy([(t) => OrderingTerm.desc(t.createdAt)])
       ..limit(1);
 
-    return (await query.getSingleOrNull())?.createdAt;
+    return (await query.getSingleOrNull())?.createdAt.toDateTime;
   }
 
   Future<DateTime?> getEarliestBlockEventDate({DateTime? after}) async {
     final query = select(blockEventTable);
 
     if (after != null) {
-      query.where((t) => t.createdAt.isBiggerThanValue(after));
+      query.where((t) => t.createdAt.isBiggerThanValue(after.microsecondsSinceEpoch));
     }
 
     query
       ..orderBy([(t) => OrderingTerm.asc(t.createdAt)])
       ..limit(1);
 
-    return (await query.getSingleOrNull())?.createdAt;
+    return (await query.getSingleOrNull())?.createdAt.toDateTime;
   }
 
   Future<List<EventMessage>> getBlockedUsersEvents(String currentUserMasterPubkey) async {

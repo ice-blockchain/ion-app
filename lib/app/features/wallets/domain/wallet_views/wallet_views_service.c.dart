@@ -5,7 +5,6 @@ import 'dart:async';
 import 'package:collection/collection.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/exceptions/exceptions.dart';
-import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/core/providers/main_wallet_provider.c.dart';
 import 'package:ion/app/features/core/providers/wallets_provider.c.dart';
 import 'package:ion/app/features/wallets/data/mappers/nft_mapper.dart';
@@ -88,7 +87,7 @@ class WalletViewsService {
     final mainWalletViewId = viewsDetailsDTO.isEmpty
         ? '' // if there no wallet views, we haven't the main one
         : viewsDetailsDTO
-            .reduce((a, b) => a.createdAt.toDateTime.isBefore(b.createdAt.toDateTime) ? a : b)
+            .reduce((a, b) => a.createdAt.isBefore(b.createdAt) ? a : b)
             .id;
 
     _originWalletViews = viewsDetailsDTO
@@ -429,8 +428,8 @@ class WalletViewsService {
       name: viewDTO.name,
       symbolGroups: symbolGroups,
       nfts: viewDTO.nfts?.map((nft) => nft.toNft(networks[nft.network]!)).toList() ?? [],
-      createdAt: viewDTO.createdAt,
-      updatedAt: viewDTO.updatedAt,
+      createdAt: viewDTO.createdAt.microsecondsSinceEpoch,
+      updatedAt: viewDTO.updatedAt.microsecondsSinceEpoch,
       usdBalance: totalViewBalanceUSD,
       isMainWalletView: isMainWalletView,
     );

@@ -5,7 +5,7 @@ import 'dart:async';
 import 'package:collection/collection.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:ion/app/exceptions/exceptions.dart';
-import 'package:ion/app/extensions/event_message.dart';
+import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/chat/community/models/entities/tags/master_pubkey_tag.c.dart';
 import 'package:ion/app/features/chat/community/models/entities/tags/pubkey_tag.c.dart';
 import 'package:ion/app/features/ion_connect/ion_connect.dart';
@@ -19,7 +19,7 @@ class BlockedUserEntity with IonConnectEntity, ImmutableEntity, _$BlockedUserEnt
   const factory BlockedUserEntity({
     required String id,
     required String pubkey,
-    required DateTime createdAt,
+    required int createdAt,
     required String masterPubkey,
     required BlockedUserEntityData data,
   }) = _BlockedUserEntity;
@@ -87,7 +87,7 @@ class BlockedUserEntityData with _$BlockedUserEntityData implements EventSeriali
   FutureOr<EventMessage> toEventMessage(
     EventSigner signer, {
     List<List<String>> tags = const [],
-    DateTime? createdAt,
+    int? createdAt,
   }) {
     return EventMessage.fromData(
       signer: signer,

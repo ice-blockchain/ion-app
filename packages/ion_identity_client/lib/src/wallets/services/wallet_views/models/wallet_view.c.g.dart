@@ -20,8 +20,8 @@ _$WalletViewImpl _$$WalletViewImplFromJson(Map<String, dynamic> json) =>
               ?.map((e) => e as String)
               .toList() ??
           [],
-      createdAt: (json['createdAt'] as num).toInt(),
-      updatedAt: (json['updatedAt'] as num).toInt(),
+      createdAt: DateTime.parse(json['createdAt'] as String),
+      updatedAt: DateTime.parse(json['updatedAt'] as String),
       userId: json['userId'] as String,
       nfts: (json['nfts'] as List<dynamic>?)
           ?.map((e) => WalletNft.fromJson(e as Map<String, dynamic>))
@@ -36,8 +36,8 @@ Map<String, dynamic> _$$WalletViewImplToJson(_$WalletViewImpl instance) =>
       'aggregation':
           instance.aggregation.map((k, e) => MapEntry(k, e.toJson())),
       'symbolGroups': instance.symbolGroups,
-      'createdAt': instance.createdAt,
-      'updatedAt': instance.updatedAt,
+      'createdAt': instance.createdAt.toIso8601String(),
+      'updatedAt': instance.updatedAt.toIso8601String(),
       'userId': instance.userId,
       'nfts': instance.nfts?.map((e) => e.toJson()).toList(),
     };

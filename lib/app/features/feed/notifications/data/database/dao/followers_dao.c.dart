@@ -2,6 +2,8 @@
 
 import 'package:drift/drift.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:ion/app/extensions/database.dart';
+import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/feed/notifications/data/database/notifications_database.c.dart';
 import 'package:ion/app/features/feed/notifications/data/database/tables/followers_table.c.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
@@ -24,19 +26,22 @@ class FollowersDao extends DatabaseAccessor<NotificationsDatabase> with _$Follow
   }
 
   Future<DateTime?> getLastCreatedAt() async {
-    final maxCreatedAt = followersTable.createdAt.max();
-    return (selectOnly(followersTable)..addColumns([maxCreatedAt]))
-        .map((row) => row.read(maxCreatedAt))
-        .getSingleOrNull();
+    final max = await maxTimestamp(
+      followersTable,
+      followersTable.actualTableName,
+      followersTable.createdAt.name,
+    );
+    return max?.toDateTime;
   }
 
   Future<DateTime?> getFirstCreatedAt({DateTime? after}) async {
-    final firstCreatedAt = followersTable.createdAt.min();
-    final query = selectOnly(followersTable)..addColumns([firstCreatedAt]);
-    if (after != null) {
-      query.where(followersTable.createdAt.isBiggerThanValue(after));
-    }
-    return query.map((row) => row.read(firstCreatedAt)).getSingleOrNull();
+    final min = await minTimestamp(
+      followersTable,
+      followersTable.actualTableName,
+      followersTable.createdAt.name,
+      after: after?.microsecondsSinceEpoch,
+    );
+    return min?.toDateTime;
   }
 
   Stream<int> watchUnreadCount({required DateTime? after}) {
@@ -44,7 +49,8 @@ class FollowersDao extends DatabaseAccessor<NotificationsDatabase> with _$Follow
     final query = selectOnly(followersTable)..addColumns([unreadCount]);
 
     if (after != null) {
-      query.where(followersTable.createdAt.isBiggerThanValue(after));
+      // TODO: This might not work for old, seconds values
+      query.where(followersTable.createdAt.isBiggerThanValue(after.microsecondsSinceEpoch));
     }
 
     return query.map((row) => row.read(unreadCount)!).watchSingle();

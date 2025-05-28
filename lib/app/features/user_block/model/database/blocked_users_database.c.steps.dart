@@ -8,11 +8,12 @@ final class Schema2 extends i0.VersionedSchema {
   Schema2({required super.database}) : super(version: 2);
   @override
   late final List<i1.DatabaseSchemaEntity> entities = [
-    eventMessagesTable,
+    blockEventTable,
+    deletedBlockEventTable,
   ];
-  late final Shape0 eventMessagesTable = Shape0(
+  late final Shape0 blockEventTable = Shape0(
       source: i0.VersionedTable(
-        entityName: 'event_messages_table',
+        entityName: 'block_event_table',
         withoutRowId: false,
         isStrict: false,
         tableConstraints: [
@@ -32,24 +33,40 @@ final class Schema2 extends i0.VersionedSchema {
         attachedDatabase: database,
       ),
       alias: null);
+  late final Shape1 deletedBlockEventTable = Shape1(
+      source: i0.VersionedTable(
+        entityName: 'deleted_block_event_table',
+        withoutRowId: false,
+        isStrict: false,
+        tableConstraints: [
+          'PRIMARY KEY(event_reference)',
+        ],
+        columns: [
+          _column_1,
+          _column_9,
+          _column_8,
+        ],
+        attachedDatabase: database,
+      ),
+      alias: null);
 }
 
 class Shape0 extends i0.VersionedTable {
   Shape0({required super.source, required super.alias}) : super.aliased();
   i1.GeneratedColumn<String> get id =>
       columnsByName['id']! as i1.GeneratedColumn<String>;
+  i1.GeneratedColumn<String> get sharedId =>
+      columnsByName['shared_id']! as i1.GeneratedColumn<String>;
+  i1.GeneratedColumn<String> get content =>
+      columnsByName['content']! as i1.GeneratedColumn<String>;
   i1.GeneratedColumn<int> get kind =>
       columnsByName['kind']! as i1.GeneratedColumn<int>;
   i1.GeneratedColumn<String> get pubkey =>
       columnsByName['pubkey']! as i1.GeneratedColumn<String>;
   i1.GeneratedColumn<String> get masterPubkey =>
       columnsByName['master_pubkey']! as i1.GeneratedColumn<String>;
-  i1.GeneratedColumn<DateTime> get createdAt =>
-      columnsByName['created_at']! as i1.GeneratedColumn<DateTime>;
-  i1.GeneratedColumn<String> get sig =>
-      columnsByName['sig']! as i1.GeneratedColumn<String>;
-  i1.GeneratedColumn<String> get content =>
-      columnsByName['content']! as i1.GeneratedColumn<String>;
+  i1.GeneratedColumn<int> get createdAt =>
+      columnsByName['created_at']! as i1.GeneratedColumn<int>;
   i1.GeneratedColumn<String> get tags =>
       columnsByName['tags']! as i1.GeneratedColumn<String>;
   i1.GeneratedColumn<String> get eventReference =>
@@ -59,24 +76,24 @@ class Shape0 extends i0.VersionedTable {
 i1.GeneratedColumn<String> _column_0(String aliasedName) =>
     i1.GeneratedColumn<String>('id', aliasedName, false,
         type: i1.DriftSqlType.string);
-i1.GeneratedColumn<int> _column_1(String aliasedName) =>
-    i1.GeneratedColumn<int>('kind', aliasedName, false,
-        type: i1.DriftSqlType.int);
+i1.GeneratedColumn<String> _column_1(String aliasedName) =>
+    i1.GeneratedColumn<String>('shared_id', aliasedName, false,
+        type: i1.DriftSqlType.string);
 i1.GeneratedColumn<String> _column_2(String aliasedName) =>
-    i1.GeneratedColumn<String>('pubkey', aliasedName, false,
-        type: i1.DriftSqlType.string);
-i1.GeneratedColumn<String> _column_3(String aliasedName) =>
-    i1.GeneratedColumn<String>('master_pubkey', aliasedName, false,
-        type: i1.DriftSqlType.string);
-i1.GeneratedColumn<DateTime> _column_4(String aliasedName) =>
-    i1.GeneratedColumn<DateTime>('created_at', aliasedName, false,
-        type: i1.DriftSqlType.dateTime);
-i1.GeneratedColumn<String> _column_5(String aliasedName) =>
-    i1.GeneratedColumn<String>('sig', aliasedName, true,
-        type: i1.DriftSqlType.string);
-i1.GeneratedColumn<String> _column_6(String aliasedName) =>
     i1.GeneratedColumn<String>('content', aliasedName, false,
         type: i1.DriftSqlType.string);
+i1.GeneratedColumn<int> _column_3(String aliasedName) =>
+    i1.GeneratedColumn<int>('kind', aliasedName, false,
+        type: i1.DriftSqlType.int);
+i1.GeneratedColumn<String> _column_4(String aliasedName) =>
+    i1.GeneratedColumn<String>('pubkey', aliasedName, false,
+        type: i1.DriftSqlType.string);
+i1.GeneratedColumn<String> _column_5(String aliasedName) =>
+    i1.GeneratedColumn<String>('master_pubkey', aliasedName, false,
+        type: i1.DriftSqlType.string);
+i1.GeneratedColumn<int> _column_6(String aliasedName) =>
+    i1.GeneratedColumn<int>('created_at', aliasedName, false,
+        type: i1.DriftSqlType.int);
 i1.GeneratedColumn<String> _column_7(String aliasedName) =>
     i1.GeneratedColumn<String>('tags', aliasedName, false,
         type: i1.DriftSqlType.string);
@@ -84,64 +101,24 @@ i1.GeneratedColumn<String> _column_8(String aliasedName) =>
     i1.GeneratedColumn<String>('event_reference', aliasedName, false,
         type: i1.DriftSqlType.string);
 
-final class Schema3 extends i0.VersionedSchema {
-  Schema3({required super.database}) : super(version: 3);
-  @override
-  late final List<i1.DatabaseSchemaEntity> entities = [
-    eventMessagesTable,
-  ];
-  late final Shape1 eventMessagesTable = Shape1(
-      source: i0.VersionedTable(
-        entityName: 'event_messages_table',
-        withoutRowId: false,
-        isStrict: false,
-        tableConstraints: [
-          'PRIMARY KEY(event_reference)',
-        ],
-        columns: [
-          _column_0,
-          _column_1,
-          _column_2,
-          _column_3,
-          _column_9,
-          _column_5,
-          _column_6,
-          _column_7,
-          _column_8,
-        ],
-        attachedDatabase: database,
-      ),
-      alias: null);
-}
-
 class Shape1 extends i0.VersionedTable {
   Shape1({required super.source, required super.alias}) : super.aliased();
-  i1.GeneratedColumn<String> get id =>
-      columnsByName['id']! as i1.GeneratedColumn<String>;
-  i1.GeneratedColumn<int> get kind =>
-      columnsByName['kind']! as i1.GeneratedColumn<int>;
-  i1.GeneratedColumn<String> get pubkey =>
-      columnsByName['pubkey']! as i1.GeneratedColumn<String>;
-  i1.GeneratedColumn<String> get masterPubkey =>
-      columnsByName['master_pubkey']! as i1.GeneratedColumn<String>;
-  i1.GeneratedColumn<int> get createdAt =>
-      columnsByName['created_at']! as i1.GeneratedColumn<int>;
-  i1.GeneratedColumn<String> get sig =>
-      columnsByName['sig']! as i1.GeneratedColumn<String>;
-  i1.GeneratedColumn<String> get content =>
-      columnsByName['content']! as i1.GeneratedColumn<String>;
-  i1.GeneratedColumn<String> get tags =>
-      columnsByName['tags']! as i1.GeneratedColumn<String>;
+  i1.GeneratedColumn<String> get sharedId =>
+      columnsByName['shared_id']! as i1.GeneratedColumn<String>;
+  i1.GeneratedColumn<bool> get isDeleted =>
+      columnsByName['is_deleted']! as i1.GeneratedColumn<bool>;
   i1.GeneratedColumn<String> get eventReference =>
       columnsByName['event_reference']! as i1.GeneratedColumn<String>;
 }
 
-i1.GeneratedColumn<int> _column_9(String aliasedName) =>
-    i1.GeneratedColumn<int>('created_at', aliasedName, false,
-        type: i1.DriftSqlType.int);
+i1.GeneratedColumn<bool> _column_9(String aliasedName) =>
+    i1.GeneratedColumn<bool>('is_deleted', aliasedName, false,
+        type: i1.DriftSqlType.bool,
+        defaultConstraints: i1.GeneratedColumn.constraintIsAlways(
+            'CHECK ("is_deleted" IN (0, 1))'),
+        defaultValue: const CustomExpression('0'));
 i0.MigrationStepWithVersion migrationSteps({
   required Future<void> Function(i1.Migrator m, Schema2 schema) from1To2,
-  required Future<void> Function(i1.Migrator m, Schema3 schema) from2To3,
 }) {
   return (currentVersion, database) async {
     switch (currentVersion) {
@@ -150,11 +127,6 @@ i0.MigrationStepWithVersion migrationSteps({
         final migrator = i1.Migrator(database, schema);
         await from1To2(migrator, schema);
         return 2;
-      case 2:
-        final schema = Schema3(database: database);
-        final migrator = i1.Migrator(database, schema);
-        await from2To3(migrator, schema);
-        return 3;
       default:
         throw ArgumentError.value('Unknown migration from $currentVersion');
     }
@@ -163,10 +135,8 @@ i0.MigrationStepWithVersion migrationSteps({
 
 i1.OnUpgrade stepByStep({
   required Future<void> Function(i1.Migrator m, Schema2 schema) from1To2,
-  required Future<void> Function(i1.Migrator m, Schema3 schema) from2To3,
 }) =>
     i0.VersionedSchema.stepByStepHelper(
         step: migrationSteps(
       from1To2: from1To2,
-      from2To3: from2To3,
     ));

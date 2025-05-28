@@ -6,7 +6,7 @@ import 'package:ion/app/features/feed/notifications/data/database/converters/eve
 @DataClassName('Comment')
 class CommentsTable extends Table {
   TextColumn get eventReference => text().map(const EventReferenceConverter())();
-  DateTimeColumn get createdAt => dateTime()();
+  IntColumn get createdAt => integer()();
   IntColumn get type => intEnum<CommentType>()();
 
   @override

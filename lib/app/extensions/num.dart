@@ -37,7 +37,7 @@ extension SizeExtension on double {
   }
 }
 
-extension Timesteamp on int {
+extension Timestamp on int {
   DateTime get toDateTime {
     if (toString().length <= 10) {
       // If it's less than or equal to 10 digits, assume it's in seconds

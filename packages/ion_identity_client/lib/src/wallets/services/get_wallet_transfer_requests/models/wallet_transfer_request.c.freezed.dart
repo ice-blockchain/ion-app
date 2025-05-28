@@ -27,11 +27,11 @@ mixin _$WalletTransferRequest {
   Requester get requester => throw _privateConstructorUsedError;
   TransferRequestBody get requestBody => throw _privateConstructorUsedError;
   String get status => throw _privateConstructorUsedError;
-  int get dateRequested => throw _privateConstructorUsedError;
+  DateTime get dateRequested => throw _privateConstructorUsedError;
   String? get txHash => throw _privateConstructorUsedError;
   String? get fee => throw _privateConstructorUsedError;
-  int? get dateBroadcasted => throw _privateConstructorUsedError;
-  int? get dateConfirmed => throw _privateConstructorUsedError;
+  DateTime? get dateBroadcasted => throw _privateConstructorUsedError;
+  DateTime? get dateConfirmed => throw _privateConstructorUsedError;
   String? get reason => throw _privateConstructorUsedError;
   Map<String, dynamic>? get metadata => throw _privateConstructorUsedError;
 
@@ -58,11 +58,11 @@ abstract class $WalletTransferRequestCopyWith<$Res> {
       Requester requester,
       TransferRequestBody requestBody,
       String status,
-      int dateRequested,
+      DateTime dateRequested,
       String? txHash,
       String? fee,
-      int? dateBroadcasted,
-      int? dateConfirmed,
+      DateTime? dateBroadcasted,
+      DateTime? dateConfirmed,
       String? reason,
       Map<String, dynamic>? metadata});
 
@@ -128,7 +128,7 @@ class _$WalletTransferRequestCopyWithImpl<$Res,
       dateRequested: null == dateRequested
           ? _value.dateRequested
           : dateRequested // ignore: cast_nullable_to_non_nullable
-              as int,
+              as DateTime,
       txHash: freezed == txHash
           ? _value.txHash
           : txHash // ignore: cast_nullable_to_non_nullable
@@ -140,11 +140,11 @@ class _$WalletTransferRequestCopyWithImpl<$Res,
       dateBroadcasted: freezed == dateBroadcasted
           ? _value.dateBroadcasted
           : dateBroadcasted // ignore: cast_nullable_to_non_nullable
-              as int?,
+              as DateTime?,
       dateConfirmed: freezed == dateConfirmed
           ? _value.dateConfirmed
           : dateConfirmed // ignore: cast_nullable_to_non_nullable
-              as int?,
+              as DateTime?,
       reason: freezed == reason
           ? _value.reason
           : reason // ignore: cast_nullable_to_non_nullable
@@ -193,11 +193,11 @@ abstract class _$$WalletTransferRequestImplCopyWith<$Res>
       Requester requester,
       TransferRequestBody requestBody,
       String status,
-      int dateRequested,
+      DateTime dateRequested,
       String? txHash,
       String? fee,
-      int? dateBroadcasted,
-      int? dateConfirmed,
+      DateTime? dateBroadcasted,
+      DateTime? dateConfirmed,
       String? reason,
       Map<String, dynamic>? metadata});
 
@@ -263,7 +263,7 @@ class __$$WalletTransferRequestImplCopyWithImpl<$Res>
       dateRequested: null == dateRequested
           ? _value.dateRequested
           : dateRequested // ignore: cast_nullable_to_non_nullable
-              as int,
+              as DateTime,
       txHash: freezed == txHash
           ? _value.txHash
           : txHash // ignore: cast_nullable_to_non_nullable
@@ -275,11 +275,11 @@ class __$$WalletTransferRequestImplCopyWithImpl<$Res>
       dateBroadcasted: freezed == dateBroadcasted
           ? _value.dateBroadcasted
           : dateBroadcasted // ignore: cast_nullable_to_non_nullable
-              as int?,
+              as DateTime?,
       dateConfirmed: freezed == dateConfirmed
           ? _value.dateConfirmed
           : dateConfirmed // ignore: cast_nullable_to_non_nullable
-              as int?,
+              as DateTime?,
       reason: freezed == reason
           ? _value.reason
           : reason // ignore: cast_nullable_to_non_nullable
@@ -327,15 +327,15 @@ class _$WalletTransferRequestImpl implements _WalletTransferRequest {
   @override
   final String status;
   @override
-  final int dateRequested;
+  final DateTime dateRequested;
   @override
   final String? txHash;
   @override
   final String? fee;
   @override
-  final int? dateBroadcasted;
+  final DateTime? dateBroadcasted;
   @override
-  final int? dateConfirmed;
+  final DateTime? dateConfirmed;
   @override
   final String? reason;
   final Map<String, dynamic>? _metadata;
@@ -422,11 +422,11 @@ abstract class _WalletTransferRequest implements WalletTransferRequest {
       required final Requester requester,
       required final TransferRequestBody requestBody,
       required final String status,
-      required final int dateRequested,
+      required final DateTime dateRequested,
       final String? txHash,
       final String? fee,
-      final int? dateBroadcasted,
-      final int? dateConfirmed,
+      final DateTime? dateBroadcasted,
+      final DateTime? dateConfirmed,
       final String? reason,
       final Map<String, dynamic>? metadata}) = _$WalletTransferRequestImpl;
 
@@ -446,15 +446,15 @@ abstract class _WalletTransferRequest implements WalletTransferRequest {
   @override
   String get status;
   @override
-  int get dateRequested;
+  DateTime get dateRequested;
   @override
   String? get txHash;
   @override
   String? get fee;
   @override
-  int? get dateBroadcasted;
+  DateTime? get dateBroadcasted;
   @override
-  int? get dateConfirmed;
+  DateTime? get dateConfirmed;
   @override
   String? get reason;
   @override
