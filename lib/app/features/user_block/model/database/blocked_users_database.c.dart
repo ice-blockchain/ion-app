@@ -8,6 +8,7 @@ import 'package:ion/app/features/feed/notifications/data/database/converters/eve
 import 'package:ion/app/features/ion_connect/database/converters/event_tags_converter.dart';
 import 'package:ion/app/features/ion_connect/ion_connect.dart';
 import 'package:ion/app/features/ion_connect/model/event_reference.c.dart';
+import 'package:ion/app/features/user_block/extensions/event_message.dart';
 import 'package:ion/app/features/user_block/model/entities/blocked_user_entity.c.dart';
 import 'package:ion/app/features/user_block/providers/blocked_users_database_provider.c.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';

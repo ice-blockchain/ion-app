@@ -8,7 +8,6 @@ import 'package:ion/app/features/ion_connect/database/event_messages_database.c.
     as event_messages_db;
 import 'package:ion/app/features/ion_connect/ion_connect.dart';
 import 'package:ion/app/features/ion_connect/model/event_reference.c.dart';
-import 'package:ion/app/features/user_block/model/database/blocked_users_database.c.dart';
 
 extension KeysExtensions on EventMessage {
   String get masterPubkey {
@@ -48,26 +47,6 @@ extension KeysExtensions on EventMessage {
       eventReference: eventReference,
     );
   }
-
-  BlockEventDbModel toBlockEventDbModel(EventReference eventReference) {
-    final sharedId = tags.firstWhereOrNull((tag) => tag.first == 'd')?.last;
-
-    if (sharedId == null) {
-      throw ShareableIdentifierDecodeException(id);
-    }
-
-    return BlockEventDbModel(
-      id: id,
-      kind: kind,
-      tags: tags,
-      pubkey: pubkey,
-      content: content,
-      sharedId: sharedId,
-      createdAt: createdAt,
-      masterPubkey: masterPubkey,
-      eventReference: eventReference,
-    );
-  }
 }
 
 extension IonConnectEventMessageDbModelExtensions on event_messages_db.EventMessageDbModel {
@@ -85,20 +64,6 @@ extension IonConnectEventMessageDbModelExtensions on event_messages_db.EventMess
 }
 
 extension ChatEventMessageDbModelExtensions on chat_db.EventMessageDbModel {
-  EventMessage toEventMessage() {
-    return EventMessage(
-      id: id,
-      kind: kind,
-      pubkey: pubkey,
-      createdAt: createdAt,
-      content: content,
-      tags: tags,
-      sig: null,
-    );
-  }
-}
-
-extension BlockEventDbModelExtensions on BlockEventDbModel {
   EventMessage toEventMessage() {
     return EventMessage(
       id: id,
