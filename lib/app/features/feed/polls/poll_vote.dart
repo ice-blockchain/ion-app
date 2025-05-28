@@ -3,8 +3,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:ion/app/features/core/views/components/poll/poll_vote_item.dart';
 import 'package:ion/app/features/feed/data/models/poll/poll_data.c.dart';
+import 'package:ion/app/features/feed/polls/poll_vote_item.dart';
 
 class PollVote extends HookConsumerWidget {
   const PollVote({

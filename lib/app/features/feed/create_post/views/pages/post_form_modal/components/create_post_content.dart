@@ -9,7 +9,6 @@ import 'package:ion/app/components/screen_offset/screen_side_offset.dart';
 import 'package:ion/app/components/text_editor/text_editor.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/core/providers/poll/poll_draft_provider.c.dart';
-import 'package:ion/app/features/core/views/components/poll/poll.dart';
 import 'package:ion/app/features/feed/create_post/model/create_post_option.dart';
 import 'package:ion/app/features/feed/create_post/views/components/reply_input_field/attached_media_preview.dart';
 import 'package:ion/app/features/feed/create_post/views/pages/post_form_modal/components/current_user_avatar.dart';
@@ -17,6 +16,7 @@ import 'package:ion/app/features/feed/create_post/views/pages/post_form_modal/co
 import 'package:ion/app/features/feed/create_post/views/pages/post_form_modal/components/quoted_entity.dart';
 import 'package:ion/app/features/feed/create_post/views/pages/post_form_modal/components/video_preview_cover.dart';
 import 'package:ion/app/features/feed/create_post/views/pages/post_form_modal/hooks/use_url_links.dart';
+import 'package:ion/app/features/feed/polls/poll.dart';
 import 'package:ion/app/features/feed/views/components/url_preview_content/url_preview_content.dart';
 import 'package:ion/app/features/ion_connect/model/event_reference.c.dart';
 import 'package:ion/app/services/media_service/media_service.c.dart';
