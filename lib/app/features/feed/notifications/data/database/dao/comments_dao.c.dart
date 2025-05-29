@@ -2,7 +2,6 @@
 
 import 'package:drift/drift.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:ion/app/extensions/database.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/feed/notifications/data/database/notifications_database.c.dart';
 import 'package:ion/app/features/feed/notifications/data/database/tables/comments_table.c.dart';
@@ -27,7 +26,7 @@ class CommentsDao extends DatabaseAccessor<NotificationsDatabase> with _$Comment
   }
 
   Future<DateTime?> getLastCreatedAt(CommentType type) async {
-    final maxCreatedAt = commentsTable.normalizedTimestamp(commentsTable.createdAt).max();
+    final maxCreatedAt = commentsTable.createdAt.max();
     final max = await (selectOnly(commentsTable)
           ..addColumns([maxCreatedAt])
           ..where(commentsTable.type.equalsValue(type)))
@@ -37,7 +36,7 @@ class CommentsDao extends DatabaseAccessor<NotificationsDatabase> with _$Comment
   }
 
   Future<DateTime?> getFirstCreatedAt(CommentType type, {DateTime? after}) async {
-    final firstCreatedAt = commentsTable.normalizedTimestamp(commentsTable.createdAt).min();
+    final firstCreatedAt = commentsTable.createdAt.min();
     final query = selectOnly(commentsTable)
       ..addColumns([firstCreatedAt])
       ..where(commentsTable.type.equalsValue(type));
@@ -54,9 +53,7 @@ class CommentsDao extends DatabaseAccessor<NotificationsDatabase> with _$Comment
 
     if (after != null) {
       query.where(
-        commentsTable
-            .normalizedTimestamp(commentsTable.createdAt)
-            .isBiggerThanValue(after.microsecondsSinceEpoch),
+        commentsTable.createdAt.isBiggerThanValue(after.microsecondsSinceEpoch),
       );
     }
 

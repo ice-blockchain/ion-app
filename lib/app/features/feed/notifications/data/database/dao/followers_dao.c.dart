@@ -2,7 +2,6 @@
 
 import 'package:drift/drift.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:ion/app/extensions/database.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/feed/notifications/data/database/notifications_database.c.dart';
 import 'package:ion/app/features/feed/notifications/data/database/tables/followers_table.c.dart';
@@ -26,7 +25,7 @@ class FollowersDao extends DatabaseAccessor<NotificationsDatabase> with _$Follow
   }
 
   Future<DateTime?> getLastCreatedAt() async {
-    final maxCreatedAt = followersTable.normalizedTimestamp(followersTable.createdAt).max();
+    final maxCreatedAt = followersTable.createdAt.max();
     final max = await (selectOnly(followersTable)..addColumns([maxCreatedAt]))
         .map((row) => row.read(maxCreatedAt))
         .getSingleOrNull();
@@ -34,7 +33,7 @@ class FollowersDao extends DatabaseAccessor<NotificationsDatabase> with _$Follow
   }
 
   Future<DateTime?> getFirstCreatedAt({DateTime? after}) async {
-    final firstCreatedAt = followersTable.normalizedTimestamp(followersTable.createdAt).min();
+    final firstCreatedAt = followersTable.createdAt.min();
     final query = selectOnly(followersTable)..addColumns([firstCreatedAt]);
     if (after != null) {
       query.where(followersTable.createdAt.isBiggerThanValue(after.microsecondsSinceEpoch));
@@ -49,9 +48,7 @@ class FollowersDao extends DatabaseAccessor<NotificationsDatabase> with _$Follow
 
     if (after != null) {
       query.where(
-        followersTable
-            .normalizedTimestamp(followersTable.createdAt)
-            .isBiggerThanValue(after.microsecondsSinceEpoch),
+        followersTable.createdAt.isBiggerThanValue(after.microsecondsSinceEpoch),
       );
     }
 

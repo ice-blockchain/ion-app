@@ -88,15 +88,11 @@ class ConversationEventMessageDao extends DatabaseAccessor<ChatDatabase>
     final query = select(eventMessageTable)..where((t) => t.kind.isIn(kinds));
 
     if (after != null) {
-      query.where(
-        (t) => t
-            .normalizedTimestamp(eventMessageTable.createdAt)
-            .isBiggerThanValue(after.microsecondsSinceEpoch),
-      );
+      query.where((t) => t.createdAt.isBiggerThanValue(after.microsecondsSinceEpoch));
     }
 
     query
-      ..orderBy([(t) => OrderingTerm.asc(t.normalizedTimestamp(eventMessageTable.createdAt))])
+      ..orderBy([(t) => OrderingTerm.asc(t.createdAt)])
       ..limit(1);
 
     return (await query.getSingleOrNull())?.createdAt.toDateTime;

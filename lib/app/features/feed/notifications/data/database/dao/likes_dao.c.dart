@@ -2,7 +2,6 @@
 
 import 'package:drift/drift.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:ion/app/extensions/database.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/feed/notifications/data/database/notifications_database.c.dart';
 import 'package:ion/app/features/feed/notifications/data/database/tables/likes_table.c.dart';
@@ -26,7 +25,7 @@ class LikesDao extends DatabaseAccessor<NotificationsDatabase> with _$LikesDaoMi
   }
 
   Future<DateTime?> getLastCreatedAt() async {
-    final maxCreatedAt = likesTable.normalizedTimestamp(likesTable.createdAt).max();
+    final maxCreatedAt = likesTable.createdAt.max();
     final max = await (selectOnly(likesTable)..addColumns([maxCreatedAt]))
         .map((row) => row.read(maxCreatedAt))
         .getSingleOrNull();
@@ -34,7 +33,7 @@ class LikesDao extends DatabaseAccessor<NotificationsDatabase> with _$LikesDaoMi
   }
 
   Future<DateTime?> getFirstCreatedAt({DateTime? after}) async {
-    final firstCreatedAt = likesTable.normalizedTimestamp(likesTable.createdAt).min();
+    final firstCreatedAt = likesTable.createdAt.min();
     final query = selectOnly(likesTable)..addColumns([firstCreatedAt]);
     if (after != null) {
       query.where(likesTable.createdAt.isBiggerThanValue(after.microsecondsSinceEpoch));
@@ -49,9 +48,7 @@ class LikesDao extends DatabaseAccessor<NotificationsDatabase> with _$LikesDaoMi
 
     if (after != null) {
       query.where(
-        likesTable
-            .normalizedTimestamp(likesTable.createdAt)
-            .isBiggerThanValue(after.microsecondsSinceEpoch),
+        likesTable.createdAt.isBiggerThanValue(after.microsecondsSinceEpoch),
       );
     }
 
