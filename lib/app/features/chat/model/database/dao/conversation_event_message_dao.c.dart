@@ -87,13 +87,16 @@ class ConversationEventMessageDao extends DatabaseAccessor<ChatDatabase>
   Future<DateTime?> getEarliestEventMessageDate(List<int> kinds, {DateTime? after}) async {
     final query = select(eventMessageTable)..where((t) => t.kind.isIn(kinds));
 
-    // TODO: Check this
     if (after != null) {
-      query.where((t) => t.createdAt.isBiggerThanValue(after.microsecondsSinceEpoch));
+      query.where(
+        (t) => t
+            .normalizedTimestamp(eventMessageTable.createdAt)
+            .isBiggerThanValue(after.microsecondsSinceEpoch),
+      );
     }
 
     query
-      ..orderBy([(t) => OrderingTerm.asc(t.createdAt)])
+      ..orderBy([(t) => OrderingTerm.asc(t.normalizedTimestamp(eventMessageTable.createdAt))])
       ..limit(1);
 
     return (await query.getSingleOrNull())?.createdAt.toDateTime;

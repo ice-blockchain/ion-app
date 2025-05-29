@@ -26,21 +26,35 @@ class LikesDao extends DatabaseAccessor<NotificationsDatabase> with _$LikesDaoMi
   }
 
   Future<DateTime?> getLastCreatedAt() async {
-    final max = await maxTimestamp(
-      likesTable,
-      likesTable.actualTableName,
-      likesTable.createdAt.name,
-    );
+    // final max = await maxTimestamp(
+    //   likesTable,
+    //   likesTable.actualTableName,
+    //   likesTable.createdAt.name,
+    // );
+    // return max?.toDateTime;
+
+    final maxCreatedAt = likesTable.normalizedTimestamp(likesTable.createdAt).max();
+    final max = await (selectOnly(likesTable)..addColumns([maxCreatedAt]))
+        .map((row) => row.read(maxCreatedAt))
+        .getSingleOrNull();
     return max?.toDateTime;
   }
 
   Future<DateTime?> getFirstCreatedAt({DateTime? after}) async {
-    final min = await minTimestamp(
-      likesTable,
-      likesTable.actualTableName,
-      likesTable.createdAt.name,
-      after: after?.microsecondsSinceEpoch,
-    );
+    // final min = await minTimestamp(
+    //   likesTable,
+    //   likesTable.actualTableName,
+    //   likesTable.createdAt.name,
+    //   afterTimestamp: after?.microsecondsSinceEpoch,
+    // );
+    // return min?.toDateTime;
+
+    final firstCreatedAt = likesTable.normalizedTimestamp(likesTable.createdAt).min();
+    final query = selectOnly(likesTable)..addColumns([firstCreatedAt]);
+    if (after != null) {
+      query.where(likesTable.createdAt.isBiggerThanValue(after.microsecondsSinceEpoch));
+    }
+    final min = await query.map((row) => row.read(firstCreatedAt)).getSingleOrNull();
     return min?.toDateTime;
   }
 
@@ -49,8 +63,11 @@ class LikesDao extends DatabaseAccessor<NotificationsDatabase> with _$LikesDaoMi
     final query = selectOnly(likesTable)..addColumns([unreadCount]);
 
     if (after != null) {
-      // TODO: This might not work for old, seconds values
-      query.where(likesTable.createdAt.isBiggerThanValue(after.microsecondsSinceEpoch));
+      query.where(
+        likesTable
+            .normalizedTimestamp(likesTable.createdAt)
+            .isBiggerThanValue(after.microsecondsSinceEpoch),
+      );
     }
 
     return query.map((row) => row.read(unreadCount)!).watchSingle();

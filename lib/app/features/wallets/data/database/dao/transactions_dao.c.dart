@@ -2,8 +2,6 @@
 
 import 'package:drift/drift.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:ion/app/extensions/database.dart';
-import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/wallets/data/database/tables/coins_table.c.dart';
 import 'package:ion/app/features/wallets/data/database/tables/networks_table.c.dart';
 import 'package:ion/app/features/wallets/data/database/tables/transactions_table.c.dart';
@@ -27,22 +25,19 @@ class TransactionsDao extends DatabaseAccessor<WalletsDatabase> with _$Transacti
   TransactionsDao({required WalletsDatabase db}) : super(db);
 
   Future<DateTime?> lastCreatedAt() async {
-    final max = await maxTimestamp(
-      transactionsTable,
-      transactionsTable.actualTableName,
-      transactionsTable.createdAtInRelay.name,
-    );
-    return max?.toDateTime;
+    final maxCreatedAt = transactionsTable.createdAtInRelay.max();
+    return (selectOnly(transactionsTable)..addColumns([maxCreatedAt]))
+        .map((row) => row.read(maxCreatedAt))
+        .getSingleOrNull();
   }
 
   Future<DateTime?> getFirstCreatedAt({DateTime? after}) async {
-    final min = await minTimestamp(
-      transactionsTable,
-      transactionsTable.actualTableName,
-      transactionsTable.createdAtInRelay.name,
-      after: after?.microsecondsSinceEpoch,
-    );
-    return min?.toDateTime;
+    final firstCreatedAt = transactionsTable.createdAtInRelay.min();
+    final query = selectOnly(transactionsTable)..addColumns([firstCreatedAt]);
+    if (after != null) {
+      query.where(transactionsTable.createdAtInRelay.isBiggerThanValue(after));
+    }
+    return query.map((row) => row.read(firstCreatedAt)).getSingleOrNull();
   }
 
   /// Returns true if there were changes in the database

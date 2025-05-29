@@ -215,12 +215,11 @@ class ConversationMessageDao extends DatabaseAccessor<ChatDatabase>
     final env = ref.read(envProvider.notifier);
     final expiration = env.get<int>(EnvVariable.GIFT_WRAP_EXPIRATION_HOURS);
 
-    // TODO: Check this
     final expiredMessageEventReferences = await (select(eventMessageTable)
           ..where(
-            (table) => table.createdAt.isSmallerThanValue(
-              DateTime.now().subtract(Duration(hours: expiration)).microsecondsSinceEpoch,
-            ),
+            (table) => table.normalizedTimestamp(eventMessageTable.createdAt).isSmallerThanValue(
+                  DateTime.now().subtract(Duration(hours: expiration)).microsecondsSinceEpoch,
+                ),
           )
           ..where((table) => table.eventReference.isInValues(eventReferences)))
         .map((e) => e.eventReference)

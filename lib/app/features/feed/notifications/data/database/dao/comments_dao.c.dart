@@ -27,23 +27,41 @@ class CommentsDao extends DatabaseAccessor<NotificationsDatabase> with _$Comment
   }
 
   Future<DateTime?> getLastCreatedAt(CommentType type) async {
-    final max = await maxTimestamp(
-      commentsTable,
-      commentsTable.actualTableName,
-      commentsTable.createdAt.name,
-      additionalQuery: 'WHERE type = ${type.index}',
-    );
+    // final max = await maxTimestamp(
+    //   commentsTable,
+    //   commentsTable.actualTableName,
+    //   commentsTable.createdAt.name,
+    //   additionalQuery: 'WHERE type = ${type.index}',
+    // );
+    // return max?.toDateTime;
+
+    final maxCreatedAt = commentsTable.normalizedTimestamp(commentsTable.createdAt).max();
+    final max = await (selectOnly(commentsTable)
+          ..addColumns([maxCreatedAt])
+          ..where(commentsTable.type.equalsValue(type)))
+        .map((row) => row.read(maxCreatedAt))
+        .getSingleOrNull();
     return max?.toDateTime;
   }
 
   Future<DateTime?> getFirstCreatedAt(CommentType type, {DateTime? after}) async {
-    final min = await minTimestamp(
-      commentsTable,
-      commentsTable.actualTableName,
-      commentsTable.createdAt.name,
-      after: after?.microsecondsSinceEpoch,
-      additionalQuery: 'WHERE type = ${type.index}',
-    );
+    // final min = await minTimestamp(
+    //   commentsTable,
+    //   commentsTable.actualTableName,
+    //   commentsTable.createdAt.name,
+    //   afterTimestamp: after?.microsecondsSinceEpoch,
+    //   additionalQuery: 'WHERE type = ${type.index}',
+    // );
+    // return min?.toDateTime;
+
+    final firstCreatedAt = commentsTable.normalizedTimestamp(commentsTable.createdAt).min();
+    final query = selectOnly(commentsTable)
+      ..addColumns([firstCreatedAt])
+      ..where(commentsTable.type.equalsValue(type));
+    if (after != null) {
+      query.where(commentsTable.createdAt.isBiggerThanValue(after.microsecondsSinceEpoch));
+    }
+    final min = await query.map((row) => row.read(firstCreatedAt)).getSingleOrNull();
     return min?.toDateTime;
   }
 
@@ -52,8 +70,11 @@ class CommentsDao extends DatabaseAccessor<NotificationsDatabase> with _$Comment
     final query = selectOnly(commentsTable)..addColumns([unreadCount]);
 
     if (after != null) {
-      // TODO: This might not work for old, seconds values
-      query.where(commentsTable.createdAt.isBiggerThanValue(after.microsecondsSinceEpoch));
+      query.where(
+        commentsTable
+            .normalizedTimestamp(commentsTable.createdAt)
+            .isBiggerThanValue(after.microsecondsSinceEpoch),
+      );
     }
 
     return query.map((row) => row.read(unreadCount)!).watchSingle();
