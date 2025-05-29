@@ -53,7 +53,7 @@ void _handleNotification(
   required FeedNotificationContentType type,
 }) {
   if (state.isLoading) {
-    ref.read(globalNotificationNotifierProvider.notifier).show(type.loading());
+    ref.read(globalNotificationNotifierProvider.notifier).show(type.loading(), isPermanent: true);
   } else if (state.hasError && state.error != null) {
     showErrorModal(rootNavigatorKey.currentContext!, state.error!);
     ref.read(globalNotificationNotifierProvider.notifier).hide();
