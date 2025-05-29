@@ -93,6 +93,12 @@ class UserActionSignerDataSource {
           headers: headers,
           decoder: (result) => parseJsonObject(result, fromJson: responseDecoder),
         ),
+      HttpMethod.put => networkClient.put(
+          request.path,
+          data: request.body,
+          headers: headers,
+          decoder: (result) => parseJsonObject(result, fromJson: responseDecoder),
+        ),
       _ => throw UnimplementedError('Method ${request.method} is not supported'),
     };
   }

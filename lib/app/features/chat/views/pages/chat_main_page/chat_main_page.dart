@@ -13,6 +13,7 @@ import 'package:ion/app/features/chat/recent_chats/views/pages/recent_chats_empt
 import 'package:ion/app/features/chat/recent_chats/views/pages/recent_chats_timeline_page/recent_chats_timeline_page.dart';
 import 'package:ion/app/features/chat/views/pages/chat_main_page/components/chat_main_appbar/chat_main_appbar.dart';
 import 'package:ion/app/features/components/verify_identity/verify_identity_prompt_dialog_helper.dart';
+import 'package:ion/app/features/ion_connect/providers/restore_device_keypair_notifier.c.dart';
 import 'package:ion/app/features/ion_connect/providers/upload_device_keypair_notifier.c.dart';
 import 'package:ion/app/hooks/use_on_init.dart';
 
@@ -25,9 +26,10 @@ class ChatMainPage extends HookConsumerWidget {
       ref
         ..read(communityJoinRequestsProvider)
         ..watch(e2eeMessagesSubscriberProvider)
+        ..watch(uploadDeviceKeypairNotifierProvider)
+        ..watch(restoreDeviceKeypairNotifierProvider)
         ..read(communityMessagesSubscriberProvider);
     });
-    print('XXX: ${ref.watch(uploadDeviceKeypairNotifierProvider)}');
     final conversations = ref.watch(conversationsProvider);
 
     return Scaffold(
@@ -44,29 +46,58 @@ class ChatMainPage extends HookConsumerWidget {
           loading: () => const RecentChatSkeleton(),
         ),
       ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () async {
-          final identityKeyName = ref.read(currentIdentityKeyNameSelectorProvider);
-          if (identityKeyName == null) {
-            return;
-          }
-          await guardPasskeyDialog(
-            context,
-            (child) {
-              return RiverpodUserActionSignerRequestBuilder(
-                provider: uploadDeviceKeypairNotifierProvider,
-                request: (signer) {
-                  ref.read(uploadDeviceKeypairNotifierProvider.notifier).uploadDeviceKeypair(
-                        identityKeyName: identityKeyName,
-                        signer: signer,
-                      );
+      floatingActionButton: Column(
+        mainAxisAlignment: MainAxisAlignment.end,
+        children: [
+          FloatingActionButton(
+            onPressed: () async {
+              final identityKeyName = ref.read(currentIdentityKeyNameSelectorProvider);
+              if (identityKeyName == null) {
+                return;
+              }
+              await guardPasskeyDialog(
+                context,
+                (child) {
+                  return RiverpodUserActionSignerRequestBuilder(
+                    provider: uploadDeviceKeypairNotifierProvider,
+                    request: (signer) {
+                      ref.read(uploadDeviceKeypairNotifierProvider.notifier).uploadDeviceKeypair(
+                            identityKeyName: identityKeyName,
+                            signer: signer,
+                          );
+                    },
+                    child: child,
+                  );
                 },
-                child: child,
               );
             },
-          );
-        },
-        child: const Icon(Icons.add),
+            child: const Icon(Icons.arrow_upward),
+          ),
+          const SizedBox(height: 16),
+          FloatingActionButton(
+            onPressed: () async {
+              final identityKeyName = ref.read(currentIdentityKeyNameSelectorProvider);
+              if (identityKeyName == null) {
+                return;
+              }
+              await guardPasskeyDialog(
+                context,
+                (child) {
+                  return RiverpodUserActionSignerRequestBuilder(
+                    provider: restoreDeviceKeypairNotifierProvider,
+                    request: (signer) {
+                      ref.read(restoreDeviceKeypairNotifierProvider.notifier).restoreDeviceKeypair(
+                            signer: signer,
+                          );
+                    },
+                    child: child,
+                  );
+                },
+              );
+            },
+            child: const Icon(Icons.arrow_downward),
+          ),
+        ],
       ),
     );
   }

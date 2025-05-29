@@ -7,6 +7,8 @@ import 'package:ion_identity_client/src/keys/services/derive/data_sources/derive
 import 'package:ion_identity_client/src/keys/services/derive/derive_service.dart';
 import 'package:ion_identity_client/src/keys/services/list_keys/data_sources/list_keys_data_source.dart';
 import 'package:ion_identity_client/src/keys/services/list_keys/list_keys_service.dart';
+import 'package:ion_identity_client/src/keys/services/update_key/data_sources/update_key_data_source.dart';
+import 'package:ion_identity_client/src/keys/services/update_key/update_key_service.dart';
 import 'package:ion_identity_client/src/signer/identity_signer.dart';
 
 class KeysClientServiceLocator {
@@ -37,6 +39,11 @@ class KeysClientServiceLocator {
       _listKeysService(
         username: username,
         config: config,
+      ),
+      _updateKeyService(
+        username: username,
+        config: config,
+        signer: identitySigner,
       ),
     );
   }
@@ -71,6 +78,16 @@ class KeysClientServiceLocator {
         IONIdentityServiceLocator.networkClient(config: config),
         IONIdentityServiceLocator.tokenStorage(),
       ),
+    );
+  }
+
+  UpdateKeyService _updateKeyService({
+    required String username,
+    required IONIdentityConfig config,
+    required IdentitySigner signer,
+  }) {
+    return UpdateKeyService(
+      UpdateKeyDataSource(username),
     );
   }
 }
