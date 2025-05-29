@@ -27,7 +27,7 @@ else
 
 enum Environment {
     static let ionOrigin = "$(grep '^ION_ORIGIN=' .app.env | cut -d= -f2-)"
-    static let pushTranslationsCacheMinutes = $(grep '^PUSH_TRANSLATIONS_CACHE_MINUTES=' .app.env | cut -d= -f2-)
+    static let pushTranslationsCacheMinutes = $(grep '^GENERIC_CONFIG_CACHE_MINUTES=' .app.env | cut -d= -f2-)
 }
 EOF
     
