@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: ice License 1.0
+
 import 'dart:convert';
 import 'dart:io';
 import 'dart:typed_data';
@@ -9,8 +11,10 @@ import 'package:ion/app/features/ion_connect/model/file_alt.dart';
 import 'package:ion/app/features/ion_connect/model/file_metadata.c.dart';
 import 'package:ion/app/features/ion_connect/model/media_attachment.dart';
 import 'package:ion/app/features/ion_connect/providers/device_keypair_constants.dart';
+import 'package:ion/app/features/ion_connect/providers/device_keypair_dialog_manager.c.dart';
 import 'package:ion/app/features/ion_connect/providers/device_keypair_utils.dart';
 import 'package:ion/app/features/ion_connect/providers/ion_connect_event_signer_provider.c.dart';
+import 'package:ion/app/features/ion_connect/providers/ion_connect_notifier.c.dart';
 import 'package:ion/app/features/ion_connect/providers/ion_connect_upload_notifier.c.dart';
 import 'package:ion/app/services/ion_identity/ion_identity_client_provider.c.dart';
 import 'package:ion/app/services/logger/logger.dart';
@@ -49,7 +53,13 @@ class UploadDeviceKeypairNotifier extends _$UploadDeviceKeypairNotifier {
       );
 
       final uploadResult = await _uploadEncryptedKeypair(encryptedKeypair);
+      await ref.read(ionConnectNotifierProvider.notifier).sendEntityData(uploadResult.fileMetadata);
       await _renameKeyWithFileId(deviceKey.id, uploadResult.fileMetadata.url, signer);
+
+      // Mark as completed and uploaded from this device
+      final dialogManager = ref.read(deviceKeypairDialogManagerProvider.notifier);
+      await dialogManager.markCompleted();
+      await dialogManager.markUploadedFromThisDevice();
     });
   }
 

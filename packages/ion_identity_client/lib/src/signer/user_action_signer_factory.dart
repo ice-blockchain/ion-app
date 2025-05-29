@@ -44,7 +44,8 @@ class UserActionSignerFactory {
       }
 
       throw ArgumentError(
-          'Password callback is required for password flow users when biometrics is not available');
+        'Password callback is required for password flow users when biometrics is not available',
+      );
     } else {
       return createPasskeySigner();
     }

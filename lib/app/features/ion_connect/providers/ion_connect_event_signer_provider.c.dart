@@ -38,7 +38,7 @@ class IonConnectEventSigner extends _$IonConnectEventSigner {
   }
 
   /// Restores an event signer from a private key string
-  /// This is used for device keypair restoration from backup
+  /// This is used for device keypair restoration from uploaded
   Future<EventSigner> restoreFromPrivateKey(String privateKey) async {
     final keyStore = await Ed25519KeyStore.fromPrivate(privateKey);
     return _setEventSigner(keyStore);

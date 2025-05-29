@@ -1,6 +1,9 @@
+// SPDX-License-Identifier: ice License 1.0
+
 import 'package:ion/app/exceptions/exceptions.dart';
 import 'package:ion/app/features/auth/providers/auth_provider.c.dart';
 import 'package:ion/app/features/ion_connect/ion_connect.dart';
+import 'package:ion/app/features/ion_connect/providers/device_keypair_dialog_manager.c.dart';
 import 'package:ion/app/features/ion_connect/providers/device_keypair_utils.dart';
 import 'package:ion/app/features/ion_connect/providers/ion_connect_event_signer_provider.c.dart';
 import 'package:ion_identity_client/ion_identity.dart';
@@ -37,6 +40,11 @@ class RestoreDeviceKeypairNotifier extends _$RestoreDeviceKeypairNotifier {
 
       final restoredSigner =
           await _restoreKeypairToDevice(decryptedPrivateKey, currentIdentityKeyName);
+
+      // Mark as completed
+      final dialogManager = ref.read(deviceKeypairDialogManagerProvider.notifier);
+      await dialogManager.markCompleted();
+
       state = const AsyncData(null);
       return restoredSigner;
     } catch (error, stackTrace) {

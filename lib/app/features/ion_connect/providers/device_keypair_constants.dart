@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: ice License 1.0
+
 /// Constants used for device keypair synchronization across devices
 class DeviceKeypairConstants {
   static const String domain = 'ion:ion-app:1';

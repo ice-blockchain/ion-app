@@ -3,7 +3,6 @@
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/components/screen_offset/screen_side_offset.dart';
-import 'package:ion/app/features/auth/providers/auth_provider.c.dart';
 import 'package:ion/app/features/chat/community/providers/community_join_requests_provider.c.dart';
 import 'package:ion/app/features/chat/community/providers/community_messages_subscriber_provider.c.dart';
 import 'package:ion/app/features/chat/e2ee/providers/e2ee_messages_subscriber.c.dart';
@@ -12,10 +11,12 @@ import 'package:ion/app/features/chat/recent_chats/views/components/recent_chat_
 import 'package:ion/app/features/chat/recent_chats/views/pages/recent_chats_empty_page/recent_chats_empty_page.dart';
 import 'package:ion/app/features/chat/recent_chats/views/pages/recent_chats_timeline_page/recent_chats_timeline_page.dart';
 import 'package:ion/app/features/chat/views/pages/chat_main_page/components/chat_main_appbar/chat_main_appbar.dart';
-import 'package:ion/app/features/components/verify_identity/verify_identity_prompt_dialog_helper.dart';
+import 'package:ion/app/features/ion_connect/providers/device_keypair_dialog_provider.c.dart';
 import 'package:ion/app/features/ion_connect/providers/restore_device_keypair_notifier.c.dart';
 import 'package:ion/app/features/ion_connect/providers/upload_device_keypair_notifier.c.dart';
+import 'package:ion/app/features/ion_connect/views/components/device_keypair_dialog.dart';
 import 'package:ion/app/hooks/use_on_init.dart';
+import 'package:ion/app/router/utils/show_simple_bottom_sheet.dart';
 
 class ChatMainPage extends HookConsumerWidget {
   const ChatMainPage({super.key});
@@ -29,6 +30,20 @@ class ChatMainPage extends HookConsumerWidget {
         ..watch(uploadDeviceKeypairNotifierProvider)
         ..watch(restoreDeviceKeypairNotifierProvider)
         ..read(communityMessagesSubscriberProvider);
+
+      WidgetsBinding.instance.addPostFrameCallback((_) async {
+        final dialogProvider = ref.read(deviceKeypairDialogProviderProvider.notifier);
+        final dialogState = await dialogProvider.getDialogState();
+
+        if (dialogState != null && context.mounted) {
+          dialogProvider.markDialogShown();
+          await showSimpleBottomSheet<void>(
+            context: context,
+            isDismissible: false,
+            child: DeviceKeypairDialog(state: dialogState),
+          );
+        }
+      });
     });
     final conversations = ref.watch(conversationsProvider);
 
@@ -45,59 +60,6 @@ class ChatMainPage extends HookConsumerWidget {
           error: (error, stackTrace) => const SizedBox(),
           loading: () => const RecentChatSkeleton(),
         ),
-      ),
-      floatingActionButton: Column(
-        mainAxisAlignment: MainAxisAlignment.end,
-        children: [
-          FloatingActionButton(
-            onPressed: () async {
-              final identityKeyName = ref.read(currentIdentityKeyNameSelectorProvider);
-              if (identityKeyName == null) {
-                return;
-              }
-              await guardPasskeyDialog(
-                context,
-                (child) {
-                  return RiverpodUserActionSignerRequestBuilder(
-                    provider: uploadDeviceKeypairNotifierProvider,
-                    request: (signer) {
-                      ref.read(uploadDeviceKeypairNotifierProvider.notifier).uploadDeviceKeypair(
-                            identityKeyName: identityKeyName,
-                            signer: signer,
-                          );
-                    },
-                    child: child,
-                  );
-                },
-              );
-            },
-            child: const Icon(Icons.arrow_upward),
-          ),
-          const SizedBox(height: 16),
-          FloatingActionButton(
-            onPressed: () async {
-              final identityKeyName = ref.read(currentIdentityKeyNameSelectorProvider);
-              if (identityKeyName == null) {
-                return;
-              }
-              await guardPasskeyDialog(
-                context,
-                (child) {
-                  return RiverpodUserActionSignerRequestBuilder(
-                    provider: restoreDeviceKeypairNotifierProvider,
-                    request: (signer) {
-                      ref.read(restoreDeviceKeypairNotifierProvider.notifier).restoreDeviceKeypair(
-                            signer: signer,
-                          );
-                    },
-                    child: child,
-                  );
-                },
-              );
-            },
-            child: const Icon(Icons.arrow_downward),
-          ),
-        ],
       ),
     );
   }
