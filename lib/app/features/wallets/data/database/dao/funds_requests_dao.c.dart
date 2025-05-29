@@ -21,13 +21,6 @@ class FundsRequestsDao extends DatabaseAccessor<WalletsDatabase> with _$FundsReq
   FundsRequestsDao({required WalletsDatabase db}) : super(db);
 
   Future<DateTime?> getLastCreatedAt() async {
-    // final max = await maxTimestamp(
-    //   fundsRequestsTable,
-    //   fundsRequestsTable.actualTableName,
-    //   fundsRequestsTable.createdAt.name,
-    // );
-    // return max?.toDateTime;
-
     final query = select(fundsRequestsTable)
       ..orderBy([(t) => OrderingTerm.desc(t.normalizedTimestamp(t.createdAt))])
       ..limit(1);
@@ -37,14 +30,6 @@ class FundsRequestsDao extends DatabaseAccessor<WalletsDatabase> with _$FundsReq
   }
 
   Future<DateTime?> getFirstCreatedAt({DateTime? after}) async {
-    // final min = await minTimestamp(
-    //   fundsRequestsTable,
-    //   fundsRequestsTable.actualTableName,
-    //   fundsRequestsTable.createdAt.name,
-    //   afterTimestamp: after?.microsecondsSinceEpoch,
-    // );
-    // return min?.toDateTime;
-
     final query = select(fundsRequestsTable);
     if (after != null) {
       query.where(

@@ -27,14 +27,6 @@ class CommentsDao extends DatabaseAccessor<NotificationsDatabase> with _$Comment
   }
 
   Future<DateTime?> getLastCreatedAt(CommentType type) async {
-    // final max = await maxTimestamp(
-    //   commentsTable,
-    //   commentsTable.actualTableName,
-    //   commentsTable.createdAt.name,
-    //   additionalQuery: 'WHERE type = ${type.index}',
-    // );
-    // return max?.toDateTime;
-
     final maxCreatedAt = commentsTable.normalizedTimestamp(commentsTable.createdAt).max();
     final max = await (selectOnly(commentsTable)
           ..addColumns([maxCreatedAt])
@@ -45,15 +37,6 @@ class CommentsDao extends DatabaseAccessor<NotificationsDatabase> with _$Comment
   }
 
   Future<DateTime?> getFirstCreatedAt(CommentType type, {DateTime? after}) async {
-    // final min = await minTimestamp(
-    //   commentsTable,
-    //   commentsTable.actualTableName,
-    //   commentsTable.createdAt.name,
-    //   afterTimestamp: after?.microsecondsSinceEpoch,
-    //   additionalQuery: 'WHERE type = ${type.index}',
-    // );
-    // return min?.toDateTime;
-
     final firstCreatedAt = commentsTable.normalizedTimestamp(commentsTable.createdAt).min();
     final query = selectOnly(commentsTable)
       ..addColumns([firstCreatedAt])

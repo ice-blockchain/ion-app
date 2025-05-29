@@ -3,7 +3,7 @@
 import 'dart:convert';
 
 import 'package:freezed_annotation/freezed_annotation.dart';
-import 'package:ion_identity_client/src/core/utils/date.dart';
+import 'package:ion_identity_client/src/core/extensions/num.dart';
 
 part 'user_token.c.freezed.dart';
 part 'user_token.c.g.dart';
@@ -38,6 +38,6 @@ class UserToken with _$UserToken {
       ),
     ) as Map<String, dynamic>;
 
-    return fromTimestamp(payload['exp'] as int);
+    return (payload['exp'] as int).toDateTime;
   }
 }

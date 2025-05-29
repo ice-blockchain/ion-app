@@ -7,12 +7,12 @@ struct FollowListEntity: IonConnectEntity {
     let pubkey: String
     let masterPubkey: String
     let signature: String
-    let createdAt: Date
+    let createdAt: Int
     let pubkeys: [String]
 
     static let kind = 3
 
-    init(id: String, pubkey: String, masterPubkey: String, signature: String, createdAt: Date, pubkeys: [String]) {
+    init(id: String, pubkey: String, masterPubkey: String, signature: String, createdAt: Int, pubkeys: [String]) {
         self.id = id
         self.pubkey = pubkey
         self.masterPubkey = masterPubkey

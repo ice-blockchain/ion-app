@@ -42,12 +42,12 @@ struct RepostEntity: IonConnectEntity {
     let pubkey: String
     let masterPubkey: String
     let signature: String
-    let createdAt: Date
+    let createdAt: Int
     let data: RepostData
 
     static let kind = 6
 
-    init(id: String, pubkey: String, masterPubkey: String, signature: String, createdAt: Date, data: RepostData) {
+    init(id: String, pubkey: String, masterPubkey: String, signature: String, createdAt: Int, data: RepostData) {
         self.id = id
         self.pubkey = pubkey
         self.masterPubkey = masterPubkey

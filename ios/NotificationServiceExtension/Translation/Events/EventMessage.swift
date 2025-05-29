@@ -7,7 +7,7 @@ struct EventMessage: Decodable {
     let id: String
     let pubkey: String
     let kind: Int
-    let createdAt: Date
+    let createdAt: Int
     let content: String
     let tags: [[String]]
     let sig: String?
@@ -27,12 +27,7 @@ struct EventMessage: Decodable {
         id = try container.decode(String.self, forKey: .id)
         pubkey = try container.decode(String.self, forKey: .pubkey)
         kind = try container.decode(Int.self, forKey: .kind)
-
-        // Special handling for created_at
-        let timestamp = try container.decode(Int.self, forKey: .createdAt)
-        // Convert Unix timestamp (seconds since 1970) to Date
-        createdAt = Date(timeIntervalSince1970: TimeInterval(timestamp))
-
+        createdAt = try container.decode(Int.self, forKey: .createdAt)
         content = try container.decode(String.self, forKey: .content)
         tags = try container.decode([[String]].self, forKey: .tags)
         sig = try container.decodeIfPresent(String.self, forKey: .sig)
@@ -60,7 +55,7 @@ struct EventMessage: Decodable {
 
     func calculateEventId(
         publicKey: String,
-        createdAt: Date,
+        createdAt: Int,
         kind: Int,
         tags: [[String]],
         content: String
@@ -68,7 +63,7 @@ struct EventMessage: Decodable {
         let eventData: [Any] = [
             0,
             publicKey,
-            Int(createdAt.timeIntervalSince1970),
+            createdAt,
             kind,
             tags,
             content,

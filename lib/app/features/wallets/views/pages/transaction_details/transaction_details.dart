@@ -44,8 +44,7 @@ class TransactionDetailsPage extends ConsumerWidget {
     final transactionData = ref.watch(transactionNotifierProvider)!;
     final arrivalTime = transactionData.status == TransactionStatus.confirmed &&
             transactionData.dateConfirmed != null
-        ? DateFormat('dd.MM.yyyy HH:mm:ss')
-            .format(transactionData.dateConfirmed!.toLocal())
+        ? DateFormat('dd.MM.yyyy HH:mm:ss').format(transactionData.dateConfirmed!.toLocal())
         : transactionData.networkFeeOption?.getDisplayArrivalTime(context);
 
     final participantAddress = transactionData.type.isSend
