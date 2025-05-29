@@ -26,21 +26,35 @@ class FollowersDao extends DatabaseAccessor<NotificationsDatabase> with _$Follow
   }
 
   Future<DateTime?> getLastCreatedAt() async {
-    final max = await maxTimestamp(
-      followersTable,
-      followersTable.actualTableName,
-      followersTable.createdAt.name,
-    );
+    // final max = await maxTimestamp(
+    //   followersTable,
+    //   followersTable.actualTableName,
+    //   followersTable.createdAt.name,
+    // );
+    // return max?.toDateTime;
+
+    final maxCreatedAt = followersTable.normalizedTimestamp(followersTable.createdAt).max();
+    final max = await (selectOnly(followersTable)..addColumns([maxCreatedAt]))
+        .map((row) => row.read(maxCreatedAt))
+        .getSingleOrNull();
     return max?.toDateTime;
   }
 
   Future<DateTime?> getFirstCreatedAt({DateTime? after}) async {
-    final min = await minTimestamp(
-      followersTable,
-      followersTable.actualTableName,
-      followersTable.createdAt.name,
-      after: after?.microsecondsSinceEpoch,
-    );
+    // final min = await minTimestamp(
+    //   followersTable,
+    //   followersTable.actualTableName,
+    //   followersTable.createdAt.name,
+    //   afterTimestamp: after?.microsecondsSinceEpoch,
+    // );
+    // return min?.toDateTime;
+
+    final firstCreatedAt = followersTable.normalizedTimestamp(followersTable.createdAt).min();
+    final query = selectOnly(followersTable)..addColumns([firstCreatedAt]);
+    if (after != null) {
+      query.where(followersTable.createdAt.isBiggerThanValue(after.microsecondsSinceEpoch));
+    }
+    final min = await query.map((row) => row.read(firstCreatedAt)).getSingleOrNull();
     return min?.toDateTime;
   }
 
@@ -49,8 +63,11 @@ class FollowersDao extends DatabaseAccessor<NotificationsDatabase> with _$Follow
     final query = selectOnly(followersTable)..addColumns([unreadCount]);
 
     if (after != null) {
-      // TODO: This might not work for old, seconds values
-      query.where(followersTable.createdAt.isBiggerThanValue(after.microsecondsSinceEpoch));
+      query.where(
+        followersTable
+            .normalizedTimestamp(followersTable.createdAt)
+            .isBiggerThanValue(after.microsecondsSinceEpoch),
+      );
     }
 
     return query.map((row) => row.read(unreadCount)!).watchSingle();

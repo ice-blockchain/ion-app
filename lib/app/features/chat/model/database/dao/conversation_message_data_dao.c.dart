@@ -44,9 +44,9 @@ class ConversationMessageDataDao extends DatabaseAccessor<ChatDatabase>
               .equalsExp(messageStatusTable.messageEventReference),
         ),
       ])
-            // TODO: Check this
             ..where(
-              eventMessageTable.createdAt
+              eventMessageTable
+                  .normalizedTimestamp(eventMessageTable.createdAt)
                   .isSmallerOrEqualValue(updateAllBefore.microsecondsSinceEpoch),
             )
             ..where(messageStatusTable.masterPubkey.equals(masterPubkey))
