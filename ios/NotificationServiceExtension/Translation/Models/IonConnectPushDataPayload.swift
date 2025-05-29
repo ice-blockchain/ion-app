@@ -25,31 +25,12 @@ class IonConnectPushDataPayload: Decodable {
         
         if let compression = compression, compression == "zlib" {
             do {
-                let decompressedEventString = try Decompressor.decompressBase64String(eventString)
-                guard let eventData = decompressedEventString.data(using: .utf8) else {
-                    throw DecompressionError.jsonDataConversionFailed
-                }
+                let eventData = try Decompressor.decompress(eventString)
                 event = try JSONDecoder().decode(EventMessage.self, from: eventData)
                 
                 if !relevantEventsString.isEmpty {
-                    let decompressedRelevantEventsString = try Decompressor.decompressBase64String(relevantEventsString)
-                    guard let relevantEventsData = decompressedRelevantEventsString.data(using: .utf8) else {
-                        throw DecompressionError.jsonDataConversionFailed
-                    }
-                    
-                    // Parse the string array and deserialize each element
-                    let stringArray = try JSONDecoder().decode([String].self, from: relevantEventsData)
-                    var parsedEvents: [EventMessage] = []
-                    
-                    for jsonString in stringArray {
-                        guard let eventData = jsonString.data(using: .utf8) else {
-                            throw DecompressionError.jsonDataConversionFailed
-                        }
-                        let parsedEvent = try JSONDecoder().decode(EventMessage.self, from: eventData)
-                        parsedEvents.append(parsedEvent)
-                    }
-                    
-                    relevantEvents = parsedEvents
+                    let relevantEventsData = try Decompressor.decompress(relevantEventsString)
+                    relevantEvents = try JSONDecoder().decode([EventMessage].self, from: relevantEventsData)
                 } else {
                     relevantEvents = []
                 }
