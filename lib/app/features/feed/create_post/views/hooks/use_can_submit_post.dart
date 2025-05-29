@@ -20,7 +20,9 @@ bool useCanSubmitPost({
   required List<PollAnswer> pollAnswers,
   IonConnectEntity? modifiedEvent,
 }) {
-  final hasContent = useTextEditorHasContent(textEditorController) || mediaFiles.isNotEmpty;
+  final hasContent = useTextEditorHasContent(textEditorController);
+  final hasMediaFiles = mediaFiles.isNotEmpty;
+  final hasMediaAttachments = mediaAttachments.isNotEmpty;
   final changedMediaAttachments = useChangedMediaAttachments(
     mediaAttachments,
     modifiedEvent,
@@ -38,11 +40,31 @@ bool useCanSubmitPost({
           Validators.isPollValid(
             pollAnswers,
           );
-      canSubmit.value =
-          isPollValid && (hasContent || changedMediaAttachments) && !exceedsCharacterLimit;
+
+      final isEditMode = modifiedEvent != null;
+
+      bool hasAnyContent;
+      if (isEditMode) {
+        hasAnyContent = hasContent || hasMediaAttachments || hasMediaFiles;
+      } else {
+        hasAnyContent = hasContent || hasMediaFiles;
+      }
+
+      final shouldEnableSubmit = isPollValid && !exceedsCharacterLimit && hasAnyContent;
+
+      canSubmit.value = shouldEnableSubmit;
       return null;
     },
-    [hasContent, exceedsCharacterLimit, hasPoll, changedMediaAttachments, pollAnswers],
+    [
+      hasContent,
+      hasMediaFiles,
+      hasMediaAttachments,
+      exceedsCharacterLimit,
+      hasPoll,
+      changedMediaAttachments,
+      pollAnswers,
+      modifiedEvent,
+    ],
   );
 
   return canSubmit.value;
