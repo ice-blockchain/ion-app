@@ -21,6 +21,8 @@ enum EnvVariable {
   COMMUNITY_MEMBERS_COUNT_CACHE_MINUTES,
   GIFT_WRAP_EXPIRATION_HOURS,
   PUSH_TRANSLATIONS_CACHE_MINUTES,
+  MIN_APP_VERSION_CONFIG_CACHE_DURATION,
+  GENERIC_CONFIG_CACHE_DURATION,
   ICLOUD_CONTAINER_ID,
   CONTENT_CREATORS_RELAY,
   USER_SEARCH_RELAY,
@@ -64,6 +66,12 @@ class Env extends _$Env {
         const int.fromEnvironment('GIFT_WRAP_EXPIRATION_HOURS') as T,
       EnvVariable.PUSH_TRANSLATIONS_CACHE_MINUTES =>
         const int.fromEnvironment('PUSH_TRANSLATIONS_CACHE_MINUTES') as T,
+      EnvVariable.MIN_APP_VERSION_CONFIG_CACHE_DURATION => const Duration(
+          minutes: int.fromEnvironment('MIN_APP_VERSION_CONFIG_CACHE_MINUTES', defaultValue: 480),
+        ) as T,
+      EnvVariable.GENERIC_CONFIG_CACHE_DURATION => const Duration(
+          minutes: int.fromEnvironment('GENERIC_CONFIG_CACHE_MINUTES', defaultValue: 480),
+        ) as T,
       EnvVariable.ICLOUD_CONTAINER_ID => const String.fromEnvironment('ICLOUD_CONTAINER_ID') as T,
       EnvVariable.SENTRY_DSN => const String.fromEnvironment('SENTRY_DSN') as T,
       EnvVariable.FOUNDATION_APP_GROUP => const String.fromEnvironment('FOUNDATION_APP_GROUP') as T,

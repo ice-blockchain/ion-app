@@ -68,13 +68,12 @@ class Translator<T extends AppConfigWithVersion> {
     if (translations.containsKey(locale)) {
       return translations[locale]!;
     }
-    final cacheMinutes = _env.get<int>(EnvVariable.PUSH_TRANSLATIONS_CACHE_MINUTES);
-    final refreshInterval = Duration(minutes: cacheMinutes).inMilliseconds;
+    final cacheDuration = _env.get<Duration>(EnvVariable.GENERIC_CONFIG_CACHE_DURATION);
     return translations[locale] =
         await _translationsRepository.getConfig<PushNotificationTranslations>(
       'ion-app_push-notifications_translations_${locale.languageCode}',
       cacheStrategy: AppConfigCacheStrategy.file,
-      refreshInterval: refreshInterval,
+      refreshInterval: cacheDuration.inMilliseconds,
       parser: (data) =>
           PushNotificationTranslations.fromJson(jsonDecode(data) as Map<String, dynamic>),
       checkVersion: true,

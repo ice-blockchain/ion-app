@@ -37,8 +37,10 @@ class ForceUpdate extends _$ForceUpdate {
       final minVersion = await repository.getConfig<String>(
         MinAppVersionConfigName.fromPlatform().toString(),
         cacheStrategy: AppConfigCacheStrategy.localStorage,
-        refreshInterval:
-            ref.read(envProvider.notifier).get<int>(EnvVariable.VERSIONS_CONFIG_REFETCH_INTERVAL),
+        refreshInterval: ref
+            .read(envProvider.notifier)
+            .get<Duration>(EnvVariable.MIN_APP_VERSION_CONFIG_CACHE_DURATION)
+            .inMilliseconds,
         parser: (data) => data,
       );
 
