@@ -2,7 +2,6 @@
 
 import 'package:drift/drift.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:ion/app/extensions/database.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/wallets/data/database/tables/funds_requests_table.c.dart';
 import 'package:ion/app/features/wallets/data/database/tables/transactions_table.c.dart';
@@ -22,7 +21,7 @@ class FundsRequestsDao extends DatabaseAccessor<WalletsDatabase> with _$FundsReq
 
   Future<DateTime?> getLastCreatedAt() async {
     final query = select(fundsRequestsTable)
-      ..orderBy([(t) => OrderingTerm.desc(t.normalizedTimestamp(t.createdAt))])
+      ..orderBy([(t) => OrderingTerm.desc(t.createdAt)])
       ..limit(1);
 
     final result = await query.getSingleOrNull();
@@ -33,13 +32,11 @@ class FundsRequestsDao extends DatabaseAccessor<WalletsDatabase> with _$FundsReq
     final query = select(fundsRequestsTable);
     if (after != null) {
       query.where(
-        (t) => t
-            .normalizedTimestamp(fundsRequestsTable.createdAt)
-            .isBiggerThanValue(after.microsecondsSinceEpoch),
+        (t) => t.createdAt.isBiggerThanValue(after.microsecondsSinceEpoch),
       );
     }
     query
-      ..orderBy([(t) => OrderingTerm.asc(t.normalizedTimestamp(t.createdAt))])
+      ..orderBy([(t) => OrderingTerm.asc(t.createdAt)])
       ..limit(1);
 
     final result = await query.getSingleOrNull();

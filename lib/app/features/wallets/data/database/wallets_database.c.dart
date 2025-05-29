@@ -4,6 +4,7 @@ import 'package:drift/drift.dart';
 import 'package:drift_flutter/drift_flutter.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/exceptions/exceptions.dart';
+import 'package:ion/app/extensions/database.dart';
 import 'package:ion/app/features/auth/providers/auth_provider.c.dart';
 import 'package:ion/app/features/wallets/data/database/tables/coins_table.c.dart';
 import 'package:ion/app/features/wallets/data/database/tables/crypto_wallets_table.c.dart';
@@ -152,12 +153,12 @@ class WalletsDatabase extends _$WalletsDatabase {
           }
         },
         from12To13: (m, schema) async {
+          final table = schema.fundsRequestsTable;
           await m.alterTable(
             TableMigration(
-              schema.fundsRequestsTable,
+              table,
               columnTransformer: {
-                schema.fundsRequestsTable.createdAt:
-                    schema.fundsRequestsTable.createdAt.cast<int>(),
+                table.createdAt: table.normalizedTimestamp(table.createdAt),
               },
             ),
           );

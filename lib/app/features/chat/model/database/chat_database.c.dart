@@ -89,8 +89,9 @@ class ChatDatabase extends _$ChatDatabase {
                 TableMigration(
                   schema.conversationTable,
                   columnTransformer: {
-                    schema.conversationTable.joinedAt:
-                        schema.conversationTable.joinedAt.cast<int>(),
+                    schema.conversationTable.joinedAt: schema.conversationTable.normalizedTimestamp(
+                      schema.conversationTable.joinedAt,
+                    ),
                   },
                 ),
               ),
@@ -99,7 +100,9 @@ class ChatDatabase extends _$ChatDatabase {
                   schema.eventMessageTable,
                   columnTransformer: {
                     schema.eventMessageTable.createdAt:
-                        schema.eventMessageTable.createdAt.cast<int>(),
+                        schema.eventMessageTable.normalizedTimestamp(
+                      schema.eventMessageTable.createdAt,
+                    ),
                   },
                 ),
               ),

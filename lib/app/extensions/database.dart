@@ -4,7 +4,7 @@ import 'package:drift/drift.dart';
 
 /// Threshold to split seconds vs micros, and multiplier to go
 /// from seconds → microseconds.
-const _secThreshold = 1000000000000; // 1e12
+const _secThreshold = 10000000000; // 1e10
 const _toMicros = 1000000; // multiply seconds by this
 
 /// Extension on **all** TableInfo instances, so you can normalize

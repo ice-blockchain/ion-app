@@ -3,6 +3,7 @@
 import 'package:drift/drift.dart';
 import 'package:drift_flutter/drift_flutter.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:ion/app/extensions/database.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/feed/notifications/data/database/converters/event_reference_converter.c.dart';
 import 'package:ion/app/features/ion_connect/database/converters/event_tags_converter.dart';
@@ -48,7 +49,9 @@ class BlockedUsersDatabase extends _$BlockedUsersDatabase {
             TableMigration(
               schema.blockEventTable,
               columnTransformer: {
-                schema.blockEventTable.createdAt: schema.blockEventTable.createdAt.cast<int>(),
+                schema.blockEventTable.createdAt: schema.blockEventTable.normalizedTimestamp(
+                  schema.blockEventTable.createdAt,
+                ),
               },
             ),
           );

@@ -217,9 +217,9 @@ class ConversationMessageDao extends DatabaseAccessor<ChatDatabase>
 
     final expiredMessageEventReferences = await (select(eventMessageTable)
           ..where(
-            (table) => table.normalizedTimestamp(eventMessageTable.createdAt).isSmallerThanValue(
-                  DateTime.now().subtract(Duration(hours: expiration)).microsecondsSinceEpoch,
-                ),
+            (table) => table.createdAt.isSmallerThanValue(
+              DateTime.now().subtract(Duration(hours: expiration)).microsecondsSinceEpoch,
+            ),
           )
           ..where((table) => table.eventReference.isInValues(eventReferences)))
         .map((e) => e.eventReference)

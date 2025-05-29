@@ -4,6 +4,7 @@ import 'package:drift/drift.dart';
 import 'package:drift_flutter/drift_flutter.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/exceptions/exceptions.dart';
+import 'package:ion/app/extensions/database.dart';
 import 'package:ion/app/features/auth/providers/auth_provider.c.dart';
 import 'package:ion/app/features/feed/notifications/data/database/converters/event_reference_converter.c.dart';
 import 'package:ion/app/features/feed/notifications/data/database/notifications_database.c.steps.dart';
@@ -104,32 +105,40 @@ class NotificationsDatabase extends _$NotificationsDatabase {
           ]);
         },
         from2To3: (m, schema) async {
-          await Future.wait([
-            m.alterTable(
-              TableMigration(
-                schema.commentsTable,
-                columnTransformer: {
-                  schema.commentsTable.createdAt: schema.commentsTable.createdAt.cast<int>(),
-                },
+          await Future.wait(
+            [
+              m.alterTable(
+                TableMigration(
+                  schema.commentsTable,
+                  columnTransformer: {
+                    schema.commentsTable.createdAt: schema.commentsTable.normalizedTimestamp(
+                      schema.commentsTable.createdAt,
+                    ),
+                  },
+                ),
               ),
-            ),
-            m.alterTable(
-              TableMigration(
-                schema.followersTable,
-                columnTransformer: {
-                  schema.followersTable.createdAt: schema.followersTable.createdAt.cast<int>(),
-                },
+              m.alterTable(
+                TableMigration(
+                  schema.followersTable,
+                  columnTransformer: {
+                    schema.followersTable.createdAt: schema.followersTable.normalizedTimestamp(
+                      schema.followersTable.createdAt,
+                    ),
+                  },
+                ),
               ),
-            ),
-            m.alterTable(
-              TableMigration(
-                schema.likesTable,
-                columnTransformer: {
-                  schema.likesTable.createdAt: schema.likesTable.createdAt.cast<int>(),
-                },
+              m.alterTable(
+                TableMigration(
+                  schema.likesTable,
+                  columnTransformer: {
+                    schema.likesTable.createdAt: schema.likesTable.normalizedTimestamp(
+                      schema.likesTable.createdAt,
+                    ),
+                  },
+                ),
               ),
-            ),
-          ]);
+            ],
+          );
         },
       ),
     );
