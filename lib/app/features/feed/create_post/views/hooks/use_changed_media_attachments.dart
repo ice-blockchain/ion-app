@@ -17,8 +17,10 @@ bool useChangedMediaAttachments(
         changedMediaAttachments.value = false;
       } else {
         final existingAttachments = modifiedEvent.data.media;
-        final attachmentsMatch =
-            mediaAttachments.keys.toSet().containsAll(existingAttachments.keys.toSet());
+        final currentAttachmentKeys = mediaAttachments.keys.toSet();
+        final existingAttachmentKeys = existingAttachments.keys.toSet();
+        final attachmentsMatch = currentAttachmentKeys.containsAll(existingAttachmentKeys) &&
+            existingAttachmentKeys.containsAll(currentAttachmentKeys);
         changedMediaAttachments.value = !attachmentsMatch;
       }
       return null;
