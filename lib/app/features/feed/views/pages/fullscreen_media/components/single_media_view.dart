@@ -43,6 +43,7 @@ class SingleMediaView extends HookWidget {
         authorPubkey: eventReference.pubkey,
         thumbnailUrl: media.thumb,
         blurhash: media.blurhash,
+        aspectRatio: media.aspectRatio,
         framedEventReference: framedEventReference,
         looping: true,
       );

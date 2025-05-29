@@ -123,6 +123,7 @@ class _ChatMediaItem extends HookConsumerWidget {
         authorPubkey: entity.masterPubkey,
         thumbnailUrl: media.thumb,
         blurhash: media.blurhash,
+        aspectRatio: media.aspectRatio,
         videoBottomPadding: 0,
       );
     }

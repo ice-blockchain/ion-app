@@ -30,6 +30,7 @@ class VideoPage extends HookConsumerWidget {
     this.videoBottomPadding = 42.0,
     this.thumbnailUrl,
     this.blurhash,
+    this.aspectRatio,
     super.key,
   });
 
@@ -43,6 +44,7 @@ class VideoPage extends HookConsumerWidget {
   final double videoBottomPadding;
   final String? thumbnailUrl;
   final String? blurhash;
+  final double? aspectRatio;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -65,15 +67,34 @@ class VideoPage extends HookConsumerWidget {
         .value;
 
     if (playerController == null || !playerController.value.isInitialized) {
+      final thumbnailAspectRatio = aspectRatio ?? 16 / 9;
+
+      Widget thumbnailWidget = VideoThumbnailPreview(
+        thumbnailUrl: thumbnailUrl,
+        blurhash: blurhash,
+        authorPubkey: authorPubkey,
+      );
+
+      if (thumbnailAspectRatio < 1) {
+        thumbnailWidget = SizedBox.expand(
+          child: FittedBox(
+            fit: BoxFit.cover,
+            child: thumbnailWidget,
+          ),
+        );
+      } else {
+        thumbnailWidget = Center(
+          child: AspectRatio(
+            aspectRatio: thumbnailAspectRatio,
+            child: thumbnailWidget,
+          ),
+        );
+      }
+
       return Stack(
         fit: StackFit.expand,
         children: [
-          if (thumbnailUrl != null || blurhash != null)
-            VideoThumbnailPreview(
-              thumbnailUrl: thumbnailUrl,
-              blurhash: blurhash,
-              authorPubkey: authorPubkey,
-            ),
+          thumbnailWidget,
           const CenteredLoadingIndicator(),
         ],
       );
@@ -156,14 +177,6 @@ class VideoPage extends HookConsumerWidget {
       },
       child: Stack(
         children: [
-          if (thumbnailUrl != null || blurhash != null)
-            Positioned.fill(
-              child: VideoThumbnailPreview(
-                thumbnailUrl: thumbnailUrl,
-                blurhash: blurhash,
-                authorPubkey: authorPubkey,
-              ),
-            ),
           GestureDetector(
             onTap: () {
               if (isPlaying.value) {

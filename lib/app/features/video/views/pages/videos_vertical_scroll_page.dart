@@ -168,6 +168,7 @@ class VideosVerticalScrollPage extends HookConsumerWidget {
             authorPubkey: eventReference.pubkey,
             thumbnailUrl: flattenedVideos[index].media.thumb,
             blurhash: flattenedVideos[index].media.blurhash,
+            aspectRatio: flattenedVideos[index].media.aspectRatio,
             framedEventReference: index == initialPage ? framedEventReference : null,
             onVideoEnded: () {
               if (index < flattenedVideos.length - 1) {
