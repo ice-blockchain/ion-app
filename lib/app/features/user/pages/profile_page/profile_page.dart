@@ -10,7 +10,6 @@ import 'package:ion/app/features/feed/data/models/entities/event_count_result_da
 import 'package:ion/app/features/ion_connect/providers/ion_connect_cache.c.dart';
 import 'package:ion/app/features/user/model/tab_entity_type.dart';
 import 'package:ion/app/features/user/model/user_content_type.dart';
-
 import 'package:ion/app/features/user/pages/components/header_action/header_action.dart';
 import 'package:ion/app/features/user/pages/components/profile_avatar/profile_avatar.dart';
 import 'package:ion/app/features/user/pages/profile_page/cant_find_profile_page.dart';
@@ -23,6 +22,7 @@ import 'package:ion/app/features/user/pages/profile_page/hooks/use_animated_opac
 import 'package:ion/app/features/user/pages/profile_page/profile_skeleton.dart';
 import 'package:ion/app/features/user/providers/user_metadata_provider.c.dart';
 import 'package:ion/app/features/user_block/providers/block_list_notifier.c.dart';
+import 'package:ion/app/hooks/use_scroll_top_on_tab_press.dart';
 
 class ProfilePage extends HookConsumerWidget {
   const ProfilePage({
@@ -56,6 +56,9 @@ class ProfilePage extends HookConsumerWidget {
     }
 
     final scrollController = useScrollController();
+    if (!showBackButton) {
+      useScrollTopOnTabPress(context, scrollController: scrollController);
+    }
     final (:opacity) = useAnimatedOpacityOnScroll(scrollController, topOffset: paddingTop);
 
     final backgroundColor = context.theme.appColors.secondaryBackground;
