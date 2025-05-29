@@ -36,12 +36,12 @@ struct ReactionEntity: IonConnectEntity {
     let pubkey: String
     let masterPubkey: String
     let signature: String
-    let createdAt: Date
+    let createdAt: Int
     let data: ReactionData
 
     static let kind = 7
 
-    init(id: String, pubkey: String, masterPubkey: String, signature: String, createdAt: Date, data: ReactionData) {
+    init(id: String, pubkey: String, masterPubkey: String, signature: String, createdAt: Int, data: ReactionData) {
         self.id = id
         self.pubkey = pubkey
         self.masterPubkey = masterPubkey

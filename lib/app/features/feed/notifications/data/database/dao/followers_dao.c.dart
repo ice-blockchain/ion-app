@@ -26,13 +26,6 @@ class FollowersDao extends DatabaseAccessor<NotificationsDatabase> with _$Follow
   }
 
   Future<DateTime?> getLastCreatedAt() async {
-    // final max = await maxTimestamp(
-    //   followersTable,
-    //   followersTable.actualTableName,
-    //   followersTable.createdAt.name,
-    // );
-    // return max?.toDateTime;
-
     final maxCreatedAt = followersTable.normalizedTimestamp(followersTable.createdAt).max();
     final max = await (selectOnly(followersTable)..addColumns([maxCreatedAt]))
         .map((row) => row.read(maxCreatedAt))
@@ -41,14 +34,6 @@ class FollowersDao extends DatabaseAccessor<NotificationsDatabase> with _$Follow
   }
 
   Future<DateTime?> getFirstCreatedAt({DateTime? after}) async {
-    // final min = await minTimestamp(
-    //   followersTable,
-    //   followersTable.actualTableName,
-    //   followersTable.createdAt.name,
-    //   afterTimestamp: after?.microsecondsSinceEpoch,
-    // );
-    // return min?.toDateTime;
-
     final firstCreatedAt = followersTable.normalizedTimestamp(followersTable.createdAt).min();
     final query = selectOnly(followersTable)..addColumns([firstCreatedAt]);
     if (after != null) {

@@ -30,12 +30,12 @@ struct FundsRequestEntity: IonConnectEntity {
     let pubkey: String
     let masterPubkey: String
     let signature: String
-    let createdAt: Date
+    let createdAt: Int
     let data: FundsRequestData
 
     static let kind = 1755
 
-    init(id: String, pubkey: String, masterPubkey: String, signature: String, createdAt: Date, data: FundsRequestData) {
+    init(id: String, pubkey: String, masterPubkey: String, signature: String, createdAt: Int, data: FundsRequestData) {
         self.id = id
         self.pubkey = pubkey
         self.masterPubkey = masterPubkey

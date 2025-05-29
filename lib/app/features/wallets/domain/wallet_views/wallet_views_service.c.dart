@@ -86,9 +86,7 @@ class WalletViewsService {
     final networks = await _networksRepository.getAllAsMap();
     final mainWalletViewId = viewsDetailsDTO.isEmpty
         ? '' // if there no wallet views, we haven't the main one
-        : viewsDetailsDTO
-            .reduce((a, b) => a.createdAt.isBefore(b.createdAt) ? a : b)
-            .id;
+        : viewsDetailsDTO.reduce((a, b) => a.createdAt.isBefore(b.createdAt) ? a : b).id;
 
     _originWalletViews = viewsDetailsDTO
         .map(

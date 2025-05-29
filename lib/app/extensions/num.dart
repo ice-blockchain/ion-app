@@ -39,10 +39,16 @@ extension SizeExtension on double {
 
 extension Timestamp on int {
   DateTime get toDateTime {
-    if (toString().length <= 10) {
-      // If it's less than or equal to 10 digits, assume it's in seconds
-      return DateTime.fromMillisecondsSinceEpoch(this * 1000);
-    }
-    return DateTime.fromMicrosecondsSinceEpoch(this);
+    return switch (toString().length) {
+      // If the timestamp is 10 digits, it's in seconds
+      10 => DateTime.fromMillisecondsSinceEpoch(this * 1000),
+      // If the timestamp is 13 digits, it's in milliseconds
+      13 => DateTime.fromMillisecondsSinceEpoch(this),
+      // If the timestamp is 16 digits, assume it's in microseconds
+      16 => DateTime.fromMicrosecondsSinceEpoch(this),
+      _ => throw FormatException(
+          'Invalid timestamp format: ${toString()} length: ${toString().length}',
+        ),
+    };
   }
 }

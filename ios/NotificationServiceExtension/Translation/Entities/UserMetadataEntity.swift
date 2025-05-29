@@ -7,7 +7,7 @@ struct UserMetadataEntity: IonConnectEntity {
     let pubkey: String
     let masterPubkey: String
     let signature: String
-    let createdAt: Date
+    let createdAt: Int
     let data: UserMetadata
 
     static let kind = 0

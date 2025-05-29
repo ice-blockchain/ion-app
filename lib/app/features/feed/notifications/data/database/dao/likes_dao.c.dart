@@ -26,13 +26,6 @@ class LikesDao extends DatabaseAccessor<NotificationsDatabase> with _$LikesDaoMi
   }
 
   Future<DateTime?> getLastCreatedAt() async {
-    // final max = await maxTimestamp(
-    //   likesTable,
-    //   likesTable.actualTableName,
-    //   likesTable.createdAt.name,
-    // );
-    // return max?.toDateTime;
-
     final maxCreatedAt = likesTable.normalizedTimestamp(likesTable.createdAt).max();
     final max = await (selectOnly(likesTable)..addColumns([maxCreatedAt]))
         .map((row) => row.read(maxCreatedAt))
@@ -41,14 +34,6 @@ class LikesDao extends DatabaseAccessor<NotificationsDatabase> with _$LikesDaoMi
   }
 
   Future<DateTime?> getFirstCreatedAt({DateTime? after}) async {
-    // final min = await minTimestamp(
-    //   likesTable,
-    //   likesTable.actualTableName,
-    //   likesTable.createdAt.name,
-    //   afterTimestamp: after?.microsecondsSinceEpoch,
-    // );
-    // return min?.toDateTime;
-
     final firstCreatedAt = likesTable.normalizedTimestamp(likesTable.createdAt).min();
     final query = selectOnly(likesTable)..addColumns([firstCreatedAt]);
     if (after != null) {
