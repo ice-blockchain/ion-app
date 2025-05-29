@@ -53,13 +53,15 @@ class VideoCarousel extends HookWidget {
       scrollDirection: Axis.vertical,
       itemCount: videos.length,
       itemBuilder: (context, index) {
-        final videoUrl = videos[index].url;
+        final video = videos[index];
         return VideoPage(
-          key: ValueKey('video_$videoUrl'),
+          key: ValueKey('video_${video.url}'),
           videoInfo: VideoPostInfo(videoPost: post),
           bottomOverlay: VideoActions(eventReference: eventReference),
-          videoUrl: videoUrl,
+          videoUrl: video.url,
           authorPubkey: post.masterPubkey,
+          thumbnailUrl: video.thumb,
+          blurhash: video.blurhash,
           framedEventReference: framedEventReference,
           onVideoEnded: () {
             final nextPage = (index + 1) % videos.length;
