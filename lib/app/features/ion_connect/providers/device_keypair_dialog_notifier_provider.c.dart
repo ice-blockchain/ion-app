@@ -5,10 +5,10 @@ import 'package:ion/app/features/ion_connect/providers/device_keypair_dialog_man
 import 'package:ion/app/features/ion_connect/providers/device_keypair_dialog_state.c.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
-part 'device_keypair_dialog_provider.c.g.dart';
+part 'device_keypair_dialog_notifier_provider.c.g.dart';
 
 @riverpod
-class DeviceKeypairDialogProvider extends _$DeviceKeypairDialogProvider {
+class DeviceKeypairDialogNotifier extends _$DeviceKeypairDialogNotifier {
   @override
   bool build() {
     onLogout(ref, () {

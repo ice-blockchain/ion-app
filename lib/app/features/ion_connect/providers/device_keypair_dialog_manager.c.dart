@@ -1,5 +1,6 @@
 // SPDX-License-Identifier: ice License 1.0
 
+import 'package:ion/app/exceptions/exceptions.dart';
 import 'package:ion/app/features/auth/providers/auth_provider.c.dart';
 import 'package:ion/app/features/ion_connect/providers/device_keypair_constants.dart';
 import 'package:ion/app/features/ion_connect/providers/device_keypair_dialog_state.c.dart';
@@ -24,7 +25,7 @@ class DeviceKeypairDialogManager extends _$DeviceKeypairDialogManager {
   String _getCompletedKey() {
     final identityKeyName = ref.read(currentIdentityKeyNameSelectorProvider);
     if (identityKeyName == null) {
-      throw Exception('No current user identity');
+      throw const CurrentUserNotFoundException();
     }
     return '${_completedKeyPrefix}_$identityKeyName';
   }
@@ -33,7 +34,7 @@ class DeviceKeypairDialogManager extends _$DeviceKeypairDialogManager {
   String _getUploadedFromDeviceKey() {
     final identityKeyName = ref.read(currentIdentityKeyNameSelectorProvider);
     if (identityKeyName == null) {
-      throw Exception('No current user identity');
+      throw const CurrentUserNotFoundException();
     }
     return '${_uploadedFromDeviceKeyPrefix}_$identityKeyName';
   }

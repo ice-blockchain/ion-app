@@ -8,6 +8,7 @@ import 'package:convert/convert.dart';
 import 'package:cryptography/cryptography.dart';
 import 'package:dio/dio.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:ion/app/exceptions/exceptions.dart';
 import 'package:ion/app/features/core/providers/dio_provider.c.dart';
 import 'package:ion/app/features/ion_connect/providers/device_keypair_constants.dart';
 import 'package:ion/app/features/ion_connect/providers/file_storage_url_provider.c.dart';
@@ -44,7 +45,7 @@ class DeviceKeypairUtils {
   }) async {
     final userDetails = await ref.read(currentUserIdentityProvider.future);
     if (userDetails?.userId == null) {
-      throw Exception('User ID not found');
+      throw DeviceKeypairRestoreException('User ID not found');
     }
 
     final ionIdentity = await ref.read(ionIdentityClientProvider.future);
@@ -112,9 +113,11 @@ class DeviceKeypairUtils {
         return Uint8List.fromList(response.data!);
       }
 
-      throw Exception('Failed to download file: HTTP ${response.statusCode}');
+      throw DeviceKeypairRestoreException('Failed to download file: HTTP ${response.statusCode}');
     } catch (e) {
-      throw Exception('Failed to download encrypted keypair from $downloadUrl: $e');
+      throw DeviceKeypairRestoreException(
+        'Failed to download encrypted keypair from $downloadUrl: $e',
+      );
     }
   }
 
@@ -136,7 +139,7 @@ class DeviceKeypairUtils {
     try {
       final parts = fileId.split(':');
       if (parts.length != 2) {
-        throw Exception('Invalid file ID format, expected hex:hex');
+        throw DeviceKeypairUploadException('Invalid file ID format, expected hex:hex');
       }
 
       // Convert each hex part to bytes, then to base64
@@ -148,7 +151,7 @@ class DeviceKeypairUtils {
 
       return '$part1Base64:$part2Base64';
     } catch (e) {
-      throw Exception('Failed to compress file ID: $e');
+      throw DeviceKeypairUploadException('Failed to compress file ID: $e');
     }
   }
 
@@ -158,7 +161,9 @@ class DeviceKeypairUtils {
     try {
       final parts = compressedFileId.split(':');
       if (parts.length != 2) {
-        throw Exception('Invalid compressed file ID format, expected base64:base64');
+        throw DeviceKeypairRestoreException(
+          'Invalid compressed file ID format, expected base64:base64',
+        );
       }
 
       // Convert each base64 part to bytes, then to hex
@@ -170,7 +175,7 @@ class DeviceKeypairUtils {
 
       return '$part1Hex:$part2Hex';
     } catch (e) {
-      throw Exception('Failed to expand file ID: $e');
+      throw DeviceKeypairRestoreException('Failed to expand file ID: $e');
     }
   }
 

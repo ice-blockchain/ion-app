@@ -7,12 +7,15 @@ import 'package:ion_identity_client/src/keys/services/list_keys/list_keys_servic
 import 'package:ion_identity_client/src/keys/services/update_key/update_key_service.dart';
 
 class IONIdentityKeys {
-  IONIdentityKeys(
-    this._createKeyService,
-    this._deriveService,
-    this._listKeysService,
-    this._updateKeyService,
-  );
+  IONIdentityKeys({
+    required CreateKeyService createKeyService,
+    required DeriveService deriveService,
+    required ListKeysService listKeysService,
+    required UpdateKeyService updateKeyService,
+  })  : _createKeyService = createKeyService,
+        _deriveService = deriveService,
+        _listKeysService = listKeysService,
+        _updateKeyService = updateKeyService;
 
   final CreateKeyService _createKeyService;
   final DeriveService _deriveService;

@@ -6,6 +6,7 @@ import 'dart:typed_data';
 
 import 'package:convert/convert.dart';
 import 'package:cryptography/cryptography.dart';
+import 'package:ion/app/exceptions/exceptions.dart';
 import 'package:ion/app/features/ion_connect/ion_connect.dart';
 import 'package:ion/app/features/ion_connect/model/file_alt.dart';
 import 'package:ion/app/features/ion_connect/model/file_metadata.c.dart';
@@ -36,37 +37,43 @@ class UploadDeviceKeypairNotifier extends _$UploadDeviceKeypairNotifier {
   }) async {
     state = const AsyncLoading();
     state = await AsyncValue.guard(() async {
-      final deviceKeypair = await _getDeviceKeypair();
-      final deviceKey = await DeviceKeypairUtils.findOrCreateDeviceKey(
-        ref: ref,
-        signer: signer,
-      );
-      final derivation = await DeviceKeypairUtils.generateDerivation(
-        ref: ref,
-        keyId: deviceKey.id,
-        signer: signer,
-      );
+      try {
+        final deviceKeypair = await _getDeviceKeypair();
+        final deviceKey = await DeviceKeypairUtils.findOrCreateDeviceKey(
+          ref: ref,
+          signer: signer,
+        );
+        final derivation = await DeviceKeypairUtils.generateDerivation(
+          ref: ref,
+          keyId: deviceKey.id,
+          signer: signer,
+        );
 
-      final encryptedKeypair = await _encryptDeviceKeypair(
-        deviceKeypair.privateKey,
-        derivation.output,
-      );
+        final encryptedKeypair = await _encryptDeviceKeypair(
+          deviceKeypair.privateKey,
+          derivation.output,
+        );
 
-      final uploadResult = await _uploadEncryptedKeypair(encryptedKeypair);
-      await ref.read(ionConnectNotifierProvider.notifier).sendEntityData(uploadResult.fileMetadata);
-      await _renameKeyWithFileId(deviceKey.id, uploadResult.fileMetadata.url, signer);
+        final uploadResult = await _uploadEncryptedKeypair(encryptedKeypair);
+        await ref
+            .read(ionConnectNotifierProvider.notifier)
+            .sendEntityData(uploadResult.fileMetadata);
+        await _renameKeyWithFileId(deviceKey.id, uploadResult.fileMetadata.url, signer);
 
-      // Mark as completed and uploaded from this device
-      final dialogManager = ref.read(deviceKeypairDialogManagerProvider.notifier);
-      await dialogManager.markCompleted();
-      await dialogManager.markUploadedFromThisDevice();
+        // Mark as completed and uploaded from this device
+        final dialogManager = ref.read(deviceKeypairDialogManagerProvider.notifier);
+        await dialogManager.markCompleted();
+        await dialogManager.markUploadedFromThisDevice();
+      } catch (error) {
+        throw DeviceKeypairUploadException(error);
+      }
     });
   }
 
   Future<EventSigner> _getDeviceKeypair() async {
     final deviceKeypair = await ref.read(currentUserIonConnectEventSignerProvider.future);
     if (deviceKeypair == null) {
-      throw Exception('Device keypair not found');
+      throw DeviceKeypairUploadException('Device keypair not found');
     }
     return deviceKeypair;
   }

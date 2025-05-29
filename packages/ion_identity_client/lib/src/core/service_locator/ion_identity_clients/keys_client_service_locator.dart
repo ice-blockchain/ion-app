@@ -28,21 +28,21 @@ class KeysClientServiceLocator {
     required IdentitySigner identitySigner,
   }) {
     return IONIdentityKeys(
-      _createKeyService(
+      createKeyService: _createKeyService(
         username: username,
         config: config,
         signer: identitySigner,
       ),
-      _deriveService(
+      deriveService: _deriveService(
         username: username,
         config: config,
         signer: identitySigner,
       ),
-      _listKeysService(
+      listKeysService: _listKeysService(
         username: username,
         config: config,
       ),
-      _updateKeyService(
+      updateKeyService: _updateKeyService(
         username: username,
         config: config,
         signer: identitySigner,

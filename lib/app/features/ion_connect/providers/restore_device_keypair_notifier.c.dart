@@ -16,41 +16,38 @@ class RestoreDeviceKeypairNotifier extends _$RestoreDeviceKeypairNotifier {
   @override
   FutureOr<void> build() {}
 
-  Future<EventSigner?> restoreDeviceKeypair({
+  Future<void> restoreDeviceKeypair({
     required UserActionSignerNew signer,
   }) async {
     state = const AsyncLoading();
 
-    try {
-      final currentIdentityKeyName = _getCurrentIdentityKeyName();
-      final deviceKey = await _findLatestDeviceKey();
-      final fileId = _extractFileIdFromKeyName(deviceKey.name);
+    state = await AsyncValue.guard(() async {
+      try {
+        final currentIdentityKeyName = _getCurrentIdentityKeyName();
+        final deviceKey = await _findDeviceKey();
+        final fileId = _extractFileIdFromKeyName(deviceKey.name);
 
-      final derivation = await DeviceKeypairUtils.generateDerivation(
-        ref: ref,
-        keyId: deviceKey.id,
-        signer: signer,
-      );
+        final derivation = await DeviceKeypairUtils.generateDerivation(
+          ref: ref,
+          keyId: deviceKey.id,
+          signer: signer,
+        );
 
-      final encryptedData = await DeviceKeypairUtils.downloadEncryptedKeypair(fileId, ref);
-      final decryptedPrivateKey = await DeviceKeypairUtils.decryptDeviceKeypair(
-        encryptedData,
-        derivation.output,
-      );
+        final encryptedData = await DeviceKeypairUtils.downloadEncryptedKeypair(fileId, ref);
+        final decryptedPrivateKey = await DeviceKeypairUtils.decryptDeviceKeypair(
+          encryptedData,
+          derivation.output,
+        );
 
-      final restoredSigner =
-          await _restoreKeypairToDevice(decryptedPrivateKey, currentIdentityKeyName);
+        await _restoreKeypairToDevice(decryptedPrivateKey, currentIdentityKeyName);
 
-      // Mark as completed
-      final dialogManager = ref.read(deviceKeypairDialogManagerProvider.notifier);
-      await dialogManager.markCompleted();
-
-      state = const AsyncData(null);
-      return restoredSigner;
-    } catch (error, stackTrace) {
-      state = AsyncError(error, stackTrace);
-      rethrow;
-    }
+        // Mark as completed
+        final dialogManager = ref.read(deviceKeypairDialogManagerProvider.notifier);
+        await dialogManager.markCompleted();
+      } catch (error) {
+        throw DeviceKeypairRestoreException(error);
+      }
+    });
   }
 
   Future<List<String>> listAvailableDeviceKeys() async {
@@ -66,10 +63,10 @@ class RestoreDeviceKeypairNotifier extends _$RestoreDeviceKeypairNotifier {
     return currentIdentityKeyName;
   }
 
-  Future<KeyResponse> _findLatestDeviceKey() async {
+  Future<KeyResponse> _findDeviceKey() async {
     final deviceKeys = await DeviceKeypairUtils.findDeviceKeys(ref: ref);
     if (deviceKeys.isEmpty) {
-      throw Exception('No device keys found');
+      throw DeviceKeypairRestoreException('No device keys found');
     }
     return deviceKeys.first;
   }
@@ -77,7 +74,7 @@ class RestoreDeviceKeypairNotifier extends _$RestoreDeviceKeypairNotifier {
   String _extractFileIdFromKeyName(String? keyName) {
     final compressedFileId = DeviceKeypairUtils.extractCompressedFileIdFromKeyName(keyName);
     if (compressedFileId == null) {
-      throw Exception('Invalid device key name format');
+      throw DeviceKeypairRestoreException('Invalid device key name format');
     }
 
     return DeviceKeypairUtils.expandFileIdFromKeyName(compressedFileId);

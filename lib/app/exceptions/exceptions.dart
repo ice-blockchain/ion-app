@@ -559,3 +559,14 @@ class PaymentNoDestinationException extends IONException {
       : super(10111, 'Payment no destination');
   final String abbreviation;
 }
+
+class DeviceKeypairUploadException extends IONException {
+  DeviceKeypairUploadException(Object error)
+      : super(10112, 'Failed to upload device keypair: $error');
+}
+
+class DeviceKeypairRestoreException extends IONException {
+  DeviceKeypairRestoreException(Object error)
+      : super(10113, 'Failed to restore device keypair: $error');
+}
+
