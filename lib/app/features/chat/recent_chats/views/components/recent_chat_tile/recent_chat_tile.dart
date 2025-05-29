@@ -191,6 +191,7 @@ class RecentChatTile extends HookConsumerWidget {
                               if (isMe)
                                 MessageMetaData(
                                   displayTime: false,
+                                  deliveryStatusIconSize: 16.0.s,
                                   eventMessage: conversation.latestMessage!,
                                 )
                               else
@@ -275,7 +276,7 @@ class ChatTimestamp extends StatelessWidget {
   Widget build(BuildContext context) {
     return Text(
       formatMessageTimestamp(time),
-      style: context.theme.appTextThemes.body2.copyWith(
+      style: context.theme.appTextThemes.caption3.copyWith(
         color: context.theme.appColors.onTertararyBackground,
       ),
     );

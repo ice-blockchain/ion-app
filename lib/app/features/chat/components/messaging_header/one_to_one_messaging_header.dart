@@ -5,6 +5,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/components/avatar/avatar.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/chat/views/components/message_items/messages_context_menu/one_to_one_messages_context_menu.dart';
+import 'package:ion/app/features/user/providers/badges_notifier.c.dart';
 import 'package:ion/app/features/user_block/providers/block_list_notifier.c.dart';
 import 'package:ion/generated/assets.gen.dart';
 
@@ -14,7 +15,6 @@ class OneToOneMessagingHeader extends ConsumerWidget {
     required this.subtitle,
     required this.conversationId,
     required this.receiverMasterPubkey,
-    this.isVerified = false,
     this.imageUrl,
     this.imageWidget,
     this.onTap,
@@ -24,20 +24,22 @@ class OneToOneMessagingHeader extends ConsumerWidget {
 
   final String name;
 
-  final String receiverMasterPubkey;
   final Widget subtitle;
-  final bool isVerified;
   final String? imageUrl;
   final Widget? imageWidget;
-  final GestureTapCallback? onTap;
   final String conversationId;
+  final GestureTapCallback? onTap;
   final VoidCallback? onToggleMute;
+  final String receiverMasterPubkey;
+
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final isBlocked =
         ref.watch(isBlockedNotifierProvider(receiverMasterPubkey)).valueOrNull ?? true;
     final isBlockedBy =
         ref.watch(isBlockedByNotifierProvider(receiverMasterPubkey)).valueOrNull ?? true;
+    final isVerified = ref.watch(isUserVerifiedProvider(receiverMasterPubkey)).valueOrNull ?? false;
+
     return Padding(
       padding: EdgeInsetsDirectional.fromSTEB(16.0.s, 8.0.s, 16.0.s, 12.0.s),
       child: Row(
@@ -70,7 +72,7 @@ class OneToOneMessagingHeader extends ConsumerWidget {
                       children: [
                         Row(
                           children: [
-                            Expanded(
+                            Flexible(
                               child: Text(
                                 name,
                                 style: context.theme.appTextThemes.subtitle3,

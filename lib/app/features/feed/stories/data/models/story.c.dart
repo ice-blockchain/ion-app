@@ -3,6 +3,7 @@
 import 'package:collection/collection.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:ion/app/features/feed/data/models/entities/modifiable_post_data.c.dart';
+import 'package:ion/app/features/ion_connect/model/event_reference.c.dart';
 
 part 'story.c.freezed.dart';
 
@@ -21,6 +22,9 @@ class UserStories with _$UserStories {
       stories.firstWhereOrNull((post) => post.id == id);
 
   int getStoryIndex(String id) => stories.indexWhere((post) => post.id == id);
+
+  int getStoryIndexByReference(EventReference eventReference) =>
+      stories.indexWhere((post) => post.toEventReference() == eventReference);
 
   bool hasStoryWithId(String id) => stories.any((post) => post.id == id);
 }

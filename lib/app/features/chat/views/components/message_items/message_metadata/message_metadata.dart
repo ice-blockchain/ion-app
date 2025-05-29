@@ -17,11 +17,13 @@ class MessageMetaData extends HookConsumerWidget {
     required this.eventMessage,
     this.displayTime = true,
     super.key,
-    this.startPadding = 8.0,
+    this.startPadding,
+    this.deliveryStatusIconSize,
   });
 
   final bool displayTime;
-  final double startPadding;
+  final double? startPadding;
+  final double? deliveryStatusIconSize;
   final EventMessage eventMessage;
 
   @override
@@ -41,7 +43,7 @@ class MessageMetaData extends HookConsumerWidget {
     final entityData = ReplaceablePrivateDirectMessageData.fromEventMessage(eventMessage);
 
     return Padding(
-      padding: EdgeInsetsDirectional.only(start: startPadding.s),
+      padding: EdgeInsetsDirectional.only(start: startPadding ?? 8.0.s),
       child: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
@@ -70,8 +72,9 @@ class MessageMetaData extends HookConsumerWidget {
             Padding(
               padding: EdgeInsetsDirectional.only(start: 2.0.s),
               child: statusIcon(
-                context: context,
-                deliveryStatus: deliveryStatus.valueOrNull ?? MessageDeliveryStatus.created,
+                context,
+                deliveryStatus.valueOrNull ?? MessageDeliveryStatus.created,
+                deliveryStatusIconSize,
               ),
             ),
         ],
@@ -79,26 +82,23 @@ class MessageMetaData extends HookConsumerWidget {
     );
   }
 
-  Widget statusIcon({
-    required BuildContext context,
-    required MessageDeliveryStatus deliveryStatus,
-  }) {
+  Widget statusIcon(BuildContext context, MessageDeliveryStatus deliveryStatus, double? size) {
     return switch (deliveryStatus) {
       MessageDeliveryStatus.deleted => const SizedBox.shrink(),
       MessageDeliveryStatus.created => const SizedBox.shrink(),
       MessageDeliveryStatus.failed => const SizedBox.shrink(),
       MessageDeliveryStatus.sent => Assets.svg.iconMessageSent.icon(
           color: context.theme.appColors.strokeElements,
-          size: 12.0.s,
+          size: size ?? 12.0.s,
         ),
       MessageDeliveryStatus.received => Assets.svg.iconMessageDelivered.icon(
           color: context.theme.appColors.strokeElements,
-          size: 12.0.s,
+          size: size ?? 12.0.s,
         ),
       MessageDeliveryStatus.read => Assets.svg.iconMessageDelivered.icon(
           color: context.theme.appColors.success,
-          size: 12.0.s,
-        )
+          size: size ?? 12.0.s,
+        ),
     };
   }
 }

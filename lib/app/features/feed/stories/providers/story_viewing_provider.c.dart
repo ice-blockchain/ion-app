@@ -4,6 +4,7 @@ import 'package:collection/collection.dart';
 import 'package:flutter/foundation.dart';
 import 'package:ion/app/features/feed/stories/data/models/models.dart';
 import 'package:ion/app/features/feed/stories/providers/stories_provider.c.dart';
+import 'package:ion/app/features/ion_connect/model/event_reference.c.dart';
 import 'package:ion/app/features/optimistic_ui/features/likes/post_like_provider.c.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
@@ -18,6 +19,7 @@ class StoryViewingController extends _$StoryViewingController {
   @override
   StoryViewerState build(String pubkey) {
     final stories = ref.watch(filteredStoriesByPubkeyProvider(pubkey));
+
     return StoryViewerState(
       userStories: stories,
       currentUserIndex: 0,
@@ -78,6 +80,29 @@ class StoryViewingController extends _$StoryViewingController {
         currentStoryIndex: 0,
       );
     }
+  }
+
+  void moveToStory(EventReference storyReference) {
+    late final int storyIndex;
+
+    final userIndex = state.userStories.indexWhere(
+      (userStory) {
+        final index = userStory.getStoryIndexByReference(storyReference);
+        if (index != -1) {
+          storyIndex = index;
+          return true;
+        }
+
+        return false;
+      },
+    );
+
+    if (userIndex == -1) return;
+
+    state = state.copyWith(
+      currentUserIndex: userIndex,
+      currentStoryIndex: storyIndex,
+    );
   }
 
   void toggleLike(String postId) {

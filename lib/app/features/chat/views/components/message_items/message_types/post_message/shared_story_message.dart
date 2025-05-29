@@ -39,7 +39,7 @@ class SharedStoryMessage extends HookConsumerWidget {
       () => switch (storyEntity) {
         final ModifiablePostEntity post => post.data,
         final PostEntity post => post.data,
-        _ => false,
+        _ => null,
       },
     );
 
@@ -79,7 +79,12 @@ class SharedStoryMessage extends HookConsumerWidget {
         children: [
           GestureDetector(
             behavior: HitTestBehavior.opaque,
-            onTap: () => StoryViewerRoute(pubkey: storyEntity.masterPubkey).push<void>(context),
+            onTap: () {
+              StoryViewerRoute(
+                pubkey: storyEntity.masterPubkey,
+                initialStoryReference: storyEntity.toEventReference().encode(),
+              ).push<void>(context);
+            },
             child: Column(
               crossAxisAlignment: isMe ? CrossAxisAlignment.end : CrossAxisAlignment.start,
               children: [
