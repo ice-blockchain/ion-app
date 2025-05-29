@@ -3,10 +3,10 @@
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/components/list_item/list_item.dart';
-import 'package:ion/app/extensions/bool.dart';
+import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/user/providers/badges_notifier.c.dart';
 
-class BadgesUserListItem extends ConsumerWidget {
+class BadgesUserListItem extends HookConsumerWidget {
   const BadgesUserListItem({
     required this.pubkey,
     required this.title,
@@ -47,11 +47,21 @@ class BadgesUserListItem extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final isUserVerified = ref.watch(isUserVerifiedProvider(pubkey)).valueOrNull.falseOrValue;
+    final isNicknameProofed = ref.watch(isNicknameProofedProvider(pubkey)).valueOrNull ?? true;
 
     return ListItem.user(
       pubkey: pubkey,
       title: title,
-      subtitle: subtitle,
+      subtitle: isNicknameProofed
+          ? subtitle
+          : Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                subtitle,
+                SizedBox(width: 4.0.s),
+                Text(context.i18n.nickname_not_owned_suffix),
+              ],
+            ),
       leading: leading,
       trailing: trailing,
       border: border,

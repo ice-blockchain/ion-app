@@ -24,6 +24,8 @@ import 'package:ion/app/features/ion_connect/providers/ion_connect_event_signer_
 import 'package:ion/app/features/ion_connect/providers/long_living_subscription_relay_provider.c.dart';
 import 'package:ion/app/features/ion_connect/providers/relay_auth_provider.c.dart';
 import 'package:ion/app/features/ion_connect/providers/relay_creation_provider.c.dart';
+import 'package:ion/app/features/user/model/badges/badge_award.c.dart';
+import 'package:ion/app/features/user/model/badges/badge_definition.c.dart';
 import 'package:ion/app/features/user/model/user_delegation.c.dart';
 import 'package:ion/app/services/ion_identity/ion_identity_provider.c.dart';
 import 'package:ion/app/services/logger/logger.dart';
@@ -126,11 +128,12 @@ class IonConnectNotifier extends _$IonConnectNotifier {
     List<EventSerializable> entitiesData, {
     ActionSource actionSource = const ActionSourceCurrentUser(),
     List<EventsMetadataBuilder> metadataBuilders = const [],
+    List<EventMessage> additionalEvents = const [],
     bool cache = true,
   }) async {
     final events = await Future.wait(entitiesData.map(sign));
     return sendEvents(
-      events,
+      [...events, ...additionalEvents],
       actionSource: actionSource,
       cache: cache,
       metadataBuilders: metadataBuilders,
@@ -363,6 +366,8 @@ class IonConnectNotifier extends _$IonConnectNotifier {
       IonConnectGiftWrapEntity.kind,
       FileMetadataEntity.kind,
       UserDelegationEntity.kind,
+      BadgeAwardEntity.kind,
+      BadgeDefinitionEntity.kind,
     ];
     for (final event in events) {
       if (!excludedKinds.contains(event.kind) &&

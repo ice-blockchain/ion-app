@@ -862,5 +862,6 @@
   "device_keypair_button_not_now": "Not Now",
   "device_keypair_button_upload_now": "Upload Now",
   "device_keypair_button_complete_upload": "Complete Upload",
-  "device_keypair_button_restore_now": "Restore Now"
+  "device_keypair_button_restore_now": "Restore Now",
+  "nickname_not_owned_suffix": "(! not owned)"
 }

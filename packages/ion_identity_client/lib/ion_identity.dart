@@ -32,6 +32,7 @@ export 'src/signer/user_action_signer_new.dart';
 export 'src/users/get_content_creators/models/content_creator_response_data.c.dart';
 export 'src/users/ion_connect_indexers/models/ion_connect_indexers_response.c.dart';
 export 'src/users/set_ion_connect_relays/models/set_ion_connect_relays_response.c.dart';
+export 'src/users/update_user_social_profile/models/user_social_profile_data.c.dart';
 export 'src/users/user_details/models/user_details.c.dart';
 export 'src/wallets/models/wallet.c.dart';
 export 'src/wallets/models/wallet_signing_key.c.dart';

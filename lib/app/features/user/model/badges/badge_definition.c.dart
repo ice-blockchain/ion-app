@@ -56,6 +56,9 @@ class BadgeDefinitionEntity
 
   static const int kind = 30009;
   static const String verifiedBadgeDTag = 'verified';
+
+  // Actual d tag is username_proof_of_ownership~<username>
+  static const String usernameProofOfOwnershipBadgeDTag = 'username_proof_of_ownership~';
 }
 
 @freezed

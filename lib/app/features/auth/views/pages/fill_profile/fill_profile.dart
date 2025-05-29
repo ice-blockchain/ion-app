@@ -46,15 +46,19 @@ class FillProfile extends HookConsumerWidget {
 
     final onSubmit = useCallback(() async {
       if (formKey.currentState!.validate()) {
+        await ref
+            .read(userNicknameNotifierProvider.notifier)
+            .verifyNicknameAvailability(nickname: nickname.value);
+        if (ref.read(userNicknameNotifierProvider).hasError) {
+          return;
+        }
+
         final pickedAvatar = ref
             .read(imageProcessorNotifierProvider(ImageProcessingType.avatar))
             .whenOrNull(processed: (file) => file);
         if (pickedAvatar != null) {
           ref.read(onboardingDataProvider.notifier).avatar = pickedAvatar;
         }
-        await ref
-            .read(userNicknameNotifierProvider.notifier)
-            .verifyNicknameAvailability(nickname: nickname.value);
         ref.read(onboardingDataProvider.notifier).name = nickname.value;
         ref.read(onboardingDataProvider.notifier).displayName = name.value;
         ref.read(onboardingDataProvider.notifier).referralName = referral.value;

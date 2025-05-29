@@ -168,6 +168,23 @@ class InvalidNicknameException extends IONIdentityException {
   }
 }
 
+class NicknameAlreadyExistsException extends IONIdentityException {
+  NicknameAlreadyExistsException() : super('Nickname already exists');
+
+  static bool isMatch(DioException dioException) {
+    final responseData = dioException.response?.data;
+
+    try {
+      if (responseData is Map<String, dynamic>) {
+        return responseData['code'] == 'DUPLICATE';
+      }
+      return false;
+    } catch (_) {
+      return false;
+    }
+  }
+}
+
 class InvalidRecoveryCredentialsException extends IONIdentityException {
   InvalidRecoveryCredentialsException() : super('Invalid recovery credentials');
 
