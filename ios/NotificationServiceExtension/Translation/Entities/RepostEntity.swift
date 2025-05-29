@@ -5,24 +5,34 @@ import Foundation
 struct RepostData {
     let eventReference: EventReference
 
-    static func fromEventMessage(_ eventMessage: EventMessage) -> RepostData {
-        // Get the first e tag for event reference
-        var eventRef: EventReference?
+    static func fromEventMessage(_ eventMessage: EventMessage) throws -> RepostData {
+        var eventId: String? = nil
+        var pubkey: String? = nil
+        
         for tag in eventMessage.tags {
-            if tag.count >= 4 && tag[0] == "e" {
-                let id = tag[1]
-                let kindStr = tag[2]
-                let pubkey = tag[3]
-
-                if let kind = Int(kindStr) {
-                    eventRef = ImmutableEventReference(id: id, pubkey: pubkey)
+            if !tag.isEmpty {
+                switch tag[0] {
+                case "e":
+                    if tag.count > 1 {
+                        eventId = tag[1]
+                    }
+                case "p":
+                    if tag.count > 1 {
+                        pubkey = tag[1]
+                    }
+                default:
                     break
                 }
             }
         }
-
+        
+        // Throw exception if required tags are missing
+        if eventId == nil || pubkey == nil {
+            throw IncorrectEventTagsException(eventId: eventMessage.id)
+        }
+        
         return RepostData(
-            eventReference: eventRef ?? ImmutableEventReference(id: "", pubkey: "")
+            eventReference: ImmutableEventReference(id: eventId!, pubkey: pubkey!),
         )
     }
 }
@@ -59,7 +69,7 @@ struct RepostEntity: IonConnectEntity {
             masterPubkey: masterPubkey,
             signature: eventMessage.sig ?? "",
             createdAt: eventMessage.createdAt,
-            data: RepostData.fromEventMessage(eventMessage)
+            data: try RepostData.fromEventMessage(eventMessage)
         )
     }
 }

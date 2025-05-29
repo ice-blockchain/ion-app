@@ -28,15 +28,21 @@ class IncorrectEventTagNameException: IONException {
     }
 }
 
-class IncorrectEventTagException: IONException {
-    init(tag: String) {
-        super.init(10013, "Incorrect event tag: \(tag)")
+class IncorrectEventTagsException: IONException {
+    init(eventId: String) {
+        super.init(10011, "Incorrect event \(eventId) tags")
     }
 }
 
 class UnknownEventException: IONException {
     init(eventId: String, kind: Int) {
         super.init(10012, "Unknown event \(eventId) with kind \(kind)")
+    }
+}
+
+class IncorrectEventTagException: IONException {
+    init(tag: String) {
+        super.init(10013, "Incorrect event tag: \(tag)")
     }
 }
 
