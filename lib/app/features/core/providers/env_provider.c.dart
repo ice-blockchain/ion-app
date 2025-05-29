@@ -14,13 +14,11 @@ enum EnvVariable {
   SHOW_DEBUG_INFO,
   BANUBA_TOKEN,
   STORY_EXPIRATION_HOURS,
-  VERSIONS_CONFIG_REFETCH_INTERVAL,
   EDIT_POST_ALLOWED_MINUTES,
   EDIT_MESSAGE_ALLOWED_MINUTES,
   COMMUNITY_CREATION_CACHE_MINUTES,
   COMMUNITY_MEMBERS_COUNT_CACHE_MINUTES,
   GIFT_WRAP_EXPIRATION_HOURS,
-  PUSH_TRANSLATIONS_CACHE_MINUTES,
   MIN_APP_VERSION_CONFIG_CACHE_DURATION,
   GENERIC_CONFIG_CACHE_DURATION,
   ICLOUD_CONTAINER_ID,
@@ -53,8 +51,6 @@ class Env extends _$Env {
       EnvVariable.USER_SEARCH_RELAY => const String.fromEnvironment('USER_SEARCH_RELAY') as T,
       EnvVariable.STORY_EXPIRATION_HOURS =>
         const int.fromEnvironment('STORY_EXPIRATION_HOURS') as T,
-      EnvVariable.VERSIONS_CONFIG_REFETCH_INTERVAL =>
-        const int.fromEnvironment('VERSIONS_CONFIG_REFETCH_INTERVAL') as T,
       EnvVariable.EDIT_POST_ALLOWED_MINUTES =>
         const int.fromEnvironment('EDIT_POST_ALLOWED_MINUTES') as T,
       EnvVariable.EDIT_MESSAGE_ALLOWED_MINUTES =>
@@ -65,8 +61,6 @@ class Env extends _$Env {
         const int.fromEnvironment('COMMUNITY_MEMBERS_COUNT_CACHE_MINUTES') as T,
       EnvVariable.GIFT_WRAP_EXPIRATION_HOURS =>
         const int.fromEnvironment('GIFT_WRAP_EXPIRATION_HOURS') as T,
-      EnvVariable.PUSH_TRANSLATIONS_CACHE_MINUTES =>
-        const int.fromEnvironment('PUSH_TRANSLATIONS_CACHE_MINUTES') as T,
       EnvVariable.MIN_APP_VERSION_CONFIG_CACHE_DURATION => const Duration(
           minutes: int.fromEnvironment('MIN_APP_VERSION_CONFIG_CACHE_MINUTES', defaultValue: 480),
         ) as T,
