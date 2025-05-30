@@ -282,7 +282,9 @@ class WalletViewsService {
       );
       final adjustedBalanceUSD = adjustedAmount * coinInWallet.coin.priceUSD;
 
-      Logger.info('The reduction is complete. Adjusted amount: $adjustedAmount');
+      if (adjustedAmount > 0) {
+        Logger.info('The reduction is complete. Adjusted amount: $adjustedAmount');
+      }
 
       updatedCoin = coinInWallet.copyWith(
         amount: adjustedAmount,
