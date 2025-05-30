@@ -24,6 +24,7 @@ import 'package:ion/app/features/chat/recent_chats/views/components/recent_chat_
 import 'package:ion/app/features/user/providers/badges_notifier.c.dart';
 import 'package:ion/app/features/user/providers/user_metadata_provider.c.dart';
 import 'package:ion/app/hooks/use_on_init.dart';
+import 'package:ion/app/hooks/use_scroll_top_on_tab_press.dart';
 import 'package:ion/app/router/app_routes.c.dart';
 import 'package:ion/app/services/media_service/media_encryption_service.c.dart';
 import 'package:ion/generated/assets.gen.dart';
@@ -37,6 +38,7 @@ class RecentChatsTimelinePage extends HookConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final archiveVisible = useState(false);
     final scrollController = useScrollController();
+    useScrollTopOnTabPress(context, scrollController: scrollController);
     final archivedConversations = ref.watch(archivedConversationsProvider);
     final isArchivedConversationsEmpty = archivedConversations.valueOrNull?.isEmpty ?? true;
 
