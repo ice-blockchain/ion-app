@@ -2,8 +2,8 @@
 
 import 'package:ion_identity_client/src/statistics/services/hashtags/hashtags_service.dart';
 
-class IonIdentityStatistics {
-  IonIdentityStatistics({
+class IONIdentityStatistics {
+  IONIdentityStatistics({
     required this.username,
     required HashtagsService hashtagsService,
   }) : _hashtagsService = hashtagsService;

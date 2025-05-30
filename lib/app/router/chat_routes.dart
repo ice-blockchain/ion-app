@@ -40,6 +40,7 @@ class ChatRoutes {
         TypedGoRoute<ExploreTransactionDetailsChatRoute>(path: 'coin-transaction-explore-chat'),
         TypedGoRoute<RequestCoinsFormChatRoute>(path: 'request-coins-form-chat'),
         TypedGoRoute<AddressNotFoundChatRoute>(path: 'address-not-found'),
+        TypedGoRoute<DeviceKeypairDialogRoute>(path: 'device-keypair-dialog'),
       ],
     ),
   ];
@@ -374,4 +375,14 @@ class ChatMediaRoute extends BaseRouteData {
 
   final String eventReference;
   final int initialIndex;
+}
+
+class DeviceKeypairDialogRoute extends BaseRouteData {
+  DeviceKeypairDialogRoute({required this.state})
+      : super(
+          child: DeviceKeypairDialog(state: state),
+          type: IceRouteType.bottomSheet,
+        );
+
+  final DeviceKeypairState state;
 }

@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion_identity_client_example/pages/get_ion_connect_indexers/get_ion_connect_indexers_page.dart';
 import 'package:ion_identity_client_example/pages/get_user_details/get_user_details_page.dart';
+import 'package:ion_identity_client_example/pages/keys/keys_main_page.dart';
 import 'package:ion_identity_client_example/pages/set_ion_connect_relays/set_ion_connect_relays_page.dart';
 import 'package:ion_identity_client_example/pages/twofa/twofa_page.dart';
 import 'package:ion_identity_client_example/pages/user_wallet_views/user_wallet_views_page.dart';
@@ -86,6 +87,16 @@ class UserDetailsPage extends HookConsumerWidget {
               Navigator.of(context).push(
                 MaterialPageRoute(
                   builder: (context) => const TwoFAPage(),
+                ),
+              );
+            },
+          ),
+          ListTile(
+            title: const Text('Keys'),
+            onTap: () {
+              Navigator.of(context).push(
+                MaterialPageRoute(
+                  builder: (context) => const KeysMainPage(),
                 ),
               );
             },

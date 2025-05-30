@@ -31,6 +31,7 @@ enum EnvVariable {
   FIREBASE_CONFIG,
   RELAY_PING_INTERVAL_SECONDS,
   BLOCKED_USERS_SYNC_OVERLAP_DAYS,
+  CHECKSUM,
 }
 
 @Riverpod(keepAlive: true)
@@ -86,6 +87,7 @@ class Env extends _$Env {
         ) as T,
       EnvVariable.BLOCKED_USERS_SYNC_OVERLAP_DAYS =>
         const int.fromEnvironment('BLOCKED_USERS_SYNC_OVERLAP_DAYS') as T,
+      EnvVariable.CHECKSUM => const String.fromEnvironment('CHECKSUM') as T,
     };
   }
 }

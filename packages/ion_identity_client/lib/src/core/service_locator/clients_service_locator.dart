@@ -3,6 +3,7 @@
 import 'package:ion_identity_client/ion_identity.dart';
 import 'package:ion_identity_client/src/core/service_locator/ion_identity_clients/auth_client_service_locator.dart';
 import 'package:ion_identity_client/src/core/service_locator/ion_identity_clients/coin_client_service_locator.dart';
+import 'package:ion_identity_client/src/core/service_locator/ion_identity_clients/keys_client_service_locator.dart';
 import 'package:ion_identity_client/src/core/service_locator/ion_identity_clients/networks_client_service_locator.dart';
 import 'package:ion_identity_client/src/core/service_locator/ion_identity_clients/statistics_client_service_locator.dart';
 import 'package:ion_identity_client/src/core/service_locator/ion_identity_clients/users_client_service_locator.dart';
@@ -28,6 +29,9 @@ class ClientsServiceLocator {
     var client = _clients[username];
     if (client == null) {
       client = IONIdentityClient(
+        username: username,
+        config: config,
+        identitySigner: identitySigner,
         auth: AuthClientServiceLocator().auth(
           username: username,
           config: config,
@@ -53,6 +57,11 @@ class ClientsServiceLocator {
         statistics: StatisticsClientServiceLocator().statistics(
           username: username,
           config: config,
+        ),
+        keys: KeysClientServiceLocator().keys(
+          username: username,
+          config: config,
+          identitySigner: identitySigner,
         ),
       );
       _clients[username] = client;

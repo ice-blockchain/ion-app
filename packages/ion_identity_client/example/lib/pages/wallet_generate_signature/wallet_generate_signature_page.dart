@@ -34,7 +34,7 @@ class WalletGenerateSignaturePage extends HookConsumerWidget {
             DropdownButton<Wallet>(
               value: selectedWallet.value,
               items: wallets.value
-                      ?.map((wallet) => DropdownMenuItem(value: wallet, child: Text(wallet.name)))
+                      ?.map((wallet) => DropdownMenuItem(value: wallet, child: Text(wallet.name!)))
                       .toList() ??
                   [],
               onChanged: (wallet) => selectedWallet.value = wallet,
