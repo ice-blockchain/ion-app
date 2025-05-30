@@ -26,7 +26,7 @@ dependencies:
   cross_file: ^0.3.4+2
   cryptography: ^2.7.0
   cupertino_icons: ^1.0.6
-  device_info_plus: ^10.1.2
+  device_info_plus: ^11.1.0
   dio: ^5.7.0
   dlibphonenumber: ^1.1.26
   dotted_border: ^2.1.0
