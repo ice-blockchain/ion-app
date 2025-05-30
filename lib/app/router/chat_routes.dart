@@ -370,7 +370,7 @@ class ChatMediaRoute extends BaseRouteData {
             initialIndex: initialIndex,
           ),
           type: IceRouteType.swipeDismissible,
-          isFullscreenImage: true,
+          isFullscreenMedia: true,
         );
 
   final String eventReference;
