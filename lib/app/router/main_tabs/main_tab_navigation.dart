@@ -26,10 +26,16 @@ class MainTabNavigation extends HookWidget {
     final tabHistory = useState<List<int>>([shell.currentIndex]);
     final tabPressStreamController = useStreamController<TabPressSteamData>();
     final currentTab = TabItem.fromNavigationIndex(shell.currentIndex);
+    final canPop = useState<bool>(GoRouter.of(context).canPop());
+
+    // GoRouter.of(context).canPop() holds incorrect value during build phase
+    // so we need to wait for it to finish in order to get the correct value.
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      canPop.value = GoRouter.of(context).canPop();
+    });
 
     return PopScope(
-      canPop: !Navigator.of(context).canPop() &&
-          (tabHistory.value.length <= 1 || currentTab == TabItem.feed),
+      canPop: !canPop.value && (tabHistory.value.length <= 1 || currentTab == TabItem.feed),
       onPopInvokedWithResult: (didPop, result) async {
         if (!didPop) {
           if (Navigator.of(context).canPop()) {
