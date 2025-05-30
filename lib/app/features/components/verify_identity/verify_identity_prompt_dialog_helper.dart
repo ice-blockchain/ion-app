@@ -40,7 +40,7 @@ class RiverpodUserActionSignerRequestBuilder<T> extends HookConsumerWidget {
 
   final Widget child;
   final ProviderListenable<AsyncValue<T>> provider;
-  final void Function(UserActionSignerNew signer) request;
+  final Future<void> Function(UserActionSignerNew signer) request;
   final String? identityKeyName;
 
   @override
@@ -75,13 +75,13 @@ class RiverpodUserActionSignerRequestBuilder<T> extends HookConsumerWidget {
     final ionIdentityClient = ionIdentity(username: username);
     final signerFactory = ionIdentityClient.userActionSignerFactory;
 
-    final signer = signerFactory.createSigner(
+    final signer = await signerFactory.createSigner(
       localisedReasonForBiometrics: locale.verify_with_biometrics_title,
       localisedCancelForBiometrics: locale.button_cancel,
       getPassword: () => onGetPassword<String>(({required String password}) async => password),
     );
 
-    request(signer);
+    await request(signer);
   }
 }
 

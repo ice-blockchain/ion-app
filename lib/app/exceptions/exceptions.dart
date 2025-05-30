@@ -569,4 +569,3 @@ class DeviceKeypairRestoreException extends IONException {
   DeviceKeypairRestoreException(Object error)
       : super(10113, 'Failed to restore device keypair: $error');
 }
-

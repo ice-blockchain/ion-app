@@ -16,8 +16,8 @@ class MediaAttachment {
     required this.url,
     required this.mimeType,
     required this.dimension,
-    required this.alt,
     required this.originalFileHash,
+    this.alt,
     this.encryptionKey,
     this.encryptionNonce,
     this.encryptionMac,
@@ -131,7 +131,7 @@ class MediaAttachment {
         'url': url,
         'mimeType': mimeType,
         'dimension': dimension,
-        'alt': alt.toShortString(),
+        if (alt != null) 'alt': alt!.toShortString(),
         'originalFileHash': originalFileHash,
         'encryptionKey': encryptionKey,
         'encryptionNonce': encryptionNonce,
@@ -147,7 +147,7 @@ class MediaAttachment {
 
   final String dimension;
 
-  final FileAlt alt;
+  final FileAlt? alt;
 
   final String originalFileHash;
 
@@ -207,7 +207,7 @@ class MediaAttachment {
       'url $url',
       'm $mimeType',
       'dim $dimension',
-      'alt ${alt.toShortString()}',
+      if (alt != null) 'alt ${alt!.toShortString()}',
       'ox $originalFileHash',
       if (encryptionKey != null && encryptionNonce != null)
         'encryption-key $encryptionKey $encryptionNonce $encryptionMac aes-gcm',

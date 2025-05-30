@@ -67,6 +67,8 @@ import 'package:ion/app/features/gallery/views/pages/gallery_camera_page.dart';
 import 'package:ion/app/features/gallery/views/pages/media_picker_page.dart';
 import 'package:ion/app/features/gallery/views/pages/media_picker_type.dart';
 import 'package:ion/app/features/ion_connect/model/event_reference.c.dart';
+import 'package:ion/app/features/ion_connect/providers/device_keypair_dialog_state.c.dart';
+import 'package:ion/app/features/ion_connect/views/components/device_keypair_dialog.dart';
 import 'package:ion/app/features/protect_account/authenticator/views/pages/delete_authenticator/authenticator_delete_page.dart';
 import 'package:ion/app/features/protect_account/authenticator/views/pages/delete_authenticator/authenticator_delete_success.dart';
 import 'package:ion/app/features/protect_account/authenticator/views/pages/setup_authenticator/step_pages.dart';

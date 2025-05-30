@@ -10,18 +10,17 @@ import 'package:ion_identity_client/src/signer/user_action_signer_new.dart';
 class PasswordUserActionSigner implements UserActionSignerNew {
   const PasswordUserActionSigner({
     required this.userActionSigner,
-    required this.getPassword,
+    required this.password,
   });
 
   final UserActionSigner userActionSigner;
-  final Future<String> Function() getPassword;
+  final String password;
 
   @override
   Future<T> sign<T>(
     UserActionSigningRequest request,
     T Function(JsonObject) responseDecoder,
   ) async {
-    final password = await getPassword();
     return userActionSigner.signWithPassword(request, responseDecoder, password);
   }
 }

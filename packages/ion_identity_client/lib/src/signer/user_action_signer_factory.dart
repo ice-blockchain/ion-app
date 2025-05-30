@@ -20,11 +20,11 @@ class UserActionSignerFactory {
   /// 1. If user is password flow user and biometrics enabled -> BiometricsUserActionSigner
   /// 2. If user is password flow user and biometrics disabled -> PasswordUserActionSigner (gets password via callback)
   /// 3. If user is passkey user -> PasskeyUserActionSigner
-  UserActionSignerNew createSigner({
+  Future<UserActionSignerNew> createSigner({
     String? localisedReasonForBiometrics,
     String? localisedCancelForBiometrics,
     Future<String> Function()? getPassword,
-  }) {
+  }) async {
     final isPasswordFlowUser = ionIdentityAuth.isPasswordFlowUser();
     final biometricsState = ionIdentityAuth.getBiometricsState();
 
@@ -40,7 +40,7 @@ class UserActionSignerFactory {
 
       // For password flow users without biometrics
       if (getPassword != null) {
-        return createPasswordSignerWithCallback(getPassword: getPassword);
+        return createPasswordSigner(password: await getPassword());
       }
 
       throw ArgumentError(
@@ -59,12 +59,12 @@ class UserActionSignerFactory {
   }
 
   /// Creates a PasswordUserActionSigner with a callback for lazy password retrieval.
-  UserActionSignerNew createPasswordSignerWithCallback({
-    required Future<String> Function() getPassword,
+  UserActionSignerNew createPasswordSigner({
+    required String password,
   }) {
     return PasswordUserActionSigner(
       userActionSigner: userActionSigner,
-      getPassword: getPassword,
+      password: password,
     );
   }
 

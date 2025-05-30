@@ -14,11 +14,8 @@ import 'package:ion/app/features/chat/recent_chats/views/pages/recent_chats_empt
 import 'package:ion/app/features/chat/recent_chats/views/pages/recent_chats_timeline_page/recent_chats_timeline_page.dart';
 import 'package:ion/app/features/chat/views/pages/chat_main_page/components/chat_main_appbar/chat_main_appbar.dart';
 import 'package:ion/app/features/ion_connect/providers/device_keypair_dialog_notifier_provider.c.dart';
-import 'package:ion/app/features/ion_connect/providers/restore_device_keypair_notifier.c.dart';
-import 'package:ion/app/features/ion_connect/providers/upload_device_keypair_notifier.c.dart';
-import 'package:ion/app/features/ion_connect/views/components/device_keypair_dialog.dart';
 import 'package:ion/app/hooks/use_on_init.dart';
-import 'package:ion/app/router/utils/show_simple_bottom_sheet.dart';
+import 'package:ion/app/router/app_routes.c.dart';
 
 class ChatMainPage extends HookConsumerWidget {
   const ChatMainPage({super.key});
@@ -28,11 +25,10 @@ class ChatMainPage extends HookConsumerWidget {
     useOnInit(() {
       ref
         ..read(communityJoinRequestsProvider)
-        ..watch(e2eeMessagesSubscriberProvider)
-        ..watch(uploadDeviceKeypairNotifierProvider)
-        ..watch(restoreDeviceKeypairNotifierProvider)
         ..read(communityMessagesSubscriberProvider);
     });
+
+    ref.watch(e2eeMessagesSubscriberProvider);
 
     _useCheckDeviceKeypairDialog(ref);
 
@@ -65,13 +61,7 @@ class ChatMainPage extends HookConsumerWidget {
       }
 
       dialogProvider.markDialogShown();
-      unawaited(
-        showSimpleBottomSheet<void>(
-          context: ref.context,
-          isDismissible: false,
-          child: DeviceKeypairDialog(state: dialogState),
-        ),
-      );
+      unawaited(DeviceKeypairDialogRoute(state: dialogState).push(ref.context));
     });
   }
 }

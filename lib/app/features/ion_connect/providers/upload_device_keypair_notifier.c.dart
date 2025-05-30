@@ -8,7 +8,6 @@ import 'package:convert/convert.dart';
 import 'package:cryptography/cryptography.dart';
 import 'package:ion/app/exceptions/exceptions.dart';
 import 'package:ion/app/features/ion_connect/ion_connect.dart';
-import 'package:ion/app/features/ion_connect/model/file_alt.dart';
 import 'package:ion/app/features/ion_connect/model/file_metadata.c.dart';
 import 'package:ion/app/features/ion_connect/model/media_attachment.dart';
 import 'package:ion/app/features/ion_connect/providers/device_keypair_constants.dart';
@@ -32,7 +31,6 @@ class UploadDeviceKeypairNotifier extends _$UploadDeviceKeypairNotifier {
   FutureOr<void> build() {}
 
   Future<void> uploadDeviceKeypair({
-    required String identityKeyName,
     required UserActionSignerNew signer,
   }) async {
     state = const AsyncLoading();
@@ -85,8 +83,9 @@ class UploadDeviceKeypairNotifier extends _$UploadDeviceKeypairNotifier {
   ) async {
     final fileId = DeviceKeypairUtils.extractFileIdFromUrl(url);
     if (fileId == null) {
-      Logger.log('Warning: Could not extract file ID from URL: $url');
-      return;
+      final error = DeviceKeypairUploadException('Could not extract file ID from URL: $url');
+      Logger.error(error);
+      throw error;
     }
 
     try {
@@ -100,10 +99,8 @@ class UploadDeviceKeypairNotifier extends _$UploadDeviceKeypairNotifier {
         signer: signer,
       );
     } catch (e) {
-      Logger.log(
-        'Warning: Failed to rename key with compressed file ID',
-        error: e,
-      );
+      Logger.error(e, message: 'Failed to rename key with compressed file ID');
+      throw DeviceKeypairUploadException('Failed to rename key with compressed file ID');
     }
   }
 
@@ -142,10 +139,7 @@ class UploadDeviceKeypairNotifier extends _$UploadDeviceKeypairNotifier {
     );
 
     try {
-      return await ref.read(ionConnectUploadNotifierProvider.notifier).upload(
-            mediaFile,
-            alt: FileAlt.message,
-          );
+      return await ref.read(ionConnectUploadNotifierProvider.notifier).upload(mediaFile);
     } finally {
       if (tempFile.existsSync()) {
         await tempFile.delete();

@@ -10,6 +10,7 @@ import 'package:dio/dio.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/exceptions/exceptions.dart';
 import 'package:ion/app/features/core/providers/dio_provider.c.dart';
+import 'package:ion/app/features/core/providers/env_provider.c.dart';
 import 'package:ion/app/features/ion_connect/providers/device_keypair_constants.dart';
 import 'package:ion/app/features/ion_connect/providers/file_storage_url_provider.c.dart';
 import 'package:ion/app/features/user/providers/current_user_identity_provider.c.dart';
@@ -43,21 +44,28 @@ class DeviceKeypairUtils {
     required String keyId,
     required UserActionSignerNew signer,
   }) async {
-    final userDetails = await ref.read(currentUserIdentityProvider.future);
-    if (userDetails?.userId == null) {
-      throw DeviceKeypairRestoreException('User ID not found');
-    }
+    final domain = hex.encode(DeviceKeypairConstants.domain.codeUnits);
+    final seed = await generateSeed(ref);
 
     final ionIdentity = await ref.read(ionIdentityClientProvider.future);
-    final domain = hex.encode(DeviceKeypairConstants.domain.codeUnits);
-    final seed = hex.encode(userDetails!.userId!.codeUnits);
-
     return ionIdentity.keys.derive(
       keyId: keyId,
       domain: domain,
       seed: seed,
       signer: signer,
     );
+  }
+
+  static Future<String> generateSeed(Ref ref) async {
+    final userDetails = await ref.read(currentUserIdentityProvider.future);
+    if (userDetails?.userId == null) {
+      throw DeviceKeypairRestoreException('User ID not found');
+    }
+    const keyName = DeviceKeypairConstants.keyName;
+    final userId = userDetails!.userId;
+    final checksum = ref.read(envProvider.notifier).get<String>(EnvVariable.CHECKSUM);
+
+    return hex.encode('$keyName:$userId:$checksum'.codeUnits);
   }
 
   /// Finds device keys for synchronization across devices

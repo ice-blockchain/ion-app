@@ -30,7 +30,7 @@ class IonConnectUploadNotifier extends _$IonConnectUploadNotifier {
 
   Future<UploadResult> upload(
     MediaFile file, {
-    required FileAlt alt,
+    FileAlt? alt,
     EventSigner? customEventSigner,
   }) async {
     if (file.width == null || file.height == null) {
@@ -80,9 +80,9 @@ class IonConnectUploadNotifier extends _$IonConnectUploadNotifier {
   Future<UploadResponse> _makeUploadRequest({
     required String url,
     required MediaFile file,
-    required FileAlt alt,
     required Uint8List fileBytes,
     required String authorizationToken,
+    FileAlt? alt,
   }) async {
     final fileName = file.name ?? file.basename;
     final multipartFile = MultipartFile.fromBytes(fileBytes, filename: fileName);
@@ -90,7 +90,7 @@ class IonConnectUploadNotifier extends _$IonConnectUploadNotifier {
     final formData = FormData.fromMap({
       'file': MultipartFile.fromBytes(fileBytes, filename: fileName),
       'caption': fileName,
-      'alt': alt.toShortString(),
+      if (alt != null) 'alt': alt.toShortString(),
       'size': multipartFile.length,
       'content_type': file.mimeType,
     });

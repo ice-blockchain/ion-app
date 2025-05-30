@@ -1,17 +1,18 @@
 // SPDX-License-Identifier: ice License 1.0
 
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/components/button/button.dart';
 import 'package:ion/app/components/screen_offset/screen_bottom_offset.dart';
 import 'package:ion/app/components/screen_offset/screen_side_offset.dart';
 import 'package:ion/app/extensions/extensions.dart';
-import 'package:ion/app/features/auth/providers/auth_provider.c.dart';
 import 'package:ion/app/features/components/verify_identity/verify_identity_prompt_dialog_helper.dart';
 import 'package:ion/app/features/ion_connect/providers/device_keypair_dialog_manager.c.dart';
 import 'package:ion/app/features/ion_connect/providers/device_keypair_dialog_state.c.dart';
 import 'package:ion/app/features/ion_connect/providers/restore_device_keypair_notifier.c.dart';
 import 'package:ion/app/features/ion_connect/providers/upload_device_keypair_notifier.c.dart';
+import 'package:ion/app/router/components/sheet_content/sheet_content.dart';
 
 class DeviceKeypairDialog extends HookConsumerWidget {
   const DeviceKeypairDialog({
@@ -23,18 +24,15 @@ class DeviceKeypairDialog extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    switch (state) {
-      case DeviceKeypairState.needsUpload:
-      case DeviceKeypairState.uploadInProgress:
-        return _UploadDialog(
-          isInProgress: state == DeviceKeypairState.uploadInProgress,
-        );
-      case DeviceKeypairState.needsRestore:
-        return const _RestoreDialog();
-      case DeviceKeypairState.completed:
-      case DeviceKeypairState.rejectedThisSession:
-        return const SizedBox.shrink();
-    }
+    return SheetContent(
+      body: switch (state) {
+        DeviceKeypairState.needsUpload || DeviceKeypairState.uploadInProgress => _UploadDialog(
+            isInProgress: state == DeviceKeypairState.uploadInProgress,
+          ),
+        DeviceKeypairState.needsRestore => const _RestoreDialog(),
+        _ => throw StateError('Invalid state: $state'),
+      },
+    );
   }
 }
 
@@ -50,8 +48,13 @@ class _UploadDialog extends HookConsumerWidget {
     final textStyles = context.theme.appTextThemes;
     final colors = context.theme.appColors;
 
+    ref
+      ..listenError(uploadDeviceKeypairNotifierProvider, (_) => context.pop())
+      ..listenSuccess(uploadDeviceKeypairNotifierProvider, (_) => context.pop());
+
     return ScreenSideOffset.medium(
       child: Column(
+        mainAxisSize: MainAxisSize.min,
         children: [
           SizedBox(height: 48.0.s),
           Text(
@@ -78,27 +81,17 @@ class _UploadDialog extends HookConsumerWidget {
                   : context.i18n.device_keypair_button_upload_now,
             ),
             onPressed: () async {
-              Navigator.of(context).pop();
-
-              final identityKeyName = ref.read(currentIdentityKeyNameSelectorProvider);
-              if (identityKeyName == null) {
-                return;
-              }
-
               await guardPasskeyDialog(
                 context,
-                (child) {
-                  return RiverpodUserActionSignerRequestBuilder(
-                    provider: uploadDeviceKeypairNotifierProvider,
-                    request: (signer) {
-                      ref.read(uploadDeviceKeypairNotifierProvider.notifier).uploadDeviceKeypair(
-                            identityKeyName: identityKeyName,
-                            signer: signer,
-                          );
-                    },
-                    child: child,
-                  );
-                },
+                (child) => RiverpodUserActionSignerRequestBuilder(
+                  provider: uploadDeviceKeypairNotifierProvider,
+                  request: (signer) async {
+                    await ref
+                        .read(uploadDeviceKeypairNotifierProvider.notifier)
+                        .uploadDeviceKeypair(signer: signer);
+                  },
+                  child: child,
+                ),
               );
             },
           ),
@@ -127,8 +120,13 @@ class _RestoreDialog extends HookConsumerWidget {
     final textStyles = context.theme.appTextThemes;
     final colors = context.theme.appColors;
 
+    ref
+      ..listenError(restoreDeviceKeypairNotifierProvider, (_) => context.pop())
+      ..listenSuccess(restoreDeviceKeypairNotifierProvider, (_) => context.pop());
+
     return ScreenSideOffset.medium(
       child: Column(
+        mainAxisSize: MainAxisSize.min,
         children: [
           SizedBox(height: 48.0.s),
           Text(
@@ -147,17 +145,15 @@ class _RestoreDialog extends HookConsumerWidget {
             minimumSize: Size(double.infinity, 56.0.s),
             label: Text(context.i18n.device_keypair_button_restore_now),
             onPressed: () async {
-              Navigator.of(context).pop();
-
               await guardPasskeyDialog(
                 context,
                 (child) {
                   return RiverpodUserActionSignerRequestBuilder(
                     provider: restoreDeviceKeypairNotifierProvider,
-                    request: (signer) {
-                      ref.read(restoreDeviceKeypairNotifierProvider.notifier).restoreDeviceKeypair(
-                            signer: signer,
-                          );
+                    request: (signer) async {
+                      await ref
+                          .read(restoreDeviceKeypairNotifierProvider.notifier)
+                          .restoreDeviceKeypair(signer: signer);
                     },
                     child: child,
                   );
