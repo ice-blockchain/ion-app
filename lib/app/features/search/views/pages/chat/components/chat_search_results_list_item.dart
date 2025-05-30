@@ -26,54 +26,47 @@ class ChatSearchResultListItem extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final userMetadata = ref.watch(userMetadataProvider(pubkeyAndContent.$1));
+    final userMetadata = ref.watch(cachedUserMetadataProvider(pubkeyAndContent.$1));
 
     return Padding(
       padding: EdgeInsets.symmetric(vertical: 8.0.s),
       child: ScreenSideOffset.small(
-        child: userMetadata.maybeWhen(
-          data: (userMetadata) {
-            if (userMetadata == null) {
-              return const SizedBox.shrink();
-            }
-
-            return GestureDetector(
-              behavior: HitTestBehavior.opaque,
-              onTap: () {
-                ref
-                    .read(chatSearchHistoryProvider.notifier)
-                    .addUserIdToTheHistory(userMetadata.masterPubkey);
-                context.pushReplacement(
-                  ConversationRoute(receiverPubKey: pubkeyAndContent.$1).location,
-                );
-              },
-              child: Row(
-                children: [
-                  Expanded(
-                    child: BadgesUserListItem(
-                      pubkey: userMetadata.masterPubkey,
-                      title: Text(userMetadata.data.displayName),
-                      subtitle: pubkeyAndContent.$2.isNotEmpty && showLastMessage
-                          ? Text(
-                              pubkeyAndContent.$2,
-                              maxLines: 1,
-                              overflow: TextOverflow.ellipsis,
-                            )
-                          : Text(
-                              prefixUsername(username: userMetadata.data.name, context: context),
-                            ),
+        child: userMetadata == null
+            ? const Skeleton(child: ChatSearchListItemShape())
+            : GestureDetector(
+                behavior: HitTestBehavior.opaque,
+                onTap: () {
+                  ref
+                      .read(chatSearchHistoryProvider.notifier)
+                      .addUserIdToTheHistory(userMetadata.masterPubkey);
+                  context.pushReplacement(
+                    ConversationRoute(receiverPubKey: pubkeyAndContent.$1).location,
+                  );
+                },
+                child: Row(
+                  children: [
+                    Expanded(
+                      child: BadgesUserListItem(
+                        pubkey: userMetadata.masterPubkey,
+                        title: Text(userMetadata.data.displayName),
+                        subtitle: pubkeyAndContent.$2.isNotEmpty && showLastMessage
+                            ? Text(
+                                pubkeyAndContent.$2,
+                                maxLines: 1,
+                                overflow: TextOverflow.ellipsis,
+                              )
+                            : Text(
+                                prefixUsername(username: userMetadata.data.name, context: context),
+                              ),
+                      ),
                     ),
-                  ),
-                  Assets.svg.iconArrowRight.icon(
-                    size: 24.0.s,
-                    color: context.theme.appColors.tertararyText,
-                  ),
-                ],
+                    Assets.svg.iconArrowRight.icon(
+                      size: 24.0.s,
+                      color: context.theme.appColors.tertararyText,
+                    ),
+                  ],
+                ),
               ),
-            );
-          },
-          orElse: () => const Skeleton(child: ChatSearchListItemShape()),
-        ),
       ),
     );
   }
