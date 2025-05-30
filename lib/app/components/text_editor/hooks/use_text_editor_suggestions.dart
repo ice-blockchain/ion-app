@@ -31,7 +31,8 @@ TextEditorSuggestionsState useTextEditorSuggestions({
   useEffect(
     () {
       void onTextChange() {
-        if (isScrolling.value) return;
+        // Only auto-scroll when suggestions are visible to avoid interfering with normal editing
+        if (isScrolling.value || !suggestionsState.isVisible) return;
 
         final editorContext = editorKey.currentContext;
         if (editorContext != null && scrollController.hasClients) {
@@ -51,7 +52,7 @@ TextEditorSuggestionsState useTextEditorSuggestions({
       quillController?.addListener(onTextChange);
       return () => quillController?.removeListener(onTextChange);
     },
-    [quillController],
+    [quillController, suggestionsState.isVisible],
   );
 
   useEffect(
