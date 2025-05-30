@@ -15,7 +15,7 @@ enum ConversationType implements MainModalListItem {
   @override
   String getDisplayName(BuildContext context) {
     return switch (this) {
-      ConversationType.private => context.i18n.new_chat_modal_title,
+      ConversationType.private => context.i18n.common_chat,
       ConversationType.group => context.i18n.new_chat_modal_new_group_button,
       ConversationType.channel => context.i18n.new_chat_modal_new_channel_button,
     };
