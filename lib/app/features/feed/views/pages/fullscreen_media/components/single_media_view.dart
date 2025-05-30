@@ -41,6 +41,9 @@ class SingleMediaView extends HookWidget {
         bottomOverlay: VideoActions(eventReference: eventReference),
         videoUrl: media.url,
         authorPubkey: eventReference.pubkey,
+        thumbnailUrl: media.thumb,
+        blurhash: media.blurhash,
+        aspectRatio: media.aspectRatio,
         framedEventReference: framedEventReference,
         looping: true,
       );

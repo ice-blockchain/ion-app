@@ -50,6 +50,7 @@ import 'package:ion/app/features/user/providers/verified_user_events_metadata_pr
 import 'package:ion/app/services/compressors/image_compressor.c.dart';
 import 'package:ion/app/services/compressors/video_compressor.c.dart';
 import 'package:ion/app/services/markdown/quill.dart';
+import 'package:ion/app/services/media_service/blurhash_service.c.dart';
 import 'package:ion/app/services/media_service/media_service.c.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
@@ -487,15 +488,22 @@ class CreatePostNotifier extends _$CreatePostNotifier {
           );
     }
 
+    final blurhash = await ref.read(generateBlurhashProvider(compressedImage));
+
     final uploadResult = await ref.read(ionConnectUploadNotifierProvider.notifier).upload(
           compressedImage,
           alt: _getFileAlt(),
         );
 
-    return (
-      fileMetadatas: [uploadResult.fileMetadata],
-      mediaAttachment: uploadResult.mediaAttachment
+    final mediaAttachment = uploadResult.mediaAttachment.copyWith(
+      blurhash: blurhash,
     );
+
+    final fileMetadata = uploadResult.fileMetadata.copyWith(
+      blurhash: blurhash,
+    );
+
+    return (fileMetadatas: [fileMetadata], mediaAttachment: mediaAttachment);
   }
 
   Future<({List<FileMetadata> fileMetadatas, MediaAttachment mediaAttachment})> _uploadVideo(
@@ -516,11 +524,20 @@ class CreatePostNotifier extends _$CreatePostNotifier {
 
     final thumbUrl = thumbUploadResult.fileMetadata.url;
 
-    final mediaAttachment =
-        videoUploadResult.mediaAttachment.copyWith(thumb: thumbUrl, image: thumbUrl);
+    // Generate blurhash from thumbnail for videos
+    final blurhash = await ref.read(generateBlurhashProvider(thumbImage));
 
-    final videoFileMetadata =
-        videoUploadResult.fileMetadata.copyWith(thumb: thumbUrl, image: thumbUrl);
+    final mediaAttachment = videoUploadResult.mediaAttachment.copyWith(
+      thumb: thumbUrl,
+      image: thumbUrl,
+      blurhash: blurhash,
+    );
+
+    final videoFileMetadata = videoUploadResult.fileMetadata.copyWith(
+      thumb: thumbUrl,
+      image: thumbUrl,
+      blurhash: blurhash,
+    );
 
     return (
       fileMetadatas: [videoFileMetadata, thumbUploadResult.fileMetadata],

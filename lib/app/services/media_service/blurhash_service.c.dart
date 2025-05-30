@@ -7,6 +7,8 @@ import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/exceptions/exceptions.dart';
 import 'package:ion/app/features/core/model/media_type.dart';
+import 'package:ion/app/services/compressors/video_compressor.c.dart';
+import 'package:ion/app/services/logger/logger.dart';
 import 'package:ion/app/services/media_service/media_service.c.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
@@ -20,17 +22,30 @@ Raw<Future<String?>> generateBlurhash(Ref ref, MediaFile mediaFile) async {
     }
 
     final mimeType = MediaType.fromMimeType(mediaFile.mimeType!);
-    if (mimeType != MediaType.image) {
-      return null;
+
+    if (mimeType == MediaType.image) {
+      final file = File(mediaFile.path);
+      if (!file.existsSync()) {
+        return null;
+      }
+      final image = FileImage(file);
+      return BlurhashFFI.encode(image);
     }
 
-    final file = File(mediaFile.path);
-    if (!file.existsSync()) {
-      return null;
+    if (mimeType == MediaType.video) {
+      final videoCompressor = ref.read(videoCompressorProvider);
+
+      try {
+        final thumbnailFile = await videoCompressor.getThumbnail(mediaFile);
+        final thumbnailImage = FileImage(File(thumbnailFile.path));
+        return BlurhashFFI.encode(thumbnailImage);
+      } catch (e) {
+        Logger.log('Failed to generate blurhash for video', error: e);
+        return null;
+      }
     }
 
-    final image = FileImage(file);
-    return BlurhashFFI.encode(image);
+    return null;
   } catch (error) {
     throw MediaBlurhashCannotBeGeneratedException(mediaFile.mimeType, error: error);
   }

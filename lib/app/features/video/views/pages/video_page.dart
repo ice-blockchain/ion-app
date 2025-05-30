@@ -12,6 +12,7 @@ import 'package:ion/app/features/ion_connect/model/event_reference.c.dart';
 import 'package:ion/app/features/video/views/components/video_button.dart';
 import 'package:ion/app/features/video/views/components/video_progress.dart';
 import 'package:ion/app/features/video/views/components/video_slider.dart';
+import 'package:ion/app/features/video/views/components/video_thumbnail_preview.dart';
 import 'package:ion/app/features/video/views/hooks/use_video_ended.dart';
 import 'package:ion/app/hooks/use_route_presence.dart';
 import 'package:ion/generated/assets.gen.dart';
@@ -27,6 +28,9 @@ class VideoPage extends HookConsumerWidget {
     this.videoInfo,
     this.bottomOverlay,
     this.videoBottomPadding = 42.0,
+    this.thumbnailUrl,
+    this.blurhash,
+    this.aspectRatio,
     super.key,
   });
 
@@ -38,6 +42,9 @@ class VideoPage extends HookConsumerWidget {
   final Widget? videoInfo;
   final Widget? bottomOverlay;
   final double videoBottomPadding;
+  final String? thumbnailUrl;
+  final String? blurhash;
+  final double? aspectRatio;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -60,7 +67,37 @@ class VideoPage extends HookConsumerWidget {
         .value;
 
     if (playerController == null || !playerController.value.isInitialized) {
-      return const CenteredLoadingIndicator();
+      final thumbnailAspectRatio = aspectRatio ?? 16 / 9;
+
+      Widget thumbnailWidget = VideoThumbnailPreview(
+        thumbnailUrl: thumbnailUrl,
+        blurhash: blurhash,
+        authorPubkey: authorPubkey,
+      );
+
+      if (thumbnailAspectRatio < 1) {
+        thumbnailWidget = SizedBox.expand(
+          child: FittedBox(
+            fit: BoxFit.cover,
+            child: thumbnailWidget,
+          ),
+        );
+      } else {
+        thumbnailWidget = Center(
+          child: AspectRatio(
+            aspectRatio: thumbnailAspectRatio,
+            child: thumbnailWidget,
+          ),
+        );
+      }
+
+      return Stack(
+        fit: StackFit.expand,
+        children: [
+          thumbnailWidget,
+          const CenteredLoadingIndicator(),
+        ],
+      );
     }
 
     final isPlaying = useState(playerController.value.isPlaying);
@@ -153,7 +190,10 @@ class VideoPage extends HookConsumerWidget {
                 top: false,
                 child: Padding(
                   padding: EdgeInsetsDirectional.only(bottom: videoBottomPadding.s),
-                  child: videoPlayer,
+                  child: AnimatedSwitcher(
+                    duration: const Duration(milliseconds: 300),
+                    child: videoPlayer,
+                  ),
                 ),
               ),
             ),
