@@ -22,12 +22,11 @@ class CoinTransactionHistoryNotifier extends _$CoinTransactionHistoryNotifier {
   static const int _pageSize = 20;
   static const String _tag = 'CoinTransactionHistory: ';
 
-  final List<CoinTransactionData> _history = [];
-
   late List<String> _coinWalletAddresses;
   late List<CoinInWalletData> _coins;
   late String _walletViewId;
 
+  List<CoinTransactionData> _history = [];
   NetworkData? _network;
   var _offset = 0;
 
@@ -51,8 +50,9 @@ class CoinTransactionHistoryNotifier extends _$CoinTransactionHistoryNotifier {
   }
 
   void _reset() {
-    _history.clear();
+    Logger.warning('$_tag reset history, since notifier dependencies changed');
     _offset = 0;
+    _history = [];
   }
 
   Future<void> loadMore() async {

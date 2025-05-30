@@ -9,7 +9,7 @@ import 'package:ion/app/components/screen_offset/screen_side_offset.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/wallets/hooks/use_check_wallet_address_available.dart';
 import 'package:ion/app/features/wallets/model/network_data.c.dart';
-import 'package:ion/app/features/wallets/providers/coins_by_filters_provider.c.dart';
+import 'package:ion/app/features/wallets/providers/synced_coins_by_symbol_group_provider.c.dart';
 import 'package:ion/app/features/wallets/views/components/network_icon_widget.dart';
 import 'package:ion/app/features/wallets/views/pages/coins_flow/coin_receive_modal/components/coin_address_tile/coin_address_tile.dart';
 import 'package:ion/app/features/wallets/views/pages/coins_flow/receive_coins/providers/receive_coins_form_provider.c.dart';
@@ -30,12 +30,8 @@ class CoinReceiveModal extends HookConsumerWidget {
     final selectedNetwork = ref.watch(
       receiveCoinsFormControllerProvider.select((state) => state.selectedNetwork),
     );
-
     final coinsWithNetworkOptions = ref.watch(
-      coinsByFiltersProvider(
-        symbol: coinsGroup.abbreviation,
-        symbolGroup: coinsGroup.symbolGroup,
-      ),
+      syncedCoinsBySymbolGroupProvider(coinsGroup.symbolGroup),
     );
 
     useOnInit(

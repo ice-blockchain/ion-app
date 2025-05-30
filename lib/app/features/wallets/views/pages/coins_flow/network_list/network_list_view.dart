@@ -14,7 +14,6 @@ import 'package:ion/app/features/wallets/model/coin_data.c.dart';
 import 'package:ion/app/features/wallets/model/coin_in_wallet_data.c.dart';
 import 'package:ion/app/features/wallets/model/crypto_asset_to_send_data.c.dart';
 import 'package:ion/app/features/wallets/model/network_data.c.dart';
-import 'package:ion/app/features/wallets/providers/coins_by_filters_provider.c.dart';
 import 'package:ion/app/features/wallets/providers/mock_data/mock_data.dart';
 import 'package:ion/app/features/wallets/providers/send_asset_form_provider.c.dart';
 import 'package:ion/app/features/wallets/providers/synced_coins_by_symbol_group_provider.c.dart';
@@ -55,17 +54,7 @@ class NetworkListView extends ConsumerWidget {
 
     final coinsState = coinsGroup == null
         ? const AsyncValue<List<CoinInWalletData>>.loading()
-        : switch (type) {
-            NetworkListViewType.send => ref.watch(
-                syncedCoinsBySymbolGroupProvider(coinsGroup.symbolGroup),
-              ),
-            NetworkListViewType.receive || NetworkListViewType.request => ref.watch(
-                coinsByFiltersProvider(
-                  symbol: coinsGroup.abbreviation,
-                  symbolGroup: coinsGroup.symbolGroup,
-                ),
-              ),
-          };
+        : ref.watch(syncedCoinsBySymbolGroupProvider(coinsGroup.symbolGroup));
 
     Future<void> onTap(NetworkData network) async {
       if (onSelectReturnType) {
