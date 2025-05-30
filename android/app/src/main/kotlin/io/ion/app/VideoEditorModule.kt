@@ -6,6 +6,7 @@ import com.banuba.sdk.arcloud.data.source.ArEffectsRepositoryProvider
 import com.banuba.sdk.arcloud.di.ArCloudKoinModule
 import com.banuba.sdk.audiobrowser.di.AudioBrowserKoinModule
 import com.banuba.sdk.audiobrowser.domain.AudioBrowserMusicProvider
+import com.banuba.sdk.core.AspectRatio
 import com.banuba.sdk.core.data.TrackData
 import com.banuba.sdk.core.domain.DraftConfig
 import com.banuba.sdk.core.ui.ContentFeatureProvider
@@ -13,8 +14,10 @@ import com.banuba.sdk.effectplayer.adapter.BanubaEffectPlayerKoinModule
 import com.banuba.sdk.export.di.VeExportKoinModule
 import com.banuba.sdk.gallery.di.GalleryKoinModule
 import com.banuba.sdk.playback.di.VePlaybackSdkKoinModule
+import com.banuba.sdk.ve.data.EditorAspectSettings
 import com.banuba.sdk.ve.di.VeSdkKoinModule
 import com.banuba.sdk.ve.flow.di.VeFlowKoinModule
+import com.banuba.sdk.veui.data.EditorConfig
 import com.banuba.sdk.veui.di.VeUiSdkKoinModule
 import org.koin.android.ext.koin.androidContext
 import org.koin.core.context.startKoin
@@ -23,7 +26,7 @@ import org.koin.dsl.module
 
 class VideoEditorModule {
 
-    fun initialize(application: Application) {
+    fun initialize(application: Application, videoAspectRatio: Double?) {
         startKoin {
             androidContext(application)
             allowOverride(true)
@@ -46,7 +49,7 @@ class VideoEditorModule {
                 GalleryKoinModule().module,
 
                 // Sample integration module
-                SampleIntegrationVeKoinModule().module,
+                SampleIntegrationVeKoinModule(videoAspectRatio).module,
             )
         }
     }
@@ -58,7 +61,7 @@ class VideoEditorModule {
  * Some dependencies has no default implementations. It means that
  * these classes fully depends on your requirements
  */
-private class SampleIntegrationVeKoinModule {
+private class SampleIntegrationVeKoinModule(videoAspectRatio: Double?) {
 
     val module = module {
         single<ArEffectsRepositoryProvider>(createdAtStart = true) {
@@ -77,6 +80,14 @@ private class SampleIntegrationVeKoinModule {
             named("musicTrackProvider")
         ) {
             AudioBrowserMusicProvider()
+        }
+
+        if (videoAspectRatio != null) {
+            single(createdAtStart = true) {
+                EditorConfig(
+                    aspectSettings = EditorAspectSettings.detectAspectSettings(videoAspectRatio),
+                )
+            }
         }
     }
 }

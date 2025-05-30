@@ -1,32 +1,30 @@
 package io.ion.app
-    
+
+import android.content.Context
 import android.content.Intent
+import android.media.MediaMetadataRetriever
 import android.net.Uri
-import android.os.Bundle
 import android.util.Log
-import androidx.core.content.FileProvider
+import android.util.Size
 import androidx.core.os.bundleOf
-import com.banuba.sdk.cameraui.data.PipConfig
+import com.banuba.sdk.core.EditorUtilityManager
 import com.banuba.sdk.core.license.BanubaVideoEditor
 import com.banuba.sdk.core.license.LicenseStateCallback
-import com.banuba.sdk.core.EditorUtilityManager
 import com.banuba.sdk.export.data.ExportResult
 import com.banuba.sdk.export.utils.EXTRA_EXPORTED_SUCCESS
+import com.banuba.sdk.pe.BanubaPhotoEditor
 import com.banuba.sdk.pe.PhotoCreationActivity
 import com.banuba.sdk.pe.data.PhotoEditorConfig
-import com.banuba.sdk.pe.BanubaPhotoEditor
-import com.banuba.sdk.ve.flow.VideoCreationActivity
 import com.banuba.sdk.ve.ext.VideoEditorUtils.getKoin
-import io.ion.app.AudioFocusHandler
-import org.koin.core.context.stopKoin
-import org.koin.core.error.InstanceCreationException
-import io.flutter.embedding.android.FlutterActivity
-import io.flutter.plugin.common.MethodChannel
-import io.flutter.plugins.GeneratedPluginRegistrant
-import java.io.File
-
+import com.banuba.sdk.ve.flow.VideoCreationActivity
 import io.flutter.embedding.android.FlutterFragmentActivity
 import io.flutter.embedding.engine.FlutterEngine
+import io.flutter.plugin.common.MethodChannel
+import io.flutter.plugins.GeneratedPluginRegistrant
+import org.koin.core.context.stopKoin
+import org.koin.core.error.InstanceCreationException
+import java.io.File
+
 
 class MainActivity : FlutterFragmentActivity() {
     companion object {
@@ -56,14 +54,14 @@ class MainActivity : FlutterFragmentActivity() {
     }
 
     private var exportResult: MethodChannel.Result? = null
-    
+
     // Track current editing file for cleanup
     private var currentEditingFile: File? = null
 
     private var videoEditorSDK: BanubaVideoEditor? = null
     private var photoEditorSDK: BanubaPhotoEditor? = null
     private var videoEditorModule: VideoEditorModule? = null
-    
+
     private lateinit var audioFocusHandler: AudioFocusHandler
 
     // Bundle for enabling Editor V2
@@ -74,7 +72,7 @@ class MainActivity : FlutterFragmentActivity() {
     override fun configureFlutterEngine(flutterEngine: FlutterEngine) {
         GeneratedPluginRegistrant.registerWith(flutterEngine)
         super.configureFlutterEngine(flutterEngine)
-        
+
         audioFocusHandler = AudioFocusHandler(applicationContext, flutterEngine)
 
         // Set up your MethodChannel here after registration
@@ -86,7 +84,7 @@ class MainActivity : FlutterFragmentActivity() {
             exportResult = result
 
             when (call.method) {
-                 METHOD_INIT_VIDEO_EDITOR -> {
+                METHOD_INIT_VIDEO_EDITOR -> {
                     val licenseToken = call.arguments as String
                     videoEditorSDK = BanubaVideoEditor.initialize(licenseToken)
 
@@ -94,12 +92,6 @@ class MainActivity : FlutterFragmentActivity() {
                         // The SDK token is incorrect - empty or truncated
                         result.error(ERR_CODE_SDK_NOT_INITIALIZED, "", null)
                     } else {
-                        if (videoEditorModule == null) {
-                            // Initialize video editor sdk dependencies
-                            videoEditorModule = VideoEditorModule().apply {
-                                initialize(application)
-                            }
-                        }
                         result.success(null)
                     }
                 }
@@ -114,6 +106,15 @@ class MainActivity : FlutterFragmentActivity() {
                             callback = { isValid ->
                                 if (isValid) {
                                     // ✅ The license is active
+                                    // Initialize video editor sdk dependencies
+                                    val aspectRatio =
+                                        getVideoSize(applicationContext, trimmerVideoUri)?.let {
+                                            it.width.toDouble() / it.height.toDouble()
+                                        }
+
+                                    videoEditorModule = VideoEditorModule().apply {
+                                        initialize(application, aspectRatio)
+                                    }
                                     startVideoEditorModeTrimmer(trimmerVideoUri)
                                 } else {
                                     // ❌ Use of SDK is restricted: the license is revoked or expired
@@ -126,22 +127,11 @@ class MainActivity : FlutterFragmentActivity() {
                 }
 
                 METHOD_RELEASE_VIDEO_EDITOR -> {
-                    if (videoEditorModule != null) {
-                        val utilityManager = try {
-                            // EditorUtilityManager is NULL when the token is expired or revoked.
-                            // This dependency is not explicitly created in DI.
-                            getKoin().getOrNull<EditorUtilityManager>()
-                        } catch (e: InstanceCreationException) {
-                            result.error("EditorUtilityManager was not initialized!", "", null)
-                            null
-                        }
-                        utilityManager?.release()
-                        stopKoin()
-                        videoEditorModule = null
-                    }
+                    releaseVideoEditorModule()
                     videoEditorSDK = null
                     result.success(null)
                 }
+
                 METHOD_INIT_PHOTO_EDITOR -> {
                     val licenseToken = call.arguments as String
                     photoEditorSDK = BanubaPhotoEditor.initialize(licenseToken)
@@ -197,7 +187,7 @@ class MainActivity : FlutterFragmentActivity() {
                     val data = prepareVideoExportData(exportResult)
                     this.exportResult?.success(data)
                 }
-                
+
                 cleanupCurrentEditingFile()
             } else if (result == RESULT_CANCELED) {
                 cleanupCurrentEditingFile()
@@ -243,7 +233,7 @@ class MainActivity : FlutterFragmentActivity() {
         // Create a safe copy of the video for editing
         val safeEditingUri = copyVideoToSafeLocation(trimmerVideo)
         val finalUri = safeEditingUri ?: trimmerVideo
-        
+
         startActivityForResult(
             VideoCreationActivity.startFromTrimmer(
                 context = this,
@@ -264,19 +254,19 @@ class MainActivity : FlutterFragmentActivity() {
             if (originalPath == null) {
                 return null
             }
-            
+
             val originalFile = File(originalPath)
             if (!originalFile.exists()) {
                 return null
             }
-            
+
             val editingFileName = "editing_${System.currentTimeMillis()}.mp4"
             val editingFile = File(filesDir, editingFileName)
-            
+
             if (editingFile.exists()) {
                 editingFile.delete()
             }
-            
+
             originalFile.copyTo(editingFile, overwrite = true)
             currentEditingFile = editingFile
             return Uri.fromFile(editingFile)
@@ -287,7 +277,7 @@ class MainActivity : FlutterFragmentActivity() {
 
     private fun cleanupCurrentEditingFile() {
         val file = currentEditingFile ?: return
-        
+
         try {
             if (file.exists() && !file.delete()) {
                 Log.w("EDIT_VIDEO", "Failed to delete editing file: ${file.name}")
@@ -295,8 +285,24 @@ class MainActivity : FlutterFragmentActivity() {
         } catch (e: Exception) {
             Log.e("EDIT_VIDEO", "Failed to cleanup editing file: ${e.message}", e)
         }
-        
+
         currentEditingFile = null
+        releaseVideoEditorModule()
+    }
+
+    private fun releaseVideoEditorModule() {
+        if (videoEditorModule != null) {
+            val utilityManager = try {
+                // EditorUtilityManager is NULL when the token is expired or revoked.
+                // This dependency is not explicitly created in DI.
+                getKoin().getOrNull<EditorUtilityManager>()
+            } catch (e: InstanceCreationException) {
+                null
+            }
+            utilityManager?.release()
+            stopKoin()
+            videoEditorModule = null
+        }
     }
 
     private fun checkSdkLicenseVideoEditor(
@@ -310,6 +316,36 @@ class MainActivity : FlutterFragmentActivity() {
             // Checking the license might take around 1 sec in the worst case.
             // Please optimize use if this method in your application for the best user experience
             sdk.getLicenseState(callback)
+        }
+    }
+
+    private fun getVideoSize(context: Context, uri: Uri): Size? {
+        val retriever = MediaMetadataRetriever()
+        return try {
+            retriever.setDataSource(context, uri)
+
+            val w = retriever
+                .extractMetadata(MediaMetadataRetriever.METADATA_KEY_VIDEO_WIDTH)
+                ?.toIntOrNull() ?: return null
+
+            val h = retriever
+                .extractMetadata(MediaMetadataRetriever.METADATA_KEY_VIDEO_HEIGHT)
+                ?.toIntOrNull() ?: return null
+
+            val rot = retriever
+                .extractMetadata(MediaMetadataRetriever.METADATA_KEY_VIDEO_ROTATION)
+                ?.toIntOrNull() ?: 0
+
+            // If the rotation is 90° or 270°, swap width/height
+            if (rot == 90 || rot == 270) {
+                Size(h, w)
+            } else {
+                Size(w, h)
+            }
+        } catch (_: Throwable) {
+            null
+        } finally {
+            retriever.release()
         }
     }
 }
