@@ -10,24 +10,24 @@ class DismissibleContent extends ConsumerWidget {
   const DismissibleContent({
     required this.child,
     required this.state,
-    required this.isFullscreenImage,
+    required this.isFullscreenMedia,
     super.key,
   });
 
   final Widget child;
   final GoRouterState state;
-  final bool isFullscreenImage;
+  final bool isFullscreenMedia;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final isZoomed = ref.watch(imageZoomProvider);
 
-    // 1. If zoom is enabled, disable swipe.
-    // 2. If it's a fullscreen image, use only vertical direction.
-    // 3. Otherwise (e.g., "the trending video list"), allow swipe in all directions (multi).
+    // 1. If zoomed - disable swipe.
+    // 2. If fullscreen media (stories, chat media) - vertical only for natural dismiss gesture
+    // 3. Otherwise (video feeds) - multi-directional
     final dismissDirection = isZoomed
         ? SwipeDismissDirection.none
-        : (isFullscreenImage ? SwipeDismissDirection.vertical : SwipeDismissDirection.multi);
+        : (isFullscreenMedia ? SwipeDismissDirection.vertical : SwipeDismissDirection.multi);
 
     return DismissiblePage(
       onDismissed: () {
@@ -37,6 +37,9 @@ class DismissibleContent extends ConsumerWidget {
       },
       direction: dismissDirection,
       isZoomed: isZoomed,
+      // For fullscreen media, keep background static (don't animate opacity)
+      // where background stays fixed while content moves
+      staticBackground: isFullscreenMedia,
       child: child,
     );
   }

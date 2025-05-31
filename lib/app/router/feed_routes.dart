@@ -434,6 +434,7 @@ class StoryViewerRoute extends BaseRouteData {
                 : null,
           ),
           type: IceRouteType.swipeDismissible,
+          isFullscreenMedia: true,
         );
 
   final String pubkey;
@@ -538,7 +539,7 @@ class FullscreenMediaRoute extends BaseRouteData {
                 : null,
           ),
           type: IceRouteType.swipeDismissible,
-          isFullscreenImage: true,
+          isFullscreenMedia: true,
         );
 
   final int initialMediaIndex;
