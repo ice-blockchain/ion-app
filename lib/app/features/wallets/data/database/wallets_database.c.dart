@@ -4,6 +4,7 @@ import 'package:drift/drift.dart';
 import 'package:drift_flutter/drift_flutter.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/exceptions/exceptions.dart';
+import 'package:ion/app/extensions/database.dart';
 import 'package:ion/app/features/auth/providers/auth_provider.c.dart';
 import 'package:ion/app/features/wallets/data/database/tables/coins_table.c.dart';
 import 'package:ion/app/features/wallets/data/database/tables/crypto_wallets_table.c.dart';
@@ -50,7 +51,7 @@ class WalletsDatabase extends _$WalletsDatabase {
   final String pubkey;
 
   @override
-  int get schemaVersion => 12;
+  int get schemaVersion => 13;
 
   static QueryExecutor _openConnection(String pubkey) {
     return driftDatabase(name: 'wallets_database_$pubkey');
@@ -150,6 +151,17 @@ class WalletsDatabase extends _$WalletsDatabase {
           if (!isExternalHashColumnExists) {
             await m.addColumn(schema.transactionsTableV2, schema.transactionsTableV2.externalHash);
           }
+        },
+        from12To13: (m, schema) async {
+          final table = schema.fundsRequestsTable;
+          await m.alterTable(
+            TableMigration(
+              table,
+              columnTransformer: {
+                table.createdAt: table.normalizedTimestamp(table.createdAt),
+              },
+            ),
+          );
         },
       ),
     );

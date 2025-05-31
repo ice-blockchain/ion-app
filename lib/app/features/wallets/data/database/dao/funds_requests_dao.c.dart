@@ -2,6 +2,7 @@
 
 import 'package:drift/drift.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/wallets/data/database/tables/funds_requests_table.c.dart';
 import 'package:ion/app/features/wallets/data/database/tables/transactions_table.c.dart';
 import 'package:ion/app/features/wallets/data/database/wallets_database.c.dart';
@@ -24,20 +25,22 @@ class FundsRequestsDao extends DatabaseAccessor<WalletsDatabase> with _$FundsReq
       ..limit(1);
 
     final result = await query.getSingleOrNull();
-    return result?.createdAt;
+    return result?.createdAt.toDateTime;
   }
 
   Future<DateTime?> getFirstCreatedAt({DateTime? after}) async {
     final query = select(fundsRequestsTable);
     if (after != null) {
-      query.where((t) => t.createdAt.isBiggerThanValue(after));
+      query.where(
+        (t) => t.createdAt.isBiggerThanValue(after.microsecondsSinceEpoch),
+      );
     }
     query
       ..orderBy([(t) => OrderingTerm.asc(t.createdAt)])
       ..limit(1);
 
     final result = await query.getSingleOrNull();
-    return result?.createdAt;
+    return result?.createdAt.toDateTime;
   }
 
   Stream<FundsRequest?> watchFundsRequestById(String eventId) =>

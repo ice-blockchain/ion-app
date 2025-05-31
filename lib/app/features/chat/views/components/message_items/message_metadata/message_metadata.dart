@@ -49,7 +49,10 @@ class MessageMetaData extends HookConsumerWidget {
         children: [
           if ((entityData.messageType == MessageType.text ||
                   entityData.messageType == MessageType.emoji) &&
-              (eventMessage.createdAt.difference(entityData.publishedAt.value).inSeconds > 2))
+              (eventMessage.createdAt.toDateTime
+                      .difference(entityData.publishedAt.value.toDateTime)
+                      .inSeconds >
+                  2))
             Text(
               context.i18n.common_message_edited,
               style: context.theme.appTextThemes.caption4.copyWith(
@@ -61,7 +64,7 @@ class MessageMetaData extends HookConsumerWidget {
           SizedBox(width: 2.0.s),
           if (displayTime)
             Text(
-              toTimeDisplayValue(entityData.publishedAt.value.millisecondsSinceEpoch),
+              toTimeDisplayValue(entityData.publishedAt.value.toDateTime.millisecondsSinceEpoch),
               style: context.theme.appTextThemes.caption4.copyWith(
                 color: isMe
                     ? context.theme.appColors.strokeElements

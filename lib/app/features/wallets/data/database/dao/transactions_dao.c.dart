@@ -24,7 +24,7 @@ TransactionsDao transactionsDao(Ref ref) => TransactionsDao(db: ref.watch(wallet
 class TransactionsDao extends DatabaseAccessor<WalletsDatabase> with _$TransactionsDaoMixin {
   TransactionsDao({required WalletsDatabase db}) : super(db);
 
-  Future<DateTime?> lastCreatedAt() {
+  Future<DateTime?> lastCreatedAt() async {
     final maxCreatedAt = transactionsTable.createdAtInRelay.max();
     return (selectOnly(transactionsTable)..addColumns([maxCreatedAt]))
         .map((row) => row.read(maxCreatedAt))

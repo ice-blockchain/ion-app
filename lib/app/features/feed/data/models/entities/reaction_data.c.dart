@@ -21,7 +21,7 @@ class ReactionEntity with _$ReactionEntity, IonConnectEntity, ImmutableEntity, C
     required String pubkey,
     required String masterPubkey,
     required String signature,
-    required DateTime createdAt,
+    required int createdAt,
     required ReactionData data,
   }) = _ReactionEntity;
 
@@ -100,7 +100,7 @@ class ReactionData with _$ReactionData implements EventSerializable {
   FutureOr<EventMessage> toEventMessage(
     EventSigner signer, {
     List<List<String>> tags = const [],
-    DateTime? createdAt,
+    int? createdAt,
   }) {
     return EventMessage.fromData(
       signer: signer,

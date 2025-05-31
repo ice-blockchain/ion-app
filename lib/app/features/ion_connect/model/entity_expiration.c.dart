@@ -8,7 +8,7 @@ part 'entity_expiration.c.freezed.dart';
 @freezed
 class EntityExpiration with _$EntityExpiration {
   const factory EntityExpiration({
-    required DateTime value,
+    required int value,
   }) = _EntityExpiration;
 
   const EntityExpiration._();
@@ -20,12 +20,12 @@ class EntityExpiration with _$EntityExpiration {
     }
 
     return EntityExpiration(
-      value: DateTime.fromMillisecondsSinceEpoch(int.parse(tag[1]) * 1000),
+      value: int.parse(tag[1]),
     );
   }
 
   List<String> toTag() {
-    return [tagName, (value.millisecondsSinceEpoch ~/ 1000).toString()];
+    return [tagName, value.toString()];
   }
 
   static const String tagName = 'expiration';

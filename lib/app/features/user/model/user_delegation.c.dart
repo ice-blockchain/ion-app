@@ -24,7 +24,7 @@ class UserDelegationEntity
     required String pubkey,
     required String masterPubkey,
     required String signature,
-    required DateTime createdAt,
+    required int createdAt,
     required UserDelegationData data,
   }) = _UserDelegationEntity;
 

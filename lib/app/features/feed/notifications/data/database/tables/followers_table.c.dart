@@ -5,7 +5,7 @@ import 'package:drift/drift.dart';
 @DataClassName('Follower')
 class FollowersTable extends Table {
   TextColumn get pubkey => text()();
-  DateTimeColumn get createdAt => dateTime()();
+  IntColumn get createdAt => integer()();
 
   @override
   Set<Column> get primaryKey => {pubkey};

@@ -29,7 +29,7 @@ Future<void> notificationQuotesSubscription(Ref ref) async {
         [null, null, currentPubkey],
       ],
     },
-    since: DateTime.now().subtract(const Duration(microseconds: 2)),
+    since: DateTime.now().subtract(const Duration(microseconds: 2)).microsecondsSinceEpoch,
   );
 
   await ref.watch(entitiesSyncerNotifierProvider('notifications-quotes').notifier).syncEntities(

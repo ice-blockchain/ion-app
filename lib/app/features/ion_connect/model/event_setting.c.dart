@@ -92,7 +92,7 @@ class CommentsEnabledEventSetting with _$CommentsEnabledEventSetting implements 
       EventSetting.settingTagName,
       tagName,
       isEnabled.toString(),
-      (DateTime.now().millisecondsSinceEpoch ~/ 1000).toString(),
+      DateTime.now().microsecondsSinceEpoch.toString(),
     ];
   }
 
@@ -128,7 +128,7 @@ class RoleRequiredForPostingEventSetting
       EventSetting.settingTagName,
       tagName,
       role.name,
-      (DateTime.now().millisecondsSinceEpoch ~/ 1000).toString(),
+      DateTime.now().microsecondsSinceEpoch.toString(),
     ];
   }
 }

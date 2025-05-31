@@ -62,7 +62,7 @@ class BlockedUsersSync extends _$BlockedUsersSync {
         ],
         '#p': [masterPubkey],
       },
-      since: sinceDate,
+      since: sinceDate?.microsecondsSinceEpoch,
     );
 
     final sealService = await ref.watch(ionConnectSealServiceProvider.future);

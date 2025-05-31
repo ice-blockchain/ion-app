@@ -268,7 +268,7 @@ class _MoneyMessageContent extends HookConsumerWidget {
             ],
           ),
           Text(
-            toTimeDisplayValue(eventMessage.createdAt.millisecondsSinceEpoch),
+            toTimeDisplayValue(eventMessage.createdAt.toDateTime.millisecondsSinceEpoch),
             style: context.theme.appTextThemes.caption4.copyWith(color: timeTextColor),
           ),
         ],

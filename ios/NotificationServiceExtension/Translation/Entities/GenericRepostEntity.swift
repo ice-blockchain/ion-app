@@ -32,12 +32,12 @@ struct GenericRepostEntity: IonConnectEntity {
     let pubkey: String
     let masterPubkey: String
     let signature: String
-    let createdAt: Date
+    let createdAt: Int
     let data: GenericRepostData
 
     static let kind = 16
 
-    init(id: String, pubkey: String, masterPubkey: String, signature: String, createdAt: Date, data: GenericRepostData) {
+    init(id: String, pubkey: String, masterPubkey: String, signature: String, createdAt: Int, data: GenericRepostData) {
         self.id = id
         self.pubkey = pubkey
         self.masterPubkey = masterPubkey

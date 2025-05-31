@@ -37,7 +37,7 @@ Future<void> notificationRepliesSubscription(Ref ref) async {
         marker: RelatedEventMarker.reply.toShortString(),
       ),
     ]).toString(),
-    since: DateTime.now().subtract(const Duration(microseconds: 2)),
+    since: DateTime.now().subtract(const Duration(microseconds: 2)).microsecondsSinceEpoch,
   );
 
   await ref.watch(entitiesSyncerNotifierProvider('notifications-replies').notifier).syncEntities(

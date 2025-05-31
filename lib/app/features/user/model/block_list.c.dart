@@ -20,7 +20,7 @@ class BlockListEntity with IonConnectEntity, CacheableEntity, ReplaceableEntity,
     required String pubkey,
     required String masterPubkey,
     required String signature,
-    required DateTime createdAt,
+    required int createdAt,
     required BlockListData data,
   }) = _BlockListEntity;
 
@@ -63,7 +63,7 @@ class BlockListData with _$BlockListData implements EventSerializable, Replaceab
   FutureOr<EventMessage> toEventMessage(
     EventSigner signer, {
     List<List<String>> tags = const [],
-    DateTime? createdAt,
+    int? createdAt,
   }) {
     return EventMessage.fromData(
       signer: signer,

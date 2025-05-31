@@ -14,7 +14,7 @@ abstract mixin class IonConnectEntity implements IonConnectEntityReferenceable {
   String get pubkey;
   String get masterPubkey;
   String get signature;
-  DateTime get createdAt;
+  int get createdAt;
 
   FutureOr<EventMessage> toEventMessage(EventSerializable data) {
     return data.toEventMessage(

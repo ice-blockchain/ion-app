@@ -118,10 +118,11 @@ class ConversationMessageDao extends DatabaseAccessor<ChatDatabase>
       final groupedMessages = <DateTime, List<EventMessage>>{};
       for (final eventMessage in eventMessages) {
         final em = eventMessage.toEventMessage();
+        final publishedAtDate = em.publishedAt.toDateTime;
         final dateKey = DateTime(
-          em.publishedAt.year,
-          em.publishedAt.month,
-          em.publishedAt.day,
+          publishedAtDate.year,
+          publishedAtDate.month,
+          publishedAtDate.day,
         );
         groupedMessages.putIfAbsent(dateKey, () => []).add(em);
         groupedMessages[dateKey]!.sort((a, b) => b.publishedAt.compareTo(a.publishedAt));
@@ -216,8 +217,9 @@ class ConversationMessageDao extends DatabaseAccessor<ChatDatabase>
 
     final expiredMessageEventReferences = await (select(eventMessageTable)
           ..where(
-            (table) => table.createdAt
-                .isSmallerThanValue(DateTime.now().subtract(Duration(hours: expiration))),
+            (table) => table.createdAt.isSmallerThanValue(
+              DateTime.now().subtract(Duration(hours: expiration)).microsecondsSinceEpoch,
+            ),
           )
           ..where((table) => table.eventReference.isInValues(eventReferences)))
         .map((e) => e.eventReference)

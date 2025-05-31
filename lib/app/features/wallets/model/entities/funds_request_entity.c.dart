@@ -25,7 +25,7 @@ class FundsRequestEntity with IonConnectEntity, ImmutableEntity, _$FundsRequestE
     required String id,
     required String pubkey,
     required String masterPubkey,
-    required DateTime createdAt,
+    required int createdAt,
     required FundsRequestData data,
   }) = _FundsRequestEntity;
 
@@ -98,7 +98,7 @@ class FundsRequestData with _$FundsRequestData {
 
     final rumorId = EventMessage.calculateEventId(
       publicKey: masterPubkey,
-      createdAt: createdAt,
+      createdAt: createdAt.microsecondsSinceEpoch,
       kind: FundsRequestEntity.kind,
       tags: tags,
       content: encodedContent,
@@ -107,7 +107,7 @@ class FundsRequestData with _$FundsRequestData {
     return EventMessage(
       id: rumorId,
       pubkey: masterPubkey,
-      createdAt: createdAt,
+      createdAt: createdAt.microsecondsSinceEpoch,
       kind: FundsRequestEntity.kind,
       tags: tags,
       content: encodedContent,

@@ -8,7 +8,7 @@ part 'entity_published_at.c.freezed.dart';
 @freezed
 class EntityPublishedAt with _$EntityPublishedAt {
   const factory EntityPublishedAt({
-    required DateTime value,
+    required int value,
   }) = _EntityPublishedAt;
 
   const EntityPublishedAt._();
@@ -19,12 +19,12 @@ class EntityPublishedAt with _$EntityPublishedAt {
     }
 
     return EntityPublishedAt(
-      value: DateTime.fromMillisecondsSinceEpoch(int.parse(tag[1]) * 1000),
+      value: int.parse(tag[1]),
     );
   }
 
   List<String> toTag() {
-    return [tagName, (value.millisecondsSinceEpoch ~/ 1000).toString()];
+    return [tagName, value.toString()];
   }
 
   static const String tagName = 'published_at';

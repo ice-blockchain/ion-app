@@ -17,7 +17,7 @@ class IonConnectGiftWrapEntity with IonConnectEntity, ImmutableEntity, _$IonConn
     required String pubkey,
     required String masterPubkey,
     required String signature,
-    required DateTime createdAt,
+    required int createdAt,
     required IonConnectGiftWrapData data,
   }) = _IonConnectGiftWrapEntity;
 

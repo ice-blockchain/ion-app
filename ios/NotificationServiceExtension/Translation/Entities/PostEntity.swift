@@ -7,12 +7,12 @@ class PostEntity: IonConnectEntity {
     let pubkey: String
     let masterPubkey: String
     let signature: String
-    let createdAt: Date
+    let createdAt: Int
     let data: PostData
 
     static let kind = 1
 
-    init(id: String, pubkey: String, masterPubkey: String, signature: String, createdAt: Date, data: PostData) {
+    init(id: String, pubkey: String, masterPubkey: String, signature: String, createdAt: Int, data: PostData) {
         self.id = id
         self.pubkey = pubkey
         self.masterPubkey = masterPubkey

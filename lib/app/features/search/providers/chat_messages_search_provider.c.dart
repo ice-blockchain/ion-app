@@ -2,6 +2,7 @@
 
 import 'package:collection/collection.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/auth/providers/auth_provider.c.dart';
 import 'package:ion/app/features/chat/e2ee/model/entities/private_direct_message_data.c.dart';
 import 'package:ion/app/features/chat/model/database/chat_database.c.dart';
@@ -25,7 +26,7 @@ Future<List<(String, String)>?> chatMessagesSearch(Ref ref, String query) async 
   final entities = searchResults.map(ReplaceablePrivateDirectMessageEntity.fromEventMessage);
 
   final tuples = entities
-      .sortedBy((entity) => entity.createdAt)
+      .sortedBy((entity) => entity.createdAt.toDateTime)
       .reversed
       .map(
         (message) => (

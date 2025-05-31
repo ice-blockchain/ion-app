@@ -22,7 +22,7 @@ class InviteToCommunityNotifier extends _$InviteToCommunityNotifier {
       final invitation = CommunityJoinData(
         uuid: communityUUUID,
         pubkey: invitedPubkey,
-        expiration: expiration,
+        expiration: expiration.microsecondsSinceEpoch,
       );
 
       final result = await ref

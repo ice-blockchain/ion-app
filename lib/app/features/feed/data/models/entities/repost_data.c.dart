@@ -21,7 +21,7 @@ class RepostEntity with _$RepostEntity, IonConnectEntity, ImmutableEntity, Cache
     required String pubkey,
     required String masterPubkey,
     required String signature,
-    required DateTime createdAt,
+    required int createdAt,
     required RepostData data,
   }) = _RepostEntity;
 
@@ -84,7 +84,7 @@ class RepostData with _$RepostData implements EventSerializable {
   FutureOr<EventMessage> toEventMessage(
     EventSigner signer, {
     List<List<String>> tags = const [],
-    DateTime? createdAt,
+    int? createdAt,
   }) {
     return EventMessage.fromData(
       signer: signer,

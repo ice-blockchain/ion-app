@@ -24,7 +24,7 @@ class UserChatRelaysEntity
     required String pubkey,
     required String signature,
     required String masterPubkey,
-    required DateTime createdAt,
+    required int createdAt,
     required UserChatRelaysData data,
   }) = _UserChatRelaysEntity;
 
@@ -77,7 +77,7 @@ class UserChatRelaysData
   FutureOr<EventMessage> toEventMessage(
     EventSigner signer, {
     List<List<String>> tags = const [],
-    DateTime? createdAt,
+    int? createdAt,
   }) {
     return EventMessage.fromData(
       signer: signer,

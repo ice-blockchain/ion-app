@@ -21,7 +21,7 @@ class FileMetadataEntity
     required String pubkey,
     required String masterPubkey,
     required String signature,
-    required DateTime createdAt,
+    required int createdAt,
     required FileMetadata data,
   }) = _FileMetadataEntity;
 
@@ -169,7 +169,7 @@ class FileMetadata with _$FileMetadata implements EventSerializable {
   FutureOr<EventMessage> toEventMessage(
     EventSigner signer, {
     List<List<String>> tags = const [],
-    DateTime? createdAt,
+    int? createdAt,
   }) {
     return EventMessage.fromData(
       signer: signer,
