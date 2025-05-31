@@ -35,6 +35,7 @@ class VideoEditorModule: VideoEditor {
 
         config.featureConfiguration.supportsTrimRecordedVideo = true
         config.featureConfiguration.draftsConfig = .disabled
+        config.editorConfiguration.isVideoAspectFillEnabled = false
 
         // Make customization here
         
@@ -102,6 +103,22 @@ class VideoEditorModule: VideoEditor {
         }
 
         // Editor V2 is not available from Trimmer screen. Editor screen will be opened
+
+        let asset = AVAsset(url: videoURL)
+        guard let track = asset.tracks(withMediaType: .video).first else {
+            fatalError("no video track!")
+        }
+        let size = track.naturalSize.applying(track.preferredTransform)
+        let width = abs(size.width)
+        let height = abs(size.height)
+        let aspectRatio = width / height
+
+        let config = videoEditorSDK?.currentConfiguration
+        config?.videoEditorViewConfiguration.primaryAspectRatio = AspectRatio(videoAspectRatio: aspectRatio)
+        if let newConfig = config {
+            videoEditorSDK?.updateVideoEditorConfig(newConfig)
+        }
+
         let trimmerLaunchConfig = VideoEditorLaunchConfig(
             entryPoint: .trimmer,
             hostController: controller,
@@ -115,28 +132,28 @@ class VideoEditorModule: VideoEditor {
     
     private func createEditingCopy(of originalURL: URL) -> URL? {
         let fileManager = FileManager.default
-        
+
         // Use Documents directory instead of temp directory for persistence
         guard let documentsURL = fileManager.urls(for: .documentDirectory, in: .userDomainMask).first else {
             return nil
         }
-        
+
         let editingFileName = "editing_\(UUID().uuidString).mov"
         let editingURL = documentsURL.appendingPathComponent(editingFileName)
-        
+
         do {
             if fileManager.fileExists(atPath: editingURL.path) {
                 try fileManager.removeItem(at: editingURL)
             }
-            
+
             try fileManager.copyItem(at: originalURL, to: editingURL)
             return editingURL
         } catch {
             return nil
         }
     }
-    
-    
+
+
     func checkLicenseAndStartVideoEditor(with config: VideoEditorLaunchConfig, flutterResult: @escaping FlutterResult) {
         if videoEditorSDK == nil {
             flutterResult(FlutterError(code: AppDelegate.errEditorNotInitialized, message: "", details: nil))
@@ -144,11 +161,11 @@ class VideoEditorModule: VideoEditor {
         }
         
         videoEditorSDK?.delegate = self
-        
+
         if self.restoreLastVideoEditingSession == false {
             self.videoEditorSDK?.clearSessionData()
         }
-        
+
         // Checking the license might take around 1 sec in the worst case.
         // Please optimize use if this method in your application for the best user experience
         videoEditorSDK?.getLicenseState(completion: { [weak self] isValid in
