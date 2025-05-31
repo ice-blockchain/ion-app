@@ -3,30 +3,49 @@
 import Foundation
 
 struct ReactionData {
+    let kind: Int
     let content: String
     let eventReference: EventReference
 
-    static func fromEventMessage(_ eventMessage: EventMessage) -> ReactionData {
+    static func fromEventMessage(_ eventMessage: EventMessage) throws -> ReactionData {
         let content = eventMessage.content
-
-        // Get the first e tag for event reference
-        var eventRef: EventReference?
+        
+        var tagGroups: [String: [[String]]] = [:]
         for tag in eventMessage.tags {
-            if tag.count >= 4 && tag[0] == "e" {
-                let id = tag[1]
-                let kindStr = tag[2]
-                let pubkey = tag[3]
-
-                if let kind = Int(kindStr) {
-                    eventRef = ImmutableEventReference(id: id, pubkey: pubkey)
-                    break
+            if !tag.isEmpty {
+                let key = tag[0]
+                if tagGroups[key] == nil {
+                    tagGroups[key] = []
                 }
+                tagGroups[key]?.append(tag)
             }
         }
-
+        
+        let eventId = tagGroups["e"]?.first?[1]
+        let eventRef = tagGroups["a"]?.first?[1]
+        let pubkey = tagGroups["p"]?.first?[1]
+        let kindStr = tagGroups["k"]?.first?[1]
+        
+        guard let pubkey = pubkey, let kindStr = kindStr, let kind = Int(kindStr) else {
+            throw IncorrectEventTagsException(eventId: eventMessage.id)
+        }
+        
+        var eventReference: EventReference?
+        
+        if let eventRef = eventRef {
+            eventReference = ReplaceableEventReference.fromString(eventRef)
+        } else if let eventId = eventId {
+            eventReference = ImmutableEventReference(id: eventId, pubkey: pubkey)
+        }
+        
+        guard let eventReference = eventReference else {
+            throw IncorrectEventTagsException(eventId: eventMessage.id)
+        }
+        
         return ReactionData(
+            kind: kind,
             content: content,
-            eventReference: eventRef ?? ImmutableEventReference(id: "", pubkey: "")
+            eventReference: eventReference
         )
     }
 }
@@ -40,6 +59,7 @@ struct ReactionEntity: IonConnectEntity {
     let data: ReactionData
 
     static let kind = 7
+    static let likeSymbol = "+"
 
     init(id: String, pubkey: String, masterPubkey: String, signature: String, createdAt: Date, data: ReactionData) {
         self.id = id
@@ -63,7 +83,7 @@ struct ReactionEntity: IonConnectEntity {
             masterPubkey: masterPubkey,
             signature: eventMessage.sig ?? "",
             createdAt: eventMessage.createdAt,
-            data: ReactionData.fromEventMessage(eventMessage)
+            data: try ReactionData.fromEventMessage(eventMessage)
         )
     }
 }
