@@ -55,7 +55,7 @@ class SendTransactionToRelayService {
   final IonConnectGiftWrapService wrapService;
 
   Future<EventMessage> sendTransactionEntity({
-    required EventMessage Function(String currentUserPubkey) createEventMessage,
+    required EventMessage Function(String devicePubkey, String masterPubkey) createEventMessage,
     required MasterPubkeyWithDeviceKeys senderPubkeys,
     required MasterPubkeyWithDeviceKeys receiverPubkeys,
   }) async {
@@ -75,7 +75,7 @@ class SendTransactionToRelayService {
         ),
       ];
 
-      final event = createEventMessage(eventSigner.publicKey);
+      final event = createEventMessage(eventSigner.publicKey, senderPubkeys.masterPubkey);
 
       final masterPubkeyToGiftWrap = await pubkeyCombinations.map((pubkeys) async {
         final (:masterPubkey, :devicePubkey) = pubkeys;

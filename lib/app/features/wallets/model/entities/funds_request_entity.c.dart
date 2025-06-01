@@ -83,7 +83,10 @@ class FundsRequestData with _$FundsRequestData {
     );
   }
 
-  EventMessage toEventMessage({required String masterPubkey}) {
+  EventMessage toEventMessage({
+    required String devicePubkey,
+    required String masterPubkey,
+  }) {
     final tags = [
       MasterPubkeyTag(value: masterPubkey).toTag(),
       NetworkTag(value: networkId).toTag(),
@@ -97,7 +100,7 @@ class FundsRequestData with _$FundsRequestData {
     final encodedContent = jsonEncode(content.toJson());
 
     final rumorId = EventMessage.calculateEventId(
-      publicKey: masterPubkey,
+      publicKey: devicePubkey,
       createdAt: createdAt,
       kind: FundsRequestEntity.kind,
       tags: tags,
@@ -106,7 +109,7 @@ class FundsRequestData with _$FundsRequestData {
 
     return EventMessage(
       id: rumorId,
-      pubkey: masterPubkey,
+      pubkey: devicePubkey,
       createdAt: createdAt,
       kind: FundsRequestEntity.kind,
       tags: tags,
