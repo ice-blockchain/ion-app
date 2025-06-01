@@ -19,14 +19,14 @@ struct ReplaceableEventReference: EventReference {
     static func fromString(_ string: String) -> ReplaceableEventReference {
         let components = string.split(separator: ":")
         guard components.count >= 2,
-            let kind = Int(components[1])
+            let kind = Int(components[0])
         else {
             // Default fallback if parsing fails
             return ReplaceableEventReference(pubkey: "", kind: 0)
         }
 
         return ReplaceableEventReference(
-            pubkey: String(components[0]),
+            pubkey: String(components[1]),
             kind: kind
         )
     }
