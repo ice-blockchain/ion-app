@@ -228,7 +228,7 @@ class ViewTransactionButton extends ConsumerWidget {
         if (!context.mounted) {
           return;
         }
-        unawaited(CoinTransactionResultChatRoute().push<void>(context));
+        unawaited(CoinTransactionDetailsChatRoute().push<void>(context));
       },
     );
   }
