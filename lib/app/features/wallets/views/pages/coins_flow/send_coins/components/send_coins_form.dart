@@ -59,6 +59,7 @@ class SendCoinsForm extends HookConsumerWidget {
     final selectedContactPubkey = formController.contactPubkey;
     final coin = formController.assetData.as<CoinAssetToSendData>();
     final maxAmount = coin?.selectedOption?.amount ?? 0;
+    final exceedsMaxAmount = formController.exceedsMaxAmount;
 
     final amount = coin?.amount ?? 0.0;
     final amountController = useTextEditingController();
@@ -93,7 +94,8 @@ class SendCoinsForm extends HookConsumerWidget {
     final isContinueButtonEnabled = formController.canCoverNetworkFee &&
         validAmount &&
         formController.senderWallet?.address != null &&
-        validator.value.validate(formController.receiverAddress);
+        validator.value.validate(formController.receiverAddress) &&
+        !exceedsMaxAmount;
 
     final feeSectionSpacing = SizedBox(height: 20.0.s);
 
@@ -175,6 +177,8 @@ class SendCoinsForm extends HookConsumerWidget {
                         maxValue: coin?.selectedOption?.amount ?? 0,
                         coinAbbreviation: coin?.coinsGroup.abbreviation ?? '',
                         enabled: formController.request == null,
+                        errorText:
+                            exceedsMaxAmount ? locale.wallet_coin_amount_insufficient_funds : null,
                       ),
                       CoinsNetworkFeeSelector(
                         padding: EdgeInsetsDirectional.only(top: 17.0.s),

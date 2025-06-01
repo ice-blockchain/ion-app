@@ -16,6 +16,7 @@ class CoinAmountInput extends HookWidget {
     this.maxValue,
     this.coinAbbreviation,
     this.enabled = true,
+    this.errorText,
     super.key,
   });
 
@@ -24,6 +25,7 @@ class CoinAmountInput extends HookWidget {
   final double? maxValue;
   final String? coinAbbreviation;
   final bool enabled;
+  final String? errorText;
 
   @override
   Widget build(BuildContext context) {
@@ -61,6 +63,7 @@ class CoinAmountInput extends HookWidget {
             return null;
           },
           labelText: label,
+          errorText: errorText,
           suffixIcon: maxValue != null && enabled
               ? Padding(
                   padding: EdgeInsetsDirectional.only(end: 16.0.s),
