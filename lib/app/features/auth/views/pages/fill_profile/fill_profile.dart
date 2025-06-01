@@ -13,6 +13,7 @@ import 'package:ion/app/features/auth/providers/onboarding_data_provider.c.dart'
 import 'package:ion/app/features/auth/views/components/auth_scrolled_body/auth_scrolled_body.dart';
 import 'package:ion/app/features/auth/views/components/user_data_inputs/name_input.dart';
 import 'package:ion/app/features/auth/views/components/user_data_inputs/nickname_input.dart';
+import 'package:ion/app/features/auth/views/components/user_data_inputs/referral_input.dart';
 import 'package:ion/app/features/auth/views/pages/fill_profile/components/fill_prifile_submit_button.dart';
 import 'package:ion/app/features/components/avatar_picker/avatar_picker.dart';
 import 'package:ion/app/features/user/providers/image_proccessor_notifier.c.dart';
@@ -36,6 +37,8 @@ class FillProfile extends HookConsumerWidget {
     final name = useState(initialName);
     final initialNickname = onboardingData.name ?? '';
     final nickname = useState(onboardingData.name ?? '');
+    final initialReferral = onboardingData.referralName ?? '';
+    final referral = useState(onboardingData.referralName ?? '');
 
     final onSubmit = useCallback(() async {
       if (formKey.currentState!.validate()) {
@@ -47,6 +50,7 @@ class FillProfile extends HookConsumerWidget {
         }
         ref.read(onboardingDataProvider.notifier).name = nickname.value;
         ref.read(onboardingDataProvider.notifier).displayName = name.value;
+        ref.read(onboardingDataProvider.notifier).referralName = referral.value;
         await SelectLanguagesRoute().push<void>(context);
       }
     });
@@ -90,6 +94,13 @@ class FillProfile extends HookConsumerWidget {
                           initialValue: initialNickname,
                           textInputAction: TextInputAction.done,
                           onChanged: (newValue) => nickname.value = newValue,
+                        ),
+                        SizedBox(height: 16.0.s),
+                        ReferralInput(
+                          isLive: true,
+                          initialValue: initialReferral,
+                          textInputAction: TextInputAction.done,
+                          onChanged: (newValue) => referral.value = newValue,
                         ),
                         SizedBox(height: 26.0.s),
                         FillProfileSubmitButton(
