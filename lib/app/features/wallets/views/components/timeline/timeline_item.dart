@@ -15,11 +15,13 @@ class TimelineItem extends StatelessWidget {
     super.key,
     this.isNextDone = false,
   });
+
   final bool isLast;
   final TimelineItemData data;
   final bool? isNextDone;
 
   static double get separatorWidth => 1.0.s;
+
   static double get separatorHeight => 9.0.s;
 
   @override
@@ -34,12 +36,18 @@ class TimelineItem extends StatelessWidget {
                 data.isDone ? Assets.svg.iconStepsCheckActive : Assets.svg.iconStepsCheckInactive,
                 width: 16.0.s,
                 height: 16.0.s,
+                colorFilter: ColorFilter.mode(
+                  data.isDone
+                      ? context.theme.appColors.success
+                      : context.theme.appColors.tertararyText,
+                  BlendMode.srcIn,
+                ),
               ),
             ),
             if (!isLast)
               TimelineSeparator(
                 color: isNextDone != null && isNextDone!
-                    ? context.theme.appColors.primaryAccent
+                    ? context.theme.appColors.success
                     : context.theme.appColors.tertararyText,
               ),
           ],

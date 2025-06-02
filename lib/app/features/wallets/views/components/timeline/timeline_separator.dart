@@ -11,7 +11,7 @@ class TimelineSeparator extends StatelessWidget {
 
   final Color color;
 
-  static double get separatorWidth => 1.0.s;
+  static double get separatorWidth => 0.5.s;
   static double get separatorHeight => 18.0.s;
 
   @override
