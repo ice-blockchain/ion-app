@@ -2,10 +2,13 @@
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/components/button/button.dart';
+import 'package:ion/app/components/card/rounded_card.dart';
 import 'package:ion/app/components/progress_bar/ion_loading_indicator.dart';
+import 'package:ion/app/components/screen_offset/screen_bottom_offset.dart';
 import 'package:ion/app/components/screen_offset/screen_side_offset.dart';
 import 'package:ion/app/extensions/asset_gen_image.dart';
 import 'package:ion/app/extensions/build_context.dart';
@@ -15,7 +18,7 @@ import 'package:ion/app/features/wallets/providers/delete_wallet_view_provider.c
 import 'package:ion/app/router/components/sheet_content/sheet_content.dart';
 import 'package:ion/generated/assets.gen.dart';
 
-class DeleteWalletModal extends ConsumerWidget {
+class DeleteWalletModal extends HookConsumerWidget {
   const DeleteWalletModal({required this.walletId, super.key});
 
   final String walletId;
@@ -28,6 +31,8 @@ class DeleteWalletModal extends ConsumerWidget {
 
     final isDeleting =
         ref.watch(deleteWalletViewNotifierProvider(walletViewId: walletId)).isLoading;
+
+    final isConfirmed = useState(false);
 
     return SheetContent(
       body: ScreenSideOffset.small(
@@ -47,7 +52,6 @@ class DeleteWalletModal extends ConsumerWidget {
             Padding(
               padding: EdgeInsetsDirectional.only(
                 top: 8.0.s,
-                bottom: 30.0.s,
                 start: 36.0.s,
                 end: 36.0.s,
               ),
@@ -59,46 +63,93 @@ class DeleteWalletModal extends ConsumerWidget {
                 textAlign: TextAlign.center,
               ),
             ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Expanded(
-                  child: Button.compact(
-                    type: ButtonType.outlined,
-                    label: Text(
-                      context.i18n.button_cancel,
-                    ),
-                    onPressed: () {
-                      context.pop();
-                    },
-                    minimumSize: buttonMinimalSize,
-                  ),
+            Padding(
+              padding: EdgeInsetsDirectional.symmetric(vertical: 16.0.s),
+              child: IgnorePointer(
+                ignoring: isDeleting,
+                child: _ConfirmDeleteCheckbox(
+                  selected: isConfirmed.value,
+                  onChanged: (selected) => isConfirmed.value = selected,
                 ),
-                SizedBox(
-                  width: 15.0.s,
-                ),
-                Expanded(
-                  child: Button.compact(
-                    label: Text(context.i18n.button_delete),
-                    disabled: isDeleting,
-                    trailingIcon: isDeleting ? const IONLoadingIndicator() : null,
-                    onPressed: () async {
-                      await ref
-                          .read(deleteWalletViewNotifierProvider(walletViewId: walletId).notifier)
-                          .delete();
-
-                      if (context.mounted) {
-                        context.pop();
-                      }
-                    },
-                    minimumSize: buttonMinimalSize,
-                    backgroundColor: context.theme.appColors.attentionRed,
-                  ),
-                ),
-              ],
+              ),
             ),
-            SizedBox(
-              height: MediaQuery.paddingOf(context).bottom + 20.0.s,
+            ScreenBottomOffset(
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Expanded(
+                    child: Button.compact(
+                      type: ButtonType.outlined,
+                      label: Text(
+                        context.i18n.button_cancel,
+                      ),
+                      onPressed: () {
+                        context.pop();
+                      },
+                      minimumSize: buttonMinimalSize,
+                    ),
+                  ),
+                  SizedBox(
+                    width: 15.0.s,
+                  ),
+                  Expanded(
+                    child: Button.compact(
+                      label: Text(context.i18n.button_delete),
+                      disabled: isDeleting || !isConfirmed.value,
+                      type: isConfirmed.value ? ButtonType.primary : ButtonType.disabled,
+                      trailingIcon: isDeleting ? const IONLoadingIndicator() : null,
+                      onPressed: () async {
+                        await ref
+                            .read(deleteWalletViewNotifierProvider(walletViewId: walletId).notifier)
+                            .delete();
+
+                        if (context.mounted) {
+                          context.pop();
+                        }
+                      },
+                      minimumSize: buttonMinimalSize,
+                      backgroundColor:
+                          isConfirmed.value ? context.theme.appColors.attentionRed : null,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class _ConfirmDeleteCheckbox extends StatelessWidget {
+  const _ConfirmDeleteCheckbox({
+    required this.selected,
+    required this.onChanged,
+  });
+
+  final bool selected;
+  final ValueChanged<bool> onChanged;
+
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      behavior: HitTestBehavior.opaque,
+      onTap: () => onChanged(!selected),
+      child: RoundedCard.filled(
+        padding: EdgeInsets.all(12.0.s),
+        child: Row(
+          children: [
+            if (selected)
+              Assets.svg.iconBlockCheckboxOn.icon()
+            else
+              Assets.svg.iconBlockCheckboxOff.icon(),
+            SizedBox(width: 10.0.s),
+            Flexible(
+              child: Text(
+                context.i18n.wallet_delete_confirmation,
+                style: context.theme.appTextThemes.body2,
+              ),
             ),
           ],
         ),
