@@ -21,6 +21,7 @@ import 'package:ion/app/features/wallets/providers/networks_provider.c.dart';
 import 'package:ion/app/features/wallets/providers/send_asset_form_provider.c.dart';
 import 'package:ion/app/features/wallets/providers/transaction_provider.c.dart';
 import 'package:ion/app/features/wallets/providers/wallet_view_data_provider.c.dart';
+import 'package:ion/app/features/wallets/views/utils/amount_parser.dart';
 import 'package:ion/app/router/app_routes.c.dart';
 
 class RequestedMoneyMessageButton extends StatelessWidget {
@@ -164,6 +165,8 @@ class _SendMoneyButton extends ConsumerWidget {
 
       await sendAssetFormController.setCoin(coinGroup, walletView);
 
+      final maxAmount = coinGroup.totalAmount;
+
       sendAssetFormController
         ..setRequest(request!)
         ..setContact(receiverPubkey, isContactPreselected: true)
@@ -171,7 +174,9 @@ class _SendMoneyButton extends ConsumerWidget {
 
       await sendAssetFormController.setNetwork(network);
 
-      sendAssetFormController.setCoinsAmount(amount ?? '');
+      sendAssetFormController
+        ..setCoinsAmount(amount ?? '')
+        ..exceedsMaxAmount = (parseAmount(amount) ?? 0) > maxAmount;
 
       if (!context.mounted) return;
 

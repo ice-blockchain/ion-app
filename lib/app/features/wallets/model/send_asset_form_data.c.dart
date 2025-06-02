@@ -26,5 +26,6 @@ class SendAssetFormData with _$SendAssetFormData {
     @Default(true) bool canCoverNetworkFee,
     @Default([]) List<NetworkFeeOption> networkFeeOptions,
     @Default(false) bool isContactPreselected,
+    @Default(false) bool exceedsMaxAmount,
   }) = _SendAssetFormData;
 }

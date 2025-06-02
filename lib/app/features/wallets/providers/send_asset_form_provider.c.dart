@@ -176,4 +176,8 @@ class SendAssetFormController extends _$SendAssetFormController {
   void setRequest(FundsRequestEntity request) {
     state = state.copyWith(request: request);
   }
+
+  set exceedsMaxAmount(bool value) {
+    state = state.copyWith(exceedsMaxAmount: value);
+  }
 }
