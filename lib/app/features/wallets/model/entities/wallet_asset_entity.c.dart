@@ -83,6 +83,7 @@ class WalletAssetData with _$WalletAssetData {
   }
 
   EventMessage toEventMessage({
+    required String devicePubkey,
     required String masterPubkey,
     FundsRequestEntity? requestEntity,
   }) {
@@ -100,7 +101,7 @@ class WalletAssetData with _$WalletAssetData {
     final encodedContent = jsonEncode(content.toJson());
 
     final rumorId = EventMessage.calculateEventId(
-      publicKey: masterPubkey,
+      publicKey: devicePubkey,
       createdAt: createdAt,
       kind: WalletAssetEntity.kind,
       tags: tags,
@@ -109,7 +110,7 @@ class WalletAssetData with _$WalletAssetData {
 
     return EventMessage(
       id: rumorId,
-      pubkey: masterPubkey,
+      pubkey: devicePubkey,
       createdAt: createdAt,
       kind: WalletAssetEntity.kind,
       tags: tags,
