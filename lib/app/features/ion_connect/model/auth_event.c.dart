@@ -29,12 +29,12 @@ class AuthEvent with _$AuthEvent implements EventSerializable {
     EventSigner signer, {
     List<List<String>> tags = const [],
     int? createdAt,
-  }) {
+  }) async {
     final authTags = [
       ['challenge', challenge],
       ['relay', relay],
       if (userDelegation != null)
-        ['attestation', jsonEncode(await userDelegation!.toEntityEventMessage().toJson().last)],
+        ['attestation', jsonEncode((await userDelegation!.toEntityEventMessage()).toJson().last)],
       ...tags,
     ];
 
