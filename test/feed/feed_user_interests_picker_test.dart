@@ -26,6 +26,7 @@ void main() {
         topMaxAge: Duration(days: 1),
         trendingMaxAge: Duration(days: 1),
         exploreMaxAge: Duration(days: 1),
+        repostThrottleDelay: Duration(days: 1),
       );
       interests = FeedInterests.fromJson({
         'music': {

@@ -17,6 +17,7 @@ Future<FeedConfig> feedConfig(Ref ref) async {
     'topMaxAge': const Duration(days: 3).inMilliseconds,
     'trendingMaxAge': const Duration(days: 1).inMilliseconds,
     'exploreMaxAge': const Duration(hours: 12).inMilliseconds,
+    'repostThrottleDelay': const Duration(hours: 3).inMilliseconds,
   });
 
   // final env = ref.read(envProvider.notifier);

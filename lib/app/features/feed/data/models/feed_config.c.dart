@@ -15,6 +15,7 @@ class FeedConfig with _$FeedConfig {
     @DurationMillisecondsConverter() required Duration topMaxAge,
     @DurationMillisecondsConverter() required Duration trendingMaxAge,
     @DurationMillisecondsConverter() required Duration exploreMaxAge,
+    @DurationMillisecondsConverter() required Duration repostThrottleDelay,
   }) = _FeedConfig;
   const FeedConfig._();
 
