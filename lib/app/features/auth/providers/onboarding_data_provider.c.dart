@@ -17,6 +17,7 @@ class OnboardingState with _$OnboardingState {
     MediaFile? avatar,
     String? name,
     String? displayName,
+    String? referralName,
     List<String>? languages,
     List<String>? followees,
   }) = _OnboardingState;
@@ -38,6 +39,10 @@ class OnboardingData extends _$OnboardingData {
 
   set displayName(String displayName) {
     state = state.copyWith(displayName: displayName);
+  }
+
+  set referralName(String referralName) {
+    state = state.copyWith(referralName: referralName);
   }
 
   set languages(List<String> languages) {
