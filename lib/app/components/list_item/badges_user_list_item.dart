@@ -6,7 +6,7 @@ import 'package:ion/app/components/list_item/list_item.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/user/providers/badges_notifier.c.dart';
 
-class BadgesUserListItem extends HookConsumerWidget {
+class BadgesUserListItem extends ConsumerWidget {
   const BadgesUserListItem({
     required this.pubkey,
     required this.title,

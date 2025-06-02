@@ -564,6 +564,7 @@
   "error_display_name_invalid": "Please use regular text only",
   "error_nickname_invalid": "Only letters, numbers, and dots are allowed",
   "error_nickname_taken": "Nickname is already taken",
+  "error_nickname_not_exists": "Nickname doesn't exist",
   "error_passwords_are_not_equal": "Passwords are not equal",
   "error_website_invalid": "Invalid website url",
   "error_general_title": "Something went wrong",

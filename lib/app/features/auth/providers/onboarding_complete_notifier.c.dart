@@ -62,6 +62,7 @@ class OnboardingCompleteNotifier extends _$OnboardingCompleteNotifier {
             data: UserSocialProfileData(
               username: userMetadata.name,
               displayName: userMetadata.displayName,
+              referral: ref.read(onboardingDataProvider).referralName,
             ),
           ).future,
         );
