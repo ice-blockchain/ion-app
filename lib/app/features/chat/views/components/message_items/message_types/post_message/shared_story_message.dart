@@ -74,67 +74,70 @@ class SharedStoryMessage extends HookConsumerWidget {
       },
     );
 
-    return Align(
-      alignment: isMe ? AlignmentDirectional.centerEnd : AlignmentDirectional.centerStart,
-      child: Stack(
-        children: [
-          GestureDetector(
-            behavior: HitTestBehavior.opaque,
-            onTap: () {
-              StoryViewerRoute(
-                pubkey: storyEntity.masterPubkey,
-                initialStoryReference: storyEntity.toEventReference().encode(),
-              ).push<void>(context);
-            },
-            child: Column(
-              crossAxisAlignment: isMe ? CrossAxisAlignment.end : CrossAxisAlignment.start,
-              children: [
-                _SenderReceiverLabel(isMe: isMe),
-                if (storyUrl.isNotEmpty && !storyExpired && !storyDeleted)
-                  _StoryPreviewImage(
-                    isMe: isMe,
-                    storyUrl: storyUrl,
-                    replyEventMessage: replyEventMessage,
-                    isThumb: storyMedia.mediaType == MediaType.video,
-                  )
-                else
-                  _UnavailableStoryContainer(isMe: isMe, replyEventMessage: replyEventMessage),
-                if (replyEventMessage.content.isNotEmpty)
-                  Padding(
-                    padding: EdgeInsetsDirectional.only(top: 4.0.s),
-                    child: TextMessage(eventMessage: replyEventMessage),
-                  ),
-              ],
-            ),
-          ),
-          if (storyUrl.isNotEmpty && replyEventMessage.content.isEmpty)
-            PositionedDirectional(
-              start: 6.0.s,
-              bottom: 6.0.s,
-              child: GestureDetector(
-                behavior: HitTestBehavior.opaque,
-                onTap: () async {
-                  final forEveryone = await DeleteMessageRoute(
-                    isMe: isMe,
-                  ).push<bool>(context);
-
-                  if (forEveryone != null && context.mounted) {
-                    final messageEventsList = [replyEventMessage];
-
-                    ref.read(
-                      e2eeDeleteMessageProvider(
-                        forEveryone: forEveryone,
-                        messageEvents: messageEventsList,
-                      ),
-                    );
-                  }
-                },
-                child: IgnorePointer(
-                  child: MessageReactions(eventMessage: replyEventMessage, isMe: isMe),
-                ),
+    return Container(
+      margin: margin,
+      child: Align(
+        alignment: isMe ? AlignmentDirectional.centerEnd : AlignmentDirectional.centerStart,
+        child: Stack(
+          children: [
+            GestureDetector(
+              behavior: HitTestBehavior.opaque,
+              onTap: () {
+                StoryViewerRoute(
+                  pubkey: storyEntity.masterPubkey,
+                  initialStoryReference: storyEntity.toEventReference().encode(),
+                ).push<void>(context);
+              },
+              child: Column(
+                crossAxisAlignment: isMe ? CrossAxisAlignment.end : CrossAxisAlignment.start,
+                children: [
+                  _SenderReceiverLabel(isMe: isMe),
+                  if (storyUrl.isNotEmpty && !storyExpired && !storyDeleted)
+                    _StoryPreviewImage(
+                      isMe: isMe,
+                      storyUrl: storyUrl,
+                      replyEventMessage: replyEventMessage,
+                      isThumb: storyMedia.mediaType == MediaType.video,
+                    )
+                  else
+                    _UnavailableStoryContainer(isMe: isMe, replyEventMessage: replyEventMessage),
+                  if (replyEventMessage.content.isNotEmpty)
+                    Padding(
+                      padding: EdgeInsetsDirectional.only(top: 4.0.s),
+                      child: TextMessage(eventMessage: replyEventMessage),
+                    ),
+                ],
               ),
             ),
-        ],
+            if (storyUrl.isNotEmpty && replyEventMessage.content.isEmpty)
+              PositionedDirectional(
+                start: 6.0.s,
+                bottom: 6.0.s,
+                child: GestureDetector(
+                  behavior: HitTestBehavior.opaque,
+                  onTap: () async {
+                    final forEveryone = await DeleteMessageRoute(
+                      isMe: isMe,
+                    ).push<bool>(context);
+
+                    if (forEveryone != null && context.mounted) {
+                      final messageEventsList = [replyEventMessage];
+
+                      ref.read(
+                        e2eeDeleteMessageProvider(
+                          forEveryone: forEveryone,
+                          messageEvents: messageEventsList,
+                        ),
+                      );
+                    }
+                  },
+                  child: IgnorePointer(
+                    child: MessageReactions(eventMessage: replyEventMessage, isMe: isMe),
+                  ),
+                ),
+              ),
+          ],
+        ),
       ),
     );
   }
