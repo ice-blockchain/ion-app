@@ -16,7 +16,7 @@ class PollVoteEntity with _$PollVoteEntity, IonConnectEntity, ImmutableEntity, C
     required String pubkey,
     required String masterPubkey,
     required String signature,
-    required DateTime createdAt,
+    required int createdAt,
     required PollVoteData data,
   }) = _PollVoteEntity;
 

@@ -86,7 +86,7 @@ class TwoFAService {
     OnVerifyIdentity<GenerateSignatureResponse> onVerifyIdentity,
   ) async {
     final userId = _extractUserIdService.extractUserId(username: username);
-    final timestamp = DateTime.now().millisecondsSinceEpoch ~/ 1000;
+    final timestamp = DateTime.now().microsecondsSinceEpoch;
     final mainWallet = (await _wallets.getWallets()).first;
 
     final hash = sha256.convert(utf8.encode('$timestamp:$userId'));

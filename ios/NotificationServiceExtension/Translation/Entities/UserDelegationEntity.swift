@@ -13,7 +13,7 @@ struct UserDelegationEntity: IonConnectEntity {
     let pubkey: String
     let masterPubkey: String
     let signature: String
-    let createdAt: Date
+    let createdAt: Int
     let data: UserDelegationData
 
     static let kind = 10100

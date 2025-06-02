@@ -165,7 +165,7 @@ class UserRelaysManager extends _$UserRelaysManager {
             signature: '',
             masterPubkey: details.masterPubKey,
             pubkey: details.masterPubKey,
-            createdAt: DateTime.now(),
+            createdAt: DateTime.now().microsecondsSinceEpoch,
             data: UserRelaysData(
               list: details.ionConnectRelays!.map((url) => UserRelay(url: url)).toList(),
             ),

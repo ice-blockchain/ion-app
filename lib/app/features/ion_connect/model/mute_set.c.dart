@@ -32,7 +32,7 @@ class MuteSetEntity with IonConnectEntity, CacheableEntity, ReplaceableEntity, _
     required String pubkey,
     required String masterPubkey,
     required String signature,
-    required DateTime createdAt,
+    required int createdAt,
     required MuteSetData data,
   }) = _MuteSetEntity;
 
@@ -90,7 +90,7 @@ class MuteSetData with _$MuteSetData implements EventSerializable, ReplaceableEn
   @override
   FutureOr<EventMessage> toEventMessage(
     EventSigner signer, {
-    DateTime? createdAt,
+    int? createdAt,
     String content = '',
     List<List<String>> tags = const [],
   }) {

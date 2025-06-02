@@ -24,7 +24,7 @@ class EventsMetadata with _$EventsMetadata implements EventSerializable {
   FutureOr<EventMessage> toEventMessage(
     EventSigner signer, {
     List<List<String>> tags = const [],
-    DateTime? createdAt,
+    int? createdAt,
   }) {
     return EventMessage.fromData(
       signer: signer,

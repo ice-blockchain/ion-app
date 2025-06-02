@@ -30,7 +30,7 @@ struct ReplaceablePrivateDirectMessageEntity: IonConnectEntity {
     let pubkey: String
     let masterPubkey: String
     let signature: String
-    let createdAt: Date
+    let createdAt: Int
     let data: ReplaceablePrivateDirectMessageData
 
     static let kind = 30014
@@ -40,7 +40,7 @@ struct ReplaceablePrivateDirectMessageEntity: IonConnectEntity {
         pubkey: String,
         masterPubkey: String,
         signature: String,
-        createdAt: Date,
+        createdAt: Int,
         data: ReplaceablePrivateDirectMessageData
     ) {
         self.id = id

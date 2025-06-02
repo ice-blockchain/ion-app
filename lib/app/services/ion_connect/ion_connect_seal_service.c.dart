@@ -62,7 +62,7 @@ class IonConnectSealServiceImpl implements IonConnectSealService {
 
     final createdAt = randomDateBefore(
       const Duration(days: 2),
-    );
+    ).microsecondsSinceEpoch;
 
     if (currentUserMasterPubkey.isEmpty) {
       throw UserMasterPubkeyNotFoundException();

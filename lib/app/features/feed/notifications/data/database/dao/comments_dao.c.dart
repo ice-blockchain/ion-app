@@ -2,6 +2,7 @@
 
 import 'package:drift/drift.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/feed/notifications/data/database/notifications_database.c.dart';
 import 'package:ion/app/features/feed/notifications/data/database/tables/comments_table.c.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
@@ -26,11 +27,12 @@ class CommentsDao extends DatabaseAccessor<NotificationsDatabase> with _$Comment
 
   Future<DateTime?> getLastCreatedAt(CommentType type) async {
     final maxCreatedAt = commentsTable.createdAt.max();
-    return (selectOnly(commentsTable)
+    final max = await (selectOnly(commentsTable)
           ..addColumns([maxCreatedAt])
           ..where(commentsTable.type.equalsValue(type)))
         .map((row) => row.read(maxCreatedAt))
         .getSingleOrNull();
+    return max?.toDateTime;
   }
 
   Future<DateTime?> getFirstCreatedAt(CommentType type, {DateTime? after}) async {
@@ -39,9 +41,10 @@ class CommentsDao extends DatabaseAccessor<NotificationsDatabase> with _$Comment
       ..addColumns([firstCreatedAt])
       ..where(commentsTable.type.equalsValue(type));
     if (after != null) {
-      query.where(commentsTable.createdAt.isBiggerThanValue(after));
+      query.where(commentsTable.createdAt.isBiggerThanValue(after.microsecondsSinceEpoch));
     }
-    return query.map((row) => row.read(firstCreatedAt)).getSingleOrNull();
+    final min = await query.map((row) => row.read(firstCreatedAt)).getSingleOrNull();
+    return min?.toDateTime;
   }
 
   Stream<int> watchUnreadCount({required DateTime? after}) {
@@ -49,7 +52,9 @@ class CommentsDao extends DatabaseAccessor<NotificationsDatabase> with _$Comment
     final query = selectOnly(commentsTable)..addColumns([unreadCount]);
 
     if (after != null) {
-      query.where(commentsTable.createdAt.isBiggerThanValue(after));
+      query.where(
+        commentsTable.createdAt.isBiggerThanValue(after.microsecondsSinceEpoch),
+      );
     }
 
     return query.map((row) => row.read(unreadCount)!).watchSingle();

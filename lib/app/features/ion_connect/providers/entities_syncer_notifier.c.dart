@@ -2,6 +2,7 @@
 
 import 'dart:async';
 
+import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/ion_connect/ion_connect.dart';
 import 'package:ion/app/features/ion_connect/model/action_source.c.dart';
 import 'package:ion/app/features/ion_connect/model/ion_connect_entity.dart';
@@ -124,8 +125,8 @@ class EntitiesSyncerNotifier extends _$EntitiesSyncerNotifier {
     for (final filter in requestFilters) {
       requestMessage.addFilter(
         filter.copyWith(
-          until: () => untilDateOverlapped,
-          since: () => pivotDateOverlapped,
+          until: () => untilDateOverlapped.microsecondsSinceEpoch,
+          since: () => pivotDateOverlapped?.microsecondsSinceEpoch,
           limit: () => limit,
         ),
       );
@@ -166,8 +167,8 @@ class EntitiesSyncerNotifier extends _$EntitiesSyncerNotifier {
     for (final filter in requestFilters) {
       requestMessage.addFilter(
         filter.copyWith(
-          until: () => untilDateOverlapped,
-          since: () => sinceDateOverlapped,
+          until: () => untilDateOverlapped.microsecondsSinceEpoch,
+          since: () => sinceDateOverlapped?.microsecondsSinceEpoch,
           limit: () => limit,
         ),
       );
@@ -203,7 +204,7 @@ class EntitiesSyncerNotifier extends _$EntitiesSyncerNotifier {
     DateTime? lastEventTime;
     var count = 0;
     await for (final event in eventsStream) {
-      lastEventTime = event.createdAt;
+      lastEventTime = event.createdAt.toDateTime;
       if (sinceDate == null || (lastEventTime.isAfter(sinceDate))) {
         count++;
         saveCallback(event);
@@ -219,7 +220,7 @@ class EntitiesSyncerNotifier extends _$EntitiesSyncerNotifier {
     for (final filter in requestMessage.filters) {
       newRequestMessage.addFilter(
         filter.copyWith(
-          until: () => lastEventTime,
+          until: () => lastEventTime?.microsecondsSinceEpoch,
         ),
       );
     }

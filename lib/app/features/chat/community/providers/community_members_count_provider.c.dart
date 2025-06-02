@@ -1,6 +1,7 @@
 // SPDX-License-Identifier: ice License 1.0
 
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/chat/community/models/entities/community_definition_data.c.dart';
 import 'package:ion/app/features/chat/community/models/entities/community_join_data.c.dart';
 import 'package:ion/app/features/core/providers/env_provider.c.dart';
@@ -29,7 +30,7 @@ FutureOr<int?> communityMembersCount(
 
   final getCommunityCreationCacheMinutes =
       ref.read(envProvider.notifier).get<int>(EnvVariable.COMMUNITY_CREATION_CACHE_MINUTES);
-  final canUseCache = community.createdAt
+  final canUseCache = community.createdAt.toDateTime
       .add(Duration(minutes: getCommunityCreationCacheMinutes))
       .isAfter(DateTime.now());
 

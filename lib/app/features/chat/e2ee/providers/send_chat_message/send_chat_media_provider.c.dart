@@ -130,9 +130,11 @@ class SendChatMedia extends _$SendChatMedia {
       oneTimeEventSigner,
       tags: [
         EntityExpiration(
-          value: DateTime.now().add(
-            Duration(hours: env.get<int>(EnvVariable.GIFT_WRAP_EXPIRATION_HOURS)),
-          ),
+          value: DateTime.now()
+              .add(
+                Duration(hours: env.get<int>(EnvVariable.GIFT_WRAP_EXPIRATION_HOURS)),
+              )
+              .microsecondsSinceEpoch,
         ).toTag(),
       ],
     );

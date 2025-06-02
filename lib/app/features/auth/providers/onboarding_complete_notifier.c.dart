@@ -123,7 +123,7 @@ class OnboardingCompleteNotifier extends _$OnboardingCompleteNotifier {
     return UserMetadata(
       name: name,
       displayName: displayName,
-      registeredAt: DateTime.now(),
+      registeredAt: DateTime.now().microsecondsSinceEpoch,
       picture: avatarAttachment?.url,
       media: avatarAttachment != null ? {avatarAttachment.url: avatarAttachment} : {},
       wallets: wallets,

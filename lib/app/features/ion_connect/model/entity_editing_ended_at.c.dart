@@ -8,7 +8,7 @@ part 'entity_editing_ended_at.c.freezed.dart';
 @freezed
 class EntityEditingEndedAt with _$EntityEditingEndedAt {
   const factory EntityEditingEndedAt({
-    required DateTime value,
+    required int value,
   }) = _EntityEditingEndedAt;
 
   const EntityEditingEndedAt._();
@@ -19,22 +19,24 @@ class EntityEditingEndedAt with _$EntityEditingEndedAt {
     }
 
     return EntityEditingEndedAt(
-      value: DateTime.fromMillisecondsSinceEpoch(int.parse(tag[1]) * 1000),
+      value: int.parse(tag[1]),
     );
   }
 
   factory EntityEditingEndedAt.build(int minutes) {
     return EntityEditingEndedAt(
-      value: DateTime.now().add(
-        Duration(
-          minutes: minutes,
-        ),
-      ),
+      value: DateTime.now()
+          .add(
+            Duration(
+              minutes: minutes,
+            ),
+          )
+          .microsecondsSinceEpoch,
     );
   }
 
   List<String> toTag() {
-    return [tagName, (value.millisecondsSinceEpoch ~/ 1000).toString()];
+    return [tagName, value.toString()];
   }
 
   static const String tagName = 'editing_ended_at';

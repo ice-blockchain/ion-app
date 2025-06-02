@@ -95,7 +95,7 @@ class SendBlockEventService {
               final eventMessage = await EventMessage.fromData(
                 content: '',
                 signer: eventSigner,
-                createdAt: createdAt,
+                createdAt: createdAt.microsecondsSinceEpoch,
                 kind: BlockedUserEntity.kind,
                 tags: [
                   ['d', sharedId],

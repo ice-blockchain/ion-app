@@ -68,9 +68,11 @@ class WalletViewsService {
 
   final StreamController<List<WalletViewData>> _walletViewsController =
       StreamController.broadcast();
+
   Stream<List<WalletViewData>> get walletViews => _walletViewsController.stream;
   List<WalletViewData> _originWalletViews = [];
   List<WalletViewData> _modifiedWalletViews = [];
+
   List<WalletViewData> get lastEmitted => _modifiedWalletViews;
 
   StreamSubscription<(List<CoinData>, Map<CoinData, List<TransactionData>>)>? _updatesSubscription;
@@ -424,8 +426,8 @@ class WalletViewsService {
       name: viewDTO.name,
       symbolGroups: symbolGroups,
       nfts: viewDTO.nfts?.map((nft) => nft.toNft(networks[nft.network]!)).toList() ?? [],
-      createdAt: viewDTO.createdAt,
-      updatedAt: viewDTO.updatedAt,
+      createdAt: viewDTO.createdAt.microsecondsSinceEpoch,
+      updatedAt: viewDTO.updatedAt.microsecondsSinceEpoch,
       usdBalance: totalViewBalanceUSD,
       isMainWalletView: isMainWalletView,
     );

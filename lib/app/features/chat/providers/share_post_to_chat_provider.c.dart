@@ -86,7 +86,7 @@ class SharePostToChat extends _$SharePostToChat {
           final id = EventMessage.calculateEventId(
             tags: tags,
             content: postAsContent,
-            createdAt: DateTime.now(),
+            createdAt: DateTime.now().microsecondsSinceEpoch,
             kind: GenericRepostEntity.kind,
             publicKey: eventSigner.publicKey,
           );

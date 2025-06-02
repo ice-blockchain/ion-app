@@ -2,6 +2,7 @@
 
 import 'package:collection/collection.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/auth/providers/auth_provider.c.dart';
 import 'package:ion/app/features/chat/e2ee/model/entities/private_direct_message_data.c.dart';
 import 'package:ion/app/features/chat/providers/conversations_provider.c.dart';
@@ -38,7 +39,7 @@ Future<List<(String, String)>?> chatUsersSearch(Ref ref, String query) async {
   final lastConversationEntities = lastConversationMessages
       .map(ReplaceablePrivateDirectMessageEntity.fromEventMessage)
       .toList()
-    ..sortBy((message) => message.createdAt);
+    ..sortBy((message) => message.createdAt.toDateTime);
 
   final conversationPubkeysMap = {
     for (final message in lastConversationEntities.reversed)

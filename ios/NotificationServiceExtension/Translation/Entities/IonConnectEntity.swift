@@ -7,7 +7,7 @@ protocol IonConnectEntity {
     var pubkey: String { get }
     var masterPubkey: String { get }
     var signature: String { get }
-    var createdAt: Date { get }
+    var createdAt: Int { get }
 }
 
 extension IonConnectEntity {

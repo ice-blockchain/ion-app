@@ -2,6 +2,7 @@
 
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/exceptions/exceptions.dart';
+import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/feed/data/models/entities/generic_repost.c.dart';
 import 'package:ion/app/features/feed/data/models/entities/modifiable_post_data.c.dart';
 import 'package:ion/app/features/feed/notifications/data/database/dao/comments_dao.c.dart';
@@ -55,7 +56,7 @@ class CommentsRepository implements IonNotificationRepository {
       return CommentIonNotification(
         type: type,
         eventReference: comment.eventReference,
-        timestamp: comment.createdAt,
+        timestamp: comment.createdAt.toDateTime,
       );
     }).toList();
   }

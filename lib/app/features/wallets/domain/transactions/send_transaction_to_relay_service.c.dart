@@ -123,9 +123,11 @@ class SendTransactionToRelayService {
     int kind = ReplaceablePrivateDirectMessageEntity.kind,
   }) async {
     final expirationTag = EntityExpiration(
-      value: DateTime.now().add(
-        Duration(hours: env.get<int>(EnvVariable.GIFT_WRAP_EXPIRATION_HOURS)),
-      ),
+      value: DateTime.now()
+          .add(
+            Duration(hours: env.get<int>(EnvVariable.GIFT_WRAP_EXPIRATION_HOURS)),
+          )
+          .microsecondsSinceEpoch,
     ).toTag();
 
     final seal = await sealService.createSeal(

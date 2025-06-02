@@ -7,7 +7,7 @@ import 'package:ion/app/features/feed/notifications/data/database/converters/eve
 class LikesTable extends Table {
   TextColumn get eventReference => text().map(const EventReferenceConverter())();
   TextColumn get pubkey => text()();
-  DateTimeColumn get createdAt => dateTime()();
+  IntColumn get createdAt => integer()();
 
   @override
   Set<Column> get primaryKey => {eventReference, pubkey};

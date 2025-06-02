@@ -30,7 +30,7 @@ ModifiablePostEntity _post({
   required DateTime createdAt,
 }) {
   final post = buildPost(id, author: author, mediaType: mediaType);
-  when(() => post.createdAt).thenReturn(createdAt);
+  when(() => post.createdAt).thenReturn(createdAt.microsecondsSinceEpoch);
   return post;
 }
 

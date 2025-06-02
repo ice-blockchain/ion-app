@@ -10,7 +10,7 @@ class FundsRequestsTable extends Table {
 
   TextColumn get eventId => text()();
   TextColumn get pubkey => text()();
-  DateTimeColumn get createdAt => dateTime()();
+  IntColumn get createdAt => integer()();
   TextColumn get networkId => text()();
   TextColumn get assetClass => text()();
   TextColumn get assetAddress => text()();

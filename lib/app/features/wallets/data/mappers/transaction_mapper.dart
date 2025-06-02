@@ -1,6 +1,7 @@
 // SPDX-License-Identifier: ice License 1.0
 
 import 'package:collection/collection.dart';
+import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/extensions/object.dart';
 import 'package:ion/app/features/wallets/data/database/wallets_database.c.dart' as db;
 import 'package:ion/app/features/wallets/model/coin_data.c.dart';
@@ -86,7 +87,7 @@ class CoinTransactionsMapper {
             nativeCoinId: nativeCoin?.id,
             senderWalletAddress: content.from,
             receiverWalletAddress: content.to,
-            createdAtInRelay: entity.createdAt,
+            createdAtInRelay: entity.createdAt.toDateTime,
             userPubkey: entity.data.pubkey,
             transferredAmount: content.amount,
             transferredAmountUsd: double.tryParse(content.amountUsd ?? '0'),

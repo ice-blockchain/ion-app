@@ -21,7 +21,7 @@ class InterestsEntity with IonConnectEntity, CacheableEntity, ReplaceableEntity,
     required String pubkey,
     required String masterPubkey,
     required String signature,
-    required DateTime createdAt,
+    required int createdAt,
     required InterestsData data,
   }) = _InterestsEntity;
 
@@ -70,7 +70,7 @@ class InterestsData with _$InterestsData implements EventSerializable, Replaceab
   FutureOr<EventMessage> toEventMessage(
     EventSigner signer, {
     List<List<String>> tags = const [],
-    DateTime? createdAt,
+    int? createdAt,
   }) {
     return EventMessage.fromData(
       signer: signer,

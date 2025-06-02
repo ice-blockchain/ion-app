@@ -72,7 +72,7 @@ class E2eeMessagesSubscriber extends _$E2eeMessagesSubscriber {
         ],
         '#p': [masterPubkey],
       },
-      since: sinceDate,
+      since: sinceDate?.microsecondsSinceEpoch,
     );
 
     final sealService = await ref.watch(ionConnectSealServiceProvider.future);
@@ -200,7 +200,7 @@ class E2eeMessagesSubscriber extends _$E2eeMessagesSubscriber {
           pubkey: rumor.pubkey,
           masterPubkey: rumor.masterPubkey,
           status: MessageDeliveryStatus.values.byName(reactionEntity.data.content),
-          updateAllBefore: rumor.createdAt,
+          updateAllBefore: rumor.createdAt.toDateTime,
         );
       } else {
         await conversationMessageReactionDao.add(

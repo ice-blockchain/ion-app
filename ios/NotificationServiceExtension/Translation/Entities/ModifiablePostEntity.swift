@@ -7,12 +7,12 @@ struct ModifiablePostEntity: IonConnectEntity {
     let pubkey: String
     let masterPubkey: String
     let signature: String
-    let createdAt: Date
+    let createdAt: Int
     let data: ModifiablePostData
 
     static let kind = 30175
 
-    init(id: String, pubkey: String, masterPubkey: String, signature: String, createdAt: Date, data: ModifiablePostData) {
+    init(id: String, pubkey: String, masterPubkey: String, signature: String, createdAt: Int, data: ModifiablePostData) {
         self.id = id
         self.pubkey = pubkey
         self.masterPubkey = masterPubkey

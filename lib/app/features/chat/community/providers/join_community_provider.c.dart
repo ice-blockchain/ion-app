@@ -3,6 +3,7 @@
 import 'dart:convert';
 
 import 'package:ion/app/exceptions/exceptions.dart';
+import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/auth/providers/auth_provider.c.dart';
 import 'package:ion/app/features/chat/community/models/entities/community_join_data.c.dart';
 import 'package:ion/app/features/chat/community/providers/community_invitation_provider.c.dart';
@@ -46,7 +47,7 @@ class JoinCommunityNotifier extends _$JoinCommunityNotifier {
         final invitation = CommunityJoinEntity.fromEventMessage(invitationEvent);
 
         if (invitation.data.expiration != null &&
-            invitation.data.expiration!.isBefore(DateTime.now())) {
+            invitation.data.expiration!.toDateTime.isBefore(DateTime.now())) {
           throw CommunityInvitationExpiredException();
         }
         joinData = joinData.copyWith(auth: jsonEncode(invitationEvent.toJson().last));

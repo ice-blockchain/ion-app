@@ -1,6 +1,7 @@
 // SPDX-License-Identifier: ice License 1.0
 
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/auth/providers/auth_provider.c.dart';
 import 'package:ion/app/features/feed/data/models/entities/event_count_result_data.c.dart';
 import 'package:ion/app/features/feed/polls/models/poll_data.c.dart';
@@ -71,7 +72,8 @@ List<int> pollVoteCounts(Ref ref, EventReference eventReference, PollData pollDa
   final votesByUser = <String, PollVoteEntity>{};
   for (final vote in allPollVotes) {
     final existingVote = votesByUser[vote.masterPubkey];
-    if (existingVote == null || vote.createdAt.isAfter(existingVote.createdAt)) {
+    if (existingVote == null ||
+        vote.createdAt.toDateTime.isAfter(existingVote.createdAt.toDateTime)) {
       votesByUser[vote.masterPubkey] = vote;
     }
   }

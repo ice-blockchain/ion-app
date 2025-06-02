@@ -26,7 +26,7 @@ class WalletAssetEntity with IonConnectEntity, ImmutableEntity, _$WalletAssetEnt
     required String id,
     required String pubkey,
     required String masterPubkey,
-    required DateTime createdAt,
+    required int createdAt,
     required WalletAssetData data,
   }) = _WalletAssetEntity;
 
@@ -102,7 +102,7 @@ class WalletAssetData with _$WalletAssetData {
 
     final rumorId = EventMessage.calculateEventId(
       publicKey: devicePubkey,
-      createdAt: createdAt,
+      createdAt: createdAt.microsecondsSinceEpoch,
       kind: WalletAssetEntity.kind,
       tags: tags,
       content: encodedContent,
@@ -111,7 +111,7 @@ class WalletAssetData with _$WalletAssetData {
     return EventMessage(
       id: rumorId,
       pubkey: devicePubkey,
-      createdAt: createdAt,
+      createdAt: createdAt.microsecondsSinceEpoch,
       kind: WalletAssetEntity.kind,
       tags: tags,
       content: encodedContent,

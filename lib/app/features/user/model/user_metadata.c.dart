@@ -25,7 +25,7 @@ class UserMetadataEntity
     required String pubkey,
     required String masterPubkey,
     required String signature,
-    required DateTime createdAt,
+    required int createdAt,
     required UserMetadata data,
   }) = _UserMetadataEntity;
 
@@ -66,7 +66,7 @@ class UserMetadata with _$UserMetadata implements EventSerializable, Replaceable
     String? website,
     String? location,
     String? category,
-    DateTime? registeredAt,
+    int? registeredAt,
     String? banner,
     @Default({}) Map<String, MediaAttachment> media,
     Map<String, String>? wallets,
@@ -110,7 +110,7 @@ class UserMetadata with _$UserMetadata implements EventSerializable, Replaceable
   FutureOr<EventMessage> toEventMessage(
     EventSigner signer, {
     List<List<String>> tags = const [],
-    DateTime? createdAt,
+    int? createdAt,
   }) {
     return EventMessage.fromData(
       signer: signer,
@@ -183,12 +183,8 @@ class UserDataEventMessageContent {
 
   final String? category;
 
-  @JsonKey(
-    name: 'registered_at',
-    toJson: _dateTimeToJson,
-    fromJson: _dateTimeFromJson,
-  )
-  final DateTime? registeredAt;
+  @JsonKey(name: 'registered_at')
+  final int? registeredAt;
 
   final String? banner;
 
@@ -201,12 +197,6 @@ class UserDataEventMessageContent {
   final Map<String, String>? wallets;
 
   Map<String, dynamic> toJson() => _$UserDataEventMessageContentToJson(this);
-
-  static int? _dateTimeToJson(DateTime? value) =>
-      value != null ? value.millisecondsSinceEpoch ~/ 1000 : null;
-
-  static DateTime? _dateTimeFromJson(int? value) =>
-      value != null ? DateTime.fromMillisecondsSinceEpoch(value * 1000) : null;
 }
 
 enum WhoCanSetting {

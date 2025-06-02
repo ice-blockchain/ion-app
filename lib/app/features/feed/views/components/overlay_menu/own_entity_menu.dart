@@ -148,9 +148,9 @@ class OwnEntityMenu extends ConsumerWidget {
   bool _isEntityEditable(IonConnectEntity entity) {
     return switch (entity) {
       final ModifiablePostEntity post =>
-        post.data.editingEndedAt?.value.isAfter(DateTime.now()) ?? false,
+        post.data.editingEndedAt?.value.toDateTime.isAfter(DateTime.now()) ?? false,
       final ArticleEntity article =>
-        article.data.editingEndedAt?.value.isAfter(DateTime.now()) ?? false,
+        article.data.editingEndedAt?.value.toDateTime.isAfter(DateTime.now()) ?? false,
       _ => false,
     };
   }

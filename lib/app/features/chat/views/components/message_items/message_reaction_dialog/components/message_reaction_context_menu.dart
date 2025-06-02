@@ -44,7 +44,7 @@ class MessageReactionContextMenu extends HookConsumerWidget {
       () => ReplaceablePrivateDirectMessageData.fromEventMessage(messageItem.eventMessage),
     );
 
-    final canEdit = entityData.editingEndedAt.value.isAfter(DateTime.now());
+    final canEdit = entityData.editingEndedAt.value.toDateTime.isAfter(DateTime.now());
     final hideChatBookmark =
         ref.watch(featureFlagsProvider.notifier).get(ChatFeatureFlag.hideChatBookmark);
     final canCopy =

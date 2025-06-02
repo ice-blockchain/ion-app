@@ -111,7 +111,7 @@ class EntitiesPagedData extends _$EntitiesPagedData {
     final requestMessage = RequestMessage();
     for (final filter in dataSource.requestFilters) {
       requestMessage.addFilter(
-        filter.copyWith(until: () => paginationParams.until),
+        filter.copyWith(until: () => paginationParams.until?.microsecondsSinceEpoch),
       );
     }
 
@@ -128,7 +128,7 @@ class EntitiesPagedData extends _$EntitiesPagedData {
 
       // Update pagination params
       if (pagedFilter(entity) && stateFilter) {
-        lastEventTime = entity.createdAt;
+        lastEventTime = entity.createdAt.toDateTime;
       }
 
       // Update state

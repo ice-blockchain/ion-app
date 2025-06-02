@@ -193,7 +193,7 @@ class CommunityRecentChatTile extends ConsumerWidget {
         ),
       ),
       unreadMessagesCount: unreadMessagesCount.valueOrNull ?? 0,
-      lastMessageAt: conversation.latestMessage?.createdAt ?? conversation.joinedAt,
+      lastMessageAt: (conversation.latestMessage?.createdAt ?? conversation.joinedAt).toDateTime,
       lastMessageContent: conversation.latestMessage?.content ?? context.i18n.empty_message_history,
       messageType: entity.messageType,
       onTap: () {
@@ -251,7 +251,7 @@ class E2eeRecentChatTile extends ConsumerWidget {
       eventReference: eventReference,
       unreadMessagesCount: unreadMessagesCount.valueOrNull ?? 0,
       lastMessageContent: conversation.latestMessage?.content ?? '',
-      lastMessageAt: conversation.latestMessage?.createdAt ?? conversation.joinedAt,
+      lastMessageAt: (conversation.latestMessage?.createdAt ?? conversation.joinedAt).toDateTime,
       isVerified: isUserVerified,
       onTap: () {
         ConversationRoute(receiverPubKey: receiverPubkey).push<void>(context);
@@ -297,7 +297,7 @@ class EncryptedGroupRecentChatTile extends HookConsumerWidget {
       eventReference: eventReference,
       avatarWidget: groupImageFile != null ? Image.file(groupImageFile) : null,
       defaultAvatar: Assets.svg.iconChannelEmptychannel.icon(size: 40.0.s),
-      lastMessageAt: conversation.latestMessage?.createdAt ?? conversation.joinedAt,
+      lastMessageAt: (conversation.latestMessage?.createdAt ?? conversation.joinedAt).toDateTime,
       lastMessageContent:
           entity.content.isEmpty ? context.i18n.empty_message_history : entity.content,
       unreadMessagesCount: unreadMessagesCount.valueOrNull ?? 0,
