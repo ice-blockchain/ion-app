@@ -86,7 +86,7 @@ class CoinsComparator {
 
 class CoinPriority {
   final _priorityList = const [
-    'ICE', // Ice Open Network
+    'ION', // Ice Open Network
     'BNB', // Binance Coin
     'BTC', // Bitcoin
     'ETH', // Ethereum
