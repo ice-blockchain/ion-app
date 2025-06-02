@@ -32,7 +32,7 @@ struct RepostData {
         }
         
         return RepostData(
-            eventReference: ImmutableEventReference(id: eventId!, pubkey: pubkey!),
+            eventReference: ImmutableEventReference(id: eventId!, pubkey: pubkey!)
         )
     }
 }
