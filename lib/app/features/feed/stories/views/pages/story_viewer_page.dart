@@ -87,7 +87,7 @@ class StoryViewerPage extends HookConsumerWidget {
                 .removeViewPadding(removeBottom: true, removeTop: true),
             child: Scaffold(
               resizeToAvoidBottomInset: false,
-              backgroundColor: context.theme.appColors.primaryText,
+              backgroundColor: Colors.black,
               body: Stack(
                 children: [
                   PositionedDirectional(

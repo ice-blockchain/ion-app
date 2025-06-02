@@ -26,6 +26,7 @@ class DismissiblePage extends HookWidget {
     this.minScale = 0.85,
     this.maxRadius = 30.0,
     this.minRadius = 7.0,
+    this.staticBackground = false,
     super.key,
   });
 
@@ -38,6 +39,7 @@ class DismissiblePage extends HookWidget {
   final double minScale;
   final double maxRadius;
   final double minRadius;
+  final bool staticBackground;
 
   @override
   Widget build(BuildContext context) {
@@ -62,7 +64,7 @@ class DismissiblePage extends HookWidget {
 
     final radius = minRadius + (maxRadius - minRadius) * progress;
     final scale = 1.0 - (1.0 - minScale) * progress;
-    final opacity = 1.0 - 0.8 * progress;
+    final opacity = staticBackground ? 1.0 : 1.0 - 0.8 * progress;
 
     useEffect(
       () {
@@ -129,7 +131,18 @@ class DismissiblePage extends HookWidget {
       [isZoomed, animationController, onDismissed],
     );
 
-    return GestureDetector(
+    final content = Transform.translate(
+      offset: dragOffset.value,
+      child: Transform.scale(
+        scale: scale,
+        child: ClipRRect(
+          borderRadius: BorderRadius.circular(radius),
+          child: child,
+        ),
+      ),
+    );
+
+    final gestureDetector = GestureDetector(
       onVerticalDragStart:
           direction == SwipeDismissDirection.vertical && !isZoomed ? handleDragStart : null,
       onVerticalDragUpdate:
@@ -140,20 +153,20 @@ class DismissiblePage extends HookWidget {
       onPanUpdate: direction == SwipeDismissDirection.multi && !isZoomed ? handleDragUpdate : null,
       onPanEnd: direction == SwipeDismissDirection.multi && !isZoomed ? handleDragEnd : null,
       behavior: HitTestBehavior.opaque,
-      child: AnimatedContainer(
+      child: content,
+    );
+
+    if (staticBackground) {
+      return ColoredBox(
+        color: backgroundColor,
+        child: gestureDetector,
+      );
+    } else {
+      return AnimatedContainer(
         duration: 100.ms,
         color: backgroundColor.withValues(alpha: opacity),
-        child: Transform.translate(
-          offset: dragOffset.value,
-          child: Transform.scale(
-            scale: scale,
-            child: ClipRRect(
-              borderRadius: BorderRadius.circular(radius),
-              child: child,
-            ),
-          ),
-        ),
-      ),
-    );
+        child: gestureDetector,
+      );
+    }
   }
 }
