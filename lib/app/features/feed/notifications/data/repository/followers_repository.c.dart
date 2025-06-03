@@ -1,6 +1,7 @@
 // SPDX-License-Identifier: ice License 1.0
 
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/feed/notifications/data/database/dao/followers_dao.c.dart';
 import 'package:ion/app/features/feed/notifications/data/database/notifications_database.c.dart';
 import 'package:ion/app/features/feed/notifications/data/model/ion_notification.c.dart';
@@ -36,9 +37,7 @@ class FollowersRepository implements IonNotificationRepository {
         .map(
           (result) => FollowersIonNotification(
             total: result.uniquePubkeyCount,
-            timestamp: DateTime.fromMillisecondsSinceEpoch(
-              (result.lastCreatedAt ?? 0) * 1000,
-            ),
+            timestamp: result.lastCreatedAt?.toDateTime ?? DateTime.fromMillisecondsSinceEpoch(0),
             pubkeys: result.latestPubkeys?.split(',') ?? [],
           ),
         )
