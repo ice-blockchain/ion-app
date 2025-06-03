@@ -4,6 +4,7 @@ import 'dart:async';
 
 import 'package:collection/collection.dart';
 import 'package:ion/app/exceptions/exceptions.dart';
+import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/auth/providers/auth_provider.c.dart';
 import 'package:ion/app/features/auth/providers/delegation_complete_provider.c.dart';
 import 'package:ion/app/features/chat/e2ee/providers/gift_unwrap_service_provider.c.dart';
@@ -68,6 +69,7 @@ class BlockedUsersSync extends _$BlockedUsersSync {
     final sealService = await ref.watch(ionConnectSealServiceProvider.future);
     final giftWrapService = await ref.watch(ionConnectGiftWrapServiceProvider.future);
     final blockEventDao = ref.watch(blockEventDaoProvider);
+    final blockEventStatusDao = ref.watch(blockEventStatusDaoProvider);
     final env = ref.watch(envProvider.notifier);
     final overlap = env.get<int>(EnvVariable.BLOCKED_USERS_SYNC_OVERLAP_DAYS);
 
@@ -81,6 +83,7 @@ class BlockedUsersSync extends _$BlockedUsersSync {
             masterPubkey: masterPubkey,
             blockEventDao: blockEventDao,
             giftWrapService: giftWrapService,
+            blockEventStatusDao: blockEventStatusDao,
           ),
           maxCreatedAtBuilder: () => ref.watch(blockEventDaoProvider).getLatestBlockEventDate(),
           minCreatedAtBuilder: (since) =>
@@ -99,6 +102,7 @@ class BlockedUsersSync extends _$BlockedUsersSync {
         masterPubkey: masterPubkey,
         blockEventDao: blockEventDao,
         giftWrapService: giftWrapService,
+        blockEventStatusDao: blockEventStatusDao,
       ),
     );
 
@@ -113,6 +117,7 @@ class BlockedUsersSync extends _$BlockedUsersSync {
     required EventMessage eventMessage,
     required BlockEventDao blockEventDao,
     required IonConnectSealService sealService,
+    required BlockEventStatusDao blockEventStatusDao,
     required IonConnectGiftWrapService giftWrapService,
   }) async {
     if (eventSigner.publicKey != _receiverDevicePubkey(eventMessage)) {
@@ -125,6 +130,12 @@ class BlockedUsersSync extends _$BlockedUsersSync {
 
     if (rumor.kind == BlockedUserEntity.kind) {
       await blockEventDao.add(rumor);
+      await blockEventStatusDao.add(
+        event: rumor,
+        receiverPubkey: rumor.pubkey,
+        receiverMasterPubkey: rumor.masterPubkey,
+        status: BlockedUserStatus.delivered,
+      );
     } else if (rumor.kind == DeletionRequestEntity.kind) {
       final eventsToDelete = DeletionRequest.fromEventMessage(rumor).events;
 
@@ -132,7 +143,7 @@ class BlockedUsersSync extends _$BlockedUsersSync {
           .map((event) => (event as EventToDelete).eventReference as ReplaceableEventReference)
           .toList();
 
-      await blockEventDao.markAsDeleted(eventToDeleteReferences);
+      await blockEventStatusDao.markAsDeleted(eventToDeleteReferences);
     }
   }
 

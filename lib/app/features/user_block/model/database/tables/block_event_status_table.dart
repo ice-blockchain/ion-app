@@ -2,9 +2,11 @@
 
 part of '../blocked_users_database.c.dart';
 
-class DeletedBlockEventTable extends Table {
+class BlockEventStatusTable extends Table {
   TextColumn get sharedId => text()();
-  BoolColumn get isDeleted => boolean().withDefault(const Constant(false))();
+  TextColumn get receiverPubkey => text()();
+  TextColumn get receiverMasterPubkey => text()();
+  IntColumn get status => intEnum<BlockedUserStatus>()();
   TextColumn get eventReference => text().map(const EventReferenceConverter())();
 
   @override
