@@ -61,7 +61,7 @@ class FillProfile extends HookConsumerWidget {
           ],
         );
         if (ref.read(userNicknameNotifierProvider).hasError ||
-            ref.read(userReferralNotifierProvider).hasError) {
+            (referral.value.isNotEmpty && ref.read(userReferralNotifierProvider).hasError)) {
           return;
         }
 
