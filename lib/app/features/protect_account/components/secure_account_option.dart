@@ -41,9 +41,7 @@ class SecureAccountOption extends ConsumerWidget {
       leading: Button.icon(
         backgroundColor: context.theme.appColors.secondaryBackground,
         borderColor: context.theme.appColors.onTerararyFill,
-        borderRadius: BorderRadius.all(
-          Radius.circular(16.0.s),
-        ),
+        borderRadius: BorderRadius.all(Radius.circular(12.0.s)),
         type: ButtonType.menuInactive,
         size: 36.0.s,
         onPressed: () {},
