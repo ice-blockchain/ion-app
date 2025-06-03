@@ -25,12 +25,9 @@ class GlobalNotificationView extends StatelessWidget {
           padding: EdgeInsets.symmetric(vertical: 3.0.s),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.center,
+            spacing: 8.0.s,
             children: [
-              if (icon != null)
-                Padding(
-                  padding: EdgeInsetsDirectional.only(start: 8.0.s),
-                  child: icon,
-                ),
+              if (icon != null) icon!,
               Text(
                 message,
                 style: context.theme.appTextThemes.body2.copyWith(
