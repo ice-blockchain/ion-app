@@ -12,6 +12,7 @@
 .fvm/
 .swiftpm/
 migrate_working_dir/
+.ruby-version
 
 # IntelliJ related
 *.iml
