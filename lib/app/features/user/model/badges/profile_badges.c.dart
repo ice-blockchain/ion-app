@@ -120,12 +120,22 @@ class ProfileBadgesData
   }
 }
 
+@immutable
 class BadgeEntry {
-  BadgeEntry({
+  const BadgeEntry({
     required this.definitionRef,
     required this.awardId,
   });
 
   final ReplaceableEventReference definitionRef;
   final String awardId;
+
+  @override
+  bool operator ==(Object other) {
+    if (identical(this, other)) return true;
+    return other is BadgeEntry && other.definitionRef == definitionRef && other.awardId == awardId;
+  }
+
+  @override
+  int get hashCode => Object.hash(definitionRef, awardId);
 }

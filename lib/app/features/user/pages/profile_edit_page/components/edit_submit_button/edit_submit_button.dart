@@ -29,12 +29,13 @@ class EditSubmitButton extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    ref.displayErrors(updateUserMetadataNotifierProvider);
+    final isLoading =
+        ref.watch(updateUserMetadataNotifierProvider.select((state) => state.isLoading));
 
     return Button(
-      disabled: !hasChanges,
+      disabled: !hasChanges || isLoading,
       type: hasChanges ? ButtonType.primary : ButtonType.disabled,
-      leadingIcon: ref.watch(updateUserMetadataNotifierProvider).isLoading
+      leadingIcon: isLoading
           ? const IONLoadingIndicator()
           : Assets.svg.iconProfileSave.icon(
               color: context.theme.appColors.onPrimaryAccent,
@@ -50,7 +51,7 @@ class EditSubmitButton extends ConsumerWidget {
           await ref
               .read(updateUserMetadataNotifierProvider.notifier)
               .publish(draftRef.value, avatar: avatarFile, banner: bannerFile);
-          if (context.mounted) {
+          if (context.mounted && !ref.read(updateUserMetadataNotifierProvider).hasError) {
             context.pop();
           }
         }

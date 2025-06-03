@@ -16,7 +16,11 @@ import 'package:ion/app/features/auth/views/components/user_data_inputs/nickname
 import 'package:ion/app/features/auth/views/components/user_data_inputs/referral_input.dart';
 import 'package:ion/app/features/auth/views/pages/fill_profile/components/fill_prifile_submit_button.dart';
 import 'package:ion/app/features/components/avatar_picker/avatar_picker.dart';
+import 'package:ion/app/features/user/hooks/use_verify_nickname_availability_error_message.dart';
+import 'package:ion/app/features/user/hooks/use_verify_referral_exists_error_message.dart';
 import 'package:ion/app/features/user/providers/image_proccessor_notifier.c.dart';
+import 'package:ion/app/features/user/providers/user_nickname_provider.c.dart';
+import 'package:ion/app/features/user/providers/user_referral_provider.c.dart';
 import 'package:ion/app/router/app_routes.c.dart';
 import 'package:ion/app/router/components/sheet_content/sheet_content.dart';
 import 'package:ion/app/services/media_service/image_proccessing_config.dart';
@@ -40,8 +44,27 @@ class FillProfile extends HookConsumerWidget {
     final initialReferral = onboardingData.referralName ?? '';
     final referral = useState(onboardingData.referralName ?? '');
 
+    final isLoading = ref.watch(userNicknameNotifierProvider).isLoading ||
+        ref.watch(userReferralNotifierProvider).isLoading;
+
     final onSubmit = useCallback(() async {
       if (formKey.currentState!.validate()) {
+        await Future.wait(
+          [
+            ref
+                .read(userNicknameNotifierProvider.notifier)
+                .verifyNicknameAvailability(nickname: nickname.value),
+            if (referral.value.isNotEmpty)
+              ref
+                  .read(userReferralNotifierProvider.notifier)
+                  .verifyReferralExists(referral: referral.value),
+          ],
+        );
+        if (ref.read(userNicknameNotifierProvider).hasError ||
+            ref.read(userReferralNotifierProvider).hasError) {
+          return;
+        }
+
         final pickedAvatar = ref
             .read(imageProcessorNotifierProvider(ImageProcessingType.avatar))
             .whenOrNull(processed: (file) => file);
@@ -51,9 +74,14 @@ class FillProfile extends HookConsumerWidget {
         ref.read(onboardingDataProvider.notifier).name = nickname.value;
         ref.read(onboardingDataProvider.notifier).displayName = name.value;
         ref.read(onboardingDataProvider.notifier).referralName = referral.value;
-        await SelectLanguagesRoute().push<void>(context);
+        if (context.mounted) {
+          await SelectLanguagesRoute().push<void>(context);
+        }
       }
     });
+
+    final verifyNicknameErrorMessage = useVerifyNicknameAvailabilityErrorMessage(ref);
+    final verifyReferralErrorMessage = useVerifyReferralExistsErrorMessage(ref);
 
     return SheetContent(
       body: KeyboardDismissOnTap(
@@ -93,19 +121,27 @@ class FillProfile extends HookConsumerWidget {
                           isLive: true,
                           initialValue: initialNickname,
                           textInputAction: TextInputAction.done,
-                          onChanged: (newValue) => nickname.value = newValue,
+                          onChanged: (newValue) {
+                            nickname.value = newValue;
+                            verifyNicknameErrorMessage.value = null;
+                          },
+                          errorText: verifyNicknameErrorMessage.value,
                         ),
                         SizedBox(height: 16.0.s),
                         ReferralInput(
                           isLive: true,
                           initialValue: initialReferral,
                           textInputAction: TextInputAction.done,
-                          onChanged: (newValue) => referral.value = newValue,
+                          onChanged: (newValue) {
+                            referral.value = newValue;
+                            verifyReferralErrorMessage.value = null;
+                          },
+                          errorText: verifyReferralErrorMessage.value,
                         ),
                         SizedBox(height: 26.0.s),
                         FillProfileSubmitButton(
-                          disabled: name.value.isEmpty || nickname.value.isEmpty,
-                          loading: isAvatarCompressing,
+                          disabled: name.value.isEmpty || nickname.value.isEmpty || isLoading,
+                          loading: isAvatarCompressing || isLoading,
                           onPressed: onSubmit,
                         ),
                         SizedBox(height: 40.0.s + MediaQuery.paddingOf(context).bottom),

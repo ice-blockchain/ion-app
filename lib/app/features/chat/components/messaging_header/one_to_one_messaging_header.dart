@@ -39,6 +39,8 @@ class OneToOneMessagingHeader extends ConsumerWidget {
     final isBlockedBy =
         ref.watch(isBlockedByNotifierProvider(receiverMasterPubkey)).valueOrNull ?? true;
     final isVerified = ref.watch(isUserVerifiedProvider(receiverMasterPubkey)).valueOrNull ?? false;
+    final isNicknameProven =
+        ref.watch(isNicknameProvenProvider(receiverMasterPubkey)).valueOrNull ?? true;
 
     return Padding(
       padding: EdgeInsetsDirectional.fromSTEB(16.0.s, 8.0.s, 16.0.s, 12.0.s),
@@ -87,7 +89,17 @@ class OneToOneMessagingHeader extends ConsumerWidget {
                           ],
                         ),
                         SizedBox(height: 1.0.s),
-                        subtitle,
+                        if (isNicknameProven)
+                          subtitle
+                        else
+                          Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              subtitle,
+                              SizedBox(width: 4.0.s),
+                              Text(context.i18n.nickname_not_owned_suffix),
+                            ],
+                          ),
                       ],
                     ),
                   ),

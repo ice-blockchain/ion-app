@@ -569,3 +569,8 @@ class DeviceKeypairRestoreException extends IONException {
   DeviceKeypairRestoreException(Object error)
       : super(10113, 'Failed to restore device keypair: $error');
 }
+
+class NicknameDoesntExistException extends IONException {
+  NicknameDoesntExistException(String nickname)
+      : super(10114, 'Nickname "$nickname" does not exist');
+}

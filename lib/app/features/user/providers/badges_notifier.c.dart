@@ -20,7 +20,9 @@ import 'package:ion/app/features/user/model/badges/badge_award.c.dart';
 import 'package:ion/app/features/user/model/badges/badge_definition.c.dart';
 import 'package:ion/app/features/user/model/badges/profile_badges.c.dart';
 import 'package:ion/app/features/user/model/badges/verified_badge_data.dart';
+import 'package:ion/app/features/user/model/user_metadata.c.dart';
 import 'package:ion/app/features/user/providers/service_pubkeys_provider.c.dart';
+import 'package:ion/app/features/user/providers/user_metadata_provider.c.dart';
 import 'package:nostr_dart/nostr_dart.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
@@ -139,6 +141,17 @@ bool isValidVerifiedBadgeDefinition(
 }
 
 @riverpod
+bool isValidNicknameProofBadgeDefinition(
+  Ref ref,
+  ReplaceableEventReference badgeRef,
+  List<String> servicePubkeys,
+) {
+  return badgeRef.dTag.startsWith(BadgeDefinitionEntity.usernameProofOfOwnershipBadgeDTag) &&
+      (servicePubkeys.isEmpty || servicePubkeys.contains(badgeRef.pubkey)) &&
+      badgeRef.kind == BadgeDefinitionEntity.kind;
+}
+
+@riverpod
 Future<bool> isUserVerified(
   Ref ref,
   String pubkey,
@@ -154,6 +167,37 @@ Future<bool> isUserVerified(
         final isBadgeDefinitionValid =
             ref.watch(isValidVerifiedBadgeDefinitionProvider(entry.definitionRef, pubkeys));
         return isBadgeDefinitionValid && isBadgeAwardValid;
+      }) ??
+      false;
+}
+
+@riverpod
+Future<bool> isNicknameProven(
+  Ref ref,
+  String pubkey,
+) async {
+  final [
+    profileBadgesData as ProfileBadgesData?,
+    userMetadata as UserMetadataEntity?,
+    pubkeys as List<String>
+  ] = await Future.wait([
+    ref.watch(profileBadgesDataProvider(pubkey).future),
+    ref.watch(userMetadataProvider(pubkey).future),
+    ref.watch(servicePubkeysProvider.future),
+  ]);
+
+  if (userMetadata == null) {
+    return false;
+  }
+
+  return profileBadgesData?.entries.any((entry) {
+        final isBadgeAwardValid =
+            pubkeys.isEmpty || ref.watch(cachedBadgeAwardProvider(entry.awardId, pubkeys)) != null;
+        final isBadgeDefinitionValid =
+            ref.watch(isValidNicknameProofBadgeDefinitionProvider(entry.definitionRef, pubkeys));
+        return isBadgeDefinitionValid &&
+            isBadgeAwardValid &&
+            entry.definitionRef.dTag.endsWith('~${userMetadata.data.name}');
       }) ??
       false;
 }
@@ -244,21 +288,16 @@ void currentUserBadgesSync(Ref ref) {
         if (eventRef.kind == BadgeDefinitionEntity.kind &&
             eventRef.dTag == BadgeDefinitionEntity.verifiedBadgeDTag &&
             (pubkeys.isEmpty || pubkeys.contains(eventRef.pubkey))) {
-          final profileBadgesData = await ref.read(
-            profileBadgesDataProvider(currentPubkey).future,
-          );
-          final updatedProfileBadgesData = ProfileBadgesData(
-            entries: [
-              ...(profileBadgesData?.entries ?? []),
+          final updatedData = await ref.read(
+            updatedProfileBadgesProvider(
               BadgeEntry(
                 definitionRef: badgeAwardEntity.data.badgeDefinitionRef,
                 awardId: badgeAwardEntity.id,
               ),
-            ],
+              currentPubkey,
+            ).future,
           );
-          await ref.read(ionConnectNotifierProvider.notifier).sendEntitiesData(
-            [updatedProfileBadgesData],
-          );
+          await ref.read(ionConnectNotifierProvider.notifier).sendEntitiesData([updatedData]);
           // Unsubscribe after handling the verified badge
           sub.close();
         }
@@ -317,5 +356,53 @@ Future<VerifiedBadgeEntities?> currentUserVerifiedBadgeData(Ref ref) async {
     profileEntity: profileEntity,
     awardEntity: awardEntity,
     definitionEntity: definitionEntity,
+  );
+}
+
+@riverpod
+Future<ProfileBadgesData> updatedProfileBadges(Ref ref, BadgeEntry newEntry, String pubkey) async {
+  final profileData = await ref.watch(
+    profileBadgesDataProvider(pubkey).future,
+  );
+  final existing = profileData?.entries ?? [];
+  final newDTag = newEntry.definitionRef.dTag;
+
+  // Filter out any entry with the same dTag
+  final filtered = existing.where((e) => e.definitionRef.dTag != newDTag).toList();
+
+  return ProfileBadgesData(
+    entries: [...filtered, newEntry],
+  );
+}
+
+@riverpod
+Future<ProfileBadgesData?> updateProfileBadgesWithUsernameProofs(
+  Ref ref,
+  List<EventMessage> events,
+) async {
+  final currentPubkey = ref.watch(currentPubkeySelectorProvider);
+  if (currentPubkey == null) return null;
+
+  final awardEntity = events
+      .where((event) => event.kind == BadgeAwardEntity.kind)
+      .map(BadgeAwardEntity.fromEventMessage)
+      .nonNulls
+      .where(
+        (entity) => entity.data.badgeDefinitionRef.dTag
+            .startsWith(BadgeDefinitionEntity.usernameProofOfOwnershipBadgeDTag),
+      )
+      .firstOrNull;
+  if (awardEntity == null) {
+    return null;
+  }
+
+  return ref.read(
+    updatedProfileBadgesProvider(
+      BadgeEntry(
+        definitionRef: awardEntity.data.badgeDefinitionRef,
+        awardId: awardEntity.id,
+      ),
+      currentPubkey,
+    ).future,
   );
 }

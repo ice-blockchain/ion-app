@@ -15,6 +15,7 @@ import 'package:ion/app/features/auth/views/components/user_data_inputs/location
 import 'package:ion/app/features/auth/views/components/user_data_inputs/name_input.dart';
 import 'package:ion/app/features/auth/views/components/user_data_inputs/nickname_input.dart';
 import 'package:ion/app/features/auth/views/components/user_data_inputs/website_input.dart';
+import 'package:ion/app/features/user/hooks/update_user_metadata_error_message.dart';
 import 'package:ion/app/features/user/pages/components/profile_avatar/profile_avatar.dart';
 import 'package:ion/app/features/user/pages/profile_edit_page/components/category_selector/category_selector.dart';
 import 'package:ion/app/features/user/pages/profile_edit_page/components/edit_submit_button/edit_submit_button.dart';
@@ -41,6 +42,8 @@ class ProfileEditPage extends HookConsumerWidget {
     }
 
     final (:hasChanges, :draftRef, :update) = useDraftMetadata(ref, userMetadata.data);
+
+    final errorMessage = useUpdateUserMetadataErrorMessage(ref);
 
     return Scaffold(
       body: KeyboardDismissOnTap(
@@ -70,8 +73,11 @@ class ProfileEditPage extends HookConsumerWidget {
                                   NicknameInput(
                                     initialValue: userMetadata.data.name,
                                     isLive: true,
-                                    onChanged: (text) =>
-                                        update(draftRef.value.copyWith(name: text)),
+                                    errorText: errorMessage.value,
+                                    onChanged: (text) {
+                                      errorMessage.value = null;
+                                      update(draftRef.value.copyWith(name: text));
+                                    },
                                   ),
                                   SizedBox(height: paddingValue),
                                   BioInput(

@@ -14,6 +14,7 @@ class NicknameInput extends StatelessWidget {
     this.textInputAction,
     this.onChanged,
     this.initialValue,
+    this.errorText,
     this.isLive = false,
   });
 
@@ -22,6 +23,8 @@ class NicknameInput extends StatelessWidget {
   final ValueChanged<String>? onChanged;
 
   final String? initialValue;
+
+  final String? errorText;
 
   final bool isLive;
 
@@ -35,6 +38,7 @@ class NicknameInput extends StatelessWidget {
       initialValue: initialValue,
       isLive: isLive,
       showNoErrorsIndicator: isLive,
+      errorText: errorText,
       validator: (String? value) {
         if (Validators.isEmpty(value)) return '';
 

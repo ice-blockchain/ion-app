@@ -17,8 +17,10 @@ import 'package:ion/app/features/user/model/interests.c.dart';
 import 'package:ion/app/features/user/model/user_delegation.c.dart';
 import 'package:ion/app/features/user/model/user_metadata.c.dart';
 import 'package:ion/app/features/user/model/user_relays.c.dart';
+import 'package:ion/app/features/user/providers/badges_notifier.c.dart';
 import 'package:ion/app/features/user/providers/current_user_identity_provider.c.dart';
 import 'package:ion/app/features/user/providers/user_delegation_provider.c.dart';
+import 'package:ion/app/features/user/providers/user_social_profile_provider.c.dart';
 import 'package:ion/app/features/wallets/providers/connected_crypto_wallets_provider.c.dart';
 import 'package:ion/app/services/logger/logger.dart';
 import 'package:ion_identity_client/ion_identity.dart';
@@ -55,18 +57,35 @@ class OnboardingCompleteNotifier extends _$OnboardingCompleteNotifier {
 
         final userMetadata =
             await _buildUserMetadata(avatarAttachment: uploadedAvatar?.mediaAttachment);
+        final usernameProofsJsonPayloads = await ref.read(
+          updateUserSocialProfileProvider(
+            data: UserSocialProfileData(
+              username: userMetadata.name,
+              displayName: userMetadata.displayName,
+              referral: ref.read(onboardingDataProvider).referralName,
+            ),
+          ).future,
+        );
 
         final (:interestSetData, :interestsData) = _buildUserLanguages();
 
         final followList = _buildFollowList();
 
-        await ref.read(ionConnectNotifierProvider.notifier).sendEntitiesData([
-          userMetadata,
-          followList,
-          interestSetData,
-          interestsData,
-          if (uploadedAvatar != null) uploadedAvatar.fileMetadata,
-        ]);
+        final usernameProofsEvents =
+            usernameProofsJsonPayloads.map(EventMessage.fromPayloadJson).toList();
+        final updatedProfileBadges = await ref
+            .read(updateProfileBadgesWithUsernameProofsProvider(usernameProofsEvents).future);
+        await ref.read(ionConnectNotifierProvider.notifier).sendEntitiesData(
+          [
+            userMetadata,
+            followList,
+            interestSetData,
+            interestsData,
+            if (uploadedAvatar != null) uploadedAvatar.fileMetadata,
+            if (updatedProfileBadges != null) updatedProfileBadges,
+          ],
+          additionalEvents: usernameProofsEvents,
+        );
       },
     );
   }
