@@ -2,11 +2,13 @@
 
 import 'dart:io';
 
+import 'package:custom_refresh_indicator/custom_refresh_indicator.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
+import 'package:ion/app/components/progress_bar/ion_loading_indicator.dart';
 import 'package:ion/app/components/scroll_view/ion_pull_to_refresh_loading_indicator.dart';
+import 'package:ion/app/extensions/extensions.dart';
 
 class PullToRefreshBuilder extends HookWidget {
   PullToRefreshBuilder({
@@ -47,9 +49,17 @@ class PullToRefreshBuilder extends HookWidget {
       ]);
     }
 
-    return RefreshIndicator(
+    return CustomMaterialIndicator(
       onRefresh: _onRefresh,
       edgeOffset: refreshIndicatorEdgeOffset,
+      indicatorBuilder: (context, controller) {
+        return Padding(
+          padding: EdgeInsets.all(8.0.s),
+          child: IONLoadingIndicatorThemed(
+            size: Size.square(24.0.s),
+          ),
+        );
+      },
       child: builder(context, [
         if (sliverAppBar != null) sliverAppBar!,
         ...slivers,
