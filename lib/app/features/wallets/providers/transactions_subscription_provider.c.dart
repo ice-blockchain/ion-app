@@ -64,6 +64,7 @@ Future<void> transactionsSubscription(Ref ref) async {
     requestFilters: [requestFilter],
     saveCallback: (eventMessage) => _saveEvent(
       eventMessage: eventMessage,
+      currentPubkey: currentPubkey,
       giftUnwrapService: giftUnwrapService,
       walletViewsService: walletViewsService,
       transactionsRepository: transactionsRepository,
@@ -89,6 +90,7 @@ Future<void> transactionsSubscription(Ref ref) async {
   final subscription = events.listen(
     (eventMessage) => _saveEvent(
       eventMessage: eventMessage,
+      currentPubkey: currentPubkey,
       giftUnwrapService: giftUnwrapService,
       walletViewsService: walletViewsService,
       transactionsRepository: transactionsRepository,
@@ -118,6 +120,7 @@ DateTime? _getLatestDateTime(DateTime? first, DateTime? second) {
 }
 
 Future<void> _saveEvent({
+  required String currentPubkey,
   required EventMessage eventMessage,
   required GiftUnwrapService giftUnwrapService,
   required WalletViewsService walletViewsService,
@@ -131,6 +134,7 @@ Future<void> _saveEvent({
       case WalletAssetEntity.kind:
         await _handleWalletAssetEntity(
           rumor: rumor,
+          currentPubkey: currentPubkey,
           walletViewsService: walletViewsService,
           transactionsRepository: transactionsRepository,
           requestAssetsRepository: requestAssetsRepository,
@@ -149,23 +153,34 @@ Future<void> _saveEvent({
 /// Handle a WalletAssetEntity event
 Future<void> _handleWalletAssetEntity({
   required EventMessage rumor,
+  required String currentPubkey,
   required WalletViewsService walletViewsService,
   required TransactionsRepository transactionsRepository,
   required RequestAssetsRepository requestAssetsRepository,
 }) async {
   final message = WalletAssetEntity.fromEventMessage(rumor);
+
+  // Since the current user is the recipient,
+  // we need to replace his pubkey inside the asset
+  // with the sender's pubkey to maintain accurate information about the sender.
+  final adjustedMessage = message.data.pubkey == currentPubkey
+      ? message.copyWith(
+          data: message.data.copyWith(pubkey: message.masterPubkey),
+        )
+      : message;
+
   final walletViews = walletViewsService.lastEmitted.isNotEmpty
       ? walletViewsService.lastEmitted
       : await walletViewsService.walletViews.first;
-  await transactionsRepository.saveEntities([message], walletViews);
+  await transactionsRepository.saveEntities([adjustedMessage], walletViews);
 
-  final requestJson = message.data.request;
+  final requestJson = adjustedMessage.data.request;
   if (requestJson != null) {
     try {
       final decodedJson = jsonDecode(requestJson) as Map;
 
       final requestId = decodedJson['id'] as String;
-      final txHash = message.data.content.txHash;
+      final txHash = adjustedMessage.data.content.txHash;
       await requestAssetsRepository.markRequestAsPaid(requestId, txHash);
     } catch (e) {
       Logger.error('Failed to parse request JSON: $e');
