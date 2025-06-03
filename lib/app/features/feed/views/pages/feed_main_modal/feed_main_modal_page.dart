@@ -3,7 +3,6 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-
 import 'package:ion/app/components/separated/separator.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/core/permissions/data/models/permissions_types.dart';
@@ -84,9 +83,11 @@ class FeedMainModalPage extends ConsumerWidget {
                             false;
 
                         if (editingResult && context.mounted) {
-                          context.go(
-                            GoRouterState.of(context).currentTab.baseRouteLocation,
-                          );
+                          WidgetsBinding.instance.addPostFrameCallback((_) {
+                            if (context.mounted) {
+                              context.pop();
+                            }
+                          });
                         }
                       }
                     }
