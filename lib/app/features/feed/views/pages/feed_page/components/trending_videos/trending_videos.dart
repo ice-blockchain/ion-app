@@ -9,13 +9,14 @@ import 'package:ion/app/components/section_header/section_header.dart';
 import 'package:ion/app/extensions/build_context.dart';
 import 'package:ion/app/extensions/num.dart';
 import 'package:ion/app/features/feed/data/models/entities/modifiable_post_data.c.dart';
+import 'package:ion/app/features/feed/data/models/feed_modifier.dart';
+import 'package:ion/app/features/feed/data/models/feed_type.dart';
 import 'package:ion/app/features/feed/data/models/trending_videos_overlay.dart';
-import 'package:ion/app/features/feed/providers/feed_trending_videos_data_source_provider.c.dart';
+import 'package:ion/app/features/feed/providers/feed_following_content_provider.c.dart';
 import 'package:ion/app/features/feed/views/components/list_separator/list_separator.dart';
 import 'package:ion/app/features/feed/views/pages/feed_page/components/trending_videos/components/trending_videos_list.dart';
 import 'package:ion/app/features/feed/views/pages/feed_page/components/trending_videos/components/trending_videos_list_skeleton.dart';
 import 'package:ion/app/features/feed/views/pages/feed_page/components/trending_videos/components/video_icon.dart';
-import 'package:ion/app/features/ion_connect/providers/entities_paged_data_provider.c.dart';
 import 'package:ion/app/router/app_routes.c.dart';
 
 class TrendingVideos extends ConsumerWidget {
@@ -27,11 +28,10 @@ class TrendingVideos extends ConsumerWidget {
     // final listOverlay = ref.watch(trendingVideosOverlayNotifierProvider);
     const listOverlay = TrendingVideosOverlay.vertical;
 
-    final dataSource = ref.watch(feedTrendingVideosDataSourceProvider);
-    final videosData = ref.watch(entitiesPagedDataProvider(dataSource));
-    final videos = videosData?.data.items?.toList();
+    final FeedFollowingContentState(:items, :hasMore) =
+        ref.watch(feedFollowingContentProvider(FeedType.video, FeedModifier.trending));
 
-    if (videos == null) {
+    if (items == null) {
       return Column(
         children: [
           SizedBox(height: 10.0.s),
@@ -42,14 +42,13 @@ class TrendingVideos extends ConsumerWidget {
       );
     }
 
-    if (videos.isEmpty) return const SizedBox.shrink();
+    if (items.isEmpty) return const SizedBox.shrink();
 
     return Column(
       children: [
         SectionHeader(
           onPress: () {
-            final eventReference =
-                videos.whereType<ModifiablePostEntity>().first.toEventReference();
+            final eventReference = items.whereType<ModifiablePostEntity>().first.toEventReference();
             TrendingVideosRoute(
               eventReference: eventReference.encode(),
             ).push<void>(context);
@@ -62,11 +61,11 @@ class TrendingVideos extends ConsumerWidget {
         LoadMoreBuilder(
           slivers: [
             TrendingVideosList(
-              videos: videos.whereType<ModifiablePostEntity>().toList(),
+              videos: items.whereType<ModifiablePostEntity>().toList(),
               listOverlay: listOverlay,
             ),
           ],
-          hasMore: videosData!.hasMore,
+          hasMore: hasMore,
           onLoadMore: () => _onLoadMore(ref),
           builder: (context, slivers) => SizedBox(
             height: listOverlay.itemSize.height,
@@ -84,9 +83,7 @@ class TrendingVideos extends ConsumerWidget {
 
   Future<void> _onLoadMore(WidgetRef ref) async {
     await ref
-        .read(
-          entitiesPagedDataProvider(ref.read(feedTrendingVideosDataSourceProvider)).notifier,
-        )
-        .fetchEntities();
+        .read(feedFollowingContentProvider(FeedType.video, FeedModifier.trending).notifier)
+        .fetch();
   }
 }
