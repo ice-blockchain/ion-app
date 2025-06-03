@@ -53,6 +53,7 @@ NotificationsDatabase notificationsDatabase(Ref ref) {
       SELECT
           event_date,
           event_reference,
+          MAX(created_at) AS last_created_at,
           GROUP_CONCAT(CASE WHEN rn <= 10 THEN pubkey END, ',') AS latest_pubkeys,
           COUNT(DISTINCT pubkey) AS unique_pubkey_count
       FROM
@@ -60,7 +61,7 @@ NotificationsDatabase notificationsDatabase(Ref ref) {
       GROUP BY
           event_date, event_reference
       ORDER BY
-          event_date DESC, event_reference DESC;
+          last_created_at DESC, event_reference DESC;
     ''',
     'aggregatedFollowers': '''
       WITH DailyFollowers AS (
@@ -75,6 +76,7 @@ NotificationsDatabase notificationsDatabase(Ref ref) {
       )
       SELECT
           event_date,
+          MAX(created_at) AS last_created_at,
           GROUP_CONCAT(CASE WHEN rn <= 10 THEN pubkey END, ',') AS latest_pubkeys,
           COUNT(DISTINCT pubkey) AS unique_pubkey_count
       FROM
@@ -82,7 +84,7 @@ NotificationsDatabase notificationsDatabase(Ref ref) {
       GROUP BY
           event_date
       ORDER BY
-          event_date DESC;
+          last_created_at DESC;
     ''',
   },
 )

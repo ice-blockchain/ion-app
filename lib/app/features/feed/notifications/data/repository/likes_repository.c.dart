@@ -2,6 +2,7 @@
 
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/exceptions/exceptions.dart';
+import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/feed/data/models/entities/reaction_data.c.dart';
 import 'package:ion/app/features/feed/notifications/data/database/dao/likes_dao.c.dart';
 import 'package:ion/app/features/feed/notifications/data/database/notifications_database.c.dart';
@@ -45,7 +46,7 @@ class LikesRepository implements IonNotificationRepository {
           (result) => LikesIonNotification(
             total: result.uniquePubkeyCount,
             eventReference: result.eventReference,
-            timestamp: DateTime.parse(result.eventDate),
+            timestamp: result.lastCreatedAt?.toDateTime ?? DateTime.fromMillisecondsSinceEpoch(0),
             pubkeys: result.latestPubkeys?.split(',') ?? [],
           ),
         )
