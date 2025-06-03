@@ -17,6 +17,9 @@ EntitiesDataSource buildArticlesDataSource({
   required ActionSource actionSource,
   required List<String> authors,
   required String currentPubkey,
+  int limit = 1,
+  List<SearchExtension>? searchExtensions,
+  Map<String, List<String>>? tags,
 }) {
   final search = SearchExtensions.withCounters(
     [
@@ -29,6 +32,7 @@ EntitiesDataSource buildArticlesDataSource({
         forKind: ArticleEntity.kind,
         includeKind: BlockListEntity.kind,
       ),
+      if (searchExtensions != null) ...searchExtensions,
     ],
     currentPubkey: currentPubkey,
     forKind: ArticleEntity.kind,
@@ -50,6 +54,8 @@ EntitiesDataSource buildArticlesDataSource({
           // TODO:add GenericRepostEntity
         ],
         authors: authors,
+        limit: limit,
+        tags: tags,
         search: search,
       ),
     ],
@@ -60,6 +66,9 @@ EntitiesDataSource buildVideosDataSource({
   required ActionSource actionSource,
   required List<String> authors,
   required String currentPubkey,
+  int limit = 1,
+  List<SearchExtension>? searchExtensions,
+  Map<String, List<String>>? tags,
 }) {
   final search = SearchExtensions([
     ...SearchExtensions.withCounters(
@@ -78,6 +87,7 @@ EntitiesDataSource buildVideosDataSource({
           forKind: ModifiablePostEntity.kind,
           includeKind: BlockListEntity.kind,
         ),
+        if (searchExtensions != null) ...searchExtensions,
       ],
       currentPubkey: currentPubkey,
     ).extensions,
@@ -97,6 +107,7 @@ EntitiesDataSource buildVideosDataSource({
           forKind: PostEntity.kind,
           includeKind: BlockListEntity.kind,
         ),
+        if (searchExtensions != null) ...searchExtensions,
       ],
       currentPubkey: currentPubkey,
       forKind: PostEntity.kind,
@@ -132,6 +143,8 @@ EntitiesDataSource buildVideosDataSource({
         ],
         search: search,
         authors: authors,
+        limit: limit,
+        tags: tags,
       ),
     ],
   );
@@ -141,6 +154,9 @@ EntitiesDataSource buildPostsDataSource({
   required ActionSource actionSource,
   required List<String> authors,
   required String currentPubkey,
+  int limit = 1,
+  List<SearchExtension>? searchExtensions,
+  Map<String, List<String>>? tags,
 }) {
   final search = SearchExtensions([
     ...SearchExtensions.withCounters(
@@ -159,6 +175,7 @@ EntitiesDataSource buildPostsDataSource({
           forKind: ModifiablePostEntity.kind,
           includeKind: BlockListEntity.kind,
         ),
+        if (searchExtensions != null) ...searchExtensions,
       ],
       currentPubkey: currentPubkey,
     ).extensions,
@@ -178,6 +195,7 @@ EntitiesDataSource buildPostsDataSource({
           forKind: PostEntity.kind,
           includeKind: BlockListEntity.kind,
         ),
+        if (searchExtensions != null) ...searchExtensions,
       ],
       currentPubkey: currentPubkey,
       forKind: PostEntity.kind,
@@ -193,6 +211,7 @@ EntitiesDataSource buildPostsDataSource({
           forKind: ArticleEntity.kind,
           includeKind: BlockListEntity.kind,
         ),
+        if (searchExtensions != null) ...searchExtensions,
       ],
       currentPubkey: currentPubkey,
       forKind: ArticleEntity.kind,
@@ -225,6 +244,52 @@ EntitiesDataSource buildPostsDataSource({
         ],
         search: search,
         authors: authors,
+        limit: limit,
+        tags: tags,
+      ),
+    ],
+  );
+}
+
+EntitiesDataSource buildStoriesDataSource({
+  required ActionSource actionSource,
+  required List<String> authors,
+  required String currentPubkey,
+  int limit = 1,
+  List<SearchExtension>? searchExtensions,
+  Map<String, List<String>>? tags,
+}) {
+  final search = SearchExtensions(
+    [
+      ReactionsSearchExtension(currentPubkey: currentPubkey),
+      ReferencesSearchExtension(contain: false),
+      ExpirationSearchExtension(expiration: true),
+      MediaSearchExtension(contain: true),
+      GenericIncludeSearchExtension(
+        forKind: ModifiablePostEntity.kind,
+        includeKind: UserMetadataEntity.kind,
+      ),
+      ProfileBadgesSearchExtension(forKind: ModifiablePostEntity.kind),
+      GenericIncludeSearchExtension(
+        forKind: ModifiablePostEntity.kind,
+        includeKind: BlockListEntity.kind,
+      ),
+      if (searchExtensions != null) ...searchExtensions,
+    ],
+  ).toString();
+
+  return EntitiesDataSource(
+    actionSource: actionSource,
+    entityFilter: (entity) =>
+        authors.contains(entity.masterPubkey) &&
+        (entity is ModifiablePostEntity && entity.data.parentEvent == null),
+    requestFilters: [
+      RequestFilter(
+        kinds: const [ModifiablePostEntity.kind],
+        authors: authors,
+        limit: limit,
+        search: search,
+        tags: tags,
       ),
     ],
   );

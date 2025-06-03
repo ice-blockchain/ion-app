@@ -4,11 +4,14 @@ import 'package:async/async.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:ion/app/exceptions/exceptions.dart';
 import 'package:ion/app/features/auth/providers/auth_provider.c.dart';
+import 'package:ion/app/features/feed/data/models/feed_modifier.dart';
+import 'package:ion/app/features/feed/data/models/feed_type.dart';
 import 'package:ion/app/features/feed/providers/feed_config_provider.c.dart';
 import 'package:ion/app/features/feed/providers/feed_data_source_builders.dart';
 import 'package:ion/app/features/ion_connect/ion_connect.dart';
 import 'package:ion/app/features/ion_connect/model/action_source.c.dart';
 import 'package:ion/app/features/ion_connect/model/ion_connect_entity.dart';
+import 'package:ion/app/features/ion_connect/providers/entities_paged_data_provider.c.dart';
 import 'package:ion/app/features/ion_connect/providers/ion_connect_notifier.c.dart';
 import 'package:ion/app/features/user/providers/follow_list_provider.c.dart';
 import 'package:ion/app/services/logger/logger.dart';
@@ -22,7 +25,7 @@ const _pageSize = 10;
 @riverpod
 class FeedFollowingContent extends _$FeedFollowingContent {
   @override
-  FeedFollowingContentState build() {
+  FeedFollowingContentState build(FeedType feedType, FeedModifier? feedModifier) {
     Future(fetch);
     return const FeedFollowingContentState(
       items: [],
@@ -31,23 +34,19 @@ class FeedFollowingContent extends _$FeedFollowingContent {
   }
 
   Future<void> fetch({int limit = _pageSize}) async {
-    final followList = await ref.read(currentUserFollowListProvider.future);
+    final followedPubkeys = await _getFollowedPubkeys();
+    final nextPagePubkeys = await _getNextPagePubkeys(pubkeys: followedPubkeys, limit: limit);
 
-    if (followList == null) {
-      throw FollowListNotFoundException();
-    }
-
-    final pubkeys = await _getNextPagePubkeys(pubkeys: followList.pubkeys, limit: limit);
-
-    if (pubkeys.isNotEmpty) {
+    if (nextPagePubkeys.isNotEmpty) {
       var fetchedEntities = 0;
-      final entitiesStream = _fetchEntities(pubkeys: pubkeys);
+      final entitiesStream = _fetchEntities(pubkeys: nextPagePubkeys);
       // pass until, since
       await for (final MapEntry(key: pubkey, value: entity) in entitiesStream) {
         if (entity != null) {
           fetchedEntities++;
         }
         //TODO: put entities in db, handle seen sequences
+        //TODO: refactor - move to a separate method
         final hasMore = entity != null; // TODO: not only this
         final pagination = _getPubkeyPagination(pubkey);
         state = state.copyWith(
@@ -66,6 +65,16 @@ class FeedFollowingContent extends _$FeedFollowingContent {
         return fetch(limit: limit - fetchedEntities);
       }
     }
+  }
+
+  Future<List<String>> _getFollowedPubkeys() async {
+    final followList = await ref.read(currentUserFollowListProvider.future);
+
+    if (followList == null) {
+      throw FollowListNotFoundException();
+    }
+
+    return followList.pubkeys;
   }
 
   UserPagination _getPubkeyPagination(String pubkey) {
@@ -122,11 +131,6 @@ class FeedFollowingContent extends _$FeedFollowingContent {
   }) async* {
     final feedConfig = await ref.read(feedConfigProvider.future);
     final ionConnectNotifier = ref.read(ionConnectNotifierProvider.notifier);
-    final currentPubkey = ref.read(currentPubkeySelectorProvider);
-
-    if (currentPubkey == null) {
-      throw const CurrentUserNotFoundException();
-    }
 
     final since = DateTime.now().subtract(feedConfig.followingMaxAge).microsecondsSinceEpoch;
 
@@ -134,11 +138,7 @@ class FeedFollowingContent extends _$FeedFollowingContent {
     for (final pubkey in pubkeys) {
       try {
         final UserPagination(:lastEventCreatedAt) = _getPubkeyPagination(pubkey);
-        final dataSource = buildPostsDataSource(
-          actionSource: ActionSource.user(pubkey),
-          authors: [pubkey],
-          currentPubkey: currentPubkey,
-        );
+        final dataSource = _getDataSource(pubkey);
 
         final requestMessage = RequestMessage();
         for (final filter in dataSource.requestFilters) {
@@ -168,6 +168,47 @@ class FeedFollowingContent extends _$FeedFollowingContent {
         );
       }
     }
+  }
+
+  EntitiesDataSource _getDataSource(String pubkey) {
+    final currentPubkey = ref.read(currentPubkeySelectorProvider);
+
+    if (currentPubkey == null) {
+      throw const CurrentUserNotFoundException();
+    }
+
+    final feedModifierFilter = feedModifier?.filter;
+
+    return switch (feedType) {
+      FeedType.post => buildPostsDataSource(
+          actionSource: ActionSource.user(pubkey),
+          authors: [pubkey],
+          currentPubkey: currentPubkey,
+          searchExtensions: feedModifierFilter?.search,
+          tags: feedModifierFilter?.tags,
+        ),
+      FeedType.article => buildArticlesDataSource(
+          actionSource: ActionSource.user(pubkey),
+          authors: [pubkey],
+          currentPubkey: currentPubkey,
+          searchExtensions: feedModifierFilter?.search,
+          tags: feedModifierFilter?.tags,
+        ),
+      FeedType.video => buildVideosDataSource(
+          actionSource: ActionSource.user(pubkey),
+          authors: [pubkey],
+          currentPubkey: currentPubkey,
+          searchExtensions: feedModifierFilter?.search,
+          tags: feedModifierFilter?.tags,
+        ),
+      FeedType.story => buildStoriesDataSource(
+          actionSource: ActionSource.user(pubkey),
+          authors: [pubkey],
+          currentPubkey: currentPubkey,
+          searchExtensions: feedModifierFilter?.search,
+          tags: feedModifierFilter?.tags,
+        ),
+    };
   }
 }
 

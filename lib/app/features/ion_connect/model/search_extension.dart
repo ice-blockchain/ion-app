@@ -276,6 +276,22 @@ class ImagesSearchExtension extends SearchExtension {
   String get query => 'images:$contain';
 }
 
+/// true → only events that have at least 1 imeta tag with either video or image based mime type are included
+/// false → only events that DO NOT have any imeta tag with either video or image based mime type are included
+///
+/// By default (if this extension is not set) ALL events are returned,
+/// regardless, whether they have any imeta tag with either video or image based mime type or not
+///
+/// When querying for kind 6/16 events this extension instead applies to the kind 1/30023 event it points to
+class MediaSearchExtension extends SearchExtension {
+  MediaSearchExtension({required this.contain});
+
+  final bool contain;
+
+  @override
+  String get query => 'media:$contain';
+}
+
 /// true → only events that have at least 1 [tagName] tag with any value are included
 /// false → only events that DO NOT have any [tagName] tag with any value are included
 ///
