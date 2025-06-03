@@ -36,7 +36,9 @@ class FollowersRepository implements IonNotificationRepository {
         .map(
           (result) => FollowersIonNotification(
             total: result.uniquePubkeyCount,
-            timestamp: DateTime.parse(result.eventDate),
+            timestamp: DateTime.fromMillisecondsSinceEpoch(
+              (result.lastCreatedAt ?? 0) * 1000,
+            ),
             pubkeys: result.latestPubkeys?.split(',') ?? [],
           ),
         )

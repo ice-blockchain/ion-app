@@ -45,7 +45,9 @@ class LikesRepository implements IonNotificationRepository {
           (result) => LikesIonNotification(
             total: result.uniquePubkeyCount,
             eventReference: result.eventReference,
-            timestamp: DateTime.parse(result.eventDate),
+            timestamp: DateTime.fromMillisecondsSinceEpoch(
+              (result.lastCreatedAt ?? 0) * 1000,
+            ),
             pubkeys: result.latestPubkeys?.split(',') ?? [],
           ),
         )
