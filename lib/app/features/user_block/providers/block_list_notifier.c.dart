@@ -48,7 +48,7 @@ class CurrentUserBlockListNotifier extends _$CurrentUserBlockListNotifier {
 class IsBlockedNotifier extends _$IsBlockedNotifier {
   @override
   Future<bool> build(String masterPubkey) async {
-  //  unawaited(checkFailedBlockEvents());
+    //  unawaited(checkFailedBlockEvents());
 
     final currentBlockList = ref.watch(currentUserBlockListNotifierProvider).valueOrNull;
     return currentBlockList?.any(
