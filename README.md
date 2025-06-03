@@ -54,11 +54,26 @@ melos run pub_get
 ```
 Since we use monorepo with several packages, we need to download dependencies for each package. To simplify this process, we use Melos, which allows us to define commands that run across all packages. For a list of available commands, check `melos.yaml`.
 
+## Install Rust
+```
+curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
+```
+Some dependencies require Rust to be installed
+
+## Install asdf
+
+To ensure that everyone uses the exact same Flutter version we use asdf. To install it there is a script. It will also create a VSCode settings file with the Flutter SDK path
+```
+./scripts/asdf.sh
+```
+
 # Run the project
 
+You should pass environment variables to Flutter compiler:
 ```
-flutter run
+asdf exec flutter run --dart-define-from-file=.app.env
 ```
+
 
 > [!IMPORTANT]
 > To run the project on Android with staging environment, we need to specify the `flavor`:
