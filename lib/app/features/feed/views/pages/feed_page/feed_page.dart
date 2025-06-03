@@ -54,7 +54,7 @@ class FeedPage extends HookConsumerWidget {
       body: LoadMoreBuilder(
         slivers: slivers,
         hasMore: hasMorePosts,
-        onLoadMore: () => ref.watch(feedPostsProvider.notifier).loadMore(),
+        onLoadMore: () => _onLoadMore(ref),
         builder: (context, slivers) {
           return PullToRefreshBuilder(
             sliverAppBar: CollapsingAppBar(
@@ -74,6 +74,10 @@ class FeedPage extends HookConsumerWidget {
         },
       ),
     );
+  }
+
+  Future<void> _onLoadMore(WidgetRef ref) async {
+    return ref.read(feedPostsProvider.notifier).loadMore();
   }
 
   Future<void> _onRefresh(WidgetRef ref) async {

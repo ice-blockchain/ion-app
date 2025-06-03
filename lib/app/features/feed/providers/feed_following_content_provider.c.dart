@@ -35,6 +35,10 @@ class FeedFollowingContent extends _$FeedFollowingContent {
 
   Future<void> fetch({int limit = _pageSize}) async {
     final followedPubkeys = await _getFollowedPubkeys();
+    final pagination = _initPagination(pubkeys: followedPubkeys);
+
+    state = state.copyWith(pagination: pagination);
+
     final nextPagePubkeys = await _getNextPagePubkeys(pubkeys: followedPubkeys, limit: limit);
 
     if (nextPagePubkeys.isNotEmpty) {
@@ -71,6 +75,12 @@ class FeedFollowingContent extends _$FeedFollowingContent {
     }
   }
 
+  void insert(IonConnectEntity entity) {
+    state = state.copyWith(
+      items: {entity, ...(state.items ?? {})},
+    );
+  }
+
   Future<List<String>> _getFollowedPubkeys() async {
     final followList = await ref.read(currentUserFollowListProvider.future);
 
@@ -79,6 +89,14 @@ class FeedFollowingContent extends _$FeedFollowingContent {
     }
 
     return followList.pubkeys;
+  }
+
+  Map<String, UserPagination> _initPagination({required List<String> pubkeys}) {
+    final newPagination = <String, UserPagination>{};
+    for (final pubkey in pubkeys) {
+      newPagination[pubkey] = _getPubkeyPagination(pubkey);
+    }
+    return newPagination;
   }
 
   UserPagination _getPubkeyPagination(String pubkey) {
