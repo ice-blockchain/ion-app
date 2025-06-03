@@ -13,7 +13,7 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 part 'feed_trending_videos_provider.c.g.dart';
 
 @riverpod
-class FeedTrendingVideos extends _$FeedTrendingVideos {
+class FeedTrendingVideos extends _$FeedTrendingVideos with DelegatedPagedNotifier {
   @override
   ({Iterable<IonConnectEntity>? items, bool hasMore}) build() {
     final filter = ref.watch(feedCurrentFilterProvider);
@@ -28,15 +28,8 @@ class FeedTrendingVideos extends _$FeedTrendingVideos {
     }
   }
 
-  Future<void> loadMore() async {
-    return _getNotifier().fetchEntities();
-  }
-
-  void refresh() {
-    return _getNotifier().refresh();
-  }
-
-  PagedNotifier _getNotifier() {
+  @override
+  PagedNotifier getDelegate() {
     final filter = ref.watch(feedCurrentFilterProvider);
     if (filter.filter == FeedFilter.following) {
       return ref.read(feedFollowingContentProvider(FeedType.video, FeedModifier.trending).notifier);

@@ -79,6 +79,6 @@ class TrendingVideos extends ConsumerWidget {
   }
 
   Future<void> _onLoadMore(WidgetRef ref) async {
-    await ref.read(feedTrendingVideosProvider.notifier).loadMore();
+    await ref.read(feedTrendingVideosProvider.notifier).fetchEntities();
   }
 }

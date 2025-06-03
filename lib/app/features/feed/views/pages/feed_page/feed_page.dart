@@ -78,7 +78,7 @@ class FeedPage extends HookConsumerWidget {
   }
 
   Future<void> _onLoadMore(WidgetRef ref) async {
-    return ref.read(feedPostsProvider.notifier).loadMore();
+    return ref.read(feedPostsProvider.notifier).fetchEntities();
   }
 
   Future<void> _onRefresh(WidgetRef ref) async {

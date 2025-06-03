@@ -20,7 +20,7 @@ class TrendingVideosPage extends HookConsumerWidget {
     return VideosVerticalScrollPage(
       eventReference: eventReference,
       entities: entities,
-      onLoadMore: () => ref.read(feedTrendingVideosProvider.notifier).loadMore(),
+      onLoadMore: () => ref.read(feedTrendingVideosProvider.notifier).fetchEntities(),
     );
   }
 }

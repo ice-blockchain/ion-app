@@ -21,6 +21,30 @@ abstract class PagedNotifier {
   void deleteEntity(IonConnectEntity entity);
 }
 
+mixin DelegatedPagedNotifier implements PagedNotifier {
+  @override
+  Future<void> fetchEntities() async {
+    return getDelegate().fetchEntities();
+  }
+
+  @override
+  void refresh() {
+    return getDelegate().refresh();
+  }
+
+  @override
+  void insertEntity(IonConnectEntity entity) {
+    getDelegate().insertEntity(entity);
+  }
+
+  @override
+  void deleteEntity(IonConnectEntity entity) {
+    getDelegate().insertEntity(entity);
+  }
+
+  PagedNotifier getDelegate();
+}
+
 @freezed
 class EntitiesDataSource with _$EntitiesDataSource {
   const factory EntitiesDataSource({

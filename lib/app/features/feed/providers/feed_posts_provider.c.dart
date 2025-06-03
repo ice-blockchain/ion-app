@@ -25,7 +25,7 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 part 'feed_posts_provider.c.g.dart';
 
 @riverpod
-class FeedPosts extends _$FeedPosts {
+class FeedPosts extends _$FeedPosts with DelegatedPagedNotifier {
   @override
   ({Iterable<IonConnectEntity>? items, bool hasMore}) build() {
     final postsStream = ref.watch(createPostNotifierStreamProvider);
@@ -34,7 +34,7 @@ class FeedPosts extends _$FeedPosts {
     final subscription = StreamGroup.merge([postsStream, articlesStream, repostsStream])
         .where(_filterEntities)
         .distinct()
-        .listen(_insertEntity);
+        .listen(insertEntity);
     ref.onDispose(subscription.cancel);
 
     final filter = ref.watch(feedCurrentFilterProvider);
@@ -49,15 +49,8 @@ class FeedPosts extends _$FeedPosts {
     }
   }
 
-  Future<void> loadMore() async {
-    return _getNotifier().fetchEntities();
-  }
-
-  void refresh() {
-    return _getNotifier().refresh();
-  }
-
-  PagedNotifier _getNotifier() {
+  @override
+  PagedNotifier getDelegate() {
     final filter = ref.watch(feedCurrentFilterProvider);
     if (filter.filter == FeedFilter.following) {
       final feedType = FeedType.fromCategory(filter.category);
@@ -76,10 +69,6 @@ class FeedPosts extends _$FeedPosts {
         ref.read(isVideoPostProvider(entity)) || ref.read(isVideoRepostProvider(entity)),
       FeedCategory.articles => _isArticleOrArticleRepost(entity),
     };
-  }
-
-  void _insertEntity(IonConnectEntity entity) {
-    _getNotifier().insertEntity(entity);
   }
 
   bool _isRegularPostOrRepost(IonConnectEntity entity) {
