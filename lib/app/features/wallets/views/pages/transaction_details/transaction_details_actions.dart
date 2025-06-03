@@ -25,9 +25,6 @@ class TransactionDetailsActions extends StatelessWidget {
           child: Button(
             type: disableExplorer ? ButtonType.disabled : ButtonType.outlined,
             disabled: disableExplorer,
-            label: Text(
-              context.i18n.transaction_details_view_on_explorer,
-            ),
             mainAxisSize: MainAxisSize.max,
             leadingIcon: Assets.svg.iconButtonInternet.icon(
               color: disableExplorer ? context.theme.appColors.onPrimaryAccent : null,
