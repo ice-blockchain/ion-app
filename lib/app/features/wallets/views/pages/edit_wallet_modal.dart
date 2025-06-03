@@ -8,6 +8,7 @@ import 'package:ion/app/components/button/button.dart';
 import 'package:ion/app/components/inputs/text_input/components/text_input_clear_button.dart';
 import 'package:ion/app/components/inputs/text_input/components/text_input_icons.dart';
 import 'package:ion/app/components/inputs/text_input/text_input.dart';
+import 'package:ion/app/components/screen_offset/screen_bottom_offset.dart';
 import 'package:ion/app/components/screen_offset/screen_side_offset.dart';
 import 'package:ion/app/extensions/asset_gen_image.dart';
 import 'package:ion/app/extensions/build_context.dart';
@@ -67,32 +68,33 @@ class EditWalletModal extends HookConsumerWidget {
                 ),
               ),
             ),
-            ScreenSideOffset.small(
-              child: isNameChanged || !walletCanBeRemoved
-                  ? Button(
-                      disabled: !isNameChanged,
-                      onPressed: () {
-                        ref.read(updateWalletViewNotifierProvider.notifier).updateWalletView(
-                              walletView: walletView,
-                              updatedName: walletName.value,
-                            );
-                        context.pop();
-                      },
-                      label: Text(context.i18n.button_save),
-                      mainAxisSize: MainAxisSize.max,
-                    )
-                  : Button(
-                      onPressed: () {
-                        DeleteWalletRoute(walletId: walletId).replace(context);
-                      },
-                      leadingIcon: Assets.svg.iconBlockDelete
-                          .icon(color: context.theme.appColors.onPrimaryAccent),
-                      label: Text(context.i18n.wallet_delete),
-                      mainAxisSize: MainAxisSize.max,
-                      backgroundColor: context.theme.appColors.attentionRed,
-                    ),
+            ScreenBottomOffset(
+              child: ScreenSideOffset.small(
+                child: isNameChanged || !walletCanBeRemoved
+                    ? Button(
+                        disabled: !isNameChanged,
+                        onPressed: () {
+                          ref.read(updateWalletViewNotifierProvider.notifier).updateWalletView(
+                                walletView: walletView,
+                                updatedName: walletName.value,
+                              );
+                          context.pop();
+                        },
+                        label: Text(context.i18n.button_save),
+                        mainAxisSize: MainAxisSize.max,
+                      )
+                    : Button(
+                        onPressed: () {
+                          DeleteWalletRoute(walletId: walletId).replace(context);
+                        },
+                        leadingIcon: Assets.svg.iconBlockDelete
+                            .icon(color: context.theme.appColors.onPrimaryAccent),
+                        label: Text(context.i18n.wallet_delete),
+                        mainAxisSize: MainAxisSize.max,
+                        backgroundColor: context.theme.appColors.attentionRed,
+                      ),
+              ),
             ),
-            SizedBox(height: MediaQuery.paddingOf(context).bottom + 16.0.s),
           ],
         ),
       ),
