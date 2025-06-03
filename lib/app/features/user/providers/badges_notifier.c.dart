@@ -172,7 +172,7 @@ Future<bool> isUserVerified(
 }
 
 @riverpod
-Future<bool> isNicknameProofed(
+Future<bool> isNicknameProven(
   Ref ref,
   String pubkey,
 ) async {
