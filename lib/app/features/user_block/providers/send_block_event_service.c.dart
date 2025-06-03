@@ -4,6 +4,7 @@ import 'dart:async';
 
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/exceptions/exceptions.dart';
+import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/auth/providers/auth_provider.c.dart';
 import 'package:ion/app/features/chat/community/models/entities/tags/master_pubkey_tag.c.dart';
 import 'package:ion/app/features/chat/community/models/entities/tags/pubkey_tag.c.dart';
@@ -15,6 +16,7 @@ import 'package:ion/app/features/ion_connect/model/deletion_request.c.dart';
 import 'package:ion/app/features/ion_connect/model/event_reference.c.dart';
 import 'package:ion/app/features/ion_connect/providers/ion_connect_event_signer_provider.c.dart';
 import 'package:ion/app/features/ion_connect/providers/ion_connect_notifier.c.dart';
+import 'package:ion/app/features/user_block/model/database/blocked_users_database.c.dart';
 import 'package:ion/app/features/user_block/model/entities/blocked_user_entity.c.dart';
 import 'package:ion/app/services/ion_connect/ion_connect_gift_wrap_service.c.dart';
 import 'package:ion/app/services/ion_connect/ion_connect_seal_service.c.dart';
@@ -44,7 +46,9 @@ Future<SendBlockEventService> sendBlockEventService(Ref ref) async {
     sealService: sealService,
     wrapService: wrapService,
     env: ref.watch(envProvider.notifier),
+    blockEventDao: ref.watch(blockEventDaoProvider),
     currentUserMasterPubkey: currentUserMasterPubkey,
+    blockEventStatusDao: ref.watch(blockEventStatusDaoProvider),
     ionConnectNotifier: ref.watch(ionConnectNotifierProvider.notifier),
     devicePubkeysProvider: ref.watch(conversationPubkeysProvider.notifier),
   );
@@ -57,22 +61,25 @@ class SendBlockEventService {
     required this.sealService,
     required this.eventSigner,
     required this.ionConnectNotifier,
+    required this.blockEventDao,
+    required this.blockEventStatusDao,
     required this.currentUserMasterPubkey,
     required this.devicePubkeysProvider,
   });
 
   final Env env;
   final EventSigner eventSigner;
+  final BlockEventDao blockEventDao;
   final String currentUserMasterPubkey;
   final IonConnectSealService sealService;
   final IonConnectGiftWrapService wrapService;
   final IonConnectNotifier ionConnectNotifier;
+  final BlockEventStatusDao blockEventStatusDao;
   final ConversationPubkeys devicePubkeysProvider;
 
   Future<void> sendBlockEvent(String blockedUserMasterPubkey) async {
     try {
       final sharedId = generateUuid();
-      final createdAt = DateTime.now();
 
       final participantsMasterPubkeys = [currentUserMasterPubkey, blockedUserMasterPubkey]
         ..sort((a, b) {
@@ -85,39 +92,82 @@ class SendBlockEventService {
           await devicePubkeysProvider.fetchUsersKeys(participantsMasterPubkeys);
 
       await Future.wait(
-        participantsMasterPubkeys.map((masterPubkey) async {
-          final pubkeyDevices = participantsPubkeysMap[masterPubkey];
+        participantsMasterPubkeys.map((receiverMasterPubkey) async {
+          final pubkeyDevices = participantsPubkeysMap[receiverMasterPubkey];
 
-          if (pubkeyDevices == null) throw UserPubkeyNotFoundException(masterPubkey);
+          if (pubkeyDevices == null) throw UserPubkeyNotFoundException(receiverMasterPubkey);
 
-          for (final pubkey in pubkeyDevices) {
+          for (final receiverPubkey in pubkeyDevices) {
+            final createdAt = DateTime.now();
+
+            final eventMessage = await EventMessage.fromData(
+              content: '',
+              signer: eventSigner,
+              kind: BlockedUserEntity.kind,
+              createdAt: createdAt.microsecondsSinceEpoch,
+              tags: [
+                // This is immutable event but with exception for dtag
+                ['d', sharedId],
+                PubkeyTag(value: blockedUserMasterPubkey).toTag(),
+                MasterPubkeyTag(value: currentUserMasterPubkey).toTag(),
+              ],
+            );
+
+            await blockEventDao.add(eventMessage);
+            await blockEventStatusDao.add(
+              event: eventMessage,
+              receiverPubkey: receiverPubkey,
+              receiverMasterPubkey: receiverMasterPubkey,
+              status: BlockedUserStatus.created,
+            );
+
             try {
-              final eventMessage = await EventMessage.fromData(
-                content: '',
-                signer: eventSigner,
-                createdAt: createdAt.microsecondsSinceEpoch,
-                kind: BlockedUserEntity.kind,
-                tags: [
-                  ['d', sharedId],
-                  PubkeyTag(value: blockedUserMasterPubkey).toTag(),
-                  MasterPubkeyTag(value: currentUserMasterPubkey).toTag(),
-                ],
-              );
-
               await sendWrappedEvent(
-                pubkey: pubkey,
+                pubkey: receiverPubkey,
                 eventSigner: eventSigner,
                 sealService: sealService,
-                masterPubkey: masterPubkey,
+                masterPubkey: receiverMasterPubkey,
                 eventMessage: eventMessage,
                 giftWrapService: wrapService,
                 ionConnectNotifier: ionConnectNotifier,
               );
             } catch (e) {
-              throw SendEventException(e.toString());
+              await blockEventStatusDao.add(
+                event: eventMessage,
+                receiverPubkey: receiverPubkey,
+                receiverMasterPubkey: receiverMasterPubkey,
+                status: BlockedUserStatus.failed,
+              );
             }
           }
         }),
+      );
+    } catch (e) {
+      throw SendEventException(e.toString());
+    }
+  }
+
+  Future<void> resendFailedBlockEvent({
+    required EventMessage blockEventMessage,
+    required String blockedUserDevicePubkey,
+    required String blockedUserMasterPubkey,
+  }) async {
+    try {
+      await sendWrappedEvent(
+        eventSigner: eventSigner,
+        sealService: sealService,
+        giftWrapService: wrapService,
+        pubkey: blockedUserDevicePubkey,
+        eventMessage: blockEventMessage,
+        ionConnectNotifier: ionConnectNotifier,
+        masterPubkey: blockEventMessage.masterPubkey,
+      );
+
+      await blockEventStatusDao.add(
+        event: blockEventMessage,
+        receiverPubkey: blockedUserDevicePubkey,
+        receiverMasterPubkey: blockedUserMasterPubkey,
+        status: BlockedUserStatus.delivered,
       );
     } catch (e) {
       throw SendEventException(e.toString());
@@ -136,13 +186,15 @@ class SendBlockEventService {
       final participantsPubkeysMap =
           await devicePubkeysProvider.fetchUsersKeys(participantsMasterPubkeys);
 
-      final eventToDelete = EventToDelete(
-        eventReference: ReplaceableEventReference(
-          dTag: dtag,
-          kind: BlockedUserEntity.kind,
-          pubkey: currentUserMasterPubkey,
-        ),
+      // Actually we are deleting immutable event, but there is no way to
+      // pass dtag tag information
+      final eventReference = ReplaceableEventReference(
+        dTag: dtag,
+        kind: BlockedUserEntity.kind,
+        pubkey: currentUserMasterPubkey,
       );
+
+      final eventToDelete = EventToDelete(eventReference: eventReference);
 
       final deleteRequest = DeletionRequest(events: [eventToDelete]);
 
@@ -152,20 +204,22 @@ class SendBlockEventService {
       );
 
       await Future.wait(
-        participantsMasterPubkeys.map((masterPubkey) async {
-          final pubkeyDevices = participantsPubkeysMap[masterPubkey];
+        participantsMasterPubkeys.map((receiverMasterPubkey) async {
+          final pubkeyDevices = participantsPubkeysMap[receiverMasterPubkey];
 
-          if (pubkeyDevices == null) throw UserPubkeyNotFoundException(masterPubkey);
+          if (pubkeyDevices == null) throw UserPubkeyNotFoundException(receiverMasterPubkey);
 
-          for (final pubkey in pubkeyDevices) {
+          for (final receiverPubkey in pubkeyDevices) {
             try {
+              await blockEventStatusDao.markAsDeleted([eventReference]);
+
               await sendWrappedEvent(
-                pubkey: pubkey,
+                pubkey: receiverPubkey,
                 eventSigner: eventSigner,
                 sealService: sealService,
-                masterPubkey: masterPubkey,
                 eventMessage: eventMessage,
                 giftWrapService: wrapService,
+                masterPubkey: receiverMasterPubkey,
                 ionConnectNotifier: ionConnectNotifier,
               );
             } catch (e) {

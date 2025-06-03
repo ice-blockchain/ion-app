@@ -1,5 +1,7 @@
 // SPDX-License-Identifier: ice License 1.0
 
+import 'dart:async';
+
 import 'package:collection/collection.dart';
 import 'package:ion/app/exceptions/exceptions.dart';
 import 'package:ion/app/features/auth/providers/auth_provider.c.dart';
@@ -46,11 +48,30 @@ class CurrentUserBlockListNotifier extends _$CurrentUserBlockListNotifier {
 class IsBlockedNotifier extends _$IsBlockedNotifier {
   @override
   Future<bool> build(String masterPubkey) async {
+  //  unawaited(checkFailedBlockEvents());
+
     final currentBlockList = ref.watch(currentUserBlockListNotifierProvider).valueOrNull;
     return currentBlockList?.any(
           (blockedUser) => blockedUser.data.blockedMasterPubkeys.contains(masterPubkey),
         ) ??
         false;
+  }
+
+  Future<void> checkFailedBlockEvents() async {
+    final blockEventStatusDao = ref.watch(blockEventStatusDaoProvider);
+    final failedBlockEventMessages = await blockEventStatusDao.getFailedBlockEventMessages();
+
+    if (failedBlockEventMessages.isNotEmpty) {
+      final sendBlockEventService = await ref.watch(sendBlockEventServiceProvider.future);
+
+      for (final eventMessages in failedBlockEventMessages) {
+        await sendBlockEventService.resendFailedBlockEvent(
+          blockEventMessage: eventMessages.$1,
+          blockedUserDevicePubkey: eventMessages.$2,
+          blockedUserMasterPubkey: eventMessages.$3,
+        );
+      }
+    }
   }
 }
 

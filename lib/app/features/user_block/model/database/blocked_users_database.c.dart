@@ -3,8 +3,10 @@
 import 'package:drift/drift.dart';
 import 'package:drift_flutter/drift_flutter.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:ion/app/exceptions/exceptions.dart';
 import 'package:ion/app/extensions/database.dart';
 import 'package:ion/app/extensions/extensions.dart';
+import 'package:ion/app/features/chat/e2ee/model/entities/private_direct_message_data.c.dart';
 import 'package:ion/app/features/feed/notifications/data/database/converters/event_reference_converter.c.dart';
 import 'package:ion/app/features/ion_connect/database/converters/event_tags_converter.dart';
 import 'package:ion/app/features/ion_connect/ion_connect.dart';
@@ -17,13 +19,14 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'blocked_users_database.c.g.dart';
 part 'dao/block_event_dao.c.dart';
+part 'dao/block_event_status_dao.c.dart';
 part 'tables/block_event_table.dart';
-part 'tables/deleted_block_event_table.dart';
+part 'tables/block_event_status_table.dart';
 
 @DriftDatabase(
   tables: [
     BlockEventTable,
-    DeletedBlockEventTable,
+    BlockEventStatusTable,
   ],
   daos: [BlockEventDao],
 )
