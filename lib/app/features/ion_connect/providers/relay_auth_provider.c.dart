@@ -10,6 +10,8 @@ import 'package:ion/app/features/ion_connect/ion_connect.dart' hide requestEvent
 import 'package:ion/app/features/ion_connect/model/action_source.c.dart';
 import 'package:ion/app/features/ion_connect/model/auth_event.c.dart';
 import 'package:ion/app/features/ion_connect/providers/ion_connect_notifier.c.dart';
+import 'package:ion/app/features/user/providers/user_delegation_provider.c.dart';
+import 'package:ion/app/features/user/providers/user_relays_manager.c.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'relay_auth_provider.c.g.dart';
@@ -24,13 +26,20 @@ class RelayAuth extends _$RelayAuth {
         required String challenge,
         required String relayUrl,
       }) async {
+        // Used cache delegation only because relay not authorized yet
+        final delegationComplete = await ref.read(cacheDelegationCompleteProvider.future);
+        final delegation = await ref.read(currentUserCachedDelegationProvider.future);
+        final userRelays = await ref.read(currentUserRelaysProvider.future);
+
+        final isRelayInUserRelays = userRelays?.urls.contains(relay.url) ?? false;
+
         final authEvent = AuthEvent(
           challenge: challenge,
           relay: relayUrl,
+          userDelegation:
+              (delegationComplete.falseOrValue && !isRelayInUserRelays) ? delegation : null,
         );
 
-        // Used cache delegation only because relay not authorized yet
-        final delegationComplete = await ref.read(cacheDelegationCompleteProvider.future);
         return ref
             .read(ionConnectNotifierProvider.notifier)
             .sign(authEvent, includeMasterPubkey: delegationComplete.falseOrValue);
