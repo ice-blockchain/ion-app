@@ -73,7 +73,9 @@ class FillProfile extends HookConsumerWidget {
         }
         ref.read(onboardingDataProvider.notifier).name = nickname.value;
         ref.read(onboardingDataProvider.notifier).displayName = name.value;
-        ref.read(onboardingDataProvider.notifier).referralName = referral.value;
+        if (referral.value.isNotEmpty) {
+          ref.read(onboardingDataProvider.notifier).referralName = referral.value;
+        }
         if (context.mounted) {
           await SelectLanguagesRoute().push<void>(context);
         }
