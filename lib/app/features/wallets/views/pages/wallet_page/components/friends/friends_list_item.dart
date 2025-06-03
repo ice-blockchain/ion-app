@@ -48,27 +48,34 @@ class FriendsListItem extends ConsumerWidget {
         );
       },
       data: (userMetadata) {
-        return GestureDetector(
-          onTap: onTap,
-          child: SizedBox(
-            width: width,
-            height: height,
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                IonConnectAvatar(
-                  size: imageWidth,
-                  pubkey: pubkey,
-                  borderRadius: BorderRadius.circular(14.0.s),
-                ),
-                Text(
-                  prefixUsername(username: userMetadata?.data.name, context: context),
-                  style: context.theme.appTextThemes.caption.copyWith(
-                    color: context.theme.appColors.secondaryText,
+        if (userMetadata == null) {
+          return const SizedBox.shrink();
+        }
+
+        return Padding(
+          padding: EdgeInsetsDirectional.only(start: 12.0.s),
+          child: GestureDetector(
+            onTap: onTap,
+            child: SizedBox(
+              width: width,
+              height: height,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  IonConnectAvatar(
+                    size: imageWidth,
+                    pubkey: pubkey,
+                    borderRadius: BorderRadius.circular(14.0.s),
                   ),
-                  overflow: TextOverflow.ellipsis,
-                ),
-              ],
+                  Text(
+                    prefixUsername(username: userMetadata.data.name, context: context),
+                    style: context.theme.appTextThemes.caption.copyWith(
+                      color: context.theme.appColors.secondaryText,
+                    ),
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                ],
+              ),
             ),
           ),
         );

@@ -3,7 +3,7 @@
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/components/screen_offset/screen_side_offset.dart';
-import 'package:ion/app/extensions/num.dart';
+import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/user/providers/follow_list_provider.c.dart';
 import 'package:ion/app/features/wallets/views/pages/wallet_page/components/friends/friends_list_header.dart';
 import 'package:ion/app/features/wallets/views/pages/wallet_page/components/friends/friends_list_item.dart';
@@ -31,15 +31,13 @@ class FriendsList extends ConsumerWidget {
             const FriendsListHeader(),
             SizedBox(
               height: FriendsListItem.height,
-              child: ListView.separated(
-                padding: EdgeInsets.symmetric(
-                  horizontal: ScreenSideOffset.defaultSmallMargin,
+              child: ListView.builder(
+                padding: EdgeInsetsDirectional.only(
+                  start: 4.0.s,
+                  end: ScreenSideOffset.defaultSmallMargin,
                 ),
                 scrollDirection: Axis.horizontal,
                 itemCount: friendsPubkeys.length,
-                separatorBuilder: (BuildContext context, int index) {
-                  return SizedBox(width: 12.0.s);
-                },
                 itemBuilder: (BuildContext context, int index) {
                   final friendPubkey = friendsPubkeys[index];
 
