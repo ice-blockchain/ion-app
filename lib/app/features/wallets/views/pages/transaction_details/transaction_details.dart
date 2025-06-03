@@ -15,7 +15,6 @@ import 'package:ion/app/features/wallets/model/transaction_type.dart';
 import 'package:ion/app/features/wallets/providers/transaction_provider.c.dart';
 import 'package:ion/app/features/wallets/views/components/arrival_time/list_item_arrival_time.dart';
 import 'package:ion/app/features/wallets/views/components/network_fee/list_item_network_fee.dart';
-import 'package:ion/app/features/wallets/views/components/network_icon_widget.dart';
 import 'package:ion/app/features/wallets/views/components/nft_item.dart';
 import 'package:ion/app/features/wallets/views/components/timeline/timeline.dart';
 import 'package:ion/app/features/wallets/views/components/transaction_participant.dart';
@@ -164,8 +163,8 @@ class TransactionDetailsPage extends ConsumerWidget {
                           ListItem.textWithIcon(
                             title: Text(context.i18n.send_nft_confirm_network),
                             value: transactionData.network.displayName,
-                            icon: NetworkIconWidget(
-                              size: 16.0.s,
+                            icon: CoinIconWidget(
+                              size: ScreenSideOffset.defaultSmallMargin,
                               imageUrl: transactionData.network.image,
                             ),
                           ),
