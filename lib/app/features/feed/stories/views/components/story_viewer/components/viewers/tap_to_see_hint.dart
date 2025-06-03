@@ -74,7 +74,7 @@ class TapToSeeHint extends HookWidget {
                         ),
                       ),
                       CustomPaint(
-                        painter: NotchPainter(color: colors.onPrimaryAccent),
+                        painter: _NotchPainter(color: colors.onPrimaryAccent),
                         size: Size(19.0.s, 7.0.s),
                       ),
                     ],
@@ -88,8 +88,8 @@ class TapToSeeHint extends HookWidget {
   }
 }
 
-class NotchPainter extends CustomPainter {
-  const NotchPainter({required this.color});
+class _NotchPainter extends CustomPainter {
+  const _NotchPainter({required this.color});
 
   final Color color;
 
