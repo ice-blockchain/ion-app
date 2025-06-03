@@ -23,17 +23,18 @@ part 'feed_following_content_provider.c.g.dart';
 const _pageSize = 10;
 
 @riverpod
-class FeedFollowingContent extends _$FeedFollowingContent {
+class FeedFollowingContent extends _$FeedFollowingContent implements PagedNotifier {
   @override
   FeedFollowingContentState build(FeedType feedType, [FeedModifier? feedModifier]) {
-    Future(fetch);
+    Future(fetchEntities);
     return const FeedFollowingContentState(
       items: null,
       pagination: {},
     );
   }
 
-  Future<void> fetch({int limit = _pageSize}) async {
+  @override
+  Future<void> fetchEntities({int limit = _pageSize}) async {
     final followedPubkeys = await _getFollowedPubkeys();
     final pagination = _initPagination(pubkeys: followedPubkeys);
 
@@ -66,7 +67,7 @@ class FeedFollowingContent extends _$FeedFollowingContent {
         );
       }
       if (fetchedEntities < limit) {
-        return fetch(limit: limit - fetchedEntities);
+        return fetchEntities(limit: limit - fetchedEntities);
       }
     } else if (state.items == null) {
       state = state.copyWith(
@@ -75,10 +76,29 @@ class FeedFollowingContent extends _$FeedFollowingContent {
     }
   }
 
-  void insert(IonConnectEntity entity) {
+  @override
+  void refresh() {
+    ref.invalidateSelf();
+  }
+
+  @override
+  void insertEntity(IonConnectEntity entity) {
     state = state.copyWith(
       items: {entity, ...(state.items ?? {})},
     );
+  }
+
+  @override
+  void deleteEntity(IonConnectEntity entity) {
+    final items = state.items;
+    if (items == null) return;
+
+    final updatedItems = {...items};
+    final removed = updatedItems.remove(entity);
+
+    if (removed) {
+      state = state.copyWith(items: updatedItems);
+    }
   }
 
   Future<List<String>> _getFollowedPubkeys() async {

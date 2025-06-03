@@ -35,7 +35,7 @@ class _FlattenedVideo {
 class VideosVerticalScrollPage extends HookConsumerWidget {
   const VideosVerticalScrollPage({
     required this.eventReference,
-    required this.videos,
+    required this.entities,
     required this.onLoadMore,
     this.initialMediaIndex = 0,
     this.framedEventReference,
@@ -44,7 +44,7 @@ class VideosVerticalScrollPage extends HookConsumerWidget {
 
   final EventReference eventReference;
   final int initialMediaIndex;
-  final Iterable<IonConnectEntity> videos;
+  final Iterable<IonConnectEntity> entities;
   final void Function() onLoadMore;
   final EventReference? framedEventReference;
 
@@ -68,12 +68,18 @@ class VideosVerticalScrollPage extends HookConsumerWidget {
       );
     }
 
-    final entities = videos.isEmpty ? [ionConnectEntity] : videos;
+    final filteredVideos = entities.where((item) {
+      final videoPost = ref.read(isVideoPostProvider(item));
+      final videoRepost = ref.read(isVideoRepostProvider(item));
+      return videoPost || videoRepost;
+    });
+
+    final videos = filteredVideos.isEmpty ? [ionConnectEntity] : filteredVideos;
 
     final List<_FlattenedVideo> flattenedVideos = useMemoized(
       () {
         final result = <_FlattenedVideo>[];
-        for (final entity in entities) {
+        for (final entity in videos) {
           if (entity is ModifiablePostEntity) {
             for (final media in entity.data.videos) {
               result.add(_FlattenedVideo(entity: entity, media: media));

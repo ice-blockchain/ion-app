@@ -2,9 +2,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:ion/app/features/feed/data/models/feed_modifier.dart';
-import 'package:ion/app/features/feed/data/models/feed_type.dart';
-import 'package:ion/app/features/feed/providers/feed_following_content_provider.c.dart';
+import 'package:ion/app/features/feed/providers/feed_trending_videos_provider.c.dart';
 import 'package:ion/app/features/ion_connect/model/event_reference.c.dart';
 import 'package:ion/app/features/video/views/pages/videos_vertical_scroll_page.dart';
 
@@ -18,16 +16,11 @@ class TrendingVideosPage extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final videos = ref.watch(
-      feedFollowingContentProvider(FeedType.video, FeedModifier.trending)
-          .select((state) => state.items ?? {}),
-    );
+    final entities = ref.watch(feedTrendingVideosProvider.select((state) => state.items ?? {}));
     return VideosVerticalScrollPage(
       eventReference: eventReference,
-      videos: videos,
-      onLoadMore: () => ref
-          .read(feedFollowingContentProvider(FeedType.video, FeedModifier.trending).notifier)
-          .fetch(),
+      entities: entities,
+      onLoadMore: () => ref.read(feedTrendingVideosProvider.notifier).loadMore(),
     );
   }
 }

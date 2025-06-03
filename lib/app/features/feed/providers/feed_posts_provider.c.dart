@@ -34,7 +34,7 @@ class FeedPosts extends _$FeedPosts {
     final subscription = StreamGroup.merge([postsStream, articlesStream, repostsStream])
         .where(_filterEntities)
         .distinct()
-        .listen(_handleEntity);
+        .listen(_insertEntity);
     ref.onDispose(subscription.cancel);
 
     final filter = ref.watch(feedCurrentFilterProvider);
@@ -50,13 +50,22 @@ class FeedPosts extends _$FeedPosts {
   }
 
   Future<void> loadMore() async {
-    final feedType = FeedType.fromCategory(ref.read(feedCurrentFilterProvider).category);
-    await ref.read(feedFollowingContentProvider(feedType).notifier).fetch();
+    return _getNotifier().fetchEntities();
   }
 
   void refresh() {
-    final feedType = FeedType.fromCategory(ref.read(feedCurrentFilterProvider).category);
-    ref.invalidate(feedFollowingContentProvider(feedType));
+    return _getNotifier().refresh();
+  }
+
+  PagedNotifier _getNotifier() {
+    final filter = ref.watch(feedCurrentFilterProvider);
+    if (filter.filter == FeedFilter.following) {
+      final feedType = FeedType.fromCategory(filter.category);
+      return ref.read(feedFollowingContentProvider(feedType).notifier);
+    } else {
+      final dataSource = ref.watch(feedPostsDataSourceProvider);
+      return ref.read(entitiesPagedDataProvider(dataSource).notifier);
+    }
   }
 
   bool _filterEntities(IonConnectEntity entity) {
@@ -69,15 +78,8 @@ class FeedPosts extends _$FeedPosts {
     };
   }
 
-  void _handleEntity(IonConnectEntity entity) {
-    final filter = ref.watch(feedCurrentFilterProvider);
-    if (filter.filter == FeedFilter.following) {
-      final feedType = FeedType.fromCategory(filter.category);
-      ref.read(feedFollowingContentProvider(feedType).notifier).insert(entity);
-    } else {
-      final dataSource = ref.watch(feedPostsDataSourceProvider);
-      ref.read(entitiesPagedDataProvider(dataSource).notifier).insertEntity(entity);
-    }
+  void _insertEntity(IonConnectEntity entity) {
+    _getNotifier().insertEntity(entity);
   }
 
   bool _isRegularPostOrRepost(IonConnectEntity entity) {

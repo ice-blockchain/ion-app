@@ -14,6 +14,13 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 part 'entities_paged_data_provider.c.freezed.dart';
 part 'entities_paged_data_provider.c.g.dart';
 
+abstract class PagedNotifier {
+  Future<void> fetchEntities();
+  void refresh();
+  void insertEntity(IonConnectEntity entity);
+  void deleteEntity(IonConnectEntity entity);
+}
+
 @freezed
 class EntitiesDataSource with _$EntitiesDataSource {
   const factory EntitiesDataSource({
@@ -37,7 +44,7 @@ class EntitiesPagedDataState with _$EntitiesPagedDataState {
 }
 
 @riverpod
-class EntitiesPagedData extends _$EntitiesPagedData {
+class EntitiesPagedData extends _$EntitiesPagedData implements PagedNotifier {
   @override
   EntitiesPagedDataState? build(List<EntitiesDataSource>? dataSources) {
     if (dataSources != null) {
@@ -53,6 +60,7 @@ class EntitiesPagedData extends _$EntitiesPagedData {
     return null;
   }
 
+  @override
   Future<void> fetchEntities() async {
     final currentState = state;
 
@@ -76,6 +84,12 @@ class EntitiesPagedData extends _$EntitiesPagedData {
     );
   }
 
+  @override
+  void refresh() {
+    ref.invalidateSelf();
+  }
+
+  @override
   void deleteEntity(IonConnectEntity entity) {
     final items = state?.data.items;
     if (items == null) return;
@@ -90,6 +104,7 @@ class EntitiesPagedData extends _$EntitiesPagedData {
     }
   }
 
+  @override
   void insertEntity(IonConnectEntity entity, {int index = 0}) {
     final items = state?.data.items?.toList() ?? []
       ..insert(index, entity);

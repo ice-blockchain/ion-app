@@ -9,10 +9,8 @@ import 'package:ion/app/components/section_header/section_header.dart';
 import 'package:ion/app/extensions/build_context.dart';
 import 'package:ion/app/extensions/num.dart';
 import 'package:ion/app/features/feed/data/models/entities/modifiable_post_data.c.dart';
-import 'package:ion/app/features/feed/data/models/feed_modifier.dart';
-import 'package:ion/app/features/feed/data/models/feed_type.dart';
 import 'package:ion/app/features/feed/data/models/trending_videos_overlay.dart';
-import 'package:ion/app/features/feed/providers/feed_following_content_provider.c.dart';
+import 'package:ion/app/features/feed/providers/feed_trending_videos_provider.c.dart';
 import 'package:ion/app/features/feed/views/components/list_separator/list_separator.dart';
 import 'package:ion/app/features/feed/views/pages/feed_page/components/trending_videos/components/trending_videos_list.dart';
 import 'package:ion/app/features/feed/views/pages/feed_page/components/trending_videos/components/trending_videos_list_skeleton.dart';
@@ -28,8 +26,7 @@ class TrendingVideos extends ConsumerWidget {
     // final listOverlay = ref.watch(trendingVideosOverlayNotifierProvider);
     const listOverlay = TrendingVideosOverlay.vertical;
 
-    final FeedFollowingContentState(:items, :hasMore) =
-        ref.watch(feedFollowingContentProvider(FeedType.video, FeedModifier.trending));
+    final (:items, :hasMore) = ref.watch(feedTrendingVideosProvider);
 
     if (items == null) {
       return Column(
@@ -82,8 +79,6 @@ class TrendingVideos extends ConsumerWidget {
   }
 
   Future<void> _onLoadMore(WidgetRef ref) async {
-    await ref
-        .read(feedFollowingContentProvider(FeedType.video, FeedModifier.trending).notifier)
-        .fetch();
+    await ref.read(feedTrendingVideosProvider.notifier).loadMore();
   }
 }
