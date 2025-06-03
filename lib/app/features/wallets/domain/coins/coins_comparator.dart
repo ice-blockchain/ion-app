@@ -18,6 +18,14 @@ class CoinsComparator {
     bool isPrioritizedA = false,
     bool isPrioritizedB = false,
   }) {
+    final upperA = symbolA.toUpperCase();
+    final upperB = symbolB.toUpperCase();
+    const topCoin = CoinPriority._topCoin;
+
+    // 0. ION always comes first, regardless of other conditions
+    if (upperA == topCoin && upperB != topCoin) return -1;
+    if (upperB == topCoin && upperA != topCoin) return 1;
+
     // 1. Compare by balanceUSD in descending order
     final balanceComparison = balanceB.compareTo(balanceA);
     if (balanceComparison != 0) return balanceComparison;
@@ -27,8 +35,8 @@ class CoinsComparator {
     if (isPrioritizedB && !isPrioritizedA) return 1;
 
     // 3. Compare by priority list
-    final aPriority = _prioritizer.getPriorityIndex(symbolA.toUpperCase());
-    final bPriority = _prioritizer.getPriorityIndex(symbolB.toUpperCase());
+    final aPriority = _prioritizer.getPriorityIndex(upperA);
+    final bPriority = _prioritizer.getPriorityIndex(upperB);
 
     // If both are in priority list, compare their positions
     if (aPriority != -1 && bPriority != -1 && aPriority != bPriority) {
@@ -85,8 +93,9 @@ class CoinsComparator {
 }
 
 class CoinPriority {
+  static const _topCoin = 'ION'; // Ice Open Network
   final _priorityList = const [
-    'ION', // Ice Open Network
+    _topCoin,
     'BNB', // Binance Coin
     'BTC', // Bitcoin
     'ETH', // Ethereum
