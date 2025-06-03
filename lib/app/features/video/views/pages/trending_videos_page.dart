@@ -17,19 +17,13 @@ class TrendingVideosPage extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final dataSource = ref.watch(feedTrendingVideosDataSourceProvider);
+    final videos =
+        ref.watch(entitiesPagedDataProvider(dataSource).select((state) => state?.data.items ?? {}));
     return VideosVerticalScrollPage(
       eventReference: eventReference,
-      getVideosData: () {
-        final dataSource = ref.watch(feedTrendingVideosDataSourceProvider);
-        return ref.watch(entitiesPagedDataProvider(dataSource));
-      },
-      onLoadMore: () => ref
-          .read(
-            entitiesPagedDataProvider(
-              ref.read(feedTrendingVideosDataSourceProvider),
-            ).notifier,
-          )
-          .fetchEntities(),
+      videos: videos,
+      onLoadMore: () => ref.read(entitiesPagedDataProvider(dataSource).notifier).fetchEntities(),
     );
   }
 }

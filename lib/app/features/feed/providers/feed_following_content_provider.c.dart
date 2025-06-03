@@ -25,10 +25,10 @@ const _pageSize = 10;
 @riverpod
 class FeedFollowingContent extends _$FeedFollowingContent {
   @override
-  FeedFollowingContentState build(FeedType feedType, FeedModifier? feedModifier) {
+  FeedFollowingContentState build(FeedType feedType, [FeedModifier? feedModifier]) {
     Future(fetch);
     return const FeedFollowingContentState(
-      items: [],
+      items: null,
       pagination: {},
     );
   }
@@ -50,7 +50,7 @@ class FeedFollowingContent extends _$FeedFollowingContent {
         final hasMore = entity != null; // TODO: not only this
         final pagination = _getPubkeyPagination(pubkey);
         state = state.copyWith(
-          items: entity != null ? [...state.items, entity] : state.items,
+          items: entity != null ? {...(state.items ?? {}), entity} : state.items,
           pagination: {
             ...state.pagination,
             pubkey: pagination.copyWith(
@@ -64,6 +64,10 @@ class FeedFollowingContent extends _$FeedFollowingContent {
       if (fetchedEntities < limit) {
         return fetch(limit: limit - fetchedEntities);
       }
+    } else if (state.items == null) {
+      state = state.copyWith(
+        items: const {},
+      );
     }
   }
 
@@ -139,13 +143,15 @@ class FeedFollowingContent extends _$FeedFollowingContent {
       try {
         final UserPagination(:lastEventCreatedAt) = _getPubkeyPagination(pubkey);
         final dataSource = _getDataSource(pubkey);
+        final until = lastEventCreatedAt != null ? lastEventCreatedAt - 1 : null;
 
         final requestMessage = RequestMessage();
         for (final filter in dataSource.requestFilters) {
           requestMessage.addFilter(
             filter.copyWith(
               limit: () => 1,
-              until: () => lastEventCreatedAt != null ? lastEventCreatedAt - 1 : null,
+              //TODO:remove adjusment when BE is fixed
+              until: () => until != null && until.toString().length == 10 ? until * 1000000 : until,
               since: () => since,
             ),
           );
@@ -156,7 +162,7 @@ class FeedFollowingContent extends _$FeedFollowingContent {
               requestMessage,
               actionSource: dataSource.actionSource,
             )
-            .where((entity) => dataSource.entityFilter(entity) && !state.items.contains(entity))
+            .where((entity) => dataSource.entityFilter(entity))
             .firstOrNull;
 
         yield MapEntry(pubkey, result);
@@ -215,11 +221,11 @@ class FeedFollowingContent extends _$FeedFollowingContent {
 @Freezed(equal: false)
 class FeedFollowingContentState with _$FeedFollowingContentState {
   const factory FeedFollowingContentState({
-    required List<IonConnectEntity> items,
+    required Set<IonConnectEntity>? items,
     required Map<String, UserPagination> pagination,
   }) = _FeedFollowingContentState;
 
-  FeedFollowingContentState._();
+  const FeedFollowingContentState._();
 
   bool get hasMore => pagination.values.any((pubkey) => pubkey.hasMore);
 }

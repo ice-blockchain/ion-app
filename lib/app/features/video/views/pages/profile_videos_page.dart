@@ -27,12 +27,14 @@ class ProfileVideosPage extends HookConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final dataSource = ref.watch(tabDataSourceProvider(type: tabEntityType, pubkey: pubkey));
+    final videos =
+        ref.watch(entitiesPagedDataProvider(dataSource).select((state) => state?.data.items ?? {}));
 
     return VideosVerticalScrollPage(
       eventReference: eventReference,
       initialMediaIndex: initialMediaIndex,
       framedEventReference: framedEventReference,
-      getVideosData: () => ref.watch(entitiesPagedDataProvider(dataSource)),
+      videos: videos,
       onLoadMore: () => ref.read(entitiesPagedDataProvider(dataSource).notifier).fetchEntities(),
     );
   }

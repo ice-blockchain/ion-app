@@ -14,8 +14,8 @@ import 'package:ion/app/features/feed/providers/ion_connect_entity_with_counters
 import 'package:ion/app/features/feed/views/components/overlay_menu/own_entity_menu.dart';
 import 'package:ion/app/features/feed/views/components/overlay_menu/user_info_menu.dart';
 import 'package:ion/app/features/ion_connect/model/event_reference.c.dart';
+import 'package:ion/app/features/ion_connect/model/ion_connect_entity.dart';
 import 'package:ion/app/features/ion_connect/model/media_attachment.dart';
-import 'package:ion/app/features/ion_connect/providers/entities_paged_data_provider.c.dart';
 import 'package:ion/app/features/video/views/components/video_actions.dart';
 import 'package:ion/app/features/video/views/components/video_post_info.dart';
 import 'package:ion/app/features/video/views/hooks/use_status_bar_color.dart';
@@ -35,7 +35,7 @@ class _FlattenedVideo {
 class VideosVerticalScrollPage extends HookConsumerWidget {
   const VideosVerticalScrollPage({
     required this.eventReference,
-    required this.getVideosData,
+    required this.videos,
     required this.onLoadMore,
     this.initialMediaIndex = 0,
     this.framedEventReference,
@@ -44,7 +44,7 @@ class VideosVerticalScrollPage extends HookConsumerWidget {
 
   final EventReference eventReference;
   final int initialMediaIndex;
-  final EntitiesPagedDataState? Function() getVideosData;
+  final Iterable<IonConnectEntity> videos;
   final void Function() onLoadMore;
   final EventReference? framedEventReference;
 
@@ -68,15 +68,7 @@ class VideosVerticalScrollPage extends HookConsumerWidget {
       );
     }
 
-    final videosData = getVideosData();
-    final filteredVideos = videosData?.data.items?.where((item) {
-          final videoPost = ref.read(isVideoPostProvider(item));
-          final videoRepost = ref.read(isVideoRepostProvider(item));
-          return videoPost || videoRepost;
-        }).toList() ??
-        [];
-
-    final entities = filteredVideos.isEmpty ? [ionConnectEntity] : filteredVideos;
+    final entities = videos.isEmpty ? [ionConnectEntity] : videos;
 
     final List<_FlattenedVideo> flattenedVideos = useMemoized(
       () {

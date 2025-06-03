@@ -2,6 +2,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:ion/app/features/feed/data/models/entities/modifiable_post_data.c.dart';
 import 'package:ion/app/features/feed/providers/replies_provider.c.dart';
 import 'package:ion/app/features/ion_connect/model/event_reference.c.dart';
 import 'package:ion/app/features/video/views/pages/videos_vertical_scroll_page.dart';
@@ -22,11 +23,19 @@ class ReplyListVideosPage extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final videos = ref.watch(
+      repliesProvider(parentEventReference).select(
+        (state) =>
+            state?.data.items
+                ?.where((entity) => entity is ModifiablePostEntity && entity.data.hasVideo) ??
+            {},
+      ),
+    );
     return VideosVerticalScrollPage(
       eventReference: eventReference,
       initialMediaIndex: initialMediaIndex,
       framedEventReference: framedEventReference,
-      getVideosData: () => ref.watch(repliesProvider(parentEventReference)),
+      videos: videos,
       onLoadMore: () =>
           ref.read(repliesProvider(parentEventReference).notifier).loadMore(parentEventReference),
     );
