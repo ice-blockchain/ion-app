@@ -204,10 +204,6 @@ class _MoneyMessageContent extends HookConsumerWidget {
       (MoneyMessageType.requested, _) => context.i18n.chat_money_request_title,
     };
 
-    final timeTextColor = switch (isMe) {
-      true => context.theme.appColors.strokeElements,
-      false => context.theme.appColors.quaternaryText,
-    };
     final messageItem = ChatMessageInfoItem.money(
       eventMessage: eventMessage,
       contentDescription: title,
