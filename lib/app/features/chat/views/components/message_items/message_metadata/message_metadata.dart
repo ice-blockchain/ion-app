@@ -65,7 +65,7 @@ class MessageMetaData extends HookConsumerWidget {
           if (displayTime)
             Text(
               toTimeDisplayValue(entityData.publishedAt.value.toDateTime.millisecondsSinceEpoch),
-              style: context.theme.appTextThemes.caption4.copyWith(
+              style: context.theme.appTextThemes.caption5.copyWith(
                 color: isMe
                     ? context.theme.appColors.strokeElements
                     : context.theme.appColors.quaternaryText,
