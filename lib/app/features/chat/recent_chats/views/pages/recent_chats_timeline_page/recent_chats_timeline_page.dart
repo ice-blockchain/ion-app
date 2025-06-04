@@ -210,6 +210,8 @@ class E2eeRecentChatTile extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    useAutomaticKeepAlive();
+
     if (conversation.latestMessage == null) {
       return const SizedBox.shrink();
     }
@@ -251,11 +253,6 @@ class E2eeRecentChatTile extends HookConsumerWidget {
       name: isDeleted
           ? context.i18n.common_deleted_account
           : cachedUserMetadata?.data.displayName ?? '',
-      avatarUrl: isDeleted ? null : cachedUserMetadata?.data.picture,
-      eventReference: eventReference,
-      unreadMessagesCount: unreadMessagesCount.valueOrNull ?? 0,
-      lastMessageContent: conversation.latestMessage?.content ?? '',
-      lastMessageAt: (conversation.latestMessage?.createdAt ?? conversation.joinedAt).toDateTime,
       isVerified: isUserVerified,
       onTap: () {
         ConversationRoute(receiverPubKey: receiverPubkey).push<void>(context);
