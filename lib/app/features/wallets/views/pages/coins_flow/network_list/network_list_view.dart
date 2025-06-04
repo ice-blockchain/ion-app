@@ -107,20 +107,23 @@ class NetworkListView extends ConsumerWidget {
             ),
           ),
           Flexible(
-            child: ScreenSideOffset.small(
-              child: coinsState.maybeMap(
-                data: (data) => _NetworksList(
-                  itemCount: data.value.length,
-                  itemBuilder: (BuildContext context, int index) {
-                    final coin = data.value[index];
-                    return NetworkItem(
-                      coinInWallet: coin,
-                      network: coin.coin.network,
-                      onTap: () => onTap(coin.coin.network),
-                    );
-                  },
+            child: Padding(
+              padding: EdgeInsetsDirectional.only(bottom: 32.0.s),
+              child: ScreenSideOffset.small(
+                child: coinsState.maybeMap(
+                  data: (data) => _NetworksList(
+                    itemCount: data.value.length,
+                    itemBuilder: (BuildContext context, int index) {
+                      final coin = data.value[index];
+                      return NetworkItem(
+                        coinInWallet: coin,
+                        network: coin.coin.network,
+                        onTap: () => onTap(coin.coin.network),
+                      );
+                    },
+                  ),
+                  orElse: () => const _LoadingState(),
                 ),
-                orElse: () => const _LoadingState(),
               ),
             ),
           ),
