@@ -204,7 +204,7 @@ void main() {
         syncCallback: DummySyncStrategy(const Duration(milliseconds: 200)).send,
         onError: (_, __) async => false,
       );
-      
+
       await manager.initialize([const TestModel('1', 'A')]);
 
       final service = OptimisticService<TestModel>(manager: manager);
