@@ -23,8 +23,6 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 part 'feed_following_content_provider.c.freezed.dart';
 part 'feed_following_content_provider.c.g.dart';
 
-const _defaultPageSize = 10;
-
 @riverpod
 class FeedFollowingContent extends _$FeedFollowingContent implements PagedNotifier {
   @override
@@ -37,29 +35,40 @@ class FeedFollowingContent extends _$FeedFollowingContent implements PagedNotifi
   }
 
   @override
-  Future<void> fetchEntities({int limit = _defaultPageSize}) async {
-    final followedPubkeys = await _getFollowedPubkeys();
+  Future<void> fetchEntities({bool bypassLoading = false, int? limit}) async {
+    if (_loading && !bypassLoading) {
+      return;
+    }
+    _loading = true;
 
-    state = state.copyWith(pagination: _initPagination(pubkeys: followedPubkeys));
+    try {
+      final fetchLimit = limit ?? feedType.pageSize;
+      final followedPubkeys = await _getFollowedPubkeys();
 
-    final nextPagePubkeys = await _getNextPagePubkeys(pubkeys: followedPubkeys, limit: limit);
+      state = state.copyWith(pagination: _initPagination(pubkeys: followedPubkeys));
 
-    if (nextPagePubkeys.isNotEmpty) {
-      var fetchedEntities = 0;
-      final entitiesStream = _fetchEntities(pubkeys: nextPagePubkeys);
-      await for (final MapEntry(key: pubkey, value: entity) in entitiesStream) {
-        if (entity != null) {
-          fetchedEntities++;
+      final nextPagePubkeys =
+          await _getNextPagePubkeys(pubkeys: followedPubkeys, limit: fetchLimit);
+
+      if (nextPagePubkeys.isNotEmpty) {
+        var fetchedEntities = 0;
+        final entitiesStream = _fetchEntities(pubkeys: nextPagePubkeys);
+        await for (final MapEntry(key: pubkey, value: entity) in entitiesStream) {
+          if (entity != null) {
+            fetchedEntities++;
+          }
+          _handleFetchedEntity(pubkey, entity);
         }
-        _handleFetchedEntity(pubkey, entity);
+        if (fetchedEntities < fetchLimit) {
+          return fetchEntities(limit: fetchLimit - fetchedEntities, bypassLoading: true);
+        }
+      } else if (state.items == null) {
+        state = state.copyWith(
+          items: const {},
+        );
       }
-      if (fetchedEntities < limit) {
-        return fetchEntities(limit: limit - fetchedEntities);
-      }
-    } else if (state.items == null) {
-      state = state.copyWith(
-        items: const {},
-      );
+    } finally {
+      _loading = false;
     }
   }
 
@@ -88,6 +97,8 @@ class FeedFollowingContent extends _$FeedFollowingContent implements PagedNotifi
     }
   }
 
+  bool _loading = false;
+
   Future<List<String>> _getFollowedPubkeys() async {
     final followList = await ref.read(currentUserFollowListProvider.future);
 
@@ -114,45 +125,45 @@ class FeedFollowingContent extends _$FeedFollowingContent implements PagedNotifi
     required List<String> pubkeys,
     required int limit,
   }) async {
-    int? currentPage;
-    final result = <String>[];
-    final candidates = <String>[];
+    int? minPage;
+    final selected = <String>[];
+    final remaining = <String>[];
 
     for (final pubkey in pubkeys) {
       final pagination = state.pagination[pubkey];
 
-      if (pagination != null && !pagination.hasMore) {
-        continue;
-      }
+      if (pagination?.hasMore == false) continue;
 
       final page = pagination?.page ?? -1;
 
-      if (page == currentPage) {
-        result.add(pubkey);
-      } else if (currentPage == null || page < currentPage) {
-        currentPage = page;
-        candidates.addAll(result);
-        result
+      if (page == minPage) {
+        selected.add(pubkey);
+      } else if (minPage == null || page < minPage) {
+        // Found a lower page, reset the selection
+        minPage = page;
+        remaining.addAll(selected);
+        selected
           ..clear()
           ..add(pubkey);
-        if (result.length == limit) {
-          return result;
-        }
       } else {
-        candidates.add(pubkey);
+        remaining.add(pubkey);
+      }
+
+      if (selected.length == limit) {
+        return selected;
       }
     }
 
-    if (result.length < limit && candidates.isNotEmpty) {
-      result.addAll(
+    if (selected.length < limit && remaining.isNotEmpty) {
+      selected.addAll(
         await _getNextPagePubkeys(
-          pubkeys: candidates,
-          limit: limit - result.length,
+          pubkeys: remaining,
+          limit: limit - selected.length,
         ),
       );
     }
 
-    return result;
+    return selected;
   }
 
   Stream<MapEntry<String, IonConnectEntity?>> _fetchEntities({
