@@ -9,8 +9,8 @@ void shareContent(String text, {String? subject}) {
   Share.share(text, subject: subject);
 }
 
-void shareFile(String path, {String name = ''}) {
-  Share.shareXFiles(
+Future<void> shareFile(String path, {String name = ''}) {
+  return Share.shareXFiles(
     [
       XFile.fromData(
         File(path).readAsBytesSync(),
