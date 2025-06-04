@@ -5,6 +5,8 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/components/progress_bar/centered_loading_indicator.dart';
 import 'package:ion/app/features/components/ion_connect_network_image/ion_connect_network_image.dart';
 import 'package:ion/app/features/feed/stories/providers/story_image_loading_provider.c.dart';
+import 'package:ion/app/features/feed/stories/providers/story_pause_provider.c.dart';
+import 'package:ion/app/features/feed/stories/views/components/story_viewer/components/viewers/tap_to_see_hint.dart';
 import 'package:ion/app/features/ion_connect/model/quoted_event.c.dart';
 import 'package:ion/app/router/app_routes.c.dart';
 
@@ -52,12 +54,15 @@ class ImageStoryViewer extends ConsumerWidget {
     );
 
     if (hasQuotedPost) {
-      return GestureDetector(
+      return TapToSeeHint(
         onTap: () {
           final eventReference = quotedEvent!.eventReference;
           PostDetailsRoute(
             eventReference: eventReference.encode(),
           ).push<void>(context);
+        },
+        onVisibilityChanged: (isVisible) {
+          ref.read(storyPauseControllerProvider.notifier).paused = isVisible;
         },
         child: imageWidget,
       );
