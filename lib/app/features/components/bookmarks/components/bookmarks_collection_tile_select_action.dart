@@ -22,20 +22,10 @@ class BookmarksCollectionTileSelectAction extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final isBookmarked =
         ref.watch(isBookmarkedInCollectionProvider(eventReference, collectionDTag: data.type));
-    final bookmarkState = ref.watch(feedBookmarksNotifierProvider(collectionDTag: data.type));
-    return GestureDetector(
-      onTap: bookmarkState.isLoading
-          ? null
-          : () {
-              ref
-                  .read(feedBookmarksNotifierProvider(collectionDTag: data.type).notifier)
-                  .toggleBookmark(eventReference);
-            },
-      child: _getIconWidget(isBookmarked),
-    );
+    return _getIconWidget(isBookmarked);
   }
 
-  Widget? _getIconWidget(bool isBookmarked) {
+  Widget _getIconWidget(bool isBookmarked) {
     final isDefaultCollection = data.type == BookmarksCollectionEntity.defaultCollectionDTag;
     if (isDefaultCollection) {
       return isBookmarked ? Assets.svg.iconBookmarksOn.icon() : Assets.svg.iconBookmarks.icon();

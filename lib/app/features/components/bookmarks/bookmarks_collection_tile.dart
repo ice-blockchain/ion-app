@@ -60,6 +60,12 @@ class BookmarksCollectionTile extends ConsumerWidget {
           color: context.theme.appColors.quaternaryText,
         ),
       ),
+      onTap: () {
+        if (state.isLoading || eventReference == null) return;
+        ref
+            .read(feedBookmarksNotifierProvider(collectionDTag: collectionDTag).notifier)
+            .toggleBookmark(eventReference!);
+      },
       trailing: eventReference != null
           ? BookmarksCollectionTileSelectAction(
               data: entity.data,
