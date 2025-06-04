@@ -73,7 +73,8 @@ class CoinInputFormatter extends TextInputFormatter {
 
         if (lastSeparatorIndex != -1) {
           // Split at the last separator
-          final intPart = newValue.text.substring(0, lastSeparatorIndex);
+          final intPart =
+              newValue.text.substring(0, lastSeparatorIndex > 0 ? lastSeparatorIndex : 0);
           final decimalPart = newValue.text.substring(lastSeparatorIndex + 1);
 
           // Normalize both parts separately
@@ -164,7 +165,7 @@ class CoinInputFormatter extends TextInputFormatter {
   ) {
     if (oldValue.text.contains('.')) return oldValue;
 
-    final normalized = _normalizeInput(newValue.text);
+    final normalized = _normalizeInput(newValue.text).replaceAll('.', '');
     final isAppending = index == newValue.text.length - 1;
 
     try {
@@ -278,7 +279,7 @@ class CoinInputFormatter extends TextInputFormatter {
     var newPos = oldCursorPos;
 
     final oldCommaCount = oldValue.text
-        .substring(0, min(oldValue.text.length, oldCursorPos - 1))
+        .substring(0, min(oldValue.text.length, oldCursorPos - 1 < 0 ? 0 : oldCursorPos - 1))
         .replaceAll(_commasRegex, '')
         .length;
 
