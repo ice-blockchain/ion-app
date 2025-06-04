@@ -17,7 +17,7 @@ Future<bool> checkWalletExists(
     return true;
   }
 
-  final user = await ref.read(userMetadataProvider(pubkey).future);
+  final user = await ref.read(userMetadataProvider(pubkey, cache: false).future);
   final walletsMap = user?.data.wallets;
 
   final hasProperWallet = walletsMap?[network.id] != null;

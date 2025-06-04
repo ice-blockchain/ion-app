@@ -56,7 +56,7 @@ class SendAssetFormController extends _$SendAssetFormController {
     final pubkey = state.contactPubkey;
 
     if (pubkey != null && network != null) {
-      final contactMetadata = await ref.read(userMetadataProvider(pubkey).future);
+      final contactMetadata = await ref.read(userMetadataProvider(pubkey, cache: false).future);
       final walletAddress = contactMetadata?.data.wallets?[network.id];
 
       // Assuming that wallet address shouldn't be null because of the check during selection

@@ -15,7 +15,6 @@ import 'package:ion/app/components/select/select_network_button.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/extensions/object.dart';
 import 'package:ion/app/features/user/pages/profile_page/components/user_payment_flow_card/user_payment_flow_card.dart';
-import 'package:ion/app/features/user/providers/user_metadata_provider.c.dart';
 import 'package:ion/app/features/wallets/model/crypto_asset_to_send_data.c.dart';
 import 'package:ion/app/features/wallets/model/network_data.c.dart';
 import 'package:ion/app/features/wallets/providers/send_asset_form_provider.c.dart';
@@ -24,9 +23,9 @@ import 'package:ion/app/features/wallets/views/pages/coins_flow/send_coins/compo
 import 'package:ion/app/features/wallets/views/pages/coins_flow/send_coins/components/coins_network_fee_selector.dart';
 import 'package:ion/app/features/wallets/views/pages/coins_flow/send_coins/components/contact_input_switcher.dart';
 import 'package:ion/app/features/wallets/views/pages/coins_flow/send_coins/components/widgets/not_enough_coins_for_network_fee_message.dart';
-import 'package:ion/app/features/wallets/views/pages/contact_wallet_error_modals.dart';
 import 'package:ion/app/features/wallets/views/utils/amount_parser.dart';
 import 'package:ion/app/features/wallets/views/utils/crypto_formatter.dart';
+import 'package:ion/app/features/wallets/views/utils/network_validator.dart';
 import 'package:ion/app/hooks/use_on_init.dart';
 import 'package:ion/app/router/components/navigation_app_bar/navigation_app_bar.dart';
 import 'package:ion/app/router/components/navigation_app_bar/navigation_close_button.dart';
@@ -226,25 +225,12 @@ class SendCoinsForm extends HookConsumerWidget {
 
     ref.listen(
       sendAssetFormControllerProvider.select((formState) => formState.network),
-      (_, network) async {
+      (_, network) {
         if (network == null) {
           return;
         }
 
-        final user = await ref.read(userMetadataProvider(contactPubkey).future);
-        final walletsMap = user?.data.wallets;
-
-        final hasProperWallet = walletsMap?[network.id] != null;
-        if (!hasProperWallet && ref.context.mounted) {
-          unawaited(
-            showContactWalletError(
-              ref.context,
-              user: user!,
-              network: network,
-              isPrivate: walletsMap == null,
-            ),
-          );
-        }
+        checkWalletExists(ref, contactPubkey, network);
       },
     );
   }
