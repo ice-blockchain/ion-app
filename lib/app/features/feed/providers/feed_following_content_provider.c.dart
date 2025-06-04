@@ -39,9 +39,8 @@ class FeedFollowingContent extends _$FeedFollowingContent implements PagedNotifi
   @override
   Future<void> fetchEntities({int limit = _defaultPageSize}) async {
     final followedPubkeys = await _getFollowedPubkeys();
-    final pagination = _initPagination(pubkeys: followedPubkeys);
 
-    state = state.copyWith(pagination: pagination);
+    state = state.copyWith(pagination: _initPagination(pubkeys: followedPubkeys));
 
     final nextPagePubkeys = await _getNextPagePubkeys(pubkeys: followedPubkeys, limit: limit);
 
@@ -52,21 +51,7 @@ class FeedFollowingContent extends _$FeedFollowingContent implements PagedNotifi
         if (entity != null) {
           fetchedEntities++;
         }
-        //TODO: put entities in db, handle seen sequences
-        //TODO: refactor - move to a separate method
-        final hasMore = entity != null; // TODO: not only this
-        final pagination = _getPubkeyPagination(pubkey);
-        state = state.copyWith(
-          items: entity != null ? {...(state.items ?? {}), entity} : state.items,
-          pagination: {
-            ...state.pagination,
-            pubkey: pagination.copyWith(
-              page: pagination.page + 1,
-              hasMore: hasMore,
-              lastEventCreatedAt: entity?.createdAt,
-            ),
-          },
-        );
+        _handleFetchedEntity(pubkey, entity);
       }
       if (fetchedEntities < limit) {
         return fetchEntities(limit: limit - fetchedEntities);
@@ -173,48 +158,64 @@ class FeedFollowingContent extends _$FeedFollowingContent implements PagedNotifi
   Stream<MapEntry<String, IonConnectEntity?>> _fetchEntities({
     required List<String> pubkeys,
   }) async* {
-    final feedConfig = await ref.read(feedConfigProvider.future);
-    final ionConnectNotifier = ref.read(ionConnectNotifierProvider.notifier);
     final requestsQueue = await ref.read(feedRequestQueueProvider.future);
-
-    final since = DateTime.now().subtract(feedConfig.followingReqMaxAge).microsecondsSinceEpoch;
+    final resultController = StreamController<MapEntry<String, IonConnectEntity?>>();
+    var handledPubkeys = 0;
 
     for (final pubkey in pubkeys) {
-      try {
-        final UserPagination(:lastEventCreatedAt) = _getPubkeyPagination(pubkey);
-        final dataSource = _getDataSource(pubkey);
-        final until = lastEventCreatedAt != null ? lastEventCreatedAt - 1 : null;
-
-        final requestMessage = RequestMessage();
-        for (final filter in dataSource.requestFilters) {
-          requestMessage.addFilter(
-            filter.copyWith(
-              limit: () => 1,
-              until: () => until,
-              since: () => since,
-            ),
+      unawaited(
+        requestsQueue
+            .add(() => _fetchEntity(pubkey: pubkey))
+            .then((result) => resultController.add(MapEntry(pubkey, result)))
+            .onError((error, stackTrace) {
+          Logger.error(
+            error ?? '',
+            stackTrace: stackTrace,
+            message: 'Error fetching entities for pubkey: $pubkey',
           );
-        }
-
-        final result = await requestsQueue.add(
-          () => ionConnectNotifier
-              .requestEntities(
-                requestMessage,
-                actionSource: dataSource.actionSource,
-              )
-              .where((entity) => dataSource.entityFilter(entity))
-              .firstOrNull,
-        );
-
-        yield MapEntry(pubkey, result);
-      } catch (error, stackTrace) {
-        Logger.error(
-          error,
-          stackTrace: stackTrace,
-          message: 'Error fetching entities for pubkey: $pubkey',
-        );
-      }
+          resultController.add(MapEntry(pubkey, null));
+        }).whenComplete(() {
+          handledPubkeys++;
+          if (handledPubkeys == pubkeys.length) {
+            resultController.close();
+          }
+        }),
+      );
     }
+
+    yield* resultController.stream;
+  }
+
+  Future<IonConnectEntity?> _fetchEntity({
+    required String pubkey,
+  }) async {
+    final feedConfig = await ref.read(feedConfigProvider.future);
+    final ionConnectNotifier = ref.read(ionConnectNotifierProvider.notifier);
+
+    final UserPagination(:lastEventCreatedAt) = _getPubkeyPagination(pubkey);
+    final dataSource = _getDataSource(pubkey);
+
+    final until = lastEventCreatedAt != null ? lastEventCreatedAt - 1 : null;
+    final since = DateTime.now().subtract(feedConfig.followingReqMaxAge).microsecondsSinceEpoch;
+
+    final requestMessage = RequestMessage();
+    for (final filter in dataSource.requestFilters) {
+      requestMessage.addFilter(
+        filter.copyWith(
+          limit: () => 1,
+          until: () => until,
+          since: () => since,
+        ),
+      );
+    }
+
+    return ionConnectNotifier
+        .requestEntities(
+          requestMessage,
+          actionSource: dataSource.actionSource,
+        )
+        .where(dataSource.entityFilter)
+        .firstOrNull;
   }
 
   EntitiesDataSource _getDataSource(String pubkey) {
@@ -256,6 +257,26 @@ class FeedFollowingContent extends _$FeedFollowingContent implements PagedNotifi
           tags: feedModifierFilter?.tags,
         ),
     };
+  }
+
+  void _handleFetchedEntity(
+    String pubkey,
+    IonConnectEntity? entity,
+  ) {
+    //TODO: put entities in db, handle seen sequences
+    final hasMore = entity != null; // TODO: not only this
+    final pagination = _getPubkeyPagination(pubkey);
+    state = state.copyWith(
+      items: entity != null ? {...(state.items ?? {}), entity} : state.items,
+      pagination: {
+        ...state.pagination,
+        pubkey: pagination.copyWith(
+          page: pagination.page + 1,
+          hasMore: hasMore,
+          lastEventCreatedAt: entity?.createdAt,
+        ),
+      },
+    );
   }
 }
 
