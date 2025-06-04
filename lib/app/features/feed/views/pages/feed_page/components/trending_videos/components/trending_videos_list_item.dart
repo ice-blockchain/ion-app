@@ -2,6 +2,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:ion/app/components/placeholder/ion_placeholder.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/components/ion_connect_network_image/ion_connect_network_image.dart';
 import 'package:ion/app/features/feed/data/models/entities/modifiable_post_data.c.dart';
@@ -74,16 +75,11 @@ class _PlaceholderThumbnail extends StatelessWidget {
       child: Container(
         width: size.width,
         height: size.height,
-        decoration: BoxDecoration(
-          color: context.theme.appColors.sheetLine.withValues(alpha: 0.3),
+        foregroundDecoration: BoxDecoration(
           borderRadius: BorderRadius.circular(16.0.s),
         ),
-        child: Center(
-          child: Icon(
-            Icons.broken_image,
-            size: 48.0.s,
-            color: context.theme.appColors.sheetLine,
-          ),
+        child: const Center(
+          child: IonPlaceholder(),
         ),
       ),
     );
