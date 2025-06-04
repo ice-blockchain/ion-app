@@ -10,7 +10,7 @@ class CoinIconWithNetwork extends StatelessWidget {
   const CoinIconWithNetwork._({
     required this.iconUrl,
     required this.network,
-    required this.coinSize,
+    required this.coinIconType,
     required this.networkSize,
     required this.containerSize,
   });
@@ -22,9 +22,9 @@ class CoinIconWithNetwork extends StatelessWidget {
       CoinIconWithNetwork._(
         iconUrl: iconUrl,
         network: network,
-        coinSize: 36.0.s,
         networkSize: 16.0.s,
         containerSize: 40.0.s,
+        coinIconType: CoinIconType.big,
       );
 
   factory CoinIconWithNetwork.medium(
@@ -34,17 +34,17 @@ class CoinIconWithNetwork extends StatelessWidget {
       CoinIconWithNetwork._(
         iconUrl: iconUrl,
         network: network,
-        coinSize: 46.0.s,
         networkSize: 21.0.s,
         containerSize: 51.0.s,
+        coinIconType: CoinIconType.huge,
       );
 
   final String iconUrl;
   final NetworkData network;
 
-  final double coinSize;
   final double networkSize;
   final double containerSize;
+  final CoinIconType coinIconType;
 
   @override
   Widget build(BuildContext context) {
@@ -58,10 +58,7 @@ class CoinIconWithNetwork extends StatelessWidget {
           PositionedDirectional(
             top: 0,
             start: 0,
-            child: CoinIconWidget(
-              imageUrl: iconUrl,
-              size: coinSize,
-            ),
+            child: CoinIconWidget.withType(iconUrl, coinIconType),
           ),
           PositionedDirectional(
             bottom: 0,

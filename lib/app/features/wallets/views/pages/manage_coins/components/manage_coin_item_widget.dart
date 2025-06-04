@@ -6,7 +6,6 @@ import 'package:ion/app/components/coins/coin_icon.dart';
 import 'package:ion/app/components/list_item/list_item.dart';
 import 'package:ion/app/extensions/asset_gen_image.dart';
 import 'package:ion/app/extensions/build_context.dart';
-import 'package:ion/app/extensions/num.dart';
 import 'package:ion/app/extensions/theme_data.dart';
 import 'package:ion/app/features/wallets/model/coins_group.c.dart';
 import 'package:ion/app/features/wallets/views/pages/manage_coins/providers/manage_coins_provider.c.dart';
@@ -30,10 +29,7 @@ class ManageCoinItemWidget extends ConsumerWidget {
       title: Text(coinsGroup.name),
       subtitle: Text(coinsGroup.abbreviation),
       backgroundColor: context.theme.appColors.tertararyBackground,
-      leading: CoinIconWidget(
-        imageUrl: coinsGroup.iconUrl,
-        size: 36.0.s,
-      ),
+      leading: CoinIconWidget.big(coinsGroup.iconUrl),
       trailing: isSelected
           ? Assets.svg.iconBlockCheckboxOn.icon()
           : Assets.svg.iconBlockCheckboxOff.icon(),

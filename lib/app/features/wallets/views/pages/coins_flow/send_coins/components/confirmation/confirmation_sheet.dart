@@ -93,10 +93,7 @@ class ConfirmationSheet extends ConsumerWidget {
                       amount: coin.amount,
                       currency: coin.coinsGroup.abbreviation,
                       usdAmount: coin.amountUSD,
-                      icon: CoinIconWidget(
-                        imageUrl: coin.coinsGroup.iconUrl,
-                        size: 36.0.s,
-                      ),
+                      icon: CoinIconWidget.big(coin.coinsGroup.iconUrl),
                       transactionType: TransactionType.send,
                     ),
                   SizedBox(height: 16.0.s),
@@ -109,10 +106,7 @@ class ConfirmationSheet extends ConsumerWidget {
                     ListItem.textWithIcon(
                       title: Text(locale.wallet_asset),
                       value: coin.coinsGroup.abbreviation,
-                      icon: CoinIconWidget(
-                        imageUrl: coin.coinsGroup.iconUrl,
-                        size: ScreenSideOffset.defaultSmallMargin,
-                      ),
+                      icon: CoinIconWidget.small(coin.coinsGroup.iconUrl),
                     ),
                   SizedBox(height: 16.0.s),
                   if (formData.senderWallet?.address case final String address)
