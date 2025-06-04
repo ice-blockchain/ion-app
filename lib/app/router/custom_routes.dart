@@ -1,13 +1,4 @@
-// SPDX-License-Identifier: ice License 1.0
-
 // ignore_for_file: prefer_asserts_with_message, avoid_positional_boolean_parameters
-
-///
-/// This file is a copy of the original file in the flutter/packages/flutter/lib/src/cupertino/route.dart file.
-/// It is used to customize _kBackGestureWidth to 200.0.
-///
-
-library;
 
 import 'dart:math';
 import 'dart:ui' show ImageFilter;
@@ -765,19 +756,19 @@ class _CupertinoBackGestureDetectorState<T> extends State<_CupertinoBackGestureD
     if (!widget.enabledCallback()) return;
 
     final hit = HitTestResult();
-    final view = View.of(context);
-    final viewsList = RendererBinding.instance.platformDispatcher.views.toList();
-    final viewId = viewsList.indexOf(view);
-
-    if (viewId == -1) return; // View not found, prevent gesture
-
-    RendererBinding.instance.hitTestInView(hit, event.position, viewId);
+    WidgetsBinding.instance.hitTest(hit, event.position);
 
     final gestureBlockedByScrollable = hit.path.any((entry) {
       final target = entry.target;
-      return target is RenderViewport &&
-          target.axisDirection == AxisDirection.right &&
-          target.offset.pixels > 0;
+
+      if (target is RenderViewport) {
+        print('target.axisDirection: ${target.axisDirection}');
+        print('target.offset.pixels: ${target.offset.pixels}');
+
+        return target.axisDirection == AxisDirection.right && target.offset.pixels > 0;
+      }
+
+      return false;
     });
 
     if (!gestureBlockedByScrollable) {
@@ -807,7 +798,7 @@ class _CupertinoBackGestureDetectorState<T> extends State<_CupertinoBackGestureD
         widget.child,
         PositionedDirectional(
           start: 0,
-          width: max(dragAreaWidth, _kBackGestureWidth),
+          width: max(dragAreaWidth, MediaQuery.sizeOf(context).width),
           top: 0,
           bottom: 0,
           child: Listener(
