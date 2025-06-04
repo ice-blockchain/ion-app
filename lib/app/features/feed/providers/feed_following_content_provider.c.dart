@@ -10,6 +10,7 @@ import 'package:ion/app/features/feed/data/models/feed_modifier.dart';
 import 'package:ion/app/features/feed/data/models/feed_type.dart';
 import 'package:ion/app/features/feed/providers/feed_config_provider.c.dart';
 import 'package:ion/app/features/feed/providers/feed_data_source_builders.dart';
+import 'package:ion/app/features/feed/providers/feed_request_queue.c.dart';
 import 'package:ion/app/features/ion_connect/ion_connect.dart';
 import 'package:ion/app/features/ion_connect/model/action_source.c.dart';
 import 'package:ion/app/features/ion_connect/model/ion_connect_entity.dart';
@@ -174,10 +175,10 @@ class FeedFollowingContent extends _$FeedFollowingContent implements PagedNotifi
   }) async* {
     final feedConfig = await ref.read(feedConfigProvider.future);
     final ionConnectNotifier = ref.read(ionConnectNotifierProvider.notifier);
+    final requestsQueue = await ref.read(feedRequestQueueProvider.future);
 
     final since = DateTime.now().subtract(feedConfig.followingReqMaxAge).microsecondsSinceEpoch;
 
-    // TODO:limit concurrent requests
     for (final pubkey in pubkeys) {
       try {
         final UserPagination(:lastEventCreatedAt) = _getPubkeyPagination(pubkey);
@@ -189,20 +190,21 @@ class FeedFollowingContent extends _$FeedFollowingContent implements PagedNotifi
           requestMessage.addFilter(
             filter.copyWith(
               limit: () => 1,
-              //TODO:remove adjusment when BE is fixed
-              until: () => until != null && until.toString().length == 10 ? until * 1000000 : until,
+              until: () => until,
               since: () => since,
             ),
           );
         }
 
-        final result = await ionConnectNotifier
-            .requestEntities(
-              requestMessage,
-              actionSource: dataSource.actionSource,
-            )
-            .where((entity) => dataSource.entityFilter(entity))
-            .firstOrNull;
+        final result = await requestsQueue.add(
+          () => ionConnectNotifier
+              .requestEntities(
+                requestMessage,
+                actionSource: dataSource.actionSource,
+              )
+              .where((entity) => dataSource.entityFilter(entity))
+              .firstOrNull,
+        );
 
         yield MapEntry(pubkey, result);
       } catch (error, stackTrace) {

@@ -12,7 +12,7 @@ class ConcurrentTasksQueue {
 
   final Queue<_Task<dynamic>> _queue = Queue<_Task<dynamic>>();
 
-  Future<T> add<T>(Future<T> Function() task) {
+  Future<T> add<T extends dynamic>(Future<T> Function() task) {
     final completer = Completer<T>();
     _queue.add(_Task<T>(task, completer));
     _tryRunNext();
