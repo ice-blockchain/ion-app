@@ -132,13 +132,13 @@ class RecentChatTile extends HookConsumerWidget {
                 child: Row(
                   children: [
                     if (isBlockedBy)
-                      Avatar(size: 40.0.s)
+                      Avatar(size: 48.0.s)
                     else
                       Avatar(
                         imageUrl: avatarUrl,
                         imageWidget: avatarWidget,
                         defaultAvatar: defaultAvatar,
-                        size: 40.0.s,
+                        size: 48.0.s,
                       ),
                     SizedBox(width: 12.0.s),
                     Expanded(

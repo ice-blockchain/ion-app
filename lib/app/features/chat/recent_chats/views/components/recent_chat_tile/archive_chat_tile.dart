@@ -69,7 +69,7 @@ class ArchiveChatTile extends HookConsumerWidget {
                 children: [
                   Avatar(
                     imageWidget: Assets.svg.avatarArchive.icon(),
-                    size: 40.0.s,
+                    size: 48.0.s,
                   ),
                   SizedBox(width: 12.0.s),
                   Expanded(
