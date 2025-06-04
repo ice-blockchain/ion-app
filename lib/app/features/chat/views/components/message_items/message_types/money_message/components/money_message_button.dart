@@ -138,7 +138,7 @@ class _SendMoneyButton extends ConsumerWidget {
       final amount = request?.data.content.amount;
       final networkId = request?.data.networkId ?? '';
       final assetId = request?.data.content.assetId ?? '';
-      final receiverPubkey = request?.pubkey;
+      final receiverPubkey = request?.data.pubkey;
 
       // Get required data from providers
       final network = await ref.read(networkByIdProvider(networkId).future);
