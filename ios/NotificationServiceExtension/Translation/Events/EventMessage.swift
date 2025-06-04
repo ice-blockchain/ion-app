@@ -72,7 +72,7 @@ struct EventMessage: Decodable {
         guard
             let jsonData = try? JSONSerialization.data(
                 withJSONObject: eventData,
-                options: []
+                options: [.withoutEscapingSlashes]
             ),
             let jsonString = String(data: jsonData, encoding: .utf8)
         else {

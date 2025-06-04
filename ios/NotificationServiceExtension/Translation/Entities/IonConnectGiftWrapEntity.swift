@@ -54,12 +54,10 @@ struct IonConnectGiftWrapEntity: IonConnectEntity {
             throw IncorrectEventKindException(eventMessage.id, kind: kind)
         }
 
-        let masterPubkey = try eventMessage.masterPubkey()
-
         return IonConnectGiftWrapEntity(
             id: eventMessage.id,
             pubkey: eventMessage.pubkey,
-            masterPubkey: masterPubkey,
+            masterPubkey: eventMessage.pubkey,
             signature: eventMessage.sig ?? "",
             createdAt: eventMessage.createdAt,
             data: IonConnectGiftWrapData.fromEventMessage(eventMessage)
