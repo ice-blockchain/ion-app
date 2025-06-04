@@ -34,6 +34,12 @@ class FeedFollowingContent extends _$FeedFollowingContent implements PagedNotifi
     );
   }
 
+  /// Fetches entities for the feed by populating the state by fetching entities
+  /// for each followed pubkey one by one.
+  ///
+  /// The page size is determined by the `FeedType.pageSize`
+  /// The max createdAt of the events we request from the relays is determined by the `FeedConfig.followingReqMaxAge`
+  /// The max number of concurrent requests is determined by `FeedConfig.concurrentRequests`
   @override
   Future<void> fetchEntities({bool bypassLoading = false, int? limit}) async {
     if (_loading && !bypassLoading) return;
@@ -137,6 +143,9 @@ class FeedFollowingContent extends _$FeedFollowingContent implements PagedNotifi
     return state.pagination[pubkey] ?? const UserPagination(page: -1, hasMore: true);
   }
 
+  /// Returns a list of pubkeys that have the next page available.
+  ///
+  /// Priority is given to pubkeys with the lowest page number.
   Future<List<String>> _getNextPagePubkeys({
     required List<String> pubkeys,
     required int limit,
@@ -187,28 +196,24 @@ class FeedFollowingContent extends _$FeedFollowingContent implements PagedNotifi
   }) async* {
     final requestsQueue = await ref.read(feedRequestQueueProvider.future);
     final resultController = StreamController<MapEntry<String, IonConnectEntity?>>();
-    var handledPubkeys = 0;
+    final pending = <Future<void>>[];
 
     for (final pubkey in pubkeys) {
-      unawaited(
-        requestsQueue
-            .add(() => _fetchEntity(pubkey: pubkey))
-            .then((result) => resultController.add(MapEntry(pubkey, result)))
-            .onError((error, stackTrace) {
-          Logger.error(
-            error ?? '',
-            stackTrace: stackTrace,
-            message: 'Error fetching entities for pubkey: $pubkey',
-          );
-          resultController.add(MapEntry(pubkey, null));
-        }).whenComplete(() {
-          handledPubkeys++;
-          if (handledPubkeys == pubkeys.length) {
-            resultController.close();
-          }
-        }),
-      );
+      final future = requestsQueue
+          .add(() => _fetchEntity(pubkey: pubkey))
+          .then((result) => resultController.add(MapEntry(pubkey, result)))
+          .onError((error, stackTrace) {
+        Logger.error(
+          error ?? '',
+          stackTrace: stackTrace,
+          message: 'Error fetching entities for pubkey: $pubkey',
+        );
+        resultController.add(MapEntry(pubkey, null));
+      });
+      pending.add(future);
     }
+
+    unawaited(Future.wait(pending).whenComplete(resultController.close));
 
     yield* resultController.stream;
   }
