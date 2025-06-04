@@ -1,5 +1,7 @@
 // SPDX-License-Identifier: ice License 1.0
 
+import 'dart:io';
+
 import 'package:drift/drift.dart' as db;
 import 'package:drift_db_viewer/drift_db_viewer.dart';
 import 'package:flutter/material.dart';
@@ -15,6 +17,8 @@ import 'package:ion/app/features/wallets/data/database/wallets_database.c.dart';
 import 'package:ion/app/router/components/navigation_app_bar/navigation_app_bar.dart';
 import 'package:ion/app/router/components/navigation_app_bar/navigation_close_button.dart';
 import 'package:ion/app/services/logger/logger.dart';
+import 'package:ion/app/services/share/share.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:talker_flutter/talker_flutter.dart';
 
 class DebugPage extends ConsumerWidget {
@@ -70,6 +74,15 @@ class DebugPage extends ConsumerWidget {
                     subtitle: const Text('Explore database tables'),
                     trailing: const Icon(Icons.chevron_right),
                     onTap: () => _showDatabaseSelectionDialog(context, ref),
+                  ),
+                ),
+                Card(
+                  child: ListTile(
+                    leading: const Icon(Icons.share),
+                    title: const Text('Export & Share Databases'),
+                    subtitle: const Text('Export database files and share them'),
+                    trailing: const Icon(Icons.chevron_right),
+                    onTap: () => _showExportDatabaseDialog(context, ref),
                   ),
                 ),
                 SizedBox(height: 16.0.s),
@@ -130,6 +143,38 @@ class DebugPage extends ConsumerWidget {
     );
   }
 
+  void _showExportDatabaseDialog(BuildContext context, WidgetRef ref) {
+    showDialog<void>(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text('Export & Share Database'),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: _DebugPageDatabaseType.values
+                .map(
+                  (dbType) => ListTile(
+                    leading: const Icon(Icons.share),
+                    title: Text(dbType.displayName),
+                    onTap: () {
+                      Navigator.of(context).pop();
+                      _exportAndShareDatabase(context, ref, dbType);
+                    },
+                  ),
+                )
+                .toList(),
+          ),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.of(context).pop(),
+              child: const Text('Cancel'),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
   void _openDatabaseViewer(BuildContext context, WidgetRef ref, _DebugPageDatabaseType dbType) {
     final database = _getDatabaseInstance(ref, dbType);
     Navigator.of(context).push(
@@ -138,6 +183,83 @@ class DebugPage extends ConsumerWidget {
           return DriftDbViewer(database);
         },
       ),
+    );
+  }
+
+  Future<void> _exportAndShareDatabase(
+    BuildContext context,
+    WidgetRef ref,
+    _DebugPageDatabaseType dbType,
+  ) async {
+    try {
+      _showProgressDialog(context, 'Exporting ${dbType.displayName}...');
+
+      final database = _getDatabaseInstance(ref, dbType);
+      final directory = await getApplicationDocumentsDirectory();
+      final timestamp = DateTime.now().millisecondsSinceEpoch;
+      final fileName = '${dbType.name}_db_backup_$timestamp.db';
+      final file = File('${directory.path}/$fileName');
+
+      await file.parent.create(recursive: true);
+
+      if (file.existsSync()) {
+        file.deleteSync();
+      }
+
+      await database.customStatement('VACUUM INTO ?', [file.path]);
+
+      if (context.mounted) {
+        Navigator.of(context).pop();
+      }
+
+      shareFile(file.path, name: fileName);
+    } catch (e) {
+      if (context.mounted) {
+        Navigator.of(context).pop();
+        _showResultDialog(
+          context,
+          'Export Failed',
+          'Error exporting database: $e',
+        );
+      }
+    }
+  }
+
+  AlertDialog _showProgressDialog(BuildContext context, String message) {
+    final dialog = AlertDialog(
+      content: Row(
+        children: [
+          const CircularProgressIndicator(),
+          const SizedBox(width: 16),
+          Text(message),
+        ],
+      ),
+    );
+
+    showDialog<void>(
+      context: context,
+      barrierDismissible: false,
+      builder: (BuildContext context) => dialog,
+    );
+
+    return dialog;
+  }
+
+  void _showResultDialog(BuildContext context, String title, String message) {
+    showDialog<void>(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text(title),
+          content: Text(message),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.of(context).pop(),
+              child: const Text('OK'),
+            ),
+          ],
+        );
+      },
     );
   }
 
