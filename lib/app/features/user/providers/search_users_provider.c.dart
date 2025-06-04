@@ -51,6 +51,7 @@ class SearchUsers extends _$SearchUsers {
 
   Future<List<UserRelaysInfo>> _fetcher(
     int limit,
+    int offset,
     List<UserMetadataEntity> current,
     IONIdentityClient ionIdentityClient,
   ) {
@@ -59,6 +60,7 @@ class SearchUsers extends _$SearchUsers {
     }
     return ionIdentityClient.users.searchForUsersByKeyword(
       limit: limit,
+      offset: offset,
       keyword: query.trim(),
       searchType: SearchUsersSocialProfileType.contains,
     );

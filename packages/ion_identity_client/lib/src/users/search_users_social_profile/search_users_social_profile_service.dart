@@ -17,11 +17,13 @@ class SearchUsersSocialProfileService {
     required String keyword,
     required SearchUsersSocialProfileType searchType,
     required int limit,
+    required int offset,
   }) async =>
       _dataSource.searchForUsersByKeyword(
         keyword: keyword,
         searchType: searchType,
         limit: limit,
+        offset: offset,
         username: username,
       );
 }

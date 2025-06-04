@@ -28,7 +28,8 @@ class FeedSimpleSearchPage extends HookConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final history = ref.watch(feedSearchHistoryProvider);
     final debouncedQuery = useDebounced(query, const Duration(milliseconds: 300)) ?? '';
-    final searchResults = ref.watch(searchUsersProvider(query: debouncedQuery));
+    final searchProvider = searchUsersProvider(query: debouncedQuery);
+    final searchResults = ref.watch(searchProvider);
     final searchUsers = searchResults?.users;
 
     return Scaffold(
@@ -80,11 +81,10 @@ class FeedSimpleSearchPage extends HookConsumerWidget {
                         ),
                       ),
                   ],
-                  onRefresh: ref.read(searchUsersProvider(query: debouncedQuery).notifier).refresh,
+                  onRefresh: () => ref.read(searchProvider.notifier).refresh(),
                   builder: (context, slivers) => LoadMoreBuilder(
                     slivers: slivers,
-                    onLoadMore:
-                        ref.read(searchUsersProvider(query: debouncedQuery).notifier).loadMore,
+                    onLoadMore: () => ref.read(searchProvider.notifier).loadMore(),
                     hasMore: searchResults?.hasMore ?? false,
                   ),
                 ),

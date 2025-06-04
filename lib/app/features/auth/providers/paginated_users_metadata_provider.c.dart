@@ -18,6 +18,7 @@ part 'paginated_users_metadata_provider.c.g.dart';
 
 typedef UserRelaysInfoFetcher = Future<List<UserRelaysInfo>> Function(
   int limit,
+  int offset,
   List<UserMetadataEntity> current,
   IONIdentityClient ionIdentityClient,
 );
@@ -34,9 +35,10 @@ class PaginatedUsersMetadataData {
 
 @Riverpod(keepAlive: true)
 class PaginatedUsersMetadata extends _$PaginatedUsersMetadata {
-  static const int _limit = 5;
+  static const int _limit = 20;
   late UserRelaysInfoFetcher _fetcher;
   bool _initialised = false;
+  int _offset = 0;
 
   @override
   Future<PaginatedUsersMetadataData> build(UserRelaysInfoFetcher fetcher) async {
@@ -65,7 +67,7 @@ class PaginatedUsersMetadata extends _$PaginatedUsersMetadata {
     final currentData = state.valueOrNull?.items ?? <UserMetadataEntity>[];
     state = await AsyncValue.guard(() async {
       final ionIdentityClient = await ref.watch(ionIdentityClientProvider.future);
-      final userRelaysInfo = await _fetcher(_limit, currentData, ionIdentityClient);
+      final userRelaysInfo = await _fetcher(_limit, _offset, currentData, ionIdentityClient);
 
       final client = ref.read(ionConnectNotifierProvider.notifier);
       final metas = await Future.wait(
@@ -111,6 +113,7 @@ class PaginatedUsersMetadata extends _$PaginatedUsersMetadata {
       ];
       return PaginatedUsersMetadataData(items: merged, hasMore: userRelaysInfo.length == _limit);
     });
+    _offset += _limit;
   }
 }
 
@@ -119,29 +122,10 @@ PaginatedUsersMetadataProvider contentCreatorsPaginatedProvider(
   Ref ref,
 ) {
   return paginatedUsersMetadataProvider(
-    (limit, current, ionIdentityClient) {
+    (limit, _, current, ionIdentityClient) {
       return ionIdentityClient.users.getContentCreators(
         limit: limit,
         excludeMasterPubKeys: current.map((u) => u.masterPubkey).toList(),
-      );
-    },
-  );
-}
-
-@riverpod
-PaginatedUsersMetadataProvider usersSearchByKeywordPaginatedProvider(
-  Ref ref, {
-  required String keyword,
-}) {
-  return paginatedUsersMetadataProvider(
-    (limit, _, ionIdentityClient) {
-      if (keyword.trim().isEmpty) {
-        return Future.value([]);
-      }
-      return ionIdentityClient.users.searchForUsersByKeyword(
-        limit: limit,
-        keyword: keyword,
-        searchType: SearchUsersSocialProfileType.contains,
       );
     },
   );

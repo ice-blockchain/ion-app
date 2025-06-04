@@ -20,6 +20,7 @@ class SearchUsersSocialProfileDataSource {
     required String keyword,
     required SearchUsersSocialProfileType searchType,
     required int limit,
+    required int offset,
     required String username,
   }) async {
     final token = _tokenStorage.getToken(username: username);
@@ -32,6 +33,7 @@ class SearchUsersSocialProfileDataSource {
       queryParams: {
         'limit': limit,
         'keyword': keyword,
+        'offset': offset,
         'type': searchType.name,
       },
       headers: RequestHeaders.getAuthorizationHeaders(

@@ -102,11 +102,13 @@ class IONIdentityUsers {
     required String keyword,
     required SearchUsersSocialProfileType searchType,
     required int limit,
+    required int offset,
   }) async {
     return _searchUsersSocialProfileService.searchForUsersByKeyword(
       keyword: keyword,
       searchType: searchType,
       limit: limit,
+      offset: offset,
     );
   }
 }
