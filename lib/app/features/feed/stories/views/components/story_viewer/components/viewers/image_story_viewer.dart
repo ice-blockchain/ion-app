@@ -1,7 +1,6 @@
 // SPDX-License-Identifier: ice License 1.0
 
 import 'package:flutter/material.dart';
-import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/components/progress_bar/centered_loading_indicator.dart';
 import 'package:ion/app/features/components/ion_connect_network_image/ion_connect_network_image.dart';
@@ -11,7 +10,7 @@ import 'package:ion/app/features/feed/stories/views/components/story_viewer/comp
 import 'package:ion/app/features/ion_connect/model/quoted_event.c.dart';
 import 'package:ion/app/router/app_routes.c.dart';
 
-class ImageStoryViewer extends HookConsumerWidget {
+class ImageStoryViewer extends ConsumerWidget {
   const ImageStoryViewer({
     required this.imageUrl,
     required this.authorPubkey,
@@ -29,7 +28,6 @@ class ImageStoryViewer extends HookConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final cacheManager = ref.watch(storyImageCacheManagerProvider);
     final hasQuotedPost = quotedEvent != null;
-    final showTooltip = useState(false);
 
     final imageWidget = IonConnectNetworkImage(
       imageUrl: imageUrl,
@@ -56,30 +54,17 @@ class ImageStoryViewer extends HookConsumerWidget {
     );
 
     if (hasQuotedPost) {
-      return GestureDetector(
+      return TapToSeeHint(
         onTap: () {
-          if (!showTooltip.value) {
-            showTooltip.value = true;
-            ref.read(storyPauseControllerProvider.notifier).paused = true;
-          }
+          final eventReference = quotedEvent!.eventReference;
+          PostDetailsRoute(
+            eventReference: eventReference.encode(),
+          ).push<void>(context);
         },
-        child: TapToSeeHint(
-          showTooltip: showTooltip.value,
-          onTooltipTap: () {
-            showTooltip.value = false;
-            ref.read(storyPauseControllerProvider.notifier).paused = false;
-
-            final eventReference = quotedEvent!.eventReference;
-            PostDetailsRoute(
-              eventReference: eventReference.encode(),
-            ).push<void>(context);
-          },
-          onHideTooltip: () {
-            showTooltip.value = false;
-            ref.read(storyPauseControllerProvider.notifier).paused = false;
-          },
-          child: imageWidget,
-        ),
+        onVisibilityChanged: (isVisible) {
+          ref.read(storyPauseControllerProvider.notifier).paused = isVisible;
+        },
+        child: imageWidget,
       );
     }
 
