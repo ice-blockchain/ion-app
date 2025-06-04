@@ -61,29 +61,6 @@ class BlockEventStatusDao extends DatabaseAccessor<BlockedUsersDatabase>
     }
   }
 
-  Future<List<(EventMessage, String, String)>> getFailedBlockEventMessages() async {
-    final query = select(db.blockEventTable).join([
-      leftOuterJoin(
-        db.blockEventStatusTable,
-        db.blockEventStatusTable.eventReference.equalsExp(db.blockEventTable.eventReference) &
-            db.blockEventStatusTable.status.equals(BlockedUserStatus.failed.index),
-      ),
-    ]);
-
-    final result = await query.get();
-
-    return result.where((row) => row.readTableOrNull(db.blockEventStatusTable) != null).map((row) {
-      final blockEvent = row.readTable(db.blockEventTable);
-      final blockEventStatus = row.readTable(db.blockEventStatusTable);
-
-      return (
-        blockEvent.toEventMessage(),
-        blockEventStatus.receiverPubkey,
-        blockEventStatus.receiverMasterPubkey
-      );
-    }).toList();
-  }
-
   Future<void> markAsDeleted(List<ReplaceableEventReference> eventReferences) async {
     final sharedIds = eventReferences.map((eventReference) => eventReference.dTag).toList();
 
@@ -102,6 +79,30 @@ class BlockEventStatusDao extends DatabaseAccessor<BlockedUsersDatabase>
           receiverPubkey: Value(blockEvent.receiverPubkey),
           receiverMasterPubkey: Value(blockEvent.receiverMasterPubkey),
           status: const Value(BlockedUserStatus.deleted),
+        ),
+        mode: InsertMode.insertOrReplace,
+      );
+    }
+  }
+
+  Future<void> markAsDelivered(List<ReplaceableEventReference> eventReferences) async {
+    final sharedIds = eventReferences.map((eventReference) => eventReference.dTag).toList();
+
+    final matchingBlockEvents = await (select(db.blockEventStatusTable)
+          ..where((table) => table.sharedId.isIn(sharedIds)))
+        .get();
+
+    for (final blockEvent in matchingBlockEvents) {
+      if (blockEvent.status == BlockedUserStatus.delivered) {
+        continue;
+      }
+      await into(db.blockEventStatusTable).insert(
+        BlockEventStatusTableCompanion(
+          sharedId: Value(blockEvent.sharedId),
+          eventReference: Value(blockEvent.eventReference),
+          receiverPubkey: Value(blockEvent.receiverPubkey),
+          receiverMasterPubkey: Value(blockEvent.receiverMasterPubkey),
+          status: const Value(BlockedUserStatus.delivered),
         ),
         mode: InsertMode.insertOrReplace,
       );
