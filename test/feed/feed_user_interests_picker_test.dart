@@ -22,11 +22,13 @@ void main() {
         interestedThreshold: 0.5,
         notInterestedCategoryChance: 0.5,
         notInterestedSubcategoryChance: 0.5,
-        followingMaxAge: Duration(days: 1),
+        followingReqMaxAge: Duration(days: 1),
+        followingCacheMaxAge: Duration(days: 2),
         topMaxAge: Duration(days: 1),
         trendingMaxAge: Duration(days: 1),
         exploreMaxAge: Duration(days: 1),
         repostThrottleDelay: Duration(days: 1),
+        concurrentRequests: 3,
       );
       interests = FeedInterests.fromJson({
         'music': {
