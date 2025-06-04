@@ -49,18 +49,18 @@ class FeedFollowingContent extends _$FeedFollowingContent implements PagedNotifi
     try {
       final fetchLimit = limit ?? feedType.pageSize;
 
-      final followedPubkeys = await _getFollowedPubkeys();
-      if (followedPubkeys.isEmpty) {
+      final dataSourcePubkeys = await _getDataSourcePubkeys();
+      if (dataSourcePubkeys.isEmpty) {
         _ensureEmptyState();
         return;
       }
 
       state = state.copyWith(
-        pagination: _initPagination(pubkeys: followedPubkeys),
+        pagination: _initPagination(pubkeys: dataSourcePubkeys),
       );
 
       final nextPagePubkeys = await _getNextPagePubkeys(
-        pubkeys: followedPubkeys,
+        pubkeys: dataSourcePubkeys,
         limit: fetchLimit,
       );
 
@@ -121,14 +121,25 @@ class FeedFollowingContent extends _$FeedFollowingContent implements PagedNotifi
     }
   }
 
-  Future<List<String>> _getFollowedPubkeys() async {
+  Future<List<String>> _getDataSourcePubkeys() async {
     final followList = await ref.read(currentUserFollowListProvider.future);
 
     if (followList == null) {
       throw FollowListNotFoundException();
     }
 
-    return followList.pubkeys;
+    var pubkeysToFetch = followList.data.list.map((followee) => followee.pubkey);
+
+    // In case of stories - we need to fetch own entities
+    if (feedType == FeedType.story) {
+      final currentPubkey = ref.read(currentPubkeySelectorProvider);
+      if (currentPubkey == null) {
+        throw const CurrentUserNotFoundException();
+      }
+      pubkeysToFetch = [currentPubkey, ...pubkeysToFetch];
+    }
+
+    return pubkeysToFetch.toList();
   }
 
   Map<String, UserPagination> _initPagination({required List<String> pubkeys}) {

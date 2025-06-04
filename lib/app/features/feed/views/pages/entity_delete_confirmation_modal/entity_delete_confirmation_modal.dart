@@ -95,7 +95,7 @@ class EntityDeleteConfirmationModal extends HookConsumerWidget {
 
   FutureOr<void> Function()? _getOnDeleteCallback(WidgetRef ref) {
     return switch (deleteConfirmationType) {
-      DeleteConfirmationType.story => () => ref.invalidate(feedStoriesProvider),
+      DeleteConfirmationType.story => () => ref.read(feedStoriesProvider.notifier).refresh(),
       _ => null,
     };
   }

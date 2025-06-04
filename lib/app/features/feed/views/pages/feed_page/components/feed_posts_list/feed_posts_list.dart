@@ -18,21 +18,21 @@ class FeedPostsList extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final posts = ref.watch(feedPostsProvider.select((state) => state.items));
+    final entities = ref.watch(feedPostsProvider.select((state) => state.items));
 
     // Prefetching mute list here so it can be used later with sync provider
     useOnInit(() {
       ref.read(mutedUsersProvider);
     });
 
-    if (posts == null) {
+    if (entities == null) {
       return const EntitiesListSkeleton();
-    } else if (posts.isEmpty) {
+    } else if (entities.isEmpty) {
       return const _EmptyState();
     }
 
     return EntitiesList(
-      refs: posts.map((entity) => entity.toEventReference()).toList(),
+      refs: entities.map((entity) => entity.toEventReference()).toList(),
       onVideoTap: ({
         required String eventReference,
         required int initialMediaIndex,
