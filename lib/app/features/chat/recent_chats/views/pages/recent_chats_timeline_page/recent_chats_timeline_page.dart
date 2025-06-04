@@ -203,13 +203,15 @@ class CommunityRecentChatTile extends ConsumerWidget {
   }
 }
 
-class E2eeRecentChatTile extends ConsumerWidget {
+class E2eeRecentChatTile extends HookConsumerWidget {
   const E2eeRecentChatTile({required this.conversation, super.key});
 
   final ConversationListItem conversation;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    useAutomaticKeepAlive();
+
     if (conversation.latestMessage == null) {
       return const SizedBox.shrink();
     }
@@ -226,11 +228,7 @@ class E2eeRecentChatTile extends ConsumerWidget {
       return const SizedBox.shrink();
     }
 
-    final userMetadata = ref.watch(cachedUserMetadataProvider(receiverPubkey));
-
-    if (userMetadata == null) {
-      return const RecentChatSkeletonItem();
-    }
+    final userMetadata = ref.watch(userMetadataProvider(receiverPubkey));
 
     final unreadMessagesCount =
         ref.watch(getUnreadMessagesCountProvider(conversation.conversationId));
@@ -242,12 +240,16 @@ class E2eeRecentChatTile extends ConsumerWidget {
     final isUserVerified =
         ref.watch(isUserVerifiedProvider(receiverPubkey)).valueOrNull.falseOrValue;
 
+    if (userMetadata.isLoading) {
+      return const RecentChatSkeletonItem();
+    }
+
     return RecentChatTile(
       defaultAvatar: null,
       conversation: conversation,
       messageType: entity.messageType,
-      name: userMetadata.data.displayName,
-      avatarUrl: userMetadata.data.picture,
+      name: userMetadata.valueOrNull?.data.displayName ?? context.i18n.common_deleted_account,
+      avatarUrl: userMetadata.valueOrNull?.data.picture,
       eventReference: eventReference,
       unreadMessagesCount: unreadMessagesCount.valueOrNull ?? 0,
       lastMessageContent: conversation.latestMessage?.content ?? '',

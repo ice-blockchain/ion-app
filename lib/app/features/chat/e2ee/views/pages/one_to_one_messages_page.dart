@@ -110,20 +110,24 @@ class _Header extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final receiver = ref.watch(userMetadataProvider(receiverMasterPubkey)).valueOrNull;
+    final receiverUserMetadata = ref.watch(userMetadataProvider(receiverMasterPubkey));
 
-    if (receiver == null) {
+    if (receiverUserMetadata.isLoading) {
       return const SizedBox.shrink();
     }
 
     return OneToOneMessagingHeader(
       conversationId: conversationId,
-      imageUrl: receiver.data.picture,
-      name: receiver.data.displayName,
+      imageUrl: receiverUserMetadata.valueOrNull?.data.picture,
+      name:
+          receiverUserMetadata.valueOrNull?.data.displayName ?? context.i18n.common_deleted_account,
       receiverMasterPubkey: receiverMasterPubkey,
       onTap: () => ProfileRoute(pubkey: receiverMasterPubkey).push<void>(context),
       subtitle: Text(
-        prefixUsername(username: receiver.data.name, context: context),
+        prefixUsername(
+          username: receiverUserMetadata.valueOrNull?.data.name ?? '',
+          context: context,
+        ),
         style: context.theme.appTextThemes.caption.copyWith(
           color: context.theme.appColors.quaternaryText,
         ),
