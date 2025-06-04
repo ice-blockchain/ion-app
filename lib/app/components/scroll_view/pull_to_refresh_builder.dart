@@ -56,7 +56,7 @@ class PullToRefreshBuilder extends HookWidget {
         return Padding(
           padding: EdgeInsets.all(8.0.s),
           child: IONLoadingIndicatorThemed(
-            size: Size.square(24.0.s),
+            size: Size.square(20.0.s),
           ),
         );
       },
