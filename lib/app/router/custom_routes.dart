@@ -8,7 +8,6 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/rendering.dart';
 
-const double _kBackGestureWidth = 200;
 const double _kMinFlingVelocity = 1; // Screen widths per second.
 
 // The duration for a page to animate when the user releases it mid-swipe.
@@ -756,12 +755,17 @@ class _CupertinoBackGestureDetectorState<T> extends State<_CupertinoBackGestureD
     if (!widget.enabledCallback()) return;
 
     final hit = HitTestResult();
-    WidgetsBinding.instance.hitTest(hit, event.position);
+
+    final view = View.of(context);
+    final views = RendererBinding.instance.platformDispatcher.views.toList();
+    final viewId = views.indexOf(view);
+
+    if (viewId == -1) return; // View not found, don't proceed
+
+    RendererBinding.instance.hitTestInView(hit, event.position, viewId);
 
     final gestureBlockedByScrollable = hit.path.any((entry) {
       final target = entry.target;
-
-      // Block if it's a horizontal scrollable like PageView, even at position 0
       return target is RenderViewport && target.axisDirection == AxisDirection.right;
     });
 
