@@ -84,9 +84,7 @@ class TransactionDetailsPage extends ConsumerWidget {
                                   amount: coin.amount,
                                   currency: coin.coinsGroup.abbreviation,
                                   usdAmount: coin.amountUSD,
-                                  icon: CoinIconWidget(
-                                    imageUrl: coin.coinsGroup.iconUrl,
-                                  ),
+                                  icon: CoinIconWidget.medium(coin.coinsGroup.iconUrl),
                                   transactionType: transactionData.type,
                                 ),
                                 nft: (nft) => Padding(
@@ -149,10 +147,7 @@ class TransactionDetailsPage extends ConsumerWidget {
                                   ListItem.textWithIcon(
                                     title: Text(locale.wallet_asset),
                                     value: coin.coinsGroup.abbreviation,
-                                    icon: CoinIconWidget(
-                                      imageUrl: coin.coinsGroup.iconUrl,
-                                      size: ScreenSideOffset.defaultSmallMargin,
-                                    ),
+                                    icon: CoinIconWidget.small(coin.coinsGroup.iconUrl),
                                   ),
                                 ],
                                 orElse: () => const [SizedBox.shrink()],

@@ -5,7 +5,6 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/components/coins/coin_icon.dart';
 import 'package:ion/app/components/list_item/list_item.dart';
 import 'package:ion/app/extensions/build_context.dart';
-import 'package:ion/app/extensions/num.dart';
 import 'package:ion/app/extensions/theme_data.dart';
 import 'package:ion/app/features/wallets/model/coins_group.c.dart';
 import 'package:ion/app/features/wallets/providers/wallet_user_preferences/user_preferences_selectors.c.dart';
@@ -29,10 +28,7 @@ class CoinsGroupItem extends ConsumerWidget {
       title: Text(coinsGroup.name),
       subtitle: Text(coinsGroup.abbreviation),
       backgroundColor: context.theme.appColors.tertararyBackground,
-      leading: CoinIconWidget(
-        imageUrl: coinsGroup.iconUrl,
-        size: 36.0.s,
-      ),
+      leading: CoinIconWidget.big(coinsGroup.iconUrl),
       onTap: onTap,
       trailing: Column(
         crossAxisAlignment: CrossAxisAlignment.end,

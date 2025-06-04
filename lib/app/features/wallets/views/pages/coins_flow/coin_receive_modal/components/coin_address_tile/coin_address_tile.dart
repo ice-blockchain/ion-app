@@ -49,10 +49,7 @@ class CoinAddressTile extends HookConsumerWidget {
               children: [
                 Row(
                   children: [
-                    CoinIconWidget(
-                      imageUrl: coinsGroup.iconUrl,
-                      size: 16.0.s,
-                    ),
+                    CoinIconWidget.small(coinsGroup.iconUrl),
                     SizedBox(width: 6.0.s),
                     Expanded(
                       child: Text(
