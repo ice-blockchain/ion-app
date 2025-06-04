@@ -36,36 +36,46 @@ class FeedFollowingContent extends _$FeedFollowingContent implements PagedNotifi
 
   @override
   Future<void> fetchEntities({bool bypassLoading = false, int? limit}) async {
-    if (_loading && !bypassLoading) {
-      return;
-    }
+    if (_loading && !bypassLoading) return;
+
     _loading = true;
 
     try {
       final fetchLimit = limit ?? feedType.pageSize;
+
       final followedPubkeys = await _getFollowedPubkeys();
+      if (followedPubkeys.isEmpty) {
+        _ensureEmptyState();
+        return;
+      }
 
-      state = state.copyWith(pagination: _initPagination(pubkeys: followedPubkeys));
+      state = state.copyWith(
+        pagination: _initPagination(pubkeys: followedPubkeys),
+      );
 
-      final nextPagePubkeys =
-          await _getNextPagePubkeys(pubkeys: followedPubkeys, limit: fetchLimit);
+      final nextPagePubkeys = await _getNextPagePubkeys(
+        pubkeys: followedPubkeys,
+        limit: fetchLimit,
+      );
 
-      if (nextPagePubkeys.isNotEmpty) {
-        var fetchedEntities = 0;
-        final entitiesStream = _fetchEntities(pubkeys: nextPagePubkeys);
-        await for (final MapEntry(key: pubkey, value: entity) in entitiesStream) {
-          if (entity != null) {
-            fetchedEntities++;
-          }
-          _handleFetchedEntity(pubkey, entity);
+      if (nextPagePubkeys.isEmpty) {
+        _ensureEmptyState();
+        return;
+      }
+
+      var fetchedCount = 0;
+
+      final entitiesStream = _fetchEntities(pubkeys: nextPagePubkeys);
+      await for (final MapEntry(key: pubkey, value: entity) in entitiesStream) {
+        if (entity != null) {
+          fetchedCount++;
         }
-        if (fetchedEntities < fetchLimit) {
-          return fetchEntities(limit: fetchLimit - fetchedEntities, bypassLoading: true);
-        }
-      } else if (state.items == null) {
-        state = state.copyWith(
-          items: const {},
-        );
+        _handleFetchedEntity(pubkey, entity);
+      }
+
+      final remaining = fetchLimit - fetchedCount;
+      if (remaining > 0) {
+        return fetchEntities(limit: remaining, bypassLoading: true);
       }
     } finally {
       _loading = false;
@@ -98,6 +108,12 @@ class FeedFollowingContent extends _$FeedFollowingContent implements PagedNotifi
   }
 
   bool _loading = false;
+
+  void _ensureEmptyState() {
+    if (state.items == null) {
+      state = state.copyWith(items: const {});
+    }
+  }
 
   Future<List<String>> _getFollowedPubkeys() async {
     final followList = await ref.read(currentUserFollowListProvider.future);
