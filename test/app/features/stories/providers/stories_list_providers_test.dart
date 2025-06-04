@@ -5,8 +5,8 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/features/core/model/media_type.dart';
 import 'package:ion/app/features/core/model/paged.c.dart';
 import 'package:ion/app/features/feed/data/models/entities/modifiable_post_data.c.dart';
-import 'package:ion/app/features/feed/providers/feed_stories_data_source_provider.c.dart';
-import 'package:ion/app/features/feed/stories/providers/stories_provider.c.dart';
+import 'package:ion/app/features/feed/stories/providers/feed_stories_data_source_provider.c.dart';
+import 'package:ion/app/features/feed/stories/providers/feed_stories_provider.c.dart';
 import 'package:ion/app/features/ion_connect/model/action_source.c.dart';
 import 'package:ion/app/features/ion_connect/providers/entities_paged_data_provider.c.dart';
 import 'package:mocktail/mocktail.dart';
@@ -14,6 +14,7 @@ import 'package:mocktail/mocktail.dart';
 import '../../../../fixtures/posts/post_fixtures.dart';
 import '../../../../fixtures/stories/story_fixtures.dart';
 import '../../../../test_utils.dart';
+import '../data/fake_feed_stories_state.dart';
 
 class _FakeEntitiesPagedData extends EntitiesPagedData {
   _FakeEntitiesPagedData(this._state);
@@ -80,9 +81,9 @@ void main() {
       ];
 
       final container = _containerWith(posts);
-      final result = container.read(storiesProvider);
+      final result = container.read(feedStoriesProvider);
 
-      final keptIds = result?.expand((u) => u.stories).map((e) => e.id).toList();
+      final keptIds = result.items?.expand((u) => u.stories).map((e) => e.id).toList();
       expect(keptIds, unorderedEquals(['image_1', 'video_1']));
     });
 
@@ -103,7 +104,8 @@ void main() {
       ];
 
       final container = _containerWith(posts);
-      final aliceStories = container.read(storiesProvider)!.firstWhere((u) => u.pubkey == 'alice');
+      final aliceStories =
+          container.read(feedStoriesProvider).items!.firstWhere((u) => u.pubkey == 'alice');
 
       final orderedIds = aliceStories.stories.map((e) => e.id).toList();
       expect(orderedIds, equals(['early', 'late']));
@@ -132,7 +134,7 @@ void main() {
       ];
 
       final container = _containerWith(posts);
-      final list = container.read(storiesProvider);
+      final list = container.read(feedStoriesProvider).items;
 
       expect(list?.length, 3);
       expect(list?.map((u) => u.pubkey).toSet(), equals({'alice', 'bob', 'carol'}));
@@ -153,11 +155,11 @@ void main() {
     test('returns a list starting with the selected user', () {
       final container = createContainer(
         overrides: [
-          storiesProvider.overrideWith((_) => dummyStories),
+          feedStoriesProvider.overrideWith(() => FakeFeedStories(dummyStories)),
         ],
       );
 
-      final result = container.read(filteredStoriesByPubkeyProvider(bob));
+      final result = container.read(feedStoriesByPubkeyProvider(bob));
 
       expect(result.first.pubkey, equals(bob));
       expect(result.length, equals(2));
@@ -166,11 +168,11 @@ void main() {
     test('returns an empty list if pubkey is not found', () {
       final container = createContainer(
         overrides: [
-          storiesProvider.overrideWith((_) => dummyStories),
+          feedStoriesProvider.overrideWith(() => FakeFeedStories(dummyStories)),
         ],
       );
 
-      final result = container.read(filteredStoriesByPubkeyProvider('unknown_pubkey'));
+      final result = container.read(feedStoriesByPubkeyProvider('unknown_pubkey'));
 
       expect(result, isEmpty);
     });

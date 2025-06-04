@@ -6,9 +6,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:go_router/go_router.dart';
 import 'package:ion/app/features/core/model/media_type.dart';
 import 'package:ion/app/features/core/providers/video_player_provider.c.dart';
-import 'package:ion/app/features/feed/stories/providers/stories_provider.c.dart'
-    show filteredStoriesByPubkeyProvider;
-import 'package:ion/app/features/feed/stories/providers/stories_provider.c.dart';
+import 'package:ion/app/features/feed/stories/providers/feed_stories_provider.c.dart';
 import 'package:ion/app/features/feed/stories/views/pages/story_viewer_page.dart';
 import 'package:ion/app/router/providers/go_router_provider.c.dart';
 import 'package:ion/app/services/storage/local_storage.c.dart';
@@ -51,7 +49,7 @@ void main() {
         stories: [myStories, otherStories],
         viewerPubkey: myPubkey,
         extraOverrides: [
-          filteredStoriesByPubkeyProvider(myPubkey).overrideWith((_) => [myStories]),
+          feedStoriesByPubkeyProvider(myPubkey).overrideWith((_) => [myStories]),
         ],
       );
 

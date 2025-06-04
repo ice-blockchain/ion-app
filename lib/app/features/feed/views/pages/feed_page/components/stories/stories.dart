@@ -5,15 +5,13 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/components/scroll_view/load_more_builder.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/core/model/media_type.dart';
-import 'package:ion/app/features/feed/providers/feed_stories_data_source_provider.c.dart';
-import 'package:ion/app/features/feed/stories/providers/stories_provider.c.dart';
+import 'package:ion/app/features/feed/stories/providers/feed_stories_provider.c.dart';
 import 'package:ion/app/features/feed/stories/providers/story_image_loading_provider.c.dart';
 import 'package:ion/app/features/feed/stories/providers/viewed_stories_provider.c.dart';
 import 'package:ion/app/features/feed/views/components/list_separator/list_separator.dart';
 import 'package:ion/app/features/feed/views/pages/feed_page/components/stories/components/story_item_content.dart';
 import 'package:ion/app/features/feed/views/pages/feed_page/components/stories/components/story_list.dart';
 import 'package:ion/app/features/feed/views/pages/feed_page/components/stories/components/story_list_skeleton.dart';
-import 'package:ion/app/features/ion_connect/providers/entities_paged_data_provider.c.dart';
 import 'package:ion/app/hooks/use_on_init.dart';
 
 class Stories extends HookConsumerWidget {
@@ -21,7 +19,7 @@ class Stories extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final stories = ref.watch(storiesProvider);
+    final (items: stories, :hasMore) = ref.watch(feedStoriesProvider);
 
     useOnInit(
       () async {
@@ -46,11 +44,6 @@ class Stories extends HookConsumerWidget {
       }
     });
 
-    final storyHasMore = ref.watch(
-      entitiesPagedDataProvider(ref.watch(feedStoriesDataSourceProvider))
-          .select((state) => (state?.hasMore).falseOrValue),
-    );
-
     return Column(
       children: [
         SizedBox(height: 3.0.s),
@@ -63,7 +56,7 @@ class Stories extends HookConsumerWidget {
                 pubkeys: stories.map((story) => story.pubkey).toList(),
               ),
             ],
-            hasMore: storyHasMore,
+            hasMore: hasMore,
             onLoadMore: () => _onLoadMore(ref),
             builder: (context, slivers) {
               return SizedBox(
@@ -81,9 +74,7 @@ class Stories extends HookConsumerWidget {
     );
   }
 
-  Future<void> _onLoadMore(WidgetRef ref) async {
-    await ref
-        .read(entitiesPagedDataProvider(ref.read(feedStoriesDataSourceProvider)).notifier)
-        .fetchEntities();
+  Future<void> _onLoadMore(WidgetRef ref) {
+    return ref.read(feedStoriesProvider.notifier).fetchEntities();
   }
 }

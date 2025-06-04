@@ -11,14 +11,12 @@ import 'package:ion/app/features/core/model/media_type.dart';
 import 'package:ion/app/features/feed/create_post/model/create_post_option.dart';
 import 'package:ion/app/features/feed/create_post/providers/create_post_notifier.c.dart';
 import 'package:ion/app/features/feed/data/models/who_can_reply_settings_option.c.dart';
-import 'package:ion/app/features/feed/providers/feed_stories_data_source_provider.c.dart';
 import 'package:ion/app/features/feed/providers/selected_who_can_reply_option_provider.c.dart';
 import 'package:ion/app/features/feed/stories/views/components/story_preview/actions/story_share_button.dart';
 import 'package:ion/app/features/feed/stories/views/components/story_preview/media/story_image_preview.dart';
 import 'package:ion/app/features/feed/stories/views/components/story_preview/media/story_video_preview.dart';
 import 'package:ion/app/features/feed/views/pages/who_can_reply_settings_modal/who_can_reply_settings_modal.dart';
 import 'package:ion/app/features/ion_connect/model/event_reference.c.dart';
-import 'package:ion/app/features/ion_connect/providers/entities_paged_data_provider.c.dart';
 import 'package:ion/app/router/app_routes.c.dart';
 import 'package:ion/app/router/components/navigation_app_bar/navigation_app_bar.dart';
 import 'package:ion/app/router/utils/show_simple_bottom_sheet.dart';
@@ -51,11 +49,6 @@ class StoryPreviewPage extends HookConsumerWidget {
       ..listenSuccess(
         createPostNotifierProvider(CreatePostOption.story),
         (_) {
-          final dataSources = ref.read(feedStoriesDataSourceProvider) ?? [];
-          if (dataSources.isNotEmpty) {
-            ref.invalidate(entitiesPagedDataProvider(dataSources));
-          }
-
           if (context.mounted) {
             FeedRoute().go(context);
           }

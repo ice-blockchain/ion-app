@@ -4,10 +4,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:ion/app/features/feed/stories/data/models/story.c.dart';
-import 'package:ion/app/features/feed/stories/providers/stories_provider.c.dart';
+import 'package:ion/app/features/feed/stories/providers/feed_stories_provider.c.dart';
 import 'package:ion/app/features/feed/stories/providers/story_viewing_provider.c.dart';
 import 'package:ion/app/features/feed/stories/views/components/story_viewer/components/components.dart';
 
+import '../../app/features/stories/data/fake_feed_stories_state.dart';
 import '../../helpers/robot_test_harness.dart';
 import '../base_robot.dart';
 import '../mixins/provider_scope_mixin.dart';
@@ -31,8 +32,8 @@ class StoryProgressBarRobot extends BaseRobot with ProviderScopeMixin, StoryStat
           body: StoryProgressBarContainer(pubkey: viewerPubkey),
         ),
         overrides: [
-          storiesProvider.overrideWith((_) => stories),
-          filteredStoriesByPubkeyProvider(viewerPubkey).overrideWith((_) => stories),
+          feedStoriesProvider.overrideWith(() => FakeFeedStories(stories)),
+          feedStoriesByPubkeyProvider(viewerPubkey).overrideWith((_) => stories),
         ],
       ),
     );

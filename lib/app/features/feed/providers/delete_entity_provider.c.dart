@@ -16,6 +16,7 @@ import 'package:ion/app/features/feed/providers/counters/replies_count_provider.
 import 'package:ion/app/features/feed/providers/counters/reposted_events_notifier.c.dart';
 import 'package:ion/app/features/feed/providers/counters/reposts_count_provider.c.dart';
 import 'package:ion/app/features/feed/providers/feed_posts_provider.c.dart';
+import 'package:ion/app/features/feed/stories/providers/feed_stories_provider.c.dart';
 import 'package:ion/app/features/feed/providers/user_posts_data_source_provider.c.dart';
 import 'package:ion/app/features/feed/providers/user_videos_data_source_provider.c.dart';
 import 'package:ion/app/features/ion_connect/model/action_source.c.dart';
@@ -175,7 +176,7 @@ void _deleteFromDataSources(Ref ref, IonConnectEntity entity) {
           .notifier,
     ),
     ref.read(feedPostsProvider.notifier),
-    // ref.read(feedStoriesDataSourceProvider), TODO:[feed]!!!
+    ref.read(feedStoriesProvider.notifier),
   ];
 
   for (final notifier in notifiers) {

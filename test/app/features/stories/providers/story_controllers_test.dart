@@ -3,7 +3,7 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/features/auth/providers/auth_provider.c.dart';
-import 'package:ion/app/features/feed/stories/providers/stories_provider.c.dart';
+import 'package:ion/app/features/feed/stories/providers/feed_stories_provider.c.dart';
 import 'package:ion/app/features/feed/stories/providers/story_viewing_provider.c.dart';
 import 'package:ion/app/features/feed/stories/providers/viewed_stories_provider.c.dart';
 import 'package:ion/app/services/storage/local_storage.c.dart';
@@ -13,6 +13,7 @@ import 'package:mocktail/mocktail.dart';
 import '../../../../fixtures/stories/story_fixtures.dart';
 import '../../../../mocks.dart';
 import '../../../../test_utils.dart';
+import '../data/fake_feed_stories_state.dart';
 
 void main() {
   const alice = StoryFixtures.alice;
@@ -28,8 +29,8 @@ void main() {
   );
 
   final overrides = [
-    storiesProvider.overrideWith(
-      (_) => [aliceUserStories, bobUserStories],
+    feedStoriesProvider.overrideWith(
+      () => FakeFeedStories([aliceUserStories, bobUserStories]),
     ),
   ];
 

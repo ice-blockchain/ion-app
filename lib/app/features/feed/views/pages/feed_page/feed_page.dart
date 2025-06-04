@@ -13,6 +13,7 @@ import 'package:ion/app/features/feed/data/models/feed_category.dart';
 import 'package:ion/app/features/feed/providers/feed_current_filter_provider.c.dart';
 import 'package:ion/app/features/feed/providers/feed_posts_provider.c.dart';
 import 'package:ion/app/features/feed/providers/feed_trending_videos_provider.c.dart';
+import 'package:ion/app/features/feed/stories/providers/feed_stories_provider.c.dart';
 import 'package:ion/app/features/feed/views/pages/feed_page/components/article_categories_menu/article_categories_menu.dart';
 import 'package:ion/app/features/feed/views/pages/feed_page/components/feed_controls/feed_controls.dart';
 import 'package:ion/app/features/feed/views/pages/feed_page/components/feed_posts_list/feed_posts_list.dart';
@@ -82,8 +83,8 @@ class FeedPage extends HookConsumerWidget {
   }
 
   Future<void> _onRefresh(WidgetRef ref) async {
-    //TODO::fix
     ref.read(feedPostsProvider.notifier).refresh();
     ref.read(feedTrendingVideosProvider.notifier).refresh();
+    ref.read(feedStoriesProvider.notifier).refresh();
   }
 }
