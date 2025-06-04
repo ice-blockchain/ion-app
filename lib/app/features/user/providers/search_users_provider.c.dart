@@ -1,15 +1,10 @@
 // SPDX-License-Identifier: ice License 1.0
 
-import 'package:collection/collection.dart';
-import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/features/auth/providers/auth_provider.c.dart';
-import 'package:ion/app/features/core/providers/env_provider.c.dart';
-import 'package:ion/app/features/ion_connect/ion_connect.dart';
-import 'package:ion/app/features/ion_connect/model/action_source.c.dart';
-import 'package:ion/app/features/ion_connect/model/search_extension.dart';
-import 'package:ion/app/features/ion_connect/providers/entities_paged_data_provider.c.dart';
+import 'package:ion/app/features/auth/providers/paginated_users_metadata_provider.c.dart';
 import 'package:ion/app/features/user/model/user_metadata.c.dart';
 import 'package:ion/app/features/user_block/providers/block_list_notifier.c.dart';
+import 'package:ion_identity_client/ion_identity.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'search_users_provider.c.g.dart';
@@ -17,14 +12,12 @@ part 'search_users_provider.c.g.dart';
 @riverpod
 class SearchUsers extends _$SearchUsers {
   @override
-  ({List<UserMetadataEntity>? users, bool hasMore, List<EntitiesDataSource> dataSource})? build({
+  ({List<UserMetadataEntity>? users, bool hasMore})? build({
     required String query,
   }) {
-    if (query.isEmpty) return null;
-
     final masterPubkey = ref.watch(currentPubkeySelectorProvider);
-    final dataSource = ref.watch(searchUsersDataSourceProvider(query: query));
-    final entitiesPagedData = ref.watch(entitiesPagedDataProvider(dataSource));
+    final paginatedUsersMetadataData =
+        ref.watch(paginatedUsersMetadataProvider(_fetcher)).valueOrNull;
     final blockedUsersMasterPubkeys = ref
             .watch(currentUserBlockListNotifierProvider)
             .valueOrNull
@@ -33,57 +26,43 @@ class SearchUsers extends _$SearchUsers {
             .toList() ??
         [];
 
-    if (entitiesPagedData == null) {
+    if (paginatedUsersMetadataData == null) {
       return null;
     }
 
-    final users = entitiesPagedData.data.items
-        ?.whereType<UserMetadataEntity>()
-        .whereNot((user) => user.masterPubkey == masterPubkey)
+    final filteredUsers = paginatedUsersMetadataData.items
+        .where(
+          (user) =>
+              user.masterPubkey != masterPubkey &&
+              !blockedUsersMasterPubkeys.contains(user.masterPubkey),
+        )
         .toList();
 
-    final filteredUsers = users?.where((user) {
-      return !blockedUsersMasterPubkeys.contains(user.masterPubkey);
-    }).toList();
-
-    return (users: filteredUsers, hasMore: entitiesPagedData.hasMore, dataSource: dataSource);
+    return (users: filteredUsers, hasMore: paginatedUsersMetadataData.hasMore);
   }
 
   Future<void> loadMore() async {
-    final dataSource = state?.dataSource;
-    if (dataSource != null) {
-      return ref.read(entitiesPagedDataProvider(dataSource).notifier).fetchEntities();
-    }
+    return ref.read(paginatedUsersMetadataProvider(_fetcher).notifier).loadMore();
   }
 
   Future<void> refresh() async {
-    final dataSource = state?.dataSource;
-    if (dataSource != null) {
-      return ref.invalidate(entitiesPagedDataProvider(dataSource));
-    }
+    return ref.invalidate(paginatedUsersMetadataProvider(_fetcher));
   }
-}
 
-@riverpod
-List<EntitiesDataSource> searchUsersDataSource(Ref ref, {required String query}) {
-  final relay = ref.watch(envProvider.notifier).get<String>(EnvVariable.USER_SEARCH_RELAY);
-  return [
-    EntitiesDataSource(
-      actionSource: ActionSourceRelayUrl(relay),
-      entityFilter: (entity) => entity is UserMetadataEntity,
-      requestFilters: [
-        RequestFilter(
-          kinds: const [UserMetadataEntity.kind],
-          search: SearchExtensions(
-            [
-              QuerySearchExtension(searchQuery: query),
-            ],
-          ).toString(),
-          limit: 20,
-        ),
-      ],
-    ),
-  ];
+  Future<List<UserRelaysInfo>> _fetcher(
+    int limit,
+    List<UserMetadataEntity> current,
+    IONIdentityClient ionIdentityClient,
+  ) {
+    if (query.trim().isEmpty) {
+      return Future.value([]);
+    }
+    return ionIdentityClient.users.searchForUsersByKeyword(
+      limit: limit,
+      keyword: query.trim(),
+      searchType: SearchUsersSocialProfileType.contains,
+    );
+  }
 }
 
 @riverpod
