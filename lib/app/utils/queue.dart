@@ -1,6 +1,8 @@
 import 'dart:async';
 import 'dart:collection';
 
+/// A queue that manages the execution of asynchronous tasks
+/// with a limit on the number of concurrent tasks.
 class ConcurrentTasksQueue {
   ConcurrentTasksQueue({
     required this.maxConcurrent,
