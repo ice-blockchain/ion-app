@@ -761,14 +761,8 @@ class _CupertinoBackGestureDetectorState<T> extends State<_CupertinoBackGestureD
     final gestureBlockedByScrollable = hit.path.any((entry) {
       final target = entry.target;
 
-      if (target is RenderViewport) {
-        print('target.axisDirection: ${target.axisDirection}');
-        print('target.offset.pixels: ${target.offset.pixels}');
-
-        return target.axisDirection == AxisDirection.right && target.offset.pixels > 0;
-      }
-
-      return false;
+      // Block if it's a horizontal scrollable like PageView, even at position 0
+      return target is RenderViewport && target.axisDirection == AxisDirection.right;
     });
 
     if (!gestureBlockedByScrollable) {
