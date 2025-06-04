@@ -191,6 +191,7 @@ class DebugPage extends ConsumerWidget {
     WidgetRef ref,
     _DebugPageDatabaseType dbType,
   ) async {
+    File? tempFile;
     try {
       _showProgressDialog(context, 'Exporting ${dbType.displayName}...');
 
@@ -198,21 +199,21 @@ class DebugPage extends ConsumerWidget {
       final directory = await getApplicationDocumentsDirectory();
       final timestamp = DateTime.now().millisecondsSinceEpoch;
       final fileName = '${dbType.name}_db_backup_$timestamp.db';
-      final file = File('${directory.path}/$fileName');
+      tempFile = File('${directory.path}/$fileName');
 
-      await file.parent.create(recursive: true);
+      await tempFile.parent.create(recursive: true);
 
-      if (file.existsSync()) {
-        file.deleteSync();
+      if (tempFile.existsSync()) {
+        tempFile.deleteSync();
       }
 
-      await database.customStatement('VACUUM INTO ?', [file.path]);
+      await database.customStatement('VACUUM INTO ?', [tempFile.path]);
 
       if (context.mounted) {
         Navigator.of(context).pop();
       }
 
-      shareFile(file.path, name: fileName);
+      await shareFile(tempFile.path, name: fileName);
     } catch (e) {
       if (context.mounted) {
         Navigator.of(context).pop();
@@ -221,6 +222,10 @@ class DebugPage extends ConsumerWidget {
           'Export Failed',
           'Error exporting database: $e',
         );
+      }
+    } finally {
+      if (tempFile != null && tempFile.existsSync()) {
+        tempFile.deleteSync();
       }
     }
   }
