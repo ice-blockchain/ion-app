@@ -6,6 +6,7 @@ import 'package:ion/app/components/list_item/badges_user_list_item.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/feed/data/models/entities/modifiable_post_data.c.dart';
 import 'package:ion/app/features/feed/stories/views/components/story_viewer/components/header/header.dart';
+import 'package:ion/app/features/feed/views/components/time_ago/time_ago.dart';
 import 'package:ion/app/features/user/providers/user_metadata_provider.c.dart';
 import 'package:ion/app/router/app_routes.c.dart';
 import 'package:ion/app/utils/username.dart';
@@ -57,15 +58,36 @@ class StoryViewerHeader extends ConsumerWidget {
                   shadows: shadow,
                 ),
               ),
-              subtitle: Text(
-                prefixUsername(
-                  username: userMetadata.data.name,
-                  context: context,
-                ),
-                style: textThemes.caption.copyWith(
-                  color: onPrimaryAccent,
-                  shadows: shadow,
-                ),
+              subtitle: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Text(
+                    prefixUsername(
+                      username: userMetadata.data.name,
+                      context: context,
+                    ),
+                    style: textThemes.caption.copyWith(
+                      color: onPrimaryAccent,
+                      shadows: shadow,
+                    ),
+                  ),
+                  SizedBox(width: 4.0.s),
+                  Text(
+                    '•',
+                    style: textThemes.caption.copyWith(
+                      color: onPrimaryAccent,
+                      shadows: shadow,
+                    ),
+                  ),
+                  SizedBox(width: 4.0.s),
+                  TimeAgo(
+                    time: currentPost.data.publishedAt.value.toDateTime,
+                    style: textThemes.caption.copyWith(
+                      color: onPrimaryAccent,
+                      shadows: shadow,
+                    ),
+                  ),
+                ],
               ),
               trailing: HeaderActions(post: currentPost),
               backgroundColor: Colors.transparent,
