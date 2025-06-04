@@ -1,4 +1,12 @@
+// SPDX-License-Identifier: ice License 1.0
+
 // ignore_for_file: prefer_asserts_with_message, avoid_positional_boolean_parameters
+
+///
+/// This file is a copy of the original file in the flutter/packages/flutter/lib/src/cupertino/route.dart file.
+/// It is used to customize _kBackGestureWidth to MediaQuery.sizeOf(context).width
+///
+library;
 
 import 'dart:math';
 import 'dart:ui' show ImageFilter;
