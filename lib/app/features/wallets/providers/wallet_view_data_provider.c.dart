@@ -61,22 +61,20 @@ class WalletViewsDataNotifier extends _$WalletViewsDataNotifier {
   }
 }
 
-@Riverpod(keepAlive: true)
+@riverpod
 Future<String> currentWalletViewId(Ref ref) async {
+  final currentWalletViewData = await ref.watch(currentWalletViewDataProvider.future);
+  return currentWalletViewData.id;
+}
+
+@Riverpod(keepAlive: true)
+Future<WalletViewData> currentWalletViewData(Ref ref) async {
   final savedSelectedWalletId = ref.watch(selectedWalletViewIdNotifierProvider);
   final walletsData = await ref.watch(walletViewsDataNotifierProvider.future);
 
   final selectedWallet =
       walletsData.firstWhereOrNull((wallet) => wallet.id == savedSelectedWalletId);
-  return selectedWallet?.id ?? walletsData.firstOrNull?.id ?? '';
-}
-
-@riverpod
-Future<WalletViewData> currentWalletViewData(Ref ref) async {
-  final currentWalletId = await ref.watch(currentWalletViewIdProvider.future);
-  final walletsData = await ref.watch(walletViewsDataNotifierProvider.future);
-
-  return walletsData.firstWhere((wallet) => wallet.id == currentWalletId);
+  return selectedWallet ?? walletsData.first;
 }
 
 @riverpod

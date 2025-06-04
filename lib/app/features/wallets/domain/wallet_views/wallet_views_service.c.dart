@@ -150,6 +150,14 @@ class WalletViewsService {
           (Map<CoinData, List<TransactionData>> transactions, List<CoinData> coins) =>
               (coins, transactions),
         )
+        .distinct((a, b) {
+          final (coinsA, transactionsA) = a;
+          final (coinsB, transactionsB) = b;
+
+          return const UnorderedIterableEquality<CoinData>().equals(coinsA, coinsB) &&
+              const MapEquality<CoinData, List<TransactionData>>()
+                  .equals(transactionsA, transactionsB);
+        })
         .listen((combined) {
           final (updatedCoins, transactions) = combined;
 
