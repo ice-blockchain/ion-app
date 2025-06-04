@@ -133,9 +133,7 @@ class TransactionDetailsPage extends ConsumerWidget {
                             ListItem.textWithIcon(
                               title: Text(locale.wallet_title),
                               value: transactionData.walletViewName,
-                              icon: Assets.svg.walletWalletblue.icon(
-                                size: ScreenSideOffset.defaultSmallMargin,
-                              ),
+                              icon: Assets.svg.walletWalletblue.icon(size: 16.s),
                               secondary: Align(
                                 alignment: AlignmentDirectional.centerEnd,
                                 child: Text(
@@ -165,7 +163,7 @@ class TransactionDetailsPage extends ConsumerWidget {
                             title: Text(context.i18n.send_nft_confirm_network),
                             value: transactionData.network.displayName,
                             icon: NetworkIconWidget(
-                              size: ScreenSideOffset.defaultSmallMargin,
+                              size: 16.s,
                               imageUrl: transactionData.network.image,
                             ),
                           ),
