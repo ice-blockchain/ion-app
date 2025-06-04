@@ -46,7 +46,7 @@ void main() {
       expect(currentWalletId, equals(mockedWalletDataArray.first.id));
     });
 
-    test('returns an empty string when there are no wallets', () async {
+    test('throws when there are no wallets', () async {
       final container = createContainer(
         overrides: [
           walletViewsDataNotifierProvider.overrideWith(
@@ -59,9 +59,7 @@ void main() {
       container.read(selectedWalletViewIdNotifierProvider.notifier).selectedWalletId =
           'non_existing_id';
 
-      final currentWalletId = await container.read(currentWalletViewIdProvider.future);
-
-      expect(currentWalletId, equals(''));
+      expect(() => container.read(currentWalletViewIdProvider.future), throwsStateError);
     });
   });
 
@@ -72,9 +70,11 @@ void main() {
           walletViewsDataNotifierProvider.overrideWith(
             () => MockWalletsDataNotifier(mockedWalletDataArray),
           ),
-          currentWalletViewIdProvider.overrideWith((ref) => '1'),
+          selectedWalletViewIdNotifierProvider.overrideWith(MockSelectedWalletIdNotifier.new),
         ],
       );
+
+      container.read(selectedWalletViewIdNotifierProvider.notifier).selectedWalletId = '1';
 
       final currentWalletData = await container.read(currentWalletViewDataProvider.future);
 
