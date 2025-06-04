@@ -8,9 +8,9 @@ import 'package:ion/app/features/feed/stories/data/models/story.c.dart';
 import 'package:ion/app/features/feed/stories/data/models/story_viewer_state.c.dart';
 import 'package:ion/app/features/feed/stories/providers/story_viewing_provider.c.dart';
 import 'package:ion/app/features/feed/stories/views/components/story_viewer/components/core/core.dart';
-import 'package:ion/app/utils/future.dart';
 
 const Key storiesSwiperKey = Key('stories_swiper');
+const Duration _pageTransitionDuration = Duration(milliseconds: 100);
 
 class StoriesSwiper extends HookConsumerWidget {
   const StoriesSwiper({
@@ -34,7 +34,7 @@ class StoriesSwiper extends HookConsumerWidget {
         if (prev?.currentUserIndex != next.currentUserIndex && userPageController.hasClients) {
           userPageController.animateToPage(
             next.currentUserIndex,
-            duration: 300.ms,
+            duration: _pageTransitionDuration,
             curve: Curves.easeInOut,
           );
         }
@@ -73,7 +73,7 @@ class StoriesSwiper extends HookConsumerWidget {
             onNextUser: () {
               if (userPageController.hasClients && userIndex < userStories.length - 1) {
                 userPageController.nextPage(
-                  duration: 300.ms,
+                  duration: _pageTransitionDuration,
                   curve: Curves.easeInOut,
                 );
               } else {
@@ -83,7 +83,7 @@ class StoriesSwiper extends HookConsumerWidget {
             onPreviousUser: () {
               if (userPageController.hasClients && userIndex > 0) {
                 userPageController.previousPage(
-                  duration: 300.ms,
+                  duration: _pageTransitionDuration,
                   curve: Curves.easeInOut,
                 );
               } else {
