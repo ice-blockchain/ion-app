@@ -19,8 +19,8 @@ class CoinIconWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final iconSize = size ?? 24.0.s;
-    final borderRadius = BorderRadius.circular(10.0.s);
+    final iconSize = size ?? 24.s;
+    final borderRadius = BorderRadius.circular(4.s);
 
     return imageUrl.isSvg
         ? ClipRRect(
