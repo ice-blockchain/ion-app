@@ -50,8 +50,7 @@ class ToolbarLinkButton extends HookWidget {
     required BuildContext context,
     String? initialValue,
   }) {
-    final linkController =
-        TextEditingController(text: initialValue ?? context.i18n.toolbar_link_placeholder);
+    final linkController = TextEditingController(text: initialValue ?? '');
 
     return showCupertinoDialog<String>(
       context: context,
@@ -63,7 +62,6 @@ class ToolbarLinkButton extends HookWidget {
               const SizedBox(height: 10),
               CupertinoTextField(
                 controller: linkController,
-                placeholder: context.i18n.toolbar_link_placeholder,
               ),
             ],
           ),
