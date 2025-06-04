@@ -4,7 +4,6 @@ import 'dart:async';
 
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/exceptions/exceptions.dart';
-import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/auth/providers/auth_provider.c.dart';
 import 'package:ion/app/features/chat/community/models/entities/tags/master_pubkey_tag.c.dart';
 import 'package:ion/app/features/chat/community/models/entities/tags/pubkey_tag.c.dart';
@@ -147,33 +146,6 @@ class SendBlockEventService {
     }
   }
 
-  Future<void> resendFailedBlockEvent({
-    required EventMessage blockEventMessage,
-    required String blockedUserDevicePubkey,
-    required String blockedUserMasterPubkey,
-  }) async {
-    try {
-      await sendWrappedEvent(
-        eventSigner: eventSigner,
-        sealService: sealService,
-        giftWrapService: wrapService,
-        pubkey: blockedUserDevicePubkey,
-        eventMessage: blockEventMessage,
-        ionConnectNotifier: ionConnectNotifier,
-        masterPubkey: blockEventMessage.masterPubkey,
-      );
-
-      await blockEventStatusDao.add(
-        event: blockEventMessage,
-        receiverPubkey: blockedUserDevicePubkey,
-        receiverMasterPubkey: blockedUserMasterPubkey,
-        status: BlockedUserStatus.delivered,
-      );
-    } catch (e) {
-      throw SendEventException(e.toString());
-    }
-  }
-
   Future<void> sendDeleteBlockEvent(String dtag, String blockedUserMasterPubkey) async {
     try {
       final participantsMasterPubkeys = [currentUserMasterPubkey, blockedUserMasterPubkey]
@@ -210,9 +182,9 @@ class SendBlockEventService {
           if (pubkeyDevices == null) throw UserPubkeyNotFoundException(receiverMasterPubkey);
 
           for (final receiverPubkey in pubkeyDevices) {
-            try {
-              await blockEventStatusDao.markAsDeleted([eventReference]);
+            await blockEventStatusDao.markAsDeleted([eventReference]);
 
+            try {
               await sendWrappedEvent(
                 pubkey: receiverPubkey,
                 eventSigner: eventSigner,
@@ -223,7 +195,7 @@ class SendBlockEventService {
                 ionConnectNotifier: ionConnectNotifier,
               );
             } catch (e) {
-              throw SendEventException(e.toString());
+              await blockEventStatusDao.markAsDelivered([eventReference]);
             }
           }
         }),

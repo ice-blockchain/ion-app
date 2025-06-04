@@ -53,7 +53,12 @@ class BlockEventDao extends DatabaseAccessor<BlockedUsersDatabase> with _$BlockE
         ),
       ])
         ..where(db.blockEventTable.masterPubkey.equals(currentUserMasterPubkey))
-        ..where(db.blockEventStatusTable.status.isNotValue(BlockedUserStatus.deleted.index));
+        ..where(
+          db.blockEventStatusTable.status.isNotInValues([
+            BlockedUserStatus.deleted,
+            BlockedUserStatus.failed,
+          ]),
+        );
 
   Future<List<EventMessage>> getBlockedUsersEvents(String currentUserMasterPubkey) async {
     final result = await _blockedUsersQuery(currentUserMasterPubkey).get();
@@ -77,7 +82,12 @@ class BlockEventDao extends DatabaseAccessor<BlockedUsersDatabase> with _$BlockE
         ),
       ])
         ..where(db.blockEventTable.masterPubkey.isNotValue(currentUserMasterPubkey))
-        ..where(db.blockEventStatusTable.status.isNotValue(BlockedUserStatus.deleted.index));
+        ..where(
+          db.blockEventStatusTable.status.isNotInValues([
+            BlockedUserStatus.deleted,
+            BlockedUserStatus.failed,
+          ]),
+        );
 
   Future<List<EventMessage>> getBlockedByUsersEvents(String currentUserMasterPubkey) async {
     final result = await _blockedByUsersQuery(currentUserMasterPubkey).get();
