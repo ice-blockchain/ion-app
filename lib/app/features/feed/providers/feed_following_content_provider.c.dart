@@ -22,7 +22,7 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 part 'feed_following_content_provider.c.freezed.dart';
 part 'feed_following_content_provider.c.g.dart';
 
-const _pageSize = 10;
+const _defaultPageSize = 10;
 
 @riverpod
 class FeedFollowingContent extends _$FeedFollowingContent implements PagedNotifier {
@@ -36,7 +36,7 @@ class FeedFollowingContent extends _$FeedFollowingContent implements PagedNotifi
   }
 
   @override
-  Future<void> fetchEntities({int limit = _pageSize}) async {
+  Future<void> fetchEntities({int limit = _defaultPageSize}) async {
     final followedPubkeys = await _getFollowedPubkeys();
     final pagination = _initPagination(pubkeys: followedPubkeys);
 
@@ -47,7 +47,6 @@ class FeedFollowingContent extends _$FeedFollowingContent implements PagedNotifi
     if (nextPagePubkeys.isNotEmpty) {
       var fetchedEntities = 0;
       final entitiesStream = _fetchEntities(pubkeys: nextPagePubkeys);
-      // pass until, since
       await for (final MapEntry(key: pubkey, value: entity) in entitiesStream) {
         if (entity != null) {
           fetchedEntities++;
@@ -176,7 +175,7 @@ class FeedFollowingContent extends _$FeedFollowingContent implements PagedNotifi
     final feedConfig = await ref.read(feedConfigProvider.future);
     final ionConnectNotifier = ref.read(ionConnectNotifierProvider.notifier);
 
-    final since = DateTime.now().subtract(feedConfig.followingMaxAge).microsecondsSinceEpoch;
+    final since = DateTime.now().subtract(feedConfig.followingReqMaxAge).microsecondsSinceEpoch;
 
     // TODO:limit concurrent requests
     for (final pubkey in pubkeys) {
