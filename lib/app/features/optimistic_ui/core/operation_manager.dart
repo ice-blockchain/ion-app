@@ -41,10 +41,11 @@ class OptimisticOperationManager<T extends OptimisticModel> {
   final Queue<OptimisticOperation<T>> _pending;
   bool _busy = false;
 
-  void initialize(List<T> initial) {
+  Future<void> initialize(FutureOr<List<T>> initial) async {
+    final initialState = await initial;
     _state
       ..clear()
-      ..addAll(initial);
+      ..addAll(initialState);
     _controller.add(List.unmodifiable(_state));
   }
 

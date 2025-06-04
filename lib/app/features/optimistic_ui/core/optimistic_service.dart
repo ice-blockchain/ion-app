@@ -1,5 +1,7 @@
 // SPDX-License-Identifier: ice License 1.0
 
+import 'dart:async';
+
 import 'package:collection/collection.dart';
 import 'package:ion/app/features/optimistic_ui/core/operation_manager.dart';
 import 'package:ion/app/features/optimistic_ui/core/optimistic_intent.dart';
@@ -20,7 +22,7 @@ class OptimisticService<T extends OptimisticModel> {
       _manager.perform(previous: current, optimistic: intent.optimistic(current));
 
   /// Initializes the manager with initial state.
-  void initialize(List<T> init) => _manager.initialize(init);
+  Future<void> initialize(FutureOr<List<T>> init) async => _manager.initialize(init);
 
-  void dispose() => _manager.dispose();
+  Future<void> dispose() async => _manager.dispose();
 }
