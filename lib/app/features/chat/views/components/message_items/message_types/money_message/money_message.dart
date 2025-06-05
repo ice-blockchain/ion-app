@@ -24,7 +24,6 @@ import 'package:ion/app/features/wallets/providers/coins_provider.c.dart';
 import 'package:ion/app/features/wallets/providers/networks_provider.c.dart';
 import 'package:ion/app/features/wallets/views/components/network_icon_widget.dart';
 import 'package:ion/app/features/wallets/views/utils/crypto_formatter.dart';
-import 'package:ion/app/utils/date.dart';
 import 'package:ion/app/utils/num.dart';
 
 part 'components/amount_display.dart';
@@ -205,10 +204,6 @@ class _MoneyMessageContent extends HookConsumerWidget {
       (MoneyMessageType.requested, _) => context.i18n.chat_money_request_title,
     };
 
-    final timeTextColor = switch (isMe) {
-      true => context.theme.appColors.strokeElements,
-      false => context.theme.appColors.quaternaryText,
-    };
     final messageItem = ChatMessageInfoItem.money(
       eventMessage: eventMessage,
       contentDescription: title,
@@ -267,10 +262,7 @@ class _MoneyMessageContent extends HookConsumerWidget {
               ),
             ],
           ),
-          Text(
-            toTimeDisplayValue(eventMessage.createdAt.toDateTime.millisecondsSinceEpoch),
-            style: context.theme.appTextThemes.caption4.copyWith(color: timeTextColor),
-          ),
+          MessageMetaData(eventMessage: eventMessage),
         ],
       ),
     );
