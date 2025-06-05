@@ -1,3 +1,5 @@
 #!/bin/bash
 
-asdf exec flutter build apk --release --flavor=staging
+source "$(dirname "$0")/utils.sh"
+
+use_asdf flutter build apk --release --flavor=staging
