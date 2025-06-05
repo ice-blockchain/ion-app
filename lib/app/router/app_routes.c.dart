@@ -169,6 +169,7 @@ part 'profile_routes.dart';
 part 'protect_account_routes.dart';
 part 'settings_routes.dart';
 part 'wallet_routes.dart';
+part 'gallery_routes.dart';
 
 final rootNavigatorKey = GlobalKey<NavigatorState>(debugLabel: 'rootNav');
 final bottomBarNavigatorKey = GlobalKey<NavigatorState>(debugLabel: 'tabNav');
@@ -181,7 +182,7 @@ final transitionObserver = NavigationSheetTransitionObserver();
         TypedGoRoute<FeedRoute>(
           path: '/feed',
           routes: [
-            ...FeedRoutes.routes,
+            ...FeedRoutes.routes, 
             TypedGoRoute<FeedMainModalRoute>(path: 'main-modal'),
           ],
         ),
@@ -299,7 +300,13 @@ class ErrorRoute extends BaseRouteData {
 
 @TypedGoRoute<IntroRoute>(
   path: '/intro',
-  routes: [...AuthRoutes.routes],
+  routes: [...AuthRoutes.routes, 
+  TypedShellRoute<ModalShellRouteData>(
+      routes: [
+        ...GalleryRoutes.routes,
+      ],
+    ),
+  ],
 )
 class IntroRoute extends BaseRouteData {
   IntroRoute() : super(child: const IntroPage(), type: IceRouteType.singleWithoutTransition);

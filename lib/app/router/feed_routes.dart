@@ -47,12 +47,7 @@ class FeedRoutes {
         ),
         TypedGoRoute<CreateVideoRoute>(path: 'post-editor/video'),
         TypedGoRoute<CreateArticleRoute>(path: 'create-article'),
-        TypedGoRoute<MediaPickerRoute>(
-          path: 'media-picker',
-          routes: [
-            TypedGoRoute<AlbumSelectionRoute>(path: 'album-selection'),
-          ],
-        ),
+        TypedGoRoute<MediaPickerRoute>(path: 'media-picker'),
         TypedGoRoute<FeedSearchFiltersRoute>(path: 'feed-search_filters'),
         TypedGoRoute<ArticlePreviewRoute>(path: 'article-preview'),
         TypedGoRoute<SelectArticleTopicsRoute>(path: 'article-topics'),
@@ -357,27 +352,7 @@ class MediaPickerRoute extends BaseRouteData {
   final bool showCameraCell;
 }
 
-class AlbumSelectionRoute extends BaseRouteData {
-  AlbumSelectionRoute({
-    required this.mediaPickerType,
-  }) : super(
-          child: AlbumSelectionPage(type: mediaPickerType),
-          type: IceRouteType.bottomSheet,
-        );
 
-  final MediaPickerType mediaPickerType;
-}
-
-@TypedGoRoute<GalleryCameraRoute>(path: '/gallery-camera')
-class GalleryCameraRoute extends BaseRouteData {
-  GalleryCameraRoute({
-    required this.mediaPickerType,
-  }) : super(
-          child: GalleryCameraPage(type: mediaPickerType),
-        );
-
-  final MediaPickerType mediaPickerType;
-}
 
 class ArticlePreviewRoute extends BaseRouteData {
   ArticlePreviewRoute()

@@ -24,14 +24,17 @@ class SetIONConnectRelaysPage extends HookConsumerWidget {
           if (relaysState.isLoading)
             const IconButton(
               onPressed: null,
+              // wrap in repaint boundary?
               icon: CircularProgressIndicator(),
             ),
         ],
       ),
       body: ListView(
         shrinkWrap: true,
+        // In some places we use numbers without 16.0.s extensions, in other places we do
         padding: const EdgeInsets.symmetric(horizontal: 16),
         children: [
+          // textInputAction: TextInputAction.next
           TextField(
             controller: userIdController,
             decoration: const InputDecoration(
@@ -40,6 +43,7 @@ class SetIONConnectRelaysPage extends HookConsumerWidget {
           ),
           const SizedBox(height: 8),
           TextField(
+            // here would be nice to add submit button behaviour
             controller: followeeListController,
             decoration: const InputDecoration(
               labelText: 'Followee List (comma separated)',
