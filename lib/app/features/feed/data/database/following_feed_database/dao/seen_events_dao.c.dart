@@ -44,20 +44,7 @@ class SeenEventsDao extends DatabaseAccessor<FollowingFeedDatabase> with _$SeenE
     );
   }
 
-  Future<SeenEvent?> getSequenceEnd({
-    required EventReference eventReference,
-    required FeedType feedType,
-    FeedModifier? feedModifier,
-  }) async {
-    return null;
-  }
-
-  /// Fetches a record by [eventReference] + [feedType] + [feedModifier].
-  /// If found and [nextEventReference] is not null,
-  /// finds the end of the sequence -
-  /// the first next event for that [feedType] + [feedModifier] without [nextEventReference],
-  /// ordered by createdAt.
-  Future<SeenEvent?> getByReferenceOrFirstWithoutNext({
+  Future<SeenEvent?> getByReference({
     required EventReference eventReference,
     required FeedType feedType,
     FeedModifier? feedModifier,
@@ -71,10 +58,17 @@ class SeenEventsDao extends DatabaseAccessor<FollowingFeedDatabase> with _$SeenE
             : tbl.feedModifier.equalsValue(feedModifier),
       );
 
-    final record = await query.getSingleOrNull();
-    if (record == null) return null;
-    if (record.nextEventReference == null) return record;
+    return query.getSingleOrNull();
+  }
 
+  /// Finds the end of the sequence -
+  /// the first next event starting [since] for provided [feedType] + [feedModifier]
+  /// without [nextEventReference], ordered by createdAt
+  Future<SeenEvent?> getFirstWithoutNext({
+    required int since,
+    required FeedType feedType,
+    FeedModifier? feedModifier,
+  }) async {
     final firstWithoutNext = await (select(db.seenEventsTable)
           ..where((tbl) => tbl.feedType.equalsValue(feedType))
           ..where(
@@ -83,7 +77,7 @@ class SeenEventsDao extends DatabaseAccessor<FollowingFeedDatabase> with _$SeenE
                 : tbl.feedModifier.equalsValue(feedModifier),
           )
           ..where((tbl) => tbl.nextEventReference.isNull())
-          ..where((tbl) => tbl.createdAt.isBiggerThanValue(record.createdAt))
+          ..where((tbl) => tbl.createdAt.isBiggerThanValue(since))
           ..orderBy([
             (tbl) => OrderingTerm(expression: tbl.createdAt),
           ])

@@ -59,17 +59,27 @@ class FollowingSeenEventsRepository {
     required FeedType feedType,
     FeedModifier? feedModifier,
   }) async {
-    final seenSequenceEnd = await _seenEventsDao.getByReferenceOrFirstWithoutNext(
+    final seenEvent = await _seenEventsDao.getByReference(
       eventReference: eventReference,
       feedType: feedType,
       feedModifier: feedModifier,
     );
 
-    if (seenSequenceEnd == null) return null;
+    if (seenEvent == null) return null;
+    if (seenEvent.nextEventReference == null) {
+      return (createdAt: seenEvent.createdAt, eventReference: seenEvent.eventReference);
+    }
 
-    return (
-      createdAt: seenSequenceEnd.createdAt,
-      eventReference: seenSequenceEnd.eventReference,
+    final seenSequenceEnd = await _seenEventsDao.getFirstWithoutNext(
+      since: seenEvent.createdAt,
+      feedType: feedType,
+      feedModifier: feedModifier,
     );
+
+    if (seenSequenceEnd == null) {
+      return (createdAt: seenEvent.createdAt, eventReference: seenEvent.eventReference);
+    }
+
+    return (createdAt: seenSequenceEnd.createdAt, eventReference: seenSequenceEnd.eventReference);
   }
 }
