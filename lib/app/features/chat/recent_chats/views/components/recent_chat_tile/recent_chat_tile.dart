@@ -193,8 +193,8 @@ class RecentChatTile extends HookConsumerWidget {
                                   displayTime: false,
                                   deliveryStatusIconSize: 16.0.s,
                                   eventMessage: conversation.latestMessage!,
-                                )
-                              else
+                                ),
+                              if (unreadMessagesCount > 0)
                                 UnreadCountBadge(
                                   isMuted: isMuted,
                                   unreadCount: unreadMessagesCount,

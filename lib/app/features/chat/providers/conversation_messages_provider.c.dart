@@ -1,5 +1,6 @@
 // SPDX-License-Identifier: ice License 1.0
 
+import 'package:collection/collection.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/auth/providers/auth_provider.c.dart';
 import 'package:ion/app/features/chat/e2ee/model/entities/private_direct_message_data.c.dart';
@@ -23,7 +24,8 @@ class ConversationMessages extends _$ConversationMessages {
     final stream = ref.watch(conversationMessageDaoProvider).getMessages(conversationId);
 
     final subscription = stream.listen((event) {
-      final messages = event.entries.map((e) => e.value).expand((e) => e).toList();
+      final messages = event.entries.map((e) => e.value).expand((e) => e).toList()
+        ..sortByCompare((e) => e.publishedAt, (a, b) => b.compareTo(a));
       _sendReadStatus(messages);
     });
 
