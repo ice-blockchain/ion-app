@@ -210,8 +210,6 @@ class E2eeRecentChatTile extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    useAutomaticKeepAlive();
-
     if (conversation.latestMessage == null) {
       return const SizedBox.shrink();
     }
