@@ -53,7 +53,7 @@ EntitiesDataSource buildArticlesDataSource({
       RequestFilter(
         kinds: const [
           ArticleEntity.kind,
-          // TODO:add GenericRepostEntity
+          GenericRepostEntity.articleRepostKind,
         ],
         authors: authors,
         limit: limit,
@@ -141,7 +141,7 @@ EntitiesDataSource buildVideosDataSource({
           PostEntity.kind,
           ModifiablePostEntity.kind,
           RepostEntity.kind,
-          // TODO: add GenericRepostEntity
+          GenericRepostEntity.modifiablePostRepostKind,
         ],
         search: search,
         authors: authors,
@@ -242,7 +242,8 @@ EntitiesDataSource buildPostsDataSource({
           ModifiablePostEntity.kind,
           RepostEntity.kind,
           ArticleEntity.kind,
-          // TODO: add GenericRepostEntity
+          GenericRepostEntity.modifiablePostRepostKind,
+          GenericRepostEntity.articleRepostKind,
         ],
         search: search,
         authors: authors,

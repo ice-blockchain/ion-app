@@ -46,6 +46,10 @@ class GenericRepostEntity
   }
 
   static const int kind = 16;
+
+  static const int modifiablePostRepostKind = 1630175;
+
+  static const int articleRepostKind = 1630023;
 }
 
 @freezed
