@@ -12,9 +12,9 @@ import 'package:ion/app/components/separated/separated_column.dart';
 import 'package:ion/app/components/separated/separator.dart';
 import 'package:ion/app/components/skeleton/skeleton.dart';
 import 'package:ion/app/extensions/extensions.dart';
-import 'package:ion/app/features/auth/providers/content_creators_data_source_provider.c.dart';
 import 'package:ion/app/features/auth/providers/onboarding_complete_notifier.c.dart';
 import 'package:ion/app/features/auth/providers/onboarding_data_provider.c.dart';
+import 'package:ion/app/features/auth/providers/paginated_users_metadata_provider.c.dart';
 import 'package:ion/app/features/auth/views/components/auth_scrolled_body/auth_scrolled_body.dart';
 import 'package:ion/app/features/auth/views/pages/discover_creators/creator_list_item.dart';
 import 'package:ion/app/features/components/verify_identity/verify_identity_prompt_dialog_helper.dart';
@@ -29,12 +29,14 @@ class DiscoverCreators extends HookConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final finishNotifier = ref.watch(onboardingCompleteNotifierProvider);
-    final creatorsState = ref.watch(contentCreatorsProvider);
+    final contentCreatorsPaginatedProvider =
+        paginatedUsersMetadataProvider(contentCreatorsPaginatedFetcher);
+    final creatorsState = ref.watch(contentCreatorsPaginatedProvider);
     final contentCreators = creatorsState.valueOrNull?.items ?? <UserMetadataEntity>[];
     final hasMore = creatorsState.valueOrNull?.hasMore ?? true;
     ref
       ..displayErrors(onboardingCompleteNotifierProvider)
-      ..displayErrors(contentCreatorsProvider);
+      ..displayErrors(contentCreatorsPaginatedProvider);
 
     final (selectedCreators, toggleCreatorSelection) = useSelectedState(<UserMetadataEntity>[]);
 
@@ -72,7 +74,7 @@ class DiscoverCreators extends HookConsumerWidget {
           Expanded(
             child: LoadMoreBuilder(
               slivers: slivers,
-              onLoadMore: ref.read(contentCreatorsProvider.notifier).fetch,
+              onLoadMore: ref.read(contentCreatorsPaginatedProvider.notifier).loadMore,
               hasMore: hasMore,
               builder: (context, slivers) {
                 return AuthScrollContainer(

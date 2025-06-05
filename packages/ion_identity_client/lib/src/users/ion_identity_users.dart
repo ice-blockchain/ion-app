@@ -5,6 +5,7 @@ import 'package:ion_identity_client/src/auth/services/extract_user_id/extract_us
 import 'package:ion_identity_client/src/users/available_ion_connect_relays/available_ion_connect_relays_service.dart';
 import 'package:ion_identity_client/src/users/get_content_creators/content_creators_service.dart';
 import 'package:ion_identity_client/src/users/ion_connect_indexers/get_user_connect_indexers_service.dart';
+import 'package:ion_identity_client/src/users/search_users_social_profile/search_users_social_profile_service.dart';
 import 'package:ion_identity_client/src/users/set_ion_connect_relays/set_ion_connect_relays_service.dart';
 import 'package:ion_identity_client/src/users/update_user_social_profile/update_user_social_profile_service.dart';
 import 'package:ion_identity_client/src/users/user_details/user_details_service.dart';
@@ -19,6 +20,7 @@ class IONIdentityUsers {
     this._ionConnectContentCreatorsService,
     this._nicknameAvailabilityService,
     this._updateUserSocialProfileService,
+    this._searchUsersSocialProfileService,
     this._extractUserIdService,
     this._availableIONConnectRelaysService,
   );
@@ -30,6 +32,7 @@ class IONIdentityUsers {
   final NicknameAvailabilityService _nicknameAvailabilityService;
   final SetIONConnectRelaysService _setIONConnectRelaysService;
   final UpdateUserSocialProfileService _updateUserSocialProfileService;
+  final SearchUsersSocialProfileService _searchUsersSocialProfileService;
   final ExtractUserIdService _extractUserIdService;
   final AvailableIONConnectRelaysService _availableIONConnectRelaysService;
 
@@ -58,7 +61,7 @@ class IONIdentityUsers {
     );
   }
 
-  Future<List<ContentCreatorResponseData>> getContentCreators({
+  Future<List<UserRelaysInfo>> getContentCreators({
     required int limit,
     required List<String> excludeMasterPubKeys,
   }) async {
@@ -92,6 +95,20 @@ class IONIdentityUsers {
     return _updateUserSocialProfileService.updateUserSocialProfile(
       userId: userId,
       data: data,
+    );
+  }
+
+  Future<List<UserRelaysInfo>> searchForUsersByKeyword({
+    required String keyword,
+    required SearchUsersSocialProfileType searchType,
+    required int limit,
+    required int offset,
+  }) async {
+    return _searchUsersSocialProfileService.searchForUsersByKeyword(
+      keyword: keyword,
+      searchType: searchType,
+      limit: limit,
+      offset: offset,
     );
   }
 }

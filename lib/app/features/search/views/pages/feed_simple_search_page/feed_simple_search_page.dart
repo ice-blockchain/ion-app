@@ -28,8 +28,11 @@ class FeedSimpleSearchPage extends HookConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final history = ref.watch(feedSearchHistoryProvider);
     final debouncedQuery = useDebounced(query, const Duration(milliseconds: 300)) ?? '';
-    final searchResults = ref.watch(searchUsersProvider(query: debouncedQuery));
-    final searchUsers = searchResults?.users;
+    final searchProvider = searchUsersProvider(query: debouncedQuery);
+    final searchResults = ref.watch(searchProvider);
+    final searchUsers = searchResults?.users ?? [];
+    final hasMore = searchResults?.hasMore ?? true;
+    final loading = (hasMore && searchUsers.isEmpty) || query != debouncedQuery;
 
     return Scaffold(
       body: ScreenTopOffset(
@@ -37,7 +40,7 @@ class FeedSimpleSearchPage extends HookConsumerWidget {
           children: [
             SearchNavigation(
               query: query,
-              loading: debouncedQuery.isNotEmpty && searchUsers == null,
+              loading: loading,
               onSubmitted: (String query) {
                 FeedAdvancedSearchRoute(query: query).go(context);
                 ref.read(feedSearchHistoryProvider.notifier).addQueryToTheHistory(query);
@@ -63,7 +66,7 @@ class FeedSimpleSearchPage extends HookConsumerWidget {
               Expanded(
                 child: PullToRefreshBuilder(
                   slivers: [
-                    if (searchUsers == null)
+                    if (loading)
                       ListItemsLoadingState(
                         padding: EdgeInsets.symmetric(vertical: 20.0.s),
                         listItemsLoadingStateType: ListItemsLoadingStateType.scrollView,
@@ -80,11 +83,10 @@ class FeedSimpleSearchPage extends HookConsumerWidget {
                         ),
                       ),
                   ],
-                  onRefresh: ref.read(searchUsersProvider(query: debouncedQuery).notifier).refresh,
+                  onRefresh: () => ref.read(searchProvider.notifier).refresh(),
                   builder: (context, slivers) => LoadMoreBuilder(
                     slivers: slivers,
-                    onLoadMore:
-                        ref.read(searchUsersProvider(query: debouncedQuery).notifier).loadMore,
+                    onLoadMore: () => ref.read(searchProvider.notifier).loadMore(),
                     hasMore: searchResults?.hasMore ?? false,
                   ),
                 ),
