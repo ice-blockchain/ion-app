@@ -9,6 +9,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/auth/providers/auth_provider.c.dart';
 import 'package:ion/app/features/feed/data/models/entities/modifiable_post_data.c.dart';
+import 'package:ion/app/features/feed/data/models/entities/post_data.c.dart';
 import 'package:ion/app/features/feed/providers/feed_posts_provider.c.dart';
 import 'package:ion/app/features/feed/providers/ion_connect_entity_with_counters_provider.c.dart';
 import 'package:ion/app/features/feed/views/components/overlay_menu/own_entity_menu.dart';
@@ -28,7 +29,7 @@ import 'package:ion/generated/assets.gen.dart';
 class _FlattenedVideo {
   _FlattenedVideo({required this.entity, required this.media});
 
-  final ModifiablePostEntity entity;
+  final IonConnectEntity entity;
   final MediaAttachment media;
 }
 
@@ -62,7 +63,8 @@ class VideosVerticalScrollPage extends HookConsumerWidget {
 
     final ionConnectEntity =
         ref.watch(ionConnectEntityWithCountersProvider(eventReference: eventReference));
-    if (ionConnectEntity is! ModifiablePostEntity) {
+    if (ionConnectEntity == null ||
+        (ionConnectEntity is! ModifiablePostEntity && ionConnectEntity is! PostEntity)) {
       return Center(
         child: Text(context.i18n.video_not_found),
       );
@@ -80,14 +82,14 @@ class VideosVerticalScrollPage extends HookConsumerWidget {
       () {
         final result = <_FlattenedVideo>[];
         for (final entity in videos) {
-          if (entity is ModifiablePostEntity) {
-            for (final media in entity.data.videos) {
+          if (entity is ModifiablePostEntity || entity is PostEntity) {
+            for (final media in _getVideosFromEntity(entity)) {
               result.add(_FlattenedVideo(entity: entity, media: media));
             }
           } else {
             final reposted = ref.read(getRepostedEntityProvider(entity));
-            if (reposted is ModifiablePostEntity) {
-              for (final media in reposted.data.videos) {
+            if (reposted != null && (reposted is ModifiablePostEntity || reposted is PostEntity)) {
+              for (final media in _getVideosFromEntity(entity)) {
                 result.add(_FlattenedVideo(entity: reposted, media: media));
               }
             }
@@ -187,5 +189,13 @@ class VideosVerticalScrollPage extends HookConsumerWidget {
     if (totalItems > threshold && index >= totalItems - threshold) {
       onLoadMore();
     }
+  }
+
+  List<MediaAttachment> _getVideosFromEntity(IonConnectEntity entity) {
+    return switch (entity) {
+      ModifiablePostEntity() => entity.data.videos,
+      PostEntity() => entity.data.videos,
+      _ => []
+    };
   }
 }
