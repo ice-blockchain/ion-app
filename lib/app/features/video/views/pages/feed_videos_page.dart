@@ -20,12 +20,13 @@ class FeedVideosPage extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final entities = ref.watch(feedPostsProvider.select((state) => state.items ?? {}));
     return VideosVerticalScrollPage(
       eventReference: eventReference,
       initialMediaIndex: initialMediaIndex,
       framedEventReference: framedEventReference,
-      getVideosData: () => ref.watch(feedPostsProvider),
-      onLoadMore: () => ref.read(feedPostsProvider.notifier).loadMore(),
+      entities: entities,
+      onLoadMore: () => ref.read(feedPostsProvider.notifier).fetchEntities(),
     );
   }
 }

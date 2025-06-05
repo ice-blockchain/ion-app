@@ -10,7 +10,10 @@ import 'package:ion/app/features/feed/data/models/entities/modifiable_post_data.
 import 'package:ion/app/features/feed/data/models/entities/post_data.c.dart';
 import 'package:ion/app/features/feed/data/models/entities/repost_data.c.dart';
 import 'package:ion/app/features/feed/data/models/feed_category.dart';
+import 'package:ion/app/features/feed/data/models/feed_filter.dart';
+import 'package:ion/app/features/feed/data/models/feed_type.dart';
 import 'package:ion/app/features/feed/providers/feed_current_filter_provider.c.dart';
+import 'package:ion/app/features/feed/providers/feed_following_content_provider.c.dart';
 import 'package:ion/app/features/feed/providers/feed_posts_data_source_provider.c.dart';
 import 'package:ion/app/features/feed/providers/ion_connect_entity_with_counters_provider.c.dart';
 import 'package:ion/app/features/feed/providers/repost_notifier.c.dart';
@@ -22,46 +25,50 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 part 'feed_posts_provider.c.g.dart';
 
 @riverpod
-class FeedPosts extends _$FeedPosts {
+class FeedPosts extends _$FeedPosts with DelegatedPagedNotifier {
   @override
-  EntitiesPagedDataState? build() {
-    final dataSource = ref.watch(feedPostsDataSourceProvider);
-    final entitiesPagedData = ref.watch(entitiesPagedDataProvider(dataSource));
-
+  ({Iterable<IonConnectEntity>? items, bool hasMore}) build() {
     final postsStream = ref.watch(createPostNotifierStreamProvider);
     final articlesStream = ref.watch(createArticleNotifierStreamProvider);
     final repostsStream = ref.watch(createRepostNotifierStreamProvider);
     final subscription = StreamGroup.merge([postsStream, articlesStream, repostsStream])
         .where(_filterEntities)
         .distinct()
-        .listen(_handleEntity);
+        .listen(insertEntity);
     ref.onDispose(subscription.cancel);
 
-    return entitiesPagedData;
+    final filter = ref.watch(feedCurrentFilterProvider);
+    if (filter.filter == FeedFilter.following) {
+      final feedType = FeedType.fromCategory(filter.category);
+      final followingContent = ref.watch(feedFollowingContentProvider(feedType));
+      return (items: followingContent.items, hasMore: followingContent.hasMore);
+    } else {
+      final dataSource = ref.watch(feedPostsDataSourceProvider);
+      final entitiesPagedData = ref.watch(entitiesPagedDataProvider(dataSource));
+      return (items: entitiesPagedData?.data.items, hasMore: entitiesPagedData?.hasMore ?? true);
+    }
+  }
+
+  @override
+  PagedNotifier getDelegate() {
+    final filter = ref.watch(feedCurrentFilterProvider);
+    if (filter.filter == FeedFilter.following) {
+      final feedType = FeedType.fromCategory(filter.category);
+      return ref.read(feedFollowingContentProvider(feedType).notifier);
+    } else {
+      final dataSource = ref.watch(feedPostsDataSourceProvider);
+      return ref.read(entitiesPagedDataProvider(dataSource).notifier);
+    }
   }
 
   bool _filterEntities(IonConnectEntity entity) {
     final currentCategory = ref.read(feedCurrentFilterProvider).category;
-    switch (currentCategory) {
-      case FeedCategory.feed:
-        return _isRegularPostOrRepost(entity) || _isArticleOrArticleRepost(entity);
-      case FeedCategory.videos:
-        final isVideoPost = ref.read(isVideoPostProvider(entity));
-        final isVideoRepost = ref.read(isVideoRepostProvider(entity));
-        return isVideoPost || isVideoRepost;
-      case FeedCategory.articles:
-        return _isArticleOrArticleRepost(entity);
-    }
-  }
-
-  Future<void> loadMore() async {
-    final dataSource = ref.read(feedPostsDataSourceProvider);
-    await ref.read(entitiesPagedDataProvider(dataSource).notifier).fetchEntities();
-  }
-
-  void _handleEntity(IonConnectEntity entity) {
-    final dataSource = ref.read(feedPostsDataSourceProvider);
-    ref.read(entitiesPagedDataProvider(dataSource).notifier).insertEntity(entity);
+    return switch (currentCategory) {
+      FeedCategory.feed => _isRegularPostOrRepost(entity) || _isArticleOrArticleRepost(entity),
+      FeedCategory.videos =>
+        ref.read(isVideoPostProvider(entity)) || ref.read(isVideoRepostProvider(entity)),
+      FeedCategory.articles => _isArticleOrArticleRepost(entity),
+    };
   }
 
   bool _isRegularPostOrRepost(IonConnectEntity entity) {

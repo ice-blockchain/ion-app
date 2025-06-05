@@ -3,14 +3,27 @@
 import 'package:flutter/material.dart';
 import 'package:ion/app/extensions/build_context.dart';
 import 'package:ion/app/extensions/theme_data.dart';
+import 'package:ion/app/features/feed/data/models/feed_category.dart';
 import 'package:ion/app/router/model/main_modal_list_item.dart';
 import 'package:ion/generated/assets.gen.dart';
 
 enum FeedType implements MainModalListItem {
-  post,
-  story,
-  video,
-  article;
+  post(pageSize: 10),
+  story(pageSize: 10),
+  video(pageSize: 10),
+  article(pageSize: 10);
+
+  const FeedType({required this.pageSize});
+
+  factory FeedType.fromCategory(FeedCategory category) {
+    return switch (category) {
+      FeedCategory.feed => FeedType.post,
+      FeedCategory.articles => FeedType.article,
+      FeedCategory.videos => FeedType.video,
+    };
+  }
+
+  final int pageSize;
 
   @override
   String getDisplayName(BuildContext context) {

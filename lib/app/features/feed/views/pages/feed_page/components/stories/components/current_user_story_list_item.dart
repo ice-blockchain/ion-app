@@ -3,7 +3,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:ion/app/features/feed/stories/providers/stories_provider.c.dart';
+import 'package:ion/app/features/feed/stories/providers/feed_stories_provider.c.dart';
 import 'package:ion/app/features/feed/stories/providers/viewed_stories_provider.c.dart';
 import 'package:ion/app/features/feed/views/pages/feed_page/components/stories/components/current_user_avatar_with_permission.dart';
 import 'package:ion/app/features/feed/views/pages/feed_page/components/stories/components/plus_button_with_permission.dart';
@@ -22,7 +22,7 @@ class CurrentUserStoryListItem extends HookConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final currentUserMetadata = ref.watch(currentUserMetadataProvider);
-    final userStories = ref.watch(filteredStoriesByPubkeyProvider(pubkey));
+    final userStories = ref.watch(feedStoriesByPubkeyProvider(pubkey));
     final viewedStories = ref.watch(viewedStoriesControllerProvider);
     final hasStories = userStories.isNotEmpty;
 

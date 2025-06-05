@@ -11,10 +11,13 @@ class FeedConfig with _$FeedConfig {
     required double interestedThreshold,
     required double notInterestedCategoryChance,
     required double notInterestedSubcategoryChance,
-    @DurationMillisecondsConverter() required Duration followingMaxAge,
+    required int concurrentRequests,
+    @DurationMillisecondsConverter() required Duration followingReqMaxAge,
+    @DurationMillisecondsConverter() required Duration followingCacheMaxAge,
     @DurationMillisecondsConverter() required Duration topMaxAge,
     @DurationMillisecondsConverter() required Duration trendingMaxAge,
     @DurationMillisecondsConverter() required Duration exploreMaxAge,
+    @DurationMillisecondsConverter() required Duration repostThrottleDelay,
   }) = _FeedConfig;
   const FeedConfig._();
 

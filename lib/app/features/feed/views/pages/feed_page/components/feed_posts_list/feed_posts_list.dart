@@ -18,8 +18,7 @@ class FeedPostsList extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final posts = ref.watch(feedPostsProvider);
-    final entities = posts?.data.items?.toList();
+    final entities = ref.watch(feedPostsProvider.select((state) => state.items));
 
     // Prefetching mute list here so it can be used later with sync provider
     useOnInit(() {

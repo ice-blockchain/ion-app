@@ -11,17 +11,14 @@ import 'package:ion/app/features/core/model/feature_flags.dart';
 import 'package:ion/app/features/core/providers/feature_flags_provider.c.dart';
 import 'package:ion/app/features/feed/data/models/feed_category.dart';
 import 'package:ion/app/features/feed/providers/feed_current_filter_provider.c.dart';
-import 'package:ion/app/features/feed/providers/feed_filter_relays_provider.c.dart';
-import 'package:ion/app/features/feed/providers/feed_posts_data_source_provider.c.dart';
 import 'package:ion/app/features/feed/providers/feed_posts_provider.c.dart';
-import 'package:ion/app/features/feed/providers/feed_stories_data_source_provider.c.dart';
-import 'package:ion/app/features/feed/providers/feed_trending_videos_data_source_provider.c.dart';
+import 'package:ion/app/features/feed/providers/feed_trending_videos_provider.c.dart';
+import 'package:ion/app/features/feed/stories/providers/feed_stories_provider.c.dart';
 import 'package:ion/app/features/feed/views/pages/feed_page/components/article_categories_menu/article_categories_menu.dart';
 import 'package:ion/app/features/feed/views/pages/feed_page/components/feed_controls/feed_controls.dart';
 import 'package:ion/app/features/feed/views/pages/feed_page/components/feed_posts_list/feed_posts_list.dart';
 import 'package:ion/app/features/feed/views/pages/feed_page/components/stories/stories.dart';
 import 'package:ion/app/features/feed/views/pages/feed_page/components/trending_videos/trending_videos.dart';
-import 'package:ion/app/features/ion_connect/providers/entities_paged_data_provider.c.dart';
 import 'package:ion/app/hooks/use_scroll_top_on_tab_press.dart';
 import 'package:ion/app/router/components/navigation_app_bar/collapsing_app_bar.dart';
 
@@ -31,8 +28,7 @@ class FeedPage extends HookConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final feedCategory = ref.watch(feedCurrentFilterProvider.select((state) => state.category));
-    final hasMorePosts =
-        ref.watch(feedPostsProvider.select((state) => state?.hasMore)).falseOrValue;
+    final hasMorePosts = ref.watch(feedPostsProvider.select((state) => state.hasMore)).falseOrValue;
     final showTrendingVideos = useRef(
       ref.watch(featureFlagsProvider.notifier).get(FeedFeatureFlag.showTrendingVideo),
     );
@@ -60,7 +56,7 @@ class FeedPage extends HookConsumerWidget {
       body: LoadMoreBuilder(
         slivers: slivers,
         hasMore: hasMorePosts,
-        onLoadMore: () => ref.watch(feedPostsProvider.notifier).loadMore(),
+        onLoadMore: () => _onLoadMore(ref),
         builder: (context, slivers) {
           return PullToRefreshBuilder(
             sliverAppBar: CollapsingAppBar(
@@ -82,13 +78,13 @@ class FeedPage extends HookConsumerWidget {
     );
   }
 
+  Future<void> _onLoadMore(WidgetRef ref) async {
+    return ref.read(feedPostsProvider.notifier).fetchEntities();
+  }
+
   Future<void> _onRefresh(WidgetRef ref) async {
-    ref
-      // order matters here, otherwise multiple requests can happen
-      // invalidate feedFilterRelaysProvider to trigger provider rebuild with new relays
-      ..invalidate(feedFilterRelaysProvider)
-      ..invalidate(entitiesPagedDataProvider(ref.read(feedStoriesDataSourceProvider)))
-      ..invalidate(entitiesPagedDataProvider(ref.read(feedPostsDataSourceProvider)))
-      ..invalidate(entitiesPagedDataProvider(ref.read(feedTrendingVideosDataSourceProvider)));
+    ref.read(feedPostsProvider.notifier).refresh();
+    ref.read(feedTrendingVideosProvider.notifier).refresh();
+    ref.read(feedStoriesProvider.notifier).refresh();
   }
 }
