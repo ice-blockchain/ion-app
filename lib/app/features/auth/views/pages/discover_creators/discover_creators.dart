@@ -29,13 +29,14 @@ class DiscoverCreators extends HookConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final finishNotifier = ref.watch(onboardingCompleteNotifierProvider);
-    final contentCreatorsPaginated = ref.watch(contentCreatorsPaginatedProviderProvider);
-    final creatorsState = ref.watch(contentCreatorsPaginated);
+    final contentCreatorsPaginatedProvider =
+        paginatedUsersMetadataProvider(contentCreatorsPaginatedFetcher);
+    final creatorsState = ref.watch(contentCreatorsPaginatedProvider);
     final contentCreators = creatorsState.valueOrNull?.items ?? <UserMetadataEntity>[];
     final hasMore = creatorsState.valueOrNull?.hasMore ?? true;
     ref
       ..displayErrors(onboardingCompleteNotifierProvider)
-      ..displayErrors(contentCreatorsPaginated);
+      ..displayErrors(contentCreatorsPaginatedProvider);
 
     final (selectedCreators, toggleCreatorSelection) = useSelectedState(<UserMetadataEntity>[]);
 
@@ -73,7 +74,7 @@ class DiscoverCreators extends HookConsumerWidget {
           Expanded(
             child: LoadMoreBuilder(
               slivers: slivers,
-              onLoadMore: ref.read(contentCreatorsPaginated.notifier).loadMore,
+              onLoadMore: ref.read(contentCreatorsPaginatedProvider.notifier).loadMore,
               hasMore: hasMore,
               builder: (context, slivers) {
                 return AuthScrollContainer(
