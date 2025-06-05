@@ -1,3 +1,3 @@
 #!/bin/bash
 
-flutter build apk --release --flavor=staging
+asdf exec flutter build apk --release --flavor=staging

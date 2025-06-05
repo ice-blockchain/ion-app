@@ -21,6 +21,13 @@ Example:
 ./scripts/configure_env.sh staging
 ```
 
+## Install asdf
+
+To ensure that everyone uses the exact same Flutter version we use asdf. To install it there is a script. It will also create a VSCode settings file with the Flutter SDK path
+```
+./scripts/asdf.sh
+```
+
 ## Set up git hooks
 
 ```
@@ -59,13 +66,6 @@ Since we use monorepo with several packages, we need to download dependencies fo
 curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
 ```
 Some dependencies require Rust to be installed
-
-## Install asdf
-
-To ensure that everyone uses the exact same Flutter version we use asdf. To install it there is a script. It will also create a VSCode settings file with the Flutter SDK path
-```
-./scripts/asdf.sh
-```
 
 # Run the project
 

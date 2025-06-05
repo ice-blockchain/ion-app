@@ -1,3 +1,3 @@
 #!/bin/bash
 
-dart pub global activate melos
+asdf exec dart pub global activate melos
