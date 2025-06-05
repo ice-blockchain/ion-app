@@ -1,23 +1,18 @@
 // SPDX-License-Identifier: ice License 1.0
 
-part of '../blocked_users_database.c.dart';
+part of '../block_user_database.c.dart';
 
 @Riverpod(keepAlive: true)
 BlockEventDao blockEventDao(Ref ref) => BlockEventDao(ref.watch(blockedUsersDatabaseProvider));
 
-@DriftAccessor(tables: [BlockEventTable, BlockEventStatusTable])
-class BlockEventDao extends DatabaseAccessor<BlockedUsersDatabase> with _$BlockEventDaoMixin {
+@DriftAccessor(tables: [BlockEventTable, UnblockEventTable])
+class BlockEventDao extends DatabaseAccessor<BlockUserDatabase> with _$BlockEventDaoMixin {
   BlockEventDao(super.db);
 
   Future<void> add(EventMessage event) async {
-    final EventReference eventReference;
-    switch (event.kind) {
-      case BlockedUserEntity.kind:
-        eventReference = BlockedUserEntity.fromEventMessage(event).toEventReference();
-      default:
-        return;
-    }
+    if (event.kind != BlockedUserEntity.kind) return;
 
+    final eventReference = BlockedUserEntity.fromEventMessage(event).toEventReference();
     final dbModel = event.toBlockEventDbModel(eventReference);
 
     await into(db.blockEventTable).insert(dbModel, mode: InsertMode.insertOrReplace);
@@ -28,7 +23,8 @@ class BlockEventDao extends DatabaseAccessor<BlockedUsersDatabase> with _$BlockE
       ..orderBy([(t) => OrderingTerm.desc(t.createdAt)])
       ..limit(1);
 
-    return (await query.getSingleOrNull())?.createdAt.toDateTime;
+    final row = await query.getSingleOrNull();
+    return row?.createdAt.toDateTime;
   }
 
   Future<DateTime?> getEarliestBlockEventDate({DateTime? after}) async {
@@ -42,27 +38,23 @@ class BlockEventDao extends DatabaseAccessor<BlockedUsersDatabase> with _$BlockE
       ..orderBy([(t) => OrderingTerm.asc(t.createdAt)])
       ..limit(1);
 
-    return (await query.getSingleOrNull())?.createdAt.toDateTime;
+    final row = await query.getSingleOrNull();
+    return row?.createdAt.toDateTime;
   }
 
-  JoinedSelectStatement<HasResultSet, dynamic> _blockedUsersQuery(String currentUserMasterPubkey) =>
-      select(db.blockEventTable).join([
-        leftOuterJoin(
-          db.blockEventStatusTable,
-          db.blockEventStatusTable.eventReference.equalsExp(db.blockEventTable.eventReference),
-        ),
-      ])
-        ..where(db.blockEventTable.masterPubkey.equals(currentUserMasterPubkey))
-        ..where(
-          db.blockEventStatusTable.status.isNotInValues([
-            BlockedUserStatus.deleted,
-            BlockedUserStatus.failed,
-          ]),
-        );
+  JoinedSelectStatement<HasResultSet, dynamic> _blockedUsersQuery(String currentUserMasterPubkey) {
+    return select(db.blockEventTable).join([
+      leftOuterJoin(
+        db.unblockEventTable,
+        db.unblockEventTable.eventReference.equalsExp(db.blockEventTable.eventReference),
+      ),
+    ])
+      ..where(db.blockEventTable.masterPubkey.equals(currentUserMasterPubkey))
+      ..where(db.unblockEventTable.eventReference.isNull());
+  }
 
   Future<List<EventMessage>> getBlockedUsersEvents(String currentUserMasterPubkey) async {
     final result = await _blockedUsersQuery(currentUserMasterPubkey).get();
-
     return result.map((row) => row.readTable(db.blockEventTable).toEventMessage()).toList();
   }
 
@@ -74,24 +66,19 @@ class BlockEventDao extends DatabaseAccessor<BlockedUsersDatabase> with _$BlockE
 
   JoinedSelectStatement<HasResultSet, dynamic> _blockedByUsersQuery(
     String currentUserMasterPubkey,
-  ) =>
-      select(db.blockEventTable).join([
-        leftOuterJoin(
-          db.blockEventStatusTable,
-          db.blockEventStatusTable.eventReference.equalsExp(db.blockEventTable.eventReference),
-        ),
-      ])
-        ..where(db.blockEventTable.masterPubkey.isNotValue(currentUserMasterPubkey))
-        ..where(
-          db.blockEventStatusTable.status.isNotInValues([
-            BlockedUserStatus.deleted,
-            BlockedUserStatus.failed,
-          ]),
-        );
+  ) {
+    return select(db.blockEventTable).join([
+      leftOuterJoin(
+        db.unblockEventTable,
+        db.unblockEventTable.eventReference.equalsExp(db.blockEventTable.eventReference),
+      ),
+    ])
+      ..where(db.blockEventTable.masterPubkey.isNotValue(currentUserMasterPubkey))
+      ..where(db.unblockEventTable.eventReference.isNull());
+  }
 
   Future<List<EventMessage>> getBlockedByUsersEvents(String currentUserMasterPubkey) async {
     final result = await _blockedByUsersQuery(currentUserMasterPubkey).get();
-
     return result.map((row) => row.readTable(db.blockEventTable).toEventMessage()).toList();
   }
 

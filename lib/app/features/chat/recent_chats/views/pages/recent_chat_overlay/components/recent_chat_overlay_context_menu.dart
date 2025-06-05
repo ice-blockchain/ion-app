@@ -15,6 +15,7 @@ import 'package:ion/app/features/chat/recent_chats/model/conversation_list_item.
 import 'package:ion/app/features/chat/recent_chats/providers/toggle_archive_conversation_provider.c.dart';
 import 'package:ion/app/features/user/pages/profile_page/pages/block_user_modal/block_user_modal.dart';
 import 'package:ion/app/features/user/providers/report_notifier.c.dart';
+import 'package:ion/app/features/user_block/optimistic_ui/block_user_provider.c.dart';
 import 'package:ion/app/features/user_block/providers/block_list_notifier.c.dart';
 import 'package:ion/app/router/app_routes.c.dart';
 import 'package:ion/app/router/utils/show_simple_bottom_sheet.dart';
@@ -121,9 +122,7 @@ class RecentChatOverlayContextMenu extends ConsumerWidget {
                               child: BlockUserModal(pubkey: masterPubkey),
                             );
                           } else {
-                            ref
-                                .read(blockListNotifierProvider.notifier)
-                                .toggleBlocked(masterPubkey);
+                            ref.read(toggleBlockNotifierProvider.notifier).toggle(masterPubkey);
                           }
                         },
                       ),

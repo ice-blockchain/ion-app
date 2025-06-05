@@ -9,7 +9,6 @@ import 'package:ion/app/features/chat/providers/conversation_pubkeys_provider.c.
 import 'package:ion/app/features/ion_connect/ion_connect.dart';
 import 'package:ion/app/features/ion_connect/model/action_source.c.dart';
 import 'package:ion/app/features/ion_connect/model/deletion_request.c.dart';
-import 'package:ion/app/features/ion_connect/model/event_reference.c.dart';
 import 'package:ion/app/features/ion_connect/providers/ion_connect_event_signer_provider.c.dart';
 import 'package:ion/app/features/ion_connect/providers/ion_connect_notifier.c.dart';
 import 'package:ion/app/features/optimistic_ui/core/optimistic_sync_strategy.dart';
@@ -18,19 +17,14 @@ import 'package:ion/app/features/user_block/optimistic_ui/block_sync_strategy.da
 import 'package:ion/app/features/user_block/optimistic_ui/model/blocked_user.c.dart';
 import 'package:ion/app/services/ion_connect/ion_connect_gift_wrap_service.c.dart';
 import 'package:ion/app/services/ion_connect/ion_connect_seal_service.c.dart';
-import 'package:ion/app/services/uuid/uuid.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'block_sync_strategy_provider.c.g.dart';
 
 @riverpod
 SyncStrategy<BlockedUser> blockSyncStrategy(Ref ref) {
-  final ionConnectNotifier = ref.read(ionConnectNotifierProvider.notifier);
-  final sealService = ref.watch(ionConnectSealServiceProvider).value;
-  final wrapService = ref.watch(ionConnectGiftWrapServiceProvider).value;
   final eventSigner = ref.watch(currentUserIonConnectEventSignerProvider).value;
   final currentUserMasterPubkey = ref.read(currentPubkeySelectorProvider);
-  final devicePubkeysProvider = ref.watch(conversationPubkeysProvider.notifier);
 
   if (eventSigner == null) {
     throw EventSignerNotFoundException();
@@ -39,6 +33,11 @@ SyncStrategy<BlockedUser> blockSyncStrategy(Ref ref) {
   if (currentUserMasterPubkey == null) {
     throw UserMasterPubkeyNotFoundException();
   }
+
+  final sealService = ref.watch(ionConnectSealServiceProvider).value;
+  final wrapService = ref.watch(ionConnectGiftWrapServiceProvider).value;
+  final ionConnectNotifier = ref.read(ionConnectNotifierProvider.notifier);
+  final devicePubkeysProvider = ref.watch(conversationPubkeysProvider.notifier);
 
   Future<void> sendWrappedEvent({
     required String pubkey,
@@ -65,17 +64,11 @@ SyncStrategy<BlockedUser> blockSyncStrategy(Ref ref) {
 
   return BlockSyncStrategy(
     sendBlockEvent: (blockedUserMasterPubkey) async {
-      final sharedId = generateUuid();
-
-      final participantsMasterPubkeys = [currentUserMasterPubkey, blockedUserMasterPubkey]
-        ..sort((a, b) {
-          if (a == currentUserMasterPubkey) return 1;
-          if (b == currentUserMasterPubkey) return -1;
-          return a.compareTo(b);
-        });
+      final participantsMasterPubkeys = [currentUserMasterPubkey, blockedUserMasterPubkey];
 
       final participantsPubkeysMap =
           await devicePubkeysProvider.fetchUsersKeys(participantsMasterPubkeys);
+      final createdAt = DateTime.now();
 
       await Future.wait(
         participantsMasterPubkeys.map((receiverMasterPubkey) async {
@@ -84,16 +77,12 @@ SyncStrategy<BlockedUser> blockSyncStrategy(Ref ref) {
           if (pubkeyDevices == null) throw UserPubkeyNotFoundException(receiverMasterPubkey);
 
           for (final receiverPubkey in pubkeyDevices) {
-            final createdAt = DateTime.now();
-
             final eventMessage = await EventMessage.fromData(
               content: '',
               signer: eventSigner,
               kind: BlockedUserEntity.kind,
               createdAt: createdAt.microsecondsSinceEpoch,
               tags: [
-                // This is immutable event but with exception for dtag
-                ['d', sharedId],
                 PubkeyTag(value: blockedUserMasterPubkey).toTag(),
                 MasterPubkeyTag(value: currentUserMasterPubkey).toTag(),
               ],
@@ -108,24 +97,15 @@ SyncStrategy<BlockedUser> blockSyncStrategy(Ref ref) {
         }),
       );
     },
-    deleteBlockEvent: (blockedUserMasterPubkey, dtag) async {
-      final participantsMasterPubkeys = [currentUserMasterPubkey, blockedUserMasterPubkey]
-        ..sort((a, b) {
-          if (a == currentUserMasterPubkey) return 1;
-          if (b == currentUserMasterPubkey) return -1;
-          return a.compareTo(b);
-        });
+    deleteBlockEvent: (blockedUserMasterPubkey, eventReference) async {
+      if (eventReference == null) {
+        throw UnsupportedEventReference(eventReference);
+      }
+
+      final participantsMasterPubkeys = [currentUserMasterPubkey, blockedUserMasterPubkey];
 
       final participantsPubkeysMap =
           await devicePubkeysProvider.fetchUsersKeys(participantsMasterPubkeys);
-
-      // Actually we are deleting immutable event, but there is no way to
-      // pass dtag tag information
-      final eventReference = ReplaceableEventReference(
-        dTag: dtag,
-        kind: BlockedUserEntity.kind,
-        pubkey: currentUserMasterPubkey,
-      );
 
       final eventToDelete = EventToDelete(eventReference: eventReference);
 

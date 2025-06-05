@@ -7,7 +7,7 @@ import 'package:ion/app/features/user_block/optimistic_ui/model/blocked_user.c.d
 final class ToggleBlockIntent implements OptimisticIntent<BlockedUser> {
   @override
   BlockedUser optimistic(BlockedUser current, [String? dtag]) =>
-      current.copyWith(isBlocked: !current.isBlocked, dtag: dtag);
+      current.copyWith(isBlocked: !current.isBlocked);
 
   @override
   Future<BlockedUser> sync(BlockedUser prev, BlockedUser next) =>

@@ -14,6 +14,7 @@ import 'package:ion/app/features/chat/recent_chats/providers/selected_edit_messa
 import 'package:ion/app/features/chat/views/components/message_items/components.dart';
 import 'package:ion/app/features/chat/views/components/message_items/messaging_bottom_bar/components/components.dart';
 import 'package:ion/app/features/chat/views/components/message_items/messaging_bottom_bar/components/text_message_limit_label.dart';
+import 'package:ion/app/features/user_block/optimistic_ui/block_user_provider.c.dart';
 import 'package:ion/app/features/user_block/providers/block_list_notifier.c.dart';
 import 'package:ion/app/hooks/use_on_init.dart';
 import 'package:ion/app/services/compressors/audio_compressor.c.dart';
@@ -89,7 +90,7 @@ class MessagingBottomBar extends HookConsumerWidget {
         height: 45.0.s,
         child: TextButton(
           onPressed: () {
-            ref.read(blockListNotifierProvider.notifier).toggleBlocked(receiverMasterPubkey);
+            ref.read(toggleBlockNotifierProvider.notifier).toggle(receiverMasterPubkey);
           },
           style: TextButton.styleFrom(
             minimumSize: Size(0, 40.0.s),

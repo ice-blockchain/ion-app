@@ -6,6 +6,8 @@ import 'package:ion/app/features/auth/providers/auth_provider.c.dart';
 
 import 'package:ion/app/features/optimistic_ui/core/operation_manager.dart';
 import 'package:ion/app/features/optimistic_ui/core/optimistic_service.dart';
+import 'package:ion/app/features/user_block/model/database/block_user_database.c.dart';
+import 'package:ion/app/features/user_block/model/entities/blocked_user_entity.c.dart';
 import 'package:ion/app/features/user_block/optimistic_ui/block_sync_strategy_provider.c.dart';
 import 'package:ion/app/features/user_block/optimistic_ui/model/blocked_user.c.dart';
 import 'package:ion/app/features/user_block/optimistic_ui/toggle_block_intent.dart';
@@ -21,28 +23,37 @@ Future<List<BlockedUser>> loadInitialBlockedUsers(Ref ref) async {
     throw UserMasterPubkeyNotFoundException();
   }
 
-  //final blockEventDao = ref.watch(blockEventDaoProvider);
-  //final blockEvents = await blockEventDao.getBlockedUsersEvents(currentMasterPubkey);
-  //final blockedByEvents = await blockEventDao.getBlockedByUsersEvents(currentMasterPubkey);
+  final blockEventDao = ref.watch(blockEventDaoProvider);
+  final blockEvents = await blockEventDao.getBlockedUsersEvents(currentMasterPubkey);
+  final blockEventEntities = blockEvents.map(BlockedUserEntity.fromEventMessage).toList();
 
-  //final blockEventStatusDao = ref.watch(blockEventStatusDaoProvider);
-  //final blockEventStatuses = await blockEventStatusDao;
+  final unblockEventDao = ref.watch(unblockEventDaoProvider);
 
-  return [];
+  return Future.wait(
+    blockEventEntities.map((blockEntity) async {
+      final isUnblocked = await unblockEventDao.isUnblocked(blockEntity.toEventReference());
+
+      return BlockedUser(
+        isBlocked: !isUnblocked,
+        masterPubkey: blockEntity.data.blockedMasterPubkeys.single,
+        eventReference: blockEntity.toEventReference().copyWith(kind: BlockedUserEntity.kind),
+      );
+    }),
+  );
 }
 
 @riverpod
 OptimisticService<BlockedUser> blockUserService(Ref ref) {
   final manager = ref.watch(blockUserManagerProvider);
-  final service = OptimisticService<BlockedUser>(manager: manager)
-    ..initialize(loadInitialBlockedUsers(ref));
+  final service = OptimisticService<BlockedUser>(manager: manager);
 
   return service;
 }
 
 @riverpod
 Stream<BlockedUser?> blockedUserWatch(Ref ref, String masterPubkey) {
-  final service = ref.watch(blockUserServiceProvider);
+  final service = ref.watch(blockUserServiceProvider)..initialize(loadInitialBlockedUsers(ref));
+
   return service.watch(masterPubkey);
 }
 
