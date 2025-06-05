@@ -198,7 +198,7 @@
   "fill_profile_description": "Customize your account",
   "fill_profile_input_name": "Name",
   "fill_profile_input_nickname": "Nickname",
-  "fill_profile_input_referral": "Who invited you (optional)",
+  "fill_profile_input_referral": "Who invited you",
   "get_started_title": "Get started",
   "get_started_description": "Enter your identity key name to log in into your account",
   "get_started_method_divider": "or",
