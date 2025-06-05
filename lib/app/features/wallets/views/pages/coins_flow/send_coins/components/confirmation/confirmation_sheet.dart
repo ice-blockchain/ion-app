@@ -35,13 +35,20 @@ import 'package:ion/app/utils/num.dart';
 import 'package:ion/generated/assets.gen.dart';
 import 'package:ion_identity_client/ion_identity.dart';
 
+enum RedirectType {
+  push,
+  go,
+}
+
 class ConfirmationSheet extends ConsumerWidget {
   const ConfirmationSheet({
     required this.successRouteLocationBuilder,
+    this.redirectType = RedirectType.go,
     super.key,
   });
 
   final String Function() successRouteLocationBuilder;
+  final RedirectType redirectType;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -66,7 +73,13 @@ class ConfirmationSheet extends ConsumerWidget {
 
         if (context.mounted && transactionDetails != null) {
           ref.read(transactionNotifierProvider.notifier).details = transactionDetails;
-          context.go(successRouteLocationBuilder());
+
+          switch (redirectType) {
+            case RedirectType.go:
+              context.go(successRouteLocationBuilder());
+            case RedirectType.push:
+              unawaited(context.push(successRouteLocationBuilder()));
+          }
         }
       });
 
