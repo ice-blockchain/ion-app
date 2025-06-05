@@ -57,6 +57,18 @@ class VideoController extends _$VideoController {
         .watch(videoPlayerControllerFactoryProvider(sourcePath))
         .createController(VideoPlayerOptions(mixWithOthers: true));
 
+    ref.onCancel(() async {
+      await Future.wait([
+        controller.dispose(),
+        () async {
+          if (_activeController != controller) {
+            await _activeController?.dispose();
+            _activeController = null;
+          }
+        }(),
+      ]);
+    });
+
     try {
       await controller.initialize();
       if (!controller.value.hasError) {
@@ -112,10 +124,6 @@ class VideoController extends _$VideoController {
         stackTrace: stackTrace,
       );
     }
-
-    ref.onCancel(() async {
-      return controller.dispose();
-    });
 
     return controller;
   }
