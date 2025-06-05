@@ -2,6 +2,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:ion/app/components/placeholder/ion_placeholder.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/components/ion_connect_network_image/ion_connect_network_image.dart';
 import 'package:ion/app/features/feed/data/models/entities/modifiable_post_data.c.dart';
@@ -9,6 +10,9 @@ import 'package:ion/app/features/feed/views/components/overlay_menu/user_info_me
 import 'package:ion/app/features/feed/views/pages/feed_page/components/trending_videos/components/trending_video_author.dart';
 import 'package:ion/app/features/feed/views/pages/feed_page/components/trending_videos/components/trending_video_likes_button.dart';
 import 'package:ion/app/features/ion_connect/model/event_reference.c.dart';
+import 'package:ion/app/features/ion_connect/model/ion_connect_entity.dart';
+import 'package:ion/app/features/user/providers/muted_users_notifier.c.dart';
+import 'package:ion/app/features/user_block/providers/block_list_notifier.c.dart';
 import 'package:ion/app/router/app_routes.c.dart';
 
 class TrendingVideoListItem extends ConsumerWidget {
@@ -23,6 +27,10 @@ class TrendingVideoListItem extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    if (_isBlockedOrMutedOrBlocking(ref, video)) {
+      return const SizedBox.shrink();
+    }
+
     final eventReference = video.toEventReference();
 
     final thumbnailUrl = video.data.primaryVideo?.thumb;
@@ -30,18 +38,28 @@ class TrendingVideoListItem extends ConsumerWidget {
       return _PlaceholderThumbnail(size: itemSize);
     }
 
-    return GestureDetector(
-      onTap: () {
-        TrendingVideosRoute(
-          eventReference: eventReference.encode(),
-        ).push<void>(context);
-      },
-      child: _VideoContainer(
-        thumbnailUrl: thumbnailUrl,
-        size: itemSize,
-        eventReference: eventReference,
+    return Padding(
+      padding: EdgeInsetsDirectional.only(end: 12.0.s),
+      child: GestureDetector(
+        onTap: () {
+          TrendingVideosRoute(
+            eventReference: eventReference.encode(),
+          ).push<void>(context);
+        },
+        child: _VideoContainer(
+          thumbnailUrl: thumbnailUrl,
+          size: itemSize,
+          eventReference: eventReference,
+        ),
       ),
     );
+  }
+
+  bool _isBlockedOrMutedOrBlocking(WidgetRef ref, IonConnectEntity entity) {
+    final isMuted = ref.watch(isUserMutedProvider(entity.masterPubkey));
+    final isBlockedOrBlockedBy =
+        ref.watch(isEntityBlockedOrBlockedByNotifierProvider(entity)).valueOrNull ?? false;
+    return isMuted || isBlockedOrBlockedBy;
   }
 }
 
@@ -52,18 +70,16 @@ class _PlaceholderThumbnail extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      width: size.width,
-      height: size.height,
-      decoration: BoxDecoration(
-        color: context.theme.appColors.sheetLine.withValues(alpha: 0.3),
-        borderRadius: BorderRadius.circular(16.0.s),
-      ),
-      child: Center(
-        child: Icon(
-          Icons.broken_image,
-          size: 48.0.s,
-          color: context.theme.appColors.sheetLine,
+    return Padding(
+      padding: EdgeInsetsDirectional.only(end: 12.0.s),
+      child: Container(
+        width: size.width,
+        height: size.height,
+        foregroundDecoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(16.0.s),
+        ),
+        child: const Center(
+          child: IonPlaceholder(),
         ),
       ),
     );

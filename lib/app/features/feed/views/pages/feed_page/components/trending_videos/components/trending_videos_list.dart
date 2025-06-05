@@ -5,7 +5,6 @@ import 'package:ion/app/components/screen_offset/screen_side_offset.dart';
 import 'package:ion/app/features/feed/data/models/entities/modifiable_post_data.c.dart';
 import 'package:ion/app/features/feed/data/models/trending_videos_overlay.dart';
 import 'package:ion/app/features/feed/views/pages/feed_page/components/trending_videos/components/trending_videos_list_item.dart';
-import 'package:ion/app/features/feed/views/pages/feed_page/components/trending_videos/components/trending_videos_list_separator.dart';
 
 class TrendingVideosList extends StatelessWidget {
   const TrendingVideosList({
@@ -24,11 +23,8 @@ class TrendingVideosList extends StatelessWidget {
       padding: EdgeInsets.symmetric(
         horizontal: ScreenSideOffset.defaultSmallMargin,
       ),
-      sliver: SliverList.separated(
+      sliver: SliverList.builder(
         itemCount: videos.length,
-        separatorBuilder: (BuildContext context, int index) {
-          return const TrendingVideosListSeparator();
-        },
         itemBuilder: (BuildContext context, int index) => TrendingVideoListItem(
           video: videos[index],
           itemSize: listOverlay.itemSize,
