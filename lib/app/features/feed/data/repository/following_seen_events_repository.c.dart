@@ -53,4 +53,23 @@ class FollowingSeenEventsRepository {
       nextEventReference: nextEventReference,
     );
   }
+
+  Future<({EventReference eventReference, int createdAt})?> getSeenSequenceEnd({
+    required EventReference eventReference,
+    required FeedType feedType,
+    FeedModifier? feedModifier,
+  }) async {
+    final seenSequenceEnd = await _seenEventsDao.getByReferenceOrFirstWithoutNext(
+      eventReference: eventReference,
+      feedType: feedType,
+      feedModifier: feedModifier,
+    );
+
+    if (seenSequenceEnd == null) return null;
+
+    return (
+      createdAt: seenSequenceEnd.createdAt,
+      eventReference: seenSequenceEnd.eventReference,
+    );
+  }
 }

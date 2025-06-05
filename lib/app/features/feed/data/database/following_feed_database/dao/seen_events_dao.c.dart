@@ -43,4 +43,52 @@ class SeenEventsDao extends DatabaseAccessor<FollowingFeedDatabase> with _$SeenE
       ),
     );
   }
+
+  Future<SeenEvent?> getSequenceEnd({
+    required EventReference eventReference,
+    required FeedType feedType,
+    FeedModifier? feedModifier,
+  }) async {
+    return null;
+  }
+
+  /// Fetches a record by [eventReference] + [feedType] + [feedModifier].
+  /// If found and [nextEventReference] is not null,
+  /// finds the end of the sequence -
+  /// the first next event for that [feedType] + [feedModifier] without [nextEventReference],
+  /// ordered by createdAt.
+  Future<SeenEvent?> getByReferenceOrFirstWithoutNext({
+    required EventReference eventReference,
+    required FeedType feedType,
+    FeedModifier? feedModifier,
+  }) async {
+    final query = select(db.seenEventsTable)
+      ..where((tbl) => tbl.eventReference.equalsValue(eventReference))
+      ..where((tbl) => tbl.feedType.equalsValue(feedType))
+      ..where(
+        (tbl) => feedModifier == null
+            ? tbl.feedModifier.isNull()
+            : tbl.feedModifier.equalsValue(feedModifier),
+      );
+
+    final record = await query.getSingleOrNull();
+    if (record == null) return null;
+    if (record.nextEventReference == null) return record;
+
+    final firstWithoutNext = await (select(db.seenEventsTable)
+          ..where((tbl) => tbl.feedType.equalsValue(feedType))
+          ..where(
+            (tbl) => feedModifier == null
+                ? tbl.feedModifier.isNull()
+                : tbl.feedModifier.equalsValue(feedModifier),
+          )
+          ..where((tbl) => tbl.nextEventReference.isNull())
+          ..where((tbl) => tbl.createdAt.isBiggerThanValue(record.createdAt))
+          ..orderBy([
+            (tbl) => OrderingTerm(expression: tbl.createdAt),
+          ])
+          ..limit(1))
+        .getSingleOrNull();
+    return firstWithoutNext;
+  }
 }
