@@ -6,6 +6,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/auth/providers/auth_provider.c.dart';
 import 'package:ion/app/features/chat/e2ee/providers/e2ee_delete_event_provider.c.dart';
+import 'package:ion/app/features/chat/hooks/use_has_reaction.dart';
 import 'package:ion/app/features/chat/views/components/message_items/message_item_wrapper/message_item_wrapper.dart';
 import 'package:ion/app/features/chat/views/components/message_items/message_reactions/message_reactions.dart';
 import 'package:ion/app/features/chat/views/components/message_items/message_types/text_message/text_message.dart';
@@ -74,6 +75,9 @@ class SharedStoryMessage extends HookConsumerWidget {
       },
     );
 
+    final isReplyToStory =
+        useHasReaction(replyEventMessage, ref) || replyEventMessage.content.isNotEmpty;
+
     return Container(
       margin: margin,
       child: Align(
@@ -91,7 +95,7 @@ class SharedStoryMessage extends HookConsumerWidget {
               child: Column(
                 crossAxisAlignment: isMe ? CrossAxisAlignment.end : CrossAxisAlignment.start,
                 children: [
-                  _SenderReceiverLabel(isMe: isMe),
+                  if (isReplyToStory) _SenderReceiverLabel(isMe: isMe),
                   if (storyUrl.isNotEmpty && !storyExpired && !storyDeleted)
                     _StoryPreviewImage(
                       isMe: isMe,
