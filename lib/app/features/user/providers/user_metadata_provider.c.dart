@@ -59,3 +59,9 @@ Future<UserMetadataEntity?> currentUserMetadata(Ref ref) async {
     return null;
   }
 }
+
+@riverpod
+Future<bool> isUserDeleted(Ref ref, String pubkey) async {
+  final userMetadata = await ref.watch(userMetadataProvider(pubkey).future);
+  return userMetadata == null;
+}
