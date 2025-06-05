@@ -17,6 +17,7 @@ import 'package:ion/app/features/core/providers/splash_provider.c.dart';
 import 'package:ion/app/features/core/views/pages/error_page.dart';
 import 'package:ion/app/features/force_update/providers/force_update_provider.c.dart';
 import 'package:ion/app/features/force_update/view/pages/app_update_modal.dart';
+import 'package:ion/app/features/gallery/views/pages/media_picker_type.dart';
 import 'package:ion/app/features/user/providers/user_metadata_provider.c.dart';
 import 'package:ion/app/router/app_router_listenable.dart';
 import 'package:ion/app/router/app_routes.c.dart';
@@ -68,6 +69,7 @@ Future<String?> _mainRedirect({
   required String location,
   required Ref ref,
 }) async {
+  print('_mainRedirect location: $location');
   final isAuthenticated = (ref.read(authProvider).valueOrNull?.isAuthenticated).falseOrValue;
   final onboardingComplete = ref.read(onboardingCompleteProvider).valueOrNull;
   final hasNotificationsPermission = ref.read(hasPermissionProvider(Permission.notifications));
@@ -75,7 +77,9 @@ Future<String?> _mainRedirect({
   final isOnSplash = location.startsWith(SplashRoute().location);
   final isOnAuth = location.contains('/${AuthRoutes.authPrefix}/');
   final isOnOnboarding = location.contains('/${AuthRoutes.onboardingPrefix}/');
+  final isOnGallery = location.contains('/${GalleryRoutes.galleryRoutesPrefix}/');
   final isOnFeed = location == FeedRoute().location;
+  // final isOnCamera = location.contains(GalleryCameraRoute(mediaPickerType: MediaPickerType.image).location);
 
   if (!isAuthenticated && !isOnAuth) {
     return IntroRoute().location;
@@ -98,7 +102,8 @@ Future<String?> _mainRedirect({
     final delegationComplete = ref.read(delegationCompleteProvider).valueOrNull.falseOrValue;
     final relaysAssigned = ref.read(relaysAssignedProvider).valueOrNull.falseOrValue;
 
-    if (!onboardingComplete && !isOnOnboarding && !(hasUserMetadata && relaysAssigned)) {
+    if (!onboardingComplete && !isOnOnboarding && !isOnGallery && !(hasUserMetadata && relaysAssigned)) {
+      print('redirecting to fill profile');
       return FillProfileRoute().location;
     }
 
