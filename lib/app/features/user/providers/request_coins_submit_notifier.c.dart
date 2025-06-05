@@ -44,7 +44,7 @@ class RequestCoinsSubmitNotifier extends _$RequestCoinsSubmitNotifier {
         throw const CurrentUserNotFoundException();
       }
 
-      final request = await _buildFundsRequestData(formData);
+      final request = await _buildFundsRequestData(formData, currentUserPubkey);
       final pubkeys = await _collectPubkeys(formData.contactPubkey!, currentUserPubkey);
 
       final sendToRelayService = await ref.read(sendTransactionToRelayServiceProvider.future);
@@ -108,7 +108,10 @@ class RequestCoinsSubmitNotifier extends _$RequestCoinsSubmitNotifier {
     }
   }
 
-  Future<FundsRequestData> _buildFundsRequestData(RequestCoinsFormData formData) async {
+  Future<FundsRequestData> _buildFundsRequestData(
+    RequestCoinsFormData formData,
+    String currentUserPubkey,
+  ) async {
     final RequestCoinsFormData(:assetData, :network, :contactPubkey, :toWallet) = formData;
 
     final user = await ref.read(userMetadataProvider(contactPubkey!).future);
@@ -131,7 +134,7 @@ class RequestCoinsSubmitNotifier extends _$RequestCoinsSubmitNotifier {
       networkId: network.id,
       assetClass: isNative ? 'native' : 'token',
       assetAddress: contractAddress,
-      pubkey: contactPubkey,
+      pubkey: currentUserPubkey,
       walletAddress: toWalletAddress,
       content: content,
     );

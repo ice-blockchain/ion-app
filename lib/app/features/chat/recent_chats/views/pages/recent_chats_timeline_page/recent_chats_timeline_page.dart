@@ -1,5 +1,6 @@
 // SPDX-License-Identifier: ice License 1.0
 
+import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter_animate/flutter_animate.dart';
@@ -220,7 +221,7 @@ class E2eeRecentChatTile extends HookConsumerWidget {
     final currentUserPubkey = ref.watch(currentPubkeySelectorProvider);
 
     final receiverPubkey =
-        entity.relatedPubkeys?.firstWhere((p) => p.value != currentUserPubkey).value;
+        entity.relatedPubkeys?.firstWhereOrNull((p) => p.value != currentUserPubkey)?.value;
 
     if (receiverPubkey == null) {
       return const SizedBox.shrink();
