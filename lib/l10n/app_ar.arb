@@ -656,7 +656,6 @@
   "poll_time_less_than_minute": "أقل من دقيقة",
   "chat_recents_money_request_message": "تم طلب المال",
   "toolbar_link_title": "أضف رابط",
-  "toolbar_link_placeholder": "http://",
   "messaging_empty_description": "الرسائل والأصوات مشفرة من الطرف إلى الطرف.",
   "chat_modal_title": "ابدأ محادثة",
   "chat_modal_private_description": "ابدأ محادثة خاصة بينك وبين شخص واحد",
