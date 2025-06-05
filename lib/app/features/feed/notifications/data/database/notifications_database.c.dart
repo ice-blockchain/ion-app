@@ -41,11 +41,19 @@ NotificationsDatabase notificationsDatabase(Ref ref) {
     'aggregatedLikes': '''
       WITH DailyLikes AS (
           SELECT
-              DATE(datetime(created_at, 'unixepoch', 'localtime')) AS event_date,
+              DATE(datetime(
+                CASE 
+                  WHEN LENGTH(created_at) > 13 THEN created_at / 1000000
+                  ELSE created_at
+                END, 'unixepoch', 'localtime')) AS event_date,
               event_reference,
               pubkey,
               created_at,
-              ROW_NUMBER() OVER (PARTITION BY DATE(datetime(created_at, 'unixepoch', 'localtime')), event_reference 
+              ROW_NUMBER() OVER (PARTITION BY DATE(datetime(
+                CASE 
+                  WHEN LENGTH(created_at) > 13 THEN created_at / 1000000
+                  ELSE created_at
+                END, 'unixepoch', 'localtime')), event_reference 
                   ORDER BY created_at DESC) AS rn
           FROM
               likes_table
@@ -66,10 +74,18 @@ NotificationsDatabase notificationsDatabase(Ref ref) {
     'aggregatedFollowers': '''
       WITH DailyFollowers AS (
           SELECT
-              DATE(datetime(created_at, 'unixepoch', 'localtime')) AS event_date,
+              DATE(datetime(
+                CASE 
+                  WHEN LENGTH(created_at) > 13 THEN created_at / 1000000
+                  ELSE created_at
+                END, 'unixepoch', 'localtime')) AS event_date,
               pubkey,
               created_at,
-              ROW_NUMBER() OVER (PARTITION BY DATE(datetime(created_at, 'unixepoch', 'localtime')) 
+              ROW_NUMBER() OVER (PARTITION BY DATE(datetime(
+                CASE 
+                  WHEN LENGTH(created_at) > 13 THEN created_at / 1000000
+                  ELSE created_at
+                END, 'unixepoch', 'localtime')) 
                   ORDER BY created_at DESC) AS rn
           FROM
               followers_table
