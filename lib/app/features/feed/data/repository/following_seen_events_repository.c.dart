@@ -5,6 +5,7 @@ import 'package:ion/app/features/feed/data/database/following_feed_database/dao/
 import 'package:ion/app/features/feed/data/database/following_feed_database/following_feed_database.c.dart';
 import 'package:ion/app/features/feed/data/models/feed_modifier.dart';
 import 'package:ion/app/features/feed/data/models/feed_type.dart';
+import 'package:ion/app/features/ion_connect/model/event_reference.c.dart';
 import 'package:ion/app/features/ion_connect/model/ion_connect_entity.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
@@ -36,6 +37,20 @@ class FollowingSeenEventsRepository {
         feedModifier: feedModifier,
         pubkey: entity.masterPubkey,
       ),
+    );
+  }
+
+  Future<void> setNextEvent({
+    required EventReference eventReference,
+    required EventReference nextEventReference,
+    required FeedType feedType,
+    FeedModifier? feedModifier,
+  }) async {
+    return _seenEventsDao.updateNextEvent(
+      eventReference: eventReference,
+      feedType: feedType,
+      feedModifier: feedModifier,
+      nextEventReference: nextEventReference,
     );
   }
 }
