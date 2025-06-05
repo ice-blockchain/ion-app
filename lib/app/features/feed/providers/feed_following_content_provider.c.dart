@@ -130,7 +130,7 @@ class FeedFollowingContent extends _$FeedFollowingContent implements PagedNotifi
 
     var pubkeysToFetch = followList.data.list.map((followee) => followee.pubkey);
 
-    // In case of stories - we need to fetch own entities
+    // In case of stories - we also need to fetch own entities
     if (feedType == FeedType.story) {
       final currentPubkey = ref.read(currentPubkeySelectorProvider);
       if (currentPubkey == null) {
@@ -202,6 +202,7 @@ class FeedFollowingContent extends _$FeedFollowingContent implements PagedNotifi
     return selected;
   }
 
+  /// For for 1 entity for each provider pubkey
   Stream<MapEntry<String, IonConnectEntity?>> _fetchEntities({
     required List<String> pubkeys,
   }) async* {
