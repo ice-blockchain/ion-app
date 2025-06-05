@@ -119,7 +119,7 @@ class BlockedUsersSync extends _$BlockedUsersSync {
       await blockEventDao.add(rumor);
     } else if (rumor.kind == DeletionRequestEntity.kind) {
       final eventsToDelete = DeletionRequest.fromEventMessage(rumor).events;
-      print('Deletion request received for ${eventsToDelete.first} events.');
+
       final eventToDeleteReferences =
           eventsToDelete.map((event) => (event as EventToDelete).eventReference).toList();
       if (eventToDeleteReferences.length == 1) {
