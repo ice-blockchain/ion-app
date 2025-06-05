@@ -41,6 +41,7 @@ class VisualMediaCustomGrid extends HookConsumerWidget {
         eventMessage: eventMessage,
         height: _height1,
         isReply: isReply,
+        isSingle: true,
       );
     }
 

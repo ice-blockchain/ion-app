@@ -62,10 +62,7 @@ class VisualMediaMessage extends HookConsumerWidget {
         contentDescription: context.i18n.common_media,
       ),
       contentPadding: EdgeInsets.all(padding),
-      child: SizedBox(
-        width: messageMedias.length > 1 || repliedEventMessage.valueOrNull != null
-            ? double.infinity
-            : 146.0.s,
+      child: IntrinsicWidth(
         child: Column(
           children: [
             if (repliedMessageItem != null)

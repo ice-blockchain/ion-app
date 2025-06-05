@@ -15,6 +15,7 @@ import 'package:ion/app/features/chat/model/database/chat_database.c.dart';
 import 'package:ion/app/features/core/model/media_type.dart';
 import 'package:ion/app/features/ion_connect/ion_connect.dart';
 import 'package:ion/app/router/app_routes.c.dart';
+import 'package:ion/app/services/media_service/aspect_ratio.dart';
 import 'package:ion/app/utils/date.dart';
 import 'package:ion/generated/assets.gen.dart';
 
@@ -24,6 +25,7 @@ class VisualMediaContent extends HookConsumerWidget {
     required this.eventMessage,
     required this.height,
     this.isReply = false,
+    this.isSingle = false,
     super.key,
   });
 
@@ -31,6 +33,8 @@ class VisualMediaContent extends HookConsumerWidget {
   final EventMessage eventMessage;
   final double height;
   final bool isReply;
+  final bool isSingle;
+
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final localFile = useState<File?>(null);
@@ -63,6 +67,26 @@ class VisualMediaContent extends HookConsumerWidget {
 
     final isVideo = MediaType.fromMimeType(mediaAttachment?.mimeType ?? '') == MediaType.video;
 
+    final fittedSize = useMemoized(
+      () {
+        final aspectRatio = entity.data.visualMedias.firstOrNull != null
+            ? MediaAspectRatio.fromMediaAttachment(entity.data.visualMedias.firstOrNull!)
+                .aspectRatio
+            : null;
+
+        if (isSingle && !isReply && aspectRatio != null) {
+          return getFittedSize(
+            maxWidth: 262.0.s,
+            maxHeight: 262.0.s,
+            aspectRatio: aspectRatio,
+          );
+        }
+
+        return Size(146.0.s, height);
+      },
+      [entity.data.visualMedias.firstOrNull],
+    );
+
     return GestureDetector(
       onTap: () async {
         final messageMedias =
@@ -83,7 +107,8 @@ class VisualMediaContent extends HookConsumerWidget {
             ClipRRect(
               borderRadius: BorderRadius.circular(height <= 30.0.s ? 2.0.s : 5.0.s),
               child: SizedBox(
-                height: height,
+                width: fittedSize.width,
+                height: fittedSize.height,
                 child: BlurhashFfi(
                   hash: mediaAttachment!.blurhash!,
                 ),
@@ -95,8 +120,8 @@ class VisualMediaContent extends HookConsumerWidget {
               child: Image.file(
                 localFile.value!,
                 fit: BoxFit.cover,
-                width: double.infinity,
-                height: height,
+                width: fittedSize.width,
+                height: fittedSize.height,
               ),
             ),
           if (isVideo && !isReply)
