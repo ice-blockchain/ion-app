@@ -11,7 +11,7 @@ import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/chat/providers/muted_conversations_provider.c.dart';
 import 'package:ion/app/features/user/pages/profile_page/pages/block_user_modal/block_user_modal.dart';
 import 'package:ion/app/features/user/providers/report_notifier.c.dart';
-import 'package:ion/app/features/user_block/providers/block_list_notifier.c.dart';
+import 'package:ion/app/features/user_block/optimistic_ui/block_user_provider.c.dart';
 import 'package:ion/app/router/app_routes.c.dart';
 import 'package:ion/app/router/utils/show_simple_bottom_sheet.dart';
 import 'package:ion/generated/assets.gen.dart';
@@ -73,8 +73,8 @@ class OneToOneMessagingContextMenu extends ConsumerWidget {
                         );
                       } else {
                         await ref
-                            .read(blockListNotifierProvider.notifier)
-                            .toggleBlocked(receiverMasterPubkey);
+                            .read(toggleBlockNotifierProvider.notifier)
+                            .toggle(receiverMasterPubkey);
                       }
                     },
                   ),

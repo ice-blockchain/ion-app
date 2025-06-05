@@ -12,6 +12,7 @@ import 'package:ion/app/features/user/pages/profile_page/components/header/conte
 import 'package:ion/app/features/user/pages/profile_page/components/header/context_menu_item_divider.dart';
 import 'package:ion/app/features/user/pages/profile_page/pages/block_user_modal/block_user_modal.dart';
 import 'package:ion/app/features/user/providers/report_notifier.c.dart';
+import 'package:ion/app/features/user_block/optimistic_ui/block_user_provider.c.dart';
 import 'package:ion/app/features/user_block/providers/block_list_notifier.c.dart';
 import 'package:ion/app/router/app_routes.c.dart';
 import 'package:ion/app/router/utils/show_simple_bottom_sheet.dart';
@@ -50,7 +51,7 @@ class ContextMenu extends ConsumerWidget {
             ),
             const ContextMenuItemDivider(),
             _BlockUserMenuItem(
-              pubkey: pubkey,
+              masterPubkey: pubkey,
               closeMenu: closeMenu,
             ),
             const ContextMenuItemDivider(),
@@ -77,16 +78,16 @@ class ContextMenu extends ConsumerWidget {
 
 class _BlockUserMenuItem extends ConsumerWidget {
   const _BlockUserMenuItem({
-    required this.pubkey,
+    required this.masterPubkey,
     required this.closeMenu,
   });
 
-  final String pubkey;
+  final String masterPubkey;
   final VoidCallback closeMenu;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final isBlocked = ref.watch(isBlockedNotifierProvider(pubkey)).valueOrNull ?? false;
+    final isBlocked = ref.watch(isBlockedNotifierProvider(masterPubkey)).valueOrNull ?? false;
     return ContextMenuItem(
       label: isBlocked ? context.i18n.button_unblock : context.i18n.button_block,
       iconAsset: Assets.svg.iconBlockClose3,
@@ -95,10 +96,10 @@ class _BlockUserMenuItem extends ConsumerWidget {
         if (!isBlocked) {
           showSimpleBottomSheet<void>(
             context: context,
-            child: BlockUserModal(pubkey: pubkey),
+            child: BlockUserModal(pubkey: masterPubkey),
           );
         } else {
-          ref.read(blockListNotifierProvider.notifier).toggleBlocked(pubkey);
+          ref.read(toggleBlockNotifierProvider.notifier).toggle(masterPubkey);
         }
       },
     );

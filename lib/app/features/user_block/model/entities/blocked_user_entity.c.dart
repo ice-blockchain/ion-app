@@ -58,7 +58,6 @@ class BlockedUserEntity with IonConnectEntity, ImmutableEntity, _$BlockedUserEnt
 class BlockedUserEntityData with _$BlockedUserEntityData implements EventSerializable {
   const factory BlockedUserEntityData({
     required String content,
-    required String sharedId,
     required String masterPubkey,
     required List<String> blockedMasterPubkeys,
   }) = _BlockedUserEntityData;
@@ -68,15 +67,9 @@ class BlockedUserEntityData with _$BlockedUserEntityData implements EventSeriali
   factory BlockedUserEntityData.fromEventMessage(EventMessage eventMessage) {
     final tags = groupBy(eventMessage.tags, (tag) => tag[0]);
 
-    final sharedId = tags['d']?.first[1];
-
-    if (sharedId == null) {
-      throw ShareableIdentifierDecodeException(eventMessage.id);
-    }
     final blockedMasterPubkeys = tags[PubkeyTag.tagName]?.map((tag) => tag[1]).toList() ?? [];
 
     return BlockedUserEntityData(
-      sharedId: tags['d']?.first[1] ?? '',
       content: eventMessage.content,
       masterPubkey: eventMessage.masterPubkey,
       blockedMasterPubkeys: blockedMasterPubkeys,
@@ -94,9 +87,8 @@ class BlockedUserEntityData with _$BlockedUserEntityData implements EventSeriali
       content: content,
       kind: BlockedUserEntity.kind,
       tags: [
-        ...tags,
-        ['d', sharedId],
         MasterPubkeyTag(value: masterPubkey).toTag(),
+        ...tags,
         ...blockedMasterPubkeys.map((pubkey) => PubkeyTag(value: pubkey).toTag()),
       ],
       createdAt: createdAt,

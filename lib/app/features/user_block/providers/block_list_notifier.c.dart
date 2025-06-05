@@ -8,7 +8,7 @@ import 'package:ion/app/features/feed/data/models/entities/generic_repost.c.dart
 import 'package:ion/app/features/feed/data/models/entities/modifiable_post_data.c.dart';
 import 'package:ion/app/features/ion_connect/model/ion_connect_entity.dart';
 import 'package:ion/app/features/ion_connect/providers/ion_connect_entity_provider.c.dart';
-import 'package:ion/app/features/user_block/model/database/blocked_users_database.c.dart';
+import 'package:ion/app/features/user_block/model/database/block_user_database.c.dart';
 import 'package:ion/app/features/user_block/model/entities/blocked_user_entity.c.dart';
 import 'package:ion/app/features/user_block/optimistic_ui/block_user_provider.c.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
@@ -47,7 +47,8 @@ class IsBlockedNotifier extends _$IsBlockedNotifier {
   @override
   Future<bool> build(String masterPubkey) async {
     final blockedUser = ref.watch(blockedUserWatchProvider(masterPubkey)).valueOrNull;
-    return blockedUser != null;
+
+    return blockedUser != null && blockedUser.isBlocked;
   }
 }
 
@@ -64,20 +65,12 @@ class IsBlockedByNotifier extends _$IsBlockedByNotifier {
 
     final initialEvents = await blockEventDao.getBlockedByUsersEvents(currentUserMasterPubkey);
     final initialEntities = initialEvents.map(BlockedUserEntity.fromEventMessage);
-    final initiallyBlocked = initialEntities.any(
-      (entity) =>
-          entity.data.blockedMasterPubkeys.contains(currentUserMasterPubkey) &&
-          entity.masterPubkey == masterPubkey,
-    );
+    final initiallyBlocked = initialEntities.any((entity) => entity.masterPubkey == masterPubkey);
 
     final subscription =
         blockEventDao.watchBlockedByUsersEvents(currentUserMasterPubkey).listen((events) {
       final entities = events.map(BlockedUserEntity.fromEventMessage);
-      final isBlocked = entities.any(
-        (entity) =>
-            entity.data.blockedMasterPubkeys.contains(currentUserMasterPubkey) &&
-            entity.masterPubkey == masterPubkey,
-      );
+      final isBlocked = entities.any((entity) => entity.masterPubkey == masterPubkey);
       state = AsyncValue.data(isBlocked);
     });
 
@@ -138,63 +131,5 @@ class IsGenericRepostChildBlockedOrBlockedByNotifier
         ref.watch(ionConnectSyncEntityProvider(eventReference: repost.data.eventReference));
     if (entity == null) return Future.value(false);
     return ref.watch(isEntityBlockedOrBlockedByNotifierProvider(entity).future);
-  }
-}
-
-@riverpod
-class BlockListNotifier extends _$BlockListNotifier {
-  @override
-  Future<void> build() async {}
-
-  Future<void> toggleBlocked(String masterPubkey) async {
-    return ref.read(toggleBlockNotifierProvider.notifier).toggle(masterPubkey);
-
-    /*
-    state = const AsyncValue.loading();
-    await AsyncValue.guard(() async {
-      final currentMasterPubkey = ref.read(currentPubkeySelectorProvider);
-      if (currentMasterPubkey == null) {
-        throw UserMasterPubkeyNotFoundException();
-      }
-
-      final blockedUsers = ref.read(currentUserBlockListNotifierProvider).value ?? [];
-      final blockedUserEntity = blockedUsers.firstWhereOrNull(
-        (blockedUser) => blockedUser.data.blockedMasterPubkeys.contains(masterPubkey),
-      );
-
-      if (blockedUserEntity != null) {
-        await _unblockUser(blockedUserEntity.data.sharedId, masterPubkey);
-      } else {
-        await _blockUser(masterPubkey);
-      }
-    });
-  }
-  */
-
-    /*
-  Future<void> _blockUser(String masterPubkey) async {
-    final currentMasterPubkey = ref.read(currentPubkeySelectorProvider);
-    if (currentMasterPubkey == null) {
-      throw UserMasterPubkeyNotFoundException();
-    }
-
-    await Future.wait([
-      ref.read(sendBlockEventServiceProvider.future).then(
-            (service) => service.sendBlockEvent(masterPubkey),
-          ),
-      ref.read(followListManagerProvider.notifier).unfollow(masterPubkey),
-    ]);
-  }
-
-  Future<void> _unblockUser(String sharedId, String masterPubkey) async {
-    final currentMasterPubkey = ref.read(currentPubkeySelectorProvider);
-    if (currentMasterPubkey == null) {
-      throw UserMasterPubkeyNotFoundException();
-    }
-
-    final sendBlockEventService = await ref.read(sendBlockEventServiceProvider.future);
-    await sendBlockEventService.sendDeleteBlockEvent(sharedId, masterPubkey);
-  }
-  */
   }
 }

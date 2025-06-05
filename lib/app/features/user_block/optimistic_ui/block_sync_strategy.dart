@@ -1,5 +1,6 @@
 // SPDX-License-Identifier: ice License 1.0
 
+import 'package:ion/app/features/ion_connect/model/event_reference.c.dart';
 import 'package:ion/app/features/optimistic_ui/core/optimistic_sync_strategy.dart';
 import 'package:ion/app/features/user_block/optimistic_ui/model/blocked_user.c.dart';
 
@@ -11,7 +12,7 @@ class BlockSyncStrategy implements SyncStrategy<BlockedUser> {
   });
 
   final Future<void> Function(String) sendBlockEvent;
-  final Future<void> Function(String, String) deleteBlockEvent;
+  final Future<void> Function(String, EventReference?) deleteBlockEvent;
 
   @override
   Future<BlockedUser> send(BlockedUser previous, BlockedUser optimistic) async {
@@ -20,8 +21,8 @@ class BlockSyncStrategy implements SyncStrategy<BlockedUser> {
 
     if (toggledToBlock) {
       await sendBlockEvent(optimistic.masterPubkey);
-    } else if (toggledToUnblock && optimistic.dtag != null) {
-      await deleteBlockEvent(optimistic.masterPubkey, optimistic.dtag!);
+    } else if (toggledToUnblock) {
+      await deleteBlockEvent(optimistic.masterPubkey, optimistic.eventReference);
     }
     return optimistic;
   }

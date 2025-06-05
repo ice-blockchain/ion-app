@@ -1,6 +1,7 @@
 // SPDX-License-Identifier: ice License 1.0
 
 import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:ion/app/features/ion_connect/model/event_reference.c.dart';
 import 'package:ion/app/features/optimistic_ui/core/optimistic_model.dart';
 
 part 'blocked_user.c.freezed.dart';
@@ -10,7 +11,7 @@ class BlockedUser with _$BlockedUser implements OptimisticModel {
   const factory BlockedUser({
     required bool isBlocked,
     required String masterPubkey,
-    String? dtag,
+    EventReference? eventReference,
   }) = _BlockedUser;
   const BlockedUser._();
 
