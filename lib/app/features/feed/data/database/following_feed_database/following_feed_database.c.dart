@@ -5,7 +5,7 @@ import 'package:drift_flutter/drift_flutter.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/exceptions/exceptions.dart';
 import 'package:ion/app/features/auth/providers/auth_provider.c.dart';
-import 'package:ion/app/features/feed/data/database/tables/seen_events_table.c.dart';
+import 'package:ion/app/features/feed/data/database/following_feed_database/tables/seen_events_table.c.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'following_feed_database.c.g.dart';

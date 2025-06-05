@@ -2,8 +2,8 @@
 
 import 'package:drift/drift.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:ion/app/features/feed/data/database/following_feed_database.c.dart';
-import 'package:ion/app/features/feed/data/database/tables/seen_events_table.c.dart';
+import 'package:ion/app/features/feed/data/database/following_feed_database/following_feed_database.c.dart';
+import 'package:ion/app/features/feed/data/database/following_feed_database/tables/seen_events_table.c.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'seen_events_dao.c.g.dart';
