@@ -2,9 +2,8 @@
 
 import 'package:ion/app/exceptions/exceptions.dart';
 import 'package:ion/app/features/auth/providers/auth_provider.c.dart';
-import 'package:ion/app/features/ion_connect/providers/device_keypair_constants.dart';
 import 'package:ion/app/features/ion_connect/providers/device_keypair_dialog_state.c.dart';
-import 'package:ion/app/services/ion_identity/ion_identity_client_provider.c.dart';
+import 'package:ion/app/features/ion_connect/providers/device_keypair_utils.dart';
 import 'package:ion/app/services/logger/logger.dart';
 import 'package:ion/app/services/storage/local_storage.c.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
@@ -19,24 +18,6 @@ class DeviceKeypairDialogManager extends _$DeviceKeypairDialogManager {
   @override
   DeviceKeypairSessionState build() {
     return DeviceKeypairSessionState();
-  }
-
-  /// Gets user-specific storage key for completion status
-  String _getCompletedKey() {
-    final identityKeyName = ref.read(currentIdentityKeyNameSelectorProvider);
-    if (identityKeyName == null) {
-      throw const CurrentUserNotFoundException();
-    }
-    return '${_completedKeyPrefix}_$identityKeyName';
-  }
-
-  /// Gets user-specific storage key for upload-from-device status
-  String _getUploadedFromDeviceKey() {
-    final identityKeyName = ref.read(currentIdentityKeyNameSelectorProvider);
-    if (identityKeyName == null) {
-      throw const CurrentUserNotFoundException();
-    }
-    return '${_uploadedFromDeviceKeyPrefix}_$identityKeyName';
   }
 
   /// Determines the current state of device keypair synchronization
@@ -59,31 +40,24 @@ class DeviceKeypairDialogManager extends _$DeviceKeypairDialogManager {
         return DeviceKeypairState.completed;
       }
 
-      // Get all keys to determine state
-      final ionIdentity = await ref.read(ionIdentityClientProvider.future);
-      final keysResponse = await ionIdentity.keys.listKeys();
+      // Check if there's a device keypair backup in user metadata
+      final hasDeviceKeypairBackup =
+          (await DeviceKeypairUtils.findDeviceKeypairAttachment(ref: ref)) != null;
 
-      // First check for device keys linked to uploaded files (device-*) - these indicate we should restore
-      final signingKeys = keysResponse.items
-          .where((key) => key.name?.startsWith('${DeviceKeypairConstants.keyName}-') ?? false)
-          .toList();
-
-      // If device keys are linked to uploaded files, user should restore
-      if (signingKeys.isNotEmpty) {
+      // If device keypair backup exists in user metadata, user should restore
+      if (hasDeviceKeypairBackup) {
         return DeviceKeypairState.needsRestore;
       }
 
-      // Then check for base device key
-      final hasDeviceKey = keysResponse.items.any(
-        (key) => key.name == DeviceKeypairConstants.keyName,
-      );
+      // Check if device key exists (upload was started)
+      final deviceKey = await DeviceKeypairUtils.findDeviceKey(ref: ref);
 
-      // If base device key exists, upload is in progress
-      if (hasDeviceKey) {
+      // If device key exists but no backup in metadata, upload was interrupted
+      if (deviceKey != null) {
         return DeviceKeypairState.uploadInProgress;
       }
 
-      // If no keys exist at all, need to start upload
+      // If no device key and no backup, need to start upload
       return DeviceKeypairState.needsUpload;
     } catch (e) {
       // If any error occurs, assume we need to start upload
@@ -113,6 +87,14 @@ class DeviceKeypairDialogManager extends _$DeviceKeypairDialogManager {
     await localStorage.setBool(key: _getUploadedFromDeviceKey(), value: true);
   }
 
+  /// Resets all persistent state (for testing/debugging)
+  Future<void> resetState() async {
+    final localStorage = ref.read(localStorageProvider);
+    await localStorage.remove(_getCompletedKey());
+    await localStorage.remove(_getUploadedFromDeviceKey());
+    state = DeviceKeypairSessionState();
+  }
+
   /// Checks if user has completed upload/restore on this device
   Future<bool> _hasCompletedOnThisDevice() async {
     try {
@@ -135,11 +117,21 @@ class DeviceKeypairDialogManager extends _$DeviceKeypairDialogManager {
     }
   }
 
-  /// Resets all persistent state (for testing/debugging)
-  Future<void> resetState() async {
-    final localStorage = ref.read(localStorageProvider);
-    await localStorage.remove(_getCompletedKey());
-    await localStorage.remove(_getUploadedFromDeviceKey());
-    state = DeviceKeypairSessionState();
+  /// Gets user-specific storage key for completion status
+  String _getCompletedKey() {
+    final identityKeyName = ref.read(currentIdentityKeyNameSelectorProvider);
+    if (identityKeyName == null) {
+      throw const CurrentUserNotFoundException();
+    }
+    return '${_completedKeyPrefix}_$identityKeyName';
+  }
+
+  /// Gets user-specific storage key for upload-from-device status
+  String _getUploadedFromDeviceKey() {
+    final identityKeyName = ref.read(currentIdentityKeyNameSelectorProvider);
+    if (identityKeyName == null) {
+      throw const CurrentUserNotFoundException();
+    }
+    return '${_uploadedFromDeviceKeyPrefix}_$identityKeyName';
   }
 }

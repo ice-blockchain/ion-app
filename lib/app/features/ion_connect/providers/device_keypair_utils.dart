@@ -11,31 +11,62 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/exceptions/exceptions.dart';
 import 'package:ion/app/features/core/providers/dio_provider.c.dart';
 import 'package:ion/app/features/core/providers/env_provider.c.dart';
+import 'package:ion/app/features/ion_connect/model/file_alt.dart';
+import 'package:ion/app/features/ion_connect/model/media_attachment.dart';
 import 'package:ion/app/features/ion_connect/providers/device_keypair_constants.dart';
 import 'package:ion/app/features/ion_connect/providers/file_storage_url_provider.c.dart';
 import 'package:ion/app/features/user/providers/current_user_identity_provider.c.dart';
+import 'package:ion/app/features/user/providers/user_metadata_provider.c.dart';
 import 'package:ion/app/services/ion_identity/ion_identity_client_provider.c.dart';
 import 'package:ion_identity_client/ion_identity.dart';
 
 /// Utility class for shared device keypair operations
 class DeviceKeypairUtils {
   /// Finds or creates a device key for synchronization operations
-  static Future<KeyResponse> findOrCreateDeviceKey({
+  static Future<KeyResponse?> findDeviceKey({
     required Ref ref,
-    required UserActionSignerNew signer,
   }) async {
     final ionIdentity = await ref.read(ionIdentityClientProvider.future);
     final keysResponse = await ionIdentity.keys.listKeys();
 
-    return keysResponse.items.firstWhereOrNull(
-          (key) => key.name?.startsWith(DeviceKeypairConstants.keyName) ?? false,
-        ) ??
-        await ionIdentity.keys.createKey(
-          scheme: DeviceKeypairConstants.scheme,
-          curve: DeviceKeypairConstants.curve,
-          name: DeviceKeypairConstants.keyName,
-          signer: signer,
-        );
+    return keysResponse.items.firstWhereOrNull((key) => key.name == DeviceKeypairConstants.keyName);
+  }
+
+  static Future<KeyResponse> findOrCreateDeviceKey({
+    required Ref ref,
+    required UserActionSignerNew signer,
+  }) async {
+    final existingKey = await findDeviceKey(ref: ref);
+    if (existingKey != null) {
+      return existingKey;
+    }
+
+    final ionIdentity = await ref.read(ionIdentityClientProvider.future);
+    return ionIdentity.keys.createKey(
+      scheme: DeviceKeypairConstants.scheme,
+      curve: DeviceKeypairConstants.curve,
+      name: DeviceKeypairConstants.keyName,
+      signer: signer,
+    );
+  }
+
+  /// Finds the device keypair MediaAttachment from current user's metadata
+  static Future<MediaAttachment?> findDeviceKeypairAttachment({
+    required Ref ref,
+  }) async {
+    try {
+      final currentUserMetadata = await ref.read(currentUserMetadataProvider.future);
+      if (currentUserMetadata == null) {
+        return null;
+      }
+
+      // Find device keypair attachment by alt field
+      return currentUserMetadata.data.media.values
+          .where((attachment) => attachment.alt == FileAlt.attestationKey)
+          .firstOrNull;
+    } catch (e) {
+      return null;
+    }
   }
 
   /// Generates derivation for device keypair encryption/decryption
@@ -66,18 +97,6 @@ class DeviceKeypairUtils {
     final checksum = ref.read(envProvider.notifier).get<String>(EnvVariable.CHECKSUM);
 
     return hex.encode('$keyName:$userId:$checksum'.codeUnits);
-  }
-
-  /// Finds device keys for synchronization across devices
-  static Future<List<KeyResponse>> findDeviceKeys({
-    required Ref ref,
-  }) async {
-    final ionIdentity = await ref.read(ionIdentityClientProvider.future);
-    final keysResponse = await ionIdentity.keys.listKeys();
-
-    return keysResponse.items
-        .where((key) => key.name?.startsWith('${DeviceKeypairConstants.keyName}-') ?? false)
-        .toList();
   }
 
   /// Decrypts device keypair using AES-GCM
@@ -139,60 +158,5 @@ class DeviceKeypairUtils {
     }
 
     return null;
-  }
-
-  /// Converts hex file ID to base64 for shorter key names
-  /// Example: "abc123:def456" -> "qsEj3e9FVg=="
-  static String compressFileIdForKeyName(String fileId) {
-    try {
-      final parts = fileId.split(':');
-      if (parts.length != 2) {
-        throw DeviceKeypairUploadException('Invalid file ID format, expected hex:hex');
-      }
-
-      // Convert each hex part to bytes, then to base64
-      final part1Bytes = hex.decode(parts[0]);
-      final part2Bytes = hex.decode(parts[1]);
-
-      final part1Base64 = base64Encode(part1Bytes);
-      final part2Base64 = base64Encode(part2Bytes);
-
-      return '$part1Base64:$part2Base64';
-    } catch (e) {
-      throw DeviceKeypairUploadException('Failed to compress file ID: $e');
-    }
-  }
-
-  /// Converts base64 file ID back to hex format
-  /// Example: "qsEj3e9FVg==" -> "abc123:def456"
-  static String expandFileIdFromKeyName(String compressedFileId) {
-    try {
-      final parts = compressedFileId.split(':');
-      if (parts.length != 2) {
-        throw DeviceKeypairRestoreException(
-          'Invalid compressed file ID format, expected base64:base64',
-        );
-      }
-
-      // Convert each base64 part to bytes, then to hex
-      final part1Bytes = base64Decode(parts[0]);
-      final part2Bytes = base64Decode(parts[1]);
-
-      final part1Hex = hex.encode(part1Bytes);
-      final part2Hex = hex.encode(part2Bytes);
-
-      return '$part1Hex:$part2Hex';
-    } catch (e) {
-      throw DeviceKeypairRestoreException('Failed to expand file ID: $e');
-    }
-  }
-
-  /// Extracts the compressed file ID from a device key name
-  /// Example: "device-qsEj3e9FVg==" -> "qsEj3e9FVg=="
-  static String? extractCompressedFileIdFromKeyName(String? keyName) {
-    if (keyName == null || !keyName.startsWith('${DeviceKeypairConstants.keyName}-')) {
-      return null;
-    }
-    return keyName.substring('${DeviceKeypairConstants.keyName}-'.length);
   }
 }

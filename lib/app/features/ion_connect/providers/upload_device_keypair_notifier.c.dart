@@ -8,15 +8,16 @@ import 'package:convert/convert.dart';
 import 'package:cryptography/cryptography.dart';
 import 'package:ion/app/exceptions/exceptions.dart';
 import 'package:ion/app/features/ion_connect/ion_connect.dart';
+import 'package:ion/app/features/ion_connect/model/file_alt.dart';
 import 'package:ion/app/features/ion_connect/model/file_metadata.c.dart';
 import 'package:ion/app/features/ion_connect/model/media_attachment.dart';
-import 'package:ion/app/features/ion_connect/providers/device_keypair_constants.dart';
 import 'package:ion/app/features/ion_connect/providers/device_keypair_dialog_manager.c.dart';
 import 'package:ion/app/features/ion_connect/providers/device_keypair_utils.dart';
 import 'package:ion/app/features/ion_connect/providers/ion_connect_event_signer_provider.c.dart';
 import 'package:ion/app/features/ion_connect/providers/ion_connect_notifier.c.dart';
 import 'package:ion/app/features/ion_connect/providers/ion_connect_upload_notifier.c.dart';
-import 'package:ion/app/services/ion_identity/ion_identity_client_provider.c.dart';
+import 'package:ion/app/features/user/providers/update_user_metadata_notifier.c.dart';
+import 'package:ion/app/features/user/providers/user_metadata_provider.c.dart';
 import 'package:ion/app/services/logger/logger.dart';
 import 'package:ion/app/services/media_service/media_service.c.dart';
 import 'package:ion_identity_client/ion_identity.dart';
@@ -56,7 +57,9 @@ class UploadDeviceKeypairNotifier extends _$UploadDeviceKeypairNotifier {
         await ref
             .read(ionConnectNotifierProvider.notifier)
             .sendEntityData(uploadResult.fileMetadata);
-        await _renameKeyWithFileId(deviceKey.id, uploadResult.fileMetadata.url, signer);
+
+        // Add device keypair MediaAttachment to current user's metadata
+        await _addDeviceKeypairToUserMetadata(uploadResult.mediaAttachment);
 
         // Mark as completed and uploaded from this device
         final dialogManager = ref.read(deviceKeypairDialogManagerProvider.notifier);
@@ -76,31 +79,27 @@ class UploadDeviceKeypairNotifier extends _$UploadDeviceKeypairNotifier {
     return deviceKeypair;
   }
 
-  Future<void> _renameKeyWithFileId(
-    String keyId,
-    String? url,
-    UserActionSignerNew signer,
-  ) async {
-    final fileId = DeviceKeypairUtils.extractFileIdFromUrl(url);
-    if (fileId == null) {
-      final error = DeviceKeypairUploadException('Could not extract file ID from URL: $url');
-      Logger.error(error);
-      throw error;
-    }
-
+  /// Adds the device keypair MediaAttachment to the current user's metadata
+  Future<void> _addDeviceKeypairToUserMetadata(MediaAttachment mediaAttachment) async {
     try {
-      final compressedFileId = DeviceKeypairUtils.compressFileIdForKeyName(fileId);
-      final newKeyName = '${DeviceKeypairConstants.keyName}-$compressedFileId';
+      final currentUserMetadata = await ref.read(currentUserMetadataProvider.future);
+      if (currentUserMetadata == null) {
+        throw DeviceKeypairUploadException('Current user metadata not found');
+      }
 
-      final ionIdentity = await ref.read(ionIdentityClientProvider.future);
-      await ionIdentity.keys.updateKey(
-        keyId: keyId,
-        name: newKeyName,
-        signer: signer,
+      // Add the device keypair attachment to the media map
+      final updatedMetadata = currentUserMetadata.data.copyWith(
+        media: {
+          ...currentUserMetadata.data.media,
+          mediaAttachment.url: mediaAttachment,
+        },
       );
+
+      // Update user metadata
+      await ref.read(updateUserMetadataNotifierProvider.notifier).publish(updatedMetadata);
     } catch (e) {
-      Logger.error(e, message: 'Failed to rename key with compressed file ID');
-      throw DeviceKeypairUploadException('Failed to rename key with compressed file ID');
+      Logger.error(e, message: 'Failed to add device keypair to user metadata');
+      throw DeviceKeypairUploadException('Failed to add device keypair to user metadata');
     }
   }
 
@@ -132,14 +131,16 @@ class UploadDeviceKeypairNotifier extends _$UploadDeviceKeypairNotifier {
     await tempFile.writeAsBytes(encryptedData);
 
     final mediaFile = MediaFile(
-      width: 1,
-      height: 1,
       path: tempFile.path,
       mimeType: 'application/octet-stream',
     );
 
     try {
-      return await ref.read(ionConnectUploadNotifierProvider.notifier).upload(mediaFile);
+      return await ref.read(ionConnectUploadNotifierProvider.notifier).upload(
+            mediaFile,
+            alt: FileAlt.attestationKey,
+            skipDimCheck: true,
+          );
     } finally {
       if (tempFile.existsSync()) {
         await tempFile.delete();
