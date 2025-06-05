@@ -54,7 +54,7 @@ class OneToOneMessageList extends HookConsumerWidget {
         color: context.theme.appColors.primaryBackground,
         child: ScreenSideOffset.small(
           child: ScrollablePositionedList.builder(
-            physics: const BouncingScrollPhysics(),
+            physics: const ClampingScrollPhysics(),
             itemCount: allMessages.length,
             itemScrollController: itemScrollController,
             reverse: true,
