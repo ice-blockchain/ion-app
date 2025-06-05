@@ -146,6 +146,7 @@ class _MakeTransfer extends HookConsumerWidget {
       child: Column(
         children: [
           TextField(
+            // textInputAction: TextInputAction.next
             onTapOutside: (event) => FocusScope.of(context).unfocus(),
             controller: addressController,
             decoration: const InputDecoration(
@@ -153,6 +154,7 @@ class _MakeTransfer extends HookConsumerWidget {
             ),
           ),
           TextField(
+            // onSubmitted
             onTapOutside: (event) => FocusScope.of(context).unfocus(),
             controller: amountController,
             decoration: const InputDecoration(

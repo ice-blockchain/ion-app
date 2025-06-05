@@ -211,6 +211,7 @@ class CubeWidget extends StatelessWidget {
         children: [
           Positioned.fill(
             child: Opacity(
+              // here the opacity is animated too
               opacity: opacity,
               child: Container(
                 color: Colors.black87,

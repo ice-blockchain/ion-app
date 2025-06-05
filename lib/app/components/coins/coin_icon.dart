@@ -64,6 +64,7 @@ class CoinIconWidget extends StatelessWidget {
     final borderRadius = _borderRadius(type);
 
     return imageUrl.isSvg
+    // could be done with decoration
         ? ClipRRect(
             borderRadius: borderRadius,
             child: SvgPicture.network(

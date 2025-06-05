@@ -34,6 +34,7 @@ class RegisterPage extends HookConsumerWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             TextField(
+              // textInputAction: TextInputAction.next
               controller: usernameController,
               decoration: const InputDecoration(
                 labelText: 'Username',
@@ -42,6 +43,7 @@ class RegisterPage extends HookConsumerWidget {
             ),
             const SizedBox(height: 16),
             TextField(
+              // onSubmitted
               controller: passwordController,
               decoration: const InputDecoration(
                 labelText: 'Password',

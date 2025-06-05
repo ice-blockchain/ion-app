@@ -53,7 +53,7 @@ class OverlayMenu extends HookWidget {
       controller: overlayPortalController,
       overlayChildBuilder: (_) {
         final renderBox = context.findRenderObject()! as RenderBox;
-
+// tap target is very small here, would be hard to hit on touch screens
         return GestureDetector(
           behavior: HitTestBehavior.translucent,
           onTap: hideMenu,

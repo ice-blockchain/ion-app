@@ -39,6 +39,7 @@ class CollapsingAppBar extends StatelessWidget {
       surfaceTintColor: context.theme.appColors.onPrimaryAccent,
       flexibleSpace: LayoutBuilder(
         builder: (BuildContext context, BoxConstraints constraints) {
+          // would this be triggered every frame when scrolling?
           final opacity = 1 - ((totalHeight - constraints.maxHeight) / fadeOffset).clamp(0, 1);
           return Align(
             alignment: Alignment.bottomCenter,

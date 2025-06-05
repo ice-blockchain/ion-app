@@ -17,6 +17,7 @@ class NftPicture extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // clipping is avoidable here + need cache sizes for image (?)
     return ClipRRect(
       borderRadius: BorderRadius.circular(16.0.s),
       child: IonNetworkImage(

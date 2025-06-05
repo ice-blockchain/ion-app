@@ -47,6 +47,7 @@ class Header extends ConsumerWidget {
                 child: Padding(
                   padding: EdgeInsets.symmetric(horizontal: 16.0.s),
                   child: Opacity(
+                    // here the opacity is animated too
                     opacity: opacity,
                     child: UseListItem(
                       pubkey: pubkey,

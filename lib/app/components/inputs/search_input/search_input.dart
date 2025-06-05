@@ -72,6 +72,7 @@ class SearchInput extends HookWidget {
               decoration: InputDecoration(
                 isCollapsed: true,
                 isDense: true,
+                // in some places, we use products of 4, while in others we use 5, 6, 11, etc
                 contentPadding: EdgeInsets.all(11.0.s),
                 enabledBorder: OutlineInputBorder(
                   borderSide: BorderSide(

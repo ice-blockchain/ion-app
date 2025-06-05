@@ -38,6 +38,7 @@ class IonPullToRefreshLoadingIndicator extends StatelessWidget {
           start: 0,
           end: 0,
           child: Opacity(
+            // here the opacity is animated too
             opacity: isRefreshing ? 1 : percentageComplete,
             child: IONLoadingIndicatorThemed(
               value: shouldAnimate ? null : percentageComplete,

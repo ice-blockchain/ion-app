@@ -51,6 +51,7 @@ class IonConnectNetworkImage extends ConsumerWidget {
       fit: fit,
       filterQuality: filterQuality,
       alignment: alignment,
+      //todo: check if cache could help here
       width: width,
       height: height,
       errorListener: (error) {

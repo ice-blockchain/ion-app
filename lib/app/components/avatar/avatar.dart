@@ -53,6 +53,7 @@ class Avatar extends StatelessWidget {
       clipBehavior: Clip.none,
       children: [
         if (hexagon)
+        // this could be done using DecoratedBox with a shape and image bg, clipping is super expensive
           ClipPath(
             clipper: ShapeClipper(HexagonShapeBuilder()),
             child: image,
