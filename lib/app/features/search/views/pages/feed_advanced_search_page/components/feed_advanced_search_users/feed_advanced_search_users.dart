@@ -22,11 +22,13 @@ class FeedAdvancedSearchUsers extends HookConsumerWidget {
     useAutomaticKeepAlive();
 
     final searchResults = ref.watch(searchUsersProvider(query: query));
-    final searchUsers = searchResults?.users;
+    final searchUsers = searchResults?.users ?? [];
+    final hasMore = searchResults?.hasMore ?? true;
+    final loading = hasMore && searchUsers.isEmpty;
 
     return PullToRefreshBuilder(
       slivers: [
-        if (searchUsers == null)
+        if (loading)
           const ListItemsLoadingState(
             listItemsLoadingStateType: ListItemsLoadingStateType.scrollView,
           )

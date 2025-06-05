@@ -30,7 +30,9 @@ class FeedSimpleSearchPage extends HookConsumerWidget {
     final debouncedQuery = useDebounced(query, const Duration(milliseconds: 300)) ?? '';
     final searchProvider = searchUsersProvider(query: debouncedQuery);
     final searchResults = ref.watch(searchProvider);
-    final searchUsers = searchResults?.users;
+    final searchUsers = searchResults?.users ?? [];
+    final hasMore = searchResults?.hasMore ?? true;
+    final loading = (hasMore && searchUsers.isEmpty) || query != debouncedQuery;
 
     return Scaffold(
       body: ScreenTopOffset(
@@ -38,7 +40,7 @@ class FeedSimpleSearchPage extends HookConsumerWidget {
           children: [
             SearchNavigation(
               query: query,
-              loading: debouncedQuery.isNotEmpty && searchUsers == null,
+              loading: loading,
               onSubmitted: (String query) {
                 FeedAdvancedSearchRoute(query: query).go(context);
                 ref.read(feedSearchHistoryProvider.notifier).addQueryToTheHistory(query);
@@ -64,7 +66,7 @@ class FeedSimpleSearchPage extends HookConsumerWidget {
               Expanded(
                 child: PullToRefreshBuilder(
                   slivers: [
-                    if (searchUsers == null)
+                    if (loading)
                       ListItemsLoadingState(
                         padding: EdgeInsets.symmetric(vertical: 20.0.s),
                         listItemsLoadingStateType: ListItemsLoadingStateType.scrollView,
