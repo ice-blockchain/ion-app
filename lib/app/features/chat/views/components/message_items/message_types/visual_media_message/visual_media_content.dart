@@ -77,7 +77,7 @@ class VisualMediaContent extends HookConsumerWidget {
         if (isSingle && !isReply && aspectRatio != null) {
           return getFittedSize(
             maxWidth: 262.0.s,
-            maxHeight: 262.0.s,
+            maxHeight: 350.0.s,
             aspectRatio: aspectRatio,
           );
         }
