@@ -6,24 +6,21 @@ struct GenericRepostData {
     let eventReference: EventReference
 
     static func fromEventMessage(_ eventMessage: EventMessage) -> GenericRepostData {
-        // Get the first e tag for event reference
-        var eventRef: EventReference?
-        for tag in eventMessage.tags {
-            if tag.count >= 4 && tag[0] == "e" {
-                let id = tag[1]
-                let kindStr = tag[2]
-                let pubkey = tag[3]
+        let tagsByType = Dictionary(grouping: eventMessage.tags, by: { $0.first ?? "" })
 
-                if let _ = Int(kindStr) {
-                    eventRef = ImmutableEventReference(id: id, pubkey: pubkey)
-                    break
-                }
-            }
+        let aTag = tagsByType["a"]?.first
+        let eTag = tagsByType["e"]?.first
+        let pTag = tagsByType["p"]?.first
+        
+        if let aTag = aTag, aTag.count > 1 {
+            let eventReference = ReplaceableEventReference.fromString(aTag[1])
+            return GenericRepostData(eventReference: eventReference)
+        } else if let eTag = eTag, eTag.count > 1, let pubkey = pTag?.count ?? 0 > 1 ? pTag?[1] : nil {
+            let eventId = eTag[1]
+            return GenericRepostData(eventReference: ImmutableEventReference(id: eventId, pubkey: pubkey))
         }
 
-        return GenericRepostData(
-            eventReference: eventRef ?? ImmutableEventReference(id: "", pubkey: "")
-        )
+        return GenericRepostData(eventReference: ImmutableEventReference(id: "", pubkey: ""))
     }
 }
 
