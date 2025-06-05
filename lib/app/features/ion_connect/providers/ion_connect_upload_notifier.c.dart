@@ -38,12 +38,13 @@ class IonConnectUploadNotifier extends _$IonConnectUploadNotifier {
     MediaFile file, {
     FileAlt? alt,
     EventSigner? customEventSigner,
+    bool skipDimCheck = false,
   }) async {
-    if (file.width == null || file.height == null) {
+    if (!skipDimCheck && (file.width == null || file.height == null)) {
       throw UnknownFileResolutionException('File dimensions are missing');
     }
 
-    final dimension = '${file.width}x${file.height}';
+    final dimension = skipDimCheck ? null : '${file.width}x${file.height}';
 
     final url = await ref.read(fileStorageUrlProvider.future);
 

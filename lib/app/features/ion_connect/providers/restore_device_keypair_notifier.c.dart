@@ -24,9 +24,23 @@ class RestoreDeviceKeypairNotifier extends _$RestoreDeviceKeypairNotifier {
     state = await AsyncValue.guard(() async {
       try {
         final currentIdentityKeyName = _getCurrentIdentityKeyName();
-        final deviceKey = await _findDeviceKey();
-        final fileId = _extractFileIdFromKeyName(deviceKey.name);
+        final deviceKeypairAttachment =
+            await DeviceKeypairUtils.findDeviceKeypairAttachment(ref: ref);
 
+        if (deviceKeypairAttachment == null) {
+          throw DeviceKeypairRestoreException('No device keypair backup found in user metadata');
+        }
+
+        final fileId = DeviceKeypairUtils.extractFileIdFromUrl(deviceKeypairAttachment.url);
+
+        if (fileId == null) {
+          throw DeviceKeypairRestoreException('Could not extract file ID from device keypair URL');
+        }
+
+        final deviceKey = await DeviceKeypairUtils.findOrCreateDeviceKey(
+          ref: ref,
+          signer: signer,
+        );
         final derivation = await DeviceKeypairUtils.generateDerivation(
           ref: ref,
           keyId: deviceKey.id,
@@ -51,8 +65,11 @@ class RestoreDeviceKeypairNotifier extends _$RestoreDeviceKeypairNotifier {
   }
 
   Future<List<String>> listAvailableDeviceKeys() async {
-    final deviceKeys = await DeviceKeypairUtils.findDeviceKeys(ref: ref);
-    return deviceKeys.map((key) => key.name!).toList();
+    final deviceKeypairAttachment = await DeviceKeypairUtils.findDeviceKeypairAttachment(ref: ref);
+    if (deviceKeypairAttachment != null) {
+      return [deviceKeypairAttachment.url];
+    }
+    return [];
   }
 
   String _getCurrentIdentityKeyName() {
@@ -61,23 +78,6 @@ class RestoreDeviceKeypairNotifier extends _$RestoreDeviceKeypairNotifier {
       throw const CurrentUserNotFoundException();
     }
     return currentIdentityKeyName;
-  }
-
-  Future<KeyResponse> _findDeviceKey() async {
-    final deviceKeys = await DeviceKeypairUtils.findDeviceKeys(ref: ref);
-    if (deviceKeys.isEmpty) {
-      throw DeviceKeypairRestoreException('No device keys found');
-    }
-    return deviceKeys.first;
-  }
-
-  String _extractFileIdFromKeyName(String? keyName) {
-    final compressedFileId = DeviceKeypairUtils.extractCompressedFileIdFromKeyName(keyName);
-    if (compressedFileId == null) {
-      throw DeviceKeypairRestoreException('Invalid device key name format');
-    }
-
-    return DeviceKeypairUtils.expandFileIdFromKeyName(compressedFileId);
   }
 
   /// Restores the decrypted keypair to the device storage and returns the event signer

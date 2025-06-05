@@ -15,8 +15,8 @@ class MediaAttachment {
   MediaAttachment({
     required this.url,
     required this.mimeType,
-    required this.dimension,
     required this.originalFileHash,
+    this.dimension,
     this.alt,
     this.encryptionKey,
     this.encryptionNonce,
@@ -59,6 +59,7 @@ class MediaAttachment {
     String? encryptionMac;
     String? blurhash;
     int? duration;
+
     for (final params in tag.skip(1)) {
       final pair = params.split(' ');
       final value = pair[1];
@@ -98,7 +99,7 @@ class MediaAttachment {
     return MediaAttachment(
       url: url!,
       mimeType: mimeType!,
-      dimension: dimension!,
+      dimension: dimension,
       alt: EnumExtensions.fromShortString(FileAlt.values, alt!),
       originalFileHash: originalFileHash!,
       thumb: thumb,
@@ -115,7 +116,7 @@ class MediaAttachment {
   factory MediaAttachment.fromJson(Map<String, dynamic> json) => MediaAttachment(
         url: json['url'] as String,
         mimeType: json['mimeType'] as String,
-        dimension: json['dimension'] as String,
+        dimension: json['dimension'] as String?,
         alt: EnumExtensions.fromShortString(FileAlt.values, json['alt'] as String),
         originalFileHash: json['originalFileHash'] as String,
         encryptionKey: json['encryptionKey'] as String?,
@@ -130,7 +131,7 @@ class MediaAttachment {
   Map<String, dynamic> toJson() => {
         'url': url,
         'mimeType': mimeType,
-        'dimension': dimension,
+        if (dimension != null) 'dimension': dimension,
         if (alt != null) 'alt': alt!.toShortString(),
         'originalFileHash': originalFileHash,
         'encryptionKey': encryptionKey,
@@ -145,7 +146,7 @@ class MediaAttachment {
 
   final String mimeType;
 
-  final String dimension;
+  final String? dimension;
 
   final FileAlt? alt;
 
@@ -206,7 +207,7 @@ class MediaAttachment {
       tagName,
       'url $url',
       'm $mimeType',
-      'dim $dimension',
+      if (dimension != null) 'dim $dimension',
       if (alt != null) 'alt ${alt!.toShortString()}',
       'ox $originalFileHash',
       if (encryptionKey != null && encryptionNonce != null)

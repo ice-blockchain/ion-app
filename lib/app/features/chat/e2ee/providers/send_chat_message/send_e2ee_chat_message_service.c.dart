@@ -8,6 +8,7 @@ import 'package:file_saver/file_saver.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/exceptions/exceptions.dart';
 import 'package:ion/app/extensions/extensions.dart';
+import 'package:ion/app/extensions/object.dart';
 import 'package:ion/app/features/auth/providers/auth_provider.c.dart';
 import 'package:ion/app/features/chat/e2ee/model/entities/private_direct_message_data.c.dart';
 import 'package:ion/app/features/chat/e2ee/providers/send_chat_message/send_chat_media_provider.c.dart';
@@ -366,8 +367,8 @@ class SendE2eeChatMessageService {
           (media) => MediaFile(
             path: media.url,
             mimeType: media.mimeType,
-            height: int.parse(media.dimension.split('x').first),
-            width: int.parse(media.dimension.split('x').last),
+            height: media.dimension?.split('x').firstOrNull?.map(int.tryParse),
+            width: media.dimension?.split('x').lastOrNull?.map(int.tryParse),
           ),
         )
         .toList();
