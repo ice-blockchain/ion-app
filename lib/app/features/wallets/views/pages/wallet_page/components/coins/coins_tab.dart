@@ -22,49 +22,41 @@ class CoinsTab extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final selectedCoinsState = ref.watch(filteredCoinsNotifierProvider);
+    final groups = ref.watch(filteredCoinsNotifierProvider.select((state) => state.value));
 
-    return selectedCoinsState.maybeWhen(
-      data: (groups) {
-        if (groups.isEmpty) {
-          return EmptyState(
-            tabType: tabType,
-            onBottomActionTap: () {
-              ManageCoinsRoute().go(context);
-            },
-          );
-        }
+    if (groups == null || groups.isEmpty) {
+      return EmptyState(
+        tabType: tabType,
+        onBottomActionTap: () {
+          ManageCoinsRoute().go(context);
+        },
+      );
+    }
 
-        return SliverMainAxisGroup(
-          slivers: [
-            SliverList.separated(
-              itemCount: groups.length,
-              separatorBuilder: (context, index) => SizedBox(height: 12.0.s),
-              itemBuilder: (context, index) {
-                final group = groups[index];
-                final isNewlyAdded = ref.watch(manageCoinsNotifierProvider).maybeWhen(
-                      data: (data) => data[group.symbolGroup]?.isNewlyAdded ?? false,
-                      orElse: () => false,
-                    );
-
-                return ScreenSideOffset.small(
-                  child: isNewlyAdded
-                      ? const CoinsGroupItemPlaceholder()
-                      : CoinsGroupItem(
-                          coinsGroup: group,
-                          onTap: () =>
-                              CoinsDetailsRoute(symbolGroup: group.symbolGroup).go(context),
-                        ),
+    return SliverMainAxisGroup(
+      slivers: [
+        SliverList.separated(
+          itemCount: groups.length,
+          separatorBuilder: (context, index) => SizedBox(height: 12.0.s),
+          itemBuilder: (context, index) {
+            final group = groups[index];
+            final isNewlyAdded = ref.watch(manageCoinsNotifierProvider).maybeWhen(
+                  data: (data) => data[group.symbolGroup]?.isNewlyAdded ?? false,
+                  orElse: () => false,
                 );
-              },
-            ),
-            const CoinsTabFooter(),
-          ],
-        );
-      },
-      orElse: () => const SliverToBoxAdapter(
-        child: SizedBox.shrink(),
-      ),
+
+            return ScreenSideOffset.small(
+              child: isNewlyAdded
+                  ? const CoinsGroupItemPlaceholder()
+                  : CoinsGroupItem(
+                      coinsGroup: group,
+                      onTap: () => CoinsDetailsRoute(symbolGroup: group.symbolGroup).go(context),
+                    ),
+            );
+          },
+        ),
+        const CoinsTabFooter(),
+      ],
     );
   }
 }
