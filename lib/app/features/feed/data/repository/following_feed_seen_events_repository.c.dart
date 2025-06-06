@@ -9,16 +9,16 @@ import 'package:ion/app/features/ion_connect/model/event_reference.c.dart';
 import 'package:ion/app/features/ion_connect/model/ion_connect_entity.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
-part 'following_seen_events_repository.c.g.dart';
+part 'following_feed_seen_events_repository.c.g.dart';
 
 @Riverpod(keepAlive: true)
-FollowingSeenEventsRepository followingSeenEventsRepository(Ref ref) =>
-    FollowingSeenEventsRepository(
+FollowingFeedSeenEventsRepository followingFeedSeenEventsRepository(Ref ref) =>
+    FollowingFeedSeenEventsRepository(
       seenEventsDao: ref.watch(seenEventsDaoProvider),
     );
 
-class FollowingSeenEventsRepository {
-  FollowingSeenEventsRepository({
+class FollowingFeedSeenEventsRepository {
+  FollowingFeedSeenEventsRepository({
     required SeenEventsDao seenEventsDao,
   }) : _seenEventsDao = seenEventsDao;
 
