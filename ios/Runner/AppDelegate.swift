@@ -62,7 +62,9 @@ class AudioFocusHandler: NSObject {
                     // When abandoning focus, set back to mixWithOthers and deactivate
                     // This will allow external audio to resume
                     try AVAudioSession.sharedInstance().setCategory(.playback, mode: .default, options: [.mixWithOthers])
+                    // Briefly disactivate the session so previous audio sources can resume playing
                     try AVAudioSession.sharedInstance().setActive(false, options: .notifyOthersOnDeactivation)
+                    try AVAudioSession.sharedInstance().setActive(true)
                     self.hasFocus = false
                     self.channel.invokeMethod("onAudioFocusChange", arguments: false)
                     result(true)

@@ -98,12 +98,12 @@ class VideoController extends _$VideoController {
 
         _activeController = controller;
 
-        ref.listen(globalMuteNotifierProvider, (_, next) {
+        ref.listen(globalMuteNotifierProvider, (_, muted) {
           if (_activeController != null && _activeController!.value.isInitialized) {
             final isPlaying = _activeController!.value.isPlaying;
             unawaited(
-              _activeController!.setVolume(next ? 0.0 : 1.0).then((_) {
-                if (isPlaying && !_activeController!.value.isPlaying) {
+              _activeController!.setVolume(muted ? 0.0 : 1.0).then((_) {
+                if (isPlaying) {
                   _activeController!.play();
                 }
               }),
