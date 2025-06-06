@@ -1,6 +1,7 @@
 // SPDX-License-Identifier: ice License 1.0
 
 import 'dart:math';
+import 'dart:ui';
 
 import 'package:ion/app/features/ion_connect/model/media_attachment.dart';
 import 'package:ion/app/services/media_service/media_service.c.dart';
@@ -67,4 +68,20 @@ MediaAspectRatioResult attachedMediaAspectRatio(Iterable<MediaAspectRatio> ratio
   final resultRatio = ratios.reduce((a, b) => a + b) / ratios.length;
 
   return MediaAspectRatioResult(resultRatio);
+}
+
+Size getFittedSize({
+  required double maxWidth,
+  required double maxHeight,
+  required double aspectRatio, // width / height
+}) {
+  var width = maxWidth;
+  var height = width / aspectRatio;
+
+  if (height > maxHeight) {
+    height = maxHeight;
+    width = height * aspectRatio;
+  }
+
+  return Size(width, height);
 }
