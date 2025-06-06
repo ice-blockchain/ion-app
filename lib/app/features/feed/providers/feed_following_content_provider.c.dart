@@ -219,6 +219,9 @@ class FeedFollowingContent extends _$FeedFollowingContent implements PagedNotifi
     ]);
   }
 
+  /// Fetches a single entity for the given pubkey.
+  ///
+  /// Fetches the most recent entity if pagination is empty or the next entity if not.
   Future<IonConnectEntity?> _fetchEntity({
     required String pubkey,
   }) async {
@@ -251,6 +254,9 @@ class FeedFollowingContent extends _$FeedFollowingContent implements PagedNotifi
         .firstOrNull;
   }
 
+  /// Handles the fetched entity:
+  /// * Updates the provider state: items, pagination.
+  /// * Updates the seen entities state.
   Future<void> _handleFetchedEntity(
     String pubkey,
     IonConnectEntity? entity,

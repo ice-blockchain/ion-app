@@ -8,7 +8,7 @@ import 'package:ion/app/features/ion_connect/database/converters/event_reference
 @DataClassName('SeenEvent')
 class SeenEventsTable extends Table {
   IntColumn get feedType => integer().map(const FeedTypeConverter())();
-  IntColumn get feedModifier => integer().map(const FeedModifierConverter())();
+  IntColumn get feedModifier => integer().map(const FeedModifierConverter()).nullable()();
   TextColumn get eventReference => text().map(const EventReferenceConverter())();
   TextColumn get nextEventReference => text().map(const EventReferenceConverter()).nullable()();
   TextColumn get pubkey => text()();
