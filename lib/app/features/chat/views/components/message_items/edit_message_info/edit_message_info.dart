@@ -19,7 +19,6 @@ class EditMessageInfo extends HookConsumerWidget {
     }
 
     return Container(
-      margin: EdgeInsetsDirectional.only(bottom: 12.0.s),
       padding: EdgeInsetsDirectional.fromSTEB(12.0.s, 5.0.s, 20.0.s, 5.0.s),
       color: context.theme.appColors.onPrimaryAccent,
       child: IntrinsicHeight(
