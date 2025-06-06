@@ -77,7 +77,7 @@ class SeenEventsDao extends DatabaseAccessor<FollowingFeedDatabase> with _$SeenE
                 : tbl.feedModifier.equalsValue(feedModifier),
           )
           ..where((tbl) => tbl.nextEventReference.isNull())
-          ..where((tbl) => tbl.createdAt.isBiggerThanValue(since))
+          ..where((tbl) => tbl.createdAt.isSmallerOrEqualValue(since))
           ..orderBy([
             (tbl) => OrderingTerm(expression: tbl.createdAt),
           ])

@@ -14,7 +14,7 @@ Future<FeedConfig> feedConfig(Ref ref) async {
     'notInterestedCategoryChance': 0.3,
     'notInterestedSubcategoryChance': 0.2,
     'concurrentRequests': 3,
-    'followingReqMaxAge': const Duration(days: 5).inMilliseconds,
+    'followingReqMaxAge': const Duration(days: 2).inMilliseconds,
     'followingCacheMaxAge': const Duration(days: 7).inMilliseconds,
     'topMaxAge': const Duration(days: 3).inMilliseconds,
     'trendingMaxAge': const Duration(days: 1).inMilliseconds,

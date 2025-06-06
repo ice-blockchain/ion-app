@@ -207,8 +207,8 @@ class FeedFollowingContent extends _$FeedFollowingContent implements PagedNotifi
       for (final pubkey in pubkeys)
         requestsQueue.add(() async {
           final entity = await _fetchEntity(pubkey: pubkey);
-          await _handleFetchedEntity(pubkey, entity);
-          return entity;
+          final valid = await _handleFetchedEntity(pubkey, entity);
+          return valid ? entity : null;
         }).catchError((Object? error) {
           Logger.error(
             error ?? '',
@@ -225,22 +225,21 @@ class FeedFollowingContent extends _$FeedFollowingContent implements PagedNotifi
   Future<IonConnectEntity?> _fetchEntity({
     required String pubkey,
   }) async {
-    final feedConfig = await ref.read(feedConfigProvider.future);
     final ionConnectNotifier = ref.read(ionConnectNotifierProvider.notifier);
 
     final UserPagination(:lastEvent) = _getPubkeyPagination(pubkey);
     final dataSource = _getDataSource(pubkey);
 
     final until = lastEvent != null ? lastEvent.createdAt - 1 : null;
-    final since = DateTime.now().subtract(feedConfig.followingReqMaxAge).microsecondsSinceEpoch;
-
     final requestMessage = RequestMessage();
     for (final filter in dataSource.requestFilters) {
       requestMessage.addFilter(
+        // Do not use `since` here (from feedConfig.followingReqMaxAge),
+        // as we want to fetch one overflow entity (if it exists),
+        // to avoid the unnecessary requests in the future.
         filter.copyWith(
           limit: () => 1,
           until: () => until,
-          since: () => since,
         ),
       );
     }
@@ -256,13 +255,14 @@ class FeedFollowingContent extends _$FeedFollowingContent implements PagedNotifi
 
   /// Handles the fetched entity:
   /// * Updates the provider state: items, pagination.
-  /// * Updates the seen entities state.
-  Future<void> _handleFetchedEntity(
+  /// * Updates the seen entities state
+  ///
+  /// returns `true` if the entity is in the required time frame
+  Future<bool> _handleFetchedEntity(
     String pubkey,
     IonConnectEntity? entity,
   ) async {
     final pagination = _getPubkeyPagination(pubkey);
-    final feedConfig = await ref.read(feedConfigProvider.future);
     final seenEventsRepository = ref.read(followingFeedSeenEventsRepositoryProvider);
 
     // If the entity is null, it means there are no more entities to fetch for this pubkey.
@@ -270,7 +270,7 @@ class FeedFollowingContent extends _$FeedFollowingContent implements PagedNotifi
       state = state.copyWith(
         pagination: {...state.pagination, pubkey: pagination.copyWith(hasMore: false)},
       );
-      return;
+      return false;
     }
 
     // Update the nextEventReference for the previous event (pagination.lastEvent).
@@ -295,32 +295,36 @@ class FeedFollowingContent extends _$FeedFollowingContent implements PagedNotifi
 
     if (seenSequenceEnd == null) {
       // If the entity is not seen, we save it as a new seen event,
-      // insert it to the state and update the pagination.
+      // update the state items and pagination.
       await seenEventsRepository.save(entity, feedType: feedType, feedModifier: feedModifier);
+      final isInReqTimeFrame = await _isInReqTimeFrame(entity.createdAt);
       state = state.copyWith(
-        items: {...(state.items ?? {}), entity},
+        items: isInReqTimeFrame ? {...(state.items ?? {}), entity} : state.items,
         pagination: {
           ...state.pagination,
           pubkey: pagination.copyWith(
             page: pagination.page + 1,
-            hasMore: true,
-            lastEvent: (eventReference: entity.toEventReference(), createdAt: entity.createdAt),
+            hasMore: isInReqTimeFrame,
+            lastEvent: (
+              eventReference: entity.toEventReference(),
+              createdAt: entity.createdAt,
+            ),
           ),
         },
       );
+      return isInReqTimeFrame;
     } else {
       // If the entity is seen, we do not insert it to the state,
       // but we update the pagination with the seen sequence end.
       // This is to ensure that we do not fetch the same entity again
       // and skip all the seen events in between.
-      final hasMore = seenSequenceEnd.createdAt.toDateTime
-          .isAfter(DateTime.now().subtract(feedConfig.followingReqMaxAge));
+      final isInReqTimeFrame = await _isInReqTimeFrame(seenSequenceEnd.createdAt);
       state = state.copyWith(
         pagination: {
           ...state.pagination,
           pubkey: pagination.copyWith(
             page: pagination.page + 1,
-            hasMore: hasMore,
+            hasMore: isInReqTimeFrame,
             lastEvent: (
               eventReference: seenSequenceEnd.eventReference,
               createdAt: seenSequenceEnd.createdAt
@@ -328,6 +332,7 @@ class FeedFollowingContent extends _$FeedFollowingContent implements PagedNotifi
           ),
         },
       );
+      return false;
     }
   }
 
@@ -370,6 +375,11 @@ class FeedFollowingContent extends _$FeedFollowingContent implements PagedNotifi
           tags: feedModifierFilter?.tags,
         ),
     };
+  }
+
+  Future<bool> _isInReqTimeFrame(int time) async {
+    final feedConfig = await ref.read(feedConfigProvider.future);
+    return time.toDateTime.isAfter(DateTime.now().subtract(feedConfig.followingReqMaxAge));
   }
 }
 
