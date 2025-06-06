@@ -18,6 +18,20 @@ class BlockEventDao extends DatabaseAccessor<BlockUserDatabase> with _$BlockEven
     await into(db.blockEventTable).insert(dbModel, mode: InsertMode.insertOrReplace);
   }
 
+  Future<EventReference?> getBlockEventReference({
+    required String masterPubkey,
+    required String blockedUserMasterPubkey,
+  }) async {
+    final blockedUsers = await getBlockedUsersEvents(masterPubkey);
+    final blockedUsersEntities = blockedUsers.map(BlockedUserEntity.fromEventMessage).toList();
+
+    final blockedUserEntity = blockedUsersEntities.firstWhereOrNull(
+      (entity) => entity.data.blockedMasterPubkeys.contains(blockedUserMasterPubkey),
+    );
+
+    return blockedUserEntity?.toEventReference();
+  }
+
   Future<DateTime?> getLatestBlockEventDate() async {
     final query = select(blockEventTable)
       ..orderBy([(t) => OrderingTerm.desc(t.createdAt)])

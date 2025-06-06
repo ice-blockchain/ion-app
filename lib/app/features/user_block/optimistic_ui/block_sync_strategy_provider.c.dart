@@ -9,9 +9,11 @@ import 'package:ion/app/features/chat/providers/conversation_pubkeys_provider.c.
 import 'package:ion/app/features/ion_connect/ion_connect.dart';
 import 'package:ion/app/features/ion_connect/model/action_source.c.dart';
 import 'package:ion/app/features/ion_connect/model/deletion_request.c.dart';
+import 'package:ion/app/features/ion_connect/model/event_reference.c.dart';
 import 'package:ion/app/features/ion_connect/providers/ion_connect_event_signer_provider.c.dart';
 import 'package:ion/app/features/ion_connect/providers/ion_connect_notifier.c.dart';
 import 'package:ion/app/features/optimistic_ui/core/optimistic_sync_strategy.dart';
+import 'package:ion/app/features/user_block/model/database/block_user_database.c.dart';
 import 'package:ion/app/features/user_block/model/entities/blocked_user_entity.c.dart';
 import 'package:ion/app/features/user_block/optimistic_ui/block_sync_strategy.dart';
 import 'package:ion/app/features/user_block/optimistic_ui/model/blocked_user.c.dart';
@@ -97,8 +99,15 @@ SyncStrategy<BlockedUser> blockSyncStrategy(Ref ref) {
         }),
       );
     },
-    deleteBlockEvent: (blockedUserMasterPubkey, eventReference) async {
-      if (eventReference == null) {
+    deleteBlockEvent: (blockedUserMasterPubkey) async {
+      var eventReference = await ref.read(blockEventDaoProvider).getBlockEventReference(
+            masterPubkey: currentUserMasterPubkey,
+            blockedUserMasterPubkey: blockedUserMasterPubkey,
+          );
+
+      if (eventReference != null && eventReference is ImmutableEventReference) {
+        eventReference = eventReference.copyWith(kind: BlockedUserEntity.kind);
+      } else {
         throw UnsupportedEventReference(eventReference);
       }
 

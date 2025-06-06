@@ -36,7 +36,6 @@ Future<List<BlockedUser>> loadInitialBlockedUsers(Ref ref) async {
       return BlockedUser(
         isBlocked: !isUnblocked,
         masterPubkey: blockEntity.data.blockedMasterPubkeys.single,
-        eventReference: blockEntity.toEventReference().copyWith(kind: BlockedUserEntity.kind),
       );
     }),
   );
