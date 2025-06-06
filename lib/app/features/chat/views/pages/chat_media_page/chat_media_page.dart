@@ -96,28 +96,6 @@ class ChatMediaPage extends HookConsumerWidget {
         child: Scaffold(
           backgroundColor: context.theme.appColors.primaryText,
           extendBodyBehindAppBar: true,
-          appBar: NavigationAppBar.screen(
-            backgroundColor: Colors.transparent,
-            leading: NavigationBackButton(
-              () => context.pop(),
-              icon: Assets.svg.iconChatBack.icon(
-                size: NavigationAppBar.actionButtonSide,
-                color: context.theme.appColors.onPrimaryAccent,
-                flipForRtl: true,
-              ),
-            ),
-            onBackPress: () => context.pop(),
-            actions: [
-              ChatMediaContextMenu(
-                eventMessage: eventMessage,
-                activeMedia: medias[currentPage.value],
-              ),
-            ],
-            title: _MediaPagerCounter(
-              currentPage: currentPage.value,
-              totalPages: medias.length,
-            ),
-          ),
           body: Stack(
             children: [
               ChatMediaPageView(
@@ -127,6 +105,36 @@ class ChatMediaPage extends HookConsumerWidget {
                 zoomController: zoomController,
                 isZoomed: isZoomed,
                 pageController: pageController,
+              ),
+              PositionedDirectional(
+                top: 0,
+                start: 0,
+                end: 0,
+                child: ColoredBox(
+                  color: context.theme.appColors.primaryText.withValues(alpha: 0.5),
+                  child: NavigationAppBar.screen(
+                    backgroundColor: Colors.transparent,
+                    leading: NavigationBackButton(
+                      () => context.pop(),
+                      icon: Assets.svg.iconChatBack.icon(
+                        size: NavigationAppBar.actionButtonSide,
+                        color: context.theme.appColors.onPrimaryAccent,
+                        flipForRtl: true,
+                      ),
+                    ),
+                    onBackPress: () => context.pop(),
+                    actions: [
+                      ChatMediaContextMenu(
+                        eventMessage: eventMessage,
+                        activeMedia: medias[currentPage.value],
+                      ),
+                    ],
+                    title: _MediaPagerCounter(
+                      currentPage: currentPage.value,
+                      totalPages: medias.length,
+                    ),
+                  ),
+                ),
               ),
               _MediaBottomOverlay(
                 messageEntity: entity,
@@ -184,49 +192,55 @@ class _MediaBottomOverlay extends ConsumerWidget {
     final isMuted = ref.watch(globalMuteNotifierProvider);
 
     return PositionedDirectional(
-      bottom: MediaQuery.paddingOf(context).bottom,
+      bottom: 0,
       start: 0,
       end: 0,
-      child: ScreenSideOffset.small(
-        child: Padding(
-          padding: EdgeInsetsDirectional.only(bottom: 20.0.s),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Expanded(
-                child: BadgesUserListItem(
-                  pubkey: messageEntity.masterPubkey,
-                  title: Text(
-                    userMetadata.data.displayName,
-                    style: context.theme.appTextThemes.subtitle3.copyWith(
-                      color: context.theme.appColors.onPrimaryAccent,
+      child: ColoredBox(
+        color: context.theme.appColors.primaryText.withValues(alpha: 0.5),
+        child: ScreenSideOffset.small(
+          child: Padding(
+            padding: EdgeInsetsDirectional.only(
+              bottom: 20.0.s + MediaQuery.paddingOf(context).bottom,
+              top: 16.0.s,
+            ),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Expanded(
+                  child: BadgesUserListItem(
+                    pubkey: messageEntity.masterPubkey,
+                    title: Text(
+                      userMetadata.data.displayName,
+                      style: context.theme.appTextThemes.subtitle3.copyWith(
+                        color: context.theme.appColors.onPrimaryAccent,
+                      ),
                     ),
-                  ),
-                  subtitle: Text(
-                    prefixUsername(username: userMetadata.data.name, context: context),
-                    style: context.theme.appTextThemes.caption.copyWith(
-                      color: context.theme.appColors.onPrimaryAccent,
+                    subtitle: Text(
+                      prefixUsername(username: userMetadata.data.name, context: context),
+                      style: context.theme.appTextThemes.caption.copyWith(
+                        color: context.theme.appColors.onPrimaryAccent,
+                      ),
                     ),
                   ),
                 ),
-              ),
-              if (isVideo)
-                GestureDetector(
-                  onTap: () async {
-                    await HapticFeedback.lightImpact();
-                    await ref.read(globalMuteNotifierProvider.notifier).toggle();
-                  },
-                  child: isMuted
-                      ? Assets.svg.iconChannelMute.icon(
-                          size: 24.0.s,
-                          color: context.theme.appColors.onPrimaryAccent,
-                        )
-                      : Assets.svg.iconChannelUnmute.icon(
-                          size: 24.0.s,
-                          color: context.theme.appColors.onPrimaryAccent,
-                        ),
-                ),
-            ],
+                if (isVideo)
+                  GestureDetector(
+                    onTap: () async {
+                      await HapticFeedback.lightImpact();
+                      await ref.read(globalMuteNotifierProvider.notifier).toggle();
+                    },
+                    child: isMuted
+                        ? Assets.svg.iconChannelMute.icon(
+                            size: 24.0.s,
+                            color: context.theme.appColors.onPrimaryAccent,
+                          )
+                        : Assets.svg.iconChannelUnmute.icon(
+                            size: 24.0.s,
+                            color: context.theme.appColors.onPrimaryAccent,
+                          ),
+                  ),
+              ],
+            ),
           ),
         ),
       ),
