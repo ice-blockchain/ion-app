@@ -8,6 +8,8 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/chat/e2ee/model/entities/private_direct_message_data.c.dart';
 import 'package:ion/app/features/chat/providers/messaging_bottom_bar_state_provider.c.dart';
+import 'package:ion/app/features/chat/recent_chats/providers/selected_edit_message_provider.c.dart';
+import 'package:ion/app/features/chat/recent_chats/providers/selected_reply_message_provider.c.dart';
 import 'package:ion/app/features/chat/views/components/message_items/messaging_bottom_bar/components/components.dart';
 import 'package:ion/app/features/core/permissions/data/models/permissions_types.dart';
 import 'package:ion/app/features/core/permissions/views/components/permission_aware_widget.dart';
@@ -28,10 +30,23 @@ class BottomBarInitialView extends HookConsumerWidget {
   final String? receiverPubKey;
   final TextEditingController controller;
   final Future<void> Function({String? content, List<MediaFile>? mediaFiles}) onSubmitted;
-
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final bottomBarState = ref.watch(messagingBottomBarActiveStateProvider);
+    final focusNode = useFocusNode();
+
+    final editMessage = ref.watch(selectedEditMessageProvider);
+    final repliedMessage = ref.watch(selectedReplyMessageProvider);
+
+    useEffect(
+      () {
+        if (editMessage != null || repliedMessage != null) {
+          focusNode.requestFocus();
+        }
+        return null;
+      },
+      [editMessage, repliedMessage],
+    );
 
     final onTextChanged = useCallback(
       (String text) {
@@ -91,6 +106,7 @@ class BottomBarInitialView extends HookConsumerWidget {
               SizedBox(width: 6.0.s),
               Expanded(
                 child: TextField(
+                  focusNode: focusNode,
                   controller: controller,
                   style: context.theme.appTextThemes.body2.copyWith(
                     color: context.theme.appColors.primaryText,
