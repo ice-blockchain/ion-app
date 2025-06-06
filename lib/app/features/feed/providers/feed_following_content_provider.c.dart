@@ -46,7 +46,6 @@ class FeedFollowingContent extends _$FeedFollowingContent implements PagedNotifi
   @override
   Future<void> fetchEntities({bool bypassLoading = false, int? limit}) async {
     if (_loading && !bypassLoading) return;
-
     _loading = true;
 
     try {
@@ -85,7 +84,9 @@ class FeedFollowingContent extends _$FeedFollowingContent implements PagedNotifi
 
   @override
   void refresh() {
-    ref.invalidateSelf();
+    if (!_loading) {
+      ref.invalidateSelf();
+    }
   }
 
   @override
@@ -206,8 +207,14 @@ class FeedFollowingContent extends _$FeedFollowingContent implements PagedNotifi
     return Future.wait([
       for (final pubkey in pubkeys)
         requestsQueue.add(() async {
-          final entity = await _fetchEntity(pubkey: pubkey);
-          final valid = await _handleFetchedEntity(pubkey, entity);
+          final UserPagination(:lastEvent) = _getPubkeyPagination(pubkey);
+          final entity =
+              await _fetchEntity(pubkey: pubkey, lastEventCreatedAt: lastEvent?.createdAt);
+          final valid = await _handleFetchedEntity(
+            pubkey: pubkey,
+            entity: entity,
+            lastEventReference: lastEvent?.eventReference,
+          );
           return valid ? entity : null;
         }).catchError((Object? error) {
           Logger.error(
@@ -224,13 +231,13 @@ class FeedFollowingContent extends _$FeedFollowingContent implements PagedNotifi
   /// Fetches the most recent entity if pagination is empty or the next entity if not.
   Future<IonConnectEntity?> _fetchEntity({
     required String pubkey,
+    required int? lastEventCreatedAt,
   }) async {
     final ionConnectNotifier = ref.read(ionConnectNotifierProvider.notifier);
 
-    final UserPagination(:lastEvent) = _getPubkeyPagination(pubkey);
     final dataSource = _getDataSource(pubkey);
 
-    final until = lastEvent != null ? lastEvent.createdAt - 1 : null;
+    final until = lastEventCreatedAt != null ? lastEventCreatedAt - 1 : null;
     final requestMessage = RequestMessage();
     for (final filter in dataSource.requestFilters) {
       requestMessage.addFilter(
@@ -258,10 +265,11 @@ class FeedFollowingContent extends _$FeedFollowingContent implements PagedNotifi
   /// * Updates the seen entities state
   ///
   /// returns `true` if the entity is in the required time frame
-  Future<bool> _handleFetchedEntity(
-    String pubkey,
-    IonConnectEntity? entity,
-  ) async {
+  Future<bool> _handleFetchedEntity({
+    required String pubkey,
+    required IonConnectEntity? entity,
+    required EventReference? lastEventReference,
+  }) async {
     final pagination = _getPubkeyPagination(pubkey);
     final seenEventsRepository = ref.read(followingFeedSeenEventsRepositoryProvider);
 
@@ -275,10 +283,9 @@ class FeedFollowingContent extends _$FeedFollowingContent implements PagedNotifi
 
     // Update the nextEventReference for the previous event (pagination.lastEvent).
     // This maintains the correct sequence of seen events.
-    final lastEvent = pagination.lastEvent;
-    if (lastEvent != null) {
+    if (lastEventReference != null) {
       await seenEventsRepository.setNextEvent(
-        eventReference: lastEvent.eventReference,
+        eventReference: lastEventReference,
         nextEventReference: entity.toEventReference(),
         feedType: feedType,
         feedModifier: feedModifier,
