@@ -43,7 +43,8 @@ class PaginatedUsersMetadata extends _$PaginatedUsersMetadata {
   Future<PaginatedUsersMetadataData> build(UserRelaysInfoFetcher fetcher) async {
     _fetcher = fetcher;
     if (!_initialized) {
-      unawaited(Future.microtask(_init));
+      await _init();
+      return state.value ?? const PaginatedUsersMetadataData();
     }
     return const PaginatedUsersMetadataData();
   }
