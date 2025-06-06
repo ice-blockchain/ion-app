@@ -106,10 +106,10 @@ class ChatMediaPage extends HookConsumerWidget {
                 isZoomed: isZoomed,
                 pageController: pageController,
               ),
-              Positioned(
+              PositionedDirectional(
                 top: 0,
-                left: 0,
-                right: 0,
+                start: 0,
+                end: 0,
                 child: ColoredBox(
                   color: context.theme.appColors.primaryText.withValues(alpha: 0.5),
                   child: NavigationAppBar.screen(
