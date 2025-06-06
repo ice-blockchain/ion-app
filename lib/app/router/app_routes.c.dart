@@ -169,7 +169,7 @@ part 'profile_routes.dart';
 part 'protect_account_routes.dart';
 part 'settings_routes.dart';
 part 'wallet_routes.dart';
-part 'gallery_routes.dart';
+part 'media_picker_routes.dart';
 
 final rootNavigatorKey = GlobalKey<NavigatorState>(debugLabel: 'rootNav');
 final bottomBarNavigatorKey = GlobalKey<NavigatorState>(debugLabel: 'tabNav');
@@ -300,12 +300,15 @@ class ErrorRoute extends BaseRouteData {
 
 @TypedGoRoute<IntroRoute>(
   path: '/intro',
-  routes: [...AuthRoutes.routes, 
-  TypedShellRoute<ModalShellRouteData>(
-      routes: [
-        ...GalleryRoutes.routes,
-      ],
-    ),
+  routes: [
+    ...AuthRoutes.routes,
+    ...MediaPickerRoutes.routes,
+    // TypedGoRoute<GalleryCameraRoute>(path: 'gallery/camera'),
+    // TypedShellRoute<ModalShellRouteData>(
+    //   routes: [
+    //     TypedGoRoute<AlbumSelectionRoute>(path: 'gallery/album-selection'),
+    //   ],
+    // ),
   ],
 )
 class IntroRoute extends BaseRouteData {

@@ -77,7 +77,7 @@ Future<String?> _mainRedirect({
   final isOnSplash = location.startsWith(SplashRoute().location);
   final isOnAuth = location.contains('/${AuthRoutes.authPrefix}/');
   final isOnOnboarding = location.contains('/${AuthRoutes.onboardingPrefix}/');
-  final isOnGallery = location.contains('/${GalleryRoutes.galleryRoutesPrefix}/');
+  final isOnGallery = location.contains('/${MediaPickerRoutes.galleryRoutesPrefix}/');
   final isOnFeed = location == FeedRoute().location;
   // final isOnCamera = location.contains(GalleryCameraRoute(mediaPickerType: MediaPickerType.image).location);
 

@@ -21,7 +21,6 @@ class FeedRoutes {
     TypedGoRoute<ArticlesFromAuthorRoute>(path: 'articles/author/:pubkey'),
     TypedGoRoute<FeedSimpleSearchRoute>(path: 'feed-simple-search'),
     TypedGoRoute<FeedAdvancedSearchRoute>(path: 'feed-advanced-search'),
-    TypedGoRoute<FullscreenMediaRoute>(path: 'fullscreen-media-fullstack'),
     TypedShellRoute<ModalShellRouteData>(
       routes: [
         TypedGoRoute<SwitchAccountRoute>(path: 'switch-account'),
@@ -497,28 +496,6 @@ class ReplyListVideosRoute extends BaseRouteData {
   final String parentEventReference;
   final String eventReference;
   final int initialMediaIndex;
-  final String? framedEventReference;
-}
-
-class FullscreenMediaRoute extends BaseRouteData {
-  FullscreenMediaRoute({
-    required this.initialMediaIndex,
-    required this.eventReference,
-    this.framedEventReference,
-  }) : super(
-          child: FullscreenMediaPage(
-            initialMediaIndex: initialMediaIndex,
-            eventReference: EventReference.fromEncoded(eventReference),
-            framedEventReference: framedEventReference != null
-                ? EventReference.fromEncoded(framedEventReference)
-                : null,
-          ),
-          type: IceRouteType.swipeDismissible,
-          isFullscreenMedia: true,
-        );
-
-  final int initialMediaIndex;
-  final String eventReference;
   final String? framedEventReference;
 }
 
