@@ -50,7 +50,11 @@ class MediaPickerPage extends HookConsumerWidget {
 
     ref.listen(mediaSelectionNotifierProvider, (_, value) {
       if (maxSelection == 1 && value.selectedMedia.isNotEmpty == true) {
-        Navigator.of(context).pop(value.selectedMedia);
+        WidgetsBinding.instance.addPostFrameCallback((_) {
+          if (context.mounted) {
+            Navigator.of(context).pop(value.selectedMedia);
+          }
+        });
       }
     });
 

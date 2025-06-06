@@ -21,7 +21,6 @@ class FeedRoutes {
     TypedGoRoute<ArticlesFromAuthorRoute>(path: 'articles/author/:pubkey'),
     TypedGoRoute<FeedSimpleSearchRoute>(path: 'feed-simple-search'),
     TypedGoRoute<FeedAdvancedSearchRoute>(path: 'feed-advanced-search'),
-    TypedGoRoute<FullscreenMediaRoute>(path: 'fullscreen-media-fullstack'),
     TypedShellRoute<ModalShellRouteData>(
       routes: [
         TypedGoRoute<SwitchAccountRoute>(path: 'switch-account'),
@@ -47,7 +46,6 @@ class FeedRoutes {
         ),
         TypedGoRoute<CreateVideoRoute>(path: 'post-editor/video'),
         TypedGoRoute<CreateArticleRoute>(path: 'create-article'),
-        TypedGoRoute<MediaPickerRoute>(path: 'media-picker'),
         TypedGoRoute<FeedSearchFiltersRoute>(path: 'feed-search_filters'),
         TypedGoRoute<ArticlePreviewRoute>(path: 'article-preview'),
         TypedGoRoute<SelectArticleTopicsRoute>(path: 'article-topics'),
@@ -330,27 +328,7 @@ class CreateArticleRoute extends BaseRouteData {
         );
 }
 
-class MediaPickerRoute extends BaseRouteData {
-  MediaPickerRoute({
-    this.maxSelection,
-    this.mediaPickerType = MediaPickerType.common,
-    this.maxVideoDurationInSeconds,
-    this.showCameraCell = true,
-  }) : super(
-          child: MediaPickerPage(
-            maxSelection: maxSelection ?? 5,
-            type: mediaPickerType,
-            maxVideoDurationInSeconds: maxVideoDurationInSeconds,
-            showCameraCell: showCameraCell,
-          ),
-          type: IceRouteType.bottomSheet,
-        );
 
-  final int? maxSelection;
-  final MediaPickerType mediaPickerType;
-  final int? maxVideoDurationInSeconds;
-  final bool showCameraCell;
-}
 
 
 
@@ -497,28 +475,6 @@ class ReplyListVideosRoute extends BaseRouteData {
   final String parentEventReference;
   final String eventReference;
   final int initialMediaIndex;
-  final String? framedEventReference;
-}
-
-class FullscreenMediaRoute extends BaseRouteData {
-  FullscreenMediaRoute({
-    required this.initialMediaIndex,
-    required this.eventReference,
-    this.framedEventReference,
-  }) : super(
-          child: FullscreenMediaPage(
-            initialMediaIndex: initialMediaIndex,
-            eventReference: EventReference.fromEncoded(eventReference),
-            framedEventReference: framedEventReference != null
-                ? EventReference.fromEncoded(framedEventReference)
-                : null,
-          ),
-          type: IceRouteType.swipeDismissible,
-          isFullscreenMedia: true,
-        );
-
-  final int initialMediaIndex;
-  final String eventReference;
   final String? framedEventReference;
 }
 

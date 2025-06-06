@@ -25,7 +25,7 @@ class FullscreenMediaPage extends HookConsumerWidget {
 
   final EventReference eventReference;
   final EventReference? framedEventReference;
-  final int initialMediaIndex;
+  final int? initialMediaIndex;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
