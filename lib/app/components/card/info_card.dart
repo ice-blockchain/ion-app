@@ -25,6 +25,7 @@ class InfoCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Column(
+      mainAxisSize: MainAxisSize.min,
       children: [
         iconAsset.icon(size: 80.0.s),
         SizedBox(height: 10.0.s),
