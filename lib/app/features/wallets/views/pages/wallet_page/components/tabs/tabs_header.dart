@@ -35,7 +35,8 @@ class WalletTabsHeader extends ConsumerWidget {
     final dappsEnabled =
         ref.watch(featureFlagsProvider.notifier).get(WalletFeatureFlag.dappsEnabled);
 
-    final areCoinsLoading = ref.watch(filteredCoinsNotifierProvider).isLoading;
+    final areCoinsLoading =
+        ref.watch(filteredCoinsNotifierProvider.select((state) => !state.hasValue));
     if (areCoinsLoading) {
       return const WalletTabsHeaderLoader();
     }
