@@ -2,18 +2,17 @@
 
 import 'dart:convert';
 
-import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/auth/providers/auth_provider.c.dart';
 import 'package:ion/app/features/core/providers/env_provider.c.dart';
 import 'package:ion/app/features/ion_connect/model/relay_info.c.dart';
 import 'package:ion/app/features/ion_connect/providers/relay_info_provider.c.dart';
+import 'package:ion/app/features/push_notifications/data/models/relay_firebase_config.c.dart';
 import 'package:ion/app/features/user/providers/ranked_user_relays_provider.c.dart';
 import 'package:ion/app/services/logger/logger.dart';
 import 'package:ion/app/services/storage/local_storage.c.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
-part 'relay_firebase_app_config_provider.c.freezed.dart';
 part 'relay_firebase_app_config_provider.c.g.dart';
 
 @Riverpod(keepAlive: true)
@@ -130,16 +129,4 @@ class BuildInFirebaseAppConfig extends _$BuildInFirebaseAppConfig {
       return null;
     }
   }
-}
-
-@freezed
-class RelayFirebaseConfig with _$RelayFirebaseConfig {
-  const factory RelayFirebaseConfig({
-    required String relayUrl,
-    required String relayPubkey,
-    required FirebaseConfig firebaseConfig,
-  }) = _RelayFirebaseConfig;
-
-  factory RelayFirebaseConfig.fromJson(Map<String, dynamic> json) =>
-      _$RelayFirebaseConfigFromJson(json);
 }

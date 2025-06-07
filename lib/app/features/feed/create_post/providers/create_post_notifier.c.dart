@@ -18,6 +18,7 @@ import 'package:ion/app/features/feed/data/models/entities/article_data.c.dart';
 import 'package:ion/app/features/feed/data/models/entities/modifiable_post_data.c.dart';
 import 'package:ion/app/features/feed/data/models/entities/post_data.c.dart';
 import 'package:ion/app/features/feed/data/models/who_can_reply_settings_option.c.dart';
+import 'package:ion/app/features/feed/polls/data/models/poll_draft.c.dart';
 import 'package:ion/app/features/feed/polls/models/poll_data.c.dart';
 import 'package:ion/app/features/feed/polls/providers/poll_draft_provider.c.dart';
 import 'package:ion/app/features/feed/providers/counters/replies_count_provider.c.dart';

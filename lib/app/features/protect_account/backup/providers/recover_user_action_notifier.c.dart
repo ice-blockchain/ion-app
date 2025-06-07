@@ -1,27 +1,14 @@
 // SPDX-License-Identifier: ice License 1.0
 
-import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:ion/app/features/auth/data/models/twofa_type.dart';
 import 'package:ion/app/features/protect_account/authenticator/data/adapter/twofa_type_adapter.dart';
+import 'package:ion/app/features/protect_account/backup/data/models/recovery_action_states.c.dart';
 import 'package:ion/app/services/ion_identity/ion_identity_provider.c.dart';
 import 'package:ion_identity_client/ion_identity.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
-part 'recover_user_action_notifier.c.freezed.dart';
 part 'recover_user_action_notifier.c.g.dart';
 
-@freezed
-class InitUserRecoveryActionState with _$InitUserRecoveryActionState {
-  const factory InitUserRecoveryActionState.initial() = _InitUserRecoveryActionStateInitial;
-  const factory InitUserRecoveryActionState.success(UserRegistrationChallenge challenge) =
-      _InitUserRecoveryActionStateSuccess;
-}
-
-@freezed
-class CompleteUserRecoveryActionState with _$CompleteUserRecoveryActionState {
-  const factory CompleteUserRecoveryActionState.initial() = _CompleteUserRecoveryActionStateInitial;
-  const factory CompleteUserRecoveryActionState.success() = _CompleteUserRecoveryActionStateSuccess;
-}
 
 @riverpod
 class InitUserRecoveryActionNotifier extends _$InitUserRecoveryActionNotifier {
