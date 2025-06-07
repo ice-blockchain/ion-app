@@ -1,23 +1,13 @@
 // SPDX-License-Identifier: ice License 1.0
 
-import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:ion/app/constants/emails.dart';
 import 'package:ion/app/features/ion_connect/model/event_reference.c.dart';
 import 'package:ion/app/features/user/model/user_metadata.c.dart';
+import 'package:ion/app/features/user/models/report_reason.c.dart';
 import 'package:ion/app/services/mail/mail.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'report_notifier.c.g.dart';
-part 'report_notifier.c.freezed.dart';
-
-@freezed
-sealed class ReportReason with _$ReportReason {
-  const factory ReportReason.user({required String pubkey}) = ReportReasonUser;
-  const factory ReportReason.content({required EventReference eventReference}) =
-      ReportReasonContent;
-  const factory ReportReason.conversation({required String conversationId}) =
-      ReportReasonConversation;
-}
 
 @riverpod
 class ReportNotifier extends _$ReportNotifier {

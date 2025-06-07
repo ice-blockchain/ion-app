@@ -3,15 +3,14 @@
 import 'dart:convert';
 
 import 'package:dio/dio.dart';
-import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:ion/app/exceptions/exceptions.dart';
 import 'package:ion/app/features/core/providers/dio_provider.c.dart';
 import 'package:ion/app/features/ion_connect/ion_connect.dart';
+import 'package:ion/app/features/ion_connect/models/delete_response.c.dart';
 import 'package:ion/app/features/ion_connect/providers/file_storage_url_provider.c.dart';
 import 'package:ion/app/features/ion_connect/utils/file_storage_utils.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
-part 'ion_connect_delete_file_notifier.c.freezed.dart';
 part 'ion_connect_delete_file_notifier.c.g.dart';
 
 @riverpod
@@ -81,14 +80,4 @@ class IonConnectDeleteFileNotifier extends _$IonConnectDeleteFileNotifier {
       throw FileDeleteException(error, fileHash: fileHash);
     }
   }
-}
-
-@freezed
-class DeleteResponse with _$DeleteResponse {
-  const factory DeleteResponse({
-    required String status,
-    required String message,
-  }) = _DeleteResponse;
-
-  factory DeleteResponse.fromJson(Map<String, dynamic> json) => _$DeleteResponseFromJson(json);
 }
