@@ -6,7 +6,7 @@ import 'package:ion/app/services/compressors/audio_compressor.c.dart';
 import 'package:ion/app/services/compressors/brotli_compressor.c.dart';
 import 'package:ion/app/services/compressors/image_compressor.c.dart';
 import 'package:ion/app/services/compressors/video_compressor.c.dart';
-import 'package:ion/app/services/media_service/media_service.c.dart';
+import 'package:ion/app/services/media_service/data/models/media_file.c.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'compressor.c.g.dart';

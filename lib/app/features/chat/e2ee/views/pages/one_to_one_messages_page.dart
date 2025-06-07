@@ -21,7 +21,7 @@ import 'package:ion/app/features/chat/views/components/message_items/messaging_b
 import 'package:ion/app/features/chat/views/components/message_items/replied_message_info/replied_message_info.dart';
 import 'package:ion/app/features/user/providers/user_metadata_provider.c.dart';
 import 'package:ion/app/router/app_routes.c.dart';
-import 'package:ion/app/services/media_service/media_service.c.dart';
+import 'package:ion/app/services/media_service/data/models/media_file.c.dart';
 import 'package:ion/app/utils/username.dart';
 
 class OneToOneMessagesPage extends HookConsumerWidget {

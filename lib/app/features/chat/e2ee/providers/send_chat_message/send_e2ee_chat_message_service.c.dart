@@ -34,7 +34,7 @@ import 'package:ion/app/features/user_block/providers/block_list_notifier.c.dart
 import 'package:ion/app/services/compressors/video_compressor.c.dart';
 import 'package:ion/app/services/ion_connect/ion_connect_gift_wrap_service.c.dart';
 import 'package:ion/app/services/ion_connect/ion_connect_seal_service.c.dart';
-import 'package:ion/app/services/media_service/media_service.c.dart';
+import 'package:ion/app/services/media_service/data/models/media_file.c.dart';
 import 'package:ion/app/services/uuid/uuid.dart';
 import 'package:isolate_manager/isolate_manager.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';

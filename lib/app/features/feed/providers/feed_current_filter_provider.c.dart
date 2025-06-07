@@ -1,26 +1,13 @@
 // SPDX-License-Identifier: ice License 1.0
 
-import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:ion/app/features/auth/providers/auth_provider.c.dart';
 import 'package:ion/app/features/feed/data/models/feed_category.dart';
 import 'package:ion/app/features/feed/data/models/feed_filter.dart';
+import 'package:ion/app/features/feed/data/models/feed_filters_state.c.dart';
 import 'package:ion/app/services/storage/user_preferences_service.c.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
-part 'feed_current_filter_provider.c.freezed.dart';
 part 'feed_current_filter_provider.c.g.dart';
-
-@freezed
-class FeedFiltersState with _$FeedFiltersState {
-  const factory FeedFiltersState({
-    required FeedCategory category,
-    required FeedFilter filter,
-  }) = _FeedFiltersState;
-  const FeedFiltersState._();
-
-  static const FeedCategory defaultCategory = FeedCategory.feed;
-  static const FeedFilter defaultFilter = FeedFilter.forYou;
-}
 
 @riverpod
 class FeedCurrentFilter extends _$FeedCurrentFilter {

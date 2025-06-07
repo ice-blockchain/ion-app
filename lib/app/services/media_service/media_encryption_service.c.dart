@@ -6,7 +6,6 @@ import 'dart:isolate';
 
 import 'package:cryptography/cryptography.dart';
 import 'package:flutter/foundation.dart';
-import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/exceptions/exceptions.dart';
 import 'package:ion/app/features/core/model/media_type.dart';
@@ -14,11 +13,11 @@ import 'package:ion/app/features/core/providers/ion_connect_media_url_fallback_p
 import 'package:ion/app/features/ion_connect/model/media_attachment.dart';
 import 'package:ion/app/services/compressors/brotli_compressor.c.dart';
 import 'package:ion/app/services/file_cache/ion_file_cache_manager.c.dart';
-import 'package:ion/app/services/media_service/media_service.c.dart';
+import 'package:ion/app/services/media_service/data/models/encrypted_media_file.c.dart';
+import 'package:ion/app/services/media_service/data/models/media_file.c.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
-part 'media_encryption_service.c.freezed.dart';
 part 'media_encryption_service.c.g.dart';
 
 class MediaEncryptionService {
@@ -206,13 +205,3 @@ MediaEncryptionService mediaEncryptionService(Ref ref) => MediaEncryptionService
       generateMediaUrlFallback:
           ref.read(iONConnectMediaUrlFallbackProvider.notifier).generateFallback,
     );
-
-@freezed
-class EncryptedMediaFile with _$EncryptedMediaFile {
-  const factory EncryptedMediaFile({
-    required MediaFile mediaFile,
-    required String secretKey,
-    required String nonce,
-    required String mac,
-  }) = _EncryptedMediaFile;
-}

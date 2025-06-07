@@ -3,7 +3,7 @@
 import 'package:ion/app/features/gallery/data/models/album_data.c.dart';
 import 'package:ion/app/features/gallery/views/pages/media_picker_type.dart';
 import 'package:ion/app/services/logger/logger.dart';
-import 'package:ion/app/services/media_service/media_service.c.dart';
+import 'package:ion/app/services/media_service/data/models/media_file.c.dart';
 import 'package:photo_manager/photo_manager.dart';
 
 class AlbumService {

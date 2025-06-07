@@ -1,18 +1,9 @@
 // SPDX-License-Identifier: ice License 1.0
 
-import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:ion/app/features/feed/stories/data/models/emoji_state.c.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'emoji_reaction_provider.c.g.dart';
-part 'emoji_reaction_provider.c.freezed.dart';
-
-@freezed
-class EmojiState with _$EmojiState {
-  const factory EmojiState({
-    String? selectedEmoji,
-    @Default(false) bool showNotification,
-  }) = _EmojiState;
-}
 
 @riverpod
 class EmojiReactionsController extends _$EmojiReactionsController {

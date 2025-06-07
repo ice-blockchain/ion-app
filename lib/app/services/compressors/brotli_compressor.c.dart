@@ -9,7 +9,7 @@ import 'package:ion/app/exceptions/exceptions.dart';
 import 'package:ion/app/services/compressors/compressor.c.dart';
 import 'package:ion/app/services/compressors/output_path_generator.dart';
 import 'package:ion/app/services/logger/logger.dart';
-import 'package:ion/app/services/media_service/media_service.c.dart';
+import 'package:ion/app/services/media_service/data/models/media_file.c.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'brotli_compressor.c.g.dart';

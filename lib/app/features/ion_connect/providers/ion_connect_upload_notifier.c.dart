@@ -15,7 +15,7 @@ import 'package:ion/app/features/ion_connect/model/ion_connect_upload_models.c.d
 import 'package:ion/app/features/ion_connect/model/media_attachment.dart';
 import 'package:ion/app/features/ion_connect/providers/file_storage_url_provider.c.dart';
 import 'package:ion/app/features/ion_connect/utils/file_storage_utils.dart';
-import 'package:ion/app/services/media_service/media_service.c.dart';
+import 'package:ion/app/services/media_service/data/models/media_file.c.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'ion_connect_upload_notifier.c.g.dart';

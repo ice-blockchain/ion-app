@@ -8,7 +8,6 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
-import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:image_cropper/image_cropper.dart';
 import 'package:ion/app/exceptions/exceptions.dart';
@@ -16,35 +15,14 @@ import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/gallery/providers/gallery_provider.c.dart';
 import 'package:ion/app/features/gallery/views/pages/media_picker_type.dart';
 import 'package:ion/app/services/logger/logger.dart';
+import 'package:ion/app/services/media_service/data/models/media_file.c.dart';
 import 'package:ion/app/utils/image_path.dart';
 import 'package:path/path.dart' as p;
 import 'package:path_provider/path_provider.dart';
 import 'package:photo_manager/photo_manager.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
-part 'media_service.c.freezed.dart';
 part 'media_service.c.g.dart';
-
-@freezed
-class MediaFile with _$MediaFile {
-  const factory MediaFile({
-    required String path,
-    int? size,
-    String? name,
-    int? width,
-    int? height,
-    String? mimeType,
-    String? thumb,
-    String? blurhash,
-    int? duration,
-  }) = _MediaFile;
-
-  const MediaFile._();
-
-  factory MediaFile.fromJson(Map<String, dynamic> json) => _$MediaFileFromJson(json);
-
-  String get basename => p.basename(path);
-}
 
 typedef CropImageUiSettings = List<PlatformUiSettings>;
 

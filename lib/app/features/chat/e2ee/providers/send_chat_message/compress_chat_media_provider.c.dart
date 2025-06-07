@@ -4,7 +4,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/features/core/model/media_type.dart';
 import 'package:ion/app/services/compressors/compressor.c.dart';
 import 'package:ion/app/services/compressors/image_compressor.c.dart';
-import 'package:ion/app/services/media_service/media_service.c.dart';
+import 'package:ion/app/services/media_service/data/models/media_file.c.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'compress_chat_media_provider.c.g.dart';

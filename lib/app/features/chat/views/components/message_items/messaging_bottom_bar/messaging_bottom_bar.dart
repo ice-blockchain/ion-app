@@ -18,7 +18,7 @@ import 'package:ion/app/features/user_block/optimistic_ui/block_user_provider.c.
 import 'package:ion/app/features/user_block/providers/block_list_notifier.c.dart';
 import 'package:ion/app/hooks/use_on_init.dart';
 import 'package:ion/app/services/compressors/audio_compressor.c.dart';
-import 'package:ion/app/services/media_service/media_service.c.dart';
+import 'package:ion/app/services/media_service/data/models/media_file.c.dart';
 import 'package:ion/generated/assets.gen.dart';
 
 class MessagingBottomBar extends HookConsumerWidget {

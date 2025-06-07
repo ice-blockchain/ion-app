@@ -9,6 +9,7 @@ import 'package:ion/app/services/compressors/compressor.c.dart';
 import 'package:ion/app/services/compressors/image_compressor.c.dart';
 import 'package:ion/app/services/compressors/output_path_generator.dart';
 import 'package:ion/app/services/logger/logger.dart';
+import 'package:ion/app/services/media_service/data/models/media_file.c.dart';
 import 'package:ion/app/services/media_service/ffmpeg_args/ffmpeg_audio_bitrate_arg.dart';
 import 'package:ion/app/services/media_service/ffmpeg_args/ffmpeg_audio_codec_arg.dart';
 import 'package:ion/app/services/media_service/ffmpeg_args/ffmpeg_bitrate_arg.dart';
@@ -18,7 +19,6 @@ import 'package:ion/app/services/media_service/ffmpeg_args/ffmpeg_preset_arg.dar
 import 'package:ion/app/services/media_service/ffmpeg_args/ffmpeg_scale_arg.dart';
 import 'package:ion/app/services/media_service/ffmpeg_args/ffmpeg_video_codec_arg.dart';
 import 'package:ion/app/services/media_service/ffmpeg_commands_config.dart';
-import 'package:ion/app/services/media_service/media_service.c.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'video_compressor.c.g.dart';

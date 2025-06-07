@@ -2,34 +2,15 @@
 
 import 'dart:convert';
 
-import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:ion/app/features/auth/providers/auth_provider.c.dart';
 import 'package:ion/app/features/feed/data/models/feed_category.dart';
+import 'package:ion/app/features/search/data/models/feed_search_filters_state.c.dart';
 import 'package:ion/app/features/search/model/feed_search_source.dart';
 import 'package:ion/app/services/logger/logger.dart';
 import 'package:ion/app/services/storage/user_preferences_service.c.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
-part 'feed_search_filters_provider.c.freezed.dart';
 part 'feed_search_filters_provider.c.g.dart';
-
-@freezed
-class FeedSearchFiltersState with _$FeedSearchFiltersState {
-  const factory FeedSearchFiltersState({
-    required Map<FeedCategory, bool> categories,
-    required FeedSearchSource source,
-  }) = _FeedSearchFiltersState;
-
-  factory FeedSearchFiltersState.initial() {
-    return const FeedSearchFiltersState(
-      source: FeedSearchSource.anyone,
-      categories: {FeedCategory.feed: true, FeedCategory.videos: true, FeedCategory.articles: true},
-    );
-  }
-
-  factory FeedSearchFiltersState.fromJson(Map<String, dynamic> json) =>
-      _$FeedSearchFiltersStateFromJson(json);
-}
 
 @riverpod
 class FeedSearchFilter extends _$FeedSearchFilter {
