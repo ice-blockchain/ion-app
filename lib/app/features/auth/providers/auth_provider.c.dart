@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: ice License 1.0
 
-import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:ion/app/features/auth/data/models/auth_state.c.dart';
 import 'package:ion/app/features/auth/providers/local_passkey_creds_provider.c.dart';
 import 'package:ion/app/features/core/providers/main_wallet_provider.c.dart';
 import 'package:ion/app/features/ion_connect/providers/ion_connect_event_signer_provider.c.dart';
@@ -11,28 +11,7 @@ import 'package:ion/app/services/storage/local_storage.c.dart';
 import 'package:ion_identity_client/ion_identity.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
-part 'auth_provider.c.freezed.dart';
 part 'auth_provider.c.g.dart';
-
-@freezed
-class AuthState with _$AuthState {
-  const factory AuthState({
-    required List<String> authenticatedIdentityKeyNames,
-    required String? currentIdentityKeyName,
-    required bool suggestToAddBiometrics,
-    required bool suggestToCreateLocalPasskeyCreds,
-    required bool hasEventSigner,
-  }) = _AuthState;
-
-  const AuthState._();
-
-  bool get isAuthenticated {
-    return authenticatedIdentityKeyNames.isNotEmpty &&
-        !suggestToAddBiometrics &&
-        !suggestToCreateLocalPasskeyCreds &&
-        hasEventSigner;
-  }
-}
 
 @Riverpod(keepAlive: true)
 class Auth extends _$Auth {

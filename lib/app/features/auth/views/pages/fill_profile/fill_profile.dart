@@ -18,6 +18,7 @@ import 'package:ion/app/features/auth/views/pages/fill_profile/components/fill_p
 import 'package:ion/app/features/components/avatar_picker/avatar_picker.dart';
 import 'package:ion/app/features/user/hooks/use_verify_nickname_availability_error_message.dart';
 import 'package:ion/app/features/user/hooks/use_verify_referral_exists_error_message.dart';
+import 'package:ion/app/features/user/model/image_processor_state.c.dart';
 import 'package:ion/app/features/user/providers/image_proccessor_notifier.c.dart';
 import 'package:ion/app/features/user/providers/user_nickname_provider.c.dart';
 import 'package:ion/app/features/user/providers/user_referral_provider.c.dart';

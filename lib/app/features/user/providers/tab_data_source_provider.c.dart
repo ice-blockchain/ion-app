@@ -5,7 +5,7 @@ import 'package:ion/app/features/feed/providers/user_articles_data_source_provid
 import 'package:ion/app/features/feed/providers/user_posts_data_source_provider.c.dart';
 import 'package:ion/app/features/feed/providers/user_replies_data_source_provider.c.dart';
 import 'package:ion/app/features/feed/providers/user_videos_data_source_provider.c.dart';
-import 'package:ion/app/features/ion_connect/providers/entities_paged_data_provider.c.dart';
+import 'package:ion/app/features/ion_connect/model/entities_paged_data_models.c.dart';
 import 'package:ion/app/features/user/model/tab_entity_type.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 

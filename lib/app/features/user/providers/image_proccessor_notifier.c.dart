@@ -1,26 +1,15 @@
 // SPDX-License-Identifier: ice License 1.0
 
-import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:ion/app/exceptions/exceptions.dart';
 import 'package:ion/app/features/gallery/providers/gallery_provider.c.dart';
+import 'package:ion/app/features/user/model/image_processor_state.c.dart';
 import 'package:ion/app/services/compressors/image_compressor.c.dart';
 import 'package:ion/app/services/logger/logger.dart';
 import 'package:ion/app/services/media_service/image_proccessing_config.dart';
 import 'package:ion/app/services/media_service/media_service.c.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
-part 'image_proccessor_notifier.c.freezed.dart';
 part 'image_proccessor_notifier.c.g.dart';
-
-@freezed
-sealed class ImageProcessorState with _$ImageProcessorState {
-  const factory ImageProcessorState.initial() = ImageProcessorStateInitial;
-  const factory ImageProcessorState.picked({required MediaFile file}) = ImageProcessorStatePicked;
-  const factory ImageProcessorState.cropped({required MediaFile file}) = ImageProcessorStateCropped;
-  const factory ImageProcessorState.processed({required MediaFile file}) =
-      ImageProcessorStateProcessed;
-  const factory ImageProcessorState.error({required String message}) = ImageProcessorStateError;
-}
 
 @riverpod
 class ImageProcessorNotifier extends _$ImageProcessorNotifier {

@@ -20,6 +20,7 @@ import 'package:ion/app/features/feed/stories/views/components/story_capture/con
 import 'package:ion/app/features/feed/stories/views/components/story_capture/controls/camera_recording_indicator.dart';
 import 'package:ion/app/features/gallery/data/models/camera_state.c.dart';
 import 'package:ion/app/features/gallery/providers/camera_provider.c.dart';
+import 'package:ion/app/features/user/model/image_processor_state.c.dart';
 import 'package:ion/app/features/user/providers/image_proccessor_notifier.c.dart';
 import 'package:ion/app/router/app_routes.c.dart';
 import 'package:ion/app/services/media_service/image_proccessing_config.dart';

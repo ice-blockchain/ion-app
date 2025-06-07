@@ -2,28 +2,13 @@
 
 import 'dart:convert';
 
-import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:ion/app/features/auth/data/models/onboarding_state.c.dart';
 import 'package:ion/app/features/auth/providers/auth_provider.c.dart';
 import 'package:ion/app/services/media_service/media_service.c.dart';
 import 'package:ion/app/services/storage/user_preferences_service.c.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
-part 'onboarding_data_provider.c.freezed.dart';
 part 'onboarding_data_provider.c.g.dart';
-
-@freezed
-class OnboardingState with _$OnboardingState {
-  const factory OnboardingState({
-    MediaFile? avatar,
-    String? name,
-    String? displayName,
-    String? referralName,
-    List<String>? languages,
-    List<String>? followees,
-  }) = _OnboardingState;
-
-  factory OnboardingState.fromJson(Map<String, dynamic> json) => _$OnboardingStateFromJson(json);
-}
 
 @riverpod
 class OnboardingData extends _$OnboardingData {
