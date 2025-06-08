@@ -12,6 +12,7 @@ import 'package:ion/app/features/core/permissions/providers/permissions_provider
 import 'package:ion/app/features/core/permissions/views/components/permission_aware_widget.dart';
 import 'package:ion/app/features/core/permissions/views/components/permission_dialogs/permission_request_sheet.dart';
 import 'package:ion/app/features/push_notifications/data/models/push_notification_category.c.dart';
+import 'package:ion/app/features/push_notifications/data/models/selected_push_categories_state.c.dart';
 import 'package:ion/app/features/push_notifications/providers/selected_push_categories_provider.c.dart';
 import 'package:ion/app/features/settings/components/selectable_options_group.dart';
 import 'package:ion/app/features/settings/data/models/push_notifications_options.dart';

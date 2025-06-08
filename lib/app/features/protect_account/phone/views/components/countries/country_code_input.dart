@@ -1,8 +1,8 @@
 // SPDX-License-Identifier: ice License 1.0
 
 import 'package:flutter/material.dart';
-import 'package:ion/app/constants/countries.c.dart';
 import 'package:ion/app/extensions/extensions.dart';
+import 'package:ion/app/features/core/data/models/countries.c.dart';
 import 'package:ion/generated/assets.gen.dart';
 
 class CountryCodeInput extends StatelessWidget {

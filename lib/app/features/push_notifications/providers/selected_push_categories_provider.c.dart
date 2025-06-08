@@ -2,15 +2,14 @@
 
 import 'dart:convert';
 
-import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:ion/app/features/auth/providers/auth_provider.c.dart';
 import 'package:ion/app/features/push_notifications/data/models/push_notification_category.c.dart';
+import 'package:ion/app/features/push_notifications/data/models/selected_push_categories_state.c.dart';
 import 'package:ion/app/services/logger/logger.dart';
 import 'package:ion/app/services/providers/storage/user_preferences_service.c.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'selected_push_categories_provider.c.g.dart';
-part 'selected_push_categories_provider.c.freezed.dart';
 
 @Riverpod(keepAlive: true)
 class SelectedPushCategories extends _$SelectedPushCategories {
@@ -73,19 +72,4 @@ class SelectedPushCategories extends _$SelectedPushCategories {
   );
 
   static const _selectedPushCategoriesKey = 'selected_push_categories';
-}
-
-@freezed
-class SelectedPushCategoriesState with _$SelectedPushCategoriesState {
-  const factory SelectedPushCategoriesState({
-    required List<PushNotificationCategory> categories,
-    required bool suspended,
-  }) = _SelectedPushCategoriesState;
-
-  const SelectedPushCategoriesState._();
-
-  factory SelectedPushCategoriesState.fromJson(Map<String, dynamic> json) =>
-      _$SelectedPushCategoriesStateFromJson(json);
-
-  List<PushNotificationCategory> get enabledCategories => suspended ? [] : categories;
 }

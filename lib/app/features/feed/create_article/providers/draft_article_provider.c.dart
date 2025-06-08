@@ -5,28 +5,14 @@ import 'dart:io';
 import 'package:flutter/rendering.dart';
 import 'package:flutter_quill/flutter_quill.dart';
 import 'package:flutter_quill/quill_delta.dart';
-import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:ion/app/components/text_editor/utils/extract_image_ids.dart';
+import 'package:ion/app/features/feed/create_article/data/models/draft_article_state.c.dart';
 import 'package:ion/app/services/media_service/data/models/media_file.c.dart';
 import 'package:ion/app/utils/color.dart';
 import 'package:palette_generator/palette_generator.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
-part 'draft_article_provider.c.freezed.dart';
 part 'draft_article_provider.c.g.dart';
-
-@freezed
-class DraftArticleState with _$DraftArticleState {
-  const factory DraftArticleState({
-    required Delta content,
-    @Default([]) List<String> imageIds,
-    MediaFile? image,
-    @Default('') String title,
-    String? imageColor,
-    @Default({}) Map<String, String> codeBlocks,
-    String? imageUrl,
-  }) = _DraftArticleState;
-}
 
 @Riverpod(keepAlive: true)
 class DraftArticle extends _$DraftArticle {

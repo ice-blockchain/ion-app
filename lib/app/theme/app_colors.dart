@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: ice License 1.0
 
 import 'package:flutter/material.dart';
-import 'package:ion/app/services/providers/templates/template.c.dart';
+import 'package:ion/app/services/data/models/template.c.dart';
 
 class AppColorsExtension extends ThemeExtension<AppColorsExtension> {
   AppColorsExtension({

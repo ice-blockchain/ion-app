@@ -3,7 +3,6 @@
 import 'dart:convert';
 import 'dart:ui';
 
-import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/exceptions/exceptions.dart';
 import 'package:ion/app/features/config/data/models/app_config_cache_strategy.dart';
@@ -11,10 +10,10 @@ import 'package:ion/app/features/config/data/models/app_config_with_version.dart
 import 'package:ion/app/features/config/providers/config_repository.c.dart';
 import 'package:ion/app/features/core/providers/app_locale_provider.c.dart';
 import 'package:ion/app/features/core/providers/env_provider.c.dart';
+import 'package:ion/app/features/push_notifications/data/models/push_notification_translations.c.dart';
 import 'package:ion/app/services/logger/logger.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
-part 'app_translations_provider.c.freezed.dart';
 part 'app_translations_provider.c.g.dart';
 
 class Translator<T extends AppConfigWithVersion> {
@@ -92,36 +91,4 @@ Future<Translator<PushNotificationTranslations>> pushTranslator(Ref ref) async {
     locale: appLocale,
     env: ref.read(envProvider.notifier),
   );
-}
-
-@freezed
-class PushNotificationTranslations
-    with _$PushNotificationTranslations
-    implements AppConfigWithVersion {
-  const factory PushNotificationTranslations({
-    @JsonKey(name: '_version') required int version,
-    NotificationTranslation? reply,
-    NotificationTranslation? mention,
-    NotificationTranslation? repost,
-    NotificationTranslation? like,
-    NotificationTranslation? follower,
-    NotificationTranslation? chatReaction,
-    NotificationTranslation? chatMessage,
-    NotificationTranslation? paymentRequest,
-    NotificationTranslation? paymentReceived,
-  }) = _PushNotificationTranslations;
-
-  factory PushNotificationTranslations.fromJson(Map<String, dynamic> json) =>
-      _$PushNotificationTranslationsFromJson(json);
-}
-
-@freezed
-class NotificationTranslation with _$NotificationTranslation {
-  const factory NotificationTranslation({
-    String? title,
-    String? body,
-  }) = _NotificationTranslation;
-
-  factory NotificationTranslation.fromJson(Map<String, dynamic> json) =>
-      _$NotificationTranslationFromJson(json);
 }

@@ -1,11 +1,10 @@
 // SPDX-License-Identifier: ice License 1.0
 
 import 'package:firebase_core/firebase_core.dart';
-import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:ion/app/services/data/models/firebase_app_options.c.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
-part 'firebase_service_provider.c.freezed.dart';
 part 'firebase_service_provider.c.g.dart';
 
 class FirebaseAppService {
@@ -33,19 +32,6 @@ class FirebaseAppService {
   bool hasApp([String name = defaultFirebaseAppName]) {
     return Firebase.apps.any((app) => app.name == name);
   }
-}
-
-@freezed
-class FirebaseAppOptions with _$FirebaseAppOptions {
-  const factory FirebaseAppOptions({
-    required String apiKey,
-    required String appId,
-    required String messagingSenderId,
-    required String projectId,
-  }) = _FirebaseAppOptions;
-
-  factory FirebaseAppOptions.fromJson(Map<String, dynamic> json) =>
-      _$FirebaseAppOptionsFromJson(json);
 }
 
 @Riverpod(keepAlive: true)

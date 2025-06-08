@@ -3,6 +3,7 @@
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/features/auth/providers/auth_provider.c.dart';
 import 'package:ion/app/features/push_notifications/data/models/ion_connect_push_data_payload.c.dart';
+import 'package:ion/app/features/push_notifications/data/models/push_notification_translations.c.dart';
 import 'package:ion/app/features/push_notifications/providers/app_translations_provider.c.dart';
 import 'package:ion/app/services/providers/storage/local_storage.c.dart';
 import 'package:ion/app/utils/string.dart';

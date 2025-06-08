@@ -4,7 +4,7 @@ import 'dart:convert';
 
 import 'package:flutter/services.dart' show rootBundle;
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:ion/app/services/providers/templates/template.c.dart';
+import 'package:ion/app/services/data/models/template.c.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'template_provider.c.g.dart';
