@@ -52,19 +52,16 @@ class FeedFollowingContent extends _$FeedFollowingContent implements PagedNotifi
       final fetchLimit = limit ?? feedType.pageSize;
 
       final dataSourcePubkeys = await _getDataSourcePubkeys();
+
       if (dataSourcePubkeys.isEmpty) {
         _ensureEmptyState();
         return;
       }
 
-      state = state.copyWith(
-        pagination: _initPagination(pubkeys: dataSourcePubkeys),
-      );
+      _initPagination(pubkeys: dataSourcePubkeys);
 
-      final nextPagePubkeys = await _getNextPagePubkeys(
-        pubkeys: dataSourcePubkeys,
-        limit: fetchLimit,
-      );
+      final nextPagePubkeys =
+          await _getNextPagePubkeys(pubkeys: dataSourcePubkeys, limit: fetchLimit);
 
       if (nextPagePubkeys.isEmpty) {
         _ensureEmptyState();
@@ -138,12 +135,11 @@ class FeedFollowingContent extends _$FeedFollowingContent implements PagedNotifi
     return pubkeysToFetch.toList();
   }
 
-  Map<String, UserPagination> _initPagination({required List<String> pubkeys}) {
-    final newPagination = <String, UserPagination>{};
-    for (final pubkey in pubkeys) {
-      newPagination[pubkey] = _getPubkeyPagination(pubkey);
-    }
-    return newPagination;
+  void _initPagination({required List<String> pubkeys}) {
+    final newPagination = {
+      for (final pubkey in pubkeys) pubkey: _getPubkeyPagination(pubkey),
+    };
+    state = state.copyWith(pagination: newPagination);
   }
 
   UserPagination _getPubkeyPagination(String pubkey) {
