@@ -12,8 +12,6 @@ import 'package:ion/app/features/ion_connect/model/related_event_marker.dart';
 import 'package:ion/app/features/ion_connect/model/search_extension.dart';
 import 'package:ion/app/features/ion_connect/providers/entities_paged_data_provider.c.dart';
 import 'package:ion/app/features/ion_connect/providers/ion_connect_entity_provider.c.dart';
-import 'package:ion/app/features/user/model/block_list.c.dart';
-import 'package:ion/app/features/user/model/user_metadata.c.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'replies_data_source_provider.c.g.dart';
@@ -47,20 +45,8 @@ List<EntitiesDataSource>? repliesDataSource(
           tags: Map.fromEntries([relatedTags]),
           search: SearchExtensions(
             [
-              ...SearchExtensions.withCounters(
-                [
-                  GenericIncludeSearchExtension(
-                    forKind: ModifiablePostEntity.kind,
-                    includeKind: UserMetadataEntity.kind,
-                  ),
-                  ProfileBadgesSearchExtension(forKind: ModifiablePostEntity.kind),
-                  GenericIncludeSearchExtension(
-                    forKind: ModifiablePostEntity.kind,
-                    includeKind: BlockListEntity.kind,
-                  ),
-                ],
-                currentPubkey: currentPubkey,
-              ).extensions,
+              ...SearchExtensions.withCounters(currentPubkey: currentPubkey).extensions,
+              ...SearchExtensions.withAuthors().extensions,
               ExpirationSearchExtension(expiration: false),
             ],
           ).toString(),
@@ -72,20 +58,9 @@ List<EntitiesDataSource>? repliesDataSource(
           search: SearchExtensions(
             [
               ...SearchExtensions.withCounters(
-                [
-                  GenericIncludeSearchExtension(
-                    forKind: PostEntity.kind,
-                    includeKind: UserMetadataEntity.kind,
-                  ),
-                  ProfileBadgesSearchExtension(forKind: PostEntity.kind),
-                  GenericIncludeSearchExtension(
-                    forKind: PostEntity.kind,
-                    includeKind: BlockListEntity.kind,
-                  ),
-                ],
-                currentPubkey: currentPubkey,
-                forKind: PostEntity.kind,
-              ).extensions,
+                      currentPubkey: currentPubkey, forKind: PostEntity.kind)
+                  .extensions,
+              ...SearchExtensions.withAuthors(forKind: PostEntity.kind).extensions,
               ExpirationSearchExtension(expiration: false),
             ],
           ).toString(),

@@ -20,9 +20,7 @@ import 'package:ion/app/features/search/model/advanced_search_category.dart';
 import 'package:ion/app/features/search/model/feed_search_source.dart';
 import 'package:ion/app/features/search/providers/feed_search_filter_relays_provider.c.dart';
 import 'package:ion/app/features/search/providers/feed_search_filters_provider.c.dart';
-import 'package:ion/app/features/user/model/block_list.c.dart';
 import 'package:ion/app/features/user/model/interest_set.c.dart';
-import 'package:ion/app/features/user/model/user_metadata.c.dart';
 import 'package:ion/app/features/user/providers/user_interests_set_provider.c.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
@@ -120,64 +118,28 @@ List<RequestFilter> _buildFilters({
   final search = SearchExtensions([
     ...searchExtensions,
     if (includePosts) ...[
-      ...SearchExtensions.withCounters(
-        [
-          TagMarkerSearchExtension(
-            tagName: RelatedReplaceableEvent.tagName,
-            marker: RelatedEventMarker.reply.toShortString(),
-            negative: true,
-          ),
-          GenericIncludeSearchExtension(
-            forKind: ModifiablePostEntity.kind,
-            includeKind: UserMetadataEntity.kind,
-          ),
-          ProfileBadgesSearchExtension(forKind: ModifiablePostEntity.kind),
-          GenericIncludeSearchExtension(
-            forKind: ModifiablePostEntity.kind,
-            includeKind: BlockListEntity.kind,
-          ),
-        ],
-        currentPubkey: currentPubkey,
-      ).extensions,
-      ...SearchExtensions.withCounters(
-        [
-          TagMarkerSearchExtension(
-            tagName: RelatedImmutableEvent.tagName,
-            marker: RelatedEventMarker.reply.toShortString(),
-            negative: true,
-          ),
-          GenericIncludeSearchExtension(
-            forKind: PostEntity.kind,
-            includeKind: UserMetadataEntity.kind,
-          ),
-          ProfileBadgesSearchExtension(forKind: PostEntity.kind),
-          GenericIncludeSearchExtension(
-            forKind: PostEntity.kind,
-            includeKind: BlockListEntity.kind,
-          ),
-        ],
-        currentPubkey: currentPubkey,
-        forKind: PostEntity.kind,
-      ).extensions,
+      ...SearchExtensions.withCounters(currentPubkey: currentPubkey).extensions,
+      ...SearchExtensions.withAuthors().extensions,
+      ...SearchExtensions.withCounters(currentPubkey: currentPubkey, forKind: PostEntity.kind)
+          .extensions,
+      ...SearchExtensions.withAuthors(forKind: PostEntity.kind).extensions,
       ReferencesSearchExtension(contain: false),
       ExpirationSearchExtension(expiration: false),
+      TagMarkerSearchExtension(
+        tagName: RelatedReplaceableEvent.tagName,
+        marker: RelatedEventMarker.reply.toShortString(),
+        negative: true,
+      ),
+      TagMarkerSearchExtension(
+        tagName: RelatedImmutableEvent.tagName,
+        marker: RelatedEventMarker.reply.toShortString(),
+        negative: true,
+      ),
     ],
     if (includeArticles)
-      ...SearchExtensions.withCounters(
-        [
-          GenericIncludeSearchExtension(
-            forKind: ArticleEntity.kind,
-            includeKind: UserMetadataEntity.kind,
-          ),
-          ProfileBadgesSearchExtension(forKind: ArticleEntity.kind),
-          GenericIncludeSearchExtension(
-            forKind: ArticleEntity.kind,
-            includeKind: BlockListEntity.kind,
-          ),
-        ],
-        currentPubkey: currentPubkey,
-        forKind: ArticleEntity.kind,
-      ).extensions,
+      ...SearchExtensions.withCounters(currentPubkey: currentPubkey, forKind: ArticleEntity.kind)
+          .extensions,
+    ...SearchExtensions.withAuthors(forKind: ArticleEntity.kind).extensions,
   ]).toString();
 
   return [

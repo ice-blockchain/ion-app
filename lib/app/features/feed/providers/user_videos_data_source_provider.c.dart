@@ -24,11 +24,9 @@ List<EntitiesDataSource>? userVideosDataSource(Ref ref, String pubkey) {
 
   final search = SearchExtensions([
     ...SearchExtensions.withCounters(
-      [],
       currentPubkey: currentPubkey,
     ).extensions,
     ...SearchExtensions.withCounters(
-      [],
       currentPubkey: currentPubkey,
       forKind: PostEntity.kind,
     ).extensions,

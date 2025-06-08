@@ -21,7 +21,6 @@ List<EntitiesDataSource>? userArticlesDataSource(Ref ref, String pubkey) {
   }
 
   final search = SearchExtensions.withCounters(
-    [],
     currentPubkey: currentPubkey,
     forKind: ArticleEntity.kind,
   ).toString();

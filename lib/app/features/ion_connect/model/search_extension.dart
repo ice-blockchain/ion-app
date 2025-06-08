@@ -2,6 +2,7 @@
 
 import 'package:ion/app/features/feed/data/models/entities/modifiable_post_data.c.dart';
 import 'package:ion/app/features/feed/data/models/entities/post_data.c.dart';
+import 'package:ion/app/features/user/model/block_list.c.dart';
 import 'package:ion/app/features/user/model/user_metadata.c.dart';
 
 abstract class SearchExtension {
@@ -21,8 +22,7 @@ abstract class IncludeSearchExtension extends SearchExtension {
 class SearchExtensions {
   SearchExtensions(this.extensions);
 
-  factory SearchExtensions.withCounters(
-    List<SearchExtension> extensions, {
+  factory SearchExtensions.withCounters({
     required String currentPubkey,
     int forKind = ModifiablePostEntity.kind,
   }) {
@@ -36,7 +36,22 @@ class SearchExtensions {
       GenericRepostSampleSearchExtension(currentPubkey: currentPubkey, forKind: forKind),
       ReactionsSearchExtension(currentPubkey: currentPubkey, forKind: forKind),
       PollVotesSearchExtension(currentPubkey: currentPubkey, forKind: forKind),
-      ...extensions,
+    ]);
+  }
+
+  factory SearchExtensions.withAuthors({
+    int forKind = ModifiablePostEntity.kind,
+  }) {
+    return SearchExtensions([
+      GenericIncludeSearchExtension(
+        forKind: forKind,
+        includeKind: UserMetadataEntity.kind,
+      ),
+      ProfileBadgesSearchExtension(forKind: forKind),
+      GenericIncludeSearchExtension(
+        forKind: forKind,
+        includeKind: BlockListEntity.kind,
+      ),
     ]);
   }
 

@@ -39,7 +39,6 @@ IonConnectEntity? ionConnectEntityWithCounters(
 
   final search = SearchExtensions([
     ...SearchExtensions.withCounters(
-      [],
       currentPubkey: currentUserPubkey,
       forKind: eventReference.kind,
     ).extensions,

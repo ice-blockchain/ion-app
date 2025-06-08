@@ -7,7 +7,6 @@ import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:ion/app/exceptions/exceptions.dart';
 import 'package:ion/app/extensions/num.dart';
 import 'package:ion/app/features/auth/providers/auth_provider.c.dart';
-import 'package:ion/app/features/feed/data/models/entities/modifiable_post_data.c.dart';
 import 'package:ion/app/features/feed/data/models/entities/post_data.c.dart';
 import 'package:ion/app/features/feed/data/models/feed_modifier.dart';
 import 'package:ion/app/features/feed/data/models/feed_type.dart';
@@ -23,8 +22,6 @@ import 'package:ion/app/features/ion_connect/model/search_extension.dart';
 import 'package:ion/app/features/ion_connect/providers/entities_paged_data_provider.c.dart';
 import 'package:ion/app/features/ion_connect/providers/ion_connect_entity_provider.c.dart';
 import 'package:ion/app/features/ion_connect/providers/ion_connect_notifier.c.dart';
-import 'package:ion/app/features/user/model/block_list.c.dart';
-import 'package:ion/app/features/user/model/user_metadata.c.dart';
 import 'package:ion/app/features/user/providers/follow_list_provider.c.dart';
 import 'package:ion/app/services/logger/logger.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
@@ -316,28 +313,17 @@ class FeedFollowingContent extends _$FeedFollowingContent implements PagedNotifi
   Future<IonConnectEntity?> _requestEntityByReference({
     required EventReference eventReference,
   }) async {
-    final currentUserPubkey = ref.read(currentPubkeySelectorProvider);
-    if (currentUserPubkey == null) {
+    final currentPubkey = ref.read(currentPubkeySelectorProvider);
+    if (currentPubkey == null) {
       throw const CurrentUserNotFoundException();
     }
 
+    final kind =
+        eventReference is ReplaceableEventReference ? eventReference.kind : PostEntity.kind;
+
     final search = SearchExtensions([
-      ...SearchExtensions.withCounters(
-        [
-          GenericIncludeSearchExtension(
-            forKind: ModifiablePostEntity.kind,
-            includeKind: UserMetadataEntity.kind,
-          ),
-          ProfileBadgesSearchExtension(forKind: ModifiablePostEntity.kind),
-          GenericIncludeSearchExtension(
-            forKind: ModifiablePostEntity.kind,
-            includeKind: BlockListEntity.kind,
-          ),
-        ],
-        currentPubkey: currentUserPubkey,
-        forKind:
-            eventReference is ReplaceableEventReference ? eventReference.kind : PostEntity.kind,
-      ).extensions,
+      ...SearchExtensions.withCounters(currentPubkey: currentPubkey, forKind: kind).extensions,
+      ...SearchExtensions.withAuthors(forKind: kind).extensions,
     ]).toString();
 
     return ref

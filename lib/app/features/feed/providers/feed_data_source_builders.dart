@@ -23,22 +23,12 @@ EntitiesDataSource buildArticlesDataSource({
   List<SearchExtension>? searchExtensions,
   Map<String, List<String>>? tags,
 }) {
-  final search = SearchExtensions.withCounters(
-    [
-      GenericIncludeSearchExtension(
-        forKind: ArticleEntity.kind,
-        includeKind: UserMetadataEntity.kind,
-      ),
-      ProfileBadgesSearchExtension(forKind: ArticleEntity.kind),
-      GenericIncludeSearchExtension(
-        forKind: ArticleEntity.kind,
-        includeKind: BlockListEntity.kind,
-      ),
-      if (searchExtensions != null) ...searchExtensions,
-    ],
-    currentPubkey: currentPubkey,
-    forKind: ArticleEntity.kind,
-  ).toString();
+  final search = SearchExtensions([
+    ...SearchExtensions.withCounters(currentPubkey: currentPubkey, forKind: ArticleEntity.kind)
+        .extensions,
+    ...SearchExtensions.withAuthors(forKind: ArticleEntity.kind).extensions,
+    if (searchExtensions != null) ...searchExtensions,
+  ]).toString();
 
   return EntitiesDataSource(
     actionSource: actionSource,
@@ -73,50 +63,25 @@ EntitiesDataSource buildVideosDataSource({
   Map<String, List<String>>? tags,
 }) {
   final search = SearchExtensions([
-    ...SearchExtensions.withCounters(
-      [
-        TagMarkerSearchExtension(
-          tagName: RelatedReplaceableEvent.tagName,
-          marker: RelatedEventMarker.reply.toShortString(),
-          negative: true,
-        ),
-        GenericIncludeSearchExtension(
-          forKind: ModifiablePostEntity.kind,
-          includeKind: UserMetadataEntity.kind,
-        ),
-        ProfileBadgesSearchExtension(forKind: ModifiablePostEntity.kind),
-        GenericIncludeSearchExtension(
-          forKind: ModifiablePostEntity.kind,
-          includeKind: BlockListEntity.kind,
-        ),
-        if (searchExtensions != null) ...searchExtensions,
-      ],
-      currentPubkey: currentPubkey,
-    ).extensions,
-    ...SearchExtensions.withCounters(
-      [
-        TagMarkerSearchExtension(
-          tagName: RelatedImmutableEvent.tagName,
-          marker: RelatedEventMarker.reply.toShortString(),
-          negative: true,
-        ),
-        GenericIncludeSearchExtension(
-          forKind: PostEntity.kind,
-          includeKind: UserMetadataEntity.kind,
-        ),
-        ProfileBadgesSearchExtension(forKind: PostEntity.kind),
-        GenericIncludeSearchExtension(
-          forKind: PostEntity.kind,
-          includeKind: BlockListEntity.kind,
-        ),
-        if (searchExtensions != null) ...searchExtensions,
-      ],
-      currentPubkey: currentPubkey,
-      forKind: PostEntity.kind,
-    ).extensions,
+    ...SearchExtensions.withCounters(currentPubkey: currentPubkey).extensions,
+    ...SearchExtensions.withAuthors().extensions,
+    ...SearchExtensions.withCounters(currentPubkey: currentPubkey, forKind: PostEntity.kind)
+        .extensions,
+    ...SearchExtensions.withAuthors(forKind: PostEntity.kind).extensions,
     ReferencesSearchExtension(contain: false),
     ExpirationSearchExtension(expiration: false),
     VideosSearchExtension(contain: true),
+    TagMarkerSearchExtension(
+      tagName: RelatedReplaceableEvent.tagName,
+      marker: RelatedEventMarker.reply.toShortString(),
+      negative: true,
+    ),
+    TagMarkerSearchExtension(
+      tagName: RelatedImmutableEvent.tagName,
+      marker: RelatedEventMarker.reply.toShortString(),
+      negative: true,
+    ),
+    if (searchExtensions != null) ...searchExtensions,
   ]).toString();
 
   return EntitiesDataSource(
@@ -161,65 +126,27 @@ EntitiesDataSource buildPostsDataSource({
   Map<String, List<String>>? tags,
 }) {
   final search = SearchExtensions([
-    ...SearchExtensions.withCounters(
-      [
-        TagMarkerSearchExtension(
-          tagName: RelatedReplaceableEvent.tagName,
-          marker: RelatedEventMarker.reply.toShortString(),
-          negative: true,
-        ),
-        GenericIncludeSearchExtension(
-          forKind: ModifiablePostEntity.kind,
-          includeKind: UserMetadataEntity.kind,
-        ),
-        ProfileBadgesSearchExtension(forKind: ModifiablePostEntity.kind),
-        GenericIncludeSearchExtension(
-          forKind: ModifiablePostEntity.kind,
-          includeKind: BlockListEntity.kind,
-        ),
-        if (searchExtensions != null) ...searchExtensions,
-      ],
-      currentPubkey: currentPubkey,
-    ).extensions,
-    ...SearchExtensions.withCounters(
-      [
-        TagMarkerSearchExtension(
-          tagName: RelatedImmutableEvent.tagName,
-          marker: RelatedEventMarker.reply.toShortString(),
-          negative: true,
-        ),
-        GenericIncludeSearchExtension(
-          forKind: PostEntity.kind,
-          includeKind: UserMetadataEntity.kind,
-        ),
-        ProfileBadgesSearchExtension(forKind: PostEntity.kind),
-        GenericIncludeSearchExtension(
-          forKind: PostEntity.kind,
-          includeKind: BlockListEntity.kind,
-        ),
-        if (searchExtensions != null) ...searchExtensions,
-      ],
-      currentPubkey: currentPubkey,
-      forKind: PostEntity.kind,
-    ).extensions,
-    ...SearchExtensions.withCounters(
-      [
-        GenericIncludeSearchExtension(
-          forKind: ArticleEntity.kind,
-          includeKind: UserMetadataEntity.kind,
-        ),
-        ProfileBadgesSearchExtension(forKind: ArticleEntity.kind),
-        GenericIncludeSearchExtension(
-          forKind: ArticleEntity.kind,
-          includeKind: BlockListEntity.kind,
-        ),
-        if (searchExtensions != null) ...searchExtensions,
-      ],
-      currentPubkey: currentPubkey,
-      forKind: ArticleEntity.kind,
-    ).extensions,
+    ...SearchExtensions.withCounters(currentPubkey: currentPubkey).extensions,
+    ...SearchExtensions.withAuthors().extensions,
+    ...SearchExtensions.withCounters(currentPubkey: currentPubkey, forKind: PostEntity.kind)
+        .extensions,
+    ...SearchExtensions.withAuthors(forKind: PostEntity.kind).extensions,
+    ...SearchExtensions.withCounters(currentPubkey: currentPubkey, forKind: ArticleEntity.kind)
+        .extensions,
+    ...SearchExtensions.withAuthors(forKind: ArticleEntity.kind).extensions,
     ReferencesSearchExtension(contain: false),
     ExpirationSearchExtension(expiration: false),
+    TagMarkerSearchExtension(
+      tagName: RelatedReplaceableEvent.tagName,
+      marker: RelatedEventMarker.reply.toShortString(),
+      negative: true,
+    ),
+    TagMarkerSearchExtension(
+      tagName: RelatedImmutableEvent.tagName,
+      marker: RelatedEventMarker.reply.toShortString(),
+      negative: true,
+    ),
+    if (searchExtensions != null) ...searchExtensions,
   ]).toString();
 
   return EntitiesDataSource(

@@ -12,7 +12,6 @@ void main() {
   group('SearchExtensions', () {
     test('withCounters factory creates correct extensions', () {
       final extensions = SearchExtensions.withCounters(
-        [],
         currentPubkey: testPubkey,
       );
 
@@ -23,7 +22,6 @@ void main() {
 
     test('withCounters factory with different kind creates correct extensions', () {
       final extensions = SearchExtensions.withCounters(
-        [],
         currentPubkey: testPubkey,
         forKind: ArticleEntity.kind,
       );
