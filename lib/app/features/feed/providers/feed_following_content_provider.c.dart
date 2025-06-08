@@ -7,6 +7,8 @@ import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:ion/app/exceptions/exceptions.dart';
 import 'package:ion/app/extensions/num.dart';
 import 'package:ion/app/features/auth/providers/auth_provider.c.dart';
+import 'package:ion/app/features/feed/data/models/entities/modifiable_post_data.c.dart';
+import 'package:ion/app/features/feed/data/models/entities/post_data.c.dart';
 import 'package:ion/app/features/feed/data/models/feed_modifier.dart';
 import 'package:ion/app/features/feed/data/models/feed_type.dart';
 import 'package:ion/app/features/feed/data/repository/following_feed_seen_events_repository.c.dart';
@@ -17,9 +19,12 @@ import 'package:ion/app/features/ion_connect/ion_connect.dart';
 import 'package:ion/app/features/ion_connect/model/action_source.c.dart';
 import 'package:ion/app/features/ion_connect/model/event_reference.c.dart';
 import 'package:ion/app/features/ion_connect/model/ion_connect_entity.dart';
+import 'package:ion/app/features/ion_connect/model/search_extension.dart';
 import 'package:ion/app/features/ion_connect/providers/entities_paged_data_provider.c.dart';
 import 'package:ion/app/features/ion_connect/providers/ion_connect_entity_provider.c.dart';
 import 'package:ion/app/features/ion_connect/providers/ion_connect_notifier.c.dart';
+import 'package:ion/app/features/user/model/block_list.c.dart';
+import 'package:ion/app/features/user/model/user_metadata.c.dart';
 import 'package:ion/app/features/user/providers/follow_list_provider.c.dart';
 import 'package:ion/app/services/logger/logger.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
@@ -139,11 +144,9 @@ class FeedFollowingContent extends _$FeedFollowingContent implements PagedNotifi
           1000, //TODO:handle microseconds
     );
 
-    //TODO:rework START
-    final fetched = await Future.wait(
+    final results = await Future.wait(
       seenEventReferences.map((eventReference) async {
-        final entity =
-            await ref.read(ionConnectEntityProvider(eventReference: eventReference).future);
+        final entity = await _requestEntityByReference(eventReference: eventReference);
         if (entity != null) {
           state = state.copyWith(
             items: {...(state.items ?? {}), entity},
@@ -152,9 +155,8 @@ class FeedFollowingContent extends _$FeedFollowingContent implements PagedNotifi
         return entity;
       }),
     );
-    //TODO:rework END
 
-    final remaining = limit - fetched.nonNulls.length;
+    final remaining = limit - results.nonNulls.length;
 
     if (remaining > 0) {
       state = state.copyWith(hasMoreSeen: false);
@@ -286,7 +288,7 @@ class FeedFollowingContent extends _$FeedFollowingContent implements PagedNotifi
   }) async {
     final ionConnectNotifier = ref.read(ionConnectNotifierProvider.notifier);
 
-    final dataSource = _getDataSource(pubkey);
+    final dataSource = _getDataSourceForPubkey(pubkey);
 
     final until = lastEventCreatedAt != null ? lastEventCreatedAt - 1 : null;
     final requestMessage = RequestMessage();
@@ -309,6 +311,37 @@ class FeedFollowingContent extends _$FeedFollowingContent implements PagedNotifi
         )
         .where(dataSource.entityFilter)
         .firstOrNull;
+  }
+
+  Future<IonConnectEntity?> _requestEntityByReference({
+    required EventReference eventReference,
+  }) async {
+    final currentUserPubkey = ref.read(currentPubkeySelectorProvider);
+    if (currentUserPubkey == null) {
+      throw const CurrentUserNotFoundException();
+    }
+
+    final search = SearchExtensions([
+      ...SearchExtensions.withCounters(
+        [
+          GenericIncludeSearchExtension(
+            forKind: ModifiablePostEntity.kind,
+            includeKind: UserMetadataEntity.kind,
+          ),
+          ProfileBadgesSearchExtension(forKind: ModifiablePostEntity.kind),
+          GenericIncludeSearchExtension(
+            forKind: ModifiablePostEntity.kind,
+            includeKind: BlockListEntity.kind,
+          ),
+        ],
+        currentPubkey: currentUserPubkey,
+        forKind:
+            eventReference is ReplaceableEventReference ? eventReference.kind : PostEntity.kind,
+      ).extensions,
+    ]).toString();
+
+    return ref
+        .read(ionConnectEntityProvider(eventReference: eventReference, search: search).future);
   }
 
   /// Handles the requested entity:
@@ -394,7 +427,7 @@ class FeedFollowingContent extends _$FeedFollowingContent implements PagedNotifi
     }
   }
 
-  EntitiesDataSource _getDataSource(String pubkey) {
+  EntitiesDataSource _getDataSourceForPubkey(String pubkey) {
     final currentPubkey = ref.read(currentPubkeySelectorProvider);
 
     if (currentPubkey == null) {
