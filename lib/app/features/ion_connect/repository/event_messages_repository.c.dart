@@ -7,6 +7,7 @@ import 'package:ion/app/features/ion_connect/data/models/event_reference.c.dart'
 import 'package:ion/app/features/ion_connect/database/dao/event_messages_dao.c.dart';
 import 'package:ion/app/features/ion_connect/database/event_messages_database.c.dart';
 import 'package:ion/app/features/ion_connect/ion_connect.dart';
+import 'package:ion/app/features/ion_connect/providers/dao/event_messages_dao_provider.c.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'event_messages_repository.c.g.dart';

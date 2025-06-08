@@ -13,7 +13,7 @@ import 'package:ion/app/components/screen_offset/screen_bottom_offset.dart';
 import 'package:ion/app/components/screen_offset/screen_side_offset.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/core/data/models/countries.c.dart';
-import 'package:ion/app/features/protect_account/phone/provider/country_provider.c.dart';
+import 'package:ion/app/features/protect_account/phone/providers/country_provider.c.dart';
 import 'package:ion/app/features/protect_account/phone/views/components/countries/country_code_input.dart';
 import 'package:ion/app/features/protect_account/secure_account/providers/request_twofa_code_notifier.c.dart';
 import 'package:ion/app/router/app_routes.c.dart';

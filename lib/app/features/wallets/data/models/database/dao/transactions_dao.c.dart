@@ -1,7 +1,6 @@
 // SPDX-License-Identifier: ice License 1.0
 
 import 'package:drift/drift.dart';
-import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/features/wallets/data/models/coin_data.c.dart';
 import 'package:ion/app/features/wallets/data/models/database/tables/coins_table.c.dart';
 import 'package:ion/app/features/wallets/data/models/database/tables/networks_table.c.dart';
@@ -12,14 +11,9 @@ import 'package:ion/app/features/wallets/data/models/transaction_crypto_asset.c.
 import 'package:ion/app/features/wallets/data/models/transaction_data.c.dart';
 import 'package:ion/app/features/wallets/data/models/transaction_status.c.dart';
 import 'package:ion/app/features/wallets/data/models/transaction_type.dart';
-import 'package:ion/app/features/wallets/providers/database/wallets_database_provider.c.dart';
 import 'package:ion/app/features/wallets/utils/crypto_amount_parser.dart';
-import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'transactions_dao.c.g.dart';
-
-@Riverpod(keepAlive: true)
-TransactionsDao transactionsDao(Ref ref) => TransactionsDao(db: ref.watch(walletsDatabaseProvider));
 
 @DriftAccessor(tables: [TransactionsTable, NetworksTable, CoinsTable])
 class TransactionsDao extends DatabaseAccessor<WalletsDatabase> with _$TransactionsDaoMixin {

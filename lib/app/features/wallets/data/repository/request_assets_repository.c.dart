@@ -5,6 +5,7 @@ import 'package:ion/app/features/wallets/data/mappers/funds_request_mapper.dart'
 import 'package:ion/app/features/wallets/data/models/database/dao/funds_requests_dao.c.dart';
 import 'package:ion/app/features/wallets/data/models/database/dao/transactions_dao.c.dart';
 import 'package:ion/app/features/wallets/data/models/entities/funds_request_entity.c.dart';
+import 'package:ion/app/features/wallets/providers/dao/transactions_dao_provider.c.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:stream_transform/stream_transform.dart';
 
