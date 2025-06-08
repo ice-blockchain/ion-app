@@ -11,7 +11,7 @@ import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/auth/providers/auth_provider.c.dart';
 import 'package:ion/app/features/chat/e2ee/data/models/entities/private_direct_message_data.c.dart';
 import 'package:ion/app/features/chat/providers/muted_conversations_provider.c.dart';
-import 'package:ion/app/features/chat/recent_chats/model/conversation_list_item.c.dart';
+import 'package:ion/app/features/chat/recent_chats/data/models/conversation_list_item.c.dart';
 import 'package:ion/app/features/chat/recent_chats/providers/toggle_archive_conversation_provider.c.dart';
 import 'package:ion/app/features/user/data/models/report_reason.c.dart';
 import 'package:ion/app/features/user/pages/profile_page/pages/block_user_modal/block_user_modal.dart';

@@ -2,7 +2,7 @@
 
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/features/chat/e2ee/data/models/database/chat_database.c.dart';
-import 'package:ion/app/features/chat/recent_chats/model/conversation_list_item.c.dart';
+import 'package:ion/app/features/chat/recent_chats/data/models/conversation_list_item.c.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'conversations_provider.c.g.dart';

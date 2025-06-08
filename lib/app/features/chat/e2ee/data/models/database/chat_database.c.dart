@@ -15,7 +15,7 @@ import 'package:ion/app/features/chat/e2ee/data/models/entities/private_direct_m
 import 'package:ion/app/features/chat/e2ee/data/models/entities/private_message_reaction_data.c.dart';
 import 'package:ion/app/features/chat/e2ee/data/models/group_subject.c.dart';
 import 'package:ion/app/features/chat/e2ee/data/models/message_reaction_group.c.dart';
-import 'package:ion/app/features/chat/recent_chats/model/conversation_list_item.c.dart';
+import 'package:ion/app/features/chat/recent_chats/data/models/conversation_list_item.c.dart';
 import 'package:ion/app/features/core/providers/env_provider.c.dart';
 import 'package:ion/app/features/feed/data/models/entities/generic_repost.c.dart';
 import 'package:ion/app/features/feed/notifications/data/database/converters/event_reference_converter.c.dart';

@@ -6,7 +6,7 @@ import 'package:ion/app/features/auth/providers/auth_provider.c.dart';
 import 'package:ion/app/features/chat/community/providers/community_metadata_provider.c.dart';
 import 'package:ion/app/features/chat/e2ee/data/models/database/chat_database.c.dart';
 import 'package:ion/app/features/chat/e2ee/data/models/entities/private_direct_message_data.c.dart';
-import 'package:ion/app/features/chat/recent_chats/model/conversation_list_item.c.dart';
+import 'package:ion/app/features/chat/recent_chats/data/models/conversation_list_item.c.dart';
 import 'package:ion/app/features/user/providers/user_metadata_provider.c.dart';
 
 String? useCombinedConversationNames(

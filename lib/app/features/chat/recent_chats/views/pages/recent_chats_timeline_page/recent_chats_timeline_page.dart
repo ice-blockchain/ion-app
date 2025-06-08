@@ -16,7 +16,7 @@ import 'package:ion/app/features/chat/e2ee/data/models/entities/private_direct_m
 import 'package:ion/app/features/chat/providers/conversations_provider.c.dart'
     hide archivedConversationsProvider;
 import 'package:ion/app/features/chat/providers/unread_message_count_provider.c.dart';
-import 'package:ion/app/features/chat/recent_chats/model/conversation_list_item.c.dart';
+import 'package:ion/app/features/chat/recent_chats/data/models/conversation_list_item.c.dart';
 import 'package:ion/app/features/chat/recent_chats/providers/archived_conversations_provider.c.dart';
 import 'package:ion/app/features/chat/recent_chats/views/components/recent_chat_skeleton/recent_chat_skeleton.dart';
 import 'package:ion/app/features/chat/recent_chats/views/components/recent_chat_tile/archive_chat_tile.dart';
