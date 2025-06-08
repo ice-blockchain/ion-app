@@ -58,8 +58,9 @@ List<EntitiesDataSource>? repliesDataSource(
           search: SearchExtensions(
             [
               ...SearchExtensions.withCounters(
-                      currentPubkey: currentPubkey, forKind: PostEntity.kind)
-                  .extensions,
+                currentPubkey: currentPubkey,
+                forKind: PostEntity.kind,
+              ).extensions,
               ...SearchExtensions.withAuthors(forKind: PostEntity.kind).extensions,
               ExpirationSearchExtension(expiration: false),
             ],
