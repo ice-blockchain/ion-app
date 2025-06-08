@@ -378,17 +378,6 @@ class TagMarkerSearchExtension extends SearchExtension {
   String get query => '${negative ? '!' : ''}${tagName}marker:$marker';
 }
 
-/// For every kind [forKind] that the subscription finds also include mentions (kind 10002)
-class MentionsSearchExtension extends IncludeSearchExtension {
-  MentionsSearchExtension({this.forKind = UserMetadataEntity.kind});
-
-  @override
-  final int forKind;
-
-  @override
-  String get query => 'kind10002';
-}
-
 class ProfileBadgesSearchExtension extends SearchExtension {
   ProfileBadgesSearchExtension({this.forKind});
 

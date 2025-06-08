@@ -204,11 +204,4 @@ void main() {
       expect(extension.toString(), 'include:dependencies:kind30175>kind1');
     });
   });
-
-  group('Mentions Search Extension', () {
-    test('MentionsSearchExtension formats query correctly', () {
-      final extension = MentionsSearchExtension();
-      expect(extension.toString(), 'include:dependencies:kind0>kind10002');
-    });
-  });
 }

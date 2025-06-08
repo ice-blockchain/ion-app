@@ -33,8 +33,8 @@ class FeedTrendingVideos extends _$FeedTrendingVideos with DelegatedPagedNotifie
     final filter = ref.watch(feedCurrentFilterProvider);
     if (filter.filter == FeedFilter.following) {
       return ref.read(
-          feedFollowingContentProvider(FeedType.video, feedModifier: FeedModifier.trending)
-              .notifier);
+        feedFollowingContentProvider(FeedType.video, feedModifier: FeedModifier.trending).notifier,
+      );
     } else {
       final dataSource = ref.watch(feedTrendingVideosDataSourceProvider);
       return ref.read(entitiesPagedDataProvider(dataSource).notifier);
