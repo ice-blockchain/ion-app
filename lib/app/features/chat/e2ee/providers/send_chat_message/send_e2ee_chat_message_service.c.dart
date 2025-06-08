@@ -15,6 +15,7 @@ import 'package:ion/app/features/chat/e2ee/data/models/entities/private_direct_m
 import 'package:ion/app/features/chat/e2ee/data/models/group_subject.c.dart';
 import 'package:ion/app/features/chat/e2ee/providers/send_chat_message/send_chat_media_provider.c.dart';
 import 'package:ion/app/features/chat/providers/conversation_pubkeys_provider.c.dart';
+import 'package:ion/app/features/chat/providers/database/chat_database_provider.c.dart';
 import 'package:ion/app/features/core/data/models/media_type.dart';
 import 'package:ion/app/features/core/providers/env_provider.c.dart';
 import 'package:ion/app/features/ion_connect/data/models/action_source.c.dart';

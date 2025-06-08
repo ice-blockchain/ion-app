@@ -4,7 +4,6 @@ import 'package:collection/collection.dart';
 import 'package:drift/drift.dart';
 import 'package:drift_flutter/drift_flutter.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:ion/app/exceptions/exceptions.dart';
 import 'package:ion/app/extensions/database.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/auth/providers/auth_provider.c.dart';
@@ -15,6 +14,7 @@ import 'package:ion/app/features/chat/e2ee/data/models/entities/private_direct_m
 import 'package:ion/app/features/chat/e2ee/data/models/entities/private_message_reaction_data.c.dart';
 import 'package:ion/app/features/chat/e2ee/data/models/group_subject.c.dart';
 import 'package:ion/app/features/chat/e2ee/data/models/message_reaction_group.c.dart';
+import 'package:ion/app/features/chat/providers/database/chat_database_provider.c.dart';
 import 'package:ion/app/features/chat/recent_chats/data/models/conversation_list_item.c.dart';
 import 'package:ion/app/features/core/providers/env_provider.c.dart';
 import 'package:ion/app/features/feed/data/models/entities/generic_repost.c.dart';
@@ -40,20 +40,6 @@ part 'tables/message_media_table.dart';
 part 'tables/message_status_table.dart';
 part 'tables/reaction_table.dart';
 
-@Riverpod(keepAlive: true)
-ChatDatabase chatDatabase(Ref ref) {
-  final pubkey = ref.watch(currentPubkeySelectorProvider);
-
-  if (pubkey == null) {
-    throw UserMasterPubkeyNotFoundException();
-  }
-
-  final database = ChatDatabase(pubkey);
-
-  onLogout(ref, database.close);
-
-  return database;
-}
 
 @DriftDatabase(
   tables: [

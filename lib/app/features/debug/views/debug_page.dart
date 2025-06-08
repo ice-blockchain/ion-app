@@ -7,7 +7,7 @@ import 'package:drift_db_viewer/drift_db_viewer.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/extensions/extensions.dart';
-import 'package:ion/app/features/chat/e2ee/data/models/database/chat_database.c.dart';
+import 'package:ion/app/features/chat/providers/database/chat_database_provider.c.dart';
 import 'package:ion/app/features/core/providers/app_info_provider.c.dart';
 import 'package:ion/app/features/core/providers/feature_flags_provider.c.dart';
 import 'package:ion/app/features/feed/notifications/data/database/notifications_database.c.dart';
