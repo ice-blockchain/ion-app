@@ -3,8 +3,8 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:ion/app/features/feed/data/models/entities/reaction_data.c.dart';
 import 'package:ion/app/features/ion_connect/data/models/event_reference.c.dart';
+import 'package:ion/app/features/optimistic_ui/features/likes/data/models/post_like.c.dart';
 import 'package:ion/app/features/optimistic_ui/features/likes/like_sync_strategy.dart';
-import 'package:ion/app/features/optimistic_ui/features/likes/model/post_like.c.dart';
 import 'package:ion/app/features/optimistic_ui/features/likes/toggle_like_intent.dart';
 import 'package:mocktail/mocktail.dart';
 

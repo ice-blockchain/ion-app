@@ -19,8 +19,8 @@ import 'package:ion/app/features/ion_connect/providers/ion_connect_event_parser.
 import 'package:ion/app/features/push_notifications/data/models/ion_connect_push_data_payload.c.dart';
 import 'package:ion/app/features/push_notifications/providers/notification_response_data_provider.c.dart';
 import 'package:ion/app/features/user/data/models/follow_list.c.dart';
-import 'package:ion/app/features/wallets/model/entities/funds_request_entity.c.dart';
-import 'package:ion/app/features/wallets/model/entities/wallet_asset_entity.c.dart';
+import 'package:ion/app/features/wallets/data/models/entities/funds_request_entity.c.dart';
+import 'package:ion/app/features/wallets/data/models/entities/wallet_asset_entity.c.dart';
 import 'package:ion/app/router/app_routes.c.dart';
 import 'package:ion/app/services/logger/logger.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';

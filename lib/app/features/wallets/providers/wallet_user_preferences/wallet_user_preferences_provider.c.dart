@@ -1,10 +1,10 @@
 // SPDX-License-Identifier: ice License 1.0
 
-import 'package:ion/app/features/wallets/model/balance_display_order.dart';
-import 'package:ion/app/features/wallets/model/nft_layout_type.dart';
-import 'package:ion/app/features/wallets/model/nft_sorting_type.dart';
-import 'package:ion/app/features/wallets/model/user_preferences.c.dart';
-import 'package:ion/app/services/storage/user_preferences_service.c.dart';
+import 'package:ion/app/features/wallets/data/models/balance_display_order.dart';
+import 'package:ion/app/features/wallets/data/models/nft_layout_type.dart';
+import 'package:ion/app/features/wallets/data/models/nft_sorting_type.dart';
+import 'package:ion/app/features/wallets/data/models/user_preferences.c.dart';
+import 'package:ion/app/services/providers/storage/user_preferences_service.c.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'wallet_user_preferences_provider.c.g.dart';

@@ -6,7 +6,7 @@ import 'package:ion/app/features/core/views/pages/error_modal.dart';
 import 'package:ion/app/features/feed/create_article/providers/create_article_provider.c.dart';
 import 'package:ion/app/features/feed/create_post/model/create_post_option.dart';
 import 'package:ion/app/features/feed/create_post/providers/create_post_notifier.c.dart';
-import 'package:ion/app/features/feed/global_notifications/models/feed_global_notification.c.dart';
+import 'package:ion/app/features/feed/global_notifications/data/models/feed_global_notification.c.dart';
 import 'package:ion/app/features/feed/providers/repost_notifier.c.dart';
 import 'package:ion/app/router/app_routes.c.dart';
 

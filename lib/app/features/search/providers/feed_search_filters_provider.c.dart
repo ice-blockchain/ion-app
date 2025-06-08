@@ -7,7 +7,7 @@ import 'package:ion/app/features/feed/data/models/feed_category.dart';
 import 'package:ion/app/features/search/data/models/feed_search_filters_state.c.dart';
 import 'package:ion/app/features/search/model/feed_search_source.dart';
 import 'package:ion/app/services/logger/logger.dart';
-import 'package:ion/app/services/storage/user_preferences_service.c.dart';
+import 'package:ion/app/services/providers/storage/user_preferences_service.c.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'feed_search_filters_provider.c.g.dart';

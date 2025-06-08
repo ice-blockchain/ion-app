@@ -11,11 +11,11 @@ import 'package:ion/app/features/ion_connect/data/models/ion_connect_gift_wrap.c
 import 'package:ion/app/features/ion_connect/ion_connect.dart';
 import 'package:ion/app/features/ion_connect/providers/entities_syncer_notifier.c.dart';
 import 'package:ion/app/features/ion_connect/providers/ion_connect_subscription_provider.c.dart';
+import 'package:ion/app/features/wallets/data/models/entities/funds_request_entity.c.dart';
+import 'package:ion/app/features/wallets/data/models/entities/wallet_asset_entity.c.dart';
 import 'package:ion/app/features/wallets/data/repository/request_assets_repository.c.dart';
 import 'package:ion/app/features/wallets/data/repository/transactions_repository.c.dart';
 import 'package:ion/app/features/wallets/domain/wallet_views/wallet_views_service.c.dart';
-import 'package:ion/app/features/wallets/model/entities/funds_request_entity.c.dart';
-import 'package:ion/app/features/wallets/model/entities/wallet_asset_entity.c.dart';
 import 'package:ion/app/features/wallets/providers/wallets_initializer_provider.c.dart';
 import 'package:ion/app/services/logger/logger.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';

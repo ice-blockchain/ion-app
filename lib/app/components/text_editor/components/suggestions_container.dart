@@ -10,7 +10,7 @@ import 'package:ion/app/components/text_editor/components/suggestions_container_
 import 'package:ion/app/components/text_editor/hooks/use_text_editor_suggestions.dart';
 import 'package:ion/app/components/text_editor/text_editor.dart';
 import 'package:ion/app/extensions/extensions.dart';
-import 'package:ion/app/features/core/model/feature_flags.dart';
+import 'package:ion/app/features/core/data/models/feature_flags.dart';
 import 'package:ion/app/features/core/providers/feature_flags_provider.c.dart';
 
 class SuggestionsContainer extends HookConsumerWidget {

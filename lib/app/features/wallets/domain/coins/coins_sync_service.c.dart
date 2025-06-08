@@ -3,10 +3,10 @@
 import 'dart:async';
 
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:ion/app/features/wallets/data/models/network_data.c.dart';
 import 'package:ion/app/features/wallets/data/repository/coins_repository.c.dart';
 import 'package:ion/app/features/wallets/data/repository/networks_repository.c.dart';
 import 'package:ion/app/features/wallets/domain/coins/coins_mapper.dart';
-import 'package:ion/app/features/wallets/model/network_data.c.dart';
 import 'package:ion/app/services/ion_identity/ion_identity_client_provider.c.dart';
 import 'package:ion_identity_client/ion_identity.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';

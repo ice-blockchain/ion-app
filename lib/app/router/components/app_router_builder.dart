@@ -7,7 +7,7 @@ import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/debug/views/debug_rotate_gesture.dart';
 import 'package:ion/app/features/feed/global_notifications/helpers/feed_global_notifications_helper.dart';
 import 'package:ion/app/features/protect_account/secure_account/views/components/two_fa_signature_wrapper.dart';
-import 'package:ion/app/services/ui_event_queue/ui_event_queue_listener.dart';
+import 'package:ion/app/services/providers/ui_event_queue/ui_event_queue_listener.dart';
 
 class AppRouterBuilder extends HookConsumerWidget {
   const AppRouterBuilder({super.key, this.child});

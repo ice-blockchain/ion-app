@@ -12,7 +12,7 @@ import 'package:ion/app/features/chat/e2ee/data/models/entities/private_direct_m
 import 'package:ion/app/features/chat/e2ee/providers/chat_medias_provider.c.dart';
 import 'package:ion/app/features/chat/e2ee/providers/chat_message_load_media_provider.c.dart';
 import 'package:ion/app/features/chat/e2ee/providers/send_chat_message/send_chat_media_provider.c.dart';
-import 'package:ion/app/features/core/model/media_type.dart';
+import 'package:ion/app/features/core/data/models/media_type.dart';
 import 'package:ion/app/features/ion_connect/ion_connect.dart';
 import 'package:ion/app/router/app_routes.c.dart';
 import 'package:ion/app/utils/date.dart';

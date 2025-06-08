@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: ice License 1.0
 
-import 'package:ion/app/services/text_parser/model/text_match.c.dart';
-import 'package:ion/app/services/text_parser/model/text_matcher.dart';
+import 'package:ion/app/services/text_parser/data/models/text_match.c.dart';
+import 'package:ion/app/services/text_parser/data/models/text_matcher.dart';
 
 class TextParser {
   TextParser({

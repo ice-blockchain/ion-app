@@ -7,7 +7,7 @@ import 'package:ion/app/components/list_item/list_item.dart';
 import 'package:ion/app/components/progress_bar/centered_loading_indicator.dart';
 import 'package:ion/app/components/screen_offset/screen_bottom_offset.dart';
 import 'package:ion/app/extensions/extensions.dart';
-import 'package:ion/app/features/core/model/media_type.dart';
+import 'package:ion/app/features/core/data/models/media_type.dart';
 import 'package:ion/app/features/feed/create_post/model/create_post_option.dart';
 import 'package:ion/app/features/feed/create_post/providers/create_post_notifier.c.dart';
 import 'package:ion/app/features/feed/data/models/who_can_reply_settings_option.c.dart';
@@ -20,8 +20,8 @@ import 'package:ion/app/features/ion_connect/data/models/event_reference.c.dart'
 import 'package:ion/app/router/app_routes.c.dart';
 import 'package:ion/app/router/components/navigation_app_bar/navigation_app_bar.dart';
 import 'package:ion/app/router/utils/show_simple_bottom_sheet.dart';
-import 'package:ion/app/services/compressors/image_compressor.c.dart';
 import 'package:ion/app/services/media_service/data/models/media_file.c.dart';
+import 'package:ion/app/services/providers/compressors/image_compressor.c.dart';
 import 'package:ion/generated/assets.gen.dart';
 
 class StoryPreviewPage extends HookConsumerWidget {

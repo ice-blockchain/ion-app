@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: ice License 1.0
 
 import 'package:ion/app/features/optimistic_ui/core/optimistic_intent.dart';
-import 'package:ion/app/features/settings/model/content_lang_set.c.dart';
+import 'package:ion/app/features/settings/data/models/content_lang_set.c.dart';
 
 class ChangeLanguageIntent implements OptimisticIntent<ContentLangSet> {
   ChangeLanguageIntent(this.iso);

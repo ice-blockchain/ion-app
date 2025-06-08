@@ -6,7 +6,7 @@ import 'package:ion/app/components/inputs/search_input/search_input.dart';
 import 'package:ion/app/components/list_items_loading_state/list_items_loading_state.dart';
 import 'package:ion/app/components/screen_offset/screen_side_offset.dart';
 import 'package:ion/app/extensions/extensions.dart';
-import 'package:ion/app/features/wallets/model/coins_group.c.dart';
+import 'package:ion/app/features/wallets/data/models/coins_group.c.dart';
 import 'package:ion/app/features/wallets/views/components/coins_list/coin_item.dart';
 import 'package:ion/app/router/components/navigation_app_bar/navigation_app_bar.dart';
 import 'package:ion/app/router/components/navigation_app_bar/navigation_close_button.dart';

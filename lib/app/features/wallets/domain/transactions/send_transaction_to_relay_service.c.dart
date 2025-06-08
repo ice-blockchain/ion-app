@@ -11,8 +11,8 @@ import 'package:ion/app/features/ion_connect/data/models/entity_expiration.c.dar
 import 'package:ion/app/features/ion_connect/ion_connect.dart';
 import 'package:ion/app/features/ion_connect/providers/ion_connect_event_signer_provider.c.dart';
 import 'package:ion/app/features/ion_connect/providers/ion_connect_notifier.c.dart';
-import 'package:ion/app/services/ion_connect/ion_connect_gift_wrap_service.c.dart';
-import 'package:ion/app/services/ion_connect/ion_connect_seal_service.c.dart';
+import 'package:ion/app/services/providers/ion_connect/ion_connect_gift_wrap_service.c.dart';
+import 'package:ion/app/services/providers/ion_connect/ion_connect_seal_service.c.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'send_transaction_to_relay_service.c.g.dart';

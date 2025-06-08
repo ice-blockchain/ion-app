@@ -11,7 +11,7 @@ import 'package:ion/app/features/feed/data/models/entities/event_count_request_d
 import 'package:ion/app/features/feed/data/models/entities/generic_repost.c.dart';
 import 'package:ion/app/features/feed/data/models/entities/reaction_data.c.dart';
 import 'package:ion/app/features/feed/data/models/entities/repost_data.c.dart';
-import 'package:ion/app/features/feed/polls/models/poll_vote.c.dart';
+import 'package:ion/app/features/feed/polls/data/models/poll_vote.c.dart';
 import 'package:ion/app/features/ion_connect/data/models/event_reference.c.dart';
 import 'package:ion/app/features/ion_connect/data/models/ion_connect_entity.dart';
 import 'package:ion/app/features/ion_connect/ion_connect.dart';

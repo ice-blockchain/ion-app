@@ -8,7 +8,7 @@ import 'package:ion/app/features/ion_connect/data/models/ion_connect_entity.dart
 import 'package:ion/app/features/ion_connect/ion_connect.dart';
 import 'package:ion/app/features/ion_connect/providers/ion_connect_event_parser.c.dart';
 import 'package:ion/app/features/ion_connect/providers/ion_connect_notifier.c.dart';
-import 'package:ion/app/services/storage/local_storage.c.dart';
+import 'package:ion/app/services/providers/storage/local_storage.c.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'entities_syncer_notifier.c.g.dart';

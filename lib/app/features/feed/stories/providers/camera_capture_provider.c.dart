@@ -6,7 +6,7 @@ import 'dart:io';
 import 'package:ion/app/features/feed/stories/data/models/camera_capture_state.c.dart';
 import 'package:ion/app/features/gallery/providers/camera_provider.c.dart';
 import 'package:ion/app/features/gallery/providers/gallery_provider.c.dart';
-import 'package:ion/app/services/media_service/media_service.c.dart';
+import 'package:ion/app/services/media_service/providers/media_service.c.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'camera_capture_provider.c.g.dart';

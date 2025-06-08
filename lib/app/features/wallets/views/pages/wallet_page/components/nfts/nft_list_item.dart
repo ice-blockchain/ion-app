@@ -6,7 +6,7 @@ import 'package:ion/app/components/list_item/list_item.dart';
 import 'package:ion/app/extensions/build_context.dart';
 import 'package:ion/app/extensions/num.dart';
 import 'package:ion/app/extensions/theme_data.dart';
-import 'package:ion/app/features/wallets/model/nft_data.c.dart';
+import 'package:ion/app/features/wallets/data/models/nft_data.c.dart';
 import 'package:ion/app/features/wallets/views/pages/wallet_page/components/nfts/nfts_network.dart';
 
 class NftListItem extends StatelessWidget {

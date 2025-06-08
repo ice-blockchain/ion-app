@@ -14,7 +14,7 @@ import 'package:ion/app/features/user/providers/image_proccessor_notifier.c.dart
 import 'package:ion/app/router/app_routes.c.dart';
 import 'package:ion/app/services/media_service/data/models/media_file.c.dart';
 import 'package:ion/app/services/media_service/image_proccessing_config.dart';
-import 'package:ion/app/services/media_service/media_service.c.dart';
+import 'package:ion/app/services/media_service/providers/media_service.c.dart';
 
 class ArticleFormAddImage extends HookConsumerWidget {
   const ArticleFormAddImage({

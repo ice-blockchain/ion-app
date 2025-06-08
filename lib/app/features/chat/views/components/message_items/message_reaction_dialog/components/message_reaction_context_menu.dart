@@ -18,7 +18,7 @@ import 'package:ion/app/features/chat/e2ee/providers/e2ee_delete_event_provider.
 import 'package:ion/app/features/chat/e2ee/providers/send_chat_message/send_e2ee_chat_message_service.c.dart';
 import 'package:ion/app/features/chat/recent_chats/providers/selected_edit_message_provider.c.dart';
 import 'package:ion/app/features/chat/recent_chats/providers/selected_reply_message_provider.c.dart';
-import 'package:ion/app/features/core/model/feature_flags.dart';
+import 'package:ion/app/features/core/data/models/feature_flags.dart';
 import 'package:ion/app/features/core/providers/feature_flags_provider.c.dart';
 import 'package:ion/app/router/app_routes.c.dart';
 import 'package:ion/app/services/clipboard/clipboard.dart';

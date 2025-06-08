@@ -1,8 +1,8 @@
 // SPDX-License-Identifier: ice License 1.0
 
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:ion/app/features/wallets/data/database/dao/crypto_wallets_dao.c.dart';
-import 'package:ion/app/features/wallets/data/database/wallets_database.c.dart';
+import 'package:ion/app/features/wallets/data/models/database/dao/crypto_wallets_dao.c.dart';
+import 'package:ion/app/features/wallets/data/models/database/wallets_database.c.dart';
 import 'package:ion_identity_client/ion_identity.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 

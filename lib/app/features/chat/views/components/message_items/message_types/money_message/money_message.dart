@@ -16,10 +16,10 @@ import 'package:ion/app/features/chat/views/components/message_items/message_typ
 import 'package:ion/app/features/chat/views/components/message_items/message_types/reply_message/reply_message.dart';
 import 'package:ion/app/features/ion_connect/data/models/event_reference.c.dart';
 import 'package:ion/app/features/ion_connect/ion_connect.dart';
-import 'package:ion/app/features/wallets/model/coin_data.c.dart';
-import 'package:ion/app/features/wallets/model/entities/funds_request_entity.c.dart';
-import 'package:ion/app/features/wallets/model/entities/wallet_asset_entity.c.dart';
-import 'package:ion/app/features/wallets/model/network_data.c.dart';
+import 'package:ion/app/features/wallets/data/models/coin_data.c.dart';
+import 'package:ion/app/features/wallets/data/models/entities/funds_request_entity.c.dart';
+import 'package:ion/app/features/wallets/data/models/entities/wallet_asset_entity.c.dart';
+import 'package:ion/app/features/wallets/data/models/network_data.c.dart';
 import 'package:ion/app/features/wallets/providers/coins_provider.c.dart';
 import 'package:ion/app/features/wallets/providers/networks_provider.c.dart';
 import 'package:ion/app/features/wallets/views/components/network_icon_widget.dart';

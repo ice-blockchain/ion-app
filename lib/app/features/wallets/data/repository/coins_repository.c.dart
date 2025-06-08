@@ -2,12 +2,12 @@
 
 import 'package:collection/collection.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:ion/app/features/wallets/data/database/dao/coins_dao.c.dart';
-import 'package:ion/app/features/wallets/data/database/dao/sync_coins_dao.c.dart';
-import 'package:ion/app/features/wallets/data/database/wallets_database.c.dart';
-import 'package:ion/app/features/wallets/model/coin_data.c.dart';
-import 'package:ion/app/features/wallets/model/network_data.c.dart';
-import 'package:ion/app/services/storage/local_storage.c.dart';
+import 'package:ion/app/features/wallets/data/models/coin_data.c.dart';
+import 'package:ion/app/features/wallets/data/models/database/dao/coins_dao.c.dart';
+import 'package:ion/app/features/wallets/data/models/database/dao/sync_coins_dao.c.dart';
+import 'package:ion/app/features/wallets/data/models/database/wallets_database.c.dart';
+import 'package:ion/app/features/wallets/data/models/network_data.c.dart';
+import 'package:ion/app/services/providers/storage/local_storage.c.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'coins_repository.c.g.dart';

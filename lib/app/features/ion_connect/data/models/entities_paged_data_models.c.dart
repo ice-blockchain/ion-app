@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: ice License 1.0
 
 import 'package:freezed_annotation/freezed_annotation.dart';
-import 'package:ion/app/features/core/model/paged.c.dart';
+import 'package:ion/app/features/core/data/models/paged.c.dart';
 import 'package:ion/app/features/ion_connect/data/models/action_source.c.dart';
 import 'package:ion/app/features/ion_connect/data/models/ion_connect_entity.dart';
 import 'package:ion/app/features/ion_connect/ion_connect.dart';

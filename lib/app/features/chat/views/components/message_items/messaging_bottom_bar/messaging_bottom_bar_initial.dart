@@ -17,7 +17,7 @@ import 'package:ion/app/features/core/permissions/views/components/permission_di
 import 'package:ion/app/features/core/permissions/views/components/permission_dialogs/settings_redirect_sheet.dart';
 import 'package:ion/app/router/app_routes.c.dart';
 import 'package:ion/app/services/media_service/data/models/media_file.c.dart';
-import 'package:ion/app/services/media_service/media_service.c.dart';
+import 'package:ion/app/services/media_service/providers/media_service.c.dart';
 import 'package:ion/generated/assets.gen.dart';
 
 class BottomBarInitialView extends HookConsumerWidget {

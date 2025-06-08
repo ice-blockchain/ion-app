@@ -12,7 +12,7 @@ import 'package:ion/app/features/chat/e2ee/data/models/database/chat_database.c.
 import 'package:ion/app/features/chat/e2ee/data/models/entities/private_direct_message_data.c.dart';
 import 'package:ion/app/features/chat/views/pages/chat_media_page/components/chat_media_context_menu.dart';
 import 'package:ion/app/features/chat/views/pages/chat_media_page/components/chat_media_page_view.dart';
-import 'package:ion/app/features/core/model/media_type.dart';
+import 'package:ion/app/features/core/data/models/media_type.dart';
 import 'package:ion/app/features/core/providers/mute_provider.c.dart';
 import 'package:ion/app/features/feed/views/pages/fullscreen_media/hooks/use_image_zoom.dart';
 import 'package:ion/app/features/feed/views/pages/fullscreen_media/providers/image_zoom_provider.c.dart';

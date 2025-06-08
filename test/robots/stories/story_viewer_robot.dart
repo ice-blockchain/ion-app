@@ -14,8 +14,8 @@ import 'package:ion/app/features/feed/stories/providers/story_viewing_provider.c
 import 'package:ion/app/features/feed/stories/views/components/story_viewer/components/core/core.dart';
 import 'package:ion/app/features/feed/stories/views/pages/story_viewer_page.dart';
 import 'package:ion/app/router/providers/go_router_provider.c.dart';
-import 'package:ion/app/services/storage/local_storage.c.dart';
-import 'package:ion/app/services/storage/user_preferences_service.c.dart';
+import 'package:ion/app/services/providers/storage/local_storage.c.dart';
+import 'package:ion/app/services/providers/storage/user_preferences_service.c.dart';
 import 'package:ion/generated/app_localizations.dart';
 import 'package:mocktail/mocktail.dart';
 

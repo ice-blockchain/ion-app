@@ -3,7 +3,7 @@
 import 'package:flutter/material.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/feed/data/models/entities/generic_repost.c.dart';
-import 'package:ion/app/features/feed/notifications/data/model/ion_notification.c.dart';
+import 'package:ion/app/features/feed/notifications/data/models/ion_notification.c.dart';
 import 'package:ion/app/features/feed/views/components/article/article.dart';
 import 'package:ion/app/features/feed/views/components/post/post.dart';
 import 'package:ion/app/features/ion_connect/data/models/event_reference.c.dart';

@@ -12,7 +12,7 @@ import 'package:ion/app/extensions/delta.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/feed/data/models/entities/modifiable_post_data.c.dart';
 import 'package:ion/app/features/feed/data/models/entities/post_data.c.dart';
-import 'package:ion/app/features/feed/polls/models/poll_data.c.dart';
+import 'package:ion/app/features/feed/polls/data/models/poll_data.c.dart';
 import 'package:ion/app/features/feed/polls/view/components/post_poll.dart';
 import 'package:ion/app/features/feed/views/components/post/components/post_body/components/post_media/post_media.dart';
 import 'package:ion/app/features/feed/views/components/url_preview_content/url_preview_content.dart';

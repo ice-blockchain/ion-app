@@ -3,9 +3,9 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:ion/app/features/chat/e2ee/data/models/entities/private_direct_message_data.c.dart';
 import 'package:ion/app/features/ion_connect/ion_connect.dart';
-import 'package:ion/app/services/ion_connect/ed25519_key_store.dart';
-import 'package:ion/app/services/ion_connect/encrypted_message_service.c.dart';
-import 'package:ion/app/services/ion_connect/ion_connect_seal_service.c.dart';
+import 'package:ion/app/services/providers/ion_connect/ed25519_key_store.dart';
+import 'package:ion/app/services/providers/ion_connect/encrypted_message_service.c.dart';
+import 'package:ion/app/services/providers/ion_connect/ion_connect_seal_service.c.dart';
 
 void main() {
   late IonConnectSealService sealService;

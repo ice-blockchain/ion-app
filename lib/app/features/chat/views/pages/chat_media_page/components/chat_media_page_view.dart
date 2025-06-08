@@ -10,12 +10,12 @@ import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/chat/e2ee/data/models/database/chat_database.c.dart';
 import 'package:ion/app/features/chat/e2ee/data/models/entities/private_direct_message_data.c.dart';
 import 'package:ion/app/features/chat/e2ee/providers/chat_message_load_media_provider.c.dart';
-import 'package:ion/app/features/core/model/media_type.dart';
+import 'package:ion/app/features/core/data/models/media_type.dart';
 import 'package:ion/app/features/feed/views/pages/fullscreen_media/hooks/use_image_zoom.dart';
 import 'package:ion/app/features/ion_connect/data/models/event_reference.c.dart';
 import 'package:ion/app/features/ion_connect/data/models/media_attachment.dart';
 import 'package:ion/app/features/video/views/pages/video_page.dart';
-import 'package:ion/app/services/file_cache/ion_file_cache_manager.c.dart';
+import 'package:ion/app/services/providers/file_cache/ion_file_cache_manager.c.dart';
 import 'package:ion/app/utils/url.dart';
 
 class ChatMediaPageView extends HookConsumerWidget {

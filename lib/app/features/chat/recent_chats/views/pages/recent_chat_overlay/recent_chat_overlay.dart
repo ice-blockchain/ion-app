@@ -10,7 +10,7 @@ import 'package:ion/app/components/screen_offset/screen_side_offset.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/chat/recent_chats/model/conversation_list_item.c.dart';
 import 'package:ion/app/features/chat/recent_chats/views/pages/recent_chat_overlay/components/recent_chat_overlay_context_menu.dart';
-import 'package:ion/app/services/media_service/media_service.c.dart';
+import 'package:ion/app/services/media_service/providers/media_service.c.dart';
 
 class RecentChatOverlay extends HookConsumerWidget {
   const RecentChatOverlay({

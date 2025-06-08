@@ -9,8 +9,8 @@ import 'package:ion/app/features/ion_connect/data/models/ion_connect_gift_wrap.c
 import 'package:ion/app/features/push_notifications/data/models/ion_connect_push_data_payload.c.dart';
 import 'package:ion/app/features/push_notifications/providers/configure_firebase_app_provider.c.dart';
 import 'package:ion/app/features/push_notifications/providers/notification_data_parser_provider.c.dart';
-import 'package:ion/app/services/firebase/firebase_messaging_service_provider.c.dart';
-import 'package:ion/app/services/local_notifications/local_notifications.c.dart';
+import 'package:ion/app/services/providers/firebase/firebase_messaging_service_provider.c.dart';
+import 'package:ion/app/services/providers/local_notifications/local_notifications.c.dart';
 import 'package:ion/app/services/uuid/uuid.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 

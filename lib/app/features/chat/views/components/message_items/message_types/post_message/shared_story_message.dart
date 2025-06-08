@@ -11,7 +11,7 @@ import 'package:ion/app/features/chat/views/components/message_items/message_ite
 import 'package:ion/app/features/chat/views/components/message_items/message_reactions/message_reactions.dart';
 import 'package:ion/app/features/chat/views/components/message_items/message_types/text_message/text_message.dart';
 import 'package:ion/app/features/components/ion_connect_network_image/ion_connect_network_image.dart';
-import 'package:ion/app/features/core/model/media_type.dart';
+import 'package:ion/app/features/core/data/models/media_type.dart';
 import 'package:ion/app/features/feed/data/models/entities/modifiable_post_data.c.dart';
 import 'package:ion/app/features/feed/data/models/entities/post_data.c.dart';
 import 'package:ion/app/features/ion_connect/data/models/entity_data_with_media_content.dart';

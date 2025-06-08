@@ -26,7 +26,7 @@ import 'package:ion/app/features/user/providers/user_metadata_provider.c.dart';
 import 'package:ion/app/hooks/use_on_init.dart';
 import 'package:ion/app/hooks/use_scroll_top_on_tab_press.dart';
 import 'package:ion/app/router/app_routes.c.dart';
-import 'package:ion/app/services/media_service/media_encryption_service.c.dart';
+import 'package:ion/app/services/media_service/providers/media_encryption_service.c.dart';
 import 'package:ion/generated/assets.gen.dart';
 
 class RecentChatsTimelinePage extends HookConsumerWidget {

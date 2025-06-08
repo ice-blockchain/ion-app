@@ -15,10 +15,10 @@ import 'package:ion/app/features/ion_connect/ion_connect.dart';
 import 'package:ion/app/features/ion_connect/providers/entities_syncer_notifier.c.dart';
 import 'package:ion/app/features/ion_connect/providers/ion_connect_event_signer_provider.c.dart';
 import 'package:ion/app/features/ion_connect/providers/ion_connect_subscription_provider.c.dart';
-import 'package:ion/app/features/user_block/model/database/block_user_database.c.dart';
-import 'package:ion/app/features/user_block/model/entities/blocked_user_entity.c.dart';
-import 'package:ion/app/services/ion_connect/ion_connect_gift_wrap_service.c.dart';
-import 'package:ion/app/services/ion_connect/ion_connect_seal_service.c.dart';
+import 'package:ion/app/features/user_block/data/models/database/blocked_users_database.c.dart';
+import 'package:ion/app/features/user_block/data/models/entities/blocked_user_entity.c.dart';
+import 'package:ion/app/services/providers/ion_connect/ion_connect_gift_wrap_service.c.dart';
+import 'package:ion/app/services/providers/ion_connect/ion_connect_seal_service.c.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'blocked_users_sync_provider.c.g.dart';

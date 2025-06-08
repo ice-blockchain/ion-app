@@ -5,7 +5,7 @@ import 'package:ion/app/features/chat/community/data/models/entities/tags/master
 import 'package:ion/app/features/ion_connect/data/models/event_reference.c.dart';
 import 'package:ion/app/features/ion_connect/ion_connect.dart';
 import 'package:ion/app/features/user/data/models/interests.c.dart';
-import 'package:ion/app/services/ion_connect/ed25519_key_store.dart';
+import 'package:ion/app/services/providers/ion_connect/ed25519_key_store.dart';
 
 void main() {
   NostrDart.configure();

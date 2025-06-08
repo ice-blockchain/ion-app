@@ -2,8 +2,8 @@
 
 import 'package:flutter/material.dart';
 import 'package:ion/app/extensions/extensions.dart';
-import 'package:ion/app/features/wallets/model/info_type.dart';
-import 'package:ion/app/features/wallets/model/network_fee_option.c.dart';
+import 'package:ion/app/features/wallets/data/models/info_type.dart';
+import 'package:ion/app/features/wallets/data/models/network_fee_option.c.dart';
 import 'package:ion/app/features/wallets/views/pages/info/info_modal.dart';
 import 'package:ion/app/features/wallets/views/utils/crypto_formatter.dart';
 import 'package:ion/app/router/utils/show_simple_bottom_sheet.dart';

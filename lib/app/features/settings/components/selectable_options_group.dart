@@ -6,7 +6,7 @@ import 'package:ion/app/components/list_item/list_item.dart';
 import 'package:ion/app/components/separated/separated_column.dart';
 import 'package:ion/app/components/separated/separator.dart';
 import 'package:ion/app/extensions/extensions.dart';
-import 'package:ion/app/features/settings/model/selectable_option.dart';
+import 'package:ion/app/features/settings/data/models/selectable_option.dart';
 import 'package:ion/generated/assets.gen.dart';
 
 class SelectableOptionsGroup<T extends SelectableOption> extends StatelessWidget {

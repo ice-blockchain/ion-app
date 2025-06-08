@@ -10,7 +10,7 @@ import 'package:ion/app/features/ion_connect/providers/relay_info_provider.c.dar
 import 'package:ion/app/features/push_notifications/data/models/relay_firebase_config.c.dart';
 import 'package:ion/app/features/user/providers/ranked_user_relays_provider.c.dart';
 import 'package:ion/app/services/logger/logger.dart';
-import 'package:ion/app/services/storage/local_storage.c.dart';
+import 'package:ion/app/services/providers/storage/local_storage.c.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'relay_firebase_app_config_provider.c.g.dart';

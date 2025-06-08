@@ -2,8 +2,8 @@
 
 import 'package:ion/app/features/ion_connect/data/models/relay_info.c.dart';
 import 'package:ion/app/features/push_notifications/providers/relay_firebase_app_config_provider.c.dart';
-import 'package:ion/app/services/firebase/firebase_messaging_service_provider.c.dart';
-import 'package:ion/app/services/firebase/firebase_service_provider.c.dart';
+import 'package:ion/app/services/providers/firebase/firebase_messaging_service_provider.c.dart';
+import 'package:ion/app/services/providers/firebase/firebase_service_provider.c.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'configure_firebase_app_provider.c.g.dart';

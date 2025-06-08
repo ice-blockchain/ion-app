@@ -12,7 +12,7 @@ import 'package:ion/app/features/chat/e2ee/data/models/database/chat_database.c.
 import 'package:ion/app/features/chat/e2ee/data/models/message_list_item.c.dart';
 import 'package:ion/app/features/chat/views/components/message_items/message_reaction_dialog/components/message_reaction_context_menu.dart';
 import 'package:ion/app/features/chat/views/components/message_items/message_reaction_dialog/components/message_reaction_emoji_bar.dart';
-import 'package:ion/app/services/media_service/media_service.c.dart';
+import 'package:ion/app/services/media_service/providers/media_service.c.dart';
 
 class MessageReactionDialog extends HookConsumerWidget {
   const MessageReactionDialog({

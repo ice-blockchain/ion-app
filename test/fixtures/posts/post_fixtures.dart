@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: ice License 1.0
 
-import 'package:ion/app/features/core/model/media_type.dart';
+import 'package:ion/app/features/core/data/models/media_type.dart';
 import 'package:ion/app/features/feed/data/models/entities/modifiable_post_data.c.dart';
 import 'package:ion/app/features/ion_connect/data/models/event_reference.c.dart';
 import 'package:ion/app/features/ion_connect/data/models/media_attachment.dart';

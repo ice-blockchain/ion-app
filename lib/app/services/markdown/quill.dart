@@ -7,7 +7,7 @@ import 'package:flutter_quill/quill_delta.dart';
 import 'package:ion/app/components/text_editor/attributes.dart';
 import 'package:ion/app/components/text_editor/components/custom_blocks/text_editor_profile_block/text_editor_profile_block.dart';
 import 'package:ion/app/components/text_editor/components/custom_blocks/text_editor_single_image_block/text_editor_single_image_block.dart';
-import 'package:ion/app/services/text_parser/model/text_matcher.dart';
+import 'package:ion/app/services/text_parser/data/models/text_matcher.dart';
 import 'package:ion/app/services/text_parser/text_parser.dart';
 import 'package:markdown/markdown.dart' as md;
 import 'package:markdown_quill/markdown_quill.dart';

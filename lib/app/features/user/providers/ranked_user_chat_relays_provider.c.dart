@@ -7,7 +7,7 @@ import 'package:ion/app/exceptions/exceptions.dart';
 import 'package:ion/app/features/auth/providers/auth_provider.c.dart';
 import 'package:ion/app/features/chat/providers/user_chat_relays_provider.c.dart';
 import 'package:ion/app/features/user/data/models/user_chat_relays.c.dart';
-import 'package:ion/app/services/ion_connect/ion_connect_relays_ranker.c.dart';
+import 'package:ion/app/services/providers/ion_connect/ion_connect_relays_ranker.c.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'ranked_user_chat_relays_provider.c.g.dart';

@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: ice License 1.0
 
-import 'package:ion/app/features/dapps/model/dapp_data.c.dart';
+import 'package:ion/app/features/dapps/data/models/dapp_data.c.dart';
 import 'package:ion/generated/assets.gen.dart';
 
 const _description =

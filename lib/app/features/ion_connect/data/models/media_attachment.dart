@@ -2,7 +2,7 @@
 
 import 'package:ion/app/exceptions/exceptions.dart';
 import 'package:ion/app/extensions/extensions.dart';
-import 'package:ion/app/features/core/model/media_type.dart';
+import 'package:ion/app/features/core/data/models/media_type.dart';
 import 'package:ion/app/features/ion_connect/data/models/file_alt.dart';
 import 'package:ion/app/services/media_service/data/models/media_file.c.dart';
 import 'package:ion/app/utils/validators.dart';

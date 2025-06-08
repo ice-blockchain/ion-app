@@ -14,7 +14,7 @@ import 'package:ion/app/features/core/permissions/views/components/permission_di
 import 'package:ion/app/features/push_notifications/data/models/push_notification_category.c.dart';
 import 'package:ion/app/features/push_notifications/providers/selected_push_categories_provider.c.dart';
 import 'package:ion/app/features/settings/components/selectable_options_group.dart';
-import 'package:ion/app/features/settings/model/push_notifications_options.dart';
+import 'package:ion/app/features/settings/data/models/push_notifications_options.dart';
 import 'package:ion/app/router/components/navigation_app_bar/navigation_app_bar.dart';
 import 'package:ion/app/router/components/navigation_app_bar/navigation_close_button.dart';
 import 'package:ion/app/router/components/sheet_content/sheet_content.dart';

@@ -21,8 +21,8 @@ import 'package:ion/app/features/chat/views/components/message_items/message_rea
 import 'package:ion/app/features/chat/views/components/message_items/message_types/reply_message/reply_message.dart';
 import 'package:ion/app/features/ion_connect/ion_connect.dart';
 import 'package:ion/app/hooks/use_on_init.dart';
-import 'package:ion/app/services/audio_wave_playback_service/audio_wave_playback_service.c.dart';
-import 'package:ion/app/services/compressors/audio_compressor.c.dart';
+import 'package:ion/app/services/providers/audio_wave_playback_service/audio_wave_playback_service.c.dart';
+import 'package:ion/app/services/providers/compressors/audio_compressor.c.dart';
 import 'package:ion/app/utils/date.dart';
 import 'package:ion/generated/assets.gen.dart';
 

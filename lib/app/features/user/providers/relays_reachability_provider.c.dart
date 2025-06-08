@@ -3,7 +3,7 @@
 import 'package:collection/collection.dart';
 import 'package:ion/app/features/user/data/models/user_chat_relays.c.dart';
 import 'package:ion/app/features/user/data/models/user_relays.c.dart';
-import 'package:ion/app/services/storage/local_storage.c.dart';
+import 'package:ion/app/services/providers/storage/local_storage.c.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'relays_reachability_provider.c.g.dart';

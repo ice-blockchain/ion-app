@@ -2,8 +2,8 @@
 
 import 'package:flutter_test/flutter_test.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:ion/app/features/core/model/media_type.dart';
-import 'package:ion/app/features/core/model/paged.c.dart';
+import 'package:ion/app/features/core/data/models/media_type.dart';
+import 'package:ion/app/features/core/data/models/paged.c.dart';
 import 'package:ion/app/features/feed/data/models/entities/modifiable_post_data.c.dart';
 import 'package:ion/app/features/feed/stories/providers/feed_stories_data_source_provider.c.dart';
 import 'package:ion/app/features/feed/stories/providers/feed_stories_provider.c.dart';

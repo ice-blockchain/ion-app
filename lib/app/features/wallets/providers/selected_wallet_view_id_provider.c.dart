@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: ice License 1.0
 
-import 'package:ion/app/services/storage/local_storage.c.dart';
+import 'package:ion/app/services/providers/storage/local_storage.c.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'selected_wallet_view_id_provider.c.g.dart';

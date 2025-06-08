@@ -1,12 +1,12 @@
 // SPDX-License-Identifier: ice License 1.0
 
 import 'package:ion/app/exceptions/exceptions.dart';
+import 'package:ion/app/features/wallets/data/models/crypto_asset_to_send_data.c.dart';
+import 'package:ion/app/features/wallets/data/models/transaction_details.c.dart';
+import 'package:ion/app/features/wallets/data/models/transaction_status.c.dart';
+import 'package:ion/app/features/wallets/data/models/transaction_type.dart';
 import 'package:ion/app/features/wallets/domain/coins/coins_service.c.dart';
 import 'package:ion/app/features/wallets/domain/nfts/send_nft_use_case.c.dart';
-import 'package:ion/app/features/wallets/model/crypto_asset_to_send_data.c.dart';
-import 'package:ion/app/features/wallets/model/transaction_details.c.dart';
-import 'package:ion/app/features/wallets/model/transaction_status.c.dart';
-import 'package:ion/app/features/wallets/model/transaction_type.dart';
 import 'package:ion/app/features/wallets/providers/send_nft_form_provider.c.dart';
 import 'package:ion/app/features/wallets/providers/wallet_view_data_provider.c.dart';
 import 'package:ion/app/services/logger/logger.dart';

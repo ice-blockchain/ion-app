@@ -5,7 +5,7 @@ import 'package:ion/app/features/auth/providers/auth_provider.c.dart';
 import 'package:ion/app/features/ion_connect/providers/device_keypair_dialog_state.c.dart';
 import 'package:ion/app/features/ion_connect/providers/device_keypair_utils.dart';
 import 'package:ion/app/services/logger/logger.dart';
-import 'package:ion/app/services/storage/local_storage.c.dart';
+import 'package:ion/app/services/providers/storage/local_storage.c.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'device_keypair_dialog_manager.c.g.dart';

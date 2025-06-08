@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: ice License 1.0
 
-import 'package:ion/app/features/core/model/language.dart';
+import 'package:ion/app/features/core/data/models/language.dart';
 import 'package:ion/l10n/short_timeago_messages_adapter.dart';
 import 'package:timeago/timeago.dart' as timeago;
 import 'package:timeago/timeago.dart';

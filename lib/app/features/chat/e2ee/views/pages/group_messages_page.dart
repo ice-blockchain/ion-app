@@ -17,7 +17,7 @@ import 'package:ion/app/features/chat/e2ee/views/components/one_to_one_messages_
 import 'package:ion/app/features/chat/providers/conversation_messages_provider.c.dart';
 import 'package:ion/app/features/chat/views/components/message_items/messaging_bottom_bar/messaging_bottom_bar.dart';
 import 'package:ion/app/features/ion_connect/ion_connect.dart';
-import 'package:ion/app/services/media_service/media_encryption_service.c.dart';
+import 'package:ion/app/services/media_service/providers/media_encryption_service.c.dart';
 
 class GroupMessagesPage extends HookConsumerWidget {
   const GroupMessagesPage({

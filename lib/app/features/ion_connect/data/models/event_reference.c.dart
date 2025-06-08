@@ -4,11 +4,11 @@ import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:ion/app/exceptions/exceptions.dart';
 import 'package:ion/app/features/feed/data/models/entities/article_data.c.dart';
 import 'package:ion/app/features/user/data/models/user_metadata.c.dart';
-import 'package:ion/app/services/bech32/bech32_service.c.dart';
-import 'package:ion/app/services/ion_connect/ion_connect_protocol_identifier_type.dart';
-import 'package:ion/app/services/ion_connect/ion_connect_uri_identifier_service.c.dart';
-import 'package:ion/app/services/ion_connect/ion_connect_uri_protocol_service.c.dart';
-import 'package:ion/app/services/ion_connect/shareable_identifier.dart';
+import 'package:ion/app/services/providers/bech32/bech32_service.c.dart';
+import 'package:ion/app/services/providers/ion_connect/ion_connect_protocol_identifier_type.dart';
+import 'package:ion/app/services/providers/ion_connect/ion_connect_uri_identifier_service.c.dart';
+import 'package:ion/app/services/providers/ion_connect/ion_connect_uri_protocol_service.c.dart';
+import 'package:ion/app/services/providers/ion_connect/shareable_identifier.dart';
 
 part 'event_reference.c.freezed.dart';
 

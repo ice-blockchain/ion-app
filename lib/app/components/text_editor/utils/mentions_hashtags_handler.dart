@@ -7,7 +7,7 @@ import 'package:ion/app/components/text_editor/components/custom_blocks/text_edi
 import 'package:ion/app/components/text_editor/utils/text_editor_typing_listener.dart';
 import 'package:ion/app/features/feed/providers/suggestions/suggestions_notifier_provider.c.dart';
 import 'package:ion/app/features/user/providers/user_metadata_provider.c.dart';
-import 'package:ion/app/services/text_parser/model/text_matcher.dart';
+import 'package:ion/app/services/text_parser/data/models/text_matcher.dart';
 
 class MentionsHashtagsHandler extends TextEditorTypingListener {
   MentionsHashtagsHandler({

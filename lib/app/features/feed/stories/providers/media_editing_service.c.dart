@@ -5,8 +5,8 @@ import 'dart:async';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/features/gallery/data/models/camera_state.c.dart';
 import 'package:ion/app/features/gallery/providers/camera_provider.c.dart';
-import 'package:ion/app/services/media_service/banuba_service.c.dart';
 import 'package:ion/app/services/media_service/data/models/media_file.c.dart';
+import 'package:ion/app/services/media_service/providers/banuba_service.c.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'media_editing_service.c.g.dart';

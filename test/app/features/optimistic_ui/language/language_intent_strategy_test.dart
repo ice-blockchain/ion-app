@@ -3,7 +3,7 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:ion/app/features/optimistic_ui/features/language/change_language_intent.dart';
 import 'package:ion/app/features/optimistic_ui/features/language/language_sync_strategy.dart';
-import 'package:ion/app/features/settings/model/content_lang_set.c.dart';
+import 'package:ion/app/features/settings/data/models/content_lang_set.c.dart';
 import 'package:ion/app/features/user/data/models/interest_set.c.dart';
 
 void main() {

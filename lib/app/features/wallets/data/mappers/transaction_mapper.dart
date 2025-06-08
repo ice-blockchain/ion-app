@@ -3,14 +3,14 @@
 import 'package:collection/collection.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/extensions/object.dart';
-import 'package:ion/app/features/wallets/data/database/wallets_database.c.dart' as db;
-import 'package:ion/app/features/wallets/model/coin_data.c.dart';
-import 'package:ion/app/features/wallets/model/crypto_asset_to_send_data.c.dart';
-import 'package:ion/app/features/wallets/model/entities/wallet_asset_entity.c.dart';
-import 'package:ion/app/features/wallets/model/transaction_crypto_asset.c.dart';
-import 'package:ion/app/features/wallets/model/transaction_data.c.dart';
-import 'package:ion/app/features/wallets/model/transaction_details.c.dart';
-import 'package:ion/app/features/wallets/model/transaction_type.dart';
+import 'package:ion/app/features/wallets/data/models/coin_data.c.dart';
+import 'package:ion/app/features/wallets/data/models/crypto_asset_to_send_data.c.dart';
+import 'package:ion/app/features/wallets/data/models/database/wallets_database.c.dart' as db;
+import 'package:ion/app/features/wallets/data/models/entities/wallet_asset_entity.c.dart';
+import 'package:ion/app/features/wallets/data/models/transaction_crypto_asset.c.dart';
+import 'package:ion/app/features/wallets/data/models/transaction_data.c.dart';
+import 'package:ion/app/features/wallets/data/models/transaction_details.c.dart';
+import 'package:ion/app/features/wallets/data/models/transaction_type.dart';
 import 'package:ion/app/services/logger/logger.dart';
 import 'package:ion_identity_client/ion_identity.dart';
 

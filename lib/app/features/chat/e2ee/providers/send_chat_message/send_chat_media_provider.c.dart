@@ -12,11 +12,11 @@ import 'package:ion/app/features/ion_connect/data/models/file_alt.dart';
 import 'package:ion/app/features/ion_connect/data/models/media_attachment.dart';
 import 'package:ion/app/features/ion_connect/providers/ion_connect_notifier.c.dart';
 import 'package:ion/app/features/ion_connect/providers/ion_connect_upload_notifier.c.dart';
-import 'package:ion/app/services/compressors/video_compressor.c.dart';
-import 'package:ion/app/services/ion_connect/ed25519_key_store.dart';
-import 'package:ion/app/services/media_service/blurhash_service.c.dart';
 import 'package:ion/app/services/media_service/data/models/media_file.c.dart';
-import 'package:ion/app/services/media_service/media_encryption_service.c.dart';
+import 'package:ion/app/services/media_service/providers/blurhash_service.c.dart';
+import 'package:ion/app/services/media_service/providers/media_encryption_service.c.dart';
+import 'package:ion/app/services/providers/compressors/video_compressor.c.dart';
+import 'package:ion/app/services/providers/ion_connect/ed25519_key_store.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'send_chat_media_provider.c.g.dart';

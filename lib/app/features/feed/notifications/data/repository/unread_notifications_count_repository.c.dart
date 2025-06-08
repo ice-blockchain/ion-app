@@ -6,7 +6,7 @@ import 'package:ion/app/features/auth/providers/auth_provider.c.dart';
 import 'package:ion/app/features/feed/notifications/data/database/dao/comments_dao.c.dart';
 import 'package:ion/app/features/feed/notifications/data/database/dao/followers_dao.c.dart';
 import 'package:ion/app/features/feed/notifications/data/database/dao/likes_dao.c.dart';
-import 'package:ion/app/services/storage/user_preferences_service.c.dart';
+import 'package:ion/app/services/providers/storage/user_preferences_service.c.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:stream_transform/stream_transform.dart';
 

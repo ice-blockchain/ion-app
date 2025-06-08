@@ -14,7 +14,7 @@ import 'package:ion/app/features/feed/data/models/entities/modifiable_post_data.
 import 'package:ion/app/features/feed/data/models/entities/post_data.c.dart';
 import 'package:ion/app/features/feed/data/models/entities/reaction_data.c.dart';
 import 'package:ion/app/features/feed/data/models/entities/repost_data.c.dart';
-import 'package:ion/app/features/feed/polls/models/poll_vote.c.dart';
+import 'package:ion/app/features/feed/polls/data/models/poll_vote.c.dart';
 import 'package:ion/app/features/ion_connect/data/models/deletion_request.c.dart';
 import 'package:ion/app/features/ion_connect/data/models/file_metadata.c.dart';
 import 'package:ion/app/features/ion_connect/data/models/ion_connect_entity.dart';

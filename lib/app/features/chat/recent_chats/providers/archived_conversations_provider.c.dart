@@ -10,7 +10,7 @@ import 'package:ion/app/features/chat/community/data/models/entities/tags/conver
 import 'package:ion/app/features/chat/e2ee/data/models/database/chat_database.c.dart';
 import 'package:ion/app/features/feed/data/models/bookmarks/bookmarks_set.c.dart';
 import 'package:ion/app/features/feed/providers/bookmarks_notifier.c.dart';
-import 'package:ion/app/services/ion_connect/encrypted_message_service.c.dart';
+import 'package:ion/app/services/providers/ion_connect/encrypted_message_service.c.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'archived_conversations_provider.c.g.dart';

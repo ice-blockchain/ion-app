@@ -6,7 +6,7 @@ import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/components/button/button.dart';
 import 'package:ion/app/extensions/extensions.dart';
-import 'package:ion/app/features/core/model/feature_flags.dart';
+import 'package:ion/app/features/core/data/models/feature_flags.dart';
 import 'package:ion/app/features/core/providers/feature_flags_provider.c.dart';
 import 'package:ion/app/features/user/data/models/user_metadata.c.dart';
 import 'package:ion/app/features/user/pages/user_picker_sheet/user_picker_sheet.dart';

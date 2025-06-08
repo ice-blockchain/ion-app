@@ -5,7 +5,7 @@ import 'dart:convert';
 import 'package:ion/app/features/auth/data/models/onboarding_state.c.dart';
 import 'package:ion/app/features/auth/providers/auth_provider.c.dart';
 import 'package:ion/app/services/media_service/data/models/media_file.c.dart';
-import 'package:ion/app/services/storage/user_preferences_service.c.dart';
+import 'package:ion/app/services/providers/storage/user_preferences_service.c.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'onboarding_data_provider.c.g.dart';

@@ -10,8 +10,8 @@ import 'package:ion/app/features/ion_connect/data/models/event_reference.c.dart'
 import 'package:ion/app/features/ion_connect/providers/ion_connect_cache.c.dart';
 import 'package:ion/app/features/optimistic_ui/core/operation_manager.dart';
 import 'package:ion/app/features/optimistic_ui/core/optimistic_service.dart';
+import 'package:ion/app/features/optimistic_ui/features/likes/data/models/post_like.c.dart';
 import 'package:ion/app/features/optimistic_ui/features/likes/like_sync_strategy_provider.c.dart';
-import 'package:ion/app/features/optimistic_ui/features/likes/model/post_like.c.dart';
 import 'package:ion/app/features/optimistic_ui/features/likes/toggle_like_intent.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 

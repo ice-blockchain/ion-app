@@ -3,7 +3,7 @@
 import 'package:flutter/material.dart';
 import 'package:ion/app/extensions/build_context.dart';
 import 'package:ion/app/extensions/theme_data.dart';
-import 'package:ion/app/features/wallets/model/network_fee_option.c.dart';
+import 'package:ion/app/features/wallets/data/models/network_fee_option.c.dart';
 import 'package:ion/app/features/wallets/views/components/arrival_time/arrival_time_indicator.dart';
 
 class ArrivalTime extends StatelessWidget {

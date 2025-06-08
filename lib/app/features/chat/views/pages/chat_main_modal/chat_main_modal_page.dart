@@ -6,7 +6,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/components/separated/separator.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/chat/e2ee/data/models/conversation_type.dart';
-import 'package:ion/app/features/core/model/feature_flags.dart';
+import 'package:ion/app/features/core/data/models/feature_flags.dart';
 import 'package:ion/app/features/core/providers/feature_flags_provider.c.dart';
 import 'package:ion/app/router/components/navigation_app_bar/navigation_app_bar.dart';
 import 'package:ion/app/router/components/sheet_content/main_modal_item.dart';

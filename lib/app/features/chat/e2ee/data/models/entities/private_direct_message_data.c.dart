@@ -24,9 +24,9 @@ import 'package:ion/app/features/ion_connect/data/models/related_pubkey.c.dart';
 import 'package:ion/app/features/ion_connect/data/models/replaceable_event_identifier.c.dart';
 import 'package:ion/app/features/ion_connect/data/models/rich_text.c.dart';
 import 'package:ion/app/features/ion_connect/ion_connect.dart';
-import 'package:ion/app/features/wallets/model/entities/funds_request_entity.c.dart';
-import 'package:ion/app/features/wallets/model/entities/wallet_asset_entity.c.dart';
-import 'package:ion/app/services/ion_connect/ion_connect_protocol_identifier_type.dart';
+import 'package:ion/app/features/wallets/data/models/entities/funds_request_entity.c.dart';
+import 'package:ion/app/features/wallets/data/models/entities/wallet_asset_entity.c.dart';
+import 'package:ion/app/services/providers/ion_connect/ion_connect_protocol_identifier_type.dart';
 import 'package:ion/app/services/uuid/uuid.dart';
 import 'package:ion/app/utils/string.dart';
 

@@ -3,7 +3,7 @@
 import 'dart:async';
 
 import 'package:ion/app/extensions/extensions.dart';
-import 'package:ion/app/features/core/model/paged.c.dart';
+import 'package:ion/app/features/core/data/models/paged.c.dart';
 import 'package:ion/app/features/ion_connect/data/models/action_source.c.dart';
 import 'package:ion/app/features/ion_connect/data/models/entities_paged_data_models.c.dart';
 import 'package:ion/app/features/ion_connect/data/models/ion_connect_entity.dart';

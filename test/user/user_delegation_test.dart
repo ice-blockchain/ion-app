@@ -3,7 +3,7 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:ion/app/features/ion_connect/ion_connect.dart';
 import 'package:ion/app/features/user/data/models/user_delegation.c.dart';
-import 'package:ion/app/services/ion_connect/ed25519_key_store.dart';
+import 'package:ion/app/services/providers/ion_connect/ed25519_key_store.dart';
 
 void main() {
   const pubkey = '477318cfb5427b9cfc66a9fa376150c1ddbc62115ae27cef72417eb959691396';

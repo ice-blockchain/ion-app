@@ -11,7 +11,7 @@ import 'package:ion/app/constants/links.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/auth/providers/auth_provider.c.dart';
 import 'package:ion/app/features/core/providers/app_info_provider.c.dart';
-import 'package:ion/app/features/settings/model/settings_action.dart';
+import 'package:ion/app/features/settings/data/models/settings_action.dart';
 import 'package:ion/app/features/settings/providers/leave_feedback_notifier.c.dart';
 import 'package:ion/app/router/app_routes.c.dart';
 import 'package:ion/app/router/components/navigation_app_bar/navigation_app_bar.dart';

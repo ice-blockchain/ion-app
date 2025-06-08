@@ -7,7 +7,7 @@ import 'package:ion/app/features/auth/providers/auth_provider.c.dart';
 import 'package:ion/app/features/chat/community/data/models/community_join_requests_state.c.dart';
 import 'package:ion/app/features/chat/community/data/models/entities/community_join_data.c.dart';
 import 'package:ion/app/features/chat/e2ee/data/models/database/chat_database.c.dart';
-import 'package:ion/app/features/core/model/feature_flags.dart';
+import 'package:ion/app/features/core/data/models/feature_flags.dart';
 import 'package:ion/app/features/core/providers/feature_flags_provider.c.dart';
 import 'package:ion/app/features/ion_connect/ion_connect.dart';
 import 'package:ion/app/features/ion_connect/providers/ion_connect_notifier.c.dart';

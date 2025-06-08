@@ -3,7 +3,7 @@
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/ion_connect/data/models/event_reference.c.dart';
 import 'package:ion/app/features/ion_connect/ion_connect.dart';
-import 'package:ion/app/features/user_block/model/database/blocked_users_database.c.dart';
+import 'package:ion/app/features/user_block/data/models/database/blocked_users_database.c.dart';
 
 extension BlockEventExtensions on EventMessage {
   BlockEventDbModel toBlockEventDbModel(EventReference eventReference) {

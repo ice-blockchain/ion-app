@@ -17,7 +17,7 @@ import 'package:ion/app/features/ion_connect/data/models/event_reference.c.dart'
 import 'package:ion/app/features/user/data/models/user_metadata.c.dart';
 import 'package:ion/app/router/app_routes.c.dart';
 import 'package:ion/app/services/media_service/data/models/media_file.c.dart';
-import 'package:ion/app/services/media_service/media_service.c.dart';
+import 'package:ion/app/services/media_service/providers/media_service.c.dart';
 import 'package:ion/generated/assets.gen.dart';
 import 'package:mime/mime.dart';
 

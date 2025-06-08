@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: ice License 1.0
 
-import 'package:ion/app/services/text_parser/model/text_matcher.dart';
+import 'package:ion/app/services/text_parser/data/models/text_matcher.dart';
 
 String? removeHttpsPrefix(String? url) {
   // Replace the https:// prefix with an empty string if it exists.

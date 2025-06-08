@@ -4,7 +4,7 @@ import 'package:ion/app/features/auth/providers/auth_provider.c.dart';
 import 'package:ion/app/features/feed/data/models/feed_category.dart';
 import 'package:ion/app/features/feed/data/models/feed_filter.dart';
 import 'package:ion/app/features/feed/data/models/feed_filters_state.c.dart';
-import 'package:ion/app/services/storage/user_preferences_service.c.dart';
+import 'package:ion/app/services/providers/storage/user_preferences_service.c.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'feed_current_filter_provider.c.g.dart';

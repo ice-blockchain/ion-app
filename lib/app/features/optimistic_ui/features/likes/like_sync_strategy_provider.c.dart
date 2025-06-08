@@ -7,8 +7,8 @@ import 'package:ion/app/features/ion_connect/data/models/action_source.c.dart';
 import 'package:ion/app/features/ion_connect/providers/ion_connect_cache.c.dart';
 import 'package:ion/app/features/ion_connect/providers/ion_connect_notifier.c.dart';
 import 'package:ion/app/features/optimistic_ui/core/optimistic_sync_strategy.dart';
+import 'package:ion/app/features/optimistic_ui/features/likes/data/models/post_like.c.dart';
 import 'package:ion/app/features/optimistic_ui/features/likes/like_sync_strategy.dart';
-import 'package:ion/app/features/optimistic_ui/features/likes/model/post_like.c.dart';
 import 'package:ion/app/features/user/providers/user_events_metadata_provider.c.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 

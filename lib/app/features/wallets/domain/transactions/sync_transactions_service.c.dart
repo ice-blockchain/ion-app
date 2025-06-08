@@ -4,12 +4,12 @@ import 'dart:async';
 
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/features/core/providers/wallets_provider.c.dart';
+import 'package:ion/app/features/wallets/data/models/wallet_view_data.c.dart';
 import 'package:ion/app/features/wallets/data/repository/crypto_wallets_repository.c.dart';
 import 'package:ion/app/features/wallets/data/repository/networks_repository.c.dart';
 import 'package:ion/app/features/wallets/domain/transactions/transaction_loader.c.dart';
 import 'package:ion/app/features/wallets/domain/transactions/transfer_status_updater.c.dart';
 import 'package:ion/app/features/wallets/domain/wallet_views/wallet_views_service.c.dart';
-import 'package:ion/app/features/wallets/model/wallet_view_data.c.dart';
 import 'package:ion/app/services/logger/logger.dart';
 import 'package:ion_identity_client/ion_identity.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';

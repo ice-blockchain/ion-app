@@ -8,7 +8,7 @@ import 'package:ion/app/features/auth/providers/delegation_complete_provider.c.d
 import 'package:ion/app/features/auth/providers/onboarding_complete_provider.c.dart';
 import 'package:ion/app/features/auth/providers/relays_assigned_provider.c.dart';
 import 'package:ion/app/features/auth/views/pages/link_new_device/link_new_device_dialog.dart';
-import 'package:ion/app/features/core/model/feature_flags.dart';
+import 'package:ion/app/features/core/data/models/feature_flags.dart';
 import 'package:ion/app/features/core/permissions/data/models/permissions_types.dart';
 import 'package:ion/app/features/core/permissions/providers/permissions_provider.c.dart';
 import 'package:ion/app/features/core/providers/feature_flags_provider.c.dart';
@@ -21,7 +21,7 @@ import 'package:ion/app/features/user/providers/user_metadata_provider.c.dart';
 import 'package:ion/app/router/app_router_listenable.dart';
 import 'package:ion/app/router/app_routes.c.dart';
 import 'package:ion/app/services/logger/logger.dart';
-import 'package:ion/app/services/ui_event_queue/ui_event_queue_notifier.c.dart';
+import 'package:ion/app/services/providers/ui_event_queue/ui_event_queue_notifier.c.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'go_router_provider.c.g.dart';

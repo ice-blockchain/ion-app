@@ -25,9 +25,9 @@ import 'package:ion/app/features/ion_connect/ion_connect.dart';
 import 'package:ion/app/features/ion_connect/providers/entities_syncer_notifier.c.dart';
 import 'package:ion/app/features/ion_connect/providers/ion_connect_event_signer_provider.c.dart';
 import 'package:ion/app/features/ion_connect/providers/ion_connect_subscription_provider.c.dart';
-import 'package:ion/app/services/ion_connect/ion_connect_gift_wrap_service.c.dart';
-import 'package:ion/app/services/ion_connect/ion_connect_seal_service.c.dart';
-import 'package:ion/app/services/media_service/media_encryption_service.c.dart';
+import 'package:ion/app/services/media_service/providers/media_encryption_service.c.dart';
+import 'package:ion/app/services/providers/ion_connect/ion_connect_gift_wrap_service.c.dart';
+import 'package:ion/app/services/providers/ion_connect/ion_connect_seal_service.c.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'e2ee_messages_subscriber.c.g.dart';

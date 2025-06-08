@@ -9,7 +9,7 @@ import 'package:ion/app/components/screen_offset/screen_bottom_offset.dart';
 import 'package:ion/app/components/screen_offset/screen_side_offset.dart';
 import 'package:ion/app/components/separated/separated_column.dart';
 import 'package:ion/app/extensions/extensions.dart';
-import 'package:ion/app/features/core/model/language.dart';
+import 'package:ion/app/features/core/data/models/language.dart';
 import 'package:ion/app/features/core/providers/app_locale_provider.c.dart';
 import 'package:ion/app/features/optimistic_ui/features/language/language_sync_strategy_provider.c.dart';
 import 'package:ion/app/features/settings/views/delete_confirm_modal.dart';

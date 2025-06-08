@@ -6,7 +6,7 @@ import 'package:ion/app/components/avatar/avatar.dart';
 import 'package:ion/app/extensions/build_context.dart';
 import 'package:ion/app/extensions/num.dart';
 import 'package:ion/app/extensions/theme_data.dart';
-import 'package:ion/app/features/wallets/model/network_data.c.dart';
+import 'package:ion/app/features/wallets/data/models/network_data.c.dart';
 import 'package:ion/app/features/wallets/views/components/network_icon_widget.dart';
 
 class NftNetwork extends ConsumerWidget {

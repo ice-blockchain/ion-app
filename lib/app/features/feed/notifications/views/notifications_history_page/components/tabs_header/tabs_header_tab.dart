@@ -2,7 +2,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:ion/app/extensions/extensions.dart';
-import 'package:ion/app/features/feed/notifications/data/model/notifications_tab_type.dart';
+import 'package:ion/app/features/feed/notifications/data/models/notifications_tab_type.dart';
 
 class NotificationsHistoryTab extends StatelessWidget {
   const NotificationsHistoryTab({

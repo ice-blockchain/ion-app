@@ -8,7 +8,7 @@ import 'package:ion/app/extensions/asset_gen_image.dart';
 import 'package:ion/app/extensions/build_context.dart';
 import 'package:ion/app/extensions/num.dart';
 import 'package:ion/app/extensions/theme_data.dart';
-import 'package:ion/app/features/core/model/feature_flags.dart';
+import 'package:ion/app/features/core/data/models/feature_flags.dart';
 import 'package:ion/app/features/core/providers/feature_flags_provider.c.dart';
 import 'package:ion/app/features/wallets/providers/filtered_assets_provider.c.dart';
 import 'package:ion/app/features/wallets/views/pages/wallet_page/components/header/wallet_tabs_header_loader.dart';

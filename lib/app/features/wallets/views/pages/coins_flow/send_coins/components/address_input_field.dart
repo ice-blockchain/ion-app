@@ -5,7 +5,7 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:ion/app/components/inputs/text_input/components/text_input_icons.dart';
 import 'package:ion/app/components/inputs/text_input/text_input.dart';
 import 'package:ion/app/extensions/extensions.dart';
-import 'package:ion/app/features/wallets/model/network_data.c.dart';
+import 'package:ion/app/features/wallets/data/models/network_data.c.dart';
 import 'package:ion/app/features/wallets/utils/wallet_address_validator.dart';
 import 'package:ion/app/hooks/use_on_init.dart';
 import 'package:ion/generated/assets.gen.dart';

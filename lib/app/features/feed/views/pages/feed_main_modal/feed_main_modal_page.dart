@@ -16,8 +16,8 @@ import 'package:ion/app/router/components/navigation_app_bar/navigation_app_bar.
 import 'package:ion/app/router/components/sheet_content/main_modal_item.dart';
 import 'package:ion/app/router/components/sheet_content/sheet_content.dart';
 import 'package:ion/app/router/utils/show_simple_bottom_sheet.dart';
-import 'package:ion/app/services/media_service/banuba_service.c.dart';
 import 'package:ion/app/services/media_service/data/models/media_file.c.dart';
+import 'package:ion/app/services/media_service/providers/banuba_service.c.dart';
 
 class FeedMainModalPage extends ConsumerWidget {
   const FeedMainModalPage({super.key});

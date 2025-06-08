@@ -12,7 +12,7 @@ import 'package:ion/app/features/chat/recent_chats/model/conversation_list_item.
 import 'package:ion/app/features/feed/data/models/bookmarks/bookmarks_set.c.dart';
 import 'package:ion/app/features/feed/providers/bookmarks_notifier.c.dart';
 import 'package:ion/app/features/ion_connect/providers/ion_connect_notifier.c.dart';
-import 'package:ion/app/services/ion_connect/encrypted_message_service.c.dart';
+import 'package:ion/app/services/providers/ion_connect/encrypted_message_service.c.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'toggle_archive_conversation_provider.c.g.dart';
