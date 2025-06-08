@@ -4,9 +4,9 @@ import 'dart:async';
 
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/features/auth/providers/auth_provider.c.dart';
+import 'package:ion/app/features/ion_connect/data/models/action_source.c.dart';
+import 'package:ion/app/features/ion_connect/data/models/disliked_relay_urls_collection.c.dart';
 import 'package:ion/app/features/ion_connect/ion_connect.dart';
-import 'package:ion/app/features/ion_connect/model/action_source.c.dart';
-import 'package:ion/app/features/ion_connect/model/disliked_relay_urls_collection.c.dart';
 import 'package:ion/app/features/ion_connect/providers/relay_creation_provider.c.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 

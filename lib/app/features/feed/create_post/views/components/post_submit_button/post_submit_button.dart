@@ -12,9 +12,9 @@ import 'package:ion/app/features/feed/create_post/views/hooks/use_can_submit_pos
 import 'package:ion/app/features/feed/polls/providers/poll_draft_provider.c.dart';
 import 'package:ion/app/features/feed/providers/selected_who_can_reply_option_provider.c.dart';
 import 'package:ion/app/features/feed/views/components/toolbar_buttons/toolbar_send_button.dart';
-import 'package:ion/app/features/ion_connect/model/event_reference.c.dart';
-import 'package:ion/app/features/ion_connect/model/ion_connect_entity.dart';
-import 'package:ion/app/features/ion_connect/model/media_attachment.dart';
+import 'package:ion/app/features/ion_connect/data/models/event_reference.c.dart';
+import 'package:ion/app/features/ion_connect/data/models/ion_connect_entity.dart';
+import 'package:ion/app/features/ion_connect/data/models/media_attachment.dart';
 import 'package:ion/app/features/ion_connect/providers/ion_connect_entity_provider.c.dart';
 import 'package:ion/app/services/media_service/data/models/media_file.c.dart';
 import 'package:ion/app/services/media_service/media_service.c.dart';

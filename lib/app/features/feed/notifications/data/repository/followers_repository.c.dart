@@ -6,7 +6,7 @@ import 'package:ion/app/features/feed/notifications/data/database/dao/followers_
 import 'package:ion/app/features/feed/notifications/data/database/notifications_database.c.dart';
 import 'package:ion/app/features/feed/notifications/data/model/ion_notification.c.dart';
 import 'package:ion/app/features/feed/notifications/data/repository/ion_notification_repository.dart';
-import 'package:ion/app/features/ion_connect/model/ion_connect_entity.dart';
+import 'package:ion/app/features/ion_connect/data/models/ion_connect_entity.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'followers_repository.c.g.dart';

@@ -4,13 +4,13 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/exceptions/exceptions.dart';
 import 'package:ion/app/features/auth/providers/auth_provider.c.dart';
 import 'package:ion/app/features/feed/notifications/data/repository/followers_repository.c.dart';
+import 'package:ion/app/features/ion_connect/data/models/ion_connect_entity.dart';
+import 'package:ion/app/features/ion_connect/data/models/search_extension.dart';
 import 'package:ion/app/features/ion_connect/ion_connect.dart';
-import 'package:ion/app/features/ion_connect/model/ion_connect_entity.dart';
-import 'package:ion/app/features/ion_connect/model/search_extension.dart';
 import 'package:ion/app/features/ion_connect/providers/entities_syncer_notifier.c.dart';
 import 'package:ion/app/features/ion_connect/providers/ion_connect_subscription_provider.c.dart';
-import 'package:ion/app/features/user/model/follow_list.c.dart';
-import 'package:ion/app/features/user/model/user_metadata.c.dart';
+import 'package:ion/app/features/user/data/models/follow_list.c.dart';
+import 'package:ion/app/features/user/data/models/user_metadata.c.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'notification_followers_subscription_provider.c.g.dart';

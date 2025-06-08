@@ -8,8 +8,8 @@ import 'package:ion/app/features/feed/data/models/entities/modifiable_post_data.
 import 'package:ion/app/features/feed/views/pages/fullscreen_media/components/image_carousel.dart';
 import 'package:ion/app/features/feed/views/pages/fullscreen_media/components/single_media_view.dart';
 import 'package:ion/app/features/feed/views/pages/fullscreen_media/components/video_carousel.dart';
-import 'package:ion/app/features/ion_connect/model/event_reference.c.dart';
-import 'package:ion/app/features/ion_connect/model/media_attachment.dart';
+import 'package:ion/app/features/ion_connect/data/models/event_reference.c.dart';
+import 'package:ion/app/features/ion_connect/data/models/media_attachment.dart';
 
 class MediaContentHandler extends HookConsumerWidget {
   const MediaContentHandler({

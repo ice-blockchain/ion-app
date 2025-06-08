@@ -8,7 +8,7 @@ import 'package:ion/app/components/separated/separated_column.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/settings/components/selectable_options_group.dart';
 import 'package:ion/app/features/settings/model/privacy_options.dart';
-import 'package:ion/app/features/user/model/user_metadata.c.dart';
+import 'package:ion/app/features/user/data/models/user_metadata.c.dart';
 import 'package:ion/app/features/user/providers/update_user_metadata_notifier.c.dart';
 import 'package:ion/app/features/user/providers/user_metadata_provider.c.dart';
 import 'package:ion/app/router/components/navigation_app_bar/navigation_app_bar.dart';

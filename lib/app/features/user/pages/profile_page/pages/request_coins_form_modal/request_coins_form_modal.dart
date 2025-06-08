@@ -13,7 +13,7 @@ import 'package:ion/app/components/select/select_coin_button.dart';
 import 'package:ion/app/components/select/select_network_button.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/extensions/object.dart';
-import 'package:ion/app/features/user/model/payment_type.dart';
+import 'package:ion/app/features/user/data/models/payment_type.dart';
 import 'package:ion/app/features/user/pages/profile_page/components/user_payment_flow_card/user_payment_flow_card.dart';
 import 'package:ion/app/features/user/providers/request_coins_form_provider.c.dart';
 import 'package:ion/app/features/user/providers/request_coins_submit_notifier.c.dart';

@@ -13,7 +13,7 @@ import 'package:ion/app/features/feed/views/components/post/post.dart';
 import 'package:ion/app/features/feed/views/components/post/post_skeleton.dart';
 import 'package:ion/app/features/feed/views/components/quoted_entity_frame/quoted_entity_frame.dart';
 import 'package:ion/app/features/feed/views/components/user_info/user_info.dart';
-import 'package:ion/app/features/ion_connect/model/event_reference.c.dart';
+import 'package:ion/app/features/ion_connect/data/models/event_reference.c.dart';
 
 class QuotedEntity extends HookConsumerWidget {
   const QuotedEntity({

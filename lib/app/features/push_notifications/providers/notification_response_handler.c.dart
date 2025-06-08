@@ -12,13 +12,13 @@ import 'package:ion/app/features/feed/data/models/entities/modifiable_post_data.
 import 'package:ion/app/features/feed/data/models/entities/post_data.c.dart';
 import 'package:ion/app/features/feed/data/models/entities/reaction_data.c.dart';
 import 'package:ion/app/features/feed/data/models/entities/repost_data.c.dart';
+import 'package:ion/app/features/ion_connect/data/models/event_reference.c.dart';
+import 'package:ion/app/features/ion_connect/data/models/ion_connect_gift_wrap.c.dart';
 import 'package:ion/app/features/ion_connect/ion_connect.dart';
-import 'package:ion/app/features/ion_connect/model/event_reference.c.dart';
-import 'package:ion/app/features/ion_connect/model/ion_connect_gift_wrap.c.dart';
 import 'package:ion/app/features/ion_connect/providers/ion_connect_event_parser.c.dart';
 import 'package:ion/app/features/push_notifications/data/models/ion_connect_push_data_payload.c.dart';
 import 'package:ion/app/features/push_notifications/providers/notification_response_data_provider.c.dart';
-import 'package:ion/app/features/user/model/follow_list.c.dart';
+import 'package:ion/app/features/user/data/models/follow_list.c.dart';
 import 'package:ion/app/features/wallets/model/entities/funds_request_entity.c.dart';
 import 'package:ion/app/features/wallets/model/entities/wallet_asset_entity.c.dart';
 import 'package:ion/app/router/app_routes.c.dart';

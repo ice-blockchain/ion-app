@@ -8,9 +8,9 @@ import 'package:ion/app/exceptions/exceptions.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/chat/community/models/entities/tags/master_pubkey_tag.c.dart';
 import 'package:ion/app/features/chat/community/models/entities/tags/pubkey_tag.c.dart';
+import 'package:ion/app/features/ion_connect/data/models/event_serializable.dart';
+import 'package:ion/app/features/ion_connect/data/models/ion_connect_entity.dart';
 import 'package:ion/app/features/ion_connect/ion_connect.dart';
-import 'package:ion/app/features/ion_connect/model/event_serializable.dart';
-import 'package:ion/app/features/ion_connect/model/ion_connect_entity.dart';
 
 part 'blocked_user_entity.c.freezed.dart';
 

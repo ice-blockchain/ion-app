@@ -8,7 +8,7 @@ import 'package:ion/app/components/progress_bar/centered_loading_indicator.dart'
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/core/providers/app_lifecycle_provider.c.dart';
 import 'package:ion/app/features/core/providers/video_player_provider.c.dart';
-import 'package:ion/app/features/ion_connect/model/event_reference.c.dart';
+import 'package:ion/app/features/ion_connect/data/models/event_reference.c.dart';
 import 'package:ion/app/features/video/views/components/video_button.dart';
 import 'package:ion/app/features/video/views/components/video_progress.dart';
 import 'package:ion/app/features/video/views/components/video_slider.dart';

@@ -1,8 +1,8 @@
 // SPDX-License-Identifier: ice License 1.0
 
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:ion/app/features/ion_connect/data/models/event_reference.c.dart';
 import 'package:ion/app/features/ion_connect/ion_connect.dart';
-import 'package:ion/app/features/ion_connect/model/event_reference.c.dart';
 import 'package:ion/app/features/wallets/data/repository/request_assets_repository.c.dart';
 import 'package:ion/app/features/wallets/data/repository/transactions_repository.c.dart';
 import 'package:ion/app/features/wallets/model/entities/funds_request_entity.c.dart';

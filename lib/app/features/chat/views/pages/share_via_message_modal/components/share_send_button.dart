@@ -11,8 +11,8 @@ import 'package:ion/app/features/chat/e2ee/providers/send_chat_message_service.c
 import 'package:ion/app/features/chat/providers/share_post_to_chat_provider.c.dart';
 import 'package:ion/app/features/core/views/pages/error_modal.dart';
 import 'package:ion/app/features/feed/providers/ion_connect_entity_with_counters_provider.c.dart';
-import 'package:ion/app/features/ion_connect/model/event_reference.c.dart';
-import 'package:ion/app/features/user/model/user_metadata.c.dart';
+import 'package:ion/app/features/ion_connect/data/models/event_reference.c.dart';
+import 'package:ion/app/features/user/data/models/user_metadata.c.dart';
 import 'package:ion/generated/assets.gen.dart';
 
 class ShareSendButton extends HookConsumerWidget {

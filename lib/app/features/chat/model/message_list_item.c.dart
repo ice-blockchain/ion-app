@@ -4,8 +4,8 @@
 
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:ion/app/features/chat/model/database/chat_database.c.dart';
+import 'package:ion/app/features/ion_connect/data/models/media_attachment.dart';
 import 'package:ion/app/features/ion_connect/ion_connect.dart';
-import 'package:ion/app/features/ion_connect/model/media_attachment.dart';
 
 part 'message_list_item.c.freezed.dart';
 

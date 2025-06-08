@@ -4,7 +4,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/exceptions/exceptions.dart';
 
 import 'package:ion/app/features/search/model/feed_search_source.dart';
-import 'package:ion/app/features/user/model/user_relays.c.dart';
+import 'package:ion/app/features/user/data/models/user_relays.c.dart';
 import 'package:ion/app/features/user/providers/follow_list_provider.c.dart';
 import 'package:ion/app/features/user/providers/user_relays_manager.c.dart';
 import 'package:ion/app/utils/algorithm.dart';

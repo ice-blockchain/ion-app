@@ -15,9 +15,9 @@ import 'package:ion/app/features/feed/data/models/entities/post_data.c.dart';
 import 'package:ion/app/features/feed/views/components/article/article.dart';
 import 'package:ion/app/features/feed/views/components/post/post.dart';
 import 'package:ion/app/features/feed/views/components/user_info/user_info.dart';
+import 'package:ion/app/features/ion_connect/data/models/entity_data_with_media_content.dart';
+import 'package:ion/app/features/ion_connect/data/models/ion_connect_entity.dart';
 import 'package:ion/app/features/ion_connect/ion_connect.dart';
-import 'package:ion/app/features/ion_connect/model/entity_data_with_media_content.dart';
-import 'package:ion/app/features/ion_connect/model/ion_connect_entity.dart';
 import 'package:ion/app/features/ion_connect/views/hooks/use_parsed_media_content.dart';
 import 'package:ion/app/router/app_routes.c.dart';
 

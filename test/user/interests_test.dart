@@ -2,9 +2,9 @@
 
 import 'package:flutter_test/flutter_test.dart';
 import 'package:ion/app/features/chat/community/models/entities/tags/master_pubkey_tag.c.dart';
+import 'package:ion/app/features/ion_connect/data/models/event_reference.c.dart';
 import 'package:ion/app/features/ion_connect/ion_connect.dart';
-import 'package:ion/app/features/ion_connect/model/event_reference.c.dart';
-import 'package:ion/app/features/user/model/interests.c.dart';
+import 'package:ion/app/features/user/data/models/interests.c.dart';
 import 'package:ion/app/services/ion_connect/ed25519_key_store.dart';
 
 void main() {

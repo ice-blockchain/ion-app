@@ -9,7 +9,7 @@ import 'package:ion/app/features/core/permissions/views/components/permission_aw
 import 'package:ion/app/features/core/permissions/views/components/permission_dialogs/permission_sheets.dart';
 import 'package:ion/app/features/feed/create_article/views/components/article_image_container.dart';
 import 'package:ion/app/features/gallery/views/pages/media_picker_type.dart';
-import 'package:ion/app/features/user/model/image_processor_state.c.dart';
+import 'package:ion/app/features/user/data/models/image_processor_state.c.dart';
 import 'package:ion/app/features/user/providers/image_proccessor_notifier.c.dart';
 import 'package:ion/app/router/app_routes.c.dart';
 import 'package:ion/app/services/media_service/data/models/media_file.c.dart';

@@ -13,7 +13,7 @@ import 'package:ion/app/features/components/bookmarks/components/bookmarks_colle
 import 'package:ion/app/features/components/bookmarks/components/bookmarks_collection_tile_select_action.dart';
 import 'package:ion/app/features/feed/data/models/bookmarks/bookmarks_collection.c.dart';
 import 'package:ion/app/features/feed/providers/feed_bookmarks_notifier.c.dart';
-import 'package:ion/app/features/ion_connect/model/event_reference.c.dart';
+import 'package:ion/app/features/ion_connect/data/models/event_reference.c.dart';
 import 'package:ion/generated/assets.gen.dart';
 
 enum BookmarksCollectionTileMode { select, edit }

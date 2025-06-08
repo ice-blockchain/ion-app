@@ -11,7 +11,7 @@ import 'package:ion/app/components/text_editor/components/custom_blocks/text_edi
 import 'package:ion/app/components/text_editor/components/custom_blocks/unknown/text_editor_unknown_embed_builder.dart';
 import 'package:ion/app/components/text_editor/custom_recognizer_builder.dart';
 import 'package:ion/app/components/text_editor/utils/text_editor_styles.dart';
-import 'package:ion/app/features/ion_connect/model/media_attachment.dart';
+import 'package:ion/app/features/ion_connect/data/models/media_attachment.dart';
 
 class TextEditorPreview extends HookWidget {
   const TextEditorPreview({

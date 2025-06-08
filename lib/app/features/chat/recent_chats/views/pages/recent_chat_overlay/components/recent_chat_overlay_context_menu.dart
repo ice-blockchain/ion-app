@@ -13,7 +13,7 @@ import 'package:ion/app/features/chat/e2ee/model/entities/private_direct_message
 import 'package:ion/app/features/chat/providers/muted_conversations_provider.c.dart';
 import 'package:ion/app/features/chat/recent_chats/model/conversation_list_item.c.dart';
 import 'package:ion/app/features/chat/recent_chats/providers/toggle_archive_conversation_provider.c.dart';
-import 'package:ion/app/features/user/models/report_reason.c.dart';
+import 'package:ion/app/features/user/data/models/report_reason.c.dart';
 import 'package:ion/app/features/user/pages/profile_page/pages/block_user_modal/block_user_modal.dart';
 import 'package:ion/app/features/user/providers/report_notifier.c.dart';
 import 'package:ion/app/features/user_block/optimistic_ui/block_user_provider.c.dart';

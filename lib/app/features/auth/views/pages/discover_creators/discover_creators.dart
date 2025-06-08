@@ -18,7 +18,7 @@ import 'package:ion/app/features/auth/providers/paginated_users_metadata_provide
 import 'package:ion/app/features/auth/views/components/auth_scrolled_body/auth_scrolled_body.dart';
 import 'package:ion/app/features/auth/views/pages/discover_creators/creator_list_item.dart';
 import 'package:ion/app/features/components/verify_identity/verify_identity_prompt_dialog_helper.dart';
-import 'package:ion/app/features/user/model/user_metadata.c.dart';
+import 'package:ion/app/features/user/data/models/user_metadata.c.dart';
 import 'package:ion/app/hooks/use_selected_state.dart';
 import 'package:ion/app/router/components/sheet_content/sheet_content.dart';
 import 'package:ion_identity_client/ion_identity.dart';

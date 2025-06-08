@@ -25,7 +25,7 @@ import 'package:ion/app/features/feed/views/pages/article_details_page/component
 import 'package:ion/app/features/feed/views/pages/article_details_page/components/more_articles_from_topic.dart';
 import 'package:ion/app/features/feed/views/pages/article_details_page/components/user_biography.dart';
 import 'package:ion/app/features/feed/views/pages/article_details_page/hooks/use_scroll_indicator.dart';
-import 'package:ion/app/features/ion_connect/model/event_reference.c.dart';
+import 'package:ion/app/features/ion_connect/data/models/event_reference.c.dart';
 import 'package:ion/app/router/components/navigation_app_bar/navigation_app_bar.dart';
 import 'package:ion/app/services/markdown/quill.dart';
 

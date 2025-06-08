@@ -12,7 +12,7 @@ import 'package:ion/app/features/feed/data/models/entities/generic_repost.c.dart
 import 'package:ion/app/features/feed/data/models/entities/modifiable_post_data.c.dart';
 import 'package:ion/app/features/feed/notifications/data/model/ion_notification.c.dart';
 import 'package:ion/app/features/feed/providers/ion_connect_entity_with_counters_provider.c.dart';
-import 'package:ion/app/features/ion_connect/model/ion_connect_entity.dart';
+import 'package:ion/app/features/ion_connect/data/models/ion_connect_entity.dart';
 import 'package:ion/app/features/user/providers/user_metadata_provider.c.dart';
 import 'package:ion/app/router/app_routes.c.dart';
 import 'package:ion/app/utils/date.dart';

@@ -19,9 +19,9 @@ import 'package:ion/app/features/chat/recent_chats/model/conversation_list_item.
 import 'package:ion/app/features/core/providers/env_provider.c.dart';
 import 'package:ion/app/features/feed/data/models/entities/generic_repost.c.dart';
 import 'package:ion/app/features/feed/notifications/data/database/converters/event_reference_converter.c.dart';
+import 'package:ion/app/features/ion_connect/data/models/event_reference.c.dart';
 import 'package:ion/app/features/ion_connect/database/converters/event_tags_converter.dart';
 import 'package:ion/app/features/ion_connect/ion_connect.dart';
-import 'package:ion/app/features/ion_connect/model/event_reference.c.dart';
 import 'package:ion/app/features/ion_connect/providers/ion_connect_event_signer_provider.c.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 

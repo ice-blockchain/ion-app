@@ -2,9 +2,9 @@
 
 import 'package:drift/drift.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:ion/app/features/ion_connect/data/models/event_reference.c.dart';
 import 'package:ion/app/features/ion_connect/database/event_messages_database.c.dart';
 import 'package:ion/app/features/ion_connect/database/tables/event_messages_table.c.dart';
-import 'package:ion/app/features/ion_connect/model/event_reference.c.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'event_messages_dao.c.g.dart';

@@ -11,7 +11,7 @@ import 'package:ion/app/features/feed/providers/can_reply_notifier.c.dart';
 import 'package:ion/app/features/feed/providers/counters/replied_events_provider.c.dart';
 import 'package:ion/app/features/feed/providers/counters/replies_count_provider.c.dart';
 import 'package:ion/app/features/feed/views/pages/who_can_reply_info_modal/who_can_reply_info_modal.dart';
-import 'package:ion/app/features/ion_connect/model/event_reference.c.dart';
+import 'package:ion/app/features/ion_connect/data/models/event_reference.c.dart';
 import 'package:ion/app/features/ion_connect/providers/ion_connect_entity_provider.c.dart';
 import 'package:ion/app/router/app_routes.c.dart';
 import 'package:ion/app/router/utils/show_simple_bottom_sheet.dart';

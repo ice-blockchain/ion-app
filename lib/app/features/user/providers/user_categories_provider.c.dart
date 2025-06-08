@@ -4,7 +4,7 @@ import 'dart:convert';
 
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/features/core/providers/app_locale_provider.c.dart';
-import 'package:ion/app/features/user/model/user_category.c.dart';
+import 'package:ion/app/features/user/data/models/user_category.c.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'user_categories_provider.c.g.dart';

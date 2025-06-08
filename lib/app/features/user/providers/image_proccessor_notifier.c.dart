@@ -2,7 +2,7 @@
 
 import 'package:ion/app/exceptions/exceptions.dart';
 import 'package:ion/app/features/gallery/providers/gallery_provider.c.dart';
-import 'package:ion/app/features/user/model/image_processor_state.c.dart';
+import 'package:ion/app/features/user/data/models/image_processor_state.c.dart';
 import 'package:ion/app/services/compressors/image_compressor.c.dart';
 import 'package:ion/app/services/logger/logger.dart';
 import 'package:ion/app/services/media_service/data/models/media_file.c.dart';

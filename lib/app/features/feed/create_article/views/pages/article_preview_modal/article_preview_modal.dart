@@ -15,7 +15,7 @@ import 'package:ion/app/features/feed/create_article/views/pages/article_preview
 import 'package:ion/app/features/feed/create_article/views/pages/article_preview_modal/components/select_article_who_can_reply_item.dart';
 import 'package:ion/app/features/feed/providers/article/select_topics_provider.c.dart';
 import 'package:ion/app/features/feed/providers/selected_who_can_reply_option_provider.c.dart';
-import 'package:ion/app/features/ion_connect/model/event_reference.c.dart';
+import 'package:ion/app/features/ion_connect/data/models/event_reference.c.dart';
 import 'package:ion/app/router/components/navigation_app_bar/navigation_app_bar.dart';
 import 'package:ion/app/router/components/sheet_content/sheet_content.dart';
 import 'package:ion/generated/assets.gen.dart';

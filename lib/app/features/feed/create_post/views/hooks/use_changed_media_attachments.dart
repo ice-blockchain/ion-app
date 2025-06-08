@@ -2,8 +2,8 @@
 
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:ion/app/features/feed/data/models/entities/modifiable_post_data.c.dart';
-import 'package:ion/app/features/ion_connect/model/ion_connect_entity.dart';
-import 'package:ion/app/features/ion_connect/model/media_attachment.dart';
+import 'package:ion/app/features/ion_connect/data/models/ion_connect_entity.dart';
+import 'package:ion/app/features/ion_connect/data/models/media_attachment.dart';
 
 bool useChangedMediaAttachments(
   Map<String, MediaAttachment> mediaAttachments,

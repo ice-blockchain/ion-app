@@ -4,7 +4,7 @@ import 'dart:async';
 
 import 'package:collection/collection.dart';
 import 'package:ion/app/features/core/providers/wallets_provider.c.dart';
-import 'package:ion/app/features/user/model/request_coins_form_data.c.dart';
+import 'package:ion/app/features/user/data/models/request_coins_form_data.c.dart';
 import 'package:ion/app/features/wallets/domain/coins/coins_service.c.dart';
 import 'package:ion/app/features/wallets/model/coin_in_wallet_data.c.dart';
 import 'package:ion/app/features/wallets/model/coins_group.c.dart';

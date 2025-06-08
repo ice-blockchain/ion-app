@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: ice License 1.0
 
-import 'package:ion/app/features/ion_connect/model/relay_info.c.dart';
+import 'package:ion/app/features/ion_connect/data/models/relay_info.c.dart';
 import 'package:ion/app/features/push_notifications/providers/relay_firebase_app_config_provider.c.dart';
 import 'package:ion/app/services/firebase/firebase_messaging_service_provider.c.dart';
 import 'package:ion/app/services/firebase/firebase_service_provider.c.dart';

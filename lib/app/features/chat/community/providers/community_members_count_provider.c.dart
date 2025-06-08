@@ -7,7 +7,7 @@ import 'package:ion/app/features/chat/community/models/entities/community_join_d
 import 'package:ion/app/features/core/providers/env_provider.c.dart';
 import 'package:ion/app/features/feed/data/models/entities/event_count_request_data.c.dart';
 import 'package:ion/app/features/feed/data/models/entities/event_count_result_data.c.dart';
-import 'package:ion/app/features/ion_connect/model/action_source.c.dart';
+import 'package:ion/app/features/ion_connect/data/models/action_source.c.dart';
 import 'package:ion/app/features/user/providers/count_provider.c.dart';
 import 'package:nostr_dart/nostr_dart.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';

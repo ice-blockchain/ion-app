@@ -3,7 +3,7 @@
 import 'dart:convert';
 
 import 'package:drift/drift.dart';
-import 'package:ion/app/features/ion_connect/model/event_reference.c.dart';
+import 'package:ion/app/features/ion_connect/data/models/event_reference.c.dart';
 
 class EventReferenceConverter extends TypeConverter<EventReference, String>
     with JsonTypeConverter2<EventReference, String, List<String>> {

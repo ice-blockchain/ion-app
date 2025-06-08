@@ -1,12 +1,12 @@
 // SPDX-License-Identifier: ice License 1.0
 
 import 'package:collection/collection.dart';
+import 'package:ion/app/features/ion_connect/data/models/file_alt.dart';
 import 'package:ion/app/features/ion_connect/ion_connect.dart';
-import 'package:ion/app/features/ion_connect/model/file_alt.dart';
 import 'package:ion/app/features/ion_connect/providers/ion_connect_notifier.c.dart';
 import 'package:ion/app/features/ion_connect/providers/ion_connect_upload_notifier.c.dart';
 import 'package:ion/app/features/settings/model/privacy_options.dart';
-import 'package:ion/app/features/user/model/user_metadata.c.dart';
+import 'package:ion/app/features/user/data/models/user_metadata.c.dart';
 import 'package:ion/app/features/user/providers/badges_notifier.c.dart';
 import 'package:ion/app/features/user/providers/user_metadata_provider.c.dart';
 import 'package:ion/app/features/user/providers/user_social_profile_provider.c.dart';

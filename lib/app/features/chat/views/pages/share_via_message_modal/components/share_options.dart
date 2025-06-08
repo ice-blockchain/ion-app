@@ -16,7 +16,7 @@ import 'package:ion/app/features/chat/views/pages/share_via_message_modal/compon
 import 'package:ion/app/features/feed/data/models/entities/modifiable_post_data.c.dart';
 import 'package:ion/app/features/feed/providers/feed_bookmarks_notifier.c.dart';
 import 'package:ion/app/features/feed/providers/ion_connect_entity_with_counters_provider.c.dart';
-import 'package:ion/app/features/ion_connect/model/event_reference.c.dart';
+import 'package:ion/app/features/ion_connect/data/models/event_reference.c.dart';
 import 'package:ion/app/features/ion_connect/providers/ion_connect_entity_provider.c.dart';
 import 'package:ion/app/features/user/providers/user_metadata_provider.c.dart';
 import 'package:ion/app/router/app_routes.c.dart';

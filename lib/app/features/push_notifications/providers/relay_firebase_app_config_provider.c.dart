@@ -5,7 +5,7 @@ import 'dart:convert';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/auth/providers/auth_provider.c.dart';
 import 'package:ion/app/features/core/providers/env_provider.c.dart';
-import 'package:ion/app/features/ion_connect/model/relay_info.c.dart';
+import 'package:ion/app/features/ion_connect/data/models/relay_info.c.dart';
 import 'package:ion/app/features/ion_connect/providers/relay_info_provider.c.dart';
 import 'package:ion/app/features/push_notifications/data/models/relay_firebase_config.c.dart';
 import 'package:ion/app/features/user/providers/ranked_user_relays_provider.c.dart';

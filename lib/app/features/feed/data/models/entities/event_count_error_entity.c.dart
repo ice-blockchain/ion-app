@@ -5,8 +5,9 @@ import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:ion/app/exceptions/exceptions.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/chat/community/models/entities/tags/master_pubkey_tag.c.dart';
-import 'package:ion/app/features/ion_connect/model/event_reference.c.dart';
-import 'package:ion/app/features/ion_connect/model/ion_connect_entity.dart';
+import 'package:ion/app/features/ion_connect/data/models/event_reference.c.dart';
+import 'package:ion/app/features/ion_connect/data/models/ion_connect_entity.dart';
+import 'package:ion/app/features/ion_connect/ion_connect.dart';
 import 'package:nostr_dart/nostr_dart.dart';
 
 part 'event_count_error_entity.c.freezed.dart';

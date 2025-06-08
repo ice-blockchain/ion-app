@@ -11,7 +11,7 @@ import 'package:ion/app/features/feed/notifications/data/database/notifications_
 import 'package:ion/app/features/feed/notifications/data/database/tables/comments_table.c.dart';
 import 'package:ion/app/features/feed/notifications/data/database/tables/followers_table.c.dart';
 import 'package:ion/app/features/feed/notifications/data/database/tables/likes_table.c.dart';
-import 'package:ion/app/features/ion_connect/model/event_reference.c.dart';
+import 'package:ion/app/features/ion_connect/data/models/event_reference.c.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'notifications_database.c.g.dart';

@@ -14,8 +14,8 @@ import 'package:ion/app/features/chat/views/components/message_items/components.
 import 'package:ion/app/features/chat/views/components/message_items/message_reactions/message_reactions.dart';
 import 'package:ion/app/features/chat/views/components/message_items/message_types/money_message/components/money_message_button.dart';
 import 'package:ion/app/features/chat/views/components/message_items/message_types/reply_message/reply_message.dart';
+import 'package:ion/app/features/ion_connect/data/models/event_reference.c.dart';
 import 'package:ion/app/features/ion_connect/ion_connect.dart';
-import 'package:ion/app/features/ion_connect/model/event_reference.c.dart';
 import 'package:ion/app/features/wallets/model/coin_data.c.dart';
 import 'package:ion/app/features/wallets/model/entities/funds_request_entity.c.dart';
 import 'package:ion/app/features/wallets/model/entities/wallet_asset_entity.c.dart';

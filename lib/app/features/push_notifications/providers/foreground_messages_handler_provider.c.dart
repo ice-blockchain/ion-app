@@ -5,7 +5,7 @@ import 'dart:convert';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/auth/providers/auth_provider.c.dart';
 import 'package:ion/app/features/chat/e2ee/providers/gift_unwrap_service_provider.c.dart';
-import 'package:ion/app/features/ion_connect/model/ion_connect_gift_wrap.c.dart';
+import 'package:ion/app/features/ion_connect/data/models/ion_connect_gift_wrap.c.dart';
 import 'package:ion/app/features/push_notifications/data/models/ion_connect_push_data_payload.c.dart';
 import 'package:ion/app/features/push_notifications/providers/configure_firebase_app_provider.c.dart';
 import 'package:ion/app/features/push_notifications/providers/notification_data_parser_provider.c.dart';

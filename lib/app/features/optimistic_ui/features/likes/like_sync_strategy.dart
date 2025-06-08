@@ -2,7 +2,7 @@
 
 import 'package:ion/app/features/feed/data/models/entities/post_data.c.dart';
 import 'package:ion/app/features/feed/data/models/entities/reaction_data.c.dart';
-import 'package:ion/app/features/ion_connect/model/event_reference.c.dart';
+import 'package:ion/app/features/ion_connect/data/models/event_reference.c.dart';
 import 'package:ion/app/features/optimistic_ui/core/optimistic_sync_strategy.dart';
 import 'package:ion/app/features/optimistic_ui/features/likes/model/post_like.c.dart';
 

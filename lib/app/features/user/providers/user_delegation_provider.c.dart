@@ -4,12 +4,12 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/exceptions/exceptions.dart';
 import 'package:ion/app/features/auth/providers/auth_provider.c.dart';
 import 'package:ion/app/features/core/providers/main_wallet_provider.c.dart';
+import 'package:ion/app/features/ion_connect/data/models/action_source.c.dart';
+import 'package:ion/app/features/ion_connect/data/models/event_reference.c.dart';
 import 'package:ion/app/features/ion_connect/ion_connect.dart';
-import 'package:ion/app/features/ion_connect/model/action_source.c.dart';
-import 'package:ion/app/features/ion_connect/model/event_reference.c.dart';
 import 'package:ion/app/features/ion_connect/providers/ion_connect_cache.c.dart';
 import 'package:ion/app/features/ion_connect/providers/ion_connect_notifier.c.dart';
-import 'package:ion/app/features/user/model/user_delegation.c.dart';
+import 'package:ion/app/features/user/data/models/user_delegation.c.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'user_delegation_provider.c.g.dart';

@@ -14,7 +14,7 @@ import 'package:ion/app/features/feed/providers/counters/reposted_events_provide
 import 'package:ion/app/features/feed/providers/delete_entity_provider.c.dart';
 import 'package:ion/app/features/feed/providers/repost_notifier.c.dart';
 import 'package:ion/app/features/feed/views/pages/repost_options_modal/repost_option_action.dart';
-import 'package:ion/app/features/ion_connect/model/event_reference.c.dart';
+import 'package:ion/app/features/ion_connect/data/models/event_reference.c.dart';
 import 'package:ion/app/router/app_routes.c.dart';
 import 'package:ion/app/router/components/navigation_app_bar/navigation_app_bar.dart';
 import 'package:ion/app/router/components/navigation_app_bar/navigation_close_button.dart';

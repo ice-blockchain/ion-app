@@ -18,7 +18,7 @@ import 'package:ion/app/features/feed/create_post/views/pages/post_form_modal/ho
 import 'package:ion/app/features/feed/polls/providers/poll_draft_provider.c.dart';
 import 'package:ion/app/features/feed/polls/view/components/poll.dart';
 import 'package:ion/app/features/feed/views/components/url_preview_content/url_preview_content.dart';
-import 'package:ion/app/features/ion_connect/model/event_reference.c.dart';
+import 'package:ion/app/features/ion_connect/data/models/event_reference.c.dart';
 import 'package:ion/app/services/media_service/data/models/media_file.c.dart';
 import 'package:ion/app/typedefs/typedefs.dart';
 

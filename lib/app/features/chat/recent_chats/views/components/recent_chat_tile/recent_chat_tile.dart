@@ -15,7 +15,7 @@ import 'package:ion/app/features/chat/recent_chats/providers/conversations_edit_
 import 'package:ion/app/features/chat/recent_chats/providers/selected_conversations_ids_provider.c.dart';
 import 'package:ion/app/features/chat/recent_chats/views/pages/recent_chat_overlay/recent_chat_overlay.dart';
 import 'package:ion/app/features/chat/views/components/message_items/message_metadata/message_metadata.dart';
-import 'package:ion/app/features/ion_connect/model/event_reference.c.dart';
+import 'package:ion/app/features/ion_connect/data/models/event_reference.c.dart';
 import 'package:ion/app/features/user/providers/user_metadata_provider.c.dart';
 import 'package:ion/app/features/user_block/providers/block_list_notifier.c.dart';
 import 'package:ion/app/utils/date.dart';

@@ -1,0 +1,213 @@
+// SPDX-License-Identifier: ice License 1.0
+
+import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:ion/app/exceptions/exceptions.dart';
+import 'package:ion/app/features/feed/data/models/entities/article_data.c.dart';
+import 'package:ion/app/features/user/data/models/user_metadata.c.dart';
+import 'package:ion/app/services/bech32/bech32_service.c.dart';
+import 'package:ion/app/services/ion_connect/ion_connect_protocol_identifier_type.dart';
+import 'package:ion/app/services/ion_connect/ion_connect_uri_identifier_service.c.dart';
+import 'package:ion/app/services/ion_connect/ion_connect_uri_protocol_service.c.dart';
+import 'package:ion/app/services/ion_connect/shareable_identifier.dart';
+
+part 'event_reference.c.freezed.dart';
+
+abstract class EventReference {
+  factory EventReference.fromEncoded(String input) {
+    final identifier =
+        IonConnectUriIdentifierService(bech32Service: Bech32Service()).decodeShareableIdentifiers(
+      payload: IonConnectUriProtocolService().decode(input),
+    );
+
+    if (identifier == null) {
+      throw ShareableIdentifierDecodeException(input);
+    }
+
+    return switch (identifier.prefix) {
+      IonConnectProtocolIdentifierType.nevent =>
+        ImmutableEventReference.fromShareableIdentifier(identifier),
+      IonConnectProtocolIdentifierType.naddr ||
+      IonConnectProtocolIdentifierType.nprofile =>
+        ReplaceableEventReference.fromShareableIdentifier(identifier),
+      _ => throw ShareableIdentifierDecodeException(input),
+    };
+  }
+
+  factory EventReference.fromTag(List<String> tag) {
+    return switch (tag.elementAtOrNull(0)) {
+      ImmutableEventReference.tagName => ImmutableEventReference.fromTag(tag),
+      ReplaceableEventReference.tagName => ReplaceableEventReference.fromTag(tag),
+      _ => throw IncorrectEventTagException(tag: tag)
+    };
+  }
+
+  String get pubkey;
+
+  String encode();
+
+  List<String> toTag();
+
+  MapEntry<String, List<String>> toFilterEntry();
+
+  static String separator = ':';
+}
+
+@Freezed(toStringOverride: false)
+class ImmutableEventReference with _$ImmutableEventReference implements EventReference {
+  const factory ImmutableEventReference({
+    required String pubkey,
+    required String eventId,
+    int? kind,
+  }) = _ImmutableEventReference;
+
+  const ImmutableEventReference._();
+
+  factory ImmutableEventReference.fromTag(List<String> tag) {
+    if (tag[0] != tagName) {
+      throw IncorrectEventTagNameException(actual: tag[0], expected: tagName);
+    }
+
+    return ImmutableEventReference(pubkey: tag[3], eventId: tag[1]);
+  }
+
+  factory ImmutableEventReference.fromShareableIdentifier(ShareableIdentifier identifier) {
+    final ShareableIdentifier(:special, :author, :kind) = identifier;
+
+    if (author == null) {
+      throw IncorrectShareableIdentifierException(identifier);
+    }
+
+    return ImmutableEventReference(eventId: special, pubkey: author, kind: kind);
+  }
+
+  @override
+  List<String> toTag() {
+    return [tagName, eventId, '', pubkey];
+  }
+
+  @override
+  String encode() {
+    return IonConnectUriProtocolService().encode(
+      IonConnectUriIdentifierService(bech32Service: Bech32Service()).encodeShareableIdentifiers(
+        prefix: IonConnectProtocolIdentifierType.nevent,
+        special: eventId,
+        author: pubkey,
+        kind: kind,
+      ),
+    );
+  }
+
+  @override
+  MapEntry<String, List<String>> toFilterEntry() {
+    return MapEntry('#$tagName', [eventId]);
+  }
+
+  @override
+  String toString() {
+    return eventId;
+  }
+
+  static bool hasValidLength(List<String> tag) {
+    return tag.length <= maxTagLength;
+  }
+
+  static const String tagName = 'e';
+  static const int maxTagLength = 4;
+}
+
+@Freezed(toStringOverride: false)
+class ReplaceableEventReference with _$ReplaceableEventReference implements EventReference {
+  const factory ReplaceableEventReference({
+    required String pubkey,
+    required int kind,
+    @Default('') String dTag,
+  }) = _ReplaceableEventReference;
+
+  const ReplaceableEventReference._();
+
+  factory ReplaceableEventReference.fromTag(List<String> tag) {
+    if (tag[0] != tagName) {
+      throw IncorrectEventTagNameException(actual: tag[0], expected: tagName);
+    }
+
+    return ReplaceableEventReference.fromString(tag[1]);
+  }
+
+  factory ReplaceableEventReference.fromShareableIdentifier(ShareableIdentifier identifier) {
+    final ShareableIdentifier(:special, :author, :kind, :prefix) = identifier;
+
+    if (prefix == IonConnectProtocolIdentifierType.nprofile) {
+      return ReplaceableEventReference(
+        kind: UserMetadataEntity.kind,
+        pubkey: special,
+      );
+    } else {
+      if (author == null || kind == null) {
+        throw IncorrectShareableIdentifierException(identifier);
+      }
+
+      return ReplaceableEventReference(
+        kind: kind,
+        pubkey: author,
+        dTag: special,
+      );
+    }
+  }
+
+  factory ReplaceableEventReference.fromString(String input) {
+    final parts = input.split(EventReference.separator);
+
+    return ReplaceableEventReference(
+      kind: int.parse(parts[0]),
+      pubkey: parts[1],
+      dTag: parts[2],
+    );
+  }
+
+  @override
+  List<String> toTag() {
+    return [
+      tagName,
+      [kind, pubkey, dTag].join(EventReference.separator),
+    ];
+  }
+
+  @override
+  String encode() {
+    if (kind == UserMetadataEntity.kind) {
+      return IonConnectUriProtocolService().encode(
+        IonConnectUriIdentifierService(bech32Service: Bech32Service()).encodeShareableIdentifiers(
+          prefix: IonConnectProtocolIdentifierType.nprofile,
+          special: pubkey,
+        ),
+      );
+    } else {
+      return IonConnectUriProtocolService().encode(
+        IonConnectUriIdentifierService(bech32Service: Bech32Service()).encodeShareableIdentifiers(
+          prefix: IonConnectProtocolIdentifierType.naddr,
+          special: dTag,
+          author: pubkey,
+          kind: kind,
+        ),
+      );
+    }
+  }
+
+  @override
+  MapEntry<String, List<String>> toFilterEntry() {
+    return MapEntry('#$tagName', [toString()]);
+  }
+
+  @override
+  String toString() {
+    return [kind, pubkey, dTag].join(EventReference.separator);
+  }
+
+  static const String tagName = 'a';
+}
+
+extension EventReferenceX on EventReference {
+  bool get isArticleReference =>
+      this is ReplaceableEventReference &&
+      (this as ReplaceableEventReference).kind == ArticleEntity.kind;
+}

@@ -2,7 +2,7 @@
 
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/features/auth/providers/auth_provider.c.dart';
-import 'package:ion/app/features/user/model/verify_identity_type.dart';
+import 'package:ion/app/features/user/data/models/verify_identity_type.dart';
 import 'package:ion/app/features/user/providers/biometrics_provider.c.dart';
 import 'package:ion/app/services/ion_identity/ion_identity_provider.c.dart';
 import 'package:ion/app/services/logger/logger.dart';

@@ -4,10 +4,10 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/features/auth/providers/auth_provider.c.dart';
 import 'package:ion/app/features/feed/data/models/entities/article_data.c.dart';
 import 'package:ion/app/features/feed/data/models/entities/generic_repost.c.dart';
+import 'package:ion/app/features/ion_connect/data/models/action_source.c.dart';
+import 'package:ion/app/features/ion_connect/data/models/entities_paged_data_models.c.dart';
+import 'package:ion/app/features/ion_connect/data/models/search_extension.dart';
 import 'package:ion/app/features/ion_connect/ion_connect.dart';
-import 'package:ion/app/features/ion_connect/model/action_source.c.dart';
-import 'package:ion/app/features/ion_connect/model/entities_paged_data_models.c.dart';
-import 'package:ion/app/features/ion_connect/model/search_extension.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'user_articles_data_source_provider.c.g.dart';

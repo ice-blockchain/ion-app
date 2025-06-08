@@ -6,7 +6,7 @@ import 'package:ion/app/features/auth/providers/auth_provider.c.dart';
 import 'package:ion/app/features/feed/data/models/entities/reaction_data.c.dart';
 import 'package:ion/app/features/feed/providers/counters/like_reaction_provider.c.dart';
 import 'package:ion/app/features/feed/providers/counters/likes_count_provider.c.dart';
-import 'package:ion/app/features/ion_connect/model/event_reference.c.dart';
+import 'package:ion/app/features/ion_connect/data/models/event_reference.c.dart';
 import 'package:ion/app/features/ion_connect/providers/ion_connect_cache.c.dart';
 import 'package:ion/app/features/optimistic_ui/core/operation_manager.dart';
 import 'package:ion/app/features/optimistic_ui/core/optimistic_service.dart';

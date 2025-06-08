@@ -8,8 +8,8 @@ import 'package:ion/app/components/text_editor/utils/text_editor_styles.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/feed/data/models/entities/modifiable_post_data.c.dart';
 import 'package:ion/app/features/feed/data/models/entities/post_data.c.dart';
-import 'package:ion/app/features/ion_connect/model/entity_data_with_media_content.dart';
-import 'package:ion/app/features/ion_connect/model/ion_connect_entity.dart';
+import 'package:ion/app/features/ion_connect/data/models/entity_data_with_media_content.dart';
+import 'package:ion/app/features/ion_connect/data/models/ion_connect_entity.dart';
 import 'package:ion/app/features/ion_connect/views/hooks/use_parsed_media_content.dart';
 
 class VideoTextPost extends HookWidget {

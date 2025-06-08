@@ -12,7 +12,7 @@ import 'package:ion/app/features/optimistic_ui/core/optimistic_service.dart';
 import 'package:ion/app/features/optimistic_ui/features/language/change_language_intent.dart';
 import 'package:ion/app/features/optimistic_ui/features/language/language_sync_strategy.dart';
 import 'package:ion/app/features/settings/model/content_lang_set.c.dart';
-import 'package:ion/app/features/user/model/interest_set.c.dart';
+import 'package:ion/app/features/user/data/models/interest_set.c.dart';
 import 'package:ion/app/features/user/providers/user_interests_set_provider.c.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 

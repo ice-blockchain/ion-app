@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: ice License 1.0
 
 import 'package:ion/app/features/auth/providers/auth_provider.c.dart';
-import 'package:ion/app/features/user/model/user_notifications_type.dart';
+import 'package:ion/app/features/user/data/models/user_notifications_type.dart';
 import 'package:ion/app/services/storage/user_preferences_service.c.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 

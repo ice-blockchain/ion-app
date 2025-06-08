@@ -12,7 +12,7 @@ import 'package:ion/app/components/text_editor/custom_recognizer_builder.dart';
 import 'package:ion/app/components/text_editor/utils/links_handler.dart';
 import 'package:ion/app/components/text_editor/utils/mentions_hashtags_handler.dart';
 import 'package:ion/app/components/text_editor/utils/text_editor_styles.dart';
-import 'package:ion/app/features/ion_connect/model/media_attachment.dart';
+import 'package:ion/app/features/ion_connect/data/models/media_attachment.dart';
 
 class TextEditorKeys {
   const TextEditorKeys._();

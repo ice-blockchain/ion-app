@@ -16,9 +16,9 @@ import 'package:ion/app/features/auth/views/components/user_data_inputs/nickname
 import 'package:ion/app/features/auth/views/components/user_data_inputs/referral_input.dart';
 import 'package:ion/app/features/auth/views/pages/fill_profile/components/fill_prifile_submit_button.dart';
 import 'package:ion/app/features/components/avatar_picker/avatar_picker.dart';
+import 'package:ion/app/features/user/data/models/image_processor_state.c.dart';
 import 'package:ion/app/features/user/hooks/use_verify_nickname_availability_error_message.dart';
 import 'package:ion/app/features/user/hooks/use_verify_referral_exists_error_message.dart';
-import 'package:ion/app/features/user/model/image_processor_state.c.dart';
 import 'package:ion/app/features/user/providers/image_proccessor_notifier.c.dart';
 import 'package:ion/app/features/user/providers/user_nickname_provider.c.dart';
 import 'package:ion/app/features/user/providers/user_referral_provider.c.dart';

@@ -9,7 +9,7 @@ import 'package:ion/app/components/overlay_menu/overlay_menu.dart';
 import 'package:ion/app/components/overlay_menu/overlay_menu_container.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/chat/providers/muted_conversations_provider.c.dart';
-import 'package:ion/app/features/user/models/report_reason.c.dart';
+import 'package:ion/app/features/user/data/models/report_reason.c.dart';
 import 'package:ion/app/features/user/pages/profile_page/pages/block_user_modal/block_user_modal.dart';
 import 'package:ion/app/features/user/providers/report_notifier.c.dart';
 import 'package:ion/app/features/user_block/optimistic_ui/block_user_provider.c.dart';

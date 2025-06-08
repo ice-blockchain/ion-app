@@ -1,9 +1,9 @@
 // SPDX-License-Identifier: ice License 1.0
 
 import 'package:ion/app/constants/emails.dart';
-import 'package:ion/app/features/ion_connect/model/event_reference.c.dart';
-import 'package:ion/app/features/user/model/user_metadata.c.dart';
-import 'package:ion/app/features/user/models/report_reason.c.dart';
+import 'package:ion/app/features/ion_connect/data/models/event_reference.c.dart';
+import 'package:ion/app/features/user/data/models/report_reason.c.dart';
+import 'package:ion/app/features/user/data/models/user_metadata.c.dart';
 import 'package:ion/app/services/mail/mail.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 

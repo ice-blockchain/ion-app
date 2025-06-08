@@ -15,7 +15,7 @@ import 'package:ion/app/features/feed/create_article/views/pages/article_form_mo
 import 'package:ion/app/features/feed/create_article/views/pages/article_form_modal/components/article_form_toolbar.dart';
 import 'package:ion/app/features/feed/create_article/views/pages/article_form_modal/hooks/use_article_form.dart';
 import 'package:ion/app/features/feed/views/pages/cancel_creation_modal/cancel_creation_modal.dart';
-import 'package:ion/app/features/ion_connect/model/event_reference.c.dart';
+import 'package:ion/app/features/ion_connect/data/models/event_reference.c.dart';
 import 'package:ion/app/router/app_routes.c.dart';
 import 'package:ion/app/router/components/navigation_app_bar/navigation_app_bar.dart';
 import 'package:ion/app/router/components/sheet_content/sheet_content.dart';

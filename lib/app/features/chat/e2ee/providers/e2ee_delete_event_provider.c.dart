@@ -11,9 +11,9 @@ import 'package:ion/app/features/chat/e2ee/providers/send_chat_message/send_e2ee
 import 'package:ion/app/features/chat/model/database/chat_database.c.dart';
 import 'package:ion/app/features/chat/providers/conversation_pubkeys_provider.c.dart';
 import 'package:ion/app/features/feed/data/models/entities/generic_repost.c.dart';
+import 'package:ion/app/features/ion_connect/data/models/deletion_request.c.dart';
+import 'package:ion/app/features/ion_connect/data/models/event_reference.c.dart';
 import 'package:ion/app/features/ion_connect/ion_connect.dart';
-import 'package:ion/app/features/ion_connect/model/deletion_request.c.dart';
-import 'package:ion/app/features/ion_connect/model/event_reference.c.dart';
 import 'package:ion/app/features/ion_connect/providers/ion_connect_event_signer_provider.c.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 

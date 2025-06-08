@@ -4,7 +4,7 @@ import 'package:collection/collection.dart';
 import 'package:flutter/foundation.dart';
 import 'package:ion/app/features/feed/stories/data/models/models.dart';
 import 'package:ion/app/features/feed/stories/providers/feed_stories_provider.c.dart';
-import 'package:ion/app/features/ion_connect/model/event_reference.c.dart';
+import 'package:ion/app/features/ion_connect/data/models/event_reference.c.dart';
 import 'package:ion/app/features/optimistic_ui/features/likes/post_like_provider.c.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 

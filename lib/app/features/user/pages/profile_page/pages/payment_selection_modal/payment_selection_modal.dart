@@ -8,7 +8,7 @@ import 'package:ion/app/components/list_item/list_item.dart';
 import 'package:ion/app/components/screen_offset/screen_bottom_offset.dart';
 import 'package:ion/app/components/screen_offset/screen_side_offset.dart';
 import 'package:ion/app/extensions/extensions.dart';
-import 'package:ion/app/features/user/model/payment_type.dart';
+import 'package:ion/app/features/user/data/models/payment_type.dart';
 import 'package:ion/app/features/user/providers/request_coins_form_provider.c.dart';
 import 'package:ion/app/features/wallets/providers/send_asset_form_provider.c.dart';
 import 'package:ion/app/hooks/use_on_receive_funds_flow.dart';

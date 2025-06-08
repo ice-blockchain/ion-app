@@ -10,7 +10,7 @@ import 'package:ion/app/features/feed/notifications/data/database/notifications_
 import 'package:ion/app/features/feed/notifications/data/database/tables/comments_table.c.dart';
 import 'package:ion/app/features/feed/notifications/data/model/ion_notification.c.dart';
 import 'package:ion/app/features/feed/notifications/data/repository/ion_notification_repository.dart';
-import 'package:ion/app/features/ion_connect/model/ion_connect_entity.dart';
+import 'package:ion/app/features/ion_connect/data/models/ion_connect_entity.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'comments_repository.c.g.dart';

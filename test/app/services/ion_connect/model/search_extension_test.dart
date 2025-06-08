@@ -4,7 +4,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:ion/app/features/feed/data/models/entities/article_data.c.dart';
 import 'package:ion/app/features/feed/data/models/entities/modifiable_post_data.c.dart';
 import 'package:ion/app/features/feed/data/models/entities/post_data.c.dart';
-import 'package:ion/app/features/ion_connect/model/search_extension.dart';
+import 'package:ion/app/features/ion_connect/data/models/search_extension.dart';
 
 void main() {
   const testPubkey = 'test_pubkey';

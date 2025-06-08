@@ -12,7 +12,7 @@ import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/feed/data/models/delete/delete_confirmation_type.dart';
 import 'package:ion/app/features/feed/providers/delete_entity_provider.c.dart';
 import 'package:ion/app/features/feed/stories/providers/feed_stories_provider.c.dart';
-import 'package:ion/app/features/ion_connect/model/event_reference.c.dart';
+import 'package:ion/app/features/ion_connect/data/models/event_reference.c.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 class EntityDeleteConfirmationModal extends HookConsumerWidget {

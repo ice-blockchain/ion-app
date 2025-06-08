@@ -2,7 +2,7 @@
 
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:ion/app/features/chat/community/models/entities/tags/conversation_identifier.c.dart';
-import 'package:ion/app/features/ion_connect/model/deletable_event.dart';
+import 'package:ion/app/features/ion_connect/data/models/deletable_event.dart';
 
 part 'conversation_to_delete.c.freezed.dart';
 

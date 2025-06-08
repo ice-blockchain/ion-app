@@ -21,7 +21,7 @@ import 'package:ion/app/features/feed/views/components/toolbar_buttons/toolbar_i
 import 'package:ion/app/features/feed/views/components/toolbar_buttons/toolbar_italic_button.dart';
 import 'package:ion/app/features/feed/views/components/toolbar_buttons/toolbar_poll_button.dart';
 import 'package:ion/app/features/feed/views/pages/who_can_reply_settings_modal/who_can_reply_settings_modal.dart';
-import 'package:ion/app/features/ion_connect/model/event_reference.c.dart';
+import 'package:ion/app/features/ion_connect/data/models/event_reference.c.dart';
 import 'package:ion/app/features/ion_connect/providers/ion_connect_entity_provider.c.dart';
 import 'package:ion/app/hooks/use_on_init.dart';
 import 'package:ion/app/router/utils/show_simple_bottom_sheet.dart';
