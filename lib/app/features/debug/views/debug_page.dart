@@ -13,7 +13,7 @@ import 'package:ion/app/features/core/providers/feature_flags_provider.c.dart';
 import 'package:ion/app/features/feed/notifications/data/database/notifications_database.c.dart';
 import 'package:ion/app/features/ion_connect/database/event_messages_database.c.dart';
 import 'package:ion/app/features/user_block/providers/blocked_users_database_provider.c.dart';
-import 'package:ion/app/features/wallets/data/models/database/wallets_database.c.dart';
+import 'package:ion/app/features/wallets/providers/database/wallets_database_provider.c.dart';
 import 'package:ion/app/router/components/navigation_app_bar/navigation_app_bar.dart';
 import 'package:ion/app/router/components/navigation_app_bar/navigation_close_button.dart';
 import 'package:ion/app/services/logger/logger.dart';

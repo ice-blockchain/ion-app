@@ -6,6 +6,7 @@ import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/wallets/data/models/database/tables/funds_requests_table.c.dart';
 import 'package:ion/app/features/wallets/data/models/database/tables/transactions_table.c.dart';
 import 'package:ion/app/features/wallets/data/models/database/wallets_database.c.dart';
+import 'package:ion/app/features/wallets/providers/database/wallets_database_provider.c.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'funds_requests_dao.c.g.dart';

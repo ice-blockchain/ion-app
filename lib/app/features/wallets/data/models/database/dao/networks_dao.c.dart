@@ -4,6 +4,7 @@ import 'package:drift/drift.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/features/wallets/data/models/database/tables/networks_table.c.dart';
 import 'package:ion/app/features/wallets/data/models/database/wallets_database.c.dart';
+import 'package:ion/app/features/wallets/providers/database/wallets_database_provider.c.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'networks_dao.c.g.dart';
