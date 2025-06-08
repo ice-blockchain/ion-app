@@ -6,7 +6,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/components/screen_offset/screen_side_offset.dart';
 import 'package:ion/app/components/screen_offset/screen_top_offset.dart';
 import 'package:ion/app/extensions/extensions.dart';
-import 'package:ion/app/features/chat/community/channel/models/channel_detail_tab.dart';
+import 'package:ion/app/features/chat/community/channel/data/models/channel_detail_tab.dart';
 import 'package:ion/app/features/chat/community/channel/views/components/channel_detail_app_bar.dart';
 import 'package:ion/app/features/chat/community/channel/views/pages/channel_detail_page/components/channel_detail_tabs_header.dart';
 import 'package:ion/app/features/chat/community/channel/views/pages/channel_detail_page/components/channel_summary.dart';

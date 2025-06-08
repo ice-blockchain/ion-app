@@ -4,10 +4,10 @@ import 'dart:async';
 
 import 'package:ion/app/exceptions/exceptions.dart';
 import 'package:ion/app/features/auth/providers/auth_provider.c.dart';
-import 'package:ion/app/features/chat/community/models/community_admin_type.dart';
-import 'package:ion/app/features/chat/community/models/community_visibility_type.dart';
-import 'package:ion/app/features/chat/community/models/entities/community_definition_data.c.dart';
-import 'package:ion/app/features/chat/community/models/entities/community_update_data.c.dart';
+import 'package:ion/app/features/chat/community/data/models/community_admin_type.dart';
+import 'package:ion/app/features/chat/community/data/models/community_visibility_type.dart';
+import 'package:ion/app/features/chat/community/data/models/entities/community_definition_data.c.dart';
+import 'package:ion/app/features/chat/community/data/models/entities/community_update_data.c.dart';
 import 'package:ion/app/features/chat/community/providers/community_admins_provider.c.dart';
 import 'package:ion/app/features/chat/community/providers/community_metadata_provider.c.dart';
 import 'package:ion/app/features/chat/community/providers/invite_to_community_provider.c.dart';

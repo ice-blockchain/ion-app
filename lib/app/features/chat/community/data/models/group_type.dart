@@ -2,7 +2,7 @@
 
 import 'package:flutter/widgets.dart';
 import 'package:ion/app/extensions/build_context.dart';
-import 'package:ion/app/features/chat/model/selectable_type.dart';
+import 'package:ion/app/features/chat/e2ee/data/models/selectable_type.dart';
 import 'package:ion/generated/assets.gen.dart';
 
 enum GroupType implements SelectableType {

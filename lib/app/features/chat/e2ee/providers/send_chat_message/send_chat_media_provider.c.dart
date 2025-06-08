@@ -3,8 +3,8 @@
 import 'dart:async';
 
 import 'package:async/async.dart';
+import 'package:ion/app/features/chat/e2ee/data/models/database/chat_database.c.dart';
 import 'package:ion/app/features/chat/e2ee/providers/send_chat_message/compress_chat_media_provider.c.dart';
-import 'package:ion/app/features/chat/model/database/chat_database.c.dart';
 import 'package:ion/app/features/core/providers/env_provider.c.dart';
 import 'package:ion/app/features/ion_connect/data/models/action_source.c.dart';
 import 'package:ion/app/features/ion_connect/data/models/entity_expiration.c.dart';

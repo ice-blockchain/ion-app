@@ -3,13 +3,13 @@
 import 'dart:async';
 
 import 'package:ion/app/exceptions/exceptions.dart';
-import 'package:ion/app/features/chat/community/models/community_admin_type.dart';
-import 'package:ion/app/features/chat/community/models/community_visibility_type.dart';
-import 'package:ion/app/features/chat/community/models/entities/community_definition_data.c.dart';
+import 'package:ion/app/features/chat/community/data/models/community_admin_type.dart';
+import 'package:ion/app/features/chat/community/data/models/community_visibility_type.dart';
+import 'package:ion/app/features/chat/community/data/models/entities/community_definition_data.c.dart';
 import 'package:ion/app/features/chat/community/providers/community_admins_provider.c.dart';
 import 'package:ion/app/features/chat/community/providers/invite_to_community_provider.c.dart';
 import 'package:ion/app/features/chat/community/providers/join_community_provider.c.dart';
-import 'package:ion/app/features/chat/model/database/chat_database.c.dart';
+import 'package:ion/app/features/chat/e2ee/data/models/database/chat_database.c.dart';
 import 'package:ion/app/features/ion_connect/data/models/event_setting.c.dart';
 import 'package:ion/app/features/ion_connect/data/models/file_alt.dart';
 import 'package:ion/app/features/ion_connect/providers/ion_connect_notifier.c.dart';

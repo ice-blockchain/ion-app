@@ -2,8 +2,8 @@
 
 import 'package:collection/collection.dart';
 import 'package:ion/app/exceptions/exceptions.dart';
-import 'package:ion/app/features/chat/community/models/entities/tags/master_pubkey_tag.c.dart';
-import 'package:ion/app/features/chat/model/database/chat_database.c.dart' as chat_db;
+import 'package:ion/app/features/chat/community/data/models/entities/tags/master_pubkey_tag.c.dart';
+import 'package:ion/app/features/chat/e2ee/data/models/database/chat_database.c.dart' as chat_db;
 import 'package:ion/app/features/ion_connect/data/models/event_reference.c.dart';
 import 'package:ion/app/features/ion_connect/database/event_messages_database.c.dart'
     as event_messages_db;

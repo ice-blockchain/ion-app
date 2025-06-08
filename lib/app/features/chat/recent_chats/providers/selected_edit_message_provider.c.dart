@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: ice License 1.0
 
-import 'package:ion/app/features/chat/model/message_list_item.c.dart';
+import 'package:ion/app/features/chat/e2ee/data/models/message_list_item.c.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'selected_edit_message_provider.c.g.dart';

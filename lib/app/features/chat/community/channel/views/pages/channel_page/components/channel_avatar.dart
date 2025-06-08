@@ -5,7 +5,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/components/avatar/avatar.dart';
 import 'package:ion/app/components/screen_offset/screen_side_offset.dart';
 import 'package:ion/app/extensions/extensions.dart';
-import 'package:ion/app/features/chat/community/models/entities/community_definition_data.c.dart';
+import 'package:ion/app/features/chat/community/data/models/entities/community_definition_data.c.dart';
 import 'package:ion/app/features/components/avatar_picker/avatar_picker.dart';
 import 'package:ion/generated/assets.gen.dart';
 

@@ -10,12 +10,12 @@ import 'package:ion/app/components/overlay_menu/components/overlay_menu_item.dar
 import 'package:ion/app/components/overlay_menu/components/overlay_menu_item_separator.dart';
 import 'package:ion/app/components/overlay_menu/overlay_menu_container.dart';
 import 'package:ion/app/extensions/extensions.dart';
-import 'package:ion/app/features/chat/e2ee/model/entities/private_direct_message_data.c.dart';
+import 'package:ion/app/features/chat/e2ee/data/models/database/chat_database.c.dart';
+import 'package:ion/app/features/chat/e2ee/data/models/entities/private_direct_message_data.c.dart';
+import 'package:ion/app/features/chat/e2ee/data/models/message_list_item.c.dart';
+import 'package:ion/app/features/chat/e2ee/data/models/message_type.dart';
 import 'package:ion/app/features/chat/e2ee/providers/e2ee_delete_event_provider.c.dart';
 import 'package:ion/app/features/chat/e2ee/providers/send_chat_message/send_e2ee_chat_message_service.c.dart';
-import 'package:ion/app/features/chat/model/database/chat_database.c.dart';
-import 'package:ion/app/features/chat/model/message_list_item.c.dart';
-import 'package:ion/app/features/chat/model/message_type.dart';
 import 'package:ion/app/features/chat/recent_chats/providers/selected_edit_message_provider.c.dart';
 import 'package:ion/app/features/chat/recent_chats/providers/selected_reply_message_provider.c.dart';
 import 'package:ion/app/features/core/model/feature_flags.dart';

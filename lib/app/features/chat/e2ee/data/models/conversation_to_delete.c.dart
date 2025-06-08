@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: ice License 1.0
 
 import 'package:freezed_annotation/freezed_annotation.dart';
-import 'package:ion/app/features/chat/community/models/entities/tags/conversation_identifier.c.dart';
+import 'package:ion/app/features/chat/community/data/models/entities/tags/conversation_identifier.c.dart';
 import 'package:ion/app/features/ion_connect/data/models/deletable_event.dart';
 
 part 'conversation_to_delete.c.freezed.dart';

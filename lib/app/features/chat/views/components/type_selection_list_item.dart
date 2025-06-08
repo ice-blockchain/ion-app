@@ -3,7 +3,7 @@
 import 'package:flutter/material.dart';
 import 'package:ion/app/components/list_item/list_item.dart';
 import 'package:ion/app/extensions/extensions.dart';
-import 'package:ion/app/features/chat/model/selectable_type.dart';
+import 'package:ion/app/features/chat/e2ee/data/models/selectable_type.dart';
 import 'package:ion/app/features/chat/views/components/selection_list_item.dart';
 
 class TypeSelectionListItem<T extends SelectableType> extends StatelessWidget {

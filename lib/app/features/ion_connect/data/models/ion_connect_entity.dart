@@ -3,7 +3,7 @@
 import 'dart:async';
 
 import 'package:freezed_annotation/freezed_annotation.dart';
-import 'package:ion/app/features/chat/community/models/entities/tags/master_pubkey_tag.c.dart';
+import 'package:ion/app/features/chat/community/data/models/entities/tags/master_pubkey_tag.c.dart';
 import 'package:ion/app/features/ion_connect/data/models/event_reference.c.dart';
 import 'package:ion/app/features/ion_connect/data/models/event_serializable.dart';
 import 'package:ion/app/features/ion_connect/ion_connect.dart';

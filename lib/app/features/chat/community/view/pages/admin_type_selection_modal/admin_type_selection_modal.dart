@@ -7,7 +7,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/components/screen_offset/screen_bottom_offset.dart';
 import 'package:ion/app/components/screen_offset/screen_side_offset.dart';
 import 'package:ion/app/extensions/extensions.dart';
-import 'package:ion/app/features/chat/community/models/community_admin_type.dart';
+import 'package:ion/app/features/chat/community/data/models/community_admin_type.dart';
 import 'package:ion/app/features/chat/community/providers/community_admins_provider.c.dart';
 import 'package:ion/app/features/chat/community/view/pages/admin_type_selection_modal/components/delete_admin_button.dart';
 import 'package:ion/app/features/chat/views/components/selection_list_item.dart';
