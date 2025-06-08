@@ -2,7 +2,7 @@
 
 import 'dart:async';
 
-import 'package:ion/app/services/ion_identity/ion_identity_client_provider.c.dart';
+import 'package:ion/app/services/providers/ion_identity/ion_identity_client_provider.c.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'user_nickname_provider.c.g.dart';

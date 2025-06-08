@@ -6,7 +6,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/features/wallets/data/models/network_fee_type.dart';
 import 'package:ion/app/features/wallets/data/models/nft_data.c.dart';
 import 'package:ion/app/features/wallets/data/models/transfer_result.c.dart';
-import 'package:ion/app/services/ion_identity/ion_identity_client_provider.c.dart';
+import 'package:ion/app/services/providers/ion_identity/ion_identity_client_provider.c.dart';
 import 'package:ion_identity_client/ion_identity.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 

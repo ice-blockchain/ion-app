@@ -3,7 +3,7 @@
 import 'package:ion/app/features/wallets/data/models/coin_data.c.dart';
 import 'package:ion/app/features/wallets/views/pages/import_token_page/providers/selected_network_provider.c.dart';
 import 'package:ion/app/features/wallets/views/pages/import_token_page/providers/token_address_provider.c.dart';
-import 'package:ion/app/services/ion_identity/ion_identity_client_provider.c.dart';
+import 'package:ion/app/services/providers/ion_identity/ion_identity_client_provider.c.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'token_data_notifier_provider.c.g.dart';

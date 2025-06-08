@@ -2,7 +2,7 @@
 
 import 'package:ion/app/features/auth/providers/auth_provider.c.dart';
 import 'package:ion/app/features/protect_account/secure_account/providers/recovery_credentials_enabled_notifier.c.dart';
-import 'package:ion/app/services/ion_identity/ion_identity_provider.c.dart';
+import 'package:ion/app/services/providers/ion_identity/ion_identity_provider.c.dart';
 import 'package:ion_identity_client/ion_identity.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 

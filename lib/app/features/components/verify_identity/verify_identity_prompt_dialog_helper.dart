@@ -11,7 +11,7 @@ import 'package:ion/app/features/components/verify_identity/verify_identity_prom
 import 'package:ion/app/features/user/providers/user_verify_identity_provider.c.dart';
 import 'package:ion/app/hooks/use_on_init.dart';
 import 'package:ion/app/router/utils/show_simple_bottom_sheet.dart';
-import 'package:ion/app/services/ion_identity/ion_identity_provider.c.dart';
+import 'package:ion/app/services/providers/ion_identity/ion_identity_provider.c.dart';
 import 'package:ion_identity_client/ion_identity.dart';
 
 Future<void> guardPasskeyDialog(

@@ -17,7 +17,7 @@ import 'package:ion/app/features/ion_connect/providers/device_keypair_constants.
 import 'package:ion/app/features/ion_connect/providers/file_storage_url_provider.c.dart';
 import 'package:ion/app/features/user/providers/current_user_identity_provider.c.dart';
 import 'package:ion/app/features/user/providers/user_metadata_provider.c.dart';
-import 'package:ion/app/services/ion_identity/ion_identity_client_provider.c.dart';
+import 'package:ion/app/services/providers/ion_identity/ion_identity_client_provider.c.dart';
 import 'package:ion_identity_client/ion_identity.dart';
 
 /// Utility class for shared device keypair operations

@@ -13,8 +13,8 @@ import 'package:ion/app/features/ion_connect/providers/ion_connect_notifier.c.da
 import 'package:ion/app/features/user/data/models/user_relays.c.dart';
 import 'package:ion/app/features/user/providers/current_user_identity_provider.c.dart';
 import 'package:ion/app/features/user/providers/relays_reachability_provider.c.dart';
-import 'package:ion/app/services/ion_identity/ion_identity_client_provider.c.dart';
 import 'package:ion/app/services/logger/logger.dart';
+import 'package:ion/app/services/providers/ion_identity/ion_identity_client_provider.c.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'user_relays_manager.c.g.dart';

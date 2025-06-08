@@ -5,7 +5,7 @@ import 'package:ion/app/features/feed/data/models/entities/event_count_result_da
 import 'package:ion/app/features/feed/data/models/entities/reaction_data.c.dart';
 import 'package:ion/app/features/ion_connect/data/models/event_reference.c.dart';
 import 'package:ion/app/features/ion_connect/providers/ion_connect_cache.c.dart';
-import 'package:ion/app/features/optimistic_ui/features/likes/post_like_provider.c.dart';
+import 'package:ion/app/features/optimistic_ui/providers/post_like_provider.c.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'likes_count_provider.c.g.dart';

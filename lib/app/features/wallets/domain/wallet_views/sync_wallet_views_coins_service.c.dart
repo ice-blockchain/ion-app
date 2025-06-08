@@ -6,8 +6,8 @@ import 'package:collection/collection.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/features/wallets/data/models/coin_data.c.dart';
 import 'package:ion/app/features/wallets/data/repository/coins_repository.c.dart';
-import 'package:ion/app/services/ion_identity/ion_identity_client_provider.c.dart';
 import 'package:ion/app/services/logger/logger.dart';
+import 'package:ion/app/services/providers/ion_identity/ion_identity_client_provider.c.dart';
 import 'package:ion_identity_client/ion_identity.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 

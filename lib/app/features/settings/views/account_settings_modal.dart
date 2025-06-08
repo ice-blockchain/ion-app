@@ -11,7 +11,7 @@ import 'package:ion/app/components/separated/separated_column.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/core/data/models/language.dart';
 import 'package:ion/app/features/core/providers/app_locale_provider.c.dart';
-import 'package:ion/app/features/optimistic_ui/features/language/language_sync_strategy_provider.c.dart';
+import 'package:ion/app/features/optimistic_ui/providers/language_sync_strategy_provider.c.dart';
 import 'package:ion/app/features/settings/views/delete_confirm_modal.dart';
 import 'package:ion/app/router/app_routes.c.dart';
 import 'package:ion/app/router/components/navigation_app_bar/navigation_app_bar.dart';

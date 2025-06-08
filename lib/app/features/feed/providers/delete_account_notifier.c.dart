@@ -8,7 +8,7 @@ import 'package:ion/app/features/chat/community/data/models/entities/tags/master
 import 'package:ion/app/features/core/providers/main_wallet_provider.c.dart';
 import 'package:ion/app/features/ion_connect/data/models/deletion_request.c.dart';
 import 'package:ion/app/features/ion_connect/providers/ion_connect_notifier.c.dart';
-import 'package:ion/app/services/ion_identity/ion_identity_provider.c.dart';
+import 'package:ion/app/services/providers/ion_identity/ion_identity_provider.c.dart';
 import 'package:ion/app/services/providers/storage/user_preferences_service.c.dart';
 import 'package:ion_identity_client/ion_identity.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
