@@ -3,7 +3,7 @@
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/exceptions/exceptions.dart';
 import 'package:ion/app/features/auth/providers/auth_provider.c.dart';
-import 'package:ion/app/features/chat/e2ee/data/models/database/chat_database.c.dart';
+import 'package:ion/app/features/chat/providers/dao/conversation_message_dao_provider.c.dart';
 import 'package:ion/app/features/chat/providers/muted_conversations_provider.c.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 

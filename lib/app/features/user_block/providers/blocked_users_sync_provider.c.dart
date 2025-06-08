@@ -17,6 +17,7 @@ import 'package:ion/app/features/ion_connect/providers/ion_connect_event_signer_
 import 'package:ion/app/features/ion_connect/providers/ion_connect_subscription_provider.c.dart';
 import 'package:ion/app/features/user_block/data/models/database/blocked_users_database.c.dart';
 import 'package:ion/app/features/user_block/data/models/entities/blocked_user_entity.c.dart';
+import 'package:ion/app/features/user_block/providers/dao/block_event_dao_provider.c.dart';
 import 'package:ion/app/services/providers/ion_connect/ion_connect_gift_wrap_service.c.dart';
 import 'package:ion/app/services/providers/ion_connect/ion_connect_seal_service.c.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';

@@ -14,6 +14,7 @@ import 'package:ion/app/features/chat/e2ee/data/models/message_type.dart';
 import 'package:ion/app/features/chat/e2ee/providers/chat_medias_provider.c.dart';
 import 'package:ion/app/features/chat/e2ee/providers/send_e2ee_reaction_provider.c.dart';
 import 'package:ion/app/features/chat/e2ee/providers/shared_post_message_provider.c.dart';
+import 'package:ion/app/features/chat/providers/dao/conversation_message_reaction_dao_provider.c.dart';
 import 'package:ion/app/features/chat/providers/message_status_provider.c.dart';
 import 'package:ion/app/features/chat/views/components/message_items/message_reaction_dialog/message_reaction_dialog.dart';
 import 'package:ion/app/features/feed/data/models/entities/modifiable_post_data.c.dart';

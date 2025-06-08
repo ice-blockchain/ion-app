@@ -14,7 +14,7 @@ import 'package:ion/app/features/chat/e2ee/data/models/entities/private_direct_m
 import 'package:ion/app/features/chat/e2ee/data/models/entities/private_message_reaction_data.c.dart';
 import 'package:ion/app/features/chat/e2ee/data/models/group_subject.c.dart';
 import 'package:ion/app/features/chat/e2ee/data/models/message_reaction_group.c.dart';
-import 'package:ion/app/features/chat/providers/database/chat_database_provider.c.dart';
+import 'package:ion/app/features/chat/providers/dao/event_message_dao_provider.c.dart';
 import 'package:ion/app/features/chat/recent_chats/data/models/conversation_list_item.c.dart';
 import 'package:ion/app/features/core/providers/env_provider.c.dart';
 import 'package:ion/app/features/feed/data/models/entities/generic_repost.c.dart';
@@ -23,7 +23,6 @@ import 'package:ion/app/features/ion_connect/data/models/event_reference.c.dart'
 import 'package:ion/app/features/ion_connect/database/converters/event_tags_converter.dart';
 import 'package:ion/app/features/ion_connect/ion_connect.dart';
 import 'package:ion/app/features/ion_connect/providers/ion_connect_event_signer_provider.c.dart';
-import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'chat_database.c.g.dart';
 part 'dao/conversation_dao.c.dart';

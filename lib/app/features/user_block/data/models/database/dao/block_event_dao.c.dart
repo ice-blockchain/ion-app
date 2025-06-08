@@ -2,8 +2,6 @@
 
 part of '../block_user_database.c.dart';
 
-@Riverpod(keepAlive: true)
-BlockEventDao blockEventDao(Ref ref) => BlockEventDao(ref.watch(blockedUsersDatabaseProvider));
 
 @DriftAccessor(tables: [BlockEventTable, UnblockEventTable])
 class BlockEventDao extends DatabaseAccessor<BlockUserDatabase> with _$BlockEventDaoMixin {

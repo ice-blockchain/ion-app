@@ -13,6 +13,11 @@ import 'package:ion/app/features/chat/e2ee/data/models/entities/private_message_
 import 'package:ion/app/features/chat/e2ee/providers/gift_unwrap_service_provider.c.dart';
 import 'package:ion/app/features/chat/e2ee/providers/send_e2ee_message_status_provider.c.dart';
 import 'package:ion/app/features/chat/providers/dao/conversation_dao_provider.c.dart';
+import 'package:ion/app/features/chat/providers/dao/conversation_event_message_dao_provider.c.dart';
+import 'package:ion/app/features/chat/providers/dao/conversation_message_dao_provider.c.dart';
+import 'package:ion/app/features/chat/providers/dao/conversation_message_data_dao_provider.c.dart';
+import 'package:ion/app/features/chat/providers/dao/conversation_message_reaction_dao_provider.c.dart';
+import 'package:ion/app/features/chat/providers/dao/event_message_dao_provider.c.dart';
 import 'package:ion/app/features/chat/providers/dao/message_media_dao_provider.c.dart';
 import 'package:ion/app/features/chat/providers/user_chat_relays_provider.c.dart';
 import 'package:ion/app/features/feed/data/models/entities/article_data.c.dart';

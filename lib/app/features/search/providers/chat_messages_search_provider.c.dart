@@ -4,8 +4,8 @@ import 'package:collection/collection.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/auth/providers/auth_provider.c.dart';
-import 'package:ion/app/features/chat/e2ee/data/models/database/chat_database.c.dart';
 import 'package:ion/app/features/chat/e2ee/data/models/entities/private_direct_message_data.c.dart';
+import 'package:ion/app/features/chat/providers/dao/event_message_dao_provider.c.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'chat_messages_search_provider.c.g.dart';

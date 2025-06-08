@@ -1,17 +1,11 @@
 // SPDX-License-Identifier: ice License 1.0
 
 import 'package:drift/drift.dart';
-import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/feed/notifications/data/database/notifications_database.c.dart';
 import 'package:ion/app/features/feed/notifications/data/database/tables/followers_table.c.dart';
-import 'package:ion/app/features/feed/notifications/providers/database/notifications_database_provider.c.dart';
-import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'followers_dao.c.g.dart';
-
-@Riverpod(keepAlive: true)
-FollowersDao followersDao(Ref ref) => FollowersDao(db: ref.watch(notificationsDatabaseProvider));
 
 @DriftAccessor(tables: [FollowersTable])
 class FollowersDao extends DatabaseAccessor<NotificationsDatabase> with _$FollowersDaoMixin {

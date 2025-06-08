@@ -6,6 +6,8 @@ import 'package:ion/app/features/auth/providers/auth_provider.c.dart';
 import 'package:ion/app/features/feed/notifications/data/database/dao/comments_dao.c.dart';
 import 'package:ion/app/features/feed/notifications/data/database/dao/followers_dao.c.dart';
 import 'package:ion/app/features/feed/notifications/data/database/dao/likes_dao.c.dart';
+import 'package:ion/app/features/feed/notifications/providers/dao/comments_dao_provider.c.dart';
+import 'package:ion/app/features/feed/notifications/providers/dao/followers_dao_provider.c.dart';
 import 'package:ion/app/features/feed/notifications/providers/dao/likes_dao_provider.c.dart';
 import 'package:ion/app/services/providers/storage/user_preferences_service.c.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';

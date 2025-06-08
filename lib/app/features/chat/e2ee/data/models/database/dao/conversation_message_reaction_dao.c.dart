@@ -2,10 +2,6 @@
 
 part of '../chat_database.c.dart';
 
-@riverpod
-ConversationMessageReactionDao conversationMessageReactionDao(Ref ref) =>
-    ConversationMessageReactionDao(ref.watch(chatDatabaseProvider));
-
 @DriftAccessor(
   tables: [ReactionTable, ConversationMessageTable, EventMessageTable],
 )

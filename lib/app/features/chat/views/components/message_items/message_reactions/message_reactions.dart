@@ -5,10 +5,10 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/auth/providers/auth_provider.c.dart';
-import 'package:ion/app/features/chat/e2ee/data/models/database/chat_database.c.dart';
 import 'package:ion/app/features/chat/e2ee/data/models/entities/private_direct_message_data.c.dart';
 import 'package:ion/app/features/chat/e2ee/data/models/message_reaction_group.c.dart';
 import 'package:ion/app/features/chat/e2ee/providers/e2ee_delete_event_provider.c.dart';
+import 'package:ion/app/features/chat/providers/dao/conversation_message_reaction_dao_provider.c.dart';
 import 'package:ion/app/features/components/ion_connect_avatar/ion_connect_avatar.dart';
 import 'package:ion/app/features/ion_connect/ion_connect.dart';
 
