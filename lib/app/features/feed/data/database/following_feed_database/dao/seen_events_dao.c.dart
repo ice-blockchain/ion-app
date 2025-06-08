@@ -79,10 +79,38 @@ class SeenEventsDao extends DatabaseAccessor<FollowingFeedDatabase> with _$SeenE
           ..where((tbl) => tbl.nextEventReference.isNull())
           ..where((tbl) => tbl.createdAt.isSmallerOrEqualValue(since))
           ..orderBy([
-            (tbl) => OrderingTerm(expression: tbl.createdAt),
+            (tbl) => OrderingTerm(expression: tbl.createdAt, mode: OrderingMode.desc),
           ])
           ..limit(1))
         .getSingleOrNull();
     return firstWithoutNext;
+  }
+
+  Future<List<EventReference>> getEventReferencesExcluding({
+    required FeedType feedType,
+    required List<EventReference> exclude,
+    required int limit,
+    required int since,
+    FeedModifier? feedModifier,
+  }) async {
+    final query = select(db.seenEventsTable)
+      ..where((tbl) => tbl.feedType.equalsValue(feedType))
+      ..where(
+        (tbl) => feedModifier == null
+            ? tbl.feedModifier.isNull()
+            : tbl.feedModifier.equalsValue(feedModifier),
+      )
+      ..where((tbl) => tbl.createdAt.isBiggerOrEqualValue(since))
+      ..orderBy([
+        (tbl) => OrderingTerm(expression: tbl.createdAt, mode: OrderingMode.desc),
+      ])
+      ..limit(limit);
+    if (exclude.isNotEmpty) {
+      query.where(
+        (tbl) => tbl.eventReference.isNotInValues(exclude),
+      );
+    }
+    final rows = await query.get();
+    return rows.map((event) => event.eventReference).toList();
   }
 }

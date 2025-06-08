@@ -82,4 +82,20 @@ class FollowingFeedSeenEventsRepository {
 
     return (createdAt: seenSequenceEnd.createdAt, eventReference: seenSequenceEnd.eventReference);
   }
+
+  Future<List<EventReference>> getEventReferences({
+    required FeedType feedType,
+    required List<EventReference> exclude,
+    required int limit,
+    required int since,
+    FeedModifier? feedModifier,
+  }) {
+    return _seenEventsDao.getEventReferencesExcluding(
+      feedType: feedType,
+      feedModifier: feedModifier,
+      exclude: exclude,
+      limit: limit,
+      since: since,
+    );
+  }
 }

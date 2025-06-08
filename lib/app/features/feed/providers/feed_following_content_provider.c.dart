@@ -18,6 +18,7 @@ import 'package:ion/app/features/ion_connect/model/action_source.c.dart';
 import 'package:ion/app/features/ion_connect/model/event_reference.c.dart';
 import 'package:ion/app/features/ion_connect/model/ion_connect_entity.dart';
 import 'package:ion/app/features/ion_connect/providers/entities_paged_data_provider.c.dart';
+import 'package:ion/app/features/ion_connect/providers/ion_connect_entity_provider.c.dart';
 import 'package:ion/app/features/ion_connect/providers/ion_connect_notifier.c.dart';
 import 'package:ion/app/features/user/providers/follow_list_provider.c.dart';
 import 'package:ion/app/services/logger/logger.dart';
@@ -54,7 +55,10 @@ class FeedFollowingContent extends _$FeedFollowingContent implements PagedNotifi
 
     try {
       final limit = feedType.pageSize;
-      final remaining = await _fetchUnseenEntities(limit: limit);
+      var remaining = await _fetchUnseenEntities(limit: limit);
+      if (remaining > 0 && showSeen) {
+        remaining = await _fetchSeenEntities(limit: remaining);
+      }
       if (remaining == limit) {
         _ensureEmptyState();
       }
@@ -116,6 +120,41 @@ class FeedFollowingContent extends _$FeedFollowingContent implements PagedNotifi
     }
 
     return 0;
+  }
+
+  Future<int> _fetchSeenEntities({required int limit}) async {
+    final seenEventsRepository = ref.read(followingFeedSeenEventsRepositoryProvider);
+    final feedConfig = await ref.read(feedConfigProvider.future);
+
+    final stateEntityReferences =
+        state.items?.map((entity) => entity.toEventReference()).toList() ?? [];
+    final seenEventReferences = await seenEventsRepository.getEventReferences(
+      feedType: feedType,
+      feedModifier: feedModifier,
+      exclude: stateEntityReferences,
+      limit: limit,
+      since: DateTime.now().subtract(feedConfig.followingReqMaxAge).millisecondsSinceEpoch ~/
+          1000, //TODO:handle microseconds
+    );
+
+    //TODO:rework START
+    var fetched = 0;
+    for (final eventReference in seenEventReferences) {
+      // This is a workaround to ensure that the entities are requested
+      // and the state is updated with the seen entities.
+      // The `ionConnectEntityProvider` will handle the request and update the state.
+      final entity =
+          await ref.read(ionConnectEntityProvider(eventReference: eventReference).future);
+      if (entity != null) {
+        fetched++;
+        state = state.copyWith(
+          items: {...(state.items ?? {}), entity},
+        );
+      }
+    }
+    //TODO:rework END
+
+    return limit - fetched;
   }
 
   void _ensureEmptyState() {
