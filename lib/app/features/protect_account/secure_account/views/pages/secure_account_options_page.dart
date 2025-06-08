@@ -34,72 +34,74 @@ class SecureAccountOptionsPage extends HookConsumerWidget {
     });
 
     return SheetContent(
-      body: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          NavigationAppBar.modal(
-            title: Text(locale.protect_account_header_security),
-            actions: const [
-              NavigationCloseButton(),
-            ],
-          ),
-          SizedBox(height: 36.0.s),
-          ScreenSideOffset.small(
-            child: Column(
-              children: [
-                Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 24.0.s),
-                  child: InfoCard(
-                    iconAsset: Assets.svg.actionWalletSecureaccount,
-                    title: locale.protect_account_title_secure_account,
-                    description: locale.protect_account_description_secure_account_2fa,
-                  ),
-                ),
-                SizedBox(height: 32.0.s),
-                SecureAccountOption(
-                  title: locale.two_fa_option_backup,
-                  icon: Assets.svg.iconProtectwalletIcloud.icon(
-                    color: context.theme.appColors.primaryAccent,
-                  ),
-                  onTap: () => BackupOptionsRoute().push<void>(context),
-                  isEnabled: securityMethods?.isBackupEnabled ?? false,
-                  isLoading: isLoading,
-                ),
-                SizedBox(height: 12.0.s),
-                SecureAccountOption(
-                  title: locale.two_fa_option_email,
-                  icon: Assets.svg.iconFieldEmail.icon(
-                    color: context.theme.appColors.primaryAccent,
-                  ),
-                  onTap: () => _onEmailPressed(context, securityMethods),
-                  isEnabled: securityMethods?.isEmailEnabled ?? false,
-                  isLoading: isLoading,
-                ),
-                SizedBox(height: 12.0.s),
-                SecureAccountOption(
-                  title: locale.two_fa_option_authenticator,
-                  icon: Assets.svg.iconLoginAuthcode.icon(
-                    color: context.theme.appColors.primaryAccent,
-                  ),
-                  isEnabled: securityMethods?.isAuthenticatorEnabled ?? false,
-                  isLoading: isLoading,
-                  onTap: () => _onAuthenticatorPressed(context, securityMethods),
-                ),
-                SizedBox(height: 12.0.s),
-                SecureAccountOption(
-                  title: locale.two_fa_option_phone,
-                  icon: Assets.svg.iconFieldPhone.icon(
-                    color: context.theme.appColors.primaryAccent,
-                  ),
-                  onTap: () => _onPhonePressed(context, securityMethods),
-                  isEnabled: securityMethods?.isPhoneEnabled ?? false,
-                  isLoading: isLoading,
-                ),
-                ScreenBottomOffset(margin: 36.0.s),
+      body: SingleChildScrollView(
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            NavigationAppBar.modal(
+              title: Text(locale.protect_account_header_security),
+              actions: const [
+                NavigationCloseButton(),
               ],
             ),
-          ),
-        ],
+            SizedBox(height: 36.0.s),
+            ScreenSideOffset.small(
+              child: Column(
+                children: [
+                  Padding(
+                    padding: EdgeInsets.symmetric(horizontal: 24.0.s),
+                    child: InfoCard(
+                      iconAsset: Assets.svg.actionWalletSecureaccount,
+                      title: locale.protect_account_title_secure_account,
+                      description: locale.protect_account_description_secure_account_2fa,
+                    ),
+                  ),
+                  SizedBox(height: 32.0.s),
+                  SecureAccountOption(
+                    title: locale.two_fa_option_backup,
+                    icon: Assets.svg.iconProtectwalletIcloud.icon(
+                      color: context.theme.appColors.primaryAccent,
+                    ),
+                    onTap: () => BackupOptionsRoute().push<void>(context),
+                    isEnabled: securityMethods?.isBackupEnabled ?? false,
+                    isLoading: isLoading,
+                  ),
+                  SizedBox(height: 12.0.s),
+                  SecureAccountOption(
+                    title: locale.two_fa_option_email,
+                    icon: Assets.svg.iconFieldEmail.icon(
+                      color: context.theme.appColors.primaryAccent,
+                    ),
+                    onTap: () => _onEmailPressed(context, securityMethods),
+                    isEnabled: securityMethods?.isEmailEnabled ?? false,
+                    isLoading: isLoading,
+                  ),
+                  SizedBox(height: 12.0.s),
+                  SecureAccountOption(
+                    title: locale.two_fa_option_authenticator,
+                    icon: Assets.svg.iconLoginAuthcode.icon(
+                      color: context.theme.appColors.primaryAccent,
+                    ),
+                    isEnabled: securityMethods?.isAuthenticatorEnabled ?? false,
+                    isLoading: isLoading,
+                    onTap: () => _onAuthenticatorPressed(context, securityMethods),
+                  ),
+                  SizedBox(height: 12.0.s),
+                  SecureAccountOption(
+                    title: locale.two_fa_option_phone,
+                    icon: Assets.svg.iconFieldPhone.icon(
+                      color: context.theme.appColors.primaryAccent,
+                    ),
+                    onTap: () => _onPhonePressed(context, securityMethods),
+                    isEnabled: securityMethods?.isPhoneEnabled ?? false,
+                    isLoading: isLoading,
+                  ),
+                  ScreenBottomOffset(margin: 36.0.s),
+                ],
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }

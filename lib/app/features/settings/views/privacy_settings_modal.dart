@@ -35,48 +35,51 @@ class PrivacySettingsModal extends ConsumerWidget {
         UserVisibilityPrivacyOption.fromWhoCanSetting(metadata.data.whoCanInviteYouToGroups);
 
     return SheetContent(
-      body: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          NavigationAppBar.modal(
-            title: Text(context.i18n.settings_privacy),
-            actions: const [
-              NavigationCloseButton(),
-            ],
-          ),
-          ScreenSideOffset.small(
-            child: ScreenBottomOffset(
-              margin: 32.0.s,
-              child: SeparatedColumn(
-                mainAxisSize: MainAxisSize.min,
-                separator: SelectableOptionsGroup.separator,
-                children: [
-                  SelectableOptionsGroup(
-                    title: context.i18n.privacy_group_wallet_address_title,
-                    selected: [walletPrivacy],
-                    options: WalletAddressPrivacyOption.values,
-                    onSelected: (option) => ref
-                        .read(updateUserMetadataNotifierProvider.notifier)
-                        .publishWallets(option),
-                  ),
-                  SelectableOptionsGroup(
-                    title: context.i18n.privacy_group_who_can_message_you_title,
-                    selected: [messagingPrivacy],
-                    options: UserVisibilityPrivacyOption.values,
-                    onSelected: (option) =>
-                        _onMessagingPrivacyOptionSelected(ref, metadata, option),
-                  ),
-                  SelectableOptionsGroup(
-                    title: context.i18n.privacy_group_who_can_invite_you_title,
-                    selected: [invitingPrivacy],
-                    options: UserVisibilityPrivacyOption.values,
-                    onSelected: (option) => _onInvitingPrivacyOptionSelected(ref, metadata, option),
-                  ),
-                ],
+      body: SingleChildScrollView(
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            NavigationAppBar.modal(
+              title: Text(context.i18n.settings_privacy),
+              actions: const [
+                NavigationCloseButton(),
+              ],
+            ),
+            ScreenSideOffset.small(
+              child: ScreenBottomOffset(
+                margin: 32.0.s,
+                child: SeparatedColumn(
+                  mainAxisSize: MainAxisSize.min,
+                  separator: SelectableOptionsGroup.separator,
+                  children: [
+                    SelectableOptionsGroup(
+                      title: context.i18n.privacy_group_wallet_address_title,
+                      selected: [walletPrivacy],
+                      options: WalletAddressPrivacyOption.values,
+                      onSelected: (option) => ref
+                          .read(updateUserMetadataNotifierProvider.notifier)
+                          .publishWallets(option),
+                    ),
+                    SelectableOptionsGroup(
+                      title: context.i18n.privacy_group_who_can_message_you_title,
+                      selected: [messagingPrivacy],
+                      options: UserVisibilityPrivacyOption.values,
+                      onSelected: (option) =>
+                          _onMessagingPrivacyOptionSelected(ref, metadata, option),
+                    ),
+                    SelectableOptionsGroup(
+                      title: context.i18n.privacy_group_who_can_invite_you_title,
+                      selected: [invitingPrivacy],
+                      options: UserVisibilityPrivacyOption.values,
+                      onSelected: (option) =>
+                          _onInvitingPrivacyOptionSelected(ref, metadata, option),
+                    ),
+                  ],
+                ),
               ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }
