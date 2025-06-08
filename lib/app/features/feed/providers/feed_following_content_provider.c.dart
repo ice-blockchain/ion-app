@@ -48,35 +48,15 @@ class FeedFollowingContent extends _$FeedFollowingContent implements PagedNotifi
   /// The max createdAt of the events we request from the relays is determined by the `FeedConfig.followingReqMaxAge`
   /// The max number of concurrent requests is determined by `FeedConfig.concurrentRequests`
   @override
-  Future<void> fetchEntities({bool bypassLoading = false, int? limit}) async {
-    if (_loading && !bypassLoading) return;
+  Future<void> fetchEntities() async {
+    if (_loading) return;
     _loading = true;
 
     try {
-      final fetchLimit = limit ?? feedType.pageSize;
-
-      final dataSourcePubkeys = await _getDataSourcePubkeys();
-
-      if (dataSourcePubkeys.isEmpty) {
+      final limit = feedType.pageSize;
+      final remaining = await _fetchUnseenEntities(limit: limit);
+      if (remaining == limit) {
         _ensureEmptyState();
-        return;
-      }
-
-      _initPagination(pubkeys: dataSourcePubkeys);
-
-      final nextPagePubkeys =
-          await _getNextPagePubkeys(pubkeys: dataSourcePubkeys, limit: fetchLimit);
-
-      if (nextPagePubkeys.isEmpty) {
-        _ensureEmptyState();
-        return;
-      }
-
-      final results = await _requestEntities(pubkeys: nextPagePubkeys);
-      final remaining = fetchLimit - results.nonNulls.length;
-
-      if (remaining > 0) {
-        return fetchEntities(limit: remaining, bypassLoading: true);
       }
     } finally {
       _loading = false;
@@ -111,6 +91,32 @@ class FeedFollowingContent extends _$FeedFollowingContent implements PagedNotifi
   }
 
   bool _loading = false;
+
+  // TODO:add comment
+  Future<int> _fetchUnseenEntities({required int limit}) async {
+    final dataSourcePubkeys = await _getDataSourcePubkeys();
+
+    if (dataSourcePubkeys.isEmpty) {
+      return limit;
+    }
+
+    _initPagination(pubkeys: dataSourcePubkeys);
+
+    final nextPagePubkeys = await _getNextPagePubkeys(pubkeys: dataSourcePubkeys, limit: limit);
+
+    if (nextPagePubkeys.isEmpty) {
+      return limit;
+    }
+
+    final results = await _requestEntities(pubkeys: nextPagePubkeys);
+    final remaining = limit - results.nonNulls.length;
+
+    if (remaining > 0) {
+      return _fetchUnseenEntities(limit: remaining);
+    }
+
+    return 0;
+  }
 
   void _ensureEmptyState() {
     if (state.items == null) {
