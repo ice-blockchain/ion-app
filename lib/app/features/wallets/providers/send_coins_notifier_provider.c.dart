@@ -16,11 +16,11 @@ import 'package:ion/app/features/wallets/data/models/transaction_details.c.dart'
 import 'package:ion/app/features/wallets/data/models/transaction_status.c.dart';
 import 'package:ion/app/features/wallets/data/models/transaction_type.dart';
 import 'package:ion/app/features/wallets/data/models/transfer_result.c.dart';
-import 'package:ion/app/features/wallets/data/repository/transactions_repository.c.dart';
-import 'package:ion/app/features/wallets/domain/coins/coins_service.c.dart';
-import 'package:ion/app/features/wallets/domain/transactions/send_transaction_to_relay_service.c.dart';
+import 'package:ion/app/features/wallets/providers/coins/coins_service.c.dart';
+import 'package:ion/app/features/wallets/providers/repository/transactions_repository.c.dart';
 import 'package:ion/app/features/wallets/providers/send_asset_form_provider.c.dart';
 import 'package:ion/app/features/wallets/providers/synced_coins_by_symbol_group_provider.c.dart';
+import 'package:ion/app/features/wallets/providers/transactions/send_transaction_to_relay_service.c.dart';
 import 'package:ion/app/features/wallets/providers/wallet_view_data_provider.c.dart';
 import 'package:ion/app/services/logger/logger.dart';
 import 'package:ion/app/utils/retry.dart';

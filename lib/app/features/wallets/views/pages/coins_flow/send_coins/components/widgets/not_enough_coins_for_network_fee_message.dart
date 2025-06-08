@@ -10,8 +10,8 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/wallets/data/models/coins_group.c.dart';
 import 'package:ion/app/features/wallets/data/models/network_data.c.dart';
-import 'package:ion/app/features/wallets/data/repository/coins_repository.c.dart';
 import 'package:ion/app/features/wallets/providers/coins_provider.c.dart';
+import 'package:ion/app/features/wallets/providers/repository/coins_repository.c.dart';
 import 'package:ion/app/features/wallets/views/pages/coins_flow/receive_coins/providers/receive_coins_form_provider.c.dart';
 import 'package:ion/app/router/app_routes.c.dart';
 

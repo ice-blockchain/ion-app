@@ -9,8 +9,8 @@ import 'package:ion/app/features/feed/views/pages/feed_page/components/feed_cont
 import 'package:ion/app/features/ion_connect/providers/ion_connect_cache.c.dart';
 import 'package:ion/app/features/user/providers/follow_list_provider.c.dart';
 import 'package:ion/app/features/user/providers/friends_section_providers.c.dart';
-import 'package:ion/app/features/wallets/domain/transactions/sync_transactions_service.c.dart';
 import 'package:ion/app/features/wallets/providers/synced_coins_by_symbol_group_provider.c.dart';
+import 'package:ion/app/features/wallets/providers/transactions/sync_transactions_service.c.dart';
 import 'package:ion/app/features/wallets/providers/wallet_view_data_provider.c.dart';
 import 'package:ion/app/features/wallets/views/pages/wallet_page/components/balance/balance.dart';
 import 'package:ion/app/features/wallets/views/pages/wallet_page/components/coins/coins_tab.dart';

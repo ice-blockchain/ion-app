@@ -5,7 +5,7 @@ import 'package:ion/app/features/auth/providers/auth_provider.c.dart';
 import 'package:ion/app/features/wallets/data/models/coin_data.c.dart';
 import 'package:ion/app/features/wallets/data/models/coin_in_wallet_data.c.dart';
 import 'package:ion/app/features/wallets/data/models/coins_group.c.dart';
-import 'package:ion/app/features/wallets/domain/coins/coins_service.c.dart';
+import 'package:ion/app/features/wallets/providers/coins/coins_service.c.dart';
 import 'package:ion/app/features/wallets/providers/wallet_view_data_provider.c.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 

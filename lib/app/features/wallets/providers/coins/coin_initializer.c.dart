@@ -4,8 +4,8 @@ import 'dart:convert';
 
 import 'package:flutter/services.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:ion/app/features/wallets/data/repository/coins_repository.c.dart';
-import 'package:ion/app/features/wallets/domain/coins/coins_mapper.dart';
+import 'package:ion/app/features/wallets/providers/coins/coins_mapper.dart';
+import 'package:ion/app/features/wallets/providers/repository/coins_repository.c.dart';
 import 'package:ion/generated/assets.gen.dart';
 import 'package:ion_identity_client/ion_identity.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';

@@ -2,7 +2,7 @@
 
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/features/wallets/data/models/network_data.c.dart';
-import 'package:ion/app/features/wallets/data/repository/networks_repository.c.dart';
+import 'package:ion/app/features/wallets/providers/repository/networks_repository.c.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'networks_provider.c.g.dart';

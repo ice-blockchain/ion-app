@@ -4,8 +4,8 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/features/wallets/data/models/database/dao/networks_dao.c.dart';
 import 'package:ion/app/features/wallets/data/models/database/wallets_database.c.dart' as db;
 import 'package:ion/app/features/wallets/data/models/network_data.c.dart';
-import 'package:ion/app/features/wallets/domain/networks/network_mapper.dart';
 import 'package:ion/app/features/wallets/providers/dao/networks_dao_provider.c.dart';
+import 'package:ion/app/features/wallets/providers/networks/network_mapper.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'networks_repository.c.g.dart';

@@ -9,7 +9,7 @@ import 'package:ion/app/features/wallets/data/models/network_data.c.dart';
 import 'package:ion/app/features/wallets/data/models/network_fee_information.c.dart';
 import 'package:ion/app/features/wallets/data/models/network_fee_option.c.dart';
 import 'package:ion/app/features/wallets/data/models/network_fee_type.dart';
-import 'package:ion/app/features/wallets/domain/coins/coins_service.c.dart';
+import 'package:ion/app/features/wallets/providers/coins/coins_service.c.dart';
 import 'package:ion/app/services/logger/logger.dart';
 import 'package:ion/app/services/providers/ion_identity/ion_identity_client_provider.c.dart';
 import 'package:ion_identity_client/ion_identity.dart' as ion;

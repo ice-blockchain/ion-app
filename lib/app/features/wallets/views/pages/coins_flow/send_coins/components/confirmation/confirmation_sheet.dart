@@ -17,10 +17,10 @@ import 'package:ion/app/features/wallets/data/models/crypto_asset_to_send_data.c
 import 'package:ion/app/features/wallets/data/models/network_data.c.dart';
 import 'package:ion/app/features/wallets/data/models/network_fee_option.c.dart';
 import 'package:ion/app/features/wallets/data/models/transaction_type.dart';
-import 'package:ion/app/features/wallets/domain/transactions/sync_transactions_service.c.dart';
 import 'package:ion/app/features/wallets/providers/send_asset_form_provider.c.dart';
 import 'package:ion/app/features/wallets/providers/send_coins_notifier_provider.c.dart';
 import 'package:ion/app/features/wallets/providers/transaction_provider.c.dart';
+import 'package:ion/app/features/wallets/providers/transactions/sync_transactions_service.c.dart';
 import 'package:ion/app/features/wallets/providers/wallet_view_data_provider.c.dart';
 import 'package:ion/app/features/wallets/views/components/arrival_time/list_item_arrival_time.dart';
 import 'package:ion/app/features/wallets/views/components/network_fee/list_item_network_fee.dart';

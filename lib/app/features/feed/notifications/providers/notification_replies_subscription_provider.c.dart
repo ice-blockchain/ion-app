@@ -6,7 +6,7 @@ import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/auth/providers/auth_provider.c.dart';
 import 'package:ion/app/features/feed/data/models/entities/modifiable_post_data.c.dart';
 import 'package:ion/app/features/feed/notifications/data/models/ion_notification.c.dart';
-import 'package:ion/app/features/feed/notifications/data/repository/comments_repository.c.dart';
+import 'package:ion/app/features/feed/notifications/providers/repository/comments_repository.c.dart';
 import 'package:ion/app/features/ion_connect/data/models/related_event.c.dart';
 import 'package:ion/app/features/ion_connect/data/models/related_event_marker.dart';
 import 'package:ion/app/features/ion_connect/data/models/search_extension.dart';

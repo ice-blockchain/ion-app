@@ -7,8 +7,8 @@ import 'package:ion/app/features/wallets/data/models/coin_transaction_history_st
 import 'package:ion/app/features/wallets/data/models/network_data.c.dart';
 import 'package:ion/app/features/wallets/data/models/transaction_crypto_asset.c.dart';
 import 'package:ion/app/features/wallets/data/models/transaction_data.c.dart';
-import 'package:ion/app/features/wallets/data/repository/transactions_repository.c.dart';
 import 'package:ion/app/features/wallets/providers/connected_crypto_wallets_provider.c.dart';
+import 'package:ion/app/features/wallets/providers/repository/transactions_repository.c.dart';
 import 'package:ion/app/features/wallets/providers/synced_coins_by_symbol_group_provider.c.dart';
 import 'package:ion/app/features/wallets/providers/wallet_view_data_provider.c.dart';
 import 'package:ion/app/features/wallets/views/pages/coins_flow/coin_details/providers/network_selector_notifier.c.dart';

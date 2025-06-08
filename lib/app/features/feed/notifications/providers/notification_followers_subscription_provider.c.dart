@@ -3,7 +3,7 @@
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/exceptions/exceptions.dart';
 import 'package:ion/app/features/auth/providers/auth_provider.c.dart';
-import 'package:ion/app/features/feed/notifications/data/repository/followers_repository.c.dart';
+import 'package:ion/app/features/feed/notifications/providers/repository/followers_repository.c.dart';
 import 'package:ion/app/features/ion_connect/data/models/ion_connect_entity.dart';
 import 'package:ion/app/features/ion_connect/data/models/search_extension.dart';
 import 'package:ion/app/features/ion_connect/ion_connect.dart';

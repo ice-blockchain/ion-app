@@ -9,11 +9,11 @@ targets:
       json_serializable:json_serializable:
         generate_for:
           include:
-            - lib/**.c.dart
+            - lib/**/data/models/**.c.dart
       riverpod_generator:riverpod_generator:
         generate_for:
           include:
-            - lib/**.c.dart
+            - lib/**/providers/**.c.dart
       go_router_builder:go_router_builder:
         generate_for:
           include:

@@ -1,15 +1,7 @@
 // SPDX-License-Identifier: ice License 1.0
 
 import 'package:dio/dio.dart';
-import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:ion/app/features/core/providers/dio_provider.c.dart';
 import 'package:ion/app/features/wallets/data/models/nft_data.c.dart';
-import 'package:riverpod_annotation/riverpod_annotation.dart';
-
-part 'nfts_repository.c.g.dart';
-
-@riverpod
-NftsRepository nftsRepository(Ref ref) => NftsRepository(ref.watch(dioProvider));
 
 class NftsRepository {
   NftsRepository(this._dio);

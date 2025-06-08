@@ -2,7 +2,7 @@
 
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/features/wallets/data/models/transaction_data.c.dart';
-import 'package:ion/app/features/wallets/data/repository/transactions_repository.c.dart';
+import 'package:ion/app/features/wallets/providers/repository/transactions_repository.c.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'external_hash_processor.c.g.dart';

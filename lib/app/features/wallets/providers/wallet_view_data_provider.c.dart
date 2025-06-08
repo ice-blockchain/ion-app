@@ -7,8 +7,8 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/features/core/providers/wallets_provider.c.dart';
 import 'package:ion/app/features/wallets/data/models/coin_data.c.dart';
 import 'package:ion/app/features/wallets/data/models/wallet_view_data.c.dart';
-import 'package:ion/app/features/wallets/domain/wallet_views/wallet_views_service.c.dart';
 import 'package:ion/app/features/wallets/providers/selected_wallet_view_id_provider.c.dart';
+import 'package:ion/app/features/wallets/providers/wallet_views/wallet_views_service.c.dart';
 import 'package:ion/app/features/wallets/providers/wallets_initializer_provider.c.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 

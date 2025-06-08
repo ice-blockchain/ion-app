@@ -9,7 +9,7 @@ import 'package:ion/app/features/feed/notifications/data/database/dao/comments_d
 import 'package:ion/app/features/feed/notifications/data/database/notifications_database.c.dart';
 import 'package:ion/app/features/feed/notifications/data/database/tables/comments_table.c.dart';
 import 'package:ion/app/features/feed/notifications/data/models/ion_notification.c.dart';
-import 'package:ion/app/features/feed/notifications/data/repository/ion_notification_repository.dart';
+import 'package:ion/app/features/feed/notifications/providers/repository/ion_notification_repository.dart';
 import 'package:ion/app/features/feed/notifications/providers/dao/comments_dao_provider.c.dart';
 import 'package:ion/app/features/ion_connect/data/models/ion_connect_entity.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';

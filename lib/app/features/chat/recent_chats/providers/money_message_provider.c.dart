@@ -6,8 +6,8 @@ import 'package:ion/app/features/ion_connect/ion_connect.dart';
 import 'package:ion/app/features/wallets/data/models/entities/funds_request_entity.c.dart';
 import 'package:ion/app/features/wallets/data/models/entities/wallet_asset_entity.c.dart';
 import 'package:ion/app/features/wallets/data/models/transaction_data.c.dart';
-import 'package:ion/app/features/wallets/data/repository/request_assets_repository.c.dart';
-import 'package:ion/app/features/wallets/data/repository/transactions_repository.c.dart';
+import 'package:ion/app/features/wallets/providers/repository/request_assets_repository.c.dart';
+import 'package:ion/app/features/wallets/providers/repository/transactions_repository.c.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'money_message_provider.c.g.dart';
