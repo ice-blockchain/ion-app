@@ -23,6 +23,7 @@ import 'package:ion/app/features/wallets/data/models/transaction_status.c.dart';
 import 'package:ion/app/features/wallets/data/models/transaction_type.dart';
 import 'package:ion/app/features/wallets/data/models/wallet_view_data.c.dart';
 import 'package:ion/app/features/wallets/providers/dao/coins_dao_provider.c.dart';
+import 'package:ion/app/features/wallets/providers/dao/networks_dao_provider.c.dart';
 import 'package:ion/app/features/wallets/providers/dao/transactions_dao_provider.c.dart';
 import 'package:ion/app/features/wallets/utils/crypto_amount_parser.dart';
 import 'package:ion/app/services/logger/logger.dart';

@@ -9,7 +9,7 @@ import 'package:ion/app/features/chat/community/data/models/entities/community_d
 import 'package:ion/app/features/chat/community/providers/community_admins_provider.c.dart';
 import 'package:ion/app/features/chat/community/providers/invite_to_community_provider.c.dart';
 import 'package:ion/app/features/chat/community/providers/join_community_provider.c.dart';
-import 'package:ion/app/features/chat/e2ee/data/models/database/chat_database.c.dart';
+import 'package:ion/app/features/chat/providers/dao/conversation_dao_provider.c.dart';
 import 'package:ion/app/features/ion_connect/data/models/event_setting.c.dart';
 import 'package:ion/app/features/ion_connect/data/models/file_alt.dart';
 import 'package:ion/app/features/ion_connect/providers/ion_connect_notifier.c.dart';

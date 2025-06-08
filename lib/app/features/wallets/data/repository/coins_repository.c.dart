@@ -8,6 +8,7 @@ import 'package:ion/app/features/wallets/data/models/database/dao/sync_coins_dao
 import 'package:ion/app/features/wallets/data/models/database/wallets_database.c.dart';
 import 'package:ion/app/features/wallets/data/models/network_data.c.dart';
 import 'package:ion/app/features/wallets/providers/dao/coins_dao_provider.c.dart';
+import 'package:ion/app/features/wallets/providers/dao/sync_coins_dao_provider.c.dart';
 import 'package:ion/app/services/providers/storage/local_storage.c.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 

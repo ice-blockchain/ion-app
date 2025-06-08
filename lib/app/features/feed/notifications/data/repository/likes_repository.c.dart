@@ -8,6 +8,7 @@ import 'package:ion/app/features/feed/notifications/data/database/dao/likes_dao.
 import 'package:ion/app/features/feed/notifications/data/database/notifications_database.c.dart';
 import 'package:ion/app/features/feed/notifications/data/models/ion_notification.c.dart';
 import 'package:ion/app/features/feed/notifications/data/repository/ion_notification_repository.dart';
+import 'package:ion/app/features/feed/notifications/providers/dao/likes_dao_provider.c.dart';
 import 'package:ion/app/features/ion_connect/data/models/ion_connect_entity.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 

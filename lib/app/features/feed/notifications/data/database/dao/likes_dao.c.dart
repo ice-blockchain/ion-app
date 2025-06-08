@@ -1,17 +1,11 @@
 // SPDX-License-Identifier: ice License 1.0
 
 import 'package:drift/drift.dart';
-import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/feed/notifications/data/database/notifications_database.c.dart';
 import 'package:ion/app/features/feed/notifications/data/database/tables/likes_table.c.dart';
-import 'package:ion/app/features/feed/notifications/providers/database/notifications_database_provider.c.dart';
-import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'likes_dao.c.g.dart';
-
-@Riverpod(keepAlive: true)
-LikesDao likesDao(Ref ref) => LikesDao(db: ref.watch(notificationsDatabaseProvider));
 
 @DriftAccessor(tables: [LikesTable])
 class LikesDao extends DatabaseAccessor<NotificationsDatabase> with _$LikesDaoMixin {

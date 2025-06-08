@@ -1,20 +1,12 @@
 // SPDX-License-Identifier: ice License 1.0
 
 import 'package:drift/drift.dart';
-import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/wallets/data/models/database/tables/funds_requests_table.c.dart';
 import 'package:ion/app/features/wallets/data/models/database/tables/transactions_table.c.dart';
 import 'package:ion/app/features/wallets/data/models/database/wallets_database.c.dart';
-import 'package:ion/app/features/wallets/providers/database/wallets_database_provider.c.dart';
-import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'funds_requests_dao.c.g.dart';
-
-@Riverpod(keepAlive: true)
-FundsRequestsDao fundsRequestsDao(Ref ref) => FundsRequestsDao(
-      db: ref.watch(walletsDatabaseProvider),
-    );
 
 @DriftAccessor(tables: [FundsRequestsTable, TransactionsTable])
 class FundsRequestsDao extends DatabaseAccessor<WalletsDatabase> with _$FundsRequestsDaoMixin {
