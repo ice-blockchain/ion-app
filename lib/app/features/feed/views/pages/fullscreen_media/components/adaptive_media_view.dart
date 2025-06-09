@@ -17,7 +17,7 @@ class AdaptiveMediaView extends HookConsumerWidget {
 
   final EventReference eventReference;
   final EventReference? framedEventReference;
-  final int? initialMediaIndex;
+  final int initialMediaIndex;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -32,7 +32,7 @@ class AdaptiveMediaView extends HookConsumerWidget {
         return MediaContentHandler(
           post: post,
           eventReference: eventReference,
-          initialMediaIndex: initialMediaIndex ?? 0,
+          initialMediaIndex: initialMediaIndex,
           framedEventReference: framedEventReference,
         );
       },
