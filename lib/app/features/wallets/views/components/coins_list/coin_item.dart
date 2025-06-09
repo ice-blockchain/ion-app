@@ -79,20 +79,7 @@ class CoinsGroupItemPlaceholder extends StatelessWidget {
           ),
         ],
       ),
-      leading: Container(
-        decoration: BoxDecoration(
-          color: context.theme.appColors.onTerararyFill,
-          borderRadius: BorderRadius.circular(10.0.s),
-        ),
-        height: 36.0.s,
-        width: 36.0.s,
-        alignment: Alignment.center,
-        child: SizedBox(
-          height: 24.0.s,
-          width: 24.0.s,
-          child: Assets.svg.walletManageCoinsEmpty.icon(size: 24.0.s),
-        ),
-      ),
+      leading: Assets.svg.walletemptyicon2.icon(size: 36.0.s),
       trailing: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         crossAxisAlignment: CrossAxisAlignment.end,
