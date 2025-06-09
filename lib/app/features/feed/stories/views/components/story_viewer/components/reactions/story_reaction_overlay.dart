@@ -5,6 +5,7 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_keyboard_visibility/flutter_keyboard_visibility.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/extensions/extensions.dart';
+import 'package:ion/app/features/chat/views/components/message_items/components.dart';
 import 'package:ion/app/features/feed/data/models/entities/modifiable_post_data.c.dart';
 import 'package:ion/app/features/feed/stories/providers/emoji_reaction_provider.c.dart';
 import 'package:ion/app/features/feed/stories/providers/story_reply_provider.c.dart';
@@ -124,10 +125,7 @@ class _ReactionButton extends StatelessWidget {
         width: 54.0.s,
         height: 54.0.s,
         child: Center(
-          child: Text(
-            emoji,
-            style: TextStyle(fontSize: 40.0.s),
-          ),
+          child: Text(emoji, style: TextStyle(fontSize: 40.0.s).platformEmojiAware()),
         ),
       ),
     );

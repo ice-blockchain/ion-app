@@ -15,6 +15,7 @@ import 'package:ion/app/features/chat/recent_chats/providers/conversations_edit_
 import 'package:ion/app/features/chat/recent_chats/providers/selected_conversations_ids_provider.c.dart';
 import 'package:ion/app/features/chat/recent_chats/views/pages/recent_chat_overlay/recent_chat_overlay.dart';
 import 'package:ion/app/features/chat/views/components/message_items/message_metadata/message_metadata.dart';
+import 'package:ion/app/features/chat/views/components/message_items/message_types/emoji_message/emoji_message.dart';
 import 'package:ion/app/features/ion_connect/model/event_reference.c.dart';
 import 'package:ion/app/features/user/providers/user_metadata_provider.c.dart';
 import 'package:ion/app/features/user_block/providers/block_list_notifier.c.dart';
@@ -337,9 +338,15 @@ class ChatPreview extends HookConsumerWidget {
                 snapshot.hasData ? snapshot.data ?? content : content,
                 maxLines: maxLines,
                 overflow: TextOverflow.ellipsis,
-                style: context.theme.appTextThemes.body2.copyWith(
-                  color: textColor ?? context.theme.appColors.onTertararyBackground,
-                ),
+                style: messageType == MessageType.emoji
+                    ? context.theme.appTextThemes.body2
+                        .copyWith(
+                          color: textColor ?? context.theme.appColors.onTertararyBackground,
+                        )
+                        .platformEmojiAware()
+                    : context.theme.appTextThemes.body2.copyWith(
+                        color: textColor ?? context.theme.appColors.onTertararyBackground,
+                      ),
               );
             },
           ),

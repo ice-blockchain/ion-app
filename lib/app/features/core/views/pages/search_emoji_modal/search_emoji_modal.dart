@@ -10,6 +10,7 @@ import 'package:ion/app/components/screen_offset/screen_side_offset.dart';
 import 'package:ion/app/components/separated/separated_column.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/chat/providers/recent_emoji_reactions_provider.c.dart';
+import 'package:ion/app/features/chat/views/components/message_items/components.dart';
 import 'package:ion/app/features/core/model/emoji/emoji_category.dart';
 import 'package:ion/app/features/core/model/emoji/emoji_group.c.dart';
 import 'package:ion/app/features/core/providers/emoji/emoji_set_provider.c.dart';
