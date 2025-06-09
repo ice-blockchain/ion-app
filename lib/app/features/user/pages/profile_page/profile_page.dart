@@ -51,7 +51,9 @@ class ProfilePage extends HookConsumerWidget {
     final isBlockedOrBlockedBy =
         isBlocked != null && isBlocked || isBlockedBy != null && isBlockedBy;
 
-    if (!userMetadata.hasValue || isBlockedOrBlockedBy) {
+    final isDeleted = ref.watch(isUserDeletedProvider(pubkey)).valueOrNull.falseOrValue;
+
+    if (isDeleted || isBlockedOrBlockedBy) {
       return const CantFindProfilePage();
     }
 
