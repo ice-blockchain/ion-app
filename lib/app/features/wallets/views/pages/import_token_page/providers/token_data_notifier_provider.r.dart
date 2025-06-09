@@ -1,5 +1,8 @@
 // SPDX-License-Identifier: ice License 1.0
 
+import 'package:ion/app/features/wallets/model/coin_data.c.dart';
+import 'package:ion/app/features/wallets/views/pages/import_token_page/providers/token_form_notifier_provider.c.dart';
+import 'package:ion/app/services/ion_identity/ion_identity_client_provider.c.dart';
 import 'package:ion/app/features/wallets/model/coin_data.f.dart';
 import 'package:ion/app/features/wallets/views/pages/import_token_page/providers/selected_network_provider.r.dart';
 import 'package:ion/app/features/wallets/views/pages/import_token_page/providers/token_address_provider.r.dart';
@@ -14,10 +17,15 @@ class TokenDataNotifier extends _$TokenDataNotifier {
   Future<CoinData?> build() async => null;
 
   Future<void> fetchTokenData() async {
-    final network = ref.read(selectedNetworkProvider);
-    final tokenAddress = ref.read(tokenAddressProvider);
+    final network = ref.read(tokenFormNotifierProvider.select((state) => state.network));
+    final tokenAddress = ref.read(tokenFormNotifierProvider.select((state) => state.address));
 
-    if (tokenAddress == null || network == null || tokenAddress.isEmpty) {
+    final isEmptyFetchParams = tokenAddress == null || network == null || tokenAddress.isEmpty;
+    final isDataAlreadyLoaded = state.hasValue &&
+        state.valueOrNull?.contractAddress == tokenAddress &&
+        state.valueOrNull?.network.id == network?.id;
+
+    if (isEmptyFetchParams || isDataAlreadyLoaded) {
       return;
     }
 

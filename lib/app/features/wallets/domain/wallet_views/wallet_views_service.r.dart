@@ -28,6 +28,7 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:stream_transform/stream_transform.dart';
 
 part 'create_update_wallet_view_request_builder.dart';
+part 'wallet_view_parser.dart';
 part 'wallet_views_service.r.g.dart';
 
 @riverpod
@@ -51,6 +52,7 @@ Future<WalletViewsService> walletViewsService(Ref ref) async {
     wallets,
     mainWallet,
     ref.watch(coinsRepositoryProvider),
+    ref.watch(walletViewParserProvider),
     ref.watch(networksRepositoryProvider),
     transactionsRepo,
     syncService,
@@ -67,6 +69,7 @@ class WalletViewsService {
     this._userWallets,
     this._mainUserWallet,
     this._coinsRepository,
+    this._walletViewParser,
     this._networksRepository,
     this._transactionsRepository,
     this._syncWalletViewCoinsService,
@@ -76,6 +79,7 @@ class WalletViewsService {
   final Wallet? _mainUserWallet;
   final IONIdentityClient _identity;
   final CoinsRepository _coinsRepository;
+  final WalletViewParser _walletViewParser;
   final NetworksRepository _networksRepository;
   final TransactionsRepository _transactionsRepository;
   final SyncWalletViewCoinsService _syncWalletViewCoinsService;
@@ -102,15 +106,16 @@ class WalletViewsService {
         ? '' // if there no wallet views, we haven't the main one
         : viewsDetailsDTO.reduce((a, b) => a.createdAt.isBefore(b.createdAt) ? a : b).id;
 
-    _originWalletViews = viewsDetailsDTO
+    _originWalletViews = await viewsDetailsDTO
         .map(
-          (viewDTO) => _parseWalletView(
+          (viewDTO) => _walletViewParser.parse(
             viewDTO,
             networks,
             isMainWalletView: viewDTO.id == mainWalletViewId,
           ),
         )
-        .toList();
+        .wait
+        .then((result) => result.toList());
     _updateEmittedWalletViews(walletViews: _originWalletViews);
 
     return _originWalletViews;
@@ -326,7 +331,7 @@ class WalletViewsService {
     final request = _CreateUpdateRequestBuilder().build(name: name);
     final networks = await _networksRepository.getAllAsMap();
     final newWalletView = await _identity.wallets.createWalletView(request).then(
-          (viewDTO) => _parseWalletView(viewDTO, networks, isMainWalletView: false),
+          (viewDTO) => _walletViewParser.parse(viewDTO, networks, isMainWalletView: false),
         );
 
     _originWalletViews = [..._originWalletViews, newWalletView];
@@ -350,7 +355,7 @@ class WalletViewsService {
     );
 
     final updatedWalletView = await _identity.wallets.updateWalletView(walletView.id, request).then(
-          (viewDTO) => _parseWalletView(
+          (viewDTO) => _walletViewParser.parse(
             viewDTO,
             networks,
             isMainWalletView: walletView.isMainWalletView,
@@ -382,113 +387,6 @@ class WalletViewsService {
     _originWalletViews = _originWalletViews.where((view) => view.id != walletViewId).toList();
 
     _updateEmittedWalletViews(walletViews: _originWalletViews);
-  }
-
-  WalletViewData _parseWalletView(
-    WalletView viewDTO,
-    Map<String, NetworkData> networks, {
-    required bool isMainWalletView,
-  }) {
-    final coinGroups = <String, CoinsGroup>{};
-    final symbolGroups = <String>{};
-
-    var totalViewBalanceUSD = 0.0;
-
-    for (final coinInWalletDTO in viewDTO.coins) {
-      final coinDTO = coinInWalletDTO.coin;
-      final network = networks[coinDTO.network];
-      if (network == null) {
-        Logger.log('Network $network not found not');
-        continue;
-      }
-
-      var coinAmount = 0.0;
-      var rawCoinAmount = '0';
-      var coinBalanceUSD = 0.0;
-
-      final aggregationItem = _searchAggregationItem(
-        coinInWalletDTO: coinInWalletDTO,
-        aggregation: viewDTO.aggregation,
-      );
-
-      if (aggregationItem != null) {
-        final asset = aggregationItem.wallets
-            .firstWhereOrNull(
-              (wallet) => wallet.walletId == coinInWalletDTO.walletId,
-            )
-            ?.asset;
-
-        if (asset != null) {
-          rawCoinAmount = asset.balance;
-          coinAmount = parseCryptoAmount(asset.balance, asset.decimals);
-          coinBalanceUSD = coinAmount * coinDTO.priceUSD;
-        }
-      }
-
-      totalViewBalanceUSD += coinBalanceUSD;
-      final symbolGroup = coinDTO.symbolGroup;
-      symbolGroups.add(symbolGroup);
-
-      final coinInWallet = CoinInWalletData(
-        amount: coinAmount,
-        rawAmount: rawCoinAmount,
-        balanceUSD: coinBalanceUSD,
-        walletId: coinInWalletDTO.walletId,
-        coin: CoinData.fromDTO(coinDTO, network),
-      );
-
-      final currentGroup = coinGroups[symbolGroup] ?? CoinsGroup.fromCoin(coinInWallet.coin);
-      coinGroups[symbolGroup] = currentGroup.copyWith(
-        totalAmount: currentGroup.totalAmount + coinInWallet.amount,
-        totalBalanceUSD: currentGroup.totalBalanceUSD + coinInWallet.balanceUSD,
-        coins: [
-          ...currentGroup.coins,
-          coinInWallet,
-        ],
-      );
-    }
-
-    return WalletViewData(
-      coinGroups: coinGroups.values.sorted(CoinsComparator().compareGroups),
-      id: viewDTO.id,
-      name: viewDTO.name,
-      symbolGroups: symbolGroups,
-      nfts: viewDTO.nfts?.map((nft) => nft.toNft(networks[nft.network]!)).toList() ?? [],
-      createdAt: viewDTO.createdAt.microsecondsSinceEpoch,
-      updatedAt: viewDTO.updatedAt.microsecondsSinceEpoch,
-      usdBalance: totalViewBalanceUSD,
-      isMainWalletView: isMainWalletView,
-    );
-  }
-
-  WalletViewAggregationItem? _searchAggregationItem({
-    required CoinInWallet coinInWalletDTO,
-    required Map<String, WalletViewAggregationItem> aggregation,
-  }) {
-    WalletViewAggregationItem? search(Iterable<WalletViewAggregationItem> searchSample) {
-      for (final aggregation in aggregation.values) {
-        final associatedWallet = aggregation.wallets.firstWhereOrNull(
-          (e) => e.walletId == coinInWalletDTO.walletId && e.coinId == coinInWalletDTO.coin.id,
-        );
-        if (associatedWallet != null && associatedWallet.network == coinInWalletDTO.coin.network) {
-          return aggregation;
-        }
-      }
-      return null;
-    }
-
-    // Return aggregation item if aggregation map contains coin symbol as a key
-    // with the same wallet and coin ids as in CoinInWallet
-    final symbol = coinInWalletDTO.coin.symbol;
-    if (aggregation[symbol] case final WalletViewAggregationItem aggregation) {
-      final result = search([aggregation]);
-      if (result != null) return result;
-    }
-
-    // Attempt to find an aggregation item by indirect signs.
-    // The search is performed on all aggregation items with a check
-    // for matching the wallet ID, network, and coinId.
-    return search(aggregation.values);
   }
 
   void dispose() {
