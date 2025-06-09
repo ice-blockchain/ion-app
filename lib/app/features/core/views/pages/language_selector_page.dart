@@ -46,57 +46,55 @@ class LanguageSelectorPage extends HookConsumerWidget {
     final mayContinue = selectedLanguages.isNotEmpty;
 
     return SheetContent(
-      body: Column(
-        children: [
-          appBar ?? NavigationAppBar.modal(),
-          AuthHeader(
-            title: title,
-            description: description,
+      body: CustomScrollView(
+        slivers: [
+          SliverToBoxAdapter(
+            child: appBar ?? NavigationAppBar.modal(),
           ),
-          SizedBox(height: 26.0.s),
-          Expanded(
-            child: CustomScrollView(
-              slivers: [
-                CollapsingAppBar(
-                  topOffset: 8.0.s,
-                  height: SearchInput.height,
-                  child: ScreenSideOffset.small(
-                    child: SearchInput(
-                      onTextChanged: (String value) => searchQuery.value = value,
-                    ),
-                  ),
-                ),
-                SliverList.separated(
-                  itemCount: languages.length,
-                  separatorBuilder: (BuildContext _, int __) => SizedBox(
-                    height: 12.0.s,
-                  ),
-                  itemBuilder: (BuildContext context, int index) {
-                    final language = languages[index];
-                    return LanguageListItem(
-                      language: language,
-                      isSelected: selectedLanguages.contains(language.isoCode),
-                      onTap: () {
-                        toggleLanguageSelection(language.isoCode);
-                      },
-                    );
-                  },
-                ),
-                SliverPadding(
-                  padding: EdgeInsetsDirectional.only(
-                    bottom: 16.0.s + (mayContinue ? 0 : MediaQuery.paddingOf(context).bottom),
-                  ),
-                ),
-              ],
+          SliverToBoxAdapter(
+            child: AuthHeader(
+              title: title,
+              description: description,
+            ),
+          ),
+          SliverToBoxAdapter(
+            child: SizedBox(height: 26.0.s),
+          ),
+          CollapsingAppBar(
+            topOffset: 8.0.s,
+            height: SearchInput.height,
+            child: ScreenSideOffset.small(
+              child: SearchInput(
+                onTextChanged: (String value) => searchQuery.value = value,
+              ),
+            ),
+          ),
+          SliverList.separated(
+            itemCount: languages.length,
+            separatorBuilder: (BuildContext _, int __) => SizedBox(height: 12.0.s),
+            itemBuilder: (BuildContext context, int index) {
+              final language = languages[index];
+              return LanguageListItem(
+                language: language,
+                isSelected: selectedLanguages.contains(language.isoCode),
+                onTap: () => toggleLanguageSelection(language.isoCode),
+              );
+            },
+          ),
+          SliverPadding(
+            padding: EdgeInsetsDirectional.only(
+              bottom: 16.0.s + (mayContinue ? 0 : MediaQuery.paddingOf(context).bottom),
             ),
           ),
           if (mayContinue && continueButton != null) ...[
-            const HorizontalSeparator(),
-            SizedBox(height: 16.0.s),
-            ScreenSideOffset.small(
-              child: continueButton!,
+            const SliverToBoxAdapter(child: HorizontalSeparator()),
+            SliverToBoxAdapter(child: SizedBox(height: 16.0.s)),
+            SliverToBoxAdapter(
+              child: ScreenSideOffset.small(child: continueButton!),
             ),
-            SizedBox(height: 8.0.s + MediaQuery.paddingOf(context).bottom),
+            SliverToBoxAdapter(
+              child: SizedBox(height: 8.0.s + MediaQuery.paddingOf(context).bottom),
+            ),
           ],
         ],
       ),

@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/components/button/button.dart';
 import 'package:ion/app/components/list_item/list_item.dart';
-import 'package:ion/app/components/screen_offset/screen_bottom_offset.dart';
 import 'package:ion/app/components/screen_offset/screen_side_offset.dart';
 import 'package:ion/app/components/separated/separated_column.dart';
 import 'package:ion/app/extensions/extensions.dart';
@@ -32,79 +31,79 @@ class PushNotificationsSettings extends ConsumerWidget {
     final hasNotificationsPermission = hasPermissionOnDeviceLevel && !suspended;
 
     return SheetContent(
-      body: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          NavigationAppBar.modal(
-            title: Text(context.i18n.settings_push_notifications),
-            actions: const [
-              NavigationCloseButton(),
-            ],
+      body: CustomScrollView(
+        slivers: [
+          SliverPersistentHeader(
+            pinned: true,
+            delegate: _NavBarDelegate(
+              child: NavigationAppBar.modal(
+                title: Text(context.i18n.settings_push_notifications),
+                actions: const [NavigationCloseButton()],
+              ),
+            ),
           ),
-          Expanded(
-            child: ScreenBottomOffset(
-              margin: 40.0.s,
-              child: SingleChildScrollView(
-                child: ScreenSideOffset.small(
-                  child: SeparatedColumn(
-                    separator: SelectableOptionsGroup.separator,
-                    children: [
-                      _DevicePermissionButton(
-                        hasPermission: hasNotificationsPermission,
-                        hasPermissionOnDeviceLevel: hasPermissionOnDeviceLevel,
-                        onChangeAppLevelPermission:
-                            ref.read(selectedPushCategoriesProvider.notifier).toggleSuspended,
+          SliverPadding(
+            padding: EdgeInsetsDirectional.only(bottom: 40.0.s),
+            sliver: SliverToBoxAdapter(
+              child: ScreenSideOffset.small(
+                child: SeparatedColumn(
+                  separator: SelectableOptionsGroup.separator,
+                  children: [
+                    _DevicePermissionButton(
+                      hasPermission: hasNotificationsPermission,
+                      hasPermissionOnDeviceLevel: hasPermissionOnDeviceLevel,
+                      onChangeAppLevelPermission:
+                          ref.read(selectedPushCategoriesProvider.notifier).toggleSuspended,
+                    ),
+                    SelectableOptionsGroup(
+                      title: context.i18n.push_notification_social_group_title,
+                      selected: _filterSelectedOptions(
+                        SocialNotificationOption.values,
+                        selected: selectedCategories,
                       ),
-                      SelectableOptionsGroup(
-                        title: context.i18n.push_notification_social_group_title,
-                        selected: _filterSelectedOptions(
-                          SocialNotificationOption.values,
-                          selected: selectedCategories,
-                        ),
-                        options: SocialNotificationOption.values,
-                        onSelected: (option) => ref
-                            .read(selectedPushCategoriesProvider.notifier)
-                            .toggleCategory(option.category),
-                        enabled: hasNotificationsPermission,
+                      options: SocialNotificationOption.values,
+                      onSelected: (option) => ref
+                          .read(selectedPushCategoriesProvider.notifier)
+                          .toggleCategory(option.category),
+                      enabled: hasNotificationsPermission,
+                    ),
+                    SelectableOptionsGroup(
+                      title: context.i18n.push_notification_chat_group_title,
+                      selected: _filterSelectedOptions(
+                        ChatNotificationOption.values,
+                        selected: selectedCategories,
                       ),
-                      SelectableOptionsGroup(
-                        title: context.i18n.push_notification_chat_group_title,
-                        selected: _filterSelectedOptions(
-                          ChatNotificationOption.values,
-                          selected: selectedCategories,
-                        ),
-                        options: ChatNotificationOption.values,
-                        onSelected: (option) => ref
-                            .read(selectedPushCategoriesProvider.notifier)
-                            .toggleCategory(option.category),
-                        enabled: hasNotificationsPermission,
+                      options: ChatNotificationOption.values,
+                      onSelected: (option) => ref
+                          .read(selectedPushCategoriesProvider.notifier)
+                          .toggleCategory(option.category),
+                      enabled: hasNotificationsPermission,
+                    ),
+                    SelectableOptionsGroup(
+                      title: context.i18n.push_notification_wallet_group_title,
+                      selected: _filterSelectedOptions(
+                        WalletNotificationOption.values,
+                        selected: selectedCategories,
                       ),
-                      SelectableOptionsGroup(
-                        title: context.i18n.push_notification_wallet_group_title,
-                        selected: _filterSelectedOptions(
-                          WalletNotificationOption.values,
-                          selected: selectedCategories,
-                        ),
-                        options: WalletNotificationOption.values,
-                        onSelected: (option) => ref
-                            .read(selectedPushCategoriesProvider.notifier)
-                            .toggleCategory(option.category),
-                        enabled: hasNotificationsPermission,
+                      options: WalletNotificationOption.values,
+                      onSelected: (option) => ref
+                          .read(selectedPushCategoriesProvider.notifier)
+                          .toggleCategory(option.category),
+                      enabled: hasNotificationsPermission,
+                    ),
+                    SelectableOptionsGroup(
+                      title: context.i18n.push_notification_system_group_title,
+                      selected: _filterSelectedOptions(
+                        SystemNotificationOption.values,
+                        selected: selectedCategories,
                       ),
-                      SelectableOptionsGroup(
-                        title: context.i18n.push_notification_system_group_title,
-                        selected: _filterSelectedOptions(
-                          SystemNotificationOption.values,
-                          selected: selectedCategories,
-                        ),
-                        options: SystemNotificationOption.values,
-                        onSelected: (option) => ref
-                            .read(selectedPushCategoriesProvider.notifier)
-                            .toggleCategory(option.category),
-                        enabled: hasNotificationsPermission,
-                      ),
-                    ],
-                  ),
+                      options: SystemNotificationOption.values,
+                      onSelected: (option) => ref
+                          .read(selectedPushCategoriesProvider.notifier)
+                          .toggleCategory(option.category),
+                      enabled: hasNotificationsPermission,
+                    ),
+                  ],
                 ),
               ),
             ),
@@ -120,6 +119,29 @@ class PushNotificationsSettings extends ConsumerWidget {
   }) {
     return options.where((option) => selected.contains(option.category)).toList();
   }
+}
+
+class _NavBarDelegate extends SliverPersistentHeaderDelegate {
+  _NavBarDelegate({required this.child});
+
+  final Widget child;
+
+  @override
+  Widget build(BuildContext context, double shrinkOffset, bool overlaps) {
+    return Material(
+      elevation: overlaps ? 4 : 0,
+      child: child,
+    );
+  }
+
+  @override
+  double get maxExtent => NavigationAppBar.modalHeaderHeight;
+
+  @override
+  double get minExtent => NavigationAppBar.modalHeaderHeight;
+
+  @override
+  bool shouldRebuild(covariant SliverPersistentHeaderDelegate oldDelegate) => false;
 }
 
 class _DevicePermissionButton extends StatelessWidget {

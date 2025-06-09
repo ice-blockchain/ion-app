@@ -69,7 +69,7 @@ class GeneralUserDataInput extends HookWidget {
       isLive: isLive,
       verified: isValid.value,
       onTapOutside: (_) => FocusManager.instance.primaryFocus?.unfocus(),
-      suffixIcon: isValid.value && showNoErrorsIndicator
+      suffixIcon: isValid.value && showNoErrorsIndicator && errorText == null
           ? TextInputIcons(
               icons: [Assets.svg.iconBlockCheckboxOn.icon()],
             )
