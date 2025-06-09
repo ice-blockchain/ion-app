@@ -73,7 +73,7 @@ class _NetworkLabel extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: EdgeInsets.symmetric(horizontal: 6.0.s),
+      padding: EdgeInsetsDirectional.only(start: 6.0.s, end: 6.0.s, bottom: 1.5.s),
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(16.0.s),
         color: context.theme.appColors.attentionBlock,
