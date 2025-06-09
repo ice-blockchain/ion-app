@@ -9,7 +9,7 @@ import 'package:ion/app/features/auth/providers/onboarding_complete_provider.c.d
 import 'package:ion/app/features/chat/e2ee/providers/gift_unwrap_service_provider.c.dart';
 import 'package:ion/app/features/ion_connect/ion_connect.dart';
 import 'package:ion/app/features/ion_connect/model/ion_connect_gift_wrap.c.dart';
-import 'package:ion/app/features/ion_connect/providers/entities_syncer_notifier.c.dart';
+import 'package:ion/app/features/ion_connect/providers/event_syncer_provider.c.dart';
 import 'package:ion/app/features/ion_connect/providers/ion_connect_subscription_provider.c.dart';
 import 'package:ion/app/features/wallets/data/repository/request_assets_repository.c.dart';
 import 'package:ion/app/features/wallets/data/repository/transactions_repository.c.dart';
@@ -39,7 +39,7 @@ Future<void> transactionsSubscription(Ref ref) async {
   final onboardingComplete = ref.watch(onboardingCompleteProvider).valueOrNull;
   final walletViewsService = ref.watch(walletViewsServiceProvider).valueOrNull;
   final giftUnwrapService = await ref.watch(giftUnwrapServiceProvider.future);
-
+  const overlap = Duration(days: 2);
   if (currentPubkey == null ||
       transactionsRepository == null ||
       walletViewsService == null ||
@@ -50,7 +50,6 @@ Future<void> transactionsSubscription(Ref ref) async {
 
   final requestFilter = RequestFilter(
     kinds: const [IonConnectGiftWrapEntity.kind],
-    since: DateTime.now().subtract(const Duration(days: 2)).microsecondsSinceEpoch,
     tags: {
       '#k': [
         FundsRequestEntity.kind.toString(),
@@ -60,7 +59,7 @@ Future<void> transactionsSubscription(Ref ref) async {
     },
   );
 
-  await ref.watch(entitiesSyncerNotifierProvider('transactions').notifier).syncEvents(
+  final since = await ref.watch(eventSyncerProvider('transactions').notifier).syncEvents(
     requestFilters: [requestFilter],
     saveCallback: (eventMessage) => _saveEvent(
       eventMessage: eventMessage,
@@ -70,21 +69,19 @@ Future<void> transactionsSubscription(Ref ref) async {
       transactionsRepository: transactionsRepository,
       requestAssetsRepository: requestAssetsRepository,
     ),
-    maxCreatedAtBuilder: () async {
-      final transactionLastCreatedAt = await transactionsRepository.getLastCreatedAt();
-      final requestLastCreatedAt = await requestAssetsRepository.getLastCreatedAt();
-      return _getEarliestDateTime(transactionLastCreatedAt, requestLastCreatedAt);
-    },
-    minCreatedAtBuilder: (since) async {
-      final transactionFirstCreatedAt = await transactionsRepository.firstCreatedAt(after: since);
-      final requestFirstCreatedAt = await requestAssetsRepository.firstCreatedAt(after: since);
-      return _getLatestDateTime(transactionFirstCreatedAt, requestFirstCreatedAt);
-    },
-    overlap: const Duration(days: 2),
+    overlap: overlap,
   );
 
-  final requestMessage = RequestMessage()..addFilter(requestFilter);
+  final requestMessage = RequestMessage();
 
+  if (since != null) {
+    final sinceWithOverlap = since - overlap.inMicroseconds;
+    requestMessage.addFilter(
+      requestFilter.copyWith(
+        since: () => sinceWithOverlap,
+      ),
+    );
+  }
   final events = ref.watch(ionConnectEventsSubscriptionProvider(requestMessage));
 
   final subscription = events.listen(
@@ -99,24 +96,6 @@ Future<void> transactionsSubscription(Ref ref) async {
   );
 
   ref.onDispose(subscription.cancel);
-}
-
-/// Returns the earliest datetime between two optional datetimes.
-/// If both are null, returns null.
-/// If only one is null, returns the non-null one.
-DateTime? _getEarliestDateTime(DateTime? first, DateTime? second) {
-  if (first == null) return second;
-  if (second == null) return first;
-  return first.isBefore(second) ? first : second;
-}
-
-/// Returns the latest datetime between two optional datetimes.
-/// If both are null, returns null.
-/// If only one is null, returns the non-null one.
-DateTime? _getLatestDateTime(DateTime? first, DateTime? second) {
-  if (first == null) return second;
-  if (second == null) return first;
-  return first.isAfter(second) ? first : second;
 }
 
 Future<void> _saveEvent({

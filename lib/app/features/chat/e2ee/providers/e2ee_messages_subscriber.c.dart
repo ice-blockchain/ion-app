@@ -22,7 +22,7 @@ import 'package:ion/app/features/ion_connect/model/action_source.c.dart';
 import 'package:ion/app/features/ion_connect/model/deletion_request.c.dart';
 import 'package:ion/app/features/ion_connect/model/event_reference.c.dart';
 import 'package:ion/app/features/ion_connect/model/ion_connect_gift_wrap.c.dart';
-import 'package:ion/app/features/ion_connect/providers/entities_syncer_notifier.c.dart';
+import 'package:ion/app/features/ion_connect/providers/event_syncer_provider.c.dart';
 import 'package:ion/app/features/ion_connect/providers/ion_connect_event_signer_provider.c.dart';
 import 'package:ion/app/features/ion_connect/providers/ion_connect_subscription_provider.c.dart';
 import 'package:ion/app/services/ion_connect/ion_connect_gift_wrap_service.c.dart';
@@ -46,20 +46,14 @@ class E2eeMessagesSubscriber extends _$E2eeMessagesSubscriber {
       throw EventSignerNotFoundException();
     }
 
-    final latestEventMessageDate = await ref
-        .watch(conversationEventMessageDaoProvider)
-        .getLatestEventMessageDate([ReplaceablePrivateDirectMessageEntity.kind]);
-
     final userChatRelays = await ref.watch(userChatRelaysProvider(masterPubkey).future);
 
     if (userChatRelays == null) {
       return;
     }
 
-    final sinceDate = latestEventMessageDate?.add(const Duration(days: -2));
-
     final requestFilter = RequestFilter(
-      limit: -1,
+      limit: 100,
       kinds: const [IonConnectGiftWrapEntity.kind],
       tags: {
         '#k': [
@@ -72,7 +66,6 @@ class E2eeMessagesSubscriber extends _$E2eeMessagesSubscriber {
         ],
         '#p': [masterPubkey],
       },
-      since: sinceDate?.microsecondsSinceEpoch,
     );
 
     final sealService = await ref.watch(ionConnectSealServiceProvider.future);
@@ -84,8 +77,9 @@ class E2eeMessagesSubscriber extends _$E2eeMessagesSubscriber {
     final conversationMessageDao = ref.watch(conversationMessageDaoProvider);
     final conversationMessageStatusDao = ref.watch(conversationMessageDataDaoProvider);
     final conversationMessageReactionDao = ref.watch(conversationMessageReactionDaoProvider);
+    const overlap = Duration(days: 2);
 
-    await ref.watch(entitiesSyncerNotifierProvider('e2ee-messages').notifier).syncEvents(
+    final since = await ref.watch(eventSyncerProvider('e2ee-messages').notifier).syncEvents(
       requestFilters: [requestFilter],
       saveCallback: (eventMessage) => _handleMessage(
         eventMessage,
@@ -100,19 +94,19 @@ class E2eeMessagesSubscriber extends _$E2eeMessagesSubscriber {
         conversationMessageStatusDao,
         conversationMessageReactionDao,
       ),
-      maxCreatedAtBuilder: () => ref
-          .watch(conversationEventMessageDaoProvider)
-          .getLatestEventMessageDate([ReplaceablePrivateDirectMessageEntity.kind]),
-      minCreatedAtBuilder: (since) =>
-          ref.watch(conversationEventMessageDaoProvider).getEarliestEventMessageDate(
-        [ReplaceablePrivateDirectMessageEntity.kind],
-        after: since,
-      ),
-      overlap: const Duration(days: 2),
+      overlap: overlap,
       actionSource: const ActionSourceCurrentUserChat(),
     );
+    final requestMessage = RequestMessage();
 
-    final requestMessage = RequestMessage()..addFilter(requestFilter);
+    if (since != null) {
+      final sinceWithOverlap = since - overlap.inMicroseconds;
+      requestMessage.addFilter(
+        requestFilter.copyWith(
+          since: () => sinceWithOverlap,
+        ),
+      );
+    }
 
     final events = ref.watch(
       ionConnectEventsSubscriptionProvider(
