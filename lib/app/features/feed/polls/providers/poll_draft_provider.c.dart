@@ -6,7 +6,6 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'poll_draft_provider.c.g.dart';
 
-
 @riverpod
 class PollDraftNotifier extends _$PollDraftNotifier {
   @override

@@ -8,7 +8,6 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'selected_two_fa_types_provider.c.g.dart';
 
-
 @Riverpod(dependencies: [availableTwoFaTypes])
 class SelectedTwoFAOptionsNotifier extends _$SelectedTwoFAOptionsNotifier {
   @override
@@ -37,7 +36,6 @@ Set<TwoFaType> selectedTwoFaOptions(Ref ref) {
   final state = ref.watch(selectedTwoFAOptionsNotifierProvider);
   return state.selectedValues.whereType<TwoFaType>().toSet();
 }
-
 
 @Riverpod(dependencies: [])
 AvailableTwoFATypesState availableTwoFaTypes(Ref ref) =>

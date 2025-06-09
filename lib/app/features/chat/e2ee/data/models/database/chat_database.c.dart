@@ -39,7 +39,6 @@ part 'tables/message_media_table.dart';
 part 'tables/message_status_table.dart';
 part 'tables/reaction_table.dart';
 
-
 @DriftDatabase(
   tables: [
     ConversationTable,

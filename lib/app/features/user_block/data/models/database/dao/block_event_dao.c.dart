@@ -2,9 +2,8 @@
 
 part of '../block_user_database.c.dart';
 
-
-@DriftAccessor(tables: [BlockEventTable, UnblockEventTable])
-class BlockEventDao extends DatabaseAccessor<BlockUserDatabase> with _$BlockEventDaoMixin {
+@DriftAccessor(tables: [BlockEventTable])
+class BlockEventDao extends DatabaseAccessor<BlockedUsersDatabase> with _$BlockEventDaoMixin {
   BlockEventDao(super.db);
 
   Future<void> add(EventMessage event) async {

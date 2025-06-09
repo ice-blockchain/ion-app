@@ -9,7 +9,6 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'recover_user_action_notifier.c.g.dart';
 
-
 @riverpod
 class InitUserRecoveryActionNotifier extends _$InitUserRecoveryActionNotifier {
   @override

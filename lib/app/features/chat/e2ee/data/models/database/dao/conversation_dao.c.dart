@@ -2,7 +2,6 @@
 
 part of '../chat_database.c.dart';
 
-
 @DriftAccessor(
   tables: [
     ConversationTable,
