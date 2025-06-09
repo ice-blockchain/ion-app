@@ -17,7 +17,7 @@ targets:
       go_router_builder:go_router_builder:
         generate_for:
           include:
-            - lib/app/router/app_router.c.dart
+            - lib/app/router/app_routes.c.dart
       flutter_gen_runner:flutter_gen_runner:
         enabled: true
       drift_dev:drift_dev:
