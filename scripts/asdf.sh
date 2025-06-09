@@ -1,6 +1,13 @@
 #!/bin/bash
 
-brew install asdf
+if [ -f "$(dirname "$0")/utils.sh" ]; then
+    source "$(dirname "$0")/utils.sh"
+fi
+
+if ! command -v asdf &> /dev/null; then
+    echo "Installing asdf..."
+    brew install asdf
+fi
 
 flutter_version=""
 while read -r line; do
