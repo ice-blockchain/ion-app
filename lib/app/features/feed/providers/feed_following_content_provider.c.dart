@@ -55,7 +55,6 @@ class FeedFollowingContent extends _$FeedFollowingContent implements PagedNotifi
   /// The max number of concurrent requests is determined by `FeedConfig.concurrentRequests`
   @override
   Future<void> fetchEntities() async {
-    //TODO:TEST LOADING in state
     if (state.isLoading) return;
     state = state.copyWith(isLoading: true);
 
@@ -137,8 +136,7 @@ class FeedFollowingContent extends _$FeedFollowingContent implements PagedNotifi
       feedModifier: feedModifier,
       exclude: stateEntityReferences,
       limit: limit,
-      since: DateTime.now().subtract(feedConfig.followingCacheMaxAge).millisecondsSinceEpoch ~/
-          1000, //TODO:handle microseconds
+      since: DateTime.now().subtract(feedConfig.followingCacheMaxAge).microsecondsSinceEpoch,
     );
 
     final results = await Future.wait(

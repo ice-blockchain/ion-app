@@ -2,6 +2,7 @@
 
 import 'package:drift/drift.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/feed/data/database/following_feed_database/following_feed_database.c.dart';
 import 'package:ion/app/features/feed/data/database/following_feed_database/tables/seen_events_table.c.dart';
 import 'package:ion/app/features/feed/data/models/feed_modifier.dart';
@@ -19,7 +20,10 @@ class SeenEventsDao extends DatabaseAccessor<FollowingFeedDatabase> with _$SeenE
   SeenEventsDao({required FollowingFeedDatabase db}) : super(db);
 
   Future<void> insert(SeenEvent event) async {
-    await into(db.seenEventsTable).insert(event, mode: InsertMode.insertOrReplace);
+    await into(db.seenEventsTable).insert(
+      event.copyWith(createdAt: event.createdAt.toMicroseconds),
+      mode: InsertMode.insertOrReplace,
+    );
   }
 
   Future<void> updateNextEvent({
@@ -62,7 +66,7 @@ class SeenEventsDao extends DatabaseAccessor<FollowingFeedDatabase> with _$SeenE
   }
 
   /// Finds the end of the sequence -
-  /// the first next event starting [since] for provided [feedType] + [feedModifier]
+  /// the first older event starting from [since] for provided [feedType] + [feedModifier]
   /// without [nextEventReference], ordered by createdAt
   Future<SeenEvent?> getFirstWithoutNext({
     required int since,
@@ -77,7 +81,7 @@ class SeenEventsDao extends DatabaseAccessor<FollowingFeedDatabase> with _$SeenE
                 : tbl.feedModifier.equalsValue(feedModifier),
           )
           ..where((tbl) => tbl.nextEventReference.isNull())
-          ..where((tbl) => tbl.createdAt.isSmallerOrEqualValue(since))
+          ..where((tbl) => tbl.createdAt.isSmallerOrEqualValue(since.toMicroseconds))
           ..orderBy([
             (tbl) => OrderingTerm(expression: tbl.createdAt, mode: OrderingMode.desc),
           ])
@@ -100,7 +104,7 @@ class SeenEventsDao extends DatabaseAccessor<FollowingFeedDatabase> with _$SeenE
             ? tbl.feedModifier.isNull()
             : tbl.feedModifier.equalsValue(feedModifier),
       )
-      ..where((tbl) => tbl.createdAt.isBiggerOrEqualValue(since))
+      ..where((tbl) => tbl.createdAt.isBiggerOrEqualValue(since.toMicroseconds))
       ..orderBy([
         (tbl) => OrderingTerm(expression: tbl.createdAt, mode: OrderingMode.desc),
       ])
