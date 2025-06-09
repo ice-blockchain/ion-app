@@ -75,6 +75,7 @@ class EventSyncer extends _$EventSyncer {
       saveCallback(event);
     }
 
+    print('--- count: $count $state');
     if (count < limit) {
       return oldestDate;
     }
