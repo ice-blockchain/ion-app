@@ -50,6 +50,8 @@ class MediaPickerPage extends HookConsumerWidget {
 
     ref.listen(mediaSelectionNotifierProvider, (_, value) {
       if (maxSelection == 1 && value.selectedMedia.isNotEmpty == true) {
+        // this is need to avoid this callback running too early, before the previous screen
+        // is closed
         WidgetsBinding.instance.addPostFrameCallback((_) {
           if (context.mounted) {
             Navigator.of(context).pop(value.selectedMedia);
