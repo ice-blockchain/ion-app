@@ -134,8 +134,12 @@ class SeenEventsDao extends DatabaseAccessor<FollowingFeedDatabase> with _$SeenE
             ? tbl.feedModifier.isNull()
             : tbl.feedModifier.equalsValue(feedModifier),
       )
-      ..where((tbl) => tbl.createdAt.isSmallerThanValue(until.toMicroseconds))
-      ..where((tbl) => tbl.pubkey.isNotIn(retainPubkeys));
+      ..where(
+        (tbl) => Expression.or([
+          tbl.createdAt.isSmallerThanValue(until.toMicroseconds),
+          tbl.pubkey.isNotIn(retainPubkeys),
+        ]),
+      );
     await query.go();
   }
 }
