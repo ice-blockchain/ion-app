@@ -15,6 +15,7 @@ import 'package:ion/app/features/user/providers/follow_list_provider.c.dart';
 import 'package:ion/app/features/user/providers/muted_users_notifier.c.dart';
 import 'package:ion/app/features/user/providers/report_notifier.c.dart';
 import 'package:ion/app/features/user/providers/user_metadata_provider.c.dart';
+import 'package:ion/app/features/user_block/optimistic_ui/block_user_provider.c.dart';
 import 'package:ion/app/features/user_block/providers/block_list_notifier.c.dart';
 import 'package:ion/app/router/utils/show_simple_bottom_sheet.dart';
 import 'package:ion/generated/assets.gen.dart';
@@ -172,7 +173,7 @@ class _BlockUserMenuItem extends ConsumerWidget {
             child: BlockUserModal(pubkey: pubkey),
           );
         } else {
-          ref.read(blockListNotifierProvider.notifier).toggleBlocked(pubkey);
+          ref.read(toggleBlockNotifierProvider.notifier).toggle(pubkey);
         }
       },
     );

@@ -30,7 +30,7 @@ class BlockedUserListItem extends ConsumerWidget {
         }
         return BadgesUserListItem(
           title: Text(userMetadata.data.displayName),
-          trailing: BlockUserButton(pubkey: pubkey),
+          trailing: BlockUserButton(masterPubkey: pubkey),
           subtitle: Text(
             prefixUsername(
               username: userMetadata.data.name,

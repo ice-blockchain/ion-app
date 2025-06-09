@@ -73,7 +73,7 @@ void main() {
       );
 
       subscription = listen();
-      operationManager.initialize([const TestModel('1', 'A')]);
+      await operationManager.initialize([const TestModel('1', 'A')]);
 
       subscription.onData((state) {
         emissions.add(List.of(state));
@@ -105,7 +105,7 @@ void main() {
       );
 
       subscription = listen();
-      operationManager.initialize([const TestModel('1', 'A')]);
+      await operationManager.initialize([const TestModel('1', 'A')]);
 
       await operationManager.perform(
         previous: const TestModel('1', 'A'),
@@ -131,7 +131,7 @@ void main() {
 
       subscription = listen();
       const initial = TestModel('1', 'A');
-      operationManager.initialize([initial]);
+      await operationManager.initialize([initial]);
 
       await operationManager.perform(
         previous: initial,
@@ -155,7 +155,7 @@ void main() {
       );
 
       subscription = listen();
-      operationManager.initialize([
+      await operationManager.initialize([
         const TestModel('1', 'A'),
         const TestModel('2', 'X'),
       ]);
@@ -184,9 +184,9 @@ void main() {
       );
 
       subscription = listen();
-      operationManager
-        ..initialize([const TestModel('1', 'A')])
-        ..dispose();
+      await operationManager.initialize([const TestModel('1', 'A')]);
+
+      operationManager.dispose();
 
       expect(
         () => operationManager.perform(
@@ -203,7 +203,9 @@ void main() {
       final manager = OptimisticOperationManager<TestModel>(
         syncCallback: DummySyncStrategy(const Duration(milliseconds: 200)).send,
         onError: (_, __) async => false,
-      )..initialize([const TestModel('1', 'A')]);
+      );
+
+      await manager.initialize([const TestModel('1', 'A')]);
 
       final service = OptimisticService<TestModel>(manager: manager);
       final emissions = <TestModel?>[];

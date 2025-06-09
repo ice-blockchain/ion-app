@@ -1,26 +1,35 @@
 // SPDX-License-Identifier: ice License 1.0
 
-part of '../blocked_users_database.c.dart';
+part of '../block_user_database.c.dart';
 
 @Riverpod(keepAlive: true)
 BlockEventDao blockEventDao(Ref ref) => BlockEventDao(ref.watch(blockedUsersDatabaseProvider));
 
-@DriftAccessor(tables: [BlockEventTable])
-class BlockEventDao extends DatabaseAccessor<BlockedUsersDatabase> with _$BlockEventDaoMixin {
+@DriftAccessor(tables: [BlockEventTable, UnblockEventTable])
+class BlockEventDao extends DatabaseAccessor<BlockUserDatabase> with _$BlockEventDaoMixin {
   BlockEventDao(super.db);
 
   Future<void> add(EventMessage event) async {
-    final EventReference eventReference;
-    switch (event.kind) {
-      case BlockedUserEntity.kind:
-        eventReference = BlockedUserEntity.fromEventMessage(event).toEventReference();
-      default:
-        return;
-    }
+    if (event.kind != BlockedUserEntity.kind) return;
 
+    final eventReference = BlockedUserEntity.fromEventMessage(event).toEventReference();
     final dbModel = event.toBlockEventDbModel(eventReference);
 
     await into(db.blockEventTable).insert(dbModel, mode: InsertMode.insertOrReplace);
+  }
+
+  Future<EventReference?> getBlockEventReference({
+    required String masterPubkey,
+    required String blockedUserMasterPubkey,
+  }) async {
+    final blockedUsers = await getBlockedUsersEvents(masterPubkey);
+    final blockedUsersEntities = blockedUsers.map(BlockedUserEntity.fromEventMessage).toList();
+
+    final blockedUserEntity = blockedUsersEntities.firstWhereOrNull(
+      (entity) => entity.data.blockedMasterPubkeys.contains(blockedUserMasterPubkey),
+    );
+
+    return blockedUserEntity?.toEventReference();
   }
 
   Future<DateTime?> getLatestBlockEventDate() async {
@@ -28,7 +37,8 @@ class BlockEventDao extends DatabaseAccessor<BlockedUsersDatabase> with _$BlockE
       ..orderBy([(t) => OrderingTerm.desc(t.createdAt)])
       ..limit(1);
 
-    return (await query.getSingleOrNull())?.createdAt.toDateTime;
+    final row = await query.getSingleOrNull();
+    return row?.createdAt.toDateTime;
   }
 
   Future<DateTime?> getEarliestBlockEventDate({DateTime? after}) async {
@@ -42,87 +52,53 @@ class BlockEventDao extends DatabaseAccessor<BlockedUsersDatabase> with _$BlockE
       ..orderBy([(t) => OrderingTerm.asc(t.createdAt)])
       ..limit(1);
 
-    return (await query.getSingleOrNull())?.createdAt.toDateTime;
+    final row = await query.getSingleOrNull();
+    return row?.createdAt.toDateTime;
   }
 
-  Future<List<EventMessage>> getBlockedUsersEvents(String currentUserMasterPubkey) async {
-    final query = select(db.blockEventTable).join([
+  JoinedSelectStatement<HasResultSet, dynamic> _blockedUsersQuery(String currentUserMasterPubkey) {
+    return select(db.blockEventTable).join([
       leftOuterJoin(
-        db.deletedBlockEventTable,
-        db.deletedBlockEventTable.eventReference.equalsExp(db.blockEventTable.eventReference) &
-            db.deletedBlockEventTable.isDeleted.equals(true),
+        db.unblockEventTable,
+        db.unblockEventTable.eventReference.equalsExp(db.blockEventTable.eventReference),
       ),
     ])
       ..where(db.blockEventTable.masterPubkey.equals(currentUserMasterPubkey))
-      ..where(db.deletedBlockEventTable.eventReference.isNull());
+      ..where(db.unblockEventTable.eventReference.isNull());
+  }
 
-    final result = await query.get();
-
+  Future<List<EventMessage>> getBlockedUsersEvents(String currentUserMasterPubkey) async {
+    final result = await _blockedUsersQuery(currentUserMasterPubkey).get();
     return result.map((row) => row.readTable(db.blockEventTable).toEventMessage()).toList();
   }
 
   Stream<List<EventMessage>> watchBlockedUsersEvents(String currentUserMasterPubkey) {
-    final query = select(db.blockEventTable).join([
-      leftOuterJoin(
-        db.deletedBlockEventTable,
-        db.deletedBlockEventTable.eventReference.equalsExp(db.blockEventTable.eventReference) &
-            db.deletedBlockEventTable.isDeleted.equals(true),
-      ),
-    ])
-      ..where(db.blockEventTable.masterPubkey.equals(currentUserMasterPubkey))
-      ..where(db.deletedBlockEventTable.eventReference.isNull());
-
-    return query.watch().map(
+    return _blockedUsersQuery(currentUserMasterPubkey).watch().map(
           (rows) => rows.map((row) => row.readTable(db.blockEventTable).toEventMessage()).toList(),
         );
   }
 
-  Future<List<EventMessage>> getBlockedByUsersEvents(String currentUserMasterPubkey) async {
-    final query = select(db.blockEventTable).join([
+  JoinedSelectStatement<HasResultSet, dynamic> _blockedByUsersQuery(
+    String currentUserMasterPubkey,
+  ) {
+    return select(db.blockEventTable).join([
       leftOuterJoin(
-        db.deletedBlockEventTable,
-        db.deletedBlockEventTable.eventReference.equalsExp(db.blockEventTable.eventReference) &
-            db.deletedBlockEventTable.isDeleted.equals(true),
+        db.unblockEventTable,
+        db.unblockEventTable.eventReference.equalsExp(db.blockEventTable.eventReference),
       ),
     ])
       ..where(db.blockEventTable.masterPubkey.isNotValue(currentUserMasterPubkey))
-      ..where(db.deletedBlockEventTable.eventReference.isNull());
+      ..where(db.unblockEventTable.eventReference.isNull());
+  }
 
-    final result = await query.get();
-
+  Future<List<EventMessage>> getBlockedByUsersEvents(String currentUserMasterPubkey) async {
+    final result = await _blockedByUsersQuery(currentUserMasterPubkey).get();
     return result.map((row) => row.readTable(db.blockEventTable).toEventMessage()).toList();
   }
 
   Stream<List<EventMessage>> watchBlockedByUsersEvents(String currentUserMasterPubkey) {
-    final query = select(db.blockEventTable).join([
-      leftOuterJoin(
-        db.deletedBlockEventTable,
-        db.deletedBlockEventTable.eventReference.equalsExp(db.blockEventTable.eventReference) &
-            db.deletedBlockEventTable.isDeleted.equals(true),
-      ),
-    ])
-      ..where(db.blockEventTable.masterPubkey.isNotValue(currentUserMasterPubkey))
-      ..where(db.deletedBlockEventTable.eventReference.isNull());
-
-    return query.watch().map(
+    return _blockedByUsersQuery(currentUserMasterPubkey).watch().map(
           (rows) => rows.map((row) => row.readTable(db.blockEventTable).toEventMessage()).toList(),
         );
-  }
-
-  Future<void> markAsDeleted(List<ReplaceableEventReference> eventReferences) async {
-    final sharedIds = eventReferences.map((eventReference) => eventReference.dTag).toList();
-
-    final matchingEvents =
-        await (select(db.blockEventTable)..where((tbl) => tbl.sharedId.isIn(sharedIds))).get();
-
-    for (final event in matchingEvents) {
-      await into(db.deletedBlockEventTable).insertOnConflictUpdate(
-        DeletedBlockEventTableCompanion(
-          eventReference: Value(event.eventReference),
-          sharedId: Value(event.sharedId),
-          isDeleted: const Value(true),
-        ),
-      );
-    }
   }
 }
