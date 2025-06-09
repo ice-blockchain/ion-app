@@ -92,15 +92,14 @@ class FeedFollowingContent extends _$FeedFollowingContent implements PagedNotifi
 
   /// Fetches unseen entities up to the specified [limit].
   ///
-  /// This method recursively fetches entities from the followed pubkeys until the limit is reached
+  /// This method fetches entities from the followed pubkeys until the limit is reached
   /// or no more unseen entities are available.
   ///
   /// Returns the number of unseen entities that could not be fetched (0 if all were fetched).
   Future<int> _fetchUnseenEntities({required int limit}) async {
     final dataSourcePubkeys = await _getDataSourcePubkeys();
-    if (dataSourcePubkeys.isEmpty) return limit;
 
-    _initPagination(pubkeys: dataSourcePubkeys);
+    _refreshUnseenPagination(pubkeys: dataSourcePubkeys);
 
     final nextPagePubkeys = await _getNextPagePubkeys(pubkeys: dataSourcePubkeys, limit: limit);
 
@@ -118,39 +117,19 @@ class FeedFollowingContent extends _$FeedFollowingContent implements PagedNotifi
 
   /// Fetches seen entities up to the specified [limit].
   ///
-  /// This method retrieves entities that have been seen by the user,
+  /// This method fetches entities that have been seen by the user,
   /// excluding those already present in the current state.
   ///
   /// Returns the number of seen entities that could not be fetched (0 if all were fetched).
   Future<int> _fetchSeenEntities({required int limit}) async {
-    final seenEventsRepository = ref.read(followingFeedSeenEventsRepositoryProvider);
-    final feedConfig = await ref.read(feedConfigProvider.future);
+    final dataSourcePubkeys = await _getDataSourcePubkeys();
+    //TODO:add db cleanup for dataSourcePubkeys + feedConfig.followingCacheMaxAge
 
-    final stateEntityReferences =
-        state.items?.map((entity) => entity.toEventReference()).toList() ?? [];
-    final seenEvents = await seenEventsRepository.getEventReferences(
-      feedType: feedType,
-      feedModifier: feedModifier,
-      exclude: stateEntityReferences,
-      limit: limit,
-      since: DateTime.now().subtract(feedConfig.followingCacheMaxAge).microsecondsSinceEpoch,
-      until: state.seenPagination.lastEvent?.createdAt,
-    );
+    final nextSeenReferences = await _getNextSeenReferences(limit: limit);
 
-    state = state.copyWith(
-      seenPagination: state.seenPagination.copyWith(
-        hasMore: seenEvents.isNotEmpty,
-        lastEvent: seenEvents.lastOrNull,
-      ),
-    );
+    if (nextSeenReferences.isEmpty) return limit;
 
-    if (seenEvents.isEmpty) {
-      return limit;
-    }
-
-    final results = await _requestEntitiesByReferences(
-      eventReferences: seenEvents.map((event) => event.eventReference).toList(),
-    );
+    final results = await _requestEntitiesByReferences(eventReferences: nextSeenReferences);
     final remaining = limit - results.nonNulls.length;
 
     if (remaining > 0) {
@@ -173,21 +152,15 @@ class FeedFollowingContent extends _$FeedFollowingContent implements PagedNotifi
       throw FollowListNotFoundException();
     }
 
-    var dataSourcePubkeys = followList.data.list.map((followee) => followee.pubkey);
+    final dataSourcePubkeys = [
+      if (feedType == FeedType.story) ref.read(currentPubkeySelectorProvider),
+      for (final followee in followList.data.list) followee.pubkey,
+    ];
 
-    // In case of stories - we also need to request own entities
-    if (feedType == FeedType.story) {
-      final currentPubkey = ref.read(currentPubkeySelectorProvider);
-      if (currentPubkey == null) {
-        throw const CurrentUserNotFoundException();
-      }
-      dataSourcePubkeys = [currentPubkey, ...dataSourcePubkeys];
-    }
-
-    return dataSourcePubkeys.toList();
+    return dataSourcePubkeys.nonNulls.toList();
   }
 
-  void _initPagination({required List<String> pubkeys}) {
+  void _refreshUnseenPagination({required List<String> pubkeys}) {
     final newPagination = {
       for (final pubkey in pubkeys) pubkey: _getPubkeyPagination(pubkey),
     };
@@ -196,6 +169,31 @@ class FeedFollowingContent extends _$FeedFollowingContent implements PagedNotifi
 
   Pagination _getPubkeyPagination(String pubkey) {
     return state.unseenPagination[pubkey] ?? const Pagination(page: -1, hasMore: true);
+  }
+
+  Future<List<EventReference>> _getNextSeenReferences({required int limit}) async {
+    final seenEventsRepository = ref.read(followingFeedSeenEventsRepositoryProvider);
+    final feedConfig = await ref.read(feedConfigProvider.future);
+
+    final stateEntityReferences =
+        state.items?.map((entity) => entity.toEventReference()).toList() ?? [];
+    final seenEvents = await seenEventsRepository.getEventReferences(
+      feedType: feedType,
+      feedModifier: feedModifier,
+      exclude: stateEntityReferences,
+      limit: limit,
+      since: DateTime.now().subtract(feedConfig.followingCacheMaxAge).microsecondsSinceEpoch,
+      until: state.seenPagination.lastEvent?.createdAt,
+    );
+
+    state = state.copyWith(
+      seenPagination: state.seenPagination.copyWith(
+        hasMore: seenEvents.isNotEmpty,
+        lastEvent: seenEvents.lastOrNull,
+      ),
+    );
+
+    return seenEvents.map((event) => event.eventReference).toList();
   }
 
   /// Returns a list of pubkeys that have the next page available.
