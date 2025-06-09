@@ -2,7 +2,6 @@ import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/ion_connect/ion_connect.dart';
 import 'package:ion/app/features/ion_connect/model/action_source.c.dart';
 import 'package:ion/app/features/ion_connect/providers/ion_connect_notifier.c.dart';
-import 'package:ion/app/services/storage/local_storage.c.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'event_syncer_provider.c.g.dart';
@@ -17,12 +16,11 @@ class EventSyncer extends _$EventSyncer {
   Future<int?> syncEvents({
     required List<RequestFilter> requestFilters,
     required void Function(EventMessage eventMessage) saveCallback,
+    required int? sinceDateMicroseconds,
     ActionSource actionSource = const ActionSourceCurrentUser(),
     int limit = 100,
     Duration? overlap,
   }) async {
-    var sinceDateMicroseconds = ref.read(localStorageProvider).getInt(state);
-
     if (sinceDateMicroseconds != null && overlap != null) {
       sinceDateMicroseconds = sinceDateMicroseconds - overlap.inMicroseconds;
     }
@@ -77,17 +75,8 @@ class EventSyncer extends _$EventSyncer {
       saveCallback(event);
     }
 
-    if (oldestDate != null) {
-      final existingSince = ref.read(localStorageProvider).getInt(state);
-
-      if (existingSince == null || existingSince <= oldestDate) {
-        await ref.read(localStorageProvider).setInt(state, oldestDate);
-      }
-    }
-
     if (count < limit) {
-      final oldestSince = ref.read(localStorageProvider).getInt(state);
-      return oldestSince;
+      return oldestDate;
     }
 
     return _fetchEvents(requestFilters, actionSource, saveCallback, limit, since, newestDate);

@@ -42,8 +42,7 @@ class BlockedUsersSync extends _$BlockedUsersSync {
     final blockEventDao = ref.watch(blockEventDaoProvider);
     final unblockEventDao = ref.watch(unblockEventDaoProvider);
 
-    final latestBlockEventDate = await blockEventDao.getLatestBlockEventDate();
-    final sinceDate = latestBlockEventDate?.subtract(const Duration(days: 2));
+    final latestBlockEventDate = await ref.watch(blockEventDaoProvider).getLatestBlockEventDate();
 
     final requestFilter = RequestFilter(
       kinds: const [IonConnectGiftWrapEntity.kind],
@@ -54,7 +53,6 @@ class BlockedUsersSync extends _$BlockedUsersSync {
         ],
         '#p': [masterPubkey, '', eventSigner.publicKey],
       },
-      since: sinceDate?.microsecondsSinceEpoch,
     );
 
     final env = ref.watch(envProvider.notifier);
@@ -65,6 +63,7 @@ class BlockedUsersSync extends _$BlockedUsersSync {
     final since = await ref.watch(eventSyncerProvider('blocked-users').notifier).syncEvents(
           overlap: Duration(days: overlap),
           requestFilters: [requestFilter],
+          sinceDateMicroseconds: latestBlockEventDate?.microsecondsSinceEpoch,
           saveCallback: (wrap) => _handleBlockEvent(
             eventMessage: wrap,
             eventSigner: eventSigner,

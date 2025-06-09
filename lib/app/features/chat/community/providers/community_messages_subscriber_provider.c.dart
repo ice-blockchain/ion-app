@@ -48,8 +48,13 @@ class CommunityMessagesSubscriber extends _$CommunityMessagesSubscriber {
       since: DateTime.now().subtract(const Duration(days: 2)).microsecondsSinceEpoch,
     );
 
+    final latestEventMessageDate = await ref
+        .watch(conversationEventMessageDaoProvider)
+        .getLatestEventMessageDate([ModifiablePostEntity.kind]);
+
     await ref.watch(eventSyncerProvider('community-messages').notifier).syncEvents(
       requestFilters: [requestFilter],
+      sinceDateMicroseconds: latestEventMessageDate?.microsecondsSinceEpoch,
       saveCallback: (eventMessage) {
         if (eventMessage.kind == ModifiablePostEntity.kind) {
           ref.read(conversationEventMessageDaoProvider).add(eventMessage);

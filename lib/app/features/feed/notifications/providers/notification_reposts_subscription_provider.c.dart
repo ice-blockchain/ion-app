@@ -6,6 +6,7 @@ import 'package:ion/app/features/auth/providers/auth_provider.c.dart';
 import 'package:ion/app/features/feed/data/models/entities/article_data.c.dart';
 import 'package:ion/app/features/feed/data/models/entities/generic_repost.c.dart';
 import 'package:ion/app/features/feed/data/models/entities/modifiable_post_data.c.dart';
+import 'package:ion/app/features/feed/notifications/data/model/ion_notification.c.dart';
 import 'package:ion/app/features/feed/notifications/data/repository/comments_repository.c.dart';
 import 'package:ion/app/features/ion_connect/ion_connect.dart';
 import 'package:ion/app/features/ion_connect/providers/event_syncer_provider.c.dart';
@@ -33,8 +34,11 @@ Future<void> notificationRepostsSubscription(Ref ref) async {
     since: DateTime.now().subtract(const Duration(microseconds: 2)).microsecondsSinceEpoch,
   );
 
+  final lastCreatedAt = await commentsRepository.lastCreatedAt(CommentIonNotificationType.repost);
+
   final since = await ref.watch(eventSyncerProvider('notifications-reposts').notifier).syncEvents(
     requestFilters: [requestFilter],
+    sinceDateMicroseconds: lastCreatedAt?.microsecondsSinceEpoch,
     saveCallback: (eventMessage) {
       final parser = ref.read(eventParserProvider);
       final entity = parser.parse(eventMessage);

@@ -59,8 +59,13 @@ Future<void> transactionsSubscription(Ref ref) async {
     },
   );
 
+  final transactionLastCreatedAt = await transactionsRepository.getLastCreatedAt();
+  final requestLastCreatedAt = await requestAssetsRepository.getLastCreatedAt();
+  final lastCreatedAt = _getEarliestDateTime(transactionLastCreatedAt, requestLastCreatedAt);
+
   final since = await ref.watch(eventSyncerProvider('transactions').notifier).syncEvents(
     requestFilters: [requestFilter],
+    sinceDateMicroseconds: lastCreatedAt?.microsecondsSinceEpoch,
     saveCallback: (eventMessage) => _saveEvent(
       eventMessage: eventMessage,
       currentPubkey: currentPubkey,
@@ -96,6 +101,15 @@ Future<void> transactionsSubscription(Ref ref) async {
   );
 
   ref.onDispose(subscription.cancel);
+}
+
+/// Returns the earliest datetime between two optional datetimes.
+/// If both are null, returns null.
+/// If only one is null, returns the non-null one.
+DateTime? _getEarliestDateTime(DateTime? first, DateTime? second) {
+  if (first == null) return second;
+  if (second == null) return first;
+  return first.isBefore(second) ? first : second;
 }
 
 Future<void> _saveEvent({

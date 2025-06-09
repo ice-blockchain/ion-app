@@ -78,9 +78,13 @@ class E2eeMessagesSubscriber extends _$E2eeMessagesSubscriber {
     final conversationMessageStatusDao = ref.watch(conversationMessageDataDaoProvider);
     final conversationMessageReactionDao = ref.watch(conversationMessageReactionDaoProvider);
     const overlap = Duration(days: 2);
+    final latestEventMessageDate = await ref
+        .watch(conversationEventMessageDaoProvider)
+        .getLatestEventMessageDate([ReplaceablePrivateDirectMessageEntity.kind]);
 
     final since = await ref.watch(eventSyncerProvider('e2ee-messages').notifier).syncEvents(
       requestFilters: [requestFilter],
+      sinceDateMicroseconds: latestEventMessageDate?.microsecondsSinceEpoch,
       saveCallback: (eventMessage) => _handleMessage(
         eventMessage,
         masterPubkey,

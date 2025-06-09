@@ -32,8 +32,11 @@ Future<void> notificationLikesSubscription(Ref ref) async {
     since: DateTime.now().subtract(const Duration(microseconds: 2)).microsecondsSinceEpoch,
   );
 
+  final lastCreatedAt = await likesRepository.lastCreatedAt();
+
   final since = await ref.watch(eventSyncerProvider('notifications-likes').notifier).syncEvents(
     requestFilters: [requestFilter],
+    sinceDateMicroseconds: lastCreatedAt?.microsecondsSinceEpoch,
     saveCallback: (eventMessage) {
       final parser = ref.read(eventParserProvider);
       final entity = parser.parse(eventMessage);

@@ -4,6 +4,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/exceptions/exceptions.dart';
 import 'package:ion/app/features/auth/providers/auth_provider.c.dart';
 import 'package:ion/app/features/feed/data/models/entities/modifiable_post_data.c.dart';
+import 'package:ion/app/features/feed/notifications/data/model/ion_notification.c.dart';
 import 'package:ion/app/features/feed/notifications/data/repository/comments_repository.c.dart';
 import 'package:ion/app/features/ion_connect/ion_connect.dart';
 import 'package:ion/app/features/ion_connect/providers/event_syncer_provider.c.dart';
@@ -32,8 +33,11 @@ Future<void> notificationQuotesSubscription(Ref ref) async {
     since: DateTime.now().subtract(const Duration(microseconds: 2)).microsecondsSinceEpoch,
   );
 
+  final lastCreatedAt = await commentsRepository.lastCreatedAt(CommentIonNotificationType.quote);
+
   final since = await ref.watch(eventSyncerProvider('notifications-quotes').notifier).syncEvents(
     requestFilters: [requestFilter],
+    sinceDateMicroseconds: lastCreatedAt?.microsecondsSinceEpoch,
     saveCallback: (eventMessage) {
       final parser = ref.read(eventParserProvider);
       final entity = parser.parse(eventMessage);

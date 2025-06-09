@@ -46,8 +46,11 @@ Future<void> notificationFollowersSubscription(Ref ref) async {
       entity.data.list.isNotEmpty &&
       entity.data.list.last.pubkey == currentPubkey;
 
+  final lastCreatedAt = await followersRepository.lastCreatedAt();
+
   final since = await ref.watch(eventSyncerProvider('notifications-followers').notifier).syncEvents(
     requestFilters: [requestFilter],
+    sinceDateMicroseconds: lastCreatedAt?.microsecondsSinceEpoch,
     saveCallback: (eventMessage) {
       final parser = ref.read(eventParserProvider);
       final entity = parser.parse(eventMessage);
