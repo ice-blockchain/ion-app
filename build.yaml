@@ -17,7 +17,7 @@ targets:
       go_router_builder:go_router_builder:
         generate_for:
           include:
-            - lib/app/router/**.c.dart
+            - lib/app/router/app_router.c.dart
       flutter_gen_runner:flutter_gen_runner:
         enabled: true
       drift_dev:drift_dev:
@@ -31,3 +31,4 @@ targets:
             notifications_database: lib/app/features/feed/notifications/data/database/notifications_database.c.dart
             wallets_database: lib/app/features/wallets/data/models/database/wallets_database.c.dart
             event_messages_database: lib/app/features/ion_connect/data/database/event_messages_database.c.dart
+            blocked_users_database: lib/app/features/user_block/data/models/database/blocked_users_database.c.dart
