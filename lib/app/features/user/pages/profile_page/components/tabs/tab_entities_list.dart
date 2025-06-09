@@ -11,7 +11,6 @@ import 'package:ion/app/features/ion_connect/model/ion_connect_entity.dart';
 import 'package:ion/app/features/ion_connect/providers/entities_paged_data_provider.c.dart';
 import 'package:ion/app/features/user/model/tab_entity_type.dart';
 import 'package:ion/app/features/user/pages/profile_page/components/tabs/empty_state.dart';
-import 'package:ion/app/features/user/providers/muted_users_notifier.c.dart';
 import 'package:ion/app/features/user/providers/tab_data_source_provider.c.dart';
 import 'package:ion/app/features/user/providers/user_metadata_provider.c.dart';
 import 'package:ion/app/features/user_block/providers/block_list_notifier.c.dart';
@@ -59,7 +58,6 @@ class TabEntitiesList extends ConsumerWidget {
     final entitiesPagedData = ref.watch(entitiesPagedDataProvider(dataSource));
     final isBlockedOrBlockedBy =
         ref.watch(isBlockedOrBlockedByNotifierProvider(pubkey)).valueOrNull ?? false;
-    final isMuted = ref.watch(isUserMutedProvider(pubkey));
     final entities = entitiesPagedData?.data.items;
 
     return LoadMoreBuilder(
@@ -68,7 +66,7 @@ class TabEntitiesList extends ConsumerWidget {
       slivers: [
         if (entities == null)
           const EntitiesListSkeleton()
-        else if (entities.isEmpty || isBlockedOrBlockedBy || isMuted)
+        else if (entities.isEmpty || isBlockedOrBlockedBy)
           EmptyState(
             type: type,
             isCurrentUserProfile: pubkey == ref.watch(currentPubkeySelectorProvider),
@@ -79,6 +77,7 @@ class TabEntitiesList extends ConsumerWidget {
               ? builder!(entities.toList())
               : EntitiesList(
                   refs: entities.map((entity) => entity.toEventReference()).toList(),
+                  showMuted: true,
                   onVideoTap: ({
                     required String eventReference,
                     required int initialMediaIndex,

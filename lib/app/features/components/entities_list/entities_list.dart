@@ -29,6 +29,7 @@ class EntitiesList extends HookWidget {
     this.separatorHeight,
     this.onVideoTap,
     this.readFromDB = false,
+    this.showMuted = false,
     super.key,
   });
 
@@ -37,6 +38,7 @@ class EntitiesList extends HookWidget {
   final bool displayParent;
   final OnVideoTapCallback? onVideoTap;
   final bool readFromDB;
+  final bool showMuted;
 
   @override
   Widget build(BuildContext context) {
@@ -51,6 +53,7 @@ class EntitiesList extends HookWidget {
           separatorHeight: separatorHeight,
           onVideoTap: onVideoTap,
           readFromDB: readFromDB,
+          showMuted: showMuted,
         );
       },
     );
@@ -62,6 +65,7 @@ class _EntityListItem extends ConsumerWidget {
     required this.eventReference,
     required this.displayParent,
     required this.readFromDB,
+    required this.showMuted,
     this.onVideoTap,
     double? separatorHeight,
     super.key,
@@ -72,6 +76,7 @@ class _EntityListItem extends ConsumerWidget {
   final bool displayParent;
   final bool readFromDB;
   final OnVideoTapCallback? onVideoTap;
+  final bool showMuted;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -81,7 +86,7 @@ class _EntityListItem extends ConsumerWidget {
         ref.watch(ionConnectSyncEntityProvider(eventReference: eventReference, db: readFromDB));
 
     if (entity == null ||
-        _isBlockedOrMutedOrBlocking(ref, entity) ||
+        _isBlockedOrMutedOrBlocking(ref, entity, showMuted) ||
         _isDeleted(ref, entity) ||
         _isRepostedEntityDeleted(ref, entity) ||
         !_hasMetadata(ref, entity)) {
@@ -119,8 +124,8 @@ class _EntityListItem extends ConsumerWidget {
     return false;
   }
 
-  bool _isBlockedOrMutedOrBlocking(WidgetRef ref, IonConnectEntity entity) {
-    final isMuted = ref.watch(isUserMutedProvider(entity.masterPubkey));
+  bool _isBlockedOrMutedOrBlocking(WidgetRef ref, IonConnectEntity entity, bool showMuted) {
+    final isMuted = !showMuted && ref.watch(isUserMutedProvider(entity.masterPubkey));
     final isBlockedOrBlockedBy =
         ref.watch(isEntityBlockedOrBlockedByNotifierProvider(entity)).valueOrNull ?? false;
     return isMuted || isBlockedOrBlockedBy;
