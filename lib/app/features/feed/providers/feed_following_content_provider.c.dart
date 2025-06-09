@@ -51,11 +51,10 @@ class FeedFollowingContent extends _$FeedFollowingContent implements PagedNotifi
     if (state.isLoading) return;
     state = state.copyWith(isLoading: true);
     try {
-      final results = await requestEntities(limit: feedType.pageSize);
-      if (results.isEmpty) {
-        _ensureEmptyState();
+      await for (final entity in requestEntities(limit: feedType.pageSize)) {
+        state = state.copyWith(items: {...(state.items ?? {}), entity});
       }
-      state = state.copyWith(items: {...(state.items ?? {}), ...results});
+      _ensureEmptyState();
     } finally {
       state = state.copyWith(isLoading: false);
     }
@@ -64,12 +63,15 @@ class FeedFollowingContent extends _$FeedFollowingContent implements PagedNotifi
   /// Requests entities for the feed:
   /// * First, requests unseen entities from followed users (see [_fetchUnseenEntities]).
   /// * Then, if [showSeen] is true, requests seen entities (see [_fetchSeenEntities]).
-  Future<List<IonConnectEntity>> requestEntities({required int limit}) async {
-    final results = await _fetchUnseenEntities(limit: limit);
-    if (results.length < limit && showSeen) {
-      results.addAll(await _fetchSeenEntities(limit: limit - results.length));
+  Stream<IonConnectEntity> requestEntities({required int limit}) async* {
+    var unseenCount = 0;
+    await for (final entity in _fetchUnseenEntities(limit: limit)) {
+      yield entity;
+      unseenCount++;
     }
-    return results;
+    if (unseenCount < limit && showSeen) {
+      yield* _fetchSeenEntities(limit: limit - unseenCount);
+    }
   }
 
   @override
@@ -99,23 +101,26 @@ class FeedFollowingContent extends _$FeedFollowingContent implements PagedNotifi
   ///
   /// This method fetches entities from the followed pubkeys until the limit is reached
   /// or no more unseen entities are available.
-  Future<List<IonConnectEntity>> _fetchUnseenEntities({required int limit}) async {
+  Stream<IonConnectEntity> _fetchUnseenEntities({required int limit}) async* {
     final dataSourcePubkeys = await _getDataSourcePubkeys();
 
     _refreshUnseenPagination(pubkeys: dataSourcePubkeys);
 
     final nextPagePubkeys = await _getNextPagePubkeys(pubkeys: dataSourcePubkeys, limit: limit);
 
-    if (nextPagePubkeys.isEmpty) return [];
+    if (nextPagePubkeys.isEmpty) return;
 
-    final results = await _requestEntitiesFromPubkeys(pubkeys: nextPagePubkeys);
-    final remaining = limit - results.nonNulls.length;
-
-    if (remaining > 0) {
-      return [...results.nonNulls, ...await _fetchUnseenEntities(limit: remaining)];
+    var requestedCount = 0;
+    await for (final entity in _requestEntitiesFromPubkeys(pubkeys: nextPagePubkeys)) {
+      yield entity;
+      requestedCount++;
     }
 
-    return results.nonNulls.toList();
+    final remaining = limit - requestedCount;
+
+    if (remaining > 0) {
+      yield* _fetchUnseenEntities(limit: remaining);
+    }
   }
 
   /// Fetches seen entities up to the specified [limit].
@@ -124,23 +129,26 @@ class FeedFollowingContent extends _$FeedFollowingContent implements PagedNotifi
   /// excluding those already present in the current state.
   ///
   /// Returns the number of seen entities that could not be fetched (0 if all were fetched).
-  Future<List<IonConnectEntity>> _fetchSeenEntities({required int limit}) async {
+  Stream<IonConnectEntity> _fetchSeenEntities({required int limit}) async* {
     final dataSourcePubkeys = await _getDataSourcePubkeys();
 
     await _cleanupSeenEvents(pubkeys: dataSourcePubkeys);
 
     final nextSeenReferences = await _getNextSeenReferences(limit: limit);
 
-    if (nextSeenReferences.isEmpty) return [];
+    if (nextSeenReferences.isEmpty) return;
 
-    final results = await _requestEntitiesByReferences(eventReferences: nextSeenReferences);
-    final remaining = limit - results.nonNulls.length;
-
-    if (remaining > 0) {
-      return [...results.nonNulls, ...await _fetchSeenEntities(limit: remaining)];
+    var requestedCount = 0;
+    await for (final entity in _requestEntitiesByReferences(eventReferences: nextSeenReferences)) {
+      yield entity;
+      requestedCount++;
     }
 
-    return results.nonNulls.toList();
+    final remaining = limit - requestedCount;
+
+    if (remaining > 0) {
+      yield* _fetchSeenEntities(limit: remaining);
+    }
   }
 
   void _ensureEmptyState() {
@@ -259,12 +267,13 @@ class FeedFollowingContent extends _$FeedFollowingContent implements PagedNotifi
   }
 
   /// Request 1 entity for each provider pubkey and update the state with the results.
-  Future<List<IonConnectEntity?>> _requestEntitiesFromPubkeys({
+  Stream<IonConnectEntity> _requestEntitiesFromPubkeys({
     required List<String> pubkeys,
-  }) async {
+  }) async* {
     final requestsQueue = await ref.read(feedRequestQueueProvider.future);
+    final resultsController = StreamController<IonConnectEntity>();
 
-    return Future.wait([
+    final requests = [
       for (final pubkey in pubkeys)
         requestsQueue.add(() async {
           final Pagination(:lastEvent) = _getPubkeyPagination(pubkey);
@@ -277,15 +286,20 @@ class FeedFollowingContent extends _$FeedFollowingContent implements PagedNotifi
             entity: entity,
             lastEventReference: lastEvent?.eventReference,
           );
-          return valid ? entity : null;
+          if (valid) {
+            resultsController.add(entity!);
+          }
         }).catchError((Object? error) {
           Logger.error(
             error ?? '',
             message: 'Error requesting entities for pubkey: $pubkey',
           );
-          return null;
         }),
-    ]);
+    ];
+
+    unawaited(Future.wait(requests).whenComplete(resultsController.close));
+
+    yield* resultsController.stream;
   }
 
   /// Requests a single entity for the given pubkey.
@@ -322,25 +336,31 @@ class FeedFollowingContent extends _$FeedFollowingContent implements PagedNotifi
         .firstOrNull;
   }
 
-  Future<List<IonConnectEntity?>> _requestEntitiesByReferences({
+  Stream<IonConnectEntity> _requestEntitiesByReferences({
     required List<EventReference> eventReferences,
-  }) async {
+  }) async* {
     final requestsQueue = await ref.read(feedRequestQueueProvider.future);
+    final resultsController = StreamController<IonConnectEntity>();
 
-    return Future.wait([
+    final requests = [
       for (final eventReference in eventReferences)
         requestsQueue.add(() async {
           final entity = await _requestEntityByReference(eventReference: eventReference);
           final valid = await _validateRequestedReferenceEntity(entity: entity);
-          return valid ? entity : null;
+          if (valid) {
+            resultsController.add(entity!);
+          }
         }).catchError((Object? error) {
           Logger.error(
             error ?? '',
             message: 'Error requesting entities for event reference: $eventReference',
           );
-          return null;
         }),
-    ]);
+    ];
+
+    unawaited(Future.wait(requests).whenComplete(resultsController.close));
+
+    yield* resultsController.stream;
   }
 
   Future<IonConnectEntity?> _requestEntityByReference({
