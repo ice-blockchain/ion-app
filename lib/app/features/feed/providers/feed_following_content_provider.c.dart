@@ -29,7 +29,6 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 part 'feed_following_content_provider.c.freezed.dart';
 part 'feed_following_content_provider.c.g.dart';
 
-//TODO:split and reconsider naming of all the methods to split seen / unseen ones
 @riverpod
 class FeedFollowingContent extends _$FeedFollowingContent implements PagedNotifier {
   @override
@@ -38,33 +37,29 @@ class FeedFollowingContent extends _$FeedFollowingContent implements PagedNotifi
     FeedModifier? feedModifier,
     bool showSeen = true,
   }) {
-    Future(fetchEntities);
+    Future.microtask(fetchEntities);
     return FeedFollowingContentState(
       items: null,
       isLoading: false,
-      hasMoreSeen: showSeen,
+      seenPagination: Pagination(page: -1, hasMore: showSeen),
       unseenPagination: {},
     );
   }
 
-  /// Fetches entities for the feed by populating the state by fetching entities
-  /// for each followed pubkey one by one.
-  ///
-  /// The page size is determined by the `FeedType.pageSize`
-  /// The max createdAt of the events we request from the relays is determined by the `FeedConfig.followingReqMaxAge`
-  /// The max number of concurrent requests is determined by `FeedConfig.concurrentRequests`
+  /// Fetches entities for the feed:
+  /// * First, requests unseen entities from followed users (see [_fetchUnseenEntities]).
+  /// * Then, if [showSeen] is true, requests seen entities (see [_fetchSeenEntities]).
   @override
-  Future<void> fetchEntities() async {
+  Future<void> fetchEntities({int? limit}) async {
     if (state.isLoading) return;
     state = state.copyWith(isLoading: true);
-
     try {
-      final limit = feedType.pageSize;
-      var remaining = await _fetchUnseenEntities(limit: limit);
+      final fetchLimit = limit ?? feedType.pageSize;
+      var remaining = await _fetchUnseenEntities(limit: fetchLimit);
       if (remaining > 0 && showSeen) {
         remaining = await _fetchSeenEntities(limit: remaining);
       }
-      if (remaining == limit) {
+      if (remaining == fetchLimit) {
         _ensureEmptyState();
       }
     } finally {
@@ -74,16 +69,12 @@ class FeedFollowingContent extends _$FeedFollowingContent implements PagedNotifi
 
   @override
   void refresh() {
-    if (!state.isLoading) {
-      ref.invalidateSelf();
-    }
+    if (!state.isLoading) ref.invalidateSelf();
   }
 
   @override
   void insertEntity(IonConnectEntity entity) {
-    state = state.copyWith(
-      items: {entity, ...(state.items ?? {})},
-    );
+    state = state.copyWith(items: {entity, ...(state.items ?? {})});
   }
 
   @override
@@ -99,62 +90,71 @@ class FeedFollowingContent extends _$FeedFollowingContent implements PagedNotifi
     }
   }
 
-  // TODO:add comment
+  /// Fetches unseen entities up to the specified [limit].
+  ///
+  /// This method recursively fetches entities from the followed pubkeys until the limit is reached
+  /// or no more unseen entities are available.
+  ///
+  /// Returns the number of unseen entities that could not be fetched (0 if all were fetched).
   Future<int> _fetchUnseenEntities({required int limit}) async {
     final dataSourcePubkeys = await _getDataSourcePubkeys();
-
-    if (dataSourcePubkeys.isEmpty) {
-      return limit;
-    }
+    if (dataSourcePubkeys.isEmpty) return limit;
 
     _initPagination(pubkeys: dataSourcePubkeys);
 
     final nextPagePubkeys = await _getNextPagePubkeys(pubkeys: dataSourcePubkeys, limit: limit);
 
-    if (nextPagePubkeys.isEmpty) {
-      return limit;
-    }
+    if (nextPagePubkeys.isEmpty) return limit;
 
-    final results = await _requestEntities(pubkeys: nextPagePubkeys);
+    final results = await _requestEntitiesFromPubkeys(pubkeys: nextPagePubkeys);
     final remaining = limit - results.nonNulls.length;
 
     if (remaining > 0) {
       return _fetchUnseenEntities(limit: remaining);
     }
 
-    return 0;
+    return remaining;
   }
 
+  /// Fetches seen entities up to the specified [limit].
+  ///
+  /// This method retrieves entities that have been seen by the user,
+  /// excluding those already present in the current state.
+  ///
+  /// Returns the number of seen entities that could not be fetched (0 if all were fetched).
   Future<int> _fetchSeenEntities({required int limit}) async {
     final seenEventsRepository = ref.read(followingFeedSeenEventsRepositoryProvider);
     final feedConfig = await ref.read(feedConfigProvider.future);
 
     final stateEntityReferences =
         state.items?.map((entity) => entity.toEventReference()).toList() ?? [];
-    final seenEventReferences = await seenEventsRepository.getEventReferences(
+    final seenEvents = await seenEventsRepository.getEventReferences(
       feedType: feedType,
       feedModifier: feedModifier,
       exclude: stateEntityReferences,
       limit: limit,
       since: DateTime.now().subtract(feedConfig.followingCacheMaxAge).microsecondsSinceEpoch,
+      until: state.seenPagination.lastEvent?.createdAt,
     );
 
-    final results = await Future.wait(
-      seenEventReferences.map((eventReference) async {
-        final entity = await _requestEntityByReference(eventReference: eventReference);
-        if (entity != null) {
-          state = state.copyWith(
-            items: {...(state.items ?? {}), entity},
-          );
-        }
-        return entity;
-      }),
+    state = state.copyWith(
+      seenPagination: state.seenPagination.copyWith(
+        hasMore: seenEvents.isNotEmpty,
+        lastEvent: seenEvents.lastOrNull,
+      ),
     );
 
+    if (seenEvents.isEmpty) {
+      return limit;
+    }
+
+    final results = await _requestEntitiesByReferences(
+      eventReferences: seenEvents.map((event) => event.eventReference).toList(),
+    );
     final remaining = limit - results.nonNulls.length;
 
     if (remaining > 0) {
-      state = state.copyWith(hasMoreSeen: false);
+      return _fetchSeenEntities(limit: remaining);
     }
 
     return remaining;
@@ -194,8 +194,8 @@ class FeedFollowingContent extends _$FeedFollowingContent implements PagedNotifi
     state = state.copyWith(unseenPagination: newPagination);
   }
 
-  UserPagination _getPubkeyPagination(String pubkey) {
-    return state.unseenPagination[pubkey] ?? const UserPagination(page: -1, hasMore: true);
+  Pagination _getPubkeyPagination(String pubkey) {
+    return state.unseenPagination[pubkey] ?? const Pagination(page: -1, hasMore: true);
   }
 
   /// Returns a list of pubkeys that have the next page available.
@@ -247,7 +247,7 @@ class FeedFollowingContent extends _$FeedFollowingContent implements PagedNotifi
   }
 
   /// Request 1 entity for each provider pubkey and update the state with the results.
-  Future<List<IonConnectEntity?>> _requestEntities({
+  Future<List<IonConnectEntity?>> _requestEntitiesFromPubkeys({
     required List<String> pubkeys,
   }) async {
     final requestsQueue = await ref.read(feedRequestQueueProvider.future);
@@ -255,10 +255,12 @@ class FeedFollowingContent extends _$FeedFollowingContent implements PagedNotifi
     return Future.wait([
       for (final pubkey in pubkeys)
         requestsQueue.add(() async {
-          final UserPagination(:lastEvent) = _getPubkeyPagination(pubkey);
-          final entity =
-              await _requestEntity(pubkey: pubkey, lastEventCreatedAt: lastEvent?.createdAt);
-          final valid = await _handleRequestedEntity(
+          final Pagination(:lastEvent) = _getPubkeyPagination(pubkey);
+          final entity = await _requestEntityFromPubkey(
+            pubkey: pubkey,
+            lastEventCreatedAt: lastEvent?.createdAt,
+          );
+          final valid = await _handleRequestedPubkeyEntity(
             pubkey: pubkey,
             entity: entity,
             lastEventReference: lastEvent?.eventReference,
@@ -277,7 +279,7 @@ class FeedFollowingContent extends _$FeedFollowingContent implements PagedNotifi
   /// Requests a single entity for the given pubkey.
   ///
   /// Requests the most recent entity if pagination is empty or the next entity if not.
-  Future<IonConnectEntity?> _requestEntity({
+  Future<IonConnectEntity?> _requestEntityFromPubkey({
     required String pubkey,
     required int? lastEventCreatedAt,
   }) async {
@@ -308,6 +310,28 @@ class FeedFollowingContent extends _$FeedFollowingContent implements PagedNotifi
         .firstOrNull;
   }
 
+  Future<List<IonConnectEntity?>> _requestEntitiesByReferences({
+    required List<EventReference> eventReferences,
+  }) async {
+    final requestsQueue = await ref.read(feedRequestQueueProvider.future);
+
+    return Future.wait([
+      for (final eventReference in eventReferences)
+        requestsQueue.add(() async {
+          final entity = await _requestEntityByReference(eventReference: eventReference);
+          final valid =
+              await _handleRequestedReferenceEntity(eventReference: eventReference, entity: entity);
+          return valid ? entity : null;
+        }).catchError((Object? error) {
+          Logger.error(
+            error ?? '',
+            message: 'Error requesting entities for event reference: $eventReference',
+          );
+          return null;
+        }),
+    ]);
+  }
+
   Future<IonConnectEntity?> _requestEntityByReference({
     required EventReference eventReference,
   }) async {
@@ -333,7 +357,7 @@ class FeedFollowingContent extends _$FeedFollowingContent implements PagedNotifi
   /// * Updates the seen entities state
   ///
   /// returns `true` if the entity is in the required time frame
-  Future<bool> _handleRequestedEntity({
+  Future<bool> _handleRequestedPubkeyEntity({
     required String pubkey,
     required IonConnectEntity? entity,
     required EventReference? lastEventReference,
@@ -372,6 +396,7 @@ class FeedFollowingContent extends _$FeedFollowingContent implements PagedNotifi
       // If the entity is not seen, we save it as a new seen event,
       // update the state items and pagination.
       await seenEventsRepository.save(entity, feedType: feedType, feedModifier: feedModifier);
+      // TODO:add repost deduplication here
       final isInReqTimeFrame = await _isInReqTimeFrame(entity.createdAt);
       state = state.copyWith(
         items: isInReqTimeFrame ? {...(state.items ?? {}), entity} : state.items,
@@ -409,6 +434,16 @@ class FeedFollowingContent extends _$FeedFollowingContent implements PagedNotifi
       );
       return false;
     }
+  }
+
+  Future<bool> _handleRequestedReferenceEntity({
+    required EventReference eventReference,
+    required IonConnectEntity? entity,
+  }) async {
+    if (entity == null) return false;
+    // TODO:add repost deduplication here
+    state = state.copyWith(items: {...(state.items ?? {}), entity});
+    return true;
   }
 
   EntitiesDataSource _getDataSourceForPubkey(String pubkey) {
@@ -462,21 +497,22 @@ class FeedFollowingContent extends _$FeedFollowingContent implements PagedNotifi
 class FeedFollowingContentState with _$FeedFollowingContentState {
   const factory FeedFollowingContentState({
     required Set<IonConnectEntity>? items,
-    required Map<String, UserPagination> unseenPagination,
+    required Map<String, Pagination> unseenPagination,
+    required Pagination seenPagination,
     required bool isLoading,
-    required bool hasMoreSeen,
   }) = _FeedFollowingContentState;
 
   const FeedFollowingContentState._();
 
-  bool get hasMore => unseenPagination.values.any((pubkey) => pubkey.hasMore) || hasMoreSeen;
+  bool get hasMore =>
+      unseenPagination.values.any((pubkey) => pubkey.hasMore) || seenPagination.hasMore;
 }
 
 @Freezed(equal: false)
-class UserPagination with _$UserPagination {
-  const factory UserPagination({
+class Pagination with _$Pagination {
+  const factory Pagination({
     required int page,
     required bool hasMore,
     ({EventReference eventReference, int createdAt})? lastEvent,
-  }) = _UserPagination;
+  }) = _Pagination;
 }

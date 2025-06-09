@@ -83,19 +83,26 @@ class FollowingFeedSeenEventsRepository {
     return (createdAt: seenSequenceEnd.createdAt, eventReference: seenSequenceEnd.eventReference);
   }
 
-  Future<List<EventReference>> getEventReferences({
+  Future<List<({EventReference eventReference, int createdAt})>> getEventReferences({
     required FeedType feedType,
     required List<EventReference> exclude,
     required int limit,
     required int since,
+    int? until,
     FeedModifier? feedModifier,
-  }) {
-    return _seenEventsDao.getEventReferencesExcluding(
+  }) async {
+    final seenEvents = await _seenEventsDao.getEventsExcluding(
       feedType: feedType,
       feedModifier: feedModifier,
       exclude: exclude,
       limit: limit,
       since: since,
+      until: until,
     );
+    return seenEvents
+        .map(
+          (event) => (eventReference: event.eventReference, createdAt: event.createdAt),
+        )
+        .toList();
   }
 }

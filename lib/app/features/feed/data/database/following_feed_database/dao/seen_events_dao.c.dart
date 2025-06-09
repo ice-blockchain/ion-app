@@ -81,7 +81,7 @@ class SeenEventsDao extends DatabaseAccessor<FollowingFeedDatabase> with _$SeenE
                 : tbl.feedModifier.equalsValue(feedModifier),
           )
           ..where((tbl) => tbl.nextEventReference.isNull())
-          ..where((tbl) => tbl.createdAt.isSmallerOrEqualValue(since.toMicroseconds))
+          ..where((tbl) => tbl.createdAt.isSmallerThanValue(since.toMicroseconds))
           ..orderBy([
             (tbl) => OrderingTerm(expression: tbl.createdAt, mode: OrderingMode.desc),
           ])
@@ -90,11 +90,12 @@ class SeenEventsDao extends DatabaseAccessor<FollowingFeedDatabase> with _$SeenE
     return firstWithoutNext;
   }
 
-  Future<List<EventReference>> getEventReferencesExcluding({
+  Future<List<SeenEvent>> getEventsExcluding({
     required FeedType feedType,
     required List<EventReference> exclude,
     required int limit,
     required int since,
+    int? until,
     FeedModifier? feedModifier,
   }) async {
     final query = select(db.seenEventsTable)
@@ -104,17 +105,17 @@ class SeenEventsDao extends DatabaseAccessor<FollowingFeedDatabase> with _$SeenE
             ? tbl.feedModifier.isNull()
             : tbl.feedModifier.equalsValue(feedModifier),
       )
-      ..where((tbl) => tbl.createdAt.isBiggerOrEqualValue(since.toMicroseconds))
+      ..where((tbl) => tbl.createdAt.isBiggerThanValue(since.toMicroseconds))
       ..orderBy([
         (tbl) => OrderingTerm(expression: tbl.createdAt, mode: OrderingMode.desc),
       ])
       ..limit(limit);
     if (exclude.isNotEmpty) {
-      query.where(
-        (tbl) => tbl.eventReference.isNotInValues(exclude),
-      );
+      query.where((tbl) => tbl.eventReference.isNotInValues(exclude));
     }
-    final rows = await query.get();
-    return rows.map((event) => event.eventReference).toList();
+    if (until != null) {
+      query.where((tbl) => tbl.createdAt.isSmallerThanValue(until.toMicroseconds));
+    }
+    return query.get();
   }
 }
