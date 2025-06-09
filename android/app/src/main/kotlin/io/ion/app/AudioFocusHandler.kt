@@ -51,7 +51,7 @@ class AudioFocusHandler(private val context: Context, flutterEngine: FlutterEngi
                 .setContentType(AudioAttributes.CONTENT_TYPE_MUSIC)
                 .build()
 
-            focusRequest = AudioFocusRequest.Builder(AudioManager.AUDIOFOCUS_GAIN)
+            focusRequest = AudioFocusRequest.Builder(AudioManager.AUDIOFOCUS_GAIN_TRANSIENT)
                 .setAudioAttributes(playbackAttributes)
                 .setAcceptsDelayedFocusGain(true)
                 .setOnAudioFocusChangeListener { focusChange ->
@@ -65,7 +65,7 @@ class AudioFocusHandler(private val context: Context, flutterEngine: FlutterEngi
             @Suppress("DEPRECATION")
             audioManager?.requestAudioFocus({ focusChange ->
                 handleAudioFocusChange(focusChange)
-            }, AudioManager.STREAM_MUSIC, AudioManager.AUDIOFOCUS_GAIN)
+            }, AudioManager.STREAM_MUSIC, AudioManager.AUDIOFOCUS_GAIN_TRANSIENT)
         }
 
         hasFocus = result == AudioManager.AUDIOFOCUS_REQUEST_GRANTED
