@@ -169,6 +169,7 @@ part 'profile_routes.dart';
 part 'protect_account_routes.dart';
 part 'settings_routes.dart';
 part 'wallet_routes.dart';
+part 'media_picker_routes.dart';
 
 final rootNavigatorKey = GlobalKey<NavigatorState>(debugLabel: 'rootNav');
 final bottomBarNavigatorKey = GlobalKey<NavigatorState>(debugLabel: 'tabNav');

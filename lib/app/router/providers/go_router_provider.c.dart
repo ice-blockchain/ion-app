@@ -75,6 +75,7 @@ Future<String?> _mainRedirect({
   final isOnSplash = location.startsWith(SplashRoute().location);
   final isOnAuth = location.contains('/${AuthRoutes.authPrefix}/');
   final isOnOnboarding = location.contains('/${AuthRoutes.onboardingPrefix}/');
+  final isOnMediaPicker = location.contains(MediaPickerRoutes.routesPrefix);
   final isOnFeed = location == FeedRoute().location;
 
   if (!isAuthenticated && !isOnAuth) {
@@ -98,7 +99,7 @@ Future<String?> _mainRedirect({
     final delegationComplete = ref.read(delegationCompleteProvider).valueOrNull.falseOrValue;
     final relaysAssigned = ref.read(relaysAssignedProvider).valueOrNull.falseOrValue;
 
-    if (!onboardingComplete && !isOnOnboarding && !(hasUserMetadata && relaysAssigned)) {
+    if (!onboardingComplete && !isOnOnboarding && !isOnMediaPicker && !(hasUserMetadata && relaysAssigned)) {
       return FillProfileRoute().location;
     }
 
