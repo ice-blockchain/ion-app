@@ -87,7 +87,7 @@ class FollowingFeedSeenEventsRepository {
     required FeedType feedType,
     required List<EventReference> exclude,
     required int limit,
-    required int since,
+    int? since,
     int? until,
     FeedModifier? feedModifier,
   }) async {
@@ -104,5 +104,19 @@ class FollowingFeedSeenEventsRepository {
           (event) => (eventReference: event.eventReference, createdAt: event.createdAt),
         )
         .toList();
+  }
+
+  Future<void> clearSeenEvents({
+    required FeedType feedType,
+    required List<String> retainPubkeys,
+    required int until,
+    FeedModifier? feedModifier,
+  }) async {
+    await _seenEventsDao.clearSeenEvents(
+      feedType: feedType,
+      feedModifier: feedModifier,
+      retainPubkeys: retainPubkeys,
+      until: until,
+    );
   }
 }

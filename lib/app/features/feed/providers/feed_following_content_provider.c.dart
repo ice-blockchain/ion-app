@@ -123,7 +123,8 @@ class FeedFollowingContent extends _$FeedFollowingContent implements PagedNotifi
   /// Returns the number of seen entities that could not be fetched (0 if all were fetched).
   Future<int> _fetchSeenEntities({required int limit}) async {
     final dataSourcePubkeys = await _getDataSourcePubkeys();
-    //TODO:add db cleanup for dataSourcePubkeys + feedConfig.followingCacheMaxAge
+
+    await _cleanupSeenEvents(pubkeys: dataSourcePubkeys);
 
     final nextSeenReferences = await _getNextSeenReferences(limit: limit);
 
@@ -167,13 +168,24 @@ class FeedFollowingContent extends _$FeedFollowingContent implements PagedNotifi
     state = state.copyWith(unseenPagination: newPagination);
   }
 
+  Future<void> _cleanupSeenEvents({required List<String> pubkeys}) async {
+    final seenEventsRepository = ref.read(followingFeedSeenEventsRepositoryProvider);
+    final feedConfig = await ref.read(feedConfigProvider.future);
+
+    await seenEventsRepository.clearSeenEvents(
+      feedType: feedType,
+      feedModifier: feedModifier,
+      retainPubkeys: pubkeys,
+      until: DateTime.now().subtract(feedConfig.followingCacheMaxAge).microsecondsSinceEpoch,
+    );
+  }
+
   Pagination _getPubkeyPagination(String pubkey) {
     return state.unseenPagination[pubkey] ?? const Pagination(page: -1, hasMore: true);
   }
 
   Future<List<EventReference>> _getNextSeenReferences({required int limit}) async {
     final seenEventsRepository = ref.read(followingFeedSeenEventsRepositoryProvider);
-    final feedConfig = await ref.read(feedConfigProvider.future);
 
     final stateEntityReferences =
         state.items?.map((entity) => entity.toEventReference()).toList() ?? [];
@@ -182,7 +194,6 @@ class FeedFollowingContent extends _$FeedFollowingContent implements PagedNotifi
       feedModifier: feedModifier,
       exclude: stateEntityReferences,
       limit: limit,
-      since: DateTime.now().subtract(feedConfig.followingCacheMaxAge).microsecondsSinceEpoch,
       until: state.seenPagination.lastEvent?.createdAt,
     );
 

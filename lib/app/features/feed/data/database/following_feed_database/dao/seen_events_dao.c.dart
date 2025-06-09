@@ -94,7 +94,7 @@ class SeenEventsDao extends DatabaseAccessor<FollowingFeedDatabase> with _$SeenE
     required FeedType feedType,
     required List<EventReference> exclude,
     required int limit,
-    required int since,
+    int? since,
     int? until,
     FeedModifier? feedModifier,
   }) async {
@@ -105,7 +105,6 @@ class SeenEventsDao extends DatabaseAccessor<FollowingFeedDatabase> with _$SeenE
             ? tbl.feedModifier.isNull()
             : tbl.feedModifier.equalsValue(feedModifier),
       )
-      ..where((tbl) => tbl.createdAt.isBiggerThanValue(since.toMicroseconds))
       ..orderBy([
         (tbl) => OrderingTerm(expression: tbl.createdAt, mode: OrderingMode.desc),
       ])
@@ -113,9 +112,30 @@ class SeenEventsDao extends DatabaseAccessor<FollowingFeedDatabase> with _$SeenE
     if (exclude.isNotEmpty) {
       query.where((tbl) => tbl.eventReference.isNotInValues(exclude));
     }
+    if (since != null) {
+      query.where((tbl) => tbl.createdAt.isBiggerThanValue(since.toMicroseconds));
+    }
     if (until != null) {
       query.where((tbl) => tbl.createdAt.isSmallerThanValue(until.toMicroseconds));
     }
     return query.get();
+  }
+
+  Future<void> clearSeenEvents({
+    required FeedType feedType,
+    required List<String> retainPubkeys,
+    required int until,
+    FeedModifier? feedModifier,
+  }) async {
+    final query = delete(db.seenEventsTable)
+      ..where((tbl) => tbl.feedType.equalsValue(feedType))
+      ..where(
+        (tbl) => feedModifier == null
+            ? tbl.feedModifier.isNull()
+            : tbl.feedModifier.equalsValue(feedModifier),
+      )
+      ..where((tbl) => tbl.createdAt.isSmallerThanValue(until.toMicroseconds))
+      ..where((tbl) => tbl.pubkey.isNotIn(retainPubkeys));
+    await query.go();
   }
 }
