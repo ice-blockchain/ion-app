@@ -804,5 +804,7 @@
   "contact_wallet_not_found_description": "لا يملك محفظة في شبكة {network}",
   "upload_limit_error_title": "تم الوصول إلى الحد الأقصى للتحميل",
   "video_upload_limit_modal_description": "يمكنك رفع فيديو مدته تصل إلى 5 دقائق",
-  "file_upload_limit_modal_description": "يمكنك رفع ملف حجمه يصل إلى 25 ميغابايت"
+  "file_upload_limit_modal_description": "يمكنك رفع ملف حجمه يصل إلى 25 ميغابايت",
+  "wallet_address_confirmation": "تأكيد العنوان",
+  "wallet_address_confirmation_info": "قبل إرسال العملة الرقمية إلى هذا العنوان، تأكد من أن عنوان المحفظة والشبكة المحددة على جهة المرسل يتطابقان تمامًا مع العملة والشبكة المختارة. إذا لم يتطابقا، فستفقد أموالك بشكل دائم."
 }

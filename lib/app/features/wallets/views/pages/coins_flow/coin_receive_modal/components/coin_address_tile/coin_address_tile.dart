@@ -10,9 +10,12 @@ import 'package:ion/app/extensions/asset_gen_image.dart';
 import 'package:ion/app/extensions/build_context.dart';
 import 'package:ion/app/extensions/num.dart';
 import 'package:ion/app/extensions/theme_data.dart';
+import 'package:ion/app/features/wallets/model/info_type.dart';
 import 'package:ion/app/features/wallets/views/pages/coins_flow/receive_coins/providers/receive_coins_form_provider.c.dart';
+import 'package:ion/app/features/wallets/views/pages/info/info_modal.dart';
 import 'package:ion/app/router/app_routes.c.dart';
 import 'package:ion/app/router/components/navigation_button/navigation_button.dart';
+import 'package:ion/app/router/utils/show_simple_bottom_sheet.dart';
 import 'package:ion/app/utils/formatters.dart';
 import 'package:ion/generated/assets.gen.dart';
 
@@ -48,10 +51,10 @@ class CoinAddressTile extends HookConsumerWidget {
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
                 Row(
+                  spacing: 6.0.s,
                   children: [
                     CoinIconWidget.small(coinsGroup.iconUrl),
-                    SizedBox(width: 6.0.s),
-                    Expanded(
+                    Flexible(
                       child: Text(
                         context.i18n.wallet_coin_address(coinsGroup.abbreviation),
                         style: context.theme.appTextThemes.body.copyWith(
@@ -59,9 +62,16 @@ class CoinAddressTile extends HookConsumerWidget {
                         ),
                       ),
                     ),
-                    SizedBox(width: 6.0.s),
-                    Assets.svg.iconBlockInformation.icon(size: 20.0.s),
-                    SizedBox(width: 6.0.s),
+                    GestureDetector(
+                      onTap: () async => showSimpleBottomSheet<void>(
+                        context: ref.context,
+                        child: const InfoModal(
+                          infoType: InfoType.addressConfirmation,
+                          descriptionTextAlign: TextAlign.center,
+                        ),
+                      ),
+                      child: Assets.svg.iconBlockInformation.icon(size: 20.0.s),
+                    ),
                   ],
                 ),
                 SizedBox(height: 7.0.s),
