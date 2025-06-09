@@ -3,6 +3,7 @@
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/components/progress_bar/centered_loading_indicator.dart';
+import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/components/ion_connect_network_image/ion_connect_network_image.dart';
 import 'package:ion/app/features/feed/stories/providers/story_image_loading_provider.c.dart';
 import 'package:ion/app/features/feed/stories/providers/story_pause_provider.c.dart';
@@ -54,17 +55,61 @@ class ImageStoryViewer extends ConsumerWidget {
     );
 
     if (hasQuotedPost) {
-      return TapToSeeHint(
-        onTap: () {
-          final eventReference = quotedEvent!.eventReference;
-          PostDetailsRoute(
-            eventReference: eventReference.encode(),
-          ).push<void>(context);
-        },
-        onVisibilityChanged: (isVisible) {
-          ref.read(storyPauseControllerProvider.notifier).paused = isVisible;
-        },
-        child: imageWidget,
+      final colors = context.theme.appColors;
+
+      return ColoredBox(
+        color: colors.attentionBlock,
+        child: Center(
+          child: AspectRatio(
+            aspectRatio: 9 / 16,
+            child: Padding(
+              padding: EdgeInsets.symmetric(horizontal: 20.0.s),
+              child: Flexible(
+                child: ClipRRect(
+                  borderRadius: BorderRadius.circular(16.0.s),
+                  child: ColoredBox(
+                    color: Colors.red,
+                    child: TapToSeeHint(
+                      onTap: () {
+                        final eventReference = quotedEvent!.eventReference;
+                        PostDetailsRoute(
+                          eventReference: eventReference.encode(),
+                        ).push<void>(context);
+                      },
+                      onVisibilityChanged: (isVisible) {
+                        ref.read(storyPauseControllerProvider.notifier).paused = isVisible;
+                      },
+                      child: IonConnectNetworkImage(
+                        imageUrl: imageUrl,
+                        authorPubkey: authorPubkey,
+                        cacheManager: cacheManager,
+                        filterQuality: FilterQuality.high,
+                        fit: BoxFit.contain,
+                        progressIndicatorBuilder: (_, __, ___) => const CenteredLoadingIndicator(),
+                        imageBuilder: (context, imageProvider) {
+                          WidgetsBinding.instance.addPostFrameCallback((_) {
+                            if (context.mounted) {
+                              ref.read(storyImageLoadStatusProvider(storyId).notifier).markLoaded();
+                            }
+                          });
+
+                          return DecoratedBox(
+                            decoration: BoxDecoration(
+                              image: DecorationImage(
+                                image: imageProvider,
+                                fit: BoxFit.contain,
+                              ),
+                            ),
+                          );
+                        },
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+            ),
+          ),
+        ),
       );
     }
 

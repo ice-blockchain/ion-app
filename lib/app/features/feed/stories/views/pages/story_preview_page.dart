@@ -13,6 +13,7 @@ import 'package:ion/app/features/feed/create_post/providers/create_post_notifier
 import 'package:ion/app/features/feed/data/models/who_can_reply_settings_option.c.dart';
 import 'package:ion/app/features/feed/providers/selected_who_can_reply_option_provider.c.dart';
 import 'package:ion/app/features/feed/stories/views/components/story_preview/actions/story_share_button.dart';
+import 'package:ion/app/features/feed/stories/views/components/story_preview/media/post_screenshot_preview.dart';
 import 'package:ion/app/features/feed/stories/views/components/story_preview/media/story_image_preview.dart';
 import 'package:ion/app/features/feed/stories/views/components/story_preview/media/story_video_preview.dart';
 import 'package:ion/app/features/feed/views/pages/who_can_reply_settings_modal/who_can_reply_settings_modal.dart';
@@ -74,7 +75,9 @@ class StoryPreviewPage extends HookConsumerWidget {
                     Flexible(
                       child: switch (mediaType) {
                         MediaType.video => StoryVideoPreview(path: path),
-                        MediaType.image => StoryImagePreview(path: path),
+                        MediaType.image => isPostScreenshot
+                            ? PostScreenshotPreview(path: path)
+                            : StoryImagePreview(path: path),
                         MediaType.audio => const CenteredLoadingIndicator(),
                         MediaType.unknown => const CenteredLoadingIndicator(),
                       },
