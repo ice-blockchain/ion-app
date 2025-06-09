@@ -1,6 +1,7 @@
 // SPDX-License-Identifier: ice License 1.0
 
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/components/screen_offset/screen_bottom_offset.dart';
 import 'package:ion/app/components/screen_offset/screen_side_offset.dart';
@@ -40,6 +41,7 @@ class PrivacySettingsModal extends ConsumerWidget {
           mainAxisSize: MainAxisSize.min,
           children: [
             NavigationAppBar.modal(
+              onBackPress: () => context.pop(true),
               title: Text(context.i18n.settings_privacy),
               actions: const [
                 NavigationCloseButton(),

@@ -2,6 +2,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
+import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/components/list_items_loading_state/item_loading_state.dart';
 import 'package:ion/app/components/modal_action_button/modal_action_button.dart';
@@ -13,6 +14,7 @@ import 'package:ion/app/features/core/model/language.dart';
 import 'package:ion/app/features/core/providers/app_locale_provider.c.dart';
 import 'package:ion/app/features/optimistic_ui/features/language/language_sync_strategy_provider.c.dart';
 import 'package:ion/app/features/settings/views/delete_confirm_modal.dart';
+import 'package:ion/app/hooks/use_pop_if_returned_null.dart';
 import 'package:ion/app/router/app_routes.c.dart';
 import 'package:ion/app/router/components/navigation_app_bar/navigation_app_bar.dart';
 import 'package:ion/app/router/components/navigation_app_bar/navigation_close_button.dart';
@@ -34,12 +36,15 @@ class AccountSettingsModal extends HookConsumerWidget {
 
     final primaryColor = context.theme.appColors.primaryAccent;
 
+    final popIfNull = usePopIfReturnedNull<bool>();
+
     return SheetContent(
       body: SingleChildScrollView(
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
             NavigationAppBar.modal(
+              onBackPress: () => context.pop(true),
               title: Text(context.i18n.common_account),
               actions: const [NavigationCloseButton()],
             ),
@@ -56,7 +61,7 @@ class AccountSettingsModal extends HookConsumerWidget {
                   ModalActionButton(
                     icon: Assets.svg.iconProfileBlockUser.icon(color: primaryColor),
                     label: context.i18n.settings_blocked_users,
-                    onTap: () => BlockedUsersRoute().push<void>(context),
+                    onTap: () => popIfNull(() => BlockedUsersRoute().push<bool>(context)),
                   ),
                   ModalActionButton(
                     icon: Assets.svg.iconSelectLanguage.icon(color: primaryColor),
@@ -65,7 +70,7 @@ class AccountSettingsModal extends HookConsumerWidget {
                       ref.watch(localePreferredLanguagesProvider).first.name,
                       style: context.theme.appTextThemes.caption.copyWith(color: primaryColor),
                     ),
-                    onTap: () => AppLanguagesRoute().push<void>(context),
+                    onTap: () => popIfNull(() => AppLanguagesRoute().push<bool>(context)),
                   ),
                   contentLangsAsync.maybeWhen(
                     orElse: () => const ItemLoadingState(),
@@ -86,7 +91,7 @@ class AccountSettingsModal extends HookConsumerWidget {
                             ),
                         ],
                       ),
-                      onTap: () => ContentLanguagesRoute().push<void>(context),
+                      onTap: () => popIfNull(() => ContentLanguagesRoute().push<bool>(context)),
                     ),
                   ),
                   ModalActionButton(

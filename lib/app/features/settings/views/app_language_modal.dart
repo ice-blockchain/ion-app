@@ -1,6 +1,7 @@
 // SPDX-License-Identifier: ice License 1.0
 
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/core/providers/app_locale_provider.c.dart';
@@ -23,6 +24,7 @@ class AppLanguageModal extends ConsumerWidget {
       },
       selectedLanguages: [locale.languageCode.toLowerCase()],
       appBar: NavigationAppBar.modal(
+        onBackPress: () => context.pop(true),
         actions: const [NavigationCloseButton()],
       ),
     );
