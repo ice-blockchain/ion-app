@@ -106,13 +106,13 @@ class FollowingFeedSeenEventsRepository {
         .toList();
   }
 
-  Future<void> clearSeenEvents({
+  Future<void> deleteEvents({
     required FeedType feedType,
     required List<String> retainPubkeys,
     required int until,
     FeedModifier? feedModifier,
   }) async {
-    await _seenEventsDao.clearSeenEvents(
+    await _seenEventsDao.deleteEvents(
       feedType: feedType,
       feedModifier: feedModifier,
       retainPubkeys: retainPubkeys,

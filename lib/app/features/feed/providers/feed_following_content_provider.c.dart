@@ -183,7 +183,7 @@ class FeedFollowingContent extends _$FeedFollowingContent implements PagedNotifi
     final seenEventsRepository = ref.read(followingFeedSeenEventsRepositoryProvider);
     final feedConfig = await ref.read(feedConfigProvider.future);
 
-    await seenEventsRepository.clearSeenEvents(
+    await seenEventsRepository.deleteEvents(
       feedType: feedType,
       feedModifier: feedModifier,
       retainPubkeys: pubkeys,

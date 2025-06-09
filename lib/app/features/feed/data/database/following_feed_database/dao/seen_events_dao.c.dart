@@ -121,7 +121,7 @@ class SeenEventsDao extends DatabaseAccessor<FollowingFeedDatabase> with _$SeenE
     return query.get();
   }
 
-  Future<void> clearSeenEvents({
+  Future<void> deleteEvents({
     required FeedType feedType,
     required List<String> retainPubkeys,
     required int until,

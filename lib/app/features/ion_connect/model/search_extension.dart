@@ -39,9 +39,7 @@ class SearchExtensions {
     ]);
   }
 
-  factory SearchExtensions.withAuthors({
-    int forKind = ModifiablePostEntity.kind,
-  }) {
+  factory SearchExtensions.withAuthors({int forKind = ModifiablePostEntity.kind}) {
     return SearchExtensions([
       GenericIncludeSearchExtension(
         forKind: forKind,
