@@ -22,10 +22,6 @@ class EventSyncer extends _$EventSyncer {
     int limit = 100,
     Duration? overlap,
   }) async {
-    if (syncPivotKey != 'e2ee-messages') {
-      return null;
-    }
-
     if (sinceDateMicroseconds != null && overlap != null) {
       sinceDateMicroseconds = sinceDateMicroseconds - overlap.inMicroseconds;
     }
