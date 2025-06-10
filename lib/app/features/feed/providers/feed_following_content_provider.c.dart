@@ -7,7 +7,9 @@ import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:ion/app/exceptions/exceptions.dart';
 import 'package:ion/app/extensions/num.dart';
 import 'package:ion/app/features/auth/providers/auth_provider.c.dart';
+import 'package:ion/app/features/feed/data/models/entities/generic_repost.c.dart';
 import 'package:ion/app/features/feed/data/models/entities/post_data.c.dart';
+import 'package:ion/app/features/feed/data/models/entities/repost_data.c.dart';
 import 'package:ion/app/features/feed/data/models/feed_modifier.dart';
 import 'package:ion/app/features/feed/data/models/feed_type.dart';
 import 'package:ion/app/features/feed/data/repository/following_feed_seen_events_repository.c.dart';
@@ -286,8 +288,9 @@ class FeedFollowingContent extends _$FeedFollowingContent implements PagedNotifi
             entity: entity,
             lastEventReference: lastEvent?.eventReference,
           );
-          if (valid) {
-            resultsController.add(entity!);
+          if (valid && entity != null) {
+            await _saveSeenReposts(entity);
+            resultsController.add(entity);
           }
         }).catchError((Object? error) {
           Logger.error(
@@ -429,6 +432,7 @@ class FeedFollowingContent extends _$FeedFollowingContent implements PagedNotifi
       await seenEventsRepository.save(entity, feedType: feedType, feedModifier: feedModifier);
       // TODO:add repost deduplication here
       final isInReqTimeFrame = await _isInReqTimeFrame(entity.createdAt);
+
       state = state.copyWith(
         unseenPagination: {
           ...state.unseenPagination,
@@ -516,6 +520,18 @@ class FeedFollowingContent extends _$FeedFollowingContent implements PagedNotifi
   Future<bool> _isInReqTimeFrame(int time) async {
     final feedConfig = await ref.read(feedConfigProvider.future);
     return time.toDateTime.isAfter(DateTime.now().subtract(feedConfig.followingReqMaxAge));
+  }
+
+  Future<void> _saveSeenReposts(IonConnectEntity entity) async {
+    final repostedEventReference = switch (entity) {
+      GenericRepostEntity() => entity.data.eventReference,
+      RepostEntity() => entity.data.eventReference,
+      _ => null,
+    };
+    if (repostedEventReference != null) {
+      final seenEventsRepository = ref.read(followingFeedSeenEventsRepositoryProvider);
+      await seenEventsRepository.saveSeenRepostedEvent(repostedEventReference);
+    }
   }
 }
 
