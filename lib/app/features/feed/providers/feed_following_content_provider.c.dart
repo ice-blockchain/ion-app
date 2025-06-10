@@ -350,8 +350,9 @@ class FeedFollowingContent extends _$FeedFollowingContent implements PagedNotifi
         requestsQueue.add(() async {
           final entity = await _requestEntityByReference(eventReference: eventReference);
           final valid = await _validateRequestedReferenceEntity(entity: entity);
-          if (valid) {
-            resultsController.add(entity!);
+          if (valid && entity != null) {
+            await _saveSeenReposts(entity);
+            resultsController.add(entity);
           }
         }).catchError((Object? error) {
           Logger.error(
@@ -430,7 +431,7 @@ class FeedFollowingContent extends _$FeedFollowingContent implements PagedNotifi
       // If the entity is not seen, we save it as a new seen event,
       // update the state items and pagination.
       await seenEventsRepository.save(entity, feedType: feedType, feedModifier: feedModifier);
-      // TODO:add repost deduplication here
+      final duplicatedRepost = await _isDuplicatedRepost(entity);
       final isInReqTimeFrame = await _isInReqTimeFrame(entity.createdAt);
 
       state = state.copyWith(
@@ -446,7 +447,7 @@ class FeedFollowingContent extends _$FeedFollowingContent implements PagedNotifi
           ),
         },
       );
-      return isInReqTimeFrame;
+      return isInReqTimeFrame && !duplicatedRepost;
     } else {
       // If the entity is seen, we do not insert it to the state,
       // but we update the pagination with the seen sequence end.
@@ -472,8 +473,8 @@ class FeedFollowingContent extends _$FeedFollowingContent implements PagedNotifi
 
   Future<bool> _validateRequestedReferenceEntity({required IonConnectEntity? entity}) async {
     if (entity == null) return false;
-    // TODO:add repost deduplication here
-    return true;
+    final duplicatedRepost = await _isDuplicatedRepost(entity);
+    return !duplicatedRepost;
   }
 
   EntitiesDataSource _getDataSourceForPubkey(String pubkey) {
@@ -532,6 +533,23 @@ class FeedFollowingContent extends _$FeedFollowingContent implements PagedNotifi
       final seenEventsRepository = ref.read(followingFeedSeenEventsRepositoryProvider);
       await seenEventsRepository.saveSeenRepostedEvent(repostedEventReference);
     }
+  }
+
+  Future<bool> _isDuplicatedRepost(IonConnectEntity entity) async {
+    final repostedEventReference = switch (entity) {
+      GenericRepostEntity() => entity.data.eventReference,
+      RepostEntity() => entity.data.eventReference,
+      _ => null,
+    };
+    if (repostedEventReference == null) return false;
+
+    final seenEventsRepository = ref.read(followingFeedSeenEventsRepositoryProvider);
+    final seenAt = await seenEventsRepository.getRepostedEventSeenAt(repostedEventReference);
+
+    if (seenAt == null) return false;
+
+    final feedConfig = await ref.read(feedConfigProvider.future);
+    return seenAt.isBefore(DateTime.now().subtract(feedConfig.repostThrottleDelay));
   }
 }
 
