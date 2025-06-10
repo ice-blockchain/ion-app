@@ -7,7 +7,7 @@ import 'package:ion/app/features/core/permissions/views/components/permission_aw
 import 'package:ion/app/features/core/permissions/views/components/permission_dialogs/permission_sheets.dart';
 import 'package:ion/app/features/feed/views/components/actions_toolbar_button/actions_toolbar_button.dart';
 import 'package:ion/app/features/gallery/views/pages/media_picker_type.dart';
-import 'package:ion/app/router/app_routes.c.dart';
+import 'package:ion/app/router/utils/quote_routing_utils.dart';
 import 'package:ion/app/services/media_service/media_service.c.dart';
 import 'package:ion/generated/assets.gen.dart';
 
@@ -32,10 +32,12 @@ class GalleryPermissionButton extends ConsumerWidget {
       requestId: 'gallery_permission_button',
       onGranted: () async {
         if (context.mounted) {
-          final mediaFiles = await MediaPickerRoute(
-            mediaPickerType: mediaPickerType,
+          final mediaFiles = await QuoteRoutingUtils.pushMediaPicker<List<MediaFile>>(
+            context,
+            mediaPickerType,
             maxSelection: maxSelection,
-          ).push<List<MediaFile>>(context);
+          );
+
           onMediaSelected(mediaFiles);
         }
       },

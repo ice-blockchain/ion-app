@@ -8,7 +8,7 @@ import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/feed/providers/counters/reposted_events_provider.c.dart';
 import 'package:ion/app/features/feed/providers/counters/reposts_count_provider.c.dart';
 import 'package:ion/app/features/ion_connect/model/event_reference.c.dart';
-import 'package:ion/app/router/app_routes.c.dart';
+import 'package:ion/app/router/utils/quote_routing_utils.dart';
 import 'package:ion/app/utils/num.dart';
 import 'package:ion/generated/assets.gen.dart';
 
@@ -31,9 +31,7 @@ class RepostsCounterButton extends ConsumerWidget {
       behavior: HitTestBehavior.opaque,
       onTap: () {
         HapticFeedback.lightImpact();
-        RepostOptionsModalRoute(
-          eventReference: eventReference.encode(),
-        ).push<void>(context);
+        QuoteRoutingUtils.pushRepostOptionsModal(context, eventReference.encode());
       },
       child: Container(
         constraints: BoxConstraints(minWidth: 50.0.s),

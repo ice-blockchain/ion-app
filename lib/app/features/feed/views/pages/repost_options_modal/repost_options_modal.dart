@@ -15,10 +15,10 @@ import 'package:ion/app/features/feed/providers/delete_entity_provider.c.dart';
 import 'package:ion/app/features/feed/providers/repost_notifier.c.dart';
 import 'package:ion/app/features/feed/views/pages/repost_options_modal/repost_option_action.dart';
 import 'package:ion/app/features/ion_connect/model/event_reference.c.dart';
-import 'package:ion/app/router/app_routes.c.dart';
 import 'package:ion/app/router/components/navigation_app_bar/navigation_app_bar.dart';
 import 'package:ion/app/router/components/navigation_app_bar/navigation_close_button.dart';
 import 'package:ion/app/router/components/sheet_content/sheet_content.dart';
+import 'package:ion/app/router/utils/quote_routing_utils.dart';
 
 class RepostOptionsModal extends HookConsumerWidget {
   const RepostOptionsModal({
@@ -80,7 +80,7 @@ class RepostOptionsModal extends HookConsumerWidget {
                             }
 
                           case RepostOptionAction.quotePost:
-                            CreateQuoteRoute(quotedEvent: eventReference.encode()).go(context);
+                            QuoteRoutingUtils.pushCreateQuote(context, eventReference.encode());
 
                           case RepostOptionAction.undoRepost:
                             if (repostReference != null) {

@@ -23,6 +23,16 @@ class ProfileRoutes {
         TypedGoRoute<ExploreTransactionDetailsProfileRoute>(path: 'coin-transaction-explore'),
         TypedGoRoute<RequestCoinsFormRoute>(path: 'request-coins-form'),
         TypedGoRoute<AddressNotFoundProfileRoute>(path: 'address-not-found'),
+        TypedGoRoute<RepostOptionsModalProfileRoute>(
+          path: 'profile-post-repost-options/:eventReference',
+        ),
+        TypedGoRoute<CreateQuoteProfileRoute>(path: 'post-editor/profile-quote/:quotedEvent'),
+        TypedGoRoute<MediaPickerProfileRoute>(
+          path: 'profile-media-picker',
+          routes: [
+            TypedGoRoute<AlbumSelectionProfileRoute>(path: 'album-selection'),
+          ],
+        ),
         ...SettingsRoutes.routes,
       ],
     ),
@@ -241,4 +251,69 @@ class EditBookmarksRoute extends BaseRouteData {
       : super(
           child: const EditBookmarksPage(),
         );
+}
+
+class RepostOptionsModalProfileRoute extends BaseRouteData {
+  RepostOptionsModalProfileRoute({
+    required this.eventReference,
+  }) : super(
+          child: RepostOptionsModal(
+            eventReference: EventReference.fromEncoded(eventReference),
+          ),
+          type: IceRouteType.bottomSheet,
+        );
+
+  final String eventReference;
+}
+
+class MediaPickerProfileRoute extends BaseRouteData {
+  MediaPickerProfileRoute({
+    this.maxSelection,
+    this.mediaPickerType = MediaPickerType.common,
+    this.maxVideoDurationInSeconds,
+    this.showCameraCell = true,
+  }) : super(
+          child: MediaPickerPage(
+            maxSelection: maxSelection ?? 5,
+            type: mediaPickerType,
+            maxVideoDurationInSeconds: maxVideoDurationInSeconds,
+            showCameraCell: showCameraCell,
+          ),
+          type: IceRouteType.bottomSheet,
+        );
+
+  final int? maxSelection;
+  final MediaPickerType mediaPickerType;
+  final int? maxVideoDurationInSeconds;
+  final bool showCameraCell;
+}
+
+class AlbumSelectionProfileRoute extends BaseRouteData {
+  AlbumSelectionProfileRoute({
+    required this.mediaPickerType,
+  }) : super(
+          child: AlbumSelectionPage(type: mediaPickerType),
+          type: IceRouteType.bottomSheet,
+        );
+
+  final MediaPickerType mediaPickerType;
+}
+
+class CreateQuoteProfileRoute extends BaseRouteData {
+  CreateQuoteProfileRoute({
+    required this.quotedEvent,
+    this.content,
+    this.attachedMedia,
+  }) : super(
+          child: PostFormModal.createQuote(
+            quotedEvent: EventReference.fromEncoded(quotedEvent),
+            content: content,
+            attachedMedia: attachedMedia,
+          ),
+          type: IceRouteType.bottomSheet,
+        );
+
+  final String quotedEvent;
+  final String? content;
+  final String? attachedMedia;
 }
