@@ -75,9 +75,13 @@ class GalleryNotifier extends _$GalleryNotifier {
     )
         .listen((media) {
       final currentState = state.valueOrNull;
+      final existingMedia = currentState?.mediaData ?? [];
+      final existingMediaPaths = existingMedia.map((m) => m.path).toSet();
+      final newMedia = media.where((m) => !existingMediaPaths.contains(m.path)).toList();
+
       state = AsyncValue.data(
         GalleryState(
-          mediaData: [...(currentState?.mediaData ?? []), ...media],
+          mediaData: [...existingMedia, ...newMedia],
           currentPage: currentState?.currentPage ?? 0,
           hasMore: media.isNotEmpty,
           type: type,
