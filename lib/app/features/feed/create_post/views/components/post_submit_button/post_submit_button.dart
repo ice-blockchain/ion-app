@@ -10,6 +10,7 @@ import 'package:ion/app/features/feed/create_post/model/create_post_option.dart'
 import 'package:ion/app/features/feed/create_post/providers/create_post_notifier.c.dart';
 import 'package:ion/app/features/feed/create_post/views/hooks/use_can_submit_post.dart';
 import 'package:ion/app/features/feed/polls/providers/poll_draft_provider.c.dart';
+import 'package:ion/app/features/feed/providers/selected_interests_notifier.c.dart';
 import 'package:ion/app/features/feed/providers/selected_who_can_reply_option_provider.c.dart';
 import 'package:ion/app/features/feed/views/components/toolbar_buttons/toolbar_send_button.dart';
 import 'package:ion/app/features/ion_connect/model/event_reference.c.dart';
@@ -56,6 +57,7 @@ class PostSubmitButton extends HookConsumerWidget {
     }
     final draftPoll = ref.watch(pollDraftNotifierProvider);
     final whoCanReply = ref.watch(selectedWhoCanReplyOptionProvider);
+    final selectedTopics = ref.watch(selectedInterestsNotifierProvider);
 
     final isSubmitButtonEnabled = useCanSubmitPost(
       textEditorController: textEditorController,
@@ -85,6 +87,7 @@ class PostSubmitButton extends HookConsumerWidget {
               mediaAttachments: mediaAttachments,
               eventReference: modifiedEvent!,
               whoCanReply: whoCanReply,
+              topics: selectedTopics,
             ),
           );
         } else {
@@ -95,6 +98,7 @@ class PostSubmitButton extends HookConsumerWidget {
               quotedEvent: quotedEvent,
               mediaFiles: filesToUpload,
               whoCanReply: whoCanReply,
+              topics: selectedTopics,
             ),
           );
         }

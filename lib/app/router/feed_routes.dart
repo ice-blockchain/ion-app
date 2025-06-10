@@ -49,6 +49,8 @@ class FeedRoutes {
         TypedGoRoute<FeedSearchFiltersRoute>(path: 'feed-search_filters'),
         TypedGoRoute<ArticlePreviewRoute>(path: 'article-preview'),
         TypedGoRoute<SelectArticleTopicsRoute>(path: 'article-topics'),
+        TypedGoRoute<SelectTopicsCategoriesRoute>(path: 'topics-categories'),
+        TypedGoRoute<SelectTopicsSubcategoriesRoute>(path: 'topics-subcategories'),
         TypedGoRoute<EditArticleRoute>(path: 'create-article/edit/:modifiedEvent'),
         TypedGoRoute<EditArticlePreviewRoute>(path: 'article-preview/edit/:modifiedEvent'),
       ],
@@ -73,6 +75,32 @@ class SelectArticleTopicsRoute extends BaseRouteData {
           child: const SelectArticleTopicModal(),
           type: IceRouteType.bottomSheet,
         );
+}
+
+class SelectTopicsCategoriesRoute extends BaseRouteData {
+  SelectTopicsCategoriesRoute({required this.feedType})
+      : super(
+          child: SelectTopicsCategoriesModal(feedType: feedType),
+          type: IceRouteType.bottomSheet,
+        );
+
+  final FeedType feedType;
+}
+
+class SelectTopicsSubcategoriesRoute extends BaseRouteData {
+  SelectTopicsSubcategoriesRoute({
+    required this.categoryKey,
+    required this.feedType,
+  }) : super(
+          child: SelectTopicsSubcategoriesModal(
+            categoryKey: categoryKey,
+            feedType: feedType,
+          ),
+          type: IceRouteType.bottomSheet,
+        );
+
+  final String categoryKey;
+  final FeedType feedType;
 }
 
 class ArticleRepliesRoute extends BaseRouteData {

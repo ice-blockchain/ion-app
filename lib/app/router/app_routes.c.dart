@@ -48,6 +48,7 @@ import 'package:ion/app/features/feed/create_article/views/pages/select_article_
 import 'package:ion/app/features/feed/create_post/views/pages/compress_test_page.c.dart';
 import 'package:ion/app/features/feed/create_post/views/pages/post_form_modal/post_form_modal.dart';
 import 'package:ion/app/features/feed/data/models/article_topic.dart';
+import 'package:ion/app/features/feed/data/models/feed_type.dart';
 import 'package:ion/app/features/feed/notifications/views/notifications_history_page/notifications_history_page.dart';
 import 'package:ion/app/features/feed/stories/views/pages/story_preview_page.dart';
 import 'package:ion/app/features/feed/stories/views/pages/story_record_page.dart';
@@ -62,6 +63,8 @@ import 'package:ion/app/features/feed/views/pages/feed_page/feed_page.dart';
 import 'package:ion/app/features/feed/views/pages/fullscreen_media/fullscreen_media_page.dart';
 import 'package:ion/app/features/feed/views/pages/post_details_page/post_details_page.dart';
 import 'package:ion/app/features/feed/views/pages/repost_options_modal/repost_options_modal.dart';
+import 'package:ion/app/features/feed/views/pages/topics_modal/select_topics_categories_modal.dart';
+import 'package:ion/app/features/feed/views/pages/topics_modal/select_topics_subcategories_modal.dart';
 import 'package:ion/app/features/gallery/views/pages/album_selection_page.dart';
 import 'package:ion/app/features/gallery/views/pages/gallery_camera_page.dart';
 import 'package:ion/app/features/gallery/views/pages/media_picker_page.dart';

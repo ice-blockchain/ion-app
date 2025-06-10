@@ -16,6 +16,8 @@ import 'package:ion/app/features/feed/create_post/views/pages/post_form_modal/co
 import 'package:ion/app/features/feed/create_post/views/pages/post_form_modal/components/create_post_content.dart';
 import 'package:ion/app/features/feed/create_post/views/pages/post_form_modal/hooks/use_post_quill_controller.dart';
 import 'package:ion/app/features/feed/data/models/entities/modifiable_post_data.c.dart';
+import 'package:ion/app/features/feed/providers/selected_interests_notifier.c.dart';
+import 'package:ion/app/features/feed/utils/extract_topics.dart';
 import 'package:ion/app/features/feed/views/pages/cancel_creation_modal/cancel_creation_modal.dart';
 import 'package:ion/app/features/ion_connect/model/event_reference.c.dart';
 import 'package:ion/app/features/ion_connect/model/media_attachment.dart';
@@ -155,8 +157,11 @@ class PostFormModal extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final textEditorController =
-        usePostQuillController(ref, content: content, modifiedEvent: modifiedEvent);
+    final textEditorController = usePostQuillController(
+      ref,
+      content: content,
+      modifiedEvent: modifiedEvent,
+    );
     final scrollController = useScrollController();
     final textEditorKey = useMemoized(TextEditorKeys.createPost);
 
@@ -194,7 +199,10 @@ class PostFormModal extends HookConsumerWidget {
             throw UnsupportedEventReference(modifiedEvent);
           }
           attachedMediaLinksNotifier.value = modifiedEntity.data.media;
-
+          final topics = extractTopics(modifiedEntity.data.relatedHashtags);
+          WidgetsBinding.instance.addPostFrameCallback(
+            (_) => ref.read(selectedInterestsNotifierProvider.notifier).selectInterests = topics,
+          );
           return null;
         },
         [],
