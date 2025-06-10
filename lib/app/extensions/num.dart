@@ -46,6 +46,8 @@ extension Timestamp on int {
       13 => DateTime.fromMillisecondsSinceEpoch(this),
       // If the timestamp is 16 digits, assume it's in microseconds
       16 => DateTime.fromMicrosecondsSinceEpoch(this),
+      // If the timestamp is 19 digits, assume it's in nanoseconds
+      19 => DateTime.fromMicrosecondsSinceEpoch(this ~/ 1000),
       _ => throw FormatException(
           'Invalid timestamp format: ${toString()} length: ${toString().length}',
         ),
@@ -62,6 +64,8 @@ extension Microseconds on int {
       13 => this * 1000,
       // If the timestamp is 16 digits, assume it's in microseconds
       16 => this,
+      // If the timestamp is 19 digits, assume it's in nanoseconds
+      19 => this ~/ 1000,
       _ => throw FormatException(
           'Invalid timestamp format: ${toString()} length: ${toString().length}',
         ),
