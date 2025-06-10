@@ -7,7 +7,9 @@ import 'package:ion/app/exceptions/exceptions.dart';
 import 'package:ion/app/features/auth/providers/auth_provider.c.dart';
 import 'package:ion/app/features/feed/data/database/following_feed_database/converters/feed_modifier_converter.c.dart';
 import 'package:ion/app/features/feed/data/database/following_feed_database/converters/feed_type_converter.c.dart';
+import 'package:ion/app/features/feed/data/database/following_feed_database/following_feed_database.c.steps.dart';
 import 'package:ion/app/features/feed/data/database/following_feed_database/tables/seen_events_table.c.dart';
+import 'package:ion/app/features/feed/data/database/following_feed_database/tables/seen_reposts_table.c.dart';
 import 'package:ion/app/features/feed/data/models/feed_modifier.dart';
 import 'package:ion/app/features/feed/data/models/feed_type.dart';
 import 'package:ion/app/features/ion_connect/database/converters/event_reference_converter.c.dart';
@@ -34,6 +36,7 @@ FollowingFeedDatabase followingFeedDatabase(Ref ref) {
 @DriftDatabase(
   tables: [
     SeenEventsTable,
+    SeenRepostsTable,
   ],
 )
 class FollowingFeedDatabase extends _$FollowingFeedDatabase {
@@ -42,7 +45,18 @@ class FollowingFeedDatabase extends _$FollowingFeedDatabase {
   final String pubkey;
 
   @override
-  int get schemaVersion => 1;
+  int get schemaVersion => 2;
+
+  @override
+  MigrationStrategy get migration {
+    return MigrationStrategy(
+      onUpgrade: stepByStep(
+        from1To2: (m, schema) async {
+          await m.createTable(schema.seenRepostsTable);
+        },
+      ),
+    );
+  }
 
   static QueryExecutor _openConnection(String pubkey) {
     return driftDatabase(name: 'following_feed_database_$pubkey');

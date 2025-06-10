@@ -10,6 +10,7 @@ import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/chat/model/database/chat_database.c.dart';
 import 'package:ion/app/features/core/providers/app_info_provider.c.dart';
 import 'package:ion/app/features/core/providers/feature_flags_provider.c.dart';
+import 'package:ion/app/features/feed/data/database/following_feed_database/following_feed_database.c.dart';
 import 'package:ion/app/features/feed/notifications/data/database/notifications_database.c.dart';
 import 'package:ion/app/features/ion_connect/database/event_messages_database.c.dart';
 import 'package:ion/app/features/user_block/providers/blocked_users_database_provider.c.dart';
@@ -275,6 +276,7 @@ class DebugPage extends ConsumerWidget {
       _DebugPageDatabaseType.notifications => ref.read(notificationsDatabaseProvider),
       _DebugPageDatabaseType.eventMessages => ref.read(eventMessagesDatabaseProvider),
       _DebugPageDatabaseType.blockedUsers => ref.read(blockedUsersDatabaseProvider),
+      _DebugPageDatabaseType.followingFeed => ref.read(followingFeedDatabaseProvider),
     };
   }
 }
@@ -284,7 +286,8 @@ enum _DebugPageDatabaseType {
   chat('Chat Database'),
   notifications('Notifications Database'),
   eventMessages('Event Messages Database'),
-  blockedUsers('Blocked Users Database');
+  blockedUsers('Blocked Users Database'),
+  followingFeed('Following Feed Database');
 
   const _DebugPageDatabaseType(this.displayName);
   final String displayName;
