@@ -22,7 +22,7 @@ import 'package:ion/app/features/ion_connect/model/action_source.c.dart';
 import 'package:ion/app/features/ion_connect/model/deletion_request.c.dart';
 import 'package:ion/app/features/ion_connect/model/event_reference.c.dart';
 import 'package:ion/app/features/ion_connect/model/ion_connect_gift_wrap.c.dart';
-import 'package:ion/app/features/ion_connect/providers/entities_syncer_notifier.c.dart';
+import 'package:ion/app/features/ion_connect/providers/event_syncer_provider.c.dart';
 import 'package:ion/app/features/ion_connect/providers/ion_connect_event_signer_provider.c.dart';
 import 'package:ion/app/features/ion_connect/providers/ion_connect_subscription_provider.c.dart';
 import 'package:ion/app/services/ion_connect/ion_connect_gift_wrap_service.c.dart';
@@ -46,20 +46,14 @@ class E2eeMessagesSubscriber extends _$E2eeMessagesSubscriber {
       throw EventSignerNotFoundException();
     }
 
-    final latestEventMessageDate = await ref
-        .watch(conversationEventMessageDaoProvider)
-        .getLatestEventMessageDate([ReplaceablePrivateDirectMessageEntity.kind]);
-
     final userChatRelays = await ref.watch(userChatRelaysProvider(masterPubkey).future);
 
     if (userChatRelays == null) {
       return;
     }
 
-    final sinceDate = latestEventMessageDate?.add(const Duration(days: -2));
-
     final requestFilter = RequestFilter(
-      limit: -1,
+      limit: 100,
       kinds: const [IonConnectGiftWrapEntity.kind],
       tags: {
         '#k': [
@@ -70,9 +64,10 @@ class E2eeMessagesSubscriber extends _$E2eeMessagesSubscriber {
           [GenericRepostEntity.kind.toString(), ArticleEntity.kind.toString()],
           [GenericRepostEntity.kind.toString(), ModifiablePostEntity.kind.toString()],
         ],
-        '#p': [masterPubkey],
+        '#p': [
+          [masterPubkey, '', eventSigner.publicKey],
+        ],
       },
-      since: sinceDate?.microsecondsSinceEpoch,
     );
 
     final sealService = await ref.watch(ionConnectSealServiceProvider.future);
@@ -84,9 +79,14 @@ class E2eeMessagesSubscriber extends _$E2eeMessagesSubscriber {
     final conversationMessageDao = ref.watch(conversationMessageDaoProvider);
     final conversationMessageStatusDao = ref.watch(conversationMessageDataDaoProvider);
     final conversationMessageReactionDao = ref.watch(conversationMessageReactionDaoProvider);
+    const overlap = Duration(days: 2);
+    final latestEventMessageDate = await ref
+        .watch(conversationEventMessageDaoProvider)
+        .getLatestEventMessageDate([ReplaceablePrivateDirectMessageEntity.kind]);
 
-    await ref.watch(entitiesSyncerNotifierProvider('e2ee-messages').notifier).syncEvents(
+    final latestSyncedEventTimestamp = await ref.watch(eventSyncerServiceProvider).syncEvents(
       requestFilters: [requestFilter],
+      sinceDateMicroseconds: latestEventMessageDate?.microsecondsSinceEpoch,
       saveCallback: (eventMessage) => _handleMessage(
         eventMessage,
         masterPubkey,
@@ -100,19 +100,18 @@ class E2eeMessagesSubscriber extends _$E2eeMessagesSubscriber {
         conversationMessageStatusDao,
         conversationMessageReactionDao,
       ),
-      maxCreatedAtBuilder: () => ref
-          .watch(conversationEventMessageDaoProvider)
-          .getLatestEventMessageDate([ReplaceablePrivateDirectMessageEntity.kind]),
-      minCreatedAtBuilder: (since) =>
-          ref.watch(conversationEventMessageDaoProvider).getEarliestEventMessageDate(
-        [ReplaceablePrivateDirectMessageEntity.kind],
-        after: since,
-      ),
-      overlap: const Duration(days: 2),
+      overlap: overlap,
       actionSource: const ActionSourceCurrentUserChat(),
     );
+    final requestMessage = RequestMessage();
 
-    final requestMessage = RequestMessage()..addFilter(requestFilter);
+    final sinceWithOverlap = (latestSyncedEventTimestamp ?? DateTime.now().microsecondsSinceEpoch) -
+        overlap.inMicroseconds;
+    requestMessage.addFilter(
+      requestFilter.copyWith(
+        since: () => sinceWithOverlap,
+      ),
+    );
 
     final events = ref.watch(
       ionConnectEventsSubscriptionProvider(
@@ -155,10 +154,6 @@ class E2eeMessagesSubscriber extends _$E2eeMessagesSubscriber {
     ConversationMessageDataDao conversationMessageStatusDao,
     ConversationMessageReactionDao conversationMessageReactionDao,
   ) async {
-    if (eventSigner.publicKey != _receiverDevicePubkey(eventMessage)) {
-      return;
-    }
-
     final giftUnwrapService = await ref.watch(giftUnwrapServiceProvider.future);
 
     final rumor = await giftUnwrapService.unwrap(eventMessage);
@@ -248,16 +243,6 @@ class E2eeMessagesSubscriber extends _$E2eeMessagesSubscriber {
     } else if (rumor.kind == GenericRepostEntity.kind) {
       await eventMessageDao.add(rumor);
     }
-  }
-
-  String _receiverDevicePubkey(EventMessage wrap) {
-    final senderPubkey = wrap.tags.firstWhereOrNull((tags) => tags[0] == 'p')?.elementAtOrNull(3);
-
-    if (senderPubkey == null) {
-      throw ReceiverDevicePubkeyNotFoundException(wrap.id);
-    }
-
-    return senderPubkey;
   }
 
   Future<void> _addMediaToDatabase(

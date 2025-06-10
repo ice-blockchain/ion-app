@@ -7,7 +7,8 @@ import 'package:ion/app/features/feed/notifications/data/repository/followers_re
 import 'package:ion/app/features/ion_connect/ion_connect.dart';
 import 'package:ion/app/features/ion_connect/model/ion_connect_entity.dart';
 import 'package:ion/app/features/ion_connect/model/search_extension.dart';
-import 'package:ion/app/features/ion_connect/providers/entities_syncer_notifier.c.dart';
+import 'package:ion/app/features/ion_connect/providers/event_syncer_provider.c.dart';
+import 'package:ion/app/features/ion_connect/providers/ion_connect_event_parser.c.dart';
 import 'package:ion/app/features/ion_connect/providers/ion_connect_subscription_provider.c.dart';
 import 'package:ion/app/features/user/model/follow_list.c.dart';
 import 'package:ion/app/features/user/model/user_metadata.c.dart';
@@ -37,7 +38,6 @@ Future<void> notificationFollowersSubscription(Ref ref) async {
         ),
       ],
     ).toString(),
-    since: DateTime.now().subtract(const Duration(microseconds: 2)).microsecondsSinceEpoch,
   );
 
   bool isCurrentUserLastAdded(IonConnectEntity entity) =>
@@ -45,18 +45,23 @@ Future<void> notificationFollowersSubscription(Ref ref) async {
       entity.data.list.isNotEmpty &&
       entity.data.list.last.pubkey == currentPubkey;
 
-  await ref.watch(entitiesSyncerNotifierProvider('notifications-followers').notifier).syncEntities(
+  final lastCreatedAt = await followersRepository.lastCreatedAt();
+
+  final latestSyncedEventTimestamp = await ref.watch(eventSyncerServiceProvider).syncEvents(
     requestFilters: [requestFilter],
-    saveCallback: (entity) {
+    sinceDateMicroseconds: lastCreatedAt?.microsecondsSinceEpoch,
+    saveCallback: (eventMessage) {
+      final parser = ref.read(eventParserProvider);
+      final entity = parser.parse(eventMessage);
+
       if (isCurrentUserLastAdded(entity)) {
         followersRepository.save(entity);
       }
     },
-    maxCreatedAtBuilder: followersRepository.lastCreatedAt,
-    minCreatedAtBuilder: (since) => followersRepository.firstCreatedAt(after: since),
   );
 
-  final requestMessage = RequestMessage()..addFilter(requestFilter);
+  final requestMessage = RequestMessage()
+    ..addFilter(requestFilter.copyWith(since: () => latestSyncedEventTimestamp));
 
   final entities = ref.watch(ionConnectEntitiesSubscriptionProvider(requestMessage));
 

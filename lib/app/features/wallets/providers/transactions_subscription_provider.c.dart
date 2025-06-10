@@ -3,13 +3,15 @@
 import 'dart:convert';
 
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:ion/app/exceptions/exceptions.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/auth/providers/auth_provider.c.dart';
 import 'package:ion/app/features/auth/providers/onboarding_complete_provider.c.dart';
 import 'package:ion/app/features/chat/e2ee/providers/gift_unwrap_service_provider.c.dart';
 import 'package:ion/app/features/ion_connect/ion_connect.dart';
 import 'package:ion/app/features/ion_connect/model/ion_connect_gift_wrap.c.dart';
-import 'package:ion/app/features/ion_connect/providers/entities_syncer_notifier.c.dart';
+import 'package:ion/app/features/ion_connect/providers/event_syncer_provider.c.dart';
+import 'package:ion/app/features/ion_connect/providers/ion_connect_event_signer_provider.c.dart';
 import 'package:ion/app/features/ion_connect/providers/ion_connect_subscription_provider.c.dart';
 import 'package:ion/app/features/wallets/data/repository/request_assets_repository.c.dart';
 import 'package:ion/app/features/wallets/data/repository/transactions_repository.c.dart';
@@ -39,7 +41,13 @@ Future<void> transactionsSubscription(Ref ref) async {
   final onboardingComplete = ref.watch(onboardingCompleteProvider).valueOrNull;
   final walletViewsService = ref.watch(walletViewsServiceProvider).valueOrNull;
   final giftUnwrapService = await ref.watch(giftUnwrapServiceProvider.future);
+  final eventSigner = await ref.watch(currentUserIonConnectEventSignerProvider.future);
 
+  if (eventSigner == null) {
+    throw EventSignerNotFoundException();
+  }
+
+  const overlap = Duration(days: 2);
   if (currentPubkey == null ||
       transactionsRepository == null ||
       walletViewsService == null ||
@@ -50,18 +58,24 @@ Future<void> transactionsSubscription(Ref ref) async {
 
   final requestFilter = RequestFilter(
     kinds: const [IonConnectGiftWrapEntity.kind],
-    since: DateTime.now().subtract(const Duration(days: 2)).microsecondsSinceEpoch,
     tags: {
       '#k': [
         FundsRequestEntity.kind.toString(),
         WalletAssetEntity.kind.toString(),
       ],
-      '#p': [currentPubkey],
+      '#p': [
+        [currentPubkey, '', eventSigner.publicKey],
+      ],
     },
   );
 
-  await ref.watch(entitiesSyncerNotifierProvider('transactions').notifier).syncEvents(
+  final transactionLastCreatedAt = await transactionsRepository.getLastCreatedAt();
+  final requestLastCreatedAt = await requestAssetsRepository.getLastCreatedAt();
+  final lastCreatedAt = _getEarliestDateTime(transactionLastCreatedAt, requestLastCreatedAt);
+
+  final latestSyncedEventTimestamp = await ref.watch(eventSyncerServiceProvider).syncEvents(
     requestFilters: [requestFilter],
+    sinceDateMicroseconds: lastCreatedAt?.microsecondsSinceEpoch,
     saveCallback: (eventMessage) => _saveEvent(
       eventMessage: eventMessage,
       currentPubkey: currentPubkey,
@@ -70,21 +84,18 @@ Future<void> transactionsSubscription(Ref ref) async {
       transactionsRepository: transactionsRepository,
       requestAssetsRepository: requestAssetsRepository,
     ),
-    maxCreatedAtBuilder: () async {
-      final transactionLastCreatedAt = await transactionsRepository.getLastCreatedAt();
-      final requestLastCreatedAt = await requestAssetsRepository.getLastCreatedAt();
-      return _getEarliestDateTime(transactionLastCreatedAt, requestLastCreatedAt);
-    },
-    minCreatedAtBuilder: (since) async {
-      final transactionFirstCreatedAt = await transactionsRepository.firstCreatedAt(after: since);
-      final requestFirstCreatedAt = await requestAssetsRepository.firstCreatedAt(after: since);
-      return _getLatestDateTime(transactionFirstCreatedAt, requestFirstCreatedAt);
-    },
-    overlap: const Duration(days: 2),
+    overlap: overlap,
   );
 
-  final requestMessage = RequestMessage()..addFilter(requestFilter);
+  final requestMessage = RequestMessage();
 
+  final sinceWithOverlap = (latestSyncedEventTimestamp ?? DateTime.now().microsecondsSinceEpoch) -
+      overlap.inMicroseconds;
+  requestMessage.addFilter(
+    requestFilter.copyWith(
+      since: () => sinceWithOverlap,
+    ),
+  );
   final events = ref.watch(ionConnectEventsSubscriptionProvider(requestMessage));
 
   final subscription = events.listen(
@@ -108,15 +119,6 @@ DateTime? _getEarliestDateTime(DateTime? first, DateTime? second) {
   if (first == null) return second;
   if (second == null) return first;
   return first.isBefore(second) ? first : second;
-}
-
-/// Returns the latest datetime between two optional datetimes.
-/// If both are null, returns null.
-/// If only one is null, returns the non-null one.
-DateTime? _getLatestDateTime(DateTime? first, DateTime? second) {
-  if (first == null) return second;
-  if (second == null) return first;
-  return first.isAfter(second) ? first : second;
 }
 
 Future<void> _saveEvent({

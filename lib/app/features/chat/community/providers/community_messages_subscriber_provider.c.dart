@@ -8,7 +8,7 @@ import 'package:ion/app/features/core/providers/feature_flags_provider.c.dart';
 import 'package:ion/app/features/feed/data/models/entities/modifiable_post_data.c.dart';
 import 'package:ion/app/features/ion_connect/ion_connect.dart';
 import 'package:ion/app/features/ion_connect/model/action_source.c.dart';
-import 'package:ion/app/features/ion_connect/providers/entities_syncer_notifier.c.dart';
+import 'package:ion/app/features/ion_connect/providers/event_syncer_provider.c.dart';
 import 'package:ion/app/features/ion_connect/providers/ion_connect_subscription_provider.c.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
@@ -45,27 +45,30 @@ class CommunityMessagesSubscriber extends _$CommunityMessagesSubscriber {
       tags: {
         '#h': [communityId],
       },
-      since: DateTime.now().subtract(const Duration(days: 2)).microsecondsSinceEpoch,
     );
 
-    await ref.watch(entitiesSyncerNotifierProvider('community-messages').notifier).syncEvents(
+    final latestEventMessageDate = await ref
+        .watch(conversationEventMessageDaoProvider)
+        .getLatestEventMessageDate([ModifiablePostEntity.kind]);
+
+    final latestSyncedEventTimestamp = await ref.watch(eventSyncerServiceProvider).syncEvents(
       requestFilters: [requestFilter],
+      sinceDateMicroseconds: latestEventMessageDate?.microsecondsSinceEpoch,
       saveCallback: (eventMessage) {
         if (eventMessage.kind == ModifiablePostEntity.kind) {
           ref.read(conversationEventMessageDaoProvider).add(eventMessage);
         }
       },
-      maxCreatedAtBuilder: () => ref
-          .watch(conversationEventMessageDaoProvider)
-          .getLatestEventMessageDate([ModifiablePostEntity.kind]),
-      minCreatedAtBuilder: (since) => ref
-          .watch(conversationEventMessageDaoProvider)
-          .getEarliestEventMessageDate([ModifiablePostEntity.kind], after: since),
       overlap: const Duration(days: 2),
       actionSource: ActionSourceUser(ownerPubkey),
     );
 
-    final requestMessage = RequestMessage()..addFilter(requestFilter);
+    final requestMessage = RequestMessage()
+      ..addFilter(
+        requestFilter.copyWith(
+          since: () => latestSyncedEventTimestamp,
+        ),
+      );
 
     final events = ref.watch(
       ionConnectEventsSubscriptionProvider(
