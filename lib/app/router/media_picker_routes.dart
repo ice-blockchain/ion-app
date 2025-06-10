@@ -20,7 +20,7 @@ class MediaPickerRoute extends BaseRouteData {
             maxVideoDurationInSeconds: maxVideoDurationInSeconds,
             showCameraCell: showCameraCell,
           ),
-          type: IceRouteType.bottomSheet,
+          type: IceRouteType.simpleModalSheet,
         );
 
   final int? maxSelection;
@@ -35,7 +35,7 @@ class AlbumSelectionRoute extends BaseRouteData {
     required this.mediaPickerType,
   }) : super(
           child: AlbumSelectionPage(type: mediaPickerType),
-          type: IceRouteType.bottomSheet,
+          type: IceRouteType.simpleModalSheet,
         );
 
   final MediaPickerType mediaPickerType;
