@@ -48,7 +48,9 @@ class BlockedUsersSync extends _$BlockedUsersSync {
           BlockedUserEntity.kind.toString(),
           DeletionRequestEntity.kind.toString(),
         ],
-        '#p': [masterPubkey, '', eventSigner.publicKey],
+        '#p': [
+          [masterPubkey, '', eventSigner.publicKey],
+        ],
       },
     );
 

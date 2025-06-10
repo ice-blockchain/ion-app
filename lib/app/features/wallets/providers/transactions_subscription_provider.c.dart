@@ -63,7 +63,9 @@ Future<void> transactionsSubscription(Ref ref) async {
         FundsRequestEntity.kind.toString(),
         WalletAssetEntity.kind.toString(),
       ],
-      '#p': [currentPubkey, '', eventSigner.publicKey],
+      '#p': [
+        [currentPubkey, '', eventSigner.publicKey],
+      ],
     },
   );
 

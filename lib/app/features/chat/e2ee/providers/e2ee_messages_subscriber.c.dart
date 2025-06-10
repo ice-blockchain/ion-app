@@ -64,7 +64,9 @@ class E2eeMessagesSubscriber extends _$E2eeMessagesSubscriber {
           [GenericRepostEntity.kind.toString(), ArticleEntity.kind.toString()],
           [GenericRepostEntity.kind.toString(), ModifiablePostEntity.kind.toString()],
         ],
-        '#p': [masterPubkey, '', eventSigner.publicKey],
+        '#p': [
+          [masterPubkey, '', eventSigner.publicKey],
+        ],
       },
     );
 
