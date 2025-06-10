@@ -31,14 +31,13 @@ class TapToSeeHint extends HookWidget {
     return GestureDetector(
       onTap: showTooltip.value ? null : toggleTooltip,
       child: Stack(
-        fit: StackFit.expand,
         children: [
-          child,
+          Positioned.fill(child: child),
           if (showTooltip.value)
-            GestureDetector(
-              onTap: toggleTooltip,
-              behavior: HitTestBehavior.opaque,
-              child: SizedBox.expand(
+            Positioned.fill(
+              child: GestureDetector(
+                onTap: toggleTooltip,
+                behavior: HitTestBehavior.opaque,
                 child: Center(
                   child: GestureDetector(
                     onTap: () {

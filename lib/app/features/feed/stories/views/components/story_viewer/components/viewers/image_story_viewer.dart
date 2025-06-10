@@ -3,6 +3,7 @@
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/components/progress_bar/centered_loading_indicator.dart';
+import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/components/ion_connect_network_image/ion_connect_network_image.dart';
 import 'package:ion/app/features/feed/stories/providers/story_image_loading_provider.c.dart';
 import 'package:ion/app/features/feed/stories/providers/story_pause_provider.c.dart';
@@ -46,7 +47,7 @@ class ImageStoryViewer extends ConsumerWidget {
           decoration: BoxDecoration(
             image: DecorationImage(
               image: imageProvider,
-              fit: BoxFit.cover,
+              fit: hasQuotedPost ? BoxFit.contain : BoxFit.cover,
             ),
           ),
         );
@@ -54,17 +55,26 @@ class ImageStoryViewer extends ConsumerWidget {
     );
 
     if (hasQuotedPost) {
-      return TapToSeeHint(
-        onTap: () {
-          final eventReference = quotedEvent!.eventReference;
-          PostDetailsRoute(
-            eventReference: eventReference.encode(),
-          ).push<void>(context);
-        },
-        onVisibilityChanged: (isVisible) {
-          ref.read(storyPauseControllerProvider.notifier).paused = isVisible;
-        },
-        child: imageWidget,
+      return ColoredBox(
+        color: context.theme.appColors.attentionBlock,
+        child: Padding(
+          padding: EdgeInsets.symmetric(horizontal: 20.0.s),
+          child: FractionallySizedBox(
+            heightFactor: 0.7,
+            child: TapToSeeHint(
+              onTap: () {
+                final eventReference = quotedEvent!.eventReference;
+                PostDetailsRoute(
+                  eventReference: eventReference.encode(),
+                ).push<void>(context);
+              },
+              onVisibilityChanged: (isVisible) {
+                ref.read(storyPauseControllerProvider.notifier).paused = isVisible;
+              },
+              child: imageWidget,
+            ),
+          ),
+        ),
       );
     }
 
