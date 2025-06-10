@@ -3,10 +3,10 @@
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/extensions/enum.dart';
 import 'package:ion/app/features/auth/providers/auth_provider.c.dart';
-import 'package:ion/app/features/ion_connect/model/event_reference.c.dart';
+import 'package:ion/app/features/ion_connect/data/models/event_reference.c.dart';
 import 'package:ion/app/features/ion_connect/providers/ion_connect_entity_provider.c.dart';
 import 'package:ion/app/features/ion_connect/providers/ion_connect_notifier.c.dart';
-import 'package:ion/app/features/user/model/interest_set.c.dart';
+import 'package:ion/app/features/user/data/models/interest_set.c.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'user_interests_set_provider.c.g.dart';

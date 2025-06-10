@@ -5,13 +5,13 @@ import 'dart:async';
 import 'package:ion/app/exceptions/exceptions.dart';
 import 'package:ion/app/features/auth/providers/auth_provider.c.dart';
 import 'package:ion/app/features/chat/e2ee/providers/send_chat_message_service.c.dart';
-import 'package:ion/app/features/ion_connect/model/event_reference.c.dart';
-import 'package:ion/app/features/user/model/request_coins_form_data.c.dart';
+import 'package:ion/app/features/ion_connect/data/models/event_reference.c.dart';
+import 'package:ion/app/features/user/data/models/request_coins_form_data.c.dart';
 import 'package:ion/app/features/user/providers/request_coins_form_provider.c.dart';
 import 'package:ion/app/features/user/providers/user_delegation_provider.c.dart';
 import 'package:ion/app/features/user/providers/user_metadata_provider.c.dart';
-import 'package:ion/app/features/wallets/domain/transactions/send_transaction_to_relay_service.c.dart';
-import 'package:ion/app/features/wallets/model/entities/funds_request_entity.c.dart';
+import 'package:ion/app/features/wallets/data/models/entities/funds_request_entity.c.dart';
+import 'package:ion/app/features/wallets/providers/transactions/send_transaction_to_relay_service.c.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'request_coins_submit_notifier.c.g.dart';

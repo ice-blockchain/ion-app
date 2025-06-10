@@ -3,7 +3,7 @@
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/features/feed/providers/feed_posts_provider.c.dart';
-import 'package:ion/app/features/ion_connect/model/event_reference.c.dart';
+import 'package:ion/app/features/ion_connect/data/models/event_reference.c.dart';
 import 'package:ion/app/features/video/views/pages/videos_vertical_scroll_page.dart';
 
 class FeedVideosPage extends HookConsumerWidget {

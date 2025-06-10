@@ -6,7 +6,7 @@ import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/chat/community/channel/views/components/channel_form.dart';
 import 'package:ion/app/features/chat/community/channel/views/pages/create_channel_modal/components/channel_photo.dart';
 import 'package:ion/app/features/chat/community/providers/create_community_provider.c.dart';
-import 'package:ion/app/features/ion_connect/model/event_setting.c.dart';
+import 'package:ion/app/features/ion_connect/data/models/event_setting.c.dart';
 import 'package:ion/app/router/app_routes.c.dart';
 import 'package:ion/app/router/components/navigation_app_bar/navigation_app_bar.dart';
 import 'package:ion/app/router/components/navigation_app_bar/navigation_close_button.dart';

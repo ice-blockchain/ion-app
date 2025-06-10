@@ -6,7 +6,7 @@ import 'package:image_cropper/image_cropper.dart';
 import 'package:ion/app/components/progress_bar/centered_loading_indicator.dart';
 import 'package:ion/app/components/screen_offset/screen_bottom_offset.dart';
 import 'package:ion/app/extensions/extensions.dart';
-import 'package:ion/app/features/core/model/media_type.dart';
+import 'package:ion/app/features/core/data/models/media_type.dart';
 import 'package:ion/app/features/core/permissions/data/models/permissions_types.dart';
 import 'package:ion/app/features/core/permissions/views/components/permission_aware_widget.dart';
 import 'package:ion/app/features/core/permissions/views/components/permission_dialogs/permission_sheets.dart';
@@ -20,10 +20,12 @@ import 'package:ion/app/features/feed/stories/views/components/story_capture/con
 import 'package:ion/app/features/feed/stories/views/components/story_capture/controls/camera_recording_indicator.dart';
 import 'package:ion/app/features/gallery/data/models/camera_state.c.dart';
 import 'package:ion/app/features/gallery/providers/camera_provider.c.dart';
+import 'package:ion/app/features/user/data/models/image_processor_state.c.dart';
 import 'package:ion/app/features/user/providers/image_proccessor_notifier.c.dart';
 import 'package:ion/app/router/app_routes.c.dart';
+import 'package:ion/app/services/media_service/data/models/media_file.c.dart';
 import 'package:ion/app/services/media_service/image_proccessing_config.dart';
-import 'package:ion/app/services/media_service/media_service.c.dart';
+import 'package:ion/app/services/media_service/providers/media_service.c.dart';
 
 class StoryRecordPage extends HookConsumerWidget {
   const StoryRecordPage({super.key});

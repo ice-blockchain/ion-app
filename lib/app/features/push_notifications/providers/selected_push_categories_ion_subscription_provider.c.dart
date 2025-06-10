@@ -2,18 +2,18 @@
 
 import 'package:ion/app/exceptions/exceptions.dart';
 import 'package:ion/app/features/auth/providers/auth_provider.c.dart';
-import 'package:ion/app/features/chat/e2ee/model/entities/private_direct_message_data.c.dart';
-import 'package:ion/app/features/chat/e2ee/model/entities/private_message_reaction_data.c.dart';
+import 'package:ion/app/features/chat/e2ee/data/models/entities/private_direct_message_data.c.dart';
+import 'package:ion/app/features/chat/e2ee/data/models/entities/private_message_reaction_data.c.dart';
 import 'package:ion/app/features/feed/data/models/entities/article_data.c.dart';
 import 'package:ion/app/features/feed/data/models/entities/generic_repost.c.dart';
 import 'package:ion/app/features/feed/data/models/entities/modifiable_post_data.c.dart';
 import 'package:ion/app/features/feed/data/models/entities/post_data.c.dart';
 import 'package:ion/app/features/feed/data/models/entities/reaction_data.c.dart';
 import 'package:ion/app/features/feed/data/models/entities/repost_data.c.dart';
+import 'package:ion/app/features/ion_connect/data/models/ion_connect_gift_wrap.c.dart';
+import 'package:ion/app/features/ion_connect/data/models/related_relay.c.dart';
+import 'package:ion/app/features/ion_connect/data/models/related_token.c.dart';
 import 'package:ion/app/features/ion_connect/ion_connect.dart';
-import 'package:ion/app/features/ion_connect/model/ion_connect_gift_wrap.c.dart';
-import 'package:ion/app/features/ion_connect/model/related_relay.c.dart';
-import 'package:ion/app/features/ion_connect/model/related_token.c.dart';
 import 'package:ion/app/features/push_notifications/data/models/push_notification_category.c.dart';
 import 'package:ion/app/features/push_notifications/data/models/push_subscription.c.dart';
 import 'package:ion/app/features/push_notifications/data/models/push_subscription_platform.c.dart';
@@ -21,11 +21,11 @@ import 'package:ion/app/features/push_notifications/providers/configure_firebase
 import 'package:ion/app/features/push_notifications/providers/firebase_messaging_token_provider.c.dart';
 import 'package:ion/app/features/push_notifications/providers/relay_firebase_app_config_provider.c.dart';
 import 'package:ion/app/features/push_notifications/providers/selected_push_categories_provider.c.dart';
-import 'package:ion/app/features/user/model/follow_list.c.dart';
-import 'package:ion/app/features/wallets/model/entities/funds_request_entity.c.dart';
-import 'package:ion/app/features/wallets/model/entities/wallet_asset_entity.c.dart';
-import 'package:ion/app/services/device_id/device_id.c.dart';
-import 'package:ion/app/services/ion_connect/encrypted_message_service.c.dart';
+import 'package:ion/app/features/user/data/models/follow_list.c.dart';
+import 'package:ion/app/features/wallets/data/models/entities/funds_request_entity.c.dart';
+import 'package:ion/app/features/wallets/data/models/entities/wallet_asset_entity.c.dart';
+import 'package:ion/app/services/providers/device_id/device_id.c.dart';
+import 'package:ion/app/services/providers/ion_connect/encrypted_message_service.c.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'selected_push_categories_ion_subscription_provider.c.g.dart';

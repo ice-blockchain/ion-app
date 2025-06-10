@@ -7,9 +7,9 @@ import 'dart:ui';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:intl/intl.dart';
 import 'package:ion/app/features/auth/providers/auth_provider.c.dart';
-import 'package:ion/app/features/core/model/language.dart';
-import 'package:ion/app/services/storage/local_storage.c.dart';
-import 'package:ion/app/services/storage/user_preferences_service.c.dart';
+import 'package:ion/app/features/core/data/models/language.dart';
+import 'package:ion/app/services/providers/storage/local_storage.c.dart';
+import 'package:ion/app/services/providers/storage/user_preferences_service.c.dart';
 import 'package:ion/generated/app_localizations.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 

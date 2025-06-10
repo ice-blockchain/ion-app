@@ -5,12 +5,12 @@ import 'package:ion/app/exceptions/exceptions.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/ion_connect/ion_connect.dart';
 import 'package:ion/app/features/ion_connect/providers/ion_connect_event_signer_provider.c.dart';
-import 'package:ion/app/features/user/model/user_delegation.c.dart';
+import 'package:ion/app/features/user/data/models/user_delegation.c.dart';
 import 'package:ion/app/features/user/providers/user_delegation_provider.c.dart';
-import 'package:ion/app/services/ion_connect/ion_connect.dart';
-import 'package:ion/app/services/ion_connect/ion_connect_gift_wrap_service.c.dart';
-import 'package:ion/app/services/ion_connect/ion_connect_logger.dart';
-import 'package:ion/app/services/ion_connect/ion_connect_seal_service.c.dart';
+import 'package:ion/app/services/providers/ion_connect/ion_connect.dart';
+import 'package:ion/app/services/providers/ion_connect/ion_connect_gift_wrap_service.c.dart';
+import 'package:ion/app/services/providers/ion_connect/ion_connect_logger.dart';
+import 'package:ion/app/services/providers/ion_connect/ion_connect_seal_service.c.dart';
 import 'package:isolate_manager/isolate_manager.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 

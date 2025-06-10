@@ -6,10 +6,10 @@ import 'package:collection/collection.dart';
 import 'package:dio/dio.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/features/core/providers/env_provider.c.dart';
-import 'package:ion/app/features/user/model/user_relays.c.dart';
+import 'package:ion/app/features/user/data/models/user_relays.c.dart';
 import 'package:ion/app/features/user/providers/relevant_current_user_relays_provider.c.dart';
 import 'package:ion/app/features/user/providers/user_relays_manager.c.dart';
-import 'package:ion/app/services/ion_connect/ion_connect_relays_ranker.c.dart';
+import 'package:ion/app/services/providers/ion_connect/ion_connect_relays_ranker.c.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'ranked_user_relays_provider.c.g.dart';

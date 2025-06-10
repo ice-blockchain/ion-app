@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: ice License 1.0
 
 import 'package:flutter_hooks/flutter_hooks.dart';
-import 'package:ion/app/features/core/model/language.dart';
+import 'package:ion/app/features/core/data/models/language.dart';
 
 /// A hook that returns a filtered list of languages based on a search query.
 ///

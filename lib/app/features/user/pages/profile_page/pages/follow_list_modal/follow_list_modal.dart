@@ -2,7 +2,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:ion/app/features/user/model/follow_type.dart';
+import 'package:ion/app/features/user/data/models/follow_type.dart';
 import 'package:ion/app/features/user/pages/profile_page/pages/follow_list_modal/followers_list.dart';
 import 'package:ion/app/features/user/pages/profile_page/pages/follow_list_modal/following_list.dart';
 import 'package:ion/app/features/user/pages/profile_page/pages/follow_list_modal/relevant_followers_list.dart';

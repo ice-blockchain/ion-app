@@ -2,8 +2,8 @@
 
 import 'dart:convert';
 
-import 'package:ion/app/services/cloud_storage/cloud_storage_service.c.dart';
-import 'package:ion/app/services/encryptor/aes_gcm_encryptor.c.dart';
+import 'package:ion/app/services/providers/cloud_storage/cloud_storage_service.c.dart';
+import 'package:ion/app/services/providers/encryptor/aes_gcm_encryptor.c.dart';
 import 'package:ion_identity_client/ion_identity.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 

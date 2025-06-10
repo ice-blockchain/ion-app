@@ -17,8 +17,8 @@ import 'package:ion/app/features/feed/providers/feed_following_content_provider.
 import 'package:ion/app/features/feed/providers/feed_posts_data_source_provider.c.dart';
 import 'package:ion/app/features/feed/providers/ion_connect_entity_with_counters_provider.c.dart';
 import 'package:ion/app/features/feed/providers/repost_notifier.c.dart';
-import 'package:ion/app/features/ion_connect/model/event_reference.c.dart';
-import 'package:ion/app/features/ion_connect/model/ion_connect_entity.dart';
+import 'package:ion/app/features/ion_connect/data/models/event_reference.c.dart';
+import 'package:ion/app/features/ion_connect/data/models/ion_connect_entity.dart';
 import 'package:ion/app/features/ion_connect/providers/entities_paged_data_provider.c.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 

@@ -2,7 +2,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:ion/app/extensions/extensions.dart';
-import 'package:ion/app/features/wallets/model/timeline_item_data.dart';
+import 'package:ion/app/features/wallets/data/models/timeline_item_data.dart';
 import 'package:ion/app/features/wallets/views/components/timeline/timeline_item.dart';
 
 class Timeline extends StatelessWidget {

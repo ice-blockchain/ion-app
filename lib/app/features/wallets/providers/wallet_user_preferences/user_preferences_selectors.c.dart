@@ -2,10 +2,10 @@
 
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/features/auth/providers/auth_provider.c.dart';
-import 'package:ion/app/features/wallets/model/balance_display_order.dart';
-import 'package:ion/app/features/wallets/model/nft_layout_type.dart';
-import 'package:ion/app/features/wallets/model/nft_sorting_type.dart';
-import 'package:ion/app/features/wallets/model/user_preferences.c.dart';
+import 'package:ion/app/features/wallets/data/models/balance_display_order.dart';
+import 'package:ion/app/features/wallets/data/models/nft_layout_type.dart';
+import 'package:ion/app/features/wallets/data/models/nft_sorting_type.dart';
+import 'package:ion/app/features/wallets/data/models/user_preferences.c.dart';
 import 'package:ion/app/features/wallets/providers/wallet_user_preferences/wallet_user_preferences_provider.c.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 

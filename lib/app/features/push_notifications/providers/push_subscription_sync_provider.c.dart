@@ -2,9 +2,9 @@
 
 import 'package:ion/app/features/auth/providers/auth_provider.c.dart';
 import 'package:ion/app/features/auth/providers/delegation_complete_provider.c.dart';
-import 'package:ion/app/features/ion_connect/model/action_source.c.dart';
-import 'package:ion/app/features/ion_connect/model/deletion_request.c.dart';
-import 'package:ion/app/features/ion_connect/model/event_reference.c.dart';
+import 'package:ion/app/features/ion_connect/data/models/action_source.c.dart';
+import 'package:ion/app/features/ion_connect/data/models/deletion_request.c.dart';
+import 'package:ion/app/features/ion_connect/data/models/event_reference.c.dart';
 import 'package:ion/app/features/ion_connect/providers/ion_connect_cache.c.dart';
 import 'package:ion/app/features/ion_connect/providers/ion_connect_notifier.c.dart';
 import 'package:ion/app/features/push_notifications/data/models/push_subscription.c.dart';

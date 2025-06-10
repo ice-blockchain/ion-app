@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/components/avatar/avatar.dart';
 import 'package:ion/app/extensions/extensions.dart';
-import 'package:ion/app/features/dapps/model/dapp_data.c.dart';
+import 'package:ion/app/features/dapps/data/models/dapp_data.c.dart';
 import 'package:ion/app/features/dapps/providers/dapps_provider.c.dart';
 import 'package:ion/app/features/search/views/components/search_history/search_list_item_loading.dart';
 import 'package:ion/app/router/app_routes.c.dart';

@@ -1,12 +1,12 @@
 // SPDX-License-Identifier: ice License 1.0
 
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:ion/app/features/ion_connect/data/models/action_source.c.dart';
+import 'package:ion/app/features/ion_connect/data/models/event_reference.c.dart';
 import 'package:ion/app/features/ion_connect/ion_connect.dart';
-import 'package:ion/app/features/ion_connect/model/action_source.c.dart';
-import 'package:ion/app/features/ion_connect/model/event_reference.c.dart';
 import 'package:ion/app/features/ion_connect/providers/ion_connect_db_cache_notifier.c.dart';
 import 'package:ion/app/features/ion_connect/providers/ion_connect_notifier.c.dart';
-import 'package:ion/app/features/user/model/user_chat_relays.c.dart';
+import 'package:ion/app/features/user/data/models/user_chat_relays.c.dart';
 import 'package:ion/app/features/user/providers/relays_reachability_provider.c.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 

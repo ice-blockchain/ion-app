@@ -7,7 +7,7 @@ import 'package:ion/app/features/auth/providers/auth_provider.c.dart';
 import 'package:ion/app/features/auth/providers/delegation_complete_provider.c.dart';
 import 'package:ion/app/features/feed/providers/feed_filter_relays_provider.c.dart';
 import 'package:ion/app/features/ion_connect/providers/ion_connect_notifier.c.dart';
-import 'package:ion/app/features/user/model/user_relays.c.dart';
+import 'package:ion/app/features/user/data/models/user_relays.c.dart';
 import 'package:ion/app/features/user/providers/current_user_identity_provider.c.dart';
 import 'package:ion/app/features/user/providers/user_relays_manager.c.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';

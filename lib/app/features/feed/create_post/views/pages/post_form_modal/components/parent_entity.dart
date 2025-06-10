@@ -15,7 +15,7 @@ import 'package:ion/app/features/feed/views/components/overlay_menu/user_info_me
 import 'package:ion/app/features/feed/views/components/post/components/post_body/post_body.dart';
 import 'package:ion/app/features/feed/views/components/post/post_skeleton.dart';
 import 'package:ion/app/features/feed/views/components/replying_to/replying_to.dart';
-import 'package:ion/app/features/ion_connect/model/event_reference.c.dart';
+import 'package:ion/app/features/ion_connect/data/models/event_reference.c.dart';
 import 'package:ion/app/features/user/providers/user_metadata_provider.c.dart';
 import 'package:ion/app/utils/username.dart';
 

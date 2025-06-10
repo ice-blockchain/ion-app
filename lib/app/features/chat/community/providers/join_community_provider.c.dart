@@ -5,11 +5,11 @@ import 'dart:convert';
 import 'package:ion/app/exceptions/exceptions.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/auth/providers/auth_provider.c.dart';
-import 'package:ion/app/features/chat/community/models/entities/community_join_data.c.dart';
+import 'package:ion/app/features/chat/community/data/models/entities/community_join_data.c.dart';
 import 'package:ion/app/features/chat/community/providers/community_invitation_provider.c.dart';
 import 'package:ion/app/features/chat/community/providers/community_join_requests_provider.c.dart';
 import 'package:ion/app/features/chat/community/providers/community_metadata_provider.c.dart';
-import 'package:ion/app/features/ion_connect/model/action_source.c.dart';
+import 'package:ion/app/features/ion_connect/data/models/action_source.c.dart';
 import 'package:ion/app/features/ion_connect/providers/ion_connect_notifier.c.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 

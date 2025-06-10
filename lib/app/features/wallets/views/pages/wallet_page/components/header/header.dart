@@ -10,7 +10,7 @@ import 'package:ion/app/extensions/build_context.dart';
 import 'package:ion/app/extensions/num.dart';
 import 'package:ion/app/extensions/theme_data.dart';
 import 'package:ion/app/features/components/wallet_switcher/wallet_switcher.dart';
-import 'package:ion/app/features/core/model/feature_flags.dart';
+import 'package:ion/app/features/core/data/models/feature_flags.dart';
 import 'package:ion/app/features/core/providers/feature_flags_provider.c.dart';
 import 'package:ion/app/features/wallets/providers/send_asset_form_provider.c.dart';
 import 'package:ion/app/features/wallets/views/pages/wallet_scan_modal_page.dart';

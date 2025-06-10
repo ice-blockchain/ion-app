@@ -9,7 +9,7 @@ import 'package:ion/app/features/feed/data/models/feed_interests.c.dart';
 import 'package:ion/app/features/feed/data/models/feed_interests_interaction.c.dart';
 import 'package:ion/app/features/feed/data/models/feed_type.dart';
 import 'package:ion/app/services/logger/logger.dart';
-import 'package:ion/app/services/storage/user_preferences_service.c.dart';
+import 'package:ion/app/services/providers/storage/user_preferences_service.c.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'feed_user_interests_provider.c.g.dart';

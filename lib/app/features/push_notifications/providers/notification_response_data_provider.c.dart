@@ -4,8 +4,8 @@ import 'dart:async';
 import 'dart:collection';
 
 import 'package:ion/app/features/push_notifications/providers/configure_firebase_app_provider.c.dart';
-import 'package:ion/app/services/firebase/firebase_messaging_service_provider.c.dart';
-import 'package:ion/app/services/local_notifications/local_notifications.c.dart';
+import 'package:ion/app/services/providers/firebase/firebase_messaging_service_provider.c.dart';
+import 'package:ion/app/services/providers/local_notifications/local_notifications.c.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'notification_response_data_provider.c.g.dart';

@@ -2,9 +2,9 @@
 
 import 'package:flutter_test/flutter_test.dart';
 import 'package:ion/app/features/feed/data/models/entities/modifiable_post_data.c.dart';
-import 'package:ion/app/features/ion_connect/model/event_reference.c.dart';
-import 'package:ion/app/features/user/model/user_metadata.c.dart';
-import 'package:ion/app/features/user/model/user_relays.c.dart';
+import 'package:ion/app/features/ion_connect/data/models/event_reference.c.dart';
+import 'package:ion/app/features/user/data/models/user_metadata.c.dart';
+import 'package:ion/app/features/user/data/models/user_relays.c.dart';
 
 void main() {
   group('ImmutableEventReference encode and decode', () {

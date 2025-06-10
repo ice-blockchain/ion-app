@@ -2,7 +2,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:ion/app/extensions/extensions.dart';
-import 'package:ion/app/features/dapps/model/dapp_data.c.dart';
+import 'package:ion/app/features/dapps/data/models/dapp_data.c.dart';
 import 'package:ion/app/features/search/views/pages/dapps_simple_search_page/components/search_results/dapps_search_results_list_item.dart';
 
 class DAppsSearchResults extends StatelessWidget {

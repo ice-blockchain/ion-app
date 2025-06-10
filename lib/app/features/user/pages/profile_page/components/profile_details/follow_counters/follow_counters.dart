@@ -3,7 +3,7 @@
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/extensions/extensions.dart';
-import 'package:ion/app/features/user/model/follow_type.dart';
+import 'package:ion/app/features/user/data/models/follow_type.dart';
 import 'package:ion/app/features/user/pages/profile_page/components/profile_details/follow_counters/follow_counters_cell.dart';
 import 'package:ion/app/features/user/providers/follow_list_provider.c.dart';
 import 'package:ion/app/features/user/providers/followers_count_provider.c.dart';

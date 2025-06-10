@@ -4,7 +4,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/features/ion_connect/ion_connect.dart';
 import 'package:ion/app/features/ion_connect/providers/ion_connect_event_signer_provider.c.dart';
 import 'package:ion/app/features/ion_connect/providers/relay_auth_provider.c.dart';
-import 'package:ion/app/features/user/model/user_delegation.c.dart';
+import 'package:ion/app/features/user/data/models/user_delegation.c.dart';
 import 'package:ion/app/features/user/providers/user_delegation_provider.c.dart';
 
 mixin RelayAuthMixin {

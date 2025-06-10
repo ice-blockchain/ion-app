@@ -11,7 +11,7 @@ import 'package:ion/app/features/config/data/models/app_config_with_version.dart
 import 'package:ion/app/features/core/providers/dio_provider.c.dart';
 import 'package:ion/app/features/core/providers/env_provider.c.dart';
 import 'package:ion/app/services/logger/logger.dart';
-import 'package:ion/app/services/storage/local_storage.c.dart';
+import 'package:ion/app/services/providers/storage/local_storage.c.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:synchronized/synchronized.dart';

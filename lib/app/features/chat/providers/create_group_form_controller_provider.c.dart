@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: ice License 1.0
 
-import 'package:ion/app/features/chat/community/models/create_group_form_data.c.dart';
-import 'package:ion/app/features/chat/community/models/group_type.dart';
+import 'package:ion/app/features/chat/community/data/models/create_group_form_data.c.dart';
+import 'package:ion/app/features/chat/community/data/models/group_type.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'create_group_form_controller_provider.c.g.dart';

@@ -2,7 +2,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:ion/app/extensions/extensions.dart';
-import 'package:ion/app/features/chat/model/message_author.c.dart';
+import 'package:ion/app/features/chat/e2ee/data/models/message_author.c.dart';
 
 class MessageAuthorNameWidget extends StatelessWidget {
   const MessageAuthorNameWidget({this.author, super.key});

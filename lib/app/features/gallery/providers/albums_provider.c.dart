@@ -3,7 +3,7 @@
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/features/gallery/data/models/album_data.c.dart';
 import 'package:ion/app/features/gallery/views/pages/media_picker_type.dart';
-import 'package:ion/app/services/media_service/album_service.dart';
+import 'package:ion/app/services/media_service/providers/album_service.dart';
 import 'package:photo_manager/photo_manager.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 

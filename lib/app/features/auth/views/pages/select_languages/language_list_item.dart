@@ -7,7 +7,7 @@ import 'package:ion/app/extensions/asset_gen_image.dart';
 import 'package:ion/app/extensions/build_context.dart';
 import 'package:ion/app/extensions/num.dart';
 import 'package:ion/app/extensions/theme_data.dart';
-import 'package:ion/app/features/core/model/language.dart';
+import 'package:ion/app/features/core/data/models/language.dart';
 import 'package:ion/generated/assets.gen.dart';
 
 class LanguageListItem extends StatelessWidget {

@@ -4,8 +4,9 @@ import 'dart:async';
 
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/features/auth/providers/auth_provider.c.dart';
-import 'package:ion/app/features/chat/model/database/chat_database.c.dart';
-import 'package:ion/app/features/ion_connect/model/event_reference.c.dart';
+import 'package:ion/app/features/chat/e2ee/data/models/database/chat_database.c.dart';
+import 'package:ion/app/features/chat/providers/dao/conversation_message_data_dao_provider.c.dart';
+import 'package:ion/app/features/ion_connect/data/models/event_reference.c.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'message_status_provider.c.g.dart';

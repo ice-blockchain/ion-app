@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:ion/app/components/list_item/list_item.dart';
 import 'package:ion/app/components/screen_offset/screen_side_offset.dart';
 import 'package:ion/app/extensions/extensions.dart';
-import 'package:ion/app/features/wallets/model/network_data.c.dart';
+import 'package:ion/app/features/wallets/data/models/network_data.c.dart';
 import 'package:ion/app/features/wallets/views/components/network_icon_widget.dart';
 import 'package:ion/generated/assets.gen.dart';
 

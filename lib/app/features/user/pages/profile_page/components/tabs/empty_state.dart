@@ -3,7 +3,7 @@
 import 'package:flutter/material.dart';
 import 'package:ion/app/components/empty_list/empty_list.dart';
 import 'package:ion/app/components/screen_offset/screen_side_offset.dart';
-import 'package:ion/app/features/user/model/tab_entity_type.dart';
+import 'package:ion/app/features/user/data/models/tab_entity_type.dart';
 
 class EmptyState extends StatelessWidget {
   const EmptyState({

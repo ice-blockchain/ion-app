@@ -13,7 +13,7 @@ import 'package:ion/app/features/feed/providers/ion_connect_entity_with_counters
 import 'package:ion/app/features/feed/views/components/article/article.dart';
 import 'package:ion/app/features/feed/views/components/post/post.dart';
 import 'package:ion/app/features/feed/views/components/post/post_skeleton.dart';
-import 'package:ion/app/features/ion_connect/model/event_reference.c.dart';
+import 'package:ion/app/features/ion_connect/data/models/event_reference.c.dart';
 import 'package:ion/app/router/app_routes.c.dart';
 import 'package:ion/app/typedefs/typedefs.dart';
 

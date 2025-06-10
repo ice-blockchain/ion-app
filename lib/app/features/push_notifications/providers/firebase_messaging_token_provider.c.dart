@@ -3,7 +3,7 @@
 import 'dart:async';
 
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:ion/app/services/firebase/firebase_messaging_service_provider.c.dart';
+import 'package:ion/app/services/providers/firebase/firebase_messaging_service_provider.c.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'firebase_messaging_token_provider.c.g.dart';

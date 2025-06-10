@@ -11,7 +11,7 @@ import 'package:ion/app/features/components/bookmarks/bookmarks_collection_tile.
 import 'package:ion/app/features/components/bookmarks/new_bookmarks_collection_button.dart';
 import 'package:ion/app/features/feed/data/models/bookmarks/bookmarks_collection.c.dart';
 import 'package:ion/app/features/feed/providers/feed_bookmarks_notifier.c.dart';
-import 'package:ion/app/features/ion_connect/model/event_reference.c.dart';
+import 'package:ion/app/features/ion_connect/data/models/event_reference.c.dart';
 import 'package:ion/app/router/components/sheet_content/sheet_content.dart';
 
 class AddBookmarkModal extends ConsumerWidget {

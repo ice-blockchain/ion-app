@@ -6,7 +6,7 @@ import 'package:ion/app/components/list_items_loading_state/item_loading_state.d
 import 'package:ion/app/components/screen_offset/screen_side_offset.dart';
 import 'package:ion/app/components/skeleton/container_skeleton.dart';
 import 'package:ion/app/extensions/extensions.dart';
-import 'package:ion/app/features/core/model/feature_flags.dart';
+import 'package:ion/app/features/core/data/models/feature_flags.dart';
 import 'package:ion/app/features/core/providers/feature_flags_provider.c.dart';
 import 'package:ion/app/features/wallets/views/pages/wallet_page/components/nfts/nfts_tab.dart';
 

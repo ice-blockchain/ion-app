@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/components/screen_offset/screen_top_offset.dart';
 import 'package:ion/app/extensions/extensions.dart';
-import 'package:ion/app/features/feed/notifications/data/model/notifications_tab_type.dart';
+import 'package:ion/app/features/feed/notifications/data/models/notifications_tab_type.dart';
 import 'package:ion/app/features/feed/notifications/providers/unread_notifications_count_provider.c.dart';
 import 'package:ion/app/features/feed/notifications/views/notifications_history_page/components/tabs/notifications_tab.dart';
 import 'package:ion/app/features/feed/notifications/views/notifications_history_page/components/tabs_header/tabs_header.dart';

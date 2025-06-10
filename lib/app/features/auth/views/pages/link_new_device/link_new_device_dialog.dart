@@ -12,7 +12,7 @@ import 'package:ion/app/features/auth/providers/onboarding_complete_notifier.c.d
 import 'package:ion/app/features/components/verify_identity/verify_identity_prompt_dialog_helper.dart';
 import 'package:ion/app/hooks/use_on_init.dart';
 import 'package:ion/app/router/utils/show_simple_bottom_sheet.dart';
-import 'package:ion/app/services/ui_event_queue/ui_event_queue_notifier.c.dart';
+import 'package:ion/app/services/providers/ui_event_queue/ui_event_queue_notifier.c.dart';
 import 'package:ion/generated/assets.gen.dart';
 import 'package:ion_identity_client/ion_identity.dart';
 

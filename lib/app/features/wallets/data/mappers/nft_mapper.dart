@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: ice License 1.0
 
-import 'package:ion/app/features/wallets/model/network_data.c.dart';
-import 'package:ion/app/features/wallets/model/nft_data.c.dart';
+import 'package:ion/app/features/wallets/data/models/network_data.c.dart';
+import 'package:ion/app/features/wallets/data/models/nft_data.c.dart';
 import 'package:ion_identity_client/ion_identity.dart';
 
 extension WalletNftMapper on WalletNft {

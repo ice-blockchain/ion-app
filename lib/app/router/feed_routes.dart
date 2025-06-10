@@ -328,10 +328,6 @@ class CreateArticleRoute extends BaseRouteData {
         );
 }
 
-
-
-
-
 class ArticlePreviewRoute extends BaseRouteData {
   ArticlePreviewRoute()
       : super(

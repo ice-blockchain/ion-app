@@ -8,7 +8,7 @@ import 'package:ion/app/extensions/build_context.dart';
 import 'package:ion/app/extensions/num.dart';
 import 'package:ion/app/extensions/theme_data.dart';
 import 'package:ion/app/features/auth/providers/auth_provider.c.dart';
-import 'package:ion/app/features/wallets/model/nft_layout_type.dart';
+import 'package:ion/app/features/wallets/data/models/nft_layout_type.dart';
 import 'package:ion/app/features/wallets/providers/wallet_user_preferences/user_preferences_selectors.c.dart';
 import 'package:ion/app/features/wallets/providers/wallet_user_preferences/wallet_user_preferences_provider.c.dart';
 

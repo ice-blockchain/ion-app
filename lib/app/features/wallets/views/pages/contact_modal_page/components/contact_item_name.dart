@@ -2,7 +2,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:ion/app/extensions/extensions.dart';
-import 'package:ion/app/features/user/model/user_metadata.c.dart';
+import 'package:ion/app/features/user/data/models/user_metadata.c.dart';
 
 class ContactItemName extends StatelessWidget {
   const ContactItemName({

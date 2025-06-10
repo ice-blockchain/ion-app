@@ -7,7 +7,7 @@ import 'package:ion/app/components/list_item/badges_user_list_item.dart';
 import 'package:ion/app/components/list_item/list_item.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/user/providers/user_metadata_provider.c.dart';
-import 'package:ion/app/features/wallets/model/transaction_type.dart';
+import 'package:ion/app/features/wallets/data/models/transaction_type.dart';
 
 class TransactionParticipant extends ConsumerWidget {
   const TransactionParticipant({

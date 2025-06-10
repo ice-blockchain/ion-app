@@ -6,7 +6,7 @@ import 'package:dio/dio.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/exceptions/exceptions.dart';
 import 'package:ion/app/features/core/providers/dio_provider.c.dart';
-import 'package:ion/app/features/ion_connect/model/relay_info.c.dart';
+import 'package:ion/app/features/ion_connect/data/models/relay_info.c.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'relay_info_provider.c.g.dart';

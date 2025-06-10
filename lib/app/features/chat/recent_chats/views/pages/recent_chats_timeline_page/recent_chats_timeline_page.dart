@@ -11,12 +11,12 @@ import 'package:ion/app/components/separated/separator.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/auth/providers/auth_provider.c.dart';
 import 'package:ion/app/features/chat/community/providers/community_metadata_provider.c.dart';
-import 'package:ion/app/features/chat/e2ee/model/entities/private_direct_message_data.c.dart';
-import 'package:ion/app/features/chat/model/database/chat_database.c.dart';
+import 'package:ion/app/features/chat/e2ee/data/models/database/chat_database.c.dart';
+import 'package:ion/app/features/chat/e2ee/data/models/entities/private_direct_message_data.c.dart';
 import 'package:ion/app/features/chat/providers/conversations_provider.c.dart'
     hide archivedConversationsProvider;
 import 'package:ion/app/features/chat/providers/unread_message_count_provider.c.dart';
-import 'package:ion/app/features/chat/recent_chats/model/conversation_list_item.c.dart';
+import 'package:ion/app/features/chat/recent_chats/data/models/conversation_list_item.c.dart';
 import 'package:ion/app/features/chat/recent_chats/providers/archived_conversations_provider.c.dart';
 import 'package:ion/app/features/chat/recent_chats/views/components/recent_chat_skeleton/recent_chat_skeleton.dart';
 import 'package:ion/app/features/chat/recent_chats/views/components/recent_chat_tile/archive_chat_tile.dart';
@@ -26,7 +26,7 @@ import 'package:ion/app/features/user/providers/user_metadata_provider.c.dart';
 import 'package:ion/app/hooks/use_on_init.dart';
 import 'package:ion/app/hooks/use_scroll_top_on_tab_press.dart';
 import 'package:ion/app/router/app_routes.c.dart';
-import 'package:ion/app/services/media_service/media_encryption_service.c.dart';
+import 'package:ion/app/services/media_service/providers/media_encryption_service.c.dart';
 import 'package:ion/generated/assets.gen.dart';
 
 class RecentChatsTimelinePage extends HookConsumerWidget {

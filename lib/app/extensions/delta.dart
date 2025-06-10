@@ -4,7 +4,7 @@ import 'package:flutter_quill/flutter_quill.dart';
 import 'package:flutter_quill/quill_delta.dart';
 import 'package:ion/app/components/text_editor/components/custom_blocks/text_editor_profile_block/text_editor_profile_block.dart';
 import 'package:ion/app/components/text_editor/utils/is_attributed_operation.dart';
-import 'package:ion/app/features/ion_connect/model/event_reference.c.dart';
+import 'package:ion/app/features/ion_connect/data/models/event_reference.c.dart';
 
 extension DeltaExt on Delta {
   List<String> extractPubkeys() {

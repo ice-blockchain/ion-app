@@ -4,9 +4,9 @@ import 'dart:async';
 
 import 'package:collection/collection.dart';
 import 'package:ion/app/features/user/providers/user_metadata_provider.c.dart';
-import 'package:ion/app/features/wallets/model/network_fee_option.c.dart';
-import 'package:ion/app/features/wallets/model/nft_data.c.dart';
-import 'package:ion/app/features/wallets/model/send_nft_form_data.c.dart';
+import 'package:ion/app/features/wallets/data/models/network_fee_option.c.dart';
+import 'package:ion/app/features/wallets/data/models/nft_data.c.dart';
+import 'package:ion/app/features/wallets/data/models/send_nft_form_data.c.dart';
 import 'package:ion/app/features/wallets/providers/connected_crypto_wallets_provider.c.dart';
 import 'package:ion/app/features/wallets/providers/network_fee_provider.c.dart';
 import 'package:ion/app/features/wallets/providers/wallet_view_data_provider.c.dart';

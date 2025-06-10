@@ -9,14 +9,15 @@ import 'package:ion/app/components/shadow/svg_shadow.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/core/views/pages/unfollow_user_page.dart';
 import 'package:ion/app/features/feed/data/models/entities/article_data.c.dart';
-import 'package:ion/app/features/ion_connect/model/event_reference.c.dart';
+import 'package:ion/app/features/ion_connect/data/models/event_reference.c.dart';
+import 'package:ion/app/features/user/data/models/report_reason.c.dart';
 import 'package:ion/app/features/user/pages/profile_page/pages/block_user_modal/block_user_modal.dart';
 import 'package:ion/app/features/user/providers/follow_list_provider.c.dart';
 import 'package:ion/app/features/user/providers/muted_users_notifier.c.dart';
 import 'package:ion/app/features/user/providers/report_notifier.c.dart';
 import 'package:ion/app/features/user/providers/user_metadata_provider.c.dart';
-import 'package:ion/app/features/user_block/optimistic_ui/block_user_provider.c.dart';
 import 'package:ion/app/features/user_block/providers/block_list_notifier.c.dart';
+import 'package:ion/app/features/user_block/providers/optimistic_ui/block_user_provider.c.dart';
 import 'package:ion/app/router/utils/show_simple_bottom_sheet.dart';
 import 'package:ion/generated/assets.gen.dart';
 

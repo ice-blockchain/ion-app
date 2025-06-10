@@ -3,8 +3,8 @@
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/features/auth/providers/auth_provider.c.dart';
 import 'package:ion/app/features/ion_connect/ion_connect.dart';
-import 'package:ion/app/services/ion_connect/ed25519_key_store.dart';
-import 'package:ion/app/services/storage/secure_storage.c.dart';
+import 'package:ion/app/services/providers/ion_connect/ed25519_key_store.dart';
+import 'package:ion/app/services/providers/storage/secure_storage.c.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'ion_connect_event_signer_provider.c.g.dart';

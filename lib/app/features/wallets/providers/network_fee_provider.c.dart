@@ -4,14 +4,14 @@ import 'dart:math';
 
 import 'package:collection/collection.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:ion/app/features/wallets/domain/coins/coins_service.c.dart';
-import 'package:ion/app/features/wallets/model/coin_data.c.dart';
-import 'package:ion/app/features/wallets/model/network_data.c.dart';
-import 'package:ion/app/features/wallets/model/network_fee_information.c.dart';
-import 'package:ion/app/features/wallets/model/network_fee_option.c.dart';
-import 'package:ion/app/features/wallets/model/network_fee_type.dart';
-import 'package:ion/app/services/ion_identity/ion_identity_client_provider.c.dart';
+import 'package:ion/app/features/wallets/data/models/coin_data.c.dart';
+import 'package:ion/app/features/wallets/data/models/network_data.c.dart';
+import 'package:ion/app/features/wallets/data/models/network_fee_information.c.dart';
+import 'package:ion/app/features/wallets/data/models/network_fee_option.c.dart';
+import 'package:ion/app/features/wallets/data/models/network_fee_type.dart';
+import 'package:ion/app/features/wallets/providers/coins/coins_service.c.dart';
 import 'package:ion/app/services/logger/logger.dart';
+import 'package:ion/app/services/providers/ion_identity/ion_identity_client_provider.c.dart';
 import 'package:ion_identity_client/ion_identity.dart' as ion;
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 

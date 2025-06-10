@@ -9,7 +9,7 @@ import 'package:ion/app/features/feed/data/models/entities/article_data.c.dart';
 import 'package:ion/app/features/feed/providers/topic_articles_data_source_provider.c.dart';
 import 'package:ion/app/features/feed/views/pages/article_details_page/components/article_details_section_header.dart';
 import 'package:ion/app/features/feed/views/pages/article_details_page/components/articles_carousel.dart';
-import 'package:ion/app/features/ion_connect/model/event_reference.c.dart';
+import 'package:ion/app/features/ion_connect/data/models/event_reference.c.dart';
 import 'package:ion/app/features/ion_connect/providers/entities_paged_data_provider.c.dart';
 import 'package:ion/app/router/app_routes.c.dart';
 import 'package:ion/generated/assets.gen.dart';

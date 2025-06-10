@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: ice License 1.0
 
-import 'package:ion/app/features/ion_connect/model/related_hashtag.c.dart';
-import 'package:ion/app/features/ion_connect/model/search_extension.dart';
+import 'package:ion/app/features/ion_connect/data/models/related_hashtag.c.dart';
+import 'package:ion/app/features/ion_connect/data/models/search_extension.dart';
 
 enum FeedModifier {
   top,

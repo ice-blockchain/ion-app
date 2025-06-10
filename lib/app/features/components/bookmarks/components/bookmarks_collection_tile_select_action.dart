@@ -5,7 +5,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/extensions/asset_gen_image.dart';
 import 'package:ion/app/features/feed/data/models/bookmarks/bookmarks_collection.c.dart';
 import 'package:ion/app/features/feed/providers/feed_bookmarks_notifier.c.dart';
-import 'package:ion/app/features/ion_connect/model/event_reference.c.dart';
+import 'package:ion/app/features/ion_connect/data/models/event_reference.c.dart';
 import 'package:ion/generated/assets.gen.dart';
 
 class BookmarksCollectionTileSelectAction extends ConsumerWidget {

@@ -4,7 +4,7 @@ import 'dart:async';
 
 import 'package:flutter_quill/flutter_quill.dart';
 import 'package:ion/app/components/text_editor/utils/text_editor_typing_listener.dart';
-import 'package:ion/app/services/text_parser/model/text_matcher.dart';
+import 'package:ion/app/services/text_parser/data/models/text_matcher.dart';
 
 class LinksHandler extends TextEditorTypingListener {
   LinksHandler({

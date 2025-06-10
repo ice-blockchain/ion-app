@@ -6,7 +6,7 @@ import 'package:ion/app/components/screen_offset/screen_side_offset.dart';
 import 'package:ion/app/extensions/build_context.dart';
 import 'package:ion/app/extensions/num.dart';
 import 'package:ion/app/extensions/theme_data.dart';
-import 'package:ion/app/features/wallets/model/nft_data.c.dart';
+import 'package:ion/app/features/wallets/data/models/nft_data.c.dart';
 import 'package:ion/app/features/wallets/views/pages/wallet_page/components/nfts/constants.dart';
 import 'package:ion/app/features/wallets/views/pages/wallet_page/components/nfts/nfts_network.dart';
 import 'package:ion/app/router/app_routes.c.dart';

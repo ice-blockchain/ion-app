@@ -1,17 +1,17 @@
 // SPDX-License-Identifier: ice License 1.0
 
 import 'package:collection/collection.dart';
+import 'package:ion/app/features/ion_connect/data/models/file_alt.dart';
 import 'package:ion/app/features/ion_connect/ion_connect.dart';
-import 'package:ion/app/features/ion_connect/model/file_alt.dart';
 import 'package:ion/app/features/ion_connect/providers/ion_connect_notifier.c.dart';
 import 'package:ion/app/features/ion_connect/providers/ion_connect_upload_notifier.c.dart';
-import 'package:ion/app/features/settings/model/privacy_options.dart';
-import 'package:ion/app/features/user/model/user_metadata.c.dart';
+import 'package:ion/app/features/settings/data/models/privacy_options.dart';
+import 'package:ion/app/features/user/data/models/user_metadata.c.dart';
 import 'package:ion/app/features/user/providers/badges_notifier.c.dart';
 import 'package:ion/app/features/user/providers/user_metadata_provider.c.dart';
 import 'package:ion/app/features/user/providers/user_social_profile_provider.c.dart';
 import 'package:ion/app/features/wallets/providers/connected_crypto_wallets_provider.c.dart';
-import 'package:ion/app/services/media_service/media_service.c.dart';
+import 'package:ion/app/services/media_service/data/models/media_file.c.dart';
 import 'package:ion/app/utils/url.dart';
 import 'package:ion_identity_client/ion_identity.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';

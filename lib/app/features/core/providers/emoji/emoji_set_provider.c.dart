@@ -5,7 +5,7 @@ import 'dart:convert';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:ion/app/features/core/model/emoji/emoji_group.c.dart';
+import 'package:ion/app/features/core/data/models/emoji/emoji_group.c.dart';
 import 'package:ion/generated/assets.gen.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 

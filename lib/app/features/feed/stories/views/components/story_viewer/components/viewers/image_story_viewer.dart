@@ -7,7 +7,7 @@ import 'package:ion/app/features/components/ion_connect_network_image/ion_connec
 import 'package:ion/app/features/feed/stories/providers/story_image_loading_provider.c.dart';
 import 'package:ion/app/features/feed/stories/providers/story_pause_provider.c.dart';
 import 'package:ion/app/features/feed/stories/views/components/story_viewer/components/viewers/tap_to_see_hint.dart';
-import 'package:ion/app/features/ion_connect/model/quoted_event.c.dart';
+import 'package:ion/app/features/ion_connect/data/models/quoted_event.c.dart';
 import 'package:ion/app/router/app_routes.c.dart';
 
 class ImageStoryViewer extends ConsumerWidget {

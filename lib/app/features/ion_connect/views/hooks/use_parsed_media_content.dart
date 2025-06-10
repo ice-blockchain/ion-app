@@ -6,8 +6,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_quill/flutter_quill.dart';
 import 'package:flutter_quill/quill_delta.dart';
-import 'package:ion/app/features/ion_connect/model/entity_data_with_media_content.dart';
-import 'package:ion/app/features/ion_connect/model/media_attachment.dart';
+import 'package:ion/app/features/ion_connect/data/models/entity_data_with_media_content.dart';
+import 'package:ion/app/features/ion_connect/data/models/media_attachment.dart';
 import 'package:ion/app/services/markdown/quill.dart';
 
 /// Returns [content] in Delta format with excluded media links

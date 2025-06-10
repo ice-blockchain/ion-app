@@ -27,10 +27,10 @@ import 'package:ion/app/features/feed/views/components/toolbar_buttons/toolbar_b
 import 'package:ion/app/features/feed/views/components/toolbar_buttons/toolbar_image_button.dart';
 import 'package:ion/app/features/feed/views/components/toolbar_buttons/toolbar_italic_button.dart';
 import 'package:ion/app/features/feed/views/components/toolbar_buttons/toolbar_poll_button.dart';
-import 'package:ion/app/features/ion_connect/model/event_reference.c.dart';
-import 'package:ion/app/features/ion_connect/model/media_attachment.dart';
+import 'package:ion/app/features/ion_connect/data/models/event_reference.c.dart';
+import 'package:ion/app/features/ion_connect/data/models/media_attachment.dart';
 import 'package:ion/app/router/app_routes.c.dart';
-import 'package:ion/app/services/media_service/media_service.c.dart';
+import 'package:ion/app/services/media_service/data/models/media_file.c.dart';
 import 'package:ion/app/typedefs/typedefs.dart';
 import 'package:ion/generated/assets.gen.dart';
 

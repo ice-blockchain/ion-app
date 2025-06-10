@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:intl/intl.dart';
 import 'package:ion/app/extensions/extensions.dart';
-import 'package:ion/app/features/wallets/model/timeline_item_data.dart';
+import 'package:ion/app/features/wallets/data/models/timeline_item_data.dart';
 import 'package:ion/app/features/wallets/views/components/timeline/timeline_separator.dart';
 import 'package:ion/generated/assets.gen.dart';
 

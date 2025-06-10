@@ -5,7 +5,7 @@ import 'package:flutter/widgets.dart';
 import 'package:ion/app/extensions/build_context.dart';
 import 'package:ion/app/extensions/num.dart';
 import 'package:ion/app/extensions/theme_data.dart';
-import 'package:ion/app/features/user/model/user_metadata.c.dart';
+import 'package:ion/app/features/user/data/models/user_metadata.c.dart';
 import 'package:ion/app/features/wallets/views/pages/contact_modal_page/components/contact_item_avatar.dart';
 import 'package:ion/app/features/wallets/views/pages/contact_modal_page/components/contact_item_name.dart';
 import 'package:ion/app/utils/username.dart';

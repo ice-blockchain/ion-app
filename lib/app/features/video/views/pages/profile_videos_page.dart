@@ -2,9 +2,9 @@
 
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:ion/app/features/ion_connect/model/event_reference.c.dart';
+import 'package:ion/app/features/ion_connect/data/models/event_reference.c.dart';
 import 'package:ion/app/features/ion_connect/providers/entities_paged_data_provider.c.dart';
-import 'package:ion/app/features/user/model/tab_entity_type.dart';
+import 'package:ion/app/features/user/data/models/tab_entity_type.dart';
 import 'package:ion/app/features/user/providers/tab_data_source_provider.c.dart';
 import 'package:ion/app/features/video/views/pages/videos_vertical_scroll_page.dart';
 

@@ -9,8 +9,8 @@ import 'package:ion/app/features/feed/data/models/entities/modifiable_post_data.
 import 'package:ion/app/features/feed/views/components/overlay_menu/user_info_menu.dart';
 import 'package:ion/app/features/feed/views/pages/feed_page/components/trending_videos/components/trending_video_author.dart';
 import 'package:ion/app/features/feed/views/pages/feed_page/components/trending_videos/components/trending_video_likes_button.dart';
-import 'package:ion/app/features/ion_connect/model/event_reference.c.dart';
-import 'package:ion/app/features/ion_connect/model/ion_connect_entity.dart';
+import 'package:ion/app/features/ion_connect/data/models/event_reference.c.dart';
+import 'package:ion/app/features/ion_connect/data/models/ion_connect_entity.dart';
 import 'package:ion/app/features/user/providers/muted_users_notifier.c.dart';
 import 'package:ion/app/features/user_block/providers/block_list_notifier.c.dart';
 import 'package:ion/app/router/app_routes.c.dart';

@@ -3,7 +3,7 @@
 import 'package:flutter/material.dart';
 import 'package:ion/app/components/screen_offset/screen_side_offset.dart';
 import 'package:ion/app/extensions/num.dart';
-import 'package:ion/app/features/wallets/model/network_selector_data.c.dart';
+import 'package:ion/app/features/wallets/data/models/network_selector_data.c.dart';
 import 'package:ion/app/features/wallets/views/pages/coins_flow/coin_details/components/transaction_list_item/constants.dart';
 import 'package:ion/app/features/wallets/views/pages/coins_flow/coin_details/components/transaction_list_item/transaction_list_header_item.dart';
 

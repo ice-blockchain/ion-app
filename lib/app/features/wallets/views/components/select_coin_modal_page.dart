@@ -2,7 +2,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:ion/app/features/wallets/model/coins_group.c.dart';
+import 'package:ion/app/features/wallets/data/models/coins_group.c.dart';
 import 'package:ion/app/features/wallets/providers/filtered_assets_provider.c.dart';
 import 'package:ion/app/features/wallets/views/components/coins_list/coins_list_view.dart';
 import 'package:ion/app/router/components/sheet_content/sheet_content.dart';

@@ -6,17 +6,17 @@ import 'package:collection/collection.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:ion/app/exceptions/exceptions.dart';
 import 'package:ion/app/extensions/extensions.dart';
-import 'package:ion/app/features/chat/community/models/entities/community_join_data.c.dart';
+import 'package:ion/app/features/chat/community/data/models/entities/community_join_data.c.dart';
 import 'package:ion/app/features/feed/data/models/entities/event_count_request_data.c.dart';
 import 'package:ion/app/features/feed/data/models/entities/generic_repost.c.dart';
 import 'package:ion/app/features/feed/data/models/entities/reaction_data.c.dart';
 import 'package:ion/app/features/feed/data/models/entities/repost_data.c.dart';
-import 'package:ion/app/features/feed/polls/models/poll_vote.c.dart';
+import 'package:ion/app/features/feed/polls/data/models/poll_vote.c.dart';
+import 'package:ion/app/features/ion_connect/data/models/event_reference.c.dart';
+import 'package:ion/app/features/ion_connect/data/models/ion_connect_entity.dart';
 import 'package:ion/app/features/ion_connect/ion_connect.dart';
-import 'package:ion/app/features/ion_connect/model/event_reference.c.dart';
-import 'package:ion/app/features/ion_connect/model/ion_connect_entity.dart';
 import 'package:ion/app/features/ion_connect/providers/ion_connect_cache.c.dart';
-import 'package:ion/app/features/user/model/follow_list.c.dart';
+import 'package:ion/app/features/user/data/models/follow_list.c.dart';
 
 part 'event_count_result_data.c.freezed.dart';
 

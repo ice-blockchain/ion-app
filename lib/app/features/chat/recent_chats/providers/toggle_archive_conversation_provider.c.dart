@@ -6,13 +6,14 @@ import 'dart:convert';
 import 'package:collection/collection.dart';
 import 'package:ion/app/exceptions/exceptions.dart';
 import 'package:ion/app/features/auth/providers/auth_provider.c.dart';
-import 'package:ion/app/features/chat/community/models/entities/tags/conversation_identifier.c.dart';
-import 'package:ion/app/features/chat/model/database/chat_database.c.dart';
-import 'package:ion/app/features/chat/recent_chats/model/conversation_list_item.c.dart';
+import 'package:ion/app/features/chat/community/data/models/entities/tags/conversation_identifier.c.dart';
+import 'package:ion/app/features/chat/e2ee/data/models/database/chat_database.c.dart';
+import 'package:ion/app/features/chat/providers/dao/conversation_dao_provider.c.dart';
+import 'package:ion/app/features/chat/recent_chats/data/models/conversation_list_item.c.dart';
 import 'package:ion/app/features/feed/data/models/bookmarks/bookmarks_set.c.dart';
 import 'package:ion/app/features/feed/providers/bookmarks_notifier.c.dart';
 import 'package:ion/app/features/ion_connect/providers/ion_connect_notifier.c.dart';
-import 'package:ion/app/services/ion_connect/encrypted_message_service.c.dart';
+import 'package:ion/app/services/providers/ion_connect/encrypted_message_service.c.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'toggle_archive_conversation_provider.c.g.dart';

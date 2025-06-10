@@ -8,6 +8,7 @@ import 'package:ion/app/components/button/button.dart';
 import 'package:ion/app/components/screen_offset/screen_bottom_offset.dart';
 import 'package:ion/app/components/screen_offset/screen_side_offset.dart';
 import 'package:ion/app/extensions/extensions.dart';
+import 'package:ion/app/features/search/data/models/feed_search_filters_state.c.dart';
 import 'package:ion/app/features/search/providers/feed_search_filters_provider.c.dart';
 import 'package:ion/app/features/search/views/pages/feed_search_filters_page/feed_search_filter_categories_section.dart';
 import 'package:ion/app/features/search/views/pages/feed_search_filters_page/feed_search_filter_source_section.dart';
