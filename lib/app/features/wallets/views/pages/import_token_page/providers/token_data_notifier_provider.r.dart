@@ -25,7 +25,7 @@ class TokenDataNotifier extends _$TokenDataNotifier {
         state.valueOrNull?.contractAddress == tokenAddress &&
         state.valueOrNull?.network.id == network?.id;
 
-    if (isEmptyFetchParams || isDataAlreadyLoaded) {
+    if (isEmptyFetchParams || isDataAlreadyLoaded || state.isLoading) {
       return;
     }
 
