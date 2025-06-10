@@ -52,18 +52,13 @@ class EventSyncer extends _$EventSyncer {
   ) async {
     final requestMessage = RequestMessage();
     for (final filter in requestFilters) {
-      final index = requestFilters.indexOf(filter);
-      if (index == 0) {
-        requestMessage.addFilter(
-          filter.copyWith(
-            since: () => since,
-            until: () => until,
-            limit: () => limit,
-          ),
-        );
-      } else {
-        requestMessage.addFilter(filter);
-      }
+      requestMessage.addFilter(
+        filter.copyWith(
+          since: () => since,
+          until: () => until,
+          limit: () => limit,
+        ),
+      );
     }
 
     final eventsStream = ref.read(ionConnectNotifierProvider.notifier).requestEvents(
