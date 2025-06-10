@@ -869,5 +869,7 @@
   "device_keypair_button_restore_now": "Restore Now",
   "nickname_not_owned_suffix": "(! not owned)",
   "maintenance_page_title": "We are on maintenance",
-  "maintenance_page_description": "We apologize for any inconvenience caused. We're almost done."
+  "maintenance_page_description": "We apologize for any inconvenience caused. We're almost done.",
+  "wallet_address_confirmation": "Address confirmation",
+  "wallet_address_confirmation_info": "Before sending cryptocurrency to this address, ensure that the wallet address and the selected network on the sender’s side exactly match the chosen coin and network. If they don’t, your funds will be permanently lost"
 }

@@ -13,9 +13,11 @@ class InfoModal extends StatelessWidget {
   const InfoModal({
     required this.infoType,
     super.key,
+    this.descriptionTextAlign,
   });
 
   final InfoType infoType;
+  final TextAlign? descriptionTextAlign;
 
   @override
   Widget build(BuildContext context) {
@@ -36,7 +38,7 @@ class InfoModal extends StatelessWidget {
             iconAsset: infoType.iconAsset,
             title: infoType.getTitle(context),
             description: infoType.getDesc(context),
-            descriptionTextAlign: TextAlign.start,
+            descriptionTextAlign: descriptionTextAlign ?? TextAlign.start,
           ),
         ),
         ScreenBottomOffset(margin: 16.0.s),
