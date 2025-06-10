@@ -1843,7 +1843,7 @@ packages:
     description:
       path: "."
       ref: "0.0.39"
-      resolved-ref: "78a95a90d2c72e232f12b37e68b67f8de946f1e8"
+      resolved-ref: "320ee05ed23259b0535f6849288997ac5729d8e3"
       url: "https://github.com/ice-blockchain/nostr-dart"
     source: git
     version: "0.0.39"
