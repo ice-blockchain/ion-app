@@ -9,17 +9,15 @@ import 'package:cross_file/cross_file.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
-import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/features/core/providers/video_player_provider.c.dart';
+import 'package:ion/app/features/feed/create_post/data/models/video_info_model.c.dart';
 import 'package:ion/app/hooks/use_on_init.dart';
 import 'package:ion/app/services/logger/logger.dart';
 import 'package:ion/app/services/media_service/data/models/media_file.c.dart';
 import 'package:ion/app/services/providers/compressors/image_compressor.c.dart';
 import 'package:ion/app/services/providers/compressors/video_compressor.c.dart';
 import 'package:ion/app/utils/filesize.dart';
-
-part 'compress_test_page.c.freezed.dart';
 
 Timer? debounce;
 
@@ -374,17 +372,4 @@ class VideoPlayerTab extends HookConsumerWidget {
       ),
     );
   }
-}
-
-@freezed
-class VideoInfoModel with _$VideoInfoModel {
-  const factory VideoInfoModel({
-    required String name,
-    required String originalSize,
-    required String compressedSize,
-    required String duration,
-    required String size,
-    required String fps,
-    required String bitRate,
-  }) = _VideoInfoModel;
 }
