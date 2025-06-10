@@ -84,8 +84,7 @@ class E2eeMessagesSubscriber extends _$E2eeMessagesSubscriber {
         .watch(conversationEventMessageDaoProvider)
         .getLatestEventMessageDate([ReplaceablePrivateDirectMessageEntity.kind]);
 
-    final latestSyncedEventTimestamp =
-        await ref.watch(eventSyncerProvider('e2ee-messages').notifier).syncEvents(
+    final latestSyncedEventTimestamp = await ref.watch(eventSyncerServiceProvider).syncEvents(
       requestFilters: [requestFilter],
       sinceDateMicroseconds: latestEventMessageDate?.microsecondsSinceEpoch,
       saveCallback: (eventMessage) => _handleMessage(

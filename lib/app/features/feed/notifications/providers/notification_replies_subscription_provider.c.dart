@@ -42,8 +42,7 @@ Future<void> notificationRepliesSubscription(Ref ref) async {
 
   final lastCreatedAt = await commentsRepository.lastCreatedAt(CommentIonNotificationType.reply);
 
-  final latestSyncedEventTimestamp =
-      await ref.watch(eventSyncerProvider('notifications-replies').notifier).syncEvents(
+  final latestSyncedEventTimestamp = await ref.watch(eventSyncerServiceProvider).syncEvents(
     requestFilters: [requestFilter],
     sinceDateMicroseconds: lastCreatedAt?.microsecondsSinceEpoch,
     saveCallback: (eventMessage) {

@@ -47,8 +47,7 @@ Future<void> notificationFollowersSubscription(Ref ref) async {
 
   final lastCreatedAt = await followersRepository.lastCreatedAt();
 
-  final latestSyncedEventTimestamp =
-      await ref.watch(eventSyncerProvider('notifications-followers').notifier).syncEvents(
+  final latestSyncedEventTimestamp = await ref.watch(eventSyncerServiceProvider).syncEvents(
     requestFilters: [requestFilter],
     sinceDateMicroseconds: lastCreatedAt?.microsecondsSinceEpoch,
     saveCallback: (eventMessage) {

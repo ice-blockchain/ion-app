@@ -73,8 +73,7 @@ Future<void> transactionsSubscription(Ref ref) async {
   final requestLastCreatedAt = await requestAssetsRepository.getLastCreatedAt();
   final lastCreatedAt = _getEarliestDateTime(transactionLastCreatedAt, requestLastCreatedAt);
 
-  final latestSyncedEventTimestamp =
-      await ref.watch(eventSyncerProvider('transactions').notifier).syncEvents(
+  final latestSyncedEventTimestamp = await ref.watch(eventSyncerServiceProvider).syncEvents(
     requestFilters: [requestFilter],
     sinceDateMicroseconds: lastCreatedAt?.microsecondsSinceEpoch,
     saveCallback: (eventMessage) => _saveEvent(

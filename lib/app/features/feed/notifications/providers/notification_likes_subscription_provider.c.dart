@@ -33,8 +33,7 @@ Future<void> notificationLikesSubscription(Ref ref) async {
 
   final lastCreatedAt = await likesRepository.lastCreatedAt();
 
-  final latestSyncedEventTimestamp =
-      await ref.watch(eventSyncerProvider('notifications-likes').notifier).syncEvents(
+  final latestSyncedEventTimestamp = await ref.watch(eventSyncerServiceProvider).syncEvents(
     requestFilters: [requestFilter],
     sinceDateMicroseconds: lastCreatedAt?.microsecondsSinceEpoch,
     saveCallback: (eventMessage) {

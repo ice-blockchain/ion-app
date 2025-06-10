@@ -1,5 +1,6 @@
 // SPDX-License-Identifier: ice License 1.0
 
+import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/features/ion_connect/ion_connect.dart';
 import 'package:ion/app/features/ion_connect/model/action_source.c.dart';
 import 'package:ion/app/features/ion_connect/providers/ion_connect_notifier.c.dart';
@@ -7,12 +8,10 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'event_syncer_provider.c.g.dart';
 
-@riverpod
-class EventSyncer extends _$EventSyncer {
-  @override
-  String build(String syncPivotKey) {
-    return syncPivotKey;
-  }
+class EventSyncerService {
+  EventSyncerService({required this.ionConnectNotifier});
+
+  final IonConnectNotifier ionConnectNotifier;
 
   Future<int?> syncEvents({
     required List<RequestFilter> requestFilters,
@@ -57,10 +56,10 @@ class EventSyncer extends _$EventSyncer {
       );
     }
 
-    final eventsStream = ref.read(ionConnectNotifierProvider.notifier).requestEvents(
-          requestMessage,
-          actionSource: actionSource,
-        );
+    final eventsStream = ionConnectNotifier.requestEvents(
+      requestMessage,
+      actionSource: actionSource,
+    );
 
     int? newestDate;
     int? oldestDate;
@@ -79,4 +78,9 @@ class EventSyncer extends _$EventSyncer {
 
     return _fetchEvents(requestFilters, actionSource, saveCallback, limit, since, newestDate);
   }
+}
+
+@riverpod
+EventSyncerService eventSyncerService(Ref ref) {
+  return EventSyncerService(ionConnectNotifier: ref.read(ionConnectNotifierProvider.notifier));
 }

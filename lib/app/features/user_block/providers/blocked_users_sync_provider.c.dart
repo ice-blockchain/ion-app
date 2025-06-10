@@ -57,19 +57,18 @@ class BlockedUsersSync extends _$BlockedUsersSync {
     final env = ref.watch(envProvider.notifier);
     final overlap = Duration(days: env.get<int>(EnvVariable.BLOCKED_USERS_SYNC_OVERLAP_DAYS));
 
-    final latestSyncedEventTimestamp =
-        await ref.watch(eventSyncerProvider('blocked-users').notifier).syncEvents(
-              overlap: overlap,
-              requestFilters: [requestFilter],
-              sinceDateMicroseconds: latestBlockEventDate?.microsecondsSinceEpoch,
-              saveCallback: (wrap) => _handleBlockEvent(
-                eventMessage: wrap,
-                eventSigner: eventSigner,
-                masterPubkey: masterPubkey,
-                blockEventDao: blockEventDao,
-                unblockEventDao: unblockEventDao,
-              ),
-            );
+    final latestSyncedEventTimestamp = await ref.watch(eventSyncerServiceProvider).syncEvents(
+          overlap: overlap,
+          requestFilters: [requestFilter],
+          sinceDateMicroseconds: latestBlockEventDate?.microsecondsSinceEpoch,
+          saveCallback: (wrap) => _handleBlockEvent(
+            eventMessage: wrap,
+            eventSigner: eventSigner,
+            masterPubkey: masterPubkey,
+            blockEventDao: blockEventDao,
+            unblockEventDao: unblockEventDao,
+          ),
+        );
 
     final requestMessage = RequestMessage();
 

@@ -51,8 +51,7 @@ class CommunityMessagesSubscriber extends _$CommunityMessagesSubscriber {
         .watch(conversationEventMessageDaoProvider)
         .getLatestEventMessageDate([ModifiablePostEntity.kind]);
 
-    final latestSyncedEventTimestamp =
-        await ref.watch(eventSyncerProvider('community-messages').notifier).syncEvents(
+    final latestSyncedEventTimestamp = await ref.watch(eventSyncerServiceProvider).syncEvents(
       requestFilters: [requestFilter],
       sinceDateMicroseconds: latestEventMessageDate?.microsecondsSinceEpoch,
       saveCallback: (eventMessage) {
@@ -66,10 +65,9 @@ class CommunityMessagesSubscriber extends _$CommunityMessagesSubscriber {
 
     final requestMessage = RequestMessage()
       ..addFilter(
-        requestFilter
-          ..copyWith(
-            since: () => latestSyncedEventTimestamp,
-          ),
+        requestFilter.copyWith(
+          since: () => latestSyncedEventTimestamp,
+        ),
       );
 
     final events = ref.watch(
