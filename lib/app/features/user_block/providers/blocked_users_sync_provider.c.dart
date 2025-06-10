@@ -2,7 +2,6 @@
 
 import 'dart:async';
 
-import 'package:collection/collection.dart';
 import 'package:ion/app/exceptions/exceptions.dart';
 import 'package:ion/app/features/auth/providers/auth_provider.c.dart';
 import 'package:ion/app/features/auth/providers/delegation_complete_provider.c.dart';
@@ -16,8 +15,6 @@ import 'package:ion/app/features/ion_connect/providers/ion_connect_event_signer_
 import 'package:ion/app/features/ion_connect/providers/ion_connect_subscription_provider.c.dart';
 import 'package:ion/app/features/user_block/model/database/block_user_database.c.dart';
 import 'package:ion/app/features/user_block/model/entities/blocked_user_entity.c.dart';
-import 'package:ion/app/services/ion_connect/ion_connect_gift_wrap_service.c.dart';
-import 'package:ion/app/services/ion_connect/ion_connect_seal_service.c.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'blocked_users_sync_provider.c.g.dart';
@@ -66,10 +63,9 @@ class BlockedUsersSync extends _$BlockedUsersSync {
               saveCallback: (wrap) => _handleBlockEvent(
                 eventMessage: wrap,
                 eventSigner: eventSigner,
-                sealService: sealService,
                 masterPubkey: masterPubkey,
                 blockEventDao: blockEventDao,
-                giftWrapService: giftWrapService,
+                unblockEventDao: unblockEventDao,
               ),
             );
 
@@ -89,10 +85,8 @@ class BlockedUsersSync extends _$BlockedUsersSync {
       (wrap) => _handleBlockEvent(
         eventMessage: wrap,
         eventSigner: eventSigner,
-        sealService: sealService,
         masterPubkey: masterPubkey,
         blockEventDao: blockEventDao,
-        giftWrapService: giftWrapService,
         unblockEventDao: unblockEventDao,
       ),
     );
@@ -107,9 +101,7 @@ class BlockedUsersSync extends _$BlockedUsersSync {
     required EventSigner eventSigner,
     required EventMessage eventMessage,
     required BlockEventDao blockEventDao,
-    required IonConnectSealService sealService,
     required UnblockEventDao unblockEventDao,
-    required IonConnectGiftWrapService giftWrapService,
   }) async {
     final giftUnwrapService = await ref.watch(giftUnwrapServiceProvider.future);
     final rumor = await giftUnwrapService.unwrap(eventMessage);
