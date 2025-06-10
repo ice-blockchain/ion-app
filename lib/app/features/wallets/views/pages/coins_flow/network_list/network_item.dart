@@ -73,9 +73,9 @@ class _NetworkLabel extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: EdgeInsets.symmetric(horizontal: 6.0.s),
+      padding: EdgeInsets.symmetric(vertical: 2.s, horizontal: 6.s),
       decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(16.0.s),
+        borderRadius: BorderRadius.circular(16.s),
         color: context.theme.appColors.attentionBlock,
       ),
       child: Text(
@@ -83,6 +83,8 @@ class _NetworkLabel extends StatelessWidget {
         style: context.theme.appTextThemes.caption3.copyWith(
           color: context.theme.appColors.quaternaryText,
         ),
+        textHeightBehavior: const TextHeightBehavior(applyHeightToFirstAscent: false),
+        textAlign: TextAlign.center,
       ),
     );
   }

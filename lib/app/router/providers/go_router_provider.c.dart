@@ -99,7 +99,10 @@ Future<String?> _mainRedirect({
     final delegationComplete = ref.read(delegationCompleteProvider).valueOrNull.falseOrValue;
     final relaysAssigned = ref.read(relaysAssignedProvider).valueOrNull.falseOrValue;
 
-    if (!onboardingComplete && !isOnOnboarding && !isOnMediaPicker && !(hasUserMetadata && relaysAssigned)) {
+    if (!onboardingComplete &&
+        !isOnOnboarding &&
+        !isOnMediaPicker &&
+        !(hasUserMetadata && relaysAssigned)) {
       return FillProfileRoute().location;
     }
 
