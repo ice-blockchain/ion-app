@@ -38,7 +38,12 @@ class ActiveRelays extends _$ActiveRelays {
     ref.listen(
       currentUserIonConnectEventSignerProvider,
       (prev, next) {
-        if (prev != next) {
+        // Only invalidate when switching between two different valid signers
+        // This avoids false positives when logging in/out (null transitions)
+        final bothNotNull = prev?.value != null && next.value != null;
+        final valuesNotEqual = prev?.value != next.value;
+
+        if (bothNotNull && valuesNotEqual) {
           invalidateAll();
         }
       },
