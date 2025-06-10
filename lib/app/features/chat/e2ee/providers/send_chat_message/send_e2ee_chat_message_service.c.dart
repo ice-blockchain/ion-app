@@ -34,6 +34,7 @@ import 'package:ion/app/features/user_block/providers/block_list_notifier.c.dart
 import 'package:ion/app/services/compressors/video_compressor.c.dart';
 import 'package:ion/app/services/ion_connect/ion_connect_gift_wrap_service.c.dart';
 import 'package:ion/app/services/ion_connect/ion_connect_seal_service.c.dart';
+import 'package:ion/app/services/logger/logger.dart';
 import 'package:ion/app/services/media_service/media_service.c.dart';
 import 'package:ion/app/services/uuid/uuid.dart';
 import 'package:isolate_manager/isolate_manager.dart';
@@ -209,6 +210,7 @@ class SendE2eeChatMessageService {
                     );
               }
             } catch (e) {
+              Logger.log(e.toString());
               if (eventReference != null) {
                 await ref.read(conversationMessageDataDaoProvider).addOrUpdateStatus(
                       pubkey: pubkey,

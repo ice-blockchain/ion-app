@@ -9,6 +9,7 @@ import 'package:ion/app/features/chat/e2ee/model/entities/private_direct_message
 import 'package:ion/app/features/chat/e2ee/providers/e2ee_delete_event_provider.c.dart';
 import 'package:ion/app/features/chat/model/database/chat_database.c.dart';
 import 'package:ion/app/features/chat/model/message_reaction_group.c.dart';
+import 'package:ion/app/features/chat/views/components/message_items/message_types/emoji_message/emoji_message.dart';
 import 'package:ion/app/features/components/ion_connect_avatar/ion_connect_avatar.dart';
 import 'package:ion/app/features/ion_connect/ion_connect.dart';
 

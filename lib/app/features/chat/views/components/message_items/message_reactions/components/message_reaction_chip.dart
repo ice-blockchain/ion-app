@@ -37,9 +37,7 @@ class _MessageReactionChip extends StatelessWidget {
           children: [
             Text(
               emoji,
-              style: context.theme.appTextThemes.title.copyWith(
-                height: 1,
-              ),
+              style: context.theme.appTextThemes.title.copyWith(height: 1).platformEmojiAware(),
             ),
             _AvatarStack(pubkeys: masterPubkeys),
           ],

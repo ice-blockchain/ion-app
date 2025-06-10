@@ -1,7 +1,10 @@
 // SPDX-License-Identifier: ice License 1.0
 
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/auth/providers/auth_provider.c.dart';
@@ -64,7 +67,7 @@ class EmojiMessage extends HookConsumerWidget {
               children: [
                 Text(
                   entity.data.content,
-                  style: context.theme.appTextThemes.headline1.copyWith(height: 1),
+                  style: context.theme.appTextThemes.headline1.platformEmojiAware(),
                 ),
                 if (!hasReaction) MessageMetaData(eventMessage: eventMessage),
               ],
@@ -84,5 +87,16 @@ class EmojiMessage extends HookConsumerWidget {
         ),
       ),
     );
+  }
+}
+
+extension GoogleFontsPlatformExtension on TextStyle {
+  TextStyle platformEmojiAware() {
+    return Platform.isAndroid
+        ? GoogleFonts.getFont(
+            'Noto Color Emoji',
+            textStyle: this,
+          )
+        : this;
   }
 }

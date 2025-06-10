@@ -40,9 +40,11 @@ class _EmojisGridView extends ConsumerWidget {
                     },
                     child: Text(
                       emoji,
-                      style: context.theme.appTextThemes.headline1.copyWith(
-                        height: 1,
-                      ),
+                      style: context.theme.appTextThemes.headline1
+                          .copyWith(
+                            height: 1,
+                          )
+                          .platformEmojiAware(),
                     ),
                   ),
                 ),
