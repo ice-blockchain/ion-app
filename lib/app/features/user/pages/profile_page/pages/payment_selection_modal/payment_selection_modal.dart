@@ -77,7 +77,10 @@ class PaymentSelectionModal extends HookConsumerWidget {
                 children: [
                   ListItem(
                     title: Text(option.getTitle(context)),
-                    subtitle: Text(option.getDesc(context)),
+                    subtitle: Text(
+                      option.getDesc(context),
+                      maxLines: 2,
+                    ),
                     backgroundColor: context.theme.appColors.tertararyBackground,
                     leading: option.iconAsset.icon(size: 48.0.s),
                     onTap: () {

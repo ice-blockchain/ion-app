@@ -116,13 +116,19 @@ class SignInStep extends HookConsumerWidget {
                   ),
                   SizedBox(height: 16.0.s),
                   Button(
+                    labelFlex: 2,
                     type: ButtonType.outlined,
-                    leadingIcon: Assets.svg.iconRestorekey.icon(
-                      color: context.theme.appColors.secondaryText,
+                    leadingIcon: Flexible(
+                      child: Assets.svg.iconRestorekey.icon(
+                        color: context.theme.appColors.secondaryText,
+                      ),
                     ),
                     disabled: loginActionState.isLoading,
                     onPressed: () => RestoreMenuRoute().push<void>(context),
-                    label: Text(context.i18n.get_started_restore_button),
+                    label: Text(
+                      context.i18n.get_started_restore_button,
+                      maxLines: 2,
+                    ),
                     mainAxisSize: MainAxisSize.max,
                     borderColor: Colors.transparent,
                   ),

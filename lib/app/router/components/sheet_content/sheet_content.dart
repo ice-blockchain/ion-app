@@ -12,6 +12,7 @@ class SheetContent extends StatelessWidget {
     this.bottomPadding,
     this.topPadding,
     this.backgroundColor,
+    this.bottomBar,
   });
 
   final Widget body;
@@ -22,6 +23,8 @@ class SheetContent extends StatelessWidget {
 
   final Color? backgroundColor;
 
+  final Widget? bottomBar;
+
   @override
   Widget build(BuildContext context) {
     return SheetContentScaffold(
@@ -29,7 +32,7 @@ class SheetContent extends StatelessWidget {
       primary: true,
       extendBody: true,
       appBar: SheetDragHandle(topPadding: topPadding),
-      bottomBar: const SizedBox.shrink(),
+      bottomBar: bottomBar ?? const SizedBox.shrink(),
       body: SheetShape(
         backgroundColor: backgroundColor,
         bottomPadding: bottomPadding ?? MediaQuery.paddingOf(context).bottom,
