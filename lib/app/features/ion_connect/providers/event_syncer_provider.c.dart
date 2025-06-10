@@ -82,5 +82,5 @@ class EventSyncerService {
 
 @riverpod
 EventSyncerService eventSyncerService(Ref ref) {
-  return EventSyncerService(ionConnectNotifier: ref.read(ionConnectNotifierProvider.notifier));
+  return EventSyncerService(ionConnectNotifier: ref.watch(ionConnectNotifierProvider.notifier));
 }
