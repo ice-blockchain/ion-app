@@ -13,26 +13,30 @@ import 'package:ion/app/features/auth/providers/auth_provider.c.dart';
 import 'package:ion/app/features/core/providers/app_info_provider.c.dart';
 import 'package:ion/app/features/settings/model/settings_action.dart';
 import 'package:ion/app/features/settings/providers/leave_feedback_notifier.c.dart';
+import 'package:ion/app/hooks/use_pop_if_returned_null.dart';
 import 'package:ion/app/router/app_routes.c.dart';
 import 'package:ion/app/router/components/navigation_app_bar/navigation_app_bar.dart';
 import 'package:ion/app/router/components/navigation_app_bar/navigation_close_button.dart';
 import 'package:ion/app/router/components/sheet_content/sheet_content.dart';
 import 'package:ion/app/services/browser/browser.dart';
 
-class SettingsModal extends ConsumerWidget {
+class SettingsModal extends HookConsumerWidget {
   const SettingsModal({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final pubkey = ref.watch(currentPubkeySelectorProvider) ?? '';
 
+    final popIfNull = usePopIfReturnedNull<bool>();
+
     VoidCallback getOnPressed(SettingsAction option) {
       return switch (option) {
-        SettingsAction.account => () => AccountSettingsRoute().push<void>(context),
-        SettingsAction.security => () => SecureAccountOptionsRoute().push<void>(context),
-        SettingsAction.privacy => () => PrivacySettingsRoute().push<void>(context),
+        SettingsAction.account => () => popIfNull(() => AccountSettingsRoute().push<bool>(context)),
+        SettingsAction.security => () =>
+            popIfNull(() => SecureAccountOptionsRoute().push<bool>(context)),
+        SettingsAction.privacy => () => popIfNull(() => PrivacySettingsRoute().push<bool>(context)),
         SettingsAction.pushNotifications => () =>
-            PushNotificationsSettingsRoute().push<void>(context),
+            popIfNull(() => PushNotificationsSettingsRoute().push<bool>(context)),
         SettingsAction.privacyPolicy => () => openUrlInAppBrowser(Links.privacy),
         SettingsAction.termsConditions => () => openUrlInAppBrowser(Links.terms),
         SettingsAction.leaveFeedback => () =>

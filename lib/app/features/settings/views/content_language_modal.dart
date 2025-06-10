@@ -1,6 +1,7 @@
 // SPDX-License-Identifier: ice License 1.0
 
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/core/views/pages/language_selector_page.dart';
@@ -26,6 +27,7 @@ class ContentLanguageModal extends HookConsumerWidget {
           ref.read(toggleLanguageNotifierProvider.notifier).toggle(iso),
       selectedLanguages: selectedLanguages,
       appBar: NavigationAppBar.modal(
+        onBackPress: () => context.pop(true),
         actions: const [NavigationCloseButton()],
       ),
     );

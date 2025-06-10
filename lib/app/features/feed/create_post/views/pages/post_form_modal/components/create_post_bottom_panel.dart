@@ -5,7 +5,6 @@ import 'package:flutter_quill/flutter_quill.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/components/list_item/list_item.dart';
 import 'package:ion/app/components/screen_offset/screen_side_offset.dart';
-import 'package:ion/app/components/separated/separator.dart';
 import 'package:ion/app/components/text_editor/components/suggestions_container.dart';
 import 'package:ion/app/components/text_editor/text_editor.dart';
 import 'package:ion/app/extensions/extensions.dart';
@@ -28,6 +27,19 @@ import 'package:ion/app/router/utils/show_simple_bottom_sheet.dart';
 import 'package:ion/app/services/media_service/media_service.c.dart';
 import 'package:ion/app/typedefs/typedefs.dart';
 import 'package:ion/generated/assets.gen.dart';
+
+class _Delimiter extends StatelessWidget {
+  const _Delimiter();
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      width: double.infinity,
+      height: 0.5.s,
+      color: context.theme.appColors.onTerararyFill,
+    );
+  }
+}
 
 class CreatePostBottomPanel extends StatelessWidget {
   const CreatePostBottomPanel({
@@ -63,10 +75,14 @@ class CreatePostBottomPanel extends StatelessWidget {
           scrollController: scrollController,
           editorKey: textEditorKey,
         ),
-        const HorizontalSeparator(),
+        const _Delimiter(),
         _WhoCanReplySection(
           createOption: createOption,
           modifiedEvent: modifiedEvent,
+        ),
+        const _Delimiter(),
+        SizedBox(
+          height: 8.0.s,
         ),
         _ActionsSection(
           textEditorController: textEditorController,
@@ -77,6 +93,9 @@ class CreatePostBottomPanel extends StatelessWidget {
           attachedMediaLinksNotifier: attachedMediaLinksNotifier,
           attachedVideoNotifier: attachedVideoNotifier,
           createOption: createOption,
+        ),
+        SizedBox(
+          height: 8.0.s,
         ),
       ],
     );

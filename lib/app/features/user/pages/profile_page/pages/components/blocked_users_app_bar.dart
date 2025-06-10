@@ -1,6 +1,7 @@
 // SPDX-License-Identifier: ice License 1.0
 
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/extensions/build_context.dart';
 import 'package:ion/app/features/user_block/providers/block_list_notifier.c.dart';
@@ -23,6 +24,7 @@ class BlockedUsersAppBar extends ConsumerWidget {
       automaticallyImplyLeading: false,
       toolbarHeight: NavigationAppBar.modalHeaderHeight,
       flexibleSpace: NavigationAppBar.modal(
+        onBackPress: () => context.pop(true),
         actions: const [NavigationCloseButton()],
         title: Text(
           blockedUsers == null
