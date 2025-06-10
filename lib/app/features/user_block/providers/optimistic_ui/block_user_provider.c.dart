@@ -3,14 +3,14 @@
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/exceptions/exceptions.dart';
 import 'package:ion/app/features/auth/providers/auth_provider.c.dart';
-
 import 'package:ion/app/features/optimistic_ui/core/operation_manager.dart';
 import 'package:ion/app/features/optimistic_ui/core/optimistic_service.dart';
-import 'package:ion/app/features/user_block/model/database/block_user_database.c.dart';
-import 'package:ion/app/features/user_block/model/entities/blocked_user_entity.c.dart';
-import 'package:ion/app/features/user_block/optimistic_ui/block_sync_strategy_provider.c.dart';
-import 'package:ion/app/features/user_block/optimistic_ui/model/blocked_user.c.dart';
+import 'package:ion/app/features/user_block/data/models/entities/blocked_user_entity.c.dart';
+import 'package:ion/app/features/user_block/data/models/optimistic_ui/blocked_user.c.dart';
 import 'package:ion/app/features/user_block/optimistic_ui/toggle_block_intent.dart';
+import 'package:ion/app/features/user_block/providers/dao/block_event_dao_provider.c.dart';
+import 'package:ion/app/features/user_block/providers/dao/unblock_event_dao_provider.c.dart';
+import 'package:ion/app/features/user_block/providers/optimistic_ui/block_sync_strategy_provider.c.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'block_user_provider.c.g.dart';

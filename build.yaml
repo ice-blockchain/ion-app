@@ -31,4 +31,4 @@ targets:
             notifications_database: lib/app/features/feed/notifications/data/database/notifications_database.c.dart
             wallets_database: lib/app/features/wallets/data/models/database/wallets_database.c.dart
             event_messages_database: lib/app/features/ion_connect/data/database/event_messages_database.c.dart
-            blocked_users_database: lib/app/features/user_block/data/models/database/blocked_users_database.c.dart
+            blocked_users_database: lib/app/features/user_block/data/models/database/block_user_database.c.dart

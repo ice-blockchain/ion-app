@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: ice License 1.0
 
 import 'package:ion/app/features/optimistic_ui/core/optimistic_sync_strategy.dart';
-import 'package:ion/app/features/user_block/optimistic_ui/model/blocked_user.c.dart';
+import 'package:ion/app/features/user_block/data/models/optimistic_ui/blocked_user.c.dart';
 
 /// Sync strategy for toggling likes using IonConnectNotifier.
 class BlockSyncStrategy implements SyncStrategy<BlockedUser> {

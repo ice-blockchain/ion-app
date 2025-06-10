@@ -12,7 +12,7 @@ import 'package:ion/app/features/chat/providers/muted_conversations_provider.c.d
 import 'package:ion/app/features/user/data/models/report_reason.c.dart';
 import 'package:ion/app/features/user/pages/profile_page/pages/block_user_modal/block_user_modal.dart';
 import 'package:ion/app/features/user/providers/report_notifier.c.dart';
-import 'package:ion/app/features/user_block/optimistic_ui/block_user_provider.c.dart';
+import 'package:ion/app/features/user_block/providers/optimistic_ui/block_user_provider.c.dart';
 import 'package:ion/app/router/app_routes.c.dart';
 import 'package:ion/app/router/utils/show_simple_bottom_sheet.dart';
 import 'package:ion/generated/assets.gen.dart';

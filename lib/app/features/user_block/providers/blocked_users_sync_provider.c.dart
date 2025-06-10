@@ -9,15 +9,15 @@ import 'package:ion/app/features/auth/providers/delegation_complete_provider.c.d
 import 'package:ion/app/features/chat/e2ee/providers/gift_unwrap_service_provider.c.dart';
 import 'package:ion/app/features/core/providers/env_provider.c.dart';
 import 'package:ion/app/features/ion_connect/data/models/deletion_request.c.dart';
-import 'package:ion/app/features/ion_connect/data/models/event_reference.c.dart';
 import 'package:ion/app/features/ion_connect/data/models/ion_connect_gift_wrap.c.dart';
 import 'package:ion/app/features/ion_connect/ion_connect.dart';
 import 'package:ion/app/features/ion_connect/providers/entities_syncer_notifier.c.dart';
 import 'package:ion/app/features/ion_connect/providers/ion_connect_event_signer_provider.c.dart';
 import 'package:ion/app/features/ion_connect/providers/ion_connect_subscription_provider.c.dart';
-import 'package:ion/app/features/user_block/data/models/database/blocked_users_database.c.dart';
+import 'package:ion/app/features/user_block/data/models/database/block_user_database.c.dart';
 import 'package:ion/app/features/user_block/data/models/entities/blocked_user_entity.c.dart';
 import 'package:ion/app/features/user_block/providers/dao/block_event_dao_provider.c.dart';
+import 'package:ion/app/features/user_block/providers/dao/unblock_event_dao_provider.c.dart';
 import 'package:ion/app/services/providers/ion_connect/ion_connect_gift_wrap_service.c.dart';
 import 'package:ion/app/services/providers/ion_connect/ion_connect_seal_service.c.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';

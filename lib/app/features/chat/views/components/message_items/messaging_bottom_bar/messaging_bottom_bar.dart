@@ -14,8 +14,8 @@ import 'package:ion/app/features/chat/recent_chats/providers/selected_edit_messa
 import 'package:ion/app/features/chat/views/components/message_items/components.dart';
 import 'package:ion/app/features/chat/views/components/message_items/messaging_bottom_bar/components/components.dart';
 import 'package:ion/app/features/chat/views/components/message_items/messaging_bottom_bar/components/text_message_limit_label.dart';
-import 'package:ion/app/features/user_block/optimistic_ui/block_user_provider.c.dart';
 import 'package:ion/app/features/user_block/providers/block_list_notifier.c.dart';
+import 'package:ion/app/features/user_block/providers/optimistic_ui/block_user_provider.c.dart';
 import 'package:ion/app/hooks/use_on_init.dart';
 import 'package:ion/app/services/media_service/data/models/media_file.c.dart';
 import 'package:ion/app/services/providers/compressors/audio_compressor.c.dart';

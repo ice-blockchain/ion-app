@@ -5,7 +5,8 @@ import 'package:ion/app/features/user_block/data/models/database/block_user_data
 import 'package:ion/app/features/user_block/providers/blocked_users_database_provider.c.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
-part 'block_event_dao_provider.c.g.dart';
+part 'unblock_event_dao_provider.c.g.dart';
 
 @Riverpod(keepAlive: true)
-BlockEventDao blockEventDao(Ref ref) => BlockEventDao(ref.watch(blockedUsersDatabaseProvider));
+UnblockEventDao unblockEventDao(Ref ref) =>
+    UnblockEventDao(ref.watch(blockedUsersDatabaseProvider));
