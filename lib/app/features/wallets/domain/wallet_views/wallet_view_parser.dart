@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: ice License 1.0
+
 part of 'wallet_views_service.c.dart';
 
 @riverpod
