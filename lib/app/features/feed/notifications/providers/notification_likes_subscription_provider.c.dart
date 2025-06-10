@@ -29,12 +29,12 @@ Future<void> notificationLikesSubscription(Ref ref) async {
     tags: {
       '#p': [currentPubkey],
     },
-    since: DateTime.now().subtract(const Duration(microseconds: 2)).microsecondsSinceEpoch,
   );
 
   final lastCreatedAt = await likesRepository.lastCreatedAt();
 
-  final since = await ref.watch(eventSyncerProvider('notifications-likes').notifier).syncEvents(
+  final latestSyncedEventTimestamp =
+      await ref.watch(eventSyncerProvider('notifications-likes').notifier).syncEvents(
     requestFilters: [requestFilter],
     sinceDateMicroseconds: lastCreatedAt?.microsecondsSinceEpoch,
     saveCallback: (eventMessage) {
@@ -47,7 +47,8 @@ Future<void> notificationLikesSubscription(Ref ref) async {
     },
   );
 
-  final requestMessage = RequestMessage()..addFilter(requestFilter.copyWith(since: () => since));
+  final requestMessage = RequestMessage()
+    ..addFilter(requestFilter.copyWith(since: () => latestSyncedEventTimestamp));
 
   final entities = ref.watch(ionConnectEntitiesSubscriptionProvider(requestMessage));
 

@@ -64,7 +64,7 @@ class E2eeMessagesSubscriber extends _$E2eeMessagesSubscriber {
           [GenericRepostEntity.kind.toString(), ArticleEntity.kind.toString()],
           [GenericRepostEntity.kind.toString(), ModifiablePostEntity.kind.toString()],
         ],
-        '#p': [masterPubkey],
+        '#p': [masterPubkey, '', eventSigner.publicKey],
       },
     );
 
@@ -82,7 +82,8 @@ class E2eeMessagesSubscriber extends _$E2eeMessagesSubscriber {
         .watch(conversationEventMessageDaoProvider)
         .getLatestEventMessageDate([ReplaceablePrivateDirectMessageEntity.kind]);
 
-    final since = await ref.watch(eventSyncerProvider('e2ee-messages').notifier).syncEvents(
+    final latestSyncedEventTimestamp =
+        await ref.watch(eventSyncerProvider('e2ee-messages').notifier).syncEvents(
       requestFilters: [requestFilter],
       sinceDateMicroseconds: latestEventMessageDate?.microsecondsSinceEpoch,
       saveCallback: (eventMessage) => _handleMessage(
@@ -103,14 +104,13 @@ class E2eeMessagesSubscriber extends _$E2eeMessagesSubscriber {
     );
     final requestMessage = RequestMessage();
 
-    if (since != null) {
-      final sinceWithOverlap = since - overlap.inMicroseconds;
-      requestMessage.addFilter(
-        requestFilter.copyWith(
-          since: () => sinceWithOverlap,
-        ),
-      );
-    }
+    final sinceWithOverlap = (latestSyncedEventTimestamp ?? DateTime.now().microsecondsSinceEpoch) -
+        overlap.inMicroseconds;
+    requestMessage.addFilter(
+      requestFilter.copyWith(
+        since: () => sinceWithOverlap,
+      ),
+    );
 
     final events = ref.watch(
       ionConnectEventsSubscriptionProvider(
@@ -153,10 +153,6 @@ class E2eeMessagesSubscriber extends _$E2eeMessagesSubscriber {
     ConversationMessageDataDao conversationMessageStatusDao,
     ConversationMessageReactionDao conversationMessageReactionDao,
   ) async {
-    if (eventSigner.publicKey != _receiverDevicePubkey(eventMessage)) {
-      return;
-    }
-
     final giftUnwrapService = await ref.watch(giftUnwrapServiceProvider.future);
 
     final rumor = await giftUnwrapService.unwrap(eventMessage);
@@ -246,16 +242,6 @@ class E2eeMessagesSubscriber extends _$E2eeMessagesSubscriber {
     } else if (rumor.kind == GenericRepostEntity.kind) {
       await eventMessageDao.add(rumor);
     }
-  }
-
-  String _receiverDevicePubkey(EventMessage wrap) {
-    final senderPubkey = wrap.tags.firstWhereOrNull((tags) => tags[0] == 'p')?.elementAtOrNull(3);
-
-    if (senderPubkey == null) {
-      throw ReceiverDevicePubkeyNotFoundException(wrap.id);
-    }
-
-    return senderPubkey;
   }
 
   Future<void> _addMediaToDatabase(

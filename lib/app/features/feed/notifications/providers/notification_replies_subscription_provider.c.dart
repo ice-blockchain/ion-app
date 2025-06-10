@@ -38,12 +38,12 @@ Future<void> notificationRepliesSubscription(Ref ref) async {
         marker: RelatedEventMarker.reply.toShortString(),
       ),
     ]).toString(),
-    since: DateTime.now().subtract(const Duration(microseconds: 2)).microsecondsSinceEpoch,
   );
 
   final lastCreatedAt = await commentsRepository.lastCreatedAt(CommentIonNotificationType.reply);
 
-  final since = await ref.watch(eventSyncerProvider('notifications-replies').notifier).syncEvents(
+  final latestSyncedEventTimestamp =
+      await ref.watch(eventSyncerProvider('notifications-replies').notifier).syncEvents(
     requestFilters: [requestFilter],
     sinceDateMicroseconds: lastCreatedAt?.microsecondsSinceEpoch,
     saveCallback: (eventMessage) {
@@ -55,7 +55,8 @@ Future<void> notificationRepliesSubscription(Ref ref) async {
     },
   );
 
-  final requestMessage = RequestMessage()..addFilter(requestFilter.copyWith(since: () => since));
+  final requestMessage = RequestMessage()
+    ..addFilter(requestFilter.copyWith(since: () => latestSyncedEventTimestamp));
 
   final entities = ref.watch(ionConnectEntitiesSubscriptionProvider(requestMessage));
 

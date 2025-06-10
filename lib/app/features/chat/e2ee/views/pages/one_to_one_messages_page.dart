@@ -63,17 +63,6 @@ class OneToOneMessagesPage extends HookConsumerWidget {
         ref.read(selectedEditMessageProvider.notifier).clear();
         ref.read(selectedReplyMessageProvider.notifier).clear();
 
-        // for (var i = 0; i < 120; i++) {
-        //   await Future<void>.delayed(const Duration(milliseconds: 1000));
-        //   await ref.read(sendE2eeChatMessageServiceProvider).sendMessage(
-        //     content: i.toString(),
-        //     mediaFiles: mediaFiles ?? [],
-        //     conversationId: conversationId.value!,
-        //     editedMessage: editedMessage?.eventMessage,
-        //     repliedMessage: repliedMessage?.eventMessage,
-        //     participantsMasterPubkeys: [receiverMasterPubkey, currentPubkey],
-        //   );
-        // }
         await ref.read(sendE2eeChatMessageServiceProvider).sendMessage(
           content: content ?? '',
           mediaFiles: mediaFiles ?? [],

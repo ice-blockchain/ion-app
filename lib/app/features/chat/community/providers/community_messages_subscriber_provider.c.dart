@@ -45,14 +45,14 @@ class CommunityMessagesSubscriber extends _$CommunityMessagesSubscriber {
       tags: {
         '#h': [communityId],
       },
-      since: DateTime.now().subtract(const Duration(days: 2)).microsecondsSinceEpoch,
     );
 
     final latestEventMessageDate = await ref
         .watch(conversationEventMessageDaoProvider)
         .getLatestEventMessageDate([ModifiablePostEntity.kind]);
 
-    await ref.watch(eventSyncerProvider('community-messages').notifier).syncEvents(
+    final latestSyncedEventTimestamp =
+        await ref.watch(eventSyncerProvider('community-messages').notifier).syncEvents(
       requestFilters: [requestFilter],
       sinceDateMicroseconds: latestEventMessageDate?.microsecondsSinceEpoch,
       saveCallback: (eventMessage) {
@@ -64,7 +64,13 @@ class CommunityMessagesSubscriber extends _$CommunityMessagesSubscriber {
       actionSource: ActionSourceUser(ownerPubkey),
     );
 
-    final requestMessage = RequestMessage()..addFilter(requestFilter);
+    final requestMessage = RequestMessage()
+      ..addFilter(
+        requestFilter
+          ..copyWith(
+            since: () => latestSyncedEventTimestamp,
+          ),
+      );
 
     final events = ref.watch(
       ionConnectEventsSubscriptionProvider(

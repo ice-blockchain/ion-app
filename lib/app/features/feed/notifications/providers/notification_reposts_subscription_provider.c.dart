@@ -31,12 +31,12 @@ Future<void> notificationRepostsSubscription(Ref ref) async {
       '#p': [currentPubkey],
       '#k': [ModifiablePostEntity.kind.toString(), ArticleEntity.kind.toString()],
     },
-    since: DateTime.now().subtract(const Duration(microseconds: 2)).microsecondsSinceEpoch,
   );
 
   final lastCreatedAt = await commentsRepository.lastCreatedAt(CommentIonNotificationType.repost);
 
-  final since = await ref.watch(eventSyncerProvider('notifications-reposts').notifier).syncEvents(
+  final latestSyncedEventTimestamp =
+      await ref.watch(eventSyncerProvider('notifications-reposts').notifier).syncEvents(
     requestFilters: [requestFilter],
     sinceDateMicroseconds: lastCreatedAt?.microsecondsSinceEpoch,
     saveCallback: (eventMessage) {
@@ -49,7 +49,8 @@ Future<void> notificationRepostsSubscription(Ref ref) async {
     },
   );
 
-  final requestMessage = RequestMessage()..addFilter(requestFilter.copyWith(since: () => since));
+  final requestMessage = RequestMessage()
+    ..addFilter(requestFilter.copyWith(since: () => latestSyncedEventTimestamp));
 
   final entities = ref.watch(ionConnectEntitiesSubscriptionProvider(requestMessage));
 

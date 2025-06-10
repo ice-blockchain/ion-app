@@ -3,6 +3,7 @@
 import 'dart:convert';
 
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:ion/app/exceptions/exceptions.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/auth/providers/auth_provider.c.dart';
 import 'package:ion/app/features/auth/providers/onboarding_complete_provider.c.dart';
@@ -10,6 +11,7 @@ import 'package:ion/app/features/chat/e2ee/providers/gift_unwrap_service_provide
 import 'package:ion/app/features/ion_connect/ion_connect.dart';
 import 'package:ion/app/features/ion_connect/model/ion_connect_gift_wrap.c.dart';
 import 'package:ion/app/features/ion_connect/providers/event_syncer_provider.c.dart';
+import 'package:ion/app/features/ion_connect/providers/ion_connect_event_signer_provider.c.dart';
 import 'package:ion/app/features/ion_connect/providers/ion_connect_subscription_provider.c.dart';
 import 'package:ion/app/features/wallets/data/repository/request_assets_repository.c.dart';
 import 'package:ion/app/features/wallets/data/repository/transactions_repository.c.dart';
@@ -39,6 +41,12 @@ Future<void> transactionsSubscription(Ref ref) async {
   final onboardingComplete = ref.watch(onboardingCompleteProvider).valueOrNull;
   final walletViewsService = ref.watch(walletViewsServiceProvider).valueOrNull;
   final giftUnwrapService = await ref.watch(giftUnwrapServiceProvider.future);
+  final eventSigner = await ref.watch(currentUserIonConnectEventSignerProvider.future);
+
+  if (eventSigner == null) {
+    throw EventSignerNotFoundException();
+  }
+
   const overlap = Duration(days: 2);
   if (currentPubkey == null ||
       transactionsRepository == null ||
@@ -55,7 +63,7 @@ Future<void> transactionsSubscription(Ref ref) async {
         FundsRequestEntity.kind.toString(),
         WalletAssetEntity.kind.toString(),
       ],
-      '#p': [currentPubkey],
+      '#p': [currentPubkey, '', eventSigner.publicKey],
     },
   );
 
@@ -63,7 +71,8 @@ Future<void> transactionsSubscription(Ref ref) async {
   final requestLastCreatedAt = await requestAssetsRepository.getLastCreatedAt();
   final lastCreatedAt = _getEarliestDateTime(transactionLastCreatedAt, requestLastCreatedAt);
 
-  final since = await ref.watch(eventSyncerProvider('transactions').notifier).syncEvents(
+  final latestSyncedEventTimestamp =
+      await ref.watch(eventSyncerProvider('transactions').notifier).syncEvents(
     requestFilters: [requestFilter],
     sinceDateMicroseconds: lastCreatedAt?.microsecondsSinceEpoch,
     saveCallback: (eventMessage) => _saveEvent(
@@ -79,14 +88,13 @@ Future<void> transactionsSubscription(Ref ref) async {
 
   final requestMessage = RequestMessage();
 
-  if (since != null) {
-    final sinceWithOverlap = since - overlap.inMicroseconds;
-    requestMessage.addFilter(
-      requestFilter.copyWith(
-        since: () => sinceWithOverlap,
-      ),
-    );
-  }
+  final sinceWithOverlap = (latestSyncedEventTimestamp ?? DateTime.now().microsecondsSinceEpoch) -
+      overlap.inMicroseconds;
+  requestMessage.addFilter(
+    requestFilter.copyWith(
+      since: () => sinceWithOverlap,
+    ),
+  );
   final events = ref.watch(ionConnectEventsSubscriptionProvider(requestMessage));
 
   final subscription = events.listen(

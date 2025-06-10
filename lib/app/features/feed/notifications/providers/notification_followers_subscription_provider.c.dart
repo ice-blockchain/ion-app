@@ -47,7 +47,8 @@ Future<void> notificationFollowersSubscription(Ref ref) async {
 
   final lastCreatedAt = await followersRepository.lastCreatedAt();
 
-  final since = await ref.watch(eventSyncerProvider('notifications-followers').notifier).syncEvents(
+  final latestSyncedEventTimestamp =
+      await ref.watch(eventSyncerProvider('notifications-followers').notifier).syncEvents(
     requestFilters: [requestFilter],
     sinceDateMicroseconds: lastCreatedAt?.microsecondsSinceEpoch,
     saveCallback: (eventMessage) {
@@ -60,7 +61,8 @@ Future<void> notificationFollowersSubscription(Ref ref) async {
     },
   );
 
-  final requestMessage = RequestMessage()..addFilter(requestFilter.copyWith(since: () => since));
+  final requestMessage = RequestMessage()
+    ..addFilter(requestFilter.copyWith(since: () => latestSyncedEventTimestamp));
 
   final entities = ref.watch(ionConnectEntitiesSubscriptionProvider(requestMessage));
 

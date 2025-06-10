@@ -56,35 +56,33 @@ class BlockedUsersSync extends _$BlockedUsersSync {
     );
 
     final env = ref.watch(envProvider.notifier);
-    final overlap = env.get<int>(EnvVariable.BLOCKED_USERS_SYNC_OVERLAP_DAYS);
-    final sealService = await ref.watch(ionConnectSealServiceProvider.future);
-    final giftWrapService = await ref.watch(ionConnectGiftWrapServiceProvider.future);
+    final overlap = Duration(days: env.get<int>(EnvVariable.BLOCKED_USERS_SYNC_OVERLAP_DAYS));
 
-    final since = await ref.watch(eventSyncerProvider('blocked-users').notifier).syncEvents(
-          overlap: Duration(days: overlap),
-          requestFilters: [requestFilter],
-          sinceDateMicroseconds: latestBlockEventDate?.microsecondsSinceEpoch,
-          saveCallback: (wrap) => _handleBlockEvent(
-            eventMessage: wrap,
-            eventSigner: eventSigner,
-            sealService: sealService,
-            masterPubkey: masterPubkey,
-            blockEventDao: blockEventDao,
-            giftWrapService: giftWrapService,
-            unblockEventDao: unblockEventDao,
-          ),
-        );
+    final latestSyncedEventTimestamp =
+        await ref.watch(eventSyncerProvider('blocked-users').notifier).syncEvents(
+              overlap: overlap,
+              requestFilters: [requestFilter],
+              sinceDateMicroseconds: latestBlockEventDate?.microsecondsSinceEpoch,
+              saveCallback: (wrap) => _handleBlockEvent(
+                eventMessage: wrap,
+                eventSigner: eventSigner,
+                sealService: sealService,
+                masterPubkey: masterPubkey,
+                blockEventDao: blockEventDao,
+                giftWrapService: giftWrapService,
+              ),
+            );
 
     final requestMessage = RequestMessage();
 
-    if (since != null) {
-      final sinceWithOverlap = since - Duration(days: overlap).inMicroseconds;
-      requestMessage.addFilter(
-        requestFilter.copyWith(
-          since: () => sinceWithOverlap,
-        ),
-      );
-    }
+    final sinceWithOverlap = (latestSyncedEventTimestamp ?? DateTime.now().microsecondsSinceEpoch) -
+        overlap.inMicroseconds;
+    requestMessage.addFilter(
+      requestFilter.copyWith(
+        since: () => sinceWithOverlap,
+      ),
+    );
+
     final events = ref.watch(ionConnectEventsSubscriptionProvider(requestMessage));
 
     final subscription = events.listen(

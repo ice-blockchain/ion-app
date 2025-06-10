@@ -1,4 +1,3 @@
-import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/ion_connect/ion_connect.dart';
 import 'package:ion/app/features/ion_connect/model/action_source.c.dart';
 import 'package:ion/app/features/ion_connect/providers/ion_connect_notifier.c.dart';
@@ -21,6 +20,10 @@ class EventSyncer extends _$EventSyncer {
     int limit = 100,
     Duration? overlap,
   }) async {
+    if (syncPivotKey != 'e2ee-messages') {
+      return null;
+    }
+
     if (sinceDateMicroseconds != null && overlap != null) {
       sinceDateMicroseconds = sinceDateMicroseconds - overlap.inMicroseconds;
     }
@@ -47,13 +50,18 @@ class EventSyncer extends _$EventSyncer {
   ) async {
     final requestMessage = RequestMessage();
     for (final filter in requestFilters) {
-      requestMessage.addFilter(
-        filter.copyWith(
-          since: () => since,
-          until: () => until,
-          limit: () => limit,
-        ),
-      );
+      final index = requestFilters.indexOf(filter);
+      if (index == 0) {
+        requestMessage.addFilter(
+          filter.copyWith(
+            since: () => since,
+            until: () => until,
+            limit: () => limit,
+          ),
+        );
+      } else {
+        requestMessage.addFilter(filter);
+      }
     }
 
     final eventsStream = ref.read(ionConnectNotifierProvider.notifier).requestEvents(
@@ -66,16 +74,12 @@ class EventSyncer extends _$EventSyncer {
     var count = 0;
 
     await for (final event in eventsStream) {
-      print(
-        '--- event: ${event.createdAt} ${event.createdAt.toDateTime.toIso8601String()} ${event.id}',
-      );
       newestDate = event.createdAt;
       oldestDate ??= event.createdAt;
-      count++;
       saveCallback(event);
+      count++;
     }
 
-    print('--- count: $count $state');
     if (count < limit) {
       return oldestDate;
     }

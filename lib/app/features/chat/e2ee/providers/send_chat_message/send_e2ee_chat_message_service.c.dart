@@ -168,6 +168,10 @@ class SendE2eeChatMessageService {
 
           final isCurrentUser = currentUserMasterPubkey == masterPubkey;
 
+          if (isCurrentUser) {
+            return;
+          }
+
           for (final pubkey in pubkeyDevices) {
             try {
               final remoteEventMessage = await ReplaceablePrivateDirectMessageData(
