@@ -12,7 +12,6 @@ void main() {
   group('SearchExtensions', () {
     test('withCounters factory creates correct extensions', () {
       final extensions = SearchExtensions.withCounters(
-        [],
         currentPubkey: testPubkey,
       );
 
@@ -23,7 +22,6 @@ void main() {
 
     test('withCounters factory with different kind creates correct extensions', () {
       final extensions = SearchExtensions.withCounters(
-        [],
         currentPubkey: testPubkey,
         forKind: ArticleEntity.kind,
       );
@@ -204,13 +202,6 @@ void main() {
         includeKind: 1,
       );
       expect(extension.toString(), 'include:dependencies:kind30175>kind1');
-    });
-  });
-
-  group('Mentions Search Extension', () {
-    test('MentionsSearchExtension formats query correctly', () {
-      final extension = MentionsSearchExtension();
-      expect(extension.toString(), 'include:dependencies:kind0>kind10002');
     });
   });
 }

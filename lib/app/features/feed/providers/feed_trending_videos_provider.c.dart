@@ -18,8 +18,8 @@ class FeedTrendingVideos extends _$FeedTrendingVideos with DelegatedPagedNotifie
   ({Iterable<IonConnectEntity>? items, bool hasMore}) build() {
     final filter = ref.watch(feedCurrentFilterProvider);
     if (filter.filter == FeedFilter.following) {
-      final followingContent =
-          ref.watch(feedFollowingContentProvider(FeedType.video, FeedModifier.trending));
+      final followingContent = ref
+          .watch(feedFollowingContentProvider(FeedType.video, feedModifier: FeedModifier.trending));
       return (items: followingContent.items, hasMore: followingContent.hasMore);
     } else {
       final dataSource = ref.watch(feedTrendingVideosDataSourceProvider);
@@ -32,7 +32,9 @@ class FeedTrendingVideos extends _$FeedTrendingVideos with DelegatedPagedNotifie
   PagedNotifier getDelegate() {
     final filter = ref.watch(feedCurrentFilterProvider);
     if (filter.filter == FeedFilter.following) {
-      return ref.read(feedFollowingContentProvider(FeedType.video, FeedModifier.trending).notifier);
+      return ref.read(
+        feedFollowingContentProvider(FeedType.video, feedModifier: FeedModifier.trending).notifier,
+      );
     } else {
       final dataSource = ref.watch(feedTrendingVideosDataSourceProvider);
       return ref.read(entitiesPagedDataProvider(dataSource).notifier);
