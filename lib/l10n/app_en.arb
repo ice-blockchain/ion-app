@@ -824,7 +824,7 @@
   "emoji_category_flags": "Flags",
   "recent_emoji_reactions": "Recent reactions",
   "passkeys_prompt_title": "Verify with passkey",
-  "passkeys_prompt_description": "Your device will ask your fingerprint, face or screen lock to confirm",
+  "passkeys_prompt_description": "Your device will prompt you to confirm this action using your fingerprint, face, or screen lock",
   "verify_with_password_title": "Verify with password",
   "verify_with_password_desc": "Please confirm your password to continue.",
   "verify_with_password_prompt_desc": "Your device will ask your password to confirm",

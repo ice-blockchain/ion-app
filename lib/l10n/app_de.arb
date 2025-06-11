@@ -824,7 +824,7 @@
   "emoji_category_flags": "Flaggen",
   "recent_emoji_reactions": "Letzte Reaktionen",
   "passkeys_prompt_title": "Mit Passkey verifizieren",
-  "passkeys_prompt_description": "Ihr Gerät fragt Fingerabdruck, Gesicht oder Sperre",
+  "passkeys_prompt_description": "Ihr Gerät fordert Sie auf, diese Aktion mit Ihrem Fingerabdruck, Gesicht oder Ihrer Bildschirmsperre zu bestätigen",
   "verify_with_password_title": "Mit Passwort verifizieren",
   "verify_with_password_desc": "Bitte Passwort eingeben",
   "verify_with_password_prompt_desc": "Ihr Gerät fragt Ihr Passwort",
