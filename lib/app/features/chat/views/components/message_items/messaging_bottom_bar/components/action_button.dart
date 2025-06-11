@@ -70,7 +70,7 @@ class ActionButton extends HookConsumerWidget {
 
     return PositionedDirectional(
       bottom: 8.0.s + (bottomBarState.isMore ? moreContentHeight : 0),
-      end: 14.0.s,
+      end: 12.0.s,
       child: GestureDetector(
         onLongPressStart: (details) async {
           if (!bottomBarState.isVoice) {

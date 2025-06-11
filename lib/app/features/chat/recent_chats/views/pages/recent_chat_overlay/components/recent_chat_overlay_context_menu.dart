@@ -29,7 +29,7 @@ class RecentChatOverlayContextMenu extends ConsumerWidget {
 
   final ConversationListItem conversation;
 
-  static final height = 237.0.s;
+  static final height = 193.0.s;
 
   static double get iconSize => 20.0.s;
 
@@ -128,28 +128,6 @@ class RecentChatOverlayContextMenu extends ConsumerWidget {
                       ),
                     ],
                   ),
-                const OverlayMenuItemSeparator(),
-                OverlayMenuItem(
-                  label: context.i18n.button_report,
-                  verticalPadding: 12.0.s,
-                  icon: Assets.svg.iconBlockClose3
-                      .icon(size: iconSize, color: context.theme.appColors.quaternaryText),
-                  onPressed: () {
-                    final currentUserPubkey = ref.watch(currentPubkeySelectorProvider);
-                    final receiverPubkey = ReplaceablePrivateDirectMessageData.fromEventMessage(
-                      conversation.latestMessage!,
-                    ).relatedPubkeys?.firstWhereOrNull((p) => p.value != currentUserPubkey)?.value;
-
-                    if (receiverPubkey == null) {
-                      return;
-                    }
-
-                    ref
-                        .read(reportNotifierProvider.notifier)
-                        .report(ReportReason.user(pubkey: receiverPubkey));
-                    Navigator.of(context).pop();
-                  },
-                ),
                 const OverlayMenuItemSeparator(),
                 OverlayMenuItem(
                   label: context.i18n.button_delete,

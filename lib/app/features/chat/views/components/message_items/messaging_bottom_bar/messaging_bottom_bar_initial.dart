@@ -69,7 +69,7 @@ class BottomBarInitialView extends HookConsumerWidget {
         Container(
           color: context.theme.appColors.onPrimaryAccent,
           constraints: BoxConstraints(
-            minHeight: 48.0.s,
+            minHeight: 52.0.s,
           ),
           padding: EdgeInsetsDirectional.fromSTEB(8.0.s, 8.0.s, 44.0.s, 8.0.s),
           child: Row(
