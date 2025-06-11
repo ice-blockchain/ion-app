@@ -84,6 +84,9 @@ android {
         debug {
             signingConfig signingConfigs.release
         }
+        profile {
+            signingConfig signingConfigs.release
+        }
         release {
             signingConfig signingConfigs.release
         }
