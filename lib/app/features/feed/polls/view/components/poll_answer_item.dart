@@ -35,7 +35,9 @@ class PollAnswerItem extends HookConsumerWidget {
 
     useEffect(
       () {
-        textController.text = answer.text;
+        if (textController.text != answer.text) {
+          textController.text = answer.text;
+        }
         return null;
       },
       [answer.text],
