@@ -69,15 +69,13 @@ class OneToOneMessageList extends HookConsumerWidget {
                   .singleWhereOrNull((entry) => entry.value.last.id == message.id)
                   ?.key;
 
-              final previousMessage = index > 0 ? allMessages[index - 1] : null;
-              final isLastMessage = index == 0;
-
-              final isMessageFromAnotherAuthor =
-                  previousMessage != null && previousMessage.masterPubkey != message.masterPubkey;
+              final isLastMessageInConversation = index == 0;
+              final hasNextMessageFromAnotherUser =
+                  index > 0 && allMessages[index - 1].masterPubkey != message.masterPubkey;
 
               final margin = EdgeInsetsDirectional.only(
-                bottom: isLastMessage ? 20.0.s : 8.0.s,
-                top: isMessageFromAnotherAuthor ? 8.0.s : 0,
+                bottom:
+                    isLastMessageInConversation || hasNextMessageFromAnotherUser ? 20.0.s : 8.0.s,
               );
 
               return Column(
