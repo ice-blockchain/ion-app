@@ -2,6 +2,7 @@
 
 import 'package:ion/app/extensions/riverpod.dart';
 import 'package:ion/app/features/wallets/model/coins_group.c.dart';
+import 'package:ion/app/features/wallets/model/manage_coins_group.c.dart';
 import 'package:ion/app/features/wallets/model/wallet_data_with_loading_state.c.dart';
 import 'package:ion/app/features/wallets/providers/coins_provider.c.dart';
 import 'package:ion/app/features/wallets/views/pages/manage_coins/providers/manage_coins_provider.c.dart';
@@ -25,28 +26,30 @@ class FilteredCoinsNotifier extends _$FilteredCoinsNotifier {
   Future<List<CoinsGroup>> build() async {
     final manageCoinsNotifier = ref.watch(manageCoinsNotifierProvider);
     final selectedCoins = manageCoinsNotifier.value;
-
-    final searchQueryListener = ref.listen<String>(
-      walletSearchQueryControllerProvider(WalletAssetType.coin),
-      (previous, next) => search(next),
-    );
-
-    ref.onDispose(searchQueryListener.close);
-
     final coinGroups = await ref.watch(coinsInWalletProvider.future);
 
-    if (selectedCoins != null) {
-      final newlyAddedGroups = selectedCoins.values
-          .where((group) => group.isNewlyAdded)
-          .map((group) => group.coinsGroup)
-          .toList();
+    ref.listen<String>(
+      walletSearchQueryControllerProvider(WalletAssetType.coin),
+      (_, next) => search(next),
+    );
 
-      if (newlyAddedGroups.isNotEmpty) {
-        return [...coinGroups, ...newlyAddedGroups];
-      }
+    if (selectedCoins == null || !selectedCoins.values.any((group) => group.isUpdating)) {
+      return coinGroups;
     }
 
-    return coinGroups;
+    final updatingGroups = selectedCoins.values
+        .where((group) => group.isUpdating)
+        .map((group) => group.coinsGroup)
+        .toList();
+
+    final filteredCoinGroups = coinGroups.where((group) => !_isBeingDeleted(group, selectedCoins));
+
+    return [...filteredCoinGroups, ...updatingGroups];
+  }
+
+  bool _isBeingDeleted(CoinsGroup group, Map<String, ManageCoinsGroup>? selectedCoins) {
+    final manageGroup = selectedCoins?[group.symbolGroup];
+    return (manageGroup?.isUpdating ?? false) && !(manageGroup?.isSelected ?? false);
   }
 
   Future<void> search(String query) async {
@@ -55,7 +58,7 @@ class FilteredCoinsNotifier extends _$FilteredCoinsNotifier {
     final manageCoinsNotifier = ref.watch(manageCoinsNotifierProvider);
 
     final newlyAddedGroups = manageCoinsNotifier.value?.values
-            .where((group) => group.isNewlyAdded)
+            .where((group) => group.isUpdating)
             .map((group) => group.coinsGroup)
             .toList() ??
         [];

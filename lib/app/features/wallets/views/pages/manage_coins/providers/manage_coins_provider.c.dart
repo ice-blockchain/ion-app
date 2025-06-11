@@ -34,13 +34,13 @@ class ManageCoinsNotifier extends _$ManageCoinsNotifier {
   void switchCoinsGroup(CoinsGroup coinsGroup) {
     final currentMap = state.value ?? <String, ManageCoinsGroup>{};
     final currentGroup = currentMap[coinsGroup.symbolGroup];
-
     final isNewlyAdded = !currentMap.containsKey(coinsGroup.symbolGroup);
+    final isBeingDeleted = currentGroup?.isSelected ?? false;
 
     currentMap[coinsGroup.symbolGroup] = ManageCoinsGroup(
       coinsGroup: coinsGroup,
       isSelected: !(currentGroup?.isSelected ?? false),
-      isNewlyAdded: isNewlyAdded,
+      isUpdating: isNewlyAdded || isBeingDeleted,
     );
     state = AsyncData<Map<String, ManageCoinsGroup>>(currentMap);
   }
