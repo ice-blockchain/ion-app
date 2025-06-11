@@ -51,53 +51,43 @@ final class Schema2 extends i0.VersionedSchema {
 
 class Shape0 extends i0.VersionedTable {
   Shape0({required super.source, required super.alias}) : super.aliased();
-  i1.GeneratedColumn<int> get feedType =>
-      columnsByName['feed_type']! as i1.GeneratedColumn<int>;
+  i1.GeneratedColumn<int> get feedType => columnsByName['feed_type']! as i1.GeneratedColumn<int>;
   i1.GeneratedColumn<int> get feedModifier =>
       columnsByName['feed_modifier']! as i1.GeneratedColumn<int>;
   i1.GeneratedColumn<String> get eventReference =>
       columnsByName['event_reference']! as i1.GeneratedColumn<String>;
   i1.GeneratedColumn<String> get nextEventReference =>
       columnsByName['next_event_reference']! as i1.GeneratedColumn<String>;
-  i1.GeneratedColumn<String> get pubkey =>
-      columnsByName['pubkey']! as i1.GeneratedColumn<String>;
-  i1.GeneratedColumn<int> get createdAt =>
-      columnsByName['created_at']! as i1.GeneratedColumn<int>;
+  i1.GeneratedColumn<String> get pubkey => columnsByName['pubkey']! as i1.GeneratedColumn<String>;
+  i1.GeneratedColumn<int> get createdAt => columnsByName['created_at']! as i1.GeneratedColumn<int>;
 }
 
 i1.GeneratedColumn<int> _column_0(String aliasedName) =>
-    i1.GeneratedColumn<int>('feed_type', aliasedName, false,
-        type: i1.DriftSqlType.int);
+    i1.GeneratedColumn<int>('feed_type', aliasedName, false, type: i1.DriftSqlType.int);
 i1.GeneratedColumn<int> _column_1(String aliasedName) =>
-    i1.GeneratedColumn<int>('feed_modifier', aliasedName, true,
-        type: i1.DriftSqlType.int);
+    i1.GeneratedColumn<int>('feed_modifier', aliasedName, true, type: i1.DriftSqlType.int);
 i1.GeneratedColumn<String> _column_2(String aliasedName) =>
-    i1.GeneratedColumn<String>('event_reference', aliasedName, false,
-        type: i1.DriftSqlType.string);
+    i1.GeneratedColumn<String>('event_reference', aliasedName, false, type: i1.DriftSqlType.string);
 i1.GeneratedColumn<String> _column_3(String aliasedName) =>
     i1.GeneratedColumn<String>('next_event_reference', aliasedName, true,
         type: i1.DriftSqlType.string);
 i1.GeneratedColumn<String> _column_4(String aliasedName) =>
-    i1.GeneratedColumn<String>('pubkey', aliasedName, false,
-        type: i1.DriftSqlType.string);
+    i1.GeneratedColumn<String>('pubkey', aliasedName, false, type: i1.DriftSqlType.string);
 i1.GeneratedColumn<int> _column_5(String aliasedName) =>
-    i1.GeneratedColumn<int>('created_at', aliasedName, false,
-        type: i1.DriftSqlType.int);
+    i1.GeneratedColumn<int>('created_at', aliasedName, false, type: i1.DriftSqlType.int);
 
 class Shape1 extends i0.VersionedTable {
   Shape1({required super.source, required super.alias}) : super.aliased();
   i1.GeneratedColumn<String> get repostedEventReference =>
       columnsByName['reposted_event_reference']! as i1.GeneratedColumn<String>;
-  i1.GeneratedColumn<int> get seenAt =>
-      columnsByName['seen_at']! as i1.GeneratedColumn<int>;
+  i1.GeneratedColumn<int> get seenAt => columnsByName['seen_at']! as i1.GeneratedColumn<int>;
 }
 
 i1.GeneratedColumn<String> _column_6(String aliasedName) =>
     i1.GeneratedColumn<String>('reposted_event_reference', aliasedName, false,
         type: i1.DriftSqlType.string);
 i1.GeneratedColumn<int> _column_7(String aliasedName) =>
-    i1.GeneratedColumn<int>('seen_at', aliasedName, false,
-        type: i1.DriftSqlType.int);
+    i1.GeneratedColumn<int>('seen_at', aliasedName, false, type: i1.DriftSqlType.int);
 i0.MigrationStepWithVersion migrationSteps({
   required Future<void> Function(i1.Migrator m, Schema2 schema) from1To2,
 }) {
