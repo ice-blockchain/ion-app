@@ -33,9 +33,10 @@ class GalleryPermissionButton extends ConsumerWidget {
       onGranted: () async {
         if (context.mounted) {
           final mediaFiles = await MediaPickerRoute(
-            mediaPickerType: mediaPickerType,
             maxSelection: maxSelection,
+            mediaPickerType: mediaPickerType,
           ).push<List<MediaFile>>(context);
+
           onMediaSelected(mediaFiles);
         }
       },
