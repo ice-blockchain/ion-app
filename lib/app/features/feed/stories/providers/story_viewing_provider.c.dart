@@ -2,9 +2,11 @@
 
 import 'package:collection/collection.dart';
 import 'package:flutter/foundation.dart';
+import 'package:ion/app/features/feed/data/models/entities/modifiable_post_data.c.dart';
 import 'package:ion/app/features/feed/stories/data/models/models.dart';
 import 'package:ion/app/features/feed/stories/providers/feed_stories_provider.c.dart';
 import 'package:ion/app/features/ion_connect/model/event_reference.c.dart';
+import 'package:ion/app/features/ion_connect/providers/ion_connect_entity_provider.c.dart';
 import 'package:ion/app/features/optimistic_ui/features/likes/post_like_provider.c.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
@@ -14,7 +16,7 @@ part 'story_viewing_provider.c.g.dart';
 ///
 /// This controller maintains the state of currently viewed stories and provides methods
 /// to navigate between stories and users.
-@riverpod
+@Riverpod(keepAlive: true)
 class StoryViewingController extends _$StoryViewingController {
   @override
   StoryViewerState build(String pubkey) {
@@ -22,6 +24,27 @@ class StoryViewingController extends _$StoryViewingController {
 
     return StoryViewerState(
       userStories: stories,
+      currentUserIndex: 0,
+      currentStoryIndex: 0,
+    );
+  }
+
+  Future<void> setUserStoryByReference(EventReference eventReference) async {
+    final storyEntity = await ref.read(
+      ionConnectEntityProvider(eventReference: eventReference).future,
+    );
+
+    if (storyEntity == null) {
+      return;
+    }
+
+    state = state.copyWith(
+      userStories: [
+        UserStories(
+          pubkey: pubkey,
+          stories: [storyEntity as ModifiablePostEntity],
+        ),
+      ],
       currentUserIndex: 0,
       currentStoryIndex: 0,
     );
