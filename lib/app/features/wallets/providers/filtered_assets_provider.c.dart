@@ -28,10 +28,12 @@ class FilteredCoinsNotifier extends _$FilteredCoinsNotifier {
     final selectedCoins = manageCoinsNotifier.value;
     final coinGroups = await ref.watch(coinsInWalletProvider.future);
 
-    ref.listen<String>(
+    final searchQueryListener = ref.listen<String>(
       walletSearchQueryControllerProvider(WalletAssetType.coin),
       (_, next) => search(next),
     );
+
+    ref.onDispose(searchQueryListener.close);
 
     if (selectedCoins == null || !selectedCoins.values.any((group) => group.isUpdating)) {
       return coinGroups;
