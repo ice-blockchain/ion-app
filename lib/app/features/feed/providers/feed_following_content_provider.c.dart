@@ -549,7 +549,7 @@ class FeedFollowingContent extends _$FeedFollowingContent implements PagedNotifi
     if (seenAt == null) return false;
 
     final feedConfig = await ref.read(feedConfigProvider.future);
-    return seenAt.isBefore(DateTime.now().subtract(feedConfig.repostThrottleDelay));
+    return seenAt.isAfter(DateTime.now().subtract(feedConfig.repostThrottleDelay));
   }
 }
 
