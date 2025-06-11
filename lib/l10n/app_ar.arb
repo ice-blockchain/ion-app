@@ -782,7 +782,7 @@
   "emoji_category_flags": "الأعلام",
   "recent_emoji_reactions": "التفاعلات الأخيرة",
   "passkeys_prompt_title": "تحقق باستخدام مفتاح المرور",
-  "passkeys_prompt_description": "سيطلب جهازك بصمتك أو وجهك أو قفل الشاشة للتأكيد",
+  "passkeys_prompt_description": "سيطلب منك جهازك تأكيد هذا الإجراء باستخدام بصمة الإصبع أو الوجه أو قفل الشاشة",
   "verify_with_password_title": "تحقق باستخدام كلمة المرور",
   "verify_with_password_desc": "يرجى تأكيد كلمة المرور للمتابعة.",
   "verify_with_password_prompt_desc": "سيطلب جهازك كلمة المرور للتأكيد",
