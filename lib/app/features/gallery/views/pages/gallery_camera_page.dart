@@ -41,7 +41,7 @@ class GalleryCameraPage extends HookConsumerWidget {
     );
 
     final isRecording = cameraState.maybeWhen(
-      ready: (_, isRecording, __) => isRecording,
+      ready: (_, isRecording, __, ___, ____, _____) => isRecording,
       orElse: () => false,
     );
 
@@ -70,15 +70,35 @@ class GalleryCameraPage extends HookConsumerWidget {
           fit: StackFit.expand,
           children: [
             cameraState.maybeWhen(
-              ready: (controller, _, __) => CustomCameraPreview(controller: controller),
+              ready: (controller, _, __, ___, ____, _____) =>
+                  CustomCameraPreview(controller: controller),
               orElse: () => const CenteredLoadingIndicator(),
             ),
             if (isRecording)
               CameraRecordingIndicator(recordingDuration: recordingDuration)
             else
-              CameraIdlePreview(
-                showGalleryButton: false,
-                onGallerySelected: (_) async {},
+              cameraState.maybeWhen(
+                ready: (
+                  _,
+                  __,
+                  ___,
+                  minZoomLevel,
+                  maxZoomLevel,
+                  currentZoomLevel,
+                ) =>
+                    CameraIdlePreview(
+                  showGalleryButton: false,
+                  onGallerySelected: (_) async {},
+                  minZoomLevel: minZoomLevel,
+                  maxZoomLevel: maxZoomLevel,
+                  currentZoomLevel: currentZoomLevel,
+                  onZoomChanged: (zoom) =>
+                      ref.read(cameraControllerNotifierProvider.notifier).setZoomLevel(zoom),
+                ),
+                orElse: () => CameraIdlePreview(
+                  showGalleryButton: false,
+                  onGallerySelected: (_) async {},
+                ),
               ),
             Positioned.fill(
               bottom: 16.0.s,

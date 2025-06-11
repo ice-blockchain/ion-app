@@ -15,17 +15,9 @@ _$UserSocialProfileDataImpl _$$UserSocialProfileDataImplFromJson(
     );
 
 Map<String, dynamic> _$$UserSocialProfileDataImplToJson(
-    _$UserSocialProfileDataImpl instance) {
-  final val = <String, dynamic>{};
-
-  void writeNotNull(String key, dynamic value) {
-    if (value != null) {
-      val[key] = value;
-    }
-  }
-
-  writeNotNull('username', instance.username);
-  writeNotNull('displayName', instance.displayName);
-  writeNotNull('referral', instance.referral);
-  return val;
-}
+        _$UserSocialProfileDataImpl instance) =>
+    <String, dynamic>{
+      if (instance.username case final value?) 'username': value,
+      if (instance.displayName case final value?) 'displayName': value,
+      if (instance.referral case final value?) 'referral': value,
+    };

@@ -70,15 +70,14 @@ class CameraControllerNotifier extends _$CameraControllerNotifier {
         return;
       }
 
-      final controller = await _createCameraController(initialCamera);
-      state = CameraState.ready(controller: controller);
+      await _createCameraController(initialCamera);
     } catch (e) {
       Logger.log('Camera initialization error: $e');
       state = CameraState.error(message: 'Camera initialization error: $e');
     }
   }
 
-  Future<CameraController> _createCameraController(CameraDescription camera) async {
+  Future<void> _createCameraController(CameraDescription camera) async {
     _cameraController = CameraController(
       camera,
       ResolutionPreset.max,
@@ -87,7 +86,16 @@ class CameraControllerNotifier extends _$CameraControllerNotifier {
     try {
       await _cameraController?.initialize();
       _cameraController?.addListener(_onCameraControllerUpdate);
-      return _cameraController!;
+
+      final minZoomLevel = await _cameraController!.getMinZoomLevel();
+      final maxZoomLevel = await _cameraController!.getMaxZoomLevel();
+
+      state = CameraState.ready(
+        controller: _cameraController!,
+        minZoomLevel: minZoomLevel,
+        maxZoomLevel: maxZoomLevel,
+        currentZoomLevel: minZoomLevel,
+      );
     } catch (e) {
       Logger.log('Camera initialization error: $e');
       await _disposeCamera();
@@ -175,22 +183,62 @@ class CameraControllerNotifier extends _$CameraControllerNotifier {
 
     state = const CameraState.loading();
     try {
-      final controller = await _createCameraController(newCamera);
-      state = CameraState.ready(controller: controller);
+      await _createCameraController(newCamera);
     } catch (e) {
       state = CameraState.error(message: 'Camera switch error: $e');
     }
   }
 
+  Future<void> setZoomLevel(double zoom) async {
+    await state.maybeWhen(
+      ready: (
+        controller,
+        isRecording,
+        isFlashOn,
+        minZoomLevel,
+        maxZoomLevel,
+        currentZoomLevel,
+      ) async {
+        if (zoom >= minZoomLevel && zoom <= maxZoomLevel) {
+          try {
+            await controller.setZoomLevel(zoom);
+            state = CameraState.ready(
+              controller: controller,
+              isRecording: isRecording,
+              isFlashOn: isFlashOn,
+              minZoomLevel: minZoomLevel,
+              maxZoomLevel: maxZoomLevel,
+              currentZoomLevel: zoom,
+            );
+          } catch (e) {
+            Logger.log('Error setting zoom level', error: e);
+            state = CameraState.error(message: 'Error setting zoom level: $e');
+          }
+        }
+      },
+      orElse: () {},
+    );
+  }
+
   Future<void> setFlashMode(FlashMode mode) async {
     await state.maybeWhen(
-      ready: (controller, isRecording, isFlashOn) async {
+      ready: (
+        controller,
+        isRecording,
+        isFlashOn,
+        minZoomLevel,
+        maxZoomLevel,
+        currentZoomLevel,
+      ) async {
         try {
           await controller.setFlashMode(mode);
           state = CameraState.ready(
             controller: controller,
             isRecording: isRecording,
             isFlashOn: mode == FlashMode.torch,
+            minZoomLevel: minZoomLevel,
+            maxZoomLevel: maxZoomLevel,
+            currentZoomLevel: currentZoomLevel,
           );
         } catch (e) {
           Logger.log('Error setting flash mode', error: e);
@@ -203,7 +251,14 @@ class CameraControllerNotifier extends _$CameraControllerNotifier {
 
   Future<void> toggleFlash() async {
     await state.maybeWhen(
-      ready: (controller, isRecording, isFlashOn) async {
+      ready: (
+        controller,
+        isRecording,
+        isFlashOn,
+        minZoomLevel,
+        maxZoomLevel,
+        currentZoomLevel,
+      ) async {
         final newFlashMode = isFlashOn ? FlashMode.off : FlashMode.torch;
         try {
           await controller.setFlashMode(newFlashMode);
@@ -211,6 +266,9 @@ class CameraControllerNotifier extends _$CameraControllerNotifier {
             controller: controller,
             isRecording: isRecording,
             isFlashOn: !isFlashOn,
+            minZoomLevel: minZoomLevel,
+            maxZoomLevel: maxZoomLevel,
+            currentZoomLevel: currentZoomLevel,
           );
         } catch (e) {
           Logger.log('Error toggling flash mode', error: e);
@@ -235,7 +293,14 @@ class CameraControllerNotifier extends _$CameraControllerNotifier {
 
   Future<void> startVideoRecording() async {
     await state.maybeWhen(
-      ready: (controller, isRecording, isFlashOn) async {
+      ready: (
+        controller,
+        isRecording,
+        isFlashOn,
+        minZoomLevel,
+        maxZoomLevel,
+        currentZoomLevel,
+      ) async {
         if (!isRecording) {
           try {
             await controller.startVideoRecording();
@@ -243,6 +308,9 @@ class CameraControllerNotifier extends _$CameraControllerNotifier {
               controller: controller,
               isRecording: true,
               isFlashOn: isFlashOn,
+              minZoomLevel: minZoomLevel,
+              maxZoomLevel: maxZoomLevel,
+              currentZoomLevel: currentZoomLevel,
             );
           } catch (e) {
             Logger.log('Error starting video recording', error: e);
@@ -256,13 +324,23 @@ class CameraControllerNotifier extends _$CameraControllerNotifier {
 
   Future<XFile?> stopVideoRecording() async {
     return await state.maybeWhen(
-      ready: (controller, isRecording, isFlashOn) async {
+      ready: (
+        controller,
+        isRecording,
+        isFlashOn,
+        minZoomLevel,
+        maxZoomLevel,
+        currentZoomLevel,
+      ) async {
         if (isRecording) {
           try {
             final videoFile = await controller.stopVideoRecording();
             state = CameraState.ready(
               controller: controller,
               isFlashOn: isFlashOn,
+              minZoomLevel: minZoomLevel,
+              maxZoomLevel: maxZoomLevel,
+              currentZoomLevel: currentZoomLevel,
             );
 
             final mimeType = lookupMimeType(videoFile.path);

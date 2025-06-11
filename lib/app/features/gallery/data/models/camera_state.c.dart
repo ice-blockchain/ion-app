@@ -13,6 +13,9 @@ sealed class CameraState with _$CameraState {
     required CameraController controller,
     @Default(false) bool isRecording,
     @Default(false) bool isFlashOn,
+    required double minZoomLevel,
+    required double maxZoomLevel,
+    required double currentZoomLevel,
   }) = CameraReady;
 
   const factory CameraState.paused() = CameraPaused;

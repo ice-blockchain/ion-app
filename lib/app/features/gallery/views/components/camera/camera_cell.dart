@@ -47,7 +47,7 @@ class CameraCell extends HookConsumerWidget {
         cameraControllerNotifierProvider,
         (previous, next) async {
           await next.whenOrNull(
-            ready: (_, __, ___) async {
+            ready: (_, __, ___, ____, _____, _______) async {
               if (shouldOpenCamera.value) {
                 shouldOpenCamera.value = false;
 
@@ -68,7 +68,7 @@ class CameraCell extends HookConsumerWidget {
       permissionType: Permission.camera,
       onGranted: () async {
         await ref.read(cameraControllerNotifierProvider).maybeWhen(
-          ready: (_, __, ___) async {
+          ready: (_, __, ___, ____, _____, ______) async {
             final mediaFile =
                 await GalleryCameraRoute(mediaPickerType: type).push<MediaFile?>(context);
 
@@ -94,7 +94,7 @@ class CameraCell extends HookConsumerWidget {
             child: !hasPermission
                 ? const CameraPlaceholderWidget()
                 : ref.watch(cameraControllerNotifierProvider).maybeWhen(
-                      ready: (controller, _, ___) {
+                      ready: (controller, _, __, ___, ____, _____) {
                         return CameraPreviewWidget(
                           key: ValueKey(controller),
                           controller: controller,
