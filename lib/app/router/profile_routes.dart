@@ -27,12 +27,6 @@ class ProfileRoutes {
           path: 'profile-post-repost-options/:eventReference',
         ),
         TypedGoRoute<CreateQuoteProfileRoute>(path: 'post-editor/profile-quote/:quotedEvent'),
-        TypedGoRoute<MediaPickerProfileRoute>(
-          path: 'profile-media-picker',
-          routes: [
-            TypedGoRoute<AlbumSelectionProfileRoute>(path: 'album-selection'),
-          ],
-        ),
         ...SettingsRoutes.routes,
       ],
     ),
@@ -264,28 +258,6 @@ class RepostOptionsModalProfileRoute extends BaseRouteData {
         );
 
   final String eventReference;
-}
-
-class MediaPickerProfileRoute extends BaseRouteData {
-  MediaPickerProfileRoute({
-    this.maxSelection,
-    this.mediaPickerType = MediaPickerType.common,
-    this.maxVideoDurationInSeconds,
-    this.showCameraCell = true,
-  }) : super(
-          child: MediaPickerPage(
-            maxSelection: maxSelection ?? 5,
-            type: mediaPickerType,
-            maxVideoDurationInSeconds: maxVideoDurationInSeconds,
-            showCameraCell: showCameraCell,
-          ),
-          type: IceRouteType.bottomSheet,
-        );
-
-  final int? maxSelection;
-  final MediaPickerType mediaPickerType;
-  final int? maxVideoDurationInSeconds;
-  final bool showCameraCell;
 }
 
 class AlbumSelectionProfileRoute extends BaseRouteData {
