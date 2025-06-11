@@ -8,8 +8,8 @@ import 'package:ion/app/features/feed/data/models/feed_filter.dart';
 import 'package:ion/app/features/feed/data/models/feed_type.dart';
 import 'package:ion/app/features/feed/providers/feed_current_filter_provider.c.dart';
 import 'package:ion/app/features/feed/providers/feed_following_content_provider.c.dart';
+import 'package:ion/app/features/feed/providers/feed_for_you_content_provider.c.dart';
 import 'package:ion/app/features/feed/stories/data/models/story.c.dart';
-import 'package:ion/app/features/feed/stories/providers/feed_stories_data_source_provider.c.dart';
 import 'package:ion/app/features/ion_connect/model/ion_connect_entity.dart';
 import 'package:ion/app/features/ion_connect/providers/entities_paged_data_provider.c.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
@@ -21,28 +21,20 @@ class FeedStories extends _$FeedStories with DelegatedPagedNotifier {
   @override
   ({Iterable<UserStories>? items, bool hasMore}) build() {
     final filter = ref.watch(feedCurrentFilterProvider);
-    if (filter.filter == FeedFilter.following) {
-      final followingContent = ref.watch(feedFollowingContentProvider(FeedType.story));
-      return (items: _groupByPubkey(followingContent.items), hasMore: followingContent.hasMore);
-    } else {
-      final dataSource = ref.watch(feedStoriesDataSourceProvider);
-      final entitiesPagedData = ref.watch(entitiesPagedDataProvider(dataSource));
-      return (
-        items: _groupByPubkey(entitiesPagedData?.data.items),
-        hasMore: entitiesPagedData?.hasMore ?? true
-      );
-    }
+    final data = switch (filter.filter) {
+      FeedFilter.following => ref.watch(feedFollowingContentProvider(FeedType.story)),
+      FeedFilter.forYou => ref.watch(feedForYouContentProvider(FeedType.story)),
+    };
+    return (items: _groupByPubkey(data.items), hasMore: data.hasMore);
   }
 
   @override
   PagedNotifier getDelegate() {
-    final filter = ref.watch(feedCurrentFilterProvider);
-    if (filter.filter == FeedFilter.following) {
-      return ref.read(feedFollowingContentProvider(FeedType.story).notifier);
-    } else {
-      final dataSource = ref.watch(feedStoriesDataSourceProvider);
-      return ref.read(entitiesPagedDataProvider(dataSource).notifier);
-    }
+    final filter = ref.read(feedCurrentFilterProvider);
+    return switch (filter.filter) {
+      FeedFilter.following => ref.read(feedFollowingContentProvider(FeedType.story).notifier),
+      FeedFilter.forYou => ref.read(feedForYouContentProvider(FeedType.story).notifier),
+    };
   }
 
   Iterable<UserStories>? _groupByPubkey(Iterable<IonConnectEntity>? entities) {

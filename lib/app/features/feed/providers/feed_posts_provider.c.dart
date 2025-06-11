@@ -14,7 +14,7 @@ import 'package:ion/app/features/feed/data/models/feed_filter.dart';
 import 'package:ion/app/features/feed/data/models/feed_type.dart';
 import 'package:ion/app/features/feed/providers/feed_current_filter_provider.c.dart';
 import 'package:ion/app/features/feed/providers/feed_following_content_provider.c.dart';
-import 'package:ion/app/features/feed/providers/feed_posts_data_source_provider.c.dart';
+import 'package:ion/app/features/feed/providers/feed_for_you_content_provider.c.dart';
 import 'package:ion/app/features/feed/providers/ion_connect_entity_with_counters_provider.c.dart';
 import 'package:ion/app/features/feed/providers/repost_notifier.c.dart';
 import 'package:ion/app/features/ion_connect/model/event_reference.c.dart';
@@ -38,27 +38,23 @@ class FeedPosts extends _$FeedPosts with DelegatedPagedNotifier {
     ref.onDispose(subscription.cancel);
 
     final filter = ref.watch(feedCurrentFilterProvider);
-    if (filter.filter == FeedFilter.following) {
-      final feedType = FeedType.fromCategory(filter.category);
-      final followingContent = ref.watch(feedFollowingContentProvider(feedType));
-      return (items: followingContent.items, hasMore: followingContent.hasMore);
-    } else {
-      final dataSource = ref.watch(feedPostsDataSourceProvider);
-      final entitiesPagedData = ref.watch(entitiesPagedDataProvider(dataSource));
-      return (items: entitiesPagedData?.data.items, hasMore: entitiesPagedData?.hasMore ?? true);
-    }
+    final feedType = FeedType.fromCategory(filter.category);
+
+    final data = switch (filter.filter) {
+      FeedFilter.following => ref.watch(feedFollowingContentProvider(feedType)),
+      FeedFilter.forYou => ref.watch(feedForYouContentProvider(feedType)),
+    };
+    return (items: data.items, hasMore: data.hasMore);
   }
 
   @override
   PagedNotifier getDelegate() {
-    final filter = ref.watch(feedCurrentFilterProvider);
-    if (filter.filter == FeedFilter.following) {
-      final feedType = FeedType.fromCategory(filter.category);
-      return ref.read(feedFollowingContentProvider(feedType).notifier);
-    } else {
-      final dataSource = ref.watch(feedPostsDataSourceProvider);
-      return ref.read(entitiesPagedDataProvider(dataSource).notifier);
-    }
+    final filter = ref.read(feedCurrentFilterProvider);
+    final feedType = FeedType.fromCategory(filter.category);
+    return switch (filter.filter) {
+      FeedFilter.following => ref.read(feedFollowingContentProvider(feedType).notifier),
+      FeedFilter.forYou => ref.read(feedForYouContentProvider(feedType).notifier),
+    };
   }
 
   bool _filterEntities(IonConnectEntity entity) {
