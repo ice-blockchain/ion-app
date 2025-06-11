@@ -15,6 +15,7 @@ import 'package:ion/app/features/ion_connect/providers/restore_device_keypair_no
 import 'package:ion/app/features/user/providers/user_metadata_provider.c.dart';
 import 'package:ion/app/hooks/use_on_init.dart';
 import 'package:ion/app/router/utils/show_simple_bottom_sheet.dart';
+import 'package:ion/app/services/logger/logger.dart';
 import 'package:ion/app/services/ui_event_queue/ui_event_queue_notifier.c.dart';
 import 'package:ion/generated/assets.gen.dart';
 import 'package:ion_identity_client/ion_identity.dart';
@@ -103,6 +104,11 @@ class LinkNewDeviceDialog extends HookConsumerWidget {
           DeviceKeypairUtils.extractDeviceKeypairAttachmentFromMetadata(currentUserMetadata);
       return keypairAttachment != null;
     } catch (e) {
+      Logger.error(
+        e,
+        stackTrace: StackTrace.current,
+        message: 'Failed to check metadata for uploaded keypair',
+      );
       return false;
     }
   }
