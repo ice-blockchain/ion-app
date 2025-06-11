@@ -10,6 +10,9 @@ import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/auth/providers/delegation_complete_provider.c.dart';
 import 'package:ion/app/features/auth/providers/onboarding_complete_notifier.c.dart';
 import 'package:ion/app/features/components/verify_identity/verify_identity_prompt_dialog_helper.dart';
+import 'package:ion/app/features/ion_connect/providers/device_keypair_utils.dart';
+import 'package:ion/app/features/ion_connect/providers/restore_device_keypair_notifier.c.dart';
+import 'package:ion/app/features/user/providers/user_metadata_provider.c.dart';
 import 'package:ion/app/hooks/use_on_init.dart';
 import 'package:ion/app/router/utils/show_simple_bottom_sheet.dart';
 import 'package:ion/app/services/ui_event_queue/ui_event_queue_notifier.c.dart';
@@ -73,10 +76,48 @@ class LinkNewDeviceDialog extends HookConsumerWidget {
             disabled: state.isLoading,
             trailingIcon: state.isLoading ? const IONLoadingIndicator() : const SizedBox.shrink(),
             label: Text(context.i18n.auth_link_new_device_link_button),
-            onPressed: () => _addDelegation(ref),
+            onPressed: () => _linkNewDevice(ref),
           ),
           ScreenBottomOffset(),
         ],
+      ),
+    );
+  }
+
+  Future<void> _linkNewDevice(WidgetRef ref) async {
+    final hasUploadedKeypair = await _hasUploadedKeypair(ref);
+
+    if (hasUploadedKeypair) {
+      // There's an uploaded keypair - restore it instead of creating new delegation
+      await _restoreKeypair(ref);
+    } else {
+      // No uploaded keypair - proceed with normal delegation creation
+      await _addDelegation(ref);
+    }
+  }
+
+  Future<bool> _hasUploadedKeypair(WidgetRef ref) async {
+    try {
+      final currentUserMetadata = await ref.read(currentUserMetadataProvider.future);
+      final keypairAttachment =
+          DeviceKeypairUtils.extractDeviceKeypairAttachmentFromMetadata(currentUserMetadata);
+      return keypairAttachment != null;
+    } catch (e) {
+      return false;
+    }
+  }
+
+  Future<void> _restoreKeypair(WidgetRef ref) async {
+    await guardPasskeyDialog(
+      ref.context,
+      (child) => RiverpodUserActionSignerRequestBuilder(
+        provider: restoreDeviceKeypairNotifierProvider,
+        request: (signer) async {
+          await ref
+              .read(restoreDeviceKeypairNotifierProvider.notifier)
+              .restoreDeviceKeypair(signer: signer);
+        },
+        child: child,
       ),
     );
   }

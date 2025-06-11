@@ -15,6 +15,7 @@ import 'package:ion/app/features/ion_connect/model/file_alt.dart';
 import 'package:ion/app/features/ion_connect/model/media_attachment.dart';
 import 'package:ion/app/features/ion_connect/providers/device_keypair_constants.dart';
 import 'package:ion/app/features/ion_connect/providers/file_storage_url_provider.c.dart';
+import 'package:ion/app/features/user/model/user_metadata.c.dart';
 import 'package:ion/app/features/user/providers/current_user_identity_provider.c.dart';
 import 'package:ion/app/features/user/providers/user_metadata_provider.c.dart';
 import 'package:ion/app/services/ion_identity/ion_identity_client_provider.c.dart';
@@ -51,19 +52,23 @@ class DeviceKeypairUtils {
   }
 
   /// Finds the device keypair MediaAttachment from current user's metadata
+  static MediaAttachment? extractDeviceKeypairAttachmentFromMetadata(UserMetadataEntity? metadata) {
+    if (metadata == null) {
+      return null;
+    }
+
+    // Find device keypair attachment by alt field
+    return metadata.data.media.values
+        .where((attachment) => attachment.alt == FileAlt.attestationKey)
+        .firstOrNull;
+  }
+
   static Future<MediaAttachment?> findDeviceKeypairAttachment({
     required Ref ref,
   }) async {
     try {
       final currentUserMetadata = await ref.read(currentUserMetadataProvider.future);
-      if (currentUserMetadata == null) {
-        return null;
-      }
-
-      // Find device keypair attachment by alt field
-      return currentUserMetadata.data.media.values
-          .where((attachment) => attachment.alt == FileAlt.attestationKey)
-          .firstOrNull;
+      return extractDeviceKeypairAttachmentFromMetadata(currentUserMetadata);
     } catch (e) {
       return null;
     }
