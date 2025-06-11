@@ -54,6 +54,17 @@ class OverlayMenu extends HookWidget {
       overlayChildBuilder: (_) {
         final renderBox = context.findRenderObject()! as RenderBox;
 
+        final dir = Directionality.of(context);
+        final globalOffset = renderBox.localToGlobal(Offset.zero);
+        final maxMenuWidth = 300.0.s;
+        final shouldAlignStart = globalOffset.dx + renderBox.size.width < maxMenuWidth;
+        final offset = shouldAlignStart
+            ? Offset(0, renderBox.size.height + 6.0.s)
+            : Offset(renderBox.size.width, renderBox.size.height + 6.0.s);
+        final anchorAlignment =
+            (shouldAlignStart ? AlignmentDirectional.topStart : AlignmentDirectional.topEnd)
+                .resolve(dir);
+
         return GestureDetector(
           behavior: HitTestBehavior.translucent,
           onTap: hideMenu,
@@ -61,11 +72,11 @@ class OverlayMenu extends HookWidget {
             children: [
               CompositedTransformFollower(
                 link: followLink,
-                offset: Offset(renderBox.size.width, renderBox.size.height + 6.0.s),
-                followerAnchor: AlignmentDirectional.topEnd.resolve(Directionality.of(context)),
+                offset: offset,
+                followerAnchor: anchorAlignment,
                 showWhenUnlinked: false,
                 child: ScaleTransition(
-                  alignment: AlignmentDirectional.topEnd.resolve(Directionality.of(context)),
+                  alignment: anchorAlignment,
                   scale: scaleAnimation,
                   child: IntrinsicWidth(child: menuBuilder(hideMenu)),
                 ),
