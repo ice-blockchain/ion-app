@@ -41,6 +41,7 @@ class MainModalItem extends StatelessWidget {
         style: context.theme.appTextThemes.caption.copyWith(
           color: context.theme.appColors.tertararyText,
         ),
+        maxLines: 2,
       ),
       leading: Container(
         width: 42.0.s,

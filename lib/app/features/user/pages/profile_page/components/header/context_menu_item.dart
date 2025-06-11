@@ -27,6 +27,7 @@ class ContextMenuItem extends StatelessWidget {
     final textStyles = context.theme.appTextThemes;
 
     return GestureDetector(
+      behavior: HitTestBehavior.opaque,
       onTap: onPressed,
       child: SizedBox(
         height: 44.0.s,

@@ -46,6 +46,23 @@ class LanguageSelectorPage extends HookConsumerWidget {
     final mayContinue = selectedLanguages.isNotEmpty;
 
     return SheetContent(
+      bottomBar: mayContinue && continueButton != null
+          ? ColoredBox(
+              color: context.theme.appColors.onPrimaryAccent,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.end,
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  const HorizontalSeparator(),
+                  SizedBox(height: 16.0.s),
+                  ScreenSideOffset.small(
+                    child: continueButton!,
+                  ),
+                  SizedBox(height: 8.0.s + MediaQuery.paddingOf(context).bottom),
+                ],
+              ),
+            )
+          : null,
       body: CustomScrollView(
         slivers: [
           SliverToBoxAdapter(
@@ -86,16 +103,6 @@ class LanguageSelectorPage extends HookConsumerWidget {
               bottom: 16.0.s + (mayContinue ? 0 : MediaQuery.paddingOf(context).bottom),
             ),
           ),
-          if (mayContinue && continueButton != null) ...[
-            const SliverToBoxAdapter(child: HorizontalSeparator()),
-            SliverToBoxAdapter(child: SizedBox(height: 16.0.s)),
-            SliverToBoxAdapter(
-              child: ScreenSideOffset.small(child: continueButton!),
-            ),
-            SliverToBoxAdapter(
-              child: SizedBox(height: 8.0.s + MediaQuery.paddingOf(context).bottom),
-            ),
-          ],
         ],
       ),
     );

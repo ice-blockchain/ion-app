@@ -40,6 +40,7 @@ class Button extends StatelessWidget {
     this.borderRadius,
     this.backgroundColor,
     this.minimumSize,
+    this.labelFlex = 1,
     double? leadingIconOffset,
     double? trailingIconOffset,
   })  : leadingIconOffset = leadingIconOffset ?? 8.0.s,
@@ -113,6 +114,7 @@ class Button extends StatelessWidget {
   final Widget? leadingIcon;
   final Widget? trailingIcon;
   final Widget? label;
+  final int labelFlex;
   final Color? borderColor;
   final BorderRadius? borderRadius;
   final Color? backgroundColor;
@@ -155,6 +157,7 @@ class Button extends StatelessWidget {
               if (leadingIcon != null) leadingIcon!,
               if (label != null)
                 Flexible(
+                  flex: labelFlex,
                   child: Padding(
                     padding: EdgeInsetsDirectional.only(
                       start: leadingIcon == null ? 0 : leadingIconOffset,
