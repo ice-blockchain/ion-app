@@ -554,7 +554,7 @@ class FeedFollowingContent extends _$FeedFollowingContent implements PagedNotifi
 }
 
 @Freezed(equal: false)
-class FeedFollowingContentState with _$FeedFollowingContentState {
+class FeedFollowingContentState with _$FeedFollowingContentState implements PagedState {
   const factory FeedFollowingContentState({
     required Set<IonConnectEntity>? items,
     required Map<String, Pagination> unseenPagination,
@@ -564,6 +564,7 @@ class FeedFollowingContentState with _$FeedFollowingContentState {
 
   const FeedFollowingContentState._();
 
+  @override
   bool get hasMore =>
       unseenPagination.values.any((pubkey) => pubkey.hasMore) || seenPagination.hasMore;
 }
