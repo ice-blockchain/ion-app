@@ -40,17 +40,15 @@ class CoinsTab extends ConsumerWidget {
           separatorBuilder: (context, index) => SizedBox(height: 12.0.s),
           itemBuilder: (context, index) {
             final group = groups[index];
-            final isNewlyAdded = ref.watch(
+
+            final isUpdating = ref.watch(
               manageCoinsNotifierProvider.select(
-                (state) => state.maybeWhen(
-                  data: (data) => data[group.symbolGroup]?.isNewlyAdded ?? false,
-                  orElse: () => false,
-                ),
+                (state) => state.valueOrNull?[group.symbolGroup]?.isUpdating ?? false,
               ),
             );
 
             return ScreenSideOffset.small(
-              child: isNewlyAdded
+              child: isUpdating
                   ? const CoinsGroupItemPlaceholder()
                   : CoinsGroupItem(
                       coinsGroup: group,
