@@ -10,7 +10,7 @@ _$RequesterImpl _$$RequesterImplFromJson(Map<String, dynamic> json) =>
     _$RequesterImpl(
       userId: json['userId'] as String,
       tokenId: json['tokenId'] as String?,
-      appId: json['appId'] as String,
+      appId: json['appId'] as String?,
     );
 
 Map<String, dynamic> _$$RequesterImplToJson(_$RequesterImpl instance) =>
