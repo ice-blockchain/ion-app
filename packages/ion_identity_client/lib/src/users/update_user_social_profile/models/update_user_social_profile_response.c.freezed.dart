@@ -24,7 +24,7 @@ mixin _$UpdateUserSocialProfileResponse {
   String get username => throw _privateConstructorUsedError;
   String? get displayName => throw _privateConstructorUsedError;
   String? get referral => throw _privateConstructorUsedError;
-  List<Map<String, dynamic>> get usernameProof =>
+  List<Map<String, dynamic>>? get usernameProof =>
       throw _privateConstructorUsedError;
 
   /// Serializes this UpdateUserSocialProfileResponse to a JSON map.
@@ -49,7 +49,7 @@ abstract class $UpdateUserSocialProfileResponseCopyWith<$Res> {
       {String username,
       String? displayName,
       String? referral,
-      List<Map<String, dynamic>> usernameProof});
+      List<Map<String, dynamic>>? usernameProof});
 }
 
 /// @nodoc
@@ -71,7 +71,7 @@ class _$UpdateUserSocialProfileResponseCopyWithImpl<$Res,
     Object? username = null,
     Object? displayName = freezed,
     Object? referral = freezed,
-    Object? usernameProof = null,
+    Object? usernameProof = freezed,
   }) {
     return _then(_value.copyWith(
       username: null == username
@@ -86,10 +86,10 @@ class _$UpdateUserSocialProfileResponseCopyWithImpl<$Res,
           ? _value.referral
           : referral // ignore: cast_nullable_to_non_nullable
               as String?,
-      usernameProof: null == usernameProof
+      usernameProof: freezed == usernameProof
           ? _value.usernameProof
           : usernameProof // ignore: cast_nullable_to_non_nullable
-              as List<Map<String, dynamic>>,
+              as List<Map<String, dynamic>>?,
     ) as $Val);
   }
 }
@@ -107,7 +107,7 @@ abstract class _$$UpdateUserSocialProfileResponseImplCopyWith<$Res>
       {String username,
       String? displayName,
       String? referral,
-      List<Map<String, dynamic>> usernameProof});
+      List<Map<String, dynamic>>? usernameProof});
 }
 
 /// @nodoc
@@ -128,7 +128,7 @@ class __$$UpdateUserSocialProfileResponseImplCopyWithImpl<$Res>
     Object? username = null,
     Object? displayName = freezed,
     Object? referral = freezed,
-    Object? usernameProof = null,
+    Object? usernameProof = freezed,
   }) {
     return _then(_$UpdateUserSocialProfileResponseImpl(
       username: null == username
@@ -143,10 +143,10 @@ class __$$UpdateUserSocialProfileResponseImplCopyWithImpl<$Res>
           ? _value.referral
           : referral // ignore: cast_nullable_to_non_nullable
               as String?,
-      usernameProof: null == usernameProof
+      usernameProof: freezed == usernameProof
           ? _value._usernameProof
           : usernameProof // ignore: cast_nullable_to_non_nullable
-              as List<Map<String, dynamic>>,
+              as List<Map<String, dynamic>>?,
     ));
   }
 }
@@ -159,7 +159,7 @@ class _$UpdateUserSocialProfileResponseImpl
       {required this.username,
       required this.displayName,
       required this.referral,
-      required final List<Map<String, dynamic>> usernameProof})
+      required final List<Map<String, dynamic>>? usernameProof})
       : _usernameProof = usernameProof;
 
   factory _$UpdateUserSocialProfileResponseImpl.fromJson(
@@ -172,12 +172,14 @@ class _$UpdateUserSocialProfileResponseImpl
   final String? displayName;
   @override
   final String? referral;
-  final List<Map<String, dynamic>> _usernameProof;
+  final List<Map<String, dynamic>>? _usernameProof;
   @override
-  List<Map<String, dynamic>> get usernameProof {
+  List<Map<String, dynamic>>? get usernameProof {
+    final value = _usernameProof;
+    if (value == null) return null;
     if (_usernameProof is EqualUnmodifiableListView) return _usernameProof;
     // ignore: implicit_dynamic_type
-    return EqualUnmodifiableListView(_usernameProof);
+    return EqualUnmodifiableListView(value);
   }
 
   @override
@@ -229,7 +231,7 @@ abstract class _UpdateUserSocialProfileResponse
           {required final String username,
           required final String? displayName,
           required final String? referral,
-          required final List<Map<String, dynamic>> usernameProof}) =
+          required final List<Map<String, dynamic>>? usernameProof}) =
       _$UpdateUserSocialProfileResponseImpl;
 
   factory _UpdateUserSocialProfileResponse.fromJson(Map<String, dynamic> json) =
@@ -242,7 +244,7 @@ abstract class _UpdateUserSocialProfileResponse
   @override
   String? get referral;
   @override
-  List<Map<String, dynamic>> get usernameProof;
+  List<Map<String, dynamic>>? get usernameProof;
 
   /// Create a copy of UpdateUserSocialProfileResponse
   /// with the given fields replaced by the non-null parameter values.
