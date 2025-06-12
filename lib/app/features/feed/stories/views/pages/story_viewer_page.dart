@@ -36,7 +36,9 @@ class StoryViewerPage extends HookConsumerWidget {
     useEffect(
       () {
         return () {
-          ref.invalidate(storyViewingControllerProvider(pubkey));
+          if (context.mounted) {
+            ref.invalidate(storyViewingControllerProvider(pubkey));
+          }
         };
       },
       [],
