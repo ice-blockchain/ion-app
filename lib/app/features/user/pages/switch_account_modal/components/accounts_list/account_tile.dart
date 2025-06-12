@@ -23,7 +23,7 @@ class AccountsTile extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final currentIdentityKeyName = ref.watch(currentIdentityKeyNameSelectorProvider);
-    final eventSigner = ref.watch(ionConnectEventSignerProvider(identityKeyName)).valueOrNull;
+    final eventSigner = ref.watch(currentUserIonConnectEventSignerProvider).valueOrNull;
 
     if (eventSigner == null) {
       return Skeleton(child: ListItem());
