@@ -17,7 +17,7 @@ class DeviceKeypairDialogManager extends _$DeviceKeypairDialogManager {
 
   @override
   DeviceKeypairSessionState build() {
-    return DeviceKeypairSessionState();
+    return const DeviceKeypairSessionState();
   }
 
   /// Determines the current state of device keypair synchronization
@@ -30,7 +30,7 @@ class DeviceKeypairDialogManager extends _$DeviceKeypairDialogManager {
       }
 
       // Check session rejections
-      if (state.uploadRejected || state.restoreRejected) {
+      if (state.rejected) {
         return DeviceKeypairState.rejectedThisSession;
       }
 
@@ -65,14 +65,9 @@ class DeviceKeypairDialogManager extends _$DeviceKeypairDialogManager {
     }
   }
 
-  /// Marks that the user rejected the upload action
-  void rejectUpload() {
-    state = state.copyWith(uploadRejected: true);
-  }
-
-  /// Marks that the user rejected the restore action
-  void rejectRestore() {
-    state = state.copyWith(restoreRejected: true);
+  /// Marks that the user rejected the action
+  void reject() {
+    state = state.copyWith(rejected: true);
   }
 
   /// Marks that the user completed upload/restore on this device
@@ -92,7 +87,7 @@ class DeviceKeypairDialogManager extends _$DeviceKeypairDialogManager {
     final localStorage = ref.read(localStorageProvider);
     await localStorage.remove(_getCompletedKey());
     await localStorage.remove(_getUploadedFromDeviceKey());
-    state = DeviceKeypairSessionState();
+    state = const DeviceKeypairSessionState();
   }
 
   /// Checks if user has completed upload/restore on this device

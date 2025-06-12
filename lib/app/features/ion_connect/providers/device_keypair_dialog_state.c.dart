@@ -1,5 +1,9 @@
 // SPDX-License-Identifier: ice License 1.0
 
+import 'package:freezed_annotation/freezed_annotation.dart';
+
+part 'device_keypair_dialog_state.c.freezed.dart';
+
 /// Represents the current state of device keypair synchronization
 enum DeviceKeypairState {
   /// No device key exists, need to start upload flow
@@ -19,22 +23,9 @@ enum DeviceKeypairState {
 }
 
 /// Session state for tracking user rejections during current app session
-class DeviceKeypairSessionState {
-  DeviceKeypairSessionState({
-    this.uploadRejected = false,
-    this.restoreRejected = false,
-  });
-
-  final bool uploadRejected;
-  final bool restoreRejected;
-
-  DeviceKeypairSessionState copyWith({
-    bool? uploadRejected,
-    bool? restoreRejected,
-  }) {
-    return DeviceKeypairSessionState(
-      uploadRejected: uploadRejected ?? this.uploadRejected,
-      restoreRejected: restoreRejected ?? this.restoreRejected,
-    );
-  }
+@freezed
+class DeviceKeypairSessionState with _$DeviceKeypairSessionState {
+  const factory DeviceKeypairSessionState({
+    @Default(false) bool rejected,
+  }) = _DeviceKeypairSessionState;
 }
