@@ -3,6 +3,7 @@
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/features/core/providers/wallets_provider.c.dart';
 import 'package:ion/app/features/wallets/providers/wallet_view_data_provider.c.dart';
+import 'package:ion/app/services/logger/logger.dart';
 import 'package:ion_identity_client/ion_identity.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
@@ -38,9 +39,12 @@ Future<List<Wallet>> walletViewCryptoWallets(Ref ref, {String? walletViewId}) as
 /// Returns crypto wallets of the main WalletView
 @riverpod
 Future<List<Wallet>> mainCryptoWallets(Ref ref) async {
+  Logger.log('XXX: mainCryptoWallets: getting wallet views');
   final walletViews = await ref.watch(walletViewsDataNotifierProvider.future);
+  Logger.log('XXX: mainCryptoWallets: getting crypto wallets');
   final cryptoWallets = await ref.watch(walletsNotifierProvider.future);
 
+  Logger.log('XXX: mainCryptoWallets: getting wallet ids');
   final walletIds = walletViews
       .firstWhere((w) => w.isMainWalletView)
       .coins

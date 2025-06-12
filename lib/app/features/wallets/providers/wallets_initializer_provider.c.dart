@@ -19,17 +19,24 @@ class WalletsInitializerNotifier extends _$WalletsInitializerNotifier {
   @override
   Future<void> build() async {
     // Create a new completer only if it doesn't exist or was already completed
+    Logger.log('XXX: WalletsInitializerNotifier: creating completer');
     if (_completer == null || _completer!.isCompleted) {
       _completer = Completer<void>();
     }
 
     // Just wait here, until user becomes authenticated and required data loaded
+    Logger.log('XXX: WalletsInitializerNotifier: getting auth state');
     final authState = await ref.watch(authProvider.future);
+    Logger.log('XXX: WalletsInitializerNotifier: getting pubkey');
     final pubkey = ref.watch(currentPubkeySelectorProvider);
 
+    Logger.log('XXX: WalletsInitializerNotifier: checking if user is authenticated');
     if (authState.isAuthenticated && pubkey != null) {
+      Logger.log('XXX: WalletsInitializerNotifier: getting coin initializer');
       final coinInitializer = ref.watch(coinInitializerProvider);
+      Logger.log('XXX: WalletsInitializerNotifier: getting networks initializer');
       final networksInitializer = ref.watch(networksInitializerProvider);
+      Logger.log('XXX: WalletsInitializerNotifier: getting sync transactions service');
       final syncServiceFuture = ref.watch(syncTransactionsServiceProvider.future);
 
       Logger.log('XXX: WalletsInitializerNotifier: initializing coin and networks');
