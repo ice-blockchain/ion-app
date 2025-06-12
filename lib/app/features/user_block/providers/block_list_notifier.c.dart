@@ -19,6 +19,9 @@ part 'block_list_notifier.c.g.dart';
 class CurrentUserBlockListNotifier extends _$CurrentUserBlockListNotifier {
   @override
   Future<List<BlockedUserEntity>> build() async {
+    final keepAlive = ref.keepAlive();
+    onLogout(ref, keepAlive.close);
+
     final currentUserMasterPubkey = ref.watch(currentPubkeySelectorProvider);
     if (currentUserMasterPubkey == null) {
       throw UserMasterPubkeyNotFoundException();
@@ -35,9 +38,10 @@ class CurrentUserBlockListNotifier extends _$CurrentUserBlockListNotifier {
       final entities = blockEvents.map(BlockedUserEntity.fromEventMessage).toList();
       state = AsyncValue.data(entities);
     });
-
-    ref.onDispose(subscription.cancel);
-
+    ref.onDispose(() {
+      print('CurrentUserBlockListNotifier disposed');
+      subscription.cancel;
+    });
     return initialEntities;
   }
 }
@@ -46,6 +50,9 @@ class CurrentUserBlockListNotifier extends _$CurrentUserBlockListNotifier {
 class IsBlockedNotifier extends _$IsBlockedNotifier {
   @override
   Future<bool> build(String masterPubkey) async {
+    final keepAlive = ref.keepAlive();
+    onLogout(ref, keepAlive.close);
+
     final blockedUser = ref.watch(blockedUserWatchProvider(masterPubkey)).valueOrNull;
 
     return blockedUser != null && blockedUser.isBlocked;
@@ -56,6 +63,9 @@ class IsBlockedNotifier extends _$IsBlockedNotifier {
 class IsBlockedByNotifier extends _$IsBlockedByNotifier {
   @override
   Future<bool> build(String masterPubkey) async {
+    final keepAlive = ref.keepAlive();
+    onLogout(ref, keepAlive.close);
+
     final currentUserMasterPubkey = ref.watch(currentPubkeySelectorProvider);
     if (currentUserMasterPubkey == null) {
       throw UserMasterPubkeyNotFoundException();
@@ -74,7 +84,10 @@ class IsBlockedByNotifier extends _$IsBlockedByNotifier {
       state = AsyncValue.data(isBlocked);
     });
 
-    ref.onDispose(subscription.cancel);
+    ref.onDispose(() {
+      print('IsBlockedByNotifier disposed');
+      subscription.cancel;
+    });
 
     return initiallyBlocked;
   }

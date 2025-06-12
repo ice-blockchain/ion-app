@@ -13,6 +13,7 @@ import 'package:ion/app/router/components/modal_wrapper/sheet_scope.dart';
 import 'package:ion/app/router/providers/go_router_provider.c.dart';
 import 'package:ion/app/services/logger/logger.dart';
 import 'package:ion/app/services/logger/logger_initializer.dart';
+import 'package:ion/app/services/provider_rebuild_counter/provider_rebuild_counter.dart';
 import 'package:ion/app/services/sentry/sentry_service.dart';
 import 'package:ion/app/services/storage/secure_storage.c.dart';
 import 'package:ion/app/theme/theme.dart';
@@ -23,7 +24,12 @@ void main() async {
   SentryWidgetsFlutterBinding.ensureInitialized();
   await SecureStorage().clearOnReinstall();
 
-  final container = ProviderContainer(observers: [Logger.talkerRiverpodObserver]);
+  final container = ProviderContainer(
+    observers: [
+      Logger.talkerRiverpodObserver,
+      ProviderRebuildLogger(threshold: 1000),
+    ],
+  );
   LoggerInitializer.initialize(container);
 
   await SentryService.init(
