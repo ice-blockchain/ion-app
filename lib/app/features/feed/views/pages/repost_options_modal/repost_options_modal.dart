@@ -80,7 +80,15 @@ class RepostOptionsModal extends HookConsumerWidget {
                             }
 
                           case RepostOptionAction.quotePost:
-                            QuoteRoutingUtils.pushCreateQuote(context, eventReference.encode());
+                            await QuoteRoutingUtils.pushCreateQuote(
+                              context,
+                              eventReference.encode(),
+                            );
+                            if (context.mounted) {
+                              WidgetsBinding.instance.addPostFrameCallback(
+                                (_) => context.pop(),
+                              );
+                            }
 
                           case RepostOptionAction.undoRepost:
                             if (repostReference != null) {

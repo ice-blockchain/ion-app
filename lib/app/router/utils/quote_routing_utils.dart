@@ -27,21 +27,24 @@ class QuoteRoutingUtils {
     }
   }
 
-  static void pushCreateQuote(
+  static Future<void> pushCreateQuote(
     BuildContext context,
     String quotedEvent, {
     String? content,
     String? attachedMedia,
   }) {
     if (isInProfile(context)) {
-      CreateQuoteProfileRoute(
+      return CreateQuoteProfileRoute(
         quotedEvent: quotedEvent,
         content: content,
         attachedMedia: attachedMedia,
       ).push<void>(context);
     } else {
-      CreateQuoteRoute(quotedEvent: quotedEvent, content: content, attachedMedia: attachedMedia)
-          .push<void>(context);
+      return CreateQuoteRoute(
+        quotedEvent: quotedEvent,
+        content: content,
+        attachedMedia: attachedMedia,
+      ).push<void>(context);
     }
   }
 }
