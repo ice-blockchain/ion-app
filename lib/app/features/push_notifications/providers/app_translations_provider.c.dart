@@ -105,10 +105,19 @@ class PushNotificationTranslations
     NotificationTranslation? repost,
     NotificationTranslation? like,
     NotificationTranslation? follower,
-    NotificationTranslation? chatReaction,
-    NotificationTranslation? chatMessage,
     NotificationTranslation? paymentRequest,
     NotificationTranslation? paymentReceived,
+    NotificationTranslation? chatDocumentMessage,
+    NotificationTranslation? chatEmojiMessage,
+    NotificationTranslation? chatPhotoMessage,
+    NotificationTranslation? chatProfileMessage,
+    NotificationTranslation? chatReaction,
+    NotificationTranslation? chatSharePostMessage,
+    NotificationTranslation? chatShareStoryMessage,
+    NotificationTranslation? chatSharedStoryReplyMessage,
+    NotificationTranslation? chatTextMessage,
+    NotificationTranslation? chatVideoMessage,
+    NotificationTranslation? chatVoiceMessage,
   }) = _PushNotificationTranslations;
 
   factory PushNotificationTranslations.fromJson(Map<String, dynamic> json) =>
