@@ -7,6 +7,7 @@ import 'package:ion/app/exceptions/exceptions.dart';
 import 'package:ion/app/features/wallets/data/repository/coins_repository.c.dart';
 import 'package:ion/app/features/wallets/data/repository/networks_repository.c.dart';
 import 'package:ion/app/features/wallets/model/coin_data.c.dart';
+import 'package:ion/app/features/wallets/model/coins_group.c.dart';
 import 'package:ion/app/features/wallets/model/network_data.c.dart';
 import 'package:ion/app/features/wallets/model/network_fee_type.dart';
 import 'package:ion/app/features/wallets/model/transfer_result.c.dart';
@@ -43,6 +44,17 @@ class CoinsService {
   Future<CoinData?> getCoinById(String coinId) => _coinsRepository.getCoinById(coinId);
 
   Future<CoinData?> getNativeCoin(NetworkData network) => _coinsRepository.getNativeCoin(network);
+
+  Future<Iterable<CoinsGroup>> getCoinGroups({
+    int? limit,
+    int? offset,
+    Iterable<String>? excludeCoinIds,
+  }) =>
+      _coinsRepository.getCoinGroups(
+        limit: limit,
+        offset: offset,
+        excludeCoinIds: excludeCoinIds,
+      );
 
   Future<Iterable<CoinData>> getCoinsByFilters({
     String? symbolGroup,

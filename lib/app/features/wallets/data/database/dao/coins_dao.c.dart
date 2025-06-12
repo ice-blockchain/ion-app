@@ -6,6 +6,7 @@ import 'package:ion/app/features/wallets/data/database/tables/coins_table.c.dart
 import 'package:ion/app/features/wallets/data/database/tables/networks_table.c.dart';
 import 'package:ion/app/features/wallets/data/database/wallets_database.c.dart';
 import 'package:ion/app/features/wallets/model/coin_data.c.dart';
+import 'package:ion/app/features/wallets/model/coins_group.c.dart';
 import 'package:ion/app/features/wallets/model/network_data.c.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
@@ -151,5 +152,10 @@ class CoinsDao extends DatabaseAccessor<WalletsDatabase> with _$CoinsDaoMixin {
         row.readTable(networksTable),
       ),
     );
+  }
+
+  Future<Iterable<CoinsGroup>> getCoinGroups(
+      {int? limit, int? offset, Iterable<String>? excludeCoinIds}) {
+    throw UnimplementedError();
   }
 }

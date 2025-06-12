@@ -4,35 +4,61 @@ import 'dart:async';
 
 import 'package:collection/collection.dart';
 import 'package:ion/app/extensions/extensions.dart';
+import 'package:ion/app/features/wallets/domain/coins/coins_service.c.dart';
 import 'package:ion/app/features/wallets/domain/coins/search_coins_service.c.dart';
 import 'package:ion/app/features/wallets/model/coin_data.c.dart';
 import 'package:ion/app/features/wallets/model/coins_group.c.dart';
 import 'package:ion/app/features/wallets/model/manage_coins_group.c.dart';
 import 'package:ion/app/features/wallets/providers/update_wallet_view_provider.c.dart';
 import 'package:ion/app/features/wallets/providers/wallet_view_data_provider.c.dart';
+import 'package:ion/app/features/wallets/views/pages/manage_coins/models/manage_coins_state.c.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'manage_coins_provider.c.g.dart';
 
 @riverpod
 class ManageCoinsNotifier extends _$ManageCoinsNotifier {
+  static const _pageSize = 20;
+
+  final _coinsFromWallet = <String, ManageCoinsGroup>{};
+  final _loadedCoins = <String, ManageCoinsGroup>{};
+  final _toExclude = <String>{};
+
   @override
-  Future<Map<String, ManageCoinsGroup>> build() async {
+  Future<ManageCoinsState> build() async {
     final walletView = await ref.watch(currentWalletViewDataProvider.future);
 
-    final coinsFromWallet = <String, ManageCoinsGroup>{
-      for (final coinGroup in walletView.coinGroups)
-        coinGroup.symbolGroup: ManageCoinsGroup(
-          coinsGroup: coinGroup,
-          isSelected: state.value?[coinGroup.symbolGroup]?.isSelected ?? true,
-        ),
-    };
+    for (final coinGroup in walletView.coinGroups) {
+      _toExclude.addAll(coinGroup.coins.map((e) => e.coin.id));
+      _coinsFromWallet[coinGroup.symbolGroup] = ManageCoinsGroup(
+        coinsGroup: coinGroup,
+        isSelected: state.value?.groups[coinGroup.symbolGroup]?.isSelected ?? true,
+      );
+    }
 
-    return coinsFromWallet;
+    if (_coinsFromWallet.length < _pageSize) {
+      final repo = await ref.watch(coinsServiceProvider.future);
+      final groups = await repo.getCoinGroups(
+        limit: _pageSize - _coinsFromWallet.length,
+        excludeCoinIds: _toExclude,
+      );
+      _loadedCoins.addAll({
+        for (final group in groups)
+          group.symbolGroup: ManageCoinsGroup(
+            coinsGroup: group,
+            isSelected: state.value?.groups[group.symbolGroup]?.isSelected ?? true,
+          ),
+      });
+    }
+
+    return ManageCoinsState(
+      hasMore: true,
+      groups: _coinsFromWallet,
+    );
   }
 
   void switchCoinsGroup(CoinsGroup coinsGroup) {
-    final currentMap = state.value ?? <String, ManageCoinsGroup>{};
+    final currentMap = state.value?.groups ?? <String, ManageCoinsGroup>{};
     final currentGroup = currentMap[coinsGroup.symbolGroup];
     final isNewlyAdded = !currentMap.containsKey(coinsGroup.symbolGroup);
     final isBeingDeleted = currentGroup?.isSelected ?? false;
@@ -42,12 +68,18 @@ class ManageCoinsNotifier extends _$ManageCoinsNotifier {
       isSelected: !(currentGroup?.isSelected ?? false),
       isUpdating: isNewlyAdded || isBeingDeleted,
     );
-    state = AsyncData<Map<String, ManageCoinsGroup>>(currentMap);
+    // state = AsyncData<Map<String, ManageCoinsGroup>>(currentMap);
+    state = AsyncData<ManageCoinsState>(
+      ManageCoinsState(
+        hasMore: true,
+        groups: currentMap,
+      ),
+    );
   }
 
   Future<void> save() async {
     final currentWalletView = await ref.read(currentWalletViewDataProvider.future);
-    final updatedCoins = state.value?.values
+    final updatedCoins = state.value?.groups.values
             .where((manageGroup) => manageGroup.isSelected)
             .expand((manageGroup) => manageGroup.coinsGroup.coins)
             .map((e) => e.coin)
@@ -68,6 +100,8 @@ class ManageCoinsNotifier extends _$ManageCoinsNotifier {
       );
     }
   }
+
+  Future<void> loadMore() async {}
 }
 
 @riverpod
@@ -79,7 +113,7 @@ class SearchCoinsNotifier extends _$SearchCoinsNotifier {
     if (query.isEmpty) {
       state = ref.read(manageCoinsNotifierProvider).map(
             data: (data) => AsyncData(
-              data.value.values.map((manageCoin) => manageCoin.coinsGroup).toSet(),
+              data.value.groups.values.map((manageCoin) => manageCoin.coinsGroup).toSet(),
             ),
             error: (error) => AsyncError(error.error, error.stackTrace),
             loading: (loading) => const AsyncLoading(),
@@ -95,8 +129,9 @@ class SearchCoinsNotifier extends _$SearchCoinsNotifier {
     });
     state = ref.read(manageCoinsNotifierProvider).maybeWhen(
           data: (coinsInWalletView) {
-            final walletCoinGroups =
-                coinsInWalletView.values.map((manageGroup) => manageGroup.coinsGroup).toList();
+            final walletCoinGroups = coinsInWalletView.groups.values
+                .map((manageGroup) => manageGroup.coinsGroup)
+                .toList();
 
             // Coins from wallet should be first in the search results list
             final result = <CoinsGroup>{};
