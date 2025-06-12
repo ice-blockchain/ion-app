@@ -22,7 +22,7 @@ Requester _$RequesterFromJson(Map<String, dynamic> json) {
 mixin _$Requester {
   String get userId => throw _privateConstructorUsedError;
   String? get tokenId => throw _privateConstructorUsedError;
-  String get appId => throw _privateConstructorUsedError;
+  String? get appId => throw _privateConstructorUsedError;
 
   /// Serializes this Requester to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
@@ -39,7 +39,7 @@ abstract class $RequesterCopyWith<$Res> {
   factory $RequesterCopyWith(Requester value, $Res Function(Requester) then) =
       _$RequesterCopyWithImpl<$Res, Requester>;
   @useResult
-  $Res call({String userId, String? tokenId, String appId});
+  $Res call({String userId, String? tokenId, String? appId});
 }
 
 /// @nodoc
@@ -59,7 +59,7 @@ class _$RequesterCopyWithImpl<$Res, $Val extends Requester>
   $Res call({
     Object? userId = null,
     Object? tokenId = freezed,
-    Object? appId = null,
+    Object? appId = freezed,
   }) {
     return _then(_value.copyWith(
       userId: null == userId
@@ -70,10 +70,10 @@ class _$RequesterCopyWithImpl<$Res, $Val extends Requester>
           ? _value.tokenId
           : tokenId // ignore: cast_nullable_to_non_nullable
               as String?,
-      appId: null == appId
+      appId: freezed == appId
           ? _value.appId
           : appId // ignore: cast_nullable_to_non_nullable
-              as String,
+              as String?,
     ) as $Val);
   }
 }
@@ -86,7 +86,7 @@ abstract class _$$RequesterImplCopyWith<$Res>
       __$$RequesterImplCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call({String userId, String? tokenId, String appId});
+  $Res call({String userId, String? tokenId, String? appId});
 }
 
 /// @nodoc
@@ -104,7 +104,7 @@ class __$$RequesterImplCopyWithImpl<$Res>
   $Res call({
     Object? userId = null,
     Object? tokenId = freezed,
-    Object? appId = null,
+    Object? appId = freezed,
   }) {
     return _then(_$RequesterImpl(
       userId: null == userId
@@ -115,10 +115,10 @@ class __$$RequesterImplCopyWithImpl<$Res>
           ? _value.tokenId
           : tokenId // ignore: cast_nullable_to_non_nullable
               as String?,
-      appId: null == appId
+      appId: freezed == appId
           ? _value.appId
           : appId // ignore: cast_nullable_to_non_nullable
-              as String,
+              as String?,
     ));
   }
 }
@@ -137,7 +137,7 @@ class _$RequesterImpl implements _Requester {
   @override
   final String? tokenId;
   @override
-  final String appId;
+  final String? appId;
 
   @override
   String toString() {
@@ -178,7 +178,7 @@ abstract class _Requester implements Requester {
   const factory _Requester(
       {required final String userId,
       required final String? tokenId,
-      required final String appId}) = _$RequesterImpl;
+      required final String? appId}) = _$RequesterImpl;
 
   factory _Requester.fromJson(Map<String, dynamic> json) =
       _$RequesterImpl.fromJson;
@@ -188,7 +188,7 @@ abstract class _Requester implements Requester {
   @override
   String? get tokenId;
   @override
-  String get appId;
+  String? get appId;
 
   /// Create a copy of Requester
   /// with the given fields replaced by the non-null parameter values.

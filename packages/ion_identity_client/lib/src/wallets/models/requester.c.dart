@@ -10,7 +10,7 @@ class Requester with _$Requester {
   const factory Requester({
     required String userId,
     required String? tokenId,
-    required String appId,
+    required String? appId,
   }) = _Requester;
 
   factory Requester.fromJson(Map<String, dynamic> json) => _$RequesterFromJson(json);
