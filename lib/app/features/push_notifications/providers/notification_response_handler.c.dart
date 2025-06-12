@@ -40,7 +40,12 @@ class NotificationResponseHandler extends _$NotificationResponseHandler {
 
   Future<void> _handleNotificationResponse(Map<String, dynamic> response) async {
     try {
-      final notificationPayload = await IonConnectPushDataPayload.fromEncoded(response);
+      final notificationPayload =
+          await IonConnectPushDataPayload.fromEncoded(response, (eventMassage) async {
+        final giftUnwrapService = await ref.read(giftUnwrapServiceProvider.future);
+        return giftUnwrapService.unwrap(eventMassage);
+      });
+
       final eventParser = ref.read(eventParserProvider);
       final entity = eventParser.parse(notificationPayload.event);
 
