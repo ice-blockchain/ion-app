@@ -17,7 +17,7 @@ part 'block_user_provider.c.g.dart';
 
 @riverpod
 Future<List<BlockedUser>> loadInitialBlockedUsers(Ref ref) async {
-  final currentMasterPubkey = ref.read(currentPubkeySelectorProvider);
+  final currentMasterPubkey = ref.watch(currentPubkeySelectorProvider);
 
   if (currentMasterPubkey == null) {
     throw UserMasterPubkeyNotFoundException();
@@ -56,8 +56,10 @@ Stream<BlockedUser?> blockedUserWatch(Ref ref, String masterPubkey) {
   return service.watch(masterPubkey);
 }
 
-@Riverpod(keepAlive: true)
+@riverpod
 OptimisticOperationManager<BlockedUser> blockUserManager(Ref ref) {
+  keepAliveWhenAuthenticated(ref);
+
   final strategy = ref.watch(blockSyncStrategyProvider);
 
   final manager = OptimisticOperationManager<BlockedUser>(

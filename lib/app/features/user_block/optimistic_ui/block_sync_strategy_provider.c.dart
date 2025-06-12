@@ -26,7 +26,7 @@ part 'block_sync_strategy_provider.c.g.dart';
 @riverpod
 SyncStrategy<BlockedUser> blockSyncStrategy(Ref ref) {
   final eventSigner = ref.watch(currentUserIonConnectEventSignerProvider).value;
-  final currentUserMasterPubkey = ref.read(currentPubkeySelectorProvider);
+  final currentUserMasterPubkey = ref.watch(currentPubkeySelectorProvider);
 
   if (eventSigner == null) {
     throw EventSignerNotFoundException();
@@ -38,7 +38,7 @@ SyncStrategy<BlockedUser> blockSyncStrategy(Ref ref) {
 
   final sealService = ref.watch(ionConnectSealServiceProvider).value;
   final wrapService = ref.watch(ionConnectGiftWrapServiceProvider).value;
-  final ionConnectNotifier = ref.read(ionConnectNotifierProvider.notifier);
+  final ionConnectNotifier = ref.watch(ionConnectNotifierProvider.notifier);
   final devicePubkeysProvider = ref.watch(conversationPubkeysProvider.notifier);
 
   Future<void> sendWrappedEvent({

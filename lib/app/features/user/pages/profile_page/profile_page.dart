@@ -38,22 +38,19 @@ class ProfilePage extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final isBlocked = ref.watch(isBlockedNotifierProvider(pubkey)).valueOrNull;
-    final isBlockedBy = ref.watch(isBlockedByNotifierProvider(pubkey)).valueOrNull;
+    final isBlockedOrBlockedBy =
+        ref.watch(isBlockedOrBlockedByNotifierProvider(pubkey)).valueOrNull;
     final userMetadata = ref.watch(userMetadataProvider(pubkey));
 
     final didRefresh = useState(false);
 
-    if (!didRefresh.value && (userMetadata.isLoading || isBlocked == null || isBlockedBy == null)) {
+    if (!didRefresh.value && (userMetadata.isLoading || isBlockedOrBlockedBy == null)) {
       return ProfileSkeleton(showBackButton: showBackButton);
     }
 
-    final isBlockedOrBlockedBy =
-        isBlocked != null && isBlocked || isBlockedBy != null && isBlockedBy;
-
     final isDeleted = ref.watch(isUserDeletedProvider(pubkey)).valueOrNull.falseOrValue;
 
-    if (isDeleted || isBlockedOrBlockedBy) {
+    if (isDeleted || isBlockedOrBlockedBy!) {
       return const CantFindProfilePage();
     }
 
