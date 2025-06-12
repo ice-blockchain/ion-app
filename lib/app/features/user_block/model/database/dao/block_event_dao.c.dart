@@ -4,8 +4,7 @@ part of '../block_user_database.c.dart';
 
 @riverpod
 BlockEventDao blockEventDao(Ref ref) {
-  final keepAlive = ref.keepAlive();
-  onLogout(ref, keepAlive.close);
+  keepAliveWhenAuthenticated(ref);
   return BlockEventDao(ref.watch(blockedUsersDatabaseProvider));
 }
 

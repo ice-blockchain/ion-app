@@ -155,3 +155,8 @@ void onLogout(Ref ref, void Function() callback) {
     }
   });
 }
+
+void keepAliveWhenAuthenticated(Ref ref) {
+  final keepAlive = ref.keepAlive();
+  onLogout(ref, keepAlive.close);
+}

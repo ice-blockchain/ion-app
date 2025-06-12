@@ -58,8 +58,7 @@ Stream<BlockedUser?> blockedUserWatch(Ref ref, String masterPubkey) {
 
 @riverpod
 OptimisticOperationManager<BlockedUser> blockUserManager(Ref ref) {
-  final keepAlive = ref.keepAlive();
-  onLogout(ref, keepAlive.close);
+  keepAliveWhenAuthenticated(ref);
 
   final strategy = ref.watch(blockSyncStrategyProvider);
 

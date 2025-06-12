@@ -10,8 +10,7 @@ part 'blocked_users_database_provider.c.g.dart';
 
 @riverpod
 BlockUserDatabase blockedUsersDatabase(Ref ref) {
-  final keepAlive = ref.keepAlive();
-  onLogout(ref, keepAlive.close);
+  keepAliveWhenAuthenticated(ref);
   final pubkey = ref.watch(currentPubkeySelectorProvider);
 
   if (pubkey == null) {
