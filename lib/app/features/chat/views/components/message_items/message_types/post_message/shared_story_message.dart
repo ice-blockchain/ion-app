@@ -1,5 +1,7 @@
 // SPDX-License-Identifier: ice License 1.0
 
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
@@ -14,6 +16,7 @@ import 'package:ion/app/features/components/ion_connect_network_image/ion_connec
 import 'package:ion/app/features/core/model/media_type.dart';
 import 'package:ion/app/features/feed/data/models/entities/modifiable_post_data.c.dart';
 import 'package:ion/app/features/feed/data/models/entities/post_data.c.dart';
+import 'package:ion/app/features/feed/stories/providers/story_viewing_provider.c.dart';
 import 'package:ion/app/features/ion_connect/ion_connect.dart';
 import 'package:ion/app/features/ion_connect/model/entity_data_with_media_content.dart';
 import 'package:ion/app/features/ion_connect/model/ion_connect_entity.dart';
@@ -86,11 +89,23 @@ class SharedStoryMessage extends HookConsumerWidget {
           children: [
             GestureDetector(
               behavior: HitTestBehavior.opaque,
-              onTap: () {
-                StoryViewerRoute(
-                  pubkey: storyEntity.masterPubkey,
-                  initialStoryReference: storyEntity.toEventReference().encode(),
-                ).push<void>(context);
+              onTap: () async {
+                final storyViewerState =
+                    ref.read(storyViewingControllerProvider(storyEntity.masterPubkey));
+
+                if (storyViewerState.userStories.isEmpty) {
+                  await ref
+                      .read(storyViewingControllerProvider(storyEntity.masterPubkey).notifier)
+                      .setUserStoryByReference(storyEntity.toEventReference());
+                }
+                if (context.mounted) {
+                  unawaited(
+                    StoryViewerRoute(
+                      pubkey: storyEntity.masterPubkey,
+                      initialStoryReference: storyEntity.toEventReference().encode(),
+                    ).push<void>(context),
+                  );
+                }
               },
               child: Column(
                 crossAxisAlignment: isMe ? CrossAxisAlignment.end : CrossAxisAlignment.start,
