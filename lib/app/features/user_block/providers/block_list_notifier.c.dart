@@ -38,10 +38,8 @@ class CurrentUserBlockListNotifier extends _$CurrentUserBlockListNotifier {
       final entities = blockEvents.map(BlockedUserEntity.fromEventMessage).toList();
       state = AsyncValue.data(entities);
     });
-    ref.onDispose(() {
-      print('CurrentUserBlockListNotifier disposed');
-      subscription.cancel;
-    });
+    ref.onDispose(subscription.cancel);
+
     return initialEntities;
   }
 }
@@ -84,10 +82,7 @@ class IsBlockedByNotifier extends _$IsBlockedByNotifier {
       state = AsyncValue.data(isBlocked);
     });
 
-    ref.onDispose(() {
-      print('IsBlockedByNotifier disposed');
-      subscription.cancel;
-    });
+    ref.onDispose(subscription.cancel);
 
     return initiallyBlocked;
   }
