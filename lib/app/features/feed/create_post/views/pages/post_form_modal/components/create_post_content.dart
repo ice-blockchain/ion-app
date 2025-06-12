@@ -1,6 +1,5 @@
 // SPDX-License-Identifier: ice License 1.0
 
-import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_keyboard_visibility/flutter_keyboard_visibility.dart';
@@ -20,8 +19,6 @@ import 'package:ion/app/features/feed/create_post/views/pages/post_form_modal/ho
 import 'package:ion/app/features/feed/data/models/feed_type.dart';
 import 'package:ion/app/features/feed/polls/providers/poll_draft_provider.c.dart';
 import 'package:ion/app/features/feed/polls/view/components/poll.dart';
-import 'package:ion/app/features/feed/providers/feed_user_interests_provider.c.dart';
-import 'package:ion/app/features/feed/providers/selected_interests_notifier.c.dart';
 import 'package:ion/app/features/feed/views/components/url_preview_content/url_preview_content.dart';
 import 'package:ion/app/features/ion_connect/model/event_reference.c.dart';
 import 'package:ion/app/services/media_service/media_service.c.dart';
@@ -65,7 +62,6 @@ class CreatePostContent extends StatelessWidget {
               parentEvent: parentEvent,
               quotedEvent: quotedEvent,
             ),
-            SizedBox(height: 8.s),
             if (parentEvent != null) _ParentEntitySection(eventReference: parentEvent!),
             _TextInputSection(
               textEditorController: textEditorController,
@@ -260,23 +256,13 @@ class _TopicsSection extends HookConsumerWidget {
     }
 
     final isVideo = attachedVideoNotifier.value != null;
-    final availableCategories =
-        ref.watch(feedUserInterestsProvider(FeedType.post)).valueOrNull?.categories ?? {};
-    final selectedSubcategoriesKeys = ref.watch(selectedInterestsNotifierProvider);
-    final selectedSubcategories = selectedSubcategoriesKeys
-        .map(
-          (key) => availableCategories.values
-              .expand((category) => category.children.entries)
-              .firstWhereOrNull((subcategoryEntry) => subcategoryEntry.key == key)
-              ?.value,
-        )
-        .nonNulls
-        .toList();
 
     return ScreenSideOffset.small(
-      child: TopicsButton(
-        topics: selectedSubcategories,
-        feedType: isVideo ? FeedType.video : FeedType.post,
+      child: Padding(
+        padding: EdgeInsetsDirectional.only(bottom: 8.s),
+        child: TopicsButton(
+          type: isVideo ? FeedType.video : FeedType.post,
+        ),
       ),
     );
   }

@@ -25,6 +25,7 @@ import 'package:ion/app/features/ion_connect/providers/ion_connect_entity_provid
 import 'package:ion/app/router/components/sheet_content/sheet_content.dart';
 import 'package:ion/app/router/utils/show_simple_bottom_sheet.dart';
 import 'package:ion/app/services/media_service/media_service.c.dart';
+import 'package:showcaseview/showcaseview.dart';
 
 class PostFormModal extends HookConsumerWidget {
   const PostFormModal._({
@@ -225,38 +226,42 @@ class PostFormModal extends HookConsumerWidget {
             ),
       child: SheetContent(
         topPadding: 0,
-        body: Column(
-          children: [
-            CreatePostAppBar(
-              createOption: createOption,
-              textEditorController: textEditorController,
-            ),
-            Expanded(
-              child: CreatePostContent(
-                scrollController: scrollController,
-                attachedVideoNotifier: attachedVideoNotifier,
-                parentEvent: parentEvent,
-                textEditorController: textEditorController,
+        body: ShowCaseWidget(
+          disableMovingAnimation: true,
+          disableScaleAnimation: true,
+          builder: (context) => Column(
+            children: [
+              CreatePostAppBar(
                 createOption: createOption,
-                attachedMediaNotifier: attachedMediaNotifier,
-                attachedMediaLinksNotifier: attachedMediaLinksNotifier,
+                textEditorController: textEditorController,
+              ),
+              Expanded(
+                child: CreatePostContent(
+                  scrollController: scrollController,
+                  attachedVideoNotifier: attachedVideoNotifier,
+                  parentEvent: parentEvent,
+                  textEditorController: textEditorController,
+                  createOption: createOption,
+                  attachedMediaNotifier: attachedMediaNotifier,
+                  attachedMediaLinksNotifier: attachedMediaLinksNotifier,
+                  quotedEvent: quotedEvent,
+                  textEditorKey: textEditorKey,
+                ),
+              ),
+              CreatePostBottomPanel(
+                textEditorController: textEditorController,
+                parentEvent: parentEvent,
                 quotedEvent: quotedEvent,
+                modifiedEvent: modifiedEvent,
+                attachedMediaNotifier: attachedMediaNotifier,
+                attachedVideoNotifier: attachedVideoNotifier,
+                attachedMediaLinksNotifier: attachedMediaLinksNotifier,
+                createOption: createOption,
+                scrollController: scrollController,
                 textEditorKey: textEditorKey,
               ),
-            ),
-            CreatePostBottomPanel(
-              textEditorController: textEditorController,
-              parentEvent: parentEvent,
-              quotedEvent: quotedEvent,
-              modifiedEvent: modifiedEvent,
-              attachedMediaNotifier: attachedMediaNotifier,
-              attachedVideoNotifier: attachedVideoNotifier,
-              attachedMediaLinksNotifier: attachedMediaLinksNotifier,
-              createOption: createOption,
-              scrollController: scrollController,
-              textEditorKey: textEditorKey,
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );
