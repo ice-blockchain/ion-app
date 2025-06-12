@@ -37,26 +37,38 @@ class OnboardingCompleteNotifier extends _$OnboardingCompleteNotifier {
     state = const AsyncLoading();
     state = await AsyncValue.guard(
       () async {
+        Logger.log('XXX: OnboardingCompleteNotifier: assigning user relays');
         final relayUrls = await _assignUserRelays();
 
         // BE requires sending user relays alongside the user delegation event
+        Logger.log('XXX: OnboardingCompleteNotifier: building user relays event');
         final userRelaysEvent = await _buildUserRelaysEvent(relayUrls: relayUrls);
 
         // Send user delegation event in advance so all subsequent events pass delegation attestation
         try {
+          Logger.log('XXX: OnboardingCompleteNotifier: building user delegation event');
           final userDelegationEvent =
               await _buildUserDelegation(onVerifyIdentity: onVerifyIdentity);
+          Logger.log(
+            'XXX: OnboardingCompleteNotifier: sending user delegation and user relays events',
+          );
           await ref
               .read(ionConnectNotifierProvider.notifier)
               .sendEvents([userDelegationEvent, userRelaysEvent]);
+          Logger.log(
+            'XXX: OnboardingCompleteNotifier: user delegation and user relays events sent',
+          );
         } on PasskeyCancelledException {
           return;
         }
 
+        Logger.log('XXX: OnboardingCompleteNotifier: uploading avatar');
         final uploadedAvatar = await _uploadAvatar();
 
+        Logger.log('XXX: OnboardingCompleteNotifier: building user metadata');
         final userMetadata =
             await _buildUserMetadata(avatarAttachment: uploadedAvatar?.mediaAttachment);
+        Logger.log('XXX: OnboardingCompleteNotifier: updating user social profile');
         final usernameProofsJsonPayloads = await ref.read(
           updateUserSocialProfileProvider(
             data: UserSocialProfileData(
@@ -67,14 +79,19 @@ class OnboardingCompleteNotifier extends _$OnboardingCompleteNotifier {
           ).future,
         );
 
+        Logger.log('XXX: OnboardingCompleteNotifier: building user languages');
         final (:interestSetData, :interestsData) = _buildUserLanguages();
 
+        Logger.log('XXX: OnboardingCompleteNotifier: building follow list');
         final followList = _buildFollowList();
 
+        Logger.log('XXX: OnboardingCompleteNotifier: building username proofs events');
         final usernameProofsEvents =
             usernameProofsJsonPayloads.map(EventMessage.fromPayloadJson).toList();
+        Logger.log('XXX: OnboardingCompleteNotifier: updating profile badges');
         final updatedProfileBadges = await ref
             .read(updateProfileBadgesWithUsernameProofsProvider(usernameProofsEvents).future);
+        Logger.log('XXX: OnboardingCompleteNotifier: sending entities data');
         await ref.read(ionConnectNotifierProvider.notifier).sendEntitiesData(
           [
             userMetadata,

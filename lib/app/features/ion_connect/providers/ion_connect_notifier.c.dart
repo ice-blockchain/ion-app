@@ -54,14 +54,17 @@ class IonConnectNotifier extends _$IonConnectNotifier {
 
     return withRetry(
       ({error}) async {
+        Logger.log('XXX: IonConnectNotifier: getting relay');
         relay ??= await ref
             .read(relayCreationProvider.notifier)
             .getRelay(actionSource, dislikedUrls: DislikedRelayUrlsCollection(dislikedRelaysUrls));
 
+        Logger.log('XXX: IonConnectNotifier: handling relay auth');
         await ref
             .read(relayAuthProvider(relay!))
             .handleRelayAuthOnAction(actionSource: actionSource, error: error);
 
+        Logger.log('XXX: IonConnectNotifier: sending events');
         await relay!.sendEvents(events).timeout(
               _defaultTimeout,
               onTimeout: () => throw TimeoutException(
@@ -98,6 +101,7 @@ class IonConnectNotifier extends _$IonConnectNotifier {
   }) async {
     final eventsToSend = [...events];
     if (metadataBuilders.isNotEmpty) {
+      Logger.log('XXX: IonConnectNotifier: building metadata');
       final metadataEvents = await _buildMetadata(
         events: events,
         metadataBuilders: metadataBuilders,
@@ -131,7 +135,9 @@ class IonConnectNotifier extends _$IonConnectNotifier {
     List<EventMessage> additionalEvents = const [],
     bool cache = true,
   }) async {
+    Logger.log('XXX: IonConnectNotifier: signing entities data');
     final events = await Future.wait(entitiesData.map(sign));
+    Logger.log('XXX: IonConnectNotifier: sending events with additional events');
     return sendEvents(
       [...events, ...additionalEvents],
       actionSource: actionSource,
@@ -343,6 +349,7 @@ class IonConnectNotifier extends _$IonConnectNotifier {
     required List<EventMessage> events,
     required List<EventsMetadataBuilder> metadataBuilders,
   }) async {
+    Logger.log('XXX: IonConnectNotifier: building metadata');
     final parser = ref.read(eventParserProvider);
     final eventReferences =
         events.map((eventMessage) => parser.parse(eventMessage).toEventReference()).toList();
