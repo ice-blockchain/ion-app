@@ -40,7 +40,7 @@ class UpdateUserSocialProfileDataSource {
         decoder: (result) =>
             parseJsonObject(result, fromJson: UpdateUserSocialProfileResponse.fromJson),
       );
-      return response.usernameProof;
+      return response.usernameProof ?? [];
     } on RequestExecutionException catch (e) {
       final exception = _mapException(e);
       throw exception;
