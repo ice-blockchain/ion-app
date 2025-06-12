@@ -26,6 +26,7 @@ class FeedForYouContent extends _$FeedForYouContent implements PagedNotifier {
     return const FeedForYouContentState(
       items: null,
       isLoading: false,
+      hasMoreFollowing: true,
       relaysPagination: {},
     );
   }
@@ -55,11 +56,19 @@ class FeedForYouContent extends _$FeedForYouContent implements PagedNotifier {
     // }
   }
 
-  Stream<IonConnectEntity> _fetchUnseenFollowing({required int limit}) {
+  Stream<IonConnectEntity> _fetchUnseenFollowing({required int limit}) async* {
     final notifier = ref.read(
       feedFollowingContentProvider(feedType, feedModifier: feedModifier, showSeen: false).notifier,
     );
-    return notifier.requestEntities(limit: limit);
+    final provider = ref
+        .read(feedFollowingContentProvider(feedType, feedModifier: feedModifier, showSeen: false));
+    if (!provider.hasMore) return;
+
+    yield* notifier.requestEntities(limit: limit);
+
+    if (!provider.hasMore) {
+      state = state.copyWith(hasMoreFollowing: false);
+    }
   }
 
   @override
@@ -97,13 +106,15 @@ class FeedForYouContentState with _$FeedForYouContentState implements PagedState
   const factory FeedForYouContentState({
     required Set<IonConnectEntity>? items,
     required Map<String, RelayPagination> relaysPagination,
+    required bool hasMoreFollowing,
     required bool isLoading,
   }) = _FeedForYouContentState;
 
   const FeedForYouContentState._();
 
   @override
-  bool get hasMore => relaysPagination.values.any((pagination) => pagination.hasMore);
+  bool get hasMore =>
+      hasMoreFollowing || relaysPagination.values.any((pagination) => pagination.hasMore);
 }
 
 @Freezed(equal: false)
