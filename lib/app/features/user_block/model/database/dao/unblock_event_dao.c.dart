@@ -2,9 +2,12 @@
 
 part of '../block_user_database.c.dart';
 
-@Riverpod(keepAlive: true)
-UnblockEventDao unblockEventDao(Ref ref) =>
-    UnblockEventDao(ref.watch(blockedUsersDatabaseProvider));
+@riverpod
+UnblockEventDao unblockEventDao(Ref ref) {
+  final keepAlive = ref.keepAlive();
+  onLogout(ref, keepAlive.close);
+  return UnblockEventDao(ref.watch(blockedUsersDatabaseProvider));
+}
 
 @DriftAccessor(tables: [UnblockEventTable])
 class UnblockEventDao extends DatabaseAccessor<BlockUserDatabase> with _$UnblockEventDaoMixin {

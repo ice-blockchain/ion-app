@@ -8,8 +8,10 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'blocked_users_database_provider.c.g.dart';
 
-@Riverpod(keepAlive: true)
+@riverpod
 BlockUserDatabase blockedUsersDatabase(Ref ref) {
+  final keepAlive = ref.keepAlive();
+  onLogout(ref, keepAlive.close);
   final pubkey = ref.watch(currentPubkeySelectorProvider);
 
   if (pubkey == null) {

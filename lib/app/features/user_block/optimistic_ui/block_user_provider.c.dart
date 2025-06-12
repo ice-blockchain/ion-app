@@ -56,8 +56,11 @@ Stream<BlockedUser?> blockedUserWatch(Ref ref, String masterPubkey) {
   return service.watch(masterPubkey);
 }
 
-@Riverpod(keepAlive: true)
+@riverpod
 OptimisticOperationManager<BlockedUser> blockUserManager(Ref ref) {
+  final keepAlive = ref.keepAlive();
+  onLogout(ref, keepAlive.close);
+
   final strategy = ref.watch(blockSyncStrategyProvider);
 
   final manager = OptimisticOperationManager<BlockedUser>(

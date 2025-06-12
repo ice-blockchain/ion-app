@@ -18,11 +18,12 @@ import 'package:ion/app/features/user_block/model/entities/blocked_user_entity.c
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'blocked_users_sync_provider.c.g.dart';
-
-@Riverpod(keepAlive: true)
+@riverpod
 class BlockedUsersSync extends _$BlockedUsersSync {
   @override
   Stream<void> build() async* {
+    final keepAlive = ref.keepAlive();
+    onLogout(ref, keepAlive.close);
     // Wait for authentication and delegation
     final authState = await ref.watch(authProvider.future);
     if (!authState.isAuthenticated) return;
