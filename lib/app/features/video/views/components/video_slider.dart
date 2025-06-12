@@ -25,22 +25,51 @@ class VideoSlider extends StatelessWidget {
     final secondaryTextColor = context.theme.appColors.secondaryText;
     final trackHeight = 4.0.s;
 
-    return SliderTheme(
-      data: SliderThemeData(
-        thumbShape: SliderComponentShape.noThumb,
-        overlayShape: SliderComponentShape.noThumb,
-        trackHeight: trackHeight,
-        trackShape: const RectangularSliderTrackShape(),
-      ),
-      child: Slider(
-        max: duration.inMilliseconds.toDouble(),
-        value: position.inMilliseconds.toDouble(),
-        onChangeStart: onChangeStart,
-        onChangeEnd: onChangeEnd,
-        onChanged: onChanged,
-        activeColor: secondaryBackgroundColor,
-        inactiveColor: secondaryTextColor,
+    return ColoredBox(
+      color: context.theme.appColors.primaryText,
+      child: SliderTheme(
+        data: SliderThemeData(
+          thumbShape: const _CustomSliderComponentShape(),
+          overlayShape: const _CustomSliderComponentShape(),
+          trackHeight: trackHeight,
+          trackShape: const RectangularSliderTrackShape(),
+        ),
+        child: Slider(
+          max: duration.inMilliseconds.toDouble(),
+          value: position.inMilliseconds.toDouble(),
+          onChangeStart: onChangeStart,
+          onChangeEnd: onChangeEnd,
+          onChanged: onChanged,
+          activeColor: secondaryBackgroundColor,
+          inactiveColor: secondaryTextColor,
+        ),
       ),
     );
+  }
+}
+
+class _CustomSliderComponentShape extends SliderComponentShape {
+  const _CustomSliderComponentShape();
+  @override
+  Size getPreferredSize(bool isEnabled, bool isDiscrete) {
+    return Size(0.s, 24.s);
+  }
+
+  @override
+  void paint(
+    PaintingContext context,
+    Offset center, {
+    required Animation<double> activationAnimation,
+    required Animation<double> enableAnimation,
+    required bool isDiscrete,
+    required TextPainter labelPainter,
+    required RenderBox parentBox,
+    required SliderThemeData sliderTheme,
+    required TextDirection textDirection,
+    required double value,
+    required double textScaleFactor,
+    required Size sizeWithOverflow,
+  }) {
+    // no-op.
   }
 }

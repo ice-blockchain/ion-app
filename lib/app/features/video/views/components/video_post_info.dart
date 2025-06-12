@@ -74,7 +74,7 @@ class VideoPostInfo extends StatelessWidget {
               Padding(
                 padding: EdgeInsetsDirectional.only(
                   top: 10.0.s,
-                  bottom: 14.0.s,
+                  bottom: 2.0.s,
                 ),
                 child: VideoTextPost(entity: videoPost),
               ),
