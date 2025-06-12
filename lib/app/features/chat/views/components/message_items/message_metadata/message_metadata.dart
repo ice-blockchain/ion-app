@@ -55,7 +55,7 @@ class MessageMetaData extends HookConsumerWidget {
                   2))
             Text(
               context.i18n.common_message_edited,
-              style: context.theme.appTextThemes.caption4.copyWith(
+              style: context.theme.appTextThemes.caption5.copyWith(
                 color: isMe
                     ? context.theme.appColors.strokeElements
                     : context.theme.appColors.quaternaryText,
@@ -74,11 +74,14 @@ class MessageMetaData extends HookConsumerWidget {
           if (isMe)
             Padding(
               padding: EdgeInsetsDirectional.only(start: 2.0.s),
-              child: statusIcon(
-                context,
-                deliveryStatus.valueOrNull ?? MessageDeliveryStatus.created,
-                deliveryStatusIconSize,
-              ),
+              child: (deliveryStatus.valueOrNull ?? MessageDeliveryStatus.created) ==
+                      MessageDeliveryStatus.created
+                  ? SizedBox(width: 12.0.s)
+                  : statusIcon(
+                      context,
+                      deliveryStatus.valueOrNull ?? MessageDeliveryStatus.created,
+                      deliveryStatusIconSize,
+                    ),
             ),
         ],
       ),

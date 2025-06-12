@@ -140,13 +140,10 @@ class _TextMessageContent extends HookWidget {
     );
 
     final oneLineTextPainter = TextPainter(
-      text: TextSpan(
-        text: content,
-        style: textStyle,
-      ),
+      text: TextSpan(text: content, style: textStyle),
       textDirection: TextDirection.ltr,
       textWidthBasis: TextWidthBasis.longestLine,
-    )..layout(maxWidth: maxAvailableWidth - metadataWidth.value.s);
+    )..layout(maxWidth: maxAvailableWidth - metadataWidth.value.s + 32.0.s);
 
     final oneLineMetrics = oneLineTextPainter.computeLineMetrics();
     final multiline = oneLineMetrics.length > 1;
