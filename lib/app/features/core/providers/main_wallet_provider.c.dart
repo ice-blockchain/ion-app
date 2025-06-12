@@ -10,13 +10,9 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'main_wallet_provider.c.g.dart';
 
-@Riverpod(keepAlive: true)
+@riverpod
 Future<Wallet?> mainWallet(Ref ref) async {
-  final userAvailable =
-      await ref.watch(authProvider.selectAsync((state) => state.currentIdentityKeyName)) != null;
-  if (!userAvailable) {
-    return null;
-  }
+  keepAliveWhenAuthenticated(ref);
 
   final wallets = await ref.watch(walletsNotifierProvider.future);
   final mainWallet = wallets.firstWhereOrNull((wallet) => wallet.name == 'main');
