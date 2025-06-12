@@ -75,11 +75,9 @@ class IonConnectLongRunningSubscriptionNotifier
     await _fetchPreviousEvents(
       currentUserMasterPubkey,
       currentUserDeviceKey,
-      null,
+      null, //TODO: get from latestSyncedEventCreatedAtTimestamp
       null,
     );
-    return;
-    //INIT LONG RUNNING SUBSCRIPTION
 
     final requestMessage = RequestMessage(
       filters: [
@@ -87,10 +85,13 @@ class IonConnectLongRunningSubscriptionNotifier
         encryptedEventsFilter(
           currentUserMasterPubkey,
           currentUserDeviceKey,
-          since: latestSyncedEventCreatedAtTimestamp,
+          since: latestSyncedEventCreatedAtTimestamp?.overlap,
         ),
       ],
     );
+
+    return;
+    print('subscriptionrequestMessage: $requestMessage long-running-subscription');
 
     final stream = ref.watch(
       ionConnectEventsSubscriptionProvider(
@@ -107,7 +108,7 @@ class IonConnectLongRunningSubscriptionNotifier
     yield null;
   }
 
-  Future<void> _fetchPreviousEvents(
+  Future<int?> _fetchPreviousEvents(
     String currentUserMasterPubkey,
     String currentUserDeviceKey,
     int? since,
@@ -139,6 +140,7 @@ class IonConnectLongRunningSubscriptionNotifier
       print(
         'until: $until Date: ${until?.toDateTime.toIso8601String()} long-running-subscription',
       );
+      print('request: $request long-running-subscription');
       final ionConnectNotifier = ref.watch(ionConnectNotifierProvider.notifier);
       final eventsStream = ionConnectNotifier.requestEvents(
         request,
@@ -175,7 +177,7 @@ class IonConnectLongRunningSubscriptionNotifier
 
       //TODO: handle 0 events
       if (count == 0) {
-        return;
+        return until;
       }
 
       return _fetchPreviousEvents(
@@ -187,6 +189,7 @@ class IonConnectLongRunningSubscriptionNotifier
     } catch (e) {
       print('error: $e long-running-subscription');
     }
+    return null;
   }
 
   Future<int> _handleMessage(
