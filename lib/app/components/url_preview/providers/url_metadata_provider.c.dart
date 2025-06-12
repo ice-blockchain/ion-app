@@ -8,7 +8,6 @@ part 'url_metadata_provider.c.g.dart';
 
 @Riverpod(keepAlive: true)
 Future<OgpData?> urlMetadata(Ref ref, String url) async {
-  
   final uri = Uri.tryParse(url);
 
   if (uri == null || uri.scheme.isEmpty) {

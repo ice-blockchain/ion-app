@@ -18,6 +18,7 @@ import 'package:ion/app/features/user_block/model/entities/blocked_user_entity.c
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'blocked_users_sync_provider.c.g.dart';
+
 @riverpod
 class BlockedUsersSync extends _$BlockedUsersSync {
   @override
