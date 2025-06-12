@@ -18,14 +18,39 @@ part 'sync_transactions_service.c.g.dart';
 
 @Riverpod(keepAlive: true)
 Future<SyncTransactionsService> syncTransactionsService(Ref ref) async {
-  return SyncTransactionsService(
-    await ref.watch(walletsNotifierProvider.future),
-    ref.watch(networksRepositoryProvider),
-    await ref.watch(cryptoWalletsRepositoryProvider),
-    await ref.watch(transactionLoaderProvider.future),
-    await ref.watch(transferStatusUpdaterProvider.future),
-    await ref.watch(walletViewsServiceProvider.future),
-  );
+  Logger.log('XXX: syncTransactionsService: initializing sync transactions service');
+
+  Logger.log('XXX: syncTransactionsService: getting wallets');
+  final wallets = await ref.watch(walletsNotifierProvider.future);
+  Logger.log('XXX: syncTransactionsService: getting networks repo');
+  final networks = ref.watch(networksRepositoryProvider);
+  Logger.log('XXX: syncTransactionsService: getting crypto wallets repo');
+  final cryptoWallets = ref.watch(cryptoWalletsRepositoryProvider);
+  Logger.log('XXX: syncTransactionsService: getting transaction loader');
+  final transactionLoader = await ref.watch(transactionLoaderProvider.future);
+  Logger.log('XXX: syncTransactionsService: getting transfer status updater');
+  final transferStatusUpdater = await ref.watch(transferStatusUpdaterProvider.future);
+  Logger.log('XXX: syncTransactionsService: getting wallet views service');
+  final walletViews = await ref.watch(walletViewsServiceProvider.future);
+
+  try {
+    Logger.log('XXX: syncTransactionsService: returning sync transactions service');
+    return SyncTransactionsService(
+      wallets,
+      networks,
+      cryptoWallets,
+      transactionLoader,
+      transferStatusUpdater,
+      walletViews,
+    );
+  } catch (error, stackTrace) {
+    Logger.error(
+      error,
+      stackTrace: stackTrace,
+      message: 'XXX: syncTransactionsServiceProvider: failed',
+    );
+    rethrow;
+  }
 }
 
 /// Loads the available wallet history, and on subsequent calls, synchronizes it.

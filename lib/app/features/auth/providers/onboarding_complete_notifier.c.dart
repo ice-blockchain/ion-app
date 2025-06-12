@@ -144,18 +144,23 @@ class OnboardingCompleteNotifier extends _$OnboardingCompleteNotifier {
   }
 
   Future<UserMetadata> _buildUserMetadata({MediaAttachment? avatarAttachment}) async {
+    Logger.log('XXX: OnboardingCompleteNotifier: getting onboarding data');
     final OnboardingState(:name, :displayName) = ref.read(onboardingDataProvider);
 
+    Logger.log('XXX: OnboardingCompleteNotifier: checking name');
     if (name == null) {
       throw RequiredFieldIsEmptyException(field: 'name');
     }
 
+    Logger.log('XXX: OnboardingCompleteNotifier: checking displayName');
     if (displayName == null) {
       throw RequiredFieldIsEmptyException(field: 'displayName');
     }
 
+    Logger.log('XXX: OnboardingCompleteNotifier: building wallets');
     final wallets = await _buildUserWallets();
 
+    Logger.log('XXX: OnboardingCompleteNotifier: returning user metadata');
     return UserMetadata(
       name: name,
       displayName: displayName,
@@ -167,7 +172,9 @@ class OnboardingCompleteNotifier extends _$OnboardingCompleteNotifier {
   }
 
   Future<Map<String, String>> _buildUserWallets() async {
+    Logger.log('XXX: OnboardingCompleteNotifier: getting main crypto wallets');
     final cryptoWallets = await ref.read(mainCryptoWalletsProvider.future);
+    Logger.log('XXX: OnboardingCompleteNotifier: creating wallet map');
     return Map.fromEntries(
       cryptoWallets.map((wallet) {
         if (wallet.address == null) return null;

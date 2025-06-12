@@ -32,14 +32,17 @@ class WalletsInitializerNotifier extends _$WalletsInitializerNotifier {
       final networksInitializer = ref.watch(networksInitializerProvider);
       final syncServiceFuture = ref.watch(syncTransactionsServiceProvider.future);
 
-      final (_, _) = await (
+      Logger.log('XXX: WalletsInitializerNotifier: initializing coin and networks');
+      await Future.wait([
         coinInitializer.initialize(),
         networksInitializer.initialize(),
-      ).wait;
+      ]);
 
       try {
+        Logger.log('XXX: WalletsInitializerNotifier: initializing sync transactions service');
         final syncService = await syncServiceFuture;
 
+        Logger.log('XXX: WalletsInitializerNotifier: syncing transactions');
         unawaited(
           syncService.sync(),
         );
@@ -47,8 +50,9 @@ class WalletsInitializerNotifier extends _$WalletsInitializerNotifier {
         Logger.error(
           error,
           stackTrace: stackTrace,
-          message: 'SyncTransactionsService.sync() failed',
+          message: 'XXX: WalletsInitializerNotifier: SyncTransactionsService.sync() failed',
         );
+        rethrow;
       }
 
       // Only complete if not already completed
