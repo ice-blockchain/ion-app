@@ -45,9 +45,9 @@ class IonConnectGiftWrapEntity with IonConnectEntity, ImmutableEntity, _$IonConn
 class IonConnectGiftWrapData with _$IonConnectGiftWrapData {
   const factory IonConnectGiftWrapData({
     required String content,
-    required EntityExpiration expiration,
-    required List<String> kinds,
+    required List<List<String>> kinds,
     required List<RelatedPubkey> relatedPubkeys,
+    EntityExpiration? expiration,
   }) = _IonConnectGiftWrapData;
 
   const IonConnectGiftWrapData._();
@@ -56,8 +56,8 @@ class IonConnectGiftWrapData with _$IonConnectGiftWrapData {
     final tags = groupBy(eventMessage.tags, (tag) => tag[0]);
     return IonConnectGiftWrapData(
       content: eventMessage.content,
-      expiration: EntityExpiration.fromTag(tags[EntityExpiration.tagName]!.first),
-      kinds: tags['k']!.map((tag) => tag[1]).toList(),
+      expiration: tags[EntityExpiration.tagName]?.map(EntityExpiration.fromTag).firstOrNull,
+      kinds: tags['k']!.map((tag) => tag.sublist(1)).toList(),
       relatedPubkeys: tags[RelatedPubkey.tagName]!.map(RelatedPubkey.fromTag).toList(),
     );
   }

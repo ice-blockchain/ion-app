@@ -7,6 +7,7 @@ import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/chat/e2ee/model/entities/private_message_reaction_data.c.dart';
 import 'package:ion/app/features/chat/model/database/chat_database.c.dart';
 import 'package:ion/app/features/ion_connect/ion_connect.dart';
+import 'package:ion/app/features/ion_connect/model/ion_connect_gift_wrap.c.dart';
 import 'package:ion/app/features/ion_connect/model/persistent_subscription_encrypted_event_message_handler.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
@@ -26,12 +27,15 @@ class EncryptedDirectMessageReactionEventHandler
 
   @override
   bool canHandle({
-    required List<String> wrappedKinds,
-    List<String> wrappedSecondKinds = const [],
+    required IonConnectGiftWrapEntity entity,
   }) {
-    return wrappedKinds.contains(
-      PrivateMessageReactionEntity.kind.toString(),
-    );
+    return entity.data.kinds.containsKind([
+          PrivateMessageReactionEntity.kind.toString(),
+          PrivateMessageReactionEntity.kind.toString(),
+        ]) ||
+        entity.data.kinds.containsKind([
+          PrivateMessageReactionEntity.kind.toString(),
+        ]);
   }
 
   @override
