@@ -158,5 +158,39 @@ class CoinsDao extends DatabaseAccessor<WalletsDatabase> with _$CoinsDaoMixin {
     int? limit,
     int? offset,
     Iterable<String>? excludeCoinIds,
-  }) {}
+  }) async {
+    final query = select(coinsTable).join([
+      leftOuterJoin(networksTable, networksTable.id.equalsExp(coinsTable.networkId)),
+    ]);
+
+    if (excludeCoinIds?.isNotEmpty ?? false) {
+      query.where(coinsTable.id.isNotIn(excludeCoinIds!));
+    }
+
+    if (offset != null) {
+      query.offset(offset);
+    }
+
+    if (limit != null) {
+      query.limit(limit);
+    }
+
+    final results = await query.map(_toCoinData).get();
+    
+    // Group coins by symbolGroup
+    final groupsMap = <String, List<CoinData>>{};
+    for (final coin in results) {
+      final symbolGroup = coin.symbolGroup;
+      if (!groupsMap.containsKey(symbolGroup)) {
+        groupsMap[symbolGroup] = [];
+      }
+      groupsMap[symbolGroup]!.add(coin);
+    }
+
+    // Convert to CoinsGroup objects
+    return groupsMap.entries.map((entry) => CoinsGroup(
+      symbolGroup: entry.key,
+      coins: entry.value,
+    ));
+  }
 }
