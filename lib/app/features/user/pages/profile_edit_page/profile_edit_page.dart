@@ -16,12 +16,15 @@ import 'package:ion/app/features/auth/views/components/user_data_inputs/name_inp
 import 'package:ion/app/features/auth/views/components/user_data_inputs/nickname_input.dart';
 import 'package:ion/app/features/auth/views/components/user_data_inputs/website_input.dart';
 import 'package:ion/app/features/user/hooks/update_user_metadata_error_message.dart';
+import 'package:ion/app/features/user/hooks/use_verify_nickname_availability_error_message.dart';
 import 'package:ion/app/features/user/pages/components/profile_avatar/profile_avatar.dart';
 import 'package:ion/app/features/user/pages/profile_edit_page/components/category_selector/category_selector.dart';
 import 'package:ion/app/features/user/pages/profile_edit_page/components/edit_submit_button/edit_submit_button.dart';
 import 'package:ion/app/features/user/pages/profile_edit_page/components/header/header.dart';
 import 'package:ion/app/features/user/pages/profile_edit_page/hooks/use_draft_metadata.dart';
 import 'package:ion/app/features/user/providers/user_metadata_provider.c.dart';
+import 'package:ion/app/features/user/providers/user_nickname_provider.c.dart';
+import 'package:ion/app/hooks/use_on_init.dart';
 import 'package:ion/app/utils/url.dart';
 
 class ProfileEditPage extends HookConsumerWidget {
@@ -43,7 +46,21 @@ class ProfileEditPage extends HookConsumerWidget {
 
     final (:hasChanges, :draftRef, :update) = useDraftMetadata(ref, userMetadata.data);
 
-    final errorMessage = useUpdateUserMetadataErrorMessage(ref);
+    final nickname = useState(userMetadata.data.name);
+    final debouncedNickname = useDebounced(nickname.value.trim(), const Duration(seconds: 1));
+    useOnInit(
+      () {
+        if (debouncedNickname != null && validateNickname(debouncedNickname, context) == null) {
+          ref
+              .read(userNicknameNotifierProvider.notifier)
+              .verifyNicknameAvailability(nickname: debouncedNickname);
+        }
+      },
+      [debouncedNickname, context],
+    );
+
+    final verifyNicknameErrorMessage = useVerifyNicknameAvailabilityErrorMessage(ref);
+    final updateUserMetadataError = useUpdateUserMetadataErrorMessage(ref);
 
     return Scaffold(
       body: KeyboardDismissOnTap(
@@ -73,10 +90,13 @@ class ProfileEditPage extends HookConsumerWidget {
                                   NicknameInput(
                                     initialValue: userMetadata.data.name,
                                     isLive: true,
-                                    errorText: errorMessage.value,
+                                    errorText: updateUserMetadataError.value ??
+                                        verifyNicknameErrorMessage.value,
                                     onChanged: (text) {
-                                      errorMessage.value = null;
+                                      updateUserMetadataError.value = null;
+                                      verifyNicknameErrorMessage.value = null;
                                       update(draftRef.value.copyWith(name: text));
+                                      nickname.value = text;
                                     },
                                   ),
                                   SizedBox(height: paddingValue),

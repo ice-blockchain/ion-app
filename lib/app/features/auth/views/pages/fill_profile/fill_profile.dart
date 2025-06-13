@@ -42,10 +42,10 @@ class FillProfile extends HookConsumerWidget {
     final name = useState(initialName);
     final initialNickname = onboardingData.name ?? '';
     final nickname = useState(onboardingData.name ?? '');
-    final debouncedNickname =
-        useDebounced(nickname.value.trim(), const Duration(milliseconds: 1000));
+    final debouncedNickname = useDebounced(nickname.value.trim(), const Duration(seconds: 1));
     final initialReferral = onboardingData.referralName ?? '';
     final referral = useState(onboardingData.referralName ?? '');
+    final debouncedReferral = useDebounced(referral.value.trim(), const Duration(seconds: 1));
 
     final isLoading = useState(false);
 
@@ -95,6 +95,17 @@ class FillProfile extends HookConsumerWidget {
         }
       },
       [debouncedNickname, context],
+    );
+
+    useOnInit(
+      () {
+        if (debouncedReferral != null && validateNickname(debouncedReferral, context) == null) {
+          ref
+              .read(userReferralNotifierProvider.notifier)
+              .verifyReferralExists(referral: debouncedReferral);
+        }
+      },
+      [debouncedReferral, context],
     );
 
     final verifyNicknameErrorMessage = useVerifyNicknameAvailabilityErrorMessage(ref);
