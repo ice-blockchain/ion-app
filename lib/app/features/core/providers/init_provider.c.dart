@@ -23,7 +23,6 @@ import 'package:ion/app/features/user/providers/badges_notifier.c.dart';
 import 'package:ion/app/features/user/providers/user_file_storage_relays_sync_provider.c.dart';
 import 'package:ion/app/features/user/providers/user_relays_sync_provider.c.dart';
 import 'package:ion/app/features/wallets/providers/coins_sync_provider.c.dart';
-import 'package:ion/app/features/wallets/providers/transactions_subscription_provider.c.dart';
 import 'package:ion/app/features/wallets/providers/user_public_wallets_sync_provider.c.dart';
 import 'package:ion/app/features/wallets/providers/wallets_initializer_provider.c.dart';
 import 'package:ion/app/services/ion_connect/ion_connect.dart';
@@ -60,7 +59,6 @@ Future<void> initApp(Ref ref) async {
   // so we need to listen to it to keep it alive. The same with transactionsSubscription.
   ref
     ..listen(coinsSyncProvider, noop)
-    ..listen(transactionsSubscriptionProvider, noop)
     ..listen(walletsInitializerNotifierProvider, noop)
     ..listen(userPublicWalletsSyncProvider, noop)
     ..listen(userRelaysSyncProvider, noop)

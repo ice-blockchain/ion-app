@@ -6,6 +6,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/exceptions/exceptions.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/auth/providers/auth_provider.c.dart';
+import 'package:ion/app/features/auth/providers/delegation_complete_provider.c.dart';
 import 'package:ion/app/features/chat/e2ee/providers/encrypted_event_message_handler.c.dart';
 import 'package:ion/app/features/ion_connect/ion_connect.dart';
 import 'package:ion/app/features/ion_connect/model/ion_connect_gift_wrap.c.dart';
@@ -22,7 +23,9 @@ class IonConnectPersistentSubscription extends _$IonConnectPersistentSubscriptio
   @override
   Future<void> build() async {
     final authState = await ref.watch(authProvider.future);
-    if (!authState.isAuthenticated) return;
+    final delegationComplete = ref.watch(delegationCompleteProvider).valueOrNull.falseOrValue;
+
+    if (!authState.isAuthenticated || !delegationComplete) return;
 
     final latestEventTimestamp = ref.watch(persistentSubscriptionLatestEventTimestampProvider);
     await _fetchPreviousEvents(
@@ -51,6 +54,10 @@ class IonConnectPersistentSubscription extends _$IonConnectPersistentSubscriptio
       int? recentEventCreatedAt;
       int? oldestEventCreatedAt;
       await for (final event in eventsStream) {
+        //TODO: Remove this once we have a proper way to handle gift wrap events on relay
+        if (event.kind == IonConnectGiftWrapEntity.kind) {
+          continue;
+        }
         await _handleEvent(event);
         count++;
         final eventCreatedAt = event.createdAt.toMicroseconds;
@@ -75,6 +82,7 @@ class IonConnectPersistentSubscription extends _$IonConnectPersistentSubscriptio
       }
 
       return _fetchPreviousEvents(
+        since: since,
         until: oldestEventCreatedAt == null ? null : oldestEventCreatedAt - 1,
       );
     } catch (e) {
@@ -87,6 +95,9 @@ class IonConnectPersistentSubscription extends _$IonConnectPersistentSubscriptio
     final requestMessage = await _requestMessageBuilder(
       since: latestEventTimestamp,
     );
+    //TODO: Remove this once we have a proper way to handle gift wrap events on relay
+    requestMessage.filters[1] = requestMessage.filters[1]
+        .copyWith(since: () => DateTime.now().microsecondsSinceEpoch.overlap);
     final stream = ref.watch(ionConnectEventsSubscriptionProvider(requestMessage));
     final subscription = stream.listen(_handleEvent);
     ref.onDispose(subscription.cancel);
