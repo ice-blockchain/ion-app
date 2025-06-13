@@ -52,6 +52,7 @@ class RepliedMessageInfo extends HookConsumerWidget {
                     borderRadius: BorderRadius.circular(8.0.s),
                     child: IonConnectNetworkImage(
                       authorPubkey: repliedMessage.eventMessage.masterPubkey,
+                      width: 30.0.s,
                       imageUrl:
                           repliedMessage.medias.first.thumb ?? repliedMessage.medias.first.url,
                       fit: BoxFit.fitWidth,
