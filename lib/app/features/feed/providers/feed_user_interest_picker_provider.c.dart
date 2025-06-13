@@ -19,7 +19,8 @@ class FeedUserInterestPicker {
     required Random random,
   })  : _config = config,
         _interests = interests,
-        _random = random;
+        _random = random,
+        _interested = _calculateInterested(interests.categories, config: config);
 
   final FeedConfig _config;
 
@@ -27,18 +28,23 @@ class FeedUserInterestPicker {
 
   final Random _random;
 
-  String roll() {
-    final categories = _interests.categories;
+  final List<String> _interested;
+
+  /// Rolls a random subcategory based on the user's interests and the configuration.
+  ///
+  /// Only the [allowedSubcategories] are considered, if provided.
+  String? roll([List<String>? allowedSubcategories]) {
+    final categories = _getAllowedCategories(allowedSubcategories);
 
     if (_roll(_config.notInterestedCategoryChance)) {
       // if rolled the scenario where we have to pick a parent category
       // the user is not interested in, we pick an entirely random child
       // of an entirely random parent.
-      final randomCategory = _getRandomItem(categories.values);
-      return _getRandomItem(randomCategory.children.keys);
+      return _getRandomInterest(categories);
     }
 
     final interestedCategory = _getRandomInterestedByWeight(categories);
+    if (interestedCategory == null) return _getRandomInterest(categories);
 
     if (_roll(_config.notInterestedSubcategoryChance)) {
       // If rolled the scenario where you have to pick a child category
@@ -47,47 +53,35 @@ class FeedUserInterestPicker {
       return _getRandomItem(interestedCategory.value.children.keys);
     }
 
-    return _getRandomInterestedByWeight(interestedCategory.value.children).key;
+    return _getRandomInterestedByWeight(interestedCategory.value.children)?.key;
+  }
+
+  String? _getRandomInterest(Map<String, FeedInterestsCategory> categories) {
+    final randomCategory = _getRandomItem(categories.values);
+    return _getRandomItem(randomCategory?.children.keys ?? []);
   }
 
   bool _roll(double chance) => chance > _random.nextDouble();
 
-  T _getRandomItem<T>(Iterable<T> items) => items.elementAt(_random.nextInt(items.length));
+  T? _getRandomItem<T>(Iterable<T> items) => items.elementAtOrNull(_random.nextInt(items.length));
 
-  /// Caches the results of the interested categories to avoid recalculating them
-  /// every time we roll.
-  ///
-  /// Keyed by the hash code of the Map node, which remains the same over time.
-  final Map<int, InterestedItems> _cache = {};
+  Map<String, FeedInterestsCategory> _getAllowedCategories([List<String>? allowedSubcategories]) {
+    if (allowedSubcategories == null) return _interests.categories;
 
-  /// Returns a list of interested items for the given node and sum of their weights.
-  ///
-  /// An item is considered "interesting" to the user if its weight
-  /// is bigger than the threshold multiplied by the total weight of all sibling
-  /// items under the same parent.
-  InterestedItems<T>? _getInterested<T extends CategoryWithWeight>(Map<String, T> node) {
-    if (_cache.containsKey(node.hashCode)) {
-      return _cache[node.hashCode]! as InterestedItems<T>;
-    }
+    final filteredCategories = _interests.categories.entries.map((category) {
+      final filteredSubcategories = category.value.children.entries
+          .where((subcategory) => allowedSubcategories.contains(subcategory.key))
+          .nonNulls;
 
-    final entries = node.entries.toList();
-    final totalWeight = entries.fold<int>(0, (sum, item) => sum + item.value.weight);
+      return filteredSubcategories.isNotEmpty
+          ? MapEntry(
+              category.key,
+              category.value.copyWith(children: Map.fromEntries(filteredSubcategories)),
+            )
+          : null;
+    }).nonNulls;
 
-    if (totalWeight == 0) {
-      return null;
-    }
-
-    final minInterestedWeight = _config.interestedThreshold * totalWeight;
-
-    final interested = entries.where((item) => item.value.weight >= minInterestedWeight).toList();
-
-    if (interested.isEmpty) {
-      return null;
-    }
-
-    final interestedTotalWeight = interested.fold<int>(0, (sum, item) => sum + item.value.weight);
-
-    return _cache[node.hashCode] = (items: interested, totalWeight: interestedTotalWeight);
+    return Map.fromEntries(filteredCategories);
   }
 
   /// Returns a random interested item from the given node.
@@ -96,28 +90,62 @@ class FeedUserInterestPicker {
   /// For example, for a node with children [{weight: 1}, {weight: 3}],
   /// the first item has a 25% chance of being picked,
   /// while the second item has a 75% chance.
-  MapEntry<String, T> _getRandomInterestedByWeight<T extends CategoryWithWeight>(
+  MapEntry<String, T>? _getRandomInterestedByWeight<T extends CategoryWithWeight>(
     Map<String, T> node,
   ) {
-    final interested = _getInterested(node);
+    final interestedItems = node.entries.where((entry) => _interested.contains(entry.key)).toList();
 
-    if (interested == null) {
-      return _getRandomItem(node.entries);
-    }
+    final totalInterestedWeight = interestedItems.fold<int>(
+      0,
+      (sum, item) => sum + item.value.weight,
+    );
 
-    final (:items, :totalWeight) = interested;
-
-    final roll = _random.nextInt(totalWeight);
+    final roll = _random.nextInt(totalInterestedWeight);
 
     var sum = 0;
-    for (var i = 0; i < items.length; i++) {
-      sum += items[i].value.weight;
+    for (var i = 0; i < interestedItems.length; i++) {
+      sum += interestedItems[i].value.weight;
       if (roll < sum) {
-        return items[i];
+        return interestedItems[i];
       }
     }
 
-    return _getRandomItem(items);
+    return _getRandomItem(interestedItems);
+  }
+
+  /// Returns a List of interested categories and subcategories.
+  ///
+  /// An item is considered "interesting" to the user if its weight
+  /// is bigger than the threshold multiplied by the total weight of all sibling
+  /// items under the same parent.
+  static List<String> _calculateInterested(
+    Map<String, FeedInterestsCategory> categories, {
+    required FeedConfig config,
+  }) {
+    return [
+      ..._getInterested(categories, config: config),
+      ...categories.entries
+          .map((entry) => _getInterested(entry.value.children, config: config))
+          .expand((results) => results),
+    ];
+  }
+
+  static List<String> _getInterested<T extends CategoryWithWeight>(
+    Map<String, T> node, {
+    required FeedConfig config,
+  }) {
+    final entries = node.entries.toList();
+    final totalWeight = entries.fold<int>(0, (sum, item) => sum + item.value.weight);
+
+    if (totalWeight == 0) {
+      return [];
+    }
+
+    final minInterestedWeight = config.interestedThreshold * totalWeight;
+
+    final interested = entries.where((item) => item.value.weight >= minInterestedWeight).toList();
+
+    return interested.map((item) => item.key).toList();
   }
 }
 

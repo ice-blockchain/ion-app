@@ -183,32 +183,47 @@ class FeedForYouContent extends _$FeedForYouContent implements PagedNotifier {
       for (final relayUrl in relays)
         requestsQueue.add(() async {
           final interestsPicker = await ref.read(feedUserInterestPickerProvider(feedType).future);
-          final interest = interestsPicker.roll();
-          final pagination =
-              state.modifiersPagination[feedModifier]![relayUrl]!.interestsPagination[interest]!;
+
+          final relayInterestsPagination =
+              state.modifiersPagination[feedModifier]![relayUrl]!.interestsPagination;
+
+          final availableInterests = relayInterestsPagination.entries
+              .where((entry) => entry.value.hasMore)
+              .map((entry) => entry.key)
+              .toList();
+
+          final interest = interestsPicker.roll(availableInterests)!;
+
+          final interestPagination = relayInterestsPagination[interest]!;
 
           final entity = await _requestEntityFromRelay(
             relayUrl: relayUrl,
             feedModifier: feedModifier,
-            lastEventCreatedAt: pagination.lastEventCreatedAt,
+            lastEventCreatedAt: interestPagination.lastEventCreatedAt,
           );
+
           if (entity != null) {
             resultsController.add(entity);
             _updateRelayInterestPagination(
-              pagination.copyWith(lastEventCreatedAt: entity.createdAt),
+              interestPagination.copyWith(lastEventCreatedAt: entity.createdAt),
               relayUrl: relayUrl,
               feedModifier: feedModifier,
               interest: interest,
             );
           } else {
             _updateRelayInterestPagination(
-              pagination.copyWith(hasMore: false),
+              interestPagination.copyWith(hasMore: false),
               relayUrl: relayUrl,
               feedModifier: feedModifier,
               interest: interest,
             );
           }
         }).catchError((Object? error) {
+          _updateRelayPagination(
+            state.modifiersPagination[feedModifier]![relayUrl]!.copyWith(hasMore: false),
+            relayUrl: relayUrl,
+            feedModifier: feedModifier,
+          );
           Logger.error(
             error ?? '',
             message: 'Error requesting entities from relay: $relayUrl',
@@ -302,25 +317,40 @@ class FeedForYouContent extends _$FeedForYouContent implements PagedNotifier {
     }
   }
 
-  void _updateRelayInterestPagination(
-    InterestPagination pagination, {
+  void _updateRelayPagination(
+    RelayPagination pagination, {
     required String relayUrl,
     required FeedModifier feedModifier,
-    required String interest,
   }) {
     state = state.copyWith(
       modifiersPagination: {
         ...state.modifiersPagination,
         feedModifier: {
           ...state.modifiersPagination[feedModifier]!,
-          relayUrl: state.modifiersPagination[feedModifier]![relayUrl]!.copyWith(
-            interestsPagination: {
-              ...state.modifiersPagination[feedModifier]![relayUrl]!.interestsPagination,
-              interest: pagination,
-            },
-          ),
+          relayUrl: pagination,
         },
       },
+    );
+  }
+
+  void _updateRelayInterestPagination(
+    InterestPagination pagination, {
+    required String relayUrl,
+    required FeedModifier feedModifier,
+    required String interest,
+  }) {
+    final relayPagination = state.modifiersPagination[feedModifier]![relayUrl]!;
+    final interestsPagination = {
+      ...relayPagination.interestsPagination,
+      interest: pagination,
+    };
+    _updateRelayPagination(
+      relayPagination.copyWith(
+        interestsPagination: interestsPagination,
+        hasMore: interestsPagination.values.any((interest) => interest.hasMore),
+      ),
+      relayUrl: relayUrl,
+      feedModifier: feedModifier,
     );
   }
 }
