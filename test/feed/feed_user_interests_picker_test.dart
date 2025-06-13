@@ -88,5 +88,37 @@ void main() {
       final result = picker.roll();
       expect(result, equals('football'));
     });
+
+    test(
+        'rolls a random subcategory if there are no interested categories and interested chance is 100%',
+        () {
+      final picker = FeedUserInterestPicker(
+        config: config.copyWith(
+          notInterestedCategoryChance: 0,
+          notInterestedSubcategoryChance: 0,
+          interestedThreshold: 1,
+        ),
+        interests: interests,
+        random: random,
+      );
+      final result = picker.roll();
+      expect(result, 'rock');
+    });
+
+    test(
+        'rolls a random subcategory if there are no not-interested categories and not-interested chance is 100%',
+        () {
+      final picker = FeedUserInterestPicker(
+        config: config.copyWith(
+          notInterestedCategoryChance: 1,
+          notInterestedSubcategoryChance: 1,
+          interestedThreshold: 0,
+        ),
+        interests: interests,
+        random: random,
+      );
+      final result = picker.roll();
+      expect(result, 'rock');
+    });
   });
 }
