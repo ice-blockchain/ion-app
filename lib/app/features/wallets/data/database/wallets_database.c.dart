@@ -21,6 +21,7 @@ part 'wallets_database.c.g.dart';
 @riverpod
 WalletsDatabase walletsDatabase(Ref ref) {
   keepAliveWhenAuthenticated(ref);
+
   final pubkey = ref.watch(currentPubkeySelectorProvider);
 
   if (pubkey == null) {
