@@ -35,7 +35,7 @@ class TopicTooltipVisibilityNotifier extends _$TopicTooltipVisibilityNotifier {
     state = const AsyncValue.data(false);
     final identityKeyName = ref.watch(currentIdentityKeyNameSelectorProvider) ?? '';
     final userPreferencesService =
-    ref.watch(userPreferencesServiceProvider(identityKeyName: identityKeyName));
+        ref.watch(userPreferencesServiceProvider(identityKeyName: identityKeyName));
 
     return userPreferencesService.setValue<bool>(hasSeenTopicTooltip, true);
   }
