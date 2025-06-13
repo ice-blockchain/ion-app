@@ -41,7 +41,7 @@ class ConfigRepository {
     required T Function(String) parser,
     bool checkVersion = false,
   }) async {
-    final lock = _locks.putIfAbsent(configName, Lock.new);
+    final lock = _locks.putIfAbsent('$configName-$refreshInterval', Lock.new);
     return lock.synchronized(() async {
       final cachedData = await _getFromCache(configName, cacheStrategy, refreshInterval, parser);
       if (cachedData != null) {

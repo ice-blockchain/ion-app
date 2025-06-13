@@ -6,7 +6,6 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:ion/app/features/feed/data/models/feed_config.c.dart';
 import 'package:ion/app/features/feed/data/models/feed_interests.c.dart';
 import 'package:ion/app/features/feed/providers/feed_user_interest_picker_provider.c.dart';
-
 import 'package:mocktail/mocktail.dart';
 
 class MockRandom extends Mock implements Random {}
@@ -33,16 +32,18 @@ void main() {
       interests = FeedInterests.fromJson({
         'music': {
           'weight': 2,
+          'display': 'Music',
           'children': {
-            'rock': {'weight': 10},
-            'pop': {'weight': 1},
+            'rock': {'weight': 10, 'display': 'Rock'},
+            'pop': {'weight': 1, 'display': 'Pop'},
           },
         },
         'sports': {
           'weight': 10,
+          'display': 'Sports',
           'children': {
-            'basketball': {'weight': 2},
-            'football': {'weight': 5},
+            'basketball': {'weight': 2, 'display': 'Basketball'},
+            'football': {'weight': 5, 'display': 'Football'},
           },
         },
       });

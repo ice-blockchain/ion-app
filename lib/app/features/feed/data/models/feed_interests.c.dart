@@ -1,21 +1,29 @@
 // SPDX-License-Identifier: ice License 1.0
 
 import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:ion/app/features/config/data/models/app_config_with_version.dart';
 import 'package:ion/app/features/feed/data/models/feed_interests_interaction.c.dart';
 
 part 'feed_interests.c.freezed.dart';
 part 'feed_interests.c.g.dart';
 
-@freezed
-class FeedInterests with _$FeedInterests {
+@Freezed(toJson: false)
+class FeedInterests with _$FeedInterests implements AppConfigWithVersion {
   const factory FeedInterests({
+    required int version,
     required Map<String, FeedInterestsCategory> categories,
   }) = _FeedInterests;
 
-  factory FeedInterests.fromJson(Map<String, dynamic> json) =>
-      _$FeedInterestsFromJson({'categories': json});
+  factory FeedInterests.fromJson(Map<String, dynamic> json) => _$FeedInterestsFromJson(
+        {'version': json['_version'] ?? 0, 'categories': json..remove('_version')},
+      );
 
   const FeedInterests._();
+
+  Map<String, dynamic> toJson() => {
+        '_version': version,
+        ...categories.map((key, value) => MapEntry(key, value.toJson())),
+      };
 
   /// Returns a copy of the interest with updated weights based on the interaction.
   ///
@@ -64,6 +72,7 @@ abstract class CategoryWithWeight {
 class FeedInterestsCategory with _$FeedInterestsCategory implements CategoryWithWeight {
   const factory FeedInterestsCategory({
     required int weight,
+    required String display,
     required Map<String, FeedInterestsSubcategory> children,
   }) = _FeedInterestsCategory;
 
@@ -74,6 +83,7 @@ class FeedInterestsCategory with _$FeedInterestsCategory implements CategoryWith
 @freezed
 class FeedInterestsSubcategory with _$FeedInterestsSubcategory implements CategoryWithWeight {
   const factory FeedInterestsSubcategory({
+    required String display,
     required int weight,
   }) = _FeedInterestsSubcategory;
 

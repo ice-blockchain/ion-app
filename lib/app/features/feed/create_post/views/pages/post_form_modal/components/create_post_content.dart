@@ -10,11 +10,13 @@ import 'package:ion/app/components/text_editor/text_editor.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/feed/create_post/model/create_post_option.dart';
 import 'package:ion/app/features/feed/create_post/views/components/reply_input_field/attached_media_preview.dart';
+import 'package:ion/app/features/feed/create_post/views/components/topics/topics_button.dart';
 import 'package:ion/app/features/feed/create_post/views/pages/post_form_modal/components/current_user_avatar.dart';
 import 'package:ion/app/features/feed/create_post/views/pages/post_form_modal/components/parent_entity.dart';
 import 'package:ion/app/features/feed/create_post/views/pages/post_form_modal/components/quoted_entity.dart';
 import 'package:ion/app/features/feed/create_post/views/pages/post_form_modal/components/video_preview_cover.dart';
 import 'package:ion/app/features/feed/create_post/views/pages/post_form_modal/hooks/use_url_links.dart';
+import 'package:ion/app/features/feed/data/models/feed_type.dart';
 import 'package:ion/app/features/feed/polls/providers/poll_draft_provider.c.dart';
 import 'package:ion/app/features/feed/polls/view/components/poll.dart';
 import 'package:ion/app/features/feed/views/components/url_preview_content/url_preview_content.dart';
@@ -52,8 +54,14 @@ class CreatePostContent extends StatelessWidget {
       child: SingleChildScrollView(
         controller: scrollController,
         child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             _VideoPreviewSection(attachedVideoNotifier: attachedVideoNotifier),
+            _TopicsSection(
+              attachedVideoNotifier: attachedVideoNotifier,
+              parentEvent: parentEvent,
+              quotedEvent: quotedEvent,
+            ),
             if (parentEvent != null) _ParentEntitySection(eventReference: parentEvent!),
             _TextInputSection(
               textEditorController: textEditorController,
@@ -224,6 +232,37 @@ class _QuotedEntitySection extends StatelessWidget {
     return ScreenSideOffset.small(
       child: IgnorePointer(
         child: QuotedEntity(eventReference: eventReference),
+      ),
+    );
+  }
+}
+
+class _TopicsSection extends HookConsumerWidget {
+  const _TopicsSection({
+    required this.attachedVideoNotifier,
+    required this.parentEvent,
+    required this.quotedEvent,
+  });
+
+  final ValueNotifier<MediaFile?> attachedVideoNotifier;
+  final EventReference? parentEvent;
+  final EventReference? quotedEvent;
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    // inherit topics from parent or quoted event
+    if (parentEvent != null || quotedEvent != null) {
+      return const SizedBox.shrink();
+    }
+
+    final isVideo = attachedVideoNotifier.value != null;
+
+    return ScreenSideOffset.small(
+      child: Padding(
+        padding: EdgeInsetsDirectional.only(bottom: 8.s),
+        child: TopicsButton(
+          type: isVideo ? FeedType.video : FeedType.post,
+        ),
       ),
     );
   }

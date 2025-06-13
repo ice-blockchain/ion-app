@@ -76,17 +76,26 @@ class CreatePostNotifier extends _$CreatePostNotifier {
     List<MediaFile>? mediaFiles,
     String? communityId,
     PollData? poll,
+    List<String> topics = const [],
   }) async {
     state = const AsyncValue.loading();
 
     state = await AsyncValue.guard(() async {
       final postContent = content ?? buildEmptyDelta();
-      final parentEntity = parentEvent != null ? await _getParentEntity(parentEvent) : null;
+      final parentEntity = parentEvent != null ? await _getEntity(parentEvent) : null;
+      final quotedEntity = quotedEvent != null ? await _getEntity(quotedEvent) : null;
       final (:files, :media) = await _uploadMediaFiles(mediaFiles: mediaFiles);
       final mentions = _buildMentions(postContent);
 
       final pollDraft = ref.read(pollDraftNotifierProvider);
       final pollData = poll ?? (pollDraft.added ? _createPollDataFromDraft(pollDraft) : null);
+
+      final parentQuotedTopics = _getTopicsFromParentAndQuoted(parentEntity, quotedEntity);
+      final relatedHashtags = {
+        ...topics.map((topic) => RelatedHashtag(value: topic)),
+        ...parentQuotedTopics.map((topic) => RelatedHashtag(value: topic)),
+        ...extractTags(postContent).map((tag) => RelatedHashtag(value: tag)),
+      }.toList();
 
       final postData = ModifiablePostData(
         textContent: '',
@@ -94,7 +103,7 @@ class CreatePostNotifier extends _$CreatePostNotifier {
         replaceableEventId: ReplaceableEventIdentifier.generate(),
         publishedAt: _buildEntityPublishedAt(),
         editingEndedAt: _buildEditingEndedAt(),
-        relatedHashtags: extractTags(postContent).map((tag) => RelatedHashtag(value: tag)).toList(),
+        relatedHashtags: relatedHashtags,
         quotedEvent: quotedEvent != null ? _buildQuotedEvent(quotedEvent) : null,
         relatedEvents: parentEntity != null ? _buildRelatedEvents(parentEntity) : null,
         relatedPubkeys: _buildRelatedPubkeys(mentions: mentions, parentEntity: parentEntity),
@@ -135,6 +144,7 @@ class CreatePostNotifier extends _$CreatePostNotifier {
     // Media attachments left from the original post
     Map<String, MediaAttachment> mediaAttachments = const {},
     WhoCanReplySettingsOption? whoCanReply,
+    List<String> topics = const [],
   }) async {
     state = const AsyncValue.loading();
 
@@ -149,11 +159,16 @@ class CreatePostNotifier extends _$CreatePostNotifier {
 
       final parentEvent = modifiedEntity.data.parentEvent?.eventReference;
       final quotedEvent = modifiedEntity.data.quotedEvent?.eventReference;
-      final parentEntity = parentEvent != null ? await _getParentEntity(parentEvent) : null;
+      final parentEntity = parentEvent != null ? await _getEntity(parentEvent) : null;
       final mentions = _buildMentions(postContent);
 
       final (:files, :media) = await _uploadMediaFiles(mediaFiles: mediaFiles);
       final modifiedMedia = Map<String, MediaAttachment>.from(mediaAttachments)..addAll(media);
+
+      final relatedHashtags = [
+        ...topics.map((topic) => RelatedHashtag(value: topic)),
+        ...extractTags(postContent).map((tag) => RelatedHashtag(value: tag)),
+      ];
 
       final postData = modifiedEntity.data.copyWith(
         textContent: '',
@@ -162,7 +177,7 @@ class CreatePostNotifier extends _$CreatePostNotifier {
           media: modifiedMedia.values.toList(),
         ),
         media: modifiedMedia,
-        relatedHashtags: extractTags(postContent).map((tag) => RelatedHashtag(value: tag)).toList(),
+        relatedHashtags: relatedHashtags,
         relatedPubkeys:
             _buildRelatedPubkeys(mentions: _buildMentions(postContent), parentEntity: parentEntity),
         settings: EntityDataWithSettings.build(
@@ -234,7 +249,7 @@ class CreatePostNotifier extends _$CreatePostNotifier {
           mentions: _buildMentions(contentDelta),
           quotedEvent: entity.data.quotedEvent?.eventReference,
           parentEntity: entity.data.parentEvent?.eventReference != null
-              ? await _getParentEntity(entity.data.parentEvent!.eventReference)
+              ? await _getEntity(entity.data.parentEvent!.eventReference)
               : null,
         ),
       ]);
@@ -335,19 +350,16 @@ class CreatePostNotifier extends _$CreatePostNotifier {
     );
   }
 
-  Future<IonConnectEntity> _getParentEntity(EventReference parentEventReference) async {
-    final parentEntity =
-        await ref.read(ionConnectEntityProvider(eventReference: parentEventReference).future);
-    if (parentEntity == null) {
-      throw EntityNotFoundException(parentEventReference);
+  Future<IonConnectEntity> _getEntity(EventReference eventReference) async {
+    final entity = await ref.read(ionConnectEntityProvider(eventReference: eventReference).future);
+    if (entity == null) {
+      throw EntityNotFoundException(eventReference);
     }
 
-    if (parentEntity is! ModifiablePostEntity &&
-        parentEntity is! ArticleEntity &&
-        parentEntity is! PostEntity) {
-      throw UnsupportedParentEntity(parentEntity);
+    if (entity is! ModifiablePostEntity && entity is! ArticleEntity && entity is! PostEntity) {
+      throw UnsupportedParentEntity(entity);
     }
-    return parentEntity;
+    return entity;
   }
 
   QuotedEvent _buildQuotedEvent(EventReference quotedEventReference) {
@@ -573,5 +585,29 @@ class CreatePostNotifier extends _$CreatePostNotifier {
       title: '',
       options: pollOptions,
     );
+  }
+
+  List<String> _getTopicsFromParentAndQuoted(
+    IonConnectEntity? parentEntity,
+    IonConnectEntity? quotedEntity,
+  ) {
+    if (parentEntity == null && quotedEntity == null) {
+      return [];
+    }
+    final parentTopics = RelatedHashtag.extractTopics(_getRelatedHashtags(parentEntity));
+    final quotedTopics = RelatedHashtag.extractTopics(_getRelatedHashtags(quotedEntity));
+    return {
+      ...parentTopics,
+      ...quotedTopics,
+    }.toList();
+  }
+
+  List<RelatedHashtag>? _getRelatedHashtags(IonConnectEntity? entity) {
+    return switch (entity) {
+      ModifiablePostEntity() => entity.data.relatedHashtags,
+      PostEntity() => entity.data.relatedHashtags,
+      ArticleEntity() => entity.data.relatedHashtags,
+      _ => null,
+    };
   }
 }

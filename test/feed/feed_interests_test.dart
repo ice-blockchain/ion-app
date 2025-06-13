@@ -8,27 +8,30 @@ void main() {
   group('FeedInterests.applyInteraction', () {
     final baseJson = {
       'sports': {
+        'display': 'Sports',
         'weight': 4,
         'children': {
-          'football': {'weight': 1},
-          'tennis': {'weight': 2},
-          'swimming': {'weight': 3},
+          'football': {'weight': 1, 'display': 'Football'},
+          'tennis': {'weight': 2, 'display': 'Tennis'},
+          'swimming': {'weight': 3, 'display': 'Swimming'},
         },
       },
       'gaming': {
         'weight': 10,
+        'display': 'Gaming',
         'children': {
-          'moba': {'weight': 1},
-          'fps': {'weight': 2},
-          'rpg': {'weight': 3},
+          'moba': {'weight': 1, 'display': 'MOBA'},
+          'fps': {'weight': 2, 'display': 'FPS'},
+          'rpg': {'weight': 3, 'display': 'RPG'},
         },
       },
       'crypto': {
         'weight': 3,
+        'display': 'Crypto',
         'children': {
-          'defi': {'weight': 1},
-          'stablecoins': {'weight': 2},
-          'nfts': {'weight': 3},
+          'defi': {'weight': 1, 'display': 'DeFi'},
+          'stablecoins': {'weight': 2, 'display': 'Stablecoins'},
+          'nfts': {'weight': 3, 'display': 'NFTs'},
         },
       },
     };

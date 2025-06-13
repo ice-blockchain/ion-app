@@ -4,7 +4,11 @@ import 'dart:convert';
 import 'dart:ui';
 
 import 'package:ion/app/features/auth/providers/auth_provider.c.dart';
+import 'package:ion/app/features/config/data/models/app_config_cache_strategy.dart';
+import 'package:ion/app/features/config/providers/config_repository.c.dart';
 import 'package:ion/app/features/core/providers/app_lifecycle_provider.c.dart';
+import 'package:ion/app/features/core/providers/app_locale_provider.c.dart';
+import 'package:ion/app/features/core/providers/env_provider.c.dart';
 import 'package:ion/app/features/feed/data/models/feed_interests.c.dart';
 import 'package:ion/app/features/feed/data/models/feed_interests_interaction.c.dart';
 import 'package:ion/app/features/feed/data/models/feed_type.dart';
@@ -22,11 +26,11 @@ class FeedUserInterests extends _$FeedUserInterests {
       appLifecycleProvider,
       (previous, next) async {
         if (next == AppLifecycleState.resumed) {
-          state = AsyncData(await _syncState());
+          state = AsyncData(await _syncState(feedType));
         }
       },
     );
-    return _syncState();
+    return _syncState(feedType);
   }
 
   Future<void> updateInterests(
@@ -42,9 +46,9 @@ class FeedUserInterests extends _$FeedUserInterests {
     state = AsyncData(updatedInterests);
   }
 
-  Future<FeedInterests> _syncState() async {
+  Future<FeedInterests> _syncState(FeedType feedType) async {
     final localState = _loadSavedState();
-    final remoteState = await _getRemoteState();
+    final remoteState = await _getRemoteState(feedType);
     final mergedState = _mergeStates(local: localState, remote: remoteState);
     if (mergedState != localState) {
       await _saveState(mergedState);
@@ -62,46 +66,27 @@ class FeedUserInterests extends _$FeedUserInterests {
         .setValue(_persistanceKey, jsonEncode(interests.categories));
   }
 
-  Future<FeedInterests> _getRemoteState() async {
-    await Future<void>.delayed(const Duration(milliseconds: 500));
-    return FeedInterests.fromJson({
-      'sports': {
-        'weight': 4,
-        'children': {
-          'football': {'weight': 1},
-          'tennis': {'weight': 2},
-          'swimming': {'weight': 3},
-        },
-      },
-      'gaming': {
-        'weight': 10,
-        'children': {
-          'moba': {'weight': 1},
-          'fps': {'weight': 2},
-          'rpg': {'weight': 3},
-        },
-      },
-      'crypto': {
-        'weight': 3,
-        'children': {
-          'defi': {'weight': 1},
-          'stablecoins': {'weight': 2},
-          'nfts': {'weight': 3},
-        },
-      },
-    });
-
-    // final repository = await ref.read(configRepositoryProvider.future);
-    // final env = ref.read(envProvider.notifier);
-    // final cacheDuration = env.get<Duration>(EnvVariable.GENERIC_CONFIG_CACHE_DURATION);
-    // return repository.getConfig<FeedInterests>(
-    //   'TODO', //TODO: set url
-    //   cacheStrategy: AppConfigCacheStrategy.file,
-    //   refreshInterval: cacheDuration.inMilliseconds,
-    //   parser: (data) => FeedInterests.fromJson(jsonDecode(data) as Map<String, dynamic>),
-    //   checkVersion: true,
-    // );
+  Future<FeedInterests> _getRemoteState(FeedType feedType) async {
+    final repository = await ref.read(configRepositoryProvider.future);
+    final locale = ref.read(appLocaleProvider).languageCode;
+    final env = ref.read(envProvider.notifier);
+    final cacheDuration = env.get<Duration>(EnvVariable.GENERIC_CONFIG_CACHE_DURATION);
+    final type = _getConfigTopicsContentType(feedType);
+    return repository.getConfig<FeedInterests>(
+      'content-topics_${type}_$locale',
+      cacheStrategy: AppConfigCacheStrategy.file,
+      refreshInterval: cacheDuration.inMilliseconds,
+      parser: (data) => FeedInterests.fromJson(jsonDecode(data) as Map<String, dynamic>),
+      checkVersion: true,
+    );
   }
+
+  String _getConfigTopicsContentType(FeedType feedType) => switch (feedType) {
+        FeedType.post => 'posts',
+        FeedType.story => 'stories',
+        FeedType.video => 'videos',
+        FeedType.article => 'articles',
+      };
 
   FeedInterests? _loadSavedState() {
     final identityKeyName = ref.watch(currentIdentityKeyNameSelectorProvider);
@@ -146,23 +131,31 @@ class FeedUserInterests extends _$FeedUserInterests {
     final mergedCategories = <String, FeedInterestsCategory>{};
 
     for (final MapEntry(key: remoteKey, value: remoteCategory) in remote.categories.entries) {
-      final localCategory =
-          local.categories[remoteKey] ?? const FeedInterestsCategory(weight: 0, children: {});
+      final localCategory = local.categories[remoteKey] ??
+          const FeedInterestsCategory(
+            weight: 0,
+            children: {},
+            display: '',
+          );
 
       final mergedSubcategories = <String, FeedInterestsSubcategory>{};
 
       for (final subEntry in remoteCategory.children.entries) {
-        mergedSubcategories[subEntry.key] =
-            localCategory.children[subEntry.key] ?? const FeedInterestsSubcategory(weight: 0);
+        mergedSubcategories[subEntry.key] = localCategory.children[subEntry.key] ??
+            FeedInterestsSubcategory(
+              weight: 0,
+              display: subEntry.value.display,
+            );
       }
 
       mergedCategories[remoteKey] = FeedInterestsCategory(
+        display: remoteCategory.display,
         weight: localCategory.weight,
         children: mergedSubcategories,
       );
     }
 
-    return FeedInterests(categories: mergedCategories);
+    return FeedInterests(categories: mergedCategories, version: remote.version);
   }
 
   String get _persistanceKey => 'feed_user_interests_${feedType.name}';
