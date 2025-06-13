@@ -38,6 +38,7 @@ class ArticleImageView extends ConsumerWidget {
                   imageUrl: imageUrl!,
                   authorPubkey: currentPubkey,
                   fit: BoxFit.cover,
+                  width: MediaQuery.sizeOf(context).width, //TEST
                 )
               : selectedImage != null
                   ? Image.file(

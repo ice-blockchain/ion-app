@@ -50,7 +50,7 @@ class _UrlMetadataImage extends StatelessWidget {
       ),
       child: IonNetworkImage(
         imageUrl: imageUrl,
-        width: double.infinity,
+        width: MediaQuery.sizeOf(context).width,  //TEST IT
         fit: BoxFit.cover,
       ),
     );

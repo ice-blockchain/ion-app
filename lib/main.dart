@@ -1,5 +1,7 @@
 // SPDX-License-Identifier: ice License 1.0
 
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_quill/flutter_quill.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
@@ -12,24 +14,33 @@ import 'package:ion/app/router/components/app_router_builder.dart';
 import 'package:ion/app/router/components/modal_wrapper/sheet_scope.dart';
 import 'package:ion/app/router/providers/go_router_provider.c.dart';
 import 'package:ion/app/services/logger/logger_initializer.dart';
+import 'package:ion/app/services/logger/logger.dart';
 import 'package:ion/app/services/riverpod/container.dart';
 import 'package:ion/app/services/sentry/sentry_service.dart';
 import 'package:ion/app/services/storage/secure_storage.c.dart';
 import 'package:ion/app/theme/theme.dart';
 import 'package:ion/generated/app_localizations.dart';
 import 'package:sentry_flutter/sentry_flutter.dart';
+import 'package:flutter/rendering.dart';
+import 'package:talker/talker.dart';
 
 void main() async {
   SentryWidgetsFlutterBinding.ensureInitialized();
   await SecureStorage().clearOnReinstall();
 
-  LoggerInitializer.initialize(riverpodContainer);
+  final container = ProviderContainer(observers: [Logger.talkerRiverpodObserver]);
+  LoggerInitializer.initialize(container);
+
+  Timer.periodic(const Duration(seconds: 3), (timer) {
+    print("image cache size: ${PaintingBinding.instance.imageCache.currentSizeBytes}");
+    print("image cache images: ${PaintingBinding.instance.imageCache.liveImageCount}");
+  });
 
   await SentryService.init(
-    container: riverpodContainer,
+    container: container,
     appRunner: () => runApp(
       UncontrolledProviderScope(
-        container: riverpodContainer,
+        container: container,
         child: const IONApp(),
       ),
     ),

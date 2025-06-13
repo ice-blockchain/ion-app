@@ -26,11 +26,11 @@ class IonConnectNetworkImage extends ConsumerWidget {
 
   final String imageUrl;
   final String authorPubkey;
-  final BaseCacheManager? cacheManager;
+  final CacheManager? cacheManager;
   final ImageWidgetBuilder? imageBuilder;
   final ProgressIndicatorBuilder? progressIndicatorBuilder;
   final LoadingErrorWidgetBuilder? errorWidget;
-  final PlaceholderWidgetBuilder? placeholder;
+  final Widget? placeholder;
   final BoxFit? fit;
   final FilterQuality filterQuality;
   final Alignment alignment;
