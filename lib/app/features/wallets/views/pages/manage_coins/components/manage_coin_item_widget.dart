@@ -22,7 +22,7 @@ class ManageCoinItemWidget extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final isSelected = ref.watch(manageCoinsNotifierProvider).maybeMap(
-          data: (data) => data.value[coinsGroup.symbolGroup]?.isSelected ?? false,
+          data: (data) => data.value.groups[coinsGroup.symbolGroup]?.isSelected ?? false,
           orElse: () => false,
         );
     return ListItem(

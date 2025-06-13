@@ -35,16 +35,18 @@ class FilteredCoinsNotifier extends _$FilteredCoinsNotifier {
 
     ref.onDispose(searchQueryListener.close);
 
-    if (selectedCoins == null || !selectedCoins.values.any((group) => group.isUpdating)) {
+    if (selectedCoins == null || !selectedCoins.groups.values.any((group) => group.isUpdating)) {
       return coinGroups;
     }
 
-    final updatingGroups = selectedCoins.values
+    final updatingGroups = selectedCoins.groups.values
         .where((group) => group.isUpdating)
         .map((group) => group.coinsGroup)
         .toList();
 
-    final filteredCoinGroups = coinGroups.where((group) => !_isBeingDeleted(group, selectedCoins));
+    final filteredCoinGroups = coinGroups.where(
+      (group) => !_isBeingDeleted(group, selectedCoins.groups),
+    );
 
     return [...filteredCoinGroups, ...updatingGroups];
   }
@@ -59,7 +61,7 @@ class FilteredCoinsNotifier extends _$FilteredCoinsNotifier {
     final coinGroups = await ref.watch(coinsInWalletProvider.future);
     final manageCoinsNotifier = ref.watch(manageCoinsNotifierProvider);
 
-    final newlyAddedGroups = manageCoinsNotifier.value?.values
+    final newlyAddedGroups = manageCoinsNotifier.value?.groups.values
             .where((group) => group.isUpdating)
             .map((group) => group.coinsGroup)
             .toList() ??
