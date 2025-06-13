@@ -167,24 +167,19 @@ class ConversationMessageDao extends DatabaseAccessor<ChatDatabase>
   }
 
   Future<void> removeMessages({
-    required Ref ref,
     required List<EventReference> eventReferences,
     required EventMessage deleteRequest,
+    required Env env,
+    required String masterPubkey,
+    required String eventSignerPubkey,
   }) async {
-    await _removeExpiredMessages(ref, eventReferences);
-
-    final masterPubkey = ref.read(currentPubkeySelectorProvider);
-    final eventSigner = await ref.read(currentUserIonConnectEventSignerProvider.future);
-
-    if (masterPubkey == null || eventSigner == null) {
-      return;
-    }
+    await _removeExpiredMessages(eventReferences, env);
 
     for (final eventReference in eventReferences) {
       final existingStatusRow = await (select(messageStatusTable)
             ..where((table) => table.messageEventReference.equalsValue(eventReference))
             ..where((table) => table.masterPubkey.equals(masterPubkey))
-            ..where((table) => table.pubkey.equals(eventSigner.publicKey)))
+            ..where((table) => table.pubkey.equals(eventSignerPubkey)))
           .getSingleOrNull();
 
       if (existingStatusRow == null) {
@@ -192,7 +187,7 @@ class ConversationMessageDao extends DatabaseAccessor<ChatDatabase>
           MessageStatusTableCompanion.insert(
             messageEventReference: eventReference,
             masterPubkey: masterPubkey,
-            pubkey: eventSigner.publicKey,
+            pubkey: eventSignerPubkey,
             status: MessageDeliveryStatus.deleted,
           ),
         );
@@ -202,7 +197,7 @@ class ConversationMessageDao extends DatabaseAccessor<ChatDatabase>
       await (update(messageStatusTable)
             ..where((table) => table.messageEventReference.equalsValue(eventReference))
             ..where((table) => table.masterPubkey.equals(masterPubkey))
-            ..where((table) => table.pubkey.equals(eventSigner.publicKey)))
+            ..where((table) => table.pubkey.equals(eventSignerPubkey)))
           .write(
         const MessageStatusTableCompanion(
           status: Value(MessageDeliveryStatus.deleted),
@@ -211,8 +206,7 @@ class ConversationMessageDao extends DatabaseAccessor<ChatDatabase>
     }
   }
 
-  Future<void> _removeExpiredMessages(Ref ref, List<EventReference> eventReferences) async {
-    final env = ref.read(envProvider.notifier);
+  Future<void> _removeExpiredMessages(List<EventReference> eventReferences, Env env) async {
     final expiration = env.get<int>(EnvVariable.GIFT_WRAP_EXPIRATION_HOURS);
 
     final expiredMessageEventReferences = await (select(eventMessageTable)

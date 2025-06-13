@@ -7,7 +7,6 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/components/screen_offset/screen_side_offset.dart';
 import 'package:ion/app/features/chat/community/providers/community_join_requests_provider.c.dart';
 import 'package:ion/app/features/chat/community/providers/community_messages_subscriber_provider.c.dart';
-import 'package:ion/app/features/chat/e2ee/providers/e2ee_messages_subscriber.c.dart';
 import 'package:ion/app/features/chat/providers/conversations_provider.c.dart';
 import 'package:ion/app/features/chat/recent_chats/views/components/recent_chat_skeleton/recent_chat_skeleton.dart';
 import 'package:ion/app/features/chat/recent_chats/views/pages/recent_chats_empty_page/recent_chats_empty_page.dart';
@@ -27,8 +26,6 @@ class ChatMainPage extends HookConsumerWidget {
         ..read(communityJoinRequestsProvider)
         ..read(communityMessagesSubscriberProvider);
     });
-
-    ref.watch(e2eeMessagesSubscriberProvider);
 
     _useCheckDeviceKeypairDialog(ref);
 
