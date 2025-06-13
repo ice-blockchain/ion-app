@@ -145,6 +145,10 @@ class TemplateTextStyle extends TextStyle {
       height: theme.height,
       fontFamily: 'NotoSans',
       letterSpacing: 0,
+      fontFeatures: const [
+        FontFeature.disable('liga'),
+        FontFeature.disable('clig'),
+      ],
     );
   }
 }
