@@ -18,8 +18,10 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'wallets_database.c.g.dart';
 
-@Riverpod(keepAlive: true)
+@riverpod
 WalletsDatabase walletsDatabase(Ref ref) {
+  keepAliveWhenAuthenticated(ref);
+
   final pubkey = ref.watch(currentPubkeySelectorProvider);
 
   if (pubkey == null) {

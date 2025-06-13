@@ -11,12 +11,14 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 part 'wallets_initializer_provider.c.g.dart';
 
 /// Completes, when wallets db and all related services are ready to use.
-@Riverpod(keepAlive: true)
+@riverpod
 class WalletsInitializerNotifier extends _$WalletsInitializerNotifier {
   Completer<void>? _completer;
 
   @override
   Future<void> build() async {
+    keepAliveWhenAuthenticated(ref);
+
     // Create a new completer only if it doesn't exist or was already completed
     if (_completer == null || _completer!.isCompleted) {
       _completer = Completer<void>();
