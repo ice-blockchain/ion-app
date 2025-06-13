@@ -24,10 +24,10 @@ class TopicTooltipVisibilityNotifier extends _$TopicTooltipVisibilityNotifier {
       return false;
     } else {
       final haveCreatedAnyPosts = await ref.watch(haveCreatedAnyPostsProvider.future);
-      if (true == haveCreatedAnyPosts) {
+      if (haveCreatedAnyPosts) {
         await markAsSeen();
       }
-      return haveCreatedAnyPosts == false;
+      return !haveCreatedAnyPosts;
     }
   }
 
@@ -35,7 +35,7 @@ class TopicTooltipVisibilityNotifier extends _$TopicTooltipVisibilityNotifier {
     state = const AsyncValue.data(false);
     final identityKeyName = ref.watch(currentIdentityKeyNameSelectorProvider) ?? '';
     final userPreferencesService =
-        ref.watch(userPreferencesServiceProvider(identityKeyName: identityKeyName));
+    ref.watch(userPreferencesServiceProvider(identityKeyName: identityKeyName));
 
     return userPreferencesService.setValue<bool>(hasSeenTopicTooltip, true);
   }

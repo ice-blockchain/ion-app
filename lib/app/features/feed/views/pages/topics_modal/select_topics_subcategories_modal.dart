@@ -47,15 +47,6 @@ class SelectTopicsSubcategoriesModal extends HookConsumerWidget {
       [searchValue.value],
     );
 
-    void toggleTopicSelection(String subcategoryKey) {
-      final notifier = ref.read(selectedInterestsNotifierProvider.notifier);
-      if (selectedSubcategories.contains(subcategoryKey)) {
-        notifier.selectInterests = List.from(selectedSubcategories)..remove(subcategoryKey);
-      } else {
-        notifier.selectInterests = List.from(selectedSubcategories)..add(subcategoryKey);
-      }
-    }
-
     return SheetContent(
       topPadding: 0,
       body: Column(
@@ -97,7 +88,7 @@ class SelectTopicsSubcategoriesModal extends HookConsumerWidget {
                 return ListItem(
                   contentPadding: EdgeInsets.symmetric(horizontal: 16.0.s, vertical: 8.0.s),
                   constraints: const BoxConstraints(),
-                  onTap: () => toggleTopicSelection(subcategory.key),
+                  onTap: () => _toggleTopicSelection(ref, subcategory.key),
                   backgroundColor: colors.secondaryBackground,
                   trailing: isSelected
                       ? Assets.svg.iconBlockCheckboxOnblue.icon(color: colors.success)
@@ -110,5 +101,15 @@ class SelectTopicsSubcategoriesModal extends HookConsumerWidget {
         ],
       ),
     );
+  }
+
+  void _toggleTopicSelection(WidgetRef ref, String subcategoryKey) {
+    final selectedSubcategories = ref.read(selectedInterestsNotifierProvider);
+    final notifier = ref.read(selectedInterestsNotifierProvider.notifier);
+    if (selectedSubcategories.contains(subcategoryKey)) {
+      notifier.selectInterests = List.from(selectedSubcategories)..remove(subcategoryKey);
+    } else {
+      notifier.selectInterests = List.from(selectedSubcategories)..add(subcategoryKey);
+    }
   }
 }
