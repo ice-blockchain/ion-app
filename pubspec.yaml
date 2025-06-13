@@ -32,7 +32,7 @@ dependencies:
   dlibphonenumber: ^1.1.26
   dotted_border: ^2.1.0
   drift: ^2.24.0
-  drift_db_viewer: ^2.1.0                                                                                   
+  drift_db_viewer: ^2.1.0
   drift_flutter: ^0.2.4
   email_validator: ^3.0.0
   es_compression: ^2.0.13
@@ -177,7 +177,24 @@ flutter:
   fonts:
     - family: NotoSans
       fonts:
+        - asset: assets/fonts/NotoSans-Black.ttf
+        - asset: assets/fonts/NotoSans-BlackItalic.ttf
+        - asset: assets/fonts/NotoSans-Bold.ttf
+        - asset: assets/fonts/NotoSans-BoldItalic.ttf
+        - asset: assets/fonts/NotoSans-ExtraBold.ttf
+        - asset: assets/fonts/NotoSans-ExtraBoldItalic.ttf
+        - asset: assets/fonts/NotoSans-ExtraLight.ttf
+        - asset: assets/fonts/NotoSans-ExtraLightItalic.ttf
+        - asset: assets/fonts/NotoSans-Italic.ttf
+        - asset: assets/fonts/NotoSans-Light.ttf
+        - asset: assets/fonts/NotoSans-LightItalic.ttf
+        - asset: assets/fonts/NotoSans-Medium.ttf
+        - asset: assets/fonts/NotoSans-MediumItalic.ttf
         - asset: assets/fonts/NotoSans-Regular.ttf
+        - asset: assets/fonts/NotoSans-SemiBold.ttf
+        - asset: assets/fonts/NotoSans-SemiBoldItalic.ttf
+        - asset: assets/fonts/NotoSans-Thin.ttf
+        - asset: assets/fonts/NotoSans-ThinItalic.ttf
         - asset: assets/fonts/NotoSans-Italic.ttf
     - family: Monaco
       fonts:
