@@ -144,6 +144,10 @@ class NotificationDataParser {
             await translator.translate((t) => t.chatVoiceMessage?.title),
             await translator.translate((t) => t.chatVoiceMessage?.body)
           ),
+        PushNotificationType.chatAlbumMessage => (
+            await translator.translate((t) => t.chatAlbumMessage?.title),
+            await translator.translate((t) => t.chatAlbumMessage?.body)
+          ),
       };
     } catch (error) {
       return (null, null);
