@@ -41,7 +41,7 @@ class FeedForYouContent extends _$FeedForYouContent implements PagedNotifier {
       items: null,
       isLoading: false,
       hasMoreFollowing: true,
-      relaysPagination: {},
+      modifiersPagination: {},
     );
   }
 
@@ -61,12 +61,17 @@ class FeedForYouContent extends _$FeedForYouContent implements PagedNotifier {
 
   Stream<IonConnectEntity> requestEntities({required int limit}) async* {
     var unseenFollowing = 0;
+    // TODO: set limit of unseen to the percent of total depending on the feedType
     await for (final entity in _fetchUnseenFollowing(limit: limit)) {
       yield entity;
       unseenFollowing++;
     }
     if (unseenFollowing < limit) {
-      yield* _fetchInterestsEntities(limit: limit - unseenFollowing);
+      //TODO:distribute the remaining limit to different modifiers
+      yield* _fetchInterestsEntities(
+        limit: limit - unseenFollowing,
+        feedModifier: feedModifier ?? FeedModifier.top,
+      );
     }
   }
 
@@ -108,17 +113,22 @@ class FeedForYouContent extends _$FeedForYouContent implements PagedNotifier {
     }
   }
 
-  Stream<IonConnectEntity> _fetchInterestsEntities({required int limit}) async* {
+  Stream<IonConnectEntity> _fetchInterestsEntities({
+    required int limit,
+    required FeedModifier feedModifier,
+  }) async* {
     final dataSourceRelays = await _getDataSourceRelays();
 
-    await _initRelaysPagination(relays: dataSourceRelays);
+    await _initModifierPagination(relays: dataSourceRelays, feedModifier: feedModifier);
 
-    final nextPageRelays = getNextPageSources(sources: state.relaysPagination, limit: limit);
+    final nextPageRelays =
+        getNextPageSources(sources: state.modifiersPagination[feedModifier]!, limit: limit);
 
     if (nextPageRelays.isEmpty) return;
 
     var requestedCount = 0;
-    await for (final entity in _requestEntitiesFromRelays(relays: nextPageRelays.keys)) {
+    await for (final entity
+        in _requestEntitiesFromRelays(relays: nextPageRelays.keys, feedModifier: feedModifier)) {
       yield entity;
       requestedCount++;
     }
@@ -126,7 +136,7 @@ class FeedForYouContent extends _$FeedForYouContent implements PagedNotifier {
     final remaining = limit - requestedCount;
 
     if (remaining > 0) {
-      yield* _fetchInterestsEntities(limit: remaining);
+      yield* _fetchInterestsEntities(limit: remaining, feedModifier: feedModifier);
     }
   }
 
@@ -134,8 +144,11 @@ class FeedForYouContent extends _$FeedForYouContent implements PagedNotifier {
     return ref.read(relevantCurrentUserRelaysProvider.future);
   }
 
-  Future<void> _initRelaysPagination({required List<String> relays}) async {
-    if (state.relaysPagination.isNotEmpty) return;
+  Future<void> _initModifierPagination({
+    required List<String> relays,
+    required FeedModifier feedModifier,
+  }) async {
+    if (state.modifiersPagination[feedModifier] != null) return;
 
     final interests = await ref.read(feedUserInterestsProvider(feedType).future);
 
@@ -151,11 +164,17 @@ class FeedForYouContent extends _$FeedForYouContent implements PagedNotifier {
         ),
     };
 
-    state = state.copyWith(relaysPagination: relaysPagination);
+    state = state.copyWith(
+      modifiersPagination: {
+        ...state.modifiersPagination,
+        feedModifier: relaysPagination,
+      },
+    );
   }
 
   Stream<IonConnectEntity> _requestEntitiesFromRelays({
     required Iterable<String> relays,
+    required FeedModifier feedModifier,
   }) async* {
     final requestsQueue = await ref.read(feedRequestQueueProvider.future);
     final resultsController = StreamController<IonConnectEntity>();
@@ -165,10 +184,12 @@ class FeedForYouContent extends _$FeedForYouContent implements PagedNotifier {
         requestsQueue.add(() async {
           final interestsPicker = await ref.read(feedUserInterestPickerProvider(feedType).future);
           final interest = interestsPicker.roll();
-          final pagination = state.relaysPagination[relayUrl]!.interestsPagination[interest]!;
+          final pagination =
+              state.modifiersPagination[feedModifier]![relayUrl]!.interestsPagination[interest]!;
 
           final entity = await _requestEntityFromRelay(
             relayUrl: relayUrl,
+            feedModifier: feedModifier,
             lastEventCreatedAt: pagination.lastEventCreatedAt,
           );
           if (entity != null) {
@@ -176,12 +197,14 @@ class FeedForYouContent extends _$FeedForYouContent implements PagedNotifier {
             _updateRelayInterestPagination(
               pagination.copyWith(lastEventCreatedAt: entity.createdAt),
               relayUrl: relayUrl,
+              feedModifier: feedModifier,
               interest: interest,
             );
           } else {
             _updateRelayInterestPagination(
               pagination.copyWith(hasMore: false),
               relayUrl: relayUrl,
+              feedModifier: feedModifier,
               interest: interest,
             );
           }
@@ -200,6 +223,7 @@ class FeedForYouContent extends _$FeedForYouContent implements PagedNotifier {
 
   Future<IonConnectEntity?> _requestEntityFromRelay({
     required String relayUrl,
+    required FeedModifier feedModifier,
     required int? lastEventCreatedAt,
   }) async {
     final ionConnectNotifier = ref.read(ionConnectNotifierProvider.notifier);
@@ -207,6 +231,13 @@ class FeedForYouContent extends _$FeedForYouContent implements PagedNotifier {
 
     final dataSource = _getDataSourceForRelay(relayUrl);
 
+    final maxAge = switch (feedModifier) {
+      FeedModifier.trending => feedConfig.trendingMaxAge,
+      FeedModifier.top => feedConfig.topMaxAge,
+      FeedModifier.explore => feedConfig.exploreMaxAge,
+    };
+
+    final since = DateTime.now().subtract(maxAge).microsecondsSinceEpoch;
     final until = lastEventCreatedAt != null ? lastEventCreatedAt - 1 : null;
     final requestMessage = RequestMessage();
     for (final filter in dataSource.requestFilters) {
@@ -214,7 +245,7 @@ class FeedForYouContent extends _$FeedForYouContent implements PagedNotifier {
         filter.copyWith(
           limit: () => 1,
           until: () => until,
-          //TODO:add since from config
+          since: () => since,
         ),
       );
     }
@@ -274,17 +305,21 @@ class FeedForYouContent extends _$FeedForYouContent implements PagedNotifier {
   void _updateRelayInterestPagination(
     InterestPagination pagination, {
     required String relayUrl,
+    required FeedModifier feedModifier,
     required String interest,
   }) {
     state = state.copyWith(
-      relaysPagination: {
-        ...state.relaysPagination,
-        relayUrl: state.relaysPagination[relayUrl]!.copyWith(
-          interestsPagination: {
-            ...state.relaysPagination[relayUrl]!.interestsPagination,
-            interest: pagination,
-          },
-        ),
+      modifiersPagination: {
+        ...state.modifiersPagination,
+        feedModifier: {
+          ...state.modifiersPagination[feedModifier]!,
+          relayUrl: state.modifiersPagination[feedModifier]![relayUrl]!.copyWith(
+            interestsPagination: {
+              ...state.modifiersPagination[feedModifier]![relayUrl]!.interestsPagination,
+              interest: pagination,
+            },
+          ),
+        },
       },
     );
   }
@@ -294,7 +329,7 @@ class FeedForYouContent extends _$FeedForYouContent implements PagedNotifier {
 class FeedForYouContentState with _$FeedForYouContentState implements PagedState {
   const factory FeedForYouContentState({
     required Set<IonConnectEntity>? items,
-    required Map<String, RelayPagination> relaysPagination,
+    required Map<FeedModifier, Map<String, RelayPagination>> modifiersPagination,
     required bool hasMoreFollowing,
     required bool isLoading,
   }) = _FeedForYouContentState;
@@ -303,7 +338,10 @@ class FeedForYouContentState with _$FeedForYouContentState implements PagedState
 
   @override
   bool get hasMore =>
-      hasMoreFollowing || relaysPagination.values.any((pagination) => pagination.hasMore);
+      hasMoreFollowing ||
+      modifiersPagination.values.any(
+        (modifierPagination) => modifierPagination.values.any((pagination) => pagination.hasMore),
+      );
 }
 
 @Freezed(equal: false)
