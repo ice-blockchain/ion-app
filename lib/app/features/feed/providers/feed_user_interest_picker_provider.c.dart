@@ -110,7 +110,7 @@ class FeedUserInterestPicker {
       }
     }
 
-    return _getRandomItem(interestedItems);
+    return _getRandomItem(node.entries);
   }
 
   /// Returns a List of interested categories and subcategories.

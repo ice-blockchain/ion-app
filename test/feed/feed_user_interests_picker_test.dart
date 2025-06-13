@@ -102,7 +102,7 @@ void main() {
         random: random,
       );
       final result = picker.roll();
-      expect(result, 'rock');
+      expect(result, equals('rock'));
     });
 
     test(
@@ -118,7 +118,78 @@ void main() {
         random: random,
       );
       final result = picker.roll();
-      expect(result, 'rock');
+      expect(result, equals('rock'));
+    });
+
+    test('rolls only from allowedSubcategories if provided', () {
+      final picker = FeedUserInterestPicker(
+        config: config.copyWith(
+          notInterestedCategoryChance: 1,
+          notInterestedSubcategoryChance: 1,
+        ),
+        interests: interests,
+        random: random,
+      );
+      final result = picker.roll(['pop', 'football']);
+      expect(result, equals('pop'));
+    });
+
+    test('rolls null if no allowed provided', () {
+      final picker = FeedUserInterestPicker(
+        config: config.copyWith(
+          notInterestedCategoryChance: 1,
+          notInterestedSubcategoryChance: 1,
+        ),
+        interests: interests,
+        random: random,
+      );
+      final result = picker.roll([]);
+      expect(result, isNull);
+    });
+
+    test('rolls null if unknown subcategories are provided', () {
+      final picker = FeedUserInterestPicker(
+        config: config.copyWith(
+          notInterestedCategoryChance: 1,
+          notInterestedSubcategoryChance: 1,
+        ),
+        interests: interests,
+        random: random,
+      );
+      final result = picker.roll(['foo', 'bar']);
+      expect(result, isNull);
+    });
+
+    test(
+        'rolls a random subcategory from allowedSubcategories if there are no interested categories and interested chance is 100%',
+        () {
+      final picker = FeedUserInterestPicker(
+        config: config.copyWith(
+          notInterestedCategoryChance: 0,
+          notInterestedSubcategoryChance: 0,
+          interestedThreshold: 1,
+        ),
+        interests: interests,
+        random: random,
+      );
+      final result = picker.roll(['pop', 'basketball']);
+      expect(result, equals('pop'));
+    });
+
+    test('rolls a random subcategory from allowedSubcategories, taking the interested category',
+        () {
+      final picker = FeedUserInterestPicker(
+        config: config.copyWith(
+          notInterestedCategoryChance: 0,
+          notInterestedSubcategoryChance: 0,
+        ),
+        interests: interests,
+        random: random,
+      );
+      final result = picker.roll(['pop', 'basketball']);
+      // "sports" is an interested category, but there are no interested subcategories
+      // from allowed list there, so taking a random allowed subcategory.
+      expect(result, equals('basketball'));
     });
   });
 }

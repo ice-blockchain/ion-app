@@ -150,7 +150,11 @@ class FeedForYouContent extends _$FeedForYouContent implements PagedNotifier {
   }) async {
     if (state.modifiersPagination[feedModifier] != null) return;
 
-    final interests = await ref.read(feedUserInterestsProvider(feedType).future);
+    // TODO: for articles (if feedType is FeedType.article), take the selected interests
+    final interests =
+        (await ref.read(feedUserInterestsProvider(feedType).future)).subcategories.map(
+              (subcategory) => subcategory.key,
+            );
 
     final relaysPagination = {
       for (final relay in relays)
@@ -158,8 +162,7 @@ class FeedForYouContent extends _$FeedForYouContent implements PagedNotifier {
           page: -1,
           hasMore: true,
           interestsPagination: {
-            for (final interest in interests.subcategories)
-              interest.key: const InterestPagination(hasMore: true),
+            for (final interest in interests) interest: const InterestPagination(hasMore: true),
           },
         ),
     };
