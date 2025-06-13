@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: ice License 1.0
+
 abstract class PagedSource {
   int get page;
   bool get hasMore;
