@@ -574,3 +574,13 @@ class NicknameDoesntExistException extends IONException {
   NicknameDoesntExistException(String nickname)
       : super(10114, 'Nickname "$nickname" does not exist');
 }
+
+class PersistentSubscriptionException extends IONException {
+  PersistentSubscriptionException(dynamic error)
+      : super(10115, 'Persistent subscription exception: $error');
+}
+
+class PersistentSubscriptionEventMessageHandlingException extends IONException {
+  PersistentSubscriptionEventMessageHandlingException(dynamic error)
+      : super(10116, 'Persistent subscription event message handling exception: $error');
+}

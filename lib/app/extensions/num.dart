@@ -60,3 +60,12 @@ extension Microseconds on int {
     };
   }
 }
+
+extension OverlapExtension on int? {
+  int? get overlap {
+    if (this == null) {
+      return null;
+    }
+    return this! - const Duration(days: 2).inMicroseconds;
+  }
+}
