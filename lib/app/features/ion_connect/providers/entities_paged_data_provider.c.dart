@@ -21,6 +21,11 @@ abstract class PagedNotifier {
   void deleteEntity(IonConnectEntity entity);
 }
 
+abstract class PagedState {
+  Set<IonConnectEntity>? get items;
+  bool get hasMore;
+}
+
 mixin DelegatedPagedNotifier implements PagedNotifier {
   @override
   Future<void> fetchEntities() async {
