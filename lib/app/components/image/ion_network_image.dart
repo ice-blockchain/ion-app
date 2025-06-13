@@ -59,8 +59,8 @@ class IonNetworkImage extends StatelessWidget {
       cacheManager: cacheManager,
       imageBuilder: imageBuilder,
       progressIndicatorBuilder: progressIndicatorBuilder,
-      memCacheWidth: width != null ? (width! * MediaQuery.of(context).devicePixelRatio).toInt() : null,
-      memCacheHeight: height != null ? (height! * MediaQuery.of(context).devicePixelRatio).toInt() : null,
+      memCacheWidth: width != null ? (width! * MediaQuery.of(context).devicePixelRatio).toInt().clamp(0, 1920) : null,
+      memCacheHeight: height != null ? (height! * MediaQuery.of(context).devicePixelRatio).toInt().clamp(0, 1080) : null,
     );
   }
 }
