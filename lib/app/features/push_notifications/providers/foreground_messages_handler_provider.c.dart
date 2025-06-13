@@ -29,7 +29,10 @@ class ForegroundMessagesHandler extends _$ForegroundMessagesHandler {
   }
 
   Future<void> _handleForegroundMessage(Map<String, dynamic> response) async {
-    final data = await IonConnectPushDataPayload.fromEncoded(response);
+    final data = await IonConnectPushDataPayload.fromEncoded(response, (eventMassage) async {
+      final giftUnwrapService = await ref.read(giftUnwrapServiceProvider.future);
+      return giftUnwrapService.unwrap(eventMassage);
+    });
 
     if (await _shouldSkip(data: data)) {
       return;
