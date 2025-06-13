@@ -57,8 +57,7 @@ class TrendingVideoListItem extends ConsumerWidget {
 
   bool _isBlockedOrMutedOrBlocking(WidgetRef ref, IonConnectEntity entity) {
     final isMuted = ref.watch(isUserMutedProvider(entity.masterPubkey));
-    final isBlockedOrBlockedBy =
-        ref.watch(isEntityBlockedOrBlockedByNotifierProvider(entity)).valueOrNull ?? false;
+    final isBlockedOrBlockedBy = ref.watch(isEntityBlockedOrBlockedByProvider(entity));
     return isMuted || isBlockedOrBlockedBy;
   }
 }
