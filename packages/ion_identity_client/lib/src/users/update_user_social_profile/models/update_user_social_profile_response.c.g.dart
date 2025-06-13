@@ -12,8 +12,8 @@ _$UpdateUserSocialProfileResponseImpl
           username: json['username'] as String,
           displayName: json['displayName'] as String?,
           referral: json['referral'] as String?,
-          usernameProof: (json['usernameProof'] as List<dynamic>)
-              .map((e) => e as Map<String, dynamic>)
+          usernameProof: (json['usernameProof'] as List<dynamic>?)
+              ?.map((e) => e as Map<String, dynamic>)
               .toList(),
         );
 

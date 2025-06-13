@@ -62,21 +62,21 @@ class UpdateUserMetadataNotifier extends _$UpdateUserMetadataNotifier {
 
       final currentUserMetadata = await ref.read(currentUserMetadataProvider.future);
       final additionalEvents = <EventMessage>[];
-      if (currentUserMetadata != null &&
-          (currentUserMetadata.data.name != data.name ||
-              currentUserMetadata.data.displayName != data.displayName)) {
+      final usernameChanged = currentUserMetadata?.data.name != data.name;
+      final displayNameChanged = currentUserMetadata?.data.displayName != data.displayName;
+      if (currentUserMetadata != null && (usernameChanged || displayNameChanged)) {
         final usernameProofsJsonPayloads = await ref.read(
           updateUserSocialProfileProvider(
             data: UserSocialProfileData(
-              username: userMetadata.name,
-              displayName: userMetadata.displayName,
+              username: usernameChanged ? data.name : null,
+              displayName: displayNameChanged ? data.displayName : null,
             ),
           ).future,
         );
-        if (currentUserMetadata.data.name != data.name) {
+        if (usernameChanged && usernameProofsJsonPayloads.isNotEmpty) {
           final usernameProofsEvents =
               usernameProofsJsonPayloads.map(EventMessage.fromPayloadJson).toList();
-          additionalEvents.addAll(usernameProofsJsonPayloads.map(EventMessage.fromPayloadJson));
+          additionalEvents.addAll(usernameProofsEvents);
           final updatedProfileBadges = await ref
               .read(updateProfileBadgesWithUsernameProofsProvider(usernameProofsEvents).future);
           if (updatedProfileBadges != null) {
