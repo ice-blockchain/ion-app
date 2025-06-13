@@ -22,7 +22,6 @@ import 'package:ion/app/features/push_notifications/providers/pushes_init_provid
 import 'package:ion/app/features/user/providers/badges_notifier.c.dart';
 import 'package:ion/app/features/user/providers/user_file_storage_relays_sync_provider.c.dart';
 import 'package:ion/app/features/user/providers/user_relays_sync_provider.c.dart';
-import 'package:ion/app/features/user_block/providers/blocked_users_sync_provider.c.dart';
 import 'package:ion/app/features/wallets/providers/coins_sync_provider.c.dart';
 import 'package:ion/app/features/wallets/providers/transactions_subscription_provider.c.dart';
 import 'package:ion/app/features/wallets/providers/user_public_wallets_sync_provider.c.dart';
@@ -70,7 +69,6 @@ Future<void> initApp(Ref ref) async {
     ..listen(feedBookmarksSyncProvider, noop)
     ..listen(currentUserBadgesSyncProvider, noop)
     ..listen(pushesInitProvider, noop)
-    ..listen(blockedUsersSyncProvider, noop)
     ..listen(ionConnectPersistentSubscriptionProvider, noop);
 
   initFirebaseMessagingBackgroundHandler();

@@ -5,9 +5,8 @@ import 'dart:io';
 
 import 'package:collection/collection.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/chat/e2ee/model/entities/private_direct_message_data.c.dart';
-import 'package:ion/app/features/chat/model/message_type.dart';
-import 'package:ion/app/features/core/model/media_type.dart';
 import 'package:ion/app/features/feed/data/models/entities/generic_repost.c.dart';
 import 'package:ion/app/features/feed/data/models/entities/modifiable_post_data.c.dart';
 import 'package:ion/app/features/feed/data/models/entities/post_data.c.dart';
@@ -107,40 +106,13 @@ class IonConnectPushDataPayload {
     } else if (entity is FollowListEntity) {
       return PushNotificationType.follower;
     } else if (entity is IonConnectGiftWrapEntity) {
-      if (entity.data.kinds.contains(ReplaceablePrivateDirectMessageEntity.kind.toString())) {
-        if (decryptedEvent == null) return null;
-
-        final message = ReplaceablePrivateDirectMessageEntity.fromEventMessage(decryptedEvent!);
-        switch (message.data.messageType) {
-          case MessageType.audio:
-            return PushNotificationType.chatVoiceMessage;
-          case MessageType.document:
-            return PushNotificationType.chatDocumentMessage;
-          case MessageType.text || MessageType.emoji:
-            return PushNotificationType.chatTextMessage;
-          case MessageType.profile:
-            return PushNotificationType.chatProfileMessage;
-          case MessageType.sharedPost:
-            return PushNotificationType.chatSharePostMessage;
-          case MessageType.visualMedia:
-            final mediaItems = message.data.media.values.toList();
-            if (mediaItems.every((media) => media.mediaType == MediaType.image)) {
-              return PushNotificationType.chatPhotoMessage;
-            } else if (mediaItems.every((media) => media.mediaType == MediaType.video)) {
-              return PushNotificationType.chatVideoMessage;
-            } else {
-              return PushNotificationType.chatAlbumMessage;
-            }
-          case MessageType.requestFunds:
-            return PushNotificationType.paymentRequest;
-          case MessageType.moneySent:
-            return PushNotificationType.paymentReceived;
-        }
-      } else if (entity.data.kinds.contains(ReactionEntity.kind.toString())) {
+      if (entity.data.kinds.containsKind([ReplaceablePrivateDirectMessageEntity.kind.toString()])) {
+        return PushNotificationType.chatTextMessage;
+      } else if (entity.data.kinds.containsKind([ReactionEntity.kind.toString()])) {
         return PushNotificationType.chatReaction;
-      } else if (entity.data.kinds.contains(FundsRequestEntity.kind.toString())) {
+      } else if (entity.data.kinds.containsKind([FundsRequestEntity.kind.toString()])) {
         return PushNotificationType.paymentRequest;
-      } else if (entity.data.kinds.contains(WalletAssetEntity.kind.toString())) {
+      } else if (entity.data.kinds.containsKind([WalletAssetEntity.kind.toString()])) {
         return PushNotificationType.paymentReceived;
       }
     }

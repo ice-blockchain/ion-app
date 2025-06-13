@@ -5,6 +5,7 @@ import 'dart:async';
 import 'package:collection/collection.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/exceptions/exceptions.dart';
+import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/auth/providers/auth_provider.c.dart';
 import 'package:ion/app/features/chat/community/models/entities/tags/conversation_identifier.c.dart';
 import 'package:ion/app/features/chat/model/database/chat_database.c.dart';
@@ -12,6 +13,7 @@ import 'package:ion/app/features/core/providers/env_provider.c.dart';
 import 'package:ion/app/features/ion_connect/ion_connect.dart';
 import 'package:ion/app/features/ion_connect/model/deletion_request.c.dart';
 import 'package:ion/app/features/ion_connect/model/event_reference.c.dart';
+import 'package:ion/app/features/ion_connect/model/ion_connect_gift_wrap.c.dart';
 import 'package:ion/app/features/ion_connect/model/persistent_subscription_encrypted_event_message_handler.dart';
 import 'package:ion/app/features/ion_connect/providers/ion_connect_event_signer_provider.c.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
@@ -40,12 +42,9 @@ class EncryptedDeletionRequestEventHandler
 
   @override
   bool canHandle({
-    required List<String> wrappedKinds,
-    List<String> wrappedSecondKinds = const [],
+    required IonConnectGiftWrapEntity entity,
   }) {
-    return wrappedKinds.contains(
-      DeletionRequestEntity.kind.toString(),
-    );
+    return entity.data.kinds.containsKind([DeletionRequestEntity.kind.toString()]);
   }
 
   @override
