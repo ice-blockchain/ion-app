@@ -7,13 +7,15 @@ import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:ion/app/exceptions/exceptions.dart';
 import 'package:ion/app/extensions/num.dart';
 import 'package:ion/app/features/auth/providers/auth_provider.c.dart';
+import 'package:ion/app/features/feed/data/models/entities/generic_repost.c.dart';
 import 'package:ion/app/features/feed/data/models/entities/post_data.c.dart';
+import 'package:ion/app/features/feed/data/models/entities/repost_data.c.dart';
 import 'package:ion/app/features/feed/data/models/feed_modifier.dart';
 import 'package:ion/app/features/feed/data/models/feed_type.dart';
-import 'package:ion/app/features/feed/data/repository/following_feed_seen_events_repository.c.dart';
 import 'package:ion/app/features/feed/providers/feed_config_provider.c.dart';
 import 'package:ion/app/features/feed/providers/feed_data_source_builders.dart';
 import 'package:ion/app/features/feed/providers/feed_request_queue.c.dart';
+import 'package:ion/app/features/feed/providers/repository/following_feed_seen_events_repository.c.dart';
 import 'package:ion/app/features/ion_connect/ion_connect.dart';
 import 'package:ion/app/features/ion_connect/model/action_source.c.dart';
 import 'package:ion/app/features/ion_connect/model/event_reference.c.dart';
@@ -286,8 +288,9 @@ class FeedFollowingContent extends _$FeedFollowingContent implements PagedNotifi
             entity: entity,
             lastEventReference: lastEvent?.eventReference,
           );
-          if (valid) {
-            resultsController.add(entity!);
+          if (valid && entity != null) {
+            await _saveSeenReposts(entity);
+            resultsController.add(entity);
           }
         }).catchError((Object? error) {
           Logger.error(
@@ -347,8 +350,9 @@ class FeedFollowingContent extends _$FeedFollowingContent implements PagedNotifi
         requestsQueue.add(() async {
           final entity = await _requestEntityByReference(eventReference: eventReference);
           final valid = await _validateRequestedReferenceEntity(entity: entity);
-          if (valid) {
-            resultsController.add(entity!);
+          if (valid && entity != null) {
+            await _saveSeenReposts(entity);
+            resultsController.add(entity);
           }
         }).catchError((Object? error) {
           Logger.error(
@@ -427,8 +431,9 @@ class FeedFollowingContent extends _$FeedFollowingContent implements PagedNotifi
       // If the entity is not seen, we save it as a new seen event,
       // update the state items and pagination.
       await seenEventsRepository.save(entity, feedType: feedType, feedModifier: feedModifier);
-      // TODO:add repost deduplication here
+      final duplicatedRepost = await _isDuplicatedRepost(entity);
       final isInReqTimeFrame = await _isInReqTimeFrame(entity.createdAt);
+
       state = state.copyWith(
         unseenPagination: {
           ...state.unseenPagination,
@@ -442,7 +447,7 @@ class FeedFollowingContent extends _$FeedFollowingContent implements PagedNotifi
           ),
         },
       );
-      return isInReqTimeFrame;
+      return isInReqTimeFrame && !duplicatedRepost;
     } else {
       // If the entity is seen, we do not insert it to the state,
       // but we update the pagination with the seen sequence end.
@@ -468,8 +473,8 @@ class FeedFollowingContent extends _$FeedFollowingContent implements PagedNotifi
 
   Future<bool> _validateRequestedReferenceEntity({required IonConnectEntity? entity}) async {
     if (entity == null) return false;
-    // TODO:add repost deduplication here
-    return true;
+    final duplicatedRepost = await _isDuplicatedRepost(entity);
+    return !duplicatedRepost;
   }
 
   EntitiesDataSource _getDataSourceForPubkey(String pubkey) {
@@ -516,6 +521,35 @@ class FeedFollowingContent extends _$FeedFollowingContent implements PagedNotifi
   Future<bool> _isInReqTimeFrame(int time) async {
     final feedConfig = await ref.read(feedConfigProvider.future);
     return time.toDateTime.isAfter(DateTime.now().subtract(feedConfig.followingReqMaxAge));
+  }
+
+  Future<void> _saveSeenReposts(IonConnectEntity entity) async {
+    final repostedEventReference = switch (entity) {
+      GenericRepostEntity() => entity.data.eventReference,
+      RepostEntity() => entity.data.eventReference,
+      _ => null,
+    };
+    if (repostedEventReference != null) {
+      final seenEventsRepository = ref.read(followingFeedSeenEventsRepositoryProvider);
+      await seenEventsRepository.saveSeenRepostedEvent(repostedEventReference);
+    }
+  }
+
+  Future<bool> _isDuplicatedRepost(IonConnectEntity entity) async {
+    final repostedEventReference = switch (entity) {
+      GenericRepostEntity() => entity.data.eventReference,
+      RepostEntity() => entity.data.eventReference,
+      _ => null,
+    };
+    if (repostedEventReference == null) return false;
+
+    final seenEventsRepository = ref.read(followingFeedSeenEventsRepositoryProvider);
+    final seenAt = await seenEventsRepository.getRepostedEventSeenAt(repostedEventReference);
+
+    if (seenAt == null) return false;
+
+    final feedConfig = await ref.read(feedConfigProvider.future);
+    return seenAt.isAfter(DateTime.now().subtract(feedConfig.repostThrottleDelay));
   }
 }
 

@@ -1,7 +1,10 @@
 // SPDX-License-Identifier: ice License 1.0
 
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:ion/app/features/feed/data/database/following_feed_database/dao/providers/seen_events_dao_provider.c.dart';
+import 'package:ion/app/features/feed/data/database/following_feed_database/dao/providers/seen_reposts_dao_provider.c.dart';
 import 'package:ion/app/features/feed/data/database/following_feed_database/dao/seen_events_dao.c.dart';
+import 'package:ion/app/features/feed/data/database/following_feed_database/dao/seen_reposts_dao.c.dart';
 import 'package:ion/app/features/feed/data/database/following_feed_database/following_feed_database.c.dart';
 import 'package:ion/app/features/feed/data/models/feed_modifier.dart';
 import 'package:ion/app/features/feed/data/models/feed_type.dart';
@@ -15,14 +18,18 @@ part 'following_feed_seen_events_repository.c.g.dart';
 FollowingFeedSeenEventsRepository followingFeedSeenEventsRepository(Ref ref) =>
     FollowingFeedSeenEventsRepository(
       seenEventsDao: ref.watch(seenEventsDaoProvider),
+      seenRepostsDao: ref.watch(seenRepostsDaoProvider),
     );
 
 class FollowingFeedSeenEventsRepository {
   FollowingFeedSeenEventsRepository({
     required SeenEventsDao seenEventsDao,
-  }) : _seenEventsDao = seenEventsDao;
+    required SeenRepostsDao seenRepostsDao,
+  })  : _seenEventsDao = seenEventsDao,
+        _seenRepostsDao = seenRepostsDao;
 
   final SeenEventsDao _seenEventsDao;
+  final SeenRepostsDao _seenRepostsDao;
 
   Future<void> save(
     IonConnectEntity entity, {
@@ -118,5 +125,20 @@ class FollowingFeedSeenEventsRepository {
       retainPubkeys: retainPubkeys,
       until: until,
     );
+  }
+
+  Future<void> saveSeenRepostedEvent(EventReference eventReference) async {
+    return _seenRepostsDao.insert(
+      SeenRepost(
+        repostedEventReference: eventReference,
+        seenAt: DateTime.now().microsecondsSinceEpoch,
+      ),
+    );
+  }
+
+  Future<DateTime?> getRepostedEventSeenAt(EventReference eventReference) async {
+    final seenRepost = await _seenRepostsDao.getByRepostedReference(eventReference);
+    if (seenRepost == null) return null;
+    return DateTime.fromMicrosecondsSinceEpoch(seenRepost.seenAt);
   }
 }
