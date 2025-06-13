@@ -2,14 +2,23 @@
 
 import 'dart:async';
 
+import 'package:async/async.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:ion/app/exceptions/exceptions.dart';
+import 'package:ion/app/features/auth/providers/auth_provider.c.dart';
 import 'package:ion/app/features/feed/data/models/feed_modifier.dart';
 import 'package:ion/app/features/feed/data/models/feed_type.dart';
+import 'package:ion/app/features/feed/providers/feed_config_provider.c.dart';
+import 'package:ion/app/features/feed/providers/feed_data_source_builders.dart';
 import 'package:ion/app/features/feed/providers/feed_following_content_provider.c.dart';
 import 'package:ion/app/features/feed/providers/feed_request_queue.c.dart';
+import 'package:ion/app/features/feed/providers/feed_user_interest_picker_provider.c.dart';
 import 'package:ion/app/features/feed/providers/feed_user_interests_provider.c.dart';
+import 'package:ion/app/features/ion_connect/ion_connect.dart';
+import 'package:ion/app/features/ion_connect/model/action_source.c.dart';
 import 'package:ion/app/features/ion_connect/model/ion_connect_entity.dart';
 import 'package:ion/app/features/ion_connect/providers/entities_paged_data_provider.c.dart';
+import 'package:ion/app/features/ion_connect/providers/ion_connect_notifier.c.dart';
 import 'package:ion/app/features/user/providers/relevant_current_user_relays_provider.c.dart';
 import 'package:ion/app/services/logger/logger.dart';
 import 'package:ion/app/utils/functions.dart';
@@ -58,6 +67,29 @@ class FeedForYouContent extends _$FeedForYouContent implements PagedNotifier {
     }
     if (unseenFollowing < limit) {
       yield* _fetchInterestsEntities(limit: limit - unseenFollowing);
+    }
+  }
+
+  @override
+  void refresh() {
+    if (!state.isLoading) ref.invalidateSelf();
+  }
+
+  @override
+  void insertEntity(IonConnectEntity entity) {
+    state = state.copyWith(items: {entity, ...(state.items ?? {})});
+  }
+
+  @override
+  void deleteEntity(IonConnectEntity entity) {
+    final items = state.items;
+    if (items == null) return;
+
+    final updatedItems = {...items};
+    final removed = updatedItems.remove(entity);
+
+    if (removed) {
+      state = state.copyWith(items: updatedItems);
     }
   }
 
@@ -129,13 +161,34 @@ class FeedForYouContent extends _$FeedForYouContent implements PagedNotifier {
     final resultsController = StreamController<IonConnectEntity>();
 
     final requests = [
-      for (final relay in relays)
+      for (final relayUrl in relays)
         requestsQueue.add(() async {
-          //TODO:impl fetching
+          final interestsPicker = await ref.read(feedUserInterestPickerProvider(feedType).future);
+          final interest = interestsPicker.roll();
+          final pagination = state.relaysPagination[relayUrl]!.interestsPagination[interest]!;
+
+          final entity = await _requestEntityFromRelay(
+            relayUrl: relayUrl,
+            lastEventCreatedAt: pagination.lastEventCreatedAt,
+          );
+          if (entity != null) {
+            resultsController.add(entity);
+            _updateRelayInterestPagination(
+              pagination.copyWith(lastEventCreatedAt: entity.createdAt),
+              relayUrl: relayUrl,
+              interest: interest,
+            );
+          } else {
+            _updateRelayInterestPagination(
+              pagination.copyWith(hasMore: false),
+              relayUrl: relayUrl,
+              interest: interest,
+            );
+          }
         }).catchError((Object? error) {
           Logger.error(
             error ?? '',
-            message: 'Error requesting entities from relay: $relay',
+            message: 'Error requesting entities from relay: $relayUrl',
           );
         }),
     ];
@@ -145,33 +198,95 @@ class FeedForYouContent extends _$FeedForYouContent implements PagedNotifier {
     yield* resultsController.stream;
   }
 
-  @override
-  void refresh() {
-    if (!state.isLoading) ref.invalidateSelf();
-  }
+  Future<IonConnectEntity?> _requestEntityFromRelay({
+    required String relayUrl,
+    required int? lastEventCreatedAt,
+  }) async {
+    final ionConnectNotifier = ref.read(ionConnectNotifierProvider.notifier);
+    final feedConfig = await ref.read(feedConfigProvider.future);
 
-  @override
-  void insertEntity(IonConnectEntity entity) {
-    state = state.copyWith(items: {entity, ...(state.items ?? {})});
-  }
+    final dataSource = _getDataSourceForRelay(relayUrl);
 
-  @override
-  void deleteEntity(IonConnectEntity entity) {
-    final items = state.items;
-    if (items == null) return;
-
-    final updatedItems = {...items};
-    final removed = updatedItems.remove(entity);
-
-    if (removed) {
-      state = state.copyWith(items: updatedItems);
+    final until = lastEventCreatedAt != null ? lastEventCreatedAt - 1 : null;
+    final requestMessage = RequestMessage();
+    for (final filter in dataSource.requestFilters) {
+      requestMessage.addFilter(
+        filter.copyWith(
+          limit: () => 1,
+          until: () => until,
+          //TODO:add since from config
+        ),
+      );
     }
+
+    return ionConnectNotifier
+        .requestEntities(
+          requestMessage,
+          actionSource: dataSource.actionSource,
+        )
+        .where(dataSource.entityFilter)
+        .firstOrNull;
+  }
+
+  EntitiesDataSource _getDataSourceForRelay(String relayUrl) {
+    final currentPubkey = ref.read(currentPubkeySelectorProvider);
+
+    if (currentPubkey == null) {
+      throw const CurrentUserNotFoundException();
+    }
+
+    final feedModifierFilter = feedModifier?.filter;
+
+    return switch (feedType) {
+      FeedType.post => buildPostsDataSource(
+          actionSource: ActionSource.relayUrl(relayUrl),
+          currentPubkey: currentPubkey,
+          searchExtensions: feedModifierFilter?.search,
+          tags: feedModifierFilter?.tags,
+        ),
+      FeedType.article => buildArticlesDataSource(
+          actionSource: ActionSource.relayUrl(relayUrl),
+          currentPubkey: currentPubkey,
+          searchExtensions: feedModifierFilter?.search,
+          tags: feedModifierFilter?.tags,
+        ),
+      FeedType.video => buildVideosDataSource(
+          actionSource: ActionSource.relayUrl(relayUrl),
+          currentPubkey: currentPubkey,
+          searchExtensions: feedModifierFilter?.search,
+          tags: feedModifierFilter?.tags,
+        ),
+      FeedType.story => buildStoriesDataSource(
+          actionSource: ActionSource.relayUrl(relayUrl),
+          currentPubkey: currentPubkey,
+          searchExtensions: feedModifierFilter?.search,
+          tags: feedModifierFilter?.tags,
+        ),
+    };
   }
 
   void _ensureEmptyState() {
     if (state.items == null) {
       state = state.copyWith(items: const {});
     }
+  }
+
+  void _updateRelayInterestPagination(
+    InterestPagination pagination, {
+    required String relayUrl,
+    required String interest,
+  }) {
+    state = state.copyWith(
+      relaysPagination: {
+        ...state.relaysPagination,
+        relayUrl: state.relaysPagination[relayUrl]!.copyWith(
+          interestsPagination: {
+            ...state.relaysPagination[relayUrl]!.interestsPagination,
+            interest: pagination,
+          },
+        ),
+      },
+    );
   }
 }
 
