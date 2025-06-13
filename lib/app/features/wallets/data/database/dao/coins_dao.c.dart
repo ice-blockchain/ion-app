@@ -154,8 +154,9 @@ class CoinsDao extends DatabaseAccessor<WalletsDatabase> with _$CoinsDaoMixin {
     );
   }
 
-  Future<Iterable<CoinsGroup>> getCoinGroups(
-      {int? limit, int? offset, Iterable<String>? excludeCoinIds}) {
-    throw UnimplementedError();
-  }
+  Future<Iterable<CoinsGroup>> getCoinGroups({
+    int? limit,
+    int? offset,
+    Iterable<String>? excludeCoinIds,
+  }) {}
 }
