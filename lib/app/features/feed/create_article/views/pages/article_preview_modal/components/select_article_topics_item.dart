@@ -5,8 +5,10 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/components/list_item/list_item.dart';
 import 'package:ion/app/components/screen_offset/screen_side_offset.dart';
 import 'package:ion/app/extensions/extensions.dart';
-import 'package:ion/app/features/feed/providers/article/select_topics_provider.c.dart';
-import 'package:ion/app/features/feed/views/components/topics_carousel/topics_carousel.dart';
+import 'package:ion/app/features/feed/data/models/feed_type.dart';
+import 'package:ion/app/features/feed/providers/feed_user_interests_provider.c.dart';
+import 'package:ion/app/features/feed/providers/selected_interests_notifier.c.dart';
+import 'package:ion/app/features/feed/views/components/topics/topics_carousel.dart';
 import 'package:ion/app/router/app_routes.c.dart';
 import 'package:ion/generated/assets.gen.dart';
 
@@ -15,8 +17,6 @@ class SelectArticleTopicsItem extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final selectedTopics = ref.watch(selectTopicsProvider);
-
     return Column(
       children: [
         ScreenSideOffset.medium(
@@ -47,16 +47,42 @@ class SelectArticleTopicsItem extends ConsumerWidget {
             trailing: Assets.svg.iconArrowRight.icon(color: context.theme.appColors.primaryText),
             constraints: BoxConstraints(minHeight: 40.0.s),
             onTap: () {
-              SelectArticleTopicsRoute().push<void>(ref.context);
+              SelectTopicsCategoriesRoute(feedType: FeedType.article).push<void>(context);
             },
           ),
         ),
-        if (selectedTopics.isNotEmpty)
-          Padding(
-            padding: EdgeInsetsDirectional.only(top: 10.0.s),
-            child: TopicsCarousel(topics: selectedTopics),
-          ),
+        _Topics(
+          padding: EdgeInsetsDirectional.only(top: 10.0.s),
+        ),
       ],
+    );
+  }
+}
+
+class _Topics extends HookConsumerWidget {
+  const _Topics({
+    required this.padding,
+  });
+
+  final EdgeInsetsGeometry padding;
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final availableSubcategories =
+        ref.watch(feedUserInterestsProvider(FeedType.article)).valueOrNull?.subcategories ?? {};
+    final selectedSubcategoriesKeys = ref.watch(selectedInterestsNotifierProvider);
+    final topics = selectedSubcategoriesKeys
+        .map((key) => availableSubcategories[key]?.display)
+        .nonNulls
+        .toList();
+
+    if (topics.isEmpty) {
+      return const SizedBox.shrink();
+    }
+
+    return Padding(
+      padding: padding,
+      child: TopicsCarousel(topics: topics),
     );
   }
 }

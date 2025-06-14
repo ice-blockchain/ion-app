@@ -5,7 +5,6 @@ import 'dart:async';
 import 'package:collection/collection.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:ion/app/extensions/extensions.dart';
-import 'package:ion/app/features/feed/data/models/article_topic.dart';
 import 'package:ion/app/features/ion_connect/ion_connect.dart';
 import 'package:ion/app/features/ion_connect/model/color_label.c.dart';
 import 'package:ion/app/features/ion_connect/model/entity_data_with_media_content.dart';
@@ -196,13 +195,13 @@ class ArticleData
     );
   }
 
-  List<ArticleTopic>? get topics => relatedHashtags
-      ?.map(
-        (hashtag) =>
-            ArticleTopic.values.firstWhereOrNull((topic) => topic.toShortString() == hashtag.value),
-      )
-      .nonNulls
-      .toList();
+  List<String> get topics =>
+      relatedHashtags
+          ?.where((hashTag) => !RelatedHashtag.isTag(hashTag.value))
+          .map((hashtag) => hashtag.value)
+          .nonNulls
+          .toList() ??
+      [];
 
   static Map<String, MediaAttachment> _buildMedia(List<List<String>>? mediaTags) {
     if (mediaTags == null) return {};

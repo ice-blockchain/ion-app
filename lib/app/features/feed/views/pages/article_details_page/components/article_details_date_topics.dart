@@ -2,33 +2,32 @@
 
 import 'package:flutter/material.dart';
 import 'package:ion/app/extensions/extensions.dart';
-import 'package:ion/app/features/feed/data/models/article_topic.dart';
 import 'package:ion/app/utils/date.dart';
 
 class ArticleDetailsDateTopics extends StatelessWidget {
   const ArticleDetailsDateTopics({
     this.publishedAt,
-    this.topics,
+    this.topicsNames,
     super.key,
   });
 
   final DateTime? publishedAt;
-  final List<ArticleTopic>? topics;
+  final List<String>? topicsNames;
 
   @override
   Widget build(BuildContext context) {
-    if (publishedAt == null && topics == null) {
+    if (publishedAt == null && topicsNames == null) {
       return const SizedBox.shrink();
     }
 
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
-        if (topics != null && topics!.isNotEmpty) ...[
+        if (topicsNames != null && topicsNames!.isNotEmpty) ...[
           Row(
             children: [
               Text(
-                topics![0].getTitle(context),
+                topicsNames![0],
                 style: context.theme.appTextThemes.caption.copyWith(
                   color: context.theme.appColors.quaternaryText,
                 ),
@@ -36,7 +35,7 @@ class ArticleDetailsDateTopics extends StatelessWidget {
               SizedBox(
                 width: 6.0.s,
               ),
-              if (topics!.length > 1)
+              if (topicsNames!.length > 1)
                 Container(
                   padding: EdgeInsets.symmetric(vertical: 1.0.s, horizontal: 7.0.s),
                   decoration: BoxDecoration(
@@ -44,7 +43,7 @@ class ArticleDetailsDateTopics extends StatelessWidget {
                     borderRadius: BorderRadius.circular(12.0.s),
                   ),
                   child: Text(
-                    '+${topics!.length - 1}',
+                    '+${topicsNames!.length - 1}',
                     style: context.theme.appTextThemes.caption.copyWith(
                       color: context.theme.appColors.primaryAccent,
                     ),
