@@ -31,7 +31,7 @@ class UrlPreview extends HookConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     if (Validators.isInvalidUrl(url)) {
-      return const SizedBox.shrink();
+      return builder(null, null);
     }
     final normalizedUrl = useMemoized(() {
       final normalizedUrl = normalizeUrl(url);
@@ -42,7 +42,7 @@ class UrlPreview extends HookConsumerWidget {
     });
 
     if (normalizedUrl == null) {
-      return const SizedBox.shrink();
+      return builder(null, null);
     }
 
     final favIconUrl = _resolveFavIconUrl(normalizedUrl);
@@ -53,7 +53,7 @@ class UrlPreview extends HookConsumerWidget {
     });
 
     if (metadataAsync.isLoading || metadataAsync.hasError) {
-      return const SizedBox.shrink();
+      return builder(null, null);
     }
 
     return builder(metadataAsync.valueOrNull, favIconUrl);

@@ -82,7 +82,7 @@ class PostBody extends HookConsumerWidget {
     );
 
     final showTextContent = useMemoized(
-      () => content.isNotEmpty && (!content.isSingleLinkOnly || urlPreviewVisible.value),
+      () => content.isNotEmpty && (!content.isSingleLinkOnly || !urlPreviewVisible.value),
       [content, urlPreviewVisible.value],
     );
 
