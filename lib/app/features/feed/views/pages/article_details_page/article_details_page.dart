@@ -12,6 +12,8 @@ import 'package:ion/app/components/text_editor/text_editor_preview.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/auth/providers/auth_provider.c.dart';
 import 'package:ion/app/features/feed/data/models/entities/article_data.c.dart';
+import 'package:ion/app/features/feed/data/models/feed_type.dart';
+import 'package:ion/app/features/feed/providers/feed_user_interests_provider.c.dart';
 import 'package:ion/app/features/feed/providers/ion_connect_entity_with_counters_provider.c.dart';
 import 'package:ion/app/features/feed/views/components/deleted_entity/deleted_entity.dart';
 import 'package:ion/app/features/feed/views/components/list_separator/list_separator.dart';
@@ -59,6 +61,9 @@ class ArticleDetailsPage extends HookConsumerWidget {
     );
 
     final topics = articleEntity.data.topics;
+    final availableSubcategories =
+        ref.watch(feedUserInterestsProvider(FeedType.article)).valueOrNull?.subcategories ?? {};
+    final topicsNames = topics.map((key) => availableSubcategories[key]?.display).nonNulls.toList();
 
     if (articleEntity.isDeleted) {
       DeletedEntity(entityType: DeletedEntityType.article);
@@ -86,7 +91,7 @@ class ArticleDetailsPage extends HookConsumerWidget {
                     ScreenSideOffset.small(
                       child: ArticleDetailsDateTopics(
                         publishedAt: articleEntity.data.publishedAt.value.toDateTime,
-                        topics: topics,
+                        topicsNames: topicsNames,
                       ),
                     ),
                     SizedBox(height: 16.0.s),
@@ -115,13 +120,17 @@ class ArticleDetailsPage extends HookConsumerWidget {
                     ScreenSideOffset.small(
                       child: UserBiography(eventReference: eventReference),
                     ),
-                    if (topics != null && topics.isNotEmpty) ...[
+                    if (topicsNames.isNotEmpty) ...[
                       SizedBox(height: 20.0.s),
-                      ArticleDetailsTopics(topics: topics),
+                      ArticleDetailsTopics(topics: topicsNames),
                     ],
                     MoreArticlesFromAuthor(eventReference: eventReference),
-                    if (topics != null && topics.isNotEmpty)
-                      MoreArticlesFromTopic(eventReference: eventReference, topic: topics.first),
+                    if (topics.isNotEmpty && topicsNames.isNotEmpty)
+                      MoreArticlesFromTopic(
+                        eventReference: eventReference,
+                        topicKey: topics.first,
+                        topicName: topicsNames.first,
+                      ),
                     ScreenBottomOffset(),
                   ]),
                 ),

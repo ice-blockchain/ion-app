@@ -6,13 +6,16 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/components/list_item/list_item.dart';
 import 'package:ion/app/components/progress_bar/centered_loading_indicator.dart';
 import 'package:ion/app/components/screen_offset/screen_bottom_offset.dart';
+import 'package:ion/app/components/separated/separator.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/core/model/media_type.dart';
 import 'package:ion/app/features/feed/create_post/model/create_post_option.dart';
 import 'package:ion/app/features/feed/create_post/providers/create_post_notifier.c.dart';
 import 'package:ion/app/features/feed/data/models/who_can_reply_settings_option.c.dart';
+import 'package:ion/app/features/feed/providers/selected_interests_notifier.c.dart';
 import 'package:ion/app/features/feed/providers/selected_who_can_reply_option_provider.c.dart';
 import 'package:ion/app/features/feed/stories/views/components/story_preview/actions/story_share_button.dart';
+import 'package:ion/app/features/feed/stories/views/components/story_preview/actions/story_topics_button.dart';
 import 'package:ion/app/features/feed/stories/views/components/story_preview/media/post_screenshot_preview.dart';
 import 'package:ion/app/features/feed/stories/views/components/story_preview/media/story_image_preview.dart';
 import 'package:ion/app/features/feed/stories/views/components/story_preview/media/story_video_preview.dart';
@@ -95,6 +98,7 @@ class StoryPreviewPage extends HookConsumerWidget {
                       leading: whoCanReply.getIcon(context),
                       trailing: Assets.svg.iconArrowRight.icon(
                         color: context.theme.appColors.primaryAccent,
+                        size: 16.s,
                       ),
                       constraints: BoxConstraints(minHeight: 40.0.s),
                       onTap: () => showSimpleBottomSheet<void>(
@@ -104,13 +108,22 @@ class StoryPreviewPage extends HookConsumerWidget {
                         ),
                       ),
                     ),
+                    Padding(
+                      padding: EdgeInsets.symmetric(vertical: 7.s),
+                      child: const HorizontalSeparator(),
+                    ),
+                    const StoryTopicsButton(),
+                    Padding(
+                      padding: EdgeInsets.symmetric(vertical: 6.s),
+                      child: const HorizontalSeparator(),
+                    ),
                   ],
                 ),
               ),
             ),
             Column(
               children: [
-                SizedBox(height: 16.0.s),
+                SizedBox(height: 10.0.s),
                 StoryShareButton(
                   isLoading: isPublishing.value,
                   onPressed: isPublishing.value
@@ -138,11 +151,13 @@ class StoryPreviewPage extends HookConsumerWidget {
                               ],
                               whoCanReply: whoCanReply,
                               quotedEvent: eventReference,
+                              topics: ref.read(selectedInterestsNotifierProvider),
                             );
                           } else if (mediaType == MediaType.video) {
                             await createPostNotifier.create(
                               mediaFiles: [MediaFile(path: path, mimeType: mimeType)],
                               whoCanReply: whoCanReply,
+                              topics: ref.read(selectedInterestsNotifierProvider),
                             );
                           }
 
@@ -151,7 +166,7 @@ class StoryPreviewPage extends HookConsumerWidget {
                           }
                         },
                 ),
-                ScreenBottomOffset(margin: 36.0.s),
+                ScreenBottomOffset(margin: 16.0.s),
               ],
             ),
           ],
