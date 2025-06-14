@@ -13,9 +13,12 @@ import 'package:ion/app/features/feed/create_article/providers/draft_article_pro
 import 'package:ion/app/features/feed/create_article/views/pages/article_preview_modal/components/article_preview.dart';
 import 'package:ion/app/features/feed/create_article/views/pages/article_preview_modal/components/select_article_topics_item.dart';
 import 'package:ion/app/features/feed/create_article/views/pages/article_preview_modal/components/select_article_who_can_reply_item.dart';
-import 'package:ion/app/features/feed/providers/article/select_topics_provider.c.dart';
+import 'package:ion/app/features/feed/data/models/entities/article_data.c.dart';
+import 'package:ion/app/features/feed/providers/selected_interests_notifier.c.dart';
 import 'package:ion/app/features/feed/providers/selected_who_can_reply_option_provider.c.dart';
 import 'package:ion/app/features/ion_connect/model/event_reference.c.dart';
+import 'package:ion/app/features/ion_connect/providers/ion_connect_entity_provider.c.dart';
+import 'package:ion/app/hooks/use_on_init.dart';
 import 'package:ion/app/router/components/navigation_app_bar/navigation_app_bar.dart';
 import 'package:ion/app/router/components/sheet_content/sheet_content.dart';
 import 'package:ion/generated/assets.gen.dart';
@@ -58,7 +61,22 @@ class ArticlePreviewModal extends HookConsumerWidget {
       :imageUrl,
     ) = ref.watch(draftArticleProvider);
     final whoCanReply = ref.watch(selectedWhoCanReplyOptionProvider);
-    final selectedTopics = ref.watch(selectTopicsProvider);
+    final selectedTopics = ref.watch(selectedInterestsNotifierProvider);
+
+    useOnInit(
+      () {
+        if (modifiedEvent == null) return;
+        final modifiableEntity =
+            ref.read(ionConnectEntityProvider(eventReference: modifiedEvent!)).valueOrNull;
+        if (modifiableEntity is! ArticleEntity) return;
+
+        WidgetsBinding.instance.addPostFrameCallback(
+          (_) => ref.read(selectedInterestsNotifierProvider.notifier).selectInterests =
+              modifiableEntity.data.topics,
+        );
+      },
+      [modifiedEvent],
+    );
 
     return SheetContent(
       body: Column(

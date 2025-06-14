@@ -1,9 +1,7 @@
 // SPDX-License-Identifier: ice License 1.0
 
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/auth/providers/auth_provider.c.dart';
-import 'package:ion/app/features/feed/data/models/article_topic.dart';
 import 'package:ion/app/features/feed/data/models/entities/article_data.c.dart';
 import 'package:ion/app/features/feed/data/models/feed_filter.dart';
 import 'package:ion/app/features/feed/providers/feed_current_filter_provider.c.dart';
@@ -17,7 +15,7 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 part 'topic_articles_data_source_provider.c.g.dart';
 
 @riverpod
-List<EntitiesDataSource>? topicArticlesDataSource(Ref ref, ArticleTopic topic) {
+List<EntitiesDataSource>? topicArticlesDataSource(Ref ref, String topic) {
   final filter = ref.watch(feedCurrentFilterProvider.select((state) => state.filter));
   final filterRelays = ref.watch(feedFilterRelaysProvider).valueOrNull;
   final currentPubkey = ref.watch(currentPubkeySelectorProvider);
@@ -40,7 +38,7 @@ EntitiesDataSource _buildArticlesDataSource({
   required ActionSource actionSource,
   required List<String>? authors,
   required String currentPubkey,
-  required ArticleTopic topic,
+  required String topic,
 }) {
   return EntitiesDataSource(
     actionSource: actionSource,
@@ -58,7 +56,7 @@ EntitiesDataSource _buildArticlesDataSource({
         ]).toString(),
         limit: 20,
         tags: {
-          '#t': [topic.toShortString()],
+          '#t': [topic],
         },
       ),
     ],
