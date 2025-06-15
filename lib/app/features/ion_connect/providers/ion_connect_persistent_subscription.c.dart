@@ -11,7 +11,7 @@ import 'package:ion/app/features/chat/e2ee/providers/encrypted_event_message_han
 import 'package:ion/app/features/feed/notifications/providers/notification_followers_event_handler.c.dart';
 import 'package:ion/app/features/feed/notifications/providers/notification_likes_event_handler.c.dart';
 import 'package:ion/app/features/feed/notifications/providers/notification_quotes_event_handler.c.dart';
-import 'package:ion/app/features/feed/notifications/providers/notification_replies_subscription_provider.c.dart';
+import 'package:ion/app/features/feed/notifications/providers/notification_replies_event_handler.c.dart';
 import 'package:ion/app/features/ion_connect/ion_connect.dart';
 import 'package:ion/app/features/ion_connect/model/ion_connect_gift_wrap.c.dart';
 import 'package:ion/app/features/ion_connect/providers/ion_connect_event_signer_provider.c.dart';
@@ -99,9 +99,9 @@ class IonConnectPersistentSubscription extends _$IonConnectPersistentSubscriptio
     final requestMessage = await _requestMessageBuilder(
       since: latestEventTimestamp,
     );
-    //TODO: Remove this once we have a proper way to handle gift wrap events on relay
-    requestMessage.filters[1] = requestMessage.filters[1]
-        .copyWith(since: () => DateTime.now().microsecondsSinceEpoch.overlap);
+    // //TODO: Remove this once we have a proper way to handle gift wrap events on relay
+    // requestMessage.filters[1] = requestMessage.filters[1]
+    //     .copyWith(since: () => DateTime.now().microsecondsSinceEpoch.overlap);
     final stream = ref.watch(ionConnectEventsSubscriptionProvider(requestMessage));
     final subscription = stream.listen(_handleEvent);
     ref.onDispose(subscription.cancel);
