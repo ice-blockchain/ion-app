@@ -48,6 +48,11 @@ class EncryptedDeletionRequestHandler extends PersistentSubscriptionEncryptedEve
 
   @override
   Future<void> handle(EventMessage rumor) async {
+    unawaited(_deleteConversation(rumor));
+    unawaited(_deleteConversationMessages(rumor));
+  }
+
+  Future<void> _deleteConversation(EventMessage rumor) async {
     final deleteConversationIds = rumor.tags
         .where((tags) => tags[0] == ConversationIdentifier.tagName)
         .map((tag) => tag.elementAtOrNull(1))
@@ -60,27 +65,35 @@ class EncryptedDeletionRequestHandler extends PersistentSubscriptionEncryptedEve
         conversationIds: deleteConversationIds,
         eventMessageDao: eventMessageDao,
       );
-    } else {
-      final eventsToDelete = DeletionRequest.fromEventMessage(rumor).events;
+    }
+  }
 
-      final eventToDeleteReferences =
-          eventsToDelete.map((event) => (event as EventToDelete).eventReference).toList();
+  Future<void> _deleteConversationMessages(EventMessage rumor) async {
+    final eventsToDelete = DeletionRequest.fromEventMessage(rumor).events;
 
-      for (final eventReference in eventToDeleteReferences) {
-        switch (eventReference) {
-          case ReplaceableEventReference():
-            await conversationMessageDao.removeMessages(
-              deleteRequest: rumor,
-              eventReferences: [eventReference],
-              env: env,
-              masterPubkey: masterPubkey,
-              eventSignerPubkey: eventSigner.publicKey,
-            );
-          case ImmutableEventReference():
-            await conversationMessageReactionDao.remove(
-              reactionEventReference: eventReference,
-            );
-        }
+    if (eventsToDelete.isEmpty) {
+      return;
+    }
+
+    final eventToDeleteReferences =
+        eventsToDelete.map((event) => (event as EventToDelete).eventReference).toList();
+
+    for (final eventReference in eventToDeleteReferences) {
+      switch (eventReference) {
+        case ReplaceableEventReference():
+          await conversationMessageDao.removeMessages(
+            deleteRequest: rumor,
+            eventReferences: [eventReference],
+            env: env,
+            masterPubkey: masterPubkey,
+            eventSignerPubkey: eventSigner.publicKey,
+          );
+        case ImmutableEventReference():
+          await conversationMessageReactionDao.remove(
+            reactionEventReference: eventReference,
+          );
+        default:
+          break;
       }
     }
   }
