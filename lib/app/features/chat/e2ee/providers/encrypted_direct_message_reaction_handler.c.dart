@@ -40,24 +40,34 @@ class EncryptedDirectMessageReactionHandler
 
   @override
   Future<void> handle(EventMessage rumor) async {
-    final reactionEntity = PrivateMessageReactionEntity.fromEventMessage(rumor);
-
-    // Identify kind 7 status message (received or read only)
-    if (reactionEntity.data.content == MessageDeliveryStatus.received.name ||
-        reactionEntity.data.content == MessageDeliveryStatus.read.name) {
-      await conversationMessageDataDao.addOrUpdateStatus(
-        messageEventReference: reactionEntity.data.reference,
-        pubkey: rumor.pubkey,
-        masterPubkey: rumor.masterPubkey,
-        status: MessageDeliveryStatus.values.byName(reactionEntity.data.content),
-        updateAllBefore: rumor.createdAt.toDateTime,
-      );
+    if (rumor.content == MessageDeliveryStatus.received.name ||
+        rumor.content == MessageDeliveryStatus.read.name) {
+      await _addOrUpdateMessageStatus(rumor);
     } else {
-      await conversationMessageReactionDao.add(
-        reactionEvent: rumor,
-        eventMessageDao: eventMessageDao,
-      );
+      await _addReaction(rumor);
     }
+  }
+
+  Future<void> _addOrUpdateMessageStatus(
+    EventMessage rumor,
+  ) async {
+    final reactionEntity = PrivateMessageReactionEntity.fromEventMessage(rumor);
+    await conversationMessageDataDao.addOrUpdateStatus(
+      messageEventReference: reactionEntity.data.reference,
+      pubkey: rumor.pubkey,
+      masterPubkey: rumor.masterPubkey,
+      status: MessageDeliveryStatus.values.byName(reactionEntity.data.content),
+      updateAllBefore: rumor.createdAt.toDateTime,
+    );
+  }
+
+  Future<void> _addReaction(
+    EventMessage rumor,
+  ) async {
+    await conversationMessageReactionDao.add(
+      reactionEvent: rumor,
+      eventMessageDao: eventMessageDao,
+    );
   }
 }
 
