@@ -63,7 +63,8 @@ class FeedUserInterestPicker {
 
   bool _roll(double chance) => chance > _random.nextDouble();
 
-  T? _getRandomItem<T>(Iterable<T> items) => items.elementAtOrNull(_random.nextInt(items.length));
+  T? _getRandomItem<T>(Iterable<T> items) =>
+      items.isEmpty ? null : items.elementAt(_random.nextInt(items.length));
 
   Map<String, FeedInterestsCategory> _getAllowedCategories([List<String>? allowedSubcategories]) {
     if (allowedSubcategories == null) return _interests.categories;
@@ -99,6 +100,8 @@ class FeedUserInterestPicker {
       0,
       (sum, item) => sum + item.value.weight,
     );
+
+    if (totalInterestedWeight == 0) return _getRandomItem(node.entries);
 
     final roll = _random.nextInt(totalInterestedWeight);
 

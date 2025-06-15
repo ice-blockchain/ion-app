@@ -18,6 +18,7 @@ import 'package:ion/app/features/feed/providers/feed_user_interests_provider.c.d
 import 'package:ion/app/features/ion_connect/ion_connect.dart';
 import 'package:ion/app/features/ion_connect/model/action_source.c.dart';
 import 'package:ion/app/features/ion_connect/model/ion_connect_entity.dart';
+import 'package:ion/app/features/ion_connect/model/related_hashtag.c.dart';
 import 'package:ion/app/features/ion_connect/providers/entities_paged_data_provider.c.dart';
 import 'package:ion/app/features/ion_connect/providers/ion_connect_notifier.c.dart';
 import 'package:ion/app/features/user/providers/relevant_current_user_relays_provider.c.dart';
@@ -246,6 +247,7 @@ class FeedForYouContent extends _$FeedForYouContent implements PagedNotifier {
           final entity = await _requestEntityFromRelay(
             relayUrl: relayUrl,
             feedModifier: feedModifier,
+            interest: interest,
             lastEventCreatedAt: interestPagination.lastEventCreatedAt,
           );
 
@@ -286,12 +288,14 @@ class FeedForYouContent extends _$FeedForYouContent implements PagedNotifier {
   Future<IonConnectEntity?> _requestEntityFromRelay({
     required String relayUrl,
     required FeedModifier feedModifier,
+    required String interest,
     required int? lastEventCreatedAt,
   }) async {
     final ionConnectNotifier = ref.read(ionConnectNotifierProvider.notifier);
     final feedConfig = await ref.read(feedConfigProvider.future);
 
-    final dataSource = _getDataSourceForRelay(relayUrl);
+    final dataSource =
+        _getDataSource(relayUrl: relayUrl, feedModifier: feedModifier, interest: interest);
 
     final maxAge = switch (feedModifier) {
       FeedModifier.trending => feedConfig.trendingMaxAge,
@@ -321,39 +325,46 @@ class FeedForYouContent extends _$FeedForYouContent implements PagedNotifier {
         .firstOrNull;
   }
 
-  EntitiesDataSource _getDataSourceForRelay(String relayUrl) {
+  EntitiesDataSource _getDataSource({
+    required String relayUrl,
+    required FeedModifier feedModifier,
+    required String interest,
+  }) {
     final currentPubkey = ref.read(currentPubkeySelectorProvider);
 
     if (currentPubkey == null) {
       throw const CurrentUserNotFoundException();
     }
 
-    final feedModifierFilter = feedModifier?.filter;
+    final tags = {
+      ...feedModifier.filter.tags,
+      '#${RelatedHashtag.tagName}': [interest],
+    };
 
     return switch (feedType) {
       FeedType.post => buildPostsDataSource(
           actionSource: ActionSource.relayUrl(relayUrl),
           currentPubkey: currentPubkey,
-          searchExtensions: feedModifierFilter?.search,
-          tags: feedModifierFilter?.tags,
+          searchExtensions: feedModifier.filter.search,
+          tags: tags,
         ),
       FeedType.article => buildArticlesDataSource(
           actionSource: ActionSource.relayUrl(relayUrl),
           currentPubkey: currentPubkey,
-          searchExtensions: feedModifierFilter?.search,
-          tags: feedModifierFilter?.tags,
+          searchExtensions: feedModifier.filter.search,
+          tags: tags,
         ),
       FeedType.video => buildVideosDataSource(
           actionSource: ActionSource.relayUrl(relayUrl),
           currentPubkey: currentPubkey,
-          searchExtensions: feedModifierFilter?.search,
-          tags: feedModifierFilter?.tags,
+          searchExtensions: feedModifier.filter.search,
+          tags: tags,
         ),
       FeedType.story => buildStoriesDataSource(
           actionSource: ActionSource.relayUrl(relayUrl),
           currentPubkey: currentPubkey,
-          searchExtensions: feedModifierFilter?.search,
-          tags: feedModifierFilter?.tags,
+          searchExtensions: feedModifier.filter.search,
+          tags: tags,
         ),
     };
   }
