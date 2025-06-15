@@ -107,8 +107,7 @@ class CreatePostNotifier extends _$CreatePostNotifier {
         quotedEvent: quotedEvent != null ? _buildQuotedEvent(quotedEvent) : null,
         relatedEvents: parentEntity != null ? _buildRelatedEvents(parentEntity) : null,
         relatedPubkeys: _buildRelatedPubkeys(mentions: mentions, parentEntity: parentEntity),
-        settings:
-            parentEntity != null ? null : EntityDataWithSettings.build(whoCanReply: whoCanReply),
+        settings: EntityDataWithSettings.build(whoCanReply: whoCanReply),
         expiration: _buildExpiration(),
         communityId: communityId,
         richText: await _buildRichTextContentWithMediaLinks(
@@ -472,9 +471,13 @@ class CreatePostNotifier extends _$CreatePostNotifier {
   List<RelatedPubkey> _buildRelatedPubkeys({
     required List<RelatedPubkey> mentions,
     IonConnectEntity? parentEntity,
+    EventReference? quotedEvent,
   }) {
     return <RelatedPubkey>{
       ...mentions,
+      if (quotedEvent != null) ...{
+        RelatedPubkey(value: quotedEvent.pubkey),
+      },
       if (parentEntity != null) ...{
         RelatedPubkey(value: parentEntity.masterPubkey),
         if (parentEntity is ModifiablePostEntity) ...(parentEntity.data.relatedPubkeys ?? []),
