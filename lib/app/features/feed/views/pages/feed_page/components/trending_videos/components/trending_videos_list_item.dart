@@ -111,6 +111,8 @@ class _VideoContainer extends StatelessWidget {
               imageUrl: thumbnailUrl,
               authorPubkey: eventReference.pubkey,
               fit: BoxFit.cover,
+              height: size.height,
+              width: size.width,
             ),
             Column(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
