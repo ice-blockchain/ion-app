@@ -85,6 +85,12 @@ class FeedForYouContent extends _$FeedForYouContent implements PagedNotifier {
   }
 
   Map<FeedModifier, int> _getFeedModifiersDistribution({required int limit}) {
+    if (feedModifier != null) {
+      // If a specific feed modifier is set, we only return that modifier with the full limit.
+      // For example, for the Trending Videos feed.
+      return {feedModifier!: limit};
+    }
+
     final modifierWeights = switch (feedType) {
       FeedType.post || FeedType.video || FeedType.article => {
           FeedModifier.trending: 1,
