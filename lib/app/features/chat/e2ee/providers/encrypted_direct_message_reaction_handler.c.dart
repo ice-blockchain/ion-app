@@ -29,11 +29,11 @@ class EncryptedDirectMessageReactionEventHandler
   bool canHandle({
     required IonConnectGiftWrapEntity entity,
   }) {
-    return entity.data.kinds.containsKind([
+    return entity.data.kinds.containsDeep([
           PrivateMessageReactionEntity.kind.toString(),
           PrivateMessageReactionEntity.kind.toString(),
         ]) ||
-        entity.data.kinds.containsKind([
+        entity.data.kinds.containsDeep([
           PrivateMessageReactionEntity.kind.toString(),
         ]);
   }

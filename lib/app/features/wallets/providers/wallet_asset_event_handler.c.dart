@@ -32,7 +32,7 @@ class WalletAssetEventHandler extends PersistentSubscriptionEncryptedEventMessag
 
   @override
   bool canHandle({required IonConnectGiftWrapEntity entity}) {
-    return entity.data.kinds.containsKind([WalletAssetEntity.kind.toString()]);
+    return entity.data.kinds.containsDeep([WalletAssetEntity.kind.toString()]);
   }
 
   @override

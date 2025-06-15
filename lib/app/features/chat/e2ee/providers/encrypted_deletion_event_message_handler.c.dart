@@ -44,7 +44,7 @@ class EncryptedDeletionRequestEventHandler
   bool canHandle({
     required IonConnectGiftWrapEntity entity,
   }) {
-    return entity.data.kinds.containsKind([DeletionRequestEntity.kind.toString()]);
+    return entity.data.kinds.containsDeep([DeletionRequestEntity.kind.toString()]);
   }
 
   @override

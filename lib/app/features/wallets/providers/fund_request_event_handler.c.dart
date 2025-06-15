@@ -20,7 +20,7 @@ class FundsRequestEventHandler extends PersistentSubscriptionEncryptedEventMessa
 
   @override
   bool canHandle({required IonConnectGiftWrapEntity entity}) {
-    return entity.data.kinds.containsKind([FundsRequestEntity.kind.toString()]);
+    return entity.data.kinds.containsDeep([FundsRequestEntity.kind.toString()]);
   }
 
   @override

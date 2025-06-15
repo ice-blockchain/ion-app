@@ -41,7 +41,7 @@ class EncryptedDirectMessageEventHandler
   bool canHandle({
     required IonConnectGiftWrapEntity entity,
   }) {
-    return entity.data.kinds.containsKind([ReplaceablePrivateDirectMessageEntity.kind.toString()]);
+    return entity.data.kinds.containsDeep([ReplaceablePrivateDirectMessageEntity.kind.toString()]);
   }
 
   @override
