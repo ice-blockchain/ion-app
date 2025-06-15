@@ -6,6 +6,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/features/chat/e2ee/providers/encrypted_deletion_request_handler.c.dart';
 import 'package:ion/app/features/chat/e2ee/providers/encrypted_direct_message_handler.c.dart';
 import 'package:ion/app/features/chat/e2ee/providers/encrypted_direct_message_reaction_handler.c.dart';
+import 'package:ion/app/features/chat/e2ee/providers/encrypted_direct_message_status_handler.c.dart';
 import 'package:ion/app/features/chat/e2ee/providers/encrypted_repost_handler.c.dart';
 import 'package:ion/app/features/chat/e2ee/providers/gift_unwrap_service_provider.c.dart';
 import 'package:ion/app/features/ion_connect/ion_connect.dart';
@@ -48,6 +49,7 @@ class EncryptedMessageEventHandler implements PersistentSubscriptionEventHandler
 @riverpod
 Future<EncryptedMessageEventHandler> encryptedMessageEventHandler(Ref ref) async {
   final handlers = [
+    ref.watch(encryptedDirectMessageStatusHandlerProvider),
     await ref.watch(encryptedDirectMessageHandlerProvider.future),
     ref.watch(encryptedDirectMessageReactionHandlerProvider),
     await ref.watch(encryptedDeletionRequestHandlerProvider.future),

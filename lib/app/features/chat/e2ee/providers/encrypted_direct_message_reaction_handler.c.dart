@@ -16,12 +16,10 @@ part 'encrypted_direct_message_reaction_handler.c.g.dart';
 class EncryptedDirectMessageReactionHandler
     extends PersistentSubscriptionEncryptedEventMessageHandler {
   EncryptedDirectMessageReactionHandler(
-    this.conversationMessageDataDao,
     this.conversationMessageReactionDao,
     this.eventMessageDao,
   );
 
-  final ConversationMessageDataDao conversationMessageDataDao;
   final ConversationMessageReactionDao conversationMessageReactionDao;
   final EventMessageDao eventMessageDao;
 
@@ -30,40 +28,13 @@ class EncryptedDirectMessageReactionHandler
     required IonConnectGiftWrapEntity entity,
   }) {
     return entity.data.kinds.containsDeep([
-          PrivateMessageReactionEntity.kind.toString(),
-          PrivateMessageReactionEntity.kind.toString(),
-        ]) ||
-        entity.data.kinds.containsDeep([
-          PrivateMessageReactionEntity.kind.toString(),
-        ]);
+      PrivateMessageReactionEntity.kind.toString(),
+      PrivateMessageReactionEntity.kind.toString(),
+    ]);
   }
 
   @override
   Future<void> handle(EventMessage rumor) async {
-    if (rumor.content == MessageDeliveryStatus.received.name ||
-        rumor.content == MessageDeliveryStatus.read.name) {
-      await _addOrUpdateMessageStatus(rumor);
-    } else {
-      await _addReaction(rumor);
-    }
-  }
-
-  Future<void> _addOrUpdateMessageStatus(
-    EventMessage rumor,
-  ) async {
-    final reactionEntity = PrivateMessageReactionEntity.fromEventMessage(rumor);
-    await conversationMessageDataDao.addOrUpdateStatus(
-      messageEventReference: reactionEntity.data.reference,
-      pubkey: rumor.pubkey,
-      masterPubkey: rumor.masterPubkey,
-      status: MessageDeliveryStatus.values.byName(reactionEntity.data.content),
-      updateAllBefore: rumor.createdAt.toDateTime,
-    );
-  }
-
-  Future<void> _addReaction(
-    EventMessage rumor,
-  ) async {
     await conversationMessageReactionDao.add(
       reactionEvent: rumor,
       eventMessageDao: eventMessageDao,
@@ -74,7 +45,6 @@ class EncryptedDirectMessageReactionHandler
 @riverpod
 EncryptedDirectMessageReactionHandler encryptedDirectMessageReactionHandler(Ref ref) =>
     EncryptedDirectMessageReactionHandler(
-      ref.watch(conversationMessageDataDaoProvider),
       ref.watch(conversationMessageReactionDaoProvider),
       ref.watch(eventMessageDaoProvider),
     );
