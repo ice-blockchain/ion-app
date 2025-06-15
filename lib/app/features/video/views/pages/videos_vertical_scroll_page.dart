@@ -89,7 +89,7 @@ class VideosVerticalScrollPage extends HookConsumerWidget {
           } else {
             final reposted = ref.read(getRepostedEntityProvider(entity));
             if (reposted != null && (reposted is ModifiablePostEntity || reposted is PostEntity)) {
-              for (final media in _getVideosFromEntity(entity)) {
+              for (final media in _getVideosFromEntity(reposted)) {
                 result.add(_FlattenedVideo(entity: reposted, media: media));
               }
             }
