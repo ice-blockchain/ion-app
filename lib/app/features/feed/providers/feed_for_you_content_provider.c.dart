@@ -117,9 +117,7 @@ class FeedForYouContent extends _$FeedForYouContent implements PagedNotifier {
     required int limit,
     required FeedModifier feedModifier,
   }) async* {
-    final dataSourceRelays = await _getDataSourceRelays();
-
-    await _initModifierPagination(relays: dataSourceRelays, feedModifier: feedModifier);
+    await _refreshModifierPagination(feedModifier: feedModifier);
 
     final nextPageRelays =
         getNextPageSources(sources: state.modifiersPagination[feedModifier]!, limit: limit);
@@ -144,11 +142,12 @@ class FeedForYouContent extends _$FeedForYouContent implements PagedNotifier {
     return ref.read(relevantCurrentUserRelaysProvider.future);
   }
 
-  Future<void> _initModifierPagination({
-    required List<String> relays,
-    required FeedModifier feedModifier,
-  }) async {
-    if (state.modifiersPagination[feedModifier] != null) return;
+  Future<void> _refreshModifierPagination({required FeedModifier feedModifier}) async {
+    // For any other feed type except articles, pagination can't be changed.
+    // For Articles, user can select or unselect some topics, so we need to refresh the pagination
+    if (feedType != FeedType.article && state.modifiersPagination[feedModifier] != null) return;
+
+    final dataSourceRelays = await _getDataSourceRelays();
 
     // TODO: for articles (if feedType is FeedType.article), take the selected interests
     final interests =
@@ -156,16 +155,29 @@ class FeedForYouContent extends _$FeedForYouContent implements PagedNotifier {
               (subcategory) => subcategory.key,
             );
 
-    final relaysPagination = {
-      for (final relay in relays)
-        relay: RelayPagination(
-          page: -1,
-          hasMore: true,
-          interestsPagination: {
-            for (final interest in interests) interest: const InterestPagination(hasMore: true),
-          },
-        ),
-    };
+    final relaysPagination = Map.fromEntries(
+      dataSourceRelays.map(
+        (relayUrl) {
+          final relayPagination = state.modifiersPagination[feedModifier]?[relayUrl] ??
+              const RelayPagination(page: -1, hasMore: true, interestsPagination: {});
+          final interestsPagination = Map.fromEntries(
+            interests.map(
+              (interest) {
+                return MapEntry(
+                  interest,
+                  relayPagination.interestsPagination[interest] ??
+                      const InterestPagination(hasMore: true),
+                );
+              },
+            ),
+          );
+          return MapEntry(
+            relayUrl,
+            relayPagination.copyWith(interestsPagination: interestsPagination),
+          );
+        },
+      ),
+    );
 
     state = state.copyWith(
       modifiersPagination: {
