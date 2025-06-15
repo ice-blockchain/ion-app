@@ -1,11 +1,13 @@
 // SPDX-License-Identifier: ice License 1.0
 
+import 'package:collection/collection.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/exceptions/exceptions.dart';
 import 'package:ion/app/features/chat/community/models/entities/community_definition_data.c.dart';
 import 'package:ion/app/features/chat/community/models/entities/community_join_data.c.dart';
 import 'package:ion/app/features/chat/community/models/entities/community_update_data.c.dart';
 import 'package:ion/app/features/feed/data/models/bookmarks/bookmarks.c.dart';
+import 'package:ion/app/features/feed/data/models/bookmarks/bookmarks_collection.c.dart';
 import 'package:ion/app/features/feed/data/models/bookmarks/bookmarks_set.c.dart';
 import 'package:ion/app/features/feed/data/models/entities/article_data.c.dart';
 import 'package:ion/app/features/feed/data/models/entities/event_count_result_data.c.dart';
@@ -22,6 +24,7 @@ import 'package:ion/app/features/ion_connect/model/ion_connect_entity.dart';
 import 'package:ion/app/features/ion_connect/model/ion_connect_gift_wrap.c.dart';
 import 'package:ion/app/features/ion_connect/model/mute_set.c.dart';
 import 'package:ion/app/features/ion_connect/model/not_authoritative_event.c.dart';
+import 'package:ion/app/features/ion_connect/model/replaceable_event_identifier.c.dart';
 import 'package:ion/app/features/push_notifications/data/models/push_subscription.c.dart';
 import 'package:ion/app/features/user/model/badges/badge_award.c.dart';
 import 'package:ion/app/features/user/model/badges/badge_definition.c.dart';
@@ -57,7 +60,7 @@ class EventParser {
       FileMetadataEntity.kind => FileMetadataEntity.fromEventMessage(eventMessage),
       ReactionEntity.kind => ReactionEntity.fromEventMessage(eventMessage),
       EventCountResultEntity.kind => EventCountResultEntity.fromEventMessage(eventMessage),
-      BookmarksSetEntity.kind => BookmarksSetEntity.fromEventMessage(eventMessage),
+      BookmarksSetEntity.kind => _parseBookmarksSet(eventMessage),
       BookmarksEntity.kind => BookmarksEntity.fromEventMessage(eventMessage),
       BlockListEntity.kind => BlockListEntity.fromEventMessage(eventMessage),
       NotAuthoritativeEvent.kind => NotAuthoritativeEvent.fromEventMessage(eventMessage),
@@ -76,6 +79,30 @@ class EventParser {
       PollVoteEntity.kind => PollVoteEntity.fromEventMessage(eventMessage),
       _ => throw UnknownEventException(eventId: eventMessage.id, kind: eventMessage.kind)
     };
+  }
+
+  IonConnectEntity _parseBookmarksSet(EventMessage eventMessage) {
+    // Add logic here to differentiate between BookmarksSetEntity and BookmarksCollectionEntity
+    if (_isCollection(eventMessage)) {
+      return BookmarksCollectionEntity.fromEventMessage(eventMessage);
+    }
+    return BookmarksSetEntity.fromEventMessage(eventMessage);
+  }
+
+  bool _isCollection(EventMessage eventMessage) {
+    final tags = groupBy(eventMessage.tags, (tag) => tag.first);
+    // Replace with actual condition to determine if it's a collection
+    final dTag = tags[ReplaceableEventIdentifier.tagName]
+        ?.map(ReplaceableEventIdentifier.fromTag)
+        .first
+        .value;
+
+    if (dTag == BookmarksCollectionEntity.defaultCollectionDTag ||
+        dTag == BookmarksCollectionEntity.collectionsDTag ||
+        (dTag?.contains('homefeed_collection_') ?? false)) {
+      return true;
+    }
+    return false;
   }
 }
 
