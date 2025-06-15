@@ -3,6 +3,7 @@
 import 'dart:convert';
 
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:ion/app/exceptions/exceptions.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/auth/providers/auth_provider.c.dart';
 import 'package:ion/app/features/ion_connect/ion_connect.dart';
@@ -15,10 +16,10 @@ import 'package:ion/app/features/wallets/model/entities/wallet_asset_entity.c.da
 import 'package:ion/app/services/logger/logger.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
-part 'wallet_asset_event_handler.c.g.dart';
+part 'wallet_asset_handler.c.g.dart';
 
-class WalletAssetEventHandler extends PersistentSubscriptionEncryptedEventMessageHandler {
-  WalletAssetEventHandler(
+class WalletAssetHandler extends PersistentSubscriptionEncryptedEventMessageHandler {
+  WalletAssetHandler(
     this.currentPubkey,
     this.walletViewsService,
     this.transactionsRepository,
@@ -69,17 +70,17 @@ class WalletAssetEventHandler extends PersistentSubscriptionEncryptedEventMessag
 }
 
 @riverpod
-Future<WalletAssetEventHandler> walletAssetEventHandler(Ref ref) async {
+Future<WalletAssetHandler> walletAssetHandler(Ref ref) async {
   final currentPubkey = ref.watch(currentPubkeySelectorProvider);
   final walletViewsService = ref.watch(walletViewsServiceProvider).valueOrNull;
   final transactionsRepository = ref.watch(transactionsRepositoryProvider).valueOrNull;
   final requestAssetsRepository = ref.watch(requestAssetsRepositoryProvider);
 
   if (currentPubkey == null || walletViewsService == null || transactionsRepository == null) {
-    throw Exception('WalletAssetEventHandler not initialized');
+    throw WalletAssetHandlerNotInitializedException();
   }
 
-  return WalletAssetEventHandler(
+  return WalletAssetHandler(
     currentPubkey,
     walletViewsService,
     transactionsRepository,

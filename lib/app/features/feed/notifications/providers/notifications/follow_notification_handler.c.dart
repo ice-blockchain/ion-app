@@ -9,10 +9,10 @@ import 'package:ion/app/features/ion_connect/providers/ion_connect_persistent_su
 import 'package:ion/app/features/user/model/follow_list.c.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
-part 'notification_followers_event_handler.c.g.dart';
+part 'follow_notification_handler.c.g.dart';
 
-class NotificationFollowersEventHandler extends PersistentSubscriptionEventHandler {
-  NotificationFollowersEventHandler(
+class FollowNotificationHandler extends PersistentSubscriptionEventHandler {
+  FollowNotificationHandler(
     this.followersRepository,
     this.currentMasterPubkey,
   );
@@ -37,7 +37,7 @@ class NotificationFollowersEventHandler extends PersistentSubscriptionEventHandl
 }
 
 @riverpod
-NotificationFollowersEventHandler notificationFollowersEventHandler(Ref ref) {
+FollowNotificationHandler followNotificationHandler(Ref ref) {
   final followersRepository = ref.watch(followersRepositoryProvider);
   final currentMasterPubkey = ref.watch(currentPubkeySelectorProvider);
 
@@ -45,5 +45,5 @@ NotificationFollowersEventHandler notificationFollowersEventHandler(Ref ref) {
     throw UserMasterPubkeyNotFoundException();
   }
 
-  return NotificationFollowersEventHandler(followersRepository, currentMasterPubkey);
+  return FollowNotificationHandler(followersRepository, currentMasterPubkey);
 }

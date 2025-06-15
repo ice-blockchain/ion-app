@@ -11,10 +11,10 @@ import 'package:ion/app/features/ion_connect/ion_connect.dart';
 import 'package:ion/app/features/ion_connect/providers/ion_connect_persistent_subscription.c.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
-part 'notification_likes_event_handler.c.g.dart';
+part 'like_notification_handler.c.g.dart';
 
-class NotificationLikesEventHandler extends PersistentSubscriptionEventHandler {
-  NotificationLikesEventHandler(this.likesRepository, this.currentPubkey);
+class LikeNotificationHandler extends PersistentSubscriptionEventHandler {
+  LikeNotificationHandler(this.likesRepository, this.currentPubkey);
 
   final LikesRepository likesRepository;
   final String currentPubkey;
@@ -35,7 +35,7 @@ class NotificationLikesEventHandler extends PersistentSubscriptionEventHandler {
 }
 
 @riverpod
-NotificationLikesEventHandler notificationLikesEventHandler(Ref ref) {
+LikeNotificationHandler likeNotificationHandler(Ref ref) {
   final likesRepository = ref.watch(likesRepositoryProvider);
   final currentPubkey = ref.watch(currentPubkeySelectorProvider);
 
@@ -43,5 +43,5 @@ NotificationLikesEventHandler notificationLikesEventHandler(Ref ref) {
     throw UserMasterPubkeyNotFoundException();
   }
 
-  return NotificationLikesEventHandler(likesRepository, currentPubkey);
+  return LikeNotificationHandler(likesRepository, currentPubkey);
 }

@@ -11,10 +11,10 @@ import 'package:ion/app/features/wallets/data/repository/request_assets_reposito
 import 'package:ion/app/features/wallets/model/entities/funds_request_entity.c.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
-part 'fund_request_event_handler.c.g.dart';
+part 'fund_request_handler.c.g.dart';
 
-class FundsRequestEventHandler extends PersistentSubscriptionEncryptedEventMessageHandler {
-  FundsRequestEventHandler(this.requestAssetsRepository);
+class FundsRequestHandler extends PersistentSubscriptionEncryptedEventMessageHandler {
+  FundsRequestHandler(this.requestAssetsRepository);
 
   final RequestAssetsRepository requestAssetsRepository;
 
@@ -35,7 +35,7 @@ class FundsRequestEventHandler extends PersistentSubscriptionEncryptedEventMessa
 }
 
 @riverpod
-Future<FundsRequestEventHandler> fundsRequestEventHandler(Ref ref) async {
+Future<FundsRequestHandler> fundsRequestHandler(Ref ref) async {
   final requestAssetsRepository = ref.watch(requestAssetsRepositoryProvider);
-  return FundsRequestEventHandler(requestAssetsRepository);
+  return FundsRequestHandler(requestAssetsRepository);
 }

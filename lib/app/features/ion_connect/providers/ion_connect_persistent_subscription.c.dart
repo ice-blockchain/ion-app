@@ -8,11 +8,11 @@ import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/auth/providers/auth_provider.c.dart';
 import 'package:ion/app/features/auth/providers/delegation_complete_provider.c.dart';
 import 'package:ion/app/features/chat/e2ee/providers/encrypted_event_message_handler.c.dart';
-import 'package:ion/app/features/feed/notifications/providers/notification_followers_event_handler.c.dart';
-import 'package:ion/app/features/feed/notifications/providers/notification_likes_event_handler.c.dart';
-import 'package:ion/app/features/feed/notifications/providers/notification_quotes_event_handler.c.dart';
-import 'package:ion/app/features/feed/notifications/providers/notification_replies_event_handler.c.dart';
-import 'package:ion/app/features/feed/notifications/providers/notification_reposts_event_handler.c.dart';
+import 'package:ion/app/features/feed/notifications/providers/notifications/follow_notification_handler.c.dart';
+import 'package:ion/app/features/feed/notifications/providers/notifications/like_notification_handler.c.dart';
+import 'package:ion/app/features/feed/notifications/providers/notifications/quote_notification_handler.c.dart';
+import 'package:ion/app/features/feed/notifications/providers/notifications/reply_notification_handler.c.dart';
+import 'package:ion/app/features/feed/notifications/providers/notifications/repost_notification_handler.c.dart';
 import 'package:ion/app/features/ion_connect/ion_connect.dart';
 import 'package:ion/app/features/ion_connect/model/ion_connect_gift_wrap.c.dart';
 import 'package:ion/app/features/ion_connect/providers/ion_connect_notifier.c.dart';
@@ -90,7 +90,7 @@ class IonConnectPersistentSubscription extends _$IonConnectPersistentSubscriptio
         until: oldestEventCreatedAt == null ? null : oldestEventCreatedAt - 1,
       );
     } catch (e) {
-      throw PersistentSubscriptionException(e);
+      throw PersistentSubscriptionSyncEventsException(e);
     }
   }
 
@@ -218,10 +218,10 @@ class PersistentEventDispatcher {
 Future<PersistentEventDispatcher> persistentEventDispatcherNotifier(Ref ref) async {
   return PersistentEventDispatcher(ref, [
     await ref.watch(encryptedMessageEventHandlerProvider.future),
-    ref.watch(notificationFollowersEventHandlerProvider),
-    ref.watch(notificationLikesEventHandlerProvider),
-    ref.watch(notificationQuotesEventHandlerProvider),
-    ref.watch(notificationRepliesEventHandlerProvider),
-    ref.watch(notificationRepostsEventHandlerProvider),
+    ref.watch(followNotificationHandlerProvider),
+    ref.watch(likeNotificationHandlerProvider),
+    ref.watch(quoteNotificationHandlerProvider),
+    ref.watch(replyNotificationHandlerProvider),
+    ref.watch(repostNotificationHandlerProvider),
   ]);
 }

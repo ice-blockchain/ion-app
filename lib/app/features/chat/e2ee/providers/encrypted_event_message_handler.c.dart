@@ -3,16 +3,17 @@
 import 'dart:async';
 
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:ion/app/features/chat/e2ee/providers/encrypted_deletion_event_message_handler.c.dart';
+import 'package:ion/app/features/chat/e2ee/providers/encrypted_deletion_request_handler.c.dart';
 import 'package:ion/app/features/chat/e2ee/providers/encrypted_direct_message_handler.c.dart';
 import 'package:ion/app/features/chat/e2ee/providers/encrypted_direct_message_reaction_handler.c.dart';
-import 'package:ion/app/features/chat/e2ee/providers/encrypted_repost_event_message_handler.c.dart';
+import 'package:ion/app/features/chat/e2ee/providers/encrypted_repost_handler.c.dart';
 import 'package:ion/app/features/chat/e2ee/providers/gift_unwrap_service_provider.c.dart';
 import 'package:ion/app/features/ion_connect/ion_connect.dart';
 import 'package:ion/app/features/ion_connect/model/ion_connect_gift_wrap.c.dart';
 import 'package:ion/app/features/ion_connect/model/persistent_subscription_encrypted_event_message_handler.dart';
 import 'package:ion/app/features/ion_connect/providers/ion_connect_persistent_subscription.c.dart';
 import 'package:ion/app/features/user_block/providers/encrypted_blocked_users_handler.c.dart';
+import 'package:ion/app/features/wallets/providers/fund_request_handler.c.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'encrypted_event_message_handler.c.g.dart';
@@ -47,11 +48,12 @@ class EncryptedMessageEventHandler implements PersistentSubscriptionEventHandler
 @riverpod
 Future<EncryptedMessageEventHandler> encryptedMessageEventHandler(Ref ref) async {
   final handlers = [
-    await ref.watch(encryptedDirectMessageEventHandlerProvider.future),
-    ref.watch(encryptedDirectMessageReactionEventHandlerProvider),
-    await ref.watch(encryptedDeletionRequestEventHandlerProvider.future),
-    ref.watch(encryptedRepostEventMessageHandlerProvider),
-    ref.watch(encryptedBlockedUserEventHandlerProvider),
+    await ref.watch(encryptedDirectMessageHandlerProvider.future),
+    ref.watch(encryptedDirectMessageReactionHandlerProvider),
+    await ref.watch(encryptedDeletionRequestHandlerProvider.future),
+    ref.watch(encryptedRepostHandlerProvider),
+    ref.watch(encryptedBlockedUserHandlerProvider),
+    await ref.watch(fundsRequestHandlerProvider.future),
   ];
 
   return EncryptedMessageEventHandler(
