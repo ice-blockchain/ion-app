@@ -50,7 +50,13 @@ void main() {
       random = MockRandom();
 
       when(() => random.nextDouble()).thenReturn(Random().nextDouble());
-      when(() => random.nextInt(any())).thenReturn(0);
+      when(() => random.nextInt(any(that: isA<int>()))).thenAnswer((invocation) {
+        final n = invocation.positionalArguments.first as int;
+        if (n <= 0) {
+          throw ArgumentError.value(n, 'n', 'Must be positive');
+        }
+        return 0;
+      });
     });
 
     test('rolls a random (first) category and sub-category', () {
