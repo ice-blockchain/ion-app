@@ -30,7 +30,7 @@ class FollowNotificationHandler extends PersistentSubscriptionEventHandler {
     final entity = FollowListEntity.fromEventMessage(eventMessage);
     final isCurrentUserLastAdded = entity.data.list.lastOrNull?.pubkey == currentMasterPubkey;
 
-    if (!isCurrentUserLastAdded) {
+    if (isCurrentUserLastAdded) {
       await followersRepository.save(entity);
     }
   }
