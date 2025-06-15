@@ -4,7 +4,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:ion/app/utils/pagination.dart';
 
 class _MockPagedSource implements PagedSource {
-  _MockPagedSource(this.page, this.hasMore);
+  _MockPagedSource(this.page, {this.hasMore = true});
   @override
   final int page;
   @override
@@ -15,9 +15,9 @@ void main() {
   group('getNextPageSources', () {
     test('returns only sources with hasMore == true', () {
       final sources = <String, PagedSource>{
-        'a': _MockPagedSource(1, true),
-        'b': _MockPagedSource(2, false),
-        'c': _MockPagedSource(1, true),
+        'a': _MockPagedSource(1),
+        'b': _MockPagedSource(2, hasMore: false),
+        'c': _MockPagedSource(1),
       };
       final result = getNextPageSources(sources: sources, limit: 10);
       expect(result.keys, containsAll(['a', 'c']));
@@ -26,10 +26,10 @@ void main() {
 
     test('prioritizes sources with the lowest page', () {
       final sources = <String, PagedSource>{
-        'a': _MockPagedSource(3, true),
-        'b': _MockPagedSource(1, true),
-        'c': _MockPagedSource(2, true),
-        'd': _MockPagedSource(2, true),
+        'a': _MockPagedSource(3),
+        'b': _MockPagedSource(1),
+        'c': _MockPagedSource(2),
+        'd': _MockPagedSource(2),
       };
       final result = getNextPageSources(sources: sources, limit: 3);
       expect(result.keys, containsAll(['b', 'c', 'd']));
@@ -38,9 +38,9 @@ void main() {
 
     test('returns up to the specified limit', () {
       final sources = <String, PagedSource>{
-        'a': _MockPagedSource(1, true),
-        'b': _MockPagedSource(1, true),
-        'c': _MockPagedSource(2, true),
+        'a': _MockPagedSource(1),
+        'b': _MockPagedSource(1),
+        'c': _MockPagedSource(2),
       };
       final result = getNextPageSources(sources: sources, limit: 1);
       expect(result.length, 1);
@@ -48,8 +48,8 @@ void main() {
 
     test('returns empty map if no sources have hasMore', () {
       final sources = <String, PagedSource>{
-        'a': _MockPagedSource(1, false),
-        'b': _MockPagedSource(2, false),
+        'a': _MockPagedSource(1, hasMore: false),
+        'b': _MockPagedSource(2, hasMore: false),
       };
       final result = getNextPageSources(sources: sources, limit: 2);
       expect(result, isEmpty);
@@ -62,10 +62,10 @@ void main() {
 
     test('selects all if limit allows', () {
       final sources = <String, PagedSource>{
-        'a': _MockPagedSource(1, true),
-        'b': _MockPagedSource(2, true),
-        'c': _MockPagedSource(3, true),
-        'd': _MockPagedSource(4, true),
+        'a': _MockPagedSource(1),
+        'b': _MockPagedSource(2),
+        'c': _MockPagedSource(3),
+        'd': _MockPagedSource(4),
       };
       final result = getNextPageSources(sources: sources, limit: 5);
       expect(result.keys, containsAll(['a', 'b', 'c', 'd']));
