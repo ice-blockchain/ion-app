@@ -94,8 +94,8 @@ class FeedForYouContent extends _$FeedForYouContent implements PagedNotifier {
 
     final modifierWeights = switch (feedType) {
       FeedType.post || FeedType.video || FeedType.article => {
-          FeedModifier.trending: 1,
           FeedModifier.top: 1,
+          FeedModifier.trending: 1,
           FeedModifier.explore: 1,
         },
       FeedType.story => {
@@ -252,7 +252,15 @@ class FeedForYouContent extends _$FeedForYouContent implements PagedNotifier {
           );
 
           if (entity != null) {
-            resultsController.add(entity);
+            if (state.items?.contains(entity) != true) {
+              // The entity might have already been added to the state by another request.
+              // For example, the entity might have been added through another modifier,
+              // or it shares several topics and was already included to the state by a previous
+              // request for a different interest.
+              // In this case we don't add it the results (to not count this entity as "fetched"),
+              // but still update the pagination to shift the [lastEventCreatedAt].
+              resultsController.add(entity);
+            }
             _updateRelayInterestPagination(
               interestPagination.copyWith(lastEventCreatedAt: entity.createdAt),
               relayUrl: relayUrl,
