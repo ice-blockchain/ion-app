@@ -10,14 +10,14 @@ import 'package:ion/app/features/chat/e2ee/model/entities/private_direct_message
 import 'package:ion/app/features/chat/e2ee/providers/send_e2ee_message_status_provider.c.dart';
 import 'package:ion/app/features/chat/model/database/chat_database.c.dart';
 import 'package:ion/app/features/ion_connect/ion_connect.dart';
+import 'package:ion/app/features/ion_connect/model/global_subscription_encrypted_event_message_handler.dart';
 import 'package:ion/app/features/ion_connect/model/ion_connect_gift_wrap.c.dart';
-import 'package:ion/app/features/ion_connect/model/persistent_subscription_encrypted_event_message_handler.dart';
 import 'package:ion/app/services/media_service/media_encryption_service.c.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'encrypted_direct_message_handler.c.g.dart';
 
-class EncryptedDirectMessageHandler extends PersistentSubscriptionEncryptedEventMessageHandler {
+class EncryptedDirectMessageHandler extends GlobalSubscriptionEncryptedEventMessageHandler {
   EncryptedDirectMessageHandler(
     this.masterPubkey,
     this.conversationDao,

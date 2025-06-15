@@ -13,14 +13,14 @@ import 'package:ion/app/features/core/providers/env_provider.c.dart';
 import 'package:ion/app/features/ion_connect/ion_connect.dart';
 import 'package:ion/app/features/ion_connect/model/deletion_request.c.dart';
 import 'package:ion/app/features/ion_connect/model/event_reference.c.dart';
+import 'package:ion/app/features/ion_connect/model/global_subscription_encrypted_event_message_handler.dart';
 import 'package:ion/app/features/ion_connect/model/ion_connect_gift_wrap.c.dart';
-import 'package:ion/app/features/ion_connect/model/persistent_subscription_encrypted_event_message_handler.dart';
 import 'package:ion/app/features/ion_connect/providers/ion_connect_event_signer_provider.c.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'encrypted_deletion_request_handler.c.g.dart';
 
-class EncryptedDeletionRequestHandler extends PersistentSubscriptionEncryptedEventMessageHandler {
+class EncryptedDeletionRequestHandler extends GlobalSubscriptionEncryptedEventMessageHandler {
   EncryptedDeletionRequestHandler(
     this.conversationMessageDao,
     this.conversationMessageReactionDao,

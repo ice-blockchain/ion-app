@@ -575,14 +575,14 @@ class NicknameDoesntExistException extends IONException {
       : super(10114, 'Nickname "$nickname" does not exist');
 }
 
-class PersistentSubscriptionSyncEventsException extends IONException {
-  PersistentSubscriptionSyncEventsException(dynamic error)
-      : super(10115, 'Persistent subscription sync events exception: $error');
+class GlobalSubscriptionSyncEventsException extends IONException {
+  GlobalSubscriptionSyncEventsException(dynamic error)
+      : super(10115, 'Global subscription sync events exception: $error');
 }
 
-class PersistentSubscriptionEventMessageHandlingException extends IONException {
-  PersistentSubscriptionEventMessageHandlingException(dynamic error)
-      : super(10116, 'Persistent subscription event message handling exception: $error');
+class GlobalSubscriptionEventMessageHandlingException extends IONException {
+  GlobalSubscriptionEventMessageHandlingException(dynamic error)
+      : super(10116, 'Global subscription event message handling exception: $error');
 }
 
 class WalletAssetHandlerNotInitializedException extends IONException {

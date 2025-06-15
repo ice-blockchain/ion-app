@@ -8,16 +8,16 @@ import 'package:ion/app/features/auth/providers/auth_provider.c.dart';
 import 'package:ion/app/features/auth/providers/delegation_complete_provider.c.dart';
 import 'package:ion/app/features/ion_connect/ion_connect.dart';
 import 'package:ion/app/features/ion_connect/model/ion_connect_gift_wrap.c.dart';
+import 'package:ion/app/features/ion_connect/providers/global_subscription_event_dispatcher_provider.c.dart';
+import 'package:ion/app/features/ion_connect/providers/global_subscription_latest_event_timestamp_provider.c.dart';
 import 'package:ion/app/features/ion_connect/providers/ion_connect_notifier.c.dart';
 import 'package:ion/app/features/ion_connect/providers/ion_connect_subscription_provider.c.dart';
-import 'package:ion/app/features/ion_connect/providers/persistent_subscription_event_dispatcher_provider.c.dart';
-import 'package:ion/app/features/ion_connect/providers/persistent_subscription_latest_event_timestamp_provider.c.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
-part 'ion_connect_persistent_subscription.c.g.dart';
+part 'global_subscription.c.g.dart';
 
 @Riverpod(keepAlive: true)
-class IonConnectPersistentSubscription extends _$IonConnectPersistentSubscription {
+class GlobalSubscription extends _$GlobalSubscription {
   @override
   Future<void> build() async {
     final authState = await ref.watch(authProvider.future);
@@ -25,7 +25,7 @@ class IonConnectPersistentSubscription extends _$IonConnectPersistentSubscriptio
 
     if (!authState.isAuthenticated || !delegationComplete) return;
 
-    final latestEventTimestamp = ref.watch(persistentSubscriptionLatestEventTimestampProvider);
+    final latestEventTimestamp = ref.watch(globalSubscriptionLatestEventTimestampProvider);
     await _fetchPreviousEvents(
       since: latestEventTimestamp,
     );
@@ -71,7 +71,7 @@ class IonConnectPersistentSubscription extends _$IonConnectPersistentSubscriptio
 
       if (recentEventCreatedAt != null) {
         await ref
-            .read(persistentSubscriptionLatestEventTimestampProvider.notifier)
+            .read(globalSubscriptionLatestEventTimestampProvider.notifier)
             .update(recentEventCreatedAt);
       }
 
@@ -84,12 +84,12 @@ class IonConnectPersistentSubscription extends _$IonConnectPersistentSubscriptio
         until: oldestEventCreatedAt == null ? null : oldestEventCreatedAt - 1,
       );
     } catch (e) {
-      throw PersistentSubscriptionSyncEventsException(e);
+      throw GlobalSubscriptionSyncEventsException(e);
     }
   }
 
   Future<void> _subscribe() async {
-    final latestEventTimestamp = ref.watch(persistentSubscriptionLatestEventTimestampProvider);
+    final latestEventTimestamp = ref.watch(globalSubscriptionLatestEventTimestampProvider);
     final requestMessage = await _requestMessageBuilder(
       since: latestEventTimestamp,
     );
@@ -105,11 +105,10 @@ class IonConnectPersistentSubscription extends _$IonConnectPersistentSubscriptio
     EventMessage eventMessage,
   ) async {
     try {
-      final dispatcher =
-          await ref.watch(persistentSubscriptionEventDispatcherNotifierProvider.future);
+      final dispatcher = await ref.watch(globalSubscriptionEventDispatcherNotifierProvider.future);
       await dispatcher.dispatch(eventMessage);
     } catch (e) {
-      throw PersistentSubscriptionEventMessageHandlingException(e);
+      throw GlobalSubscriptionEventMessageHandlingException(e);
     }
   }
 
