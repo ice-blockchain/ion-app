@@ -574,3 +574,18 @@ class NicknameDoesntExistException extends IONException {
   NicknameDoesntExistException(String nickname)
       : super(10114, 'Nickname "$nickname" does not exist');
 }
+
+class GlobalSubscriptionSyncEventsException extends IONException {
+  GlobalSubscriptionSyncEventsException(dynamic error)
+      : super(10115, 'Global subscription sync events exception: $error');
+}
+
+class GlobalSubscriptionEventMessageHandlingException extends IONException {
+  GlobalSubscriptionEventMessageHandlingException(dynamic error)
+      : super(10116, 'Global subscription event message handling exception: $error');
+}
+
+class WalletAssetHandlerNotInitializedException extends IONException {
+  WalletAssetHandlerNotInitializedException()
+      : super(10117, 'Wallet asset handler not initialized');
+}

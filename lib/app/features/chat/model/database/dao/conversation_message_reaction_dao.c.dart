@@ -14,11 +14,10 @@ class ConversationMessageReactionDao extends DatabaseAccessor<ChatDatabase>
   ConversationMessageReactionDao(super.db);
 
   Future<void> add({
-    required Ref ref,
     required EventMessage reactionEvent,
+    required EventMessageDao eventMessageDao,
   }) async {
     final reactionEntity = PrivateMessageReactionEntity.fromEventMessage(reactionEvent);
-    final eventMessageDao = ref.read(eventMessageDaoProvider);
 
     await eventMessageDao.add(reactionEvent);
     await into(reactionTable).insert(
@@ -33,7 +32,6 @@ class ConversationMessageReactionDao extends DatabaseAccessor<ChatDatabase>
   }
 
   Future<void> remove({
-    required Ref ref,
     required ImmutableEventReference reactionEventReference,
   }) async {
     await (update(reactionTable)

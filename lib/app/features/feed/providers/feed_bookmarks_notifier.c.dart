@@ -14,7 +14,6 @@ import 'package:ion/app/features/ion_connect/model/action_source.c.dart';
 import 'package:ion/app/features/ion_connect/model/event_reference.c.dart';
 import 'package:ion/app/features/ion_connect/providers/ion_connect_db_cache_notifier.c.dart';
 import 'package:ion/app/features/ion_connect/providers/ion_connect_notifier.c.dart';
-import 'package:ion/app/features/ion_connect/providers/ion_connect_subscription_provider.c.dart';
 import 'package:ion/app/features/ion_connect/repository/event_messages_repository.c.dart';
 import 'package:ion/app/services/uuid/uuid.dart';
 import 'package:nostr_dart/nostr_dart.dart';
@@ -23,12 +22,11 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 part 'feed_bookmarks_notifier.c.g.dart';
 
 @riverpod
-Stream<BookmarksCollectionEntity?> bookmarksCollectionStream(
+Future<BookmarksCollectionEntity?> bookmarksCollection(
   Ref ref,
   String pubkey,
   String collectionDTag,
-) {
-  final streamController = StreamController<BookmarksCollectionEntity?>.broadcast();
+) async {
   final request = RequestMessage()
     ..addFilter(
       RequestFilter(
@@ -40,27 +38,15 @@ Stream<BookmarksCollectionEntity?> bookmarksCollectionStream(
       ),
     );
 
-  var receivedAnyEvents = false;
-  void onEndOfStoredEvents() {
-    if (!receivedAnyEvents) {
-      streamController.add(null);
-    }
+  final eventMessage = await ref.watch(ionConnectNotifierProvider.notifier).requestEvent(request);
+
+  if (eventMessage == null) {
+    return null;
   }
 
-  final events = ref.watch(
-    ionConnectEventsSubscriptionProvider(
-      request,
-      onEndOfStoredEvents: onEndOfStoredEvents,
-    ),
-  );
+  final entity = BookmarksCollectionEntity.fromEventMessage(eventMessage);
 
-  final subscription = events.listen((event) {
-    receivedAnyEvents = true;
-    streamController.add(BookmarksCollectionEntity.fromEventMessage(event));
-  });
-  streamController.onCancel = subscription.cancel;
-
-  return streamController.stream;
+  return entity;
 }
 
 @Riverpod(keepAlive: true)
@@ -82,7 +68,7 @@ class FeedBookmarksNotifier extends _$FeedBookmarksNotifier {
     }
 
     final bookmarksCollection = await ref.watch(
-      bookmarksCollectionStreamProvider(
+      bookmarksCollectionProvider(
         currentPubkey,
         collectionDTag,
       ).future,
@@ -171,11 +157,11 @@ class FeedBookmarksNotifier extends _$FeedBookmarksNotifier {
         title: bookmarksCollection.data.title,
       );
 
-      await ref.read(ionConnectNotifierProvider.notifier).sendEntitiesData(
-        [newBookmarksCollectionData],
-        actionSource: ActionSourceUser(currentPubkey),
-      );
-      return state.value;
+      final result = await ref.read(ionConnectNotifierProvider.notifier).sendEntityData(
+            newBookmarksCollectionData,
+          );
+      final data = result as BookmarksCollectionEntity?;
+      return data;
     });
   }
 }
@@ -231,7 +217,7 @@ class FeedBookmarkCollectionsNotifier extends _$FeedBookmarkCollectionsNotifier 
     }
 
     final bookmarksCollection = await ref.watch(
-      bookmarksCollectionStreamProvider(
+      bookmarksCollectionProvider(
         currentPubkey,
         BookmarksCollectionEntity.collectionsDTag,
       ).future,
@@ -312,6 +298,13 @@ class FeedBookmarkCollectionsNotifier extends _$FeedBookmarkCollectionsNotifier 
       [newCollectionData, updatedAllCollectionsData],
       actionSource: ActionSourceUser(currentPubkey),
     );
+
+    ref
+      ..invalidateSelf()
+      ..invalidate(
+        bookmarksCollectionProvider(currentPubkey, BookmarksCollectionEntity.collectionsDTag),
+      )
+      ..invalidate(feedBookmarksNotifierProvider);
   }
 
   Future<void> deleteCollection(String collectionDTag) async {
@@ -340,6 +333,13 @@ class FeedBookmarkCollectionsNotifier extends _$FeedBookmarkCollectionsNotifier 
       [deleteCollectionData, updatedAllCollectionsData],
       actionSource: ActionSourceUser(currentPubkey),
     );
+
+    ref
+      ..invalidateSelf()
+      ..invalidate(
+        bookmarksCollectionProvider(currentPubkey, BookmarksCollectionEntity.collectionsDTag),
+      )
+      ..invalidate(feedBookmarksNotifierProvider);
   }
 
   Future<void> renameCollection(
