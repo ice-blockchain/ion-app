@@ -276,6 +276,7 @@ class FeedForYouContent extends _$FeedForYouContent implements PagedNotifier {
               relayUrl: relayUrl,
               feedModifier: feedModifier,
               interest: interest,
+              increasePage: true,
             );
           } else {
             _updateRelayInterestPagination(
@@ -397,6 +398,7 @@ class FeedForYouContent extends _$FeedForYouContent implements PagedNotifier {
     RelayPagination pagination, {
     required String relayUrl,
     required FeedModifier feedModifier,
+    bool increasePage = false,
   }) {
     state = state.copyWith(
       modifiersPagination: {
@@ -414,6 +416,7 @@ class FeedForYouContent extends _$FeedForYouContent implements PagedNotifier {
     required String relayUrl,
     required FeedModifier feedModifier,
     required String interest,
+    bool increasePage = false,
   }) {
     final relayPagination = state.modifiersPagination[feedModifier]![relayUrl]!;
     final interestsPagination = {
@@ -423,10 +426,12 @@ class FeedForYouContent extends _$FeedForYouContent implements PagedNotifier {
     _updateRelayPagination(
       relayPagination.copyWith(
         interestsPagination: interestsPagination,
+        page: relayPagination.page + (increasePage ? 1 : 0),
         hasMore: interestsPagination.values.any((interest) => interest.hasMore),
       ),
       relayUrl: relayUrl,
       feedModifier: feedModifier,
+      increasePage: increasePage,
     );
   }
 }
