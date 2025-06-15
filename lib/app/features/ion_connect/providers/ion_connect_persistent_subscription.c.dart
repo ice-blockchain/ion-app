@@ -2,22 +2,16 @@
 
 import 'dart:async';
 
-import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/exceptions/exceptions.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/auth/providers/auth_provider.c.dart';
 import 'package:ion/app/features/auth/providers/delegation_complete_provider.c.dart';
-import 'package:ion/app/features/chat/e2ee/providers/encrypted_event_message_handler.c.dart';
-import 'package:ion/app/features/feed/notifications/providers/notifications/follow_notification_handler.c.dart';
-import 'package:ion/app/features/feed/notifications/providers/notifications/like_notification_handler.c.dart';
-import 'package:ion/app/features/feed/notifications/providers/notifications/quote_notification_handler.c.dart';
-import 'package:ion/app/features/feed/notifications/providers/notifications/reply_notification_handler.c.dart';
-import 'package:ion/app/features/feed/notifications/providers/notifications/repost_notification_handler.c.dart';
 import 'package:ion/app/features/ion_connect/ion_connect.dart';
 import 'package:ion/app/features/ion_connect/model/ion_connect_gift_wrap.c.dart';
 import 'package:ion/app/features/ion_connect/providers/ion_connect_notifier.c.dart';
 import 'package:ion/app/features/ion_connect/providers/ion_connect_subscription_provider.c.dart';
-import 'package:ion/app/services/storage/user_preferences_service.c.dart';
+import 'package:ion/app/features/ion_connect/providers/persistent_subscription_event_dispatcher_provider.c.dart';
+import 'package:ion/app/features/ion_connect/providers/persistent_subscription_latest_event_timestamp_provider.c.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'ion_connect_persistent_subscription.c.g.dart';
@@ -111,7 +105,8 @@ class IonConnectPersistentSubscription extends _$IonConnectPersistentSubscriptio
     EventMessage eventMessage,
   ) async {
     try {
-      final dispatcher = await ref.watch(persistentEventDispatcherNotifierProvider.future);
+      final dispatcher =
+          await ref.watch(persistentSubscriptionEventDispatcherNotifierProvider.future);
       await dispatcher.dispatch(eventMessage);
     } catch (e) {
       throw PersistentSubscriptionEventMessageHandlingException(e);
@@ -161,67 +156,4 @@ class IonConnectPersistentSubscription extends _$IonConnectPersistentSubscriptio
       ],
     );
   }
-}
-
-@riverpod
-class PersistentSubscriptionLatestEventTimestamp
-    extends _$PersistentSubscriptionLatestEventTimestamp {
-  static const _latestEventTimestampKey = 'persistent_subscription_latest_event_timestamp';
-
-  @override
-  int? build() {
-    final currentUserMasterPubkey = ref.watch(currentPubkeySelectorProvider);
-    if (currentUserMasterPubkey == null) {
-      throw UserMasterPubkeyNotFoundException();
-    }
-
-    return ref
-        .watch(userPreferencesServiceProvider(identityKeyName: currentUserMasterPubkey))
-        .getValue<int>(_latestEventTimestampKey);
-  }
-
-  Future<void> update(int createdAt) async {
-    final currentUserMasterPubkey = ref.watch(currentPubkeySelectorProvider);
-    if (currentUserMasterPubkey == null) {
-      throw UserMasterPubkeyNotFoundException();
-    }
-
-    await ref
-        .watch(userPreferencesServiceProvider(identityKeyName: currentUserMasterPubkey))
-        .setValue(_latestEventTimestampKey, createdAt);
-  }
-}
-
-abstract class PersistentSubscriptionEventHandler {
-  bool canHandle(EventMessage eventMessage);
-
-  Future<void> handle(EventMessage eventMessage);
-}
-
-class PersistentEventDispatcher {
-  PersistentEventDispatcher(this.ref, this._handlers);
-
-  final Ref ref;
-  final List<PersistentSubscriptionEventHandler> _handlers;
-
-  Future<void> dispatch(EventMessage eventMessage) async {
-    for (final handler in _handlers) {
-      if (handler.canHandle(eventMessage)) {
-        unawaited(handler.handle(eventMessage));
-        break;
-      }
-    }
-  }
-}
-
-@riverpod
-Future<PersistentEventDispatcher> persistentEventDispatcherNotifier(Ref ref) async {
-  return PersistentEventDispatcher(ref, [
-    await ref.watch(encryptedMessageEventHandlerProvider.future),
-    ref.watch(followNotificationHandlerProvider),
-    ref.watch(likeNotificationHandlerProvider),
-    ref.watch(quoteNotificationHandlerProvider),
-    ref.watch(replyNotificationHandlerProvider),
-    ref.watch(repostNotificationHandlerProvider),
-  ]);
 }

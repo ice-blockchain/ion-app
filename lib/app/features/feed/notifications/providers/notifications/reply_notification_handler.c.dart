@@ -7,8 +7,8 @@ import 'package:ion/app/features/feed/data/models/entities/modifiable_post_data.
 import 'package:ion/app/features/feed/notifications/data/repository/comments_repository.c.dart';
 import 'package:ion/app/features/ion_connect/ion_connect.dart';
 import 'package:ion/app/features/ion_connect/model/event_reference.c.dart';
+import 'package:ion/app/features/ion_connect/model/persistent_subscription_event_handler.dart';
 import 'package:ion/app/features/ion_connect/model/related_event_marker.dart';
-import 'package:ion/app/features/ion_connect/providers/ion_connect_persistent_subscription.c.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'reply_notification_handler.c.g.dart';

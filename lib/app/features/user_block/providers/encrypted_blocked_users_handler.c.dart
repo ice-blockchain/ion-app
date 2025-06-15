@@ -30,15 +30,23 @@ class EncryptedBlockedUserHandler extends PersistentSubscriptionEncryptedEventMe
   @override
   Future<void> handle(EventMessage rumor) async {
     if (rumor.kind == BlockedUserEntity.kind) {
-      await blockEventDao.add(rumor);
+      await _blockUser(rumor);
     } else if (rumor.kind == DeletionRequestEntity.kind) {
-      final eventsToDelete = DeletionRequest.fromEventMessage(rumor).events;
+      await _unblockUser(rumor);
+    }
+  }
 
-      final eventToDeleteReferences =
-          eventsToDelete.map((event) => (event as EventToDelete).eventReference).toList();
-      if (eventToDeleteReferences.length == 1) {
-        await unblockEventDao.add(eventToDeleteReferences.single);
-      }
+  Future<void> _blockUser(EventMessage rumor) async {
+    await blockEventDao.add(rumor);
+  }
+
+  Future<void> _unblockUser(EventMessage rumor) async {
+    final eventsToDelete = DeletionRequest.fromEventMessage(rumor).events;
+
+    final eventToDeleteReferences =
+        eventsToDelete.map((event) => (event as EventToDelete).eventReference).toList();
+    if (eventToDeleteReferences.length == 1) {
+      await unblockEventDao.add(eventToDeleteReferences.single);
     }
   }
 }

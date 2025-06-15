@@ -12,7 +12,7 @@ import 'package:ion/app/features/chat/e2ee/providers/gift_unwrap_service_provide
 import 'package:ion/app/features/ion_connect/ion_connect.dart';
 import 'package:ion/app/features/ion_connect/model/ion_connect_gift_wrap.c.dart';
 import 'package:ion/app/features/ion_connect/model/persistent_subscription_encrypted_event_message_handler.dart';
-import 'package:ion/app/features/ion_connect/providers/ion_connect_persistent_subscription.c.dart';
+import 'package:ion/app/features/ion_connect/model/persistent_subscription_event_handler.dart';
 import 'package:ion/app/features/user_block/providers/encrypted_blocked_users_handler.c.dart';
 import 'package:ion/app/features/wallets/providers/fund_request_handler.c.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
