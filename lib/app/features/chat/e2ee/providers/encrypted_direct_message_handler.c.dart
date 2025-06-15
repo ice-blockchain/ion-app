@@ -17,9 +17,8 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'encrypted_direct_message_handler.c.g.dart';
 
-class EncryptedDirectMessageEventHandler
-    extends PersistentSubscriptionEncryptedEventMessageHandler {
-  EncryptedDirectMessageEventHandler(
+class EncryptedDirectMessageHandler extends PersistentSubscriptionEncryptedEventMessageHandler {
+  EncryptedDirectMessageHandler(
     this.masterPubkey,
     this.conversationDao,
     this.conversationEventMessageDao,
@@ -96,14 +95,14 @@ class EncryptedDirectMessageEventHandler
 }
 
 @riverpod
-Future<EncryptedDirectMessageEventHandler> encryptedDirectMessageEventHandler(Ref ref) async {
+Future<EncryptedDirectMessageHandler> encryptedDirectMessageHandler(Ref ref) async {
   final masterPubkey = ref.watch(currentPubkeySelectorProvider);
 
   if (masterPubkey == null) {
     throw UserMasterPubkeyNotFoundException();
   }
 
-  return EncryptedDirectMessageEventHandler(
+  return EncryptedDirectMessageHandler(
     masterPubkey,
     ref.watch(conversationDaoProvider),
     ref.watch(conversationEventMessageDaoProvider),

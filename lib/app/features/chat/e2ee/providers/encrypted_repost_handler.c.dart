@@ -13,11 +13,10 @@ import 'package:ion/app/features/ion_connect/model/ion_connect_gift_wrap.c.dart'
 import 'package:ion/app/features/ion_connect/model/persistent_subscription_encrypted_event_message_handler.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
-part 'encrypted_repost_event_message_handler.c.g.dart';
+part 'encrypted_repost_handler.c.g.dart';
 
-class EncryptedRepostEventMessageHandler
-    extends PersistentSubscriptionEncryptedEventMessageHandler {
-  EncryptedRepostEventMessageHandler(this.eventMessageDao);
+class EncryptedRepostHandler extends PersistentSubscriptionEncryptedEventMessageHandler {
+  EncryptedRepostHandler(this.eventMessageDao);
 
   final EventMessageDao eventMessageDao;
 
@@ -43,5 +42,5 @@ class EncryptedRepostEventMessageHandler
 }
 
 @riverpod
-EncryptedRepostEventMessageHandler encryptedRepostEventMessageHandler(Ref ref) =>
-    EncryptedRepostEventMessageHandler(ref.watch(eventMessageDaoProvider));
+EncryptedRepostHandler encryptedRepostHandler(Ref ref) =>
+    EncryptedRepostHandler(ref.watch(eventMessageDaoProvider));

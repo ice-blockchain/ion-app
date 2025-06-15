@@ -18,11 +18,10 @@ import 'package:ion/app/features/ion_connect/model/persistent_subscription_encry
 import 'package:ion/app/features/ion_connect/providers/ion_connect_event_signer_provider.c.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
-part 'encrypted_deletion_event_message_handler.c.g.dart';
+part 'encrypted_deletion_request_handler.c.g.dart';
 
-class EncryptedDeletionRequestEventHandler
-    extends PersistentSubscriptionEncryptedEventMessageHandler {
-  EncryptedDeletionRequestEventHandler(
+class EncryptedDeletionRequestHandler extends PersistentSubscriptionEncryptedEventMessageHandler {
+  EncryptedDeletionRequestHandler(
     this.conversationMessageDao,
     this.conversationMessageReactionDao,
     this.conversationDao,
@@ -88,7 +87,7 @@ class EncryptedDeletionRequestEventHandler
 }
 
 @riverpod
-Future<EncryptedDeletionRequestEventHandler> encryptedDeletionRequestEventHandler(Ref ref) async {
+Future<EncryptedDeletionRequestHandler> encryptedDeletionRequestHandler(Ref ref) async {
   final eventSigner = await ref.watch(currentUserIonConnectEventSignerProvider.future);
 
   if (eventSigner == null) {
@@ -101,7 +100,7 @@ Future<EncryptedDeletionRequestEventHandler> encryptedDeletionRequestEventHandle
     throw UserMasterPubkeyNotFoundException();
   }
 
-  return EncryptedDeletionRequestEventHandler(
+  return EncryptedDeletionRequestHandler(
     ref.watch(conversationMessageDaoProvider),
     ref.watch(conversationMessageReactionDaoProvider),
     ref.watch(conversationDaoProvider),

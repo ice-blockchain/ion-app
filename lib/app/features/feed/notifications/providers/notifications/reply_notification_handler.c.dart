@@ -11,10 +11,10 @@ import 'package:ion/app/features/ion_connect/model/related_event_marker.dart';
 import 'package:ion/app/features/ion_connect/providers/ion_connect_persistent_subscription.c.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
-part 'notification_replies_event_handler.c.g.dart';
+part 'reply_notification_handler.c.g.dart';
 
-class NotificationRepliesEventHandler extends PersistentSubscriptionEventHandler {
-  NotificationRepliesEventHandler(this.commentsRepository, this.currentPubkey);
+class ReplyNotificationHandler extends PersistentSubscriptionEventHandler {
+  ReplyNotificationHandler(this.commentsRepository, this.currentPubkey);
 
   final CommentsRepository commentsRepository;
   final String currentPubkey;
@@ -44,7 +44,7 @@ class NotificationRepliesEventHandler extends PersistentSubscriptionEventHandler
 }
 
 @riverpod
-NotificationRepliesEventHandler notificationRepliesEventHandler(Ref ref) {
+ReplyNotificationHandler replyNotificationHandler(Ref ref) {
   final commentsRepository = ref.watch(commentsRepositoryProvider);
   final currentPubkey = ref.watch(currentPubkeySelectorProvider);
 
@@ -52,5 +52,5 @@ NotificationRepliesEventHandler notificationRepliesEventHandler(Ref ref) {
     throw UserMasterPubkeyNotFoundException();
   }
 
-  return NotificationRepliesEventHandler(commentsRepository, currentPubkey);
+  return ReplyNotificationHandler(commentsRepository, currentPubkey);
 }

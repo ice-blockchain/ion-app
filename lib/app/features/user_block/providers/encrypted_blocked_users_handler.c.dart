@@ -14,8 +14,8 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'encrypted_blocked_users_handler.c.g.dart';
 
-class EncryptedBlockedUserEventHandler extends PersistentSubscriptionEncryptedEventMessageHandler {
-  EncryptedBlockedUserEventHandler(this.blockEventDao, this.unblockEventDao);
+class EncryptedBlockedUserHandler extends PersistentSubscriptionEncryptedEventMessageHandler {
+  EncryptedBlockedUserHandler(this.blockEventDao, this.unblockEventDao);
 
   final BlockEventDao blockEventDao;
   final UnblockEventDao unblockEventDao;
@@ -44,8 +44,8 @@ class EncryptedBlockedUserEventHandler extends PersistentSubscriptionEncryptedEv
 }
 
 @riverpod
-EncryptedBlockedUserEventHandler encryptedBlockedUserEventHandler(Ref ref) {
-  return EncryptedBlockedUserEventHandler(
+EncryptedBlockedUserHandler encryptedBlockedUserHandler(Ref ref) {
+  return EncryptedBlockedUserHandler(
     ref.watch(blockEventDaoProvider),
     ref.watch(unblockEventDaoProvider),
   );

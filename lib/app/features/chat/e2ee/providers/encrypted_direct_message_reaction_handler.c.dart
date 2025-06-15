@@ -13,9 +13,9 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'encrypted_direct_message_reaction_handler.c.g.dart';
 
-class EncryptedDirectMessageReactionEventHandler
+class EncryptedDirectMessageReactionHandler
     extends PersistentSubscriptionEncryptedEventMessageHandler {
-  EncryptedDirectMessageReactionEventHandler(
+  EncryptedDirectMessageReactionHandler(
     this.conversationMessageDataDao,
     this.conversationMessageReactionDao,
     this.eventMessageDao,
@@ -62,8 +62,8 @@ class EncryptedDirectMessageReactionEventHandler
 }
 
 @riverpod
-EncryptedDirectMessageReactionEventHandler encryptedDirectMessageReactionEventHandler(Ref ref) =>
-    EncryptedDirectMessageReactionEventHandler(
+EncryptedDirectMessageReactionHandler encryptedDirectMessageReactionHandler(Ref ref) =>
+    EncryptedDirectMessageReactionHandler(
       ref.watch(conversationMessageDataDaoProvider),
       ref.watch(conversationMessageReactionDaoProvider),
       ref.watch(eventMessageDaoProvider),
