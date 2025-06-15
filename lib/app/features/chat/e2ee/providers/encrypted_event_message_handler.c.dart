@@ -46,7 +46,7 @@ class EncryptedMessageEventHandler implements PersistentSubscriptionEventHandler
   }
 }
 
-@riverpod
+@Riverpod(keepAlive: true)
 Future<EncryptedMessageEventHandler> encryptedMessageEventHandler(Ref ref) async {
   final handlers = [
     ref.watch(encryptedDirectMessageStatusHandlerProvider),
