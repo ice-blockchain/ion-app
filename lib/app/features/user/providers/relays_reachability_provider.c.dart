@@ -1,7 +1,6 @@
 // SPDX-License-Identifier: ice License 1.0
 
 import 'package:collection/collection.dart';
-import 'package:ion/app/features/user/model/user_chat_relays.c.dart';
 import 'package:ion/app/features/user/model/user_relays.c.dart';
 import 'package:ion/app/services/storage/local_storage.c.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
@@ -56,20 +55,6 @@ class RelayReachability extends _$RelayReachability {
 
     return relaysEntity.copyWith(
       data: UserRelaysData(
-        list: reachableRelays,
-      ),
-    );
-  }
-
-  UserChatRelaysEntity? getFilteredChatRelayEntity(UserChatRelaysEntity? chatRelaysEntity) {
-    if (chatRelaysEntity == null) return null;
-    final reachableRelays = _getReachableRelaysSorted(chatRelaysEntity.data.list);
-    if (reachableRelays == null) {
-      return null;
-    }
-
-    return chatRelaysEntity.copyWith(
-      data: UserChatRelaysData(
         list: reachableRelays,
       ),
     );
