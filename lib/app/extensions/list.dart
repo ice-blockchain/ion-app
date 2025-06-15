@@ -16,14 +16,14 @@ extension ListRandomExtension<T> on List<T> {
   }
 }
 
-extension KindListExtensions on List<List<String>> {
+extension DeepEqualityListExtension on List<List<String>> {
   static const _deepEquality = DeepCollectionEquality();
 
   bool equalsDeep(List<List<String>> other) {
     return _deepEquality.equals(this, other);
   }
 
-  bool containsKind(List<String> targetKind) {
-    return any((kind) => const ListEquality<String>().equals(kind, targetKind));
+  bool containsDeep(List<String> target) {
+    return any((list) => const ListEquality<String>().equals(list, target));
   }
 }

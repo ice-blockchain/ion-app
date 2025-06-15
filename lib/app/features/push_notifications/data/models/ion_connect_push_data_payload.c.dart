@@ -89,13 +89,13 @@ class IonConnectPushDataPayload {
     } else if (entity is FollowListEntity) {
       return PushNotificationType.follower;
     } else if (entity is IonConnectGiftWrapEntity) {
-      if (entity.data.kinds.containsKind([ReplaceablePrivateDirectMessageEntity.kind.toString()])) {
+      if (entity.data.kinds.containsDeep([ReplaceablePrivateDirectMessageEntity.kind.toString()])) {
         return PushNotificationType.chatMessage;
-      } else if (entity.data.kinds.containsKind([ReactionEntity.kind.toString()])) {
+      } else if (entity.data.kinds.containsDeep([ReactionEntity.kind.toString()])) {
         return PushNotificationType.chatReaction;
-      } else if (entity.data.kinds.containsKind([FundsRequestEntity.kind.toString()])) {
+      } else if (entity.data.kinds.containsDeep([FundsRequestEntity.kind.toString()])) {
         return PushNotificationType.paymentRequest;
-      } else if (entity.data.kinds.containsKind([WalletAssetEntity.kind.toString()])) {
+      } else if (entity.data.kinds.containsDeep([WalletAssetEntity.kind.toString()])) {
         return PushNotificationType.paymentReceived;
       }
     }

@@ -26,11 +26,11 @@ class EncryptedRepostEventMessageHandler
     required IonConnectGiftWrapEntity entity,
   }) {
     //TODO: test [GenericRepostEntity.kind.toString(), PostEntity.kind.toString()] with RepostEntity.kind
-    return entity.data.kinds.containsKind([
+    return entity.data.kinds.containsDeep([
           GenericRepostEntity.kind.toString(),
           ArticleEntity.kind.toString(),
         ]) ||
-        entity.data.kinds.containsKind([
+        entity.data.kinds.containsDeep([
           GenericRepostEntity.kind.toString(),
           ModifiablePostEntity.kind.toString(),
         ]);

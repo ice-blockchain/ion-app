@@ -22,7 +22,7 @@ class EncryptedBlockedUserEventHandler extends PersistentSubscriptionEncryptedEv
 
   @override
   bool canHandle({required IonConnectGiftWrapEntity entity}) {
-    return entity.data.kinds.containsKind([
+    return entity.data.kinds.containsDeep([
       BlockedUserEntity.kind.toString(),
     ]);
   }
