@@ -112,7 +112,13 @@ class FeedForYouContent extends _$FeedForYouContent implements PagedNotifier {
 
   @override
   void refresh() {
-    if (!state.isLoading) ref.invalidateSelf();
+    if (!state.isLoading) {
+      ref
+        ..invalidate(
+          feedFollowingContentProvider(feedType, feedModifier: feedModifier, showSeen: false),
+        )
+        ..invalidateSelf();
+    }
   }
 
   @override
@@ -139,7 +145,11 @@ class FeedForYouContent extends _$FeedForYouContent implements PagedNotifier {
     );
     final provider = ref
         .read(feedFollowingContentProvider(feedType, feedModifier: feedModifier, showSeen: false));
-    if (!provider.hasMore) return;
+
+    if (!provider.hasMore) {
+      state = state.copyWith(hasMoreFollowing: false);
+      return;
+    }
 
     yield* notifier.requestEntities(limit: limit);
 
