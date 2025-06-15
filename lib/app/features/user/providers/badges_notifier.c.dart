@@ -15,7 +15,6 @@ import 'package:ion/app/features/ion_connect/model/search_extension.dart';
 import 'package:ion/app/features/ion_connect/providers/ion_connect_cache.c.dart';
 import 'package:ion/app/features/ion_connect/providers/ion_connect_entity_provider.c.dart';
 import 'package:ion/app/features/ion_connect/providers/ion_connect_notifier.c.dart';
-import 'package:ion/app/features/ion_connect/providers/ion_connect_subscription_provider.c.dart';
 import 'package:ion/app/features/user/model/badges/badge_award.c.dart';
 import 'package:ion/app/features/user/model/badges/badge_definition.c.dart';
 import 'package:ion/app/features/user/model/badges/profile_badges.c.dart';
@@ -213,55 +212,36 @@ bool isCurrentUserVerified(Ref ref) {
 }
 
 @riverpod
-Stream<BadgeAwardEntity> badgeAwardsStream(
+Future<BadgeAwardEntity?> badgeAward(
   Ref ref,
   String pubkey,
-) {
+) async {
   final authState = ref.watch(authProvider).valueOrNull;
   if (authState == null || !authState.isAuthenticated) {
-    return const Stream.empty();
+    return null;
   }
 
   final currentPubkey = ref.watch(currentPubkeySelectorProvider);
   final delegationComplete = ref.watch(delegationCompleteProvider).valueOrNull.falseOrValue;
   if (currentPubkey == null || !delegationComplete) {
-    return const Stream.empty();
+    return null;
   }
-
-  final streamController = StreamController<BadgeAwardEntity>.broadcast();
 
   final request = RequestMessage()
     ..addFilter(
       RequestFilter(
         kinds: const [BadgeAwardEntity.kind],
+        limit: 1,
         tags: {
           '#p': [pubkey],
         },
       ),
     );
-
-  final events = ref.watch(
-    ionConnectEventsSubscriptionProvider(
-      request,
-    ),
-  );
-
-  final subscription = events.listen((eventMessage) {
-    streamController.add(
-      BadgeAwardEntity.fromEventMessage(eventMessage),
-    );
-  });
-
-  ref.onDispose(() {
-    subscription.cancel();
-    streamController.close();
-  });
-
-  return streamController.stream;
+  return ref.watch(ionConnectNotifierProvider.notifier).requestEntity<BadgeAwardEntity>(request);
 }
 
 @Riverpod(keepAlive: true)
-void currentUserBadgesSync(Ref ref) {
+Future<void> currentUserBadgesSync(Ref ref) async {
   final authState = ref.watch(authProvider).valueOrNull;
   if (authState == null || !authState.isAuthenticated) {
     return;
@@ -278,33 +258,28 @@ void currentUserBadgesSync(Ref ref) {
     return;
   }
 
-  late final ProviderSubscription<AsyncValue<BadgeAwardEntity>> sub;
-  sub = ref.listen<AsyncValue<BadgeAwardEntity>>(
-    badgeAwardsStreamProvider(currentPubkey),
-    (previous, next) {
-      next.whenData((badgeAwardEntity) async {
-        final pubkeys = await ref.watch(servicePubkeysProvider.future);
-        final eventRef = badgeAwardEntity.data.badgeDefinitionRef;
-        if (eventRef.kind == BadgeDefinitionEntity.kind &&
-            eventRef.dTag == BadgeDefinitionEntity.verifiedBadgeDTag &&
-            (pubkeys.isEmpty || pubkeys.contains(eventRef.pubkey))) {
-          final updatedData = await ref.read(
-            updatedProfileBadgesProvider(
-              BadgeEntry(
-                definitionRef: badgeAwardEntity.data.badgeDefinitionRef,
-                awardId: badgeAwardEntity.id,
-              ),
-              currentPubkey,
-            ).future,
-          );
-          await ref.read(ionConnectNotifierProvider.notifier).sendEntitiesData([updatedData]);
-          // Unsubscribe after handling the verified badge
-          sub.close();
-        }
-      });
-    },
-  );
-  ref.onDispose(sub.close);
+  final badgeAwardEntity = await ref.watch(badgeAwardProvider(currentPubkey).future);
+
+  if (badgeAwardEntity == null) {
+    return;
+  }
+
+  final pubkeys = await ref.watch(servicePubkeysProvider.future);
+  final eventRef = badgeAwardEntity.data.badgeDefinitionRef;
+  if (eventRef.kind == BadgeDefinitionEntity.kind &&
+      eventRef.dTag == BadgeDefinitionEntity.verifiedBadgeDTag &&
+      (pubkeys.isEmpty || pubkeys.contains(eventRef.pubkey))) {
+    final updatedData = await ref.read(
+      updatedProfileBadgesProvider(
+        BadgeEntry(
+          definitionRef: badgeAwardEntity.data.badgeDefinitionRef,
+          awardId: badgeAwardEntity.id,
+        ),
+        currentPubkey,
+      ).future,
+    );
+    await ref.read(ionConnectNotifierProvider.notifier).sendEntitiesData([updatedData]);
+  }
 }
 
 @riverpod
