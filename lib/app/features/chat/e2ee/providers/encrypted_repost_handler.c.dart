@@ -9,13 +9,13 @@ import 'package:ion/app/features/feed/data/models/entities/article_data.c.dart';
 import 'package:ion/app/features/feed/data/models/entities/generic_repost.c.dart';
 import 'package:ion/app/features/feed/data/models/entities/modifiable_post_data.c.dart';
 import 'package:ion/app/features/ion_connect/ion_connect.dart';
+import 'package:ion/app/features/ion_connect/model/global_subscription_encrypted_event_message_handler.dart';
 import 'package:ion/app/features/ion_connect/model/ion_connect_gift_wrap.c.dart';
-import 'package:ion/app/features/ion_connect/model/persistent_subscription_encrypted_event_message_handler.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'encrypted_repost_handler.c.g.dart';
 
-class EncryptedRepostHandler extends PersistentSubscriptionEncryptedEventMessageHandler {
+class EncryptedRepostHandler extends GlobalSubscriptionEncryptedEventMessageHandler {
   EncryptedRepostHandler(this.eventMessageDao);
 
   final EventMessageDao eventMessageDao;

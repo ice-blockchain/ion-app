@@ -5,13 +5,13 @@ import 'package:ion/app/exceptions/exceptions.dart';
 import 'package:ion/app/features/auth/providers/auth_provider.c.dart';
 import 'package:ion/app/features/feed/notifications/data/repository/followers_repository.c.dart';
 import 'package:ion/app/features/ion_connect/ion_connect.dart';
-import 'package:ion/app/features/ion_connect/model/persistent_subscription_event_handler.dart';
+import 'package:ion/app/features/ion_connect/model/global_subscription_event_handler.dart';
 import 'package:ion/app/features/user/model/follow_list.c.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'follow_notification_handler.c.g.dart';
 
-class FollowNotificationHandler extends PersistentSubscriptionEventHandler {
+class FollowNotificationHandler extends GlobalSubscriptionEventHandler {
   FollowNotificationHandler(
     this.followersRepository,
     this.currentMasterPubkey,

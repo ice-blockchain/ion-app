@@ -7,8 +7,8 @@ import 'package:ion/app/exceptions/exceptions.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/auth/providers/auth_provider.c.dart';
 import 'package:ion/app/features/ion_connect/ion_connect.dart';
+import 'package:ion/app/features/ion_connect/model/global_subscription_encrypted_event_message_handler.dart';
 import 'package:ion/app/features/ion_connect/model/ion_connect_gift_wrap.c.dart';
-import 'package:ion/app/features/ion_connect/model/persistent_subscription_encrypted_event_message_handler.dart';
 import 'package:ion/app/features/wallets/data/repository/request_assets_repository.c.dart';
 import 'package:ion/app/features/wallets/data/repository/transactions_repository.c.dart';
 import 'package:ion/app/features/wallets/domain/wallet_views/wallet_views_service.c.dart';
@@ -18,7 +18,7 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'wallet_asset_handler.c.g.dart';
 
-class WalletAssetHandler extends PersistentSubscriptionEncryptedEventMessageHandler {
+class WalletAssetHandler extends GlobalSubscriptionEncryptedEventMessageHandler {
   WalletAssetHandler(
     this.currentPubkey,
     this.walletViewsService,

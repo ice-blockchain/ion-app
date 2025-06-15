@@ -10,16 +10,16 @@ import 'package:ion/app/features/feed/notifications/providers/notifications/quot
 import 'package:ion/app/features/feed/notifications/providers/notifications/reply_notification_handler.c.dart';
 import 'package:ion/app/features/feed/notifications/providers/notifications/repost_notification_handler.c.dart';
 import 'package:ion/app/features/ion_connect/ion_connect.dart';
-import 'package:ion/app/features/ion_connect/model/persistent_subscription_event_handler.dart';
+import 'package:ion/app/features/ion_connect/model/global_subscription_event_handler.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
-part 'persistent_subscription_event_dispatcher_provider.c.g.dart';
+part 'global_subscription_event_dispatcher_provider.c.g.dart';
 
-class PersistentSubscriptionEventDispatcher {
-  PersistentSubscriptionEventDispatcher(this.ref, this._handlers);
+class GlobalSubscriptionEventDispatcher {
+  GlobalSubscriptionEventDispatcher(this.ref, this._handlers);
 
   final Ref ref;
-  final List<PersistentSubscriptionEventHandler> _handlers;
+  final List<GlobalSubscriptionEventHandler> _handlers;
 
   Future<void> dispatch(EventMessage eventMessage) async {
     for (final handler in _handlers) {
@@ -32,10 +32,10 @@ class PersistentSubscriptionEventDispatcher {
 }
 
 @riverpod
-Future<PersistentSubscriptionEventDispatcher> persistentSubscriptionEventDispatcherNotifier(
+Future<GlobalSubscriptionEventDispatcher> globalSubscriptionEventDispatcherNotifier(
   Ref ref,
 ) async {
-  return PersistentSubscriptionEventDispatcher(ref, [
+  return GlobalSubscriptionEventDispatcher(ref, [
     await ref.watch(encryptedMessageEventHandlerProvider.future),
     ref.watch(followNotificationHandlerProvider),
     ref.watch(likeNotificationHandlerProvider),

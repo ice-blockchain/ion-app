@@ -5,15 +5,15 @@ import 'dart:convert';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/ion_connect/ion_connect.dart';
+import 'package:ion/app/features/ion_connect/model/global_subscription_encrypted_event_message_handler.dart';
 import 'package:ion/app/features/ion_connect/model/ion_connect_gift_wrap.c.dart';
-import 'package:ion/app/features/ion_connect/model/persistent_subscription_encrypted_event_message_handler.dart';
 import 'package:ion/app/features/wallets/data/repository/request_assets_repository.c.dart';
 import 'package:ion/app/features/wallets/model/entities/funds_request_entity.c.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'fund_request_handler.c.g.dart';
 
-class FundsRequestHandler extends PersistentSubscriptionEncryptedEventMessageHandler {
+class FundsRequestHandler extends GlobalSubscriptionEncryptedEventMessageHandler {
   FundsRequestHandler(this.requestAssetsRepository);
 
   final RequestAssetsRepository requestAssetsRepository;

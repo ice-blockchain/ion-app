@@ -1,6 +1,6 @@
 import 'package:ion/app/features/ion_connect/ion_connect.dart';
 
-abstract class PersistentSubscriptionEventHandler {
+abstract class GlobalSubscriptionEventHandler {
   bool canHandle(EventMessage eventMessage);
 
   Future<void> handle(EventMessage eventMessage);
