@@ -2,7 +2,6 @@
 
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/exceptions/exceptions.dart';
-import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/auth/providers/auth_provider.c.dart';
 import 'package:ion/app/features/feed/data/models/entities/article_data.c.dart';
 import 'package:ion/app/features/feed/data/models/entities/generic_repost.c.dart';
@@ -21,8 +20,7 @@ class RepostNotificationHandler extends PersistentSubscriptionEventHandler {
 
   @override
   bool canHandle(EventMessage eventMessage) {
-    if (eventMessage.kind == GenericRepostEntity.kind &&
-        eventMessage.masterPubkey != currentPubkey) {
+    if (eventMessage.kind == GenericRepostEntity.kind) {
       final entity = GenericRepostEntity.fromEventMessage(eventMessage);
       if (entity.data.kind == ModifiablePostEntity.kind || entity.data.kind == ArticleEntity.kind) {
         return true;
@@ -34,7 +32,10 @@ class RepostNotificationHandler extends PersistentSubscriptionEventHandler {
   @override
   Future<void> handle(EventMessage eventMessage) async {
     final entity = GenericRepostEntity.fromEventMessage(eventMessage);
-    await commentsRepository.save(entity);
+    final isOwnRepost = entity.masterPubkey == currentPubkey;
+    if (!isOwnRepost) {
+      await commentsRepository.save(entity);
+    }
   }
 }
 

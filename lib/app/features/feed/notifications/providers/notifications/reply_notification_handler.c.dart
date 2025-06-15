@@ -26,20 +26,23 @@ class ReplyNotificationHandler extends PersistentSubscriptionEventHandler {
     }
 
     final entity = ModifiablePostEntity.fromEventMessage(eventMessage);
-    final isOwnReply = entity.masterPubkey == currentPubkey;
     final isReply = entity.data.relatedEvents?.any(
           (event) =>
               event.marker == RelatedEventMarker.reply &&
               event.eventReference is ReplaceableEventReference,
         ) ??
         false;
-    return eventMessage.kind == ModifiablePostEntity.kind && isReply && !isOwnReply;
+    return eventMessage.kind == ModifiablePostEntity.kind && isReply;
   }
 
   @override
   Future<void> handle(EventMessage eventMessage) async {
     final entity = ModifiablePostEntity.fromEventMessage(eventMessage);
-    await commentsRepository.save(entity);
+
+    final isOwnReply = entity.masterPubkey == currentPubkey;
+    if (!isOwnReply) {
+      await commentsRepository.save(entity);
+    }
   }
 }
 
