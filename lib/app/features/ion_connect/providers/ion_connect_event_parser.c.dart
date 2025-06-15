@@ -78,8 +78,9 @@ class EventParser {
     };
   }
 
+  // TODO: Remove this method when we parse 30003 kind event in single entity
+  // There is duplicate logic in BookmarksCollectionEntity and BookmarksSetEntity
   IonConnectEntity _parseBookmarksSet(EventMessage eventMessage) {
-    // Add logic here to differentiate between BookmarksSetEntity and BookmarksCollectionEntity
     if (_isCollection(eventMessage)) {
       return BookmarksCollectionEntity.fromEventMessage(eventMessage);
     }
@@ -88,7 +89,6 @@ class EventParser {
 
   bool _isCollection(EventMessage eventMessage) {
     final tags = groupBy(eventMessage.tags, (tag) => tag.first);
-    // Replace with actual condition to determine if it's a collection
     final dTag = tags[ReplaceableEventIdentifier.tagName]
         ?.map(ReplaceableEventIdentifier.fromTag)
         .first

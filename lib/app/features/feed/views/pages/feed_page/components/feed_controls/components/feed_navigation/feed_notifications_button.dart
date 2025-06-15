@@ -3,7 +3,6 @@
 import 'package:flutter/widgets.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/extensions/extensions.dart';
-import 'package:ion/app/features/feed/notifications/providers/notifications_subscription_provider.c.dart';
 import 'package:ion/app/features/feed/notifications/providers/unread_notifications_count_provider.c.dart';
 import 'package:ion/app/router/app_routes.c.dart';
 import 'package:ion/app/router/components/navigation_button/navigation_button.dart';
@@ -14,8 +13,6 @@ class FeedNotificationsButton extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    ref.watch(notificationsSubscriptionProvider);
-
     return Stack(
       clipBehavior: Clip.none,
       children: [
