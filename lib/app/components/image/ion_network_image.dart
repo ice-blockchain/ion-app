@@ -43,24 +43,39 @@ class IonNetworkImage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return CachedNetworkImage(
-      imageUrl: imageUrl,
-      placeholder: (context, url) => placeholder ?? const IonPlaceholder(),
-      errorListener: errorListener ?? (_) {},
-      errorWidget: errorWidget ?? (context, url, error) => const IonPlaceholder(),
-      fadeOutDuration: fadeOutDuration,
-      fadeInDuration: fadeInDuration,
-      placeholderFadeInDuration: placeholderFadeInDuration,
-      width: width,
+    final devicePixelRatio = MediaQuery.devicePixelRatioOf(context);
+    final fullWidth = MediaQuery.sizeOf(context).width;
+    final width = (this.width ?? fullWidth) * devicePixelRatio;
+    final height = this.height != null ? this.height! * devicePixelRatio : null;
+    
+    return Image.network(
+      imageUrl,
       height: height,
+      width: width,
       fit: fit,
       alignment: alignment ?? Alignment.center,
       filterQuality: filterQuality ?? FilterQuality.medium,
-      cacheManager: cacheManager,
-      imageBuilder: imageBuilder,
-      progressIndicatorBuilder: progressIndicatorBuilder,
-      memCacheWidth: width != null ? (width! * MediaQuery.of(context).devicePixelRatio).toInt().clamp(0, 1920) : null,
-      memCacheHeight: height != null ? (height! * MediaQuery.of(context).devicePixelRatio).toInt().clamp(0, 1080) : null,
+      // loadingBuilder: (context, child, loadingProgress) {
+      //   if (loadingProgress == null) return child;
+      //   return const IonPlaceholder();  
+      //   // return progressIndicatorBuilder!(context, imageUrl, loadingProgress);
+      // },
+      errorBuilder: (context, error, stackTrace) => const IonPlaceholder(),
+      // key: Key(imageUrl),
+      // imageUrl: imageUrl,
+      // placeholder: (context, url) => placeholder ?? const IonPlaceholder(),
+      // errorListener: errorListener ?? (_) {},
+      // errorWidget: errorWidget ?? (context, url, error) => const IonPlaceholder(),
+      // fadeOutDuration: fadeOutDuration,
+      // fadeInDuration: fadeInDuration,
+      // placeholderFadeInDuration: placeholderFadeInDuration,
+      // width: width,
+      // height: height,
+      // cacheManager: cacheManager,
+      // imageBuilder: imageBuilder,
+      // progressIndicatorBuilder: progressIndicatorBuilder,
+      cacheWidth: width.toInt(),
+      cacheHeight: height?.toInt(),
     );
   }
 }
