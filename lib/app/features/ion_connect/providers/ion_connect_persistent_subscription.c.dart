@@ -12,6 +12,7 @@ import 'package:ion/app/features/feed/notifications/providers/notification_follo
 import 'package:ion/app/features/feed/notifications/providers/notification_likes_event_handler.c.dart';
 import 'package:ion/app/features/feed/notifications/providers/notification_quotes_event_handler.c.dart';
 import 'package:ion/app/features/feed/notifications/providers/notification_replies_event_handler.c.dart';
+import 'package:ion/app/features/feed/notifications/providers/notification_reposts_event_handler.c.dart';
 import 'package:ion/app/features/ion_connect/ion_connect.dart';
 import 'package:ion/app/features/ion_connect/model/ion_connect_gift_wrap.c.dart';
 import 'package:ion/app/features/ion_connect/providers/ion_connect_event_signer_provider.c.dart';
@@ -220,5 +221,6 @@ Future<PersistentEventDispatcher> persistentEventDispatcherNotifier(Ref ref) asy
     await ref.watch(notificationLikesEventHandlerProvider.future),
     ref.watch(notificationQuotesEventHandlerProvider),
     ref.watch(notificationRepliesEventHandlerProvider),
+    ref.watch(notificationRepostsEventHandlerProvider),
   ]);
 }
