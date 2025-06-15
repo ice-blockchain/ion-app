@@ -71,7 +71,7 @@ class FeedForYouContent extends _$FeedForYouContent implements PagedNotifier {
       final modifiersDistribution = _getFeedModifiersDistribution(limit: limit - unseenFollowing);
       for (final MapEntry(key: modifier, value: modifierLimit) in modifiersDistribution.entries) {
         if (modifierLimit > 0) {
-          yield* _fetchInterestsEntities(limit: modifierLimit, feedModifier: modifier);
+          yield* _fetchInterestsEntities(feedModifier: modifier, limit: modifierLimit);
         }
       }
     }
@@ -142,8 +142,8 @@ class FeedForYouContent extends _$FeedForYouContent implements PagedNotifier {
   }
 
   Stream<IonConnectEntity> _fetchInterestsEntities({
-    required int limit,
     required FeedModifier feedModifier,
+    required int limit,
   }) async* {
     await _refreshModifierPagination(feedModifier: feedModifier);
 
@@ -162,7 +162,7 @@ class FeedForYouContent extends _$FeedForYouContent implements PagedNotifier {
     final remaining = limit - requestedCount;
 
     if (remaining > 0) {
-      yield* _fetchInterestsEntities(limit: remaining, feedModifier: feedModifier);
+      yield* _fetchInterestsEntities(feedModifier: feedModifier, limit: remaining);
     }
   }
 
