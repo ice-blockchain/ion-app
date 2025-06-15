@@ -35,7 +35,7 @@ class NotificationLikesEventHandler extends PersistentSubscriptionEventHandler {
 }
 
 @riverpod
-Future<NotificationLikesEventHandler> notificationLikesEventHandler(Ref ref) async {
+NotificationLikesEventHandler notificationLikesEventHandler(Ref ref) {
   final likesRepository = ref.watch(likesRepositoryProvider);
   final currentPubkey = ref.watch(currentPubkeySelectorProvider);
 

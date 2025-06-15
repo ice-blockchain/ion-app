@@ -37,7 +37,7 @@ class NotificationFollowersEventHandler extends PersistentSubscriptionEventHandl
 }
 
 @riverpod
-Future<NotificationFollowersEventHandler> notificationFollowersEventHandler(Ref ref) async {
+NotificationFollowersEventHandler notificationFollowersEventHandler(Ref ref) {
   final followersRepository = ref.watch(followersRepositoryProvider);
   final currentMasterPubkey = ref.watch(currentPubkeySelectorProvider);
 

@@ -15,7 +15,6 @@ import 'package:ion/app/features/feed/notifications/providers/notification_repli
 import 'package:ion/app/features/feed/notifications/providers/notification_reposts_event_handler.c.dart';
 import 'package:ion/app/features/ion_connect/ion_connect.dart';
 import 'package:ion/app/features/ion_connect/model/ion_connect_gift_wrap.c.dart';
-import 'package:ion/app/features/ion_connect/providers/ion_connect_event_signer_provider.c.dart';
 import 'package:ion/app/features/ion_connect/providers/ion_connect_notifier.c.dart';
 import 'package:ion/app/features/ion_connect/providers/ion_connect_subscription_provider.c.dart';
 import 'package:ion/app/services/storage/user_preferences_service.c.dart';
@@ -128,11 +127,12 @@ class IonConnectPersistentSubscription extends _$IonConnectPersistentSubscriptio
       throw UserMasterPubkeyNotFoundException();
     }
 
-    final eventSigner = await ref.watch(currentUserIonConnectEventSignerProvider.future);
-    if (eventSigner == null) {
-      throw EventSignerNotFoundException();
-    }
-    final currentUserDeviceKey = eventSigner.publicKey;
+    //TODO: uncomment this once we have a proper way to handle gift wrap events on relay
+    // final eventSigner = await ref.watch(currentUserIonConnectEventSignerProvider.future);
+    // if (eventSigner == null) {
+    //   throw EventSignerNotFoundException();
+    // }
+    // final currentUserDeviceKey = eventSigner.publicKey;
 
     return RequestMessage(
       filters: [
@@ -146,17 +146,18 @@ class IonConnectPersistentSubscription extends _$IonConnectPersistentSubscriptio
           until: until,
           limit: 50,
         ),
-        RequestFilter(
-          kinds: const [IonConnectGiftWrapEntity.kind],
-          tags: {
-            '#p': [
-              [currentUserMasterPubkey, '', currentUserDeviceKey],
-            ],
-          },
-          since: since?.overlap,
-          until: until,
-          limit: 50,
-        ),
+        //TODO: uncomment this once we have a proper way to handle gift wrap events on relay
+        // RequestFilter(
+        //   kinds: const [IonConnectGiftWrapEntity.kind],
+        //   tags: {
+        //     '#p': [
+        //       [currentUserMasterPubkey, '', currentUserDeviceKey],
+        //     ],
+        //   },
+        //   since: since?.overlap,
+        //   until: until,
+        //   limit: 50,
+        // ),
       ],
     );
   }
@@ -217,8 +218,8 @@ class PersistentEventDispatcher {
 Future<PersistentEventDispatcher> persistentEventDispatcherNotifier(Ref ref) async {
   return PersistentEventDispatcher(ref, [
     await ref.watch(encryptedMessageEventHandlerProvider.future),
-    await ref.watch(notificationFollowersEventHandlerProvider.future),
-    await ref.watch(notificationLikesEventHandlerProvider.future),
+    ref.watch(notificationFollowersEventHandlerProvider),
+    ref.watch(notificationLikesEventHandlerProvider),
     ref.watch(notificationQuotesEventHandlerProvider),
     ref.watch(notificationRepliesEventHandlerProvider),
     ref.watch(notificationRepostsEventHandlerProvider),
