@@ -3,6 +3,7 @@
 import 'dart:async';
 
 import 'package:async/async.dart';
+import 'package:collection/collection.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:ion/app/exceptions/exceptions.dart';
 import 'package:ion/app/features/auth/providers/auth_provider.c.dart';
@@ -61,18 +62,45 @@ class FeedForYouContent extends _$FeedForYouContent implements PagedNotifier {
 
   Stream<IonConnectEntity> requestEntities({required int limit}) async* {
     var unseenFollowing = 0;
-    // TODO: set limit of unseen to the percent of total depending on the feedType
-    await for (final entity in _fetchUnseenFollowing(limit: limit)) {
+    final followingDistribution = _getFeedFollowingDistribution(limit: limit);
+    await for (final entity in _fetchUnseenFollowing(limit: followingDistribution)) {
       yield entity;
       unseenFollowing++;
     }
     if (unseenFollowing < limit) {
-      //TODO:distribute the remaining limit to different modifiers
-      yield* _fetchInterestsEntities(
-        limit: limit - unseenFollowing,
-        feedModifier: feedModifier ?? FeedModifier.top,
-      );
+      final modifiersDistribution = _getFeedModifiersDistribution(limit: limit - unseenFollowing);
+      for (final MapEntry(key: modifier, value: modifierLimit) in modifiersDistribution.entries) {
+        if (modifierLimit > 0) {
+          yield* _fetchInterestsEntities(limit: modifierLimit, feedModifier: modifier);
+        }
+      }
     }
+  }
+
+  int _getFeedFollowingDistribution({required int limit}) {
+    return switch (feedType) {
+      FeedType.post || FeedType.video || FeedType.article => (0.7 * limit).ceil(),
+      FeedType.story => limit,
+    };
+  }
+
+  Map<FeedModifier, int> _getFeedModifiersDistribution({required int limit}) {
+    final modifierWeights = switch (feedType) {
+      FeedType.post || FeedType.video || FeedType.article => {
+          FeedModifier.trending: 1,
+          FeedModifier.top: 1,
+          FeedModifier.explore: 1,
+        },
+      FeedType.story => {
+          FeedModifier.trending: 1,
+          FeedModifier.explore: 1,
+        },
+    };
+    final totalWeight = modifierWeights.values.sum;
+    return {
+      for (final entry in modifierWeights.entries)
+        entry.key: (limit * entry.value / totalWeight).ceil(),
+    };
   }
 
   @override
