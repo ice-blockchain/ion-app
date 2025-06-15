@@ -10,7 +10,7 @@ import 'package:ion/app/features/ion_connect/ion_connect.dart';
 import 'package:ion/app/features/ion_connect/providers/ion_connect_persistent_subscription.c.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
-part 'notification_quotes_subscription_provider.c.g.dart';
+part 'notification_quotes_event_handler.c.g.dart';
 
 class NotificationQuotesEventHandler extends PersistentSubscriptionEventHandler {
   NotificationQuotesEventHandler(this.commentsRepository, this.currentPubkey);

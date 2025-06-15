@@ -8,6 +8,10 @@ import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/auth/providers/auth_provider.c.dart';
 import 'package:ion/app/features/auth/providers/delegation_complete_provider.c.dart';
 import 'package:ion/app/features/chat/e2ee/providers/encrypted_event_message_handler.c.dart';
+import 'package:ion/app/features/feed/notifications/providers/notification_followers_event_handler.c.dart';
+import 'package:ion/app/features/feed/notifications/providers/notification_likes_event_handler.c.dart';
+import 'package:ion/app/features/feed/notifications/providers/notification_quotes_event_handler.c.dart';
+import 'package:ion/app/features/feed/notifications/providers/notification_replies_subscription_provider.c.dart';
 import 'package:ion/app/features/ion_connect/ion_connect.dart';
 import 'package:ion/app/features/ion_connect/model/ion_connect_gift_wrap.c.dart';
 import 'package:ion/app/features/ion_connect/providers/ion_connect_event_signer_provider.c.dart';
@@ -211,10 +215,10 @@ class PersistentEventDispatcher {
 @riverpod
 Future<PersistentEventDispatcher> persistentEventDispatcherNotifier(Ref ref) async {
   return PersistentEventDispatcher(ref, [
-    // PrivateDirectMessageEventHandler(ref),
-    // PrivateMessageReactionEventHandler(ref),
-    // GenericRepostEventHandler(ref),
-    // DeletionRequestEventHandler(ref),
     await ref.watch(encryptedMessageEventHandlerProvider.future),
+    await ref.watch(notificationFollowersEventHandlerProvider.future),
+    await ref.watch(notificationLikesEventHandlerProvider.future),
+    ref.watch(notificationQuotesEventHandlerProvider),
+    ref.watch(notificationRepliesEventHandlerProvider),
   ]);
 }
