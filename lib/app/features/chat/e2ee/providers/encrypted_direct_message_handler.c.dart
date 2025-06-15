@@ -45,27 +45,16 @@ class EncryptedDirectMessageHandler extends PersistentSubscriptionEncryptedEvent
 
   @override
   Future<void> handle(EventMessage rumor) async {
-    final entity = ReplaceablePrivateDirectMessageEntity.fromEventMessage(rumor);
-    final eventReference = entity.toEventReference();
+    await _addDirectMessageToDatabase(rumor);
+    unawaited(_sendReceivedStatus(rumor));
+  }
 
+  Future<void> _addDirectMessageToDatabase(
+    EventMessage rumor,
+  ) async {
     await conversationDao.add([rumor]);
     await conversationEventMessageDao.add(rumor);
-
     await _addMediaToDatabase(rumor);
-
-    // Notify rest of the participants that the message was received
-    // by the current user
-    final currentStatus = await conversationMessageDataDao.checkMessageStatus(
-      eventReference: eventReference,
-      masterPubkey: masterPubkey,
-    );
-
-    if (currentStatus == null || currentStatus.index < MessageDeliveryStatus.received.index) {
-      await sendE2eeMessageStatusService.sendMessageStatus(
-        messageEventMessage: rumor,
-        status: MessageDeliveryStatus.received,
-      );
-    }
   }
 
   Future<void> _addMediaToDatabase(
@@ -90,6 +79,27 @@ class EncryptedDirectMessageHandler extends PersistentSubscriptionEncryptedEvent
           remoteUrl: media.url,
         );
       }
+    }
+  }
+
+  Future<void> _sendReceivedStatus(
+    EventMessage rumor,
+  ) async {
+    final eventReference =
+        ReplaceablePrivateDirectMessageEntity.fromEventMessage(rumor).toEventReference();
+
+    final currentStatus = await conversationMessageDataDao.checkMessageStatus(
+      eventReference: eventReference,
+      masterPubkey: masterPubkey,
+    );
+
+    if (currentStatus == null || currentStatus.index < MessageDeliveryStatus.received.index) {
+      // Notify rest of the participants that the message was received
+      // by the current user
+      await sendE2eeMessageStatusService.sendMessageStatus(
+        messageEventMessage: rumor,
+        status: MessageDeliveryStatus.received,
+      );
     }
   }
 }
