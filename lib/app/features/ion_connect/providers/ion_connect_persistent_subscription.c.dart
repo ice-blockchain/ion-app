@@ -33,7 +33,7 @@ class IonConnectPersistentSubscription extends _$IonConnectPersistentSubscriptio
 
     final latestEventTimestamp = ref.watch(persistentSubscriptionLatestEventTimestampProvider);
     await _fetchPreviousEvents(
-      since: latestEventTimestamp.overlap,
+      since: latestEventTimestamp,
     );
 
     unawaited(_subscribe());
