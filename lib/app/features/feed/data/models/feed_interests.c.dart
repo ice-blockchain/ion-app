@@ -63,15 +63,9 @@ class FeedInterests with _$FeedInterests implements AppConfigWithVersion {
     return copyWith(categories: updatedCategories);
   }
 
-  Map<String, FeedInterestsSubcategory> get subcategories {
-    final subcategories = <String, FeedInterestsSubcategory>{};
-    for (final category in categories.values) {
-      for (final subcategory in category.children.entries) {
-        subcategories[subcategory.key] = subcategory.value;
-      }
-    }
-    return subcategories;
-  }
+  List<MapEntry<String, FeedInterestsSubcategory>> get subcategories => Map [
+        for (final category in categories.values) ...category.children.entries,
+      ];
 }
 
 abstract class CategoryWithWeight {
