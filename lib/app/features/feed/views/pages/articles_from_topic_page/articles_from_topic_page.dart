@@ -24,8 +24,10 @@ class ArticlesFromTopicPage extends ConsumerWidget {
     final dataSource = ref.watch(topicArticlesDataSourceProvider(topic));
     final entitiesPagedData = ref.watch(entitiesPagedDataProvider(dataSource));
     final entities = entitiesPagedData?.data.items;
-    final availableSubcategories =
-        ref.watch(feedUserInterestsProvider(FeedType.article)).valueOrNull?.subcategories ?? {};
+    final availableSubcategories = ref.watch(
+      feedUserInterestsProvider(FeedType.article)
+          .select((state) => state.valueOrNull?.subcategories ?? {}),
+    );
     final topicName = availableSubcategories[topic]?.display ?? topic;
 
     return Scaffold(

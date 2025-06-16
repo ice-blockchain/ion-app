@@ -15,8 +15,10 @@ class StoryTopicsButton extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final availableSubcategories =
-        ref.watch(feedUserInterestsProvider(FeedType.story)).valueOrNull?.subcategories ?? {};
+    final availableSubcategories = ref.watch(
+      feedUserInterestsProvider(FeedType.story)
+          .select((state) => state.valueOrNull?.subcategories ?? {}),
+    );
     final selectedSubcategoriesKeys = ref.watch(selectedInterestsNotifierProvider);
     final selectedSubcategories =
         selectedSubcategoriesKeys.map((key) => availableSubcategories[key]).nonNulls.toList();

@@ -61,8 +61,10 @@ class ArticleDetailsPage extends HookConsumerWidget {
     );
 
     final topics = articleEntity.data.topics;
-    final availableSubcategories =
-        ref.watch(feedUserInterestsProvider(FeedType.article)).valueOrNull?.subcategories ?? {};
+    final availableSubcategories = ref.watch(
+      feedUserInterestsProvider(FeedType.article)
+          .select((state) => state.valueOrNull?.subcategories ?? {}),
+    );
     final topicsNames = topics.map((key) => availableSubcategories[key]?.display).nonNulls.toList();
 
     if (articleEntity.isDeleted) {

@@ -27,8 +27,10 @@ class ArticlesCarouselItem extends ConsumerWidget {
     }
 
     final topics = article.data.topics;
-    final availableSubcategories =
-        ref.watch(feedUserInterestsProvider(FeedType.article)).valueOrNull?.subcategories ?? {};
+    final availableSubcategories = ref.watch(
+      feedUserInterestsProvider(FeedType.article)
+          .select((state) => state.valueOrNull?.subcategories ?? {}),
+    );
     final topicsNames = topics.map((key) => availableSubcategories[key]?.display).nonNulls.toList();
 
     return GestureDetector(

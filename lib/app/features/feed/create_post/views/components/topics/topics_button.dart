@@ -28,8 +28,9 @@ class TopicsButton extends HookConsumerWidget {
     final topicsButtonKey = useRef(GlobalKey());
     final topicsTooltipVisible =
         ref.watch(topicTooltipVisibilityNotifierProvider).valueOrNull.falseOrValue;
-    final availableSubcategories =
-        ref.watch(feedUserInterestsProvider(type)).valueOrNull?.subcategories ?? {};
+    final availableSubcategories = ref.watch(
+      feedUserInterestsProvider(type).select((state) => state.valueOrNull?.subcategories ?? {}),
+    );
     final selectedSubcategoriesKeys = ref.watch(selectedInterestsNotifierProvider);
     final selectedSubcategories =
         selectedSubcategoriesKeys.map((key) => availableSubcategories[key]).nonNulls.toList();
