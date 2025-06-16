@@ -28,7 +28,7 @@ class IonNetworkImage extends StatelessWidget {
   final String imageUrl;
   final Widget Function(BuildContext, String, Object)? errorWidget;
   final ValueChanged<Object>? errorListener;
-  final Widget? placeholder;
+  final PlaceholderWidgetBuilder? placeholder;
   final Duration fadeOutDuration;
   final Duration fadeInDuration;
   final Duration placeholderFadeInDuration;
@@ -37,7 +37,7 @@ class IonNetworkImage extends StatelessWidget {
   final BoxFit? fit;
   final Alignment? alignment;
   final FilterQuality? filterQuality;
-  final CacheManager? cacheManager;
+  final BaseCacheManager? cacheManager;
   final ImageWidgetBuilder? imageBuilder;
   final ProgressIndicatorBuilder? progressIndicatorBuilder;
 
@@ -47,7 +47,6 @@ class IonNetworkImage extends StatelessWidget {
     final fullWidth = MediaQuery.sizeOf(context).width;
     final cacheWidth = (width ?? fullWidth) * devicePixelRatio;
     final cacheHeight = height != null ? height! * devicePixelRatio : null;
-    print('🖼️ IonNetworkImage.build: $imageUrl, $cacheWidth, $cacheHeight');
 
     return CachedNetworkImage(
       key: Key("${imageUrl}_${cacheWidth.toInt()}x${cacheHeight?.toInt() ?? 'auto'}"),
@@ -57,7 +56,7 @@ class IonNetworkImage extends StatelessWidget {
       fit: fit,
       alignment: alignment ?? Alignment.center,
       filterQuality: filterQuality ?? FilterQuality.medium,
-      placeholder: (context, url) => placeholder ?? const IonPlaceholder(),
+      placeholder: placeholder ?? (context, url) => const IonPlaceholder(),
       errorListener: errorListener ?? (_) {},
       errorWidget: errorWidget ?? (context, url, error) => const IonPlaceholder(),
       fadeOutDuration: fadeOutDuration,

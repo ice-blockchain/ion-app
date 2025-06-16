@@ -132,7 +132,7 @@ class CarouselImageItem extends StatelessWidget {
               child: IonConnectNetworkImage(
                 imageUrl: imageUrl,
                 authorPubkey: authorPubkey,
-                placeholder: const CenteredLoadingIndicator(),
+                placeholder: (_, __) => const CenteredLoadingIndicator(),
                 fit: BoxFit.contain,
               ),
             ),

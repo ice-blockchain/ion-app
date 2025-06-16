@@ -10,7 +10,6 @@ import 'package:ion/app/features/feed/stories/providers/story_pause_provider.c.d
 import 'package:ion/app/features/feed/stories/views/components/story_viewer/components/viewers/tap_to_see_hint.dart';
 import 'package:ion/app/features/ion_connect/model/quoted_event.c.dart';
 import 'package:ion/app/router/app_routes.c.dart';
-import 'package:flutter_cache_manager/flutter_cache_manager.dart';
 
 class ImageStoryViewer extends ConsumerWidget {
   const ImageStoryViewer({
@@ -34,7 +33,7 @@ class ImageStoryViewer extends ConsumerWidget {
     final imageWidget = IonConnectNetworkImage(
       imageUrl: imageUrl,
       authorPubkey: authorPubkey,
-      cacheManager: cacheManager as CacheManager,
+      cacheManager: cacheManager,
       filterQuality: FilterQuality.high,
       progressIndicatorBuilder: (_, __, ___) => const CenteredLoadingIndicator(),
       imageBuilder: (context, imageProvider) {
