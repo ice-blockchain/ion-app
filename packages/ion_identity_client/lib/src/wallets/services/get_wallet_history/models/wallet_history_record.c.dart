@@ -19,6 +19,7 @@ class WalletHistoryRecord with _$WalletHistoryRecord {
     required String? externalHash,
     required String? index,
     required String? contract,
+    required String? metadataAddress, // the same as contract for specific types of transactions
     required String? tokenId,
     required String? from,
     required String? to,

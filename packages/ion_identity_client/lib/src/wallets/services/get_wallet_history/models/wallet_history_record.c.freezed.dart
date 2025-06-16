@@ -30,6 +30,8 @@ mixin _$WalletHistoryRecord {
   String? get externalHash => throw _privateConstructorUsedError;
   String? get index => throw _privateConstructorUsedError;
   String? get contract => throw _privateConstructorUsedError;
+  String? get metadataAddress =>
+      throw _privateConstructorUsedError; // the same as contract for specific types of transactions
   String? get tokenId => throw _privateConstructorUsedError;
   String? get from => throw _privateConstructorUsedError;
   String? get to => throw _privateConstructorUsedError;
@@ -66,6 +68,7 @@ abstract class $WalletHistoryRecordCopyWith<$Res> {
       String? externalHash,
       String? index,
       String? contract,
+      String? metadataAddress,
       String? tokenId,
       String? from,
       String? to,
@@ -103,6 +106,7 @@ class _$WalletHistoryRecordCopyWithImpl<$Res, $Val extends WalletHistoryRecord>
     Object? externalHash = freezed,
     Object? index = freezed,
     Object? contract = freezed,
+    Object? metadataAddress = freezed,
     Object? tokenId = freezed,
     Object? from = freezed,
     Object? to = freezed,
@@ -152,6 +156,10 @@ class _$WalletHistoryRecordCopyWithImpl<$Res, $Val extends WalletHistoryRecord>
       contract: freezed == contract
           ? _value.contract
           : contract // ignore: cast_nullable_to_non_nullable
+              as String?,
+      metadataAddress: freezed == metadataAddress
+          ? _value.metadataAddress
+          : metadataAddress // ignore: cast_nullable_to_non_nullable
               as String?,
       tokenId: freezed == tokenId
           ? _value.tokenId
@@ -218,6 +226,7 @@ abstract class _$$WalletHistoryRecordImplCopyWith<$Res>
       String? externalHash,
       String? index,
       String? contract,
+      String? metadataAddress,
       String? tokenId,
       String? from,
       String? to,
@@ -254,6 +263,7 @@ class __$$WalletHistoryRecordImplCopyWithImpl<$Res>
     Object? externalHash = freezed,
     Object? index = freezed,
     Object? contract = freezed,
+    Object? metadataAddress = freezed,
     Object? tokenId = freezed,
     Object? from = freezed,
     Object? to = freezed,
@@ -303,6 +313,10 @@ class __$$WalletHistoryRecordImplCopyWithImpl<$Res>
       contract: freezed == contract
           ? _value.contract
           : contract // ignore: cast_nullable_to_non_nullable
+              as String?,
+      metadataAddress: freezed == metadataAddress
+          ? _value.metadataAddress
+          : metadataAddress // ignore: cast_nullable_to_non_nullable
               as String?,
       tokenId: freezed == tokenId
           ? _value.tokenId
@@ -354,6 +368,7 @@ class _$WalletHistoryRecordImpl implements _WalletHistoryRecord {
       required this.externalHash,
       required this.index,
       required this.contract,
+      required this.metadataAddress,
       required this.tokenId,
       required this.from,
       required this.to,
@@ -389,6 +404,9 @@ class _$WalletHistoryRecordImpl implements _WalletHistoryRecord {
   @override
   final String? contract;
   @override
+  final String? metadataAddress;
+// the same as contract for specific types of transactions
+  @override
   final String? tokenId;
   @override
   final String? from;
@@ -423,7 +441,7 @@ class _$WalletHistoryRecordImpl implements _WalletHistoryRecord {
 
   @override
   String toString() {
-    return 'WalletHistoryRecord(walletId: $walletId, network: $network, kind: $kind, direction: $direction, blockNumber: $blockNumber, timestamp: $timestamp, txHash: $txHash, externalHash: $externalHash, index: $index, contract: $contract, tokenId: $tokenId, from: $from, to: $to, tos: $tos, froms: $froms, value: $value, fee: $fee, metadata: $metadata)';
+    return 'WalletHistoryRecord(walletId: $walletId, network: $network, kind: $kind, direction: $direction, blockNumber: $blockNumber, timestamp: $timestamp, txHash: $txHash, externalHash: $externalHash, index: $index, contract: $contract, metadataAddress: $metadataAddress, tokenId: $tokenId, from: $from, to: $to, tos: $tos, froms: $froms, value: $value, fee: $fee, metadata: $metadata)';
   }
 
   @override
@@ -447,6 +465,8 @@ class _$WalletHistoryRecordImpl implements _WalletHistoryRecord {
             (identical(other.index, index) || other.index == index) &&
             (identical(other.contract, contract) ||
                 other.contract == contract) &&
+            (identical(other.metadataAddress, metadataAddress) ||
+                other.metadataAddress == metadataAddress) &&
             (identical(other.tokenId, tokenId) || other.tokenId == tokenId) &&
             (identical(other.from, from) || other.from == from) &&
             (identical(other.to, to) || other.to == to) &&
@@ -460,26 +480,28 @@ class _$WalletHistoryRecordImpl implements _WalletHistoryRecord {
 
   @JsonKey(includeFromJson: false, includeToJson: false)
   @override
-  int get hashCode => Object.hash(
-      runtimeType,
-      walletId,
-      network,
-      kind,
-      direction,
-      blockNumber,
-      timestamp,
-      txHash,
-      externalHash,
-      index,
-      contract,
-      tokenId,
-      from,
-      to,
-      const DeepCollectionEquality().hash(_tos),
-      const DeepCollectionEquality().hash(_froms),
-      value,
-      fee,
-      metadata);
+  int get hashCode => Object.hashAll([
+        runtimeType,
+        walletId,
+        network,
+        kind,
+        direction,
+        blockNumber,
+        timestamp,
+        txHash,
+        externalHash,
+        index,
+        contract,
+        metadataAddress,
+        tokenId,
+        from,
+        to,
+        const DeepCollectionEquality().hash(_tos),
+        const DeepCollectionEquality().hash(_froms),
+        value,
+        fee,
+        metadata
+      ]);
 
   /// Create a copy of WalletHistoryRecord
   /// with the given fields replaced by the non-null parameter values.
@@ -510,6 +532,7 @@ abstract class _WalletHistoryRecord implements WalletHistoryRecord {
           required final String? externalHash,
           required final String? index,
           required final String? contract,
+          required final String? metadataAddress,
           required final String? tokenId,
           required final String? from,
           required final String? to,
@@ -543,6 +566,9 @@ abstract class _WalletHistoryRecord implements WalletHistoryRecord {
   String? get index;
   @override
   String? get contract;
+  @override
+  String?
+      get metadataAddress; // the same as contract for specific types of transactions
   @override
   String? get tokenId;
   @override

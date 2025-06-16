@@ -108,6 +108,16 @@ sealed class WalletAsset with _$WalletAsset {
     String? name,
   }) = _WalletAssetTrc20;
 
+  @FreezedUnionValue('Aip21')
+  const factory WalletAsset.aip21({
+    required String metadata,
+    required String symbol,
+    required int decimals,
+    required String kind,
+    @StringOrIntConverter() required String balance,
+    String? name,
+  }) = _WalletAssetAip21;
+
   const factory WalletAsset.unknown({
     required String symbol,
     required int decimals,

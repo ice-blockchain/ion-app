@@ -203,3 +203,21 @@ Map<String, dynamic> _$$Trc721TransferRequestBodyImplToJson(
       'to': instance.to,
       'tokenId': instance.tokenId,
     };
+
+_$Aip21TransferRequestBodyImpl _$$Aip21TransferRequestBodyImplFromJson(
+        Map<String, dynamic> json) =>
+    _$Aip21TransferRequestBodyImpl(
+      kind: json['kind'] as String,
+      to: json['to'] as String,
+      amount: json['amount'] as String,
+      metadata: json['metadata'] as String,
+    );
+
+Map<String, dynamic> _$$Aip21TransferRequestBodyImplToJson(
+        _$Aip21TransferRequestBodyImpl instance) =>
+    <String, dynamic>{
+      'kind': instance.kind,
+      'to': instance.to,
+      'amount': instance.amount,
+      'metadata': instance.metadata,
+    };

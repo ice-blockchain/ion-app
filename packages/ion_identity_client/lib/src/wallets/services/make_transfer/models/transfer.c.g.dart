@@ -212,3 +212,19 @@ Map<String, dynamic> _$$Trc721TransferImplToJson(
       'tokenId': instance.tokenId,
       'kind': instance.kind,
     };
+
+_$Aip21TransferImpl _$$Aip21TransferImplFromJson(Map<String, dynamic> json) =>
+    _$Aip21TransferImpl(
+      metadata: json['metadata'] as String,
+      to: json['to'] as String,
+      amount: json['amount'] as String,
+      kind: json['kind'] as String? ?? 'Aip21',
+    );
+
+Map<String, dynamic> _$$Aip21TransferImplToJson(_$Aip21TransferImpl instance) =>
+    <String, dynamic>{
+      'metadata': instance.metadata,
+      'to': instance.to,
+      'amount': instance.amount,
+      'kind': instance.kind,
+    };

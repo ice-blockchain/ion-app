@@ -122,7 +122,7 @@ class SendAssetFormController extends _$SendAssetFormController {
         networkFeeProvider(
           walletId: state.senderWallet?.id,
           network: state.network!,
-          assetSymbol: coin.coinsGroup.abbreviation,
+          transferredCoin: selectedOption?.coin,
         ).future,
       );
 

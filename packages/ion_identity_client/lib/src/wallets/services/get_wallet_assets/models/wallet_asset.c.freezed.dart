@@ -34,6 +34,8 @@ WalletAsset _$WalletAssetFromJson(Map<String, dynamic> json) {
       return _WalletAssetTrc10.fromJson(json);
     case 'Trc20':
       return _WalletAssetTrc20.fromJson(json);
+    case 'Aip21':
+      return _WalletAssetAip21.fromJson(json);
 
     default:
       return _WalletAssetUnknown.fromJson(json);
@@ -94,6 +96,9 @@ mixin _$WalletAsset {
     required TResult Function(String contract, String symbol, int decimals,
             @StringOrIntConverter() String balance, String kind, String? name)
         trc20,
+    required TResult Function(String metadata, String symbol, int decimals,
+            String kind, @StringOrIntConverter() String balance, String? name)
+        aip21,
     required TResult Function(
             String symbol,
             int decimals,
@@ -154,6 +159,9 @@ mixin _$WalletAsset {
     TResult? Function(String contract, String symbol, int decimals,
             @StringOrIntConverter() String balance, String kind, String? name)?
         trc20,
+    TResult? Function(String metadata, String symbol, int decimals, String kind,
+            @StringOrIntConverter() String balance, String? name)?
+        aip21,
     TResult? Function(
             String symbol,
             int decimals,
@@ -208,6 +216,9 @@ mixin _$WalletAsset {
     TResult Function(String contract, String symbol, int decimals,
             @StringOrIntConverter() String balance, String kind, String? name)?
         trc20,
+    TResult Function(String metadata, String symbol, int decimals, String kind,
+            @StringOrIntConverter() String balance, String? name)?
+        aip21,
     TResult Function(
             String symbol,
             int decimals,
@@ -234,6 +245,7 @@ mixin _$WalletAsset {
     required TResult Function(_WalletAssetTep74 value) tep74,
     required TResult Function(_WalletAssetTrc10 value) trc10,
     required TResult Function(_WalletAssetTrc20 value) trc20,
+    required TResult Function(_WalletAssetAip21 value) aip21,
     required TResult Function(_WalletAssetUnknown value) unknown,
   }) =>
       throw _privateConstructorUsedError;
@@ -248,6 +260,7 @@ mixin _$WalletAsset {
     TResult? Function(_WalletAssetTep74 value)? tep74,
     TResult? Function(_WalletAssetTrc10 value)? trc10,
     TResult? Function(_WalletAssetTrc20 value)? trc20,
+    TResult? Function(_WalletAssetAip21 value)? aip21,
     TResult? Function(_WalletAssetUnknown value)? unknown,
   }) =>
       throw _privateConstructorUsedError;
@@ -262,6 +275,7 @@ mixin _$WalletAsset {
     TResult Function(_WalletAssetTep74 value)? tep74,
     TResult Function(_WalletAssetTrc10 value)? trc10,
     TResult Function(_WalletAssetTrc20 value)? trc20,
+    TResult Function(_WalletAssetAip21 value)? aip21,
     TResult Function(_WalletAssetUnknown value)? unknown,
     required TResult orElse(),
   }) =>
@@ -513,6 +527,9 @@ class _$WalletAssetNativeImpl extends _WalletAssetNative {
     required TResult Function(String contract, String symbol, int decimals,
             @StringOrIntConverter() String balance, String kind, String? name)
         trc20,
+    required TResult Function(String metadata, String symbol, int decimals,
+            String kind, @StringOrIntConverter() String balance, String? name)
+        aip21,
     required TResult Function(
             String symbol,
             int decimals,
@@ -576,6 +593,9 @@ class _$WalletAssetNativeImpl extends _WalletAssetNative {
     TResult? Function(String contract, String symbol, int decimals,
             @StringOrIntConverter() String balance, String kind, String? name)?
         trc20,
+    TResult? Function(String metadata, String symbol, int decimals, String kind,
+            @StringOrIntConverter() String balance, String? name)?
+        aip21,
     TResult? Function(
             String symbol,
             int decimals,
@@ -633,6 +653,9 @@ class _$WalletAssetNativeImpl extends _WalletAssetNative {
     TResult Function(String contract, String symbol, int decimals,
             @StringOrIntConverter() String balance, String kind, String? name)?
         trc20,
+    TResult Function(String metadata, String symbol, int decimals, String kind,
+            @StringOrIntConverter() String balance, String? name)?
+        aip21,
     TResult Function(
             String symbol,
             int decimals,
@@ -665,6 +688,7 @@ class _$WalletAssetNativeImpl extends _WalletAssetNative {
     required TResult Function(_WalletAssetTep74 value) tep74,
     required TResult Function(_WalletAssetTrc10 value) trc10,
     required TResult Function(_WalletAssetTrc20 value) trc20,
+    required TResult Function(_WalletAssetAip21 value) aip21,
     required TResult Function(_WalletAssetUnknown value) unknown,
   }) {
     return native(this);
@@ -682,6 +706,7 @@ class _$WalletAssetNativeImpl extends _WalletAssetNative {
     TResult? Function(_WalletAssetTep74 value)? tep74,
     TResult? Function(_WalletAssetTrc10 value)? trc10,
     TResult? Function(_WalletAssetTrc20 value)? trc20,
+    TResult? Function(_WalletAssetAip21 value)? aip21,
     TResult? Function(_WalletAssetUnknown value)? unknown,
   }) {
     return native?.call(this);
@@ -699,6 +724,7 @@ class _$WalletAssetNativeImpl extends _WalletAssetNative {
     TResult Function(_WalletAssetTep74 value)? tep74,
     TResult Function(_WalletAssetTrc10 value)? trc10,
     TResult Function(_WalletAssetTrc20 value)? trc20,
+    TResult Function(_WalletAssetAip21 value)? aip21,
     TResult Function(_WalletAssetUnknown value)? unknown,
     required TResult orElse(),
   }) {
@@ -937,6 +963,9 @@ class _$WalletAssetErc20Impl extends _WalletAssetErc20 {
     required TResult Function(String contract, String symbol, int decimals,
             @StringOrIntConverter() String balance, String kind, String? name)
         trc20,
+    required TResult Function(String metadata, String symbol, int decimals,
+            String kind, @StringOrIntConverter() String balance, String? name)
+        aip21,
     required TResult Function(
             String symbol,
             int decimals,
@@ -1000,6 +1029,9 @@ class _$WalletAssetErc20Impl extends _WalletAssetErc20 {
     TResult? Function(String contract, String symbol, int decimals,
             @StringOrIntConverter() String balance, String kind, String? name)?
         trc20,
+    TResult? Function(String metadata, String symbol, int decimals, String kind,
+            @StringOrIntConverter() String balance, String? name)?
+        aip21,
     TResult? Function(
             String symbol,
             int decimals,
@@ -1058,6 +1090,9 @@ class _$WalletAssetErc20Impl extends _WalletAssetErc20 {
     TResult Function(String contract, String symbol, int decimals,
             @StringOrIntConverter() String balance, String kind, String? name)?
         trc20,
+    TResult Function(String metadata, String symbol, int decimals, String kind,
+            @StringOrIntConverter() String balance, String? name)?
+        aip21,
     TResult Function(
             String symbol,
             int decimals,
@@ -1090,6 +1125,7 @@ class _$WalletAssetErc20Impl extends _WalletAssetErc20 {
     required TResult Function(_WalletAssetTep74 value) tep74,
     required TResult Function(_WalletAssetTrc10 value) trc10,
     required TResult Function(_WalletAssetTrc20 value) trc20,
+    required TResult Function(_WalletAssetAip21 value) aip21,
     required TResult Function(_WalletAssetUnknown value) unknown,
   }) {
     return erc20(this);
@@ -1107,6 +1143,7 @@ class _$WalletAssetErc20Impl extends _WalletAssetErc20 {
     TResult? Function(_WalletAssetTep74 value)? tep74,
     TResult? Function(_WalletAssetTrc10 value)? trc10,
     TResult? Function(_WalletAssetTrc20 value)? trc20,
+    TResult? Function(_WalletAssetAip21 value)? aip21,
     TResult? Function(_WalletAssetUnknown value)? unknown,
   }) {
     return erc20?.call(this);
@@ -1124,6 +1161,7 @@ class _$WalletAssetErc20Impl extends _WalletAssetErc20 {
     TResult Function(_WalletAssetTep74 value)? tep74,
     TResult Function(_WalletAssetTrc10 value)? trc10,
     TResult Function(_WalletAssetTrc20 value)? trc20,
+    TResult Function(_WalletAssetAip21 value)? aip21,
     TResult Function(_WalletAssetUnknown value)? unknown,
     required TResult orElse(),
   }) {
@@ -1363,6 +1401,9 @@ class _$WalletAssetAsaImpl extends _WalletAssetAsa {
     required TResult Function(String contract, String symbol, int decimals,
             @StringOrIntConverter() String balance, String kind, String? name)
         trc20,
+    required TResult Function(String metadata, String symbol, int decimals,
+            String kind, @StringOrIntConverter() String balance, String? name)
+        aip21,
     required TResult Function(
             String symbol,
             int decimals,
@@ -1426,6 +1467,9 @@ class _$WalletAssetAsaImpl extends _WalletAssetAsa {
     TResult? Function(String contract, String symbol, int decimals,
             @StringOrIntConverter() String balance, String kind, String? name)?
         trc20,
+    TResult? Function(String metadata, String symbol, int decimals, String kind,
+            @StringOrIntConverter() String balance, String? name)?
+        aip21,
     TResult? Function(
             String symbol,
             int decimals,
@@ -1483,6 +1527,9 @@ class _$WalletAssetAsaImpl extends _WalletAssetAsa {
     TResult Function(String contract, String symbol, int decimals,
             @StringOrIntConverter() String balance, String kind, String? name)?
         trc20,
+    TResult Function(String metadata, String symbol, int decimals, String kind,
+            @StringOrIntConverter() String balance, String? name)?
+        aip21,
     TResult Function(
             String symbol,
             int decimals,
@@ -1515,6 +1562,7 @@ class _$WalletAssetAsaImpl extends _WalletAssetAsa {
     required TResult Function(_WalletAssetTep74 value) tep74,
     required TResult Function(_WalletAssetTrc10 value) trc10,
     required TResult Function(_WalletAssetTrc20 value) trc20,
+    required TResult Function(_WalletAssetAip21 value) aip21,
     required TResult Function(_WalletAssetUnknown value) unknown,
   }) {
     return asa(this);
@@ -1532,6 +1580,7 @@ class _$WalletAssetAsaImpl extends _WalletAssetAsa {
     TResult? Function(_WalletAssetTep74 value)? tep74,
     TResult? Function(_WalletAssetTrc10 value)? trc10,
     TResult? Function(_WalletAssetTrc20 value)? trc20,
+    TResult? Function(_WalletAssetAip21 value)? aip21,
     TResult? Function(_WalletAssetUnknown value)? unknown,
   }) {
     return asa?.call(this);
@@ -1549,6 +1598,7 @@ class _$WalletAssetAsaImpl extends _WalletAssetAsa {
     TResult Function(_WalletAssetTep74 value)? tep74,
     TResult Function(_WalletAssetTrc10 value)? trc10,
     TResult Function(_WalletAssetTrc20 value)? trc20,
+    TResult Function(_WalletAssetAip21 value)? aip21,
     TResult Function(_WalletAssetUnknown value)? unknown,
     required TResult orElse(),
   }) {
@@ -1777,6 +1827,9 @@ class _$WalletAssetSplImpl extends _WalletAssetSpl {
     required TResult Function(String contract, String symbol, int decimals,
             @StringOrIntConverter() String balance, String kind, String? name)
         trc20,
+    required TResult Function(String metadata, String symbol, int decimals,
+            String kind, @StringOrIntConverter() String balance, String? name)
+        aip21,
     required TResult Function(
             String symbol,
             int decimals,
@@ -1840,6 +1893,9 @@ class _$WalletAssetSplImpl extends _WalletAssetSpl {
     TResult? Function(String contract, String symbol, int decimals,
             @StringOrIntConverter() String balance, String kind, String? name)?
         trc20,
+    TResult? Function(String metadata, String symbol, int decimals, String kind,
+            @StringOrIntConverter() String balance, String? name)?
+        aip21,
     TResult? Function(
             String symbol,
             int decimals,
@@ -1897,6 +1953,9 @@ class _$WalletAssetSplImpl extends _WalletAssetSpl {
     TResult Function(String contract, String symbol, int decimals,
             @StringOrIntConverter() String balance, String kind, String? name)?
         trc20,
+    TResult Function(String metadata, String symbol, int decimals, String kind,
+            @StringOrIntConverter() String balance, String? name)?
+        aip21,
     TResult Function(
             String symbol,
             int decimals,
@@ -1929,6 +1988,7 @@ class _$WalletAssetSplImpl extends _WalletAssetSpl {
     required TResult Function(_WalletAssetTep74 value) tep74,
     required TResult Function(_WalletAssetTrc10 value) trc10,
     required TResult Function(_WalletAssetTrc20 value) trc20,
+    required TResult Function(_WalletAssetAip21 value) aip21,
     required TResult Function(_WalletAssetUnknown value) unknown,
   }) {
     return spl(this);
@@ -1946,6 +2006,7 @@ class _$WalletAssetSplImpl extends _WalletAssetSpl {
     TResult? Function(_WalletAssetTep74 value)? tep74,
     TResult? Function(_WalletAssetTrc10 value)? trc10,
     TResult? Function(_WalletAssetTrc20 value)? trc20,
+    TResult? Function(_WalletAssetAip21 value)? aip21,
     TResult? Function(_WalletAssetUnknown value)? unknown,
   }) {
     return spl?.call(this);
@@ -1963,6 +2024,7 @@ class _$WalletAssetSplImpl extends _WalletAssetSpl {
     TResult Function(_WalletAssetTep74 value)? tep74,
     TResult Function(_WalletAssetTrc10 value)? trc10,
     TResult Function(_WalletAssetTrc20 value)? trc20,
+    TResult Function(_WalletAssetAip21 value)? aip21,
     TResult Function(_WalletAssetUnknown value)? unknown,
     required TResult orElse(),
   }) {
@@ -2189,6 +2251,9 @@ class _$WalletAssetSpl2022Impl extends _WalletAssetSpl2022 {
     required TResult Function(String contract, String symbol, int decimals,
             @StringOrIntConverter() String balance, String kind, String? name)
         trc20,
+    required TResult Function(String metadata, String symbol, int decimals,
+            String kind, @StringOrIntConverter() String balance, String? name)
+        aip21,
     required TResult Function(
             String symbol,
             int decimals,
@@ -2252,6 +2317,9 @@ class _$WalletAssetSpl2022Impl extends _WalletAssetSpl2022 {
     TResult? Function(String contract, String symbol, int decimals,
             @StringOrIntConverter() String balance, String kind, String? name)?
         trc20,
+    TResult? Function(String metadata, String symbol, int decimals, String kind,
+            @StringOrIntConverter() String balance, String? name)?
+        aip21,
     TResult? Function(
             String symbol,
             int decimals,
@@ -2309,6 +2377,9 @@ class _$WalletAssetSpl2022Impl extends _WalletAssetSpl2022 {
     TResult Function(String contract, String symbol, int decimals,
             @StringOrIntConverter() String balance, String kind, String? name)?
         trc20,
+    TResult Function(String metadata, String symbol, int decimals, String kind,
+            @StringOrIntConverter() String balance, String? name)?
+        aip21,
     TResult Function(
             String symbol,
             int decimals,
@@ -2341,6 +2412,7 @@ class _$WalletAssetSpl2022Impl extends _WalletAssetSpl2022 {
     required TResult Function(_WalletAssetTep74 value) tep74,
     required TResult Function(_WalletAssetTrc10 value) trc10,
     required TResult Function(_WalletAssetTrc20 value) trc20,
+    required TResult Function(_WalletAssetAip21 value) aip21,
     required TResult Function(_WalletAssetUnknown value) unknown,
   }) {
     return spl2022(this);
@@ -2358,6 +2430,7 @@ class _$WalletAssetSpl2022Impl extends _WalletAssetSpl2022 {
     TResult? Function(_WalletAssetTep74 value)? tep74,
     TResult? Function(_WalletAssetTrc10 value)? trc10,
     TResult? Function(_WalletAssetTrc20 value)? trc20,
+    TResult? Function(_WalletAssetAip21 value)? aip21,
     TResult? Function(_WalletAssetUnknown value)? unknown,
   }) {
     return spl2022?.call(this);
@@ -2375,6 +2448,7 @@ class _$WalletAssetSpl2022Impl extends _WalletAssetSpl2022 {
     TResult Function(_WalletAssetTep74 value)? tep74,
     TResult Function(_WalletAssetTrc10 value)? trc10,
     TResult Function(_WalletAssetTrc20 value)? trc20,
+    TResult Function(_WalletAssetAip21 value)? aip21,
     TResult Function(_WalletAssetUnknown value)? unknown,
     required TResult orElse(),
   }) {
@@ -2601,6 +2675,9 @@ class _$WalletAssetSep41Impl extends _WalletAssetSep41 {
     required TResult Function(String contract, String symbol, int decimals,
             @StringOrIntConverter() String balance, String kind, String? name)
         trc20,
+    required TResult Function(String metadata, String symbol, int decimals,
+            String kind, @StringOrIntConverter() String balance, String? name)
+        aip21,
     required TResult Function(
             String symbol,
             int decimals,
@@ -2664,6 +2741,9 @@ class _$WalletAssetSep41Impl extends _WalletAssetSep41 {
     TResult? Function(String contract, String symbol, int decimals,
             @StringOrIntConverter() String balance, String kind, String? name)?
         trc20,
+    TResult? Function(String metadata, String symbol, int decimals, String kind,
+            @StringOrIntConverter() String balance, String? name)?
+        aip21,
     TResult? Function(
             String symbol,
             int decimals,
@@ -2721,6 +2801,9 @@ class _$WalletAssetSep41Impl extends _WalletAssetSep41 {
     TResult Function(String contract, String symbol, int decimals,
             @StringOrIntConverter() String balance, String kind, String? name)?
         trc20,
+    TResult Function(String metadata, String symbol, int decimals, String kind,
+            @StringOrIntConverter() String balance, String? name)?
+        aip21,
     TResult Function(
             String symbol,
             int decimals,
@@ -2753,6 +2836,7 @@ class _$WalletAssetSep41Impl extends _WalletAssetSep41 {
     required TResult Function(_WalletAssetTep74 value) tep74,
     required TResult Function(_WalletAssetTrc10 value) trc10,
     required TResult Function(_WalletAssetTrc20 value) trc20,
+    required TResult Function(_WalletAssetAip21 value) aip21,
     required TResult Function(_WalletAssetUnknown value) unknown,
   }) {
     return sep41(this);
@@ -2770,6 +2854,7 @@ class _$WalletAssetSep41Impl extends _WalletAssetSep41 {
     TResult? Function(_WalletAssetTep74 value)? tep74,
     TResult? Function(_WalletAssetTrc10 value)? trc10,
     TResult? Function(_WalletAssetTrc20 value)? trc20,
+    TResult? Function(_WalletAssetAip21 value)? aip21,
     TResult? Function(_WalletAssetUnknown value)? unknown,
   }) {
     return sep41?.call(this);
@@ -2787,6 +2872,7 @@ class _$WalletAssetSep41Impl extends _WalletAssetSep41 {
     TResult Function(_WalletAssetTep74 value)? tep74,
     TResult Function(_WalletAssetTrc10 value)? trc10,
     TResult Function(_WalletAssetTrc20 value)? trc20,
+    TResult Function(_WalletAssetAip21 value)? aip21,
     TResult Function(_WalletAssetUnknown value)? unknown,
     required TResult orElse(),
   }) {
@@ -3013,6 +3099,9 @@ class _$WalletAssetTep74Impl extends _WalletAssetTep74 {
     required TResult Function(String contract, String symbol, int decimals,
             @StringOrIntConverter() String balance, String kind, String? name)
         trc20,
+    required TResult Function(String metadata, String symbol, int decimals,
+            String kind, @StringOrIntConverter() String balance, String? name)
+        aip21,
     required TResult Function(
             String symbol,
             int decimals,
@@ -3076,6 +3165,9 @@ class _$WalletAssetTep74Impl extends _WalletAssetTep74 {
     TResult? Function(String contract, String symbol, int decimals,
             @StringOrIntConverter() String balance, String kind, String? name)?
         trc20,
+    TResult? Function(String metadata, String symbol, int decimals, String kind,
+            @StringOrIntConverter() String balance, String? name)?
+        aip21,
     TResult? Function(
             String symbol,
             int decimals,
@@ -3133,6 +3225,9 @@ class _$WalletAssetTep74Impl extends _WalletAssetTep74 {
     TResult Function(String contract, String symbol, int decimals,
             @StringOrIntConverter() String balance, String kind, String? name)?
         trc20,
+    TResult Function(String metadata, String symbol, int decimals, String kind,
+            @StringOrIntConverter() String balance, String? name)?
+        aip21,
     TResult Function(
             String symbol,
             int decimals,
@@ -3165,6 +3260,7 @@ class _$WalletAssetTep74Impl extends _WalletAssetTep74 {
     required TResult Function(_WalletAssetTep74 value) tep74,
     required TResult Function(_WalletAssetTrc10 value) trc10,
     required TResult Function(_WalletAssetTrc20 value) trc20,
+    required TResult Function(_WalletAssetAip21 value) aip21,
     required TResult Function(_WalletAssetUnknown value) unknown,
   }) {
     return tep74(this);
@@ -3182,6 +3278,7 @@ class _$WalletAssetTep74Impl extends _WalletAssetTep74 {
     TResult? Function(_WalletAssetTep74 value)? tep74,
     TResult? Function(_WalletAssetTrc10 value)? trc10,
     TResult? Function(_WalletAssetTrc20 value)? trc20,
+    TResult? Function(_WalletAssetAip21 value)? aip21,
     TResult? Function(_WalletAssetUnknown value)? unknown,
   }) {
     return tep74?.call(this);
@@ -3199,6 +3296,7 @@ class _$WalletAssetTep74Impl extends _WalletAssetTep74 {
     TResult Function(_WalletAssetTep74 value)? tep74,
     TResult Function(_WalletAssetTrc10 value)? trc10,
     TResult Function(_WalletAssetTrc20 value)? trc20,
+    TResult Function(_WalletAssetAip21 value)? aip21,
     TResult Function(_WalletAssetUnknown value)? unknown,
     required TResult orElse(),
   }) {
@@ -3425,6 +3523,9 @@ class _$WalletAssetTrc10Impl extends _WalletAssetTrc10 {
     required TResult Function(String contract, String symbol, int decimals,
             @StringOrIntConverter() String balance, String kind, String? name)
         trc20,
+    required TResult Function(String metadata, String symbol, int decimals,
+            String kind, @StringOrIntConverter() String balance, String? name)
+        aip21,
     required TResult Function(
             String symbol,
             int decimals,
@@ -3488,6 +3589,9 @@ class _$WalletAssetTrc10Impl extends _WalletAssetTrc10 {
     TResult? Function(String contract, String symbol, int decimals,
             @StringOrIntConverter() String balance, String kind, String? name)?
         trc20,
+    TResult? Function(String metadata, String symbol, int decimals, String kind,
+            @StringOrIntConverter() String balance, String? name)?
+        aip21,
     TResult? Function(
             String symbol,
             int decimals,
@@ -3545,6 +3649,9 @@ class _$WalletAssetTrc10Impl extends _WalletAssetTrc10 {
     TResult Function(String contract, String symbol, int decimals,
             @StringOrIntConverter() String balance, String kind, String? name)?
         trc20,
+    TResult Function(String metadata, String symbol, int decimals, String kind,
+            @StringOrIntConverter() String balance, String? name)?
+        aip21,
     TResult Function(
             String symbol,
             int decimals,
@@ -3577,6 +3684,7 @@ class _$WalletAssetTrc10Impl extends _WalletAssetTrc10 {
     required TResult Function(_WalletAssetTep74 value) tep74,
     required TResult Function(_WalletAssetTrc10 value) trc10,
     required TResult Function(_WalletAssetTrc20 value) trc20,
+    required TResult Function(_WalletAssetAip21 value) aip21,
     required TResult Function(_WalletAssetUnknown value) unknown,
   }) {
     return trc10(this);
@@ -3594,6 +3702,7 @@ class _$WalletAssetTrc10Impl extends _WalletAssetTrc10 {
     TResult? Function(_WalletAssetTep74 value)? tep74,
     TResult? Function(_WalletAssetTrc10 value)? trc10,
     TResult? Function(_WalletAssetTrc20 value)? trc20,
+    TResult? Function(_WalletAssetAip21 value)? aip21,
     TResult? Function(_WalletAssetUnknown value)? unknown,
   }) {
     return trc10?.call(this);
@@ -3611,6 +3720,7 @@ class _$WalletAssetTrc10Impl extends _WalletAssetTrc10 {
     TResult Function(_WalletAssetTep74 value)? tep74,
     TResult Function(_WalletAssetTrc10 value)? trc10,
     TResult Function(_WalletAssetTrc20 value)? trc20,
+    TResult Function(_WalletAssetAip21 value)? aip21,
     TResult Function(_WalletAssetUnknown value)? unknown,
     required TResult orElse(),
   }) {
@@ -3838,6 +3948,9 @@ class _$WalletAssetTrc20Impl extends _WalletAssetTrc20 {
     required TResult Function(String contract, String symbol, int decimals,
             @StringOrIntConverter() String balance, String kind, String? name)
         trc20,
+    required TResult Function(String metadata, String symbol, int decimals,
+            String kind, @StringOrIntConverter() String balance, String? name)
+        aip21,
     required TResult Function(
             String symbol,
             int decimals,
@@ -3901,6 +4014,9 @@ class _$WalletAssetTrc20Impl extends _WalletAssetTrc20 {
     TResult? Function(String contract, String symbol, int decimals,
             @StringOrIntConverter() String balance, String kind, String? name)?
         trc20,
+    TResult? Function(String metadata, String symbol, int decimals, String kind,
+            @StringOrIntConverter() String balance, String? name)?
+        aip21,
     TResult? Function(
             String symbol,
             int decimals,
@@ -3958,6 +4074,9 @@ class _$WalletAssetTrc20Impl extends _WalletAssetTrc20 {
     TResult Function(String contract, String symbol, int decimals,
             @StringOrIntConverter() String balance, String kind, String? name)?
         trc20,
+    TResult Function(String metadata, String symbol, int decimals, String kind,
+            @StringOrIntConverter() String balance, String? name)?
+        aip21,
     TResult Function(
             String symbol,
             int decimals,
@@ -3990,6 +4109,7 @@ class _$WalletAssetTrc20Impl extends _WalletAssetTrc20 {
     required TResult Function(_WalletAssetTep74 value) tep74,
     required TResult Function(_WalletAssetTrc10 value) trc10,
     required TResult Function(_WalletAssetTrc20 value) trc20,
+    required TResult Function(_WalletAssetAip21 value) aip21,
     required TResult Function(_WalletAssetUnknown value) unknown,
   }) {
     return trc20(this);
@@ -4007,6 +4127,7 @@ class _$WalletAssetTrc20Impl extends _WalletAssetTrc20 {
     TResult? Function(_WalletAssetTep74 value)? tep74,
     TResult? Function(_WalletAssetTrc10 value)? trc10,
     TResult? Function(_WalletAssetTrc20 value)? trc20,
+    TResult? Function(_WalletAssetAip21 value)? aip21,
     TResult? Function(_WalletAssetUnknown value)? unknown,
   }) {
     return trc20?.call(this);
@@ -4024,6 +4145,7 @@ class _$WalletAssetTrc20Impl extends _WalletAssetTrc20 {
     TResult Function(_WalletAssetTep74 value)? tep74,
     TResult Function(_WalletAssetTrc10 value)? trc10,
     TResult Function(_WalletAssetTrc20 value)? trc20,
+    TResult Function(_WalletAssetAip21 value)? aip21,
     TResult Function(_WalletAssetUnknown value)? unknown,
     required TResult orElse(),
   }) {
@@ -4072,6 +4194,431 @@ abstract class _WalletAssetTrc20 extends WalletAsset {
   @override
   @JsonKey(includeFromJson: false, includeToJson: false)
   _$$WalletAssetTrc20ImplCopyWith<_$WalletAssetTrc20Impl> get copyWith =>
+      throw _privateConstructorUsedError;
+}
+
+/// @nodoc
+abstract class _$$WalletAssetAip21ImplCopyWith<$Res>
+    implements $WalletAssetCopyWith<$Res> {
+  factory _$$WalletAssetAip21ImplCopyWith(_$WalletAssetAip21Impl value,
+          $Res Function(_$WalletAssetAip21Impl) then) =
+      __$$WalletAssetAip21ImplCopyWithImpl<$Res>;
+  @override
+  @useResult
+  $Res call(
+      {String metadata,
+      String symbol,
+      int decimals,
+      String kind,
+      @StringOrIntConverter() String balance,
+      String? name});
+}
+
+/// @nodoc
+class __$$WalletAssetAip21ImplCopyWithImpl<$Res>
+    extends _$WalletAssetCopyWithImpl<$Res, _$WalletAssetAip21Impl>
+    implements _$$WalletAssetAip21ImplCopyWith<$Res> {
+  __$$WalletAssetAip21ImplCopyWithImpl(_$WalletAssetAip21Impl _value,
+      $Res Function(_$WalletAssetAip21Impl) _then)
+      : super(_value, _then);
+
+  /// Create a copy of WalletAsset
+  /// with the given fields replaced by the non-null parameter values.
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({
+    Object? metadata = null,
+    Object? symbol = null,
+    Object? decimals = null,
+    Object? kind = null,
+    Object? balance = null,
+    Object? name = freezed,
+  }) {
+    return _then(_$WalletAssetAip21Impl(
+      metadata: null == metadata
+          ? _value.metadata
+          : metadata // ignore: cast_nullable_to_non_nullable
+              as String,
+      symbol: null == symbol
+          ? _value.symbol
+          : symbol // ignore: cast_nullable_to_non_nullable
+              as String,
+      decimals: null == decimals
+          ? _value.decimals
+          : decimals // ignore: cast_nullable_to_non_nullable
+              as int,
+      kind: null == kind
+          ? _value.kind
+          : kind // ignore: cast_nullable_to_non_nullable
+              as String,
+      balance: null == balance
+          ? _value.balance
+          : balance // ignore: cast_nullable_to_non_nullable
+              as String,
+      name: freezed == name
+          ? _value.name
+          : name // ignore: cast_nullable_to_non_nullable
+              as String?,
+    ));
+  }
+}
+
+/// @nodoc
+@JsonSerializable()
+class _$WalletAssetAip21Impl extends _WalletAssetAip21 {
+  const _$WalletAssetAip21Impl(
+      {required this.metadata,
+      required this.symbol,
+      required this.decimals,
+      required this.kind,
+      @StringOrIntConverter() required this.balance,
+      this.name})
+      : super._();
+
+  factory _$WalletAssetAip21Impl.fromJson(Map<String, dynamic> json) =>
+      _$$WalletAssetAip21ImplFromJson(json);
+
+  @override
+  final String metadata;
+  @override
+  final String symbol;
+  @override
+  final int decimals;
+  @override
+  final String kind;
+  @override
+  @StringOrIntConverter()
+  final String balance;
+  @override
+  final String? name;
+
+  @override
+  String toString() {
+    return 'WalletAsset.aip21(metadata: $metadata, symbol: $symbol, decimals: $decimals, kind: $kind, balance: $balance, name: $name)';
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType &&
+            other is _$WalletAssetAip21Impl &&
+            (identical(other.metadata, metadata) ||
+                other.metadata == metadata) &&
+            (identical(other.symbol, symbol) || other.symbol == symbol) &&
+            (identical(other.decimals, decimals) ||
+                other.decimals == decimals) &&
+            (identical(other.kind, kind) || other.kind == kind) &&
+            (identical(other.balance, balance) || other.balance == balance) &&
+            (identical(other.name, name) || other.name == name));
+  }
+
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  @override
+  int get hashCode =>
+      Object.hash(runtimeType, metadata, symbol, decimals, kind, balance, name);
+
+  /// Create a copy of WalletAsset
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  @override
+  @pragma('vm:prefer-inline')
+  _$$WalletAssetAip21ImplCopyWith<_$WalletAssetAip21Impl> get copyWith =>
+      __$$WalletAssetAip21ImplCopyWithImpl<_$WalletAssetAip21Impl>(
+          this, _$identity);
+
+  @override
+  @optionalTypeArgs
+  TResult when<TResult extends Object?>({
+    required TResult Function(
+            String symbol,
+            int decimals,
+            @StringOrIntConverter() String balance,
+            String kind,
+            bool? verified,
+            String? name)
+        native,
+    required TResult Function(
+            String symbol,
+            int decimals,
+            @StringOrIntConverter() String balance,
+            String kind,
+            bool? verified,
+            String? contract,
+            String? name)
+        erc20,
+    required TResult Function(
+            String assetId,
+            String symbol,
+            int decimals,
+            bool verified,
+            @StringOrIntConverter() String balance,
+            String kind,
+            String? name)
+        asa,
+    required TResult Function(String mint, String symbol, int decimals,
+            @StringOrIntConverter() String balance, String kind, String? name)
+        spl,
+    required TResult Function(String mint, String symbol, int decimals,
+            @StringOrIntConverter() String balance, String kind, String? name)
+        spl2022,
+    required TResult Function(String mint, String symbol, int decimals,
+            @StringOrIntConverter() String balance, String kind, String? name)
+        sep41,
+    required TResult Function(String mint, String symbol, int decimals,
+            @StringOrIntConverter() String balance, String kind, String? name)
+        tep74,
+    required TResult Function(String tokenId, String symbol, int decimals,
+            @StringOrIntConverter() String balance, String kind, String? name)
+        trc10,
+    required TResult Function(String contract, String symbol, int decimals,
+            @StringOrIntConverter() String balance, String kind, String? name)
+        trc20,
+    required TResult Function(String metadata, String symbol, int decimals,
+            String kind, @StringOrIntConverter() String balance, String? name)
+        aip21,
+    required TResult Function(
+            String symbol,
+            int decimals,
+            @StringOrIntConverter() String balance,
+            String kind,
+            String? contract,
+            String? name,
+            String? assetId,
+            String? mint,
+            String? tokenId,
+            bool? verified)
+        unknown,
+  }) {
+    return aip21(metadata, symbol, decimals, kind, balance, name);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? whenOrNull<TResult extends Object?>({
+    TResult? Function(
+            String symbol,
+            int decimals,
+            @StringOrIntConverter() String balance,
+            String kind,
+            bool? verified,
+            String? name)?
+        native,
+    TResult? Function(
+            String symbol,
+            int decimals,
+            @StringOrIntConverter() String balance,
+            String kind,
+            bool? verified,
+            String? contract,
+            String? name)?
+        erc20,
+    TResult? Function(
+            String assetId,
+            String symbol,
+            int decimals,
+            bool verified,
+            @StringOrIntConverter() String balance,
+            String kind,
+            String? name)?
+        asa,
+    TResult? Function(String mint, String symbol, int decimals,
+            @StringOrIntConverter() String balance, String kind, String? name)?
+        spl,
+    TResult? Function(String mint, String symbol, int decimals,
+            @StringOrIntConverter() String balance, String kind, String? name)?
+        spl2022,
+    TResult? Function(String mint, String symbol, int decimals,
+            @StringOrIntConverter() String balance, String kind, String? name)?
+        sep41,
+    TResult? Function(String mint, String symbol, int decimals,
+            @StringOrIntConverter() String balance, String kind, String? name)?
+        tep74,
+    TResult? Function(String tokenId, String symbol, int decimals,
+            @StringOrIntConverter() String balance, String kind, String? name)?
+        trc10,
+    TResult? Function(String contract, String symbol, int decimals,
+            @StringOrIntConverter() String balance, String kind, String? name)?
+        trc20,
+    TResult? Function(String metadata, String symbol, int decimals, String kind,
+            @StringOrIntConverter() String balance, String? name)?
+        aip21,
+    TResult? Function(
+            String symbol,
+            int decimals,
+            @StringOrIntConverter() String balance,
+            String kind,
+            String? contract,
+            String? name,
+            String? assetId,
+            String? mint,
+            String? tokenId,
+            bool? verified)?
+        unknown,
+  }) {
+    return aip21?.call(metadata, symbol, decimals, kind, balance, name);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeWhen<TResult extends Object?>({
+    TResult Function(
+            String symbol,
+            int decimals,
+            @StringOrIntConverter() String balance,
+            String kind,
+            bool? verified,
+            String? name)?
+        native,
+    TResult Function(
+            String symbol,
+            int decimals,
+            @StringOrIntConverter() String balance,
+            String kind,
+            bool? verified,
+            String? contract,
+            String? name)?
+        erc20,
+    TResult Function(String assetId, String symbol, int decimals, bool verified,
+            @StringOrIntConverter() String balance, String kind, String? name)?
+        asa,
+    TResult Function(String mint, String symbol, int decimals,
+            @StringOrIntConverter() String balance, String kind, String? name)?
+        spl,
+    TResult Function(String mint, String symbol, int decimals,
+            @StringOrIntConverter() String balance, String kind, String? name)?
+        spl2022,
+    TResult Function(String mint, String symbol, int decimals,
+            @StringOrIntConverter() String balance, String kind, String? name)?
+        sep41,
+    TResult Function(String mint, String symbol, int decimals,
+            @StringOrIntConverter() String balance, String kind, String? name)?
+        tep74,
+    TResult Function(String tokenId, String symbol, int decimals,
+            @StringOrIntConverter() String balance, String kind, String? name)?
+        trc10,
+    TResult Function(String contract, String symbol, int decimals,
+            @StringOrIntConverter() String balance, String kind, String? name)?
+        trc20,
+    TResult Function(String metadata, String symbol, int decimals, String kind,
+            @StringOrIntConverter() String balance, String? name)?
+        aip21,
+    TResult Function(
+            String symbol,
+            int decimals,
+            @StringOrIntConverter() String balance,
+            String kind,
+            String? contract,
+            String? name,
+            String? assetId,
+            String? mint,
+            String? tokenId,
+            bool? verified)?
+        unknown,
+    required TResult orElse(),
+  }) {
+    if (aip21 != null) {
+      return aip21(metadata, symbol, decimals, kind, balance, name);
+    }
+    return orElse();
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult map<TResult extends Object?>({
+    required TResult Function(_WalletAssetNative value) native,
+    required TResult Function(_WalletAssetErc20 value) erc20,
+    required TResult Function(_WalletAssetAsa value) asa,
+    required TResult Function(_WalletAssetSpl value) spl,
+    required TResult Function(_WalletAssetSpl2022 value) spl2022,
+    required TResult Function(_WalletAssetSep41 value) sep41,
+    required TResult Function(_WalletAssetTep74 value) tep74,
+    required TResult Function(_WalletAssetTrc10 value) trc10,
+    required TResult Function(_WalletAssetTrc20 value) trc20,
+    required TResult Function(_WalletAssetAip21 value) aip21,
+    required TResult Function(_WalletAssetUnknown value) unknown,
+  }) {
+    return aip21(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? mapOrNull<TResult extends Object?>({
+    TResult? Function(_WalletAssetNative value)? native,
+    TResult? Function(_WalletAssetErc20 value)? erc20,
+    TResult? Function(_WalletAssetAsa value)? asa,
+    TResult? Function(_WalletAssetSpl value)? spl,
+    TResult? Function(_WalletAssetSpl2022 value)? spl2022,
+    TResult? Function(_WalletAssetSep41 value)? sep41,
+    TResult? Function(_WalletAssetTep74 value)? tep74,
+    TResult? Function(_WalletAssetTrc10 value)? trc10,
+    TResult? Function(_WalletAssetTrc20 value)? trc20,
+    TResult? Function(_WalletAssetAip21 value)? aip21,
+    TResult? Function(_WalletAssetUnknown value)? unknown,
+  }) {
+    return aip21?.call(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeMap<TResult extends Object?>({
+    TResult Function(_WalletAssetNative value)? native,
+    TResult Function(_WalletAssetErc20 value)? erc20,
+    TResult Function(_WalletAssetAsa value)? asa,
+    TResult Function(_WalletAssetSpl value)? spl,
+    TResult Function(_WalletAssetSpl2022 value)? spl2022,
+    TResult Function(_WalletAssetSep41 value)? sep41,
+    TResult Function(_WalletAssetTep74 value)? tep74,
+    TResult Function(_WalletAssetTrc10 value)? trc10,
+    TResult Function(_WalletAssetTrc20 value)? trc20,
+    TResult Function(_WalletAssetAip21 value)? aip21,
+    TResult Function(_WalletAssetUnknown value)? unknown,
+    required TResult orElse(),
+  }) {
+    if (aip21 != null) {
+      return aip21(this);
+    }
+    return orElse();
+  }
+
+  @override
+  Map<String, dynamic> toJson() {
+    return _$$WalletAssetAip21ImplToJson(
+      this,
+    );
+  }
+}
+
+abstract class _WalletAssetAip21 extends WalletAsset {
+  const factory _WalletAssetAip21(
+      {required final String metadata,
+      required final String symbol,
+      required final int decimals,
+      required final String kind,
+      @StringOrIntConverter() required final String balance,
+      final String? name}) = _$WalletAssetAip21Impl;
+  const _WalletAssetAip21._() : super._();
+
+  factory _WalletAssetAip21.fromJson(Map<String, dynamic> json) =
+      _$WalletAssetAip21Impl.fromJson;
+
+  String get metadata;
+  @override
+  String get symbol;
+  @override
+  int get decimals;
+  @override
+  String get kind;
+  @override
+  @StringOrIntConverter()
+  String get balance;
+  @override
+  String? get name;
+
+  /// Create a copy of WalletAsset
+  /// with the given fields replaced by the non-null parameter values.
+  @override
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  _$$WalletAssetAip21ImplCopyWith<_$WalletAssetAip21Impl> get copyWith =>
       throw _privateConstructorUsedError;
 }
 
@@ -4292,6 +4839,9 @@ class _$WalletAssetUnknownImpl extends _WalletAssetUnknown {
     required TResult Function(String contract, String symbol, int decimals,
             @StringOrIntConverter() String balance, String kind, String? name)
         trc20,
+    required TResult Function(String metadata, String symbol, int decimals,
+            String kind, @StringOrIntConverter() String balance, String? name)
+        aip21,
     required TResult Function(
             String symbol,
             int decimals,
@@ -4356,6 +4906,9 @@ class _$WalletAssetUnknownImpl extends _WalletAssetUnknown {
     TResult? Function(String contract, String symbol, int decimals,
             @StringOrIntConverter() String balance, String kind, String? name)?
         trc20,
+    TResult? Function(String metadata, String symbol, int decimals, String kind,
+            @StringOrIntConverter() String balance, String? name)?
+        aip21,
     TResult? Function(
             String symbol,
             int decimals,
@@ -4414,6 +4967,9 @@ class _$WalletAssetUnknownImpl extends _WalletAssetUnknown {
     TResult Function(String contract, String symbol, int decimals,
             @StringOrIntConverter() String balance, String kind, String? name)?
         trc20,
+    TResult Function(String metadata, String symbol, int decimals, String kind,
+            @StringOrIntConverter() String balance, String? name)?
+        aip21,
     TResult Function(
             String symbol,
             int decimals,
@@ -4447,6 +5003,7 @@ class _$WalletAssetUnknownImpl extends _WalletAssetUnknown {
     required TResult Function(_WalletAssetTep74 value) tep74,
     required TResult Function(_WalletAssetTrc10 value) trc10,
     required TResult Function(_WalletAssetTrc20 value) trc20,
+    required TResult Function(_WalletAssetAip21 value) aip21,
     required TResult Function(_WalletAssetUnknown value) unknown,
   }) {
     return unknown(this);
@@ -4464,6 +5021,7 @@ class _$WalletAssetUnknownImpl extends _WalletAssetUnknown {
     TResult? Function(_WalletAssetTep74 value)? tep74,
     TResult? Function(_WalletAssetTrc10 value)? trc10,
     TResult? Function(_WalletAssetTrc20 value)? trc20,
+    TResult? Function(_WalletAssetAip21 value)? aip21,
     TResult? Function(_WalletAssetUnknown value)? unknown,
   }) {
     return unknown?.call(this);
@@ -4481,6 +5039,7 @@ class _$WalletAssetUnknownImpl extends _WalletAssetUnknown {
     TResult Function(_WalletAssetTep74 value)? tep74,
     TResult Function(_WalletAssetTrc10 value)? trc10,
     TResult Function(_WalletAssetTrc20 value)? trc20,
+    TResult Function(_WalletAssetAip21 value)? aip21,
     TResult Function(_WalletAssetUnknown value)? unknown,
     required TResult orElse(),
   }) {

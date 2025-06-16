@@ -22,7 +22,7 @@ Future<NetworkFeeInformation?> networkFee(
   Ref ref, {
   required NetworkData network,
   required String? walletId,
-  String? assetSymbol,
+  CoinData? transferredCoin,
 }) async {
   if (walletId == null) {
     Logger.error('Cannot load fees info without walletId');
@@ -41,7 +41,7 @@ Future<NetworkFeeInformation?> networkFee(
       await client.wallets.getWalletAssets(walletId).then((result) => result.assets);
 
   final networkNativeToken = walletAssets.firstWhereOrNull((asset) => asset.isNative);
-  final sendableAsset = _getSendableAsset(walletAssets, assetSymbol);
+  final sendableAsset = _getSendableAsset(walletAssets, transferredCoin);
 
   if (sendableAsset == null || networkNativeToken == null) {
     Logger.error(
@@ -76,16 +76,18 @@ Future<NetworkFeeInformation?> networkFee(
   );
 }
 
-ion.WalletAsset? _getSendableAsset(List<ion.WalletAsset> assets, String? abbreviation) {
-  if (abbreviation == null || abbreviation.isEmpty) {
-    return assets.firstWhereOrNull((asset) => asset.isNative);
+ion.WalletAsset? _getSendableAsset(List<ion.WalletAsset> assets, CoinData? transferredCoin) {
+  ion.WalletAsset? nativeAsset() => assets.firstWhereOrNull((asset) => asset.isNative);
+
+  if (transferredCoin == null || transferredCoin.native) {
+    return nativeAsset();
   }
 
   final result = assets.firstWhereOrNull(
-    (asset) => asset.symbol.toLowerCase() == abbreviation.toLowerCase(),
+    (asset) => asset.symbol.toLowerCase() == transferredCoin.abbreviation.toLowerCase(),
   );
   // Can be native token of the testnet, if result is null
-  return result ?? assets.firstWhereOrNull((asset) => asset.isNative);
+  return result ?? nativeAsset();
 }
 
 NetworkFeeOption _buildNetworkFeeOption(

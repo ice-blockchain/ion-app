@@ -2788,3 +2788,210 @@ abstract class _Trc721Transfer implements Trc721Transfer {
   _$$Trc721TransferImplCopyWith<_$Trc721TransferImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }
+
+Aip21Transfer _$Aip21TransferFromJson(Map<String, dynamic> json) {
+  return _Aip21Transfer.fromJson(json);
+}
+
+/// @nodoc
+mixin _$Aip21Transfer {
+  String get metadata => throw _privateConstructorUsedError;
+  String get to => throw _privateConstructorUsedError;
+  String get amount => throw _privateConstructorUsedError;
+  String get kind => throw _privateConstructorUsedError;
+
+  /// Serializes this Aip21Transfer to a JSON map.
+  Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
+
+  /// Create a copy of Aip21Transfer
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  $Aip21TransferCopyWith<Aip21Transfer> get copyWith =>
+      throw _privateConstructorUsedError;
+}
+
+/// @nodoc
+abstract class $Aip21TransferCopyWith<$Res> {
+  factory $Aip21TransferCopyWith(
+          Aip21Transfer value, $Res Function(Aip21Transfer) then) =
+      _$Aip21TransferCopyWithImpl<$Res, Aip21Transfer>;
+  @useResult
+  $Res call({String metadata, String to, String amount, String kind});
+}
+
+/// @nodoc
+class _$Aip21TransferCopyWithImpl<$Res, $Val extends Aip21Transfer>
+    implements $Aip21TransferCopyWith<$Res> {
+  _$Aip21TransferCopyWithImpl(this._value, this._then);
+
+  // ignore: unused_field
+  final $Val _value;
+  // ignore: unused_field
+  final $Res Function($Val) _then;
+
+  /// Create a copy of Aip21Transfer
+  /// with the given fields replaced by the non-null parameter values.
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({
+    Object? metadata = null,
+    Object? to = null,
+    Object? amount = null,
+    Object? kind = null,
+  }) {
+    return _then(_value.copyWith(
+      metadata: null == metadata
+          ? _value.metadata
+          : metadata // ignore: cast_nullable_to_non_nullable
+              as String,
+      to: null == to
+          ? _value.to
+          : to // ignore: cast_nullable_to_non_nullable
+              as String,
+      amount: null == amount
+          ? _value.amount
+          : amount // ignore: cast_nullable_to_non_nullable
+              as String,
+      kind: null == kind
+          ? _value.kind
+          : kind // ignore: cast_nullable_to_non_nullable
+              as String,
+    ) as $Val);
+  }
+}
+
+/// @nodoc
+abstract class _$$Aip21TransferImplCopyWith<$Res>
+    implements $Aip21TransferCopyWith<$Res> {
+  factory _$$Aip21TransferImplCopyWith(
+          _$Aip21TransferImpl value, $Res Function(_$Aip21TransferImpl) then) =
+      __$$Aip21TransferImplCopyWithImpl<$Res>;
+  @override
+  @useResult
+  $Res call({String metadata, String to, String amount, String kind});
+}
+
+/// @nodoc
+class __$$Aip21TransferImplCopyWithImpl<$Res>
+    extends _$Aip21TransferCopyWithImpl<$Res, _$Aip21TransferImpl>
+    implements _$$Aip21TransferImplCopyWith<$Res> {
+  __$$Aip21TransferImplCopyWithImpl(
+      _$Aip21TransferImpl _value, $Res Function(_$Aip21TransferImpl) _then)
+      : super(_value, _then);
+
+  /// Create a copy of Aip21Transfer
+  /// with the given fields replaced by the non-null parameter values.
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({
+    Object? metadata = null,
+    Object? to = null,
+    Object? amount = null,
+    Object? kind = null,
+  }) {
+    return _then(_$Aip21TransferImpl(
+      metadata: null == metadata
+          ? _value.metadata
+          : metadata // ignore: cast_nullable_to_non_nullable
+              as String,
+      to: null == to
+          ? _value.to
+          : to // ignore: cast_nullable_to_non_nullable
+              as String,
+      amount: null == amount
+          ? _value.amount
+          : amount // ignore: cast_nullable_to_non_nullable
+              as String,
+      kind: null == kind
+          ? _value.kind
+          : kind // ignore: cast_nullable_to_non_nullable
+              as String,
+    ));
+  }
+}
+
+/// @nodoc
+@JsonSerializable()
+class _$Aip21TransferImpl implements _Aip21Transfer {
+  const _$Aip21TransferImpl(
+      {required this.metadata,
+      required this.to,
+      required this.amount,
+      this.kind = 'Aip21'});
+
+  factory _$Aip21TransferImpl.fromJson(Map<String, dynamic> json) =>
+      _$$Aip21TransferImplFromJson(json);
+
+  @override
+  final String metadata;
+  @override
+  final String to;
+  @override
+  final String amount;
+  @override
+  @JsonKey()
+  final String kind;
+
+  @override
+  String toString() {
+    return 'Aip21Transfer(metadata: $metadata, to: $to, amount: $amount, kind: $kind)';
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType &&
+            other is _$Aip21TransferImpl &&
+            (identical(other.metadata, metadata) ||
+                other.metadata == metadata) &&
+            (identical(other.to, to) || other.to == to) &&
+            (identical(other.amount, amount) || other.amount == amount) &&
+            (identical(other.kind, kind) || other.kind == kind));
+  }
+
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  @override
+  int get hashCode => Object.hash(runtimeType, metadata, to, amount, kind);
+
+  /// Create a copy of Aip21Transfer
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  @override
+  @pragma('vm:prefer-inline')
+  _$$Aip21TransferImplCopyWith<_$Aip21TransferImpl> get copyWith =>
+      __$$Aip21TransferImplCopyWithImpl<_$Aip21TransferImpl>(this, _$identity);
+
+  @override
+  Map<String, dynamic> toJson() {
+    return _$$Aip21TransferImplToJson(
+      this,
+    );
+  }
+}
+
+abstract class _Aip21Transfer implements Aip21Transfer {
+  const factory _Aip21Transfer(
+      {required final String metadata,
+      required final String to,
+      required final String amount,
+      final String kind}) = _$Aip21TransferImpl;
+
+  factory _Aip21Transfer.fromJson(Map<String, dynamic> json) =
+      _$Aip21TransferImpl.fromJson;
+
+  @override
+  String get metadata;
+  @override
+  String get to;
+  @override
+  String get amount;
+  @override
+  String get kind;
+
+  /// Create a copy of Aip21Transfer
+  /// with the given fields replaced by the non-null parameter values.
+  @override
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  _$$Aip21TransferImplCopyWith<_$Aip21TransferImpl> get copyWith =>
+      throw _privateConstructorUsedError;
+}

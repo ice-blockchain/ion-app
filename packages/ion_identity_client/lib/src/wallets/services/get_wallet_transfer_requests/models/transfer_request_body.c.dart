@@ -108,6 +108,14 @@ class TransferRequestBody with _$TransferRequestBody {
     required String tokenId,
   }) = Trc721TransferRequestBody;
 
+  @FreezedUnionValue('Aip21')
+  const factory TransferRequestBody.aip21({
+    required String kind,
+    required String to,
+    required String amount,
+    required String metadata,
+  }) = Aip21TransferRequestBody;
+
   factory TransferRequestBody.fromJson(Map<String, dynamic> json) =>
       _$TransferRequestBodyFromJson(json);
 }
