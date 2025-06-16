@@ -215,9 +215,10 @@ class FeedForYouContent extends _$FeedForYouContent implements PagedNotifier {
 
     final dataSourceRelays = await _getDataSourceRelays();
 
-    // TODO: for articles (if feedType is FeedType.article), take the selected interests
-    final interests =
-        (await ref.read(feedUserInterestsProvider(feedType).future)).subcategories.keys;
+    // TODO: for articles (if feedType is FeedType.article), take the selected article interests
+    final interests = feedModifier == FeedModifier.explore
+        ? [_exploreInterest]
+        : (await ref.read(feedUserInterestsProvider(feedType).future)).subcategories.keys;
 
     final relaysPagination = Map.fromEntries(
       dataSourceRelays.map(
@@ -261,17 +262,11 @@ class FeedForYouContent extends _$FeedForYouContent implements PagedNotifier {
     final requests = [
       for (final relayUrl in relays)
         requestsQueue.add(() async {
-          final interestsPicker = await ref.read(feedUserInterestPickerProvider(feedType).future);
-
           final relayInterestsPagination =
               state.modifiersPagination[feedModifier]![relayUrl]!.interestsPagination;
 
-          final availableInterests = relayInterestsPagination.entries
-              .where((entry) => entry.value.hasMore)
-              .map((entry) => entry.key)
-              .toList();
-
-          final interest = interestsPicker.roll(availableInterests)!;
+          final interest =
+              await _getRequestInterest(relayUrl: relayUrl, feedModifier: feedModifier);
 
           final interestPagination = relayInterestsPagination[interest]!;
 
@@ -323,6 +318,28 @@ class FeedForYouContent extends _$FeedForYouContent implements PagedNotifier {
     unawaited(Future.wait(requests).whenComplete(resultsController.close));
 
     yield* resultsController.stream;
+  }
+
+  Future<String> _getRequestInterest({
+    required String relayUrl,
+    required FeedModifier feedModifier,
+  }) async {
+    if (feedModifier == FeedModifier.explore) {
+      // For explore feed, we use a special interest that is not related to any user interests.
+      return _exploreInterest;
+    } else {
+      final interestsPicker = await ref.read(feedUserInterestPickerProvider(feedType).future);
+
+      final relayInterestsPagination =
+          state.modifiersPagination[feedModifier]![relayUrl]!.interestsPagination;
+
+      final availableInterests = relayInterestsPagination.entries
+          .where((entry) => entry.value.hasMore)
+          .map((entry) => entry.key)
+          .toList();
+
+      return interestsPicker.roll(availableInterests)!;
+    }
   }
 
   Future<IonConnectEntity?> _requestEntityFromRelay({
@@ -378,7 +395,9 @@ class FeedForYouContent extends _$FeedForYouContent implements PagedNotifier {
 
     final tags = {
       ...feedModifier.filter.tags,
-      '#${RelatedHashtag.tagName}': [interest],
+      // For explore feed, we use a special interest that is not related to any user interests.
+      // It is defined in the [feedModifier] filter tags
+      if (interest != _exploreInterest) '#${RelatedHashtag.tagName}': [interest],
     };
 
     return switch (feedType) {
@@ -455,6 +474,8 @@ class FeedForYouContent extends _$FeedForYouContent implements PagedNotifier {
       increasePage: increasePage,
     );
   }
+
+  static final String _exploreInterest = '_${FeedModifier.explore}';
 }
 
 @Freezed(equal: false)
