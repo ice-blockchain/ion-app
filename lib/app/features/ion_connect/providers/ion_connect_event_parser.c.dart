@@ -32,6 +32,7 @@ import 'package:ion/app/features/user/model/interest_set.c.dart';
 import 'package:ion/app/features/user/model/interests.c.dart';
 import 'package:ion/app/features/user/model/user_chat_relays.c.dart';
 import 'package:ion/app/features/user/model/user_delegation.c.dart';
+import 'package:ion/app/features/user/model/user_file_storage_relays.c.dart';
 import 'package:ion/app/features/user/model/user_metadata.c.dart';
 import 'package:ion/app/features/user/model/user_relays.c.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
@@ -45,6 +46,8 @@ class EventParser {
       ArticleEntity.kind => ArticleEntity.fromEventMessage(eventMessage),
       UserRelaysEntity.kind => UserRelaysEntity.fromEventMessage(eventMessage),
       UserChatRelaysEntity.kind => UserChatRelaysEntity.fromEventMessage(eventMessage),
+      UserFileStorageRelaysEntity.kind =>
+        UserFileStorageRelaysEntity.fromEventMessage(eventMessage),
       FollowListEntity.kind => FollowListEntity.fromEventMessage(eventMessage),
       InterestSetEntity.kind => InterestSetEntity.fromEventMessage(eventMessage),
       InterestsEntity.kind => InterestsEntity.fromEventMessage(eventMessage),
