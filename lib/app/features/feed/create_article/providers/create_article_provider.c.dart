@@ -12,6 +12,7 @@ import 'package:ion/app/extensions/delta.dart';
 import 'package:ion/app/features/core/providers/env_provider.c.dart';
 import 'package:ion/app/features/feed/create_article/providers/draft_article_provider.c.dart';
 import 'package:ion/app/features/feed/data/models/entities/article_data.c.dart';
+import 'package:ion/app/features/feed/data/models/feed_interests.c.dart';
 import 'package:ion/app/features/feed/data/models/who_can_reply_settings_option.c.dart';
 import 'package:ion/app/features/gallery/providers/gallery_provider.c.dart';
 import 'package:ion/app/features/ion_connect/model/action_source.c.dart';
@@ -89,6 +90,9 @@ class CreateArticle extends _$CreateArticle {
         content: jsonEncode(updatedContent.toJson()),
       );
 
+      if (topics.isEmpty) {
+        topics.add(FeedInterests.unclassified);
+      }
       final relatedHashtags = [
         ...topics.map((topic) => RelatedHashtag(value: topic)),
         ...extractTags(updatedContent).map((tag) => RelatedHashtag(value: tag)),
@@ -213,6 +217,11 @@ class CreateArticle extends _$CreateArticle {
         content: contentString,
       );
 
+      if (topics.contains(FeedInterests.unclassified) && topics.length > 1) {
+        topics.remove(FeedInterests.unclassified);
+      } else if (topics.isEmpty) {
+        topics.add(FeedInterests.unclassified);
+      }
       final relatedHashtags = [
         ...topics.map((topic) => RelatedHashtag(value: topic)),
         ...extractTags(updatedContent).map((tag) => RelatedHashtag(value: tag)),
