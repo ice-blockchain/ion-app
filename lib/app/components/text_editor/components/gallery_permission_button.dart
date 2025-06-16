@@ -46,7 +46,7 @@ class GalleryPermissionButton extends ConsumerWidget {
       settingsDialog: SettingsRedirectSheet.fromType(context, Permission.photos),
       builder: (context, onPressed) {
         return ActionsToolbarButton(
-          icon: Assets.svg.iconGalleryOpen,
+          icon: Assets.svgIconGalleryOpen,
           onPressed: enabled ? onPressed : () {},
           enabled: enabled,
         );

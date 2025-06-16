@@ -59,7 +59,7 @@ class ImportTokenPage extends HookConsumerWidget {
                       label: Text(context.i18n.wallet_import_token_import_button),
                       type: isButtonDisabled ? ButtonType.disabled : ButtonType.primary,
                       disabled: isButtonDisabled,
-                      leadingIcon: Assets.svg.iconImportcoin.icon(),
+                      leadingIcon: Assets.svgIconImportcoin.icon(),
                       trailingIcon: ref.watch(importTokenNotifierProvider).isLoading
                           ? const IONLoadingIndicator()
                           : null,

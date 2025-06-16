@@ -41,7 +41,7 @@ class ArrivalTimeIndicator extends StatelessWidget {
             ),
             child: Row(
               children: [
-                Assets.svg.iconBlockTime.icon(
+                Assets.svgIconBlockTime.icon(
                   size: 12.0.s,
                 ),
                 SizedBox(width: 5.0.s),

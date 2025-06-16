@@ -48,7 +48,7 @@ class _NoCoinSelected extends StatelessWidget {
     return SelectContainer(
       child: Row(
         children: [
-          Assets.svg.walletassets.icon(size: 30.0.s),
+          IconAsset(Assets.svgWalletassets, size: 30.0),
           SizedBox(width: 10.0.s),
           Text(
             context.i18n.common_select_coin_button_unselected,
@@ -116,7 +116,7 @@ class _HasCoinSelected extends StatelessWidget {
             if (enabled)
               Padding(
                 padding: EdgeInsets.all(8.0.s),
-                child: Assets.svg.iconArrowDown.icon(),
+                child: IconAsset(Assets.svgIconArrowDown),
               )
             else
               SizedBox.square(dimension: 10.0.s),

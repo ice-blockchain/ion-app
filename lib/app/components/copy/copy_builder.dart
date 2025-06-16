@@ -43,7 +43,7 @@ class CopyBuilder extends HookWidget {
         delayed(() => isCopied.value = false, after: 2.seconds);
       },
       CopyBuilderContent(
-        icon: isCopied.value ? copiedIcon ?? Assets.svg.iconBlockCheckGreen.icon() : defaultIcon,
+        icon: isCopied.value ? copiedIcon ?? Assets.svgIconBlockCheckGreen.icon() : defaultIcon,
         borderColor: isCopied.value
             ? copiedBorderColor ?? context.theme.appColors.success
             : defaultBorderColor,

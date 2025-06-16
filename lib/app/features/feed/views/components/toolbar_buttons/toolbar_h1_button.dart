@@ -19,8 +19,8 @@ class ToolbarH1Button extends HookWidget {
         useMemoized(() => QuillStyleManager(textEditorController), [textEditorController]);
 
     return ActionsToolbarButton(
-      icon: Assets.svg.iconArticleH1Off,
-      iconSelected: Assets.svg.iconArticleH1On,
+      icon: Assets.svgIconArticleH1Off,
+      iconSelected: Assets.svgIconArticleH1On,
       onPressed: () {
         styleManager.toggleHeaderStyle(Attribute.h1);
       },

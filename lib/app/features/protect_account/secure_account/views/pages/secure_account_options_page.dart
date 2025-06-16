@@ -61,7 +61,7 @@ class SecureAccountOptionsPage extends HookConsumerWidget {
                   SizedBox(height: 32.0.s),
                   SecureAccountOption(
                     title: locale.two_fa_option_backup,
-                    icon: Assets.svg.iconProtectwalletIcloud.icon(
+                    icon: Assets.svgIconProtectwalletIcloud.icon(
                       color: context.theme.appColors.primaryAccent,
                     ),
                     onTap: () => BackupOptionsRoute().push<void>(context),
@@ -71,7 +71,7 @@ class SecureAccountOptionsPage extends HookConsumerWidget {
                   SizedBox(height: 12.0.s),
                   SecureAccountOption(
                     title: locale.two_fa_option_email,
-                    icon: Assets.svg.iconFieldEmail.icon(
+                    icon: Assets.svgIconFieldEmail.icon(
                       color: context.theme.appColors.primaryAccent,
                     ),
                     onTap: () => _onEmailPressed(context, securityMethods),
@@ -81,7 +81,7 @@ class SecureAccountOptionsPage extends HookConsumerWidget {
                   SizedBox(height: 12.0.s),
                   SecureAccountOption(
                     title: locale.two_fa_option_authenticator,
-                    icon: Assets.svg.iconLoginAuthcode.icon(
+                    icon: Assets.svgIconLoginAuthcode.icon(
                       color: context.theme.appColors.primaryAccent,
                     ),
                     isEnabled: securityMethods?.isAuthenticatorEnabled ?? false,
@@ -91,7 +91,7 @@ class SecureAccountOptionsPage extends HookConsumerWidget {
                   SizedBox(height: 12.0.s),
                   SecureAccountOption(
                     title: locale.two_fa_option_phone,
-                    icon: Assets.svg.iconFieldPhone.icon(
+                    icon: Assets.svgIconFieldPhone.icon(
                       color: context.theme.appColors.primaryAccent,
                     ),
                     onTap: () => _onPhonePressed(context, securityMethods),

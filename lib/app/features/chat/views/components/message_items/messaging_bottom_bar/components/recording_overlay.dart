@@ -44,7 +44,7 @@ class RecordingOverlay extends ConsumerWidget {
                   },
                   child: Padding(
                     padding: EdgeInsetsDirectional.only(top: 8.0.s),
-                    child: Assets.svg.iconVideoPause.icon(
+                    child: Assets.svgIconVideoPause.icon(
                       color: context.theme.appColors.primaryAccent,
                       size: 20.0.s,
                     ),
@@ -55,7 +55,7 @@ class RecordingOverlay extends ConsumerWidget {
                   onTap: onResumeRecording,
                   child: Padding(
                     padding: EdgeInsetsDirectional.only(top: 8.0.s),
-                    child: Assets.svg.iconChatMicrophone.icon(
+                    child: Assets.svgIconChatMicrophone.icon(
                       color: context.theme.appColors.primaryAccent,
                       size: 20.0.s,
                     ),
@@ -90,12 +90,12 @@ class RecordingOverlay extends ConsumerWidget {
                 child: bottomBarState.isVoicePaused
                     ? GestureDetector(
                         onTap: onSubmitted,
-                        child: Assets.svg.iconChatSendmessage.icon(
+                        child: Assets.svgIconChatSendmessage.icon(
                           color: context.theme.appColors.onPrimaryAccent,
                           size: 24.0.s,
                         ),
                       )
-                    : Assets.svg.iconChatMicrophone.icon(
+                    : Assets.svgIconChatMicrophone.icon(
                         color: context.theme.appColors.onPrimaryAccent,
                         size: 24.0.s,
                       ),

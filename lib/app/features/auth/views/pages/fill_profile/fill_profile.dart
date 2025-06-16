@@ -90,7 +90,7 @@ class FillProfile extends HookConsumerWidget {
         child: AuthScrollContainer(
           title: context.i18n.fill_profile_title,
           description: context.i18n.fill_profile_description,
-          icon: Assets.svg.iconLoginIcelogo.icon(size: 44.0.s),
+          icon: Assets.svgIconLoginIcelogo.icon(size: 44.0.s),
           mainAxisAlignment: MainAxisAlignment.start,
           onBackPress: () async {
             await ref.read(authProvider.notifier).signOut();

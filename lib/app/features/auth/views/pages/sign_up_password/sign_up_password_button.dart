@@ -27,7 +27,7 @@ class SignUpPasswordButton extends ConsumerWidget {
       trailingIcon:
           registerActionState.isLoading || (authState.valueOrNull?.isAuthenticated).falseOrValue
               ? const IONLoadingIndicator()
-              : Assets.svg.iconButtonNext.icon(color: context.theme.appColors.onPrimaryAccent),
+              : Assets.svgIconButtonNext.icon(color: context.theme.appColors.onPrimaryAccent),
       onPressed: onPressed,
       label: Text(context.i18n.button_continue),
       mainAxisSize: MainAxisSize.max,

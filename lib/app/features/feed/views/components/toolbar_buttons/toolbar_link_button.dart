@@ -21,7 +21,7 @@ class ToolbarLinkButton extends HookWidget {
         useMemoized(() => QuillStyleManager(textEditorController), [textEditorController]);
 
     return ActionsToolbarButton(
-      icon: Assets.svg.iconArticleLink,
+      icon: Assets.svgIconArticleLink,
       onPressed: () async {
         final localContext = context;
 

@@ -53,10 +53,10 @@ class SelectionListItem extends ConsumerWidget {
       trailing: Padding(
         padding: EdgeInsets.all(8.0.s),
         child: isSelected
-            ? Assets.svg.iconBlockCheckboxOnblue.icon(
+            ? Assets.svgIconBlockCheckboxOnblue.icon(
                 color: colors.success,
               )
-            : Assets.svg.iconBlockCheckboxOff.icon(
+            : Assets.svgIconBlockCheckboxOff.icon(
                 color: colors.tertararyText,
               ),
       ),

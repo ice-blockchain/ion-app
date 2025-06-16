@@ -33,7 +33,7 @@ class WebsiteInput extends StatelessWidget {
           color: context.theme.appColors.tertararyText,
         ),
       ),
-      prefixIconAssetName: Assets.svg.iconArticleLink,
+      prefixIconAssetName: Assets.svgIconArticleLink,
       keyboardType: TextInputType.url,
       labelText: context.i18n.profile_website,
       initialValue: initialValue,

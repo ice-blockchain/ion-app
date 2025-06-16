@@ -53,7 +53,7 @@ class AddGroupParticipantsModal extends HookConsumerWidget {
                     },
                     label: Text(context.i18n.button_next),
                     mainAxisSize: MainAxisSize.max,
-                    trailingIcon: Assets.svg.iconButtonNext.icon(
+                    trailingIcon: Assets.svgIconButtonNext.icon(
                       color: context.theme.appColors.onPrimaryAccent,
                     ),
                   ),

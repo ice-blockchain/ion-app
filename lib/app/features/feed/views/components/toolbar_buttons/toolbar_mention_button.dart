@@ -20,7 +20,7 @@ class ToolbarMentionButton extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     return ActionsToolbarButton(
-      icon: Assets.svg.iconFieldNickname,
+      icon: Assets.svgIconFieldNickname,
       onPressed: () {
         final cursorPosition = textEditorController.selection.baseOffset;
         if (cursorPosition >= 0) {

@@ -13,7 +13,7 @@ class ToolbarSeparatorButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ActionsToolbarButton(
-      icon: Assets.svg.iconArticleSeparator,
+      icon: Assets.svgIconArticleSeparator,
       onPressed: () {
         final selection = textEditorController.selection;
         var index = selection.baseOffset;

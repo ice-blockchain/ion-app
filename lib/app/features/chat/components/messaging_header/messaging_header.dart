@@ -37,7 +37,7 @@ class MessagingHeader extends ConsumerWidget {
         children: [
           GestureDetector(
             onTap: () => Navigator.pop(context),
-            child: Assets.svg.iconChatBack.icon(
+            child: Assets.svgIconChatBack.icon(
               size: 24.0.s,
               flipForRtl: true,
             ),
@@ -70,7 +70,7 @@ class MessagingHeader extends ConsumerWidget {
                             ),
                             if (isVerified) ...[
                               SizedBox(width: 3.0.s),
-                              Assets.svg.iconBadgeVerify.icon(size: 16.0.s),
+                              Assets.svgIconBadgeVerify.icon(size: 16.0.s),
                             ],
                           ],
                         ),

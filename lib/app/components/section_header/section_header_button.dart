@@ -33,7 +33,7 @@ class SectionHeaderButton extends StatelessWidget {
         icon: Transform(
           alignment: Alignment.center,
           transform: Matrix4.rotationY(pi),
-          child: Assets.svg.iconChatBack.icon(
+          child: Assets.svgIconChatBack.icon(
             size: size,
             flipForRtl: true,
           ),

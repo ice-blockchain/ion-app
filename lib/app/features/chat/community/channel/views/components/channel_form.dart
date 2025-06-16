@@ -86,7 +86,7 @@ class ChannelForm extends HookConsumerWidget {
               children: <Widget>[
                 GeneralUserDataInput(
                   controller: titleController,
-                  prefixIconAssetName: Assets.svg.iconChannelTitle,
+                  prefixIconAssetName: Assets.svgIconChannelTitle,
                   labelText: context.i18n.common_title,
                   validator: (String? value) {
                     if (Validators.isEmpty(value)) return '';
@@ -95,13 +95,13 @@ class ChannelForm extends HookConsumerWidget {
                 ),
                 GeneralUserDataInput(
                   controller: descController,
-                  prefixIconAssetName: Assets.svg.iconChannelDescription,
+                  prefixIconAssetName: Assets.svgIconChannelDescription,
                   labelText: context.i18n.common_desc,
                   minLines: 1,
                   maxLines: 5,
                 ),
                 GeneralSelectionButton(
-                  iconAsset: Assets.svg.iconChannelType,
+                  iconAsset: Assets.svgIconChannelType,
                   title: context.i18n.channel_create_type,
                   selectedValue: channelType.value?.getTitle(context),
                   onPress: () {
@@ -117,7 +117,7 @@ class ChannelForm extends HookConsumerWidget {
                   },
                 ),
                 GeneralSelectionButton(
-                  iconAsset: Assets.svg.iconChannelAdmin,
+                  iconAsset: Assets.svgIconChannelAdmin,
                   title: context.i18n.channel_create_admins,
                   selectedValue:
                       communityAdmins.isNotEmpty ? communityAdmins.length.toString() : null,
@@ -137,8 +137,8 @@ class ChannelForm extends HookConsumerWidget {
                 isEdit ? context.i18n.button_save_changes : context.i18n.channel_create_action,
               ),
               leadingIcon: isEdit
-                  ? Assets.svg.iconProfileSave.icon()
-                  : Assets.svg.iconPlusCreatechannel.icon(),
+                  ? Assets.svgIconProfileSave.icon()
+                  : Assets.svgIconPlusCreatechannel.icon(),
               disabled: !isFormValid.value || isLoading,
               trailingIcon: isLoading ? const IONLoadingIndicator() : null,
               type: isFormValid.value ? ButtonType.primary : ButtonType.disabled,

@@ -20,7 +20,7 @@ class SignUpPasskeyPage extends StatelessWidget {
       body: KeyboardDismissOnTap(
         child: AuthScrollContainer(
           title: context.i18n.sign_up_passkey_title,
-          icon: Assets.svg.iconLoginPasskey.icon(size: 36.0.s),
+          icon: Assets.svgIconLoginPasskey.icon(size: 36.0.s),
           mainAxisAlignment: MainAxisAlignment.start,
           children: [
             ScreenSideOffset.large(
@@ -30,17 +30,17 @@ class SignUpPasskeyPage extends StatelessWidget {
                   SignUpListItem(
                     title: context.i18n.sign_up_passkey_advantage_1_title,
                     subtitle: context.i18n.sign_up_passkey_advantage_1_description,
-                    icon: Assets.svg.iconLoginFingerprint.icon(),
+                    icon: Assets.svgIconLoginFingerprint.icon(),
                   ),
                   SignUpListItem(
                     title: context.i18n.sign_up_passkey_advantage_2_title,
                     subtitle: context.i18n.sign_up_passkey_advantage_2_description,
-                    icon: Assets.svg.iconLoginDevice.icon(),
+                    icon: Assets.svgIconLoginDevice.icon(),
                   ),
                   SignUpListItem(
                     title: context.i18n.sign_up_passkey_advantage_3_title,
                     subtitle: context.i18n.sign_up_passkey_advantage_3_description,
-                    icon: Assets.svg.iconLoginSafeacc.icon(),
+                    icon: Assets.svgIconLoginSafeacc.icon(),
                   ),
                   SizedBox(height: 57.0.s),
                   const SignUpPasskeyForm(),

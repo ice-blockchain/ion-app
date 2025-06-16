@@ -34,7 +34,7 @@ class BioInput extends StatelessWidget {
         }
         return null;
       },
-      prefixIconAssetName: Assets.svg.iconProfileBio,
+      prefixIconAssetName: Assets.svgIconProfileBio,
       labelText: context.i18n.profile_bio,
       textInputAction: TextInputAction.newline,
       minLines: 1,

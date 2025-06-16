@@ -32,7 +32,7 @@ class ReferralInput extends StatelessWidget {
   Widget build(BuildContext context) {
     return GeneralUserDataInput(
       onChanged: onChanged,
-      prefixIconAssetName: Assets.svg.iconFieldInviter,
+      prefixIconAssetName: Assets.svgIconFieldInviter,
       labelText: context.i18n.fill_profile_input_referral,
       textInputAction: textInputAction,
       initialValue: initialValue,

@@ -21,11 +21,11 @@ enum AuthenticatorType {
 
   String get iconAsset {
     return switch (this) {
-      AuthenticatorType.google => Assets.svg.icon2faGoogleauth,
-      AuthenticatorType.microsoft => Assets.svg.icon2famicrosoft,
-      AuthenticatorType.lastpass => Assets.svg.icon2faLastpass,
-      AuthenticatorType.authy => Assets.svg.icon2faAuthy,
-      AuthenticatorType.userLockPush => Assets.svg.icon2faUserlock,
+      AuthenticatorType.google => Assets.svgIcon2faGoogleauth,
+      AuthenticatorType.microsoft => Assets.svgIcon2famicrosoft,
+      AuthenticatorType.lastpass => Assets.svgIcon2faLastpass,
+      AuthenticatorType.authy => Assets.svgIcon2faAuthy,
+      AuthenticatorType.userLockPush => Assets.svgIcon2faUserlock,
     };
   }
 

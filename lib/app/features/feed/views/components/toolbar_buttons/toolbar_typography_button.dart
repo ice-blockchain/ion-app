@@ -17,7 +17,7 @@ class ToolbarTypographyButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ActionsToolbarButton(
-      icon: Assets.svg.iconArticleTextformat,
+      icon: Assets.svgIconArticleTextformat,
       onPressed: onPressed,
     );
   }

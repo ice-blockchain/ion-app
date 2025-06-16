@@ -25,21 +25,21 @@ class Descriptions extends StatelessWidget {
       children: [
         DescriptionListItem(
           title: context.i18n.turn_notifications_receive,
-          icon: Assets.svg.iconButtonReceive.icon(
+          icon: Assets.svgIconButtonReceive.icon(
             color: context.theme.appColors.primaryText,
             size: iconSide,
           ),
         ),
         DescriptionListItem(
           title: context.i18n.turn_notifications_stay_up,
-          icon: Assets.svg.iconFeedStories.icon(
+          icon: Assets.svgIconFeedStories.icon(
             color: context.theme.appColors.primaryText,
             size: iconSide,
           ),
         ),
         DescriptionListItem(
           title: context.i18n.turn_notifications_chat,
-          icon: Assets.svg.iconChatOff.icon(
+          icon: Assets.svgIconChatOff.icon(
             color: context.theme.appColors.primaryText,
             size: iconSide,
           ),

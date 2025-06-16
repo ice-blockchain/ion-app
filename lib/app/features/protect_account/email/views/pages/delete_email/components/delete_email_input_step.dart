@@ -33,7 +33,7 @@ class DeleteEmailInputStep extends ConsumerWidget {
     return TwoFAStepScaffold(
       headerTitle: locale.two_fa_deleting_email_title,
       headerDescription: locale.two_fa_deleting_email_description,
-      headerIcon: Assets.svg.icon2faEmailauth.icon(size: 36.0.s),
+      headerIcon: Assets.svgIcon2faEmailauth.icon(size: 36.0.s),
       onBackPress: onPrevious,
       child: TwoFAInputStep(
         onConfirm: (controllers) => _onConfirm(ref, controllers),

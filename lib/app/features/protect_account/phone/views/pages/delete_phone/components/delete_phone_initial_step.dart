@@ -22,12 +22,12 @@ class DeletePhoneInitialStep extends StatelessWidget {
 
     return TwoFaInitialScaffold(
       headerIcon: AuthHeaderIcon(
-        icon: Assets.svg.icon2faPhoneconfirm.icon(size: 36.0.s),
+        icon: Assets.svgIcon2faPhoneconfirm.icon(size: 36.0.s),
       ),
       headerTitle: locale.phone_verification_title,
       prompt: Column(
         children: [
-          Assets.svg.icon2faPhoneVerification.icon(size: 80.0.s),
+          Assets.svgIcon2faPhoneVerification.icon(size: 80.0.s),
           SizedBox(height: 16.0.s),
           const _LinkedPhone(),
           SizedBox(height: 24.0.s),
@@ -83,7 +83,7 @@ class _EditPhoneButton extends StatelessWidget {
       type: ButtonType.outlined,
       label: Text(locale.two_fa_edit_phone_button),
       minimumSize: Size(0.0.s, 44.0.s),
-      leadingIcon: Assets.svg.iconEditLink.icon(size: 24.0.s),
+      leadingIcon: Assets.svgIconEditLink.icon(size: 24.0.s),
       borderColor: colors.onTerararyFill,
       onPressed: () => PhoneEditRoute().push<void>(context),
     );

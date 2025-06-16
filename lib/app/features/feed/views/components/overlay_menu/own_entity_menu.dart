@@ -55,7 +55,7 @@ class OwnEntityMenu extends ConsumerWidget {
                   OverlayMenuItem(
                     minWidth: 75.0.s,
                     label: context.i18n.button_edit,
-                    icon: Assets.svg.iconEditLink.icon(
+                    icon: Assets.svgIconEditLink.icon(
                       size: iconSize,
                       color: context.theme.appColors.quaternaryText,
                     ),
@@ -89,7 +89,7 @@ class OwnEntityMenu extends ConsumerWidget {
                   OverlayMenuItem(
                     minWidth: 75.0.s,
                     label: context.i18n.button_edit,
-                    icon: Assets.svg.iconEditLink.icon(
+                    icon: Assets.svgIconEditLink.icon(
                       size: iconSize,
                       color: context.theme.appColors.quaternaryText,
                     ),
@@ -106,7 +106,7 @@ class OwnEntityMenu extends ConsumerWidget {
                   minWidth: 75.0.s,
                   label: context.i18n.post_menu_delete,
                   labelColor: context.theme.appColors.attentionRed,
-                  icon: Assets.svg.iconBlockDelete.icon(
+                  icon: Assets.svgIconBlockDelete.icon(
                     size: iconSize,
                     color: context.theme.appColors.attentionRed,
                   ),
@@ -130,7 +130,7 @@ class OwnEntityMenu extends ConsumerWidget {
           ),
         ],
       ),
-      child: Assets.svg.iconMorePopup.icon(
+      child: Assets.svgIconMorePopup.icon(
         color: iconColor ?? context.theme.appColors.onTertararyBackground,
       ),
     );

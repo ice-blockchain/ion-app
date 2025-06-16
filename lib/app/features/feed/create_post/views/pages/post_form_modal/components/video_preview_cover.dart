@@ -101,7 +101,7 @@ class VideoPreviewCover extends HookConsumerWidget {
                         color: context.theme.appColors.primaryAccent,
                       ),
                       child: IconButton(
-                        icon: Assets.svg.iconVideoPlay
+                        icon: Assets.svgIconVideoPlay
                             .icon(color: context.theme.appColors.secondaryBackground),
                         onPressed: () {
                           videoController.play();

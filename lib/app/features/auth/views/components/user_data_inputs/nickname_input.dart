@@ -32,7 +32,7 @@ class NicknameInput extends StatelessWidget {
   Widget build(BuildContext context) {
     return GeneralUserDataInput(
       onChanged: onChanged,
-      prefixIconAssetName: Assets.svg.iconFieldNickname,
+      prefixIconAssetName: Assets.svgIconFieldNickname,
       labelText: context.i18n.fill_profile_input_nickname,
       textInputAction: textInputAction,
       initialValue: initialValue,

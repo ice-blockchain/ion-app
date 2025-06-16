@@ -23,8 +23,8 @@ enum WalletAddressPrivacyOption implements SelectableOption {
   @override
   Widget getIcon(BuildContext context) {
     final icon = switch (this) {
-      WalletAddressPrivacyOption.public => Assets.svg.iconChannelType,
-      WalletAddressPrivacyOption.private => Assets.svg.iconPrivacyPrivate,
+      WalletAddressPrivacyOption.public => Assets.svgIconChannelType,
+      WalletAddressPrivacyOption.private => Assets.svgIconPrivacyPrivate,
     };
     return icon.icon(color: context.theme.appColors.primaryAccent);
   }
@@ -55,9 +55,9 @@ enum UserVisibilityPrivacyOption implements SelectableOption {
   @override
   Widget getIcon(BuildContext context) {
     final icon = switch (this) {
-      UserVisibilityPrivacyOption.everyone => Assets.svg.iconPostEveryone,
-      UserVisibilityPrivacyOption.followedPeople => Assets.svg.iconSearchFollow,
-      UserVisibilityPrivacyOption.friends => Assets.svg.iconSearchGroups,
+      UserVisibilityPrivacyOption.everyone => Assets.svgIconPostEveryone,
+      UserVisibilityPrivacyOption.followedPeople => Assets.svgIconSearchFollow,
+      UserVisibilityPrivacyOption.friends => Assets.svgIconSearchGroups,
     };
 
     return icon.icon(color: context.theme.appColors.primaryAccent);

@@ -28,7 +28,7 @@ class PhoneEditConfirmNewPhoneStep extends HookConsumerWidget {
     return TwoFAStepScaffold(
       headerTitle: locale.two_fa_edit_phone_title,
       headerDescription: locale.two_fa_code_confirmation,
-      headerIcon: Assets.svg.icon2faPhoneconfirm.icon(size: 36.0.s),
+      headerIcon: Assets.svgIcon2faPhoneconfirm.icon(size: 36.0.s),
       onBackPress: onPrevious,
       contentPadding: 0,
       child: TwoFaEditConfirmNewValueStep(

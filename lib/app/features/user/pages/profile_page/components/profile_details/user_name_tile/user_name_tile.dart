@@ -45,7 +45,7 @@ class UserNameTile extends ConsumerWidget {
             if (isUserVerified)
               Padding(
                 padding: EdgeInsetsDirectional.only(start: 4.0.s),
-                child: Assets.svg.iconBadgeVerify.icon(size: 16.0.s),
+                child: Assets.svgIconBadgeVerify.icon(size: 16.0.s),
               ),
           ],
         ),

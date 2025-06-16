@@ -36,8 +36,8 @@ enum WalletMainModalListItem implements MainModalListItem {
   @override
   String get iconAsset {
     return switch (this) {
-      WalletMainModalListItem.send => Assets.svg.iconButtonSend,
-      WalletMainModalListItem.receive => Assets.svg.iconButtonReceive,
+      WalletMainModalListItem.send => Assets.svgIconButtonSend,
+      WalletMainModalListItem.receive => Assets.svgIconButtonReceive,
     };
   }
 }

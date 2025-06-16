@@ -23,7 +23,7 @@ class DeleteEmailSelectOptionsStep extends HookWidget {
     final locale = context.i18n;
 
     return TwoFAStepScaffold(
-      headerIcon: Assets.svg.icon2faEmailauth.icon(size: 36.0.s),
+      headerIcon: Assets.svgIcon2faEmailauth.icon(size: 36.0.s),
       headerTitle: locale.two_fa_deleting_email_title,
       headerDescription: locale.two_fa_deleting_email_description,
       onBackPress: onPrevious,

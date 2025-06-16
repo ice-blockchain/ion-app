@@ -19,9 +19,9 @@ enum ReportReasonType {
 
   String get iconAsset {
     return switch (this) {
-      ReportReasonType.hate => Assets.svg.iconProfileHate,
-      ReportReasonType.violentSpeech => Assets.svg.iconProfileViolentSpeech,
-      ReportReasonType.childSafety => Assets.svg.iconProfileChildSafety,
+      ReportReasonType.hate => Assets.svgIconProfileHate,
+      ReportReasonType.violentSpeech => Assets.svgIconProfileViolentSpeech,
+      ReportReasonType.childSafety => Assets.svgIconProfileChildSafety,
     };
   }
 }

@@ -97,7 +97,7 @@ class ChatMediaContextMenu extends HookConsumerWidget {
                 children: [
                   OverlayMenuItem(
                     label: context.i18n.button_save,
-                    icon: Assets.svg.iconSecurityDownload
+                    icon: Assets.svgIconSecurityDownload
                         .icon(size: iconSize, color: context.theme.appColors.quaternaryText),
                     onPressed: () {
                       closeMenu();
@@ -108,7 +108,7 @@ class ChatMediaContextMenu extends HookConsumerWidget {
                   OverlayMenuItem(
                     label: context.i18n.button_delete,
                     labelColor: context.theme.appColors.attentionRed,
-                    icon: Assets.svg.iconBlockDelete
+                    icon: Assets.svgIconBlockDelete
                         .icon(size: iconSize, color: context.theme.appColors.attentionRed),
                     onPressed: () async {
                       unawaited(onDelete());
@@ -121,7 +121,7 @@ class ChatMediaContextMenu extends HookConsumerWidget {
           ),
         ],
       ),
-      child: Assets.svg.iconMorePopup.icon(
+      child: Assets.svgIconMorePopup.icon(
         color: context.theme.appColors.onPrimaryAccent,
       ),
     );

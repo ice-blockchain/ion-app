@@ -35,7 +35,7 @@ class ConversationDeleteButton extends ConsumerWidget {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.end,
         children: [
-          Assets.svg.iconBlockDelete.icon(
+          Assets.svgIconBlockDelete.icon(
             color: conversationsToManage.isNotEmpty
                 ? context.theme.appColors.attentionRed
                 : context.theme.appColors.tertararyText,

@@ -39,7 +39,7 @@ class Header extends ConsumerWidget {
                   onPressed: () {
                     Navigator.of(context).pop(true);
                   },
-                  assetName: Assets.svg.iconProfileBack,
+                  assetName: Assets.svgIconProfileBack,
                   opacity: 1,
                   flipForRtl: true,
                 ),
@@ -62,7 +62,7 @@ class Header extends ConsumerWidget {
                       onPressed: () {
                         BookmarksRoute().push<void>(context);
                       },
-                      assetName: Assets.svg.iconBookmarks,
+                      assetName: Assets.svgIconBookmarks,
                       opacity: 1,
                     ),
                     SizedBox(
@@ -72,7 +72,7 @@ class Header extends ConsumerWidget {
                       onPressed: () {
                         SettingsRoute().push<void>(context);
                       },
-                      assetName: Assets.svg.iconProfileSettings,
+                      assetName: Assets.svgIconProfileSettings,
                       opacity: 1,
                     ),
                   ],

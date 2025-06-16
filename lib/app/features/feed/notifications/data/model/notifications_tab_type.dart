@@ -13,10 +13,10 @@ enum NotificationsTabType {
 
   String get iconAsset {
     return switch (this) {
-      NotificationsTabType.all => Assets.svg.iconTabAll,
-      NotificationsTabType.comments => Assets.svg.iconBlockComment,
-      NotificationsTabType.followers => Assets.svg.iconSearchFollow,
-      NotificationsTabType.likes => Assets.svg.iconVideoLikeOff,
+      NotificationsTabType.all => Assets.svgIconTabAll,
+      NotificationsTabType.comments => Assets.svgIconBlockComment,
+      NotificationsTabType.followers => Assets.svgIconSearchFollow,
+      NotificationsTabType.likes => Assets.svgIconVideoLikeOff,
     };
   }
 

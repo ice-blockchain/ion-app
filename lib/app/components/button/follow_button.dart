@@ -23,11 +23,11 @@ class FollowButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return Button(
       onPressed: onPressed,
-      leadingIcon: (following ? Assets.svg.iconSearchFollowers : Assets.svg.iconSearchFollow).icon(
+      leadingIcon: IconAssetColored(following ? Assets.svgIconSearchFollowers : Assets.svgIconSearchFollow,
         color: following
             ? context.theme.appColors.primaryAccent
             : context.theme.appColors.onPrimaryAccent,
-        size: 16.0.s,
+        size: 16,
       ),
       type: following ? ButtonType.outlined : ButtonType.primary,
       tintColor: following ? context.theme.appColors.primaryAccent : null,

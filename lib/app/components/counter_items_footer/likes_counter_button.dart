@@ -37,12 +37,12 @@ class LikesCounterButton extends ConsumerWidget {
         constraints: BoxConstraints(minWidth: 50.0.s),
         alignment: Alignment.center,
         child: TextActionButton(
-          icon: Assets.svg.iconVideoLikeOff.icon(
+          icon: Assets.svgIconVideoLikeOff.icon(
             size: 16.0.s,
             color: color ?? context.theme.appColors.onTertararyBackground,
           ),
           textColor: color ?? context.theme.appColors.onTertararyBackground,
-          activeIcon: Assets.svg.iconVideoLikeOn.icon(
+          activeIcon: Assets.svgIconVideoLikeOn.icon(
             size: 16.0.s,
             color: context.theme.appColors.attentionRed,
           ),

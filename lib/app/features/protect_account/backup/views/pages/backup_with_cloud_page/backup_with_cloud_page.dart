@@ -24,7 +24,7 @@ class BackupWithCloudPage extends StatelessWidget {
         child: AuthScrollContainer(
           title: locale.backup_option_with(cloudOption),
           description: locale.backup_cloud_page_description(cloudOption),
-          icon: Assets.svg.iconLoginRestorekey.icon(size: 36.0.s),
+          icon: Assets.svgIconLoginRestorekey.icon(size: 36.0.s),
           children: const [
             Expanded(
               child: BackupWithCloudPasswordInputBody(),

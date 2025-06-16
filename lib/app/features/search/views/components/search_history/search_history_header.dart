@@ -40,7 +40,7 @@ class SearchHistoryHeader extends ConsumerWidget {
           },
           child: Padding(
             padding: EdgeInsets.symmetric(horizontal: ScreenSideOffset.defaultSmallMargin),
-            child: Assets.svg.iconSheetClose.icon(size: 20.0.s),
+            child: Assets.svgIconSheetClose.icon(size: 20.0.s),
           ),
         ),
       ],

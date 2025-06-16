@@ -54,17 +54,17 @@ class AccountSettingsModal extends HookConsumerWidget {
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   ModalActionButton(
-                    icon: Assets.svg.iconProfileUser.icon(color: primaryColor),
+                    icon: Assets.svgIconProfileUser.icon(color: primaryColor),
                     label: context.i18n.settings_profile_edit,
                     onTap: () => ProfileEditRoute().go(context),
                   ),
                   ModalActionButton(
-                    icon: Assets.svg.iconProfileBlockUser.icon(color: primaryColor),
+                    icon: Assets.svgIconProfileBlockUser.icon(color: primaryColor),
                     label: context.i18n.settings_blocked_users,
                     onTap: () => popIfNull(() => BlockedUsersRoute().push<bool>(context)),
                   ),
                   ModalActionButton(
-                    icon: Assets.svg.iconSelectLanguage.icon(color: primaryColor),
+                    icon: Assets.svgIconSelectLanguage.icon(color: primaryColor),
                     label: context.i18n.settings_app_language,
                     trailing: Text(
                       ref.watch(localePreferredLanguagesProvider).first.name,
@@ -75,7 +75,7 @@ class AccountSettingsModal extends HookConsumerWidget {
                   contentLangsAsync.maybeWhen(
                     orElse: () => const ItemLoadingState(),
                     data: (_) => ModalActionButton(
-                      icon: Assets.svg.iconSelectLanguage.icon(color: primaryColor),
+                      icon: Assets.svgIconSelectLanguage.icon(color: primaryColor),
                       label: context.i18n.settings_content_language,
                       trailing: Row(
                         mainAxisSize: MainAxisSize.min,
@@ -95,7 +95,7 @@ class AccountSettingsModal extends HookConsumerWidget {
                     ),
                   ),
                   ModalActionButton(
-                    icon: Assets.svg.iconBlockDelete.icon(
+                    icon: Assets.svgIconBlockDelete.icon(
                       color: context.theme.appColors.attentionRed,
                     ),
                     label: context.i18n.settings_delete,

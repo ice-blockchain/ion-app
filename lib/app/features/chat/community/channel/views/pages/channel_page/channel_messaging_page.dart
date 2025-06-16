@@ -76,7 +76,7 @@ class ChannelMessagingPage extends HookConsumerWidget {
                   if (messages.isEmpty) {
                     return MessagingEmptyView(
                       title: context.i18n.common_invitation_link,
-                      asset: Assets.svg.iconChatEmptystate,
+                      asset: Assets.svgIconChatEmptystate,
                       trailing: EmptyStateCopyLink(link: channel.data.defaultInvitationLink),
                       leading: Column(
                         children: [
@@ -193,7 +193,7 @@ class _JoinButton extends HookConsumerWidget {
             ref.read(joinCommunityNotifierProvider.notifier).joinCommunity(communityId);
           },
           label: Text(context.i18n.channel_join),
-          leadingIcon: Assets.svg.iconMenuLogout.icon(
+          leadingIcon: Assets.svgIconMenuLogout.icon(
             color: context.theme.appColors.onPrimaryAccent,
             size: 24.0.s,
           ),

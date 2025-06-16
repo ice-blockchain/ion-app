@@ -38,7 +38,7 @@ class BookmarksHeader extends HookConsumerWidget implements PreferredSizeWidget 
               ? [
                   IconButton(
                     padding: EdgeInsets.zero,
-                    icon: Assets.svg.iconEditLink.icon(
+                    icon: Assets.svgIconEditLink.icon(
                       size: NavigationAppBar.actionButtonSide,
                       color: context.theme.appColors.primaryText,
                     ),

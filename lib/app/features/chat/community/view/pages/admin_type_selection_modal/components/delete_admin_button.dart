@@ -48,7 +48,7 @@ class DeleteAdminButton extends ConsumerWidget {
           containerSize: 36.0.s,
           borderRadius: BorderRadius.circular(10.0.s),
           color: colors.onPrimaryAccent,
-          icon: Assets.svg.iconBlockDelete.icon(
+          icon: Assets.svgIconBlockDelete.icon(
             size: 24.0.s,
             color: colors.attentionRed,
           ),
@@ -58,7 +58,7 @@ class DeleteAdminButton extends ConsumerWidget {
         ),
         trailing: Padding(
           padding: EdgeInsets.all(8.0.s),
-          child: Assets.svg.iconArrowRight.icon(
+          child: Assets.svgIconArrowRight.icon(
             color: colors.tertararyText,
           ),
         ),

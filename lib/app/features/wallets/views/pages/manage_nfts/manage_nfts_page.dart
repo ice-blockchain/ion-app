@@ -31,7 +31,7 @@ class ManageNftsPage extends HookConsumerWidget {
             title: Text(context.i18n.wallet_manage_nfts),
             actions: [
               IconButton(
-                icon: Assets.svg.iconSheetClose.icon(
+                icon: Assets.svgIconSheetClose.icon(
                   size: NavigationAppBar.actionButtonSide,
                   color: context.theme.appColors.tertararyText,
                 ),

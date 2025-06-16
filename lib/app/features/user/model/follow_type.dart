@@ -11,8 +11,8 @@ enum FollowType {
 
   String get iconAsset {
     return switch (this) {
-      FollowType.followers || FollowType.relevant => Assets.svg.iconSearchFollow,
-      FollowType.following => Assets.svg.iconSearchFollowers,
+      FollowType.followers || FollowType.relevant => Assets.svgIconSearchFollow,
+      FollowType.following => Assets.svgIconSearchFollowers,
     };
   }
 

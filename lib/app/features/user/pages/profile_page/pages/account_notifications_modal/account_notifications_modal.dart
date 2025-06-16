@@ -95,10 +95,10 @@ class AccountNotificationsModal extends HookConsumerWidget {
                     ),
                   ),
                   trailing: selectedOptions.value.contains(option)
-                      ? Assets.svg.iconBlockCheckboxOnblue.icon(
+                      ? Assets.svgIconBlockCheckboxOnblue.icon(
                           color: colors.success,
                         )
-                      : Assets.svg.iconBlockCheckboxOff.icon(
+                      : Assets.svgIconBlockCheckboxOff.icon(
                           color: colors.tertararyText,
                         ),
                 ),

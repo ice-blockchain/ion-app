@@ -61,7 +61,7 @@ class ChannelSummary extends HookConsumerWidget {
                 onPressed: () {
                   EditChannelRoute(uuid: channel.data.uuid).push<void>(context);
                 },
-                leadingIcon: Assets.svg.iconEditLink.icon(
+                leadingIcon: Assets.svgIconEditLink.icon(
                   color: context.theme.appColors.onPrimaryAccent,
                   size: 16.0.s,
                 ),
@@ -83,7 +83,7 @@ class ChannelSummary extends HookConsumerWidget {
         else
           SizedBox(height: 20.0.s),
         CopyBuilder(
-          defaultIcon: Assets.svg.iconBlockCopyBlue.icon(
+          defaultIcon: Assets.svgIconBlockCopyBlue.icon(
             size: 20.0.s,
             color: context.theme.appColors.primaryAccent,
           ),

@@ -112,7 +112,7 @@ class AvatarPicker extends HookConsumerWidget {
                   ),
                   child: avatarProcessorState is ImageProcessorStateCropped
                       ? const IONLoadingIndicator()
-                      : Assets.svg.iconLoginCamera.icon(size: iconSize),
+                      : Assets.svgIconLoginCamera.icon(size: iconSize),
                 ),
               );
             },

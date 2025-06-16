@@ -30,7 +30,7 @@ class BookmarksCollectionTileEditAction extends ConsumerWidget {
           children: [
             ContextMenuItem(
               label: context.i18n.button_edit,
-              iconAsset: Assets.svg.iconEditLink,
+              iconAsset: Assets.svgIconEditLink,
               onPressed: () async {
                 closeMenu();
                 await showSimpleBottomSheet<String>(
@@ -44,7 +44,7 @@ class BookmarksCollectionTileEditAction extends ConsumerWidget {
             const ContextMenuItemDivider(),
             ContextMenuItem(
               label: context.i18n.button_delete,
-              iconAsset: Assets.svg.iconBlockDelete,
+              iconAsset: Assets.svgIconBlockDelete,
               iconColor: context.theme.appColors.attentionRed,
               textColor: context.theme.appColors.attentionRed,
               onPressed: () async {
@@ -60,7 +60,7 @@ class BookmarksCollectionTileEditAction extends ConsumerWidget {
           ],
         ),
       ),
-      child: Assets.svg.iconMorePopup.icon(),
+      child: Assets.svgIconMorePopup.icon(),
     );
   }
 }

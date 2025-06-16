@@ -41,7 +41,7 @@ class AdvancedSearchNavigation extends HookConsumerWidget {
         children: [
           NavigationButton(
             onPressed: context.pop,
-            icon: Assets.svg.iconBackArrow.icon(
+            icon: Assets.svgIconBackArrow.icon(
               color: context.theme.appColors.primaryText,
               flipForRtl: true,
             ),
@@ -62,7 +62,7 @@ class AdvancedSearchNavigation extends HookConsumerWidget {
               onPressed: () {
                 onFiltersPressed?.call();
               },
-              icon: Assets.svg.iconButtonManagecoin.icon(
+              icon: Assets.svgIconButtonManagecoin.icon(
                 color: context.theme.appColors.primaryText,
               ),
             ),

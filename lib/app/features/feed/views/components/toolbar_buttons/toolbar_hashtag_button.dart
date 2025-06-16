@@ -19,7 +19,7 @@ class ToolbarHashtagButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ActionsToolbarButton(
-      icon: Assets.svg.iconArticleHashtag,
+      icon: Assets.svgIconArticleHashtag,
       onPressed: () {
         final cursorPosition = textEditorController.selection.baseOffset;
         if (cursorPosition >= 0) {

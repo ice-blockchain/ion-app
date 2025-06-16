@@ -32,7 +32,7 @@ class ToolbarSendButton extends StatelessWidget {
         alignment: Alignment.center,
         child: loading
             ? const IONLoadingIndicator()
-            : Assets.svg.iconFeedSendbutton.icon(size: 20.0.s),
+            : Assets.svgIconFeedSendbutton.icon(size: 20.0.s),
       ),
     );
   }

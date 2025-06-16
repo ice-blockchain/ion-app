@@ -16,7 +16,7 @@ class TextInputClearButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return IconButton(
       onPressed: controller.clear,
-      icon: Assets.svg.iconFieldClearall.icon(),
+      icon: const IconAsset(Assets.svgIconFieldClearall),
     );
   }
 }

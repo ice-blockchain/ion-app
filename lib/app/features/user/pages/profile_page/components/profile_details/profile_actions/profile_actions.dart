@@ -48,7 +48,7 @@ class ProfileActions extends ConsumerWidget {
                 await SecureAccountModalRoute().push<void>(context);
               }
             },
-            assetName: Assets.svg.iconProfileTips,
+            assetName: Assets.svgIconProfileTips,
           ),
         ],
         SizedBox(width: 8.0.s),
@@ -56,7 +56,7 @@ class ProfileActions extends ConsumerWidget {
           onPressed: () {
             ConversationRoute(receiverPubKey: pubkey).push<void>(context);
           },
-          assetName: Assets.svg.iconChatOff,
+          assetName: Assets.svgIconChatOff,
         ),
         SizedBox(width: 8.0.s),
         if (following)
@@ -71,8 +71,8 @@ class ProfileActions extends ConsumerWidget {
             },
             isAccent: notificationsEnabled,
             assetName: notificationsEnabled
-                ? Assets.svg.iconProfileNotificationOn
-                : Assets.svg.iconProfileNotificationOff,
+                ? Assets.svgIconProfileNotificationOn
+                : Assets.svgIconProfileNotificationOff,
           ),
       ],
     );

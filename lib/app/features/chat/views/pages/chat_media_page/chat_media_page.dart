@@ -116,7 +116,7 @@ class ChatMediaPage extends HookConsumerWidget {
                     backgroundColor: Colors.transparent,
                     leading: NavigationBackButton(
                       () => context.pop(),
-                      icon: Assets.svg.iconChatBack.icon(
+                      icon: Assets.svgIconChatBack.icon(
                         size: NavigationAppBar.actionButtonSide,
                         color: context.theme.appColors.onPrimaryAccent,
                         flipForRtl: true,
@@ -230,11 +230,11 @@ class _MediaBottomOverlay extends ConsumerWidget {
                       await ref.read(globalMuteNotifierProvider.notifier).toggle();
                     },
                     child: isMuted
-                        ? Assets.svg.iconChannelMute.icon(
+                        ? Assets.svgIconChannelMute.icon(
                             size: 24.0.s,
                             color: context.theme.appColors.onPrimaryAccent,
                           )
-                        : Assets.svg.iconChannelUnmute.icon(
+                        : Assets.svgIconChannelUnmute.icon(
                             size: 24.0.s,
                             color: context.theme.appColors.onPrimaryAccent,
                           ),

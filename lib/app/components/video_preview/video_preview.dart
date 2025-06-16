@@ -212,7 +212,7 @@ class _MuteButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final icon = isMuted ? Assets.svg.iconChannelMute : Assets.svg.iconChannelUnmute;
+    final icon = isMuted ? Assets.svgIconChannelMute : Assets.svgIconChannelUnmute;
 
     return GestureDetector(
       onTap: () async {

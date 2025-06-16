@@ -25,8 +25,8 @@ enum WalletTabType {
 
   String get bottomActionAsset {
     return switch (this) {
-      WalletTabType.coins => Assets.svg.iconButtonManagecoin,
-      WalletTabType.nfts => Assets.svg.iconButtonWalletnft,
+      WalletTabType.coins => Assets.svgIconButtonManagecoin,
+      WalletTabType.nfts => Assets.svgIconButtonWalletnft,
     };
   }
 

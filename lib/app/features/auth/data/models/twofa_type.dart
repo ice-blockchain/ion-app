@@ -19,9 +19,9 @@ enum TwoFaType {
 
   String get iconAsset {
     return switch (this) {
-      TwoFaType.auth => Assets.svg.iconLoginAuthcode,
-      TwoFaType.email => Assets.svg.iconFieldEmail,
-      TwoFaType.sms => Assets.svg.iconLoginSmscode,
+      TwoFaType.auth => Assets.svgIconLoginAuthcode,
+      TwoFaType.email => Assets.svgIconFieldEmail,
+      TwoFaType.sms => Assets.svgIconLoginSmscode,
     };
   }
 }

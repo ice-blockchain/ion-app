@@ -23,7 +23,7 @@ class DeletePhoneSelectOptionsStep extends HookWidget {
     final locale = context.i18n;
 
     return TwoFAStepScaffold(
-      headerIcon: Assets.svg.icon2faPhoneconfirm.icon(size: 36.0.s),
+      headerIcon: Assets.svgIcon2faPhoneconfirm.icon(size: 36.0.s),
       headerTitle: locale.two_fa_deleting_phone_title,
       headerDescription: locale.two_fa_deleting_phone_description,
       onBackPress: onPrevious,

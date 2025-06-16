@@ -32,9 +32,9 @@ class ToolbarListButton extends StatelessWidget {
   String? _iconForType() {
     switch (listType) {
       case Attribute.ul:
-        return Assets.svg.iconArticleListdots;
+        return Assets.svgIconArticleListdots;
       case Attribute.ol:
-        return Assets.svg.iconArticleListnumbers;
+        return Assets.svgIconArticleListnumbers;
     }
     return null;
   }

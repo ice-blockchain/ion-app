@@ -34,7 +34,7 @@ class SwitchAccountModal extends ConsumerWidget {
                 actions: const [NavigationCloseButton()],
               ),
               ModalActionButton(
-                icon: Assets.svg.iconChannelType.icon(color: context.theme.appColors.primaryAccent),
+                icon: Assets.svgIconChannelType.icon(color: context.theme.appColors.primaryAccent),
                 label: context.i18n.profile_create_new_account,
                 onTap: () {},
               ),
@@ -42,7 +42,7 @@ class SwitchAccountModal extends ConsumerWidget {
               const AccountsList(),
               SizedBox(height: 16.0.s),
               ModalActionButton(
-                icon: Assets.svg.iconMenuLogout.icon(size: 24.0.s),
+                icon: Assets.svgIconMenuLogout.icon(size: 24.0.s),
                 label: context.i18n.profile_log_out(
                   prefixUsername(username: userMetadataValue?.data.name, context: context),
                 ),

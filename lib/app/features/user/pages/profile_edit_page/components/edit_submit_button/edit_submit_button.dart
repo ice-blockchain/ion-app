@@ -37,7 +37,7 @@ class EditSubmitButton extends ConsumerWidget {
       type: hasChanges ? ButtonType.primary : ButtonType.disabled,
       leadingIcon: isLoading
           ? const IONLoadingIndicator()
-          : Assets.svg.iconProfileSave.icon(
+          : Assets.svgIconProfileSave.icon(
               color: context.theme.appColors.onPrimaryAccent,
             ),
       onPressed: () async {

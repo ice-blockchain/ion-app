@@ -31,11 +31,11 @@ enum SocialNotificationOption implements SelectableOption, PushNotificationOptio
   @override
   Widget getIcon(BuildContext context) {
     final icon = switch (this) {
-      SocialNotificationOption.posts => Assets.svg.iconProfileFeed,
-      SocialNotificationOption.mentionsAndReplies => Assets.svg.iconFieldNickname,
-      SocialNotificationOption.reposts => Assets.svg.iconFeedRepost,
-      SocialNotificationOption.likes => Assets.svg.iconVideoLikeOff,
-      SocialNotificationOption.newFollowers => Assets.svg.iconSearchFollow,
+      SocialNotificationOption.posts => Assets.svgIconProfileFeed,
+      SocialNotificationOption.mentionsAndReplies => Assets.svgIconFieldNickname,
+      SocialNotificationOption.reposts => Assets.svgIconFeedRepost,
+      SocialNotificationOption.likes => Assets.svgIconVideoLikeOff,
+      SocialNotificationOption.newFollowers => Assets.svgIconSearchFollow,
     };
 
     return icon.icon(color: context.theme.appColors.primaryAccent);
@@ -67,9 +67,9 @@ enum ChatNotificationOption implements SelectableOption, PushNotificationOption 
   @override
   Widget getIcon(BuildContext context) {
     final icon = switch (this) {
-      ChatNotificationOption.directMessages => Assets.svg.iconChatOff,
-      ChatNotificationOption.groupChats => Assets.svg.iconSearchGroups,
-      ChatNotificationOption.channels => Assets.svg.iconSearchChannel,
+      ChatNotificationOption.directMessages => Assets.svgIconChatOff,
+      ChatNotificationOption.groupChats => Assets.svgIconSearchGroups,
+      ChatNotificationOption.channels => Assets.svgIconSearchChannel,
     };
 
     return icon.icon(color: context.theme.appColors.primaryAccent);
@@ -98,8 +98,8 @@ enum WalletNotificationOption implements SelectableOption, PushNotificationOptio
   @override
   Widget getIcon(BuildContext context) {
     final icon = switch (this) {
-      WalletNotificationOption.paymentRequest => Assets.svg.iconButtonAddstroke,
-      WalletNotificationOption.paymentReceived => Assets.svg.iconButtonReceive,
+      WalletNotificationOption.paymentRequest => Assets.svgIconButtonAddstroke,
+      WalletNotificationOption.paymentReceived => Assets.svgIconButtonReceive,
     };
 
     return icon.icon(color: context.theme.appColors.primaryAccent);
@@ -120,7 +120,7 @@ enum SystemNotificationOption implements SelectableOption, PushNotificationOptio
 
   @override
   Widget getIcon(BuildContext context) {
-    return Assets.svg.iconNotificationsUpdates.icon(color: context.theme.appColors.primaryAccent);
+    return Assets.svgIconNotificationsUpdates.icon(color: context.theme.appColors.primaryAccent);
   }
 
   @override

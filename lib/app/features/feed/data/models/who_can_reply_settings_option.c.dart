@@ -60,10 +60,10 @@ extension WhoCanReplySettingsOptionX on WhoCanReplySettingsOption {
 
   Widget getIcon(BuildContext context) {
     final asset = when(
-      everyone: () => Assets.svg.iconPostEveryone,
-      followedAccounts: () => Assets.svg.iconSearchFollow,
-      mentionedAccounts: () => Assets.svg.iconFieldNickname,
-      accountsWithBadge: (_) => Assets.svg.iconPostVerifyaccount,
+      everyone: () => Assets.svgIconPostEveryone,
+      followedAccounts: () => Assets.svgIconSearchFollow,
+      mentionedAccounts: () => Assets.svgIconFieldNickname,
+      accountsWithBadge: (_) => Assets.svgIconPostVerifyaccount,
     );
     return asset.icon(color: context.theme.appColors.primaryAccent);
   }

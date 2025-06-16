@@ -60,15 +60,15 @@ enum EmojiCategory {
 
   String getIcon(BuildContext context) {
     final icon = switch (this) {
-      EmojiCategory.recent => Assets.svg.iconChatRecentemoji,
-      EmojiCategory.smileysPeople => Assets.svg.iconChatSmileemoji,
-      EmojiCategory.animalsNature => Assets.svg.iconChatAnimalemoji,
-      EmojiCategory.foodAndDrink => Assets.svg.iconChatCupemoji,
-      EmojiCategory.activities => Assets.svg.iconChatSportemoji,
-      EmojiCategory.travelAndPlaces => Assets.svg.iconChartCaremoji,
-      EmojiCategory.objects => Assets.svg.iconChatBulb,
-      EmojiCategory.symbols => Assets.svg.iconChatTagemoji,
-      EmojiCategory.flags => Assets.svg.iconChatFlagemoji,
+      EmojiCategory.recent => Assets.svgIconChatRecentemoji,
+      EmojiCategory.smileysPeople => Assets.svgIconChatSmileemoji,
+      EmojiCategory.animalsNature => Assets.svgIconChatAnimalemoji,
+      EmojiCategory.foodAndDrink => Assets.svgIconChatCupemoji,
+      EmojiCategory.activities => Assets.svgIconChatSportemoji,
+      EmojiCategory.travelAndPlaces => Assets.svgIconChartCaremoji,
+      EmojiCategory.objects => Assets.svgIconChatBulb,
+      EmojiCategory.symbols => Assets.svgIconChatTagemoji,
+      EmojiCategory.flags => Assets.svgIconChatFlagemoji,
     };
 
     return icon;

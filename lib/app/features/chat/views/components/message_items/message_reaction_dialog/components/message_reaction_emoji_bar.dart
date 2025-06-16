@@ -58,7 +58,7 @@ class _EmojiBarNotch extends StatelessWidget {
   Widget build(BuildContext context) {
     return Padding(
       padding: EdgeInsets.symmetric(horizontal: 20.0.s),
-      child: Assets.svg.iconBubleCorner.iconWithDimensions(width: 20.0.s, height: 14.0.s),
+      child: Assets.svgIconBubleCorner.iconWithDimensions(width: 20.0.s, height: 14.0.s),
     );
   }
 }
@@ -82,7 +82,7 @@ class _ShowMoreEmojiButton extends StatelessWidget {
           color: context.theme.appColors.primaryBackground,
           borderRadius: BorderRadius.circular(20.0.s),
         ),
-        child: Assets.svg.iconPostAddanswer.icon(
+        child: Assets.svgIconPostAddanswer.icon(
           size: 20.0.s,
           color: context.theme.appColors.primaryAccent,
         ),

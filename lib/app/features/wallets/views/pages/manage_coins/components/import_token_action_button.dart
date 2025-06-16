@@ -14,7 +14,7 @@ class ImportTokenActionButton extends StatelessWidget {
 
     return GestureDetector(
       onTap: () => ImportTokenRoute().push<void>(context),
-      child: Assets.svg.iconPlusCreatechannel.icon(
+      child: Assets.svgIconPlusCreatechannel.icon(
         color: colors.primaryAccent,
         size: 33.0.s,
       ),

@@ -30,7 +30,7 @@ class SelectContainer extends StatelessWidget {
           children: [
             SizedBox(width: 16.0.s),
             Expanded(child: child),
-            if (enabled) Assets.svg.iconArrowDown.icon(),
+            if (enabled) IconAsset(Assets.svgIconArrowDown),
             SizedBox(width: 16.0.s),
           ],
         ),

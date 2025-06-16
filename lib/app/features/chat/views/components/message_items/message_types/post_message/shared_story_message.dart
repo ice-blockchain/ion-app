@@ -203,7 +203,7 @@ class _StoryPreviewImage extends StatelessWidget {
           children: [
             Image(image: imageProvider, height: 220.0.s),
             if (isThumb)
-              Assets.svg.iconVideoPlay.icon(
+              Assets.svgIconVideoPlay.icon(
                 color: context.theme.appColors.onPrimaryAccent,
                 size: 32.0.s,
               ),
@@ -245,7 +245,7 @@ class _UnavailableStoryContainer extends StatelessWidget {
           Row(
             mainAxisSize: MainAxisSize.min,
             children: [
-              Assets.svg.iconFeedStories.icon(
+              Assets.svgIconFeedStories.icon(
                 color: isMe
                     ? context.theme.appColors.onPrimaryAccent
                     : context.theme.appColors.quaternaryText,

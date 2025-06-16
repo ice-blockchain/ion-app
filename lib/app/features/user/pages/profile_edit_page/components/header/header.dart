@@ -26,7 +26,7 @@ class Header extends StatelessWidget {
                 Navigator.of(context).pop(true);
               },
               opacity: 1,
-              assetName: Assets.svg.iconProfileBack,
+              assetName: Assets.svgIconProfileBack,
               flipForRtl: true,
             ),
           ],

@@ -140,7 +140,7 @@ class _CurrentUserMenuItems extends ConsumerWidget {
 
     return ContextMenuItem(
       label: i18n.button_delete,
-      iconAsset: Assets.svg.iconBlockDelete,
+      iconAsset: Assets.svgIconBlockDelete,
       onPressed: onDeleteRequest,
       textColor: colors.attentionRed,
       iconColor: colors.attentionRed,
@@ -169,7 +169,7 @@ class _OtherUserMenuItems extends ConsumerWidget {
       children: [
         ContextMenuItem(
           label: i18n.button_report,
-          iconAsset: Assets.svg.iconReport,
+          iconAsset: Assets.svgIconReport,
           onPressed: () {
             onClose();
             final currentStory = ref.read(storyViewingControllerProvider(pubkey)).currentStory;
@@ -186,7 +186,7 @@ class _OtherUserMenuItems extends ConsumerWidget {
         const ContextMenuItemDivider(),
         ContextMenuItem(
           label: isMuted ? i18n.button_unmute : i18n.button_mute,
-          iconAsset: isMuted ? Assets.svg.iconChannelUnmute : Assets.svg.iconChannelMute,
+          iconAsset: isMuted ? Assets.svgIconChannelUnmute : Assets.svgIconChannelMute,
           onPressed: () async {
             await ref.read(globalMuteNotifierProvider.notifier).toggle();
           },
@@ -194,7 +194,7 @@ class _OtherUserMenuItems extends ConsumerWidget {
         const ContextMenuItemDivider(),
         ContextMenuItem(
           label: i18n.button_unfollow,
-          iconAsset: Assets.svg.iconCategoriesUnflow,
+          iconAsset: Assets.svgIconCategoriesUnflow,
           onPressed: () {
             onClose();
             showSimpleBottomSheet<void>(

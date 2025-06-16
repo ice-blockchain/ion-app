@@ -76,7 +76,7 @@ class AddressNotFoundModal extends HookConsumerWidget {
             ScreenBottomOffset(
               child: Button(
                 label: Text(context.i18n.wallet_address_create_button),
-                leadingIcon: Assets.svg.iconPostAddanswer.icon(
+                leadingIcon: Assets.svgIconPostAddanswer.icon(
                   size: 24.0.s,
                   color: context.theme.appColors.onPrimaryAccent,
                 ),

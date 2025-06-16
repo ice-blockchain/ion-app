@@ -41,7 +41,7 @@ class UserInfoSummary extends HookConsumerWidget {
       tiles.add(
         UserInfoTile(
           title: website,
-          assetName: Assets.svg.iconArticleLink,
+          assetName: Assets.svgIconArticleLink,
           isLink: true,
         ),
       );
@@ -51,7 +51,7 @@ class UserInfoSummary extends HookConsumerWidget {
       tiles.add(
         UserInfoTile(
           title: formatDateToMonthYear(registeredAt.toDateTime),
-          assetName: Assets.svg.iconFieldCalendar,
+          assetName: Assets.svgIconFieldCalendar,
         ),
       );
     }
@@ -60,7 +60,7 @@ class UserInfoSummary extends HookConsumerWidget {
       tiles.add(
         UserInfoTile(
           title: location,
-          assetName: Assets.svg.iconProfileLocation,
+          assetName: Assets.svgIconProfileLocation,
         ),
       );
     }
@@ -69,7 +69,7 @@ class UserInfoSummary extends HookConsumerWidget {
       tiles.add(
         UserInfoTile(
           title: context.i18n.profile_follows_you,
-          assetName: Assets.svg.iconSearchFollow,
+          assetName: Assets.svgIconSearchFollow,
         ),
       );
     }
@@ -126,7 +126,7 @@ class _CategoryTile extends ConsumerWidget {
 
     return UserInfoTile(
       title: label,
-      assetName: Assets.svg.iconBlockchain,
+      assetName: Assets.svgIconBlockchain,
     );
   }
 }

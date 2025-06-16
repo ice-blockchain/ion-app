@@ -19,9 +19,9 @@ enum CommunityAdminType {
 
   String get iconAsset {
     return switch (this) {
-      CommunityAdminType.owner => Assets.svg.iconChannelOwner,
-      CommunityAdminType.admin => Assets.svg.iconChannelAdmin,
-      CommunityAdminType.moderator => Assets.svg.iconChannelModerator,
+      CommunityAdminType.owner => Assets.svgIconChannelOwner,
+      CommunityAdminType.admin => Assets.svgIconChannelAdmin,
+      CommunityAdminType.moderator => Assets.svgIconChannelModerator,
     };
   }
 }

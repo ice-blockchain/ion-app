@@ -18,8 +18,8 @@ enum AppUpdateType {
 
   String get buttonIconAsset {
     return switch (this) {
-      AppUpdateType.updateRequired => Assets.svg.iconFeedUpdate,
-      AppUpdateType.upToDate => Assets.svg.iconFeedChangelog,
+      AppUpdateType.updateRequired => Assets.svgIconFeedUpdate,
+      AppUpdateType.upToDate => Assets.svgIconFeedChangelog,
     };
   }
 

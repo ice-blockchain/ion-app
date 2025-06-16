@@ -44,7 +44,7 @@ class WalletsModal extends StatelessWidget {
                 end: ScreenSideOffset.defaultSmallMargin,
               ),
               child: Button(
-                leadingIcon: Assets.svg.iconButtonManageWallet.icon(),
+                leadingIcon: Assets.svgIconButtonManageWallet.icon(),
                 onPressed: () {
                   ManageWalletsRoute().push<void>(context);
                 },

@@ -29,7 +29,7 @@ class RestoreMenuPage extends ConsumerWidget {
       body: AuthScrollContainer(
         title: context.i18n.restore_identity_title,
         description: context.i18n.restore_identity_type_description,
-        icon: Assets.svg.iconLoginRestorekey.icon(size: 36.0.s),
+        icon: Assets.svgIconLoginRestorekey.icon(size: 36.0.s),
         children: [
           Padding(
             padding: EdgeInsets.symmetric(horizontal: 38.0.s),

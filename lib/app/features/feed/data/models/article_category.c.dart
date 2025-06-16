@@ -18,46 +18,46 @@ final List<ArticleCategory> mockedArticleCategories = [
   ArticleCategory(
     id: '1',
     name: 'Exchanges',
-    icon: Assets.svg.iconBlockRepost,
+    icon: Assets.svgIconBlockRepost,
   ),
   ArticleCategory(
     id: '2',
     name: 'Crypto',
-    icon: Assets.svg.iconTabsCoins,
+    icon: Assets.svgIconTabsCoins,
   ),
   ArticleCategory(
     id: '3',
     name: 'Game',
-    icon: Assets.svg.iconCategoriesGame,
+    icon: Assets.svgIconCategoriesGame,
   ),
   ArticleCategory(
     id: '4',
     name: 'Business',
-    icon: Assets.svg.iconCategoriesBusiness,
+    icon: Assets.svgIconCategoriesBusiness,
   ),
   ArticleCategory(
     id: '5',
     name: 'Travel',
-    icon: Assets.svg.iconCategoriesTravel,
+    icon: Assets.svgIconCategoriesTravel,
   ),
   ArticleCategory(
     id: '6',
     name: 'Programming',
-    icon: Assets.svg.iconCategoriesProgramm,
+    icon: Assets.svgIconCategoriesProgramm,
   ),
   ArticleCategory(
     id: '7',
     name: 'AI',
-    icon: Assets.svg.iconCategoriesAi,
+    icon: Assets.svgIconCategoriesAi,
   ),
   ArticleCategory(
     id: '8',
     name: 'Work',
-    icon: Assets.svg.iconCategoriesBusiness,
+    icon: Assets.svgIconCategoriesBusiness,
   ),
   ArticleCategory(
     id: '9',
     name: 'Science',
-    icon: Assets.svg.iconCategoriesScience,
+    icon: Assets.svgIconCategoriesScience,
   ),
 ];

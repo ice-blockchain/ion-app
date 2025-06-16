@@ -132,11 +132,11 @@ class ReplyMessage extends HookConsumerWidget {
         PostItem _ => null,
         TextItem _ => null,
         EmojiItem _ => null,
-        MoneyItem _ => Assets.svg.iconProfileTips,
-        DocumentItem _ => Assets.svg.iconChatFile,
-        MediaItem _ => Assets.svg.iconProfileCamera,
-        AudioItem _ => Assets.svg.iconChatVoicemessage,
-        ShareProfileItem _ => Assets.svg.iconProfileUsertab,
+        MoneyItem _ => Assets.svgIconProfileTips,
+        DocumentItem _ => Assets.svgIconChatFile,
+        MediaItem _ => Assets.svgIconProfileCamera,
+        AudioItem _ => Assets.svgIconChatVoicemessage,
+        ShareProfileItem _ => Assets.svgIconProfileUsertab,
       };
 }
 

@@ -42,7 +42,7 @@ class ContactButton extends ConsumerWidget {
         pubkey: userMetadata.masterPubkey,
         trailing: IconButton(
           onPressed: onClearTap,
-          icon: Assets.svg.iconSheetClose.icon(
+          icon: Assets.svgIconSheetClose.icon(
             size: 16.0.s,
             color: colors.primaryText,
           ),

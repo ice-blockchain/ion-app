@@ -65,7 +65,7 @@ class CreateRecoveryKeySuccessState extends HookWidget {
         children: [
           RecoveryKeyOption(
             title: locale.common_identity_key_name,
-            iconAsset: Assets.svg.iconIdentitykey,
+            iconAsset: Assets.svgIconIdentitykey,
             subtitle: recoveryData.identityKeyName,
             onTap: () => _onOptionTap(0, disabledOptions),
             enabled: !disabledOptions.value.contains(0),
@@ -73,7 +73,7 @@ class CreateRecoveryKeySuccessState extends HookWidget {
           SizedBox(height: 12.0.s),
           RecoveryKeyOption(
             title: locale.restore_identity_creds_recovery_key,
-            iconAsset: Assets.svg.iconChannelPrivate,
+            iconAsset: Assets.svgIconChannelPrivate,
             subtitle: recoveryData.recoveryKeyId,
             onTap: () => _onOptionTap(1, disabledOptions),
             enabled: !disabledOptions.value.contains(1),
@@ -81,7 +81,7 @@ class CreateRecoveryKeySuccessState extends HookWidget {
           SizedBox(height: 12.0.s),
           RecoveryKeyOption(
             title: locale.restore_identity_creds_recovery_code,
-            iconAsset: Assets.svg.iconCode4,
+            iconAsset: Assets.svgIconCode4,
             subtitle: recoveryData.recoveryCode,
             onTap: () => _onOptionTap(2, disabledOptions),
             enabled: !disabledOptions.value.contains(2),
@@ -125,7 +125,7 @@ class _StoringKeysWarning extends StatelessWidget {
         borderRadius: BorderRadius.all(
           Radius.circular(16.0.s),
         ),
-        leading: Assets.svg.iconReport.icon(
+        leading: Assets.svgIconReport.icon(
           size: 20.0.s,
           color: context.theme.appColors.attentionRed,
         ),

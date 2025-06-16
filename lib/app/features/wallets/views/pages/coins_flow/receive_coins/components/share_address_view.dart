@@ -72,7 +72,7 @@ class ShareAddressView extends HookConsumerWidget {
                 Button.compact(
                   mainAxisSize: MainAxisSize.max,
                   minimumSize: Size(56.0.s, 56.0.s),
-                  leadingIcon: Assets.svg.iconButtonShare
+                  leadingIcon: Assets.svgIconButtonShare
                       .icon(color: context.theme.appColors.secondaryBackground),
                   label: Text(
                     context.i18n.button_share,

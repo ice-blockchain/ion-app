@@ -44,9 +44,7 @@ class SliderThumb extends StatelessWidget {
           stops: stops,
         );
       },
-      child: Assets.svg.iconBlockRocket.icon(
-        size: thumbIconSize,
-      ),
+      child: IconAsset(Assets.svgIconBlockRocket, size: thumbIconSize),
     );
   }
 }

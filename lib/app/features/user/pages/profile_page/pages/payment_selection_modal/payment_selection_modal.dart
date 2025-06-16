@@ -90,7 +90,7 @@ class PaymentSelectionModal extends HookConsumerWidget {
                         onContinue(option);
                       }
                     },
-                    trailing: Assets.svg.iconArrowRight.icon(
+                    trailing: Assets.svgIconArrowRight.icon(
                       color: context.theme.appColors.primaryText,
                     ),
                   ),

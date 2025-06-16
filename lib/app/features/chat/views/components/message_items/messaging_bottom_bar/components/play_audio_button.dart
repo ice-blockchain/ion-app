@@ -21,7 +21,7 @@ class PlayAudioButton extends StatelessWidget {
           ..setFinishMode(finishMode: FinishMode.pause)
           ..startPlayer();
       },
-      child: Assets.svg.iconVideoPlay.icon(
+      child: Assets.svgIconVideoPlay.icon(
         color: context.theme.appColors.primaryAccent,
         size: 24.0.s,
       ),

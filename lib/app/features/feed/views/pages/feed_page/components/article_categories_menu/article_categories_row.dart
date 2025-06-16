@@ -36,7 +36,7 @@ class ArticleCategoriesRow extends StatelessWidget {
               borderColor: colors.onTerararyFill,
               size: 40.0.s,
               type: ButtonType.secondary,
-              icon: Assets.svg.iconPlusCreatechannel.icon(
+              icon: Assets.svgIconPlusCreatechannel.icon(
                 color: colors.primaryAccent,
                 size: 28.0.s,
               ),

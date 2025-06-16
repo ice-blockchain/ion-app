@@ -200,7 +200,7 @@ class _DocumentIcon extends StatelessWidget {
           ? const IONLoadingIndicator(
               type: IndicatorType.dark,
             )
-          : Assets.svg.iconFeedAddfile.icon(
+          : Assets.svgIconFeedAddfile.icon(
               size: 20.0.s,
               color: context.theme.appColors.primaryAccent,
             ),

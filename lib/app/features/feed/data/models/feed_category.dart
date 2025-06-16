@@ -33,9 +33,9 @@ enum FeedCategory {
     final defaultColor = context.theme.appColors.secondaryBackground;
 
     final icon = switch (this) {
-      FeedCategory.feed => Assets.svg.iconProfileFeed,
-      FeedCategory.videos => Assets.svg.iconVideosTrading,
-      FeedCategory.articles => Assets.svg.iconFeedArticles,
+      FeedCategory.feed => Assets.svgIconProfileFeed,
+      FeedCategory.videos => Assets.svgIconVideosTrading,
+      FeedCategory.articles => Assets.svgIconFeedArticles,
     };
 
     return icon.icon(color: color ?? defaultColor);

@@ -25,7 +25,7 @@ class DAppsHeader extends ConsumerWidget {
           children: [
             NavigationButton(
               onPressed: context.pop,
-              icon: Assets.svg.iconBackArrow.icon(
+              icon: Assets.svgIconBackArrow.icon(
                 color: context.theme.appColors.primaryText,
                 flipForRtl: true,
               ),
@@ -46,7 +46,7 @@ class DAppsHeader extends ConsumerWidget {
                 onPressed: () {
                   WalletsRoute().push<void>(context);
                 },
-                icon: Assets.svg.iconWallet.icon(),
+                icon: Assets.svgIconWallet.icon(),
               ),
             ),
           ],

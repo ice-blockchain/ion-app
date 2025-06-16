@@ -51,7 +51,7 @@ class ArticleImageView extends ConsumerWidget {
           end: 12.0.s,
           child: IconButton(
             onPressed: onClearImage,
-            icon: Assets.svg.iconFieldClearall.icon(size: 20.0.s),
+            icon: Assets.svgIconFieldClearall.icon(size: 20.0.s),
           ),
         ),
       ],

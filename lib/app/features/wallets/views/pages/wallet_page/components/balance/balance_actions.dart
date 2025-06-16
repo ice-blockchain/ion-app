@@ -37,7 +37,7 @@ class BalanceActions extends HookConsumerWidget {
       children: [
         Expanded(
           child: Button.compact(
-            leadingIcon: Assets.svg.iconButtonSend.icon(),
+            leadingIcon: Assets.svgIconButtonSend.icon(),
             label: Text(
               context.i18n.wallet_send,
             ),
@@ -50,7 +50,7 @@ class BalanceActions extends HookConsumerWidget {
         Expanded(
           child: Button.compact(
             type: isLoading ? ButtonType.primary : ButtonType.outlined,
-            leadingIcon: Assets.svg.iconButtonReceive.icon(),
+            leadingIcon: Assets.svgIconButtonReceive.icon(),
             label: Text(
               context.i18n.wallet_receive,
             ),

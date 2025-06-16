@@ -37,12 +37,12 @@ class RepostsCounterButton extends ConsumerWidget {
         constraints: BoxConstraints(minWidth: 50.0.s),
         alignment: Alignment.center,
         child: TextActionButton(
-          icon: Assets.svg.iconBlockRepost.icon(
+          icon: Assets.svgIconBlockRepost.icon(
             size: 16.0.s,
             color: color ?? context.theme.appColors.onTertararyBackground,
           ),
           textColor: color ?? context.theme.appColors.onTertararyBackground,
-          activeIcon: Assets.svg.iconBlockRepost.icon(
+          activeIcon: Assets.svgIconBlockRepost.icon(
             size: 16.0.s,
             color: context.theme.appColors.primaryAccent,
           ),

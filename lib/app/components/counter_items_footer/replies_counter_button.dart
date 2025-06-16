@@ -51,17 +51,17 @@ class RepliesCounterButton extends HookConsumerWidget {
         constraints: BoxConstraints(minWidth: 50.0.s),
         alignment: AlignmentDirectional.centerStart,
         child: TextActionButton(
-          icon: Assets.svg.iconBlockComment.icon(
+          icon: Assets.svgIconBlockComment.icon(
             size: 16.0.s,
             color: color ?? context.theme.appColors.onTertararyBackground,
           ),
           textColor: color ?? context.theme.appColors.onTertararyBackground,
-          activeIcon: Assets.svg.iconBlockCommenton.icon(
+          activeIcon: Assets.svgIconBlockCommenton.icon(
             size: 16.0.s,
             color: context.theme.appColors.primaryAccent,
           ),
           activeTextColor: context.theme.appColors.primaryAccent,
-          disabledIcon: Assets.svg.iconBlockComment.icon(
+          disabledIcon: Assets.svgIconBlockComment.icon(
             size: 16.0.s,
             color: context.theme.appColors.tertararyText,
           ),

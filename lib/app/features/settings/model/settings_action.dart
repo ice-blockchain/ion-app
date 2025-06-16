@@ -32,14 +32,14 @@ enum SettingsAction {
 
   Widget getIcon(BuildContext context) {
     final icon = switch (this) {
-      SettingsAction.account => Assets.svg.iconProfileUser,
+      SettingsAction.account => Assets.svgIconProfileUser,
       SettingsAction.security => Assets.svg.linearSecurityShielduser,
-      SettingsAction.privacy => Assets.svg.iconProfilePrivacy,
-      SettingsAction.pushNotifications => Assets.svg.iconHomeNotification,
-      SettingsAction.privacyPolicy => Assets.svg.iconProfilePrivacypolicy,
-      SettingsAction.termsConditions => Assets.svg.iconProfileTerms,
-      SettingsAction.leaveFeedback => Assets.svg.iconProfileFeedback,
-      SettingsAction.logout => Assets.svg.iconMenuLogout,
+      SettingsAction.privacy => Assets.svgIconProfilePrivacy,
+      SettingsAction.pushNotifications => Assets.svgIconHomeNotification,
+      SettingsAction.privacyPolicy => Assets.svgIconProfilePrivacypolicy,
+      SettingsAction.termsConditions => Assets.svgIconProfileTerms,
+      SettingsAction.leaveFeedback => Assets.svgIconProfileFeedback,
+      SettingsAction.logout => Assets.svgIconMenuLogout,
     };
 
     return icon.icon(color: getIconColor(context));

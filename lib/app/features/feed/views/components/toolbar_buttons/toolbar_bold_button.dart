@@ -19,8 +19,8 @@ class ToolbarBoldButton extends HookWidget {
         useMemoized(() => QuillStyleManager(textEditorController), [textEditorController]);
 
     return ActionsToolbarButton(
-      icon: Assets.svg.iconPostBoldtextOff,
-      iconSelected: Assets.svg.iconPostBoldtextOn,
+      icon: Assets.svgIconPostBoldtextOff,
+      iconSelected: Assets.svgIconPostBoldtextOn,
       onPressed: () {
         styleManager.toggleTextStyle(Attribute.bold);
       },

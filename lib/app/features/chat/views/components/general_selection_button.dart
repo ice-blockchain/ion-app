@@ -60,7 +60,7 @@ class GeneralSelectionButton extends StatelessWidget {
               onTap: onPress,
               child: Padding(
                 padding: EdgeInsets.all(4.0.s),
-                child: Assets.svg.iconArrowRight.icon(color: colors.secondaryText),
+                child: Assets.svgIconArrowRight.icon(color: colors.secondaryText),
               ),
             ),
           ],

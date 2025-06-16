@@ -53,7 +53,7 @@ class CoinUsdAmount extends HookConsumerWidget {
               SizedBox(
                 width: 4.0.s,
               ),
-              Assets.svg.iconArrowSelect.icon(size: 12.0.s),
+              Assets.svgIconArrowSelect.icon(size: 12.0.s),
             ],
           ),
         ),

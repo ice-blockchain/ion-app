@@ -51,9 +51,9 @@ enum ChannelDetailTab {
   }
 
   String get iconAsset => switch (this) {
-        ChannelDetailTab.posts => Assets.svg.iconProfileFeed,
-        ChannelDetailTab.photos => Assets.svg.iconGalleryOpen,
-        ChannelDetailTab.videos => Assets.svg.iconFeedVideos,
-        ChannelDetailTab.links => Assets.svg.iconArticleLink,
+        ChannelDetailTab.posts => Assets.svgIconProfileFeed,
+        ChannelDetailTab.photos => Assets.svgIconGalleryOpen,
+        ChannelDetailTab.videos => Assets.svgIconFeedVideos,
+        ChannelDetailTab.links => Assets.svgIconArticleLink,
       };
 }

@@ -48,10 +48,10 @@ class SelectableUserListItem extends ConsumerWidget {
           ),
           trailing: selectable
               ? isSelected
-                  ? Assets.svg.iconBlockCheckboxOnblue.icon(
+                  ? Assets.svgIconBlockCheckboxOnblue.icon(
                       color: context.theme.appColors.success,
                     )
-                  : Assets.svg.iconBlockCheckboxOff.icon(
+                  : Assets.svgIconBlockCheckboxOff.icon(
                       color: context.theme.appColors.onTerararyFill,
                     )
               : null,

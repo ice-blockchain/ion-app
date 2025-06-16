@@ -42,9 +42,9 @@ class MessagingContextMenu extends ConsumerWidget {
                   OverlayMenuItem(
                     label: isMuted ? context.i18n.button_unmute : context.i18n.button_mute,
                     icon: isMuted
-                        ? Assets.svg.iconChannelUnmute
+                        ? Assets.svgIconChannelUnmute
                             .icon(size: iconSize, color: context.theme.appColors.quaternaryText)
-                        : Assets.svg.iconChannelMute
+                        : Assets.svgIconChannelMute
                             .icon(size: iconSize, color: context.theme.appColors.quaternaryText),
                     onPressed: () {
                       closeMenu();
@@ -54,14 +54,14 @@ class MessagingContextMenu extends ConsumerWidget {
                   const OverlayMenuItemSeparator(),
                   OverlayMenuItem(
                     label: context.i18n.button_block,
-                    icon: Assets.svg.iconPhofileBlockuser
+                    icon: Assets.svgIconPhofileBlockuser
                         .icon(size: iconSize, color: context.theme.appColors.quaternaryText),
                     onPressed: closeMenu,
                   ),
                   const OverlayMenuItemSeparator(),
                   OverlayMenuItem(
                     label: context.i18n.button_report,
-                    icon: Assets.svg.iconBlockClose3
+                    icon: Assets.svgIconBlockClose3
                         .icon(size: iconSize, color: context.theme.appColors.quaternaryText),
                     onPressed: () {
                       closeMenu();
@@ -74,7 +74,7 @@ class MessagingContextMenu extends ConsumerWidget {
                   OverlayMenuItem(
                     label: context.i18n.button_delete,
                     labelColor: context.theme.appColors.attentionRed,
-                    icon: Assets.svg.iconBlockDelete
+                    icon: Assets.svgIconBlockDelete
                         .icon(size: iconSize, color: context.theme.appColors.attentionRed),
                     onPressed: () async {
                       closeMenu();
@@ -94,7 +94,7 @@ class MessagingContextMenu extends ConsumerWidget {
           ),
         ],
       ),
-      child: Assets.svg.iconMorePopup.icon(
+      child: Assets.svgIconMorePopup.icon(
         color: context.theme.appColors.onTertararyBackground,
       ),
     );

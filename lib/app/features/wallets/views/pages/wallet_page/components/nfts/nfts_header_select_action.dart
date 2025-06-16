@@ -56,7 +56,7 @@ class NftHeaderSelectAction extends ConsumerWidget {
                 SizedBox(
                   width: 5.0.s,
                 ),
-                Assets.svg.iconArrowDown.icon(size: 20.0.s, color: colors.secondaryText),
+                Assets.svgIconArrowDown.icon(size: 20.0.s, color: colors.secondaryText),
               ],
             ),
           ),

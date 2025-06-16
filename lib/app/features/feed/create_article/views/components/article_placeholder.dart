@@ -20,7 +20,7 @@ class ArticlePlaceholder extends StatelessWidget {
             borderRadius: BorderRadius.circular(18.0.s),
           ),
           alignment: Alignment.center,
-          child: Assets.svg.iconLoginCamera.icon(size: 24.0.s),
+          child: Assets.svgIconLoginCamera.icon(size: 24.0.s),
         ),
         SizedBox(height: 7.0.s),
         Text(

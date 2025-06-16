@@ -14,8 +14,8 @@ enum FeedSearchSource {
 
   String getIcon(BuildContext context, {double? size, Color? color}) {
     return switch (this) {
-      FeedSearchSource.anyone => Assets.svg.iconSearchAnyone,
-      FeedSearchSource.following => Assets.svg.iconSearchFollow,
+      FeedSearchSource.anyone => Assets.svgIconSearchAnyone,
+      FeedSearchSource.following => Assets.svgIconSearchFollow,
     };
   }
 

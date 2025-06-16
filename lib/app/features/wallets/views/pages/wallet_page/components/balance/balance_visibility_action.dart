@@ -22,7 +22,7 @@ class BalanceVisibilityAction extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final isBalanceVisible = ref.watch(isBalanceVisibleSelectorProvider);
-    final iconAsset = isBalanceVisible ? Assets.svg.iconBlockEyeOn : Assets.svg.iconBlockEyeOff;
+    final iconAsset = isBalanceVisible ? Assets.svgIconBlockEyeOn : Assets.svgIconBlockEyeOff;
 
     if (isLoading) {
       return ContainerSkeleton(

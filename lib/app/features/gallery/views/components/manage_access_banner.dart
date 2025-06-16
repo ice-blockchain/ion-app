@@ -46,7 +46,7 @@ class ManageAccessBanner extends ConsumerWidget {
                   ),
               type: ButtonType.outlined,
               tintColor: primaryAccent,
-              leadingIcon: Assets.svg.iconButtonManagecoin.icon(
+              leadingIcon: Assets.svgIconButtonManagecoin.icon(
                 color: primaryAccent,
                 size: 16.0.s,
               ),

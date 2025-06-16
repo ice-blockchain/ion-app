@@ -19,8 +19,8 @@ class ToolbarUnderlineButton extends HookWidget {
         useMemoized(() => QuillStyleManager(textEditorController), [textEditorController]);
 
     return ActionsToolbarButton(
-      icon: Assets.svg.iconArticleUnderlineOff,
-      iconSelected: Assets.svg.iconArticleUnderlineOn,
+      icon: Assets.svgIconArticleUnderlineOff,
+      iconSelected: Assets.svgIconArticleUnderlineOn,
       onPressed: () {
         styleManager.toggleTextStyle(Attribute.underline);
       },

@@ -39,7 +39,7 @@ class ContextMenu extends ConsumerWidget {
           children: [
             ContextMenuItem(
               label: context.i18n.button_share,
-              iconAsset: Assets.svg.iconButtonShare,
+              iconAsset: Assets.svgIconButtonShare,
               onPressed: () {
                 closeMenu();
                 ShareViaMessageModalRoute(
@@ -57,7 +57,7 @@ class ContextMenu extends ConsumerWidget {
             const ContextMenuItemDivider(),
             ContextMenuItem(
               label: context.i18n.button_report,
-              iconAsset: Assets.svg.iconReport,
+              iconAsset: Assets.svgIconReport,
               onPressed: () {
                 closeMenu();
                 ref.read(reportNotifierProvider.notifier).report(ReportReason.user(pubkey: pubkey));
@@ -70,7 +70,7 @@ class ContextMenu extends ConsumerWidget {
         onPressed: () {},
         disabled: true,
         opacity: opacity,
-        assetName: Assets.svg.iconMorePopup,
+        assetName: Assets.svgIconMorePopup,
       ),
     );
   }
@@ -90,7 +90,7 @@ class _BlockUserMenuItem extends ConsumerWidget {
     final isBlocked = ref.watch(isBlockedNotifierProvider(masterPubkey)).valueOrNull ?? false;
     return ContextMenuItem(
       label: isBlocked ? context.i18n.button_unblock : context.i18n.button_block,
-      iconAsset: Assets.svg.iconBlockClose3,
+      iconAsset: Assets.svgIconBlockClose3,
       onPressed: () {
         closeMenu();
         if (!isBlocked) {

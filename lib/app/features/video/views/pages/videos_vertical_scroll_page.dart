@@ -125,7 +125,7 @@ class VideosVerticalScrollPage extends HookConsumerWidget {
           backgroundColor: Colors.transparent,
           leading: NavigationBackButton(
             () => context.pop(),
-            icon: Assets.svg.iconChatBack.icon(
+            icon: Assets.svgIconChatBack.icon(
               size: NavigationAppBar.actionButtonSide,
               color: onPrimaryAccentColor,
               flipForRtl: true,

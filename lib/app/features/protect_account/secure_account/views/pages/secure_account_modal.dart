@@ -43,7 +43,7 @@ class SecureAccountModal extends ConsumerWidget {
                 SizedBox(height: 32.0.s),
                 Button(
                   mainAxisSize: MainAxisSize.max,
-                  leadingIcon: Assets.svg.iconWalletProtectAccount.icon(
+                  leadingIcon: Assets.svgIconWalletProtectAccount.icon(
                     color: context.theme.appColors.onPrimaryAccent,
                   ),
                   label: Text(locale.protect_account_button),

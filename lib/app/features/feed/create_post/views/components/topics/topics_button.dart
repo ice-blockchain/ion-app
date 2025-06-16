@@ -97,7 +97,7 @@ class TopicsButton extends HookConsumerWidget {
                   ),
                 ),
                 SizedBox(width: 2.s),
-                Assets.svg.iconArrowRight.icon(
+                Assets.svgIconArrowRight.icon(
                   color: context.theme.appColors.primaryAccent,
                   size: 14.s,
                 ),

@@ -58,7 +58,7 @@ class _HeaderSection extends StatelessWidget {
       child: Row(
         children: [
           _HeaderButton(
-            icon: Assets.svg.iconSearchGroups,
+            icon: Assets.svgIconSearchGroups,
             title: context.i18n.new_chat_modal_new_group_button,
             onTap: () {
               AddParticipantsToGroupModalRoute().push<void>(context);
@@ -66,7 +66,7 @@ class _HeaderSection extends StatelessWidget {
           ),
           SizedBox(width: 20.0.s),
           _HeaderButton(
-            icon: Assets.svg.iconSearchChannel,
+            icon: Assets.svgIconSearchChannel,
             title: context.i18n.new_chat_modal_new_channel_button,
             onTap: () {
               NewChannelModalRoute().replace(context);

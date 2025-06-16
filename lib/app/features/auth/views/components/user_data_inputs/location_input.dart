@@ -26,7 +26,7 @@ class LocationInput extends StatelessWidget {
     return GeneralUserDataInput(
       controller: controller,
       onChanged: onChanged,
-      prefixIconAssetName: Assets.svg.iconProfileLocation,
+      prefixIconAssetName: Assets.svgIconProfileLocation,
       validator: (value) {
         if (Validators.isInvalidLength(
           value,

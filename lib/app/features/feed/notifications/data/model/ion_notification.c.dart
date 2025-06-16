@@ -34,9 +34,9 @@ final class CommentIonNotification extends IonNotification {
 
   @override
   String get asset => switch (type) {
-        CommentIonNotificationType.reply => Assets.svg.iconBlockComment,
-        CommentIonNotificationType.quote => Assets.svg.iconFeedQuote,
-        CommentIonNotificationType.repost => Assets.svg.iconFeedRepost
+        CommentIonNotificationType.reply => Assets.svgIconBlockComment,
+        CommentIonNotificationType.quote => Assets.svgIconFeedQuote,
+        CommentIonNotificationType.repost => Assets.svgIconFeedRepost
       };
 
   @override
@@ -71,7 +71,7 @@ final class LikesIonNotification extends IonNotification {
   final int total;
 
   @override
-  String get asset => Assets.svg.iconVideoLikeOff;
+  String get asset => Assets.svgIconVideoLikeOff;
 
   @override
   Color getBackgroundColor(BuildContext context) => context.theme.appColors.attentionRed;
@@ -96,7 +96,7 @@ final class FollowersIonNotification extends IonNotification {
   final int total;
 
   @override
-  String get asset => Assets.svg.iconSearchFollow;
+  String get asset => Assets.svgIconSearchFollow;
 
   @override
   Color getBackgroundColor(BuildContext context) => context.theme.appColors.primaryAccent;

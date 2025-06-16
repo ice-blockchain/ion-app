@@ -43,7 +43,7 @@ class Header extends ConsumerWidget {
               SizedBox(width: 12.0.s),
               NavigationButton(
                 onPressed: () => DAppsRoute().push<void>(context),
-                icon: Assets.svg.iconDappOff.icon(
+                icon: Assets.svgIconDappOff.icon(
                   color: context.theme.appColors.primaryText,
                 ),
               ),
@@ -51,7 +51,7 @@ class Header extends ConsumerWidget {
             SizedBox(width: 12.0.s),
             NavigationButton(
               onPressed: () => _onScanPressed(ref),
-              icon: Assets.svg.iconHeaderScan1.icon(
+              icon: Assets.svgIconHeaderScan1.icon(
                 color: context.theme.appColors.primaryText,
               ),
             ),

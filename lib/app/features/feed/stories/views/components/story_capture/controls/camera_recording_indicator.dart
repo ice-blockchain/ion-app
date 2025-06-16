@@ -32,7 +32,7 @@ class CameraRecordingIndicator extends StatelessWidget {
           child: Row(
             mainAxisSize: MainAxisSize.min,
             children: [
-              Assets.svg.iconVideosTrading.icon(size: 16.0.s),
+              Assets.svgIconVideosTrading.icon(size: 16.0.s),
               SizedBox(width: 6.0.s),
               Text(
                 formatDuration(recordingDuration),

@@ -88,8 +88,8 @@ class SelectArticleTopicModal extends HookConsumerWidget {
                   onTap: () => toggleTopicSelection(topic),
                   backgroundColor: colors.secondaryBackground,
                   trailing: isSelected
-                      ? Assets.svg.iconBlockCheckboxOnblue.icon(color: colors.success)
-                      : Assets.svg.iconBlockCheckboxOff.icon(color: colors.tertararyText),
+                      ? Assets.svgIconBlockCheckboxOnblue.icon(color: colors.success)
+                      : Assets.svgIconBlockCheckboxOff.icon(color: colors.tertararyText),
                   title: Text(topic.getTitle(context), style: textStyles.body),
                 );
               },

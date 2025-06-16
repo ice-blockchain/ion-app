@@ -29,7 +29,7 @@ class WalletIcon extends StatelessWidget {
         child: SizedBox(
           width: iconSize.s,
           height: iconSize.s,
-          child: Assets.svg.iconWallet.icon(size: iconSize.s),
+          child: IconAsset(Assets.svgIconWallet, size: iconSize),
         ),
       ),
     );

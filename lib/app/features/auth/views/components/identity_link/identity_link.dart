@@ -16,7 +16,7 @@ class IdentityLink extends StatelessWidget {
       child: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
-          Assets.svg.iconLoginIdentity.icon(size: 20.0.s),
+          Assets.svgIconLoginIdentity.icon(size: 20.0.s),
           SizedBox(width: 4.0.s),
           Text(
             context.i18n.auth_identity_io,

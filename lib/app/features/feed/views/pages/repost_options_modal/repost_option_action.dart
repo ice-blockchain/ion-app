@@ -29,9 +29,9 @@ enum RepostOptionAction {
 
   Widget getIcon(BuildContext context) {
     final icon = switch (this) {
-      RepostOptionAction.repost => Assets.svg.iconFeedRepost,
-      RepostOptionAction.undoRepost => Assets.svg.iconFeedRepost,
-      RepostOptionAction.quotePost => Assets.svg.iconFeedQuote,
+      RepostOptionAction.repost => Assets.svgIconFeedRepost,
+      RepostOptionAction.undoRepost => Assets.svgIconFeedRepost,
+      RepostOptionAction.quotePost => Assets.svgIconFeedQuote,
     };
 
     return icon.icon(color: getIconColor(context));

@@ -40,7 +40,7 @@ class ManageWalletsModal extends ConsumerWidget {
             if (shouldShowCreateWalletButton)
               ScreenSideOffset.small(
                 child: Button(
-                  leadingIcon: Assets.svg.iconButtonAddstroke
+                  leadingIcon: Assets.svgIconButtonAddstroke
                       .icon(color: context.theme.appColors.onPrimaryAccent),
                   onPressed: () {
                     CreateWalletRoute().push<void>(context);

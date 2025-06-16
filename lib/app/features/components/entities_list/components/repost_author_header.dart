@@ -29,7 +29,7 @@ class RepostAuthorHeader extends ConsumerWidget {
         onTap: () => ProfileRoute(pubkey: pubkey).push<void>(context),
         child: Row(
           children: [
-            Assets.svg.iconFeedRepost.icon(
+            Assets.svgIconFeedRepost.icon(
               size: 16.0.s,
               color: context.theme.appColors.onTertararyBackground,
             ),

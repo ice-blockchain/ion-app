@@ -203,7 +203,7 @@ class VideoPage extends HookConsumerWidget {
               child: VideoButton(
                 size: 48.0.s,
                 borderRadius: BorderRadius.circular(20.0.s),
-                icon: Assets.svg.iconVideoPlay.icon(
+                icon: Assets.svgIconVideoPlay.icon(
                   color: context.theme.appColors.secondaryBackground,
                   size: 30.0.s,
                 ),

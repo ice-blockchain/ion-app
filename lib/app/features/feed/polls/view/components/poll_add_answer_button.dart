@@ -38,7 +38,7 @@ class PollAddAnswerButton extends ConsumerWidget {
         ),
         backgroundColor: context.theme.appColors.secondaryBackground,
         borderColor: context.theme.appColors.secondaryBackground,
-        leadingIcon: Assets.svg.iconPostAddanswer.icon(
+        leadingIcon: Assets.svgIconPostAddanswer.icon(
           color: context.theme.appColors.primaryAccent,
           size: 16.0.s,
         ),

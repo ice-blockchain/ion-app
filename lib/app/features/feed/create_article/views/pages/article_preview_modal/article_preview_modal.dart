@@ -93,7 +93,7 @@ class ArticlePreviewModal extends HookConsumerWidget {
               SizedBox(height: 16.0.s),
               ScreenSideOffset.large(
                 child: Button(
-                  leadingIcon: Assets.svg.iconFeedArticles.icon(
+                  leadingIcon: Assets.svgIconFeedArticles.icon(
                     color: context.theme.appColors.onPrimaryAccent,
                   ),
                   onPressed: () {

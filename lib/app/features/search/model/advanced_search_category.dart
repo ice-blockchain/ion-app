@@ -18,16 +18,16 @@ enum AdvancedSearchCategory {
 
   String icon(BuildContext context) {
     return switch (this) {
-      AdvancedSearchCategory.all => Assets.svg.iconTabAll,
-      AdvancedSearchCategory.trending => Assets.svg.iconmemeTranding,
-      AdvancedSearchCategory.top => Assets.svg.iconSearchTop,
-      AdvancedSearchCategory.latest => Assets.svg.iconSearchLast,
-      AdvancedSearchCategory.people => Assets.svg.iconSendfundsUser,
-      AdvancedSearchCategory.photos => Assets.svg.iconGalleryOpen,
-      AdvancedSearchCategory.videos => Assets.svg.iconVideosTrading,
-      AdvancedSearchCategory.chat => Assets.svg.iconChatOff,
-      AdvancedSearchCategory.groups => Assets.svg.iconSearchGroups,
-      AdvancedSearchCategory.channels => Assets.svg.iconSearchChannel,
+      AdvancedSearchCategory.all => Assets.svgIconTabAll,
+      AdvancedSearchCategory.trending => Assets.svgIconmemeTranding,
+      AdvancedSearchCategory.top => Assets.svgIconSearchTop,
+      AdvancedSearchCategory.latest => Assets.svgIconSearchLast,
+      AdvancedSearchCategory.people => Assets.svgIconSendfundsUser,
+      AdvancedSearchCategory.photos => Assets.svgIconGalleryOpen,
+      AdvancedSearchCategory.videos => Assets.svgIconVideosTrading,
+      AdvancedSearchCategory.chat => Assets.svgIconChatOff,
+      AdvancedSearchCategory.groups => Assets.svgIconSearchGroups,
+      AdvancedSearchCategory.channels => Assets.svgIconSearchChannel,
     };
   }
 

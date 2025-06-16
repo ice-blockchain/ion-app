@@ -58,7 +58,7 @@ class ShareSendButton extends HookConsumerWidget {
           minimumSize: Size(56.0.s, 56.0.s),
           trailingIcon: loading.value
               ? const IONLoadingIndicator()
-              : Assets.svg.iconButtonNext.icon(color: context.theme.appColors.onPrimaryAccent),
+              : Assets.svgIconButtonNext.icon(color: context.theme.appColors.onPrimaryAccent),
           label: Text(
             context.i18n.feed_send,
           ),

@@ -58,7 +58,7 @@ class MessageReactionContextMenu extends HookConsumerWidget {
             if (messageStatus == MessageDeliveryStatus.failed)
               OverlayMenuItem(
                 label: context.i18n.button_retry,
-                icon: Assets.svg.iconMessageRetry.icon(
+                icon: Assets.svgIconMessageRetry.icon(
                   size: iconSize,
                   color: context.theme.appColors.quaternaryText,
                 ),
@@ -79,7 +79,7 @@ class MessageReactionContextMenu extends HookConsumerWidget {
             else ...[
               OverlayMenuItem(
                 label: context.i18n.button_reply,
-                icon: Assets.svg.iconChatReply.icon(
+                icon: Assets.svgIconChatReply.icon(
                   size: iconSize,
                   color: context.theme.appColors.quaternaryText,
                 ),
@@ -99,7 +99,7 @@ class MessageReactionContextMenu extends HookConsumerWidget {
                 OverlayMenuItem(
                   label: context.i18n.button_edit,
                   verticalPadding: 12.0.s,
-                  icon: Assets.svg.iconEditLink
+                  icon: Assets.svgIconEditLink
                       .icon(size: iconSize, color: context.theme.appColors.quaternaryText),
                   onPressed: () {
                     ref.read(selectedReplyMessageProvider.notifier).clear();
@@ -114,7 +114,7 @@ class MessageReactionContextMenu extends HookConsumerWidget {
                 OverlayMenuItem(
                   label: context.i18n.button_copy,
                   verticalPadding: 12.0.s,
-                  icon: Assets.svg.iconBlockCopyBlue
+                  icon: Assets.svgIconBlockCopyBlue
                       .icon(size: iconSize, color: context.theme.appColors.quaternaryText),
                   onPressed: () {
                     copyToClipboard(messageItem.eventMessage.content);
@@ -127,7 +127,7 @@ class MessageReactionContextMenu extends HookConsumerWidget {
                 OverlayMenuItem(
                   label: context.i18n.button_bookmark,
                   verticalPadding: 12.0.s,
-                  icon: Assets.svg.iconBookmarks
+                  icon: Assets.svgIconBookmarks
                       .icon(size: iconSize, color: context.theme.appColors.quaternaryText),
                   onPressed: () {
                     Navigator.of(context).pop();
@@ -140,7 +140,7 @@ class MessageReactionContextMenu extends HookConsumerWidget {
               label: context.i18n.button_delete,
               labelColor: context.theme.appColors.attentionRed,
               verticalPadding: 12.0.s,
-              icon: Assets.svg.iconBlockDelete
+              icon: Assets.svgIconBlockDelete
                   .icon(size: iconSize, color: context.theme.appColors.attentionRed),
               onPressed: () async {
                 final forEveryone = await DeleteMessageRoute(

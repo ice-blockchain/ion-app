@@ -34,7 +34,7 @@ class IdentityKeyNameSelectorInput extends HookWidget {
     return TextInput(
       prefixIcon: TextInputIcons(
         hasRightDivider: true,
-        icons: [Assets.svg.iconRestorekey.icon()],
+        icons: [Assets.svgIconRestorekey.icon()],
       ),
       suffixIcon: menuEnabled
           ? TextInputIcons(
@@ -43,7 +43,7 @@ class IdentityKeyNameSelectorInput extends HookWidget {
                   dimension: 40.0.s,
                   child: IconButton(
                     icon:
-                        (isOpened.value ? Assets.svg.iconArrowUp : Assets.svg.iconArrowDown).icon(),
+                        (isOpened.value ? Assets.svgIconArrowUp : Assets.svgIconArrowDown).icon(),
                     onPressed: () {
                       isOpened.value = !isOpened.value;
                       if (menuController.isOpen) {

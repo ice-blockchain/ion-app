@@ -187,7 +187,7 @@ class CommunityRecentChatTile extends ConsumerWidget {
           color: context.theme.appColors.onTerararyFill,
           borderRadius: BorderRadius.circular(12.0.s),
         ),
-        child: Assets.svg.iconChannelEmptychannel.icon(
+        child: Assets.svgIconChannelEmptychannel.icon(
           size: 26.0.s,
           color: context.theme.appColors.secondaryBackground,
         ),
@@ -300,7 +300,7 @@ class EncryptedGroupRecentChatTile extends HookConsumerWidget {
       conversation: conversation,
       eventReference: eventReference,
       avatarWidget: groupImageFile != null ? Image.file(groupImageFile) : null,
-      defaultAvatar: Assets.svg.iconChannelEmptychannel.icon(size: 40.0.s),
+      defaultAvatar: Assets.svgIconChannelEmptychannel.icon(size: 40.0.s),
       lastMessageAt: (conversation.latestMessage?.createdAt ?? conversation.joinedAt).toDateTime,
       lastMessageContent:
           entity.content.isEmpty ? context.i18n.empty_message_history : entity.content,

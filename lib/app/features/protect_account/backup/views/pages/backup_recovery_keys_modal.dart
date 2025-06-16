@@ -22,7 +22,7 @@ class BackupRecoveryKeysModal extends StatelessWidget {
           mainAxisSize: MainAxisSize.max,
           label: Text(context.i18n.button_lets_start),
           onPressed: () => CreateRecoveryKeyRoute().push<void>(context),
-          trailingIcon: Assets.svg.iconButtonNext.icon(
+          trailingIcon: Assets.svgIconButtonNext.icon(
             color: context.theme.appColors.onPrimaryAccent,
           ),
         ),

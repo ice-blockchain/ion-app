@@ -44,14 +44,14 @@ class _ButtonDropdown extends Button {
           leadingIconOffset: leadingIconOffset ?? 10.0.s,
           trailingIcon: Row(
             children: [
-              (opened ? Assets.svg.iconArrowUp : Assets.svg.iconArrowDown).icon(),
+              IconAsset(opened ? Assets.svgIconArrowUp : Assets.svgIconArrowDown),
               if (showClearButton)
                 GestureDetector(
                   behavior: HitTestBehavior.opaque,
                   onTap: () => onClearTap?.call(),
                   child: Padding(
                     padding: EdgeInsetsDirectional.only(start: 8.0.s, top: 4.0.s, bottom: 4.0.s),
-                    child: Assets.svg.iconSheetClose.icon(size: 16.0.s),
+                    child: const IconAsset(Assets.svgIconSheetClose, size: 16),
                   ),
                 ),
             ],

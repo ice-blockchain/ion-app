@@ -90,7 +90,7 @@ class NftDetails extends ConsumerWidget {
         Button(
           mainAxisSize: MainAxisSize.max,
           minimumSize: Size(56.0.s, 56.0.s),
-          leadingIcon: Assets.svg.iconButtonSend.icon(
+          leadingIcon: Assets.svgIconButtonSend.icon(
             color: context.theme.appColors.onPrimaryAccent,
           ),
           label: Text(context.i18n.feed_send),

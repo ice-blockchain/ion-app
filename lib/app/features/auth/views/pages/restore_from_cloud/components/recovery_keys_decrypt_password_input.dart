@@ -23,7 +23,7 @@ class RecoveryKeysDecryptPasswordInput extends HookWidget {
     return TextInput(
       prefixIcon: TextInputIcons(
         hasRightDivider: true,
-        icons: [Assets.svg.iconPass.icon()],
+        icons: [Assets.svgIconPass.icon()],
       ),
       suffixIcon: TextInputIcons(
         icons: [
@@ -31,8 +31,8 @@ class RecoveryKeysDecryptPasswordInput extends HookWidget {
             dimension: 40.0.s,
             child: IconButton(
               icon: isPasswordVisible.value
-                  ? Assets.svg.iconBlockEyeOff.icon(color: context.theme.appColors.primaryAccent)
-                  : Assets.svg.iconBlockEyeOn.icon(color: context.theme.appColors.primaryAccent),
+                  ? Assets.svgIconBlockEyeOff.icon(color: context.theme.appColors.primaryAccent)
+                  : Assets.svgIconBlockEyeOn.icon(color: context.theme.appColors.primaryAccent),
               onPressed: () {
                 isPasswordVisible.value = !isPasswordVisible.value;
               },

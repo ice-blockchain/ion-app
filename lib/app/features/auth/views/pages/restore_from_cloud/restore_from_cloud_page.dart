@@ -57,7 +57,7 @@ class RestoreFromCloudPage extends HookConsumerWidget {
             twoFAOptionsCount: twoFAOptionsCount.value,
             onConfirm: () => step.value = RecoverUserStep.twoFAInput,
             onBackPress: () => step.value = RecoverUserStep.recoveryCreds,
-            titleIcon: Assets.svg.iconLoginRestorecloud.icon(size: 36.0.s),
+            titleIcon: Assets.svgIconLoginRestorecloud.icon(size: 36.0.s),
           ),
         ),
       RecoverUserStep.twoFAInput => ProviderScope(
@@ -80,7 +80,7 @@ class RestoreFromCloudPage extends HookConsumerWidget {
                   initUserRecoveryActionNotifierProvider.select((it) => it.isLoading),
                 ) ||
                 ref.watch(completeUserRecoveryActionNotifierProvider.select((it) => it.isLoading)),
-            titleIcon: Assets.svg.iconLoginRestorecloud.icon(size: 36.0.s),
+            titleIcon: Assets.svgIconLoginRestorecloud.icon(size: 36.0.s),
           ),
         ),
     };

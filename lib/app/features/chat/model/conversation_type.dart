@@ -42,9 +42,9 @@ enum ConversationType implements MainModalListItem {
   @override
   String get iconAsset {
     return switch (this) {
-      ConversationType.private => Assets.svg.iconChatCreatenew,
-      ConversationType.group => Assets.svg.iconSearchGroups,
-      ConversationType.channel => Assets.svg.iconSearchChannel,
+      ConversationType.private => Assets.svgIconChatCreatenew,
+      ConversationType.group => Assets.svgIconSearchGroups,
+      ConversationType.channel => Assets.svgIconSearchChannel,
     };
   }
 

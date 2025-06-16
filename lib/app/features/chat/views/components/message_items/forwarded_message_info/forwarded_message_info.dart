@@ -25,7 +25,7 @@ class ForwardedMessageInfo extends StatelessWidget {
           children: [
             Row(
               children: [
-                Assets.svg.iconChatForward.icon(
+                Assets.svgIconChatForward.icon(
                   size: 16.0.s,
                   color: isMe
                       ? context.theme.appColors.strokeElements

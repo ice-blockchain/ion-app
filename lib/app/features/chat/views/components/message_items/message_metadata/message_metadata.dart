@@ -93,15 +93,15 @@ class MessageMetaData extends HookConsumerWidget {
       MessageDeliveryStatus.deleted => const SizedBox.shrink(),
       MessageDeliveryStatus.created => const SizedBox.shrink(),
       MessageDeliveryStatus.failed => const SizedBox.shrink(),
-      MessageDeliveryStatus.sent => Assets.svg.iconMessageSent.icon(
+      MessageDeliveryStatus.sent => Assets.svgIconMessageSent.icon(
           color: context.theme.appColors.strokeElements,
           size: size ?? 12.0.s,
         ),
-      MessageDeliveryStatus.received => Assets.svg.iconMessageDelivered.icon(
+      MessageDeliveryStatus.received => Assets.svgIconMessageDelivered.icon(
           color: context.theme.appColors.strokeElements,
           size: size ?? 12.0.s,
         ),
-      MessageDeliveryStatus.read => Assets.svg.iconMessageDelivered.icon(
+      MessageDeliveryStatus.read => Assets.svgIconMessageDelivered.icon(
           color: context.theme.appColors.success,
           size: size ?? 12.0.s,
         ),

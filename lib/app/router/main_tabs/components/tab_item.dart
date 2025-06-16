@@ -16,16 +16,16 @@ enum TabItem {
 
   Widget getIcon({required bool isSelected}) => switch (this) {
         TabItem.feed => TabIcon(
-            icon: Assets.svg.iconHomeOff,
+            icon: Assets.svgIconHomeOff,
             isSelected: isSelected,
           ),
         TabItem.chat => TabIcon(
-            icon: Assets.svg.iconChatOff,
+            icon: Assets.svgIconChatOff,
             isSelected: isSelected,
           ),
         TabItem.main => const MainTabButton(),
         TabItem.wallet => TabIcon(
-            icon: Assets.svg.iconsWalletOff,
+            icon: Assets.svgIconsWalletOff,
             isSelected: isSelected,
           ),
         TabItem.profile => ProfileTabButton(

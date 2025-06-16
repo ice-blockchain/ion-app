@@ -119,7 +119,7 @@ class _AddressDescription extends StatelessWidget {
         ),
         SizedBox(height: 22.0.s),
         CopyBuilder(
-          defaultIcon: Assets.svg.iconBlockCopyBlue.icon(),
+          defaultIcon: Assets.svgIconBlockCopyBlue.icon(),
           defaultText: context.i18n.button_copy,
           defaultBorderColor: context.theme.appColors.strokeElements,
           builder: (context, onCopy, content) => Button(

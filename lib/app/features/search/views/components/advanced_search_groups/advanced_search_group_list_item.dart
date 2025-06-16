@@ -45,7 +45,7 @@ class AdvancedSearchGroupListItem extends ConsumerWidget {
               ],
             ),
           ),
-          Assets.svg.iconArrowRight
+          Assets.svgIconArrowRight
               .icon(size: 24.0.s, color: context.theme.appColors.tertararyText),
         ],
       ),
@@ -70,7 +70,7 @@ class GroupDescription extends StatelessWidget {
         if (joined)
           Padding(
             padding: EdgeInsetsDirectional.only(end: 4.0.s),
-            child: Assets.svg.iconChannelMembers.icon(
+            child: Assets.svgIconChannelMembers.icon(
               size: 12.0.s,
               color: context.theme.appColors.onTertararyBackground,
             ),
@@ -113,12 +113,12 @@ class GroupHeader extends StatelessWidget {
         if (isVerified)
           Padding(
             padding: EdgeInsetsDirectional.only(start: 4.0.s),
-            child: Assets.svg.iconBadgeIcelogo.icon(size: 16.0.s),
+            child: Assets.svgIconBadgeIcelogo.icon(size: 16.0.s),
           ),
         if (isION)
           Padding(
             padding: EdgeInsetsDirectional.only(start: 4.0.s),
-            child: Assets.svg.iconBadgeVerify.icon(size: 16.0.s),
+            child: Assets.svgIconBadgeVerify.icon(size: 16.0.s),
           ),
       ],
     );

@@ -75,7 +75,7 @@ class TapToSeeHint extends HookWidget {
                                 ),
                               ),
                               SizedBox(width: 4.0.s),
-                              Assets.svg.iconArrowRight.icon(
+                              Assets.svgIconArrowRight.icon(
                                 size: 16.0.s,
                                 color: colors.primaryText,
                               ),

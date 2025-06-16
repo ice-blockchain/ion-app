@@ -29,13 +29,13 @@ class HeaderActions extends ConsumerWidget {
           post: post,
           isCurrentUser: isCurrentUser,
           child: SvgShadow(
-            child: Assets.svg.iconMoreStories.icon(color: iconMoreColor),
+            child: Assets.svgIconMoreStories.icon(color: iconMoreColor),
           ),
         ),
         SizedBox(width: 16.0.s),
         GestureDetector(
           child: SvgShadow(
-            child: Assets.svg.iconSheetClose.icon(color: iconMoreColor),
+            child: Assets.svgIconSheetClose.icon(color: iconMoreColor),
           ),
           onTap: () => context.pop(),
         ),

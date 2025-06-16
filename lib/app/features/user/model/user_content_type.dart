@@ -12,10 +12,10 @@ enum UserContentType {
 
   String get iconAsset {
     return switch (this) {
-      UserContentType.posts => Assets.svg.iconProfileFeed,
-      UserContentType.replies => Assets.svg.iconFeedReplies,
-      UserContentType.videos => Assets.svg.iconFeedVideos,
-      UserContentType.articles => Assets.svg.iconFeedArticles,
+      UserContentType.posts => Assets.svgIconProfileFeed,
+      UserContentType.replies => Assets.svgIconFeedReplies,
+      UserContentType.videos => Assets.svgIconFeedVideos,
+      UserContentType.articles => Assets.svgIconFeedArticles,
     };
   }
 

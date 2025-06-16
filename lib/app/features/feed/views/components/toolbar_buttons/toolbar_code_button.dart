@@ -20,7 +20,7 @@ class ToolbarCodeButton extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     return ActionsToolbarButton(
-      icon: Assets.svg.iconArticleCode,
+      icon: Assets.svgIconArticleCode,
       onPressed: () {
         final selection = textEditorController.selection;
         var index = selection.baseOffset;

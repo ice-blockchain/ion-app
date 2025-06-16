@@ -23,7 +23,7 @@ class ToolbarPollButton extends HookConsumerWidget {
     final hasPoll = ref.watch(pollDraftNotifierProvider).added;
 
     return ActionsToolbarButton(
-      icon: Assets.svg.iconPostPoll,
+      icon: Assets.svgIconPostPoll,
       enabled: !hasPoll && enabled,
       onPressed: () {
         ref.read(pollDraftNotifierProvider.notifier).markPollAdded();

@@ -19,9 +19,9 @@ enum RecoveryKeyProperty {
 
   String get iconAsset {
     return switch (this) {
-      RecoveryKeyProperty.identityKeyName => Assets.svg.iconIdentitykey,
-      RecoveryKeyProperty.recoveryKeyId => Assets.svg.iconChannelPrivate,
-      RecoveryKeyProperty.recoveryCode => Assets.svg.iconCode4,
+      RecoveryKeyProperty.identityKeyName => Assets.svgIconIdentitykey,
+      RecoveryKeyProperty.recoveryKeyId => Assets.svgIconChannelPrivate,
+      RecoveryKeyProperty.recoveryCode => Assets.svgIconCode4,
     };
   }
 }

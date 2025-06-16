@@ -28,8 +28,8 @@ enum CommunityVisibilityType implements SelectableType {
   @override
   String get iconAsset {
     return switch (this) {
-      CommunityVisibilityType.public => Assets.svg.iconChannelType,
-      CommunityVisibilityType.private => Assets.svg.iconChannelPrivatetype,
+      CommunityVisibilityType.public => Assets.svgIconChannelType,
+      CommunityVisibilityType.private => Assets.svgIconChannelPrivatetype,
     };
   }
 }

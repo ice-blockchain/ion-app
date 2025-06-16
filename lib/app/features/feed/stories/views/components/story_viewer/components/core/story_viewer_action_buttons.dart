@@ -34,7 +34,7 @@ class StoryViewerActionButtons extends ConsumerWidget {
         StoryControlButton(
           borderRadius: 16.0.s,
           iconPadding: 8.0.s,
-          icon: Assets.svg.iconBlockShare.icon(
+          icon: Assets.svgIconBlockShare.icon(
             color: shareColor,
             size: 20.0.s,
           ),
@@ -77,11 +77,11 @@ class _SoundButton extends ConsumerWidget {
       borderRadius: 16.0.s,
       iconPadding: 8.0.s,
       icon: isMuted
-          ? Assets.svg.iconChannelMute.icon(
+          ? Assets.svgIconChannelMute.icon(
               color: muteColor,
               size: 20.0.s,
             )
-          : Assets.svg.iconChannelUnmute.icon(
+          : Assets.svgIconChannelUnmute.icon(
               color: muteColor,
               size: 20.0.s,
             ),
@@ -105,7 +105,7 @@ class _LikeButton extends ConsumerWidget {
 
     final appColors = context.theme.appColors;
     final color = isLiked ? appColors.attentionRed : appColors.onPrimaryAccent;
-    final icon = isLiked ? Assets.svg.iconVideoLikeOn : Assets.svg.iconVideoLikeOff;
+    final icon = isLiked ? Assets.svgIconVideoLikeOn : Assets.svgIconVideoLikeOff;
 
     return StoryControlButton(
       icon: icon.icon(

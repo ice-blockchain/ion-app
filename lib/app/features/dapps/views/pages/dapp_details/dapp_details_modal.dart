@@ -83,7 +83,7 @@ class DAppDetailsModal extends HookConsumerWidget {
                       ),
                     if (app.link != null)
                       DappDetailsInfoBlock(
-                        iconPath: Assets.svg.iconWalletLink,
+                        iconPath: Assets.svgIconWalletLink,
                         value: InkWell(
                           onTap: () async {
                             if (app.link != null) {
@@ -112,7 +112,7 @@ class DAppDetailsModal extends HookConsumerWidget {
                             color: context.theme.appColors.primaryText,
                           ),
                         ),
-                        iconPath: Assets.svg.iconButtonIceStroke,
+                        iconPath: Assets.svgIconButtonIceStroke,
                         trailing: Button.compact(
                           label: Text(
                             isVoted.value
@@ -140,7 +140,7 @@ class DAppDetailsModal extends HookConsumerWidget {
                             isVoted.value = !isVoted.value;
                           },
                           leadingIcon:
-                              isVoted.value ? Assets.svg.iconDappCheck.icon(size: 16.0.s) : null,
+                              isVoted.value ? Assets.svgIconDappCheck.icon(size: 16.0.s) : null,
                           leadingIconOffset: 4.0.s,
                         ),
                       ),
@@ -160,7 +160,7 @@ class DAppDetailsModal extends HookConsumerWidget {
                                 color: context.theme.appColors.primaryText,
                               ),
                             ),
-                            iconPath: Assets.svg.iconDappGames,
+                            iconPath: Assets.svgIconDappGames,
                           ),
                         ),
                         SizedBox(
@@ -180,7 +180,7 @@ class DAppDetailsModal extends HookConsumerWidget {
                                 color: context.theme.appColors.primaryText,
                               ),
                             ),
-                            iconPath: Assets.svg.iconDappGames,
+                            iconPath: Assets.svgIconDappGames,
                           ),
                         ),
                       ],

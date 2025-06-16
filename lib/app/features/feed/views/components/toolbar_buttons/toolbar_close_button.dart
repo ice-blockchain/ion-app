@@ -17,7 +17,7 @@ class ToolbarCloseButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ActionsToolbarButton(
-      icon: Assets.svg.iconSheetClose,
+      icon: Assets.svgIconSheetClose,
       onPressed: onPressed,
     );
   }

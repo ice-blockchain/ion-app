@@ -13,11 +13,11 @@ enum UserNotificationsType {
 
   String get iconAsset {
     return switch (this) {
-      UserNotificationsType.none => Assets.svg.iconProfileNotificationMute,
-      UserNotificationsType.stories => Assets.svg.iconFeedStories,
-      UserNotificationsType.posts => Assets.svg.iconFeedPost,
-      UserNotificationsType.videos => Assets.svg.iconFeedVideos,
-      UserNotificationsType.articles => Assets.svg.iconFeedArticles,
+      UserNotificationsType.none => Assets.svgIconProfileNotificationMute,
+      UserNotificationsType.stories => Assets.svgIconFeedStories,
+      UserNotificationsType.posts => Assets.svgIconFeedPost,
+      UserNotificationsType.videos => Assets.svgIconFeedVideos,
+      UserNotificationsType.articles => Assets.svgIconFeedArticles,
     };
   }
 

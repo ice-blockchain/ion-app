@@ -125,8 +125,8 @@ class RecentChatTile extends HookConsumerWidget {
                 child: Padding(
                   padding: EdgeInsetsDirectional.only(end: 10.0.s),
                   child: selectedConversations.contains(conversation)
-                      ? Assets.svg.iconBlockCheckboxOn.icon(size: 24.0.s)
-                      : Assets.svg.iconBlockCheckboxOff.icon(size: 24.0.s),
+                      ? Assets.svgIconBlockCheckboxOn.icon(size: 24.0.s)
+                      : Assets.svgIconBlockCheckboxOff.icon(size: 24.0.s),
                 ),
               ),
               Flexible(
@@ -165,12 +165,12 @@ class RecentChatTile extends HookConsumerWidget {
                                     if (isVerified)
                                       Padding(
                                         padding: EdgeInsetsDirectional.only(start: 4.0.s),
-                                        child: Assets.svg.iconBadgeVerify.icon(size: 16.0.s),
+                                        child: Assets.svgIconBadgeVerify.icon(size: 16.0.s),
                                       ),
                                     if (isMuted)
                                       Padding(
                                         padding: EdgeInsetsDirectional.only(start: 4.0.s),
-                                        child: Assets.svg.iconChannelfillMute.icon(size: 16.0.s),
+                                        child: Assets.svgIconChannelfillMute.icon(size: 16.0.s),
                                       ),
                                   ],
                                 ),
@@ -244,7 +244,7 @@ class SenderSummary extends ConsumerWidget {
         if (isReply)
           Padding(
             padding: EdgeInsetsDirectional.only(end: 4.0.s),
-            child: Assets.svg.iconChatReply.icon(
+            child: Assets.svgIconChatReply.icon(
               size: 16.0.s,
               color: context.theme.appColors.quaternaryText,
             ),
@@ -252,7 +252,7 @@ class SenderSummary extends ConsumerWidget {
         if (isEdit)
           Padding(
             padding: EdgeInsetsDirectional.only(end: 4.0.s),
-            child: Assets.svg.iconEditLink.icon(
+            child: Assets.svgIconEditLink.icon(
               size: 16.0.s,
               color: context.theme.appColors.quaternaryText,
             ),
@@ -389,12 +389,12 @@ class RecentChatMessageIcon extends StatelessWidget {
   String? _getMessageIcon() => switch (messageType) {
         MessageType.text => null,
         MessageType.emoji => null,
-        MessageType.sharedPost => Assets.svg.iconProfileFeed,
-        MessageType.audio => Assets.svg.iconChatVoicemessage,
-        MessageType.profile => Assets.svg.iconProfileUsertab,
-        MessageType.document => Assets.svg.iconChatFile,
-        MessageType.visualMedia => Assets.svg.iconProfileCamera,
-        MessageType.requestFunds || MessageType.moneySent => Assets.svg.iconProfileTips,
+        MessageType.sharedPost => Assets.svgIconProfileFeed,
+        MessageType.audio => Assets.svgIconChatVoicemessage,
+        MessageType.profile => Assets.svgIconProfileUsertab,
+        MessageType.document => Assets.svgIconChatFile,
+        MessageType.visualMedia => Assets.svgIconProfileCamera,
+        MessageType.requestFunds || MessageType.moneySent => Assets.svgIconProfileTips,
       };
 }
 

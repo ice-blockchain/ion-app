@@ -19,7 +19,7 @@ class NewBookmarksCollectionButton extends StatelessWidget {
         vertical: 16.0.s,
       ),
       child: Button(
-        leadingIcon: Assets.svg.iconPostAddanswer.icon(),
+        leadingIcon: Assets.svgIconPostAddanswer.icon(),
         onPressed: () async {
           await showSimpleBottomSheet<String>(
             context: context,

@@ -89,7 +89,7 @@ class CreateGroupModal extends HookConsumerWidget {
                         Expanded(
                           child: GeneralUserDataInput(
                             controller: nameController,
-                            prefixIconAssetName: Assets.svg.iconFieldName,
+                            prefixIconAssetName: Assets.svgIconFieldName,
                             labelText: context.i18n.group_create_name_label,
                             validator: (String? value) {
                               if (Validators.isEmpty(value)) return '';
@@ -101,7 +101,7 @@ class CreateGroupModal extends HookConsumerWidget {
                     ),
                     SizedBox(height: 24.0.s),
                     GeneralSelectionButton(
-                      iconAsset: Assets.svg.iconChannelType,
+                      iconAsset: Assets.svgIconChannelType,
                       title: context.i18n.group_create_type,
                       selectedValue: createGroupForm.type.getTitle(context),
                       onPress: () {
@@ -121,7 +121,7 @@ class CreateGroupModal extends HookConsumerWidget {
                     SizedBox(height: 24.0.s),
                     Row(
                       children: [
-                        Assets.svg.iconCategoriesFollowing.icon(size: 16.0.s),
+                        Assets.svgIconCategoriesFollowing.icon(size: 16.0.s),
                         SizedBox(width: 6.0.s),
                         Text(
                           context.i18n.group_create_members_number(participantsMasterkeys.length),
@@ -178,7 +178,7 @@ class CreateGroupModal extends HookConsumerWidget {
                 // minimumSize: Size(56.0.s, 56.0.s),
                 // leadingIcon: sendE2eeMessageNotifier.maybeWhen(
                 //   loading: () => const IONLoadingIndicator(),
-                //   orElse: () => Assets.svg.iconPlusCreatechannel.icon(
+                //   orElse: () => Assets.svgIconPlusCreatechannel.icon(
                 //     color: context.theme.appColors.onPrimaryAccent,
                 //   ),
                 // ),

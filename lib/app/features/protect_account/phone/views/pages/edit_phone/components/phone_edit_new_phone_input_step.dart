@@ -21,7 +21,7 @@ class PhoneEditNewPhoneInputStep extends HookConsumerWidget {
     final linkedPhone = ref.watch(linkedPhoneProvider).valueOrNull;
 
     return TwoFAStepScaffold(
-      headerIcon: Assets.svg.icon2faPhoneconfirm.icon(size: 36.0.s),
+      headerIcon: Assets.svgIcon2faPhoneconfirm.icon(size: 36.0.s),
       headerTitle: locale.two_fa_edit_phone_title,
       headerDescription: locale.two_fa_edit_phone_new_phone_description,
       contentPadding: 0,

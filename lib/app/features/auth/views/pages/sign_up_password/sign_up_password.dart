@@ -70,7 +70,7 @@ class SignUpPasswordPage extends HookConsumerWidget {
         child: AuthScrollContainer(
           title: context.i18n.sign_up_password_title,
           description: context.i18n.sign_up_password_description,
-          icon: Assets.svg.iconLoginPassword.icon(size: 36.0.s),
+          icon: Assets.svgIconLoginPassword.icon(size: 36.0.s),
           children: [
             ScreenSideOffset.large(
               child: Form(

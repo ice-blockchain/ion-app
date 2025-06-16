@@ -44,7 +44,7 @@ class SelectArticleTopicsItem extends ConsumerWidget {
               child: Assets.svg.walletChannelPrivate
                   .icon(color: context.theme.appColors.primaryAccent),
             ),
-            trailing: Assets.svg.iconArrowRight.icon(color: context.theme.appColors.primaryText),
+            trailing: Assets.svgIconArrowRight.icon(color: context.theme.appColors.primaryText),
             constraints: BoxConstraints(minHeight: 40.0.s),
             onTap: () {
               SelectArticleTopicsRoute().push<void>(ref.context);

@@ -53,7 +53,7 @@ class _BlockButton extends StatelessWidget {
     return Button(
       onPressed: onPressed,
       leadingIcon:
-          (blocking ? Assets.svg.iconProfileUnblock : Assets.svg.iconProfileBlockUser).icon(
+          (blocking ? Assets.svgIconProfileUnblock : Assets.svgIconProfileBlockUser).icon(
         color: blocking
             ? context.theme.appColors.onPrimaryAccent
             : context.theme.appColors.attentionRed,

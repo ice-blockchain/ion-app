@@ -47,7 +47,7 @@ class RecoveryCredsStep extends HookConsumerWidget {
         child: AuthScrollContainer(
           title: context.i18n.restore_identity_title,
           description: context.i18n.restore_identity_creds_description,
-          icon: Assets.svg.iconLoginRestorekey.icon(size: 36.0.s),
+          icon: Assets.svgIconLoginRestorekey.icon(size: 36.0.s),
           titleStyle: context.theme.appTextThemes.headline2,
           descriptionStyle: context.theme.appTextThemes.body2.copyWith(
             color: context.theme.appColors.tertararyText,

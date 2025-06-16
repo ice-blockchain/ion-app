@@ -31,7 +31,7 @@ class DeletePhoneInputStep extends ConsumerWidget {
     return TwoFAStepScaffold(
       headerTitle: locale.two_fa_deleting_phone_title,
       headerDescription: locale.two_fa_deleting_phone_description,
-      headerIcon: Assets.svg.icon2faPhoneconfirm.icon(size: 36.0.s),
+      headerIcon: Assets.svgIcon2faPhoneconfirm.icon(size: 36.0.s),
       onBackPress: onPrevious,
       child: TwoFAInputStep(
         onConfirm: (controllers) => _onConfirm(ref, controllers),

@@ -54,7 +54,7 @@ class PhoneSetupPage extends ConsumerWidget {
                           color: context.theme.appColors.secondaryText,
                         ),
                         icon: AuthHeaderIcon(
-                          icon: Assets.svg.icon2faPhoneconfirm.icon(size: 36.0.s),
+                          icon: Assets.svgIcon2faPhoneconfirm.icon(size: 36.0.s),
                         ),
                       ),
                       if (step == PhoneSetupSteps.input)

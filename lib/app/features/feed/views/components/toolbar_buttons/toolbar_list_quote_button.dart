@@ -12,7 +12,7 @@ class ToolbarListQuoteButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ActionsToolbarButton(
-      icon: Assets.svg.iconArticleQuote,
+      icon: Assets.svgIconArticleQuote,
       onPressed: () {
         final currentStyle = textEditorController.getSelectionStyle().attributes;
 

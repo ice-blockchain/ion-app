@@ -26,13 +26,13 @@ class ChannelDetailAppBar extends StatelessWidget {
             onPressed: () {
               context.pop();
             },
-            assetName: Assets.svg.iconProfileBack,
+            assetName: Assets.svgIconProfileBack,
             flipForRtl: true,
             opacity: 1,
           ),
           HeaderAction(
             onPressed: () {},
-            assetName: Assets.svg.iconMorePopup,
+            assetName: Assets.svgIconMorePopup,
             opacity: 1,
           ),
         ],

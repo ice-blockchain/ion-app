@@ -93,7 +93,7 @@ class StoryPreviewPage extends HookConsumerWidget {
                       contentPadding: EdgeInsets.zero,
                       backgroundColor: context.theme.appColors.secondaryBackground,
                       leading: whoCanReply.getIcon(context),
-                      trailing: Assets.svg.iconArrowRight.icon(
+                      trailing: Assets.svgIconArrowRight.icon(
                         color: context.theme.appColors.primaryAccent,
                       ),
                       constraints: BoxConstraints(minHeight: 40.0.s),

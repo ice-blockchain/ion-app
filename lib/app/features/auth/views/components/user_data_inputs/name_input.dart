@@ -26,7 +26,7 @@ class NameInput extends StatelessWidget {
   Widget build(BuildContext context) {
     return GeneralUserDataInput(
       onChanged: onChanged,
-      prefixIconAssetName: Assets.svg.iconFieldName,
+      prefixIconAssetName: Assets.svgIconFieldName,
       labelText: context.i18n.fill_profile_input_name,
       initialValue: initialValue,
       isLive: isLive,

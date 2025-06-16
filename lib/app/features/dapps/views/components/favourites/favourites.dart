@@ -70,7 +70,7 @@ class Favourites extends StatelessWidget {
                     ],
                   ),
                 ),
-                Assets.svg.iconArrowRight.icon(size: 26.0.s),
+                Assets.svgIconArrowRight.icon(size: 26.0.s),
               ],
             ),
           ),

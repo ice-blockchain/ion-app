@@ -30,7 +30,7 @@ class CopyKeyCard extends ConsumerWidget {
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Assets.svg.iconFieldIdentitykey.icon(
+              Assets.svgIconFieldIdentitykey.icon(
                 size: 16.0.s,
                 color: context.theme.appColors.onTertararyBackground,
               ),
@@ -49,7 +49,7 @@ class CopyKeyCard extends ConsumerWidget {
           ),
           if (code != null)
             CopyBuilder(
-              defaultIcon: Assets.svg.iconBlockCopyBlue.icon(),
+              defaultIcon: Assets.svgIconBlockCopyBlue.icon(),
               defaultText: context.i18n.button_copy,
               defaultBorderColor: context.theme.appColors.strokeElements,
               builder: (context, onCopy, content) => Button(

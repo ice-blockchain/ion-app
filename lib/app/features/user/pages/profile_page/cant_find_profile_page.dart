@@ -47,7 +47,7 @@ class CantFindProfilePage extends StatelessWidget {
                       onPressed: () {
                         Navigator.of(context).pop(true);
                       },
-                      assetName: Assets.svg.iconProfileBack,
+                      assetName: Assets.svgIconProfileBack,
                       opacity: 1,
                       flipForRtl: true,
                     ),

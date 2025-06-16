@@ -18,7 +18,7 @@ class DeleteAudioButton extends ConsumerWidget {
       onTap: onPressed,
       child: Padding(
         padding: EdgeInsetsDirectional.fromSTEB(12.0.s, 4.0.s, 4.0.s, 4.0.s),
-        child: Assets.svg.iconBlockDelete.icon(
+        child: Assets.svgIconBlockDelete.icon(
           color: context.theme.appColors.primaryText,
           size: 24.0.s,
         ),
