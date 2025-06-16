@@ -82,29 +82,48 @@ jobs:
           set -a
           source ./.app.env
           set +a
-          
-          # Save headers and body separately
-          curl -X 'GET' \
-            "${ION_ORIGIN}/v1/coins" \
+
+          mkdir -p ./assets/ion_identity
+          echo "Fetching coins data from: ${ION_ORIGIN}/v1/coins"
+
+          response=$(curl -sS -w "\n%{http_code}" \
+            -D ./assets/ion_identity/coins_headers.txt \
+            -o ./assets/ion_identity/coins.json \
             -H 'accept: application/json' \
             -H "X-API-Key: ${{ secrets.IDENTITY_IO_API_KEY }}" \
-            -D ./assets/ion_identity/coins_headers.txt \
-            -o ./assets/ion_identity/coins.json
+            "${ION_ORIGIN}/v1/coins")
           
+          status_code=$(echo "$response" | tail -n1)
+          if [ "$status_code" -ne 200 ]; then
+            echo "❌ Failed to fetch coins.json. Status code: $status_code"
+            exit 1
+          fi
+          echo "✅ coins.json fetched successfully. Status: $status_code"
+
           # Extract 'x-version' header from coins_headers.txt and save it
-          grep -i 'x-version:' ./assets/ion_identity/coins_headers.txt | awk '{print $2}' | tr -d '\r' > ./assets/ion_identity/coins_version.txt
+          grep -i '^x-version:' ./assets/ion_identity/coins_headers.txt | awk '{print $2}' | tr -d '\r' > ./assets/ion_identity/coins_version.txt
       - name: Fetch networks data using ION_ORIGIN
         run: |
           cd main-repo
           set -a
           source ./.app.env
           set +a
-          
-          curl -X 'GET' \
-            "${ION_ORIGIN}/v1/networks" \
+
+          mkdir -p ./assets/ion_identity
+          echo "Fetching networks data from: ${ION_ORIGIN}/v1/networks"
+
+          response=$(curl -sS -w "\n%{http_code}" \
+            -o ./assets/ion_identity/networks.json \
             -H 'accept: application/json' \
             -H "X-API-Key: ${{ secrets.IDENTITY_IO_API_KEY }}" \
-            -o ./assets/ion_identity/networks.json
+            "${ION_ORIGIN}/v1/networks")
+
+          status_code=$(echo "$response" | tail -n1)
+          if [ "$status_code" -ne 200 ]; then
+            echo "❌ Failed to fetch networks.json. Status code: $status_code"
+            exit 1
+          fi
+          echo "✅ networks.json fetched successfully. Status: $status_code"
       - name: Mask APP environment and keys in logs
         id: mask-secrets
         run: |
