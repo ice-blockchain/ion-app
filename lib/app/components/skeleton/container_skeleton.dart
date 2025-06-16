@@ -10,15 +10,18 @@ class ContainerSkeleton extends StatelessWidget {
     required this.height,
     this.margin,
     super.key,
+    this.skeletonBaseColor,
   });
 
   final double width;
   final double height;
   final EdgeInsetsGeometry? margin;
+  final Color? skeletonBaseColor;
 
   @override
   Widget build(BuildContext context) {
     return Skeleton(
+      baseColor: skeletonBaseColor,
       child: Container(
         width: width,
         height: height,

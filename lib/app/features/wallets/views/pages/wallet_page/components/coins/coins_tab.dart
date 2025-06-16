@@ -24,7 +24,11 @@ class CoinsTab extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final groups = ref.watch(filteredCoinsNotifierProvider.select((state) => state.value));
 
-    if (groups == null || groups.isEmpty) {
+    if (groups == null) {
+      return _CoinsTabBody(itemCount: 4, itemBuilder: (_, __) => const CoinsGroupItemPlaceholder());
+    }
+
+    if (groups.isEmpty) {
       return EmptyState(
         tabType: tabType,
         onBottomActionTap: () {
@@ -33,29 +37,47 @@ class CoinsTab extends ConsumerWidget {
       );
     }
 
+    return _CoinsTabBody(
+      itemCount: groups.length,
+      itemBuilder: (context, index) {
+        final group = groups[index];
+
+        final isUpdating = ref.watch(
+          manageCoinsNotifierProvider.select(
+            (state) => state.valueOrNull?[group.symbolGroup]?.isUpdating ?? false,
+          ),
+        );
+
+        return ScreenSideOffset.small(
+          child: isUpdating
+              ? const CoinsGroupItemPlaceholder()
+              : CoinsGroupItem(
+                  coinsGroup: group,
+                  onTap: () => CoinsDetailsRoute(symbolGroup: group.symbolGroup).go(context),
+                ),
+        );
+      },
+    );
+  }
+}
+
+class _CoinsTabBody extends ConsumerWidget {
+  const _CoinsTabBody({
+    required this.itemCount,
+    required this.itemBuilder,
+  });
+
+  final int itemCount;
+  final NullableIndexedWidgetBuilder itemBuilder;
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
     return SliverMainAxisGroup(
       slivers: [
         SliverList.separated(
-          itemCount: groups.length,
+          itemCount: itemCount,
           separatorBuilder: (context, index) => SizedBox(height: 12.0.s),
-          itemBuilder: (context, index) {
-            final group = groups[index];
-
-            final isUpdating = ref.watch(
-              manageCoinsNotifierProvider.select(
-                (state) => state.valueOrNull?[group.symbolGroup]?.isUpdating ?? false,
-              ),
-            );
-
-            return ScreenSideOffset.small(
-              child: isUpdating
-                  ? const CoinsGroupItemPlaceholder()
-                  : CoinsGroupItem(
-                      coinsGroup: group,
-                      onTap: () => CoinsDetailsRoute(symbolGroup: group.symbolGroup).go(context),
-                    ),
-            );
-          },
+          itemBuilder: itemBuilder,
         ),
         const CoinsTabFooter(),
       ],
