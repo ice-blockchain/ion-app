@@ -6,6 +6,8 @@ import 'dart:io';
 import 'package:collection/collection.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:ion/app/features/chat/e2ee/model/entities/private_direct_message_data.c.dart';
+import 'package:ion/app/features/chat/model/message_type.dart';
+import 'package:ion/app/features/core/model/media_type.dart';
 import 'package:ion/app/features/feed/data/models/entities/generic_repost.c.dart';
 import 'package:ion/app/features/feed/data/models/entities/modifiable_post_data.c.dart';
 import 'package:ion/app/features/feed/data/models/entities/post_data.c.dart';
@@ -29,12 +31,17 @@ class IonConnectPushDataPayload {
   const IonConnectPushDataPayload._({
     required this.event,
     required this.relevantEvents,
+    this.decryptedEvent,
   });
 
   final EventMessage event;
+  final EventMessage? decryptedEvent;
   final List<EventMessage> relevantEvents;
 
-  static Future<IonConnectPushDataPayload> fromEncoded(Map<String, dynamic> data) async {
+  static Future<IonConnectPushDataPayload> fromEncoded(
+    Map<String, dynamic> data,
+    Future<EventMessage> Function(EventMessage eventMassage) decryptEvent,
+  ) async {
     final EncodedIonConnectPushData(:event, :relevantEvents, :compression) =
         EncodedIonConnectPushData.fromJson(data);
 
@@ -51,9 +58,21 @@ class IonConnectPushDataPayload {
             )
             .toList())
         : <EventMessage>[];
+
+    EventMessage? decryptedEvent;
+
+    if (parsedEvent.kind == IonConnectGiftWrapEntity.kind) {
+      final giftWrapEntity = EventParser().parse(parsedEvent) as IonConnectGiftWrapEntity;
+      if (giftWrapEntity.data.kinds
+          .contains(ReplaceablePrivateDirectMessageEntity.kind.toString())) {
+        decryptedEvent = await decryptEvent(parsedEvent);
+      }
+    }
+
     return IonConnectPushDataPayload._(
       event: parsedEvent,
       relevantEvents: parsedRelevantEvents,
+      decryptedEvent: decryptedEvent,
     );
   }
 
@@ -89,7 +108,34 @@ class IonConnectPushDataPayload {
       return PushNotificationType.follower;
     } else if (entity is IonConnectGiftWrapEntity) {
       if (entity.data.kinds.contains(ReplaceablePrivateDirectMessageEntity.kind.toString())) {
-        return PushNotificationType.chatMessage;
+        if (decryptedEvent == null) return null;
+
+        final message = ReplaceablePrivateDirectMessageEntity.fromEventMessage(decryptedEvent!);
+        switch (message.data.messageType) {
+          case MessageType.audio:
+            return PushNotificationType.chatVoiceMessage;
+          case MessageType.document:
+            return PushNotificationType.chatDocumentMessage;
+          case MessageType.text || MessageType.emoji:
+            return PushNotificationType.chatTextMessage;
+          case MessageType.profile:
+            return PushNotificationType.chatProfileMessage;
+          case MessageType.sharedPost:
+            return PushNotificationType.chatSharePostMessage;
+          case MessageType.visualMedia:
+            final mediaItems = message.data.media.values.toList();
+            if (mediaItems.every((media) => media.mediaType == MediaType.image)) {
+              return PushNotificationType.chatPhotoMessage;
+            } else if (mediaItems.every((media) => media.mediaType == MediaType.video)) {
+              return PushNotificationType.chatVideoMessage;
+            } else {
+              return PushNotificationType.chatAlbumMessage;
+            }
+          case MessageType.requestFunds:
+            return PushNotificationType.paymentRequest;
+          case MessageType.moneySent:
+            return PushNotificationType.paymentReceived;
+        }
       } else if (entity.data.kinds.contains(ReactionEntity.kind.toString())) {
         return PushNotificationType.chatReaction;
       } else if (entity.data.kinds.contains(FundsRequestEntity.kind.toString())) {
@@ -98,17 +144,27 @@ class IonConnectPushDataPayload {
         return PushNotificationType.paymentReceived;
       }
     }
+
     return null;
   }
 
   Map<String, String> get placeholders {
     final mainEntityUserMetadata = _getUserMetadata(pubkey: mainEntity.masterPubkey);
 
+    final data = <String, String>{};
+
     if (mainEntityUserMetadata != null) {
-      return {'username': mainEntityUserMetadata.data.displayName};
+      data.addAll({
+        'username': mainEntityUserMetadata.data.name,
+        'displayName': mainEntityUserMetadata.data.displayName,
+      });
     }
 
-    return {};
+    if (decryptedEvent != null) {
+      data['messageContent'] = decryptedEvent!.content;
+    }
+
+    return data;
   }
 
   Future<bool> validate({required String currentPubkey}) async {
@@ -220,8 +276,18 @@ enum PushNotificationType {
   repost,
   like,
   follower,
-  chatMessage,
-  chatReaction,
   paymentRequest,
   paymentReceived,
+  chatDocumentMessage,
+  chatEmojiMessage,
+  chatPhotoMessage,
+  chatProfileMessage,
+  chatReaction,
+  chatSharePostMessage,
+  chatShareStoryMessage,
+  chatSharedStoryReplyMessage,
+  chatTextMessage,
+  chatVideoMessage,
+  chatVoiceMessage,
+  chatAlbumMessage,
 }

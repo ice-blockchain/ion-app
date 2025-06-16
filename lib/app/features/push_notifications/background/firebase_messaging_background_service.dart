@@ -6,6 +6,7 @@ import 'dart:io';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/foundation.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:ion/app/features/chat/e2ee/providers/gift_unwrap_service_provider.c.dart';
 import 'package:ion/app/features/push_notifications/data/models/ion_connect_push_data_payload.c.dart';
 import 'package:ion/app/features/push_notifications/providers/notification_data_parser_provider.c.dart';
 import 'package:ion/app/services/ion_connect/ion_connect.dart';
@@ -25,7 +26,11 @@ Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
     return;
   }
 
-  final data = await IonConnectPushDataPayload.fromEncoded(message.data);
+  final data = await IonConnectPushDataPayload.fromEncoded(message.data, (eventMassage) async {
+    final giftUnwrapService = await riverpodContainer.read(giftUnwrapServiceProvider.future);
+    return giftUnwrapService.unwrap(eventMassage);
+  });
+
   final parser = await riverpodContainer.read(notificationDataParserProvider.future);
   final parsedData = await parser.parse(data);
 
