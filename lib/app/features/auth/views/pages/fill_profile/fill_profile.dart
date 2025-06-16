@@ -21,6 +21,7 @@ import 'package:ion/app/features/user/hooks/use_verify_referral_exists_error_mes
 import 'package:ion/app/features/user/providers/image_proccessor_notifier.c.dart';
 import 'package:ion/app/features/user/providers/user_nickname_provider.c.dart';
 import 'package:ion/app/features/user/providers/user_referral_provider.c.dart';
+import 'package:ion/app/hooks/use_on_init.dart';
 import 'package:ion/app/router/app_routes.c.dart';
 import 'package:ion/app/router/components/sheet_content/sheet_content.dart';
 import 'package:ion/app/services/media_service/image_proccessing_config.dart';
@@ -41,14 +42,16 @@ class FillProfile extends HookConsumerWidget {
     final name = useState(initialName);
     final initialNickname = onboardingData.name ?? '';
     final nickname = useState(onboardingData.name ?? '');
+    final debouncedNickname = useDebounced(nickname.value.trim(), const Duration(seconds: 1));
     final initialReferral = onboardingData.referralName ?? '';
     final referral = useState(onboardingData.referralName ?? '');
+    final debouncedReferral = useDebounced(referral.value.trim(), const Duration(seconds: 1));
 
-    final isLoading = ref.watch(userNicknameNotifierProvider).isLoading ||
-        ref.watch(userReferralNotifierProvider).isLoading;
+    final isLoading = useState(false);
 
     final onSubmit = useCallback(() async {
       if (formKey.currentState!.validate()) {
+        isLoading.value = true;
         await Future.wait(
           [
             ref
@@ -60,6 +63,7 @@ class FillProfile extends HookConsumerWidget {
                   .verifyReferralExists(referral: referral.value),
           ],
         );
+        isLoading.value = false;
         if (ref.read(userNicknameNotifierProvider).hasError ||
             (referral.value.isNotEmpty && ref.read(userReferralNotifierProvider).hasError)) {
           return;
@@ -81,6 +85,28 @@ class FillProfile extends HookConsumerWidget {
         }
       }
     });
+
+    useOnInit(
+      () {
+        if (debouncedNickname != null && validateNickname(debouncedNickname, context) == null) {
+          ref
+              .read(userNicknameNotifierProvider.notifier)
+              .verifyNicknameAvailability(nickname: debouncedNickname);
+        }
+      },
+      [debouncedNickname, context],
+    );
+
+    useOnInit(
+      () {
+        if (debouncedReferral != null && validateNickname(debouncedReferral, context) == null) {
+          ref
+              .read(userReferralNotifierProvider.notifier)
+              .verifyReferralExists(referral: debouncedReferral);
+        }
+      },
+      [debouncedReferral, context],
+    );
 
     final verifyNicknameErrorMessage = useVerifyNicknameAvailabilityErrorMessage(ref);
     final verifyReferralErrorMessage = useVerifyReferralExistsErrorMessage(ref);
@@ -142,8 +168,8 @@ class FillProfile extends HookConsumerWidget {
                         ),
                         SizedBox(height: 26.0.s),
                         FillProfileSubmitButton(
-                          disabled: name.value.isEmpty || nickname.value.isEmpty || isLoading,
-                          loading: isAvatarCompressing || isLoading,
+                          disabled: name.value.isEmpty || nickname.value.isEmpty || isLoading.value,
+                          loading: isAvatarCompressing || isLoading.value,
                           onPressed: onSubmit,
                         ),
                         SizedBox(height: 40.0.s + MediaQuery.paddingOf(context).bottom),

@@ -8,6 +8,19 @@ import 'package:ion/generated/assets.gen.dart';
 
 const int _nicknameMaxLength = 20;
 
+String? validateNickname(String? value, BuildContext context) {
+  if (Validators.isEmpty(value)) return '';
+
+  if (Validators.isInvalidNickname(value)) {
+    return context.i18n.error_nickname_invalid;
+  }
+
+  if (Validators.isInvalidLength(value, maxLength: _nicknameMaxLength)) {
+    return context.i18n.error_input_length_max(_nicknameMaxLength);
+  }
+  return null;
+}
+
 class NicknameInput extends StatelessWidget {
   const NicknameInput({
     super.key,
@@ -39,18 +52,7 @@ class NicknameInput extends StatelessWidget {
       isLive: isLive,
       showNoErrorsIndicator: isLive,
       errorText: errorText,
-      validator: (String? value) {
-        if (Validators.isEmpty(value)) return '';
-
-        if (Validators.isInvalidNickname(value)) {
-          return context.i18n.error_nickname_invalid;
-        }
-
-        if (Validators.isInvalidLength(value, maxLength: _nicknameMaxLength)) {
-          return context.i18n.error_input_length_max(_nicknameMaxLength);
-        }
-        return null;
-      },
+      validator: (value) => validateNickname(value, context),
     );
   }
 }
