@@ -45,10 +45,11 @@ class CurrentUserBlockListNotifier extends _$CurrentUserBlockListNotifier {
   }
 }
 
-@Riverpod(keepAlive: true)
+@riverpod
 class CurrentUserBlockedByListNotifier extends _$CurrentUserBlockedByListNotifier {
   @override
   Future<List<BlockedUserEntity>> build() async {
+    keepAliveWhenAuthenticated(ref);
     final currentUserMasterPubkey = ref.watch(currentPubkeySelectorProvider);
     if (currentUserMasterPubkey == null) {
       return [];
