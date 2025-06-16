@@ -1,0 +1,17 @@
+diff --git a/lib/app/features/feed/data/models/feed_interests.c.dart b/lib/app/features/feed/data/models/feed_interests.c.dart
+index 895ce9ef0..fb44ecf95 100644
+--- a/lib/app/features/feed/data/models/feed_interests.c.dart
++++ b/lib/app/features/feed/data/models/feed_interests.c.dart
+@@ -62,6 +62,12 @@ class FeedInterests with _$FeedInterests implements AppConfigWithVersion {
+ 
+     return copyWith(categories: updatedCategories);
+   }
++
++  Map<String, FeedInterestsSubcategory> get subcategories => Map.fromEntries([
++        for (final category in categories.values) ...category.children.entries,
++      ]);
++
++  static const unclassified = 'unclassified';
+ }
+ 
+ abstract class CategoryWithWeight {

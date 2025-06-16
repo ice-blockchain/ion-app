@@ -77,7 +77,7 @@ class FeedForYouContent extends _$FeedForYouContent implements PagedNotifier {
       final modifiersDistribution = _getFeedModifiersDistribution(limit: limit - unseenFollowing);
       for (final MapEntry(key: modifier, value: modifierLimit) in modifiersDistribution.entries) {
         if (modifierLimit > 0) {
-          yield* _fetchInterestsEntities(feedModifier: modifier, limit: modifierLimit);
+          yield* _fetchInterestsEntities(modifier: modifier, limit: modifierLimit);
         }
       }
     }
@@ -91,23 +91,27 @@ class FeedForYouContent extends _$FeedForYouContent implements PagedNotifier {
   }
 
   Map<FeedModifier, int> _getFeedModifiersDistribution({required int limit}) {
-    if (feedModifier != null) {
-      // If a specific feed modifier is set, we only return that modifier with the full limit.
-      // For example, for the Trending Videos feed.
-      return {feedModifier!: limit};
-    }
-
-    final modifierWeights = switch (feedType) {
-      FeedType.post || FeedType.video || FeedType.article => {
-          FeedModifier.top: 1,
-          FeedModifier.trending: 1,
-          FeedModifier.explore: 1,
-        },
-      FeedType.story => {
-          FeedModifier.trending: 1,
-          FeedModifier.explore: 1,
-        },
-    };
+    final modifierWeights =
+        // If the "global" feed modifier is "trending", distribute to the
+        // trending and explore modifiers equally (explore also has the "trending" search ext).
+        feedModifier == FeedModifier.trending
+            ? {
+                FeedModifier.trending: 1,
+                FeedModifier.explore: 1,
+              }
+            : switch (feedType) {
+                // Regular feeds has equal distribution of all modifiers.
+                FeedType.post || FeedType.video || FeedType.article => {
+                    FeedModifier.top: 1,
+                    FeedModifier.trending: 1,
+                    FeedModifier.explore: 1,
+                  },
+                // Stories feed has only explore and trending modifiers.
+                FeedType.story => {
+                    FeedModifier.trending: 1,
+                    FeedModifier.explore: 1,
+                  },
+              };
     final totalWeight = modifierWeights.values.sum;
     return {
       for (final entry in modifierWeights.entries)
@@ -180,19 +184,19 @@ class FeedForYouContent extends _$FeedForYouContent implements PagedNotifier {
   }
 
   Stream<IonConnectEntity> _fetchInterestsEntities({
-    required FeedModifier feedModifier,
+    required FeedModifier modifier,
     required int limit,
   }) async* {
-    await _refreshModifierPagination(feedModifier: feedModifier);
+    await _refreshModifierPagination(modifier: modifier);
 
     final nextPageRelays =
-        getNextPageSources(sources: state.modifiersPagination[feedModifier]!, limit: limit);
+        getNextPageSources(sources: state.modifiersPagination[modifier]!, limit: limit);
 
     if (nextPageRelays.isEmpty) return;
 
     var requestedCount = 0;
     await for (final entity
-        in _requestEntitiesFromRelays(relays: nextPageRelays.keys, feedModifier: feedModifier)) {
+        in _requestEntitiesFromRelays(relays: nextPageRelays.keys, modifier: modifier)) {
       yield entity;
       requestedCount++;
     }
@@ -200,7 +204,7 @@ class FeedForYouContent extends _$FeedForYouContent implements PagedNotifier {
     final remaining = limit - requestedCount;
 
     if (remaining > 0) {
-      yield* _fetchInterestsEntities(feedModifier: feedModifier, limit: remaining);
+      yield* _fetchInterestsEntities(modifier: modifier, limit: remaining);
     }
   }
 
@@ -208,22 +212,22 @@ class FeedForYouContent extends _$FeedForYouContent implements PagedNotifier {
     return ref.read(relevantCurrentUserRelaysProvider.future);
   }
 
-  Future<void> _refreshModifierPagination({required FeedModifier feedModifier}) async {
+  Future<void> _refreshModifierPagination({required FeedModifier modifier}) async {
     // For any other feed type except articles, pagination can't be changed.
     // For Articles, user can select or unselect some topics, so we need to refresh the pagination
-    if (feedType != FeedType.article && state.modifiersPagination[feedModifier] != null) return;
+    if (feedType != FeedType.article && state.modifiersPagination[modifier] != null) return;
 
     final dataSourceRelays = await _getDataSourceRelays();
 
     // TODO: for articles (if feedType is FeedType.article), take the selected article interests
-    final interests = feedModifier == FeedModifier.explore
+    final interests = modifier == FeedModifier.explore
         ? [_exploreInterest]
         : (await ref.read(feedUserInterestsProvider(feedType).future)).subcategories.keys;
 
     final relaysPagination = Map.fromEntries(
       dataSourceRelays.map(
         (relayUrl) {
-          final relayPagination = state.modifiersPagination[feedModifier]?[relayUrl] ??
+          final relayPagination = state.modifiersPagination[modifier]?[relayUrl] ??
               const RelayPagination(page: -1, hasMore: true, interestsPagination: {});
           final interestsPagination = Map.fromEntries(
             interests.map(
@@ -247,14 +251,14 @@ class FeedForYouContent extends _$FeedForYouContent implements PagedNotifier {
     state = state.copyWith(
       modifiersPagination: {
         ...state.modifiersPagination,
-        feedModifier: relaysPagination,
+        modifier: relaysPagination,
       },
     );
   }
 
   Stream<IonConnectEntity> _requestEntitiesFromRelays({
     required Iterable<String> relays,
-    required FeedModifier feedModifier,
+    required FeedModifier modifier,
   }) async* {
     final requestsQueue = await ref.read(feedRequestQueueProvider.future);
     final resultsController = StreamController<IonConnectEntity>();
@@ -263,16 +267,15 @@ class FeedForYouContent extends _$FeedForYouContent implements PagedNotifier {
       for (final relayUrl in relays)
         requestsQueue.add(() async {
           final relayInterestsPagination =
-              state.modifiersPagination[feedModifier]![relayUrl]!.interestsPagination;
+              state.modifiersPagination[modifier]![relayUrl]!.interestsPagination;
 
-          final interest =
-              await _getRequestInterest(relayUrl: relayUrl, feedModifier: feedModifier);
+          final interest = await _getRequestInterest(relayUrl: relayUrl, modifier: modifier);
 
           final interestPagination = relayInterestsPagination[interest]!;
 
           final entity = await _requestEntityFromRelay(
             relayUrl: relayUrl,
-            feedModifier: feedModifier,
+            modifier: modifier,
             interest: interest,
             lastEventCreatedAt: interestPagination.lastEventCreatedAt,
           );
@@ -290,7 +293,7 @@ class FeedForYouContent extends _$FeedForYouContent implements PagedNotifier {
             _updateRelayInterestPagination(
               interestPagination.copyWith(lastEventCreatedAt: entity.createdAt),
               relayUrl: relayUrl,
-              feedModifier: feedModifier,
+              modifier: modifier,
               interest: interest,
               increasePage: true,
             );
@@ -298,15 +301,15 @@ class FeedForYouContent extends _$FeedForYouContent implements PagedNotifier {
             _updateRelayInterestPagination(
               interestPagination.copyWith(hasMore: false),
               relayUrl: relayUrl,
-              feedModifier: feedModifier,
+              modifier: modifier,
               interest: interest,
             );
           }
         }).catchError((Object? error) {
           _updateRelayPagination(
-            state.modifiersPagination[feedModifier]![relayUrl]!.copyWith(hasMore: false),
+            state.modifiersPagination[modifier]![relayUrl]!.copyWith(hasMore: false),
             relayUrl: relayUrl,
-            feedModifier: feedModifier,
+            modifier: modifier,
           );
           Logger.error(
             error ?? '',
@@ -322,16 +325,16 @@ class FeedForYouContent extends _$FeedForYouContent implements PagedNotifier {
 
   Future<String> _getRequestInterest({
     required String relayUrl,
-    required FeedModifier feedModifier,
+    required FeedModifier modifier,
   }) async {
-    if (feedModifier == FeedModifier.explore) {
+    if (modifier == FeedModifier.explore) {
       // For explore feed, we use a special interest that is not related to any user interests.
       return _exploreInterest;
     } else {
       final interestsPicker = await ref.read(feedUserInterestPickerProvider(feedType).future);
 
       final relayInterestsPagination =
-          state.modifiersPagination[feedModifier]![relayUrl]!.interestsPagination;
+          state.modifiersPagination[modifier]![relayUrl]!.interestsPagination;
 
       final availableInterests = relayInterestsPagination.entries
           .where((entry) => entry.value.hasMore)
@@ -344,17 +347,16 @@ class FeedForYouContent extends _$FeedForYouContent implements PagedNotifier {
 
   Future<IonConnectEntity?> _requestEntityFromRelay({
     required String relayUrl,
-    required FeedModifier feedModifier,
+    required FeedModifier modifier,
     required String interest,
     required int? lastEventCreatedAt,
   }) async {
     final ionConnectNotifier = ref.read(ionConnectNotifierProvider.notifier);
     final feedConfig = await ref.read(feedConfigProvider.future);
 
-    final dataSource =
-        _getDataSource(relayUrl: relayUrl, feedModifier: feedModifier, interest: interest);
+    final dataSource = _getDataSource(relayUrl: relayUrl, modifier: modifier, interest: interest);
 
-    final maxAge = switch (feedModifier) {
+    final maxAge = switch (modifier) {
       FeedModifier.trending => feedConfig.trendingMaxAge,
       FeedModifier.top => feedConfig.topMaxAge,
       FeedModifier.explore => feedConfig.exploreMaxAge,
@@ -384,7 +386,7 @@ class FeedForYouContent extends _$FeedForYouContent implements PagedNotifier {
 
   EntitiesDataSource _getDataSource({
     required String relayUrl,
-    required FeedModifier feedModifier,
+    required FeedModifier modifier,
     required String interest,
   }) {
     final currentPubkey = ref.read(currentPubkeySelectorProvider);
@@ -393,36 +395,42 @@ class FeedForYouContent extends _$FeedForYouContent implements PagedNotifier {
       throw const CurrentUserNotFoundException();
     }
 
+    // For explore feed, we use a special interest that is not related to any user interests.
+    // It is defined in the [modifier] filter tags
     final tags = {
-      ...feedModifier.filter.tags,
-      // For explore feed, we use a special interest that is not related to any user interests.
-      // It is defined in the [feedModifier] filter tags
-      if (interest != _exploreInterest) '#${RelatedHashtag.tagName}': [interest],
+      ...modifier.filter.tags,
+      if (modifier != FeedModifier.explore) '#${RelatedHashtag.tagName}': [interest],
     };
+
+    // Global [feedModifier] has priority over the local [modifier].
+    // This is for the "Trending Videos" case, where we have to apply the
+    // "trending" modifier even to the "explore" [modifier].
+    final modifiersSearch =
+        feedModifier != null ? feedModifier!.filter.search : modifier.filter.search;
 
     return switch (feedType) {
       FeedType.post => buildPostsDataSource(
           actionSource: ActionSource.relayUrl(relayUrl),
           currentPubkey: currentPubkey,
-          searchExtensions: feedModifier.filter.search,
+          searchExtensions: modifiersSearch,
           tags: tags,
         ),
       FeedType.article => buildArticlesDataSource(
           actionSource: ActionSource.relayUrl(relayUrl),
           currentPubkey: currentPubkey,
-          searchExtensions: feedModifier.filter.search,
+          searchExtensions: modifiersSearch,
           tags: tags,
         ),
       FeedType.video => buildVideosDataSource(
           actionSource: ActionSource.relayUrl(relayUrl),
           currentPubkey: currentPubkey,
-          searchExtensions: feedModifier.filter.search,
+          searchExtensions: modifiersSearch,
           tags: tags,
         ),
       FeedType.story => buildStoriesDataSource(
           actionSource: ActionSource.relayUrl(relayUrl),
           currentPubkey: currentPubkey,
-          searchExtensions: feedModifier.filter.search,
+          searchExtensions: modifiersSearch,
           tags: tags,
         ),
     };
@@ -437,14 +445,14 @@ class FeedForYouContent extends _$FeedForYouContent implements PagedNotifier {
   void _updateRelayPagination(
     RelayPagination pagination, {
     required String relayUrl,
-    required FeedModifier feedModifier,
+    required FeedModifier modifier,
     bool increasePage = false,
   }) {
     state = state.copyWith(
       modifiersPagination: {
         ...state.modifiersPagination,
-        feedModifier: {
-          ...state.modifiersPagination[feedModifier]!,
+        modifier: {
+          ...state.modifiersPagination[modifier]!,
           relayUrl: pagination,
         },
       },
@@ -454,11 +462,11 @@ class FeedForYouContent extends _$FeedForYouContent implements PagedNotifier {
   void _updateRelayInterestPagination(
     InterestPagination pagination, {
     required String relayUrl,
-    required FeedModifier feedModifier,
+    required FeedModifier modifier,
     required String interest,
     bool increasePage = false,
   }) {
-    final relayPagination = state.modifiersPagination[feedModifier]![relayUrl]!;
+    final relayPagination = state.modifiersPagination[modifier]![relayUrl]!;
     final interestsPagination = {
       ...relayPagination.interestsPagination,
       interest: pagination,
@@ -470,7 +478,7 @@ class FeedForYouContent extends _$FeedForYouContent implements PagedNotifier {
         hasMore: interestsPagination.values.any((interest) => interest.hasMore),
       ),
       relayUrl: relayUrl,
-      feedModifier: feedModifier,
+      modifier: modifier,
       increasePage: increasePage,
     );
   }
