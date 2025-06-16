@@ -50,7 +50,6 @@ class _UrlMetadataImage extends StatelessWidget {
       ),
       child: IonNetworkImage(
         imageUrl: imageUrl,
-        width: MediaQuery.sizeOf(context).width,  //TEST IT
         fit: BoxFit.cover,
       ),
     );
@@ -75,6 +74,8 @@ class _UrlMetadataSiteInfo extends StatelessWidget {
           if (favIconUrl != null)
             IonNetworkImage(
               imageUrl: favIconUrl!,
+              width: 19.0.s,
+              height: 13.0.s,
               imageBuilder: (context, imageProvider) => Row(
                 children: [
                   Image(

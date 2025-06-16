@@ -40,7 +40,7 @@ class IonNetworkImage extends StatelessWidget {
   final BaseCacheManager? cacheManager;
   final ImageWidgetBuilder? imageBuilder;
   final ProgressIndicatorBuilder? progressIndicatorBuilder;
-
+  
   @override
   Widget build(BuildContext context) {
     final devicePixelRatio = MediaQuery.devicePixelRatioOf(context);
