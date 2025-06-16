@@ -8,10 +8,10 @@ import 'package:ion/app/router/model/main_modal_list_item.dart';
 import 'package:ion/generated/assets.gen.dart';
 
 enum FeedType implements MainModalListItem {
-  post(pageSize: 10),
-  story(pageSize: 10),
-  video(pageSize: 10),
-  article(pageSize: 10);
+  post(pageSize: 9),
+  story(pageSize: 12),
+  video(pageSize: 9),
+  article(pageSize: 9);
 
   const FeedType({required this.pageSize});
 

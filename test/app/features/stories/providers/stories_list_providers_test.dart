@@ -3,12 +3,11 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/features/core/model/media_type.dart';
-import 'package:ion/app/features/core/model/paged.c.dart';
 import 'package:ion/app/features/feed/data/models/entities/modifiable_post_data.c.dart';
-import 'package:ion/app/features/feed/stories/providers/feed_stories_data_source_provider.c.dart';
+import 'package:ion/app/features/feed/data/models/feed_modifier.dart';
+import 'package:ion/app/features/feed/data/models/feed_type.dart';
+import 'package:ion/app/features/feed/providers/feed_for_you_content_provider.c.dart';
 import 'package:ion/app/features/feed/stories/providers/feed_stories_provider.c.dart';
-import 'package:ion/app/features/ion_connect/model/action_source.c.dart';
-import 'package:ion/app/features/ion_connect/providers/entities_paged_data_provider.c.dart';
 import 'package:mocktail/mocktail.dart';
 
 import '../../../../fixtures/posts/post_fixtures.dart';
@@ -16,12 +15,17 @@ import '../../../../fixtures/stories/story_fixtures.dart';
 import '../../../../test_utils.dart';
 import '../data/fake_feed_stories_state.dart';
 
-class _FakeEntitiesPagedData extends EntitiesPagedData {
-  _FakeEntitiesPagedData(this._state);
-  final EntitiesPagedDataState? _state;
+class _FakeFeedForYouContent extends FeedForYouContent {
+  _FakeFeedForYouContent(this._state);
+  final FeedForYouContentState _state;
 
   @override
-  EntitiesPagedDataState? build(List<EntitiesDataSource>? dataSources) => _state;
+  FeedForYouContentState build(
+    FeedType feedType, {
+    FeedModifier? feedModifier,
+    bool showSeen = true,
+  }) =>
+      _state;
 }
 
 ModifiablePostEntity _post({
@@ -35,22 +39,18 @@ ModifiablePostEntity _post({
   return post;
 }
 
-EntitiesPagedDataState _stateWith(List<ModifiablePostEntity> posts) => EntitiesPagedDataState(
-      data: Paged.data(
-        posts.toSet(),
-        pagination: const <ActionSource, PaginationParams>{},
-      ),
+FeedForYouContentState _stateWith(List<ModifiablePostEntity> posts) => FeedForYouContentState(
+      items: posts.toSet(),
+      modifiersPagination: {},
+      hasMoreFollowing: false,
+      isLoading: false,
     );
 
 ProviderContainer _containerWith(List<ModifiablePostEntity> posts) {
-  const dataSources = <EntitiesDataSource>[];
-  final fakeState = _stateWith(posts);
-
   return createContainer(
     overrides: [
-      feedStoriesDataSourceProvider.overrideWith((_) => dataSources),
-      entitiesPagedDataProvider(dataSources).overrideWith(
-        () => _FakeEntitiesPagedData(fakeState),
+      feedForYouContentProvider(FeedType.story).overrideWith(
+        () => _FakeFeedForYouContent(_stateWith(posts)),
       ),
     ],
   );

@@ -17,8 +17,8 @@ import 'package:ion/app/features/user/model/user_metadata.c.dart';
 
 EntitiesDataSource buildArticlesDataSource({
   required ActionSource actionSource,
-  required List<String> authors,
   required String currentPubkey,
+  List<String>? authors,
   int limit = 1,
   List<SearchExtension>? searchExtensions,
   Map<String, List<String>>? tags,
@@ -33,7 +33,7 @@ EntitiesDataSource buildArticlesDataSource({
   return EntitiesDataSource(
     actionSource: actionSource,
     entityFilter: (entity) {
-      if (!authors.contains(entity.masterPubkey)) {
+      if (authors != null && !authors.contains(entity.masterPubkey)) {
         return false;
       }
 
@@ -56,8 +56,8 @@ EntitiesDataSource buildArticlesDataSource({
 
 EntitiesDataSource buildVideosDataSource({
   required ActionSource actionSource,
-  required List<String> authors,
   required String currentPubkey,
+  List<String>? authors,
   int limit = 1,
   List<SearchExtension>? searchExtensions,
   Map<String, List<String>>? tags,
@@ -87,7 +87,7 @@ EntitiesDataSource buildVideosDataSource({
   return EntitiesDataSource(
     actionSource: actionSource,
     entityFilter: (entity) {
-      if (!authors.contains(entity.masterPubkey)) {
+      if (authors != null && !authors.contains(entity.masterPubkey)) {
         return false;
       }
 
@@ -119,8 +119,8 @@ EntitiesDataSource buildVideosDataSource({
 
 EntitiesDataSource buildPostsDataSource({
   required ActionSource actionSource,
-  required List<String> authors,
   required String currentPubkey,
+  List<String>? authors,
   int limit = 1,
   List<SearchExtension>? searchExtensions,
   Map<String, List<String>>? tags,
@@ -152,7 +152,7 @@ EntitiesDataSource buildPostsDataSource({
   return EntitiesDataSource(
     actionSource: actionSource,
     entityFilter: (entity) {
-      if (!authors.contains(entity.masterPubkey)) {
+      if (authors != null && !authors.contains(entity.masterPubkey)) {
         return false;
       }
 
@@ -183,8 +183,8 @@ EntitiesDataSource buildPostsDataSource({
 
 EntitiesDataSource buildStoriesDataSource({
   required ActionSource actionSource,
-  required List<String> authors,
   required String currentPubkey,
+  List<String>? authors,
   int limit = 1,
   List<SearchExtension>? searchExtensions,
   Map<String, List<String>>? tags,
@@ -211,7 +211,7 @@ EntitiesDataSource buildStoriesDataSource({
   return EntitiesDataSource(
     actionSource: actionSource,
     entityFilter: (entity) =>
-        authors.contains(entity.masterPubkey) &&
+        (authors == null || authors.contains(entity.masterPubkey)) &&
         (entity is ModifiablePostEntity && entity.data.parentEvent == null),
     requestFilters: [
       RequestFilter(
