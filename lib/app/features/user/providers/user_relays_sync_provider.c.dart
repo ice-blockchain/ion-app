@@ -26,19 +26,19 @@ Future<void> userRelaysSync(Ref ref) async {
     return;
   }
 
-  final currentPubkey = ref.watch(currentPubkeySelectorProvider);
+  final masterPubkey = ref.watch(currentPubkeySelectorProvider);
   final identity = await ref.watch(currentUserIdentityProvider.future);
   final identityConnectRelays = identity?.ionConnectRelays;
   final delegationComplete = ref.watch(delegationCompleteProvider).valueOrNull.falseOrValue;
 
-  if (currentPubkey == null ||
+  if (masterPubkey == null ||
       identity == null ||
       identityConnectRelays == null ||
       !delegationComplete) {
     return;
   }
 
-  final userRelays = await ref.watch(userRelayProvider(currentPubkey).future);
+  final userRelays = await ref.watch(userRelayProvider(masterPubkey).future);
 
   if (userRelays != null && !listEquals(userRelays.urls, identityConnectRelays)) {
     final updatedUserRelays = UserRelaysData(
@@ -48,7 +48,7 @@ Future<void> userRelaysSync(Ref ref) async {
         .watch(ionConnectNotifierProvider.notifier)
         .sendEntityData<UserRelaysEntity>(updatedUserRelays);
     ref
-      ..invalidate(userRelayProvider(currentPubkey))
+      ..invalidate(userRelayProvider(masterPubkey))
       // invalidate feedFilterRelaysProvider manually because ref.read is used there
       ..invalidate(feedFilterRelaysProvider);
   }

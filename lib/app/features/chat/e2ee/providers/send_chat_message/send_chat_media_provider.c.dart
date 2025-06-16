@@ -142,7 +142,7 @@ class SendChatMedia extends _$SendChatMedia {
     unawaited(
       ref.read(ionConnectNotifierProvider.notifier).sendEvent(
             mediaMetadataEvent,
-            actionSource: ActionSourceUserChat(masterPubkey, anonymous: true),
+            actionSource: ActionSource.user(masterPubkey, anonymous: true),
             cache: false,
           ),
     );

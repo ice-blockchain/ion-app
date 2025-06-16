@@ -4,7 +4,6 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/auth/providers/auth_provider.c.dart';
 import 'package:ion/app/features/auth/providers/delegation_complete_provider.c.dart';
-import 'package:ion/app/features/chat/providers/user_chat_relays_provider.c.dart';
 import 'package:ion/app/features/ion_connect/providers/ion_connect_notifier.c.dart';
 import 'package:ion/app/features/user/model/user_chat_relays.c.dart';
 import 'package:ion/app/features/user/model/user_relays.c.dart';
@@ -25,17 +24,17 @@ Future<void> userChatRelaysSync(Ref ref) async {
     return;
   }
 
-  final currentPubkey = ref.watch(currentPubkeySelectorProvider);
+  final masterPubkey = ref.watch(currentPubkeySelectorProvider);
   final delegationComplete = ref.watch(delegationCompleteProvider).valueOrNull.falseOrValue;
   final userRelays = await ref.watch(currentUserRelaysProvider.future);
 
-  if (currentPubkey == null || userRelays == null || !delegationComplete) {
+  if (masterPubkey == null || userRelays == null || !delegationComplete) {
     return;
   }
 
   final relayUrls = userRelays.urls;
 
-  final userChatRelays = await ref.watch(userChatRelaysProvider(currentPubkey).future);
+  final userChatRelays = await ref.watch(userRelayProvider(masterPubkey).future);
   if (userChatRelays != null) {
     final chatRelays = userChatRelays.data.list.map((e) => e.url).toList();
     if (chatRelays.toSet().containsAll(relayUrls) && relayUrls.toSet().containsAll(chatRelays)) {
@@ -48,5 +47,5 @@ Future<void> userChatRelaysSync(Ref ref) async {
   );
 
   await ref.read(ionConnectNotifierProvider.notifier).sendEntityData(chatRelays);
-  ref.invalidate(userChatRelaysProvider(currentPubkey));
+  ref.invalidate(userRelayProvider(masterPubkey));
 }

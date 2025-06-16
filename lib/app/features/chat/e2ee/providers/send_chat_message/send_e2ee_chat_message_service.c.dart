@@ -348,7 +348,7 @@ class SendE2eeChatMessageService {
     await ref.read(ionConnectNotifierProvider.notifier).sendEvent(
           giftWrap,
           cache: false,
-          actionSource: ActionSourceUserChat(masterPubkey, anonymous: true),
+          actionSource: ActionSource.user(masterPubkey, anonymous: true),
         );
   }
 

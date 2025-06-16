@@ -45,7 +45,7 @@ FutureOr<int?> communityMembersCount(
 
   return await ref.watch(
     countProvider(
-      actionSource: ActionSourceUserChat(community.ownerPubkey),
+      actionSource: ActionSource.user(community.ownerPubkey),
       requestData: EventCountRequestData(filters: filters),
       key: community.data.uuid,
       type: EventCountResultType.members,

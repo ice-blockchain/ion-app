@@ -43,7 +43,10 @@ Future<List<String>> rankedRelevantCurrentUserRelaysUrls(Ref ref) async {
 }
 
 @riverpod
-Future<UserRelaysEntity?> rankedRelay(Ref ref, UserRelaysEntity? relayEntity) async {
+Future<UserRelaysEntity?> rankedRelay(
+  Ref ref,
+  UserRelaysEntity? relayEntity,
+) async {
   if (relayEntity == null) {
     return null;
   }

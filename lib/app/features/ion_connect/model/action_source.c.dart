@@ -23,13 +23,4 @@ sealed class ActionSource with _$ActionSource {
   const factory ActionSource.indexers({
     @Default(false) bool anonymous,
   }) = ActionSourceIndexers;
-
-  const factory ActionSource.userChat(
-    String pubkey, {
-    @Default(false) bool anonymous,
-  }) = ActionSourceUserChat;
-
-  const factory ActionSource.currentUserChat({
-    @Default(false) bool anonymous,
-  }) = ActionSourceCurrentUserChat;
 }

@@ -12,19 +12,18 @@ import 'package:ion/app/features/chat/e2ee/model/entities/private_message_reacti
 import 'package:ion/app/features/chat/e2ee/providers/gift_unwrap_service_provider.c.dart';
 import 'package:ion/app/features/chat/e2ee/providers/send_e2ee_message_status_provider.c.dart';
 import 'package:ion/app/features/chat/model/database/chat_database.c.dart';
-import 'package:ion/app/features/chat/providers/user_chat_relays_provider.c.dart';
 import 'package:ion/app/features/feed/data/models/entities/article_data.c.dart';
 import 'package:ion/app/features/feed/data/models/entities/generic_repost.c.dart';
 import 'package:ion/app/features/feed/data/models/entities/modifiable_post_data.c.dart';
 import 'package:ion/app/features/feed/data/models/entities/post_data.c.dart';
 import 'package:ion/app/features/ion_connect/ion_connect.dart';
-import 'package:ion/app/features/ion_connect/model/action_source.c.dart';
 import 'package:ion/app/features/ion_connect/model/deletion_request.c.dart';
 import 'package:ion/app/features/ion_connect/model/event_reference.c.dart';
 import 'package:ion/app/features/ion_connect/model/ion_connect_gift_wrap.c.dart';
 import 'package:ion/app/features/ion_connect/providers/event_syncer_provider.c.dart';
 import 'package:ion/app/features/ion_connect/providers/ion_connect_event_signer_provider.c.dart';
 import 'package:ion/app/features/ion_connect/providers/ion_connect_subscription_provider.c.dart';
+import 'package:ion/app/features/user/providers/user_relays_manager.c.dart';
 import 'package:ion/app/services/ion_connect/ion_connect_gift_wrap_service.c.dart';
 import 'package:ion/app/services/ion_connect/ion_connect_seal_service.c.dart';
 import 'package:ion/app/services/media_service/media_encryption_service.c.dart';
@@ -46,9 +45,8 @@ class E2eeMessagesSubscriber extends _$E2eeMessagesSubscriber {
       throw EventSignerNotFoundException();
     }
 
-    final userChatRelays = await ref.watch(userChatRelaysProvider(masterPubkey).future);
-
-    if (userChatRelays == null) {
+    final userRelays = await ref.watch(userRelayProvider(masterPubkey).future);
+    if (userRelays == null) {
       return;
     }
 
@@ -101,7 +99,6 @@ class E2eeMessagesSubscriber extends _$E2eeMessagesSubscriber {
         conversationMessageReactionDao,
       ),
       overlap: overlap,
-      actionSource: const ActionSourceCurrentUserChat(),
     );
     final requestMessage = RequestMessage();
 
@@ -116,7 +113,6 @@ class E2eeMessagesSubscriber extends _$E2eeMessagesSubscriber {
     final events = ref.watch(
       ionConnectEventsSubscriptionProvider(
         requestMessage,
-        actionSource: const ActionSourceCurrentUserChat(),
       ),
     );
 
