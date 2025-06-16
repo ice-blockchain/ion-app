@@ -16,6 +16,7 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'global_subscription.c.g.dart';
 
+//TODO: update it regarding to the noticon doc
 @Riverpod(keepAlive: true)
 class GlobalSubscription extends _$GlobalSubscription {
   @override
