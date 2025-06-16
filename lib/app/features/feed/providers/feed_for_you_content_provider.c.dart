@@ -36,7 +36,12 @@ class FeedForYouContent extends _$FeedForYouContent implements PagedNotifier {
   FeedForYouContentState build(FeedType feedType, {FeedModifier? feedModifier}) {
     Future.microtask(fetchEntities);
     ref.listen(
-      feedFollowingContentProvider(feedType, feedModifier: feedModifier, showSeen: false),
+      feedFollowingContentProvider(
+        feedType,
+        feedModifier: feedModifier,
+        fetchSeen: false,
+        autoFetch: false,
+      ),
       noop,
     );
     return const FeedForYouContentState(
@@ -115,7 +120,12 @@ class FeedForYouContent extends _$FeedForYouContent implements PagedNotifier {
     if (!state.isLoading) {
       ref
         ..invalidate(
-          feedFollowingContentProvider(feedType, feedModifier: feedModifier, showSeen: false),
+          feedFollowingContentProvider(
+            feedType,
+            feedModifier: feedModifier,
+            fetchSeen: false,
+            autoFetch: false,
+          ),
         )
         ..invalidateSelf();
     }
@@ -141,10 +151,21 @@ class FeedForYouContent extends _$FeedForYouContent implements PagedNotifier {
 
   Stream<IonConnectEntity> _fetchUnseenFollowing({required int limit}) async* {
     final notifier = ref.read(
-      feedFollowingContentProvider(feedType, feedModifier: feedModifier, showSeen: false).notifier,
+      feedFollowingContentProvider(
+        feedType,
+        feedModifier: feedModifier,
+        fetchSeen: false,
+        autoFetch: false,
+      ).notifier,
     );
-    final provider = ref
-        .read(feedFollowingContentProvider(feedType, feedModifier: feedModifier, showSeen: false));
+    final provider = ref.read(
+      feedFollowingContentProvider(
+        feedType,
+        feedModifier: feedModifier,
+        fetchSeen: false,
+        autoFetch: false,
+      ),
+    );
 
     if (!provider.hasMore) {
       state = state.copyWith(hasMoreFollowing: false);

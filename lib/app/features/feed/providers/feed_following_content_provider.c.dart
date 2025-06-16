@@ -38,13 +38,16 @@ class FeedFollowingContent extends _$FeedFollowingContent implements PagedNotifi
   FeedFollowingContentState build(
     FeedType feedType, {
     FeedModifier? feedModifier,
-    bool showSeen = true,
+    bool fetchSeen = true,
+    bool autoFetch = true,
   }) {
-    Future.microtask(fetchEntities);
+    if (autoFetch) {
+      Future.microtask(fetchEntities);
+    }
     return FeedFollowingContentState(
       items: null,
       isLoading: false,
-      seenPagination: Pagination(page: -1, hasMore: showSeen),
+      seenPagination: Pagination(page: -1, hasMore: fetchSeen),
       unseenPagination: null,
     );
   }
@@ -65,14 +68,14 @@ class FeedFollowingContent extends _$FeedFollowingContent implements PagedNotifi
 
   /// Requests entities for the feed:
   /// * First, requests unseen entities from followed users (see [_fetchUnseenEntities]).
-  /// * Then, if [showSeen] is true, requests seen entities (see [_fetchSeenEntities]).
+  /// * Then, if [fetchSeen] is true, requests seen entities (see [_fetchSeenEntities]).
   Stream<IonConnectEntity> requestEntities({required int limit}) async* {
     var unseenCount = 0;
     await for (final entity in _fetchUnseenEntities(limit: limit)) {
       yield entity;
       unseenCount++;
     }
-    if (unseenCount < limit && showSeen) {
+    if (unseenCount < limit && fetchSeen) {
       yield* _fetchSeenEntities(limit: limit - unseenCount);
     }
   }
