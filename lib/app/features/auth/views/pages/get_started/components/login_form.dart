@@ -38,7 +38,7 @@ class LoginForm extends HookConsumerWidget {
               _ => loginActionState.error?.toString()
             },
             controller: identityKeyNameController,
-            scrollPadding: EdgeInsetsDirectional.only(bottom: 190.0.s),
+            scrollPadding: EdgeInsetsDirectional.only(bottom: 88.0.s),
             onFocused: (focused) {
               final isIdentityKeyNameEmpty = identityKeyNameController.text.isEmpty;
               if (!focused || !isIdentityKeyNameEmpty) {
