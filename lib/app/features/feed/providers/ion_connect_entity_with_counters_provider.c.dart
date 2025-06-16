@@ -44,5 +44,12 @@ IonConnectEntity? ionConnectEntityWithCounters(
     ).extensions,
   ]).toString();
 
-  return ref.watch(ionConnectSyncEntityProvider(eventReference: eventReference, search: search));
+  return ref.watch(
+    ionConnectSyncEntityProvider(
+      eventReference: eventReference,
+      search: search,
+      network: network,
+      cache: cache,
+    ),
+  );
 }

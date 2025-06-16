@@ -10,6 +10,7 @@ import 'package:ion/app/features/feed/create_post/model/create_post_option.dart'
 import 'package:ion/app/features/feed/create_post/providers/create_post_notifier.c.dart';
 import 'package:ion/app/features/feed/create_post/views/hooks/use_can_submit_post.dart';
 import 'package:ion/app/features/feed/polls/providers/poll_draft_provider.c.dart';
+import 'package:ion/app/features/feed/polls/utils/poll_utils.dart';
 import 'package:ion/app/features/feed/providers/selected_interests_notifier.c.dart';
 import 'package:ion/app/features/feed/providers/selected_who_can_reply_option_provider.c.dart';
 import 'package:ion/app/features/feed/views/components/toolbar_buttons/toolbar_send_button.dart';
@@ -88,6 +89,7 @@ class PostSubmitButton extends HookConsumerWidget {
               eventReference: modifiedEvent!,
               whoCanReply: whoCanReply,
               topics: selectedTopics,
+              poll: PollUtils.pollDraftToPollData(draftPoll),
             ),
           );
         } else {
@@ -99,6 +101,7 @@ class PostSubmitButton extends HookConsumerWidget {
               mediaFiles: filesToUpload,
               whoCanReply: whoCanReply,
               topics: selectedTopics,
+              poll: PollUtils.pollDraftToPollData(draftPoll),
             ),
           );
         }

@@ -7,6 +7,7 @@ import 'package:collection/collection.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:ion/app/features/auth/providers/auth_provider.c.dart';
 import 'package:ion/app/features/feed/polls/providers/poll_results_provider.c.dart';
+import 'package:ion/app/features/feed/providers/ion_connect_entity_with_counters_provider.c.dart';
 import 'package:ion/app/features/ion_connect/ion_connect.dart';
 import 'package:ion/app/features/ion_connect/model/event_reference.c.dart';
 import 'package:ion/app/features/ion_connect/providers/ion_connect_entity_provider.c.dart';
@@ -104,7 +105,7 @@ class PollVoteNotifier extends _$PollVoteNotifier {
 
       if (result != null) {
         ref
-          ..invalidate(ionConnectEntityProvider(eventReference: postReference))
+          ..read(ionConnectEntityWithCountersProvider(eventReference: postReference, cache: false))
           ..invalidate(userPollVoteProvider(postReference))
           ..invalidate(userVotedOptionIndexProvider(postReference))
           ..invalidate(hasUserVotedProvider(postReference))

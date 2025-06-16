@@ -3,6 +3,7 @@
 import 'package:flutter/material.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/feed/polls/models/poll_data.c.dart';
+import 'package:ion/app/features/feed/polls/models/poll_draft.c.dart';
 
 class PollUtils {
   PollUtils._();
@@ -46,5 +47,28 @@ class PollUtils {
     }
 
     return '${context.i18n.poll_votes}: $voteText';
+  }
+
+  static PollData? pollDraftToPollData(PollDraft pollDraft) {
+    if (!pollDraft.added) {
+      return null;
+    }
+    final pollOptions = pollDraft.answers
+        .where((answer) => answer.text.trim().isNotEmpty)
+        .map((answer) => answer.text.trim())
+        .toList();
+
+    // Convert duration to Unix timestamp (seconds since epoch)
+    final ttlSeconds = pollDraft.ttlSeconds;
+    final expiryTimestamp = ttlSeconds > 0
+        ? (DateTime.now().millisecondsSinceEpoch / 1000).floor() + ttlSeconds
+        : 0; // 0 means never expires
+
+    return PollData(
+      type: 'single',
+      ttl: expiryTimestamp,
+      title: '',
+      options: pollOptions,
+    );
   }
 }

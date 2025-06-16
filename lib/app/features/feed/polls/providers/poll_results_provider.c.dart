@@ -17,6 +17,7 @@ class PollResults {
     required this.voteCounts,
     required this.userVotedOptionIndex,
   });
+
   final List<int> voteCounts;
   final int? userVotedOptionIndex;
 }
@@ -123,19 +124,4 @@ int? userVotedOptionIndex(Ref ref, EventReference eventReference) {
 @riverpod
 bool hasUserVoted(Ref ref, EventReference eventReference) {
   return ref.watch(userPollVoteProvider(eventReference)) != null;
-}
-
-@riverpod
-PollResults pollResults(
-  Ref ref,
-  EventReference eventReference,
-  PollData pollData,
-) {
-  final voteCounts = ref.watch(pollVoteCountsProvider(eventReference, pollData));
-  final userVotedOptionIndex = ref.watch(userVotedOptionIndexProvider(eventReference));
-
-  return PollResults(
-    voteCounts: voteCounts,
-    userVotedOptionIndex: userVotedOptionIndex,
-  );
 }
