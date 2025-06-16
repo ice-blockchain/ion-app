@@ -281,19 +281,22 @@ class TransactionsRepository {
 
     final transactions = await result.items
         .map((transaction) async {
-          final contract = transaction.contract ?? '';
+          final contract = transaction.contract ?? transaction.metadataAddress;
+          CoinData? coin;
 
-          // Try to find coin by symbol, if not native coin
-          var coin = contract.isEmpty
-              ? nativeCoin
-              : await _coinsDao.getByFilters(
-                  symbols: [transaction.metadata.asset.symbol],
-                  networks: [network.id],
-                ).then((result) => result.firstOrNull);
+          if (transaction.kind.toLowerCase().contains('native')) {
+            coin = nativeCoin;
+          } else if (transaction.contract != null || transaction.metadataAddress != null) {
+            // Get coin by contract and network
+            coin = await _coinsDao.getByFilters(
+              contractAddresses: [transaction.contract ?? transaction.metadataAddress].nonNulls,
+              networks: [network.id],
+            ).then((result) => result.firstOrNull);
+          }
 
           // Contracts in the db and from ion can be different, so use this type of search as the last try
           coin ??= await _coinsDao.getByFilters(
-            symbols: [contract],
+            symbols: [transaction.metadata.asset.symbol],
             networks: [network.id],
           ).then((result) => result.firstOrNull);
 
