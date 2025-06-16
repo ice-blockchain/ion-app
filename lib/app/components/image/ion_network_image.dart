@@ -2,8 +2,8 @@
 
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
-import 'package:ion/app/components/placeholder/ion_placeholder.dart';
 import 'package:flutter_cache_manager/flutter_cache_manager.dart';
+import 'package:ion/app/components/placeholder/ion_placeholder.dart';
 
 class IonNetworkImage extends StatelessWidget {
   const IonNetworkImage({
@@ -45,37 +45,26 @@ class IonNetworkImage extends StatelessWidget {
   Widget build(BuildContext context) {
     final devicePixelRatio = MediaQuery.devicePixelRatioOf(context);
     final fullWidth = MediaQuery.sizeOf(context).width;
-    final width = (this.width ?? fullWidth) * devicePixelRatio;
-    final height = this.height != null ? this.height! * devicePixelRatio : null;
-    
-    return Image.network(
-      imageUrl,
+    final cacheWidth = (width ?? fullWidth) * devicePixelRatio;
+    final cacheHeight = height != null ? height! * devicePixelRatio : null;
+    print('🖼️ IonNetworkImage.build: $imageUrl, $cacheWidth, $cacheHeight');
+
+    return CachedNetworkImage(
+      key: Key("${imageUrl}_${cacheWidth.toInt()}x${cacheHeight?.toInt() ?? 'auto'}"),
+      imageUrl: imageUrl,
       height: height,
       width: width,
       fit: fit,
       alignment: alignment ?? Alignment.center,
       filterQuality: filterQuality ?? FilterQuality.medium,
-      // loadingBuilder: (context, child, loadingProgress) {
-      //   if (loadingProgress == null) return child;
-      //   return const IonPlaceholder();  
-      //   // return progressIndicatorBuilder!(context, imageUrl, loadingProgress);
-      // },
-      errorBuilder: (context, error, stackTrace) => const IonPlaceholder(),
-      // key: Key(imageUrl),
-      // imageUrl: imageUrl,
-      // placeholder: (context, url) => placeholder ?? const IonPlaceholder(),
-      // errorListener: errorListener ?? (_) {},
-      // errorWidget: errorWidget ?? (context, url, error) => const IonPlaceholder(),
-      // fadeOutDuration: fadeOutDuration,
-      // fadeInDuration: fadeInDuration,
-      // placeholderFadeInDuration: placeholderFadeInDuration,
-      // width: width,
-      // height: height,
-      // cacheManager: cacheManager,
-      // imageBuilder: imageBuilder,
-      // progressIndicatorBuilder: progressIndicatorBuilder,
-      cacheWidth: width.toInt(),
-      cacheHeight: height?.toInt(),
+      placeholder: (context, url) => placeholder ?? const IonPlaceholder(),
+      errorListener: errorListener ?? (_) {},
+      errorWidget: errorWidget ?? (context, url, error) => const IonPlaceholder(),
+      fadeOutDuration: fadeOutDuration,
+      fadeInDuration: fadeInDuration,
+      placeholderFadeInDuration: placeholderFadeInDuration,
+      memCacheWidth: cacheWidth.toInt(),
+      memCacheHeight: cacheHeight?.toInt(),
     );
   }
 }
