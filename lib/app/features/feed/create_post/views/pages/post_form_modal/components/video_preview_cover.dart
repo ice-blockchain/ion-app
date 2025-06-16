@@ -63,7 +63,7 @@ class VideoPreviewCover extends HookConsumerWidget {
     final clampedAspectRatio = videoAspectRatio.clamp(minAspectRatio, maxAspectRatio);
 
     return Padding(
-      padding: EdgeInsetsDirectional.only(bottom: 24.0.s, start: 12.0.s, end: 12.0.s),
+      padding: EdgeInsetsDirectional.only(bottom: 16.0.s, start: 12.0.s, end: 12.0.s),
       child: ConstrainedBox(
         constraints: BoxConstraints(maxHeight: 430.0.s),
         child: ClipRRect(

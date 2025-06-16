@@ -5,6 +5,8 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/components/ion_connect_network_image/ion_connect_network_image.dart';
 import 'package:ion/app/features/feed/data/models/entities/article_data.c.dart';
+import 'package:ion/app/features/feed/data/models/feed_type.dart';
+import 'package:ion/app/features/feed/providers/feed_user_interests_provider.c.dart';
 import 'package:ion/app/features/feed/providers/ion_connect_entity_with_counters_provider.c.dart';
 import 'package:ion/app/features/feed/views/components/overlay_menu/user_info_menu.dart';
 import 'package:ion/app/features/feed/views/components/user_info/user_info.dart';
@@ -25,6 +27,11 @@ class ArticlesCarouselItem extends ConsumerWidget {
     }
 
     final topics = article.data.topics;
+    final availableSubcategories = ref.watch(
+      feedUserInterestsProvider(FeedType.article)
+          .select((state) => state.valueOrNull?.subcategories ?? {}),
+    );
+    final topicsNames = topics.map((key) => availableSubcategories[key]?.display).nonNulls.toList();
 
     return GestureDetector(
       onTap: () => ArticleDetailsRoute(eventReference: eventReference.encode()).push<void>(context),
@@ -42,10 +49,10 @@ class ArticlesCarouselItem extends ConsumerWidget {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      if (topics != null && topics.isNotEmpty) ...[
+                      if (topics.isNotEmpty) ...[
                         SizedBox(height: 10.0.s),
                         Text(
-                          context.i18n.article_page_in_topic(topics.first.getTitle(context)),
+                          context.i18n.article_page_in_topic(topicsNames.first),
                           style: context.theme.appTextThemes.caption2.copyWith(
                             color: context.theme.appColors.tertararyText,
                           ),

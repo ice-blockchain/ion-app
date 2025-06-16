@@ -9,10 +9,8 @@ import 'package:ion/app/components/text_editor/components/custom_blocks/text_edi
 import 'package:ion/app/components/text_editor/utils/extract_tags.dart';
 import 'package:ion/app/exceptions/exceptions.dart';
 import 'package:ion/app/extensions/delta.dart';
-import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/core/providers/env_provider.c.dart';
 import 'package:ion/app/features/feed/create_article/providers/draft_article_provider.c.dart';
-import 'package:ion/app/features/feed/data/models/article_topic.dart';
 import 'package:ion/app/features/feed/data/models/entities/article_data.c.dart';
 import 'package:ion/app/features/feed/data/models/who_can_reply_settings_option.c.dart';
 import 'package:ion/app/features/gallery/providers/gallery_provider.c.dart';
@@ -62,7 +60,7 @@ class CreateArticle extends _$CreateArticle {
   Future<void> create({
     required Delta content,
     required WhoCanReplySettingsOption whoCanReply,
-    required List<ArticleTopic> topics,
+    required List<String> topics,
     String? title,
     String? summary,
     String? coverImagePath,
@@ -92,7 +90,7 @@ class CreateArticle extends _$CreateArticle {
       );
 
       final relatedHashtags = [
-        ...topics.map((topic) => RelatedHashtag(value: topic.toShortString())),
+        ...topics.map((topic) => RelatedHashtag(value: topic)),
         ...extractTags(updatedContent).map((tag) => RelatedHashtag(value: tag)),
       ];
 
@@ -174,7 +172,7 @@ class CreateArticle extends _$CreateArticle {
     required EventReference eventReference,
     required Delta content,
     required WhoCanReplySettingsOption whoCanReply,
-    required List<ArticleTopic> topics,
+    required List<String> topics,
     String? title,
     String? summary,
     String? coverImagePath,
@@ -216,7 +214,7 @@ class CreateArticle extends _$CreateArticle {
       );
 
       final relatedHashtags = [
-        ...topics.map((topic) => RelatedHashtag(value: topic.toShortString())),
+        ...topics.map((topic) => RelatedHashtag(value: topic)),
         ...extractTags(updatedContent).map((tag) => RelatedHashtag(value: tag)),
       ];
 

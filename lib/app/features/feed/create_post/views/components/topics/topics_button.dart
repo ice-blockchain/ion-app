@@ -1,6 +1,5 @@
 // SPDX-License-Identifier: ice License 1.0
 
-import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
@@ -29,18 +28,12 @@ class TopicsButton extends HookConsumerWidget {
     final topicsButtonKey = useRef(GlobalKey());
     final topicsTooltipVisible =
         ref.watch(topicTooltipVisibilityNotifierProvider).valueOrNull.falseOrValue;
-    final availableCategories =
-        ref.watch(feedUserInterestsProvider(type)).valueOrNull?.categories ?? {};
+    final availableSubcategories = ref.watch(
+      feedUserInterestsProvider(type).select((state) => state.valueOrNull?.subcategories ?? {}),
+    );
     final selectedSubcategoriesKeys = ref.watch(selectedInterestsNotifierProvider);
-    final selectedSubcategories = selectedSubcategoriesKeys
-        .map(
-          (key) => availableCategories.values
-              .expand((category) => category.children.entries)
-              .firstWhereOrNull((subcategoryEntry) => subcategoryEntry.key == key)
-              ?.value,
-        )
-        .nonNulls
-        .toList();
+    final selectedSubcategories =
+        selectedSubcategoriesKeys.map((key) => availableSubcategories[key]).nonNulls.toList();
 
     useOnInit(
       () {

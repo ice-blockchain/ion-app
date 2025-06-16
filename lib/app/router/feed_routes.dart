@@ -48,7 +48,6 @@ class FeedRoutes {
         TypedGoRoute<CreateArticleRoute>(path: 'create-article'),
         TypedGoRoute<FeedSearchFiltersRoute>(path: 'feed-search_filters'),
         TypedGoRoute<ArticlePreviewRoute>(path: 'article-preview'),
-        TypedGoRoute<SelectArticleTopicsRoute>(path: 'article-topics'),
         TypedGoRoute<SelectTopicsCategoriesRoute>(path: 'topics-categories'),
         TypedGoRoute<SelectTopicsSubcategoriesRoute>(path: 'topics-subcategories'),
         TypedGoRoute<EditArticleRoute>(path: 'create-article/edit/:modifiedEvent'),
@@ -67,14 +66,6 @@ class ArticleDetailsRoute extends BaseRouteData {
         );
 
   final String eventReference;
-}
-
-class SelectArticleTopicsRoute extends BaseRouteData {
-  SelectArticleTopicsRoute()
-      : super(
-          child: const SelectArticleTopicModal(),
-          type: IceRouteType.bottomSheet,
-        );
 }
 
 class SelectTopicsCategoriesRoute extends BaseRouteData {
@@ -118,7 +109,7 @@ class ArticlesFromTopicRoute extends BaseRouteData {
   ArticlesFromTopicRoute({required this.topic})
       : super(
           child: ArticlesFromTopicPage(
-            topic: EnumExtensions.fromShortString(ArticleTopic.values, topic),
+            topic: topic,
           ),
         );
 
