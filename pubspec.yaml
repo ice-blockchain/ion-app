@@ -200,6 +200,9 @@ flutter:
     - assets/ion_identity/networks.json
 
 flutter_gen:
+  assets:
+    outputs:
+      style: camel-case
   output: lib/generated/
 
   integrations:
