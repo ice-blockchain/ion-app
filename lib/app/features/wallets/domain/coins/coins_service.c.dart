@@ -45,6 +45,8 @@ class CoinsService {
 
   Future<CoinData?> getNativeCoin(NetworkData network) => _coinsRepository.getNativeCoin(network);
 
+  Future<int> getCoinGroupsNumber() => _coinsRepository.getCoinGroupsNumber();
+
   Future<Iterable<CoinsGroup>> getCoinGroups({
     int? limit,
     int? offset,

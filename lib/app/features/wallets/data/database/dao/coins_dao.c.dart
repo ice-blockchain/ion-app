@@ -167,16 +167,18 @@ class CoinsDao extends DatabaseAccessor<WalletsDatabase> with _$CoinsDaoMixin {
       query.where(coinsTable.id.isNotIn(excludeCoinIds!));
     }
 
-    if (offset != null) {
-      query.offset(offset);
+    if (limit != null) {
+      query.limit(limit, offset: offset);
     }
 
-    if (limit != null) {
-      query.limit(limit);
-    }
+    query.orderBy([
+      OrderingTerm(
+        expression: coinsTable.name.lower(),
+      ),
+    ]);
 
     final results = await query.map(_toCoinData).get();
-    
+
     // Group coins by symbolGroup
     final groupsMap = <String, List<CoinData>>{};
     for (final coin in results) {
@@ -188,9 +190,11 @@ class CoinsDao extends DatabaseAccessor<WalletsDatabase> with _$CoinsDaoMixin {
     }
 
     // Convert to CoinsGroup objects
-    return groupsMap.entries.map((entry) => CoinsGroup(
-      symbolGroup: entry.key,
-      coins: entry.value,
-    ));
+    return groupsMap.entries.map((entry) => CoinsGroup.fromCoinsData(entry.value));
+  }
+
+  Future<int> getCoinGroupsNumber() async {
+    final query = selectOnly(coinsTable, distinct: true)..addColumns([coinsTable.symbolGroup]);
+    return query.get().then((result) => result.length);
   }
 }

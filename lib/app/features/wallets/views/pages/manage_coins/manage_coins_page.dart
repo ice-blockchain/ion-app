@@ -45,7 +45,9 @@ class ManageCoinsPage extends HookConsumerWidget {
             ],
           ),
           Expanded(
-            child: CustomScrollView(
+            child: LoadMoreBuilder(
+              onLoadMore: () => ref.read(manageCoinsNotifierProvider.notifier).loadMore(),
+              hasMore: manageCoins.value?.hasMore ?? false,
               slivers: [
                 CollapsingAppBar(
                   height: SearchInput.height,
@@ -57,35 +59,16 @@ class ManageCoinsPage extends HookConsumerWidget {
                   ),
                 ),
                 if (searchText.value.isEmpty)
-                  LoadMoreBuilder(
-                    onLoadMore: () => ref.read(manageCoinsNotifierProvider.notifier).loadMore(),
-                    hasMore: false,
-                    slivers: [
-                      manageCoins.maybeWhen(
-                        data: (coins) {
-                          if (coins.groups.isEmpty) return const NothingIsFound();
-                          return _CoinsList(
-                            itemCount: coins.groups.length,
-                            itemProvider: (index) =>
-                                coins.groups.values.elementAt(index).coinsGroup,
-                          );
-                        },
-                        loading: () => const _ProgressIndicator(),
-                        orElse: () => const NothingIsFound(),
-                      ),
-                    ],
-
-                    // return manageCoins.maybeWhen(
-                    //   data: (coins) {
-                    //     if (coins.isEmpty) return const NothingIsFound();
-                    //     return _CoinsList(
-                    //       itemCount: coins.length,
-                    //       itemProvider: (index) => coins.values.elementAt(index).coinsGroup,
-                    //     );
-                    //   },
-                    //   loading: () => const _ProgressIndicator(),
-                    //   orElse: () => const NothingIsFound(),
-                    // );
+                  manageCoins.maybeWhen(
+                    data: (coins) {
+                      if (coins.groups.isEmpty) return const NothingIsFound();
+                      return _CoinsList(
+                        itemCount: coins.groups.length,
+                        itemProvider: (index) => coins.groups.values.elementAt(index).coinsGroup,
+                      );
+                    },
+                    loading: () => const _ProgressIndicator(),
+                    orElse: () => const NothingIsFound(),
                   )
                 else
                   searchResult.maybeWhen(
@@ -102,6 +85,45 @@ class ManageCoinsPage extends HookConsumerWidget {
               ],
             ),
           ),
+          // Expanded(
+          //   child: CustomScrollView(
+          //     slivers: [
+          //       CollapsingAppBar(
+          //         height: SearchInput.height,
+          //         child: ScreenSideOffset.small(
+          //           child: SearchInput(
+          //             onTextChanged: (String value) => searchText.value = value,
+          //             loading: searchResult.isLoading,
+          //           ),
+          //         ),
+          //       ),
+          //       if (searchText.value.isEmpty)
+          //         manageCoins.maybeWhen(
+          //           data: (coins) {
+          //             if (coins.groups.isEmpty) return const NothingIsFound();
+          //             return _CoinsList(
+          //               itemCount: coins.groups.length,
+          //               itemProvider: (index) => coins.groups.values.elementAt(index).coinsGroup,
+          //             );
+          //           },
+          //           loading: () => const _ProgressIndicator(),
+          //           orElse: () => const NothingIsFound(),
+          //         )
+          //       else
+          //         searchResult.maybeWhen(
+          //           data: (coins) {
+          //             if (coins.isEmpty) return const NothingIsFound();
+          //             return _CoinsList(
+          //               itemCount: coins.length,
+          //               itemProvider: (index) => coins.elementAt(index),
+          //             );
+          //           },
+          //           loading: () => const _ProgressIndicator(),
+          //           orElse: () => const NothingIsFound(),
+          //         ),
+          //     ],
+          //   ),
+          // ),
         ],
       ),
     );

@@ -23,6 +23,7 @@ class ManageCoinsNotifier extends _$ManageCoinsNotifier {
   final _coinsFromWallet = <String, ManageCoinsGroup>{};
   final _loadedCoins = <String, ManageCoinsGroup>{};
   final _toExclude = <String>{};
+  var _coinGroupsNumber = 0;
 
   @override
   Future<ManageCoinsState> build() async {
@@ -35,6 +36,11 @@ class ManageCoinsNotifier extends _$ManageCoinsNotifier {
         isSelected: state.value?.groups[coinGroup.symbolGroup]?.isSelected ?? true,
       );
     }
+    final coinsService = await ref.watch(coinsServiceProvider.future);
+
+    if (_coinGroupsNumber == 0) {
+      _coinGroupsNumber = await coinsService.getCoinGroupsNumber();
+    }
 
     if (_coinsFromWallet.length < _pageSize) {
       final repo = await ref.watch(coinsServiceProvider.future);
@@ -46,19 +52,27 @@ class ManageCoinsNotifier extends _$ManageCoinsNotifier {
         for (final group in groups)
           group.symbolGroup: ManageCoinsGroup(
             coinsGroup: group,
-            isSelected: state.value?.groups[group.symbolGroup]?.isSelected ?? true,
+            isSelected: state.value?.groups[group.symbolGroup]?.isSelected ?? false,
           ),
       });
     }
 
+    final groups = {
+      ..._coinsFromWallet,
+      ..._loadedCoins,
+    };
+
     return ManageCoinsState(
-      hasMore: true,
-      groups: _coinsFromWallet,
+      hasMore: groups.length < _coinGroupsNumber,
+      groups: groups,
     );
   }
 
   void switchCoinsGroup(CoinsGroup coinsGroup) {
-    final currentMap = state.value?.groups ?? <String, ManageCoinsGroup>{};
+    final stateMap = state.value?.groups;
+    final currentMap = stateMap != null
+        ? Map<String, ManageCoinsGroup>.from(stateMap)
+        : <String, ManageCoinsGroup>{};
     final currentGroup = currentMap[coinsGroup.symbolGroup];
     final isNewlyAdded = !currentMap.containsKey(coinsGroup.symbolGroup);
     final isBeingDeleted = currentGroup?.isSelected ?? false;
@@ -71,7 +85,7 @@ class ManageCoinsNotifier extends _$ManageCoinsNotifier {
     // state = AsyncData<Map<String, ManageCoinsGroup>>(currentMap);
     state = AsyncData<ManageCoinsState>(
       ManageCoinsState(
-        hasMore: true,
+        hasMore: _coinGroupsNumber > currentMap.length,
         groups: currentMap,
       ),
     );
@@ -101,7 +115,31 @@ class ManageCoinsNotifier extends _$ManageCoinsNotifier {
     }
   }
 
-  Future<void> loadMore() async {}
+  Future<void> loadMore() async {
+    final repo = await ref.watch(coinsServiceProvider.future);
+    final loadedGroups = await repo.getCoinGroups(
+      limit: _pageSize,
+      offset: _loadedCoins.length,
+      excludeCoinIds: _toExclude,
+    );
+    _loadedCoins.addAll({
+      for (final group in loadedGroups)
+        group.symbolGroup: ManageCoinsGroup(
+          coinsGroup: group,
+          isSelected: state.value?.groups[group.symbolGroup]?.isSelected ?? false,
+        ),
+    });
+    final groups = {
+      ..._coinsFromWallet,
+      ..._loadedCoins,
+    };
+    state = AsyncData<ManageCoinsState>(
+      ManageCoinsState(
+        hasMore: _coinGroupsNumber > groups.length,
+        groups: groups,
+      ),
+    );
+  }
 }
 
 @riverpod
