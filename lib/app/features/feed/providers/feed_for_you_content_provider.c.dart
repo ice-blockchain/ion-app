@@ -179,9 +179,7 @@ class FeedForYouContent extends _$FeedForYouContent implements PagedNotifier {
 
     // TODO: for articles (if feedType is FeedType.article), take the selected interests
     final interests =
-        (await ref.read(feedUserInterestsProvider(feedType).future)).subcategories.map(
-              (subcategory) => subcategory.key,
-            );
+        (await ref.read(feedUserInterestsProvider(feedType).future)).subcategories.keys;
 
     final relaysPagination = Map.fromEntries(
       dataSourceRelays.map(
