@@ -126,8 +126,7 @@ class _EntityListItem extends ConsumerWidget {
 
   bool _isBlockedOrMutedOrBlocking(WidgetRef ref, IonConnectEntity entity, bool showMuted) {
     final isMuted = !showMuted && ref.watch(isUserMutedProvider(entity.masterPubkey));
-    final isBlockedOrBlockedBy =
-        ref.watch(isEntityBlockedOrBlockedByNotifierProvider(entity)).valueOrNull ?? false;
+    final isBlockedOrBlockedBy = ref.watch(isEntityBlockedOrBlockedByProvider(entity));
     return isMuted || isBlockedOrBlockedBy;
   }
 

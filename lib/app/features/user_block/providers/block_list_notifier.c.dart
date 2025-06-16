@@ -2,6 +2,7 @@
 
 import 'dart:async';
 
+import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/exceptions/exceptions.dart';
 import 'package:ion/app/features/auth/providers/auth_provider.c.dart';
 import 'package:ion/app/features/feed/data/models/entities/generic_repost.c.dart';
@@ -45,6 +46,33 @@ class CurrentUserBlockListNotifier extends _$CurrentUserBlockListNotifier {
 }
 
 @riverpod
+class CurrentUserBlockedByListNotifier extends _$CurrentUserBlockedByListNotifier {
+  @override
+  Future<List<BlockedUserEntity>> build() async {
+    keepAliveWhenAuthenticated(ref);
+    final currentUserMasterPubkey = ref.watch(currentPubkeySelectorProvider);
+    if (currentUserMasterPubkey == null) {
+      return [];
+    }
+
+    final blockEventDao = ref.watch(blockEventDaoProvider);
+
+    final initialEvents = await blockEventDao.getBlockedByUsersEvents(currentUserMasterPubkey);
+    final initialEntities = initialEvents.map(BlockedUserEntity.fromEventMessage);
+
+    final subscription =
+        blockEventDao.watchBlockedByUsersEvents(currentUserMasterPubkey).listen((events) {
+      final entities = events.map(BlockedUserEntity.fromEventMessage);
+      state = AsyncValue.data(entities.toList());
+    });
+
+    ref.onDispose(subscription.cancel);
+
+    return initialEntities.toList();
+  }
+}
+
+@riverpod
 class IsBlockedNotifier extends _$IsBlockedNotifier {
   @override
   Future<bool> build(String masterPubkey) async {
@@ -64,27 +92,8 @@ class IsBlockedByNotifier extends _$IsBlockedByNotifier {
     final keepAlive = ref.keepAlive();
     onLogout(ref, keepAlive.close);
 
-    final currentUserMasterPubkey = ref.watch(currentPubkeySelectorProvider);
-    if (currentUserMasterPubkey == null) {
-      throw UserMasterPubkeyNotFoundException();
-    }
-
-    final blockEventDao = ref.watch(blockEventDaoProvider);
-
-    final initialEvents = await blockEventDao.getBlockedByUsersEvents(currentUserMasterPubkey);
-    final initialEntities = initialEvents.map(BlockedUserEntity.fromEventMessage);
-    final initiallyBlocked = initialEntities.any((entity) => entity.masterPubkey == masterPubkey);
-
-    final subscription =
-        blockEventDao.watchBlockedByUsersEvents(currentUserMasterPubkey).listen((events) {
-      final entities = events.map(BlockedUserEntity.fromEventMessage);
-      final isBlocked = entities.any((entity) => entity.masterPubkey == masterPubkey);
-      state = AsyncValue.data(isBlocked);
-    });
-
-    ref.onDispose(subscription.cancel);
-
-    return initiallyBlocked;
+    final blockedByList = await ref.watch(currentUserBlockedByListNotifierProvider.future);
+    return blockedByList.any((entity) => entity.masterPubkey == masterPubkey);
   }
 }
 
@@ -100,44 +109,31 @@ class IsBlockedOrBlockedByNotifier extends _$IsBlockedOrBlockedByNotifier {
 }
 
 @riverpod
-class IsEntityBlockedOrBlockedByNotifier extends _$IsEntityBlockedOrBlockedByNotifier {
-  @override
-  Future<bool> build(IonConnectEntity entity) async {
-    final isMainAuthorBlockedOrBlocking =
-        await ref.watch(isBlockedOrBlockedByNotifierProvider(entity.masterPubkey).future);
-    if (isMainAuthorBlockedOrBlocking) return true;
-    return switch (entity) {
-      ModifiablePostEntity() =>
-        await ref.watch(isPostChildBlockedOrBlockedByNotifierProvider(entity).future),
-      GenericRepostEntity() =>
-        await ref.watch(isGenericRepostChildBlockedOrBlockedByNotifierProvider(entity).future),
-      _ => false,
-    };
+bool isEntityBlockedOrBlockedBy(Ref ref, IonConnectEntity entity) {
+  final isUserBlocked =
+      ref.watch(blockedUserWatchProvider(entity.masterPubkey)).valueOrNull?.isBlocked ?? false;
+  final blockedByList = ref.watch(currentUserBlockedByListNotifierProvider).valueOrNull ?? [];
+  if (isUserBlocked ||
+      blockedByList.any((bEntity) => bEntity.masterPubkey == entity.masterPubkey)) {
+    return true;
   }
-}
-
-@riverpod
-class IsPostChildBlockedOrBlockedByNotifier extends _$IsPostChildBlockedOrBlockedByNotifier {
-  @override
-  Future<bool> build(ModifiablePostEntity entity) {
-    final quotedEvent = entity.data.quotedEvent;
-    if (quotedEvent == null) return Future.value(false);
-    final quotedPost = ref.watch(
-      ionConnectSyncEntityProvider(eventReference: quotedEvent.eventReference),
+  if (entity is ModifiablePostEntity && entity.data.quotedEvent != null) {
+    final quotedEntity = ref.watch(
+      ionConnectCachedEntityProvider(
+        eventReference: entity.data.quotedEvent!.eventReference,
+      ),
     );
-    if (quotedPost == null) return Future.value(false);
-    return ref.watch(isEntityBlockedOrBlockedByNotifierProvider(quotedPost).future);
+    if (quotedEntity != null) {
+      return ref.watch(isEntityBlockedOrBlockedByProvider(quotedEntity));
+    }
+  } else if (entity is GenericRepostEntity) {
+    final childEntity = ref.watch(
+      ionConnectSyncEntityProvider(eventReference: entity.data.eventReference),
+    );
+    if (childEntity != null) {
+      return ref.watch(isEntityBlockedOrBlockedByProvider(childEntity));
+    }
   }
-}
 
-@riverpod
-class IsGenericRepostChildBlockedOrBlockedByNotifier
-    extends _$IsGenericRepostChildBlockedOrBlockedByNotifier {
-  @override
-  Future<bool> build(GenericRepostEntity repost) {
-    final entity =
-        ref.watch(ionConnectSyncEntityProvider(eventReference: repost.data.eventReference));
-    if (entity == null) return Future.value(false);
-    return ref.watch(isEntityBlockedOrBlockedByNotifierProvider(entity).future);
-  }
+  return false;
 }
