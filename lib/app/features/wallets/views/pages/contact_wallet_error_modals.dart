@@ -100,15 +100,15 @@ Future<void> showContactWalletError(
       ? '${context.i18n.contact_wallet_is_private}\n${context.i18n.contact_wallet_is_private_description}'
       : context.i18n.contact_wallet_not_found_description(network.displayName);
 
-  final iconPath =
-      isPrivate ? Assets.svg.actionwalletprivatewallet : Assets.svg.actionwalleterrorwallet;
+  final iconAsset =
+      isPrivate ? Assets.svgActionwalletprivatewallet : Assets.svgActionwalleterrorwallet;
 
   return showSimpleBottomSheet<void>(
     context: context,
     child: ContactWalletErrorModal(
       user: user,
       title: title,
-      iconPath: iconPath,
+      iconPath: iconAsset,
       description: description,
     ),
   );

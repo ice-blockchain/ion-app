@@ -25,7 +25,7 @@ class BottomAction extends StatelessWidget {
         top: 12.0.s,
       ),
       child: Button(
-        leadingIcon: asset.icon(),
+        leadingIcon: IconAsset(asset),
         onPressed: onTap,
         label: Text(title),
         mainAxisSize: MainAxisSize.max,

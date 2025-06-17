@@ -32,7 +32,7 @@ class EmptyState extends ConsumerWidget {
 
     final toShowNoResults = searchValue.isNotEmpty == true;
 
-    final asset = toShowNoResults ? Assets.svg.walletIconWalletEmptysearch : tabType.emptyListAsset;
+    final asset = toShowNoResults ? Assets.svgWalletIconWalletEmptysearch : tabType.emptyListAsset;
     final title =
         toShowNoResults ? context.i18n.core_empty_search : tabType.getEmptyListTitle(context);
 

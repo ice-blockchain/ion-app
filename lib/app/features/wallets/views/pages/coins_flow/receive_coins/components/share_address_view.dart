@@ -14,6 +14,7 @@ import 'package:ion/app/router/components/navigation_app_bar/navigation_app_bar.
 import 'package:ion/app/router/components/navigation_app_bar/navigation_close_button.dart';
 import 'package:ion/app/router/components/sheet_content/sheet_content.dart';
 import 'package:ion/app/services/share/share.dart';
+import 'package:ion/app/extensions/asset_gen_image.dart';
 import 'package:ion/generated/assets.gen.dart';
 
 class ShareAddressView extends HookConsumerWidget {
@@ -72,8 +73,10 @@ class ShareAddressView extends HookConsumerWidget {
                 Button.compact(
                   mainAxisSize: MainAxisSize.max,
                   minimumSize: Size(56.0.s, 56.0.s),
-                  leadingIcon: Assets.svgIconButtonShare
-                      .icon(color: context.theme.appColors.secondaryBackground),
+                  leadingIcon: IconAssetColored(
+                    Assets.svgIconButtonShare,
+                    color: context.theme.appColors.secondaryBackground
+                  ),
                   label: Text(
                     context.i18n.button_share,
                   ),

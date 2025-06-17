@@ -18,8 +18,8 @@ enum WalletTabType {
 
   String get emptyListAsset {
     return switch (this) {
-      WalletTabType.coins => Assets.svg.walletIconWalletEmptycoins,
-      WalletTabType.nfts => Assets.svg.categoriesNft,
+      WalletTabType.coins => Assets.svgWalletIconWalletEmptycoins,
+      WalletTabType.nfts => Assets.svgCategoriesNft,
     };
   }
 

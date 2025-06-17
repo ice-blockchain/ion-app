@@ -5,6 +5,7 @@ import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/wallets/model/network_selector_data.c.dart';
 import 'package:ion/app/features/wallets/views/components/network_icon_widget.dart';
 import 'package:ion/app/features/wallets/views/pages/coins_flow/coin_details/components/transaction_list_item/constants.dart';
+import 'package:ion/app/extensions/asset_gen_image.dart';
 
 class TransactionListHeaderItem extends StatelessWidget {
   const TransactionListHeaderItem({
@@ -58,7 +59,7 @@ class TransactionListHeaderItem extends StatelessWidget {
                   size: 16.0.s,
                   imageUrl: network.image,
                 ),
-                all: (_) => item.image.icon(size: 16.0.s),
+                all: (_) => IconAsset(item.image, size: 16.0),
               ),
               SizedBox(
                 width: 6.0.s,

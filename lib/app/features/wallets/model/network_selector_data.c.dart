@@ -31,7 +31,7 @@ sealed class SelectedNetworkItem with _$SelectedNetworkItem {
   String get image {
     return when(
       network: (network) => network.image,
-      all: (_) => Assets.svg.networks.walletInfinite,
+      all: (_) => Assets.svgNetworksWalletInfinite,
     );
   }
 

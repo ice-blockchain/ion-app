@@ -41,9 +41,10 @@ class NftHeaderLayoutAction extends ConsumerWidget {
               end: 7.0.s,
               bottom: UiConstants.hitSlop,
             ),
-            child: NftLayoutType.grid.iconAsset.icon(
+            child: IconAssetColored(
+              NftLayoutType.grid.iconAsset,
               color: NftLayoutType.grid == nftLayoutType ? activeColor : inactiveColor,
-              size: 20.0.s,
+              size: 20.0,
             ),
           ),
         ),
@@ -63,9 +64,10 @@ class NftHeaderLayoutAction extends ConsumerWidget {
               end: 7.0.s,
               bottom: UiConstants.hitSlop,
             ),
-            child: NftLayoutType.list.iconAsset.icon(
+            child: IconAssetColored(
+              NftLayoutType.list.iconAsset,
               color: NftLayoutType.list == nftLayoutType ? activeColor : inactiveColor,
-              size: 20.0.s,
+              size: 20.0,
             ),
           ),
         ),

@@ -26,7 +26,7 @@ class EmptyList extends StatelessWidget {
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
-          asset.icon(size: imageSize),
+          IconAsset(asset, size: imageSize),
           SizedBox(height: 8.0.s),
           Text(
             title,

@@ -33,7 +33,7 @@ class CoinInitializer {
   Future<void> _loadCoins() async {
     // load coins from assets file
     final coinsJson =
-        (await rootBundle.loadString(Assets.ionIdentity.coins).then(jsonDecode)) as List<dynamic>;
+        (await rootBundle.loadString(Assets.ionIdentityCoins).then(jsonDecode)) as List<dynamic>;
 
     final coinEntities = coinsJson
         .expand(
@@ -48,7 +48,7 @@ class CoinInitializer {
 
   Future<void> _loadCoinsVersion() async {
     final coinsVersion =
-        await rootBundle.loadString(Assets.ionIdentity.coinsVersion).then(int.parse);
+        await rootBundle.loadString(Assets.ionIdentityCoinsVersion).then(int.parse);
     await _coinsRepository.setCoinsVersion(coinsVersion);
   }
 }

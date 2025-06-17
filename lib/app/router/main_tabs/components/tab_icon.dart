@@ -2,6 +2,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:ion/app/extensions/extensions.dart';
+import 'package:ion/app/extensions/asset_gen_image.dart';
 
 class TabIcon extends StatelessWidget {
   const TabIcon({
@@ -17,8 +18,9 @@ class TabIcon extends StatelessWidget {
   Widget build(BuildContext context) {
     return SizedBox(
       height: 50.0.s,
-      child: icon.icon(
-        size: 24.0.s,
+      child: IconAssetColored(
+        icon,
+        size: 24.0,
         fit: BoxFit.none,
         color: isSelected
             ? context.theme.appColors.primaryAccent

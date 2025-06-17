@@ -27,9 +27,9 @@ enum InfoType {
 
   String get iconAsset {
     return switch (this) {
-      InfoType.networkFee => Assets.svg.actionWalletNetworFee,
-      InfoType.arrivalTime => Assets.svg.actionWalletArrivalTime,
-      InfoType.addressConfirmation => Assets.svg.actionwalletinformation,
+      InfoType.networkFee => Assets.svgActionWalletNetworFee,
+      InfoType.arrivalTime => Assets.svgActionWalletArrivalTime,
+      InfoType.addressConfirmation => Assets.svgActionwalletinformation,
     };
   }
 }

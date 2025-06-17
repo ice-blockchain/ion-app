@@ -38,12 +38,14 @@ class WalletTabsHeaderHideAction extends ConsumerWidget {
         child: Row(
           children: [
             if (isZeroValueAssetsVisible)
-              asset.icon(
+              IconAssetColored(
+                asset,
                 color: actionColor,
                 size: iconSize,
               )
             else
-              asset.icon(
+              IconAsset(
+                asset,
                 size: iconSize,
               ),
             SizedBox(
