@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: ice License 1.0
+
 import 'package:flutter_cache_manager/flutter_cache_manager.dart';
 
 class LimitedConcurrentHttpFileService extends HttpFileService {
