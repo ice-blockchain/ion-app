@@ -90,7 +90,7 @@ class SelectTopicsCategoriesModal extends HookConsumerWidget {
                     feedType: feedType,
                   ).push<void>(context),
                   backgroundColor: colors.secondaryBackground,
-                  trailing: Assets.svgIconArrowRight.icon(color: colors.tertararyText),
+                  trailing: IconAssetColored(Assets.svgIconArrowRight, color: colors.tertararyText),
                   title: Text(categoryEntry.value.display, style: textStyles.body),
                 );
               },

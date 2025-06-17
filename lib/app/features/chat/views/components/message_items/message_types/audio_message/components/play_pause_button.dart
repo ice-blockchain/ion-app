@@ -41,14 +41,8 @@ class _PlayPauseButton extends ConsumerWidget {
               );
             }
             return state.isPlaying
-                ? Assets.svgIconVideoPause.icon(
-                    size: 20.0.s,
-                    color: context.theme.appColors.primaryAccent,
-                  )
-                : Assets.svgIconVideoPlay.icon(
-                    size: 20.0.s,
-                    color: context.theme.appColors.primaryAccent,
-                  );
+                ? IconAssetColored(Assets.svgIconVideoPause, color: context.theme.appColors.primaryAccent, size: 20)
+                : IconAssetColored(Assets.svgIconVideoPlay, color: context.theme.appColors.primaryAccent, size: 20);
           },
         ),
       ),

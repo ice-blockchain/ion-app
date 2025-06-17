@@ -27,7 +27,7 @@ class InfoCard extends StatelessWidget {
     return Column(
       mainAxisSize: MainAxisSize.min,
       children: [
-        iconAsset.icon(size: 80.0.s),
+        IconAsset(iconAsset, size: 80),
         SizedBox(height: 10.0.s),
         Text(
           title,

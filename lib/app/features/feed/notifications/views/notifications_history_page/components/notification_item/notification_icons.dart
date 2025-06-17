@@ -35,7 +35,7 @@ class NotificationIcons extends StatelessWidget {
             color: notification.getBackgroundColor(context),
             borderRadius: BorderRadius.circular(10.0.s),
           ),
-          child: notification.asset.icon(size: 18.0.s, color: Colors.white),
+          child: IconAssetColored(notification.asset, color: Colors.white, size: 18.0),
         ),
         ...notification.pubkeys.take(iconsCount - 1).map((pubkey) {
           return Padding(

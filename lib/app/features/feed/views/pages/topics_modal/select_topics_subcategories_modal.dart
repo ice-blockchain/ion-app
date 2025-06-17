@@ -91,8 +91,8 @@ class SelectTopicsSubcategoriesModal extends HookConsumerWidget {
                   onTap: () => _toggleTopicSelection(ref, subcategory.key),
                   backgroundColor: colors.secondaryBackground,
                   trailing: isSelected
-                      ? Assets.svgIconBlockCheckboxOnblue.icon(color: colors.success)
-                      : Assets.svgIconBlockCheckboxOff.icon(color: colors.tertararyText),
+                      ? IconAssetColored(Assets.svgIconBlockCheckboxOnblue, color: colors.success)
+                      : IconAssetColored(Assets.svgIconBlockCheckboxOff, color: colors.tertararyText),
                   title: Text(subcategory.value.display, style: textStyles.body),
                 );
               },

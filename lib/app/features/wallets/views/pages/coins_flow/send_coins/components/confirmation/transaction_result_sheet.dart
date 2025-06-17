@@ -35,7 +35,6 @@ class TransactionResultSheet extends ConsumerWidget {
     final colors = context.theme.appColors;
     final textTheme = context.theme.appTextThemes;
     final locale = context.i18n;
-    const icons = Assets.svg;
 
     return SheetContent(
       body: Column(
@@ -49,9 +48,10 @@ class TransactionResultSheet extends ConsumerWidget {
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
-                icons.actionContactsendSuccess.iconWithDimensions(
-                  width: 74.0.s,
-                  height: 76.0.s,
+                IconAsset.rect(
+                  Assets.svgActionContactsendSuccess,
+                  width: 74.0,
+                  height: 76.0,
                 ),
                 SizedBox(height: 10.0.s),
                 Text(
@@ -88,7 +88,8 @@ class TransactionResultSheet extends ConsumerWidget {
                     Expanded(
                       child: Button(
                         label: Text(locale.wallet_transaction_details),
-                        leadingIcon: icons.iconButtonDetails.icon(
+                        leadingIcon: IconAssetColored(
+                          Assets.svgIconButtonDetails,
                           color: context.theme.appColors.secondaryText,
                         ),
                         backgroundColor: context.theme.appColors.tertararyBackground,
@@ -107,7 +108,7 @@ class TransactionResultSheet extends ConsumerWidget {
                         shareContent(transactionData.transactionExplorerUrl);
                       },
                       backgroundColor: context.theme.appColors.tertararyBackground,
-                      leadingIcon: icons.iconButtonShare.icon(),
+                      leadingIcon: IconAsset(Assets.svgIconButtonShare),
                     ),
                   ],
                 ),

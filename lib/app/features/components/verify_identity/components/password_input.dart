@@ -36,7 +36,7 @@ class PasswordInput extends HookWidget {
     return TextInput(
       prefixIcon: TextInputIcons(
         hasRightDivider: true,
-        icons: [Assets.svgIconPass.icon()],
+        icons: [IconAsset(Assets.svgIconPass)],
       ),
       suffixIcon: TextInputIcons(
         icons: [
@@ -44,8 +44,8 @@ class PasswordInput extends HookWidget {
             dimension: 40.0.s,
             child: IconButton(
               icon: isPasswordVisible.value
-                  ? Assets.svgIconBlockEyeOff.icon(color: context.theme.appColors.primaryAccent)
-                  : Assets.svgIconBlockEyeOn.icon(color: context.theme.appColors.primaryAccent),
+                  ? IconAssetColored(Assets.svgIconBlockEyeOff, color: context.theme.appColors.primaryAccent)
+                  : IconAssetColored(Assets.svgIconBlockEyeOn, color: context.theme.appColors.primaryAccent),
               onPressed: () {
                 isPasswordVisible.value = !isPasswordVisible.value;
               },

@@ -53,7 +53,7 @@ class ModalActionButton extends StatelessWidget {
           ],
         ],
       ),
-      trailing: Assets.svgIconArrowRight.icon(color: context.theme.appColors.primaryText),
+      trailing: IconAssetColored(Assets.svgIconArrowRight, color: context.theme.appColors.primaryText),
       backgroundColor: context.theme.appColors.tertararyBackground,
     );
   }

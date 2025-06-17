@@ -53,7 +53,7 @@ class LoginForm extends HookConsumerWidget {
             trailingIcon: loginActionState.isLoading ||
                     (authState.valueOrNull?.isAuthenticated).falseOrValue
                 ? const IONLoadingIndicator()
-                : Assets.svgIconButtonNext.icon(color: context.theme.appColors.onPrimaryAccent),
+                : IconAssetColored(Assets.svgIconButtonNext, color: context.theme.appColors.onPrimaryAccent),
             onPressed: () {
               if (formKey.value.currentState!.validate()) {
                 onLogin(identityKeyNameController.text);
