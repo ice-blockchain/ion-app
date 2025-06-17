@@ -255,3 +255,15 @@ class Trc721Transfer with _$Trc721Transfer implements Transfer {
 
   factory Trc721Transfer.fromJson(Map<String, dynamic> json) => _$Trc721TransferFromJson(json);
 }
+
+@freezed
+class Aip21Transfer with _$Aip21Transfer implements Transfer {
+  const factory Aip21Transfer({
+    required String metadata,
+    required String to,
+    required String amount,
+    @Default('Aip21') String kind,
+  }) = _Aip21Transfer;
+
+  factory Aip21Transfer.fromJson(Map<String, dynamic> json) => _$Aip21TransferFromJson(json);
+}

@@ -65,6 +65,11 @@ class _TransferFactory {
         to: receiverAddress,
         contract: asset.contract,
       ),
+      aip21: (asset) => Aip21Transfer(
+        amount: amount,
+        to: receiverAddress,
+        metadata: asset.metadata,
+      ),
       unknown: (_) => throw CannotBuildTransferForUnknownAssetException(
         sendableAsset.kind,
       ),

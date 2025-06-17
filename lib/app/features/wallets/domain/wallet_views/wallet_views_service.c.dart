@@ -268,6 +268,7 @@ class WalletViewsService {
         );
       }
 
+      var balanceHackApplied = false;
       for (final transaction in coinTransactions) {
         final isTransactionRelatedToCoin = transaction.senderWalletAddress == wallet?.address;
         final isTransactionRelatedToWalletView = transaction.walletViewId == walletViewId;
@@ -278,6 +279,7 @@ class WalletViewsService {
             isTransactionRelatedToWalletView) {
           adjustedRawAmount -= BigInt.parse(transactionCoin.rawAmount);
 
+          balanceHackApplied = true;
           Logger.info(
             'Reduce coin amount according to the next transactions: '
             'amount: ${transactionCoin.amount} txHash: ${transaction.txHash}, '
@@ -292,7 +294,7 @@ class WalletViewsService {
       );
       final adjustedBalanceUSD = adjustedAmount * coinInWallet.coin.priceUSD;
 
-      if (adjustedAmount > 0) {
+      if (adjustedAmount > 0 && balanceHackApplied) {
         Logger.info('The reduction is complete. Adjusted amount: $adjustedAmount');
       }
 

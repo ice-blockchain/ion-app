@@ -206,6 +206,28 @@ Map<String, dynamic> _$$WalletAssetTrc20ImplToJson(
       'name': instance.name,
     };
 
+_$WalletAssetAip21Impl _$$WalletAssetAip21ImplFromJson(
+        Map<String, dynamic> json) =>
+    _$WalletAssetAip21Impl(
+      metadata: json['metadata'] as String,
+      symbol: json['symbol'] as String,
+      decimals: (json['decimals'] as num).toInt(),
+      kind: json['kind'] as String,
+      balance: const StringOrIntConverter().fromJson(json['balance']),
+      name: json['name'] as String?,
+    );
+
+Map<String, dynamic> _$$WalletAssetAip21ImplToJson(
+        _$WalletAssetAip21Impl instance) =>
+    <String, dynamic>{
+      'metadata': instance.metadata,
+      'symbol': instance.symbol,
+      'decimals': instance.decimals,
+      'kind': instance.kind,
+      'balance': const StringOrIntConverter().toJson(instance.balance),
+      'name': instance.name,
+    };
+
 _$WalletAssetUnknownImpl _$$WalletAssetUnknownImplFromJson(
         Map<String, dynamic> json) =>
     _$WalletAssetUnknownImpl(

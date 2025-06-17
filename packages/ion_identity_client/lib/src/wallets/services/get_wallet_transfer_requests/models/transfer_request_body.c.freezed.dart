@@ -38,6 +38,8 @@ TransferRequestBody _$TransferRequestBodyFromJson(Map<String, dynamic> json) {
       return Trc20TransferRequestBody.fromJson(json);
     case 'Trc721':
       return Trc721TransferRequestBody.fromJson(json);
+    case 'Aip21':
+      return Aip21TransferRequestBody.fromJson(json);
 
     default:
       throw CheckedFromJsonException(json, 'kind', 'TransferRequestBody',
@@ -82,6 +84,9 @@ mixin _$TransferRequestBody {
     required TResult Function(
             String kind, String contract, String to, String tokenId)
         trc721,
+    required TResult Function(
+            String kind, String to, String amount, String metadata)
+        aip21,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
@@ -107,6 +112,8 @@ mixin _$TransferRequestBody {
         trc20,
     TResult? Function(String kind, String contract, String to, String tokenId)?
         trc721,
+    TResult? Function(String kind, String to, String amount, String metadata)?
+        aip21,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
@@ -132,6 +139,8 @@ mixin _$TransferRequestBody {
         trc20,
     TResult Function(String kind, String contract, String to, String tokenId)?
         trc721,
+    TResult Function(String kind, String to, String amount, String metadata)?
+        aip21,
     required TResult orElse(),
   }) =>
       throw _privateConstructorUsedError;
@@ -148,6 +157,7 @@ mixin _$TransferRequestBody {
     required TResult Function(Trc10TransferRequestBody value) trc10,
     required TResult Function(Trc20TransferRequestBody value) trc20,
     required TResult Function(Trc721TransferRequestBody value) trc721,
+    required TResult Function(Aip21TransferRequestBody value) aip21,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
@@ -163,6 +173,7 @@ mixin _$TransferRequestBody {
     TResult? Function(Trc10TransferRequestBody value)? trc10,
     TResult? Function(Trc20TransferRequestBody value)? trc20,
     TResult? Function(Trc721TransferRequestBody value)? trc721,
+    TResult? Function(Aip21TransferRequestBody value)? aip21,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
@@ -178,6 +189,7 @@ mixin _$TransferRequestBody {
     TResult Function(Trc10TransferRequestBody value)? trc10,
     TResult Function(Trc20TransferRequestBody value)? trc20,
     TResult Function(Trc721TransferRequestBody value)? trc721,
+    TResult Function(Aip21TransferRequestBody value)? aip21,
     required TResult orElse(),
   }) =>
       throw _privateConstructorUsedError;
@@ -358,6 +370,9 @@ class _$NativeTransferRequestBodyImpl implements NativeTransferRequestBody {
     required TResult Function(
             String kind, String contract, String to, String tokenId)
         trc721,
+    required TResult Function(
+            String kind, String to, String amount, String metadata)
+        aip21,
   }) {
     return native(kind, to, amount);
   }
@@ -386,6 +401,8 @@ class _$NativeTransferRequestBodyImpl implements NativeTransferRequestBody {
         trc20,
     TResult? Function(String kind, String contract, String to, String tokenId)?
         trc721,
+    TResult? Function(String kind, String to, String amount, String metadata)?
+        aip21,
   }) {
     return native?.call(kind, to, amount);
   }
@@ -414,6 +431,8 @@ class _$NativeTransferRequestBodyImpl implements NativeTransferRequestBody {
         trc20,
     TResult Function(String kind, String contract, String to, String tokenId)?
         trc721,
+    TResult Function(String kind, String to, String amount, String metadata)?
+        aip21,
     required TResult orElse(),
   }) {
     if (native != null) {
@@ -436,6 +455,7 @@ class _$NativeTransferRequestBodyImpl implements NativeTransferRequestBody {
     required TResult Function(Trc10TransferRequestBody value) trc10,
     required TResult Function(Trc20TransferRequestBody value) trc20,
     required TResult Function(Trc721TransferRequestBody value) trc721,
+    required TResult Function(Aip21TransferRequestBody value) aip21,
   }) {
     return native(this);
   }
@@ -454,6 +474,7 @@ class _$NativeTransferRequestBodyImpl implements NativeTransferRequestBody {
     TResult? Function(Trc10TransferRequestBody value)? trc10,
     TResult? Function(Trc20TransferRequestBody value)? trc20,
     TResult? Function(Trc721TransferRequestBody value)? trc721,
+    TResult? Function(Aip21TransferRequestBody value)? aip21,
   }) {
     return native?.call(this);
   }
@@ -472,6 +493,7 @@ class _$NativeTransferRequestBodyImpl implements NativeTransferRequestBody {
     TResult Function(Trc10TransferRequestBody value)? trc10,
     TResult Function(Trc20TransferRequestBody value)? trc20,
     TResult Function(Trc721TransferRequestBody value)? trc721,
+    TResult Function(Aip21TransferRequestBody value)? aip21,
     required TResult orElse(),
   }) {
     if (native != null) {
@@ -650,6 +672,9 @@ class _$Erc721TransferRequestBodyImpl implements Erc721TransferRequestBody {
     required TResult Function(
             String kind, String contract, String to, String tokenId)
         trc721,
+    required TResult Function(
+            String kind, String to, String amount, String metadata)
+        aip21,
   }) {
     return erc721(kind, contract, to, tokenId);
   }
@@ -678,6 +703,8 @@ class _$Erc721TransferRequestBodyImpl implements Erc721TransferRequestBody {
         trc20,
     TResult? Function(String kind, String contract, String to, String tokenId)?
         trc721,
+    TResult? Function(String kind, String to, String amount, String metadata)?
+        aip21,
   }) {
     return erc721?.call(kind, contract, to, tokenId);
   }
@@ -706,6 +733,8 @@ class _$Erc721TransferRequestBodyImpl implements Erc721TransferRequestBody {
         trc20,
     TResult Function(String kind, String contract, String to, String tokenId)?
         trc721,
+    TResult Function(String kind, String to, String amount, String metadata)?
+        aip21,
     required TResult orElse(),
   }) {
     if (erc721 != null) {
@@ -728,6 +757,7 @@ class _$Erc721TransferRequestBodyImpl implements Erc721TransferRequestBody {
     required TResult Function(Trc10TransferRequestBody value) trc10,
     required TResult Function(Trc20TransferRequestBody value) trc20,
     required TResult Function(Trc721TransferRequestBody value) trc721,
+    required TResult Function(Aip21TransferRequestBody value) aip21,
   }) {
     return erc721(this);
   }
@@ -746,6 +776,7 @@ class _$Erc721TransferRequestBodyImpl implements Erc721TransferRequestBody {
     TResult? Function(Trc10TransferRequestBody value)? trc10,
     TResult? Function(Trc20TransferRequestBody value)? trc20,
     TResult? Function(Trc721TransferRequestBody value)? trc721,
+    TResult? Function(Aip21TransferRequestBody value)? aip21,
   }) {
     return erc721?.call(this);
   }
@@ -764,6 +795,7 @@ class _$Erc721TransferRequestBodyImpl implements Erc721TransferRequestBody {
     TResult Function(Trc10TransferRequestBody value)? trc10,
     TResult Function(Trc20TransferRequestBody value)? trc20,
     TResult Function(Trc721TransferRequestBody value)? trc721,
+    TResult Function(Aip21TransferRequestBody value)? aip21,
     required TResult orElse(),
   }) {
     if (erc721 != null) {
@@ -942,6 +974,9 @@ class _$AsaTransferRequestBodyImpl implements AsaTransferRequestBody {
     required TResult Function(
             String kind, String contract, String to, String tokenId)
         trc721,
+    required TResult Function(
+            String kind, String to, String amount, String metadata)
+        aip21,
   }) {
     return asa(kind, assetId, to, amount);
   }
@@ -970,6 +1005,8 @@ class _$AsaTransferRequestBodyImpl implements AsaTransferRequestBody {
         trc20,
     TResult? Function(String kind, String contract, String to, String tokenId)?
         trc721,
+    TResult? Function(String kind, String to, String amount, String metadata)?
+        aip21,
   }) {
     return asa?.call(kind, assetId, to, amount);
   }
@@ -998,6 +1035,8 @@ class _$AsaTransferRequestBodyImpl implements AsaTransferRequestBody {
         trc20,
     TResult Function(String kind, String contract, String to, String tokenId)?
         trc721,
+    TResult Function(String kind, String to, String amount, String metadata)?
+        aip21,
     required TResult orElse(),
   }) {
     if (asa != null) {
@@ -1020,6 +1059,7 @@ class _$AsaTransferRequestBodyImpl implements AsaTransferRequestBody {
     required TResult Function(Trc10TransferRequestBody value) trc10,
     required TResult Function(Trc20TransferRequestBody value) trc20,
     required TResult Function(Trc721TransferRequestBody value) trc721,
+    required TResult Function(Aip21TransferRequestBody value) aip21,
   }) {
     return asa(this);
   }
@@ -1038,6 +1078,7 @@ class _$AsaTransferRequestBodyImpl implements AsaTransferRequestBody {
     TResult? Function(Trc10TransferRequestBody value)? trc10,
     TResult? Function(Trc20TransferRequestBody value)? trc20,
     TResult? Function(Trc721TransferRequestBody value)? trc721,
+    TResult? Function(Aip21TransferRequestBody value)? aip21,
   }) {
     return asa?.call(this);
   }
@@ -1056,6 +1097,7 @@ class _$AsaTransferRequestBodyImpl implements AsaTransferRequestBody {
     TResult Function(Trc10TransferRequestBody value)? trc10,
     TResult Function(Trc20TransferRequestBody value)? trc20,
     TResult Function(Trc721TransferRequestBody value)? trc721,
+    TResult Function(Aip21TransferRequestBody value)? aip21,
     required TResult orElse(),
   }) {
     if (asa != null) {
@@ -1236,6 +1278,9 @@ class _$Erc20TransferRequestBodyImpl implements Erc20TransferRequestBody {
     required TResult Function(
             String kind, String contract, String to, String tokenId)
         trc721,
+    required TResult Function(
+            String kind, String to, String amount, String metadata)
+        aip21,
   }) {
     return erc20(kind, contract, amount, to);
   }
@@ -1264,6 +1309,8 @@ class _$Erc20TransferRequestBodyImpl implements Erc20TransferRequestBody {
         trc20,
     TResult? Function(String kind, String contract, String to, String tokenId)?
         trc721,
+    TResult? Function(String kind, String to, String amount, String metadata)?
+        aip21,
   }) {
     return erc20?.call(kind, contract, amount, to);
   }
@@ -1292,6 +1339,8 @@ class _$Erc20TransferRequestBodyImpl implements Erc20TransferRequestBody {
         trc20,
     TResult Function(String kind, String contract, String to, String tokenId)?
         trc721,
+    TResult Function(String kind, String to, String amount, String metadata)?
+        aip21,
     required TResult orElse(),
   }) {
     if (erc20 != null) {
@@ -1314,6 +1363,7 @@ class _$Erc20TransferRequestBodyImpl implements Erc20TransferRequestBody {
     required TResult Function(Trc10TransferRequestBody value) trc10,
     required TResult Function(Trc20TransferRequestBody value) trc20,
     required TResult Function(Trc721TransferRequestBody value) trc721,
+    required TResult Function(Aip21TransferRequestBody value) aip21,
   }) {
     return erc20(this);
   }
@@ -1332,6 +1382,7 @@ class _$Erc20TransferRequestBodyImpl implements Erc20TransferRequestBody {
     TResult? Function(Trc10TransferRequestBody value)? trc10,
     TResult? Function(Trc20TransferRequestBody value)? trc20,
     TResult? Function(Trc721TransferRequestBody value)? trc721,
+    TResult? Function(Aip21TransferRequestBody value)? aip21,
   }) {
     return erc20?.call(this);
   }
@@ -1350,6 +1401,7 @@ class _$Erc20TransferRequestBodyImpl implements Erc20TransferRequestBody {
     TResult Function(Trc10TransferRequestBody value)? trc10,
     TResult Function(Trc20TransferRequestBody value)? trc20,
     TResult Function(Trc721TransferRequestBody value)? trc721,
+    TResult Function(Aip21TransferRequestBody value)? aip21,
     required TResult orElse(),
   }) {
     if (erc20 != null) {
@@ -1529,6 +1581,9 @@ class _$SplTransferRequestBodyImpl implements SplTransferRequestBody {
     required TResult Function(
             String kind, String contract, String to, String tokenId)
         trc721,
+    required TResult Function(
+            String kind, String to, String amount, String metadata)
+        aip21,
   }) {
     return spl(kind, mint, to, amount);
   }
@@ -1557,6 +1612,8 @@ class _$SplTransferRequestBodyImpl implements SplTransferRequestBody {
         trc20,
     TResult? Function(String kind, String contract, String to, String tokenId)?
         trc721,
+    TResult? Function(String kind, String to, String amount, String metadata)?
+        aip21,
   }) {
     return spl?.call(kind, mint, to, amount);
   }
@@ -1585,6 +1642,8 @@ class _$SplTransferRequestBodyImpl implements SplTransferRequestBody {
         trc20,
     TResult Function(String kind, String contract, String to, String tokenId)?
         trc721,
+    TResult Function(String kind, String to, String amount, String metadata)?
+        aip21,
     required TResult orElse(),
   }) {
     if (spl != null) {
@@ -1607,6 +1666,7 @@ class _$SplTransferRequestBodyImpl implements SplTransferRequestBody {
     required TResult Function(Trc10TransferRequestBody value) trc10,
     required TResult Function(Trc20TransferRequestBody value) trc20,
     required TResult Function(Trc721TransferRequestBody value) trc721,
+    required TResult Function(Aip21TransferRequestBody value) aip21,
   }) {
     return spl(this);
   }
@@ -1625,6 +1685,7 @@ class _$SplTransferRequestBodyImpl implements SplTransferRequestBody {
     TResult? Function(Trc10TransferRequestBody value)? trc10,
     TResult? Function(Trc20TransferRequestBody value)? trc20,
     TResult? Function(Trc721TransferRequestBody value)? trc721,
+    TResult? Function(Aip21TransferRequestBody value)? aip21,
   }) {
     return spl?.call(this);
   }
@@ -1643,6 +1704,7 @@ class _$SplTransferRequestBodyImpl implements SplTransferRequestBody {
     TResult Function(Trc10TransferRequestBody value)? trc10,
     TResult Function(Trc20TransferRequestBody value)? trc20,
     TResult Function(Trc721TransferRequestBody value)? trc721,
+    TResult Function(Aip21TransferRequestBody value)? aip21,
     required TResult orElse(),
   }) {
     if (spl != null) {
@@ -1823,6 +1885,9 @@ class _$Spl2022TransferRequestBodyImpl implements Spl2022TransferRequestBody {
     required TResult Function(
             String kind, String contract, String to, String tokenId)
         trc721,
+    required TResult Function(
+            String kind, String to, String amount, String metadata)
+        aip21,
   }) {
     return spl2022(kind, mint, to, amount);
   }
@@ -1851,6 +1916,8 @@ class _$Spl2022TransferRequestBodyImpl implements Spl2022TransferRequestBody {
         trc20,
     TResult? Function(String kind, String contract, String to, String tokenId)?
         trc721,
+    TResult? Function(String kind, String to, String amount, String metadata)?
+        aip21,
   }) {
     return spl2022?.call(kind, mint, to, amount);
   }
@@ -1879,6 +1946,8 @@ class _$Spl2022TransferRequestBodyImpl implements Spl2022TransferRequestBody {
         trc20,
     TResult Function(String kind, String contract, String to, String tokenId)?
         trc721,
+    TResult Function(String kind, String to, String amount, String metadata)?
+        aip21,
     required TResult orElse(),
   }) {
     if (spl2022 != null) {
@@ -1901,6 +1970,7 @@ class _$Spl2022TransferRequestBodyImpl implements Spl2022TransferRequestBody {
     required TResult Function(Trc10TransferRequestBody value) trc10,
     required TResult Function(Trc20TransferRequestBody value) trc20,
     required TResult Function(Trc721TransferRequestBody value) trc721,
+    required TResult Function(Aip21TransferRequestBody value) aip21,
   }) {
     return spl2022(this);
   }
@@ -1919,6 +1989,7 @@ class _$Spl2022TransferRequestBodyImpl implements Spl2022TransferRequestBody {
     TResult? Function(Trc10TransferRequestBody value)? trc10,
     TResult? Function(Trc20TransferRequestBody value)? trc20,
     TResult? Function(Trc721TransferRequestBody value)? trc721,
+    TResult? Function(Aip21TransferRequestBody value)? aip21,
   }) {
     return spl2022?.call(this);
   }
@@ -1937,6 +2008,7 @@ class _$Spl2022TransferRequestBodyImpl implements Spl2022TransferRequestBody {
     TResult Function(Trc10TransferRequestBody value)? trc10,
     TResult Function(Trc20TransferRequestBody value)? trc20,
     TResult Function(Trc721TransferRequestBody value)? trc721,
+    TResult Function(Aip21TransferRequestBody value)? aip21,
     required TResult orElse(),
   }) {
     if (spl2022 != null) {
@@ -2128,6 +2200,9 @@ class _$Sep41TransferRequestBodyImpl implements Sep41TransferRequestBody {
     required TResult Function(
             String kind, String contract, String to, String tokenId)
         trc721,
+    required TResult Function(
+            String kind, String to, String amount, String metadata)
+        aip21,
   }) {
     return sep41(kind, issuer, assetCode, to, amount);
   }
@@ -2156,6 +2231,8 @@ class _$Sep41TransferRequestBodyImpl implements Sep41TransferRequestBody {
         trc20,
     TResult? Function(String kind, String contract, String to, String tokenId)?
         trc721,
+    TResult? Function(String kind, String to, String amount, String metadata)?
+        aip21,
   }) {
     return sep41?.call(kind, issuer, assetCode, to, amount);
   }
@@ -2184,6 +2261,8 @@ class _$Sep41TransferRequestBodyImpl implements Sep41TransferRequestBody {
         trc20,
     TResult Function(String kind, String contract, String to, String tokenId)?
         trc721,
+    TResult Function(String kind, String to, String amount, String metadata)?
+        aip21,
     required TResult orElse(),
   }) {
     if (sep41 != null) {
@@ -2206,6 +2285,7 @@ class _$Sep41TransferRequestBodyImpl implements Sep41TransferRequestBody {
     required TResult Function(Trc10TransferRequestBody value) trc10,
     required TResult Function(Trc20TransferRequestBody value) trc20,
     required TResult Function(Trc721TransferRequestBody value) trc721,
+    required TResult Function(Aip21TransferRequestBody value) aip21,
   }) {
     return sep41(this);
   }
@@ -2224,6 +2304,7 @@ class _$Sep41TransferRequestBodyImpl implements Sep41TransferRequestBody {
     TResult? Function(Trc10TransferRequestBody value)? trc10,
     TResult? Function(Trc20TransferRequestBody value)? trc20,
     TResult? Function(Trc721TransferRequestBody value)? trc721,
+    TResult? Function(Aip21TransferRequestBody value)? aip21,
   }) {
     return sep41?.call(this);
   }
@@ -2242,6 +2323,7 @@ class _$Sep41TransferRequestBodyImpl implements Sep41TransferRequestBody {
     TResult Function(Trc10TransferRequestBody value)? trc10,
     TResult Function(Trc20TransferRequestBody value)? trc20,
     TResult Function(Trc721TransferRequestBody value)? trc721,
+    TResult Function(Aip21TransferRequestBody value)? aip21,
     required TResult orElse(),
   }) {
     if (sep41 != null) {
@@ -2423,6 +2505,9 @@ class _$Tep74TransferRequestBodyImpl implements Tep74TransferRequestBody {
     required TResult Function(
             String kind, String contract, String to, String tokenId)
         trc721,
+    required TResult Function(
+            String kind, String to, String amount, String metadata)
+        aip21,
   }) {
     return tep74(kind, master, to, amount);
   }
@@ -2451,6 +2536,8 @@ class _$Tep74TransferRequestBodyImpl implements Tep74TransferRequestBody {
         trc20,
     TResult? Function(String kind, String contract, String to, String tokenId)?
         trc721,
+    TResult? Function(String kind, String to, String amount, String metadata)?
+        aip21,
   }) {
     return tep74?.call(kind, master, to, amount);
   }
@@ -2479,6 +2566,8 @@ class _$Tep74TransferRequestBodyImpl implements Tep74TransferRequestBody {
         trc20,
     TResult Function(String kind, String contract, String to, String tokenId)?
         trc721,
+    TResult Function(String kind, String to, String amount, String metadata)?
+        aip21,
     required TResult orElse(),
   }) {
     if (tep74 != null) {
@@ -2501,6 +2590,7 @@ class _$Tep74TransferRequestBodyImpl implements Tep74TransferRequestBody {
     required TResult Function(Trc10TransferRequestBody value) trc10,
     required TResult Function(Trc20TransferRequestBody value) trc20,
     required TResult Function(Trc721TransferRequestBody value) trc721,
+    required TResult Function(Aip21TransferRequestBody value) aip21,
   }) {
     return tep74(this);
   }
@@ -2519,6 +2609,7 @@ class _$Tep74TransferRequestBodyImpl implements Tep74TransferRequestBody {
     TResult? Function(Trc10TransferRequestBody value)? trc10,
     TResult? Function(Trc20TransferRequestBody value)? trc20,
     TResult? Function(Trc721TransferRequestBody value)? trc721,
+    TResult? Function(Aip21TransferRequestBody value)? aip21,
   }) {
     return tep74?.call(this);
   }
@@ -2537,6 +2628,7 @@ class _$Tep74TransferRequestBodyImpl implements Tep74TransferRequestBody {
     TResult Function(Trc10TransferRequestBody value)? trc10,
     TResult Function(Trc20TransferRequestBody value)? trc20,
     TResult Function(Trc721TransferRequestBody value)? trc721,
+    TResult Function(Aip21TransferRequestBody value)? aip21,
     required TResult orElse(),
   }) {
     if (tep74 != null) {
@@ -2716,6 +2808,9 @@ class _$Trc10TransferRequestBodyImpl implements Trc10TransferRequestBody {
     required TResult Function(
             String kind, String contract, String to, String tokenId)
         trc721,
+    required TResult Function(
+            String kind, String to, String amount, String metadata)
+        aip21,
   }) {
     return trc10(kind, tokenId, to, amount);
   }
@@ -2744,6 +2839,8 @@ class _$Trc10TransferRequestBodyImpl implements Trc10TransferRequestBody {
         trc20,
     TResult? Function(String kind, String contract, String to, String tokenId)?
         trc721,
+    TResult? Function(String kind, String to, String amount, String metadata)?
+        aip21,
   }) {
     return trc10?.call(kind, tokenId, to, amount);
   }
@@ -2772,6 +2869,8 @@ class _$Trc10TransferRequestBodyImpl implements Trc10TransferRequestBody {
         trc20,
     TResult Function(String kind, String contract, String to, String tokenId)?
         trc721,
+    TResult Function(String kind, String to, String amount, String metadata)?
+        aip21,
     required TResult orElse(),
   }) {
     if (trc10 != null) {
@@ -2794,6 +2893,7 @@ class _$Trc10TransferRequestBodyImpl implements Trc10TransferRequestBody {
     required TResult Function(Trc10TransferRequestBody value) trc10,
     required TResult Function(Trc20TransferRequestBody value) trc20,
     required TResult Function(Trc721TransferRequestBody value) trc721,
+    required TResult Function(Aip21TransferRequestBody value) aip21,
   }) {
     return trc10(this);
   }
@@ -2812,6 +2912,7 @@ class _$Trc10TransferRequestBodyImpl implements Trc10TransferRequestBody {
     TResult? Function(Trc10TransferRequestBody value)? trc10,
     TResult? Function(Trc20TransferRequestBody value)? trc20,
     TResult? Function(Trc721TransferRequestBody value)? trc721,
+    TResult? Function(Aip21TransferRequestBody value)? aip21,
   }) {
     return trc10?.call(this);
   }
@@ -2830,6 +2931,7 @@ class _$Trc10TransferRequestBodyImpl implements Trc10TransferRequestBody {
     TResult Function(Trc10TransferRequestBody value)? trc10,
     TResult Function(Trc20TransferRequestBody value)? trc20,
     TResult Function(Trc721TransferRequestBody value)? trc721,
+    TResult Function(Aip21TransferRequestBody value)? aip21,
     required TResult orElse(),
   }) {
     if (trc10 != null) {
@@ -3010,6 +3112,9 @@ class _$Trc20TransferRequestBodyImpl implements Trc20TransferRequestBody {
     required TResult Function(
             String kind, String contract, String to, String tokenId)
         trc721,
+    required TResult Function(
+            String kind, String to, String amount, String metadata)
+        aip21,
   }) {
     return trc20(kind, contract, to, amount);
   }
@@ -3038,6 +3143,8 @@ class _$Trc20TransferRequestBodyImpl implements Trc20TransferRequestBody {
         trc20,
     TResult? Function(String kind, String contract, String to, String tokenId)?
         trc721,
+    TResult? Function(String kind, String to, String amount, String metadata)?
+        aip21,
   }) {
     return trc20?.call(kind, contract, to, amount);
   }
@@ -3066,6 +3173,8 @@ class _$Trc20TransferRequestBodyImpl implements Trc20TransferRequestBody {
         trc20,
     TResult Function(String kind, String contract, String to, String tokenId)?
         trc721,
+    TResult Function(String kind, String to, String amount, String metadata)?
+        aip21,
     required TResult orElse(),
   }) {
     if (trc20 != null) {
@@ -3088,6 +3197,7 @@ class _$Trc20TransferRequestBodyImpl implements Trc20TransferRequestBody {
     required TResult Function(Trc10TransferRequestBody value) trc10,
     required TResult Function(Trc20TransferRequestBody value) trc20,
     required TResult Function(Trc721TransferRequestBody value) trc721,
+    required TResult Function(Aip21TransferRequestBody value) aip21,
   }) {
     return trc20(this);
   }
@@ -3106,6 +3216,7 @@ class _$Trc20TransferRequestBodyImpl implements Trc20TransferRequestBody {
     TResult? Function(Trc10TransferRequestBody value)? trc10,
     TResult? Function(Trc20TransferRequestBody value)? trc20,
     TResult? Function(Trc721TransferRequestBody value)? trc721,
+    TResult? Function(Aip21TransferRequestBody value)? aip21,
   }) {
     return trc20?.call(this);
   }
@@ -3124,6 +3235,7 @@ class _$Trc20TransferRequestBodyImpl implements Trc20TransferRequestBody {
     TResult Function(Trc10TransferRequestBody value)? trc10,
     TResult Function(Trc20TransferRequestBody value)? trc20,
     TResult Function(Trc721TransferRequestBody value)? trc721,
+    TResult Function(Aip21TransferRequestBody value)? aip21,
     required TResult orElse(),
   }) {
     if (trc20 != null) {
@@ -3304,6 +3416,9 @@ class _$Trc721TransferRequestBodyImpl implements Trc721TransferRequestBody {
     required TResult Function(
             String kind, String contract, String to, String tokenId)
         trc721,
+    required TResult Function(
+            String kind, String to, String amount, String metadata)
+        aip21,
   }) {
     return trc721(kind, contract, to, tokenId);
   }
@@ -3332,6 +3447,8 @@ class _$Trc721TransferRequestBodyImpl implements Trc721TransferRequestBody {
         trc20,
     TResult? Function(String kind, String contract, String to, String tokenId)?
         trc721,
+    TResult? Function(String kind, String to, String amount, String metadata)?
+        aip21,
   }) {
     return trc721?.call(kind, contract, to, tokenId);
   }
@@ -3360,6 +3477,8 @@ class _$Trc721TransferRequestBodyImpl implements Trc721TransferRequestBody {
         trc20,
     TResult Function(String kind, String contract, String to, String tokenId)?
         trc721,
+    TResult Function(String kind, String to, String amount, String metadata)?
+        aip21,
     required TResult orElse(),
   }) {
     if (trc721 != null) {
@@ -3382,6 +3501,7 @@ class _$Trc721TransferRequestBodyImpl implements Trc721TransferRequestBody {
     required TResult Function(Trc10TransferRequestBody value) trc10,
     required TResult Function(Trc20TransferRequestBody value) trc20,
     required TResult Function(Trc721TransferRequestBody value) trc721,
+    required TResult Function(Aip21TransferRequestBody value) aip21,
   }) {
     return trc721(this);
   }
@@ -3400,6 +3520,7 @@ class _$Trc721TransferRequestBodyImpl implements Trc721TransferRequestBody {
     TResult? Function(Trc10TransferRequestBody value)? trc10,
     TResult? Function(Trc20TransferRequestBody value)? trc20,
     TResult? Function(Trc721TransferRequestBody value)? trc721,
+    TResult? Function(Aip21TransferRequestBody value)? aip21,
   }) {
     return trc721?.call(this);
   }
@@ -3418,6 +3539,7 @@ class _$Trc721TransferRequestBodyImpl implements Trc721TransferRequestBody {
     TResult Function(Trc10TransferRequestBody value)? trc10,
     TResult Function(Trc20TransferRequestBody value)? trc20,
     TResult Function(Trc721TransferRequestBody value)? trc721,
+    TResult Function(Aip21TransferRequestBody value)? aip21,
     required TResult orElse(),
   }) {
     if (trc721 != null) {
@@ -3456,5 +3578,308 @@ abstract class Trc721TransferRequestBody implements TransferRequestBody {
   @override
   @JsonKey(includeFromJson: false, includeToJson: false)
   _$$Trc721TransferRequestBodyImplCopyWith<_$Trc721TransferRequestBodyImpl>
+      get copyWith => throw _privateConstructorUsedError;
+}
+
+/// @nodoc
+abstract class _$$Aip21TransferRequestBodyImplCopyWith<$Res>
+    implements $TransferRequestBodyCopyWith<$Res> {
+  factory _$$Aip21TransferRequestBodyImplCopyWith(
+          _$Aip21TransferRequestBodyImpl value,
+          $Res Function(_$Aip21TransferRequestBodyImpl) then) =
+      __$$Aip21TransferRequestBodyImplCopyWithImpl<$Res>;
+  @override
+  @useResult
+  $Res call({String kind, String to, String amount, String metadata});
+}
+
+/// @nodoc
+class __$$Aip21TransferRequestBodyImplCopyWithImpl<$Res>
+    extends _$TransferRequestBodyCopyWithImpl<$Res,
+        _$Aip21TransferRequestBodyImpl>
+    implements _$$Aip21TransferRequestBodyImplCopyWith<$Res> {
+  __$$Aip21TransferRequestBodyImplCopyWithImpl(
+      _$Aip21TransferRequestBodyImpl _value,
+      $Res Function(_$Aip21TransferRequestBodyImpl) _then)
+      : super(_value, _then);
+
+  /// Create a copy of TransferRequestBody
+  /// with the given fields replaced by the non-null parameter values.
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({
+    Object? kind = null,
+    Object? to = null,
+    Object? amount = null,
+    Object? metadata = null,
+  }) {
+    return _then(_$Aip21TransferRequestBodyImpl(
+      kind: null == kind
+          ? _value.kind
+          : kind // ignore: cast_nullable_to_non_nullable
+              as String,
+      to: null == to
+          ? _value.to
+          : to // ignore: cast_nullable_to_non_nullable
+              as String,
+      amount: null == amount
+          ? _value.amount
+          : amount // ignore: cast_nullable_to_non_nullable
+              as String,
+      metadata: null == metadata
+          ? _value.metadata
+          : metadata // ignore: cast_nullable_to_non_nullable
+              as String,
+    ));
+  }
+}
+
+/// @nodoc
+@JsonSerializable()
+class _$Aip21TransferRequestBodyImpl implements Aip21TransferRequestBody {
+  const _$Aip21TransferRequestBodyImpl(
+      {required this.kind,
+      required this.to,
+      required this.amount,
+      required this.metadata});
+
+  factory _$Aip21TransferRequestBodyImpl.fromJson(Map<String, dynamic> json) =>
+      _$$Aip21TransferRequestBodyImplFromJson(json);
+
+  @override
+  final String kind;
+  @override
+  final String to;
+  @override
+  final String amount;
+  @override
+  final String metadata;
+
+  @override
+  String toString() {
+    return 'TransferRequestBody.aip21(kind: $kind, to: $to, amount: $amount, metadata: $metadata)';
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType &&
+            other is _$Aip21TransferRequestBodyImpl &&
+            (identical(other.kind, kind) || other.kind == kind) &&
+            (identical(other.to, to) || other.to == to) &&
+            (identical(other.amount, amount) || other.amount == amount) &&
+            (identical(other.metadata, metadata) ||
+                other.metadata == metadata));
+  }
+
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  @override
+  int get hashCode => Object.hash(runtimeType, kind, to, amount, metadata);
+
+  /// Create a copy of TransferRequestBody
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  @override
+  @pragma('vm:prefer-inline')
+  _$$Aip21TransferRequestBodyImplCopyWith<_$Aip21TransferRequestBodyImpl>
+      get copyWith => __$$Aip21TransferRequestBodyImplCopyWithImpl<
+          _$Aip21TransferRequestBodyImpl>(this, _$identity);
+
+  @override
+  @optionalTypeArgs
+  TResult when<TResult extends Object?>({
+    required TResult Function(String kind, String to, String amount) native,
+    required TResult Function(
+            String kind, String contract, String to, String tokenId)
+        erc721,
+    required TResult Function(
+            String kind, String assetId, String to, String amount)
+        asa,
+    required TResult Function(
+            String kind, String contract, String amount, String to)
+        erc20,
+    required TResult Function(
+            String kind, String mint, String to, String amount)
+        spl,
+    required TResult Function(
+            String kind, String mint, String to, String amount)
+        spl2022,
+    required TResult Function(String kind, String issuer, String assetCode,
+            String to, String amount)
+        sep41,
+    required TResult Function(
+            String kind, String master, String to, String amount)
+        tep74,
+    required TResult Function(
+            String kind, String tokenId, String to, String amount)
+        trc10,
+    required TResult Function(
+            String kind, String contract, String to, String amount)
+        trc20,
+    required TResult Function(
+            String kind, String contract, String to, String tokenId)
+        trc721,
+    required TResult Function(
+            String kind, String to, String amount, String metadata)
+        aip21,
+  }) {
+    return aip21(kind, to, amount, metadata);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? whenOrNull<TResult extends Object?>({
+    TResult? Function(String kind, String to, String amount)? native,
+    TResult? Function(String kind, String contract, String to, String tokenId)?
+        erc721,
+    TResult? Function(String kind, String assetId, String to, String amount)?
+        asa,
+    TResult? Function(String kind, String contract, String amount, String to)?
+        erc20,
+    TResult? Function(String kind, String mint, String to, String amount)? spl,
+    TResult? Function(String kind, String mint, String to, String amount)?
+        spl2022,
+    TResult? Function(String kind, String issuer, String assetCode, String to,
+            String amount)?
+        sep41,
+    TResult? Function(String kind, String master, String to, String amount)?
+        tep74,
+    TResult? Function(String kind, String tokenId, String to, String amount)?
+        trc10,
+    TResult? Function(String kind, String contract, String to, String amount)?
+        trc20,
+    TResult? Function(String kind, String contract, String to, String tokenId)?
+        trc721,
+    TResult? Function(String kind, String to, String amount, String metadata)?
+        aip21,
+  }) {
+    return aip21?.call(kind, to, amount, metadata);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeWhen<TResult extends Object?>({
+    TResult Function(String kind, String to, String amount)? native,
+    TResult Function(String kind, String contract, String to, String tokenId)?
+        erc721,
+    TResult Function(String kind, String assetId, String to, String amount)?
+        asa,
+    TResult Function(String kind, String contract, String amount, String to)?
+        erc20,
+    TResult Function(String kind, String mint, String to, String amount)? spl,
+    TResult Function(String kind, String mint, String to, String amount)?
+        spl2022,
+    TResult Function(String kind, String issuer, String assetCode, String to,
+            String amount)?
+        sep41,
+    TResult Function(String kind, String master, String to, String amount)?
+        tep74,
+    TResult Function(String kind, String tokenId, String to, String amount)?
+        trc10,
+    TResult Function(String kind, String contract, String to, String amount)?
+        trc20,
+    TResult Function(String kind, String contract, String to, String tokenId)?
+        trc721,
+    TResult Function(String kind, String to, String amount, String metadata)?
+        aip21,
+    required TResult orElse(),
+  }) {
+    if (aip21 != null) {
+      return aip21(kind, to, amount, metadata);
+    }
+    return orElse();
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult map<TResult extends Object?>({
+    required TResult Function(NativeTransferRequestBody value) native,
+    required TResult Function(Erc721TransferRequestBody value) erc721,
+    required TResult Function(AsaTransferRequestBody value) asa,
+    required TResult Function(Erc20TransferRequestBody value) erc20,
+    required TResult Function(SplTransferRequestBody value) spl,
+    required TResult Function(Spl2022TransferRequestBody value) spl2022,
+    required TResult Function(Sep41TransferRequestBody value) sep41,
+    required TResult Function(Tep74TransferRequestBody value) tep74,
+    required TResult Function(Trc10TransferRequestBody value) trc10,
+    required TResult Function(Trc20TransferRequestBody value) trc20,
+    required TResult Function(Trc721TransferRequestBody value) trc721,
+    required TResult Function(Aip21TransferRequestBody value) aip21,
+  }) {
+    return aip21(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? mapOrNull<TResult extends Object?>({
+    TResult? Function(NativeTransferRequestBody value)? native,
+    TResult? Function(Erc721TransferRequestBody value)? erc721,
+    TResult? Function(AsaTransferRequestBody value)? asa,
+    TResult? Function(Erc20TransferRequestBody value)? erc20,
+    TResult? Function(SplTransferRequestBody value)? spl,
+    TResult? Function(Spl2022TransferRequestBody value)? spl2022,
+    TResult? Function(Sep41TransferRequestBody value)? sep41,
+    TResult? Function(Tep74TransferRequestBody value)? tep74,
+    TResult? Function(Trc10TransferRequestBody value)? trc10,
+    TResult? Function(Trc20TransferRequestBody value)? trc20,
+    TResult? Function(Trc721TransferRequestBody value)? trc721,
+    TResult? Function(Aip21TransferRequestBody value)? aip21,
+  }) {
+    return aip21?.call(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeMap<TResult extends Object?>({
+    TResult Function(NativeTransferRequestBody value)? native,
+    TResult Function(Erc721TransferRequestBody value)? erc721,
+    TResult Function(AsaTransferRequestBody value)? asa,
+    TResult Function(Erc20TransferRequestBody value)? erc20,
+    TResult Function(SplTransferRequestBody value)? spl,
+    TResult Function(Spl2022TransferRequestBody value)? spl2022,
+    TResult Function(Sep41TransferRequestBody value)? sep41,
+    TResult Function(Tep74TransferRequestBody value)? tep74,
+    TResult Function(Trc10TransferRequestBody value)? trc10,
+    TResult Function(Trc20TransferRequestBody value)? trc20,
+    TResult Function(Trc721TransferRequestBody value)? trc721,
+    TResult Function(Aip21TransferRequestBody value)? aip21,
+    required TResult orElse(),
+  }) {
+    if (aip21 != null) {
+      return aip21(this);
+    }
+    return orElse();
+  }
+
+  @override
+  Map<String, dynamic> toJson() {
+    return _$$Aip21TransferRequestBodyImplToJson(
+      this,
+    );
+  }
+}
+
+abstract class Aip21TransferRequestBody implements TransferRequestBody {
+  const factory Aip21TransferRequestBody(
+      {required final String kind,
+      required final String to,
+      required final String amount,
+      required final String metadata}) = _$Aip21TransferRequestBodyImpl;
+
+  factory Aip21TransferRequestBody.fromJson(Map<String, dynamic> json) =
+      _$Aip21TransferRequestBodyImpl.fromJson;
+
+  @override
+  String get kind;
+  @override
+  String get to;
+  String get amount;
+  String get metadata;
+
+  /// Create a copy of TransferRequestBody
+  /// with the given fields replaced by the non-null parameter values.
+  @override
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  _$$Aip21TransferRequestBodyImplCopyWith<_$Aip21TransferRequestBodyImpl>
       get copyWith => throw _privateConstructorUsedError;
 }
