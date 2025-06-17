@@ -78,8 +78,8 @@ class ConversationMessageDataDao extends DatabaseAccessor<ChatDatabase>
           MessageStatusTableCompanion.insert(
             status: status,
             pubkey: pubkey,
-            messageEventReference: messageEventReference,
             masterPubkey: masterPubkey,
+            messageEventReference: messageEventReference,
           ),
         );
       } else if (status.index > existingStatus.status.index) {
