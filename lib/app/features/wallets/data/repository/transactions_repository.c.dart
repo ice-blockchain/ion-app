@@ -284,7 +284,7 @@ class TransactionsRepository {
           final contract = transaction.contract ?? transaction.metadataAddress;
           CoinData? coin;
 
-          if (transaction.kind.toLowerCase().contains('native')) {
+          if (transaction.isNativeTransfer) {
             coin = nativeCoin;
           } else if (transaction.contract != null || transaction.metadataAddress != null) {
             // Get coin by contract and network
@@ -375,5 +375,14 @@ class TransactionsRepository {
     if (direct != null) return direct;
     if (alternatives?.length == 1) return alternatives!.first;
     return fallbackAddress;
+  }
+}
+
+extension on WalletHistoryRecord {
+  bool get isNativeTransfer {
+    final lowerKind = kind.toLowerCase();
+
+    // utxo - specific native transfer for the UTXO networks, like Bitcoin
+    return lowerKind.contains('native') || lowerKind.contains('utxo');
   }
 }
