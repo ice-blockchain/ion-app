@@ -24,6 +24,10 @@ class ManageCoinsNotifier extends _$ManageCoinsNotifier {
 
   @override
   Future<Map<String, ManageCoinsGroup>> build() async {
+    _coinsFromWallet.clear();
+    _loadedGroups.clear();
+    _toExclude.clear();
+
     final walletView = await ref.watch(currentWalletViewDataProvider.future);
 
     for (final coinGroup in walletView.coinGroups) {
@@ -42,7 +46,8 @@ class ManageCoinsNotifier extends _$ManageCoinsNotifier {
       for (final group in loadedGroups)
         group.symbolGroup: ManageCoinsGroup(
           coinsGroup: group,
-          isSelected: state.value?[group.symbolGroup]?.isSelected ?? false,
+          isSelected: state.value?[group.symbolGroup]?.isSelected ??
+              false || _coinsFromWallet.keys.contains(group.symbolGroup),
         ),
     });
 
