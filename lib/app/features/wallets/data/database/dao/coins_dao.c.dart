@@ -194,12 +194,6 @@ class CoinsDao extends DatabaseAccessor<WalletsDatabase> with _$CoinsDaoMixin {
       groupsMap[symbolGroup]!.add(coin);
     }
 
-    // Convert to CoinsGroup objects
     return groupsMap.entries.map((entry) => CoinsGroup.fromCoinsData(entry.value));
-  }
-
-  Future<int> getCoinGroupsNumber() async {
-    final query = selectOnly(coinsTable, distinct: true)..addColumns([coinsTable.symbolGroup]);
-    return query.get().then((result) => result.length);
   }
 }

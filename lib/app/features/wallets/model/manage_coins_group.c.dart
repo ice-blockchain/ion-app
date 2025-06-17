@@ -10,6 +10,6 @@ class ManageCoinsGroup with _$ManageCoinsGroup {
   const factory ManageCoinsGroup({
     required CoinsGroup coinsGroup,
     required bool isSelected,
-    required bool isUpdating,
+    @Default(false) bool isUpdating,
   }) = _ManageCoinsGroup;
 }

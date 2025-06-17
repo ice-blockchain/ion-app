@@ -41,7 +41,6 @@ const _coinGroups = [
   'nexo',
   'apecoin',
   'usd1-wlfi',
-  // wbtc. Should be clarified! All wrapped btc should be in one symbolGroup!
   'first-digital-usd',
   'pepe',
   'chainlink',
@@ -112,7 +111,6 @@ const _coinGroups = [
   'lombard-staked-btc',
   'dogwifcoin',
   'ondo-finance',
-  // bera ?? Clarify this token!
   'weth',
   'cosmos',
   'gigachad-2',

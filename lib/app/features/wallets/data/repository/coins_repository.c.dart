@@ -136,6 +136,4 @@ class CoinsRepository {
         excludeCoinIds: excludeCoinIds,
         symbolGroups: symbolGroups,
       );
-
-  Future<int> getCoinGroupsNumber() => _coinsDao.getCoinGroupsNumber();
 }
