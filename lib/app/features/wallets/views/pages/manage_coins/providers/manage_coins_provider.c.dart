@@ -18,21 +18,17 @@ part 'required_coin_groups_list.dart';
 
 @riverpod
 class ManageCoinsNotifier extends _$ManageCoinsNotifier {
-  final _coinsFromWallet = <String, ManageCoinsGroup>{};
-  final _loadedGroups = <String, ManageCoinsGroup>{};
-  final _toExclude = <String>{};
-
   @override
   Future<Map<String, ManageCoinsGroup>> build() async {
-    _coinsFromWallet.clear();
-    _loadedGroups.clear();
-    _toExclude.clear();
+    final coinsFromWallet = <String, ManageCoinsGroup>{};
+    final loadedGroupsToSymbolGroup = <String, ManageCoinsGroup>{};
+    final toExclude = <String>{};
 
     final walletView = await ref.watch(currentWalletViewDataProvider.future);
 
     for (final coinGroup in walletView.coinGroups) {
-      _toExclude.addAll(coinGroup.coins.map((e) => e.coin.id));
-      _coinsFromWallet[coinGroup.symbolGroup] = ManageCoinsGroup(
+      toExclude.addAll(coinGroup.coins.map((e) => e.coin.id));
+      coinsFromWallet[coinGroup.symbolGroup] = ManageCoinsGroup(
         coinsGroup: coinGroup,
         isSelected: state.value?[coinGroup.symbolGroup]?.isSelected ?? true,
       );
@@ -40,20 +36,20 @@ class ManageCoinsNotifier extends _$ManageCoinsNotifier {
     final coinsService = await ref.watch(coinsServiceProvider.future);
     final loadedGroups = await coinsService.getCoinGroups(
       symbolGroups: _coinGroups,
-      excludeCoinIds: _toExclude,
+      excludeCoinIds: toExclude,
     );
-    _loadedGroups.addAll({
+    loadedGroupsToSymbolGroup.addAll({
       for (final group in loadedGroups)
         group.symbolGroup: ManageCoinsGroup(
           coinsGroup: group,
           isSelected: state.value?[group.symbolGroup]?.isSelected ??
-              false || _coinsFromWallet.keys.contains(group.symbolGroup),
+              false || coinsFromWallet.keys.contains(group.symbolGroup),
         ),
     });
 
     final groups = {
-      ..._coinsFromWallet,
-      ..._loadedGroups,
+      ...coinsFromWallet,
+      ...loadedGroupsToSymbolGroup,
     };
 
     return groups;
