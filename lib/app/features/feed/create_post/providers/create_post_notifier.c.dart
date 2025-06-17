@@ -19,7 +19,6 @@ import 'package:ion/app/features/feed/data/models/entities/modifiable_post_data.
 import 'package:ion/app/features/feed/data/models/entities/post_data.c.dart';
 import 'package:ion/app/features/feed/data/models/who_can_reply_settings_option.c.dart';
 import 'package:ion/app/features/feed/polls/models/poll_data.c.dart';
-import 'package:ion/app/features/feed/polls/providers/poll_draft_provider.c.dart';
 import 'package:ion/app/features/feed/providers/counters/replies_count_provider.c.dart';
 import 'package:ion/app/features/feed/providers/counters/reposts_count_provider.c.dart';
 import 'package:ion/app/features/ion_connect/model/action_source.c.dart';
@@ -87,9 +86,6 @@ class CreatePostNotifier extends _$CreatePostNotifier {
       final (:files, :media) = await _uploadMediaFiles(mediaFiles: mediaFiles);
       final mentions = _buildMentions(postContent);
 
-      final pollDraft = ref.read(pollDraftNotifierProvider);
-      final pollData = poll ?? (pollDraft.added ? _createPollDataFromDraft(pollDraft) : null);
-
       final parentQuotedTopics = _getTopicsFromParentAndQuoted(parentEntity, quotedEntity);
       final relatedHashtags = {
         ...topics.map((topic) => RelatedHashtag(value: topic)),
@@ -114,7 +110,7 @@ class CreatePostNotifier extends _$CreatePostNotifier {
           content: postContent,
           media: media.values.toList(),
         ),
-        poll: pollData,
+        poll: poll,
       );
 
       final post = await _publishPost(
@@ -145,6 +141,7 @@ class CreatePostNotifier extends _$CreatePostNotifier {
     Map<String, MediaAttachment> mediaAttachments = const {},
     WhoCanReplySettingsOption? whoCanReply,
     List<String> topics = const [],
+    PollData? poll,
   }) async {
     state = const AsyncValue.loading();
 
@@ -183,6 +180,7 @@ class CreatePostNotifier extends _$CreatePostNotifier {
         settings: EntityDataWithSettings.build(
           whoCanReply: whoCanReply ?? modifiedEntity.data.whoCanReplySetting,
         ),
+        poll: poll,
       );
 
       final originalContentDelta = parseAndConvertDelta(
@@ -565,26 +563,6 @@ class CreatePostNotifier extends _$CreatePostNotifier {
       CreatePostOption.story => FileAlt.story,
       _ => FileAlt.post
     };
-  }
-
-  PollData _createPollDataFromDraft(PollDraft pollDraft) {
-    final pollOptions = pollDraft.answers
-        .where((answer) => answer.text.trim().isNotEmpty)
-        .map((answer) => answer.text.trim())
-        .toList();
-
-    // Convert duration to Unix timestamp (seconds since epoch)
-    final ttlSeconds = pollDraft.ttlSeconds;
-    final expiryTimestamp = ttlSeconds > 0
-        ? (DateTime.now().millisecondsSinceEpoch / 1000).floor() + ttlSeconds
-        : 0; // 0 means never expires
-
-    return PollData(
-      type: 'single',
-      ttl: expiryTimestamp,
-      title: '',
-      options: pollOptions,
-    );
   }
 
   List<String> _getTopicsFromParentAndQuoted(
