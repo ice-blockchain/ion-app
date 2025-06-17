@@ -50,11 +50,13 @@ class CoinsService {
   Future<Iterable<CoinsGroup>> getCoinGroups({
     int? limit,
     int? offset,
+    Iterable<String>? symbolGroups,
     Iterable<String>? excludeCoinIds,
   }) =>
       _coinsRepository.getCoinGroups(
         limit: limit,
         offset: offset,
+        symbolGroups: symbolGroups,
         excludeCoinIds: excludeCoinIds,
       );
 

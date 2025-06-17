@@ -128,11 +128,13 @@ class CoinsRepository {
     int? limit,
     int? offset,
     Iterable<String>? excludeCoinIds,
+    Iterable<String>? symbolGroups,
   }) =>
       _coinsDao.getCoinGroups(
         limit: limit,
         offset: offset,
         excludeCoinIds: excludeCoinIds,
+        symbolGroups: symbolGroups,
       );
 
   Future<int> getCoinGroupsNumber() => _coinsDao.getCoinGroupsNumber();

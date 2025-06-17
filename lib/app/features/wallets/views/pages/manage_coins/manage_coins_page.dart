@@ -8,7 +8,6 @@ import 'package:ion/app/components/list_items_loading_state/list_items_loading_s
 import 'package:ion/app/components/nothing_is_found/nothing_is_found.dart';
 import 'package:ion/app/components/screen_offset/screen_bottom_offset.dart';
 import 'package:ion/app/components/screen_offset/screen_side_offset.dart';
-import 'package:ion/app/components/scroll_view/load_more_builder.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/wallets/model/coins_group.c.dart';
 import 'package:ion/app/features/wallets/views/pages/manage_coins/components/import_token_action_button.dart';
@@ -45,9 +44,7 @@ class ManageCoinsPage extends HookConsumerWidget {
             ],
           ),
           Expanded(
-            child: LoadMoreBuilder(
-              onLoadMore: () => ref.read(manageCoinsNotifierProvider.notifier).loadMore(),
-              hasMore: manageCoins.value?.hasMore ?? false,
+            child: CustomScrollView(
               slivers: [
                 CollapsingAppBar(
                   height: SearchInput.height,
@@ -61,10 +58,10 @@ class ManageCoinsPage extends HookConsumerWidget {
                 if (searchText.value.isEmpty)
                   manageCoins.maybeWhen(
                     data: (coins) {
-                      if (coins.groups.isEmpty) return const NothingIsFound();
+                      if (coins.isEmpty) return const NothingIsFound();
                       return _CoinsList(
-                        itemCount: coins.groups.length,
-                        itemProvider: (index) => coins.groups.values.elementAt(index).coinsGroup,
+                        itemCount: coins.length,
+                        itemProvider: (index) => coins.values.elementAt(index).coinsGroup,
                       );
                     },
                     loading: () => const _ProgressIndicator(),
@@ -85,45 +82,6 @@ class ManageCoinsPage extends HookConsumerWidget {
               ],
             ),
           ),
-          // Expanded(
-          //   child: CustomScrollView(
-          //     slivers: [
-          //       CollapsingAppBar(
-          //         height: SearchInput.height,
-          //         child: ScreenSideOffset.small(
-          //           child: SearchInput(
-          //             onTextChanged: (String value) => searchText.value = value,
-          //             loading: searchResult.isLoading,
-          //           ),
-          //         ),
-          //       ),
-          //       if (searchText.value.isEmpty)
-          //         manageCoins.maybeWhen(
-          //           data: (coins) {
-          //             if (coins.groups.isEmpty) return const NothingIsFound();
-          //             return _CoinsList(
-          //               itemCount: coins.groups.length,
-          //               itemProvider: (index) => coins.groups.values.elementAt(index).coinsGroup,
-          //             );
-          //           },
-          //           loading: () => const _ProgressIndicator(),
-          //           orElse: () => const NothingIsFound(),
-          //         )
-          //       else
-          //         searchResult.maybeWhen(
-          //           data: (coins) {
-          //             if (coins.isEmpty) return const NothingIsFound();
-          //             return _CoinsList(
-          //               itemCount: coins.length,
-          //               itemProvider: (index) => coins.elementAt(index),
-          //             );
-          //           },
-          //           loading: () => const _ProgressIndicator(),
-          //           orElse: () => const NothingIsFound(),
-          //         ),
-          //     ],
-          //   ),
-          // ),
         ],
       ),
     );
