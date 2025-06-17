@@ -17,6 +17,7 @@ import 'package:ion/app/features/feed/create_post/model/create_post_option.dart'
 import 'package:ion/app/features/feed/data/models/entities/article_data.c.dart';
 import 'package:ion/app/features/feed/data/models/entities/modifiable_post_data.c.dart';
 import 'package:ion/app/features/feed/data/models/entities/post_data.c.dart';
+import 'package:ion/app/features/feed/data/models/feed_interests.c.dart';
 import 'package:ion/app/features/feed/data/models/who_can_reply_settings_option.c.dart';
 import 'package:ion/app/features/feed/polls/models/poll_data.c.dart';
 import 'package:ion/app/features/feed/providers/counters/replies_count_provider.c.dart';
@@ -87,6 +88,9 @@ class CreatePostNotifier extends _$CreatePostNotifier {
       final mentions = _buildMentions(postContent);
 
       final parentQuotedTopics = _getTopicsFromParentAndQuoted(parentEntity, quotedEntity);
+      if (topics.isEmpty && parentQuotedTopics.isEmpty) {
+        topics.add(FeedInterests.unclassified);
+      }
       final relatedHashtags = {
         ...topics.map((topic) => RelatedHashtag(value: topic)),
         ...parentQuotedTopics.map((topic) => RelatedHashtag(value: topic)),
@@ -162,6 +166,11 @@ class CreatePostNotifier extends _$CreatePostNotifier {
       final (:files, :media) = await _uploadMediaFiles(mediaFiles: mediaFiles);
       final modifiedMedia = Map<String, MediaAttachment>.from(mediaAttachments)..addAll(media);
 
+      if (topics.contains(FeedInterests.unclassified) && topics.length > 1) {
+        topics.remove(FeedInterests.unclassified);
+      } else if (topics.isEmpty) {
+        topics.add(FeedInterests.unclassified);
+      }
       final relatedHashtags = [
         ...topics.map((topic) => RelatedHashtag(value: topic)),
         ...extractTags(postContent).map((tag) => RelatedHashtag(value: tag)),
