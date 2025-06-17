@@ -33,7 +33,7 @@ class StoryProgressSegment extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: 4.0.s,
+      height: 2.0.s,
       margin: margin,
       clipBehavior: Clip.hardEdge,
       decoration: BoxDecoration(

@@ -3,7 +3,6 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:ion/app/components/shadow/svg_shadow.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/auth/providers/auth_provider.c.dart';
 import 'package:ion/app/features/feed/data/models/entities/modifiable_post_data.c.dart';
@@ -28,15 +27,11 @@ class HeaderActions extends ConsumerWidget {
           pubkey: post.masterPubkey,
           post: post,
           isCurrentUser: isCurrentUser,
-          child: SvgShadow(
-            child: Assets.svg.iconMoreStories.icon(color: iconMoreColor),
-          ),
+          child: Assets.svg.iconMoreStories.icon(color: iconMoreColor),
         ),
         SizedBox(width: 16.0.s),
         GestureDetector(
-          child: SvgShadow(
-            child: Assets.svg.iconSheetClose.icon(color: iconMoreColor),
-          ),
+          child: Assets.svg.iconSheetClose.icon(color: iconMoreColor),
           onTap: () => context.pop(),
         ),
       ],

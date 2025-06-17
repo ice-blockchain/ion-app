@@ -3,7 +3,9 @@
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/components/list_item/badges_user_list_item.dart';
+import 'package:ion/app/components/list_item/list_item.dart';
 import 'package:ion/app/extensions/extensions.dart';
+import 'package:ion/app/features/components/ion_connect_avatar/ion_connect_avatar.dart';
 import 'package:ion/app/features/feed/data/models/entities/modifiable_post_data.c.dart';
 import 'package:ion/app/features/feed/stories/views/components/story_viewer/components/header/header.dart';
 import 'package:ion/app/features/feed/views/components/time_ago/time_ago.dart';
@@ -32,9 +34,9 @@ class StoryViewerHeader extends ConsumerWidget {
       Shadow(
         offset: Offset(
           0.0.s,
-          1.5.s,
+          0.3.s,
         ),
-        blurRadius: 1.5,
+        blurRadius: 1,
         color: primaryTextWithAlpha,
       ),
     ];
@@ -51,6 +53,22 @@ class StoryViewerHeader extends ConsumerWidget {
             onTap: () => ProfileRoute(pubkey: currentPost.masterPubkey).push<void>(context),
             child: BadgesUserListItem(
               pubkey: userMetadata.masterPubkey,
+              leading: DecoratedBox(
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(10.s),
+                  boxShadow: [
+                    BoxShadow(
+                      offset: shadow.first.offset,
+                      blurRadius: shadow.first.blurRadius,
+                      color: shadow.first.color,
+                    ),
+                  ],
+                ),
+                child: IonConnectAvatar(
+                  size: ListItem.defaultAvatarSize,
+                  pubkey: currentPost.masterPubkey,
+                ),
+              ),
               title: Text(
                 userMetadata.data.displayName,
                 style: textThemes.subtitle3.copyWith(

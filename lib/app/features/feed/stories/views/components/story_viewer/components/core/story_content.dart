@@ -17,7 +17,6 @@ import 'package:ion/app/features/feed/stories/providers/emoji_reaction_provider.
 import 'package:ion/app/features/feed/stories/providers/story_pause_provider.c.dart';
 import 'package:ion/app/features/feed/stories/providers/story_reply_provider.c.dart';
 import 'package:ion/app/features/feed/stories/views/components/story_viewer/components/components.dart';
-import 'package:ion/app/features/feed/stories/views/components/story_viewer/components/header/story_header_gradient.dart';
 import 'package:ion/app/features/feed/stories/views/components/story_viewer/components/header/story_viewer_header.dart';
 import 'package:ion/app/utils/future.dart';
 
@@ -64,15 +63,7 @@ class StoryContent extends HookConsumerWidget {
                 ),
             ],
           ),
-          Stack(
-            children: [
-              const StoryHeaderGradient(),
-              StoryViewerHeader(currentPost: story),
-            ],
-          )
-              .animate(target: _shouldShowUI(ref, isKeyboardVisible) ? 1 : 0)
-              .fade(duration: 300.ms)
-              .slideY(begin: -0.1, end: 0, duration: 300.ms),
+          StoryViewerHeader(currentPost: story),
           _StoryControlsPanel(
             story: story,
             viewerPubkey: viewerPubkey,
@@ -85,13 +76,6 @@ class StoryContent extends HookConsumerWidget {
         ],
       ),
     );
-  }
-
-  bool _shouldShowUI(WidgetRef ref, bool isKeyboardShown) {
-    final paused = ref.watch(storyPauseControllerProvider);
-    final loading = ref.watch(storyReplyProvider).isLoading;
-    final menuOpen = ref.watch(storyMenuControllerProvider);
-    return loading || !paused || menuOpen || isKeyboardShown;
   }
 }
 
@@ -153,8 +137,8 @@ class _StoryControlsPanel extends HookConsumerWidget {
             duration: 50.ms,
             curve: Curves.easeOut,
             bottom: bottomPadding,
-            start: 16.0.s,
-            end: 68.0.s,
+            start: 0.s,
+            end: 52.0.s,
             child: StoryInputField(
               controller: textController,
               onSubmitted: onSubmit,
