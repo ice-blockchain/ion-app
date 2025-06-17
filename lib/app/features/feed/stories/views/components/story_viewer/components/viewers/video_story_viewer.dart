@@ -50,10 +50,9 @@ class VideoStoryViewer extends HookConsumerWidget {
     );
 
     final aspect = videoController.value.aspectRatio;
-    return LayoutBuilder(
-      builder: (context, constraints) => SizedBox(
-        width: constraints.maxWidth,
-        height: constraints.maxWidth / aspect,
+    return Center(
+      child: AspectRatio(
+        aspectRatio: aspect,
         child: CachedVideoPlayerPlus(videoController),
       ),
     );
