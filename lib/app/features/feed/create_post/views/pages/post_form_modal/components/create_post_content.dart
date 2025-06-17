@@ -8,6 +8,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/components/screen_offset/screen_side_offset.dart';
 import 'package:ion/app/components/text_editor/text_editor.dart';
 import 'package:ion/app/extensions/extensions.dart';
+import 'package:ion/app/features/core/model/media_type.dart';
 import 'package:ion/app/features/feed/create_post/model/create_post_option.dart';
 import 'package:ion/app/features/feed/create_post/views/components/reply_input_field/attached_media_preview.dart';
 import 'package:ion/app/features/feed/create_post/views/components/topics/topics_button.dart';
@@ -58,7 +59,9 @@ class CreatePostContent extends StatelessWidget {
           children: [
             _VideoPreviewSection(attachedVideoNotifier: attachedVideoNotifier),
             _TopicsSection(
+              attachedMediaNotifier: attachedMediaNotifier,
               attachedVideoNotifier: attachedVideoNotifier,
+              attachedMediaLinksNotifier: attachedMediaLinksNotifier,
               parentEvent: parentEvent,
               quotedEvent: quotedEvent,
             ),
@@ -239,12 +242,16 @@ class _QuotedEntitySection extends StatelessWidget {
 
 class _TopicsSection extends HookConsumerWidget {
   const _TopicsSection({
+    required this.attachedMediaNotifier,
     required this.attachedVideoNotifier,
+    required this.attachedMediaLinksNotifier,
     required this.parentEvent,
     required this.quotedEvent,
   });
 
+  final AttachedMediaNotifier attachedMediaNotifier;
   final ValueNotifier<MediaFile?> attachedVideoNotifier;
+  final AttachedMediaLinksNotifier attachedMediaLinksNotifier;
   final EventReference? parentEvent;
   final EventReference? quotedEvent;
 
@@ -255,7 +262,18 @@ class _TopicsSection extends HookConsumerWidget {
       return const SizedBox.shrink();
     }
 
-    final isVideo = attachedVideoNotifier.value != null;
+    final isAnyMediaVideo = attachedMediaNotifier.value.any(
+      (media) {
+        final mediaType = MediaType.fromMimeType(media.mimeType.emptyOrValue);
+        return mediaType == MediaType.video;
+      },
+    );
+    final isAnyMediaLinkVideo = attachedMediaLinksNotifier.value.values.any(
+      (mediaLink) {
+        return mediaLink.mediaType == MediaType.video;
+      },
+    );
+    final isVideo = attachedVideoNotifier.value != null || isAnyMediaVideo || isAnyMediaLinkVideo;
 
     return ScreenSideOffset.small(
       child: Padding(

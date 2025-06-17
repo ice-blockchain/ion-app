@@ -1,5 +1,6 @@
 // SPDX-License-Identifier: ice License 1.0
 
+import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
@@ -46,6 +47,27 @@ class TopicsButton extends HookConsumerWidget {
         });
       },
       [topicsTooltipVisible],
+    );
+
+    useEffect(
+      () {
+        if (availableSubcategories.isEmpty || selectedSubcategories.isEmpty) return null;
+        final selectedSubcategoriesKeysSet = selectedSubcategoriesKeys.toSet();
+        final selectedAvailableSubcategoriesKeys =
+            selectedSubcategoriesKeysSet.intersection({...availableSubcategories.keys});
+        final setsAreEqual = const SetEquality<String>().equals(
+          selectedAvailableSubcategoriesKeys,
+          selectedSubcategoriesKeysSet,
+        );
+        if (!setsAreEqual) {
+          WidgetsBinding.instance.addPostFrameCallback(
+            (_) => ref.read(selectedInterestsNotifierProvider.notifier).selectInterests =
+                selectedAvailableSubcategoriesKeys.toList(),
+          );
+        }
+        return null;
+      },
+      [availableSubcategories],
     );
 
     return ShowcaseWrapper(
