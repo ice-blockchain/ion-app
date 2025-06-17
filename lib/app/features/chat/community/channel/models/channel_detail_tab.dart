@@ -31,10 +31,10 @@ enum ChannelDetailTab {
   }
 
   String get emptyStateIconAsset => switch (this) {
-        ChannelDetailTab.posts => Assets.svgwalletIconProfileEmptyposts,
-        ChannelDetailTab.photos => Assets.svgwalletIconProfileEmptyreplies,
-        ChannelDetailTab.videos => Assets.svgwalletIconProfileEmptyvideo,
-        ChannelDetailTab.links => Assets.svgwalletIconProfileEmptyarticles,
+        ChannelDetailTab.posts => Assets.svgWalletIconProfileEmptyposts,
+        ChannelDetailTab.photos => Assets.svgWalletIconProfileEmptyreplies,
+        ChannelDetailTab.videos => Assets.svgWalletIconProfileEmptyvideo,
+        ChannelDetailTab.links => Assets.svgWalletIconProfileEmptyarticles,
       };
 
   String getTitle(BuildContext context) {

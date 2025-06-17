@@ -71,7 +71,7 @@ class IONLoadingIndicator extends HookWidget {
     );
 
     final loader =
-        type == IndicatorType.light ? Assets.lottie.whiteLoader : Assets.lottie.darkLoader;
+        type == IndicatorType.light ? Assets.lottieWhiteLoader : Assets.lottieDarkLoader;
     return SizedBox(
       width: size?.width ?? 20.0.s,
       height: size?.height ?? 20.0.s,

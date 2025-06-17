@@ -38,7 +38,7 @@ class IdentityKeyNameInput extends StatelessWidget {
       keyboardType: TextInputType.text,
       prefixIcon: TextInputIcons(
         hasRightDivider: true,
-        icons: [Assets.svgIconIdentitykey.icon()],
+        icons: [IconAsset(Assets.svgIconIdentitykey)],
       ),
       suffixIcon: notShowInfoIcon
           ? null
@@ -47,7 +47,7 @@ class IdentityKeyNameInput extends StatelessWidget {
                 SizedBox.square(
                   dimension: 40.0.s,
                   child: IconButton(
-                    icon: Assets.svgIconBlockInformation.icon(),
+                    icon: IconAsset(Assets.svgIconBlockInformation),
                     onPressed: () {
                       showSimpleBottomSheet<void>(
                         context: context,

@@ -21,7 +21,7 @@ class IntroPage extends HookConsumerWidget {
         .watch(
           videoControllerProvider(
             VideoControllerParams(
-              sourcePath: Assets.videos.intro,
+              sourcePath: Assets.videosIntro,
               looping: true,
               autoPlay: true,
             ),

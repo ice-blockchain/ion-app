@@ -64,7 +64,10 @@ class RecoveryKeysInputContainer extends HookConsumerWidget {
                               controller: controllers[key]!,
                               labelText: key.getDisplayName(context),
                               prefixIcon:
-                                  key.iconAsset.icon(color: context.theme.appColors.secondaryText),
+                                  IconAssetColored(
+                                    key.iconAsset,
+                                    color: context.theme.appColors.secondaryText,
+                                  ),
                               validator: (value) => validator(value, key),
                               textInputAction: key == RecoveryKeyProperty.recoveryCode
                                   ? TextInputAction.done

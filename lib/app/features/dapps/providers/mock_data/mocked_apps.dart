@@ -9,8 +9,8 @@ const _description =
 List<DAppData> mockedApps = <DAppData>[
   DAppData(
     identifier: 1,
-    iconImage: Assets.svgnetworks.walletUniswap,
-    backgroundImage: Assets.images.bg.bgWalletUniswap.path,
+    iconImage: Assets.svgNetworksWalletUniswap,
+    backgroundImage: Assets.imagesBgBgWalletUniswap.path,
     title: 'Uniswap',
     description: 'Swap ERC-20 tokens',
     value: 4190.77,
@@ -22,8 +22,8 @@ List<DAppData> mockedApps = <DAppData>[
   ),
   DAppData(
     identifier: 2,
-    iconImage: Assets.svgnetworks.walletOpensea,
-    backgroundImage: Assets.images.bg.bgWalletOpensea.path,
+    iconImage: Assets.svgNetworksWalletOpensea,
+    backgroundImage: Assets.imagesBgBgWalletOpensea.path,
     title: 'Opensea',
     description: 'NFT marketplace',
     value: 3938.25,
@@ -35,8 +35,8 @@ List<DAppData> mockedApps = <DAppData>[
   ),
   DAppData(
     identifier: 3,
-    iconImage: Assets.svgnetworks.wallet1inch,
-    backgroundImage: Assets.images.bg.bgWallet1inch.path,
+    iconImage: Assets.svgNetworksWallet1inch,
+    backgroundImage: Assets.imagesBgBgWallet1inch.path,
     title: '1inch',
     description: 'DEX price optimizer',
     value: 2681.49,
@@ -47,8 +47,8 @@ List<DAppData> mockedApps = <DAppData>[
   ),
   DAppData(
     identifier: 4,
-    iconImage: Assets.svgnetworks.walletPanecakeswap,
-    backgroundImage: Assets.images.bg.bgWalletOpensea.path,
+    iconImage: Assets.svgNetworksWalletPanecakeswap,
+    backgroundImage: Assets.imagesBgBgWalletOpensea.path,
     title: 'Pancakeswap',
     description: 'BSC decentralized exchange',
     value: 1348.52,
@@ -57,8 +57,8 @@ List<DAppData> mockedApps = <DAppData>[
   ),
   DAppData(
     identifier: 5,
-    iconImage: Assets.svgnetworks.walletStargate,
-    backgroundImage: Assets.images.bg.bgWalletOpensea.path,
+    iconImage: Assets.svgNetworksWalletStargate,
+    backgroundImage: Assets.imagesBgBgWalletOpensea.path,
     title: 'Stargate',
     description: 'Cross-chain transaction facilitator',
     value: 938.25,
@@ -67,8 +67,8 @@ List<DAppData> mockedApps = <DAppData>[
   ),
   DAppData(
     identifier: 6,
-    iconImage: Assets.svgnetworks.walletLido,
-    backgroundImage: Assets.images.bg.bgWalletOpensea.path,
+    iconImage: Assets.svgNetworksWalletLido,
+    backgroundImage: Assets.imagesBgBgWalletOpensea.path,
     title: 'Lido',
     description: 'Decentralized ETH 2.0.0.staking',
     value: 497.08,

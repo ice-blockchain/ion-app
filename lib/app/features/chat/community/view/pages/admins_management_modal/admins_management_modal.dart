@@ -63,7 +63,8 @@ class AdminsManagementModal extends HookConsumerWidget {
                 child: Button(
                   mainAxisSize: MainAxisSize.max,
                   minimumSize: Size(buttonSize, buttonSize),
-                  leadingIcon: Assets.svgIconPlusCreatechannel.icon(
+                  leadingIcon: IconAssetColored(
+                    Assets.svgIconPlusCreatechannel,
                     color: context.theme.appColors.onPrimaryAccent,
                   ),
                   label: Text(

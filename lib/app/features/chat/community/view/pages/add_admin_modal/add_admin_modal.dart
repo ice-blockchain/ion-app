@@ -52,7 +52,8 @@ class AddAdminModal extends HookConsumerWidget {
                 type: selectedPubkey.value == null ? ButtonType.disabled : ButtonType.primary,
                 mainAxisSize: MainAxisSize.max,
                 minimumSize: Size(56.0.s, 56.0.s),
-                leadingIcon: Assets.svgIconProfileSave.icon(
+                leadingIcon: IconAssetColored(
+                  Assets.svgIconProfileSave,
                   color: context.theme.appColors.onPrimaryAccent,
                 ),
                 label: Text(

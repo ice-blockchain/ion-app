@@ -29,7 +29,7 @@ class IdentityInfo extends StatelessWidget {
           child: Column(
             children: [
               InfoCard(
-                iconAsset: Assets.svgactionWalletIdKey,
+                iconAsset: Assets.svgActionWalletIdKey,
                 title: context.i18n.common_identity_key_name,
                 description: context.i18n.identity_key_name_description,
               ),

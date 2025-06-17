@@ -19,7 +19,7 @@ class RecoverInvalidCredentialsErrorAlert extends StatelessWidget {
         Padding(
           padding: EdgeInsetsDirectional.only(start: 30.0.s, end: 30.0.s, top: 30.0.s),
           child: InfoCard(
-            iconAsset: Assets.svgactionWalletKeyserror,
+            iconAsset: Assets.svgActionWalletKeyserror,
             title: context.i18n.restore_identity_invalid_creds_alert_title,
             description: context.i18n.restore_identity_invalid_creds_alert_description,
           ),

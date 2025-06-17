@@ -193,9 +193,10 @@ class _JoinButton extends HookConsumerWidget {
             ref.read(joinCommunityNotifierProvider.notifier).joinCommunity(communityId);
           },
           label: Text(context.i18n.channel_join),
-          leadingIcon: Assets.svgIconMenuLogout.icon(
+          leadingIcon: IconAssetColored(
+            Assets.svgIconMenuLogout,
             color: context.theme.appColors.onPrimaryAccent,
-            size: 24.0.s,
+            size: 24.0,
           ),
         ),
       ),

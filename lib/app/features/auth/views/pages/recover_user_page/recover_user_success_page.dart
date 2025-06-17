@@ -28,7 +28,7 @@ class RecoverUserSuccessPage extends StatelessWidget {
           SizedBox(height: 24.0.s),
           ScreenSideOffset.medium(
             child: InfoCard(
-              iconAsset: Assets.svgactionWalletSuccess2Fa,
+              iconAsset: Assets.svgActionWalletSuccess2Fa,
               title: context.i18n.common_congratulations,
               description: context.i18n.two_fa_success_desc,
             ),
