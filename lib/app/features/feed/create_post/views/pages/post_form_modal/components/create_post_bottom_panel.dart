@@ -13,6 +13,7 @@ import 'package:ion/app/features/feed/create_post/views/components/character_lim
 import 'package:ion/app/features/feed/create_post/views/components/post_submit_button/post_submit_button.dart';
 import 'package:ion/app/features/feed/data/models/entities/modifiable_post_data.c.dart';
 import 'package:ion/app/features/feed/data/models/who_can_reply_settings_option.c.dart';
+import 'package:ion/app/features/feed/providers/root_post_provider.c.dart';
 import 'package:ion/app/features/feed/providers/selected_who_can_reply_option_provider.c.dart';
 import 'package:ion/app/features/feed/views/components/actions_toolbar/actions_toolbar.dart';
 import 'package:ion/app/features/feed/views/components/toolbar_buttons/toolbar_bold_button.dart';
@@ -75,10 +76,10 @@ class CreatePostBottomPanel extends StatelessWidget {
           scrollController: scrollController,
           editorKey: textEditorKey,
         ),
-        const _Delimiter(),
         _WhoCanReplySection(
           createOption: createOption,
           modifiedEvent: modifiedEvent,
+          parentEvent: parentEvent,
         ),
         const _Delimiter(),
         SizedBox(
@@ -105,11 +106,12 @@ class CreatePostBottomPanel extends StatelessWidget {
 class _WhoCanReplySection extends HookConsumerWidget {
   const _WhoCanReplySection({
     required this.createOption,
+    this.parentEvent,
     this.modifiedEvent,
   });
 
   final CreatePostOption createOption;
-
+  final EventReference? parentEvent;
   final EventReference? modifiedEvent;
 
   @override
@@ -119,40 +121,56 @@ class _WhoCanReplySection extends HookConsumerWidget {
         ? ref.watch(ionConnectEntityProvider(eventReference: modifiedEvent!)).valueOrNull
         : null;
 
+    final rootEntity = parentEvent != null
+        ? ref.watch(rootPostEntityProvider(eventReference: parentEvent!))
+        : null;
+
     useOnInit(
       () async {
-        if (modifiableEntity != null && modifiableEntity is ModifiablePostEntity) {
+        if (rootEntity != null && rootEntity is ModifiablePostEntity) {
+          ref.read(selectedWhoCanReplyOptionProvider.notifier).option =
+              rootEntity.data.whoCanReplySetting;
+        } else if (modifiableEntity != null && modifiableEntity is ModifiablePostEntity) {
           ref.read(selectedWhoCanReplyOptionProvider.notifier).option =
               modifiableEntity.data.whoCanReplySetting;
         }
       },
-      [modifiableEntity],
+      [modifiableEntity, rootEntity],
     );
 
-    return ScreenSideOffset.small(
-      child: ListItem(
-        title: Text(
-          selectedOption.getTitle(context),
-          style: context.theme.appTextThemes.caption.copyWith(
-            color: context.theme.appColors.primaryAccent,
+    if (parentEvent != null) {
+      return const SizedBox.shrink();
+    }
+
+    return Column(
+      children: [
+        const _Delimiter(),
+        ScreenSideOffset.small(
+          child: ListItem(
+            title: Text(
+              selectedOption.getTitle(context),
+              style: context.theme.appTextThemes.caption.copyWith(
+                color: context.theme.appColors.primaryAccent,
+              ),
+            ),
+            contentPadding: EdgeInsets.zero,
+            backgroundColor: context.theme.appColors.secondaryBackground,
+            leading: selectedOption.getIcon(context),
+            trailing: Assets.svg.iconArrowRight.icon(
+              color: context.theme.appColors.primaryAccent,
+            ),
+            constraints: BoxConstraints(minHeight: 40.0.s),
+            onTap: () => showSimpleBottomSheet<void>(
+              context: context,
+              child: WhoCanReplySettingsModal(
+                title: createOption == CreatePostOption.video
+                    ? context.i18n.who_can_reply_settings_title_video
+                    : context.i18n.who_can_reply_settings_title_post,
+              ),
+            ),
           ),
         ),
-        contentPadding: EdgeInsets.zero,
-        backgroundColor: context.theme.appColors.secondaryBackground,
-        leading: selectedOption.getIcon(context),
-        trailing: Assets.svg.iconArrowRight.icon(
-          color: context.theme.appColors.primaryAccent,
-        ),
-        constraints: BoxConstraints(minHeight: 40.0.s),
-        onTap: () => showSimpleBottomSheet<void>(
-          context: context,
-          child: WhoCanReplySettingsModal(
-            title: createOption == CreatePostOption.video
-                ? context.i18n.who_can_reply_settings_title_video
-                : context.i18n.who_can_reply_settings_title_post,
-          ),
-        ),
-      ),
+      ],
     );
   }
 }
