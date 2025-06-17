@@ -179,7 +179,7 @@ class E2eeMessagesSubscriber extends _$E2eeMessagesSubscriber {
         );
       }
 
-      // If we recovered keypair, current user will not have "read" message status 
+      // If we recovered keypair, current user will not have "read" message status
       // as we don't send it
       if (rumor.masterPubkey == masterPubkey) {
         await conversationMessageStatusDao.addOrUpdateStatus(

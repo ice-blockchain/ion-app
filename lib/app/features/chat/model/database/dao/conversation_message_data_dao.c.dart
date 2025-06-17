@@ -69,7 +69,8 @@ class ConversationMessageDataDao extends DatabaseAccessor<ChatDatabase>
       final existingStatus = await (select(messageStatusTable)
             ..where((table) => table.pubkey.equals(pubkey))
             ..where((table) => table.masterPubkey.equals(masterPubkey))
-            ..where((table) => table.messageEventReference.equalsValue(messageEventReference)))
+            ..where((table) => table.messageEventReference.equalsValue(messageEventReference))
+            ..limit(1))
           .getSingleOrNull();
 
       if (existingStatus == null) {
