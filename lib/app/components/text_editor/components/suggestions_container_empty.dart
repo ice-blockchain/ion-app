@@ -21,9 +21,9 @@ class SuggestionsContainerEmpty extends ConsumerWidget {
           children: [
             Padding(
               padding: EdgeInsetsDirectional.only(end: 8.0.s),
-              child: Assets.svgIconFieldSearch.icon(
+              child: IconAssetColored(Assets.svgIconFieldSearch,
                 color: context.theme.appColors.tertararyText,
-                size: 18.0.s,
+                                  size: 18.0,
               ),
             ),
             Text(

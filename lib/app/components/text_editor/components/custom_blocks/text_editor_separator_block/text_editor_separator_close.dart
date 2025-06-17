@@ -19,7 +19,7 @@ class TextEditorSeparatorClose extends StatelessWidget {
       padding: EdgeInsets.zero,
       constraints: const BoxConstraints(),
       onPressed: onPressed,
-      icon: Assets.svgIconFieldClearall.icon(size: 20.0.s),
+      icon: IconAsset(Assets.svgIconFieldClearall, size: 20.0),
     );
   }
 }

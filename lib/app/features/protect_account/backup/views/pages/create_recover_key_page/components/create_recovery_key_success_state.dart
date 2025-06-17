@@ -125,8 +125,8 @@ class _StoringKeysWarning extends StatelessWidget {
         borderRadius: BorderRadius.all(
           Radius.circular(16.0.s),
         ),
-        leading: Assets.svgIconReport.icon(
-          size: 20.0.s,
+                    leading: IconAssetColored(Assets.svgIconReport,
+                      size: 20.0,
           color: context.theme.appColors.attentionRed,
         ),
         title: Text(

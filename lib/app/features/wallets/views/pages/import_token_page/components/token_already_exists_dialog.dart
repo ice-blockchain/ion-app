@@ -30,7 +30,7 @@ class TokenAlreadyExistsDialog extends ConsumerWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
-              Assets.svg.walletIconProfileCoininwallet.icon(size: 80.0.s),
+              IconAsset(Assets.svgWalletIconProfileCoininwallet, size: 80.0),
               SizedBox(height: 6.0.s),
               Text(
                 locales.wallet_import_token_token_already_exists_title,

@@ -19,7 +19,7 @@ class EmailEditNewEmailInputStep extends HookConsumerWidget {
     final locale = context.i18n;
 
     return TwoFAStepScaffold(
-      headerIcon: Assets.svgIcon2faEmailauth.icon(size: 36.0.s),
+      headerIcon: IconAsset(Assets.svgIcon2faEmailauth, size: 36.0),
       headerTitle: locale.two_fa_edit_email_title,
       headerDescription: locale.two_fa_edit_email_new_email_description,
       contentPadding: 0,

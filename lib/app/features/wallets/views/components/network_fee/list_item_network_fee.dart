@@ -38,14 +38,14 @@ class ListItemNetworkFee extends StatelessWidget {
                   context.theme.appColors.secondaryText,
                   BlendMode.srcIn,
                 ),
-                child: Assets.svgIconBlockInformation.icon(size: 14.0.s),
+                child: IconAsset(Assets.svgIconBlockInformation, size: 14.0),
               ),
             ),
           ],
         ),
       ),
       value: value,
-      icon: Assets.svgIconBlockCoins.icon(size: 16.0.s),
+              icon: IconAsset(Assets.svgIconBlockCoins, size: 16.0),
     );
   }
 }

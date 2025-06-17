@@ -44,9 +44,10 @@ class RecordingOverlay extends ConsumerWidget {
                   },
                   child: Padding(
                     padding: EdgeInsetsDirectional.only(top: 8.0.s),
-                    child: Assets.svgIconVideoPause.icon(
+                    child: IconAssetColored(
+                      Assets.svgIconVideoPause,
                       color: context.theme.appColors.primaryAccent,
-                      size: 20.0.s,
+                      size: 20.0,
                     ),
                   ),
                 )
@@ -55,9 +56,10 @@ class RecordingOverlay extends ConsumerWidget {
                   onTap: onResumeRecording,
                   child: Padding(
                     padding: EdgeInsetsDirectional.only(top: 8.0.s),
-                    child: Assets.svgIconChatMicrophone.icon(
+                    child: IconAssetColored(
+                      Assets.svgIconChatMicrophone,
                       color: context.theme.appColors.primaryAccent,
-                      size: 20.0.s,
+                      size: 20.0,
                     ),
                   ),
                 )
@@ -72,11 +74,12 @@ class RecordingOverlay extends ConsumerWidget {
                           : Colors.transparent,
                       borderRadius: BorderRadius.circular(12.0.s),
                     ),
-                    child: Assets.svg.linearSecurityLockKeyholeUnlocked.icon(
+                    child: IconAssetColored(
+                      Assets.svgLinearSecurityLockKeyholeUnlocked,
                       color: paddingBottom > 20
                           ? context.theme.appColors.onPrimaryAccent
                           : context.theme.appColors.primaryAccent,
-                      size: 20.0.s,
+                      size: 20.0,
                     ),
                   ),
                 ),
@@ -90,14 +93,16 @@ class RecordingOverlay extends ConsumerWidget {
                 child: bottomBarState.isVoicePaused
                     ? GestureDetector(
                         onTap: onSubmitted,
-                        child: Assets.svgIconChatSendmessage.icon(
+                        child: IconAssetColored(
+                          Assets.svgIconChatSendmessage,
                           color: context.theme.appColors.onPrimaryAccent,
-                          size: 24.0.s,
+                          size: 24.0,
                         ),
                       )
-                    : Assets.svgIconChatMicrophone.icon(
+                    : IconAssetColored(
+                        Assets.svgIconChatMicrophone,
                         color: context.theme.appColors.onPrimaryAccent,
-                        size: 24.0.s,
+                        size: 24.0,
                       ),
               ),
             ],

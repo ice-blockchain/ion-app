@@ -19,9 +19,7 @@ class NewChatInitialView extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             const Spacer(),
-            Assets.svg.walletChatNewchat.icon(
-              size: 48.0.s,
-            ),
+            IconAsset(Assets.svgWalletChatNewchat, size: 48.0),
             Padding(
               padding: EdgeInsets.symmetric(vertical: 8.0.s, horizontal: 78.0.s),
               child: Text(

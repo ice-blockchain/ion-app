@@ -51,7 +51,7 @@ class AuthenticatorSetupOptionsPage extends StatelessWidget {
                     color: context.theme.appColors.secondaryText,
                   ),
                   icon: AuthHeaderIcon(
-                    icon: Assets.svgIcon2faAuthsetup.icon(size: 36.0.s),
+                    icon: IconAsset(Assets.svgIcon2faAuthsetup, size: 36.0),
                   ),
                 ),
                 Expanded(
@@ -69,7 +69,7 @@ class AuthenticatorSetupOptionsPage extends StatelessWidget {
                               child: SecureAccountOption(
                                 isEnabled: false,
                                 title: type.getDisplayName(context),
-                                icon: type.iconAsset.icon(),
+                                icon: IconAsset(type.iconAsset),
                                 onTap: () => _onOptionTap(type),
                               ),
                             );

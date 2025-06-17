@@ -59,7 +59,8 @@ class AddressInputField extends HookWidget {
       suffixIcon: TextInputIcons(
         icons: [
           IconButton(
-            icon: Assets.svgIconContactList.icon(
+            icon: IconAssetColored(
+              Assets.svgIconContactList,
               color: isValidInput.value
                   ? context.theme.appColors.primaryAccent
                   : context.theme.appColors.attentionRed,
@@ -75,7 +76,7 @@ class AddressInputField extends HookWidget {
                       : context.theme.appColors.attentionRed,
                   BlendMode.srcIn,
                 ),
-                child: Assets.svgIconHeaderScan1.icon(),
+                child: IconAsset(Assets.svgIconHeaderScan1),
               ),
               onPressed: onScanPressed,
             ),

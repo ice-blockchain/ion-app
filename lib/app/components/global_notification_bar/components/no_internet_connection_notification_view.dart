@@ -25,7 +25,7 @@ class NoInternetConnectionNotificationView extends StatelessWidget {
             children: [
               Padding(
                 padding: EdgeInsetsDirectional.only(start: 16.0.s),
-                child: Assets.svg.linearessentionaluidangertriangle.icon(size: 16.0.s),
+                child: const IconAsset(Assets.svgLinearessentionaluidangertriangle, size: 16.0),
               ),
               SizedBox(width: 8.0.s),
               Expanded(

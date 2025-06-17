@@ -29,7 +29,7 @@ class ChatLearnMoreModal extends ConsumerWidget {
               padding: EdgeInsetsDirectional.only(top: 13.0.s, bottom: 16.0.s),
               child: Column(
                 children: [
-                  Assets.svg.walletIconChatEncription.icon(size: 80.0.s),
+                  IconAsset(Assets.svgWalletIconChatEncription, size: 80.0),
                   SizedBox(height: 10.0.s),
                   Text(
                     context.i18n.chat_learn_more_modal_title,

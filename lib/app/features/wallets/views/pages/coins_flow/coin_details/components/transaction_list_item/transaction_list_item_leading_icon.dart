@@ -72,7 +72,7 @@ class TransactionListItemLeadingIcon extends StatelessWidget {
                   width: 1.0.s,
                 ),
               ),
-              child: type.iconAsset.icon(color: _getIconColor(context)),
+              child: IconAssetColored(type.iconAsset, color: _getIconColor(context)),
             ),
           ),
           if (showBroadcastedTransactionIcon)
@@ -80,7 +80,7 @@ class TransactionListItemLeadingIcon extends StatelessWidget {
               end: 0,
               bottom: 0,
               textDirection: direction,
-              child: Assets.svgIconhourglass.icon(size: 14.0.s),
+              child: IconAsset(Assets.svgIconhourglass, size: 14.0),
             ),
         ],
       ),

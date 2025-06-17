@@ -42,7 +42,7 @@ class SelectArticleWhoCanReplyItem extends ConsumerWidget {
           ),
           child: selectedOption.getIcon(context),
         ),
-        trailing: Assets.svgIconArrowRight.icon(color: context.theme.appColors.primaryText),
+        trailing: IconAssetColored(Assets.svgIconArrowRight, color: context.theme.appColors.primaryText),
         constraints: BoxConstraints(minHeight: 40.0.s),
         onTap: () {
           showSimpleBottomSheet<void>(

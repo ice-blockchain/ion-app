@@ -37,7 +37,7 @@ class CreateRecoveryKeyErrorState extends ConsumerWidget {
                       mainAxisAlignment: MainAxisAlignment.center,
                       crossAxisAlignment: CrossAxisAlignment.stretch,
                       children: [
-                        Assets.svg.walletIconWalletLoadingerror.icon(size: 48.0.s),
+                        IconAsset(Assets.svgWalletIconWalletLoadingerror, size: 48.0),
                         SizedBox(height: 10.0.s),
                         Text(
                           locale.protect_account_create_recovery_error,

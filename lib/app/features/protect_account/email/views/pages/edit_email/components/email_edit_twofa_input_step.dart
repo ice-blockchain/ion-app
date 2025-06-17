@@ -34,7 +34,7 @@ class EmailEditTwoFaInputStep extends ConsumerWidget {
     return TwoFAStepScaffold(
       headerTitle: locale.two_fa_edit_email_title,
       headerDescription: locale.two_fa_edit_email_options_description,
-      headerIcon: Assets.svgIcon2faEmailauth.icon(size: 36.0.s),
+      headerIcon: IconAsset(Assets.svgIcon2faEmailauth, size: 36.0),
       onBackPress: onPrevious,
       child: TwoFAInputStep(
         onConfirm: (controllers) => _onConfirm(ref, controllers),

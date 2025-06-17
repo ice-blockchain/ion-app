@@ -18,8 +18,9 @@ class PollCloseButton extends StatelessWidget {
       child: Button.icon(
         size: 24.0.s,
         type: ButtonType.outlined,
-        icon: Assets.svgIconSheetClose.icon(
-          size: 14.4.s,
+        icon: IconAssetColored(
+          Assets.svgIconSheetClose,
+          size: 14.4,
           color: context.theme.appColors.primaryText,
         ),
         borderColor: context.theme.appColors.onTerararyFill,

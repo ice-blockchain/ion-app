@@ -29,7 +29,7 @@ class BackupOption extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final trailingIcon = isOptionEnabled
-        ? Assets.svgIconDappCheck.icon(
+                  ? IconAssetColored(Assets.svgIconDappCheck,
             color: context.theme.appColors.success,
           )
         : null;

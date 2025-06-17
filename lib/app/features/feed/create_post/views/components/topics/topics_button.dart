@@ -80,9 +80,10 @@ class TopicsButton extends HookConsumerWidget {
             child: Row(
               mainAxisSize: MainAxisSize.min,
               children: [
-                Assets.svg.walletChannelPrivate.icon(
+                IconAssetColored(
+                  Assets.svgWalletChannelPrivate,
                   color: context.theme.appColors.primaryAccent,
-                  size: 16.s,
+                  size: 16.0,
                 ),
                 SizedBox(width: 2.s),
                 Flexible(
@@ -97,9 +98,10 @@ class TopicsButton extends HookConsumerWidget {
                   ),
                 ),
                 SizedBox(width: 2.s),
-                Assets.svgIconArrowRight.icon(
+                IconAssetColored(
+                  Assets.svgIconArrowRight,
                   color: context.theme.appColors.primaryAccent,
-                  size: 14.s,
+                  size: 14.0,
                 ),
               ],
             ),

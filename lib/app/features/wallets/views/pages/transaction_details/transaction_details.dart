@@ -131,7 +131,7 @@ class TransactionDetailsPage extends ConsumerWidget {
                             ListItem.textWithIcon(
                               title: Text(locale.wallet_title),
                               value: transactionData.walletViewName,
-                              icon: Assets.svg.walletWalletblue.icon(size: 16.s),
+                              icon: IconAsset(Assets.svgWalletWalletblue, size: 16.0),
                               secondary: Align(
                                 alignment: AlignmentDirectional.centerEnd,
                                 child: Text(

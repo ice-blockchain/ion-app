@@ -140,7 +140,8 @@ class _WhoCanReplySection extends HookConsumerWidget {
         contentPadding: EdgeInsets.zero,
         backgroundColor: context.theme.appColors.secondaryBackground,
         leading: selectedOption.getIcon(context),
-        trailing: Assets.svgIconArrowRight.icon(
+        trailing: IconAssetColored(
+          Assets.svgIconArrowRight,
           color: context.theme.appColors.primaryAccent,
         ),
         constraints: BoxConstraints(minHeight: 40.0.s),

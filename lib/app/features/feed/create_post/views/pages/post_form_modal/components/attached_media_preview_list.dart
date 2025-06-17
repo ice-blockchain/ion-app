@@ -70,8 +70,9 @@ class AttachedMediaPreview extends ConsumerWidget {
                       attachedMediaNotifier.value = attachedMediaNotifier.value.toList()
                         ..remove(file);
                     },
-                    icon: Assets.svgIconFieldClearall.icon(
-                      size: aspectRatio.isHorizontal ? 24.0.s : 16.0.s,
+                    icon: IconAsset(
+                      Assets.svgIconFieldClearall,
+                      size: aspectRatio.isHorizontal ? 24.0 : 16.0,
                     ),
                   ),
                 ),

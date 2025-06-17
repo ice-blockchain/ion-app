@@ -25,7 +25,7 @@ class ChannelPhoto extends StatelessWidget {
               SizedBox(
                 width: width,
                 height: height,
-                child: Assets.svg.backgroundCreatechannel.icon(size: constraints.maxWidth),
+                child: IconAsset(Assets.svgBackgroundCreatechannel, size: constraints.maxWidth),
               ),
               AvatarPicker(
                 title: context.i18n.channel_create_add_photo,

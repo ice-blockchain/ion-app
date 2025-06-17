@@ -65,7 +65,7 @@ class NetworkButton extends StatelessWidget {
         onTap: onTap,
         trailing: Padding(
           padding: EdgeInsets.all(8.0.s),
-          child: Assets.svgIconArrowDown.icon(),
+                          child: IconAsset(Assets.svgIconArrowDown),
         ),
       ),
     );

@@ -32,7 +32,7 @@ class SearchHistoryQueryListItem extends ConsumerWidget {
                 color: context.theme.appColors.primaryText,
               ),
             ),
-            Assets.svgIconSearchHistorylink.icon(size: 20.0.s),
+            IconAsset(Assets.svgIconSearchHistorylink, size: 20.0),
           ],
         ),
       ),

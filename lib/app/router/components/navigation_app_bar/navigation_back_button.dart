@@ -34,7 +34,7 @@ class NavigationBackButton extends StatelessWidget {
         padding: EdgeInsets.zero,
         onPressed: () => hideKeyboardOnBack ? hideKeyboard(context, callback: onPress) : onPress(),
         icon: icon ??
-            Assets.svgIconBackArrow.icon(
+            IconAsset(Assets.svgIconBackArrow,
               size: iconSize,
               flipForRtl: true,
             ),

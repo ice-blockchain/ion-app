@@ -38,16 +38,14 @@ class ListItemArrivalTime extends StatelessWidget {
                   context.theme.appColors.secondaryText,
                   BlendMode.srcIn,
                 ),
-                child: Assets.svgIconBlockInformation.icon(size: 14.0.s),
+                child: IconAsset(Assets.svgIconBlockInformation, size: 14.0),
               ),
             ),
           ],
         ),
       ),
       value: formattedTime,
-      icon: Assets.svgIconBlockTime.icon(
-        size: 16.0.s,
-      ),
+      icon: IconAsset(Assets.svgIconBlockTime, size: 16.0),
     );
   }
 }

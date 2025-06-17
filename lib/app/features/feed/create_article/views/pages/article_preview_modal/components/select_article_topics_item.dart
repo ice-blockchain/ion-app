@@ -41,10 +41,12 @@ class SelectArticleTopicsItem extends ConsumerWidget {
                   color: context.theme.appColors.onTerararyFill,
                 ),
               ),
-              child: Assets.svg.walletChannelPrivate
-                  .icon(color: context.theme.appColors.primaryAccent),
+              child: IconAssetColored(
+                Assets.svgWalletChannelPrivate,
+                color: context.theme.appColors.primaryAccent,
+              ),
             ),
-            trailing: Assets.svgIconArrowRight.icon(color: context.theme.appColors.primaryText),
+            trailing: IconAssetColored(Assets.svgIconArrowRight, color: context.theme.appColors.primaryText),
             constraints: BoxConstraints(minHeight: 40.0.s),
             onTap: () {
               SelectArticleTopicsRoute().push<void>(ref.context);

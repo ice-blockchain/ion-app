@@ -70,14 +70,14 @@ class CoinIconWidget extends StatelessWidget {
               imageUrl,
               width: iconSize,
               height: iconSize,
-              errorBuilder: (_, __, ___) => Assets.svg.walletEmptyicon.icon(size: iconSize),
+              errorBuilder: (_, __, ___) => IconAsset(Assets.svgWalletEmptyicon, size: iconSize),
             ),
           )
         : IonNetworkImage(
             imageUrl: imageUrl,
             width: iconSize,
             height: iconSize,
-            errorWidget: (_, __, ___) => Assets.svg.walletEmptyicon.icon(size: iconSize),
+            errorWidget: (_, __, ___) => IconAsset(Assets.svgWalletEmptyicon, size: iconSize),
             imageBuilder: (context, imageProvider) => Container(
               width: iconSize,
               height: iconSize,

@@ -37,7 +37,7 @@ class AboutImportTokenDialog extends ConsumerWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
-              Assets.svg.walleticonprofilewarningaddcoin.icon(size: 80.0.s),
+              IconAsset(Assets.svgWalleticonprofilewarningaddcoin, size: 80.0),
               SizedBox(height: 6.0.s),
               Text(
                 locales.wallet_import_token_about_title,

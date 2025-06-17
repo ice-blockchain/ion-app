@@ -62,7 +62,7 @@ class AuthenticatorSetupCodeConfirmPage extends HookConsumerWidget {
                     color: context.theme.appColors.secondaryText,
                   ),
                   icon: AuthHeaderIcon(
-                    icon: Assets.svgIconLoginPassword.icon(size: 36.0.s),
+                    icon: IconAsset(Assets.svgIconLoginPassword, size: 36.0),
                   ),
                 ),
                 SizedBox(height: 32.0.s),
@@ -76,7 +76,7 @@ class AuthenticatorSetupCodeConfirmPage extends HookConsumerWidget {
                           labelText: context.i18n.two_fa_auth,
                           prefixIcon: TextInputIcons(
                             hasRightDivider: true,
-                            icons: [Assets.svgIconRecoveryCode.icon()],
+                            icons: [IconAsset(Assets.svgIconRecoveryCode)],
                           ),
                           validator: (value) => (value?.isEmpty ?? false) ? '' : null,
                           textInputAction: TextInputAction.done,

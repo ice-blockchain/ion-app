@@ -60,8 +60,8 @@ class ChatSearchResultListItem extends ConsumerWidget {
                               ),
                       ),
                     ),
-                    Assets.svgIconArrowRight.icon(
-                      size: 24.0.s,
+                    IconAssetColored(Assets.svgIconArrowRight,
+                                              size: 24.0,
                       color: context.theme.appColors.tertararyText,
                     ),
                   ],

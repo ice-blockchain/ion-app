@@ -19,7 +19,8 @@ class NavigationCloseButton extends StatelessWidget {
       onPressed: onPressed ?? () => Navigator.of(context, rootNavigator: true).pop(),
       child: Padding(
         padding: EdgeInsets.all(UiConstants.hitSlop),
-        child: Assets.svgIconSheetClose.icon(
+        child: IconAssetColored(
+          Assets.svgIconSheetClose,
           color: context.theme.appColors.tertararyText,
         ),
       ),

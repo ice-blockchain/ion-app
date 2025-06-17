@@ -140,7 +140,7 @@ class DAppDetailsModal extends HookConsumerWidget {
                             isVoted.value = !isVoted.value;
                           },
                           leadingIcon:
-                              isVoted.value ? Assets.svgIconDappCheck.icon(size: 16.0.s) : null,
+                              isVoted.value ? IconAsset(Assets.svgIconDappCheck, size: 16.0) : null,
                           leadingIconOffset: 4.0.s,
                         ),
                       ),

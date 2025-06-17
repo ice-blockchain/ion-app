@@ -48,9 +48,9 @@ class CodeBlockTypeItem extends StatelessWidget {
             ),
             if (isSelected) ...[
               SizedBox(width: 4.0.s),
-              Assets.svgIconArrowRight.icon(
+              IconAssetColored(Assets.svgIconArrowRight,
                 color: context.theme.appColors.primaryAccent,
-                size: 14.0.s,
+                                  size: 14.0,
               ),
             ],
           ],

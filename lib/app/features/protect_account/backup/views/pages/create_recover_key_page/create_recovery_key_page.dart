@@ -68,7 +68,7 @@ class _Header extends StatelessWidget {
           color: context.theme.appColors.secondaryText,
         ),
         icon: AuthHeaderIcon(
-          icon: Assets.svgIconLoginRestorekey.icon(size: 36.0.s),
+          icon: IconAsset(Assets.svgIconLoginRestorekey, size: 36.0),
         ),
       ),
     );

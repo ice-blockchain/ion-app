@@ -59,7 +59,8 @@ class ChannelAvatar extends ConsumerWidget {
                     fit: BoxFit.fill,
                     imageUrl: channel.avatar?.url,
                     borderRadius: BorderRadius.circular(20.0.s),
-                    defaultAvatar: Assets.svg.userPhotoArea.icon(
+                    defaultAvatar: IconAsset(
+                      Assets.svgUserPhotoArea,
                       size: pictureSize,
                     ),
                   ),

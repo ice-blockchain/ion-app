@@ -27,7 +27,7 @@ class PollLengthButton extends StatelessWidget {
         ),
         backgroundColor: context.theme.appColors.secondaryBackground,
         borderColor: context.theme.appColors.secondaryBackground,
-        leadingIcon: Assets.svgIconBlockTime.icon(size: 16.0.s),
+        leadingIcon: IconAsset(Assets.svgIconBlockTime, size: 16.0),
         onPressed: onPollLengthPress,
       ),
     );

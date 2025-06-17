@@ -41,12 +41,12 @@ class _ListItemUser extends ListItem {
               if (iceBadge)
                 Padding(
                   padding: EdgeInsetsDirectional.only(start: 4.0.s),
-                  child: Assets.svgIconBadgeIcelogo.icon(size: defaultBadgeSize),
+                  child: IconAsset(Assets.svgIconBadgeIcelogo, size: defaultBadgeSize),
                 ),
               if (verifiedBadge)
                 Padding(
                   padding: EdgeInsetsDirectional.only(start: 4.0.s),
-                  child: Assets.svgIconBadgeVerify.icon(size: defaultBadgeSize),
+                  child: IconAsset(Assets.svgIconBadgeVerify, size: defaultBadgeSize),
                 ),
             ],
           ),

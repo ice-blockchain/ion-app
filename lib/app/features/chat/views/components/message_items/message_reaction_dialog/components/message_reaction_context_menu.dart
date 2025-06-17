@@ -58,7 +58,8 @@ class MessageReactionContextMenu extends HookConsumerWidget {
             if (messageStatus == MessageDeliveryStatus.failed)
               OverlayMenuItem(
                 label: context.i18n.button_retry,
-                icon: Assets.svgIconMessageRetry.icon(
+                icon: IconAssetColored(
+                  Assets.svgIconMessageRetry,
                   size: iconSize,
                   color: context.theme.appColors.quaternaryText,
                 ),
@@ -79,7 +80,7 @@ class MessageReactionContextMenu extends HookConsumerWidget {
             else ...[
               OverlayMenuItem(
                 label: context.i18n.button_reply,
-                icon: Assets.svgIconChatReply.icon(
+                icon: IconAssetColored(Assets.svgIconChatReply,
                   size: iconSize,
                   color: context.theme.appColors.quaternaryText,
                 ),
@@ -99,8 +100,11 @@ class MessageReactionContextMenu extends HookConsumerWidget {
                 OverlayMenuItem(
                   label: context.i18n.button_edit,
                   verticalPadding: 12.0.s,
-                  icon: Assets.svgIconEditLink
-                      .icon(size: iconSize, color: context.theme.appColors.quaternaryText),
+                  icon: IconAssetColored(
+                    Assets.svgIconEditLink,
+                    size: iconSize,
+                    color: context.theme.appColors.quaternaryText,
+                  ),
                   onPressed: () {
                     ref.read(selectedReplyMessageProvider.notifier).clear();
                     ref.read(selectedEditMessageProvider.notifier).selectedEditMessage =
@@ -114,8 +118,11 @@ class MessageReactionContextMenu extends HookConsumerWidget {
                 OverlayMenuItem(
                   label: context.i18n.button_copy,
                   verticalPadding: 12.0.s,
-                  icon: Assets.svgIconBlockCopyBlue
-                      .icon(size: iconSize, color: context.theme.appColors.quaternaryText),
+                  icon: IconAssetColored(
+                    Assets.svgIconBlockCopyBlue,
+                    size: iconSize,
+                    color: context.theme.appColors.quaternaryText,
+                  ),
                   onPressed: () {
                     copyToClipboard(messageItem.eventMessage.content);
                     Navigator.of(context).pop();
@@ -127,8 +134,11 @@ class MessageReactionContextMenu extends HookConsumerWidget {
                 OverlayMenuItem(
                   label: context.i18n.button_bookmark,
                   verticalPadding: 12.0.s,
-                  icon: Assets.svgIconBookmarks
-                      .icon(size: iconSize, color: context.theme.appColors.quaternaryText),
+                  icon: IconAssetColored(
+                    Assets.svgIconBookmarks,
+                    size: iconSize,
+                    color: context.theme.appColors.quaternaryText,
+                  ),
                   onPressed: () {
                     Navigator.of(context).pop();
                   },
@@ -140,8 +150,11 @@ class MessageReactionContextMenu extends HookConsumerWidget {
               label: context.i18n.button_delete,
               labelColor: context.theme.appColors.attentionRed,
               verticalPadding: 12.0.s,
-              icon: Assets.svgIconBlockDelete
-                  .icon(size: iconSize, color: context.theme.appColors.attentionRed),
+              icon: IconAssetColored(
+                Assets.svgIconBlockDelete,
+                size: iconSize,
+                color: context.theme.appColors.attentionRed,
+              ),
               onPressed: () async {
                 final forEveryone = await DeleteMessageRoute(
                   isMe: isMe,

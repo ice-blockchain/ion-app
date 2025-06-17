@@ -22,7 +22,7 @@ class StoryShareButton extends StatelessWidget {
       child: Button(
         mainAxisSize: MainAxisSize.max,
         label: Text(context.i18n.button_share_story),
-        trailingIcon: Assets.svgIconFeedSendbutton.icon(),
+        trailingIcon: IconAsset(Assets.svgIconFeedSendbutton),
         onPressed: onPressed ?? () {},
         disabled: isLoading || onPressed == null,
         type: onPressed == null ? ButtonType.disabled : ButtonType.primary,

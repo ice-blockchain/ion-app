@@ -16,13 +16,13 @@ class BackupRecoveryKeysModal extends StatelessWidget {
     return SimpleModalSheet.info(
       title: context.i18n.secure_your_recovery_keys_title,
       description: context.i18n.secure_your_recovery_keys_description,
-      iconAsset: Assets.svg.actionWalletLock,
+      iconAsset: Assets.svgActionWalletLock,
       button: ScreenSideOffset.large(
         child: Button(
           mainAxisSize: MainAxisSize.max,
           label: Text(context.i18n.button_lets_start),
           onPressed: () => CreateRecoveryKeyRoute().push<void>(context),
-          trailingIcon: Assets.svgIconButtonNext.icon(
+          trailingIcon: IconAssetColored(Assets.svgIconButtonNext,
             color: context.theme.appColors.onPrimaryAccent,
           ),
         ),

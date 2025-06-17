@@ -48,7 +48,7 @@ class MoreArticlesFromTopic extends ConsumerWidget {
             count: articlesReferences.length,
             trailing: GestureDetector(
               onTap: () => ArticlesFromTopicRoute(topic: topic.toShortString()).push<void>(context),
-              child: Assets.svgIconButtonNext.icon(),
+              child: IconAsset(Assets.svgIconButtonNext),
             ),
           ),
         ),

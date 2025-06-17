@@ -37,7 +37,7 @@ class TokenNotFoundDialog extends ConsumerWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
-              Assets.svg.walletIconWalletLoadingerror.icon(size: 80.0.s),
+              IconAsset(Assets.svgWalletIconWalletLoadingerror, size: 80.0),
               SizedBox(height: 6.0.s),
               Text(
                 locales.wallet_import_token_token_not_found_title,

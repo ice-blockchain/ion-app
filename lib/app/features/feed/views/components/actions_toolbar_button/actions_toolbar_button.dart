@@ -23,8 +23,9 @@ class ActionsToolbarButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: enabled ? onPressed : null,
-      child: (selected && iconSelected != null ? iconSelected! : icon).icon(
-        size: 24.0.s,
+      child: IconAssetColored(
+        selected && iconSelected != null ? iconSelected! : icon,
+        size: 24.0,
         color: enabled ? context.theme.appColors.primaryAccent : context.theme.appColors.sheetLine,
       ),
     );

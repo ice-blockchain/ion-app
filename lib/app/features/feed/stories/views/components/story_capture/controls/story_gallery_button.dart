@@ -36,7 +36,8 @@ class StoryGalleryButton extends HookConsumerWidget {
           onPressed: onPressed,
           iconPadding: preview == null ? null : 0.0.s,
           icon: preview == null
-              ? Assets.svgIconGalleryOpen.icon(
+              ? IconAssetColored(
+                  Assets.svgIconGalleryOpen,
                   color: context.theme.appColors.onPrimaryAccent,
                 )
               : Image(

@@ -17,7 +17,7 @@ class SearchHistoryEmpty extends StatelessWidget {
         child: Column(
           children: [
             SizedBox(height: 150.0.s),
-            Assets.svg.walletIconWalletSearching.icon(size: 48.0.s),
+            IconAsset(Assets.svgWalletIconWalletSearching, size: 48.0),
             SizedBox(height: 8.0.s),
             Text(
               title,

@@ -58,7 +58,7 @@ class LinkNewDeviceDialog extends HookConsumerWidget {
       child: Column(
         children: [
           SizedBox(height: 48.0.s),
-          Assets.svg.actionLoginLinkaccount.icon(size: 80.0.s),
+          IconAsset(Assets.svgActionLoginLinkaccount, size: 80.0),
           SizedBox(height: 6.0.s),
           Text(
             context.i18n.auth_link_new_device_title,

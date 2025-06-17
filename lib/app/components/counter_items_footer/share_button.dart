@@ -30,8 +30,8 @@ class ShareButton extends StatelessWidget {
         child: Padding(
           padding: EdgeInsetsDirectional.only(start: 8.0.s),
           child: TextActionButton(
-            icon: Assets.svgIconBlockShare.icon(
-              size: 16.0.s,
+            icon: IconAssetColored(Assets.svgIconBlockShare,
+                              size: 16.0,
               color: color ?? context.theme.appColors.onTertararyBackground,
             ),
             textColor: color ?? context.theme.appColors.onTertararyBackground,

@@ -32,9 +32,10 @@ class TopicsButtonTooltip extends StatelessWidget {
             children: [
               Row(
                 children: [
-                  Assets.svg.walletChannelPrivate.icon(
+                  IconAssetColored(
+                    Assets.svgWalletChannelPrivate,
                     color: context.theme.appColors.primaryText,
-                    size: 20.s,
+                    size: 20.0,
                   ),
                   SizedBox(width: 2.s),
                   Text(

@@ -91,9 +91,10 @@ class SearchInput extends HookWidget {
                 ),
                 prefixIcon: Padding(
                   padding: EdgeInsetsDirectional.only(start: 12.0.s, end: 6.0.s),
-                  child: Assets.svgIconFieldSearch.icon(
-                    color: context.theme.appColors.tertararyText,
-                    size: 18.0.s,
+                                  child: IconAssetColored(
+                      Assets.svgIconFieldSearch,
+                      color: context.theme.appColors.tertararyText,
+                      size: 18.0,
                   ),
                 ),
                 suffixIcon: suffix ??

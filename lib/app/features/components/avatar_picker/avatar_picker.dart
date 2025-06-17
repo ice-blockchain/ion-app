@@ -63,7 +63,7 @@ class AvatarPicker extends HookConsumerWidget {
               ? Image.file(File(avatarFile.path))
               : avatarWidget ??
                   (avatarUrl == null
-                      ? Assets.svg.userPhotoArea.icon(size: avatarSize ?? 100.0.s)
+                      ? IconAsset(Assets.svgUserPhotoArea, size: avatarSize ?? 100.0)
                       : null),
         ),
         PositionedDirectional(
@@ -112,7 +112,7 @@ class AvatarPicker extends HookConsumerWidget {
                   ),
                   child: avatarProcessorState is ImageProcessorStateCropped
                       ? const IONLoadingIndicator()
-                      : Assets.svgIconLoginCamera.icon(size: iconSize),
+                      : IconAsset(Assets.svgIconLoginCamera, size: iconSize),
                 ),
               );
             },
