@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: ice License 1.0
+
 part of 'manage_coins_provider.c.dart';
 
 const _coinGroups = [
