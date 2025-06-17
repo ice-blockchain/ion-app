@@ -82,7 +82,7 @@ class PollResultItem extends HookWidget {
           SizedBox(
             height: 34.0.s,
             child: Padding(
-              padding: EdgeInsetsDirectional.only(start: 12.0.s),
+              padding: EdgeInsetsDirectional.symmetric(horizontal: 12.0.s),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
