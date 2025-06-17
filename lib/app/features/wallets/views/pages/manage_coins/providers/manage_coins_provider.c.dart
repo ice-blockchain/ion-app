@@ -18,9 +18,11 @@ part 'required_coin_groups_list.dart';
 
 @riverpod
 class ManageCoinsNotifier extends _$ManageCoinsNotifier {
+  final _coinsFromWallet = <String, ManageCoinsGroup>{};
+
   @override
   Future<Map<String, ManageCoinsGroup>> build() async {
-    final coinsFromWallet = <String, ManageCoinsGroup>{};
+    _coinsFromWallet.clear();
     final loadedGroupsToSymbolGroup = <String, ManageCoinsGroup>{};
     final toExclude = <String>{};
 
@@ -28,7 +30,7 @@ class ManageCoinsNotifier extends _$ManageCoinsNotifier {
 
     for (final coinGroup in walletView.coinGroups) {
       toExclude.addAll(coinGroup.coins.map((e) => e.coin.id));
-      coinsFromWallet[coinGroup.symbolGroup] = ManageCoinsGroup(
+      _coinsFromWallet[coinGroup.symbolGroup] = ManageCoinsGroup(
         coinsGroup: coinGroup,
         isSelected: state.value?[coinGroup.symbolGroup]?.isSelected ?? true,
       );
@@ -43,28 +45,31 @@ class ManageCoinsNotifier extends _$ManageCoinsNotifier {
         group.symbolGroup: ManageCoinsGroup(
           coinsGroup: group,
           isSelected: state.value?[group.symbolGroup]?.isSelected ??
-              false || coinsFromWallet.keys.contains(group.symbolGroup),
+              false || _coinsFromWallet.keys.contains(group.symbolGroup),
         ),
     });
 
     final groups = {
-      ...coinsFromWallet,
+      ..._coinsFromWallet,
       ...loadedGroupsToSymbolGroup,
     };
 
     return groups;
   }
 
-  void switchCoinsGroup(CoinsGroup coinsGroup) {
+  Future<void> switchCoinsGroup(CoinsGroup coinsGroup) async {
     final currentMap = state.value ?? <String, ManageCoinsGroup>{};
     final currentGroup = currentMap[coinsGroup.symbolGroup];
-    final isNewlyAdded = !currentMap.containsKey(coinsGroup.symbolGroup);
-    final isBeingDeleted = currentGroup?.isSelected ?? false;
+    final isNewlyAdded =
+        !currentMap.containsKey(coinsGroup.symbolGroup) || !(currentGroup?.isSelected ?? true);
+    final isBeingDeleted =
+        _coinsFromWallet.containsKey(coinsGroup.symbolGroup) || !(currentGroup?.isSelected ?? true);
+    final isUpdating = (isNewlyAdded || isBeingDeleted) && !(currentGroup?.isUpdating ?? false);
 
     currentMap[coinsGroup.symbolGroup] = ManageCoinsGroup(
       coinsGroup: coinsGroup,
       isSelected: !(currentGroup?.isSelected ?? false),
-      isUpdating: isNewlyAdded || isBeingDeleted,
+      isUpdating: isUpdating,
     );
     state = AsyncData<Map<String, ManageCoinsGroup>>(currentMap);
   }
