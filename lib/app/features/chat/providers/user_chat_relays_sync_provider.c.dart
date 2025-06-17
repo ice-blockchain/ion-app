@@ -1,5 +1,6 @@
 // SPDX-License-Identifier: ice License 1.0
 
+import 'package:collection/collection.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/auth/providers/auth_provider.c.dart';
@@ -37,7 +38,7 @@ Future<void> userChatRelaysSync(Ref ref) async {
   final userChatRelays = await ref.watch(userRelayProvider(masterPubkey).future);
   if (userChatRelays != null) {
     final chatRelays = userChatRelays.data.list.map((e) => e.url).toSet();
-    if (chatRelays == relayUrls.toSet()) {
+    if (const SetEquality<String>().equals(chatRelays, relayUrls.toSet())) {
       return;
     }
   }
