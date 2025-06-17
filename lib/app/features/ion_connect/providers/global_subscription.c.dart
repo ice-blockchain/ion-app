@@ -3,6 +3,7 @@
 import 'dart:async';
 
 import 'package:collection/collection.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/exceptions/exceptions.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/auth/providers/auth_provider.c.dart';
@@ -27,8 +28,23 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'global_subscription.c.g.dart';
 
-@riverpod
-class GlobalSubscription extends _$GlobalSubscription {
+class GlobalSubscription {
+  GlobalSubscription({
+    required this.currentUserMasterPubkey,
+    required this.devicePubkey,
+    required this.latestEventTimestampService,
+    required this.ionConnectNotifier,
+    required this.globalSubscriptionNotifier,
+    required this.globalSubscriptionEventDispatcher,
+  });
+
+  final String currentUserMasterPubkey;
+  final String devicePubkey;
+  final GlobalSubscriptionLatestEventTimestampService latestEventTimestampService;
+  final IonConnectNotifier ionConnectNotifier;
+  final GlobalSubscriptionNotifier globalSubscriptionNotifier;
+  final GlobalSubscriptionEventDispatcher globalSubscriptionEventDispatcher;
+
   static const List<int> _genericEventKinds = [
     BookmarksCollectionEntity.kind, // no p tag and need to test
     BookmarksEntity.kind, // has p tag
@@ -43,20 +59,8 @@ class GlobalSubscription extends _$GlobalSubscription {
 
   static const List<int> _encryptedEventKinds = [IonConnectGiftWrapEntity.kind];
 
-  @override
-  Future<void> build() async {
-    keepAliveWhenAuthenticated(ref);
-
-    final delegationComplete = ref.watch(delegationCompleteProvider).valueOrNull.falseOrValue;
-    if (!delegationComplete) return;
-
-    final currentUserMasterPubkey = ref.watch(currentPubkeySelectorProvider);
-    if (currentUserMasterPubkey == null) {
-      return;
-    }
-
-    final regularLatestEventTimestamp =
-        ref.read(globalSubscriptionLatestEventTimestampProvider(EventType.regular));
+  Future<void> init() async {
+    final regularLatestEventTimestamp = latestEventTimestampService.get(EventType.regular);
 
     if (regularLatestEventTimestamp == null) {
       _startSubscription();
@@ -90,8 +94,7 @@ class GlobalSubscription extends _$GlobalSubscription {
       mostRecentEventTimestamp = missingEventsCreatedAts.maxOrNull;
     }
 
-    final encryptedLatestEventTimestamp =
-        ref.read(globalSubscriptionLatestEventTimestampProvider(EventType.encrypted));
+    final encryptedLatestEventTimestamp = latestEventTimestampService.get(EventType.encrypted);
 
     unawaited(
       _subscribe(
@@ -111,11 +114,6 @@ class GlobalSubscription extends _$GlobalSubscription {
     bool isRecursive = true,
   }) async {
     try {
-      final currentUserMasterPubkey = ref.watch(currentPubkeySelectorProvider);
-      if (currentUserMasterPubkey == null) {
-        throw UserMasterPubkeyNotFoundException();
-      }
-
       final requestMessage = RequestMessage(
         filters: [
           RequestFilter(
@@ -132,7 +130,6 @@ class GlobalSubscription extends _$GlobalSubscription {
         ],
       );
 
-      final ionConnectNotifier = ref.read(ionConnectNotifierProvider.notifier);
       final eventsStream = ionConnectNotifier.requestEvents(
         requestMessage,
       );
@@ -175,18 +172,6 @@ class GlobalSubscription extends _$GlobalSubscription {
     int? encryptedSince,
   }) async {
     try {
-      final currentUserMasterPubkey = ref.watch(currentPubkeySelectorProvider);
-      if (currentUserMasterPubkey == null) {
-        throw UserMasterPubkeyNotFoundException();
-      }
-
-      final devicePubkey =
-          ref.read(currentUserIonConnectEventSignerProvider).valueOrNull?.publicKey;
-
-      if (devicePubkey == null) {
-        throw EventSignerNotFoundException();
-      }
-
       final requestMessage = RequestMessage(
         filters: [
           RequestFilter(
@@ -211,9 +196,7 @@ class GlobalSubscription extends _$GlobalSubscription {
         ],
       );
 
-      final stream = ref.watch(ionConnectEventsSubscriptionProvider(requestMessage));
-      final subscription = stream.listen(_handleEvent);
-      ref.onDispose(subscription.cancel);
+      globalSubscriptionNotifier.subscribe(requestMessage, onEvent: _handleEvent);
     } catch (e) {
       throw GlobalSubscriptionSubscribeException(e);
     }
@@ -227,14 +210,59 @@ class GlobalSubscription extends _$GlobalSubscription {
           ? EventType.encrypted
           : EventType.regular;
 
-      await ref
-          .read(globalSubscriptionLatestEventTimestampProvider(eventType).notifier)
-          .update(eventMessage.createdAt.toMicroseconds);
-
-      final dispatcher = await ref.watch(globalSubscriptionEventDispatcherNotifierProvider.future);
-      await dispatcher.dispatch(eventMessage);
+      await latestEventTimestampService.update(eventMessage.createdAt.toMicroseconds, eventType);
+      await globalSubscriptionEventDispatcher.dispatch(eventMessage);
     } catch (e) {
       throw GlobalSubscriptionEventMessageHandlingException(e);
     }
   }
+}
+
+@riverpod
+class GlobalSubscriptionNotifier extends _$GlobalSubscriptionNotifier {
+  @override
+  void build() {
+    return;
+  }
+
+  void subscribe(
+    RequestMessage requestMessage, {
+    required void Function(EventMessage) onEvent,
+  }) {
+    final stream = ref.watch(ionConnectEventsSubscriptionProvider(requestMessage));
+    final subscription = stream.listen(onEvent);
+    ref.onDispose(subscription.cancel);
+  }
+}
+
+@riverpod
+GlobalSubscription? globalSubscription(Ref ref) {
+  keepAliveWhenAuthenticated(ref);
+
+  final currentUserMasterPubkey = ref.watch(currentPubkeySelectorProvider);
+  final devicePubkey = ref.read(currentUserIonConnectEventSignerProvider).valueOrNull?.publicKey;
+  final delegationComplete = ref.watch(delegationCompleteProvider).valueOrNull.falseOrValue;
+  final latestEventTimestampService =
+      ref.watch(globalSubscriptionLatestEventTimestampServiceProvider);
+  final ionConnectNotifier = ref.watch(ionConnectNotifierProvider.notifier);
+  final globalSubscriptionNotifier = ref.watch(globalSubscriptionNotifierProvider.notifier);
+  final globalSubscriptionEventDispatcherNotifier =
+      ref.watch(globalSubscriptionEventDispatcherNotifierProvider).valueOrNull;
+
+  if (currentUserMasterPubkey == null ||
+      devicePubkey == null ||
+      !delegationComplete ||
+      latestEventTimestampService == null ||
+      globalSubscriptionEventDispatcherNotifier == null) {
+    return null;
+  }
+
+  return GlobalSubscription(
+    currentUserMasterPubkey: currentUserMasterPubkey,
+    devicePubkey: devicePubkey,
+    latestEventTimestampService: latestEventTimestampService,
+    ionConnectNotifier: ionConnectNotifier,
+    globalSubscriptionNotifier: globalSubscriptionNotifier,
+    globalSubscriptionEventDispatcher: globalSubscriptionEventDispatcherNotifier,
+  );
 }

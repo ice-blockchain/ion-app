@@ -590,3 +590,7 @@ class GlobalSubscriptionSubscribeException extends IONException {
   GlobalSubscriptionSubscribeException(dynamic error)
       : super(10118, 'Global subscription subscribe exception: $error');
 }
+
+class GlobalSubscriptionNotInitializedException extends IONException {
+  GlobalSubscriptionNotInitializedException() : super(10119, 'Global subscription not initialized');
+}

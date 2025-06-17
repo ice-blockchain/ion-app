@@ -67,7 +67,16 @@ Future<void> initApp(Ref ref) async {
     ..listen(feedBookmarksSyncProvider, noop)
     ..listen(currentUserBadgesSyncProvider, noop)
     ..listen(pushesInitProvider, noop)
-    ..listen(globalSubscriptionProvider, noop);
+    ..listen(globalSubscriptionProvider, (_, subscription) {
+      if (subscription != null) {
+        subscription.init();
+      }
+    });
+
+  // final globalSubscription = ref.watch(globalSubscriptionProvider);
+  // if (globalSubscription != null) {
+  //   globalSubscription.init();
+  // }
 
   initFirebaseMessagingBackgroundHandler();
 
