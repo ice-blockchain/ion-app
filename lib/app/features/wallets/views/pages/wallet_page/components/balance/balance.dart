@@ -8,6 +8,7 @@ import 'package:ion/app/extensions/build_context.dart';
 import 'package:ion/app/extensions/num.dart';
 import 'package:ion/app/extensions/theme_data.dart';
 import 'package:ion/app/features/wallets/providers/send_asset_form_provider.c.dart';
+import 'package:ion/app/features/wallets/providers/wallet_page_loader_provider.c.dart';
 import 'package:ion/app/features/wallets/providers/wallet_user_preferences/user_preferences_selectors.c.dart';
 import 'package:ion/app/features/wallets/providers/wallet_view_data_provider.c.dart';
 import 'package:ion/app/features/wallets/views/pages/wallet_page/components/balance/balance_actions.dart';
@@ -20,6 +21,8 @@ class Balance extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final isPageLoading = ref.watch(walletPageLoaderNotifierProvider);
+
     final currentWallet =
         ref.watch(currentWalletViewDataProvider.select((state) => state.valueOrNull));
     final walletBalance = currentWallet?.usdBalance;
@@ -27,7 +30,7 @@ class Balance extends ConsumerWidget {
     final isBalanceVisible = ref.watch(isBalanceVisibleSelectorProvider);
     final hitSlop = 5.0.s;
 
-    final shouldShowLoader = currentWallet == null;
+    final shouldShowLoader = isPageLoading || walletBalance == null;
 
     return ScreenSideOffset.small(
       child: Column(
@@ -48,7 +51,7 @@ class Balance extends ConsumerWidget {
             )
           else
             Text(
-              isBalanceVisible ? formatToCurrency(walletBalance!) : '********',
+              isBalanceVisible ? formatToCurrency(walletBalance) : '********',
               style: context.theme.appTextThemes.headline1
                   .copyWith(color: context.theme.appColors.primaryText),
             ),

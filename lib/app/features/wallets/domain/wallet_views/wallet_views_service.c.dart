@@ -32,14 +32,28 @@ part 'wallet_views_service.c.g.dart';
 
 @riverpod
 Future<WalletViewsService> walletViewsService(Ref ref) async {
+  final (
+    identity,
+    wallets,
+    mainWallet,
+    transactionsRepo,
+    syncService,
+  ) = await (
+    ref.watch(ionIdentityClientProvider.future),
+    ref.watch(walletsNotifierProvider.future),
+    ref.watch(mainWalletProvider.future),
+    ref.watch(transactionsRepositoryProvider.future),
+    ref.watch(syncWalletViewCoinsServiceProvider.future),
+  ).wait;
+
   final service = WalletViewsService(
-    await ref.watch(ionIdentityClientProvider.future),
-    await ref.watch(walletsNotifierProvider.future),
-    await ref.watch(mainWalletProvider.future),
+    identity,
+    wallets,
+    mainWallet,
     ref.watch(coinsRepositoryProvider),
     ref.watch(networksRepositoryProvider),
-    await ref.watch(transactionsRepositoryProvider.future),
-    await ref.watch(syncWalletViewCoinsServiceProvider.future),
+    transactionsRepo,
+    syncService,
   );
 
   ref.onDispose(service.dispose);

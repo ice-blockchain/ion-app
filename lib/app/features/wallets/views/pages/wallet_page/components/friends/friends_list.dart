@@ -6,6 +6,7 @@ import 'package:ion/app/components/screen_offset/screen_side_offset.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/user/providers/follow_list_provider.c.dart';
 import 'package:ion/app/features/user/providers/friends_section_providers.c.dart';
+import 'package:ion/app/features/wallets/providers/wallet_page_loader_provider.c.dart';
 import 'package:ion/app/features/wallets/views/pages/wallet_page/components/delimiter/delimiter.dart';
 import 'package:ion/app/features/wallets/views/pages/wallet_page/components/friends/friends_list_header.dart';
 import 'package:ion/app/features/wallets/views/pages/wallet_page/components/friends/friends_list_item.dart';
@@ -21,12 +22,15 @@ class FriendsList extends ConsumerWidget {
     if (!showFriendsSection) {
       return const SizedBox.shrink();
     }
+
+    final isPageLoading = ref.watch(walletPageLoaderNotifierProvider);
+
     final friendsPubkeys = ref.watch(
       currentUserFollowListProvider.select(
         (state) => state.valueOrNull?.pubkeys,
       ),
     );
-    final isLoading = friendsPubkeys == null;
+    final isLoading = isPageLoading || friendsPubkeys == null;
 
     final footer = SizedBox(
       height: ScreenSideOffset.defaultSmallMargin,

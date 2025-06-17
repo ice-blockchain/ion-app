@@ -6,6 +6,7 @@ import 'package:ion/app/components/screen_offset/screen_side_offset.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/extensions/num.dart';
 import 'package:ion/app/features/wallets/providers/filtered_assets_provider.c.dart';
+import 'package:ion/app/features/wallets/providers/wallet_page_loader_provider.c.dart';
 import 'package:ion/app/features/wallets/views/components/coins_list/coin_item.dart';
 import 'package:ion/app/features/wallets/views/pages/manage_coins/providers/manage_coins_provider.c.dart';
 import 'package:ion/app/features/wallets/views/pages/wallet_page/components/coins/coins_tab_footer.dart';
@@ -22,13 +23,15 @@ class CoinsTab extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final groups = ref.watch(filteredCoinsNotifierProvider.select((state) => state.value));
+    final isPageLoading = ref.watch(walletPageLoaderNotifierProvider);
 
-    if (groups == null) {
+    if (isPageLoading) {
       return _CoinsTabBody(itemCount: 4, itemBuilder: (_, __) => const CoinsGroupItemPlaceholder());
     }
 
-    if (groups.isEmpty) {
+    final groups = ref.watch(filteredCoinsNotifierProvider.select((state) => state.valueOrNull));
+
+    if (groups == null || groups.isEmpty) {
       return EmptyState(
         tabType: tabType,
         onBottomActionTap: () {
