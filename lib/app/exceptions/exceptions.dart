@@ -585,3 +585,8 @@ class WalletAssetHandlerNotInitializedException extends IONException {
   WalletAssetHandlerNotInitializedException()
       : super(10117, 'Wallet asset handler not initialized');
 }
+
+class GlobalSubscriptionSubscribeException extends IONException {
+  GlobalSubscriptionSubscribeException(dynamic error)
+      : super(10118, 'Global subscription subscribe exception: $error');
+}
