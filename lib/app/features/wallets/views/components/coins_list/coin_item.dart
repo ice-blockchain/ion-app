@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/components/coins/coin_icon.dart';
 import 'package:ion/app/components/list_item/list_item.dart';
+import 'package:ion/app/components/skeleton/container_skeleton.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/wallets/model/coins_group.c.dart';
 import 'package:ion/app/features/wallets/providers/wallet_user_preferences/user_preferences_selectors.c.dart';
@@ -57,25 +58,19 @@ class CoinsGroupItemPlaceholder extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ListItem(
-      title: Container(
+      title: ContainerSkeleton(
         height: 16.0.s,
         width: 101.0.s,
-        decoration: BoxDecoration(
-          color: context.theme.appColors.onTerararyFill,
-          borderRadius: BorderRadius.circular(8.0.s),
-        ),
+        skeletonBaseColor: context.theme.appColors.onTerararyFill,
       ),
       subtitle: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           SizedBox(height: 6.0.s),
-          Container(
+          ContainerSkeleton(
             height: 12.0.s,
             width: 55.0.s,
-            decoration: BoxDecoration(
-              color: context.theme.appColors.onTerararyFill,
-              borderRadius: BorderRadius.circular(8.0.s),
-            ),
+            skeletonBaseColor: context.theme.appColors.onTerararyFill,
           ),
         ],
       ),
@@ -84,22 +79,16 @@ class CoinsGroupItemPlaceholder extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.center,
         crossAxisAlignment: CrossAxisAlignment.end,
         children: [
-          Container(
+          ContainerSkeleton(
             height: 16.0.s,
             width: 40.0.s,
-            decoration: BoxDecoration(
-              color: context.theme.appColors.onTerararyFill,
-              borderRadius: BorderRadius.circular(8.0.s),
-            ),
+            skeletonBaseColor: context.theme.appColors.onTerararyFill,
           ),
           SizedBox(height: 6.0.s),
-          Container(
+          ContainerSkeleton(
             height: 12.0.s,
             width: 30.0.s,
-            decoration: BoxDecoration(
-              color: context.theme.appColors.onTerararyFill,
-              borderRadius: BorderRadius.circular(8.0.s),
-            ),
+            skeletonBaseColor: context.theme.appColors.onTerararyFill,
           ),
         ],
       ),

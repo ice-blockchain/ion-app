@@ -6,6 +6,7 @@ import 'package:ion/app/components/screen_offset/screen_side_offset.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/extensions/num.dart';
 import 'package:ion/app/features/wallets/providers/filtered_assets_provider.c.dart';
+import 'package:ion/app/features/wallets/providers/wallet_page_loader_provider.c.dart';
 import 'package:ion/app/features/wallets/views/components/coins_list/coin_item.dart';
 import 'package:ion/app/features/wallets/views/pages/manage_coins/providers/manage_coins_provider.c.dart';
 import 'package:ion/app/features/wallets/views/pages/wallet_page/components/coins/coins_tab_footer.dart';
@@ -22,7 +23,13 @@ class CoinsTab extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final groups = ref.watch(filteredCoinsNotifierProvider.select((state) => state.value));
+    final isPageLoading = ref.watch(walletPageLoaderNotifierProvider);
+
+    if (isPageLoading) {
+      return _CoinsTabBody(itemCount: 4, itemBuilder: (_, __) => const CoinsGroupItemPlaceholder());
+    }
+
+    final groups = ref.watch(filteredCoinsNotifierProvider.select((state) => state.valueOrNull));
 
     if (groups == null || groups.isEmpty) {
       return EmptyState(
@@ -33,29 +40,47 @@ class CoinsTab extends ConsumerWidget {
       );
     }
 
+    return _CoinsTabBody(
+      itemCount: groups.length,
+      itemBuilder: (context, index) {
+        final group = groups[index];
+
+        final isUpdating = ref.watch(
+          manageCoinsNotifierProvider.select(
+            (state) => state.valueOrNull?[group.symbolGroup]?.isUpdating ?? false,
+          ),
+        );
+
+        return ScreenSideOffset.small(
+          child: isUpdating
+              ? const CoinsGroupItemPlaceholder()
+              : CoinsGroupItem(
+                  coinsGroup: group,
+                  onTap: () => CoinsDetailsRoute(symbolGroup: group.symbolGroup).go(context),
+                ),
+        );
+      },
+    );
+  }
+}
+
+class _CoinsTabBody extends ConsumerWidget {
+  const _CoinsTabBody({
+    required this.itemCount,
+    required this.itemBuilder,
+  });
+
+  final int itemCount;
+  final NullableIndexedWidgetBuilder itemBuilder;
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
     return SliverMainAxisGroup(
       slivers: [
         SliverList.separated(
-          itemCount: groups.length,
+          itemCount: itemCount,
           separatorBuilder: (context, index) => SizedBox(height: 12.0.s),
-          itemBuilder: (context, index) {
-            final group = groups[index];
-
-            final isUpdating = ref.watch(
-              manageCoinsNotifierProvider.select(
-                (state) => state.valueOrNull?[group.symbolGroup]?.isUpdating ?? false,
-              ),
-            );
-
-            return ScreenSideOffset.small(
-              child: isUpdating
-                  ? const CoinsGroupItemPlaceholder()
-                  : CoinsGroupItem(
-                      coinsGroup: group,
-                      onTap: () => CoinsDetailsRoute(symbolGroup: group.symbolGroup).go(context),
-                    ),
-            );
-          },
+          itemBuilder: itemBuilder,
         ),
         const CoinsTabFooter(),
       ],

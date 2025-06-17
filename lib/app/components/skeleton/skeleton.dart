@@ -10,14 +10,16 @@ class Skeleton extends StatelessWidget {
   const Skeleton({
     required this.child,
     super.key,
+    this.baseColor,
   });
 
   final Widget child;
+  final Color? baseColor;
 
   @override
   Widget build(BuildContext context) {
     return Shimmer.fromColors(
-      baseColor: context.theme.appColors.primaryBackground,
+      baseColor: baseColor ?? context.theme.appColors.primaryBackground,
       highlightColor: context.theme.appColors.secondaryBackground,
       child: child,
     );

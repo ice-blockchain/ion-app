@@ -5,6 +5,9 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/components/screen_offset/screen_side_offset.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/user/providers/follow_list_provider.c.dart';
+import 'package:ion/app/features/user/providers/friends_section_providers.c.dart';
+import 'package:ion/app/features/wallets/providers/wallet_page_loader_provider.c.dart';
+import 'package:ion/app/features/wallets/views/pages/wallet_page/components/delimiter/delimiter.dart';
 import 'package:ion/app/features/wallets/views/pages/wallet_page/components/friends/friends_list_header.dart';
 import 'package:ion/app/features/wallets/views/pages/wallet_page/components/friends/friends_list_item.dart';
 import 'package:ion/app/features/wallets/views/pages/wallet_page/components/friends/friends_list_loader.dart';
@@ -15,53 +18,65 @@ class FriendsList extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final friendsDataState = ref.watch(currentUserFollowListProvider);
+    final showFriendsSection = ref.watch(shouldShowFriendsSectionProvider);
+    if (!showFriendsSection) {
+      return const SizedBox.shrink();
+    }
+
+    final isPageLoading = ref.watch(walletPageLoaderNotifierProvider);
+
+    final friendsPubkeys = ref.watch(
+      currentUserFollowListProvider.select(
+        (state) => state.valueOrNull?.pubkeys,
+      ),
+    );
+    final isLoading = isPageLoading || friendsPubkeys == null;
 
     final footer = SizedBox(
       height: ScreenSideOffset.defaultSmallMargin,
     );
 
-    return friendsDataState.maybeWhen(
-      skipLoadingOnRefresh: false,
-      data: (friends) {
-        final friendsPubkeys = friends?.pubkeys ?? [];
+    return Column(
+      children: [
+        const Delimiter(),
+        if (isLoading)
+          FriendsListLoader(footer: footer)
+        else if (friendsPubkeys.isNotEmpty)
+          Column(
+            children: [
+              const FriendsListHeader(),
+              SizedBox(
+                height: FriendsListItem.height,
+                child: ListView.builder(
+                  padding: EdgeInsetsDirectional.only(
+                    start: 4.0.s,
+                    end: ScreenSideOffset.defaultSmallMargin,
+                  ),
+                  scrollDirection: Axis.horizontal,
+                  itemCount: friendsPubkeys.length,
+                  itemBuilder: (BuildContext context, int index) {
+                    final friendPubkey = friendsPubkeys[index];
 
-        return Column(
-          children: [
-            const FriendsListHeader(),
-            SizedBox(
-              height: FriendsListItem.height,
-              child: ListView.builder(
-                padding: EdgeInsetsDirectional.only(
-                  start: 4.0.s,
-                  end: ScreenSideOffset.defaultSmallMargin,
-                ),
-                scrollDirection: Axis.horizontal,
-                itemCount: friendsPubkeys.length,
-                itemBuilder: (BuildContext context, int index) {
-                  final friendPubkey = friendsPubkeys[index];
-
-                  return FriendsListItem(
-                    pubkey: friendPubkey,
-                    onTap: () async {
-                      final needToEnable2FA =
-                          await ContactRoute(pubkey: friendPubkey).push<bool>(context);
-                      if (needToEnable2FA != null && needToEnable2FA == true) {
-                        await Future<void>.delayed(const Duration(seconds: 1));
-                        if (context.mounted) {
-                          await SecureAccountModalRoute().push<void>(context);
+                    return FriendsListItem(
+                      pubkey: friendPubkey,
+                      onTap: () async {
+                        final needToEnable2FA =
+                            await ContactRoute(pubkey: friendPubkey).push<bool>(context);
+                        if (needToEnable2FA != null && needToEnable2FA == true) {
+                          await Future<void>.delayed(const Duration(seconds: 1));
+                          if (context.mounted) {
+                            await SecureAccountModalRoute().push<void>(context);
+                          }
                         }
-                      }
-                    },
-                  );
-                },
+                      },
+                    );
+                  },
+                ),
               ),
-            ),
-            footer,
-          ],
-        );
-      },
-      orElse: () => FriendsListLoader(footer: footer),
+              footer,
+            ],
+          ),
+      ],
     );
   }
 }
