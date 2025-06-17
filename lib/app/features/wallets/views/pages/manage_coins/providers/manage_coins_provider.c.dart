@@ -31,7 +31,6 @@ class ManageCoinsNotifier extends _$ManageCoinsNotifier {
       _coinsFromWallet[coinGroup.symbolGroup] = ManageCoinsGroup(
         coinsGroup: coinGroup,
         isSelected: state.value?[coinGroup.symbolGroup]?.isSelected ?? true,
-        isUpdating: false,
       );
     }
     final coinsService = await ref.watch(coinsServiceProvider.future);
@@ -44,7 +43,6 @@ class ManageCoinsNotifier extends _$ManageCoinsNotifier {
         group.symbolGroup: ManageCoinsGroup(
           coinsGroup: group,
           isSelected: state.value?[group.symbolGroup]?.isSelected ?? false,
-          isUpdating: false,
         ),
     });
 
