@@ -78,7 +78,7 @@ class SettingsRedirectSheet extends StatelessWidget {
             title: header,
             titleStyle: context.theme.appTextThemes.headline2,
             icon: AuthHeaderIcon(
-              icon: headerIconAsset.icon(size: 36.0.s),
+              icon: IconAsset(headerIconAsset, size: 36.0),
             ),
           ),
           const Spacer(),

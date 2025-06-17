@@ -42,8 +42,9 @@ class SelectionListItem extends ConsumerWidget {
         containerSize: 36.0.s,
         borderRadius: BorderRadius.circular(10.0.s),
         color: colors.onPrimaryAccent,
-        icon: iconAsset.icon(
-          size: 24.0.s,
+        icon: IconAssetColored(
+          iconAsset,
+          size: 24.0,
           color: colors.primaryAccent,
         ),
         border: Border.fromBorderSide(
@@ -53,10 +54,12 @@ class SelectionListItem extends ConsumerWidget {
       trailing: Padding(
         padding: EdgeInsets.all(8.0.s),
         child: isSelected
-            ? Assets.svgIconBlockCheckboxOnblue.icon(
+            ? IconAssetColored(
+                Assets.svgIconBlockCheckboxOnblue,
                 color: colors.success,
               )
-            : Assets.svgIconBlockCheckboxOff.icon(
+            : IconAssetColored(
+                Assets.svgIconBlockCheckboxOff,
                 color: colors.tertararyText,
               ),
       ),

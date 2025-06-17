@@ -65,6 +65,6 @@ extension WhoCanReplySettingsOptionX on WhoCanReplySettingsOption {
       mentionedAccounts: () => Assets.svgIconFieldNickname,
       accountsWithBadge: (_) => Assets.svgIconPostVerifyaccount,
     );
-    return asset.icon(color: context.theme.appColors.primaryAccent);
+    return IconAssetColored(asset, color: context.theme.appColors.primaryAccent);
   }
 }

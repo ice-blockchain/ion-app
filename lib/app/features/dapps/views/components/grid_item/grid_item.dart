@@ -39,7 +39,7 @@ class GridItem extends HookWidget {
               color: Colors.white,
               borderRadius: BorderRadius.circular(12.0.s),
             ),
-            child: dAppData.iconImage.icon(size: 48.0.s),
+            child: IconAsset(dAppData.iconImage, size: 48.0),
           ),
           SizedBox(width: 10.0.s),
           Expanded(
@@ -63,7 +63,7 @@ class GridItem extends HookWidget {
                             size: 16.0.s,
                             color: context.theme.appColors.onTertararyBackground,
                           ),
-                          child: Assets.svgIconBadgeVerify.icon(size: 16.0.s),
+                          child: const IconAsset(Assets.svgIconBadgeVerify, size: 16),
                         ),
                       ),
                   ],
@@ -82,7 +82,7 @@ class GridItem extends HookWidget {
                           size: 12.0.s,
                           color: context.theme.appColors.onTertararyBackground,
                         ),
-                        child: Assets.svgIconButtonIceStroke.icon(size: 12.0.s),
+                        child: const IconAsset(Assets.svgIconButtonIceStroke, size: 12),
                       ),
                       if (dAppData.value != null)
                         Padding(

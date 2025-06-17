@@ -77,8 +77,9 @@ class RepliedMessageInfo extends HookConsumerWidget {
             ),
             GestureDetector(
               onTap: ref.read(selectedReplyMessageProvider.notifier).clear,
-              child: Assets.svgIconSheetClose.icon(
-                size: 20.0.s,
+              child: IconAssetColored(
+                Assets.svgIconSheetClose,
+                size: 20.0,
                 color: context.theme.appColors.tertararyText,
               ),
             ),

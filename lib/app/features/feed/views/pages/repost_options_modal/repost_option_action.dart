@@ -34,6 +34,6 @@ enum RepostOptionAction {
       RepostOptionAction.quotePost => Assets.svgIconFeedQuote,
     };
 
-    return icon.icon(color: getIconColor(context));
+    return IconAssetColored(icon, color: getIconColor(context));
   }
 }

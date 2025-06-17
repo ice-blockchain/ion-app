@@ -17,7 +17,7 @@ class AdvancedSearchTab extends StatelessWidget {
       child: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
-          category.icon(context).icon(size: 18.0.s, color: color),
+          IconAssetColored(category.icon(context), size: 18.0, color: color!),
           SizedBox(width: 6.0.s),
           Text(
             category.label(context),

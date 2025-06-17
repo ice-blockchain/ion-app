@@ -28,6 +28,7 @@ import 'package:ion/app/services/media_service/image_proccessing_config.dart';
 import 'package:ion/app/services/uuid/uuid.dart';
 import 'package:ion/app/utils/validators.dart';
 import 'package:ion/generated/assets.gen.dart';
+import 'package:ion/app/extensions/asset_gen_image.dart';
 
 class CreateGroupModal extends HookConsumerWidget {
   const CreateGroupModal({super.key});
@@ -121,7 +122,7 @@ class CreateGroupModal extends HookConsumerWidget {
                     SizedBox(height: 24.0.s),
                     Row(
                       children: [
-                        Assets.svgIconCategoriesFollowing.icon(size: 16.0.s),
+                        const IconAsset(Assets.svgIconCategoriesFollowing, size: 16.0),
                         SizedBox(width: 6.0.s),
                         Text(
                           context.i18n.group_create_members_number(participantsMasterkeys.length),

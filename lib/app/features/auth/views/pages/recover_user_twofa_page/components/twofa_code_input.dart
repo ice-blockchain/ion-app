@@ -39,7 +39,7 @@ class TwoFaCodeInput extends HookWidget {
     return TextInput(
       prefixIcon: TextInputIcons(
         hasRightDivider: true,
-        icons: [prefixIcon ?? twoFaType.iconAsset.icon()],
+        icons: [prefixIcon ?? IconAsset(twoFaType.iconAsset)],
       ),
       labelText: twoFaType.getDisplayName(context),
       controller: controller,

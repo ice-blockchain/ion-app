@@ -23,6 +23,7 @@ import 'package:ion/app/router/components/sheet_content/sheet_content.dart';
 import 'package:ion/app/router/utils/show_simple_bottom_sheet.dart';
 import 'package:ion/generated/assets.gen.dart';
 import 'package:ion_identity_client/ion_identity.dart';
+import 'package:ion/app/extensions/asset_gen_image.dart';
 
 typedef PromptSignInDialogCallback = Future<String?> Function(
   WidgetRef ref, {
@@ -70,7 +71,7 @@ class SignInStep extends HookConsumerWidget {
           showBackButton: false,
           title: context.i18n.get_started_title,
           description: context.i18n.get_started_description,
-          icon: Assets.svgIconLoginIcelogo.icon(size: 44.0.s),
+          icon: const IconAsset(Assets.svgIconLoginIcelogo, size: 44.0),
           children: [
             ScreenSideOffset.large(
               child: Column(
@@ -101,7 +102,8 @@ class SignInStep extends HookConsumerWidget {
                   SizedBox(height: 14.0.s),
                   Button(
                     type: ButtonType.outlined,
-                    leadingIcon: Assets.svgIconLoginCreateacc.icon(
+                    leadingIcon: IconAssetColored(
+                      Assets.svgIconLoginCreateacc,
                       color: context.theme.appColors.secondaryText,
                     ),
                     onPressed: () {
@@ -119,7 +121,8 @@ class SignInStep extends HookConsumerWidget {
                     labelFlex: 2,
                     type: ButtonType.outlined,
                     leadingIcon: Flexible(
-                      child: Assets.svgIconRestorekey.icon(
+                      child: IconAssetColored(
+                        Assets.svgIconRestorekey,
                         color: context.theme.appColors.secondaryText,
                       ),
                     ),

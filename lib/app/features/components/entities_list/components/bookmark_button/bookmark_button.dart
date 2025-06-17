@@ -58,8 +58,8 @@ class BookmarkButton extends HookConsumerWidget {
         child: Center(
           child: TextActionButton(
             icon: isBookmarked
-                ? Assets.svgIconBookmarksOn.icon(size: size)
-                : Assets.svgIconBookmarks.icon(size: size, color: color),
+                ? IconAsset(Assets.svgIconBookmarksOn, size: size)
+                : IconAssetColored(Assets.svgIconBookmarks, size: size, color: color ?? Colors.black),
             textColor: color ?? context.theme.appColors.onTertararyBackground,
           ),
         ),

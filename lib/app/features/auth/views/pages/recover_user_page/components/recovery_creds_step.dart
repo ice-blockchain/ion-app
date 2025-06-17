@@ -18,6 +18,7 @@ import 'package:ion/app/features/protect_account/backup/views/components/recover
 import 'package:ion/app/router/components/sheet_content/sheet_content.dart';
 import 'package:ion/app/router/utils/show_simple_bottom_sheet.dart';
 import 'package:ion/generated/assets.gen.dart';
+import 'package:ion/app/extensions/asset_gen_image.dart';
 
 class RecoveryCredsStep extends HookConsumerWidget {
   const RecoveryCredsStep({
@@ -47,7 +48,7 @@ class RecoveryCredsStep extends HookConsumerWidget {
         child: AuthScrollContainer(
           title: context.i18n.restore_identity_title,
           description: context.i18n.restore_identity_creds_description,
-          icon: Assets.svgIconLoginRestorekey.icon(size: 36.0.s),
+          icon: const IconAsset(Assets.svgIconLoginRestorekey, size: 36.0),
           titleStyle: context.theme.appTextThemes.headline2,
           descriptionStyle: context.theme.appTextThemes.body2.copyWith(
             color: context.theme.appColors.tertararyText,
@@ -69,8 +70,10 @@ class RecoveryCredsStep extends HookConsumerWidget {
                               child: RecoveryKeyInput(
                                 controller: controllers[key]!,
                                 labelText: key.getDisplayName(context),
-                                prefixIcon: key.iconAsset
-                                    .icon(color: context.theme.appColors.secondaryText),
+                                prefixIcon: IconAssetColored(
+                                  key.iconAsset,
+                                  color: context.theme.appColors.secondaryText,
+                                ),
                                 validator: (value) => value == null || value.isEmpty ? '' : null,
                                 textInputAction: key == RecoveryKeyProperty.recoveryCode
                                     ? TextInputAction.done

@@ -14,6 +14,7 @@ import 'package:ion/app/features/protect_account/backup/views/components/recover
 import 'package:ion/app/router/components/sheet_content/sheet_content.dart';
 import 'package:ion/app/router/utils/show_simple_bottom_sheet.dart';
 import 'package:ion/generated/assets.gen.dart';
+import 'package:ion/app/extensions/asset_gen_image.dart';
 
 class RecoveryKeysInputContainer extends HookConsumerWidget {
   const RecoveryKeysInputContainer({
@@ -40,7 +41,7 @@ class RecoveryKeysInputContainer extends HookConsumerWidget {
       body: AuthScrollContainer(
         title: context.i18n.backup_option_with_recovery_keys_title,
         description: context.i18n.restore_identity_creds_description,
-        icon: Assets.svgIconLoginRestorekey.icon(size: 36.0.s),
+        icon: const IconAsset(Assets.svgIconLoginRestorekey, size: 36.0),
         titleStyle: context.theme.appTextThemes.headline2,
         descriptionStyle: context.theme.appTextThemes.body2.copyWith(
           color: context.theme.appColors.secondaryText,

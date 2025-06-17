@@ -10,6 +10,7 @@ import 'package:ion/app/features/auth/views/components/sign_up_list_item/sign_up
 import 'package:ion/app/features/auth/views/pages/sign_up_passkey/sign_up_passkey_form.dart';
 import 'package:ion/app/router/components/sheet_content/sheet_content.dart';
 import 'package:ion/generated/assets.gen.dart';
+import 'package:ion/app/extensions/asset_gen_image.dart';
 
 class SignUpPasskeyPage extends StatelessWidget {
   const SignUpPasskeyPage({super.key});
@@ -20,7 +21,7 @@ class SignUpPasskeyPage extends StatelessWidget {
       body: KeyboardDismissOnTap(
         child: AuthScrollContainer(
           title: context.i18n.sign_up_passkey_title,
-          icon: Assets.svgIconLoginPasskey.icon(size: 36.0.s),
+          icon: const IconAsset(Assets.svgIconLoginPasskey, size: 36.0),
           mainAxisAlignment: MainAxisAlignment.start,
           children: [
             ScreenSideOffset.large(
@@ -30,17 +31,17 @@ class SignUpPasskeyPage extends StatelessWidget {
                   SignUpListItem(
                     title: context.i18n.sign_up_passkey_advantage_1_title,
                     subtitle: context.i18n.sign_up_passkey_advantage_1_description,
-                    icon: Assets.svgIconLoginFingerprint.icon(),
+                    icon: const IconAsset(Assets.svgIconLoginFingerprint),
                   ),
                   SignUpListItem(
                     title: context.i18n.sign_up_passkey_advantage_2_title,
                     subtitle: context.i18n.sign_up_passkey_advantage_2_description,
-                    icon: Assets.svgIconLoginDevice.icon(),
+                    icon: const IconAsset(Assets.svgIconLoginDevice),
                   ),
                   SignUpListItem(
                     title: context.i18n.sign_up_passkey_advantage_3_title,
                     subtitle: context.i18n.sign_up_passkey_advantage_3_description,
-                    icon: Assets.svgIconLoginSafeacc.icon(),
+                    icon: const IconAsset(Assets.svgIconLoginSafeacc),
                   ),
                   SizedBox(height: 57.0.s),
                   const SignUpPasskeyForm(),

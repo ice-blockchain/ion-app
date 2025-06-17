@@ -43,8 +43,9 @@ class SignUpPasskeyForm extends HookConsumerWidget {
             trailingIcon: registerActionState.isLoading ||
                     (authState.valueOrNull?.isAuthenticated).falseOrValue
                 ? const IONLoadingIndicator()
-                : Assets.svgIconButtonNext.icon(
-                    size: 24.0.s,
+                : IconAssetColored(
+                    Assets.svgIconButtonNext,
+                    size: 24.0,
                     color: context.theme.appColors.onPrimaryAccent,
                   ),
             onPressed: () {

@@ -15,9 +15,10 @@ class AudioRecordButton extends ConsumerWidget {
     return GestureDetector(
       child: Padding(
         padding: EdgeInsets.all(4.0.s),
-        child: Assets.svgIconChatMicrophone.icon(
+        child: IconAssetColored(
+          Assets.svgIconChatMicrophone,
           color: context.theme.appColors.primaryText,
-          size: 24.0.s,
+          size: 24.0,
         ),
       ),
     );

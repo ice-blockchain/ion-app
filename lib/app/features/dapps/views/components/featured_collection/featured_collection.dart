@@ -49,7 +49,7 @@ class FeaturedCollection extends ConsumerWidget {
                     start: 12.0.s,
                     child: Row(
                       children: [
-                        featuredApps[index].iconImage.icon(size: 30.0.s),
+                        IconAsset(featuredApps[index].iconImage, size: 30.0),
                         SizedBox(width: 8.0.s),
                         Column(
                           crossAxisAlignment: CrossAxisAlignment.start,

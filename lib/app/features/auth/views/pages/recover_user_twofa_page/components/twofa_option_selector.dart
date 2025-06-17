@@ -99,8 +99,9 @@ class TwoFaOptionSelector extends HookWidget {
                     child: ButtonIconFrame(
                       containerSize: 30.0.s,
                       color: colors.secondaryBackground,
-                      icon: option.iconAsset.icon(
-                        size: 20.0.s,
+                      icon: IconAssetColored(
+                        option.iconAsset,
+                        size: 20.0,
                         color: colors.secondaryText,
                       ),
                       border: iconBorderSize,

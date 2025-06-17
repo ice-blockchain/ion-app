@@ -44,7 +44,7 @@ class SuggestToCreateLocalPasskeyCredsPopup extends HookConsumerWidget {
         Padding(
           padding: EdgeInsetsDirectional.only(start: 30.0.s, end: 30.0.s, top: 30.0.s),
           child: InfoCard(
-            iconAsset: Assets.svg.actionWalletFaceid,
+            iconAsset: Assets.svgactionWalletFaceid,
             title: context.i18n.new_passkey_creds_suggestion_title,
             description: context.i18n.new_passkey_creds_suggestion_desc,
           ),

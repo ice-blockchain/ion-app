@@ -50,7 +50,7 @@ class DAppsList extends HookConsumerWidget {
                     Expanded(
                       child: apps.isEmpty
                           ? EmptyList(
-                              asset: Assets.svg.walletIconWalletEmptyfavourites,
+                              asset: Assets.svgWalletIconWalletEmptyfavourites,
                               title: context.i18n.dapps_favourites_empty_title,
                             )
                           : filteredApps.isEmpty

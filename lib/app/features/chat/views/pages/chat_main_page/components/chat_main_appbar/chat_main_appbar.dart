@@ -55,7 +55,8 @@ class ChatMainAppBar extends ConsumerWidget implements PreferredSizeWidget {
           duration: const Duration(milliseconds: 200),
           child: IconButton(
             padding: EdgeInsets.zero,
-            icon: Assets.svgIconEditLink.icon(
+            icon: IconAsset(
+              Assets.svgIconEditLink,
               size: NavigationAppBar.actionButtonSide,
             ),
             onPressed: () {

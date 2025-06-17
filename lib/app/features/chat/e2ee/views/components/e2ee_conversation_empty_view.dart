@@ -14,7 +14,7 @@ class E2eeConversationEmptyView extends HookConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     return MessagingEmptyView(
       title: context.i18n.messaging_empty_description,
-      asset: Assets.svg.walletIconChatEncrypted,
+      asset: Assets.svgwalletIconChatEncrypted,
       trailing: GestureDetector(
         onTap: () {
           ChatLearnMoreModalRoute().push<void>(context);

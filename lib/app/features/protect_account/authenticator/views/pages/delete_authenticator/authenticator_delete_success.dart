@@ -28,7 +28,7 @@ class AuthenticatorDeleteSuccessPage extends ConsumerWidget {
           ),
           ScreenSideOffset.medium(
             child: InfoCard(
-              iconAsset: Assets.svg.actionWalletGoogleauth,
+              iconAsset: Assets.svgactionWalletGoogleauth,
               title: locale.common_congratulations,
               description: locale.authenticator_has_deleted,
             ),

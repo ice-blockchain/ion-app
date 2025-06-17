@@ -24,19 +24,34 @@ class Notifications extends StatelessWidget {
       children: [
         NotificationListItem(
           iceVerified: true,
-          image: Assets.images.notifications.avatar1.icon(size: iconSide, fit: BoxFit.contain),
+          image: Image.asset(
+            Assets.imagesNotificationsAvatar1.path,
+            width: iconSide,
+            height: iconSide,
+            fit: BoxFit.contain,
+          ),
           title: context.i18n.turn_notifications_sent_title,
           description: context.i18n.turn_notifications_sent_description,
           time: context.i18n.turn_notifications_sent_time,
         ),
         NotificationListItem(
-          image: Assets.images.notifications.avatar2.icon(size: iconSide),
+          image: Image.asset(
+            Assets.imagesNotificationsAvatar2.path,
+            width: iconSide,
+            height: iconSide,
+            fit: BoxFit.contain,
+          ),
           title: context.i18n.turn_notifications_new_follower_title,
           description: context.i18n.turn_notifications_new_follower_description,
           time: context.i18n.turn_notifications_new_follower_time,
         ),
         NotificationListItem(
-          image: Assets.images.notifications.avatar3.icon(size: iconSide),
+          image: Image.asset(
+            Assets.imagesNotificationsAvatar3.path,
+            width: iconSide,
+            height: iconSide,
+            fit: BoxFit.contain,
+          ),
           title: context.i18n.turn_notifications_new_message_title,
           description: context.i18n.turn_notifications_new_message_description,
           time: context.i18n.turn_notifications_new_message_time,

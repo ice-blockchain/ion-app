@@ -40,7 +40,7 @@ class IntroPage extends HookConsumerWidget {
             ColoredBox(
               color: Colors.white,
               child: Center(
-                child: Assets.svg.logo.logoCircle.icon(size: 148.0.s),
+                child: const IconAsset(Assets.svgLogoLogoCircle, size: 148),
               ),
             )
           else
@@ -65,7 +65,8 @@ class IntroPage extends HookConsumerWidget {
               child: Button(
                 onPressed: () => GetStartedRoute().go(context),
                 label: Text(context.i18n.button_continue),
-                trailingIcon: Assets.svgIconButtonNext.icon(
+                trailingIcon: IconAssetColored(
+                  Assets.svgIconButtonNext,
                   color: context.theme.appColors.secondaryBackground,
                 ),
               ),

@@ -21,7 +21,7 @@ class ScreenshotSecurityAlert extends StatelessWidget {
         Padding(
           padding: EdgeInsets.symmetric(horizontal: 24.0.s),
           child: InfoCard(
-            iconAsset: Assets.svg.actionWalletScreenshot,
+            iconAsset: Assets.svgactionWalletScreenshot,
             title: context.i18n.error_screenshots_arent_secure_title,
             description: context.i18n.error_screenshots_arent_secure_description,
           ),

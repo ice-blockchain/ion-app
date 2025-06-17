@@ -12,6 +12,7 @@ import 'package:ion/app/router/components/navigation_app_bar/navigation_app_bar.
 import 'package:ion/app/router/components/navigation_app_bar/navigation_close_button.dart';
 import 'package:ion/app/router/components/sheet_content/sheet_content.dart';
 import 'package:ion/generated/assets.gen.dart';
+import 'package:ion/app/extensions/asset_gen_image.dart';
 
 class PhoneSetupPage extends ConsumerWidget {
   const PhoneSetupPage(this.step, this.phone, {super.key});
@@ -54,7 +55,7 @@ class PhoneSetupPage extends ConsumerWidget {
                           color: context.theme.appColors.secondaryText,
                         ),
                         icon: AuthHeaderIcon(
-                          icon: Assets.svgIcon2faPhoneconfirm.icon(size: 36.0.s),
+                          icon: const IconAsset(Assets.svgIcon2faPhoneconfirm, size: 36.0),
                         ),
                       ),
                       if (step == PhoneSetupSteps.input)

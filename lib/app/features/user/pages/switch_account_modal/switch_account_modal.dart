@@ -14,6 +14,7 @@ import 'package:ion/app/router/components/navigation_app_bar/navigation_close_bu
 import 'package:ion/app/router/components/sheet_content/sheet_content.dart';
 import 'package:ion/app/utils/username.dart';
 import 'package:ion/generated/assets.gen.dart';
+import 'package:ion/app/extensions/asset_gen_image.dart';
 
 class SwitchAccountModal extends ConsumerWidget {
   const SwitchAccountModal({super.key});
@@ -34,7 +35,10 @@ class SwitchAccountModal extends ConsumerWidget {
                 actions: const [NavigationCloseButton()],
               ),
               ModalActionButton(
-                icon: Assets.svgIconChannelType.icon(color: context.theme.appColors.primaryAccent),
+                icon: IconAssetColored(
+                  Assets.svgIconChannelType,
+                  color: context.theme.appColors.primaryAccent,
+                ),
                 label: context.i18n.profile_create_new_account,
                 onTap: () {},
               ),
@@ -42,7 +46,7 @@ class SwitchAccountModal extends ConsumerWidget {
               const AccountsList(),
               SizedBox(height: 16.0.s),
               ModalActionButton(
-                icon: Assets.svgIconMenuLogout.icon(size: 24.0.s),
+                icon: const IconAsset(Assets.svgIconMenuLogout, size: 24.0),
                 label: context.i18n.profile_log_out(
                   prefixUsername(username: userMetadataValue?.data.name, context: context),
                 ),

@@ -58,13 +58,13 @@ class ShareOptions extends HookConsumerWidget {
                 buttonType: ButtonType.primary,
                 icon: isCapturing.value
                     ? const CenteredLoadingIndicator()
-                    : Assets.svgIconFeedStory.icon(size: iconSize),
+                    : const IconAsset(Assets.svgIconFeedStory, size: 28),
                 label: context.i18n.feed_add_story,
                 onPressed: isCapturing.value ? () {} : () => _onSharePostToStory(ref, isCapturing),
               ),
             ShareOptionsMenuItem(
               buttonType: ButtonType.dropdown,
-              icon: Assets.svgIconBlockCopy1.icon(size: iconSize, color: Colors.black),
+              icon: IconAssetColored(Assets.svgIconBlockCopy1, size: iconSize, color: Colors.black),
               label: context.i18n.feed_copy_link,
               onPressed: () {
                 copyToClipboard(shareUrl);
@@ -74,7 +74,7 @@ class ShareOptions extends HookConsumerWidget {
             if (isPost)
               ShareOptionsMenuItem(
                 buttonType: ButtonType.dropdown,
-                icon: Assets.svgIconBookmarks.icon(size: iconSize, color: Colors.black),
+                icon: IconAssetColored(Assets.svgIconBookmarks, size: iconSize, color: Colors.black),
                 label: context.i18n.button_bookmark,
                 onPressed: () async {
                   await ref
@@ -87,25 +87,25 @@ class ShareOptions extends HookConsumerWidget {
               ),
             ShareOptionsMenuItem(
               buttonType: ButtonType.dropdown,
-              icon: Assets.svgIconFeedWhatsapp.icon(size: iconSize),
+              icon: IconAsset(Assets.svgIconFeedWhatsapp, size: iconSize),
               label: context.i18n.feed_whatsapp,
               onPressed: () {},
             ),
             ShareOptionsMenuItem(
               buttonType: ButtonType.dropdown,
-              icon: Assets.svgIconFeedTelegram.icon(size: iconSize),
+              icon: IconAsset(Assets.svgIconFeedTelegram, size: iconSize),
               label: context.i18n.feed_telegram,
               onPressed: () {},
             ),
             ShareOptionsMenuItem(
               buttonType: ButtonType.dropdown,
-              icon: Assets.svgIconLoginXlogo.icon(size: iconSize),
+              icon: IconAsset(Assets.svgIconLoginXlogo, size: iconSize),
               label: context.i18n.feed_x,
               onPressed: () {},
             ),
             ShareOptionsMenuItem(
               buttonType: ButtonType.dropdown,
-              icon: Assets.svgIconFeedMore.icon(size: iconSize),
+              icon: IconAsset(Assets.svgIconFeedMore, size: iconSize),
               label: context.i18n.feed_more,
               onPressed: () {
                 shareContent(shareUrl);

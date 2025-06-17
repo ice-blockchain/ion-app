@@ -18,9 +18,10 @@ class EditUserButton extends ConsumerWidget {
       onPressed: () {
         ProfileEditRoute().push<void>(context);
       },
-      leadingIcon: Assets.svgIconEditLink.icon(
+      leadingIcon: IconAssetColored(
+        Assets.svgIconEditLink,
         color: context.theme.appColors.onPrimaryAccent,
-        size: 16.0.s,
+        size: 16.0,
       ),
       tintColor: context.theme.appColors.primaryAccent,
       label: Text(

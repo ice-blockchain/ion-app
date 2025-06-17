@@ -23,8 +23,9 @@ class CameraPreviewWidget extends StatelessWidget {
           child: CameraPreview(controller),
         ),
         Center(
-          child: Assets.svgIconCameraOpen.icon(
-            size: 40.0.s,
+          child: IconAssetColored(
+            Assets.svgIconCameraOpen,
+            size: 40.0,
             color: context.theme.appColors.onPrimaryAccent,
           ),
         ),

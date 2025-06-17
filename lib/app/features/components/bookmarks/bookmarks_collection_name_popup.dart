@@ -67,7 +67,7 @@ class BookmarksCollectionNamePopup extends HookConsumerWidget {
                 Padding(
                   padding: EdgeInsetsDirectional.only(top: 30.0.s, bottom: 6.0.s),
                   child: InfoCard(
-                    iconAsset: Assets.svg.actionWalletName,
+                    iconAsset: Assets.svgactionWalletName,
                     title: title,
                     description: desc,
                   ),

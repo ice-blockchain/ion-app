@@ -48,7 +48,10 @@ class BookmarksFilterTile extends ConsumerWidget {
         ),
         child: Row(
           children: [
-            Assets.svgIconFolderOpen.icon(color: color),
+            IconAssetColored(
+              Assets.svgIconFolderOpen,
+              color: color,
+            ),
             SizedBox(
               width: 6.0.s,
             ),

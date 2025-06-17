@@ -105,8 +105,11 @@ class PollAnswerItem extends HookConsumerWidget {
                   onTap: () {
                     ref.read(pollDraftNotifierProvider.notifier).removeAnswer(index);
                   },
-                  child: Assets.svgIconBlockDelete
-                      .icon(size: 20.0.s, color: context.theme.appColors.quaternaryText),
+                  child: IconAssetColored(
+                    Assets.svgIconBlockDelete,
+                    size: 20.0,
+                    color: context.theme.appColors.quaternaryText,
+                  ),
                 )
               : const SizedBox.shrink(),
         ),

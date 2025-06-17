@@ -6,6 +6,7 @@ import 'package:ion/app/components/avatar/avatar.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/chat/views/components/message_items/messages_context_menu/messages_context_menu.dart';
 import 'package:ion/generated/assets.gen.dart';
+import 'package:ion/app/extensions/asset_gen_image.dart';
 
 class MessagingHeader extends ConsumerWidget {
   const MessagingHeader({
@@ -70,7 +71,7 @@ class MessagingHeader extends ConsumerWidget {
                             ),
                             if (isVerified) ...[
                               SizedBox(width: 3.0.s),
-                              Assets.svgIconBadgeVerify.icon(size: 16.0.s),
+                              const IconAsset(Assets.svgIconBadgeVerify, size: 16.0),
                             ],
                           ],
                         ),

@@ -20,7 +20,7 @@ class EmailSetupSuccessPage extends StatelessWidget {
       children: [
         ScreenSideOffset.medium(
           child: InfoCard(
-            iconAsset: Assets.svg.actionWalletConfirmemail,
+            iconAsset: Assets.svgactionWalletConfirmemail,
             title: locale.common_successfully,
             description: locale.email_success_description,
           ),

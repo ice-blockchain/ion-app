@@ -21,7 +21,8 @@ class FeedNotificationsButton extends ConsumerWidget {
       children: [
         NavigationButton(
           onPressed: () => NotificationsHistoryRoute().push<void>(context),
-          icon: Assets.svgIconHomeNotification.icon(
+          icon: IconAssetColored(
+            Assets.svgIconHomeNotification,
             color: context.theme.appColors.primaryText,
           ),
         ),

@@ -24,7 +24,7 @@ class CloudDisabledModal extends ConsumerWidget {
     return SimpleModalSheet.alert(
       title: context.i18n.backup_cloud_disabled_title(option),
       description: context.i18n.backup_cloud_disabled_description(option),
-      iconAsset: Assets.svg.actionCreatepostLogout,
+      iconAsset: Assets.svgactionCreatepostLogout,
       button: ScreenSideOffset.small(
         child: Row(
           children: [

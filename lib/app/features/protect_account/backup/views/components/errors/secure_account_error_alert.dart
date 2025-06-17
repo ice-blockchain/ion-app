@@ -35,7 +35,7 @@ class SecureAccountErrorAlert extends ConsumerWidget {
             child: Column(
               children: [
                 InfoCard(
-                  iconAsset: Assets.svg.actionWalletAutherror,
+                  iconAsset: Assets.svgactionWalletAutherror,
                   title: locale.two_fa_failure_authenticator_title,
                   description: locale.two_fa_failure_authenticator_description,
                 ),

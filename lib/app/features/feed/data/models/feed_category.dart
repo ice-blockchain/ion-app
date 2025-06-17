@@ -38,7 +38,7 @@ enum FeedCategory {
       FeedCategory.articles => Assets.svgIconFeedArticles,
     };
 
-    return icon.icon(color: color ?? defaultColor);
+    return IconAssetColored(icon, color: color ?? defaultColor);
   }
 
   String getPostsNames(BuildContext context) => switch (this) {

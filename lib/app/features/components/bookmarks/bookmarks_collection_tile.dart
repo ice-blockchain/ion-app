@@ -46,7 +46,10 @@ class BookmarksCollectionTile extends ConsumerWidget {
         color: context.theme.appColors.secondaryBackground,
         borderRadius: BorderRadius.circular(12.0.s),
         border: Border.all(color: context.theme.appColors.onTerararyFill),
-        icon: Assets.svgIconFolderOpen.icon(color: context.theme.appColors.primaryAccent),
+        icon: IconAssetColored(
+          Assets.svgIconFolderOpen,
+          color: context.theme.appColors.primaryAccent,
+        ),
       ),
       title: Text(
         isDefaultCollection ? context.i18n.core_all : entity.data.title,

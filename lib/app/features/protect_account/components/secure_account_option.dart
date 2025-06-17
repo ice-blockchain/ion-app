@@ -30,10 +30,11 @@ class SecureAccountOption extends ConsumerWidget {
     final isLightTheme = ref.watch(appThemeModeProvider) == ThemeMode.light;
 
     final trailingIcon = isEnabled
-        ? Assets.svgIconDappCheck.icon(
+        ? IconAssetColored(
+            Assets.svgIconDappCheck,
             color: context.theme.appColors.success,
           )
-        : Assets.svgIconArrowRight.icon();
+        : const IconAsset(Assets.svgIconArrowRight);
 
     return ListItem(
       title: Text(title),

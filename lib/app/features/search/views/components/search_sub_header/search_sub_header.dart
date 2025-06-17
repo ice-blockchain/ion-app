@@ -17,8 +17,9 @@ class SearchSubHeader extends StatelessWidget {
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.end,
         children: [
-          icon.icon(
-            size: 16.0.s,
+          IconAssetColored(
+            icon,
+            size: 16.0,
             color: context.theme.appColors.primaryText,
           ),
           SizedBox(width: 6.0.s),

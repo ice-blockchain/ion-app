@@ -36,9 +36,10 @@ class ArticleCategoriesRow extends StatelessWidget {
               borderColor: colors.onTerararyFill,
               size: 40.0.s,
               type: ButtonType.secondary,
-              icon: Assets.svgIconPlusCreatechannel.icon(
+              icon: IconAssetColored(
+                Assets.svgIconPlusCreatechannel,
                 color: colors.primaryAccent,
-                size: 28.0.s,
+                size: 28.0,
               ),
               onPressed: () {},
             ),
@@ -77,7 +78,8 @@ class _CategoryButton extends StatelessWidget {
       backgroundColor: colors.tertararyBackground,
       type: ButtonType.outlined,
       leadingIconOffset: 6.0.s,
-      leadingIcon: category.icon.icon(
+      leadingIcon: IconAssetColored(
+        category.icon,
         color: isSelected ? colors.primaryAccent : colors.tertararyText,
       ),
       label: Text(

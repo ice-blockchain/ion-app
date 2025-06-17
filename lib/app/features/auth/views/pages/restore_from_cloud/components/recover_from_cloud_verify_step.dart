@@ -19,6 +19,7 @@ import 'package:ion/app/features/protect_account/backup/providers/cloud_stored_r
 import 'package:ion/app/features/protect_account/backup/providers/recovery_key_cloud_backup_restore_notifier.c.dart';
 import 'package:ion/app/router/components/sheet_content/sheet_content.dart';
 import 'package:ion/generated/assets.gen.dart';
+import 'package:ion/app/extensions/asset_gen_image.dart';
 
 class RestoreFromCloudVerifyStep extends HookConsumerWidget {
   const RestoreFromCloudVerifyStep({
@@ -59,7 +60,7 @@ class RestoreFromCloudVerifyStep extends HookConsumerWidget {
         child: AuthScrollContainer(
           title: context.i18n.restore_identity_from(cloudType),
           description: context.i18n.restore_from_cloud_description(descriptionCloudType),
-          icon: Assets.svgIconLoginRestorecloud.icon(size: 36.0.s),
+          icon: const IconAsset(Assets.svgIconLoginRestorecloud, size: 36.0),
           titleStyle: context.theme.appTextThemes.headline2,
           descriptionStyle: context.theme.appTextThemes.body2.copyWith(
             color: context.theme.appColors.tertararyText,

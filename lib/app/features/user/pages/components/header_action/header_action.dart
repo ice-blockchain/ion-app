@@ -51,7 +51,8 @@ class HeaderAction extends StatelessWidget {
       tintColor: context.theme.appColors.primaryText,
       icon: loading
           ? const IONLoadingIndicator(type: IndicatorType.dark)
-          : assetName.icon(
+          : IconAssetColored(
+              assetName,
               size: iconSize,
               color: context.theme.appColors.primaryText,
               flipForRtl: flipForRtl,

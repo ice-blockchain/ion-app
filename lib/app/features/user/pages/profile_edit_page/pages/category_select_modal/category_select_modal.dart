@@ -82,10 +82,12 @@ class CategorySelectModal extends HookConsumerWidget {
                   onTap: () => Navigator.of(context).pop(category.key),
                   title: Text(category.name, style: context.theme.appTextThemes.body),
                   trailing: selectedCategory == category.key
-                      ? Assets.svgIconBlockCheckboxOnblue.icon(
+                      ? IconAssetColored(
+                          Assets.svgIconBlockCheckboxOnblue,
                           color: context.theme.appColors.success,
                         )
-                      : Assets.svgIconBlockCheckboxOff.icon(
+                      : IconAssetColored(
+                          Assets.svgIconBlockCheckboxOff,
                           color: context.theme.appColors.tertararyText,
                         ),
                 );

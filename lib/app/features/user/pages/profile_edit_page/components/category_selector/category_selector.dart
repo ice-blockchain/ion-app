@@ -39,8 +39,9 @@ class CategorySelector extends HookConsumerWidget {
       leadingIcon: ButtonIconFrame(
         containerSize: 30.0.s,
         color: context.theme.appColors.tertararyBackground,
-        icon: Assets.svgIconBlockchain.icon(
-          size: 20.0.s,
+        icon: IconAssetColored(
+          Assets.svgIconBlockchain,
+          size: 20.0,
           color: context.theme.appColors.secondaryText,
         ),
         border: Border.fromBorderSide(

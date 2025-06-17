@@ -28,8 +28,9 @@ class EmptyStateCopyLink extends StatelessWidget {
           SizedBox(
             width: 4.0.s,
           ),
-          Assets.svgIconBlockCopyBlue.icon(
-            size: 20.0.s,
+          IconAssetColored(
+            Assets.svgIconBlockCopyBlue,
+            size: 20.0,
             color: context.theme.appColors.primaryAccent,
           ),
         ],

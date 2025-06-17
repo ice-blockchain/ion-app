@@ -47,7 +47,8 @@ class ContextMenuItem extends StatelessWidget {
               SizedBox(
                 width: 12.0.s,
               ),
-              iconAsset.icon(
+              IconAssetColored(
+                iconAsset,
                 size: iconSize,
                 color: iconColor ?? colors.quaternaryText,
               ),

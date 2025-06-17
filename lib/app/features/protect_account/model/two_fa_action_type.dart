@@ -22,9 +22,9 @@ enum TwoFaActionType {
   String get successIconAsset {
     return switch (this) {
       TwoFaActionType.emailDelete => Assets.svgIcon2faEmailVerification,
-      TwoFaActionType.emailUpdate => Assets.svg.actionWalletConfirmemail,
+      TwoFaActionType.emailUpdate => Assets.svgactionWalletConfirmemail,
       TwoFaActionType.phoneDelete => Assets.svgIcon2faEmailVerification,
-      TwoFaActionType.phoneUpdate => Assets.svg.actionWalletConfirmphone,
+      TwoFaActionType.phoneUpdate => Assets.svgactionWalletConfirmphone,
     };
   }
 }

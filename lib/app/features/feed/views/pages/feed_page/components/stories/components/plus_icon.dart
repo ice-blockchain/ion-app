@@ -31,7 +31,8 @@ class PlusIcon extends StatelessWidget {
             shape: BoxShape.circle,
           ),
         ),
-        Assets.svgIconPlusCreatechannel.icon(
+        IconAssetColored(
+          Assets.svgIconPlusCreatechannel,
           size: size,
           color: context.theme.appColors.secondaryBackground,
         ),

@@ -31,7 +31,7 @@ class TwoFaTryAgainPage extends StatelessWidget {
           child: Column(
             children: [
               InfoCard(
-                iconAsset: Assets.svg.actionWalletKeyserror,
+                iconAsset: Assets.svgactionWalletKeyserror,
                 title: context.i18n.two_fa_failure_title,
                 description: description ?? context.i18n.two_fa_failure_desc,
               ),

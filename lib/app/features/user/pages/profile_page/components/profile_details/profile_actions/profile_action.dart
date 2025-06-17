@@ -31,7 +31,8 @@ class ProfileAction extends StatelessWidget {
       borderColor: colors.onTerararyFill,
       backgroundColor: colors.tertararyBackground,
       tintColor: colors.primaryText,
-      icon: assetName.icon(
+      icon: IconAssetColored(
+        assetName,
         size: iconSize,
         color: isAccent ? colors.primaryAccent : colors.primaryText,
       ),

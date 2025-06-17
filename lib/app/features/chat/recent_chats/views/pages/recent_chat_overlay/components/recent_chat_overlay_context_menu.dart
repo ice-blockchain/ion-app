@@ -64,7 +64,8 @@ class RecentChatOverlayContextMenu extends ConsumerWidget {
                   label: conversation.isArchived
                       ? context.i18n.common_unarchive_single
                       : context.i18n.common_add_to_archive,
-                  icon: Assets.svgIconChatArchive.icon(
+                  icon: IconAssetColored(
+                    Assets.svgIconChatArchive,
                     size: iconSize,
                     color: context.theme.appColors.quaternaryText,
                   ),
@@ -82,10 +83,16 @@ class RecentChatOverlayContextMenu extends ConsumerWidget {
                   label: isMuted ? context.i18n.button_unmute : context.i18n.button_mute,
                   verticalPadding: 12.0.s,
                   icon: isMuted
-                      ? Assets.svgIconChannelUnmute
-                          .icon(size: iconSize, color: context.theme.appColors.quaternaryText)
-                      : Assets.svgIconChannelMute
-                          .icon(size: iconSize, color: context.theme.appColors.quaternaryText),
+                      ? IconAssetColored(
+                          Assets.svgIconChannelUnmute,
+                          size: iconSize,
+                          color: context.theme.appColors.quaternaryText,
+                        )
+                      : IconAssetColored(
+                          Assets.svgIconChannelMute,
+                          size: iconSize,
+                          color: context.theme.appColors.quaternaryText,
+                        ),
                   onPressed: () {
                     final currentUserPubkey = ref.watch(currentPubkeySelectorProvider);
                     final receiverPubkey = ReplaceablePrivateDirectMessageData.fromEventMessage(
@@ -109,8 +116,11 @@ class RecentChatOverlayContextMenu extends ConsumerWidget {
                       OverlayMenuItem(
                         label: isBlocked ? context.i18n.button_unblock : context.i18n.button_block,
                         verticalPadding: 12.0.s,
-                        icon: Assets.svgIconPhofileBlockuser
-                            .icon(size: iconSize, color: context.theme.appColors.quaternaryText),
+                        icon: IconAssetColored(
+                          Assets.svgIconPhofileBlockuser,
+                          size: iconSize,
+                          color: context.theme.appColors.quaternaryText,
+                        ),
                         onPressed: () {
                           context.pop();
                           final masterPubkey =
@@ -133,8 +143,11 @@ class RecentChatOverlayContextMenu extends ConsumerWidget {
                   label: context.i18n.button_delete,
                   labelColor: context.theme.appColors.attentionRed,
                   verticalPadding: 12.0.s,
-                  icon: Assets.svgIconBlockDelete
-                      .icon(size: iconSize, color: context.theme.appColors.attentionRed),
+                  icon: IconAssetColored(
+                    Assets.svgIconBlockDelete,
+                    size: iconSize,
+                    color: context.theme.appColors.attentionRed,
+                  ),
                   onPressed: () async {
                     final deleted = await DeleteConversationRoute(
                           conversationIds: [conversation.conversationId],

@@ -44,8 +44,9 @@ class GroupPariticipantsListItem extends ConsumerWidget {
               : GestureDetector(
                   onTap: onRemove,
                   behavior: HitTestBehavior.opaque,
-                  child: Assets.svgIconBlockDelete.icon(
-                    size: 24.0.s,
+                  child: IconAssetColored(
+                    Assets.svgIconBlockDelete,
+                    size: 24.0,
                     color: context.theme.appColors.sheetLine,
                   ),
                 ),

@@ -36,7 +36,7 @@ class ReportUserModal extends HookConsumerWidget {
         Padding(
           padding: EdgeInsetsDirectional.only(start: 30.0.s, end: 30.0.s, top: 30.0.s),
           child: InfoCard(
-            iconAsset: Assets.svg.actionProfileBlockuser,
+            iconAsset: Assets.svgactionProfileBlockuser,
             title: context.i18n.profile_popup_report_title(name),
             description: context.i18n.profile_popup_report_desc,
           ),

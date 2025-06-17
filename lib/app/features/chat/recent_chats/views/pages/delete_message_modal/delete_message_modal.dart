@@ -31,7 +31,7 @@ class DeleteMessageModal extends ConsumerWidget {
               child: InfoCard(
                 title: context.i18n.chat_message_delete_modal_title_single,
                 description: context.i18n.chat_message_delete_modal_description_single,
-                iconAsset: Assets.svg.actionCreatepostDeletepost,
+                iconAsset: Assets.svgactionCreatepostDeletepost,
               ),
             ),
             Row(

@@ -33,17 +33,17 @@ class PermissionRequestSheet extends ConsumerWidget {
             Permission.photos => InfoCard(
                 title: context.i18n.photo_library_require_access_title(appName),
                 description: context.i18n.photo_library_require_access_description,
-                iconAsset: Assets.svg.walletIconWalletGelleryperm,
+                iconAsset: Assets.svgwalletIconWalletGelleryperm,
               ),
             Permission.camera => InfoCard(
                 title: context.i18n.camera_require_access_title(appName),
                 description: context.i18n.camera_require_access_description,
-                iconAsset: Assets.svg.walletIconWalletCamera,
+                iconAsset: Assets.svgwalletIconWalletCamera,
               ),
             Permission.notifications => InfoCard(
                 title: context.i18n.push_notifications_require_access_title(appName),
                 description: context.i18n.push_notifications_require_access_description,
-                iconAsset: Assets.svg.walletIconWalletCamera,
+                iconAsset: Assets.svgwalletIconWalletCamera,
               ),
             _ => throw Exception(
                 'UI is not implemented for the permission type $permission',

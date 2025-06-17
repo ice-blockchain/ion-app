@@ -7,6 +7,7 @@ import 'package:ion/app/features/user/providers/badges_notifier.c.dart';
 import 'package:ion/app/features/user/providers/user_metadata_provider.c.dart';
 import 'package:ion/app/utils/username.dart';
 import 'package:ion/generated/assets.gen.dart';
+import 'package:ion/app/extensions/asset_gen_image.dart';
 
 class UserNameTile extends ConsumerWidget {
   const UserNameTile({
@@ -45,7 +46,7 @@ class UserNameTile extends ConsumerWidget {
             if (isUserVerified)
               Padding(
                 padding: EdgeInsetsDirectional.only(start: 4.0.s),
-                child: Assets.svgIconBadgeVerify.icon(size: 16.0.s),
+                child: const IconAsset(Assets.svgIconBadgeVerify, size: 16.0),
               ),
           ],
         ),

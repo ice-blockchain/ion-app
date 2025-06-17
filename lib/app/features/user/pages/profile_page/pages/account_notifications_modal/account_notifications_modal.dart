@@ -86,8 +86,9 @@ class AccountNotificationsModal extends HookConsumerWidget {
                     containerSize: 36.0.s,
                     borderRadius: BorderRadius.circular(10.0.s),
                     color: colors.onSecondaryBackground,
-                    icon: option.iconAsset.icon(
-                      size: 24.0.s,
+                    icon: IconAssetColored(
+                      option.iconAsset,
+                      size: 24.0,
                       color: colors.primaryAccent,
                     ),
                     border: Border.fromBorderSide(
@@ -95,10 +96,12 @@ class AccountNotificationsModal extends HookConsumerWidget {
                     ),
                   ),
                   trailing: selectedOptions.value.contains(option)
-                      ? Assets.svgIconBlockCheckboxOnblue.icon(
+                      ? IconAssetColored(
+                          Assets.svgIconBlockCheckboxOnblue,
                           color: colors.success,
                         )
-                      : Assets.svgIconBlockCheckboxOff.icon(
+                      : IconAssetColored(
+                          Assets.svgIconBlockCheckboxOff,
                           color: colors.tertararyText,
                         ),
                 ),

@@ -28,10 +28,10 @@ class BookmarksCollectionTileSelectAction extends ConsumerWidget {
   Widget _getIconWidget(bool isBookmarked) {
     final isDefaultCollection = data.type == BookmarksCollectionEntity.defaultCollectionDTag;
     if (isDefaultCollection) {
-      return isBookmarked ? Assets.svgIconBookmarksOn.icon() : Assets.svgIconBookmarks.icon();
+      return isBookmarked ? const IconAsset(Assets.svgIconBookmarksOn) : const IconAsset(Assets.svgIconBookmarks);
     }
     return isBookmarked
-        ? Assets.svgIconBlockCheckboxOnblue.icon()
-        : Assets.svgIconBlockCheckboxOff.icon();
+        ? const IconAsset(Assets.svgIconBlockCheckboxOnblue)
+        : const IconAsset(Assets.svgIconBlockCheckboxOff);
   }
 }

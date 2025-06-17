@@ -30,10 +30,10 @@ enum DeleteConfirmationType {
 
   String get iconAsset {
     return switch (this) {
-      DeleteConfirmationType.story => Assets.svg.actionCreatepostDeleterole,
-      DeleteConfirmationType.video => Assets.svg.actionCreatepostDeletevideo,
-      DeleteConfirmationType.post => Assets.svg.actionCreatepostDeletepost,
-      DeleteConfirmationType.article => Assets.svg.actionCreatepostDeletearticle,
+      DeleteConfirmationType.story => Assets.svgactionCreatepostDeleterole,
+      DeleteConfirmationType.video => Assets.svgactionCreatepostDeletevideo,
+      DeleteConfirmationType.post => Assets.svgactionCreatepostDeletepost,
+      DeleteConfirmationType.article => Assets.svgactionCreatepostDeletearticle,
     };
   }
 }

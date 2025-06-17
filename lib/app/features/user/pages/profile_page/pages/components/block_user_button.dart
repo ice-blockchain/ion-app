@@ -52,12 +52,12 @@ class _BlockButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return Button(
       onPressed: onPressed,
-      leadingIcon:
-          (blocking ? Assets.svgIconProfileUnblock : Assets.svgIconProfileBlockUser).icon(
+      leadingIcon: IconAssetColored(
+        blocking ? Assets.svgIconProfileUnblock : Assets.svgIconProfileBlockUser,
         color: blocking
             ? context.theme.appColors.onPrimaryAccent
             : context.theme.appColors.attentionRed,
-        size: 16.0.s,
+        size: 16.0,
       ),
       backgroundColor: blocking ? context.theme.appColors.attentionRed : null,
       type: blocking ? ButtonType.primary : ButtonType.outlined,

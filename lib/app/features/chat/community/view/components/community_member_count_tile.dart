@@ -38,8 +38,9 @@ class MemberCountTile extends HookConsumerWidget {
       children: [
         Padding(
           padding: EdgeInsetsDirectional.only(top: 2.0.s),
-          child: Assets.svgIconChannelMembers.icon(
-            size: 10.0.s,
+          child: IconAssetColored(
+            Assets.svgIconChannelMembers,
+            size: 10.0,
             color: context.theme.appColors.quaternaryText,
           ),
         ),

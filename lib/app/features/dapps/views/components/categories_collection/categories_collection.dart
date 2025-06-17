@@ -20,16 +20,17 @@ enum DAppsCategory {
   other;
 
   Widget get icon {
-    return switch (this) {
-      DAppsCategory.defi => Assets.svg.categoriesDefi,
-      DAppsCategory.marketplaces => Assets.svg.categoriesMarketplace,
-      DAppsCategory.nft => Assets.svg.categoriesNft,
-      DAppsCategory.games => Assets.svg.categoriesGames,
-      DAppsCategory.social => Assets.svg.categoriesSocial,
-      DAppsCategory.utilities => Assets.svg.categoriesUtilites,
-      DAppsCategory.other => Assets.svg.categoriesOther,
-    }
-        .icon(size: 50.0.s);
+    final String asset = switch (this) {
+      DAppsCategory.defi => 'assets/svg/categories_defi.svg',
+      DAppsCategory.marketplaces => 'assets/svg/categories_marketplace.svg',
+      DAppsCategory.nft => 'assets/svg/categories_nft.svg',
+      DAppsCategory.games => 'assets/svg/categories_games.svg',
+      DAppsCategory.social => 'assets/svg/categories_social.svg',
+      DAppsCategory.utilities => 'assets/svg/categories_utilites.svg',
+      DAppsCategory.other => 'assets/svg/categories_other.svg',
+    };
+    
+    return IconAsset(asset, size: 50.0);
   }
 
   String title(BuildContext context) {

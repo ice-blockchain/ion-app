@@ -88,7 +88,7 @@ class _EmptyState extends StatelessWidget {
       child: Padding(
         padding: EdgeInsets.symmetric(vertical: 12.0.s),
         child: EmptyList(
-          asset: Assets.svg.walletIconProfileEmptyprofile,
+          asset: Assets.svgwalletIconProfileEmptyprofile,
           title: context.i18n.feed_replies_empty,
         ),
       ),

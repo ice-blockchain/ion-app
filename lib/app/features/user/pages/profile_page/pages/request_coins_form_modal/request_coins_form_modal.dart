@@ -145,7 +145,7 @@ class RequestCoinsFormModal extends HookConsumerWidget {
                                   colors.primaryBackground,
                                   BlendMode.srcIn,
                                 ),
-                                child: Assets.svgIconButtonNext.icon(),
+                                child: const IconAsset(Assets.svgIconButtonNext),
                               ),
                         onPressed: () {
                           if (formKey.currentState!.validate()) {

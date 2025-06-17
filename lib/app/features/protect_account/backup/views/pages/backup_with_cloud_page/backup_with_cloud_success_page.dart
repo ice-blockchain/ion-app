@@ -25,7 +25,7 @@ class BackupWithCloudSuccessPage extends StatelessWidget {
           children: [
             ScreenSideOffset.medium(
               child: InfoCard(
-                iconAsset: Assets.svg.actionWalletSecureaccsuccess,
+                iconAsset: Assets.svgactionWalletSecureaccsuccess,
                 title: context.i18n.backup_cloud_success_title,
                 description: context.i18n.backup_cloud_success_description(
                   Platform.isIOS ? context.i18n.backup_icloud : context.i18n.backup_google_drive,

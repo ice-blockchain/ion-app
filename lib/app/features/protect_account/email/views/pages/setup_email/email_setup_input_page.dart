@@ -59,7 +59,7 @@ class EmailSetupInputPage extends HookConsumerWidget {
                   child: TextInput(
                     prefixIcon: TextInputIcons(
                       hasRightDivider: true,
-                      icons: [TwoFaType.email.iconAsset.icon()],
+                      icons: [IconAsset(TwoFaType.email.iconAsset)],
                     ),
                     labelText: context.i18n.common_email_address,
                     controller: emailController,

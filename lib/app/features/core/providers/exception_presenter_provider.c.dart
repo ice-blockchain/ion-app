@@ -67,6 +67,6 @@ class ExceptionPresenter {
   }
 
   String _getIconPath(Object error) => switch (error) {
-        _ => Assets.svg.actionWalletKeyserror,
+        _ => Assets.svgactionWalletKeyserror,
       };
 }

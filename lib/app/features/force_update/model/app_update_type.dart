@@ -11,8 +11,8 @@ enum AppUpdateType {
 
   String get iconAsset {
     return switch (this) {
-      AppUpdateType.updateRequired => Assets.svg.actionWalletUpdate,
-      AppUpdateType.upToDate => Assets.svg.actionWalletChangelog,
+      AppUpdateType.updateRequired => Assets.svgactionWalletUpdate,
+      AppUpdateType.upToDate => Assets.svgactionWalletChangelog,
     };
   }
 

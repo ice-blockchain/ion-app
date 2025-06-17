@@ -16,7 +16,7 @@ class RestoreFromCloudNoKeysAvailableModal extends ConsumerWidget {
     return SimpleModalSheet.alert(
       title: context.i18n.restore_from_cloud_identity_not_found_title,
       description: context.i18n.restore_from_cloud_identity_not_found_description,
-      iconAsset: Assets.svg.actionWalletKeyserror,
+      iconAsset: Assets.svgactionWalletKeyserror,
       button: ScreenSideOffset.small(
         child: Button(
           mainAxisSize: MainAxisSize.max,

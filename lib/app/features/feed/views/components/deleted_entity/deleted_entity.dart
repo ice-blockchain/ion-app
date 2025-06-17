@@ -42,8 +42,11 @@ class DeletedEntity extends StatelessWidget {
               EdgeInsetsDirectional.only(top: 12.0.s, end: 16.0.s, bottom: 12.0.s, start: 12.0.s),
           child: Row(
             children: [
-              Assets.svgIconFeedDeletedpost
-                  .icon(size: 20.0.s, color: context.theme.appColors.quaternaryText),
+              IconAssetColored(
+                Assets.svgIconFeedDeletedpost,
+                size: 20.0,
+                color: context.theme.appColors.quaternaryText,
+              ),
               SizedBox(width: 8.0.s),
               Flexible(
                 child: Text(

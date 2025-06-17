@@ -29,7 +29,7 @@ class CantFindProfilePage extends StatelessWidget {
                     const ProfileAvatar(pubkey: ''),
                     Expanded(
                       child: EmptyList(
-                        asset: Assets.svg.walletIconProfileMissingprofile,
+                        asset: Assets.svgwalletIconProfileMissingprofile,
                         title: context.i18n.profile_no_account_found,
                       ),
                     ),

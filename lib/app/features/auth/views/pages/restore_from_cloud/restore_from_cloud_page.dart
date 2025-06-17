@@ -17,6 +17,7 @@ import 'package:ion/app/features/protect_account/secure_account/providers/select
 import 'package:ion/app/router/app_routes.c.dart';
 import 'package:ion/generated/assets.gen.dart';
 import 'package:ion_identity_client/ion_identity.dart';
+import 'package:ion/app/extensions/asset_gen_image.dart';
 
 class RestoreFromCloudPage extends HookConsumerWidget {
   const RestoreFromCloudPage({super.key});
@@ -57,7 +58,7 @@ class RestoreFromCloudPage extends HookConsumerWidget {
             twoFAOptionsCount: twoFAOptionsCount.value,
             onConfirm: () => step.value = RecoverUserStep.twoFAInput,
             onBackPress: () => step.value = RecoverUserStep.recoveryCreds,
-            titleIcon: Assets.svgIconLoginRestorecloud.icon(size: 36.0.s),
+            titleIcon: const IconAsset(Assets.svgIconLoginRestorecloud, size: 36.0),
           ),
         ),
       RecoverUserStep.twoFAInput => ProviderScope(
@@ -80,7 +81,7 @@ class RestoreFromCloudPage extends HookConsumerWidget {
                   initUserRecoveryActionNotifierProvider.select((it) => it.isLoading),
                 ) ||
                 ref.watch(completeUserRecoveryActionNotifierProvider.select((it) => it.isLoading)),
-            titleIcon: Assets.svgIconLoginRestorecloud.icon(size: 36.0.s),
+            titleIcon: const IconAsset(Assets.svgIconLoginRestorecloud, size: 36.0),
           ),
         ),
     };

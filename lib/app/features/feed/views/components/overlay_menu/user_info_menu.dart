@@ -52,7 +52,8 @@ class UserInfoMenu extends ConsumerWidget {
 
     ref.displayErrors(reportNotifierProvider);
 
-    final icon = Assets.svgIconMorePopup.icon(
+    final icon = IconAssetColored(
+      Assets.svgIconMorePopup,
       color: iconColor ?? context.theme.appColors.onTertararyBackground,
       size: iconSize,
     );
@@ -86,7 +87,7 @@ class UserInfoMenu extends ConsumerWidget {
                     label: isArticle
                         ? context.i18n.article_menu_report_article
                         : context.i18n.post_menu_report_post,
-                    icon: Assets.svgIconReport.icon(size: menuIconSize),
+                    icon: const IconAsset(Assets.svgIconReport, size: 20),
                     onPressed: () {
                       closeMenu();
                       ref
@@ -127,7 +128,8 @@ class _FollowUserMenuItem extends ConsumerWidget {
       label: following
           ? context.i18n.post_menu_unfollow_nickname(username)
           : context.i18n.post_menu_follow_nickname(username),
-      icon: Assets.svgIconFollowuser.icon(
+      icon: IconAssetColored(
+        Assets.svgIconFollowuser,
         size: UserInfoMenu.menuIconSize,
         color: context.theme.appColors.onTertararyBackground,
       ),
@@ -164,7 +166,7 @@ class _BlockUserMenuItem extends ConsumerWidget {
       label: isBlocked
           ? context.i18n.post_menu_unblock_nickname(username)
           : context.i18n.post_menu_block_nickname(username),
-      icon: Assets.svgIconBlock.icon(size: UserInfoMenu.menuIconSize),
+      icon: IconAsset(Assets.svgIconBlock, size: UserInfoMenu.menuIconSize),
       onPressed: () {
         closeMenu();
         if (!isBlocked) {
@@ -193,7 +195,8 @@ class _NotInterestedMenuItem extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     return OverlayMenuItem(
       label: context.i18n.post_menu_not_interested,
-      icon: Assets.svgIconNotinterested.icon(
+      icon: IconAsset(
+        Assets.svgIconNotinterested,
         size: UserInfoMenu.menuIconSize,
       ),
       onPressed: () {

@@ -19,7 +19,7 @@ class NothingIsFound extends StatelessWidget {
       child: Padding(
         padding: EdgeInsets.symmetric(vertical: 12.0.s),
         child: EmptyList(
-          asset: icon ?? Assets.svg.walletIconWalletEmptysearch,
+          asset: icon ?? Assets.svgwalletIconWalletEmptysearch,
           title: title ?? context.i18n.core_empty_search,
         ),
       ),

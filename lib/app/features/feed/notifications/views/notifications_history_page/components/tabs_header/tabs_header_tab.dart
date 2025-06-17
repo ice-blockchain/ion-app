@@ -20,7 +20,7 @@ class NotificationsHistoryTab extends StatelessWidget {
       child: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
-          tabType.iconAsset.icon(size: 18.0.s, color: color),
+          IconAssetColored(tabType.iconAsset, size: 18.0, color: color!),
           SizedBox(width: 6.0.s),
           Text(
             tabType.getTitle(context),

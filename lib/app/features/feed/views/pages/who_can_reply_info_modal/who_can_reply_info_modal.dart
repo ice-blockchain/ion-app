@@ -32,7 +32,7 @@ class WhoCanReplyInfoModal extends HookConsumerWidget {
           child: Padding(
             padding: EdgeInsetsDirectional.only(start: 30.0.s, end: 30.0.s, top: 30.0.s),
             child: InfoCard(
-              iconAsset: Assets.svg.actionProfileFollow,
+              iconAsset: Assets.svgactionProfileFollow,
               title: context.i18n.who_can_reply_info_modal_title,
               description: description,
             ),

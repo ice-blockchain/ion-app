@@ -42,10 +42,16 @@ class MessagingContextMenu extends ConsumerWidget {
                   OverlayMenuItem(
                     label: isMuted ? context.i18n.button_unmute : context.i18n.button_mute,
                     icon: isMuted
-                        ? Assets.svgIconChannelUnmute
-                            .icon(size: iconSize, color: context.theme.appColors.quaternaryText)
-                        : Assets.svgIconChannelMute
-                            .icon(size: iconSize, color: context.theme.appColors.quaternaryText),
+                        ? IconAssetColored(
+                            Assets.svgIconChannelUnmute,
+                            size: iconSize,
+                            color: context.theme.appColors.quaternaryText,
+                          )
+                        : IconAssetColored(
+                            Assets.svgIconChannelMute,
+                            size: iconSize,
+                            color: context.theme.appColors.quaternaryText,
+                          ),
                     onPressed: () {
                       closeMenu();
                       onToggleMute?.call();
@@ -54,15 +60,21 @@ class MessagingContextMenu extends ConsumerWidget {
                   const OverlayMenuItemSeparator(),
                   OverlayMenuItem(
                     label: context.i18n.button_block,
-                    icon: Assets.svgIconPhofileBlockuser
-                        .icon(size: iconSize, color: context.theme.appColors.quaternaryText),
+                    icon: IconAssetColored(
+                      Assets.svgIconPhofileBlockuser,
+                      size: iconSize,
+                      color: context.theme.appColors.quaternaryText,
+                    ),
                     onPressed: closeMenu,
                   ),
                   const OverlayMenuItemSeparator(),
                   OverlayMenuItem(
                     label: context.i18n.button_report,
-                    icon: Assets.svgIconBlockClose3
-                        .icon(size: iconSize, color: context.theme.appColors.quaternaryText),
+                    icon: IconAssetColored(
+                      Assets.svgIconBlockClose3,
+                      size: iconSize,
+                      color: context.theme.appColors.quaternaryText,
+                    ),
                     onPressed: () {
                       closeMenu();
                       ref
@@ -74,8 +86,11 @@ class MessagingContextMenu extends ConsumerWidget {
                   OverlayMenuItem(
                     label: context.i18n.button_delete,
                     labelColor: context.theme.appColors.attentionRed,
-                    icon: Assets.svgIconBlockDelete
-                        .icon(size: iconSize, color: context.theme.appColors.attentionRed),
+                    icon: IconAssetColored(
+                      Assets.svgIconBlockDelete,
+                      size: iconSize,
+                      color: context.theme.appColors.attentionRed,
+                    ),
                     onPressed: () async {
                       closeMenu();
                       final deleted = await DeleteConversationRoute(
@@ -94,7 +109,8 @@ class MessagingContextMenu extends ConsumerWidget {
           ),
         ],
       ),
-      child: Assets.svgIconMorePopup.icon(
+      child: IconAssetColored(
+        Assets.svgIconMorePopup,
         color: context.theme.appColors.onTertararyBackground,
       ),
     );

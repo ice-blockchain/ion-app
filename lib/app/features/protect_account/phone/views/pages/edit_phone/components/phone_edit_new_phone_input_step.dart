@@ -9,6 +9,7 @@ import 'package:ion/app/features/protect_account/email/providers/linked_phone_pr
 import 'package:ion/app/features/protect_account/phone/views/components/phone/phone_input_step.dart';
 import 'package:ion/app/router/utils/show_simple_bottom_sheet.dart';
 import 'package:ion/generated/assets.gen.dart';
+import 'package:ion/app/extensions/asset_gen_image.dart';
 
 class PhoneEditNewPhoneInputStep extends HookConsumerWidget {
   const PhoneEditNewPhoneInputStep({required this.onNext, super.key});
@@ -21,7 +22,7 @@ class PhoneEditNewPhoneInputStep extends HookConsumerWidget {
     final linkedPhone = ref.watch(linkedPhoneProvider).valueOrNull;
 
     return TwoFAStepScaffold(
-      headerIcon: Assets.svgIcon2faPhoneconfirm.icon(size: 36.0.s),
+      headerIcon: const IconAsset(Assets.svgIcon2faPhoneconfirm, size: 36.0),
       headerTitle: locale.two_fa_edit_phone_title,
       headerDescription: locale.two_fa_edit_phone_new_phone_description,
       contentPadding: 0,
@@ -41,7 +42,7 @@ class PhoneEditNewPhoneInputStep extends HookConsumerWidget {
     showSimpleBottomSheet<void>(
       context: ref.context,
       child: SimpleModalSheet.alert(
-        iconAsset: Assets.svg.actionWalletKeyserror,
+        iconAsset: Assets.svgactionWalletKeyserror,
         title: ref.context.i18n.common_error,
         description: ref.context.i18n.two_fa_edit_phone_already_linked,
         buttonText: ref.context.i18n.button_try_again,

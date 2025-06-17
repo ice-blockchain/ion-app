@@ -82,7 +82,7 @@ class PaymentSelectionModal extends HookConsumerWidget {
                       maxLines: 2,
                     ),
                     backgroundColor: context.theme.appColors.tertararyBackground,
-                    leading: option.iconAsset.icon(size: 48.0.s),
+                    leading: IconAsset(option.iconAsset, size: 48.0),
                     onTap: () {
                       if (option == PaymentType.request) {
                         onRequestFlow();
@@ -90,7 +90,8 @@ class PaymentSelectionModal extends HookConsumerWidget {
                         onContinue(option);
                       }
                     },
-                    trailing: Assets.svgIconArrowRight.icon(
+                    trailing: IconAssetColored(
+                      Assets.svgIconArrowRight,
                       color: context.theme.appColors.primaryText,
                     ),
                   ),

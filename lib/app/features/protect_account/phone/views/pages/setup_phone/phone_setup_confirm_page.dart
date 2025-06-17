@@ -68,7 +68,7 @@ class PhoneSetupConfirmPage extends HookConsumerWidget {
                   child: TwoFaCodeInput(
                     controller: codeController,
                     twoFaType: TwoFaType.sms,
-                    prefixIcon: Assets.svgIconFieldPhone.icon(),
+                    prefixIcon: const IconAsset(Assets.svgIconFieldPhone),
                     onRequestCode: requestTwoFaCode,
                     isSending: isRequestingCode,
                     countdownInitially: true,

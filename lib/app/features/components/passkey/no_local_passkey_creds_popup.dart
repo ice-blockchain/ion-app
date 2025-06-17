@@ -22,7 +22,7 @@ class NoLocalPasskeyCredsPopup extends StatelessWidget {
         Padding(
           padding: EdgeInsetsDirectional.only(start: 30.0.s, end: 30.0.s, top: 30.0.s),
           child: InfoCard(
-            iconAsset: Assets.svg.actionLoginLinkaccount,
+            iconAsset: Assets.svgactionLoginLinkaccount,
             title: context.i18n.error_identity_no_local_passkey_creds_found_title,
             description: context.i18n.error_identity_no_local_passkey_creds_found_description,
           ),

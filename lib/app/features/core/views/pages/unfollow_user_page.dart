@@ -32,7 +32,7 @@ class UnfollowUserModal extends ConsumerWidget {
         Padding(
           padding: EdgeInsetsDirectional.only(start: 30.0.s, end: 30.0.s, top: 30.0.s),
           child: InfoCard(
-            iconAsset: Assets.svg.actionProfileUnfollow,
+            iconAsset: Assets.svgActionProfileUnfollow,
             title: context.i18n.profile_popup_unfollow(name),
             description: context.i18n.profile_popup_unfollow_desc,
           ),
@@ -40,7 +40,8 @@ class UnfollowUserModal extends ConsumerWidget {
         SizedBox(height: 24.0.s),
         ScreenSideOffset.small(
           child: Button(
-            leadingIcon: Assets.svgIconCategoriesUnflow.icon(
+            leadingIcon: IconAssetColored(
+              Assets.svgIconCategoriesUnflow,
               color: context.theme.appColors.onPrimaryAccent,
             ),
             onPressed: () {

@@ -26,7 +26,7 @@ class UploadLimitReachedModal extends StatelessWidget {
           padding:
               EdgeInsetsDirectional.only(start: 28.0.s, end: 28.0.s, top: 38.0.s, bottom: 31.0.s),
           child: InfoCard(
-            iconAsset: Assets.svg.actionWalletKeyserror,
+            iconAsset: Assets.svgactionWalletKeyserror,
             title: context.i18n.upload_limit_error_title,
             description: type.getDescription(context),
           ),

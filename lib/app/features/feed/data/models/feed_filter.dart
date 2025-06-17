@@ -16,9 +16,10 @@ enum FeedFilter {
       FeedFilter.following => Assets.svgIconCategoriesFollowing,
     };
 
-    return icon.icon(
+    return IconAssetColored(
+      icon,
       color: color ?? defaultColor,
-      size: size ?? 18.0.s,
+      size: size ?? 18.0,
     );
   }
 

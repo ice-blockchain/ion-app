@@ -101,7 +101,7 @@ class SplashPage extends HookConsumerWidget {
                 child: CachedVideoPlayerPlus(splashVideoController),
               )
             : splashVideoController != null && splashVideoController.value.hasError
-                ? Assets.svg.logo.logoCircle.icon(size: 148.0.s)
+                ? const IconAsset(Assets.svgLogoLogoCircle, size: 148)
                 : const SizedBox.shrink(),
       ),
     );

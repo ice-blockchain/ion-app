@@ -10,8 +10,8 @@ enum PaymentType {
 
   String get iconAsset {
     return switch (this) {
-      PaymentType.send => Assets.svg.walletChatSendpayment,
-      PaymentType.request => Assets.svg.walletChatRequestpayment,
+      PaymentType.send => Assets.svgwalletChatSendpayment,
+      PaymentType.request => Assets.svgwalletChatRequestpayment,
     };
   }
 

@@ -17,9 +17,10 @@ class PauseAudioButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: playerController.pausePlayer,
-      child: Assets.svgIconVideoPause.icon(
+      child: IconAssetColored(
+        Assets.svgIconVideoPause,
         color: context.theme.appColors.primaryAccent,
-        size: 24.0.s,
+        size: 24.0,
       ),
     );
   }

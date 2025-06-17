@@ -60,7 +60,7 @@ class BookmarksCollectionTileEditAction extends ConsumerWidget {
           ],
         ),
       ),
-      child: Assets.svgIconMorePopup.icon(),
+      child: const IconAsset(Assets.svgIconMorePopup),
     );
   }
 }

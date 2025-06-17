@@ -65,7 +65,7 @@ class EmailDeletePage extends HookConsumerWidget {
     showSimpleBottomSheet<void>(
       context: ref.context,
       child: SimpleModalSheet.alert(
-        iconAsset: Assets.svg.actionWalletKeyserror,
+        iconAsset: Assets.svgactionWalletKeyserror,
         title: ref.context.i18n.two_fa_delete_email_button,
         description: ref.context.i18n.two_fa_delete_email_cant_remove_description,
         buttonText: ref.context.i18n.button_close,

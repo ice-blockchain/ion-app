@@ -31,7 +31,7 @@ class BlockUserModal extends ConsumerWidget {
         Padding(
           padding: EdgeInsetsDirectional.only(start: 30.0.s, end: 30.0.s, top: 30.0.s),
           child: InfoCard(
-            iconAsset: Assets.svg.actionProfileBlockuser,
+            iconAsset: Assets.svgactionProfileBlockuser,
             title: context.i18n.post_menu_block_nickname(name),
             description: context.i18n.profile_popup_block_user_desc,
           ),

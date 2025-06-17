@@ -47,7 +47,10 @@ class FeedSearchFilterSourceSection extends StatelessWidget {
                   color: context.theme.appColors.onTerararyFill,
                 ),
               ),
-              child: filter.getIcon(context).icon(color: context.theme.appColors.primaryAccent),
+              child: IconAssetColored(
+                filter.getIcon(context),
+                color: context.theme.appColors.primaryAccent,
+              ),
             ),
             trailing: selectedFilter == filter
                           ? IconAssetColored(Assets.svgIconBlockCheckboxOn, color: context.theme.appColors.success)

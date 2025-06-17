@@ -29,7 +29,7 @@ class ConfirmBookmarksCollectionDeletePopup extends ConsumerWidget {
 
     return SimpleModalSheet.alert(
       isBottomSheet: true,
-      iconAsset: Assets.svg.actionCreatepostDeletebookmarks,
+      iconAsset: Assets.svgactionCreatepostDeletebookmarks,
       title: context.i18n.bookmarks_delete_collection_title,
       description: context.i18n.bookmarks_delete_collection_desc,
       bottomOffset: 0,

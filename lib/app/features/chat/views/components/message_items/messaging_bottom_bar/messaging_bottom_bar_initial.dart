@@ -82,9 +82,10 @@ class BottomBarInitialView extends HookConsumerWidget {
                   },
                   child: Padding(
                     padding: EdgeInsets.all(4.0.s),
-                    child: Assets.svgIconChatKeyboard.icon(
+                    child: IconAssetColored(
+                      Assets.svgIconChatKeyboard,
                       color: context.theme.appColors.primaryText,
-                      size: 24.0.s,
+                      size: 24.0,
                     ),
                   ),
                 )
@@ -97,9 +98,10 @@ class BottomBarInitialView extends HookConsumerWidget {
                   },
                   child: Padding(
                     padding: EdgeInsets.all(4.0.s),
-                    child: Assets.svgIconChatAttatch.icon(
+                    child: IconAssetColored(
+                      Assets.svgIconChatAttatch,
                       color: context.theme.appColors.primaryText,
-                      size: 24.0.s,
+                      size: 24.0,
                     ),
                   ),
                 ),
@@ -166,9 +168,10 @@ class BottomBarInitialView extends HookConsumerWidget {
                     onTap: onPressed,
                     child: Padding(
                       padding: EdgeInsetsDirectional.fromSTEB(0.0.s, 4.0.s, 4.0.s, 4.0.s),
-                      child: Assets.svgIconCameraOpen.icon(
+                      child: IconAssetColored(
+                        Assets.svgIconCameraOpen,
                         color: context.theme.appColors.primaryText,
-                        size: 24.0.s,
+                        size: 24.0,
                       ),
                     ),
                   ),

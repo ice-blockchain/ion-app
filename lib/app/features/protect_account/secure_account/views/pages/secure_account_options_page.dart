@@ -53,7 +53,7 @@ class SecureAccountOptionsPage extends HookConsumerWidget {
                   Padding(
                     padding: EdgeInsets.symmetric(horizontal: 24.0.s),
                     child: InfoCard(
-                      iconAsset: Assets.svg.actionWalletSecureaccount,
+                      iconAsset: Assets.svgActionWalletSecureaccount,
                       title: locale.protect_account_title_secure_account,
                       description: locale.protect_account_description_secure_account_2fa,
                     ),
@@ -61,7 +61,8 @@ class SecureAccountOptionsPage extends HookConsumerWidget {
                   SizedBox(height: 32.0.s),
                   SecureAccountOption(
                     title: locale.two_fa_option_backup,
-                    icon: Assets.svgIconProtectwalletIcloud.icon(
+                    icon: IconAssetColored(
+                      Assets.svgIconProtectwalletIcloud,
                       color: context.theme.appColors.primaryAccent,
                     ),
                     onTap: () => BackupOptionsRoute().push<void>(context),
@@ -71,7 +72,8 @@ class SecureAccountOptionsPage extends HookConsumerWidget {
                   SizedBox(height: 12.0.s),
                   SecureAccountOption(
                     title: locale.two_fa_option_email,
-                    icon: Assets.svgIconFieldEmail.icon(
+                    icon: IconAssetColored(
+                      Assets.svgIconFieldEmail,
                       color: context.theme.appColors.primaryAccent,
                     ),
                     onTap: () => _onEmailPressed(context, securityMethods),
@@ -81,7 +83,8 @@ class SecureAccountOptionsPage extends HookConsumerWidget {
                   SizedBox(height: 12.0.s),
                   SecureAccountOption(
                     title: locale.two_fa_option_authenticator,
-                    icon: Assets.svgIconLoginAuthcode.icon(
+                    icon: IconAssetColored(
+                      Assets.svgIconLoginAuthcode,
                       color: context.theme.appColors.primaryAccent,
                     ),
                     isEnabled: securityMethods?.isAuthenticatorEnabled ?? false,
@@ -91,7 +94,8 @@ class SecureAccountOptionsPage extends HookConsumerWidget {
                   SizedBox(height: 12.0.s),
                   SecureAccountOption(
                     title: locale.two_fa_option_phone,
-                    icon: Assets.svgIconFieldPhone.icon(
+                    icon: IconAssetColored(
+                      Assets.svgIconFieldPhone,
                       color: context.theme.appColors.primaryAccent,
                     ),
                     onTap: () => _onPhonePressed(context, securityMethods),

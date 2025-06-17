@@ -144,9 +144,10 @@ class MessageItemWrapper extends HookConsumerWidget {
                   Row(
                     children: [
                       SizedBox(width: 6.0.s),
-                      Assets.svgIconMessageFailed.icon(
+                      IconAssetColored(
+                        Assets.svgIconMessageFailed,
                         color: context.theme.appColors.attentionRed,
-                        size: 16.0.s,
+                        size: 16.0,
                       ),
                     ],
                   ),

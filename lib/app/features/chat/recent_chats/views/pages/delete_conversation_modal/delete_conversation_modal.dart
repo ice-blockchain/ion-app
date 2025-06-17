@@ -36,7 +36,7 @@ class DeleteConversationModal extends ConsumerWidget {
                 description: conversationIds.length > 1
                     ? context.i18n.chat_delete_modal_description
                     : context.i18n.chat_delete_modal_description_single,
-                iconAsset: Assets.svg.actionCreatepostDeletepost,
+                iconAsset: Assets.svgactionCreatepostDeletepost,
               ),
             ),
             Row(

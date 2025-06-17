@@ -45,7 +45,7 @@ class GeneralSelectionButton extends StatelessWidget {
         backgroundColor: Colors.transparent,
         leading: TextInputIcons(
           hasRightDivider: true,
-          icons: [iconAsset.icon(color: colors.secondaryText)],
+          icons: [IconAssetColored(iconAsset, color: colors.secondaryText)],
         ),
         onTap: onPress,
         trailing: Row(
@@ -60,7 +60,10 @@ class GeneralSelectionButton extends StatelessWidget {
               onTap: onPress,
               child: Padding(
                 padding: EdgeInsets.all(4.0.s),
-                child: Assets.svgIconArrowRight.icon(color: colors.secondaryText),
+                child: IconAssetColored(
+                  Assets.svgIconArrowRight,
+                  color: colors.secondaryText,
+                ),
               ),
             ),
           ],

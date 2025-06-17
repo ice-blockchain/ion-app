@@ -99,7 +99,10 @@ class MessagingBottomBar extends HookConsumerWidget {
           child: Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Assets.svgIconProfileBlockUser.icon(color: context.theme.appColors.primaryAccent),
+              IconAssetColored(
+                Assets.svgIconProfileBlockUser,
+                color: context.theme.appColors.primaryAccent,
+              ),
               SizedBox(width: 6.0.s),
               Text(
                 context.i18n.button_unblock,

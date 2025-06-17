@@ -40,8 +40,9 @@ class TwoFaOptionsSelectorButton extends StatelessWidget {
       leadingIcon: ButtonIconFrame(
         containerSize: 30.0.s,
         color: context.theme.appColors.tertararyBackground,
-        icon: (state.value?.iconAsset ?? Assets.svgIconSelect2).icon(
-          size: 20.0.s,
+        icon: IconAssetColored(
+          state.value?.iconAsset ?? Assets.svgIconSelect2,
+          size: 20.0,
           color: context.theme.appColors.secondaryText,
         ),
         border: iconBorderSize,

@@ -14,6 +14,7 @@ import 'package:ion/app/features/protect_account/secure_account/providers/select
 import 'package:ion/app/router/utils/show_simple_bottom_sheet.dart';
 import 'package:ion/generated/assets.gen.dart';
 import 'package:ion_identity_client/ion_identity.dart';
+import 'package:ion/app/extensions/asset_gen_image.dart';
 
 class PhoneEditTwoFaInputStep extends ConsumerWidget {
   const PhoneEditTwoFaInputStep({
@@ -34,7 +35,7 @@ class PhoneEditTwoFaInputStep extends ConsumerWidget {
     return TwoFAStepScaffold(
       headerTitle: locale.two_fa_edit_phone_title,
       headerDescription: locale.two_fa_edit_phone_options_description,
-      headerIcon: Assets.svgIcon2faPhoneconfirm.icon(size: 36.0.s),
+      headerIcon: const IconAsset(Assets.svgIcon2faPhoneconfirm, size: 36.0),
       onBackPress: onPrevious,
       child: TwoFAInputStep(
         onConfirm: (controllers) => _onConfirm(ref, controllers),

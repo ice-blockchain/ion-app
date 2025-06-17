@@ -25,9 +25,10 @@ class SendButton extends StatelessWidget {
               disabled ? context.theme.appColors.sheetLine : context.theme.appColors.primaryAccent,
           borderRadius: BorderRadius.circular(12.0.s),
         ),
-        child: Assets.svgIconChatSendmessage.icon(
+        child: IconAssetColored(
+          Assets.svgIconChatSendmessage,
           color: context.theme.appColors.onPrimaryAccent,
-          size: 24.0.s,
+          size: 24.0,
         ),
       ),
     );
