@@ -54,6 +54,10 @@ class IonConnectPushDataPayload: Decodable {
                 relevantEvents = []
             }
         }
+        
+        if (event.kind == IonConnectGiftWrapEntity.kind) {
+            
+        }
     }
 
     var mainEntity: IonConnectEntity? {

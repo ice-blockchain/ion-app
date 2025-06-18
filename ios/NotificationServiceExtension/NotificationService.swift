@@ -18,19 +18,30 @@ class NotificationService: UNNotificationServiceExtension {
             contentHandler(request.content)
             return
         }
+        
+        defer {
+            Messaging.serviceExtension().populateNotificationContent(
+                mutableNotificationContent,
+                withContentHandler: contentHandler
+            )
+        }
+
+        var storage: SharedStorageService
+
+        do {
+            storage = try SharedStorageService()
+        } catch {
+            NSLog("❌ Can't initialize storage")
+            return
+        }
 
         Task {
-            let translation = await NotificationTranslationService.shared.translate(request.content.userInfo)
+            let translation = await NotificationTranslationService(storage: storage).translate(request.content.userInfo)
 
             if let title = translation.title, let body = translation.body {
                 mutableNotificationContent.title = title
                 mutableNotificationContent.body = body
             }
-
-            Messaging.serviceExtension().populateNotificationContent(
-                mutableNotificationContent,
-                withContentHandler: contentHandler
-            )
         }
     }
 
