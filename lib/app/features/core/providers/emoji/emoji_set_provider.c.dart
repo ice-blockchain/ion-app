@@ -13,7 +13,7 @@ part 'emoji_set_provider.c.g.dart';
 
 @Riverpod(keepAlive: true)
 Future<List<EmojiGroup>> emojiGroups(Ref ref) async {
-  final data = await rootBundle.loadString(Assets.emojiDataSets.emojisByGroup);
+  final data = await rootBundle.loadString(Assets.emojiDataSetsEmojisByGroup);
 
   return compute(
     (data) {
@@ -26,7 +26,7 @@ Future<List<EmojiGroup>> emojiGroups(Ref ref) async {
 
 @Riverpod(keepAlive: true)
 Future<Map<String, List<String>>> emojiKeywords(Ref ref) async {
-  final data = await rootBundle.loadString(Assets.emojiDataSets.emojiKeywords);
+  final data = await rootBundle.loadString(Assets.emojiDataSetsEmojiKeywords);
   final jsonData = jsonDecode(data) as Map<String, dynamic>;
   return jsonData.map(
     (key, value) => MapEntry(

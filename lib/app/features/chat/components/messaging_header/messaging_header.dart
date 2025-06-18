@@ -38,10 +38,7 @@ class MessagingHeader extends ConsumerWidget {
         children: [
           GestureDetector(
             onTap: () => Navigator.pop(context),
-            child: Assets.svgIconChatBack.icon(
-              size: 24.0.s,
-              flipForRtl: true,
-            ),
+            child: const IconAsset(Assets.svgIconChatBack, size: 24, flipForRtl: true),
           ),
           SizedBox(width: 12.0.s),
           Expanded(

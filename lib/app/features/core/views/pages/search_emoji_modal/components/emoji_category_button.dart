@@ -22,12 +22,13 @@ class _EmojiCategoryButton extends StatelessWidget {
           color: isActive ? context.theme.appColors.onTerararyFill : Colors.transparent,
           borderRadius: BorderRadius.circular(30.0.s),
         ),
-        child: category.getIcon(context).icon(
-              size: 20.0.s,
-              color: isActive
-                  ? context.theme.appColors.primaryAccent
-                  : context.theme.appColors.quaternaryText,
-            ),
+        child: IconAssetColored(
+          category.getIcon(context),
+          size: 20,
+          color: isActive
+              ? context.theme.appColors.primaryAccent
+              : context.theme.appColors.quaternaryText,
+        ),
       ),
     );
   }

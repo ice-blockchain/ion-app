@@ -28,7 +28,7 @@ class ConfirmLogoutModal extends ConsumerWidget {
     final buttonMinimalSize = Size(56.0.s, 56.0.s);
 
     return SimpleModalSheet.alert(
-      iconAsset: Assets.svgactionCreatepostLogout,
+      iconAsset: Assets.svgActionCreatepostLogout,
       title: context.i18n.confirm_logout_title(username),
       description: context.i18n.confirm_logout_description,
       button: ScreenSideOffset.small(

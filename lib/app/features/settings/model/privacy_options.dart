@@ -26,7 +26,7 @@ enum WalletAddressPrivacyOption implements SelectableOption {
       WalletAddressPrivacyOption.public => Assets.svgIconChannelType,
       WalletAddressPrivacyOption.private => Assets.svgIconPrivacyPrivate,
     };
-    return icon.icon(color: context.theme.appColors.primaryAccent);
+    return IconAssetColored(icon, color: context.theme.appColors.primaryAccent);
   }
 }
 
@@ -60,7 +60,7 @@ enum UserVisibilityPrivacyOption implements SelectableOption {
       UserVisibilityPrivacyOption.friends => Assets.svgIconSearchGroups,
     };
 
-    return icon.icon(color: context.theme.appColors.primaryAccent);
+    return IconAssetColored(icon, color: context.theme.appColors.primaryAccent);
   }
 
   WhoCanSetting? toWhoCanSetting() => switch (this) {

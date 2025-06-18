@@ -20,7 +20,7 @@ class SearchHistoryClearConfirm extends StatelessWidget {
           Padding(
             padding: EdgeInsets.symmetric(horizontal: 36.0.s),
             child: InfoCard(
-              iconAsset: Assets.svgactionSearchDeletehistory,
+              iconAsset: Assets.svgActionSearchDeletehistory,
               title: context.i18n.feed_search_history_delete_title,
               description: context.i18n.feed_search_history_delete_message,
             ),

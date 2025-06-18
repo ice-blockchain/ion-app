@@ -29,7 +29,7 @@ class DeleteAdminModal extends ConsumerWidget {
         Padding(
           padding: EdgeInsetsDirectional.only(start: 30.0.s, end: 30.0.s, top: 30.0.s),
           child: InfoCard(
-            iconAsset: Assets.svgactionCreatepostDeleterole,
+            iconAsset: Assets.svgActionCreatepostDeleterole,
             title: context.i18n.channel_create_admin_type_remove_title,
             description: context.i18n.channel_create_admin_type_remove_desc,
           ),

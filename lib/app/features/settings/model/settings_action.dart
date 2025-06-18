@@ -33,7 +33,7 @@ enum SettingsAction {
   Widget getIcon(BuildContext context) {
     final icon = switch (this) {
       SettingsAction.account => Assets.svgIconProfileUser,
-      SettingsAction.security => Assets.svglinearSecurityShielduser,
+      SettingsAction.security => Assets.svgLinearSecurityShielduser,
       SettingsAction.privacy => Assets.svgIconProfilePrivacy,
       SettingsAction.pushNotifications => Assets.svgIconHomeNotification,
       SettingsAction.privacyPolicy => Assets.svgIconProfilePrivacypolicy,
@@ -42,6 +42,6 @@ enum SettingsAction {
       SettingsAction.logout => Assets.svgIconMenuLogout,
     };
 
-    return icon.icon(color: getIconColor(context));
+    return IconAssetColored(icon, color: getIconColor(context));
   }
 }

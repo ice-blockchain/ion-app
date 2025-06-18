@@ -52,7 +52,7 @@ class BookmarksPage extends HookConsumerWidget {
                 SliverFillRemaining(
                   hasScrollBody: false,
                   child: EmptyList(
-                    asset: Assets.svgwalletIconEmptybookmraks,
+                    asset: Assets.svgWalletIconEmptybookmraks,
                     title: context.i18n.bookmarks_empty_state,
                   ),
                 )

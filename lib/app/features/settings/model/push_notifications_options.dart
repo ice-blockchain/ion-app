@@ -38,7 +38,7 @@ enum SocialNotificationOption implements SelectableOption, PushNotificationOptio
       SocialNotificationOption.newFollowers => Assets.svgIconSearchFollow,
     };
 
-    return icon.icon(color: context.theme.appColors.primaryAccent);
+    return IconAssetColored(icon, color: context.theme.appColors.primaryAccent);
   }
 
   @override
@@ -72,7 +72,7 @@ enum ChatNotificationOption implements SelectableOption, PushNotificationOption 
       ChatNotificationOption.channels => Assets.svgIconSearchChannel,
     };
 
-    return icon.icon(color: context.theme.appColors.primaryAccent);
+    return IconAssetColored(icon, color: context.theme.appColors.primaryAccent);
   }
 
   @override
@@ -102,7 +102,7 @@ enum WalletNotificationOption implements SelectableOption, PushNotificationOptio
       WalletNotificationOption.paymentReceived => Assets.svgIconButtonReceive,
     };
 
-    return icon.icon(color: context.theme.appColors.primaryAccent);
+    return IconAssetColored(icon, color: context.theme.appColors.primaryAccent);
   }
 
   @override
@@ -120,7 +120,10 @@ enum SystemNotificationOption implements SelectableOption, PushNotificationOptio
 
   @override
   Widget getIcon(BuildContext context) {
-    return Assets.svgIconNotificationsUpdates.icon(color: context.theme.appColors.primaryAccent);
+    return IconAssetColored(
+      Assets.svgIconNotificationsUpdates,
+      color: context.theme.appColors.primaryAccent,
+    );
   }
 
   @override

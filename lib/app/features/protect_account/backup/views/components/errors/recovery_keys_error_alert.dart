@@ -19,7 +19,7 @@ class RecoveryKeysErrorAlert extends StatelessWidget {
         Padding(
           padding: EdgeInsetsDirectional.only(start: 30.0.s, end: 30.0.s, top: 30.0.s),
           child: InfoCard(
-            iconAsset: Assets.svgactionWalletKeyserror,
+            iconAsset: Assets.svgActionWalletKeyserror,
             title: context.i18n.error_recovery_keys_title,
             description: context.i18n.error_recovery_keys_description,
           ),

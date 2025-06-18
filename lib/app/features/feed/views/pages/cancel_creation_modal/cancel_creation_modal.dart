@@ -33,7 +33,7 @@ class CancelCreationModal extends ConsumerWidget {
         children: [
           SizedBox(height: 48.0.s),
           InfoCard(
-            iconAsset: Assets.svgactionCreatepostDeletepost,
+            iconAsset: Assets.svgActionCreatepostDeletepost,
             title: title,
             description: context.i18n.cancel_creation_description,
           ),

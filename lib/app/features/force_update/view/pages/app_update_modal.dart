@@ -57,7 +57,8 @@ class AppUpdateModal extends ConsumerWidget {
         SizedBox(height: 24.0.s),
         ScreenSideOffset.small(
           child: Button(
-            leadingIcon: appUpdateType.buttonIconAsset.icon(
+            leadingIcon: IconAssetColored(
+              appUpdateType.buttonIconAsset,
               color: context.theme.appColors.onPrimaryAccent,
             ),
             onPressed: () {

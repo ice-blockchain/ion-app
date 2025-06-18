@@ -40,11 +40,12 @@ class ConversationArchiveButton extends ConsumerWidget {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Assets.svgIconChatArchive.icon(
+          IconAssetColored(
+            Assets.svgIconChatArchive,
             color: conversationsToManage.isNotEmpty
                 ? context.theme.appColors.primaryAccent
                 : context.theme.appColors.tertararyText,
-            size: 20.0.s,
+            size: 20,
           ),
           SizedBox(width: 4.0.s),
           Flexible(

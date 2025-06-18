@@ -31,9 +31,9 @@ enum TabEntityType {
   }
 
   String get emptyStateIconAsset => switch (this) {
-        TabEntityType.posts => Assets.svgwalletIconProfileEmptyposts,
-        TabEntityType.replies => Assets.svgwalletIconProfileEmptyreplies,
-        TabEntityType.videos => Assets.svgwalletIconProfileEmptyvideo,
-        TabEntityType.articles => Assets.svgwalletIconProfileEmptyarticles,
+        TabEntityType.posts => Assets.svgWalletIconProfileEmptyposts,
+        TabEntityType.replies => Assets.svgWalletIconProfileEmptyreplies,
+        TabEntityType.videos => Assets.svgWalletIconProfileEmptyvideo,
+        TabEntityType.articles => Assets.svgWalletIconProfileEmptyarticles,
       };
 }

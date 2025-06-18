@@ -20,7 +20,7 @@ class PhoneSetupSuccessPage extends StatelessWidget {
       children: [
         ScreenSideOffset.medium(
           child: InfoCard(
-            iconAsset: Assets.svgactionWalletConfirmphone,
+            iconAsset: Assets.svgActionWalletConfirmphone,
             title: locale.common_successfully,
             description: locale.phone_success_description,
           ),

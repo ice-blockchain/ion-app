@@ -59,7 +59,7 @@ class _EmptyState extends ConsumerWidget {
     return SliverFillRemaining(
       hasScrollBody: false,
       child: EmptyList(
-        asset: Assets.svgwalletIconProfileEmptyposts,
+        asset: Assets.svgWalletIconProfileEmptyposts,
         title: context.i18n.feed_posts_empty(postsTypes),
       ),
     );

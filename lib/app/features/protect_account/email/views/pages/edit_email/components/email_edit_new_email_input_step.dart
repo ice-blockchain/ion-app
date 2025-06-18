@@ -19,13 +19,13 @@ class EmailEditNewEmailInputStep extends HookConsumerWidget {
     final locale = context.i18n;
 
     return TwoFAStepScaffold(
-      headerIcon: IconAsset(Assets.svgIcon2faEmailauth, size: 36.0),
+      headerIcon: const IconAsset(Assets.svgIcon2faEmailauth, size: 36),
       headerTitle: locale.two_fa_edit_email_title,
       headerDescription: locale.two_fa_edit_email_new_email_description,
       contentPadding: 0,
       child: TwoFaEditNewValueInputStep(
         onNext: onNext,
-        inputFieldIcon: TwoFaType.email.iconAsset.icon(),
+        inputFieldIcon: IconAsset(TwoFaType.email.iconAsset, size: 36),
         inputFieldLabel: context.i18n.common_email_address,
         inputKeyboardType: TextInputType.emailAddress,
         validator: (value) => Validators.isInvalidEmail(value) ? '' : null,

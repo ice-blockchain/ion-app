@@ -65,7 +65,10 @@ class AdminCard extends ConsumerWidget {
               ),
               Padding(
                 padding: EdgeInsets.all(4.0.s),
-                child: Assets.svgIconArrowRight.icon(color: context.theme.appColors.secondaryText),
+                child: IconAssetColored(
+                  Assets.svgIconArrowRight,
+                  color: context.theme.appColors.secondaryText,
+                ),
               ),
             ],
           ),

@@ -30,7 +30,7 @@ class RecoveryKeysSuccessPage extends ConsumerWidget {
           ),
           ScreenSideOffset.medium(
             child: InfoCard(
-              iconAsset: Assets.svgactionWalletSecureaccsuccess,
+              iconAsset: Assets.svgActionWalletSecureaccsuccess,
               title: locale.recovery_keys_successfully_protected_title,
               description: locale.recovery_keys_successfully_protected_description,
             ),

@@ -24,7 +24,7 @@ class ErrorPage extends HookConsumerWidget {
       body: Center(
         child: ScreenSideOffset.large(
           child: InfoCard(
-            iconAsset: Assets.svgactionFeedMaintenance,
+            iconAsset: Assets.svgActionFeedMaintenance,
             title: context.i18n.maintenance_page_title,
             descriptionWidget: Column(
               children: [

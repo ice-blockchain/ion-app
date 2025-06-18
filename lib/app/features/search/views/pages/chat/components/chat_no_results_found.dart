@@ -13,7 +13,7 @@ class ChatSearchNoResults extends StatelessWidget {
     return Padding(
       padding: EdgeInsets.symmetric(vertical: 12.0.s),
       child: EmptyList(
-        asset: Assets.svgwalletIconWalletEmptysearch,
+        asset: Assets.svgWalletIconWalletEmptysearch,
         title: context.i18n.core_empty_search,
       ),
     );

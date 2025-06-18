@@ -30,7 +30,7 @@ class NetworksInitializer {
   }
 
   Future<void> _loadNetworks() async {
-    final networksJson = (await rootBundle.loadString(Assets.ionIdentity.networks).then(jsonDecode))
+    final networksJson = (await rootBundle.loadString(Assets.ionIdentityNetworks).then(jsonDecode))
         as List<dynamic>;
 
     final networks = networksJson

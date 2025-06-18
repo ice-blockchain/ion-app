@@ -183,13 +183,14 @@ class _DevicePermissionButton extends StatelessWidget {
                 ),
                 size: 36.0.s,
                 onPressed: onTap,
-                icon: Assets.svgIconProfileDevicepermission.icon(
+                icon: IconAssetColored(
+                  Assets.svgIconProfileDevicepermission,
                   color: context.theme.appColors.primaryAccent,
                 ),
               ),
               trailing: hasPermission
-                  ? Assets.svgIconBlockCheckboxOn.icon()
-                  : Assets.svgIconBlockCheckboxOff.icon(),
+                  ? const IconAsset(Assets.svgIconBlockCheckboxOn)
+                  : const IconAsset(Assets.svgIconBlockCheckboxOff),
             );
           },
         ),

@@ -44,7 +44,7 @@ class SuggestToAddBiometricsPopup extends HookConsumerWidget {
         Padding(
           padding: EdgeInsetsDirectional.only(start: 30.0.s, end: 30.0.s, top: 30.0.s),
           child: InfoCard(
-            iconAsset: Assets.svgactionWalletFaceid,
+            iconAsset: Assets.svgActionWalletFaceid,
             title: context.i18n.biometrics_suggestion_title,
             description: context.i18n.biometrics_suggestion_desc,
           ),

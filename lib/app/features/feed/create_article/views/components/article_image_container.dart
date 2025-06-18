@@ -38,10 +38,7 @@ class ArticleImageContainer extends StatelessWidget {
             child: Stack(
               fit: StackFit.expand,
               children: [
-                SvgPicture.asset(
-                  Assets.svgarticlePlaceholder,
-                  fit: BoxFit.cover,
-                ),
+                SvgPicture.asset(Assets.svgArticlePlaceholder, fit: BoxFit.cover),
                 if (hasImage)
                   ArticleImageView(
                     selectedImage: selectedImage,

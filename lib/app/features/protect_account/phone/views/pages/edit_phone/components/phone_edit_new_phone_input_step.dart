@@ -42,7 +42,7 @@ class PhoneEditNewPhoneInputStep extends HookConsumerWidget {
     showSimpleBottomSheet<void>(
       context: ref.context,
       child: SimpleModalSheet.alert(
-        iconAsset: Assets.svgactionWalletKeyserror,
+        iconAsset: Assets.svgActionWalletKeyserror,
         title: ref.context.i18n.common_error,
         description: ref.context.i18n.two_fa_edit_phone_already_linked,
         buttonText: ref.context.i18n.button_try_again,

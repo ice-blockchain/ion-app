@@ -63,7 +63,7 @@ class MoreContentView extends ConsumerWidget {
                 requestDialog: const PermissionRequestSheet(permission: Permission.photos),
                 settingsDialog: SettingsRedirectSheet.fromType(context, Permission.photos),
                 builder: (context, onPressed) => _MoreContentItem(
-                  iconPath: Assets.svgwalletChatPhotos,
+                  iconPath: Assets.svgWalletChatPhotos,
                   title: context.i18n.common_media,
                   onTap: onPressed,
                 ),
@@ -87,13 +87,13 @@ class MoreContentView extends ConsumerWidget {
                 requestDialog: const PermissionRequestSheet(permission: Permission.photos),
                 settingsDialog: SettingsRedirectSheet.fromType(context, Permission.photos),
                 builder: (context, onPressed) => _MoreContentItem(
-                  iconPath: Assets.svgwalletChatCamera,
+                  iconPath: Assets.svgWalletChatCamera,
                   title: context.i18n.common_camera,
                   onTap: onPressed,
                 ),
               ),
               _MoreContentItem(
-                iconPath: Assets.svgwalletChatIonpay,
+                iconPath: Assets.svgWalletChatIonpay,
                 title: context.i18n.common_ion_pay,
                 onTap: () async {
                   if (receiverPubKey == null) {
@@ -113,7 +113,7 @@ class MoreContentView extends ConsumerWidget {
             mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: [
               _MoreContentItem(
-                iconPath: Assets.svgwalletChatPerson,
+                iconPath: Assets.svgWalletChatPerson,
                 title: context.i18n.common_profile,
                 onTap: () async {
                   final selectedProfilePubkey = await SendProfileModalRoute().push<String>(context);
@@ -128,7 +128,7 @@ class MoreContentView extends ConsumerWidget {
                 },
               ),
               _MoreContentItem(
-                iconPath: Assets.svgwalletChatDocument,
+                iconPath: Assets.svgWalletChatDocument,
                 title: context.i18n.common_document,
                 onTap: () async {
                   final result = await FilePicker.platform.pickFiles(

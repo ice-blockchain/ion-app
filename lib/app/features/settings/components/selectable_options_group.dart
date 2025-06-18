@@ -101,11 +101,10 @@ class _OptionItem extends StatelessWidget {
           color: context.theme.appColors.primaryText,
         ),
       ),
-      trailing: isSelected
-          ? Assets.svgIconBlockCheckboxOn.icon(
-              color: enabled ? null : context.theme.appColors.sheetLine,
-            )
-          : Assets.svgIconBlockCheckboxOff.icon(),
+      trailing: IconAssetColored(
+        isSelected ? Assets.svgIconBlockCheckboxOn : Assets.svgIconBlockCheckboxOff,
+        color: enabled ? context.theme.appColors.primaryText : context.theme.appColors.sheetLine,
+      ),
     );
   }
 }

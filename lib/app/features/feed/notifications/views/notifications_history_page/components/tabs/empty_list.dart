@@ -13,7 +13,7 @@ class EmptyState extends StatelessWidget {
     return SliverFillRemaining(
       hasScrollBody: false,
       child: EmptyList(
-        asset: Assets.svgwalletIconProfileEmptyprofile,
+        asset: Assets.svgWalletIconProfileEmptyprofile,
         title: context.i18n.notifications_empty_state,
       ),
     );

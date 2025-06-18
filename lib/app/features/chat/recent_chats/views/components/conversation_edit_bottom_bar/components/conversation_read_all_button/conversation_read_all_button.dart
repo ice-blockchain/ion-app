@@ -42,9 +42,10 @@ class ConversationReadAllButton extends ConsumerWidget {
       },
       child: Row(
         children: [
-          Assets.svgIconChatReadall.icon(
+          IconAssetColored(
+            Assets.svgIconChatReadall,
             color: context.theme.appColors.primaryAccent,
-            size: 20.0.s,
+            size: 20,
           ),
           SizedBox(width: 4.0.s),
           Flexible(

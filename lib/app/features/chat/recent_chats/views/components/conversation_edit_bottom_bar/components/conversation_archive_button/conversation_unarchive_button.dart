@@ -43,7 +43,8 @@ class ConversationUnarchiveButton extends ConsumerWidget {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Assets.svgIconChatArchive.icon(
+          IconAssetColored(
+            Assets.svgIconChatArchive,
             color: conversationsToManage.isNotEmpty
                 ? context.theme.appColors.primaryAccent
                 : context.theme.appColors.tertararyText,
