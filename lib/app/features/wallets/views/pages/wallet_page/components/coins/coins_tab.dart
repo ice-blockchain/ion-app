@@ -26,7 +26,10 @@ class CoinsTab extends ConsumerWidget {
     final isPageLoading = ref.watch(walletPageLoaderNotifierProvider);
 
     if (isPageLoading) {
-      return _CoinsTabBody(itemCount: 4, itemBuilder: (_, __) => const CoinsGroupItemPlaceholder());
+      return _CoinsTabBody(
+        itemCount: 4,
+        itemBuilder: (_, __) => ScreenSideOffset.small(child: const CoinsGroupItemPlaceholder()),
+      );
     }
 
     final groups = ref.watch(filteredCoinsNotifierProvider.select((state) => state.valueOrNull));
