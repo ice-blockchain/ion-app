@@ -37,8 +37,8 @@ class IconAsset extends StatelessWidget {
   Widget build(BuildContext context) {
     final svg = SvgPicture.asset(
       asset,
-      width: width ?? 24.0.s,
-      height: height ?? 24.0.s,
+      width: width?.s ?? 24.0.s,
+      height: height?.s ?? 24.0.s,
       excludeFromSemantics: true,
       fit: fit ?? BoxFit.contain,
       colorFilter: colorFilter,
