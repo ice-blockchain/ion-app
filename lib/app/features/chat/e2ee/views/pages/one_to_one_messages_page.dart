@@ -120,8 +120,7 @@ class _Header extends HookConsumerWidget {
     return OneToOneMessagingHeader(
       conversationId: conversationId,
       imageUrl: receiverUserMetadata.data.picture,
-      name:
-          receiverUserMetadata.data.displayName,
+      name: receiverUserMetadata.data.displayName,
       receiverMasterPubkey: receiverMasterPubkey,
       onTap: () => ProfileRoute(pubkey: receiverMasterPubkey).push<void>(context),
       subtitle: Text(
