@@ -2,7 +2,6 @@
 
 import 'package:flutter/material.dart';
 import 'package:ion/app/extensions/asset_gen_image.dart';
-import 'package:ion/app/extensions/num.dart';
 import 'package:ion/generated/assets.gen.dart';
 
 class SearchClearButton extends StatelessWidget {
@@ -17,7 +16,7 @@ class SearchClearButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return IconButton(
       onPressed: onPressed,
-      icon: IconAsset(Assets.svgIconFieldClearall, size: 20.0),
+      icon: const IconAsset(Assets.svgIconFieldClearall, size: 20),
     );
   }
 }

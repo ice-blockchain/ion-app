@@ -125,8 +125,8 @@ class RecentChatTile extends HookConsumerWidget {
                 child: Padding(
                   padding: EdgeInsetsDirectional.only(end: 10.0.s),
                   child: selectedConversations.contains(conversation)
-                      ? IconAsset(Assets.svgIconBlockCheckboxOn, size: 24.0)
-                      : IconAsset(Assets.svgIconBlockCheckboxOff, size: 24.0),
+                      ? const IconAsset(Assets.svgIconBlockCheckboxOn, size: 24)
+                      : const IconAsset(Assets.svgIconBlockCheckboxOff, size: 24),
                 ),
               ),
               Flexible(
@@ -165,12 +165,12 @@ class RecentChatTile extends HookConsumerWidget {
                                     if (isVerified)
                                       Padding(
                                         padding: EdgeInsetsDirectional.only(start: 4.0.s),
-                                        child: IconAsset(Assets.svgIconBadgeVerify, size: 16.0),
+                                        child: const IconAsset(Assets.svgIconBadgeVerify, size: 16),
                                       ),
                                     if (isMuted)
                                       Padding(
                                         padding: EdgeInsetsDirectional.only(start: 4.0.s),
-                                        child: IconAsset(Assets.svgIconChannelfillMute, size: 16.0),
+                                        child: const IconAsset(Assets.svgIconChannelfillMute, size: 16),
                                       ),
                                   ],
                                 ),
@@ -380,8 +380,8 @@ class RecentChatMessageIcon extends StatelessWidget {
       return Padding(
         padding: EdgeInsetsDirectional.only(end: 2.0.s),
         child: IconAssetColored(
-          messageIconPath!,
-          size: 16.0,
+          messageIconPath,
+          size: 16,
           color: color ?? context.theme.appColors.onTertararyBackground,
         ),
       );
