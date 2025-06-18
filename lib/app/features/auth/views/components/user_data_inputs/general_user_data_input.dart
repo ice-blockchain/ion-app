@@ -54,7 +54,7 @@ class GeneralUserDataInput extends HookWidget {
         icons: [IconAssetColored(
           prefixIconAssetName,
           color: context.theme.appColors.secondaryText,
-        )],
+        ),],
       ),
       onChanged: onChanged,
       prefix: prefix,
@@ -73,7 +73,7 @@ class GeneralUserDataInput extends HookWidget {
       verified: isValid.value,
       onTapOutside: (_) => FocusManager.instance.primaryFocus?.unfocus(),
       suffixIcon: isValid.value && showNoErrorsIndicator && errorText == null
-          ? TextInputIcons(
+          ? const TextInputIcons(
               icons: [IconAsset(Assets.svgIconBlockCheckboxOn)],
             )
           : null,

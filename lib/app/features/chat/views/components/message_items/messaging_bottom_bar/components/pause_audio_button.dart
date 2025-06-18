@@ -20,7 +20,7 @@ class PauseAudioButton extends StatelessWidget {
       child: IconAssetColored(
         Assets.svgIconVideoPause,
         color: context.theme.appColors.primaryAccent,
-        size: 24.0,
+        size: 24,
       ),
     );
   }

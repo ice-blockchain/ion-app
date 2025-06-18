@@ -29,7 +29,7 @@ class RestoreMenuPage extends ConsumerWidget {
       body: AuthScrollContainer(
         title: context.i18n.restore_identity_title,
         description: context.i18n.restore_identity_type_description,
-        icon: IconAsset(Assets.svgIconLoginRestorekey, size: 36.0),
+        icon: const IconAsset(Assets.svgIconLoginRestorekey, size: 36),
         children: [
           Padding(
             padding: EdgeInsets.symmetric(horizontal: 38.0.s),
@@ -37,7 +37,7 @@ class RestoreMenuPage extends ConsumerWidget {
               children: [
                 SizedBox(height: 12.0.s),
                 RestoreMenuItem(
-                  icon: IconAsset(Assets.svgWalletLoginCloud, size: 48.0),
+                  icon: const IconAsset(Assets.svgWalletLoginCloud, size: 48),
                   title: context.i18n.restore_identity_from(cloudType),
                   description: context.i18n.restore_from_cloud_description(descriptionCloudType),
                   onPressed: () async {
@@ -53,7 +53,7 @@ class RestoreMenuPage extends ConsumerWidget {
                 ),
                 SizedBox(height: 16.0.s),
                 RestoreMenuItem(
-                  icon: IconAsset(Assets.svgWalletLoginRecovery, size: 48.0),
+                  icon: const IconAsset(Assets.svgWalletLoginRecovery, size: 48),
                   title: context.i18n.restore_identity_type_credentials_title,
                   description: context.i18n.restore_identity_type_credentials_description,
                   onPressed: () => RecoverUserRoute().push<void>(context),

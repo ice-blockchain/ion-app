@@ -206,7 +206,7 @@ class _StoryPreviewImage extends StatelessWidget {
               IconAssetColored(
                 Assets.svgIconVideoPlay,
                 color: context.theme.appColors.onPrimaryAccent,
-                size: 32.0,
+                size: 32,
               ),
           ],
         ),

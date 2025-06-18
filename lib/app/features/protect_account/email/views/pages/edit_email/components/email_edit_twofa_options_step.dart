@@ -23,7 +23,7 @@ class EmailEditTwoFaOptionsStep extends HookWidget {
     final locale = context.i18n;
 
     return TwoFAStepScaffold(
-      headerIcon: IconAsset(Assets.svgIcon2faEmailauth, size: 36.0),
+      headerIcon: const IconAsset(Assets.svgIcon2faEmailauth, size: 36),
       headerTitle: locale.two_fa_edit_email_title,
       headerDescription: locale.two_fa_edit_email_options_description,
       onBackPress: onPrevious,

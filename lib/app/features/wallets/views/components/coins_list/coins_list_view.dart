@@ -96,7 +96,7 @@ class _EmptyState extends StatelessWidget {
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        IconAsset(Assets.svgWalletIconWalletEmptysearch, size: 48.0),
+        const IconAsset(Assets.svgWalletIconWalletEmptysearch, size: 48),
         SizedBox(height: 8.0.s),
         Text(
           context.i18n.core_empty_search,

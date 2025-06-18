@@ -61,7 +61,7 @@ class _UploadDialog extends HookConsumerWidget {
       ..listenSuccess(uploadDeviceKeypairNotifierProvider, (_) => context.pop());
 
     return _DeviceKeypairDialogContent(
-      icon: IconAsset(Assets.svgActionchatsynckey, size: _iconSize),
+      icon: const IconAsset(Assets.svgActionchatsynckey, size: _iconSize),
       title: isInProgress
           ? context.i18n.device_keypair_upload_complete_title
           : context.i18n.device_keypair_upload_title,
@@ -101,7 +101,7 @@ class _RestoreDialog extends HookConsumerWidget {
       ..listenSuccess(restoreDeviceKeypairNotifierProvider, (_) => context.pop());
 
     return _DeviceKeypairDialogContent(
-      icon: IconAsset(Assets.svgActionchatrestorekey, size: _iconSize),
+      icon: const IconAsset(Assets.svgActionchatrestorekey, size: _iconSize),
       title: context.i18n.device_keypair_restore_title,
       description: context.i18n.device_keypair_restore_description,
       actionButtonLabel: context.i18n.device_keypair_button_restore_now,

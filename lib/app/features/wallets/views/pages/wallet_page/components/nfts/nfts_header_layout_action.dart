@@ -44,7 +44,7 @@ class NftHeaderLayoutAction extends ConsumerWidget {
             child: IconAssetColored(
               NftLayoutType.grid.iconAsset,
               color: NftLayoutType.grid == nftLayoutType ? activeColor : inactiveColor,
-              size: 20.0,
+              size: 20,
             ),
           ),
         ),
@@ -67,7 +67,7 @@ class NftHeaderLayoutAction extends ConsumerWidget {
             child: IconAssetColored(
               NftLayoutType.list.iconAsset,
               color: NftLayoutType.list == nftLayoutType ? activeColor : inactiveColor,
-              size: 20.0,
+              size: 20,
             ),
           ),
         ),

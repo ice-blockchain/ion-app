@@ -107,7 +107,7 @@ class PollAnswerItem extends HookConsumerWidget {
                   },
                   child: IconAssetColored(
                     Assets.svgIconBlockDelete,
-                    size: 20.0,
+                    size: 20,
                     color: context.theme.appColors.quaternaryText,
                   ),
                 )

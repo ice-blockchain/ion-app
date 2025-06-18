@@ -14,7 +14,6 @@ import 'package:ion/app/router/components/navigation_app_bar/navigation_app_bar.
 import 'package:ion/app/router/components/navigation_app_bar/navigation_close_button.dart';
 import 'package:ion/app/router/components/sheet_content/sheet_content.dart';
 import 'package:ion/generated/assets.gen.dart';
-import 'package:ion/app/extensions/asset_gen_image.dart';
 
 class ManageWalletsModal extends ConsumerWidget {
   const ManageWalletsModal({super.key});
@@ -43,7 +42,7 @@ class ManageWalletsModal extends ConsumerWidget {
                 child: Button(
                   leadingIcon: IconAssetColored(
                     Assets.svgIconButtonAddstroke,
-                    color: context.theme.appColors.onPrimaryAccent
+                    color: context.theme.appColors.onPrimaryAccent,
                   ),
                   onPressed: () {
                     CreateWalletRoute().push<void>(context);

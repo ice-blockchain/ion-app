@@ -23,7 +23,7 @@ class DeleteAuthenticatorSelectOptionsStep extends HookWidget {
     final locale = context.i18n;
 
     return TwoFAStepScaffold(
-      headerIcon: IconAsset(Assets.svgIconWalletProtectFill, size: 36.0),
+      headerIcon: const IconAsset(Assets.svgIconWalletProtectFill, size: 36),
       headerTitle: locale.authenticator_delete_title,
       headerDescription: locale.authenticator_delete_description,
       onBackPress: onPrevious,

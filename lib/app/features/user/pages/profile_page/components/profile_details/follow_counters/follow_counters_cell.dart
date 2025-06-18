@@ -43,7 +43,7 @@ class FollowCountersCell extends StatelessWidget {
             IconAssetColored(
               followType.iconAsset,
               color: context.theme.appColors.primaryText,
-              size: 16.0,
+              size: 16,
             ),
             SizedBox(width: 4.0.s),
             Text(

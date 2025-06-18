@@ -48,7 +48,7 @@ class NetworkFeeOptionWidget extends StatelessWidget {
                   context.theme.appColors.tertararyText,
                   BlendMode.srcIn,
                 ),
-                child: IconAsset(Assets.svgIconBlockInformation, size: 16.0),
+                child: const IconAsset(Assets.svgIconBlockInformation, size: 16),
               ),
             ),
           ),

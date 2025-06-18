@@ -2,7 +2,6 @@
 
 import 'package:flutter/material.dart';
 import 'package:ion/app/components/separated/separated_column.dart';
-import 'package:ion/app/extensions/asset_gen_image.dart';
 import 'package:ion/app/extensions/build_context.dart';
 import 'package:ion/app/extensions/num.dart';
 import 'package:ion/app/features/auth/views/pages/turn_on_notifications/notification_list_item.dart';

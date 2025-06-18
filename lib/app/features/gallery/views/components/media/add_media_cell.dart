@@ -30,7 +30,7 @@ class AddMediaCell extends ConsumerWidget {
               IconAssetColored(
                 Assets.svgIconPostAddanswer,
                 color: context.theme.appColors.primaryAccent,
-                size: 40.0,
+                size: 40,
               ),
               SizedBox(height: 2.0.s),
               Text(

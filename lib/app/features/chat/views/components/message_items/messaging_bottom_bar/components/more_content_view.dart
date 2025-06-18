@@ -193,7 +193,7 @@ class _MoreContentItem extends StatelessWidget {
         children: [
           IconAsset(
             iconPath,
-            size: 48.0,
+            size: 48,
           ),
           SizedBox(width: 8.0.s),
           Text(

@@ -80,7 +80,7 @@ class TransactionListItemLeadingIcon extends StatelessWidget {
               end: 0,
               bottom: 0,
               textDirection: direction,
-              child: IconAsset(Assets.svgIconhourglass, size: 14.0),
+              child: const IconAsset(Assets.svgIconhourglass, size: 14),
             ),
         ],
       ),

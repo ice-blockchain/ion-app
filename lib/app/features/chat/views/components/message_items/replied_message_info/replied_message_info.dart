@@ -79,7 +79,7 @@ class RepliedMessageInfo extends HookConsumerWidget {
               onTap: ref.read(selectedReplyMessageProvider.notifier).clear,
               child: IconAssetColored(
                 Assets.svgIconSheetClose,
-                size: 20.0,
+                size: 20,
                 color: context.theme.appColors.tertararyText,
               ),
             ),

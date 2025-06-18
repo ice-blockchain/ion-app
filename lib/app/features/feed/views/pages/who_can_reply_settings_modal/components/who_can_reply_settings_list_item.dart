@@ -47,8 +47,8 @@ class WhoCanReplySettingsListItem extends ConsumerWidget {
       trailing: GestureDetector(
         onTap: onSelect,
         child: isSelected
-                    ? IconAsset(Assets.svgIconBlockCheckboxOn)
-        : IconAsset(Assets.svgIconBlockCheckboxOff),
+                    ? const IconAsset(Assets.svgIconBlockCheckboxOn)
+        : const IconAsset(Assets.svgIconBlockCheckboxOff),
       ),
     );
   }

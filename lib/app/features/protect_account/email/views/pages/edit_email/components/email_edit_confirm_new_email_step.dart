@@ -28,7 +28,7 @@ class EmailEditConfirmNewEmailStep extends HookConsumerWidget {
     return TwoFAStepScaffold(
       headerTitle: locale.two_fa_edit_email_title,
       headerDescription: locale.two_fa_code_confirmation,
-      headerIcon: IconAsset(Assets.svgIcon2faEmailauth, size: 36.0),
+      headerIcon: const IconAsset(Assets.svgIcon2faEmailauth, size: 36),
       onBackPress: onPrevious,
       contentPadding: 0,
       child: TwoFaEditConfirmNewValueStep(

@@ -20,7 +20,7 @@ class IntroPage extends HookConsumerWidget {
     final videoController = ref
         .watch(
           videoControllerProvider(
-            VideoControllerParams(
+            const VideoControllerParams(
               sourcePath: Assets.videosIntro,
               looping: true,
               autoPlay: true,
@@ -37,10 +37,10 @@ class IntroPage extends HookConsumerWidget {
           if (videoController == null ||
               !videoController.value.isInitialized ||
               videoController.value.hasError)
-            ColoredBox(
+            const ColoredBox(
               color: Colors.white,
               child: Center(
-                child: const IconAsset(Assets.svgLogoLogoCircle, size: 148),
+                child: IconAsset(Assets.svgLogoLogoCircle, size: 148),
               ),
             )
           else

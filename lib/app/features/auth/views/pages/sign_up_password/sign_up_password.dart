@@ -17,7 +17,6 @@ import 'package:ion/app/features/components/biometrics/hooks/use_on_suggest_biom
 import 'package:ion/app/features/components/verify_identity/components/password_input.dart';
 import 'package:ion/app/router/components/sheet_content/sheet_content.dart';
 import 'package:ion/generated/assets.gen.dart';
-import 'package:ion/app/extensions/asset_gen_image.dart';
 
 class SignUpPasswordPage extends HookConsumerWidget {
   const SignUpPasswordPage({super.key});
@@ -71,7 +70,7 @@ class SignUpPasswordPage extends HookConsumerWidget {
         child: AuthScrollContainer(
           title: context.i18n.sign_up_password_title,
           description: context.i18n.sign_up_password_description,
-          icon: const IconAsset(Assets.svgIconLoginPassword, size: 36.0),
+          icon: const IconAsset(Assets.svgIconLoginPassword, size: 36),
           children: [
             ScreenSideOffset.large(
               child: Form(

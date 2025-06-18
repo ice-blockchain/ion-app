@@ -226,7 +226,7 @@ class _MuteButton extends StatelessWidget {
         ),
         child: IconAssetColored(
           icon,
-          size: 16.0,
+          size: 16,
           color: context.theme.appColors.onPrimaryAccent,
         ),
       ),

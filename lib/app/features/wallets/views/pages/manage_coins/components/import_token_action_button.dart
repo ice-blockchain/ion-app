@@ -17,7 +17,7 @@ class ImportTokenActionButton extends StatelessWidget {
       child: IconAssetColored(
         Assets.svgIconPlusCreatechannel,
         color: colors.primaryAccent,
-        size: 33.0,
+        size: 33,
       ),
     );
   }

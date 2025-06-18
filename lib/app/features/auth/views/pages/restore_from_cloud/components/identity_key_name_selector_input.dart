@@ -32,7 +32,7 @@ class IdentityKeyNameSelectorInput extends HookWidget {
   @override
   Widget build(BuildContext context) {
     return TextInput(
-      prefixIcon: TextInputIcons(
+      prefixIcon: const TextInputIcons(
         hasRightDivider: true,
         icons: [IconAsset(Assets.svgIconRestorekey)],
       ),

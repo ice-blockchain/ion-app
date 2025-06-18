@@ -18,7 +18,7 @@ class AudioRecordButton extends ConsumerWidget {
         child: IconAssetColored(
           Assets.svgIconChatMicrophone,
           color: context.theme.appColors.primaryText,
-          size: 24.0,
+          size: 24,
         ),
       ),
     );

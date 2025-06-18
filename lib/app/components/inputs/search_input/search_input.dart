@@ -94,7 +94,7 @@ class SearchInput extends HookWidget {
                                   child: IconAssetColored(
                       Assets.svgIconFieldSearch,
                       color: context.theme.appColors.tertararyText,
-                      size: 18.0,
+                      size: 18,
                   ),
                 ),
                 suffixIcon: suffix ??

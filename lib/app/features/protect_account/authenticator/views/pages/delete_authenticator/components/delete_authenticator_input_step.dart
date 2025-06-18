@@ -32,7 +32,7 @@ class DeleteAuthenticatorInputStep extends ConsumerWidget {
     return TwoFAStepScaffold(
       headerTitle: locale.authenticator_delete_title,
       headerDescription: locale.authenticator_delete_description,
-      headerIcon: IconAsset(Assets.svgIconWalletProtectFill, size: 36.0),
+      headerIcon: const IconAsset(Assets.svgIconWalletProtectFill, size: 36),
       onBackPress: onPrevious,
       contentPadding: 8.0.s,
       child: TwoFAInputStep(

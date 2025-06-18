@@ -21,7 +21,7 @@ class EditUserButton extends ConsumerWidget {
       leadingIcon: IconAssetColored(
         Assets.svgIconEditLink,
         color: context.theme.appColors.onPrimaryAccent,
-        size: 16.0,
+        size: 16,
       ),
       tintColor: context.theme.appColors.primaryAccent,
       label: Text(

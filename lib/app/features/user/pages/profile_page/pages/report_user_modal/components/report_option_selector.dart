@@ -78,7 +78,7 @@ class ReportOptionSelector extends HookWidget {
                     color: colors.secondaryBackground,
                     icon: IconAssetColored(
                       option.iconAsset,
-                      size: 20.0,
+                      size: 20,
                       color: colors.secondaryText,
                     ),
                     border: iconBorderSize,

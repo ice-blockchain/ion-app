@@ -56,12 +56,12 @@ class VideoPostInfo extends StatelessWidget {
                           ? IconAssetColored(
                               Assets.svgIconChannelMute,
                               color: context.theme.appColors.secondaryBackground,
-                              size: 20.0,
+                              size: 20,
                             )
                           : IconAssetColored(
                               Assets.svgIconChannelUnmute,
                               color: context.theme.appColors.secondaryBackground,
-                              size: 20.0,
+                              size: 20,
                             ),
                       onPressed: () async {
                         await ref.read(globalMuteNotifierProvider.notifier).toggle();

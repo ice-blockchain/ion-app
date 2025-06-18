@@ -64,7 +64,7 @@ class ChannelSummary extends HookConsumerWidget {
                 leadingIcon: IconAssetColored(
                   Assets.svgIconEditLink,
                   color: context.theme.appColors.onPrimaryAccent,
-                  size: 16.0,
+                  size: 16,
                 ),
                 tintColor: context.theme.appColors.primaryAccent,
                 label: Text(
@@ -86,7 +86,7 @@ class ChannelSummary extends HookConsumerWidget {
         CopyBuilder(
           defaultIcon: IconAssetColored(
             Assets.svgIconBlockCopyBlue,
-            size: 20.0,
+            size: 20,
             color: context.theme.appColors.primaryAccent,
           ),
           defaultText: context.i18n.button_copy,

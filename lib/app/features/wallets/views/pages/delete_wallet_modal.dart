@@ -41,7 +41,7 @@ class DeleteWalletModal extends HookConsumerWidget {
           children: [
             Padding(
               padding: EdgeInsetsDirectional.only(top: 31.0.s, bottom: 4.0.s),
-              child: IconAsset(Assets.svgActionWalletDelete, size: 80.0),
+              child: const IconAsset(Assets.svgActionWalletDelete, size: 80),
             ),
             Text(
               context.i18n.wallet_delete_q,
@@ -141,9 +141,9 @@ class _ConfirmDeleteCheckbox extends StatelessWidget {
         child: Row(
           children: [
             if (selected)
-              IconAsset(Assets.svgIconBlockCheckboxOn)
+              const IconAsset(Assets.svgIconBlockCheckboxOn)
             else
-              IconAsset(Assets.svgIconBlockCheckboxOff),
+              const IconAsset(Assets.svgIconBlockCheckboxOff),
             SizedBox(width: 10.0.s),
             Flexible(
               child: Text(

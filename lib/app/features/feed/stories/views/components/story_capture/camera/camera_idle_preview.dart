@@ -30,7 +30,7 @@ class CameraIdlePreview extends ConsumerWidget {
           top: 10.0.s,
           start: 10.0.s,
           child: StoryControlButton(
-            icon: IconAsset(Assets.svgIconStoryLightning),
+            icon: const IconAsset(Assets.svgIconStoryLightning),
             onPressed: camera.toggleFlash,
           ),
         ),
@@ -46,7 +46,7 @@ class CameraIdlePreview extends ConsumerWidget {
           bottom: 30.0.s,
           end: 16.0.s,
           child: StoryControlButton(
-            icon: IconAsset(Assets.svgIconStorySwitchcamera),
+            icon: const IconAsset(Assets.svgIconStorySwitchcamera),
             onPressed: camera.switchCamera,
           ),
         ),

@@ -44,7 +44,7 @@ class ContactButton extends ConsumerWidget {
           onPressed: onClearTap,
           icon: IconAssetColored(
             Assets.svgIconSheetClose,
-            size: 16.0,
+            size: 16,
             color: colors.primaryText,
           ),
         ),

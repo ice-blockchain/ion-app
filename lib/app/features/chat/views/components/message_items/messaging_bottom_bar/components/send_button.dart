@@ -28,7 +28,7 @@ class SendButton extends StatelessWidget {
         child: IconAssetColored(
           Assets.svgIconChatSendmessage,
           color: context.theme.appColors.onPrimaryAccent,
-          size: 24.0,
+          size: 24,
         ),
       ),
     );

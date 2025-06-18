@@ -148,7 +148,7 @@ class ReplyInputField extends HookConsumerWidget {
                                     attachedMediaLinksNotifier: attachedMediaLinksNotifier,
                                   );
                                 },
-                                child: IconAsset(Assets.svgIconReplysearchScale, size: 20.0),
+                                child: const IconAsset(Assets.svgIconReplysearchScale, size: 20),
                               ),
                           ],
                         ),

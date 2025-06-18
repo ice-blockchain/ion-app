@@ -45,7 +45,7 @@ class VerifyIdentityPromptDialog extends ConsumerWidget {
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
             SizedBox(height: 65.0.s),
-            IconAsset(Assets.svgActionWalletPasskey, size: 80.0),
+            const IconAsset(Assets.svgActionWalletPasskey, size: 80),
             SizedBox(height: 20.0.s),
             Text(
               verifyIdentityType.getTitle(context),

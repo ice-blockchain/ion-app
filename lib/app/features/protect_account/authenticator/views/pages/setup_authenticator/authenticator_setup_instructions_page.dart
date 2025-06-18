@@ -61,7 +61,7 @@ class AuthenticatorSetupInstructionsPage extends HookConsumerWidget {
                     color: context.theme.appColors.secondaryText,
                   ),
                   icon: AuthHeaderIcon(
-                    icon: IconAsset(Assets.svgIcon2faFollowinstuction, size: 36.0),
+                    icon: const IconAsset(Assets.svgIcon2faFollowinstuction, size: 36),
                   ),
                 ),
                 SizedBox(height: 32.0.s),

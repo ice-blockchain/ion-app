@@ -25,7 +25,7 @@ class ActionsToolbarButton extends StatelessWidget {
       onTap: enabled ? onPressed : null,
       child: IconAssetColored(
         selected && iconSelected != null ? iconSelected! : icon,
-        size: 24.0,
+        size: 24,
         color: enabled ? context.theme.appColors.primaryAccent : context.theme.appColors.sheetLine,
       ),
     );

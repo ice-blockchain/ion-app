@@ -46,7 +46,7 @@ class GroupPariticipantsListItem extends ConsumerWidget {
                   behavior: HitTestBehavior.opaque,
                   child: IconAssetColored(
                     Assets.svgIconBlockDelete,
-                    size: 24.0,
+                    size: 24,
                     color: context.theme.appColors.sheetLine,
                   ),
                 ),

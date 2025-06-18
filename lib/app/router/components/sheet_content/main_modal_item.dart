@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:ion/app/components/list_item/list_item.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/router/model/main_modal_list_item.dart';
-import 'package:ion/app/extensions/asset_gen_image.dart';
 
 class MainModalItem extends StatelessWidget {
   const MainModalItem({
@@ -54,8 +53,8 @@ class MainModalItem extends StatelessWidget {
         child: Center(
           child: IconAssetColored(
             item.iconAsset, 
-            size: 24.0, 
-            color: context.theme.appColors.onPrimaryAccent
+            size: 24, 
+            color: context.theme.appColors.onPrimaryAccent,
           ),
         ),
       ),

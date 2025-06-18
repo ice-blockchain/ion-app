@@ -137,8 +137,8 @@ class ChannelForm extends HookConsumerWidget {
                 isEdit ? context.i18n.button_save_changes : context.i18n.channel_create_action,
               ),
               leadingIcon: isEdit
-                  ? IconAsset(Assets.svgIconProfileSave)
-                  : IconAsset(Assets.svgIconPlusCreatechannel),
+                  ? const IconAsset(Assets.svgIconProfileSave)
+                  : const IconAsset(Assets.svgIconPlusCreatechannel),
               disabled: !isFormValid.value || isLoading,
               trailingIcon: isLoading ? const IONLoadingIndicator() : null,
               type: isFormValid.value ? ButtonType.primary : ButtonType.disabled,

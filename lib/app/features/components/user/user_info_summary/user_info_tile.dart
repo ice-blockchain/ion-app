@@ -28,7 +28,7 @@ class UserInfoTile extends StatelessWidget {
         children: [
           IconAssetColored(
             assetName,
-            size: 14.0,
+            size: 14,
             color: color,
           ),
           SizedBox(width: 4.0.s),

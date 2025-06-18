@@ -10,7 +10,6 @@ import 'package:ion/app/features/auth/views/components/sign_up_list_item/sign_up
 import 'package:ion/app/features/auth/views/pages/sign_up_passkey/sign_up_passkey_form.dart';
 import 'package:ion/app/router/components/sheet_content/sheet_content.dart';
 import 'package:ion/generated/assets.gen.dart';
-import 'package:ion/app/extensions/asset_gen_image.dart';
 
 class SignUpPasskeyPage extends StatelessWidget {
   const SignUpPasskeyPage({super.key});
@@ -21,7 +20,7 @@ class SignUpPasskeyPage extends StatelessWidget {
       body: KeyboardDismissOnTap(
         child: AuthScrollContainer(
           title: context.i18n.sign_up_passkey_title,
-          icon: const IconAsset(Assets.svgIconLoginPasskey, size: 36.0),
+          icon: const IconAsset(Assets.svgIconLoginPasskey, size: 36),
           mainAxisAlignment: MainAxisAlignment.start,
           children: [
             ScreenSideOffset.large(

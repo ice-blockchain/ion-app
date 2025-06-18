@@ -51,7 +51,7 @@ class AuthenticatorSetupOptionsPage extends StatelessWidget {
                     color: context.theme.appColors.secondaryText,
                   ),
                   icon: AuthHeaderIcon(
-                    icon: IconAsset(Assets.svgIcon2faAuthsetup, size: 36.0),
+                    icon: const IconAsset(Assets.svgIcon2faAuthsetup, size: 36),
                   ),
                 ),
                 Expanded(

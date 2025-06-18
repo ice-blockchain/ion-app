@@ -22,12 +22,12 @@ class DeleteEmailInitialStep extends StatelessWidget {
 
     return TwoFaInitialScaffold(
       headerIcon: AuthHeaderIcon(
-        icon: IconAsset(Assets.svgIcon2faEmailauth, size: 36.0),
+        icon: const IconAsset(Assets.svgIcon2faEmailauth, size: 36),
       ),
       headerTitle: locale.email_verification_title,
       prompt: Column(
         children: [
-          IconAsset(Assets.svgIcon2faEmailVerification, size: 80.0),
+          const IconAsset(Assets.svgIcon2faEmailVerification, size: 80),
           SizedBox(height: 16.0.s),
           const _LinkedEmail(),
           SizedBox(height: 24.0.s),
@@ -83,7 +83,7 @@ class _EditEmailButton extends StatelessWidget {
       type: ButtonType.outlined,
       label: Text(locale.two_fa_edit_email_title),
       minimumSize: Size(0.0.s, 44.0.s),
-      leadingIcon: IconAsset(Assets.svgIconEditLink, size: 24.0),
+      leadingIcon: const IconAsset(Assets.svgIconEditLink, size: 24),
       borderColor: colors.onTerararyFill,
       onPressed: () => EmailEditRoute().push<void>(context),
     );

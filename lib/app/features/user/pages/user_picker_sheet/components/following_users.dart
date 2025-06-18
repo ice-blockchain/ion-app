@@ -60,7 +60,7 @@ class _NoUserView extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             const Spacer(),
-            IconAsset(Assets.svgWalletChatNewchat, size: 48.0),
+            const IconAsset(Assets.svgWalletChatNewchat, size: 48),
             Padding(
               padding: EdgeInsets.symmetric(vertical: 8.0.s, horizontal: 78.0.s),
               child: Text(

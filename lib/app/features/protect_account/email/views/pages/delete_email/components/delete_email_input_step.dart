@@ -13,7 +13,6 @@ import 'package:ion/app/features/protect_account/secure_account/providers/delete
 import 'package:ion/app/features/protect_account/secure_account/providers/selected_two_fa_types_provider.c.dart';
 import 'package:ion/app/router/utils/show_simple_bottom_sheet.dart';
 import 'package:ion/generated/assets.gen.dart';
-import 'package:ion/app/extensions/asset_gen_image.dart';
 
 class DeleteEmailInputStep extends ConsumerWidget {
   const DeleteEmailInputStep({
@@ -34,7 +33,7 @@ class DeleteEmailInputStep extends ConsumerWidget {
     return TwoFAStepScaffold(
       headerTitle: locale.two_fa_deleting_email_title,
       headerDescription: locale.two_fa_deleting_email_description,
-      headerIcon: const IconAsset(Assets.svgIcon2faEmailauth, size: 36.0),
+      headerIcon: const IconAsset(Assets.svgIcon2faEmailauth, size: 36),
       onBackPress: onPrevious,
       child: TwoFAInputStep(
         onConfirm: (controllers) => _onConfirm(ref, controllers),

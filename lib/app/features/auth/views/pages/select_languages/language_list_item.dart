@@ -52,9 +52,9 @@ class LanguageListItem extends StatelessWidget {
                   ),
                 ),
                 if (isSelected)
-                  IconAsset(Assets.svgIconBlockCheckboxOn)
+                  const IconAsset(Assets.svgIconBlockCheckboxOn)
                 else
-                                      IconAsset(Assets.svgIconBlockCheckboxOff),
+                                      const IconAsset(Assets.svgIconBlockCheckboxOff),
               ],
             ),
           ),

@@ -7,7 +7,6 @@ import 'package:ion/app/features/auth/data/models/twofa_type.dart';
 import 'package:ion/app/features/protect_account/components/twofa_select_options_step.dart';
 import 'package:ion/app/features/protect_account/components/twofa_step_scaffold.dart';
 import 'package:ion/generated/assets.gen.dart';
-import 'package:ion/app/extensions/asset_gen_image.dart';
 
 class DeleteEmailSelectOptionsStep extends HookWidget {
   const DeleteEmailSelectOptionsStep({
@@ -24,7 +23,7 @@ class DeleteEmailSelectOptionsStep extends HookWidget {
     final locale = context.i18n;
 
     return TwoFAStepScaffold(
-      headerIcon: const IconAsset(Assets.svgIcon2faEmailauth, size: 36.0),
+      headerIcon: const IconAsset(Assets.svgIcon2faEmailauth, size: 36),
       headerTitle: locale.two_fa_deleting_email_title,
       headerDescription: locale.two_fa_deleting_email_description,
       onBackPress: onPrevious,

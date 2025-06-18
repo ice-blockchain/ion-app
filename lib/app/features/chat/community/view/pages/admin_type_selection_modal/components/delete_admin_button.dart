@@ -50,7 +50,7 @@ class DeleteAdminButton extends ConsumerWidget {
           color: colors.onPrimaryAccent,
           icon: IconAssetColored(
             Assets.svgIconBlockDelete,
-            size: 24.0,
+            size: 24,
             color: colors.attentionRed,
           ),
           border: Border.fromBorderSide(

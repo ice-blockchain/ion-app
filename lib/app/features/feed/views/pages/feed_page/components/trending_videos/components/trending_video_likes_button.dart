@@ -47,7 +47,7 @@ class TrendingVideoLikesButton extends ConsumerWidget {
           SvgShadow(
             child: IconAssetColored(
               isLiked ? Assets.svgIconVideoLikeOn : Assets.svgIconVideoLikeOff,
-              size: 14.0,
+              size: 14,
               color: color,
             ),
           ),

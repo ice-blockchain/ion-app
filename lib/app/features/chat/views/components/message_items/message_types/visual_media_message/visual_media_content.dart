@@ -107,9 +107,9 @@ class VisualMediaContent extends HookConsumerWidget {
                   color: context.theme.appColors.backgroundSheet.withValues(alpha: 0.7),
                   borderRadius: BorderRadius.circular(12.0.s),
                 ),
-                child: IconAsset(
+                child: const IconAsset(
                   Assets.svgIconVideoPlay,
-                  size: 16.0,
+                  size: 16,
                 ),
               ),
             ),
@@ -150,7 +150,7 @@ class CancelButton extends ConsumerWidget {
           children: [
             IconAssetColored(
               Assets.svgIconSheetClose,
-              size: 16.0,
+              size: 16,
               color: context.theme.appColors.onPrimaryAccent,
             ),
             SizedBox(

@@ -24,7 +24,7 @@ class PlayAudioButton extends StatelessWidget {
       child: IconAssetColored(
         Assets.svgIconVideoPlay,
         color: context.theme.appColors.primaryAccent,
-        size: 24.0,
+        size: 24,
       ),
     );
   }

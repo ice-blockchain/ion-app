@@ -35,7 +35,7 @@ class TopicsButtonTooltip extends StatelessWidget {
                   IconAssetColored(
                     Assets.svgWalletChannelPrivate,
                     color: context.theme.appColors.primaryText,
-                    size: 20.0,
+                    size: 20,
                   ),
                   SizedBox(width: 2.s),
                   Text(

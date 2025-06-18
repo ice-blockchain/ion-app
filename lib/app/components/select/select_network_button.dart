@@ -44,7 +44,7 @@ class _NoNetworkSelected extends StatelessWidget {
     return SelectContainer(
       child: Row(
         children: [
-          IconAsset(Assets.svgWalletnetwork, size: 30.0),
+          const IconAsset(Assets.svgWalletnetwork, size: 30),
           SizedBox(width: 10.0.s),
           Text(
             context.i18n.common_select_network_button_unselected,

@@ -57,7 +57,7 @@ class _BlockButton extends StatelessWidget {
         color: blocking
             ? context.theme.appColors.onPrimaryAccent
             : context.theme.appColors.attentionRed,
-        size: 16.0,
+        size: 16,
       ),
       backgroundColor: blocking ? context.theme.appColors.attentionRed : null,
       type: blocking ? ButtonType.primary : ButtonType.outlined,

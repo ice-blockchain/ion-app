@@ -32,7 +32,7 @@ class AuthenticatorSetupInstructionsErrorState extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.center,
                   crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: [
-                    IconAsset(Assets.svgWalletIconWalletLoadingerror, size: 48.0),
+                    const IconAsset(Assets.svgWalletIconWalletLoadingerror, size: 48),
                     SizedBox(height: 10.0.s),
                     Text(
                       locale.protect_account_create_recovery_error,

@@ -88,7 +88,7 @@ class AccountNotificationsModal extends HookConsumerWidget {
                     color: colors.onSecondaryBackground,
                     icon: IconAssetColored(
                       option.iconAsset,
-                      size: 24.0,
+                      size: 24,
                       color: colors.primaryAccent,
                     ),
                     border: Border.fromBorderSide(

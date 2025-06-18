@@ -96,7 +96,7 @@ class _HeaderButton extends StatelessWidget {
       child: Button.compact(
         leadingIcon: IconAssetColored(
           icon,
-          size: 16.0,
+          size: 16,
           color: context.theme.appColors.primaryAccent,
         ),
         type: ButtonType.outlined,

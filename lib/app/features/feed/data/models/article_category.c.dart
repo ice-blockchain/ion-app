@@ -15,47 +15,47 @@ class ArticleCategory with _$ArticleCategory {
 }
 
 final List<ArticleCategory> mockedArticleCategories = [
-  ArticleCategory(
+  const ArticleCategory(
     id: '1',
     name: 'Exchanges',
     icon: Assets.svgIconBlockRepost,
   ),
-  ArticleCategory(
+  const ArticleCategory(
     id: '2',
     name: 'Crypto',
     icon: Assets.svgIconTabsCoins,
   ),
-  ArticleCategory(
+  const ArticleCategory(
     id: '3',
     name: 'Game',
     icon: Assets.svgIconCategoriesGame,
   ),
-  ArticleCategory(
+  const ArticleCategory(
     id: '4',
     name: 'Business',
     icon: Assets.svgIconCategoriesBusiness,
   ),
-  ArticleCategory(
+  const ArticleCategory(
     id: '5',
     name: 'Travel',
     icon: Assets.svgIconCategoriesTravel,
   ),
-  ArticleCategory(
+  const ArticleCategory(
     id: '6',
     name: 'Programming',
     icon: Assets.svgIconCategoriesProgramm,
   ),
-  ArticleCategory(
+  const ArticleCategory(
     id: '7',
     name: 'AI',
     icon: Assets.svgIconCategoriesAi,
   ),
-  ArticleCategory(
+  const ArticleCategory(
     id: '8',
     name: 'Work',
     icon: Assets.svgIconCategoriesBusiness,
   ),
-  ArticleCategory(
+  const ArticleCategory(
     id: '9',
     name: 'Science',
     icon: Assets.svgIconCategoriesScience,

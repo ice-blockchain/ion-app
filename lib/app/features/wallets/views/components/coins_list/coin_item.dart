@@ -79,7 +79,7 @@ class CoinsGroupItemPlaceholder extends StatelessWidget {
           ),
         ],
       ),
-      leading: IconAsset(Assets.svgWalletemptyicon2, size: 36.0),
+      leading: const IconAsset(Assets.svgWalletemptyicon2, size: 36),
       trailing: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         crossAxisAlignment: CrossAxisAlignment.end,

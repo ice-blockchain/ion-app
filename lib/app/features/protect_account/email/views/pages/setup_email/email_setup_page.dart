@@ -54,7 +54,7 @@ class EmailSetupPage extends ConsumerWidget {
                           color: context.theme.appColors.secondaryText,
                         ),
                         icon: AuthHeaderIcon(
-                          icon: IconAsset(Assets.svgIcon2faEmailauth, size: 36.0),
+                          icon: const IconAsset(Assets.svgIcon2faEmailauth, size: 36),
                         ),
                       ),
                       if (step == EmailSetupSteps.input)

@@ -18,7 +18,7 @@ class CameraPlaceholderWidget extends StatelessWidget {
         children: [
           IconAssetColored(
             Assets.svgIconCameraOpen,
-            size: 40.0,
+            size: 40,
             color: theme.appColors.onPrimaryAccent,
           ),
           SizedBox(height: 2.0.s),

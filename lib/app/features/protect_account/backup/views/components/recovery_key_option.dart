@@ -29,10 +29,10 @@ class RecoveryKeyOption extends StatelessWidget {
     return CopyBuilder(
       defaultIcon: IconAssetColored(
         iconAsset,
-        size: 16.0,
+        size: 16,
         color: context.theme.appColors.onTertararyBackground,
       ),
-      copiedIcon: IconAsset(Assets.svgIconBlockCheckGreen, size: 16.0),
+      copiedIcon: const IconAsset(Assets.svgIconBlockCheckGreen, size: 16),
       defaultText: title,
       defaultBorderColor: context.theme.appColors.onTerararyFill,
       builder: (context, onCopy, content) {
@@ -82,7 +82,7 @@ class RecoveryKeyOption extends StatelessWidget {
                           ),
                         ),
                         SizedBox(width: 4.0.s),
-                        IconAsset(Assets.svgIconBlockCopyBlue, size: 16.0),
+                        const IconAsset(Assets.svgIconBlockCopyBlue, size: 16),
                       ],
                     ),
                   ),

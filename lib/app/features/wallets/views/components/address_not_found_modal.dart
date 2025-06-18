@@ -78,7 +78,7 @@ class AddressNotFoundModal extends HookConsumerWidget {
                 label: Text(context.i18n.wallet_address_create_button),
                 leadingIcon: IconAssetColored(
                   Assets.svgIconPostAddanswer,
-                  size: 24.0,
+                  size: 24,
                   color: context.theme.appColors.onPrimaryAccent,
                 ),
                 trailingIcon: isCreatingWallet ? const IONLoadingIndicator() : null,
@@ -131,7 +131,7 @@ class _WalletNetworkIcon extends StatelessWidget {
   Widget build(BuildContext context) {
     return Stack(
       children: [
-        IconAsset(Assets.svgActionwalletsetupnetwork, size: 80.0),
+        const IconAsset(Assets.svgActionwalletsetupnetwork, size: 80),
         PositionedDirectional(
           bottom: 0,
           start: 4.0.s,

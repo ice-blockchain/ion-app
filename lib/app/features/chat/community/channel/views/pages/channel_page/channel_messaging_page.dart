@@ -196,7 +196,7 @@ class _JoinButton extends HookConsumerWidget {
           leadingIcon: IconAssetColored(
             Assets.svgIconMenuLogout,
             color: context.theme.appColors.onPrimaryAccent,
-            size: 24.0,
+            size: 24,
           ),
         ),
       ),

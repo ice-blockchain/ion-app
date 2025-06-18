@@ -31,8 +31,8 @@ class ManageCoinItemWidget extends ConsumerWidget {
       backgroundColor: context.theme.appColors.tertararyBackground,
       leading: CoinIconWidget.big(coinsGroup.iconUrl),
       trailing: isSelected
-          ? IconAsset(Assets.svgIconBlockCheckboxOn)
-          : IconAsset(Assets.svgIconBlockCheckboxOff),
+          ? const IconAsset(Assets.svgIconBlockCheckboxOn)
+          : const IconAsset(Assets.svgIconBlockCheckboxOff),
       onTap: () {
         ref.read(manageCoinsNotifierProvider.notifier).switchCoinsGroup(coinsGroup);
       },

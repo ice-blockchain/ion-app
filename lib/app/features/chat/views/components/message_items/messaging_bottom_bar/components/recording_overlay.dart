@@ -47,7 +47,7 @@ class RecordingOverlay extends ConsumerWidget {
                     child: IconAssetColored(
                       Assets.svgIconVideoPause,
                       color: context.theme.appColors.primaryAccent,
-                      size: 20.0,
+                      size: 20,
                     ),
                   ),
                 )
@@ -59,7 +59,7 @@ class RecordingOverlay extends ConsumerWidget {
                     child: IconAssetColored(
                       Assets.svgIconChatMicrophone,
                       color: context.theme.appColors.primaryAccent,
-                      size: 20.0,
+                      size: 20,
                     ),
                   ),
                 )
@@ -79,7 +79,7 @@ class RecordingOverlay extends ConsumerWidget {
                       color: paddingBottom > 20
                           ? context.theme.appColors.onPrimaryAccent
                           : context.theme.appColors.primaryAccent,
-                      size: 20.0,
+                      size: 20,
                     ),
                   ),
                 ),
@@ -96,13 +96,13 @@ class RecordingOverlay extends ConsumerWidget {
                         child: IconAssetColored(
                           Assets.svgIconChatSendmessage,
                           color: context.theme.appColors.onPrimaryAccent,
-                          size: 24.0,
+                          size: 24,
                         ),
                       )
                     : IconAssetColored(
                         Assets.svgIconChatMicrophone,
                         color: context.theme.appColors.onPrimaryAccent,
-                        size: 24.0,
+                        size: 24,
                       ),
               ),
             ],

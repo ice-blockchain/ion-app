@@ -42,7 +42,7 @@ enum FeedNotificationStatus {
 
   Widget? getIcon(BuildContext context) => switch (this) {
         loading => IONLoadingIndicator(size: Size.square(16.0.s)),
-        published => IconAsset(Assets.svgIconBlockCheckboxOn),
+        published => const IconAsset(Assets.svgIconBlockCheckboxOn),
         success => null,
       };
 }

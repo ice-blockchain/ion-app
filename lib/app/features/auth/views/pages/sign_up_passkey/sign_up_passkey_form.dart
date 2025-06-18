@@ -45,7 +45,7 @@ class SignUpPasskeyForm extends HookConsumerWidget {
                 ? const IONLoadingIndicator()
                 : IconAssetColored(
                     Assets.svgIconButtonNext,
-                    size: 24.0,
+                    size: 24,
                     color: context.theme.appColors.onPrimaryAccent,
                   ),
             onPressed: () {

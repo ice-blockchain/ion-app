@@ -10,7 +10,6 @@ import 'package:ion/app/features/protect_account/email/providers/linked_phone_pr
 import 'package:ion/app/router/app_routes.c.dart';
 import 'package:ion/app/utils/formatters.dart';
 import 'package:ion/generated/assets.gen.dart';
-import 'package:ion/app/extensions/asset_gen_image.dart';
 
 class DeletePhoneInitialStep extends StatelessWidget {
   const DeletePhoneInitialStep({required this.onNext, super.key});
@@ -23,12 +22,12 @@ class DeletePhoneInitialStep extends StatelessWidget {
 
     return TwoFaInitialScaffold(
       headerIcon: AuthHeaderIcon(
-        icon: const IconAsset(Assets.svgIcon2faPhoneconfirm, size: 36.0),
+        icon: const IconAsset(Assets.svgIcon2faPhoneconfirm, size: 36),
       ),
       headerTitle: locale.phone_verification_title,
       prompt: Column(
         children: [
-          const IconAsset(Assets.svgIcon2faPhoneVerification, size: 80.0),
+          const IconAsset(Assets.svgIcon2faPhoneVerification, size: 80),
           SizedBox(height: 16.0.s),
           const _LinkedPhone(),
           SizedBox(height: 24.0.s),
@@ -84,7 +83,7 @@ class _EditPhoneButton extends StatelessWidget {
       type: ButtonType.outlined,
       label: Text(locale.two_fa_edit_phone_button),
       minimumSize: Size(0.0.s, 44.0.s),
-      leadingIcon: const IconAsset(Assets.svgIconEditLink, size: 24.0),
+      leadingIcon: const IconAsset(Assets.svgIconEditLink, size: 24),
       borderColor: colors.onTerararyFill,
       onPressed: () => PhoneEditRoute().push<void>(context),
     );

@@ -37,7 +37,7 @@ class RecentChatsEmptyPage extends ConsumerWidget {
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          IconAsset(Assets.svgWalletChatEmptystate, size: 48.0),
+                          const IconAsset(Assets.svgWalletChatEmptystate, size: 48),
                           Padding(
                             padding: EdgeInsetsDirectional.only(top: 8.0.s),
                             child: Text(

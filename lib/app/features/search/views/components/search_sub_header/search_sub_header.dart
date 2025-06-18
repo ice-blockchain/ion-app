@@ -19,7 +19,7 @@ class SearchSubHeader extends StatelessWidget {
         children: [
           IconAssetColored(
             icon,
-            size: 16.0,
+            size: 16,
             color: context.theme.appColors.primaryText,
           ),
           SizedBox(width: 6.0.s),

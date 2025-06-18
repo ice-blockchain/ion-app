@@ -21,7 +21,7 @@ class DeleteAudioButton extends ConsumerWidget {
         child: IconAssetColored(
           Assets.svgIconBlockDelete,
           color: context.theme.appColors.primaryText,
-          size: 24.0,
+          size: 24,
         ),
       ),
     );

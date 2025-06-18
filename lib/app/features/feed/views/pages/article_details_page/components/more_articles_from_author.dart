@@ -52,7 +52,7 @@ class MoreArticlesFromAuthor extends ConsumerWidget {
             trailing: GestureDetector(
               onTap: () =>
                   ArticlesFromAuthorRoute(pubkey: eventReference.pubkey).push<void>(context),
-              child: IconAsset(Assets.svgIconButtonNext),
+              child: const IconAsset(Assets.svgIconButtonNext),
             ),
           ),
         ),

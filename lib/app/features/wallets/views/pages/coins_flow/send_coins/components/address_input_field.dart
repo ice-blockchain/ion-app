@@ -76,7 +76,7 @@ class AddressInputField extends HookWidget {
                       : context.theme.appColors.attentionRed,
                   BlendMode.srcIn,
                 ),
-                child: IconAsset(Assets.svgIconHeaderScan1),
+                child: const IconAsset(Assets.svgIconHeaderScan1),
               ),
               onPressed: onScanPressed,
             ),

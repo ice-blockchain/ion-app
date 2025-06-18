@@ -206,7 +206,7 @@ class VideoPage extends HookConsumerWidget {
                 icon: IconAssetColored(
                   Assets.svgIconVideoPlay,
                   color: context.theme.appColors.secondaryBackground,
-                  size: 30.0,
+                  size: 30,
                 ),
                 onPressed: playerController.play,
               ),

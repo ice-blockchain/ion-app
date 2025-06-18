@@ -39,7 +39,7 @@ class ArticleCategoriesRow extends StatelessWidget {
               icon: IconAssetColored(
                 Assets.svgIconPlusCreatechannel,
                 color: colors.primaryAccent,
-                size: 28.0,
+                size: 28,
               ),
               onPressed: () {},
             ),

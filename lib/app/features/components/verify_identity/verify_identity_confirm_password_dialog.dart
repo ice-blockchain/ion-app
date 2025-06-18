@@ -41,7 +41,7 @@ class VerifyIdentityConfirmPasswordDialog<T> extends HookConsumerWidget {
             mainAxisSize: MainAxisSize.min,
             children: [
               SizedBox(height: 30.0.s),
-              IconAsset(Assets.svgActionWalletVerifywithpass, size: 80.0),
+              const IconAsset(Assets.svgActionWalletVerifywithpass, size: 80),
               SizedBox(height: 6.0.s),
               Text(
                 i18n.verify_with_password_title,

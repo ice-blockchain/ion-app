@@ -233,12 +233,12 @@ class _MediaBottomOverlay extends ConsumerWidget {
                     child: isMuted
                         ? IconAssetColored(
                             Assets.svgIconChannelMute,
-                            size: 24.0,
+                            size: 24,
                             color: context.theme.appColors.onPrimaryAccent,
                           )
                         : IconAssetColored(
                             Assets.svgIconChannelUnmute,
-                            size: 24.0,
+                            size: 24,
                             color: context.theme.appColors.onPrimaryAccent,
                           ),
                   ),

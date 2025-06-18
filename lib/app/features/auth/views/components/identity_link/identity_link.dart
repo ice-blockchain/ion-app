@@ -5,7 +5,6 @@ import 'package:ion/app/constants/links.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/services/browser/browser.dart';
 import 'package:ion/generated/assets.gen.dart';
-import 'package:ion/app/extensions/asset_gen_image.dart';
 
 class IdentityLink extends StatelessWidget {
   const IdentityLink({super.key});
@@ -17,7 +16,7 @@ class IdentityLink extends StatelessWidget {
       child: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
-          const IconAsset(Assets.svgIconLoginIdentity, size: 20.0),
+          const IconAsset(Assets.svgIconLoginIdentity, size: 20),
           SizedBox(width: 4.0.s),
           Text(
             context.i18n.auth_identity_io,

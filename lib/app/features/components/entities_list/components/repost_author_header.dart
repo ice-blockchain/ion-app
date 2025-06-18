@@ -31,7 +31,7 @@ class RepostAuthorHeader extends ConsumerWidget {
           children: [
             IconAssetColored(
               Assets.svgIconFeedRepost,
-              size: 16.0,
+              size: 16,
               color: context.theme.appColors.onTertararyBackground,
             ),
             SizedBox(width: 4.0.s),

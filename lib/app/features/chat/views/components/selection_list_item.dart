@@ -44,7 +44,7 @@ class SelectionListItem extends ConsumerWidget {
         color: colors.onPrimaryAccent,
         icon: IconAssetColored(
           iconAsset,
-          size: 24.0,
+          size: 24,
           color: colors.primaryAccent,
         ),
         border: Border.fromBorderSide(

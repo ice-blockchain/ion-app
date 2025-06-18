@@ -202,7 +202,7 @@ class SendCoinsForm extends HookConsumerWidget {
                               colors.primaryBackground,
                               BlendMode.srcIn,
                             ),
-                            child: IconAsset(Assets.svgIconButtonNext),
+                            child: const IconAsset(Assets.svgIconButtonNext),
                           ),
                           onPressed: () => context.push(confirmRouteLocationBuilder()),
                         ),

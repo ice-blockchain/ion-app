@@ -23,7 +23,6 @@ import 'package:ion/app/router/components/sheet_content/sheet_content.dart';
 import 'package:ion/app/router/utils/show_simple_bottom_sheet.dart';
 import 'package:ion/generated/assets.gen.dart';
 import 'package:ion_identity_client/ion_identity.dart';
-import 'package:ion/app/extensions/asset_gen_image.dart';
 
 typedef PromptSignInDialogCallback = Future<String?> Function(
   WidgetRef ref, {
@@ -71,7 +70,7 @@ class SignInStep extends HookConsumerWidget {
           showBackButton: false,
           title: context.i18n.get_started_title,
           description: context.i18n.get_started_description,
-          icon: const IconAsset(Assets.svgIconLoginIcelogo, size: 44.0),
+          icon: const IconAsset(Assets.svgIconLoginIcelogo, size: 44),
           children: [
             ScreenSideOffset.large(
               child: Column(

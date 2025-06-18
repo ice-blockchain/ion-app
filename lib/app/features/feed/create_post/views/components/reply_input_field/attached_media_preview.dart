@@ -139,7 +139,7 @@ class _PreviewItem extends ConsumerWidget {
             top: 0,
             child: GestureDetector(
               onTap: onRemove,
-              child: IconAsset(Assets.svgIconFieldClearmedia, size: 20.0),
+              child: const IconAsset(Assets.svgIconFieldClearmedia, size: 20),
             ),
           ),
         ],

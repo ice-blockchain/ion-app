@@ -61,7 +61,7 @@ class TwoFAInputStep extends HookConsumerWidget {
       body: AuthScrollContainer(
         title: context.i18n.two_fa_title,
         description: context.i18n.two_fa_desc,
-        icon: titleIcon ?? const IconAsset(Assets.svgIconWalletProtectFill, size: 36.0),
+        icon: titleIcon ?? const IconAsset(Assets.svgIconWalletProtectFill, size: 36),
         onBackPress: onBackPress,
         children: [
           Column(

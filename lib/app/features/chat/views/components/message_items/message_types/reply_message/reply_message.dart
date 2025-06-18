@@ -106,7 +106,7 @@ class ReplyMessage extends HookConsumerWidget {
                           padding: EdgeInsetsDirectional.only(end: 4.0.s),
                           child: IconAssetColored(
                             messageIconPath,
-                            size: 16.0,
+                            size: 16,
                             color: textColor ?? context.theme.appColors.onTertararyBackground,
                           ),
                         ),

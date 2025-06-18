@@ -32,8 +32,8 @@ class ManageNftNetworkItem extends ConsumerWidget {
             imageUrl: networkData?.image ?? '',
           ),
           trailing: isSelected
-              ? IconAsset(Assets.svgIconBlockCheckboxOn)
-              : IconAsset(Assets.svgIconBlockCheckboxOff),
+              ? const IconAsset(Assets.svgIconBlockCheckboxOn)
+              : const IconAsset(Assets.svgIconBlockCheckboxOff),
           onTap: () => viewModel.toggleNetwork(network),
         );
       },

@@ -70,7 +70,7 @@ class CoinAddressTile extends HookConsumerWidget {
                           descriptionTextAlign: TextAlign.center,
                         ),
                       ),
-                      child: IconAsset(Assets.svgIconBlockInformation, size: 20.0),
+                      child: const IconAsset(Assets.svgIconBlockInformation, size: 20),
                     ),
                   ],
                 ),

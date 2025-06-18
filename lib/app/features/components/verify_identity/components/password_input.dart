@@ -34,7 +34,7 @@ class PasswordInput extends HookWidget {
     final isPasswordVisible = useState(false);
 
     return TextInput(
-      prefixIcon: TextInputIcons(
+      prefixIcon: const TextInputIcons(
         hasRightDivider: true,
         icons: [IconAsset(Assets.svgIconPass)],
       ),

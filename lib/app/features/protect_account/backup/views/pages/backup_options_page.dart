@@ -64,7 +64,7 @@ class BackupOptionsPage extends ConsumerWidget {
                 BackupOption(
                   title: locale.backup_option_with_recovery_keys_title,
                   subtitle: locale.backup_option_with_recovery_keys_description,
-                  icon: IconAsset(Assets.svgWalletLoginRecovery, size: 48.0),
+                  icon: const IconAsset(Assets.svgWalletLoginRecovery, size: 48),
                   isOptionEnabled: securityMethods?.isBackupEnabled ?? false,
                   onTap: () => BackupRecoveryKeysRoute().push<void>(context),
                 ),

@@ -41,7 +41,7 @@ class ArrivalTimeIndicator extends StatelessWidget {
             ),
             child: Row(
               children: [
-                IconAsset(Assets.svgIconBlockTime, size: 12.0),
+                const IconAsset(Assets.svgIconBlockTime, size: 12),
                 SizedBox(width: 5.0.s),
                 Text(
                   '${option.arrivalTime?.inMinutes} ${locale.wallet_arrival_time_minutes}',

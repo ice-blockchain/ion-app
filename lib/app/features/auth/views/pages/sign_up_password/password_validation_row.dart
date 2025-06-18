@@ -20,9 +20,9 @@ class PasswordValidationRow extends StatelessWidget {
     return Row(
       children: [
         if (passwordValidationErrorType.isInvalid(password))
-          IconAsset(Assets.svgIconBlockClose3, size: 16.0)
+          const IconAsset(Assets.svgIconBlockClose3, size: 16)
         else
-          IconAsset(Assets.svgIconBlockCheckboxOn, size: 16.0),
+          const IconAsset(Assets.svgIconBlockCheckboxOn, size: 16),
         SizedBox(
           width: 6.0.s,
         ),

@@ -22,10 +22,10 @@ class AllChainsItem extends ConsumerWidget {
         return ListItem(
           title: Text(context.i18n.all_chains_item),
           backgroundColor: context.theme.appColors.tertararyBackground,
-          leading: IconAsset(Assets.svgWalletallnetwork, size: 40.0),
+          leading: const IconAsset(Assets.svgWalletallnetwork, size: 40),
           trailing: isSelected
-              ? IconAsset(Assets.svgIconBlockCheckboxOn)
-              : IconAsset(Assets.svgIconBlockCheckboxOff),
+              ? const IconAsset(Assets.svgIconBlockCheckboxOn)
+              : const IconAsset(Assets.svgIconBlockCheckboxOff),
           onTap: viewModel.unselectAllNetworks,
         );
       },

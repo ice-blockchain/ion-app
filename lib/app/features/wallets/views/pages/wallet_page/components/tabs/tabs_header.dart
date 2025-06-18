@@ -85,7 +85,7 @@ class WalletTabsHeader extends ConsumerWidget {
               child: IconAssetColored(
                 Assets.svgIconFieldSearch,
                 color: context.theme.appColors.tertararyText,
-                size: 20.0,
+                size: 20,
               ),
             ),
           ),

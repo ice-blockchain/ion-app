@@ -48,10 +48,10 @@ class TransactionResultSheet extends ConsumerWidget {
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
-                IconAsset.rect(
+                const IconAsset.rect(
                   Assets.svgActionContactsendSuccess,
-                  width: 74.0,
-                  height: 76.0,
+                  width: 74,
+                  height: 76,
                 ),
                 SizedBox(height: 10.0.s),
                 Text(
@@ -108,7 +108,7 @@ class TransactionResultSheet extends ConsumerWidget {
                         shareContent(transactionData.transactionExplorerUrl);
                       },
                       backgroundColor: context.theme.appColors.tertararyBackground,
-                      leadingIcon: IconAsset(Assets.svgIconButtonShare),
+                      leadingIcon: const IconAsset(Assets.svgIconButtonShare),
                     ),
                   ],
                 ),

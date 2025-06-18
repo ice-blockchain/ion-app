@@ -25,7 +25,6 @@ import 'package:ion/app/router/app_routes.c.dart';
 import 'package:ion/app/router/components/sheet_content/sheet_content.dart';
 import 'package:ion/app/services/media_service/image_proccessing_config.dart';
 import 'package:ion/generated/assets.gen.dart';
-import 'package:ion/app/extensions/asset_gen_image.dart';
 
 class FillProfile extends HookConsumerWidget {
   const FillProfile({super.key});
@@ -91,7 +90,7 @@ class FillProfile extends HookConsumerWidget {
         child: AuthScrollContainer(
           title: context.i18n.fill_profile_title,
           description: context.i18n.fill_profile_description,
-          icon: const IconAsset(Assets.svgIconLoginIcelogo, size: 44.0),
+          icon: const IconAsset(Assets.svgIconLoginIcelogo, size: 44),
           mainAxisAlignment: MainAxisAlignment.start,
           onBackPress: () async {
             await ref.read(authProvider.notifier).signOut();

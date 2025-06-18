@@ -20,12 +20,12 @@ class DeleteAuthenticatorInitialStep extends StatelessWidget {
 
     return TwoFaInitialScaffold(
       headerIcon: AuthHeaderIcon(
-        icon: IconAsset(Assets.svgIcon2faAuthsetup, size: 36.0),
+        icon: const IconAsset(Assets.svgIcon2faAuthsetup, size: 36),
       ),
       headerTitle: locale.two_fa_option_authenticator,
       prompt: Column(
         children: [
-          IconAsset(Assets.svgActionWalletGoogleauth, size: 80.0),
+          const IconAsset(Assets.svgActionWalletGoogleauth, size: 80),
           SizedBox(height: 20.0.s),
           Text(
             locale.authenticator_is_linked_to_account,

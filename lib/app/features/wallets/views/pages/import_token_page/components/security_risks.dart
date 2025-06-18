@@ -26,7 +26,7 @@ class SecurityRisks extends StatelessWidget {
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
-          IconAsset(Assets.svgWalletIconWalletRisks, size: 80.0),
+          const IconAsset(Assets.svgWalletIconWalletRisks, size: 80),
           SizedBox(height: 6.0.s),
           Text(
             context.i18n.wallet_import_token_security_risks_title,

@@ -30,7 +30,7 @@ class CountryCodeInput extends StatelessWidget {
               IconAssetColored(
                 Assets.svgIconLoginDropdown,
                 color: context.theme.appColors.secondaryText,
-                size: 15.0,
+                size: 15,
               ),
             ],
           ),

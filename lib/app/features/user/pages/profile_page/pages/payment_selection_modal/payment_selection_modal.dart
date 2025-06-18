@@ -82,7 +82,7 @@ class PaymentSelectionModal extends HookConsumerWidget {
                       maxLines: 2,
                     ),
                     backgroundColor: context.theme.appColors.tertararyBackground,
-                    leading: IconAsset(option.iconAsset, size: 48.0),
+                    leading: IconAsset(option.iconAsset, size: 48),
                     onTap: () {
                       if (option == PaymentType.request) {
                         onRequestFlow();

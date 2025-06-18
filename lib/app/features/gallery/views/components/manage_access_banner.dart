@@ -49,7 +49,7 @@ class ManageAccessBanner extends ConsumerWidget {
               leadingIcon: IconAssetColored(
                 Assets.svgIconButtonManagecoin,
                 color: primaryAccent,
-                size: 16.0,
+                size: 16,
               ),
               label: Text(
                 context.i18n.button_manage,

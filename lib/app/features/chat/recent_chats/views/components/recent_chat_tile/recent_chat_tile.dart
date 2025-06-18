@@ -246,7 +246,7 @@ class SenderSummary extends ConsumerWidget {
             padding: EdgeInsetsDirectional.only(end: 4.0.s),
             child: IconAssetColored(
               Assets.svgIconChatReply,
-              size: 16.0,
+              size: 16,
               color: context.theme.appColors.quaternaryText,
             ),
           ),
@@ -255,7 +255,7 @@ class SenderSummary extends ConsumerWidget {
             padding: EdgeInsetsDirectional.only(end: 4.0.s),
             child: IconAssetColored(
               Assets.svgIconEditLink,
-              size: 16.0,
+              size: 16,
               color: context.theme.appColors.quaternaryText,
             ),
           ),

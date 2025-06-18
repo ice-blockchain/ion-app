@@ -85,7 +85,7 @@ class BottomBarInitialView extends HookConsumerWidget {
                     child: IconAssetColored(
                       Assets.svgIconChatKeyboard,
                       color: context.theme.appColors.primaryText,
-                      size: 24.0,
+                      size: 24,
                     ),
                   ),
                 )
@@ -101,7 +101,7 @@ class BottomBarInitialView extends HookConsumerWidget {
                     child: IconAssetColored(
                       Assets.svgIconChatAttatch,
                       color: context.theme.appColors.primaryText,
-                      size: 24.0,
+                      size: 24,
                     ),
                   ),
                 ),
@@ -171,7 +171,7 @@ class BottomBarInitialView extends HookConsumerWidget {
                       child: IconAssetColored(
                         Assets.svgIconCameraOpen,
                         color: context.theme.appColors.primaryText,
-                        size: 24.0,
+                        size: 24,
                       ),
                     ),
                   ),

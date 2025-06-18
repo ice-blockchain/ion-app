@@ -37,7 +37,7 @@ class StoryViewerActionButtons extends ConsumerWidget {
           icon: IconAssetColored(
             Assets.svgIconBlockShare,
             color: shareColor,
-            size: 20.0,
+            size: 20,
           ),
           onPressed: () async {
             ref.read(storyPauseControllerProvider.notifier).paused = true;
@@ -81,12 +81,12 @@ class _SoundButton extends ConsumerWidget {
           ? IconAssetColored(
               Assets.svgIconChannelMute,
               color: muteColor,
-              size: 20.0,
+              size: 20,
             )
           : IconAssetColored(
               Assets.svgIconChannelUnmute,
               color: muteColor,
-              size: 20.0,
+              size: 20,
             ),
       onPressed: () async {
         await HapticFeedback.lightImpact();
@@ -114,7 +114,7 @@ class _LikeButton extends ConsumerWidget {
       icon: IconAssetColored(
         icon,
         color: color,
-        size: 20.0,
+        size: 20,
       ),
       borderRadius: 16.0.s,
       iconPadding: 8.0.s,

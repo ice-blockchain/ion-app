@@ -15,9 +15,9 @@ class RecoveryKeyIdInput extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return TextInput(
-      prefixIcon: TextInputIcons(
+      prefixIcon: const TextInputIcons(
         hasRightDivider: true,
-        icons: [const IconAsset(Assets.svgIconChannelPrivate)],
+        icons: [IconAsset(Assets.svgIconChannelPrivate)],
       ),
       labelText: context.i18n.restore_identity_creds_recovery_key,
       controller: controller,

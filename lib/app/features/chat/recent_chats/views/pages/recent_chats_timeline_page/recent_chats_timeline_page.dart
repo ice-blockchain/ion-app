@@ -28,7 +28,6 @@ import 'package:ion/app/hooks/use_scroll_top_on_tab_press.dart';
 import 'package:ion/app/router/app_routes.c.dart';
 import 'package:ion/app/services/media_service/media_encryption_service.c.dart';
 import 'package:ion/generated/assets.gen.dart';
-import 'package:ion/app/extensions/asset_gen_image.dart';
 
 class RecentChatsTimelinePage extends HookConsumerWidget {
   const RecentChatsTimelinePage({required this.conversations, super.key});
@@ -190,7 +189,7 @@ class CommunityRecentChatTile extends ConsumerWidget {
         ),
         child: IconAssetColored(
           Assets.svgIconChannelEmptychannel,
-          size: 26.0,
+          size: 26,
           color: context.theme.appColors.secondaryBackground,
         ),
       ),
@@ -302,7 +301,7 @@ class EncryptedGroupRecentChatTile extends HookConsumerWidget {
       conversation: conversation,
       eventReference: eventReference,
       avatarWidget: groupImageFile != null ? Image.file(groupImageFile) : null,
-      defaultAvatar: const IconAsset(Assets.svgIconChannelEmptychannel, size: 40.0),
+      defaultAvatar: const IconAsset(Assets.svgIconChannelEmptychannel, size: 40),
       lastMessageAt: (conversation.latestMessage?.createdAt ?? conversation.joinedAt).toDateTime,
       lastMessageContent:
           entity.content.isEmpty ? context.i18n.empty_message_history : entity.content,

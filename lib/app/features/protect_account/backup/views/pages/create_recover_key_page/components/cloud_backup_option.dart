@@ -35,7 +35,7 @@ class CloudBackupOption extends HookConsumerWidget {
         Platform.isIOS ? locale.backup_icloud : locale.backup_google_drive,
       ),
       subtitle: locale.backup_option_cloud_description,
-      icon: IconAsset(Assets.svgWalletLoginCloud, size: 48.0),
+      icon: const IconAsset(Assets.svgWalletLoginCloud, size: 48),
       isOptionEnabled: storedRecoveryKeysProvider.valueOrNull?.isNotEmpty ?? false,
       isLoading: storedRecoveryKeysProvider.isLoading,
       onTap: () async {

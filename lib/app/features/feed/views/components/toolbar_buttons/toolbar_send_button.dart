@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:ion/app/components/progress_bar/ion_loading_indicator.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/generated/assets.gen.dart';
-import 'package:ion/app/extensions/asset_gen_image.dart';
 
 class ToolbarSendButton extends StatelessWidget {
   const ToolbarSendButton({
@@ -33,7 +32,7 @@ class ToolbarSendButton extends StatelessWidget {
         alignment: Alignment.center,
         child: loading
             ? const IONLoadingIndicator()
-            : const IconAsset(Assets.svgIconFeedSendbutton, size: 20.0),
+            : const IconAsset(Assets.svgIconFeedSendbutton, size: 20),
       ),
     );
   }

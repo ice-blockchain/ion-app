@@ -50,7 +50,7 @@ class CodeBlockTypeItem extends StatelessWidget {
               SizedBox(width: 4.0.s),
               IconAssetColored(Assets.svgIconArrowRight,
                 color: context.theme.appColors.primaryAccent,
-                                  size: 14.0,
+                                  size: 14,
               ),
             ],
           ],

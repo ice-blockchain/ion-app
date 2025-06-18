@@ -58,7 +58,7 @@ class RecoveryKeyInput extends HookWidget {
         icons: [prefixIcon],
       ),
       suffixIcon: isValid.value
-          ? TextInputIcons(
+          ? const TextInputIcons(
               icons: [IconAsset(Assets.svgIconBlockCheckboxOn)],
             )
           : null,

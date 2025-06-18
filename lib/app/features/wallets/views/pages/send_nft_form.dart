@@ -110,7 +110,7 @@ class SendNftForm extends HookConsumerWidget {
                           colors.primaryBackground,
                           BlendMode.srcIn,
                         ),
-                        child: IconAsset(Assets.svgIconButtonNext),
+                        child: const IconAsset(Assets.svgIconButtonNext),
                       ),
                       onPressed: () {
                         SendNftConfirmRoute().push<void>(context);
