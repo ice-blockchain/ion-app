@@ -40,13 +40,27 @@ class IonNetworkImage extends StatelessWidget {
   final BaseCacheManager? cacheManager;
   final ImageWidgetBuilder? imageBuilder;
   final ProgressIndicatorBuilder? progressIndicatorBuilder;
-  
+
   @override
   Widget build(BuildContext context) {
     final devicePixelRatio = MediaQuery.devicePixelRatioOf(context);
     final fullWidth = MediaQuery.sizeOf(context).width;
     final cacheWidth = (width ?? fullWidth) * devicePixelRatio;
     final cacheHeight = height != null ? height! * devicePixelRatio : null;
+    int? memCacheWidth;
+    int? memCacheHeight;
+
+    if (fit == BoxFit.fitWidth ||
+        fit == BoxFit.cover ||
+        fit == BoxFit.fill ||
+        fit == BoxFit.fitHeight) {
+      memCacheWidth = cacheHeight == null ? cacheWidth.toInt() : null;
+      memCacheHeight = cacheHeight?.toInt();
+    }
+    if (fit == BoxFit.contain) {
+      memCacheWidth = cacheWidth.toInt();
+      memCacheHeight = cacheHeight?.toInt();
+    }
 
     return CachedNetworkImage(
       key: Key("${imageUrl}_${cacheWidth.toInt()}x${cacheHeight?.toInt() ?? 'auto'}"),
@@ -62,8 +76,8 @@ class IonNetworkImage extends StatelessWidget {
       fadeOutDuration: fadeOutDuration,
       fadeInDuration: fadeInDuration,
       placeholderFadeInDuration: placeholderFadeInDuration,
-      memCacheWidth: cacheWidth.toInt(),
-      memCacheHeight: cacheHeight?.toInt(),
+      memCacheWidth: memCacheWidth,
+      memCacheHeight: memCacheHeight,
     );
   }
 }
