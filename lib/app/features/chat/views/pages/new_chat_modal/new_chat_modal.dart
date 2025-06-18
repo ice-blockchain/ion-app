@@ -25,7 +25,7 @@ class NewChatModal extends HookConsumerWidget {
       (UserMetadataEntity user) async {
         if (context.mounted) {
           context.replace(
-            ConversationRoute(receiverPubKey: user.masterPubkey).location,
+            ConversationRoute(receiverMasterPubkey: user.masterPubkey).location,
           );
         }
       },

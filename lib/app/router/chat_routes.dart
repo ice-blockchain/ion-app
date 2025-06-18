@@ -49,17 +49,17 @@ class ChatRoutes {
 class ConversationRoute extends BaseRouteData {
   ConversationRoute({
     this.conversationId,
-    this.receiverPubKey,
+    this.receiverMasterPubkey,
   }) : super(
           child: ConversationPage(
             conversationId: conversationId,
-            receiverPubKey: receiverPubKey,
+            receiverMasterPubkey: receiverMasterPubkey,
           ),
           canPop: true,
         );
 
   final String? conversationId;
-  final String? receiverPubKey;
+  final String? receiverMasterPubkey;
 }
 
 class ChannelDetailRoute extends BaseRouteData {

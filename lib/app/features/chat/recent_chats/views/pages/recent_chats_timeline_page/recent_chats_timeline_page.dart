@@ -23,6 +23,7 @@ import 'package:ion/app/features/chat/recent_chats/views/components/recent_chat_
 import 'package:ion/app/features/chat/recent_chats/views/components/recent_chat_tile/recent_chat_tile.dart';
 import 'package:ion/app/features/user/providers/badges_notifier.c.dart';
 import 'package:ion/app/features/user/providers/user_metadata_provider.c.dart';
+import 'package:ion/app/features/user_metadata/providers/user_metadata_from_db_provider.c.dart';
 import 'package:ion/app/hooks/use_on_init.dart';
 import 'package:ion/app/hooks/use_scroll_top_on_tab_press.dart';
 import 'package:ion/app/router/app_routes.c.dart';
@@ -219,14 +220,14 @@ class E2eeRecentChatTile extends HookConsumerWidget {
 
     final currentUserPubkey = ref.watch(currentPubkeySelectorProvider);
 
-    final receiverPubkey =
+    final receiverMasterPubkey =
         entity.relatedPubkeys?.firstWhere((p) => p.value != currentUserPubkey).value;
 
-    if (receiverPubkey == null) {
+    if (receiverMasterPubkey == null) {
       return const SizedBox.shrink();
     }
 
-    final cachedUserMetadata = ref.read(cachedUserMetadataProvider(receiverPubkey));
+    final cachedUserMetadata = ref.watch(userMetadataFromDbNotifierProvider(receiverMasterPubkey));
 
     final unreadMessagesCount =
         ref.watch(getUnreadMessagesCountProvider(conversation.conversationId));
@@ -236,9 +237,10 @@ class E2eeRecentChatTile extends HookConsumerWidget {
     ).toEventReference();
 
     final isUserVerified =
-        ref.watch(isUserVerifiedProvider(receiverPubkey)).valueOrNull.falseOrValue;
+        ref.watch(isUserVerifiedProvider(receiverMasterPubkey)).valueOrNull.falseOrValue;
 
-    final isDeleted = ref.watch(isUserDeletedProvider(receiverPubkey)).valueOrNull.falseOrValue;
+    final isDeleted =
+        ref.watch(isUserDeletedProvider(receiverMasterPubkey)).valueOrNull.falseOrValue;
 
     if (cachedUserMetadata == null && !isDeleted) {
       return const RecentChatSkeletonItem();
@@ -258,7 +260,7 @@ class E2eeRecentChatTile extends HookConsumerWidget {
       lastMessageAt: (conversation.latestMessage?.createdAt ?? conversation.joinedAt).toDateTime,
       isVerified: isUserVerified,
       onTap: () {
-        ConversationRoute(receiverPubKey: receiverPubkey).push<void>(context);
+        ConversationRoute(receiverMasterPubkey: receiverMasterPubkey).push<void>(context);
       },
     );
   }

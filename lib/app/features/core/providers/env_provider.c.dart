@@ -15,6 +15,7 @@ enum EnvVariable {
   BANUBA_TOKEN,
   STORY_EXPIRATION_HOURS,
   EDIT_POST_ALLOWED_MINUTES,
+  USER_METADATA_SYNC_MINUTES,
   EDIT_MESSAGE_ALLOWED_MINUTES,
   COMMUNITY_CREATION_CACHE_MINUTES,
   COMMUNITY_MEMBERS_COUNT_CACHE_MINUTES,
@@ -52,6 +53,8 @@ class Env extends _$Env {
       EnvVariable.USER_SEARCH_RELAY => const String.fromEnvironment('USER_SEARCH_RELAY') as T,
       EnvVariable.STORY_EXPIRATION_HOURS =>
         const int.fromEnvironment('STORY_EXPIRATION_HOURS') as T,
+      EnvVariable.USER_METADATA_SYNC_MINUTES =>
+        const int.fromEnvironment('USER_METADATA_SYNC_MINUTES') as T,
       EnvVariable.EDIT_POST_ALLOWED_MINUTES =>
         const int.fromEnvironment('EDIT_POST_ALLOWED_MINUTES') as T,
       EnvVariable.EDIT_MESSAGE_ALLOWED_MINUTES =>
