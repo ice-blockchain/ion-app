@@ -179,6 +179,17 @@ class E2eeMessagesSubscriber extends _$E2eeMessagesSubscriber {
         );
       }
 
+      // If we recovered keypair, current user will not have "read" message status
+      // as we don't send it
+      if (rumor.masterPubkey == masterPubkey) {
+        await conversationMessageStatusDao.addOrUpdateStatus(
+          pubkey: rumor.pubkey,
+          masterPubkey: rumor.masterPubkey,
+          status: MessageDeliveryStatus.read,
+          messageEventReference: eventReference,
+        );
+      }
+
       // Only for kind 7
     } else if (rumor.kind == PrivateMessageReactionEntity.kind) {
       final reactionEntity = PrivateMessageReactionEntity.fromEventMessage(rumor);
