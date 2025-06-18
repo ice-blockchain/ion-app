@@ -25,8 +25,9 @@ class FilteredCoinsNotifier extends _$FilteredCoinsNotifier {
   @override
   Future<List<CoinsGroup>> build() async {
     final manageCoinsNotifier = ref.watch(manageCoinsNotifierProvider);
-    final selectedCoins = manageCoinsNotifier.value;
-    final coinGroups = await ref.watch(coinsInWalletProvider.future);
+    final coins = manageCoinsNotifier.value;
+
+    final coinGroupsInWallet = await ref.watch(coinsInWalletProvider.future);
 
     final searchQueryListener = ref.listen<String>(
       walletSearchQueryControllerProvider(WalletAssetType.coin),
@@ -35,16 +36,16 @@ class FilteredCoinsNotifier extends _$FilteredCoinsNotifier {
 
     ref.onDispose(searchQueryListener.close);
 
-    if (selectedCoins == null || !selectedCoins.values.any((group) => group.isUpdating)) {
-      return coinGroups;
+    if (coins == null || !coins.values.any((group) => group.isUpdating)) {
+      return coinGroupsInWallet;
     }
 
-    final updatingGroups = selectedCoins.values
-        .where((group) => group.isUpdating)
-        .map((group) => group.coinsGroup)
-        .toList();
+    final updatingGroups =
+        coins.values.where((group) => group.isUpdating).map((group) => group.coinsGroup).toList();
 
-    final filteredCoinGroups = coinGroups.where((group) => !_isBeingDeleted(group, selectedCoins));
+    final filteredCoinGroups = coinGroupsInWallet.where(
+      (group) => !_isBeingDeleted(group, coins),
+    );
 
     return [...filteredCoinGroups, ...updatingGroups];
   }

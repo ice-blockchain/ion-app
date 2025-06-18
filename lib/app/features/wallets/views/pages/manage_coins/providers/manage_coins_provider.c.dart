@@ -4,6 +4,7 @@ import 'dart:async';
 
 import 'package:collection/collection.dart';
 import 'package:ion/app/extensions/extensions.dart';
+import 'package:ion/app/features/wallets/domain/coins/coins_service.c.dart';
 import 'package:ion/app/features/wallets/domain/coins/search_coins_service.c.dart';
 import 'package:ion/app/features/wallets/model/coin_data.c.dart';
 import 'package:ion/app/features/wallets/model/coins_group.c.dart';
@@ -13,34 +14,62 @@ import 'package:ion/app/features/wallets/providers/wallet_view_data_provider.c.d
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'manage_coins_provider.c.g.dart';
+part 'required_coin_groups_list.dart';
 
 @riverpod
 class ManageCoinsNotifier extends _$ManageCoinsNotifier {
+  final _coinsFromWallet = <String, ManageCoinsGroup>{};
+
   @override
   Future<Map<String, ManageCoinsGroup>> build() async {
+    _coinsFromWallet.clear();
+    final loadedGroupsToSymbolGroup = <String, ManageCoinsGroup>{};
+    final toExclude = <String>{};
+
     final walletView = await ref.watch(currentWalletViewDataProvider.future);
 
-    final coinsFromWallet = <String, ManageCoinsGroup>{
-      for (final coinGroup in walletView.coinGroups)
-        coinGroup.symbolGroup: ManageCoinsGroup(
-          coinsGroup: coinGroup,
-          isSelected: state.value?[coinGroup.symbolGroup]?.isSelected ?? true,
+    for (final coinGroup in walletView.coinGroups) {
+      toExclude.addAll(coinGroup.coins.map((e) => e.coin.id));
+      _coinsFromWallet[coinGroup.symbolGroup] = ManageCoinsGroup(
+        coinsGroup: coinGroup,
+        isSelected: state.value?[coinGroup.symbolGroup]?.isSelected ?? true,
+      );
+    }
+    final coinsService = await ref.watch(coinsServiceProvider.future);
+    final loadedGroups = await coinsService.getCoinGroups(
+      symbolGroups: _coinGroups,
+      excludeCoinIds: toExclude,
+    );
+    loadedGroupsToSymbolGroup.addAll({
+      for (final group in loadedGroups)
+        group.symbolGroup: ManageCoinsGroup(
+          coinsGroup: group,
+          isSelected: state.value?[group.symbolGroup]?.isSelected ??
+              false || _coinsFromWallet.keys.contains(group.symbolGroup),
         ),
+    });
+
+    final groups = {
+      ..._coinsFromWallet,
+      ...loadedGroupsToSymbolGroup,
     };
 
-    return coinsFromWallet;
+    return groups;
   }
 
-  void switchCoinsGroup(CoinsGroup coinsGroup) {
+  Future<void> switchCoinsGroup(CoinsGroup coinsGroup) async {
     final currentMap = state.value ?? <String, ManageCoinsGroup>{};
     final currentGroup = currentMap[coinsGroup.symbolGroup];
-    final isNewlyAdded = !currentMap.containsKey(coinsGroup.symbolGroup);
-    final isBeingDeleted = currentGroup?.isSelected ?? false;
+    final isNewlyAdded =
+        !currentMap.containsKey(coinsGroup.symbolGroup) || !(currentGroup?.isSelected ?? true);
+    final isBeingDeleted =
+        _coinsFromWallet.containsKey(coinsGroup.symbolGroup) || !(currentGroup?.isSelected ?? true);
+    final isUpdating = (isNewlyAdded || isBeingDeleted) && !(currentGroup?.isUpdating ?? false);
 
     currentMap[coinsGroup.symbolGroup] = ManageCoinsGroup(
       coinsGroup: coinsGroup,
       isSelected: !(currentGroup?.isSelected ?? false),
-      isUpdating: isNewlyAdded || isBeingDeleted,
+      isUpdating: isUpdating,
     );
     state = AsyncData<Map<String, ManageCoinsGroup>>(currentMap);
   }

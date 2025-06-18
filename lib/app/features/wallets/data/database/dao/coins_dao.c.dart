@@ -6,6 +6,7 @@ import 'package:ion/app/features/wallets/data/database/tables/coins_table.c.dart
 import 'package:ion/app/features/wallets/data/database/tables/networks_table.c.dart';
 import 'package:ion/app/features/wallets/data/database/wallets_database.c.dart';
 import 'package:ion/app/features/wallets/model/coin_data.c.dart';
+import 'package:ion/app/features/wallets/model/coins_group.c.dart';
 import 'package:ion/app/features/wallets/model/network_data.c.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
@@ -151,5 +152,48 @@ class CoinsDao extends DatabaseAccessor<WalletsDatabase> with _$CoinsDaoMixin {
         row.readTable(networksTable),
       ),
     );
+  }
+
+  Future<Iterable<CoinsGroup>> getCoinGroups({
+    int? limit,
+    int? offset,
+    Iterable<String>? excludeCoinIds,
+    Iterable<String>? symbolGroups,
+  }) async {
+    final query = select(coinsTable).join([
+      leftOuterJoin(networksTable, networksTable.id.equalsExp(coinsTable.networkId)),
+    ]);
+
+    if (excludeCoinIds?.isNotEmpty ?? false) {
+      query.where(coinsTable.id.isNotIn(excludeCoinIds!));
+    }
+
+    if (symbolGroups?.isNotEmpty ?? false) {
+      query.where(coinsTable.symbolGroup.isIn(symbolGroups!));
+    }
+
+    if (limit != null) {
+      query.limit(limit, offset: offset);
+    }
+
+    query.orderBy([
+      OrderingTerm(
+        expression: coinsTable.name.lower(),
+      ),
+    ]);
+
+    final results = await query.map(_toCoinData).get();
+
+    // Group coins by symbolGroup
+    final groupsMap = <String, List<CoinData>>{};
+    for (final coin in results) {
+      final symbolGroup = coin.symbolGroup;
+      if (!groupsMap.containsKey(symbolGroup)) {
+        groupsMap[symbolGroup] = [];
+      }
+      groupsMap[symbolGroup]!.add(coin);
+    }
+
+    return groupsMap.entries.map((entry) => CoinsGroup.fromCoinsData(entry.value));
   }
 }

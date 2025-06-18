@@ -6,6 +6,7 @@ import 'package:ion/app/features/wallets/data/database/dao/coins_dao.c.dart';
 import 'package:ion/app/features/wallets/data/database/dao/sync_coins_dao.c.dart';
 import 'package:ion/app/features/wallets/data/database/wallets_database.c.dart';
 import 'package:ion/app/features/wallets/model/coin_data.c.dart';
+import 'package:ion/app/features/wallets/model/coins_group.c.dart';
 import 'package:ion/app/features/wallets/model/network_data.c.dart';
 import 'package:ion/app/services/storage/local_storage.c.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
@@ -122,4 +123,17 @@ class CoinsRepository {
   Future<void> setLastSyncTime(int time) => _localStorage.setInt(_lastSyncTimeKey, time);
 
   Future<void> setCoinsVersion(int version) => _localStorage.setInt(_coinsVersionKey, version);
+
+  Future<Iterable<CoinsGroup>> getCoinGroups({
+    int? limit,
+    int? offset,
+    Iterable<String>? excludeCoinIds,
+    Iterable<String>? symbolGroups,
+  }) =>
+      _coinsDao.getCoinGroups(
+        limit: limit,
+        offset: offset,
+        excludeCoinIds: excludeCoinIds,
+        symbolGroups: symbolGroups,
+      );
 }
