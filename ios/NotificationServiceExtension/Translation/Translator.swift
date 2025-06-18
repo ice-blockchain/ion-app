@@ -2,7 +2,7 @@
 
 import Foundation
 
-let fallbackLocale = Locale(identifier: Constants.fallbackLocale)
+private let fallbackLocale = Locale(identifier: "en_US")
 
 enum TranslationError: Error {
     case notFound(locale: Locale)
@@ -17,9 +17,9 @@ class Translator<T: TranslationWithVersion> {
     private let repository: TranslationsRepository<T>
     private let locale: Locale
 
-    init(translationsRepository: TranslationsRepository<T>, locale: Locale) {
+    init(translationsRepository: TranslationsRepository<T>, appLocale: String?) {
         self.repository = translationsRepository
-        self.locale = locale
+        self.locale = Locale(identifier: appLocale ?? fallbackLocale.identifier)
     }
 
     func translate<U>(_ selector: (T) -> U?) async -> U? {
@@ -44,24 +44,28 @@ class Translator<T: TranslationWithVersion> {
 }
 
 class TranslationsRepository<T: TranslationWithVersion & Decodable> {
+    private let translationsPath = "ion-app_push-notifications_translations"
+
     private let ionOrigin: String
-    private let path: String
-    private let userDefaults: UserDefaults
+    private let storage: SharedStorageService
     private let cacheDirectory: URL
     let cacheMaxAge: TimeInterval
 
     init(
         ionOrigin: String,
-        path: String,
-        userDefaults: UserDefaults,
-        cacheDirectory: URL,
+        storage: SharedStorageService,
         cacheMaxAge: TimeInterval
     ) {
         self.ionOrigin = ionOrigin
-        self.path = path
-        self.userDefaults = userDefaults
-        self.cacheDirectory = cacheDirectory
+        self.storage = storage
         self.cacheMaxAge = cacheMaxAge
+
+        let translationCacheDirName = "TranslationCache"
+        let containerURL = FileManager.default.containerURL(forSecurityApplicationGroupIdentifier: storage.appGroupIdentifier)
+        self.cacheDirectory =
+            containerURL?.appendingPathComponent(translationCacheDirName, isDirectory: true)
+            ?? URL(fileURLWithPath: NSTemporaryDirectory()).appendingPathComponent(translationCacheDirName)
+
     }
 
     func getTranslations(locale: Locale) async throws -> T {
@@ -69,7 +73,7 @@ class TranslationsRepository<T: TranslationWithVersion & Decodable> {
             throw TranslationError.notFound(locale: locale)
         }
 
-        let cacheFile = cacheDirectory.appendingPathComponent("\(path).\(languageCode).json")
+        let cacheFile = cacheDirectory.appendingPathComponent("\(translationsPath).\(languageCode).json")
 
         if let cachedTranslations = readValidCache(at: cacheFile) {
             return cachedTranslations
@@ -136,10 +140,9 @@ class TranslationsRepository<T: TranslationWithVersion & Decodable> {
             throw TranslationError.notFound(locale: locale)
         }
 
-        let cacheVersionKey = "cache_version_\(languageCode)"
-        let cacheVersion = userDefaults.integer(forKey: cacheVersionKey)
+        let cacheVersion = storage.getCacheVersionKey(languageCode: languageCode)
 
-        let urlString = "\(ionOrigin)/v1/config/\(path)_\(languageCode)"
+        let urlString = "\(ionOrigin)/v1/config/\(translationsPath)_\(languageCode)"
         guard var urlComponents = URLComponents(string: urlString) else {
             throw TranslationError.invalidURL
         }
@@ -172,7 +175,7 @@ class TranslationsRepository<T: TranslationWithVersion & Decodable> {
 
             case 200:
                 if let translations = try? JSONDecoder().decode(T.self, from: data) {
-                    userDefaults.set(translations.version, forKey: cacheVersionKey)
+                    storage.setCacheVersionKey(for: languageCode, with: translations.version)
                 }
                 return data
 

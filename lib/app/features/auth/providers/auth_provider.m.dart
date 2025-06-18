@@ -1,5 +1,7 @@
 // SPDX-License-Identifier: ice License 1.0
 
+import 'dart:async';
+
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/features/auth/providers/local_passkey_creds_provider.r.dart';
@@ -56,6 +58,14 @@ class Auth extends _$Auth {
             .watch(ionConnectEventSignerProvider(currentIdentityKeyName).notifier)
             .initEventSigner()
         : null;
+
+    if (currentIdentityKeyName != null) {
+      unawaited(
+        ref
+            .watch(currentIdentityKeyNameStoreProvider.notifier)
+            .setCurrentIdentityKeyNameForNotificationServiceExtension(currentIdentityKeyName),
+      );
+    }
 
     return AuthState(
       authenticatedIdentityKeyNames: authenticatedIdentityKeyNames.toList(),
@@ -144,7 +154,16 @@ class CurrentIdentityKeyNameStore extends _$CurrentIdentityKeyNameStore {
   Future<void> setCurrentIdentityKeyName(String identityKeyName) async {
     final localStorage = await ref.read(localStorageAsyncProvider.future);
     await localStorage.setString(_currentIdentityKeyNameKey, identityKeyName);
+
     state = AsyncData(identityKeyName);
+  }
+
+  // Save to sharedPreferencesFoundation for iOS Notification Service Extension access
+  Future<void> setCurrentIdentityKeyNameForNotificationServiceExtension(
+    String identityKeyName,
+  ) async {
+    final sharedPreferencesFoundation = await ref.read(sharedPreferencesFoundationProvider.future);
+    await sharedPreferencesFoundation.setString(_currentIdentityKeyNameKey, identityKeyName);
   }
 }
 
