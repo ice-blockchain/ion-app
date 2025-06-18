@@ -1,5 +1,7 @@
 // SPDX-License-Identifier: ice License 1.0
 
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
@@ -7,47 +9,44 @@ import 'package:ion/app/components/inputs/search_input/search_input.dart';
 import 'package:ion/app/components/list_item/list_item.dart';
 import 'package:ion/app/components/screen_offset/screen_side_offset.dart';
 import 'package:ion/app/extensions/extensions.dart';
+import 'package:ion/app/features/core/providers/env_provider.c.dart';
 import 'package:ion/app/features/feed/data/models/feed_type.dart';
+import 'package:ion/app/features/feed/providers/feed_selected_visible_article_categories_provider.c.dart';
 import 'package:ion/app/features/feed/providers/feed_user_interests_provider.c.dart';
-import 'package:ion/app/features/feed/providers/selected_interests_notifier.c.dart';
 import 'package:ion/app/router/components/navigation_app_bar/navigation_app_bar.dart';
 import 'package:ion/app/router/components/sheet_content/sheet_content.dart';
 import 'package:ion/generated/assets.gen.dart';
 
-class SelectTopicsSubcategoriesModal extends HookConsumerWidget {
-  const SelectTopicsSubcategoriesModal({
-    required this.categoryKey,
-    required this.feedType,
-    super.key,
-  });
-
-  final String categoryKey;
-  final FeedType feedType;
+class FeedVisibleArticleCategoriesModal extends HookConsumerWidget {
+  const FeedVisibleArticleCategoriesModal({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final availableCategories =
-        ref.watch(feedUserInterestsProvider(feedType)).valueOrNull?.categories ?? {};
-    final subcategories = availableCategories[categoryKey]?.children ?? {};
-    final selectedSubcategories = ref.watch(
-      selectedInterestsNotifierProvider.select(
-        (interests) => interests.where(subcategories.containsKey).toSet(),
-      ),
-    );
+        ref.watch(feedUserInterestsProvider(FeedType.article)).valueOrNull?.categories ?? {};
+    final selectedCategories = ref.watch(feedSelectedVisibleArticleCategoriesProvider);
     final colors = context.theme.appColors;
     final textStyles = context.theme.appTextThemes;
     final searchValue = useState('');
+    final localSelectedCategories = useState<Set<String>>(
+      Set.from(selectedCategories),
+    );
 
-    final filteredSubcategories = useMemoized(
+    final filteredCategories = useMemoized(
       () {
         final query = searchValue.value.toLowerCase();
-        return subcategories.entries.where((categoryEntry) {
+        return availableCategories.entries.where((categoryEntry) {
           final title = categoryEntry.value.display.toLowerCase();
           return title.contains(query);
         }).toList();
       },
       [searchValue.value],
     );
+
+    final envMinCategories = ref
+        .watch(envProvider.notifier)
+        .get<int>(EnvVariable.FEED_MIN_VISIBLE_ARTICLE_CATEGORIES_NUMBER);
+    final minCategories = min(envMinCategories, availableCategories.length);
 
     return SheetContent(
       topPadding: 0,
@@ -56,16 +55,30 @@ class SelectTopicsSubcategoriesModal extends HookConsumerWidget {
           NavigationAppBar.modal(
             onBackPress: () => Navigator.pop(context, false),
             actions: [
-              if (selectedSubcategories.isNotEmpty)
+              if (localSelectedCategories.value.length >= minCategories)
                 GestureDetector(
-                  onTap: () => Navigator.pop(context, false),
+                  onTap: () {
+                    ref.read(feedSelectedVisibleArticleCategoriesProvider.notifier).categories =
+                        localSelectedCategories.value.toSet();
+                    Navigator.pop(context, false);
+                  },
                   child: Padding(
                     padding: EdgeInsets.symmetric(horizontal: 8.0.s),
                     child: Text(
-                      '${context.i18n.topics_add} (${selectedSubcategories.length})',
+                      '${context.i18n.topics_add} (${localSelectedCategories.value.length})',
                       style: context.theme.appTextThemes.body.copyWith(
                         color: context.theme.appColors.primaryAccent,
                       ),
+                    ),
+                  ),
+                )
+              else
+                Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 8.0.s),
+                  child: Text(
+                    context.i18n.feed_article_categories_add_min(minCategories),
+                    style: context.theme.appTextThemes.body.copyWith(
+                      color: context.theme.appColors.tertararyText,
                     ),
                   ),
                 ),
@@ -82,19 +95,15 @@ class SelectTopicsSubcategoriesModal extends HookConsumerWidget {
           SizedBox(height: 8.0.s),
           Expanded(
             child: ListView.builder(
-              itemCount: filteredSubcategories.length,
+              itemCount: filteredCategories.length,
               itemBuilder: (BuildContext context, int index) {
-                final subcategory = filteredSubcategories[index];
-                final isSelected = selectedSubcategories.contains(subcategory.key);
+                final subcategory = filteredCategories[index];
+                final isSelected = localSelectedCategories.value.contains(subcategory.key);
 
                 return ListItem(
                   contentPadding: EdgeInsets.symmetric(horizontal: 16.0.s, vertical: 8.0.s),
                   constraints: const BoxConstraints(),
-                  onTap: () => _toggleTopicSelection(
-                    ref,
-                    selectedSubcategories,
-                    subcategory.key,
-                  ),
+                  onTap: () => _toggleTopicSelection(ref, subcategory.key, localSelectedCategories),
                   backgroundColor: colors.secondaryBackground,
                   trailing: isSelected
                       ? Assets.svg.iconBlockCheckboxOnblue.icon(color: colors.success)
@@ -111,22 +120,15 @@ class SelectTopicsSubcategoriesModal extends HookConsumerWidget {
 
   void _toggleTopicSelection(
     WidgetRef ref,
-    Set<String> currentCategorySelectedSubcategories,
     String subcategoryKey,
+    ValueNotifier<Set<String>> selectedInterestsNotifier,
   ) {
-    final selectedSubcategories = ref.read(selectedInterestsNotifierProvider);
-    final notifier = ref.read(selectedInterestsNotifierProvider.notifier);
-    if (selectedSubcategories.contains(subcategoryKey)) {
-      notifier.selectInterests = Set.from(selectedSubcategories)..remove(subcategoryKey);
-      final newCurrentCategorySelectedSubcategories =
-          Set<String>.from(currentCategorySelectedSubcategories)..remove(subcategoryKey);
-      if (newCurrentCategorySelectedSubcategories.isEmpty) {
-        notifier.selectInterests = Set.from(selectedSubcategories)
-          ..removeAll([subcategoryKey, categoryKey]);
-      }
+    if (selectedInterestsNotifier.value.contains(subcategoryKey)) {
+      selectedInterestsNotifier.value = Set.from(selectedInterestsNotifier.value)
+        ..remove(subcategoryKey);
     } else {
-      notifier.selectInterests = Set.from(selectedSubcategories)
-        ..addAll([subcategoryKey, categoryKey]);
+      selectedInterestsNotifier.value = Set.from(selectedInterestsNotifier.value)
+        ..add(subcategoryKey);
     }
   }
 }

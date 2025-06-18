@@ -14,8 +14,8 @@ import 'package:ion/app/features/feed/providers/feed_config_provider.c.dart';
 import 'package:ion/app/features/feed/providers/feed_data_source_builders.dart';
 import 'package:ion/app/features/feed/providers/feed_following_content_provider.c.dart';
 import 'package:ion/app/features/feed/providers/feed_request_queue.c.dart';
+import 'package:ion/app/features/feed/providers/feed_selected_article_categories_provider.c.dart';
 import 'package:ion/app/features/feed/providers/feed_user_interest_picker_provider.c.dart';
-import 'package:ion/app/features/feed/providers/feed_user_interests_provider.c.dart';
 import 'package:ion/app/features/ion_connect/ion_connect.dart';
 import 'package:ion/app/features/ion_connect/model/action_source.c.dart';
 import 'package:ion/app/features/ion_connect/model/ion_connect_entity.dart';
@@ -220,10 +220,10 @@ class FeedForYouContent extends _$FeedForYouContent implements PagedNotifier {
 
     final dataSourceRelays = await _getDataSourceRelays();
 
-    // TODO: for articles (if feedType is FeedType.article), take the selected article interests
-    final interests = modifier == FeedModifier.explore
+    final selectedArticleCategories = ref.read(feedSelectedArticleCategoriesProvider);
+    final interests = modifier == FeedModifier.explore || selectedArticleCategories.isEmpty
         ? [_exploreInterest]
-        : (await ref.read(feedUserInterestsProvider(feedType).future)).subcategories.keys;
+        : selectedArticleCategories;
 
     final relaysPagination = Map.fromEntries(
       dataSourceRelays.map(

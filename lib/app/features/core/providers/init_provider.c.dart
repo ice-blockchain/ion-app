@@ -15,6 +15,7 @@ import 'package:ion/app/features/core/providers/window_manager_provider.c.dart';
 import 'package:ion/app/features/core/views/components/widget_error_builder.dart';
 import 'package:ion/app/features/feed/providers/feed_bookmarks_notifier.c.dart';
 import 'package:ion/app/features/feed/providers/feed_feature_initializer.dart';
+import 'package:ion/app/features/feed/providers/feed_user_interests_provider.c.dart';
 import 'package:ion/app/features/force_update/providers/force_update_provider.c.dart';
 import 'package:ion/app/features/ion_connect/providers/global_subscription.c.dart';
 import 'package:ion/app/features/push_notifications/background/firebase_messaging_background_service.dart';
@@ -52,6 +53,7 @@ Future<void> initApp(Ref ref) async {
     ref.read(permissionsProvider.notifier).checkAllPermissions(),
     ref.read(onboardingCompleteProvider.future),
     ref.read(forceUpdateProvider.future),
+    ref.read(feedUserInterestsNotifierProvider.notifier).forceRemoteSync(),
   ]);
 
   // `ref.read` lets `coinsSyncProvider` be disposed even though it's a keepAlive provider

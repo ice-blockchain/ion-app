@@ -23,6 +23,11 @@ class FeedRoutes {
     TypedGoRoute<FeedAdvancedSearchRoute>(path: 'feed-advanced-search'),
     TypedShellRoute<ModalShellRouteData>(
       routes: [
+        TypedGoRoute<FeedVisibleArticleCategoriesRoute>(path: 'feed-visible-article-categories'),
+      ],
+    ),
+    TypedShellRoute<ModalShellRouteData>(
+      routes: [
         TypedGoRoute<SwitchAccountRoute>(path: 'switch-account'),
       ],
     ),
@@ -174,6 +179,14 @@ class FeedAdvancedSearchRoute extends BaseRouteData {
         );
 
   final String query;
+}
+
+class FeedVisibleArticleCategoriesRoute extends BaseRouteData {
+  FeedVisibleArticleCategoriesRoute()
+      : super(
+          child: const FeedVisibleArticleCategoriesModal(),
+          type: IceRouteType.bottomSheet,
+        );
 }
 
 class SwitchAccountRoute extends BaseRouteData {

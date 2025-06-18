@@ -46,9 +46,9 @@ class FeedUserInterests extends _$FeedUserInterests {
     state = AsyncData(updatedInterests);
   }
 
-  Future<FeedInterests> _syncState(FeedType feedType) async {
+  Future<FeedInterests> _syncState(FeedType feedType, {bool forceRemote = false}) async {
     final localState = _loadSavedState();
-    final remoteState = await _getRemoteState(feedType);
+    final remoteState = await _getRemoteState(feedType, force: forceRemote);
     final mergedState = _mergeStates(local: localState, remote: remoteState);
     if (mergedState != localState) {
       await _saveState(mergedState);
@@ -66,7 +66,7 @@ class FeedUserInterests extends _$FeedUserInterests {
         .setValue(_persistanceKey, jsonEncode(interests.categories));
   }
 
-  Future<FeedInterests> _getRemoteState(FeedType feedType) async {
+  Future<FeedInterests> _getRemoteState(FeedType feedType, {bool force = false}) async {
     final repository = await ref.read(configRepositoryProvider.future);
     final locale = ref.read(appLocaleProvider).languageCode;
     final env = ref.read(envProvider.notifier);
@@ -75,7 +75,7 @@ class FeedUserInterests extends _$FeedUserInterests {
     return repository.getConfig<FeedInterests>(
       'content-topics_${type}_$locale',
       cacheStrategy: AppConfigCacheStrategy.file,
-      refreshInterval: cacheDuration,
+      refreshInterval: force ? Duration.zero : cacheDuration,
       parser: (data) => FeedInterests.fromJson(jsonDecode(data) as Map<String, dynamic>),
       checkVersion: true,
     );
@@ -141,17 +141,19 @@ class FeedUserInterests extends _$FeedUserInterests {
       final mergedSubcategories = <String, FeedInterestsSubcategory>{};
 
       for (final subEntry in remoteCategory.children.entries) {
-        mergedSubcategories[subEntry.key] = localCategory.children[subEntry.key] ??
-            FeedInterestsSubcategory(
-              weight: 0,
-              display: subEntry.value.display,
-            );
+        final localSubcategory = localCategory.children[subEntry.key];
+        mergedSubcategories[subEntry.key] = FeedInterestsSubcategory(
+          weight: localSubcategory?.weight ?? 0,
+          display: subEntry.value.display,
+          iconUrl: subEntry.value.iconUrl,
+        );
       }
 
       mergedCategories[remoteKey] = FeedInterestsCategory(
         display: remoteCategory.display,
         weight: localCategory.weight,
         children: mergedSubcategories,
+        iconUrl: remoteCategory.iconUrl,
       );
     }
 
@@ -175,6 +177,16 @@ class FeedUserInterestsNotifier extends _$FeedUserInterestsNotifier {
         ref
             .read(feedUserInterestsProvider(feedType).notifier)
             .updateInterests(interaction, interactionCategories),
+    ]);
+  }
+
+  Future<void> forceRemoteSync() async {
+    await Future.wait([
+      for (final feedType in FeedType.values)
+        ref.read(feedUserInterestsProvider(feedType).notifier)._syncState(
+              feedType,
+              forceRemote: true,
+            ),
     ]);
   }
 }

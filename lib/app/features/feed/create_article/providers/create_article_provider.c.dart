@@ -61,7 +61,7 @@ class CreateArticle extends _$CreateArticle {
   Future<void> create({
     required Delta content,
     required WhoCanReplySettingsOption whoCanReply,
-    required List<String> topics,
+    required Set<String> topics,
     String? title,
     String? summary,
     String? coverImagePath,
@@ -176,7 +176,7 @@ class CreateArticle extends _$CreateArticle {
     required EventReference eventReference,
     required Delta content,
     required WhoCanReplySettingsOption whoCanReply,
-    required List<String> topics,
+    required Set<String> topics,
     String? title,
     String? summary,
     String? coverImagePath,
