@@ -69,6 +69,7 @@ class FeedPage extends HookConsumerWidget {
                 MediaQuery.paddingOf(context).top +
                 ScreenTopOffset.defaultMargin,
             builder: (context, slivers) => CustomScrollView(
+              physics: const AlwaysScrollableScrollPhysics(),
               slivers: slivers,
               controller: scrollController,
             ),

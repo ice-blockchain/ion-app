@@ -11,20 +11,29 @@ class NetworkIconWidget extends StatelessWidget {
     required this.imageUrl,
     super.key,
     this.size,
+    this.color,
   });
 
   final String imageUrl;
   final double? size;
+  final Color? color;
 
   @override
   Widget build(BuildContext context) {
     final iconSize = size ?? 24.0.s;
+    final colorFilter = color == null
+        ? null
+        : ColorFilter.mode(
+            color!,
+            BlendMode.srcIn,
+          );
 
     return imageUrl.isSvg
         ? SvgPicture.network(
             imageUrl,
             width: iconSize,
             height: iconSize,
+            colorFilter: colorFilter,
           )
         : IonNetworkImage(
             imageUrl: imageUrl,
@@ -36,6 +45,7 @@ class NetworkIconWidget extends StatelessWidget {
               decoration: BoxDecoration(
                 image: DecorationImage(
                   image: imageProvider,
+                  colorFilter: colorFilter,
                 ),
               ),
             ),
