@@ -10,7 +10,7 @@ class FeedFeatureFlags extends _$FeedFeatureFlags {
   @override
   Map<FeedFeatureFlag, dynamic> build() {
     return {
-      FeedFeatureFlag.concurrentDownloadLimit: 5,
+      FeedFeatureFlag.concurrentDownloadLimit: 3,
     };
   }
 
