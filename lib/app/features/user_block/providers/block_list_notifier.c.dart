@@ -12,9 +12,13 @@ import 'package:ion/app/features/ion_connect/providers/ion_connect_entity_provid
 import 'package:ion/app/features/user_block/model/database/block_user_database.c.dart';
 import 'package:ion/app/features/user_block/model/entities/blocked_user_entity.c.dart';
 import 'package:ion/app/features/user_block/optimistic_ui/block_user_provider.c.dart';
+import 'package:ion/app/services/riverpod/provider_cache_utils.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'block_list_notifier.c.g.dart';
+
+// Cache for blocked status to reduce rebuilds
+final _blockStatusCache = ProviderCache<String, bool>(maxAge: const Duration(minutes: 5));
 
 @riverpod
 class CurrentUserBlockListNotifier extends _$CurrentUserBlockListNotifier {
@@ -38,6 +42,9 @@ class CurrentUserBlockListNotifier extends _$CurrentUserBlockListNotifier {
         blockEventDao.watchBlockedUsersEvents(currentUserMasterPubkey).listen((blockEvents) {
       final entities = blockEvents.map(BlockedUserEntity.fromEventMessage).toList();
       state = AsyncValue.data(entities);
+      
+      // Clear the block status cache when block list changes
+      _blockStatusCache.clear();
     });
     ref.onDispose(subscription.cancel);
 
@@ -64,6 +71,9 @@ class CurrentUserBlockedByListNotifier extends _$CurrentUserBlockedByListNotifie
         blockEventDao.watchBlockedByUsersEvents(currentUserMasterPubkey).listen((events) {
       final entities = events.map(BlockedUserEntity.fromEventMessage);
       state = AsyncValue.data(entities.toList());
+      
+      // Clear the block status cache when blocked by list changes
+      _blockStatusCache.clear();
     });
 
     ref.onDispose(subscription.cancel);
@@ -79,9 +89,21 @@ class IsBlockedNotifier extends _$IsBlockedNotifier {
     final keepAlive = ref.keepAlive();
     onLogout(ref, keepAlive.close);
 
-    final blockedUser = ref.watch(blockedUserWatchProvider(masterPubkey)).valueOrNull;
+    // Check cache first
+    final cacheKey = 'isBlocked:$masterPubkey';
+    final cachedValue = _blockStatusCache.get(cacheKey);
+    if (cachedValue != null) {
+      return cachedValue;
+    }
 
-    return blockedUser != null && blockedUser.isBlocked;
+    // Get from provider if not cached
+    final blockedUser = await ref.watch(blockedUserWatchProvider(masterPubkey).future);
+    final isBlocked = blockedUser != null && blockedUser.isBlocked;
+    
+    // Cache the result
+    _blockStatusCache.put(cacheKey, isBlocked);
+    
+    return isBlocked;
   }
 }
 
@@ -92,8 +114,21 @@ class IsBlockedByNotifier extends _$IsBlockedByNotifier {
     final keepAlive = ref.keepAlive();
     onLogout(ref, keepAlive.close);
 
+    // Check cache first
+    final cacheKey = 'isBlockedBy:$masterPubkey';
+    final cachedValue = _blockStatusCache.get(cacheKey);
+    if (cachedValue != null) {
+      return cachedValue;
+    }
+
+    // Get from provider if not cached
     final blockedByList = await ref.watch(currentUserBlockedByListNotifierProvider.future);
-    return blockedByList.any((entity) => entity.masterPubkey == masterPubkey);
+    final isBlockedBy = blockedByList.any((entity) => entity.masterPubkey == masterPubkey);
+    
+    // Cache the result
+    _blockStatusCache.put(cacheKey, isBlockedBy);
+    
+    return isBlockedBy;
   }
 }
 
@@ -101,39 +136,82 @@ class IsBlockedByNotifier extends _$IsBlockedByNotifier {
 class IsBlockedOrBlockedByNotifier extends _$IsBlockedOrBlockedByNotifier {
   @override
   Future<bool> build(String pubkey) async {
+    // Check cache first
+    final cacheKey = 'isBlockedOrBlockedBy:$pubkey';
+    final cachedValue = _blockStatusCache.get(cacheKey);
+    if (cachedValue != null) {
+      return cachedValue;
+    }
+
+    // Get from providers if not cached
     final isBlocked = await ref.watch(isBlockedNotifierProvider(pubkey).future);
     final isBlockedBy = await ref.watch(isBlockedByNotifierProvider(pubkey).future);
-
-    return isBlocked || isBlockedBy;
+    final result = isBlocked || isBlockedBy;
+    
+    // Cache the result
+    _blockStatusCache.put(cacheKey, result);
+    
+    return result;
   }
 }
 
+// Memoized version of isEntityBlockedOrBlockedBy that reduces rebuilds
+final _entityBlockStatusCache = ProviderCache<String, bool>(maxAge: const Duration(minutes: 5));
+
 @riverpod
 bool isEntityBlockedOrBlockedBy(Ref ref, IonConnectEntity entity) {
-  final isUserBlocked =
-      ref.watch(blockedUserWatchProvider(entity.masterPubkey)).valueOrNull?.isBlocked ?? false;
-  final blockedByList = ref.watch(currentUserBlockedByListNotifierProvider).valueOrNull ?? [];
-  if (isUserBlocked ||
-      blockedByList.any((bEntity) => bEntity.masterPubkey == entity.masterPubkey)) {
+  final entityId = entity.id;
+  
+  // Check cache first
+  final cachedValue = _entityBlockStatusCache.get(entityId);
+  if (cachedValue != null) {
+    return cachedValue;
+  }
+  
+  // Get direct block status
+  final masterPubkey = entity.masterPubkey;
+  final isUserBlocked = ref.watch(
+    blockedUserWatchProvider(masterPubkey).select(
+      (value) => value.valueOrNull?.isBlocked ?? false,
+    ),
+  );
+  
+  final blockedByList = ref.watch(
+    currentUserBlockedByListNotifierProvider.select(
+      (value) => value.valueOrNull ?? [],
+    ),
+  );
+  
+  final isDirectlyBlocked = isUserBlocked || 
+    blockedByList.any((bEntity) => bEntity.masterPubkey == masterPubkey);
+  
+  if (isDirectlyBlocked) {
+    _entityBlockStatusCache.put(entityId, true);
     return true;
   }
+  
+  // Check quoted content if needed
+  var isQuotedContentBlocked = false;
+  
   if (entity is ModifiablePostEntity && entity.data.quotedEvent != null) {
-    final quotedEntity = ref.watch(
+    final quotedEntity = ref.read(
       ionConnectCachedEntityProvider(
         eventReference: entity.data.quotedEvent!.eventReference,
       ),
     );
     if (quotedEntity != null) {
-      return ref.watch(isEntityBlockedOrBlockedByProvider(quotedEntity));
+      isQuotedContentBlocked = ref.read(isEntityBlockedOrBlockedByProvider(quotedEntity));
     }
   } else if (entity is GenericRepostEntity) {
-    final childEntity = ref.watch(
+    final childEntity = ref.read(
       ionConnectSyncEntityProvider(eventReference: entity.data.eventReference),
     );
     if (childEntity != null) {
-      return ref.watch(isEntityBlockedOrBlockedByProvider(childEntity));
+      isQuotedContentBlocked = ref.read(isEntityBlockedOrBlockedByProvider(childEntity));
     }
   }
-
-  return false;
+  
+  // Cache and return the result
+  _entityBlockStatusCache.put(entityId, isQuotedContentBlocked);
+  return isQuotedContentBlocked;
 }

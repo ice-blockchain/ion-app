@@ -12,11 +12,15 @@ import 'package:ion/app/features/user/model/badges/badge_definition.c.dart';
 import 'package:ion/app/features/user/providers/badges_notifier.c.dart';
 import 'package:ion/app/features/user/providers/follow_list_provider.c.dart';
 import 'package:ion/app/features/user/providers/service_pubkeys_provider.c.dart';
+import 'package:ion/app/services/riverpod/provider_cache_utils.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'can_reply_notifier.c.g.dart';
 
 const _maxCacheAge = Duration(minutes: 1);
+
+// Cache for can reply results
+final _canReplyCache = ProviderCache<String, AsyncValue<bool>>(maxAge: _maxCacheAge);
 
 @riverpod
 class CanReply extends _$CanReply {
@@ -25,12 +29,24 @@ class CanReply extends _$CanReply {
 
   @override
   Future<bool> build(EventReference eventReference) async {
+    final cacheKey = eventReference.toString();
+    
+    // Use cache if available and not skipping
+    if (!_skipCache) {
+      final cachedValue = _canReplyCache.get(cacheKey);
+      if (cachedValue != null) {
+        return cachedValue.valueOrNull ?? false;
+      }
+    }
+    
+    // Watch only the current user pubkey, not the entire auth state
     final currentPubkey = ref.watch(currentPubkeySelectorProvider);
     if (currentPubkey == null) {
       return true;
     }
 
-    final entity = ref.watch(
+    // Use read instead of watch to avoid unnecessary rebuilds
+    final entity = ref.read(
       rootPostEntityProvider(eventReference: eventReference, cache: !_skipCache),
     );
     if (entity == null) {
@@ -44,6 +60,8 @@ class CanReply extends _$CanReply {
 
     final authorPubkey = entity.masterPubkey;
     if (authorPubkey == currentPubkey) {
+      final result = AsyncValue.data(true);
+      _canReplyCache.put(cacheKey, result);
       return true;
     }
 
@@ -54,10 +72,10 @@ class CanReply extends _$CanReply {
     };
     final effectiveSetting = whoCanReplySetting ?? const WhoCanReplySettingsOption.everyone();
 
-    return await effectiveSetting.when(
+    final result = await effectiveSetting.when(
       everyone: () async => true,
       followedAccounts: () async {
-        final followers = await ref.watch(
+        final followers = await ref.read(
           followListProvider(authorPubkey, cache: !_skipCache).future,
         );
         if (followers == null) {
@@ -66,13 +84,13 @@ class CanReply extends _$CanReply {
         return followers.data.list.any((followee) => followee.pubkey == currentPubkey);
       },
       accountsWithBadge: (badgeRef) async {
-        final pubkeys = await ref.watch(servicePubkeysProvider.future);
+        final pubkeys = await ref.read(servicePubkeysProvider.future);
         final isBadgeDefinitionValid =
-            ref.watch(isValidVerifiedBadgeDefinitionProvider(badgeRef, pubkeys));
+            ref.read(isValidVerifiedBadgeDefinitionProvider(badgeRef, pubkeys));
         if (!isBadgeDefinitionValid) {
           return false;
         }
-        return await ref.watch(
+        return await ref.read(
           isUserVerifiedProvider(currentPubkey).future,
         );
       },
@@ -87,6 +105,10 @@ class CanReply extends _$CanReply {
         return mentions.any((pubKey) => pubKey.value == currentPubkey);
       },
     );
+    
+    // Update cache with result
+    _canReplyCache.put(cacheKey, AsyncValue.data(result));
+    return result;
   }
 
   void refreshIfNeeded(EventReference eventReference) {
@@ -94,6 +116,10 @@ class CanReply extends _$CanReply {
     if (now.difference(_lastFetchDate) > _maxCacheAge) {
       _lastFetchDate = now;
       _skipCache = true;
+      
+      // Clear the cache for this specific event reference
+      _canReplyCache.remove(eventReference.toString());
+      
       ref.invalidateSelf();
     }
   }

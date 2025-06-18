@@ -18,6 +18,8 @@ import 'package:ion/app/features/wallets/data/database/wallets_database.c.dart';
 import 'package:ion/app/router/components/navigation_app_bar/navigation_app_bar.dart';
 import 'package:ion/app/router/components/navigation_app_bar/navigation_close_button.dart';
 import 'package:ion/app/services/logger/logger.dart';
+import 'package:ion/app/services/provider_rebuild_counter/provider_rebuild_counter.dart';
+import 'package:ion/app/services/riverpod/container.dart';
 import 'package:ion/app/services/share/share.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:talker_flutter/talker_flutter.dart';
@@ -70,6 +72,15 @@ class DebugPage extends ConsumerWidget {
                   ),
                 Card(
                   child: ListTile(
+                    leading: const Icon(Icons.speed),
+                    title: const Text('Riverpod Rebuild Tracking'),
+                    subtitle: const Text('Monitor provider rebuild counts'),
+                    trailing: const Icon(Icons.chevron_right),
+                    onTap: () => _showRiverpodRebuildOptions(context),
+                  ),
+                ),
+                Card(
+                  child: ListTile(
                     leading: const Icon(Icons.storage),
                     title: const Text('View Drift Databases'),
                     subtitle: const Text('Explore database tables'),
@@ -109,6 +120,44 @@ class DebugPage extends ConsumerWidget {
           ),
         ),
       ],
+    );
+  }
+
+  void _showRiverpodRebuildOptions(BuildContext context) {
+    showDialog<void>(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text('Riverpod Rebuild Tracking'),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              ListTile(
+                leading: const Icon(Icons.refresh),
+                title: const Text('Show Current Statistics'),
+                onTap: () {
+                  Navigator.of(context).pop();
+                  providerRebuildLogger.logStatisticsNow();
+                },
+              ),
+              ListTile(
+                leading: const Icon(Icons.delete_outline),
+                title: const Text('Reset Statistics'),
+                onTap: () {
+                  Navigator.of(context).pop();
+                  providerRebuildLogger.resetStatistics();
+                },
+              ),
+            ],
+          ),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.of(context).pop(),
+              child: const Text('Close'),
+            ),
+          ],
+        );
+      },
     );
   }
 
