@@ -18,7 +18,6 @@ final class FeedFeatureFlag extends FeatureFlag {
 
   static const showTrendingVideo = FeedFeatureFlag._(key: 'showTrendingVideo');
   static const showSuggestions = FeedFeatureFlag._(key: 'showSuggestions');
-  static const concurrentDownloadLimit = FeedFeatureFlag._(key: 'concurrentDownloadsLimit');
 }
 
 final class LoggerFeatureFlag extends FeatureFlag {
