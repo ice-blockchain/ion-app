@@ -11,7 +11,7 @@ import 'package:ion/app/extensions/num.dart';
 import 'package:ion/app/extensions/theme_data.dart';
 import 'package:ion/app/features/components/bookmarks/components/bookmarks_collection_tile_edit_action.dart';
 import 'package:ion/app/features/components/bookmarks/components/bookmarks_collection_tile_select_action.dart';
-import 'package:ion/app/features/feed/data/models/bookmarks/bookmarks_collection.c.dart';
+import 'package:ion/app/features/feed/data/models/bookmarks/bookmarks_set.c.dart';
 import 'package:ion/app/features/feed/providers/feed_bookmarks_notifier.c.dart';
 import 'package:ion/app/features/ion_connect/model/event_reference.c.dart';
 import 'package:ion/generated/assets.gen.dart';
@@ -39,7 +39,8 @@ class BookmarksCollectionTile extends ConsumerWidget {
     if (entity == null) {
       return const SizedBox();
     }
-    final isDefaultCollection = entity.data.type == BookmarksCollectionEntity.defaultCollectionDTag;
+    final isDefaultCollection =
+        entity.data.type == BookmarksSetType.homeFeedCollectionsAll.dTagName;
     return ListItem(
       leading: ButtonIconFrame(
         containerSize: 36.0.s,
@@ -55,7 +56,7 @@ class BookmarksCollectionTile extends ConsumerWidget {
         ),
       ),
       subtitle: Text(
-        entity.data.refs.length.toString(),
+        entity.data.eventReferences.length.toString(),
         style: context.theme.appTextThemes.caption2.copyWith(
           color: context.theme.appColors.quaternaryText,
         ),

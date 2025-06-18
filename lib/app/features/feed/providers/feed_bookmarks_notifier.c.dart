@@ -8,7 +8,7 @@ import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/auth/providers/auth_provider.c.dart';
 import 'package:ion/app/features/auth/providers/delegation_complete_provider.c.dart';
 import 'package:ion/app/features/feed/data/models/bookmarks/bookmarks.c.dart';
-import 'package:ion/app/features/feed/data/models/bookmarks/bookmarks_collection.c.dart';
+import 'package:ion/app/features/feed/data/models/bookmarks/bookmarks_set.c.dart';
 import 'package:ion/app/features/ion_connect/ion_connect.dart';
 import 'package:ion/app/features/ion_connect/model/action_source.c.dart';
 import 'package:ion/app/features/ion_connect/model/event_reference.c.dart';
@@ -22,7 +22,7 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 part 'feed_bookmarks_notifier.c.g.dart';
 
 @riverpod
-Future<BookmarksCollectionEntity?> bookmarksCollection(
+Future<BookmarksSetEntity?> bookmarksCollection(
   Ref ref,
   String pubkey,
   String collectionDTag,
@@ -30,10 +30,10 @@ Future<BookmarksCollectionEntity?> bookmarksCollection(
   final request = RequestMessage()
     ..addFilter(
       RequestFilter(
-        kinds: const [BookmarksCollectionEntity.kind],
+        kinds: const [BookmarksSetEntity.kind],
+        authors: [pubkey],
         tags: {
           '#d': [collectionDTag],
-          '#b': [pubkey],
         },
       ),
     );
@@ -44,7 +44,7 @@ Future<BookmarksCollectionEntity?> bookmarksCollection(
     return null;
   }
 
-  final entity = BookmarksCollectionEntity.fromEventMessage(eventMessage);
+  final entity = BookmarksSetEntity.fromEventMessage(eventMessage);
 
   return entity;
 }
@@ -52,8 +52,8 @@ Future<BookmarksCollectionEntity?> bookmarksCollection(
 @Riverpod(keepAlive: true)
 class FeedBookmarksNotifier extends _$FeedBookmarksNotifier {
   @override
-  Future<BookmarksCollectionEntity?> build({
-    String collectionDTag = BookmarksCollectionEntity.defaultCollectionDTag,
+  Future<BookmarksSetEntity?> build({
+    required String collectionDTag,
   }) async {
     final authState = await ref.watch(authProvider.future);
 
@@ -86,20 +86,20 @@ class FeedBookmarksNotifier extends _$FeedBookmarksNotifier {
         return state.value;
       }
       final newAllBookmarksRefs = <EventReference>[];
-      if (bookmarksCollection.data.refs.contains(eventReference)) {
+      if (bookmarksCollection.data.eventReferences.contains(eventReference)) {
         newAllBookmarksRefs
-          ..addAll(bookmarksCollection.data.refs)
+          ..addAll(bookmarksCollection.data.eventReferences)
           ..remove(eventReference);
 
         // If toggling off in the default collection, also remove from all other collections
-        if (bookmarksCollection.data.type == BookmarksCollectionEntity.defaultCollectionDTag) {
+        if (bookmarksCollection.data.type == BookmarksSetType.homeFeedCollectionsAll.dTagName) {
           final collectionsRefs = await ref.read(
             feedBookmarkCollectionsNotifierProvider.future,
           );
           final collectionsDTags = collectionsRefs
               .map((collectionRef) => collectionRef.dTag)
               .whereType<String>()
-              .where((dTag) => dTag != BookmarksCollectionEntity.defaultCollectionDTag)
+              .where((dTag) => dTag != BookmarksSetType.homeFeedCollectionsAll.dTagName)
               .toList();
           await Future.wait(
             collectionsDTags.map(
@@ -110,7 +110,7 @@ class FeedBookmarksNotifier extends _$FeedBookmarksNotifier {
                       ).future,
                     ))
                         ?.data
-                        .refs
+                        .eventReferences
                         .contains(eventReference) ??
                     false;
                 if (isIncluded) {
@@ -129,40 +129,28 @@ class FeedBookmarksNotifier extends _$FeedBookmarksNotifier {
       } else {
         newAllBookmarksRefs
           ..add(eventReference)
-          ..addAll(bookmarksCollection.data.refs);
-        if (bookmarksCollection.data.type == BookmarksCollectionEntity.defaultCollectionDTag) {
+          ..addAll(bookmarksCollection.data.eventReferences);
+        if (bookmarksCollection.data.type == BookmarksSetType.homeFeedCollectionsAll.dTagName) {
           unawaited(ref.read(ionConnectDbCacheProvider.notifier).saveRef(eventReference));
-        }
-        if (bookmarksCollection.data.type != BookmarksCollectionEntity.defaultCollectionDTag) {
-          final isIncluded = (await ref.read(
-                feedBookmarksNotifierProvider().future,
-              ))
-                  ?.data
-                  .refs
-                  .contains(eventReference) ??
-              false;
-          if (!isIncluded) {
-            await ref
-                .read(
-                  feedBookmarksNotifierProvider().notifier,
-                )
-                .toggleBookmark(eventReference);
-          }
         }
       }
 
-      final newBookmarksCollectionData = BookmarksCollectionData(
+      final newBookmarksCollectionData = BookmarksSetData(
         type: bookmarksCollection.data.type,
-        refs: newAllBookmarksRefs.toList(),
+        eventReferences: newAllBookmarksRefs.toList(),
         title: bookmarksCollection.data.title,
       );
 
       final result = await ref.read(ionConnectNotifierProvider.notifier).sendEntityData(
             newBookmarksCollectionData,
           );
-      final data = result as BookmarksCollectionEntity?;
+      final data = result as BookmarksSetEntity?;
       return data;
     });
+  }
+
+  Future<void> setState(BookmarksSetEntity? bookmarksSetEntity) async {
+    state = AsyncData(bookmarksSetEntity);
   }
 }
 
@@ -170,11 +158,12 @@ class FeedBookmarksNotifier extends _$FeedBookmarksNotifier {
 bool isBookmarkedInCollection(
   Ref ref,
   EventReference eventReference, {
-  String collectionDTag = BookmarksCollectionEntity.defaultCollectionDTag,
+  required String collectionDTag,
 }) {
   final feedBookmarksNotifierState =
       ref.watch(feedBookmarksNotifierProvider(collectionDTag: collectionDTag));
-  return feedBookmarksNotifierState.valueOrNull?.data.refs.contains(eventReference) ?? false;
+  return feedBookmarksNotifierState.valueOrNull?.data.eventReferences.contains(eventReference) ??
+      false;
 }
 
 @riverpod
@@ -186,7 +175,7 @@ Future<List<EventReference>> filteredBookmarksRefs(
   final collectionEntity =
       await ref.watch(feedBookmarksNotifierProvider(collectionDTag: collectionDTag).future);
 
-  final allRefs = collectionEntity?.data.refs ?? [];
+  final allRefs = collectionEntity?.data.eventReferences ?? [];
 
   if (query.isEmpty) return allRefs;
 
@@ -196,12 +185,14 @@ Future<List<EventReference>> filteredBookmarksRefs(
 
 @Riverpod(keepAlive: true)
 void feedBookmarksSync(Ref ref) {
-  ref.listen<AsyncValue<BookmarksCollectionEntity?>>(
-    feedBookmarksNotifierProvider(),
+  ref.listen<AsyncValue<BookmarksSetEntity?>>(
+    feedBookmarksNotifierProvider(collectionDTag: BookmarksSetType.homeFeedCollectionsAll.dTagName),
     (previous, next) {
       final collection = next.value;
       if (collection != null) {
-        ref.read(ionConnectDbCacheProvider.notifier).saveAllNonExistingRefs(collection.data.refs);
+        ref
+            .read(ionConnectDbCacheProvider.notifier)
+            .saveAllNonExistingRefs(collection.data.eventReferences);
       }
     },
   );
@@ -219,49 +210,56 @@ class FeedBookmarkCollectionsNotifier extends _$FeedBookmarkCollectionsNotifier 
     final bookmarksCollection = await ref.watch(
       bookmarksCollectionProvider(
         currentPubkey,
-        BookmarksCollectionEntity.collectionsDTag,
+        BookmarksSetType.homeFeedCollections.dTagName,
       ).future,
     );
-    final collectionsRefs = bookmarksCollection?.data.refs ?? [];
+    final collectionsRefs = bookmarksCollection?.data.eventReferences ?? [];
 
     final bookmarkCollections = collectionsRefs
         .where(
           (collectionsRef) =>
               collectionsRef is ReplaceableEventReference &&
-              collectionsRef.kind == BookmarksCollectionEntity.kind,
+              collectionsRef.kind == BookmarksSetEntity.kind,
         )
         .cast<ReplaceableEventReference>()
         .toList();
     if (bookmarkCollections
-        .none((ref) => ref.dTag == BookmarksCollectionEntity.defaultCollectionDTag)) {
+        .none((ref) => ref.dTag == BookmarksSetType.homeFeedCollectionsAll.dTagName)) {
       final bookmarksData = BookmarksData(
-        ids: [],
-        bookmarksSetRefs: [
+        eventReferences: [
           ReplaceableEventReference(
             pubkey: currentPubkey,
-            kind: BookmarksCollectionEntity.kind,
-            dTag: BookmarksCollectionEntity.collectionsDTag,
+            kind: BookmarksSetEntity.kind,
+            dTag: BookmarksSetType.homeFeedCollections.dTagName,
           ),
         ],
       );
-      final collectionsData = BookmarksCollectionData(
-        type: BookmarksCollectionEntity.collectionsDTag,
-        refs: [
+      final collectionsData = BookmarksSetData(
+        type: BookmarksSetType.homeFeedCollections.dTagName,
+        eventReferences: [
           ReplaceableEventReference(
             pubkey: currentPubkey,
-            kind: BookmarksCollectionEntity.kind,
-            dTag: BookmarksCollectionEntity.defaultCollectionDTag,
+            kind: BookmarksSetEntity.kind,
+            dTag: BookmarksSetType.homeFeedCollectionsAll.dTagName,
           ),
         ],
       );
-      const defaultBookmarksCollectionData = BookmarksCollectionData(
-        type: BookmarksCollectionEntity.defaultCollectionDTag,
-        refs: [],
+      final defaultBookmarksCollectionData = BookmarksSetData(
+        type: BookmarksSetType.homeFeedCollectionsAll.dTagName,
+        eventReferences: [],
       );
 
       await ref.read(ionConnectNotifierProvider.notifier).sendEntitiesData(
         [defaultBookmarksCollectionData, collectionsData, bookmarksData],
         actionSource: ActionSourceUser(currentPubkey),
+      );
+
+      bookmarkCollections.add(
+        ReplaceableEventReference(
+          pubkey: currentPubkey,
+          kind: BookmarksSetEntity.kind,
+          dTag: BookmarksSetType.homeFeedCollectionsAll.dTagName,
+        ),
       );
     }
 
@@ -275,9 +273,9 @@ class FeedBookmarkCollectionsNotifier extends _$FeedBookmarkCollectionsNotifier 
       return;
     }
 
-    final newCollectionData = BookmarksCollectionData(
+    final newCollectionData = BookmarksSetData(
       type: 'homefeed_collection_${generateUuid()}',
-      refs: [],
+      eventReferences: [],
       title: title,
     );
 
@@ -285,13 +283,13 @@ class FeedBookmarkCollectionsNotifier extends _$FeedBookmarkCollectionsNotifier 
       ...currentBookmarkCollectionsRefs,
       ReplaceableEventReference(
         pubkey: currentPubkey,
-        kind: BookmarksCollectionEntity.kind,
+        kind: BookmarksSetEntity.kind,
         dTag: newCollectionData.type,
       ),
     ];
-    final updatedAllCollectionsData = BookmarksCollectionData(
-      type: BookmarksCollectionEntity.collectionsDTag,
-      refs: updatedCollectionsRefs,
+    final updatedAllCollectionsData = BookmarksSetData(
+      type: BookmarksSetType.homeFeedCollections.dTagName,
+      eventReferences: updatedCollectionsRefs,
     );
 
     await ref.read(ionConnectNotifierProvider.notifier).sendEntitiesData(
@@ -302,7 +300,7 @@ class FeedBookmarkCollectionsNotifier extends _$FeedBookmarkCollectionsNotifier 
     ref
       ..invalidateSelf()
       ..invalidate(
-        bookmarksCollectionProvider(currentPubkey, BookmarksCollectionEntity.collectionsDTag),
+        bookmarksCollectionProvider(currentPubkey, BookmarksSetType.homeFeedCollections.dTagName),
       )
       ..invalidate(feedBookmarksNotifierProvider);
   }
@@ -312,21 +310,21 @@ class FeedBookmarkCollectionsNotifier extends _$FeedBookmarkCollectionsNotifier 
     final currentBookmarkCollectionsRefs = state.valueOrNull ?? [];
     if (currentPubkey == null ||
         currentBookmarkCollectionsRefs.isEmpty ||
-        collectionDTag == BookmarksCollectionEntity.defaultCollectionDTag) {
+        collectionDTag == BookmarksSetType.homeFeedCollectionsAll.dTagName) {
       return;
     }
 
     final updatedRootRefs =
         currentBookmarkCollectionsRefs.where((ref) => ref.dTag != collectionDTag).toList();
 
-    final updatedAllCollectionsData = BookmarksCollectionData(
-      type: BookmarksCollectionEntity.collectionsDTag,
-      refs: updatedRootRefs,
+    final updatedAllCollectionsData = BookmarksSetData(
+      type: BookmarksSetType.homeFeedCollections.dTagName,
+      eventReferences: updatedRootRefs,
     );
 
-    final deleteCollectionData = BookmarksCollectionData(
+    final deleteCollectionData = BookmarksSetData(
       type: collectionDTag,
-      refs: [],
+      eventReferences: [],
     );
 
     await ref.read(ionConnectNotifierProvider.notifier).sendEntitiesData(
@@ -337,33 +335,40 @@ class FeedBookmarkCollectionsNotifier extends _$FeedBookmarkCollectionsNotifier 
     ref
       ..invalidateSelf()
       ..invalidate(
-        bookmarksCollectionProvider(currentPubkey, BookmarksCollectionEntity.collectionsDTag),
+        bookmarksCollectionProvider(currentPubkey, BookmarksSetType.homeFeedCollections.dTagName),
       )
       ..invalidate(feedBookmarksNotifierProvider);
   }
 
   Future<void> renameCollection(
-    BookmarksCollectionData bookmarksCollectionData,
+    BookmarksSetData bookmarksCollectionData,
     String newTitle,
   ) async {
     final currentPubkey = ref.read(currentPubkeySelectorProvider);
     final currentBookmarkCollectionsRefs = state.valueOrNull ?? [];
     final collectionDTag = bookmarksCollectionData.type;
     if (currentPubkey == null ||
-        collectionDTag == BookmarksCollectionEntity.defaultCollectionDTag ||
+        collectionDTag == BookmarksSetType.homeFeedCollectionsAll.dTagName ||
         !currentBookmarkCollectionsRefs.any((ref) => ref.dTag == collectionDTag)) {
       return;
     }
 
-    final updatedCollectionData = BookmarksCollectionData(
+    final updatedCollectionData = BookmarksSetData(
       type: collectionDTag,
-      refs: bookmarksCollectionData.refs,
+      eventReferences: bookmarksCollectionData.eventReferences,
       title: newTitle,
     );
 
-    await ref.read(ionConnectNotifierProvider.notifier).sendEntitiesData(
-      [updatedCollectionData],
-      actionSource: ActionSourceUser(currentPubkey),
-    );
+    await ref.read(ionConnectNotifierProvider.notifier).sendEntityData(
+          updatedCollectionData,
+          actionSource: ActionSourceUser(currentPubkey),
+        );
+
+    ref
+      ..invalidateSelf()
+      ..invalidate(
+        bookmarksCollectionProvider(currentPubkey, BookmarksSetType.homeFeedCollections.dTagName),
+      )
+      ..invalidate(feedBookmarksNotifierProvider);
   }
 }

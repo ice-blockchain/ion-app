@@ -47,10 +47,9 @@ class ToggleArchivedConversations extends _$ToggleArchivedConversations {
     final archivedConversationBookmarksData =
         await ref.read(currentUserChatBookmarksDataProvider.future);
     return archivedConversationBookmarksData ??
-        const BookmarksSetData(
-          postsRefs: [],
-          articlesRefs: [],
-          type: BookmarksSetType.chats,
+        BookmarksSetData(
+          eventReferences: [],
+          type: BookmarksSetType.chats.dTagName,
         );
   }
 
@@ -181,5 +180,7 @@ class ToggleArchivedConversations extends _$ToggleArchivedConversations {
     await ref
         .read(ionConnectNotifierProvider.notifier)
         .sendEntityData(bookmarkSet..toReplaceableEventReference(masterPubkey));
+
+    return;
   }
 }

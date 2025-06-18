@@ -25,10 +25,8 @@ class EncryptedDirectMessageStatusHandler extends GlobalSubscriptionEncryptedEve
     required IonConnectGiftWrapEntity entity,
   }) {
     return entity.data.kinds.containsDeep([
-          PrivateMessageReactionEntity.kind.toString(),
-        ]) &&
-        (entity.data.content == MessageDeliveryStatus.received.name ||
-            entity.data.content == MessageDeliveryStatus.read.name);
+      PrivateMessageReactionEntity.kind.toString(),
+    ]);
   }
 
   @override

@@ -11,12 +11,14 @@ part 'global_subscription_latest_event_timestamp_provider.c.g.dart';
 
 enum EventType {
   regular,
+  authorBased,
   encrypted;
 
   String get localKey {
     return switch (this) {
-      EventType.regular => 'global_subscription_latest_regular_event_timestamp_8',
-      EventType.encrypted => 'global_subscription_latest_encrypted_event_timestamp_8',
+      EventType.regular => 'global_subscription_latest_regular_event_timestamp',
+      EventType.authorBased => 'global_subscription_latest_author_based_event_timestamp',
+      EventType.encrypted => 'global_subscription_latest_encrypted_event_timestamp',
     };
   }
 }
@@ -35,15 +37,18 @@ class GlobalSubscriptionLatestEventTimestampService {
 
   Future<void> update(int createdAt, EventType eventType) async {
     int? latestEventTimestamp;
-    if (eventType == EventType.encrypted) {
-      latestEventTimestamp =
-          DateTime.now().microsecondsSinceEpoch - const Duration(days: 2).inMicroseconds;
-    } else {
-      final existingValue = get(eventType);
-      if (existingValue != null && existingValue >= createdAt) {
-        return;
-      }
-      latestEventTimestamp = createdAt;
+
+    switch (eventType) {
+      case EventType.encrypted:
+        latestEventTimestamp =
+            DateTime.now().microsecondsSinceEpoch - const Duration(days: 2).inMicroseconds;
+      case EventType.authorBased:
+      case EventType.regular:
+        final existingValue = get(eventType);
+        if (existingValue != null && existingValue >= createdAt) {
+          return;
+        }
+        latestEventTimestamp = createdAt;
     }
 
     await userPreferenceService.setValue(eventType.localKey, latestEventTimestamp);

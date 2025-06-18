@@ -9,7 +9,7 @@ import 'package:ion/app/components/separated/separator.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/components/bookmarks/bookmarks_collection_tile.dart';
 import 'package:ion/app/features/components/bookmarks/new_bookmarks_collection_button.dart';
-import 'package:ion/app/features/feed/data/models/bookmarks/bookmarks_collection.c.dart';
+import 'package:ion/app/features/feed/data/models/bookmarks/bookmarks_set.c.dart';
 import 'package:ion/app/features/feed/providers/feed_bookmarks_notifier.c.dart';
 import 'package:ion/app/features/ion_connect/model/event_reference.c.dart';
 import 'package:ion/app/router/components/sheet_content/sheet_content.dart';
@@ -34,7 +34,7 @@ class AddBookmarkModal extends ConsumerWidget {
               final collectionsDTags = data
                   .map((eventReference) => eventReference.dTag)
                   .whereType<String>()
-                  .where((dTag) => dTag != BookmarksCollectionEntity.defaultCollectionDTag)
+                  .where((dTag) => dTag != BookmarksSetType.homeFeedCollectionsAll.dTagName)
                   .toList();
               return [
                 SliverToBoxAdapter(
@@ -44,7 +44,7 @@ class AddBookmarkModal extends ConsumerWidget {
                       SizedBox(height: 24.0.s),
                       BookmarksCollectionTile(
                         eventReference: eventReference,
-                        collectionDTag: BookmarksCollectionEntity.defaultCollectionDTag,
+                        collectionDTag: BookmarksSetType.homeFeedCollectionsAll.dTagName,
                       ),
                       SizedBox(height: 16.0.s),
                       const HorizontalSeparator(),

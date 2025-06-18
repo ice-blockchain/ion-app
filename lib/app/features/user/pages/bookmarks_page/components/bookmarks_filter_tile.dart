@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/components/skeleton/skeleton.dart';
 import 'package:ion/app/extensions/extensions.dart';
-import 'package:ion/app/features/feed/data/models/bookmarks/bookmarks_collection.c.dart';
+import 'package:ion/app/features/feed/data/models/bookmarks/bookmarks_set.c.dart';
 import 'package:ion/app/features/feed/providers/feed_bookmarks_notifier.c.dart';
 import 'package:ion/generated/assets.gen.dart';
 
@@ -25,7 +25,7 @@ class BookmarksFilterTile extends ConsumerWidget {
     final state = ref.watch(feedBookmarksNotifierProvider(collectionDTag: collectionDTag));
     final entity = state.valueOrNull;
     final isLoading = state.isLoading && entity == null;
-    final title = collectionDTag == BookmarksCollectionEntity.defaultCollectionDTag
+    final title = collectionDTag == BookmarksSetType.homeFeedCollectionsAll.dTagName
         ? context.i18n.core_all
         : entity?.data.title ?? '';
     if (state.hasError) {

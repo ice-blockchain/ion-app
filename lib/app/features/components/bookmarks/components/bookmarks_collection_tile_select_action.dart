@@ -3,7 +3,7 @@
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/extensions/asset_gen_image.dart';
-import 'package:ion/app/features/feed/data/models/bookmarks/bookmarks_collection.c.dart';
+import 'package:ion/app/features/feed/data/models/bookmarks/bookmarks_set.c.dart';
 import 'package:ion/app/features/feed/providers/feed_bookmarks_notifier.c.dart';
 import 'package:ion/app/features/ion_connect/model/event_reference.c.dart';
 import 'package:ion/generated/assets.gen.dart';
@@ -16,7 +16,7 @@ class BookmarksCollectionTileSelectAction extends ConsumerWidget {
   });
 
   final EventReference eventReference;
-  final BookmarksCollectionData data;
+  final BookmarksSetData data;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -26,7 +26,7 @@ class BookmarksCollectionTileSelectAction extends ConsumerWidget {
   }
 
   Widget _getIconWidget(bool isBookmarked) {
-    final isDefaultCollection = data.type == BookmarksCollectionEntity.defaultCollectionDTag;
+    final isDefaultCollection = data.type == BookmarksSetType.homeFeedCollectionsAll.dTagName;
     if (isDefaultCollection) {
       return isBookmarked ? Assets.svg.iconBookmarksOn.icon() : Assets.svg.iconBookmarks.icon();
     }
