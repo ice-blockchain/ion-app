@@ -5,9 +5,9 @@ import 'package:ion/app/features/auth/providers/auth_provider.c.dart';
 import 'package:ion/app/features/feed/data/models/entities/article_data.c.dart';
 import 'package:ion/app/features/feed/data/models/entities/modifiable_post_data.c.dart';
 import 'package:ion/app/features/feed/data/models/who_can_reply_settings_option.c.dart';
+import 'package:ion/app/features/feed/providers/root_post_provider.c.dart';
 import 'package:ion/app/features/ion_connect/model/event_reference.c.dart';
 import 'package:ion/app/features/ion_connect/model/related_pubkey.c.dart';
-import 'package:ion/app/features/ion_connect/providers/ion_connect_entity_provider.c.dart';
 import 'package:ion/app/features/user/model/badges/badge_definition.c.dart';
 import 'package:ion/app/features/user/providers/badges_notifier.c.dart';
 import 'package:ion/app/features/user/providers/follow_list_provider.c.dart';
@@ -30,8 +30,8 @@ class CanReply extends _$CanReply {
       return true;
     }
 
-    final entity = await ref.watch(
-      ionConnectEntityProvider(eventReference: eventReference, cache: !_skipCache).future,
+    final entity = ref.watch(
+      rootPostEntityProvider(eventReference: eventReference, cache: !_skipCache),
     );
     if (entity == null) {
       return false;

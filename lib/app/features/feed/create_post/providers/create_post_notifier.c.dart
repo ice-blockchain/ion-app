@@ -107,7 +107,8 @@ class CreatePostNotifier extends _$CreatePostNotifier {
         quotedEvent: quotedEvent != null ? _buildQuotedEvent(quotedEvent) : null,
         relatedEvents: parentEntity != null ? _buildRelatedEvents(parentEntity) : null,
         relatedPubkeys: _buildRelatedPubkeys(mentions: mentions, parentEntity: parentEntity),
-        settings: EntityDataWithSettings.build(whoCanReply: whoCanReply),
+        settings:
+            parentEntity != null ? null : EntityDataWithSettings.build(whoCanReply: whoCanReply),
         expiration: _buildExpiration(),
         communityId: communityId,
         richText: await _buildRichTextContentWithMediaLinks(
@@ -287,8 +288,15 @@ class CreatePostNotifier extends _$CreatePostNotifier {
         parentEntity.masterPubkey,
         if (rootRelatedEvent != null) rootRelatedEvent.eventReference.pubkey,
       ]);
-      if (parentEntity is ModifiablePostEntity &&
-          parentEntity.data.hasVerifiedUsersOnlyCanReplySettingOption) {
+      final rootRef = rootRelatedEvent?.eventReference;
+      final rootEntity = (rootRef != null
+              ? await ref.watch(
+                  ionConnectEntityProvider(eventReference: rootRef).future,
+                )
+              : null) ??
+          parentEntity;
+      if (rootEntity is ModifiablePostEntity &&
+          rootEntity.data.hasVerifiedUsersOnlyCanReplySettingOption) {
         final verifiedUserEventsMetadataBuilder =
             await ref.read(verifiedUserEventsMetadataBuilderProvider.future);
         metadataBuilders.add(verifiedUserEventsMetadataBuilder);

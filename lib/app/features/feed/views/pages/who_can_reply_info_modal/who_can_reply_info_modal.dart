@@ -9,8 +9,8 @@ import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/feed/data/models/entities/article_data.c.dart';
 import 'package:ion/app/features/feed/data/models/entities/modifiable_post_data.c.dart';
 import 'package:ion/app/features/feed/data/models/who_can_reply_settings_option.c.dart';
+import 'package:ion/app/features/feed/providers/root_post_provider.c.dart';
 import 'package:ion/app/features/ion_connect/model/event_reference.c.dart';
-import 'package:ion/app/features/ion_connect/providers/ion_connect_entity_provider.c.dart';
 import 'package:ion/app/features/user/providers/user_metadata_provider.c.dart';
 import 'package:ion/generated/assets.gen.dart';
 
@@ -44,7 +44,7 @@ class WhoCanReplyInfoModal extends HookConsumerWidget {
   }
 
   String _getDescription(BuildContext context, WidgetRef ref) {
-    final entity = ref.watch(ionConnectEntityProvider(eventReference: eventReference)).value;
+    final entity = ref.watch(rootPostEntityProvider(eventReference: eventReference));
     if (entity == null) {
       return '';
     }
