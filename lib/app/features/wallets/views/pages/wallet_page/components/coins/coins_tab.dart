@@ -67,7 +67,7 @@ class CoinsTab extends ConsumerWidget {
   }
 }
 
-class _CoinsTabBody extends ConsumerWidget {
+class _CoinsTabBody extends StatelessWidget {
   const _CoinsTabBody({
     required this.itemCount,
     required this.itemBuilder,
@@ -77,7 +77,7 @@ class _CoinsTabBody extends ConsumerWidget {
   final NullableIndexedWidgetBuilder itemBuilder;
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  Widget build(BuildContext context) {
     return SliverMainAxisGroup(
       slivers: [
         SliverList.separated(
