@@ -101,8 +101,15 @@ class IsBlockedByNotifier extends _$IsBlockedByNotifier {
 class IsBlockedOrBlockedByNotifier extends _$IsBlockedOrBlockedByNotifier {
   @override
   Future<bool> build(String pubkey) async {
-    final isBlocked = await ref.watch(isBlockedNotifierProvider(pubkey).future);
-    final isBlockedBy = await ref.watch(isBlockedByNotifierProvider(pubkey).future);
+    final isCurrentUserProfile = ref.watch(isCurrentUserSelectorProvider(pubkey));
+    if (isCurrentUserProfile) {
+      return false;
+    }
+
+    final (isBlocked, isBlockedBy) = await (
+      ref.watch(isBlockedNotifierProvider(pubkey).future),
+      ref.watch(isBlockedByNotifierProvider(pubkey).future),
+    ).wait;
 
     return isBlocked || isBlockedBy;
   }
