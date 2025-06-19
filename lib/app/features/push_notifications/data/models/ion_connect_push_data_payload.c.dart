@@ -63,7 +63,7 @@ class IonConnectPushDataPayload {
     if (parsedEvent.kind == IonConnectGiftWrapEntity.kind) {
       final giftWrapEntity = EventParser().parse(parsedEvent) as IonConnectGiftWrapEntity;
       if (giftWrapEntity.data.kinds
-          .contains(ReplaceablePrivateDirectMessageEntity.kind.toString())) {
+          .containsDeep([ReplaceablePrivateDirectMessageEntity.kind.toString()])) {
         decryptedEvent = await decryptEvent(parsedEvent);
       }
     }
