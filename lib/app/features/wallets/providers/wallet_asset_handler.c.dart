@@ -71,11 +71,11 @@ class WalletAssetHandler extends GlobalSubscriptionEncryptedEventMessageHandler 
 @riverpod
 Future<WalletAssetHandler?> walletAssetHandler(Ref ref) async {
   final currentPubkey = ref.watch(currentPubkeySelectorProvider);
-  final walletViewsService = ref.watch(walletViewsServiceProvider).valueOrNull;
-  final transactionsRepository = ref.watch(transactionsRepositoryProvider).valueOrNull;
+  final walletViewsService = await ref.watch(walletViewsServiceProvider.future);
+  final transactionsRepository = await ref.watch(transactionsRepositoryProvider.future);
   final requestAssetsRepository = ref.watch(requestAssetsRepositoryProvider);
 
-  if (currentPubkey == null || walletViewsService == null || transactionsRepository == null) {
+  if (currentPubkey == null) {
     return null;
   }
 
