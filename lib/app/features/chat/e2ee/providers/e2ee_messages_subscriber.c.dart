@@ -160,7 +160,7 @@ class E2eeMessagesSubscriber extends _$E2eeMessagesSubscriber {
           .read(userMetadataSyncProvider.notifier)
           .syncUserMetadata(masterPubkeys: {rumor.masterPubkey}),
     );
-    
+
     // Only for kind 30014
     if (rumor.kind == ReplaceablePrivateDirectMessageEntity.kind) {
       final entity = ReplaceablePrivateDirectMessageEntity.fromEventMessage(rumor);
