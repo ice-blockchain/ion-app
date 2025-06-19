@@ -43,15 +43,13 @@ class _UrlMetadataImage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ClipRRect(
+    return IonNetworkImage(
+      imageUrl: imageUrl,
+      width: double.infinity,
+      fit: BoxFit.cover,
       borderRadius: BorderRadiusDirectional.only(
         topStart: Radius.circular(12.0.s),
         topEnd: Radius.circular(12.0.s),
-      ),
-      child: IonNetworkImage(
-        imageUrl: imageUrl,
-        width: double.infinity,
-        fit: BoxFit.cover,
       ),
     );
   }

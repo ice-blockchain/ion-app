@@ -40,8 +40,11 @@ class SvgShadow extends StatelessWidget {
                     width: 0,
                   ),
                 ),
-                child: Opacity(
-                  opacity: opacity,
+                child: ColorFiltered(
+                  colorFilter: ColorFilter.mode(
+                    Colors.white.withValues(alpha: opacity),
+                    BlendMode.modulate,
+                  ),
                   child: ColorFiltered(
                     colorFilter: ColorFilter.mode(
                       color,

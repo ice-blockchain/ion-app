@@ -49,17 +49,16 @@ class AttachedMediaPreview extends ConsumerWidget {
             ),
             child: Stack(
               children: [
-                ClipRRect(
-                  borderRadius: BorderRadius.circular(12.0.s),
-                  child: AspectRatio(
-                    aspectRatio: aspectRatio.aspectRatio,
-                    child: Image(
-                      image: AssetEntityImageProvider(
-                        assetEntity,
-                        isOriginal: false,
-                      ),
-                      fit: BoxFit.cover,
+                DecoratedBox(
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(12.0.s),
+                  ),
+                  child: Image(
+                    image: AssetEntityImageProvider(
+                      assetEntity,  
+                      isOriginal: false,
                     ),
+                    fit: BoxFit.cover,
                   ),
                 ),
                 PositionedDirectional(
