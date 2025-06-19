@@ -121,8 +121,6 @@ class GlobalSubscription {
         ],
       );
 
-      print('GLOBAL SUBSCRIPTION - FETCH PREVIOUS EVENTS FILTERS: ${requestMessage.filters}');
-
       final eventsStream = ionConnectNotifier.requestEvents(
         requestMessage,
       );
@@ -188,10 +186,6 @@ class GlobalSubscription {
         ],
       );
 
-      print('GLOBAL SUBSCRIPTION - FILTERS: ${requestMessage.filters}');
-      print('GLOBAL SUBSCRIPTION - master pubkey: $currentUserMasterPubkey');
-      print('GLOBAL SUBSCRIPTION - device pubkey: $devicePubkey');
-
       globalSubscriptionNotifier.subscribe(requestMessage, onEvent: _handleEvent);
     } catch (e) {
       throw GlobalSubscriptionSubscribeException(e);
@@ -205,8 +199,6 @@ class GlobalSubscription {
       final eventType = eventMessage.kind == IonConnectGiftWrapEntity.kind
           ? EventType.encrypted
           : EventType.regular;
-
-      print('GLOBAL SUBSCRIPTION - EVENT: ${eventMessage.id} ${eventMessage.kind}');
 
       await latestEventTimestampService.update(eventMessage.createdAt.toMicroseconds, eventType);
       await globalSubscriptionEventDispatcher.dispatch(eventMessage);
