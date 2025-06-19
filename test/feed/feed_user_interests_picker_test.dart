@@ -28,6 +28,7 @@ void main() {
         exploreMaxAge: Duration(days: 1),
         repostThrottleDelay: Duration(days: 1),
         concurrentRequests: 3,
+        concurrentMediaDownloadsLimit: 3,
       );
       interests = FeedInterests.fromJson({
         'music': {

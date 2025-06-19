@@ -2,9 +2,9 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
-import 'package:ion/app/components/image/ion_network_image.dart';
 import 'package:ion/app/components/url_preview/url_preview.dart';
 import 'package:ion/app/extensions/extensions.dart';
+import 'package:ion/app/features/feed/views/components/feed_network_image/feed_network_image.dart';
 import 'package:ion/app/services/browser/browser.dart';
 import 'package:ion/app/utils/url.dart';
 import 'package:ogp_data_extract/ogp_data_extract.dart';

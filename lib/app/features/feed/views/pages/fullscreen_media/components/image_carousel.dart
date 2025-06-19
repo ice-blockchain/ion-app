@@ -5,7 +5,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/components/counter_items_footer/counter_items_footer.dart';
 import 'package:ion/app/components/progress_bar/centered_loading_indicator.dart';
 import 'package:ion/app/extensions/extensions.dart';
-import 'package:ion/app/features/components/ion_connect_network_image/ion_connect_network_image.dart';
+import 'package:ion/app/features/feed/views/components/feed_network_image/feed_network_image.dart';
 import 'package:ion/app/features/feed/views/pages/fullscreen_media/hooks/use_image_zoom.dart';
 import 'package:ion/app/features/feed/views/pages/fullscreen_media/providers/image_zoom_provider.c.dart';
 import 'package:ion/app/features/ion_connect/model/event_reference.c.dart';
@@ -129,7 +129,7 @@ class CarouselImageItem extends StatelessWidget {
               onInteractionStart: zoomController.onInteractionStart,
               onInteractionUpdate: zoomController.onInteractionUpdate,
               onInteractionEnd: zoomController.onInteractionEnd,
-              child: IonConnectNetworkImage(
+              child: FeedIONConnectNetworkImage(
                 imageUrl: imageUrl,
                 authorPubkey: authorPubkey,
                 placeholder: (_, __) => const CenteredLoadingIndicator(),

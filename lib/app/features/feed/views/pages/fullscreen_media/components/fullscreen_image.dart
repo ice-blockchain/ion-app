@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/components/progress_bar/centered_loading_indicator.dart';
 import 'package:ion/app/extensions/extensions.dart';
-import 'package:ion/app/features/components/ion_connect_network_image/ion_connect_network_image.dart';
+import 'package:ion/app/features/feed/views/components/feed_network_image/feed_network_image.dart';
 import 'package:ion/app/features/feed/views/pages/fullscreen_media/hooks/use_image_zoom.dart';
 
 class FullscreenImage extends HookConsumerWidget {
@@ -41,7 +41,7 @@ class FullscreenImage extends HookConsumerWidget {
               onInteractionStart: zoomController.onInteractionStart,
               onInteractionUpdate: zoomController.onInteractionUpdate,
               onInteractionEnd: zoomController.onInteractionEnd,
-              child: IonConnectNetworkImage(
+              child: FeedIONConnectNetworkImage(
                 imageUrl: imageUrl,
                 authorPubkey: authorPubkey,
                 placeholder: (_, __) => const CenteredLoadingIndicator(),

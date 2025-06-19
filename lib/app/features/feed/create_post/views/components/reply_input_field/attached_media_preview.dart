@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/auth/providers/auth_provider.c.dart';
-import 'package:ion/app/features/components/ion_connect_network_image/ion_connect_network_image.dart';
+import 'package:ion/app/features/feed/views/components/feed_network_image/feed_network_image.dart';
 import 'package:ion/app/features/gallery/providers/gallery_provider.c.dart';
 import 'package:ion/app/features/ion_connect/model/media_attachment.dart';
 import 'package:ion/app/typedefs/typedefs.dart';
@@ -126,7 +126,7 @@ class _PreviewItem extends ConsumerWidget {
                         ),
                         fit: BoxFit.cover,
                       )
-                    : IonConnectNetworkImage(
+                    : FeedIONConnectNetworkImage(
                         imageUrl: url!,
                         authorPubkey: currentPubkey,
                         fit: BoxFit.cover,

@@ -48,7 +48,7 @@ class _UrlMetadataImage extends StatelessWidget {
         topStart: Radius.circular(12.0.s),
         topEnd: Radius.circular(12.0.s),
       ),
-      child: IonNetworkImage(
+      child: FeedNetworkImage(
         imageUrl: imageUrl,
         fit: BoxFit.cover,
       ),
@@ -72,7 +72,7 @@ class _UrlMetadataSiteInfo extends StatelessWidget {
       child: Row(
         children: [
           if (favIconUrl != null)
-            IonNetworkImage(
+            FeedNetworkImage(
               imageUrl: favIconUrl!,
               width: 19.0.s,
               height: 13.0.s,
