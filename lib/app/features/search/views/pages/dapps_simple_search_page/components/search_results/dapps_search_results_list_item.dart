@@ -33,6 +33,7 @@ class DAppsSearchResultsListItem extends ConsumerWidget {
             profilePictureWidget: Image.asset(
               app.iconImage,
               width: 48.0.s,
+              cacheWidth: (MediaQuery.devicePixelRatioOf(context) * 48.0.s).toInt(),
               fit: BoxFit.contain,
             ),
           ),

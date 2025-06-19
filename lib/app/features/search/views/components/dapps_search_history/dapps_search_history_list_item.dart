@@ -42,7 +42,10 @@ class _ListItem extends StatelessWidget {
           children: [
             Avatar(
               size: 65.0.s,
-              imageWidget: Image.asset(app.iconImage),
+              imageWidget: Image.asset(
+                app.iconImage,
+                cacheWidth: (MediaQuery.devicePixelRatioOf(context) * 65.0.s).toInt(),
+              ),
             ),
             Column(
               mainAxisSize: MainAxisSize.min,
