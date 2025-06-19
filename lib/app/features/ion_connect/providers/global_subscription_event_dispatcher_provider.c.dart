@@ -9,7 +9,6 @@ import 'package:ion/app/features/feed/notifications/providers/notifications/like
 import 'package:ion/app/features/feed/notifications/providers/notifications/quote_notification_handler.c.dart';
 import 'package:ion/app/features/feed/notifications/providers/notifications/reply_notification_handler.c.dart';
 import 'package:ion/app/features/feed/notifications/providers/notifications/repost_notification_handler.c.dart';
-import 'package:ion/app/features/feed/providers/bookmarks_handler.c.dart';
 import 'package:ion/app/features/ion_connect/ion_connect.dart';
 import 'package:ion/app/features/ion_connect/model/global_subscription_event_handler.dart';
 import 'package:ion/app/features/user/providers/badge_award_handler.c.dart';
@@ -44,8 +43,6 @@ Future<GlobalSubscriptionEventDispatcher> globalSubscriptionEventDispatcherNotif
     ref.watch(quoteNotificationHandlerProvider),
     ref.watch(replyNotificationHandlerProvider),
     ref.watch(repostNotificationHandlerProvider),
-    ref.watch(bookmarksHandlerProvider),
-    ref.watch(bookmarksSetHandlerProvider),
     ref.watch(badgeAwardHandlerProvider),
   ]);
 }

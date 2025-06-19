@@ -8,8 +8,6 @@ import 'package:ion/app/exceptions/exceptions.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/auth/providers/auth_provider.c.dart';
 import 'package:ion/app/features/auth/providers/delegation_complete_provider.c.dart';
-import 'package:ion/app/features/feed/data/models/bookmarks/bookmarks.c.dart';
-import 'package:ion/app/features/feed/data/models/bookmarks/bookmarks_set.c.dart';
 import 'package:ion/app/features/feed/data/models/entities/generic_repost.c.dart';
 import 'package:ion/app/features/feed/data/models/entities/modifiable_post_data.c.dart';
 import 'package:ion/app/features/feed/data/models/entities/reaction_data.c.dart';
@@ -21,7 +19,6 @@ import 'package:ion/app/features/ion_connect/providers/ion_connect_event_signer_
 import 'package:ion/app/features/ion_connect/providers/ion_connect_notifier.c.dart';
 import 'package:ion/app/features/ion_connect/providers/ion_connect_subscription_provider.c.dart';
 import 'package:ion/app/features/user/model/badges/badge_award.c.dart';
-import 'package:ion/app/features/user/model/badges/profile_badges.c.dart';
 import 'package:ion/app/features/user/model/follow_list.c.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
@@ -52,26 +49,16 @@ class GlobalSubscription {
     GenericRepostEntity.modifiablePostRepostKind,
   ];
 
-  static const List<int> _authorBasedEventKinds = [
-    BookmarksSetEntity.kind,
-    BookmarksEntity.kind,
-    ProfileBadgesEntity.kind,
-  ];
-
   static const List<int> _encryptedEventKinds = [IonConnectGiftWrapEntity.kind];
 
-  Future<void> init() async {
+  void init() {
     final regularLatestEventTimestamp = latestEventTimestampService.get(EventType.regular);
-    final authorBasedLatestEventTimestamp = latestEventTimestampService.get(EventType.authorBased);
 
-    if (regularLatestEventTimestamp == null || authorBasedLatestEventTimestamp == null || true) {
+    if (regularLatestEventTimestamp == null) {
       _startSubscription();
     } else {
-      unawaited(
-        _reConnectToGlobalSubscription(
-          regularLatestEventTimestamp: regularLatestEventTimestamp,
-          authorBasedLatestEventTimestamp: authorBasedLatestEventTimestamp,
-        ),
+      _reConnectToGlobalSubscription(
+        regularLatestEventTimestamp: regularLatestEventTimestamp,
       );
     }
   }
@@ -84,24 +71,19 @@ class GlobalSubscription {
 
   Future<void> _reConnectToGlobalSubscription({
     required int regularLatestEventTimestamp,
-    required int authorBasedLatestEventTimestamp,
   }) async {
     final now = DateTime.now().microsecondsSinceEpoch;
-    final (regularCreatedAts, authorBasedCreatedAts) = await _fetchPreviousEvents(
+    final regularCreatedAts = await _fetchPreviousEvents(
       regularSince: regularLatestEventTimestamp,
-      authorBasedSince: authorBasedLatestEventTimestamp,
     );
     var mostRecentRegularEventTimestamp = regularCreatedAts.maxOrNull;
-    var mostRecentAuthorBasedEventTimestamp = authorBasedCreatedAts.maxOrNull;
 
     if (mostRecentRegularEventTimestamp != null) {
-      final (missingRegularCreatedAts, missingAuthorBasedCreatedAts) = await _fetchPreviousEvents(
+      final missingRegularCreatedAts = await _fetchPreviousEvents(
         regularSince: mostRecentRegularEventTimestamp,
-        authorBasedSince: mostRecentAuthorBasedEventTimestamp,
         isRecursive: false,
       );
       mostRecentRegularEventTimestamp = missingRegularCreatedAts.maxOrNull;
-      mostRecentAuthorBasedEventTimestamp = missingAuthorBasedCreatedAts.maxOrNull;
     }
 
     final encryptedLatestEventTimestamp = latestEventTimestampService.get(EventType.encrypted);
@@ -110,22 +92,17 @@ class GlobalSubscription {
       _subscribe(
         eventLimit: 100,
         regularSince: mostRecentRegularEventTimestamp ?? now,
-        authorBasedSince: mostRecentAuthorBasedEventTimestamp ?? now,
         encryptedSince:
             encryptedLatestEventTimestamp ?? now - const Duration(days: 2).inMicroseconds,
       ),
     );
   }
 
-  Future<(List<int> regularCreatedAts, List<int> authorBasedCreatedAts)> _fetchPreviousEvents({
+  Future<List<int>> _fetchPreviousEvents({
     int? regularSince,
     int? regularUntil,
-    int? authorBasedSince,
-    int? authorBasedUntil,
     List<int> previousRegularCreatedAts = const [],
     List<String> previousRegularIds = const [],
-    List<int> previousAuthorBasedCreatedAts = const [],
-    List<String> previousAuthorBasedIds = const [],
     bool isRecursive = true,
   }) async {
     try {
@@ -141,12 +118,6 @@ class GlobalSubscription {
               ],
             },
           ),
-          RequestFilter(
-            kinds: _authorBasedEventKinds,
-            authors: [currentUserMasterPubkey],
-            since: authorBasedSince?.toMicroseconds,
-            until: authorBasedUntil?.toMicroseconds,
-          ),
         ],
       );
 
@@ -158,44 +129,29 @@ class GlobalSubscription {
 
       final regularCreatedAts = <int>[];
       final regularIds = <String>[];
-      final authorBasedCreatedAts = <int>[];
-      final authorBasedIds = <String>[];
       var count = 0;
       await for (final event in eventsStream) {
-        if (_authorBasedEventKinds.contains(event.kind)) {
-          if (previousAuthorBasedIds.contains(event.id)) {
-            continue;
-          }
-          authorBasedIds.add(event.id);
-          authorBasedCreatedAts.add(event.createdAt.toMicroseconds);
-        } else {
-          if (previousRegularIds.contains(event.id)) {
-            continue;
-          }
-          regularIds.add(event.id);
-          regularCreatedAts.add(event.createdAt.toMicroseconds);
+        if (previousRegularIds.contains(event.id)) {
+          continue;
         }
+        regularIds.add(event.id);
+        regularCreatedAts.add(event.createdAt.toMicroseconds);
 
         await _handleEvent(event);
         count++;
       }
 
       final allRegularCreatedAts = [...previousRegularCreatedAts, ...regularCreatedAts];
-      final allAuthorBasedCreatedAts = [...previousAuthorBasedCreatedAts, ...authorBasedCreatedAts];
 
       if (count == 0 || !isRecursive) {
-        return (allRegularCreatedAts, allAuthorBasedCreatedAts);
+        return allRegularCreatedAts;
       }
 
       return _fetchPreviousEvents(
         regularSince: regularSince,
-        authorBasedSince: authorBasedSince,
         regularUntil: regularCreatedAts.min,
-        authorBasedUntil: authorBasedCreatedAts.min,
         previousRegularCreatedAts: allRegularCreatedAts,
-        previousAuthorBasedCreatedAts: allAuthorBasedCreatedAts,
         previousRegularIds: regularIds,
-        previousAuthorBasedIds: authorBasedIds,
       );
     } catch (e) {
       throw GlobalSubscriptionSyncEventsException(e);
@@ -205,7 +161,6 @@ class GlobalSubscription {
   Future<void> _subscribe({
     required int eventLimit,
     int? regularSince,
-    int? authorBasedSince,
     int? encryptedSince,
   }) async {
     try {
@@ -220,12 +175,6 @@ class GlobalSubscription {
             },
             limit: eventLimit,
             since: regularSince?.toMicroseconds,
-          ),
-          RequestFilter(
-            kinds: _authorBasedEventKinds,
-            authors: [currentUserMasterPubkey],
-            since: authorBasedSince?.toMicroseconds,
-            limit: eventLimit,
           ),
           RequestFilter(
             kinds: _encryptedEventKinds,
@@ -255,17 +204,7 @@ class GlobalSubscription {
     try {
       final eventType = eventMessage.kind == IonConnectGiftWrapEntity.kind
           ? EventType.encrypted
-          : _authorBasedEventKinds.contains(eventMessage.kind)
-              ? EventType.authorBased
-              : EventType.regular;
-
-      if (eventType == EventType.encrypted) {
-        // print('GLOBAL SUBSCRIPTION - ENCRYPTED EVENT: ${eventMessage.id}');
-      }
-
-      if (_authorBasedEventKinds.contains(eventMessage.kind)) {
-        print('GLOBAL SUBSCRIPTION - BOOKMARKS EVENT: ${eventMessage.id}');
-      }
+          : EventType.regular;
 
       print('GLOBAL SUBSCRIPTION - EVENT: ${eventMessage.id} ${eventMessage.kind}');
 
@@ -288,7 +227,6 @@ class GlobalSubscriptionNotifier extends _$GlobalSubscriptionNotifier {
     RequestMessage requestMessage, {
     required void Function(EventMessage) onEvent,
   }) {
-    // print('GLOBAL SUBSCRIPTION - SUBSCRIBE');
     final stream = ref.watch(ionConnectEventsSubscriptionProvider(requestMessage));
     final subscription = stream.listen(onEvent);
     ref.onDispose(subscription.cancel);
