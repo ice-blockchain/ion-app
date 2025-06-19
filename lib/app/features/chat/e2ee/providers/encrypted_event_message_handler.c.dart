@@ -48,6 +48,7 @@ class EncryptedMessageEventHandler implements GlobalSubscriptionEventHandler {
   }
 }
 
+@riverpod
 Future<EncryptedMessageEventHandler> encryptedMessageEventHandler(Ref ref) async {
   keepAliveWhenAuthenticated(ref);
   final handlers = [

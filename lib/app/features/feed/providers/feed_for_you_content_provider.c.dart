@@ -68,7 +68,6 @@ class FeedForYouContent extends _$FeedForYouContent implements PagedNotifier {
 
   Stream<IonConnectEntity> requestEntities({required int limit}) async* {
     var unseenFollowing = 0;
-    return;
     final followingDistribution = _getFeedFollowingDistribution(limit: limit);
     await for (final entity in _fetchUnseenFollowing(limit: followingDistribution)) {
       yield entity;
