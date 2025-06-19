@@ -32,6 +32,7 @@ class Avatar extends StatelessWidget {
   final String? imageUrl;
   final Widget? imageWidget;
   final Widget? defaultAvatar;
+  
   @override
   Widget build(BuildContext context) {
     final image = imageUrl != null

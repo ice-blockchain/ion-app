@@ -77,20 +77,18 @@ class _MetaImage extends HookWidget {
       padding: EdgeInsetsDirectional.symmetric(
         vertical: hasError.value ? 0.0 : 8.0.s,
       ),
-      child: ClipRRect(
+      child: IonNetworkImage(
+        imageUrl: imageUrl,
+        fit: BoxFit.cover,
         borderRadius: BorderRadius.circular(12.0.s),
-        child: IonNetworkImage(
-          imageUrl: imageUrl,
-          fit: BoxFit.cover,
-          errorWidget: (context, url, error) {
-            if (!hasError.value) {
-              WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-                hasError.value = true;
-              });
-            }
-            return const SizedBox.shrink();
-          },
-        ),
+        errorWidget: (context, url, error) {
+          if (!hasError.value) {
+            WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+              hasError.value = true;
+            });
+          }
+          return const SizedBox.shrink();
+        },
       ),
     );
   }
