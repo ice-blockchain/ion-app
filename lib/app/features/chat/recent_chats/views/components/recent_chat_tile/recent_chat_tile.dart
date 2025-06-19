@@ -17,6 +17,7 @@ import 'package:ion/app/features/chat/recent_chats/views/pages/recent_chat_overl
 import 'package:ion/app/features/chat/views/components/message_items/message_metadata/message_metadata.dart';
 import 'package:ion/app/features/chat/views/components/message_items/message_types/emoji_message/emoji_message.dart';
 import 'package:ion/app/features/ion_connect/model/event_reference.c.dart';
+import 'package:ion/app/features/user/pages/components/profile_avatar/story_colored_profile_avatar.dart';
 import 'package:ion/app/features/user/providers/user_metadata_provider.c.dart';
 import 'package:ion/app/features/user_block/providers/block_list_notifier.c.dart';
 import 'package:ion/app/utils/date.dart';
@@ -73,6 +74,10 @@ class RecentChatTile extends HookConsumerWidget {
     if (currentUserMasterPubkey == null) {
       return const SizedBox.shrink();
     }
+
+    final otherUserPubkey = conversation.latestMessage != null
+        ? conversation.receiverMasterPubkey(currentUserMasterPubkey)
+        : null;
 
     final isBlockedBy = ref
             .watch(
@@ -134,6 +139,15 @@ class RecentChatTile extends HookConsumerWidget {
                   children: [
                     if (isBlockedBy)
                       Avatar(size: 48.0.s)
+                    else if (otherUserPubkey != null)
+                      StoryColoredProfileAvatar(
+                        pubkey: otherUserPubkey,
+                        size: 48.0.s,
+                        imageUrl: avatarUrl,
+                        imageWidget: avatarWidget,
+                        defaultAvatar: defaultAvatar,
+                        useRandomGradient: true,
+                      )
                     else
                       Avatar(
                         imageUrl: avatarUrl,
