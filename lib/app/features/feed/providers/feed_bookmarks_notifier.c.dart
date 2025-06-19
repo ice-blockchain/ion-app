@@ -193,6 +193,21 @@ Future<List<EventReference>> filteredBookmarksRefs(
 }
 
 @Riverpod(keepAlive: true)
+void feedBookmarksSync(Ref ref) {
+  ref.listen<AsyncValue<BookmarksSetEntity?>>(
+    feedBookmarksNotifierProvider(collectionDTag: BookmarksSetType.homeFeedCollectionsAll.dTagName),
+    (previous, next) {
+      final collection = next.value;
+      if (collection != null) {
+        ref
+            .read(ionConnectDbCacheProvider.notifier)
+            .saveAllNonExistingRefs(collection.data.eventReferences);
+      }
+    },
+  );
+}
+
+@Riverpod(keepAlive: true)
 class FeedBookmarkCollectionsNotifier extends _$FeedBookmarkCollectionsNotifier {
   @override
   Future<List<ReplaceableEventReference>> build() async {

@@ -14,6 +14,7 @@ import 'package:ion/app/features/core/providers/template_provider.c.dart';
 import 'package:ion/app/features/core/providers/window_manager_provider.c.dart';
 import 'package:ion/app/features/core/views/components/widget_error_builder.dart';
 import 'package:ion/app/features/feed/providers/bookmarks_notifier.c.dart';
+import 'package:ion/app/features/feed/providers/feed_bookmarks_notifier.c.dart';
 import 'package:ion/app/features/force_update/providers/force_update_provider.c.dart';
 import 'package:ion/app/features/ion_connect/providers/global_subscription.c.dart';
 import 'package:ion/app/features/push_notifications/background/firebase_messaging_background_service.dart';
@@ -60,18 +61,10 @@ Future<void> initApp(Ref ref) async {
     ..listen(userPublicWalletsSyncProvider, noop)
     ..listen(userRelaysSyncProvider, noop)
     ..listen(userChatRelaysSyncProvider, noop)
+    ..listen(feedBookmarksSyncProvider, noop)
     ..listen(pushesInitProvider, noop)
     ..listen(bookmarksNotifierProvider, noop)
-    ..listen(globalSubscriptionProvider, (_, subscription) {
-      if (subscription != null) {
-        subscription.init();
-      }
-    });
-
-  // final globalSubscription = ref.watch(globalSubscriptionProvider);
-  // if (globalSubscription != null) {
-  //   globalSubscription.init();
-  // }
+    ..listen(globalSubscriptionProvider, (_, subscription) => subscription?.init());
 
   initFirebaseMessagingBackgroundHandler();
 
