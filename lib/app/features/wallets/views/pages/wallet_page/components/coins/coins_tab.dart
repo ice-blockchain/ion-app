@@ -26,7 +26,10 @@ class CoinsTab extends ConsumerWidget {
     final isPageLoading = ref.watch(walletPageLoaderNotifierProvider);
 
     if (isPageLoading) {
-      return _CoinsTabBody(itemCount: 4, itemBuilder: (_, __) => const CoinsGroupItemPlaceholder());
+      return _CoinsTabBody(
+        itemCount: 4,
+        itemBuilder: (_, __) => ScreenSideOffset.small(child: const CoinsGroupItemPlaceholder()),
+      );
     }
 
     final groups = ref.watch(filteredCoinsNotifierProvider.select((state) => state.valueOrNull));
@@ -64,7 +67,7 @@ class CoinsTab extends ConsumerWidget {
   }
 }
 
-class _CoinsTabBody extends ConsumerWidget {
+class _CoinsTabBody extends StatelessWidget {
   const _CoinsTabBody({
     required this.itemCount,
     required this.itemBuilder,
@@ -74,7 +77,7 @@ class _CoinsTabBody extends ConsumerWidget {
   final NullableIndexedWidgetBuilder itemBuilder;
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  Widget build(BuildContext context) {
     return SliverMainAxisGroup(
       slivers: [
         SliverList.separated(
