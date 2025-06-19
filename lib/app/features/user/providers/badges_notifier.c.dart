@@ -212,35 +212,6 @@ bool isCurrentUserVerified(Ref ref) {
 }
 
 @riverpod
-Future<BadgeAwardEntity?> badgeAward(
-  Ref ref,
-  String pubkey,
-) async {
-  final authState = ref.watch(authProvider).valueOrNull;
-  if (authState == null || !authState.isAuthenticated) {
-    return null;
-  }
-
-  final currentPubkey = ref.watch(currentPubkeySelectorProvider);
-  final delegationComplete = ref.watch(delegationCompleteProvider).valueOrNull.falseOrValue;
-  if (currentPubkey == null || !delegationComplete) {
-    return null;
-  }
-
-  final request = RequestMessage()
-    ..addFilter(
-      RequestFilter(
-        kinds: const [BadgeAwardEntity.kind],
-        limit: 1,
-        tags: {
-          '#p': [pubkey],
-        },
-      ),
-    );
-  return ref.watch(ionConnectNotifierProvider.notifier).requestEntity<BadgeAwardEntity>(request);
-}
-
-@riverpod
 Future<VerifiedBadgeEntities?> currentUserVerifiedBadgeData(Ref ref) async {
   final currentPubkey = ref.watch(currentPubkeySelectorProvider);
   if (currentPubkey == null) {
