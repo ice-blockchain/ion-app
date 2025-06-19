@@ -37,32 +37,34 @@ class ConfigRepository {
   Future<T> getConfig<T>(
     String configName, {
     required AppConfigCacheStrategy cacheStrategy,
-    required int refreshInterval,
+    required Duration refreshInterval,
     required T Function(String) parser,
     bool checkVersion = false,
   }) async {
-    final lock = _locks.putIfAbsent('$configName-$refreshInterval', Lock.new);
+    final lock = _locks.putIfAbsent('$configName-${refreshInterval.inMilliseconds}', Lock.new);
     return lock.synchronized(() async {
       final cachedData = await _getFromCache(configName, cacheStrategy, refreshInterval, parser);
       if (cachedData != null) {
         return cachedData;
       }
 
-      final configData = await _getFromNetwork<T>(configName, parser, checkVersion) ?? cachedData;
-      if (configData == null) {
-        if (refreshInterval < 0) {
-          throw AppConfigNotFoundException(configName);
-        }
-        return getConfig<T>(
-          configName,
-          cacheStrategy: cacheStrategy,
-          refreshInterval: -1,
-          parser: parser,
-          checkVersion: checkVersion,
-        );
+      final networkData = await _getFromNetwork<T>(configName, parser, checkVersion);
+      if (networkData != null) {
+        await _saveToCache(configName, networkData, cacheStrategy);
+        return networkData;
       }
-      await _saveToCache(configName, configData, cacheStrategy);
-      return configData;
+
+      if (refreshInterval.isNegative) {
+        throw AppConfigNotFoundException(configName);
+      }
+
+      final fallbackData =
+          await _getFromCache(configName, cacheStrategy, const Duration(milliseconds: -1), parser);
+      if (fallbackData != null) {
+        return fallbackData;
+      }
+
+      throw AppConfigNotFoundException(configName);
     });
   }
 
@@ -98,25 +100,31 @@ class ConfigRepository {
   Future<T?> _getFromCache<T>(
     String configName,
     AppConfigCacheStrategy cacheStrategy,
-    int refreshInterval,
+    Duration refreshInterval,
     T Function(String) parser,
   ) async {
     try {
+      final now = DateTime.now();
+
       if (cacheStrategy == AppConfigCacheStrategy.localStorage) {
         final lastSyncDate = _localStorage.getString(getSyncDateKey(configName));
-        final cacheAvailable = refreshInterval < 0 ||
+        final cacheAvailable = refreshInterval.isNegative ||
             (lastSyncDate != null &&
-                DateTime.now().difference(DateTime.parse(lastSyncDate)).inMilliseconds <
-                    refreshInterval);
+                _isDateValid(lastSyncDate) &&
+                now.difference(DateTime.parse(lastSyncDate)).inMilliseconds <
+                    refreshInterval.inMilliseconds);
 
         if (!cacheAvailable) return null;
 
-        return parser(_localStorage.getString(getDataKey(configName))!);
+        final cachedDataString = _localStorage.getString(getDataKey(configName));
+        if (cachedDataString == null) return null;
+
+        return parser(cachedDataString);
       } else {
         final cacheFile = File(await _getCacheFilePath(configName));
         if (cacheFile.existsSync()) {
-          final cacheDuration = DateTime.now().difference(cacheFile.lastModifiedSync());
-          if (refreshInterval < 0 || cacheDuration < Duration(milliseconds: refreshInterval)) {
+          final cacheDuration = now.difference(cacheFile.lastModifiedSync());
+          if (refreshInterval.isNegative || cacheDuration < refreshInterval) {
             return parser(await cacheFile.readAsString());
           }
         }
@@ -132,17 +140,20 @@ class ConfigRepository {
     }
   }
 
+  bool _isDateValid(String dateString) => DateTime.tryParse(dateString) != null;
+
   Future<void> _saveToCache<T>(
     String configName,
     T data,
     AppConfigCacheStrategy cacheStrategy,
   ) async {
     final isString = data is String;
+    final now = DateTime.now();
 
     try {
       if (cacheStrategy == AppConfigCacheStrategy.localStorage) {
         await Future.wait([
-          _localStorage.setString(getSyncDateKey(configName), DateTime.now().toIso8601String()),
+          _localStorage.setString(getSyncDateKey(configName), now.toIso8601String()),
           _localStorage.setString(
             getDataKey(configName),
             isString ? data : jsonEncode(data),
@@ -151,7 +162,7 @@ class ConfigRepository {
       } else {
         final cacheFile = File(await _getCacheFilePath(configName));
         await cacheFile.writeAsString(isString ? data : jsonEncode(data));
-        await cacheFile.setLastModified(DateTime.now());
+        await cacheFile.setLastModified(now);
       }
 
       if (data is AppConfigWithVersion) {
@@ -170,6 +181,11 @@ class ConfigRepository {
   Future<String> _getCacheFilePath(String configName) async {
     final directory = await getApplicationDocumentsDirectory();
     return '${directory.path}/${getCacheFileName(configName)}';
+  }
+
+  /// Clears all locks to prevent memory leaks
+  void clearLocks() {
+    _locks.clear();
   }
 
   String getCacheFileName(String configName) => '$configName.json';

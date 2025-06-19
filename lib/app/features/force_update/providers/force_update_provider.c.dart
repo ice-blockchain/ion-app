@@ -39,8 +39,7 @@ class ForceUpdate extends _$ForceUpdate {
         cacheStrategy: AppConfigCacheStrategy.localStorage,
         refreshInterval: ref
             .read(envProvider.notifier)
-            .get<Duration>(EnvVariable.MIN_APP_VERSION_CONFIG_CACHE_DURATION)
-            .inMilliseconds,
+            .get<Duration>(EnvVariable.MIN_APP_VERSION_CONFIG_CACHE_DURATION),
         parser: (data) => data,
       );
 
