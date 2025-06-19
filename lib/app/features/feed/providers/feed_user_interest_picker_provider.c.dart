@@ -146,7 +146,6 @@ typedef InterestedItems<T extends CategoryWithWeight> = ({
 
 @riverpod
 Future<FeedUserInterestPicker> feedUserInterestPicker(Ref ref, FeedType feedType) async {
-  await Future.delayed(const Duration(hours: 3));
   final interests = await ref.watch(feedUserInterestsProvider(feedType).future);
   final config = await ref.watch(feedConfigProvider.future);
   final random = Random();
