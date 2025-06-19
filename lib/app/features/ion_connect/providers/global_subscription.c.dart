@@ -21,7 +21,6 @@ import 'package:ion/app/features/ion_connect/providers/ion_connect_event_signer_
 import 'package:ion/app/features/ion_connect/providers/ion_connect_notifier.c.dart';
 import 'package:ion/app/features/ion_connect/providers/ion_connect_subscription_provider.c.dart';
 import 'package:ion/app/features/user/model/badges/badge_award.c.dart';
-import 'package:ion/app/features/user/model/badges/badge_definition.c.dart';
 import 'package:ion/app/features/user/model/badges/profile_badges.c.dart';
 import 'package:ion/app/features/user/model/follow_list.c.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
@@ -46,18 +45,17 @@ class GlobalSubscription {
   final GlobalSubscriptionEventDispatcher globalSubscriptionEventDispatcher;
 
   static const List<int> _genericEventKinds = [
-    ProfileBadgesEntity.kind, // no p tag and need to test
-    BadgeDefinitionEntity.kind, // no p tag and need to test
-    BadgeAwardEntity.kind, // has p tag and need to test
-    FollowListEntity.kind, // has p tag
-    ReactionEntity.kind, // has p tag
-    ModifiablePostEntity.kind, // has p tag
-    GenericRepostEntity.modifiablePostRepostKind, // has p tag
+    BadgeAwardEntity.kind,
+    FollowListEntity.kind,
+    ReactionEntity.kind,
+    ModifiablePostEntity.kind,
+    GenericRepostEntity.modifiablePostRepostKind,
   ];
 
   static const List<int> _authorBasedEventKinds = [
     BookmarksSetEntity.kind,
     BookmarksEntity.kind,
+    ProfileBadgesEntity.kind,
   ];
 
   static const List<int> _encryptedEventKinds = [IonConnectGiftWrapEntity.kind];
@@ -66,7 +64,7 @@ class GlobalSubscription {
     final regularLatestEventTimestamp = latestEventTimestampService.get(EventType.regular);
     final authorBasedLatestEventTimestamp = latestEventTimestampService.get(EventType.authorBased);
 
-    if (regularLatestEventTimestamp == null || authorBasedLatestEventTimestamp == null) {
+    if (regularLatestEventTimestamp == null || authorBasedLatestEventTimestamp == null || true) {
       _startSubscription();
     } else {
       unawaited(

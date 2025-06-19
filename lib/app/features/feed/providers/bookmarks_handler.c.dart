@@ -11,6 +11,7 @@ import 'package:ion/app/features/feed/providers/bookmarks_notifier.c.dart';
 import 'package:ion/app/features/feed/providers/feed_bookmarks_notifier.c.dart';
 import 'package:ion/app/features/ion_connect/ion_connect.dart';
 import 'package:ion/app/features/ion_connect/model/global_subscription_event_handler.dart';
+import 'package:ion/app/features/ion_connect/providers/ion_connect_db_cache_notifier.c.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'bookmarks_handler.c.g.dart';
@@ -57,6 +58,14 @@ class BoookmarkSetHandler extends GlobalSubscriptionEventHandler {
   @override
   Future<void> handle(EventMessage eventMessage) async {
     final entity = BookmarksSetEntity.fromEventMessage(eventMessage);
+    if (entity.data.type == BookmarksSetType.homeFeedCollectionsAll.dTagName) {
+      unawaited(
+        ref
+            .read(ionConnectDbCacheProvider.notifier)
+            .saveAllNonExistingRefs(entity.data.eventReferences),
+      );
+    }
+
     await ref
         .read(
           feedBookmarksNotifierProvider(

@@ -15,6 +15,7 @@ import 'package:ion/app/features/ion_connect/model/event_reference.c.dart';
 import 'package:ion/app/features/ion_connect/providers/ion_connect_db_cache_notifier.c.dart';
 import 'package:ion/app/features/ion_connect/providers/ion_connect_notifier.c.dart';
 import 'package:ion/app/features/ion_connect/repository/event_messages_repository.c.dart';
+import 'package:ion/app/services/logger/logger.dart';
 import 'package:ion/app/services/uuid/uuid.dart';
 import 'package:nostr_dart/nostr_dart.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
@@ -44,6 +45,10 @@ Future<BookmarksSetEntity?> bookmarksCollection(
     return null;
   }
 
+  Logger.info(
+    'FEED BOOKMARKS NOTIFIER - eventMessage: $eventMessage',
+  );
+
   final entity = BookmarksSetEntity.fromEventMessage(eventMessage);
 
   return entity;
@@ -72,6 +77,10 @@ class FeedBookmarksNotifier extends _$FeedBookmarksNotifier {
         currentPubkey,
         collectionDTag,
       ).future,
+    );
+
+    Logger.info(
+      'FEED BOOKMARKS NOTIFIER - bookmarksCollection: $bookmarksCollection',
     );
 
     return bookmarksCollection;
@@ -181,21 +190,6 @@ Future<List<EventReference>> filteredBookmarksRefs(
 
   final rawEvents = await ref.read(eventMessagesRepositoryProvider).getFilteredRaw(allRefs, query);
   return rawEvents.map((event) => event.eventReference).toList();
-}
-
-@Riverpod(keepAlive: true)
-void feedBookmarksSync(Ref ref) {
-  ref.listen<AsyncValue<BookmarksSetEntity?>>(
-    feedBookmarksNotifierProvider(collectionDTag: BookmarksSetType.homeFeedCollectionsAll.dTagName),
-    (previous, next) {
-      final collection = next.value;
-      if (collection != null) {
-        ref
-            .read(ionConnectDbCacheProvider.notifier)
-            .saveAllNonExistingRefs(collection.data.eventReferences);
-      }
-    },
-  );
 }
 
 @Riverpod(keepAlive: true)

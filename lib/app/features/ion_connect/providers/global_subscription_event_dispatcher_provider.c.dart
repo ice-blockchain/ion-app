@@ -12,6 +12,7 @@ import 'package:ion/app/features/feed/notifications/providers/notifications/repo
 import 'package:ion/app/features/feed/providers/bookmarks_handler.c.dart';
 import 'package:ion/app/features/ion_connect/ion_connect.dart';
 import 'package:ion/app/features/ion_connect/model/global_subscription_event_handler.dart';
+import 'package:ion/app/features/user/providers/badge_award_handler.c.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'global_subscription_event_dispatcher_provider.c.g.dart';
@@ -45,5 +46,6 @@ Future<GlobalSubscriptionEventDispatcher> globalSubscriptionEventDispatcherNotif
     ref.watch(repostNotificationHandlerProvider),
     ref.watch(bookmarksHandlerProvider),
     ref.watch(bookmarksSetHandlerProvider),
+    ref.watch(badgeAwardHandlerProvider),
   ]);
 }
