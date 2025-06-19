@@ -1,0 +1,1 @@
+enum CryptoAssetType { coin, nft }

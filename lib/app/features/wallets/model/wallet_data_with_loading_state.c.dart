@@ -2,16 +2,15 @@
 
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:ion/app/features/wallets/model/crypto_asset_type.dart';
 import 'package:ion/app/features/wallets/model/wallet_view_data.c.dart';
 
 part 'wallet_data_with_loading_state.c.freezed.dart';
-
-enum WalletAssetType { nft, coin }
 
 @freezed
 class WalletDataWithLoadingState with _$WalletDataWithLoadingState {
   const factory WalletDataWithLoadingState({
     required WalletViewData walletData,
-    required Map<WalletAssetType, AsyncValue<bool>> loadingAssets,
+    required Map<CryptoAssetType, AsyncValue<bool>> loadingAssets,
   }) = _WalletDataWithLoadingState;
 }

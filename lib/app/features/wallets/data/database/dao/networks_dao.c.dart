@@ -50,4 +50,14 @@ class NetworksDao extends DatabaseAccessor<WalletsDatabase> with _$NetworksDaoMi
     final result = await query.get();
     return result.isNotEmpty;
   }
+
+  Future<List<Network>> getByFilters({required List<int> tiers}) {
+    final query = select(networksTable);
+
+    if (tiers.isNotEmpty) {
+      query.where((t) => t.tier.isIn(tiers));
+    }
+
+    return query.get();
+  }
 }
