@@ -1,5 +1,7 @@
 // SPDX-License-Identifier: ice License 1.0
 
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
@@ -20,6 +22,8 @@ import 'package:ion/app/features/chat/views/components/message_items/edit_messag
 import 'package:ion/app/features/chat/views/components/message_items/messaging_bottom_bar/messaging_bottom_bar.dart';
 import 'package:ion/app/features/chat/views/components/message_items/replied_message_info/replied_message_info.dart';
 import 'package:ion/app/features/user_metadata/providers/user_metadata_from_db_provider.c.dart';
+import 'package:ion/app/features/user_metadata/providers/user_metadata_sync_provider.c.dart';
+import 'package:ion/app/hooks/use_on_init.dart';
 import 'package:ion/app/router/app_routes.c.dart';
 import 'package:ion/app/services/media_service/media_service.c.dart';
 import 'package:ion/app/utils/username.dart';
@@ -35,6 +39,14 @@ class OneToOneMessagesPage extends HookConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final conversationId = useState<String?>(null);
+
+    useOnInit(() {
+      unawaited(
+        ref
+            .read(userMetadataSyncProvider.notifier)
+            .syncUserMetadata(masterPubkeys: {receiverMasterPubkey}),
+      );
+    });
 
     useEffect(
       () {
