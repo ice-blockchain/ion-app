@@ -211,9 +211,7 @@ class GlobalSubscription {
 @riverpod
 class GlobalSubscriptionNotifier extends _$GlobalSubscriptionNotifier {
   @override
-  void build() {
-    return;
-  }
+  void build() {}
 
   void subscribe(
     RequestMessage requestMessage, {

@@ -3,6 +3,7 @@
 import 'dart:async';
 
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:ion/app/features/auth/providers/auth_provider.c.dart';
 import 'package:ion/app/features/chat/e2ee/providers/encrypted_deletion_request_handler.c.dart';
 import 'package:ion/app/features/chat/e2ee/providers/encrypted_direct_message_handler.c.dart';
 import 'package:ion/app/features/chat/e2ee/providers/encrypted_direct_message_reaction_handler.c.dart';
@@ -47,8 +48,8 @@ class EncryptedMessageEventHandler implements GlobalSubscriptionEventHandler {
   }
 }
 
-@Riverpod(keepAlive: true)
 Future<EncryptedMessageEventHandler> encryptedMessageEventHandler(Ref ref) async {
+  keepAliveWhenAuthenticated(ref);
   final handlers = [
     ref.watch(encryptedDirectMessageStatusHandlerProvider),
     await ref.watch(encryptedDirectMessageHandlerProvider.future),

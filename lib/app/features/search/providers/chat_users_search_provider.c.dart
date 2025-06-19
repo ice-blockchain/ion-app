@@ -12,7 +12,6 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'chat_users_search_provider.c.g.dart';
 
-@Riverpod(keepAlive: true)
 Future<List<(String, String)>?> chatUsersSearch(Ref ref, String query) async {
   if (query.isEmpty) return null;
 
