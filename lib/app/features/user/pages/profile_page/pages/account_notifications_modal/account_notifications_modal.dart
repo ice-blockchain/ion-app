@@ -9,6 +9,7 @@ import 'package:ion/app/components/separated/separator.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/user/model/user_notifications_type.dart';
 import 'package:ion/app/features/user/pages/profile_page/providers/user_notifications_provider.c.dart';
+import 'package:ion/app/features/user/providers/account_notifications_sets_provider.c.dart';
 import 'package:ion/app/router/components/navigation_app_bar/navigation_app_bar.dart';
 import 'package:ion/generated/assets.gen.dart';
 
@@ -29,11 +30,10 @@ class AccountNotificationsModal extends HookConsumerWidget {
     );
 
     final handleOptionSelection = useCallback(
-      (UserNotificationsType option) {
+      (UserNotificationsType option) async {
         final currentSet = Set<UserNotificationsType>.from(selectedOptions.value);
 
         if (option == UserNotificationsType.none) {
-          // If "none" is selected, toggle it and clear all others if it's being selected
           if (currentSet.contains(UserNotificationsType.none)) {
             currentSet.remove(UserNotificationsType.none);
           } else {
@@ -42,7 +42,6 @@ class AccountNotificationsModal extends HookConsumerWidget {
               ..add(UserNotificationsType.none);
           }
         } else {
-          // If any other option is selected, remove "none" if it exists
           if (currentSet.contains(UserNotificationsType.none)) {
             currentSet.remove(UserNotificationsType.none);
           }
@@ -59,6 +58,8 @@ class AccountNotificationsModal extends HookConsumerWidget {
         ref
             .read(userNotificationsNotifierProvider.notifier)
             .updateNotifications(selectedOptions.value.toList());
+
+        await ref.read(syncAccountNotificationSetsProvider.future);
       },
       [selectedOptions, ref],
     );
