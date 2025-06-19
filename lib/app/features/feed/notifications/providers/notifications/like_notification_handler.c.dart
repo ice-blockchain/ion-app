@@ -3,7 +3,6 @@
 import 'dart:async';
 
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:ion/app/exceptions/exceptions.dart';
 import 'package:ion/app/features/auth/providers/auth_provider.c.dart';
 import 'package:ion/app/features/feed/data/models/entities/reaction_data.c.dart';
 import 'package:ion/app/features/feed/notifications/data/repository/likes_repository.c.dart';
@@ -35,12 +34,12 @@ class LikeNotificationHandler extends GlobalSubscriptionEventHandler {
 }
 
 @riverpod
-LikeNotificationHandler likeNotificationHandler(Ref ref) {
+LikeNotificationHandler? likeNotificationHandler(Ref ref) {
   final likesRepository = ref.watch(likesRepositoryProvider);
   final currentPubkey = ref.watch(currentPubkeySelectorProvider);
 
   if (currentPubkey == null) {
-    throw UserMasterPubkeyNotFoundException();
+    return null;
   }
 
   return LikeNotificationHandler(likesRepository, currentPubkey);

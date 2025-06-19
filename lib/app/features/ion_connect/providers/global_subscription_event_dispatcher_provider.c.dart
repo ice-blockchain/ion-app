@@ -20,10 +20,10 @@ class GlobalSubscriptionEventDispatcher {
   GlobalSubscriptionEventDispatcher(this.ref, this._handlers);
 
   final Ref ref;
-  final List<GlobalSubscriptionEventHandler> _handlers;
+  final List<GlobalSubscriptionEventHandler?> _handlers;
 
   Future<void> dispatch(EventMessage eventMessage) async {
-    for (final handler in _handlers) {
+    for (final handler in _handlers.nonNulls) {
       if (handler.canHandle(eventMessage)) {
         unawaited(handler.handle(eventMessage));
         break;

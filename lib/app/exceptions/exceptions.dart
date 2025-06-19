@@ -581,16 +581,11 @@ class GlobalSubscriptionEventMessageHandlingException extends IONException {
       : super(10116, 'Global subscription event message handling exception: $error');
 }
 
-class WalletAssetHandlerNotInitializedException extends IONException {
-  WalletAssetHandlerNotInitializedException()
-      : super(10117, 'Wallet asset handler not initialized');
-}
-
 class GlobalSubscriptionSubscribeException extends IONException {
   GlobalSubscriptionSubscribeException(dynamic error)
-      : super(10118, 'Global subscription subscribe exception: $error');
+      : super(10117, 'Global subscription subscribe exception: $error');
 }
 
 class GlobalSubscriptionNotInitializedException extends IONException {
-  GlobalSubscriptionNotInitializedException() : super(10119, 'Global subscription not initialized');
+  GlobalSubscriptionNotInitializedException() : super(10118, 'Global subscription not initialized');
 }

@@ -3,7 +3,6 @@
 import 'dart:async';
 
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:ion/app/exceptions/exceptions.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/auth/providers/auth_provider.c.dart';
 import 'package:ion/app/features/chat/e2ee/model/entities/private_direct_message_data.c.dart';
@@ -101,15 +100,26 @@ class EncryptedDirectMessageHandler extends GlobalSubscriptionEncryptedEventMess
         status: MessageDeliveryStatus.received,
       );
     }
+
+    // If we recovered keypair, current user will not have "read" message status
+    // as we don't send it
+    if (rumor.masterPubkey == masterPubkey) {
+      await conversationMessageDataDao.addOrUpdateStatus(
+        pubkey: rumor.pubkey,
+        masterPubkey: rumor.masterPubkey,
+        status: MessageDeliveryStatus.read,
+        messageEventReference: eventReference,
+      );
+    }
   }
 }
 
 @riverpod
-Future<EncryptedDirectMessageHandler> encryptedDirectMessageHandler(Ref ref) async {
+Future<EncryptedDirectMessageHandler?> encryptedDirectMessageHandler(Ref ref) async {
   final masterPubkey = ref.watch(currentPubkeySelectorProvider);
 
   if (masterPubkey == null) {
-    throw UserMasterPubkeyNotFoundException();
+    return null;
   }
 
   return EncryptedDirectMessageHandler(

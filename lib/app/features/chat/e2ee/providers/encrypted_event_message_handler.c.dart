@@ -25,7 +25,7 @@ class EncryptedMessageEventHandler implements GlobalSubscriptionEventHandler {
     required this.giftUnwrapService,
   });
 
-  final List<GlobalSubscriptionEncryptedEventMessageHandler> handlers;
+  final List<GlobalSubscriptionEncryptedEventMessageHandler?> handlers;
   final GiftUnwrapService giftUnwrapService;
 
   @override
@@ -36,7 +36,7 @@ class EncryptedMessageEventHandler implements GlobalSubscriptionEventHandler {
   @override
   Future<void> handle(EventMessage eventMessage) async {
     final entity = IonConnectGiftWrapEntity.fromEventMessage(eventMessage);
-    for (final handler in handlers) {
+    for (final handler in handlers.nonNulls) {
       if (handler.canHandle(entity: entity)) {
         final rumor = await giftUnwrapService.unwrap(eventMessage);
         unawaited(handler.handle(rumor));
