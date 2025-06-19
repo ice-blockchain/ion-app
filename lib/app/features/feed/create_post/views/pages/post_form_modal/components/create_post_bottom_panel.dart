@@ -72,9 +72,11 @@ class CreatePostBottomPanel extends StatelessWidget {
   Widget build(BuildContext context) {
     return Column(
       children: [
-        SuggestionsContainer(
-          scrollController: scrollController,
-          editorKey: textEditorKey,
+        ScreenSideOffset.small(
+          child: SuggestionsContainer(
+            scrollController: scrollController,
+            editorKey: textEditorKey,
+          ),
         ),
         _WhoCanReplySection(
           createOption: createOption,
