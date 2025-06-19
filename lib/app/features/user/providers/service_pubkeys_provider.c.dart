@@ -18,7 +18,7 @@ Future<List<String>> servicePubkeys(Ref ref) async {
   final result = await repo.getConfig<List<String>>(
     'service_pubkeys',
     cacheStrategy: AppConfigCacheStrategy.localStorage,
-    refreshInterval: cacheDuration.inMilliseconds,
+    refreshInterval: cacheDuration,
     parser: (data) => (jsonDecode(data) as List<dynamic>).cast<String>(),
     checkVersion: true,
   );

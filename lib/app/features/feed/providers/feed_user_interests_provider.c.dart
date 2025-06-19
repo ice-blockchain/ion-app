@@ -75,7 +75,7 @@ class FeedUserInterests extends _$FeedUserInterests {
     return repository.getConfig<FeedInterests>(
       'content-topics_${type}_$locale',
       cacheStrategy: AppConfigCacheStrategy.file,
-      refreshInterval: cacheDuration.inMilliseconds,
+      refreshInterval: cacheDuration,
       parser: (data) => FeedInterests.fromJson(jsonDecode(data) as Map<String, dynamic>),
       checkVersion: true,
     );
