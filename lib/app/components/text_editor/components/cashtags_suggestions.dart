@@ -1,7 +1,6 @@
 // SPDX-License-Identifier: ice License 1.0
 
 import 'package:flutter/material.dart';
-import 'package:ion/app/components/screen_offset/screen_side_offset.dart';
 import 'package:ion/app/components/separated/separator.dart';
 import 'package:ion/app/extensions/extensions.dart';
 
@@ -34,16 +33,14 @@ class CashtagsSuggestions extends StatelessWidget {
                 return GestureDetector(
                   onTap: () => onSuggestionSelected(suggestion),
                   behavior: HitTestBehavior.opaque,
-                  child: ScreenSideOffset.small(
-                    child: Container(
-                      alignment: AlignmentDirectional.centerStart,
-                      height: 30.0.s,
-                      child: DefaultTextStyle(
-                        style: context.theme.appTextThemes.caption.copyWith(
-                          color: context.theme.appColors.primaryText,
-                        ),
-                        child: Text(suggestion),
+                  child: Container(
+                    alignment: AlignmentDirectional.centerStart,
+                    height: 30.0.s,
+                    child: DefaultTextStyle(
+                      style: context.theme.appTextThemes.caption.copyWith(
+                        color: context.theme.appColors.primaryText,
                       ),
+                      child: Text(suggestion),
                     ),
                   ),
                 );

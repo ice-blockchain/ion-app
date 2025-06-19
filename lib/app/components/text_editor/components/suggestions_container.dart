@@ -2,7 +2,6 @@
 
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:ion/app/components/separated/separator.dart';
 import 'package:ion/app/components/text_editor/components/cashtags_suggestions.dart';
 import 'package:ion/app/components/text_editor/components/hashtags_suggestions.dart';
 import 'package:ion/app/components/text_editor/components/mentions_suggestions.dart';
@@ -42,29 +41,24 @@ class SuggestionsContainer extends HookConsumerWidget {
       return const SuggestionsContainerEmpty();
     }
 
-    return Column(
-      children: [
-        const HorizontalSeparator(),
-        Container(
-          height: 160.0.s,
-          color: context.theme.appColors.secondaryBackground,
-          child: switch (suggestionsState.taggingCharacter) {
-            '@' => MentionsSuggestions(
-                suggestions: suggestionsState.suggestions,
-                onSuggestionSelected: _onMentionSuggestionSelected,
-              ),
-            '#' => HashtagsSuggestions(
-                suggestions: suggestionsState.suggestions,
-                onSuggestionSelected: _onSuggestionSelected,
-              ),
-            r'$' => CashtagsSuggestions(
-                suggestions: suggestionsState.suggestions,
-                onSuggestionSelected: _onSuggestionSelected,
-              ),
-            _ => const SizedBox.shrink(),
-          },
-        ),
-      ],
+    return Container(
+      height: 160.0.s,
+      color: context.theme.appColors.secondaryBackground,
+      child: switch (suggestionsState.taggingCharacter) {
+        '@' => MentionsSuggestions(
+            suggestions: suggestionsState.suggestions,
+            onSuggestionSelected: _onMentionSuggestionSelected,
+          ),
+        '#' => HashtagsSuggestions(
+            suggestions: suggestionsState.suggestions,
+            onSuggestionSelected: _onSuggestionSelected,
+          ),
+        r'$' => CashtagsSuggestions(
+            suggestions: suggestionsState.suggestions,
+            onSuggestionSelected: _onSuggestionSelected,
+          ),
+        _ => const SizedBox.shrink(),
+      },
     );
   }
 

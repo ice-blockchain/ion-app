@@ -8,6 +8,7 @@ import 'package:flutter_quill/flutter_quill.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/components/inputs/hooks/use_node_focused.dart';
 import 'package:ion/app/components/screen_offset/screen_side_offset.dart';
+import 'package:ion/app/components/text_editor/components/suggestions_container.dart';
 import 'package:ion/app/components/text_editor/hooks/use_quill_controller.dart';
 import 'package:ion/app/components/text_editor/text_editor.dart';
 import 'package:ion/app/extensions/asset_gen_image.dart';
@@ -22,6 +23,7 @@ import 'package:ion/app/features/feed/create_post/views/components/post_submit_b
 import 'package:ion/app/features/feed/create_post/views/components/reply_input_field/attached_media_preview.dart';
 import 'package:ion/app/features/feed/create_post/views/components/reply_input_field/reply_author_header.dart';
 import 'package:ion/app/features/feed/data/models/entities/modifiable_post_data.c.dart';
+import 'package:ion/app/features/feed/providers/suggestions/suggestions_notifier_provider.c.dart';
 import 'package:ion/app/features/feed/views/components/actions_toolbar/actions_toolbar.dart';
 import 'package:ion/app/features/feed/views/components/toolbar_buttons/toolbar_bold_button.dart';
 import 'package:ion/app/features/feed/views/components/toolbar_buttons/toolbar_image_button.dart';
@@ -78,12 +80,19 @@ class ReplyInputField extends HookConsumerWidget {
     final hasFocus = useNodeFocused(focusNode);
     final attachedMediaNotifier = useState(<MediaFile>[]);
     final attachedMediaLinksNotifier = useState<Map<String, MediaAttachment>>({});
+    final scrollController = useScrollController();
+    final suggestionsState = ref.watch(suggestionsNotifierProvider);
 
     return ScreenSideOffset.small(
       child: Column(
         children: [
+          SuggestionsContainer(
+            scrollController: scrollController,
+            editorKey: textEditorKey,
+          ),
           SizedBox(height: 12.0.s),
-          if (hasFocus.value)
+          if (hasFocus.value &&
+              !(suggestionsState.isVisible && suggestionsState.suggestions.isNotEmpty))
             Padding(
               padding: EdgeInsetsDirectional.only(bottom: 12.0.s),
               child: ReplyAuthorHeader(pubkey: eventReference.pubkey),

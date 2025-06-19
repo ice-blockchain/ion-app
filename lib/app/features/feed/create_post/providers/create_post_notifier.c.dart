@@ -107,7 +107,8 @@ class CreatePostNotifier extends _$CreatePostNotifier {
         quotedEvent: quotedEvent != null ? _buildQuotedEvent(quotedEvent) : null,
         relatedEvents: parentEntity != null ? _buildRelatedEvents(parentEntity) : null,
         relatedPubkeys: _buildRelatedPubkeys(mentions: mentions, parentEntity: parentEntity),
-        settings: EntityDataWithSettings.build(whoCanReply: whoCanReply),
+        settings:
+            parentEntity != null ? null : EntityDataWithSettings.build(whoCanReply: whoCanReply),
         expiration: _buildExpiration(),
         communityId: communityId,
         richText: await _buildRichTextContentWithMediaLinks(
@@ -473,17 +474,25 @@ class CreatePostNotifier extends _$CreatePostNotifier {
     IonConnectEntity? parentEntity,
     EventReference? quotedEvent,
   }) {
-    return <RelatedPubkey>{
-      ...mentions,
-      if (quotedEvent != null) ...{
-        RelatedPubkey(value: quotedEvent.pubkey),
-      },
-      if (parentEntity != null) ...{
-        RelatedPubkey(value: parentEntity.masterPubkey),
-        if (parentEntity is ModifiablePostEntity) ...(parentEntity.data.relatedPubkeys ?? []),
-        if (parentEntity is PostEntity) ...(parentEntity.data.relatedPubkeys ?? []),
-      },
-    }.toList();
+    // Collect unique pubkey strings
+    final allValues = <String>{
+      for (final mention in mentions) mention.value,
+    };
+
+    if (quotedEvent != null) {
+      allValues.add(quotedEvent.pubkey);
+    }
+
+    if (parentEntity != null) {
+      allValues.add(parentEntity.masterPubkey);
+      if (parentEntity is ModifiablePostEntity) {
+        allValues.addAll(parentEntity.data.relatedPubkeys?.map((rp) => rp.value) ?? []);
+      } else if (parentEntity is PostEntity) {
+        allValues.addAll(parentEntity.data.relatedPubkeys?.map((rp) => rp.value) ?? []);
+      }
+    }
+
+    return allValues.map((value) => RelatedPubkey(value: value)).toList();
   }
 
   List<String> _buildRemovedMediaHashes({
