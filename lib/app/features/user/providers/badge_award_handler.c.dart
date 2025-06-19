@@ -35,11 +35,7 @@ class BadgeAwardHandler extends GlobalSubscriptionEventHandler {
       return;
     }
 
-    final badgeAwardEntity = await ref.read(badgeAwardProvider(currentPubkey).future);
-
-    if (badgeAwardEntity == null) {
-      return;
-    }
+    final badgeAwardEntity = BadgeAwardEntity.fromEventMessage(eventMessage);
 
     final pubkeys = await ref.watch(servicePubkeysProvider.future);
     final eventRef = badgeAwardEntity.data.badgeDefinitionRef;
