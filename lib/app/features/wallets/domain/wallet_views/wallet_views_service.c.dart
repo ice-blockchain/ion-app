@@ -398,6 +398,7 @@ class WalletViewsService {
       final coinDTO = coinInWalletDTO.coin;
       final network = networks[coinDTO.network];
       if (network == null) {
+        Logger.log('Network $network not found not');
         continue;
       }
 
