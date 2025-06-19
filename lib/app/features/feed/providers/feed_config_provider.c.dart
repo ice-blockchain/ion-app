@@ -19,7 +19,7 @@ Future<FeedConfig> feedConfig(Ref ref) async {
   final result = await repository.getConfig<FeedConfig>(
     'apps-runtime_ion-app',
     cacheStrategy: AppConfigCacheStrategy.file,
-    refreshInterval: cacheDuration.inMilliseconds,
+    refreshInterval: cacheDuration,
     parser: (data) => FeedConfig.fromJson(jsonDecode(data) as Map<String, dynamic>),
     checkVersion: true,
   );
