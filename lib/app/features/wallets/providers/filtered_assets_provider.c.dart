@@ -2,6 +2,7 @@
 
 import 'package:ion/app/extensions/riverpod.dart';
 import 'package:ion/app/features/wallets/model/coins_group.c.dart';
+import 'package:ion/app/features/wallets/model/crypto_asset_type.dart';
 import 'package:ion/app/features/wallets/model/manage_coins_group.c.dart';
 import 'package:ion/app/features/wallets/model/wallet_data_with_loading_state.c.dart';
 import 'package:ion/app/features/wallets/providers/coins_provider.c.dart';
@@ -15,7 +16,7 @@ const apiCallDelay = Duration(milliseconds: 500);
 @Riverpod(keepAlive: true)
 class WalletSearchQueryController extends _$WalletSearchQueryController {
   @override
-  String build(WalletAssetType assetType) => '';
+  String build(CryptoAssetType assetType) => '';
 
   set query(String query) => state = query;
 }
@@ -30,7 +31,7 @@ class FilteredCoinsNotifier extends _$FilteredCoinsNotifier {
     final coinGroupsInWallet = await ref.watch(coinsInWalletProvider.future);
 
     final searchQueryListener = ref.listen<String>(
-      walletSearchQueryControllerProvider(WalletAssetType.coin),
+      walletSearchQueryControllerProvider(CryptoAssetType.coin),
       (_, next) => search(next),
     );
 

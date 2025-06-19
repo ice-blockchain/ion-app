@@ -17,6 +17,19 @@ Future<List<NetworkData>> networks(Ref ref) {
 }
 
 @riverpod
+Future<List<NetworkData>> networksByTier(Ref ref, {required int tier}) {
+  return ref
+      .watch(networksRepositoryProvider)
+      .getByFilters(tiers: [tier]).then((networks) => networks.sortedBy((a) => a.displayName));
+}
+
+@riverpod
+Future<List<NetworkData>> networksWithNft(Ref ref) {
+  // Only tier 1 networks support NFTs
+  return ref.watch(networksRepositoryProvider).getByFilters(tiers: [1]);
+}
+
+@riverpod
 Future<NetworkData?> networkById(Ref ref, String id) {
   return ref.watch(networksRepositoryProvider).getById(id);
 }

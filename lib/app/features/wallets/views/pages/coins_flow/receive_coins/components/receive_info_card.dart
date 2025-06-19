@@ -9,29 +9,28 @@ import 'package:ion/app/extensions/asset_gen_image.dart';
 import 'package:ion/app/extensions/build_context.dart';
 import 'package:ion/app/extensions/num.dart';
 import 'package:ion/app/extensions/theme_data.dart';
+import 'package:ion/app/features/wallets/model/coins_group.c.dart';
+import 'package:ion/app/features/wallets/model/network_data.c.dart';
 import 'package:ion/app/features/wallets/views/components/coin_icon_with_network.dart';
-import 'package:ion/app/features/wallets/views/pages/coins_flow/receive_coins/providers/receive_coins_form_provider.c.dart';
+import 'package:ion/app/features/wallets/views/components/network_icon_widget.dart';
 import 'package:ion/app/utils/formatters.dart';
 import 'package:ion/generated/assets.gen.dart';
 import 'package:qr_flutter/qr_flutter.dart';
 
 class ReceiveInfoCard extends ConsumerWidget {
   const ReceiveInfoCard({
+    required this.network,
+    this.coinsGroup,
+    this.walletAddress,
     super.key,
   });
 
+  final NetworkData network;
+  final String? walletAddress;
+  final CoinsGroup? coinsGroup;
+
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final coinsGroup = ref.watch(
-      receiveCoinsFormControllerProvider.select((state) => state.selectedCoin),
-    );
-    final network = ref.watch(
-      receiveCoinsFormControllerProvider.select((state) => state.selectedNetwork),
-    );
-    final walletAddress = ref.watch(
-      receiveCoinsFormControllerProvider.select((state) => state.address),
-    );
-
     return Row(
       children: [
         Expanded(
@@ -44,21 +43,35 @@ class ReceiveInfoCard extends ConsumerWidget {
               mainAxisSize: MainAxisSize.min,
               children: [
                 SizedBox(height: 20.0.s),
-                CoinIconWithNetwork.medium(
-                  coinsGroup!.iconUrl,
-                  network: network!,
-                ),
-                SizedBox(height: 10.0.s),
-                Text(
-                  coinsGroup.abbreviation,
-                  style: context.theme.appTextThemes.body.copyWith(
-                    color: context.theme.appColors.primaryText,
+                if (coinsGroup != null) ...[
+                  CoinIconWithNetwork.medium(
+                    coinsGroup!.iconUrl,
+                    network: network,
                   ),
-                ),
-                Text('(${network.displayName})'),
+                  SizedBox(height: 10.0.s),
+                  Text(
+                    coinsGroup!.abbreviation,
+                    style: context.theme.appTextThemes.body.copyWith(
+                      color: context.theme.appColors.primaryText,
+                    ),
+                  ),
+                  Text('(${network.displayName})'),
+                ] else ...[
+                  NetworkIconWidget(
+                    size: 46.0.s,
+                    imageUrl: network.image,
+                  ),
+                  SizedBox(height: 10.0.s),
+                  Text(
+                    network.displayName,
+                    style: context.theme.appTextThemes.body.copyWith(
+                      color: context.theme.appColors.primaryText,
+                    ),
+                  ),
+                ],
                 SizedBox(height: 8.0.s),
-                if (walletAddress != null && walletAddress.isNotEmpty)
-                  _AddressDescription(walletAddress)
+                if (walletAddress != null && walletAddress!.isNotEmpty)
+                  _AddressDescription(walletAddress!)
                 else
                   const _AddressLoader(),
               ],
