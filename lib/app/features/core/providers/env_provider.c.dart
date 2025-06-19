@@ -30,6 +30,7 @@ enum EnvVariable {
   RELAY_PING_INTERVAL_SECONDS,
   BLOCKED_USERS_SYNC_OVERLAP_DAYS,
   CHECKSUM,
+  FEED_MIN_VISIBLE_ARTICLE_CATEGORIES_NUMBER,
 }
 
 @Riverpod(keepAlive: true)
@@ -82,6 +83,10 @@ class Env extends _$Env {
       EnvVariable.BLOCKED_USERS_SYNC_OVERLAP_DAYS =>
         const int.fromEnvironment('BLOCKED_USERS_SYNC_OVERLAP_DAYS') as T,
       EnvVariable.CHECKSUM => const String.fromEnvironment('CHECKSUM') as T,
+      EnvVariable.FEED_MIN_VISIBLE_ARTICLE_CATEGORIES_NUMBER => const int.fromEnvironment(
+          'FEED_MIN_VISIBLE_ARTICLE_CATEGORIES_NUMBER',
+          defaultValue: 5,
+        ) as T,
     };
   }
 }

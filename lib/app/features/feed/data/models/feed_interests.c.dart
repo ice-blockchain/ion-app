@@ -67,6 +67,15 @@ class FeedInterests with _$FeedInterests implements AppConfigWithVersion {
         for (final category in categories.values) ...category.children.entries,
       ]);
 
+  String? parentFor(String subcategoryKey) {
+    for (final category in categories.entries) {
+      if (category.value.children.containsKey(subcategoryKey)) {
+        return category.key;
+      }
+    }
+    return null;
+  }
+
   static const unclassified = 'unclassified';
 }
 
@@ -80,6 +89,7 @@ class FeedInterestsCategory with _$FeedInterestsCategory implements CategoryWith
     required int weight,
     required String display,
     required Map<String, FeedInterestsSubcategory> children,
+    String? iconUrl,
   }) = _FeedInterestsCategory;
 
   factory FeedInterestsCategory.fromJson(Map<String, dynamic> json) =>
@@ -91,6 +101,7 @@ class FeedInterestsSubcategory with _$FeedInterestsSubcategory implements Catego
   const factory FeedInterestsSubcategory({
     required String display,
     required int weight,
+    String? iconUrl,
   }) = _FeedInterestsSubcategory;
 
   factory FeedInterestsSubcategory.fromJson(Map<String, dynamic> json) =>

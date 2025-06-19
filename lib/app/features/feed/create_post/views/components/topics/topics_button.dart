@@ -29,9 +29,15 @@ class TopicsButton extends HookConsumerWidget {
     final topicsButtonKey = useRef(GlobalKey());
     final topicsTooltipVisible =
         ref.watch(topicTooltipVisibilityNotifierProvider).valueOrNull.falseOrValue;
-    final availableSubcategories = ref.watch(
-      feedUserInterestsProvider(type).select((state) => state.valueOrNull?.subcategories ?? {}),
+    final availableInterests = ref.watch(
+      feedUserInterestsProvider(type).select((state) => state.valueOrNull),
     );
+    final availableCategories = availableInterests?.categories ?? {};
+    final availableSubcategories = availableInterests?.subcategories ?? {};
+    final availableCategoriesAndSubcategories = {
+      ...availableCategories,
+      ...availableSubcategories,
+    };
     final selectedSubcategoriesKeys = ref.watch(selectedInterestsNotifierProvider);
     final selectedSubcategories =
         selectedSubcategoriesKeys.map((key) => availableSubcategories[key]).nonNulls.toList();
@@ -51,18 +57,20 @@ class TopicsButton extends HookConsumerWidget {
 
     useEffect(
       () {
-        if (availableSubcategories.isEmpty || selectedSubcategories.isEmpty) return null;
+        if (availableCategoriesAndSubcategories.isEmpty || selectedSubcategories.isEmpty) {
+          return null;
+        }
         final selectedSubcategoriesKeysSet = selectedSubcategoriesKeys.toSet();
-        final selectedAvailableSubcategoriesKeys =
-            selectedSubcategoriesKeysSet.intersection({...availableSubcategories.keys});
+        final selectedAvailableKeys = selectedSubcategoriesKeysSet
+            .intersection({...availableCategoriesAndSubcategories.keys});
         final setsAreEqual = const SetEquality<String>().equals(
-          selectedAvailableSubcategoriesKeys,
+          selectedAvailableKeys,
           selectedSubcategoriesKeysSet,
         );
         if (!setsAreEqual) {
           WidgetsBinding.instance.addPostFrameCallback(
             (_) => ref.read(selectedInterestsNotifierProvider.notifier).selectInterests =
-                selectedAvailableSubcategoriesKeys.toList(),
+                selectedAvailableKeys,
           );
         }
         return null;

@@ -56,6 +56,7 @@ import 'package:ion/app/features/feed/views/pages/article_details_page/article_d
 import 'package:ion/app/features/feed/views/pages/article_replies_page/article_replies_page.dart';
 import 'package:ion/app/features/feed/views/pages/articles_from_author_page/articles_from_author_page.dart';
 import 'package:ion/app/features/feed/views/pages/articles_from_topic_page/articles_from_topic_page.dart';
+import 'package:ion/app/features/feed/views/pages/feed_article_categories/feed_visible_article_categories_modal.dart';
 import 'package:ion/app/features/feed/views/pages/feed_main_modal/feed_main_modal_page.dart';
 import 'package:ion/app/features/feed/views/pages/feed_page/feed_page.dart';
 import 'package:ion/app/features/feed/views/pages/fullscreen_media/fullscreen_media_page.dart';
@@ -166,11 +167,11 @@ part 'auth_routes.dart';
 part 'chat_routes.dart';
 part 'dapps_routes.dart';
 part 'feed_routes.dart';
+part 'media_picker_routes.dart';
 part 'profile_routes.dart';
 part 'protect_account_routes.dart';
 part 'settings_routes.dart';
 part 'wallet_routes.dart';
-part 'media_picker_routes.dart';
 
 final rootNavigatorKey = GlobalKey<NavigatorState>(debugLabel: 'rootNav');
 final bottomBarNavigatorKey = GlobalKey<NavigatorState>(debugLabel: 'tabNav');
