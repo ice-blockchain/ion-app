@@ -1,5 +1,7 @@
 // SPDX-License-Identifier: ice License 1.0
 
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter_animate/flutter_animate.dart';
@@ -24,6 +26,7 @@ import 'package:ion/app/features/chat/recent_chats/views/components/recent_chat_
 import 'package:ion/app/features/user/providers/badges_notifier.c.dart';
 import 'package:ion/app/features/user/providers/user_metadata_provider.c.dart';
 import 'package:ion/app/features/user_metadata/providers/user_metadata_from_db_provider.c.dart';
+import 'package:ion/app/features/user_metadata/providers/user_metadata_sync_provider.c.dart';
 import 'package:ion/app/hooks/use_on_init.dart';
 import 'package:ion/app/hooks/use_scroll_top_on_tab_press.dart';
 import 'package:ion/app/router/app_routes.c.dart';
@@ -53,6 +56,8 @@ class RecentChatsTimelinePage extends HookConsumerWidget {
           archiveVisible.value = false;
         }
       });
+
+      _forceSyncUserMetadata(ref);
     });
 
     return PullToRefreshBuilder(
@@ -100,6 +105,8 @@ class RecentChatsTimelinePage extends HookConsumerWidget {
       ],
       onRefresh: () async {
         ref.invalidate(conversationsProvider);
+
+        await _forceSyncUserMetadata(ref);
       },
       builder: (context, slivers) => CustomScrollView(
         primary: false,
@@ -112,6 +119,24 @@ class RecentChatsTimelinePage extends HookConsumerWidget {
         slivers: slivers,
       ),
     );
+  }
+
+  Future<void> _forceSyncUserMetadata(WidgetRef ref) async {
+    final currentUserMasterPubkey = ref.read(currentPubkeySelectorProvider);
+
+    if (currentUserMasterPubkey == null) return;
+
+    final participantsMasterPubkeys = conversations
+        .where((c) => c.type == ConversationType.oneToOne)
+        .map((c) => c.receiverMasterPubkey(currentUserMasterPubkey))
+        .toSet();
+
+    if (participantsMasterPubkeys.isEmpty) return;
+
+    await ref.read(userMetadataSyncProvider.notifier).syncUserMetadata(
+          forceSync: true,
+          masterPubkeys: participantsMasterPubkeys,
+        );
   }
 }
 

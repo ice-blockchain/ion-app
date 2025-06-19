@@ -24,6 +24,7 @@ import 'package:ion/app/features/ion_connect/providers/event_syncer_provider.c.d
 import 'package:ion/app/features/ion_connect/providers/ion_connect_event_signer_provider.c.dart';
 import 'package:ion/app/features/ion_connect/providers/ion_connect_subscription_provider.c.dart';
 import 'package:ion/app/features/user/providers/user_relays_manager.c.dart';
+import 'package:ion/app/features/user_metadata/providers/user_metadata_sync_provider.c.dart';
 import 'package:ion/app/services/ion_connect/ion_connect_gift_wrap_service.c.dart';
 import 'package:ion/app/services/ion_connect/ion_connect_seal_service.c.dart';
 import 'package:ion/app/services/media_service/media_encryption_service.c.dart';
@@ -154,6 +155,13 @@ class E2eeMessagesSubscriber extends _$E2eeMessagesSubscriber {
 
     final rumor = await giftUnwrapService.unwrap(eventMessage);
 
+    unawaited(
+      ref
+          .read(userMetadataSyncProvider.notifier)
+          .syncUserMetadata(masterPubkeys: {rumor.masterPubkey}),
+    );
+    
+    // Only for kind 30014
     if (rumor.kind == ReplaceablePrivateDirectMessageEntity.kind) {
       final entity = ReplaceablePrivateDirectMessageEntity.fromEventMessage(rumor);
       final eventReference = entity.toEventReference();

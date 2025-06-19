@@ -43,7 +43,7 @@ class UserMetadataSync extends _$UserMetadataSync {
 
     final existingMasterPubkeys = await userMetadataDao.getExistingMasterPubkeys();
 
-    final masterPubkeysDifference = existingMasterPubkeys.difference(masterPubkeys);
+    final masterPubkeysDifference = masterPubkeys.difference(existingMasterPubkeys);
 
     final masterPubkeysToSync = Set<String>.from(existingMasterPubkeys)..addAll(masterPubkeys);
 
@@ -76,7 +76,7 @@ class UserMetadataSync extends _$UserMetadataSync {
 
     final usersMetadata = await Future.wait(
       masterPubkeys
-          .map((pubkey) => ref.watch(userMetadataProvider(pubkey, cache: false).future))
+          .map((pubkey) => ref.read(userMetadataProvider(pubkey, cache: false).future))
           .toList(),
     );
 
