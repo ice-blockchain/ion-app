@@ -19,7 +19,9 @@ class FeedConfig with _$FeedConfig {
     @DurationMillisecondsConverter() required Duration trendingMaxAge,
     @DurationMillisecondsConverter() required Duration exploreMaxAge,
     @DurationMillisecondsConverter() required Duration repostThrottleDelay,
+    @Default(false) bool excludeUnclassifiedFromExplore,
   }) = _FeedConfig;
+
   const FeedConfig._();
 
   factory FeedConfig.fromJson(Map<String, dynamic> json) => _$FeedConfigFromJson(json);

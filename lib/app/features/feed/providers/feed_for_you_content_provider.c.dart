@@ -7,6 +7,7 @@ import 'package:collection/collection.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:ion/app/exceptions/exceptions.dart';
 import 'package:ion/app/features/auth/providers/auth_provider.c.dart';
+import 'package:ion/app/features/feed/data/models/feed_config.c.dart';
 import 'package:ion/app/features/feed/data/models/feed_modifier.dart';
 import 'package:ion/app/features/feed/data/models/feed_type.dart';
 import 'package:ion/app/features/feed/providers/feed_config_provider.c.dart';
@@ -354,7 +355,12 @@ class FeedForYouContent extends _$FeedForYouContent implements PagedNotifier {
     final ionConnectNotifier = ref.read(ionConnectNotifierProvider.notifier);
     final feedConfig = await ref.read(feedConfigProvider.future);
 
-    final dataSource = _getDataSource(relayUrl: relayUrl, modifier: modifier, interest: interest);
+    final dataSource = _getDataSource(
+      relayUrl: relayUrl,
+      modifier: modifier,
+      interest: interest,
+      feedConfig: feedConfig,
+    );
 
     final maxAge = switch (modifier) {
       FeedModifier.trending => feedConfig.trendingMaxAge,
@@ -388,6 +394,7 @@ class FeedForYouContent extends _$FeedForYouContent implements PagedNotifier {
     required String relayUrl,
     required FeedModifier modifier,
     required String interest,
+    required FeedConfig feedConfig,
   }) {
     final currentPubkey = ref.read(currentPubkeySelectorProvider);
 
@@ -398,15 +405,16 @@ class FeedForYouContent extends _$FeedForYouContent implements PagedNotifier {
     // For explore feed, we use a special interest that is not related to any user interests.
     // It is defined in the [modifier] filter tags
     final tags = {
-      ...modifier.filter.tags,
+      ...modifier.filter(feedConfig).tags,
       if (modifier != FeedModifier.explore) '#${RelatedHashtag.tagName}': [interest],
     };
 
     // Global [feedModifier] has priority over the local [modifier].
     // This is for the "Trending Videos" case, where we have to apply the
     // "trending" modifier even to the "explore" [modifier].
-    final modifiersSearch =
-        feedModifier != null ? feedModifier!.filter.search : modifier.filter.search;
+    final modifiersSearch = feedModifier != null
+        ? feedModifier!.filter(feedConfig).search
+        : modifier.filter(feedConfig).search;
 
     return switch (feedType) {
       FeedType.post => buildPostsDataSource(

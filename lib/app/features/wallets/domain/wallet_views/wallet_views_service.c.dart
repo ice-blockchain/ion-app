@@ -396,7 +396,10 @@ class WalletViewsService {
 
     for (final coinInWalletDTO in viewDTO.coins) {
       final coinDTO = coinInWalletDTO.coin;
-      final network = networks[coinDTO.network]!;
+      final network = networks[coinDTO.network];
+      if (network == null) {
+        continue;
+      }
 
       var coinAmount = 0.0;
       var rawCoinAmount = '0';
