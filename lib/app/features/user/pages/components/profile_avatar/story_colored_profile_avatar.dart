@@ -118,7 +118,8 @@ class StoryColoredProfileAvatar extends HookConsumerWidget {
 
     if (hasStories) {
       return GestureDetector(
-        onTap: () => StoryViewerRoute(pubkey: pubkey).push<void>(context),
+        onTap: () =>
+            StoryViewerRoute(pubkey: pubkey, showOnlySelectedUser: true).push<void>(context),
         child: avatarWidget,
       );
     }
