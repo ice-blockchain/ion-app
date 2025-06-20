@@ -95,8 +95,7 @@ class ProfilePage extends HookConsumerWidget {
                       SliverToBoxAdapter(
                         child: Column(
                           children: [
-                            ProfileAvatar(pubkey: pubkey),
-                            SizedBox(height: 16.0.s),
+                            SizedBox(height: 16.0.s + ProfileAvatar.pictureSize),
                             ProfileDetails(pubkey: pubkey),
                             SizedBox(height: 16.0.s),
                             const HorizontalSeparator(),
@@ -142,6 +141,15 @@ class ProfilePage extends HookConsumerWidget {
                   pubkey: pubkey,
                   showBackButton: showBackButton,
                 ),
+              ),
+            ),
+            // need to move ProfileAvatar here to fix the issue with the header action
+            // because header overlaps the ProfileAvatar
+            Align(
+              alignment: Alignment.topCenter,
+              child: Container(
+                padding: EdgeInsetsDirectional.only(top: paddingTop),
+                child: Opacity(opacity: 1 - opacity, child: ProfileAvatar(pubkey: pubkey)),
               ),
             ),
           ],

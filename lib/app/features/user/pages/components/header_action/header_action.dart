@@ -25,7 +25,7 @@ class HeaderAction extends StatelessWidget {
   final double opacity;
   final bool flipForRtl;
 
-  static double get buttonSize => 40.0.s;
+  static double get buttonSize => 48.0.s;
 
   double get iconSize => 24.0.s;
 
