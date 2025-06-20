@@ -4,18 +4,13 @@ import 'dart:async';
 
 import 'package:collection/collection.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:ion/app/extensions/bool.dart';
-import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/auth/providers/auth_provider.c.dart';
-import 'package:ion/app/features/auth/providers/delegation_complete_provider.c.dart';
 import 'package:ion/app/features/ion_connect/ion_connect.dart';
 import 'package:ion/app/features/ion_connect/model/action_source.c.dart';
 import 'package:ion/app/features/ion_connect/model/event_reference.c.dart';
 import 'package:ion/app/features/ion_connect/model/search_extension.dart';
 import 'package:ion/app/features/ion_connect/providers/ion_connect_cache.c.dart';
 import 'package:ion/app/features/ion_connect/providers/ion_connect_entity_provider.c.dart';
-import 'package:ion/app/features/ion_connect/providers/ion_connect_notifier.c.dart';
-import 'package:ion/app/features/ion_connect/providers/ion_connect_subscription_provider.c.dart';
 import 'package:ion/app/features/user/model/badges/badge_award.c.dart';
 import 'package:ion/app/features/user/model/badges/badge_definition.c.dart';
 import 'package:ion/app/features/user/model/badges/profile_badges.c.dart';
@@ -210,101 +205,6 @@ bool isCurrentUserVerified(Ref ref) {
   }
 
   return ref.watch(isUserVerifiedProvider(currentPubkey)).valueOrNull ?? false;
-}
-
-@riverpod
-Stream<BadgeAwardEntity> badgeAwardsStream(
-  Ref ref,
-  String pubkey,
-) {
-  final authState = ref.watch(authProvider).valueOrNull;
-  if (authState == null || !authState.isAuthenticated) {
-    return const Stream.empty();
-  }
-
-  final currentPubkey = ref.watch(currentPubkeySelectorProvider);
-  final delegationComplete = ref.watch(delegationCompleteProvider).valueOrNull.falseOrValue;
-  if (currentPubkey == null || !delegationComplete) {
-    return const Stream.empty();
-  }
-
-  final streamController = StreamController<BadgeAwardEntity>.broadcast();
-
-  final request = RequestMessage()
-    ..addFilter(
-      RequestFilter(
-        kinds: const [BadgeAwardEntity.kind],
-        tags: {
-          '#p': [pubkey],
-        },
-      ),
-    );
-
-  final events = ref.watch(
-    ionConnectEventsSubscriptionProvider(
-      request,
-    ),
-  );
-
-  final subscription = events.listen((eventMessage) {
-    streamController.add(
-      BadgeAwardEntity.fromEventMessage(eventMessage),
-    );
-  });
-
-  ref.onDispose(() {
-    subscription.cancel();
-    streamController.close();
-  });
-
-  return streamController.stream;
-}
-
-@Riverpod(keepAlive: true)
-void currentUserBadgesSync(Ref ref) {
-  final authState = ref.watch(authProvider).valueOrNull;
-  if (authState == null || !authState.isAuthenticated) {
-    return;
-  }
-
-  final currentPubkey = ref.watch(currentPubkeySelectorProvider);
-  final delegationComplete = ref.watch(delegationCompleteProvider).valueOrNull.falseOrValue;
-  if (currentPubkey == null || !delegationComplete) {
-    return;
-  }
-
-  final isVerified = ref.watch(isUserVerifiedProvider(currentPubkey)).valueOrNull;
-  if (isVerified == null || isVerified) {
-    return;
-  }
-
-  late final ProviderSubscription<AsyncValue<BadgeAwardEntity>> sub;
-  sub = ref.listen<AsyncValue<BadgeAwardEntity>>(
-    badgeAwardsStreamProvider(currentPubkey),
-    (previous, next) {
-      next.whenData((badgeAwardEntity) async {
-        final pubkeys = await ref.watch(servicePubkeysProvider.future);
-        final eventRef = badgeAwardEntity.data.badgeDefinitionRef;
-        if (eventRef.kind == BadgeDefinitionEntity.kind &&
-            eventRef.dTag == BadgeDefinitionEntity.verifiedBadgeDTag &&
-            (pubkeys.isEmpty || pubkeys.contains(eventRef.pubkey))) {
-          final updatedData = await ref.read(
-            updatedProfileBadgesProvider(
-              BadgeEntry(
-                definitionRef: badgeAwardEntity.data.badgeDefinitionRef,
-                awardId: badgeAwardEntity.id,
-              ),
-              currentPubkey,
-            ).future,
-          );
-          await ref.read(ionConnectNotifierProvider.notifier).sendEntitiesData([updatedData]);
-          // Unsubscribe after handling the verified badge
-          sub.close();
-        }
-      });
-    },
-  );
-  ref.onDispose(sub.close);
 }
 
 @riverpod

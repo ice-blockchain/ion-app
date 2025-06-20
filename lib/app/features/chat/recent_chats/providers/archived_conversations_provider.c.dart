@@ -19,10 +19,9 @@ part 'archived_conversations_provider.c.g.dart';
 Future<List<String>> archivedConversations(Ref ref) async {
   final archivedConversationBookmarksSetData =
       await ref.watch(currentUserChatBookmarksDataProvider.future) ??
-          const BookmarksSetData(
-            type: BookmarksSetType.chats,
-            postsRefs: [],
-            articlesRefs: [],
+          BookmarksSetData(
+            type: BookmarksSetType.chats.dTagName,
+            eventReferences: [],
           );
 
   final currentUserPubkey = ref.read(currentPubkeySelectorProvider);

@@ -13,6 +13,7 @@ import 'package:ion/app/extensions/num.dart';
 import 'package:ion/app/features/auth/providers/auth_provider.c.dart';
 import 'package:ion/app/features/chat/views/pages/share_via_message_modal/components/share_options_menu_item.dart';
 import 'package:ion/app/features/chat/views/pages/share_via_message_modal/components/share_post_to_story_content.dart';
+import 'package:ion/app/features/feed/data/models/bookmarks/bookmarks_set.c.dart';
 import 'package:ion/app/features/feed/data/models/entities/modifiable_post_data.c.dart';
 import 'package:ion/app/features/feed/providers/feed_bookmarks_notifier.c.dart';
 import 'package:ion/app/features/feed/providers/ion_connect_entity_with_counters_provider.c.dart';
@@ -78,7 +79,11 @@ class ShareOptions extends HookConsumerWidget {
                 label: context.i18n.button_bookmark,
                 onPressed: () async {
                   await ref
-                      .read(feedBookmarksNotifierProvider().notifier)
+                      .read(
+                        feedBookmarksNotifierProvider(
+                          collectionDTag: BookmarksSetType.homeFeedCollectionsAll.dTagName,
+                        ).notifier,
+                      )
                       .toggleBookmark(eventReference);
                   if (context.mounted) {
                     context.pop();

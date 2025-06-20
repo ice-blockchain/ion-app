@@ -75,7 +75,7 @@ Future<Map<BookmarksSetType, BookmarksSetEntity?>> bookmarks(
   final bookmarksSets = eventsList.cast<BookmarksSetEntity>();
   return Map.fromEntries(
     bookmarkTypesList.map((type) {
-      final bookmarksSet = bookmarksSets.firstWhereOrNull((set) => set.data.type == type);
+      final bookmarksSet = bookmarksSets.firstWhereOrNull((set) => set.data.type == type.dTagName);
       return MapEntry(type, bookmarksSet);
     }),
   );

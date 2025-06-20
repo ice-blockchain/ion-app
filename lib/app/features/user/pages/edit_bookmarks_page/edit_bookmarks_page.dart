@@ -7,7 +7,7 @@ import 'package:ion/app/components/screen_offset/screen_side_offset.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/components/bookmarks/bookmarks_collection_tile.dart';
 import 'package:ion/app/features/components/bookmarks/new_bookmarks_collection_button.dart';
-import 'package:ion/app/features/feed/data/models/bookmarks/bookmarks_collection.c.dart';
+import 'package:ion/app/features/feed/data/models/bookmarks/bookmarks_set.c.dart';
 import 'package:ion/app/features/feed/providers/feed_bookmarks_notifier.c.dart';
 import 'package:ion/app/features/user/pages/edit_bookmarks_page/components/edit_bookmarks_header.dart';
 
@@ -28,7 +28,7 @@ class EditBookmarksPage extends HookConsumerWidget {
               final collectionsDTags = data
                   .map((eventReference) => eventReference.dTag)
                   .whereType<String>()
-                  .where((dTag) => dTag != BookmarksCollectionEntity.defaultCollectionDTag)
+                  .where((dTag) => dTag != BookmarksSetType.homeFeedCollectionsAll.dTagName)
                   .toList();
               return [
                 SliverList.separated(

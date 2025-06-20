@@ -5,6 +5,7 @@ import 'dart:io';
 
 import 'package:collection/collection.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/chat/e2ee/model/entities/private_direct_message_data.c.dart';
 import 'package:ion/app/features/chat/model/message_type.dart';
 import 'package:ion/app/features/core/model/media_type.dart';
@@ -64,7 +65,7 @@ class IonConnectPushDataPayload {
     if (parsedEvent.kind == IonConnectGiftWrapEntity.kind) {
       final giftWrapEntity = EventParser().parse(parsedEvent) as IonConnectGiftWrapEntity;
       if (giftWrapEntity.data.kinds
-          .contains(ReplaceablePrivateDirectMessageEntity.kind.toString())) {
+          .containsDeep([ReplaceablePrivateDirectMessageEntity.kind.toString()])) {
         decryptedEvent = await decryptEvent(parsedEvent);
       }
     }
@@ -107,7 +108,7 @@ class IonConnectPushDataPayload {
     } else if (entity is FollowListEntity) {
       return PushNotificationType.follower;
     } else if (entity is IonConnectGiftWrapEntity) {
-      if (entity.data.kinds.contains(ReplaceablePrivateDirectMessageEntity.kind.toString())) {
+      if (entity.data.kinds.containsDeep([ReplaceablePrivateDirectMessageEntity.kind.toString()])) {
         if (decryptedEvent == null) return null;
 
         final message = ReplaceablePrivateDirectMessageEntity.fromEventMessage(decryptedEvent!);
@@ -136,11 +137,11 @@ class IonConnectPushDataPayload {
           case MessageType.moneySent:
             return PushNotificationType.paymentReceived;
         }
-      } else if (entity.data.kinds.contains(ReactionEntity.kind.toString())) {
+      } else if (entity.data.kinds.containsDeep([ReactionEntity.kind.toString()])) {
         return PushNotificationType.chatReaction;
-      } else if (entity.data.kinds.contains(FundsRequestEntity.kind.toString())) {
+      } else if (entity.data.kinds.containsDeep([FundsRequestEntity.kind.toString()])) {
         return PushNotificationType.paymentRequest;
-      } else if (entity.data.kinds.contains(WalletAssetEntity.kind.toString())) {
+      } else if (entity.data.kinds.containsDeep([WalletAssetEntity.kind.toString()])) {
         return PushNotificationType.paymentReceived;
       }
     }

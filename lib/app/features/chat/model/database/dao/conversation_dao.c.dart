@@ -244,11 +244,11 @@ class ConversationDao extends DatabaseAccessor<ChatDatabase> with _$Conversation
   }
 
   Future<void> removeConversations({
-    required Ref ref,
     required EventMessage deleteRequest,
     required List<String> conversationIds,
+    required EventMessageDao eventMessageDao,
   }) async {
-    await ref.read(eventMessageDaoProvider).add(deleteRequest);
+    await eventMessageDao.add(deleteRequest);
 
     final messageEventReference = await (select(conversationMessageTable).join([
       innerJoin(

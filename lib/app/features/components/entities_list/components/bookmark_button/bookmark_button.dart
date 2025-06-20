@@ -5,6 +5,7 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/components/counter_items_footer/text_action_button.dart';
 import 'package:ion/app/extensions/extensions.dart';
+import 'package:ion/app/features/feed/data/models/bookmarks/bookmarks_set.c.dart';
 import 'package:ion/app/features/feed/providers/feed_bookmarks_notifier.c.dart';
 import 'package:ion/app/features/ion_connect/model/event_reference.c.dart';
 import 'package:ion/app/features/ion_connect/providers/ion_connect_db_cache_notifier.c.dart';
@@ -25,9 +26,18 @@ class BookmarkButton extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final bookmarkState = ref.watch(feedBookmarksNotifierProvider());
+    final bookmarkState = ref.watch(
+      feedBookmarksNotifierProvider(
+        collectionDTag: BookmarksSetType.homeFeedCollectionsAll.dTagName,
+      ),
+    );
     final isLoading = bookmarkState.isLoading;
-    final isBookmarked = ref.watch(isBookmarkedInCollectionProvider(eventReference));
+    final isBookmarked = ref.watch(
+      isBookmarkedInCollectionProvider(
+        eventReference,
+        collectionDTag: BookmarksSetType.homeFeedCollectionsAll.dTagName,
+      ),
+    );
 
     useEffect(
       () {
@@ -40,13 +50,23 @@ class BookmarkButton extends HookConsumerWidget {
       [isBookmarked],
     );
 
-    ref.displayErrors(feedBookmarksNotifierProvider());
+    ref.displayErrors(
+      feedBookmarksNotifierProvider(
+        collectionDTag: BookmarksSetType.homeFeedCollectionsAll.dTagName,
+      ),
+    );
 
     return GestureDetector(
       onTap: isLoading
           ? null
           : () {
-              ref.read(feedBookmarksNotifierProvider().notifier).toggleBookmark(eventReference);
+              ref
+                  .read(
+                    feedBookmarksNotifierProvider(
+                      collectionDTag: BookmarksSetType.homeFeedCollectionsAll.dTagName,
+                    ).notifier,
+                  )
+                  .toggleBookmark(eventReference);
               if (!isBookmarked) {
                 AddBookmarkRoute(eventReference: eventReference.encode()).push<void>(context);
               }

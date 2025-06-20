@@ -49,20 +49,20 @@ class BookmarksEntity with IonConnectEntity, CacheableEntity, ReplaceableEntity,
 @freezed
 class BookmarksData with _$BookmarksData implements EventSerializable, ReplaceableEntityData {
   const factory BookmarksData({
-    required List<String> ids,
-    required List<ReplaceableEventReference> bookmarksSetRefs,
+    required List<EventReference> eventReferences,
   }) = _BookmarksData;
 
   const BookmarksData._();
 
   factory BookmarksData.fromEventMessage(EventMessage eventMessage) {
     final tags = groupBy(eventMessage.tags, (tag) => tag[0]);
+    final replaceableEventReferences =
+        tags[ReplaceableEventReference.tagName]?.map(ReplaceableEventReference.fromTag).toList() ??
+            [];
+    final immutableEventReferences =
+        tags[ImmutableEventReference.tagName]?.map(ImmutableEventReference.fromTag).toList() ?? [];
     return BookmarksData(
-      bookmarksSetRefs: tags[ReplaceableEventReference.tagName]
-              ?.map(ReplaceableEventReference.fromTag)
-              .toList() ??
-          [],
-      ids: eventMessage.tags.where((tag) => tag[0] == 'e').map((tag) => tag[1]).toList(),
+      eventReferences: [...replaceableEventReferences, ...immutableEventReferences],
     );
   }
 
@@ -78,8 +78,7 @@ class BookmarksData with _$BookmarksData implements EventSerializable, Replaceab
       kind: BookmarksEntity.kind,
       tags: [
         ...tags,
-        ...bookmarksSetRefs.map((ref) => ref.toTag()),
-        ...ids.map((id) => ['e', id]),
+        ...eventReferences.map((ref) => ref.toTag()),
       ],
       content: '',
     );

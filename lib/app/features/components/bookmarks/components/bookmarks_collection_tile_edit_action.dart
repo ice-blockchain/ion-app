@@ -7,7 +7,7 @@ import 'package:ion/app/components/overlay_menu/overlay_menu_container.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/components/bookmarks/confirm_bookmarks_collection_delete_popup.dart';
 import 'package:ion/app/features/components/bookmarks/edit_bookmarks_collection_popup.dart';
-import 'package:ion/app/features/feed/data/models/bookmarks/bookmarks_collection.c.dart';
+import 'package:ion/app/features/feed/data/models/bookmarks/bookmarks_set.c.dart';
 import 'package:ion/app/features/user/pages/profile_page/components/header/context_menu_item.dart';
 import 'package:ion/app/features/user/pages/profile_page/components/header/context_menu_item_divider.dart';
 import 'package:ion/app/router/utils/show_simple_bottom_sheet.dart';
@@ -19,7 +19,7 @@ class BookmarksCollectionTileEditAction extends ConsumerWidget {
     super.key,
   });
 
-  final BookmarksCollectionData data;
+  final BookmarksSetData data;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {

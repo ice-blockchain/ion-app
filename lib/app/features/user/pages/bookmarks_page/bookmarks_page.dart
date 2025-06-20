@@ -7,7 +7,7 @@ import 'package:ion/app/components/empty_list/empty_list.dart';
 import 'package:ion/app/extensions/build_context.dart';
 import 'package:ion/app/features/components/entities_list/entities_list.dart';
 import 'package:ion/app/features/components/entities_list/entities_list_skeleton.dart';
-import 'package:ion/app/features/feed/data/models/bookmarks/bookmarks_collection.c.dart';
+import 'package:ion/app/features/feed/data/models/bookmarks/bookmarks_set.c.dart';
 import 'package:ion/app/features/feed/providers/feed_bookmarks_notifier.c.dart';
 import 'package:ion/app/features/feed/views/components/list_separator/list_separator.dart';
 import 'package:ion/app/features/user/pages/bookmarks_page/components/bookmarks_filters.dart';
@@ -22,7 +22,7 @@ class BookmarksPage extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final selectedCollectionDTag = useState(BookmarksCollectionEntity.defaultCollectionDTag);
+    final selectedCollectionDTag = useState(BookmarksSetType.homeFeedCollectionsAll.dTagName);
     final rawQuery = useState<String>('');
     final query = useDebounced(rawQuery.value, 300.milliseconds) ?? '';
     final collectionEntityState = ref.watch(

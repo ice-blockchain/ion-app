@@ -570,3 +570,27 @@ class NicknameDoesntExistException extends IONException {
   NicknameDoesntExistException(String nickname)
       : super(10114, 'Nickname "$nickname" does not exist');
 }
+
+class GlobalSubscriptionSyncEventsException extends IONException {
+  GlobalSubscriptionSyncEventsException(dynamic error)
+      : super(10115, 'Global subscription sync events exception: $error');
+}
+
+class GlobalSubscriptionEventMessageHandlingException extends IONException {
+  GlobalSubscriptionEventMessageHandlingException(dynamic error)
+      : super(10116, 'Global subscription event message handling exception: $error');
+}
+
+class GlobalSubscriptionSubscribeException extends IONException {
+  GlobalSubscriptionSubscribeException(dynamic error)
+      : super(10117, 'Global subscription subscribe exception: $error');
+}
+
+class GlobalSubscriptionNotInitializedException extends IONException {
+  GlobalSubscriptionNotInitializedException() : super(10118, 'Global subscription not initialized');
+}
+
+class FailedToCreateBookmarksSetException extends IONException {
+  FailedToCreateBookmarksSetException(String dTagName)
+      : super(10119, 'Failed to create bookmarks set for $dTagName');
+}

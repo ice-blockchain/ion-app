@@ -20,9 +20,7 @@ part 'toggle_archive_conversation_provider.c.g.dart';
 @riverpod
 class ToggleArchivedConversations extends _$ToggleArchivedConversations {
   @override
-  FutureOr<void> build() async {
-    return;
-  }
+  FutureOr<void> build() async {}
 
   Future<void> toggleConversations(List<ConversationListItem> conversations) async {
     final currentUserPubkey = ref.read(currentPubkeySelectorProvider);
@@ -46,12 +44,24 @@ class ToggleArchivedConversations extends _$ToggleArchivedConversations {
   Future<BookmarksSetData> _getInitialBookmarkSet() async {
     final archivedConversationBookmarksData =
         await ref.read(currentUserChatBookmarksDataProvider.future);
-    return archivedConversationBookmarksData ??
-        const BookmarksSetData(
-          postsRefs: [],
-          articlesRefs: [],
-          type: BookmarksSetType.chats,
-        );
+    if (archivedConversationBookmarksData == null) {
+      final bookmarksSetData = BookmarksSetData(
+        eventReferences: [],
+        type: BookmarksSetType.chats.dTagName,
+      );
+
+      final result =
+          await ref.read(ionConnectNotifierProvider.notifier).sendEntityData<BookmarksSetEntity>(
+                bookmarksSetData,
+              );
+
+      if (result == null) {
+        throw FailedToCreateBookmarksSetException(BookmarksSetType.chats.dTagName);
+      }
+
+      return result.data;
+    }
+    return archivedConversationBookmarksData;
   }
 
   Future<List<List<String>>?> _decryptContent(String content) async {

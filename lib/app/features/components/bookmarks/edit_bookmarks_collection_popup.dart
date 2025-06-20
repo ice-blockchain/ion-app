@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/components/bookmarks/bookmarks_collection_name_popup.dart';
-import 'package:ion/app/features/feed/data/models/bookmarks/bookmarks_collection.c.dart';
+import 'package:ion/app/features/feed/data/models/bookmarks/bookmarks_set.c.dart';
 import 'package:ion/app/features/feed/providers/feed_bookmarks_notifier.c.dart';
 
 class EditBookmarksCollectionPopup extends HookConsumerWidget {
@@ -13,7 +13,7 @@ class EditBookmarksCollectionPopup extends HookConsumerWidget {
     super.key,
   });
 
-  final BookmarksCollectionData data;
+  final BookmarksSetData data;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
