@@ -23,6 +23,7 @@ import 'package:ion/app/features/ion_connect/model/ion_connect_gift_wrap.c.dart'
 import 'package:ion/app/features/ion_connect/model/mute_set.c.dart';
 import 'package:ion/app/features/ion_connect/model/not_authoritative_event.c.dart';
 import 'package:ion/app/features/push_notifications/data/models/push_subscription.c.dart';
+import 'package:ion/app/features/user/model/account_notifications_sets.c.dart';
 import 'package:ion/app/features/user/model/badges/badge_award.c.dart';
 import 'package:ion/app/features/user/model/badges/badge_definition.c.dart';
 import 'package:ion/app/features/user/model/badges/profile_badges.c.dart';
@@ -67,6 +68,8 @@ class EventParser {
       CommunityUpdateEntity.kind => CommunityUpdateEntity.fromEventMessage(eventMessage),
       CommunityJoinEntity.kind => CommunityJoinEntity.fromEventMessage(eventMessage),
       MuteSetEntity.kind => MuteSetEntity.fromEventMessage(eventMessage),
+      AccountNotificationSetEntity.kind =>
+        AccountNotificationSetEntity.fromEventMessage(eventMessage),
       PushSubscriptionEntity.kind => PushSubscriptionEntity.fromEventMessage(eventMessage),
       DeletionRequestEntity.kind => DeletionRequestEntity.fromEventMessage(eventMessage),
       IonConnectGiftWrapEntity.kind => IonConnectGiftWrapEntity.fromEventMessage(eventMessage),
