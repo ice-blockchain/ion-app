@@ -22,13 +22,12 @@ class GlobalSubscriptionEventDispatcher {
   final Ref ref;
   final List<GlobalSubscriptionEventHandler?> _handlers;
 
-  Future<void> dispatch(EventMessage eventMessage) async {
-    for (final handler in _handlers.nonNulls) {
-      if (handler.canHandle(eventMessage)) {
-        unawaited(handler.handle(eventMessage));
-        break;
-      }
-    }
+  void dispatch(EventMessage eventMessage) {
+    final futures = _handlers.nonNulls
+        .where((handler) => handler.canHandle(eventMessage))
+        .map((handler) => handler.handle(eventMessage));
+
+    unawaited(Future.wait(futures));
   }
 }
 

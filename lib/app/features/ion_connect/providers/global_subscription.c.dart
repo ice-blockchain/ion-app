@@ -209,7 +209,7 @@ class GlobalSubscription {
           : EventType.regular;
 
       await latestEventTimestampService.update(eventMessage.createdAt.toMicroseconds, eventType);
-      await globalSubscriptionEventDispatcher.dispatch(eventMessage);
+      globalSubscriptionEventDispatcher.dispatch(eventMessage);
     } catch (e) {
       throw GlobalSubscriptionEventMessageHandlingException(e);
     }
