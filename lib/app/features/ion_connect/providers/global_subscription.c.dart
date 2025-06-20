@@ -236,7 +236,7 @@ GlobalSubscription? globalSubscription(Ref ref) {
   keepAliveWhenAuthenticated(ref);
 
   final currentUserMasterPubkey = ref.watch(currentPubkeySelectorProvider);
-  final devicePubkey = ref.read(currentUserIonConnectEventSignerProvider).valueOrNull?.publicKey;
+  final devicePubkey = ref.watch(currentUserIonConnectEventSignerProvider).valueOrNull?.publicKey;
   final delegationComplete = ref.watch(delegationCompleteProvider).valueOrNull.falseOrValue;
   final latestEventTimestampService =
       ref.watch(globalSubscriptionLatestEventTimestampServiceProvider);
