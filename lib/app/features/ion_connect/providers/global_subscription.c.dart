@@ -238,6 +238,11 @@ GlobalSubscription? globalSubscription(Ref ref) {
   final currentUserMasterPubkey = ref.watch(currentPubkeySelectorProvider);
   final devicePubkey = ref.watch(currentUserIonConnectEventSignerProvider).valueOrNull?.publicKey;
   final delegationComplete = ref.watch(delegationCompleteProvider).valueOrNull.falseOrValue;
+
+  if (currentUserMasterPubkey == null || devicePubkey == null || !delegationComplete) {
+    return null;
+  }
+
   final latestEventTimestampService =
       ref.watch(globalSubscriptionLatestEventTimestampServiceProvider);
   final ionConnectNotifier = ref.watch(ionConnectNotifierProvider.notifier);
@@ -245,11 +250,7 @@ GlobalSubscription? globalSubscription(Ref ref) {
   final globalSubscriptionEventDispatcherNotifier =
       ref.watch(globalSubscriptionEventDispatcherNotifierProvider).valueOrNull;
 
-  if (currentUserMasterPubkey == null ||
-      devicePubkey == null ||
-      !delegationComplete ||
-      latestEventTimestampService == null ||
-      globalSubscriptionEventDispatcherNotifier == null) {
+  if (latestEventTimestampService == null || globalSubscriptionEventDispatcherNotifier == null) {
     return null;
   }
 
