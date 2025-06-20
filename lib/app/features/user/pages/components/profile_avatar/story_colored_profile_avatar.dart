@@ -12,6 +12,7 @@ import 'package:ion/app/features/feed/stories/providers/feed_stories_provider.c.
 import 'package:ion/app/features/feed/stories/providers/viewed_stories_provider.c.dart';
 import 'package:ion/app/features/feed/views/pages/feed_page/components/stories/components/story_colored_border.dart';
 import 'package:ion/app/features/feed/views/pages/feed_page/components/stories/mock.dart';
+import 'package:ion/app/router/app_routes.c.dart';
 
 final _storyStatusProvider =
     Provider.family<({bool hasStories, bool allStoriesViewed}), String>((ref, pubkey) {
@@ -67,9 +68,11 @@ class StoryColoredProfileAvatar extends HookConsumerWidget {
       [hasStories, useRandomGradient],
     );
 
+    Widget avatarWidget;
+
     if (!hasStories) {
       if (imageUrl != null || imageWidget != null || defaultAvatar != null) {
-        return Avatar(
+        avatarWidget = Avatar(
           size: size,
           imageUrl: imageUrl,
           imageWidget: imageWidget,
@@ -78,39 +81,48 @@ class StoryColoredProfileAvatar extends HookConsumerWidget {
           fit: fit,
         );
       } else {
-        return IonConnectAvatar(
+        avatarWidget = IonConnectAvatar(
           size: size,
           fit: fit,
           pubkey: pubkey,
           borderRadius: borderRadius,
         );
       }
+    } else {
+      avatarWidget = StoryColoredBorder(
+        size: size,
+        color: context.theme.appColors.strokeElements,
+        gradient: gradient,
+        isViewed: allStoriesViewed,
+        child: StoryColoredBorder(
+          size: size - 4.0.s,
+          color: context.theme.appColors.secondaryBackground,
+          child: imageUrl != null || imageWidget != null || defaultAvatar != null
+              ? Avatar(
+                  size: size - 8.0.s,
+                  imageUrl: imageUrl,
+                  imageWidget: imageWidget,
+                  defaultAvatar: defaultAvatar,
+                  borderRadius: borderRadius,
+                  fit: fit,
+                )
+              : IonConnectAvatar(
+                  size: size - 8.0.s,
+                  fit: fit,
+                  pubkey: pubkey,
+                  borderRadius: borderRadius,
+                ),
+        ),
+      );
     }
 
-    return StoryColoredBorder(
-      size: size,
-      color: context.theme.appColors.strokeElements,
-      gradient: gradient,
-      isViewed: allStoriesViewed,
-      child: StoryColoredBorder(
-        size: size - 4.0.s,
-        color: context.theme.appColors.secondaryBackground,
-        child: imageUrl != null || imageWidget != null || defaultAvatar != null
-            ? Avatar(
-                size: size - 8.0.s,
-                imageUrl: imageUrl,
-                imageWidget: imageWidget,
-                defaultAvatar: defaultAvatar,
-                borderRadius: borderRadius,
-                fit: fit,
-              )
-            : IonConnectAvatar(
-                size: size - 8.0.s,
-                fit: fit,
-                pubkey: pubkey,
-                borderRadius: borderRadius,
-              ),
-      ),
-    );
+    if (hasStories) {
+      return GestureDetector(
+        onTap: () => StoryViewerRoute(pubkey: pubkey).push<void>(context),
+        child: avatarWidget,
+      );
+    }
+
+    return avatarWidget;
   }
 }
