@@ -18,7 +18,7 @@ import 'package:ion/app/router/app_routes.c.dart';
 import 'package:ion/app/utils/num.dart';
 
 class Balance extends ConsumerWidget {
-  const Balance({super.key, required this.tab});
+  const Balance({required this.tab, super.key});
 
   final WalletTabType tab;
 
