@@ -38,13 +38,13 @@ class EncryptedMessageEventHandler implements GlobalSubscriptionEventHandler {
   @override
   Future<void> handle(EventMessage eventMessage) async {
     final entity = IonConnectGiftWrapEntity.fromEventMessage(eventMessage);
-    for (final handler in handlers.nonNulls) {
-      if (handler.canHandle(entity: entity)) {
-        final rumor = await giftUnwrapService.unwrap(eventMessage);
-        unawaited(handler.handle(rumor));
-        break;
-      }
-    }
+    final rumor = await giftUnwrapService.unwrap(eventMessage);
+
+    final futures = handlers.nonNulls
+        .where((handler) => handler.canHandle(entity: entity))
+        .map((handler) => handler.handle(rumor));
+
+    unawaited(Future.wait(futures));
   }
 }
 
