@@ -3,9 +3,9 @@
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/components/avatar/avatar.dart';
+import 'package:ion/app/components/avatar/story_colored_profile_avatar.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/chat/views/components/message_items/messages_context_menu/one_to_one_messages_context_menu.dart';
-import 'package:ion/app/features/user/pages/components/profile_avatar/story_colored_profile_avatar.dart';
 import 'package:ion/app/features/user/providers/badges_notifier.c.dart';
 import 'package:ion/app/features/user_block/providers/block_list_notifier.c.dart';
 import 'package:ion/generated/assets.gen.dart';

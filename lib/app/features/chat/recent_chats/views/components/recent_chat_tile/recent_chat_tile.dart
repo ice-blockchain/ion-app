@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/components/avatar/avatar.dart';
+import 'package:ion/app/components/avatar/story_colored_profile_avatar.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/auth/providers/auth_provider.c.dart';
 import 'package:ion/app/features/chat/e2ee/model/entities/private_direct_message_data.c.dart';
@@ -17,7 +18,6 @@ import 'package:ion/app/features/chat/recent_chats/views/pages/recent_chat_overl
 import 'package:ion/app/features/chat/views/components/message_items/message_metadata/message_metadata.dart';
 import 'package:ion/app/features/chat/views/components/message_items/message_types/emoji_message/emoji_message.dart';
 import 'package:ion/app/features/ion_connect/model/event_reference.c.dart';
-import 'package:ion/app/features/user/pages/components/profile_avatar/story_colored_profile_avatar.dart';
 import 'package:ion/app/features/user/providers/user_metadata_provider.c.dart';
 import 'package:ion/app/features/user_block/providers/block_list_notifier.c.dart';
 import 'package:ion/app/utils/date.dart';
