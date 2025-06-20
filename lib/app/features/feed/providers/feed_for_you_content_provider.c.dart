@@ -402,19 +402,18 @@ class FeedForYouContent extends _$FeedForYouContent implements PagedNotifier {
       throw const CurrentUserNotFoundException();
     }
 
+    final feedFilterFactory = FeedFilterFactory(feedConfig: feedConfig);
     // For explore feed, we use a special interest that is not related to any user interests.
     // It is defined in the [modifier] filter tags
     final tags = {
-      ...modifier.filter(feedConfig).tags,
+      ...feedFilterFactory.create(modifier).tags,
       if (modifier != FeedModifier.explore) '#${RelatedHashtag.tagName}': [interest],
     };
 
     // Global [feedModifier] has priority over the local [modifier].
     // This is for the "Trending Videos" case, where we have to apply the
     // "trending" modifier even to the "explore" [modifier].
-    final modifiersSearch = feedModifier != null
-        ? feedModifier!.filter(feedConfig).search
-        : modifier.filter(feedConfig).search;
+    final modifiersSearch = feedFilterFactory.create(feedModifier ?? modifier).search;
 
     return switch (feedType) {
       FeedType.post => buildPostsDataSource(
