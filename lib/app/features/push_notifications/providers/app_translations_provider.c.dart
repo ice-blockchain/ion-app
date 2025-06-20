@@ -10,7 +10,6 @@ import 'package:ion/app/features/config/data/models/app_config_cache_strategy.da
 import 'package:ion/app/features/config/data/models/app_config_with_version.dart';
 import 'package:ion/app/features/config/providers/config_repository.c.dart';
 import 'package:ion/app/features/core/providers/app_locale_provider.c.dart';
-import 'package:ion/app/features/core/providers/env_provider.c.dart';
 import 'package:ion/app/services/logger/logger.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
@@ -21,18 +20,14 @@ class Translator<T extends AppConfigWithVersion> {
   Translator({
     required ConfigRepository translationsRepository,
     required Locale locale,
-    required Env env,
   })  : _translationsRepository = translationsRepository,
-        _locale = locale,
-        _env = env;
+        _locale = locale;
 
   final ConfigRepository _translationsRepository;
 
   final Locale _locale;
 
   final Map<Locale, PushNotificationTranslations> translations = {};
-
-  final Env _env;
 
   Future<String?> translate(
     String? Function(PushNotificationTranslations) selector,
@@ -68,12 +63,10 @@ class Translator<T extends AppConfigWithVersion> {
     if (translations.containsKey(locale)) {
       return translations[locale]!;
     }
-    final cacheDuration = _env.get<Duration>(EnvVariable.GENERIC_CONFIG_CACHE_DURATION);
     return translations[locale] =
         await _translationsRepository.getConfig<PushNotificationTranslations>(
       'ion-app_push-notifications_translations_${locale.languageCode}',
       cacheStrategy: AppConfigCacheStrategy.file,
-      refreshInterval: cacheDuration,
       parser: (data) =>
           PushNotificationTranslations.fromJson(jsonDecode(data) as Map<String, dynamic>),
       checkVersion: true,
@@ -87,10 +80,10 @@ class Translator<T extends AppConfigWithVersion> {
 Future<Translator<PushNotificationTranslations>> pushTranslator(Ref ref) async {
   final appLocale = ref.watch(appLocaleProvider);
   final translationsRepository = await ref.watch(configRepositoryProvider.future);
+
   return Translator(
     translationsRepository: translationsRepository,
     locale: appLocale,
-    env: ref.read(envProvider.notifier),
   );
 }
 
