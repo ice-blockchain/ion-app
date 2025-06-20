@@ -38,9 +38,7 @@ class NetworksRepository {
     return _networksDao.setAll(dbNetworks);
   }
 
-  Future<List<NetworkData>> getByFilters({
-    List<int> tiers = const [],
-  }) {
+  Future<List<NetworkData>> getByFilters({List<int> tiers = const []}) {
     return _networksDao.getByFilters(tiers: tiers).then((networks) => networks.toConvertedList());
   }
 
