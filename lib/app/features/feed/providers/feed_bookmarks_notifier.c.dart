@@ -133,6 +133,26 @@ class FeedBookmarksNotifier extends _$FeedBookmarksNotifier {
         if (bookmarksCollection.data.type == BookmarksSetType.homeFeedCollectionsAll.dTagName) {
           unawaited(ref.read(ionConnectDbCacheProvider.notifier).saveRef(eventReference));
         }
+        if (bookmarksCollection.data.type != BookmarksSetType.homeFeedCollectionsAll.dTagName) {
+          final isIncluded = (await ref.read(
+                feedBookmarksNotifierProvider(
+                  collectionDTag: BookmarksSetType.homeFeedCollectionsAll.dTagName,
+                ).future,
+              ))
+                  ?.data
+                  .eventReferences
+                  .contains(eventReference) ??
+              false;
+          if (!isIncluded) {
+            await ref
+                .read(
+                  feedBookmarksNotifierProvider(
+                    collectionDTag: BookmarksSetType.homeFeedCollectionsAll.dTagName,
+                  ).notifier,
+                )
+                .toggleBookmark(eventReference);
+          }
+        }
       }
 
       final newBookmarksCollectionData = BookmarksSetData(
