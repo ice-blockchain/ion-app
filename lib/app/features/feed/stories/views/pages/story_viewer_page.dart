@@ -41,7 +41,8 @@ class StoryViewerPage extends HookConsumerWidget {
         return () {
           if (context.mounted) {
             ref.invalidate(
-                storyViewingControllerProvider(pubkey, showOnlySelectedUser: showOnlySelectedUser));
+              storyViewingControllerProvider(pubkey, showOnlySelectedUser: showOnlySelectedUser),
+            );
           }
         };
       },
@@ -62,8 +63,9 @@ class StoryViewerPage extends HookConsumerWidget {
         if (initialStoryReference != null) {
           ref
               .watch(
-                  storyViewingControllerProvider(pubkey, showOnlySelectedUser: showOnlySelectedUser)
-                      .notifier)
+                storyViewingControllerProvider(pubkey, showOnlySelectedUser: showOnlySelectedUser)
+                    .notifier,
+              )
               .moveToStory(initialStoryReference!);
         }
       },
