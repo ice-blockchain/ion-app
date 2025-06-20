@@ -20,9 +20,7 @@ part 'toggle_archive_conversation_provider.c.g.dart';
 @riverpod
 class ToggleArchivedConversations extends _$ToggleArchivedConversations {
   @override
-  FutureOr<void> build() async {
-    return;
-  }
+  FutureOr<void> build() async {}
 
   Future<void> toggleConversations(List<ConversationListItem> conversations) async {
     final currentUserPubkey = ref.read(currentPubkeySelectorProvider);
@@ -180,7 +178,5 @@ class ToggleArchivedConversations extends _$ToggleArchivedConversations {
     await ref
         .read(ionConnectNotifierProvider.notifier)
         .sendEntityData(bookmarkSet..toReplaceableEventReference(masterPubkey));
-
-    return;
   }
 }
