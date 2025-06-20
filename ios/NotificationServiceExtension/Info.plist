@@ -2,6 +2,8 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
+	<key>KEYCHAIN_GROUP</key>
+	<string>$(AppIdentifierPrefix)${KEYCHAIN_GROUP}</string>
 	<key>APP_GROUP</key>
 	<string>$(APP_GROUP)</string>
 	<key>NSExtension</key>
