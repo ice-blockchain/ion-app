@@ -1,5 +1,7 @@
 // SPDX-License-Identifier: ice License 1.0
 
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
@@ -19,7 +21,9 @@ import 'package:ion/app/features/chat/recent_chats/providers/selected_reply_mess
 import 'package:ion/app/features/chat/views/components/message_items/edit_message_info/edit_message_info.dart';
 import 'package:ion/app/features/chat/views/components/message_items/messaging_bottom_bar/messaging_bottom_bar.dart';
 import 'package:ion/app/features/chat/views/components/message_items/replied_message_info/replied_message_info.dart';
-import 'package:ion/app/features/user/providers/user_metadata_provider.c.dart';
+import 'package:ion/app/features/user_metadata/providers/user_metadata_from_db_provider.c.dart';
+import 'package:ion/app/features/user_metadata/providers/user_metadata_sync_provider.c.dart';
+import 'package:ion/app/hooks/use_on_init.dart';
 import 'package:ion/app/router/app_routes.c.dart';
 import 'package:ion/app/services/media_service/media_service.c.dart';
 import 'package:ion/app/utils/username.dart';
@@ -35,6 +39,14 @@ class OneToOneMessagesPage extends HookConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final conversationId = useState<String?>(null);
+
+    useOnInit(() {
+      unawaited(
+        ref
+            .read(userMetadataSyncProvider.notifier)
+            .syncUserMetadata(masterPubkeys: {receiverMasterPubkey}),
+      );
+    });
 
     useEffect(
       () {
@@ -110,22 +122,22 @@ class _Header extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final receiverUserMetadata = ref.watch(userMetadataProvider(receiverMasterPubkey));
+    final receiverUserMetadata =
+        ref.watch(userMetadataFromDbNotifierProvider(receiverMasterPubkey));
 
-    if (receiverUserMetadata.isLoading) {
+    if (receiverUserMetadata == null) {
       return const SizedBox.shrink();
     }
 
     return OneToOneMessagingHeader(
       conversationId: conversationId,
-      imageUrl: receiverUserMetadata.valueOrNull?.data.picture,
-      name:
-          receiverUserMetadata.valueOrNull?.data.displayName ?? context.i18n.common_deleted_account,
+      imageUrl: receiverUserMetadata.data.picture,
+      name: receiverUserMetadata.data.displayName,
       receiverMasterPubkey: receiverMasterPubkey,
       onTap: () => ProfileRoute(pubkey: receiverMasterPubkey).push<void>(context),
       subtitle: Text(
         prefixUsername(
-          username: receiverUserMetadata.valueOrNull?.data.name ?? '',
+          username: receiverUserMetadata.data.name,
           context: context,
         ),
         style: context.theme.appTextThemes.caption.copyWith(

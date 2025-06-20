@@ -13,17 +13,18 @@ class ConversationPage extends HookConsumerWidget {
   const ConversationPage({
     super.key,
     this.conversationId,
-    this.receiverPubKey,
+    this.receiverMasterPubkey,
   });
 
   final String? conversationId;
-  final String? receiverPubKey;
+  final String? receiverMasterPubkey;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final conversationType = ref.watch(conversationTypeProvider(conversationId, receiverPubKey));
+    final conversationType =
+        ref.watch(conversationTypeProvider(conversationId, receiverMasterPubkey));
 
-    ref.displayErrors(conversationTypeProvider(conversationId, receiverPubKey));
+    ref.displayErrors(conversationTypeProvider(conversationId, receiverMasterPubkey));
 
     return conversationType.maybeWhen(
       data: (conversationType) {
@@ -34,7 +35,7 @@ class ConversationPage extends HookConsumerWidget {
             return ChannelMessagingPage(communityId: conversationId!);
           case ConversationType.oneToOne:
             return OneToOneMessagesPage(
-              receiverMasterPubkey: receiverPubKey!,
+              receiverMasterPubkey: receiverMasterPubkey!,
             );
         }
       },

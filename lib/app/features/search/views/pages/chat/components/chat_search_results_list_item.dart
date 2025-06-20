@@ -40,7 +40,7 @@ class ChatSearchResultListItem extends ConsumerWidget {
                       .read(chatSearchHistoryProvider.notifier)
                       .addUserIdToTheHistory(userMetadata.masterPubkey);
                   context.pushReplacement(
-                    ConversationRoute(receiverPubKey: pubkeyAndContent.$1).location,
+                    ConversationRoute(receiverMasterPubkey: pubkeyAndContent.$1).location,
                   );
                 },
                 child: Row(
