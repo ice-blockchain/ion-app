@@ -71,6 +71,7 @@ class PollAnswerItem extends HookConsumerWidget {
                           ref.read(pollDraftNotifierProvider.notifier).updateAnswer(index, value);
                         },
                         style: textThemes.body2,
+                        textCapitalization: TextCapitalization.sentences,
                         decoration: InputDecoration(
                           hintText: context.i18n.poll_choice_placeholder(index + 1),
                           hintStyle: textThemes.caption,
