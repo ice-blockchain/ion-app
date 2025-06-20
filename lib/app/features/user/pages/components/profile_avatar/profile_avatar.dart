@@ -2,9 +2,9 @@
 
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:ion/app/components/avatar/story_colored_profile_avatar.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/components/avatar_picker/avatar_picker.dart';
-import 'package:ion/app/features/user/pages/components/profile_avatar/story_colored_profile_avatar.dart';
 import 'package:ion/app/features/user/providers/user_metadata_provider.c.dart';
 
 class ProfileAvatar extends ConsumerWidget {
