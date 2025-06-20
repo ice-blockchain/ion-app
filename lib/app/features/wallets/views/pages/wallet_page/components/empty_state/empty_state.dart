@@ -59,7 +59,7 @@ class EmptyState extends ConsumerWidget {
                             await SelectNetworkToReceiveNftRoute().push<void>(ref.context);
                           },
                           child: Text(
-                            'Receive NFT',
+                            context.i18n.wallet_receive_nft,
                             style: context.theme.appTextThemes.caption
                                 .copyWith(color: context.theme.appColors.primaryAccent),
                           ),

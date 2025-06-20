@@ -363,6 +363,7 @@
   "wallet_manage_coins": "Manage coins",
   "wallet_manage_nfts": "Select chain",
   "wallet_buy_nfts": "Buy NFTs",
+  "wallet_receive_nft": "Receive NFT",
   "wallet_coin_address": "{coin} address",
   "wallet_network": "Network",
   "wallet_change": "change",
