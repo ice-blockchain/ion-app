@@ -10,7 +10,6 @@ import 'package:ion/app/features/feed/data/models/entities/event_count_result_da
 import 'package:ion/app/features/ion_connect/providers/ion_connect_cache.c.dart';
 import 'package:ion/app/features/user/model/tab_entity_type.dart';
 import 'package:ion/app/features/user/model/user_content_type.dart';
-import 'package:ion/app/features/user/pages/components/header_action/header_action.dart';
 import 'package:ion/app/features/user/pages/components/profile_avatar/profile_avatar.dart';
 import 'package:ion/app/features/user/pages/profile_page/cant_find_profile_page.dart';
 import 'package:ion/app/features/user/pages/profile_page/components/header/header.dart';
@@ -92,10 +91,19 @@ class ProfilePage extends HookConsumerWidget {
                   controller: scrollController,
                   headerSliverBuilder: (context, innerBoxIsScrolled) {
                     return [
+                      PinnedHeaderSliver(
+                        child: ColoredBox(
+                          color: backgroundColor,
+                          child: Header(
+                            pubkey: pubkey,
+                            opacity: opacity,
+                            showBackButton: showBackButton,
+                          ),
+                        ),
+                      ),
                       SliverToBoxAdapter(
                         child: Column(
                           children: [
-                            ProfileAvatar(pubkey: pubkey),
                             SizedBox(height: 16.0.s),
                             ProfileDetails(pubkey: pubkey),
                             SizedBox(height: 16.0.s),
@@ -132,15 +140,17 @@ class ProfilePage extends HookConsumerWidget {
                 ),
               ),
             ),
-            Align(
-              alignment: Alignment.topCenter,
-              child: Container(
-                padding: EdgeInsetsDirectional.only(bottom: paddingTop - HeaderAction.buttonSize),
-                color: backgroundColor.withValues(alpha: opacity),
-                child: Header(
-                  opacity: opacity,
-                  pubkey: pubkey,
-                  showBackButton: showBackButton,
+            // need to move ProfileAvatar here to fix the issue with the header action
+            // because header overlaps the ProfileAvatar
+            FittedBox(
+              child: Align(
+                alignment: Alignment.topCenter,
+                child: Padding(
+                  padding: EdgeInsetsDirectional.only(top: paddingTop),
+                  child: Opacity(
+                    opacity: 1 - opacity,
+                    child: ProfileAvatar(pubkey: pubkey),
+                  ),
                 ),
               ),
             ),

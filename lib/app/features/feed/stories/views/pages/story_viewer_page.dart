@@ -21,23 +21,28 @@ class StoryViewerPage extends HookConsumerWidget {
   const StoryViewerPage({
     required this.pubkey,
     this.initialStoryReference,
+    this.showOnlySelectedUser = false,
     super.key,
   });
 
   final String pubkey;
   final EventReference? initialStoryReference;
+  final bool showOnlySelectedUser;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     useStatusBarColor();
 
-    final storyViewerState = ref.watch(storyViewingControllerProvider(pubkey));
+    final storyViewerState = ref
+        .watch(storyViewingControllerProvider(pubkey, showOnlySelectedUser: showOnlySelectedUser));
 
     useEffect(
       () {
         return () {
           if (context.mounted) {
-            ref.invalidate(storyViewingControllerProvider(pubkey));
+            ref.invalidate(
+              storyViewingControllerProvider(pubkey, showOnlySelectedUser: showOnlySelectedUser),
+            );
           }
         };
       },
@@ -57,7 +62,10 @@ class StoryViewerPage extends HookConsumerWidget {
       () async {
         if (initialStoryReference != null) {
           ref
-              .watch(storyViewingControllerProvider(pubkey).notifier)
+              .watch(
+                storyViewingControllerProvider(pubkey, showOnlySelectedUser: showOnlySelectedUser)
+                    .notifier,
+              )
               .moveToStory(initialStoryReference!);
         }
       },
