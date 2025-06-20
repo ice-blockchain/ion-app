@@ -52,13 +52,16 @@ class GlobalSubscription {
   static const List<int> _encryptedEventKinds = [IonConnectGiftWrapEntity.kind];
 
   void init() {
+    final now = DateTime.now().microsecondsSinceEpoch;
     final regularLatestEventTimestamp = latestEventTimestampService.get(EventType.regular);
 
     if (regularLatestEventTimestamp == null) {
+      latestEventTimestampService.update(now, EventType.regular);
       _startSubscription();
     } else {
       _reConnectToGlobalSubscription(
         regularLatestEventTimestamp: regularLatestEventTimestamp,
+        now: now,
       );
     }
   }
@@ -71,19 +74,17 @@ class GlobalSubscription {
 
   Future<void> _reConnectToGlobalSubscription({
     required int regularLatestEventTimestamp,
+    required int now,
   }) async {
-    final now = DateTime.now().microsecondsSinceEpoch;
-    final regularCreatedAts = await _fetchPreviousEvents(
-      regularSince: regularLatestEventTimestamp,
-    );
-    var mostRecentRegularEventTimestamp = regularCreatedAts.maxOrNull;
-
-    if (mostRecentRegularEventTimestamp != null) {
-      final missingRegularCreatedAts = await _fetchPreviousEvents(
-        regularSince: mostRecentRegularEventTimestamp,
-        isRecursive: false,
+    int? tmpLastCreatedAt;
+    while (true) {
+      final (maxCreatedAt, stopFetching) = await _fetchPreviousEvents(
+        regularSince: tmpLastCreatedAt ?? regularLatestEventTimestamp,
       );
-      mostRecentRegularEventTimestamp = missingRegularCreatedAts.maxOrNull;
+      if (stopFetching) {
+        break;
+      }
+      tmpLastCreatedAt = maxCreatedAt;
     }
 
     final encryptedLatestEventTimestamp = latestEventTimestampService.get(EventType.encrypted);
@@ -91,27 +92,28 @@ class GlobalSubscription {
     unawaited(
       _subscribe(
         eventLimit: 100,
-        regularSince: mostRecentRegularEventTimestamp ?? now,
+        regularSince: tmpLastCreatedAt ?? regularLatestEventTimestamp,
         encryptedSince:
             encryptedLatestEventTimestamp ?? now - const Duration(days: 2).inMicroseconds,
       ),
     );
   }
 
-  Future<List<int>> _fetchPreviousEvents({
+  Future<(int maxCreatedAt, bool stopFetching)> _fetchPreviousEvents({
     int? regularSince,
     int? regularUntil,
-    List<int> previousRegularCreatedAts = const [],
+    int? previousMaxCreatedAt,
     List<String> previousRegularIds = const [],
-    bool isRecursive = true,
+    int page = 1,
   }) async {
     try {
       final requestMessage = RequestMessage(
         filters: [
           RequestFilter(
-            kinds: _genericEventKinds,
             since: regularSince?.toMicroseconds,
             until: regularUntil?.toMicroseconds,
+            limit: 100,
+            kinds: _genericEventKinds,
             tags: {
               '#p': [
                 [currentUserMasterPubkey],
@@ -125,31 +127,37 @@ class GlobalSubscription {
         requestMessage,
       );
 
-      final regularCreatedAts = <int>[];
+      var maxCreatedAt = previousMaxCreatedAt ?? 0;
+      int? minCreatedAt;
       final regularIds = <String>[];
-      var count = 0;
       await for (final event in eventsStream) {
-        if (previousRegularIds.contains(event.id)) {
-          continue;
-        }
-        regularIds.add(event.id);
-        regularCreatedAts.add(event.createdAt.toMicroseconds);
+        final eventCreatedAt = event.createdAt.toMicroseconds;
 
-        await _handleEvent(event);
-        count++;
+        if (minCreatedAt == null || eventCreatedAt < minCreatedAt) {
+          minCreatedAt = eventCreatedAt;
+        }
+        if (eventCreatedAt > maxCreatedAt) {
+          maxCreatedAt = eventCreatedAt;
+        }
+
+        regularIds.add(event.id);
+        if (!previousRegularIds.contains(event.id)) {
+          await _handleEvent(event);
+        }
       }
 
-      final allRegularCreatedAts = [...previousRegularCreatedAts, ...regularCreatedAts];
+      final nonDuplicateEventIds = regularIds.whereNot((id) => previousRegularIds.contains(id));
 
-      if (count == 0 || !isRecursive) {
-        return allRegularCreatedAts;
+      if (nonDuplicateEventIds.isEmpty) {
+        return (maxCreatedAt, page <= 2);
       }
 
       return _fetchPreviousEvents(
         regularSince: regularSince,
-        regularUntil: regularCreatedAts.min,
-        previousRegularCreatedAts: allRegularCreatedAts,
-        previousRegularIds: regularIds,
+        regularUntil: minCreatedAt,
+        previousMaxCreatedAt: maxCreatedAt,
+        previousRegularIds: [...previousRegularIds, ...nonDuplicateEventIds],
+        page: page + 1,
       );
     } catch (e) {
       throw GlobalSubscriptionSyncEventsException(e);
