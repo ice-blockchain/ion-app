@@ -4,7 +4,6 @@ import 'package:ion/app/extensions/riverpod.dart';
 import 'package:ion/app/features/wallets/model/coins_group.c.dart';
 import 'package:ion/app/features/wallets/model/crypto_asset_type.dart';
 import 'package:ion/app/features/wallets/model/manage_coins_group.c.dart';
-import 'package:ion/app/features/wallets/model/wallet_data_with_loading_state.c.dart';
 import 'package:ion/app/features/wallets/providers/coins_provider.c.dart';
 import 'package:ion/app/features/wallets/views/pages/manage_coins/providers/manage_coins_provider.c.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
