@@ -92,10 +92,20 @@ class ProfilePage extends HookConsumerWidget {
                   controller: scrollController,
                   headerSliverBuilder: (context, innerBoxIsScrolled) {
                     return [
+                      PinnedHeaderSliver(
+                        child: ColoredBox(
+                          color: backgroundColor,
+                          child: Header(
+                            pubkey: pubkey,
+                            opacity: opacity,
+                            showBackButton: showBackButton,
+                          ),
+                        ),
+                      ),
                       SliverToBoxAdapter(
                         child: Column(
                           children: [
-                            SizedBox(height: 16.0.s + ProfileAvatar.pictureSize),
+                            SizedBox(height: 16.0.s),
                             ProfileDetails(pubkey: pubkey),
                             SizedBox(height: 16.0.s),
                             const HorizontalSeparator(),
@@ -131,25 +141,18 @@ class ProfilePage extends HookConsumerWidget {
                 ),
               ),
             ),
-            Align(
-              alignment: Alignment.topCenter,
-              child: Container(
-                padding: EdgeInsetsDirectional.only(bottom: paddingTop - HeaderAction.buttonSize),
-                color: backgroundColor.withValues(alpha: opacity),
-                child: Header(
-                  opacity: opacity,
-                  pubkey: pubkey,
-                  showBackButton: showBackButton,
-                ),
-              ),
-            ),
             // need to move ProfileAvatar here to fix the issue with the header action
             // because header overlaps the ProfileAvatar
-            Align(
-              alignment: Alignment.topCenter,
-              child: Container(
-                padding: EdgeInsetsDirectional.only(top: paddingTop),
-                child: Opacity(opacity: 1 - opacity, child: ProfileAvatar(pubkey: pubkey)),
+            FittedBox(
+              child: Align(
+                alignment: Alignment.topCenter,
+                child: Padding(
+                  padding: EdgeInsetsDirectional.only(top: paddingTop),
+                  child: Opacity(
+                    opacity: 1 - opacity,
+                    child: ProfileAvatar(pubkey: pubkey),
+                  ),
+                ),
               ),
             ),
           ],

@@ -393,13 +393,17 @@ class StoryPreviewRoute extends BaseRouteData {
 }
 
 class StoryViewerRoute extends BaseRouteData {
-  StoryViewerRoute({required this.pubkey, this.initialStoryReference})
-      : super(
+  StoryViewerRoute({
+    required this.pubkey,
+    this.initialStoryReference,
+    this.showOnlySelectedUser = false,
+  }) : super(
           child: StoryViewerPage(
             pubkey: pubkey,
             initialStoryReference: initialStoryReference != null
                 ? EventReference.fromEncoded(initialStoryReference)
                 : null,
+            showOnlySelectedUser: showOnlySelectedUser,
           ),
           type: IceRouteType.swipeDismissible,
           isFullscreenMedia: true,
@@ -407,6 +411,7 @@ class StoryViewerRoute extends BaseRouteData {
 
   final String pubkey;
   final String? initialStoryReference;
+  final bool showOnlySelectedUser;
 }
 
 class TrendingVideosRoute extends BaseRouteData {

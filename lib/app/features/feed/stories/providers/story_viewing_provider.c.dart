@@ -19,8 +19,9 @@ part 'story_viewing_provider.c.g.dart';
 @Riverpod(keepAlive: true)
 class StoryViewingController extends _$StoryViewingController {
   @override
-  StoryViewerState build(String pubkey) {
-    final stories = ref.watch(feedStoriesByPubkeyProvider(pubkey));
+  StoryViewerState build(String pubkey, {bool showOnlySelectedUser = false}) {
+    final stories =
+        ref.watch(feedStoriesByPubkeyProvider(pubkey, showOnlySelectedUser: showOnlySelectedUser));
 
     return StoryViewerState(
       userStories: stories,
