@@ -15,7 +15,6 @@ import 'package:ion/app/features/ion_connect/model/event_reference.c.dart';
 import 'package:ion/app/features/ion_connect/providers/ion_connect_db_cache_notifier.c.dart';
 import 'package:ion/app/features/ion_connect/providers/ion_connect_notifier.c.dart';
 import 'package:ion/app/features/ion_connect/repository/event_messages_repository.c.dart';
-import 'package:ion/app/services/logger/logger.dart';
 import 'package:ion/app/services/uuid/uuid.dart';
 import 'package:nostr_dart/nostr_dart.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
@@ -45,10 +44,6 @@ Future<BookmarksSetEntity?> bookmarksCollection(
     return null;
   }
 
-  Logger.info(
-    'FEED BOOKMARKS NOTIFIER - eventMessage: $eventMessage',
-  );
-
   final entity = BookmarksSetEntity.fromEventMessage(eventMessage);
 
   return entity;
@@ -77,10 +72,6 @@ class FeedBookmarksNotifier extends _$FeedBookmarksNotifier {
         currentPubkey,
         collectionDTag,
       ).future,
-    );
-
-    Logger.info(
-      'FEED BOOKMARKS NOTIFIER - bookmarksCollection: $bookmarksCollection',
     );
 
     return bookmarksCollection;
@@ -203,12 +194,18 @@ void feedBookmarksSync(Ref ref) {
   );
 }
 
-@Riverpod(keepAlive: true)
+@riverpod
 class FeedBookmarkCollectionsNotifier extends _$FeedBookmarkCollectionsNotifier {
   @override
   Future<List<ReplaceableEventReference>> build() async {
+    keepAliveWhenAuthenticated(ref);
     final currentPubkey = ref.watch(currentPubkeySelectorProvider);
     if (currentPubkey == null) {
+      return [];
+    }
+
+    final delegationComplete = ref.watch(delegationCompleteProvider).valueOrNull.falseOrValue;
+    if (!delegationComplete) {
       return [];
     }
 
@@ -258,7 +255,18 @@ class FeedBookmarkCollectionsNotifier extends _$FeedBookmarkCollectionsNotifier 
         [defaultBookmarksCollectionData, collectionsData, bookmarksData],
         actionSource: ActionSourceUser(currentPubkey),
       );
-
+      ref
+        ..invalidate(
+          bookmarksCollectionProvider(
+            currentPubkey,
+            BookmarksSetType.homeFeedCollections.dTagName,
+          ),
+        )
+        ..invalidate(
+          feedBookmarksNotifierProvider(
+            collectionDTag: BookmarksSetType.homeFeedCollectionsAll.dTagName,
+          ),
+        );
       bookmarkCollections.add(
         ReplaceableEventReference(
           pubkey: currentPubkey,
