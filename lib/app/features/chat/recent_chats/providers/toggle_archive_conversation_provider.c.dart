@@ -44,11 +44,24 @@ class ToggleArchivedConversations extends _$ToggleArchivedConversations {
   Future<BookmarksSetData> _getInitialBookmarkSet() async {
     final archivedConversationBookmarksData =
         await ref.read(currentUserChatBookmarksDataProvider.future);
-    return archivedConversationBookmarksData ??
-        BookmarksSetData(
-          eventReferences: [],
-          type: BookmarksSetType.chats.dTagName,
-        );
+    if (archivedConversationBookmarksData == null) {
+      final bookmarksSetData = BookmarksSetData(
+        eventReferences: [],
+        type: BookmarksSetType.chats.dTagName,
+      );
+
+      final result =
+          await ref.read(ionConnectNotifierProvider.notifier).sendEntityData<BookmarksSetEntity>(
+                bookmarksSetData,
+              );
+
+      if (result == null) {
+        throw FailedToCreateBookmarksSetException(BookmarksSetType.chats.dTagName);
+      }
+
+      return result.data;
+    }
+    return archivedConversationBookmarksData;
   }
 
   Future<List<List<String>>?> _decryptContent(String content) async {

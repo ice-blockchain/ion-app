@@ -3,10 +3,7 @@
 import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/auth/providers/auth_provider.c.dart';
-import 'package:ion/app/features/auth/providers/delegation_complete_provider.c.dart';
-import 'package:ion/app/features/feed/data/models/bookmarks/bookmarks.c.dart';
 import 'package:ion/app/features/feed/data/models/bookmarks/bookmarks_set.c.dart';
 import 'package:ion/app/features/ion_connect/ion_connect.dart';
 import 'package:ion/app/features/ion_connect/model/action_source.c.dart';
@@ -95,56 +92,4 @@ Future<BookmarksSetData?> currentUserChatBookmarksData(Ref ref) async {
   );
 
   return bookmarksSet[BookmarksSetType.chats]?.data;
-}
-
-@riverpod
-class BookmarksNotifier extends _$BookmarksNotifier {
-  @override
-  Future<BookmarksEntity?> build() async {
-    keepAliveWhenAuthenticated(ref);
-    final authState = await ref.watch(authProvider.future);
-
-    final currentPubkey = ref.watch(currentPubkeySelectorProvider);
-    final delegationComplete = ref.watch(delegationCompleteProvider).valueOrNull.falseOrValue;
-
-    if (!authState.isAuthenticated || currentPubkey == null || !delegationComplete) {
-      return null;
-    }
-
-    final requestMessage = RequestMessage(
-      filters: [
-        RequestFilter(
-          authors: [currentPubkey],
-          kinds: const [BookmarksEntity.kind],
-        ),
-      ],
-    );
-
-    final entity =
-        await ref.watch(ionConnectNotifierProvider.notifier).requestEntity<BookmarksEntity>(
-              requestMessage,
-            );
-
-    return entity;
-  }
-
-  Future<void> link(EventReference eventReference) async {
-    final bookmarkData = state.valueOrNull?.data ?? const BookmarksData(eventReferences: []);
-
-    if (bookmarkData.eventReferences.contains(eventReference)) {
-      return;
-    }
-
-    final result = await ref
-        .read(ionConnectNotifierProvider.notifier)
-        .sendEntityData<BookmarksEntity>(
-          bookmarkData.copyWith(eventReferences: [...bookmarkData.eventReferences, eventReference]),
-        );
-
-    state = AsyncData(result);
-  }
-
-  Future<void> setState(BookmarksEntity? bookmarksEntity) async {
-    state = AsyncData(bookmarksEntity);
-  }
 }

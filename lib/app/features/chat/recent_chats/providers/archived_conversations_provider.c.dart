@@ -10,7 +10,6 @@ import 'package:ion/app/features/chat/community/models/entities/tags/conversatio
 import 'package:ion/app/features/chat/model/database/chat_database.c.dart';
 import 'package:ion/app/features/feed/data/models/bookmarks/bookmarks_set.c.dart';
 import 'package:ion/app/features/feed/providers/bookmarks_notifier.c.dart';
-import 'package:ion/app/features/ion_connect/model/event_reference.c.dart';
 import 'package:ion/app/services/ion_connect/encrypted_message_service.c.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
@@ -54,14 +53,6 @@ Future<List<String>> archivedConversations(Ref ref) async {
     ...archivedConversationBookmarksSetData.communitiesIds,
     if (encryptedConversationCommunityIds != null) ...encryptedConversationCommunityIds,
   ];
-
-  final bookmarksSetRef = ReplaceableEventReference(
-    pubkey: currentUserPubkey,
-    kind: BookmarksSetEntity.kind,
-    dTag: BookmarksSetType.chats.dTagName,
-  );
-
-  await ref.watch(bookmarksNotifierProvider.notifier).link(bookmarksSetRef);
 
   await ref.watch(conversationDaoProvider).updateArchivedConversations(archivedConversations);
 

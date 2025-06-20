@@ -589,3 +589,8 @@ class GlobalSubscriptionSubscribeException extends IONException {
 class GlobalSubscriptionNotInitializedException extends IONException {
   GlobalSubscriptionNotInitializedException() : super(10118, 'Global subscription not initialized');
 }
+
+class FailedToCreateBookmarksSetException extends IONException {
+  FailedToCreateBookmarksSetException(String dTagName)
+      : super(10119, 'Failed to create bookmarks set for $dTagName');
+}

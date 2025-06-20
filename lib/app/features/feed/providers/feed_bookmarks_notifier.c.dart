@@ -157,10 +157,6 @@ class FeedBookmarksNotifier extends _$FeedBookmarksNotifier {
       return data;
     });
   }
-
-  Future<void> setState(BookmarksSetEntity? bookmarksSetEntity) async {
-    state = AsyncData(bookmarksSetEntity);
-  }
 }
 
 @riverpod
