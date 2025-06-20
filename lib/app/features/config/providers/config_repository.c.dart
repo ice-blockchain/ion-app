@@ -41,7 +41,9 @@ class ConfigRepository {
     required T Function(String) parser,
     bool checkVersion = false,
   }) async {
-    final lock = _locks.putIfAbsent('$configName-${refreshInterval.inMilliseconds}', Lock.new);
+    final lockKey = '$configName-${refreshInterval.inMilliseconds}';
+    final lock = _locks.putIfAbsent(lockKey, Lock.new);
+
     return lock.synchronized(() async {
       final cachedData = await _getFromCache(configName, cacheStrategy, refreshInterval, parser);
       if (cachedData != null) {
@@ -54,17 +56,22 @@ class ConfigRepository {
         return networkData;
       }
 
-      if (refreshInterval.isNegative) {
+      // Server returned 204 No Content - always update cache timestamp to prevent repeated requests
+      await _updateCacheTimestamp(configName, cacheStrategy);
+
+      final fallbackData = await _getFromCache(
+        configName,
+        cacheStrategy,
+        const Duration(milliseconds: -1),
+        parser,
+      );
+
+      if (fallbackData == null) {
+        Logger.warning('Server returned 204 No Content but no cached data found for: $configName');
         throw AppConfigNotFoundException(configName);
       }
 
-      final fallbackData =
-          await _getFromCache(configName, cacheStrategy, const Duration(milliseconds: -1), parser);
-      if (fallbackData != null) {
-        return fallbackData;
-      }
-
-      throw AppConfigNotFoundException(configName);
+      return fallbackData;
     });
   }
 
@@ -121,7 +128,8 @@ class ConfigRepository {
 
         return parser(cachedDataString);
       } else {
-        final cacheFile = File(await _getCacheFilePath(configName));
+        final cacheFilePath = await _getCacheFilePath(configName);
+        final cacheFile = File(cacheFilePath);
         if (cacheFile.existsSync()) {
           final cacheDuration = now.difference(cacheFile.lastModifiedSync());
           if (refreshInterval.isNegative || cacheDuration < refreshInterval) {
@@ -181,6 +189,27 @@ class ConfigRepository {
   Future<String> _getCacheFilePath(String configName) async {
     final directory = await getApplicationDocumentsDirectory();
     return '${directory.path}/${getCacheFileName(configName)}';
+  }
+
+  Future<void> _updateCacheTimestamp(
+    String configName,
+    AppConfigCacheStrategy cacheStrategy,
+  ) async {
+    try {
+      final now = DateTime.now();
+
+      if (cacheStrategy == AppConfigCacheStrategy.localStorage) {
+        await _localStorage.setString(getSyncDateKey(configName), now.toIso8601String());
+      } else {
+        final cacheFile = File(await _getCacheFilePath(configName));
+        if (cacheFile.existsSync()) {
+          await cacheFile.setLastModified(now);
+        }
+      }
+    } catch (error) {
+      Logger.error(error);
+      // Don't throw here, as this is just timestamp update
+    }
   }
 
   /// Clears all locks to prevent memory leaks
