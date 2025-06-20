@@ -224,12 +224,13 @@ Future<void> addUserToNotificationSet(
   }
 
   final currentUsers = await ref.read(usersForNotificationTypeProvider(notificationType).future);
-  if (currentUsers.contains(userPubkey)) {
-    return;
-  }
 
-  final updatedUsers = [...currentUsers, userPubkey];
+  final updatedUsers =
+      currentUsers.contains(userPubkey) ? currentUsers : [...currentUsers, userPubkey];
+
   await _updateNotificationSet(ref, currentPubkey, setType, updatedUsers);
+
+  ref.invalidate(usersForNotificationTypeProvider(notificationType));
 }
 
 Future<void> removeUserFromNotificationSet(
@@ -248,10 +249,10 @@ Future<void> removeUserFromNotificationSet(
   }
 
   final currentUsers = await ref.read(usersForNotificationTypeProvider(notificationType).future);
-  if (!currentUsers.contains(userPubkey)) {
-    return;
-  }
 
   final updatedUsers = currentUsers.where((pubkey) => pubkey != userPubkey).toList();
+
   await _updateNotificationSet(ref, currentPubkey, setType, updatedUsers);
+
+  ref.invalidate(usersForNotificationTypeProvider(notificationType));
 }

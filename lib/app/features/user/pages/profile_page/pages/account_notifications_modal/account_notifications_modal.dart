@@ -25,21 +25,17 @@ class AccountNotificationsModal extends HookConsumerWidget {
     final colors = context.theme.appColors;
     final textStyles = context.theme.appTextThemes;
 
-    // Use local state that doesn't cause rebuilds
     final selectedOptions = useState<Set<UserNotificationsType>?>(null);
     final isLoading = useState(false);
 
-    // Initialize state only once
     useEffect(
       () {
         Future.microtask(() async {
           try {
-            final initialNotifications = await ref.read(
-              userSpecificNotificationsProvider(userPubkey).future,
-            );
+            final initialNotifications =
+                await ref.refresh(userSpecificNotificationsProvider(userPubkey).future);
             selectedOptions.value = initialNotifications.toSet();
           } catch (error) {
-            // Handle error if needed
             selectedOptions.value = <UserNotificationsType>{};
           }
         });
@@ -77,13 +73,20 @@ class AccountNotificationsModal extends HookConsumerWidget {
             }
           }
 
-          // Update local state immediately for UI responsiveness
           selectedOptions.value = currentSet;
 
-          // Update provider in background without watching
           await ref
               .read(userSpecificNotificationsProvider(userPubkey).notifier)
               .updateNotificationsForUser(userPubkey, selectedOptions.value!.toList());
+        } catch (error) {
+          try {
+            final currentNotifications = await ref.read(
+              userSpecificNotificationsProvider(userPubkey).future,
+            );
+            selectedOptions.value = currentNotifications.toSet();
+          } catch (revertError) {
+            selectedOptions.value = <UserNotificationsType>{UserNotificationsType.none};
+          }
         } finally {
           isLoading.value = false;
         }

@@ -42,24 +42,29 @@ class UserSpecificNotifications extends _$UserSpecificNotifications {
           selectedTypes.contains(UserNotificationsType.none) || selectedTypes.isEmpty;
 
       if (shouldDisableAll) {
-        for (final type in allTypes) {
-          await removeUserFromNotificationSet(ref, userPubkey, type);
-        }
+        final removeFutures = allTypes.map(
+          (type) => removeUserFromNotificationSet(ref, userPubkey, type),
+        );
+        await Future.wait(removeFutures);
+
         state = const AsyncValue.data([UserNotificationsType.none]);
       } else {
-        for (final type in allTypes) {
+        final updateFutures = allTypes.map((type) async {
           if (selectedTypes.contains(type)) {
             await addUserToNotificationSet(ref, userPubkey, type);
           } else {
             await removeUserFromNotificationSet(ref, userPubkey, type);
           }
-        }
+        });
+        await Future.wait(updateFutures);
+
         state = AsyncValue.data(selectedTypes);
       }
 
       ref.invalidateSelf();
     } catch (error, stackTrace) {
       state = AsyncValue.error(error, stackTrace);
+      rethrow;
     }
   }
 }
