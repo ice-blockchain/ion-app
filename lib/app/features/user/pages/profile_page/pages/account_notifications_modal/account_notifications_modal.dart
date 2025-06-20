@@ -14,54 +14,100 @@ import 'package:ion/generated/assets.gen.dart';
 
 class AccountNotificationsModal extends HookConsumerWidget {
   const AccountNotificationsModal({
-    required this.selectedUserNotificationsTypes,
+    required this.userPubkey,
     super.key,
   });
 
-  final List<UserNotificationsType> selectedUserNotificationsTypes;
+  final String userPubkey;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final colors = context.theme.appColors;
     final textStyles = context.theme.appTextThemes;
-    final selectedOptions = useState<Set<UserNotificationsType>>(
-      selectedUserNotificationsTypes.toSet(),
+
+    // Use local state that doesn't cause rebuilds
+    final selectedOptions = useState<Set<UserNotificationsType>?>(null);
+    final isLoading = useState(false);
+
+    // Initialize state only once
+    useEffect(
+      () {
+        Future.microtask(() async {
+          try {
+            final initialNotifications = await ref.read(
+              userSpecificNotificationsProvider(userPubkey).future,
+            );
+            selectedOptions.value = initialNotifications.toSet();
+          } catch (error) {
+            // Handle error if needed
+            selectedOptions.value = <UserNotificationsType>{};
+          }
+        });
+        return null;
+      },
+      [userPubkey],
     );
 
     final handleOptionSelection = useCallback(
       (UserNotificationsType option) async {
-        final currentSet = Set<UserNotificationsType>.from(selectedOptions.value);
+        if (selectedOptions.value == null || isLoading.value) return;
 
-        if (option == UserNotificationsType.none) {
-          if (currentSet.contains(UserNotificationsType.none)) {
-            currentSet.remove(UserNotificationsType.none);
+        isLoading.value = true;
+
+        try {
+          final currentSet = Set<UserNotificationsType>.from(selectedOptions.value!);
+
+          if (option == UserNotificationsType.none) {
+            if (currentSet.contains(UserNotificationsType.none)) {
+              currentSet.remove(UserNotificationsType.none);
+            } else {
+              currentSet
+                ..clear()
+                ..add(UserNotificationsType.none);
+            }
           } else {
-            currentSet
-              ..clear()
-              ..add(UserNotificationsType.none);
-          }
-        } else {
-          if (currentSet.contains(UserNotificationsType.none)) {
-            currentSet.remove(UserNotificationsType.none);
+            if (currentSet.contains(UserNotificationsType.none)) {
+              currentSet.remove(UserNotificationsType.none);
+            }
+
+            if (currentSet.contains(option)) {
+              currentSet.remove(option);
+            } else {
+              currentSet.add(option);
+            }
           }
 
-          if (currentSet.contains(option)) {
-            currentSet.remove(option);
-          } else {
-            currentSet.add(option);
-          }
+          // Update local state immediately for UI responsiveness
+          selectedOptions.value = currentSet;
+
+          // Update provider in background without watching
+          await ref
+              .read(userSpecificNotificationsProvider(userPubkey).notifier)
+              .updateNotificationsForUser(userPubkey, selectedOptions.value!.toList());
+        } finally {
+          isLoading.value = false;
         }
-
-        selectedOptions.value = currentSet;
-
-        ref
-            .read(userNotificationsNotifierProvider.notifier)
-            .updateNotifications(selectedOptions.value.toList());
-
-        await ref.read(syncAccountNotificationSetsProvider.future);
       },
-      [selectedOptions, ref],
+      [selectedOptions, isLoading, ref, userPubkey],
     );
+
+    if (selectedOptions.value == null) {
+      return Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          NavigationAppBar.modal(
+            showBackButton: false,
+            title: Text(context.i18n.profile_notifications_popup_title),
+          ),
+          const Center(
+            child: Padding(
+              padding: EdgeInsets.all(32),
+              child: CircularProgressIndicator(),
+            ),
+          ),
+        ],
+      );
+    }
 
     return Column(
       mainAxisSize: MainAxisSize.min,
@@ -73,6 +119,8 @@ class AccountNotificationsModal extends HookConsumerWidget {
         ListView.builder(
           itemBuilder: (BuildContext context, int index) {
             final option = UserNotificationsType.values[index];
+            final isSelected = selectedOptions.value!.contains(option);
+
             return Column(
               children: [
                 if (index == 0) const HorizontalSeparator(),
@@ -80,7 +128,7 @@ class AccountNotificationsModal extends HookConsumerWidget {
                   backgroundColor: colors.secondaryBackground,
                   contentPadding: EdgeInsets.symmetric(horizontal: 16.0.s, vertical: 12.0.s),
                   constraints: const BoxConstraints(),
-                  onTap: () => handleOptionSelection(option),
+                  onTap: isLoading.value ? null : () => handleOptionSelection(option),
                   title: Text(option.getTitle(context), style: textStyles.body),
                   leading: ButtonIconFrame(
                     containerSize: 36.0.s,
@@ -94,7 +142,7 @@ class AccountNotificationsModal extends HookConsumerWidget {
                       BorderSide(color: colors.onTerararyFill, width: 1.0.s),
                     ),
                   ),
-                  trailing: selectedOptions.value.contains(option)
+                  trailing: isSelected
                       ? Assets.svg.iconBlockCheckboxOnblue.icon(
                           color: colors.success,
                         )

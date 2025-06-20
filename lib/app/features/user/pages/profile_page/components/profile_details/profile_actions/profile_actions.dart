@@ -24,8 +24,11 @@ class ProfileActions extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final userNotificationsTypes = ref.watch(userNotificationsNotifierProvider);
-    final notificationsEnabled = !userNotificationsTypes.contains(UserNotificationsType.none);
+    final userNotificationsAsync = ref.watch(userSpecificNotificationsProvider(pubkey));
+    final notificationsEnabled = userNotificationsAsync.maybeWhen(
+      data: (types) => !types.contains(UserNotificationsType.none),
+      orElse: () => false,
+    );
 
     final walletsState =
         ref.watch(userMetadataProvider(pubkey).select((state) => state.value?.data.wallets));
@@ -65,7 +68,7 @@ class ProfileActions extends ConsumerWidget {
               showSimpleBottomSheet<void>(
                 context: context,
                 child: AccountNotificationsModal(
-                  selectedUserNotificationsTypes: userNotificationsTypes,
+                  userPubkey: pubkey,
                 ),
               );
             },

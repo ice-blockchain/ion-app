@@ -67,6 +67,8 @@ class EventParser {
       CommunityUpdateEntity.kind => CommunityUpdateEntity.fromEventMessage(eventMessage),
       CommunityJoinEntity.kind => CommunityJoinEntity.fromEventMessage(eventMessage),
       MuteSetEntity.kind => MuteSetEntity.fromEventMessage(eventMessage),
+      AccountNotificationSetEntity.kind =>
+        AccountNotificationSetEntity.fromEventMessage(eventMessage),
       PushSubscriptionEntity.kind => PushSubscriptionEntity.fromEventMessage(eventMessage),
       DeletionRequestEntity.kind => DeletionRequestEntity.fromEventMessage(eventMessage),
       IonConnectGiftWrapEntity.kind => IonConnectGiftWrapEntity.fromEventMessage(eventMessage),
