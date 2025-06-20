@@ -45,7 +45,7 @@ class WalletPage extends HookConsumerWidget {
             SliverToBoxAdapter(
               child: Column(
                 children: [
-                  const Balance(),
+                  Balance(tab: activeTab.value),
                   const FriendsList(),
                   const Delimiter(),
                   WalletTabsHeader(
