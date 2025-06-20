@@ -91,11 +91,19 @@ class PostBody extends HookConsumerWidget {
 
     return LayoutBuilder(
       builder: (context, constraints) {
+        // Ensure content delta ends with a newline to satisfy flutter_quill assertion
+        final deltaForMeasurement = content;
+        if (deltaForMeasurement.isNotEmpty) {
+          final lastOp = deltaForMeasurement.operations.last;
+          if (!(lastOp.data is String && (lastOp.data! as String).endsWith('\n'))) {
+            deltaForMeasurement.insert('\n');
+          }
+        }
         final maxHeight = maxLines == null
             ? null
             : _calculateMaxHeight(
                 context,
-                text: Document.fromDelta(content).toPlainText(),
+                text: Document.fromDelta(deltaForMeasurement).toPlainText(),
                 style: context.theme.appTextThemes.body2,
                 maxWidth: constraints.maxWidth,
               );
