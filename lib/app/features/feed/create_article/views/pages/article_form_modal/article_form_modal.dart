@@ -25,6 +25,7 @@ class ArticleFormModal extends HookConsumerWidget {
   factory ArticleFormModal({
     Key? key,
   }) = ArticleFormModal.create;
+
   const ArticleFormModal._({
     super.key,
     this.modifiedEvent,
@@ -196,9 +197,11 @@ class ArticleFormModal extends HookConsumerWidget {
             ),
             Column(
               children: [
-                SuggestionsContainer(
-                  scrollController: scrollController,
-                  editorKey: textEditorKey,
+                ScreenSideOffset.small(
+                  child: SuggestionsContainer(
+                    scrollController: scrollController,
+                    editorKey: textEditorKey,
+                  ),
                 ),
                 const HorizontalSeparator(),
                 ValueListenableBuilder<bool>(
