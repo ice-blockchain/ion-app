@@ -8,7 +8,6 @@ import 'package:ion/app/features/config/data/models/app_config_cache_strategy.da
 import 'package:ion/app/features/config/providers/config_repository.c.dart';
 import 'package:ion/app/features/core/providers/app_lifecycle_provider.c.dart';
 import 'package:ion/app/features/core/providers/app_locale_provider.c.dart';
-import 'package:ion/app/features/core/providers/env_provider.c.dart';
 import 'package:ion/app/features/feed/data/models/feed_interests.c.dart';
 import 'package:ion/app/features/feed/data/models/feed_interests_interaction.c.dart';
 import 'package:ion/app/features/feed/data/models/feed_type.dart';
@@ -69,13 +68,11 @@ class FeedUserInterests extends _$FeedUserInterests {
   Future<FeedInterests> _getRemoteState(FeedType feedType) async {
     final repository = await ref.read(configRepositoryProvider.future);
     final locale = ref.read(appLocaleProvider).languageCode;
-    final env = ref.read(envProvider.notifier);
-    final cacheDuration = env.get<Duration>(EnvVariable.GENERIC_CONFIG_CACHE_DURATION);
     final type = _getConfigTopicsContentType(feedType);
+
     return repository.getConfig<FeedInterests>(
       'content-topics_${type}_$locale',
       cacheStrategy: AppConfigCacheStrategy.file,
-      refreshInterval: cacheDuration,
       parser: (data) => FeedInterests.fromJson(jsonDecode(data) as Map<String, dynamic>),
       checkVersion: true,
     );

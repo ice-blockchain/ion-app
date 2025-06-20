@@ -23,13 +23,16 @@ class ConfigRepository {
     required Dio dio,
     required String ionOrigin,
     required LocalStorage localStorage,
+    required Duration defaultCacheMaxAge,
   })  : _dio = dio,
         _ionOrigin = ionOrigin,
-        _localStorage = localStorage;
+        _localStorage = localStorage,
+        _defaultCacheMaxAge = defaultCacheMaxAge;
 
   final Dio _dio;
   final String _ionOrigin;
   final LocalStorage _localStorage;
+  final Duration _defaultCacheMaxAge;
 
   // Lock map to prevent concurrent access per configName
   final Map<String, Lock> _locks = {};
@@ -37,15 +40,17 @@ class ConfigRepository {
   Future<T> getConfig<T>(
     String configName, {
     required AppConfigCacheStrategy cacheStrategy,
-    required Duration refreshInterval,
     required T Function(String) parser,
+    Duration? refreshInterval,
     bool checkVersion = false,
   }) async {
-    final lockKey = '$configName-${refreshInterval.inMilliseconds}';
+    final cacheMaxAge = refreshInterval ?? _defaultCacheMaxAge;
+
+    final lockKey = '$configName-${cacheMaxAge.inMilliseconds}';
     final lock = _locks.putIfAbsent(lockKey, Lock.new);
 
     return lock.synchronized(() async {
-      final cachedData = await _getFromCache(configName, cacheStrategy, refreshInterval, parser);
+      final cachedData = await _getFromCache(configName, cacheStrategy, cacheMaxAge, parser);
       if (cachedData != null) {
         return cachedData;
       }
@@ -107,7 +112,7 @@ class ConfigRepository {
   Future<T?> _getFromCache<T>(
     String configName,
     AppConfigCacheStrategy cacheStrategy,
-    Duration refreshInterval,
+    Duration cacheMaxAge,
     T Function(String) parser,
   ) async {
     try {
@@ -115,11 +120,11 @@ class ConfigRepository {
 
       if (cacheStrategy == AppConfigCacheStrategy.localStorage) {
         final lastSyncDate = _localStorage.getString(getSyncDateKey(configName));
-        final cacheAvailable = refreshInterval.isNegative ||
+        final cacheAvailable = cacheMaxAge.isNegative ||
             (lastSyncDate != null &&
                 _isDateValid(lastSyncDate) &&
                 now.difference(DateTime.parse(lastSyncDate)).inMilliseconds <
-                    refreshInterval.inMilliseconds);
+                    cacheMaxAge.inMilliseconds);
 
         if (!cacheAvailable) return null;
 
@@ -132,7 +137,7 @@ class ConfigRepository {
         final cacheFile = File(cacheFilePath);
         if (cacheFile.existsSync()) {
           final cacheDuration = now.difference(cacheFile.lastModifiedSync());
-          if (refreshInterval.isNegative || cacheDuration < refreshInterval) {
+          if (cacheMaxAge.isNegative || cacheDuration < cacheMaxAge) {
             return parser(await cacheFile.readAsString());
           }
         }
@@ -228,9 +233,15 @@ class ConfigRepository {
 
 @Riverpod(keepAlive: true)
 Future<ConfigRepository> configRepository(Ref ref) async {
+  final env = ref.watch(envProvider.notifier);
+
+  final origin = env.get<String>(EnvVariable.ION_ORIGIN);
+  final cacheMaxAge = env.get<Duration>(EnvVariable.GENERIC_CONFIG_CACHE_DURATION);
+
   return ConfigRepository(
     dio: ref.watch(dioProvider),
-    ionOrigin: ref.watch(envProvider.notifier).get<String>(EnvVariable.ION_ORIGIN),
+    ionOrigin: origin,
+    defaultCacheMaxAge: cacheMaxAge,
     localStorage: await ref.watch(localStorageAsyncProvider.future),
   );
 }
