@@ -6,9 +6,11 @@ import 'package:ion/app/components/button/button.dart';
 import 'package:ion/app/components/screen_offset/screen_bottom_offset.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/wallets/hooks/use_check_wallet_address_available.dart';
+import 'package:ion/app/features/wallets/model/crypto_asset_type.dart';
 import 'package:ion/app/features/wallets/views/pages/coins_flow/receive_coins/components/info_card.dart';
 import 'package:ion/app/features/wallets/views/pages/coins_flow/receive_coins/components/receive_info_card.dart';
 import 'package:ion/app/features/wallets/views/pages/coins_flow/receive_coins/providers/receive_coins_form_provider.c.dart';
+import 'package:ion/app/features/wallets/views/pages/receive_nft/providers/receive_nft_form_notifier.c.dart';
 import 'package:ion/app/router/app_routes.c.dart';
 import 'package:ion/app/router/components/navigation_app_bar/navigation_app_bar.dart';
 import 'package:ion/app/router/components/navigation_app_bar/navigation_close_button.dart';
@@ -17,29 +19,51 @@ import 'package:ion/app/services/share/share.dart';
 import 'package:ion/generated/assets.gen.dart';
 
 class ShareAddressView extends HookConsumerWidget {
-  const ShareAddressView({super.key});
+  const ShareAddressView({required this.type, super.key});
+
+  final CryptoAssetType type;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final network = ref.watch(
-      receiveCoinsFormControllerProvider.select((state) => state.selectedNetwork),
-    );
-    final coin = ref.watch(
-      receiveCoinsFormControllerProvider.select((state) => state.selectedCoin),
-    );
+    final network = switch (type) {
+      CryptoAssetType.coin => ref.watch(
+          receiveCoinsFormControllerProvider.select((state) => state.selectedNetwork),
+        ),
+      CryptoAssetType.nft => ref.watch(
+          receiveNftFormNotifierProvider.select((state) => state.selectedNetwork),
+        ),
+    };
+
+    final coin = switch (type) {
+      CryptoAssetType.coin => ref.watch(
+          receiveCoinsFormControllerProvider.select((state) => state.selectedCoin),
+        ),
+      CryptoAssetType.nft => null,
+    };
+
+    final walletAddress = switch (type) {
+      CryptoAssetType.coin => ref.watch(
+          receiveCoinsFormControllerProvider.select((state) => state.address),
+        ),
+      CryptoAssetType.nft => ref.watch(
+          receiveNftFormNotifierProvider.select((state) => state.address),
+        ),
+    };
 
     useCheckWalletAddressAvailable(
       ref,
       network: network,
       coinsGroup: coin,
-      onAddressFound: (address) =>
-          ref.read(receiveCoinsFormControllerProvider.notifier).setWalletAddress(address),
-      onAddressMissing: () => AddressNotFoundReceiveRoute().replace(ref.context),
+      onAddressFound: (address) {
+        switch (type) {
+          case CryptoAssetType.coin:
+            ref.read(receiveCoinsFormControllerProvider.notifier).setWalletAddress(address);
+          case CryptoAssetType.nft:
+            ref.read(receiveNftFormNotifierProvider.notifier).setWalletAddress(address);
+        }
+      },
+      onAddressMissing: () => AddressNotFoundReceiveNftRoute().replace(ref.context),
       keys: [network, coin],
-    );
-
-    final walletAddress = ref.watch(
-      receiveCoinsFormControllerProvider.select((state) => state.address),
     );
 
     return SheetContent(
@@ -61,7 +85,11 @@ class ShareAddressView extends HookConsumerWidget {
             padding: EdgeInsets.symmetric(horizontal: 16.0.s),
             child: Column(
               children: [
-                const ReceiveInfoCard(),
+                ReceiveInfoCard(
+                  network: network!,
+                  coinsGroup: coin,
+                  walletAddress: walletAddress,
+                ),
                 SizedBox(
                   height: 16.0.s,
                 ),
