@@ -52,7 +52,7 @@ class AttachedMediaPreview extends StatelessWidget {
             final linkIndex = index - mediaFiles.length;
             final mediaAttachment = mediaLinks[linkIndex];
             return _PreviewItem.url(
-              url: mediaAttachment.url,
+              url: mediaAttachment.thumb ?? mediaAttachment.image ?? mediaAttachment.url,
               onRemove: () {
                 final updatedMap =
                     Map<String, MediaAttachment>.from(attachedMediaLinksNotifier.value);
