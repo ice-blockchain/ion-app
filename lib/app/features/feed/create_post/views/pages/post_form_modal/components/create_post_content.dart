@@ -141,6 +141,24 @@ class _TextInputSection extends HookConsumerWidget {
       mediaFiles: mediaFiles,
     );
 
+    useEffect(
+      () {
+        if (bottomInset > 0 && textEditorKey.currentContext != null) {
+          Future.delayed(const Duration(milliseconds: 300), () {
+            if (textEditorKey.currentContext != null) {
+              Scrollable.ensureVisible(
+                textEditorKey.currentContext!,
+                duration: const Duration(milliseconds: 100),
+                curve: Curves.easeInOut,
+              );
+            }
+          });
+        }
+        return null;
+      },
+      [bottomInset],
+    );
+
     return Padding(
       padding: EdgeInsetsDirectional.only(bottom: 10.0.s),
       child: Row(
