@@ -9,6 +9,7 @@ import 'package:ion/app/features/chat/community/models/entities/tags/conversatio
 import 'package:ion/app/features/chat/community/models/entities/tags/master_pubkey_tag.c.dart';
 import 'package:ion/app/features/chat/e2ee/providers/send_chat_message/send_e2ee_chat_message_service.c.dart';
 import 'package:ion/app/features/chat/e2ee/providers/send_e2ee_reaction_provider.c.dart';
+import 'package:ion/app/features/chat/model/database/chat_database.c.dart';
 import 'package:ion/app/features/chat/providers/conversation_pubkeys_provider.c.dart';
 import 'package:ion/app/features/chat/providers/exist_chat_conversation_id_provider.c.dart';
 import 'package:ion/app/features/feed/data/models/entities/generic_repost.c.dart';
@@ -101,17 +102,43 @@ class StoryReply extends _$StoryReply {
           throw UserPubkeyNotFoundException(masterPubkey);
         }
 
+        await ref.read(eventMessageDaoProvider).add(kind16Rumor);
+        final entity = GenericRepostEntity.fromEventMessage(kind16Rumor);
+
         for (final pubkey in pubkeys) {
-          await ref.read(sendE2eeChatMessageServiceProvider).sendWrappedMessage(
-            pubkey: pubkey,
-            eventSigner: eventSigner,
-            masterPubkey: masterPubkey,
-            eventMessage: kind16Rumor,
-            wrappedKinds: [
-              GenericRepostEntity.kind.toString(),
-              ModifiablePostEntity.kind.toString(),
-            ],
-          );
+          try {
+            await ref.read(conversationMessageDataDaoProvider).addOrUpdateStatus(
+                  pubkey: pubkey,
+                  masterPubkey: masterPubkey,
+                  status: MessageDeliveryStatus.created,
+                  messageEventReference: entity.toEventReference(),
+                );
+
+            await ref.read(sendE2eeChatMessageServiceProvider).sendWrappedMessage(
+              pubkey: pubkey,
+              eventSigner: eventSigner,
+              masterPubkey: masterPubkey,
+              eventMessage: kind16Rumor,
+              wrappedKinds: [
+                GenericRepostEntity.kind.toString(),
+                ModifiablePostEntity.kind.toString(),
+              ],
+            );
+
+            await ref.read(conversationMessageDataDaoProvider).addOrUpdateStatus(
+                  pubkey: pubkey,
+                  masterPubkey: masterPubkey,
+                  status: MessageDeliveryStatus.sent,
+                  messageEventReference: entity.toEventReference(),
+                );
+          } catch (e) {
+            await ref.read(conversationMessageDataDaoProvider).addOrUpdateStatus(
+                  pubkey: pubkey,
+                  masterPubkey: masterPubkey,
+                  status: MessageDeliveryStatus.failed,
+                  messageEventReference: entity.toEventReference(),
+                );
+          }
         }
       }
 

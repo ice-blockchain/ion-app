@@ -26,6 +26,9 @@ Future<SendE2eeReactionService> sendE2eeReactionService(Ref ref) async {
     sendE2eeChatMessageService: sendE2eeChatMessageService,
     currentUserMasterPubkey: ref.watch(currentPubkeySelectorProvider) ?? '',
     conversationPubkeysNotifier: ref.watch(conversationPubkeysProvider.notifier),
+    eventMessageDaoProvider: ref.watch(eventMessageDaoProvider),
+    conversationMessageDataDaoProvider: ref.watch(conversationMessageDataDaoProvider),
+    conversationMessageReactionDaoProvider: ref.watch(conversationMessageReactionDaoProvider),
   );
 }
 
@@ -35,12 +38,18 @@ class SendE2eeReactionService {
     required this.currentUserMasterPubkey,
     required this.sendE2eeChatMessageService,
     required this.conversationPubkeysNotifier,
+    required this.eventMessageDaoProvider,
+    required this.conversationMessageDataDaoProvider,
+    required this.conversationMessageReactionDaoProvider,
   });
 
   final EventSigner? eventSigner;
   final String currentUserMasterPubkey;
-  final SendE2eeChatMessageService sendE2eeChatMessageService;
   final ConversationPubkeys conversationPubkeysNotifier;
+  final SendE2eeChatMessageService sendE2eeChatMessageService;
+  final EventMessageDao eventMessageDaoProvider;
+  final ConversationMessageDataDao conversationMessageDataDaoProvider;
+  final ConversationMessageReactionDao conversationMessageReactionDaoProvider;
 
   final allowedStatus = [MessageDeliveryStatus.received, MessageDeliveryStatus.read];
 
@@ -54,6 +63,11 @@ class SendE2eeReactionService {
       masterPubkey: currentUserMasterPubkey,
       reference: kind14Event.toEventReference(),
     ).toEventMessage(NoPrivateSigner(eventSigner!.publicKey));
+
+    await conversationMessageReactionDaoProvider.add(
+      eventMessageDao: eventMessageDaoProvider,
+      reactionEvent: messageReactionEventMessage,
+    );
 
     final privateDirectMessageEntity =
         ReplaceablePrivateDirectMessageData.fromEventMessage(kind14Rumor);
@@ -75,8 +89,17 @@ class SendE2eeReactionService {
           throw UserPubkeyNotFoundException(masterPubkey);
         }
 
-        await Future.wait(
-          pubkeys.map((pubkey) async {
+        final entity = PrivateMessageReactionEntity.fromEventMessage(messageReactionEventMessage);
+
+        for (final pubkey in pubkeys) {
+          try {
+            await conversationMessageDataDaoProvider.addOrUpdateStatus(
+              pubkey: pubkey,
+              masterPubkey: masterPubkey,
+              status: MessageDeliveryStatus.created,
+              messageEventReference: entity.toEventReference(),
+            );
+
             await sendE2eeChatMessageService.sendWrappedMessage(
               pubkey: pubkey,
               eventSigner: eventSigner!,
@@ -88,8 +111,22 @@ class SendE2eeReactionService {
                 PrivateMessageReactionEntity.kind.toString(),
               ],
             );
-          }),
-        );
+
+            await conversationMessageDataDaoProvider.addOrUpdateStatus(
+              pubkey: pubkey,
+              masterPubkey: masterPubkey,
+              status: MessageDeliveryStatus.sent,
+              messageEventReference: entity.toEventReference(),
+            );
+          } catch (e) {
+            await conversationMessageDataDaoProvider.addOrUpdateStatus(
+              pubkey: pubkey,
+              masterPubkey: masterPubkey,
+              status: MessageDeliveryStatus.failed,
+              messageEventReference: entity.toEventReference(),
+            );
+          }
+        }
       }),
     );
   }

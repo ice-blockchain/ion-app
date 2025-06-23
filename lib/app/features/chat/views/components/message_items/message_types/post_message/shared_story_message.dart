@@ -193,15 +193,16 @@ class _StoryPreviewImage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return IonConnectNetworkImage(
-      imageUrl: storyUrl,
-      authorPubkey: replyEventMessage.masterPubkey,
-      imageBuilder: (_, imageProvider) => ClipRRect(
-        borderRadius: BorderRadius.circular(12.0.s),
-        child: Stack(
+    return ClipRRect(
+      borderRadius: BorderRadius.circular(12.0.s),
+      child: IonConnectNetworkImage(
+        imageUrl: storyUrl,
+        height: 220.0.s,
+        authorPubkey: replyEventMessage.masterPubkey,
+        imageBuilder: (_, imageProvider) => Stack(
           alignment: AlignmentDirectional.center,
           children: [
-            Image(image: imageProvider, height: 220.0.s),
+            Image(image: imageProvider),
             if (isThumb)
               Assets.svg.iconVideoPlay.icon(
                 color: context.theme.appColors.onPrimaryAccent,
@@ -209,9 +210,9 @@ class _StoryPreviewImage extends StatelessWidget {
               ),
           ],
         ),
+        errorWidget: (context, url, error) =>
+            _UnavailableStoryContainer(isMe: isMe, replyEventMessage: replyEventMessage),
       ),
-      errorWidget: (context, url, error) =>
-          _UnavailableStoryContainer(isMe: isMe, replyEventMessage: replyEventMessage),
     );
   }
 }

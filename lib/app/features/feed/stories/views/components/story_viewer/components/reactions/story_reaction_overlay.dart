@@ -1,5 +1,7 @@
 // SPDX-License-Identifier: ice License 1.0
 
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_keyboard_visibility/flutter_keyboard_visibility.dart';
@@ -38,10 +40,12 @@ class StoryReactionOverlay extends HookConsumerWidget {
         textController.clear();
         FocusScope.of(context).unfocus();
 
-        await ref.read(storyReplyProvider.notifier).sendReply(
-              story,
-              replyEmoji: emoji,
-            );
+        unawaited(
+          ref.read(storyReplyProvider.notifier).sendReply(
+                story,
+                replyEmoji: emoji,
+              ),
+        );
 
         WidgetsBinding.instance.addPostFrameCallback((_) {
           emojiController.showReaction(emoji);
