@@ -50,7 +50,7 @@ Future<List<String>> usersForNotificationType(
     final requestMessage = RequestMessage()
       ..addFilter(
         RequestFilter(
-          kinds: const [30000],
+          kinds: const [AccountNotificationSetEntity.kind],
           authors: [currentPubkey],
           tags: {
             '#d': [setType],
@@ -94,7 +94,7 @@ Future<Map<String, List<String>>> _fetchCurrentNotificationSets(
     final requestMessage = RequestMessage()
       ..addFilter(
         RequestFilter(
-          kinds: const [30000],
+          kinds: const [AccountNotificationSetEntity.kind],
           authors: [currentPubkey],
           tags: {
             '#d': [setType],

@@ -11,8 +11,10 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'account_notifications_database.c.g.dart';
 
-@Riverpod(keepAlive: true)
+@riverpod
 AccountNotificationsDatabase accountNotificationsDatabase(Ref ref) {
+  keepAliveWhenAuthenticated(ref);
+
   final pubkey = ref.watch(currentPubkeySelectorProvider);
 
   if (pubkey == null) {
