@@ -4,33 +4,26 @@ import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/components/avatar/avatar.dart';
 import 'package:ion/app/components/avatar/story_colored_profile_avatar.dart';
+import 'package:ion/app/components/skeleton/container_skeleton.dart';
 import 'package:ion/app/extensions/extensions.dart';
+import 'package:ion/app/features/chat/providers/muted_conversations_provider.c.dart';
 import 'package:ion/app/features/chat/views/components/message_items/messages_context_menu/one_to_one_messages_context_menu.dart';
 import 'package:ion/app/features/user/providers/badges_notifier.c.dart';
+import 'package:ion/app/features/user/providers/user_metadata_provider.c.dart';
 import 'package:ion/app/features/user_block/providers/block_list_notifier.c.dart';
+import 'package:ion/app/features/user_metadata/providers/user_metadata_from_db_provider.c.dart';
+import 'package:ion/app/router/app_routes.c.dart';
+import 'package:ion/app/utils/username.dart';
 import 'package:ion/generated/assets.gen.dart';
 
 class OneToOneMessagingHeader extends ConsumerWidget {
   const OneToOneMessagingHeader({
-    required this.name,
-    required this.subtitle,
     required this.conversationId,
     required this.receiverMasterPubkey,
-    this.imageUrl,
-    this.imageWidget,
-    this.onTap,
-    this.onToggleMute,
     super.key,
   });
 
-  final String name;
-
-  final Widget subtitle;
-  final String? imageUrl;
-  final Widget? imageWidget;
   final String conversationId;
-  final GestureTapCallback? onTap;
-  final VoidCallback? onToggleMute;
   final String receiverMasterPubkey;
 
   @override
@@ -42,6 +35,28 @@ class OneToOneMessagingHeader extends ConsumerWidget {
     final isVerified = ref.watch(isUserVerifiedProvider(receiverMasterPubkey)).valueOrNull ?? false;
     final isNicknameProven =
         ref.watch(isNicknameProvenProvider(receiverMasterPubkey)).valueOrNull ?? true;
+    final isDeleted = ref.watch(isUserDeletedProvider(receiverMasterPubkey)).valueOrNull ?? false;
+
+    final userMetadata = ref.watch(userMetadataFromDbNotifierProvider(receiverMasterPubkey))?.data;
+
+    // Show skeleton while loading user data (unless deleted)
+    if ((userMetadata == null) && !isDeleted) {
+      return const _HeaderSkeleton();
+    }
+
+    final receiverPicture = isDeleted ? null : userMetadata?.picture;
+    final receiverName = userMetadata?.name;
+    final receiverDisplayName = userMetadata?.displayName;
+
+    final subtitle = Text(
+      prefixUsername(
+        context: context,
+        username: receiverName,
+      ),
+      style: context.theme.appTextThemes.caption.copyWith(
+        color: context.theme.appColors.quaternaryText,
+      ),
+    );
 
     return Padding(
       padding: EdgeInsetsDirectional.fromSTEB(16.0.s, 8.0.s, 16.0.s, 12.0.s),
@@ -57,7 +72,7 @@ class OneToOneMessagingHeader extends ConsumerWidget {
           SizedBox(width: 12.0.s),
           Expanded(
             child: GestureDetector(
-              onTap: onTap,
+              onTap: () => ProfileRoute(pubkey: receiverMasterPubkey).push<void>(context),
               child: Row(
                 children: [
                   if (isBlockedBy)
@@ -66,9 +81,8 @@ class OneToOneMessagingHeader extends ConsumerWidget {
                     StoryColoredProfileAvatar(
                       pubkey: receiverMasterPubkey,
                       size: 36.0.s,
-                      imageUrl: imageUrl,
-                      imageWidget: imageWidget,
                       useRandomGradient: true,
+                      imageUrl: (!isBlockedBy && !isDeleted) ? receiverPicture : null,
                     ),
                   SizedBox(width: 10.0.s),
                   Expanded(
@@ -79,10 +93,12 @@ class OneToOneMessagingHeader extends ConsumerWidget {
                           children: [
                             Flexible(
                               child: Text(
-                                name,
-                                style: context.theme.appTextThemes.subtitle3,
-                                overflow: TextOverflow.ellipsis,
+                                isDeleted
+                                    ? context.i18n.common_deleted_account
+                                    : receiverDisplayName ?? '',
                                 maxLines: 1,
+                                overflow: TextOverflow.ellipsis,
+                                style: context.theme.appTextThemes.subtitle3,
                               ),
                             ),
                             if (isVerified) ...[
@@ -112,9 +128,59 @@ class OneToOneMessagingHeader extends ConsumerWidget {
           ),
           OneToOneMessagingContextMenu(
             isBlocked: isBlocked,
-            onToggleMute: onToggleMute,
+            onToggleMute: () {
+              ref
+                  .read(mutedConversationsProvider.notifier)
+                  .toggleMutedMasterPubkey(receiverMasterPubkey);
+            },
             conversationId: conversationId,
             receiverMasterPubkey: receiverMasterPubkey,
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _HeaderSkeleton extends StatelessWidget {
+  const _HeaderSkeleton();
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: EdgeInsetsDirectional.fromSTEB(16.0.s, 8.0.s, 16.0.s, 12.0.s),
+      child: Row(
+        children: [
+          GestureDetector(
+            onTap: () => Navigator.pop(context),
+            child: Assets.svg.iconChatBack.icon(
+              size: 24.0.s,
+              flipForRtl: true,
+            ),
+          ),
+          SizedBox(width: 12.0.s),
+          ContainerSkeleton(
+            height: 36.0.s,
+            width: 36.0.s,
+          ),
+          SizedBox(width: 10.0.s),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                ContainerSkeleton(
+                  height: context.theme.appTextThemes.subtitle3.fontSize!.s,
+                  width: 120.0.s,
+                  skeletonBaseColor: context.theme.appColors.onTerararyFill,
+                ),
+                SizedBox(height: 4.0.s),
+                ContainerSkeleton(
+                  height: context.theme.appTextThemes.subtitle3.fontSize!.s,
+                  width: 150.0.s,
+                  skeletonBaseColor: context.theme.appColors.onTerararyFill,
+                ),
+              ],
+            ),
           ),
         ],
       ),

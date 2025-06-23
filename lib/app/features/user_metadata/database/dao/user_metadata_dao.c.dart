@@ -57,4 +57,11 @@ class UserMetadataDao extends DatabaseAccessor<UserMetadataDatabase> with _$User
     final userMetadataModels = await query.get();
     return userMetadataModels.map((model) => model.masterPubkey).toSet();
   }
+
+  Future<int> deleteMetadata(List<String> masterPubkeys) async {
+    final query = delete(db.userMetadataTable)
+      ..where((user) => user.masterPubkey.isIn(masterPubkeys));
+
+    return query.go();
+  }
 }

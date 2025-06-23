@@ -15,9 +15,7 @@ class UserMetadataFromDbNotifier extends _$UserMetadataFromDbNotifier {
     });
 
     final subscription = ref.watch(userMetadataDaoProvider).watch(masterPubkey).listen((metadata) {
-      if (metadata != null) {
-        state = metadata;
-      }
+      state = metadata;
     });
 
     ref.onDispose(subscription.cancel);

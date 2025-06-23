@@ -62,7 +62,12 @@ class UserMetadataSync extends _$UserMetadataSync {
 
       if (usersMetadata.isEmpty) return;
 
+      // If relay returned null for a master pubkey, we should remove existing metadata
+      final deletedUsers =
+          masterPubkeysToSync.difference(usersMetadata.map((e) => e.masterPubkey).toSet());
+
       await userMetadataDao.insertAll(usersMetadata);
+      await userMetadataDao.deleteMetadata(deletedUsers.toList());
 
       await localStorage.setString(localStorageKey, DateTime.now().toIso8601String());
     }

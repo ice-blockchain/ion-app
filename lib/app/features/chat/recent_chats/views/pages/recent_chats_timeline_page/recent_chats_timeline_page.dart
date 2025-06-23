@@ -252,7 +252,7 @@ class E2eeRecentChatTile extends HookConsumerWidget {
       return const SizedBox.shrink();
     }
 
-    final cachedUserMetadata = ref.watch(userMetadataFromDbNotifierProvider(receiverMasterPubkey));
+    final userMetadata = ref.watch(userMetadataFromDbNotifierProvider(receiverMasterPubkey));
 
     final unreadMessagesCount =
         ref.watch(getUnreadMessagesCountProvider(conversation.conversationId));
@@ -264,10 +264,11 @@ class E2eeRecentChatTile extends HookConsumerWidget {
     final isUserVerified =
         ref.watch(isUserVerifiedProvider(receiverMasterPubkey)).valueOrNull.falseOrValue;
 
+
     final isDeleted =
         ref.watch(isUserDeletedProvider(receiverMasterPubkey)).valueOrNull.falseOrValue;
 
-    if (cachedUserMetadata == null && !isDeleted) {
+    if (userMetadata == null && !isDeleted) {
       return const RecentChatSkeletonItem();
     }
 
@@ -275,10 +276,8 @@ class E2eeRecentChatTile extends HookConsumerWidget {
       defaultAvatar: null,
       conversation: conversation,
       messageType: entity.messageType,
-      name: isDeleted
-          ? context.i18n.common_deleted_account
-          : cachedUserMetadata?.data.displayName ?? '',
-      avatarUrl: isDeleted ? null : cachedUserMetadata?.data.picture,
+      name: isDeleted ? context.i18n.common_deleted_account : userMetadata?.data.displayName ?? '',
+      avatarUrl: isDeleted ? null : userMetadata?.data.picture,
       eventReference: eventReference,
       unreadMessagesCount: unreadMessagesCount.valueOrNull ?? 0,
       lastMessageContent: conversation.latestMessage?.content ?? '',
