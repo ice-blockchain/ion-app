@@ -1,7 +1,6 @@
 // SPDX-License-Identifier: ice License 1.0
 
 import 'package:flutter/material.dart';
-import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_keyboard_visibility/flutter_keyboard_visibility.dart';
 import 'package:flutter_quill/flutter_quill.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
@@ -72,6 +71,7 @@ class CreatePostContent extends StatelessWidget {
               attachedMediaNotifier: attachedMediaNotifier,
               attachedMediaLinksNotifier: attachedMediaLinksNotifier,
               textEditorKey: textEditorKey,
+              scrollController: scrollController,
             ),
             if (quotedEvent != null) _QuotedEntitySection(eventReference: quotedEvent!),
           ],
@@ -120,6 +120,7 @@ class _TextInputSection extends HookConsumerWidget {
     required this.attachedMediaNotifier,
     required this.attachedMediaLinksNotifier,
     required this.textEditorKey,
+    required this.scrollController,
   });
 
   final QuillController textEditorController;
@@ -127,31 +128,13 @@ class _TextInputSection extends HookConsumerWidget {
   final AttachedMediaNotifier attachedMediaNotifier;
   final AttachedMediaLinksNotifier attachedMediaLinksNotifier;
   final GlobalKey<TextEditorState> textEditorKey;
+  final ScrollController scrollController;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final mediaFiles = attachedMediaNotifier.value;
     final mediaLinks = attachedMediaLinksNotifier.value.values.toList();
-    final bottomInset = MediaQuery.of(context).viewInsets.bottom;
     final draftPoll = ref.watch(pollDraftNotifierProvider);
-
-    useEffect(
-      () {
-        if (bottomInset > 0 && textEditorKey.currentContext != null) {
-          Future.delayed(const Duration(milliseconds: 300), () {
-            if (textEditorKey.currentContext != null) {
-              Scrollable.ensureVisible(
-                textEditorKey.currentContext!,
-                duration: const Duration(milliseconds: 100),
-                curve: Curves.easeInOut,
-              );
-            }
-          });
-        }
-        return null;
-      },
-      [bottomInset],
-    );
 
     final links = useUrlLinks(
       textEditorController: textEditorController,
@@ -184,6 +167,7 @@ class _TextInputSection extends HookConsumerWidget {
                     textEditorController,
                     placeholder: createOption.getPlaceholder(context),
                     key: textEditorKey,
+                    scrollController: scrollController,
                   ),
                   if (draftPoll.added) ...[
                     SizedBox(height: 12.0.s),
