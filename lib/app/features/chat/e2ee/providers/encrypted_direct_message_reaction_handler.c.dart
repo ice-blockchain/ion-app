@@ -16,7 +16,10 @@ part 'encrypted_direct_message_reaction_handler.c.g.dart';
 
 class EncryptedDirectMessageReactionHandler extends GlobalSubscriptionEncryptedEventMessageHandler {
   EncryptedDirectMessageReactionHandler(
-      this.conversationMessageReactionDao, this.eventMessageDao, this.userMetadataSyncProvider);
+    this.conversationMessageReactionDao,
+    this.eventMessageDao,
+    this.userMetadataSyncProvider,
+  );
 
   final ConversationMessageReactionDao conversationMessageReactionDao;
   final EventMessageDao eventMessageDao;
@@ -44,5 +47,8 @@ class EncryptedDirectMessageReactionHandler extends GlobalSubscriptionEncryptedE
 
 @riverpod
 EncryptedDirectMessageReactionHandler encryptedDirectMessageReactionHandler(Ref ref) =>
-    EncryptedDirectMessageReactionHandler(ref.watch(conversationMessageReactionDaoProvider),
-        ref.watch(eventMessageDaoProvider), ref.watch(userMetadataSyncProvider.notifier));
+    EncryptedDirectMessageReactionHandler(
+      ref.watch(conversationMessageReactionDaoProvider),
+      ref.watch(eventMessageDaoProvider),
+      ref.watch(userMetadataSyncProvider.notifier),
+    );
