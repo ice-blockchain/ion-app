@@ -10,6 +10,7 @@ import 'package:ion/app/features/auth/providers/auth_provider.c.dart';
 import 'package:ion/app/features/feed/data/models/entities/generic_repost.c.dart';
 import 'package:ion/app/features/feed/data/models/entities/post_data.c.dart';
 import 'package:ion/app/features/feed/data/models/entities/repost_data.c.dart';
+import 'package:ion/app/features/feed/data/models/feed_config.c.dart';
 import 'package:ion/app/features/feed/data/models/feed_modifier.dart';
 import 'package:ion/app/features/feed/data/models/feed_type.dart';
 import 'package:ion/app/features/feed/providers/feed_config_provider.c.dart';
@@ -267,7 +268,8 @@ class FeedFollowingContent extends _$FeedFollowingContent implements PagedNotifi
   }) async {
     final ionConnectNotifier = ref.read(ionConnectNotifierProvider.notifier);
 
-    final dataSource = _getDataSourceForPubkey(pubkey);
+    final feedConfig = await ref.read(feedConfigProvider.future);
+    final dataSource = _getDataSourceForPubkey(pubkey, feedConfig);
 
     final until = lastEventCreatedAt != null ? lastEventCreatedAt - 1 : null;
     final requestMessage = RequestMessage();
@@ -430,14 +432,16 @@ class FeedFollowingContent extends _$FeedFollowingContent implements PagedNotifi
     return !duplicatedRepost;
   }
 
-  EntitiesDataSource _getDataSourceForPubkey(String pubkey) {
+  EntitiesDataSource _getDataSourceForPubkey(String pubkey, FeedConfig feedConfig) {
     final currentPubkey = ref.read(currentPubkeySelectorProvider);
 
     if (currentPubkey == null) {
       throw const CurrentUserNotFoundException();
     }
 
-    final feedModifierFilter = feedModifier?.filter;
+    final feedFilterFactory = FeedFilterFactory(feedConfig: feedConfig);
+    final feedModifierFilter =
+        feedModifier != null ? feedFilterFactory.create(feedModifier!) : null;
 
     return switch (feedType) {
       FeedType.post => buildPostsDataSource(
