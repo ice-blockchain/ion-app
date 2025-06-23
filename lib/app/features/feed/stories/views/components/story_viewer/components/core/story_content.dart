@@ -38,43 +38,51 @@ class StoryContent extends HookConsumerWidget {
     final canReply = ref.watch(canReplyProvider(story.toEventReference())).valueOrNull ?? false;
     final currentPubkey = ref.watch(currentPubkeySelectorProvider);
     final isOwnerStory = currentPubkey == story.masterPubkey;
+    final borderRadius = 16.0.s;
 
-    return ClipRRect(
-      borderRadius: isKeyboardVisible
-          ? BorderRadiusDirectional.only(
-              topStart: Radius.circular(16.0.s),
-              topEnd: Radius.circular(16.0.s),
-            )
-          : BorderRadius.circular(16.0.s),
-      child: Stack(
-        fit: StackFit.expand,
-        children: [
-          Stack(
-            fit: StackFit.expand,
-            children: [
-              StoryViewerContent(
-                post: story,
-                viewerPubkey: viewerPubkey,
-              ),
-              if (ref.watch(storyReplyProvider).isLoading)
-                BackdropFilter(
-                  filter: ImageFilter.blur(sigmaX: 15, sigmaY: 15),
-                  child: Center(child: IONLoadingIndicator(size: Size.square(54.0.s))),
+    return Stack(
+      fit: StackFit.expand,
+      children: [
+        Stack(
+          fit: StackFit.expand,
+          children: [
+            Align(
+              widthFactor: 1,
+              heightFactor: 1,
+              child: Container(
+                decoration: BoxDecoration(
+                  borderRadius: isKeyboardVisible
+                      ? BorderRadiusDirectional.only(
+                          topStart: Radius.circular(borderRadius),
+                          topEnd: Radius.circular(borderRadius),
+                        )
+                      : BorderRadius.circular(borderRadius),
                 ),
-            ],
-          ),
-          StoryViewerHeader(currentPost: story),
-          _StoryControlsPanel(
-            story: story,
-            viewerPubkey: viewerPubkey,
-            textController: textController,
-            isKeyboardShown: isKeyboardVisible,
-            canReply: canReply && !isOwnerStory,
-          ),
-          if (emojiState.showNotification && emojiState.selectedEmoji != null)
-            StoryReactionNotification(emoji: emojiState.selectedEmoji!),
-        ],
-      ),
+                clipBehavior: Clip.hardEdge,
+                child: StoryViewerContent(
+                  post: story,
+                  viewerPubkey: viewerPubkey,
+                ),
+              ),
+            ),
+            if (ref.watch(storyReplyProvider).isLoading)
+              BackdropFilter(
+                filter: ImageFilter.blur(sigmaX: 15, sigmaY: 15),
+                child: Center(child: IONLoadingIndicator(size: Size.square(54.0.s))),
+              ),
+          ],
+        ),
+        StoryViewerHeader(currentPost: story),
+        _StoryControlsPanel(
+          story: story,
+          viewerPubkey: viewerPubkey,
+          textController: textController,
+          isKeyboardShown: isKeyboardVisible,
+          canReply: canReply && !isOwnerStory,
+        ),
+        if (emojiState.showNotification && emojiState.selectedEmoji != null)
+          StoryReactionNotification(emoji: emojiState.selectedEmoji!),
+      ],
     );
   }
 }
