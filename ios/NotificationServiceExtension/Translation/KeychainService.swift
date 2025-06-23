@@ -51,7 +51,7 @@ class KeychainService {
     /// - Returns: The private key as a string
     /// - Throws: KeychainError if the key cannot be retrieved from the keychain
     private func fetchPrivateKeyFromKeychain(for identityKeyName: String) throws -> String? {
-        let storageKey = "\(identityKeyName)_nostr_key_store"
+        let storageKey = "\(identityKeyName)_ion_connect_key_store"
         log("Storage key: \(storageKey)")
 
         guard
@@ -88,7 +88,7 @@ class KeychainService {
 
         // Cache the private key
         self.privateKey = privateKeyString
-        log("Successfully retrieved private key (length: \(privateKeyString.count))")
+        log("Successfully retrieved private key (length: \(privateKeyString)), for identity key name: \(storageKey)")
 
         return privateKeyString
     }

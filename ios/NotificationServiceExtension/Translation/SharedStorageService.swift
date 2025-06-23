@@ -54,7 +54,7 @@ class SharedStorageService {
         return userDefaults.string(forKey: SharedStorageService.currentPubkeyKey)
     }
 
-    func currentIdentityKeyName() -> String? {
+    func getCurrentIdentityKeyName() -> String? {
         return userDefaults.string(forKey: SharedStorageService.currentIdentityKeyNameKey)
     }
 

@@ -5,6 +5,7 @@ import Foundation
 class NotificationTranslationService {
     private let translator: Translator<PushNotificationTranslations>
     private let storage: SharedStorageService
+    private let e2eDecryptionService: E2EDecryptionService?
 
     init(storage: SharedStorageService) {
         self.storage = storage
@@ -20,6 +21,15 @@ class NotificationTranslationService {
             translationsRepository: repository,
             appLocale: appLocale
         )
+
+        if let pubkey = storage.getCurrentPubkey(), let currentIdentityKeyName = storage.getCurrentIdentityKeyName() {
+            self.e2eDecryptionService = E2EDecryptionService(
+                keychainService: KeychainService(currentIdentityKeyName: currentIdentityKeyName),
+                pubkey: pubkey,
+            )
+        } else {
+            self.e2eDecryptionService = nil
+        }
     }
 
     func translate(_ pushPayload: [AnyHashable: Any]) async -> (title: String?, body: String?) {
@@ -28,7 +38,7 @@ class NotificationTranslationService {
             return (title: nil, body: nil)
         }
 
-        guard let data = parsePayload(from: pushPayload) else {
+        guard let data = await parsePayload(from: pushPayload) else {
             NSLog("❌ Failed to parse push payload")
             return (title: nil, body: nil)
         }
@@ -67,10 +77,11 @@ class NotificationTranslationService {
 
     // MARK: - Private helper methods
 
-    private func parsePayload(from pushPayload: [AnyHashable: Any]) -> IonConnectPushDataPayload? {
+    private func parsePayload(from pushPayload: [AnyHashable: Any]) async -> IonConnectPushDataPayload? {
         do {
-            let data = try JSONSerialization.data(withJSONObject: pushPayload)
-            let payload = try JSONDecoder().decode(IonConnectPushDataPayload.self, from: data)
+            let payload = try await IonConnectPushDataPayload.fromJson(data: pushPayload) { event in
+                return try? await self.e2eDecryptionService?.decryptMessage(event)
+            }
 
             return payload
         } catch {

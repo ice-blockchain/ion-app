@@ -43,7 +43,11 @@ class NotificationResponseHandler extends _$NotificationResponseHandler {
       final notificationPayload =
           await IonConnectPushDataPayload.fromEncoded(response, (eventMassage) async {
         final giftUnwrapService = await ref.read(giftUnwrapServiceProvider.future);
-        return giftUnwrapService.unwrap(eventMassage);
+
+        final event = await giftUnwrapService.unwrap(eventMassage);
+        final userMetadata = ref.read(userMetadataFromDbNotifierProvider(eventMassage.pubkey));
+
+        return (event, userMetadata);
       });
 
       final eventParser = ref.read(eventParserProvider);

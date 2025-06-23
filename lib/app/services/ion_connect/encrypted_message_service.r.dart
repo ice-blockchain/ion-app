@@ -84,7 +84,8 @@ class EncryptedMessageService {
 
   String _convertEd25519SkToX25519(String privateKey) {
     final x25519Sk = Uint8List.fromList(List.filled(32, 0));
-    final ed25519Sk = Uint8List.fromList(hex.decode(privateKey));
+    final hexpk = hex.decode(privateKey);
+    final ed25519Sk = Uint8List.fromList(hexpk);
     TweetNaClExt.crypto_sign_ed25519_sk_to_x25519_sk(x25519Sk, ed25519Sk);
     return hex.encode(x25519Sk);
   }

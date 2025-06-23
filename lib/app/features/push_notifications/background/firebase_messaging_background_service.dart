@@ -28,7 +28,11 @@ Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
 
   final data = await IonConnectPushDataPayload.fromEncoded(message.data, (eventMassage) async {
     final giftUnwrapService = await riverpodContainer.read(giftUnwrapServiceProvider.future);
-    return giftUnwrapService.unwrap(eventMassage);
+    final event = await giftUnwrapService.unwrap(eventMassage);
+    final userMetadata =
+        riverpodContainer.read(userMetadataFromDbNotifierProvider(eventMassage.pubkey));
+
+    return (event, userMetadata);
   });
 
   final parser = await riverpodContainer.read(notificationDataParserProvider.future);

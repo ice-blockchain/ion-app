@@ -1,82 +1,90 @@
-import Foundation
+// SPDX-License-Identifier: ice License 1.0
 
-class E2EDecryptionService {
-    enum DecryptionError: Error, CustomStringConvertible {
+import Clibsodium
+import CryptoKit
+import Foundation
+import NostrSDK
+import Sodium
+
+class E2EDecryptionService: NIP44v2Encrypting {
+    enum DecryptionError: Error {
         case invalidPrivateKey
-        case decryptionFailed
-        case invalidSealContent
-        case invalidSignature
-        case delegationVerificationFailed
-        case noPubkeyAvailable
-        case jsonParsingFailed
-        
-        var description: String {
-            switch self {
-            case .invalidPrivateKey:
-                return "Invalid private key"
-            case .decryptionFailed:
-                return "Failed to decrypt message"
-            case .invalidSealContent:
-                return "Invalid seal content"
-            case .invalidSignature:
-                return "Invalid signature"
-            case .delegationVerificationFailed:
-                return "Failed to verify delegation"
-            case .noPubkeyAvailable:
-                return "No public key available"
-            case .jsonParsingFailed:
-                return "Failed to parse JSON content"
-            }
-        }
+        case keyConversionFailed
+        case sharedSecretFailed
+        case jsonDecodingFailed
     }
-    
+
     private let keychainService: KeychainService
-    private var encryptedMessageService: EncryptedMessageService?
-    private let getCurrentPubkey: () -> String?
-    
-    init(keychainService: KeychainService, getCurrentPubkey: @escaping () -> String?) {
+    private let pubkey: String
+
+    init(keychainService: KeychainService, pubkey: String) {
         self.keychainService = keychainService
-        self.getCurrentPubkey = getCurrentPubkey
+        self.pubkey = pubkey
     }
-    
+
     /// Decrypts an E2E encrypted message using the private key from keychain
     /// - Parameter eventMessage: The encrypted event message to decrypt
     /// - Returns: The decrypted event message
-    func decryptMessage(_ eventMessage: EventMessage) async throws -> EventMessage {
-        guard let privateKey = try keychainService.getPrivateKey() else {
+    func decryptMessage(_ eventMessage: EventMessage) async throws -> EventMessage? {
+        guard let privateKeyString = try keychainService.getPrivateKey() else {
             throw DecryptionError.invalidPrivateKey
         }
-        
-        guard let currentPubkey = getCurrentPubkey() else {
-            throw DecryptionError.noPubkeyAvailable
-        }
-        
-        let messageService = EncryptedMessageService(currentUserPubkey: currentPubkey)
-        
-        guard eventMessage.kind == IonConnectGiftWrapEntity.kind else {
-            return eventMessage
-        }
-        
+
         let content = eventMessage.content
-            
+        let senderPubkey = eventMessage.pubkey
+
+        NSLog("Decrypting message from pubkey: \(senderPubkey) with content: \(content.prefix(20))...")
+
+        // Convert keys from Ed25519 to X25519 format
+        guard let x25519PrivateKey = convertEd25519SkToX25519(privateKeyString),
+            let x25519PublicKey = convertEd25519PkToX25519(senderPubkey),
+            let privateKey = PrivateKey(hex: x25519PrivateKey),
+            let publicKey = PublicKey(hex: x25519PublicKey)
+        else {
+            NSLog("Failed to convert keys from Ed25519 to X25519")
+            throw DecryptionError.keyConversionFailed
+        }
+
         do {
-            let decryptedContent = try messageService.decryptMessage(
-                content,
-                publicKey: eventMessage.pubkey,
-                privateKey: privateKey
-            )
-            
-            guard let jsonData = decryptedContent.data(using: .utf8),
-                  let decryptedMessage = try? JSONDecoder().decode(EventMessage.self, from: jsonData) else {
-                throw DecryptionError.jsonParsingFailed
-            }
-            
-            print("Successfully decrypted E2E message with ID: \(eventMessage.id)")
-            return decryptedMessage
-            
+            let decryptedContent = try decrypt(payload: content, privateKeyA: privateKey, publicKeyB: publicKey)
+            NSLog("Successfully decrypted message: \(decryptedContent.prefix(20))...")
+
+            guard let data = decryptedContent.data(using: .utf8) else { return nil }
+
+            return try? JSONDecoder().decode(EventMessage.self, from: data)
         } catch {
-            print("Failed to decrypt message: \(error)")
-            throw DecryptionError.decryptionFailed
+            NSLog("Error decrypting message: \(error)")
+            return nil
+        }
+    }
+
+    /// Converts Ed25519 public key to X25519 public key
+    private func convertEd25519PkToX25519(_ publicKey: String) -> String? {
+        var curve25519Bytes = [UInt8](repeating: 0, count: crypto_box_publickeybytes())
+
+        if 0 == crypto_sign_ed25519_pk_to_curve25519(&curve25519Bytes, [UInt8](hex: publicKey)) {
+            let pk = Box.PublicKey(curve25519Bytes).toHexString()
+            NSLog("Successfully converted Ed25519 public key to X25519 public key: \(pk)")
+            return pk
+        } else {
+            NSLog("Failed to convert Ed25519 public key to X25519 public key")
+            return nil
+        }
+    }
+
+    /// Converts Ed25519 private key to X25519 private key
+    private func convertEd25519SkToX25519(_ privateKey: String) -> String? {
+        NSLog("Converting Ed25519 private key to X25519 private key")
+
+        var curve25519Bytes = [UInt8](repeating: 0, count: crypto_box_secretkeybytes())
+
+        if 0 == crypto_sign_ed25519_sk_to_curve25519(&curve25519Bytes, [UInt8](hex: privateKey)) {
+            let x25519PrivateKeyHex = Box.SecretKey(curve25519Bytes).toHexString()
+            NSLog("Successfully converted Ed25519 private key to X25519 private key: \(x25519PrivateKeyHex)")
+            return x25519PrivateKeyHex
+        } else {
+            NSLog("Failed to convert Ed25519 private key to X25519 private key")
+            return nil
         }
     }
 }

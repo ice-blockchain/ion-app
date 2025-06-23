@@ -33,15 +33,17 @@ class IonConnectPushDataPayload {
     required this.event,
     required this.relevantEvents,
     this.decryptedEvent,
+    this.decryptedPlaceholders,
   });
 
   final EventMessage event;
-  final EventMessage? decryptedEvent;
   final List<EventMessage> relevantEvents;
+  final EventMessage? decryptedEvent;
+  final Map<String, String>? decryptedPlaceholders;
 
   static Future<IonConnectPushDataPayload> fromEncoded(
     Map<String, dynamic> data,
-    Future<EventMessage> Function(EventMessage eventMassage) decryptEvent,
+    Future<(EventMessage, UserMetadataEntity?)> Function(EventMessage eventMassage) decryptEvent,
   ) async {
     final EncodedIonConnectPushData(:event, :relevantEvents, :compression) =
         EncodedIonConnectPushData.fromJson(data);
@@ -61,12 +63,15 @@ class IonConnectPushDataPayload {
         : <EventMessage>[];
 
     EventMessage? decryptedEvent;
+    UserMetadataEntity? userMetadata;
 
     if (parsedEvent.kind == IonConnectGiftWrapEntity.kind) {
       final giftWrapEntity = EventParser().parse(parsedEvent) as IonConnectGiftWrapEntity;
       if (giftWrapEntity.data.kinds
           .containsDeep([ReplaceablePrivateDirectMessageEntity.kind.toString()])) {
-        decryptedEvent = await decryptEvent(parsedEvent);
+        final result = await decryptEvent(parsedEvent);
+        decryptedEvent = result.$1;
+        userMetadata = result.$2;
       }
     }
 
@@ -74,6 +79,12 @@ class IonConnectPushDataPayload {
       event: parsedEvent,
       relevantEvents: parsedRelevantEvents,
       decryptedEvent: decryptedEvent,
+      decryptedPlaceholders: userMetadata != null
+          ? {
+              'username': userMetadata.data.name,
+              'displayName': userMetadata.data.displayName,
+            }
+          : null,
     );
   }
 
@@ -160,6 +171,8 @@ class IonConnectPushDataPayload {
         'username': mainEntityUserMetadata.data.name,
         'displayName': mainEntityUserMetadata.data.displayName,
       });
+    } else {
+      data.addAll(decryptedPlaceholders ?? {});
     }
 
     if (decryptedEvent != null) {
