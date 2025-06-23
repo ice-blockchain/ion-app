@@ -6,23 +6,22 @@ import 'package:ion/app/features/ion_connect/ion_connect.dart';
 import 'package:ion/app/features/ion_connect/providers/ion_connect_notifier.c.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
-part 'missing_events_fetcher.c.g.dart';
+part 'event_backfill_service.c.g.dart';
 
-class MissingEventsFetcher {
-  MissingEventsFetcher({
+class EventBackfillService {
+  EventBackfillService({
     required this.ionConnectNotifier,
   });
   final IonConnectNotifier ionConnectNotifier;
 
-  Future<int> fetchMissingEvents({
+  Future<int> startBackfill({
     required int latestEventTimestamp,
     required RequestFilter filter,
     required void Function(EventMessage event) onEvent,
   }) async {
-    print('FETCHING EVENTS: latestEventTimestamp: $latestEventTimestamp');
     int? tmpLastCreatedAt;
     while (true) {
-      final (maxCreatedAt, stopFetching) = await _fetchPreviousEvents(
+      final (maxCreatedAt, stopFetching) = await _fetchPagedEvents(
         regularSince: tmpLastCreatedAt ?? latestEventTimestamp,
         filter: filter,
         onEvent: onEvent,
@@ -35,7 +34,7 @@ class MissingEventsFetcher {
     return tmpLastCreatedAt ?? latestEventTimestamp;
   }
 
-  Future<(int maxCreatedAt, bool stopFetching)> _fetchPreviousEvents({
+  Future<(int maxCreatedAt, bool stopFetching)> _fetchPagedEvents({
     required RequestFilter filter,
     required void Function(EventMessage event) onEvent,
     int? regularSince,
@@ -55,15 +54,10 @@ class MissingEventsFetcher {
         ],
       );
 
-      print('FETCHING EVENTS: filter: ${requestMessage.filters}');
-
       var maxCreatedAt = previousMaxCreatedAt ?? 0;
       int? minCreatedAt;
       final regularIds = <String>[];
       await for (final event in ionConnectNotifier.requestEvents(requestMessage)) {
-        print(
-          'FETCHING EVENTS: event: ${event.id} ${event.createdAt} date: ${DateTime.fromMicrosecondsSinceEpoch(event.createdAt)}',
-        );
         final eventCreatedAt = event.createdAt.toMicroseconds;
 
         if (minCreatedAt == null || eventCreatedAt < minCreatedAt) {
@@ -85,7 +79,7 @@ class MissingEventsFetcher {
         return (maxCreatedAt, page <= 2);
       }
 
-      return _fetchPreviousEvents(
+      return _fetchPagedEvents(
         regularSince: regularSince,
         regularUntil: minCreatedAt,
         previousMaxCreatedAt: maxCreatedAt,
@@ -101,9 +95,9 @@ class MissingEventsFetcher {
 }
 
 @riverpod
-MissingEventsFetcher missingEventsFetcher(Ref ref) {
+EventBackfillService eventBackfillService(Ref ref) {
   final ionConnectNotifier = ref.watch(ionConnectNotifierProvider.notifier);
-  return MissingEventsFetcher(
+  return EventBackfillService(
     ionConnectNotifier: ionConnectNotifier,
   );
 }

@@ -12,12 +12,12 @@ import 'package:ion/app/features/feed/data/models/entities/modifiable_post_data.
 import 'package:ion/app/features/feed/data/models/entities/reaction_data.c.dart';
 import 'package:ion/app/features/ion_connect/ion_connect.dart';
 import 'package:ion/app/features/ion_connect/model/ion_connect_gift_wrap.c.dart';
+import 'package:ion/app/features/ion_connect/providers/event_backfill_service.c.dart';
 import 'package:ion/app/features/ion_connect/providers/global_subscription_event_dispatcher_provider.c.dart';
 import 'package:ion/app/features/ion_connect/providers/global_subscription_latest_event_timestamp_provider.c.dart';
 import 'package:ion/app/features/ion_connect/providers/ion_connect_event_signer_provider.c.dart';
 import 'package:ion/app/features/ion_connect/providers/ion_connect_notifier.c.dart';
 import 'package:ion/app/features/ion_connect/providers/ion_connect_subscription_provider.c.dart';
-import 'package:ion/app/features/ion_connect/utils/missing_events_fetcher.c.dart';
 import 'package:ion/app/features/user/model/badges/badge_award.c.dart';
 import 'package:ion/app/features/user/model/follow_list.c.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
@@ -32,7 +32,7 @@ class GlobalSubscription {
     required this.ionConnectNotifier,
     required this.globalSubscriptionNotifier,
     required this.globalSubscriptionEventDispatcher,
-    required this.missingEventsFetcher,
+    required this.eventBackfillService,
   });
 
   final String currentUserMasterPubkey;
@@ -41,7 +41,7 @@ class GlobalSubscription {
   final IonConnectNotifier ionConnectNotifier;
   final GlobalSubscriptionNotifier globalSubscriptionNotifier;
   final GlobalSubscriptionEventDispatcher globalSubscriptionEventDispatcher;
-  final MissingEventsFetcher missingEventsFetcher;
+  final EventBackfillService eventBackfillService;
 
   static const List<int> _genericEventKinds = [
     BadgeAwardEntity.kind,
@@ -78,7 +78,7 @@ class GlobalSubscription {
     required int regularLatestEventTimestamp,
     required int now,
   }) async {
-    final tmpLastCreatedAt = await missingEventsFetcher.fetchMissingEvents(
+    final tmpLastCreatedAt = await eventBackfillService.startBackfill(
       latestEventTimestamp: regularLatestEventTimestamp,
       filter: RequestFilter(
         kinds: _genericEventKinds,
@@ -188,7 +188,7 @@ GlobalSubscription? globalSubscription(Ref ref) {
   final globalSubscriptionNotifier = ref.watch(globalSubscriptionNotifierProvider.notifier);
   final globalSubscriptionEventDispatcherNotifier =
       ref.watch(globalSubscriptionEventDispatcherNotifierProvider).valueOrNull;
-  final missingEventsFetcher = ref.watch(missingEventsFetcherProvider);
+  final eventBackfillService = ref.watch(eventBackfillServiceProvider);
 
   if (latestEventTimestampService == null || globalSubscriptionEventDispatcherNotifier == null) {
     return null;
@@ -201,6 +201,6 @@ GlobalSubscription? globalSubscription(Ref ref) {
     ionConnectNotifier: ionConnectNotifier,
     globalSubscriptionNotifier: globalSubscriptionNotifier,
     globalSubscriptionEventDispatcher: globalSubscriptionEventDispatcherNotifier,
-    missingEventsFetcher: missingEventsFetcher,
+    eventBackfillService: eventBackfillService,
   );
 }
