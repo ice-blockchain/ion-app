@@ -27,8 +27,6 @@ Future<List<(String, String)>?> chatUsersSearch(Ref ref, String query) async {
   final sortedUsers = (searchResults?.users ?? [])..sortBy((user) => user.data.displayName);
   final foundUsersPubkeysMap = {for (final user in sortedUsers) user.masterPubkey: ''};
 
-  print('CHAT USER SEARCH $sortedUsers');
-
   // Fetch and sort last conversation messages
   final lastConversationMessages = ref
           .watch(conversationsProvider)
