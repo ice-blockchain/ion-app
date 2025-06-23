@@ -66,7 +66,7 @@ class UserPickerSheet extends HookConsumerWidget {
           ),
         ),
         if (header != null) header!,
-        if (searchQuery.isEmpty)
+        if (debouncedQuery.isEmpty)
           FollowingUsers(
             onUserSelected: onUserSelected,
             selectedPubkeys: selectedPubkeys,
