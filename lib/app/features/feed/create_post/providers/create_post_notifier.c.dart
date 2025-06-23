@@ -106,8 +106,10 @@ class CreatePostNotifier extends _$CreatePostNotifier {
         relatedHashtags: relatedHashtags,
         quotedEvent: quotedEvent != null ? _buildQuotedEvent(quotedEvent) : null,
         relatedEvents: parentEntity != null ? _buildRelatedEvents(parentEntity) : null,
-        relatedPubkeys: _buildRelatedPubkeys(mentions: mentions, parentEntity: parentEntity),
-        settings: EntityDataWithSettings.build(whoCanReply: whoCanReply),
+        relatedPubkeys:
+            _buildRelatedPubkeys(mentions: mentions, parentEntity: parentEntity).toList(),
+        settings:
+            parentEntity != null ? null : EntityDataWithSettings.build(whoCanReply: whoCanReply),
         expiration: _buildExpiration(),
         communityId: communityId,
         richText: await _buildRichTextContentWithMediaLinks(
@@ -185,7 +187,8 @@ class CreatePostNotifier extends _$CreatePostNotifier {
         media: modifiedMedia,
         relatedHashtags: relatedHashtags,
         relatedPubkeys:
-            _buildRelatedPubkeys(mentions: _buildMentions(postContent), parentEntity: parentEntity),
+            _buildRelatedPubkeys(mentions: _buildMentions(postContent), parentEntity: parentEntity)
+                .toList(),
         settings: EntityDataWithSettings.build(
           whoCanReply: whoCanReply ?? modifiedEntity.data.whoCanReplySetting,
         ),
@@ -468,22 +471,29 @@ class CreatePostNotifier extends _$CreatePostNotifier {
     return content.extractPubkeys().map((pubkey) => RelatedPubkey(value: pubkey)).toList();
   }
 
-  List<RelatedPubkey> _buildRelatedPubkeys({
+  Set<RelatedPubkey> _buildRelatedPubkeys({
     required List<RelatedPubkey> mentions,
     IonConnectEntity? parentEntity,
     EventReference? quotedEvent,
   }) {
-    return <RelatedPubkey>{
-      ...mentions,
-      if (quotedEvent != null) ...{
-        RelatedPubkey(value: quotedEvent.pubkey),
-      },
-      if (parentEntity != null) ...{
-        RelatedPubkey(value: parentEntity.masterPubkey),
-        if (parentEntity is ModifiablePostEntity) ...(parentEntity.data.relatedPubkeys ?? []),
-        if (parentEntity is PostEntity) ...(parentEntity.data.relatedPubkeys ?? []),
-      },
-    }.toList();
+    final allPubkeys = <RelatedPubkey>{...mentions};
+    if (quotedEvent != null) {
+      allPubkeys.add(RelatedPubkey(value: quotedEvent.pubkey));
+    }
+
+    if (parentEntity != null) {
+      allPubkeys.add(RelatedPubkey(value: parentEntity.masterPubkey));
+      final parentPubkeys = parentEntity is ModifiablePostEntity
+          ? parentEntity.data.relatedPubkeys
+          : parentEntity is PostEntity
+              ? parentEntity.data.relatedPubkeys
+              : null;
+      if (parentPubkeys != null) {
+        allPubkeys.addAll(parentPubkeys);
+      }
+    }
+
+    return allPubkeys;
   }
 
   List<String> _buildRemovedMediaHashes({

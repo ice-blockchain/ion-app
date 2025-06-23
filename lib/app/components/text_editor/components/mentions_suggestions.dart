@@ -1,7 +1,6 @@
 // SPDX-License-Identifier: ice License 1.0
 
 import 'package:flutter/material.dart';
-import 'package:ion/app/components/screen_offset/screen_side_offset.dart';
 import 'package:ion/app/components/separated/separator.dart';
 import 'package:ion/app/components/text_editor/components/mention_item.dart';
 
@@ -34,11 +33,9 @@ class MentionsSuggestions extends StatelessWidget {
                 return SizedBox(
                   height: mentionItemSize,
                   child: Center(
-                    child: ScreenSideOffset.small(
-                      child: MentionItem(
-                        pubkey: suggestion,
-                        onPress: onSuggestionSelected,
-                      ),
+                    child: MentionItem(
+                      pubkey: suggestion,
+                      onPress: onSuggestionSelected,
                     ),
                   ),
                 );
