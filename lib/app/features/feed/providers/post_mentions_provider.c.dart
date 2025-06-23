@@ -14,7 +14,7 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 part 'post_mentions_provider.c.g.dart';
 
 @riverpod
-List<String> postMentionsPubkeys(
+Set<String> postMentionsPubkeys(
   Ref ref, {
   required IonConnectEntity entity,
 }) {
@@ -25,13 +25,13 @@ List<String> postMentionsPubkeys(
   };
 
   if (data is! EntityDataWithMediaContent) {
-    return [];
+    return {};
   }
   final richText = data.richText;
   if (richText == null) {
-    return [];
+    return {};
   }
 
   final richTextDecoded = Delta.fromJson(jsonDecode(richText.content) as List<dynamic>);
-  return richTextDecoded.extractPubkeys();
+  return richTextDecoded.extractPubkeys().toSet();
 }
