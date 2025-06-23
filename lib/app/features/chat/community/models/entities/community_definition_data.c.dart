@@ -11,13 +11,13 @@ import 'package:ion/app/features/chat/community/models/entities/tags/community_v
 import 'package:ion/app/features/chat/community/models/entities/tags/conversation_identifier.c.dart';
 import 'package:ion/app/features/chat/community/models/entities/tags/description_tag.c.dart';
 import 'package:ion/app/features/chat/community/models/entities/tags/name_tag.c.dart';
+import 'package:ion/app/features/ion_connect/ion_connect.dart';
 import 'package:ion/app/features/ion_connect/model/event_serializable.dart';
 import 'package:ion/app/features/ion_connect/model/event_setting.c.dart';
 import 'package:ion/app/features/ion_connect/model/ion_connect_entity.dart';
 import 'package:ion/app/features/ion_connect/model/media_attachment.dart';
 import 'package:ion/app/features/ion_connect/model/replaceable_event_identifier.c.dart';
 import 'package:ion/app/services/uuid/uuid.dart';
-import 'package:nostr_dart/nostr_dart.dart';
 
 part 'community_definition_data.c.freezed.dart';
 
