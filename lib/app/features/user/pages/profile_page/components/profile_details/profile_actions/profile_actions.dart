@@ -54,7 +54,7 @@ class ProfileActions extends ConsumerWidget {
         SizedBox(width: 8.0.s),
         ProfileAction(
           onPressed: () {
-            ConversationRoute(receiverPubKey: pubkey).push<void>(context);
+            ConversationRoute(receiverMasterPubkey: pubkey).push<void>(context);
           },
           assetName: Assets.svg.iconChatOff,
         ),

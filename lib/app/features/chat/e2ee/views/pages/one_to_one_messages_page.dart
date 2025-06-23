@@ -1,5 +1,7 @@
 // SPDX-License-Identifier: ice License 1.0
 
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
@@ -13,16 +15,14 @@ import 'package:ion/app/features/chat/e2ee/views/components/one_to_one_messages_
 import 'package:ion/app/features/chat/model/database/chat_database.c.dart';
 import 'package:ion/app/features/chat/providers/conversation_messages_provider.c.dart';
 import 'package:ion/app/features/chat/providers/exist_chat_conversation_id_provider.c.dart';
-import 'package:ion/app/features/chat/providers/muted_conversations_provider.c.dart';
 import 'package:ion/app/features/chat/recent_chats/providers/selected_edit_message_provider.c.dart';
 import 'package:ion/app/features/chat/recent_chats/providers/selected_reply_message_provider.c.dart';
 import 'package:ion/app/features/chat/views/components/message_items/edit_message_info/edit_message_info.dart';
 import 'package:ion/app/features/chat/views/components/message_items/messaging_bottom_bar/messaging_bottom_bar.dart';
 import 'package:ion/app/features/chat/views/components/message_items/replied_message_info/replied_message_info.dart';
-import 'package:ion/app/features/user/providers/user_metadata_provider.c.dart';
-import 'package:ion/app/router/app_routes.c.dart';
+import 'package:ion/app/features/user_metadata/providers/user_metadata_sync_provider.c.dart';
+import 'package:ion/app/hooks/use_on_init.dart';
 import 'package:ion/app/services/media_service/media_service.c.dart';
-import 'package:ion/app/utils/username.dart';
 
 class OneToOneMessagesPage extends HookConsumerWidget {
   const OneToOneMessagesPage({
@@ -35,6 +35,14 @@ class OneToOneMessagesPage extends HookConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final conversationId = useState<String?>(null);
+
+    useOnInit(() {
+      unawaited(
+        ref
+            .read(userMetadataSyncProvider.notifier)
+            .syncUserMetadata(masterPubkeys: {receiverMasterPubkey}),
+      );
+    });
 
     useEffect(
       () {
@@ -110,31 +118,9 @@ class _Header extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final receiverUserMetadata = ref.watch(userMetadataProvider(receiverMasterPubkey));
-
-    if (receiverUserMetadata.isLoading) {
-      return const SizedBox.shrink();
-    }
-
     return OneToOneMessagingHeader(
       conversationId: conversationId,
-      imageUrl: receiverUserMetadata.valueOrNull?.data.picture,
-      name:
-          receiverUserMetadata.valueOrNull?.data.displayName ?? context.i18n.common_deleted_account,
       receiverMasterPubkey: receiverMasterPubkey,
-      onTap: () => ProfileRoute(pubkey: receiverMasterPubkey).push<void>(context),
-      subtitle: Text(
-        prefixUsername(
-          username: receiverUserMetadata.valueOrNull?.data.name ?? '',
-          context: context,
-        ),
-        style: context.theme.appTextThemes.caption.copyWith(
-          color: context.theme.appColors.quaternaryText,
-        ),
-      ),
-      onToggleMute: () {
-        ref.read(mutedConversationsProvider.notifier).toggleMutedMasterPubkey(receiverMasterPubkey);
-      },
     );
   }
 }

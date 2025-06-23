@@ -20,6 +20,7 @@ import 'package:ion/app/features/chat/views/components/message_items/message_typ
 import 'package:ion/app/features/ion_connect/model/event_reference.c.dart';
 import 'package:ion/app/features/user/providers/user_metadata_provider.c.dart';
 import 'package:ion/app/features/user_block/providers/block_list_notifier.c.dart';
+import 'package:ion/app/features/user_metadata/providers/user_metadata_from_db_provider.c.dart';
 import 'package:ion/app/utils/date.dart';
 import 'package:ion/generated/assets.gen.dart';
 
@@ -247,9 +248,9 @@ class SenderSummary extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final user = ref.watch(userMetadataProvider(pubkey)).valueOrNull?.data;
+    final userMetadata = ref.watch(userMetadataFromDbNotifierProvider(pubkey));
 
-    if (user == null) {
+    if (userMetadata == null) {
       return const SizedBox.shrink();
     }
 
@@ -272,7 +273,7 @@ class SenderSummary extends ConsumerWidget {
             ),
           ),
         Text(
-          isEdit ? context.i18n.button_edit : user.name,
+          isEdit ? context.i18n.button_edit : userMetadata.data.name,
           style: context.theme.appTextThemes.subtitle3.copyWith(
             color: textColor ?? context.theme.appColors.primaryText,
           ),

@@ -113,6 +113,7 @@ class NotificationResponseHandler extends _$NotificationResponseHandler {
   }
 
   Future<void> _openChat(String pubkey) async {
-    await ConversationRoute(receiverPubKey: pubkey).push<void>(rootNavigatorKey.currentContext!);
+    await ConversationRoute(receiverMasterPubkey: pubkey)
+        .push<void>(rootNavigatorKey.currentContext!);
   }
 }
