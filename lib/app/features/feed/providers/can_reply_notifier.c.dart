@@ -79,7 +79,7 @@ class CanReply extends _$CanReply {
       mentionedAccounts: () async {
         final mentions = ref.read(postMentionsPubkeysProvider(entity: entity));
         if (mentions.isEmpty) {
-          return true;
+          return false;
         }
         return mentions.any((pubKey) => pubKey == currentPubkey);
       },
