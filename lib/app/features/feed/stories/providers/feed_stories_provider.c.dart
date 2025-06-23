@@ -71,11 +71,15 @@ class FeedStories extends _$FeedStories with DelegatedPagedNotifier {
 }
 
 @riverpod
-List<UserStories> feedStoriesByPubkey(Ref ref, String pubkey) {
+List<UserStories> feedStoriesByPubkey(Ref ref, String pubkey, {bool showOnlySelectedUser = false}) {
   final stories = ref.watch(feedStoriesProvider.select((state) => state.items?.toList() ?? []));
   final userIndex = stories.indexWhere((userStories) => userStories.pubkey == pubkey);
 
   if (userIndex == -1) return [];
 
-  return stories.sublist(userIndex);
+  if (showOnlySelectedUser) {
+    return [stories[userIndex]];
+  } else {
+    return stories.sublist(userIndex);
+  }
 }
