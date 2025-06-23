@@ -5,6 +5,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:ion/app/components/skeleton/container_skeleton.dart';
 import 'package:ion/app/exceptions/exceptions.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/auth/providers/auth_provider.c.dart';
@@ -27,6 +28,7 @@ import 'package:ion/app/hooks/use_on_init.dart';
 import 'package:ion/app/router/app_routes.c.dart';
 import 'package:ion/app/services/media_service/media_service.c.dart';
 import 'package:ion/app/utils/username.dart';
+import 'package:ion/generated/assets.gen.dart';
 
 class OneToOneMessagesPage extends HookConsumerWidget {
   const OneToOneMessagesPage({
@@ -122,23 +124,33 @@ class _Header extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final receiverUserMetadata =
-        ref.watch(userMetadataFromDbNotifierProvider(receiverMasterPubkey));
+    final receiverPicture = ref.watch(
+      userMetadataFromDbNotifierProvider(receiverMasterPubkey).select((data) => data?.data.picture),
+    );
 
-    if (receiverUserMetadata == null) {
-      return const SizedBox.shrink();
+    final receiverName = ref.watch(
+      userMetadataFromDbNotifierProvider(receiverMasterPubkey).select((data) => data?.data.name),
+    );
+
+    final receiverDisplayName = ref.watch(
+      userMetadataFromDbNotifierProvider(receiverMasterPubkey)
+          .select((data) => data?.data.displayName),
+    );
+
+    if (receiverName == null || receiverDisplayName == null) {
+      return const _HeaderSkeleton();
     }
 
     return OneToOneMessagingHeader(
       conversationId: conversationId,
-      imageUrl: receiverUserMetadata.data.picture,
-      name: receiverUserMetadata.data.displayName,
+      imageUrl: receiverPicture,
+      name: receiverDisplayName,
       receiverMasterPubkey: receiverMasterPubkey,
       onTap: () => ProfileRoute(pubkey: receiverMasterPubkey).push<void>(context),
       subtitle: Text(
         prefixUsername(
-          username: receiverUserMetadata.data.name,
           context: context,
+          username: receiverName,
         ),
         style: context.theme.appTextThemes.caption.copyWith(
           color: context.theme.appColors.quaternaryText,
@@ -147,6 +159,53 @@ class _Header extends HookConsumerWidget {
       onToggleMute: () {
         ref.read(mutedConversationsProvider.notifier).toggleMutedMasterPubkey(receiverMasterPubkey);
       },
+    );
+  }
+}
+
+class _HeaderSkeleton extends StatelessWidget {
+  const _HeaderSkeleton();
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: EdgeInsetsDirectional.fromSTEB(16.0.s, 8.0.s, 16.0.s, 12.0.s),
+      child: Row(
+        children: [
+          GestureDetector(
+            onTap: () => Navigator.pop(context),
+            child: Assets.svg.iconChatBack.icon(
+              size: 24.0.s,
+              flipForRtl: true,
+            ),
+          ),
+          SizedBox(width: 12.0.s),
+          ContainerSkeleton(
+            height: 36.0.s,
+            width: 36.0.s,
+            skeletonBaseColor: context.theme.appColors.onTerararyFill,
+          ),
+          SizedBox(width: 10.0.s),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                ContainerSkeleton(
+                  height: context.theme.appTextThemes.subtitle3.fontSize!.s,
+                  width: 120.0.s,
+                  skeletonBaseColor: context.theme.appColors.onTerararyFill,
+                ),
+                SizedBox(height: 4.0.s),
+                ContainerSkeleton(
+                  height: context.theme.appTextThemes.subtitle3.fontSize!.s,
+                  width: 150.0.s,
+                  skeletonBaseColor: context.theme.appColors.onTerararyFill,
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
     );
   }
 }

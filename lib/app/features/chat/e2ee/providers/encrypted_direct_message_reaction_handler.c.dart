@@ -9,18 +9,18 @@ import 'package:ion/app/features/chat/model/database/chat_database.c.dart';
 import 'package:ion/app/features/ion_connect/ion_connect.dart';
 import 'package:ion/app/features/ion_connect/model/global_subscription_encrypted_event_message_handler.dart';
 import 'package:ion/app/features/ion_connect/model/ion_connect_gift_wrap.c.dart';
+import 'package:ion/app/features/user_metadata/providers/user_metadata_sync_provider.c.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'encrypted_direct_message_reaction_handler.c.g.dart';
 
 class EncryptedDirectMessageReactionHandler extends GlobalSubscriptionEncryptedEventMessageHandler {
   EncryptedDirectMessageReactionHandler(
-    this.conversationMessageReactionDao,
-    this.eventMessageDao,
-  );
+      this.conversationMessageReactionDao, this.eventMessageDao, this.userMetadataSyncProvider);
 
   final ConversationMessageReactionDao conversationMessageReactionDao;
   final EventMessageDao eventMessageDao;
+  final UserMetadataSync userMetadataSyncProvider;
 
   @override
   bool canHandle({
@@ -34,6 +34,7 @@ class EncryptedDirectMessageReactionHandler extends GlobalSubscriptionEncryptedE
 
   @override
   Future<void> handle(EventMessage rumor) async {
+    unawaited(userMetadataSyncProvider.syncUserMetadata(masterPubkeys: {rumor.masterPubkey}));
     await conversationMessageReactionDao.add(
       reactionEvent: rumor,
       eventMessageDao: eventMessageDao,
@@ -43,7 +44,5 @@ class EncryptedDirectMessageReactionHandler extends GlobalSubscriptionEncryptedE
 
 @riverpod
 EncryptedDirectMessageReactionHandler encryptedDirectMessageReactionHandler(Ref ref) =>
-    EncryptedDirectMessageReactionHandler(
-      ref.watch(conversationMessageReactionDaoProvider),
-      ref.watch(eventMessageDaoProvider),
-    );
+    EncryptedDirectMessageReactionHandler(ref.watch(conversationMessageReactionDaoProvider),
+        ref.watch(eventMessageDaoProvider), ref.watch(userMetadataSyncProvider.notifier));
