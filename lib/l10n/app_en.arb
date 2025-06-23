@@ -493,6 +493,7 @@
   "feed_posts_empty": "There are no {postType} at the moment",
   "feed_post_deleted": "This post has been deleted by the author.",
   "feed_article_deleted": "This article has been deleted by the author.",
+  "feed_article_categories_add_min": "Add min {amount}",
   "video_not_found": "Video not found",
   "turn_notifications_title": "Turn on notifications",
   "turn_notifications_description": "Receive notifications when you transfer and receive funds",

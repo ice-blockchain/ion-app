@@ -25,9 +25,14 @@ class SelectTopicsCategoriesModal extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final availableCategories =
-        ref.watch(feedUserInterestsProvider(feedType)).valueOrNull?.categories ?? {};
-    final selectedSubcategories = ref.watch(selectedInterestsNotifierProvider);
+    final availableInterests = ref.watch(feedUserInterestsProvider(feedType)).valueOrNull;
+    final availableCategories = availableInterests?.categories ?? {};
+    final availableSubcategories = availableInterests?.subcategories ?? {};
+    final selectedSubcategories = ref.watch(
+      selectedInterestsNotifierProvider.select(
+        (interests) => interests.where(availableSubcategories.containsKey).toSet(),
+      ),
+    );
     final colors = context.theme.appColors;
     final textStyles = context.theme.appTextThemes;
     final searchValue = useState('');

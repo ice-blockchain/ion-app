@@ -10,7 +10,6 @@ class FeedConfig with _$FeedConfig {
   const factory FeedConfig({
     required double interestedThreshold,
     required double notInterestedCategoryChance,
-    required double notInterestedSubcategoryChance,
     required int concurrentRequests,
     required int concurrentMediaDownloadsLimit,
     @DurationMillisecondsConverter() required Duration followingReqMaxAge,

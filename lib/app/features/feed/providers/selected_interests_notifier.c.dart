@@ -7,11 +7,11 @@ part 'selected_interests_notifier.c.g.dart';
 @riverpod
 class SelectedInterestsNotifier extends _$SelectedInterestsNotifier {
   @override
-  List<String> build() {
-    return [];
+  Set<String> build() {
+    return {};
   }
 
-  set selectInterests(List<String> interestsKeys) {
+  set selectInterests(Set<String> interestsKeys) {
     state = interestsKeys;
   }
 }

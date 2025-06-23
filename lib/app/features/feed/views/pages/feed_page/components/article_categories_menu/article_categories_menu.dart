@@ -1,24 +1,40 @@
 // SPDX-License-Identifier: ice License 1.0
 
 import 'package:flutter/material.dart';
-import 'package:flutter_hooks/flutter_hooks.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/extensions/extensions.dart';
-import 'package:ion/app/features/feed/data/models/article_category.c.dart';
+import 'package:ion/app/features/feed/data/models/feed_type.dart';
+import 'package:ion/app/features/feed/providers/feed_posts_provider.c.dart';
+import 'package:ion/app/features/feed/providers/feed_selected_article_categories_provider.c.dart';
+import 'package:ion/app/features/feed/providers/feed_selected_visible_article_categories_provider.c.dart';
+import 'package:ion/app/features/feed/providers/feed_user_interests_provider.c.dart';
 import 'package:ion/app/features/feed/views/components/list_separator/list_separator.dart';
 import 'package:ion/app/features/feed/views/pages/feed_page/components/article_categories_menu/article_categories_row.dart';
-import 'package:ion/app/hooks/use_selected_state.dart';
 
-class ArticleCategoriesMenu extends HookWidget {
+class ArticleCategoriesMenu extends HookConsumerWidget {
   const ArticleCategoriesMenu({super.key});
 
   @override
-  Widget build(BuildContext context) {
-    final (selectedItems, toggleSelection) = useSelectedState<String>();
-    final items = mockedArticleCategories;
+  Widget build(BuildContext context, WidgetRef ref) {
+    final availableCategories = ref.watch(
+      feedUserInterestsProvider(FeedType.article)
+          .select((state) => state.valueOrNull?.categories ?? {}),
+    );
+    final visibleCategoriesKeys = ref.watch(feedSelectedVisibleArticleCategoriesProvider);
+    final selectedCategoriesKeys = ref.watch(feedSelectedArticleCategoriesProvider);
+    var visibleSubcategories = availableCategories.entries
+        .where(
+          (categoryEntry) => visibleCategoriesKeys.contains(categoryEntry.key),
+        )
+        .toList();
 
-    final firstRowItemCount = (items.length / 2).ceil();
-    final firstRowItems = items.sublist(0, firstRowItemCount);
-    final secondRowItems = items.sublist(firstRowItemCount);
+    if (visibleSubcategories.isEmpty) {
+      visibleSubcategories = availableCategories.entries.toList();
+    }
+
+    final firstRowItemCount = (visibleSubcategories.length / 2).ceil();
+    final firstRowItems = visibleSubcategories.sublist(0, firstRowItemCount);
+    final secondRowItems = visibleSubcategories.sublist(firstRowItemCount);
 
     return Column(
       children: [
@@ -32,15 +48,15 @@ class ArticleCategoriesMenu extends HookWidget {
                 SizedBox(width: 16.0.s),
                 ArticleCategoriesRow(
                   items: firstRowItems,
-                  selectedItems: selectedItems.toSet(),
-                  onToggle: toggleSelection,
+                  selectedItems: selectedCategoriesKeys,
+                  onToggle: (String categoryKey) => _toggleCategory(ref, categoryKey),
                   showAddButton: true,
                 ),
                 SizedBox(height: 10.0.s),
                 ArticleCategoriesRow(
                   items: secondRowItems,
-                  selectedItems: selectedItems.toSet(),
-                  onToggle: toggleSelection,
+                  selectedItems: selectedCategoriesKeys,
+                  onToggle: (String categoryKey) => _toggleCategory(ref, categoryKey),
                 ),
               ],
             ),
@@ -49,5 +65,17 @@ class ArticleCategoriesMenu extends HookWidget {
         FeedListSeparator(),
       ],
     );
+  }
+
+  void _toggleCategory(WidgetRef ref, String categoryKey) {
+    final selectedSubcategoriesKeys = ref.read(feedSelectedArticleCategoriesProvider);
+    final newCategories = selectedSubcategoriesKeys.toSet();
+    if (newCategories.contains(categoryKey)) {
+      newCategories.remove(categoryKey);
+    } else {
+      newCategories.add(categoryKey);
+    }
+    ref.read(feedSelectedArticleCategoriesProvider.notifier).categories = newCategories;
+    ref.read(feedPostsProvider.notifier).refresh();
   }
 }

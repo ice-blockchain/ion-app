@@ -3,7 +3,9 @@
 import 'package:flutter/material.dart';
 import 'package:ion/app/components/button/button.dart';
 import 'package:ion/app/extensions/extensions.dart';
-import 'package:ion/app/features/feed/data/models/article_category.c.dart';
+import 'package:ion/app/features/feed/data/models/feed_interests.c.dart';
+import 'package:ion/app/features/wallets/views/components/network_icon_widget.dart';
+import 'package:ion/app/router/app_routes.c.dart';
 import 'package:ion/generated/assets.gen.dart';
 
 class ArticleCategoriesRow extends StatelessWidget {
@@ -15,7 +17,7 @@ class ArticleCategoriesRow extends StatelessWidget {
     this.showAddButton = false,
   });
 
-  final List<ArticleCategory> items;
+  final List<MapEntry<String, FeedInterestsCategory>> items;
   final Set<String> selectedItems;
   final ValueChanged<String> onToggle;
   final bool showAddButton;
@@ -40,15 +42,16 @@ class ArticleCategoriesRow extends StatelessWidget {
                 color: colors.primaryAccent,
                 size: 28.0.s,
               ),
-              onPressed: () {},
+              onPressed: () => FeedVisibleArticleCategoriesRoute().push<void>(context),
             ),
           ),
         ...items.map(
           (item) => Padding(
             padding: EdgeInsetsDirectional.only(end: 12.0.s),
             child: _CategoryButton(
-              category: item,
-              isSelected: selectedItems.contains(item.id),
+              categoryKey: item.key,
+              category: item.value,
+              isSelected: selectedItems.contains(item.key),
               onToggle: onToggle,
             ),
           ),
@@ -60,12 +63,14 @@ class ArticleCategoriesRow extends StatelessWidget {
 
 class _CategoryButton extends StatelessWidget {
   const _CategoryButton({
+    required this.categoryKey,
     required this.category,
     required this.isSelected,
     required this.onToggle,
   });
 
-  final ArticleCategory category;
+  final String categoryKey;
+  final FeedInterestsCategory category;
   final bool isSelected;
   final ValueChanged<String> onToggle;
 
@@ -77,16 +82,17 @@ class _CategoryButton extends StatelessWidget {
       backgroundColor: colors.tertararyBackground,
       type: ButtonType.outlined,
       leadingIconOffset: 6.0.s,
-      leadingIcon: category.icon.icon(
+      leadingIcon: NetworkIconWidget(
+        imageUrl: category.iconUrl ?? '',
         color: isSelected ? colors.primaryAccent : colors.tertararyText,
       ),
       label: Text(
-        category.name,
+        category.display,
         style: context.theme.appTextThemes.caption.copyWith(
           color: isSelected ? colors.primaryAccent : colors.tertararyText,
         ),
       ),
-      onPressed: () => onToggle(category.id),
+      onPressed: () => onToggle(categoryKey),
       style: OutlinedButton.styleFrom(
         padding: EdgeInsets.symmetric(
           horizontal: 10.0.s,

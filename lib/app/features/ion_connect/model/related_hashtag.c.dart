@@ -35,18 +35,18 @@ class RelatedHashtag with _$RelatedHashtag {
 
   static const String tagName = 't';
 
-  static List<String> extractTopics(List<RelatedHashtag>? hashtags) {
+  static Set<String> extractTopics(List<RelatedHashtag>? hashtags) {
     if (hashtags == null || hashtags.isEmpty) {
-      return [];
+      return {};
     }
     final topicsHashtags = hashtags.where((relatedHashtag) {
       return !RelatedHashtag.isTag(relatedHashtag.value);
     }).toList();
 
     if (topicsHashtags.isEmpty) {
-      return [];
+      return {};
     }
 
-    return topicsHashtags.map((relatedHashtag) => relatedHashtag.value).toList();
+    return topicsHashtags.map((relatedHashtag) => relatedHashtag.value).toSet();
   }
 }

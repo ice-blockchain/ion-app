@@ -30,35 +30,25 @@ class FeedUserInterestPicker {
 
   final List<String> _interested;
 
-  /// Rolls a random subcategory based on the user's interests and the configuration.
+  /// Rolls a random category based on the user's interests and the configuration.
   ///
   /// Only the [allowedSubcategories] are considered, if provided.
-  String? roll([List<String>? allowedSubcategories]) {
-    final categories = _getAllowedCategories(allowedSubcategories);
+  String? roll([List<String>? allowedCategories]) {
+    final categories = _getAllowedCategories(allowedCategories);
 
     if (_roll(_config.notInterestedCategoryChance)) {
       // if rolled the scenario where we have to pick a parent category
-      // the user is not interested in, we pick an entirely random child
-      // of an entirely random parent.
+      // the user is not interested in, we pick an entirely random category
       return _getRandomInterest(categories);
     }
 
     final interestedCategory = _getRandomInterestedByWeight(categories);
-    if (interestedCategory == null) return _getRandomInterest(categories);
-
-    if (_roll(_config.notInterestedSubcategoryChance)) {
-      // If rolled the scenario where you have to pick a child category
-      // the user is not interested in, we pick an entirely random child
-      // of that parent.
-      return _getRandomItem(interestedCategory.value.children.keys);
-    }
-
-    return _getRandomInterestedByWeight(interestedCategory.value.children)?.key;
+    return interestedCategory?.key ?? _getRandomInterest(categories);
   }
 
   String? _getRandomInterest(Map<String, FeedInterestsCategory> categories) {
-    final randomCategory = _getRandomItem(categories.values);
-    return _getRandomItem(randomCategory?.children.keys ?? []);
+    final randomCategory = _getRandomItem(categories.entries);
+    return randomCategory?.key;
   }
 
   bool _roll(double chance) => chance > _random.nextDouble();
@@ -66,23 +56,20 @@ class FeedUserInterestPicker {
   T? _getRandomItem<T>(Iterable<T> items) =>
       items.isEmpty ? null : items.elementAt(_random.nextInt(items.length));
 
-  Map<String, FeedInterestsCategory> _getAllowedCategories([List<String>? allowedSubcategories]) {
-    if (allowedSubcategories == null) return _interests.categories;
+  Map<String, FeedInterestsCategory> _getAllowedCategories([List<String>? allowedCategories]) {
+    if (allowedCategories == null) return _interests.categories;
 
-    final filteredCategories = _interests.categories.entries.map((category) {
-      final filteredSubcategories = category.value.children.entries
-          .where((subcategory) => allowedSubcategories.contains(subcategory.key))
-          .nonNulls;
+    final allowedCategoriesSet = allowedCategories.toSet();
+    final interestedCategoriesSet = _interests.categories.keys.toSet();
+    final intersection = allowedCategoriesSet.intersection(interestedCategoriesSet);
+    if (intersection.isEmpty) {
+      return _interests.categories;
+    }
 
-      return filteredSubcategories.isNotEmpty
-          ? MapEntry(
-              category.key,
-              category.value.copyWith(children: Map.fromEntries(filteredSubcategories)),
-            )
-          : null;
-    }).nonNulls;
+    final entries =
+        _interests.categories.entries.where((entry) => allowedCategories.contains(entry.key));
 
-    return Map.fromEntries(filteredCategories);
+    return Map.fromEntries(entries);
   }
 
   /// Returns a random interested item from the given node.

@@ -76,7 +76,7 @@ class CreatePostNotifier extends _$CreatePostNotifier {
     List<MediaFile>? mediaFiles,
     String? communityId,
     PollData? poll,
-    List<String> topics = const [],
+    Set<String> topics = const {},
   }) async {
     state = const AsyncValue.loading();
 
@@ -144,7 +144,7 @@ class CreatePostNotifier extends _$CreatePostNotifier {
     // Media attachments left from the original post
     Map<String, MediaAttachment> mediaAttachments = const {},
     WhoCanReplySettingsOption? whoCanReply,
-    List<String> topics = const [],
+    Set<String> topics = const {},
     PollData? poll,
   }) async {
     state = const AsyncValue.loading();
