@@ -33,8 +33,6 @@ class E2EDecryptionService: NIP44v2Encrypting {
         let content = eventMessage.content
         let senderPubkey = eventMessage.pubkey
 
-        NSLog("Decrypting message from pubkey: \(senderPubkey) with content: \(content.prefix(20))...")
-
         // Convert keys from Ed25519 to X25519 format
         guard let x25519PrivateKey = convertEd25519SkToX25519(privateKeyString),
             let x25519PublicKey = convertEd25519PkToX25519(senderPubkey),
@@ -47,7 +45,6 @@ class E2EDecryptionService: NIP44v2Encrypting {
 
         do {
             let decryptedContent = try decrypt(payload: content, privateKeyA: privateKey, publicKeyB: publicKey)
-            NSLog("Successfully decrypted message: \(decryptedContent.prefix(20))...")
 
             guard let data = decryptedContent.data(using: .utf8) else { return nil }
 
@@ -64,26 +61,20 @@ class E2EDecryptionService: NIP44v2Encrypting {
 
         if 0 == crypto_sign_ed25519_pk_to_curve25519(&curve25519Bytes, [UInt8](hex: publicKey)) {
             let pk = Box.PublicKey(curve25519Bytes).toHexString()
-            NSLog("Successfully converted Ed25519 public key to X25519 public key: \(pk)")
             return pk
         } else {
-            NSLog("Failed to convert Ed25519 public key to X25519 public key")
             return nil
         }
     }
 
     /// Converts Ed25519 private key to X25519 private key
     private func convertEd25519SkToX25519(_ privateKey: String) -> String? {
-        NSLog("Converting Ed25519 private key to X25519 private key")
-
         var curve25519Bytes = [UInt8](repeating: 0, count: crypto_box_secretkeybytes())
 
         if 0 == crypto_sign_ed25519_sk_to_curve25519(&curve25519Bytes, [UInt8](hex: privateKey)) {
             let x25519PrivateKeyHex = Box.SecretKey(curve25519Bytes).toHexString()
-            NSLog("Successfully converted Ed25519 private key to X25519 private key: \(x25519PrivateKeyHex)")
             return x25519PrivateKeyHex
         } else {
-            NSLog("Failed to convert Ed25519 private key to X25519 private key")
             return nil
         }
     }

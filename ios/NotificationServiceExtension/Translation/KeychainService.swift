@@ -17,16 +17,13 @@ class KeychainService {
     private let currentIdentityKeyName: String
     private var privateKey: String?
 
-    init(
-        currentIdentityKeyName: String,
-    ) {
+    init(currentIdentityKeyName: String) {
         self.currentIdentityKeyName = currentIdentityKeyName
 
         do {
             _ = try self.getPrivateKey()
-            self.log("Successfully preloaded private key")
         } catch {
-            self.log("Failed to preload private key: \(error)")
+            NSLog("Failed to preload private key: \(error)")
         }
 
     }
@@ -38,11 +35,9 @@ class KeychainService {
         // Check if we need to refresh the key (identity changed or first load)
 
         if let privateKey = self.privateKey {
-            log("Using cached private key for identity: \(currentIdentityKeyName)")
             return privateKey
         }
 
-        log("Fetching private key from keychain for identity: \(currentIdentityKeyName)")
         return try fetchPrivateKeyFromKeychain(for: currentIdentityKeyName)
     }
 
@@ -52,7 +47,6 @@ class KeychainService {
     /// - Throws: KeychainError if the key cannot be retrieved from the keychain
     private func fetchPrivateKeyFromKeychain(for identityKeyName: String) throws -> String? {
         let storageKey = "\(identityKeyName)_ion_connect_key_store"
-        log("Storage key: \(storageKey)")
 
         guard
             let keychainGroupIdentifier = Bundle.main.object(forInfoDictionaryKey: KeychainService.keychainGroupKey) as? String
@@ -72,28 +66,19 @@ class KeychainService {
         let status = SecItemCopyMatching(query as CFDictionary, &item)
 
         if status != errSecSuccess {
-            log("Keychain access failed with status: \(status)")
             throw KeychainError.keychainAccessFailed(status)
         }
 
         guard let data = item as? Data else {
-            log("Failed to convert keychain item to data")
             throw KeychainError.dataConversionFailed
         }
 
         guard let privateKeyString = String(data: data, encoding: .utf8) else {
-            log("Failed to convert data to string")
             throw KeychainError.dataConversionFailed
         }
 
-        // Cache the private key
         self.privateKey = privateKeyString
-        log("Successfully retrieved private key (length: \(privateKeyString)), for identity key name: \(storageKey)")
 
         return privateKeyString
-    }
-
-    private func log(_ message: String) {
-        print("[KeychainService] \(message)")
     }
 }

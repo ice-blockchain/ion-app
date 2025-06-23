@@ -34,29 +34,24 @@ class NotificationTranslationService {
 
     func translate(_ pushPayload: [AnyHashable: Any]) async -> (title: String?, body: String?) {
         guard let currentPubkey = storage.getCurrentPubkey() else {
-            NSLog("❌ No current pubkey found, cannot validate notification")
             return (title: nil, body: nil)
         }
 
         guard let data = await parsePayload(from: pushPayload) else {
-            NSLog("❌ Failed to parse push payload")
             return (title: nil, body: nil)
         }
 
         let dataIsValid = data.validate(currentPubkey: currentPubkey)
 
         if !dataIsValid {
-            NSLog("❌ Data validation failed")
             return (title: nil, body: nil)
         }
 
         guard let notificationType = data.getNotificationType(currentPubkey: currentPubkey) else {
-            NSLog("❌ Unknown notification type")
             return (title: nil, body: nil)
         }
 
         guard let (title, body) = await getNotificationTranslation(for: notificationType) else {
-            NSLog("❌ Failed to get notification translation")
             return (title: nil, body: nil)
         }
 
@@ -68,7 +63,6 @@ class NotificationTranslationService {
         )
 
         if hasPlaceholders(result.title) || hasPlaceholders(result.body) {
-            NSLog("❌ Not all placeholders were replaced")
             return (title: nil, body: nil)
         }
 
@@ -85,7 +79,6 @@ class NotificationTranslationService {
 
             return payload
         } catch {
-            NSLog("❌ Error decoding push payload: \(error)")
             return nil
         }
     }
@@ -119,7 +112,6 @@ class NotificationTranslationService {
             let title = translation.title,
             let body = translation.body
         else {
-            NSLog("❌ Missing translation for notification type: \(notificationType)")
             return nil
         }
 

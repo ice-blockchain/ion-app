@@ -18,32 +18,23 @@ class DatabaseManager {
     @discardableResult
     func openDatabase() -> Bool {
         guard let pubkey = storage.getCurrentPubkey() else {
-            NSLog("❌ Failed to get pubkey")
             return false
         }
         
         guard let databasePath = getDatabasePath(pubkey: pubkey) else {
-            NSLog("❌ Failed to get database path")
             return false
         }
         
-        NSLog("📊 Opening database at path: \(databasePath)")
-        
-        // Check if the database file exists
         if !fileManager.fileExists(atPath: databasePath) {
-            NSLog("❌ Database file does not exist at path: \(databasePath)")
             return false
         }
         
-        // Open the database
         if sqlite3_open(databasePath, &database) != SQLITE_OK {
-            NSLog("❌ Error opening database: \(String(cString: sqlite3_errmsg(database)))")
             sqlite3_close(database)
             database = nil
             return false
         }
         
-        NSLog("✅ Successfully opened database")
         return true
     }
     
@@ -52,7 +43,6 @@ class DatabaseManager {
         if database != nil {
             sqlite3_close(database)
             database = nil
-            NSLog("📊 Database closed")
         }
     }
     
@@ -69,12 +59,10 @@ class DatabaseManager {
             let sharedDatabaseURL = sharedContainerURL.appendingPathComponent(databaseName)
             
             if fileManager.fileExists(atPath: sharedDatabaseURL.path) {
-                NSLog("📊 Found database in shared app group container")
                 return sharedDatabaseURL.path
             }
         }
         
-        NSLog("❌ Could not find database for pubkey: \(pubkey)")
         return nil
     }
     
@@ -83,7 +71,6 @@ class DatabaseManager {
     /// - Returns: An array of dictionaries representing the query results, or nil if the query failed
     func executeQuery(_ query: String) -> [[String: Any]]? {
         guard database != nil else {
-            NSLog("❌ Database not opened")
             return nil
         }
         
@@ -122,14 +109,14 @@ class DatabaseManager {
                     case SQLITE_NULL:
                         row[columnName] = NSNull()
                     default:
-                        NSLog("⚠️ Unknown column type: \(columnType)")
+                        NSLog("Unknown column type: \(columnType)")
                     }
                 }
                 
                 results.append(row)
             }
         } else {
-            NSLog("❌ Error preparing query: \(String(cString: sqlite3_errmsg(database)))")
+            NSLog("Error preparing query: \(String(cString: sqlite3_errmsg(database)))")
             sqlite3_finalize(statement)
             return nil
         }

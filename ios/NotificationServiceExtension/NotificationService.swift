@@ -31,7 +31,6 @@ class NotificationService: UNNotificationServiceExtension {
         do {
             storage = try SharedStorageService()
         } catch {
-            NSLog("❌ Can't initialize storage")
             return
         }
 
