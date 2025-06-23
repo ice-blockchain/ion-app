@@ -29,15 +29,11 @@ class IonConnectAvatar extends ConsumerWidget {
     return Avatar(
       imageWidget: imageUrl != null
           ? IonConnectNetworkImage(
-<<<<<<< HEAD
               imageUrl: imageUrl,
               authorPubkey: pubkey,
               height: size,
               width: size,
             )
-=======
-              imageUrl: imageUrl, authorPubkey: pubkey, height: size, width: size)
->>>>>>> 3868aef8e (fix: code formatting)
           : DefaultAvatar(size: size),
       size: size,
       borderRadius: borderRadius,
