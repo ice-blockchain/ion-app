@@ -43,7 +43,7 @@ class EventBackfillService {
     int? regularSince,
     int? regularUntil,
     int? previousMaxCreatedAt,
-    List<String> previousRegularIds = const [],
+    Set<String> previousRegularIds = const {},
     int page = 1,
   }) async {
     try {
@@ -86,7 +86,10 @@ class EventBackfillService {
         regularSince: regularSince,
         regularUntil: minCreatedAt,
         previousMaxCreatedAt: maxCreatedAt,
-        previousRegularIds: [...previousRegularIds, ...nonDuplicateEventIds],
+        previousRegularIds: {
+          ...previousRegularIds,
+          ...nonDuplicateEventIds,
+        },
         page: page + 1,
         filter: filter,
         onEvent: onEvent,
