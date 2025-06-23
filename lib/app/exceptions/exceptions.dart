@@ -571,9 +571,9 @@ class NicknameDoesntExistException extends IONException {
       : super(10114, 'Nickname "$nickname" does not exist');
 }
 
-class GlobalSubscriptionSyncEventsException extends IONException {
-  GlobalSubscriptionSyncEventsException(dynamic error)
-      : super(10115, 'Global subscription sync events exception: $error');
+class FetchMissingEventsException extends IONException {
+  FetchMissingEventsException(dynamic error)
+      : super(10115, 'Fetch missing events exception: $error');
 }
 
 class GlobalSubscriptionEventMessageHandlingException extends IONException {

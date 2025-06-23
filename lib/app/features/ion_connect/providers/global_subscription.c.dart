@@ -2,7 +2,6 @@
 
 import 'dart:async';
 
-import 'package:collection/collection.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/exceptions/exceptions.dart';
 import 'package:ion/app/extensions/extensions.dart';
@@ -18,6 +17,7 @@ import 'package:ion/app/features/ion_connect/providers/global_subscription_lates
 import 'package:ion/app/features/ion_connect/providers/ion_connect_event_signer_provider.c.dart';
 import 'package:ion/app/features/ion_connect/providers/ion_connect_notifier.c.dart';
 import 'package:ion/app/features/ion_connect/providers/ion_connect_subscription_provider.c.dart';
+import 'package:ion/app/features/ion_connect/utils/missing_events_fetcher.c.dart';
 import 'package:ion/app/features/user/model/badges/badge_award.c.dart';
 import 'package:ion/app/features/user/model/follow_list.c.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
@@ -32,6 +32,7 @@ class GlobalSubscription {
     required this.ionConnectNotifier,
     required this.globalSubscriptionNotifier,
     required this.globalSubscriptionEventDispatcher,
+    required this.missingEventsFetcher,
   });
 
   final String currentUserMasterPubkey;
@@ -40,6 +41,7 @@ class GlobalSubscription {
   final IonConnectNotifier ionConnectNotifier;
   final GlobalSubscriptionNotifier globalSubscriptionNotifier;
   final GlobalSubscriptionEventDispatcher globalSubscriptionEventDispatcher;
+  final MissingEventsFetcher missingEventsFetcher;
 
   static const List<int> _genericEventKinds = [
     BadgeAwardEntity.kind,
@@ -76,92 +78,29 @@ class GlobalSubscription {
     required int regularLatestEventTimestamp,
     required int now,
   }) async {
-    int? tmpLastCreatedAt;
-    while (true) {
-      final (maxCreatedAt, stopFetching) = await _fetchPreviousEvents(
-        regularSince: tmpLastCreatedAt ?? regularLatestEventTimestamp,
-      );
-      if (stopFetching) {
-        break;
-      }
-      tmpLastCreatedAt = maxCreatedAt;
-    }
+    final tmpLastCreatedAt = await missingEventsFetcher.fetchMissingEvents(
+      latestEventTimestamp: regularLatestEventTimestamp,
+      filter: RequestFilter(
+        kinds: _genericEventKinds,
+        tags: {
+          '#p': [
+            [currentUserMasterPubkey],
+          ],
+        },
+      ),
+      onEvent: _handleEvent,
+    );
 
     final encryptedLatestEventTimestamp = latestEventTimestampService.get(EventType.encrypted);
 
     unawaited(
       _subscribe(
         eventLimit: 100,
-        regularSince: tmpLastCreatedAt ?? regularLatestEventTimestamp,
+        regularSince: tmpLastCreatedAt,
         encryptedSince:
             encryptedLatestEventTimestamp ?? now - const Duration(days: 2).inMicroseconds,
       ),
     );
-  }
-
-  Future<(int maxCreatedAt, bool stopFetching)> _fetchPreviousEvents({
-    int? regularSince,
-    int? regularUntil,
-    int? previousMaxCreatedAt,
-    List<String> previousRegularIds = const [],
-    int page = 1,
-  }) async {
-    try {
-      final requestMessage = RequestMessage(
-        filters: [
-          RequestFilter(
-            since: regularSince?.toMicroseconds,
-            until: regularUntil?.toMicroseconds,
-            limit: 100,
-            kinds: _genericEventKinds,
-            tags: {
-              '#p': [
-                [currentUserMasterPubkey],
-              ],
-            },
-          ),
-        ],
-      );
-
-      final eventsStream = ionConnectNotifier.requestEvents(
-        requestMessage,
-      );
-
-      var maxCreatedAt = previousMaxCreatedAt ?? 0;
-      int? minCreatedAt;
-      final regularIds = <String>[];
-      await for (final event in eventsStream) {
-        final eventCreatedAt = event.createdAt.toMicroseconds;
-
-        if (minCreatedAt == null || eventCreatedAt < minCreatedAt) {
-          minCreatedAt = eventCreatedAt;
-        }
-        if (eventCreatedAt > maxCreatedAt) {
-          maxCreatedAt = eventCreatedAt;
-        }
-
-        regularIds.add(event.id);
-        if (!previousRegularIds.contains(event.id)) {
-          await _handleEvent(event);
-        }
-      }
-
-      final nonDuplicateEventIds = regularIds.whereNot((id) => previousRegularIds.contains(id));
-
-      if (nonDuplicateEventIds.isEmpty) {
-        return (maxCreatedAt, page <= 2);
-      }
-
-      return _fetchPreviousEvents(
-        regularSince: regularSince,
-        regularUntil: minCreatedAt,
-        previousMaxCreatedAt: maxCreatedAt,
-        previousRegularIds: [...previousRegularIds, ...nonDuplicateEventIds],
-        page: page + 1,
-      );
-    } catch (e) {
-      throw GlobalSubscriptionSyncEventsException(e);
-    }
   }
 
   Future<void> _subscribe({
@@ -249,6 +188,7 @@ GlobalSubscription? globalSubscription(Ref ref) {
   final globalSubscriptionNotifier = ref.watch(globalSubscriptionNotifierProvider.notifier);
   final globalSubscriptionEventDispatcherNotifier =
       ref.watch(globalSubscriptionEventDispatcherNotifierProvider).valueOrNull;
+  final missingEventsFetcher = ref.watch(missingEventsFetcherProvider);
 
   if (latestEventTimestampService == null || globalSubscriptionEventDispatcherNotifier == null) {
     return null;
@@ -261,5 +201,6 @@ GlobalSubscription? globalSubscription(Ref ref) {
     ionConnectNotifier: ionConnectNotifier,
     globalSubscriptionNotifier: globalSubscriptionNotifier,
     globalSubscriptionEventDispatcher: globalSubscriptionEventDispatcherNotifier,
+    missingEventsFetcher: missingEventsFetcher,
   );
 }
