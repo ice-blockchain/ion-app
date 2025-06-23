@@ -22,10 +22,12 @@ Future<List<(String, String)>?> chatUsersSearch(Ref ref, String query) async {
   if (currentUserMasterPubkey == null) return null;
 
   // Fetch and sort search results
-  final searchResults = ref.watch(searchUsersProvider(query: caseInsensitiveQuery));
+  final searchResults = await ref.watch(searchUsersProvider(query: caseInsensitiveQuery).future);
   await Future<void>.delayed(const Duration(milliseconds: 500));
   final sortedUsers = (searchResults?.users ?? [])..sortBy((user) => user.data.displayName);
   final foundUsersPubkeysMap = {for (final user in sortedUsers) user.masterPubkey: ''};
+
+  print('CHAT USER SEARCH $sortedUsers');
 
   // Fetch and sort last conversation messages
   final lastConversationMessages = ref

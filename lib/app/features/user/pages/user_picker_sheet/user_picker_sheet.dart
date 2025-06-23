@@ -74,7 +74,7 @@ class UserPickerSheet extends HookConsumerWidget {
           )
         else
           SearchedUsers(
-            users: searchResults?.users,
+            users: searchResults.valueOrNull?.users,
             onUserSelected: onUserSelected,
             selectedPubkeys: selectedPubkeys,
             selectable: selectable,
@@ -83,7 +83,7 @@ class UserPickerSheet extends HookConsumerWidget {
         if (footer != null) footer!,
       ],
       onLoadMore: ref.read(searchUsersProvider(query: debouncedQuery).notifier).loadMore,
-      hasMore: searchResults?.hasMore ?? false,
+      hasMore: searchResults.valueOrNull?.hasMore ?? false,
     );
   }
 }
