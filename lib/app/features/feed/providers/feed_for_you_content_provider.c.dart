@@ -220,10 +220,7 @@ class FeedForYouContent extends _$FeedForYouContent implements PagedNotifier {
 
     final dataSourceRelays = await _getDataSourceRelays();
 
-    final selectedArticleCategories = ref.read(feedSelectedArticleCategoriesProvider);
-    final interests = modifier == FeedModifier.explore || selectedArticleCategories.isEmpty
-        ? [_exploreInterest]
-        : selectedArticleCategories;
+    final interests = _getInterestsForModifier(modifier);
 
     final relaysPagination = Map.fromEntries(
       dataSourceRelays.map(
@@ -328,22 +325,27 @@ class FeedForYouContent extends _$FeedForYouContent implements PagedNotifier {
     required String relayUrl,
     required FeedModifier modifier,
   }) async {
-    if (modifier == FeedModifier.explore) {
-      // For explore feed, we use a special interest that is not related to any user interests.
-      return _exploreInterest;
-    } else {
-      final interestsPicker = await ref.read(feedUserInterestPickerProvider(feedType).future);
+    // Use the same logic as _getInterestsForModifier to ensure consistency
+    final configuredInterests = _getInterestsForModifier(modifier);
 
-      final relayInterestsPagination =
-          state.modifiersPagination[modifier]![relayUrl]!.interestsPagination;
-
-      final availableInterests = relayInterestsPagination.entries
-          .where((entry) => entry.value.hasMore)
-          .map((entry) => entry.key)
-          .toList();
-
-      return interestsPicker.roll(availableInterests)!;
+    if (configuredInterests.length == 1) {
+      // If only one interest is configured (usually _exploreInterest), return it directly
+      return configuredInterests.first;
     }
+
+    // For multiple interests, use the picker to select from available ones with remaining pages
+    final interestsPicker = await ref.read(feedUserInterestPickerProvider(feedType).future);
+
+    final relayInterestsPagination =
+        state.modifiersPagination[modifier]![relayUrl]!.interestsPagination;
+
+    final availableInterests = relayInterestsPagination.entries
+        .where((entry) => entry.value.hasMore)
+        .map((entry) => entry.key)
+        .toList();
+
+    // Pick from interests that still have more pages
+    return interestsPicker.roll(availableInterests)!;
   }
 
   Future<IonConnectEntity?> _requestEntityFromRelay({
@@ -482,12 +484,26 @@ class FeedForYouContent extends _$FeedForYouContent implements PagedNotifier {
       relayPagination.copyWith(
         interestsPagination: interestsPagination,
         page: relayPagination.page + (increasePage ? 1 : 0),
-        hasMore: interestsPagination.values.any((interest) => interest.hasMore),
+        hasMore: interestsPagination.values.any((pagination) => pagination.hasMore),
       ),
       relayUrl: relayUrl,
       modifier: modifier,
       increasePage: increasePage,
     );
+  }
+
+  /// Determines which interests should be used for the given modifier.
+  /// This is the single source of truth for interest selection logic.
+  ///
+  /// Rules:
+  /// - For FeedModifier.explore: always use [_exploreInterest]
+  /// - For other modifiers: use selectedArticleCategories if not empty,
+  ///   otherwise fall back to [_exploreInterest]
+  List<String> _getInterestsForModifier(FeedModifier modifier) {
+    final selectedArticleCategories = ref.read(feedSelectedArticleCategoriesProvider);
+    return modifier == FeedModifier.explore || selectedArticleCategories.isEmpty
+        ? [_exploreInterest]
+        : selectedArticleCategories.toList();
   }
 
   static final String _exploreInterest = '_${FeedModifier.explore}';
