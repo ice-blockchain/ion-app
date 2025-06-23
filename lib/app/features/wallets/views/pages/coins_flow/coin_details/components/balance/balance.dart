@@ -33,7 +33,7 @@ class Balance extends ConsumerWidget {
             child: BalanceActions(
               onReceive: () {
                 ref.read(receiveCoinsFormControllerProvider.notifier).setCoin(coinsGroup);
-                CoinReceiveRoute().push<void>(context);
+                NetworkSelectReceiveRoute().push<void>(context);
               },
               onNeedToEnable2FA: () => SecureAccountModalRoute().push<void>(context),
               onSend: () {
