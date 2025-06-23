@@ -32,6 +32,7 @@ List<EntitiesDataSource>? userPostsDataSource(Ref ref, String pubkey) {
     ).extensions,
     ReferencesSearchExtension(contain: false),
     ExpirationSearchExtension(expiration: false),
+    VideosSearchExtension(contain: false),
   ]).toString();
 
   return [
