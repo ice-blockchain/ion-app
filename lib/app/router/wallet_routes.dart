@@ -178,7 +178,7 @@ class ChangeNetworkShareWalletRoute extends BaseRouteData {
 class ShareAddressCoinDetailsRoute extends BaseRouteData {
   ShareAddressCoinDetailsRoute()
       : super(
-          child: const ShareAddressView(type: CryptoAssetType.coin),
+          child: const ShareAddressToGetCoinsView(),
           type: IceRouteType.bottomSheet,
         );
 }
@@ -186,7 +186,7 @@ class ShareAddressCoinDetailsRoute extends BaseRouteData {
 class ShareAddressDepositRoute extends BaseRouteData {
   ShareAddressDepositRoute()
       : super(
-          child: const ShareAddressView(type: CryptoAssetType.coin),
+          child: const ShareAddressToGetCoinsView(),
           type: IceRouteType.bottomSheet,
         );
 }
@@ -194,7 +194,7 @@ class ShareAddressDepositRoute extends BaseRouteData {
 class ShareAddressToGetCoinsRoute extends BaseRouteData {
   ShareAddressToGetCoinsRoute()
       : super(
-          child: const ShareAddressView(type: CryptoAssetType.coin),
+          child: const ShareAddressToGetCoinsView(),
           type: IceRouteType.bottomSheet,
         );
 }
@@ -202,7 +202,7 @@ class ShareAddressToGetCoinsRoute extends BaseRouteData {
 class ShareAddressToGetNftRoute extends BaseRouteData {
   ShareAddressToGetNftRoute()
       : super(
-          child: const ShareAddressView(type: CryptoAssetType.nft),
+          child: const ShareAddressToGetNftView(),
           type: IceRouteType.bottomSheet,
         );
 }

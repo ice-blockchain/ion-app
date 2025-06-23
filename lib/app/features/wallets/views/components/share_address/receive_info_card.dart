@@ -1,7 +1,6 @@
 // SPDX-License-Identifier: ice License 1.0
 
 import 'package:flutter/material.dart';
-import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/components/button/button.dart';
 import 'package:ion/app/components/copy/copy_builder.dart';
 import 'package:ion/app/components/skeleton/skeleton.dart';
@@ -17,7 +16,7 @@ import 'package:ion/app/utils/formatters.dart';
 import 'package:ion/generated/assets.gen.dart';
 import 'package:qr_flutter/qr_flutter.dart';
 
-class ReceiveInfoCard extends ConsumerWidget {
+class ReceiveInfoCard extends StatelessWidget {
   const ReceiveInfoCard({
     required this.network,
     this.coinsGroup,
@@ -30,7 +29,7 @@ class ReceiveInfoCard extends ConsumerWidget {
   final CoinsGroup? coinsGroup;
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  Widget build(BuildContext context) {
     return Row(
       children: [
         Expanded(

@@ -150,6 +150,7 @@ import 'package:ion/app/features/wallets/views/pages/manage_coins/manage_coins_p
 import 'package:ion/app/features/wallets/views/pages/manage_nfts/manage_nfts_page.dart';
 import 'package:ion/app/features/wallets/views/pages/manage_wallets_modal.dart';
 import 'package:ion/app/features/wallets/views/pages/nft_details/nft_details_page.dart';
+import 'package:ion/app/features/wallets/views/pages/receive_nft/components/share_address_view.dart';
 import 'package:ion/app/features/wallets/views/pages/receive_nft/select_nft_network_page.dart';
 import 'package:ion/app/features/wallets/views/pages/send_nft_confirm.dart';
 import 'package:ion/app/features/wallets/views/pages/send_nft_form.dart';
