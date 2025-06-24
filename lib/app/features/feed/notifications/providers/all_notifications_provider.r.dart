@@ -13,12 +13,15 @@ part 'all_notifications_provider.r.g.dart';
 @riverpod
 Future<List<IonNotification>> allNotifications(Ref ref) async {
   final commentsRepository = ref.watch(commentsRepositoryProvider);
+  final contentRepository = ref.watch(contentRepositoryProvider);
   final followersRepository = ref.watch(followersRepositoryProvider);
   final likesRepository = ref.watch(likesRepositoryProvider);
-  final (comments, likes, followers) = await (
+  final (comments, content, likes, followers) = await (
     commentsRepository.getNotifications(),
+    contentRepository.getNotifications(),
     likesRepository.getNotifications(),
     followersRepository.getNotifications()
   ).wait;
-  return [...comments, ...likes, ...followers]..sort((a, b) => b.timestamp.compareTo(a.timestamp));
+  return [...comments, ...content, ...likes, ...followers]
+    ..sort((a, b) => b.timestamp.compareTo(a.timestamp));
 }

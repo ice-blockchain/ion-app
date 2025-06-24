@@ -110,3 +110,49 @@ final class FollowersIonNotification extends IonNotification {
     };
   }
 }
+
+enum ContentIonNotificationType { posts, stories, articles, videos }
+
+final class ContentIonNotification extends IonNotification {
+  ContentIonNotification({
+    required this.type,
+    required this.eventReference,
+    required super.timestamp,
+  }) : super(pubkeys: [eventReference.pubkey]);
+
+  final ContentIonNotificationType type;
+
+  final EventReference eventReference;
+
+  @override
+  String get asset => switch (type) {
+        ContentIonNotificationType.posts => Assets.svg.iconBlockComment,
+        ContentIonNotificationType.stories => Assets.svg.iconFeedStories,
+        ContentIonNotificationType.articles => Assets.svg.iconFeedArticles,
+        ContentIonNotificationType.videos => Assets.svg.iconFeedVideos,
+      };
+
+  @override
+  Color getBackgroundColor(BuildContext context) {
+    return switch (type) {
+      ContentIonNotificationType.posts => context.theme.appColors.purple,
+      ContentIonNotificationType.stories => context.theme.appColors.orangePeel,
+      ContentIonNotificationType.articles => context.theme.appColors.success,
+      ContentIonNotificationType.videos => context.theme.appColors.lossRed,
+    };
+  }
+
+  @override
+  String getDescription(BuildContext context, [String eventTypeLabel = '']) {
+    return switch (type) {
+      ContentIonNotificationType.posts =>
+        context.i18n.notifications_posted_new_post(eventTypeLabel),
+      ContentIonNotificationType.stories =>
+        context.i18n.notifications_posted_new_story(eventTypeLabel),
+      ContentIonNotificationType.articles =>
+        context.i18n.notifications_posted_new_article(eventTypeLabel),
+      ContentIonNotificationType.videos =>
+        context.i18n.notifications_posted_new_video(eventTypeLabel),
+    };
+  }
+}

@@ -34,6 +34,7 @@ NotificationsDatabase notificationsDatabase(Ref ref) {
 @DriftDatabase(
   tables: [
     CommentsTable,
+    ContentTable,
     LikesTable,
     FollowersTable,
   ],
@@ -110,7 +111,7 @@ class NotificationsDatabase extends _$NotificationsDatabase {
   final String pubkey;
 
   @override
-  int get schemaVersion => 3;
+  int get schemaVersion => 4;
 
   @override
   MigrationStrategy get migration {
@@ -157,6 +158,9 @@ class NotificationsDatabase extends _$NotificationsDatabase {
               ),
             ],
           );
+        },
+        from3To4: (m, schema) async {
+          await m.createTable(schema.contentTable);
         },
       ),
     );

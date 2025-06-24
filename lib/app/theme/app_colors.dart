@@ -32,6 +32,7 @@ class AppColorsExtension extends ThemeExtension<AppColorsExtension> {
     required this.pink,
     required this.medBlue,
     required this.postContent,
+    required this.lossRed,
   });
 
   factory AppColorsExtension.fromTemplate(TemplateColors templateColors) {
@@ -63,6 +64,7 @@ class AppColorsExtension extends ThemeExtension<AppColorsExtension> {
       pink: templateColors.pink,
       medBlue: templateColors.medBlue,
       postContent: templateColors.postContent,
+      lossRed: templateColors.lossRed,
     );
   }
 
@@ -95,6 +97,7 @@ class AppColorsExtension extends ThemeExtension<AppColorsExtension> {
       pink: const Color(0xFFA640FF),
       medBlue: const Color(0xFF4340FF),
       postContent: const Color(0xFF0F1419),
+      lossRed: const Color(0xFFFF396E),
     );
   }
 
@@ -125,6 +128,7 @@ class AppColorsExtension extends ThemeExtension<AppColorsExtension> {
   final Color pink;
   final Color medBlue;
   final Color postContent;
+  final Color lossRed;
 
   @override
   ThemeExtension<AppColorsExtension> copyWith({
@@ -155,6 +159,7 @@ class AppColorsExtension extends ThemeExtension<AppColorsExtension> {
     Color? pink,
     Color? medBlue,
     Color? postContent,
+    Color? lossRed,
   }) {
     return AppColorsExtension(
       primaryAccent: primaryAccent ?? this.primaryAccent,
@@ -184,6 +189,7 @@ class AppColorsExtension extends ThemeExtension<AppColorsExtension> {
       pink: pink ?? this.pink,
       medBlue: medBlue ?? this.medBlue,
       postContent: postContent ?? this.postContent,
+      lossRed: lossRed ?? this.lossRed,
     );
   }
 
@@ -224,6 +230,7 @@ class AppColorsExtension extends ThemeExtension<AppColorsExtension> {
       pink: Color.lerp(pink, other.pink, t)!,
       medBlue: Color.lerp(medBlue, other.medBlue, t)!,
       postContent: Color.lerp(postContent, other.postContent, t)!,
+      lossRed: Color.lerp(lossRed, other.lossRed, t)!,
     );
   }
 }

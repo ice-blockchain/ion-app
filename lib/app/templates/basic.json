@@ -28,7 +28,8 @@
         "attentionBlock": "#EEF1FF",
         "pink": "#A640FF",
         "medBlue": "#4340FF",
-        "postContent": "#0F1419"
+        "postContent": "#0F1419",
+        "lossRed": "#FF396E"
       },
       "dark": {
         "primaryAccent": "#0166FF",
@@ -57,7 +58,8 @@
         "attentionBlock": "#EEF1FF",
         "pink": "#A640FF",
         "medBlue": "#4340FF",
-        "postContent": "#0F1419"
+        "postContent": "#0F1419",
+        "lossRed": "#FF396E"
       }
     },
     "textThemes": {

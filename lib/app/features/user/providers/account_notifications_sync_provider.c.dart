@@ -14,6 +14,7 @@ import 'package:ion/app/features/feed/data/models/entities/post_data.c.dart';
 import 'package:ion/app/features/feed/data/models/entities/reaction_data.c.dart';
 import 'package:ion/app/features/feed/data/models/entities/repost_data.c.dart';
 import 'package:ion/app/features/feed/notifications/data/repository/comments_repository.c.dart';
+import 'package:ion/app/features/feed/notifications/data/repository/content_repository.c.dart';
 import 'package:ion/app/features/feed/notifications/data/repository/likes_repository.c.dart';
 import 'package:ion/app/features/ion_connect/ion_connect.dart';
 import 'package:ion/app/features/ion_connect/model/action_source.c.dart';
@@ -388,6 +389,10 @@ class AccountNotificationsSync extends _$AccountNotificationsSync {
         case GenericRepostEntity:
           final commentsRepo = ref.read(commentsRepositoryProvider);
           await commentsRepo.save(entity);
+        case PostEntity:
+        case ArticleEntity:
+          final contentRepo = ref.read(contentRepositoryProvider);
+          await contentRepo.save(entity);
         default:
           Logger.log('No specific repository handler for ${entity.runtimeType}');
       }
