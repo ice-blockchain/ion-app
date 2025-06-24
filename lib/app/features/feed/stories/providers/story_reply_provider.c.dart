@@ -171,7 +171,7 @@ class StoryReply extends _$StoryReply {
 
     await resendKind16(ref, kind30014Entity);
 
-     await ref.read(sendE2eeChatMessageServiceProvider).resendMessage(eventMessage: kind30014Rumor);
+    await ref.read(sendE2eeChatMessageServiceProvider).resendMessage(eventMessage: kind30014Rumor);
 
     final kind7EventReference = await ref
         .read(conversationMessageReactionDaoProvider)
