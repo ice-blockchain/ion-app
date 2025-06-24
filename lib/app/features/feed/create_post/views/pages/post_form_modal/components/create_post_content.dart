@@ -135,7 +135,7 @@ class _TextInputSection extends HookConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final mediaFiles = attachedMediaNotifier.value;
     final mediaLinks = attachedMediaLinksNotifier.value.values.toList();
-    final bottomInset = MediaQuery.of(context).viewInsets.bottom;
+    final bottomInset = MediaQuery.viewInsetsOf(context).bottom;
     final draftPoll = ref.watch(pollDraftNotifierProvider);
 
     final links = useUrlLinks(
