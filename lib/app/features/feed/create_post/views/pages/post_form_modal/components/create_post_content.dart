@@ -1,6 +1,7 @@
 // SPDX-License-Identifier: ice License 1.0
 
 import 'package:flutter/material.dart';
+import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_keyboard_visibility/flutter_keyboard_visibility.dart';
 import 'package:flutter_quill/flutter_quill.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
@@ -134,11 +135,30 @@ class _TextInputSection extends HookConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final mediaFiles = attachedMediaNotifier.value;
     final mediaLinks = attachedMediaLinksNotifier.value.values.toList();
+    final bottomInset = MediaQuery.viewInsetsOf(context).bottom;
     final draftPoll = ref.watch(pollDraftNotifierProvider);
 
     final links = useUrlLinks(
       textEditorController: textEditorController,
       mediaFiles: mediaFiles,
+    );
+
+    useEffect(
+      () {
+        if (bottomInset > 0 && textEditorKey.currentContext != null) {
+          Future.delayed(const Duration(milliseconds: 300), () {
+            if (textEditorKey.currentContext != null) {
+              Scrollable.ensureVisible(
+                textEditorKey.currentContext!,
+                duration: const Duration(milliseconds: 100),
+                curve: Curves.easeInOut,
+              );
+            }
+          });
+        }
+        return null;
+      },
+      [bottomInset],
     );
 
     return Padding(
