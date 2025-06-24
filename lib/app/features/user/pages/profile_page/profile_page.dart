@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/components/screen_offset/screen_top_offset.dart';
+import 'package:ion/app/components/section_separator/section_separator.dart';
 import 'package:ion/app/components/separated/separator.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/feed/data/models/entities/event_count_result_data.c.dart';
@@ -14,7 +15,6 @@ import 'package:ion/app/features/user/pages/components/profile_avatar/profile_av
 import 'package:ion/app/features/user/pages/profile_page/cant_find_profile_page.dart';
 import 'package:ion/app/features/user/pages/profile_page/components/header/header.dart';
 import 'package:ion/app/features/user/pages/profile_page/components/profile_details/profile_details.dart';
-import 'package:ion/app/features/user/pages/profile_page/components/tabs/content_separator.dart';
 import 'package:ion/app/features/user/pages/profile_page/components/tabs/tab_entities_list.dart';
 import 'package:ion/app/features/user/pages/profile_page/components/tabs/tabs_header/tabs_header.dart';
 import 'package:ion/app/features/user/pages/profile_page/hooks/use_animated_opacity_on_scroll.dart';
@@ -118,7 +118,7 @@ class ProfilePage extends HookConsumerWidget {
                           child: const ProfileTabsHeader(),
                         ),
                       ),
-                      const SliverToBoxAdapter(child: ContentSeparator()),
+                      const SliverToBoxAdapter(child: SectionSeparator()),
                     ];
                   },
                   body: TabBarView(

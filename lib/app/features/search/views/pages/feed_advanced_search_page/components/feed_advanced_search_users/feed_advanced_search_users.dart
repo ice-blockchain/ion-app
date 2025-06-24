@@ -7,8 +7,8 @@ import 'package:ion/app/components/list_items_loading_state/list_items_loading_s
 import 'package:ion/app/components/nothing_is_found/nothing_is_found.dart';
 import 'package:ion/app/components/scroll_view/load_more_builder.dart';
 import 'package:ion/app/components/scroll_view/pull_to_refresh_builder.dart';
+import 'package:ion/app/components/section_separator/section_separator.dart';
 import 'package:ion/app/extensions/extensions.dart';
-import 'package:ion/app/features/feed/views/components/list_separator/list_separator.dart';
 import 'package:ion/app/features/search/views/pages/feed_advanced_search_page/components/feed_advanced_search_users/feed_advanced_search_user_list_item.dart';
 import 'package:ion/app/features/user/providers/search_users_provider.c.dart';
 
@@ -38,7 +38,7 @@ class FeedAdvancedSearchUsers extends HookConsumerWidget {
         else
           SliverList.separated(
             itemCount: searchUsers.length,
-            separatorBuilder: (_, __) => FeedListSeparator(),
+            separatorBuilder: (_, __) => const SectionSeparator(),
             itemBuilder: (context, index) =>
                 FeedAdvancedSearchUserListItem(user: searchUsers[index]),
           ),

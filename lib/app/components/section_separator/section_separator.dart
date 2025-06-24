@@ -5,20 +5,25 @@ import 'package:ion/app/extensions/build_context.dart';
 import 'package:ion/app/extensions/num.dart';
 import 'package:ion/app/extensions/theme_data.dart';
 
-class Delimiter extends StatelessWidget {
-  const Delimiter({
+class SectionSeparator extends StatelessWidget {
+  const SectionSeparator({
     super.key,
-    this.padding,
+    this.height,
   });
 
-  final EdgeInsetsGeometry? padding;
+  final double? height;
+
+  static const double _defaultHeight = 4;
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      padding: padding,
-      height: 10.0.s,
+    return ColoredBox(
       color: context.theme.appColors.primaryBackground,
+      child: ConstrainedBox(
+        constraints: BoxConstraints.tight(
+          Size.fromHeight(height ?? _defaultHeight.s),
+        ),
+      ),
     );
   }
 }

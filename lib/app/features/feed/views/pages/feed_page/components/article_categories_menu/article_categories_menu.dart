@@ -2,13 +2,13 @@
 
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:ion/app/components/section_separator/section_separator.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/feed/data/models/feed_type.dart';
 import 'package:ion/app/features/feed/providers/feed_posts_provider.c.dart';
 import 'package:ion/app/features/feed/providers/feed_selected_article_categories_provider.c.dart';
 import 'package:ion/app/features/feed/providers/feed_selected_visible_article_categories_provider.c.dart';
 import 'package:ion/app/features/feed/providers/feed_user_interests_provider.c.dart';
-import 'package:ion/app/features/feed/views/components/list_separator/list_separator.dart';
 import 'package:ion/app/features/feed/views/pages/feed_page/components/article_categories_menu/article_categories_row.dart';
 
 class ArticleCategoriesMenu extends HookConsumerWidget {
@@ -62,7 +62,7 @@ class ArticleCategoriesMenu extends HookConsumerWidget {
             ),
           ),
         ),
-        FeedListSeparator(),
+        const SectionSeparator(),
       ],
     );
   }
