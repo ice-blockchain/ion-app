@@ -38,6 +38,7 @@ class Post extends ConsumerWidget {
     this.headerOffset,
     this.header,
     this.footer,
+    this.quotedEventFooter,
     this.onDelete,
     this.accentTheme = false,
     this.isTextSelectable = false,
@@ -56,6 +57,7 @@ class Post extends ConsumerWidget {
   final double? headerOffset;
   final Widget? header;
   final Widget? footer;
+  final Widget? quotedEventFooter;
   final TimestampFormat timeFormat;
   final VoidCallback? onDelete;
   final bool isTextSelectable;
@@ -104,6 +106,7 @@ class Post extends ConsumerWidget {
                   accentTheme: accentTheme,
                   eventReference: quotedEventReference,
                   header: accentTheme && header != null ? header : null,
+                  footer: quotedEventFooter,
                 ),
               SizedBox(height: 8.0.s),
               footer ?? CounterItemsFooter(eventReference: eventReference),
@@ -168,11 +171,13 @@ class _QuotedEvent extends StatelessWidget {
     required this.eventReference,
     this.header,
     this.accentTheme = false,
+    this.footer,
   });
 
   final Widget? header;
   final bool accentTheme;
   final EventReference eventReference;
+  final Widget? footer;
 
   @override
   Widget build(BuildContext context) {
@@ -189,6 +194,7 @@ class _QuotedEvent extends StatelessWidget {
           header: header,
           accentTheme: accentTheme,
           eventReference: eventReference,
+          footer: footer,
         ),
       ),
     );
@@ -343,11 +349,13 @@ final class _QuotedArticle extends StatelessWidget {
     required this.eventReference,
     this.header,
     this.accentTheme = false,
+    this.footer,
   });
 
   final Widget? header;
   final bool accentTheme;
   final EventReference eventReference;
+  final Widget? footer;
 
   @override
   Widget build(BuildContext context) {
@@ -361,6 +369,7 @@ final class _QuotedArticle extends StatelessWidget {
             header: header,
             accentTheme: accentTheme,
             eventReference: eventReference,
+            footer: footer,
           ),
         ),
       ),

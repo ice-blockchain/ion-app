@@ -38,12 +38,14 @@ class Article extends ConsumerWidget {
     required EventReference eventReference,
     Widget? header,
     bool accentTheme = false,
+    Widget? footer,
   }) {
     return Article(
       header: header,
       showActionButtons: false,
       accentTheme: accentTheme,
       eventReference: eventReference,
+      footer: footer,
     );
   }
 
