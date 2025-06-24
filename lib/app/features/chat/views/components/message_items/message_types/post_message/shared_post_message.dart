@@ -128,6 +128,7 @@ class SharedPostMessage extends HookConsumerWidget {
                 accentTheme: isMe,
                 footer: const SizedBox.shrink(),
                 eventReference: postEntity.toEventReference(),
+                quotedEventFooter: const SizedBox.shrink(),
               ),
             ),
           Padding(
