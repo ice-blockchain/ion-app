@@ -78,6 +78,7 @@ class IonNetworkImage extends StatelessWidget {
       placeholderFadeInDuration: placeholderFadeInDuration,
       memCacheWidth: memCacheWidth,
       memCacheHeight: memCacheHeight,
+      imageBuilder: imageBuilder,
     );
   }
 }
