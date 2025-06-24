@@ -91,8 +91,10 @@ class Env extends _$Env {
           'FEED_MIN_VISIBLE_ARTICLE_CATEGORIES_NUMBER',
           defaultValue: 5,
         ) as T,
-      EnvVariable.ACCOUNT_NOTIFICATION_SETTINGS_SYNC_INTERVAL_MINUTES =>
-        const int.fromEnvironment('ACCOUNT_NOTIFICATION_SETTINGS_SYNC_INTERVAL_MINUTES') as T,
+      EnvVariable.ACCOUNT_NOTIFICATION_SETTINGS_SYNC_INTERVAL_MINUTES => const int.fromEnvironment(
+          'ACCOUNT_NOTIFICATION_SETTINGS_SYNC_INTERVAL_MINUTES',
+          defaultValue: 60,
+        ) as T,
     };
   }
 }

@@ -41,7 +41,7 @@ Future<List<String>> usersForNotificationType(
     return [];
   }
 
-  final setType = _getSetTypeForNotificationType(notificationType);
+  final setType = AccountNotificationSetType.fromUserNotificationType(notificationType);
   if (setType == null) {
     return [];
   }
@@ -53,7 +53,7 @@ Future<List<String>> usersForNotificationType(
           kinds: const [AccountNotificationSetEntity.kind],
           authors: [currentPubkey],
           tags: {
-            '#d': [setType],
+            '#d': [setType.dTagName],
           },
           limit: 1,
         ),
@@ -83,21 +83,14 @@ Future<Map<String, List<String>>> _fetchCurrentNotificationSets(
 ) async {
   final sets = <String, List<String>>{};
 
-  final setTypes = [
-    'in_app_notifications_posts',
-    'in_app_notifications_stories',
-    'in_app_notifications_articles',
-    'in_app_notifications_videos',
-  ];
-
-  for (final setType in setTypes) {
+  for (final setType in AccountNotificationSetType.values) {
     final requestMessage = RequestMessage()
       ..addFilter(
         RequestFilter(
           kinds: const [AccountNotificationSetEntity.kind],
           authors: [currentPubkey],
           tags: {
-            '#d': [setType],
+            '#d': [setType.dTagName],
           },
           limit: 1,
         ),
@@ -113,11 +106,11 @@ Future<Map<String, List<String>>> _fetchCurrentNotificationSets(
             .map((List<String> tag) => tag[1])
             .toList();
 
-        sets[setType] = userPubkeys;
+        sets[setType.dTagName] = userPubkeys;
         break;
       }
     } catch (error) {
-      sets[setType] = [];
+      sets[setType.dTagName] = [];
     }
   }
 
@@ -131,27 +124,17 @@ Future<void> _updateNotificationSets(
   Map<String, List<String>> currentSets,
 ) async {
   final setTypesToUsers = <String, List<String>>{
-    'in_app_notifications_posts': [],
-    'in_app_notifications_stories': [],
-    'in_app_notifications_articles': [],
-    'in_app_notifications_videos': [],
+    for (final setType in AccountNotificationSetType.values) setType.dTagName: [],
   };
 
-  if (enabledNotifications.contains(UserNotificationsType.none) || enabledNotifications.isEmpty) {
-    setTypesToUsers['in_app_notifications_posts'] = [];
-    setTypesToUsers['in_app_notifications_stories'] = [];
-    setTypesToUsers['in_app_notifications_articles'] = [];
-    setTypesToUsers['in_app_notifications_videos'] = [];
-  } else {
-    for (final entry in currentSets.entries) {
-      final setType = entry.key;
-      final notificationType = _getNotificationTypeForSetType(setType);
+  for (final entry in currentSets.entries) {
+    final setType = entry.key;
+    final notificationType = _getNotificationTypeForSetType(setType);
 
-      if (notificationType != null && enabledNotifications.contains(notificationType)) {
-        setTypesToUsers[setType] = entry.value;
-      } else {
-        setTypesToUsers[setType] = [];
-      }
+    if (notificationType != null && enabledNotifications.contains(notificationType)) {
+      setTypesToUsers[setType] = entry.value;
+    } else {
+      setTypesToUsers[setType] = [];
     }
   }
 
@@ -189,23 +172,22 @@ Future<void> _updateNotificationSet(
 }
 
 UserNotificationsType? _getNotificationTypeForSetType(String setType) {
-  return switch (setType) {
-    'in_app_notifications_posts' => UserNotificationsType.posts,
-    'in_app_notifications_stories' => UserNotificationsType.stories,
-    'in_app_notifications_articles' => UserNotificationsType.articles,
-    'in_app_notifications_videos' => UserNotificationsType.videos,
-    _ => null,
-  };
+  for (final accountSetType in AccountNotificationSetType.values) {
+    if (accountSetType.dTagName == setType) {
+      return switch (accountSetType) {
+        AccountNotificationSetType.posts => UserNotificationsType.posts,
+        AccountNotificationSetType.stories => UserNotificationsType.stories,
+        AccountNotificationSetType.articles => UserNotificationsType.articles,
+        AccountNotificationSetType.videos => UserNotificationsType.videos,
+      };
+    }
+  }
+  return null;
 }
 
 String? _getSetTypeForNotificationType(UserNotificationsType notificationType) {
-  return switch (notificationType) {
-    UserNotificationsType.posts => 'in_app_notifications_posts',
-    UserNotificationsType.stories => 'in_app_notifications_stories',
-    UserNotificationsType.articles => 'in_app_notifications_articles',
-    UserNotificationsType.videos => 'in_app_notifications_videos',
-    UserNotificationsType.none => null,
-  };
+  final setType = AccountNotificationSetType.fromUserNotificationType(notificationType);
+  return setType?.dTagName;
 }
 
 Future<void> addUserToNotificationSet(

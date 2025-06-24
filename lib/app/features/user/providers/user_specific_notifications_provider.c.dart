@@ -60,8 +60,6 @@ class UserSpecificNotifications extends _$UserSpecificNotifications {
 
         state = AsyncValue.data(selectedTypes);
       }
-
-      ref.invalidateSelf();
     } catch (error, stackTrace) {
       state = AsyncValue.error(error, stackTrace);
       rethrow;

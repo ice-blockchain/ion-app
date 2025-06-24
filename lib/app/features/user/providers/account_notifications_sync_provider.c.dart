@@ -4,6 +4,7 @@ import 'dart:async';
 import 'dart:convert';
 
 import 'package:drift/drift.dart';
+import 'package:ion/app/extensions/build_context.dart';
 import 'package:ion/app/features/auth/providers/auth_provider.c.dart';
 import 'package:ion/app/features/core/providers/env_provider.c.dart';
 import 'package:ion/app/features/feed/data/models/entities/article_data.c.dart';
@@ -22,7 +23,9 @@ import 'package:ion/app/features/user/data/database/account_notifications_databa
 import 'package:ion/app/features/user/model/user_notifications_type.dart';
 import 'package:ion/app/features/user/pages/profile_page/providers/user_notifications_provider.c.dart';
 import 'package:ion/app/features/user/providers/account_notifications_sets_provider.c.dart';
+import 'package:ion/app/features/user/providers/user_metadata_provider.c.dart';
 import 'package:ion/app/features/user/providers/user_relays_manager.c.dart';
+import 'package:ion/app/router/app_routes.c.dart';
 import 'package:ion/app/services/local_notifications/local_notifications.c.dart';
 import 'package:ion/app/services/logger/logger.dart';
 import 'package:ion/app/utils/algorithm.dart';
@@ -295,24 +298,42 @@ class AccountNotificationsSync extends _$AccountNotificationsSync {
 
     return switch (contentType) {
       NotificationContentType.videos => RequestFilter(
-          kinds: const [1, 6, 30175, 1630175],
+          kinds: const [
+            PostEntity.kind,
+            RepostEntity.kind,
+            ModifiablePostEntity.kind,
+            GenericRepostEntity.modifiablePostRepostKind,
+          ],
           search: 'videos:true',
           authors: users,
           limit: 100,
         ),
       NotificationContentType.stories => RequestFilter(
-          kinds: const [1, 6, 30175, 1630175],
+          kinds: const [
+            PostEntity.kind,
+            RepostEntity.kind,
+            ModifiablePostEntity.kind,
+            GenericRepostEntity.modifiablePostRepostKind,
+          ],
           search: 'expiration:true',
           authors: users,
           limit: 100,
         ),
       NotificationContentType.articles => RequestFilter(
-          kinds: const [30023, 1630023],
+          kinds: const [
+            ArticleEntity.kind,
+            GenericRepostEntity.articleRepostKind,
+          ],
           authors: users,
           limit: 100,
         ),
       NotificationContentType.posts => RequestFilter(
-          kinds: const [1, 6, 30175, 1630175],
+          kinds: const [
+            PostEntity.kind,
+            RepostEntity.kind,
+            ModifiablePostEntity.kind,
+            GenericRepostEntity.modifiablePostRepostKind,
+          ],
           search: 'videos:false expiration:false',
           authors: users,
           limit: 100,
@@ -342,13 +363,13 @@ class AccountNotificationsSync extends _$AccountNotificationsSync {
   IonConnectEntity? _convertEventToEntity(EventMessage event) {
     try {
       return switch (event.kind) {
-        1 => PostEntity.fromEventMessage(event),
-        6 => RepostEntity.fromEventMessage(event),
-        7 => ReactionEntity.fromEventMessage(event),
-        30023 => ArticleEntity.fromEventMessage(event),
-        30175 => ModifiablePostEntity.fromEventMessage(event),
-        1630023 => GenericRepostEntity.fromEventMessage(event),
-        1630175 => GenericRepostEntity.fromEventMessage(event),
+        PostEntity.kind => PostEntity.fromEventMessage(event),
+        RepostEntity.kind => RepostEntity.fromEventMessage(event),
+        ReactionEntity.kind => ReactionEntity.fromEventMessage(event),
+        ArticleEntity.kind => ArticleEntity.fromEventMessage(event),
+        ModifiablePostEntity.kind => ModifiablePostEntity.fromEventMessage(event),
+        GenericRepostEntity.articleRepostKind => GenericRepostEntity.fromEventMessage(event),
+        GenericRepostEntity.modifiablePostRepostKind => GenericRepostEntity.fromEventMessage(event),
         _ => null,
       };
     } catch (error) {
@@ -380,26 +401,29 @@ class AccountNotificationsSync extends _$AccountNotificationsSync {
     NotificationContentType contentType,
   ) async {
     try {
+      final context = rootNavigatorKey.currentContext;
+
+      if (context == null) {
+        return;
+      }
+
+      final locale = context.i18n;
+
       final localNotifications = await ref.read(localNotificationsServiceProvider.future);
+      final userMetadata = await ref.read(userMetadataProvider(entity.masterPubkey).future);
+      final username = userMetadata?.data.displayName ?? userMetadata?.data.name ?? '';
 
       final title = switch (contentType) {
-        NotificationContentType.posts => 'New Post',
-        NotificationContentType.stories => 'New Story',
-        NotificationContentType.articles => 'New Article',
-        NotificationContentType.videos => 'New Video',
-      };
-
-      final body = switch (entity.runtimeType) {
-        ReactionEntity => 'Someone reacted to your content',
-        ModifiablePostEntity => 'New post from someone you follow',
-        GenericRepostEntity => 'Someone shared content',
-        _ => 'New notification from someone you follow',
+        NotificationContentType.posts => locale.notifications_posted_new_post(username),
+        NotificationContentType.stories => locale.notifications_posted_new_story(username),
+        NotificationContentType.articles => locale.notifications_posted_new_article(username),
+        NotificationContentType.videos => locale.notifications_posted_new_video(username),
       };
 
       await localNotifications.showNotification(
         id: entity.id.hashCode,
         title: title,
-        body: body,
+        body: '',
         payload: entity.id,
       );
     } catch (error, stackTrace) {
