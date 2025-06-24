@@ -57,12 +57,8 @@
       debugServiceExtension = "internal"
       allowLocationSimulation = "YES"
       launchAutomaticallySubstyle = "2">
-      <RemoteRunnable
-         runnableDebuggingMode = "1"
-         BundleIdentifier = "io.ion.app.staging"
-         RemotePath = "/Users/antony/Library/Developer/CoreSimulator/Devices/4210D9F4-CFFD-4F4B-BD53-CA1086ED7686/data/Containers/Bundle/Application/7071E42D-41D6-45AE-90D2-44C5E1DABFE7/Runner.app">
-      </RemoteRunnable>
-      <MacroExpansion>
+      <BuildableProductRunnable
+         runnableDebuggingMode = "0">
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "97C146ED1CF9000F007C117D"
@@ -70,7 +66,7 @@
             BlueprintName = "Runner"
             ReferencedContainer = "container:Runner.xcodeproj">
          </BuildableReference>
-      </MacroExpansion>
+      </BuildableProductRunnable>
    </LaunchAction>
    <ProfileAction
       buildConfiguration = "Release"
