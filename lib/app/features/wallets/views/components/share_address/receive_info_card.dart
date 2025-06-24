@@ -4,10 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:ion/app/components/button/button.dart';
 import 'package:ion/app/components/copy/copy_builder.dart';
 import 'package:ion/app/components/skeleton/skeleton.dart';
-import 'package:ion/app/extensions/asset_gen_image.dart';
-import 'package:ion/app/extensions/build_context.dart';
-import 'package:ion/app/extensions/num.dart';
-import 'package:ion/app/extensions/theme_data.dart';
+import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/wallets/model/coins_group.c.dart';
 import 'package:ion/app/features/wallets/model/network_data.c.dart';
 import 'package:ion/app/features/wallets/views/components/coin_icon_with_network.dart';
@@ -69,7 +66,7 @@ class ReceiveInfoCard extends StatelessWidget {
                   ),
                 ],
                 SizedBox(height: 8.0.s),
-                if (walletAddress != null && walletAddress!.isNotEmpty)
+                if (walletAddress.isNotEmpty)
                   _AddressDescription(walletAddress!)
                 else
                   const _AddressLoader(),
