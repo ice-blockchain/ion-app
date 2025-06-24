@@ -21,6 +21,7 @@ class EventBackfillService {
     required int latestEventTimestamp,
     required RequestFilter filter,
     required void Function(EventMessage event) onEvent,
+    ActionSource? actionSource,
   }) async {
     int? tmpLastCreatedAt;
     while (true) {
@@ -28,6 +29,7 @@ class EventBackfillService {
         regularSince: tmpLastCreatedAt ?? latestEventTimestamp,
         filter: filter,
         onEvent: onEvent,
+        actionSource: actionSource,
       );
       if (stopFetching) {
         break;
@@ -45,6 +47,7 @@ class EventBackfillService {
     int? previousMaxCreatedAt,
     Set<String> previousRegularIds = const {},
     int page = 1,
+    ActionSource? actionSource,
   }) async {
     try {
       final requestMessage = RequestMessage(
@@ -60,7 +63,10 @@ class EventBackfillService {
       var maxCreatedAt = previousMaxCreatedAt ?? 0;
       int? minCreatedAt;
       final regularIds = <String>{};
-      await for (final event in ionConnectNotifier.requestEvents(requestMessage)) {
+      await for (final event in ionConnectNotifier.requestEvents(
+        requestMessage,
+        actionSource: actionSource ?? const ActionSourceCurrentUser(),
+      )) {
         final eventCreatedAt = event.createdAt.toMicroseconds;
 
         if (minCreatedAt == null || eventCreatedAt < minCreatedAt) {
@@ -93,6 +99,7 @@ class EventBackfillService {
         page: page + 1,
         filter: filter,
         onEvent: onEvent,
+        actionSource: actionSource,
       );
     } catch (e, st) {
       Logger.error(e, stackTrace: st);

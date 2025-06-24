@@ -17,7 +17,7 @@ import 'package:ion/app/features/feed/notifications/data/repository/likes_reposi
 import 'package:ion/app/features/ion_connect/ion_connect.dart';
 import 'package:ion/app/features/ion_connect/model/action_source.c.dart';
 import 'package:ion/app/features/ion_connect/model/ion_connect_entity.dart';
-import 'package:ion/app/features/ion_connect/providers/ion_connect_notifier.c.dart';
+import 'package:ion/app/features/ion_connect/providers/event_backfill_service.c.dart';
 import 'package:ion/app/features/user/data/database/account_notifications_database.c.dart';
 import 'package:ion/app/features/user/model/user_notifications_type.dart';
 import 'package:ion/app/features/user/pages/profile_page/providers/user_notifications_provider.c.dart';
@@ -220,80 +220,41 @@ class AccountNotificationsSync extends _$AccountNotificationsSync {
     required NotificationContentType contentType,
     required AccountNotificationsDatabase database,
   }) async {
-    var hasMoreEvents = true;
-    var requestCount = 0;
-    var maxCreatedAt = 0;
-
-    final callStartTime = DateTime.now().microsecondsSinceEpoch;
-
-    while (hasMoreEvents && requestCount < 10) {
-      requestCount++;
-
+    try {
       final syncState = await _getSyncState(relayUrl, contentType, database);
+      final callStartTime = DateTime.now().microsecondsSinceEpoch;
 
       final requestFilter = _buildRequestFilter(
         contentType: contentType,
         users: users,
-        since: syncState?.sinceTimestamp,
-        until: requestCount == 1 ? null : maxCreatedAt,
       );
 
       if (requestFilter == null) {
         return;
       }
 
-      final requestMessage = RequestMessage()..addFilter(requestFilter);
+      final latestEventTimestamp = syncState?.sinceTimestamp ?? callStartTime;
+      final eventBackfillService = ref.read(eventBackfillServiceProvider);
 
-      try {
-        final ionConnectNotifier = ref.read(ionConnectNotifierProvider.notifier);
-        final eventsStream = ionConnectNotifier.requestEvents(
-          requestMessage,
-          actionSource: ActionSourceRelayUrl(relayUrl),
-        );
+      final newLastCreatedAt = await eventBackfillService.startBackfill(
+        latestEventTimestamp: latestEventTimestamp,
+        filter: requestFilter,
+        onEvent: (event) => _processNotificationEvent(event, contentType),
+        actionSource: ActionSourceRelayUrl(relayUrl),
+      );
 
-        var eventsInThisRequest = 0;
-        var minCreatedAtInRequest = 0;
+      await _updateSyncState(
+        relayUrl: relayUrl,
+        contentType: contentType,
+        database: database,
+        sinceTimestamp: newLastCreatedAt,
+      );
 
-        await for (final event in eventsStream) {
-          eventsInThisRequest++;
-
-          if (minCreatedAtInRequest == 0 || event.createdAt < minCreatedAtInRequest) {
-            minCreatedAtInRequest = event.createdAt;
-          }
-
-          if (event.createdAt > maxCreatedAt) {
-            maxCreatedAt = event.createdAt;
-          }
-
-          await _processNotificationEvent(event, contentType);
-        }
-
-        if (eventsInThisRequest == 0) {
-          hasMoreEvents = false;
-
-          await _updateSyncState(
-            relayUrl: relayUrl,
-            contentType: contentType,
-            database: database,
-            sinceTimestamp: callStartTime,
-          );
-
-          Logger.log('No new events for $contentType from $relayUrl after $requestCount requests');
-        } else {
-          maxCreatedAt = minCreatedAtInRequest;
-
-          hasMoreEvents = eventsInThisRequest >= 100;
-
-          await _updateSyncState(
-            relayUrl: relayUrl,
-            contentType: contentType,
-            database: database,
-            sinceTimestamp: maxCreatedAt,
-          );
-        }
-      } catch (error) {
-        hasMoreEvents = false;
-      }
+      Logger.log(
+        'Completed sync for $contentType from $relayUrl. New since timestamp: $newLastCreatedAt',
+      );
+    } catch (error, stackTrace) {
+      Logger.error('Error syncing $contentType from $relayUrl: $error', stackTrace: stackTrace);
     }
   }
 
@@ -327,8 +288,6 @@ class AccountNotificationsSync extends _$AccountNotificationsSync {
   RequestFilter? _buildRequestFilter({
     required NotificationContentType contentType,
     required List<String> users,
-    int? since,
-    int? until,
   }) {
     if (users.isEmpty) {
       return null;
@@ -340,31 +299,23 @@ class AccountNotificationsSync extends _$AccountNotificationsSync {
           search: 'videos:true',
           authors: users,
           limit: 100,
-          since: since,
-          until: until,
         ),
       NotificationContentType.stories => RequestFilter(
           kinds: const [1, 6, 30175, 1630175],
           search: 'expiration:true',
           authors: users,
           limit: 100,
-          since: since,
-          until: until,
         ),
       NotificationContentType.articles => RequestFilter(
           kinds: const [30023, 1630023],
           authors: users,
           limit: 100,
-          since: since,
-          until: until,
         ),
       NotificationContentType.posts => RequestFilter(
           kinds: const [1, 6, 30175, 1630175],
           search: 'videos:false expiration:false',
           authors: users,
           limit: 100,
-          since: since,
-          until: until,
         ),
     };
   }
