@@ -146,9 +146,7 @@ class SendE2eeChatMessageService {
         return a.compareTo(b);
       });
 
-      if (quotedEvent != null) {
-       // await ref.read(eventMessageDaoProvider).deleteByEventReference(eventReference);
-      } else if (mediaAttachmentsUsersBased.isEmpty && content.isEmpty) {
+      if (mediaAttachmentsUsersBased.isEmpty && content.isEmpty) {
         await ref.read(eventMessageDaoProvider).deleteByEventReference(eventReference);
         return sentMessage;
       }
@@ -352,8 +350,8 @@ class SendE2eeChatMessageService {
         );
   }
 
-  Future<void> resendMessage({required EventMessage messageEvent}) async {
-    final entity = ReplaceablePrivateDirectMessageEntity.fromEventMessage(messageEvent);
+  Future<void> resendMessage({required EventMessage eventMessage}) async {
+    final entity = ReplaceablePrivateDirectMessageEntity.fromEventMessage(eventMessage);
     final eventReference = entity.toEventReference();
 
     await ref
@@ -377,8 +375,9 @@ class SendE2eeChatMessageService {
 
     await sendMessage(
       mediaFiles: mediaFiles,
-      content: messageEvent.content,
-      failedEventMessage: messageEvent,
+      content: eventMessage.content,
+      failedEventMessage: eventMessage,
+      quotedEvent: entity.data.quotedEvent,
       conversationId: entity.data.conversationId,
       participantsMasterPubkeys: entity.allPubkeys,
       failedParticipantsMasterPubkeys:

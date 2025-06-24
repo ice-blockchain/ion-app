@@ -20,6 +20,7 @@ import 'package:ion/app/features/chat/recent_chats/providers/selected_edit_messa
 import 'package:ion/app/features/chat/recent_chats/providers/selected_reply_message_provider.c.dart';
 import 'package:ion/app/features/core/model/feature_flags.dart';
 import 'package:ion/app/features/core/providers/feature_flags_provider.c.dart';
+import 'package:ion/app/features/feed/stories/providers/story_reply_provider.c.dart';
 import 'package:ion/app/router/app_routes.c.dart';
 import 'package:ion/app/services/clipboard/clipboard.dart';
 import 'package:ion/generated/assets.gen.dart';
@@ -29,10 +30,12 @@ class MessageReactionContextMenu extends HookConsumerWidget {
     required this.isMe,
     required this.messageItem,
     required this.messageStatus,
+    this.isSharedPost = false,
     super.key,
   });
 
   final bool isMe;
+  final bool isSharedPost;
   final ChatMessageInfoItem messageItem;
   final MessageDeliveryStatus messageStatus;
 
@@ -63,11 +66,17 @@ class MessageReactionContextMenu extends HookConsumerWidget {
                   color: context.theme.appColors.quaternaryText,
                 ),
                 onPressed: () async {
-                  unawaited(
-                    ref.read(sendE2eeChatMessageServiceProvider).resendMessage(
-                          messageEvent: messageItem.eventMessage,
-                        ),
-                  );
+                  if (isSharedPost) {
+                    unawaited(
+                      ref.read(storyReplyProvider.notifier).resendReply(messageItem.eventMessage),
+                    );
+                  } else {
+                    unawaited(
+                      ref.read(sendE2eeChatMessageServiceProvider).resendMessage(
+                            eventMessage: messageItem.eventMessage,
+                          ),
+                    );
+                  }
 
                   if (context.mounted) {
                     context.pop();

@@ -2,11 +2,13 @@
 
 import 'dart:convert';
 
+import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/exceptions/exceptions.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/auth/providers/auth_provider.c.dart';
 import 'package:ion/app/features/chat/community/models/entities/tags/conversation_identifier.c.dart';
 import 'package:ion/app/features/chat/community/models/entities/tags/master_pubkey_tag.c.dart';
+import 'package:ion/app/features/chat/e2ee/model/entities/private_direct_message_data.c.dart';
 import 'package:ion/app/features/chat/e2ee/providers/send_chat_message/send_e2ee_chat_message_service.c.dart';
 import 'package:ion/app/features/chat/e2ee/providers/send_e2ee_reaction_provider.c.dart';
 import 'package:ion/app/features/chat/model/database/chat_database.c.dart';
@@ -162,5 +164,88 @@ class StoryReply extends _$StoryReply {
         );
       }
     });
+  }
+
+  Future<void> resendReply(EventMessage kind30014Rumor) async {
+    final kind30014Entity = ReplaceablePrivateDirectMessageEntity.fromEventMessage(kind30014Rumor);
+
+    await resendKind16(ref, kind30014Entity);
+
+     await ref.read(sendE2eeChatMessageServiceProvider).resendMessage(eventMessage: kind30014Rumor);
+
+    final kind7EventReference = await ref
+        .read(conversationMessageReactionDaoProvider)
+        .storyReaction(kind30014Entity.toEventReference());
+    final kind7EventMessage = kind7EventReference != null
+        ? await ref.read(eventMessageDaoProvider).getByReference(kind7EventReference)
+        : null;
+
+    if (kind7EventMessage != null) {
+      await (await ref.read(sendE2eeReactionServiceProvider.future))
+          .resendReaction(eventMessage: kind7EventMessage);
+    }
+  }
+}
+
+Future<void> resendKind16(Ref ref, ReplaceablePrivateDirectMessageEntity kind30014Entity) async {
+  final kind16Rumor = await ref
+      .read(eventMessageDaoProvider)
+      .getByReference(kind30014Entity.data.quotedEvent!.eventReference);
+
+  final kind16Entity = GenericRepostEntity.fromEventMessage(kind16Rumor);
+  final eventSigner = await ref.read(currentUserIonConnectEventSignerProvider.future);
+
+  if (eventSigner == null) {
+    throw EventSignerNotFoundException();
+  }
+
+  final failedKind16Participants = await ref
+      .read(conversationMessageDataDaoProvider)
+      .getFailedParticipants(eventReference: kind16Entity.toEventReference());
+
+  if (failedKind16Participants.isNotEmpty) {
+    for (final masterPubkey in failedKind16Participants.keys) {
+      final pubkeys = failedKind16Participants[masterPubkey];
+
+      if (pubkeys == null) {
+        throw UserPubkeyNotFoundException(masterPubkey);
+      }
+
+      for (final pubkey in pubkeys) {
+        try {
+          await ref.read(conversationMessageDataDaoProvider).addOrUpdateStatus(
+                pubkey: pubkey,
+                masterPubkey: masterPubkey,
+                status: MessageDeliveryStatus.created,
+                messageEventReference: kind16Entity.toEventReference(),
+              );
+
+          await ref.read(sendE2eeChatMessageServiceProvider).sendWrappedMessage(
+            pubkey: pubkey,
+            eventSigner: eventSigner,
+            masterPubkey: masterPubkey,
+            eventMessage: kind16Rumor,
+            wrappedKinds: [
+              GenericRepostEntity.kind.toString(),
+              ModifiablePostEntity.kind.toString(),
+            ],
+          );
+
+          await ref.read(conversationMessageDataDaoProvider).addOrUpdateStatus(
+                pubkey: pubkey,
+                masterPubkey: masterPubkey,
+                status: MessageDeliveryStatus.sent,
+                messageEventReference: kind16Entity.toEventReference(),
+              );
+        } catch (e) {
+          await ref.read(conversationMessageDataDaoProvider).addOrUpdateStatus(
+                pubkey: pubkey,
+                masterPubkey: masterPubkey,
+                status: MessageDeliveryStatus.failed,
+                messageEventReference: kind16Entity.toEventReference(),
+              );
+        }
+      }
+    }
   }
 }

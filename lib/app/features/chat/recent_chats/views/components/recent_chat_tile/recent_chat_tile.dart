@@ -339,15 +339,15 @@ class ChatPreview extends HookConsumerWidget {
           '',
     };
 
-    final storyReaction =
-        ref.watch(conversationMessageReactionDaoProvider).storyReaction(eventReference);
+    final storyReactionContent =
+        ref.watch(conversationMessageReactionDaoProvider).storyReactionContent(eventReference);
 
     return Row(
       children: [
         RecentChatMessageIcon(messageType: messageType, color: textColor),
         Flexible(
           child: StreamBuilder(
-            stream: storyReaction,
+            stream: storyReactionContent,
             builder: (context, snapshot) {
               return Text(
                 snapshot.hasData ? snapshot.data ?? content : content,
