@@ -30,7 +30,7 @@ Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
     final giftUnwrapService = await riverpodContainer.read(giftUnwrapServiceProvider.future);
     final event = await giftUnwrapService.unwrap(eventMassage);
     final userMetadata =
-        riverpodContainer.read(userMetadataFromDbNotifierProvider(eventMassage.pubkey));
+        riverpodContainer.read(userMetadataFromDbNotifierProvider(event.masterPubkey));
 
     return (event, userMetadata);
   });
