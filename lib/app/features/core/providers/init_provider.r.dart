@@ -66,7 +66,8 @@ Future<void> initApp(Ref ref) async {
     ..listen(feedBookmarksSyncProvider, noop)
     ..listen(feedBookmarkCollectionsNotifierProvider, noop)
     ..listen(pushesInitProvider, noop)
-    ..listen(globalSubscriptionProvider, (_, subscription) => subscription?.init());
+    ..listen(globalSubscriptionProvider, (_, subscription) => subscription?.init())
+    ..listen(accountNotificationsSyncProvider, noop);
 
   initFirebaseMessagingBackgroundHandler();
 

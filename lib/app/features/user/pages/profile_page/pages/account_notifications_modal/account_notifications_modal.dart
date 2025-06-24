@@ -29,11 +29,10 @@ class AccountNotificationsModal extends HookConsumerWidget {
     );
 
     final handleOptionSelection = useCallback(
-      (UserNotificationsType option) {
+      (UserNotificationsType option) async {
         final currentSet = Set<UserNotificationsType>.from(selectedOptions.value);
 
         if (option == UserNotificationsType.none) {
-          // If "none" is selected, toggle it and clear all others if it's being selected
           if (currentSet.contains(UserNotificationsType.none)) {
             currentSet.remove(UserNotificationsType.none);
           } else {
@@ -42,7 +41,6 @@ class AccountNotificationsModal extends HookConsumerWidget {
               ..add(UserNotificationsType.none);
           }
         } else {
-          // If any other option is selected, remove "none" if it exists
           if (currentSet.contains(UserNotificationsType.none)) {
             currentSet.remove(UserNotificationsType.none);
           }
@@ -59,6 +57,8 @@ class AccountNotificationsModal extends HookConsumerWidget {
         ref
             .read(userNotificationsNotifierProvider.notifier)
             .updateNotifications(selectedOptions.value.toList());
+
+        await ref.read(syncAccountNotificationSetsProvider.future);
       },
       [selectedOptions, ref],
     );
