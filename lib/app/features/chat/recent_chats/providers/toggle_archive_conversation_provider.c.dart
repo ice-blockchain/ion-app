@@ -13,6 +13,7 @@ import 'package:ion/app/features/feed/data/models/bookmarks/bookmarks_set.c.dart
 import 'package:ion/app/features/feed/providers/bookmarks_notifier.c.dart';
 import 'package:ion/app/features/ion_connect/providers/ion_connect_notifier.c.dart';
 import 'package:ion/app/services/ion_connect/encrypted_message_service.c.dart';
+import 'package:ion/app/services/logger/logger.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'toggle_archive_conversation_provider.c.g.dart';
@@ -65,16 +66,21 @@ class ToggleArchivedConversations extends _$ToggleArchivedConversations {
   }
 
   Future<List<List<String>>?> _decryptContent(String content) async {
-    if (content.isEmpty) return null;
+    try {
+      if (content.isEmpty) return null;
 
-    final e2eeService = await ref.read(encryptedMessageServiceProvider.future);
-    final decryptedContent = await e2eeService.decryptMessage(content);
+      final e2eeService = await ref.read(encryptedMessageServiceProvider.future);
+      final decryptedContent = await e2eeService.decryptMessage(content);
 
-    if (decryptedContent.isEmpty) return null;
+      if (decryptedContent.isEmpty) return null;
 
-    return (jsonDecode(decryptedContent) as List)
-        .map((e) => (e as List).map((s) => s.toString()).toList())
-        .toList();
+      return (jsonDecode(decryptedContent) as List)
+          .map((e) => (e as List).map((s) => s.toString()).toList())
+          .toList();
+    } catch (e, st) {
+      Logger.error(e, stackTrace: st);
+      return null;
+    }
   }
 
   Future<BookmarksSetData> _processConversations({
