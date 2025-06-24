@@ -30,7 +30,7 @@ class StoryGestureHandler extends HookConsumerWidget {
     final isKeyboardVisible = KeyboardVisibilityProvider.isKeyboardVisible(context);
 
     return GestureDetector(
-      behavior: HitTestBehavior.deferToChild,
+      behavior: HitTestBehavior.opaque,
       onTapDown: (details) => tapPosition.value = details.globalPosition,
       onTap: () {
         if (isKeyboardVisible) {

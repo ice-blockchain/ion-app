@@ -43,13 +43,9 @@ class ImageStoryViewer extends ConsumerWidget {
           }
         });
 
-        return DecoratedBox(
-          decoration: BoxDecoration(
-            image: DecorationImage(
-              image: imageProvider,
-              fit: hasQuotedPost ? BoxFit.contain : BoxFit.cover,
-            ),
-          ),
+        return Image(
+          image: imageProvider,
+          fit: hasQuotedPost ? BoxFit.contain : BoxFit.cover,
         );
       },
     );
