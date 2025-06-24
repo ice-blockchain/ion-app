@@ -19,6 +19,7 @@ part 'required_coin_groups_list.dart';
 @riverpod
 class ManageCoinsNotifier extends _$ManageCoinsNotifier {
   final _coinsFromWallet = <String, ManageCoinsGroup>{};
+  var _saveEnabled = true;
 
   @override
   Future<Map<String, ManageCoinsGroup>> build() async {
@@ -32,7 +33,7 @@ class ManageCoinsNotifier extends _$ManageCoinsNotifier {
       toExclude.addAll(coinGroup.coins.map((e) => e.coin.id));
       _coinsFromWallet[coinGroup.symbolGroup] = ManageCoinsGroup(
         coinsGroup: coinGroup,
-        isSelected: state.value?[coinGroup.symbolGroup]?.isSelected ?? true,
+        isSelected: true,
       );
     }
     final coinsService = await ref.watch(coinsServiceProvider.future);
@@ -74,7 +75,17 @@ class ManageCoinsNotifier extends _$ManageCoinsNotifier {
     state = AsyncData<Map<String, ManageCoinsGroup>>(currentMap);
   }
 
+  void disableSave() {
+    _saveEnabled = false;
+  }
+
+  void enableSave() {
+    _saveEnabled = true;
+  }
+
   Future<void> save() async {
+    if (!_saveEnabled) return;
+
     final currentWalletView = await ref.read(currentWalletViewDataProvider.future);
     final updatedCoins = state.value?.values
             .where((manageGroup) => manageGroup.isSelected)
