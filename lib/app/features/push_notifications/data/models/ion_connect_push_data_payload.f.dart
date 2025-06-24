@@ -66,13 +66,9 @@ class IonConnectPushDataPayload {
     UserMetadataEntity? userMetadata;
 
     if (parsedEvent.kind == IonConnectGiftWrapEntity.kind) {
-      final giftWrapEntity = EventParser().parse(parsedEvent) as IonConnectGiftWrapEntity;
-      if (giftWrapEntity.data.kinds
-          .containsDeep([ReplaceablePrivateDirectMessageEntity.kind.toString()])) {
-        final result = await decryptEvent(parsedEvent);
-        decryptedEvent = result.$1;
-        userMetadata = result.$2;
-      }
+      final result = await decryptEvent(parsedEvent);
+      decryptedEvent = result.$1;
+      userMetadata = result.$2;
     }
 
     return IonConnectPushDataPayload._(
@@ -129,21 +125,35 @@ class IonConnectPushDataPayload {
             return PushNotificationType.chatVoiceMessage;
           case MessageType.document:
             return PushNotificationType.chatDocumentMessage;
-          case MessageType.text || MessageType.emoji:
+          case MessageType.text:
             return PushNotificationType.chatTextMessage;
+          case MessageType.emoji:
+            return PushNotificationType.chatEmojiMessage;
           case MessageType.profile:
             return PushNotificationType.chatProfileMessage;
           case MessageType.sharedPost:
             return PushNotificationType.chatSharePostMessage;
           case MessageType.visualMedia:
             final mediaItems = message.data.media.values.toList();
+
             if (mediaItems.every((media) => media.mediaType == MediaType.image)) {
-              return PushNotificationType.chatPhotoMessage;
+              if (mediaItems.length == 1) {
+                return mediaItems.every((media) => media.url.contains('gif'))
+                    ? PushNotificationType.chatGifMessage
+                    : PushNotificationType.chatPhotoMessage;
+              } else {
+                return mediaItems.every((media) => media.url.contains('gif'))
+                    ? PushNotificationType.chatMultiGifMessage
+                    : PushNotificationType.chatMultiPhotoMessage;
+              }
             } else if (mediaItems.every((media) => media.mediaType == MediaType.video)) {
-              return PushNotificationType.chatVideoMessage;
+              return mediaItems.length == 1
+                  ? PushNotificationType.chatVideoMessage
+                  : PushNotificationType.chatMultiVideoMessage;
             } else {
-              return PushNotificationType.chatAlbumMessage;
+              return PushNotificationType.chatMultiMediaMessage;
             }
+
           case MessageType.requestFunds:
             return PushNotificationType.paymentRequest;
           case MessageType.moneySent:
@@ -177,6 +187,15 @@ class IonConnectPushDataPayload {
 
     if (decryptedEvent != null) {
       data['messageContent'] = decryptedEvent!.content;
+      data['reactionContent'] = decryptedEvent!.content;
+      final entity = mainEntity;
+      if (entity is IonConnectGiftWrapEntity) {
+        if (entity.data.kinds
+            .containsDeep([ReplaceablePrivateDirectMessageEntity.kind.toString()])) {
+          final message = ReplaceablePrivateDirectMessageEntity.fromEventMessage(decryptedEvent!);
+          data['fileCount'] = message.data.media.values.length.toString();
+        }
+      }
     }
 
     return data;
@@ -304,5 +323,10 @@ enum PushNotificationType {
   chatTextMessage,
   chatVideoMessage,
   chatVoiceMessage,
-  chatAlbumMessage,
+  chatFirstContactMessage,
+  chatGifMessage,
+  chatMultiGifMessage,
+  chatMultiMediaMessage,
+  chatMultiPhotoMessage,
+  chatMultiVideoMessage,
 }

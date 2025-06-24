@@ -144,9 +144,29 @@ class NotificationDataParser {
             await translator.translate((t) => t.chatVoiceMessage.title),
             await translator.translate((t) => t.chatVoiceMessage.body)
           ),
-        PushNotificationType.chatAlbumMessage => (
-            await translator.translate((t) => t.chatAlbumMessage.title),
-            await translator.translate((t) => t.chatAlbumMessage.body)
+        PushNotificationType.chatFirstContactMessage => (
+            await translator.translate((t) => t.chatFirstContactMessage?.title),
+            await translator.translate((t) => t.chatFirstContactMessage?.body)
+          ),
+        PushNotificationType.chatGifMessage => (
+            await translator.translate((t) => t.chatGifMessage?.title),
+            await translator.translate((t) => t.chatGifMessage?.body)
+          ),
+        PushNotificationType.chatMultiGifMessage => (
+            await translator.translate((t) => t.chatMultiGifMessage?.title),
+            await translator.translate((t) => t.chatMultiGifMessage?.body)
+          ),
+        PushNotificationType.chatMultiMediaMessage => (
+            await translator.translate((t) => t.chatMultiMediaMessage?.title),
+            await translator.translate((t) => t.chatMultiMediaMessage?.body)
+          ),
+        PushNotificationType.chatMultiPhotoMessage => (
+            await translator.translate((t) => t.chatMultiPhotoMessage?.title),
+            await translator.translate((t) => t.chatMultiPhotoMessage?.body)
+          ),
+        PushNotificationType.chatMultiVideoMessage => (
+            await translator.translate((t) => t.chatMultiVideoMessage?.title),
+            await translator.translate((t) => t.chatMultiVideoMessage?.body)
           ),
       };
     } catch (error) {
