@@ -21,7 +21,8 @@ class FeedAdvancedSearchUsers extends HookConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     useAutomaticKeepAlive();
 
-    final searchResults = ref.watch(searchUsersProvider(query: query));
+    final searchResults = ref.watch(searchUsersProvider(query: query)).valueOrNull;
+
     final searchUsers = searchResults?.users ?? [];
     final hasMore = searchResults?.hasMore ?? true;
     final loading = hasMore && searchUsers.isEmpty;

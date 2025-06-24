@@ -29,7 +29,7 @@ class FeedSimpleSearchPage extends HookConsumerWidget {
     final history = ref.watch(feedSearchHistoryProvider);
     final debouncedQuery = useDebounced(query, const Duration(milliseconds: 300)) ?? '';
     final searchProvider = searchUsersProvider(query: debouncedQuery);
-    final searchResults = ref.watch(searchProvider);
+    final searchResults = ref.watch(searchProvider).valueOrNull;
     final searchUsers = searchResults?.users ?? [];
     final hasMore = searchResults?.hasMore ?? true;
     final loading = (hasMore && searchUsers.isEmpty) || query != debouncedQuery;

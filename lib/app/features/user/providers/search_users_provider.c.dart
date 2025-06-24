@@ -12,12 +12,12 @@ part 'search_users_provider.c.g.dart';
 @riverpod
 class SearchUsers extends _$SearchUsers {
   @override
-  ({List<UserMetadataEntity>? users, bool hasMore})? build({
+  FutureOr<({List<UserMetadataEntity>? users, bool hasMore})?> build({
     required String query,
-  }) {
+  }) async {
     final masterPubkey = ref.watch(currentPubkeySelectorProvider);
     final paginatedUsersMetadataData =
-        ref.watch(paginatedUsersMetadataProvider(_fetcher)).valueOrNull;
+        await ref.watch(paginatedUsersMetadataProvider(_fetcher).future);
     final blockedUsersMasterPubkeys = ref
             .watch(currentUserBlockListNotifierProvider)
             .valueOrNull
@@ -25,10 +25,6 @@ class SearchUsers extends _$SearchUsers {
             .expand((pubkey) => pubkey)
             .toList() ??
         [];
-
-    if (paginatedUsersMetadataData == null) {
-      return null;
-    }
 
     final filteredUsers = paginatedUsersMetadataData.items
         .where(
