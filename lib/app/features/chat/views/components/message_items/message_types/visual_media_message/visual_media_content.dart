@@ -79,7 +79,7 @@ class VisualMediaContent extends HookConsumerWidget {
         key: Key(messageMediaTableData.id.toString()),
         alignment: Alignment.center,
         children: [
-          if (mediaAttachment?.blurhash != null)
+          if (mediaAttachment?.blurhash != null && localFile.value == null)
             ClipRRect(
               borderRadius: BorderRadius.circular(height <= 30.0.s ? 2.0.s : 5.0.s),
               child: SizedBox(
