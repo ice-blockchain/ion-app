@@ -38,34 +38,39 @@ class BookmarksPage extends HookConsumerWidget {
         onSearchQueryUpdated: (value) => rawQuery.value = value.trim(),
       ),
       body: CustomScrollView(
-        slivers: collectionEntityState.when(
-          data: (refs) {
-            return [
-              SliverToBoxAdapter(
-                child: BookmarksFilters(
-                  activeCollectionDTag: selectedCollectionDTag.value,
-                  onFilterTap: (collectionDTag) => selectedCollectionDTag.value = collectionDTag,
-                ),
-              ),
-              const SliverToBoxAdapter(child: SectionSeparator()),
-              if (refs.isEmpty)
-                SliverFillRemaining(
-                  hasScrollBody: false,
-                  child: EmptyList(
-                    asset: Assets.svg.walletIconEmptybookmraks,
-                    title: context.i18n.bookmarks_empty_state,
+        slivers: [
+          SliverToBoxAdapter(
+            child: BookmarksFilters(
+              activeCollectionDTag: selectedCollectionDTag.value,
+              onFilterTap: (collectionDTag) => selectedCollectionDTag.value = collectionDTag,
+            ),
+          ),
+          const SliverToBoxAdapter(child: SectionSeparator()),
+          ...collectionEntityState.when(
+            data: (refs) {
+              if (refs.isEmpty) {
+                return [
+                  SliverFillRemaining(
+                    hasScrollBody: false,
+                    child: EmptyList(
+                      asset: Assets.svg.walletIconEmptybookmraks,
+                      title: context.i18n.bookmarks_empty_state,
+                    ),
                   ),
-                )
-              else
-                EntitiesList(
-                  refs: refs,
-                  readFromDB: true,
-                ),
-            ];
-          },
-          error: (error, stackTrace) => [const SliverFillRemaining(child: SizedBox())],
-          loading: () => [const EntitiesListSkeleton()],
-        ),
+                ];
+              } else {
+                return [
+                  EntitiesList(
+                    refs: refs,
+                    readFromDB: true,
+                  ),
+                ];
+              }
+            },
+            error: (error, stackTrace) => [const SliverFillRemaining(child: SizedBox())],
+            loading: () => [const EntitiesListSkeleton()],
+          ),
+        ],
       ),
     );
   }
