@@ -22,11 +22,7 @@ class IonConnectPushDataPayload: Decodable {
         let payload = try JSONDecoder().decode(IonConnectPushDataPayload.self, from: jsonData)
         
         // Check if we need to decrypt the event
-        if payload.event.kind == IonConnectGiftWrapEntity.kind,
-           let giftWrapEntity = try? IonConnectGiftWrapEntity.fromEventMessage(payload.event),
-           giftWrapEntity.data.kinds.contains(String(ReplaceablePrivateDirectMessageEntity.kind)) {
-            
-            // Create a new instance with the decrypted event
+        if payload.event.kind == IonConnectGiftWrapEntity.kind {
             let decryptedEvent = try await decryptEvent(payload.event)
             
             return IonConnectPushDataPayload(
