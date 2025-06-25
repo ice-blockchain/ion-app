@@ -1,6 +1,7 @@
 // SPDX-License-Identifier: ice License 1.0
 
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:ion/app/exceptions/exceptions.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/feed/data/models/entities/article_data.c.dart';
 import 'package:ion/app/features/feed/data/models/entities/generic_repost.c.dart';
@@ -31,7 +32,7 @@ class ContentRepository implements IonNotificationRepository {
   @override
   Future<void> save(IonConnectEntity entity) {
     final contentType = _getContentType(entity);
-    if (contentType == null) return Future.value();
+    if (contentType == null) throw UnsupportedEntityType(entity);
 
     return _contentDao.insert(
       ContentNotification(

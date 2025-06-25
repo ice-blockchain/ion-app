@@ -64,10 +64,9 @@ class AccountNotificationsSync extends _$AccountNotificationsSync {
   }
 
   void _startPeriodicSync() {
-    final syncIntervalMinutes = ref.read(envProvider.notifier).get<int>(
+    final syncInterval = ref.read(envProvider.notifier).get<Duration>(
           EnvVariable.ACCOUNT_NOTIFICATION_SETTINGS_SYNC_INTERVAL_MINUTES,
         );
-    final syncInterval = Duration(minutes: syncIntervalMinutes);
 
     _syncTimer = Timer.periodic(syncInterval, (_) {
       _performSync();
