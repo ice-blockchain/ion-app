@@ -23,6 +23,7 @@ class IonConnectNetworkImage extends ConsumerWidget {
     this.placeholder,
     this.fadeInDuration,
     this.fadeOutDuration,
+    this.borderRadius,
     super.key,
   });
 
@@ -40,7 +41,7 @@ class IonConnectNetworkImage extends ConsumerWidget {
   final double? height;
   final Duration? fadeInDuration;
   final Duration? fadeOutDuration;
-
+  final BorderRadiusGeometry? borderRadius;
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final sourcePath = ref
@@ -59,6 +60,7 @@ class IonConnectNetworkImage extends ConsumerWidget {
       height: height,
       fadeInDuration: fadeInDuration ?? Duration.zero,
       fadeOutDuration: fadeOutDuration ?? Duration.zero,
+      borderRadius: borderRadius,
       errorListener: (error) {
         if (ref.context.mounted) {
           ref.read(iONConnectMediaUrlFallbackProvider.notifier).generateFallback(

@@ -17,14 +17,12 @@ class NftPicture extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ClipRRect(
+    return IonNetworkImage(
+      imageUrl: imageUrl,
+      width: imageWidth,
+      height: imageHeight,
+      fit: BoxFit.fitWidth,
       borderRadius: BorderRadius.circular(16.0.s),
-      child: IonNetworkImage(
-        imageUrl: imageUrl,
-        width: imageWidth,
-        height: imageHeight,
-        fit: BoxFit.fitWidth,
-      ),
     );
   }
 }

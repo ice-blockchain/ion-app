@@ -81,13 +81,11 @@ class ReplyMessage extends HookConsumerWidget {
                 child: SizedBox(
                   width: 30.0.s,
                   height: 30.0.s,
-                  child: ClipRRect(
+                  child: IonConnectNetworkImage(
+                    authorPubkey: postItem.eventMessage.masterPubkey,
+                    imageUrl: postItem.medias.first.thumb ?? postItem.medias.first.url,
                     borderRadius: BorderRadius.circular(8.0.s),
-                    child: IonConnectNetworkImage(
-                      authorPubkey: postItem.eventMessage.masterPubkey,
-                      imageUrl: postItem.medias.first.thumb ?? postItem.medias.first.url,
-                      fit: BoxFit.fitWidth,
-                    ),
+                    fit: BoxFit.fitWidth,
                   ),
                 ),
               ),

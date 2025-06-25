@@ -19,6 +19,7 @@ class FeedNetworkImage extends IonNetworkImage {
     super.alignment,
     super.filterQuality,
     super.placeholder,
+    super.borderRadius,
   }) : super(
           cacheManager: FeedImagesCacheManager.instance,
         );
@@ -37,6 +38,9 @@ class FeedIONConnectNetworkImage extends IonConnectNetworkImage {
     super.fit,
     super.errorWidget,
     super.placeholder,
+    super.borderRadius,
+    super.fadeInDuration,
+    super.fadeOutDuration,
     super.key,
   }) : super(
           cacheManager: FeedImagesCacheManager.instance,

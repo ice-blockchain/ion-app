@@ -45,14 +45,12 @@ class NftGridItem extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            ClipRRect(
+            IonNetworkImage(
+              imageUrl: nftData.tokenUri,
+              width: imageWidth,
+              height: imageWidth * 1.13,
+              fit: BoxFit.fitHeight,
               borderRadius: borderRadius,
-              child: IonNetworkImage(
-                imageUrl: nftData.tokenUri,
-                width: imageWidth,
-                height: imageWidth * 1.13,
-                fit: BoxFit.fitHeight,
-              ),
             ),
             Text(
               nftData.name,
