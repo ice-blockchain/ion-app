@@ -54,7 +54,7 @@ class Ed25519KeyStore with EventSigner {
     );
     final messageBytes = hex.decode(message);
     final signature = await algorithm.sign(messageBytes, keyPair: keyPair);
-    return '${addPrefix ? ('$signaturePrefix:') : ''}${hex.encode(signature.bytes)}';
+    return '${addPrefix ? '$signaturePrefix:' : ''}${hex.encode(signature.bytes)}';
   }
 
   static Future<bool> verifyEddsaCurve25519Signature({

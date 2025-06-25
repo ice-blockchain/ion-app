@@ -151,9 +151,8 @@ class AudioFocusHandler: NSObject {
         if let controller = window?.rootViewController as? FlutterViewController,
            let binaryMessenger = controller as? FlutterBinaryMessenger {
             
-            if let flutterEngine = controller.engine {
-                audioFocusHandler = AudioFocusHandler(flutterEngine: flutterEngine)
-            }
+            let flutterEngine = controller.engine
+            audioFocusHandler = AudioFocusHandler(flutterEngine: flutterEngine)
             
             let channel = FlutterMethodChannel(
                 name: "banubaSdkChannel",

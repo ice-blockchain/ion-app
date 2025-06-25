@@ -7,7 +7,7 @@ version: 9.9.9+1
 
 environment:
   sdk: ">=3.5.4 <4.0.0"
-  flutter: "3.27.4"
+  flutter: "3.32.4"
 
 dependencies:
   android_id: ^0.4.0
@@ -36,7 +36,7 @@ dependencies:
   drift_flutter: ^0.2.4
   email_validator: ^3.0.0
   es_compression: ^2.0.13
-  extended_text: ^14.1.0
+  extended_text: ^15.0.2
   extension_google_sign_in_as_googleapis_auth: ^2.0.12
   external_app_launcher: ^4.0.3
   ffmpeg_kit_flutter:
