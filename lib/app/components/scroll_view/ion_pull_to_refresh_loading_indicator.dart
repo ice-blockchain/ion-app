@@ -29,6 +29,7 @@ class IonPullToRefreshLoadingIndicator extends StatelessWidget {
       RefreshIndicatorMode.armed,
       RefreshIndicatorMode.refresh,
     ].contains(refreshState);
+
     return Stack(
       clipBehavior: Clip.none,
       children: [
