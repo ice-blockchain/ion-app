@@ -37,9 +37,7 @@ class FadeOnScroll extends HookWidget {
 
     useEffect(
       () {
-        void setOpacity() {
-          opacity.value = _calculateOpacity(positionNotifier.value);
-        }
+        void setOpacity() => opacity.value = _calculateOpacity(positionNotifier.value);
         positionNotifier.addListener(setOpacity);
         return () => positionNotifier.removeListener(setOpacity);
       },
