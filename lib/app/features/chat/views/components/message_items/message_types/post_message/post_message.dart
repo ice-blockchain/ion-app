@@ -5,8 +5,10 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/features/chat/e2ee/model/entities/private_direct_message_data.c.dart';
 import 'package:ion/app/features/chat/e2ee/providers/shared_post_message_provider.c.dart';
+import 'package:ion/app/features/chat/model/message_list_item.c.dart';
 import 'package:ion/app/features/chat/views/components/message_items/message_types/post_message/shared_post_message.dart'
     as shared_post_ui;
+import 'package:ion/app/features/chat/views/components/message_items/message_types/post_message/shared_post_wrapper.dart';
 import 'package:ion/app/features/chat/views/components/message_items/message_types/post_message/shared_story_message.dart';
 import 'package:ion/app/features/feed/data/models/entities/modifiable_post_data.c.dart';
 import 'package:ion/app/features/feed/data/models/entities/post_data.c.dart';
@@ -47,17 +49,25 @@ class PostMessage extends HookConsumerWidget {
       _ => false,
     };
 
-    return isStory
-        ? SharedStoryMessage(
-            margin: margin,
-            storyEntity: postEntity,
-            replyEventMessage: eventMessage,
-          )
-        : shared_post_ui.SharedPostMessage(
-            margin: margin,
-            onTapReply: onTapReply,
-            postEntity: postEntity,
-            sharedEventMessage: eventMessage,
-          );
+    return SharedPostWrapper(
+      sharedEntity: sharedEntity,
+      messageItem: ChatMessageInfoItem.post(
+        eventMessage: eventMessage,
+        contentDescription: '',
+        medias: [],
+      ),
+      child: isStory
+          ? SharedStoryMessage(
+              margin: margin,
+              storyEntity: postEntity,
+              replyEventMessage: eventMessage,
+            )
+          : shared_post_ui.SharedPostMessage(
+              margin: margin,
+              onTapReply: onTapReply,
+              postEntity: postEntity,
+              sharedEventMessage: eventMessage,
+            ),
+    );
   }
 }

@@ -86,16 +86,20 @@ class EncryptedDeletionRequestHandler extends GlobalSubscriptionEncryptedEventMe
       switch (eventReference) {
         case ReplaceableEventReference():
           await conversationMessageDao.removeMessages(
-            deleteRequest: rumor,
-            eventReferences: [eventReference],
             env: env,
             masterPubkey: masterPubkey,
+            eventReferences: [eventReference],
             eventSignerPubkey: eventSigner.publicKey,
           );
         case ImmutableEventReference():
-          await conversationMessageReactionDao.remove(
-            reactionEventReference: eventReference,
+          // If this is shared post kind 16 event
+          await conversationMessageDao.removeMessages(
+            env: env,
+            masterPubkey: masterPubkey,
+            eventReferences: [eventReference],
+            eventSignerPubkey: eventSigner.publicKey,
           );
+          await conversationMessageReactionDao.remove(reactionEventReference: eventReference);
         default:
           break;
       }

@@ -91,7 +91,17 @@ class ConversationMessageReactionDao extends DatabaseAccessor<ChatDatabase>
     return row.isNotEmpty;
   }
 
-  Stream<String?> storyReaction(EventReference? eventReference) async* {
+  Future<EventReference?> storyReaction(EventReference eventReference) async {
+    final result = await (select(reactionTable)
+          ..where((table) => table.isDeleted.equals(false))
+          ..where((table) => table.messageEventReference.equalsValue(eventReference))
+          ..limit(1))
+        .getSingleOrNull();
+
+    return result?.reactionEventReference;
+  }
+
+  Stream<String?> storyReactionContent(EventReference? eventReference) async* {
     if (eventReference == null) {
       yield null;
       return;

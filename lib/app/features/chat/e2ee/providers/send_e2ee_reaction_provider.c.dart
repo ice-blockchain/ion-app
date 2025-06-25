@@ -26,6 +26,9 @@ Future<SendE2eeReactionService> sendE2eeReactionService(Ref ref) async {
     sendE2eeChatMessageService: sendE2eeChatMessageService,
     currentUserMasterPubkey: ref.watch(currentPubkeySelectorProvider) ?? '',
     conversationPubkeysNotifier: ref.watch(conversationPubkeysProvider.notifier),
+    eventMessageDaoProvider: ref.watch(eventMessageDaoProvider),
+    conversationMessageDataDaoProvider: ref.watch(conversationMessageDataDaoProvider),
+    conversationMessageReactionDaoProvider: ref.watch(conversationMessageReactionDaoProvider),
   );
 }
 
@@ -35,14 +38,23 @@ class SendE2eeReactionService {
     required this.currentUserMasterPubkey,
     required this.sendE2eeChatMessageService,
     required this.conversationPubkeysNotifier,
+    required this.eventMessageDaoProvider,
+    required this.conversationMessageDataDaoProvider,
+    required this.conversationMessageReactionDaoProvider,
   });
 
   final EventSigner? eventSigner;
   final String currentUserMasterPubkey;
-  final SendE2eeChatMessageService sendE2eeChatMessageService;
   final ConversationPubkeys conversationPubkeysNotifier;
+  final SendE2eeChatMessageService sendE2eeChatMessageService;
+  final EventMessageDao eventMessageDaoProvider;
+  final ConversationMessageDataDao conversationMessageDataDaoProvider;
+  final ConversationMessageReactionDao conversationMessageReactionDaoProvider;
 
-  final allowedStatus = [MessageDeliveryStatus.received, MessageDeliveryStatus.read];
+  static const allowedStatus = [
+    MessageDeliveryStatus.received,
+    MessageDeliveryStatus.read,
+  ];
 
   Future<void> sendReaction({
     required String content,
@@ -55,6 +67,11 @@ class SendE2eeReactionService {
       reference: kind14Event.toEventReference(),
     ).toEventMessage(NoPrivateSigner(eventSigner!.publicKey));
 
+    await conversationMessageReactionDaoProvider.add(
+      eventMessageDao: eventMessageDaoProvider,
+      reactionEvent: messageReactionEventMessage,
+    );
+
     final privateDirectMessageEntity =
         ReplaceablePrivateDirectMessageData.fromEventMessage(kind14Rumor);
 
@@ -65,30 +82,86 @@ class SendE2eeReactionService {
       throw ParticipantsMasterPubkeysNotFoundException(kind14Rumor.id);
     }
 
+    final participantsKeysMap =
+        await conversationPubkeysNotifier.fetchUsersKeys(participantsMasterPubkeys);
+
     await Future.wait(
       participantsMasterPubkeys.map((masterPubkey) async {
-        final participantsKeysMap =
-            await conversationPubkeysNotifier.fetchUsersKeys(participantsMasterPubkeys);
         final pubkeys = participantsKeysMap[masterPubkey];
-
         if (pubkeys == null) {
           throw UserPubkeyNotFoundException(masterPubkey);
         }
+        await _sendReactionToPubkeys(
+          pubkeys: pubkeys,
+          masterPubkey: masterPubkey,
+          eventMessage: messageReactionEventMessage,
+        );
+      }),
+    );
+  }
 
-        await Future.wait(
-          pubkeys.map((pubkey) async {
-            await sendE2eeChatMessageService.sendWrappedMessage(
-              pubkey: pubkey,
-              eventSigner: eventSigner!,
-              masterPubkey: masterPubkey,
-              eventMessage: messageReactionEventMessage,
-              wrappedKinds: [
-                // Using doubled kind 7 to differentiate between reactions and statuses
-                PrivateMessageReactionEntity.kind.toString(),
-                PrivateMessageReactionEntity.kind.toString(),
-              ],
-            );
-          }),
+  Future<void> _sendReactionToPubkeys({
+    required List<String> pubkeys,
+    required String masterPubkey,
+    required EventMessage eventMessage,
+  }) async {
+    final entity = PrivateMessageReactionEntity.fromEventMessage(eventMessage);
+    final eventReference = entity.toEventReference();
+    for (final pubkey in pubkeys) {
+      try {
+        await conversationMessageDataDaoProvider.addOrUpdateStatus(
+          pubkey: pubkey,
+          masterPubkey: masterPubkey,
+          status: MessageDeliveryStatus.created,
+          messageEventReference: eventReference,
+        );
+
+        await sendE2eeChatMessageService.sendWrappedMessage(
+          pubkey: pubkey,
+          eventSigner: eventSigner!,
+          masterPubkey: masterPubkey,
+          eventMessage: eventMessage,
+          wrappedKinds: [
+            PrivateMessageReactionEntity.kind.toString(),
+            PrivateMessageReactionEntity.kind.toString(),
+          ],
+        );
+
+        await conversationMessageDataDaoProvider.addOrUpdateStatus(
+          pubkey: pubkey,
+          masterPubkey: masterPubkey,
+          status: MessageDeliveryStatus.sent,
+          messageEventReference: eventReference,
+        );
+      } catch (_) {
+        await conversationMessageDataDaoProvider.addOrUpdateStatus(
+          pubkey: pubkey,
+          masterPubkey: masterPubkey,
+          status: MessageDeliveryStatus.failed,
+          messageEventReference: eventReference,
+        );
+      }
+    }
+  }
+
+  Future<void> resendReaction({required EventMessage eventMessage}) async {
+    final entity = PrivateMessageReactionEntity.fromEventMessage(eventMessage);
+
+    final failedKind16Participants = await conversationMessageDataDaoProvider.getFailedParticipants(
+      eventReference: entity.toEventReference(),
+    );
+
+    if (failedKind16Participants.isEmpty) return;
+
+    await Future.wait(
+      failedKind16Participants.entries.map((entry) async {
+        final masterPubkey = entry.key;
+        final pubkeys = entry.value;
+
+        await _sendReactionToPubkeys(
+          pubkeys: pubkeys,
+          masterPubkey: masterPubkey,
+          eventMessage: eventMessage,
         );
       }),
     );

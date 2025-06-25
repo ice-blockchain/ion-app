@@ -1,13 +1,12 @@
 // SPDX-License-Identifier: ice License 1.0
 
+import 'dart:async';
 import 'dart:math' as math;
-import 'dart:ui';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_keyboard_visibility/flutter_keyboard_visibility.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:ion/app/components/progress_bar/ion_loading_indicator.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/auth/providers/auth_provider.c.dart';
 import 'package:ion/app/features/feed/data/models/entities/modifiable_post_data.c.dart';
@@ -65,11 +64,6 @@ class StoryContent extends HookConsumerWidget {
                 ),
               ),
             ),
-            if (ref.watch(storyReplyProvider).isLoading)
-              BackdropFilter(
-                filter: ImageFilter.blur(sigmaX: 15, sigmaY: 15),
-                child: Center(child: IONLoadingIndicator(size: Size.square(54.0.s))),
-              ),
           ],
         ),
         StoryViewerHeader(currentPost: story),
@@ -129,7 +123,7 @@ class _StoryControlsPanel extends HookConsumerWidget {
       if (txt == null || txt.isEmpty) return;
       textController.clear();
       FocusScope.of(context).unfocus();
-      await ref.read(storyReplyProvider.notifier).sendReply(story, replyText: txt);
+      unawaited(ref.read(storyReplyProvider.notifier).sendReply(story, replyText: txt));
     }
 
     ref.listen(

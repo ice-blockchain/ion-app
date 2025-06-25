@@ -7,7 +7,6 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/auth/providers/auth_provider.c.dart';
-import 'package:ion/app/features/chat/e2ee/providers/e2ee_delete_event_provider.c.dart';
 import 'package:ion/app/features/chat/hooks/use_has_reaction.dart';
 import 'package:ion/app/features/chat/views/components/message_items/message_item_wrapper/message_item_wrapper.dart';
 import 'package:ion/app/features/chat/views/components/message_items/message_reactions/message_reactions.dart';
@@ -132,27 +131,8 @@ class SharedStoryMessage extends HookConsumerWidget {
               PositionedDirectional(
                 start: 6.0.s,
                 bottom: 6.0.s,
-                child: GestureDetector(
-                  behavior: HitTestBehavior.opaque,
-                  onTap: () async {
-                    final forEveryone = await DeleteMessageRoute(
-                      isMe: isMe,
-                    ).push<bool>(context);
-
-                    if (forEveryone != null && context.mounted) {
-                      final messageEventsList = [replyEventMessage];
-
-                      ref.read(
-                        e2eeDeleteMessageProvider(
-                          forEveryone: forEveryone,
-                          messageEvents: messageEventsList,
-                        ),
-                      );
-                    }
-                  },
-                  child: IgnorePointer(
-                    child: MessageReactions(eventMessage: replyEventMessage, isMe: isMe),
-                  ),
+                child: IgnorePointer(
+                  child: MessageReactions(eventMessage: replyEventMessage, isMe: isMe),
                 ),
               ),
           ],
@@ -193,15 +173,16 @@ class _StoryPreviewImage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return IonConnectNetworkImage(
-      imageUrl: storyUrl,
-      authorPubkey: replyEventMessage.masterPubkey,
-      imageBuilder: (_, imageProvider) => ClipRRect(
-        borderRadius: BorderRadius.circular(12.0.s),
-        child: Stack(
+    return ClipRRect(
+      borderRadius: BorderRadius.circular(12.0.s),
+      child: IonConnectNetworkImage(
+        imageUrl: storyUrl,
+        height: 220.0.s,
+        authorPubkey: replyEventMessage.masterPubkey,
+        imageBuilder: (_, imageProvider) => Stack(
           alignment: AlignmentDirectional.center,
           children: [
-            Image(image: imageProvider, height: 220.0.s),
+            Image(image: imageProvider),
             if (isThumb)
               Assets.svg.iconVideoPlay.icon(
                 color: context.theme.appColors.onPrimaryAccent,
@@ -209,9 +190,9 @@ class _StoryPreviewImage extends StatelessWidget {
               ),
           ],
         ),
+        errorWidget: (context, url, error) =>
+            _UnavailableStoryContainer(isMe: isMe, replyEventMessage: replyEventMessage),
       ),
-      errorWidget: (context, url, error) =>
-          _UnavailableStoryContainer(isMe: isMe, replyEventMessage: replyEventMessage),
     );
   }
 }

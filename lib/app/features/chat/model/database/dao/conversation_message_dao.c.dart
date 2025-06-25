@@ -167,27 +167,26 @@ class ConversationMessageDao extends DatabaseAccessor<ChatDatabase>
   }
 
   Future<void> removeMessages({
-    required List<EventReference> eventReferences,
-    required EventMessage deleteRequest,
     required Env env,
     required String masterPubkey,
     required String eventSignerPubkey,
+    required List<EventReference> eventReferences,
   }) async {
     await _removeExpiredMessages(eventReferences, env);
 
     for (final eventReference in eventReferences) {
       final existingStatusRow = await (select(messageStatusTable)
-            ..where((table) => table.messageEventReference.equalsValue(eventReference))
             ..where((table) => table.masterPubkey.equals(masterPubkey))
-            ..where((table) => table.pubkey.equals(eventSignerPubkey)))
+            ..where((table) => table.pubkey.equals(eventSignerPubkey))
+            ..where((table) => table.messageEventReference.equalsValue(eventReference)))
           .getSingleOrNull();
 
       if (existingStatusRow == null) {
         await into(messageStatusTable).insert(
           MessageStatusTableCompanion.insert(
-            messageEventReference: eventReference,
             masterPubkey: masterPubkey,
             pubkey: eventSignerPubkey,
+            messageEventReference: eventReference,
             status: MessageDeliveryStatus.deleted,
           ),
         );
@@ -195,13 +194,11 @@ class ConversationMessageDao extends DatabaseAccessor<ChatDatabase>
       }
 
       await (update(messageStatusTable)
-            ..where((table) => table.messageEventReference.equalsValue(eventReference))
             ..where((table) => table.masterPubkey.equals(masterPubkey))
-            ..where((table) => table.pubkey.equals(eventSignerPubkey)))
+            ..where((table) => table.pubkey.equals(eventSignerPubkey))
+            ..where((table) => table.messageEventReference.equalsValue(eventReference)))
           .write(
-        const MessageStatusTableCompanion(
-          status: Value(MessageDeliveryStatus.deleted),
-        ),
+        const MessageStatusTableCompanion(status: Value(MessageDeliveryStatus.deleted)),
       );
     }
   }

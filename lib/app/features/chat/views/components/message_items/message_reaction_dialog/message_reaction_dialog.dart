@@ -20,10 +20,12 @@ class MessageReactionDialog extends HookConsumerWidget {
     required this.renderObject,
     required this.messageItem,
     required this.messageStatus,
+    this.isSharedPost = false,
     super.key,
   });
 
   final bool isMe;
+  final bool isSharedPost;
   final ChatMessageInfoItem messageItem;
   final MessageDeliveryStatus messageStatus;
 
@@ -130,7 +132,7 @@ class MessageReactionDialog extends HookConsumerWidget {
               crossAxisAlignment: isMe ? CrossAxisAlignment.end : CrossAxisAlignment.start,
               mainAxisSize: MainAxisSize.min,
               children: [
-                MessageReactionEmojiBar(isMe: isMe),
+                if (!isSharedPost) MessageReactionEmojiBar(isMe: isMe),
                 Image.memory(
                   imageBytes,
                   height: contentHeight,
@@ -139,9 +141,10 @@ class MessageReactionDialog extends HookConsumerWidget {
                 ),
                 IntrinsicWidth(
                   child: MessageReactionContextMenu(
-                    key: contextMenuKey,
                     isMe: isMe,
+                    key: contextMenuKey,
                     messageItem: messageItem,
+                    isSharedPost: isSharedPost,
                     messageStatus: messageStatus,
                   ),
                 ),
