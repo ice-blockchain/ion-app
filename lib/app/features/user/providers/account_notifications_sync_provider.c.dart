@@ -4,7 +4,6 @@ import 'dart:async';
 import 'dart:convert';
 
 import 'package:drift/drift.dart';
-import 'package:ion/app/extensions/build_context.dart';
 import 'package:ion/app/features/auth/providers/auth_provider.c.dart';
 import 'package:ion/app/features/core/providers/env_provider.c.dart';
 import 'package:ion/app/features/feed/data/models/entities/article_data.c.dart';
@@ -24,11 +23,7 @@ import 'package:ion/app/features/user/data/database/account_notifications_databa
 import 'package:ion/app/features/user/model/user_notifications_type.dart';
 import 'package:ion/app/features/user/pages/profile_page/providers/user_notifications_provider.c.dart';
 import 'package:ion/app/features/user/providers/account_notifications_sets_provider.c.dart';
-import 'package:ion/app/features/user/providers/user_metadata_provider.c.dart';
 import 'package:ion/app/features/user/providers/user_relays_manager.c.dart';
-import 'package:ion/app/router/app_routes.c.dart';
-import 'package:ion/app/services/local_notifications/local_notifications.c.dart';
-import 'package:ion/app/services/logger/logger.dart';
 import 'package:ion/app/utils/algorithm.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
@@ -87,52 +82,70 @@ class AccountNotificationsSync extends _$AccountNotificationsSync {
   }
 
   Future<void> _performSync() async {
-    try {
-      final authState = await ref.read(authProvider.future);
-      if (!authState.isAuthenticated) {
-        return;
-      }
+    final authState = await ref.read(authProvider.future);
+    if (!authState.isAuthenticated) {
+      return;
+    }
 
-      final currentPubkey = ref.read(currentPubkeySelectorProvider);
-      if (currentPubkey == null) {
-        return;
-      }
+    final currentPubkey = ref.read(currentPubkeySelectorProvider);
+    if (currentPubkey == null) {
+      return;
+    }
 
-      final enabledNotifications = ref.read(userNotificationsNotifierProvider);
-      if (enabledNotifications.contains(UserNotificationsType.none) ||
-          enabledNotifications.isEmpty) {
-        return;
-      }
+    final enabledNotifications = ref.read(userNotificationsNotifierProvider);
 
-      final contentTypes = enabledNotifications
+    final hasGlobalNotifications = !enabledNotifications.contains(UserNotificationsType.none) &&
+        enabledNotifications.isNotEmpty;
+
+    var contentTypes = <NotificationContentType>[];
+
+    if (hasGlobalNotifications) {
+      contentTypes = enabledNotifications
           .where((type) => type != UserNotificationsType.none)
           .map(NotificationContentType.fromUserNotificationType)
           .toList();
-
-      final database = ref.read(accountNotificationsDatabaseProvider);
-
-      final allUsers = await _getAllUsersFromNotificationSets(contentTypes);
-      if (allUsers.isEmpty) {
-        return;
+    } else {
+      final userSpecificTypes = <NotificationContentType>[];
+      for (final type in [
+        UserNotificationsType.posts,
+        UserNotificationsType.stories,
+        UserNotificationsType.articles,
+        UserNotificationsType.videos,
+      ]) {
+        final users = await ref.read(usersForNotificationTypeProvider(type).future);
+        if (users.isNotEmpty) {
+          userSpecificTypes.add(NotificationContentType.fromUserNotificationType(type));
+        }
       }
 
-      await _cacheUserRelays(allUsers, database);
+      contentTypes = userSpecificTypes;
+    }
 
-      final optimalRelayMapping = await _getOptimalRelayMapping(allUsers, database);
+    if (contentTypes.isEmpty) {
+      return;
+    }
 
-      for (final entry in optimalRelayMapping.entries) {
-        final relayUrl = entry.key;
-        final users = entry.value;
+    final database = ref.read(accountNotificationsDatabaseProvider);
 
-        await _syncEventsFromRelay(
-          relayUrl: relayUrl,
-          users: users,
-          contentTypes: contentTypes,
-          database: database,
-        );
-      }
-    } catch (error, stackTrace) {
-      Logger.error('Account notifications sync error: $error', stackTrace: stackTrace);
+    final allUsers = await _getAllUsersFromNotificationSets(contentTypes);
+    if (allUsers.isEmpty) {
+      return;
+    }
+
+    await _cacheUserRelays(allUsers, database);
+
+    final optimalRelayMapping = await _getOptimalRelayMapping(allUsers, database);
+
+    for (final entry in optimalRelayMapping.entries) {
+      final relayUrl = entry.key;
+      final users = entry.value;
+
+      await _syncEventsFromRelay(
+        relayUrl: relayUrl,
+        users: users,
+        contentTypes: contentTypes,
+        database: database,
+      );
     }
   }
 
@@ -149,38 +162,25 @@ class AccountNotificationsSync extends _$AccountNotificationsSync {
         NotificationContentType.videos => UserNotificationsType.videos,
       };
 
-      try {
-        final users = await ref.read(usersForNotificationTypeProvider(notificationType).future);
-        allUsers.addAll(users);
-      } catch (error) {
-        Logger.error('Error fetching users for $notificationType: $error');
-      }
+      final users = await ref.read(usersForNotificationTypeProvider(notificationType).future);
+      allUsers.addAll(users);
     }
-
     return allUsers.toList();
   }
 
   Future<void> _cacheUserRelays(List<String> users, AccountNotificationsDatabase database) async {
-    // TODO: Add periodic relay list refresh/sync for users in the future
-    // Currently we only fetch relay lists when enabling notifications for a user
-    // but we should periodically refresh them to ensure we have up-to-date relay information
+    final userRelaysManager = ref.read(userRelaysManagerProvider.notifier);
+    final userRelaysList = await userRelaysManager.fetch(users);
 
-    try {
-      final userRelaysManager = ref.read(userRelaysManagerProvider.notifier);
-      final userRelaysList = await userRelaysManager.fetch(users);
-
-      for (final userRelay in userRelaysList) {
-        final relayUrls = json.encode(userRelay.urls);
-        await database.into(database.notificationUserRelaysTable).insertOnConflictUpdate(
-              NotificationUserRelaysTableCompanion.insert(
-                userPubkey: userRelay.masterPubkey,
-                relayUrls: relayUrls,
-                cachedAt: DateTime.now().microsecondsSinceEpoch,
-              ),
-            );
-      }
-    } catch (error, stackTrace) {
-      Logger.error('Error caching relays for users: $error', stackTrace: stackTrace);
+    for (final userRelay in userRelaysList) {
+      final relayUrls = json.encode(userRelay.urls);
+      await database.into(database.notificationUserRelaysTable).insertOnConflictUpdate(
+            NotificationUserRelaysTableCompanion.insert(
+              userPubkey: userRelay.masterPubkey,
+              relayUrls: relayUrls,
+              cachedAt: DateTime.now().microsecondsSinceEpoch,
+            ),
+          );
     }
   }
 
@@ -198,8 +198,9 @@ class AccountNotificationsSync extends _$AccountNotificationsSync {
         userToRelays[cached.userPubkey] = relayUrls;
       }
     }
+    final result = findBestOptions(userToRelays);
 
-    return findBestOptions(userToRelays);
+    return result;
   }
 
   Future<void> _syncEventsFromRelay({
@@ -224,42 +225,42 @@ class AccountNotificationsSync extends _$AccountNotificationsSync {
     required NotificationContentType contentType,
     required AccountNotificationsDatabase database,
   }) async {
-    try {
-      final syncState = await _getSyncState(relayUrl, contentType, database);
-      final callStartTime = DateTime.now().microsecondsSinceEpoch;
+    final syncState = await _getSyncState(relayUrl, contentType, database);
+    final callStartTime = DateTime.now().microsecondsSinceEpoch;
 
-      final requestFilter = _buildRequestFilter(
-        contentType: contentType,
-        users: users,
-      );
+    final requestFilter = _buildRequestFilter(
+      contentType: contentType,
+      users: users,
+    );
 
-      if (requestFilter == null) {
-        return;
-      }
-
-      final latestEventTimestamp = syncState?.sinceTimestamp ?? callStartTime;
-      final eventBackfillService = ref.read(eventBackfillServiceProvider);
-
-      final newLastCreatedAt = await eventBackfillService.startBackfill(
-        latestEventTimestamp: latestEventTimestamp,
-        filter: requestFilter,
-        onEvent: (event) => _processNotificationEvent(event, contentType),
-        actionSource: ActionSourceRelayUrl(relayUrl),
-      );
-
-      await _updateSyncState(
-        relayUrl: relayUrl,
-        contentType: contentType,
-        database: database,
-        sinceTimestamp: newLastCreatedAt,
-      );
-
-      Logger.log(
-        'Completed sync for $contentType from $relayUrl. New since timestamp: $newLastCreatedAt',
-      );
-    } catch (error, stackTrace) {
-      Logger.error('Error syncing $contentType from $relayUrl: $error', stackTrace: stackTrace);
+    if (requestFilter == null) {
+      return;
     }
+
+    final latestEventTimestamp = syncState?.sinceTimestamp ?? callStartTime;
+
+    final eventBackfillService = ref.read(eventBackfillServiceProvider);
+
+    final eventFutures = <Future<void>>[];
+    final newLastCreatedAt = await eventBackfillService.startBackfill(
+      latestEventTimestamp: latestEventTimestamp,
+      filter: requestFilter,
+      onEvent: (event) {
+        eventFutures.add(_processNotificationEvent(event, contentType));
+      },
+      actionSource: ActionSourceRelayUrl(relayUrl),
+    );
+    await Future.wait(eventFutures);
+
+    final actualNewTimestamp =
+        newLastCreatedAt == latestEventTimestamp ? latestEventTimestamp + 1 : newLastCreatedAt;
+
+    await _updateSyncState(
+      relayUrl: relayUrl,
+      contentType: contentType,
+      database: database,
+      sinceTimestamp: actualNewTimestamp,
+    );
   }
 
   Future<AccountNotificationSyncState?> _getSyncState(
@@ -346,24 +347,17 @@ class AccountNotificationsSync extends _$AccountNotificationsSync {
     EventMessage event,
     NotificationContentType contentType,
   ) async {
-    try {
-      final entity = _convertEventToEntity(event);
-      if (entity == null) {
-        Logger.log('Unsupported event kind ${event.kind} for notifications');
-        return;
-      }
-
-      await _saveToNotificationsDatabase(entity);
-
-      await _triggerLocalNotification(entity, contentType);
-    } catch (error) {
-      Logger.error('Error processing notification event: $error');
+    final entity = _convertEventToEntity(event);
+    if (entity == null) {
+      return;
     }
+
+    await _saveToNotificationsDatabase(entity);
   }
 
   IonConnectEntity? _convertEventToEntity(EventMessage event) {
     try {
-      return switch (event.kind) {
+      final entity = switch (event.kind) {
         PostEntity.kind => PostEntity.fromEventMessage(event),
         RepostEntity.kind => RepostEntity.fromEventMessage(event),
         ReactionEntity.kind => ReactionEntity.fromEventMessage(event),
@@ -373,66 +367,23 @@ class AccountNotificationsSync extends _$AccountNotificationsSync {
         GenericRepostEntity.modifiablePostRepostKind => GenericRepostEntity.fromEventMessage(event),
         _ => null,
       };
+
+      return entity;
     } catch (error) {
-      Logger.error('Error converting event ${event.id} to entity: $error');
       return null;
     }
   }
 
   Future<void> _saveToNotificationsDatabase(IonConnectEntity entity) async {
-    try {
-      switch (entity.runtimeType) {
-        case ReactionEntity:
-          final likesRepo = ref.read(likesRepositoryProvider);
-          await likesRepo.save(entity);
-        case ModifiablePostEntity:
-        case GenericRepostEntity:
-          final commentsRepo = ref.read(commentsRepositoryProvider);
-          await commentsRepo.save(entity);
-        case PostEntity:
-        case ArticleEntity:
-          final contentRepo = ref.read(contentRepositoryProvider);
-          await contentRepo.save(entity);
-        default:
-          Logger.log('No specific repository handler for ${entity.runtimeType}');
-      }
-    } catch (error, stackTrace) {
-      Logger.error('Error saving to notifications database: $error', stackTrace: stackTrace);
-    }
-  }
-
-  Future<void> _triggerLocalNotification(
-    IonConnectEntity entity,
-    NotificationContentType contentType,
-  ) async {
-    try {
-      final context = rootNavigatorKey.currentContext;
-
-      if (context == null) {
-        return;
-      }
-
-      final locale = context.i18n;
-
-      final localNotifications = await ref.read(localNotificationsServiceProvider.future);
-      final userMetadata = await ref.read(userMetadataProvider(entity.masterPubkey).future);
-      final username = userMetadata?.data.displayName ?? userMetadata?.data.name ?? '';
-
-      final title = switch (contentType) {
-        NotificationContentType.posts => locale.notifications_posted_new_post(username),
-        NotificationContentType.stories => locale.notifications_posted_new_story(username),
-        NotificationContentType.articles => locale.notifications_posted_new_article(username),
-        NotificationContentType.videos => locale.notifications_posted_new_video(username),
-      };
-
-      await localNotifications.showNotification(
-        id: entity.id.hashCode,
-        title: title,
-        body: '',
-        payload: entity.id,
-      );
-    } catch (error, stackTrace) {
-      Logger.error('Error triggering local notification: $error', stackTrace: stackTrace);
+    if (entity is ReactionEntity) {
+      final likesRepo = ref.read(likesRepositoryProvider);
+      await likesRepo.save(entity);
+    } else if (entity is PostEntity || entity is ArticleEntity || entity is ModifiablePostEntity) {
+      final contentRepo = ref.read(contentRepositoryProvider);
+      await contentRepo.save(entity);
+    } else if (entity is GenericRepostEntity) {
+      final commentsRepo = ref.read(commentsRepositoryProvider);
+      await commentsRepo.save(entity);
     }
   }
 }

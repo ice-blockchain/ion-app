@@ -143,16 +143,12 @@ final class ContentIonNotification extends IonNotification {
   }
 
   @override
-  String getDescription(BuildContext context, [String eventTypeLabel = '']) {
+  String getDescription(BuildContext context) {
     return switch (type) {
-      ContentIonNotificationType.posts =>
-        context.i18n.notifications_posted_new_post(eventTypeLabel),
-      ContentIonNotificationType.stories =>
-        context.i18n.notifications_posted_new_story(eventTypeLabel),
-      ContentIonNotificationType.articles =>
-        context.i18n.notifications_posted_new_article(eventTypeLabel),
-      ContentIonNotificationType.videos =>
-        context.i18n.notifications_posted_new_video(eventTypeLabel),
+      ContentIonNotificationType.posts => context.i18n.notifications_posted_new_post,
+      ContentIonNotificationType.stories => context.i18n.notifications_posted_new_story,
+      ContentIonNotificationType.articles => context.i18n.notifications_posted_new_article,
+      ContentIonNotificationType.videos => context.i18n.notifications_posted_new_video,
     };
   }
 }

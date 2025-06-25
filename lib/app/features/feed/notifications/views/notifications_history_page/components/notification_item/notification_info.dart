@@ -45,6 +45,7 @@ class NotificationInfo extends HookConsumerWidget {
         notification.getDescription(context, eventTypeLabel),
       final CommentIonNotification notification =>
         notification.getDescription(context, eventTypeLabel),
+      final ContentIonNotification notification => notification.getDescription(context),
       _ => notification.getDescription(context)
     };
 
