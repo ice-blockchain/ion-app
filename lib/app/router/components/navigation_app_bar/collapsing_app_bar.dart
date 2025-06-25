@@ -39,15 +39,23 @@ class CollapsingAppBar extends StatelessWidget {
       surfaceTintColor: context.theme.appColors.onPrimaryAccent,
       flexibleSpace: LayoutBuilder(
         builder: (BuildContext context, BoxConstraints constraints) {
-          final opacity = 1 - ((totalHeight - constraints.maxHeight) / fadeOffset).clamp(0, 1);
+          final overlayOpacity = ((totalHeight - constraints.maxHeight) / fadeOffset).clamp(0, 1);
           return Align(
             alignment: Alignment.bottomCenter,
-            child: Opacity(
-              opacity: opacity.toDouble(),
-              child: Padding(
-                padding: EdgeInsetsDirectional.only(bottom: bottomOffset),
-                child: child,
-              ),
+            child: Stack(
+              clipBehavior: Clip.none,
+              children: [
+                Padding(
+                  padding: EdgeInsetsDirectional.only(bottom: bottomOffset),
+                  child: child,
+                ),
+                Positioned.fill(
+                  child: ColoredBox(
+                    color: context.theme.appColors.onPrimaryAccent
+                        .withValues(alpha: overlayOpacity.toDouble()),
+                  ),
+                ),
+              ],
             ),
           );
         },
