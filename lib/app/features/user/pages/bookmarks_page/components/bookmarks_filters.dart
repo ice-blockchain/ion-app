@@ -21,21 +21,24 @@ class BookmarksFilters extends HookConsumerWidget {
     final collectionsRefs = ref.watch(feedBookmarkCollectionsNotifierProvider).valueOrNull ?? [];
     final collectionsDTags =
         collectionsRefs.map((collectionRef) => collectionRef.dTag).whereType<String>().toList();
-    return SingleChildScrollView(
-      scrollDirection: Axis.horizontal,
-      padding: EdgeInsets.symmetric(horizontal: 10.0.s, vertical: 12.0.s),
-      child: Row(
-        children: [
-          for (final collectionDTag in collectionsDTags)
-            Padding(
-              padding: EdgeInsets.symmetric(horizontal: 6.0.s),
-              child: BookmarksFilterTile(
-                collectionDTag: collectionDTag,
-                isActive: collectionDTag == activeCollectionDTag,
-                onTap: () => onFilterTap(collectionDTag),
-              ),
-            ),
-        ],
+    return SizedBox(
+      height: 64.0.s,
+      child: ListView.separated(
+        scrollDirection: Axis.horizontal,
+        physics: const ClampingScrollPhysics(),
+        padding: EdgeInsets.symmetric(horizontal: 16.0.s, vertical: 12.0.s),
+        itemCount: collectionsDTags.length,
+        itemBuilder: (context, index) {
+          final collectionDTag = collectionsDTags[index];
+          return BookmarksFilterTile(
+            collectionDTag: collectionDTag,
+            isActive: collectionDTag == activeCollectionDTag,
+            onTap: () => onFilterTap(collectionDTag),
+          );
+        },
+        separatorBuilder: (_, __) => SizedBox(
+          width: 12.0.s,
+        ),
       ),
     );
   }
