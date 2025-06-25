@@ -146,7 +146,7 @@ class SendE2eeChatMessageService {
         return a.compareTo(b);
       });
 
-      if (mediaAttachmentsUsersBased.isEmpty && content.isEmpty) {
+      if (mediaAttachmentsUsersBased.isEmpty && content.isEmpty && quotedEvent == null) {
         await ref.read(eventMessageDaoProvider).deleteByEventReference(eventReference);
         return sentMessage;
       }

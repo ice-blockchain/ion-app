@@ -51,32 +51,34 @@ class SharedPostWrapper extends HookConsumerWidget {
       [messageItemKey, isMe, sharedEntity, sharedPostMessageStatus],
     );
 
-    return Align(
-      alignment: isMe ? AlignmentDirectional.centerEnd : AlignmentDirectional.centerStart,
-      child: GestureDetector(
-        onLongPress: showReactDialog,
-        child: RepaintBoundary(
-          key: messageItemKey,
-          child: Row(
-            mainAxisSize: MainAxisSize.min,
-            mainAxisAlignment: MainAxisAlignment.end,
-            children: [
-              child,
-              if (sharedPostMessageStatus == MessageDeliveryStatus.failed)
-                Row(
+    return sharedPostMessageStatus == MessageDeliveryStatus.deleted
+        ? const SizedBox.shrink()
+        : Align(
+            alignment: isMe ? AlignmentDirectional.centerEnd : AlignmentDirectional.centerStart,
+            child: GestureDetector(
+              onLongPress: showReactDialog,
+              child: RepaintBoundary(
+                key: messageItemKey,
+                child: Row(
                   mainAxisSize: MainAxisSize.min,
+                  mainAxisAlignment: MainAxisAlignment.end,
                   children: [
-                    SizedBox(width: 6.0.s),
-                    Assets.svg.iconMessageFailed.icon(
-                      color: context.theme.appColors.attentionRed,
-                      size: 16.0.s,
-                    ),
+                    child,
+                    if (sharedPostMessageStatus == MessageDeliveryStatus.failed)
+                      Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          SizedBox(width: 6.0.s),
+                          Assets.svg.iconMessageFailed.icon(
+                            color: context.theme.appColors.attentionRed,
+                            size: 16.0.s,
+                          ),
+                        ],
+                      ),
                   ],
                 ),
-            ],
-          ),
-        ),
-      ),
-    );
+              ),
+            ),
+          );
   }
 }

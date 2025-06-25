@@ -2,13 +2,13 @@
 
 import 'dart:async';
 
-import 'package:async/async.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/features/auth/providers/auth_provider.c.dart';
 import 'package:ion/app/features/chat/e2ee/model/entities/private_direct_message_data.c.dart';
 import 'package:ion/app/features/chat/model/database/chat_database.c.dart';
 import 'package:ion/app/features/ion_connect/model/event_reference.c.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
+import 'package:rxdart/rxdart.dart';
 
 part 'message_status_provider.c.g.dart';
 
@@ -69,16 +69,19 @@ Stream<MessageDeliveryStatus> sharedPostMessageStatus(
             currentUserMasterPubkey: currentUserMasterPubkey,
           )
       : Stream.value(MessageDeliveryStatus.created);
-
-  await for (final statuses in StreamZip([
+  // Combine the latest values from each stream, emitting whenever any stream emits a new value.
+  yield* Rx.combineLatest3(
     sharedEntityMessageDeliveryStatusStream,
     quotedEventDeliveryStatusStream,
     storyReactionDeliveryStatusStream,
-  ])) {
-    if (statuses.contains(MessageDeliveryStatus.failed)) {
-      yield MessageDeliveryStatus.failed;
+    (a, b, c) => [a, b, c],
+  ).map((statuses) {
+    if (statuses.contains(MessageDeliveryStatus.deleted)) {
+      return MessageDeliveryStatus.deleted;
+    } else if (statuses.contains(MessageDeliveryStatus.failed)) {
+      return MessageDeliveryStatus.failed;
     } else {
-      yield MessageDeliveryStatus.sent;
+      return MessageDeliveryStatus.sent;
     }
-  }
+  });
 }
