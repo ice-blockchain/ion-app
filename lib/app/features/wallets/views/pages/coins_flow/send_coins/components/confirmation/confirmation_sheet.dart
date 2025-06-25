@@ -101,7 +101,7 @@ class ConfirmationSheet extends ConsumerWidget {
               child: Column(
                 children: [
                   SizedBox(height: 16.0.s),
-                  if (coin != null)
+                  if (coin != null) ...[
                     TransactionAmountSummary(
                       amount: coin.amount,
                       currency: coin.coinsGroup.abbreviation,
@@ -109,20 +109,14 @@ class ConfirmationSheet extends ConsumerWidget {
                       icon: CoinIconWidget.big(coin.coinsGroup.iconUrl),
                       transactionType: TransactionType.send,
                     ),
-                  SizedBox(height: 16.0.s),
+                    SizedBox(height: 16.0.s),
+                  ],
                   TransactionParticipant(
                     address: formData.receiverAddress,
                     pubkey: formData.contactPubkey,
                   ),
                   SizedBox(height: 16.0.s),
-                  if (coin != null)
-                    ListItem.textWithIcon(
-                      title: Text(locale.wallet_asset),
-                      value: coin.coinsGroup.abbreviation,
-                      icon: CoinIconWidget.small(coin.coinsGroup.iconUrl),
-                    ),
-                  SizedBox(height: 16.0.s),
-                  if (formData.senderWallet?.address case final String address)
+                  if (formData.senderWallet?.address case final String address) ...[
                     ListItem.textWithIcon(
                       title: Text(locale.wallet_title),
                       value: formData.walletView!.name,
@@ -138,8 +132,17 @@ class ConfirmationSheet extends ConsumerWidget {
                         ),
                       ),
                     ),
-                  SizedBox(height: 16.0.s),
-                  if (formData.network case final NetworkData network)
+                    SizedBox(height: 16.0.s),
+                  ],
+                  if (coin != null) ...[
+                    ListItem.textWithIcon(
+                      title: Text(locale.wallet_asset),
+                      value: coin.coinsGroup.abbreviation,
+                      icon: CoinIconWidget.small(coin.coinsGroup.iconUrl),
+                    ),
+                    SizedBox(height: 16.0.s),
+                  ],
+                  if (formData.network case final NetworkData network) ...[
                     ListItem.textWithIcon(
                       title: Text(locale.wallet_network),
                       value: network.displayName,
@@ -148,7 +151,8 @@ class ConfirmationSheet extends ConsumerWidget {
                         imageUrl: network.image,
                       ),
                     ),
-                  SizedBox(height: 16.0.s),
+                    SizedBox(height: 16.0.s),
+                  ],
                   if (formData.selectedNetworkFeeOption case final NetworkFeeOption fee) ...[
                     if (fee.getDisplayArrivalTime(context) case final String arrivalTime)
                       ListItemArrivalTime(formattedTime: arrivalTime),
