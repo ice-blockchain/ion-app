@@ -25,6 +25,9 @@ class FeedStories extends _$FeedStories with DelegatedPagedNotifier {
       FeedFilter.following => ref.watch(feedFollowingContentProvider(FeedType.story)),
       FeedFilter.forYou => ref.watch(feedForYouContentProvider(FeedType.story)),
     };
+    if (data.isLoading) {
+      return (items: null, hasMore: false);
+    }
     return (items: _groupByPubkey(data.items), hasMore: data.hasMore);
   }
 

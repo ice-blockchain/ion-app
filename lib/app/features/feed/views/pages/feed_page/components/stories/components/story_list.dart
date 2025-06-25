@@ -1,7 +1,5 @@
 // SPDX-License-Identifier: ice License 1.0
 
-import 'dart:math';
-
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/components/screen_offset/screen_side_offset.dart';
@@ -46,10 +44,7 @@ class StoryList extends ConsumerWidget {
           }
 
           final pubkey = filteredPubkeys[index - 1];
-          return StoryListItem(
-            pubkey: pubkey,
-            gradient: storyBorderGradients[Random().nextInt(storyBorderGradients.length)],
-          );
+          return StoryListItem(pubkey: pubkey);
         },
       ),
     );

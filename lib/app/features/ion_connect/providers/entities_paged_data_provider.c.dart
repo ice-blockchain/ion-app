@@ -24,6 +24,7 @@ abstract class PagedNotifier {
 abstract class PagedState {
   Set<IonConnectEntity>? get items;
   bool get hasMore;
+  bool get isLoading;
 }
 
 mixin DelegatedPagedNotifier implements PagedNotifier {
