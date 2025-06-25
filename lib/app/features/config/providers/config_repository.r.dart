@@ -46,8 +46,7 @@ class ConfigRepository {
   }) async {
     final cacheMaxAge = refreshInterval ?? _defaultCacheMaxAge;
 
-    final lockKey = '$configName-${cacheMaxAge.inMilliseconds}';
-    final lock = _locks.putIfAbsent(lockKey, Lock.new);
+    final lock = _locks.putIfAbsent(configName, Lock.new);
 
     return lock.synchronized(() async {
       final cachedData = await _getFromCache(configName, cacheStrategy, cacheMaxAge, parser);
