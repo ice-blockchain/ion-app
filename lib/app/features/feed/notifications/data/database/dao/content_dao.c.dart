@@ -26,7 +26,7 @@ class ContentDao extends DatabaseAccessor<NotificationsDatabase> with _$ContentD
 
   Future<List<ContentNotification>> getAllByType(ContentType type) {
     return (select(contentTable)
-          ..where((c) => c.type.equals(type.index))
+          ..where((c) => c.type.equalsValue(type))
           ..orderBy([(c) => OrderingTerm.desc(c.createdAt)]))
         .get();
   }
