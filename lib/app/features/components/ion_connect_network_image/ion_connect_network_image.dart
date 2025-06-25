@@ -21,6 +21,8 @@ class IonConnectNetworkImage extends ConsumerWidget {
     this.fit,
     this.errorWidget,
     this.placeholder,
+    this.fadeInDuration,
+    this.fadeOutDuration,
     super.key,
   });
 
@@ -36,6 +38,8 @@ class IonConnectNetworkImage extends ConsumerWidget {
   final Alignment alignment;
   final double? width;
   final double? height;
+  final Duration? fadeInDuration;
+  final Duration? fadeOutDuration;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -53,6 +57,8 @@ class IonConnectNetworkImage extends ConsumerWidget {
       alignment: alignment,
       width: width,
       height: height,
+      fadeInDuration: fadeInDuration ?? Duration.zero,
+      fadeOutDuration: fadeOutDuration ?? Duration.zero,
       errorListener: (error) {
         if (ref.context.mounted) {
           ref.read(iONConnectMediaUrlFallbackProvider.notifier).generateFallback(

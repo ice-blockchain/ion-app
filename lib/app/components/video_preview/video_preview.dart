@@ -255,6 +255,8 @@ class _BlurredThumbnail extends HookWidget {
               imageUrl: thumbnailUrl,
               authorPubkey: authorPubkey,
               fit: BoxFit.cover,
+              fadeInDuration: const Duration(milliseconds: 100),
+              fadeOutDuration: const Duration(milliseconds: 100),
             ),
           ),
         ),
