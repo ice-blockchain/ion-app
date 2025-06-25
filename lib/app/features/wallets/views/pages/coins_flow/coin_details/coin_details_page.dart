@@ -10,6 +10,7 @@ import 'package:ion/app/components/screen_offset/screen_bottom_offset.dart';
 import 'package:ion/app/components/screen_offset/screen_side_offset.dart';
 import 'package:ion/app/components/scroll_view/load_more_builder.dart';
 import 'package:ion/app/components/scroll_view/pull_to_refresh_builder.dart';
+import 'package:ion/app/components/section_separator/section_separator.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/wallets/model/coin_transaction_data.c.dart';
 import 'package:ion/app/features/wallets/model/transaction_details.c.dart';
@@ -22,7 +23,6 @@ import 'package:ion/app/features/wallets/views/pages/coins_flow/coin_details/com
 import 'package:ion/app/features/wallets/views/pages/coins_flow/coin_details/components/transaction_list_item/transaction_section_header.dart';
 import 'package:ion/app/features/wallets/views/pages/coins_flow/coin_details/providers/coin_transaction_history_notifier_provider.c.dart';
 import 'package:ion/app/features/wallets/views/pages/coins_flow/coin_details/providers/network_selector_notifier.c.dart';
-import 'package:ion/app/features/wallets/views/pages/wallet_page/components/delimiter/delimiter.dart';
 import 'package:ion/app/router/app_routes.c.dart';
 import 'package:ion/app/router/components/navigation_app_bar/navigation_app_bar.dart';
 import 'package:ion/app/utils/date.dart';
@@ -81,9 +81,9 @@ class CoinDetailsPage extends HookConsumerWidget {
           SliverToBoxAdapter(
             child: Column(
               children: [
-                const Delimiter(),
+                const SectionSeparator(),
                 Balance(coinsGroup: coinsGroup),
-                const Delimiter(),
+                const SectionSeparator(),
               ],
             ),
           ),

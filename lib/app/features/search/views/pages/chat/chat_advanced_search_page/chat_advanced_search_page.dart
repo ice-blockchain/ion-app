@@ -4,10 +4,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/components/screen_offset/screen_top_offset.dart';
+import 'package:ion/app/components/section_separator/section_separator.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/core/model/feature_flags.dart';
 import 'package:ion/app/features/core/providers/feature_flags_provider.c.dart';
-import 'package:ion/app/features/feed/views/components/list_separator/list_separator.dart';
 import 'package:ion/app/features/search/model/advanced_search_category.dart';
 import 'package:ion/app/features/search/views/components/advanced_search_channels/advanced_search_channels.dart';
 import 'package:ion/app/features/search/views/components/advanced_search_groups/advanced_search_groups.dart';
@@ -54,7 +54,7 @@ class ChatAdvancedSearchPage extends HookConsumerWidget {
               ),
               SizedBox(height: 16.0.s),
               AdvancedSearchTabBar(categories: categories),
-              FeedListSeparator(),
+              const SectionSeparator(),
               Expanded(
                 child: TabBarView(
                   children: categories.map((category) {

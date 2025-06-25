@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/components/scroll_view/pull_to_refresh_builder.dart';
+import 'package:ion/app/components/section_separator/section_separator.dart';
 import 'package:ion/app/features/feed/views/pages/feed_page/components/feed_controls/feed_controls.dart';
 import 'package:ion/app/features/ion_connect/providers/ion_connect_cache.c.dart';
 import 'package:ion/app/features/user/providers/follow_list_provider.c.dart';
@@ -14,7 +15,6 @@ import 'package:ion/app/features/wallets/views/pages/manage_coins/providers/mana
 import 'package:ion/app/features/wallets/views/pages/wallet_page/components/balance/balance.dart';
 import 'package:ion/app/features/wallets/views/pages/wallet_page/components/coins/coins_tab.dart';
 import 'package:ion/app/features/wallets/views/pages/wallet_page/components/coins/coins_tab_header.dart';
-import 'package:ion/app/features/wallets/views/pages/wallet_page/components/delimiter/delimiter.dart';
 import 'package:ion/app/features/wallets/views/pages/wallet_page/components/friends/friends_list.dart';
 import 'package:ion/app/features/wallets/views/pages/wallet_page/components/header/header.dart';
 import 'package:ion/app/features/wallets/views/pages/wallet_page/components/nfts/nfts_tab.dart';
@@ -47,7 +47,7 @@ class WalletPage extends HookConsumerWidget {
                 children: [
                   Balance(tab: activeTab.value),
                   const FriendsList(),
-                  const Delimiter(),
+                  const SectionSeparator(),
                   WalletTabsHeader(
                     activeTab: activeTab.value,
                     onTabSwitch: (WalletTabType newTab) {

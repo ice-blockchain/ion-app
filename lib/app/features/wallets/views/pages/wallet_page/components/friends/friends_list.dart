@@ -3,11 +3,11 @@
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/components/screen_offset/screen_side_offset.dart';
+import 'package:ion/app/components/section_separator/section_separator.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/user/providers/follow_list_provider.c.dart';
 import 'package:ion/app/features/user/providers/friends_section_providers.c.dart';
 import 'package:ion/app/features/wallets/providers/wallet_page_loader_provider.c.dart';
-import 'package:ion/app/features/wallets/views/pages/wallet_page/components/delimiter/delimiter.dart';
 import 'package:ion/app/features/wallets/views/pages/wallet_page/components/friends/friends_list_header.dart';
 import 'package:ion/app/features/wallets/views/pages/wallet_page/components/friends/friends_list_item.dart';
 import 'package:ion/app/features/wallets/views/pages/wallet_page/components/friends/friends_list_loader.dart';
@@ -38,7 +38,7 @@ class FriendsList extends ConsumerWidget {
 
     return Column(
       children: [
-        const Delimiter(),
+        const SectionSeparator(),
         if (isLoading)
           FriendsListLoader(footer: footer)
         else if (friendsPubkeys.isNotEmpty)

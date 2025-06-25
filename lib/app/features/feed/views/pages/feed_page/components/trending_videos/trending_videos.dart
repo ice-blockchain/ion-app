@@ -6,12 +6,12 @@ import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/components/scroll_view/load_more_builder.dart';
 import 'package:ion/app/components/section_header/section_header.dart';
+import 'package:ion/app/components/section_separator/section_separator.dart';
 import 'package:ion/app/extensions/build_context.dart';
 import 'package:ion/app/extensions/num.dart';
 import 'package:ion/app/features/feed/data/models/entities/modifiable_post_data.c.dart';
 import 'package:ion/app/features/feed/data/models/trending_videos_overlay.dart';
 import 'package:ion/app/features/feed/providers/feed_trending_videos_provider.c.dart';
-import 'package:ion/app/features/feed/views/components/list_separator/list_separator.dart';
 import 'package:ion/app/features/feed/views/pages/feed_page/components/trending_videos/components/trending_videos_list.dart';
 import 'package:ion/app/features/feed/views/pages/feed_page/components/trending_videos/components/trending_videos_list_skeleton.dart';
 import 'package:ion/app/features/feed/views/pages/feed_page/components/trending_videos/components/video_icon.dart';
@@ -34,7 +34,7 @@ class TrendingVideos extends ConsumerWidget {
           SizedBox(height: 10.0.s),
           const TrendingVideosListSkeleton(listOverlay: listOverlay),
           SizedBox(height: 18.0.s),
-          FeedListSeparator(height: 4.0.s),
+          const SectionSeparator(),
         ],
       );
     }
@@ -73,7 +73,7 @@ class TrendingVideos extends ConsumerWidget {
           ),
         ),
         SizedBox(height: 18.0.s),
-        FeedListSeparator(height: 4.0.s),
+        const SectionSeparator(),
       ],
     );
   }
