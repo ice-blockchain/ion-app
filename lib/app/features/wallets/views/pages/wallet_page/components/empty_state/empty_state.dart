@@ -4,12 +4,13 @@ import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/components/empty_list/empty_list.dart';
 import 'package:ion/app/components/screen_offset/screen_side_offset.dart';
-import 'package:ion/app/extensions/build_context.dart';
+import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/wallets/providers/filtered_assets_provider.c.dart';
 import 'package:ion/app/features/wallets/views/pages/wallet_page/components/bottom_action/bottom_action.dart';
 import 'package:ion/app/features/wallets/views/pages/wallet_page/components/nfts/nfts_header_select_action.dart';
 import 'package:ion/app/features/wallets/views/pages/wallet_page/providers/search_visibility_provider.c.dart';
 import 'package:ion/app/features/wallets/views/pages/wallet_page/tab_type.dart';
+import 'package:ion/app/router/app_routes.c.dart';
 import 'package:ion/generated/assets.gen.dart';
 
 class EmptyState extends ConsumerWidget {
@@ -44,10 +45,31 @@ class EmptyState extends ConsumerWidget {
           children: [
             if (tabType == WalletTabType.nfts) const NftHeaderSelectAction(),
             Expanded(
-              child: EmptyList(
-                asset: asset,
-                title: title,
-              ),
+              child: tabType == WalletTabType.nfts
+                  ? Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        EmptyList(
+                          asset: asset,
+                          title: title,
+                        ),
+                        SizedBox(height: 8.s),
+                        TextButton(
+                          onPressed: () async {
+                            await SelectNetworkToReceiveNftRoute().push<void>(ref.context);
+                          },
+                          child: Text(
+                            context.i18n.wallet_receive_nft,
+                            style: context.theme.appTextThemes.caption
+                                .copyWith(color: context.theme.appColors.primaryAccent),
+                          ),
+                        ),
+                      ],
+                    )
+                  : EmptyList(
+                      asset: asset,
+                      title: title,
+                    ),
             ),
             if (!isSearchVisible && tabType != WalletTabType.nfts)
               BottomAction(

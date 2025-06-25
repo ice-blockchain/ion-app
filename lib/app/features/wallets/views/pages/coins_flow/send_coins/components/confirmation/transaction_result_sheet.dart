@@ -18,8 +18,6 @@ import 'package:ion/app/router/components/sheet_content/sheet_content.dart';
 import 'package:ion/app/services/share/share.dart';
 import 'package:ion/generated/assets.gen.dart';
 
-enum CryptoAssetType { coin, nft }
-
 class TransactionResultSheet extends ConsumerWidget {
   const TransactionResultSheet({
     required this.transactionDetailsRouteLocationBuilder,

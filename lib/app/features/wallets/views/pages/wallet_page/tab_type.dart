@@ -2,17 +2,17 @@
 
 import 'package:flutter/material.dart';
 import 'package:ion/app/extensions/build_context.dart';
-import 'package:ion/app/features/wallets/model/wallet_data_with_loading_state.c.dart';
+import 'package:ion/app/features/wallets/model/crypto_asset_type.dart';
 import 'package:ion/generated/assets.gen.dart';
 
 enum WalletTabType {
   coins,
   nfts;
 
-  WalletAssetType get walletAssetType {
+  CryptoAssetType get walletAssetType {
     return switch (this) {
-      WalletTabType.coins => WalletAssetType.coin,
-      WalletTabType.nfts => WalletAssetType.nft,
+      WalletTabType.coins => CryptoAssetType.coin,
+      WalletTabType.nfts => CryptoAssetType.nft,
     };
   }
 

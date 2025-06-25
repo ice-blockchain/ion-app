@@ -13,11 +13,14 @@ import 'package:ion/app/features/wallets/providers/wallet_user_preferences/user_
 import 'package:ion/app/features/wallets/providers/wallet_view_data_provider.c.dart';
 import 'package:ion/app/features/wallets/views/pages/wallet_page/components/balance/balance_actions.dart';
 import 'package:ion/app/features/wallets/views/pages/wallet_page/components/balance/balance_visibility_action.dart';
+import 'package:ion/app/features/wallets/views/pages/wallet_page/tab_type.dart';
 import 'package:ion/app/router/app_routes.c.dart';
 import 'package:ion/app/utils/num.dart';
 
 class Balance extends ConsumerWidget {
-  const Balance({super.key});
+  const Balance({required this.tab, super.key});
+
+  final WalletTabType tab;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -62,7 +65,14 @@ class Balance extends ConsumerWidget {
             ),
             child: BalanceActions(
               isLoading: shouldShowLoader,
-              onReceive: () => ReceiveCoinRoute().push<void>(context),
+              onReceive: () {
+                switch (tab) {
+                  case WalletTabType.nfts:
+                    SelectNetworkToReceiveNftRoute().push<void>(ref.context);
+                  case WalletTabType.coins:
+                    ReceiveCoinRoute().push<void>(context);
+                }
+              },
               onSend: () {
                 ref.invalidate(sendAssetFormControllerProvider);
                 SelectCoinWalletRoute().push<void>(context);

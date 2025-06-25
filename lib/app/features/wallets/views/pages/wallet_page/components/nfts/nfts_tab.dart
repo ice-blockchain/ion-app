@@ -4,8 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/components/screen_offset/screen_side_offset.dart';
 import 'package:ion/app/extensions/extensions.dart';
+import 'package:ion/app/features/wallets/model/crypto_asset_type.dart';
 import 'package:ion/app/features/wallets/model/nft_layout_type.dart';
-import 'package:ion/app/features/wallets/model/wallet_data_with_loading_state.c.dart';
 import 'package:ion/app/features/wallets/providers/current_nfts_provider.c.dart';
 import 'package:ion/app/features/wallets/providers/filtered_assets_provider.c.dart';
 import 'package:ion/app/features/wallets/providers/wallet_user_preferences/user_preferences_selectors.c.dart';
@@ -37,7 +37,7 @@ class NftsTab extends ConsumerWidget {
     final viewModel = ref.watch(walletNftsViewModelProvider);
 
     ref
-      ..listen(walletSearchQueryControllerProvider(WalletAssetType.nft), (_, next) {
+      ..listen(walletSearchQueryControllerProvider(CryptoAssetType.nft), (_, next) {
         viewModel.searchQueryCommand(next);
       })
       ..listen(currentNftsProvider, (_, next) {

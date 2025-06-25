@@ -127,6 +127,7 @@ import 'package:ion/app/features/video/views/pages/feed_videos_page.dart';
 import 'package:ion/app/features/video/views/pages/profile_videos_page.dart';
 import 'package:ion/app/features/video/views/pages/reply_list_videos_page.dart';
 import 'package:ion/app/features/video/views/pages/trending_videos_page.dart';
+import 'package:ion/app/features/wallets/model/crypto_asset_type.dart';
 import 'package:ion/app/features/wallets/views/pages/address_not_found_wallet_modal.dart';
 import 'package:ion/app/features/wallets/views/pages/coins_flow/coin_details/coin_details_page.dart';
 import 'package:ion/app/features/wallets/views/pages/coins_flow/coin_receive_modal/coin_receive_modal.dart';
@@ -149,6 +150,8 @@ import 'package:ion/app/features/wallets/views/pages/manage_coins/manage_coins_p
 import 'package:ion/app/features/wallets/views/pages/manage_nfts/manage_nfts_page.dart';
 import 'package:ion/app/features/wallets/views/pages/manage_wallets_modal.dart';
 import 'package:ion/app/features/wallets/views/pages/nft_details/nft_details_page.dart';
+import 'package:ion/app/features/wallets/views/pages/receive_nft/components/share_address_view.dart';
+import 'package:ion/app/features/wallets/views/pages/receive_nft/select_nft_network_page.dart';
 import 'package:ion/app/features/wallets/views/pages/send_nft_confirm.dart';
 import 'package:ion/app/features/wallets/views/pages/send_nft_form.dart';
 import 'package:ion/app/features/wallets/views/pages/transaction_details/explore_transaction_details_modal.dart';

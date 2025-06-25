@@ -39,6 +39,13 @@ class WalletRoutes {
       ],
     ),
     ...DappsRoutes.routes,
+    TypedShellRoute<ModalShellRouteData>(
+      routes: [
+        TypedGoRoute<SelectNetworkToReceiveNftRoute>(path: 'select-network-to-receive-nft'),
+        TypedGoRoute<ShareAddressToGetNftRoute>(path: 'share-address-to-get-nft'),
+        TypedGoRoute<AddressNotFoundReceiveNftRoute>(path: 'address-not-found-receive-nft'),
+      ],
+    ),
   ];
 
   static const nftSendRoutes = <TypedRoute<RouteData>>[
@@ -80,8 +87,8 @@ class WalletRoutes {
         TypedGoRoute<NetworkSelectReceiveRoute>(path: 'network-select-receive'),
       ],
     ),
-    TypedGoRoute<ShareAddressRoute>(path: 'share-address'),
-    TypedGoRoute<AddressNotFoundReceiveRoute>(path: 'address-not-found-receive'),
+    TypedGoRoute<ShareAddressToGetCoinsRoute>(path: 'share-address'),
+    TypedGoRoute<AddressNotFoundReceiveCoinsRoute>(path: 'address-not-found-receive'),
   ];
 
   static const walletManagementRoutes = <TypedRoute<RouteData>>[
@@ -171,7 +178,7 @@ class ChangeNetworkShareWalletRoute extends BaseRouteData {
 class ShareAddressCoinDetailsRoute extends BaseRouteData {
   ShareAddressCoinDetailsRoute()
       : super(
-          child: const ShareAddressView(),
+          child: const ShareAddressToGetCoinsView(),
           type: IceRouteType.bottomSheet,
         );
 }
@@ -179,15 +186,34 @@ class ShareAddressCoinDetailsRoute extends BaseRouteData {
 class ShareAddressDepositRoute extends BaseRouteData {
   ShareAddressDepositRoute()
       : super(
-          child: const ShareAddressView(),
+          child: const ShareAddressToGetCoinsView(),
           type: IceRouteType.bottomSheet,
         );
 }
 
-class ShareAddressRoute extends BaseRouteData {
-  ShareAddressRoute()
+class ShareAddressToGetCoinsRoute extends BaseRouteData {
+  ShareAddressToGetCoinsRoute()
       : super(
-          child: const ShareAddressView(),
+          child: const ShareAddressToGetCoinsView(),
+          type: IceRouteType.bottomSheet,
+        );
+}
+
+class ShareAddressToGetNftRoute extends BaseRouteData {
+  ShareAddressToGetNftRoute()
+      : super(
+          child: const ShareAddressToGetNftView(),
+          type: IceRouteType.bottomSheet,
+        );
+}
+
+class AddressNotFoundReceiveNftRoute extends BaseRouteData {
+  AddressNotFoundReceiveNftRoute()
+      : super(
+          child: AddressNotFoundWalletModal(
+            assetType: CryptoAssetType.nft,
+            onWalletCreated: (context) => ShareAddressToGetNftRoute().replace(context),
+          ),
           type: IceRouteType.bottomSheet,
         );
 }
@@ -313,6 +339,14 @@ class SelectNetworkForTokenRoute extends BaseRouteData {
         );
 }
 
+class SelectNetworkToReceiveNftRoute extends BaseRouteData {
+  SelectNetworkToReceiveNftRoute()
+      : super(
+          child: const SelectNftNetworkPage(),
+          type: IceRouteType.bottomSheet,
+        );
+}
+
 class WalletsRoute extends BaseRouteData {
   WalletsRoute()
       : super(
@@ -367,11 +401,11 @@ class AddressNotFoundRoute extends BaseRouteData {
         );
 }
 
-class AddressNotFoundReceiveRoute extends BaseRouteData {
-  AddressNotFoundReceiveRoute()
+class AddressNotFoundReceiveCoinsRoute extends BaseRouteData {
+  AddressNotFoundReceiveCoinsRoute()
       : super(
           child: AddressNotFoundWalletModal(
-            onWalletCreated: (context) => ShareAddressRoute().replace(context),
+            onWalletCreated: (context) => ShareAddressToGetCoinsRoute().replace(context),
           ),
           type: IceRouteType.bottomSheet,
         );

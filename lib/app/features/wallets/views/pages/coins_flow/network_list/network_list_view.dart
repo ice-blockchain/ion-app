@@ -77,7 +77,7 @@ class NetworkListView extends ConsumerWidget {
           }
         case NetworkListViewType.receive:
           ref.read(receiveCoinsFormControllerProvider.notifier).setNetwork(network);
-          unawaited(ShareAddressRoute().push<void>(context));
+          unawaited(ShareAddressToGetCoinsRoute().push<void>(context));
         case NetworkListViewType.request:
           final form = ref.read(requestCoinsFormControllerProvider);
           final isNetworkValid = await checkWalletExists(ref, form.contactPubkey, network);
