@@ -29,8 +29,6 @@ class IonPullToRefreshLoadingIndicator extends StatelessWidget {
       RefreshIndicatorMode.armed,
       RefreshIndicatorMode.refresh,
     ].contains(refreshState);
-    print('pulledExtent: $pulledExtent');
-    print('percentageComplete: $percentageComplete');
     return Stack(
       clipBehavior: Clip.none,
       children: [
@@ -38,9 +36,8 @@ class IonPullToRefreshLoadingIndicator extends StatelessWidget {
           top: 16.0.s,
           start: 0,
           end: 0,
-          child: AnimatedOpacity(
+          child: Opacity(
             opacity: isRefreshing ? 1 : percentageComplete,
-            duration: const Duration(milliseconds: 250),
             child: IONLoadingIndicatorThemed(
               value: shouldAnimate ? null : percentageComplete,
               size: Size.square(30.s),
