@@ -18,12 +18,12 @@ class EncryptedDirectMessageReactionHandler extends GlobalSubscriptionEncryptedE
   EncryptedDirectMessageReactionHandler(
     this.conversationMessageReactionDao,
     this.eventMessageDao,
-    this.userMetadataSyncProvider,
+    this.userProfileSyncProvider,
   );
 
   final ConversationMessageReactionDao conversationMessageReactionDao;
   final EventMessageDao eventMessageDao;
-  final UserMetadataSync userMetadataSyncProvider;
+  final UserProfileSync userProfileSyncProvider;
 
   @override
   bool canHandle({
@@ -37,7 +37,7 @@ class EncryptedDirectMessageReactionHandler extends GlobalSubscriptionEncryptedE
 
   @override
   Future<void> handle(EventMessage rumor) async {
-    unawaited(userMetadataSyncProvider.syncUserMetadata(masterPubkeys: {rumor.masterPubkey}));
+    unawaited(userProfileSyncProvider.syncUserProfile(masterPubkeys: {rumor.masterPubkey}));
     await conversationMessageReactionDao.add(
       reactionEvent: rumor,
       eventMessageDao: eventMessageDao,
@@ -50,5 +50,5 @@ EncryptedDirectMessageReactionHandler encryptedDirectMessageReactionHandler(Ref 
     EncryptedDirectMessageReactionHandler(
       ref.watch(conversationMessageReactionDaoProvider),
       ref.watch(eventMessageDaoProvider),
-      ref.watch(userMetadataSyncProvider.notifier),
+      ref.watch(userProfileSyncProvider.notifier),
     );

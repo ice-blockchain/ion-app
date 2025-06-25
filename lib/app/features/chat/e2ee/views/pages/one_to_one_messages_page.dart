@@ -39,8 +39,8 @@ class OneToOneMessagesPage extends HookConsumerWidget {
     useOnInit(() {
       unawaited(
         ref
-            .read(userMetadataSyncProvider.notifier)
-            .syncUserMetadata(masterPubkeys: {receiverMasterPubkey}),
+            .read(userProfileSyncProvider.notifier)
+            .syncUserProfile(masterPubkeys: {receiverMasterPubkey}),
       );
     });
 

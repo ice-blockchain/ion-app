@@ -129,11 +129,12 @@ class RecentChatsTimelinePage extends HookConsumerWidget {
     final participantsMasterPubkeys = conversations
         .where((c) => c.type == ConversationType.oneToOne)
         .map((c) => c.receiverMasterPubkey(currentUserMasterPubkey))
+        .nonNulls
         .toSet();
 
     if (participantsMasterPubkeys.isEmpty) return;
 
-    await ref.read(userMetadataSyncProvider.notifier).syncUserMetadata(
+    await ref.read(userProfileSyncProvider.notifier).syncUserProfile(
           forceSync: true,
           masterPubkeys: participantsMasterPubkeys,
         );

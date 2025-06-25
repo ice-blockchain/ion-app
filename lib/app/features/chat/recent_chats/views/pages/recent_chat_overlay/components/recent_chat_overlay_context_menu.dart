@@ -36,6 +36,7 @@ class RecentChatOverlayContextMenu extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final currentUserMasterPubkey = ref.watch(currentPubkeySelectorProvider);
+    final receiverMasterPubkey = conversation.receiverMasterPubkey(currentUserMasterPubkey);
 
     final isMuted = ref
             .watch(mutedConversationIdsProvider)
@@ -43,11 +44,9 @@ class RecentChatOverlayContextMenu extends ConsumerWidget {
             ?.contains(conversation.conversationId) ??
         false;
 
-    final isBlocked = ref
-        .watch(
-          isBlockedNotifierProvider(conversation.receiverMasterPubkey(currentUserMasterPubkey)),
-        )
-        .valueOrNull;
+    final isBlocked = receiverMasterPubkey == null
+        ? false
+        : ref.watch(isBlockedNotifierProvider(receiverMasterPubkey)).valueOrNull;
 
     ref.displayErrors(reportNotifierProvider);
 
@@ -113,16 +112,18 @@ class RecentChatOverlayContextMenu extends ConsumerWidget {
                             .icon(size: iconSize, color: context.theme.appColors.quaternaryText),
                         onPressed: () {
                           context.pop();
-                          final masterPubkey =
-                              conversation.receiverMasterPubkey(currentUserMasterPubkey);
+
+                          if (receiverMasterPubkey == null) return;
 
                           if (!isBlocked) {
                             showSimpleBottomSheet<void>(
                               context: context,
-                              child: BlockUserModal(pubkey: masterPubkey),
+                              child: BlockUserModal(pubkey: receiverMasterPubkey),
                             );
                           } else {
-                            ref.read(toggleBlockNotifierProvider.notifier).toggle(masterPubkey);
+                            ref
+                                .read(toggleBlockNotifierProvider.notifier)
+                                .toggle(receiverMasterPubkey);
                           }
                         },
                       ),

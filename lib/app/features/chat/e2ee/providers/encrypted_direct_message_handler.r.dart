@@ -26,7 +26,7 @@ class EncryptedDirectMessageHandler extends GlobalSubscriptionEncryptedEventMess
     this.messageMediaDao,
     this.sendE2eeMessageStatusService,
     this.mediaEncryptionService,
-    this.userMetadataSyncProvider,
+    this.userProfileSyncProvider,
   );
 
   final String masterPubkey;
@@ -36,7 +36,7 @@ class EncryptedDirectMessageHandler extends GlobalSubscriptionEncryptedEventMess
   final MessageMediaDao messageMediaDao;
   final SendE2eeMessageStatusService sendE2eeMessageStatusService;
   final MediaEncryptionService mediaEncryptionService;
-  final UserMetadataSync userMetadataSyncProvider;
+  final UserProfileSync userProfileSyncProvider;
 
   @override
   bool canHandle({
@@ -49,7 +49,7 @@ class EncryptedDirectMessageHandler extends GlobalSubscriptionEncryptedEventMess
   Future<void> handle(EventMessage rumor) async {
     await _addDirectMessageToDatabase(rumor);
     unawaited(_sendReceivedStatus(rumor));
-    unawaited(userMetadataSyncProvider.syncUserMetadata(masterPubkeys: {rumor.masterPubkey}));
+    unawaited(userProfileSyncProvider.syncUserProfile(masterPubkeys: {rumor.masterPubkey}));
   }
 
   Future<void> _addDirectMessageToDatabase(
@@ -134,6 +134,6 @@ Future<EncryptedDirectMessageHandler?> encryptedDirectMessageHandler(Ref ref) as
     ref.watch(messageMediaDaoProvider),
     await ref.watch(sendE2eeMessageStatusServiceProvider.future),
     ref.watch(mediaEncryptionServiceProvider),
-    ref.watch(userMetadataSyncProvider.notifier),
+    ref.watch(userProfileSyncProvider.notifier),
   );
 }

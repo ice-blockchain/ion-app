@@ -2,14 +2,14 @@
 
 import 'package:drift/drift.dart';
 import 'package:ion/app/extensions/event_message.dart';
-import 'package:ion/app/features/ion_connect/database/converters/event_reference_converter.d.dart';
+import 'package:ion/app/features/ion_connect/database/converters/event_reference_converter.c.dart';
 import 'package:ion/app/features/ion_connect/database/converters/event_tags_converter.dart';
 import 'package:ion/app/features/ion_connect/ion_connect.dart';
-import 'package:ion/app/features/user/model/user_metadata.f.dart';
-import 'package:ion/app/features/user_metadata/database/user_metadata_database.m.dart';
+import 'package:ion/app/features/user/model/user_delegation.c.dart';
+import 'package:ion/app/features/user_profile/database/user_profile_database.c.dart';
 
-@DataClassName('EventMessageDbModel')
-class UserMetadataTable extends Table {
+@DataClassName('EventMessageDelegationDbModel')
+class UserDelegationTable extends Table {
   TextColumn get id => text()();
   IntColumn get kind => integer()();
   TextColumn get pubkey => text()();
@@ -24,10 +24,11 @@ class UserMetadataTable extends Table {
   Set<Column> get primaryKey => {masterPubkey};
 }
 
-extension UserMetadataEntityExtension on UserMetadataEntity {
-  Future<EventMessageDbModel> toEventMessageDbModel() async {
+extension UserDelegationEntityExtension on UserDelegationEntity {
+  Future<EventMessageDelegationDbModel> toEventMessageDbModel() async {
     final eventMessage = await toEventMessage(data);
-    return EventMessageDbModel(
+
+    return EventMessageDelegationDbModel(
       id: eventMessage.id,
       sig: eventMessage.sig,
       kind: eventMessage.kind,
@@ -40,7 +41,7 @@ extension UserMetadataEntityExtension on UserMetadataEntity {
     );
   }
 
-  static UserMetadataEntity fromEventMessageDbModel(EventMessageDbModel model) {
+  static UserDelegationEntity fromEventMessageDbModel(EventMessageDelegationDbModel model) {
     final eventMessage = EventMessage(
       id: model.id,
       sig: model.sig,
@@ -50,6 +51,6 @@ extension UserMetadataEntityExtension on UserMetadataEntity {
       content: model.content,
       createdAt: model.createdAt,
     );
-    return UserMetadataEntity.fromEventMessage(eventMessage);
+    return UserDelegationEntity.fromEventMessage(eventMessage);
   }
 }
