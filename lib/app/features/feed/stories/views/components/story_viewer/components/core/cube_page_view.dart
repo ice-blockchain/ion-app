@@ -210,11 +210,8 @@ class CubeWidget extends StatelessWidget {
       child: Stack(
         children: [
           Positioned.fill(
-            child: Opacity(
-              opacity: opacity,
-              child: Container(
-                color: Colors.black87,
-              ),
+            child: ColoredBox(
+              color: Colors.black87.withValues(alpha: opacity),
             ),
           ),
           child,
