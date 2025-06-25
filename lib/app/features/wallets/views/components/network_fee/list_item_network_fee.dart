@@ -33,12 +33,9 @@ class ListItemNetworkFee extends StatelessWidget {
               data: IconThemeData(
                 size: 14.0.s,
               ),
-              child: ColorFiltered(
-                colorFilter: ColorFilter.mode(
-                  context.theme.appColors.secondaryText,
-                  BlendMode.srcIn,
-                ),
-                child: Assets.svg.iconBlockInformation.icon(size: 14.0.s),
+              child: Assets.svg.iconBlockInformation.icon(
+                size: 14.0.s,
+                color: context.theme.appColors.secondaryText,
               ),
             ),
           ],

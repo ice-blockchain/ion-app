@@ -197,12 +197,8 @@ class SendCoinsForm extends HookConsumerWidget {
                           type: isContinueButtonEnabled ? ButtonType.primary : ButtonType.disabled,
                           mainAxisSize: MainAxisSize.max,
                           disabled: !isContinueButtonEnabled,
-                          trailingIcon: ColorFiltered(
-                            colorFilter: ColorFilter.mode(
-                              colors.primaryBackground,
-                              BlendMode.srcIn,
-                            ),
-                            child: Assets.svg.iconButtonNext.icon(),
+                          trailingIcon: Assets.svg.iconButtonNext.icon(
+                            color: colors.primaryBackground,
                           ),
                           onPressed: () => context.push(confirmRouteLocationBuilder()),
                         ),
