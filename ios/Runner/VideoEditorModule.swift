@@ -11,7 +11,7 @@ protocol VideoEditor {
     
     func openVideoEditorPIP(fromViewController controller: FlutterViewController, videoURL: URL, flutterResult: @escaping FlutterResult)
     
-    func openVideoEditorTrimmer(fromViewController controller: FlutterViewController, videoURL: URL, flutterResult: @escaping FlutterResult)
+    func openVideoEditorTrimmer(fromViewController controller: FlutterViewController, videoURL: URL, maxVideoDuration: Int, flutterResult: @escaping FlutterResult)
 }
 
 class VideoEditorModule: VideoEditor {
@@ -91,6 +91,7 @@ class VideoEditorModule: VideoEditor {
     func openVideoEditorTrimmer(
         fromViewController controller: FlutterViewController,
         videoURL: URL,
+        maxVideoDuration: Int = 60,
         flutterResult: @escaping FlutterResult
     ) {
         self.flutterResult = flutterResult
@@ -113,8 +114,9 @@ class VideoEditorModule: VideoEditor {
         let height = abs(size.height)
         let aspectRatio = width / height
 
-        let config = videoEditorSDK?.currentConfiguration
+        var config = videoEditorSDK?.currentConfiguration
         config?.videoEditorViewConfiguration.primaryAspectRatio = AspectRatio(videoAspectRatio: aspectRatio)
+        config?.videoDurationConfiguration.maximumVideoDuration = TimeInterval(maxVideoDuration)
         if let newConfig = config {
             videoEditorSDK?.updateVideoEditorConfig(newConfig)
         }

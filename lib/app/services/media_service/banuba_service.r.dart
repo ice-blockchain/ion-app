@@ -18,6 +18,7 @@ part 'banuba_service.r.g.dart';
 
 class BanubaService {
   const BanubaService(this.env);
+
   final Env env;
 
   // For Photo Editor
@@ -29,6 +30,8 @@ class BanubaService {
   static const methodInitVideoEditor = 'initVideoEditor';
   static const methodStartVideoEditor = 'startVideoEditor';
   static const methodStartVideoEditorTrimmer = 'startVideoEditorTrimmer';
+  static const argVideoFilePath = 'videoFilePath';
+  static const argMaxVideoDurationMs = 'maxVideoDurationMs';
   static const argExportedVideoFile = 'argExportedVideoFilePath';
 
   static const platformChannel = MethodChannel('banubaSdkChannel');
@@ -74,7 +77,10 @@ class BanubaService {
     }
   }
 
-  Future<String> editVideo(String filePath) async {
+  Future<String> editVideo(
+    String filePath, {
+    Duration? maxVideoDuration = const Duration(seconds: 60),
+  }) async {
     await platformChannel.invokeMethod(
       methodInitVideoEditor,
       env.get<String>(EnvVariable.BANUBA_TOKEN),
@@ -82,7 +88,10 @@ class BanubaService {
 
     final result = await platformChannel.invokeMethod(
       methodStartVideoEditorTrimmer,
-      filePath,
+      {
+        argVideoFilePath: filePath,
+        argMaxVideoDurationMs: maxVideoDuration?.inMilliseconds,
+      },
     );
 
     if (result is Map) {
