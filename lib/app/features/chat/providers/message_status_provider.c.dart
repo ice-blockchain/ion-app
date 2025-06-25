@@ -8,7 +8,7 @@ import 'package:ion/app/features/chat/e2ee/model/entities/private_direct_message
 import 'package:ion/app/features/chat/model/database/chat_database.c.dart';
 import 'package:ion/app/features/ion_connect/model/event_reference.c.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
-import 'package:rxdart/rxdart.dart';
+import 'package:stream_transform/stream_transform.dart';
 
 part 'message_status_provider.c.g.dart';
 
@@ -69,12 +69,13 @@ Stream<MessageDeliveryStatus> sharedPostMessageStatus(
             currentUserMasterPubkey: currentUserMasterPubkey,
           )
       : Stream.value(MessageDeliveryStatus.created);
+
   // Combine the latest values from each stream, emitting whenever any stream emits a new value.
-  yield* Rx.combineLatest3(
-    sharedEntityMessageDeliveryStatusStream,
-    quotedEventDeliveryStatusStream,
-    storyReactionDeliveryStatusStream,
-    (a, b, c) => [a, b, c],
+  yield* sharedEntityMessageDeliveryStatusStream.combineLatestAll(
+    [
+      quotedEventDeliveryStatusStream,
+      storyReactionDeliveryStatusStream,
+    ],
   ).map((statuses) {
     if (statuses.contains(MessageDeliveryStatus.deleted)) {
       return MessageDeliveryStatus.deleted;
