@@ -13,25 +13,6 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 part 'account_notifications_sets_provider.c.g.dart';
 
 @riverpod
-Future<void> syncAccountNotificationSets(Ref ref) async {
-  final authState = await ref.watch(authProvider.future);
-  if (!authState.isAuthenticated) {
-    return;
-  }
-
-  final currentPubkey = ref.watch(currentPubkeySelectorProvider);
-  if (currentPubkey == null) {
-    throw UserMasterPubkeyNotFoundException();
-  }
-
-  final enabledNotifications = ref.watch(userNotificationsNotifierProvider);
-
-  final currentSets = await _fetchCurrentNotificationSets(ref, currentPubkey);
-
-  await _updateNotificationSets(ref, currentPubkey, enabledNotifications, currentSets);
-}
-
-@riverpod
 Future<List<String>> usersForNotificationType(
   Ref ref,
   UserNotificationsType notificationType,
@@ -77,80 +58,6 @@ Future<List<String>> usersForNotificationType(
   return [];
 }
 
-Future<Map<String, List<String>>> _fetchCurrentNotificationSets(
-  Ref ref,
-  String currentPubkey,
-) async {
-  final sets = <String, List<String>>{};
-
-  for (final setType in AccountNotificationSetType.values) {
-    final requestMessage = RequestMessage()
-      ..addFilter(
-        RequestFilter(
-          kinds: const [AccountNotificationSetEntity.kind],
-          authors: [currentPubkey],
-          tags: {
-            '#d': [setType.dTagName],
-          },
-          limit: 1,
-        ),
-      );
-
-    try {
-      final ionConnectNotifier = ref.read(ionConnectNotifierProvider.notifier);
-      final eventsStream = ionConnectNotifier.requestEvents(requestMessage);
-
-      await for (final event in eventsStream) {
-        final userPubkeys = event.tags
-            .where((List<String> tag) => tag.isNotEmpty && tag[0] == 'p' && tag.length > 1)
-            .map((List<String> tag) => tag[1])
-            .toList();
-
-        sets[setType.dTagName] = userPubkeys;
-        break;
-      }
-    } catch (error) {
-      sets[setType.dTagName] = [];
-    }
-  }
-
-  return sets;
-}
-
-Future<void> _updateNotificationSets(
-  Ref ref,
-  String currentPubkey,
-  List<UserNotificationsType> enabledNotifications,
-  Map<String, List<String>> currentSets,
-) async {
-  final setTypesToUsers = <String, List<String>>{
-    for (final setType in AccountNotificationSetType.values) setType.dTagName: [],
-  };
-
-  for (final entry in currentSets.entries) {
-    final setType = entry.key;
-    final notificationType = _getNotificationTypeForSetType(setType);
-
-    if (notificationType != null && enabledNotifications.contains(notificationType)) {
-      setTypesToUsers[setType] = entry.value;
-    } else {
-      setTypesToUsers[setType] = [];
-    }
-  }
-
-  for (final entry in setTypesToUsers.entries) {
-    final setType = entry.key;
-    final userPubkeys = entry.value;
-
-    await _updateNotificationSet(
-      ref,
-      currentPubkey,
-      setType,
-      userPubkeys,
-    );
-  }
-}
-
 Future<void> _updateNotificationSet(
   Ref ref,
   String currentPubkey,
@@ -169,20 +76,6 @@ Future<void> _updateNotificationSet(
 
   final eventMessage = await ionConnectNotifier.sign(setData);
   await ionConnectNotifier.sendEvent(eventMessage);
-}
-
-UserNotificationsType? _getNotificationTypeForSetType(String setType) {
-  for (final accountSetType in AccountNotificationSetType.values) {
-    if (accountSetType.dTagName == setType) {
-      return switch (accountSetType) {
-        AccountNotificationSetType.posts => UserNotificationsType.posts,
-        AccountNotificationSetType.stories => UserNotificationsType.stories,
-        AccountNotificationSetType.articles => UserNotificationsType.articles,
-        AccountNotificationSetType.videos => UserNotificationsType.videos,
-      };
-    }
-  }
-  return null;
 }
 
 String? _getSetTypeForNotificationType(UserNotificationsType notificationType) {

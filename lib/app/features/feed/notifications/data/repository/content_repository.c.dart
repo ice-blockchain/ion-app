@@ -7,9 +7,9 @@ import 'package:ion/app/features/feed/data/models/entities/article_data.c.dart';
 import 'package:ion/app/features/feed/data/models/entities/generic_repost.c.dart';
 import 'package:ion/app/features/feed/data/models/entities/modifiable_post_data.c.dart';
 import 'package:ion/app/features/feed/data/models/entities/post_data.c.dart';
-import 'package:ion/app/features/feed/notifications/data/database/dao/content_dao.c.dart';
+import 'package:ion/app/features/feed/notifications/data/database/dao/subscribed_users_content_dao.c.dart';
 import 'package:ion/app/features/feed/notifications/data/database/notifications_database.c.dart';
-import 'package:ion/app/features/feed/notifications/data/database/tables/content_table.c.dart';
+import 'package:ion/app/features/feed/notifications/data/database/tables/subscribed_users_content_table.c.dart';
 import 'package:ion/app/features/feed/notifications/data/model/ion_notification.c.dart';
 import 'package:ion/app/features/feed/notifications/data/repository/ion_notification_repository.dart';
 import 'package:ion/app/features/ion_connect/model/ion_connect_entity.dart';
@@ -63,7 +63,7 @@ class ContentRepository implements IonNotificationRepository {
 
   ContentType? _getContentType(IonConnectEntity entity) {
     return switch (entity) {
-      PostEntity() when entity.data.videos.isNotEmpty == true => ContentType.videos,
+      PostEntity() when entity.data.videos.isNotEmpty => ContentType.videos,
       PostEntity() when entity.data.expiration != null => ContentType.stories,
       PostEntity() => ContentType.posts,
       ModifiablePostEntity() when entity.data.videos.isNotEmpty == true => ContentType.videos,
