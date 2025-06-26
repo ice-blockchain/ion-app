@@ -4,8 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/features/auth/views/components/recovery_keys_input_container/recovery_keys_input_container.dart';
 import 'package:ion/app/features/protect_account/backup/data/models/recovery_key_property.dart';
-import 'package:ion/app/features/protect_account/backup/providers/create_recovery_key_action_notifier.c.dart';
-import 'package:ion/app/router/app_routes.c.dart';
+import 'package:ion/app/features/protect_account/backup/providers/create_recovery_key_action_notifier.r.dart';
+import 'package:ion/app/router/app_routes.gr.dart';
 import 'package:ion_identity_client/ion_identity.dart';
 
 class ValidateRecoveryKeyPage extends ConsumerWidget {

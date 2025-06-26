@@ -1,9 +1,9 @@
 // SPDX-License-Identifier: ice License 1.0
 
 import 'package:flutter_test/flutter_test.dart';
-import 'package:ion/app/services/bech32/bech32_service.c.dart';
+import 'package:ion/app/services/bech32/bech32_service.r.dart';
 import 'package:ion/app/services/ion_connect/ion_connect_protocol_identifier_type.dart';
-import 'package:ion/app/services/ion_connect/ion_connect_uri_identifier_service.c.dart';
+import 'package:ion/app/services/ion_connect/ion_connect_uri_identifier_service.r.dart';
 import 'package:mocktail/mocktail.dart';
 
 class MockBech32Service extends Mock implements Bech32Service {}

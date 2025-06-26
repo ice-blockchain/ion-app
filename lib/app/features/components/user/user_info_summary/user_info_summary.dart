@@ -5,10 +5,10 @@ import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/components/user/user_info_summary/user_info_tile.dart';
-import 'package:ion/app/features/user/model/user_metadata.c.dart';
-import 'package:ion/app/features/user/providers/follow_list_provider.c.dart';
-import 'package:ion/app/features/user/providers/user_categories_provider.c.dart';
-import 'package:ion/app/features/user/providers/user_metadata_provider.c.dart';
+import 'package:ion/app/features/user/model/user_metadata.f.dart';
+import 'package:ion/app/features/user/providers/follow_list_provider.r.dart';
+import 'package:ion/app/features/user/providers/user_categories_provider.r.dart';
+import 'package:ion/app/features/user/providers/user_metadata_provider.r.dart';
 import 'package:ion/app/utils/date.dart';
 import 'package:ion/generated/assets.gen.dart';
 

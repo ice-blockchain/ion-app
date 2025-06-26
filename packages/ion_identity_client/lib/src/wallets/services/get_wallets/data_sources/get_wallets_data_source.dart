@@ -6,7 +6,7 @@ import 'package:ion_identity_client/src/core/network/network_client.dart';
 import 'package:ion_identity_client/src/core/network/utils.dart';
 import 'package:ion_identity_client/src/core/storage/token_storage.dart';
 import 'package:ion_identity_client/src/core/types/request_headers.dart';
-import 'package:ion_identity_client/src/wallets/services/get_wallets/models/get_wallets_response.c.dart';
+import 'package:ion_identity_client/src/wallets/services/get_wallets/models/get_wallets_response.f.dart';
 
 class GetWalletsDataSource {
   const GetWalletsDataSource(

@@ -6,7 +6,7 @@ import 'package:ion/app/components/screen_offset/screen_side_offset.dart';
 import 'package:ion/app/extensions/num.dart';
 import 'package:ion/app/features/feed/views/pages/feed_page/components/feed_controls/components/feed_filters/feed_filters_menu_button.dart';
 import 'package:ion/app/features/feed/views/pages/feed_page/components/feed_controls/components/feed_navigation/feed_notifications_button.dart';
-import 'package:ion/app/router/app_routes.c.dart';
+import 'package:ion/app/router/app_routes.gr.dart';
 
 class FeedNavigation extends StatelessWidget {
   const FeedNavigation({

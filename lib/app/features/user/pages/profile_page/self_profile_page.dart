@@ -2,7 +2,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:ion/app/features/auth/providers/auth_provider.c.dart';
+import 'package:ion/app/features/auth/providers/auth_provider.m.dart';
 import 'package:ion/app/features/user/pages/profile_page/profile_page.dart';
 
 class SelfProfilePage extends ConsumerWidget {

@@ -3,7 +3,7 @@
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/extensions/extensions.dart';
-import 'package:ion/app/features/gallery/providers/albums_provider.c.dart';
+import 'package:ion/app/features/gallery/providers/albums_provider.r.dart';
 import 'package:ion/app/features/gallery/views/components/shimmer_loading_cell.dart';
 import 'package:photo_manager/photo_manager.dart';
 import 'package:photo_manager_image_provider/photo_manager_image_provider.dart';

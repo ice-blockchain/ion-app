@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: ice License 1.0
 
-import 'package:ion/app/features/wallets/model/network_data.c.dart';
-import 'package:ion/app/features/wallets/model/wallet_view_data.c.dart';
+import 'package:ion/app/features/wallets/model/network_data.f.dart';
+import 'package:ion/app/features/wallets/model/wallet_view_data.f.dart';
 
 const String mockWalletIconUrl =
     'https://ice-staging.b-cdn.net/profile/default-profile-picture-16.png';

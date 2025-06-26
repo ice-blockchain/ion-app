@@ -6,8 +6,8 @@ import 'package:ion/app/components/inputs/search_input/search_input.dart';
 import 'package:ion/app/components/scroll_view/pull_to_refresh_builder.dart';
 import 'package:ion/app/constants/ui.dart';
 import 'package:ion/app/extensions/extensions.dart';
-import 'package:ion/app/features/chat/providers/conversations_provider.c.dart';
-import 'package:ion/app/router/app_routes.c.dart';
+import 'package:ion/app/features/chat/providers/conversations_provider.r.dart';
+import 'package:ion/app/router/app_routes.gr.dart';
 import 'package:ion/generated/assets.gen.dart';
 
 class RecentChatsEmptyPage extends ConsumerWidget {

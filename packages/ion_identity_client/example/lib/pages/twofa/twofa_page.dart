@@ -4,8 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion_identity_client/ion_identity.dart';
-import 'package:ion_identity_client_example/providers/current_username_notifier.c.dart';
-import 'package:ion_identity_client_example/providers/ion_identity_provider.c.dart';
+import 'package:ion_identity_client_example/providers/current_username_notifier.r.dart';
+import 'package:ion_identity_client_example/providers/ion_identity_provider.r.dart';
 
 class TwoFAPage extends HookConsumerWidget {
   const TwoFAPage({super.key});

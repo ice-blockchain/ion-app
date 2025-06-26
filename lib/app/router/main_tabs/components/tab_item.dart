@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: ice License 1.0
 
 import 'package:flutter/material.dart';
-import 'package:ion/app/router/app_routes.c.dart';
+import 'package:ion/app/router/app_routes.gr.dart';
 import 'package:ion/app/router/main_tabs/components/components.dart';
 import 'package:ion/generated/assets.gen.dart';
 

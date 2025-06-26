@@ -10,7 +10,7 @@ import 'package:ion/app/features/protect_account/phone/views/pages/edit_phone/co
 import 'package:ion/app/features/protect_account/phone/views/pages/edit_phone/components/phone_edit_twofa_input_step.dart';
 import 'package:ion/app/features/protect_account/phone/views/pages/edit_phone/components/phone_edit_twofa_options_step.dart';
 import 'package:ion/app/features/protect_account/secure_account/data/models/edit_twofa_step.dart';
-import 'package:ion/app/features/protect_account/secure_account/providers/selected_two_fa_types_provider.c.dart';
+import 'package:ion/app/features/protect_account/secure_account/providers/selected_two_fa_types_provider.m.dart';
 import 'package:ion/app/router/utils/show_simple_bottom_sheet.dart';
 
 class PhoneEditPage extends HookConsumerWidget {

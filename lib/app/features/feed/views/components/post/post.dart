@@ -7,12 +7,12 @@ import 'package:ion/app/components/counter_items_footer/counter_items_footer.dar
 import 'package:ion/app/components/screen_offset/screen_side_offset.dart';
 import 'package:ion/app/components/skeleton/skeleton.dart';
 import 'package:ion/app/extensions/extensions.dart';
-import 'package:ion/app/features/auth/providers/auth_provider.c.dart';
+import 'package:ion/app/features/auth/providers/auth_provider.m.dart';
 import 'package:ion/app/features/feed/create_post/views/pages/post_form_modal/components/parent_entity.dart';
-import 'package:ion/app/features/feed/data/models/entities/article_data.c.dart';
-import 'package:ion/app/features/feed/data/models/entities/modifiable_post_data.c.dart';
-import 'package:ion/app/features/feed/data/models/entities/post_data.c.dart';
-import 'package:ion/app/features/feed/providers/ion_connect_entity_with_counters_provider.c.dart';
+import 'package:ion/app/features/feed/data/models/entities/article_data.f.dart';
+import 'package:ion/app/features/feed/data/models/entities/modifiable_post_data.f.dart';
+import 'package:ion/app/features/feed/data/models/entities/post_data.f.dart';
+import 'package:ion/app/features/feed/providers/ion_connect_entity_with_counters_provider.r.dart';
 import 'package:ion/app/features/feed/views/components/article/article.dart';
 import 'package:ion/app/features/feed/views/components/deleted_entity/deleted_entity.dart';
 import 'package:ion/app/features/feed/views/components/overlay_menu/own_entity_menu.dart';
@@ -22,9 +22,9 @@ import 'package:ion/app/features/feed/views/components/post/post_skeleton.dart';
 import 'package:ion/app/features/feed/views/components/quoted_entity_frame/quoted_entity_frame.dart';
 import 'package:ion/app/features/feed/views/components/time_ago/time_ago.dart';
 import 'package:ion/app/features/feed/views/components/user_info/user_info.dart';
-import 'package:ion/app/features/ion_connect/model/event_reference.c.dart';
+import 'package:ion/app/features/ion_connect/model/event_reference.f.dart';
 import 'package:ion/app/features/ion_connect/model/ion_connect_entity.dart';
-import 'package:ion/app/router/app_routes.c.dart';
+import 'package:ion/app/router/app_routes.gr.dart';
 import 'package:ion/app/typedefs/typedefs.dart';
 
 class Post extends ConsumerWidget {

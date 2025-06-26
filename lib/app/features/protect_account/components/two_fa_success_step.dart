@@ -7,7 +7,7 @@ import 'package:ion/app/components/screen_offset/screen_bottom_offset.dart';
 import 'package:ion/app/components/screen_offset/screen_side_offset.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/protect_account/model/two_fa_action_type.dart';
-import 'package:ion/app/router/app_routes.c.dart';
+import 'package:ion/app/router/app_routes.gr.dart';
 
 class TwoFaSuccessStep extends StatelessWidget {
   const TwoFaSuccessStep({

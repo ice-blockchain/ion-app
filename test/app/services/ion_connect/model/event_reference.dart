@@ -1,10 +1,10 @@
 // SPDX-License-Identifier: ice License 1.0
 
 import 'package:flutter_test/flutter_test.dart';
-import 'package:ion/app/features/feed/data/models/entities/modifiable_post_data.c.dart';
-import 'package:ion/app/features/ion_connect/model/event_reference.c.dart';
-import 'package:ion/app/features/user/model/user_metadata.c.dart';
-import 'package:ion/app/features/user/model/user_relays.c.dart';
+import 'package:ion/app/features/feed/data/models/entities/modifiable_post_data.f.dart';
+import 'package:ion/app/features/ion_connect/model/event_reference.f.dart';
+import 'package:ion/app/features/user/model/user_metadata.f.dart';
+import 'package:ion/app/features/user/model/user_relays.f.dart';
 
 void main() {
   group('ImmutableEventReference encode and decode', () {

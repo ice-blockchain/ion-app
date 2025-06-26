@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: ice License 1.0
 
 import 'package:ion_identity_client/src/users/user_details/data_sources/user_details_data_source.dart';
-import 'package:ion_identity_client/src/users/user_details/models/user_details.c.dart';
+import 'package:ion_identity_client/src/users/user_details/models/user_details.f.dart';
 
 class UserDetailsService {
   UserDetailsService(

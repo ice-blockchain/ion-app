@@ -6,14 +6,14 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/extensions/build_context.dart';
 import 'package:ion/app/extensions/num.dart';
 import 'package:ion/app/extensions/theme_data.dart';
-import 'package:ion/app/features/dapps/providers/dapps_provider.c.dart';
+import 'package:ion/app/features/dapps/providers/dapps_provider.r.dart';
 import 'package:ion/app/features/dapps/views/categories/apps/apps.dart';
 import 'package:ion/app/features/dapps/views/categories/featured.dart';
 import 'package:ion/app/features/dapps/views/components/categories/categories.dart';
 import 'package:ion/app/features/dapps/views/components/dapps_header/dapps_header.dart';
 import 'package:ion/app/features/dapps/views/components/favourites/favourites.dart';
 import 'package:ion/app/hooks/use_scroll_top_on_tab_press.dart';
-import 'package:ion/app/router/app_routes.c.dart';
+import 'package:ion/app/router/app_routes.gr.dart';
 import 'package:ion/app/router/components/navigation_app_bar/collapsing_app_bar.dart';
 
 class DAppsPage extends HookConsumerWidget {

@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: ice License 1.0
 
-import 'package:ion_identity_client/src/coins/models/coin.c.dart';
-import 'package:ion_identity_client/src/coins/models/coins_response.c.dart';
+import 'package:ion_identity_client/src/coins/models/coin.f.dart';
+import 'package:ion_identity_client/src/coins/models/coins_response.f.dart';
 import 'package:ion_identity_client/src/coins/services/get_coins/data_sources/get_coins_data_source.dart';
 
 class GetCoinsService {

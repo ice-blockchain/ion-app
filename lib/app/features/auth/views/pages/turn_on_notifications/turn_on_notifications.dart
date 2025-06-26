@@ -11,8 +11,8 @@ import 'package:ion/app/features/auth/views/components/auth_scrolled_body/auth_s
 import 'package:ion/app/features/auth/views/pages/turn_on_notifications/descriptions.dart';
 import 'package:ion/app/features/auth/views/pages/turn_on_notifications/notifications.dart';
 import 'package:ion/app/features/core/permissions/data/models/permissions_types.dart';
-import 'package:ion/app/features/core/permissions/providers/permissions_provider.c.dart';
-import 'package:ion/app/router/app_routes.c.dart';
+import 'package:ion/app/features/core/permissions/providers/permissions_provider.r.dart';
+import 'package:ion/app/router/app_routes.gr.dart';
 import 'package:ion/app/router/components/sheet_content/sheet_content.dart';
 
 class TurnOnNotifications extends ConsumerWidget {

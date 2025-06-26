@@ -7,7 +7,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/components/progress_bar/ion_loading_indicator.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/chat/views/components/message_items/messaging_bottom_bar/components/components.dart';
-import 'package:ion/app/services/audio_wave_playback_service/audio_wave_playback_service.c.dart';
+import 'package:ion/app/services/audio_wave_playback_service/audio_wave_playback_service.r.dart';
 
 class VoiceMessagePreviewTile extends HookConsumerWidget {
   const VoiceMessagePreviewTile({

@@ -1,8 +1,8 @@
 // SPDX-License-Identifier: ice License 1.0
 
 import 'package:flutter_test/flutter_test.dart';
-import 'package:ion/app/features/feed/stories/data/models/story.c.dart';
-import 'package:ion/app/features/feed/stories/data/models/story_viewer_state.c.dart';
+import 'package:ion/app/features/feed/stories/data/models/story.f.dart';
+import 'package:ion/app/features/feed/stories/data/models/story_viewer_state.f.dart';
 
 import '../../../../fixtures/posts/post_fixtures.dart';
 

@@ -2,12 +2,12 @@
 
 import 'package:collection/collection.dart';
 import 'package:ion/app/exceptions/exceptions.dart';
-import 'package:ion/app/features/chat/community/models/entities/tags/master_pubkey_tag.c.dart';
-import 'package:ion/app/features/chat/model/database/chat_database.c.dart' as chat_db;
-import 'package:ion/app/features/ion_connect/database/event_messages_database.c.dart'
+import 'package:ion/app/features/chat/community/models/entities/tags/master_pubkey_tag.f.dart';
+import 'package:ion/app/features/chat/model/database/chat_database.m.dart' as chat_db;
+import 'package:ion/app/features/ion_connect/database/event_messages_database.m.dart'
     as event_messages_db;
 import 'package:ion/app/features/ion_connect/ion_connect.dart';
-import 'package:ion/app/features/ion_connect/model/event_reference.c.dart';
+import 'package:ion/app/features/ion_connect/model/event_reference.f.dart';
 
 extension KeysExtensions on EventMessage {
   String get masterPubkey {

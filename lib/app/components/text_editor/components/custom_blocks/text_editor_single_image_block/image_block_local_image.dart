@@ -5,7 +5,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:ion/app/features/gallery/providers/gallery_provider.c.dart';
+import 'package:ion/app/features/gallery/providers/gallery_provider.r.dart';
 import 'package:ion/app/services/media_service/aspect_ratio.dart';
 
 class ImageBlockLocalImage extends HookConsumerWidget {

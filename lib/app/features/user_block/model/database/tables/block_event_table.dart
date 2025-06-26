@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: ice License 1.0
 
-part of '../block_user_database.c.dart';
+part of '../block_user_database.m.dart';
 
 @DataClassName('BlockEventDbModel')
 class BlockEventTable extends Table {

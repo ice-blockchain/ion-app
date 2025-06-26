@@ -9,7 +9,7 @@ import 'package:ion/app/components/nothing_is_found/nothing_is_found.dart';
 import 'package:ion/app/components/screen_offset/screen_side_offset.dart';
 import 'package:ion/app/extensions/build_context.dart';
 import 'package:ion/app/extensions/num.dart';
-import 'package:ion/app/features/dapps/providers/dapps_provider.c.dart';
+import 'package:ion/app/features/dapps/providers/dapps_provider.r.dart';
 import 'package:ion/app/features/dapps/views/pages/dapps_list/dapps_list_item.dart';
 import 'package:ion/app/router/components/navigation_app_bar/navigation_app_bar.dart';
 import 'package:ion/generated/assets.gen.dart';

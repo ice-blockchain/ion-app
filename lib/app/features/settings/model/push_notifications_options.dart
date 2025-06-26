@@ -2,7 +2,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:ion/app/extensions/extensions.dart';
-import 'package:ion/app/features/push_notifications/data/models/push_notification_category.c.dart';
+import 'package:ion/app/features/push_notifications/data/models/push_notification_category.dart';
 import 'package:ion/app/features/settings/model/selectable_option.dart';
 import 'package:ion/generated/assets.gen.dart';
 

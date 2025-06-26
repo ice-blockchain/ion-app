@@ -7,12 +7,12 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/components/button/button.dart';
 import 'package:ion/app/components/progress_bar/ion_loading_indicator.dart';
 import 'package:ion/app/extensions/extensions.dart';
-import 'package:ion/app/features/chat/e2ee/providers/send_chat_message_service.c.dart';
-import 'package:ion/app/features/chat/providers/share_post_to_chat_provider.c.dart';
+import 'package:ion/app/features/chat/e2ee/providers/send_chat_message_service.r.dart';
+import 'package:ion/app/features/chat/providers/share_post_to_chat_provider.r.dart';
 import 'package:ion/app/features/core/views/pages/error_modal.dart';
-import 'package:ion/app/features/feed/providers/ion_connect_entity_with_counters_provider.c.dart';
-import 'package:ion/app/features/ion_connect/model/event_reference.c.dart';
-import 'package:ion/app/features/user/model/user_metadata.c.dart';
+import 'package:ion/app/features/feed/providers/ion_connect_entity_with_counters_provider.r.dart';
+import 'package:ion/app/features/ion_connect/model/event_reference.f.dart';
+import 'package:ion/app/features/user/model/user_metadata.f.dart';
 import 'package:ion/generated/assets.gen.dart';
 
 class ShareSendButton extends HookConsumerWidget {

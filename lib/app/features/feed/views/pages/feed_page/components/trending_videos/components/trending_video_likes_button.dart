@@ -5,10 +5,10 @@ import 'package:flutter/services.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/components/shadow/svg_shadow.dart';
 import 'package:ion/app/extensions/extensions.dart';
-import 'package:ion/app/features/feed/providers/counters/like_reaction_provider.c.dart';
-import 'package:ion/app/features/feed/providers/counters/likes_count_provider.c.dart';
-import 'package:ion/app/features/ion_connect/model/event_reference.c.dart';
-import 'package:ion/app/features/optimistic_ui/features/likes/post_like_provider.c.dart';
+import 'package:ion/app/features/feed/providers/counters/like_reaction_provider.r.dart';
+import 'package:ion/app/features/feed/providers/counters/likes_count_provider.r.dart';
+import 'package:ion/app/features/ion_connect/model/event_reference.f.dart';
+import 'package:ion/app/features/optimistic_ui/features/likes/post_like_provider.r.dart';
 import 'package:ion/app/utils/num.dart';
 import 'package:ion/generated/assets.gen.dart';
 

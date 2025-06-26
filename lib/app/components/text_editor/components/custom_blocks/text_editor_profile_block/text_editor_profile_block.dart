@@ -3,7 +3,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_quill/flutter_quill.dart';
 import 'package:ion/app/components/text_editor/components/custom_blocks/text_editor_profile_block/profile_block.dart';
-import 'package:ion/app/features/ion_connect/model/event_reference.c.dart';
+import 'package:ion/app/features/ion_connect/model/event_reference.f.dart';
 
 const textEditorProfileKey = 'text-editor-profile';
 

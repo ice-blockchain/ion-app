@@ -6,7 +6,7 @@ import 'package:ion/app/components/button/button.dart';
 import 'package:ion/app/components/list_item/list_item.dart';
 import 'package:ion/app/components/progress_bar/ion_loading_indicator.dart';
 import 'package:ion/app/extensions/extensions.dart';
-import 'package:ion/app/features/core/providers/theme_mode_provider.c.dart';
+import 'package:ion/app/features/core/providers/theme_mode_provider.r.dart';
 import 'package:ion/generated/assets.gen.dart';
 
 class SecureAccountOption extends ConsumerWidget {

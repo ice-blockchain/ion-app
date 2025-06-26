@@ -3,7 +3,7 @@
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/extensions/extensions.dart';
-import 'package:ion/app/features/feed/polls/models/poll_data.c.dart';
+import 'package:ion/app/features/feed/polls/models/poll_data.f.dart';
 import 'package:ion/app/features/feed/polls/utils/poll_utils.dart';
 import 'package:ion/app/features/feed/polls/view/components/poll_vote_result_footer.dart';
 import 'package:ion/app/features/feed/polls/view/components/poll_vote_result_item.dart';

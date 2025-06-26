@@ -11,7 +11,7 @@ import 'package:ion/app/extensions/asset_gen_image.dart';
 import 'package:ion/app/extensions/build_context.dart';
 import 'package:ion/app/extensions/num.dart';
 import 'package:ion/app/extensions/theme_data.dart';
-import 'package:ion/app/features/dapps/providers/dapps_provider.c.dart';
+import 'package:ion/app/features/dapps/providers/dapps_provider.r.dart';
 import 'package:ion/app/features/dapps/views/components/grid_item/grid_item.dart';
 import 'package:ion/app/features/dapps/views/pages/dapp_details/components/dapp_details_info_block/dapp_details_info_block.dart';
 import 'package:ion/app/features/dapps/views/pages/dapp_details/components/launch_dapp_button/launch_dapp_button.dart';

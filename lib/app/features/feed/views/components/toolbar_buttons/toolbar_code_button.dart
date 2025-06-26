@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_quill/flutter_quill.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/components/text_editor/components/custom_blocks/text_editor_code_block/text_editor_code_block.dart';
-import 'package:ion/app/features/feed/create_article/providers/draft_article_provider.c.dart';
+import 'package:ion/app/features/feed/create_article/providers/draft_article_provider.m.dart';
 import 'package:ion/app/features/feed/views/components/actions_toolbar_button/actions_toolbar_button.dart';
 import 'package:ion/generated/assets.gen.dart';
 import 'package:uuid/uuid.dart';

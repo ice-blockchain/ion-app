@@ -5,9 +5,9 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/components/list_item/list_item.dart';
 import 'package:ion/app/components/screen_offset/screen_side_offset.dart';
 import 'package:ion/app/extensions/extensions.dart';
-import 'package:ion/app/features/dapps/model/dapp_data.c.dart';
-import 'package:ion/app/features/search/providers/dapps_search_history_provider.c.dart';
-import 'package:ion/app/router/app_routes.c.dart';
+import 'package:ion/app/features/dapps/model/dapp_data.f.dart';
+import 'package:ion/app/features/search/providers/dapps_search_history_provider.m.dart';
+import 'package:ion/app/router/app_routes.gr.dart';
 
 class DAppsSearchResultsListItem extends ConsumerWidget {
   const DAppsSearchResultsListItem({required this.app, super.key});

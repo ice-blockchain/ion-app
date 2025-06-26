@@ -5,7 +5,7 @@ import 'package:ion_identity_client/src/core/network/network_client.dart';
 import 'package:ion_identity_client/src/core/network/utils.dart';
 import 'package:ion_identity_client/src/core/storage/token_storage.dart';
 import 'package:ion_identity_client/src/core/types/request_headers.dart';
-import 'package:ion_identity_client/src/users/set_ion_connect_relays/models/set_ion_connect_relays_request.c.dart';
+import 'package:ion_identity_client/src/users/set_ion_connect_relays/models/set_ion_connect_relays_request.f.dart';
 
 class SetIONConnectRelaysDataSource {
   SetIONConnectRelaysDataSource(

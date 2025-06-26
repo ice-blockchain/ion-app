@@ -1,8 +1,8 @@
 // SPDX-License-Identifier: ice License 1.0
 
 import 'package:ion_identity_client/src/users/set_ion_connect_relays/data_sources/set_ion_connect_relays_data_source.dart';
-import 'package:ion_identity_client/src/users/set_ion_connect_relays/models/set_ion_connect_relays_request.c.dart';
-import 'package:ion_identity_client/src/users/set_ion_connect_relays/models/set_ion_connect_relays_response.c.dart';
+import 'package:ion_identity_client/src/users/set_ion_connect_relays/models/set_ion_connect_relays_request.f.dart';
+import 'package:ion_identity_client/src/users/set_ion_connect_relays/models/set_ion_connect_relays_response.f.dart';
 
 class SetIONConnectRelaysService {
   SetIONConnectRelaysService(

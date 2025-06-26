@@ -15,7 +15,7 @@ import 'package:ion/app/features/protect_account/backup/views/components/recover
 import 'package:ion/app/features/protect_account/backup/views/pages/create_recover_key_page/hooks/use_screenshot_detector.dart';
 import 'package:ion/app/hooks/use_on_init.dart';
 import 'package:ion/app/hooks/use_route_presence.dart';
-import 'package:ion/app/router/app_routes.c.dart';
+import 'package:ion/app/router/app_routes.gr.dart';
 import 'package:ion/app/router/utils/show_simple_bottom_sheet.dart';
 import 'package:ion/generated/assets.gen.dart';
 import 'package:ion_identity_client/ion_identity.dart';

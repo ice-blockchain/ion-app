@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/components/slider/app_slider.dart';
 import 'package:ion/app/extensions/extensions.dart';
-import 'package:ion/app/features/wallets/model/network_fee_option.c.dart';
+import 'package:ion/app/features/wallets/model/network_fee_option.f.dart';
 import 'package:ion/app/features/wallets/views/components/arrival_time/arrival_time.dart';
 import 'package:ion/app/features/wallets/views/components/network_fee/network_fee.dart';
 

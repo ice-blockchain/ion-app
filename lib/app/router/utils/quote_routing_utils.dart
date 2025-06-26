@@ -3,7 +3,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:ion/app/extensions/extensions.dart';
-import 'package:ion/app/router/app_routes.c.dart';
+import 'package:ion/app/router/app_routes.gr.dart';
 import 'package:ion/app/router/main_tabs/components/tab_item.dart';
 
 class QuoteRoutingUtils {

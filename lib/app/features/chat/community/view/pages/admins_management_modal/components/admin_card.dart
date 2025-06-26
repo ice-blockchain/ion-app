@@ -7,7 +7,7 @@ import 'package:ion/app/components/list_items_loading_state/item_loading_state.d
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/chat/community/models/community_admin_type.dart';
 import 'package:ion/app/features/chat/community/view/pages/admin_type_selection_modal/admin_type_selection_modal.dart';
-import 'package:ion/app/features/user/providers/user_metadata_provider.c.dart';
+import 'package:ion/app/features/user/providers/user_metadata_provider.r.dart';
 import 'package:ion/app/router/utils/show_simple_bottom_sheet.dart';
 import 'package:ion/app/utils/username.dart';
 import 'package:ion/generated/assets.gen.dart';

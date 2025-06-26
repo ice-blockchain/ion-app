@@ -8,11 +8,11 @@ import 'package:ion/app/components/showcase/showcase_wrapper.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/feed/create_post/views/components/topics/topics_button_tooltip.dart';
 import 'package:ion/app/features/feed/data/models/feed_type.dart';
-import 'package:ion/app/features/feed/providers/feed_user_interests_provider.c.dart';
-import 'package:ion/app/features/feed/providers/selected_interests_notifier.c.dart';
-import 'package:ion/app/features/feed/providers/topic_tooltip_visibility_notifier.c.dart';
+import 'package:ion/app/features/feed/providers/feed_user_interests_provider.r.dart';
+import 'package:ion/app/features/feed/providers/selected_interests_notifier.r.dart';
+import 'package:ion/app/features/feed/providers/topic_tooltip_visibility_notifier.r.dart';
 import 'package:ion/app/hooks/use_on_init.dart';
-import 'package:ion/app/router/app_routes.c.dart';
+import 'package:ion/app/router/app_routes.gr.dart';
 import 'package:ion/generated/assets.gen.dart';
 import 'package:showcaseview/showcaseview.dart';
 

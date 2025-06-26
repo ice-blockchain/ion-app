@@ -5,7 +5,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/extensions/extensions.dart';
-import 'package:ion/app/features/feed/create_article/providers/draft_article_provider.c.dart';
+import 'package:ion/app/features/feed/create_article/providers/draft_article_provider.m.dart';
 
 class CodeBlockContent extends HookConsumerWidget {
   const CodeBlockContent({

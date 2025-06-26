@@ -6,7 +6,7 @@ import 'package:ion/app/components/list_item/list_item.dart';
 import 'package:ion/app/components/screen_offset/screen_side_offset.dart';
 import 'package:ion/app/components/select/select_container.dart';
 import 'package:ion/app/extensions/extensions.dart';
-import 'package:ion/app/features/wallets/model/coin_in_wallet_data.c.dart';
+import 'package:ion/app/features/wallets/model/coin_in_wallet_data.f.dart';
 import 'package:ion/app/features/wallets/views/utils/crypto_formatter.dart';
 import 'package:ion/app/utils/num.dart';
 import 'package:ion/generated/assets.gen.dart';

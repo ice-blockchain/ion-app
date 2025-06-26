@@ -2,7 +2,7 @@
 
 import 'package:flutter_test/flutter_test.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:ion/app/features/feed/stories/providers/story_pause_provider.c.dart';
+import 'package:ion/app/features/feed/stories/providers/story_pause_provider.r.dart';
 import 'package:ion/app/features/feed/stories/views/components/story_viewer/components/core/story_gesture_handler.dart';
 
 import '../../../../robots/stories/story_gesture_robot.dart';

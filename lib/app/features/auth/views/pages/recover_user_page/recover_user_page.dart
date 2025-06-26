@@ -12,9 +12,9 @@ import 'package:ion/app/features/auth/views/pages/recover_user_twofa_page/compon
 import 'package:ion/app/features/auth/views/pages/two_fa/twofa_input_step.dart';
 import 'package:ion/app/features/auth/views/pages/two_fa/twofa_options_step.dart';
 import 'package:ion/app/features/components/verify_identity/verify_identity_prompt_dialog_helper.dart';
-import 'package:ion/app/features/protect_account/backup/providers/recover_user_action_notifier.c.dart';
-import 'package:ion/app/features/protect_account/secure_account/providers/selected_two_fa_types_provider.c.dart';
-import 'package:ion/app/router/app_routes.c.dart';
+import 'package:ion/app/features/protect_account/backup/providers/recover_user_action_notifier.m.dart';
+import 'package:ion/app/features/protect_account/secure_account/providers/selected_two_fa_types_provider.m.dart';
+import 'package:ion/app/router/app_routes.gr.dart';
 import 'package:ion/app/router/utils/show_simple_bottom_sheet.dart';
 import 'package:ion_identity_client/ion_identity.dart';
 

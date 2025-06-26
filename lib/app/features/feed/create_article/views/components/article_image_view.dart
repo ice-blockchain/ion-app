@@ -5,9 +5,9 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/extensions/extensions.dart';
-import 'package:ion/app/features/auth/providers/auth_provider.c.dart';
+import 'package:ion/app/features/auth/providers/auth_provider.m.dart';
 import 'package:ion/app/features/feed/views/components/feed_network_image/feed_network_image.dart';
-import 'package:ion/app/services/media_service/media_service.c.dart';
+import 'package:ion/app/services/media_service/media_service.m.dart';
 import 'package:ion/generated/assets.gen.dart';
 
 class ArticleImageView extends ConsumerWidget {

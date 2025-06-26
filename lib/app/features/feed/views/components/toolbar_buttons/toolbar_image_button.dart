@@ -5,7 +5,7 @@ import 'package:flutter_quill/flutter_quill.dart';
 import 'package:ion/app/components/text_editor/components/custom_blocks/text_editor_single_image_block/text_editor_single_image_block.dart';
 import 'package:ion/app/components/text_editor/components/gallery_permission_button.dart';
 import 'package:ion/app/features/gallery/views/pages/media_picker_type.dart';
-import 'package:ion/app/services/media_service/media_service.c.dart';
+import 'package:ion/app/services/media_service/media_service.m.dart';
 
 abstract class ToolbarMediaButtonDelegate {
   void onMediaSelected(List<MediaFile>? mediaFiles) {

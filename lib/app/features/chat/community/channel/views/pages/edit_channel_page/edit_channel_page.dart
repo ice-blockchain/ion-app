@@ -9,9 +9,9 @@ import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/chat/community/channel/views/components/channel_detail_app_bar.dart';
 import 'package:ion/app/features/chat/community/channel/views/components/channel_form.dart';
 import 'package:ion/app/features/chat/community/channel/views/pages/channel_detail_page/components/channel_summary.dart';
-import 'package:ion/app/features/chat/community/providers/community_admins_provider.c.dart';
-import 'package:ion/app/features/chat/community/providers/community_metadata_provider.c.dart';
-import 'package:ion/app/features/chat/community/providers/update_community_provider.c.dart';
+import 'package:ion/app/features/chat/community/providers/community_admins_provider.r.dart';
+import 'package:ion/app/features/chat/community/providers/community_metadata_provider.r.dart';
+import 'package:ion/app/features/chat/community/providers/update_community_provider.r.dart';
 import 'package:ion/app/hooks/use_on_init.dart';
 
 class EditChannelPage extends HookConsumerWidget {

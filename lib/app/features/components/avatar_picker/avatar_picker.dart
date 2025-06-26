@@ -12,10 +12,10 @@ import 'package:ion/app/features/core/permissions/views/components/permission_aw
 import 'package:ion/app/features/core/permissions/views/components/permission_dialogs/permission_sheets.dart';
 import 'package:ion/app/features/gallery/views/pages/media_picker_page.dart';
 import 'package:ion/app/features/gallery/views/pages/media_picker_type.dart';
-import 'package:ion/app/features/user/providers/image_proccessor_notifier.c.dart';
+import 'package:ion/app/features/user/providers/image_proccessor_notifier.m.dart';
 import 'package:ion/app/router/utils/show_simple_bottom_sheet.dart';
 import 'package:ion/app/services/media_service/image_proccessing_config.dart';
-import 'package:ion/app/services/media_service/media_service.c.dart';
+import 'package:ion/app/services/media_service/media_service.m.dart';
 import 'package:ion/generated/assets.gen.dart';
 
 class AvatarPicker extends HookConsumerWidget {

@@ -2,8 +2,8 @@
 
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:ion/app/features/user/model/user_metadata.c.dart';
-import 'package:ion/app/features/user/providers/image_proccessor_notifier.c.dart';
+import 'package:ion/app/features/user/model/user_metadata.f.dart';
+import 'package:ion/app/features/user/providers/image_proccessor_notifier.m.dart';
 import 'package:ion/app/services/media_service/image_proccessing_config.dart';
 
 ({

@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: ice License 1.0
 
 import 'package:ion/app/features/optimistic_ui/core/optimistic_intent.dart';
-import 'package:ion/app/features/optimistic_ui/features/likes/model/post_like.c.dart';
+import 'package:ion/app/features/optimistic_ui/features/likes/model/post_like.f.dart';
 
 /// Intent to toggle like state for a post.
 final class ToggleLikeIntent implements OptimisticIntent<PostLike> {

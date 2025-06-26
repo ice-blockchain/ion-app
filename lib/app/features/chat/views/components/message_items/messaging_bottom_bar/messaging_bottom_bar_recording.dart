@@ -7,11 +7,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/extensions/extensions.dart';
-import 'package:ion/app/features/chat/e2ee/model/entities/private_direct_message_data.c.dart';
-import 'package:ion/app/features/chat/providers/messaging_bottom_bar_state_provider.c.dart';
+import 'package:ion/app/features/chat/e2ee/model/entities/private_direct_message_data.f.dart';
+import 'package:ion/app/features/chat/providers/messaging_bottom_bar_state_provider.r.dart';
 import 'package:ion/app/features/chat/views/components/message_items/messaging_bottom_bar/components/components.dart';
 import 'package:ion/app/features/chat/views/components/message_items/messaging_bottom_bar/components/voice_message_preview_tile.dart';
-import 'package:ion/app/services/media_service/media_service.c.dart';
+import 'package:ion/app/services/media_service/media_service.m.dart';
 import 'package:ion/app/utils/date.dart';
 import 'package:mime/mime.dart';
 

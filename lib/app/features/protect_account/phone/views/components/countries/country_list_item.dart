@@ -2,7 +2,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:ion/app/components/screen_offset/screen_side_offset.dart';
-import 'package:ion/app/constants/countries.c.dart';
+import 'package:ion/app/constants/countries.f.dart';
 import 'package:ion/app/extensions/extensions.dart';
 
 class CountryListItem extends StatelessWidget {

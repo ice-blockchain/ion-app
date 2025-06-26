@@ -3,9 +3,9 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:ion/app/extensions/extensions.dart';
-import 'package:ion/app/router/app_routes.c.dart';
+import 'package:ion/app/router/app_routes.gr.dart';
 import 'package:ion/app/services/browser/browser.dart';
-import 'package:ion/app/services/text_parser/model/text_match.c.dart';
+import 'package:ion/app/services/text_parser/model/text_match.f.dart';
 import 'package:ion/app/services/text_parser/model/text_matcher.dart';
 import 'package:ion/app/utils/url.dart';
 

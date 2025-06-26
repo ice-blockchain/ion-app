@@ -8,8 +8,8 @@ import 'package:ion/app/components/skeleton/skeleton.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/components/ion_connect_avatar/ion_connect_avatar.dart';
 import 'package:ion/app/features/feed/views/components/time_ago/time_ago.dart';
-import 'package:ion/app/features/user/providers/user_metadata_provider.c.dart';
-import 'package:ion/app/router/app_routes.c.dart';
+import 'package:ion/app/features/user/providers/user_metadata_provider.r.dart';
+import 'package:ion/app/router/app_routes.gr.dart';
 import 'package:ion/app/utils/username.dart';
 
 class UserInfo extends HookConsumerWidget {

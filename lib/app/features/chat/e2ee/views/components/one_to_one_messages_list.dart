@@ -6,7 +6,7 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/components/screen_offset/screen_side_offset.dart';
 import 'package:ion/app/extensions/extensions.dart';
-import 'package:ion/app/features/chat/e2ee/model/entities/private_direct_message_data.c.dart';
+import 'package:ion/app/features/chat/e2ee/model/entities/private_direct_message_data.f.dart';
 import 'package:ion/app/features/chat/model/message_type.dart';
 import 'package:ion/app/features/chat/views/components/message_items/components.dart';
 import 'package:ion/app/features/chat/views/components/message_items/message_types/document_message/document_message.dart';

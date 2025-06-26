@@ -3,9 +3,9 @@
 import 'package:flutter/material.dart';
 import 'package:ion/app/components/button/button.dart';
 import 'package:ion/app/extensions/extensions.dart';
-import 'package:ion/app/features/feed/data/models/feed_interests.c.dart';
+import 'package:ion/app/features/feed/data/models/feed_interests.f.dart';
 import 'package:ion/app/features/wallets/views/components/network_icon_widget.dart';
-import 'package:ion/app/router/app_routes.c.dart';
+import 'package:ion/app/router/app_routes.gr.dart';
 import 'package:ion/generated/assets.gen.dart';
 
 class ArticleCategoriesRow extends StatelessWidget {

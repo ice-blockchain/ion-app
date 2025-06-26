@@ -5,7 +5,7 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/extensions/extensions.dart';
-import 'package:ion/app/features/protect_account/phone/provider/country_provider.c.dart';
+import 'package:ion/app/features/protect_account/phone/provider/country_provider.r.dart';
 import 'package:ion/app/features/protect_account/phone/views/components/countries/countries.dart';
 import 'package:ion/app/router/components/navigation_app_bar/navigation_app_bar.dart';
 import 'package:ion/app/router/components/navigation_app_bar/navigation_close_button.dart';

@@ -6,11 +6,11 @@ import 'package:ion/app/components/empty_list/empty_list.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/components/entities_list/entities_list.dart';
 import 'package:ion/app/features/components/entities_list/entities_list_skeleton.dart';
-import 'package:ion/app/features/feed/providers/feed_current_filter_provider.c.dart';
-import 'package:ion/app/features/feed/providers/feed_posts_provider.c.dart';
-import 'package:ion/app/features/user/providers/muted_users_notifier.c.dart';
+import 'package:ion/app/features/feed/providers/feed_current_filter_provider.m.dart';
+import 'package:ion/app/features/feed/providers/feed_posts_provider.r.dart';
+import 'package:ion/app/features/user/providers/muted_users_notifier.r.dart';
 import 'package:ion/app/hooks/use_on_init.dart';
-import 'package:ion/app/router/app_routes.c.dart';
+import 'package:ion/app/router/app_routes.gr.dart';
 import 'package:ion/generated/assets.gen.dart';
 
 class FeedPostsList extends HookConsumerWidget {

@@ -7,8 +7,8 @@ import 'package:ion/app/components/screen_offset/screen_bottom_offset.dart';
 import 'package:ion/app/components/screen_offset/screen_side_offset.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/components/verify_identity/secured_by.dart';
-import 'package:ion/app/features/core/providers/theme_mode_provider.c.dart';
-import 'package:ion/app/features/user/providers/user_verify_identity_provider.c.dart';
+import 'package:ion/app/features/core/providers/theme_mode_provider.r.dart';
+import 'package:ion/app/features/user/providers/user_verify_identity_provider.r.dart';
 import 'package:ion/generated/assets.gen.dart';
 
 class VerifyIdentityPromptDialog extends ConsumerWidget {

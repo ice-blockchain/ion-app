@@ -10,7 +10,7 @@ import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/auth/views/components/auth_scrolled_body/auth_header.dart';
 import 'package:ion/app/features/auth/views/pages/select_languages/language_list_item.dart';
 import 'package:ion/app/features/core/model/language.dart';
-import 'package:ion/app/features/core/providers/app_locale_provider.c.dart';
+import 'package:ion/app/features/core/providers/app_locale_provider.r.dart';
 import 'package:ion/app/hooks/use_languages.dart';
 import 'package:ion/app/router/components/navigation_app_bar/collapsing_app_bar.dart';
 import 'package:ion/app/router/components/navigation_app_bar/navigation_app_bar.dart';

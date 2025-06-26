@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: ice License 1.0
 
-part of '../chat_database.c.dart';
+part of '../chat_database.m.dart';
 
 @DataClassName('EventMessageDbModel')
 class EventMessageTable extends Table {

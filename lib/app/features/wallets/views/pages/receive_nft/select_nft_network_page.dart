@@ -2,10 +2,10 @@
 
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:ion/app/features/wallets/providers/networks_provider.c.dart';
+import 'package:ion/app/features/wallets/providers/networks_provider.r.dart';
 import 'package:ion/app/features/wallets/views/pages/components/select_network_list_sheet.dart';
-import 'package:ion/app/features/wallets/views/pages/receive_nft/providers/receive_nft_form_notifier.c.dart';
-import 'package:ion/app/router/app_routes.c.dart';
+import 'package:ion/app/features/wallets/views/pages/receive_nft/providers/receive_nft_form_notifier.r.dart';
+import 'package:ion/app/router/app_routes.gr.dart';
 
 class SelectNftNetworkPage extends HookConsumerWidget {
   const SelectNftNetworkPage({super.key});

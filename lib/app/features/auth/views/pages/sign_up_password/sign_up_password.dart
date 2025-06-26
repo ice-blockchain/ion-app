@@ -7,7 +7,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/components/screen_offset/screen_bottom_offset.dart';
 import 'package:ion/app/components/screen_offset/screen_side_offset.dart';
 import 'package:ion/app/extensions/extensions.dart';
-import 'package:ion/app/features/auth/providers/register_action_notifier.c.dart';
+import 'package:ion/app/features/auth/providers/register_action_notifier.r.dart';
 import 'package:ion/app/features/auth/views/components/auth_footer/auth_footer.dart';
 import 'package:ion/app/features/auth/views/components/auth_scrolled_body/auth_scrolled_body.dart';
 import 'package:ion/app/features/auth/views/components/identity_key_name_input/identity_key_name_input.dart';

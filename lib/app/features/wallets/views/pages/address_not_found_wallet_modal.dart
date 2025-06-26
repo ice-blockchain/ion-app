@@ -4,8 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/features/wallets/model/crypto_asset_type.dart';
 import 'package:ion/app/features/wallets/views/components/address_not_found_modal.dart';
-import 'package:ion/app/features/wallets/views/pages/coins_flow/receive_coins/providers/receive_coins_form_provider.c.dart';
-import 'package:ion/app/features/wallets/views/pages/receive_nft/providers/receive_nft_form_notifier.c.dart';
+import 'package:ion/app/features/wallets/views/pages/coins_flow/receive_coins/providers/receive_coins_form_provider.r.dart';
+import 'package:ion/app/features/wallets/views/pages/receive_nft/providers/receive_nft_form_notifier.r.dart';
 
 class AddressNotFoundWalletModal extends HookConsumerWidget {
   const AddressNotFoundWalletModal({

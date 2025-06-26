@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: ice License 1.0
 
-part of 'wallet_views_service.c.dart';
+part of 'wallet_views_service.r.dart';
 
 typedef _RequestParams = (Set<String>, List<WalletViewCoinData>);
 

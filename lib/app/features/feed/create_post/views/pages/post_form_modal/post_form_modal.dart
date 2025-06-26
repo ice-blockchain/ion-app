@@ -15,16 +15,16 @@ import 'package:ion/app/features/feed/create_post/views/pages/post_form_modal/co
 import 'package:ion/app/features/feed/create_post/views/pages/post_form_modal/components/create_post_bottom_panel.dart';
 import 'package:ion/app/features/feed/create_post/views/pages/post_form_modal/components/create_post_content.dart';
 import 'package:ion/app/features/feed/create_post/views/pages/post_form_modal/hooks/use_post_quill_controller.dart';
-import 'package:ion/app/features/feed/data/models/entities/modifiable_post_data.c.dart';
-import 'package:ion/app/features/feed/providers/selected_interests_notifier.c.dart';
+import 'package:ion/app/features/feed/data/models/entities/modifiable_post_data.f.dart';
+import 'package:ion/app/features/feed/providers/selected_interests_notifier.r.dart';
 import 'package:ion/app/features/feed/views/pages/cancel_creation_modal/cancel_creation_modal.dart';
-import 'package:ion/app/features/ion_connect/model/event_reference.c.dart';
+import 'package:ion/app/features/ion_connect/model/event_reference.f.dart';
 import 'package:ion/app/features/ion_connect/model/media_attachment.dart';
-import 'package:ion/app/features/ion_connect/model/related_hashtag.c.dart';
-import 'package:ion/app/features/ion_connect/providers/ion_connect_entity_provider.c.dart';
+import 'package:ion/app/features/ion_connect/model/related_hashtag.f.dart';
+import 'package:ion/app/features/ion_connect/providers/ion_connect_entity_provider.r.dart';
 import 'package:ion/app/router/components/sheet_content/sheet_content.dart';
 import 'package:ion/app/router/utils/show_simple_bottom_sheet.dart';
-import 'package:ion/app/services/media_service/media_service.c.dart';
+import 'package:ion/app/services/media_service/media_service.m.dart';
 import 'package:showcaseview/showcaseview.dart';
 
 class PostFormModal extends HookConsumerWidget {

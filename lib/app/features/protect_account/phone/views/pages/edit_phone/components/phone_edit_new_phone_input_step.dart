@@ -5,7 +5,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/components/modal_sheets/simple_modal_sheet.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/protect_account/components/twofa_step_scaffold.dart';
-import 'package:ion/app/features/protect_account/email/providers/linked_phone_provider.c.dart';
+import 'package:ion/app/features/protect_account/email/providers/linked_phone_provider.r.dart';
 import 'package:ion/app/features/protect_account/phone/views/components/phone/phone_input_step.dart';
 import 'package:ion/app/router/utils/show_simple_bottom_sheet.dart';
 import 'package:ion/generated/assets.gen.dart';

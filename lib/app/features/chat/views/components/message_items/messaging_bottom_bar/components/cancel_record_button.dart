@@ -4,7 +4,7 @@ import 'package:audio_waveforms/audio_waveforms.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/extensions/extensions.dart';
-import 'package:ion/app/features/chat/providers/messaging_bottom_bar_state_provider.c.dart';
+import 'package:ion/app/features/chat/providers/messaging_bottom_bar_state_provider.r.dart';
 
 class CancelRecordButton extends ConsumerWidget {
   const CancelRecordButton({

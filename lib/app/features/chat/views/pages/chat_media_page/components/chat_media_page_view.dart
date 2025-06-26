@@ -7,15 +7,15 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/components/progress_bar/ion_loading_indicator.dart';
 import 'package:ion/app/extensions/extensions.dart';
-import 'package:ion/app/features/chat/e2ee/model/entities/private_direct_message_data.c.dart';
-import 'package:ion/app/features/chat/e2ee/providers/chat_message_load_media_provider.c.dart';
-import 'package:ion/app/features/chat/model/database/chat_database.c.dart';
+import 'package:ion/app/features/chat/e2ee/model/entities/private_direct_message_data.f.dart';
+import 'package:ion/app/features/chat/e2ee/providers/chat_message_load_media_provider.r.dart';
+import 'package:ion/app/features/chat/model/database/chat_database.m.dart';
 import 'package:ion/app/features/core/model/media_type.dart';
 import 'package:ion/app/features/feed/views/pages/fullscreen_media/hooks/use_image_zoom.dart';
-import 'package:ion/app/features/ion_connect/model/event_reference.c.dart';
+import 'package:ion/app/features/ion_connect/model/event_reference.f.dart';
 import 'package:ion/app/features/ion_connect/model/media_attachment.dart';
 import 'package:ion/app/features/video/views/pages/video_page.dart';
-import 'package:ion/app/services/file_cache/ion_file_cache_manager.c.dart';
+import 'package:ion/app/services/file_cache/ion_file_cache_manager.r.dart';
 import 'package:ion/app/utils/url.dart';
 
 class ChatMediaPageView extends HookConsumerWidget {

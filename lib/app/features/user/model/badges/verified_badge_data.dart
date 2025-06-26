@@ -1,8 +1,8 @@
 // SPDX-License-Identifier: ice License 1.0
 
-import 'package:ion/app/features/user/model/badges/badge_award.c.dart';
-import 'package:ion/app/features/user/model/badges/badge_definition.c.dart';
-import 'package:ion/app/features/user/model/badges/profile_badges.c.dart';
+import 'package:ion/app/features/user/model/badges/badge_award.f.dart';
+import 'package:ion/app/features/user/model/badges/badge_definition.f.dart';
+import 'package:ion/app/features/user/model/badges/profile_badges.f.dart';
 
 /// Data container for the current user's verified badge info.
 class VerifiedBadgeEntities {

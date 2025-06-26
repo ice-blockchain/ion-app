@@ -8,13 +8,13 @@ import 'package:ion/app/components/progress_bar/ion_loading_indicator.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/chat/hooks/use_combined_conversation_names.dart';
 import 'package:ion/app/features/chat/model/message_type.dart';
-import 'package:ion/app/features/chat/providers/conversations_provider.c.dart';
-import 'package:ion/app/features/chat/providers/muted_conversations_provider.c.dart';
-import 'package:ion/app/features/chat/providers/unread_message_count_provider.c.dart';
-import 'package:ion/app/features/chat/recent_chats/providers/archive_state_provider.c.dart';
-import 'package:ion/app/features/chat/recent_chats/providers/conversations_edit_mode_provider.c.dart';
+import 'package:ion/app/features/chat/providers/conversations_provider.r.dart';
+import 'package:ion/app/features/chat/providers/muted_conversations_provider.r.dart';
+import 'package:ion/app/features/chat/providers/unread_message_count_provider.r.dart';
+import 'package:ion/app/features/chat/recent_chats/providers/archive_state_provider.r.dart';
+import 'package:ion/app/features/chat/recent_chats/providers/conversations_edit_mode_provider.r.dart';
 import 'package:ion/app/features/chat/recent_chats/views/components/recent_chat_tile/recent_chat_tile.dart';
-import 'package:ion/app/router/app_routes.c.dart';
+import 'package:ion/app/router/app_routes.gr.dart';
 import 'package:ion/generated/assets.gen.dart';
 
 class ArchiveChatTile extends HookConsumerWidget {

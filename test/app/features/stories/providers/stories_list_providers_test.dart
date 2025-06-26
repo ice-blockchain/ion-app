@@ -3,11 +3,11 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/features/core/model/media_type.dart';
-import 'package:ion/app/features/feed/data/models/entities/modifiable_post_data.c.dart';
+import 'package:ion/app/features/feed/data/models/entities/modifiable_post_data.f.dart';
 import 'package:ion/app/features/feed/data/models/feed_modifier.dart';
 import 'package:ion/app/features/feed/data/models/feed_type.dart';
-import 'package:ion/app/features/feed/providers/feed_for_you_content_provider.c.dart';
-import 'package:ion/app/features/feed/stories/providers/feed_stories_provider.c.dart';
+import 'package:ion/app/features/feed/providers/feed_for_you_content_provider.m.dart';
+import 'package:ion/app/features/feed/stories/providers/feed_stories_provider.r.dart';
 import 'package:mocktail/mocktail.dart';
 
 import '../../../../fixtures/posts/post_fixtures.dart';

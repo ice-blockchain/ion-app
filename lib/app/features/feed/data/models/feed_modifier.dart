@@ -1,8 +1,8 @@
 // SPDX-License-Identifier: ice License 1.0
 
-import 'package:ion/app/features/feed/data/models/feed_config.c.dart';
-import 'package:ion/app/features/feed/data/models/feed_interests.c.dart';
-import 'package:ion/app/features/ion_connect/model/related_hashtag.c.dart';
+import 'package:ion/app/features/feed/data/models/feed_config.f.dart';
+import 'package:ion/app/features/feed/data/models/feed_interests.f.dart';
+import 'package:ion/app/features/ion_connect/model/related_hashtag.f.dart';
 import 'package:ion/app/features/ion_connect/model/search_extension.dart';
 
 typedef FeedFilterData = ({List<SearchExtension> search, Map<String, List<String>> tags});

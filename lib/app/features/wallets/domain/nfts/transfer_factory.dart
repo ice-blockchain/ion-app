@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: ice License 1.0
 
-part of 'send_nft_use_case.c.dart';
+part of 'send_nft_use_case.r.dart';
 
 class _TransferFactory {
   Transfer create({

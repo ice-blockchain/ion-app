@@ -3,7 +3,7 @@
 import 'package:flutter/material.dart';
 import 'package:ion/app/components/screen_offset/screen_side_offset.dart';
 import 'package:ion/app/extensions/num.dart';
-import 'package:ion/app/features/dapps/model/dapp_data.c.dart';
+import 'package:ion/app/features/dapps/model/dapp_data.f.dart';
 import 'package:ion/app/features/dapps/views/components/grid_item/grid_item.dart';
 
 class AppsCollection extends StatelessWidget {

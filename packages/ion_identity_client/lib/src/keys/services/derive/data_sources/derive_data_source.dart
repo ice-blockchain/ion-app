@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: ice License 1.0
 
 import 'package:ion_identity_client/src/core/types/http_method.dart';
-import 'package:ion_identity_client/src/keys/services/derive/models/derive_request.c.dart';
+import 'package:ion_identity_client/src/keys/services/derive/models/derive_request.f.dart';
 import 'package:ion_identity_client/src/signer/types/user_action_signing_request.dart';
 
 class DeriveDataSource {

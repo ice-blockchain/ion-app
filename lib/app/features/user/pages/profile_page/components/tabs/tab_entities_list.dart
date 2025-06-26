@@ -4,17 +4,17 @@ import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/components/scroll_view/load_more_builder.dart';
 import 'package:ion/app/components/scroll_view/pull_to_refresh_builder.dart';
-import 'package:ion/app/features/auth/providers/auth_provider.c.dart';
+import 'package:ion/app/features/auth/providers/auth_provider.m.dart';
 import 'package:ion/app/features/components/entities_list/entities_list.dart';
 import 'package:ion/app/features/components/entities_list/entities_list_skeleton.dart';
 import 'package:ion/app/features/ion_connect/model/ion_connect_entity.dart';
-import 'package:ion/app/features/ion_connect/providers/entities_paged_data_provider.c.dart';
+import 'package:ion/app/features/ion_connect/providers/entities_paged_data_provider.m.dart';
 import 'package:ion/app/features/user/model/tab_entity_type.dart';
 import 'package:ion/app/features/user/pages/profile_page/components/tabs/empty_state.dart';
-import 'package:ion/app/features/user/providers/tab_data_source_provider.c.dart';
-import 'package:ion/app/features/user/providers/user_metadata_provider.c.dart';
-import 'package:ion/app/features/user_block/providers/block_list_notifier.c.dart';
-import 'package:ion/app/router/app_routes.c.dart';
+import 'package:ion/app/features/user/providers/tab_data_source_provider.r.dart';
+import 'package:ion/app/features/user/providers/user_metadata_provider.r.dart';
+import 'package:ion/app/features/user_block/providers/block_list_notifier.r.dart';
+import 'package:ion/app/router/app_routes.gr.dart';
 import 'package:ion/app/utils/username.dart';
 
 class TabEntitiesList extends ConsumerWidget {

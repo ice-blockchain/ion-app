@@ -6,20 +6,20 @@ import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/extensions/extensions.dart';
-import 'package:ion/app/features/auth/providers/auth_provider.c.dart';
+import 'package:ion/app/features/auth/providers/auth_provider.m.dart';
 import 'package:ion/app/features/chat/hooks/use_has_reaction.dart';
 import 'package:ion/app/features/chat/views/components/message_items/message_item_wrapper/message_item_wrapper.dart';
 import 'package:ion/app/features/chat/views/components/message_items/message_reactions/message_reactions.dart';
 import 'package:ion/app/features/chat/views/components/message_items/message_types/text_message/text_message.dart';
 import 'package:ion/app/features/components/ion_connect_network_image/ion_connect_network_image.dart';
 import 'package:ion/app/features/core/model/media_type.dart';
-import 'package:ion/app/features/feed/data/models/entities/modifiable_post_data.c.dart';
-import 'package:ion/app/features/feed/data/models/entities/post_data.c.dart';
-import 'package:ion/app/features/feed/stories/providers/story_viewing_provider.c.dart';
+import 'package:ion/app/features/feed/data/models/entities/modifiable_post_data.f.dart';
+import 'package:ion/app/features/feed/data/models/entities/post_data.f.dart';
+import 'package:ion/app/features/feed/stories/providers/story_viewing_provider.r.dart';
 import 'package:ion/app/features/ion_connect/ion_connect.dart';
 import 'package:ion/app/features/ion_connect/model/entity_data_with_media_content.dart';
 import 'package:ion/app/features/ion_connect/model/ion_connect_entity.dart';
-import 'package:ion/app/router/app_routes.c.dart';
+import 'package:ion/app/router/app_routes.gr.dart';
 import 'package:ion/generated/assets.gen.dart';
 
 class SharedStoryMessage extends HookConsumerWidget {

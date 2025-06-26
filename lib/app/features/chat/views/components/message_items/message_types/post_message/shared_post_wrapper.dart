@@ -4,11 +4,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/extensions/extensions.dart';
-import 'package:ion/app/features/auth/providers/auth_provider.c.dart';
-import 'package:ion/app/features/chat/e2ee/model/entities/private_direct_message_data.c.dart';
-import 'package:ion/app/features/chat/model/database/chat_database.c.dart';
-import 'package:ion/app/features/chat/model/message_list_item.c.dart';
-import 'package:ion/app/features/chat/providers/message_status_provider.c.dart';
+import 'package:ion/app/features/auth/providers/auth_provider.m.dart';
+import 'package:ion/app/features/chat/e2ee/model/entities/private_direct_message_data.f.dart';
+import 'package:ion/app/features/chat/model/database/chat_database.m.dart';
+import 'package:ion/app/features/chat/model/message_list_item.f.dart';
+import 'package:ion/app/features/chat/providers/message_status_provider.r.dart';
 import 'package:ion/app/features/chat/views/components/message_items/message_reaction_dialog/message_reaction_dialog.dart';
 
 import 'package:ion/generated/assets.gen.dart';

@@ -2,11 +2,11 @@
 
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:ion/app/features/auth/providers/auth_provider.c.dart';
-import 'package:ion/app/features/auth/providers/onboarding_complete_provider.c.dart';
-import 'package:ion/app/features/core/providers/init_provider.c.dart';
-import 'package:ion/app/features/core/providers/splash_provider.c.dart';
-import 'package:ion/app/features/force_update/providers/force_update_provider.c.dart';
+import 'package:ion/app/features/auth/providers/auth_provider.m.dart';
+import 'package:ion/app/features/auth/providers/onboarding_complete_provider.r.dart';
+import 'package:ion/app/features/core/providers/init_provider.r.dart';
+import 'package:ion/app/features/core/providers/splash_provider.r.dart';
+import 'package:ion/app/features/force_update/providers/force_update_provider.r.dart';
 
 class AppRouterNotifier extends ChangeNotifier {
   AppRouterNotifier(this.ref) {

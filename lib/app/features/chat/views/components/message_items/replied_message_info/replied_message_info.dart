@@ -3,8 +3,8 @@
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/extensions/extensions.dart';
-import 'package:ion/app/features/chat/model/message_list_item.c.dart';
-import 'package:ion/app/features/chat/recent_chats/providers/selected_reply_message_provider.c.dart';
+import 'package:ion/app/features/chat/model/message_list_item.f.dart';
+import 'package:ion/app/features/chat/recent_chats/providers/selected_reply_message_provider.r.dart';
 import 'package:ion/app/features/chat/recent_chats/views/components/recent_chat_tile/recent_chat_tile.dart';
 import 'package:ion/app/features/chat/views/components/message_items/message_types/visual_media_message/visual_media_custom_grid.dart';
 import 'package:ion/app/features/components/ion_connect_network_image/ion_connect_network_image.dart';

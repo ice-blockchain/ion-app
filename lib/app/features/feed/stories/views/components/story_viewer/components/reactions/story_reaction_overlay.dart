@@ -8,9 +8,9 @@ import 'package:flutter_keyboard_visibility/flutter_keyboard_visibility.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/chat/views/components/message_items/components.dart';
-import 'package:ion/app/features/feed/data/models/entities/modifiable_post_data.c.dart';
-import 'package:ion/app/features/feed/stories/providers/emoji_reaction_provider.c.dart';
-import 'package:ion/app/features/feed/stories/providers/story_reply_provider.c.dart';
+import 'package:ion/app/features/feed/data/models/entities/modifiable_post_data.f.dart';
+import 'package:ion/app/features/feed/stories/providers/emoji_reaction_provider.m.dart';
+import 'package:ion/app/features/feed/stories/providers/story_reply_provider.r.dart';
 
 class StoryReactionOverlay extends HookConsumerWidget {
   const StoryReactionOverlay({

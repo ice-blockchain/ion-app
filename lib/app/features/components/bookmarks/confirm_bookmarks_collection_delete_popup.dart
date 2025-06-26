@@ -8,8 +8,8 @@ import 'package:ion/app/components/modal_sheets/simple_modal_sheet.dart';
 import 'package:ion/app/components/progress_bar/ion_loading_indicator.dart';
 import 'package:ion/app/components/screen_offset/screen_side_offset.dart';
 import 'package:ion/app/extensions/extensions.dart';
-import 'package:ion/app/features/feed/data/models/bookmarks/bookmarks_set.c.dart';
-import 'package:ion/app/features/feed/providers/feed_bookmarks_notifier.c.dart';
+import 'package:ion/app/features/feed/data/models/bookmarks/bookmarks_set.f.dart';
+import 'package:ion/app/features/feed/providers/feed_bookmarks_notifier.r.dart';
 import 'package:ion/generated/assets.gen.dart';
 
 class ConfirmBookmarksCollectionDeletePopup extends ConsumerWidget {

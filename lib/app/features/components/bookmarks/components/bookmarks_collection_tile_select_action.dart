@@ -3,9 +3,9 @@
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/extensions/asset_gen_image.dart';
-import 'package:ion/app/features/feed/data/models/bookmarks/bookmarks_set.c.dart';
-import 'package:ion/app/features/feed/providers/feed_bookmarks_notifier.c.dart';
-import 'package:ion/app/features/ion_connect/model/event_reference.c.dart';
+import 'package:ion/app/features/feed/data/models/bookmarks/bookmarks_set.f.dart';
+import 'package:ion/app/features/feed/providers/feed_bookmarks_notifier.r.dart';
+import 'package:ion/app/features/ion_connect/model/event_reference.f.dart';
 import 'package:ion/generated/assets.gen.dart';
 
 class BookmarksCollectionTileSelectAction extends ConsumerWidget {

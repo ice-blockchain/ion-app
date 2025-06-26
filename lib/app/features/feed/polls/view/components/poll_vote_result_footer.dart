@@ -2,7 +2,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:ion/app/extensions/extensions.dart';
-import 'package:ion/app/features/feed/polls/models/poll_data.c.dart';
+import 'package:ion/app/features/feed/polls/models/poll_data.f.dart';
 import 'package:ion/app/features/feed/polls/utils/poll_utils.dart';
 
 class PollVoteResultFooter extends StatelessWidget {

@@ -2,7 +2,7 @@
 
 import 'package:flutter/foundation.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:ion/app/features/core/providers/env_provider.c.dart';
+import 'package:ion/app/features/core/providers/env_provider.r.dart';
 import 'package:sentry_flutter/sentry_flutter.dart';
 
 mixin SentryService {

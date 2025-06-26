@@ -4,7 +4,7 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_quill/flutter_quill.dart';
 import 'package:ion/app/components/text_editor/attributes.dart';
-import 'package:ion/app/router/app_routes.c.dart';
+import 'package:ion/app/router/app_routes.gr.dart';
 
 GestureRecognizer? customRecognizerBuilder(
   BuildContext context,

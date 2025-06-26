@@ -6,9 +6,9 @@ import 'package:ion/app/extensions/asset_gen_image.dart';
 import 'package:ion/app/extensions/build_context.dart';
 import 'package:ion/app/extensions/num.dart';
 import 'package:ion/app/extensions/theme_data.dart';
-import 'package:ion/app/features/dapps/model/dapp_data.c.dart';
+import 'package:ion/app/features/dapps/model/dapp_data.f.dart';
 import 'package:ion/app/features/dapps/views/components/favourite_icon/favorite_icon.dart';
-import 'package:ion/app/router/app_routes.c.dart';
+import 'package:ion/app/router/app_routes.gr.dart';
 import 'package:ion/app/utils/num.dart';
 import 'package:ion/generated/assets.gen.dart';
 

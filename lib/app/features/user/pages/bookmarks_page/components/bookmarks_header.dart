@@ -5,8 +5,8 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/components/inputs/search_input/search_input.dart';
 import 'package:ion/app/components/screen_offset/screen_side_offset.dart';
 import 'package:ion/app/extensions/extensions.dart';
-import 'package:ion/app/features/feed/providers/feed_bookmarks_notifier.c.dart';
-import 'package:ion/app/router/app_routes.c.dart';
+import 'package:ion/app/features/feed/providers/feed_bookmarks_notifier.r.dart';
+import 'package:ion/app/router/app_routes.gr.dart';
 import 'package:ion/app/router/components/navigation_app_bar/navigation_app_bar.dart';
 import 'package:ion/generated/assets.gen.dart';
 

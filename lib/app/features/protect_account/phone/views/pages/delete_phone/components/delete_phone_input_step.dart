@@ -8,9 +8,9 @@ import 'package:ion/app/features/auth/views/pages/recover_user_twofa_page/compon
 import 'package:ion/app/features/protect_account/authenticator/data/adapter/twofa_type_adapter.dart';
 import 'package:ion/app/features/protect_account/components/twofa_input_step.dart';
 import 'package:ion/app/features/protect_account/components/twofa_step_scaffold.dart';
-import 'package:ion/app/features/protect_account/email/providers/linked_phone_provider.c.dart';
-import 'package:ion/app/features/protect_account/secure_account/providers/delete_twofa_notifier.c.dart';
-import 'package:ion/app/features/protect_account/secure_account/providers/selected_two_fa_types_provider.c.dart';
+import 'package:ion/app/features/protect_account/email/providers/linked_phone_provider.r.dart';
+import 'package:ion/app/features/protect_account/secure_account/providers/delete_twofa_notifier.r.dart';
+import 'package:ion/app/features/protect_account/secure_account/providers/selected_two_fa_types_provider.m.dart';
 import 'package:ion/app/router/utils/show_simple_bottom_sheet.dart';
 import 'package:ion/generated/assets.gen.dart';
 

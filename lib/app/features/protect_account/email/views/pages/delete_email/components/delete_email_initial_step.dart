@@ -6,8 +6,8 @@ import 'package:ion/app/components/button/button.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/auth/views/components/auth_scrolled_body/auth_header_icon.dart';
 import 'package:ion/app/features/protect_account/components/twofa_initial_scaffold.dart';
-import 'package:ion/app/features/protect_account/email/providers/linked_email_provider.c.dart';
-import 'package:ion/app/router/app_routes.c.dart';
+import 'package:ion/app/features/protect_account/email/providers/linked_email_provider.r.dart';
+import 'package:ion/app/router/app_routes.gr.dart';
 import 'package:ion/app/utils/formatters.dart';
 import 'package:ion/generated/assets.gen.dart';
 

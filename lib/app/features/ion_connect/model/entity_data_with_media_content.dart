@@ -3,7 +3,7 @@
 import 'package:collection/collection.dart';
 import 'package:ion/app/features/core/model/media_type.dart';
 import 'package:ion/app/features/ion_connect/model/media_attachment.dart';
-import 'package:ion/app/features/ion_connect/model/rich_text.c.dart';
+import 'package:ion/app/features/ion_connect/model/rich_text.f.dart';
 
 mixin EntityDataWithMediaContent {
   String get content;

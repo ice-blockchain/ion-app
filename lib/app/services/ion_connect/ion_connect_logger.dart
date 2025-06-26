@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: ice License 1.0
 
 import 'package:ion/app/features/ion_connect/ion_connect.dart';
-import 'package:ion/app/features/ion_connect/providers/relay_auth_provider.c.dart';
+import 'package:ion/app/features/ion_connect/providers/relay_auth_provider.r.dart';
 import 'package:ion/app/services/logger/logger.dart';
 
 class IonConnectLogger implements NostrDartLogger {

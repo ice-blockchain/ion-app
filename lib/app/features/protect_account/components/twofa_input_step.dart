@@ -10,7 +10,7 @@ import 'package:ion/app/components/screen_offset/screen_side_offset.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/auth/data/models/twofa_type.dart';
 import 'package:ion/app/features/auth/views/pages/recover_user_twofa_page/components/twofa_code_input.dart';
-import 'package:ion/app/features/protect_account/secure_account/providers/request_twofa_code_notifier.c.dart';
+import 'package:ion/app/features/protect_account/secure_account/providers/request_twofa_code_notifier.r.dart';
 
 class TwoFAInputStep extends HookConsumerWidget {
   const TwoFAInputStep({

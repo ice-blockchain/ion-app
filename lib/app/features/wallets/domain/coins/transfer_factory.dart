@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: ice License 1.0
 
-part of 'coins_service.c.dart';
+part of 'coins_service.r.dart';
 
 class _TransferFactory {
   Transfer create({

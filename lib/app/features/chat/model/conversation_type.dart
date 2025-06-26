@@ -3,7 +3,7 @@
 import 'package:flutter/material.dart';
 import 'package:ion/app/extensions/build_context.dart';
 import 'package:ion/app/extensions/theme_data.dart';
-import 'package:ion/app/router/app_routes.c.dart';
+import 'package:ion/app/router/app_routes.gr.dart';
 import 'package:ion/app/router/model/main_modal_list_item.dart';
 import 'package:ion/generated/assets.gen.dart';
 

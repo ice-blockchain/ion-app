@@ -7,8 +7,8 @@ import 'package:ion/app/components/screen_offset/screen_bottom_offset.dart';
 import 'package:ion/app/components/screen_offset/screen_side_offset.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/components/ion_connect_avatar/ion_connect_avatar.dart';
-import 'package:ion/app/features/user/model/user_metadata.c.dart';
-import 'package:ion/app/features/wallets/model/network_data.c.dart';
+import 'package:ion/app/features/user/model/user_metadata.f.dart';
+import 'package:ion/app/features/wallets/model/network_data.f.dart';
 import 'package:ion/app/router/utils/show_simple_bottom_sheet.dart';
 import 'package:ion/generated/assets.gen.dart';
 

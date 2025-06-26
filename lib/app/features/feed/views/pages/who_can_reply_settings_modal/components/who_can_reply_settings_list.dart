@@ -5,7 +5,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/components/list_items_loading_state/list_items_loading_state.dart';
 import 'package:ion/app/components/screen_offset/screen_side_offset.dart';
 import 'package:ion/app/components/separated/separator.dart';
-import 'package:ion/app/features/feed/providers/can_reply_notifier.c.dart';
+import 'package:ion/app/features/feed/providers/can_reply_notifier.r.dart';
 import 'package:ion/app/features/feed/views/pages/who_can_reply_settings_modal/components/who_can_reply_settings_list_item.dart';
 
 class WhoCanReplySettingsList extends ConsumerWidget {

@@ -1,9 +1,9 @@
 // SPDX-License-Identifier: ice License 1.0
 
 import 'package:collection/collection.dart';
-import 'package:ion/app/features/feed/data/models/who_can_reply_settings_option.c.dart';
-import 'package:ion/app/features/ion_connect/model/event_setting.c.dart';
-import 'package:ion/app/features/user/model/badges/badge_definition.c.dart';
+import 'package:ion/app/features/feed/data/models/who_can_reply_settings_option.f.dart';
+import 'package:ion/app/features/ion_connect/model/event_setting.f.dart';
+import 'package:ion/app/features/user/model/badges/badge_definition.f.dart';
 
 mixin EntityDataWithSettings {
   List<EventSetting>? get settings;

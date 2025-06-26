@@ -4,10 +4,10 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/extensions/extensions.dart';
-import 'package:ion/app/features/chat/providers/conversations_provider.c.dart';
-import 'package:ion/app/features/chat/recent_chats/providers/conversations_edit_mode_provider.c.dart';
-import 'package:ion/app/features/chat/recent_chats/providers/selected_conversations_ids_provider.c.dart';
-import 'package:ion/app/features/chat/recent_chats/providers/toggle_archive_conversation_provider.c.dart';
+import 'package:ion/app/features/chat/providers/conversations_provider.r.dart';
+import 'package:ion/app/features/chat/recent_chats/providers/conversations_edit_mode_provider.r.dart';
+import 'package:ion/app/features/chat/recent_chats/providers/selected_conversations_ids_provider.r.dart';
+import 'package:ion/app/features/chat/recent_chats/providers/toggle_archive_conversation_provider.r.dart';
 import 'package:ion/generated/assets.gen.dart';
 
 class ConversationUnarchiveButton extends ConsumerWidget {

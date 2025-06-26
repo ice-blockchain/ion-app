@@ -4,9 +4,9 @@ import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/components/list_item/list_item.dart';
 import 'package:ion/app/extensions/extensions.dart';
-import 'package:ion/app/features/wallets/model/coin_in_wallet_data.c.dart';
-import 'package:ion/app/features/wallets/model/network_data.c.dart';
-import 'package:ion/app/features/wallets/providers/wallet_user_preferences/user_preferences_selectors.c.dart';
+import 'package:ion/app/features/wallets/model/coin_in_wallet_data.f.dart';
+import 'package:ion/app/features/wallets/model/network_data.f.dart';
+import 'package:ion/app/features/wallets/providers/wallet_user_preferences/user_preferences_selectors.r.dart';
 import 'package:ion/app/features/wallets/views/components/coin_icon_with_network.dart';
 import 'package:ion/app/utils/num.dart';
 

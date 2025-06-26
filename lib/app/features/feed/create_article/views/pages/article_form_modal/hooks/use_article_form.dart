@@ -5,15 +5,15 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_quill/flutter_quill.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/components/text_editor/hooks/use_quill_controller.dart';
-import 'package:ion/app/features/feed/create_article/providers/draft_article_provider.c.dart';
-import 'package:ion/app/features/feed/data/models/entities/article_data.c.dart';
-import 'package:ion/app/features/ion_connect/model/event_reference.c.dart';
+import 'package:ion/app/features/feed/create_article/providers/draft_article_provider.m.dart';
+import 'package:ion/app/features/feed/data/models/entities/article_data.f.dart';
+import 'package:ion/app/features/ion_connect/model/event_reference.f.dart';
 import 'package:ion/app/features/ion_connect/model/media_attachment.dart';
-import 'package:ion/app/features/ion_connect/providers/ion_connect_entity_provider.c.dart';
-import 'package:ion/app/features/user/providers/image_proccessor_notifier.c.dart';
+import 'package:ion/app/features/ion_connect/providers/ion_connect_entity_provider.r.dart';
+import 'package:ion/app/features/user/providers/image_proccessor_notifier.m.dart';
 import 'package:ion/app/services/markdown/quill.dart';
 import 'package:ion/app/services/media_service/image_proccessing_config.dart';
-import 'package:ion/app/services/media_service/media_service.c.dart';
+import 'package:ion/app/services/media_service/media_service.m.dart';
 
 class ArticleFormState {
   ArticleFormState({

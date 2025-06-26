@@ -6,17 +6,17 @@ import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/extensions/extensions.dart';
-import 'package:ion/app/features/chat/e2ee/model/entities/private_direct_message_data.c.dart';
-import 'package:ion/app/features/chat/providers/messaging_bottom_bar_state_provider.c.dart';
-import 'package:ion/app/features/chat/recent_chats/providers/selected_edit_message_provider.c.dart';
-import 'package:ion/app/features/chat/recent_chats/providers/selected_reply_message_provider.c.dart';
+import 'package:ion/app/features/chat/e2ee/model/entities/private_direct_message_data.f.dart';
+import 'package:ion/app/features/chat/providers/messaging_bottom_bar_state_provider.r.dart';
+import 'package:ion/app/features/chat/recent_chats/providers/selected_edit_message_provider.r.dart';
+import 'package:ion/app/features/chat/recent_chats/providers/selected_reply_message_provider.r.dart';
 import 'package:ion/app/features/chat/views/components/message_items/messaging_bottom_bar/components/components.dart';
 import 'package:ion/app/features/core/permissions/data/models/permissions_types.dart';
 import 'package:ion/app/features/core/permissions/views/components/permission_aware_widget.dart';
 import 'package:ion/app/features/core/permissions/views/components/permission_dialogs/permission_request_sheet.dart';
 import 'package:ion/app/features/core/permissions/views/components/permission_dialogs/settings_redirect_sheet.dart';
-import 'package:ion/app/router/app_routes.c.dart';
-import 'package:ion/app/services/media_service/media_service.c.dart';
+import 'package:ion/app/router/app_routes.gr.dart';
+import 'package:ion/app/services/media_service/media_service.m.dart';
 import 'package:ion/generated/assets.gen.dart';
 
 class BottomBarInitialView extends HookConsumerWidget {

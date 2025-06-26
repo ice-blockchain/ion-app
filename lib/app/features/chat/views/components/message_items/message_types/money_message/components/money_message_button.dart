@@ -9,20 +9,20 @@ import 'package:ion/app/components/button/button.dart';
 import 'package:ion/app/components/progress_bar/ion_loading_indicator.dart';
 import 'package:ion/app/exceptions/exceptions.dart';
 import 'package:ion/app/extensions/extensions.dart';
-import 'package:ion/app/features/chat/e2ee/providers/e2ee_delete_event_provider.c.dart';
+import 'package:ion/app/features/chat/e2ee/providers/e2ee_delete_event_provider.r.dart';
 import 'package:ion/app/features/core/views/pages/error_modal.dart';
 import 'package:ion/app/features/ion_connect/ion_connect.dart';
-import 'package:ion/app/features/wallets/model/coins_group.c.dart';
-import 'package:ion/app/features/wallets/model/entities/funds_request_entity.c.dart';
-import 'package:ion/app/features/wallets/model/transaction_data.c.dart';
-import 'package:ion/app/features/wallets/model/transaction_details.c.dart';
-import 'package:ion/app/features/wallets/providers/coins_provider.c.dart';
-import 'package:ion/app/features/wallets/providers/networks_provider.c.dart';
-import 'package:ion/app/features/wallets/providers/send_asset_form_provider.c.dart';
-import 'package:ion/app/features/wallets/providers/transaction_provider.c.dart';
-import 'package:ion/app/features/wallets/providers/wallet_view_data_provider.c.dart';
+import 'package:ion/app/features/wallets/model/coins_group.f.dart';
+import 'package:ion/app/features/wallets/model/entities/funds_request_entity.f.dart';
+import 'package:ion/app/features/wallets/model/transaction_data.f.dart';
+import 'package:ion/app/features/wallets/model/transaction_details.f.dart';
+import 'package:ion/app/features/wallets/providers/coins_provider.r.dart';
+import 'package:ion/app/features/wallets/providers/networks_provider.r.dart';
+import 'package:ion/app/features/wallets/providers/send_asset_form_provider.r.dart';
+import 'package:ion/app/features/wallets/providers/transaction_provider.r.dart';
+import 'package:ion/app/features/wallets/providers/wallet_view_data_provider.r.dart';
 import 'package:ion/app/features/wallets/views/utils/amount_parser.dart';
-import 'package:ion/app/router/app_routes.c.dart';
+import 'package:ion/app/router/app_routes.gr.dart';
 
 class RequestedMoneyMessageButton extends StatelessWidget {
   const RequestedMoneyMessageButton({

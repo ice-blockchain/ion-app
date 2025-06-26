@@ -3,10 +3,10 @@
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/components/inputs/search_input/search_input.dart';
-import 'package:ion/app/features/wallets/providers/filtered_assets_provider.c.dart';
-import 'package:ion/app/features/wallets/providers/filtered_wallet_coins_provider.c.dart';
+import 'package:ion/app/features/wallets/providers/filtered_assets_provider.r.dart';
+import 'package:ion/app/features/wallets/providers/filtered_wallet_coins_provider.r.dart';
 import 'package:ion/app/features/wallets/views/pages/wallet_page/helpers/cancel_search_helper.dart';
-import 'package:ion/app/features/wallets/views/pages/wallet_page/providers/search_visibility_provider.c.dart';
+import 'package:ion/app/features/wallets/views/pages/wallet_page/providers/search_visibility_provider.r.dart';
 import 'package:ion/app/features/wallets/views/pages/wallet_page/tab_type.dart';
 
 class WalletSearchBar extends ConsumerWidget {

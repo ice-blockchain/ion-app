@@ -6,7 +6,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/components/scroll_view/pull_to_refresh_builder.dart';
 import 'package:ion/app/features/components/entities_list/entities_list_skeleton.dart';
 import 'package:ion/app/features/feed/notifications/data/model/notifications_tab_type.dart';
-import 'package:ion/app/features/feed/notifications/providers/tab_notifications_provider.c.dart';
+import 'package:ion/app/features/feed/notifications/providers/tab_notifications_provider.r.dart';
 import 'package:ion/app/features/feed/notifications/views/notifications_history_page/components/notification_item/notification_item.dart';
 import 'package:ion/app/features/feed/notifications/views/notifications_history_page/components/tabs/empty_list.dart';
 

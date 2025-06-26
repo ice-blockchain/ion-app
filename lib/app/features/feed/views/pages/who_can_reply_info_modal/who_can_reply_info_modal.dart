@@ -6,12 +6,12 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/components/card/info_card.dart';
 import 'package:ion/app/components/screen_offset/screen_bottom_offset.dart';
 import 'package:ion/app/extensions/extensions.dart';
-import 'package:ion/app/features/feed/data/models/entities/article_data.c.dart';
-import 'package:ion/app/features/feed/data/models/entities/modifiable_post_data.c.dart';
-import 'package:ion/app/features/feed/data/models/who_can_reply_settings_option.c.dart';
-import 'package:ion/app/features/feed/providers/root_post_provider.c.dart';
-import 'package:ion/app/features/ion_connect/model/event_reference.c.dart';
-import 'package:ion/app/features/user/providers/user_metadata_provider.c.dart';
+import 'package:ion/app/features/feed/data/models/entities/article_data.f.dart';
+import 'package:ion/app/features/feed/data/models/entities/modifiable_post_data.f.dart';
+import 'package:ion/app/features/feed/data/models/who_can_reply_settings_option.f.dart';
+import 'package:ion/app/features/feed/providers/root_post_provider.r.dart';
+import 'package:ion/app/features/ion_connect/model/event_reference.f.dart';
+import 'package:ion/app/features/user/providers/user_metadata_provider.r.dart';
 import 'package:ion/generated/assets.gen.dart';
 
 class WhoCanReplyInfoModal extends HookConsumerWidget {

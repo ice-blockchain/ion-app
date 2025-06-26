@@ -1,10 +1,10 @@
 // SPDX-License-Identifier: ice License 1.0
 
-import 'package:ion/app/features/feed/data/models/entities/post_data.c.dart';
-import 'package:ion/app/features/feed/data/models/entities/reaction_data.c.dart';
-import 'package:ion/app/features/ion_connect/model/event_reference.c.dart';
+import 'package:ion/app/features/feed/data/models/entities/post_data.f.dart';
+import 'package:ion/app/features/feed/data/models/entities/reaction_data.f.dart';
+import 'package:ion/app/features/ion_connect/model/event_reference.f.dart';
 import 'package:ion/app/features/optimistic_ui/core/optimistic_sync_strategy.dart';
-import 'package:ion/app/features/optimistic_ui/features/likes/model/post_like.c.dart';
+import 'package:ion/app/features/optimistic_ui/features/likes/model/post_like.f.dart';
 
 /// Sync strategy for toggling likes using IonConnectNotifier.
 class LikeSyncStrategy implements SyncStrategy<PostLike> {

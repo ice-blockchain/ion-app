@@ -2,8 +2,8 @@
 
 import 'package:flutter/widgets.dart';
 import 'package:ion/app/features/feed/views/components/post/post.dart';
-import 'package:ion/app/features/ion_connect/model/event_reference.c.dart';
-import 'package:ion/app/router/app_routes.c.dart';
+import 'package:ion/app/features/ion_connect/model/event_reference.f.dart';
+import 'package:ion/app/router/app_routes.gr.dart';
 import 'package:ion/app/typedefs/typedefs.dart';
 
 class PostListItem extends StatelessWidget {

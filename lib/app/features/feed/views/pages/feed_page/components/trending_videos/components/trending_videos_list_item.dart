@@ -4,16 +4,16 @@ import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/components/placeholder/ion_placeholder.dart';
 import 'package:ion/app/extensions/extensions.dart';
-import 'package:ion/app/features/feed/data/models/entities/modifiable_post_data.c.dart';
+import 'package:ion/app/features/feed/data/models/entities/modifiable_post_data.f.dart';
 import 'package:ion/app/features/feed/views/components/feed_network_image/feed_network_image.dart';
 import 'package:ion/app/features/feed/views/components/overlay_menu/user_info_menu.dart';
 import 'package:ion/app/features/feed/views/pages/feed_page/components/trending_videos/components/trending_video_author.dart';
 import 'package:ion/app/features/feed/views/pages/feed_page/components/trending_videos/components/trending_video_likes_button.dart';
-import 'package:ion/app/features/ion_connect/model/event_reference.c.dart';
+import 'package:ion/app/features/ion_connect/model/event_reference.f.dart';
 import 'package:ion/app/features/ion_connect/model/ion_connect_entity.dart';
-import 'package:ion/app/features/user/providers/muted_users_notifier.c.dart';
-import 'package:ion/app/features/user_block/providers/block_list_notifier.c.dart';
-import 'package:ion/app/router/app_routes.c.dart';
+import 'package:ion/app/features/user/providers/muted_users_notifier.r.dart';
+import 'package:ion/app/features/user_block/providers/block_list_notifier.r.dart';
+import 'package:ion/app/router/app_routes.gr.dart';
 
 class TrendingVideoListItem extends ConsumerWidget {
   const TrendingVideoListItem({

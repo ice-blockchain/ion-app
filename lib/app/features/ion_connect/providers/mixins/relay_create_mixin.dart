@@ -6,7 +6,7 @@ import 'dart:io';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/exceptions/exceptions.dart';
 import 'package:ion/app/features/ion_connect/ion_connect.dart';
-import 'package:ion/app/features/user/providers/relays_reachability_provider.c.dart';
+import 'package:ion/app/features/user/providers/relays_reachability_provider.r.dart';
 
 mixin RelayCreateMixin {
   Future<IonConnectRelay> createRelay(Ref ref, String url) async {

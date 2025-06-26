@@ -3,8 +3,8 @@
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/features/components/verify_identity/verify_identity_prompt_dialog_helper.dart';
-import 'package:ion/app/features/protect_account/secure_account/providers/two_fa_signature_wrapper_notifier.c.dart';
-import 'package:ion/app/router/app_routes.c.dart';
+import 'package:ion/app/features/protect_account/secure_account/providers/two_fa_signature_wrapper_notifier.r.dart';
+import 'package:ion/app/router/app_routes.gr.dart';
 import 'package:ion_identity_client/ion_identity.dart';
 
 class TwoFaSignatureWrapper extends HookConsumerWidget {

@@ -6,15 +6,15 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/components/progress_bar/centered_loading_indicator.dart';
 import 'package:ion/app/components/screen_offset/screen_bottom_offset.dart';
 import 'package:ion/app/extensions/extensions.dart';
-import 'package:ion/app/features/feed/stories/data/models/camera_capture_state.c.dart';
+import 'package:ion/app/features/feed/stories/data/models/camera_capture_state.f.dart';
 import 'package:ion/app/features/feed/stories/hooks/use_recording_progress.dart';
-import 'package:ion/app/features/feed/stories/providers/camera_capture_provider.c.dart';
+import 'package:ion/app/features/feed/stories/providers/camera_capture_provider.r.dart';
 import 'package:ion/app/features/feed/stories/views/components/story_capture/camera/camera_idle_preview.dart';
 import 'package:ion/app/features/feed/stories/views/components/story_capture/camera/custom_camera_preview.dart';
 import 'package:ion/app/features/feed/stories/views/components/story_capture/controls/camera_capture_button.dart';
 import 'package:ion/app/features/feed/stories/views/components/story_capture/controls/camera_recording_indicator.dart';
-import 'package:ion/app/features/gallery/data/models/camera_state.c.dart';
-import 'package:ion/app/features/gallery/providers/camera_provider.c.dart';
+import 'package:ion/app/features/gallery/data/models/camera_state.f.dart';
+import 'package:ion/app/features/gallery/providers/camera_provider.r.dart';
 import 'package:ion/app/features/gallery/views/pages/media_picker_type.dart';
 
 class GalleryCameraPage extends HookConsumerWidget {

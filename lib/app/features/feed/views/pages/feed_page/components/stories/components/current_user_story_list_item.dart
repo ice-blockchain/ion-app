@@ -3,11 +3,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:ion/app/features/feed/stories/providers/feed_stories_provider.c.dart';
-import 'package:ion/app/features/feed/stories/providers/viewed_stories_provider.c.dart';
+import 'package:ion/app/features/feed/stories/providers/feed_stories_provider.r.dart';
+import 'package:ion/app/features/feed/stories/providers/viewed_stories_provider.r.dart';
 import 'package:ion/app/features/feed/views/pages/feed_page/components/stories/components/current_user_avatar_with_permission.dart';
 import 'package:ion/app/features/feed/views/pages/feed_page/components/stories/components/plus_button_with_permission.dart';
-import 'package:ion/app/features/user/providers/user_metadata_provider.c.dart';
+import 'package:ion/app/features/user/providers/user_metadata_provider.r.dart';
 
 class CurrentUserStoryListItem extends HookConsumerWidget {
   const CurrentUserStoryListItem({

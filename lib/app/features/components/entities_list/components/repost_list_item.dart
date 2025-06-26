@@ -5,16 +5,16 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/components/skeleton/skeleton.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/components/entities_list/components/repost_author_header.dart';
-import 'package:ion/app/features/feed/data/models/entities/article_data.c.dart';
-import 'package:ion/app/features/feed/data/models/entities/generic_repost.c.dart';
-import 'package:ion/app/features/feed/data/models/entities/modifiable_post_data.c.dart';
-import 'package:ion/app/features/feed/data/models/entities/repost_data.c.dart';
-import 'package:ion/app/features/feed/providers/ion_connect_entity_with_counters_provider.c.dart';
+import 'package:ion/app/features/feed/data/models/entities/article_data.f.dart';
+import 'package:ion/app/features/feed/data/models/entities/generic_repost.f.dart';
+import 'package:ion/app/features/feed/data/models/entities/modifiable_post_data.f.dart';
+import 'package:ion/app/features/feed/data/models/entities/repost_data.f.dart';
+import 'package:ion/app/features/feed/providers/ion_connect_entity_with_counters_provider.r.dart';
 import 'package:ion/app/features/feed/views/components/article/article.dart';
 import 'package:ion/app/features/feed/views/components/post/post.dart';
 import 'package:ion/app/features/feed/views/components/post/post_skeleton.dart';
-import 'package:ion/app/features/ion_connect/model/event_reference.c.dart';
-import 'package:ion/app/router/app_routes.c.dart';
+import 'package:ion/app/features/ion_connect/model/event_reference.f.dart';
+import 'package:ion/app/router/app_routes.gr.dart';
 import 'package:ion/app/typedefs/typedefs.dart';
 
 class RepostListItem extends ConsumerWidget {

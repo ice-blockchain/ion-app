@@ -5,11 +5,11 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/components/progress_bar/centered_loading_indicator.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/components/ion_connect_network_image/ion_connect_network_image.dart';
-import 'package:ion/app/features/feed/stories/providers/story_image_loading_provider.c.dart';
-import 'package:ion/app/features/feed/stories/providers/story_pause_provider.c.dart';
+import 'package:ion/app/features/feed/stories/providers/story_image_loading_provider.r.dart';
+import 'package:ion/app/features/feed/stories/providers/story_pause_provider.r.dart';
 import 'package:ion/app/features/feed/stories/views/components/story_viewer/components/viewers/tap_to_see_hint.dart';
-import 'package:ion/app/features/ion_connect/model/quoted_event.c.dart';
-import 'package:ion/app/router/app_routes.c.dart';
+import 'package:ion/app/features/ion_connect/model/quoted_event.f.dart';
+import 'package:ion/app/router/app_routes.gr.dart';
 
 class ImageStoryViewer extends ConsumerWidget {
   const ImageStoryViewer({

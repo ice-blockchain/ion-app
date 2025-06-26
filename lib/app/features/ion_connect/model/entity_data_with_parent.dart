@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: ice License 1.0
 
 import 'package:collection/collection.dart';
-import 'package:ion/app/features/ion_connect/model/related_event.c.dart';
+import 'package:ion/app/features/ion_connect/model/related_event.f.dart';
 import 'package:ion/app/features/ion_connect/model/related_event_marker.dart';
 
 mixin EntityDataWithRelatedEvents<T extends RelatedEvent> {

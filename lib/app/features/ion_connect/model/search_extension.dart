@@ -1,9 +1,9 @@
 // SPDX-License-Identifier: ice License 1.0
 
-import 'package:ion/app/features/feed/data/models/entities/modifiable_post_data.c.dart';
-import 'package:ion/app/features/feed/data/models/entities/post_data.c.dart';
-import 'package:ion/app/features/user/model/block_list.c.dart';
-import 'package:ion/app/features/user/model/user_metadata.c.dart';
+import 'package:ion/app/features/feed/data/models/entities/modifiable_post_data.f.dart';
+import 'package:ion/app/features/feed/data/models/entities/post_data.f.dart';
+import 'package:ion/app/features/user/model/block_list.f.dart';
+import 'package:ion/app/features/user/model/user_metadata.f.dart';
 
 abstract class SearchExtension {
   String get query;

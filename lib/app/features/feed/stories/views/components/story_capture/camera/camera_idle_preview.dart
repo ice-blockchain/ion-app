@@ -6,8 +6,8 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/feed/stories/views/components/story_capture/controls/story_control_button.dart';
 import 'package:ion/app/features/feed/stories/views/components/story_capture/controls/story_gallery_button.dart';
-import 'package:ion/app/features/gallery/providers/camera_provider.c.dart';
-import 'package:ion/app/services/media_service/media_service.c.dart';
+import 'package:ion/app/features/gallery/providers/camera_provider.r.dart';
+import 'package:ion/app/services/media_service/media_service.m.dart';
 import 'package:ion/generated/assets.gen.dart';
 
 class CameraIdlePreview extends ConsumerWidget {

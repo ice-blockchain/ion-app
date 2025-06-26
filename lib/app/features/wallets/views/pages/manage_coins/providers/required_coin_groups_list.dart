@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: ice License 1.0
 
-part of 'manage_coins_provider.c.dart';
+part of 'manage_coins_provider.r.dart';
 
 const _coinGroups = [
   'spx6900',

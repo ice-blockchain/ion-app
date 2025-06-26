@@ -2,7 +2,7 @@
 
 import 'package:flutter/cupertino.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:ion/app/features/core/providers/template_provider.c.dart';
+import 'package:ion/app/features/core/providers/template_provider.r.dart';
 
 abstract class IceComponent extends ConsumerWidget {
   const IceComponent({super.key});

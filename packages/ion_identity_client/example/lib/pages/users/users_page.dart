@@ -4,9 +4,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:ion_identity_client_example/pages/user_details/user_details_page.dart';
 import 'package:ion_identity_client_example/pages/users/components/users_menu.dart';
-import 'package:ion_identity_client_example/pages/users/providers/logout_action_notifier.c.dart';
-import 'package:ion_identity_client_example/pages/users/providers/users_provider.c.dart';
-import 'package:ion_identity_client_example/providers/current_username_notifier.c.dart';
+import 'package:ion_identity_client_example/pages/users/providers/logout_action_notifier.r.dart';
+import 'package:ion_identity_client_example/pages/users/providers/users_provider.r.dart';
+import 'package:ion_identity_client_example/providers/current_username_notifier.r.dart';
 
 class UsersPage extends ConsumerWidget {
   const UsersPage({super.key});

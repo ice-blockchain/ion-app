@@ -4,8 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:ion/app/components/screen_offset/screen_side_offset.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/components/ion_connect_avatar/ion_connect_avatar.dart';
-import 'package:ion/app/features/feed/notifications/data/model/ion_notification.c.dart';
-import 'package:ion/app/router/app_routes.c.dart';
+import 'package:ion/app/features/feed/notifications/data/model/ion_notification.dart';
+import 'package:ion/app/router/app_routes.gr.dart';
 
 class NotificationIcons extends StatelessWidget {
   const NotificationIcons({

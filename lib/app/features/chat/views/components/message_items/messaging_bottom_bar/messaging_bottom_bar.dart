@@ -7,18 +7,18 @@ import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/extensions/extensions.dart';
-import 'package:ion/app/features/chat/e2ee/model/entities/private_direct_message_data.c.dart';
-import 'package:ion/app/features/chat/providers/draft_message_provider.c.dart';
-import 'package:ion/app/features/chat/providers/messaging_bottom_bar_state_provider.c.dart';
-import 'package:ion/app/features/chat/recent_chats/providers/selected_edit_message_provider.c.dart';
+import 'package:ion/app/features/chat/e2ee/model/entities/private_direct_message_data.f.dart';
+import 'package:ion/app/features/chat/providers/draft_message_provider.r.dart';
+import 'package:ion/app/features/chat/providers/messaging_bottom_bar_state_provider.r.dart';
+import 'package:ion/app/features/chat/recent_chats/providers/selected_edit_message_provider.r.dart';
 import 'package:ion/app/features/chat/views/components/message_items/components.dart';
 import 'package:ion/app/features/chat/views/components/message_items/messaging_bottom_bar/components/components.dart';
 import 'package:ion/app/features/chat/views/components/message_items/messaging_bottom_bar/components/text_message_limit_label.dart';
-import 'package:ion/app/features/user_block/optimistic_ui/block_user_provider.c.dart';
-import 'package:ion/app/features/user_block/providers/block_list_notifier.c.dart';
+import 'package:ion/app/features/user_block/optimistic_ui/block_user_provider.r.dart';
+import 'package:ion/app/features/user_block/providers/block_list_notifier.r.dart';
 import 'package:ion/app/hooks/use_on_init.dart';
-import 'package:ion/app/services/compressors/audio_compressor.c.dart';
-import 'package:ion/app/services/media_service/media_service.c.dart';
+import 'package:ion/app/services/compressors/audio_compressor.r.dart';
+import 'package:ion/app/services/media_service/media_service.m.dart';
 import 'package:ion/generated/assets.gen.dart';
 
 class MessagingBottomBar extends HookConsumerWidget {

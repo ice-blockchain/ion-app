@@ -3,7 +3,7 @@
 import 'package:flutter/widgets.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/settings/model/selectable_option.dart';
-import 'package:ion/app/features/user/model/user_metadata.c.dart';
+import 'package:ion/app/features/user/model/user_metadata.f.dart';
 import 'package:ion/generated/assets.gen.dart';
 
 enum WalletAddressPrivacyOption implements SelectableOption {

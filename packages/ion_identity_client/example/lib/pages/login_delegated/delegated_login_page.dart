@@ -3,7 +3,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:ion_identity_client_example/pages/login_delegated/providers/delegated_login_notifier.c.dart';
+import 'package:ion_identity_client_example/pages/login_delegated/providers/delegated_login_notifier.r.dart';
 
 class DelegatedLoginPage extends HookConsumerWidget {
   const DelegatedLoginPage({super.key});

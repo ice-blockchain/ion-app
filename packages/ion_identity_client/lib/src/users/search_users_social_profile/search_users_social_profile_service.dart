@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: ice License 1.0
 
-import 'package:ion_identity_client/src/users/models/user_relays_info.c.dart';
+import 'package:ion_identity_client/src/users/models/user_relays_info.f.dart';
 import 'package:ion_identity_client/src/users/search_users_social_profile/data_sources/search_users_social_profile_data_source.dart';
 import 'package:ion_identity_client/src/users/search_users_social_profile/models/search_users_social_profile_type.dart';
 

@@ -2,11 +2,11 @@
 
 import 'package:flutter/material.dart';
 import 'package:ion/app/extensions/extensions.dart';
-import 'package:ion/app/features/feed/data/models/entities/generic_repost.c.dart';
-import 'package:ion/app/features/feed/notifications/data/model/ion_notification.c.dart';
+import 'package:ion/app/features/feed/data/models/entities/generic_repost.f.dart';
+import 'package:ion/app/features/feed/notifications/data/model/ion_notification.dart';
 import 'package:ion/app/features/feed/views/components/article/article.dart';
 import 'package:ion/app/features/feed/views/components/post/post.dart';
-import 'package:ion/app/features/ion_connect/model/event_reference.c.dart';
+import 'package:ion/app/features/ion_connect/model/event_reference.f.dart';
 import 'package:ion/app/features/ion_connect/model/ion_connect_entity.dart';
 
 class NotificationRelatedEntity extends StatelessWidget {

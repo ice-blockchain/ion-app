@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: ice License 1.0
 
 import 'package:flutter/material.dart';
-import 'package:ion/app/templates/template.c.dart';
+import 'package:ion/app/templates/template.f.dart';
 
 class AppTextThemesExtension extends ThemeExtension<AppTextThemesExtension> {
   const AppTextThemesExtension({

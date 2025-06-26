@@ -3,7 +3,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:ion/app/features/feed/views/pages/fullscreen_media/providers/image_zoom_provider.c.dart';
+import 'package:ion/app/features/feed/views/pages/fullscreen_media/providers/image_zoom_provider.r.dart';
 import 'package:ion/app/router/components/modal_wrapper/dismissible_page.dart';
 
 class DismissibleContent extends ConsumerWidget {

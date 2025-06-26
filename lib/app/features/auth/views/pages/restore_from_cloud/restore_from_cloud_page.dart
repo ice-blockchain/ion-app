@@ -10,11 +10,11 @@ import 'package:ion/app/features/auth/views/pages/restore_from_cloud/components/
 import 'package:ion/app/features/auth/views/pages/two_fa/twofa_input_step.dart';
 import 'package:ion/app/features/auth/views/pages/two_fa/twofa_options_step.dart';
 import 'package:ion/app/features/components/verify_identity/verify_identity_prompt_dialog_helper.dart';
-import 'package:ion/app/features/protect_account/backup/providers/recover_user_action_notifier.c.dart';
-import 'package:ion/app/features/protect_account/backup/providers/recovery_key_cloud_backup_delete_notifier.c.dart';
-import 'package:ion/app/features/protect_account/backup/providers/recovery_key_cloud_backup_restore_notifier.c.dart';
-import 'package:ion/app/features/protect_account/secure_account/providers/selected_two_fa_types_provider.c.dart';
-import 'package:ion/app/router/app_routes.c.dart';
+import 'package:ion/app/features/protect_account/backup/providers/recover_user_action_notifier.m.dart';
+import 'package:ion/app/features/protect_account/backup/providers/recovery_key_cloud_backup_delete_notifier.r.dart';
+import 'package:ion/app/features/protect_account/backup/providers/recovery_key_cloud_backup_restore_notifier.r.dart';
+import 'package:ion/app/features/protect_account/secure_account/providers/selected_two_fa_types_provider.m.dart';
+import 'package:ion/app/router/app_routes.gr.dart';
 import 'package:ion/generated/assets.gen.dart';
 import 'package:ion_identity_client/ion_identity.dart';
 

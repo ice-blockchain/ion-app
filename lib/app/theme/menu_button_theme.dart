@@ -2,7 +2,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:ion/app/extensions/num.dart';
-import 'package:ion/app/templates/template.c.dart';
+import 'package:ion/app/templates/template.f.dart';
 import 'package:ion/app/theme/app_colors.dart';
 import 'package:ion/app/theme/app_text_themes.dart';
 

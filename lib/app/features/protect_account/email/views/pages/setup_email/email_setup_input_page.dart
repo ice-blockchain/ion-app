@@ -14,8 +14,8 @@ import 'package:ion/app/components/screen_offset/screen_side_offset.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/auth/data/models/twofa_type.dart';
 import 'package:ion/app/features/protect_account/email/data/model/email_steps.dart';
-import 'package:ion/app/features/protect_account/secure_account/providers/request_twofa_code_notifier.c.dart';
-import 'package:ion/app/router/app_routes.c.dart';
+import 'package:ion/app/features/protect_account/secure_account/providers/request_twofa_code_notifier.r.dart';
+import 'package:ion/app/router/app_routes.gr.dart';
 import 'package:ion/app/utils/validators.dart';
 
 class EmailSetupInputPage extends HookConsumerWidget {

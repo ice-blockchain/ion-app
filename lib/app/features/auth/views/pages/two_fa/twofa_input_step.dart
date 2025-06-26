@@ -16,8 +16,8 @@ import 'package:ion/app/features/auth/views/components/auth_footer/auth_footer.d
 import 'package:ion/app/features/auth/views/components/auth_scrolled_body/auth_scrolled_body.dart';
 import 'package:ion/app/features/auth/views/pages/recover_user_twofa_page/components/twofa_code_input.dart';
 import 'package:ion/app/features/auth/views/pages/recover_user_twofa_page/components/twofa_try_again_page.dart';
-import 'package:ion/app/features/protect_account/secure_account/providers/request_twofa_code_notifier.c.dart';
-import 'package:ion/app/features/protect_account/secure_account/providers/selected_two_fa_types_provider.c.dart';
+import 'package:ion/app/features/protect_account/secure_account/providers/request_twofa_code_notifier.r.dart';
+import 'package:ion/app/features/protect_account/secure_account/providers/selected_two_fa_types_provider.m.dart';
 import 'package:ion/app/router/components/sheet_content/sheet_content.dart';
 import 'package:ion/app/router/utils/show_simple_bottom_sheet.dart';
 import 'package:ion/generated/assets.gen.dart';

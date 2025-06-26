@@ -4,9 +4,9 @@ import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/components/inputs/search_input/search_input.dart';
 import 'package:ion/app/components/separated/separator.dart';
-import 'package:ion/app/features/chat/providers/conversations_provider.c.dart';
+import 'package:ion/app/features/chat/providers/conversations_provider.r.dart';
 import 'package:ion/app/features/chat/recent_chats/views/pages/recent_chats_timeline_page/recent_chats_timeline_page.dart';
-import 'package:ion/app/router/app_routes.c.dart';
+import 'package:ion/app/router/app_routes.gr.dart';
 
 class RecentChatsArchiveTimelinePage extends ConsumerWidget {
   const RecentChatsArchiveTimelinePage({super.key});

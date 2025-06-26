@@ -3,7 +3,7 @@
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/extensions/extensions.dart';
-import 'package:ion/app/features/chat/model/database/chat_database.c.dart';
+import 'package:ion/app/features/chat/model/database/chat_database.m.dart';
 import 'package:ion/app/features/chat/views/components/message_items/message_types/visual_media_message/visual_media_content.dart';
 import 'package:ion/app/features/ion_connect/ion_connect.dart';
 

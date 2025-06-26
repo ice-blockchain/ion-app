@@ -6,7 +6,7 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/extensions/extensions.dart';
-import 'package:ion/app/features/chat/recent_chats/providers/conversations_edit_mode_provider.c.dart';
+import 'package:ion/app/features/chat/recent_chats/providers/conversations_edit_mode_provider.r.dart';
 import 'package:ion/app/features/chat/recent_chats/views/components/conversation_edit_bottom_bar/conversation_edit_bottom_bar.dart';
 import 'package:ion/app/features/chat/views/components/unread_messages_counter.dart';
 import 'package:ion/app/router/main_tabs/components/components.dart';

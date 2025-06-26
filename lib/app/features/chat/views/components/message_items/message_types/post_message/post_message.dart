@@ -3,15 +3,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:ion/app/features/chat/e2ee/model/entities/private_direct_message_data.c.dart';
-import 'package:ion/app/features/chat/e2ee/providers/shared_post_message_provider.c.dart';
-import 'package:ion/app/features/chat/model/message_list_item.c.dart';
+import 'package:ion/app/features/chat/e2ee/model/entities/private_direct_message_data.f.dart';
+import 'package:ion/app/features/chat/e2ee/providers/shared_post_message_provider.r.dart';
+import 'package:ion/app/features/chat/model/message_list_item.f.dart';
 import 'package:ion/app/features/chat/views/components/message_items/message_types/post_message/shared_post_message.dart'
     as shared_post_ui;
 import 'package:ion/app/features/chat/views/components/message_items/message_types/post_message/shared_post_wrapper.dart';
 import 'package:ion/app/features/chat/views/components/message_items/message_types/post_message/shared_story_message.dart';
-import 'package:ion/app/features/feed/data/models/entities/modifiable_post_data.c.dart';
-import 'package:ion/app/features/feed/data/models/entities/post_data.c.dart';
+import 'package:ion/app/features/feed/data/models/entities/modifiable_post_data.f.dart';
+import 'package:ion/app/features/feed/data/models/entities/post_data.f.dart';
 import 'package:ion/app/features/ion_connect/ion_connect.dart';
 
 class PostMessage extends HookConsumerWidget {

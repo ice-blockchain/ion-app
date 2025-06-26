@@ -8,7 +8,7 @@ import 'package:ion/app/components/screen_offset/screen_side_offset.dart';
 import 'package:ion/app/extensions/build_context.dart';
 import 'package:ion/app/extensions/num.dart';
 import 'package:ion/app/extensions/theme_data.dart';
-import 'package:ion/app/features/user/model/user_metadata.c.dart';
+import 'package:ion/app/features/user/model/user_metadata.f.dart';
 import 'package:ion/app/utils/username.dart';
 
 class CreatorListItem extends ConsumerWidget {
