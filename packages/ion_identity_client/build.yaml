@@ -4,11 +4,14 @@ targets:
       freezed:freezed:
         generate_for:
           include:
-            - lib/**.c.dart
+            - lib/**.f.dart
+            - lib/**.m.dart
       json_serializable:json_serializable:
         generate_for:
           include:
-            - lib/**.c.dart
+            - lib/**.f.dart
+            - lib/**.j.dart  
+            - lib/**.m.dart
         options:
           create_to_json: true
           explicit_to_json: true

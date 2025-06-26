@@ -9,7 +9,7 @@ import 'package:ion/app/components/screen_offset/screen_side_offset.dart';
 import 'package:ion/app/components/screen_offset/screen_top_offset.dart';
 import 'package:ion/app/components/separated/separator.dart';
 import 'package:ion/app/extensions/extensions.dart';
-import 'package:ion/app/features/auth/providers/auth_provider.c.dart';
+import 'package:ion/app/features/auth/providers/auth_provider.m.dart';
 import 'package:ion/app/features/auth/views/components/user_data_inputs/bio_input.dart';
 import 'package:ion/app/features/auth/views/components/user_data_inputs/location_input.dart';
 import 'package:ion/app/features/auth/views/components/user_data_inputs/name_input.dart';
@@ -22,8 +22,8 @@ import 'package:ion/app/features/user/pages/profile_edit_page/components/categor
 import 'package:ion/app/features/user/pages/profile_edit_page/components/edit_submit_button/edit_submit_button.dart';
 import 'package:ion/app/features/user/pages/profile_edit_page/components/header/header.dart';
 import 'package:ion/app/features/user/pages/profile_edit_page/hooks/use_draft_metadata.dart';
-import 'package:ion/app/features/user/providers/user_metadata_provider.c.dart';
-import 'package:ion/app/features/user/providers/user_nickname_provider.c.dart';
+import 'package:ion/app/features/user/providers/user_metadata_provider.r.dart';
+import 'package:ion/app/features/user/providers/user_nickname_provider.r.dart';
 import 'package:ion/app/hooks/use_on_init.dart';
 import 'package:ion/app/utils/url.dart';
 

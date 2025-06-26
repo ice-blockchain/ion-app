@@ -2,7 +2,7 @@
 
 import 'dart:async';
 
-import 'package:ion_identity_client/src/auth/dtos/private_key_data.c.dart';
+import 'package:ion_identity_client/src/auth/dtos/private_key_data.j.dart';
 import 'package:ion_identity_client/src/core/storage/data_storage.dart';
 
 class PrivateKeyStorage extends DataStorage<PrivateKeyData> {

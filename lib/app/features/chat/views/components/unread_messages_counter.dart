@@ -3,7 +3,7 @@
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/extensions/extensions.dart';
-import 'package:ion/app/features/chat/providers/unread_message_count_provider.c.dart';
+import 'package:ion/app/features/chat/providers/unread_message_count_provider.r.dart';
 
 class UnreadMessagesCounter extends ConsumerWidget {
   const UnreadMessagesCounter({super.key});

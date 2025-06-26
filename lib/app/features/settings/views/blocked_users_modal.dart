@@ -8,7 +8,7 @@ import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/user/pages/profile_page/pages/components/blocked_user_list_item.dart';
 import 'package:ion/app/features/user/pages/profile_page/pages/components/blocked_users_app_bar.dart';
 import 'package:ion/app/features/user/pages/profile_page/pages/components/blocked_users_search_bar.dart';
-import 'package:ion/app/features/user_block/providers/block_list_notifier.c.dart';
+import 'package:ion/app/features/user_block/providers/block_list_notifier.r.dart';
 import 'package:ion/app/router/components/sheet_content/sheet_content.dart';
 
 class BlockedUsersModal extends HookConsumerWidget {

@@ -1,14 +1,14 @@
 // SPDX-License-Identifier: ice License 1.0
 
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:ion/app/components/global_notification_bar/providers/global_notification_notifier_provider.c.dart';
+import 'package:ion/app/components/global_notification_bar/providers/global_notification_notifier_provider.r.dart';
 import 'package:ion/app/features/core/views/pages/error_modal.dart';
-import 'package:ion/app/features/feed/create_article/providers/create_article_provider.c.dart';
+import 'package:ion/app/features/feed/create_article/providers/create_article_provider.r.dart';
 import 'package:ion/app/features/feed/create_post/model/create_post_option.dart';
-import 'package:ion/app/features/feed/create_post/providers/create_post_notifier.c.dart';
-import 'package:ion/app/features/feed/global_notifications/models/feed_global_notification.c.dart';
-import 'package:ion/app/features/feed/providers/repost_notifier.c.dart';
-import 'package:ion/app/router/app_routes.c.dart';
+import 'package:ion/app/features/feed/create_post/providers/create_post_notifier.m.dart';
+import 'package:ion/app/features/feed/global_notifications/models/feed_global_notification.f.dart';
+import 'package:ion/app/features/feed/providers/repost_notifier.r.dart';
+import 'package:ion/app/router/app_routes.gr.dart';
 
 void setupFeedGlobalNotificationsListeners(WidgetRef ref) {
   ref

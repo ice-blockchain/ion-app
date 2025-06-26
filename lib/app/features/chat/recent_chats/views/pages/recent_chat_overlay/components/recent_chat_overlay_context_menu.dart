@@ -8,16 +8,16 @@ import 'package:ion/app/components/overlay_menu/components/overlay_menu_item.dar
 import 'package:ion/app/components/overlay_menu/components/overlay_menu_item_separator.dart';
 import 'package:ion/app/components/overlay_menu/overlay_menu_container.dart';
 import 'package:ion/app/extensions/extensions.dart';
-import 'package:ion/app/features/auth/providers/auth_provider.c.dart';
-import 'package:ion/app/features/chat/e2ee/model/entities/private_direct_message_data.c.dart';
-import 'package:ion/app/features/chat/providers/muted_conversations_provider.c.dart';
-import 'package:ion/app/features/chat/recent_chats/model/conversation_list_item.c.dart';
-import 'package:ion/app/features/chat/recent_chats/providers/toggle_archive_conversation_provider.c.dart';
+import 'package:ion/app/features/auth/providers/auth_provider.m.dart';
+import 'package:ion/app/features/chat/e2ee/model/entities/private_direct_message_data.f.dart';
+import 'package:ion/app/features/chat/providers/muted_conversations_provider.r.dart';
+import 'package:ion/app/features/chat/recent_chats/model/conversation_list_item.f.dart';
+import 'package:ion/app/features/chat/recent_chats/providers/toggle_archive_conversation_provider.r.dart';
 import 'package:ion/app/features/user/pages/profile_page/pages/block_user_modal/block_user_modal.dart';
-import 'package:ion/app/features/user/providers/report_notifier.c.dart';
-import 'package:ion/app/features/user_block/optimistic_ui/block_user_provider.c.dart';
-import 'package:ion/app/features/user_block/providers/block_list_notifier.c.dart';
-import 'package:ion/app/router/app_routes.c.dart';
+import 'package:ion/app/features/user/providers/report_notifier.m.dart';
+import 'package:ion/app/features/user_block/optimistic_ui/block_user_provider.r.dart';
+import 'package:ion/app/features/user_block/providers/block_list_notifier.r.dart';
+import 'package:ion/app/router/app_routes.gr.dart';
 import 'package:ion/app/router/utils/show_simple_bottom_sheet.dart';
 import 'package:ion/generated/assets.gen.dart';
 

@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: ice License 1.0
 
-import 'package:ion/app/features/wallets/model/coin_in_wallet_data.c.dart';
-import 'package:ion/app/features/wallets/model/coins_group.c.dart';
+import 'package:ion/app/features/wallets/model/coin_in_wallet_data.f.dart';
+import 'package:ion/app/features/wallets/model/coins_group.f.dart';
 
 class CoinsComparator {
   final CoinPriority _prioritizer = CoinPriority();

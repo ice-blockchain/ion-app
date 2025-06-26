@@ -3,7 +3,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:ion_identity_client_example/pages/set_ion_connect_relays/providers/set_ion_connect_relays_notifier.c.dart';
+import 'package:ion_identity_client_example/pages/set_ion_connect_relays/providers/set_ion_connect_relays_notifier.r.dart';
 
 class SetIONConnectRelaysPage extends HookConsumerWidget {
   const SetIONConnectRelaysPage({super.key});

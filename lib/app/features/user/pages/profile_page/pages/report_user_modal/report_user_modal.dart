@@ -11,8 +11,8 @@ import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/user/pages/profile_page/pages/report_user_modal/components/report_option_selector.dart';
 import 'package:ion/app/features/user/pages/profile_page/pages/report_user_modal/report_sent_modal.dart';
 import 'package:ion/app/features/user/pages/profile_page/pages/report_user_modal/types/report_reason_type.dart';
-import 'package:ion/app/features/user/providers/user_metadata_provider.c.dart';
-import 'package:ion/app/router/app_routes.c.dart';
+import 'package:ion/app/features/user/providers/user_metadata_provider.r.dart';
+import 'package:ion/app/router/app_routes.gr.dart';
 import 'package:ion/app/router/utils/show_simple_bottom_sheet.dart';
 import 'package:ion/generated/assets.gen.dart';
 

@@ -5,16 +5,16 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/core/permissions/data/models/permissions_types.dart';
-import 'package:ion/app/features/core/permissions/providers/permissions_provider.c.dart';
+import 'package:ion/app/features/core/permissions/providers/permissions_provider.r.dart';
 import 'package:ion/app/features/core/permissions/views/components/permission_aware_widget.dart';
 import 'package:ion/app/features/core/permissions/views/components/permission_dialogs/permission_sheets.dart';
-import 'package:ion/app/features/gallery/data/models/camera_state.c.dart';
-import 'package:ion/app/features/gallery/providers/camera_provider.c.dart';
-import 'package:ion/app/features/gallery/providers/gallery_provider.c.dart';
+import 'package:ion/app/features/gallery/data/models/camera_state.f.dart';
+import 'package:ion/app/features/gallery/providers/camera_provider.r.dart';
+import 'package:ion/app/features/gallery/providers/gallery_provider.r.dart';
 import 'package:ion/app/features/gallery/views/components/camera/camera.dart';
 import 'package:ion/app/features/gallery/views/pages/media_picker_type.dart';
-import 'package:ion/app/router/app_routes.c.dart';
-import 'package:ion/app/services/media_service/media_service.c.dart';
+import 'package:ion/app/router/app_routes.gr.dart';
+import 'package:ion/app/services/media_service/media_service.m.dart';
 
 class CameraCell extends HookConsumerWidget {
   const CameraCell({required this.type, super.key});

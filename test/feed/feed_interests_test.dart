@@ -1,8 +1,8 @@
 // SPDX-License-Identifier: ice License 1.0
 
 import 'package:flutter_test/flutter_test.dart';
-import 'package:ion/app/features/feed/data/models/feed_interests.c.dart';
-import 'package:ion/app/features/feed/data/models/feed_interests_interaction.c.dart';
+import 'package:ion/app/features/feed/data/models/feed_interests.f.dart';
+import 'package:ion/app/features/feed/data/models/feed_interests_interaction.dart';
 
 void main() {
   group('FeedInterests.applyInteraction', () {

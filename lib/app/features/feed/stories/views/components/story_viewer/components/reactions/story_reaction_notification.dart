@@ -7,7 +7,7 @@ import 'package:flutter_animate/flutter_animate.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/chat/views/components/message_items/components.dart';
-import 'package:ion/app/features/feed/stories/providers/emoji_reaction_provider.c.dart';
+import 'package:ion/app/features/feed/stories/providers/emoji_reaction_provider.m.dart';
 
 class StoryReactionNotification extends ConsumerWidget {
   const StoryReactionNotification({

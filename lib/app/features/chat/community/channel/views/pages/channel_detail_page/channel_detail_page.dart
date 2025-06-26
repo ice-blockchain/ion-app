@@ -10,7 +10,7 @@ import 'package:ion/app/features/chat/community/channel/models/channel_detail_ta
 import 'package:ion/app/features/chat/community/channel/views/components/channel_detail_app_bar.dart';
 import 'package:ion/app/features/chat/community/channel/views/pages/channel_detail_page/components/channel_detail_tabs_header.dart';
 import 'package:ion/app/features/chat/community/channel/views/pages/channel_detail_page/components/channel_summary.dart';
-import 'package:ion/app/features/chat/community/providers/community_metadata_provider.c.dart';
+import 'package:ion/app/features/chat/community/providers/community_metadata_provider.r.dart';
 import 'package:ion/app/features/user/model/user_content_type.dart';
 
 class ChannelDetailPage extends HookConsumerWidget {

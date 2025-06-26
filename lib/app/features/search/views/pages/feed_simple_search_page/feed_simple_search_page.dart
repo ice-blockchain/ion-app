@@ -9,15 +9,15 @@ import 'package:ion/app/components/screen_offset/screen_top_offset.dart';
 import 'package:ion/app/components/scroll_view/load_more_builder.dart';
 import 'package:ion/app/components/scroll_view/pull_to_refresh_builder.dart';
 import 'package:ion/app/extensions/extensions.dart';
-import 'package:ion/app/features/search/providers/feed_search_history_provider.c.dart'
+import 'package:ion/app/features/search/providers/feed_search_history_provider.m.dart'
     show feedSearchHistoryProvider;
 import 'package:ion/app/features/search/views/components/feed_search_history/feed_search_history_user_list_item.dart';
 import 'package:ion/app/features/search/views/components/search_history/search_history.dart';
 import 'package:ion/app/features/search/views/components/search_history_empty/search_history_empty.dart';
 import 'package:ion/app/features/search/views/components/search_navigation/search_navigation.dart';
 import 'package:ion/app/features/search/views/pages/feed_simple_search_page/feed_simple_search_list_item.dart';
-import 'package:ion/app/features/user/providers/search_users_provider.c.dart';
-import 'package:ion/app/router/app_routes.c.dart';
+import 'package:ion/app/features/user/providers/search_users_provider.r.dart';
+import 'package:ion/app/router/app_routes.gr.dart';
 
 class FeedSimpleSearchPage extends HookConsumerWidget {
   const FeedSimpleSearchPage({required this.query, super.key});

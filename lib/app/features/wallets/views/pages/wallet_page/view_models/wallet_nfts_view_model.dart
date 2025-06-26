@@ -4,7 +4,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter_command/flutter_command.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/features/wallets/domain/nfts/nft_network_filter_manager.dart';
-import 'package:ion/app/features/wallets/model/nft_data.c.dart';
+import 'package:ion/app/features/wallets/model/nft_data.f.dart';
 import 'package:ion/app/services/command/command.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 

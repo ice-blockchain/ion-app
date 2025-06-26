@@ -9,14 +9,14 @@ import 'package:ion/app/extensions/build_context.dart';
 import 'package:ion/app/extensions/num.dart';
 import 'package:ion/app/extensions/theme_data.dart';
 import 'package:ion/app/features/core/model/feature_flags.dart';
-import 'package:ion/app/features/core/providers/feature_flags_provider.c.dart';
-import 'package:ion/app/features/wallets/providers/filtered_assets_provider.c.dart';
+import 'package:ion/app/features/core/providers/feature_flags_provider.r.dart';
+import 'package:ion/app/features/wallets/providers/filtered_assets_provider.r.dart';
 import 'package:ion/app/features/wallets/views/pages/wallet_page/components/header/wallet_tabs_header_loader.dart';
 import 'package:ion/app/features/wallets/views/pages/wallet_page/components/tabs/tabs_header_tab.dart';
 import 'package:ion/app/features/wallets/views/pages/wallet_page/helpers/cancel_search_helper.dart';
-import 'package:ion/app/features/wallets/views/pages/wallet_page/providers/search_visibility_provider.c.dart';
+import 'package:ion/app/features/wallets/views/pages/wallet_page/providers/search_visibility_provider.r.dart';
 import 'package:ion/app/features/wallets/views/pages/wallet_page/tab_type.dart';
-import 'package:ion/app/router/app_routes.c.dart';
+import 'package:ion/app/router/app_routes.gr.dart';
 import 'package:ion/generated/assets.gen.dart';
 
 class WalletTabsHeader extends ConsumerWidget {

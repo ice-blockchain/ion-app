@@ -7,7 +7,7 @@ import 'package:ion_identity_client/src/core/network/utils.dart';
 import 'package:ion_identity_client/src/core/storage/token_storage.dart';
 import 'package:ion_identity_client/src/core/types/request_headers.dart';
 import 'package:ion_identity_client/src/wallets/exceptions/wallets_exceptions.dart';
-import 'package:ion_identity_client/src/wallets/services/get_wallet_history/models/get_wallet_history_request_params.c.dart';
+import 'package:ion_identity_client/src/wallets/services/get_wallet_history/models/get_wallet_history_request_params.f.dart';
 import 'package:sprintf/sprintf.dart';
 
 class GetWalletHistoryDataSource {

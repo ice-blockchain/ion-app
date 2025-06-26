@@ -7,7 +7,7 @@ import 'package:ion/app/components/screen_offset/screen_top_offset.dart';
 import 'package:ion/app/components/section_separator/section_separator.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/core/model/feature_flags.dart';
-import 'package:ion/app/features/core/providers/feature_flags_provider.c.dart';
+import 'package:ion/app/features/core/providers/feature_flags_provider.r.dart';
 import 'package:ion/app/features/search/model/advanced_search_category.dart';
 import 'package:ion/app/features/search/views/components/advanced_search_channels/advanced_search_channels.dart';
 import 'package:ion/app/features/search/views/components/advanced_search_groups/advanced_search_groups.dart';
@@ -16,7 +16,7 @@ import 'package:ion/app/features/search/views/components/advanced_search_tab_bar
 import 'package:ion/app/features/search/views/pages/chat/chat_advanced_search_page/components/chat_advanced_search_all/chat_advanced_search_all.dart';
 import 'package:ion/app/features/search/views/pages/chat/chat_advanced_search_page/components/chat_advanced_search_chats/chat_advanced_search_chats.dart';
 import 'package:ion/app/features/search/views/pages/chat/chat_advanced_search_page/components/chat_advanced_search_people/chat_advanced_search_people.dart';
-import 'package:ion/app/router/app_routes.c.dart';
+import 'package:ion/app/router/app_routes.gr.dart';
 
 class ChatAdvancedSearchPage extends HookConsumerWidget {
   const ChatAdvancedSearchPage({required this.query, super.key});

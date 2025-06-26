@@ -11,10 +11,10 @@ import 'package:ion/app/components/screen_offset/screen_side_offset.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/auth/views/pages/sign_up_password/password_validation.dart';
 import 'package:ion/app/features/components/verify_identity/components/password_input.dart';
-import 'package:ion/app/features/protect_account/backup/providers/cloud_stored_recovery_keys_names_provider.c.dart';
-import 'package:ion/app/features/protect_account/backup/providers/create_recovery_key_action_notifier.c.dart';
-import 'package:ion/app/features/protect_account/backup/providers/recovery_key_cloud_backup_notifier.c.dart';
-import 'package:ion/app/router/app_routes.c.dart';
+import 'package:ion/app/features/protect_account/backup/providers/cloud_stored_recovery_keys_names_provider.r.dart';
+import 'package:ion/app/features/protect_account/backup/providers/create_recovery_key_action_notifier.r.dart';
+import 'package:ion/app/features/protect_account/backup/providers/recovery_key_cloud_backup_notifier.r.dart';
+import 'package:ion/app/router/app_routes.gr.dart';
 
 final class BackupWithCloudPasswordInputBody extends HookConsumerWidget {
   const BackupWithCloudPasswordInputBody({super.key});

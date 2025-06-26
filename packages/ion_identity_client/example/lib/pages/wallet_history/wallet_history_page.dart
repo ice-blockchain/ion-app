@@ -2,7 +2,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:ion_identity_client_example/pages/wallet_history/providers/wallet_history_provider.c.dart';
+import 'package:ion_identity_client_example/pages/wallet_history/providers/wallet_history_provider.r.dart';
 
 class WalletHistoryPage extends StatelessWidget {
   const WalletHistoryPage({

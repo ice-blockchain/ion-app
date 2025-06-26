@@ -6,8 +6,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion_identity_client/ion_identity.dart';
-import 'package:ion_identity_client_example/pages/wallet_assets/providers/make_transfer_notifier.c.dart';
-import 'package:ion_identity_client_example/pages/wallet_assets/providers/wallet_assets_provider.c.dart';
+import 'package:ion_identity_client_example/pages/wallet_assets/providers/make_transfer_notifier.r.dart';
+import 'package:ion_identity_client_example/pages/wallet_assets/providers/wallet_assets_provider.r.dart';
 
 class WalletAssetsPage extends HookConsumerWidget {
   const WalletAssetsPage({

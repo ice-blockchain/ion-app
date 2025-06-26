@@ -6,7 +6,7 @@ import 'package:ion/app/constants/ui.dart';
 import 'package:ion/app/extensions/build_context.dart';
 import 'package:ion/app/extensions/num.dart';
 import 'package:ion/app/extensions/theme_data.dart';
-import 'package:ion/app/router/app_routes.c.dart';
+import 'package:ion/app/router/app_routes.gr.dart';
 
 class FriendsListHeader extends StatelessWidget {
   const FriendsListHeader({super.key});

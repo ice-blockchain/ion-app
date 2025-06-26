@@ -5,7 +5,7 @@ import 'package:ion/app/components/button/button.dart';
 import 'package:ion/app/components/card/warning_card.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/protect_account/authenticator/views/components/copy_key_card.dart';
-import 'package:ion/app/router/app_routes.c.dart';
+import 'package:ion/app/router/app_routes.gr.dart';
 
 class AuthenticatorSetupInstructionsSuccessState extends StatelessWidget {
   const AuthenticatorSetupInstructionsSuccessState({required this.code, super.key});

@@ -5,14 +5,14 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/components/button/button.dart';
 import 'package:ion/app/components/progress_bar/ion_loading_indicator.dart';
 import 'package:ion/app/extensions/extensions.dart';
-import 'package:ion/app/features/auth/providers/onboarding_complete_notifier.c.dart';
-import 'package:ion/app/features/auth/providers/onboarding_data_provider.c.dart';
+import 'package:ion/app/features/auth/providers/onboarding_complete_notifier.r.dart';
+import 'package:ion/app/features/auth/providers/onboarding_data_provider.m.dart';
 import 'package:ion/app/features/components/verify_identity/verify_identity_prompt_dialog_helper.dart';
-import 'package:ion/app/features/core/providers/app_locale_provider.c.dart';
+import 'package:ion/app/features/core/providers/app_locale_provider.r.dart';
 import 'package:ion/app/features/core/views/pages/language_selector_page.dart';
-import 'package:ion/app/features/user/providers/current_user_identity_provider.c.dart';
+import 'package:ion/app/features/user/providers/current_user_identity_provider.r.dart';
 import 'package:ion/app/hooks/use_selected_state.dart';
-import 'package:ion/app/router/app_routes.c.dart';
+import 'package:ion/app/router/app_routes.gr.dart';
 import 'package:ion_identity_client/ion_identity.dart';
 
 class SelectLanguages extends HookConsumerWidget {

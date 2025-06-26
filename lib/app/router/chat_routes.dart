@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: ice License 1.0
 
-part of 'app_routes.c.dart';
+part of 'app_routes.gr.dart';
 
 class ChatRoutes {
   static const routes = <TypedRoute<RouteData>>[

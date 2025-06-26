@@ -3,7 +3,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:ion_identity_client_example/pages/get_ion_connect_indexers/providers/ion_connect_indexers_notifier.c.dart';
+import 'package:ion_identity_client_example/pages/get_ion_connect_indexers/providers/ion_connect_indexers_notifier.r.dart';
 
 class GetIONConnectIndexersPage extends HookConsumerWidget {
   const GetIONConnectIndexersPage({super.key});

@@ -2,7 +2,7 @@
 
 import 'package:ion/app/components/image/ion_network_image.dart';
 import 'package:ion/app/features/components/ion_connect_network_image/ion_connect_network_image.dart';
-import 'package:ion/app/features/feed/providers/feed_images_cache_manager.c.dart';
+import 'package:ion/app/features/feed/providers/feed_images_cache_manager.dart';
 
 class FeedNetworkImage extends IonNetworkImage {
   FeedNetworkImage({

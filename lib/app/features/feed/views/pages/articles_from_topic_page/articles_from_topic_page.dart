@@ -6,9 +6,9 @@ import 'package:ion/app/components/scroll_view/load_more_builder.dart';
 import 'package:ion/app/features/components/entities_list/entities_list.dart';
 import 'package:ion/app/features/components/entities_list/entities_list_skeleton.dart';
 import 'package:ion/app/features/feed/data/models/feed_type.dart';
-import 'package:ion/app/features/feed/providers/feed_user_interests_provider.c.dart';
-import 'package:ion/app/features/feed/providers/topic_articles_data_source_provider.c.dart';
-import 'package:ion/app/features/ion_connect/providers/entities_paged_data_provider.c.dart';
+import 'package:ion/app/features/feed/providers/feed_user_interests_provider.r.dart';
+import 'package:ion/app/features/feed/providers/topic_articles_data_source_provider.r.dart';
+import 'package:ion/app/features/ion_connect/providers/entities_paged_data_provider.m.dart';
 import 'package:ion/app/router/components/navigation_app_bar/navigation_app_bar.dart';
 
 class ArticlesFromTopicPage extends ConsumerWidget {

@@ -1,8 +1,8 @@
 // SPDX-License-Identifier: ice License 1.0
 
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:ion/app/features/protect_account/secure_account/providers/security_account_provider.c.dart';
-import 'package:ion/app/features/user/providers/user_verify_identity_provider.c.dart';
+import 'package:ion/app/features/protect_account/secure_account/providers/security_account_provider.r.dart';
+import 'package:ion/app/features/user/providers/user_verify_identity_provider.r.dart';
 
 void Function() useOnReceiveFundsFlow({
   required void Function() onReceive,

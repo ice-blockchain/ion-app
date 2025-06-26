@@ -3,7 +3,7 @@
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/extensions/extensions.dart';
-import 'package:ion/app/features/feed/providers/feed_bookmarks_notifier.c.dart';
+import 'package:ion/app/features/feed/providers/feed_bookmarks_notifier.r.dart';
 import 'package:ion/app/features/user/pages/bookmarks_page/components/bookmarks_filter_tile.dart';
 
 class BookmarksFilters extends HookConsumerWidget {

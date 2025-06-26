@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: ice License 1.0
 
-import 'package:ion/app/features/wallets/data/database/wallets_database.c.dart' as db;
-import 'package:ion/app/features/wallets/model/network_data.c.dart';
+import 'package:ion/app/features/wallets/data/database/wallets_database.m.dart' as db;
+import 'package:ion/app/features/wallets/model/network_data.f.dart';
 
 class NetworksMapper {
   List<db.Network> toDb(Iterable<NetworkData> networks) => [

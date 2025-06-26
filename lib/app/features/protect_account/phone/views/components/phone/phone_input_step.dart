@@ -11,12 +11,12 @@ import 'package:ion/app/components/inputs/text_input/text_input.dart';
 import 'package:ion/app/components/progress_bar/ion_loading_indicator.dart';
 import 'package:ion/app/components/screen_offset/screen_bottom_offset.dart';
 import 'package:ion/app/components/screen_offset/screen_side_offset.dart';
-import 'package:ion/app/constants/countries.c.dart';
+import 'package:ion/app/constants/countries.f.dart';
 import 'package:ion/app/extensions/extensions.dart';
-import 'package:ion/app/features/protect_account/phone/provider/country_provider.c.dart';
+import 'package:ion/app/features/protect_account/phone/provider/country_provider.r.dart';
 import 'package:ion/app/features/protect_account/phone/views/components/countries/country_code_input.dart';
-import 'package:ion/app/features/protect_account/secure_account/providers/request_twofa_code_notifier.c.dart';
-import 'package:ion/app/router/app_routes.c.dart';
+import 'package:ion/app/features/protect_account/secure_account/providers/request_twofa_code_notifier.r.dart';
+import 'package:ion/app/router/app_routes.gr.dart';
 import 'package:ion/app/utils/formatters.dart';
 import 'package:ion/app/utils/validators.dart';
 

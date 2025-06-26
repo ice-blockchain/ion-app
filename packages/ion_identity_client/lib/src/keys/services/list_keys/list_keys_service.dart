@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: ice License 1.0
 
 import 'package:ion_identity_client/src/keys/services/list_keys/data_sources/list_keys_data_source.dart';
-import 'package:ion_identity_client/src/keys/services/list_keys/models/list_keys_response.c.dart';
+import 'package:ion_identity_client/src/keys/services/list_keys/models/list_keys_response.f.dart';
 
 class ListKeysService {
   const ListKeysService(

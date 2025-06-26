@@ -6,11 +6,11 @@ import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/components/verify_identity/verify_identity_prompt_dialog_helper.dart';
-import 'package:ion/app/features/protect_account/backup/providers/cloud_stored_recovery_keys_names_provider.c.dart';
-import 'package:ion/app/features/protect_account/backup/providers/create_recovery_key_action_notifier.c.dart';
+import 'package:ion/app/features/protect_account/backup/providers/cloud_stored_recovery_keys_names_provider.r.dart';
+import 'package:ion/app/features/protect_account/backup/providers/create_recovery_key_action_notifier.r.dart';
 import 'package:ion/app/features/protect_account/backup/views/components/backup_option.dart';
-import 'package:ion/app/router/app_routes.c.dart';
-import 'package:ion/app/services/cloud_storage/cloud_storage_service.c.dart';
+import 'package:ion/app/router/app_routes.gr.dart';
+import 'package:ion/app/services/cloud_storage/cloud_storage_service.r.dart';
 import 'package:ion/generated/assets.gen.dart';
 import 'package:ion_identity_client/ion_identity.dart';
 

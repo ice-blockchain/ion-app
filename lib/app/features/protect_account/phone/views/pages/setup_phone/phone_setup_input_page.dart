@@ -9,8 +9,8 @@ import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/auth/data/models/twofa_type.dart';
 import 'package:ion/app/features/protect_account/phone/models/phone_steps.dart';
 import 'package:ion/app/features/protect_account/phone/views/components/phone/phone_input_step.dart';
-import 'package:ion/app/features/protect_account/secure_account/providers/request_twofa_code_notifier.c.dart';
-import 'package:ion/app/router/app_routes.c.dart';
+import 'package:ion/app/features/protect_account/secure_account/providers/request_twofa_code_notifier.r.dart';
+import 'package:ion/app/router/app_routes.gr.dart';
 
 class PhoneSetupInputPage extends HookConsumerWidget {
   const PhoneSetupInputPage({super.key});

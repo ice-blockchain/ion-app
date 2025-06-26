@@ -4,14 +4,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion_identity_client/ion_identity.dart';
-import 'package:ion_identity_client_example/pages/user_wallets/providers/create_wallet_notifier.c.dart';
-import 'package:ion_identity_client_example/pages/user_wallets/providers/user_wallets_provider.c.dart';
+import 'package:ion_identity_client_example/pages/user_wallets/providers/create_wallet_notifier.r.dart';
+import 'package:ion_identity_client_example/pages/user_wallets/providers/user_wallets_provider.r.dart';
 import 'package:ion_identity_client_example/pages/wallet_assets/wallet_assets_page.dart';
 import 'package:ion_identity_client_example/pages/wallet_generate_signature/wallet_generate_signature_page.dart';
 import 'package:ion_identity_client_example/pages/wallet_history/wallet_history_page.dart';
 import 'package:ion_identity_client_example/pages/wallet_nfts/wallet_nfts_page.dart';
 import 'package:ion_identity_client_example/pages/wallet_transfer_requests/wallet_transfer_requests_page.dart';
-import 'package:ion_identity_client_example/providers/current_username_notifier.c.dart';
+import 'package:ion_identity_client_example/providers/current_username_notifier.r.dart';
 
 class UserWalletsPage extends HookConsumerWidget {
   const UserWalletsPage({

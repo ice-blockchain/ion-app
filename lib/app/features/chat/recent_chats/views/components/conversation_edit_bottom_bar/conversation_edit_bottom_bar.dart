@@ -3,7 +3,7 @@
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/extensions/extensions.dart';
-import 'package:ion/app/features/chat/recent_chats/providers/archive_state_provider.c.dart';
+import 'package:ion/app/features/chat/recent_chats/providers/archive_state_provider.r.dart';
 import 'package:ion/app/features/chat/recent_chats/views/components/conversation_edit_bottom_bar/components/conversation_archive_button/conversation_archive_button.dart';
 import 'package:ion/app/features/chat/recent_chats/views/components/conversation_edit_bottom_bar/components/conversation_archive_button/conversation_unarchive_button.dart';
 import 'package:ion/app/features/chat/recent_chats/views/components/conversation_edit_bottom_bar/components/conversation_delete_button/conversation_delete_button.dart';

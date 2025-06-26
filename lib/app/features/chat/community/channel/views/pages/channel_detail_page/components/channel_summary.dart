@@ -5,13 +5,13 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/components/button/button.dart';
 import 'package:ion/app/components/copy/copy_builder.dart';
 import 'package:ion/app/extensions/extensions.dart';
-import 'package:ion/app/features/auth/providers/auth_provider.c.dart';
+import 'package:ion/app/features/auth/providers/auth_provider.m.dart';
 import 'package:ion/app/features/chat/community/channel/hooks/use_can_edit_channel.dart';
 import 'package:ion/app/features/chat/community/channel/views/pages/channel_page/components/channel_avatar.dart';
 import 'package:ion/app/features/chat/community/channel/views/pages/channel_page/components/channel_detail_list_tile.dart';
-import 'package:ion/app/features/chat/community/models/entities/community_definition_data.c.dart';
+import 'package:ion/app/features/chat/community/models/entities/community_definition_data.f.dart';
 import 'package:ion/app/features/chat/community/view/components/community_member_count_tile.dart';
-import 'package:ion/app/router/app_routes.c.dart';
+import 'package:ion/app/router/app_routes.gr.dart';
 import 'package:ion/generated/assets.gen.dart';
 
 class ChannelSummary extends HookConsumerWidget {

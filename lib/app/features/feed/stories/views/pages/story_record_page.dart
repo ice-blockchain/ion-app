@@ -10,20 +10,20 @@ import 'package:ion/app/features/core/model/media_type.dart';
 import 'package:ion/app/features/core/permissions/data/models/permissions_types.dart';
 import 'package:ion/app/features/core/permissions/views/components/permission_aware_widget.dart';
 import 'package:ion/app/features/core/permissions/views/components/permission_dialogs/permission_sheets.dart';
-import 'package:ion/app/features/feed/stories/data/models/camera_capture_state.c.dart';
+import 'package:ion/app/features/feed/stories/data/models/camera_capture_state.f.dart';
 import 'package:ion/app/features/feed/stories/hooks/use_recording_progress.dart';
-import 'package:ion/app/features/feed/stories/providers/camera_capture_provider.c.dart';
-import 'package:ion/app/features/feed/stories/providers/media_editing_service.c.dart';
+import 'package:ion/app/features/feed/stories/providers/camera_capture_provider.r.dart';
+import 'package:ion/app/features/feed/stories/providers/media_editing_service.r.dart';
 import 'package:ion/app/features/feed/stories/views/components/story_capture/camera/camera_idle_preview.dart';
 import 'package:ion/app/features/feed/stories/views/components/story_capture/camera/custom_camera_preview.dart';
 import 'package:ion/app/features/feed/stories/views/components/story_capture/controls/camera_capture_button.dart';
 import 'package:ion/app/features/feed/stories/views/components/story_capture/controls/camera_recording_indicator.dart';
-import 'package:ion/app/features/gallery/data/models/camera_state.c.dart';
-import 'package:ion/app/features/gallery/providers/camera_provider.c.dart';
-import 'package:ion/app/features/user/providers/image_proccessor_notifier.c.dart';
-import 'package:ion/app/router/app_routes.c.dart';
+import 'package:ion/app/features/gallery/data/models/camera_state.f.dart';
+import 'package:ion/app/features/gallery/providers/camera_provider.r.dart';
+import 'package:ion/app/features/user/providers/image_proccessor_notifier.m.dart';
+import 'package:ion/app/router/app_routes.gr.dart';
 import 'package:ion/app/services/media_service/image_proccessing_config.dart';
-import 'package:ion/app/services/media_service/media_service.c.dart';
+import 'package:ion/app/services/media_service/media_service.m.dart';
 
 class StoryRecordPage extends HookConsumerWidget {
   const StoryRecordPage({super.key});

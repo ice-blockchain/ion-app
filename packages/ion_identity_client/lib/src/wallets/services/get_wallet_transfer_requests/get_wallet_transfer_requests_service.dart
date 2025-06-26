@@ -1,8 +1,8 @@
 // SPDX-License-Identifier: ice License 1.0
 
 import 'package:ion_identity_client/src/wallets/services/get_wallet_transfer_requests/data_sources/get_wallet_transfer_requests_data_source.dart';
-import 'package:ion_identity_client/src/wallets/services/get_wallet_transfer_requests/models/wallet_transfer_request.c.dart';
-import 'package:ion_identity_client/src/wallets/services/get_wallet_transfer_requests/models/wallet_transfer_requests.c.dart';
+import 'package:ion_identity_client/src/wallets/services/get_wallet_transfer_requests/models/wallet_transfer_request.f.dart';
+import 'package:ion_identity_client/src/wallets/services/get_wallet_transfer_requests/models/wallet_transfer_requests.f.dart';
 
 class GetWalletTransferRequestsService {
   const GetWalletTransferRequestsService(

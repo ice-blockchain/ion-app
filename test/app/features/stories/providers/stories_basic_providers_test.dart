@@ -1,9 +1,9 @@
 // SPDX-License-Identifier: ice License 1.0
 
 import 'package:flutter_test/flutter_test.dart';
-import 'package:ion/app/features/feed/stories/providers/emoji_reaction_provider.c.dart';
-import 'package:ion/app/features/feed/stories/providers/story_image_loading_provider.c.dart';
-import 'package:ion/app/features/feed/stories/providers/story_pause_provider.c.dart';
+import 'package:ion/app/features/feed/stories/providers/emoji_reaction_provider.m.dart';
+import 'package:ion/app/features/feed/stories/providers/story_image_loading_provider.r.dart';
+import 'package:ion/app/features/feed/stories/providers/story_pause_provider.r.dart';
 
 import '../../../../test_utils.dart';
 

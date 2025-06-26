@@ -15,8 +15,8 @@ import 'package:ion/app/features/auth/views/components/auth_footer/auth_footer.d
 import 'package:ion/app/features/auth/views/components/auth_scrolled_body/auth_scrolled_body.dart';
 import 'package:ion/app/features/auth/views/pages/restore_from_cloud/components/identity_key_name_selector.dart';
 import 'package:ion/app/features/auth/views/pages/restore_from_cloud/components/recovery_keys_decrypt_password_input.dart';
-import 'package:ion/app/features/protect_account/backup/providers/cloud_stored_recovery_keys_names_provider.c.dart';
-import 'package:ion/app/features/protect_account/backup/providers/recovery_key_cloud_backup_restore_notifier.c.dart';
+import 'package:ion/app/features/protect_account/backup/providers/cloud_stored_recovery_keys_names_provider.r.dart';
+import 'package:ion/app/features/protect_account/backup/providers/recovery_key_cloud_backup_restore_notifier.r.dart';
 import 'package:ion/app/router/components/sheet_content/sheet_content.dart';
 import 'package:ion/generated/assets.gen.dart';
 

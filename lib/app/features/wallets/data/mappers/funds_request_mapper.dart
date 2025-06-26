@@ -1,8 +1,8 @@
 // SPDX-License-Identifier: ice License 1.0
 
-import 'package:ion/app/features/wallets/data/database/wallets_database.c.dart';
-import 'package:ion/app/features/wallets/model/entities/funds_request_entity.c.dart';
-import 'package:ion/app/features/wallets/model/transaction_data.c.dart';
+import 'package:ion/app/features/wallets/data/database/wallets_database.m.dart';
+import 'package:ion/app/features/wallets/model/entities/funds_request_entity.f.dart';
+import 'package:ion/app/features/wallets/model/transaction_data.f.dart';
 
 class FundsRequestMapper {
   FundsRequest toDatabase(FundsRequestEntity entity) {

@@ -5,7 +5,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/components/avatar/avatar.dart';
 import 'package:ion/app/components/avatar/default_avatar.dart';
 import 'package:ion/app/features/components/ion_connect_network_image/ion_connect_network_image.dart';
-import 'package:ion/app/features/user/providers/user_metadata_provider.c.dart';
+import 'package:ion/app/features/user/providers/user_metadata_provider.r.dart';
 
 class IonConnectAvatar extends ConsumerWidget {
   const IonConnectAvatar({

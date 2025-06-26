@@ -4,7 +4,7 @@ import 'dart:convert';
 
 import 'package:ion_identity_client/src/core/types/http_method.dart';
 import 'package:ion_identity_client/src/core/types/types.dart';
-import 'package:ion_identity_client/src/signer/dtos/user_action_signing_init_request.c.dart';
+import 'package:ion_identity_client/src/signer/dtos/user_action_signing_init_request.f.dart';
 
 class UserActionSigningRequest {
   const UserActionSigningRequest({

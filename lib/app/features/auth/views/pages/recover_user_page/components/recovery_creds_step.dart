@@ -13,7 +13,7 @@ import 'package:ion/app/features/auth/views/components/auth_footer/auth_footer.d
 import 'package:ion/app/features/auth/views/components/auth_scrolled_body/auth_scrolled_body.dart';
 import 'package:ion/app/features/auth/views/pages/recover_user_page/components/errors/recover_invalid_credentials_error_alert.dart';
 import 'package:ion/app/features/protect_account/backup/data/models/recovery_key_property.dart';
-import 'package:ion/app/features/protect_account/backup/providers/recover_user_action_notifier.c.dart';
+import 'package:ion/app/features/protect_account/backup/providers/recover_user_action_notifier.m.dart';
 import 'package:ion/app/features/protect_account/backup/views/components/recovery_key_input.dart';
 import 'package:ion/app/router/components/sheet_content/sheet_content.dart';
 import 'package:ion/app/router/utils/show_simple_bottom_sheet.dart';

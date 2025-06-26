@@ -3,7 +3,7 @@
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion_identity_client_example/pages/user_wallet_views/providers/user_wallet_view_provider.dart';
-import 'package:ion_identity_client_example/providers/current_username_notifier.c.dart';
+import 'package:ion_identity_client_example/providers/current_username_notifier.r.dart';
 
 class UserWalletViewsPage extends HookConsumerWidget {
   const UserWalletViewsPage({

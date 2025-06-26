@@ -1,9 +1,9 @@
 // SPDX-License-Identifier: ice License 1.0
 
 import 'package:ion_identity_client/src/wallets/services/wallet_views/data_sources/wallet_views_data_source.dart';
-import 'package:ion_identity_client/src/wallets/services/wallet_views/models/create_update_wallet_view_request.c.dart';
-import 'package:ion_identity_client/src/wallets/services/wallet_views/models/short_wallet_view.c.dart';
-import 'package:ion_identity_client/src/wallets/services/wallet_views/models/wallet_view.c.dart';
+import 'package:ion_identity_client/src/wallets/services/wallet_views/models/create_update_wallet_view_request.f.dart';
+import 'package:ion_identity_client/src/wallets/services/wallet_views/models/short_wallet_view.f.dart';
+import 'package:ion_identity_client/src/wallets/services/wallet_views/models/wallet_view.f.dart';
 
 class WalletViewsService {
   const WalletViewsService(

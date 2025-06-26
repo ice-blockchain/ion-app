@@ -6,11 +6,11 @@ import 'dart:io';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/foundation.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:ion/app/features/chat/e2ee/providers/gift_unwrap_service_provider.c.dart';
-import 'package:ion/app/features/push_notifications/data/models/ion_connect_push_data_payload.c.dart';
-import 'package:ion/app/features/push_notifications/providers/notification_data_parser_provider.c.dart';
+import 'package:ion/app/features/chat/e2ee/providers/gift_unwrap_service_provider.r.dart';
+import 'package:ion/app/features/push_notifications/data/models/ion_connect_push_data_payload.f.dart';
+import 'package:ion/app/features/push_notifications/providers/notification_data_parser_provider.r.dart';
 import 'package:ion/app/services/ion_connect/ion_connect.dart';
-import 'package:ion/app/services/local_notifications/local_notifications.c.dart';
+import 'package:ion/app/services/local_notifications/local_notifications.r.dart';
 import 'package:ion/app/services/logger/logger.dart';
 import 'package:ion/app/services/uuid/uuid.dart';
 

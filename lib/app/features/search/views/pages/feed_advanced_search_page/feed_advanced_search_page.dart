@@ -6,12 +6,12 @@ import 'package:ion/app/components/screen_offset/screen_top_offset.dart';
 import 'package:ion/app/components/section_separator/section_separator.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/search/model/advanced_search_category.dart';
-import 'package:ion/app/features/search/providers/feed_search_categories.c.dart';
+import 'package:ion/app/features/search/providers/feed_search_categories.r.dart';
 import 'package:ion/app/features/search/views/components/advanced_search_navigation/advanced_search_navigation.dart';
 import 'package:ion/app/features/search/views/components/advanced_search_tab_bar/advanced_search_tab_bar.dart';
 import 'package:ion/app/features/search/views/pages/feed_advanced_search_page/components/feed_advanced_search_posts/feed_advanced_search_posts.dart';
 import 'package:ion/app/features/search/views/pages/feed_advanced_search_page/components/feed_advanced_search_users/feed_advanced_search_users.dart';
-import 'package:ion/app/router/app_routes.c.dart';
+import 'package:ion/app/router/app_routes.gr.dart';
 
 class FeedAdvancedSearchPage extends HookConsumerWidget {
   const FeedAdvancedSearchPage({required this.query, super.key});

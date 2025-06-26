@@ -5,14 +5,14 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/components/screen_offset/screen_side_offset.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/extensions/num.dart';
-import 'package:ion/app/features/wallets/providers/filtered_assets_provider.c.dart';
-import 'package:ion/app/features/wallets/providers/wallet_page_loader_provider.c.dart';
+import 'package:ion/app/features/wallets/providers/filtered_assets_provider.r.dart';
+import 'package:ion/app/features/wallets/providers/wallet_page_loader_provider.r.dart';
 import 'package:ion/app/features/wallets/views/components/coins_list/coin_item.dart';
-import 'package:ion/app/features/wallets/views/pages/manage_coins/providers/manage_coins_provider.c.dart';
+import 'package:ion/app/features/wallets/views/pages/manage_coins/providers/manage_coins_provider.r.dart';
 import 'package:ion/app/features/wallets/views/pages/wallet_page/components/coins/coins_tab_footer.dart';
 import 'package:ion/app/features/wallets/views/pages/wallet_page/components/empty_state/empty_state.dart';
 import 'package:ion/app/features/wallets/views/pages/wallet_page/tab_type.dart';
-import 'package:ion/app/router/app_routes.c.dart';
+import 'package:ion/app/router/app_routes.gr.dart';
 
 class CoinsTab extends ConsumerWidget {
   const CoinsTab({

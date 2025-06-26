@@ -7,8 +7,8 @@ import 'package:ion/app/features/protect_account/authenticator/views/pages/delet
 import 'package:ion/app/features/protect_account/authenticator/views/pages/delete_authenticator/components/delete_authenticator_input_step.dart';
 import 'package:ion/app/features/protect_account/authenticator/views/pages/delete_authenticator/components/delete_authenticator_select_options_step.dart';
 import 'package:ion/app/features/protect_account/secure_account/data/models/delete_twofa_step.dart';
-import 'package:ion/app/features/protect_account/secure_account/providers/selected_two_fa_types_provider.c.dart';
-import 'package:ion/app/router/app_routes.c.dart';
+import 'package:ion/app/features/protect_account/secure_account/providers/selected_two_fa_types_provider.m.dart';
+import 'package:ion/app/router/app_routes.gr.dart';
 
 class AuthenticatorDeletePage extends HookWidget {
   const AuthenticatorDeletePage({super.key});

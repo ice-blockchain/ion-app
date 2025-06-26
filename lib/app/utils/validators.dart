@@ -3,7 +3,7 @@
 import 'package:dlibphonenumber/dlibphonenumber.dart';
 import 'package:email_validator/email_validator.dart';
 import 'package:ion/app/extensions/extensions.dart';
-import 'package:ion/app/features/feed/polls/models/poll_answer.c.dart';
+import 'package:ion/app/features/feed/polls/models/poll_answer.f.dart';
 import 'package:ion/app/utils/url.dart';
 
 class Validators {

@@ -7,7 +7,7 @@ import 'package:ion/app/extensions/num.dart';
 import 'package:ion/app/features/feed/views/components/article/components/article_image/read_time_tile.dart';
 import 'package:ion/app/features/feed/views/components/article/constants.dart';
 import 'package:ion/app/features/feed/views/components/feed_network_image/feed_network_image.dart';
-import 'package:ion/app/services/media_service/media_service.c.dart';
+import 'package:ion/app/services/media_service/media_service.m.dart';
 
 class ArticlePreviewImage extends StatelessWidget {
   const ArticlePreviewImage({

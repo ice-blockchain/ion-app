@@ -4,8 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/features/wallets/hooks/use_check_wallet_address_available.dart';
 import 'package:ion/app/features/wallets/views/components/share_address/share_address_sheet_content.dart';
-import 'package:ion/app/features/wallets/views/pages/receive_nft/providers/receive_nft_form_notifier.c.dart';
-import 'package:ion/app/router/app_routes.c.dart';
+import 'package:ion/app/features/wallets/views/pages/receive_nft/providers/receive_nft_form_notifier.r.dart';
+import 'package:ion/app/router/app_routes.gr.dart';
 
 class ShareAddressToGetNftView extends HookConsumerWidget {
   const ShareAddressToGetNftView({super.key});

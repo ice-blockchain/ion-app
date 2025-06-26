@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: ice License 1.0
 
-import 'package:ion/app/features/ion_connect/model/entity_published_at.c.dart';
+import 'package:ion/app/features/ion_connect/model/entity_published_at.f.dart';
 import 'package:ion/app/features/ion_connect/model/ion_connect_entity.dart';
 
 mixin SoftDeletableEntity<T extends SoftDeletableEntityData> on IonConnectEntity {

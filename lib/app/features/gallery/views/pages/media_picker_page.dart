@@ -6,8 +6,8 @@ import 'package:ion/app/components/button/button.dart';
 import 'package:ion/app/components/scroll_view/load_more_builder.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/core/permissions/data/models/permissions_types.dart';
-import 'package:ion/app/features/core/permissions/providers/permissions_provider.c.dart';
-import 'package:ion/app/features/gallery/data/models/gallery_state.c.dart';
+import 'package:ion/app/features/core/permissions/providers/permissions_provider.r.dart';
+import 'package:ion/app/features/gallery/data/models/gallery_state.f.dart';
 import 'package:ion/app/features/gallery/providers/providers.dart';
 import 'package:ion/app/features/gallery/views/components/components.dart';
 import 'package:ion/app/features/gallery/views/components/manage_access_banner.dart';
@@ -17,7 +17,7 @@ import 'package:ion/app/hooks/use_on_init.dart';
 import 'package:ion/app/router/components/navigation_app_bar/navigation_app_bar.dart';
 import 'package:ion/app/router/components/sheet_content/sheet_content.dart';
 import 'package:ion/app/router/utils/show_simple_bottom_sheet.dart';
-import 'package:ion/app/services/media_service/media_service.c.dart';
+import 'package:ion/app/services/media_service/media_service.m.dart';
 
 class MediaPickerPage extends HookConsumerWidget {
   const MediaPickerPage({

@@ -3,9 +3,9 @@
 import 'dart:math';
 
 import 'package:flutter_test/flutter_test.dart';
-import 'package:ion/app/features/feed/data/models/feed_config.c.dart';
-import 'package:ion/app/features/feed/data/models/feed_interests.c.dart';
-import 'package:ion/app/features/feed/providers/feed_user_interest_picker_provider.c.dart';
+import 'package:ion/app/features/feed/data/models/feed_config.f.dart';
+import 'package:ion/app/features/feed/data/models/feed_interests.f.dart';
+import 'package:ion/app/features/feed/providers/feed_user_interest_picker_provider.r.dart';
 import 'package:mocktail/mocktail.dart';
 
 class MockRandom extends Mock implements Random {}

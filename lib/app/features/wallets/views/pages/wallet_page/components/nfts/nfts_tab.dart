@@ -6,9 +6,9 @@ import 'package:ion/app/components/screen_offset/screen_side_offset.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/wallets/model/crypto_asset_type.dart';
 import 'package:ion/app/features/wallets/model/nft_layout_type.dart';
-import 'package:ion/app/features/wallets/providers/current_nfts_provider.c.dart';
-import 'package:ion/app/features/wallets/providers/filtered_assets_provider.c.dart';
-import 'package:ion/app/features/wallets/providers/wallet_user_preferences/user_preferences_selectors.c.dart';
+import 'package:ion/app/features/wallets/providers/current_nfts_provider.r.dart';
+import 'package:ion/app/features/wallets/providers/filtered_assets_provider.r.dart';
+import 'package:ion/app/features/wallets/providers/wallet_user_preferences/user_preferences_selectors.r.dart';
 import 'package:ion/app/features/wallets/views/pages/wallet_page/components/empty_state/empty_state.dart';
 import 'package:ion/app/features/wallets/views/pages/wallet_page/components/loaders/grid_loader.dart';
 import 'package:ion/app/features/wallets/views/pages/wallet_page/components/loaders/list_loader.dart';
@@ -18,7 +18,7 @@ import 'package:ion/app/features/wallets/views/pages/wallet_page/components/nfts
 import 'package:ion/app/features/wallets/views/pages/wallet_page/components/nfts/nfts_tab_footer.dart';
 import 'package:ion/app/features/wallets/views/pages/wallet_page/tab_type.dart';
 import 'package:ion/app/features/wallets/views/pages/wallet_page/view_models/wallet_nfts_view_model.dart';
-import 'package:ion/app/router/app_routes.c.dart';
+import 'package:ion/app/router/app_routes.gr.dart';
 
 class NftsTab extends ConsumerWidget {
   const NftsTab({

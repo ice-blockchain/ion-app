@@ -9,7 +9,7 @@ import 'package:ion/app/components/modal_sheets/simple_modal_sheet.dart';
 import 'package:ion/app/components/screen_offset/screen_side_offset.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/core/permissions/data/models/models.dart';
-import 'package:ion/app/features/core/permissions/providers/permissions_provider.c.dart';
+import 'package:ion/app/features/core/permissions/providers/permissions_provider.r.dart';
 import 'package:ion/generated/assets.gen.dart';
 
 class CloudDisabledModal extends ConsumerWidget {

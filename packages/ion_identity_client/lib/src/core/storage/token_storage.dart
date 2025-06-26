@@ -4,7 +4,7 @@ import 'dart:async';
 
 import 'package:ion_identity_client/src/auth/dtos/dtos.dart';
 import 'package:ion_identity_client/src/core/storage/data_storage.dart';
-import 'package:ion_identity_client/src/core/types/user_token.c.dart';
+import 'package:ion_identity_client/src/core/types/user_token.f.dart';
 
 class TokenStorage extends DataStorage<Authentication> {
   TokenStorage({

@@ -7,9 +7,9 @@ import 'package:ion/app/extensions/asset_gen_image.dart';
 import 'package:ion/app/extensions/build_context.dart';
 import 'package:ion/app/extensions/num.dart';
 import 'package:ion/app/extensions/theme_data.dart';
-import 'package:ion/app/features/dapps/providers/dapps_provider.c.dart';
+import 'package:ion/app/features/dapps/providers/dapps_provider.r.dart';
 import 'package:ion/app/features/dapps/views/components/featured_collection/shadow_text.dart';
-import 'package:ion/app/router/app_routes.c.dart';
+import 'package:ion/app/router/app_routes.gr.dart';
 
 class FeaturedCollection extends ConsumerWidget {
   const FeaturedCollection({super.key});

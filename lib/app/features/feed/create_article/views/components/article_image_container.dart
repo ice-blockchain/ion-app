@@ -7,7 +7,7 @@ import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/feed/create_article/views/components/article_image_view.dart';
 import 'package:ion/app/features/feed/create_article/views/components/article_placeholder.dart';
 import 'package:ion/app/features/feed/views/components/article/constants.dart';
-import 'package:ion/app/services/media_service/media_service.c.dart';
+import 'package:ion/app/services/media_service/media_service.m.dart';
 import 'package:ion/generated/assets.gen.dart';
 
 class ArticleImageContainer extends StatelessWidget {

@@ -8,7 +8,7 @@ import 'package:ion/app/components/screen_offset/screen_bottom_offset.dart';
 import 'package:ion/app/components/screen_offset/screen_side_offset.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/core/permissions/data/models/permissions_types.dart';
-import 'package:ion/app/features/core/providers/app_info_provider.c.dart';
+import 'package:ion/app/features/core/providers/app_info_provider.r.dart';
 import 'package:ion/generated/assets.gen.dart';
 
 class PermissionRequestSheet extends ConsumerWidget {

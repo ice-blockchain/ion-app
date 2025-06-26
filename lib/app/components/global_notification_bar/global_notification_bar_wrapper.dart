@@ -6,8 +6,8 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:internet_connection_checker_plus/internet_connection_checker_plus.dart';
 import 'package:ion/app/components/global_notification_bar/components/no_internet_connection_notification_view.dart';
 import 'package:ion/app/components/global_notification_bar/global_notification_bar.dart';
-import 'package:ion/app/components/global_notification_bar/providers/global_notification_notifier_provider.c.dart';
-import 'package:ion/app/features/core/providers/internet_status_stream_provider.c.dart';
+import 'package:ion/app/components/global_notification_bar/providers/global_notification_notifier_provider.r.dart';
+import 'package:ion/app/features/core/providers/internet_status_stream_provider.r.dart';
 import 'package:ion/app/hooks/use_interval.dart';
 
 class GlobalNotificationBarWrapper extends HookConsumerWidget {
