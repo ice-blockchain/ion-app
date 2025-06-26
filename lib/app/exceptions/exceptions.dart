@@ -594,3 +594,11 @@ class FailedToCreateBookmarksSetException extends IONException {
   FailedToCreateBookmarksSetException(String dTagName)
       : super(10119, 'Failed to create bookmarks set for $dTagName');
 }
+
+class NoAvailableInterests extends IONException {
+  NoAvailableInterests({required String relayUrl, required String modifier})
+      : super(
+          10120,
+          'No available interests for relay: $relayUrl, modifier: $modifier',
+        );
+}
