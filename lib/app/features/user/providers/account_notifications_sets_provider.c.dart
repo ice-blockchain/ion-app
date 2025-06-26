@@ -55,28 +55,3 @@ Future<List<String>> usersForNotificationType(
 
   return [];
 }
-
-Future<void> _updateNotificationSet(
-  Ref ref,
-  String currentPubkey,
-  String setType,
-  List<String> userPubkeys,
-) async {
-  final ionConnectNotifier = ref.read(ionConnectNotifierProvider.notifier);
-
-  final setData = AccountNotificationSetData(
-    type: AccountNotificationSetType.values.firstWhere(
-      (t) => t.dTagName == setType,
-      orElse: () => AccountNotificationSetType.posts,
-    ),
-    userPubkeys: userPubkeys,
-  );
-
-  final eventMessage = await ionConnectNotifier.sign(setData);
-  await ionConnectNotifier.sendEvent(eventMessage);
-}
-
-String? _getSetTypeForNotificationType(UserNotificationsType notificationType) {
-  final setType = AccountNotificationSetType.fromUserNotificationType(notificationType);
-  return setType?.dTagName;
-}
