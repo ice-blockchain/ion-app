@@ -2,6 +2,7 @@
 
 import 'dart:async';
 
+import 'package:collection/collection.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:ion/app/exceptions/exceptions.dart';
 import 'package:ion/app/extensions/extensions.dart';
@@ -80,19 +81,17 @@ class AccountNotificationSetData
   const AccountNotificationSetData._();
 
   factory AccountNotificationSetData.fromEventMessage(EventMessage eventMessage) {
-    final dTag = eventMessage.tags
-        .firstWhere((tag) => tag[0] == 'd', orElse: () => ['d', ''])
-        .elementAtOrNull(1);
+    final tags = groupBy(eventMessage.tags, (tag) => tag[0]);
+
+    final dTag = tags['d']?.firstOrNull?.elementAtOrNull(1) ?? '';
 
     final type = AccountNotificationSetType.values.firstWhere(
       (t) => t.dTagName == dTag,
       orElse: () => AccountNotificationSetType.posts,
     );
 
-    final userPubkeys = eventMessage.tags
-        .where((tag) => tag[0] == 'p' && tag.length > 1)
-        .map((tag) => tag[1])
-        .toList();
+    final userPubkeys =
+        tags['p']?.where((tag) => tag.length > 1).map((tag) => tag[1]).toList() ?? [];
 
     return AccountNotificationSetData(
       type: type,
