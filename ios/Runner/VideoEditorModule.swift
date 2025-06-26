@@ -229,7 +229,7 @@ extension VideoEditorModule {
         // Set up export
         let exportConfiguration = ExportConfiguration(
             videoConfigurations: exportVideoConfigurations,
-            isCoverEnabled: false,
+            isCoverEnabled: true,
             gifSettings: nil
         )
         

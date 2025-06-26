@@ -339,9 +339,11 @@ class CreateVideoRoute extends BaseRouteData with _$CreateVideoRoute {
     required this.videoPath,
     required this.mimeType,
     this.content,
+    this.videoThumbPath,
   }) : super(
           child: PostFormModal.video(
             videoPath: videoPath,
+            videoThumbPath: videoThumbPath,
             mimeType: mimeType,
             content: content,
           ),
@@ -349,6 +351,7 @@ class CreateVideoRoute extends BaseRouteData with _$CreateVideoRoute {
         );
 
   final String videoPath;
+  final String? videoThumbPath;
   final String mimeType;
   final String? content;
 }

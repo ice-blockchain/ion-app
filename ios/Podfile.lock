@@ -594,18 +594,18 @@ SPEC CHECKSUMS:
   BanubaVideoEditorSDK: b34f1d79674c89f9b0b26de737f91806bb04ed76
   bdk_flutter: 86c9ba59ee282dee08c3a29599abe867d10a8b10
   blurhash_ffi: 4831b96320d4273876c9a2fd3f7d50b8a3a53509
-  BNBAcneEyebagsRemoval: 3a35ebc546ef90aeb1915d9976c77e917be1fe6e
-  BNBBackground: 350c0ca73cd1fabc04e850be044b86c90cd3a5ff
-  BNBEffectPlayer: bcddb2e93efe20ac5c5e173cd0bc15f1db30226b
-  BNBEyes: bc95edc6ec54a8609ff811eab4c5c90bd07619a5
-  BNBFaceTracker: cabe99f73c5ba27b0b6c8f4a3c894e6d58da132c
-  BNBHair: 90c9966cd5cc96b5a945fb4f9144096e6a5d2e9e
+  BNBAcneEyebagsRemoval: c1ace1dc404f7ba7cf20c30ce8bc02dabc9b81ce
+  BNBBackground: 4a52987e63777a0237ee21414927b298294db7df
+  BNBEffectPlayer: fcc9abe72b00388da4d12b6261195212b2c374db
+  BNBEyes: 510c6b177475ab29c3c3f7bc5bb2cac07670525d
+  BNBFaceTracker: 7872ce4f28f07215f3bafff888b3d0faad32e110
+  BNBHair: b4c7081bffa0f775309d0a6bb7e09e30baad8721
   BNBLicenseUtils: c4131065837d0ff37b537bfba4b07a9ee7027d0a
-  BNBLips: 05f7c3dd8492f5dd6f0d3e29250d963e53eb4c6a
-  BNBScripting: 7c9372c3fdc47b3eda4a5cdfaab2a23e2203e3b9
-  BNBSdkApi: c5913e3ed9aecf7d60b3ccfded6a2db859685bc6
-  BNBSdkCore: ece3f323706277bba806bd52e80719ffb72cd279
-  BNBSkin: 12d53f218f10e890c4b762e20919d94044228369
+  BNBLips: e7ec027b92ea35218769db625db58d1c76ed9e95
+  BNBScripting: b6b109db2d197cea0e3f0e9f1b1c30d329785ef2
+  BNBSdkApi: 6ef96a86a7bb99a7d48c74be3f1e5f999d6250fe
+  BNBSdkCore: c2898edb4ef38c8a2a6fa95b80dc1c9225f8482c
+  BNBSkin: 27baee4e1e682b46fe2b2314dd888227a2dba179
   camera_avfoundation: adb0207d868b2d873e895371d88448399ab78d87
   connectivity_plus: 2a701ffec2c0ae28a48cf7540e279787e77c447d
   device_info_plus: bf2e3232933866d73fe290f2942f2156cdd10342
@@ -653,7 +653,7 @@ SPEC CHECKSUMS:
   PromisesObjC: f5707f49cb48b9636751c5b2e7d227e43fba9f47
   qr_code_scanner_plus: 3bfe4deb7f28996a63a2a580819d49dae80d5ed3
   quill_native_bridge_ios: 2b01d585fcc73d0f5eed78c0bd244ee564b06f5a
-  SDWebImage: f29024626962457f3470184232766516dee8dfea
+  SDWebImage: f84b0feeb08d2d11e6a9b843cb06d75ebf5b8868
   SecureBiometricSwift: f8a373c07fb46c9ca1b2b53be51a485d2828a3d8
   sensors_plus: 7229095999f30740798f0eeef5cd120357a8f4f2
   Sentry: da60d980b197a46db0b35ea12cb8f39af48d8854

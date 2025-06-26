@@ -38,6 +38,7 @@ class PostFormModal extends HookConsumerWidget {
     this.videoPath,
     this.attachedMedia,
     this.mimeType,
+    this.videoThumbPath,
   });
 
   factory PostFormModal.createPost({
@@ -135,6 +136,7 @@ class PostFormModal extends HookConsumerWidget {
   factory PostFormModal.video({
     required String videoPath,
     required String mimeType,
+    String? videoThumbPath,
     Key? key,
     String? content,
   }) {
@@ -144,6 +146,7 @@ class PostFormModal extends HookConsumerWidget {
       videoPath: videoPath,
       mimeType: mimeType,
       content: content,
+      videoThumbPath: videoThumbPath,
     );
   }
 
@@ -153,6 +156,7 @@ class PostFormModal extends HookConsumerWidget {
   final EventReference? modifiedEvent;
   final String? content;
   final String? videoPath;
+  final String? videoThumbPath;
   final String? attachedMedia;
   final String? mimeType;
 
@@ -185,6 +189,7 @@ class PostFormModal extends HookConsumerWidget {
           ? MediaFile(
               path: videoPath!,
               mimeType: mimeType,
+              thumb: videoThumbPath,
             )
           : null,
     );

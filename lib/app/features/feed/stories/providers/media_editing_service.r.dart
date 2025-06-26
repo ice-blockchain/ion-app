@@ -16,6 +16,7 @@ MediaEditingService mediaEditingService(Ref ref) => MediaEditingService._(ref);
 
 class MediaEditingService {
   const MediaEditingService._(this._ref);
+
   final Ref _ref;
 
   Future<String?> edit(MediaFile file, {bool resumeCamera = true}) async {
@@ -24,7 +25,7 @@ class MediaEditingService {
 
     if (!isCameraPaused) await camera.pauseCamera();
     try {
-      return await _ref.read(editMediaProvider(file).future);
+      return (await _ref.read(editMediaProvider(file).future)).path;
     } finally {
       if (resumeCamera && !isCameraPaused) await camera.resumeCamera();
     }

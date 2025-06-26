@@ -218,6 +218,9 @@
 /* Mirror 2 effect name*/
 "com.banuba.editor.effect.name.mirror2" = "Mirror 2";
 
+/* Mosaic effect name*/
+"com.banuba.editor.effect.name.mosaic" = "Mosaic";
+
 /* DV Cam effect name */
 "com.banuba.editor.effect.name.dvcam" = "DV Cam";
 
@@ -229,6 +232,9 @@
 
 /* Mirror effect name */
 "com.banuba.editor.effect.name.mirror" = "Mirror";
+
+/* Reflect 4 effect name */
+"com.banuba.editor.effect.name.reflect4" = "Reflect 4";
 
 /* Lumiere */
 "com.banuba.editor.effect.name.lumiere" = "Lumiere";
@@ -266,14 +272,71 @@
 /* Warp back effect name */
 "com.banuba.editor.effect.name.warp-back" = "Warp back";
 
+/* Electrical Diagram effect name */
+"com.banuba.editor.effect.name.electrical-diagram" = "Electrical Diagram";
+
+/* Frames 2 effect name */
+"com.banuba.editor.effect.name.frames2" = "Frames 2";
+
+/* Frames 3 effect name */
+"com.banuba.editor.effect.name.frames3" = "Frames 3";
+
+/* Frames 4 effect name */
+"com.banuba.editor.effect.name.frames4" = "Frames 4";
+
+/* Frames 6 effect name */
+"com.banuba.editor.effect.name.frames6" = "Frames 6";
+
+/* Frames 9 effect name */
+"com.banuba.editor.effect.name.frames9" = "Frames 9";
+
+/* Three Frame WB effect name */
+"com.banuba.editor.effect.name.three-Frame-WB" = "Three Frame WB";
+
+/* Three Layer Mirror effect name */
+"com.banuba.editor.effect.name.three-layer-mirror" = "Three Layer Mirror";
+
+/* Pendulum effect name */
+"com.banuba.editor.effect.name.pendulum" = "Pendulum";
+
+/* Reverse 2 effect name */
+"com.banuba.editor.effect.name.revers2" = "Reverse 2";
+
+/* Coloring effect name */
+"com.banuba.editor.effect.name.coloring" = "Coloring";
+
+/* Random Monochrome effect name */
+"com.banuba.editor.effect.name.random-monochrome" = "Random Monochrome";
+
+/* Fireflies effect name */
+"com.banuba.editor.effect.name.fireflies" = "Fireflies";
+
+/* From Dark 4 effect name */
+"com.banuba.editor.effect.name.from-dark4" = "From Dark 4";
+
+/* Grey Spin 4 effect name */
+"com.banuba.editor.effect.name.grey-spin4" = "Grey Spin 4";
+
+/* Black White Flash effect name */
+"com.banuba.editor.effect.name.black-white-flash" = "Black White Flash";
+
+/* Mirror effect name */
+"com.banuba.editor.effect.name.mirror" = "Mirror";
+
+/* Film effect name */
+"com.banuba.editor.effect.name.film" = "Film";
+
 /* Open trimmer button name (for dradt) */
 "com.banuba.editor.openTrimButtonTitle" = "Adjust Clip";
 
 /* Captions button title */
 "com.banuba.editor.captions" = "Captions";
 
-/* Captions not available for multiple videos */
+/* Captions not available for multiple videos in the Video Editor V1*/
 "com.banuba.editor.captionsNotAvailableForMutipleVideos" = "Not available for multiple videos and photo";
+
+/* Captions not available for slideshow in the Video Editor V2*/
+"com.banuba.editor.captionsNotAvailableForPhotos" = "Not available for slideshow";
 
 // MARK: - Filter names
 
@@ -452,6 +515,7 @@
 "com.banuba.overlayEditor.captions.tryAgain" = "Try Again";
 "com.banuba.overlayEditor.captions.noInternetConnectionToast" = "The internet connection appears to be offline.";
 "com.banuba.captions.noAvailableForMiltipleVideosAndPhotoError" = "Not available for multiple videos and photo.";
+"com.banuba.captions.noAvailableForPhotoOnlyError" = "Sorry, automatic captions are currently not supported for slideshow or picture-in-picture videos.";
 
 "com.banuba.overlayEditor.captions.textStyle.basic" = "Basic";
 "com.banuba.overlayEditor.captions.textStyle.multicolor" = "Multicolor";
@@ -606,6 +670,9 @@
 /* Gallery empty selection message */
 "BanubaVideoEditor.Gallery.EmptySelectionMessage" = "Select at least 1 file";
 
+"BanubaVideoEditor.Gallery.selectAtLeastNumberOfMedia" = "Fill at least %d clips in a row. Reuse clips if needed.";
+"BanubaVideoEditor.Gallery.TemplateSegmentDurationFormat" = "%@s";
+
 // MARK: - Effect additional media picker text resource
 
 /* No media files found in gallery for adding to the effect */
@@ -671,6 +738,21 @@
 "com.banuba.BanubaVideoEditor.draft.discardChangesAction" = "Discard changes";
 "com.banuba.BanubaVideoEditor.draft.updateAction" = "Update draft";
 
+// MARK: - Templates
+"BanubaVideoEditor.VideoTemplates.templatesTitle" = "Templates";
+"BanubaVideoEditor.VideoTemplates.noInternetTitle" = "No internet connection";
+"BanubaVideoEditor.VideoTemplates.noInternetMessage" = "Please check your internet connection \nand try again";
+"BanubaVideoEditor.VideoTemplates.tryAgain" = "Try again";
+
+"BanubaVideoEditor.VideoTemplates.nextButtonText" = "Try this template";
+
+"BanubaVideoEditor.VideoTemplates.failedToLoadMessage" = "Failed to load. Try again.";
+"BanubaVideoEditor.VideoTemplates.unstableConnectionMessage" = "Internet is unstable. Some features may load slowly.";
+
+"BanubaVideoEditor.VideoTemplates.editor.lose.message" = "Video not exported. Continue editing or discard changes?";
+"BanubaVideoEditor.VideoTemplates.editor.update.disagree" = "Discard";
+"BanubaVideoEditor.VideoTemplates.editor.lose.agree" = "Continue";
+
 //MARK: - Additional buttons
 "com.banuba.recorder.color.title" = "Filters";
 "com.banuba.recorder.sticker.title" = "Stickers";
@@ -719,6 +801,23 @@
 "com.banuba.videoEditor.transition.scrollLeft" = "Scroll left";
 "com.banuba.videoEditor.transition.spinRight" = "Spin";
 "com.banuba.videoEditor.transition.fade" = "Fade";
+"com.banuba.videoEditor.transition.blink" = "Blink";
+"com.banuba.videoEditor.transition.stretching2" = "Stretching 2";
+"com.banuba.videoEditor.transition.infinityPlus" = "Infinity Plus";
+"com.banuba.videoEditor.transition.infinityMinus" = "Infinity Minus";
+"com.banuba.videoEditor.transition.retractionPlus" = "Retraction Plus";
+"com.banuba.videoEditor.transition.retractionMinus" = "Retraction Minus";
+"com.banuba.videoEditor.transition.stretchLeft" = "Stretch Left";
+"com.banuba.videoEditor.transition.stretchRight" = "Stretch Right";
+"com.banuba.videoEditor.transition.rotationPlus" = "Rotation Plus";
+"com.banuba.videoEditor.transition.rotationMinus" = "Rotation Minus";
+"com.banuba.videoEditor.transition.scrollMirroredUp" = "Scroll Mirrored Up";
+"com.banuba.videoEditor.transition.scrollMirroredRight" = "Scroll Mirrored Right";
+"com.banuba.videoEditor.transition.scrollMirroredLeft" = "Scroll Mirrored Left";
+"com.banuba.videoEditor.transition.scrollMirroredDown" = "Scroll Mirrored Down";
+"com.banuba.videoEditor.transition.fadingFromWhite" = "Fading From White";
+"com.banuba.videoEditor.transition.fromDark" = "From Dark";
+"com.banuba.videoEditor.transition.intoDark" = "Into Dark";
 
 /* Transition disabled alert message */
 "com.banuba.videoEditor.transition.disabledToastMessage" = "The clip must be longer than 0.5 sec to apply transition.";
@@ -829,7 +928,10 @@
 "com.banuba.newEditor.pixelation" = "Pixelation";
 "com.banuba.newEditor.voiceEffect" = "Effect";
 "com.banuba.newEditor.captions" = "Captions";
+"com.banuba.newEditor.transition" = "Transitions";
 "com.banuba.newEditor.secondsFormat" = "%@s";
+"com.banuba.newEditor.voiceRecording" = "Voice Recording";
+"com.banuba.newEditor.videoOrder" = "Video order";
 "com.banuba.newEditor.musicVolume" = "Volume";
 "com.banuba.newEditor.recordingEffectTitle" = "Recording...";
 "com.banuba.newEditor.voiceoverEffectTitle" = "Voiceover";
@@ -850,9 +952,15 @@
 "com.banuba.newEditor.normal" = "Normal";
 
 "com.banuba.newEditor.videoVolumeTitle" = "Video";
+"com.banuba.newEditor.customCrop" = "Custom";
+
+"com.banuba.newEditor.videoVolumeTitle" = "Original Video";
+"com.banuba.newEditor.pipVolumeTitle" = "Added Video";
 "com.banuba.newEditor.audioVolumeTitle" = "Audio";
+"com.banuba.newEditor.chooseMusicSection" = "Choose the section you want for your video";
 
 "com.banuba.newEditor.editCover" = "Edit Cover";
+"com.banuba.newEditor.selectFromGallery" = "Select from gallery";
 
 "com.banuba.recorder.disardVideoAlertMessage" = "Discard video?";
 "com.banuba.recorder.disardVideoAlertDiscardButton" = "Discard";
@@ -868,6 +976,7 @@
 "com.banuba.autocut.couldNotProcess" = "Couldn't process video";
 "com.banuba.autocut.somethingWentWrong" = "Something went wrong. Please try again.";
 "com.banuba.autocut.chooseTheme" = "Choose a theme";
+"com.banuba.autocut.next" = "Next";
 "com.banuba.autocut.alert.tryAgain.agree" = "Try again";
 "com.banuba.autocut.alert.tryAgain.disagree" = "Cancel";
 "com.banuba.autocut.alert.tryAgain.title" = "Something went wrong.\nTry again?";
@@ -879,6 +988,7 @@
 "com.banuba.autocut.added.sound" = "Added sound";
 "com.banuba.autocut.error.loadingTrackFailedMessage" = "Unable to load the song. Check your internet connection.";
 "BanubaVideoEditor.Gallery.Autocut" = "AI Clipping";
+"BanubaVideoEditor.Gallery.Autocut.ToolTip" = "Select your videos to turn them into social media-ready clips.";
 "BanubaVideoEditor.Gallery.Next" = "Next";
 "BanubaVideoEditor.Gallery.NextWithCount" = "Next (%d)";
 "BanubaVideoEditor.Gallery.TotalLengthUpTo" = "Total length should be up to %d sec";
