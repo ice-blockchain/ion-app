@@ -1,5 +1,9 @@
 // SPDX-License-Identifier: ice License 1.0
 
+import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:ion/app/features/auth/providers/auth_provider.c.dart';
+import 'package:ion/app/features/ion_connect/providers/ion_connect_notifier.c.dart';
+import 'package:ion/app/features/user/model/account_notifications_sets.c.dart';
 import 'package:ion/app/features/user/model/user_notifications_type.dart';
 import 'package:ion/app/features/user/providers/account_notifications_sets_provider.c.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
@@ -43,7 +47,7 @@ class UserSpecificNotifications extends _$UserSpecificNotifications {
 
       if (shouldDisableAll) {
         final removeFutures = allTypes.map(
-          (type) => removeUserFromNotificationSet(ref, userPubkey, type),
+          (type) => _removeUserFromNotificationSet(userPubkey, type),
         );
         await Future.wait(removeFutures);
 
@@ -51,9 +55,9 @@ class UserSpecificNotifications extends _$UserSpecificNotifications {
       } else {
         final updateFutures = allTypes.map((type) async {
           if (selectedTypes.contains(type)) {
-            await addUserToNotificationSet(ref, userPubkey, type);
+            await _addUserToNotificationSet(userPubkey, type);
           } else {
-            await removeUserFromNotificationSet(ref, userPubkey, type);
+            await _removeUserFromNotificationSet(userPubkey, type);
           }
         });
         await Future.wait(updateFutures);
@@ -64,5 +68,76 @@ class UserSpecificNotifications extends _$UserSpecificNotifications {
       state = AsyncValue.error(error, stackTrace);
       rethrow;
     }
+  }
+
+  Future<void> _addUserToNotificationSet(
+    String userPubkey,
+    UserNotificationsType notificationType,
+  ) async {
+    final currentPubkey = ref.read(currentPubkeySelectorProvider);
+    if (currentPubkey == null || notificationType == UserNotificationsType.none) {
+      return;
+    }
+
+    final setType = _getSetTypeForNotificationType(notificationType);
+    if (setType == null) {
+      return;
+    }
+
+    final currentUsers = await ref.read(usersForNotificationTypeProvider(notificationType).future);
+
+    final updatedUsers =
+        currentUsers.contains(userPubkey) ? currentUsers : [...currentUsers, userPubkey];
+
+    await _updateNotificationSet(ref, currentPubkey, setType, updatedUsers);
+
+    ref.invalidate(usersForNotificationTypeProvider(notificationType));
+  }
+
+  Future<void> _removeUserFromNotificationSet(
+    String userPubkey,
+    UserNotificationsType notificationType,
+  ) async {
+    final currentPubkey = ref.read(currentPubkeySelectorProvider);
+    if (currentPubkey == null || notificationType == UserNotificationsType.none) {
+      return;
+    }
+
+    final setType = _getSetTypeForNotificationType(notificationType);
+    if (setType == null) {
+      return;
+    }
+
+    final currentUsers = await ref.read(usersForNotificationTypeProvider(notificationType).future);
+
+    final updatedUsers = currentUsers.where((pubkey) => pubkey != userPubkey).toList();
+
+    await _updateNotificationSet(ref, currentPubkey, setType, updatedUsers);
+
+    ref.invalidate(usersForNotificationTypeProvider(notificationType));
+  }
+
+  Future<void> _updateNotificationSet(
+    Ref ref,
+    String currentPubkey,
+    String setType,
+    List<String> userPubkeys,
+  ) async {
+    final ionConnectNotifier = ref.read(ionConnectNotifierProvider.notifier);
+
+    final setData = AccountNotificationSetData(
+      type: AccountNotificationSetType.values.firstWhere(
+        (t) => t.dTagName == setType,
+        orElse: () => AccountNotificationSetType.posts,
+      ),
+      userPubkeys: userPubkeys,
+    );
+
+    await ionConnectNotifier.sendEntityData(setData);
+  }
+
+  String? _getSetTypeForNotificationType(UserNotificationsType notificationType) {
+    final setType = AccountNotificationSetType.fromUserNotificationType(notificationType);
+    return setType?.dTagName;
   }
 }
