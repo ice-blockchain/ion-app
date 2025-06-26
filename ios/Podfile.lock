@@ -9,6 +9,12 @@ PODS:
     - GoogleUtilities/Environment (~> 8.0)
     - GoogleUtilities/UserDefaults (~> 8.0)
     - PromisesObjC (~> 2.4)
+  - appsflyer_sdk (6.16.2):
+    - AppsFlyerFramework (= 6.16.2)
+    - Flutter
+  - AppsFlyerFramework (6.16.2):
+    - AppsFlyerFramework/Main (= 6.16.2)
+  - AppsFlyerFramework/Main (6.16.2)
   - audio_waveforms (0.0.1):
     - Flutter
   - BanubaARCloudSDK (1.43.0):
@@ -390,6 +396,8 @@ PODS:
     - Flutter
 
 DEPENDENCIES:
+  - appsflyer_sdk (from `.symlinks/plugins/appsflyer_sdk/ios`)
+  - AppsFlyerFramework
   - audio_waveforms (from `.symlinks/plugins/audio_waveforms/ios`)
   - BanubaARCloudSDK (= 1.43.0)
   - BanubaAudioBrowserSDK (= 1.43.0)
@@ -456,6 +464,7 @@ SPEC REPOS:
   https://github.com/CocoaPods/Specs.git:
     - AppAuth
     - AppCheckCore
+    - AppsFlyerFramework
     - DKImagePickerController
     - DKPhotoGallery
     - Firebase
@@ -494,6 +503,8 @@ SPEC REPOS:
     - BNBSkin
 
 EXTERNAL SOURCES:
+  appsflyer_sdk:
+    :path: ".symlinks/plugins/appsflyer_sdk/ios"
   audio_waveforms:
     :path: ".symlinks/plugins/audio_waveforms/ios"
   bdk_flutter:
@@ -582,6 +593,8 @@ EXTERNAL SOURCES:
 SPEC CHECKSUMS:
   AppAuth: d4f13a8fe0baf391b2108511793e4b479691fb73
   AppCheckCore: cc8fd0a3a230ddd401f326489c99990b013f0c4f
+  appsflyer_sdk: ebe94dc3f00b07bdd001251dbc87879bda3c494a
+  AppsFlyerFramework: fe5303bffcdfd941d5f570c2d21eaaea982e7bdc
   audio_waveforms: a6dde7fe7c0ea05f06ffbdb0f7c1b2b2ba6cedcf
   BanubaARCloudSDK: e82c8eb19757b1a8d83167a4985a7eb1f00f80cc
   BanubaAudioBrowserSDK: f54c8c98ce489c1d5df8f1a117dddebceab2b6e2
@@ -670,6 +683,6 @@ SPEC CHECKSUMS:
   video_player_avfoundation: 2cef49524dd1f16c5300b9cd6efd9611ce03639b
   wakelock_plus: e29112ab3ef0b318e58cfa5c32326458be66b556
 
-PODFILE CHECKSUM: 6c2567250f7ee2651e25015bb011980f1533c5fa
+PODFILE CHECKSUM: 85595aa132a3b2515307ae95e0669dda99be902d
 
 COCOAPODS: 1.16.2

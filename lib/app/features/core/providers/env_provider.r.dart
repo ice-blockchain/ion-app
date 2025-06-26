@@ -33,6 +33,10 @@ enum EnvVariable {
   CHECKSUM,
   FEED_MIN_VISIBLE_ARTICLE_CATEGORIES_NUMBER,
   ACCOUNT_NOTIFICATION_SETTINGS_SYNC_INTERVAL_MINUTES,
+  AF_IOS_APP_ID,
+  AF_ANDROID_APP_ID,
+  AF_ONE_LINK_TEMPLATE_ID,
+  AF_DEV_KEY,
 }
 
 @Riverpod(keepAlive: true)
@@ -97,6 +101,11 @@ class Env extends _$Env {
             defaultValue: 60,
           ),
         ) as T,
+      EnvVariable.AF_IOS_APP_ID => const String.fromEnvironment('AF_IOS_APP_ID') as T,
+      EnvVariable.AF_ANDROID_APP_ID => const String.fromEnvironment('AF_ANDROID_APP_ID') as T,
+      EnvVariable.AF_ONE_LINK_TEMPLATE_ID =>
+        const String.fromEnvironment('AF_ONE_LINK_TEMPLATE_ID') as T,
+      EnvVariable.AF_DEV_KEY => const String.fromEnvironment('AF_DEV_KEY') as T,
     };
   }
 }
