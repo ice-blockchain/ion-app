@@ -164,7 +164,7 @@ class SelectNetworkWalletRoute extends BaseRouteData with _$SelectNetworkWalletR
         );
 }
 
-class ChangeNetworkShareWalletRoute extends BaseRouteData   with _$ChangeNetworkShareWalletRoute {
+class ChangeNetworkShareWalletRoute extends BaseRouteData with _$ChangeNetworkShareWalletRoute {
   ChangeNetworkShareWalletRoute()
       : super(
           child: const NetworkListView(
@@ -267,7 +267,8 @@ class NftSelectContactRoute extends BaseRouteData with _$NftSelectContactRoute {
   final String networkId;
 }
 
-class SendCoinsConfirmationWalletRoute extends BaseRouteData  with _$SendCoinsConfirmationWalletRoute {
+class SendCoinsConfirmationWalletRoute extends BaseRouteData
+    with _$SendCoinsConfirmationWalletRoute {
   SendCoinsConfirmationWalletRoute()
       : super(
           child: ConfirmationSheet(
@@ -278,7 +279,8 @@ class SendCoinsConfirmationWalletRoute extends BaseRouteData  with _$SendCoinsCo
         );
 }
 
-class CoinTransactionResultWalletRoute extends BaseRouteData with _$CoinTransactionResultWalletRoute {
+class CoinTransactionResultWalletRoute extends BaseRouteData
+    with _$CoinTransactionResultWalletRoute {
   CoinTransactionResultWalletRoute()
       : super(
           child: TransactionResultSheet(
@@ -298,7 +300,7 @@ class NftTransactionResultRoute extends BaseRouteData with _$NftTransactionResul
         );
 }
 
-class CoinsDetailsRoute extends BaseRouteData   with _$CoinsDetailsRoute {
+class CoinsDetailsRoute extends BaseRouteData with _$CoinsDetailsRoute {
   CoinsDetailsRoute({required this.symbolGroup})
       : super(
           child: CoinDetailsPage(symbolGroup: symbolGroup),
@@ -401,7 +403,8 @@ class AddressNotFoundRoute extends BaseRouteData with _$AddressNotFoundRoute {
         );
 }
 
-class AddressNotFoundReceiveCoinsRoute extends BaseRouteData with _$AddressNotFoundReceiveCoinsRoute {
+class AddressNotFoundReceiveCoinsRoute extends BaseRouteData
+    with _$AddressNotFoundReceiveCoinsRoute {
   AddressNotFoundReceiveCoinsRoute()
       : super(
           child: AddressNotFoundWalletModal(

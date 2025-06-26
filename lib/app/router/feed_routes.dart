@@ -132,7 +132,7 @@ class ArticlesFromAuthorRoute extends BaseRouteData with _$ArticlesFromAuthorRou
   final String pubkey;
 }
 
-class PostDetailsRoute extends BaseRouteData  with _$PostDetailsRoute {
+class PostDetailsRoute extends BaseRouteData with _$PostDetailsRoute {
   PostDetailsRoute({required this.eventReference})
       : super(
           child: PostDetailsPage(
@@ -181,7 +181,8 @@ class FeedAdvancedSearchRoute extends BaseRouteData with _$FeedAdvancedSearchRou
   final String query;
 }
 
-class FeedVisibleArticleCategoriesRoute extends BaseRouteData with _$FeedVisibleArticleCategoriesRoute {
+class FeedVisibleArticleCategoriesRoute extends BaseRouteData
+    with _$FeedVisibleArticleCategoriesRoute {
   FeedVisibleArticleCategoriesRoute()
       : super(
           child: const FeedVisibleArticleCategoriesModal(),

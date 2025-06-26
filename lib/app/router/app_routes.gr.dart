@@ -294,7 +294,7 @@ class SelfProfileRoute extends BaseRouteData with _$SelfProfileRoute {
 }
 
 @TypedGoRoute<ErrorRoute>(path: '/error')
-class ErrorRoute extends BaseRouteData  with _$ErrorRoute {
+class ErrorRoute extends BaseRouteData with _$ErrorRoute {
   ErrorRoute({this.message})
       : super(
           child: ErrorPage(message: message),

@@ -170,7 +170,8 @@ class ChatAddPollModalRoute extends BaseRouteData with _$ChatAddPollModalRoute {
         );
 }
 
-class AddParticipantsToGroupModalRoute extends BaseRouteData with _$AddParticipantsToGroupModalRoute {
+class AddParticipantsToGroupModalRoute extends BaseRouteData
+    with _$AddParticipantsToGroupModalRoute {
   AddParticipantsToGroupModalRoute()
       : super(
           child: const AddGroupParticipantsModal(),
@@ -340,7 +341,8 @@ class CoinTransactionDetailsChatRoute extends BaseRouteData with _$CoinTransacti
         );
 }
 
-class ExploreTransactionDetailsChatRoute extends BaseRouteData with _$ExploreTransactionDetailsChatRoute {
+class ExploreTransactionDetailsChatRoute extends BaseRouteData
+    with _$ExploreTransactionDetailsChatRoute {
   ExploreTransactionDetailsChatRoute({required this.url})
       : super(
           child: ExploreTransactionDetailsModal(url: url),

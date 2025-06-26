@@ -127,7 +127,8 @@ class AuthenticatorSetupOptionsRoute extends BaseRouteData with _$AuthenticatorS
         );
 }
 
-class AuthenticatorSetupInstructionsRoute extends BaseRouteData  with _$AuthenticatorSetupInstructionsRoute {
+class AuthenticatorSetupInstructionsRoute extends BaseRouteData
+    with _$AuthenticatorSetupInstructionsRoute {
   AuthenticatorSetupInstructionsRoute()
       : super(
           child: const AuthenticatorSetupInstructionsPage(),
@@ -135,7 +136,8 @@ class AuthenticatorSetupInstructionsRoute extends BaseRouteData  with _$Authenti
         );
 }
 
-class AuthenticatorSetupCodeConfirmRoute extends BaseRouteData with _$AuthenticatorSetupCodeConfirmRoute {
+class AuthenticatorSetupCodeConfirmRoute extends BaseRouteData
+    with _$AuthenticatorSetupCodeConfirmRoute {
   AuthenticatorSetupCodeConfirmRoute()
       : super(
           child: const AuthenticatorSetupCodeConfirmPage(),
