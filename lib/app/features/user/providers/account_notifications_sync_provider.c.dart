@@ -18,6 +18,7 @@ import 'package:ion/app/features/feed/notifications/data/repository/likes_reposi
 import 'package:ion/app/features/ion_connect/ion_connect.dart';
 import 'package:ion/app/features/ion_connect/model/action_source.c.dart';
 import 'package:ion/app/features/ion_connect/model/ion_connect_entity.dart';
+import 'package:ion/app/features/ion_connect/model/search_extension.dart';
 import 'package:ion/app/features/ion_connect/providers/event_backfill_service.c.dart';
 import 'package:ion/app/features/user/data/database/account_notifications_database.c.dart';
 import 'package:ion/app/features/user/model/user_notifications_type.dart';
@@ -305,7 +306,7 @@ class AccountNotificationsSync extends _$AccountNotificationsSync {
             ModifiablePostEntity.kind,
             GenericRepostEntity.modifiablePostRepostKind,
           ],
-          search: 'videos:true',
+          search: VideosSearchExtension(contain: true).toString(),
           authors: users,
           limit: 100,
         ),
@@ -316,7 +317,7 @@ class AccountNotificationsSync extends _$AccountNotificationsSync {
             ModifiablePostEntity.kind,
             GenericRepostEntity.modifiablePostRepostKind,
           ],
-          search: 'expiration:true',
+          search: ExpirationSearchExtension(expiration: true).toString(),
           authors: users,
           limit: 100,
         ),
@@ -335,7 +336,10 @@ class AccountNotificationsSync extends _$AccountNotificationsSync {
             ModifiablePostEntity.kind,
             GenericRepostEntity.modifiablePostRepostKind,
           ],
-          search: 'videos:false expiration:false',
+          search: SearchExtensions([
+            ExpirationSearchExtension(expiration: false),
+            VideosSearchExtension(contain: false),
+          ]).toString(),
           authors: users,
           limit: 100,
         ),
