@@ -59,13 +59,6 @@ class FeedUserInterestPicker {
   Map<String, FeedInterestsCategory> _getAllowedCategories([List<String>? allowedCategories]) {
     if (allowedCategories == null) return _interests.categories;
 
-    final allowedCategoriesSet = allowedCategories.toSet();
-    final interestedCategoriesSet = _interests.categories.keys.toSet();
-    final intersection = allowedCategoriesSet.intersection(interestedCategoriesSet);
-    if (intersection.isEmpty) {
-      return _interests.categories;
-    }
-
     final entries =
         _interests.categories.entries.where((entry) => allowedCategories.contains(entry.key));
 

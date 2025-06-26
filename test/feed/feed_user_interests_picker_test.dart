@@ -93,7 +93,7 @@ void main() {
       expect(result, equals('music'));
     });
 
-    test('rolls from all categories if no allowed provided', () {
+    test('rolls null if no allowed provided', () {
       final picker = FeedUserInterestPicker(
         config: config.copyWith(
           notInterestedCategoryChance: 1,
@@ -101,8 +101,8 @@ void main() {
         interests: interests,
         random: random,
       );
-      final result = picker.roll([]);
-      expect(result, equals('music'));
+      final result = picker.roll(['foo']);
+      expect(result, isNull);
     });
 
     test(
