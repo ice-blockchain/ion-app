@@ -23,6 +23,7 @@ import 'package:ion/app/features/user/providers/user_metadata_provider.r.dart';
 import 'package:ion/app/features/user_profile/database/dao/user_badge_info_dao.m.dart';
 import 'package:ion/app/features/user_profile/database/dao/user_delegation_dao.m.dart';
 import 'package:ion/app/features/user_profile/database/dao/user_metadata_dao.m.dart';
+import 'package:ion/app/services/logger/logger.dart';
 import 'package:ion/app/services/storage/local_storage.r.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
@@ -108,9 +109,13 @@ class UserProfileSync extends _$UserProfileSync {
     if (masterPubkeys.isEmpty) return usersMetadata;
 
     for (final masterPubkey in masterPubkeys) {
-      final metadata = await ref.read(userMetadataProvider(masterPubkey, cache: false).future);
-      if (metadata != null) {
-        usersMetadata.add(metadata);
+      try {
+        final metadata = await ref.read(userMetadataProvider(masterPubkey, cache: false).future);
+        if (metadata != null) {
+          usersMetadata.add(metadata);
+        }
+      } catch (e) {
+        Logger.error('Failed to fetch user metadata for master pubkey: $masterPubkey');
       }
     }
 
@@ -126,9 +131,18 @@ class UserProfileSync extends _$UserProfileSync {
     if (masterPubkeys.isEmpty) return usersDelegation;
 
     for (final masterPubkey in masterPubkeys) {
-      final delegation = await ref.read(userDelegationProvider(masterPubkey, cache: false).future);
-      if (delegation != null) {
-        usersDelegation.add(delegation);
+      try {
+        final index = masterPubkeys.toList().indexOf(masterPubkey);
+        if (index == 1) {
+          throw Exception();
+        }
+        final delegation =
+            await ref.read(userDelegationProvider(masterPubkey, cache: false).future);
+        if (delegation != null) {
+          usersDelegation.add(delegation);
+        }
+      } catch (e) {
+        Logger.error('Failed to fetch user delegation for master pubkey: $masterPubkey');
       }
     }
 
@@ -144,19 +158,23 @@ class UserProfileSync extends _$UserProfileSync {
     if (masterPubkeys.isEmpty) return profileBadges;
 
     for (final masterPubkey in masterPubkeys) {
-      final profileBadge = await ref.watch(
-        ionConnectNetworkEntityProvider(
-          eventReference: ReplaceableEventReference(
-            pubkey: masterPubkey,
-            kind: ProfileBadgesEntity.kind,
-            dTag: ProfileBadgesEntity.dTag,
-          ),
-          search: ProfileBadgesSearchExtension().toString(),
-        ).future,
-      ) as ProfileBadgesEntity?;
+      try {
+        final profileBadge = await ref.watch(
+          ionConnectNetworkEntityProvider(
+            eventReference: ReplaceableEventReference(
+              pubkey: masterPubkey,
+              kind: ProfileBadgesEntity.kind,
+              dTag: ProfileBadgesEntity.dTag,
+            ),
+            search: ProfileBadgesSearchExtension().toString(),
+          ).future,
+        ) as ProfileBadgesEntity?;
 
-      if (profileBadge != null) {
-        profileBadges.add(profileBadge);
+        if (profileBadge != null) {
+          profileBadges.add(profileBadge);
+        }
+      } catch (e) {
+        Logger.error('Failed to fetch profile badges for master pubkey: $masterPubkey');
       }
     }
 
@@ -183,38 +201,50 @@ class UserProfileSync extends _$UserProfileSync {
             .startsWith(BadgeDefinitionEntity.usernameProofOfOwnershipBadgeDTag),
       );
       for (final servicePubkey in servicePubkeys) {
-        if (verifiedEntry != null) {
-          final verifiedBadgeDefinition = await ref.watch(
-            ionConnectNetworkEntityProvider(
-              eventReference: ReplaceableEventReference(
-                pubkey: servicePubkey,
-                kind: BadgeDefinitionEntity.kind,
-                dTag: verifiedEntry.definitionRef.dTag,
-              ),
-              actionSource: const ActionSourceCurrentUser(),
-            ).future,
-          ) as BadgeDefinitionEntity?;
+        try {
+          if (verifiedEntry != null) {
+            final verifiedBadgeDefinition = await ref.watch(
+              ionConnectNetworkEntityProvider(
+                eventReference: ReplaceableEventReference(
+                  pubkey: servicePubkey,
+                  kind: BadgeDefinitionEntity.kind,
+                  dTag: verifiedEntry.definitionRef.dTag,
+                ),
+                actionSource: const ActionSourceCurrentUser(),
+              ).future,
+            ) as BadgeDefinitionEntity?;
 
-          if (verifiedBadgeDefinition != null) {
-            badgeDefinitions.add(verifiedBadgeDefinition);
+            if (verifiedBadgeDefinition != null) {
+              badgeDefinitions.add(verifiedBadgeDefinition);
+            }
           }
+        } catch (e) {
+          Logger.error(
+            'Failed to fetch verified badge definition for service pubkey: $servicePubkey',
+          );
         }
 
-        if (proofOfNameEntry != null) {
-          final proofOfNameBadgeDefinition = await ref.watch(
-            ionConnectNetworkEntityProvider(
-              eventReference: ReplaceableEventReference(
-                kind: BadgeDefinitionEntity.kind,
-                dTag: proofOfNameEntry.definitionRef.dTag,
-                pubkey: proofOfNameEntry.definitionRef.pubkey,
-              ),
-              actionSource: const ActionSourceCurrentUser(),
-            ).future,
-          ) as BadgeDefinitionEntity?;
+        try {
+          if (proofOfNameEntry != null) {
+            final proofOfNameBadgeDefinition = await ref.watch(
+              ionConnectNetworkEntityProvider(
+                eventReference: ReplaceableEventReference(
+                  kind: BadgeDefinitionEntity.kind,
+                  dTag: proofOfNameEntry.definitionRef.dTag,
+                  pubkey: proofOfNameEntry.definitionRef.pubkey,
+                ),
+                actionSource: const ActionSourceCurrentUser(),
+              ).future,
+            ) as BadgeDefinitionEntity?;
 
-          if (proofOfNameBadgeDefinition != null) {
-            badgeDefinitions.add(proofOfNameBadgeDefinition);
+            if (proofOfNameBadgeDefinition != null) {
+              badgeDefinitions.add(proofOfNameBadgeDefinition);
+            }
           }
+        } catch (e) {
+          Logger.error(
+            'Failed to fetch proof of name badge definition for service pubkey: $servicePubkey',
+          );
         }
       }
     }
@@ -243,36 +273,48 @@ class UserProfileSync extends _$UserProfileSync {
       );
 
       for (final servicePubkey in servicePubkeys) {
-        if (verifiedEntry != null) {
-          final verifiedBadgeAward = await ref.watch(
-            ionConnectNetworkEntityProvider(
-              eventReference: ImmutableEventReference(
-                pubkey: servicePubkey,
-                eventId: verifiedEntry.awardId,
-              ),
-              actionSource: const ActionSourceCurrentUser(),
-            ).future,
-          ) as BadgeAwardEntity?;
+        try {
+          if (verifiedEntry != null) {
+            final verifiedBadgeAward = await ref.watch(
+              ionConnectNetworkEntityProvider(
+                eventReference: ImmutableEventReference(
+                  pubkey: servicePubkey,
+                  eventId: verifiedEntry.awardId,
+                ),
+                actionSource: const ActionSourceCurrentUser(),
+              ).future,
+            ) as BadgeAwardEntity?;
 
-          if (verifiedBadgeAward != null) {
-            badgeAwards.add(verifiedBadgeAward);
+            if (verifiedBadgeAward != null) {
+              badgeAwards.add(verifiedBadgeAward);
+            }
           }
+        } catch (e) {
+          Logger.error(
+            'Failed to fetch verified badge award for service pubkey: $servicePubkey',
+          );
         }
 
-        if (proofOfNameEntry != null) {
-          final proofOfNameBadgeAward = await ref.watch(
-            ionConnectNetworkEntityProvider(
-              eventReference: ImmutableEventReference(
-                pubkey: servicePubkey,
-                eventId: proofOfNameEntry.awardId,
-              ),
-              actionSource: const ActionSourceCurrentUser(),
-            ).future,
-          ) as BadgeAwardEntity?;
+        try {
+          if (proofOfNameEntry != null) {
+            final proofOfNameBadgeAward = await ref.watch(
+              ionConnectNetworkEntityProvider(
+                eventReference: ImmutableEventReference(
+                  pubkey: servicePubkey,
+                  eventId: proofOfNameEntry.awardId,
+                ),
+                actionSource: const ActionSourceCurrentUser(),
+              ).future,
+            ) as BadgeAwardEntity?;
 
-          if (proofOfNameBadgeAward != null) {
-            badgeAwards.add(proofOfNameBadgeAward);
+            if (proofOfNameBadgeAward != null) {
+              badgeAwards.add(proofOfNameBadgeAward);
+            }
           }
+        } catch (e) {
+          Logger.error(
+            'Failed to fetch proof of name badge award for service pubkey: $servicePubkey',
+          );
         }
       }
     }
