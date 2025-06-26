@@ -1,8 +1,8 @@
 // SPDX-License-Identifier: ice License 1.0
 
+import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_keyboard_visibility/flutter_keyboard_visibility.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
@@ -36,19 +36,6 @@ class StoryViewerPage extends HookConsumerWidget {
     final storyViewerState = ref
         .watch(storyViewingControllerProvider(pubkey, showOnlySelectedUser: showOnlySelectedUser));
 
-    useEffect(
-      () {
-        return () {
-          if (context.mounted) {
-            ref.invalidate(
-              storyViewingControllerProvider(pubkey, showOnlySelectedUser: showOnlySelectedUser),
-            );
-          }
-        };
-      },
-      [],
-    );
-
     useOnInit(
       () {
         if (storyViewerState.userStories.isEmpty && context.mounted && context.canPop()) {
@@ -60,13 +47,16 @@ class StoryViewerPage extends HookConsumerWidget {
 
     useOnInit(
       () async {
-        if (initialStoryReference != null) {
+        final viewedStories = ref.read(viewedStoriesControllerProvider);
+        final firstNotViewedStory = storyViewerState.currentStoriesList
+            .firstWhereOrNull((story) => !viewedStories.contains(story.id));
+        if (initialStoryReference != null || firstNotViewedStory != null) {
           ref
               .watch(
                 storyViewingControllerProvider(pubkey, showOnlySelectedUser: showOnlySelectedUser)
                     .notifier,
               )
-              .moveToStory(initialStoryReference!);
+              .moveToStory(initialStoryReference ?? firstNotViewedStory!.toEventReference());
         }
       },
       [storyViewerState.userStories.isEmpty],

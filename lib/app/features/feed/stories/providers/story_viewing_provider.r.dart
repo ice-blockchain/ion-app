@@ -16,7 +16,7 @@ part 'story_viewing_provider.r.g.dart';
 ///
 /// This controller maintains the state of currently viewed stories and provides methods
 /// to navigate between stories and users.
-@Riverpod(keepAlive: true)
+@riverpod
 class StoryViewingController extends _$StoryViewingController {
   @override
   StoryViewerState build(String pubkey, {bool showOnlySelectedUser = false}) {
