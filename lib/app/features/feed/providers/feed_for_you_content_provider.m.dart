@@ -16,6 +16,7 @@ import 'package:ion/app/features/feed/providers/feed_following_content_provider.
 import 'package:ion/app/features/feed/providers/feed_request_queue.r.dart';
 import 'package:ion/app/features/feed/providers/feed_selected_article_categories_provider.r.dart';
 import 'package:ion/app/features/feed/providers/feed_user_interest_picker_provider.r.dart';
+import 'package:ion/app/features/feed/providers/feed_user_interests_provider.r.dart';
 import 'package:ion/app/features/ion_connect/ion_connect.dart';
 import 'package:ion/app/features/ion_connect/model/action_source.f.dart';
 import 'package:ion/app/features/ion_connect/model/ion_connect_entity.dart';
@@ -220,7 +221,7 @@ class FeedForYouContent extends _$FeedForYouContent implements PagedNotifier {
 
     final dataSourceRelays = await _getDataSourceRelays();
 
-    final interests = _getInterestsForModifier(modifier);
+    final interests = await _getInterestsForModifier(modifier);
 
     final relaysPagination = Map.fromEntries(
       dataSourceRelays.map(
@@ -325,26 +326,22 @@ class FeedForYouContent extends _$FeedForYouContent implements PagedNotifier {
     required String relayUrl,
     required FeedModifier modifier,
   }) async {
-    // Use the same logic as _getInterestsForModifier to ensure consistency
-    final configuredInterests = _getInterestsForModifier(modifier);
-
-    if (configuredInterests.length == 1) {
-      // If only one interest is configured (usually _exploreInterest), return it directly
-      return configuredInterests.first;
-    }
-
-    // For multiple interests, use the picker to select from available ones with remaining pages
-    final interestsPicker = await ref.read(feedUserInterestPickerProvider(feedType).future);
-
     final relayInterestsPagination =
         state.modifiersPagination[modifier]![relayUrl]!.interestsPagination;
 
+    // Pick from interests that still have more pages
     final availableInterests = relayInterestsPagination.entries
         .where((entry) => entry.value.hasMore)
         .map((entry) => entry.key)
         .toList();
 
-    // Pick from interests that still have more pages
+    if (availableInterests.length == 1) {
+      return availableInterests.first;
+    }
+
+    // For multiple interests, use the picker to select from available ones
+    final interestsPicker = await ref.read(feedUserInterestPickerProvider(feedType).future);
+
     return interestsPicker.roll(availableInterests)!;
   }
 
@@ -492,18 +489,21 @@ class FeedForYouContent extends _$FeedForYouContent implements PagedNotifier {
     );
   }
 
-  /// Determines which interests should be used for the given modifier.
-  /// This is the single source of truth for interest selection logic.
-  ///
-  /// Rules:
-  /// - For FeedModifier.explore: always use [_exploreInterest]
-  /// - For other modifiers: use selectedArticleCategories if not empty,
-  ///   otherwise fall back to [_exploreInterest]
-  List<String> _getInterestsForModifier(FeedModifier modifier) {
-    final selectedArticleCategories = ref.read(feedSelectedArticleCategoriesProvider);
-    return modifier == FeedModifier.explore || selectedArticleCategories.isEmpty
-        ? [_exploreInterest]
-        : selectedArticleCategories.toList();
+  /// Determines which interests should be used for the given modifier and feed type.
+  Future<List<String>> _getInterestsForModifier(FeedModifier modifier) async {
+    if (modifier == FeedModifier.explore) {
+      return [_exploreInterest];
+    }
+
+    if (feedType == FeedType.article) {
+      final selectedArticleCategories = ref.read(feedSelectedArticleCategoriesProvider);
+      return selectedArticleCategories.isEmpty
+          ? [_exploreInterest]
+          : selectedArticleCategories.toList();
+    }
+
+    final userInterests = await ref.read(feedUserInterestsProvider(feedType).future);
+    return userInterests.categories.keys.toList();
   }
 
   static final String _exploreInterest = '_${FeedModifier.explore}';
