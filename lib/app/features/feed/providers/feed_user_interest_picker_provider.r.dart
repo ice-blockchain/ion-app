@@ -39,16 +39,10 @@ class FeedUserInterestPicker {
     if (_roll(_config.notInterestedCategoryChance)) {
       // if rolled the scenario where we have to pick a parent category
       // the user is not interested in, we pick an entirely random category
-      return _getRandomInterest(categories);
+      return _getRandomItem(categories.keys);
     }
 
-    final interestedCategory = _getRandomInterestedByWeight(categories);
-    return interestedCategory?.key ?? _getRandomInterest(categories);
-  }
-
-  String? _getRandomInterest(Map<String, FeedInterestsCategory> categories) {
-    final randomCategory = _getRandomItem(categories.entries);
-    return randomCategory?.key;
+    return _getRandomInterestedByWeight(categories)?.key;
   }
 
   bool _roll(double chance) => chance > _random.nextDouble();
