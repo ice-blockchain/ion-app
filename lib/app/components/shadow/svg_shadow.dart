@@ -22,37 +22,31 @@ class SvgShadow extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    if (color.a == 0 || opacity == 0) {
+      return child;
+    }
+
+    final shadowColor = color.withValues(alpha: opacity);
+
     return Stack(
       children: [
-        if (color.a != 0)
-          Transform.translate(
-            offset: offset ?? Offset(0, 1.5.s),
-            child: ImageFiltered(
-              imageFilter: ImageFilter.blur(
-                sigmaY: sigma ?? 1.5,
-                sigmaX: sigma ?? 1.5,
-                tileMode: TileMode.decal,
+        Transform.translate(
+          offset: offset ?? Offset(0, 1.5.s),
+          child: ImageFiltered(
+            imageFilter: ImageFilter.blur(
+              sigmaY: sigma ?? 1.5,
+              sigmaX: sigma ?? 1.5,
+              tileMode: TileMode.decal,
+            ),
+            child: ColorFiltered(
+              colorFilter: ColorFilter.mode(
+                shadowColor,
+                BlendMode.srcIn,
               ),
-              child: Container(
-                decoration: BoxDecoration(
-                  border: Border.all(
-                    color: Colors.transparent,
-                    width: 0,
-                  ),
-                ),
-                child: Opacity(
-                  opacity: opacity,
-                  child: ColorFiltered(
-                    colorFilter: ColorFilter.mode(
-                      color,
-                      BlendMode.srcATop,
-                    ),
-                    child: child,
-                  ),
-                ),
-              ),
+              child: child,
             ),
           ),
+        ),
         child,
       ],
     );

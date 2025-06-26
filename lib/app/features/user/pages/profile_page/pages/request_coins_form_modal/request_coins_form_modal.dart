@@ -140,13 +140,7 @@ class RequestCoinsFormModal extends HookConsumerWidget {
                         mainAxisSize: MainAxisSize.max,
                         trailingIcon: isLoading
                             ? const IONLoadingIndicator()
-                            : ColorFiltered(
-                                colorFilter: ColorFilter.mode(
-                                  colors.primaryBackground,
-                                  BlendMode.srcIn,
-                                ),
-                                child: Assets.svg.iconButtonNext.icon(),
-                              ),
+                            : Assets.svg.iconButtonNext.icon(color: colors.primaryBackground),
                         onPressed: () {
                           if (formKey.currentState!.validate()) {
                             ref.read(requestCoinsSubmitNotifierProvider.notifier).submitRequest();

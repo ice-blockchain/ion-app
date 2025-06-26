@@ -105,13 +105,7 @@ class SendNftForm extends HookConsumerWidget {
                       mainAxisSize: MainAxisSize.max,
                       disabled: !isContinueButtonEnabled,
                       type: isContinueButtonEnabled ? ButtonType.primary : ButtonType.disabled,
-                      trailingIcon: ColorFiltered(
-                        colorFilter: ColorFilter.mode(
-                          colors.primaryBackground,
-                          BlendMode.srcIn,
-                        ),
-                        child: Assets.svg.iconButtonNext.icon(),
-                      ),
+                      trailingIcon: Assets.svg.iconButtonNext.icon(color: colors.primaryBackground),
                       onPressed: () {
                         SendNftConfirmRoute().push<void>(context);
                       },

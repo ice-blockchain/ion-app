@@ -23,6 +23,7 @@ class IonNetworkImage extends StatelessWidget {
     this.placeholder,
     this.errorListener,
     this.errorWidget,
+    this.borderRadius,
   });
 
   final String imageUrl;
@@ -40,6 +41,7 @@ class IonNetworkImage extends StatelessWidget {
   final BaseCacheManager? cacheManager;
   final ImageWidgetBuilder? imageBuilder;
   final ProgressIndicatorBuilder? progressIndicatorBuilder;
+  final BorderRadiusGeometry? borderRadius;
 
   @override
   Widget build(BuildContext context) {
@@ -60,6 +62,26 @@ class IonNetworkImage extends StatelessWidget {
     if (fit == BoxFit.contain) {
       memCacheWidth = cacheWidth.toInt();
       memCacheHeight = cacheHeight?.toInt();
+    }
+
+    if (borderRadius != null) {
+      return DecoratedBox(
+        decoration: BoxDecoration(
+          borderRadius: borderRadius,
+          image: DecorationImage(
+            image: CachedNetworkImageProvider(
+              imageUrl,
+              maxWidth: memCacheWidth,
+              maxHeight: memCacheHeight,
+            ),
+            fit: fit,
+          ),
+        ),
+        child: SizedBox(
+          width: width,
+          height: height,
+        ),
+      );
     }
 
     return CachedNetworkImage(

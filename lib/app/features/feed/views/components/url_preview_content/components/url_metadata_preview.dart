@@ -43,14 +43,12 @@ class _UrlMetadataImage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ClipRRect(
+    return FeedNetworkImage(
+      imageUrl: imageUrl,
+      fit: BoxFit.cover,
       borderRadius: BorderRadiusDirectional.only(
         topStart: Radius.circular(12.0.s),
         topEnd: Radius.circular(12.0.s),
-      ),
-      child: FeedNetworkImage(
-        imageUrl: imageUrl,
-        fit: BoxFit.cover,
       ),
     );
   }

@@ -78,16 +78,7 @@ class CoinIconWidget extends StatelessWidget {
             width: iconSize,
             height: iconSize,
             errorWidget: (_, __, ___) => Assets.svg.walletEmptyicon.icon(size: iconSize),
-            imageBuilder: (context, imageProvider) => Container(
-              width: iconSize,
-              height: iconSize,
-              decoration: BoxDecoration(
-                borderRadius: borderRadius,
-                image: DecorationImage(
-                  image: imageProvider,
-                ),
-              ),
-            ),
+            borderRadius: borderRadius,
           );
   }
 

@@ -68,14 +68,10 @@ class AddressInputField extends HookWidget {
           ),
           if (onScanPressed != null)
             IconButton(
-              icon: ColorFiltered(
-                colorFilter: ColorFilter.mode(
-                  isValidInput.value
-                      ? context.theme.appColors.primaryAccent
-                      : context.theme.appColors.attentionRed,
-                  BlendMode.srcIn,
-                ),
-                child: Assets.svg.iconHeaderScan1.icon(),
+              icon: Assets.svg.iconHeaderScan1.icon(
+                color: isValidInput.value
+                    ? context.theme.appColors.primaryAccent
+                    : context.theme.appColors.attentionRed,
               ),
               onPressed: onScanPressed,
             ),

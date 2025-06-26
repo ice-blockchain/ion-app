@@ -55,14 +55,12 @@ class NftItem extends StatelessWidget {
         ],
       ),
       backgroundColor: backgroundColor ?? context.theme.appColors.tertararyBackground,
-      leading: ClipRRect(
+      leading: IonNetworkImage(
+        imageUrl: nftData.tokenUri,
+        width: imageWidth,
+        height: imageHeight,
+        fit: BoxFit.fitWidth,
         borderRadius: BorderRadius.circular(16.0.s),
-        child: IonNetworkImage(
-          imageUrl: nftData.tokenUri,
-          width: imageWidth,
-          height: imageHeight,
-          fit: BoxFit.fitWidth,
-        ),
       ),
     );
   }

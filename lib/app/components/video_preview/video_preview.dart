@@ -246,44 +246,26 @@ class _BlurredThumbnail extends HookWidget {
 
   @override
   Widget build(BuildContext context) {
-    final isImageLoaded = useState(false);
-
-    useEffect(
-      () {
-        final imageStream = Image.network(thumbnailUrl).image.resolve(ImageConfiguration.empty);
-        final listener = ImageStreamListener((info, _) {
-          if (!context.mounted) return;
-          isImageLoaded.value = true;
-        });
-
-        imageStream.addListener(listener);
-        return () => imageStream.removeListener(listener);
-      },
-      [thumbnailUrl],
-    );
-
     return Stack(
       children: [
         Positioned.fill(
-          child: AnimatedOpacity(
-            duration: const Duration(milliseconds: 100),
-            opacity: isImageLoaded.value ? 1 : 0,
+          child: ImageFiltered(
+            imageFilter: ImageFilter.blur(sigmaX: 8, sigmaY: 8),
             child: IonConnectNetworkImage(
               imageUrl: thumbnailUrl,
               authorPubkey: authorPubkey,
               fit: BoxFit.cover,
+              fadeInDuration: const Duration(milliseconds: 100),
+              fadeOutDuration: const Duration(milliseconds: 100),
             ),
           ),
         ),
         if (isLoading)
-          ClipRect(
-            child: BackdropFilter(
-              filter: ImageFilter.blur(sigmaX: 8, sigmaY: 8),
-              child: const Center(
-                child: CircularProgressIndicator(
-                  strokeWidth: 2,
-                  color: Colors.white,
-                ),
+          const Center(
+            child: RepaintBoundary(
+              child: CircularProgressIndicator(
+                strokeWidth: 2,
+                color: Colors.white,
               ),
             ),
           ),
