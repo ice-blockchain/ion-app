@@ -26,7 +26,7 @@ import 'package:ion/app/features/user_profile/database/dao/user_metadata_dao.c.d
 import 'package:ion/app/services/storage/local_storage.c.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
-part 'user_profile_sync_provider.c.g.dart';
+part 'user_profile_sync_provider.r.g.dart';
 
 @riverpod
 class UserProfileSync extends _$UserProfileSync {

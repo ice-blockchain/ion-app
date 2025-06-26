@@ -8,7 +8,7 @@ import 'package:ion/app/features/user_profile/database/tables/user_delegation_ta
 import 'package:ion/app/features/user_profile/database/user_profile_database.c.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
-part 'user_delegation_dao.c.g.dart';
+part 'user_delegation_dao.m.g.dart';
 
 @riverpod
 UserDelegationDao userDelegationDao(Ref ref) {

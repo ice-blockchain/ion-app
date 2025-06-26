@@ -12,7 +12,7 @@ import 'package:ion/app/features/ion_connect/model/event_reference.f.dart';
 import 'package:ion/app/features/user_metadata/database/tables/user_metadata_table.d.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
-part 'user_metadata_database.m.g.dart';
+part 'user_metadata_database.d.g.dart';
 ========
 import 'package:ion/app/features/ion_connect/model/event_reference.c.dart';
 import 'package:ion/app/features/user_profile/database/tables/user_badge_info_table.c.dart';

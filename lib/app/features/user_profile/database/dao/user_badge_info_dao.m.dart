@@ -10,7 +10,7 @@ import 'package:ion/app/features/user_profile/database/tables/user_badge_info_ta
 import 'package:ion/app/features/user_profile/database/user_profile_database.c.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
-part 'user_badge_info_dao.c.g.dart';
+part 'user_badge_info_dao.m.g.dart';
 
 @riverpod
 UserBadgeInfoDao userBadgeInfoDao(Ref ref) {
