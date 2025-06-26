@@ -62,7 +62,7 @@ class FeedUserInterests extends _$FeedUserInterests {
     }
     return ref
         .read(userPreferencesServiceProvider(identityKeyName: identityKeyName))
-        .setValue(_persistanceKey, jsonEncode(interests.categories));
+        .setValue(_persistanceKey, jsonEncode(interests.toJson()));
   }
 
   Future<FeedInterests> _getRemoteState(FeedType feedType, {bool force = false}) async {
