@@ -270,6 +270,10 @@ class FeedForYouContent extends _$FeedForYouContent implements PagedNotifier {
 
           final interest = await _getRequestInterest(relayUrl: relayUrl, modifier: modifier);
 
+          if (interest == null) {
+            throw NoAvailableInterests(relayUrl: relayUrl, modifier: modifier.name);
+          }
+
           final interestPagination = relayInterestsPagination[interest]!;
 
           final entity = await _requestEntityFromRelay(
@@ -322,7 +326,7 @@ class FeedForYouContent extends _$FeedForYouContent implements PagedNotifier {
     yield* resultsController.stream;
   }
 
-  Future<String> _getRequestInterest({
+  Future<String?> _getRequestInterest({
     required String relayUrl,
     required FeedModifier modifier,
   }) async {
@@ -342,7 +346,7 @@ class FeedForYouContent extends _$FeedForYouContent implements PagedNotifier {
     // For multiple interests, use the picker to select from available ones
     final interestsPicker = await ref.read(feedUserInterestPickerProvider(feedType).future);
 
-    return interestsPicker.roll(availableInterests)!;
+    return interestsPicker.roll(availableInterests);
   }
 
   Future<IonConnectEntity?> _requestEntityFromRelay({
