@@ -2,13 +2,27 @@
 
 import 'package:drift/drift.dart';
 
+enum ContentType {
+  posts(0),
+  stories(1),
+  articles(2),
+  videos(3);
+
+  const ContentType(this.value);
+  final int value;
+
+  static ContentType fromValue(int value) {
+    return ContentType.values.firstWhere((type) => type.value == value);
+  }
+}
+
 @DataClassName('AccountNotificationSyncState')
 class AccountNotificationSyncStateTable extends Table {
   /// Relay URL
   TextColumn get relayUrl => text()();
 
   /// Content type (posts, stories, articles, videos)
-  TextColumn get contentType => text()();
+  IntColumn get contentType => intEnum<ContentType>()();
 
   /// Last sync timestamp in microseconds since epoch
   IntColumn get lastSyncTimestamp => integer()();
