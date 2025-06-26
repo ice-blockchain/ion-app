@@ -185,7 +185,7 @@ final class Schema4 extends i0.VersionedSchema {
   @override
   late final List<i1.DatabaseSchemaEntity> entities = [
     commentsTable,
-    contentTable,
+    subscribedUsersContentTable,
     likesTable,
     followersTable,
   ];
@@ -205,7 +205,7 @@ final class Schema4 extends i0.VersionedSchema {
         attachedDatabase: database,
       ),
       alias: null);
-  late final Shape6 contentTable = Shape6(
+  late final Shape6 subscribedUsersContentTable = Shape6(
       source: i0.VersionedTable(
         entityName: 'content_table',
         withoutRowId: false,

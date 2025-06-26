@@ -34,7 +34,7 @@ NotificationsDatabase notificationsDatabase(Ref ref) {
 @DriftDatabase(
   tables: [
     CommentsTable,
-    ContentTable,
+    SubscribedUsersContentTable,
     LikesTable,
     FollowersTable,
   ],
@@ -160,7 +160,7 @@ class NotificationsDatabase extends _$NotificationsDatabase {
           );
         },
         from3To4: (m, schema) async {
-          await m.createTable(schema.contentTable);
+          await m.createTable(schema.subscribedUsersContentTable);
         },
       ),
     );

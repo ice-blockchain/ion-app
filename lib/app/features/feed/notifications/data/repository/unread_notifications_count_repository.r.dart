@@ -22,7 +22,7 @@ UnreadNotificationsCountRepository? unreadNotificationsCountRepository(Ref ref) 
     userPreferencesService:
         ref.watch(userPreferencesServiceProvider(identityKeyName: identityKeyName)),
     commentsDao: ref.watch(commentsDaoProvider),
-    contentDao: ref.watch(contentDaoProvider),
+    subscribedUsersContentDao: ref.watch(subscribedUsersContentDaoProvider),
     likesDao: ref.watch(likesDaoProvider),
     followersDao: ref.watch(followersDaoProvider),
   );
@@ -32,18 +32,18 @@ class UnreadNotificationsCountRepository {
   UnreadNotificationsCountRepository({
     required UserPreferencesService userPreferencesService,
     required CommentsDao commentsDao,
-    required ContentDao contentDao,
+    required SubscribedUsersContentDao subscribedUsersContentDao,
     required LikesDao likesDao,
     required FollowersDao followersDao,
   })  : _userPreferencesService = userPreferencesService,
         _commentsDao = commentsDao,
-        _contentDao = contentDao,
+        _subscribedUsersContentDao = subscribedUsersContentDao,
         _likesDao = likesDao,
         _followersDao = followersDao;
 
   final UserPreferencesService _userPreferencesService;
   final CommentsDao _commentsDao;
-  final ContentDao _contentDao;
+  final SubscribedUsersContentDao _subscribedUsersContentDao;
   final LikesDao _likesDao;
   final FollowersDao _followersDao;
 
@@ -51,7 +51,7 @@ class UnreadNotificationsCountRepository {
     final lastReadTime = _getOrInitLastReadTime();
     final likesStream = _likesDao.watchUnreadCount(after: lastReadTime);
     final commentsStream = _commentsDao.watchUnreadCount(after: lastReadTime);
-    final contentStream = _contentDao.watchUnreadCount(after: lastReadTime);
+    final contentStream = _subscribedUsersContentDao.watchUnreadCount(after: lastReadTime);
     final followersStream = _followersDao.watchUnreadCount(after: lastReadTime);
     return commentsStream
         .combineLatestAll([likesStream, contentStream, followersStream]).map((data) => data.sum);

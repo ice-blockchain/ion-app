@@ -18,7 +18,7 @@ enum ContentType {
 }
 
 @DataClassName('ContentNotification')
-class ContentTable extends Table {
+class SubscribedUsersContentTable extends Table {
   TextColumn get eventReference => text().map(const EventReferenceConverter())();
 
   IntColumn get createdAt => integer()();

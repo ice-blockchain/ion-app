@@ -19,22 +19,22 @@ part 'content_repository.c.g.dart';
 
 @Riverpod(keepAlive: true)
 ContentRepository contentRepository(Ref ref) => ContentRepository(
-      contentDao: ref.watch(contentDaoProvider),
+      subscribedUsersContentDao: ref.watch(subscribedUsersContentDaoProvider),
     );
 
 class ContentRepository implements IonNotificationRepository {
   ContentRepository({
-    required ContentDao contentDao,
-  }) : _contentDao = contentDao;
+    required SubscribedUsersContentDao subscribedUsersContentDao,
+  }) : _subscribedUsersContentDao = subscribedUsersContentDao;
 
-  final ContentDao _contentDao;
+  final SubscribedUsersContentDao _subscribedUsersContentDao;
 
   @override
   Future<void> save(IonConnectEntity entity) {
     final contentType = _getContentType(entity);
     if (contentType == null) throw UnsupportedEntityType(entity);
 
-    return _contentDao.insert(
+    return _subscribedUsersContentDao.insert(
       ContentNotification(
         eventReference: entity.toEventReference(),
         createdAt: entity.createdAt,
@@ -45,7 +45,7 @@ class ContentRepository implements IonNotificationRepository {
 
   @override
   Future<List<ContentIonNotification>> getNotifications() async {
-    final contentNotifications = await _contentDao.getAll();
+    final contentNotifications = await _subscribedUsersContentDao.getAll();
     return contentNotifications.map((content) {
       final notificationType = switch (content.type) {
         ContentType.posts => ContentIonNotificationType.posts,
@@ -77,6 +77,6 @@ class ContentRepository implements IonNotificationRepository {
   }
 
   Future<DateTime?> lastCreatedAt() async {
-    return _contentDao.getLastCreatedAt();
+    return _subscribedUsersContentDao.getLastCreatedAt();
   }
 }
