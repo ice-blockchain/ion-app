@@ -33,7 +33,7 @@ class ProfileRoutes {
   ];
 }
 
-class ProfileRoute extends BaseRouteData {
+class ProfileRoute extends BaseRouteData with _$ProfileRoute {
   ProfileRoute({required this.pubkey})
       : super(
           child: ProfilePage(pubkey: pubkey),
@@ -42,7 +42,7 @@ class ProfileRoute extends BaseRouteData {
   final String pubkey;
 }
 
-class ProfileVideosRoute extends BaseRouteData {
+class ProfileVideosRoute extends BaseRouteData with _$ProfileVideosRoute {
   ProfileVideosRoute({
     required this.pubkey,
     required this.tabEntityType,
@@ -69,14 +69,14 @@ class ProfileVideosRoute extends BaseRouteData {
   final int initialMediaIndex;
 }
 
-class ProfileEditRoute extends BaseRouteData {
+class ProfileEditRoute extends BaseRouteData with _$ProfileEditRoute {
   ProfileEditRoute()
       : super(
           child: const ProfileEditPage(),
         );
 }
 
-class FollowListRoute extends BaseRouteData {
+class FollowListRoute extends BaseRouteData with _$FollowListRoute {
   FollowListRoute({
     required this.followType,
     required this.pubkey,
@@ -92,7 +92,7 @@ class FollowListRoute extends BaseRouteData {
   final String pubkey;
 }
 
-class CategorySelectRoute extends BaseRouteData {
+class CategorySelectRoute extends BaseRouteData with _$CategorySelectRoute {
   CategorySelectRoute({
     required this.selectedCategory,
   }) : super(
@@ -103,7 +103,7 @@ class CategorySelectRoute extends BaseRouteData {
   final String? selectedCategory;
 }
 
-class PaymentSelectionProfileRoute extends BaseRouteData {
+class PaymentSelectionProfileRoute extends BaseRouteData with _$PaymentSelectionProfileRoute {
   PaymentSelectionProfileRoute({
     required this.pubkey,
   }) : super(
@@ -118,7 +118,7 @@ class PaymentSelectionProfileRoute extends BaseRouteData {
   final String pubkey;
 }
 
-class SelectCoinProfileRoute extends BaseRouteData {
+class SelectCoinProfileRoute extends BaseRouteData with _$SelectCoinProfileRoute {
   SelectCoinProfileRoute({required this.paymentType})
       : super(
           child: switch (paymentType) {
@@ -137,7 +137,7 @@ class SelectCoinProfileRoute extends BaseRouteData {
   final PaymentType paymentType;
 }
 
-class SelectNetworkProfileRoute extends BaseRouteData {
+class SelectNetworkProfileRoute extends BaseRouteData with _$SelectNetworkProfileRoute {
   SelectNetworkProfileRoute({required this.paymentType})
       : super(
           child: NetworkListView(
@@ -156,7 +156,7 @@ class SelectNetworkProfileRoute extends BaseRouteData {
   final PaymentType paymentType;
 }
 
-class AddressNotFoundProfileRoute extends BaseRouteData {
+class AddressNotFoundProfileRoute extends BaseRouteData with _$AddressNotFoundProfileRoute {
   AddressNotFoundProfileRoute()
       : super(
           child: AddressNotFoundChatModal(
@@ -166,7 +166,7 @@ class AddressNotFoundProfileRoute extends BaseRouteData {
         );
 }
 
-class SendCoinsFormProfileRoute extends BaseRouteData {
+class SendCoinsFormProfileRoute extends BaseRouteData with _$SendCoinsFormProfileRoute {
   SendCoinsFormProfileRoute()
       : super(
           child: SendCoinsForm(
@@ -181,7 +181,8 @@ class SendCoinsFormProfileRoute extends BaseRouteData {
         );
 }
 
-class SendCoinsConfirmationProfileRoute extends BaseRouteData {
+class SendCoinsConfirmationProfileRoute extends BaseRouteData
+    with _$SendCoinsConfirmationProfileRoute {
   SendCoinsConfirmationProfileRoute()
       : super(
           child: ConfirmationSheet(
@@ -191,7 +192,8 @@ class SendCoinsConfirmationProfileRoute extends BaseRouteData {
         );
 }
 
-class CoinTransactionResultProfileRoute extends BaseRouteData {
+class CoinTransactionResultProfileRoute extends BaseRouteData
+    with _$CoinTransactionResultProfileRoute {
   CoinTransactionResultProfileRoute()
       : super(
           child: TransactionResultSheet(
@@ -202,7 +204,8 @@ class CoinTransactionResultProfileRoute extends BaseRouteData {
         );
 }
 
-class CoinTransactionDetailsProfileRoute extends BaseRouteData {
+class CoinTransactionDetailsProfileRoute extends BaseRouteData
+    with _$CoinTransactionDetailsProfileRoute {
   CoinTransactionDetailsProfileRoute()
       : super(
           child: TransactionDetailsPage(
@@ -213,7 +216,8 @@ class CoinTransactionDetailsProfileRoute extends BaseRouteData {
         );
 }
 
-class ExploreTransactionDetailsProfileRoute extends BaseRouteData {
+class ExploreTransactionDetailsProfileRoute extends BaseRouteData
+    with _$ExploreTransactionDetailsProfileRoute {
   ExploreTransactionDetailsProfileRoute({required this.url})
       : super(
           child: ExploreTransactionDetailsModal(url: url),
@@ -223,7 +227,7 @@ class ExploreTransactionDetailsProfileRoute extends BaseRouteData {
   final String url;
 }
 
-class RequestCoinsFormRoute extends BaseRouteData {
+class RequestCoinsFormRoute extends BaseRouteData with _$RequestCoinsFormRoute {
   RequestCoinsFormRoute()
       : super(
           child: RequestCoinsFormModal(
@@ -233,21 +237,21 @@ class RequestCoinsFormRoute extends BaseRouteData {
         );
 }
 
-class BookmarksRoute extends BaseRouteData {
+class BookmarksRoute extends BaseRouteData with _$BookmarksRoute {
   BookmarksRoute()
       : super(
           child: const BookmarksPage(),
         );
 }
 
-class EditBookmarksRoute extends BaseRouteData {
+class EditBookmarksRoute extends BaseRouteData with _$EditBookmarksRoute {
   EditBookmarksRoute()
       : super(
           child: const EditBookmarksPage(),
         );
 }
 
-class RepostOptionsModalProfileRoute extends BaseRouteData {
+class RepostOptionsModalProfileRoute extends BaseRouteData with _$RepostOptionsModalProfileRoute {
   RepostOptionsModalProfileRoute({
     required this.eventReference,
   }) : super(
@@ -271,7 +275,7 @@ class AlbumSelectionProfileRoute extends BaseRouteData {
   final MediaPickerType mediaPickerType;
 }
 
-class CreateQuoteProfileRoute extends BaseRouteData {
+class CreateQuoteProfileRoute extends BaseRouteData with _$CreateQuoteProfileRoute {
   CreateQuoteProfileRoute({
     required this.quotedEvent,
     this.content,

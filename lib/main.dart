@@ -10,7 +10,7 @@ import 'package:ion/app/features/core/views/components/app_lifecycle_observer.da
 import 'package:ion/app/features/core/views/components/content_scaler.dart';
 import 'package:ion/app/router/components/app_router_builder.dart';
 import 'package:ion/app/router/components/modal_wrapper/sheet_scope.dart';
-import 'package:ion/app/router/providers/go_router_provider.m.dart';
+import 'package:ion/app/router/providers/go_router_provider.r.dart';
 import 'package:ion/app/services/logger/logger_initializer.dart';
 import 'package:ion/app/services/riverpod/container.dart';
 import 'package:ion/app/services/sentry/sentry_service.dart';

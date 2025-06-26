@@ -13,7 +13,7 @@ import 'package:ion/app/features/feed/stories/providers/feed_stories_provider.r.
 import 'package:ion/app/features/feed/stories/providers/story_viewing_provider.r.dart';
 import 'package:ion/app/features/feed/stories/views/components/story_viewer/components/core/core.dart';
 import 'package:ion/app/features/feed/stories/views/pages/story_viewer_page.dart';
-import 'package:ion/app/router/providers/go_router_provider.m.dart';
+import 'package:ion/app/router/providers/go_router_provider.r.dart';
 import 'package:ion/app/services/storage/local_storage.r.dart';
 import 'package:ion/app/services/storage/user_preferences_service.r.dart';
 import 'package:ion/generated/app_localizations.dart';

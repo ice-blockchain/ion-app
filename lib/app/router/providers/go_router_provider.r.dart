@@ -24,7 +24,7 @@ import 'package:ion/app/services/logger/logger.dart';
 import 'package:ion/app/services/ui_event_queue/ui_event_queue_notifier.r.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
-part 'go_router_provider.m.g.dart';
+part 'go_router_provider.r.g.dart';
 
 @Riverpod(keepAlive: true)
 GoRouter goRouter(Ref ref) {

@@ -104,7 +104,7 @@ class WalletRoutes {
   ];
 }
 
-class ManageNftsRoute extends BaseRouteData {
+class ManageNftsRoute extends BaseRouteData with _$ManageNftsRoute {
   ManageNftsRoute()
       : super(
           child: const ManageNftsPage(),
@@ -112,7 +112,7 @@ class ManageNftsRoute extends BaseRouteData {
         );
 }
 
-class CoinSendScanRoute extends BaseRouteData {
+class CoinSendScanRoute extends BaseRouteData with _$CoinSendScanRoute {
   CoinSendScanRoute()
       : super(
           child: const WalletScanModalPage(),
@@ -120,7 +120,7 @@ class CoinSendScanRoute extends BaseRouteData {
         );
 }
 
-class SelectCoinWalletRoute extends BaseRouteData {
+class SelectCoinWalletRoute extends BaseRouteData with _$SelectCoinWalletRoute {
   SelectCoinWalletRoute()
       : super(
           child: SendCoinModalPage(
@@ -130,7 +130,7 @@ class SelectCoinWalletRoute extends BaseRouteData {
         );
 }
 
-class ReceiveCoinRoute extends BaseRouteData {
+class ReceiveCoinRoute extends BaseRouteData with _$ReceiveCoinRoute {
   ReceiveCoinRoute()
       : super(
           child: const ReceiveCoinModalPage(),
@@ -138,7 +138,7 @@ class ReceiveCoinRoute extends BaseRouteData {
         );
 }
 
-class ScanWalletRoute extends BaseRouteData {
+class ScanWalletRoute extends BaseRouteData with _$ScanWalletRoute {
   ScanWalletRoute()
       : super(
           child: const WalletScanModalPage(),
@@ -146,7 +146,7 @@ class ScanWalletRoute extends BaseRouteData {
         );
 }
 
-class NetworkSelectReceiveRoute extends BaseRouteData {
+class NetworkSelectReceiveRoute extends BaseRouteData with _$NetworkSelectReceiveRoute {
   NetworkSelectReceiveRoute()
       : super(
           child: const NetworkListView(type: NetworkListViewType.receive),
@@ -154,7 +154,7 @@ class NetworkSelectReceiveRoute extends BaseRouteData {
         );
 }
 
-class SelectNetworkWalletRoute extends BaseRouteData {
+class SelectNetworkWalletRoute extends BaseRouteData with _$SelectNetworkWalletRoute {
   SelectNetworkWalletRoute()
       : super(
           child: NetworkListView(
@@ -164,7 +164,7 @@ class SelectNetworkWalletRoute extends BaseRouteData {
         );
 }
 
-class ChangeNetworkShareWalletRoute extends BaseRouteData {
+class ChangeNetworkShareWalletRoute extends BaseRouteData   with _$ChangeNetworkShareWalletRoute {
   ChangeNetworkShareWalletRoute()
       : super(
           child: const NetworkListView(
@@ -175,7 +175,7 @@ class ChangeNetworkShareWalletRoute extends BaseRouteData {
         );
 }
 
-class ShareAddressCoinDetailsRoute extends BaseRouteData {
+class ShareAddressCoinDetailsRoute extends BaseRouteData with _$ShareAddressCoinDetailsRoute {
   ShareAddressCoinDetailsRoute()
       : super(
           child: const ShareAddressToGetCoinsView(),
@@ -183,7 +183,7 @@ class ShareAddressCoinDetailsRoute extends BaseRouteData {
         );
 }
 
-class ShareAddressDepositRoute extends BaseRouteData {
+class ShareAddressDepositRoute extends BaseRouteData with _$ShareAddressDepositRoute {
   ShareAddressDepositRoute()
       : super(
           child: const ShareAddressToGetCoinsView(),
@@ -191,7 +191,7 @@ class ShareAddressDepositRoute extends BaseRouteData {
         );
 }
 
-class ShareAddressToGetCoinsRoute extends BaseRouteData {
+class ShareAddressToGetCoinsRoute extends BaseRouteData with _$ShareAddressToGetCoinsRoute {
   ShareAddressToGetCoinsRoute()
       : super(
           child: const ShareAddressToGetCoinsView(),
@@ -199,7 +199,7 @@ class ShareAddressToGetCoinsRoute extends BaseRouteData {
         );
 }
 
-class ShareAddressToGetNftRoute extends BaseRouteData {
+class ShareAddressToGetNftRoute extends BaseRouteData with _$ShareAddressToGetNftRoute {
   ShareAddressToGetNftRoute()
       : super(
           child: const ShareAddressToGetNftView(),
@@ -207,7 +207,7 @@ class ShareAddressToGetNftRoute extends BaseRouteData {
         );
 }
 
-class AddressNotFoundReceiveNftRoute extends BaseRouteData {
+class AddressNotFoundReceiveNftRoute extends BaseRouteData with _$AddressNotFoundReceiveNftRoute {
   AddressNotFoundReceiveNftRoute()
       : super(
           child: AddressNotFoundWalletModal(
@@ -218,7 +218,7 @@ class AddressNotFoundReceiveNftRoute extends BaseRouteData {
         );
 }
 
-class SendCoinsFormWalletRoute extends BaseRouteData {
+class SendCoinsFormWalletRoute extends BaseRouteData with _$SendCoinsFormWalletRoute {
   SendCoinsFormWalletRoute()
       : super(
           child: SendCoinsForm(
@@ -233,7 +233,7 @@ class SendCoinsFormWalletRoute extends BaseRouteData {
         );
 }
 
-class SelectContactWalletRoute extends BaseRouteData {
+class SelectContactWalletRoute extends BaseRouteData with _$SelectContactWalletRoute {
   SelectContactWalletRoute({required this.networkId})
       : super(
           child: ContactPickerModal(
@@ -246,7 +246,7 @@ class SelectContactWalletRoute extends BaseRouteData {
   final String networkId;
 }
 
-class SelectContactRoute extends BaseRouteData {
+class SelectContactRoute extends BaseRouteData with _$SelectContactRoute {
   SelectContactRoute()
       : super(
           child: const ContactPickerModal(),
@@ -254,7 +254,7 @@ class SelectContactRoute extends BaseRouteData {
         );
 }
 
-class NftSelectContactRoute extends BaseRouteData {
+class NftSelectContactRoute extends BaseRouteData with _$NftSelectContactRoute {
   NftSelectContactRoute({required this.networkId})
       : super(
           child: ContactPickerModal(
@@ -267,7 +267,7 @@ class NftSelectContactRoute extends BaseRouteData {
   final String networkId;
 }
 
-class SendCoinsConfirmationWalletRoute extends BaseRouteData {
+class SendCoinsConfirmationWalletRoute extends BaseRouteData  with _$SendCoinsConfirmationWalletRoute {
   SendCoinsConfirmationWalletRoute()
       : super(
           child: ConfirmationSheet(
@@ -278,7 +278,7 @@ class SendCoinsConfirmationWalletRoute extends BaseRouteData {
         );
 }
 
-class CoinTransactionResultWalletRoute extends BaseRouteData {
+class CoinTransactionResultWalletRoute extends BaseRouteData with _$CoinTransactionResultWalletRoute {
   CoinTransactionResultWalletRoute()
       : super(
           child: TransactionResultSheet(
@@ -288,7 +288,7 @@ class CoinTransactionResultWalletRoute extends BaseRouteData {
         );
 }
 
-class NftTransactionResultRoute extends BaseRouteData {
+class NftTransactionResultRoute extends BaseRouteData with _$NftTransactionResultRoute {
   NftTransactionResultRoute()
       : super(
           child: TransactionResultSheet(
@@ -298,7 +298,7 @@ class NftTransactionResultRoute extends BaseRouteData {
         );
 }
 
-class CoinsDetailsRoute extends BaseRouteData {
+class CoinsDetailsRoute extends BaseRouteData   with _$CoinsDetailsRoute {
   CoinsDetailsRoute({required this.symbolGroup})
       : super(
           child: CoinDetailsPage(symbolGroup: symbolGroup),
@@ -307,7 +307,7 @@ class CoinsDetailsRoute extends BaseRouteData {
   final String symbolGroup;
 }
 
-class CoinReceiveRoute extends BaseRouteData {
+class CoinReceiveRoute extends BaseRouteData with _$CoinReceiveRoute {
   CoinReceiveRoute()
       : super(
           child: const CoinReceiveModal(),
@@ -315,7 +315,7 @@ class CoinReceiveRoute extends BaseRouteData {
         );
 }
 
-class ManageCoinsRoute extends BaseRouteData {
+class ManageCoinsRoute extends BaseRouteData with _$ManageCoinsRoute {
   ManageCoinsRoute()
       : super(
           child: const ManageCoinsPage(),
@@ -323,7 +323,7 @@ class ManageCoinsRoute extends BaseRouteData {
         );
 }
 
-class ImportTokenRoute extends BaseRouteData {
+class ImportTokenRoute extends BaseRouteData with _$ImportTokenRoute {
   ImportTokenRoute()
       : super(
           child: const ImportTokenPage(),
@@ -331,7 +331,7 @@ class ImportTokenRoute extends BaseRouteData {
         );
 }
 
-class SelectNetworkForTokenRoute extends BaseRouteData {
+class SelectNetworkForTokenRoute extends BaseRouteData with _$SelectNetworkForTokenRoute {
   SelectNetworkForTokenRoute()
       : super(
           child: const SelectNetworkList(),
@@ -339,7 +339,7 @@ class SelectNetworkForTokenRoute extends BaseRouteData {
         );
 }
 
-class SelectNetworkToReceiveNftRoute extends BaseRouteData {
+class SelectNetworkToReceiveNftRoute extends BaseRouteData with _$SelectNetworkToReceiveNftRoute {
   SelectNetworkToReceiveNftRoute()
       : super(
           child: const SelectNftNetworkPage(),
@@ -347,7 +347,7 @@ class SelectNetworkToReceiveNftRoute extends BaseRouteData {
         );
 }
 
-class WalletsRoute extends BaseRouteData {
+class WalletsRoute extends BaseRouteData with _$WalletsRoute {
   WalletsRoute()
       : super(
           child: const WalletsModal(),
@@ -355,7 +355,7 @@ class WalletsRoute extends BaseRouteData {
         );
 }
 
-class ManageWalletsRoute extends BaseRouteData {
+class ManageWalletsRoute extends BaseRouteData with _$ManageWalletsRoute {
   ManageWalletsRoute()
       : super(
           child: const ManageWalletsModal(),
@@ -363,7 +363,7 @@ class ManageWalletsRoute extends BaseRouteData {
         );
 }
 
-class CreateWalletRoute extends BaseRouteData {
+class CreateWalletRoute extends BaseRouteData with _$CreateWalletRoute {
   CreateWalletRoute()
       : super(
           child: const CreateNewWalletModal(),
@@ -371,7 +371,7 @@ class CreateWalletRoute extends BaseRouteData {
         );
 }
 
-class EditWalletRoute extends BaseRouteData {
+class EditWalletRoute extends BaseRouteData with _$EditWalletRoute {
   EditWalletRoute({required this.walletId})
       : super(
           child: EditWalletModal(walletId: walletId),
@@ -381,7 +381,7 @@ class EditWalletRoute extends BaseRouteData {
   final String walletId;
 }
 
-class DeleteWalletRoute extends BaseRouteData {
+class DeleteWalletRoute extends BaseRouteData with _$DeleteWalletRoute {
   DeleteWalletRoute({required this.walletId})
       : super(
           child: DeleteWalletModal(walletId: walletId),
@@ -391,7 +391,7 @@ class DeleteWalletRoute extends BaseRouteData {
   final String walletId;
 }
 
-class AddressNotFoundRoute extends BaseRouteData {
+class AddressNotFoundRoute extends BaseRouteData with _$AddressNotFoundRoute {
   AddressNotFoundRoute()
       : super(
           child: AddressNotFoundWalletModal(
@@ -401,7 +401,7 @@ class AddressNotFoundRoute extends BaseRouteData {
         );
 }
 
-class AddressNotFoundReceiveCoinsRoute extends BaseRouteData {
+class AddressNotFoundReceiveCoinsRoute extends BaseRouteData with _$AddressNotFoundReceiveCoinsRoute {
   AddressNotFoundReceiveCoinsRoute()
       : super(
           child: AddressNotFoundWalletModal(
@@ -411,7 +411,7 @@ class AddressNotFoundReceiveCoinsRoute extends BaseRouteData {
         );
 }
 
-class ContactRoute extends BaseRouteData {
+class ContactRoute extends BaseRouteData with _$ContactRoute {
   ContactRoute({required this.pubkey})
       : super(
           child: ContactPage(pubkey: pubkey),
@@ -421,7 +421,7 @@ class ContactRoute extends BaseRouteData {
   final String pubkey;
 }
 
-class NftDetailsRoute extends BaseRouteData {
+class NftDetailsRoute extends BaseRouteData with _$NftDetailsRoute {
   NftDetailsRoute({
     required this.contract,
     required this.tokenId,
@@ -437,7 +437,7 @@ class NftDetailsRoute extends BaseRouteData {
   final String tokenId;
 }
 
-class NftSendFormRoute extends BaseRouteData {
+class NftSendFormRoute extends BaseRouteData with _$NftSendFormRoute {
   NftSendFormRoute()
       : super(
           child: const SendNftForm(),
@@ -445,7 +445,7 @@ class NftSendFormRoute extends BaseRouteData {
         );
 }
 
-class NftSendScanRoute extends BaseRouteData {
+class NftSendScanRoute extends BaseRouteData with _$NftSendScanRoute {
   NftSendScanRoute()
       : super(
           child: const WalletScanModalPage(),
@@ -453,7 +453,7 @@ class NftSendScanRoute extends BaseRouteData {
         );
 }
 
-class SendNftConfirmRoute extends BaseRouteData {
+class SendNftConfirmRoute extends BaseRouteData with _$SendNftConfirmRoute {
   SendNftConfirmRoute()
       : super(
           child: const SendNftConfirmPage(),
@@ -461,7 +461,7 @@ class SendNftConfirmRoute extends BaseRouteData {
         );
 }
 
-class CoinTransactionDetailsRoute extends BaseRouteData {
+class CoinTransactionDetailsRoute extends BaseRouteData with _$CoinTransactionDetailsRoute {
   CoinTransactionDetailsRoute()
       : super(
           child: TransactionDetailsPage(
@@ -471,7 +471,7 @@ class CoinTransactionDetailsRoute extends BaseRouteData {
         );
 }
 
-class ExploreTransactionDetailsRoute extends BaseRouteData {
+class ExploreTransactionDetailsRoute extends BaseRouteData with _$ExploreTransactionDetailsRoute {
   ExploreTransactionDetailsRoute({required this.url})
       : super(
           child: ExploreTransactionDetailsModal(url: url),

@@ -46,7 +46,7 @@ class ChatRoutes {
   ];
 }
 
-class ConversationRoute extends BaseRouteData {
+class ConversationRoute extends BaseRouteData with _$ConversationRoute {
   ConversationRoute({
     this.conversationId,
     this.receiverMasterPubkey,
@@ -62,7 +62,7 @@ class ConversationRoute extends BaseRouteData {
   final String? receiverMasterPubkey;
 }
 
-class ChannelDetailRoute extends BaseRouteData {
+class ChannelDetailRoute extends BaseRouteData with _$ChannelDetailRoute {
   ChannelDetailRoute({required this.uuid})
       : super(
           child: ChannelDetailPage(uuid: uuid),
@@ -71,7 +71,7 @@ class ChannelDetailRoute extends BaseRouteData {
   final String uuid;
 }
 
-class EditChannelRoute extends BaseRouteData {
+class EditChannelRoute extends BaseRouteData with _$EditChannelRoute {
   EditChannelRoute({required this.uuid})
       : super(
           child: EditChannelPage(uuid: uuid),
@@ -80,11 +80,11 @@ class EditChannelRoute extends BaseRouteData {
   final String uuid;
 }
 
-class AppTestRoute extends BaseRouteData {
+class AppTestRoute extends BaseRouteData with _$AppTestRoute {
   AppTestRoute() : super(child: const AppTestPage());
 }
 
-class ChatQuickSearchRoute extends BaseRouteData {
+class ChatQuickSearchRoute extends BaseRouteData with _$ChatQuickSearchRoute {
   ChatQuickSearchRoute({this.query = ''})
       : super(
           child: ChatQuickSearchPage(query: query),
@@ -93,7 +93,7 @@ class ChatQuickSearchRoute extends BaseRouteData {
   final String query;
 }
 
-class ChatAdvancedSearchRoute extends BaseRouteData {
+class ChatAdvancedSearchRoute extends BaseRouteData with _$ChatAdvancedSearchRoute {
   ChatAdvancedSearchRoute({required this.query})
       : super(
           child: ChatAdvancedSearchPage(query: query),
@@ -102,7 +102,7 @@ class ChatAdvancedSearchRoute extends BaseRouteData {
   final String query;
 }
 
-class ArchivedChatsMainRoute extends BaseRouteData {
+class ArchivedChatsMainRoute extends BaseRouteData with _$ArchivedChatsMainRoute {
   ArchivedChatsMainRoute()
       : super(
           child: const ArchivedChatsMainPage(),
@@ -110,7 +110,7 @@ class ArchivedChatsMainRoute extends BaseRouteData {
         );
 }
 
-class DeleteConversationRoute extends BaseRouteData {
+class DeleteConversationRoute extends BaseRouteData with _$DeleteConversationRoute {
   DeleteConversationRoute({required this.conversationIds})
       : super(
           child: DeleteConversationModal(conversationIds: conversationIds),
@@ -120,7 +120,7 @@ class DeleteConversationRoute extends BaseRouteData {
   final List<String> conversationIds;
 }
 
-class DeleteMessageRoute extends BaseRouteData {
+class DeleteMessageRoute extends BaseRouteData with _$DeleteMessageRoute {
   DeleteMessageRoute({required this.isMe})
       : super(
           child: DeleteMessageModal(isMe: isMe),
@@ -130,7 +130,7 @@ class DeleteMessageRoute extends BaseRouteData {
   final bool isMe;
 }
 
-class NewChatModalRoute extends BaseRouteData {
+class NewChatModalRoute extends BaseRouteData with _$NewChatModalRoute {
   NewChatModalRoute()
       : super(
           child: const NewChatModal(),
@@ -138,7 +138,7 @@ class NewChatModalRoute extends BaseRouteData {
         );
 }
 
-class NewChannelModalRoute extends BaseRouteData {
+class NewChannelModalRoute extends BaseRouteData with _$NewChannelModalRoute {
   NewChannelModalRoute()
       : super(
           child: const CreateChannelModal(),
@@ -146,7 +146,7 @@ class NewChannelModalRoute extends BaseRouteData {
         );
 }
 
-class ChatLearnMoreModalRoute extends BaseRouteData {
+class ChatLearnMoreModalRoute extends BaseRouteData with _$ChatLearnMoreModalRoute {
   ChatLearnMoreModalRoute()
       : super(
           child: const ChatLearnMoreModal(),
@@ -154,7 +154,7 @@ class ChatLearnMoreModalRoute extends BaseRouteData {
         );
 }
 
-class SendProfileModalRoute extends BaseRouteData {
+class SendProfileModalRoute extends BaseRouteData with _$SendProfileModalRoute {
   SendProfileModalRoute()
       : super(
           child: const SendProfileModal(),
@@ -162,7 +162,7 @@ class SendProfileModalRoute extends BaseRouteData {
         );
 }
 
-class ChatAddPollModalRoute extends BaseRouteData {
+class ChatAddPollModalRoute extends BaseRouteData with _$ChatAddPollModalRoute {
   ChatAddPollModalRoute()
       : super(
           child: const ChatAddPollModal(),
@@ -170,7 +170,7 @@ class ChatAddPollModalRoute extends BaseRouteData {
         );
 }
 
-class AddParticipantsToGroupModalRoute extends BaseRouteData {
+class AddParticipantsToGroupModalRoute extends BaseRouteData with _$AddParticipantsToGroupModalRoute {
   AddParticipantsToGroupModalRoute()
       : super(
           child: const AddGroupParticipantsModal(),
@@ -178,7 +178,7 @@ class AddParticipantsToGroupModalRoute extends BaseRouteData {
         );
 }
 
-class CreateGroupModalRoute extends BaseRouteData {
+class CreateGroupModalRoute extends BaseRouteData with _$CreateGroupModalRoute {
   CreateGroupModalRoute()
       : super(
           child: const CreateGroupModal(),
@@ -186,7 +186,7 @@ class CreateGroupModalRoute extends BaseRouteData {
         );
 }
 
-class SearchEmojiRoute extends BaseRouteData {
+class SearchEmojiRoute extends BaseRouteData with _$SearchEmojiRoute {
   SearchEmojiRoute()
       : super(
           child: const SearchEmojiModal(),
@@ -194,7 +194,7 @@ class SearchEmojiRoute extends BaseRouteData {
         );
 }
 
-class ShareViaMessageModalRoute extends BaseRouteData {
+class ShareViaMessageModalRoute extends BaseRouteData with _$ShareViaMessageModalRoute {
   ShareViaMessageModalRoute({required this.eventReference})
       : super(
           child: ShareViaMessageModal(
@@ -206,7 +206,7 @@ class ShareViaMessageModalRoute extends BaseRouteData {
   final String eventReference;
 }
 
-class PaymentSelectionChatRoute extends BaseRouteData {
+class PaymentSelectionChatRoute extends BaseRouteData with _$PaymentSelectionChatRoute {
   PaymentSelectionChatRoute({
     required this.pubkey,
   }) : super(
@@ -221,7 +221,7 @@ class PaymentSelectionChatRoute extends BaseRouteData {
   final String pubkey;
 }
 
-class SelectCoinChatRoute extends BaseRouteData {
+class SelectCoinChatRoute extends BaseRouteData with _$SelectCoinChatRoute {
   SelectCoinChatRoute({required this.paymentType})
       : super(
           child: switch (paymentType) {
@@ -240,7 +240,7 @@ class SelectCoinChatRoute extends BaseRouteData {
   final PaymentType paymentType;
 }
 
-class SelectNetworkChatRoute extends BaseRouteData {
+class SelectNetworkChatRoute extends BaseRouteData with _$SelectNetworkChatRoute {
   SelectNetworkChatRoute({required this.paymentType})
       : super(
           child: NetworkListView(
@@ -259,7 +259,7 @@ class SelectNetworkChatRoute extends BaseRouteData {
   final PaymentType paymentType;
 }
 
-class AddressNotFoundChatRoute extends BaseRouteData {
+class AddressNotFoundChatRoute extends BaseRouteData with _$AddressNotFoundChatRoute {
   AddressNotFoundChatRoute()
       : super(
           child: AddressNotFoundChatModal(
@@ -269,7 +269,7 @@ class AddressNotFoundChatRoute extends BaseRouteData {
         );
 }
 
-class CoinSendScanChatRoute extends BaseRouteData {
+class CoinSendScanChatRoute extends BaseRouteData with _$CoinSendScanChatRoute {
   CoinSendScanChatRoute()
       : super(
           child: const WalletScanModalPage(),
@@ -277,7 +277,7 @@ class CoinSendScanChatRoute extends BaseRouteData {
         );
 }
 
-class SendCoinsFormChatRoute extends BaseRouteData {
+class SendCoinsFormChatRoute extends BaseRouteData with _$SendCoinsFormChatRoute {
   SendCoinsFormChatRoute()
       : super(
           child: SendCoinsForm(
@@ -294,7 +294,7 @@ class SendCoinsFormChatRoute extends BaseRouteData {
         );
 }
 
-class SelectContactChatRoute extends BaseRouteData {
+class SelectContactChatRoute extends BaseRouteData with _$SelectContactChatRoute {
   SelectContactChatRoute({required this.networkId})
       : super(
           child: ContactPickerModal(
@@ -307,7 +307,7 @@ class SelectContactChatRoute extends BaseRouteData {
   final String networkId;
 }
 
-class SendCoinsConfirmationChatRoute extends BaseRouteData {
+class SendCoinsConfirmationChatRoute extends BaseRouteData with _$SendCoinsConfirmationChatRoute {
   SendCoinsConfirmationChatRoute()
       : super(
           child: ConfirmationSheet(
@@ -318,7 +318,7 @@ class SendCoinsConfirmationChatRoute extends BaseRouteData {
         );
 }
 
-class CoinTransactionResultChatRoute extends BaseRouteData {
+class CoinTransactionResultChatRoute extends BaseRouteData with _$CoinTransactionResultChatRoute {
   CoinTransactionResultChatRoute()
       : super(
           child: TransactionResultSheet(
@@ -329,7 +329,7 @@ class CoinTransactionResultChatRoute extends BaseRouteData {
         );
 }
 
-class CoinTransactionDetailsChatRoute extends BaseRouteData {
+class CoinTransactionDetailsChatRoute extends BaseRouteData with _$CoinTransactionDetailsChatRoute {
   CoinTransactionDetailsChatRoute()
       : super(
           child: TransactionDetailsPage(
@@ -340,7 +340,7 @@ class CoinTransactionDetailsChatRoute extends BaseRouteData {
         );
 }
 
-class ExploreTransactionDetailsChatRoute extends BaseRouteData {
+class ExploreTransactionDetailsChatRoute extends BaseRouteData with _$ExploreTransactionDetailsChatRoute {
   ExploreTransactionDetailsChatRoute({required this.url})
       : super(
           child: ExploreTransactionDetailsModal(url: url),
@@ -350,7 +350,7 @@ class ExploreTransactionDetailsChatRoute extends BaseRouteData {
   final String url;
 }
 
-class RequestCoinsFormChatRoute extends BaseRouteData {
+class RequestCoinsFormChatRoute extends BaseRouteData with _$RequestCoinsFormChatRoute {
   RequestCoinsFormChatRoute()
       : super(
           child: RequestCoinsFormModal(
@@ -361,7 +361,7 @@ class RequestCoinsFormChatRoute extends BaseRouteData {
 }
 
 @TypedGoRoute<ChatMediaRoute>(path: '/chat-media/:eventReference/:initialIndex')
-class ChatMediaRoute extends BaseRouteData {
+class ChatMediaRoute extends BaseRouteData with _$ChatMediaRoute {
   ChatMediaRoute({
     required this.eventReference,
     required this.initialIndex,
@@ -378,7 +378,7 @@ class ChatMediaRoute extends BaseRouteData {
   final int initialIndex;
 }
 
-class DeviceKeypairDialogRoute extends BaseRouteData {
+class DeviceKeypairDialogRoute extends BaseRouteData with _$DeviceKeypairDialogRoute {
   DeviceKeypairDialogRoute({required this.state})
       : super(
           child: DeviceKeypairDialog(state: state),

@@ -28,7 +28,7 @@ class AuthRoutes {
   ];
 }
 
-class GetStartedRoute extends BaseRouteData {
+class GetStartedRoute extends BaseRouteData with _$GetStartedRoute {
   GetStartedRoute()
       : super(
           child: const GetStartedPage(),
@@ -36,7 +36,7 @@ class GetStartedRoute extends BaseRouteData {
         );
 }
 
-class SignUpPasskeyRoute extends BaseRouteData {
+class SignUpPasskeyRoute extends BaseRouteData with _$SignUpPasskeyRoute {
   SignUpPasskeyRoute()
       : super(
           child: const SignUpPasskeyPage(),
@@ -44,7 +44,7 @@ class SignUpPasskeyRoute extends BaseRouteData {
         );
 }
 
-class SignUpPasswordRoute extends BaseRouteData {
+class SignUpPasswordRoute extends BaseRouteData with _$SignUpPasswordRoute {
   SignUpPasswordRoute()
       : super(
           child: const SignUpPasswordPage(),
@@ -52,7 +52,7 @@ class SignUpPasswordRoute extends BaseRouteData {
         );
 }
 
-class RestoreMenuRoute extends BaseRouteData {
+class RestoreMenuRoute extends BaseRouteData with _$RestoreMenuRoute {
   RestoreMenuRoute()
       : super(
           child: const RestoreMenuPage(),
@@ -60,7 +60,7 @@ class RestoreMenuRoute extends BaseRouteData {
         );
 }
 
-class RestoreCredsRoute extends BaseRouteData {
+class RestoreCredsRoute extends BaseRouteData with _$RestoreCredsRoute {
   RestoreCredsRoute()
       : super(
           child: const RestoreCredsPage(),
@@ -68,7 +68,7 @@ class RestoreCredsRoute extends BaseRouteData {
         );
 }
 
-class RecoverUserSuccessRoute extends BaseRouteData {
+class RecoverUserSuccessRoute extends BaseRouteData with _$RecoverUserSuccessRoute {
   RecoverUserSuccessRoute()
       : super(
           child: const RecoverUserSuccessPage(),
@@ -76,7 +76,7 @@ class RecoverUserSuccessRoute extends BaseRouteData {
         );
 }
 
-class SelectLanguagesRoute extends BaseRouteData {
+class SelectLanguagesRoute extends BaseRouteData with _$SelectLanguagesRoute {
   SelectLanguagesRoute()
       : super(
           child: const SelectLanguages(),
@@ -84,7 +84,7 @@ class SelectLanguagesRoute extends BaseRouteData {
         );
 }
 
-class FillProfileRoute extends BaseRouteData {
+class FillProfileRoute extends BaseRouteData with _$FillProfileRoute {
   FillProfileRoute()
       : super(
           child: const FillProfile(),
@@ -92,7 +92,7 @@ class FillProfileRoute extends BaseRouteData {
         );
 }
 
-class DiscoverCreatorsRoute extends BaseRouteData {
+class DiscoverCreatorsRoute extends BaseRouteData with _$DiscoverCreatorsRoute {
   DiscoverCreatorsRoute()
       : super(
           child: const DiscoverCreators(),
@@ -100,7 +100,7 @@ class DiscoverCreatorsRoute extends BaseRouteData {
         );
 }
 
-class NotificationsRoute extends BaseRouteData {
+class NotificationsRoute extends BaseRouteData with _$NotificationsRoute {
   NotificationsRoute()
       : super(
           child: const TurnOnNotifications(),
@@ -108,7 +108,7 @@ class NotificationsRoute extends BaseRouteData {
         );
 }
 
-class RecoverUserRoute extends BaseRouteData {
+class RecoverUserRoute extends BaseRouteData with _$RecoverUserRoute {
   RecoverUserRoute()
       : super(
           child: const RecoverUserPage(),
@@ -116,7 +116,7 @@ class RecoverUserRoute extends BaseRouteData {
         );
 }
 
-class RestoreFromCloudRoute extends BaseRouteData {
+class RestoreFromCloudRoute extends BaseRouteData with _$RestoreFromCloudRoute {
   RestoreFromCloudRoute()
       : super(
           child: const RestoreFromCloudPage(),
@@ -124,7 +124,7 @@ class RestoreFromCloudRoute extends BaseRouteData {
         );
 }
 
-class RestoreFromCloudNoKeysRoute extends BaseRouteData {
+class RestoreFromCloudNoKeysRoute extends BaseRouteData with _$RestoreFromCloudNoKeysRoute {
   RestoreFromCloudNoKeysRoute()
       : super(
           child: const RestoreFromCloudNoKeysAvailableModal(),
