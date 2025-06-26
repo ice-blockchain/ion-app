@@ -2,12 +2,13 @@
 
 import 'package:drift/drift.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:ion/app/features/auth/providers/auth_provider.c.dart';
-import 'package:ion/app/features/user/model/badges/badge_award.c.dart';
-import 'package:ion/app/features/user/model/badges/badge_definition.c.dart';
-import 'package:ion/app/features/user/model/badges/profile_badges.c.dart';
-import 'package:ion/app/features/user_profile/database/tables/user_badge_info_table.c.dart';
-import 'package:ion/app/features/user_profile/database/user_profile_database.c.dart';
+import 'package:ion/app/features/auth/providers/auth_provider.m.dart';
+import 'package:ion/app/features/user/model/badges/badge_award.f.dart';
+import 'package:ion/app/features/user/model/badges/badge_definition.f.dart';
+import 'package:ion/app/features/user/model/badges/profile_badges.f.dart';
+import 'package:ion/app/features/user_profile/database/tables/user_badge_info_table.d.dart';
+import 'package:ion/app/features/user_profile/database/user_profile_database.d.dart';
+import 'package:ion/app/features/user_profile/providers/user_profile_database_provider.r.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'user_badge_info_dao.m.g.dart';

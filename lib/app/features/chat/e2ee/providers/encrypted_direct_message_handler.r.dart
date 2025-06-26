@@ -11,7 +11,7 @@ import 'package:ion/app/features/chat/model/database/chat_database.m.dart';
 import 'package:ion/app/features/ion_connect/ion_connect.dart';
 import 'package:ion/app/features/ion_connect/model/global_subscription_encrypted_event_message_handler.dart';
 import 'package:ion/app/features/ion_connect/model/ion_connect_gift_wrap.f.dart';
-import 'package:ion/app/features/user_metadata/providers/user_metadata_sync_provider.r.dart';
+import 'package:ion/app/features/user_profile/providers/user_profile_sync_provider.r.dart';
 import 'package:ion/app/services/media_service/media_encryption_service.m.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 

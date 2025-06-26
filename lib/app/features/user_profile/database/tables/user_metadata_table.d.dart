@@ -5,13 +5,8 @@ import 'package:ion/app/extensions/event_message.dart';
 import 'package:ion/app/features/ion_connect/database/converters/event_reference_converter.d.dart';
 import 'package:ion/app/features/ion_connect/database/converters/event_tags_converter.dart';
 import 'package:ion/app/features/ion_connect/ion_connect.dart';
-<<<<<<<< HEAD:lib/app/features/user_profile/database/tables/user_metadata_table.d.dart
 import 'package:ion/app/features/user/model/user_metadata.f.dart';
-import 'package:ion/app/features/user_metadata/database/user_metadata_database.m.dart';
-========
-import 'package:ion/app/features/user/model/user_metadata.c.dart';
-import 'package:ion/app/features/user_profile/database/user_profile_database.c.dart';
->>>>>>>> d3ecb7764 (feat: add delegation to profile db):lib/app/features/user_profile/database/tables/user_metadata_table.c.dart
+import 'package:ion/app/features/user_profile/database/user_profile_database.d.dart';
 
 @DataClassName('EventMessageMetadataDbModel')
 class UserMetadataTable extends Table {

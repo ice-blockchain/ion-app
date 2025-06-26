@@ -20,7 +20,7 @@ import 'package:ion/app/features/chat/views/components/message_items/message_typ
 import 'package:ion/app/features/ion_connect/model/event_reference.f.dart';
 import 'package:ion/app/features/user/providers/user_metadata_provider.r.dart';
 import 'package:ion/app/features/user_block/providers/block_list_notifier.r.dart';
-import 'package:ion/app/features/user_metadata/providers/user_metadata_from_db_provider.r.dart';
+import 'package:ion/app/features/user_profile/providers/user_metadata_from_db_provider.r.dart';
 import 'package:ion/app/utils/date.dart';
 import 'package:ion/generated/assets.gen.dart';
 

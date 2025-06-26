@@ -15,7 +15,7 @@ import 'package:ion/app/features/ion_connect/model/event_reference.f.dart';
 import 'package:ion/app/features/ion_connect/model/global_subscription_encrypted_event_message_handler.dart';
 import 'package:ion/app/features/ion_connect/model/ion_connect_gift_wrap.f.dart';
 import 'package:ion/app/features/ion_connect/providers/ion_connect_event_signer_provider.r.dart';
-import 'package:ion/app/features/user_metadata/providers/user_metadata_sync_provider.r.dart';
+import 'package:ion/app/features/user_profile/providers/user_profile_sync_provider.r.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'encrypted_deletion_request_handler.r.g.dart';

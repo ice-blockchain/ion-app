@@ -2,17 +2,11 @@
 
 import 'package:drift/drift.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-<<<<<<<< HEAD:lib/app/features/user_profile/database/dao/user_metadata_dao.m.dart
 import 'package:ion/app/features/auth/providers/auth_provider.m.dart';
 import 'package:ion/app/features/user/model/user_metadata.f.dart';
-import 'package:ion/app/features/user_metadata/database/tables/user_metadata_table.d.dart';
-import 'package:ion/app/features/user_metadata/database/user_metadata_database.m.dart';
-========
-import 'package:ion/app/features/auth/providers/auth_provider.c.dart';
-import 'package:ion/app/features/user/model/user_metadata.c.dart';
-import 'package:ion/app/features/user_profile/database/tables/user_metadata_table.c.dart';
-import 'package:ion/app/features/user_profile/database/user_profile_database.c.dart';
->>>>>>>> d3ecb7764 (feat: add delegation to profile db):lib/app/features/user_profile/database/dao/user_metadata_dao.c.dart
+import 'package:ion/app/features/user_profile/database/tables/user_metadata_table.d.dart';
+import 'package:ion/app/features/user_profile/database/user_profile_database.d.dart';
+import 'package:ion/app/features/user_profile/providers/user_profile_database_provider.r.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'user_metadata_dao.m.g.dart';

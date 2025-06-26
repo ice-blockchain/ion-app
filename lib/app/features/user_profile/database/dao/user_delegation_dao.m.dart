@@ -2,10 +2,11 @@
 
 import 'package:drift/drift.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:ion/app/features/auth/providers/auth_provider.c.dart';
-import 'package:ion/app/features/user/model/user_delegation.c.dart';
-import 'package:ion/app/features/user_profile/database/tables/user_delegation_table.c.dart';
-import 'package:ion/app/features/user_profile/database/user_profile_database.c.dart';
+import 'package:ion/app/features/auth/providers/auth_provider.m.dart';
+import 'package:ion/app/features/user/model/user_delegation.f.dart';
+import 'package:ion/app/features/user_profile/database/tables/user_delegation_table.d.dart';
+import 'package:ion/app/features/user_profile/database/user_profile_database.d.dart';
+import 'package:ion/app/features/user_profile/providers/user_profile_database_provider.r.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'user_delegation_dao.m.g.dart';
