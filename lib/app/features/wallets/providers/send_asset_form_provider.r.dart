@@ -158,6 +158,7 @@ class SendAssetFormController extends _$SendAssetFormController {
           amount: parsedAmount,
           amountUSD: parsedAmount * (coin.selectedOption?.coin.priceUSD ?? 0),
         ),
+        exceedsMaxAmount: false,
       );
     }
   }
