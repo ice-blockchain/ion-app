@@ -15,7 +15,7 @@ import 'package:ion/app/features/ion_connect/model/event_reference.f.dart';
 import 'package:ion/app/features/ion_connect/model/global_subscription_encrypted_event_message_handler.dart';
 import 'package:ion/app/features/ion_connect/model/ion_connect_gift_wrap.f.dart';
 import 'package:ion/app/features/ion_connect/providers/ion_connect_event_signer_provider.r.dart';
-import 'package:ion/app/features/user_metadata/providers/user_metadata_sync_provider.r.dart';
+import 'package:ion/app/features/user_profile/providers/user_profile_sync_provider.r.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'encrypted_deletion_request_handler.r.g.dart';
@@ -29,14 +29,14 @@ class EncryptedDeletionRequestHandler extends GlobalSubscriptionEncryptedEventMe
     this.env,
     this.masterPubkey,
     this.eventSigner,
-    this.userMetadataSyncProvider,
+    this.userProfileSyncProvider,
   );
 
   final ConversationMessageDao conversationMessageDao;
   final ConversationMessageReactionDao conversationMessageReactionDao;
   final ConversationDao conversationDao;
   final EventMessageDao eventMessageDao;
-  final UserMetadataSync userMetadataSyncProvider;
+  final UserProfileSync userProfileSyncProvider;
 
   final Env env;
   final String masterPubkey;
@@ -53,7 +53,7 @@ class EncryptedDeletionRequestHandler extends GlobalSubscriptionEncryptedEventMe
   Future<void> handle(EventMessage rumor) async {
     unawaited(_deleteConversation(rumor));
     unawaited(_deleteConversationMessages(rumor));
-    unawaited(userMetadataSyncProvider.syncUserMetadata(masterPubkeys: {rumor.masterPubkey}));
+    unawaited(userProfileSyncProvider.syncUserProfile(masterPubkeys: {rumor.masterPubkey}));
   }
 
   Future<void> _deleteConversation(EventMessage rumor) async {
@@ -123,6 +123,6 @@ Future<EncryptedDeletionRequestHandler?> encryptedDeletionRequestHandler(Ref ref
     ref.watch(envProvider.notifier),
     masterPubkey,
     eventSigner,
-    ref.watch(userMetadataSyncProvider.notifier),
+    ref.watch(userProfileSyncProvider.notifier),
   );
 }

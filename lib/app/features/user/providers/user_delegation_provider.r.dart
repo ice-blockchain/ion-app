@@ -15,13 +15,15 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 part 'user_delegation_provider.r.g.dart';
 
 @riverpod
-Future<UserDelegationEntity?> userDelegation(Ref ref, String pubkey) async {
-  final userDelegation = await ref.watch(
-    cachedUserDelegationProvider(pubkey).future,
-  );
+Future<UserDelegationEntity?> userDelegation(Ref ref, String pubkey, {bool cache = true}) async {
+  if (cache) {
+    final userDelegation = await ref.watch(
+      cachedUserDelegationProvider(pubkey).future,
+    );
 
-  if (userDelegation != null) {
-    return userDelegation;
+    if (userDelegation != null) {
+      return userDelegation;
+    }
   }
 
   // Added an authentication check to prevent the provider from getting stuck in an error state

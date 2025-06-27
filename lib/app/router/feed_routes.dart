@@ -62,7 +62,7 @@ class FeedRoutes {
   ];
 }
 
-class ArticleDetailsRoute extends BaseRouteData {
+class ArticleDetailsRoute extends BaseRouteData with _$ArticleDetailsRoute {
   ArticleDetailsRoute({required this.eventReference})
       : super(
           child: ArticleDetailsPage(
@@ -73,7 +73,7 @@ class ArticleDetailsRoute extends BaseRouteData {
   final String eventReference;
 }
 
-class SelectTopicsCategoriesRoute extends BaseRouteData {
+class SelectTopicsCategoriesRoute extends BaseRouteData with _$SelectTopicsCategoriesRoute {
   SelectTopicsCategoriesRoute({required this.feedType})
       : super(
           child: SelectTopicsCategoriesModal(feedType: feedType),
@@ -83,7 +83,7 @@ class SelectTopicsCategoriesRoute extends BaseRouteData {
   final FeedType feedType;
 }
 
-class SelectTopicsSubcategoriesRoute extends BaseRouteData {
+class SelectTopicsSubcategoriesRoute extends BaseRouteData with _$SelectTopicsSubcategoriesRoute {
   SelectTopicsSubcategoriesRoute({
     required this.categoryKey,
     required this.feedType,
@@ -99,7 +99,7 @@ class SelectTopicsSubcategoriesRoute extends BaseRouteData {
   final FeedType feedType;
 }
 
-class ArticleRepliesRoute extends BaseRouteData {
+class ArticleRepliesRoute extends BaseRouteData with _$ArticleRepliesRoute {
   ArticleRepliesRoute({required this.eventReference})
       : super(
           child: ArticleRepliesPage(
@@ -110,7 +110,7 @@ class ArticleRepliesRoute extends BaseRouteData {
   final String eventReference;
 }
 
-class ArticlesFromTopicRoute extends BaseRouteData {
+class ArticlesFromTopicRoute extends BaseRouteData with _$ArticlesFromTopicRoute {
   ArticlesFromTopicRoute({required this.topic})
       : super(
           child: ArticlesFromTopicPage(
@@ -121,7 +121,7 @@ class ArticlesFromTopicRoute extends BaseRouteData {
   final String topic;
 }
 
-class ArticlesFromAuthorRoute extends BaseRouteData {
+class ArticlesFromAuthorRoute extends BaseRouteData with _$ArticlesFromAuthorRoute {
   ArticlesFromAuthorRoute({required this.pubkey})
       : super(
           child: ArticlesFromAuthorPage(
@@ -132,7 +132,7 @@ class ArticlesFromAuthorRoute extends BaseRouteData {
   final String pubkey;
 }
 
-class PostDetailsRoute extends BaseRouteData {
+class PostDetailsRoute extends BaseRouteData with _$PostDetailsRoute {
   PostDetailsRoute({required this.eventReference})
       : super(
           child: PostDetailsPage(
@@ -143,14 +143,14 @@ class PostDetailsRoute extends BaseRouteData {
   final String eventReference;
 }
 
-class NotificationsHistoryRoute extends BaseRouteData {
+class NotificationsHistoryRoute extends BaseRouteData with _$NotificationsHistoryRoute {
   NotificationsHistoryRoute()
       : super(
           child: const NotificationsHistoryPage(),
         );
 }
 
-class RepostOptionsModalRoute extends BaseRouteData {
+class RepostOptionsModalRoute extends BaseRouteData with _$RepostOptionsModalRoute {
   RepostOptionsModalRoute({
     required this.eventReference,
   }) : super(
@@ -163,7 +163,7 @@ class RepostOptionsModalRoute extends BaseRouteData {
   final String eventReference;
 }
 
-class FeedSimpleSearchRoute extends BaseRouteData {
+class FeedSimpleSearchRoute extends BaseRouteData with _$FeedSimpleSearchRoute {
   FeedSimpleSearchRoute({this.query = ''})
       : super(
           child: FeedSimpleSearchPage(query: query),
@@ -172,7 +172,7 @@ class FeedSimpleSearchRoute extends BaseRouteData {
   final String query;
 }
 
-class FeedAdvancedSearchRoute extends BaseRouteData {
+class FeedAdvancedSearchRoute extends BaseRouteData with _$FeedAdvancedSearchRoute {
   FeedAdvancedSearchRoute({required this.query})
       : super(
           child: FeedAdvancedSearchPage(query: query),
@@ -181,7 +181,8 @@ class FeedAdvancedSearchRoute extends BaseRouteData {
   final String query;
 }
 
-class FeedVisibleArticleCategoriesRoute extends BaseRouteData {
+class FeedVisibleArticleCategoriesRoute extends BaseRouteData
+    with _$FeedVisibleArticleCategoriesRoute {
   FeedVisibleArticleCategoriesRoute()
       : super(
           child: const FeedVisibleArticleCategoriesModal(),
@@ -189,7 +190,7 @@ class FeedVisibleArticleCategoriesRoute extends BaseRouteData {
         );
 }
 
-class SwitchAccountRoute extends BaseRouteData {
+class SwitchAccountRoute extends BaseRouteData with _$SwitchAccountRoute {
   SwitchAccountRoute()
       : super(
           child: const SwitchAccountModal(),
@@ -197,7 +198,7 @@ class SwitchAccountRoute extends BaseRouteData {
         );
 }
 
-class CreatePostRoute extends BaseRouteData {
+class CreatePostRoute extends BaseRouteData with _$CreatePostRoute {
   CreatePostRoute({
     this.content,
     this.attachedMedia,
@@ -213,7 +214,7 @@ class CreatePostRoute extends BaseRouteData {
   final String? attachedMedia;
 }
 
-class EditPostRoute extends BaseRouteData {
+class EditPostRoute extends BaseRouteData with _$EditPostRoute {
   EditPostRoute({
     required this.modifiedEvent,
     this.content,
@@ -232,7 +233,7 @@ class EditPostRoute extends BaseRouteData {
   final String? attachedMedia;
 }
 
-class EditArticleRoute extends BaseRouteData {
+class EditArticleRoute extends BaseRouteData with _$EditArticleRoute {
   EditArticleRoute({required this.modifiedEvent})
       : super(
           child: ArticleFormModal.edit(modifiedEvent: EventReference.fromEncoded(modifiedEvent)),
@@ -242,7 +243,7 @@ class EditArticleRoute extends BaseRouteData {
   final String modifiedEvent;
 }
 
-class EditArticlePreviewRoute extends BaseRouteData {
+class EditArticlePreviewRoute extends BaseRouteData with _$EditArticlePreviewRoute {
   EditArticlePreviewRoute({required this.modifiedEvent})
       : super(
           child: ArticlePreviewModal.edit(modifiedEvent: EventReference.fromEncoded(modifiedEvent)),
@@ -251,7 +252,7 @@ class EditArticlePreviewRoute extends BaseRouteData {
   final String modifiedEvent;
 }
 
-class CreateReplyRoute extends BaseRouteData {
+class CreateReplyRoute extends BaseRouteData with _$CreateReplyRoute {
   CreateReplyRoute({
     required this.parentEvent,
     this.content,
@@ -270,7 +271,7 @@ class CreateReplyRoute extends BaseRouteData {
   final String? attachedMedia;
 }
 
-class EditReplyRoute extends BaseRouteData {
+class EditReplyRoute extends BaseRouteData with _$EditReplyRoute {
   EditReplyRoute({
     required this.parentEvent,
     required this.modifiedEvent,
@@ -292,7 +293,7 @@ class EditReplyRoute extends BaseRouteData {
   final String? attachedMedia;
 }
 
-class CreateQuoteRoute extends BaseRouteData {
+class CreateQuoteRoute extends BaseRouteData with _$CreateQuoteRoute {
   CreateQuoteRoute({
     required this.quotedEvent,
     this.content,
@@ -311,7 +312,7 @@ class CreateQuoteRoute extends BaseRouteData {
   final String? attachedMedia;
 }
 
-class EditQuoteRoute extends BaseRouteData {
+class EditQuoteRoute extends BaseRouteData with _$EditQuoteRoute {
   EditQuoteRoute({
     required this.quotedEvent,
     required this.modifiedEvent,
@@ -333,7 +334,7 @@ class EditQuoteRoute extends BaseRouteData {
   final String? attachedMedia;
 }
 
-class CreateVideoRoute extends BaseRouteData {
+class CreateVideoRoute extends BaseRouteData with _$CreateVideoRoute {
   CreateVideoRoute({
     required this.videoPath,
     required this.mimeType,
@@ -352,7 +353,7 @@ class CreateVideoRoute extends BaseRouteData {
   final String? content;
 }
 
-class CreateArticleRoute extends BaseRouteData {
+class CreateArticleRoute extends BaseRouteData with _$CreateArticleRoute {
   CreateArticleRoute()
       : super(
           child: ArticleFormModal.create(),
@@ -360,7 +361,7 @@ class CreateArticleRoute extends BaseRouteData {
         );
 }
 
-class ArticlePreviewRoute extends BaseRouteData {
+class ArticlePreviewRoute extends BaseRouteData with _$ArticlePreviewRoute {
   ArticlePreviewRoute()
       : super(
           child: ArticlePreviewModal.create(),
@@ -368,7 +369,7 @@ class ArticlePreviewRoute extends BaseRouteData {
         );
 }
 
-class FeedSearchFiltersRoute extends BaseRouteData {
+class FeedSearchFiltersRoute extends BaseRouteData with _$FeedSearchFiltersRoute {
   FeedSearchFiltersRoute()
       : super(
           child: const FeedSearchFiltersPage(),
@@ -377,12 +378,12 @@ class FeedSearchFiltersRoute extends BaseRouteData {
 }
 
 @TypedGoRoute<StoryRecordRoute>(path: '/story-record')
-class StoryRecordRoute extends BaseRouteData {
+class StoryRecordRoute extends BaseRouteData with _$StoryRecordRoute {
   StoryRecordRoute() : super(child: const StoryRecordPage());
 }
 
 @TypedGoRoute<StoryPreviewRoute>(path: '/story-preview/:path')
-class StoryPreviewRoute extends BaseRouteData {
+class StoryPreviewRoute extends BaseRouteData with _$StoryPreviewRoute {
   StoryPreviewRoute({
     required this.path,
     required this.mimeType,
@@ -405,7 +406,7 @@ class StoryPreviewRoute extends BaseRouteData {
   final bool isPostScreenshot;
 }
 
-class StoryViewerRoute extends BaseRouteData {
+class StoryViewerRoute extends BaseRouteData with _$StoryViewerRoute {
   StoryViewerRoute({
     required this.pubkey,
     this.initialStoryReference,
@@ -427,7 +428,7 @@ class StoryViewerRoute extends BaseRouteData {
   final bool showOnlySelectedUser;
 }
 
-class TrendingVideosRoute extends BaseRouteData {
+class TrendingVideosRoute extends BaseRouteData with _$TrendingVideosRoute {
   TrendingVideosRoute({required this.eventReference})
       : super(
           child: TrendingVideosPage(
@@ -439,7 +440,7 @@ class TrendingVideosRoute extends BaseRouteData {
   final String eventReference;
 }
 
-class FeedVideosRoute extends BaseRouteData {
+class FeedVideosRoute extends BaseRouteData with _$FeedVideosRoute {
   FeedVideosRoute({
     required this.eventReference,
     this.initialMediaIndex = 0,
@@ -460,7 +461,7 @@ class FeedVideosRoute extends BaseRouteData {
   final String? framedEventReference;
 }
 
-class FeedAdvancedSearchVideosRoute extends BaseRouteData {
+class FeedAdvancedSearchVideosRoute extends BaseRouteData with _$FeedAdvancedSearchVideosRoute {
   FeedAdvancedSearchVideosRoute({
     required this.eventReference,
     required this.query,
@@ -487,7 +488,7 @@ class FeedAdvancedSearchVideosRoute extends BaseRouteData {
   final String? framedEventReference;
 }
 
-class ReplyListVideosRoute extends BaseRouteData {
+class ReplyListVideosRoute extends BaseRouteData with _$ReplyListVideosRoute {
   ReplyListVideosRoute({
     required this.eventReference,
     required this.parentEventReference,
@@ -511,7 +512,7 @@ class ReplyListVideosRoute extends BaseRouteData {
   final String? framedEventReference;
 }
 
-class AddBookmarkRoute extends BaseRouteData {
+class AddBookmarkRoute extends BaseRouteData with _$AddBookmarkRoute {
   AddBookmarkRoute({
     required this.eventReference,
   }) : super(

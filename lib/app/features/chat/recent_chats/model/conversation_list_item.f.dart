@@ -19,7 +19,9 @@ class ConversationListItem with _$ConversationListItem {
 }
 
 extension ConversationListItemX on ConversationListItem {
-  String receiverMasterPubkey(String? currentUserMasterPubkey) {
+  String? receiverMasterPubkey(String? currentUserMasterPubkey) {
+    if (latestMessage == null) return null;
+
     return latestMessage!.participantsMasterPubkeys.singleWhere(
       (masterPubkey) => masterPubkey != currentUserMasterPubkey,
     );

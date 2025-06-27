@@ -61,21 +61,39 @@ class UserDelegationEntity
 }
 
 @freezed
-class UserDelegationData with _$UserDelegationData implements ReplaceableEntityData {
+class UserDelegationData
+    with _$UserDelegationData
+    implements ReplaceableEntityData, EventSerializable {
   const factory UserDelegationData({
     required List<UserDelegate> delegates,
   }) = _UserDelegationData;
+
+  const UserDelegationData._();
 
   factory UserDelegationData.fromEventMessage(EventMessage eventMessage) {
     final delegates =
         eventMessage.tags.where((tag) => tag[0] == 'p').map(UserDelegate.fromTag).toList();
 
-    return UserDelegationData(
-      delegates: delegates,
-    );
+    return UserDelegationData(delegates: delegates);
   }
 
-  const UserDelegationData._();
+  @override
+  FutureOr<EventMessage> toEventMessage(
+    EventSigner signer, {
+    List<List<String>> tags = const [],
+    int? createdAt,
+  }) {
+    return EventMessage.fromData(
+      content: '',
+      signer: signer,
+      createdAt: createdAt,
+      kind: UserDelegationEntity.kind,
+      tags: [
+        ...tags,
+        ...delegates.map((delegate) => delegate.toTag()),
+      ],
+    );
+  }
 
   bool validate(EventMessage message) {
     final currentDelegates = delegates.fold(<String, UserDelegate>{}, (currentDelegates, delegate) {

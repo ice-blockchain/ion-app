@@ -9,7 +9,7 @@ import 'package:ion/app/features/chat/model/database/chat_database.m.dart';
 import 'package:ion/app/features/ion_connect/ion_connect.dart';
 import 'package:ion/app/features/ion_connect/model/global_subscription_encrypted_event_message_handler.dart';
 import 'package:ion/app/features/ion_connect/model/ion_connect_gift_wrap.f.dart';
-import 'package:ion/app/features/user_metadata/providers/user_metadata_sync_provider.r.dart';
+import 'package:ion/app/features/user_profile/providers/user_profile_sync_provider.r.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'encrypted_direct_message_reaction_handler.r.g.dart';
@@ -18,12 +18,12 @@ class EncryptedDirectMessageReactionHandler extends GlobalSubscriptionEncryptedE
   EncryptedDirectMessageReactionHandler(
     this.conversationMessageReactionDao,
     this.eventMessageDao,
-    this.userMetadataSyncProvider,
+    this.userProfileSyncProvider,
   );
 
   final ConversationMessageReactionDao conversationMessageReactionDao;
   final EventMessageDao eventMessageDao;
-  final UserMetadataSync userMetadataSyncProvider;
+  final UserProfileSync userProfileSyncProvider;
 
   @override
   bool canHandle({
@@ -37,7 +37,7 @@ class EncryptedDirectMessageReactionHandler extends GlobalSubscriptionEncryptedE
 
   @override
   Future<void> handle(EventMessage rumor) async {
-    unawaited(userMetadataSyncProvider.syncUserMetadata(masterPubkeys: {rumor.masterPubkey}));
+    unawaited(userProfileSyncProvider.syncUserProfile(masterPubkeys: {rumor.masterPubkey}));
     await conversationMessageReactionDao.add(
       reactionEvent: rumor,
       eventMessageDao: eventMessageDao,
@@ -50,5 +50,5 @@ EncryptedDirectMessageReactionHandler encryptedDirectMessageReactionHandler(Ref 
     EncryptedDirectMessageReactionHandler(
       ref.watch(conversationMessageReactionDaoProvider),
       ref.watch(eventMessageDaoProvider),
-      ref.watch(userMetadataSyncProvider.notifier),
+      ref.watch(userProfileSyncProvider.notifier),
     );

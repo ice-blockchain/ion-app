@@ -25,8 +25,8 @@ import 'package:ion/app/features/chat/recent_chats/views/components/recent_chat_
 import 'package:ion/app/features/chat/recent_chats/views/components/recent_chat_tile/recent_chat_tile.dart';
 import 'package:ion/app/features/user/providers/badges_notifier.r.dart';
 import 'package:ion/app/features/user/providers/user_metadata_provider.r.dart';
-import 'package:ion/app/features/user_metadata/providers/user_metadata_from_db_provider.r.dart';
-import 'package:ion/app/features/user_metadata/providers/user_metadata_sync_provider.r.dart';
+import 'package:ion/app/features/user_profile/providers/user_metadata_from_db_provider.r.dart';
+import 'package:ion/app/features/user_profile/providers/user_profile_sync_provider.r.dart';
 import 'package:ion/app/hooks/use_on_init.dart';
 import 'package:ion/app/hooks/use_scroll_top_on_tab_press.dart';
 import 'package:ion/app/router/app_routes.gr.dart';
@@ -129,11 +129,12 @@ class RecentChatsTimelinePage extends HookConsumerWidget {
     final participantsMasterPubkeys = conversations
         .where((c) => c.type == ConversationType.oneToOne)
         .map((c) => c.receiverMasterPubkey(currentUserMasterPubkey))
+        .nonNulls
         .toSet();
 
     if (participantsMasterPubkeys.isEmpty) return;
 
-    await ref.read(userMetadataSyncProvider.notifier).syncUserMetadata(
+    await ref.read(userProfileSyncProvider.notifier).syncUserProfile(
           forceSync: true,
           masterPubkeys: participantsMasterPubkeys,
         );

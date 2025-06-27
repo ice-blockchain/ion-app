@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: ice License 1.0
 
 import 'package:ion/app/features/user/model/user_metadata.f.dart';
-import 'package:ion/app/features/user_metadata/database/dao/user_metadata_dao.m.dart';
+import 'package:ion/app/features/user_profile/database/dao/user_metadata_dao.m.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'user_metadata_from_db_provider.r.g.dart';

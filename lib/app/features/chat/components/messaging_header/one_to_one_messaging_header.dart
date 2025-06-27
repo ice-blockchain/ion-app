@@ -11,7 +11,7 @@ import 'package:ion/app/features/chat/views/components/message_items/messages_co
 import 'package:ion/app/features/user/providers/badges_notifier.r.dart';
 import 'package:ion/app/features/user/providers/user_metadata_provider.r.dart';
 import 'package:ion/app/features/user_block/providers/block_list_notifier.r.dart';
-import 'package:ion/app/features/user_metadata/providers/user_metadata_from_db_provider.r.dart';
+import 'package:ion/app/features/user_profile/providers/user_metadata_from_db_provider.r.dart';
 import 'package:ion/app/router/app_routes.gr.dart';
 import 'package:ion/app/utils/username.dart';
 import 'package:ion/generated/assets.gen.dart';

@@ -31,7 +31,7 @@ class ProtectAccountRoutes {
   ];
 }
 
-class SecureAccountOptionsRoute extends BaseRouteData {
+class SecureAccountOptionsRoute extends BaseRouteData with _$SecureAccountOptionsRoute {
   SecureAccountOptionsRoute()
       : super(
           child: const SecureAccountOptionsPage(),
@@ -39,7 +39,7 @@ class SecureAccountOptionsRoute extends BaseRouteData {
         );
 }
 
-class SecureAccountModalRoute extends BaseRouteData {
+class SecureAccountModalRoute extends BaseRouteData with _$SecureAccountModalRoute {
   SecureAccountModalRoute()
       : super(
           child: const SecureAccountModal(),
@@ -47,7 +47,7 @@ class SecureAccountModalRoute extends BaseRouteData {
         );
 }
 
-class SecureAccountErrorRoute extends BaseRouteData {
+class SecureAccountErrorRoute extends BaseRouteData with _$SecureAccountErrorRoute {
   SecureAccountErrorRoute()
       : super(
           child: const SecureAccountErrorAlert(),
@@ -55,7 +55,7 @@ class SecureAccountErrorRoute extends BaseRouteData {
         );
 }
 
-class BackupOptionsRoute extends BaseRouteData {
+class BackupOptionsRoute extends BaseRouteData with _$BackupOptionsRoute {
   BackupOptionsRoute()
       : super(
           child: const BackupOptionsPage(),
@@ -63,7 +63,7 @@ class BackupOptionsRoute extends BaseRouteData {
         );
 }
 
-class BackupWithCloudDisabledRoute extends BaseRouteData {
+class BackupWithCloudDisabledRoute extends BaseRouteData with _$BackupWithCloudDisabledRoute {
   BackupWithCloudDisabledRoute()
       : super(
           child: const CloudDisabledModal(),
@@ -71,7 +71,7 @@ class BackupWithCloudDisabledRoute extends BaseRouteData {
         );
 }
 
-class BackupWithCloudRoute extends BaseRouteData {
+class BackupWithCloudRoute extends BaseRouteData with _$BackupWithCloudRoute {
   BackupWithCloudRoute()
       : super(
           child: const BackupWithCloudPage(),
@@ -79,7 +79,7 @@ class BackupWithCloudRoute extends BaseRouteData {
         );
 }
 
-class BackupWithCloudSuccessRoute extends BaseRouteData {
+class BackupWithCloudSuccessRoute extends BaseRouteData with _$BackupWithCloudSuccessRoute {
   BackupWithCloudSuccessRoute()
       : super(
           child: const BackupWithCloudSuccessPage(),
@@ -87,7 +87,7 @@ class BackupWithCloudSuccessRoute extends BaseRouteData {
         );
 }
 
-class BackupRecoveryKeysRoute extends BaseRouteData {
+class BackupRecoveryKeysRoute extends BaseRouteData with _$BackupRecoveryKeysRoute {
   BackupRecoveryKeysRoute()
       : super(
           child: const BackupRecoveryKeysModal(),
@@ -95,7 +95,7 @@ class BackupRecoveryKeysRoute extends BaseRouteData {
         );
 }
 
-class CreateRecoveryKeyRoute extends BaseRouteData {
+class CreateRecoveryKeyRoute extends BaseRouteData with _$CreateRecoveryKeyRoute {
   CreateRecoveryKeyRoute()
       : super(
           child: const CreateRecoveryKeyPage(),
@@ -103,7 +103,7 @@ class CreateRecoveryKeyRoute extends BaseRouteData {
         );
 }
 
-class ValidateRecoveryKeyRoute extends BaseRouteData {
+class ValidateRecoveryKeyRoute extends BaseRouteData with _$ValidateRecoveryKeyRoute {
   ValidateRecoveryKeyRoute()
       : super(
           child: const ValidateRecoveryKeyPage(),
@@ -111,7 +111,7 @@ class ValidateRecoveryKeyRoute extends BaseRouteData {
         );
 }
 
-class RecoveryKeysSuccessRoute extends BaseRouteData {
+class RecoveryKeysSuccessRoute extends BaseRouteData with _$RecoveryKeysSuccessRoute {
   RecoveryKeysSuccessRoute()
       : super(
           child: const RecoveryKeysSuccessPage(),
@@ -119,7 +119,7 @@ class RecoveryKeysSuccessRoute extends BaseRouteData {
         );
 }
 
-class AuthenticatorSetupOptionsRoute extends BaseRouteData {
+class AuthenticatorSetupOptionsRoute extends BaseRouteData with _$AuthenticatorSetupOptionsRoute {
   AuthenticatorSetupOptionsRoute()
       : super(
           child: const AuthenticatorSetupOptionsPage(),
@@ -127,7 +127,8 @@ class AuthenticatorSetupOptionsRoute extends BaseRouteData {
         );
 }
 
-class AuthenticatorSetupInstructionsRoute extends BaseRouteData {
+class AuthenticatorSetupInstructionsRoute extends BaseRouteData
+    with _$AuthenticatorSetupInstructionsRoute {
   AuthenticatorSetupInstructionsRoute()
       : super(
           child: const AuthenticatorSetupInstructionsPage(),
@@ -135,7 +136,8 @@ class AuthenticatorSetupInstructionsRoute extends BaseRouteData {
         );
 }
 
-class AuthenticatorSetupCodeConfirmRoute extends BaseRouteData {
+class AuthenticatorSetupCodeConfirmRoute extends BaseRouteData
+    with _$AuthenticatorSetupCodeConfirmRoute {
   AuthenticatorSetupCodeConfirmRoute()
       : super(
           child: const AuthenticatorSetupCodeConfirmPage(),
@@ -143,7 +145,7 @@ class AuthenticatorSetupCodeConfirmRoute extends BaseRouteData {
         );
 }
 
-class AuthenticatorSetupSuccessRoute extends BaseRouteData {
+class AuthenticatorSetupSuccessRoute extends BaseRouteData with _$AuthenticatorSetupSuccessRoute {
   AuthenticatorSetupSuccessRoute()
       : super(
           child: const AuthenticatorSetupSuccessPage(),
@@ -151,7 +153,7 @@ class AuthenticatorSetupSuccessRoute extends BaseRouteData {
         );
 }
 
-class AuthenticatorDeleteRoute extends BaseRouteData {
+class AuthenticatorDeleteRoute extends BaseRouteData with _$AuthenticatorDeleteRoute {
   AuthenticatorDeleteRoute()
       : super(
           child: const AuthenticatorDeletePage(),
@@ -159,7 +161,7 @@ class AuthenticatorDeleteRoute extends BaseRouteData {
         );
 }
 
-class AuthenticatorDeleteSuccessRoute extends BaseRouteData {
+class AuthenticatorDeleteSuccessRoute extends BaseRouteData with _$AuthenticatorDeleteSuccessRoute {
   AuthenticatorDeleteSuccessRoute()
       : super(
           child: const AuthenticatorDeleteSuccessPage(),
@@ -167,7 +169,7 @@ class AuthenticatorDeleteSuccessRoute extends BaseRouteData {
         );
 }
 
-class EmailSetupRoute extends BaseRouteData {
+class EmailSetupRoute extends BaseRouteData with _$EmailSetupRoute {
   EmailSetupRoute({required this.step, this.email})
       : super(
           child: EmailSetupPage(step, email),
@@ -178,7 +180,7 @@ class EmailSetupRoute extends BaseRouteData {
   String? email;
 }
 
-class EmailEditRoute extends BaseRouteData {
+class EmailEditRoute extends BaseRouteData with _$EmailEditRoute {
   EmailEditRoute()
       : super(
           child: const EmailEditPage(),
@@ -186,7 +188,7 @@ class EmailEditRoute extends BaseRouteData {
         );
 }
 
-class EmailDeleteRoute extends BaseRouteData {
+class EmailDeleteRoute extends BaseRouteData with _$EmailDeleteRoute {
   EmailDeleteRoute()
       : super(
           child: const EmailDeletePage(),
@@ -194,7 +196,7 @@ class EmailDeleteRoute extends BaseRouteData {
         );
 }
 
-class PhoneSetupRoute extends BaseRouteData {
+class PhoneSetupRoute extends BaseRouteData with _$PhoneSetupRoute {
   PhoneSetupRoute({required this.step, this.phone})
       : super(
           child: PhoneSetupPage(step, phone),
@@ -205,7 +207,7 @@ class PhoneSetupRoute extends BaseRouteData {
   String? phone;
 }
 
-class PhoneEditRoute extends BaseRouteData {
+class PhoneEditRoute extends BaseRouteData with _$PhoneEditRoute {
   PhoneEditRoute()
       : super(
           child: const PhoneEditPage(),
@@ -213,7 +215,7 @@ class PhoneEditRoute extends BaseRouteData {
         );
 }
 
-class PhoneDeleteRoute extends BaseRouteData {
+class PhoneDeleteRoute extends BaseRouteData with _$PhoneDeleteRoute {
   PhoneDeleteRoute()
       : super(
           child: const PhoneDeletePage(),
@@ -221,7 +223,7 @@ class PhoneDeleteRoute extends BaseRouteData {
         );
 }
 
-class SelectCountriesRoute extends BaseRouteData {
+class SelectCountriesRoute extends BaseRouteData with _$SelectCountriesRoute {
   SelectCountriesRoute()
       : super(
           child: const SelectCountryPage(),

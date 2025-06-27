@@ -160,7 +160,7 @@ dev_dependencies:
   flutter_test:
     sdk: flutter
   freezed: ^2.4.1
-  go_router_builder: ^2.9.0
+  go_router_builder: ^3.0.1
   ion_lint_rules:
     path: packages/ion_lint_rules
   json_serializable: ^6.7.1

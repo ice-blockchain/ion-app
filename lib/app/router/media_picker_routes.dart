@@ -7,7 +7,7 @@ class MediaPickerRoutes {
 }
 
 @TypedGoRoute<MediaPickerRoute>(path: MediaPickerRoutes.routesPrefix)
-class MediaPickerRoute extends BaseRouteData {
+class MediaPickerRoute extends BaseRouteData with _$MediaPickerRoute {
   MediaPickerRoute({
     this.maxSelection,
     this.mediaPickerType = MediaPickerType.common,
@@ -30,7 +30,7 @@ class MediaPickerRoute extends BaseRouteData {
 }
 
 @TypedGoRoute<AlbumSelectionRoute>(path: '${MediaPickerRoutes.routesPrefix}/album-selection')
-class AlbumSelectionRoute extends BaseRouteData {
+class AlbumSelectionRoute extends BaseRouteData with _$AlbumSelectionRoute {
   AlbumSelectionRoute({
     required this.mediaPickerType,
   }) : super(
@@ -42,7 +42,7 @@ class AlbumSelectionRoute extends BaseRouteData {
 }
 
 @TypedGoRoute<GalleryCameraRoute>(path: '${MediaPickerRoutes.routesPrefix}/camera')
-class GalleryCameraRoute extends BaseRouteData {
+class GalleryCameraRoute extends BaseRouteData with _$GalleryCameraRoute {
   GalleryCameraRoute({
     required this.mediaPickerType,
   }) : super(
@@ -53,7 +53,7 @@ class GalleryCameraRoute extends BaseRouteData {
 }
 
 @TypedGoRoute<FullscreenMediaRoute>(path: '${MediaPickerRoutes.routesPrefix}/fullscreen-media')
-class FullscreenMediaRoute extends BaseRouteData {
+class FullscreenMediaRoute extends BaseRouteData with _$FullscreenMediaRoute {
   FullscreenMediaRoute({
     required this.initialMediaIndex,
     required this.eventReference,

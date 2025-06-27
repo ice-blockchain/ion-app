@@ -15,11 +15,11 @@ class DappsRoutes {
   ];
 }
 
-class DAppsRoute extends BaseRouteData {
+class DAppsRoute extends BaseRouteData with _$DAppsRoute {
   DAppsRoute() : super(child: const DAppsPage());
 }
 
-class DAppsListRoute extends BaseRouteData {
+class DAppsListRoute extends BaseRouteData with _$DAppsListRoute {
   DAppsListRoute({
     required this.title,
     this.isSearchVisible = true,
@@ -34,7 +34,7 @@ class DAppsListRoute extends BaseRouteData {
   final bool isSearchVisible;
 }
 
-class DAppDetailsRoute extends BaseRouteData {
+class DAppDetailsRoute extends BaseRouteData with _$DAppDetailsRoute {
   DAppDetailsRoute({required this.dappId})
       : super(
           child: DAppDetailsModal(dappId: dappId),
@@ -43,7 +43,7 @@ class DAppDetailsRoute extends BaseRouteData {
   final int dappId;
 }
 
-class DAppsSimpleSearchRoute extends BaseRouteData {
+class DAppsSimpleSearchRoute extends BaseRouteData with _$DAppsSimpleSearchRoute {
   DAppsSimpleSearchRoute({this.query = ''})
       : super(
           child: DAppsSimpleSearchPage(query: query),

@@ -16,7 +16,7 @@ class SettingsRoutes {
   ];
 }
 
-class SettingsRoute extends BaseRouteData {
+class SettingsRoute extends BaseRouteData with _$SettingsRoute {
   SettingsRoute()
       : super(
           child: const SettingsModal(),
@@ -24,7 +24,7 @@ class SettingsRoute extends BaseRouteData {
         );
 }
 
-class AppLanguagesRoute extends BaseRouteData {
+class AppLanguagesRoute extends BaseRouteData with _$AppLanguagesRoute {
   AppLanguagesRoute()
       : super(
           child: const AppLanguageModal(),
@@ -32,7 +32,7 @@ class AppLanguagesRoute extends BaseRouteData {
         );
 }
 
-class ContentLanguagesRoute extends BaseRouteData {
+class ContentLanguagesRoute extends BaseRouteData with _$ContentLanguagesRoute {
   ContentLanguagesRoute()
       : super(
           child: const ContentLanguageModal(),
@@ -40,7 +40,7 @@ class ContentLanguagesRoute extends BaseRouteData {
         );
 }
 
-class AccountSettingsRoute extends BaseRouteData {
+class AccountSettingsRoute extends BaseRouteData with _$AccountSettingsRoute {
   AccountSettingsRoute()
       : super(
           child: const AccountSettingsModal(),
@@ -48,7 +48,7 @@ class AccountSettingsRoute extends BaseRouteData {
         );
 }
 
-class BlockedUsersRoute extends BaseRouteData {
+class BlockedUsersRoute extends BaseRouteData with _$BlockedUsersRoute {
   BlockedUsersRoute()
       : super(
           child: const BlockedUsersModal(),
@@ -56,7 +56,7 @@ class BlockedUsersRoute extends BaseRouteData {
         );
 }
 
-class PrivacySettingsRoute extends BaseRouteData {
+class PrivacySettingsRoute extends BaseRouteData with _$PrivacySettingsRoute {
   PrivacySettingsRoute()
       : super(
           child: const PrivacySettingsModal(),
@@ -64,7 +64,7 @@ class PrivacySettingsRoute extends BaseRouteData {
         );
 }
 
-class PushNotificationsSettingsRoute extends BaseRouteData {
+class PushNotificationsSettingsRoute extends BaseRouteData with _$PushNotificationsSettingsRoute {
   PushNotificationsSettingsRoute()
       : super(
           child: const PushNotificationsSettings(),
@@ -72,7 +72,7 @@ class PushNotificationsSettingsRoute extends BaseRouteData {
         );
 }
 
-class ConfirmLogoutRoute extends BaseRouteData {
+class ConfirmLogoutRoute extends BaseRouteData with _$ConfirmLogoutRoute {
   ConfirmLogoutRoute({required this.pubkey})
       : super(
           child: ConfirmLogoutModal(pubkey: pubkey),

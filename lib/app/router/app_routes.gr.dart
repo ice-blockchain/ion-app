@@ -273,28 +273,28 @@ class ModalShellRouteData extends ShellRouteData {
 }
 
 @TypedGoRoute<SplashRoute>(path: '/splash')
-class SplashRoute extends BaseRouteData {
+class SplashRoute extends BaseRouteData with _$SplashRoute {
   SplashRoute() : super(child: const SplashPage());
 }
 
-class FeedRoute extends BaseRouteData {
+class FeedRoute extends BaseRouteData with _$FeedRoute {
   FeedRoute() : super(child: const FeedPage());
 }
 
-class ChatRoute extends BaseRouteData {
+class ChatRoute extends BaseRouteData with _$ChatRoute {
   ChatRoute() : super(child: const ChatMainPage());
 }
 
-class WalletRoute extends BaseRouteData {
+class WalletRoute extends BaseRouteData with _$WalletRoute {
   WalletRoute() : super(child: const WalletPage());
 }
 
-class SelfProfileRoute extends BaseRouteData {
+class SelfProfileRoute extends BaseRouteData with _$SelfProfileRoute {
   SelfProfileRoute() : super(child: const SelfProfilePage());
 }
 
 @TypedGoRoute<ErrorRoute>(path: '/error')
-class ErrorRoute extends BaseRouteData {
+class ErrorRoute extends BaseRouteData with _$ErrorRoute {
   ErrorRoute({this.message})
       : super(
           child: ErrorPage(message: message),
@@ -307,11 +307,11 @@ class ErrorRoute extends BaseRouteData {
   path: '/intro',
   routes: [...AuthRoutes.routes],
 )
-class IntroRoute extends BaseRouteData {
+class IntroRoute extends BaseRouteData with _$IntroRoute {
   IntroRoute() : super(child: const IntroPage(), type: IceRouteType.singleWithoutTransition);
 }
 
-class FeedMainModalRoute extends BaseRouteData {
+class FeedMainModalRoute extends BaseRouteData with _$FeedMainModalRoute {
   FeedMainModalRoute()
       : super(
           child: const FeedMainModalPage(),
@@ -319,7 +319,7 @@ class FeedMainModalRoute extends BaseRouteData {
         );
 }
 
-class ChatMainModalRoute extends BaseRouteData {
+class ChatMainModalRoute extends BaseRouteData with _$ChatMainModalRoute {
   ChatMainModalRoute()
       : super(
           child: const ChatMainModalPage(),
@@ -327,7 +327,7 @@ class ChatMainModalRoute extends BaseRouteData {
         );
 }
 
-class WalletMainModalRoute extends BaseRouteData {
+class WalletMainModalRoute extends BaseRouteData with _$WalletMainModalRoute {
   WalletMainModalRoute()
       : super(
           child: const WalletMainModalPage(),
@@ -336,6 +336,6 @@ class WalletMainModalRoute extends BaseRouteData {
 }
 
 @TypedGoRoute<CompressTestRoute>(path: '/compress-test')
-class CompressTestRoute extends BaseRouteData {
+class CompressTestRoute extends BaseRouteData with _$CompressTestRoute {
   CompressTestRoute() : super(child: const CompressTestPage());
 }
