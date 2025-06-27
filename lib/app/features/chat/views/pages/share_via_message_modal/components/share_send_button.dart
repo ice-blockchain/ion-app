@@ -1,5 +1,7 @@
 // SPDX-License-Identifier: ice License 1.0
 
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:go_router/go_router.dart';
@@ -62,20 +64,22 @@ class ShareSendButton extends HookConsumerWidget {
           label: Text(
             context.i18n.feed_send,
           ),
-          onPressed: () async {
+          onPressed: () {
             loading.value = true;
             try {
               final entity =
                   ref.read(ionConnectEntityWithCountersProvider(eventReference: eventReference));
 
               if (entity is UserMetadataEntity) {
-                await shareProfileToChat();
+                unawaited(shareProfileToChat());
               } else {
                 final service = ref.read(sharePostToChatProvider.notifier);
 
-                await service.sharePost(
-                  eventReference: eventReference,
-                  receiversMasterPubkeys: masterPubkeys,
+                unawaited(
+                  service.sharePost(
+                    eventReference: eventReference,
+                    receiversMasterPubkeys: masterPubkeys,
+                  ),
                 );
               }
               if (context.mounted) {

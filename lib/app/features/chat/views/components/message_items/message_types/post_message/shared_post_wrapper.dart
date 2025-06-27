@@ -13,8 +13,8 @@ import 'package:ion/app/features/chat/views/components/message_items/message_rea
 
 import 'package:ion/generated/assets.gen.dart';
 
-class SharedPostWrapper extends HookConsumerWidget {
-  const SharedPostWrapper({
+class SharedStoryWrapper extends HookConsumerWidget {
+  const SharedStoryWrapper({
     required this.messageItem,
     required this.sharedEntity,
     required this.child,
@@ -42,7 +42,7 @@ class SharedPostWrapper extends HookConsumerWidget {
           builder: (context) => MessageReactionDialog(
             isMe: isMe,
             messageItem: messageItem,
-            isSharedPost: true,
+            isSharedStory: true,
             renderObject: messageItemKey.currentContext!.findRenderObject()!,
             messageStatus: sharedPostMessageStatus ?? MessageDeliveryStatus.sent,
           ),
