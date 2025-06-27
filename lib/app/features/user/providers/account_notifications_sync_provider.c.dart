@@ -20,6 +20,7 @@ import 'package:ion/app/features/ion_connect/model/action_source.c.dart';
 import 'package:ion/app/features/ion_connect/model/ion_connect_entity.dart';
 import 'package:ion/app/features/ion_connect/providers/event_backfill_service.c.dart';
 import 'package:ion/app/features/user/data/database/account_notifications_database.c.dart';
+import 'package:ion/app/features/user/data/database/tables/account_notification_sync_state_table.c.dart';
 import 'package:ion/app/features/user/model/user_notifications_type.dart';
 import 'package:ion/app/features/user/pages/profile_page/providers/user_notifications_provider.c.dart';
 import 'package:ion/app/features/user/providers/account_notifications_sets_provider.c.dart';
@@ -339,10 +340,21 @@ class AccountNotificationsSync extends _$AccountNotificationsSync {
     NotificationContentType contentType,
     AccountNotificationsDatabase database,
   ) async {
+    final contentTypeEnum = mapToContentTypeEnum(contentType);
     final query = database.select(database.accountNotificationSyncStateTable)
-      ..where((t) => t.relayUrl.equals(relayUrl) & t.contentType.equals(contentType.filterName));
+      ..where((t) => t.relayUrl.equals(relayUrl) & t.contentType.equalsValue(contentTypeEnum));
 
     return query.getSingleOrNull();
+  }
+
+  /// Map NotificationContentType to ContentType enum
+  ContentType mapToContentTypeEnum(NotificationContentType contentType) {
+    return switch (contentType) {
+      NotificationContentType.posts => ContentType.posts,
+      NotificationContentType.stories => ContentType.stories,
+      NotificationContentType.articles => ContentType.articles,
+      NotificationContentType.videos => ContentType.videos,
+    };
   }
 
   /// Update the sync state for a specific relay and content type
@@ -352,10 +364,11 @@ class AccountNotificationsSync extends _$AccountNotificationsSync {
     required AccountNotificationsDatabase database,
     required int sinceTimestamp,
   }) async {
+    final contentTypeEnum = mapToContentTypeEnum(contentType);
     await database.into(database.accountNotificationSyncStateTable).insertOnConflictUpdate(
           AccountNotificationSyncStateTableCompanion.insert(
             relayUrl: relayUrl,
-            contentType: contentType.filterName,
+            contentType: contentTypeEnum,
             lastSyncTimestamp: DateTime.now().microsecondsSinceEpoch,
             sinceTimestamp: Value(sinceTimestamp),
           ),
