@@ -27,6 +27,7 @@ class OverlayMenuItem extends StatelessWidget {
     final textStyles = context.theme.appTextThemes;
 
     return GestureDetector(
+      behavior: HitTestBehavior.opaque,
       onTap: onPressed,
       child: Padding(
         padding: EdgeInsets.symmetric(horizontal: 16.0.s, vertical: verticalPadding ?? 8.0.s),
