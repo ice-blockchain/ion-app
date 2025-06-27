@@ -1,14 +1,14 @@
 // SPDX-License-Identifier: ice License 1.0
 
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:ion/app/features/auth/providers/auth_provider.c.dart';
-import 'package:ion/app/features/ion_connect/providers/ion_connect_notifier.c.dart';
-import 'package:ion/app/features/user/model/account_notifications_sets.c.dart';
+import 'package:ion/app/features/auth/providers/auth_provider.m.dart';
+import 'package:ion/app/features/ion_connect/providers/ion_connect_notifier.r.dart';
+import 'package:ion/app/features/user/model/account_notifications_sets.f.dart';
 import 'package:ion/app/features/user/model/user_notifications_type.dart';
-import 'package:ion/app/features/user/providers/account_notifications_sets_provider.c.dart';
+import 'package:ion/app/features/user/providers/account_notifications_sets_provider.r.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
-part 'user_specific_notifications_provider.c.g.dart';
+part 'user_specific_notifications_provider.r.g.dart';
 
 @riverpod
 class UserSpecificNotifications extends _$UserSpecificNotifications {

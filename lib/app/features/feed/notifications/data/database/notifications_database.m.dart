@@ -10,6 +10,7 @@ import 'package:ion/app/features/feed/notifications/data/database/notifications_
 import 'package:ion/app/features/feed/notifications/data/database/tables/comments_table.d.dart';
 import 'package:ion/app/features/feed/notifications/data/database/tables/followers_table.d.dart';
 import 'package:ion/app/features/feed/notifications/data/database/tables/likes_table.d.dart';
+import 'package:ion/app/features/feed/notifications/data/database/tables/subscribed_users_content_table.d.dart';
 import 'package:ion/app/features/ion_connect/database/converters/event_reference_converter.d.dart';
 import 'package:ion/app/features/ion_connect/model/event_reference.f.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';

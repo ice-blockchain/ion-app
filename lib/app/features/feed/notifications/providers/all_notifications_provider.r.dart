@@ -3,6 +3,7 @@
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/features/feed/notifications/data/model/ion_notification.dart';
 import 'package:ion/app/features/feed/notifications/data/repository/comments_repository.r.dart';
+import 'package:ion/app/features/feed/notifications/data/repository/content_repository.r.dart';
 import 'package:ion/app/features/feed/notifications/data/repository/followers_repository.r.dart';
 import 'package:ion/app/features/feed/notifications/data/repository/likes_repository.r.dart';
 

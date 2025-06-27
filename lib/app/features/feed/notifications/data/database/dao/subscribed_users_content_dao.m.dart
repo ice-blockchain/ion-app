@@ -3,11 +3,11 @@
 import 'package:drift/drift.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/extensions/extensions.dart';
-import 'package:ion/app/features/feed/notifications/data/database/notifications_database.c.dart';
-import 'package:ion/app/features/feed/notifications/data/database/tables/subscribed_users_content_table.c.dart';
+import 'package:ion/app/features/feed/notifications/data/database/notifications_database.m.dart';
+import 'package:ion/app/features/feed/notifications/data/database/tables/subscribed_users_content_table.d.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
-part 'subscribed_users_content_dao.c.g.dart';
+part 'subscribed_users_content_dao.m.g.dart';
 
 @Riverpod(keepAlive: true)
 SubscribedUsersContentDao subscribedUsersContentDao(Ref ref) =>

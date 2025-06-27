@@ -4,31 +4,31 @@ import 'dart:async';
 import 'dart:convert';
 
 import 'package:drift/drift.dart';
-import 'package:ion/app/features/auth/providers/auth_provider.c.dart';
-import 'package:ion/app/features/core/providers/env_provider.c.dart';
-import 'package:ion/app/features/feed/data/models/entities/article_data.c.dart';
-import 'package:ion/app/features/feed/data/models/entities/generic_repost.c.dart';
-import 'package:ion/app/features/feed/data/models/entities/modifiable_post_data.c.dart';
-import 'package:ion/app/features/feed/data/models/entities/post_data.c.dart';
-import 'package:ion/app/features/feed/data/models/entities/reaction_data.c.dart';
-import 'package:ion/app/features/feed/data/models/entities/repost_data.c.dart';
-import 'package:ion/app/features/feed/notifications/data/repository/comments_repository.c.dart';
-import 'package:ion/app/features/feed/notifications/data/repository/content_repository.c.dart';
-import 'package:ion/app/features/feed/notifications/data/repository/likes_repository.c.dart';
+import 'package:ion/app/features/auth/providers/auth_provider.m.dart';
+import 'package:ion/app/features/core/providers/env_provider.r.dart';
+import 'package:ion/app/features/feed/data/models/entities/article_data.f.dart';
+import 'package:ion/app/features/feed/data/models/entities/generic_repost.f.dart';
+import 'package:ion/app/features/feed/data/models/entities/modifiable_post_data.f.dart';
+import 'package:ion/app/features/feed/data/models/entities/post_data.f.dart';
+import 'package:ion/app/features/feed/data/models/entities/reaction_data.f.dart';
+import 'package:ion/app/features/feed/data/models/entities/repost_data.f.dart';
+import 'package:ion/app/features/feed/notifications/data/repository/comments_repository.r.dart';
+import 'package:ion/app/features/feed/notifications/data/repository/content_repository.r.dart';
+import 'package:ion/app/features/feed/notifications/data/repository/likes_repository.r.dart';
 import 'package:ion/app/features/ion_connect/ion_connect.dart';
-import 'package:ion/app/features/ion_connect/model/action_source.c.dart';
+import 'package:ion/app/features/ion_connect/model/action_source.f.dart';
 import 'package:ion/app/features/ion_connect/model/ion_connect_entity.dart';
-import 'package:ion/app/features/ion_connect/providers/event_backfill_service.c.dart';
-import 'package:ion/app/features/user/data/database/account_notifications_database.c.dart';
-import 'package:ion/app/features/user/data/database/tables/account_notification_sync_state_table.c.dart';
+import 'package:ion/app/features/ion_connect/providers/event_backfill_service.r.dart';
+import 'package:ion/app/features/user/data/database/account_notifications_database.m.dart';
+import 'package:ion/app/features/user/data/database/tables/account_notification_sync_state_table.d.dart';
 import 'package:ion/app/features/user/model/user_notifications_type.dart';
-import 'package:ion/app/features/user/pages/profile_page/providers/user_notifications_provider.c.dart';
-import 'package:ion/app/features/user/providers/account_notifications_sets_provider.c.dart';
-import 'package:ion/app/features/user/providers/user_relays_manager.c.dart';
+import 'package:ion/app/features/user/pages/profile_page/providers/user_notifications_provider.r.dart';
+import 'package:ion/app/features/user/providers/account_notifications_sets_provider.r.dart';
+import 'package:ion/app/features/user/providers/user_relays_manager.r.dart';
 import 'package:ion/app/utils/algorithm.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
-part 'account_notifications_sync_provider.c.g.dart';
+part 'account_notifications_sync_provider.r.g.dart';
 
 enum NotificationContentType {
   posts,

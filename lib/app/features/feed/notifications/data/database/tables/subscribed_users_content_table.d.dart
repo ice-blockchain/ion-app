@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: ice License 1.0
 
 import 'package:drift/drift.dart';
-import 'package:ion/app/features/ion_connect/database/converters/event_reference_converter.c.dart';
+import 'package:ion/app/features/ion_connect/database/converters/event_reference_converter.d.dart';
 
 enum ContentType {
   posts(0),

@@ -8,7 +8,7 @@ import 'package:ion/app/components/list_item/list_item.dart';
 import 'package:ion/app/components/separated/separator.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/user/model/user_notifications_type.dart';
-import 'package:ion/app/features/user/pages/profile_page/providers/user_notifications_provider.r.dart';
+import 'package:ion/app/features/user/providers/user_specific_notifications_provider.r.dart';
 import 'package:ion/app/router/components/navigation_app_bar/navigation_app_bar.dart';
 import 'package:ion/generated/assets.gen.dart';
 
