@@ -88,7 +88,7 @@ class VideosVerticalScrollPage extends HookConsumerWidget {
             }
           } else {
             final reposted = ref.read(getRepostedEntityProvider(entity));
-            if (reposted != null && (reposted is ModifiablePostEntity || reposted is PostEntity)) {
+            if (reposted != null) {
               for (final media in _getVideosFromEntity(reposted)) {
                 result.add(_FlattenedVideo(entity: reposted, media: media));
               }
@@ -110,6 +110,24 @@ class VideosVerticalScrollPage extends HookConsumerWidget {
 
     final isOwnedByCurrentUser =
         ref.watch(isCurrentUserSelectorProvider(currentEventReference.value.pubkey));
+
+    useEffect(
+      () {
+        void listener() {
+          if (userPageController.offset < -150 ||
+              (userPageController.offset > userPageController.position.maxScrollExtent + 150)) {
+            context.pop();
+          }
+        }
+
+        userPageController.addListener(listener);
+
+        return () {
+          userPageController.removeListener(listener);
+        };
+      },
+      [userPageController],
+    );
 
     return AnnotatedRegion<SystemUiOverlayStyle>(
       value: SystemUiOverlayStyle(
