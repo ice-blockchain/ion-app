@@ -45,15 +45,17 @@ class CollapsingAppBar extends StatelessWidget {
             child: Stack(
               clipBehavior: Clip.none,
               children: [
-                Positioned.fill(
-                  child: ColoredBox(
-                    color: context.theme.appColors.onPrimaryAccent
-                        .withValues(alpha: overlayOpacity.toDouble()),
-                  ),
-                ),
                 Padding(
                   padding: EdgeInsetsDirectional.only(bottom: bottomOffset),
                   child: child,
+                ),
+                Positioned.fill(
+                  child: IgnorePointer(
+                    child: ColoredBox(
+                      color: context.theme.appColors.onPrimaryAccent
+                          .withValues(alpha: overlayOpacity.toDouble()),
+                    ),
+                  ),
                 ),
               ],
             ),
