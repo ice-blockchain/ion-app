@@ -317,6 +317,17 @@ class AccountNotificationsSync extends _$AccountNotificationsSync {
     final syncState = await getSyncState(relayUrl, contentType, database);
     final callStartTime = DateTime.now().microsecondsSinceEpoch;
 
+    // Determine the starting timestamp for events
+    int latestEventTimestamp;
+
+    // If we have a saved sync state, use it
+    if (syncState != null && syncState.sinceTimestamp != null) {
+      latestEventTimestamp = syncState.sinceTimestamp!;
+    } else {
+      // Otherwise, get timestamp from when the notification set was created
+      latestEventTimestamp = await getNotificationSetCreationTime(contentType) ?? callStartTime;
+    }
+
     final requestFilter = buildRequestFilter(
       contentType: contentType,
       users: users,
@@ -325,8 +336,6 @@ class AccountNotificationsSync extends _$AccountNotificationsSync {
     if (requestFilter == null) {
       return;
     }
-
-    final latestEventTimestamp = syncState?.sinceTimestamp ?? callStartTime;
 
     final eventBackfillService = ref.read(eventBackfillServiceProvider);
 
@@ -350,6 +359,29 @@ class AccountNotificationsSync extends _$AccountNotificationsSync {
       database: database,
       sinceTimestamp: actualNewTimestamp,
     );
+  }
+
+  /// Get the creation timestamp of a notification set
+  Future<int?> getNotificationSetCreationTime(UserNotificationsType contentType) async {
+    final currentPubkey = ref.read(currentPubkeySelectorProvider);
+    if (currentPubkey == null) return null;
+
+    final setType = AccountNotificationSetType.fromUserNotificationType(contentType);
+    if (setType == null) return null;
+
+    final notificationSet = await ref
+        .read(
+          ionConnectEntityProvider(
+            eventReference: ReplaceableEventReference(
+              pubkey: currentPubkey,
+              kind: AccountNotificationSetEntity.kind,
+              dTag: setType.dTagName,
+            ),
+          ).future,
+        )
+        .catchError((_) => null);
+
+    return notificationSet is AccountNotificationSetEntity ? notificationSet.createdAt : null;
   }
 
   /// Get the sync state for a specific relay and content type
