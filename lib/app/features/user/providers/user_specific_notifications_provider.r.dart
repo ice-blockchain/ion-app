@@ -2,10 +2,11 @@
 
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/features/auth/providers/auth_provider.m.dart';
+import 'package:ion/app/features/ion_connect/model/event_reference.f.dart';
+import 'package:ion/app/features/ion_connect/providers/ion_connect_entity_provider.r.dart';
 import 'package:ion/app/features/ion_connect/providers/ion_connect_notifier.r.dart';
 import 'package:ion/app/features/user/model/account_notifications_sets.f.dart';
 import 'package:ion/app/features/user/model/user_notifications_type.dart';
-import 'package:ion/app/features/user/providers/account_notifications_sets_provider.r.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'user_specific_notifications_provider.r.g.dart';
@@ -15,12 +16,31 @@ class UserSpecificNotifications extends _$UserSpecificNotifications {
   @override
   Future<List<UserNotificationsType>> build(String userPubkey) async {
     final notificationTypes = <UserNotificationsType>[];
+    final currentPubkey = ref.read(currentPubkeySelectorProvider);
+    if (currentPubkey == null) {
+      return [UserNotificationsType.none];
+    }
 
     for (final type in UserNotificationsType.values) {
       if (type == UserNotificationsType.none) continue;
 
-      final users = await ref.watch(usersForNotificationTypeProvider(type).future);
-      if (users.contains(userPubkey)) {
+      final setType = AccountNotificationSetType.fromUserNotificationType(type);
+      if (setType == null) {
+        continue;
+      }
+
+      final accountNotificationSet = await ref.watch(
+        ionConnectEntityProvider(
+          eventReference: ReplaceableEventReference(
+            pubkey: currentPubkey,
+            kind: AccountNotificationSetEntity.kind,
+            dTag: setType.dTagName,
+          ),
+        ).future,
+      );
+
+      if (accountNotificationSet is AccountNotificationSetEntity &&
+          accountNotificationSet.data.userPubkeys.contains(userPubkey)) {
         notificationTypes.add(type);
       }
     }
@@ -79,19 +99,30 @@ class UserSpecificNotifications extends _$UserSpecificNotifications {
       return;
     }
 
-    final setType = _getSetTypeForNotificationType(notificationType);
+    final setType = AccountNotificationSetType.fromUserNotificationType(notificationType);
     if (setType == null) {
       return;
     }
 
-    final currentUsers = await ref.read(usersForNotificationTypeProvider(notificationType).future);
+    var currentUsers = <String>[];
+    final accountNotificationSet = await ref.read(
+      ionConnectEntityProvider(
+        eventReference: ReplaceableEventReference(
+          pubkey: currentPubkey,
+          kind: AccountNotificationSetEntity.kind,
+          dTag: setType.dTagName,
+        ),
+      ).future,
+    );
+
+    if (accountNotificationSet is AccountNotificationSetEntity) {
+      currentUsers = accountNotificationSet.data.userPubkeys;
+    }
 
     final updatedUsers =
         currentUsers.contains(userPubkey) ? currentUsers : [...currentUsers, userPubkey];
 
     await _updateNotificationSet(ref, currentPubkey, setType, updatedUsers);
-
-    ref.invalidate(usersForNotificationTypeProvider(notificationType));
   }
 
   Future<void> _removeUserFromNotificationSet(
@@ -103,41 +134,44 @@ class UserSpecificNotifications extends _$UserSpecificNotifications {
       return;
     }
 
-    final setType = _getSetTypeForNotificationType(notificationType);
+    final setType = AccountNotificationSetType.fromUserNotificationType(notificationType);
     if (setType == null) {
       return;
     }
 
-    final currentUsers = await ref.read(usersForNotificationTypeProvider(notificationType).future);
+    var currentUsers = <String>[];
+    final accountNotificationSet = await ref.read(
+      ionConnectEntityProvider(
+        eventReference: ReplaceableEventReference(
+          pubkey: currentPubkey,
+          kind: AccountNotificationSetEntity.kind,
+          dTag: setType.dTagName,
+        ),
+      ).future,
+    );
+
+    if (accountNotificationSet is AccountNotificationSetEntity) {
+      currentUsers = accountNotificationSet.data.userPubkeys;
+    }
 
     final updatedUsers = currentUsers.where((pubkey) => pubkey != userPubkey).toList();
 
     await _updateNotificationSet(ref, currentPubkey, setType, updatedUsers);
-
-    ref.invalidate(usersForNotificationTypeProvider(notificationType));
   }
 
   Future<void> _updateNotificationSet(
     Ref ref,
     String currentPubkey,
-    String setType,
+    AccountNotificationSetType setType,
     List<String> userPubkeys,
   ) async {
     final ionConnectNotifier = ref.read(ionConnectNotifierProvider.notifier);
 
     final setData = AccountNotificationSetData(
-      type: AccountNotificationSetType.values.firstWhere(
-        (t) => t.dTagName == setType,
-        orElse: () => AccountNotificationSetType.posts,
-      ),
+      type: setType,
       userPubkeys: userPubkeys,
     );
 
     await ionConnectNotifier.sendEntityData(setData);
-  }
-
-  String? _getSetTypeForNotificationType(UserNotificationsType notificationType) {
-    final setType = AccountNotificationSetType.fromUserNotificationType(notificationType);
-    return setType?.dTagName;
   }
 }

@@ -19,11 +19,13 @@ import 'package:ion/app/features/feed/notifications/data/repository/content_repo
 import 'package:ion/app/features/feed/notifications/data/repository/likes_repository.r.dart';
 import 'package:ion/app/features/ion_connect/ion_connect.dart';
 import 'package:ion/app/features/ion_connect/model/action_source.f.dart';
+import 'package:ion/app/features/ion_connect/model/event_reference.f.dart';
 import 'package:ion/app/features/ion_connect/model/ion_connect_entity.dart';
 import 'package:ion/app/features/ion_connect/providers/event_backfill_service.r.dart';
+import 'package:ion/app/features/ion_connect/providers/ion_connect_entity_provider.r.dart';
+import 'package:ion/app/features/user/model/account_notifications_sets.f.dart';
 import 'package:ion/app/features/user/model/user_notifications_type.dart';
 import 'package:ion/app/features/user/pages/profile_page/providers/user_notifications_provider.r.dart';
-import 'package:ion/app/features/user/providers/account_notifications_sets_provider.r.dart';
 import 'package:ion/app/features/user/providers/user_relays_manager.r.dart';
 import 'package:ion/app/utils/algorithm.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
@@ -152,16 +154,51 @@ class AccountNotificationsSync extends _$AccountNotificationsSync {
     }
 
     final database = ref.read(accountNotificationsDatabaseProvider);
-    final allUsers = await getAllUsersFromNotificationSets(contentTypes);
+    final usersMap = await getAllUsersFromNotificationSets(contentTypes);
+
+    if (usersMap.isEmpty) {
+      return;
+    }
+
+    final allUsers = <String>{};
+    for (final users in usersMap.values) {
+      allUsers.addAll(users);
+    }
 
     if (allUsers.isEmpty) {
       return;
     }
 
-    await cacheUserRelays(allUsers, database);
-    final optimalRelayMapping = await getOptimalRelayMapping(allUsers, database);
+    await cacheUserRelays(allUsers.toList(), database);
+    final optimalRelayMapping = await getOptimalRelayMapping(allUsers.toList(), database);
 
-    await syncFromAllRelays(optimalRelayMapping, contentTypes, database);
+    for (final entry in usersMap.entries) {
+      final contentType = entry.key;
+      final users = entry.value;
+
+      if (users.isEmpty) {
+        continue;
+      }
+
+      final filteredMapping = <String, List<String>>{};
+      for (final relayEntry in optimalRelayMapping.entries) {
+        final relayUrl = relayEntry.key;
+        final relayUsers = relayEntry.value.where(users.contains).toList();
+
+        if (relayUsers.isNotEmpty) {
+          filteredMapping[relayUrl] = relayUsers;
+        }
+      }
+
+      for (final relayEntry in filteredMapping.entries) {
+        await syncEventsFromRelay(
+          relayUrl: relayEntry.key,
+          users: relayEntry.value,
+          contentTypes: [contentType],
+          database: database,
+        );
+      }
+    }
   }
 
   /// Determine which content types need to be synced
@@ -183,6 +220,10 @@ class AccountNotificationsSync extends _$AccountNotificationsSync {
   /// Get content types that have user-specific notifications
   Future<List<NotificationContentType>> getUserSpecificContentTypes() async {
     final userSpecificTypes = <NotificationContentType>[];
+    final currentPubkey = ref.read(currentPubkeySelectorProvider);
+    if (currentPubkey == null) {
+      return userSpecificTypes;
+    }
 
     for (final type in [
       UserNotificationsType.posts,
@@ -190,8 +231,23 @@ class AccountNotificationsSync extends _$AccountNotificationsSync {
       UserNotificationsType.articles,
       UserNotificationsType.videos,
     ]) {
-      final users = await ref.read(usersForNotificationTypeProvider(type).future);
-      if (users.isNotEmpty) {
+      final setType = AccountNotificationSetType.fromUserNotificationType(type);
+      if (setType == null) {
+        continue;
+      }
+
+      final accountNotificationSet = await ref.read(
+        ionConnectEntityProvider(
+          eventReference: ReplaceableEventReference(
+            pubkey: currentPubkey,
+            kind: AccountNotificationSetEntity.kind,
+            dTag: setType.dTagName,
+          ),
+        ).future,
+      );
+
+      if (accountNotificationSet is AccountNotificationSetEntity &&
+          accountNotificationSet.data.userPubkeys.isNotEmpty) {
         userSpecificTypes.add(NotificationContentType.fromUserNotificationType(type));
       }
     }
@@ -199,27 +255,15 @@ class AccountNotificationsSync extends _$AccountNotificationsSync {
     return userSpecificTypes;
   }
 
-  /// Sync from all relays in the mapping
-  Future<void> syncFromAllRelays(
-    Map<String, List<String>> relayMapping,
-    List<NotificationContentType> contentTypes,
-    AccountNotificationsDatabase database,
-  ) async {
-    for (final entry in relayMapping.entries) {
-      await syncEventsFromRelay(
-        relayUrl: entry.key,
-        users: entry.value,
-        contentTypes: contentTypes,
-        database: database,
-      );
-    }
-  }
-
   /// Get all users from notification sets for the given content types
-  Future<List<String>> getAllUsersFromNotificationSets(
+  Future<Map<NotificationContentType, List<String>>> getAllUsersFromNotificationSets(
     List<NotificationContentType> contentTypes,
   ) async {
-    final allUsers = <String>{};
+    final result = <NotificationContentType, List<String>>{};
+    final currentPubkey = ref.read(currentPubkeySelectorProvider);
+    if (currentPubkey == null) {
+      return result;
+    }
 
     for (final contentType in contentTypes) {
       final notificationType = switch (contentType) {
@@ -229,10 +273,26 @@ class AccountNotificationsSync extends _$AccountNotificationsSync {
         NotificationContentType.videos => UserNotificationsType.videos,
       };
 
-      final users = await ref.read(usersForNotificationTypeProvider(notificationType).future);
-      allUsers.addAll(users);
+      final setType = AccountNotificationSetType.fromUserNotificationType(notificationType);
+      if (setType == null) {
+        continue;
+      }
+
+      final accountNotificationSet = await ref.read(
+        ionConnectEntityProvider(
+          eventReference: ReplaceableEventReference(
+            pubkey: currentPubkey,
+            kind: AccountNotificationSetEntity.kind,
+            dTag: setType.dTagName,
+          ),
+        ).future,
+      );
+
+      if (accountNotificationSet is AccountNotificationSetEntity) {
+        result[contentType] = accountNotificationSet.data.userPubkeys;
+      }
     }
-    return allUsers.toList();
+    return result;
   }
 
   /// Cache relay information for users
