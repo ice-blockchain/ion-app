@@ -33,30 +33,6 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'account_notifications_sync_provider.r.g.dart';
 
-enum NotificationContentType {
-  posts,
-  stories,
-  articles,
-  videos;
-
-  String get filterName => switch (this) {
-        NotificationContentType.posts => 'posts',
-        NotificationContentType.stories => 'stories',
-        NotificationContentType.articles => 'articles',
-        NotificationContentType.videos => 'videos',
-      };
-
-  static NotificationContentType fromUserNotificationType(UserNotificationsType type) {
-    return switch (type) {
-      UserNotificationsType.posts => NotificationContentType.posts,
-      UserNotificationsType.stories => NotificationContentType.stories,
-      UserNotificationsType.articles => NotificationContentType.articles,
-      UserNotificationsType.videos => NotificationContentType.videos,
-      UserNotificationsType.none => throw ArgumentError('Cannot convert none to content type'),
-    };
-  }
-}
-
 @Riverpod(keepAlive: true)
 class AccountNotificationsSync extends _$AccountNotificationsSync {
   Timer? _syncTimer;
@@ -161,6 +137,7 @@ class AccountNotificationsSync extends _$AccountNotificationsSync {
       return;
     }
 
+    // Collect all users from all types
     final allUsers = <String>{};
     for (final users in usersMap.values) {
       allUsers.addAll(users);
@@ -173,14 +150,16 @@ class AccountNotificationsSync extends _$AccountNotificationsSync {
     await cacheUserRelays(allUsers.toList(), database);
     final optimalRelayMapping = await getOptimalRelayMapping(allUsers.toList(), database);
 
+    // For each content type, sync only its specific users
     for (final entry in usersMap.entries) {
       final contentType = entry.key;
       final users = entry.value;
 
-      if (users.isEmpty) {
+      if (users.isEmpty || contentType == UserNotificationsType.none) {
         continue;
       }
 
+      // Filter relay mapping for just these users
       final filteredMapping = <String, List<String>>{};
       for (final relayEntry in optimalRelayMapping.entries) {
         final relayUrl = relayEntry.key;
@@ -191,6 +170,7 @@ class AccountNotificationsSync extends _$AccountNotificationsSync {
         }
       }
 
+      // Sync only this content type with its specific users
       for (final relayEntry in filteredMapping.entries) {
         await syncEventsFromRelay(
           relayUrl: relayEntry.key,
@@ -203,24 +183,21 @@ class AccountNotificationsSync extends _$AccountNotificationsSync {
   }
 
   /// Determine which content types need to be synced
-  Future<List<NotificationContentType>> determineContentTypesToSync() async {
+  Future<List<UserNotificationsType>> determineContentTypesToSync() async {
     final enabledNotifications = ref.read(userNotificationsNotifierProvider);
     final hasGlobalNotifications = !enabledNotifications.contains(UserNotificationsType.none) &&
         enabledNotifications.isNotEmpty;
 
     if (hasGlobalNotifications) {
-      return enabledNotifications
-          .where((type) => type != UserNotificationsType.none)
-          .map(NotificationContentType.fromUserNotificationType)
-          .toList();
+      return enabledNotifications.where((type) => type != UserNotificationsType.none).toList();
     } else {
       return getUserSpecificContentTypes();
     }
   }
 
   /// Get content types that have user-specific notifications
-  Future<List<NotificationContentType>> getUserSpecificContentTypes() async {
-    final userSpecificTypes = <NotificationContentType>[];
+  Future<List<UserNotificationsType>> getUserSpecificContentTypes() async {
+    final userSpecificTypes = <UserNotificationsType>[];
     final currentPubkey = ref.read(currentPubkeySelectorProvider);
     if (currentPubkey == null) {
       return userSpecificTypes;
@@ -249,7 +226,7 @@ class AccountNotificationsSync extends _$AccountNotificationsSync {
 
       if (accountNotificationSet is AccountNotificationSetEntity &&
           accountNotificationSet.data.userPubkeys.isNotEmpty) {
-        userSpecificTypes.add(NotificationContentType.fromUserNotificationType(type));
+        userSpecificTypes.add(type);
       }
     }
 
@@ -257,24 +234,21 @@ class AccountNotificationsSync extends _$AccountNotificationsSync {
   }
 
   /// Get all users from notification sets for the given content types
-  Future<Map<NotificationContentType, List<String>>> getAllUsersFromNotificationSets(
-    List<NotificationContentType> contentTypes,
+  Future<Map<UserNotificationsType, List<String>>> getAllUsersFromNotificationSets(
+    List<UserNotificationsType> contentTypes,
   ) async {
-    final result = <NotificationContentType, List<String>>{};
+    final result = <UserNotificationsType, List<String>>{};
     final currentPubkey = ref.read(currentPubkeySelectorProvider);
     if (currentPubkey == null) {
       return result;
     }
 
     for (final contentType in contentTypes) {
-      final notificationType = switch (contentType) {
-        NotificationContentType.posts => UserNotificationsType.posts,
-        NotificationContentType.stories => UserNotificationsType.stories,
-        NotificationContentType.articles => UserNotificationsType.articles,
-        NotificationContentType.videos => UserNotificationsType.videos,
-      };
+      if (contentType == UserNotificationsType.none) {
+        continue;
+      }
 
-      final setType = AccountNotificationSetType.fromUserNotificationType(notificationType);
+      final setType = AccountNotificationSetType.fromUserNotificationType(contentType);
       if (setType == null) {
         continue;
       }
@@ -337,10 +311,14 @@ class AccountNotificationsSync extends _$AccountNotificationsSync {
   Future<void> syncEventsFromRelay({
     required String relayUrl,
     required List<String> users,
-    required List<NotificationContentType> contentTypes,
+    required List<UserNotificationsType> contentTypes,
     required AccountNotificationsDatabase database,
   }) async {
     for (final contentType in contentTypes) {
+      if (contentType == UserNotificationsType.none) {
+        continue;
+      }
+
       await syncContentTypeFromRelay(
         relayUrl: relayUrl,
         users: users,
@@ -354,9 +332,13 @@ class AccountNotificationsSync extends _$AccountNotificationsSync {
   Future<void> syncContentTypeFromRelay({
     required String relayUrl,
     required List<String> users,
-    required NotificationContentType contentType,
+    required UserNotificationsType contentType,
     required AccountNotificationsDatabase database,
   }) async {
+    if (contentType == UserNotificationsType.none) {
+      return;
+    }
+
     final syncState = await getSyncState(relayUrl, contentType, database);
     final callStartTime = DateTime.now().microsecondsSinceEpoch;
 
@@ -398,7 +380,7 @@ class AccountNotificationsSync extends _$AccountNotificationsSync {
   /// Get the sync state for a specific relay and content type
   Future<AccountNotificationSyncState?> getSyncState(
     String relayUrl,
-    NotificationContentType contentType,
+    UserNotificationsType contentType,
     AccountNotificationsDatabase database,
   ) async {
     final contentTypeEnum = mapToContentTypeEnum(contentType);
@@ -408,20 +390,21 @@ class AccountNotificationsSync extends _$AccountNotificationsSync {
     return query.getSingleOrNull();
   }
 
-  /// Map NotificationContentType to ContentType enum
-  ContentType mapToContentTypeEnum(NotificationContentType contentType) {
+  /// Map UserNotificationsType to ContentType enum
+  ContentType mapToContentTypeEnum(UserNotificationsType contentType) {
     return switch (contentType) {
-      NotificationContentType.posts => ContentType.posts,
-      NotificationContentType.stories => ContentType.stories,
-      NotificationContentType.articles => ContentType.articles,
-      NotificationContentType.videos => ContentType.videos,
+      UserNotificationsType.posts => ContentType.posts,
+      UserNotificationsType.stories => ContentType.stories,
+      UserNotificationsType.articles => ContentType.articles,
+      UserNotificationsType.videos => ContentType.videos,
+      UserNotificationsType.none => throw ArgumentError('Cannot convert none to content type'),
     };
   }
 
   /// Update the sync state for a specific relay and content type
   Future<void> updateSyncState({
     required String relayUrl,
-    required NotificationContentType contentType,
+    required UserNotificationsType contentType,
     required AccountNotificationsDatabase database,
     required int sinceTimestamp,
   }) async {
@@ -438,15 +421,15 @@ class AccountNotificationsSync extends _$AccountNotificationsSync {
 
   /// Build a request filter for the given content type and users
   RequestFilter? buildRequestFilter({
-    required NotificationContentType contentType,
+    required UserNotificationsType contentType,
     required List<String> users,
   }) {
-    if (users.isEmpty) {
+    if (users.isEmpty || contentType == UserNotificationsType.none) {
       return null;
     }
 
     return switch (contentType) {
-      NotificationContentType.videos => RequestFilter(
+      UserNotificationsType.videos => RequestFilter(
           kinds: const [
             PostEntity.kind,
             RepostEntity.kind,
@@ -457,7 +440,7 @@ class AccountNotificationsSync extends _$AccountNotificationsSync {
           authors: users,
           limit: 100,
         ),
-      NotificationContentType.stories => RequestFilter(
+      UserNotificationsType.stories => RequestFilter(
           kinds: const [
             PostEntity.kind,
             RepostEntity.kind,
@@ -468,7 +451,7 @@ class AccountNotificationsSync extends _$AccountNotificationsSync {
           authors: users,
           limit: 100,
         ),
-      NotificationContentType.articles => RequestFilter(
+      UserNotificationsType.articles => RequestFilter(
           kinds: const [
             ArticleEntity.kind,
             GenericRepostEntity.articleRepostKind,
@@ -476,7 +459,7 @@ class AccountNotificationsSync extends _$AccountNotificationsSync {
           authors: users,
           limit: 100,
         ),
-      NotificationContentType.posts => RequestFilter(
+      UserNotificationsType.posts => RequestFilter(
           kinds: const [
             PostEntity.kind,
             RepostEntity.kind,
@@ -487,13 +470,14 @@ class AccountNotificationsSync extends _$AccountNotificationsSync {
           authors: users,
           limit: 100,
         ),
+      UserNotificationsType.none => throw ArgumentError('Cannot build filter for none type'),
     };
   }
 
   /// Process a notification event
   Future<void> processNotificationEvent(
     EventMessage event,
-    NotificationContentType contentType,
+    UserNotificationsType contentType,
   ) async {
     final entity = convertEventToEntity(event);
     if (entity == null) {
