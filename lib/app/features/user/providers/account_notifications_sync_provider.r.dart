@@ -23,6 +23,7 @@ import 'package:ion/app/features/ion_connect/model/event_reference.f.dart';
 import 'package:ion/app/features/ion_connect/model/ion_connect_entity.dart';
 import 'package:ion/app/features/ion_connect/providers/event_backfill_service.r.dart';
 import 'package:ion/app/features/ion_connect/providers/ion_connect_entity_provider.r.dart';
+import 'package:ion/app/features/ion_connect/providers/ion_connect_event_parser.r.dart';
 import 'package:ion/app/features/user/model/account_notifications_sets.f.dart';
 import 'package:ion/app/features/user/model/user_notifications_type.dart';
 import 'package:ion/app/features/user/pages/profile_page/providers/user_notifications_provider.r.dart';
@@ -505,18 +506,7 @@ class AccountNotificationsSync extends _$AccountNotificationsSync {
   /// Convert an event message to an entity
   IonConnectEntity? convertEventToEntity(EventMessage event) {
     try {
-      final entity = switch (event.kind) {
-        PostEntity.kind => PostEntity.fromEventMessage(event),
-        RepostEntity.kind => RepostEntity.fromEventMessage(event),
-        ReactionEntity.kind => ReactionEntity.fromEventMessage(event),
-        ArticleEntity.kind => ArticleEntity.fromEventMessage(event),
-        ModifiablePostEntity.kind => ModifiablePostEntity.fromEventMessage(event),
-        GenericRepostEntity.articleRepostKind => GenericRepostEntity.fromEventMessage(event),
-        GenericRepostEntity.modifiablePostRepostKind => GenericRepostEntity.fromEventMessage(event),
-        _ => null,
-      };
-
-      return entity;
+      return ref.read(eventParserProvider).parse(event);
     } catch (error) {
       return null;
     }
