@@ -1,7 +1,6 @@
 // SPDX-License-Identifier: ice License 1.0
 
 import 'dart:async';
-import 'dart:convert';
 
 import 'package:drift/drift.dart';
 import 'package:ion/app/features/auth/providers/auth_provider.m.dart';
@@ -147,8 +146,7 @@ class AccountNotificationsSync extends _$AccountNotificationsSync {
       return;
     }
 
-    await cacheUserRelays(allUsers.toList(), database);
-    final optimalRelayMapping = await getOptimalRelayMapping(allUsers.toList(), database);
+    final optimalRelayMapping = await getOptimalRelayMapping(allUsers.toList());
 
     // For each content type, sync only its specific users
     for (final entry in usersMap.entries) {
@@ -270,40 +268,17 @@ class AccountNotificationsSync extends _$AccountNotificationsSync {
     return result;
   }
 
-  /// Cache relay information for users
-  Future<void> cacheUserRelays(List<String> users, AccountNotificationsDatabase database) async {
+  /// Get the optimal mapping of relays to users
+  Future<Map<String, List<String>>> getOptimalRelayMapping(List<String> users) async {
+    final userToRelays = <String, List<String>>{};
     final userRelaysManager = ref.read(userRelaysManagerProvider.notifier);
     final userRelaysList = await userRelaysManager.fetch(users);
 
     for (final userRelay in userRelaysList) {
-      final relayUrls = json.encode(userRelay.urls);
-      await database.into(database.notificationUserRelaysTable).insertOnConflictUpdate(
-            NotificationUserRelaysTableCompanion.insert(
-              userPubkey: userRelay.masterPubkey,
-              relayUrls: relayUrls,
-              cachedAt: DateTime.now().microsecondsSinceEpoch,
-            ),
-          );
+      userToRelays[userRelay.masterPubkey] = userRelay.urls;
     }
-  }
 
-  /// Get the optimal mapping of relays to users
-  Future<Map<String, List<String>>> getOptimalRelayMapping(
-    List<String> users,
-    AccountNotificationsDatabase database,
-  ) async {
-    final userToRelays = <String, List<String>>{};
-
-    final cachedRelays = await database.select(database.notificationUserRelaysTable).get();
-
-    for (final cached in cachedRelays) {
-      if (users.contains(cached.userPubkey)) {
-        final relayUrls = (json.decode(cached.relayUrls) as List<dynamic>).cast<String>();
-        userToRelays[cached.userPubkey] = relayUrls;
-      }
-    }
     final result = findBestOptions(userToRelays);
-
     return result;
   }
 

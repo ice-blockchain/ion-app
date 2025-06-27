@@ -6,7 +6,6 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/exceptions/exceptions.dart';
 import 'package:ion/app/features/auth/providers/auth_provider.m.dart';
 import 'package:ion/app/features/feed/notifications/data/database/tables/account_notification_sync_state_table.d.dart';
-import 'package:ion/app/features/user/data/database/tables/notification_user_relays_table.d.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'account_notifications_database.m.g.dart';
@@ -31,7 +30,6 @@ AccountNotificationsDatabase accountNotificationsDatabase(Ref ref) {
 @DriftDatabase(
   tables: [
     AccountNotificationSyncStateTable,
-    NotificationUserRelaysTable,
   ],
 )
 class AccountNotificationsDatabase extends _$AccountNotificationsDatabase {
