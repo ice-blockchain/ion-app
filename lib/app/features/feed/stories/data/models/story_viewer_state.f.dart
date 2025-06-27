@@ -35,5 +35,11 @@ class StoryViewerState with _$StoryViewerState {
     return currentUserStories.stories[currentStoryIndex];
   }
 
+  List<ModifiablePostEntity> get currentStoriesList {
+    if (userStories.isEmpty) return [];
+
+    return userStories[currentUserIndex].stories;
+  }
+
   UserStories? get currentUser => userStories[currentUserIndex];
 }
