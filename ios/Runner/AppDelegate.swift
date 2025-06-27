@@ -197,11 +197,15 @@ class AudioFocusHandler: NSObject {
                                         flutterResult: result
                                     )
                 case AppDelegate.methodStartVideoEditorTrimmer:
-                                    let trimmerVideoFilePath = methodCall.arguments as? String
+                    let arguments = methodCall.arguments as? [String: Any]
+                                    let trimmerVideoFilePath = arguments?["videoFilePath"] as? String
+                    let maxVideoDurationMs = arguments?["maxVideoDurationMs"] as? Int ?? 60000
+                    let maxVideoDurationSec = maxVideoDurationMs / 1000
                                     if let videoFilePath = trimmerVideoFilePath {
                                         videoEditor.openVideoEditorTrimmer(
                                             fromViewController: controller,
                                             videoURL: URL(fileURLWithPath: videoFilePath),
+                                            maxVideoDuration: maxVideoDurationSec,
                                             flutterResult: result
                                         )
                                     } else {

@@ -26,7 +26,11 @@ import org.koin.dsl.module
 
 class VideoEditorModule {
 
-    fun initialize(application: Application, videoAspectRatio: Double?) {
+    fun initialize(
+        application: Application,
+        videoAspectRatio: Double?,
+        maxVideoDurationMs: Long? = 60_000,
+    ) {
         startKoin {
             androidContext(application)
             allowOverride(true)
@@ -49,7 +53,7 @@ class VideoEditorModule {
                 GalleryKoinModule().module,
 
                 // Sample integration module
-                SampleIntegrationVeKoinModule(videoAspectRatio).module,
+                SampleIntegrationVeKoinModule(videoAspectRatio, maxVideoDurationMs).module,
             )
         }
     }
@@ -61,8 +65,10 @@ class VideoEditorModule {
  * Some dependencies has no default implementations. It means that
  * these classes fully depends on your requirements
  */
-private class SampleIntegrationVeKoinModule(videoAspectRatio: Double?) {
-
+private class SampleIntegrationVeKoinModule(
+    videoAspectRatio: Double?,
+    maxVideoDurationMs: Long? = 60_000,
+) {
     val module = module {
         single<ArEffectsRepositoryProvider>(createdAtStart = true) {
             ArEffectsRepositoryProvider(
@@ -82,12 +88,13 @@ private class SampleIntegrationVeKoinModule(videoAspectRatio: Double?) {
             AudioBrowserMusicProvider()
         }
 
-        if (videoAspectRatio != null) {
-            single(createdAtStart = true) {
-                EditorConfig(
-                    aspectSettings = EditorAspectSettings.detectAspectSettings(videoAspectRatio),
-                )
-            }
+        single(createdAtStart = true) {
+            EditorConfig(
+                aspectSettings = if (videoAspectRatio != null) EditorAspectSettings.detectAspectSettings(
+                    videoAspectRatio
+                ) else null,
+                maxTotalVideoDurationMs = maxVideoDurationMs ?: 60_000,
+            )
         }
     }
 }

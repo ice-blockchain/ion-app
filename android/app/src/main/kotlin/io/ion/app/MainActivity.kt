@@ -97,7 +97,8 @@ class MainActivity : FlutterFragmentActivity() {
                 }
 
                 METHOD_START_VIDEO_EDITOR_TRIMMER -> {
-                    val videoFilePath = call.arguments as? String
+                    val videoFilePath = call.argument("videoFilePath") as? String
+                    val maxVideoDurationMs = call.argument<Int?>("maxVideoDurationMs")
                     val trimmerVideoUri = videoFilePath?.let { Uri.fromFile(File(it)) }
                     if (trimmerVideoUri == null) {
                         exportResult?.error("ERR_START_TRIMMER_MISSING_VIDEO", "", null)
@@ -113,7 +114,7 @@ class MainActivity : FlutterFragmentActivity() {
                                         }
 
                                     videoEditorModule = VideoEditorModule().apply {
-                                        initialize(application, aspectRatio)
+                                        initialize(application, aspectRatio, maxVideoDurationMs?.toLong())
                                     }
                                     startVideoEditorModeTrimmer(trimmerVideoUri)
                                 } else {
