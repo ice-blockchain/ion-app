@@ -12,6 +12,8 @@ import 'package:ion/app/features/feed/data/models/entities/modifiable_post_data.
 import 'package:ion/app/features/feed/data/models/entities/post_data.f.dart';
 import 'package:ion/app/features/feed/data/models/entities/reaction_data.f.dart';
 import 'package:ion/app/features/feed/data/models/entities/repost_data.f.dart';
+import 'package:ion/app/features/feed/notifications/data/database/account_notifications_database.m.dart';
+import 'package:ion/app/features/feed/notifications/data/database/tables/account_notification_sync_state_table.d.dart';
 import 'package:ion/app/features/feed/notifications/data/repository/comments_repository.r.dart';
 import 'package:ion/app/features/feed/notifications/data/repository/content_repository.r.dart';
 import 'package:ion/app/features/feed/notifications/data/repository/likes_repository.r.dart';
@@ -19,8 +21,6 @@ import 'package:ion/app/features/ion_connect/ion_connect.dart';
 import 'package:ion/app/features/ion_connect/model/action_source.f.dart';
 import 'package:ion/app/features/ion_connect/model/ion_connect_entity.dart';
 import 'package:ion/app/features/ion_connect/providers/event_backfill_service.r.dart';
-import 'package:ion/app/features/user/data/database/account_notifications_database.m.dart';
-import 'package:ion/app/features/user/data/database/tables/account_notification_sync_state_table.d.dart';
 import 'package:ion/app/features/user/model/user_notifications_type.dart';
 import 'package:ion/app/features/user/pages/profile_page/providers/user_notifications_provider.r.dart';
 import 'package:ion/app/features/user/providers/account_notifications_sets_provider.r.dart';

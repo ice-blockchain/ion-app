@@ -5,7 +5,7 @@ import 'package:drift_flutter/drift_flutter.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/exceptions/exceptions.dart';
 import 'package:ion/app/features/auth/providers/auth_provider.m.dart';
-import 'package:ion/app/features/user/data/database/tables/account_notification_sync_state_table.d.dart';
+import 'package:ion/app/features/feed/notifications/data/database/tables/account_notification_sync_state_table.d.dart';
 import 'package:ion/app/features/user/data/database/tables/notification_user_relays_table.d.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
