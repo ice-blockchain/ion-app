@@ -19,6 +19,7 @@ import 'package:ion/app/features/ion_connect/providers/ion_connect_event_parser.
 import 'package:ion/app/features/push_notifications/data/models/ion_connect_push_data_payload.f.dart';
 import 'package:ion/app/features/push_notifications/providers/notification_response_data_provider.r.dart';
 import 'package:ion/app/features/user/model/follow_list.f.dart';
+import 'package:ion/app/features/user_profile/providers/user_metadata_from_db_provider.r.dart';
 import 'package:ion/app/features/wallets/model/entities/funds_request_entity.f.dart';
 import 'package:ion/app/features/wallets/model/entities/wallet_asset_entity.f.dart';
 import 'package:ion/app/router/app_routes.gr.dart';
@@ -40,15 +41,17 @@ class NotificationResponseHandler extends _$NotificationResponseHandler {
 
   Future<void> _handleNotificationResponse(Map<String, dynamic> response) async {
     try {
-      final notificationPayload =
-          await IonConnectPushDataPayload.fromEncoded(response, (eventMassage) async {
-        final giftUnwrapService = await ref.read(giftUnwrapServiceProvider.future);
+      final notificationPayload = await IonConnectPushDataPayload.fromEncoded(
+        response,
+        decryptEvent: (eventMassage) async {
+          final giftUnwrapService = await ref.read(giftUnwrapServiceProvider.future);
 
-        final event = await giftUnwrapService.unwrap(eventMassage);
-        final userMetadata = ref.read(userMetadataFromDbNotifierProvider(event.masterPubkey));
+          final event = await giftUnwrapService.unwrap(eventMassage);
+          final userMetadata = ref.read(userMetadataFromDbNotifierProvider(event.masterPubkey));
 
-        return (event, userMetadata);
-      });
+          return (event, userMetadata);
+        },
+      );
 
       final eventParser = ref.read(eventParserProvider);
       final entity = eventParser.parse(notificationPayload.event);

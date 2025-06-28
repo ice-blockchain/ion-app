@@ -42,9 +42,10 @@ class IonConnectPushDataPayload {
   final Map<String, String>? decryptedPlaceholders;
 
   static Future<IonConnectPushDataPayload> fromEncoded(
-    Map<String, dynamic> data,
-    Future<(EventMessage, UserMetadataEntity?)> Function(EventMessage eventMassage) decryptEvent,
-  ) async {
+    Map<String, dynamic> data, {
+    required Future<(EventMessage, UserMetadataEntity?)> Function(EventMessage eventMassage)
+        decryptEvent,
+  }) async {
     final EncodedIonConnectPushData(:event, :relevantEvents, :compression) =
         EncodedIonConnectPushData.fromJson(data);
 

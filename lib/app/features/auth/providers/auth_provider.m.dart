@@ -105,7 +105,7 @@ String? currentIdentityKeyNameSelector(Ref ref) {
 class CurrentPubkeySelector extends _$CurrentPubkeySelector {
   @override
   String? build() {
-    listenSelf((_, next) => _saveState(next));
+    listenSelf(_saveState);
     final currentIdentityKeyName = ref.watch(currentIdentityKeyNameSelectorProvider);
     if (currentIdentityKeyName == null) {
       return null;
@@ -114,14 +114,14 @@ class CurrentPubkeySelector extends _$CurrentPubkeySelector {
     return mainWallet?.signingKey.publicKey;
   }
 
-  Future<void> _saveState(String? pubkey) async {
+  Future<void> _saveState(String? prev, String? next) async {
     // Saving current master pubkey using sharedPreferencesFoundation
     // to be able to read this value in the iOS Notification Service Extension
     final sharedPreferencesFoundation = await ref.read(sharedPreferencesFoundationProvider.future);
-    if (pubkey == null) {
-      await sharedPreferencesFoundation.remove(persistenceKey);
-    } else {
-      await sharedPreferencesFoundation.setString(persistenceKey, pubkey);
+    if (prev != null && next == null) {
+      await sharedPreferencesFoundation.remove(prev);
+    } else if (next != null) {
+      await sharedPreferencesFoundation.setString(persistenceKey, next);
     }
   }
 
