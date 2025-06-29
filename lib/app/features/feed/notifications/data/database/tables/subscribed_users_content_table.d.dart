@@ -26,5 +26,5 @@ class SubscribedUsersContentTable extends Table {
   IntColumn get type => intEnum<ContentType>()();
 
   @override
-  Set<Column> get primaryKey => {eventReference};
+  Set<Column> get primaryKey => {eventReference, type};
 }

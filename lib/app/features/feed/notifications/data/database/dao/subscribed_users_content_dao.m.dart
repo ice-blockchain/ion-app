@@ -36,13 +36,13 @@ class SubscribedUsersContentDao extends DatabaseAccessor<NotificationsDatabase>
 
   Stream<int> watchUnreadCount({required DateTime after}) {
     final query = selectOnly(subscribedUsersContentTable)
-      ..addColumns([subscribedUsersContentTable.eventReference.count()])
+      ..addColumns([subscribedUsersContentTable.rowId.count()])
       ..where(
         subscribedUsersContentTable.createdAt.isBiggerThanValue(after.microsecondsSinceEpoch),
       );
 
     return query
-        .map((row) => row.read(subscribedUsersContentTable.eventReference.count()) ?? 0)
+        .map((row) => row.read(subscribedUsersContentTable.rowId.count()) ?? 0)
         .watchSingle();
   }
 
