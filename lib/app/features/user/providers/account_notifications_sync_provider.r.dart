@@ -2,7 +2,6 @@
 
 import 'dart:async';
 
-import 'package:drift/drift.dart';
 import 'package:ion/app/features/auth/providers/auth_provider.m.dart';
 import 'package:ion/app/features/core/providers/env_provider.r.dart';
 import 'package:ion/app/features/feed/data/models/entities/article_data.f.dart';
@@ -11,8 +10,7 @@ import 'package:ion/app/features/feed/data/models/entities/modifiable_post_data.
 import 'package:ion/app/features/feed/data/models/entities/post_data.f.dart';
 import 'package:ion/app/features/feed/data/models/entities/reaction_data.f.dart';
 import 'package:ion/app/features/feed/data/models/entities/repost_data.f.dart';
-import 'package:ion/app/features/feed/notifications/data/database/account_notifications_database.m.dart';
-import 'package:ion/app/features/feed/notifications/data/database/tables/account_notification_sync_state_table.d.dart';
+import 'package:ion/app/features/feed/notifications/data/repository/account_notification_sync_repository.r.dart';
 import 'package:ion/app/features/feed/notifications/data/repository/comments_repository.r.dart';
 import 'package:ion/app/features/feed/notifications/data/repository/content_repository.r.dart';
 import 'package:ion/app/features/feed/notifications/data/repository/likes_repository.r.dart';
@@ -101,15 +99,8 @@ class AccountNotificationsSync extends _$AccountNotificationsSync {
 
   /// Get the timestamp of the last successful sync
   Future<DateTime?> getLastSyncTime() async {
-    final database = ref.read(accountNotificationsDatabaseProvider);
-    final query = database.select(database.accountNotificationSyncStateTable)
-      ..orderBy([(t) => OrderingTerm.desc(t.lastSyncTimestamp)])
-      ..limit(1);
-
-    final result = await query.getSingleOrNull();
-    return result?.lastSyncTimestamp != null
-        ? DateTime.fromMicrosecondsSinceEpoch(result!.lastSyncTimestamp)
-        : null;
+    final repository = ref.read(accountNotificationSyncRepositoryProvider);
+    return repository.getLastSyncTime();
   }
 
   /// Perform the actual sync operation
@@ -129,7 +120,6 @@ class AccountNotificationsSync extends _$AccountNotificationsSync {
       return;
     }
 
-    final database = ref.read(accountNotificationsDatabaseProvider);
     final usersMap = await getAllUsersFromNotificationSets(contentTypes);
 
     if (usersMap.isEmpty) {
@@ -174,7 +164,6 @@ class AccountNotificationsSync extends _$AccountNotificationsSync {
           relayUrl: relayEntry.key,
           users: relayEntry.value,
           contentTypes: [contentType],
-          database: database,
         );
       }
     }
@@ -287,7 +276,6 @@ class AccountNotificationsSync extends _$AccountNotificationsSync {
     required String relayUrl,
     required List<String> users,
     required List<UserNotificationsType> contentTypes,
-    required AccountNotificationsDatabase database,
   }) async {
     for (final contentType in contentTypes) {
       if (contentType == UserNotificationsType.none) {
@@ -298,7 +286,6 @@ class AccountNotificationsSync extends _$AccountNotificationsSync {
         relayUrl: relayUrl,
         users: users,
         contentType: contentType,
-        database: database,
       );
     }
   }
@@ -308,13 +295,13 @@ class AccountNotificationsSync extends _$AccountNotificationsSync {
     required String relayUrl,
     required List<String> users,
     required UserNotificationsType contentType,
-    required AccountNotificationsDatabase database,
   }) async {
     if (contentType == UserNotificationsType.none) {
       return;
     }
 
-    final syncState = await getSyncState(relayUrl, contentType, database);
+    final repository = ref.read(accountNotificationSyncRepositoryProvider);
+    final syncState = await repository.getSyncState(relayUrl, contentType);
     final callStartTime = DateTime.now().microsecondsSinceEpoch;
 
     // Determine the starting timestamp for events
@@ -353,10 +340,9 @@ class AccountNotificationsSync extends _$AccountNotificationsSync {
     final actualNewTimestamp =
         newLastCreatedAt == latestEventTimestamp ? latestEventTimestamp + 1 : newLastCreatedAt;
 
-    await updateSyncState(
+    await repository.updateSyncState(
       relayUrl: relayUrl,
       contentType: contentType,
-      database: database,
       sinceTimestamp: actualNewTimestamp,
     );
   }
@@ -382,48 +368,6 @@ class AccountNotificationsSync extends _$AccountNotificationsSync {
         .catchError((_) => null);
 
     return notificationSet is AccountNotificationSetEntity ? notificationSet.createdAt : null;
-  }
-
-  /// Get the sync state for a specific relay and content type
-  Future<AccountNotificationSyncState?> getSyncState(
-    String relayUrl,
-    UserNotificationsType contentType,
-    AccountNotificationsDatabase database,
-  ) async {
-    final contentTypeEnum = mapToContentTypeEnum(contentType);
-    final query = database.select(database.accountNotificationSyncStateTable)
-      ..where((t) => t.relayUrl.equals(relayUrl) & t.contentType.equalsValue(contentTypeEnum));
-
-    return query.getSingleOrNull();
-  }
-
-  /// Map UserNotificationsType to ContentType enum
-  ContentType mapToContentTypeEnum(UserNotificationsType contentType) {
-    return switch (contentType) {
-      UserNotificationsType.posts => ContentType.posts,
-      UserNotificationsType.stories => ContentType.stories,
-      UserNotificationsType.articles => ContentType.articles,
-      UserNotificationsType.videos => ContentType.videos,
-      UserNotificationsType.none => throw ArgumentError('Cannot convert none to content type'),
-    };
-  }
-
-  /// Update the sync state for a specific relay and content type
-  Future<void> updateSyncState({
-    required String relayUrl,
-    required UserNotificationsType contentType,
-    required AccountNotificationsDatabase database,
-    required int sinceTimestamp,
-  }) async {
-    final contentTypeEnum = mapToContentTypeEnum(contentType);
-    await database.into(database.accountNotificationSyncStateTable).insertOnConflictUpdate(
-          AccountNotificationSyncStateTableCompanion.insert(
-            relayUrl: relayUrl,
-            contentType: contentTypeEnum,
-            lastSyncTimestamp: DateTime.now().microsecondsSinceEpoch,
-            sinceTimestamp: Value(sinceTimestamp),
-          ),
-        );
   }
 
   /// Build a request filter for the given content type and users
