@@ -3,23 +3,23 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
-part 'emoji_reaction_provider.m.g.dart';
-part 'emoji_reaction_provider.m.freezed.dart';
+part 'story_reply_notification_provider.m.g.dart';
+part 'story_reply_notification_provider.m.freezed.dart';
 
 @freezed
-class EmojiState with _$EmojiState {
-  const factory EmojiState({
+class StoryReplyNotificationState with _$StoryReplyNotificationState {
+  const factory StoryReplyNotificationState({
     String? selectedEmoji,
     @Default(false) bool showNotification,
-  }) = _EmojiState;
+  }) = _StoryReplyNotificationState;
 }
 
 @riverpod
-class EmojiReactionsController extends _$EmojiReactionsController {
+class StoryReplyNotificationController extends _$StoryReplyNotificationController {
   @override
-  EmojiState build() => const EmojiState();
+  StoryReplyNotificationState build() => const StoryReplyNotificationState();
 
-  void showReaction(String emoji) {
+  void showNotification({String? emoji}) {
     state = state.copyWith(
       selectedEmoji: emoji,
       showNotification: true,
