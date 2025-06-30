@@ -49,6 +49,7 @@ class FeedForYouContent extends _$FeedForYouContent implements PagedNotifier {
     return const FeedForYouContentState(
       items: null,
       isLoading: false,
+      forYouRetryLimitReached: false,
       hasMoreFollowing: true,
       modifiersPagination: {},
     );
@@ -69,20 +70,53 @@ class FeedForYouContent extends _$FeedForYouContent implements PagedNotifier {
   }
 
   Stream<IonConnectEntity> requestEntities({required int limit}) async* {
+    Logger.info('$_logTag Requesting events');
+
     var unseenFollowing = 0;
     final followingDistribution = _getFeedFollowingDistribution(limit: limit);
+
     await for (final entity in _fetchUnseenFollowing(limit: followingDistribution)) {
       yield entity;
       unseenFollowing++;
     }
+
+    Logger.info('$_logTag Got [$unseenFollowing] unseen following events');
+
     if (unseenFollowing < limit) {
-      final modifiersDistribution = _getFeedModifiersDistribution(limit: limit - unseenFollowing);
-      for (final MapEntry(key: modifier, value: modifierLimit) in modifiersDistribution.entries) {
-        if (modifierLimit > 0) {
-          yield* _fetchInterestsEntities(modifier: modifier, limit: modifierLimit);
-        }
+      yield* _fetchForYou(limit: limit - unseenFollowing);
+    }
+  }
+
+  Stream<IonConnectEntity> _fetchForYou({required int limit}) async* {
+    if (state.forYouRetryLimitReached) return;
+
+    Logger.info('$_logTag Requesting [$limit] interested events');
+
+    final retryCounter = await _buildRetryCounter();
+    final modifiersDistribution = _getFeedModifiersDistribution(limit: limit);
+
+    for (final MapEntry(key: modifier, value: modifierLimit) in modifiersDistribution.entries) {
+      if (modifierLimit > 0) {
+        _ensureEmptyState();
+        yield* _fetchInterestsEntities(
+          modifier: modifier,
+          limit: modifierLimit,
+          retryCounter: retryCounter,
+        );
       }
     }
+
+    if (retryCounter.isReached) {
+      state = state.copyWith(forYouRetryLimitReached: true);
+      Logger.warning('$_logTag For you retry limit reached');
+    }
+  }
+
+  Future<RetryCounter> _buildRetryCounter() async {
+    final feedConfig = await ref.read(feedConfigProvider.future);
+    final feedRetryCounterMultiplier =
+        feedConfig.concurrentRequests * 2; //TODO:change to a separate field
+    return RetryCounter(limit: feedType.pageSize * feedRetryCounterMultiplier);
   }
 
   int _getFeedFollowingDistribution({required int limit}) {
@@ -156,6 +190,8 @@ class FeedForYouContent extends _$FeedForYouContent implements PagedNotifier {
   }
 
   Stream<IonConnectEntity> _fetchUnseenFollowing({required int limit}) async* {
+    Logger.info('$_logTag Requesting [$limit] unseen following events');
+
     final notifier = ref.read(
       feedFollowingContentProvider(
         feedType,
@@ -188,7 +224,12 @@ class FeedForYouContent extends _$FeedForYouContent implements PagedNotifier {
   Stream<IonConnectEntity> _fetchInterestsEntities({
     required FeedModifier modifier,
     required int limit,
+    required RetryCounter retryCounter,
   }) async* {
+    if (retryCounter.isReached) return;
+
+    Logger.info('$_logTag Requesting [$limit] events with [${modifier.name}] modifier');
+
     await _refreshModifierPagination(modifier: modifier);
 
     final nextPageRelays =
@@ -197,16 +238,27 @@ class FeedForYouContent extends _$FeedForYouContent implements PagedNotifier {
     if (nextPageRelays.isEmpty) return;
 
     var requestedCount = 0;
-    await for (final entity
-        in _requestEntitiesFromRelays(relays: nextPageRelays.keys, modifier: modifier)) {
+    await for (final entity in _requestEntitiesFromRelays(
+      relays: nextPageRelays.keys,
+      modifier: modifier,
+      retryCounter: retryCounter,
+    )) {
       yield entity;
       requestedCount++;
     }
 
     final remaining = limit - requestedCount;
 
+    Logger.info(
+      '$_logTag Got [$requestedCount] events with [${modifier.name}] modifier, remaining: [$remaining], tries left: [${retryCounter.triesLeft}]',
+    );
+
     if (remaining > 0) {
-      yield* _fetchInterestsEntities(modifier: modifier, limit: remaining);
+      yield* _fetchInterestsEntities(
+        modifier: modifier,
+        limit: remaining,
+        retryCounter: retryCounter,
+      );
     }
   }
 
@@ -258,6 +310,7 @@ class FeedForYouContent extends _$FeedForYouContent implements PagedNotifier {
   Stream<IonConnectEntity> _requestEntitiesFromRelays({
     required Iterable<String> relays,
     required FeedModifier modifier,
+    required RetryCounter retryCounter,
   }) async* {
     final requestsQueue = await ref.read(feedRequestQueueProvider.future);
     final resultsController = StreamController<IonConnectEntity>();
@@ -265,6 +318,8 @@ class FeedForYouContent extends _$FeedForYouContent implements PagedNotifier {
     final requests = [
       for (final relayUrl in relays)
         requestsQueue.add(() async {
+          if (retryCounter.isReached) return;
+
           final relayInterestsPagination =
               state.modifiersPagination[modifier]![relayUrl]!.interestsPagination;
 
@@ -293,7 +348,7 @@ class FeedForYouContent extends _$FeedForYouContent implements PagedNotifier {
               // but still update the pagination to shift the [lastEventCreatedAt].
               resultsController.add(entity);
             }
-            _updateRelayInterestPagination(
+            state = state.copyWithRelayInterestPagination(
               interestPagination.copyWith(lastEventCreatedAt: entity.createdAt),
               relayUrl: relayUrl,
               modifier: modifier,
@@ -301,7 +356,11 @@ class FeedForYouContent extends _$FeedForYouContent implements PagedNotifier {
               increasePage: true,
             );
           } else {
-            _updateRelayInterestPagination(
+            Logger.info(
+              '$_logTag No events found for interest: $interest, ${modifier.name}, on relay: $relayUrl, tries left ${retryCounter.triesLeft}',
+            );
+            retryCounter.increment();
+            state = state.copyWithRelayInterestPagination(
               interestPagination.copyWith(hasMore: false),
               relayUrl: relayUrl,
               modifier: modifier,
@@ -309,14 +368,15 @@ class FeedForYouContent extends _$FeedForYouContent implements PagedNotifier {
             );
           }
         }).catchError((Object? error) {
-          _updateRelayPagination(
+          state = state.copyWithRelayPagination(
             state.modifiersPagination[modifier]![relayUrl]!.copyWith(hasMore: false),
             relayUrl: relayUrl,
             modifier: modifier,
           );
           Logger.error(
             error ?? '',
-            message: 'Error requesting entities from relay: $relayUrl',
+            message:
+                '$_logTag Error requesting events with modifier: ${modifier.name}, on relay: $relayUrl',
           );
         }),
     ];
@@ -452,47 +512,6 @@ class FeedForYouContent extends _$FeedForYouContent implements PagedNotifier {
     }
   }
 
-  void _updateRelayPagination(
-    RelayPagination pagination, {
-    required String relayUrl,
-    required FeedModifier modifier,
-    bool increasePage = false,
-  }) {
-    state = state.copyWith(
-      modifiersPagination: {
-        ...state.modifiersPagination,
-        modifier: {
-          ...state.modifiersPagination[modifier]!,
-          relayUrl: pagination,
-        },
-      },
-    );
-  }
-
-  void _updateRelayInterestPagination(
-    InterestPagination pagination, {
-    required String relayUrl,
-    required FeedModifier modifier,
-    required String interest,
-    bool increasePage = false,
-  }) {
-    final relayPagination = state.modifiersPagination[modifier]![relayUrl]!;
-    final interestsPagination = {
-      ...relayPagination.interestsPagination,
-      interest: pagination,
-    };
-    _updateRelayPagination(
-      relayPagination.copyWith(
-        interestsPagination: interestsPagination,
-        page: relayPagination.page + (increasePage ? 1 : 0),
-        hasMore: interestsPagination.values.any((pagination) => pagination.hasMore),
-      ),
-      relayUrl: relayUrl,
-      modifier: modifier,
-      increasePage: increasePage,
-    );
-  }
-
   /// Determines which interests should be used for the given modifier and feed type.
   Future<List<String>> _getInterestsForModifier(FeedModifier modifier) async {
     if (modifier == FeedModifier.explore) {
@@ -510,6 +529,8 @@ class FeedForYouContent extends _$FeedForYouContent implements PagedNotifier {
     return userInterests.categories.keys.toList();
   }
 
+  String get _logTag => '[FEED FOR_YOU ${feedType.name}]';
+
   static final String _exploreInterest = '_${FeedModifier.explore}';
 }
 
@@ -518,18 +539,58 @@ class FeedForYouContentState with _$FeedForYouContentState implements PagedState
   const factory FeedForYouContentState({
     required Set<IonConnectEntity>? items,
     required Map<FeedModifier, Map<String, RelayPagination>> modifiersPagination,
+    required bool forYouRetryLimitReached,
     required bool hasMoreFollowing,
     required bool isLoading,
   }) = _FeedForYouContentState;
 
   const FeedForYouContentState._();
 
-  @override
-  bool get hasMore =>
-      hasMoreFollowing ||
-      modifiersPagination.values.any(
+  bool get hasMoreForYou => modifiersPagination.values.any(
         (modifierPagination) => modifierPagination.values.any((pagination) => pagination.hasMore),
       );
+
+  FeedForYouContentState copyWithRelayPagination(
+    RelayPagination pagination, {
+    required String relayUrl,
+    required FeedModifier modifier,
+  }) {
+    return copyWith(
+      modifiersPagination: {
+        ...modifiersPagination,
+        modifier: {
+          ...modifiersPagination[modifier]!,
+          relayUrl: pagination,
+        },
+      },
+    );
+  }
+
+  FeedForYouContentState copyWithRelayInterestPagination(
+    InterestPagination pagination, {
+    required String relayUrl,
+    required FeedModifier modifier,
+    required String interest,
+    bool increasePage = false,
+  }) {
+    final relayPagination = modifiersPagination[modifier]![relayUrl]!;
+    final interestsPagination = {
+      ...relayPagination.interestsPagination,
+      interest: pagination,
+    };
+    return copyWithRelayPagination(
+      relayPagination.copyWith(
+        interestsPagination: interestsPagination,
+        page: relayPagination.page + (increasePage ? 1 : 0),
+        hasMore: interestsPagination.values.any((pagination) => pagination.hasMore),
+      ),
+      relayUrl: relayUrl,
+      modifier: modifier,
+    );
+  }
+
+  @override
+  bool get hasMore => hasMoreFollowing || (hasMoreForYou && !forYouRetryLimitReached);
 }
 
 @Freezed(equal: false)
@@ -547,4 +608,21 @@ class InterestPagination with _$InterestPagination {
     required bool hasMore,
     int? lastEventCreatedAt,
   }) = _InterestPagination;
+}
+
+class RetryCounter {
+  RetryCounter({
+    required this.limit,
+  }) : _current = 0;
+
+  final int limit;
+  int _current;
+
+  bool get isReached => _current >= limit;
+
+  int get triesLeft => limit - _current;
+
+  void increment() {
+    _current++;
+  }
 }
