@@ -9,8 +9,8 @@ import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/chat/views/components/message_items/components.dart';
 import 'package:ion/app/features/feed/stories/providers/story_reply_notification_provider.m.dart';
 
-class StoryReactionNotification extends ConsumerWidget {
-  const StoryReactionNotification({super.key});
+class StoryReplyNotification extends ConsumerWidget {
+  const StoryReplyNotification({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {

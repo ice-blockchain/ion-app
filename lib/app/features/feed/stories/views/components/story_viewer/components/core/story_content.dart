@@ -74,8 +74,7 @@ class StoryContent extends HookConsumerWidget {
           isKeyboardShown: isKeyboardVisible,
           canReply: canReply && !isOwnerStory,
         ),
-        if (storyReplyNotificationState.showNotification)
-          const StoryReactionNotification.StoryReplyNotification(),
+        if (storyReplyNotificationState.showNotification) const StoryReplyNotification(),
       ],
     );
   }
