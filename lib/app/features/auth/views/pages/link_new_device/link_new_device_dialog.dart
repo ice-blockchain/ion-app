@@ -13,7 +13,6 @@ import 'package:ion/app/features/auth/views/pages/turn_on_notifications/turn_on_
 import 'package:ion/app/features/components/verify_identity/verify_identity_prompt_dialog_helper.dart';
 import 'package:ion/app/features/core/permissions/data/models/permissions_types.dart';
 import 'package:ion/app/features/core/permissions/providers/permissions_provider.r.dart';
-import 'package:ion/app/features/core/providers/app_first_run_provider.r.dart';
 import 'package:ion/app/features/ion_connect/providers/device_keypair_utils.dart';
 import 'package:ion/app/features/ion_connect/providers/restore_device_keypair_notifier.r.dart';
 import 'package:ion/app/features/user/providers/user_metadata_provider.r.dart';
@@ -51,10 +50,7 @@ class LinkNewDeviceDialog extends HookConsumerWidget {
         if (delegationComplete) {
           Navigator.of(ref.context).pop();
 
-          final appFirstRun = await ref.read(appFirstRunProvider.future);
-          final hasNotificationsPermission =
-              ref.read(hasPermissionProvider(Permission.notifications));
-          if (appFirstRun && !hasNotificationsPermission) {
+          if (!ref.read(hasPermissionProvider(Permission.notifications))) {
             ref
                 .read(uiEventQueueNotifierProvider.notifier)
                 .emit(const ShowTurnOnNotificationsEvent());
