@@ -9,7 +9,11 @@ import 'package:ion/app/components/screen_offset/screen_side_offset.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/auth/providers/delegation_complete_provider.r.dart';
 import 'package:ion/app/features/auth/providers/onboarding_complete_notifier.r.dart';
+import 'package:ion/app/features/auth/views/pages/turn_on_notifications/turn_on_notifications.dart';
 import 'package:ion/app/features/components/verify_identity/verify_identity_prompt_dialog_helper.dart';
+import 'package:ion/app/features/core/permissions/data/models/permissions_types.dart';
+import 'package:ion/app/features/core/permissions/providers/permissions_provider.r.dart';
+import 'package:ion/app/features/core/providers/app_first_run_provider.r.dart';
 import 'package:ion/app/features/ion_connect/providers/device_keypair_utils.dart';
 import 'package:ion/app/features/ion_connect/providers/restore_device_keypair_notifier.r.dart';
 import 'package:ion/app/features/user/providers/user_metadata_provider.r.dart';
@@ -43,9 +47,18 @@ class LinkNewDeviceDialog extends HookConsumerWidget {
 
     final delegationComplete = ref.watch(delegationCompleteProvider).valueOrNull.falseOrValue;
     useOnInit(
-      () {
+      () async {
         if (delegationComplete) {
           Navigator.of(ref.context).pop();
+
+          final appFirstRun = await ref.read(appFirstRunProvider.future);
+          final hasNotificationsPermission =
+              ref.read(hasPermissionProvider(Permission.notifications));
+          if (appFirstRun && !hasNotificationsPermission) {
+            ref
+                .read(uiEventQueueNotifierProvider.notifier)
+                .emit(const ShowTurnOnNotificationsEvent());
+          }
         }
       },
       [delegationComplete],

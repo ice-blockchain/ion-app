@@ -2,6 +2,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/components/button/button.dart';
 import 'package:ion/app/components/screen_offset/screen_side_offset.dart';
@@ -14,6 +15,16 @@ import 'package:ion/app/features/core/permissions/data/models/permissions_types.
 import 'package:ion/app/features/core/permissions/providers/permissions_provider.r.dart';
 import 'package:ion/app/router/app_routes.gr.dart';
 import 'package:ion/app/router/components/sheet_content/sheet_content.dart';
+import 'package:ion/app/services/ui_event_queue/ui_event_queue_notifier.r.dart';
+
+class ShowTurnOnNotificationsEvent extends UiEvent {
+  const ShowTurnOnNotificationsEvent();
+
+  @override
+  void performAction(BuildContext context) {
+    context.go(NotificationsRoute().location);
+  }
+}
 
 class TurnOnNotifications extends ConsumerWidget {
   const TurnOnNotifications({super.key});
