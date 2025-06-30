@@ -4,7 +4,6 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/exceptions/exceptions.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/feed/data/models/entities/article_data.f.dart';
-import 'package:ion/app/features/feed/data/models/entities/generic_repost.f.dart';
 import 'package:ion/app/features/feed/data/models/entities/modifiable_post_data.f.dart';
 import 'package:ion/app/features/feed/data/models/entities/post_data.f.dart';
 import 'package:ion/app/features/feed/notifications/data/database/dao/subscribed_users_content_dao.m.dart';
@@ -70,8 +69,6 @@ class ContentRepository implements IonNotificationRepository {
       ModifiablePostEntity() when entity.data.expiration != null => ContentType.stories,
       ModifiablePostEntity() => ContentType.posts,
       ArticleEntity() => ContentType.articles,
-      GenericRepostEntity() when entity.data.kind == ArticleEntity.kind => ContentType.articles,
-      GenericRepostEntity() => ContentType.posts,
       _ => null,
     };
   }

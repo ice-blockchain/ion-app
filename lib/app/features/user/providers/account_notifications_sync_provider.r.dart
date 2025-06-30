@@ -9,7 +9,6 @@ import 'package:ion/app/features/feed/data/models/entities/generic_repost.f.dart
 import 'package:ion/app/features/feed/data/models/entities/modifiable_post_data.f.dart';
 import 'package:ion/app/features/feed/data/models/entities/post_data.f.dart';
 import 'package:ion/app/features/feed/data/models/entities/reaction_data.f.dart';
-import 'package:ion/app/features/feed/data/models/entities/repost_data.f.dart';
 import 'package:ion/app/features/feed/notifications/data/repository/account_notification_sync_repository.r.dart';
 import 'package:ion/app/features/feed/notifications/data/repository/comments_repository.r.dart';
 import 'package:ion/app/features/feed/notifications/data/repository/content_repository.r.dart';
@@ -382,9 +381,7 @@ class AccountNotificationsSync extends _$AccountNotificationsSync {
       UserNotificationsType.videos => RequestFilter(
           kinds: const [
             PostEntity.kind,
-            RepostEntity.kind,
             ModifiablePostEntity.kind,
-            GenericRepostEntity.modifiablePostRepostKind,
           ],
           search: 'videos:true',
           authors: users,
@@ -393,9 +390,7 @@ class AccountNotificationsSync extends _$AccountNotificationsSync {
       UserNotificationsType.stories => RequestFilter(
           kinds: const [
             PostEntity.kind,
-            RepostEntity.kind,
             ModifiablePostEntity.kind,
-            GenericRepostEntity.modifiablePostRepostKind,
           ],
           search: 'expiration:true',
           authors: users,
@@ -404,7 +399,6 @@ class AccountNotificationsSync extends _$AccountNotificationsSync {
       UserNotificationsType.articles => RequestFilter(
           kinds: const [
             ArticleEntity.kind,
-            GenericRepostEntity.articleRepostKind,
           ],
           authors: users,
           limit: 100,
@@ -412,9 +406,7 @@ class AccountNotificationsSync extends _$AccountNotificationsSync {
       UserNotificationsType.posts => RequestFilter(
           kinds: const [
             PostEntity.kind,
-            RepostEntity.kind,
             ModifiablePostEntity.kind,
-            GenericRepostEntity.modifiablePostRepostKind,
           ],
           search: 'videos:false expiration:false',
           authors: users,
