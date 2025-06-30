@@ -8,7 +8,7 @@ import 'package:ion/app/features/feed/data/models/entities/modifiable_post_data.
 import 'package:ion/app/features/feed/data/models/entities/post_data.f.dart';
 import 'package:ion/app/features/feed/notifications/data/database/dao/subscribed_users_content_dao.m.dart';
 import 'package:ion/app/features/feed/notifications/data/database/notifications_database.m.dart';
-import 'package:ion/app/features/feed/notifications/data/database/tables/subscribed_users_content_table.d.dart';
+import 'package:ion/app/features/feed/notifications/data/database/tables/content_type.d.dart';
 import 'package:ion/app/features/feed/notifications/data/model/ion_notification.dart';
 import 'package:ion/app/features/feed/notifications/data/repository/ion_notification_repository.dart';
 import 'package:ion/app/features/ion_connect/model/ion_connect_entity.dart';
@@ -46,7 +46,7 @@ class ContentRepository implements IonNotificationRepository {
   Future<List<ContentIonNotification>> getNotifications() async {
     final contentNotifications = await _subscribedUsersContentDao.getAll();
     return contentNotifications.map((content) {
-      final notificationType = switch (content.type as ContentType) {
+      final notificationType = switch (content.type) {
         ContentType.posts => ContentIonNotificationType.posts,
         ContentType.stories => ContentIonNotificationType.stories,
         ContentType.articles => ContentIonNotificationType.articles,

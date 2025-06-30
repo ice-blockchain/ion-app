@@ -5,14 +5,10 @@ import 'dart:async';
 import 'package:ion/app/features/auth/providers/auth_provider.m.dart';
 import 'package:ion/app/features/core/providers/env_provider.r.dart';
 import 'package:ion/app/features/feed/data/models/entities/article_data.f.dart';
-import 'package:ion/app/features/feed/data/models/entities/generic_repost.f.dart';
 import 'package:ion/app/features/feed/data/models/entities/modifiable_post_data.f.dart';
 import 'package:ion/app/features/feed/data/models/entities/post_data.f.dart';
-import 'package:ion/app/features/feed/data/models/entities/reaction_data.f.dart';
 import 'package:ion/app/features/feed/notifications/data/repository/account_notification_sync_repository.r.dart';
-import 'package:ion/app/features/feed/notifications/data/repository/comments_repository.r.dart';
 import 'package:ion/app/features/feed/notifications/data/repository/content_repository.r.dart';
-import 'package:ion/app/features/feed/notifications/data/repository/likes_repository.r.dart';
 import 'package:ion/app/features/ion_connect/ion_connect.dart';
 import 'package:ion/app/features/ion_connect/model/action_source.f.dart';
 import 'package:ion/app/features/ion_connect/model/event_reference.f.dart';
@@ -440,15 +436,7 @@ class AccountNotificationsSync extends _$AccountNotificationsSync {
 
   /// Save an entity to the notifications database
   Future<void> saveToNotificationsDatabase(IonConnectEntity entity) async {
-    if (entity is ReactionEntity) {
-      final likesRepo = ref.read(likesRepositoryProvider);
-      await likesRepo.save(entity);
-    } else if (entity is PostEntity || entity is ArticleEntity || entity is ModifiablePostEntity) {
-      final contentRepo = ref.read(contentRepositoryProvider);
-      await contentRepo.save(entity);
-    } else if (entity is GenericRepostEntity) {
-      final commentsRepo = ref.read(commentsRepositoryProvider);
-      await commentsRepo.save(entity);
-    }
+    final contentRepo = ref.read(contentRepositoryProvider);
+    await contentRepo.save(entity);
   }
 }

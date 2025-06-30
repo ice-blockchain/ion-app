@@ -3,7 +3,7 @@
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/features/feed/notifications/data/database/dao/account_notification_sync_state_dao.m.dart';
 import 'package:ion/app/features/feed/notifications/data/database/notifications_database.m.dart';
-import 'package:ion/app/features/feed/notifications/data/database/tables/account_notification_sync_state_table.d.dart';
+import 'package:ion/app/features/feed/notifications/data/database/tables/content_type.d.dart';
 import 'package:ion/app/features/user/model/user_notifications_type.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 

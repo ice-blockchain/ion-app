@@ -4,6 +4,7 @@ import 'package:drift/drift.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/feed/notifications/data/database/notifications_database.m.dart';
+import 'package:ion/app/features/feed/notifications/data/database/tables/content_type.d.dart';
 import 'package:ion/app/features/feed/notifications/data/database/tables/subscribed_users_content_table.d.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 

@@ -1,20 +1,7 @@
 // SPDX-License-Identifier: ice License 1.0
 
 import 'package:drift/drift.dart';
-
-enum ContentType {
-  posts(0),
-  stories(1),
-  articles(2),
-  videos(3);
-
-  const ContentType(this.value);
-  final int value;
-
-  static ContentType fromValue(int value) {
-    return ContentType.values.firstWhere((type) => type.value == value);
-  }
-}
+import 'package:ion/app/features/feed/notifications/data/database/tables/content_type.d.dart';
 
 @DataClassName('AccountNotificationSyncState')
 class AccountNotificationSyncStateTable extends Table {
