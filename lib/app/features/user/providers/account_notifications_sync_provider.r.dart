@@ -7,6 +7,7 @@ import 'package:ion/app/features/core/providers/env_provider.r.dart';
 import 'package:ion/app/features/feed/data/models/entities/article_data.f.dart';
 import 'package:ion/app/features/feed/data/models/entities/modifiable_post_data.f.dart';
 import 'package:ion/app/features/feed/data/models/entities/post_data.f.dart';
+import 'package:ion/app/features/feed/notifications/data/database/tables/content_type.d.dart';
 import 'package:ion/app/features/feed/notifications/data/repository/account_notification_sync_repository.r.dart';
 import 'package:ion/app/features/feed/notifications/data/repository/content_repository.r.dart';
 import 'package:ion/app/features/ion_connect/ion_connect.dart';
@@ -35,9 +36,9 @@ class AccountNotificationsSync extends _$AccountNotificationsSync {
     ref.onDispose(cancelAllSync);
   }
 
-  /// Initialize the sync process, considering the last sync time
   Future<void> initializeSync() async {
     final syncInterval = getSyncInterval();
+
     final lastSyncTime = await getLastSyncTime();
 
     if (shouldSyncImmediately(lastSyncTime, syncInterval)) {
@@ -47,14 +48,12 @@ class AccountNotificationsSync extends _$AccountNotificationsSync {
     }
   }
 
-  /// Get the configured sync interval from environment
   Duration getSyncInterval() {
     return ref.read(envProvider.notifier).get<Duration>(
           EnvVariable.ACCOUNT_NOTIFICATION_SETTINGS_SYNC_INTERVAL_MINUTES,
         );
   }
 
-  /// Check if we should sync immediately based on last sync time
   bool shouldSyncImmediately(DateTime? lastSyncTime, Duration syncInterval) {
     if (lastSyncTime == null) return true;
 
@@ -62,7 +61,6 @@ class AccountNotificationsSync extends _$AccountNotificationsSync {
     return timeSinceLastSync >= syncInterval;
   }
 
-  /// Schedule a sync after a delay, then set up periodic sync
   void scheduleDelayedSync(DateTime lastSyncTime, Duration syncInterval) {
     final timeSinceLastSync = DateTime.now().difference(lastSyncTime);
     final remainingTime = syncInterval - timeSinceLastSync;
@@ -72,13 +70,11 @@ class AccountNotificationsSync extends _$AccountNotificationsSync {
     });
   }
 
-  /// Perform a sync and schedule the next periodic sync
   Future<void> syncAndScheduleNext(Duration syncInterval) async {
     await performSync();
     setupPeriodicSync(syncInterval);
   }
 
-  /// Set up a periodic timer for regular syncs
   void setupPeriodicSync(Duration interval) {
     _syncTimer?.cancel();
     _syncTimer = Timer.periodic(interval, (_) async {
@@ -86,19 +82,16 @@ class AccountNotificationsSync extends _$AccountNotificationsSync {
     });
   }
 
-  /// Cancel all sync operations
   void cancelAllSync() {
     _syncTimer?.cancel();
     _syncTimer = null;
   }
 
-  /// Get the timestamp of the last successful sync
   Future<DateTime?> getLastSyncTime() async {
     final repository = ref.read(accountNotificationSyncRepositoryProvider);
     return repository.getLastSyncTime();
   }
 
-  /// Perform the actual sync operation
   Future<void> performSync() async {
     final authState = await ref.read(authProvider.future);
     if (!authState.isAuthenticated) {
@@ -121,7 +114,6 @@ class AccountNotificationsSync extends _$AccountNotificationsSync {
       return;
     }
 
-    // Collect all users from all types
     final allUsers = <String>{};
     for (final users in usersMap.values) {
       allUsers.addAll(users);
@@ -133,7 +125,6 @@ class AccountNotificationsSync extends _$AccountNotificationsSync {
 
     final optimalRelayMapping = await getOptimalRelayMapping(allUsers.toList());
 
-    // For each content type, sync only its specific users
     for (final entry in usersMap.entries) {
       final contentType = entry.key;
       final users = entry.value;
@@ -142,7 +133,6 @@ class AccountNotificationsSync extends _$AccountNotificationsSync {
         continue;
       }
 
-      // Filter relay mapping for just these users
       final filteredMapping = <String, List<String>>{};
       for (final relayEntry in optimalRelayMapping.entries) {
         final relayUrl = relayEntry.key;
@@ -153,7 +143,6 @@ class AccountNotificationsSync extends _$AccountNotificationsSync {
         }
       }
 
-      // Sync only this content type with its specific users
       for (final relayEntry in filteredMapping.entries) {
         await syncEventsFromRelay(
           relayUrl: relayEntry.key,
@@ -164,20 +153,22 @@ class AccountNotificationsSync extends _$AccountNotificationsSync {
     }
   }
 
-  /// Determine which content types need to be synced
   Future<List<UserNotificationsType>> determineContentTypesToSync() async {
     final enabledNotifications = ref.read(userNotificationsNotifierProvider);
+
     final hasGlobalNotifications = !enabledNotifications.contains(UserNotificationsType.none) &&
         enabledNotifications.isNotEmpty;
 
     if (hasGlobalNotifications) {
-      return enabledNotifications.where((type) => type != UserNotificationsType.none).toList();
+      final types =
+          enabledNotifications.where((type) => type != UserNotificationsType.none).toList();
+      return types;
     } else {
-      return getUserSpecificContentTypes();
+      final types = await getUserSpecificContentTypes();
+      return types;
     }
   }
 
-  /// Get content types that have user-specific notifications
   Future<List<UserNotificationsType>> getUserSpecificContentTypes() async {
     final userSpecificTypes = <UserNotificationsType>[];
     final currentPubkey = ref.read(currentPubkeySelectorProvider);
@@ -215,7 +206,6 @@ class AccountNotificationsSync extends _$AccountNotificationsSync {
     return userSpecificTypes;
   }
 
-  /// Get all users from notification sets for the given content types
   Future<Map<UserNotificationsType, List<String>>> getAllUsersFromNotificationSets(
     List<UserNotificationsType> contentTypes,
   ) async {
@@ -246,13 +236,14 @@ class AccountNotificationsSync extends _$AccountNotificationsSync {
       );
 
       if (accountNotificationSet is AccountNotificationSetEntity) {
-        result[contentType] = accountNotificationSet.data.userPubkeys;
+        final users = accountNotificationSet.data.userPubkeys;
+        result[contentType] = users;
       }
     }
+
     return result;
   }
 
-  /// Get the optimal mapping of relays to users
   Future<Map<String, List<String>>> getOptimalRelayMapping(List<String> users) async {
     final userToRelays = <String, List<String>>{};
     final userRelaysManager = ref.read(userRelaysManagerProvider.notifier);
@@ -266,7 +257,6 @@ class AccountNotificationsSync extends _$AccountNotificationsSync {
     return result;
   }
 
-  /// Sync events from a specific relay for all content types
   Future<void> syncEventsFromRelay({
     required String relayUrl,
     required List<String> users,
@@ -285,7 +275,6 @@ class AccountNotificationsSync extends _$AccountNotificationsSync {
     }
   }
 
-  /// Sync a specific content type from a relay
   Future<void> syncContentTypeFromRelay({
     required String relayUrl,
     required List<String> users,
@@ -296,18 +285,28 @@ class AccountNotificationsSync extends _$AccountNotificationsSync {
     }
 
     final repository = ref.read(accountNotificationSyncRepositoryProvider);
-    final syncState = await repository.getSyncState(contentType);
-    final callStartTime = DateTime.now().microsecondsSinceEpoch;
 
-    // Determine the starting timestamp for events
-    int latestEventTimestamp;
+    final contentTypeEnum = switch (contentType) {
+      UserNotificationsType.posts => ContentType.posts,
+      UserNotificationsType.stories => ContentType.stories,
+      UserNotificationsType.articles => ContentType.articles,
+      UserNotificationsType.videos => ContentType.videos,
+      UserNotificationsType.none => throw ArgumentError('Cannot convert none to content type'),
+    };
 
-    // If we have a saved sync state, use it
-    if (syncState != null && syncState.sinceTimestamp != null) {
-      latestEventTimestamp = syncState.sinceTimestamp!;
+    final syncState = await repository.getSyncState(contentTypeEnum);
+
+    final callStartTime = DateTime.now();
+
+    DateTime latestEventTimestamp;
+
+    if (syncState != null) {
+      latestEventTimestamp = syncState;
     } else {
-      // Otherwise, get timestamp from when the notification set was created
-      latestEventTimestamp = await getNotificationSetCreationTime(contentType) ?? callStartTime;
+      final setCreationTime = await getNotificationSetCreationTime(contentType);
+      latestEventTimestamp = setCreationTime != null
+          ? DateTime.fromMicrosecondsSinceEpoch(setCreationTime)
+          : callStartTime;
     }
 
     final requestFilter = buildRequestFilter(
@@ -322,26 +321,25 @@ class AccountNotificationsSync extends _$AccountNotificationsSync {
     final eventBackfillService = ref.read(eventBackfillServiceProvider);
 
     final eventFutures = <Future<void>>[];
+
     final newLastCreatedAt = await eventBackfillService.startBackfill(
-      latestEventTimestamp: latestEventTimestamp,
+      latestEventTimestamp: latestEventTimestamp.microsecondsSinceEpoch,
       filter: requestFilter,
       onEvent: (event) {
         eventFutures.add(processNotificationEvent(event, contentType));
       },
       actionSource: ActionSourceRelayUrl(relayUrl),
     );
+
     await Future.wait(eventFutures);
 
-    final actualNewTimestamp =
-        newLastCreatedAt == latestEventTimestamp ? latestEventTimestamp + 1 : newLastCreatedAt;
+    final actualNewTimestamp = newLastCreatedAt == latestEventTimestamp.microsecondsSinceEpoch
+        ? latestEventTimestamp.add(const Duration(microseconds: 1))
+        : DateTime.fromMicrosecondsSinceEpoch(newLastCreatedAt);
 
-    await repository.updateSyncState(
-      contentType: contentType,
-      sinceTimestamp: actualNewTimestamp,
-    );
+    await repository.updateSyncState(contentTypeEnum, actualNewTimestamp);
   }
 
-  /// Get the creation timestamp of a notification set
   Future<int?> getNotificationSetCreationTime(UserNotificationsType contentType) async {
     final currentPubkey = ref.read(currentPubkeySelectorProvider);
     if (currentPubkey == null) return null;
@@ -364,7 +362,6 @@ class AccountNotificationsSync extends _$AccountNotificationsSync {
     return notificationSet is AccountNotificationSetEntity ? notificationSet.createdAt : null;
   }
 
-  /// Build a request filter for the given content type and users
   RequestFilter? buildRequestFilter({
     required UserNotificationsType contentType,
     required List<String> users,
@@ -412,7 +409,6 @@ class AccountNotificationsSync extends _$AccountNotificationsSync {
     };
   }
 
-  /// Process a notification event
   Future<void> processNotificationEvent(
     EventMessage event,
     UserNotificationsType contentType,
@@ -425,16 +421,11 @@ class AccountNotificationsSync extends _$AccountNotificationsSync {
     await saveToNotificationsDatabase(entity);
   }
 
-  /// Convert an event message to an entity
   IonConnectEntity? convertEventToEntity(EventMessage event) {
-    try {
-      return ref.read(eventParserProvider).parse(event);
-    } catch (error) {
-      return null;
-    }
+    final entity = ref.read(eventParserProvider).parse(event);
+    return entity;
   }
 
-  /// Save an entity to the notifications database
   Future<void> saveToNotificationsDatabase(IonConnectEntity entity) async {
     final contentRepo = ref.read(contentRepositoryProvider);
     await contentRepo.save(entity);

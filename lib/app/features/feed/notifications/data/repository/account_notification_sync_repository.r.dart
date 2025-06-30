@@ -1,63 +1,50 @@
 // SPDX-License-Identifier: ice License 1.0
 
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:ion/app/extensions/num.dart';
+import 'package:ion/app/features/auth/providers/auth_provider.m.dart';
 import 'package:ion/app/features/feed/notifications/data/database/dao/account_notification_sync_state_dao.m.dart';
-import 'package:ion/app/features/feed/notifications/data/database/notifications_database.m.dart';
 import 'package:ion/app/features/feed/notifications/data/database/tables/content_type.d.dart';
-import 'package:ion/app/features/user/model/user_notifications_type.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'account_notification_sync_repository.r.g.dart';
 
-@Riverpod(keepAlive: true)
-AccountNotificationSyncRepository accountNotificationSyncRepository(Ref ref) =>
-    AccountNotificationSyncRepository(
-      accountNotificationSyncStateDao: ref.watch(accountNotificationSyncStateDaoProvider),
-    );
+@riverpod
+AccountNotificationSyncRepository accountNotificationSyncRepository(
+  Ref ref,
+) {
+  return AccountNotificationSyncRepository(
+    syncStateDao: ref.watch(accountNotificationSyncStateDaoProvider),
+    currentPubkey: ref.watch(currentPubkeySelectorProvider),
+  );
+}
 
 class AccountNotificationSyncRepository {
-  AccountNotificationSyncRepository({
-    required AccountNotificationSyncStateDao accountNotificationSyncStateDao,
-  }) : _dao = accountNotificationSyncStateDao;
+  const AccountNotificationSyncRepository({
+    required this.syncStateDao,
+    required this.currentPubkey,
+  });
 
-  final AccountNotificationSyncStateDao _dao;
+  final AccountNotificationSyncStateDao syncStateDao;
+  final String? currentPubkey;
 
-  /// Get the timestamp of the last successful sync
   Future<DateTime?> getLastSyncTime() async {
-    return _dao.getLastSyncTime();
+    return syncStateDao.getLastSyncTime();
   }
 
-  /// Get the sync state for a specific content type
-  Future<AccountNotificationSyncState?> getSyncState(
-    UserNotificationsType contentType,
-  ) async {
-    final contentTypeEnum = mapToContentTypeEnum(contentType);
-    return _dao.getByContentType(
-      contentType: contentTypeEnum,
-    );
+  Future<DateTime?> getSyncState(ContentType contentType) async {
+    final syncState = await syncStateDao.getByContentType(contentType: contentType);
+    final timestamp = syncState?.sinceTimestamp;
+
+    return timestamp?.toDateTime;
   }
 
-  /// Update the sync state for a specific content type
-  Future<void> updateSyncState({
-    required UserNotificationsType contentType,
-    required int sinceTimestamp,
-  }) async {
-    final contentTypeEnum = mapToContentTypeEnum(contentType);
-    return _dao.insertOrUpdate(
-      contentType: contentTypeEnum,
+  Future<void> updateSyncState(ContentType contentType, DateTime sinceTimestamp) async {
+    final timestampInt = sinceTimestamp.microsecondsSinceEpoch;
+    await syncStateDao.insertOrUpdate(
+      contentType: contentType,
       lastSyncTimestamp: DateTime.now().microsecondsSinceEpoch,
-      sinceTimestamp: sinceTimestamp,
+      sinceTimestamp: timestampInt,
     );
-  }
-
-  /// Map UserNotificationsType to ContentType enum
-  ContentType mapToContentTypeEnum(UserNotificationsType contentType) {
-    return switch (contentType) {
-      UserNotificationsType.posts => ContentType.posts,
-      UserNotificationsType.stories => ContentType.stories,
-      UserNotificationsType.articles => ContentType.articles,
-      UserNotificationsType.videos => ContentType.videos,
-      UserNotificationsType.none => throw ArgumentError('Cannot convert none to content type'),
-    };
   }
 }
