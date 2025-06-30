@@ -46,7 +46,7 @@ class LinkNewDeviceDialog extends HookConsumerWidget {
 
     final delegationComplete = ref.watch(delegationCompleteProvider).valueOrNull.falseOrValue;
     useOnInit(
-      () async {
+      () {
         if (delegationComplete) {
           Navigator.of(ref.context).pop();
 
