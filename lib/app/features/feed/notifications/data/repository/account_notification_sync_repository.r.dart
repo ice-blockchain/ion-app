@@ -1,8 +1,8 @@
 // SPDX-License-Identifier: ice License 1.0
 
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:ion/app/features/feed/notifications/data/database/account_notifications_database.m.dart';
 import 'package:ion/app/features/feed/notifications/data/database/dao/account_notification_sync_state_dao.m.dart';
+import 'package:ion/app/features/feed/notifications/data/database/notifications_database.m.dart';
 import 'package:ion/app/features/feed/notifications/data/database/tables/account_notification_sync_state_table.d.dart';
 import 'package:ion/app/features/user/model/user_notifications_type.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
@@ -27,27 +27,23 @@ class AccountNotificationSyncRepository {
     return _dao.getLastSyncTime();
   }
 
-  /// Get the sync state for a specific relay and content type
+  /// Get the sync state for a specific content type
   Future<AccountNotificationSyncState?> getSyncState(
-    String relayUrl,
     UserNotificationsType contentType,
   ) async {
     final contentTypeEnum = mapToContentTypeEnum(contentType);
-    return _dao.getByRelayAndContentType(
-      relayUrl: relayUrl,
+    return _dao.getByContentType(
       contentType: contentTypeEnum,
     );
   }
 
-  /// Update the sync state for a specific relay and content type
+  /// Update the sync state for a specific content type
   Future<void> updateSyncState({
-    required String relayUrl,
     required UserNotificationsType contentType,
     required int sinceTimestamp,
   }) async {
     final contentTypeEnum = mapToContentTypeEnum(contentType);
     return _dao.insertOrUpdate(
-      relayUrl: relayUrl,
       contentType: contentTypeEnum,
       lastSyncTimestamp: DateTime.now().microsecondsSinceEpoch,
       sinceTimestamp: sinceTimestamp,

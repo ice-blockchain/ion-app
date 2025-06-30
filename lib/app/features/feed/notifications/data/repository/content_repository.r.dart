@@ -47,7 +47,7 @@ class ContentRepository implements IonNotificationRepository {
   Future<List<ContentIonNotification>> getNotifications() async {
     final contentNotifications = await _subscribedUsersContentDao.getAll();
     return contentNotifications.map((content) {
-      final notificationType = switch (content.type) {
+      final notificationType = switch (content.type as ContentType) {
         ContentType.posts => ContentIonNotificationType.posts,
         ContentType.stories => ContentIonNotificationType.stories,
         ContentType.articles => ContentIonNotificationType.articles,

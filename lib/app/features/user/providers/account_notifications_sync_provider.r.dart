@@ -301,7 +301,7 @@ class AccountNotificationsSync extends _$AccountNotificationsSync {
     }
 
     final repository = ref.read(accountNotificationSyncRepositoryProvider);
-    final syncState = await repository.getSyncState(relayUrl, contentType);
+    final syncState = await repository.getSyncState(contentType);
     final callStartTime = DateTime.now().microsecondsSinceEpoch;
 
     // Determine the starting timestamp for events
@@ -341,7 +341,6 @@ class AccountNotificationsSync extends _$AccountNotificationsSync {
         newLastCreatedAt == latestEventTimestamp ? latestEventTimestamp + 1 : newLastCreatedAt;
 
     await repository.updateSyncState(
-      relayUrl: relayUrl,
       contentType: contentType,
       sinceTimestamp: actualNewTimestamp,
     );

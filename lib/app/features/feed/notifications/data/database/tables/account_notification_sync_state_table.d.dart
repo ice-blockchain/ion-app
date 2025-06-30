@@ -18,9 +18,6 @@ enum ContentType {
 
 @DataClassName('AccountNotificationSyncState')
 class AccountNotificationSyncStateTable extends Table {
-  /// Relay URL
-  TextColumn get relayUrl => text()();
-
   /// Content type (posts, stories, articles, videos)
   IntColumn get contentType => intEnum<ContentType>()();
 
@@ -31,5 +28,5 @@ class AccountNotificationSyncStateTable extends Table {
   IntColumn get sinceTimestamp => integer().nullable()();
 
   @override
-  Set<Column> get primaryKey => {relayUrl, contentType};
+  Set<Column> get primaryKey => {contentType};
 }

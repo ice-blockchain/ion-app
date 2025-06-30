@@ -7,6 +7,7 @@ import 'package:ion/app/exceptions/exceptions.dart';
 import 'package:ion/app/extensions/database.dart';
 import 'package:ion/app/features/auth/providers/auth_provider.m.dart';
 import 'package:ion/app/features/feed/notifications/data/database/notifications_database.m.steps.dart';
+import 'package:ion/app/features/feed/notifications/data/database/tables/account_notification_sync_state_table.d.dart';
 import 'package:ion/app/features/feed/notifications/data/database/tables/comments_table.d.dart';
 import 'package:ion/app/features/feed/notifications/data/database/tables/followers_table.d.dart';
 import 'package:ion/app/features/feed/notifications/data/database/tables/likes_table.d.dart';
@@ -38,6 +39,7 @@ NotificationsDatabase notificationsDatabase(Ref ref) {
     SubscribedUsersContentTable,
     LikesTable,
     FollowersTable,
+    AccountNotificationSyncStateTable,
   ],
   queries: {
     'aggregatedLikes': '''
@@ -161,7 +163,10 @@ class NotificationsDatabase extends _$NotificationsDatabase {
           );
         },
         from3To4: (m, schema) async {
-          await m.createTable(schema.subscribedUsersContentTable);
+          await Future.wait([
+            m.createTable(schema.subscribedUsersContentTable),
+            m.createTable(schema.accountNotificationSyncStateTable),
+          ]);
         },
       ),
     );

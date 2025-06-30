@@ -188,6 +188,7 @@ final class Schema4 extends i0.VersionedSchema {
     subscribedUsersContentTable,
     likesTable,
     followersTable,
+    accountNotificationSyncStateTable,
   ];
   late final Shape3 commentsTable = Shape3(
       source: i0.VersionedTable(
@@ -252,6 +253,22 @@ final class Schema4 extends i0.VersionedSchema {
         attachedDatabase: database,
       ),
       alias: null);
+  late final Shape7 accountNotificationSyncStateTable = Shape7(
+      source: i0.VersionedTable(
+        entityName: 'account_notification_sync_state_table',
+        withoutRowId: false,
+        isStrict: false,
+        tableConstraints: [
+          'PRIMARY KEY(content_type)',
+        ],
+        columns: [
+          _column_6,
+          _column_4,
+          _column_7,
+        ],
+        attachedDatabase: database,
+      ),
+      alias: null);
 }
 
 class Shape6 extends i0.VersionedTable {
@@ -261,6 +278,21 @@ class Shape6 extends i0.VersionedTable {
   i1.GeneratedColumn<int> get createdAt => columnsByName['created_at']! as i1.GeneratedColumn<int>;
   i1.GeneratedColumn<int> get type => columnsByName['type']! as i1.GeneratedColumn<int>;
 }
+
+class Shape7 extends i0.VersionedTable {
+  Shape7({required super.source, required super.alias}) : super.aliased();
+  i1.GeneratedColumn<int> get contentType =>
+      columnsByName['content_type']! as i1.GeneratedColumn<int>;
+  i1.GeneratedColumn<int> get lastSyncTimestamp =>
+      columnsByName['last_sync_timestamp']! as i1.GeneratedColumn<int>;
+  i1.GeneratedColumn<int> get sinceTimestamp =>
+      columnsByName['since_timestamp']! as i1.GeneratedColumn<int>;
+}
+
+i1.GeneratedColumn<int> _column_6(String aliasedName) =>
+    i1.GeneratedColumn<int>('content_type', aliasedName, false, type: i1.DriftSqlType.int);
+i1.GeneratedColumn<int> _column_7(String aliasedName) =>
+    i1.GeneratedColumn<int>('since_timestamp', aliasedName, true, type: i1.DriftSqlType.int);
 
 i0.MigrationStepWithVersion migrationSteps({
   required Future<void> Function(i1.Migrator m, Schema2 schema) from1To2,
