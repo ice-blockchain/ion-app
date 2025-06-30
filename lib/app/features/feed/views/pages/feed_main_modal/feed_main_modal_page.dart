@@ -75,7 +75,7 @@ class FeedMainModalPage extends ConsumerWidget {
 
                       if (result != null && result.isNotEmpty && context.mounted) {
                         final editedMedia = await ref.read(editMediaProvider(result[0]).future);
-                        if (!context.mounted) return;
+                        if (!context.mounted || editedMedia == null) return;
                         final editingResult = await CreateVideoRoute(
                               videoPath: editedMedia.path,
                               videoThumbPath: editedMedia.thumb,

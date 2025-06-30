@@ -46,7 +46,7 @@ class BanubaService {
     );
   }
 
-  Future<String> editPhoto(String filePath) async {
+  Future<String?> editPhoto(String filePath) async {
     try {
       await _initPhotoEditor();
 
@@ -59,7 +59,7 @@ class BanubaService {
         final exportedPhotoFilePath = result[argExportedPhotoFile];
 
         if (exportedPhotoFilePath == null) {
-          return filePath;
+          return null;
         }
 
         if (Platform.isAndroid) {
@@ -69,7 +69,7 @@ class BanubaService {
 
         return exportedPhotoFilePath as String;
       }
-      return filePath;
+      return null;
     } on PlatformException catch (e) {
       Logger.log(
         'Start Photo Editor error',
@@ -80,7 +80,7 @@ class BanubaService {
     }
   }
 
-  Future<EditVideResult> editVideo(
+  Future<EditVideResult?> editVideo(
     String filePath, {
     Duration? maxVideoDuration = const Duration(seconds: 60),
   }) async {
@@ -102,7 +102,7 @@ class BanubaService {
       final thumb = result[argExportedVideoCoverPreview] as String;
       return (newPath: newPath, thumb: thumb);
     }
-    return (newPath: filePath, thumb: null);
+    return null;
   }
 }
 
@@ -112,7 +112,7 @@ BanubaService banubaService(Ref ref) {
 }
 
 @riverpod
-Future<MediaFile> editMedia(Ref ref, MediaFile mediaFile) async {
+Future<MediaFile?> editMedia(Ref ref, MediaFile mediaFile) async {
   final filePath = path.isAbsolute(mediaFile.path)
       ? mediaFile.path
       : await ref.read(assetFilePathProvider(mediaFile.path).future);
@@ -140,9 +140,11 @@ Future<MediaFile> editMedia(Ref ref, MediaFile mediaFile) async {
   switch (mediaType) {
     case MediaType.image:
       final newPath = await ref.read(banubaServiceProvider).editPhoto(filePath);
+      if (newPath == null) return null;
       return mediaFile.copyWith(path: newPath);
     case MediaType.video:
       final editVideoData = await ref.read(banubaServiceProvider).editVideo(filePath);
+      if (editVideoData == null) return null;
       return mediaFile.copyWith(path: editVideoData.newPath, thumb: editVideoData.thumb);
     case MediaType.unknown || MediaType.audio:
       throw Exception('Unknown media type');

@@ -25,7 +25,7 @@ class VideoPreviewEditCover extends ConsumerWidget {
         try {
           final editedMedia = await ref.read(editMediaProvider(attachedVideo).future);
 
-          if (editedMedia.path != attachedVideo.path) {
+          if (editedMedia != null && editedMedia.path != attachedVideo.path) {
             final timestamp = DateTime.now().millisecondsSinceEpoch;
             attachedVideoNotifier.value = attachedVideo.copyWith(
               path: editedMedia.path,
