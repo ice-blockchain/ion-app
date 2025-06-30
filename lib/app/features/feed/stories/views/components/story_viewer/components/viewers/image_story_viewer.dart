@@ -35,7 +35,7 @@ class ImageStoryViewer extends ConsumerWidget {
       authorPubkey: authorPubkey,
       cacheManager: cacheManager,
       filterQuality: FilterQuality.high,
-      progressIndicatorBuilder: (_, __, ___) => const CenteredLoadingIndicator(),
+      placeholder: (_, __) => const CenteredLoadingIndicator(),
       imageBuilder: (context, imageProvider) {
         WidgetsBinding.instance.addPostFrameCallback((_) {
           if (context.mounted) {

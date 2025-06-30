@@ -101,6 +101,7 @@ class IonNetworkImage extends StatelessWidget {
       memCacheWidth: memCacheWidth,
       memCacheHeight: memCacheHeight,
       imageBuilder: imageBuilder,
+      progressIndicatorBuilder: progressIndicatorBuilder,
     );
   }
 }
