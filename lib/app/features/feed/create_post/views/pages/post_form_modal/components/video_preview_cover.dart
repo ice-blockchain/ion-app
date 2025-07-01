@@ -10,6 +10,7 @@ import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/core/providers/video_player_provider.r.dart';
 import 'package:ion/app/features/feed/create_post/views/pages/post_form_modal/components/video_preview_duration.dart';
 import 'package:ion/app/features/feed/create_post/views/pages/post_form_modal/components/video_preview_edit_cover.dart';
+import 'package:ion/app/hooks/use_on_init.dart';
 import 'package:ion/app/services/media_service/media_service.m.dart';
 import 'package:ion/generated/assets.gen.dart';
 
@@ -62,6 +63,22 @@ class VideoPreviewCover extends HookConsumerWidget {
 
     final clampedAspectRatio = videoAspectRatio.clamp(minAspectRatio, maxAspectRatio);
 
+    final thumbFile = useState<File?>(null);
+    useOnInit(() {
+      final thumbPath = attachedVideoNotifier.value?.thumb;
+      File? newThumbFile;
+      if (thumbPath != null) {
+        final pathFromUri =
+            thumbPath.startsWith('file://') ? Uri.parse(thumbPath).toFilePath() : thumbPath;
+        newThumbFile = File(pathFromUri);
+      } else {
+        newThumbFile = null;
+      }
+      if (newThumbFile != null && newThumbFile.existsSync()) {
+        thumbFile.value = newThumbFile;
+      }
+    });
+
     return Padding(
       padding: EdgeInsetsDirectional.only(bottom: 16.0.s, start: 12.0.s, end: 12.0.s),
       child: ConstrainedBox(
@@ -83,9 +100,9 @@ class VideoPreviewCover extends HookConsumerWidget {
               child: Stack(
                 alignment: Alignment.center,
                 children: [
-                  if (attachedVideoNotifier.value?.thumb != null && !videoPlaying.value)
+                  if (thumbFile.value != null && !videoPlaying.value)
                     Image.file(
-                      File(attachedVideoNotifier.value!.thumb!),
+                      thumbFile.value!,
                       fit: BoxFit.cover,
                       width: double.infinity,
                       height: double.infinity,

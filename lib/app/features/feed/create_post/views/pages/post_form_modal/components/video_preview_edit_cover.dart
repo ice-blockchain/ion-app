@@ -23,13 +23,14 @@ class VideoPreviewEditCover extends ConsumerWidget {
         if (attachedVideo == null) return;
 
         try {
-          final editedPath = await ref.read(editMediaProvider(attachedVideo).future);
+          final editedMedia = await ref.read(editMediaProvider(attachedVideo).future);
 
-          if (editedPath != attachedVideo.path) {
+          if (editedMedia.path != attachedVideo.path) {
             final timestamp = DateTime.now().millisecondsSinceEpoch;
             attachedVideoNotifier.value = attachedVideo.copyWith(
-              path: editedPath,
+              path: editedMedia.path,
               name: 'edited_$timestamp',
+              thumb: editedMedia.thumb,
             );
           }
         } catch (e, stackTrace) {

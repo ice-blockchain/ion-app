@@ -16,6 +16,8 @@ import 'package:uri_to_file/uri_to_file.dart';
 
 part 'banuba_service.r.g.dart';
 
+typedef EditVideResult = ({String newPath, String? thumb});
+
 class BanubaService {
   const BanubaService(this.env);
 
@@ -33,6 +35,7 @@ class BanubaService {
   static const argVideoFilePath = 'videoFilePath';
   static const argMaxVideoDurationMs = 'maxVideoDurationMs';
   static const argExportedVideoFile = 'argExportedVideoFilePath';
+  static const argExportedVideoCoverPreview = 'argExportedVideoCoverPreviewPath';
 
   static const platformChannel = MethodChannel('banubaSdkChannel');
 
@@ -77,7 +80,7 @@ class BanubaService {
     }
   }
 
-  Future<String> editVideo(
+  Future<EditVideResult> editVideo(
     String filePath, {
     Duration? maxVideoDuration = const Duration(seconds: 60),
   }) async {
@@ -95,10 +98,11 @@ class BanubaService {
     );
 
     if (result is Map) {
-      final exportedVideoFilePath = result[argExportedVideoFile];
-      return exportedVideoFilePath as String;
+      final newPath = result[argExportedVideoFile] as String;
+      final thumb = result[argExportedVideoCoverPreview] as String;
+      return (newPath: newPath, thumb: thumb);
     }
-    return filePath;
+    return (newPath: filePath, thumb: null);
   }
 }
 
@@ -108,14 +112,10 @@ BanubaService banubaService(Ref ref) {
 }
 
 @riverpod
-Future<String> editMedia(Ref ref, MediaFile mediaFile) async {
-  String? filePath;
-
-  if (path.isAbsolute(mediaFile.path)) {
-    filePath = mediaFile.path;
-  } else {
-    filePath = await ref.read(assetFilePathProvider(mediaFile.path).future);
-  }
+Future<MediaFile> editMedia(Ref ref, MediaFile mediaFile) async {
+  final filePath = path.isAbsolute(mediaFile.path)
+      ? mediaFile.path
+      : await ref.read(assetFilePathProvider(mediaFile.path).future);
 
   if (filePath == null) {
     Logger.log(
@@ -139,9 +139,11 @@ Future<String> editMedia(Ref ref, MediaFile mediaFile) async {
 
   switch (mediaType) {
     case MediaType.image:
-      return ref.read(banubaServiceProvider).editPhoto(filePath);
+      final newPath = await ref.read(banubaServiceProvider).editPhoto(filePath);
+      return mediaFile.copyWith(path: newPath);
     case MediaType.video:
-      return ref.read(banubaServiceProvider).editVideo(filePath);
+      final editVideoData = await ref.read(banubaServiceProvider).editVideo(filePath);
+      return mediaFile.copyWith(path: editVideoData.newPath, thumb: editVideoData.thumb);
     case MediaType.unknown || MediaType.audio:
       throw Exception('Unknown media type');
   }
