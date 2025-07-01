@@ -14,6 +14,7 @@ import 'package:ion/app/features/ion_connect/ion_connect.dart';
 import 'package:ion/app/features/ion_connect/model/action_source.f.dart';
 import 'package:ion/app/features/ion_connect/model/event_reference.f.dart';
 import 'package:ion/app/features/ion_connect/model/ion_connect_entity.dart';
+import 'package:ion/app/features/ion_connect/model/search_extension.dart';
 import 'package:ion/app/features/ion_connect/providers/event_backfill_service.r.dart';
 import 'package:ion/app/features/ion_connect/providers/ion_connect_entity_provider.r.dart';
 import 'package:ion/app/features/ion_connect/providers/ion_connect_event_parser.r.dart';
@@ -357,7 +358,7 @@ class AccountNotificationsSync extends _$AccountNotificationsSync {
             PostEntity.kind,
             ModifiablePostEntity.kind,
           ],
-          search: 'videos:true',
+          search: VideosSearchExtension(contain: true).query,
           authors: users,
           limit: 100,
         ),
@@ -366,7 +367,7 @@ class AccountNotificationsSync extends _$AccountNotificationsSync {
             PostEntity.kind,
             ModifiablePostEntity.kind,
           ],
-          search: 'expiration:true',
+          search: ExpirationSearchExtension(expiration: true).query,
           authors: users,
           limit: 100,
         ),
@@ -382,7 +383,10 @@ class AccountNotificationsSync extends _$AccountNotificationsSync {
             PostEntity.kind,
             ModifiablePostEntity.kind,
           ],
-          search: 'videos:false expiration:false',
+          search: SearchExtensions([
+            ExpirationSearchExtension(expiration: false),
+            VideosSearchExtension(contain: false),
+          ]).toString(),
           authors: users,
           limit: 100,
         ),
