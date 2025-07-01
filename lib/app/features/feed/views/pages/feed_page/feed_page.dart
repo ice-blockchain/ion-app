@@ -15,6 +15,7 @@ import 'package:ion/app/features/feed/providers/feed_posts_provider.r.dart';
 import 'package:ion/app/features/feed/providers/feed_trending_videos_provider.r.dart';
 import 'package:ion/app/features/feed/stories/providers/feed_stories_provider.r.dart';
 import 'package:ion/app/features/feed/views/pages/feed_page/components/article_categories_menu/article_categories_menu.dart';
+import 'package:ion/app/features/feed/views/pages/feed_page/components/feed_controls/components/feed_navigation/feed_notifications_button.dart';
 import 'package:ion/app/features/feed/views/pages/feed_page/components/feed_controls/feed_controls.dart';
 import 'package:ion/app/features/feed/views/pages/feed_page/components/feed_posts_list/feed_posts_list.dart';
 import 'package:ion/app/features/feed/views/pages/feed_page/components/stories/stories.dart';
@@ -61,6 +62,7 @@ class FeedPage extends HookConsumerWidget {
           return PullToRefreshBuilder(
             sliverAppBar: CollapsingAppBar(
               height: FeedControls.height,
+              topOffset: ScreenTopOffset.defaultMargin - FeedNotificationsButton.counterOffset,
               child: FeedControls(scrollController: scrollController),
             ),
             slivers: slivers,

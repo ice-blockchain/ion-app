@@ -11,6 +11,8 @@ import 'package:ion/generated/assets.gen.dart';
 class FeedNotificationsButton extends ConsumerWidget {
   const FeedNotificationsButton({super.key});
 
+  static double get counterOffset => 5.0.s;
+
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     return Stack(
@@ -22,7 +24,11 @@ class FeedNotificationsButton extends ConsumerWidget {
             color: context.theme.appColors.primaryText,
           ),
         ),
-        PositionedDirectional(top: -5.0.s, end: -5.0.s, child: const _UnreadCounter()),
+        PositionedDirectional(
+          top: -counterOffset,
+          end: -counterOffset,
+          child: const _UnreadCounter(),
+        ),
       ],
     );
   }
