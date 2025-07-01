@@ -20,7 +20,6 @@ import 'package:ion/app/features/ion_connect/providers/ion_connect_entity_provid
 import 'package:ion/app/features/ion_connect/providers/ion_connect_event_parser.r.dart';
 import 'package:ion/app/features/user/model/account_notifications_sets.f.dart';
 import 'package:ion/app/features/user/model/user_notifications_type.dart';
-import 'package:ion/app/features/user/pages/profile_page/providers/user_notifications_provider.r.dart';
 import 'package:ion/app/features/user/providers/user_relays_manager.r.dart';
 import 'package:ion/app/utils/algorithm.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
@@ -104,7 +103,7 @@ class AccountNotificationsSync extends _$AccountNotificationsSync {
       return;
     }
 
-    final contentTypes = await determineContentTypesToSync();
+    final contentTypes = await getUserSpecificContentTypes();
     if (contentTypes.isEmpty) {
       return;
     }
@@ -119,7 +118,7 @@ class AccountNotificationsSync extends _$AccountNotificationsSync {
       final contentType = entry.key;
       final users = entry.value;
 
-      if (users.isEmpty || contentType == UserNotificationsType.none) {
+      if (users.isEmpty) {
         continue;
       }
 
@@ -132,22 +131,6 @@ class AccountNotificationsSync extends _$AccountNotificationsSync {
           contentType: contentType,
         );
       }
-    }
-  }
-
-  Future<List<UserNotificationsType>> determineContentTypesToSync() async {
-    final enabledNotifications = ref.read(userNotificationsNotifierProvider);
-
-    final hasGlobalNotifications = !enabledNotifications.contains(UserNotificationsType.none) &&
-        enabledNotifications.isNotEmpty;
-
-    if (hasGlobalNotifications) {
-      final types =
-          enabledNotifications.where((type) => type != UserNotificationsType.none).toList();
-      return types;
-    } else {
-      final types = await getUserSpecificContentTypes();
-      return types;
     }
   }
 
@@ -198,10 +181,6 @@ class AccountNotificationsSync extends _$AccountNotificationsSync {
     }
 
     for (final contentType in contentTypes) {
-      if (contentType == UserNotificationsType.none) {
-        continue;
-      }
-
       final setType = AccountNotificationSetType.fromUserNotificationType(contentType);
       if (setType == null) {
         continue;
@@ -245,10 +224,6 @@ class AccountNotificationsSync extends _$AccountNotificationsSync {
     required List<String> users,
     required UserNotificationsType contentType,
   }) async {
-    if (contentType == UserNotificationsType.none) {
-      return;
-    }
-
     await syncContentTypeFromRelay(
       relayUrl: relayUrl,
       users: users,
@@ -262,10 +237,6 @@ class AccountNotificationsSync extends _$AccountNotificationsSync {
     required List<String> users,
     required UserNotificationsType contentType,
   }) async {
-    if (contentType == UserNotificationsType.none) {
-      return;
-    }
-
     final repository = ref.read(accountNotificationSyncRepositoryProvider);
 
     final contentTypeEnum = switch (contentType) {
