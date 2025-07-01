@@ -18,6 +18,12 @@ class RegisterService {
   final IdentitySigner identitySigner;
   final TokenStorage tokenStorage;
 
+  Future<void> verifyEmailEarlyAccess({
+    required String email,
+  }) async {
+    return dataSource.verifyEmailEarlyAccess(email: email);
+  }
+
   /// Registers a new user using the provided username and handles the necessary
   /// cryptographic operations and API interactions.
   ///
@@ -31,13 +37,14 @@ class RegisterService {
   /// Throws:
   /// - [PasskeyNotAvailableException] if the device cannot authenticate using passkeys.
   /// - Other exceptions may be thrown during API interactions or token storage.
-  Future<void> registerUser() async {
+  Future<void> registerUser(String? earlyAccessEmail) async {
     final passkeyAuthAvailable = await identitySigner.isPasskeyAvailable();
     if (!passkeyAuthAvailable) {
       throw const PasskeyNotAvailableException();
     }
     await _completeRegistration(
       identitySigner.registerWithPasskey,
+      earlyAccessEmail,
     );
   }
 
@@ -50,7 +57,10 @@ class RegisterService {
   /// 3. Generates new credentials info.
   /// 4. Completes the registration with the server.
   /// 5. Stores the received authentication tokens.
-  Future<void> registerWithPassword(String password) async {
+  Future<void> registerWithPassword(
+    String password,
+    String? earlyAccessEmail,
+  ) async {
     await _completeRegistration(
       (challenge) => identitySigner.registerWithPassword(
         challenge: challenge.challenge,
@@ -58,17 +68,21 @@ class RegisterService {
         username: username,
         credentialKind: CredentialKind.PasswordProtectedKey,
       ),
+      earlyAccessEmail,
     );
   }
 
   Future<void> _completeRegistration(
     Future<CredentialRequestData> Function(UserRegistrationChallenge) getCredentials,
+    String? earlyAccessEmail,
   ) async {
-    final userRegistrationChallenge = await dataSource.registerInit(username: username);
+    final userRegistrationChallenge =
+        await dataSource.registerInit(username: username, earlyAccessEmail: earlyAccessEmail);
     final credentialData = await getCredentials(userRegistrationChallenge);
     final registrationCompleteResponse = await dataSource.registerComplete(
       credentialData: credentialData,
       temporaryAuthenticationToken: userRegistrationChallenge.temporaryAuthenticationToken!,
+      earlyAccessEmail: earlyAccessEmail,
     );
     await tokenStorage.setTokens(
       username: username,

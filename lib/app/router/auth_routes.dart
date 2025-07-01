@@ -13,6 +13,8 @@ class AuthRoutes {
         TypedGoRoute<GetStartedRoute>(path: '$authPrefix/get-started'),
         TypedGoRoute<SignUpPasskeyRoute>(path: '$authPrefix/sign-up-passkey'),
         TypedGoRoute<SignUpPasswordRoute>(path: '$authPrefix/sign-up-password'),
+        TypedGoRoute<SignUpRestrictedRoute>(path: '$authPrefix/sign-up-restricted'),
+        TypedGoRoute<SignUpEarlyAccessRoute>(path: '$authPrefix/sign-up-early-access'),
         TypedGoRoute<RestoreMenuRoute>(path: '$authPrefix/restore-menu'),
         TypedGoRoute<RestoreCredsRoute>(path: '$authPrefix/restore-creds'),
         TypedGoRoute<RecoverUserRoute>(path: '$authPrefix/recover-user'),
@@ -48,6 +50,22 @@ class SignUpPasswordRoute extends BaseRouteData with _$SignUpPasswordRoute {
   SignUpPasswordRoute()
       : super(
           child: const SignUpPasswordPage(),
+          type: IceRouteType.bottomSheet,
+        );
+}
+
+class SignUpRestrictedRoute extends BaseRouteData with _$SignUpRestrictedRoute {
+  SignUpRestrictedRoute()
+      : super(
+          child: const SignUpRestrictedPage(),
+          type: IceRouteType.bottomSheet,
+        );
+}
+
+class SignUpEarlyAccessRoute extends BaseRouteData with _$SignUpEarlyAccessRoute {
+  SignUpEarlyAccessRoute()
+      : super(
+          child: const SignUpEarlyAccessPage(),
           type: IceRouteType.bottomSheet,
         );
 }

@@ -1,15 +1,19 @@
 // SPDX-License-Identifier: ice License 1.0
 
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_keyboard_visibility/flutter_keyboard_visibility.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/components/button/button.dart';
+import 'package:ion/app/components/progress_bar/ion_loading_indicator.dart';
 import 'package:ion/app/components/screen_offset/screen_bottom_offset.dart';
 import 'package:ion/app/components/screen_offset/screen_side_offset.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/auth/data/models/twofa_type.dart';
 import 'package:ion/app/features/auth/providers/login_action_notifier.r.dart';
+import 'package:ion/app/features/auth/providers/registration_restrictions_provider.r.dart';
 import 'package:ion/app/features/auth/views/components/auth_footer/auth_footer.dart';
 import 'package:ion/app/features/auth/views/components/auth_scrolled_body/auth_scrolled_body.dart';
 import 'package:ion/app/features/auth/views/pages/get_started/components/login_form.dart';
@@ -56,6 +60,8 @@ class SignInStep extends HookConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final isPasskeyAvailable = ref.watch(isPasskeyAvailableProvider).valueOrNull ?? false;
+    final registrationRestrictionFuture = ref.read(registrationRestrictionProvider.future);
+    final isProcessing = useState(false);
 
     final onSuggestToCreatePasskeyCreds = useOnSuggestToCreateLocalPasskeyCreds(ref);
     final onSuggestToAddBiometrics = useOnSuggestToAddBiometrics(ref);
@@ -63,6 +69,7 @@ class SignInStep extends HookConsumerWidget {
     final alreadyAskedRef = useRef(false);
 
     final loginActionState = ref.watch(loginActionNotifierProvider);
+    ref.displayErrors(registrationRestrictionProvider);
 
     return SheetContent(
       body: KeyboardDismissOnTap(
@@ -101,14 +108,32 @@ class SignInStep extends HookConsumerWidget {
                   SizedBox(height: 14.0.s),
                   Button(
                     type: ButtonType.outlined,
+                    disabled: isProcessing.value,
+                    trailingIcon: isProcessing.value ? const IONLoadingIndicator() : null,
                     leadingIcon: Assets.svg.iconLoginCreateacc.icon(
                       color: context.theme.appColors.secondaryText,
                     ),
-                    onPressed: () {
-                      if (isPasskeyAvailable) {
-                        SignUpPasskeyRoute().push<void>(context);
-                      } else {
-                        SignUpPasswordRoute().push<void>(context);
+                    onPressed: () async {
+                      isProcessing.value = true;
+                      try {
+                        final registrationRestrictionType = await registrationRestrictionFuture;
+                        if (context.mounted == false) {
+                          return;
+                        }
+                        switch (registrationRestrictionType) {
+                          case RegistrationRestrictionType.fullyAllowed:
+                            if (isPasskeyAvailable) {
+                              unawaited(SignUpPasskeyRoute().push<void>(context));
+                            } else {
+                              unawaited(SignUpPasswordRoute().push<void>(context));
+                            }
+                          case RegistrationRestrictionType.earlyAccessOnly:
+                            unawaited(SignUpEarlyAccessRoute().push<void>(context));
+                          case RegistrationRestrictionType.restricted:
+                            unawaited(SignUpRestrictedRoute().push<void>(context));
+                        }
+                      } finally {
+                        isProcessing.value = false;
                       }
                     },
                     label: Text(context.i18n.button_register),

@@ -14,8 +14,10 @@ import 'package:ion/app/features/auth/views/pages/restore_from_cloud/components/
 import 'package:ion/app/features/auth/views/pages/restore_from_cloud/restore_from_cloud_page.dart';
 import 'package:ion/app/features/auth/views/pages/restore_menu/restore_menu.dart';
 import 'package:ion/app/features/auth/views/pages/select_languages/select_languages.dart';
+import 'package:ion/app/features/auth/views/pages/sign_up_early_access/sign_up_early_access.dart';
 import 'package:ion/app/features/auth/views/pages/sign_up_passkey/sign_up_passkey.dart';
 import 'package:ion/app/features/auth/views/pages/sign_up_password/sign_up_password.dart';
+import 'package:ion/app/features/auth/views/pages/sign_up_restricted/sign_up_restricted.dart';
 import 'package:ion/app/features/auth/views/pages/turn_on_notifications/turn_on_notifications.dart';
 import 'package:ion/app/features/chat/community/channel/views/pages/channel_detail_page/channel_detail_page.dart';
 import 'package:ion/app/features/chat/community/channel/views/pages/create_channel_modal/create_channel_modal.dart';

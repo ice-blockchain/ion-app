@@ -11,10 +11,12 @@ _$SignedChallengeImpl _$$SignedChallengeImplFromJson(
     _$SignedChallengeImpl(
       firstFactorCredential: CredentialRequestData.fromJson(
           json['firstFactorCredential'] as Map<String, dynamic>),
+      earlyAccessEmail: json['earlyAccessEmail'] as String?,
     );
 
 Map<String, dynamic> _$$SignedChallengeImplToJson(
         _$SignedChallengeImpl instance) =>
     <String, dynamic>{
       'firstFactorCredential': instance.firstFactorCredential.toJson(),
+      'earlyAccessEmail': instance.earlyAccessEmail,
     };

@@ -61,10 +61,16 @@ class IONIdentityAuth {
 
   final String username;
 
-  Future<void> registerUser() => registerService.registerUser();
+  Future<void> verifyEmailEarlyAccess({
+    required String email,
+  }) =>
+      registerService.verifyEmailEarlyAccess(email: email);
 
-  Future<void> registerUserWithPassword(String password) =>
-      registerService.registerWithPassword(password);
+  Future<void> registerUser(String? earlyAccessEmail) =>
+      registerService.registerUser(earlyAccessEmail);
+
+  Future<void> registerUserWithPassword(String password, String? earlyAccessEmail) =>
+      registerService.registerWithPassword(password, earlyAccessEmail);
 
   Future<void> verifyUserLoginFlow() => loginService.verifyUserLoginFlow();
 

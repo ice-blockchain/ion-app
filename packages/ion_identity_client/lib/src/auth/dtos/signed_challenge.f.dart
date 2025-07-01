@@ -11,6 +11,7 @@ part 'signed_challenge.f.g.dart';
 class SignedChallenge with _$SignedChallenge {
   const factory SignedChallenge({
     required CredentialRequestData firstFactorCredential,
+    String? earlyAccessEmail,
   }) = _SignedChallenge;
 
   factory SignedChallenge.fromJson(JsonObject json) => _$SignedChallengeFromJson(json);
