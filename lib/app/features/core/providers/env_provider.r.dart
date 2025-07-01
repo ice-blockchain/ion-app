@@ -32,6 +32,7 @@ enum EnvVariable {
   BLOCKED_USERS_SYNC_OVERLAP_DAYS,
   CHECKSUM,
   FEED_MIN_VISIBLE_ARTICLE_CATEGORIES_NUMBER,
+  ACCOUNT_NOTIFICATION_SETTINGS_SYNC_INTERVAL_MINUTES,
 }
 
 @Riverpod(keepAlive: true)
@@ -89,6 +90,12 @@ class Env extends _$Env {
       EnvVariable.FEED_MIN_VISIBLE_ARTICLE_CATEGORIES_NUMBER => const int.fromEnvironment(
           'FEED_MIN_VISIBLE_ARTICLE_CATEGORIES_NUMBER',
           defaultValue: 5,
+        ) as T,
+      EnvVariable.ACCOUNT_NOTIFICATION_SETTINGS_SYNC_INTERVAL_MINUTES => const Duration(
+          minutes: int.fromEnvironment(
+            'ACCOUNT_NOTIFICATION_SETTINGS_SYNC_INTERVAL_MINUTES',
+            defaultValue: 60,
+          ),
         ) as T,
     };
   }

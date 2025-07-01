@@ -7,9 +7,12 @@ import 'package:ion/app/exceptions/exceptions.dart';
 import 'package:ion/app/extensions/database.dart';
 import 'package:ion/app/features/auth/providers/auth_provider.m.dart';
 import 'package:ion/app/features/feed/notifications/data/database/notifications_database.m.steps.dart';
+import 'package:ion/app/features/feed/notifications/data/database/tables/account_notification_sync_state_table.d.dart';
 import 'package:ion/app/features/feed/notifications/data/database/tables/comments_table.d.dart';
+import 'package:ion/app/features/feed/notifications/data/database/tables/content_type.d.dart';
 import 'package:ion/app/features/feed/notifications/data/database/tables/followers_table.d.dart';
 import 'package:ion/app/features/feed/notifications/data/database/tables/likes_table.d.dart';
+import 'package:ion/app/features/feed/notifications/data/database/tables/subscribed_users_content_table.d.dart';
 import 'package:ion/app/features/ion_connect/database/converters/event_reference_converter.d.dart';
 import 'package:ion/app/features/ion_connect/model/event_reference.f.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
@@ -34,8 +37,10 @@ NotificationsDatabase notificationsDatabase(Ref ref) {
 @DriftDatabase(
   tables: [
     CommentsTable,
+    SubscribedUsersContentTable,
     LikesTable,
     FollowersTable,
+    AccountNotificationSyncStateTable,
   ],
   queries: {
     'aggregatedLikes': '''
@@ -110,7 +115,7 @@ class NotificationsDatabase extends _$NotificationsDatabase {
   final String pubkey;
 
   @override
-  int get schemaVersion => 3;
+  int get schemaVersion => 4;
 
   @override
   MigrationStrategy get migration {
@@ -157,6 +162,12 @@ class NotificationsDatabase extends _$NotificationsDatabase {
               ),
             ],
           );
+        },
+        from3To4: (m, schema) async {
+          await Future.wait([
+            m.createTable(schema.subscribedUsersContentTable),
+            m.createTable(schema.accountNotificationSyncStateTable),
+          ]);
         },
       ),
     );
