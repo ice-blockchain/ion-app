@@ -42,6 +42,7 @@ ModifiablePostEntity _post({
 FeedForYouContentState _stateWith(List<ModifiablePostEntity> posts) => FeedForYouContentState(
       items: posts.toSet(),
       modifiersPagination: {},
+      forYouRetryLimitReached: false,
       hasMoreFollowing: false,
       isLoading: false,
     );

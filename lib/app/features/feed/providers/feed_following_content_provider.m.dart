@@ -71,11 +71,16 @@ class FeedFollowingContent extends _$FeedFollowingContent implements PagedNotifi
   /// * First, requests unseen entities from followed users (see [_fetchUnseenEntities]).
   /// * Then, if [fetchSeen] is true, requests seen entities (see [_fetchSeenEntities]).
   Stream<IonConnectEntity> requestEntities({required int limit}) async* {
+    Logger.info('$_logTag Requesting events');
+
     var unseenCount = 0;
     await for (final entity in _fetchUnseenEntities(limit: limit)) {
       yield entity;
       unseenCount++;
     }
+
+    Logger.info('$_logTag Got [$unseenCount] unseen events');
+
     if (unseenCount < limit && fetchSeen) {
       yield* _fetchSeenEntities(limit: limit - unseenCount);
     }
@@ -508,6 +513,8 @@ class FeedFollowingContent extends _$FeedFollowingContent implements PagedNotifi
     final feedConfig = await ref.read(feedConfigProvider.future);
     return seenAt.isAfter(DateTime.now().subtract(feedConfig.repostThrottleDelay));
   }
+
+  String get _logTag => '[FEED FOLLOWING ${feedType.name}]';
 }
 
 @Freezed(equal: false)
