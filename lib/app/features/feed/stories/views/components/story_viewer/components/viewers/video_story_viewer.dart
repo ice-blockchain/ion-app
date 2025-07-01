@@ -49,12 +49,18 @@ class VideoStoryViewer extends HookConsumerWidget {
       },
     );
 
+    Widget videoPlayer = CachedVideoPlayerPlus(videoController);
+
     final aspect = videoController.value.aspectRatio;
-    return Center(
-      child: AspectRatio(
-        aspectRatio: aspect,
-        child: CachedVideoPlayerPlus(videoController),
-      ),
-    );
+    final isHorizontal = aspect > 1.0;
+    if (isHorizontal) {
+      videoPlayer = Center(
+        child: AspectRatio(
+          aspectRatio: aspect,
+          child: videoPlayer,
+        ),
+      );
+    }
+    return videoPlayer;
   }
 }
