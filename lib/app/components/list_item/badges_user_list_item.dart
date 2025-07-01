@@ -46,22 +46,25 @@ class BadgesUserListItem extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final isUserVerified = ref.watch(isUserVerifiedProvider(pubkey)).valueOrNull.falseOrValue;
-    final isNicknameProven = ref.watch(isNicknameProvenProvider(pubkey)).valueOrNull ?? true;
+    // Use cache-only providers to prevent network requests and flickering
+    final isUserVerified = ref.watch(isUserVerifiedCachedOnlyProvider(pubkey));
+    final cachedNicknameProven = ref.watch(isNicknameProvenCachedOnlyProvider(pubkey));
+    final isNicknameProven = cachedNicknameProven ?? true;
+    final hasNicknameData = cachedNicknameProven != null;
 
     return ListItem.user(
       pubkey: pubkey,
       title: title,
-      subtitle: isNicknameProven
-          ? subtitle
-          : Row(
+      subtitle: (hasNicknameData && !isNicknameProven)
+          ? Row(
               mainAxisSize: MainAxisSize.min,
               children: [
                 subtitle,
                 SizedBox(width: 4.0.s),
                 Text(context.i18n.nickname_not_owned_suffix),
               ],
-            ),
+            )
+          : subtitle,
       leading: leading,
       trailing: trailing,
       border: border,

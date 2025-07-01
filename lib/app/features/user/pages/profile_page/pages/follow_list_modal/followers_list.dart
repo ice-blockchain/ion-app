@@ -18,6 +18,13 @@ import 'package:ion/app/features/user/pages/profile_page/pages/follow_list_modal
 import 'package:ion/app/features/user/providers/followers_count_provider.r.dart';
 import 'package:ion/app/features/user/providers/followers_data_source_provider.r.dart';
 
+// Create a provider that gives us the entities list for a given query
+final _followersEntitiesProvider = Provider.family<List<UserMetadataEntity>?, ({String pubkey, String? query})>((ref, params) {
+  final dataSource = ref.watch(followersDataSourceProvider(params.pubkey, query: params.query));
+  final entitiesPagedData = ref.watch(entitiesPagedDataProvider(dataSource));
+  return entitiesPagedData?.data.items?.whereType<UserMetadataEntity>().toList();
+});
+
 class FollowersList extends HookConsumerWidget {
   const FollowersList({required this.pubkey, super.key});
 
@@ -30,19 +37,20 @@ class FollowersList extends HookConsumerWidget {
     final searchQuery = useState('');
     final debouncedQuery = useDebounced(searchQuery.value, const Duration(milliseconds: 300)) ?? '';
 
-    final dataSource = ref.watch(
-      followersDataSourceProvider(pubkey, query: debouncedQuery).debounced(
-        debounceDuration: const Duration(milliseconds: 100),
-        name: 'followersDataSource',
-      ),
+    // Create a debounced provider for the entities list
+    final debouncedEntitiesProvider = _followersEntitiesProvider((
+      pubkey: pubkey, 
+      query: debouncedQuery.isEmpty ? null : debouncedQuery
+    )).debounced(
+      debounceDuration: const Duration(milliseconds: 100),
+      name: 'followersEntities',
     );
-    final entitiesPagedData = ref.watch(
-      entitiesPagedDataProvider(dataSource).debounced(
-        debounceDuration: const Duration(milliseconds: 100),
-        name: 'entitiesPagedData',
-      ),
-    );
-    final entities = entitiesPagedData?.data.items?.whereType<UserMetadataEntity>().toList();
+
+    final entities = ref.watch(debouncedEntitiesProvider);
+
+    // For load more, we need the current data source
+    final currentDataSource = ref.watch(followersDataSourceProvider(pubkey, query: debouncedQuery.isEmpty ? null : debouncedQuery));
+    final currentEntitiesPagedData = ref.watch(entitiesPagedDataProvider(currentDataSource));
 
     final slivers = [
       FollowAppBar(title: FollowType.followers.getTitleWithCounter(context, followersCount ?? 0)),
@@ -63,8 +71,8 @@ class FollowersList extends HookConsumerWidget {
 
     return LoadMoreBuilder(
       slivers: slivers,
-      hasMore: entitiesPagedData?.hasMore ?? false,
-      onLoadMore: ref.read(entitiesPagedDataProvider(dataSource).notifier).fetchEntities,
+      hasMore: currentEntitiesPagedData?.hasMore ?? false,
+      onLoadMore: () => ref.read(entitiesPagedDataProvider(currentDataSource).notifier).fetchEntities(),
     );
   }
 }

@@ -22,7 +22,9 @@ class UserNameTile extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final userMetadataValue = ref.watch(userMetadataProvider(pubkey)).valueOrNull;
     final isUserVerified = ref.watch(isUserVerifiedProvider(pubkey)).valueOrNull.falseOrValue;
-    final isNicknameProven = ref.watch(isNicknameProvenProvider(pubkey)).valueOrNull ?? true;
+    final nicknameProvenResult = ref.watch(isNicknameProvenProvider(pubkey));
+    final isNicknameProven = nicknameProvenResult.valueOrNull ?? true;
+    final hasNicknameData = nicknameProvenResult.hasValue;
 
     if (userMetadataValue == null) {
       return const SizedBox.shrink();
@@ -52,9 +54,9 @@ class UserNameTile extends ConsumerWidget {
         SizedBox(height: 3.0.s),
         Text(
           prefixUsername(
-            username: isNicknameProven
-                ? userMetadataValue.data.name
-                : '${userMetadataValue.data.name} ${context.i18n.nickname_not_owned_suffix}',
+            username: (hasNicknameData && !isNicknameProven)
+                ? '${userMetadataValue.data.name} ${context.i18n.nickname_not_owned_suffix}'
+                : userMetadataValue.data.name,
             context: context,
           ),
           style: context.theme.appTextThemes.caption.copyWith(
