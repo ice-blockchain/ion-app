@@ -32,54 +32,8 @@ class AccountNotificationsSync extends _$AccountNotificationsSync {
 
   @override
   FutureOr<void> build() async {
-    await initializeSync();
+    await _initializeSync();
     ref.onDispose(cancelAllSync);
-  }
-
-  Future<void> initializeSync() async {
-    final syncInterval = getSyncInterval();
-
-    final lastSyncTime = await getLastSyncTime();
-
-    if (shouldSyncImmediately(lastSyncTime, syncInterval)) {
-      await syncAndScheduleNext(syncInterval);
-    } else {
-      scheduleDelayedSync(lastSyncTime!, syncInterval);
-    }
-  }
-
-  Duration getSyncInterval() {
-    return ref.read(envProvider.notifier).get<Duration>(
-          EnvVariable.ACCOUNT_NOTIFICATION_SETTINGS_SYNC_INTERVAL_MINUTES,
-        );
-  }
-
-  bool shouldSyncImmediately(DateTime? lastSyncTime, Duration syncInterval) {
-    if (lastSyncTime == null) return true;
-
-    final timeSinceLastSync = DateTime.now().difference(lastSyncTime);
-    return timeSinceLastSync >= syncInterval;
-  }
-
-  void scheduleDelayedSync(DateTime lastSyncTime, Duration syncInterval) {
-    final timeSinceLastSync = DateTime.now().difference(lastSyncTime);
-    final remainingTime = syncInterval - timeSinceLastSync;
-
-    _syncTimer = Timer(remainingTime, () async {
-      await syncAndScheduleNext(syncInterval);
-    });
-  }
-
-  Future<void> syncAndScheduleNext(Duration syncInterval) async {
-    await performSync();
-    setupPeriodicSync(syncInterval);
-  }
-
-  void setupPeriodicSync(Duration interval) {
-    _syncTimer?.cancel();
-    _syncTimer = Timer.periodic(interval, (_) async {
-      await performSync();
-    });
   }
 
   void cancelAllSync() {
@@ -87,12 +41,58 @@ class AccountNotificationsSync extends _$AccountNotificationsSync {
     _syncTimer = null;
   }
 
-  Future<DateTime?> getLastSyncTime() async {
+  Future<void> _initializeSync() async {
+    final syncInterval = _getSyncInterval();
+
+    final lastSyncTime = await _getLastSyncTime();
+
+    if (_shouldSyncImmediately(lastSyncTime, syncInterval)) {
+      await _syncAndScheduleNext(syncInterval);
+    } else {
+      _scheduleDelayedSync(lastSyncTime!, syncInterval);
+    }
+  }
+
+  Duration _getSyncInterval() {
+    return ref.read(envProvider.notifier).get<Duration>(
+          EnvVariable.ACCOUNT_NOTIFICATION_SETTINGS_SYNC_INTERVAL_MINUTES,
+        );
+  }
+
+  bool _shouldSyncImmediately(DateTime? lastSyncTime, Duration syncInterval) {
+    if (lastSyncTime == null) return true;
+
+    final timeSinceLastSync = DateTime.now().difference(lastSyncTime);
+    return timeSinceLastSync >= syncInterval;
+  }
+
+  void _scheduleDelayedSync(DateTime lastSyncTime, Duration syncInterval) {
+    final timeSinceLastSync = DateTime.now().difference(lastSyncTime);
+    final remainingTime = syncInterval - timeSinceLastSync;
+
+    _syncTimer = Timer(remainingTime, () async {
+      await _syncAndScheduleNext(syncInterval);
+    });
+  }
+
+  Future<void> _syncAndScheduleNext(Duration syncInterval) async {
+    await _performSync();
+    _setupPeriodicSync(syncInterval);
+  }
+
+  void _setupPeriodicSync(Duration interval) {
+    _syncTimer?.cancel();
+    _syncTimer = Timer.periodic(interval, (_) async {
+      await _performSync();
+    });
+  }
+
+  Future<DateTime?> _getLastSyncTime() async {
     final repository = ref.read(accountNotificationSyncRepositoryProvider);
     return repository.getLastSyncTime();
   }
 
-  Future<void> performSync() async {
+  Future<void> _performSync() async {
     final authState = await ref.read(authProvider.future);
     if (!authState.isAuthenticated) {
       return;
@@ -103,12 +103,12 @@ class AccountNotificationsSync extends _$AccountNotificationsSync {
       return;
     }
 
-    final contentTypes = await getUserSpecificContentTypes();
+    final contentTypes = await _getUserSpecificContentTypes();
     if (contentTypes.isEmpty) {
       return;
     }
 
-    final usersMap = await getAllUsersFromNotificationSets(contentTypes);
+    final usersMap = await _getAllUsersFromNotificationSets(contentTypes);
 
     if (usersMap.isEmpty) {
       return;
@@ -122,10 +122,10 @@ class AccountNotificationsSync extends _$AccountNotificationsSync {
         continue;
       }
 
-      final optimalRelayMapping = await getOptimalRelayMapping(users);
+      final optimalRelayMapping = await _getOptimalRelayMapping(users);
 
       for (final relayEntry in optimalRelayMapping.entries) {
-        await syncEventsFromRelay(
+        await _syncEventsFromRelay(
           relayUrl: relayEntry.key,
           users: relayEntry.value,
           contentType: contentType,
@@ -134,7 +134,7 @@ class AccountNotificationsSync extends _$AccountNotificationsSync {
     }
   }
 
-  Future<List<UserNotificationsType>> getUserSpecificContentTypes() async {
+  Future<List<UserNotificationsType>> _getUserSpecificContentTypes() async {
     final userSpecificTypes = <UserNotificationsType>[];
     final currentPubkey = ref.read(currentPubkeySelectorProvider);
     if (currentPubkey == null) {
@@ -171,7 +171,7 @@ class AccountNotificationsSync extends _$AccountNotificationsSync {
     return userSpecificTypes;
   }
 
-  Future<Map<UserNotificationsType, List<String>>> getAllUsersFromNotificationSets(
+  Future<Map<UserNotificationsType, List<String>>> _getAllUsersFromNotificationSets(
     List<UserNotificationsType> contentTypes,
   ) async {
     final result = <UserNotificationsType, List<String>>{};
@@ -205,7 +205,7 @@ class AccountNotificationsSync extends _$AccountNotificationsSync {
     return result;
   }
 
-  Future<Map<String, List<String>>> getOptimalRelayMapping(List<String> users) async {
+  Future<Map<String, List<String>>> _getOptimalRelayMapping(List<String> users) async {
     final userToRelays = <String, List<String>>{};
     final userRelaysManager = ref.read(userRelaysManagerProvider.notifier);
     final userRelaysList = await userRelaysManager.fetch(users);
@@ -218,21 +218,19 @@ class AccountNotificationsSync extends _$AccountNotificationsSync {
     return result;
   }
 
-  /// Sync events from a specific relay for a content type
-  Future<void> syncEventsFromRelay({
+  Future<void> _syncEventsFromRelay({
     required String relayUrl,
     required List<String> users,
     required UserNotificationsType contentType,
   }) async {
-    await syncContentTypeFromRelay(
+    await _syncContentTypeFromRelay(
       relayUrl: relayUrl,
       users: users,
       contentType: contentType,
     );
   }
 
-  /// Sync a specific content type from a relay
-  Future<void> syncContentTypeFromRelay({
+  Future<void> _syncContentTypeFromRelay({
     required String relayUrl,
     required List<String> users,
     required UserNotificationsType contentType,
@@ -256,13 +254,13 @@ class AccountNotificationsSync extends _$AccountNotificationsSync {
     if (syncState != null) {
       latestEventTimestamp = syncState;
     } else {
-      final setCreationTime = await getNotificationSetCreationTime(contentType);
+      final setCreationTime = await _getNotificationSetCreationTime(contentType);
       latestEventTimestamp = setCreationTime != null
           ? DateTime.fromMicrosecondsSinceEpoch(setCreationTime)
           : callStartTime;
     }
 
-    final requestFilter = buildRequestFilter(
+    final requestFilter = _buildRequestFilter(
       contentType: contentType,
       users: users,
     );
@@ -279,7 +277,7 @@ class AccountNotificationsSync extends _$AccountNotificationsSync {
       latestEventTimestamp: latestEventTimestamp.microsecondsSinceEpoch,
       filter: requestFilter,
       onEvent: (event) {
-        eventFutures.add(processNotificationEvent(event, contentType));
+        eventFutures.add(_processNotificationEvent(event, contentType));
       },
       actionSource: ActionSourceRelayUrl(relayUrl),
     );
@@ -293,7 +291,7 @@ class AccountNotificationsSync extends _$AccountNotificationsSync {
     await repository.updateSyncState(contentTypeEnum, actualNewTimestamp);
   }
 
-  Future<int?> getNotificationSetCreationTime(UserNotificationsType contentType) async {
+  Future<int?> _getNotificationSetCreationTime(UserNotificationsType contentType) async {
     final currentPubkey = ref.read(currentPubkeySelectorProvider);
     if (currentPubkey == null) return null;
 
@@ -313,7 +311,7 @@ class AccountNotificationsSync extends _$AccountNotificationsSync {
     return notificationSet is AccountNotificationSetEntity ? notificationSet.createdAt : null;
   }
 
-  RequestFilter? buildRequestFilter({
+  RequestFilter? _buildRequestFilter({
     required UserNotificationsType contentType,
     required List<String> users,
   }) {
@@ -363,24 +361,24 @@ class AccountNotificationsSync extends _$AccountNotificationsSync {
     };
   }
 
-  Future<void> processNotificationEvent(
+  Future<void> _processNotificationEvent(
     EventMessage event,
     UserNotificationsType contentType,
   ) async {
-    final entity = convertEventToEntity(event);
+    final entity = _convertEventToEntity(event);
     if (entity == null) {
       return;
     }
 
-    await saveToNotificationsDatabase(entity);
+    await _saveToNotificationsDatabase(entity);
   }
 
-  IonConnectEntity? convertEventToEntity(EventMessage event) {
+  IonConnectEntity? _convertEventToEntity(EventMessage event) {
     final entity = ref.read(eventParserProvider).parse(event);
     return entity;
   }
 
-  Future<void> saveToNotificationsDatabase(IonConnectEntity entity) async {
+  Future<void> _saveToNotificationsDatabase(IonConnectEntity entity) async {
     final contentRepo = ref.read(contentRepositoryProvider);
     await contentRepo.save(entity);
   }
