@@ -13,7 +13,8 @@ class PhotoEditorModule: BanubaPhotoEditorDelegate {
     private var flutterResult: FlutterResult?
     
     init(token: String, flutterResult: @escaping FlutterResult) {
-        let configuration = PhotoEditorConfig()
+        var configuration = PhotoEditorConfig()
+        configuration.editorScreenConfiguration = .init(saveResultToPhotoLibrary: false)
         photoEditorSDK = BanubaPhotoEditor(
             token: token,
             configuration: configuration
