@@ -45,9 +45,13 @@ class FeedUserInterests extends _$FeedUserInterests {
     state = AsyncData(updatedInterests);
   }
 
-  Future<FeedInterests> _syncState(FeedType feedType, {bool forceRemote = false}) async {
+  Future<FeedInterests> _syncState(FeedType feedType) async {
     final localState = _loadSavedState();
-    final remoteState = await _getRemoteState(feedType, force: forceRemote);
+    final fetchedRemote = ref.read(feedUserInterestsFetchedNotifierProvider(feedType));
+    final remoteState = await _getRemoteState(feedType, force: !fetchedRemote);
+    if (!fetchedRemote) {
+      ref.read(feedUserInterestsFetchedNotifierProvider(feedType).notifier).setFetched();
+    }
     final mergedState = _mergeStates(local: localState, remote: remoteState);
     if (mergedState != localState) {
       await _saveState(mergedState);
@@ -177,14 +181,14 @@ class FeedUserInterestsNotifier extends _$FeedUserInterestsNotifier {
             .updateInterests(interaction, interactionCategories),
     ]);
   }
+}
 
-  Future<void> forceRemoteSync() async {
-    await Future.wait([
-      for (final feedType in FeedType.values)
-        ref.read(feedUserInterestsProvider(feedType).notifier)._syncState(
-              feedType,
-              forceRemote: true,
-            ),
-    ]);
+@Riverpod(keepAlive: true)
+class FeedUserInterestsFetchedNotifier extends _$FeedUserInterestsFetchedNotifier {
+  @override
+  bool build(FeedType feedType) => false;
+
+  void setFetched() {
+    state = true;
   }
 }
