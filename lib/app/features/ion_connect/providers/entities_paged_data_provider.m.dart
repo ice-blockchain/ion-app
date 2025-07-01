@@ -44,7 +44,7 @@ mixin DelegatedPagedNotifier implements PagedNotifier {
 
   @override
   void deleteEntity(IonConnectEntity entity) {
-    getDelegate().insertEntity(entity);
+    getDelegate().deleteEntity(entity);
   }
 
   PagedNotifier getDelegate();

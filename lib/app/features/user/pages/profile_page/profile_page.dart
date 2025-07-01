@@ -7,12 +7,15 @@ import 'package:ion/app/components/screen_offset/screen_top_offset.dart';
 import 'package:ion/app/components/section_separator/section_separator.dart';
 import 'package:ion/app/components/separated/separator.dart';
 import 'package:ion/app/extensions/extensions.dart';
+import 'package:ion/app/features/auth/providers/auth_provider.m.dart';
 import 'package:ion/app/features/feed/data/models/entities/event_count_result_data.f.dart';
 import 'package:ion/app/features/ion_connect/providers/ion_connect_cache.r.dart';
 import 'package:ion/app/features/user/model/tab_entity_type.dart';
 import 'package:ion/app/features/user/model/user_content_type.dart';
+import 'package:ion/app/features/user/pages/components/header_action/header_action.dart';
 import 'package:ion/app/features/user/pages/components/profile_avatar/profile_avatar.dart';
 import 'package:ion/app/features/user/pages/profile_page/cant_find_profile_page.dart';
+import 'package:ion/app/features/user/pages/profile_page/components/header/context_menu.dart';
 import 'package:ion/app/features/user/pages/profile_page/components/header/header.dart';
 import 'package:ion/app/features/user/pages/profile_page/components/profile_details/profile_details.dart';
 import 'package:ion/app/features/user/pages/profile_page/components/tabs/tab_entities_list.dart';
@@ -22,6 +25,8 @@ import 'package:ion/app/features/user/pages/profile_page/profile_skeleton.dart';
 import 'package:ion/app/features/user/providers/user_metadata_provider.r.dart';
 import 'package:ion/app/features/user_block/providers/block_list_notifier.r.dart';
 import 'package:ion/app/hooks/use_scroll_top_on_tab_press.dart';
+import 'package:ion/app/router/app_routes.gr.dart';
+import 'package:ion/generated/assets.gen.dart';
 
 class ProfilePage extends HookConsumerWidget {
   const ProfilePage({
@@ -46,6 +51,7 @@ class ProfilePage extends HookConsumerWidget {
     }
 
     final userMetadata = ref.watch(userMetadataProvider(pubkey));
+    final isCurrentUserProfile = ref.watch(isCurrentUserSelectorProvider(pubkey));
 
     final didRefresh = useState(false);
 
@@ -91,19 +97,10 @@ class ProfilePage extends HookConsumerWidget {
                   controller: scrollController,
                   headerSliverBuilder: (context, innerBoxIsScrolled) {
                     return [
-                      PinnedHeaderSliver(
-                        child: ColoredBox(
-                          color: backgroundColor,
-                          child: Header(
-                            pubkey: pubkey,
-                            opacity: opacity,
-                            showBackButton: showBackButton,
-                          ),
-                        ),
-                      ),
                       SliverToBoxAdapter(
                         child: Column(
                           children: [
+                            ProfileAvatar(pubkey: pubkey),
                             SizedBox(height: 16.0.s),
                             ProfileDetails(pubkey: pubkey),
                             SizedBox(height: 16.0.s),
@@ -140,16 +137,77 @@ class ProfilePage extends HookConsumerWidget {
                 ),
               ),
             ),
-            // need to move ProfileAvatar here to fix the issue with the header action
-            // because header overlaps the ProfileAvatar
-            FittedBox(
-              child: Align(
-                alignment: Alignment.topCenter,
+            Align(
+              alignment: Alignment.topCenter,
+              child: IgnorePointer(
+                child: Container(
+                  padding: EdgeInsetsDirectional.only(
+                    bottom: paddingTop - HeaderAction.buttonSize,
+                    start: showBackButton ? 56.s : 32.s,
+                    end: isCurrentUserProfile ? 92.s : 50.s,
+                  ),
+                  color: backgroundColor.withValues(alpha: opacity),
+                  child: Header(
+                    opacity: opacity,
+                    pubkey: pubkey,
+                    showBackButton: showBackButton,
+                  ),
+                ),
+              ),
+            ),
+            if (showBackButton)
+              Align(
+                alignment: AlignmentDirectional.topStart,
+                child: ScreenTopOffset(
+                  child: Padding(
+                    padding: EdgeInsetsDirectional.only(start: 16.s),
+                    child: SizedBox(
+                      height: HeaderAction.buttonSize,
+                      child: HeaderAction(
+                        onPressed: () {
+                          Navigator.of(context).pop(true);
+                        },
+                        assetName: Assets.svg.iconProfileBack,
+                        opacity: 1,
+                        flipForRtl: true,
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+            Align(
+              alignment: AlignmentDirectional.topEnd,
+              child: ScreenTopOffset(
                 child: Padding(
-                  padding: EdgeInsetsDirectional.only(top: paddingTop),
-                  child: Opacity(
-                    opacity: 1 - opacity,
-                    child: ProfileAvatar(pubkey: pubkey),
+                  padding: EdgeInsetsDirectional.only(end: 16.s),
+                  child: SizedBox(
+                    height: HeaderAction.buttonSize,
+                    child: isCurrentUserProfile
+                        ? Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              HeaderAction(
+                                onPressed: () {
+                                  BookmarksRoute().push<void>(context);
+                                },
+                                assetName: Assets.svg.iconBookmarks,
+                                opacity: 1,
+                              ),
+                              SizedBox(
+                                width: 16.0.s,
+                              ),
+                              HeaderAction(
+                                onPressed: () {
+                                  SettingsRoute().push<void>(context);
+                                },
+                                assetName: Assets.svg.iconProfileSettings,
+                                opacity: 1,
+                              ),
+                            ],
+                          )
+                        : ContextMenu(
+                            pubkey: pubkey,
+                          ),
                   ),
                 ),
               ),
