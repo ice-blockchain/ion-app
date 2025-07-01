@@ -788,6 +788,7 @@
   "code_block_type_dart": "Dart",
   "write_a_message": "Write a message...",
   "reaction_was_sent": "Reaction was sent",
+  "reply_was_sent": "Reply was sent",
   "share_via": "Share via...",
   "topics_add": "Add",
   "topics_title": "Topics",

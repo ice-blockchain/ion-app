@@ -16,6 +16,7 @@ import 'package:ion/app/features/chat/e2ee/providers/send_chat_message/send_e2ee
 import 'package:ion/app/features/chat/model/database/chat_database.m.dart';
 import 'package:ion/app/features/chat/model/message_list_item.f.dart';
 import 'package:ion/app/features/chat/model/message_type.dart';
+import 'package:ion/app/features/chat/providers/share_post_to_chat_provider.r.dart';
 import 'package:ion/app/features/chat/recent_chats/providers/selected_edit_message_provider.r.dart';
 import 'package:ion/app/features/chat/recent_chats/providers/selected_reply_message_provider.r.dart';
 import 'package:ion/app/features/core/model/feature_flags.dart';
@@ -31,11 +32,13 @@ class MessageReactionContextMenu extends HookConsumerWidget {
     required this.messageItem,
     required this.messageStatus,
     this.isSharedPost = false,
+    this.isSharedStory = false,
     super.key,
   });
 
   final bool isMe;
   final bool isSharedPost;
+  final bool isSharedStory;
   final ChatMessageInfoItem messageItem;
   final MessageDeliveryStatus messageStatus;
 
@@ -66,9 +69,15 @@ class MessageReactionContextMenu extends HookConsumerWidget {
                   color: context.theme.appColors.quaternaryText,
                 ),
                 onPressed: () async {
-                  if (isSharedPost) {
+                  if (isSharedStory) {
                     unawaited(
                       ref.read(storyReplyProvider.notifier).resendReply(messageItem.eventMessage),
+                    );
+                  } else if (isSharedPost) {
+                    unawaited(
+                      ref
+                          .read(sharePostToChatProvider.notifier)
+                          .resendPost(messageItem.eventMessage),
                     );
                   } else {
                     unawaited(

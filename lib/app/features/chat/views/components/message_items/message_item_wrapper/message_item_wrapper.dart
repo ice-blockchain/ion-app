@@ -51,14 +51,18 @@ class MessageItemWrapper extends HookConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final messageItemKey = useMemoized(GlobalKey.new);
 
-    final eventReference =
-        ReplaceablePrivateDirectMessageEntity.fromEventMessage(messageItem.eventMessage)
-            .toEventReference();
-
-    final deliveryStatus = ref.watch(
-      messageStatusProvider(eventReference)
-        ..selectAsync((status) => status == MessageDeliveryStatus.deleted),
+    final entity = useMemoized(
+      () => ReplaceablePrivateDirectMessageEntity.fromEventMessage(messageItem.eventMessage),
     );
+
+    final eventReference = entity.toEventReference();
+
+    final deliveryStatus = messageItem is PostItem
+        ? ref.watch(sharedPostMessageStatusProvider(entity))
+        : ref.watch(
+            messageStatusProvider(eventReference)
+              ..selectAsync((status) => status == MessageDeliveryStatus.deleted),
+          );
 
     if (deliveryStatus.valueOrNull == MessageDeliveryStatus.deleted) {
       return const SizedBox.shrink();
@@ -74,6 +78,7 @@ class MessageItemWrapper extends HookConsumerWidget {
             builder: (context) => MessageReactionDialog(
               isMe: isMe,
               messageItem: messageItem,
+              isSharedPost: messageItem is PostItem,
               messageStatus: deliveryStatus.valueOrNull ?? MessageDeliveryStatus.created,
               renderObject: messageItemKey.currentContext!.findRenderObject()!,
             ),
@@ -173,6 +178,7 @@ ChatMessageInfoItem? getRepliedMessageListItem({
     final profilePubkey = EventReference.fromEncoded(repliedEntity.data.content).pubkey;
 
     final userMetadata = ref.watch(userMetadataProvider(profilePubkey)).valueOrNull;
+
     return ShareProfileItem(
       eventMessage: repliedEventMessage,
       contentDescription: userMetadata?.data.name ?? repliedEntity.data.content,

@@ -1,9 +1,9 @@
 // SPDX-License-Identifier: ice License 1.0
 
 import 'package:flutter_test/flutter_test.dart';
-import 'package:ion/app/features/feed/stories/providers/emoji_reaction_provider.m.dart';
 import 'package:ion/app/features/feed/stories/providers/story_image_loading_provider.r.dart';
 import 'package:ion/app/features/feed/stories/providers/story_pause_provider.r.dart';
+import 'package:ion/app/features/feed/stories/providers/story_reply_notification_provider.m.dart';
 
 import '../../../../test_utils.dart';
 
@@ -46,9 +46,11 @@ void main() {
     test('showReaction() sets emoji and notification flag', () {
       final container = createContainer();
 
-      container.read(emojiReactionsControllerProvider.notifier).showReaction('😊');
+      container
+          .read(storyReplyNotificationControllerProvider.notifier)
+          .showNotification(emoji: '😊');
 
-      final state = container.read(emojiReactionsControllerProvider);
+      final state = container.read(storyReplyNotificationControllerProvider);
       expect(state.selectedEmoji, '😊');
       expect(state.showNotification, isTrue);
     });
@@ -56,10 +58,12 @@ void main() {
     test('hideNotification() resets both fields', () {
       final container = createContainer();
 
-      container.read(emojiReactionsControllerProvider.notifier).showReaction('🔥');
-      container.read(emojiReactionsControllerProvider.notifier).hideNotification();
+      container
+          .read(storyReplyNotificationControllerProvider.notifier)
+          .showNotification(emoji: '🔥');
+      container.read(storyReplyNotificationControllerProvider.notifier).hideNotification();
 
-      final state = container.read(emojiReactionsControllerProvider);
+      final state = container.read(storyReplyNotificationControllerProvider);
       expect(state.selectedEmoji, isNull);
       expect(state.showNotification, isFalse);
     });

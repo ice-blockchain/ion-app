@@ -49,25 +49,25 @@ class PostMessage extends HookConsumerWidget {
       _ => false,
     };
 
-    return SharedPostWrapper(
-      sharedEntity: sharedEntity,
-      messageItem: ChatMessageInfoItem.post(
-        eventMessage: eventMessage,
-        contentDescription: '',
-        medias: [],
-      ),
-      child: isStory
-          ? SharedStoryMessage(
+    return isStory
+        ? SharedStoryWrapper(
+            sharedEntity: sharedEntity,
+            messageItem: ChatMessageInfoItem.post(
+              eventMessage: eventMessage,
+              contentDescription: '',
+              medias: [],
+            ),
+            child: SharedStoryMessage(
               margin: margin,
               storyEntity: postEntity,
               replyEventMessage: eventMessage,
-            )
-          : shared_post_ui.SharedPostMessage(
-              margin: margin,
-              onTapReply: onTapReply,
-              postEntity: postEntity,
-              sharedEventMessage: eventMessage,
             ),
-    );
+          )
+        : shared_post_ui.SharedPostMessage(
+            margin: margin,
+            onTapReply: onTapReply,
+            postEntity: postEntity,
+            sharedEventMessage: eventMessage,
+          );
   }
 }

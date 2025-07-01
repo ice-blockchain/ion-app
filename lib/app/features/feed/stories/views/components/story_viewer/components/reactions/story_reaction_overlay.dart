@@ -9,7 +9,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/chat/views/components/message_items/components.dart';
 import 'package:ion/app/features/feed/data/models/entities/modifiable_post_data.f.dart';
-import 'package:ion/app/features/feed/stories/providers/emoji_reaction_provider.m.dart';
+import 'package:ion/app/features/feed/stories/providers/story_reply_notification_provider.m.dart';
 import 'package:ion/app/features/feed/stories/providers/story_reply_provider.r.dart';
 
 class StoryReactionOverlay extends HookConsumerWidget {
@@ -33,7 +33,8 @@ class StoryReactionOverlay extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final emojiController = ref.read(emojiReactionsControllerProvider.notifier);
+    final storyReplyNotificationController =
+        ref.read(storyReplyNotificationControllerProvider.notifier);
 
     final handleEmojiSelected = useCallback(
       (String emoji) async {
@@ -48,7 +49,7 @@ class StoryReactionOverlay extends HookConsumerWidget {
         );
 
         WidgetsBinding.instance.addPostFrameCallback((_) {
-          emojiController.showReaction(emoji);
+          storyReplyNotificationController.showNotification(emoji: emoji);
         });
       },
       [textController],

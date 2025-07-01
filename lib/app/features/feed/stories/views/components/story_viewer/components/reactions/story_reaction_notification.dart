@@ -7,32 +7,28 @@ import 'package:flutter_animate/flutter_animate.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/chat/views/components/message_items/components.dart';
-import 'package:ion/app/features/feed/stories/providers/emoji_reaction_provider.m.dart';
+import 'package:ion/app/features/feed/stories/providers/story_reply_notification_provider.m.dart';
 
-class StoryReactionNotification extends ConsumerWidget {
-  const StoryReactionNotification({
-    required this.emoji,
-    super.key,
-  });
-
-  final String emoji;
+class StoryReplyNotification extends ConsumerWidget {
+  const StoryReplyNotification({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final emojiState = ref.watch(emojiReactionsControllerProvider);
+    final storyReplyNotification = ref.watch(storyReplyNotificationControllerProvider);
 
-    final appTextThemes = context.theme.appTextThemes;
-    final notificationColor = context.theme.appColors.onPrimaryAccent;
     final i18n = context.i18n;
+    final appTextThemes = context.theme.appTextThemes;
+    final emoji = storyReplyNotification.selectedEmoji;
+    final notificationColor = context.theme.appColors.onPrimaryAccent;
 
     return PositionedDirectional(
       top: 70.0.s,
       start: 0.0.s,
       end: 0.0.s,
       child: Animate(
-        key: ValueKey(emojiState.selectedEmoji),
-        onComplete: (controller) {
-          ref.read(emojiReactionsControllerProvider.notifier).hideNotification();
+        key: ValueKey(storyReplyNotification.selectedEmoji),
+        onComplete: (_) {
+          ref.read(storyReplyNotificationControllerProvider.notifier).hideNotification();
         },
         effects: [
           FadeEffect(duration: 300.ms),
@@ -61,13 +57,14 @@ class StoryReactionNotification extends ConsumerWidget {
                   mainAxisSize: MainAxisSize.min,
                   children: [
                     Text(
-                      i18n.reaction_was_sent,
+                      emoji != null ? i18n.reaction_was_sent : i18n.reply_was_sent,
                       style: appTextThemes.body2.copyWith(color: notificationColor),
                     ),
-                    Text(
-                      ' $emoji',
-                      style: TextStyle(fontSize: 16.0.s).platformEmojiAware(),
-                    ),
+                    if (emoji != null)
+                      Text(
+                        ' $emoji',
+                        style: TextStyle(fontSize: 16.0.s).platformEmojiAware(),
+                      ),
                   ],
                 ),
               ),

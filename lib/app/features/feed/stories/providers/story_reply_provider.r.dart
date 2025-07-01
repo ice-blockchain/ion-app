@@ -2,7 +2,6 @@
 
 import 'dart:convert';
 
-import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/exceptions/exceptions.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/auth/providers/auth_provider.m.dart';
@@ -95,9 +94,10 @@ class StoryReply extends _$StoryReply {
 
       final conversationPubkeysNotifier = ref.read(conversationPubkeysProvider.notifier);
 
+      final participantsKeysMap =
+          await conversationPubkeysNotifier.fetchUsersKeys(participantsMasterPubkeys);
+
       for (final masterPubkey in participantsMasterPubkeys) {
-        final participantsKeysMap =
-            await conversationPubkeysNotifier.fetchUsersKeys(participantsMasterPubkeys);
         final pubkeys = participantsKeysMap[masterPubkey];
 
         if (pubkeys == null) {
@@ -169,7 +169,7 @@ class StoryReply extends _$StoryReply {
   Future<void> resendReply(EventMessage kind30014Rumor) async {
     final kind30014Entity = ReplaceablePrivateDirectMessageEntity.fromEventMessage(kind30014Rumor);
 
-    await resendKind16(ref, kind30014Entity);
+    await _resendKind16(kind30014Entity);
 
     await ref.read(sendE2eeChatMessageServiceProvider).resendMessage(eventMessage: kind30014Rumor);
 
@@ -185,65 +185,65 @@ class StoryReply extends _$StoryReply {
           .resendReaction(eventMessage: kind7EventMessage);
     }
   }
-}
 
-Future<void> resendKind16(Ref ref, ReplaceablePrivateDirectMessageEntity kind30014Entity) async {
-  final kind16Rumor = await ref
-      .read(eventMessageDaoProvider)
-      .getByReference(kind30014Entity.data.quotedEvent!.eventReference);
+  Future<void> _resendKind16(ReplaceablePrivateDirectMessageEntity kind30014Entity) async {
+    final kind16Rumor = await ref
+        .read(eventMessageDaoProvider)
+        .getByReference(kind30014Entity.data.quotedEvent!.eventReference);
 
-  final kind16Entity = GenericRepostEntity.fromEventMessage(kind16Rumor);
-  final eventSigner = await ref.read(currentUserIonConnectEventSignerProvider.future);
+    final kind16Entity = GenericRepostEntity.fromEventMessage(kind16Rumor);
+    final eventSigner = await ref.read(currentUserIonConnectEventSignerProvider.future);
 
-  if (eventSigner == null) {
-    throw EventSignerNotFoundException();
-  }
+    if (eventSigner == null) {
+      throw EventSignerNotFoundException();
+    }
 
-  final failedKind16Participants = await ref
-      .read(conversationMessageDataDaoProvider)
-      .getFailedParticipants(eventReference: kind16Entity.toEventReference());
+    final failedKind16Participants = await ref
+        .read(conversationMessageDataDaoProvider)
+        .getFailedParticipants(eventReference: kind16Entity.toEventReference());
 
-  if (failedKind16Participants.isNotEmpty) {
-    for (final masterPubkey in failedKind16Participants.keys) {
-      final pubkeys = failedKind16Participants[masterPubkey];
+    if (failedKind16Participants.isNotEmpty) {
+      for (final masterPubkey in failedKind16Participants.keys) {
+        final pubkeys = failedKind16Participants[masterPubkey];
 
-      if (pubkeys == null) {
-        throw UserPubkeyNotFoundException(masterPubkey);
-      }
+        if (pubkeys == null) {
+          throw UserPubkeyNotFoundException(masterPubkey);
+        }
 
-      for (final pubkey in pubkeys) {
-        try {
-          await ref.read(conversationMessageDataDaoProvider).addOrUpdateStatus(
-                pubkey: pubkey,
-                masterPubkey: masterPubkey,
-                status: MessageDeliveryStatus.created,
-                messageEventReference: kind16Entity.toEventReference(),
-              );
+        for (final pubkey in pubkeys) {
+          try {
+            await ref.read(conversationMessageDataDaoProvider).addOrUpdateStatus(
+                  pubkey: pubkey,
+                  masterPubkey: masterPubkey,
+                  status: MessageDeliveryStatus.created,
+                  messageEventReference: kind16Entity.toEventReference(),
+                );
 
-          await ref.read(sendE2eeChatMessageServiceProvider).sendWrappedMessage(
-            pubkey: pubkey,
-            eventSigner: eventSigner,
-            masterPubkey: masterPubkey,
-            eventMessage: kind16Rumor,
-            wrappedKinds: [
-              GenericRepostEntity.kind.toString(),
-              ModifiablePostEntity.kind.toString(),
-            ],
-          );
+            await ref.read(sendE2eeChatMessageServiceProvider).sendWrappedMessage(
+              pubkey: pubkey,
+              eventSigner: eventSigner,
+              masterPubkey: masterPubkey,
+              eventMessage: kind16Rumor,
+              wrappedKinds: [
+                GenericRepostEntity.kind.toString(),
+                ModifiablePostEntity.kind.toString(),
+              ],
+            );
 
-          await ref.read(conversationMessageDataDaoProvider).addOrUpdateStatus(
-                pubkey: pubkey,
-                masterPubkey: masterPubkey,
-                status: MessageDeliveryStatus.sent,
-                messageEventReference: kind16Entity.toEventReference(),
-              );
-        } catch (e) {
-          await ref.read(conversationMessageDataDaoProvider).addOrUpdateStatus(
-                pubkey: pubkey,
-                masterPubkey: masterPubkey,
-                status: MessageDeliveryStatus.failed,
-                messageEventReference: kind16Entity.toEventReference(),
-              );
+            await ref.read(conversationMessageDataDaoProvider).addOrUpdateStatus(
+                  pubkey: pubkey,
+                  masterPubkey: masterPubkey,
+                  status: MessageDeliveryStatus.sent,
+                  messageEventReference: kind16Entity.toEventReference(),
+                );
+          } catch (e) {
+            await ref.read(conversationMessageDataDaoProvider).addOrUpdateStatus(
+                  pubkey: pubkey,
+                  masterPubkey: masterPubkey,
+                  status: MessageDeliveryStatus.failed,
+                  messageEventReference: kind16Entity.toEventReference(),
+                );
+          }
         }
       }
     }

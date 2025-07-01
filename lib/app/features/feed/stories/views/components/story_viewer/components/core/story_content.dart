@@ -12,8 +12,8 @@ import 'package:ion/app/features/auth/providers/auth_provider.m.dart';
 import 'package:ion/app/features/feed/data/models/entities/modifiable_post_data.f.dart';
 import 'package:ion/app/features/feed/providers/can_reply_notifier.r.dart';
 import 'package:ion/app/features/feed/stories/hooks/use_keyboard_height.dart';
-import 'package:ion/app/features/feed/stories/providers/emoji_reaction_provider.m.dart';
 import 'package:ion/app/features/feed/stories/providers/story_pause_provider.r.dart';
+import 'package:ion/app/features/feed/stories/providers/story_reply_notification_provider.m.dart';
 import 'package:ion/app/features/feed/stories/providers/story_reply_provider.r.dart';
 import 'package:ion/app/features/feed/stories/views/components/story_viewer/components/components.dart';
 import 'package:ion/app/features/feed/stories/views/components/story_viewer/components/header/story_viewer_header.dart';
@@ -31,7 +31,7 @@ class StoryContent extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final emojiState = ref.watch(emojiReactionsControllerProvider);
+    final storyReplyNotificationState = ref.watch(storyReplyNotificationControllerProvider);
     final textController = useTextEditingController();
     final isKeyboardVisible = KeyboardVisibilityProvider.isKeyboardVisible(context);
     final canReply = ref.watch(canReplyProvider(story.toEventReference())).valueOrNull ?? false;
@@ -74,8 +74,7 @@ class StoryContent extends HookConsumerWidget {
           isKeyboardShown: isKeyboardVisible,
           canReply: canReply && !isOwnerStory,
         ),
-        if (emojiState.showNotification && emojiState.selectedEmoji != null)
-          StoryReactionNotification(emoji: emojiState.selectedEmoji!),
+        if (storyReplyNotificationState.showNotification) const StoryReplyNotification(),
       ],
     );
   }
@@ -124,6 +123,9 @@ class _StoryControlsPanel extends HookConsumerWidget {
       textController.clear();
       FocusScope.of(context).unfocus();
       unawaited(ref.read(storyReplyProvider.notifier).sendReply(story, replyText: txt));
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        ref.read(storyReplyNotificationControllerProvider.notifier).showNotification();
+      });
     }
 
     ref.listen(
