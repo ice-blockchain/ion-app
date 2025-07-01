@@ -7,6 +7,7 @@ import 'package:ion/app/components/list_item/badges_user_list_item.dart';
 import 'package:ion/app/components/list_items_loading_state/item_loading_state.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/components/user/follow_user_button/follow_user_button.dart';
+import 'package:ion/app/features/core/providers/debounced_provider_wrapper.dart';
 import 'package:ion/app/features/user/providers/user_metadata_provider.r.dart';
 import 'package:ion/app/utils/username.dart';
 
@@ -22,11 +23,16 @@ class FollowListItem extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final userMetadataResult = ref.watch(userMetadataProvider(pubkey));
+    final userMetadataResult = ref.watch(
+      userMetadataProvider(pubkey).debounced(
+        debounceDuration: const Duration(milliseconds: 100),
+        name: 'userMetadata',
+      ),
+    );
 
     return Padding(
       padding: EdgeInsets.symmetric(vertical: 8.0.s),
-      child: userMetadataResult.maybeWhen(
+      child: userMetadataResult?.maybeWhen(
         data: (userMetadata) {
           if (userMetadata == null) {
             return const SizedBox.shrink();
