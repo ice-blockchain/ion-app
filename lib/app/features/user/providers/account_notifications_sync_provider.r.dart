@@ -129,7 +129,7 @@ class AccountNotificationsSync extends _$AccountNotificationsSync {
         await syncEventsFromRelay(
           relayUrl: relayEntry.key,
           users: relayEntry.value,
-          contentTypes: [contentType],
+          contentType: contentType,
         );
       }
     }
@@ -239,24 +239,24 @@ class AccountNotificationsSync extends _$AccountNotificationsSync {
     return result;
   }
 
+  /// Sync events from a specific relay for a content type
   Future<void> syncEventsFromRelay({
     required String relayUrl,
     required List<String> users,
-    required List<UserNotificationsType> contentTypes,
+    required UserNotificationsType contentType,
   }) async {
-    for (final contentType in contentTypes) {
-      if (contentType == UserNotificationsType.none) {
-        continue;
-      }
-
-      await syncContentTypeFromRelay(
-        relayUrl: relayUrl,
-        users: users,
-        contentType: contentType,
-      );
+    if (contentType == UserNotificationsType.none) {
+      return;
     }
+
+    await syncContentTypeFromRelay(
+      relayUrl: relayUrl,
+      users: users,
+      contentType: contentType,
+    );
   }
 
+  /// Sync a specific content type from a relay
   Future<void> syncContentTypeFromRelay({
     required String relayUrl,
     required List<String> users,
@@ -329,17 +329,15 @@ class AccountNotificationsSync extends _$AccountNotificationsSync {
     final setType = AccountNotificationSetType.fromUserNotificationType(contentType);
     if (setType == null) return null;
 
-    final notificationSet = await ref
-        .read(
-          ionConnectEntityProvider(
-            eventReference: ReplaceableEventReference(
-              pubkey: currentPubkey,
-              kind: AccountNotificationSetEntity.kind,
-              dTag: setType.dTagName,
-            ),
-          ).future,
-        )
-        .catchError((_) => null);
+    final notificationSet = await ref.read(
+      ionConnectEntityProvider(
+        eventReference: ReplaceableEventReference(
+          pubkey: currentPubkey,
+          kind: AccountNotificationSetEntity.kind,
+          dTag: setType.dTagName,
+        ),
+      ).future,
+    );
 
     return notificationSet is AccountNotificationSetEntity ? notificationSet.createdAt : null;
   }
