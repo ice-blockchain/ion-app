@@ -115,7 +115,7 @@ class FeedForYouContent extends _$FeedForYouContent implements PagedNotifier {
   Future<RetryCounter> _buildRetryCounter() async {
     final feedConfig = await ref.read(feedConfigProvider.future);
     final feedRetryCounterMultiplier =
-        feedConfig.concurrentRequests * 2; //TODO:change to a separate field
+        (feedConfig.concurrentRequests * feedConfig.forYouMaxRetriesMultiplier).ceil();
     return RetryCounter(limit: feedType.pageSize * feedRetryCounterMultiplier);
   }
 

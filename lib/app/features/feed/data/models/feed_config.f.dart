@@ -12,6 +12,7 @@ class FeedConfig with _$FeedConfig {
     required double notInterestedCategoryChance,
     required int concurrentRequests,
     required int concurrentMediaDownloadsLimit,
+    required double forYouMaxRetriesMultiplier,
     @DurationMillisecondsConverter() required Duration followingReqMaxAge,
     @DurationMillisecondsConverter() required Duration followingCacheMaxAge,
     @DurationMillisecondsConverter() required Duration topMaxAge,
