@@ -114,17 +114,6 @@ class AccountNotificationsSync extends _$AccountNotificationsSync {
       return;
     }
 
-    final allUsers = <String>{};
-    for (final users in usersMap.values) {
-      allUsers.addAll(users);
-    }
-
-    if (allUsers.isEmpty) {
-      return;
-    }
-
-    final optimalRelayMapping = await getOptimalRelayMapping(allUsers.toList());
-
     for (final entry in usersMap.entries) {
       final contentType = entry.key;
       final users = entry.value;
@@ -133,17 +122,9 @@ class AccountNotificationsSync extends _$AccountNotificationsSync {
         continue;
       }
 
-      final filteredMapping = <String, List<String>>{};
+      final optimalRelayMapping = await getOptimalRelayMapping(users);
+
       for (final relayEntry in optimalRelayMapping.entries) {
-        final relayUrl = relayEntry.key;
-        final relayUsers = relayEntry.value.where(users.contains).toList();
-
-        if (relayUsers.isNotEmpty) {
-          filteredMapping[relayUrl] = relayUsers;
-        }
-      }
-
-      for (final relayEntry in filteredMapping.entries) {
         await syncEventsFromRelay(
           relayUrl: relayEntry.key,
           users: relayEntry.value,
