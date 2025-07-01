@@ -97,7 +97,6 @@ class FeedForYouContent extends _$FeedForYouContent implements PagedNotifier {
 
     for (final MapEntry(key: modifier, value: modifierLimit) in modifiersDistribution.entries) {
       if (modifierLimit > 0) {
-        _ensureEmptyState();
         yield* _fetchInterestsEntities(
           modifier: modifier,
           limit: modifierLimit,
