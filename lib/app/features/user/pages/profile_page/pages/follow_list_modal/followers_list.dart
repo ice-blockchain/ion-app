@@ -7,18 +7,13 @@ import 'package:ion/app/components/nothing_is_found/nothing_is_found.dart';
 import 'package:ion/app/components/screen_offset/screen_side_offset.dart';
 import 'package:ion/app/components/scroll_view/load_more_builder.dart';
 import 'package:ion/app/extensions/extensions.dart';
-import 'package:ion/app/features/ion_connect/providers/entities_paged_data_provider.m.dart';
-import 'package:ion/app/features/user/model/follow_type.dart';
-import 'package:ion/app/features/user/model/user_metadata.f.dart';
 import 'package:ion/app/features/user/model/follow_type.dart';
 import 'package:ion/app/features/user/pages/profile_page/pages/follow_list_modal/components/follow_app_bar.dart';
 import 'package:ion/app/features/user/pages/profile_page/pages/follow_list_modal/components/follow_list_item.dart';
 import 'package:ion/app/features/user/pages/profile_page/pages/follow_list_modal/components/follow_list_loading.dart';
 import 'package:ion/app/features/user/pages/profile_page/pages/follow_list_modal/components/follow_search_bar.dart';
-import 'package:ion/app/features/user/providers/followers_count_provider.r.dart';
-import 'package:ion/app/features/user/providers/followers_data_source_provider.r.dart';
 import 'package:ion/app/features/user/providers/debounced_followers_provider.dart';
-import 'package:ion/app/features/user/providers/followers_count_provider.c.dart';
+import 'package:ion/app/features/user/providers/followers_count_provider.r.dart';
 
 class FollowersList extends HookConsumerWidget {
   const FollowersList({required this.pubkey, super.key});
@@ -32,14 +27,16 @@ class FollowersList extends HookConsumerWidget {
     final searchQuery = useState('');
     final debouncedQuery = useDebounced(searchQuery.value, const Duration(milliseconds: 300)) ?? '';
 
-    // Use the debounced followers provider
     final debouncedProvider = ref.watch(
-      debouncedFollowersListStateProvider((pubkey: pubkey, query: debouncedQuery.isEmpty ? null : debouncedQuery))
+      debouncedFollowersListStateProvider(
+        (pubkey: pubkey, query: debouncedQuery.isEmpty ? null : debouncedQuery),
+      ),
     );
     final debouncedState = ref.watch(debouncedProvider);
-    
+
     final entities = debouncedState?.entities;
 
+    print('debouncedState: ${debouncedState?.entities?.length}');
     final slivers = [
       FollowAppBar(title: FollowType.followers.getTitleWithCounter(context, followersCount ?? 0)),
       FollowSearchBar(onTextChanged: (query) => searchQuery.value = query),
@@ -60,9 +57,14 @@ class FollowersList extends HookConsumerWidget {
     return LoadMoreBuilder(
       slivers: slivers,
       hasMore: debouncedState?.hasMore ?? false,
-      onLoadMore: () => ref.read(
-        followersNotifierProvider(pubkey, query: debouncedQuery.isEmpty ? null : debouncedQuery)
-      ).fetchEntities(),
+      onLoadMore: () => ref
+          .read(
+            followersNotifierProvider(
+              pubkey,
+              query: debouncedQuery.isEmpty ? null : debouncedQuery,
+            ),
+          )
+          .fetchEntities(),
     );
   }
 }
