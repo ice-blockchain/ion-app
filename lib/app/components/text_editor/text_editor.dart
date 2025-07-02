@@ -33,6 +33,7 @@ class TextEditor extends ConsumerStatefulWidget {
     this.autoFocus = true,
     this.scrollController,
     this.media,
+    this.scrollable = false,
   }) : super(key: key);
 
   final QuillController controller;
@@ -41,6 +42,8 @@ class TextEditor extends ConsumerStatefulWidget {
   final bool autoFocus;
   final ScrollController? scrollController;
   final Map<String, MediaAttachment>? media;
+  final bool scrollable;
+
   @override
   TextEditorState createState() => TextEditorState();
 }
@@ -108,7 +111,7 @@ class TextEditorState extends ConsumerState<TextEditor> {
           attribute,
           isEditing: true,
         ),
-        scrollable: false,
+        scrollable: widget.scrollable,
       ),
     );
   }

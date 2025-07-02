@@ -144,6 +144,7 @@ class ReplyInputField extends HookConsumerWidget {
                                 autoFocus: false,
                                 placeholder: context.i18n.post_reply_hint,
                                 key: textEditorKey,
+                                scrollable: true,
                               ),
                             ),
                             if (hasFocus.value)
