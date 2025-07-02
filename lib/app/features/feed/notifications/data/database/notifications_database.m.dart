@@ -115,7 +115,7 @@ class NotificationsDatabase extends _$NotificationsDatabase {
   final String pubkey;
 
   @override
-  int get schemaVersion => 5;
+  int get schemaVersion => 4;
 
   @override
   MigrationStrategy get migration {
@@ -164,12 +164,6 @@ class NotificationsDatabase extends _$NotificationsDatabase {
           );
         },
         from3To4: (m, schema) async {
-          await Future.wait([
-            m.createTable(schema.subscribedUsersContentTable),
-            m.createTable(schema.accountNotificationSyncStateTable),
-          ]);
-        },
-        from4To5: (m, schema) async {
           await m.database.customStatement('DROP TABLE IF EXISTS subscribed_users_content_table');
           await m.database.customStatement('DROP TABLE IF EXISTS content_table');
           await m.database
