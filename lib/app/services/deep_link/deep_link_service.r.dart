@@ -8,7 +8,9 @@ import 'package:flutter/foundation.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/features/core/providers/env_provider.r.dart';
 import 'package:ion/app/services/logger/logger.dart';
+import 'package:ion/app/services/deep_link/native_deep_link_service.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
+import 'package:flutter/services.dart';
 
 part 'deep_link_service.r.g.dart';
 
@@ -25,13 +27,17 @@ final class DeepLinkService {
 
   Future<void> init({required void Function(String path) onDeeplink}) async {
     _appsflyerSdk.onDeepLinking((link) {
-      final path = link.deepLink?.deepLinkValue;
-      if (path == null) return;
-      onDeeplink(path);
+      Logger.log('onDeepLinking $link');
+      final rawPath = link.deepLink?.deepLinkValue;
+      if (rawPath == null || rawPath.isEmpty) return;
+
+      onDeeplink(rawPath);
     });
 
     final result = await _appsflyerSdk.initSdk(
       registerOnDeepLinkingCallback: true,
+      registerConversionDataCallback: true,
+      registerOnAppOpenAttributionCallback: true,
     );
 
     if (result case final String result) {
@@ -41,6 +47,8 @@ final class DeepLinkService {
     if (result case final Map<dynamic, dynamic> result) {
       _isInitialized = result['status'] == 'OK';
     }
+
+    Logger.log('AppsFlyer SDK start triggered');
   }
 
   /// Creates a deep link for the given path using AppsFlyer
@@ -58,6 +66,10 @@ final class DeepLinkService {
     final completer = Completer<String>();
 
     try {
+      if (Platform.isIOS) {
+        return NativeDeepLinkService.generateInviteLink(path);
+      }
+
       _appsflyerSdk.generateInviteLink(
         AppsFlyerInviteLinkParams(customParams: {'deep_link_value': path}),
         (dynamic data) => _handleInviteLinkSuccess(data, completer),

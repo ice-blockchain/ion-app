@@ -117,7 +117,7 @@ class AudioFocusHandler: NSObject {
 }
 
 @main
-@objc class AppDelegate: FlutterAppDelegate {
+@objc class AppDelegate: FlutterAppDelegate, DeepLinkDelegate {
     
     // Photo Editor Methods
     static let methodInitPhotoEditor = "initPhotoEditor"
@@ -137,6 +137,8 @@ class AudioFocusHandler: NSObject {
     lazy var audioBrowserFlutterEngine = FlutterEngine(name: "audioBrowserEngine")
     
     private var audioFocusHandler: AudioFocusHandler?
+    
+    private var pendingDeepLinkPath: String?
     
     override func application(
         _ application: UIApplication,
@@ -218,8 +220,53 @@ class AudioFocusHandler: NSObject {
                     result(FlutterMethodNotImplemented)
                 }
             }
+
+            // AppsFlyer Method Channel – invite link generation
+            let appsFlyerChannel = FlutterMethodChannel(name: "appsFlyerChannel", binaryMessenger: binaryMessenger)
+
+            appsFlyerChannel.setMethodCallHandler { methodCall, result in
+                guard methodCall.method == "generateInviteLink" else {
+                    result(FlutterMethodNotImplemented)
+                    return
+                }
+
+                guard let args = methodCall.arguments as? [String: Any],
+                      let path = args["path"] as? String else {
+                    result(FlutterError(code: "INVALID_ARGUMENTS", message: "Missing path", details: nil))
+                    return
+                }
+
+                // Build invite link using AppsFlyerShareInviteHelper
+                AppsFlyerShareInviteHelper.generateInviteUrl(linkGenerator: { generator in
+                    generator.addParameterValue(path, forKey: "deep_link_value")
+                    return generator
+                }, completionHandler: { url in
+                    DispatchQueue.main.async {
+                        guard let url = url else {
+                            result(FlutterError(code: "NO_URL", message: "No URL returned", details: nil))
+                            return
+                        }
+                        result(url.absoluteString)
+                    }
+                })
+            }
+
+            // Deep Link Channel
+            let deepLinkChannel = FlutterMethodChannel(name: "deepLinkChannel", binaryMessenger: binaryMessenger)
+            deepLinkChannel.setMethodCallHandler { methodCall, result in
+                switch methodCall.method {
+                case "getPendingDeepLink":
+                    result(self.pendingDeepLinkPath)
+                    self.pendingDeepLinkPath = nil
+                default:
+                    result(FlutterMethodNotImplemented)
+                }
+            }
         }
         GeneratedPluginRegistrant.register(with: self)
+        
+        print("AppsFlyer: SDK initialized with devKey: \(afLib.appsFlyerDevKey ?? "nil")")
+        print("AppsFlyer: Deep link delegate set: \(afLib.deepLinkDelegate != nil)")
         
         audioBrowserFlutterEngine.run(withEntrypoint: "audioBrowser")
         GeneratedPluginRegistrant.register(with: audioBrowserFlutterEngine)
@@ -229,14 +276,33 @@ class AudioFocusHandler: NSObject {
     
     // MARK: - AppsFlyer Deep Linking
     
-    override func application(_ app: UIApplication, open url: URL, options: [UIApplication.OpenURLOptionsKey : Any] = [:]) -> Bool {
-        AppsFlyerLib.shared().handleOpen(url, options: options)
-        return super.application(app, open: url, options: options)
-    }
-    
+    // Universal Links handler
     override func application(_ application: UIApplication, continue userActivity: NSUserActivity, restorationHandler: @escaping ([UIUserActivityRestoring]?) -> Void) -> Bool {
+        print("AppsFlyer: Universal link handler called with URL: \(userActivity.webpageURL?.absoluteString ?? "nil")")
         AppsFlyerLib.shared().continue(userActivity, restorationHandler: nil)
-        return super.application(application, continue: userActivity, restorationHandler: restorationHandler)
+
+        // Forward the universal link to Flutter via MethodChannel
+        if let url = userActivity.webpageURL,
+           let controller = window?.rootViewController as? FlutterViewController {
+            let channel = FlutterMethodChannel(name: "deepLinkChannel", binaryMessenger: controller.binaryMessenger)
+            channel.invokeMethod("onDeeplink", arguments: pendingDeepLinkPath)
+        }
+
+        return true
+    }
+
+    // URI Scheme handler (fallback)
+    override func application(_ app: UIApplication, open url: URL, options: [UIApplication.OpenURLOptionsKey : Any] = [:]) -> Bool {
+        print("AppsFlyer: URI scheme handler called with URL: \(url.absoluteString)")
+        AppsFlyerLib.shared().handleOpen(url, options: options)
+
+        // Forward the URI-scheme link to Flutter via MethodChannel
+        if let controller = window?.rootViewController as? FlutterViewController {
+            let channel = FlutterMethodChannel(name: "deepLinkChannel", binaryMessenger: controller.binaryMessenger)
+            channel.invokeMethod("onDeeplink", arguments: pendingDeepLinkPath)
+        }
+
+        return true
     }
 
     
@@ -261,4 +327,50 @@ class AudioFocusHandler: NSObject {
             
             return factory
         }
+
+    // MARK: - AppsFlyerDeepLinkDelegate
+
+    func didResolveDeepLink(_ result: DeepLinkResult) {
+        // Check the status first before accessing deepLink
+        print("AppsFlyer: didResolveDeepLink called")
+        print("AppsFlyer: Status = \(result.status)")
+        
+        switch result.status {
+        case .found:
+            print("AppsFlyer: Deep link found!")
+            guard let deepLink = result.deepLink,
+                  let value = deepLink.deeplinkValue else {
+                print("AppsFlyer: Missing deepLink or deeplinkValue")
+                return
+            }
+            
+            print("AppsFlyer: Extracted deeplinkValue = \(value)")
+            
+            DispatchQueue.main.async {
+                if let controller = self.window?.rootViewController as? FlutterViewController {
+                    let channel = FlutterMethodChannel(name: "deepLinkChannel", binaryMessenger: controller.binaryMessenger)
+                    channel.invokeMethod("onDeeplink", arguments: value)
+                    print("AppsFlyer: Sent to Flutter via channel: \(value)")
+                } else {
+                    self.pendingDeepLinkPath = value
+                    print("AppsFlyer: Stored pending deep link: \(value)")
+                }
+            }
+            
+        case .notFound:
+            // UDL API did not find a match to this deep linking click
+            print("AppsFlyer: Deep link not found")
+            
+        case .failure:
+            // UDL API encountered an error
+            if let error = result.error {
+                print("AppsFlyer: Deep link resolution failed with error: \(error)")
+            } else {
+                print("AppsFlyer: Deep link resolution failed with unknown error")
+            }
+            
+        @unknown default:
+            print("AppsFlyer: Unknown deep link result status")
+        }
+    }
 }
