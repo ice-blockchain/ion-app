@@ -67,38 +67,31 @@ class Shape0 extends i0.VersionedTable {
       columnsByName['event_reference']! as i1.GeneratedColumn<String>;
   i1.GeneratedColumn<DateTime> get createdAt =>
       columnsByName['created_at']! as i1.GeneratedColumn<DateTime>;
-  i1.GeneratedColumn<int> get type =>
-      columnsByName['type']! as i1.GeneratedColumn<int>;
+  i1.GeneratedColumn<int> get type => columnsByName['type']! as i1.GeneratedColumn<int>;
 }
 
 i1.GeneratedColumn<String> _column_0(String aliasedName) =>
-    i1.GeneratedColumn<String>('event_reference', aliasedName, false,
-        type: i1.DriftSqlType.string);
+    i1.GeneratedColumn<String>('event_reference', aliasedName, false, type: i1.DriftSqlType.string);
 i1.GeneratedColumn<DateTime> _column_1(String aliasedName) =>
-    i1.GeneratedColumn<DateTime>('created_at', aliasedName, false,
-        type: i1.DriftSqlType.dateTime);
+    i1.GeneratedColumn<DateTime>('created_at', aliasedName, false, type: i1.DriftSqlType.dateTime);
 i1.GeneratedColumn<int> _column_2(String aliasedName) =>
-    i1.GeneratedColumn<int>('type', aliasedName, false,
-        type: i1.DriftSqlType.int);
+    i1.GeneratedColumn<int>('type', aliasedName, false, type: i1.DriftSqlType.int);
 
 class Shape1 extends i0.VersionedTable {
   Shape1({required super.source, required super.alias}) : super.aliased();
   i1.GeneratedColumn<String> get eventReference =>
       columnsByName['event_reference']! as i1.GeneratedColumn<String>;
-  i1.GeneratedColumn<String> get pubkey =>
-      columnsByName['pubkey']! as i1.GeneratedColumn<String>;
+  i1.GeneratedColumn<String> get pubkey => columnsByName['pubkey']! as i1.GeneratedColumn<String>;
   i1.GeneratedColumn<DateTime> get createdAt =>
       columnsByName['created_at']! as i1.GeneratedColumn<DateTime>;
 }
 
 i1.GeneratedColumn<String> _column_3(String aliasedName) =>
-    i1.GeneratedColumn<String>('pubkey', aliasedName, false,
-        type: i1.DriftSqlType.string);
+    i1.GeneratedColumn<String>('pubkey', aliasedName, false, type: i1.DriftSqlType.string);
 
 class Shape2 extends i0.VersionedTable {
   Shape2({required super.source, required super.alias}) : super.aliased();
-  i1.GeneratedColumn<String> get pubkey =>
-      columnsByName['pubkey']! as i1.GeneratedColumn<String>;
+  i1.GeneratedColumn<String> get pubkey => columnsByName['pubkey']! as i1.GeneratedColumn<String>;
   i1.GeneratedColumn<DateTime> get createdAt =>
       columnsByName['created_at']! as i1.GeneratedColumn<DateTime>;
 }
@@ -164,32 +157,25 @@ class Shape3 extends i0.VersionedTable {
   Shape3({required super.source, required super.alias}) : super.aliased();
   i1.GeneratedColumn<String> get eventReference =>
       columnsByName['event_reference']! as i1.GeneratedColumn<String>;
-  i1.GeneratedColumn<int> get createdAt =>
-      columnsByName['created_at']! as i1.GeneratedColumn<int>;
-  i1.GeneratedColumn<int> get type =>
-      columnsByName['type']! as i1.GeneratedColumn<int>;
+  i1.GeneratedColumn<int> get createdAt => columnsByName['created_at']! as i1.GeneratedColumn<int>;
+  i1.GeneratedColumn<int> get type => columnsByName['type']! as i1.GeneratedColumn<int>;
 }
 
 i1.GeneratedColumn<int> _column_4(String aliasedName) =>
-    i1.GeneratedColumn<int>('created_at', aliasedName, false,
-        type: i1.DriftSqlType.int);
+    i1.GeneratedColumn<int>('created_at', aliasedName, false, type: i1.DriftSqlType.int);
 
 class Shape4 extends i0.VersionedTable {
   Shape4({required super.source, required super.alias}) : super.aliased();
   i1.GeneratedColumn<String> get eventReference =>
       columnsByName['event_reference']! as i1.GeneratedColumn<String>;
-  i1.GeneratedColumn<String> get pubkey =>
-      columnsByName['pubkey']! as i1.GeneratedColumn<String>;
-  i1.GeneratedColumn<int> get createdAt =>
-      columnsByName['created_at']! as i1.GeneratedColumn<int>;
+  i1.GeneratedColumn<String> get pubkey => columnsByName['pubkey']! as i1.GeneratedColumn<String>;
+  i1.GeneratedColumn<int> get createdAt => columnsByName['created_at']! as i1.GeneratedColumn<int>;
 }
 
 class Shape5 extends i0.VersionedTable {
   Shape5({required super.source, required super.alias}) : super.aliased();
-  i1.GeneratedColumn<String> get pubkey =>
-      columnsByName['pubkey']! as i1.GeneratedColumn<String>;
-  i1.GeneratedColumn<int> get createdAt =>
-      columnsByName['created_at']! as i1.GeneratedColumn<int>;
+  i1.GeneratedColumn<String> get pubkey => columnsByName['pubkey']! as i1.GeneratedColumn<String>;
+  i1.GeneratedColumn<int> get createdAt => columnsByName['created_at']! as i1.GeneratedColumn<int>;
 }
 
 final class Schema5 extends i0.VersionedSchema {
@@ -294,14 +280,11 @@ class Shape6 extends i0.VersionedTable {
 }
 
 i1.GeneratedColumn<int> _column_5(String aliasedName) =>
-    i1.GeneratedColumn<int>('content_type', aliasedName, false,
-        type: i1.DriftSqlType.int);
+    i1.GeneratedColumn<int>('content_type', aliasedName, false, type: i1.DriftSqlType.int);
 i1.GeneratedColumn<int> _column_6(String aliasedName) =>
-    i1.GeneratedColumn<int>('last_sync_timestamp', aliasedName, false,
-        type: i1.DriftSqlType.int);
+    i1.GeneratedColumn<int>('last_sync_timestamp', aliasedName, false, type: i1.DriftSqlType.int);
 i1.GeneratedColumn<int> _column_7(String aliasedName) =>
-    i1.GeneratedColumn<int>('since_timestamp', aliasedName, true,
-        type: i1.DriftSqlType.int);
+    i1.GeneratedColumn<int>('since_timestamp', aliasedName, true, type: i1.DriftSqlType.int);
 i0.MigrationStepWithVersion migrationSteps({
   required Future<void> Function(i1.Migrator m, Schema2 schema) from1To2,
   required Future<void> Function(i1.Migrator m, Schema3 schema) from2To3,
