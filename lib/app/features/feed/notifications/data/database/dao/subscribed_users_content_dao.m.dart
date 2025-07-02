@@ -57,19 +57,17 @@ class SubscribedUsersContentDao extends DatabaseAccessor<NotificationsDatabase>
   }
 
   Future<DateTime?> getFirstCreatedAt({DateTime? after}) async {
-    final query = selectOnly(subscribedUsersContentTable)
-      ..addColumns([subscribedUsersContentTable.createdAt])
-      ..orderBy([OrderingTerm.asc(subscribedUsersContentTable.createdAt)])
+    final query = select(subscribedUsersContentTable)
+      ..orderBy([(c) => OrderingTerm.asc(c.createdAt)])
       ..limit(1);
 
     if (after != null) {
       query.where(
-        subscribedUsersContentTable.createdAt.isBiggerThanValue(after.microsecondsSinceEpoch),
+        (c) => c.createdAt.isBiggerThanValue(after.microsecondsSinceEpoch),
       );
     }
 
     final result = await query.getSingleOrNull();
-    final microseconds = result?.read(subscribedUsersContentTable.createdAt);
-    return microseconds?.toDateTime;
+    return result?.createdAt.toDateTime;
   }
 }
