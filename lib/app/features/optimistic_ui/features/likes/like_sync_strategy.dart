@@ -40,16 +40,15 @@ class LikeSyncStrategy implements SyncStrategy<PostLike> {
       if (likeEntity != null && likeEntity.id.isNotEmpty) {
         await deleteReaction(likeEntity);
         removeFromCache(likeEntity.cacheKey);
-        if (optimistic.likesCount == 0) {
-          removeFromCache(
-            EventCountResultEntity.cacheKeyBuilder(
-              key: optimistic.eventReference.toString(),
-              type: EventCountResultType.reactions,
-            ),
-          );
-        }
       }
     }
+
+    removeFromCache(
+      EventCountResultEntity.cacheKeyBuilder(
+        key: optimistic.eventReference.toString(),
+        type: EventCountResultType.reactions,
+      ),
+    );
     return optimistic;
   }
 }
