@@ -28,6 +28,8 @@ void main() {
         repostThrottleDelay: Duration(days: 1),
         concurrentRequests: 3,
         concurrentMediaDownloadsLimit: 3,
+        excludeUnclassifiedFromExplore: false,
+        forYouMaxRetriesMultiplier: 5,
       );
       interests = FeedInterests.fromJson({
         'music': {

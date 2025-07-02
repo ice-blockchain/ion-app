@@ -49,7 +49,12 @@ class ConfigRepository {
     final lock = _locks.putIfAbsent(configName, Lock.new);
 
     return lock.synchronized(() async {
-      final cachedData = await _getFromCache(configName, cacheStrategy, cacheMaxAge, parser);
+      final cachedData = await _getFromCache(
+        configName,
+        cacheStrategy,
+        cacheMaxAge,
+        (data) => _tryParse(parser, data),
+      );
       if (cachedData != null) {
         return cachedData;
       }
@@ -213,6 +218,14 @@ class ConfigRepository {
     } catch (error) {
       Logger.error(error);
       // Don't throw here, as this is just timestamp update
+    }
+  }
+
+  T? _tryParse<T>(T Function(String) parser, String data) {
+    try {
+      return parser(data);
+    } catch (error) {
+      return null;
     }
   }
 
