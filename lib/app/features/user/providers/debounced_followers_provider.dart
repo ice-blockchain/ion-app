@@ -1,8 +1,6 @@
 // SPDX-License-Identifier: ice License 1.0
 
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:ion/app/features/core/model/paged.f.dart';
-import 'package:ion/app/features/core/providers/debounced_provider_wrapper.dart';
 import 'package:ion/app/features/ion_connect/providers/entities_paged_data_provider.m.dart';
 import 'package:ion/app/features/user/model/user_metadata.f.dart';
 import 'package:ion/app/features/user/providers/followers_data_source_provider.r.dart';
@@ -11,12 +9,10 @@ class FollowersListState {
   const FollowersListState({
     this.entities,
     this.hasMore = false,
-    // this.isLoading = false,
   });
 
   final List<UserMetadataEntity>? entities;
   final bool hasMore;
-  // final bool isLoading;
 }
 
 final followersListStateProvider =
@@ -33,14 +29,6 @@ final followersListStateProvider =
   return FollowersListState(
     entities: entities,
     hasMore: entitiesPagedData.hasMore,
-  );
-});
-
-final debouncedFollowersListStateProvider = Provider.family<
-    StateNotifierProvider<DebouncedNotifier<FollowersListState>, FollowersListState?>,
-    ({String pubkey, String? query})>((ref, params) {
-  return followersListStateProvider(params).debounced(
-    name: 'debouncedFollowersListState',
   );
 });
 
