@@ -1,22 +1,22 @@
 {
-  "originHash" : "1ebd1c396644d49ee68e68bc60ae4e926da92d393f786e9e10575a3b090b9e42",
+  "originHash" : "520993c4b624a4be2f35270e99f32caffc2b564d592cfec2aafac3427772b88b",
   "pins" : [
     {
       "identity" : "cryptoswift",
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/krzyzanowskim/CryptoSwift.git",
       "state" : {
-        "revision" : "729e01bc9b9dab466ac85f21fb9ee2bc1c61b258",
-        "version" : "1.8.4"
+        "revision" : "132f5b209cd0251067f29cdb59c97d9f8a63252a",
+        "version" : "1.8.5"
       }
     },
     {
       "identity" : "nostr-sdk-ios",
       "kind" : "remoteSourceControl",
-      "location" : "https://github.com/nostr-sdk/nostr-sdk-ios.git",
+      "location" : "https://github.com/ice-endymion/nostr-sdk-ios",
       "state" : {
-        "revision" : "e453d2793c15ebdb9ae20f27416e398ba6142bb3",
-        "version" : "0.3.0"
+        "branch" : "main",
+        "revision" : "5361b54fa43861060a8a04c65a2798e84219206d"
       }
     },
     {

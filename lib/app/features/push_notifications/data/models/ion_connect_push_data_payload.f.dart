@@ -117,7 +117,14 @@ class IonConnectPushDataPayload {
     } else if (entity is FollowListEntity) {
       return PushNotificationType.follower;
     } else if (entity is IonConnectGiftWrapEntity) {
-      if (entity.data.kinds.containsDeep([ReplaceablePrivateDirectMessageEntity.kind.toString()])) {
+      if (entity.data.kinds.containsDeep([ReactionEntity.kind.toString()])) {
+        return PushNotificationType.chatReaction;
+      } else if (entity.data.kinds.containsDeep([FundsRequestEntity.kind.toString()])) {
+        return PushNotificationType.paymentRequest;
+      } else if (entity.data.kinds.containsDeep([WalletAssetEntity.kind.toString()])) {
+        return PushNotificationType.paymentReceived;
+      } else if (entity.data.kinds
+          .containsDeep([ReplaceablePrivateDirectMessageEntity.kind.toString()])) {
         if (decryptedEvent == null) return null;
 
         final message = ReplaceablePrivateDirectMessageEntity.fromEventMessage(decryptedEvent!);
@@ -134,44 +141,48 @@ class IonConnectPushDataPayload {
             return PushNotificationType.chatProfileMessage;
           case MessageType.sharedPost:
             return PushNotificationType.chatSharePostMessage;
-          case MessageType.visualMedia:
-            final mediaItems = message.data.media.values.toList();
-
-            if (mediaItems.every((media) => media.mediaType == MediaType.image)) {
-              final isGif = mediaItems.every((media) => media.url.contains('gif'));
-
-              if (mediaItems.length == 1) {
-                return isGif
-                    ? PushNotificationType.chatGifMessage
-                    : PushNotificationType.chatPhotoMessage;
-              } else {
-                return isGif
-                    ? PushNotificationType.chatMultiGifMessage
-                    : PushNotificationType.chatMultiPhotoMessage;
-              }
-            } else if (mediaItems.every((media) => media.mediaType == MediaType.video)) {
-              return mediaItems.length == 1
-                  ? PushNotificationType.chatVideoMessage
-                  : PushNotificationType.chatMultiVideoMessage;
-            } else {
-              return PushNotificationType.chatMultiMediaMessage;
-            }
-
           case MessageType.requestFunds:
             return PushNotificationType.paymentRequest;
           case MessageType.moneySent:
             return PushNotificationType.paymentReceived;
+          case MessageType.visualMedia:
+            return _getVisualMediaNotificationType(message);
         }
-      } else if (entity.data.kinds.containsDeep([ReactionEntity.kind.toString()])) {
-        return PushNotificationType.chatReaction;
-      } else if (entity.data.kinds.containsDeep([FundsRequestEntity.kind.toString()])) {
-        return PushNotificationType.paymentRequest;
-      } else if (entity.data.kinds.containsDeep([WalletAssetEntity.kind.toString()])) {
-        return PushNotificationType.paymentReceived;
       }
     }
 
     return null;
+  }
+
+  PushNotificationType _getVisualMediaNotificationType(
+    ReplaceablePrivateDirectMessageEntity message,
+  ) {
+    final mediaItems = message.data.media.values.toList();
+
+    if (mediaItems.every((media) => media.mediaType == MediaType.image)) {
+      final isGif = mediaItems.every((media) => media.url.contains('gif'));
+
+      if (mediaItems.length == 1) {
+        return isGif ? PushNotificationType.chatGifMessage : PushNotificationType.chatPhotoMessage;
+      } else {
+        return isGif
+            ? PushNotificationType.chatMultiGifMessage
+            : PushNotificationType.chatMultiPhotoMessage;
+      }
+    } else if (mediaItems.any((media) => media.mediaType == MediaType.video)) {
+      final videoItems = mediaItems.where((media) => media.mediaType == MediaType.video).toList();
+      final thumbItems = mediaItems.where((media) => media.thumb != null).toList();
+
+      if (videoItems.length == 1 && thumbItems.length == 1) {
+        return PushNotificationType.chatVideoMessage;
+      } else if (videoItems.length == thumbItems.length) {
+        return PushNotificationType.chatMultiVideoMessage;
+      } else {
+        return PushNotificationType.chatMultiMediaMessage;
+      }
+    }
+
+    return PushNotificationType.chatMultiMediaMessage;
   }
 
   Map<String, String> get placeholders {
