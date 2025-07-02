@@ -5,7 +5,6 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 extension ThrottledProvider<T, Q> on ProviderFamily<List<T>?, Q> {
   StreamProviderFamily<List<T>?, Q> throttled() {
     return StreamProvider.family<List<T>?, Q>((ref, params) async* {
-      // final provider = _followersEntitiesProvider(params);
       List<T>? lastValue;
       final controller = StreamController<List<T>?>();
       Timer? throttleTimer;
@@ -33,7 +32,6 @@ extension ThrottledProvider<T, Q> on ProviderFamily<List<T>?, Q> {
         emitThrottled();
       });
 
-      // Emit initial value
       lastValue = ref.read(this(params));
       emitThrottled();
 

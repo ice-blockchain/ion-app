@@ -1,7 +1,5 @@
 // SPDX-License-Identifier: ice License 1.0
 
-import 'dart:async';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
@@ -73,8 +71,7 @@ class FollowersList extends HookConsumerWidget {
     return LoadMoreBuilder(
       slivers: slivers,
       hasMore: currentEntitiesPagedData?.hasMore ?? false,
-      onLoadMore: () =>
-          ref.read(entitiesPagedDataProvider(currentDataSource).notifier).fetchEntities(),
+      onLoadMore: ref.read(entitiesPagedDataProvider(currentDataSource).notifier).fetchEntities,
     );
   }
 }
