@@ -3,11 +3,12 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 54;
+	objectVersion = 77;
 	objects = {
 
 /* Begin PBXBuildFile section */
 		0A25F4F02E0577950007CA92 /* NostrSDK in Frameworks */ = {isa = PBXBuildFile; productRef = 0A25F4EF2E0577950007CA92 /* NostrSDK */; };
+		0A35122D2E15AD01001785F4 /* NostrSDK in Frameworks */ = {isa = PBXBuildFile; productRef = 0A35122C2E15AD01001785F4 /* NostrSDK */; };
 		0A4D3DCF2E09CEBC00B34272 /* Clibsodium in Frameworks */ = {isa = PBXBuildFile; productRef = 0A4D3DCE2E09CEBC00B34272 /* Clibsodium */; };
 		0A4D3DD12E09CEBC00B34272 /* Sodium in Frameworks */ = {isa = PBXBuildFile; productRef = 0A4D3DD02E09CEBC00B34272 /* Sodium */; };
 		1498D2341E8E89220040F4C2 /* GeneratedPluginRegistrant.m in Sources */ = {isa = PBXBuildFile; fileRef = 1498D2331E8E89220040F4C2 /* GeneratedPluginRegistrant.m */; };
@@ -128,6 +129,7 @@
 				9613F56C14742CFE85B46677 /* Pods_NotificationServiceExtension.framework in Frameworks */,
 				0A4D3DCF2E09CEBC00B34272 /* Clibsodium in Frameworks */,
 				0A4D3DD12E09CEBC00B34272 /* Sodium in Frameworks */,
+				0A35122D2E15AD01001785F4 /* NostrSDK in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -298,8 +300,8 @@
 			);
 			mainGroup = 97C146E51CF9000F007C117D;
 			packageReferences = (
-				0A25F4EE2E0577950007CA92 /* XCRemoteSwiftPackageReference "nostr-sdk-ios" */,
 				0A4D3DCD2E09CEBC00B34272 /* XCRemoteSwiftPackageReference "swift-sodium" */,
+				0A35122B2E15AD01001785F4 /* XCRemoteSwiftPackageReference "nostr-sdk-ios" */,
 			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = 97C146EF1CF9000F007C117D /* Products */;
@@ -384,9 +386,13 @@
 			inputFileListPaths = (
 				"${PODS_ROOT}/Target Support Files/Pods-Runner/Pods-Runner-frameworks-${CONFIGURATION}-input-files.xcfilelist",
 			);
+			inputPaths = (
+			);
 			name = "[CP] Embed Pods Frameworks";
 			outputFileListPaths = (
 				"${PODS_ROOT}/Target Support Files/Pods-Runner/Pods-Runner-frameworks-${CONFIGURATION}-output-files.xcfilelist",
+			);
+			outputPaths = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
@@ -438,9 +444,13 @@
 			inputFileListPaths = (
 				"${PODS_ROOT}/Target Support Files/Pods-Runner/Pods-Runner-resources-${CONFIGURATION}-input-files.xcfilelist",
 			);
+			inputPaths = (
+			);
 			name = "[CP] Copy Pods Resources";
 			outputFileListPaths = (
 				"${PODS_ROOT}/Target Support Files/Pods-Runner/Pods-Runner-resources-${CONFIGURATION}-output-files.xcfilelist",
+			);
+			outputPaths = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
@@ -921,10 +931,18 @@
 /* Begin XCRemoteSwiftPackageReference section */
 		0A25F4EE2E0577950007CA92 /* XCRemoteSwiftPackageReference "nostr-sdk-ios" */ = {
 			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/nostr-sdk/nostr-sdk-ios.git";
+			repositoryURL = "https://github.com/ice-endymion/nostr-sdk-ios";
 			requirement = {
 				kind = upToNextMajorVersion;
 				minimumVersion = 0.3.0;
+			};
+		};
+		0A35122B2E15AD01001785F4 /* XCRemoteSwiftPackageReference "nostr-sdk-ios" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/ice-endymion/nostr-sdk-ios";
+			requirement = {
+				branch = main;
+				kind = branch;
 			};
 		};
 		0A4D3DCD2E09CEBC00B34272 /* XCRemoteSwiftPackageReference "swift-sodium" */ = {
@@ -941,6 +959,11 @@
 		0A25F4EF2E0577950007CA92 /* NostrSDK */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = 0A25F4EE2E0577950007CA92 /* XCRemoteSwiftPackageReference "nostr-sdk-ios" */;
+			productName = NostrSDK;
+		};
+		0A35122C2E15AD01001785F4 /* NostrSDK */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 0A35122B2E15AD01001785F4 /* XCRemoteSwiftPackageReference "nostr-sdk-ios" */;
 			productName = NostrSDK;
 		};
 		0A4D3DCE2E09CEBC00B34272 /* Clibsodium */ = {

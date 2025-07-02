@@ -44,7 +44,8 @@ class E2EDecryptionService: NIP44v2Encrypting {
         }
 
         do {
-            let decryptedContent = try decrypt(payload: content, privateKeyA: privateKey, publicKeyB: publicKey)
+            let customConversationKey = getX25519SharedSecret(privateKey: privateKey, publicKey: publicKey)
+            let decryptedContent = try decrypt(payload: content, privateKeyA: privateKey, publicKeyB: publicKey, customConversationKey: customConversationKey)
 
             guard let data = decryptedContent.data(using: .utf8) else { return nil }
 
@@ -75,6 +76,38 @@ class E2EDecryptionService: NIP44v2Encrypting {
             let x25519PrivateKeyHex = Box.SecretKey(curve25519Bytes).toHexString()
             return x25519PrivateKeyHex
         } else {
+            return nil
+        }
+    }
+
+    /// Generates a shared secret using X25519 key exchange with CryptoKit
+    /// - Parameters:
+    ///   - privateKey: The private key
+    ///   - publicKey: The public key
+    /// - Returns: The shared secret as bytes, or nil if the operation fails
+    func getX25519SharedSecret(privateKey: PrivateKey, publicKey: PublicKey) -> [UInt8]? {
+        do {
+            let privateKeyData = privateKey.dataRepresentation
+            let publicKeyData = publicKey.dataRepresentation
+            guard let cryptoKitPrivateKey = try? Curve25519.KeyAgreement.PrivateKey(rawRepresentation: privateKeyData) else {
+                NSLog("Failed to create CryptoKit private key")
+                return nil
+            }
+            
+            guard let cryptoKitPublicKey = try? Curve25519.KeyAgreement.PublicKey(rawRepresentation: publicKeyData) else {
+                NSLog("Failed to create CryptoKit public key")
+                return nil
+            }
+            
+            let sharedSecret = try cryptoKitPrivateKey.sharedSecretFromKeyAgreement(with: cryptoKitPublicKey)
+            
+            let sharedSecretData = sharedSecret.withUnsafeBytes { bytes in
+                return Data(bytes)
+            }
+            
+            return [UInt8](sharedSecretData)
+        } catch {
+            NSLog("Error generating shared secret: \(error)")
             return nil
         }
     }
