@@ -14,12 +14,14 @@ part 'synced_coins_by_symbol_group_provider.r.g.dart';
 
 typedef SyncedCoinsCache = Map<String, List<CoinInWalletData>>;
 
-@Riverpod(keepAlive: true)
+@riverpod
 class SyncedCoinsBySymbolGroupNotifier extends _$SyncedCoinsBySymbolGroupNotifier {
   late final _coinsComparator = CoinsComparator();
 
   @override
   FutureOr<SyncedCoinsCache> build() async {
+    keepAliveWhenAuthenticated(ref);
+
     // Reset state when isAuthenticated changes
     await ref.watch(authProvider.selectAsync((state) => state.isAuthenticated));
     // Reset state each time the wallet view changes
@@ -90,7 +92,9 @@ class SyncedCoinsBySymbolGroupNotifier extends _$SyncedCoinsBySymbolGroupNotifie
 Future<List<CoinInWalletData>> syncedCoinsBySymbolGroup(
   Ref ref,
   String symbolGroup,
-) async {
+) {
+  ref.watch(syncedCoinsBySymbolGroupNotifierProvider);
+
   final notifier = ref.watch(syncedCoinsBySymbolGroupNotifierProvider.notifier);
   return notifier.getCoins(symbolGroup);
 }
