@@ -163,20 +163,16 @@ class NotificationsDatabase extends _$NotificationsDatabase {
           );
         },
         from3To4: (m, schema) async {
-          await m.database.customStatement('DROP TABLE IF EXISTS subscribed_users_content_table');
-          await m.database.customStatement('DROP TABLE IF EXISTS content_table');
-          await m.database
-              .customStatement('DROP TABLE IF EXISTS account_notification_sync_state_table');
-
           await Future.wait([
             m.createTable(schema.subscribedUsersContentTable),
             m.createTable(schema.accountNotificationSyncStateTable),
           ]);
         },
         from4To5: (m, schema) async {
+          await m.database.customStatement('DROP TABLE IF EXISTS subscribed_users_content_table');
+          await m.database.customStatement('DROP TABLE IF EXISTS content_table');
           await m.database
               .customStatement('DROP TABLE IF EXISTS account_notification_sync_state_table');
-          await m.database.customStatement('DROP TABLE IF EXISTS subscribed_users_content_table');
 
           await Future.wait([
             m.createTable(schema.accountNotificationSyncStateTable),
