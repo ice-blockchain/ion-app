@@ -22,7 +22,6 @@ void main() {
         notInterestedCategoryChance: 0.5,
         followingReqMaxAge: Duration(days: 1),
         followingCacheMaxAge: Duration(days: 2),
-        forYouMaxRetriesMultiplier: 5,
         topMaxAge: Duration(days: 1),
         trendingMaxAge: Duration(days: 1),
         exploreMaxAge: Duration(days: 1),
