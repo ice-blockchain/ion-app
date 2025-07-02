@@ -251,14 +251,12 @@ Future<bool> isNicknameProven(
       false;
 }
 
-// Combined provider that waits for both verification states
 @riverpod
 Future<({bool isVerified, bool isNicknameProven})> userBadgeVerificationState(
   Ref ref,
   String pubkey,
 ) async {
-  // Wait for both providers to complete
-  final [isVerified as bool, isNicknameProven as bool] = await Future.wait([
+  final [isVerified, isNicknameProven] = await Future.wait([
     ref.watch(isUserVerifiedProvider(pubkey).future),
     ref.watch(isNicknameProvenProvider(pubkey).future),
   ]);
