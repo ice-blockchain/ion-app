@@ -107,9 +107,17 @@ class FeedMainModalPage extends ConsumerWidget {
 
               return MainModalItem(
                 item: type,
-                onTap: () {
+                onTap: () async {
                   final createFlowRouteLocation = _getCreateFlowRouteLocation(type);
-                  context.go(createFlowRouteLocation);
+                  final result = await context.push<bool>(createFlowRouteLocation);
+
+                  if ((result ?? false) && context.mounted) {
+                    WidgetsBinding.instance.addPostFrameCallback((_) {
+                      if (context.mounted) {
+                        context.pop();
+                      }
+                    });
+                  }
                 },
                 index: index,
               );
