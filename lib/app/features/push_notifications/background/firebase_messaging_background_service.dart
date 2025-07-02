@@ -14,8 +14,7 @@ import 'package:ion/app/features/ion_connect/providers/ion_connect_event_signer_
 import 'package:ion/app/features/push_notifications/data/models/ion_connect_push_data_payload.f.dart';
 import 'package:ion/app/features/push_notifications/providers/notification_data_parser_provider.r.dart';
 import 'package:ion/app/features/user/providers/user_delegation_provider.r.dart';
-import 'package:ion/app/features/user_profile/providers/user_delegation_from_db_provider.r.dart';
-import 'package:ion/app/features/user_profile/providers/user_metadata_from_db_provider.r.dart';
+import 'package:ion/app/features/user/providers/user_metadata_provider.r.dart';
 import 'package:ion/app/services/ion_connect/encrypted_message_service.r.dart';
 import 'package:ion/app/services/ion_connect/ion_connect.dart';
 import 'package:ion/app/services/local_notifications/local_notifications.r.dart';
@@ -71,14 +70,13 @@ Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
           );
         }),
         userDelegationProvider(eventMassage.pubkey).overrideWith((ref) async {
-          return ref.watch(userDelegationFromDbNotifierProvider(eventMassage.pubkey));
+          return ref.watch(userDelegationFromDbProvider(eventMassage.pubkey));
         }),
       ]);
 
       final giftUnwrapService = await riverpodContainer.read(giftUnwrapServiceProvider.future);
       final event = await giftUnwrapService.unwrap(eventMassage);
-      final userMetadata =
-          riverpodContainer.read(userMetadataFromDbNotifierProvider(event.masterPubkey));
+      final userMetadata = riverpodContainer.read(userMetadataFromDbProvider(event.masterPubkey));
 
       return (event, userMetadata);
     },

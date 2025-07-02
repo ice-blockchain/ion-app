@@ -11,7 +11,6 @@ import 'package:ion/app/features/chat/views/components/message_items/messages_co
 import 'package:ion/app/features/user/providers/badges_notifier.r.dart';
 import 'package:ion/app/features/user/providers/user_metadata_provider.r.dart';
 import 'package:ion/app/features/user_block/providers/block_list_notifier.r.dart';
-import 'package:ion/app/features/user_profile/providers/user_metadata_from_db_provider.r.dart';
 import 'package:ion/app/router/app_routes.gr.dart';
 import 'package:ion/app/utils/username.dart';
 import 'package:ion/generated/assets.gen.dart';
@@ -37,7 +36,7 @@ class OneToOneMessagingHeader extends ConsumerWidget {
         ref.watch(isNicknameProvenProvider(receiverMasterPubkey)).valueOrNull ?? true;
     final isDeleted = ref.watch(isUserDeletedProvider(receiverMasterPubkey)).valueOrNull ?? false;
 
-    final userMetadata = ref.watch(userMetadataFromDbNotifierProvider(receiverMasterPubkey))?.data;
+    final userMetadata = ref.watch(userMetadataFromDbProvider(receiverMasterPubkey))?.data;
 
     // Show skeleton while loading user data (unless deleted)
     if ((userMetadata == null) && !isDeleted) {

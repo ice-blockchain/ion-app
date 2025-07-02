@@ -10,6 +10,7 @@ import 'package:ion/app/features/ion_connect/model/event_reference.f.dart';
 import 'package:ion/app/features/ion_connect/providers/ion_connect_cache.r.dart';
 import 'package:ion/app/features/ion_connect/providers/ion_connect_notifier.r.dart';
 import 'package:ion/app/features/user/model/user_delegation.f.dart';
+import 'package:ion/app/features/user_profile/database/dao/user_delegation_dao.m.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'user_delegation_provider.r.g.dart';
@@ -108,5 +109,20 @@ class UserDelegationManager extends _$UserDelegationManager {
         ),
       ],
     );
+  }
+}
+
+@riverpod
+class UserDelegationFromDb extends _$UserDelegationFromDb {
+  @override
+  UserDelegationEntity? build(String masterPubkey) {
+    final subscription =
+        ref.watch(userDelegationDaoProvider).watch(masterPubkey).listen((delegation) {
+      state = delegation;
+    });
+
+    ref.onDispose(subscription.cancel);
+
+    return null;
   }
 }

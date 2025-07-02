@@ -138,12 +138,14 @@ class IonConnectPushDataPayload {
             final mediaItems = message.data.media.values.toList();
 
             if (mediaItems.every((media) => media.mediaType == MediaType.image)) {
+              final isGif = mediaItems.every((media) => media.url.contains('gif'));
+
               if (mediaItems.length == 1) {
-                return mediaItems.every((media) => media.url.contains('gif'))
+                return isGif
                     ? PushNotificationType.chatGifMessage
                     : PushNotificationType.chatPhotoMessage;
               } else {
-                return mediaItems.every((media) => media.url.contains('gif'))
+                return isGif
                     ? PushNotificationType.chatMultiGifMessage
                     : PushNotificationType.chatMultiPhotoMessage;
               }
