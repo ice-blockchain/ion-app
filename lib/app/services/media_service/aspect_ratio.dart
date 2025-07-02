@@ -37,7 +37,7 @@ class MediaAspectRatioResult {
 }
 
 const minVerticalMediaAspectRatio = 0.85;
-const maxHorizontalMediaAspectRatio = 2.0;
+const maxHorizontalMediaAspectRatio = 3.0;
 
 /// Calculates the aspect ratio for a list of media items.
 ///
