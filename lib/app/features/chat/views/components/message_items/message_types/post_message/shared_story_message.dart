@@ -89,15 +89,19 @@ class SharedStoryMessage extends HookConsumerWidget {
             GestureDetector(
               behavior: HitTestBehavior.opaque,
               onTap: () async {
-                final storyViewerState =
+                var storyViewerState =
                     ref.read(storyViewingControllerProvider(storyEntity.masterPubkey));
 
                 if (storyViewerState.userStories.isEmpty) {
                   await ref
                       .read(storyViewingControllerProvider(storyEntity.masterPubkey).notifier)
                       .setUserStoryByReference(storyEntity.toEventReference());
+
+                  storyViewerState =
+                      ref.read(storyViewingControllerProvider(storyEntity.masterPubkey));
                 }
-                if (context.mounted) {
+
+                if (context.mounted && storyViewerState.userStories.isNotEmpty) {
                   unawaited(
                     StoryViewerRoute(
                       pubkey: storyEntity.masterPubkey,
