@@ -144,7 +144,7 @@ bool isValidNicknameProofBadgeDefinition(
       (servicePubkeys.isEmpty || servicePubkeys.contains(badgeRef.masterPubkey)) &&
       badgeRef.kind == BadgeDefinitionEntity.kind;
 }
-fix
+
 @riverpod
 bool isUserVerifiedCachedOnly(
   Ref ref,
@@ -188,21 +188,17 @@ bool? isNicknameProvenCachedOnly(
   Ref ref,
   String pubkey,
 ) {
-  // Use only cached data - return null if we don't have enough data to determine
   final cachedProfileBadgesEntity = ref.watch(cachedProfileBadgesDataProvider(pubkey));
   final cachedUserMetadata = ref.watch(userMetadataProvider(pubkey)).valueOrNull;
 
-  // If we don't have cached user metadata, we can't determine verification
   if (cachedUserMetadata == null) {
     return null;
   }
 
-  // If we don't have cached badge data, return null (unknown) to avoid flickering
   if (cachedProfileBadgesEntity == null) {
     return null;
   }
 
-  // We have both user metadata and badge data, make determination
   final profileBadgesData = cachedProfileBadgesEntity.data;
   final servicePubkeys = ref.watch(servicePubkeysProvider).valueOrNull ?? [];
 
@@ -253,6 +249,21 @@ Future<bool> isNicknameProven(
             entry.definitionRef.dTag.endsWith('~${userMetadata.data.name}');
       }) ??
       false;
+}
+
+// Combined provider that waits for both verification states
+@riverpod
+Future<({bool isVerified, bool isNicknameProven})> userBadgeVerificationState(
+  Ref ref,
+  String pubkey,
+) async {
+  // Wait for both providers to complete
+  final [isVerified as bool, isNicknameProven as bool] = await Future.wait([
+    ref.watch(isUserVerifiedProvider(pubkey).future),
+    ref.watch(isNicknameProvenProvider(pubkey).future),
+  ]);
+
+  return (isVerified: isVerified, isNicknameProven: isNicknameProven);
 }
 
 @Riverpod(keepAlive: true)

@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/components/list_item/list_item.dart';
 import 'package:ion/app/extensions/extensions.dart';
+import 'package:ion/app/features/core/providers/debounced_provider_wrapper.dart';
 import 'package:ion/app/features/user/providers/badges_notifier.r.dart';
 
 class BadgesUserListItem extends ConsumerWidget {
@@ -46,25 +47,34 @@ class BadgesUserListItem extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    // Use cache-only providers to prevent network requests and flickering
-    final isUserVerified = ref.watch(isUserVerifiedCachedOnlyProvider(pubkey));
-    final cachedNicknameProven = ref.watch(isNicknameProvenCachedOnlyProvider(pubkey));
-    final isNicknameProven = cachedNicknameProven ?? true;
-    final hasNicknameData = cachedNicknameProven != null;
+    // Use combined provider that waits for both verification states to prevent flickering
+    final badgeVerificationState = ref.watch(userBadgeVerificationStateProvider(pubkey).debounced(
+      name: 'badgeVerificationState',
+    ));
+    final isUserVerified = badgeVerificationState?.maybeWhen(
+      orElse: () => false,
+      loading: () => false,
+      data: (data) => data.isVerified,
+    ) ?? false;
+    final isNicknameProven = badgeVerificationState?.maybeWhen(
+      orElse: () => true,
+      loading: () => true,
+      data: (data) => data.isNicknameProven,
+    ) ?? true;
 
-    return ListItem.user(
+       return ListItem.user(
       pubkey: pubkey,
       title: title,
-      subtitle: (hasNicknameData && !isNicknameProven)
-          ? Row(
+      subtitle: isNicknameProven
+          ? subtitle
+          : Row(
               mainAxisSize: MainAxisSize.min,
               children: [
                 subtitle,
                 SizedBox(width: 4.0.s),
                 Text(context.i18n.nickname_not_owned_suffix),
               ],
-            )
-          : subtitle,
+            ),
       leading: leading,
       trailing: trailing,
       border: border,

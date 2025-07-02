@@ -40,7 +40,6 @@ final debouncedFollowersListStateProvider = Provider.family<
     StateNotifierProvider<DebouncedNotifier<FollowersListState>, FollowersListState?>,
     ({String pubkey, String? query})>((ref, params) {
   return followersListStateProvider(params).debounced(
-    debounceDuration: const Duration(milliseconds: 100),
     name: 'debouncedFollowersListState',
   );
 });

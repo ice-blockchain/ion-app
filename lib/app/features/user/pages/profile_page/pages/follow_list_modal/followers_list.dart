@@ -1,5 +1,7 @@
 // SPDX-License-Identifier: ice License 1.0
 
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
@@ -25,6 +27,49 @@ final _followersEntitiesProvider = Provider.family<List<UserMetadataEntity>?, ({
   return entitiesPagedData?.data.items?.whereType<UserMetadataEntity>().toList();
 });
 
+/// Throttled stream provider for the entities list
+final throttledFollowersEntitiesProvider = StreamProvider.family<List<UserMetadataEntity>?, ({String pubkey, String? query})>((ref, params) async* {
+  final provider = _followersEntitiesProvider(params);
+  List<UserMetadataEntity>? lastValue;
+  final controller = StreamController<List<UserMetadataEntity>?>();
+  Timer? throttleTimer;
+  bool hasPending = false;
+
+  void emitThrottled() {
+    if (throttleTimer == null || !throttleTimer!.isActive) {
+      controller.add(lastValue);
+      throttleTimer = Timer(const Duration(milliseconds: 200), () {
+        if (hasPending) {
+          controller.add(lastValue);
+          hasPending = false;
+          throttleTimer = Timer(const Duration(milliseconds: 200), emitThrottled);
+        } else {
+          throttleTimer = null;
+        }
+      });
+    } else {
+      hasPending = true;
+    }
+  }
+
+  final sub = ref.listen<List<UserMetadataEntity>?>(provider, (prev, next) {
+    lastValue = next;
+    emitThrottled();
+  });
+
+  // Emit initial value
+  lastValue = ref.read(provider);
+  emitThrottled();
+
+  yield* controller.stream;
+
+  ref.onDispose(() {
+    throttleTimer?.cancel();
+    controller.close();
+    sub.close();
+  });
+});
+
 class FollowersList extends HookConsumerWidget {
   const FollowersList({required this.pubkey, super.key});
 
@@ -37,18 +82,11 @@ class FollowersList extends HookConsumerWidget {
     final searchQuery = useState('');
     final debouncedQuery = useDebounced(searchQuery.value, const Duration(milliseconds: 300)) ?? '';
 
-    // Create a debounced provider for the entities list
-    final debouncedEntitiesProvider = _followersEntitiesProvider((
-      pubkey: pubkey, 
-      query: debouncedQuery.isEmpty ? null : debouncedQuery
-    )).debounced(
-      debounceDuration: const Duration(milliseconds: 100),
-      name: 'followersEntities',
-    );
+    // Use the throttled stream provider for the entities list
+    final entitiesAsync = ref.watch(throttledFollowersEntitiesProvider((pubkey: pubkey, query: debouncedQuery.isEmpty ? null : debouncedQuery)));
+    final entities = entitiesAsync.value;
 
-    final entities = ref.watch(debouncedEntitiesProvider);
-
-    // For load more, we need the current data source
+    // For load more, we need the current data source (non-debounced for actions)
     final currentDataSource = ref.watch(followersDataSourceProvider(pubkey, query: debouncedQuery.isEmpty ? null : debouncedQuery));
     final currentEntitiesPagedData = ref.watch(entitiesPagedDataProvider(currentDataSource));
 

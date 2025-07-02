@@ -9,7 +9,7 @@ class DebouncedNotifier<T> extends StateNotifier<T?> {
   DebouncedNotifier({
     required this.ref,
     required this.originalProvider,
-    this.debounceDuration = const Duration(milliseconds: 150),
+    this.debounceDuration = const Duration(milliseconds: 500),
   }) : super(null) {
     _init();
   }
@@ -49,7 +49,7 @@ class DebouncedNotifier<T> extends StateNotifier<T?> {
 /// Generic debounced provider factory
 StateNotifierProvider<DebouncedNotifier<T>, T?> createDebouncedProvider<T, P>(
   ProviderListenable<T> originalProvider, {
-  Duration debounceDuration = const Duration(milliseconds: 150),
+  Duration debounceDuration = const Duration(milliseconds: 500),
   String? name,
 }) {
   return StateNotifierProvider<DebouncedNotifier<T>, T?>(
@@ -66,7 +66,7 @@ StateNotifierProvider<DebouncedNotifier<T>, T?> createDebouncedProvider<T, P>(
 StateNotifierProvider<DebouncedNotifier<T>, T?> createDebouncedFamilyProvider<T, P>(
   ProviderFamily<T, P> originalProviderFamily,
   P parameter, {
-  Duration debounceDuration = const Duration(milliseconds: 150),
+  Duration debounceDuration = const Duration(milliseconds: 500),
   String? name,
 }) {
   return StateNotifierProvider<DebouncedNotifier<T>, T?>(
@@ -82,7 +82,7 @@ StateNotifierProvider<DebouncedNotifier<T>, T?> createDebouncedFamilyProvider<T,
 /// Extension to make it easy to create debounced versions of providers
 extension ProviderDebouncedExtension<T> on ProviderListenable<T> {
   StateNotifierProvider<DebouncedNotifier<T>, T?> debounced({
-    Duration debounceDuration = const Duration(milliseconds: 150),
+    Duration debounceDuration = const Duration(milliseconds: 500),
     String? name,
   }) {
     return createDebouncedProvider<T, void>(
@@ -97,7 +97,7 @@ extension ProviderDebouncedExtension<T> on ProviderListenable<T> {
 extension ProviderFamilyDebouncedExtension<T, P> on ProviderFamily<T, P> {
   StateNotifierProvider<DebouncedNotifier<T>, T?> debouncedFor(
     P parameter, {
-    Duration debounceDuration = const Duration(milliseconds: 150),
+    Duration debounceDuration = const Duration(milliseconds: 500),
     String? name,
   }) {
     return createDebouncedFamilyProvider<T, P>(
@@ -107,4 +107,4 @@ extension ProviderFamilyDebouncedExtension<T, P> on ProviderFamily<T, P> {
       name: name,
     );
   }
-} 
+}
