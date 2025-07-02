@@ -12,7 +12,6 @@ class FeedConfig with _$FeedConfig {
     required double notInterestedCategoryChance,
     required int concurrentRequests,
     required int concurrentMediaDownloadsLimit,
-    required double forYouMaxRetriesMultiplier,
     @DurationMillisecondsConverter() required Duration followingReqMaxAge,
     @DurationMillisecondsConverter() required Duration followingCacheMaxAge,
     @DurationMillisecondsConverter() required Duration topMaxAge,
@@ -20,6 +19,7 @@ class FeedConfig with _$FeedConfig {
     @DurationMillisecondsConverter() required Duration exploreMaxAge,
     @DurationMillisecondsConverter() required Duration repostThrottleDelay,
     @Default(false) bool excludeUnclassifiedFromExplore,
+    @Default(5.0) double forYouMaxRetriesMultiplier,
   }) = _FeedConfig;
 
   const FeedConfig._();
