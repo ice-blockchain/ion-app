@@ -3,7 +3,6 @@
 import 'package:collection/collection.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/features/auth/providers/auth_provider.m.dart';
-import 'package:ion/app/features/feed/data/models/entities/event_count_result_data.f.dart';
 import 'package:ion/app/features/feed/data/models/entities/reaction_data.f.dart';
 import 'package:ion/app/features/feed/providers/counters/like_reaction_provider.r.dart';
 import 'package:ion/app/features/feed/providers/counters/likes_count_provider.r.dart';
@@ -94,12 +93,5 @@ class ToggleLikeNotifier extends _$ToggleLikeNotifier {
     );
 
     await service.dispatch(ToggleLikeIntent(), current);
-
-    ref.read(ionConnectCacheProvider.notifier).remove(
-          EventCountResultEntity.cacheKeyBuilder(
-            key: eventReference.toString(),
-            type: EventCountResultType.reactions,
-          ),
-        );
   }
 }
