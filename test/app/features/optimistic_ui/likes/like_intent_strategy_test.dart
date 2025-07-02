@@ -39,7 +39,7 @@ void main() {
   group('LikeSyncStrategy.send()', () {
     late bool reactionSent;
     late bool deletionSent;
-    late String? removedCacheKey;
+    late List<String> removedCacheKeys;
 
     LikeSyncStrategy strategy0({
       ReactionEntity? likeEntity,
@@ -48,14 +48,14 @@ void main() {
         sendReaction: (ReactionData _) async => reactionSent = true,
         getLikeEntity: (_) => likeEntity,
         deleteReaction: (ReactionEntity _) async => deletionSent = true,
-        removeFromCache: (key) => removedCacheKey = key,
+        removeFromCache: (key) => removedCacheKeys.add(key),
       );
     }
 
     setUp(() {
       reactionSent = false;
       deletionSent = false;
-      removedCacheKey = null;
+      removedCacheKeys = [];
     });
 
     const ref = ImmutableEventReference(
@@ -63,6 +63,8 @@ void main() {
       eventId: '42',
       kind: 1,
     );
+
+    final counterCacheKey = '${ref.eventId}:reactions';
 
     test('calls sendReaction when toggling to like', () async {
       const prev = PostLike(eventReference: ref, likesCount: 0, likedByMe: false);
@@ -73,7 +75,7 @@ void main() {
       expect(result, same(opt));
       expect(reactionSent, isTrue);
       expect(deletionSent, isFalse);
-      expect(removedCacheKey, isNull);
+      expect(removedCacheKeys, equals([counterCacheKey]));
     });
 
     test('calls deleteReaction & removeFromCache when unliking', () async {
@@ -91,7 +93,7 @@ void main() {
       expect(result, same(opt));
       expect(reactionSent, isFalse);
       expect(deletionSent, isTrue);
-      expect(removedCacheKey, 'cache/abc');
+      expect(removedCacheKeys, equals(['cache/abc', counterCacheKey]));
     });
   });
 }
