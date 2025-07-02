@@ -33,9 +33,8 @@ class OneToOneMessagingHeader extends ConsumerWidget {
     final isBlockedBy =
         ref.watch(isBlockedByNotifierProvider(receiverMasterPubkey)).valueOrNull ?? true;
     final isVerified = ref.watch(isUserVerifiedProvider(receiverMasterPubkey)).valueOrNull ?? false;
-    final nicknameProvenResult = ref.watch(isNicknameProvenProvider(receiverMasterPubkey));
-    final isNicknameProven = nicknameProvenResult.valueOrNull ?? true;
-    final hasNicknameData = nicknameProvenResult.hasValue;
+    final isNicknameProven =
+        ref.watch(isNicknameProvenProvider(receiverMasterPubkey)).valueOrNull ?? true;
     final isDeleted = ref.watch(isUserDeletedProvider(receiverMasterPubkey)).valueOrNull ?? false;
 
     final userMetadata = ref.watch(userMetadataFromDbNotifierProvider(receiverMasterPubkey))?.data;
@@ -109,16 +108,17 @@ class OneToOneMessagingHeader extends ConsumerWidget {
                           ],
                         ),
                         SizedBox(height: 1.0.s),
-                        (hasNicknameData && !isNicknameProven)
-                            ? Row(
-                                mainAxisSize: MainAxisSize.min,
-                                children: [
-                                  subtitle,
-                                  SizedBox(width: 4.0.s),
-                                  Text(context.i18n.nickname_not_owned_suffix),
-                                ],
-                              )
-                            : subtitle,
+                        if (isNicknameProven)
+                          subtitle
+                        else
+                          Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              subtitle,
+                              SizedBox(width: 4.0.s),
+                              Text(context.i18n.nickname_not_owned_suffix),
+                            ],
+                          ),
                       ],
                     ),
                   ),
