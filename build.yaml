@@ -31,8 +31,8 @@ targets:
         options:
           use_sql_column_name_as_json_key: true
           databases:
-            chat_database: lib/app/features/chat/model/database/chat_database.d.dart
-            notifications_database: lib/app/features/feed/notifications/data/database/notifications_database.d.dart
-            wallets_database: lib/app/features/wallets/data/database/wallets_database.d.dart
-            event_messages_database: lib/app/features/ion_connect/database/event_messages_database.d.dart
-            following_feed_database: lib/app/features/feed/data/database/following_feed_database/following_feed_database.d.dart
+            chat_database: lib/app/features/chat/model/database/chat_database.m.dart
+            notifications_database: lib/app/features/feed/notifications/data/database/notifications_database.m.dart
+            wallets_database: lib/app/features/wallets/data/database/wallets_database.m.dart
+            event_messages_database: lib/app/features/ion_connect/database/event_messages_database.m.dart
+            following_feed_database: lib/app/features/feed/data/database/following_feed_database/following_feed_database.m.dart
