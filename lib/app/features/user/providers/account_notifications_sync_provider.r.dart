@@ -285,9 +285,7 @@ class AccountNotificationsSync extends _$AccountNotificationsSync {
 
     await Future.wait(eventFutures);
 
-    final actualNewTimestamp = newLastCreatedAt == latestEventTimestamp.microsecondsSinceEpoch
-        ? latestEventTimestamp.add(const Duration(microseconds: 1))
-        : DateTime.fromMicrosecondsSinceEpoch(newLastCreatedAt);
+    final actualNewTimestamp = DateTime.fromMicrosecondsSinceEpoch(newLastCreatedAt);
 
     await repository.updateSyncState(contentTypeEnum, actualNewTimestamp);
   }
