@@ -8,7 +8,7 @@ part 'registration_restrictions_provider.r.g.dart';
 
 enum RegistrationRestrictionType { fullyAllowed, earlyAccessOnly, restricted }
 
-@Riverpod(keepAlive: true)
+@riverpod
 Future<RegistrationRestrictionType> registrationRestriction(Ref ref) async {
   final feedConfig = await ref.watch(feedConfigProvider.future);
 
