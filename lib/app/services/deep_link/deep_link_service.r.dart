@@ -46,15 +46,16 @@ final class DeepLinkService {
       registerOnAppOpenAttributionCallback: true,
     );
 
+    //For some reason AppsFlyer on Android and iOS returns different results...
+
+    //Android
     if (result case final String result) {
       _isInitialized = result == 'success';
     }
-
+    //iOS
     if (result case final Map<dynamic, dynamic> result) {
       _isInitialized = result['status'] == 'OK';
     }
-
-    Logger.log('AppsFlyer SDK start triggered');
   }
 
   /// Creates a deep link for the given path using AppsFlyer
