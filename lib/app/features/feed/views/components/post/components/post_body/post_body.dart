@@ -28,9 +28,10 @@ class PostBody extends HookConsumerWidget {
     this.accentTheme = false,
     this.isTextSelectable = false,
     this.maxLines = 6,
-    this.framedEventReference,
-    this.sidePadding,
     this.onVideoTap,
+    this.sidePadding,
+    this.framedEventReference,
+    this.videoAutoplay = true,
     super.key,
   });
 
@@ -41,6 +42,7 @@ class PostBody extends HookConsumerWidget {
   final int? maxLines;
   final double? sidePadding;
   final OnVideoTapCallback? onVideoTap;
+  final bool videoAutoplay;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -166,9 +168,10 @@ class PostBody extends HookConsumerWidget {
                 padding: EdgeInsetsDirectional.only(top: 10.0.s),
                 child: PostMedia(
                   media: media,
-                  eventReference: entity.toEventReference(),
-                  sidePadding: sidePadding,
                   onVideoTap: onVideoTap,
+                  sidePadding: sidePadding,
+                  videoAutoplay: videoAutoplay,
+                  eventReference: entity.toEventReference(),
                   framedEventReference: framedEventReference,
                 ),
               ),

@@ -16,12 +16,14 @@ class PostMedia extends HookConsumerWidget {
   const PostMedia({
     required this.media,
     required this.eventReference,
-    this.framedEventReference,
-    this.sidePadding,
     this.onVideoTap,
+    this.sidePadding,
+    this.framedEventReference,
+    this.videoAutoplay = true,
     super.key,
   });
 
+  final bool videoAutoplay;
   final List<MediaAttachment> media;
   final EventReference eventReference;
   final EventReference? framedEventReference;
@@ -65,10 +67,11 @@ class PostMedia extends HookConsumerWidget {
     return Padding(
       padding: EdgeInsets.symmetric(horizontal: sidePadding ?? 16.0.s),
       child: PostMediaItem(
+        onVideoTap: onVideoTap,
         mediaItem: knownMedia[0],
         aspectRatio: aspectRatio,
+        videoAutoplay: videoAutoplay,
         eventReference: eventReference,
-        onVideoTap: onVideoTap,
         framedEventReference: framedEventReference,
       ),
     );

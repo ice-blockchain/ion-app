@@ -23,10 +23,12 @@ class VideoPreview extends HookConsumerWidget {
     required this.videoUrl,
     required this.authorPubkey,
     this.thumbnailUrl,
+    this.autoplay = true,
     this.framedEventReference,
     super.key,
   });
 
+  final bool autoplay;
   final String videoUrl;
   final String authorPubkey;
   final String? thumbnailUrl;
@@ -77,7 +79,7 @@ class VideoPreview extends HookConsumerWidget {
           return;
         }
         final shouldBeActive = isFullyVisible.value && isRouteFocused.value;
-        if (shouldBeActive && !controller.value.isPlaying) {
+        if (autoplay && shouldBeActive && !controller.value.isPlaying) {
           controller.play();
         } else if (!shouldBeActive && controller.value.isPlaying) {
           controller.pause();

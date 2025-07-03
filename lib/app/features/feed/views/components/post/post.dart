@@ -41,6 +41,7 @@ class Post extends ConsumerWidget {
     this.quotedEventFooter,
     this.onDelete,
     this.accentTheme = false,
+    this.videoAutoplay = true,
     this.isTextSelectable = false,
     this.bodyMaxLines = 6,
     this.contentWrapper,
@@ -62,6 +63,7 @@ class Post extends ConsumerWidget {
   final VoidCallback? onDelete;
   final bool isTextSelectable;
   final int? bodyMaxLines;
+  final bool videoAutoplay;
   final Widget Function(Widget content)? contentWrapper;
   final OnVideoTapCallback? onVideoTap;
 
@@ -92,10 +94,11 @@ class Post extends ConsumerWidget {
         SizedBox(height: headerOffset ?? 10.0.s),
         PostBody(
           entity: entity,
-          accentTheme: accentTheme,
-          isTextSelectable: isTextSelectable,
           maxLines: bodyMaxLines,
           onVideoTap: onVideoTap,
+          accentTheme: accentTheme,
+          videoAutoplay: videoAutoplay,
+          isTextSelectable: isTextSelectable,
           framedEventReference: repostEventReference ?? quotedEventReference,
         ),
         ScreenSideOffset.small(
@@ -326,6 +329,7 @@ final class _QuotedPost extends ConsumerWidget {
         },
         child: AbsorbPointer(
           child: Post(
+            videoAutoplay: false,
             accentTheme: accentTheme,
             eventReference: eventReference,
             displayQuote: false,
