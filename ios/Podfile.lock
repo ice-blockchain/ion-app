@@ -593,6 +593,8 @@ EXTERNAL SOURCES:
 SPEC CHECKSUMS:
   AppAuth: d4f13a8fe0baf391b2108511793e4b479691fb73
   AppCheckCore: cc8fd0a3a230ddd401f326489c99990b013f0c4f
+  appsflyer_sdk: 8c19d2faa90094292e5a1849cd77549e75817334
+  AppsFlyerFramework: fe5303bffcdfd941d5f570c2d21eaaea982e7bdc
   audio_waveforms: cd736909ebc6b6a164eb74701d8c705ce3241e1c
   BanubaARCloudSDK: e82c8eb19757b1a8d83167a4985a7eb1f00f80cc
   BanubaAudioBrowserSDK: f54c8c98ce489c1d5df8f1a117dddebceab2b6e2
