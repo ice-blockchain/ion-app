@@ -13,7 +13,9 @@ import 'package:ion/app/features/core/providers/env_provider.r.dart';
 import 'package:ion/app/features/feed/create_article/providers/draft_article_provider.m.dart';
 import 'package:ion/app/features/feed/data/models/entities/article_data.f.dart';
 import 'package:ion/app/features/feed/data/models/feed_interests.f.dart';
+import 'package:ion/app/features/feed/data/models/feed_interests_interaction.dart';
 import 'package:ion/app/features/feed/data/models/who_can_reply_settings_option.f.dart';
+import 'package:ion/app/features/feed/providers/feed_user_interests_provider.r.dart';
 import 'package:ion/app/features/gallery/providers/gallery_provider.r.dart';
 import 'package:ion/app/features/ion_connect/model/action_source.f.dart';
 import 'package:ion/app/features/ion_connect/model/color_label.f.dart';
@@ -129,6 +131,8 @@ class CreateArticle extends _$CreateArticle {
       _createArticleNotifierStreamController.add(article);
 
       ref.read(draftArticleProvider.notifier).clear();
+
+      await _updateInterests(article);
     });
   }
 
@@ -436,5 +440,16 @@ class CreateArticle extends _$CreateArticle {
     }
 
     return defaultPath;
+  }
+
+  Future<void> _updateInterests(ArticleEntity article) async {
+    final tags = article.data.relatedHashtags ?? [];
+    final interactionCategories = tags.map((tag) => tag.value).toList();
+
+    if (interactionCategories.isNotEmpty) {
+      await ref
+          .read(feedUserInterestsNotifierProvider.notifier)
+          .updateInterests(FeedInterestInteraction.createArticle, interactionCategories);
+    }
   }
 }

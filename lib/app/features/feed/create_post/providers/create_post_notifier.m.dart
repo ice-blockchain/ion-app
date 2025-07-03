@@ -18,10 +18,12 @@ import 'package:ion/app/features/feed/data/models/entities/article_data.f.dart';
 import 'package:ion/app/features/feed/data/models/entities/modifiable_post_data.f.dart';
 import 'package:ion/app/features/feed/data/models/entities/post_data.f.dart';
 import 'package:ion/app/features/feed/data/models/feed_interests.f.dart';
+import 'package:ion/app/features/feed/data/models/feed_interests_interaction.dart';
 import 'package:ion/app/features/feed/data/models/who_can_reply_settings_option.f.dart';
 import 'package:ion/app/features/feed/polls/models/poll_data.f.dart';
 import 'package:ion/app/features/feed/providers/counters/replies_count_provider.r.dart';
 import 'package:ion/app/features/feed/providers/counters/reposts_count_provider.r.dart';
+import 'package:ion/app/features/feed/providers/feed_user_interests_provider.r.dart';
 import 'package:ion/app/features/ion_connect/model/action_source.f.dart';
 import 'package:ion/app/features/ion_connect/model/entity_data_with_parent.dart';
 import 'package:ion/app/features/ion_connect/model/entity_data_with_settings.dart';
@@ -135,6 +137,8 @@ class CreatePostNotifier extends _$CreatePostNotifier {
       if (parentEvent != null) {
         ref.read(repliesCountProvider(parentEvent).notifier).addOne();
       }
+
+      await _updateInterests(post);
     });
   }
 
@@ -617,5 +621,26 @@ class CreatePostNotifier extends _$CreatePostNotifier {
       ArticleEntity() => entity.data.relatedHashtags,
       _ => null,
     };
+  }
+
+  Future<void> _updateInterests(ModifiablePostEntity post) async {
+    final tags = post.data.relatedHashtags ?? [];
+    if (tags.isEmpty) return;
+
+    final interaction = switch (post.data) {
+      _ when post.data.quotedEvent != null => FeedInterestInteraction.quote,
+      _ when post.data.relatedEvents != null => switch (post.data.relatedEvents) {
+          [final a, final b] when a.eventReference == b.eventReference =>
+            FeedInterestInteraction.addTopReply,
+          _ => FeedInterestInteraction.addNestedReply,
+        },
+      _ => FeedInterestInteraction.createPost,
+    };
+
+    final interactionCategories = tags.map((tag) => tag.value).toList();
+
+    await ref
+        .read(feedUserInterestsNotifierProvider.notifier)
+        .updateInterests(interaction, interactionCategories);
   }
 }

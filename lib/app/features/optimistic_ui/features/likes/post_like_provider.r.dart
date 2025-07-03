@@ -2,13 +2,19 @@
 
 import 'package:collection/collection.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:ion/app/exceptions/exceptions.dart';
 import 'package:ion/app/features/auth/providers/auth_provider.m.dart';
-import 'package:ion/app/features/feed/data/models/entities/event_count_result_data.f.dart';
+import 'package:ion/app/features/feed/data/models/entities/article_data.f.dart';
+import 'package:ion/app/features/feed/data/models/entities/modifiable_post_data.f.dart';
+import 'package:ion/app/features/feed/data/models/entities/post_data.f.dart';
 import 'package:ion/app/features/feed/data/models/entities/reaction_data.f.dart';
+import 'package:ion/app/features/feed/data/models/feed_interests_interaction.dart';
 import 'package:ion/app/features/feed/providers/counters/like_reaction_provider.r.dart';
 import 'package:ion/app/features/feed/providers/counters/likes_count_provider.r.dart';
+import 'package:ion/app/features/feed/providers/feed_user_interests_provider.r.dart';
 import 'package:ion/app/features/ion_connect/model/event_reference.f.dart';
 import 'package:ion/app/features/ion_connect/providers/ion_connect_cache.r.dart';
+import 'package:ion/app/features/ion_connect/providers/ion_connect_entity_provider.r.dart';
 import 'package:ion/app/features/optimistic_ui/core/operation_manager.dart';
 import 'package:ion/app/features/optimistic_ui/core/optimistic_service.dart';
 import 'package:ion/app/features/optimistic_ui/features/likes/like_sync_strategy_provider.r.dart';
@@ -95,11 +101,38 @@ class ToggleLikeNotifier extends _$ToggleLikeNotifier {
 
     await service.dispatch(ToggleLikeIntent(), current);
 
-    ref.read(ionConnectCacheProvider.notifier).remove(
-          EventCountResultEntity.cacheKeyBuilder(
-            key: eventReference.toString(),
-            type: EventCountResultType.reactions,
-          ),
-        );
+    if (!current.likedByMe) {
+      await _updateInterestsOnLike(eventReference);
+    }
+  }
+
+  Future<void> _updateInterestsOnLike(EventReference eventReference) async {
+    final entity = await ref.read(ionConnectEntityProvider(eventReference: eventReference).future);
+
+    if (entity == null) throw EntityNotFoundException(eventReference);
+
+    final hasParent = switch (entity) {
+      ModifiablePostEntity() => entity.data.parentEvent != null,
+      PostEntity() => entity.data.parentEvent != null,
+      ArticleEntity() => false,
+      _ => throw UnsupportedEntityType(entity)
+    };
+
+    final tags = switch (entity) {
+      ModifiablePostEntity() => entity.data.relatedHashtags,
+      PostEntity() => entity.data.relatedHashtags,
+      ArticleEntity() => entity.data.relatedHashtags,
+      _ => throw UnsupportedEntityType(entity)
+    };
+
+    final interaction =
+        hasParent ? FeedInterestInteraction.likeReply : FeedInterestInteraction.likePostOrArticle;
+    final interactionCategories = tags?.map((tag) => tag.value).toList() ?? [];
+
+    if (interactionCategories.isNotEmpty) {
+      await ref
+          .read(feedUserInterestsNotifierProvider.notifier)
+          .updateInterests(interaction, interactionCategories);
+    }
   }
 }

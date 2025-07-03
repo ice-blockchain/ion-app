@@ -1,5 +1,6 @@
 // SPDX-License-Identifier: ice License 1.0
 
+import 'package:ion/app/features/feed/data/models/entities/event_count_result_data.f.dart';
 import 'package:ion/app/features/feed/data/models/entities/post_data.f.dart';
 import 'package:ion/app/features/feed/data/models/entities/reaction_data.f.dart';
 import 'package:ion/app/features/ion_connect/model/event_reference.f.dart';
@@ -41,6 +42,13 @@ class LikeSyncStrategy implements SyncStrategy<PostLike> {
         removeFromCache(likeEntity.cacheKey);
       }
     }
+
+    removeFromCache(
+      EventCountResultEntity.cacheKeyBuilder(
+        key: optimistic.eventReference.toString(),
+        type: EventCountResultType.reactions,
+      ),
+    );
     return optimistic;
   }
 }

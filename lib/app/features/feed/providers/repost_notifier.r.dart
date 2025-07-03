@@ -9,7 +9,9 @@ import 'package:ion/app/features/feed/data/models/entities/generic_repost.f.dart
 import 'package:ion/app/features/feed/data/models/entities/modifiable_post_data.f.dart';
 import 'package:ion/app/features/feed/data/models/entities/post_data.f.dart';
 import 'package:ion/app/features/feed/data/models/entities/repost_data.f.dart';
+import 'package:ion/app/features/feed/data/models/feed_interests_interaction.dart';
 import 'package:ion/app/features/feed/providers/counters/reposts_count_provider.r.dart';
+import 'package:ion/app/features/feed/providers/feed_user_interests_provider.r.dart';
 import 'package:ion/app/features/ion_connect/model/action_source.f.dart';
 import 'package:ion/app/features/ion_connect/model/event_reference.f.dart';
 import 'package:ion/app/features/ion_connect/model/ion_connect_entity.dart';
@@ -83,6 +85,25 @@ class RepostNotifier extends _$RepostNotifier {
       }
 
       ref.read(repostsCountProvider(eventReference).notifier).addOne();
+
+      await _updateInterests(entity);
     });
+  }
+
+  Future<void> _updateInterests(IonConnectEntity repostedEntity) async {
+    final tags = switch (repostedEntity) {
+      ModifiablePostEntity() => repostedEntity.data.relatedHashtags,
+      PostEntity() => repostedEntity.data.relatedHashtags,
+      ArticleEntity() => repostedEntity.data.relatedHashtags,
+      _ => throw UnsupportedEntityType(repostedEntity)
+    };
+
+    final interactionCategories = tags?.map((tag) => tag.value).toList() ?? [];
+
+    if (interactionCategories.isNotEmpty) {
+      await ref
+          .read(feedUserInterestsNotifierProvider.notifier)
+          .updateInterests(FeedInterestInteraction.repost, interactionCategories);
+    }
   }
 }
