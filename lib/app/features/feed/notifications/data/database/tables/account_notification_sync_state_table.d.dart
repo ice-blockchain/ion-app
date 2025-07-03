@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: ice License 1.0
 
 import 'package:drift/drift.dart';
-import 'package:ion/app/features/feed/notifications/data/database/tables/content_type.d.dart';
+import 'package:ion/app/features/feed/notifications/data/model/content_type.dart';
 
 @DataClassName('AccountNotificationSyncState')
 class AccountNotificationSyncStateTable extends Table {

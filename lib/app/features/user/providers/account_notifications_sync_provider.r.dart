@@ -7,7 +7,7 @@ import 'package:ion/app/features/core/providers/env_provider.r.dart';
 import 'package:ion/app/features/feed/data/models/entities/article_data.f.dart';
 import 'package:ion/app/features/feed/data/models/entities/modifiable_post_data.f.dart';
 import 'package:ion/app/features/feed/data/models/entities/post_data.f.dart';
-import 'package:ion/app/features/feed/notifications/data/database/tables/content_type.d.dart';
+import 'package:ion/app/features/feed/notifications/data/model/content_type.dart';
 import 'package:ion/app/features/feed/notifications/data/repository/account_notification_sync_repository.r.dart';
 import 'package:ion/app/features/feed/notifications/data/repository/content_repository.r.dart';
 import 'package:ion/app/features/ion_connect/ion_connect.dart';
