@@ -701,6 +701,7 @@
   "poll_time_less_than_minute": "less than a minute",
   "chat_recents_money_request_message": "Money requested",
   "toolbar_link_title": "Add a link",
+  "toolbar_link_placeholder": "https://example.com",
   "messaging_empty_description": "Messages and voices are end-to-end encrypted.",
   "chat_modal_title": "Start conversation",
   "chat_modal_private_description": "Start a private, one-on-one chat",

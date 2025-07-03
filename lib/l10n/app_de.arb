@@ -695,6 +695,7 @@
   "poll_time_less_than_minute": "weniger als eine Minute",
   "chat_recents_money_request_message": "Geld angefordert",
   "toolbar_link_title": "Link hinzufügen",
+  "toolbar_link_placeholder": "https://example.com",
   "messaging_empty_description": "Nachrichten sind Ende-zu-Ende verschlüsselt.",
   "chat_modal_title": "Konversation starten",
   "chat_modal_private_description": "Privaten Einzelchat starten",
