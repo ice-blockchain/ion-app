@@ -62,11 +62,11 @@ class ContentRepository implements IonNotificationRepository {
 
   ContentType? _getContentType(IonConnectEntity entity) {
     return switch (entity) {
-      PostEntity() when entity.data.videos.isNotEmpty => ContentType.videos,
       PostEntity() when entity.data.expiration != null => ContentType.stories,
+      PostEntity() when entity.data.videos.isNotEmpty => ContentType.videos,
       PostEntity() => ContentType.posts,
-      ModifiablePostEntity() when entity.data.videos.isNotEmpty => ContentType.videos,
       ModifiablePostEntity() when entity.data.expiration != null => ContentType.stories,
+      ModifiablePostEntity() when entity.data.videos.isNotEmpty => ContentType.videos,
       ModifiablePostEntity() => ContentType.posts,
       ArticleEntity() => ContentType.articles,
       _ => null,
