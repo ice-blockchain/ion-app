@@ -60,7 +60,6 @@ class SignInStep extends HookConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final isPasskeyAvailable = ref.watch(isPasskeyAvailableProvider).valueOrNull ?? false;
-    final registrationRestrictionFuture = ref.read(registrationRestrictionProvider.future);
     final isProcessing = useState(false);
 
     final onSuggestToCreatePasskeyCreds = useOnSuggestToCreateLocalPasskeyCreds(ref);
@@ -116,7 +115,8 @@ class SignInStep extends HookConsumerWidget {
                     onPressed: () async {
                       isProcessing.value = true;
                       try {
-                        final registrationRestrictionType = await registrationRestrictionFuture;
+                        final registrationRestrictionType =
+                            await ref.read(registrationRestrictionProvider.future);
                         if (context.mounted == false) {
                           return;
                         }

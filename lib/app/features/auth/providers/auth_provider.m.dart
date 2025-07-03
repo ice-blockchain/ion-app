@@ -4,6 +4,7 @@ import 'dart:async';
 
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:ion/app/extensions/bool.dart';
 import 'package:ion/app/features/auth/providers/local_passkey_creds_provider.r.dart';
 import 'package:ion/app/features/core/providers/main_wallet_provider.r.dart';
 import 'package:ion/app/features/ion_connect/providers/ion_connect_event_signer_provider.r.dart';
@@ -178,4 +179,18 @@ void onLogout(Ref ref, void Function() callback) {
 void keepAliveWhenAuthenticated(Ref ref) {
   final keepAlive = ref.keepAlive();
   onLogout(ref, keepAlive.close);
+}
+
+void onLogin(Ref ref, void Function() callback) {
+  ref.listen<bool?>(authProvider.select((state) => state.valueOrNull?.isAuthenticated),
+      (prev, next) {
+    if (prev != null && prev == false && next.falseOrValue == true) {
+      callback();
+    }
+  });
+}
+
+void keepAliveWhileUnauthenticated(Ref ref) {
+  final keepAlive = ref.keepAlive();
+  onLogin(ref, keepAlive.close);
 }

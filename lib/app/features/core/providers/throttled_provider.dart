@@ -3,6 +3,7 @@
 import 'dart:async';
 
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+
 extension ThrottledProvider<T, Q> on ProviderFamily<List<T>?, Q> {
   StreamProviderFamily<List<T>?, Q> throttled() {
     return StreamProvider.family<List<T>?, Q>((ref, params) async* {

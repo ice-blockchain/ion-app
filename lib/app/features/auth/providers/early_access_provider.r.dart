@@ -1,5 +1,6 @@
 // SPDX-License-Identifier: ice License 1.0
 
+import 'package:ion/app/features/auth/providers/auth_provider.m.dart';
 import 'package:ion/app/services/ion_identity/ion_identity_provider.r.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
@@ -21,10 +22,11 @@ class EarlyAccessNotifier extends _$EarlyAccessNotifier {
   }
 }
 
-@Riverpod(keepAlive: true)
+@riverpod
 class EarlyAccessEmail extends _$EarlyAccessEmail {
   @override
   String? build() {
+    keepAliveWhileUnauthenticated(ref);
     return null;
   }
 

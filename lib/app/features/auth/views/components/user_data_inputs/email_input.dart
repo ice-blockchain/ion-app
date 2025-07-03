@@ -6,7 +6,7 @@ import 'package:ion/app/features/auth/views/components/user_data_inputs/general_
 import 'package:ion/app/utils/validators.dart';
 import 'package:ion/generated/assets.gen.dart';
 
-const int _nameMaxLength = 70;
+const int _nameMaxLength = 320;
 
 class EmailInput extends StatelessWidget {
   const EmailInput({
