@@ -624,7 +624,8 @@ class CreatePostNotifier extends _$CreatePostNotifier {
   }
 
   Future<void> _updateInterests(ModifiablePostEntity post) async {
-    final tags = post.data.relatedHashtags;
+    final tags = post.data.relatedHashtags ?? [];
+    if (tags.isEmpty) return;
 
     final interaction = switch (post.data) {
       _ when post.data.quotedEvent != null => FeedInterestInteraction.quote,
@@ -636,12 +637,10 @@ class CreatePostNotifier extends _$CreatePostNotifier {
       _ => FeedInterestInteraction.createPost,
     };
 
-    final interactionCategories = tags?.map((tag) => tag.value).toList() ?? [];
+    final interactionCategories = tags.map((tag) => tag.value).toList();
 
-    if (interactionCategories.isNotEmpty) {
-      await ref
-          .read(feedUserInterestsNotifierProvider.notifier)
-          .updateInterests(interaction, interactionCategories);
-    }
+    await ref
+        .read(feedUserInterestsNotifierProvider.notifier)
+        .updateInterests(interaction, interactionCategories);
   }
 }
