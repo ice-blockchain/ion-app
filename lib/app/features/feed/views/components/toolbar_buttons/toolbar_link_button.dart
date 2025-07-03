@@ -62,6 +62,15 @@ class ToolbarLinkButton extends HookWidget {
               const SizedBox(height: 10),
               CupertinoTextField(
                 controller: linkController,
+                placeholder: context.i18n.toolbar_link_placeholder,
+                placeholderStyle: TextStyle(
+                  color: context.theme.appColors.tertararyText,
+                  fontSize: 13,
+                ),
+                style: TextStyle(
+                  color: context.theme.appColors.primaryText,
+                  fontSize: 13,
+                ),
               ),
             ],
           ),
