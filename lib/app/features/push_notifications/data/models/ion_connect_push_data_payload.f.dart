@@ -24,6 +24,7 @@ import 'package:ion/app/features/user/model/user_delegation.f.dart';
 import 'package:ion/app/features/user/model/user_metadata.f.dart';
 import 'package:ion/app/features/wallets/model/entities/funds_request_entity.f.dart';
 import 'package:ion/app/features/wallets/model/entities/wallet_asset_entity.f.dart';
+import 'package:ion/app/utils/image_path.dart';
 
 part 'ion_connect_push_data_payload.f.freezed.dart';
 part 'ion_connect_push_data_payload.f.g.dart';
@@ -160,7 +161,7 @@ class IonConnectPushDataPayload {
     final mediaItems = message.data.media.values.toList();
 
     if (mediaItems.every((media) => media.mediaType == MediaType.image)) {
-      final isGif = mediaItems.every((media) => media.url.contains('gif'));
+      final isGif = mediaItems.every((media) => media.url.isGif);
 
       if (mediaItems.length == 1) {
         return isGif ? PushNotificationType.chatGifMessage : PushNotificationType.chatPhotoMessage;
