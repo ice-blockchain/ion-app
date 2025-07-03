@@ -96,7 +96,7 @@ class InterestSetData with _$InterestSetData implements EventSerializable, Repla
   ReplaceableEventReference toReplaceableEventReference(String pubkey) {
     return ReplaceableEventReference(
       kind: InterestSetEntity.kind,
-      pubkey: pubkey,
+      masterPubkey: pubkey,
       dTag: type.toShortString(),
     );
   }

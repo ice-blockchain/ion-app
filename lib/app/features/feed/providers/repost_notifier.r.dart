@@ -74,7 +74,7 @@ class RepostNotifier extends _$RepostNotifier {
         ionNotifier.sendEvent(repostEvent),
         ionNotifier.sendEvent(
           repostEvent,
-          actionSource: ActionSourceUser(eventReference.pubkey),
+          actionSource: ActionSourceUser(eventReference.masterPubkey),
           metadataBuilders: [userEventsMetadataBuilder],
           cache: false,
         )

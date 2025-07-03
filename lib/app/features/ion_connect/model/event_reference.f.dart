@@ -41,7 +41,7 @@ abstract class EventReference {
     };
   }
 
-  String get pubkey;
+  String get masterPubkey;
 
   String encode();
 
@@ -55,7 +55,7 @@ abstract class EventReference {
 @Freezed(toStringOverride: false)
 class ImmutableEventReference with _$ImmutableEventReference implements EventReference {
   const factory ImmutableEventReference({
-    required String pubkey,
+    required String masterPubkey,
     required String eventId,
     int? kind,
   }) = _ImmutableEventReference;
@@ -67,7 +67,7 @@ class ImmutableEventReference with _$ImmutableEventReference implements EventRef
       throw IncorrectEventTagNameException(actual: tag[0], expected: tagName);
     }
 
-    return ImmutableEventReference(pubkey: tag[3], eventId: tag[1]);
+    return ImmutableEventReference(masterPubkey: tag[3], eventId: tag[1]);
   }
 
   factory ImmutableEventReference.fromShareableIdentifier(ShareableIdentifier identifier) {
@@ -77,12 +77,12 @@ class ImmutableEventReference with _$ImmutableEventReference implements EventRef
       throw IncorrectShareableIdentifierException(identifier);
     }
 
-    return ImmutableEventReference(eventId: special, pubkey: author, kind: kind);
+    return ImmutableEventReference(eventId: special, masterPubkey: author, kind: kind);
   }
 
   @override
   List<String> toTag() {
-    return [tagName, eventId, '', pubkey];
+    return [tagName, eventId, '', masterPubkey];
   }
 
   @override
@@ -91,7 +91,7 @@ class ImmutableEventReference with _$ImmutableEventReference implements EventRef
       IonConnectUriIdentifierService(bech32Service: Bech32Service()).encodeShareableIdentifiers(
         prefix: IonConnectProtocolIdentifierType.nevent,
         special: eventId,
-        author: pubkey,
+        author: masterPubkey,
         kind: kind,
       ),
     );
@@ -118,7 +118,7 @@ class ImmutableEventReference with _$ImmutableEventReference implements EventRef
 @Freezed(toStringOverride: false)
 class ReplaceableEventReference with _$ReplaceableEventReference implements EventReference {
   const factory ReplaceableEventReference({
-    required String pubkey,
+    required String masterPubkey,
     required int kind,
     @Default('') String dTag,
   }) = _ReplaceableEventReference;
@@ -139,7 +139,7 @@ class ReplaceableEventReference with _$ReplaceableEventReference implements Even
     if (prefix == IonConnectProtocolIdentifierType.nprofile) {
       return ReplaceableEventReference(
         kind: UserMetadataEntity.kind,
-        pubkey: special,
+        masterPubkey: special,
       );
     } else {
       if (author == null || kind == null) {
@@ -148,7 +148,7 @@ class ReplaceableEventReference with _$ReplaceableEventReference implements Even
 
       return ReplaceableEventReference(
         kind: kind,
-        pubkey: author,
+        masterPubkey: author,
         dTag: special,
       );
     }
@@ -159,7 +159,7 @@ class ReplaceableEventReference with _$ReplaceableEventReference implements Even
 
     return ReplaceableEventReference(
       kind: int.parse(parts[0]),
-      pubkey: parts[1],
+      masterPubkey: parts[1],
       dTag: parts[2],
     );
   }
@@ -168,7 +168,7 @@ class ReplaceableEventReference with _$ReplaceableEventReference implements Even
   List<String> toTag() {
     return [
       tagName,
-      [kind, pubkey, dTag].join(EventReference.separator),
+      [kind, masterPubkey, dTag].join(EventReference.separator),
     ];
   }
 
@@ -178,7 +178,7 @@ class ReplaceableEventReference with _$ReplaceableEventReference implements Even
       return IonConnectUriProtocolService().encode(
         IonConnectUriIdentifierService(bech32Service: Bech32Service()).encodeShareableIdentifiers(
           prefix: IonConnectProtocolIdentifierType.nprofile,
-          special: pubkey,
+          special: masterPubkey,
         ),
       );
     } else {
@@ -186,7 +186,7 @@ class ReplaceableEventReference with _$ReplaceableEventReference implements Even
         IonConnectUriIdentifierService(bech32Service: Bech32Service()).encodeShareableIdentifiers(
           prefix: IonConnectProtocolIdentifierType.naddr,
           special: dTag,
-          author: pubkey,
+          author: masterPubkey,
           kind: kind,
         ),
       );
@@ -200,7 +200,7 @@ class ReplaceableEventReference with _$ReplaceableEventReference implements Even
 
   @override
   String toString() {
-    return [kind, pubkey, dTag].join(EventReference.separator);
+    return [kind, masterPubkey, dTag].join(EventReference.separator);
   }
 
   static const String tagName = 'a';

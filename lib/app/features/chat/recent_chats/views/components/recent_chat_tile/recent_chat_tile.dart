@@ -330,7 +330,7 @@ class ChatPreview extends HookConsumerWidget {
       MessageType.profile => ref
               .watch(
                 userMetadataProvider(
-                  EventReference.fromEncoded(lastMessageContent).pubkey,
+                  EventReference.fromEncoded(lastMessageContent).masterPubkey,
                 ),
               )
               .valueOrNull
@@ -371,7 +371,7 @@ class ChatPreview extends HookConsumerWidget {
   }
 
   String _getMoneySentTitle(WidgetRef ref, String messageContent) {
-    final messagePubkey = EventReference.fromEncoded(lastMessageContent).pubkey;
+    final messagePubkey = EventReference.fromEncoded(lastMessageContent).masterPubkey;
     final isMyPubkey = ref.watch(currentPubkeySelectorProvider) == messagePubkey;
     return isMyPubkey
         ? ref.context.i18n.chat_money_sent_title

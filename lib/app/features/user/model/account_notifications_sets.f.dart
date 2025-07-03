@@ -122,7 +122,7 @@ class AccountNotificationSetData
   ReplaceableEventReference toReplaceableEventReference(String pubkey) {
     return ReplaceableEventReference(
       kind: AccountNotificationSetEntity.kind,
-      pubkey: pubkey,
+      masterPubkey: pubkey,
       dTag: type.dTagName,
     );
   }

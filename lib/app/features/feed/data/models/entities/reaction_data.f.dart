@@ -82,7 +82,7 @@ class ReactionData with _$ReactionData implements EventSerializable {
     final eventReference = eventRef != null
         ? ReplaceableEventReference.fromString(eventRef)
         : eventId != null
-            ? ImmutableEventReference(eventId: eventId, pubkey: pubkey)
+            ? ImmutableEventReference(eventId: eventId, masterPubkey: pubkey)
             : null;
 
     if (eventReference == null) {
@@ -109,7 +109,7 @@ class ReactionData with _$ReactionData implements EventSerializable {
       content: content,
       tags: [
         ...tags,
-        ['p', eventReference.pubkey],
+        ['p', eventReference.masterPubkey],
         ['k', kind.toString()],
         eventReference.toTag(),
       ],

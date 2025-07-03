@@ -118,7 +118,7 @@ class EventCountResultData with _$EventCountResultData {
     final eventReference = eventRef != null
         ? ReplaceableEventReference.fromString(eventRef)
         : eventId != null
-            ? ImmutableEventReference(eventId: eventId, pubkey: pubkey)
+            ? ImmutableEventReference(eventId: eventId, masterPubkey: pubkey)
             : null;
 
     if (eventReference == null) {

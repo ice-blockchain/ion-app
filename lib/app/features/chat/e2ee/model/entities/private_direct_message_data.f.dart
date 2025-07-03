@@ -159,7 +159,7 @@ class ReplaceablePrivateDirectMessageData
     return ReplaceableEventReference(
       kind: ReplaceablePrivateDirectMessageEntity.kind,
       dTag: messageId,
-      pubkey: pubkey,
+      masterPubkey: pubkey,
     );
   }
 

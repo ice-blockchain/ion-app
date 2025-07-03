@@ -111,7 +111,7 @@ class MuteSetData with _$MuteSetData implements EventSerializable, ReplaceableEn
   @override
   ReplaceableEventReference toReplaceableEventReference(String pubkey) {
     return ReplaceableEventReference(
-      pubkey: pubkey,
+      masterPubkey: pubkey,
       dTag: type.dTagName,
       kind: MuteSetEntity.kind,
     );

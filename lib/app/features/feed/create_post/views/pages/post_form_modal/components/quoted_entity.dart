@@ -40,7 +40,7 @@ class QuotedEntity extends HookConsumerWidget {
               child: Post(
                 eventReference: eventReference,
                 displayQuote: false,
-                header: UserInfo(pubkey: eventReference.pubkey),
+                header: UserInfo(pubkey: eventReference.masterPubkey),
                 footer: const SizedBox.shrink(),
               ),
             );

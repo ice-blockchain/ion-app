@@ -56,13 +56,13 @@ class PostMediaItem extends HookWidget {
             MediaType.image => FeedIONConnectNetworkImage(
                 imageUrl: mediaItem.url,
                 fit: BoxFit.cover,
-                authorPubkey: eventReference.pubkey,
+                authorPubkey: eventReference.masterPubkey,
               ),
             MediaType.video => VideoPreview(
                 autoplay: videoAutoplay,
                 videoUrl: mediaItem.url,
+                authorPubkey: eventReference.masterPubkey,
                 thumbnailUrl: mediaItem.thumb,
-                authorPubkey: eventReference.pubkey,
                 framedEventReference: framedEventReference,
               ),
             _ => const SizedBox.shrink(),

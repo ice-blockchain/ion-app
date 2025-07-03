@@ -52,7 +52,7 @@ MuteSetEntity? cachedMutedUsers(Ref ref) {
   return ref.watch(
     ionConnectSyncEntityProvider(
       eventReference: ReplaceableEventReference(
-        pubkey: currentUserMasterPubkey,
+        masterPubkey: currentUserMasterPubkey,
         kind: MuteSetEntity.kind,
         dTag: MuteSetType.notInterested.dTagName,
       ),

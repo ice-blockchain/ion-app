@@ -249,7 +249,7 @@ class FeedBookmarkCollectionsNotifier extends _$FeedBookmarkCollectionsNotifier 
       final bookmarksData = BookmarksData(
         eventReferences: [
           ReplaceableEventReference(
-            pubkey: currentPubkey,
+            masterPubkey: currentPubkey,
             kind: BookmarksSetEntity.kind,
             dTag: BookmarksSetType.homeFeedCollections.dTagName,
           ),
@@ -259,7 +259,7 @@ class FeedBookmarkCollectionsNotifier extends _$FeedBookmarkCollectionsNotifier 
         type: BookmarksSetType.homeFeedCollections.dTagName,
         eventReferences: [
           ReplaceableEventReference(
-            pubkey: currentPubkey,
+            masterPubkey: currentPubkey,
             kind: BookmarksSetEntity.kind,
             dTag: BookmarksSetType.homeFeedCollectionsAll.dTagName,
           ),
@@ -288,7 +288,7 @@ class FeedBookmarkCollectionsNotifier extends _$FeedBookmarkCollectionsNotifier 
         );
       bookmarkCollections.add(
         ReplaceableEventReference(
-          pubkey: currentPubkey,
+          masterPubkey: currentPubkey,
           kind: BookmarksSetEntity.kind,
           dTag: BookmarksSetType.homeFeedCollectionsAll.dTagName,
         ),
@@ -314,7 +314,7 @@ class FeedBookmarkCollectionsNotifier extends _$FeedBookmarkCollectionsNotifier 
     final updatedCollectionsRefs = <ReplaceableEventReference>[
       ...currentBookmarkCollectionsRefs,
       ReplaceableEventReference(
-        pubkey: currentPubkey,
+        masterPubkey: currentPubkey,
         kind: BookmarksSetEntity.kind,
         dTag: newCollectionData.type,
       ),

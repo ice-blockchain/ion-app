@@ -95,7 +95,7 @@ class UserChatRelaysData
   ReplaceableEventReference toReplaceableEventReference(String pubkey) {
     return ReplaceableEventReference(
       kind: UserChatRelaysEntity.kind,
-      pubkey: pubkey,
+      masterPubkey: pubkey,
     );
   }
 

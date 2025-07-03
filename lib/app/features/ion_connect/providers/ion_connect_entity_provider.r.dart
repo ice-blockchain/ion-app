@@ -32,7 +32,7 @@ Future<IonConnectEntity?> ionConnectNetworkEntity(
   String? search,
   ActionSource? actionSource,
 }) async {
-  final aSource = actionSource ?? ActionSourceUser(eventReference.pubkey);
+  final aSource = actionSource ?? ActionSourceUser(eventReference.masterPubkey);
   if (eventReference is ImmutableEventReference) {
     final requestMessage = RequestMessage()
       ..addFilter(
@@ -52,7 +52,7 @@ Future<IonConnectEntity?> ionConnectNetworkEntity(
       ..addFilter(
         RequestFilter(
           kinds: [eventReference.kind],
-          authors: [eventReference.pubkey],
+          authors: [eventReference.masterPubkey],
           tags: {
             if (eventReference.dTag.isNotEmpty) '#d': [eventReference.dTag],
           },

@@ -159,7 +159,7 @@ class SharePostToChat extends _$SharePostToChat {
                   eventReference: ImmutableEventReference(
                     eventId: kind16Rumor.id,
                     kind: GenericRepostEntity.kind,
-                    pubkey: kind16Rumor.masterPubkey,
+                    masterPubkey: kind16Rumor.masterPubkey,
                   ),
                 ),
               );

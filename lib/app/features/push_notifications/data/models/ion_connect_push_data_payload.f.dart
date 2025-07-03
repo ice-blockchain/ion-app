@@ -92,7 +92,8 @@ class IonConnectPushDataPayload {
       return PushNotificationType.repost;
     } else if (entity is ModifiablePostEntity || entity is PostEntity) {
       final currentUserMention =
-          ReplaceableEventReference(pubkey: currentPubkey, kind: UserMetadataEntity.kind).encode();
+          ReplaceableEventReference(masterPubkey: currentPubkey, kind: UserMetadataEntity.kind)
+              .encode();
       final content = switch (entity) {
         ModifiablePostEntity() => entity.data.content,
         PostEntity() => entity.data.content,
@@ -202,11 +203,11 @@ class IonConnectPushDataPayload {
       return relatedPubkeys != null &&
           relatedPubkeys.any((relatedPubkey) => relatedPubkey.value == currentPubkey);
     } else if (entity is GenericRepostEntity) {
-      return entity.data.eventReference.pubkey == currentPubkey;
+      return entity.data.eventReference.masterPubkey == currentPubkey;
     } else if (entity is RepostEntity) {
-      return entity.data.eventReference.pubkey == currentPubkey;
+      return entity.data.eventReference.masterPubkey == currentPubkey;
     } else if (entity is ReactionEntity) {
-      return entity.data.eventReference.pubkey == currentPubkey;
+      return entity.data.eventReference.masterPubkey == currentPubkey;
     } else if (entity is FollowListEntity) {
       return entity.pubkeys.lastOrNull == currentPubkey;
     } else if (entity is IonConnectGiftWrapEntity) {

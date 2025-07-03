@@ -287,12 +287,12 @@ class CreatePostNotifier extends _$CreatePostNotifier {
     final metadataBuilders = <EventsMetadataBuilder>[];
 
     if (quotedEvent != null) {
-      pubkeysToPublish.add(quotedEvent.pubkey);
+      pubkeysToPublish.add(quotedEvent.masterPubkey);
     } else if (parentEntity != null) {
       final rootRelatedEvent = postData.rootRelatedEvent;
       pubkeysToPublish.addAll([
         parentEntity.masterPubkey,
-        if (rootRelatedEvent != null) rootRelatedEvent.eventReference.pubkey,
+        if (rootRelatedEvent != null) rootRelatedEvent.eventReference.masterPubkey,
       ]);
       final rootRef = rootRelatedEvent?.eventReference;
       final rootEntity = (rootRef != null
@@ -482,7 +482,7 @@ class CreatePostNotifier extends _$CreatePostNotifier {
   }) {
     final allPubkeys = <RelatedPubkey>{...mentions};
     if (quotedEvent != null) {
-      allPubkeys.add(RelatedPubkey(value: quotedEvent.pubkey));
+      allPubkeys.add(RelatedPubkey(value: quotedEvent.masterPubkey));
     }
 
     if (parentEntity != null) {

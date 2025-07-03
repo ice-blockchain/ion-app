@@ -109,7 +109,7 @@ class VideosVerticalScrollPage extends HookConsumerWidget {
     final currentEventReference = useState<EventReference>(eventReference);
 
     final isOwnedByCurrentUser =
-        ref.watch(isCurrentUserSelectorProvider(currentEventReference.value.pubkey));
+        ref.watch(isCurrentUserSelectorProvider(currentEventReference.value.masterPubkey));
 
     useEffect(
       () {
@@ -183,7 +183,7 @@ class VideosVerticalScrollPage extends HookConsumerWidget {
             bottomOverlay:
                 VideoActions(eventReference: flattenedVideos[index].entity.toEventReference()),
             videoUrl: flattenedVideos[index].media.url,
-            authorPubkey: eventReference.pubkey,
+            authorPubkey: eventReference.masterPubkey,
             thumbnailUrl: flattenedVideos[index].media.thumb,
             blurhash: flattenedVideos[index].media.blurhash,
             aspectRatio: flattenedVideos[index].media.aspectRatio,

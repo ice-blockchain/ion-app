@@ -67,7 +67,7 @@ class ImageCarousel extends HookConsumerWidget {
               return CarouselImageItem(
                 key: ValueKey(images[index].url),
                 imageUrl: images[index].url,
-                authorPubkey: eventReference.pubkey,
+                authorPubkey: eventReference.masterPubkey,
                 zoomController: zoomController,
                 bottomOverlayBuilder: index == currentPage.value
                     ? (context) => SafeArea(

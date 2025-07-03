@@ -126,7 +126,7 @@ class BookmarksSetData with _$BookmarksSetData implements EventSerializable, Rep
   @override
   ReplaceableEventReference toReplaceableEventReference(String pubkey) {
     return ReplaceableEventReference(
-      pubkey: pubkey,
+      masterPubkey: pubkey,
       dTag: type,
       kind: BookmarksSetEntity.kind,
     );

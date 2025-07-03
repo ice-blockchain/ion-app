@@ -31,7 +31,7 @@ class ParentEntity extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final parentEntity =
         ref.watch(ionConnectEntityWithCountersProvider(eventReference: eventReference));
-    final userMetadata = ref.watch(userMetadataProvider(eventReference.pubkey)).valueOrNull;
+    final userMetadata = ref.watch(userMetadataProvider(eventReference.masterPubkey)).valueOrNull;
 
     if (parentEntity == null || userMetadata == null) {
       return const Skeleton(child: PostSkeleton());

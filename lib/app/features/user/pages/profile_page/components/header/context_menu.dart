@@ -44,7 +44,7 @@ class ContextMenu extends ConsumerWidget {
                 closeMenu();
                 ShareViaMessageModalRoute(
                   eventReference:
-                      ReplaceableEventReference(pubkey: pubkey, kind: UserMetadataEntity.kind)
+                      ReplaceableEventReference(masterPubkey: pubkey, kind: UserMetadataEntity.kind)
                           .encode(),
                 ).push<void>(context);
               },

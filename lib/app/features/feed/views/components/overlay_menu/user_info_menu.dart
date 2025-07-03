@@ -42,7 +42,7 @@ class UserInfoMenu extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final userMetadata = ref.watch(cachedUserMetadataProvider(eventReference.pubkey));
+    final userMetadata = ref.watch(cachedUserMetadataProvider(eventReference.masterPubkey));
     final isArticle = eventReference is ReplaceableEventReference &&
         (eventReference as ReplaceableEventReference).kind == ArticleEntity.kind;
 
@@ -64,7 +64,7 @@ class UserInfoMenu extends ConsumerWidget {
           children: [
             OverlayMenuContainer(
               child: _NotInterestedMenuItem(
-                pubkey: eventReference.pubkey,
+                pubkey: eventReference.masterPubkey,
                 closeMenu: closeMenu,
               ),
             ),
@@ -73,12 +73,12 @@ class UserInfoMenu extends ConsumerWidget {
               child: Column(
                 children: [
                   _FollowUserMenuItem(
-                    pubkey: eventReference.pubkey,
+                    pubkey: eventReference.masterPubkey,
                     username: userMetadata.data.name,
                     closeMenu: closeMenu,
                   ),
                   _BlockUserMenuItem(
-                    pubkey: eventReference.pubkey,
+                    pubkey: eventReference.masterPubkey,
                     username: userMetadata.data.name,
                     closeMenu: closeMenu,
                   ),

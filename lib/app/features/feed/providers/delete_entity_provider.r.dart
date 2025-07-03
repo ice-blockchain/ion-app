@@ -125,13 +125,13 @@ Future<void> _deleteFromServer(Ref ref, IonConnectEntity entity) async {
   };
 
   final pubkeysToPublish = switch (entity) {
-    ReactionEntity() => [entity.data.eventReference.pubkey],
+    ReactionEntity() => [entity.data.eventReference.masterPubkey],
     PostEntity() => parseAndConvertDelta(
         entity.data.richText?.content,
         entity.data.content,
       ).extractPubkeys(),
-    RepostEntity() => [entity.data.eventReference.pubkey],
-    GenericRepostEntity() => [entity.data.eventReference.pubkey],
+    RepostEntity() => [entity.data.eventReference.masterPubkey],
+    GenericRepostEntity() => [entity.data.eventReference.masterPubkey],
     _ => <String>[],
   };
 
@@ -139,7 +139,7 @@ Future<void> _deleteFromServer(Ref ref, IonConnectEntity entity) async {
     events: [
       EventToDelete(
         eventReference: ImmutableEventReference(
-          pubkey: entity.masterPubkey,
+          masterPubkey: entity.masterPubkey,
           eventId: entity.id,
           kind: entityKind,
         ),

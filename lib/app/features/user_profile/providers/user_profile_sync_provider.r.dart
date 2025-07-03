@@ -162,7 +162,7 @@ class UserProfileSync extends _$UserProfileSync {
         final profileBadge = await ref.watch(
           ionConnectNetworkEntityProvider(
             eventReference: ReplaceableEventReference(
-              pubkey: masterPubkey,
+              masterPubkey: masterPubkey,
               kind: ProfileBadgesEntity.kind,
               dTag: ProfileBadgesEntity.dTag,
             ),
@@ -206,7 +206,7 @@ class UserProfileSync extends _$UserProfileSync {
             final verifiedBadgeDefinition = await ref.watch(
               ionConnectNetworkEntityProvider(
                 eventReference: ReplaceableEventReference(
-                  pubkey: servicePubkey,
+                  masterPubkey: servicePubkey,
                   kind: BadgeDefinitionEntity.kind,
                   dTag: verifiedEntry.definitionRef.dTag,
                 ),
@@ -231,7 +231,7 @@ class UserProfileSync extends _$UserProfileSync {
                 eventReference: ReplaceableEventReference(
                   kind: BadgeDefinitionEntity.kind,
                   dTag: proofOfNameEntry.definitionRef.dTag,
-                  pubkey: proofOfNameEntry.definitionRef.pubkey,
+                  masterPubkey: proofOfNameEntry.definitionRef.masterPubkey,
                 ),
                 actionSource: const ActionSourceCurrentUser(),
               ).future,
@@ -278,7 +278,7 @@ class UserProfileSync extends _$UserProfileSync {
             final verifiedBadgeAward = await ref.watch(
               ionConnectNetworkEntityProvider(
                 eventReference: ImmutableEventReference(
-                  pubkey: servicePubkey,
+                  masterPubkey: servicePubkey,
                   eventId: verifiedEntry.awardId,
                 ),
                 actionSource: const ActionSourceCurrentUser(),
@@ -300,7 +300,7 @@ class UserProfileSync extends _$UserProfileSync {
             final proofOfNameBadgeAward = await ref.watch(
               ionConnectNetworkEntityProvider(
                 eventReference: ImmutableEventReference(
-                  pubkey: servicePubkey,
+                  masterPubkey: servicePubkey,
                   eventId: proofOfNameEntry.awardId,
                 ),
                 actionSource: const ActionSourceCurrentUser(),

@@ -15,7 +15,7 @@ extension DeltaExt on Delta {
         if (attributes.containsKey(textEditorProfileKey)) {
           final encodedRef = attributes[textEditorProfileKey] as String;
           final eventReference = EventReference.fromEncoded(encodedRef);
-          pubkeys.add(eventReference.pubkey);
+          pubkeys.add(eventReference.masterPubkey);
         }
       }
     }

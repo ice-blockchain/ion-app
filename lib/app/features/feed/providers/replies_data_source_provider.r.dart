@@ -34,7 +34,7 @@ List<EntitiesDataSource>? repliesDataSource(
 
   final dataSources = [
     EntitiesDataSource(
-      actionSource: ActionSourceUser(eventReference.pubkey),
+      actionSource: ActionSourceUser(eventReference.masterPubkey),
       entityFilter: (entity) =>
           (entity is ModifiablePostEntity &&
               entity.data.parentEvent?.eventReference == eventReference) ||

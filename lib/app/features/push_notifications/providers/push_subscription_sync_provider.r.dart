@@ -57,7 +57,7 @@ class PushSubscriptionSync extends _$PushSubscriptionSync {
             events: [
               EventToDelete(
                 eventReference: ImmutableEventReference(
-                  pubkey: entity.masterPubkey,
+                  masterPubkey: entity.masterPubkey,
                   eventId: entity.id,
                   kind: PushSubscriptionEntity.kind,
                 ),

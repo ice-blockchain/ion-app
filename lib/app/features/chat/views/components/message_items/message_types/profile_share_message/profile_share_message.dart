@@ -36,7 +36,7 @@ class ProfileShareMessage extends HookConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final isMe = ref.watch(isCurrentUserSelectorProvider(eventMessage.masterPubkey));
     final entity = ReplaceablePrivateDirectMessageEntity.fromEventMessage(eventMessage);
-    final profilePubkey = EventReference.fromEncoded(entity.data.content).pubkey;
+    final profilePubkey = EventReference.fromEncoded(entity.data.content).masterPubkey;
 
     final userMetadata = ref.watch(userMetadataProvider(profilePubkey)).valueOrNull;
 

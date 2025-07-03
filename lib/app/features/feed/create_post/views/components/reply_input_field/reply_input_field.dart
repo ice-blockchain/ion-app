@@ -95,7 +95,7 @@ class ReplyInputField extends HookConsumerWidget {
               !(suggestionsState.isVisible && suggestionsState.suggestions.isNotEmpty))
             Padding(
               padding: EdgeInsetsDirectional.only(bottom: 12.0.s),
-              child: ReplyAuthorHeader(pubkey: eventReference.pubkey),
+              child: ReplyAuthorHeader(pubkey: eventReference.masterPubkey),
             ),
           Row(
             children: [

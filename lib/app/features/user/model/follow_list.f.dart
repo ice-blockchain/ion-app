@@ -87,7 +87,7 @@ class FollowListData with _$FollowListData implements EventSerializable, Replace
   ReplaceableEventReference toReplaceableEventReference(String pubkey) {
     return ReplaceableEventReference(
       kind: FollowListEntity.kind,
-      pubkey: pubkey,
+      masterPubkey: pubkey,
     );
   }
 }

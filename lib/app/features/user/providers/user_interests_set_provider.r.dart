@@ -22,7 +22,7 @@ Future<InterestSetEntity?> userInterestsSet(
   return await ref.watch(
     ionConnectEntityProvider(
       eventReference: ReplaceableEventReference(
-        pubkey: pubkey,
+        masterPubkey: pubkey,
         kind: InterestSetEntity.kind,
         dTag: type.toShortString(),
       ),

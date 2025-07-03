@@ -103,7 +103,7 @@ Future<void> _deleteReaction({
       EventToDelete(
         eventReference: ImmutableEventReference(
           eventId: reactionEvent.id,
-          pubkey: reactionEvent.masterPubkey,
+          masterPubkey: reactionEvent.masterPubkey,
           kind: PrivateMessageReactionEntity.kind,
         ),
       ),

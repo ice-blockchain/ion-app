@@ -50,7 +50,7 @@ Future<UserDelegationEntity?> cachedUserDelegation(Ref ref, String pubkey) async
       cacheSelector<UserDelegationEntity>(
         CacheableEntity.cacheKeyBuilder(
           eventReference: ReplaceableEventReference(
-            pubkey: pubkey,
+            masterPubkey: pubkey,
             kind: UserDelegationEntity.kind,
           ),
         ),

@@ -75,7 +75,7 @@ class RepostData with _$RepostData implements EventSerializable {
     }
 
     return RepostData(
-      eventReference: ImmutableEventReference(eventId: eventId, pubkey: pubkey),
+      eventReference: ImmutableEventReference(eventId: eventId, masterPubkey: pubkey),
       repostedEvent: null,
     );
   }
@@ -93,7 +93,7 @@ class RepostData with _$RepostData implements EventSerializable {
       content: repostedEvent != null ? jsonEncode(repostedEvent!.toJson().last) : '',
       tags: [
         ...tags,
-        ['p', eventReference.pubkey],
+        ['p', eventReference.masterPubkey],
         ['e', eventReference.eventId],
       ],
     );

@@ -75,7 +75,7 @@ class PaginatedUsersMetadata extends _$PaginatedUsersMetadata {
           // Try each relay in random order until we get metadata
           for (final relay in creator.ionConnectRelays.toList()..shuffle()) {
             final entityEventReference = ReplaceableEventReference(
-              pubkey: creator.masterPubKey,
+              masterPubkey: creator.masterPubKey,
               kind: UserMetadataEntity.kind,
             );
             final cachedEntity =

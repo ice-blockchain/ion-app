@@ -69,7 +69,7 @@ class EventCountErrorData with _$EventCountErrorData {
     final masterPubkey = tags[MasterPubkeyTag.tagName]!.first[1];
 
     final eventReference =
-        eventId != null ? ImmutableEventReference(eventId: eventId, pubkey: pubkey) : null;
+        eventId != null ? ImmutableEventReference(eventId: eventId, masterPubkey: pubkey) : null;
 
     if (eventReference == null) {
       throw IncorrectEventTagsException(eventId: eventMessage.id);
