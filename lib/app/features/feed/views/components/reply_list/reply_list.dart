@@ -1,6 +1,7 @@
 // SPDX-License-Identifier: ice License 1.0
 
 import 'package:flutter/material.dart';
+import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/components/empty_list/empty_list.dart';
 import 'package:ion/app/components/scroll_view/load_more_builder.dart';
@@ -15,7 +16,7 @@ import 'package:ion/app/features/ion_connect/providers/entities_paged_data_provi
 import 'package:ion/app/router/app_routes.gr.dart';
 import 'package:ion/generated/assets.gen.dart';
 
-class ReplyList extends ConsumerWidget {
+class ReplyList extends HookConsumerWidget {
   const ReplyList({
     required this.eventReference,
     this.headers,
@@ -34,9 +35,13 @@ class ReplyList extends ConsumerWidget {
     final hasMoreReplies =
         ref.watch(repliesProvider(eventReference).select((state) => (state?.hasMore).falseOrValue));
 
+    // Track refresh state to prevent LoadMoreBuilder showing indicator during pull-to-refresh
+    final isRefreshing = useState(false);
+
     return LoadMoreBuilder(
       hasMore: hasMoreReplies,
       onLoadMore: () => ref.read(repliesProvider(eventReference).notifier).loadMore(eventReference),
+      showIndicator: !isRefreshing.value,
       slivers: [
         if (headers != null) ...headers!,
         if (entities == null)
@@ -62,19 +67,24 @@ class ReplyList extends ConsumerWidget {
       ],
       builder: (context, slivers) => PullToRefreshBuilder(
         slivers: slivers,
-        onRefresh: () => _onRefresh(ref),
+        onRefresh: () => _onRefresh(ref, isRefreshing),
         builder: (BuildContext context, List<Widget> slivers) => CustomScrollView(slivers: slivers),
       ),
     );
   }
 
-  Future<void> _onRefresh(WidgetRef ref) async {
-    ref.invalidate(
-      entitiesPagedDataProvider(
-        ref.read(repliesDataSourceProvider(eventReference: eventReference)),
-      ),
-    );
-    onPullToRefresh?.call();
+  Future<void> _onRefresh(WidgetRef ref, ValueNotifier<bool> isRefreshing) async {
+    isRefreshing.value = true;
+    try {
+      ref.invalidate(
+        entitiesPagedDataProvider(
+          ref.read(repliesDataSourceProvider(eventReference: eventReference)),
+        ),
+      );
+      onPullToRefresh?.call();
+    } finally {
+      isRefreshing.value = false;
+    }
   }
 }
 
