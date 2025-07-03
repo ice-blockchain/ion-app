@@ -42,12 +42,6 @@ class FeedPage extends HookConsumerWidget {
       SliverToBoxAdapter(
         child: Column(
           children: [
-            TextButton(
-                onPressed: () async {
-                  final link = await ref.read(deepLinkServiceProvider).createDeeplink('/wallet');
-                  print('123 deep link: $link');
-                },
-                child: Text('test')),
             if (feedCategory == FeedCategory.articles) const ArticleCategoriesMenu(),
             if (feedCategory != FeedCategory.articles) const Stories(),
             if (feedCategory == FeedCategory.feed && showTrendingVideos.value)

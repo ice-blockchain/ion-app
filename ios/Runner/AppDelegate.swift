@@ -265,9 +265,6 @@ class AudioFocusHandler: NSObject {
         }
         GeneratedPluginRegistrant.register(with: self)
         
-        print("AppsFlyer: SDK initialized with devKey: \(afLib.appsFlyerDevKey ?? "nil")")
-        print("AppsFlyer: Deep link delegate set: \(afLib.deepLinkDelegate != nil)")
-        
         audioBrowserFlutterEngine.run(withEntrypoint: "audioBrowser")
         GeneratedPluginRegistrant.register(with: audioBrowserFlutterEngine)
 
@@ -281,13 +278,6 @@ class AudioFocusHandler: NSObject {
         print("AppsFlyer: Universal link handler called with URL: \(userActivity.webpageURL?.absoluteString ?? "nil")")
         AppsFlyerLib.shared().continue(userActivity, restorationHandler: nil)
 
-        // Forward the universal link to Flutter via MethodChannel
-        if let url = userActivity.webpageURL,
-           let controller = window?.rootViewController as? FlutterViewController {
-            let channel = FlutterMethodChannel(name: "deepLinkChannel", binaryMessenger: controller.binaryMessenger)
-            channel.invokeMethod("onDeeplink", arguments: pendingDeepLinkPath)
-        }
-
         return true
     }
 
@@ -295,12 +285,6 @@ class AudioFocusHandler: NSObject {
     override func application(_ app: UIApplication, open url: URL, options: [UIApplication.OpenURLOptionsKey : Any] = [:]) -> Bool {
         print("AppsFlyer: URI scheme handler called with URL: \(url.absoluteString)")
         AppsFlyerLib.shared().handleOpen(url, options: options)
-
-        // Forward the URI-scheme link to Flutter via MethodChannel
-        if let controller = window?.rootViewController as? FlutterViewController {
-            let channel = FlutterMethodChannel(name: "deepLinkChannel", binaryMessenger: controller.binaryMessenger)
-            channel.invokeMethod("onDeeplink", arguments: pendingDeepLinkPath)
-        }
 
         return true
     }

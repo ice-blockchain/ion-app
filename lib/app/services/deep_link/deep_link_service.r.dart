@@ -8,18 +8,20 @@ import 'package:flutter/foundation.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/features/core/providers/env_provider.r.dart';
 import 'package:ion/app/services/logger/logger.dart';
-import 'package:ion/app/services/deep_link/native_deep_link_service.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
-import 'package:flutter/services.dart';
 
 part 'deep_link_service.r.g.dart';
 
 final class DeepLinkService {
-  DeepLinkService(this._appsflyerSdk);
+  DeepLinkService(this._appsflyerSdk, this._templateId);
 
   final AppsflyerSdk _appsflyerSdk;
 
-  static const String _fallbackUrl = '';
+  final String _templateId;
+
+  //Defined on AppsFlyer portal for each template
+  //Use in case if generateInviteLink fails
+  String get _fallbackUrl => 'https://ion.onelink.me/$_templateId/feed';
 
   static const Duration _linkGenerationTimeout = Duration(seconds: 10);
 
@@ -28,10 +30,14 @@ final class DeepLinkService {
   Future<void> init({required void Function(String path) onDeeplink}) async {
     _appsflyerSdk.onDeepLinking((link) {
       Logger.log('onDeepLinking $link');
-      final rawPath = link.deepLink?.deepLinkValue;
-      if (rawPath == null || rawPath.isEmpty) return;
+      if (link.status == Status.FOUND) {
+        final path = link.deepLink?.deepLinkValue;
+        if (path == null || path.isEmpty) return;
 
-      onDeeplink(rawPath);
+        return onDeeplink(path);
+      }
+
+      onDeeplink(_fallbackUrl);
     });
 
     final result = await _appsflyerSdk.initSdk(
@@ -66,10 +72,6 @@ final class DeepLinkService {
     final completer = Completer<String>();
 
     try {
-      if (Platform.isIOS) {
-        return NativeDeepLinkService.generateInviteLink(path);
-      }
-
       _appsflyerSdk.generateInviteLink(
         AppsFlyerInviteLinkParams(customParams: {'deep_link_value': path}),
         (dynamic data) => _handleInviteLinkSuccess(data, completer),
@@ -134,7 +136,9 @@ final class DeepLinkService {
 
 @Riverpod(keepAlive: true)
 DeepLinkService deepLinkService(Ref ref) {
-  return DeepLinkService(ref.watch(appsflyerSdkProvider));
+  final env = ref.read(envProvider.notifier);
+  final templateId = env.get<String>(EnvVariable.AF_ONE_LINK_TEMPLATE_ID);
+  return DeepLinkService(ref.watch(appsflyerSdkProvider), templateId);
 }
 
 @riverpod

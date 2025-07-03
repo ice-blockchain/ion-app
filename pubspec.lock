@@ -74,10 +74,11 @@ packages:
   appsflyer_sdk:
     dependency: "direct main"
     description:
-      name: appsflyer_sdk
-      sha256: "08410cb4d677286027ce92f5e008bf47a88a9ce9fc36b3b6085770cf43e5f15f"
-      url: "https://pub.dev"
-    source: hosted
+      path: "."
+      ref: master
+      resolved-ref: d4e8d04fa1472e0fac0d98d99e011c4c2c0abb2e
+      url: "https://github.com/ice-blockchain/appsflyer-flutter-plugin.git"
+    source: git
     version: "6.16.21"
   archive:
     dependency: transitive
