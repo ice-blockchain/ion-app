@@ -154,6 +154,7 @@ class CreateArticle extends _$CreateArticle {
         image: null,
         textContent: '',
         relatedHashtags: [],
+        relatedPubkeys: [],
         media: {},
         colorLabel: null,
         settings: null,
