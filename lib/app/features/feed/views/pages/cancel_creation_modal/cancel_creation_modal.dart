@@ -61,7 +61,10 @@ class CancelCreationModal extends ConsumerWidget {
                   label: Text(
                     context.i18n.button_cancel,
                   ),
-                  onPressed: onCancel,
+                  onPressed: () {
+                    onCancel();
+                    context.pop();
+                  },
                   minimumSize: buttonMinimalSize,
                   backgroundColor: context.theme.appColors.attentionRed,
                 ),
