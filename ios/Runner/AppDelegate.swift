@@ -233,17 +233,13 @@ class AudioFocusHandler: NSObject {
     
     // Universal Links handler
     override func application(_ application: UIApplication, continue userActivity: NSUserActivity, restorationHandler: @escaping ([UIUserActivityRestoring]?) -> Void) -> Bool {
-        print("AppsFlyer: Universal link handler called with URL: \(userActivity.webpageURL?.absoluteString ?? "nil")")
         AppsFlyerLib.shared().continue(userActivity, restorationHandler: nil)
-
         return true
     }
 
     // URI Scheme handler (fallback)
     override func application(_ app: UIApplication, open url: URL, options: [UIApplication.OpenURLOptionsKey : Any] = [:]) -> Bool {
-        print("AppsFlyer: URI scheme handler called with URL: \(url.absoluteString)")
         AppsFlyerLib.shared().handleOpen(url, options: options)
-
         return true
     }
 
