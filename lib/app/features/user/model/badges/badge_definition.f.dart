@@ -156,7 +156,7 @@ class BadgeDefinitionData
   @override
   ReplaceableEventReference toReplaceableEventReference(String pubkey) {
     return ReplaceableEventReference(
-      pubkey: pubkey,
+      masterPubkey: pubkey,
       dTag: badge.value,
       kind: BadgeDefinitionEntity.kind,
     );

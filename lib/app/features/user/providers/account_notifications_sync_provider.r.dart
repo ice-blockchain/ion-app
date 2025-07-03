@@ -156,7 +156,7 @@ class AccountNotificationsSync extends _$AccountNotificationsSync {
       final accountNotificationSet = await ref.read(
         ionConnectEntityProvider(
           eventReference: ReplaceableEventReference(
-            pubkey: currentPubkey,
+            masterPubkey: currentPubkey,
             kind: AccountNotificationSetEntity.kind,
             dTag: setType.dTagName,
           ),
@@ -190,7 +190,7 @@ class AccountNotificationsSync extends _$AccountNotificationsSync {
       final accountNotificationSet = await ref.read(
         ionConnectEntityProvider(
           eventReference: ReplaceableEventReference(
-            pubkey: currentPubkey,
+            masterPubkey: currentPubkey,
             kind: AccountNotificationSetEntity.kind,
             dTag: setType.dTagName,
           ),
@@ -300,7 +300,7 @@ class AccountNotificationsSync extends _$AccountNotificationsSync {
     final notificationSet = await ref.read(
       ionConnectEntityProvider(
         eventReference: ReplaceableEventReference(
-          pubkey: currentPubkey,
+          masterPubkey: currentPubkey,
           kind: AccountNotificationSetEntity.kind,
           dTag: setType.dTagName,
         ),

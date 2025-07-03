@@ -103,7 +103,7 @@ class Article extends ConsumerWidget {
             header!
           else if (isReplied) ...[
             UserInfo(
-              pubkey: eventReference.pubkey,
+              pubkey: eventReference.masterPubkey,
               createdAt: entity.data.publishedAt.value,
               timeFormat: timeFormat,
               trailing: showActionButtons
@@ -155,7 +155,7 @@ class Article extends ConsumerWidget {
                               header!
                             else if (!isReplied) ...[
                               UserInfo(
-                                pubkey: eventReference.pubkey,
+                                pubkey: eventReference.masterPubkey,
                                 createdAt: entity.data.publishedAt.value,
                                 timeFormat: timeFormat,
                                 trailing: showActionButtons
@@ -174,7 +174,7 @@ class Article extends ConsumerWidget {
                             ],
                             ArticleImage(
                               imageUrl: entity.data.image,
-                              authorPubkey: eventReference.pubkey,
+                              authorPubkey: eventReference.masterPubkey,
                               minutesToRead: calculateReadingTime(entity.data.content),
                             ),
                             SizedBox(height: 10.0.s),

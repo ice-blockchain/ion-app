@@ -119,7 +119,7 @@ class MoreContentView extends ConsumerWidget {
                   final selectedProfilePubkey = await SendProfileModalRoute().push<String>(context);
                   if (selectedProfilePubkey != null) {
                     final eventReference = ReplaceableEventReference(
-                      pubkey: selectedProfilePubkey,
+                      masterPubkey: selectedProfilePubkey,
                       kind: UserMetadataEntity.kind,
                     );
 

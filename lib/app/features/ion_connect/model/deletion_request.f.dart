@@ -70,7 +70,7 @@ class DeletionRequest with _$DeletionRequest implements EventSerializable {
         ImmutableEventReference(
           eventId: immutableEventIds[i].last,
           kind: int.parse(immutableEventKinds[i].last),
-          pubkey: eventMessage.masterPubkey,
+          masterPubkey: eventMessage.masterPubkey,
         ),
       ...replaceableEvents.map(ReplaceableEventReference.fromTag),
     ];

@@ -31,7 +31,8 @@ class FullscreenMediaPage extends HookConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     useStatusBarColor();
 
-    final isOwnedByCurrentUser = ref.watch(isCurrentUserSelectorProvider(eventReference.pubkey));
+    final isOwnedByCurrentUser =
+        ref.watch(isCurrentUserSelectorProvider(eventReference.masterPubkey));
 
     return Material(
       color: Colors.transparent,

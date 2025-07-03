@@ -120,7 +120,7 @@ class UserRelaysManager extends _$UserRelaysManager {
     final eventReferences = pubkeys
         .map(
           (pubkey) => ReplaceableEventReference(
-            pubkey: pubkey,
+            masterPubkey: pubkey,
             kind: UserRelaysEntity.kind,
           ),
         )

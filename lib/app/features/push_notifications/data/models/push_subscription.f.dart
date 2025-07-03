@@ -111,7 +111,7 @@ class PushSubscriptionData
   ReplaceableEventReference toReplaceableEventReference(String pubkey) {
     return ReplaceableEventReference(
       kind: PushSubscriptionEntity.kind,
-      pubkey: pubkey,
+      masterPubkey: pubkey,
       dTag: deviceId,
     );
   }

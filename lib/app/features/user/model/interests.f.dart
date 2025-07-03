@@ -89,7 +89,7 @@ class InterestsData with _$InterestsData implements EventSerializable, Replaceab
   ReplaceableEventReference toReplaceableEventReference(String pubkey) {
     return ReplaceableEventReference(
       kind: InterestsEntity.kind,
-      pubkey: pubkey,
+      masterPubkey: pubkey,
     );
   }
 }

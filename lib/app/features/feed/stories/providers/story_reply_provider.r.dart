@@ -151,7 +151,7 @@ class StoryReply extends _$StoryReply {
             quotedEvent: QuotedImmutableEvent(
               eventReference: ImmutableEventReference(
                 eventId: kind16Rumor.id,
-                pubkey: kind16Rumor.masterPubkey,
+                masterPubkey: kind16Rumor.masterPubkey,
                 kind: GenericRepostEntity.kind,
               ),
             ),

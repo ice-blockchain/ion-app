@@ -113,7 +113,7 @@ class ProfileBadgesData
   @override
   ReplaceableEventReference toReplaceableEventReference(String pubkey) {
     return ReplaceableEventReference(
-      pubkey: pubkey,
+      masterPubkey: pubkey,
       dTag: ProfileBadgesEntity.dTag,
       kind: ProfileBadgesEntity.kind,
     );

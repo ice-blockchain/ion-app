@@ -32,7 +32,7 @@ class UserSpecificNotifications extends _$UserSpecificNotifications {
       final accountNotificationSet = await ref.watch(
         ionConnectEntityProvider(
           eventReference: ReplaceableEventReference(
-            pubkey: currentPubkey,
+            masterPubkey: currentPubkey,
             kind: AccountNotificationSetEntity.kind,
             dTag: setType.dTagName,
           ),
@@ -108,7 +108,7 @@ class UserSpecificNotifications extends _$UserSpecificNotifications {
     final accountNotificationSet = await ref.read(
       ionConnectEntityProvider(
         eventReference: ReplaceableEventReference(
-          pubkey: currentPubkey,
+          masterPubkey: currentPubkey,
           kind: AccountNotificationSetEntity.kind,
           dTag: setType.dTagName,
         ),
@@ -143,7 +143,7 @@ class UserSpecificNotifications extends _$UserSpecificNotifications {
     final accountNotificationSet = await ref.read(
       ionConnectEntityProvider(
         eventReference: ReplaceableEventReference(
-          pubkey: currentPubkey,
+          masterPubkey: currentPubkey,
           kind: AccountNotificationSetEntity.kind,
           dTag: setType.dTagName,
         ),

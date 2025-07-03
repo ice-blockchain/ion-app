@@ -16,7 +16,7 @@ Future<UserFileStorageRelaysEntity?> userFileStorageRelay(
   return await ref.watch(
     ionConnectEntityProvider(
       eventReference: ReplaceableEventReference(
-        pubkey: pubkey,
+        masterPubkey: pubkey,
         kind: UserFileStorageRelaysEntity.kind,
       ),
     ).future,

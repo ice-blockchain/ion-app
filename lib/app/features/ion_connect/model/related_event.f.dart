@@ -23,12 +23,12 @@ abstract class RelatedEvent {
     return switch (eventReference) {
       ImmutableEventReference() => RelatedImmutableEvent(
           eventReference: eventReference,
-          pubkey: eventReference.pubkey,
+          pubkey: eventReference.masterPubkey,
           marker: marker,
         ),
       ReplaceableEventReference() => RelatedReplaceableEvent(
           eventReference: eventReference,
-          pubkey: eventReference.pubkey,
+          pubkey: eventReference.masterPubkey,
           marker: marker,
         ),
       _ => throw UnsupportedEventReference(eventReference),
@@ -72,7 +72,7 @@ class RelatedImmutableEvent with _$RelatedImmutableEvent implements RelatedEvent
     }
 
     return RelatedImmutableEvent(
-      eventReference: ImmutableEventReference(eventId: tag[1], pubkey: tag[4]),
+      eventReference: ImmutableEventReference(eventId: tag[1], masterPubkey: tag[4]),
       marker: RelatedEventMarker.values.byName(tag[3]),
       pubkey: tag[4],
     );

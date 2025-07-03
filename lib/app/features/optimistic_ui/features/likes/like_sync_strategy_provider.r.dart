@@ -26,7 +26,7 @@ SyncStrategy<PostLike> likeSyncStrategy(Ref ref) {
         ionNotifier.sendEvent(reactionEvent),
         ionNotifier.sendEvent(
           reactionEvent,
-          actionSource: ActionSourceUser(reaction.eventReference.pubkey),
+          actionSource: ActionSourceUser(reaction.eventReference.masterPubkey),
           metadataBuilders: [userEventsMetadataBuilder],
           cache: false,
         ),

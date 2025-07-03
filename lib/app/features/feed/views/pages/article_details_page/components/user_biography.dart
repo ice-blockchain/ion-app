@@ -31,14 +31,14 @@ class UserBiography extends ConsumerWidget {
       child: Column(
         children: [
           UserInfo(
-            pubkey: eventReference.pubkey,
+            pubkey: eventReference.masterPubkey,
           ),
           SizedBox(height: 12.0.s),
           UserAbout(
-            pubkey: eventReference.pubkey,
+            pubkey: eventReference.masterPubkey,
             padding: EdgeInsetsDirectional.only(bottom: 12.0.s),
           ),
-          UserInfoSummary(pubkey: eventReference.pubkey),
+          UserInfoSummary(pubkey: eventReference.masterPubkey),
         ],
       ),
     );

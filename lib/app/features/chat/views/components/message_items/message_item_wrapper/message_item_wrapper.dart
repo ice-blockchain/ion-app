@@ -175,7 +175,7 @@ ChatMessageInfoItem? getRepliedMessageListItem({
   final repliedEntity = ReplaceablePrivateDirectMessageEntity.fromEventMessage(repliedEventMessage);
 
   if (repliedEntity.data.messageType == MessageType.profile) {
-    final profilePubkey = EventReference.fromEncoded(repliedEntity.data.content).pubkey;
+    final profilePubkey = EventReference.fromEncoded(repliedEntity.data.content).masterPubkey;
 
     final userMetadata = ref.watch(userMetadataProvider(profilePubkey)).valueOrNull;
 

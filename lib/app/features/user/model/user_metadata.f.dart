@@ -143,7 +143,7 @@ class UserMetadata with _$UserMetadata implements EventSerializable, Replaceable
   ReplaceableEventReference toReplaceableEventReference(String pubkey) {
     return ReplaceableEventReference(
       kind: UserMetadataEntity.kind,
-      pubkey: pubkey,
+      masterPubkey: pubkey,
     );
   }
 }

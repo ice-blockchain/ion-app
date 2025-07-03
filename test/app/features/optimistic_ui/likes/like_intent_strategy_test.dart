@@ -13,7 +13,7 @@ class _MockReactionEntity extends Mock implements ReactionEntity {}
 void main() {
   group('ToggleLikeIntent.optimistic()', () {
     const ref = ImmutableEventReference(
-      pubkey: 'pubkey42',
+      masterPubkey: 'pubkey42',
       eventId: '42',
       kind: 1,
     );
@@ -59,7 +59,7 @@ void main() {
     });
 
     const ref = ImmutableEventReference(
-      pubkey: 'pubkey42',
+      masterPubkey: 'pubkey42',
       eventId: '42',
       kind: 1,
     );

@@ -78,7 +78,7 @@ class _RequestedMoneyMessage extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final isMe = ref.watch(isCurrentUserSelectorProvider(eventReference.pubkey));
+    final isMe = ref.watch(isCurrentUserSelectorProvider(eventReference.masterPubkey));
 
     final fundsRequest = ref.watch(fundsRequestForMessageProvider(eventMessage)).value;
 
@@ -132,7 +132,7 @@ class _SentMoneyMessage extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final isMe = ref.watch(isCurrentUserSelectorProvider(eventReference.pubkey));
+    final isMe = ref.watch(isCurrentUserSelectorProvider(eventReference.masterPubkey));
 
     final transactionData = ref.watch(transactionDataForMessageProvider(eventMessage)).value;
 

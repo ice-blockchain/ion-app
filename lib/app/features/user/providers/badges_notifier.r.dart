@@ -30,7 +30,7 @@ BadgeAwardEntity? cachedBadgeAward(
 ) {
   final badgeAwardEntityList = servicePubkeys.map((pubkey) {
     final cacheKey = CacheableEntity.cacheKeyBuilder(
-      eventReference: ImmutableEventReference(pubkey: pubkey, eventId: eventId),
+      eventReference: ImmutableEventReference(masterPubkey: pubkey, eventId: eventId),
     );
     return ref.watch(
       ionConnectCacheProvider.select(cacheSelector<BadgeAwardEntity>(cacheKey)),
@@ -48,7 +48,7 @@ ProfileBadgesEntity? cachedProfileBadgesData(
   return ref.watch(
     ionConnectCachedEntityProvider(
       eventReference: ReplaceableEventReference(
-        pubkey: pubkey,
+        masterPubkey: pubkey,
         kind: ProfileBadgesEntity.kind,
         dTag: ProfileBadgesEntity.dTag,
       ),
@@ -70,7 +70,7 @@ Future<BadgeDefinitionEntity?> badgeDefinitionEntity(
       .map((pubkey) {
         final cacheKey = CacheableEntity.cacheKeyBuilder(
           eventReference: ReplaceableEventReference(
-            pubkey: pubkey,
+            masterPubkey: pubkey,
             kind: BadgeDefinitionEntity.kind,
             dTag: dTag,
           ),
@@ -90,7 +90,7 @@ Future<BadgeDefinitionEntity?> badgeDefinitionEntity(
     final fetchedEntity = await ref.watch(
       ionConnectNetworkEntityProvider(
         eventReference: ReplaceableEventReference(
-          pubkey: pubkey,
+          masterPubkey: pubkey,
           kind: BadgeDefinitionEntity.kind,
           dTag: dTag,
         ),
@@ -113,7 +113,7 @@ Future<ProfileBadgesData?> profileBadgesData(
   final profileBadgesEntity = await ref.watch(
     ionConnectEntityProvider(
       eventReference: ReplaceableEventReference(
-        pubkey: pubkey,
+        masterPubkey: pubkey,
         kind: ProfileBadgesEntity.kind,
         dTag: ProfileBadgesEntity.dTag,
       ),
@@ -130,7 +130,7 @@ bool isValidVerifiedBadgeDefinition(
   List<String> servicePubkeys,
 ) {
   return badgeRef.dTag == BadgeDefinitionEntity.verifiedBadgeDTag &&
-      (servicePubkeys.isEmpty || servicePubkeys.contains(badgeRef.pubkey)) &&
+      (servicePubkeys.isEmpty || servicePubkeys.contains(badgeRef.masterPubkey)) &&
       badgeRef.kind == BadgeDefinitionEntity.kind;
 }
 
@@ -141,7 +141,7 @@ bool isValidNicknameProofBadgeDefinition(
   List<String> servicePubkeys,
 ) {
   return badgeRef.dTag.startsWith(BadgeDefinitionEntity.usernameProofOfOwnershipBadgeDTag) &&
-      (servicePubkeys.isEmpty || servicePubkeys.contains(badgeRef.pubkey)) &&
+      (servicePubkeys.isEmpty || servicePubkeys.contains(badgeRef.masterPubkey)) &&
       badgeRef.kind == BadgeDefinitionEntity.kind;
 }
 
@@ -220,7 +220,7 @@ Future<VerifiedBadgeEntities?> currentUserVerifiedBadgeData(Ref ref) async {
   final profileEntity = ref.watch(
     ionConnectCachedEntityProvider(
       eventReference: ReplaceableEventReference(
-        pubkey: currentPubkey,
+        masterPubkey: currentPubkey,
         kind: ProfileBadgesEntity.kind,
         dTag: ProfileBadgesEntity.dTag,
       ),
@@ -243,7 +243,7 @@ Future<VerifiedBadgeEntities?> currentUserVerifiedBadgeData(Ref ref) async {
       ? ref.watch(
           ionConnectCachedEntityProvider(
             eventReference: ReplaceableEventReference(
-              pubkey: verifiedEntry.definitionRef.pubkey,
+              masterPubkey: verifiedEntry.definitionRef.masterPubkey,
               kind: BadgeDefinitionEntity.kind,
               dTag: BadgeDefinitionEntity.verifiedBadgeDTag,
             ),

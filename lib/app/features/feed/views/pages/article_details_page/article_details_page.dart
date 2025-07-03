@@ -43,7 +43,8 @@ class ArticleDetailsPage extends HookConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final articleEntity =
         ref.watch(ionConnectEntityWithCountersProvider(eventReference: eventReference));
-    final isOwnedByCurrentUser = ref.watch(isCurrentUserSelectorProvider(eventReference.pubkey));
+    final isOwnedByCurrentUser =
+        ref.watch(isCurrentUserSelectorProvider(eventReference.masterPubkey));
 
     if (articleEntity is! ArticleEntity) {
       return const SizedBox.shrink();

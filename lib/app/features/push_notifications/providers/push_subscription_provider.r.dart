@@ -20,7 +20,7 @@ Future<PushSubscriptionEntity?> currentUserPushSubscription(Ref ref) async {
   final deviceId = await ref.watch(deviceIdServiceProvider).get();
 
   final eventReference = ReplaceableEventReference(
-    pubkey: currentPubkey,
+    masterPubkey: currentPubkey,
     kind: PushSubscriptionEntity.kind,
     dTag: deviceId,
   );

@@ -59,7 +59,7 @@ class RequestCoinsSubmitNotifier extends _$RequestCoinsSubmitNotifier {
 
       final eventReference = ImmutableEventReference(
         eventId: event.id,
-        pubkey: currentUserPubkey,
+        masterPubkey: currentUserPubkey,
         kind: event.kind,
       );
 

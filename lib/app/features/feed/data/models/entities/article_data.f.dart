@@ -190,7 +190,7 @@ class ArticleData
   ReplaceableEventReference toReplaceableEventReference(String pubkey) {
     return ReplaceableEventReference(
       kind: ArticleEntity.kind,
-      pubkey: pubkey,
+      masterPubkey: pubkey,
       dTag: replaceableEventId.value,
     );
   }

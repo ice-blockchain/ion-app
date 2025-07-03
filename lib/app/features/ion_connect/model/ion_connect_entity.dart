@@ -42,7 +42,7 @@ abstract mixin class IonConnectEntityReferenceable {
 mixin ImmutableEntity on IonConnectEntity implements IonConnectEntityReferenceable {
   @override
   ImmutableEventReference toEventReference() {
-    return ImmutableEventReference(eventId: id, pubkey: masterPubkey);
+    return ImmutableEventReference(eventId: id, masterPubkey: masterPubkey);
   }
 }
 

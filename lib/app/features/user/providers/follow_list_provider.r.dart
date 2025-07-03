@@ -23,7 +23,7 @@ Future<FollowListEntity?> followList(
 }) async {
   return await ref.watch(
     ionConnectEntityProvider(
-      eventReference: ReplaceableEventReference(pubkey: pubkey, kind: FollowListEntity.kind),
+      eventReference: ReplaceableEventReference(masterPubkey: pubkey, kind: FollowListEntity.kind),
       network: network,
       cache: cache,
     ).future,

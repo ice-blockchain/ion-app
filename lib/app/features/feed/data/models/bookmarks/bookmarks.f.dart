@@ -88,7 +88,7 @@ class BookmarksData with _$BookmarksData implements EventSerializable, Replaceab
   ReplaceableEventReference toReplaceableEventReference(String pubkey) {
     return ReplaceableEventReference(
       kind: BookmarksEntity.kind,
-      pubkey: pubkey,
+      masterPubkey: pubkey,
     );
   }
 }

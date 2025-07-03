@@ -43,7 +43,7 @@ class QuotedReplaceableEvent with _$QuotedReplaceableEvent implements QuotedEven
 
   @override
   List<String> toTag() {
-    return [tagName, eventReference.toString(), '', eventReference.pubkey];
+    return [tagName, eventReference.toString(), '', eventReference.masterPubkey];
   }
 
   static const String tagName = 'Q';
@@ -66,13 +66,13 @@ class QuotedImmutableEvent with _$QuotedImmutableEvent implements QuotedEvent {
       throw IncorrectEventTagException(tag: tag.toString());
     }
     return QuotedImmutableEvent(
-      eventReference: ImmutableEventReference(eventId: tag[1], pubkey: tag[3]),
+      eventReference: ImmutableEventReference(eventId: tag[1], masterPubkey: tag[3]),
     );
   }
 
   @override
   List<String> toTag() {
-    return [tagName, eventReference.toString(), '', eventReference.pubkey];
+    return [tagName, eventReference.toString(), '', eventReference.masterPubkey];
   }
 
   static const String tagName = 'q';

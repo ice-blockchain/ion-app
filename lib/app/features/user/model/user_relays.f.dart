@@ -92,7 +92,7 @@ class UserRelaysData with _$UserRelaysData implements EventSerializable, Replace
   ReplaceableEventReference toReplaceableEventReference(String pubkey) {
     return ReplaceableEventReference(
       kind: UserRelaysEntity.kind,
-      pubkey: pubkey,
+      masterPubkey: pubkey,
     );
   }
 }

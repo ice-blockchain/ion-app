@@ -24,7 +24,7 @@ class MoreArticlesFromAuthor extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final dataSource = ref.watch(userArticlesDataSourceProvider(eventReference.pubkey));
+    final dataSource = ref.watch(userArticlesDataSourceProvider(eventReference.masterPubkey));
     final entitiesPagedData = ref.watch(entitiesPagedDataProvider(dataSource));
 
     final articlesReferences = entitiesPagedData?.data.items
@@ -34,7 +34,7 @@ class MoreArticlesFromAuthor extends ConsumerWidget {
         .toList();
 
     final authorDisplayName = ref.watch(
-      userMetadataProvider(eventReference.pubkey)
+      userMetadataProvider(eventReference.masterPubkey)
           .select((value) => value.valueOrNull?.data.displayName),
     );
 
@@ -51,7 +51,7 @@ class MoreArticlesFromAuthor extends ConsumerWidget {
             count: articlesReferences.length,
             trailing: GestureDetector(
               onTap: () =>
-                  ArticlesFromAuthorRoute(pubkey: eventReference.pubkey).push<void>(context),
+                  ArticlesFromAuthorRoute(pubkey: eventReference.masterPubkey).push<void>(context),
               child: Assets.svg.iconButtonNext.icon(),
             ),
           ),

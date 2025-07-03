@@ -34,7 +34,7 @@ void main() {
       expect(interest.data.hashtags[0], 'tag');
       expect(
         interest.data.interestSetRefs[0],
-        const ReplaceableEventReference(kind: 2, pubkey: '13', dTag: '123'),
+        const ReplaceableEventReference(kind: 2, masterPubkey: '13', dTag: '123'),
       );
     });
   });

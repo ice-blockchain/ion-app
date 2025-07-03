@@ -76,7 +76,7 @@ class GenericRepostData with _$GenericRepostData implements EventSerializable {
     final eventReference = eventRef != null
         ? ReplaceableEventReference.fromString(eventRef)
         : eventId != null
-            ? ImmutableEventReference(eventId: eventId, pubkey: pubkey)
+            ? ImmutableEventReference(eventId: eventId, masterPubkey: pubkey)
             : null;
 
     if (eventReference == null) {
@@ -102,7 +102,7 @@ class GenericRepostData with _$GenericRepostData implements EventSerializable {
       content: repostedEvent != null ? jsonEncode(repostedEvent!.toJson().last) : '',
       tags: [
         ...tags,
-        ['p', eventReference.pubkey],
+        ['p', eventReference.masterPubkey],
         ['k', kind.toString()],
         eventReference.toTag(),
       ],

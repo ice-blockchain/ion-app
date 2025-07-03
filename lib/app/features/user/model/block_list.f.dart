@@ -81,7 +81,7 @@ class BlockListData with _$BlockListData implements EventSerializable, Replaceab
   ReplaceableEventReference toReplaceableEventReference(String pubkey) {
     return ReplaceableEventReference(
       kind: BlockListEntity.kind,
-      pubkey: pubkey,
+      masterPubkey: pubkey,
     );
   }
 }

@@ -132,7 +132,7 @@ class Post extends ConsumerWidget {
         ScreenSideOffset.small(
           child: header ??
               UserInfo(
-                pubkey: eventReference.pubkey,
+                pubkey: eventReference.masterPubkey,
                 createdAt: entity is ModifiablePostEntity
                     ? entity.data.publishedAt.value
                     : entity.createdAt,
@@ -335,7 +335,7 @@ final class _QuotedPost extends ConsumerWidget {
             displayQuote: false,
             header: header ??
                 UserInfo(
-                  pubkey: eventReference.pubkey,
+                  pubkey: eventReference.masterPubkey,
                   createdAt: postEntity is ModifiablePostEntity
                       ? postEntity.data.publishedAt.value
                       : postEntity?.createdAt,

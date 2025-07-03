@@ -40,7 +40,7 @@ Future<Map<BookmarksSetType, BookmarksSetEntity?>> bookmarks(
     bookmarkTypesList.map((type) {
       final cacheKey = CacheableEntity.cacheKeyBuilder(
         eventReference: ReplaceableEventReference(
-          pubkey: pubkey,
+          masterPubkey: pubkey,
           kind: BookmarksSetEntity.kind,
           dTag: type.dTagName,
         ),

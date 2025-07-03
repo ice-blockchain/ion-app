@@ -173,7 +173,7 @@ class ModifiablePostData
   ReplaceableEventReference toReplaceableEventReference(String pubkey) {
     return ReplaceableEventReference(
       kind: ModifiablePostEntity.kind,
-      pubkey: pubkey,
+      masterPubkey: pubkey,
       dTag: replaceableEventId.value,
     );
   }

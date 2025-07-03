@@ -40,7 +40,7 @@ class SingleMediaView extends HookWidget {
         videoInfo: VideoPostInfo(videoPost: post),
         bottomOverlay: VideoActions(eventReference: eventReference),
         videoUrl: media.url,
-        authorPubkey: eventReference.pubkey,
+        authorPubkey: eventReference.masterPubkey,
         thumbnailUrl: media.thumb,
         blurhash: media.blurhash,
         aspectRatio: media.aspectRatio,
@@ -51,7 +51,7 @@ class SingleMediaView extends HookWidget {
 
     return FullscreenImage(
       imageUrl: media.url,
-      authorPubkey: eventReference.pubkey,
+      authorPubkey: eventReference.masterPubkey,
       bottomOverlayBuilder: (context) => SafeArea(
         top: false,
         child: ColoredBox(

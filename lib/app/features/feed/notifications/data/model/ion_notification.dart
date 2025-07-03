@@ -26,7 +26,7 @@ final class CommentIonNotification extends IonNotification {
     required this.type,
     required this.eventReference,
     required super.timestamp,
-  }) : super(pubkeys: [eventReference.pubkey]);
+  }) : super(pubkeys: [eventReference.masterPubkey]);
 
   final CommentIonNotificationType type;
 
@@ -118,7 +118,7 @@ final class ContentIonNotification extends IonNotification {
     required this.type,
     required this.eventReference,
     required super.timestamp,
-  }) : super(pubkeys: [eventReference.pubkey]);
+  }) : super(pubkeys: [eventReference.masterPubkey]);
 
   final ContentIonNotificationType type;
 

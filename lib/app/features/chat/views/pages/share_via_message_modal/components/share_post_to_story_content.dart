@@ -36,7 +36,7 @@ class SharePostToStoryContent extends StatelessWidget {
                 footer: const SizedBox.shrink(),
                 topOffset: 0,
                 header: UserInfo(
-                  pubkey: eventReference.pubkey,
+                  pubkey: eventReference.masterPubkey,
                   createdAt: postItselfEntity.data.publishedAt.value,
                   trailing: const SizedBox.shrink(),
                 ),

@@ -108,7 +108,7 @@ class _VideoContainer extends StatelessWidget {
           children: [
             FeedIONConnectNetworkImage(
               imageUrl: thumbnailUrl,
-              authorPubkey: eventReference.pubkey,
+              authorPubkey: eventReference.masterPubkey,
               fit: BoxFit.cover,
               height: size.height,
               width: size.width,
@@ -117,7 +117,7 @@ class _VideoContainer extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 _TopControls(eventReference: eventReference),
-                TrendingVideoAuthor(pubkey: eventReference.pubkey),
+                TrendingVideoAuthor(pubkey: eventReference.masterPubkey),
               ],
             ),
           ],
