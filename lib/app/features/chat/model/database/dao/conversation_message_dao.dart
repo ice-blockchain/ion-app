@@ -25,10 +25,6 @@ class ConversationMessageDao extends DatabaseAccessor<ChatDatabase>
   }) {
     final query = select(conversationMessageTable).join([
       innerJoin(
-        eventMessageTable,
-        eventMessageTable.eventReference.equalsExp(conversationMessageTable.messageEventReference),
-      ),
-      innerJoin(
         messageStatusTable,
         messageStatusTable.messageEventReference
             .equalsExp(conversationMessageTable.messageEventReference),
