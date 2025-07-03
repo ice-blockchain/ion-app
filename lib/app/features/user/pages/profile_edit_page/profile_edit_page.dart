@@ -50,13 +50,15 @@ class ProfileEditPage extends HookConsumerWidget {
     final debouncedNickname = useDebounced(nickname.value.trim(), const Duration(seconds: 1));
     useOnInit(
       () {
-        if (debouncedNickname != null && validateNickname(debouncedNickname, context) == null) {
+        if (debouncedNickname != null &&
+            validateNickname(debouncedNickname, context) == null &&
+            debouncedNickname != userMetadata.data.name) {
           ref
               .read(userNicknameNotifierProvider.notifier)
               .verifyNicknameAvailability(nickname: debouncedNickname);
         }
       },
-      [debouncedNickname, context],
+      [debouncedNickname, context, userMetadata.data.name],
     );
 
     final verifyNicknameErrorMessage = useVerifyNicknameAvailabilityErrorMessage(ref);
