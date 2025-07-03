@@ -14,6 +14,7 @@ class LoadMoreBuilder extends HookWidget {
     Widget Function(BuildContext context, List<Widget> slivers)? builder,
     this.loadMoreOffset,
     this.forceLoadMore = false,
+    this.showIndicator = true,
     super.key,
   }) : builder = builder ??
             ((BuildContext context, List<Widget> slivers) => CustomScrollView(slivers: slivers));
@@ -29,6 +30,8 @@ class LoadMoreBuilder extends HookWidget {
   final bool hasMore;
 
   final bool forceLoadMore;
+
+  final bool showIndicator;
 
   @override
   Widget build(BuildContext context) {
@@ -57,7 +60,7 @@ class LoadMoreBuilder extends HookWidget {
       onNotification: (notification) => _onMetricsChanged(notification, loadMore),
       child: builder(
         context,
-        loading.value
+        loading.value && showIndicator
             ? [
                 ...slivers,
                 SliverToBoxAdapter(
