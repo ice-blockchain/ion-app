@@ -18,8 +18,8 @@ class FeedConfig with _$FeedConfig {
     @DurationMillisecondsConverter() required Duration trendingMaxAge,
     @DurationMillisecondsConverter() required Duration exploreMaxAge,
     @DurationMillisecondsConverter() required Duration repostThrottleDelay,
-    @Default(false) bool excludeUnclassifiedFromExplore,
-    @Default(5.0) double forYouMaxRetriesMultiplier,
+    required bool excludeUnclassifiedFromExplore,
+    required double forYouMaxRetriesMultiplier,
   }) = _FeedConfig;
 
   const FeedConfig._();
