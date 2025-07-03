@@ -117,7 +117,7 @@ class AudioFocusHandler: NSObject {
 }
 
 @main
-@objc class AppDelegate: FlutterAppDelegate, DeepLinkDelegate {
+@objc class AppDelegate: FlutterAppDelegate {
     
     // Photo Editor Methods
     static let methodInitPhotoEditor = "initPhotoEditor"
@@ -138,7 +138,6 @@ class AudioFocusHandler: NSObject {
     
     private var audioFocusHandler: AudioFocusHandler?
     
-    private var pendingDeepLinkPath: String?
     
     override func application(
         _ application: UIApplication,
@@ -221,47 +220,6 @@ class AudioFocusHandler: NSObject {
                 }
             }
 
-            // AppsFlyer Method Channel – invite link generation
-            let appsFlyerChannel = FlutterMethodChannel(name: "appsFlyerChannel", binaryMessenger: binaryMessenger)
-
-            appsFlyerChannel.setMethodCallHandler { methodCall, result in
-                guard methodCall.method == "generateInviteLink" else {
-                    result(FlutterMethodNotImplemented)
-                    return
-                }
-
-                guard let args = methodCall.arguments as? [String: Any],
-                      let path = args["path"] as? String else {
-                    result(FlutterError(code: "INVALID_ARGUMENTS", message: "Missing path", details: nil))
-                    return
-                }
-
-                // Build invite link using AppsFlyerShareInviteHelper
-                AppsFlyerShareInviteHelper.generateInviteUrl(linkGenerator: { generator in
-                    generator.addParameterValue(path, forKey: "deep_link_value")
-                    return generator
-                }, completionHandler: { url in
-                    DispatchQueue.main.async {
-                        guard let url = url else {
-                            result(FlutterError(code: "NO_URL", message: "No URL returned", details: nil))
-                            return
-                        }
-                        result(url.absoluteString)
-                    }
-                })
-            }
-
-            // Deep Link Channel
-            let deepLinkChannel = FlutterMethodChannel(name: "deepLinkChannel", binaryMessenger: binaryMessenger)
-            deepLinkChannel.setMethodCallHandler { methodCall, result in
-                switch methodCall.method {
-                case "getPendingDeepLink":
-                    result(self.pendingDeepLinkPath)
-                    self.pendingDeepLinkPath = nil
-                default:
-                    result(FlutterMethodNotImplemented)
-                }
-            }
         }
         GeneratedPluginRegistrant.register(with: self)
         
@@ -311,50 +269,4 @@ class AudioFocusHandler: NSObject {
             
             return factory
         }
-
-    // MARK: - AppsFlyerDeepLinkDelegate
-
-    func didResolveDeepLink(_ result: DeepLinkResult) {
-        // Check the status first before accessing deepLink
-        print("AppsFlyer: didResolveDeepLink called")
-        print("AppsFlyer: Status = \(result.status)")
-        
-        switch result.status {
-        case .found:
-            print("AppsFlyer: Deep link found!")
-            guard let deepLink = result.deepLink,
-                  let value = deepLink.deeplinkValue else {
-                print("AppsFlyer: Missing deepLink or deeplinkValue")
-                return
-            }
-            
-            print("AppsFlyer: Extracted deeplinkValue = \(value)")
-            
-            DispatchQueue.main.async {
-                if let controller = self.window?.rootViewController as? FlutterViewController {
-                    let channel = FlutterMethodChannel(name: "deepLinkChannel", binaryMessenger: controller.binaryMessenger)
-                    channel.invokeMethod("onDeeplink", arguments: value)
-                    print("AppsFlyer: Sent to Flutter via channel: \(value)")
-                } else {
-                    self.pendingDeepLinkPath = value
-                    print("AppsFlyer: Stored pending deep link: \(value)")
-                }
-            }
-            
-        case .notFound:
-            // UDL API did not find a match to this deep linking click
-            print("AppsFlyer: Deep link not found")
-            
-        case .failure:
-            // UDL API encountered an error
-            if let error = result.error {
-                print("AppsFlyer: Deep link resolution failed with error: \(error)")
-            } else {
-                print("AppsFlyer: Deep link resolution failed with unknown error")
-            }
-            
-        @unknown default:
-            print("AppsFlyer: Unknown deep link result status")
-        }
-    }
 }

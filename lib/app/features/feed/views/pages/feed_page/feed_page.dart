@@ -22,7 +22,6 @@ import 'package:ion/app/features/feed/views/pages/feed_page/components/stories/s
 import 'package:ion/app/features/feed/views/pages/feed_page/components/trending_videos/trending_videos.dart';
 import 'package:ion/app/hooks/use_scroll_top_on_tab_press.dart';
 import 'package:ion/app/router/components/navigation_app_bar/collapsing_app_bar.dart';
-import 'package:ion/app/services/deep_link/deep_link_service.r.dart';
 
 class FeedPage extends HookConsumerWidget {
   const FeedPage({super.key});
