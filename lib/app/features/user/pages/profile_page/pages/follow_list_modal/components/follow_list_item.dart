@@ -22,8 +22,7 @@ class FollowListItem extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    // Use cached user metadata to avoid triggering badge network requests
-    final userMetadata = ref.watch(cachedUserMetadataProvider(pubkey));
+    final userMetadata = ref.watch(userMetadataProvider(pubkey)).valueOrNull;
 
     return Padding(
       padding: EdgeInsets.symmetric(vertical: 8.0.s),
