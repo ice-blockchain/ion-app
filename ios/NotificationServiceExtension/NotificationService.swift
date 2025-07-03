@@ -18,29 +18,23 @@ class NotificationService: UNNotificationServiceExtension {
             contentHandler(request.content)
             return
         }
-        
-        defer {
+
+        Task {
+            do {
+                let translation = await NotificationTranslationService(storage: try SharedStorageService()).translate(request.content.userInfo)
+
+                if let title = translation.title, let body = translation.body {
+                    mutableNotificationContent.title = title
+                    mutableNotificationContent.body = body
+                }
+            } catch {
+                NSLog("Failed to translate notification: \(error)")
+            }
+
             Messaging.serviceExtension().populateNotificationContent(
                 mutableNotificationContent,
                 withContentHandler: contentHandler
             )
-        }
-
-        var storage: SharedStorageService
-
-        do {
-            storage = try SharedStorageService()
-        } catch {
-            return
-        }
-
-        Task {
-            let translation = await NotificationTranslationService(storage: storage).translate(request.content.userInfo)
-
-            if let title = translation.title, let body = translation.body {
-                mutableNotificationContent.title = title
-                mutableNotificationContent.body = body
-            }
         }
     }
 
