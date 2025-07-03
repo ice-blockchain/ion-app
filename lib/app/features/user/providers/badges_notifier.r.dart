@@ -305,3 +305,15 @@ Future<ProfileBadgesData?> updateProfileBadgesWithUsernameProofs(
     ).future,
   );
 }
+@riverpod
+Future<({bool isVerified, bool isNicknameProven})> userBadgeVerificationState(
+  Ref ref,
+  String pubkey,
+) async {
+  final [isVerified, isNicknameProven] = await Future.wait([
+    ref.watch(isUserVerifiedProvider(pubkey).future),
+    ref.watch(isNicknameProvenProvider(pubkey).future),
+  ]);
+
+  return (isVerified: isVerified, isNicknameProven: isNicknameProven);
+}

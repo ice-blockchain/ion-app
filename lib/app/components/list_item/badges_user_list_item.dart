@@ -46,8 +46,9 @@ class BadgesUserListItem extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final isUserVerified = ref.watch(isUserVerifiedProvider(pubkey)).valueOrNull.falseOrValue;
-    final isNicknameProven = ref.watch(isNicknameProvenProvider(pubkey)).valueOrNull ?? true;
+    final badgeVerificationState = ref.watch(userBadgeVerificationStateProvider(pubkey));
+    final isUserVerified = badgeVerificationState.valueOrNull?.isVerified ?? false;
+    final isNicknameProven = badgeVerificationState.valueOrNull?.isNicknameProven ?? true;
 
     return ListItem.user(
       pubkey: pubkey,

@@ -22,33 +22,26 @@ class FollowListItem extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final userMetadataResult = ref.watch(userMetadataProvider(pubkey));
+    final userMetadata = ref.watch(userMetadataProvider(pubkey)).valueOrNull;
 
     return Padding(
       padding: EdgeInsets.symmetric(vertical: 8.0.s),
-      child: userMetadataResult.maybeWhen(
-        data: (userMetadata) {
-          if (userMetadata == null) {
-            return const SizedBox.shrink();
-          }
-
-          return BadgesUserListItem(
-            title: Text(userMetadata.data.displayName),
-            trailing: FollowUserButton(
-              pubkey: pubkey,
-            ),
-            subtitle: Text(
-              prefixUsername(
-                username: userMetadata.data.name,
-                context: context,
+      child: userMetadata != null
+          ? BadgesUserListItem(
+              title: Text(userMetadata.data.displayName),
+              trailing: FollowUserButton(
+                pubkey: pubkey,
               ),
-            ),
-            pubkey: pubkey,
-            onTap: () => context.pop(pubkey),
-          );
-        },
-        orElse: () => ItemLoadingState(itemHeight: itemHeight),
-      ),
+              subtitle: Text(
+                prefixUsername(
+                  username: userMetadata.data.name,
+                  context: context,
+                ),
+              ),
+              pubkey: pubkey,
+              onTap: () => context.pop(pubkey),
+            )
+          : ItemLoadingState(itemHeight: itemHeight),
     );
   }
 }
