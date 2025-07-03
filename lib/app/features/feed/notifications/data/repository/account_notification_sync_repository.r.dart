@@ -4,7 +4,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/extensions/num.dart';
 import 'package:ion/app/features/auth/providers/auth_provider.m.dart';
 import 'package:ion/app/features/feed/notifications/data/database/dao/account_notification_sync_state_dao.m.dart';
-import 'package:ion/app/features/feed/notifications/data/database/tables/content_type.d.dart';
+import 'package:ion/app/features/feed/notifications/data/model/content_type.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'account_notification_sync_repository.r.g.dart';
