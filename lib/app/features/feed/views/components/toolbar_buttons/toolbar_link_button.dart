@@ -63,13 +63,11 @@ class ToolbarLinkButton extends HookWidget {
               CupertinoTextField(
                 controller: linkController,
                 placeholder: context.i18n.toolbar_link_placeholder,
-                placeholderStyle: TextStyle(
+                placeholderStyle: context.theme.appTextThemes.body2.copyWith(
                   color: context.theme.appColors.tertararyText,
-                  fontSize: 13,
                 ),
-                style: TextStyle(
+                style: context.theme.appTextThemes.body2.copyWith(
                   color: context.theme.appColors.primaryText,
-                  fontSize: 13,
                 ),
               ),
             ],
