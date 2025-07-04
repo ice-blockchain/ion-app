@@ -5,15 +5,53 @@ import 'dart:io';
 
 import 'package:appsflyer_sdk/appsflyer_sdk.dart';
 import 'package:flutter/foundation.dart';
+import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/features/core/providers/env_provider.r.dart';
+import 'package:ion/app/router/app_routes.gr.dart';
 import 'package:ion/app/services/logger/logger.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'deep_link_service.r.g.dart';
 
+@Riverpod(keepAlive: true)
+DeepLinkService deepLinkService(Ref ref) {
+  final env = ref.read(envProvider.notifier);
+  final templateId = env.get<String>(EnvVariable.AF_ONE_LINK_TEMPLATE_ID);
+  return DeepLinkService(ref.watch(appsflyerSdkProvider), templateId);
+}
+
+@riverpod
+AppsflyerSdk appsflyerSdk(Ref ref) {
+  final env = ref.watch(envProvider.notifier);
+  final devKey = env.get<String>(EnvVariable.AF_DEV_KEY);
+  final templateId = env.get<String>(EnvVariable.AF_ONE_LINK_TEMPLATE_ID);
+
+  final String appId;
+  if (Platform.isIOS) {
+    appId = env.get<String>(EnvVariable.AF_IOS_APP_ID);
+  } else {
+    appId = env.get<String>(EnvVariable.AF_IOS_APP_ID);
+  }
+
+  return AppsflyerSdk(
+    AppsFlyerOptions(
+      afDevKey: devKey,
+      appId: appId,
+      appInviteOneLink: templateId,
+      disableAdvertisingIdentifier: false,
+      disableCollectASA: false,
+      showDebug: kDebugMode,
+    ),
+  );
+}
+
 final class DeepLinkService {
   DeepLinkService(this._appsflyerSdk, this._templateId);
+
+  static void initDeeplinks(Ref ref) => ref
+      .read(deepLinkServiceProvider)
+      .init(onDeeplink: (path) => GoRouter.of(rootNavigatorKey.currentContext!).go(path));
 
   final AppsflyerSdk _appsflyerSdk;
 
@@ -48,12 +86,11 @@ final class DeepLinkService {
 
     //For some reason AppsFlyer on Android and iOS returns different results...
 
-    //Android
-    if (result case final String result) {
+    if (Platform.isAndroid && result is String) {
       _isInitialized = result == 'success';
     }
-    //iOS
-    if (result case final Map<dynamic, dynamic> result) {
+
+    if (Platform.isIOS && result is Map<dynamic, dynamic>) {
       _isInitialized = result['status'] == 'OK';
     }
   }
@@ -133,36 +170,4 @@ final class DeepLinkService {
 
     return Map<String, String?>.from(payload as Map<String, dynamic>);
   }
-}
-
-@Riverpod(keepAlive: true)
-DeepLinkService deepLinkService(Ref ref) {
-  final env = ref.read(envProvider.notifier);
-  final templateId = env.get<String>(EnvVariable.AF_ONE_LINK_TEMPLATE_ID);
-  return DeepLinkService(ref.watch(appsflyerSdkProvider), templateId);
-}
-
-@riverpod
-AppsflyerSdk appsflyerSdk(Ref ref) {
-  final env = ref.read(envProvider.notifier);
-  final devKey = env.get<String>(EnvVariable.AF_DEV_KEY);
-  final templateId = env.get<String>(EnvVariable.AF_ONE_LINK_TEMPLATE_ID);
-
-  var appId = '';
-  if (Platform.isIOS) {
-    appId = env.get<String>(EnvVariable.AF_IOS_APP_ID);
-  } else {
-    appId = env.get<String>(EnvVariable.AF_ANDROID_APP_ID);
-  }
-
-  return AppsflyerSdk(
-    AppsFlyerOptions(
-      afDevKey: devKey,
-      appId: appId,
-      appInviteOneLink: templateId,
-      disableAdvertisingIdentifier: false,
-      disableCollectASA: false,
-      showDebug: kDebugMode,
-    ),
-  );
 }
