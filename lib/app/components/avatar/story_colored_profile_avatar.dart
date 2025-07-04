@@ -21,8 +21,8 @@ final _storyStatusProvider =
 
   final hasStories = userStories.isNotEmpty && userStories.first.hasStories;
 
-  final allStoriesViewed =
-      hasStories && userStories.first.stories.every((story) => viewedStories.contains(story.id));
+  final allStoriesViewed = hasStories &&
+      userStories.first.stories.every((story) => viewedStories.contains(story.toEventReference()));
 
   return (hasStories: hasStories, allStoriesViewed: allStoriesViewed);
 });

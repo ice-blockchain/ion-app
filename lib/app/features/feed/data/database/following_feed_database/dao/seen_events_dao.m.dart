@@ -92,7 +92,7 @@ class SeenEventsDao extends DatabaseAccessor<FollowingFeedDatabase> with _$SeenE
   Future<List<SeenEvent>> getEventsExcluding({
     required FeedType feedType,
     required List<EventReference> exclude,
-    required int limit,
+    int? limit,
     int? since,
     int? until,
     FeedModifier? feedModifier,
@@ -102,8 +102,10 @@ class SeenEventsDao extends DatabaseAccessor<FollowingFeedDatabase> with _$SeenE
       ..where((tbl) => tbl.feedModifier.equals(const FeedModifierConverter().toSql(feedModifier)))
       ..orderBy([
         (tbl) => OrderingTerm(expression: tbl.createdAt, mode: OrderingMode.desc),
-      ])
-      ..limit(limit);
+      ]);
+    if (limit != null) {
+      query.limit(limit);
+    }
     if (exclude.isNotEmpty) {
       query.where((tbl) => tbl.eventReference.isNotInValues(exclude));
     }

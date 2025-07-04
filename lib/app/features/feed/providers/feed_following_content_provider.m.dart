@@ -415,7 +415,11 @@ class FeedFollowingContent extends _$FeedFollowingContent implements PagedNotifi
     if (seenSequenceEnd == null) {
       // If the entity is not seen, we save it as a new seen event,
       // update the state items and pagination.
-      await seenEventsRepository.save(entity, feedType: feedType, feedModifier: feedModifier);
+      // We don't mark stories as seen, as they are handled separately when
+      // they are actually seen through stories viewer.
+      if (feedType != FeedType.story) {
+        await seenEventsRepository.save(entity, feedType: feedType, feedModifier: feedModifier);
+      }
       final duplicatedRepost = await _isDuplicatedRepost(entity);
       final isInReqTimeFrame = await _isInReqTimeFrame(entity.createdAt);
 

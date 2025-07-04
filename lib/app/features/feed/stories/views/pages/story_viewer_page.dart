@@ -49,7 +49,7 @@ class StoryViewerPage extends HookConsumerWidget {
       () async {
         final viewedStories = ref.read(viewedStoriesControllerProvider);
         final firstNotViewedStory = storyViewerState.currentStoriesList
-            .firstWhereOrNull((story) => !viewedStories.contains(story.id));
+            .firstWhereOrNull((story) => !viewedStories.contains(story.toEventReference()));
         if (initialStoryReference != null || firstNotViewedStory != null) {
           ref
               .watch(
@@ -71,7 +71,7 @@ class StoryViewerPage extends HookConsumerWidget {
     useOnInit(
       () {
         if (currentStory != null) {
-          ref.read(viewedStoriesControllerProvider.notifier).markStoryAsViewed(currentStory.id);
+          ref.read(viewedStoriesControllerProvider.notifier).markStoryAsViewed(currentStory);
         }
       },
       [currentStory?.id],
