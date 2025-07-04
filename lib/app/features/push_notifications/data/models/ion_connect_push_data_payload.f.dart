@@ -24,6 +24,7 @@ import 'package:ion/app/features/user/model/user_delegation.f.dart';
 import 'package:ion/app/features/user/model/user_metadata.f.dart';
 import 'package:ion/app/features/wallets/model/entities/funds_request_entity.f.dart';
 import 'package:ion/app/features/wallets/model/entities/wallet_asset_entity.f.dart';
+import 'package:ion/app/utils/image_path.dart';
 
 part 'ion_connect_push_data_payload.f.freezed.dart';
 part 'ion_connect_push_data_payload.f.g.dart';
@@ -33,16 +34,19 @@ class IonConnectPushDataPayload {
     required this.event,
     required this.relevantEvents,
     this.decryptedEvent,
+    this.decryptedPlaceholders,
   });
 
   final EventMessage event;
-  final EventMessage? decryptedEvent;
   final List<EventMessage> relevantEvents;
+  final EventMessage? decryptedEvent;
+  final Map<String, String>? decryptedPlaceholders;
 
   static Future<IonConnectPushDataPayload> fromEncoded(
-    Map<String, dynamic> data,
-    Future<EventMessage> Function(EventMessage eventMassage) decryptEvent,
-  ) async {
+    Map<String, dynamic> data, {
+    required Future<(EventMessage, UserMetadataEntity?)> Function(EventMessage eventMassage)
+        decryptEvent,
+  }) async {
     final EncodedIonConnectPushData(:event, :relevantEvents, :compression) =
         EncodedIonConnectPushData.fromJson(data);
 
@@ -61,19 +65,24 @@ class IonConnectPushDataPayload {
         : <EventMessage>[];
 
     EventMessage? decryptedEvent;
+    UserMetadataEntity? userMetadata;
 
     if (parsedEvent.kind == IonConnectGiftWrapEntity.kind) {
-      final giftWrapEntity = EventParser().parse(parsedEvent) as IonConnectGiftWrapEntity;
-      if (giftWrapEntity.data.kinds
-          .containsDeep([ReplaceablePrivateDirectMessageEntity.kind.toString()])) {
-        decryptedEvent = await decryptEvent(parsedEvent);
-      }
+      final result = await decryptEvent(parsedEvent);
+      decryptedEvent = result.$1;
+      userMetadata = result.$2;
     }
 
     return IonConnectPushDataPayload._(
       event: parsedEvent,
       relevantEvents: parsedRelevantEvents,
       decryptedEvent: decryptedEvent,
+      decryptedPlaceholders: userMetadata != null
+          ? {
+              'username': userMetadata.data.name,
+              'displayName': userMetadata.data.displayName,
+            }
+          : null,
     );
   }
 
@@ -109,7 +118,14 @@ class IonConnectPushDataPayload {
     } else if (entity is FollowListEntity) {
       return PushNotificationType.follower;
     } else if (entity is IonConnectGiftWrapEntity) {
-      if (entity.data.kinds.containsDeep([ReplaceablePrivateDirectMessageEntity.kind.toString()])) {
+      if (entity.data.kinds.containsDeep([ReactionEntity.kind.toString()])) {
+        return PushNotificationType.chatReaction;
+      } else if (entity.data.kinds.containsDeep([FundsRequestEntity.kind.toString()])) {
+        return PushNotificationType.paymentRequest;
+      } else if (entity.data.kinds.containsDeep([WalletAssetEntity.kind.toString()])) {
+        return PushNotificationType.paymentReceived;
+      } else if (entity.data.kinds
+          .containsDeep([ReplaceablePrivateDirectMessageEntity.kind.toString()])) {
         if (decryptedEvent == null) return null;
 
         final message = ReplaceablePrivateDirectMessageEntity.fromEventMessage(decryptedEvent!);
@@ -118,36 +134,56 @@ class IonConnectPushDataPayload {
             return PushNotificationType.chatVoiceMessage;
           case MessageType.document:
             return PushNotificationType.chatDocumentMessage;
-          case MessageType.text || MessageType.emoji:
+          case MessageType.text:
             return PushNotificationType.chatTextMessage;
+          case MessageType.emoji:
+            return PushNotificationType.chatEmojiMessage;
           case MessageType.profile:
             return PushNotificationType.chatProfileMessage;
           case MessageType.sharedPost:
             return PushNotificationType.chatSharePostMessage;
-          case MessageType.visualMedia:
-            final mediaItems = message.data.media.values.toList();
-            if (mediaItems.every((media) => media.mediaType == MediaType.image)) {
-              return PushNotificationType.chatPhotoMessage;
-            } else if (mediaItems.every((media) => media.mediaType == MediaType.video)) {
-              return PushNotificationType.chatVideoMessage;
-            } else {
-              return PushNotificationType.chatAlbumMessage;
-            }
           case MessageType.requestFunds:
             return PushNotificationType.paymentRequest;
           case MessageType.moneySent:
             return PushNotificationType.paymentReceived;
+          case MessageType.visualMedia:
+            return _getVisualMediaNotificationType(message);
         }
-      } else if (entity.data.kinds.containsDeep([ReactionEntity.kind.toString()])) {
-        return PushNotificationType.chatReaction;
-      } else if (entity.data.kinds.containsDeep([FundsRequestEntity.kind.toString()])) {
-        return PushNotificationType.paymentRequest;
-      } else if (entity.data.kinds.containsDeep([WalletAssetEntity.kind.toString()])) {
-        return PushNotificationType.paymentReceived;
       }
     }
 
     return null;
+  }
+
+  PushNotificationType _getVisualMediaNotificationType(
+    ReplaceablePrivateDirectMessageEntity message,
+  ) {
+    final mediaItems = message.data.media.values.toList();
+
+    if (mediaItems.every((media) => media.mediaType == MediaType.image)) {
+      final isGif = mediaItems.every((media) => media.url.isGif);
+
+      if (mediaItems.length == 1) {
+        return isGif ? PushNotificationType.chatGifMessage : PushNotificationType.chatPhotoMessage;
+      } else {
+        return isGif
+            ? PushNotificationType.chatMultiGifMessage
+            : PushNotificationType.chatMultiPhotoMessage;
+      }
+    } else if (mediaItems.any((media) => media.mediaType == MediaType.video)) {
+      final videoItems = mediaItems.where((media) => media.mediaType == MediaType.video).toList();
+      final thumbItems = mediaItems.where((media) => media.thumb != null).toList();
+
+      if (videoItems.length == 1 && thumbItems.length == 1) {
+        return PushNotificationType.chatVideoMessage;
+      } else if (videoItems.length == thumbItems.length) {
+        return PushNotificationType.chatMultiVideoMessage;
+      } else {
+        return PushNotificationType.chatMultiMediaMessage;
+      }
+    }
+
+    return PushNotificationType.chatMultiMediaMessage;
   }
 
   Map<String, String> get placeholders {
@@ -160,10 +196,21 @@ class IonConnectPushDataPayload {
         'username': mainEntityUserMetadata.data.name,
         'displayName': mainEntityUserMetadata.data.displayName,
       });
+    } else {
+      data.addAll(decryptedPlaceholders ?? {});
     }
 
     if (decryptedEvent != null) {
       data['messageContent'] = decryptedEvent!.content;
+      data['reactionContent'] = decryptedEvent!.content;
+      final entity = mainEntity;
+      if (entity is IonConnectGiftWrapEntity) {
+        if (entity.data.kinds
+            .containsDeep([ReplaceablePrivateDirectMessageEntity.kind.toString()])) {
+          final message = ReplaceablePrivateDirectMessageEntity.fromEventMessage(decryptedEvent!);
+          data['fileCount'] = message.data.media.values.length.toString();
+        }
+      }
     }
 
     return data;
@@ -291,5 +338,10 @@ enum PushNotificationType {
   chatTextMessage,
   chatVideoMessage,
   chatVoiceMessage,
-  chatAlbumMessage,
+  chatFirstContactMessage,
+  chatGifMessage,
+  chatMultiGifMessage,
+  chatMultiMediaMessage,
+  chatMultiPhotoMessage,
+  chatMultiVideoMessage,
 }

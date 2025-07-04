@@ -9,6 +9,7 @@ import 'package:ion/app/features/ion_connect/model/ion_connect_gift_wrap.f.dart'
 import 'package:ion/app/features/push_notifications/data/models/ion_connect_push_data_payload.f.dart';
 import 'package:ion/app/features/push_notifications/providers/configure_firebase_app_provider.r.dart';
 import 'package:ion/app/features/push_notifications/providers/notification_data_parser_provider.r.dart';
+import 'package:ion/app/features/user/providers/user_metadata_provider.r.dart';
 import 'package:ion/app/services/firebase/firebase_messaging_service_provider.r.dart';
 import 'package:ion/app/services/local_notifications/local_notifications.r.dart';
 import 'package:ion/app/services/uuid/uuid.dart';
@@ -29,10 +30,17 @@ class ForegroundMessagesHandler extends _$ForegroundMessagesHandler {
   }
 
   Future<void> _handleForegroundMessage(Map<String, dynamic> response) async {
-    final data = await IonConnectPushDataPayload.fromEncoded(response, (eventMassage) async {
-      final giftUnwrapService = await ref.read(giftUnwrapServiceProvider.future);
-      return giftUnwrapService.unwrap(eventMassage);
-    });
+    final data = await IonConnectPushDataPayload.fromEncoded(
+      response,
+      decryptEvent: (eventMassage) async {
+        final giftUnwrapService = await ref.read(giftUnwrapServiceProvider.future);
+
+        final event = await giftUnwrapService.unwrap(eventMassage);
+        final userMetadata = ref.read(userMetadataFromDbProvider(event.masterPubkey));
+
+        return (event, userMetadata);
+      },
+    );
 
     if (await _shouldSkip(data: data)) {
       return;

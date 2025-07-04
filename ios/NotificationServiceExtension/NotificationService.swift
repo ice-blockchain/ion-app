@@ -20,11 +20,15 @@ class NotificationService: UNNotificationServiceExtension {
         }
 
         Task {
-            let translation = await NotificationTranslationService.shared.translate(request.content.userInfo)
+            do {
+                let translation = await NotificationTranslationService(storage: try SharedStorageService()).translate(request.content.userInfo)
 
-            if let title = translation.title, let body = translation.body {
-                mutableNotificationContent.title = title
-                mutableNotificationContent.body = body
+                if let title = translation.title, let body = translation.body {
+                    mutableNotificationContent.title = title
+                    mutableNotificationContent.body = body
+                }
+            } catch {
+                NSLog("Failed to translate notification: \(error)")
             }
 
             Messaging.serviceExtension().populateNotificationContent(

@@ -2,71 +2,56 @@
 
 import Foundation
 
-enum Constants {
-    static let appGroupKey = "APP_GROUP"
-    static let currentPubkeyKey = "current_master_pubkey"
-    static let translationCacheDirName = "TranslationCache"
-    static let translationsPath = "ion-app_push-notifications_translations"
-    static let appLocaleKey = "app_locale"
-    static let fallbackLocale = "en_US"
-}
-
 class NotificationTranslationService {
-    static let shared = NotificationTranslationService()
-
     private let translator: Translator<PushNotificationTranslations>
+    private let storage: SharedStorageService
+    private let e2eDecryptionService: E2EDecryptionService?
 
-    private init() {
-        let appGroupIdentifier = Bundle.main.object(forInfoDictionaryKey: Constants.appGroupKey) as! String
-        let userDefaults = UserDefaults(suiteName: appGroupIdentifier) ?? UserDefaults.standard
+    init(storage: SharedStorageService) {
+        self.storage = storage
 
-        let fileManager = FileManager.default
-        let containerURL = fileManager.containerURL(forSecurityApplicationGroupIdentifier: appGroupIdentifier)
-        let cacheDirectory =
-            containerURL?.appendingPathComponent(Constants.translationCacheDirName, isDirectory: true)
-            ?? URL(fileURLWithPath: NSTemporaryDirectory()).appendingPathComponent(Constants.translationCacheDirName)
-        
-        let appLocale = userDefaults.string(forKey: Constants.appLocaleKey) ?? Constants.fallbackLocale
-
+        let appLocale = storage.getAppLocale()
         let repository = TranslationsRepository<PushNotificationTranslations>(
             ionOrigin: Environment.ionOrigin,
-            path: Constants.translationsPath,
-            userDefaults: userDefaults,
-            cacheDirectory: cacheDirectory,
+            storage: storage,
             cacheMaxAge: TimeInterval(Environment.pushTranslationsCacheMinutes * 60)
         )
 
         self.translator = Translator<PushNotificationTranslations>(
             translationsRepository: repository,
-            locale: Locale(identifier: appLocale)
+            appLocale: appLocale
         )
+
+        if let pubkey = storage.getCurrentPubkey(), let currentIdentityKeyName = storage.getCurrentIdentityKeyName() {
+            self.e2eDecryptionService = E2EDecryptionService(
+                keychainService: KeychainService(currentIdentityKeyName: currentIdentityKeyName),
+                pubkey: pubkey,
+            )
+        } else {
+            self.e2eDecryptionService = nil
+        }
     }
 
     func translate(_ pushPayload: [AnyHashable: Any]) async -> (title: String?, body: String?) {
-        guard let currentPubkey = getCurrentPubkey() else {
-            print("No current pubkey found, cannot validate notification")
+        guard let currentPubkey = storage.getCurrentPubkey() else {
             return (title: nil, body: nil)
         }
 
-        guard let data = parsePayload(from: pushPayload) else {
-            print("Failed to parse push payload")
+        guard let data = await parsePayload(from: pushPayload) else {
             return (title: nil, body: nil)
         }
 
         let dataIsValid = data.validate(currentPubkey: currentPubkey)
 
-       if !dataIsValid {
-           print("Data validation failed")
-           return (title: nil, body: nil)
-       }
+        if !dataIsValid {
+            return (title: nil, body: nil)
+        }
 
         guard let notificationType = data.getNotificationType(currentPubkey: currentPubkey) else {
-            print("Unknown notification type")
             return (title: nil, body: nil)
         }
 
         guard let (title, body) = await getNotificationTranslation(for: notificationType) else {
-            print("Failed to get notification translation")
             return (title: nil, body: nil)
         }
 
@@ -78,7 +63,6 @@ class NotificationTranslationService {
         )
 
         if hasPlaceholders(result.title) || hasPlaceholders(result.body) {
-            print("Not all placeholders were replaced")
             return (title: nil, body: nil)
         }
 
@@ -87,67 +71,52 @@ class NotificationTranslationService {
 
     // MARK: - Private helper methods
 
-    private func getCurrentPubkey() -> String? {
-        guard let appGroupIdentifier = Bundle.main.object(forInfoDictionaryKey: Constants.appGroupKey) as? String else {
-            print("App group identifier not found in Info.plist")
-            return nil
-        }
-
-        let userDefaults = UserDefaults(suiteName: appGroupIdentifier)
-        return userDefaults?.string(forKey: Constants.currentPubkeyKey)
-    }
-
-    private func parsePayload(from pushPayload: [AnyHashable: Any]) -> IonConnectPushDataPayload? {
+    private func parsePayload(from pushPayload: [AnyHashable: Any]) async -> IonConnectPushDataPayload? {
         do {
-            let data = try JSONSerialization.data(withJSONObject: pushPayload)
-            let payload = try JSONDecoder().decode(IonConnectPushDataPayload.self, from: data)
+            let payload = try await IonConnectPushDataPayload.fromJson(data: pushPayload) { event in
+                return try? await self.e2eDecryptionService?.decryptMessage(event)
+            }
 
             return payload
         } catch {
-            print("Error decoding push payload: \(error)")
             return nil
         }
     }
 
     private func getNotificationTranslation(for notificationType: PushNotificationType) async -> (title: String, body: String)?
     {
-        do {
-            let translation = await translator.translate { translations in
-                switch notificationType {
-                case .reply:
-                    return translations.reply
-                case .mention:
-                    return translations.mention
-                case .repost:
-                    return translations.repost
-                case .like:
-                    return translations.like
-                case .follower:
-                    return translations.follower
-                case .chatMessage:
-                    return translations.chatMessage
-                case .chatReaction:
-                    return translations.chatReaction
-                case .paymentRequest:
-                    return translations.paymentRequest
-                case .paymentReceived:
-                    return translations.paymentReceived
-                }
+        let translation = await translator.translate { translations in
+            switch notificationType {
+            case .reply:
+                return translations.reply
+            case .mention:
+                return translations.mention
+            case .repost:
+                return translations.repost
+            case .like:
+                return translations.like
+            case .follower:
+                return translations.follower
+            case .chatMessage:
+                return translations.chatMessage
+            case .chatReaction:
+                return translations.chatReaction
+            case .paymentRequest:
+                return translations.paymentRequest
+            case .paymentReceived:
+                return translations.paymentReceived
             }
+        }
 
-            guard let translation = translation,
-                let title = translation.title,
-                let body = translation.body
-            else {
-                print("Missing translation for notification type: \(notificationType)")
-                return nil
-            }
-
-            return (title: title, body: body)
-        } catch {
-            print("Unexpected error getting translation: \(error)")
+        guard let translation = translation,
+            let title = translation.title,
+            let body = translation.body
+        else {
             return nil
         }
+
+        return (title: title, body: body)
+
     }
     /// Replaces placeholders in the format `{{key}}` within the input string
     /// using corresponding values from the placeholders map.

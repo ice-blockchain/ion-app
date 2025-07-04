@@ -73,80 +73,100 @@ class NotificationDataParser {
     try {
       return switch (notificationType) {
         PushNotificationType.reply => (
-            await translator.translate((t) => t.reply.title),
-            await translator.translate((t) => t.reply.body),
+            await translator.translate((t) => t.reply?.title),
+            await translator.translate((t) => t.reply?.body),
           ),
         PushNotificationType.mention => (
-            await translator.translate((t) => t.mention.title),
-            await translator.translate((t) => t.mention.body)
+            await translator.translate((t) => t.mention?.title),
+            await translator.translate((t) => t.mention?.body)
           ),
         PushNotificationType.repost => (
-            await translator.translate((t) => t.repost.title),
-            await translator.translate((t) => t.repost.body)
+            await translator.translate((t) => t.repost?.title),
+            await translator.translate((t) => t.repost?.body)
           ),
         PushNotificationType.like => (
-            await translator.translate((t) => t.like.title),
-            await translator.translate((t) => t.like.body)
+            await translator.translate((t) => t.like?.title),
+            await translator.translate((t) => t.like?.body)
           ),
         PushNotificationType.follower => (
-            await translator.translate((t) => t.follower.title),
-            await translator.translate((t) => t.follower.body)
+            await translator.translate((t) => t.follower?.title),
+            await translator.translate((t) => t.follower?.body)
           ),
         PushNotificationType.paymentRequest => (
-            await translator.translate((t) => t.paymentRequest.title),
-            await translator.translate((t) => t.paymentRequest.body)
+            await translator.translate((t) => t.paymentRequest?.title),
+            await translator.translate((t) => t.paymentRequest?.body)
           ),
         PushNotificationType.paymentReceived => (
-            await translator.translate((t) => t.paymentReceived.title),
-            await translator.translate((t) => t.paymentReceived.body)
+            await translator.translate((t) => t.paymentReceived?.title),
+            await translator.translate((t) => t.paymentReceived?.body)
           ),
         PushNotificationType.chatDocumentMessage => (
-            await translator.translate((t) => t.chatDocumentMessage.title),
-            await translator.translate((t) => t.chatDocumentMessage.body)
+            await translator.translate((t) => t.chatDocumentMessage?.title),
+            await translator.translate((t) => t.chatDocumentMessage?.body)
           ),
         PushNotificationType.chatEmojiMessage => (
-            await translator.translate((t) => t.chatEmojiMessage.title),
-            await translator.translate((t) => t.chatEmojiMessage.body)
+            await translator.translate((t) => t.chatEmojiMessage?.title),
+            await translator.translate((t) => t.chatEmojiMessage?.body)
           ),
         PushNotificationType.chatPhotoMessage => (
-            await translator.translate((t) => t.chatPhotoMessage.title),
-            await translator.translate((t) => t.chatPhotoMessage.body)
+            await translator.translate((t) => t.chatPhotoMessage?.title),
+            await translator.translate((t) => t.chatPhotoMessage?.body)
           ),
         PushNotificationType.chatProfileMessage => (
-            await translator.translate((t) => t.chatProfileMessage.title),
-            await translator.translate((t) => t.chatProfileMessage.body)
+            await translator.translate((t) => t.chatProfileMessage?.title),
+            await translator.translate((t) => t.chatProfileMessage?.body)
           ),
         PushNotificationType.chatReaction => (
-            await translator.translate((t) => t.chatReaction.title),
-            await translator.translate((t) => t.chatReaction.body)
+            await translator.translate((t) => t.chatReaction?.title),
+            await translator.translate((t) => t.chatReaction?.body)
           ),
         PushNotificationType.chatSharePostMessage => (
-            await translator.translate((t) => t.chatSharePostMessage.title),
-            await translator.translate((t) => t.chatSharePostMessage.body)
+            await translator.translate((t) => t.chatSharePostMessage?.title),
+            await translator.translate((t) => t.chatSharePostMessage?.body)
           ),
         PushNotificationType.chatShareStoryMessage => (
-            await translator.translate((t) => t.chatShareStoryMessage.title),
-            await translator.translate((t) => t.chatShareStoryMessage.body)
+            await translator.translate((t) => t.chatShareStoryMessage?.title),
+            await translator.translate((t) => t.chatShareStoryMessage?.body)
           ),
         PushNotificationType.chatSharedStoryReplyMessage => (
-            await translator.translate((t) => t.chatSharedStoryReplyMessage.title),
-            await translator.translate((t) => t.chatSharedStoryReplyMessage.body)
+            await translator.translate((t) => t.chatSharedStoryReplyMessage?.title),
+            await translator.translate((t) => t.chatSharedStoryReplyMessage?.body)
           ),
         PushNotificationType.chatTextMessage => (
-            await translator.translate((t) => t.chatTextMessage.title),
-            await translator.translate((t) => t.chatTextMessage.body)
+            await translator.translate((t) => t.chatTextMessage?.title),
+            await translator.translate((t) => t.chatTextMessage?.body)
           ),
         PushNotificationType.chatVideoMessage => (
-            await translator.translate((t) => t.chatVideoMessage.title),
-            await translator.translate((t) => t.chatVideoMessage.body)
+            await translator.translate((t) => t.chatVideoMessage?.title),
+            await translator.translate((t) => t.chatVideoMessage?.body)
           ),
         PushNotificationType.chatVoiceMessage => (
-            await translator.translate((t) => t.chatVoiceMessage.title),
-            await translator.translate((t) => t.chatVoiceMessage.body)
+            await translator.translate((t) => t.chatVoiceMessage?.title),
+            await translator.translate((t) => t.chatVoiceMessage?.body)
           ),
-        PushNotificationType.chatAlbumMessage => (
-            await translator.translate((t) => t.chatAlbumMessage.title),
-            await translator.translate((t) => t.chatAlbumMessage.body)
+        PushNotificationType.chatFirstContactMessage => (
+            await translator.translate((t) => t.chatFirstContactMessage?.title),
+            await translator.translate((t) => t.chatFirstContactMessage?.body)
+          ),
+        PushNotificationType.chatGifMessage => (
+            await translator.translate((t) => t.chatGifMessage?.title),
+            await translator.translate((t) => t.chatGifMessage?.body)
+          ),
+        PushNotificationType.chatMultiGifMessage => (
+            await translator.translate((t) => t.chatMultiGifMessage?.title),
+            await translator.translate((t) => t.chatMultiGifMessage?.body)
+          ),
+        PushNotificationType.chatMultiMediaMessage => (
+            await translator.translate((t) => t.chatMultiMediaMessage?.title),
+            await translator.translate((t) => t.chatMultiMediaMessage?.body)
+          ),
+        PushNotificationType.chatMultiPhotoMessage => (
+            await translator.translate((t) => t.chatMultiPhotoMessage?.title),
+            await translator.translate((t) => t.chatMultiPhotoMessage?.body)
+          ),
+        PushNotificationType.chatMultiVideoMessage => (
+            await translator.translate((t) => t.chatMultiVideoMessage?.title),
+            await translator.translate((t) => t.chatMultiVideoMessage?.body)
           ),
       };
     } catch (error) {

@@ -7,6 +7,7 @@ import 'package:ion/app/features/ion_connect/model/event_reference.f.dart';
 import 'package:ion/app/features/ion_connect/model/search_extension.dart';
 import 'package:ion/app/features/ion_connect/providers/ion_connect_entity_provider.r.dart';
 import 'package:ion/app/features/user/model/user_metadata.f.dart';
+import 'package:ion/app/features/user_profile/database/dao/user_metadata_dao.m.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'user_metadata_provider.r.g.dart';
@@ -61,4 +62,19 @@ Future<UserMetadataEntity?> currentUserMetadata(Ref ref) async {
 Future<bool> isUserDeleted(Ref ref, String pubkey) async {
   final userMetadata = await ref.watch(userMetadataProvider(pubkey).future);
   return userMetadata == null;
+}
+
+@riverpod
+class UserMetadataFromDb extends _$UserMetadataFromDb {
+  @override
+  UserMetadataEntity? build(String masterPubkey) {
+    keepAliveWhenAuthenticated(ref);
+    final subscription = ref.watch(userMetadataDaoProvider).watch(masterPubkey).listen((metadata) {
+      state = metadata;
+    });
+
+    ref.onDispose(subscription.cancel);
+
+    return null;
+  }
 }

@@ -5,12 +5,35 @@ import Foundation
 class IonConnectPushDataPayload: Decodable {
     let compression: String?
     let event: EventMessage
+    let decryptedEvent: EventMessage?
     let relevantEvents: [EventMessage]
 
     enum CodingKeys: String, CodingKey {
         case compression
         case event
         case relevantEvents = "relevant_events"
+    }
+    
+    static func fromJson(
+        data: [AnyHashable: Any],
+        decryptEvent: @escaping (EventMessage) async throws -> EventMessage?
+    ) async throws -> IonConnectPushDataPayload {
+        let jsonData = try JSONSerialization.data(withJSONObject: data)
+        let payload = try JSONDecoder().decode(IonConnectPushDataPayload.self, from: jsonData)
+        
+        // Check if we need to decrypt the event
+        if payload.event.kind == IonConnectGiftWrapEntity.kind {
+            let decryptedEvent = try await decryptEvent(payload.event)
+            
+            return IonConnectPushDataPayload(
+                compression: payload.compression,
+                event: payload.event,
+                decryptedEvent: decryptedEvent,
+                relevantEvents: payload.relevantEvents
+            )
+        }
+        
+        return payload
     }
 
     required init(from decoder: Decoder) throws {
@@ -22,12 +45,12 @@ class IonConnectPushDataPayload: Decodable {
 
         let eventString = try container.decode(String.self, forKey: .event)
         let relevantEventsString = try container.decodeIfPresent(String.self, forKey: .relevantEvents) ?? ""
-        
+
         if let compression = compression, compression == "zlib" {
             do {
                 let eventData = try Decompressor.decompress(eventString)
                 event = try JSONDecoder().decode(EventMessage.self, from: eventData)
-                
+
                 if !relevantEventsString.isEmpty {
                     let relevantEventsData = try Decompressor.decompress(relevantEventsString)
                     relevantEvents = try JSONDecoder().decode([EventMessage].self, from: relevantEventsData)
@@ -43,9 +66,10 @@ class IonConnectPushDataPayload: Decodable {
                 throw DecompressionError.jsonDataConversionFailed
             }
             event = try JSONDecoder().decode(EventMessage.self, from: eventData)
-            
+
             if !relevantEventsString.isEmpty,
-               let relevantEventsData = relevantEventsString.data(using: .utf8) {
+                let relevantEventsData = relevantEventsString.data(using: .utf8)
+            {
                 relevantEvents = try JSONDecoder().decode(
                     [EventMessage].self,
                     from: relevantEventsData
@@ -54,6 +78,21 @@ class IonConnectPushDataPayload: Decodable {
                 relevantEvents = []
             }
         }
+        // In the decoder init, we don't decrypt yet - that happens in fromEncoded
+        self.decryptedEvent = nil
+    }
+    
+    /// Internal initializer for creating a payload with a decrypted event
+    internal init(
+        compression: String?,
+        event: EventMessage,
+        decryptedEvent: EventMessage?,
+        relevantEvents: [EventMessage]
+    ) {
+        self.compression = compression
+        self.event = event
+        self.decryptedEvent = decryptedEvent
+        self.relevantEvents = relevantEvents
     }
 
     var mainEntity: IonConnectEntity? {

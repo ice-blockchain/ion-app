@@ -1,5 +1,7 @@
 // SPDX-License-Identifier: ice License 1.0
 
+import 'dart:async';
+
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/features/auth/providers/local_passkey_creds_provider.r.dart';
@@ -57,6 +59,14 @@ class Auth extends _$Auth {
             .initEventSigner()
         : null;
 
+    if (currentIdentityKeyName != null) {
+      unawaited(
+        ref
+            .watch(currentIdentityKeyNameStoreProvider.notifier)
+            .setCurrentIdentityKeyNameForNotificationServiceExtension(currentIdentityKeyName),
+      );
+    }
+
     return AuthState(
       authenticatedIdentityKeyNames: authenticatedIdentityKeyNames.toList(),
       currentIdentityKeyName: currentIdentityKeyName,
@@ -95,7 +105,7 @@ String? currentIdentityKeyNameSelector(Ref ref) {
 class CurrentPubkeySelector extends _$CurrentPubkeySelector {
   @override
   String? build() {
-    listenSelf((_, next) => _saveState(next));
+    listenSelf(_saveState);
     final currentIdentityKeyName = ref.watch(currentIdentityKeyNameSelectorProvider);
     if (currentIdentityKeyName == null) {
       return null;
@@ -104,14 +114,14 @@ class CurrentPubkeySelector extends _$CurrentPubkeySelector {
     return mainWallet?.signingKey.publicKey;
   }
 
-  Future<void> _saveState(String? pubkey) async {
+  Future<void> _saveState(String? prev, String? next) async {
     // Saving current master pubkey using sharedPreferencesFoundation
     // to be able to read this value in the iOS Notification Service Extension
     final sharedPreferencesFoundation = await ref.read(sharedPreferencesFoundationProvider.future);
-    if (pubkey == null) {
-      await sharedPreferencesFoundation.remove(persistenceKey);
-    } else {
-      await sharedPreferencesFoundation.setString(persistenceKey, pubkey);
+    if (prev != null && next == null) {
+      await sharedPreferencesFoundation.remove(prev);
+    } else if (next != null) {
+      await sharedPreferencesFoundation.setString(persistenceKey, next);
     }
   }
 
@@ -144,7 +154,16 @@ class CurrentIdentityKeyNameStore extends _$CurrentIdentityKeyNameStore {
   Future<void> setCurrentIdentityKeyName(String identityKeyName) async {
     final localStorage = await ref.read(localStorageAsyncProvider.future);
     await localStorage.setString(_currentIdentityKeyNameKey, identityKeyName);
+
     state = AsyncData(identityKeyName);
+  }
+
+  // Save to sharedPreferencesFoundation for iOS Notification Service Extension access
+  Future<void> setCurrentIdentityKeyNameForNotificationServiceExtension(
+    String identityKeyName,
+  ) async {
+    final sharedPreferencesFoundation = await ref.read(sharedPreferencesFoundationProvider.future);
+    await sharedPreferencesFoundation.setString(_currentIdentityKeyNameKey, identityKeyName);
   }
 }
 
