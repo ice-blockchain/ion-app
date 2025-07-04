@@ -42,29 +42,24 @@ class StoryContent extends HookConsumerWidget {
     return Stack(
       fit: StackFit.expand,
       children: [
-        Stack(
-          fit: StackFit.expand,
-          children: [
-            Align(
-              widthFactor: 1,
-              heightFactor: 1,
-              child: Container(
-                decoration: BoxDecoration(
-                  borderRadius: isKeyboardVisible
-                      ? BorderRadiusDirectional.only(
-                          topStart: Radius.circular(borderRadius),
-                          topEnd: Radius.circular(borderRadius),
-                        )
-                      : BorderRadius.circular(borderRadius),
-                ),
-                clipBehavior: Clip.hardEdge,
-                child: StoryViewerContent(
-                  post: story,
-                  viewerPubkey: viewerPubkey,
-                ),
-              ),
+        Align(
+          widthFactor: 1,
+          heightFactor: 1,
+          child: Container(
+            decoration: BoxDecoration(
+              borderRadius: isKeyboardVisible
+                  ? BorderRadiusDirectional.only(
+                      topStart: Radius.circular(borderRadius),
+                      topEnd: Radius.circular(borderRadius),
+                    )
+                  : BorderRadius.circular(borderRadius),
             ),
-          ],
+            clipBehavior: Clip.hardEdge,
+            child: StoryViewerContent(
+              post: story,
+              viewerPubkey: viewerPubkey,
+            ),
+          ),
         ),
         StoryViewerHeader(currentPost: story),
         _StoryControlsPanel(
