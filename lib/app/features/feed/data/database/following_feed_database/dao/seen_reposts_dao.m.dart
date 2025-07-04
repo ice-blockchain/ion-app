@@ -1,11 +1,13 @@
 // SPDX-License-Identifier: ice License 1.0
 
 import 'package:drift/drift.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/features/feed/data/database/following_feed_database/following_feed_database.m.dart';
 import 'package:ion/app/features/feed/data/database/following_feed_database/tables/seen_reposts_table.d.dart';
 import 'package:ion/app/features/ion_connect/model/event_reference.f.dart';
+import 'package:riverpod_annotation/riverpod_annotation.dart';
 
-part 'seen_reposts_dao.d.g.dart';
+part 'seen_reposts_dao.m.g.dart';
 
 @DriftAccessor(tables: [SeenRepostsTable])
 class SeenRepostsDao extends DatabaseAccessor<FollowingFeedDatabase> with _$SeenRepostsDaoMixin {
@@ -23,3 +25,7 @@ class SeenRepostsDao extends DatabaseAccessor<FollowingFeedDatabase> with _$Seen
         .getSingleOrNull();
   }
 }
+
+@Riverpod(keepAlive: true)
+SeenRepostsDao seenRepostsDao(Ref ref) =>
+    SeenRepostsDao(db: ref.watch(followingFeedDatabaseProvider));
