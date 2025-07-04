@@ -14,6 +14,7 @@ import 'package:ion/app/features/feed/data/models/feed_config.f.dart';
 import 'package:ion/app/features/feed/data/models/feed_modifier.dart';
 import 'package:ion/app/features/feed/data/models/feed_type.dart';
 import 'package:ion/app/features/feed/data/repository/following_feed_seen_events_repository.r.dart';
+import 'package:ion/app/features/feed/data/repository/following_users_fetch_states_repository.r.dart';
 import 'package:ion/app/features/feed/providers/feed_config_provider.r.dart';
 import 'package:ion/app/features/feed/providers/feed_data_source_builders.dart';
 import 'package:ion/app/features/feed/providers/feed_request_queue.r.dart';
@@ -251,6 +252,7 @@ class FeedFollowingContent extends _$FeedFollowingContent implements PagedNotifi
             await _saveSeenReposts(entity);
             resultsController.add(entity);
           }
+          await _updateUserFetchState(pubkey, hasContent: valid);
         }).catchError((Object? error) {
           Logger.error(
             error ?? '',
@@ -512,6 +514,16 @@ class FeedFollowingContent extends _$FeedFollowingContent implements PagedNotifi
 
     final feedConfig = await ref.read(feedConfigProvider.future);
     return seenAt.isAfter(DateTime.now().subtract(feedConfig.repostThrottleDelay));
+  }
+
+  Future<void> _updateUserFetchState(String pubkey, {required bool hasContent}) {
+    final repository = ref.read(followingUsersFetchStatesRepositoryProvider);
+    return repository.save(
+      pubkey,
+      feedType: feedType,
+      hasContent: hasContent,
+      feedModifier: feedModifier,
+    );
   }
 
   String get _logTag => '[FEED FOLLOWING ${feedType.name}]';
