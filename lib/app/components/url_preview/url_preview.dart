@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/components/url_preview/providers/url_metadata_provider.r.dart';
+import 'package:ion/app/hooks/use_on_init.dart';
 import 'package:ion/app/utils/url.dart';
 import 'package:ion/app/utils/validators.dart';
 import 'package:ogp_data_extract/ogp_data_extract.dart';
@@ -44,6 +45,13 @@ class UrlPreview extends HookConsumerWidget {
     if (normalizedUrl == null) {
       return builder(null, null);
     }
+
+    useOnInit(() {
+      final urlMetadata = ref.read(urlMetadataProvider(normalizedUrl));
+      if (urlMetadata.valueOrNull != null && !urlMetadata.isLoading) {
+        metaListener?.call(urlMetadata.valueOrNull);
+      }
+    });
 
     final favIconUrl = _resolveFavIconUrl(normalizedUrl);
 
