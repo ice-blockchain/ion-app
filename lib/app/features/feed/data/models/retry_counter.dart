@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: ice License 1.0
+
 class RetryCounter {
   RetryCounter({
     required this.limit,
