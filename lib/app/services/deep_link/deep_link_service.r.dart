@@ -8,6 +8,9 @@ import 'package:flutter/foundation.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/features/core/providers/env_provider.r.dart';
+import 'package:ion/app/features/feed/data/models/entities/article_data.f.dart';
+import 'package:ion/app/features/feed/data/models/entities/modifiable_post_data.f.dart';
+import 'package:ion/app/features/ion_connect/model/event_reference.f.dart';
 import 'package:ion/app/router/app_routes.gr.dart';
 import 'package:ion/app/services/logger/logger.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
@@ -43,9 +46,24 @@ AppsflyerSdk appsflyerSdk(Ref ref) {
 final class DeepLinkService {
   DeepLinkService(this._appsflyerSdk, this._templateId);
 
-  static void initDeeplinks(Ref ref) => ref
-      .read(deepLinkServiceProvider)
-      .init(onDeeplink: (path) => GoRouter.of(rootNavigatorKey.currentContext!).go(path));
+  static void initDeeplinks(Ref ref) => ref.read(deepLinkServiceProvider).init(
+        onDeeplink: (eventReference) {
+          final event = EventReference.fromEncoded(eventReference);
+
+          if (event is ReplaceableEventReference) {
+            final location = switch (event.kind) {
+              ModifiablePostEntity.kind =>
+                PostDetailsRoute(eventReference: eventReference).location,
+              ArticleEntity.kind => ArticleDetailsRoute(eventReference: eventReference).location,
+              _ => null,
+            };
+
+            if (location != null) {
+              GoRouter.of(rootNavigatorKey.currentContext!).go(location);
+            }
+          }
+        },
+      );
 
   final AppsflyerSdk _appsflyerSdk;
 
