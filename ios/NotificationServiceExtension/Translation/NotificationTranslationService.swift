@@ -25,7 +25,7 @@ class NotificationTranslationService {
         if let pubkey = storage.getCurrentPubkey(), let currentIdentityKeyName = storage.getCurrentIdentityKeyName() {
             self.e2eDecryptionService = E2EDecryptionService(
                 keychainService: KeychainService(currentIdentityKeyName: currentIdentityKeyName),
-                pubkey: pubkey,
+                pubkey: pubkey
             )
         } else {
             self.e2eDecryptionService = nil
