@@ -305,6 +305,7 @@ Future<ProfileBadgesData?> updateProfileBadgesWithUsernameProofs(
     ).future,
   );
 }
+
 @riverpod
 Future<({bool isVerified, bool isNicknameProven})> userBadgeVerificationState(
   Ref ref,

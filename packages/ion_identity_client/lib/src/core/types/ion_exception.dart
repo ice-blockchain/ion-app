@@ -229,3 +229,20 @@ class InvalidSignatureException extends IONIdentityException {
 class PasskeyCancelledException extends IONIdentityException {
   const PasskeyCancelledException() : super('Passkey cancelled by user');
 }
+
+class InvalidEmailException extends IONIdentityException {
+  InvalidEmailException() : super('Invalid email');
+
+  static bool isMatch(DioException dioException) {
+    final responseData = dioException.response?.data;
+
+    try {
+      if (responseData is Map<String, dynamic>) {
+        return responseData['code'] != null;
+      }
+      return false;
+    } catch (_) {
+      return false;
+    }
+  }
+}

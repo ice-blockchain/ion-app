@@ -20,6 +20,8 @@ class FeedConfig with _$FeedConfig {
     @DurationMillisecondsConverter() required Duration repostThrottleDelay,
     required bool excludeUnclassifiedFromExplore,
     required double forYouMaxRetriesMultiplier,
+    @Default(true) bool allowNewRegistrations,
+    @Default(false) bool enableEarlyAccessRegistrations,
   }) = _FeedConfig;
 
   const FeedConfig._();

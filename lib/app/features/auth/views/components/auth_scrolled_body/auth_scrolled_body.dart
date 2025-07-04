@@ -47,6 +47,13 @@ class AuthScrollContainer extends HookWidget {
   @override
   Widget build(BuildContext context) {
     final positionNotifier = useMemoized(() => ValueNotifier<double>(0));
+    final header = AuthHeader(
+      title: title,
+      description: description,
+      titleStyle: titleStyle,
+      descriptionStyle: descriptionStyle,
+      icon: icon != null ? AuthHeaderIcon(icon: icon) : icon,
+    );
     return NotificationListener(
       onNotification: (notification) {
         // When the scroll is changed due to keyboard open / close
@@ -84,15 +91,20 @@ class AuthScrollContainer extends HookWidget {
               toolbarHeight: NavigationAppBar.modalHeaderHeight,
               pinned: true,
             ),
-            SliverToBoxAdapter(
-              child: AuthHeader(
-                title: title,
-                description: description,
-                titleStyle: titleStyle,
-                descriptionStyle: descriptionStyle,
-                icon: icon != null ? AuthHeaderIcon(icon: icon) : icon,
+            if (children.isEmpty)
+              SliverFillRemaining(
+                hasScrollBody: false,
+                child: Center(
+                  child: Padding(
+                    padding: EdgeInsetsDirectional.only(bottom: NavigationAppBar.modalHeaderHeight),
+                    child: header,
+                  ),
+                ),
+              )
+            else
+              SliverToBoxAdapter(
+                child: header,
               ),
-            ),
             if (children.isNotEmpty)
               SliverFillRemaining(
                 hasScrollBody: false,

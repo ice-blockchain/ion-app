@@ -22,6 +22,7 @@ SignedChallenge _$SignedChallengeFromJson(Map<String, dynamic> json) {
 mixin _$SignedChallenge {
   CredentialRequestData get firstFactorCredential =>
       throw _privateConstructorUsedError;
+  String? get earlyAccessEmail => throw _privateConstructorUsedError;
 
   /// Serializes this SignedChallenge to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
@@ -39,7 +40,8 @@ abstract class $SignedChallengeCopyWith<$Res> {
           SignedChallenge value, $Res Function(SignedChallenge) then) =
       _$SignedChallengeCopyWithImpl<$Res, SignedChallenge>;
   @useResult
-  $Res call({CredentialRequestData firstFactorCredential});
+  $Res call(
+      {CredentialRequestData firstFactorCredential, String? earlyAccessEmail});
 }
 
 /// @nodoc
@@ -58,12 +60,17 @@ class _$SignedChallengeCopyWithImpl<$Res, $Val extends SignedChallenge>
   @override
   $Res call({
     Object? firstFactorCredential = null,
+    Object? earlyAccessEmail = freezed,
   }) {
     return _then(_value.copyWith(
       firstFactorCredential: null == firstFactorCredential
           ? _value.firstFactorCredential
           : firstFactorCredential // ignore: cast_nullable_to_non_nullable
               as CredentialRequestData,
+      earlyAccessEmail: freezed == earlyAccessEmail
+          ? _value.earlyAccessEmail
+          : earlyAccessEmail // ignore: cast_nullable_to_non_nullable
+              as String?,
     ) as $Val);
   }
 }
@@ -76,7 +83,8 @@ abstract class _$$SignedChallengeImplCopyWith<$Res>
       __$$SignedChallengeImplCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call({CredentialRequestData firstFactorCredential});
+  $Res call(
+      {CredentialRequestData firstFactorCredential, String? earlyAccessEmail});
 }
 
 /// @nodoc
@@ -93,12 +101,17 @@ class __$$SignedChallengeImplCopyWithImpl<$Res>
   @override
   $Res call({
     Object? firstFactorCredential = null,
+    Object? earlyAccessEmail = freezed,
   }) {
     return _then(_$SignedChallengeImpl(
       firstFactorCredential: null == firstFactorCredential
           ? _value.firstFactorCredential
           : firstFactorCredential // ignore: cast_nullable_to_non_nullable
               as CredentialRequestData,
+      earlyAccessEmail: freezed == earlyAccessEmail
+          ? _value.earlyAccessEmail
+          : earlyAccessEmail // ignore: cast_nullable_to_non_nullable
+              as String?,
     ));
   }
 }
@@ -106,17 +119,20 @@ class __$$SignedChallengeImplCopyWithImpl<$Res>
 /// @nodoc
 @JsonSerializable()
 class _$SignedChallengeImpl implements _SignedChallenge {
-  const _$SignedChallengeImpl({required this.firstFactorCredential});
+  const _$SignedChallengeImpl(
+      {required this.firstFactorCredential, this.earlyAccessEmail});
 
   factory _$SignedChallengeImpl.fromJson(Map<String, dynamic> json) =>
       _$$SignedChallengeImplFromJson(json);
 
   @override
   final CredentialRequestData firstFactorCredential;
+  @override
+  final String? earlyAccessEmail;
 
   @override
   String toString() {
-    return 'SignedChallenge(firstFactorCredential: $firstFactorCredential)';
+    return 'SignedChallenge(firstFactorCredential: $firstFactorCredential, earlyAccessEmail: $earlyAccessEmail)';
   }
 
   @override
@@ -125,12 +141,15 @@ class _$SignedChallengeImpl implements _SignedChallenge {
         (other.runtimeType == runtimeType &&
             other is _$SignedChallengeImpl &&
             (identical(other.firstFactorCredential, firstFactorCredential) ||
-                other.firstFactorCredential == firstFactorCredential));
+                other.firstFactorCredential == firstFactorCredential) &&
+            (identical(other.earlyAccessEmail, earlyAccessEmail) ||
+                other.earlyAccessEmail == earlyAccessEmail));
   }
 
   @JsonKey(includeFromJson: false, includeToJson: false)
   @override
-  int get hashCode => Object.hash(runtimeType, firstFactorCredential);
+  int get hashCode =>
+      Object.hash(runtimeType, firstFactorCredential, earlyAccessEmail);
 
   /// Create a copy of SignedChallenge
   /// with the given fields replaced by the non-null parameter values.
@@ -151,14 +170,16 @@ class _$SignedChallengeImpl implements _SignedChallenge {
 
 abstract class _SignedChallenge implements SignedChallenge {
   const factory _SignedChallenge(
-          {required final CredentialRequestData firstFactorCredential}) =
-      _$SignedChallengeImpl;
+      {required final CredentialRequestData firstFactorCredential,
+      final String? earlyAccessEmail}) = _$SignedChallengeImpl;
 
   factory _SignedChallenge.fromJson(Map<String, dynamic> json) =
       _$SignedChallengeImpl.fromJson;
 
   @override
   CredentialRequestData get firstFactorCredential;
+  @override
+  String? get earlyAccessEmail;
 
   /// Create a copy of SignedChallenge
   /// with the given fields replaced by the non-null parameter values.
