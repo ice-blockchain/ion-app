@@ -22,6 +22,8 @@ class TextEditorKeys {
   static GlobalKey<TextEditorState> replyInput() => GlobalKey<TextEditorState>();
 
   static GlobalKey<TextEditorState> createPost() => GlobalKey<TextEditorState>();
+
+  static GlobalKey<TextEditorState> bioInput() => GlobalKey<TextEditorState>();
 }
 
 class TextEditor extends ConsumerStatefulWidget {
