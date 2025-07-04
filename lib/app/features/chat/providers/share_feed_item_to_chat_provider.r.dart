@@ -4,7 +4,6 @@ import 'dart:convert';
 
 import 'package:ion/app/exceptions/exceptions.dart';
 import 'package:ion/app/extensions/extensions.dart';
-import 'package:ion/app/extensions/object.dart';
 import 'package:ion/app/features/auth/providers/auth_provider.m.dart';
 import 'package:ion/app/features/chat/community/models/entities/tags/conversation_identifier.f.dart';
 import 'package:ion/app/features/chat/community/models/entities/tags/master_pubkey_tag.f.dart';
@@ -13,6 +12,7 @@ import 'package:ion/app/features/chat/e2ee/providers/send_chat_message/send_e2ee
 import 'package:ion/app/features/chat/model/database/chat_database.m.dart';
 import 'package:ion/app/features/chat/providers/conversation_pubkeys_provider.r.dart';
 import 'package:ion/app/features/chat/providers/exist_chat_conversation_id_provider.r.dart';
+import 'package:ion/app/features/feed/data/models/entities/article_data.f.dart';
 import 'package:ion/app/features/feed/data/models/entities/generic_repost.f.dart';
 import 'package:ion/app/features/feed/data/models/entities/modifiable_post_data.f.dart';
 import 'package:ion/app/features/feed/providers/ion_connect_entity_with_counters_provider.r.dart';
@@ -23,14 +23,14 @@ import 'package:ion/app/features/ion_connect/model/related_pubkey.f.dart';
 import 'package:ion/app/features/ion_connect/providers/ion_connect_event_signer_provider.r.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
-part 'share_post_to_chat_provider.r.g.dart';
+part 'share_feed_item_to_chat_provider.r.g.dart';
 
 @riverpod
-class SharePostToChat extends _$SharePostToChat {
+class ShareFeedItemToChat extends _$ShareFeedItemToChat {
   @override
   FutureOr<void> build() {}
 
-  Future<void> sharePost({
+  Future<void> share({
     required EventReference eventReference,
     required List<String> receiversMasterPubkeys,
   }) async {
@@ -51,18 +51,16 @@ class SharePostToChat extends _$SharePostToChat {
 
         final sendChatMessageService = ref.read(sendE2eeChatMessageServiceProvider);
 
-        final postEntity =
+        final feedItemEntity =
             ref.watch(ionConnectEntityWithCountersProvider(eventReference: eventReference));
 
-        final postEventMessage = await postEntity.map((entity) {
-          if (entity is ModifiablePostEntity) {
-            return entity.toEntityEventMessage();
-          } else {
-            throw EntityNotFoundException(eventReference);
-          }
-        });
+        final feedItemEventMessage = await switch (feedItemEntity) {
+          final ModifiablePostEntity entity => entity.toEntityEventMessage(),
+          final ArticleEntity entity => entity.toEntityEventMessage(),
+          _ => throw EntityNotFoundException(eventReference),
+        };
 
-        final postAsContent = jsonEncode(postEventMessage.toJson().last);
+        final feedItemAsContent = jsonEncode(feedItemEventMessage.toJson().last);
 
         for (final masterPubkey in receiversMasterPubkeys) {
           final existingConversationId =
@@ -73,7 +71,7 @@ class SharePostToChat extends _$SharePostToChat {
 
           final tags = [
             MasterPubkeyTag(value: currentUserMasterPubkey).toTag(),
-            ['k', postEventMessage.kind.toString()],
+            ['k', feedItemEventMessage.kind.toString()],
             [RelatedPubkey.tagName, eventSigner.publicKey],
             [ConversationIdentifier.tagName, conversationId],
             eventReference.toTag(),
@@ -81,7 +79,7 @@ class SharePostToChat extends _$SharePostToChat {
 
           final id = EventMessage.calculateEventId(
             tags: tags,
-            content: postAsContent,
+            content: feedItemAsContent,
             kind: GenericRepostEntity.kind,
             publicKey: eventSigner.publicKey,
             createdAt: DateTime.now().microsecondsSinceEpoch,
@@ -90,10 +88,10 @@ class SharePostToChat extends _$SharePostToChat {
           final kind16Rumor = EventMessage(
             id: id,
             tags: tags,
-            content: postAsContent,
+            content: feedItemAsContent,
             pubkey: eventSigner.publicKey,
             kind: GenericRepostEntity.kind,
-            createdAt: postEventMessage.createdAt,
+            createdAt: feedItemEventMessage.createdAt,
             sig: null,
           );
 
@@ -130,7 +128,7 @@ class SharePostToChat extends _$SharePostToChat {
                   masterPubkey: masterPubkey,
                   wrappedKinds: [
                     GenericRepostEntity.kind.toString(),
-                    postEventMessage.kind.toString(),
+                    feedItemEventMessage.kind.toString(),
                   ],
                 );
 
@@ -176,10 +174,10 @@ class SharePostToChat extends _$SharePostToChat {
     await ref.read(sendE2eeChatMessageServiceProvider).resendMessage(eventMessage: kind30014Rumor);
   }
 
-  Future<void> _resendKind16(ReplaceablePrivateDirectMessageEntity kind30014Entity) async {
+  Future<void> _resendKind16(ReplaceablePrivateDirectMessageEntity feedItemEntity) async {
     final kind16Rumor = await ref
         .read(eventMessageDaoProvider)
-        .getByReference(kind30014Entity.data.quotedEvent!.eventReference);
+        .getByReference(feedItemEntity.data.quotedEvent!.eventReference);
 
     final kind16Entity = GenericRepostEntity.fromEventMessage(kind16Rumor);
     final eventSigner = await ref.read(currentUserIonConnectEventSignerProvider.future);

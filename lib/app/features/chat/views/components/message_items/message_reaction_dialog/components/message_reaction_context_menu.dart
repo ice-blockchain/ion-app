@@ -16,7 +16,7 @@ import 'package:ion/app/features/chat/e2ee/providers/send_chat_message/send_e2ee
 import 'package:ion/app/features/chat/model/database/chat_database.m.dart';
 import 'package:ion/app/features/chat/model/message_list_item.f.dart';
 import 'package:ion/app/features/chat/model/message_type.dart';
-import 'package:ion/app/features/chat/providers/share_post_to_chat_provider.r.dart';
+import 'package:ion/app/features/chat/providers/share_feed_item_to_chat_provider.r.dart';
 import 'package:ion/app/features/chat/recent_chats/providers/selected_edit_message_provider.r.dart';
 import 'package:ion/app/features/chat/recent_chats/providers/selected_reply_message_provider.r.dart';
 import 'package:ion/app/features/core/model/feature_flags.dart';
@@ -76,7 +76,7 @@ class MessageReactionContextMenu extends HookConsumerWidget {
                   } else if (isSharedPost) {
                     unawaited(
                       ref
-                          .read(sharePostToChatProvider.notifier)
+                          .read(shareFeedItemToChatProvider.notifier)
                           .resendPost(messageItem.eventMessage),
                     );
                   } else {
