@@ -4,7 +4,6 @@ import 'dart:convert';
 
 import 'package:ion/app/exceptions/exceptions.dart';
 import 'package:ion/app/extensions/extensions.dart';
-import 'package:ion/app/extensions/object.dart';
 import 'package:ion/app/features/auth/providers/auth_provider.m.dart';
 import 'package:ion/app/features/chat/community/models/entities/tags/conversation_identifier.f.dart';
 import 'package:ion/app/features/chat/community/models/entities/tags/master_pubkey_tag.f.dart';
@@ -52,18 +51,14 @@ class ShareFeedItemToChat extends _$ShareFeedItemToChat {
 
         final sendChatMessageService = ref.read(sendE2eeChatMessageServiceProvider);
 
-        final postEntity =
+        final feedItemEntity =
             ref.watch(ionConnectEntityWithCountersProvider(eventReference: eventReference));
 
-        final feedItemEventMessage = await postEntity.map((entity) {
-          if (entity is ModifiablePostEntity) {
-            return entity.toEntityEventMessage();
-          } else if (entity is ArticleEntity) {
-            return entity.toEntityEventMessage();
-          } else {
-            throw EntityNotFoundException(eventReference);
-          }
-        });
+        final feedItemEventMessage = await switch (feedItemEntity) {
+          final ModifiablePostEntity entity => entity.toEntityEventMessage(),
+          final ArticleEntity entity => entity.toEntityEventMessage(),
+          _ => throw EntityNotFoundException(eventReference),
+        };
 
         final feedItemAsContent = jsonEncode(feedItemEventMessage.toJson().last);
 
