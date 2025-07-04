@@ -10,6 +10,7 @@ import 'package:ion/app/features/auth/providers/auth_provider.m.dart';
 import 'package:ion/app/features/feed/data/models/feed_config.f.dart';
 import 'package:ion/app/features/feed/data/models/feed_modifier.dart';
 import 'package:ion/app/features/feed/data/models/feed_type.dart';
+import 'package:ion/app/features/feed/data/models/retry_counter.dart';
 import 'package:ion/app/features/feed/providers/feed_config_provider.r.dart';
 import 'package:ion/app/features/feed/providers/feed_data_source_builders.dart';
 import 'package:ion/app/features/feed/providers/feed_following_content_provider.m.dart';
@@ -107,7 +108,7 @@ class FeedForYouContent extends _$FeedForYouContent implements PagedNotifier {
 
     if (retryCounter.isReached) {
       state = state.copyWith(forYouRetryLimitReached: true);
-      Logger.warning('$_logTag For you retry limit reached');
+      Logger.warning('$_logTag Retry limit reached');
     }
   }
 
@@ -606,21 +607,4 @@ class InterestPagination with _$InterestPagination {
     required bool hasMore,
     int? lastEventCreatedAt,
   }) = _InterestPagination;
-}
-
-class RetryCounter {
-  RetryCounter({
-    required this.limit,
-  }) : _current = 0;
-
-  final int limit;
-  int _current;
-
-  bool get isReached => _current >= limit;
-
-  int get triesLeft => limit - _current;
-
-  void increment() {
-    _current++;
-  }
 }
