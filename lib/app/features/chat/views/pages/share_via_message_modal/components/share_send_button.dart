@@ -10,7 +10,7 @@ import 'package:ion/app/components/button/button.dart';
 import 'package:ion/app/components/progress_bar/ion_loading_indicator.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/chat/e2ee/providers/send_chat_message_service.r.dart';
-import 'package:ion/app/features/chat/providers/share_post_to_chat_provider.r.dart';
+import 'package:ion/app/features/chat/providers/share_feed_item_to_chat_provider.r.dart';
 import 'package:ion/app/features/core/views/pages/error_modal.dart';
 import 'package:ion/app/features/feed/providers/ion_connect_entity_with_counters_provider.r.dart';
 import 'package:ion/app/features/ion_connect/model/event_reference.f.dart';
@@ -73,10 +73,10 @@ class ShareSendButton extends HookConsumerWidget {
               if (entity is UserMetadataEntity) {
                 unawaited(shareProfileToChat());
               } else {
-                final service = ref.read(sharePostToChatProvider.notifier);
+                final service = ref.read(shareFeedItemToChatProvider.notifier);
 
                 unawaited(
-                  service.sharePost(
+                  service.share(
                     eventReference: eventReference,
                     receiversMasterPubkeys: masterPubkeys,
                   ),
