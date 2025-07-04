@@ -12,8 +12,7 @@ import 'package:stream_transform/stream_transform.dart';
 
 part 'message_status_provider.r.g.dart';
 
-@riverpod
-//TODO: Make this provider alive till conversation page is opened
+@Riverpod(keepAlive: true, dependencies: [])
 Stream<MessageDeliveryStatus> messageStatus(
   Ref ref,
   EventReference eventReference,

@@ -73,6 +73,7 @@ class Logger {
           printProviderUpdated: _verboseRiverpod,
           printStateFullData: _verboseRiverpod,
           printFailFullData: _verboseRiverpod,
+          printProviderFailed: _verboseRiverpod,
         ),
       );
 
