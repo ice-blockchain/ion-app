@@ -1,78 +1,88 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
-	<dict>
-		<key>CADisableMinimumFrameDurationOnPhone</key>
-		<true />
-		<key>CFBundleDevelopmentRegion</key>
-		<string>$(DEVELOPMENT_LANGUAGE)</string>
-		<key>CFBundleDisplayName</key>
-		<string>$(DISPLAY_NAME)</string>
-		<key>CFBundleExecutable</key>
-		<string>$(EXECUTABLE_NAME)</string>
-		<key>CFBundleIdentifier</key>
-		<string>$(PRODUCT_BUNDLE_IDENTIFIER)</string>
-		<key>CFBundleInfoDictionaryVersion</key>
-		<string>6.0</string>
-		<key>CFBundleName</key>
-		<string>$(DISPLAY_NAME)</string>
-		<key>CFBundlePackageType</key>
-		<string>APPL</string>
-		<key>CFBundleShortVersionString</key>
-		<string>$(FLUTTER_BUILD_NAME)</string>
-		<key>CFBundleSignature</key>
-		<string>????</string>
-		<key>CFBundleVersion</key>
-		<string>$(FLUTTER_BUILD_NUMBER)</string>
-		<key>ITSAppUsesNonExemptEncryption</key>
-		<false />
-		<key>LSApplicationQueriesSchemes</key>
-		<array>
-			<string>https</string>
-			<string>totp</string>
-			<string>msauthv3</string>
-			<string>lastpassmfa</string>
-			<string>authy</string>
-			<string>userlock</string>
-			<string>mailto</string>
-		</array>
-		<key>LSRequiresIPhoneOS</key>
-		<true />
-		<key>NSAppleMusicUsageDescription</key>
-		<string>This app needs access to your media library to let you share music with friends in chats.</string>
-		<key>NSCameraUsageDescription</key>
-		<string>This app needs camera access to let you take photos or videos to share with your community.</string>
-		<key>NSPhotoLibraryUsageDescription</key>
-		<string>This app needs access to your photo library to let you share pictures in chats and posts.</string>
-		<key>PHPhotoLibraryPreventAutomaticLimitedAccessAlert</key>
-		<true/>
-		<key>PermissionGroupNotification</key>
-		<string>This app needs notification access to alert you about new messages, followers, and social updates.</string>
-		<key>UIApplicationSupportsIndirectInputEvents</key>
-		<true />
-		<key>UIBackgroundModes</key>
-		<array>
-			<string>fetch</string>
-			<string>remote-notification</string>
-		</array>
-		<key>UILaunchStoryboardName</key>
-		<string>LaunchScreen</string>
-		<key>UIMainStoryboardFile</key>
-		<string>Main</string>
-		<key>UIRequiresFullScreen</key>
-		<true />
-		<key>UISupportedInterfaceOrientations</key>
-		<array>
-			<string>UIInterfaceOrientationPortrait</string>
-		</array>
-		<key>UIViewControllerBasedStatusBarAppearance</key>
-		<false />
-		<key>NSPhotoLibraryAddUsageDescription</key>
-		<string>This app needs permission to save images you create or download to your photo library.</string>
-		<key>NSMicrophoneUsageDescription</key>
-		<string>This app needs microphone access to record voice messages or videos for sharing in chats.</string>
-		<key>NSFaceIDUsageDescription</key>
-		<string>This app uses Face ID to securely authenticate your identity for account access.</string>
-
-	</dict>
+<dict>
+	<key>CADisableMinimumFrameDurationOnPhone</key>
+	<true/>
+	<key>CFBundleDevelopmentRegion</key>
+	<string>$(DEVELOPMENT_LANGUAGE)</string>
+	<key>CFBundleDisplayName</key>
+	<string>$(DISPLAY_NAME)</string>
+	<key>CFBundleExecutable</key>
+	<string>$(EXECUTABLE_NAME)</string>
+	<key>CFBundleIdentifier</key>
+	<string>$(PRODUCT_BUNDLE_IDENTIFIER)</string>
+	<key>CFBundleInfoDictionaryVersion</key>
+	<string>6.0</string>
+	<key>CFBundleName</key>
+	<string>$(DISPLAY_NAME)</string>
+	<key>CFBundlePackageType</key>
+	<string>APPL</string>
+	<key>CFBundleShortVersionString</key>
+	<string>$(FLUTTER_BUILD_NAME)</string>
+	<key>CFBundleSignature</key>
+	<string>????</string>
+	<key>CFBundleVersion</key>
+	<string>$(FLUTTER_BUILD_NUMBER)</string>
+	<key>ITSAppUsesNonExemptEncryption</key>
+	<false/>
+	<key>LSApplicationQueriesSchemes</key>
+	<array>
+		<string>https</string>
+		<string>totp</string>
+		<string>msauthv3</string>
+		<string>lastpassmfa</string>
+		<string>authy</string>
+		<string>userlock</string>
+		<string>mailto</string>
+	</array>
+	<key>CFBundleURLTypes</key>
+	<array>
+		<dict>
+			<key>CFBundleURLName</key>
+			<string>com.ionapp.deeplink</string>
+			<key>CFBundleURLSchemes</key>
+			<array>
+				<string>ionapp</string>
+			</array>
+		</dict>
+	</array>
+	<key>LSRequiresIPhoneOS</key>
+	<true/>
+	<key>NSAppleMusicUsageDescription</key>
+	<string>This app needs access to your media library to let you share music with friends in chats.</string>
+	<key>NSCameraUsageDescription</key>
+	<string>This app needs camera access to let you take photos or videos to share with your community.</string>
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>This app needs access to your photo library to let you share pictures in chats and posts.</string>
+	<key>PHPhotoLibraryPreventAutomaticLimitedAccessAlert</key>
+	<true/>
+	<key>PermissionGroupNotification</key>
+	<string>This app needs notification access to alert you about new messages, followers, and social updates.</string>
+	<key>UIApplicationSupportsIndirectInputEvents</key>
+	<true/>
+	<key>UIBackgroundModes</key>
+	<array>
+		<string>fetch</string>
+		<string>remote-notification</string>
+	</array>
+	<key>UILaunchStoryboardName</key>
+	<string>LaunchScreen</string>
+	<key>UIMainStoryboardFile</key>
+	<string>Main</string>
+	<key>UIRequiresFullScreen</key>
+	<true/>
+	<key>UISupportedInterfaceOrientations</key>
+	<array>
+		<string>UIInterfaceOrientationPortrait</string>
+	</array>
+	<key>UIViewControllerBasedStatusBarAppearance</key>
+	<false/>
+	<key>NSPhotoLibraryAddUsageDescription</key>
+	<string>This app needs permission to save images you create or download to your photo library.</string>
+	<key>NSMicrophoneUsageDescription</key>
+	<string>This app needs microphone access to record voice messages or videos for sharing in chats.</string>
+	<key>NSFaceIDUsageDescription</key>
+	<string>This app uses Face ID to securely authenticate your identity for account access.</string>
+</dict>
 </plist>

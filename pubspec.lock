@@ -71,6 +71,15 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.0.3"
+  appsflyer_sdk:
+    dependency: "direct main"
+    description:
+      path: "."
+      ref: master
+      resolved-ref: d4e8d04fa1472e0fac0d98d99e011c4c2c0abb2e
+      url: "https://github.com/ice-blockchain/appsflyer-flutter-plugin.git"
+    source: git
+    version: "6.16.21"
   archive:
     dependency: transitive
     description:

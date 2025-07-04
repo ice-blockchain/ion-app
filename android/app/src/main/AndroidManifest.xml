@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:tools="http://schemas.android.com/tools">
+    xmlns:tools="http://schemas.android.com/tools">
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.CAMERA" />
@@ -10,8 +10,8 @@
     <uses-permission android:name="android.permission.READ_MEDIA_VIDEO" />
     <uses-permission android:name="android.permission.READ_MEDIA_AUDIO" />
     <uses-permission
-            android:name="android.permission.READ_EXTERNAL_STORAGE"
-            android:maxSdkVersion="32" />
+        android:name="android.permission.READ_EXTERNAL_STORAGE"
+        android:maxSdkVersion="32" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.RECORD_AUDIO" />
     <uses-permission android:name="android.permission.DETECT_SCREEN_CAPTURE" />
@@ -19,8 +19,8 @@
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
 
     <uses-sdk
-            android:minSdkVersion="23"
-            tools:overrideLibrary="com.corbado.passkeys_android" />
+        android:minSdkVersion="23"
+        tools:overrideLibrary="com.corbado.passkeys_android" />
 
 
     <!-- https://pub.dev/packages/url_launcher -->
@@ -44,11 +44,12 @@
 
     <!-- allowBackup:false https://pub.dev/packages/flutter_secure_storage#getting-started -->
     <application
-            android:label="${appName}"
-            android:name="${applicationName}"
-            android:icon="@mipmap/ic_launcher"
-            android:usesCleartextTraffic="true"
-            android:allowBackup="false">
+        android:name="${applicationName}"
+        android:allowBackup="false"
+        android:icon="@mipmap/ic_launcher"
+        android:label="${appName}"
+        android:usesCleartextTraffic="true"
+        tools:replace="android:allowBackup">
 
         <!-- Default fcm notification icon. This is used when no icon is set for incoming notification messages -->
         <meta-data
@@ -78,44 +79,66 @@
         /> -->
 
         <activity
-                android:name=".MainActivity"
-                android:exported="true"
-                android:launchMode="singleTop"
-                android:theme="@style/LaunchTheme"
-                android:configChanges="orientation|keyboardHidden|keyboard|screenSize|smallestScreenSize|locale|layoutDirection|fontScale|screenLayout|density|uiMode"
-                android:hardwareAccelerated="true"
-                android:enableOnBackInvokedCallback="false"
-                android:screenOrientation="portrait"
-                android:windowSoftInputMode="adjustResize">
+            android:name=".MainActivity"
+            android:configChanges="orientation|keyboardHidden|keyboard|screenSize|smallestScreenSize|locale|layoutDirection|fontScale|screenLayout|density|uiMode"
+            android:enableOnBackInvokedCallback="false"
+            android:exported="true"
+            android:hardwareAccelerated="true"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait"
+            android:theme="@style/LaunchTheme"
+            android:windowSoftInputMode="adjustResize">
             <!-- Specifies an Android theme to apply to this Activity as soon as
                  the Android process has started. This theme is visible to the user
                  while the Flutter UI initializes. After that, this theme continues
                  to determine the Window background behind the Flutter UI. -->
             <meta-data
-                    android:name="io.flutter.embedding.android.NormalTheme"
-                    android:resource="@style/NormalTheme" />
+                android:name="io.flutter.embedding.android.NormalTheme"
+                android:resource="@style/NormalTheme" />
+
+            <meta-data
+                android:name="flutter_deeplinking_enabled"
+                android:value="false" />
+
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+            <intent-filter android:autoVerify="true">
+                <action android:name="android.intent.action.VIEW" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+
+                <data
+                    android:host="ion.onelink.me"
+                    android:scheme="https" />
+            </intent-filter>
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+                <data
+                    android:scheme="ionapp" />
+            </intent-filter>
         </activity>
         <activity android:name="com.android.camera.CropImage" />
         <activity
-                android:name="com.yalantis.ucrop.UCropActivity"
-                android:screenOrientation="portrait"
-                android:theme="@style/Ucrop.CropTheme" />
+            android:name="com.yalantis.ucrop.UCropActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/Ucrop.CropTheme" />
         <activity
-                android:name="com.banuba.sdk.ve.flow.VideoCreationActivity"
-                android:screenOrientation="portrait"
-                android:theme="@style/CustomIntegrationAppTheme"
-                android:windowSoftInputMode="adjustResize"
-                tools:replace="android:theme" />
+            android:name="com.banuba.sdk.ve.flow.VideoCreationActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/CustomIntegrationAppTheme"
+            android:windowSoftInputMode="adjustResize"
+            tools:replace="android:theme" />
 
         <!-- Don't delete the meta-data below.
              This is used by the Flutter tool to generate GeneratedPluginRegistrant.java -->
         <meta-data
-                android:name="flutterEmbedding"
-                android:value="2" />
+            android:name="flutterEmbedding"
+            android:value="2" />
     </application>
 </manifest>

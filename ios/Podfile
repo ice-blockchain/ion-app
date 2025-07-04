@@ -46,6 +46,7 @@ target 'Runner' do
   pod 'BanubaPhotoEditorSDK', photo_editor_sdk_version
 
   pod 'GoogleUtilities'
+  pod 'AppsFlyerFramework'
 
   flutter_install_all_ios_pods File.dirname(File.realpath(__FILE__))
 end

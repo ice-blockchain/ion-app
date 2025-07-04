@@ -4,6 +4,7 @@ import AVKit
 import AVFoundation
 import BanubaAudioBrowserSDK
 import BanubaPhotoEditorSDK
+import AppsFlyerLib
 
 // Audio Focus Handler implementation
 class AudioFocusHandler: NSObject {
@@ -137,6 +138,7 @@ class AudioFocusHandler: NSObject {
     
     private var audioFocusHandler: AudioFocusHandler?
     
+    
     override func application(
         _ application: UIApplication,
         didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?
@@ -217,6 +219,7 @@ class AudioFocusHandler: NSObject {
                     result(FlutterMethodNotImplemented)
                 }
             }
+
         }
         GeneratedPluginRegistrant.register(with: self)
         
@@ -225,6 +228,21 @@ class AudioFocusHandler: NSObject {
 
         return super.application(application, didFinishLaunchingWithOptions: launchOptions)
     }
+    
+    // MARK: - AppsFlyer Deep Linking
+    
+    // Universal Links handler
+    override func application(_ application: UIApplication, continue userActivity: NSUserActivity, restorationHandler: @escaping ([UIUserActivityRestoring]?) -> Void) -> Bool {
+        AppsFlyerLib.shared().continue(userActivity, restorationHandler: nil)
+        return true
+    }
+
+    // URI Scheme handler (fallback)
+    override func application(_ app: UIApplication, open url: URL, options: [UIApplication.OpenURLOptionsKey : Any] = [:]) -> Bool {
+        AppsFlyerLib.shared().handleOpen(url, options: options)
+        return true
+    }
+
     
     // Custom View Factory is used to provide you custom UI/UX experience in Video Editor SDK
         // i.e. custom audio browser
