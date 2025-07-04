@@ -47,7 +47,7 @@ class FollowingFeedDatabase extends _$FollowingFeedDatabase {
   final String pubkey;
 
   @override
-  int get schemaVersion => 2;
+  int get schemaVersion => 3;
 
   @override
   MigrationStrategy get migration {
@@ -55,6 +55,9 @@ class FollowingFeedDatabase extends _$FollowingFeedDatabase {
       onUpgrade: stepByStep(
         from1To2: (m, schema) async {
           await m.createTable(schema.seenRepostsTable);
+        },
+        from2To3: (m, schema) async {
+          await m.createTable(schema.userFetchStatesTable);
         },
       ),
     );
