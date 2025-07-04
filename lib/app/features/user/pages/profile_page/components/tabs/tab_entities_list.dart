@@ -7,6 +7,7 @@ import 'package:ion/app/components/scroll_view/pull_to_refresh_builder.dart';
 import 'package:ion/app/features/auth/providers/auth_provider.m.dart';
 import 'package:ion/app/features/components/entities_list/entities_list.dart';
 import 'package:ion/app/features/components/entities_list/entities_list_skeleton.dart';
+import 'package:ion/app/features/feed/providers/user_posts_provider.r.dart';
 import 'package:ion/app/features/ion_connect/model/ion_connect_entity.dart';
 import 'package:ion/app/features/ion_connect/providers/entities_paged_data_provider.m.dart';
 import 'package:ion/app/features/user/model/tab_entity_type.dart';
@@ -54,15 +55,23 @@ class TabEntitiesList extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final userMetadata = ref.watch(userMetadataProvider(pubkey)).valueOrNull;
-    final dataSource = ref.watch(tabDataSourceProvider(type: type, pubkey: pubkey));
-    final entitiesPagedData = ref.watch(entitiesPagedDataProvider(dataSource));
     final isBlockedOrBlockedBy =
         ref.watch(isBlockedOrBlockedByNotifierProvider(pubkey)).valueOrNull ?? false;
-    final entities = entitiesPagedData?.data.items;
+    final tabData = ref.watch(tabEntitiesDataProvider(type: type, pubkey: pubkey));
+    final entities = tabData.items;
 
     return LoadMoreBuilder(
-      onLoadMore: ref.read(entitiesPagedDataProvider(dataSource).notifier).fetchEntities,
-      hasMore: entitiesPagedData?.hasMore ?? false,
+      onLoadMore: () async {
+        if (type == TabEntityType.posts) {
+          await ref.read(userPostsProvider(pubkey).notifier).fetchEntities();
+        } else {
+          final dataSource = ref.read(tabDataSourceProvider(type: type, pubkey: pubkey));
+          if (dataSource != null) {
+            await ref.read(entitiesPagedDataProvider(dataSource).notifier).fetchEntities();
+          }
+        }
+      },
+      hasMore: tabData.hasMore,
       slivers: [
         if (entities == null)
           const EntitiesListSkeleton()
@@ -95,7 +104,14 @@ class TabEntitiesList extends ConsumerWidget {
       builder: (context, slivers) => PullToRefreshBuilder(
         slivers: slivers,
         onRefresh: () async {
-          ref.invalidate(entitiesPagedDataProvider(dataSource));
+          if (type == TabEntityType.posts) {
+            ref.invalidate(userPostsProvider(pubkey));
+          } else {
+            final dataSource = ref.read(tabDataSourceProvider(type: type, pubkey: pubkey));
+            if (dataSource != null) {
+              ref.invalidate(entitiesPagedDataProvider(dataSource));
+            }
+          }
           onRefresh?.call();
         },
       ),
