@@ -26,13 +26,7 @@ AppsflyerSdk appsflyerSdk(Ref ref) {
   final env = ref.watch(envProvider.notifier);
   final devKey = env.get<String>(EnvVariable.AF_DEV_KEY);
   final templateId = env.get<String>(EnvVariable.AF_ONE_LINK_TEMPLATE_ID);
-
-  final String appId;
-  if (Platform.isIOS) {
-    appId = env.get<String>(EnvVariable.AF_IOS_APP_ID);
-  } else {
-    appId = env.get<String>(EnvVariable.AF_IOS_APP_ID);
-  }
+  final appId = env.get<String>(EnvVariable.AF_APP_ID);
 
   return AppsflyerSdk(
     AppsFlyerOptions(
