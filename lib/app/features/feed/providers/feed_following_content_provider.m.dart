@@ -13,11 +13,13 @@ import 'package:ion/app/features/feed/data/models/entities/repost_data.f.dart';
 import 'package:ion/app/features/feed/data/models/feed_config.f.dart';
 import 'package:ion/app/features/feed/data/models/feed_modifier.dart';
 import 'package:ion/app/features/feed/data/models/feed_type.dart';
+import 'package:ion/app/features/feed/data/models/retry_counter.dart';
 import 'package:ion/app/features/feed/data/repository/following_feed_seen_events_repository.r.dart';
 import 'package:ion/app/features/feed/data/repository/following_users_fetch_states_repository.r.dart';
 import 'package:ion/app/features/feed/providers/feed_config_provider.r.dart';
 import 'package:ion/app/features/feed/providers/feed_data_source_builders.dart';
 import 'package:ion/app/features/feed/providers/feed_request_queue.r.dart';
+import 'package:ion/app/features/feed/providers/relevant_users_to_fetch_service.r.dart';
 import 'package:ion/app/features/ion_connect/ion_connect.dart';
 import 'package:ion/app/features/ion_connect/model/action_source.f.dart';
 import 'package:ion/app/features/ion_connect/model/event_reference.f.dart';
@@ -28,7 +30,6 @@ import 'package:ion/app/features/ion_connect/providers/ion_connect_entity_provid
 import 'package:ion/app/features/ion_connect/providers/ion_connect_notifier.r.dart';
 import 'package:ion/app/features/user/providers/follow_list_provider.r.dart';
 import 'package:ion/app/services/logger/logger.dart';
-import 'package:ion/app/utils/pagination.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'feed_following_content_provider.m.freezed.dart';
@@ -49,7 +50,7 @@ class FeedFollowingContent extends _$FeedFollowingContent implements PagedNotifi
     return FeedFollowingContentState(
       items: null,
       isLoading: false,
-      seenPagination: Pagination(page: -1, hasMore: fetchSeen),
+      seenPagination: Pagination(hasMore: fetchSeen),
       unseenPagination: null,
     );
   }
@@ -75,12 +76,13 @@ class FeedFollowingContent extends _$FeedFollowingContent implements PagedNotifi
     Logger.info('$_logTag Requesting events');
 
     var unseenCount = 0;
-    await for (final entity in _fetchUnseenEntities(limit: limit)) {
+    final retryCounter = await _buildRetryCounter();
+    await for (final entity in _fetchUnseenEntities(limit: limit, retryCounter: retryCounter)) {
       yield entity;
       unseenCount++;
     }
 
-    Logger.info('$_logTag Got [$unseenCount] unseen events');
+    Logger.info('$_logTag Got total [$unseenCount] unseen events');
 
     if (unseenCount < limit && fetchSeen) {
       yield* _fetchSeenEntities(limit: limit - unseenCount);
@@ -114,23 +116,44 @@ class FeedFollowingContent extends _$FeedFollowingContent implements PagedNotifi
   ///
   /// This method fetches entities from the followed pubkeys until the limit is reached
   /// or no more unseen entities are available.
-  Stream<IonConnectEntity> _fetchUnseenEntities({required int limit}) async* {
+  Stream<IonConnectEntity> _fetchUnseenEntities({
+    required int limit,
+    required RetryCounter retryCounter,
+  }) async* {
+    if (retryCounter.isReached) return;
+
     await _refreshUnseenPagination();
 
-    final nextPageSources = getNextPageSources(sources: state.unseenPagination!, limit: limit);
+    final nextPageSources = await _getNextPageSources(limit: limit);
 
-    if (nextPageSources.isEmpty) return;
+    if (nextPageSources.isEmpty) {
+      Logger.info('$_logTag No sources for the next page, stopping...');
+      return;
+    }
+
+    Logger.info(
+      '$_logTag Next page sources is [${nextPageSources.length}] pubkeys: $nextPageSources',
+    );
 
     var requestedCount = 0;
-    await for (final entity in _requestEntitiesFromPubkeys(pubkeys: nextPageSources.keys)) {
+    await for (final entity
+        in _requestEntitiesFromPubkeys(pubkeys: nextPageSources, retryCounter: retryCounter)) {
       yield entity;
       requestedCount++;
     }
 
     final remaining = limit - requestedCount;
 
+    Logger.info(
+      '$_logTag Got [$requestedCount] unseen events, remaining: [$remaining], tries left: [${retryCounter.triesLeft}]',
+    );
+
     if (remaining > 0) {
-      yield* _fetchUnseenEntities(limit: remaining);
+      if (retryCounter.isReached) {
+        Logger.warning('$_logTag Retry limit reached');
+      } else {
+        yield* _fetchUnseenEntities(limit: remaining, retryCounter: retryCounter);
+      }
     }
   }
 
@@ -202,7 +225,7 @@ class FeedFollowingContent extends _$FeedFollowingContent implements PagedNotifi
   }
 
   Pagination _getPubkeyPagination(String pubkey) {
-    return state.unseenPagination?[pubkey] ?? const Pagination(page: -1, hasMore: true);
+    return state.unseenPagination?[pubkey] ?? const Pagination(hasMore: true);
   }
 
   Future<List<EventReference>> _getNextSeenReferences({required int limit}) async {
@@ -231,6 +254,7 @@ class FeedFollowingContent extends _$FeedFollowingContent implements PagedNotifi
   /// Request 1 entity for each provider pubkey and update the state with the results.
   Stream<IonConnectEntity> _requestEntitiesFromPubkeys({
     required Iterable<String> pubkeys,
+    required RetryCounter retryCounter,
   }) async* {
     final requestsQueue = await ref.read(feedRequestQueueProvider.future);
     final resultsController = StreamController<IonConnectEntity>();
@@ -238,6 +262,8 @@ class FeedFollowingContent extends _$FeedFollowingContent implements PagedNotifi
     final requests = [
       for (final pubkey in pubkeys)
         requestsQueue.add(() async {
+          if (retryCounter.isReached) return;
+
           final Pagination(:lastEvent) = _getPubkeyPagination(pubkey);
           final entity = await _requestEntityFromPubkey(
             pubkey: pubkey,
@@ -251,6 +277,9 @@ class FeedFollowingContent extends _$FeedFollowingContent implements PagedNotifi
           if (valid && entity != null) {
             await _saveSeenReposts(entity);
             resultsController.add(entity);
+          } else {
+            Logger.info('$_logTag No unseen events found for user: $pubkey');
+            retryCounter.increment();
           }
           await _updateUserFetchState(pubkey, hasContent: valid);
         }).catchError((Object? error) {
@@ -400,7 +429,6 @@ class FeedFollowingContent extends _$FeedFollowingContent implements PagedNotifi
         unseenPagination: {
           ...state.unseenPagination!,
           pubkey: pagination.copyWith(
-            page: pagination.page + 1,
             hasMore: isInReqTimeFrame,
             lastEvent: (
               eventReference: entity.toEventReference(),
@@ -420,7 +448,6 @@ class FeedFollowingContent extends _$FeedFollowingContent implements PagedNotifi
         unseenPagination: {
           ...state.unseenPagination!,
           pubkey: pagination.copyWith(
-            page: pagination.page + 1,
             hasMore: isInReqTimeFrame,
             lastEvent: (
               eventReference: seenSequenceEnd.eventReference,
@@ -526,6 +553,24 @@ class FeedFollowingContent extends _$FeedFollowingContent implements PagedNotifi
     );
   }
 
+  Future<RetryCounter> _buildRetryCounter() async {
+    final feedConfig = await ref.read(feedConfigProvider.future);
+    final maxRetries = (feedType.pageSize * feedConfig.forYouMaxRetriesMultiplier).ceil();
+    return RetryCounter(limit: maxRetries);
+  }
+
+  Future<List<String>> _getNextPageSources({required int limit}) async {
+    final dataSourcePubkeys = await _getDataSourcePubkeys();
+    final pubkeysWithUnseenData =
+        dataSourcePubkeys.where((pubkey) => _getPubkeyPagination(pubkey).hasMore).toList();
+    return ref.read(relevantFollowingUsersToFetchServiceProvider).getRelevantUsersToFetch(
+          pubkeysWithUnseenData,
+          feedType: feedType,
+          feedModifier: feedModifier,
+          limit: limit,
+        );
+  }
+
   String get _logTag => '[FEED FOLLOWING ${feedType.name}]';
 }
 
@@ -548,9 +593,8 @@ class FeedFollowingContentState with _$FeedFollowingContentState implements Page
 }
 
 @Freezed(equal: false)
-class Pagination with _$Pagination implements PagedSource {
+class Pagination with _$Pagination {
   const factory Pagination({
-    required int page,
     required bool hasMore,
     ({EventReference eventReference, int createdAt})? lastEvent,
   }) = _Pagination;
