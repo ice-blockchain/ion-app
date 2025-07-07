@@ -22,7 +22,7 @@ void deepLinkHandler(Ref ref) {
   ref.listen<String?>(deeplinkPathProvider, (prev, next) {
     if (next != null) {
       final currentContext = rootNavigatorKey.currentContext;
-      if (currentContext != null) {
+      if (currentContext != null && currentContext.mounted) {
         GoRouter.of(currentContext).go(next);
         ref.read(deeplinkPathProvider.notifier).clear();
       }
