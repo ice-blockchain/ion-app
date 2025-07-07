@@ -14,6 +14,7 @@ class VideoPreviewEditCover extends ConsumerWidget {
   });
 
   final ValueNotifier<MediaFile?> attachedVideoNotifier;
+  static const Duration feedVideoMaxDuration = Duration(minutes: 10);
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -23,7 +24,12 @@ class VideoPreviewEditCover extends ConsumerWidget {
         if (attachedVideo == null) return;
 
         try {
-          final editedMedia = await ref.read(editMediaProvider(attachedVideo).future);
+          final editedMedia = await ref.read(
+            editMediaProvider(
+              attachedVideo,
+              maxVideoDuration: feedVideoMaxDuration,
+            ).future,
+          );
 
           if (editedMedia != null && editedMedia.path != attachedVideo.path) {
             final timestamp = DateTime.now().millisecondsSinceEpoch;
