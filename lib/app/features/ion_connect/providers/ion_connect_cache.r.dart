@@ -46,7 +46,8 @@ class IonConnectCache extends _$IonConnectCache {
       createdAt: DateTime.now(),
     );
 
-    state = {...state, entity.cacheKey: entry};
+    state[entity.cacheKey] = entry;
+    ref.notifyListeners();
 
     _ionConnectCacheStreamController.sink.add(entity);
 
@@ -56,7 +57,8 @@ class IonConnectCache extends _$IonConnectCache {
   }
 
   void remove(String key) {
-    state = {...state}..remove(key);
+    state.remove(key);
+    ref.notifyListeners();
   }
 }
 

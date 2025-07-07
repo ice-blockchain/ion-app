@@ -33,10 +33,8 @@ class RepostedEventsNotifier extends _$RepostedEventsNotifier {
     final subscription = ref.watch(ionConnectCacheStreamProvider).listen((entity) {
       final userRepostData = _getCurrentUserRepostData(entity, currentPubkey: currentPubkey);
       if (userRepostData != null) {
-        state = {
-          ...state,
-          userRepostData.postReference: userRepostData.repostReference,
-        };
+        state[userRepostData.postReference] = userRepostData.repostReference;
+        ref.notifyListeners();
       }
     });
 
