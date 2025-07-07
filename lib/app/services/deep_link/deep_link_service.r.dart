@@ -17,7 +17,8 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'deep_link_service.r.g.dart';
 
-final deepLinkHandlerProvider = Provider<void>((ref) {
+@riverpod
+void deepLinkHandler(Ref ref) {
   ref.listen<String?>(deeplinkPathProvider, (prev, next) {
     if (next != null) {
       final currentContext = rootNavigatorKey.currentContext;
@@ -27,7 +28,7 @@ final deepLinkHandlerProvider = Provider<void>((ref) {
       }
     }
   });
-});
+}
 
 @riverpod
 class DeeplinkPath extends _$DeeplinkPath {
