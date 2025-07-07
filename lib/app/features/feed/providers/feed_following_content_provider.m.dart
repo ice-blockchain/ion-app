@@ -87,6 +87,8 @@ class FeedFollowingContent extends _$FeedFollowingContent implements PagedNotifi
     if (unseenCount < limit && fetchSeen) {
       yield* _fetchSeenEntities(limit: limit - unseenCount);
     }
+
+    Logger.info('$_logTag Done requesting events');
   }
 
   @override
@@ -122,18 +124,13 @@ class FeedFollowingContent extends _$FeedFollowingContent implements PagedNotifi
   }) async* {
     if (retryCounter.isReached) return;
 
+    Logger.info('$_logTag Requesting [$limit] unseen events');
+
     await _refreshUnseenPagination();
 
     final nextPageSources = await _getNextPageSources(limit: limit);
 
-    if (nextPageSources.isEmpty) {
-      Logger.info('$_logTag No sources for the next page, stopping...');
-      return;
-    }
-
-    Logger.info(
-      '$_logTag Next page sources is [${nextPageSources.length}] pubkeys: $nextPageSources',
-    );
+    if (nextPageSources.isEmpty) return;
 
     var requestedCount = 0;
     await for (final entity
@@ -164,6 +161,8 @@ class FeedFollowingContent extends _$FeedFollowingContent implements PagedNotifi
   ///
   /// Returns the number of seen entities that could not be fetched (0 if all were fetched).
   Stream<IonConnectEntity> _fetchSeenEntities({required int limit}) async* {
+    Logger.info('$_logTag Requesting [$limit] seen events');
+
     final nextSeenReferences = await _getNextSeenReferences(limit: limit);
 
     if (nextSeenReferences.isEmpty) return;
@@ -175,6 +174,8 @@ class FeedFollowingContent extends _$FeedFollowingContent implements PagedNotifi
     }
 
     final remaining = limit - requestedCount;
+
+    Logger.info('$_logTag Got [$requestedCount] seen events, remaining: [$remaining]');
 
     if (remaining > 0) {
       yield* _fetchSeenEntities(limit: remaining);
@@ -547,12 +548,23 @@ class FeedFollowingContent extends _$FeedFollowingContent implements PagedNotifi
     final dataSourcePubkeys = await _getDataSourcePubkeys();
     final pubkeysWithUnseenData =
         dataSourcePubkeys.where((pubkey) => _getPubkeyPagination(pubkey).hasMore).toList();
-    return ref.read(relevantFollowingUsersToFetchServiceProvider).getRelevantUsersToFetch(
-          pubkeysWithUnseenData,
-          feedType: feedType,
-          feedModifier: feedModifier,
-          limit: limit,
-        );
+    final relevantUsers =
+        await ref.read(relevantFollowingUsersToFetchServiceProvider).getRelevantUsersToFetch(
+              pubkeysWithUnseenData,
+              feedType: feedType,
+              feedModifier: feedModifier,
+              limit: limit,
+            );
+
+    final relevantUsersPubkeys = relevantUsers.map((item) => item.state.pubkey).toList();
+
+    Logger.info(
+      relevantUsersPubkeys.isEmpty
+          ? '$_logTag No sources for the next page of unseen events'
+          : '$_logTag Next page unseen sources are [${relevantUsersPubkeys.length}] users: $relevantUsersPubkeys',
+    );
+
+    return relevantUsersPubkeys;
   }
 
   String get _logTag => '[FEED FOLLOWING ${feedType.name}]';

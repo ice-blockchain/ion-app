@@ -17,7 +17,7 @@ class RelevantUsersToFetchService {
 
   final UsersFetchStatesRepository _repository;
 
-  Future<List<String>> getRelevantUsersToFetch(
+  Future<List<({double score, UserFetchState state})>> getRelevantUsersToFetch(
     List<String> pubkeys, {
     required FeedType feedType,
     required int limit,
@@ -34,7 +34,7 @@ class RelevantUsersToFetchService {
     }).toList()
       ..sort((a, b) => b.score.compareTo(a.score));
 
-    return scored.take(limit).map((item) => item.state.pubkey).toList();
+    return scored.take(limit).toList();
   }
 
   double _calculateUserScore(UserFetchState state, {DateTime? now}) {

@@ -1,5 +1,7 @@
 // SPDX-License-Identifier: ice License 1.0
 
+import 'dart:math';
+
 class RetryCounter {
   RetryCounter({
     required this.limit,
@@ -10,7 +12,7 @@ class RetryCounter {
 
   bool get isReached => _current >= limit;
 
-  int get triesLeft => limit - _current;
+  int get triesLeft => max(limit - _current, 0);
 
   void increment() {
     _current++;
