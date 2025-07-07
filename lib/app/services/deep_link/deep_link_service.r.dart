@@ -5,6 +5,7 @@ import 'dart:io';
 
 import 'package:appsflyer_sdk/appsflyer_sdk.dart';
 import 'package:flutter/foundation.dart';
+import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/features/core/providers/env_provider.r.dart';
 import 'package:ion/app/features/feed/data/models/entities/article_data.f.dart';
@@ -15,6 +16,18 @@ import 'package:ion/app/services/logger/logger.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'deep_link_service.r.g.dart';
+
+final deepLinkHandlerProvider = Provider<void>((ref) {
+  ref.listen<String?>(deeplinkPathProvider, (prev, next) {
+    if (next != null) {
+      final currentContext = rootNavigatorKey.currentContext;
+      if (currentContext != null) {
+        GoRouter.of(currentContext).go(next);
+        ref.read(deeplinkPathProvider.notifier).clear();
+      }
+    }
+  });
+});
 
 @riverpod
 class DeeplinkPath extends _$DeeplinkPath {

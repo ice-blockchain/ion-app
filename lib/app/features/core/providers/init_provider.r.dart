@@ -25,6 +25,7 @@ import 'package:ion/app/features/user/providers/user_relays_sync_provider.r.dart
 import 'package:ion/app/features/wallets/providers/coins_sync_provider.r.dart';
 import 'package:ion/app/features/wallets/providers/user_public_wallets_sync_provider.r.dart';
 import 'package:ion/app/features/wallets/providers/wallets_initializer_provider.r.dart';
+import 'package:ion/app/services/deep_link/deep_link_service.r.dart';
 import 'package:ion/app/services/ion_connect/ion_connect.dart';
 import 'package:ion/app/services/ion_connect/ion_connect_logger.dart';
 import 'package:ion/app/services/storage/local_storage.r.dart';
@@ -53,6 +54,7 @@ Future<void> initApp(Ref ref) async {
     ref.read(permissionsProvider.notifier).checkAllPermissions(),
     ref.read(onboardingCompleteProvider.future),
     ref.read(forceUpdateProvider.future),
+    ref.read(deeplinkInitializerProvider.future),
   ]);
 
   // `ref.read` lets `coinsSyncProvider` be disposed even though it's a keepAlive provider
@@ -68,7 +70,8 @@ Future<void> initApp(Ref ref) async {
     ..listen(feedBookmarkCollectionsNotifierProvider, noop)
     ..listen(pushesInitProvider, noop)
     ..listen(globalSubscriptionProvider, (_, subscription) => subscription?.init())
-    ..listen(accountNotificationsSyncProvider, noop);
+    ..listen(accountNotificationsSyncProvider, noop)
+    ..listen(deepLinkHandlerProvider, noop);
 
   initFirebaseMessagingBackgroundHandler();
 
