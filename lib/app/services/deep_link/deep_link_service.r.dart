@@ -8,17 +8,65 @@ import 'package:flutter/foundation.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/features/core/providers/env_provider.r.dart';
+import 'package:ion/app/features/feed/data/models/entities/article_data.f.dart';
+import 'package:ion/app/features/feed/data/models/entities/modifiable_post_data.f.dart';
+import 'package:ion/app/features/ion_connect/model/event_reference.f.dart';
 import 'package:ion/app/router/app_routes.gr.dart';
 import 'package:ion/app/services/logger/logger.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'deep_link_service.r.g.dart';
 
+@riverpod
+void deepLinkHandler(Ref ref) {
+  ref.listen<String?>(deeplinkPathProvider, (prev, next) {
+    if (next != null) {
+      final currentContext = rootNavigatorKey.currentContext;
+      if (currentContext != null && currentContext.mounted) {
+        GoRouter.of(currentContext).go(next);
+        ref.read(deeplinkPathProvider.notifier).clear();
+      }
+    }
+  });
+}
+
+@riverpod
+class DeeplinkPath extends _$DeeplinkPath {
+  @override
+  String? build() => null;
+
+  set path(String path) => state = path;
+  void clear() => state = null;
+}
+
 @Riverpod(keepAlive: true)
 DeepLinkService deepLinkService(Ref ref) {
   final env = ref.read(envProvider.notifier);
   final templateId = env.get<String>(EnvVariable.AF_ONE_LINK_TEMPLATE_ID);
   return DeepLinkService(ref.watch(appsflyerSdkProvider), templateId);
+}
+
+@riverpod
+Future<void> deeplinkInitializer(Ref ref) async {
+  final service = ref.read(deepLinkServiceProvider);
+
+  await service.init(
+    onDeeplink: (eventReference) {
+      final event = EventReference.fromEncoded(eventReference);
+
+      if (event is ReplaceableEventReference) {
+        final location = switch (event.kind) {
+          ModifiablePostEntity.kind => PostDetailsRoute(eventReference: eventReference).location,
+          ArticleEntity.kind => ArticleDetailsRoute(eventReference: eventReference).location,
+          _ => null,
+        };
+
+        if (location != null) {
+          ref.read(deeplinkPathProvider.notifier).path = location;
+        }
+      }
+    },
+  );
 }
 
 @riverpod
@@ -42,10 +90,6 @@ AppsflyerSdk appsflyerSdk(Ref ref) {
 
 final class DeepLinkService {
   DeepLinkService(this._appsflyerSdk, this._templateId);
-
-  static void initDeeplinks(Ref ref) => ref
-      .read(deepLinkServiceProvider)
-      .init(onDeeplink: (path) => GoRouter.of(rootNavigatorKey.currentContext!).go(path));
 
   final AppsflyerSdk _appsflyerSdk;
 

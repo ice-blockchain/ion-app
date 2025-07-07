@@ -37,7 +37,6 @@ part 'init_provider.r.g.dart';
 
 @Riverpod(keepAlive: true)
 Future<void> initApp(Ref ref) async {
-  DeepLinkService.initDeeplinks(ref);
   final featureFlagsNotifier = ref.read(featureFlagsProvider.notifier);
   final logIonConnect = featureFlagsNotifier.get(LoggerFeatureFlag.logIonConnect);
 
@@ -55,6 +54,7 @@ Future<void> initApp(Ref ref) async {
     ref.read(permissionsProvider.notifier).checkAllPermissions(),
     ref.read(onboardingCompleteProvider.future),
     ref.read(forceUpdateProvider.future),
+    ref.read(deeplinkInitializerProvider.future),
   ]);
 
   // `ref.read` lets `coinsSyncProvider` be disposed even though it's a keepAlive provider
@@ -70,7 +70,8 @@ Future<void> initApp(Ref ref) async {
     ..listen(feedBookmarkCollectionsNotifierProvider, noop)
     ..listen(pushesInitProvider, noop)
     ..listen(globalSubscriptionProvider, (_, subscription) => subscription?.init())
-    ..listen(accountNotificationsSyncProvider, noop);
+    ..listen(accountNotificationsSyncProvider, noop)
+    ..listen(deepLinkHandlerProvider, noop);
 
   initFirebaseMessagingBackgroundHandler();
 
