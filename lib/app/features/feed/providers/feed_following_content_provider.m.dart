@@ -164,10 +164,6 @@ class FeedFollowingContent extends _$FeedFollowingContent implements PagedNotifi
   ///
   /// Returns the number of seen entities that could not be fetched (0 if all were fetched).
   Stream<IonConnectEntity> _fetchSeenEntities({required int limit}) async* {
-    final dataSourcePubkeys = await _getDataSourcePubkeys();
-
-    await _cleanupSeenEvents(pubkeys: dataSourcePubkeys);
-
     final nextSeenReferences = await _getNextSeenReferences(limit: limit);
 
     if (nextSeenReferences.isEmpty) return;
@@ -210,18 +206,6 @@ class FeedFollowingContent extends _$FeedFollowingContent implements PagedNotifi
       for (final pubkey in dataSourcePubkeys) pubkey: _getPubkeyPagination(pubkey),
     };
     state = state.copyWith(unseenPagination: newPagination);
-  }
-
-  Future<void> _cleanupSeenEvents({required List<String> pubkeys}) async {
-    final seenEventsRepository = ref.read(followingFeedSeenEventsRepositoryProvider);
-    final feedConfig = await ref.read(feedConfigProvider.future);
-
-    await seenEventsRepository.deleteEvents(
-      feedType: feedType,
-      feedModifier: feedModifier,
-      retainPubkeys: pubkeys,
-      until: DateTime.now().subtract(feedConfig.followingCacheMaxAge).microsecondsSinceEpoch,
-    );
   }
 
   Pagination _getPubkeyPagination(String pubkey) {
