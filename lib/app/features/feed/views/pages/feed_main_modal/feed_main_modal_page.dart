@@ -23,6 +23,7 @@ class FeedMainModalPage extends ConsumerWidget {
   const FeedMainModalPage({super.key});
 
   static const List<FeedType> feedTypeValues = FeedType.values;
+  static const Duration feedVideoMaxDuration = Duration(minutes: 10);
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -74,7 +75,12 @@ class FeedMainModalPage extends ConsumerWidget {
                       );
 
                       if (result != null && result.isNotEmpty && context.mounted) {
-                        final editedMedia = await ref.read(editMediaProvider(result[0]).future);
+                        final editedMedia = await ref.read(
+                          editMediaProvider(
+                            result[0],
+                            maxVideoDuration: feedVideoMaxDuration,
+                          ).future,
+                        );
                         if (!context.mounted || editedMedia == null) return;
                         final editingResult = await CreateVideoRoute(
                               videoPath: editedMedia.path,

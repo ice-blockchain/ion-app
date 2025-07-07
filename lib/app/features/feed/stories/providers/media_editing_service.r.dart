@@ -25,7 +25,13 @@ class MediaEditingService {
 
     if (!isCameraPaused) await camera.pauseCamera();
     try {
-      return (await _ref.read(editMediaProvider(file).future))?.path;
+      return (await _ref.read(
+        editMediaProvider(
+          file,
+          maxVideoDuration: const Duration(seconds: 60),
+        ).future,
+      ))
+          ?.path;
     } finally {
       if (resumeCamera && !isCameraPaused) await camera.resumeCamera();
     }
