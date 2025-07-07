@@ -55,8 +55,8 @@ class UserFetchStatesDao extends DatabaseAccessor<FollowingFeedDatabase>
       ..where(
         // `FeedModifierConverter` should be used manually here,
         // because otherwise there is a false positive issue that it throws an exception that we're trying
-        // to pass a null value to a nun-nullable column, even though `FeedModifierConverter().toSql`
-        // returns nun-nullable int.
+        // to pass a null value to a non-nullable column, even though `FeedModifierConverter().toSql`
+        // returns non-nullable int.
         (tbl) => tbl.feedModifier.equals(const FeedModifierConverter().toSql(feedModifier)),
       );
     return query.get();
