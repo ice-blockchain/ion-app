@@ -222,18 +222,11 @@ EntitiesDataSource buildStoriesDataSource({
 
   return EntitiesDataSource(
     actionSource: actionSource,
-    entityFilter: (entity) {
-      // TODO:uncomment when stories are reworked
-      // if (entity.masterPubkey == currentPubkey) {
-      //   return false;
-      // }
-
-      if (authors != null && !authors.contains(entity.masterPubkey)) {
-        return false;
-      }
-
-      return entity is ModifiablePostEntity && entity.data.parentEvent == null;
-    },
+    entityFilter: (entity) =>
+        (authors == null || authors.contains(entity.masterPubkey)) &&
+        (entity is ModifiablePostEntity &&
+            entity.data.parentEvent == null &&
+            entity.data.expiration != null),
     requestFilters: [
       RequestFilter(
         kinds: const [ModifiablePostEntity.kind],
