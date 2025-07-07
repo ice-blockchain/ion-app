@@ -5,7 +5,6 @@ import 'dart:io';
 
 import 'package:appsflyer_sdk/appsflyer_sdk.dart';
 import 'package:flutter/foundation.dart';
-import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/features/core/providers/env_provider.r.dart';
 import 'package:ion/app/features/feed/data/models/entities/article_data.f.dart';
@@ -17,11 +16,43 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'deep_link_service.r.g.dart';
 
+@riverpod
+class DeeplinkPath extends _$DeeplinkPath {
+  @override
+  String? build() => null;
+
+  set path(String path) => state = path;
+  void clear() => state = null;
+}
+
 @Riverpod(keepAlive: true)
 DeepLinkService deepLinkService(Ref ref) {
   final env = ref.read(envProvider.notifier);
   final templateId = env.get<String>(EnvVariable.AF_ONE_LINK_TEMPLATE_ID);
   return DeepLinkService(ref.watch(appsflyerSdkProvider), templateId);
+}
+
+@riverpod
+Future<void> deeplinkInitializer(Ref ref) async {
+  final service = ref.read(deepLinkServiceProvider);
+
+  await service.init(
+    onDeeplink: (eventReference) {
+      final event = EventReference.fromEncoded(eventReference);
+
+      if (event is ReplaceableEventReference) {
+        final location = switch (event.kind) {
+          ModifiablePostEntity.kind => PostDetailsRoute(eventReference: eventReference).location,
+          ArticleEntity.kind => ArticleDetailsRoute(eventReference: eventReference).location,
+          _ => null,
+        };
+
+        if (location != null) {
+          ref.read(deeplinkPathProvider.notifier).path = location;
+        }
+      }
+    },
+  );
 }
 
 @riverpod
@@ -45,25 +76,6 @@ AppsflyerSdk appsflyerSdk(Ref ref) {
 
 final class DeepLinkService {
   DeepLinkService(this._appsflyerSdk, this._templateId);
-
-  static void initDeeplinks(Ref ref) => ref.read(deepLinkServiceProvider).init(
-        onDeeplink: (eventReference) {
-          final event = EventReference.fromEncoded(eventReference);
-
-          if (event is ReplaceableEventReference) {
-            final location = switch (event.kind) {
-              ModifiablePostEntity.kind =>
-                PostDetailsRoute(eventReference: eventReference).location,
-              ArticleEntity.kind => ArticleDetailsRoute(eventReference: eventReference).location,
-              _ => null,
-            };
-
-            if (location != null) {
-              GoRouter.of(rootNavigatorKey.currentContext!).go(location);
-            }
-          }
-        },
-      );
 
   final AppsflyerSdk _appsflyerSdk;
 

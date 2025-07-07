@@ -2,15 +2,18 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_quill/flutter_quill.dart';
+import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/features/core/providers/app_locale_provider.r.dart';
 import 'package:ion/app/features/core/providers/template_provider.r.dart';
 import 'package:ion/app/features/core/providers/theme_mode_provider.r.dart';
 import 'package:ion/app/features/core/views/components/app_lifecycle_observer.dart';
 import 'package:ion/app/features/core/views/components/content_scaler.dart';
+import 'package:ion/app/router/app_routes.gr.dart';
 import 'package:ion/app/router/components/app_router_builder.dart';
 import 'package:ion/app/router/components/modal_wrapper/sheet_scope.dart';
 import 'package:ion/app/router/providers/go_router_provider.r.dart';
+import 'package:ion/app/services/deep_link/deep_link_service.r.dart';
 import 'package:ion/app/services/logger/logger_initializer.dart';
 import 'package:ion/app/services/riverpod/container.dart';
 import 'package:ion/app/services/sentry/sentry_service.dart';
@@ -22,6 +25,7 @@ import 'package:sentry_flutter/sentry_flutter.dart';
 void main() async {
   SentryWidgetsFlutterBinding.ensureInitialized();
   await SecureStorage().clearOnReinstall();
+  await riverpodContainer.read(deeplinkInitializerProvider.future);
 
   LoggerInitializer.initialize(riverpodContainer);
 
@@ -45,6 +49,13 @@ class IONApp extends ConsumerWidget {
     final template = ref.watch(appTemplateProvider);
     final goRouter = ref.watch(goRouterProvider);
     final appLocale = ref.watch(appLocaleProvider);
+
+    ref.listen<String?>(deeplinkPathProvider, (prev, next) {
+      if (next != null) {
+        GoRouter.of(rootNavigatorKey.currentContext!).go(next);
+        ref.read(deeplinkPathProvider.notifier).clear();
+      }
+    });
 
     return ContentScaler(
       child: AppLifecycleObserver(
