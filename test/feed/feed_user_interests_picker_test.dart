@@ -30,6 +30,7 @@ void main() {
         concurrentMediaDownloadsLimit: 3,
         excludeUnclassifiedFromExplore: false,
         forYouMaxRetriesMultiplier: 5,
+        followingMaxRetriesMultiplier: 5,
       );
       interests = FeedInterests.fromJson({
         'music': {
