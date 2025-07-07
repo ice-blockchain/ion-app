@@ -86,6 +86,8 @@ class FeedForYouContent extends _$FeedForYouContent implements PagedNotifier {
     if (unseenFollowing < limit) {
       yield* _fetchForYou(limit: limit - unseenFollowing);
     }
+
+    Logger.info('$_logTag Done requesting events');
   }
 
   Stream<IonConnectEntity> _fetchForYou({required int limit}) async* {
@@ -233,6 +235,12 @@ class FeedForYouContent extends _$FeedForYouContent implements PagedNotifier {
 
     final nextPageRelays =
         getNextPageSources(sources: state.modifiersPagination[modifier]!, limit: limit);
+
+    Logger.info(
+      nextPageRelays.isEmpty
+          ? '$_logTag No sources for the next page of events'
+          : '$_logTag Next page sources are [${nextPageRelays.entries.length}] relays: ${nextPageRelays.keys}',
+    );
 
     if (nextPageRelays.isEmpty) return;
 
