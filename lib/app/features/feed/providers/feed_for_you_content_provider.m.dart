@@ -238,8 +238,8 @@ class FeedForYouContent extends _$FeedForYouContent implements PagedNotifier {
 
     Logger.info(
       nextPageRelays.isEmpty
-          ? '$_logTag No sources for the next page of events'
-          : '$_logTag Next page sources are [${nextPageRelays.entries.length}] relays: ${nextPageRelays.keys}',
+          ? '$_logTag No sources for the next page of events with [${modifier.name}] modifier'
+          : '$_logTag Next page sources are [${nextPageRelays.entries.length}] relays: ${nextPageRelays.keys} with [${modifier.name}] modifier',
     );
 
     if (nextPageRelays.isEmpty) return;
