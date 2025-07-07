@@ -9,6 +9,7 @@ import 'package:ion/app/features/feed/providers/counters/reposted_events_provide
 import 'package:ion/app/features/feed/providers/counters/reposts_count_provider.r.dart';
 import 'package:ion/app/features/ion_connect/model/event_reference.f.dart';
 import 'package:ion/app/router/utils/quote_routing_utils.dart';
+import 'package:ion/app/services/logger/logger.dart';
 import 'package:ion/app/utils/num.dart';
 import 'package:ion/generated/assets.gen.dart';
 
@@ -24,6 +25,7 @@ class RepostsCounterButton extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    Logger.info('repostsCount: ${ref.watch(repostsCountProvider(eventReference))}');
     final repostsCount = ref.watch(repostsCountProvider(eventReference));
     final isReposted = ref.watch(isRepostedProvider(eventReference));
 

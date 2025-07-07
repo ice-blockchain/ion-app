@@ -6,6 +6,7 @@ import 'package:ion/app/components/scroll_view/load_more_builder.dart';
 import 'package:ion/app/components/section_separator/section_separator.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/core/model/media_type.dart';
+import 'package:ion/app/features/core/providers/throttled_provider.dart';
 import 'package:ion/app/features/feed/stories/providers/feed_stories_provider.r.dart';
 import 'package:ion/app/features/feed/stories/providers/story_image_loading_provider.r.dart';
 import 'package:ion/app/features/feed/stories/providers/viewed_stories_provider.r.dart';
@@ -13,6 +14,8 @@ import 'package:ion/app/features/feed/views/pages/feed_page/components/stories/c
 import 'package:ion/app/features/feed/views/pages/feed_page/components/stories/components/story_list.dart';
 import 'package:ion/app/features/feed/views/pages/feed_page/components/stories/components/story_list_skeleton.dart';
 import 'package:ion/app/hooks/use_on_init.dart';
+
+final _provider = feedStoriesProvider.throttled();
 
 class Stories extends HookConsumerWidget {
   const Stories({super.key});
@@ -25,7 +28,7 @@ class Stories extends HookConsumerWidget {
       () async {
         if (stories != null && stories.isNotEmpty) {
           stories
-              .expand((userStory) => userStory.stories)
+              .expand((userStory) => userStory.stories) 
               .map((story) => story.data.primaryMedia)
               .where((media) => media != null && media.mediaType == MediaType.image)
               .map((media) => media!.url)

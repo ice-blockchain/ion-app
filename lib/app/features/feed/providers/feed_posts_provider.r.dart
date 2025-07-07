@@ -2,6 +2,7 @@
 
 import 'package:async/async.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:ion/app/features/core/providers/throttled_provider.dart';
 import 'package:ion/app/features/feed/create_article/providers/create_article_provider.r.dart';
 import 'package:ion/app/features/feed/create_post/providers/create_post_notifier.m.dart';
 import 'package:ion/app/features/feed/data/models/entities/article_data.f.dart';
@@ -24,6 +25,8 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'feed_posts_provider.r.g.dart';
 
+final _feedFollowingContentProvider = feedFollowingContentProvider(FeedType.post).select((state) => state.items).throttled();
+final _feedForYouContentProvider = feedForYouContentProvider(FeedType.post).select((state) => state.items).throttled();
 @riverpod
 class FeedPosts extends _$FeedPosts with DelegatedPagedNotifier {
   @override

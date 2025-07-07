@@ -6,6 +6,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/components/inputs/hooks/use_node_focused.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/feed/polls/providers/poll_draft_provider.r.dart';
+import 'package:ion/app/services/logger/logger.dart';
 import 'package:ion/generated/assets.gen.dart';
 
 class PollAnswerItem extends HookConsumerWidget {
@@ -32,6 +33,8 @@ class PollAnswerItem extends HookConsumerWidget {
 
     const characterLimit = 25;
     final remainingCharacters = characterLimit - textController.text.length;
+
+    Logger.info("KEK PollAnswerItem.build");
 
     useEffect(
       () {
