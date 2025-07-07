@@ -251,7 +251,7 @@ class FeedForYouContent extends _$FeedForYouContent implements PagedNotifier {
       '$_logTag Got [$requestedCount] events with [${modifier.name}] modifier, remaining: [$remaining], tries left: [${retryCounter.triesLeft}]',
     );
 
-    if (remaining > 0 && requestedCount != 0) {
+    if (requestedCount > 0 && remaining > 0) {
       yield* _fetchInterestsEntities(
         modifier: modifier,
         limit: remaining,
