@@ -354,7 +354,7 @@
   "wallet_balance": "Balance",
   "wallet_send": "Send",
   "wallet_send_coins": "Send coins",
-  "wallet_receive_info": "When sending funds, the networks must match! otherwise, you may permanently lose your funds",
+  "wallet_receive_info": "Network mismatch will lead to permanent loss of funds. Always confirm before sending.",
   "wallet_choose_network": "Choose network",
   "wallet_receive": "Receive",
   "wallet_receive_coins": "Receive coins",
