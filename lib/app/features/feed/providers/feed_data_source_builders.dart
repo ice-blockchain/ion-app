@@ -33,6 +33,10 @@ EntitiesDataSource buildArticlesDataSource({
   return EntitiesDataSource(
     actionSource: actionSource,
     entityFilter: (entity) {
+      if (entity.masterPubkey == currentPubkey) {
+        return false;
+      }
+
       if (authors != null && !authors.contains(entity.masterPubkey)) {
         return false;
       }
@@ -87,6 +91,10 @@ EntitiesDataSource buildVideosDataSource({
   return EntitiesDataSource(
     actionSource: actionSource,
     entityFilter: (entity) {
+      if (entity.masterPubkey == currentPubkey) {
+        return false;
+      }
+
       if (authors != null && !authors.contains(entity.masterPubkey)) {
         return false;
       }
@@ -152,6 +160,10 @@ EntitiesDataSource buildPostsDataSource({
   return EntitiesDataSource(
     actionSource: actionSource,
     entityFilter: (entity) {
+      if (entity.masterPubkey == currentPubkey) {
+        return false;
+      }
+
       if (authors != null && !authors.contains(entity.masterPubkey)) {
         return false;
       }
@@ -212,7 +224,9 @@ EntitiesDataSource buildStoriesDataSource({
     actionSource: actionSource,
     entityFilter: (entity) =>
         (authors == null || authors.contains(entity.masterPubkey)) &&
-        (entity is ModifiablePostEntity && entity.data.parentEvent == null),
+        (entity is ModifiablePostEntity &&
+            entity.data.parentEvent == null &&
+            entity.data.expiration != null),
     requestFilters: [
       RequestFilter(
         kinds: const [ModifiablePostEntity.kind],
