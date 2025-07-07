@@ -3,6 +3,7 @@
 import 'package:drift/drift.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/extensions/extensions.dart';
+import 'package:ion/app/features/feed/data/database/following_feed_database/converters/feed_modifier_converter.d.dart';
 import 'package:ion/app/features/feed/data/database/following_feed_database/following_feed_database.m.dart';
 import 'package:ion/app/features/feed/data/database/following_feed_database/tables/seen_events_table.d.dart';
 import 'package:ion/app/features/feed/data/models/feed_modifier.dart';
@@ -17,8 +18,15 @@ class SeenEventsDao extends DatabaseAccessor<FollowingFeedDatabase> with _$SeenE
   SeenEventsDao({required FollowingFeedDatabase db}) : super(db);
 
   Future<void> insert(SeenEvent event) async {
-    await into(db.seenEventsTable).insert(
-      event.copyWith(createdAt: event.createdAt.toMicroseconds),
+    await into(seenEventsTable).insert(
+      SeenEventsTableCompanion.insert(
+        feedType: event.feedType,
+        feedModifier: event.feedModifier,
+        eventReference: event.eventReference,
+        nextEventReference: Value(event.nextEventReference),
+        pubkey: event.pubkey,
+        createdAt: event.createdAt.toMicroseconds,
+      ),
       mode: InsertMode.insertOrReplace,
     );
   }
@@ -33,9 +41,7 @@ class SeenEventsDao extends DatabaseAccessor<FollowingFeedDatabase> with _$SeenE
       ..where((table) => table.eventReference.equalsValue(eventReference))
       ..where((table) => table.feedType.equalsValue(feedType))
       ..where(
-        (table) => feedModifier == null
-            ? table.feedModifier.isNull()
-            : table.feedModifier.equalsValue(feedModifier),
+        (tbl) => tbl.feedModifier.equals(const FeedModifierConverter().toSql(feedModifier)),
       );
 
     await query.write(
@@ -54,9 +60,7 @@ class SeenEventsDao extends DatabaseAccessor<FollowingFeedDatabase> with _$SeenE
       ..where((tbl) => tbl.eventReference.equalsValue(eventReference))
       ..where((tbl) => tbl.feedType.equalsValue(feedType))
       ..where(
-        (tbl) => feedModifier == null
-            ? tbl.feedModifier.isNull()
-            : tbl.feedModifier.equalsValue(feedModifier),
+        (tbl) => tbl.feedModifier.equals(const FeedModifierConverter().toSql(feedModifier)),
       );
 
     return query.getSingleOrNull();
@@ -73,9 +77,7 @@ class SeenEventsDao extends DatabaseAccessor<FollowingFeedDatabase> with _$SeenE
     final firstWithoutNext = await (select(db.seenEventsTable)
           ..where((tbl) => tbl.feedType.equalsValue(feedType))
           ..where(
-            (tbl) => feedModifier == null
-                ? tbl.feedModifier.isNull()
-                : tbl.feedModifier.equalsValue(feedModifier),
+            (tbl) => tbl.feedModifier.equals(const FeedModifierConverter().toSql(feedModifier)),
           )
           ..where((tbl) => tbl.nextEventReference.isNull())
           ..where((tbl) => tbl.createdAt.isSmallerThanValue(since.toMicroseconds))
@@ -97,11 +99,7 @@ class SeenEventsDao extends DatabaseAccessor<FollowingFeedDatabase> with _$SeenE
   }) async {
     final query = select(db.seenEventsTable)
       ..where((tbl) => tbl.feedType.equalsValue(feedType))
-      ..where(
-        (tbl) => feedModifier == null
-            ? tbl.feedModifier.isNull()
-            : tbl.feedModifier.equalsValue(feedModifier),
-      )
+      ..where((tbl) => tbl.feedModifier.equals(const FeedModifierConverter().toSql(feedModifier)))
       ..orderBy([
         (tbl) => OrderingTerm(expression: tbl.createdAt, mode: OrderingMode.desc),
       ])
@@ -127,9 +125,7 @@ class SeenEventsDao extends DatabaseAccessor<FollowingFeedDatabase> with _$SeenE
     final query = delete(db.seenEventsTable)
       ..where((tbl) => tbl.feedType.equalsValue(feedType))
       ..where(
-        (tbl) => feedModifier == null
-            ? tbl.feedModifier.isNull()
-            : tbl.feedModifier.equalsValue(feedModifier),
+        (tbl) => tbl.feedModifier.equals(const FeedModifierConverter().toSql(feedModifier)),
       )
       ..where(
         (tbl) => Expression.or([

@@ -1,5 +1,3 @@
-// SPDX-License-Identifier: ice License 1.0
-
 // dart format width=80
 import 'package:drift/internal/versioned_schema.dart' as i0;
 import 'package:drift/drift.dart' as i1;
@@ -107,7 +105,7 @@ final class Schema3 extends i0.VersionedSchema {
         ],
         columns: [
           _column_0,
-          _column_1,
+          _column_8,
           _column_2,
           _column_3,
           _column_4,
@@ -141,16 +139,19 @@ final class Schema3 extends i0.VersionedSchema {
         ],
         columns: [
           _column_0,
-          _column_1,
-          _column_4,
           _column_8,
+          _column_4,
           _column_9,
           _column_10,
+          _column_11,
         ],
         attachedDatabase: database,
       ),
       alias: null);
 }
+
+i1.GeneratedColumn<int> _column_8(String aliasedName) =>
+    i1.GeneratedColumn<int>('feed_modifier', aliasedName, false, type: i1.DriftSqlType.int);
 
 class Shape2 extends i0.VersionedTable {
   Shape2({required super.source, required super.alias}) : super.aliased();
@@ -166,11 +167,11 @@ class Shape2 extends i0.VersionedTable {
       columnsByName['last_content_time']! as i1.GeneratedColumn<int>;
 }
 
-i1.GeneratedColumn<int> _column_8(String aliasedName) =>
-    i1.GeneratedColumn<int>('empty_fetch_count', aliasedName, false, type: i1.DriftSqlType.int);
 i1.GeneratedColumn<int> _column_9(String aliasedName) =>
-    i1.GeneratedColumn<int>('last_fetch_time', aliasedName, false, type: i1.DriftSqlType.int);
+    i1.GeneratedColumn<int>('empty_fetch_count', aliasedName, false, type: i1.DriftSqlType.int);
 i1.GeneratedColumn<int> _column_10(String aliasedName) =>
+    i1.GeneratedColumn<int>('last_fetch_time', aliasedName, false, type: i1.DriftSqlType.int);
+i1.GeneratedColumn<int> _column_11(String aliasedName) =>
     i1.GeneratedColumn<int>('last_content_time', aliasedName, true, type: i1.DriftSqlType.int);
 i0.MigrationStepWithVersion migrationSteps({
   required Future<void> Function(i1.Migrator m, Schema2 schema) from1To2,

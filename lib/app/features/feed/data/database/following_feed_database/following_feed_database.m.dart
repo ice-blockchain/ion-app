@@ -57,6 +57,9 @@ class FollowingFeedDatabase extends _$FollowingFeedDatabase {
           await m.createTable(schema.seenRepostsTable);
         },
         from2To3: (m, schema) async {
+          // Migrating from a nullable to a non-nullable column (feedModifier)
+          await m.deleteTable('seen_events_table');
+          await m.createTable(schema.seenEventsTable);
           await m.createTable(schema.userFetchStatesTable);
         },
       ),

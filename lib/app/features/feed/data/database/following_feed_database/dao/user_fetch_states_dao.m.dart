@@ -2,6 +2,7 @@
 
 import 'package:drift/drift.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:ion/app/features/feed/data/database/following_feed_database/converters/feed_modifier_converter.d.dart';
 import 'package:ion/app/features/feed/data/database/following_feed_database/following_feed_database.m.dart';
 import 'package:ion/app/features/feed/data/database/following_feed_database/tables/user_fetch_states_table.d.dart';
 import 'package:ion/app/features/feed/data/models/feed_modifier.dart';
@@ -24,7 +25,7 @@ class UserFetchStatesDao extends DatabaseAccessor<FollowingFeedDatabase>
     await into(userFetchStatesTable).insert(
       UserFetchStatesTableCompanion.insert(
         feedType: feedType,
-        feedModifier: Value(feedModifier),
+        feedModifier: feedModifier,
         pubkey: pubkey,
         emptyFetchCount: hasContent ? 0 : 1,
         lastFetchTime: DateTime.now().microsecondsSinceEpoch,
@@ -52,9 +53,11 @@ class UserFetchStatesDao extends DatabaseAccessor<FollowingFeedDatabase>
       ..where((tbl) => tbl.pubkey.isIn(pubkeys))
       ..where((tbl) => tbl.feedType.equalsValue(feedType))
       ..where(
-        (tbl) => feedModifier == null
-            ? tbl.feedModifier.isNull()
-            : tbl.feedModifier.equalsValue(feedModifier),
+        // `FeedModifierConverter` should be used manually here,
+        // because otherwise there is a false positive issue that it throws an exception that we're trying
+        // to pass a null value to a nun-nullable column, even though `FeedModifierConverter().toSql`
+        // returns nun-nullable int.
+        (tbl) => tbl.feedModifier.equals(const FeedModifierConverter().toSql(feedModifier)),
       );
     return query.get();
   }

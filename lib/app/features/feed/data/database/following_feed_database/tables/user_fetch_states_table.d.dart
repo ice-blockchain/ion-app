@@ -7,7 +7,7 @@ import 'package:ion/app/features/feed/data/database/following_feed_database/conv
 @DataClassName('FollowingUserFetchState')
 class UserFetchStatesTable extends Table {
   IntColumn get feedType => integer().map(const FeedTypeConverter())();
-  IntColumn get feedModifier => integer().map(const FeedModifierConverter()).nullable()();
+  IntColumn get feedModifier => integer().map(const FeedModifierConverter())();
   TextColumn get pubkey => text()();
   IntColumn get emptyFetchCount => integer()();
   IntColumn get lastFetchTime => integer()();
