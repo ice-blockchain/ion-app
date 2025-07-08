@@ -10,6 +10,7 @@ import 'package:ion/app/components/screen_offset/screen_bottom_offset.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/feed/stories/providers/story_pause_provider.r.dart';
 import 'package:ion/app/features/feed/stories/providers/story_viewing_provider.r.dart';
+import 'package:ion/app/features/feed/stories/providers/user_stories_provider.r.dart';
 import 'package:ion/app/features/feed/stories/providers/viewed_stories_provider.r.dart';
 import 'package:ion/app/features/feed/stories/views/components/story_viewer/components/components.dart';
 import 'package:ion/app/features/ion_connect/model/event_reference.f.dart';
@@ -35,6 +36,9 @@ class StoryViewerPage extends HookConsumerWidget {
 
     final storyViewerState = ref
         .watch(storyViewingControllerProvider(pubkey, showOnlySelectedUser: showOnlySelectedUser));
+    final stories =
+        ref.watch(userStoriesProvider(storyViewerState.currentStory?.pubkey ?? pubkey))?.toList() ??
+            [];
 
     useOnInit(
       () {
@@ -48,18 +52,21 @@ class StoryViewerPage extends HookConsumerWidget {
     useOnInit(
       () async {
         final viewedStories = ref.read(viewedStoriesControllerProvider);
-        final firstNotViewedStory = storyViewerState.currentStoriesList
-            .firstWhereOrNull((story) => !viewedStories.contains(story.toEventReference()));
-        if (initialStoryReference != null || firstNotViewedStory != null) {
+        final firstNotViewedStoryIndex =
+            stories.indexWhere((story) => !viewedStories.contains(story.toEventReference()));
+        final initialStoryIndex = initialStoryReference != null
+            ? stories.indexWhere((story) => story.toEventReference() == initialStoryReference)
+            : null;
+        if (initialStoryIndex != null || firstNotViewedStoryIndex != -1) {
           ref
               .watch(
                 storyViewingControllerProvider(pubkey, showOnlySelectedUser: showOnlySelectedUser)
                     .notifier,
               )
-              .moveToStory(initialStoryReference ?? firstNotViewedStory!.toEventReference());
+              .moveToStoryIndex(initialStoryIndex ?? firstNotViewedStoryIndex);
         }
       },
-      [storyViewerState.userStories.isEmpty],
+      [stories.isEmpty],
     );
 
     useRoutePresence(
@@ -67,7 +74,7 @@ class StoryViewerPage extends HookConsumerWidget {
       onBecameActive: () => ref.read(storyPauseControllerProvider.notifier).paused = false,
     );
 
-    final currentStory = storyViewerState.currentStory;
+    final currentStory = stories.elementAtOrNull(storyViewerState.currentStoryIndex);
     useOnInit(
       () {
         if (currentStory != null) {

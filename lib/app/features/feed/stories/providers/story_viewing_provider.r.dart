@@ -1,13 +1,11 @@
 // SPDX-License-Identifier: ice License 1.0
 
-import 'package:collection/collection.dart';
 import 'package:flutter/foundation.dart';
 import 'package:ion/app/features/feed/data/models/entities/modifiable_post_data.f.dart';
 import 'package:ion/app/features/feed/stories/data/models/models.dart';
 import 'package:ion/app/features/feed/stories/providers/feed_stories_provider.r.dart';
 import 'package:ion/app/features/ion_connect/model/event_reference.f.dart';
 import 'package:ion/app/features/ion_connect/providers/ion_connect_entity_provider.r.dart';
-import 'package:ion/app/features/optimistic_ui/features/likes/post_like_provider.r.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'story_viewing_provider.r.g.dart';
@@ -41,9 +39,9 @@ class StoryViewingController extends _$StoryViewingController {
 
     state = state.copyWith(
       userStories: [
-        UserStories(
+        UserStory(
           pubkey: pubkey,
-          stories: [storyEntity as ModifiablePostEntity],
+          story: storyEntity as ModifiablePostEntity,
         ),
       ],
       currentUserIndex: 0,
@@ -67,8 +65,8 @@ class StoryViewingController extends _$StoryViewingController {
       );
 
   /// story → nextStory → nextUser → close
-  bool advance({VoidCallback? onClose}) {
-    if (state.hasNextStory) {
+  bool advance({required List<ModifiablePostEntity> stories, VoidCallback? onClose}) {
+    if (state.currentStoryIndex < stories.length - 1) {
       _moveToNextStory();
       return true;
     }
@@ -106,34 +104,11 @@ class StoryViewingController extends _$StoryViewingController {
     }
   }
 
-  void moveToStory(EventReference storyReference) {
-    late final int storyIndex;
-
-    final userIndex = state.userStories.indexWhere(
-      (userStory) {
-        final index = userStory.getStoryIndexByReference(storyReference);
-        if (index != -1) {
-          storyIndex = index;
-          return true;
-        }
-
-        return false;
-      },
-    );
-
-    if (userIndex == -1) return;
+  void moveToStoryIndex(int index) {
+    if (index == -1) return;
 
     state = state.copyWith(
-      currentUserIndex: userIndex,
-      currentStoryIndex: storyIndex,
+      currentStoryIndex: index,
     );
-  }
-
-  void toggleLike(String postId) {
-    final userStory = state.userStories.firstWhereOrNull((u) => u.getStoryById(postId) != null);
-    if (userStory == null) return;
-
-    final post = userStory.getStoryById(postId)!;
-    ref.read(toggleLikeNotifierProvider.notifier).toggle(post.toEventReference());
   }
 }

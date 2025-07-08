@@ -9,7 +9,7 @@ import 'package:ion/app/features/feed/data/models/feed_type.dart';
 import 'package:ion/app/features/feed/providers/feed_current_filter_provider.m.dart';
 import 'package:ion/app/features/feed/providers/feed_following_content_provider.m.dart';
 import 'package:ion/app/features/feed/providers/feed_for_you_content_provider.m.dart';
-import 'package:ion/app/features/feed/stories/data/models/story.f.dart';
+import 'package:ion/app/features/feed/stories/data/models/user_story.f.dart';
 import 'package:ion/app/features/ion_connect/model/ion_connect_entity.dart';
 import 'package:ion/app/features/ion_connect/providers/entities_paged_data_provider.m.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
@@ -19,7 +19,7 @@ part 'feed_stories_provider.r.g.dart';
 @riverpod
 class FeedStories extends _$FeedStories with DelegatedPagedNotifier {
   @override
-  ({Iterable<UserStories>? items, bool hasMore}) build() {
+  ({Iterable<UserStory>? items, bool hasMore}) build() {
     final filter = ref.watch(feedCurrentFilterProvider);
     final data = switch (filter.filter) {
       FeedFilter.following => ref.watch(feedFollowingContentProvider(FeedType.story)),
@@ -37,7 +37,7 @@ class FeedStories extends _$FeedStories with DelegatedPagedNotifier {
     };
   }
 
-  Iterable<UserStories>? _groupByPubkey(Iterable<IonConnectEntity>? entities) {
+  Iterable<UserStory>? _groupByPubkey(Iterable<IonConnectEntity>? entities) {
     if (entities == null) return null;
 
     final postEntities = entities.whereType<ModifiablePostEntity>().where((post) {
@@ -50,7 +50,7 @@ class FeedStories extends _$FeedStories with DelegatedPagedNotifier {
       (post) => post.masterPubkey,
     );
 
-    final userStoriesList = <UserStories>[];
+    final userStoriesList = <UserStory>[];
 
     for (final entry in groupedStories.entries) {
       final pubkey = entry.key;
@@ -58,9 +58,9 @@ class FeedStories extends _$FeedStories with DelegatedPagedNotifier {
 
       if (userPosts.isEmpty) continue;
 
-      final userStories = UserStories(
+      final userStories = UserStory(
         pubkey: pubkey,
-        stories: userPosts,
+        story: userPosts.first,
       );
 
       userStoriesList.add(userStories);
@@ -71,7 +71,7 @@ class FeedStories extends _$FeedStories with DelegatedPagedNotifier {
 }
 
 @riverpod
-List<UserStories> feedStoriesByPubkey(Ref ref, String pubkey, {bool showOnlySelectedUser = false}) {
+List<UserStory> feedStoriesByPubkey(Ref ref, String pubkey, {bool showOnlySelectedUser = false}) {
   final stories = ref.watch(feedStoriesProvider.select((state) => state.items?.toList() ?? []));
   final userIndex = stories.indexWhere((userStories) => userStories.pubkey == pubkey);
 

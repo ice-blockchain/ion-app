@@ -27,10 +27,7 @@ class CurrentUserStoryListItem extends HookConsumerWidget {
     final hasStories = userStories.isNotEmpty;
 
     final allStoriesViewed = useMemoized(
-      () =>
-          hasStories &&
-          userStories.first.stories
-              .every((story) => viewedStories.contains(story.toEventReference())),
+      () => hasStories && viewedStories.contains(userStories.first.story.toEventReference()),
       [userStories, viewedStories],
     );
 

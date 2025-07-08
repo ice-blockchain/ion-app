@@ -4,9 +4,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:ion/app/features/feed/stories/data/models/story.f.dart';
 import 'package:ion/app/features/feed/stories/data/models/story_viewer_state.f.dart';
+import 'package:ion/app/features/feed/stories/data/models/user_story.f.dart';
 import 'package:ion/app/features/feed/stories/providers/story_viewing_provider.r.dart';
+import 'package:ion/app/features/feed/stories/providers/user_stories_provider.r.dart';
 import 'package:ion/app/features/feed/stories/views/components/story_viewer/components/core/core.dart';
 
 const Key storiesSwiperKey = Key('stories_swiper');
@@ -20,7 +21,7 @@ class StoriesSwiper extends HookConsumerWidget {
     Key? key,
   }) : super(key: key ?? storiesSwiperKey);
 
-  final List<UserStories> userStories;
+  final List<UserStory> userStories;
   final int currentUserIndex;
   final String pubkey;
 
@@ -45,6 +46,15 @@ class StoriesSwiper extends HookConsumerWidget {
       storyViewingControllerProvider(pubkey).notifier,
     );
 
+    final stories = ref
+            .watch(
+              userStoriesProvider(
+                ref.watch(storyViewingControllerProvider(pubkey)).currentUserPubkey,
+              ),
+            )
+            ?.toList() ??
+        [];
+
     return CubePageView.builder(
       controller: userPageController,
       itemCount: userStories.length,
@@ -56,7 +66,6 @@ class StoriesSwiper extends HookConsumerWidget {
         }
       },
       itemBuilder: (context, userIndex, pageNotifier) {
-        final userStory = userStories[userIndex];
         final isCurrentUser = userIndex == currentUserIndex;
 
         void closeViewer() => context.pop();
@@ -66,9 +75,8 @@ class StoriesSwiper extends HookConsumerWidget {
           pageNotifier: pageNotifier,
           child: UserStoryPageView(
             pubkey: pubkey,
-            userStory: userStory,
             isCurrentUser: isCurrentUser,
-            onNextStory: () => storyNotifier.advance(onClose: closeViewer),
+            onNextStory: () => storyNotifier.advance(stories: stories, onClose: closeViewer),
             onPreviousStory: () => storyNotifier.rewind(onClose: closeViewer),
             onNextUser: () {
               if (userPageController.hasClients && userIndex < userStories.length - 1) {

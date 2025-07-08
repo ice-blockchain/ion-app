@@ -24,8 +24,7 @@ class Stories extends HookConsumerWidget {
       () async {
         if (stories != null && stories.isNotEmpty) {
           stories
-              .expand((userStory) => userStory.stories)
-              .map((story) => story.data.primaryMedia)
+              .map((userStory) => userStory.story.data.primaryMedia)
               .where((media) => media != null && media.mediaType == MediaType.image)
               .map((media) => media!.url)
               .forEach((url) async => ref.read(storyImageCacheManagerProvider).downloadFile(url));
@@ -33,15 +32,6 @@ class Stories extends HookConsumerWidget {
       },
       [stories],
     );
-
-    // useOnInit(() {
-    //   if (stories != null) {
-    //     final allIds =
-    //         stories.expand((userStory) => userStory.stories).map((story) => story.id).toSet();
-    //
-    //     ref.read(viewedStoriesControllerProvider.notifier).syncAvailableStories(allIds.toList());
-    //   }
-    // });
 
     return Column(
       children: [

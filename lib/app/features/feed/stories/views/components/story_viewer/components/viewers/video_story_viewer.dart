@@ -8,6 +8,7 @@ import 'package:ion/app/components/progress_bar/centered_loading_indicator.dart'
 import 'package:ion/app/features/core/providers/video_player_provider.r.dart';
 import 'package:ion/app/features/feed/stories/hooks/use_story_video_playback.dart';
 import 'package:ion/app/features/feed/stories/providers/story_viewing_provider.r.dart';
+import 'package:ion/app/features/feed/stories/providers/user_stories_provider.r.dart';
 
 class VideoStoryViewer extends HookConsumerWidget {
   const VideoStoryViewer({
@@ -37,6 +38,15 @@ class VideoStoryViewer extends HookConsumerWidget {
       return const CenteredLoadingIndicator();
     }
 
+    final stories = ref
+            .watch(
+              userStoriesProvider(
+                ref.watch(storyViewingControllerProvider(viewerPubkey)).currentUserPubkey,
+              ),
+            )
+            ?.toList() ??
+        [];
+
     useStoryVideoPlayback(
       ref: ref,
       controller: videoController,
@@ -45,7 +55,7 @@ class VideoStoryViewer extends HookConsumerWidget {
       onCompleted: () {
         ref
             .read(storyViewingControllerProvider(viewerPubkey).notifier)
-            .advance(onClose: () => context.pop());
+            .advance(stories: stories, onClose: () => context.pop());
       },
     );
 
