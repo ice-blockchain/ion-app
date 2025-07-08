@@ -91,7 +91,7 @@ class FollowingFeedSeenEventsRepository {
   Future<List<({EventReference eventReference, int createdAt})>> getEventReferences({
     required FeedType feedType,
     required List<EventReference> exclude,
-    int? limit,
+    required int limit,
     int? since,
     int? until,
     FeedModifier? feedModifier,
