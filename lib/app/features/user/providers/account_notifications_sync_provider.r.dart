@@ -122,8 +122,10 @@ class AccountNotificationsSync extends _$AccountNotificationsSync {
         continue;
       }
 
-      final optimalRelayMapping =
-          await ref.read(usersRelaysProviderProvider.notifier).fetch(masterPubkeys: users);
+      final optimalRelayMapping = await ref.read(usersRelaysProviderProvider.notifier).fetch(
+            masterPubkeys: users,
+            strategy: UsersRelaysStrategy.mostUsers,
+          );
 
       for (final relayEntry in optimalRelayMapping.entries) {
         await _syncEventsFromRelay(

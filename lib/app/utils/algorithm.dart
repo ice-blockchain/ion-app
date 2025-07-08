@@ -16,7 +16,7 @@ import 'package:collection/collection.dart';
 ///   "Option4": ["Key1", "Key2"],
 ///   "Option8": ["Key3"]
 /// }
-Map<String, List<String>> findBestOptions(Map<String, List<String>> keysToOptions) {
+Map<String, List<String>> findMostMatchingOptions(Map<String, List<String>> keysToOptions) {
   if (keysToOptions.isEmpty) {
     return {};
   }
@@ -54,7 +54,7 @@ Map<String, List<String>> findBestOptions(Map<String, List<String>> keysToOption
 
   /// If there are any remaining unhandled keys, process them recursively
   if (leftKeysToOptions.isNotEmpty) {
-    return {maxEntry.key: maxEntry.value.toList(), ...findBestOptions(leftKeysToOptions)};
+    return {maxEntry.key: maxEntry.value.toList(), ...findMostMatchingOptions(leftKeysToOptions)};
   }
 
   return {maxEntry.key: maxEntry.value.toList()};

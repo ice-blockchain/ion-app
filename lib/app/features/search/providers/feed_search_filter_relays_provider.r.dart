@@ -27,8 +27,10 @@ Future<Map<String, List<String>>> feedSearchFilterRelays(
     if (followList != null) ...followList.masterPubkeys,
   }.toList();
 
-  final relayMapping =
-      await ref.read(usersRelaysProviderProvider.notifier).fetch(masterPubkeys: masterPubkeys);
+  final relayMapping = await ref.read(usersRelaysProviderProvider.notifier).fetch(
+        masterPubkeys: masterPubkeys,
+        strategy: UsersRelaysStrategy.mostUsers,
+      );
 
   return relayMapping;
 }
