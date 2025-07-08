@@ -21,10 +21,10 @@ import 'package:sentry_flutter/sentry_flutter.dart';
 
 void main() async {
   SentryWidgetsFlutterBinding.ensureInitialized();
-
   await SecureStorage().clearOnReinstall();
 
   LoggerInitializer.initialize(riverpodContainer);
+
   await SentryService.init(
     container: riverpodContainer,
     appRunner: () => runApp(
