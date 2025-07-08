@@ -35,6 +35,7 @@ class TextEditor extends ConsumerStatefulWidget {
     this.scrollController,
     this.media,
     this.scrollable = false,
+    this.authorPubkey,
   }) : super(key: key);
 
   final QuillController controller;
@@ -44,6 +45,7 @@ class TextEditor extends ConsumerStatefulWidget {
   final ScrollController? scrollController;
   final Map<String, MediaAttachment>? media;
   final bool scrollable;
+  final String? authorPubkey;
 
   @override
   TextEditorState createState() => TextEditorState();
@@ -96,7 +98,7 @@ class TextEditorState extends ConsumerState<TextEditor> {
       scrollController: widget.scrollController,
       config: QuillEditorConfig(
         embedBuilders: [
-          TextEditorSingleImageBuilder(media: widget.media),
+          TextEditorSingleImageBuilder(media: widget.media, authorPubkey: widget.authorPubkey),
           TextEditorSeparatorBuilder(),
           TextEditorCodeBuilder(),
         ],

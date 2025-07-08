@@ -21,6 +21,7 @@ class TextEditorPreview extends HookWidget {
     this.customStyles,
     this.tagsColor,
     this.scrollable = true,
+    this.authorPubkey,
     super.key,
   });
 
@@ -31,6 +32,7 @@ class TextEditorPreview extends HookWidget {
   final double? maxHeight;
   final bool scrollable;
   final Color? tagsColor;
+  final String? authorPubkey;
 
   @override
   Widget build(BuildContext context) {
@@ -55,6 +57,7 @@ class TextEditorPreview extends HookWidget {
       maxHeight: maxHeight,
       scrollable: scrollable,
       enableInteractiveSelection: enableInteractiveSelection,
+      authorPubkey: authorPubkey,
     );
   }
 
@@ -70,6 +73,7 @@ class _QuillFormattedContent extends StatelessWidget {
     this.maxHeight,
     this.tagsColor,
     this.scrollable = true,
+    this.authorPubkey,
   });
 
   final QuillController controller;
@@ -79,6 +83,7 @@ class _QuillFormattedContent extends StatelessWidget {
   final double? maxHeight;
   final bool scrollable;
   final Color? tagsColor;
+  final String? authorPubkey;
 
   @override
   Widget build(BuildContext context) {
@@ -94,7 +99,7 @@ class _QuillFormattedContent extends StatelessWidget {
         customStyles: effectiveStyles,
         maxHeight: maxHeight,
         embedBuilders: [
-          TextEditorSingleImageBuilder(media: media),
+          TextEditorSingleImageBuilder(media: media, authorPubkey: authorPubkey),
           TextEditorSeparatorBuilder(readOnly: true),
           TextEditorCodeBuilder(readOnly: true),
         ],
