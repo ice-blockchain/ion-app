@@ -10,17 +10,19 @@ class ImageBlock extends StatelessWidget {
     required this.path,
     super.key,
     this.media,
+    this.authorPubkey,
   });
 
   final String path;
   final Map<String, MediaAttachment>? media;
+  final String? authorPubkey;
 
   bool get isNetworkImage => Uri.tryParse(path)?.hasAbsolutePath ?? false;
 
   @override
   Widget build(BuildContext context) {
     return isNetworkImage
-        ? ImageBlockNetworkImage(path: path, media: media)
-        : ImageBlockLocalImage(path: path);
+        ? ImageBlockNetworkImage(path: path, media: media, authorPubkey: authorPubkey)
+        : ImageBlockLocalImage(path: path, authorPubkey: authorPubkey);
   }
 }
