@@ -135,6 +135,9 @@ class LinkNewDeviceDialog extends HookConsumerWidget {
         child: child,
       ),
     );
+    if (ref.read(restoreDeviceKeypairNotifierProvider).hasError) {
+      return _addDelegation(ref);
+    }
   }
 
   Future<void> _addDelegation(WidgetRef ref) async {
