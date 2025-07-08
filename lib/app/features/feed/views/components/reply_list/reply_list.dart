@@ -1,7 +1,6 @@
 // SPDX-License-Identifier: ice License 1.0
 
 import 'package:flutter/material.dart';
-import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/components/empty_list/empty_list.dart';
 import 'package:ion/app/components/scroll_view/load_more_builder.dart';
@@ -9,6 +8,7 @@ import 'package:ion/app/components/scroll_view/pull_to_refresh_builder.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/components/entities_list/entities_list.dart';
 import 'package:ion/app/features/components/entities_list/entities_list_skeleton.dart';
+import 'package:ion/app/features/core/model/paged.f.dart';
 import 'package:ion/app/features/feed/providers/replies_data_source_provider.r.dart';
 import 'package:ion/app/features/feed/providers/replies_provider.r.dart';
 import 'package:ion/app/features/ion_connect/model/event_reference.f.dart';
@@ -16,7 +16,7 @@ import 'package:ion/app/features/ion_connect/providers/entities_paged_data_provi
 import 'package:ion/app/router/app_routes.gr.dart';
 import 'package:ion/generated/assets.gen.dart';
 
-class ReplyList extends HookConsumerWidget {
+class ReplyList extends ConsumerWidget {
   const ReplyList({
     required this.eventReference,
     this.headers,
@@ -35,13 +35,12 @@ class ReplyList extends HookConsumerWidget {
     final hasMoreReplies =
         ref.watch(repliesProvider(eventReference).select((state) => (state?.hasMore).falseOrValue));
 
-    // Track refresh state to prevent LoadMoreBuilder showing indicator during pull-to-refresh
-    final isRefreshing = useState(false);
+    final isLoading = replies?.data is PagedLoading;
 
     return LoadMoreBuilder(
       hasMore: hasMoreReplies,
       onLoadMore: () => ref.read(repliesProvider(eventReference).notifier).loadMore(eventReference),
-      showIndicator: !isRefreshing.value,
+      showIndicator: !isLoading,
       slivers: [
         if (headers != null) ...headers!,
         if (entities == null)
@@ -67,24 +66,18 @@ class ReplyList extends HookConsumerWidget {
       ],
       builder: (context, slivers) => PullToRefreshBuilder(
         slivers: slivers,
-        onRefresh: () => _onRefresh(ref, isRefreshing),
+        onRefresh: () => _onRefresh(ref),
         builder: (BuildContext context, List<Widget> slivers) => CustomScrollView(slivers: slivers),
       ),
     );
   }
 
-  Future<void> _onRefresh(WidgetRef ref, ValueNotifier<bool> isRefreshing) async {
-    isRefreshing.value = true;
-    try {
-      ref.invalidate(
-        entitiesPagedDataProvider(
-          ref.read(repliesDataSourceProvider(eventReference: eventReference)),
-        ),
-      );
-      onPullToRefresh?.call();
-    } finally {
-      isRefreshing.value = false;
-    }
+  Future<void> _onRefresh(WidgetRef ref) async {
+    final dataSource = ref.read(repliesDataSourceProvider(eventReference: eventReference));
+    ref.invalidate(entitiesPagedDataProvider(dataSource));
+    onPullToRefresh?.call();
+
+    await ref.read(entitiesPagedDataProvider(dataSource).notifier).fetchEntities();
   }
 }
 

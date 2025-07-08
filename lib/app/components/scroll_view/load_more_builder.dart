@@ -80,6 +80,12 @@ class LoadMoreBuilder extends HookWidget {
     void Function() loadMore,
   ) {
     final metrics = notification.metrics;
+
+    // Do not trigger loadMore if the list is not scrollable at all.
+    if (!metrics.hasPixels || metrics.maxScrollExtent == 0.0) {
+      return false;
+    }
+
     final loadMoreOffset = this.loadMoreOffset ?? metrics.viewportDimension;
     if (metrics.maxScrollExtent - metrics.pixels <= loadMoreOffset) {
       loadMore();
