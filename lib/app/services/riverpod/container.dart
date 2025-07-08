@@ -7,6 +7,6 @@ import 'package:ion/app/services/provider_rebuild_counter/provider_rebuild_count
 final riverpodContainer = ProviderContainer(
   observers: [
     Logger.talkerRiverpodObserver,
-    ProviderRebuildLogger(threshold: 1000),
+    ProviderRebuildLogger(rebuildLogInterval: 500),
   ],
 );
