@@ -9,7 +9,7 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 part 'users_relays_provider.r.g.dart';
 
 /// Strategy for selecting user relays.
-enum UsersRelaysStrategy { best }
+enum UsersRelaysStrategy { mostUsers }
 
 @riverpod
 class UsersRelaysProvider extends _$UsersRelaysProvider {
@@ -19,7 +19,7 @@ class UsersRelaysProvider extends _$UsersRelaysProvider {
   /// Fetches relays for the given [masterPubkeys] using the specified [strategy].
   Future<Map<String, List<String>>> fetch({
     required List<String> masterPubkeys,
-    UsersRelaysStrategy strategy = UsersRelaysStrategy.best,
+    UsersRelaysStrategy strategy = UsersRelaysStrategy.mostUsers,
   }) async {
     if (masterPubkeys.isEmpty) return {};
 
@@ -27,7 +27,7 @@ class UsersRelaysProvider extends _$UsersRelaysProvider {
     final currentUserMasterPubkey = ref.watch(currentPubkeySelectorProvider);
 
     if (currentUserMasterPubkey != null && masterPubkeys.contains(currentUserMasterPubkey)) {
-      final currentUserRelays = await ref.watch(currentUserRelaysProvider.future);
+      final currentUserRelays = await ref.read(currentUserRelaysProvider.future);
       if (currentUserRelays == null) {
         throw UserRelaysNotFoundException();
       }
@@ -44,7 +44,7 @@ class UsersRelaysProvider extends _$UsersRelaysProvider {
     }
 
     switch (strategy) {
-      case UsersRelaysStrategy.best:
+      case UsersRelaysStrategy.mostUsers:
         return findBestOptions(userToRelays);
     }
   }

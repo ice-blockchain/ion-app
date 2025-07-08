@@ -21,13 +21,10 @@ Future<Map<String, List<String>>> feedSearchFilterRelays(
   if (currentUserPubkey == null) {
     throw const CurrentUserNotFoundException();
   }
-  if (followList == null) {
-    throw FollowListNotFoundException();
-  }
 
   final masterPubkeys = <String>{
     if (source == FeedSearchSource.anyone) currentUserPubkey,
-    ...followList.masterPubkeys,
+    if (followList != null) ...followList.masterPubkeys,
   }.toList();
 
   final relayMapping =

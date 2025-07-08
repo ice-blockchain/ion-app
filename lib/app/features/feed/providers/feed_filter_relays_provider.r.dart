@@ -31,18 +31,16 @@ Future<Map<String, List<String>>> feedFilterRelays(Ref ref) async {
 @riverpod
 Future<Map<String, List<String>>> feedForYouFilterRelays(Ref ref) async {
   final followList = await ref.watch(currentUserFollowListProvider.future);
+
   final currentUserPubkey = ref.watch(currentPubkeySelectorProvider);
 
   if (currentUserPubkey == null) {
     throw const CurrentUserNotFoundException();
   }
-  if (followList == null) {
-    throw FollowListNotFoundException();
-  }
 
   final masterPubkeys = [
     currentUserPubkey,
-    ...followList.masterPubkeys,
+    if (followList != null) ...followList.masterPubkeys,
   ];
 
   final relayMapping =
