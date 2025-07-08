@@ -151,23 +151,32 @@ class _ChatMediaItem extends HookConsumerWidget {
               start: 0,
               end: 0,
               child: Container(
-                height: 125.s,
+                height: 91.s + MediaQuery.paddingOf(context).bottom,
+                alignment: AlignmentDirectional.bottomCenter,
                 color: context.theme.appColors.primaryText.withValues(alpha: 0.3),
-                child: VideoProgress(
-                  controller: playerController,
-                  builder: (context, position, duration) => VideoSlider(
-                    backgroundColor: Colors.transparent,
-                    position: position,
-                    duration: duration,
-                    onChangeStart: (_) => playerController.pause(),
-                    onChangeEnd: (_) => playerController.play(),
-                    onChanged: (value) {
-                      if (playerController.value.isInitialized) {
-                        playerController.seekTo(
-                          Duration(milliseconds: value.toInt()),
-                        );
-                      }
-                    },
+                child: Padding(
+                  padding: EdgeInsetsDirectional.only(
+                    bottom: MediaQuery.paddingOf(context).bottom + 10.s,
+                  ),
+                  child: SizedBox(
+                    height: 24.0.s,
+                    child: VideoProgress(
+                      controller: playerController,
+                      builder: (context, position, duration) => VideoSlider(
+                        backgroundColor: Colors.transparent,
+                        position: position,
+                        duration: duration,
+                        onChangeStart: (_) => playerController.pause(),
+                        onChangeEnd: (_) => playerController.play(),
+                        onChanged: (value) {
+                          if (playerController.value.isInitialized) {
+                            playerController.seekTo(
+                              Duration(milliseconds: value.toInt()),
+                            );
+                          }
+                        },
+                      ),
+                    ),
                   ),
                 ),
               ),
