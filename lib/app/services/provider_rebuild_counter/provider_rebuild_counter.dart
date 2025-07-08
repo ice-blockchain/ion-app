@@ -4,8 +4,8 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/services/logger/logger.dart';
 
 class ProviderRebuildLogger extends ProviderObserver {
-  ProviderRebuildLogger({required this.threshold});
-  final int threshold;
+  ProviderRebuildLogger({required this.rebuildLogInterval});
+  final int rebuildLogInterval;
   final Map<String, int> _rebuildCounts = {};
 
   @override
@@ -15,14 +15,17 @@ class ProviderRebuildLogger extends ProviderObserver {
     Object? newValue,
     ProviderContainer container,
   ) {
-    final key = provider.name ?? provider.runtimeType.toString();
+    final key = _getProviderKey(provider);
+    final count = _rebuildCounts[key] = (_rebuildCounts[key] ?? 0) + 1;
 
-    _rebuildCounts[key] = (_rebuildCounts[key] ?? 0) + 1;
-
-    if (_rebuildCounts[key]! > threshold) {
+    if (count % rebuildLogInterval == 0) {
       Logger.warning(
-        '[ProviderRebuildLogger] Provider "$key" rebuilt ${_rebuildCounts[key]} times! Possible circular dependency.',
+        '[ProviderRebuildLogger] Provider "$key" rebuilt $count times.',
       );
     }
+  }
+
+  String _getProviderKey(ProviderBase<Object?> provider) {
+    return provider.name ?? provider.runtimeType.toString();
   }
 }
