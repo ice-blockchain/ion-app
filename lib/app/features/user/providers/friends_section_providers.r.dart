@@ -12,7 +12,7 @@ const _friendsCountThreshold = 3;
 @riverpod
 bool hasEnoughFriends(Ref ref) {
   final followListState = ref.watch(currentUserFollowListProvider);
-  final friendCount = followListState.value?.pubkeys.length ?? 0;
+  final friendCount = followListState.value?.masterPubkeys.length ?? 0;
   return friendCount >= _friendsCountThreshold;
 }
 
@@ -47,7 +47,7 @@ bool shouldShowFriendsSection(Ref ref) {
 
 @riverpod
 bool isAnyFriendMetadataLoaded(Ref ref) {
-  final pubkeys = ref.watch(currentUserFollowListProvider).valueOrNull?.pubkeys ?? [];
+  final pubkeys = ref.watch(currentUserFollowListProvider).valueOrNull?.masterPubkeys ?? [];
   if (pubkeys.isEmpty) return false;
 
   for (final pk in pubkeys.take(4)) {

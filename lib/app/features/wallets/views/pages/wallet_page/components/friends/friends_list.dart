@@ -27,7 +27,7 @@ class FriendsList extends ConsumerWidget {
 
     final friendsPubkeys = ref.watch(
       currentUserFollowListProvider.select(
-        (state) => state.valueOrNull?.pubkeys,
+        (state) => state.valueOrNull?.masterPubkeys,
       ),
     );
     final isLoading = isPageLoading || friendsPubkeys == null;

@@ -23,7 +23,7 @@ class FollowingList extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final followeePubkeys = ref.watch(followListProvider(pubkey)).valueOrNull?.pubkeys;
+    final followeePubkeys = ref.watch(followListProvider(pubkey)).valueOrNull?.masterPubkeys;
     final searchQuery = useState('');
     final debouncedQuery = useDebounced(searchQuery.value, const Duration(milliseconds: 300)) ?? '';
 

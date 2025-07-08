@@ -43,7 +43,7 @@ class FollowListEntity
     );
   }
 
-  List<String> get pubkeys => data.list.map((followee) => followee.pubkey).toList();
+  List<String> get masterPubkeys => data.list.map((followee) => followee.pubkey).toList();
 
   static const int kind = 3;
 }
