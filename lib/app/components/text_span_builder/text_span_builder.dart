@@ -95,7 +95,7 @@ class TextSpanBuilder {
   }) {
     if (match.matcher is UrlMatcher) openUrlInAppBrowser(normalizeUrl(match.text));
     if (match.matcher is HashtagMatcher || match.matcher is CashtagMatcher) {
-      FeedAdvancedSearchRoute(query: match.text).go(context);
+      FeedAdvancedSearchRoute(query: match.text).push<void>(context);
     }
   }
 }
