@@ -378,7 +378,7 @@ class FeedFollowingContent extends _$FeedFollowingContent implements PagedNotifi
   /// * Updates the provider state: items, pagination.
   /// * Updates the seen entities state
   ///
-  /// returns `true` if the entity is in the required time frame
+  /// returns `true` if the entity should be shown to the user
   Future<bool> _handleRequestedPubkeyEntity({
     required String pubkey,
     required IonConnectEntity? entity,

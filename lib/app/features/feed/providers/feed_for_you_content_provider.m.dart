@@ -346,15 +346,11 @@ class FeedForYouContent extends _$FeedForYouContent implements PagedNotifier {
           );
 
           if (entity != null) {
-            if (state.items?.contains(entity) != true) {
-              // The entity might have already been added to the state by another request.
-              // For example, the entity might have been added through another modifier,
-              // or it shares several topics and was already included to the state by a previous
-              // request for a different interest.
-              // In this case we don't add it the results (to not count this entity as "fetched"),
-              // but still update the pagination to shift the [lastEventCreatedAt].
+            if (_shouldShowEntity(entity)) {
               resultsController.add(entity);
             }
+            // Even when we don't add an entity to the results (to not count this entity as "fetched"),
+            // we still need update the pagination to shift the [lastEventCreatedAt].
             state = state.copyWithRelayInterestPagination(
               interestPagination.copyWith(lastEventCreatedAt: entity.createdAt),
               relayUrl: relayUrl,
@@ -391,6 +387,31 @@ class FeedForYouContent extends _$FeedForYouContent implements PagedNotifier {
     unawaited(Future.wait(requests).whenComplete(resultsController.close));
 
     yield* resultsController.stream;
+  }
+
+  bool _shouldShowEntity(IonConnectEntity entity) {
+    final currentItems = state.items ?? {};
+
+    // The entity might have already been added to the state by another request.
+    // For example, the entity might have been added through another modifier,
+    // or it shares several topics and was already included to the state by a previous
+    // request for a different interest.
+    if (currentItems.contains(entity)) {
+      Logger.info('$_logTag Entity already exists in the state, skipping: ${entity.id}');
+      return false;
+    }
+
+    // For stories we fetch only one event per author.
+    // The rest of the stories from the user are fetched on entering the full screen story view.
+    if (feedType == FeedType.story &&
+        currentItems.any((item) => item.masterPubkey == entity.masterPubkey)) {
+      Logger.info(
+        '$_logTag Story from the same author already exists in the state, skipping: ${entity.id}',
+      );
+      return false;
+    }
+
+    return true;
   }
 
   Future<String?> _getRequestInterest({
