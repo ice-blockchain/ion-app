@@ -61,6 +61,18 @@ class ConfigRepository {
 
       final networkData = await _getFromNetwork<T>(configName, parser, checkVersion);
       if (networkData != null) {
+        if (checkVersion && networkData is! AppConfigWithVersion) {
+          final error = Exception(
+            'Config "$configName" must implement AppConfigWithVersion when checkVersion is true.',
+          );
+          Logger.error(error);
+          throw AppConfigException(
+            error,
+            configName: configName,
+            errorMessage: 'Invalid config version type',
+          );
+        }
+
         await _saveToCache(configName, networkData, cacheStrategy);
         return networkData;
       }

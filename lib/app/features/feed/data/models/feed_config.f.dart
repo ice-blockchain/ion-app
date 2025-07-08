@@ -1,13 +1,15 @@
 // SPDX-License-Identifier: ice License 1.0
 
 import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:ion/app/features/config/data/models/app_config_with_version.dart';
 
 part 'feed_config.f.freezed.dart';
 part 'feed_config.f.g.dart';
 
 @freezed
-class FeedConfig with _$FeedConfig {
+class FeedConfig with _$FeedConfig implements AppConfigWithVersion {
   const factory FeedConfig({
+    @JsonKey(name: '_version') required int version,
     required double interestedThreshold,
     required double notInterestedCategoryChance,
     required int concurrentRequests,
