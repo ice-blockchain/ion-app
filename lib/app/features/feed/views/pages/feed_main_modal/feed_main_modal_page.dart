@@ -8,6 +8,7 @@ import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/core/permissions/data/models/permissions_types.dart';
 import 'package:ion/app/features/core/permissions/views/components/permission_aware_widget.dart';
 import 'package:ion/app/features/core/permissions/views/components/permission_dialogs/permission_sheets.dart';
+import 'package:ion/app/features/feed/constants/video_constants.dart';
 import 'package:ion/app/features/feed/data/models/feed_type.dart';
 import 'package:ion/app/features/gallery/views/pages/media_picker_page.dart';
 import 'package:ion/app/features/gallery/views/pages/media_picker_type.dart';
@@ -23,7 +24,6 @@ class FeedMainModalPage extends ConsumerWidget {
   const FeedMainModalPage({super.key});
 
   static const List<FeedType> feedTypeValues = FeedType.values;
-  static const Duration feedVideoMaxDuration = Duration(minutes: 10);
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -78,7 +78,7 @@ class FeedMainModalPage extends ConsumerWidget {
                         final editedMedia = await ref.read(
                           editMediaProvider(
                             result[0],
-                            maxVideoDuration: feedVideoMaxDuration,
+                            maxVideoDuration: VideoConstants.feedVideoMaxDuration,
                           ).future,
                         );
                         if (!context.mounted || editedMedia == null) return;

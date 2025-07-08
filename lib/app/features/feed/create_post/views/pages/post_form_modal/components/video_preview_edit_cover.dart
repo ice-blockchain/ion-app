@@ -3,6 +3,7 @@
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/extensions/extensions.dart';
+import 'package:ion/app/features/feed/constants/video_constants.dart';
 import 'package:ion/app/services/logger/logger.dart';
 import 'package:ion/app/services/media_service/banuba_service.r.dart';
 import 'package:ion/app/services/media_service/media_service.m.dart';
@@ -14,7 +15,6 @@ class VideoPreviewEditCover extends ConsumerWidget {
   });
 
   final ValueNotifier<MediaFile?> attachedVideoNotifier;
-  static const Duration feedVideoMaxDuration = Duration(minutes: 10);
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -27,7 +27,7 @@ class VideoPreviewEditCover extends ConsumerWidget {
           final editedMedia = await ref.read(
             editMediaProvider(
               attachedVideo,
-              maxVideoDuration: feedVideoMaxDuration,
+              maxVideoDuration: VideoConstants.feedVideoMaxDuration,
             ).future,
           );
 
