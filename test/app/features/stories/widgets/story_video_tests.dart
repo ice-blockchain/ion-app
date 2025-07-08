@@ -33,13 +33,9 @@ void main() {
   const myPubkey = StoryFixtures.alice;
   const otherPubkey = StoryFixtures.bob;
 
-  final myStories = StoryFixtures.simpleStories(
-    pubkey: myPubkey,
-    count: 2,
-  );
-  final otherStories = StoryFixtures.simpleStories(
+  final myStories = StoryFixtures.userStory();
+  final otherStories = StoryFixtures.userStory(
     pubkey: otherPubkey,
-    count: 1,
   );
 
   group('Own stories viewer', () {
@@ -60,7 +56,7 @@ void main() {
   });
 
   const videoDuration = Duration(seconds: 3);
-  final myStoriesWithVideo = StoryFixtures.singleStory(
+  final myStoriesWithVideo = StoryFixtures.userStory(
     mediaType: MediaType.video,
   );
 

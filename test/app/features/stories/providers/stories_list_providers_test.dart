@@ -84,32 +84,8 @@ void main() {
       final container = _containerWith(posts);
       final result = container.read(feedStoriesProvider);
 
-      final keptIds = result.items?.expand((u) => u.stories).map((e) => e.id).toList();
+      final keptIds = result.items?.map((e) => e.story.id).toList();
       expect(keptIds, unorderedEquals(['image_1', 'video_1']));
-    });
-
-    test('each UserStories list is sorted by createdAt asc', () {
-      final posts = [
-        _post(
-          id: 'late',
-          author: 'alice',
-          mediaType: MediaType.image,
-          createdAt: DateTime(2024, 6, 2),
-        ),
-        _post(
-          id: 'early',
-          author: 'alice',
-          mediaType: MediaType.image,
-          createdAt: DateTime(2024, 6),
-        ),
-      ];
-
-      final container = _containerWith(posts);
-      final aliceStories =
-          container.read(feedStoriesProvider).items!.firstWhere((u) => u.pubkey == 'alice');
-
-      final orderedIds = aliceStories.stories.map((e) => e.id).toList();
-      expect(orderedIds, equals(['early', 'late']));
     });
 
     test('returns N UserStories for N distinct authors', () {
@@ -148,9 +124,9 @@ void main() {
     const carol = 'carol_pub';
 
     final dummyStories = [
-      StoryFixtures.simpleStories(pubkey: alice, count: 0),
-      StoryFixtures.simpleStories(pubkey: bob, count: 0),
-      StoryFixtures.simpleStories(pubkey: carol, count: 0),
+      StoryFixtures.userStory(pubkey: alice),
+      StoryFixtures.userStory(pubkey: bob),
+      StoryFixtures.userStory(pubkey: carol),
     ];
 
     test('returns a list starting with the selected user', () {

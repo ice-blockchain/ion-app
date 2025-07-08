@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: ice License 1.0
 
 import 'package:flutter_test/flutter_test.dart';
-import 'package:ion/app/features/feed/providers/repository/following_feed_seen_events_repository.r.dart';
+import 'package:ion/app/features/feed/data/repository/following_feed_seen_events_repository.r.dart';
 import 'package:ion/app/features/feed/stories/providers/feed_stories_provider.r.dart';
 import 'package:ion/app/features/feed/stories/providers/story_viewing_provider.r.dart';
 import 'package:mocktail/mocktail.dart';
@@ -17,13 +17,12 @@ void main() {
   const alice = StoryFixtures.alice;
   const bob = StoryFixtures.bob;
 
-  final aliceUserStories = StoryFixtures.simpleStories(
-    pubkey: alice,
+  final aliceUserStories = StoryFixtures.userStory();
+  final aliceStories = StoryFixtures.stories(
     count: 2,
   );
-  final bobUserStories = StoryFixtures.simpleStories(
+  final bobUserStories = StoryFixtures.userStory(
     pubkey: bob,
-    count: 1,
   );
 
   final overrides = [
@@ -44,7 +43,9 @@ void main() {
     test('advance increments story index within the same user', () {
       final container = createContainer(overrides: overrides);
 
-      container.read(storyViewingControllerProvider(alice).notifier).advance(); // a2
+      container
+          .read(storyViewingControllerProvider(alice).notifier)
+          .advance(stories: aliceStories); // a2
 
       final state = container.read(storyViewingControllerProvider(alice));
 
@@ -56,8 +57,8 @@ void main() {
       final container = createContainer(overrides: overrides);
 
       container.read(storyViewingControllerProvider(alice).notifier)
-        ..advance() // a2
-        ..advance(); // bob/b1
+        ..advance(stories: aliceStories) // a2
+        ..advance(stories: aliceStories); // bob/b1
 
       final state = container.read(storyViewingControllerProvider(alice));
 
@@ -69,8 +70,8 @@ void main() {
       final container = createContainer(overrides: overrides);
 
       container.read(storyViewingControllerProvider(alice).notifier)
-        ..advance() // a2
-        ..advance() // bob/b1
+        ..advance(stories: aliceStories) // a2
+        ..advance(stories: aliceStories) // bob/b1
         ..rewind(); // back to Alice/a1
 
       final state = container.read(storyViewingControllerProvider(alice));
@@ -98,7 +99,8 @@ void main() {
       'with the current user (CubePageView onPageChanged)',
       () {
         final container = createContainer(overrides: overrides);
-        final notifier = container.read(storyViewingControllerProvider(alice).notifier)..advance();
+        final notifier = container.read(storyViewingControllerProvider(alice).notifier)
+          ..advance(stories: aliceStories);
 
         var state = container.read(storyViewingControllerProvider(alice));
         expect(state.currentUserIndex, 0);

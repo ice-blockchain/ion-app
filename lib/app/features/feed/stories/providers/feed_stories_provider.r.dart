@@ -22,10 +22,16 @@ class FeedStories extends _$FeedStories with DelegatedPagedNotifier {
   ({Iterable<UserStory>? items, bool hasMore}) build() {
     final filter = ref.watch(feedCurrentFilterProvider);
     final data = switch (filter.filter) {
-      FeedFilter.following => ref.watch(feedFollowingContentProvider(FeedType.story)),
-      FeedFilter.forYou => ref.watch(feedForYouContentProvider(FeedType.story)),
+      FeedFilter.following => ref.watch(
+          feedFollowingContentProvider(FeedType.story)
+              .select((data) => (items: data.items, hasMore: data.hasMore)),
+        ),
+      FeedFilter.forYou => ref.watch(
+          feedForYouContentProvider(FeedType.story)
+              .select((data) => (items: data.items, hasMore: data.hasMore)),
+        ),
     };
-    return (items: _groupByPubkey(data.items), hasMore: data.hasMore);
+    return (items: _sortedStories(data.items), hasMore: data.hasMore);
   }
 
   @override
@@ -37,7 +43,7 @@ class FeedStories extends _$FeedStories with DelegatedPagedNotifier {
     };
   }
 
-  Iterable<UserStory>? _groupByPubkey(Iterable<IonConnectEntity>? entities) {
+  Iterable<UserStory>? _sortedStories(Iterable<IonConnectEntity>? entities) {
     if (entities == null) return null;
 
     final postEntities = entities.whereType<ModifiablePostEntity>().where((post) {
@@ -45,28 +51,24 @@ class FeedStories extends _$FeedStories with DelegatedPagedNotifier {
       return mediaType == MediaType.image || mediaType == MediaType.video;
     }).sorted((a, b) => a.createdAt.compareTo(b.createdAt));
 
-    final groupedStories = groupBy<ModifiablePostEntity, String>(
-      postEntities,
-      (post) => post.masterPubkey,
-    );
+    final userStoriesMap = <String, UserStory>{};
 
-    final userStoriesList = <UserStory>[];
+    for (final post in postEntities) {
+      final pubkey = post.masterPubkey;
 
-    for (final entry in groupedStories.entries) {
-      final pubkey = entry.key;
-      final userPosts = entry.value;
+      if (userStoriesMap.containsKey(pubkey)) {
+        continue;
+      }
 
-      if (userPosts.isEmpty) continue;
-
-      final userStories = UserStory(
+      final userStory = UserStory(
         pubkey: pubkey,
-        story: userPosts.first,
+        story: post,
       );
 
-      userStoriesList.add(userStories);
+      userStoriesMap[pubkey] = userStory;
     }
 
-    return userStoriesList;
+    return userStoriesMap.values;
   }
 }
 

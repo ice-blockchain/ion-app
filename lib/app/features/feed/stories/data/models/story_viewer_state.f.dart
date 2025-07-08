@@ -22,7 +22,7 @@ class StoryViewerState with _$StoryViewerState {
   UserStory? get currentStory {
     if (userStories.isEmpty) return null;
 
-    return userStories[currentUserIndex];
+    return userStories.elementAtOrNull(currentUserIndex);
   }
 
   String get currentUserPubkey {

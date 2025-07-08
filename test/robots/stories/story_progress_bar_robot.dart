@@ -3,6 +3,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:ion/app/features/feed/data/models/entities/modifiable_post_data.f.dart';
 import 'package:ion/app/features/feed/stories/data/models/user_story.f.dart';
 import 'package:ion/app/features/feed/stories/providers/feed_stories_provider.r.dart';
 import 'package:ion/app/features/feed/stories/providers/story_viewing_provider.r.dart';
@@ -19,7 +20,7 @@ class StoryProgressBarRobot extends BaseRobot with ProviderScopeMixin, StoryStat
 
   static Future<StoryProgressBarRobot> launch(
     WidgetTester tester, {
-    required List<UserStories> stories,
+    required List<UserStory> stories,
     required String viewerPubkey,
   }) async {
     await ScreenUtil.ensureScreenSize();
@@ -50,7 +51,9 @@ class StoryProgressBarRobot extends BaseRobot with ProviderScopeMixin, StoryStat
 
   Finder get _segmentFinder => find.byType(StoryProgressSegment);
 
-  void advance() => container.read(storyViewingControllerProvider(viewerPubkey).notifier).advance();
+  void advance({required List<ModifiablePostEntity> stories}) => container
+      .read(storyViewingControllerProvider(viewerPubkey).notifier)
+      .advance(stories: stories);
 
   List<StoryProgressSegment> get segments =>
       tester.widgetList<StoryProgressSegment>(_segmentFinder).toList();

@@ -15,18 +15,16 @@ import 'package:ion/app/features/feed/views/pages/feed_page/components/stories/c
 import 'package:ion/app/features/feed/views/pages/feed_page/components/stories/mock.dart';
 import 'package:ion/app/router/app_routes.gr.dart';
 
-final _allStoriesViewedProvider = Provider.family<bool, String>((ref, pubkey) {
+final _storyStatusProvider =
+    Provider.family<({bool hasStories, bool allStoriesViewed}), String>((ref, pubkey) {
   final userStory = ref.watch(feedStoriesByPubkeyProvider(pubkey, showOnlySelectedUser: true));
   final storiesReferences = StoriesReferences(userStory.map((e) => e.story.toEventReference()));
   final viewedStories = ref.watch(viewedStoriesControllerProvider(storiesReferences));
 
-  if (userStory.isEmpty) {
-    return false;
-  }
-
+  final hasStories = userStory.isNotEmpty;
   final allStoriesViewed = viewedStories.isNotEmpty;
 
-  return allStoriesViewed;
+  return (hasStories: hasStories, allStoriesViewed: allStoriesViewed);
 });
 
 class StoryColoredProfileAvatar extends HookConsumerWidget {
@@ -53,48 +51,79 @@ class StoryColoredProfileAvatar extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final allStoriesViewed = ref.watch(_allStoriesViewedProvider(pubkey));
+    final storyStatus = ref.watch(_storyStatusProvider(pubkey));
+    final hasStories = storyStatus.hasStories;
+    final allStoriesViewed = storyStatus.allStoriesViewed;
 
     final gradient = useMemoized(
       () {
+        if (!hasStories) {
+          return null;
+        }
+
         return useRandomGradient
             ? storyBorderGradients[Random().nextInt(storyBorderGradients.length)]
             : storyBorderGradients.first;
       },
-      [useRandomGradient],
+      [hasStories, useRandomGradient],
     );
 
     Widget avatarWidget;
 
-    avatarWidget = StoryColoredBorder(
-      size: size,
-      color: context.theme.appColors.strokeElements,
-      gradient: gradient,
-      isViewed: allStoriesViewed,
-      child: StoryColoredBorder(
-        size: size - 4.0.s,
-        color: context.theme.appColors.secondaryBackground,
-        child: imageUrl != null || imageWidget != null || defaultAvatar != null
-            ? Avatar(
-                size: size - 8.0.s,
-                imageUrl: imageUrl,
-                imageWidget: imageWidget,
-                defaultAvatar: defaultAvatar,
-                borderRadius: borderRadius,
-                fit: fit,
-              )
-            : IonConnectAvatar(
-                size: size - 8.0.s,
-                fit: fit,
-                pubkey: pubkey,
-                borderRadius: borderRadius,
-              ),
-      ),
-    );
+    if (!hasStories) {
+      if (imageUrl != null || imageWidget != null || defaultAvatar != null) {
+        avatarWidget = Avatar(
+          size: size,
+          imageUrl: imageUrl,
+          imageWidget: imageWidget,
+          defaultAvatar: defaultAvatar,
+          borderRadius: borderRadius,
+          fit: fit,
+        );
+      } else {
+        avatarWidget = IonConnectAvatar(
+          size: size,
+          fit: fit,
+          pubkey: pubkey,
+          borderRadius: borderRadius,
+        );
+      }
+    } else {
+      avatarWidget = StoryColoredBorder(
+        size: size,
+        color: context.theme.appColors.strokeElements,
+        gradient: gradient,
+        isViewed: allStoriesViewed,
+        child: StoryColoredBorder(
+          size: size - 4.0.s,
+          color: context.theme.appColors.secondaryBackground,
+          child: imageUrl != null || imageWidget != null || defaultAvatar != null
+              ? Avatar(
+                  size: size - 8.0.s,
+                  imageUrl: imageUrl,
+                  imageWidget: imageWidget,
+                  defaultAvatar: defaultAvatar,
+                  borderRadius: borderRadius,
+                  fit: fit,
+                )
+              : IonConnectAvatar(
+                  size: size - 8.0.s,
+                  fit: fit,
+                  pubkey: pubkey,
+                  borderRadius: borderRadius,
+                ),
+        ),
+      );
+    }
 
-    return GestureDetector(
-      onTap: () => StoryViewerRoute(pubkey: pubkey, showOnlySelectedUser: true).push<void>(context),
-      child: avatarWidget,
-    );
+    if (hasStories) {
+      return GestureDetector(
+        onTap: () =>
+            StoryViewerRoute(pubkey: pubkey, showOnlySelectedUser: true).push<void>(context),
+        child: avatarWidget,
+      );
+    }
+
+    return avatarWidget;
   }
 }

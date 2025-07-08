@@ -115,14 +115,8 @@ class FollowingFeedSeenEventsRepository {
 
   Stream<List<({EventReference eventReference, int createdAt})>> watchByReferences({
     required Iterable<EventReference> eventsReferences,
-    required FeedType feedType,
-    FeedModifier? feedModifier,
   }) {
-    final seenEventsStream = _seenEventsDao.watchByReferences(
-      eventsReferences: eventsReferences,
-      feedType: feedType,
-      feedModifier: feedModifier,
-    );
+    final seenEventsStream = _seenEventsDao.watchByReferences(eventsReferences: eventsReferences);
     return seenEventsStream.map(
       (eventsList) => eventsList
           .map((event) => (eventReference: event.eventReference, createdAt: event.createdAt))

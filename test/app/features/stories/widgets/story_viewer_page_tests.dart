@@ -35,13 +35,9 @@ void main() {
   const viewerPubkey = StoryFixtures.alice;
   const otherPubkey = StoryFixtures.bob;
 
-  final aliceStories = StoryFixtures.simpleStories(
-    pubkey: viewerPubkey,
-    count: 2,
-  );
-  final bobStories = StoryFixtures.simpleStories(
+  final aliceStories = StoryFixtures.userStory();
+  final bobStories = StoryFixtures.userStory(
     pubkey: otherPubkey,
-    count: 2,
   );
 
   group('StoryViewerPage – gestures', () {
@@ -119,7 +115,7 @@ void main() {
       await StoryViewerRobot.launch(
         tester,
         stories: [
-          UserStories(pubkey: viewerPubkey, stories: [lastVideoPost]),
+          UserStory(pubkey: viewerPubkey, story: lastVideoPost),
         ],
         viewerPubkey: viewerPubkey,
         autoPush: true,

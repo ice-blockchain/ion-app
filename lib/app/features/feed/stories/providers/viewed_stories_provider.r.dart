@@ -15,10 +15,7 @@ class ViewedStoriesController extends _$ViewedStoriesController {
   Set<EventReference> build(StoriesReferences storiesReferences) {
     final seenEventsRepository = ref.watch(followingFeedSeenEventsRepositoryProvider);
     final subscription = seenEventsRepository
-        .watchByReferences(
-          eventsReferences: storiesReferences.references,
-          feedType: FeedType.story,
-        )
+        .watchByReferences(eventsReferences: storiesReferences.references)
         .listen((seenEvents) => state = seenEvents.map((e) => e.eventReference).toSet());
 
     ref.onDispose(subscription.cancel);

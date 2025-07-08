@@ -1,6 +1,7 @@
 // SPDX-License-Identifier: ice License 1.0
 
 import 'package:ion/app/features/core/model/media_type.dart';
+import 'package:ion/app/features/feed/data/models/entities/modifiable_post_data.f.dart';
 import 'package:ion/app/features/feed/stories/data/models/user_story.f.dart';
 
 import '../posts/post_fixtures.dart';
@@ -12,33 +13,24 @@ class StoryFixtures {
   static const bob = 'bob';
   static const charlie = 'charlie';
 
-  static UserStories simpleStories({
-    required String pubkey,
-    int count = 3,
-    MediaType mediaType = MediaType.image,
-  }) {
-    if (count == 0) {
-      return UserStories(pubkey: pubkey, stories: []);
-    }
-
-    return UserStories(
-      pubkey: pubkey,
-      stories: List.generate(
-        count,
-        (i) => buildPost('${pubkey}_story_$i', author: pubkey, mediaType: mediaType),
-      ),
-    );
-  }
-
-  static UserStories singleStory({
+  static UserStory userStory({
     String pubkey = alice,
     MediaType mediaType = MediaType.image,
   }) {
-    return UserStories(
+    return UserStory(
       pubkey: pubkey,
-      stories: [
-        buildPost('single_story', author: pubkey, mediaType: mediaType),
-      ],
+      story: buildPost('single_story', author: pubkey, mediaType: mediaType),
+    );
+  }
+
+  static List<ModifiablePostEntity> stories({
+    String pubkey = alice,
+    int count = 3,
+    MediaType mediaType = MediaType.image,
+  }) {
+    return List.generate(
+      count,
+      (i) => buildPost('${pubkey}_story_$i', author: pubkey, mediaType: mediaType),
     );
   }
 }

@@ -14,6 +14,7 @@ import 'package:ion/app/features/feed/stories/providers/story_viewing_provider.r
 import 'package:ion/app/features/feed/stories/providers/user_stories_provider.r.dart';
 import 'package:ion/app/features/feed/stories/providers/viewed_stories_provider.r.dart';
 import 'package:ion/app/features/feed/stories/views/components/story_viewer/components/components.dart';
+import 'package:ion/app/features/feed/views/pages/feed_page/components/stories/hooks/use_preload_story_image.dart';
 import 'package:ion/app/features/ion_connect/model/event_reference.f.dart';
 import 'package:ion/app/features/video/views/hooks/use_status_bar_color.dart';
 import 'package:ion/app/hooks/use_on_init.dart';
@@ -41,6 +42,7 @@ class StoryViewerPage extends HookConsumerWidget {
         ref.watch(userStoriesProvider(storyViewerState.currentStory?.pubkey ?? pubkey))?.toList() ??
             [];
     final storiesReferences = StoriesReferences(stories.map((e) => e.toEventReference()));
+    final viewedStories = ref.watch(viewedStoriesControllerProvider(storiesReferences));
 
     useOnInit(
       () {
@@ -53,7 +55,6 @@ class StoryViewerPage extends HookConsumerWidget {
 
     useOnInit(
       () async {
-        final viewedStories = ref.read(viewedStoriesControllerProvider(storiesReferences));
         final firstNotViewedStoryIndex =
             stories.indexWhere((story) => !viewedStories.contains(story.toEventReference()));
         final initialStoryIndex = initialStoryReference != null
@@ -68,7 +69,7 @@ class StoryViewerPage extends HookConsumerWidget {
               .moveToStoryIndex(initialStoryIndex ?? firstNotViewedStoryIndex);
         }
       },
-      [stories.isEmpty],
+      [stories.isEmpty, viewedStories],
     );
 
     useRoutePresence(
@@ -91,12 +92,14 @@ class StoryViewerPage extends HookConsumerWidget {
     useOnInit(
       () {
         final currentUserStoriesLeft = stories.length - storyViewerState.currentStoryIndex - 1;
-        if (currentUserStoriesLeft <= 20) {
+        if (currentUserStoriesLeft < 10) {
           ref.read(userStoriesProvider(storyViewerState.nextUserPubkey));
         }
       },
       [storyViewerState.currentStoryIndex],
     );
+
+    usePreloadStoryImage(ref, stories.elementAtOrNull(storyViewerState.currentStoryIndex + 1));
 
     return KeyboardVisibilityBuilder(
       builder: (context, isKeyboardVisible) {

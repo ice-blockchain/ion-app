@@ -41,8 +41,14 @@ class FeedPosts extends _$FeedPosts with DelegatedPagedNotifier {
     final feedType = FeedType.fromCategory(filter.category);
 
     final data = switch (filter.filter) {
-      FeedFilter.following => ref.watch(feedFollowingContentProvider(feedType)),
-      FeedFilter.forYou => ref.watch(feedForYouContentProvider(feedType)),
+      FeedFilter.following => ref.watch(
+          feedFollowingContentProvider(feedType)
+              .select((data) => (items: data.items, hasMore: data.hasMore)),
+        ),
+      FeedFilter.forYou => ref.watch(
+          feedForYouContentProvider(feedType)
+              .select((data) => (items: data.items, hasMore: data.hasMore)),
+        ),
     };
     return (items: data.items, hasMore: data.hasMore);
   }

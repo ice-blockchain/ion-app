@@ -11,6 +11,7 @@ import 'package:ion/app/features/feed/data/models/entities/modifiable_post_data.
 import 'package:ion/app/features/feed/stories/data/models/user_story.f.dart';
 import 'package:ion/app/features/feed/stories/providers/feed_stories_provider.r.dart';
 import 'package:ion/app/features/feed/stories/providers/story_viewing_provider.r.dart';
+import 'package:ion/app/features/feed/stories/providers/user_stories_provider.r.dart';
 import 'package:ion/app/features/feed/stories/views/components/story_viewer/components/core/core.dart';
 import 'package:ion/app/features/feed/stories/views/pages/story_viewer_page.dart';
 import 'package:ion/app/router/providers/go_router_provider.r.dart';
@@ -31,7 +32,7 @@ class StoryViewerRobot extends BaseRobot with ProviderScopeMixin, StoryStateMixi
 
   static Future<StoryViewerRobot> launch(
     WidgetTester tester, {
-    required List<UserStories> stories,
+    required List<UserStory> stories,
     required String viewerPubkey,
     String identity = 'test_user',
     List<Override> extraOverrides = const [],
@@ -147,10 +148,11 @@ class StoryViewerRobot extends BaseRobot with ProviderScopeMixin, StoryStateMixi
     required ModifiablePostEntity post,
     required String pubkey,
   }) {
-    final stories = UserStories(pubkey: pubkey, stories: [post]);
+    final stories = UserStory(pubkey: pubkey, story: post);
     return [
       feedStoriesProvider.overrideWith(() => FakeFeedStories([stories])),
       feedStoriesByPubkeyProvider(pubkey).overrideWith((_) => [stories]),
+      userStoriesProvider(pubkey).overrideWith((_) => [post]),
     ];
   }
 }
