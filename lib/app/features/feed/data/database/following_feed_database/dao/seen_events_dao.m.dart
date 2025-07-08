@@ -89,10 +89,11 @@ class SeenEventsDao extends DatabaseAccessor<FollowingFeedDatabase> with _$SeenE
     return firstWithoutNext;
   }
 
-  Future<List<SeenEvent>> getEventsExcluding({
+  Future<List<SeenEvent>> getEvents({
     required FeedType feedType,
-    required List<EventReference> exclude,
     required int limit,
+    List<EventReference>? excludeReferences,
+    List<String>? excludePubkeys,
     int? since,
     int? until,
     FeedModifier? feedModifier,
@@ -104,8 +105,11 @@ class SeenEventsDao extends DatabaseAccessor<FollowingFeedDatabase> with _$SeenE
         (tbl) => OrderingTerm(expression: tbl.createdAt, mode: OrderingMode.desc),
       ])
       ..limit(limit);
-    if (exclude.isNotEmpty) {
-      query.where((tbl) => tbl.eventReference.isNotInValues(exclude));
+    if (excludeReferences != null && excludeReferences.isNotEmpty) {
+      query.where((tbl) => tbl.eventReference.isNotInValues(excludeReferences));
+    }
+    if (excludePubkeys != null && excludePubkeys.isNotEmpty) {
+      query.where((tbl) => tbl.pubkey.isNotIn(excludePubkeys));
     }
     if (since != null) {
       query.where((tbl) => tbl.createdAt.isBiggerThanValue(since.toMicroseconds));

@@ -213,15 +213,27 @@ class FeedFollowingContent extends _$FeedFollowingContent implements PagedNotifi
     return state.unseenPagination?[pubkey] ?? const Pagination(hasMore: true);
   }
 
+  /// Fetches the next seen event references, excluding those already in the state.
+  ///
+  /// In case of stories, it fetches only one event per author.
   Future<List<EventReference>> _getNextSeenReferences({required int limit}) async {
     final seenEventsRepository = ref.read(followingFeedSeenEventsRepositoryProvider);
 
-    final stateEntityReferences =
-        state.items?.map((entity) => entity.toEventReference()).toList() ?? [];
+    final stateEntityReferences = <EventReference>[];
+    final stateEntityPubkeys = <String>{};
+    for (final entity in state.items ?? <IonConnectEntity>{}) {
+      final reference = entity.toEventReference();
+      stateEntityReferences.add(reference);
+      stateEntityPubkeys.add(reference.masterPubkey);
+    }
+
+    final uniqAuthors = feedType == FeedType.story;
+
     final seenEvents = await seenEventsRepository.getEventReferences(
       feedType: feedType,
       feedModifier: feedModifier,
-      exclude: stateEntityReferences,
+      excludeReferences: uniqAuthors ? [] : stateEntityReferences,
+      excludePubkeys: uniqAuthors ? stateEntityPubkeys.toList() : [],
       limit: limit,
       until: state.seenPagination.lastEvent?.createdAt,
     );

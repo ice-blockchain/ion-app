@@ -90,16 +90,18 @@ class FollowingFeedSeenEventsRepository {
 
   Future<List<({EventReference eventReference, int createdAt})>> getEventReferences({
     required FeedType feedType,
-    required List<EventReference> exclude,
     required int limit,
+    List<EventReference>? excludeReferences,
+    List<String>? excludePubkeys,
     int? since,
     int? until,
     FeedModifier? feedModifier,
   }) async {
-    final seenEvents = await _seenEventsDao.getEventsExcluding(
+    final seenEvents = await _seenEventsDao.getEvents(
       feedType: feedType,
       feedModifier: feedModifier,
-      exclude: exclude,
+      excludeReferences: excludeReferences,
+      excludePubkeys: excludePubkeys,
       limit: limit,
       since: since,
       until: until,
