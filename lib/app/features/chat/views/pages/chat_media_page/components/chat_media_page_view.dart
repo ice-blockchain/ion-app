@@ -145,7 +145,7 @@ class _ChatMediaItem extends HookConsumerWidget {
             hideBottomOverlay: true,
             playerController: playerController,
           ),
-          if (playerController != null)
+          if (playerController != null && playerController.value.isInitialized)
             PositionedDirectional(
               bottom: 0,
               start: 0,
