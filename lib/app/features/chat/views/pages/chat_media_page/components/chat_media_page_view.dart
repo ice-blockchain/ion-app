@@ -236,7 +236,7 @@ class _ImagePreview extends HookConsumerWidget {
           start: 0,
           end: 0,
           child: Container(
-            height: 125.s,
+            height: 91.s + MediaQuery.paddingOf(context).bottom,
             color: context.theme.appColors.primaryText.withValues(alpha: 0.3),
           ),
         ),

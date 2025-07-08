@@ -196,7 +196,7 @@ class _MediaBottomOverlay extends ConsumerWidget {
       start: 0,
       end: 0,
       child: SizedBox(
-        height: 125.s,
+        height: 91.s + MediaQuery.paddingOf(context).bottom,
         child: ScreenSideOffset.small(
           child: Padding(
             padding: EdgeInsetsDirectional.only(
