@@ -3,12 +3,15 @@
 import 'package:drift/drift.dart';
 import 'package:ion/app/features/feed/data/models/feed_modifier.dart';
 
-class FeedModifierConverter extends TypeConverter<FeedModifier, int> {
+// Feed modifier is a part of the primary key, so it might not be null on db level.
+// So we map null values to -1
+class FeedModifierConverter extends TypeConverter<FeedModifier?, int> {
   const FeedModifierConverter();
 
   @override
-  FeedModifier fromSql(int fromDb) {
+  FeedModifier? fromSql(int fromDb) {
     return switch (fromDb) {
+      -1 => null,
       0 => FeedModifier.top,
       1 => FeedModifier.trending,
       2 => FeedModifier.explore,
@@ -17,11 +20,12 @@ class FeedModifierConverter extends TypeConverter<FeedModifier, int> {
   }
 
   @override
-  int toSql(FeedModifier value) {
+  int toSql(FeedModifier? value) {
     return switch (value) {
       FeedModifier.top => 0,
       FeedModifier.trending => 1,
       FeedModifier.explore => 2,
+      null => -1
     };
   }
 }

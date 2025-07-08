@@ -10,6 +10,7 @@ import 'package:ion/app/features/feed/data/database/following_feed_database/conv
 import 'package:ion/app/features/feed/data/database/following_feed_database/following_feed_database.m.steps.dart';
 import 'package:ion/app/features/feed/data/database/following_feed_database/tables/seen_events_table.d.dart';
 import 'package:ion/app/features/feed/data/database/following_feed_database/tables/seen_reposts_table.d.dart';
+import 'package:ion/app/features/feed/data/database/following_feed_database/tables/user_fetch_states_table.d.dart';
 import 'package:ion/app/features/feed/data/models/feed_modifier.dart';
 import 'package:ion/app/features/feed/data/models/feed_type.dart';
 import 'package:ion/app/features/ion_connect/database/converters/event_reference_converter.d.dart';
@@ -37,6 +38,7 @@ FollowingFeedDatabase followingFeedDatabase(Ref ref) {
   tables: [
     SeenEventsTable,
     SeenRepostsTable,
+    UserFetchStatesTable,
   ],
 )
 class FollowingFeedDatabase extends _$FollowingFeedDatabase {
@@ -45,7 +47,7 @@ class FollowingFeedDatabase extends _$FollowingFeedDatabase {
   final String pubkey;
 
   @override
-  int get schemaVersion => 2;
+  int get schemaVersion => 3;
 
   @override
   MigrationStrategy get migration {
@@ -53,6 +55,12 @@ class FollowingFeedDatabase extends _$FollowingFeedDatabase {
       onUpgrade: stepByStep(
         from1To2: (m, schema) async {
           await m.createTable(schema.seenRepostsTable);
+        },
+        from2To3: (m, schema) async {
+          // Migrating from a nullable to a non-nullable column (feedModifier)
+          await m.deleteTable('seen_events_table');
+          await m.createTable(schema.seenEventsTable);
+          await m.createTable(schema.userFetchStatesTable);
         },
       ),
     );

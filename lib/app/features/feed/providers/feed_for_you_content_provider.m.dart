@@ -10,6 +10,7 @@ import 'package:ion/app/features/auth/providers/auth_provider.m.dart';
 import 'package:ion/app/features/feed/data/models/feed_config.f.dart';
 import 'package:ion/app/features/feed/data/models/feed_modifier.dart';
 import 'package:ion/app/features/feed/data/models/feed_type.dart';
+import 'package:ion/app/features/feed/data/models/retry_counter.dart';
 import 'package:ion/app/features/feed/providers/feed_config_provider.r.dart';
 import 'package:ion/app/features/feed/providers/feed_data_source_builders.dart';
 import 'package:ion/app/features/feed/providers/feed_following_content_provider.m.dart';
@@ -85,6 +86,8 @@ class FeedForYouContent extends _$FeedForYouContent implements PagedNotifier {
     if (unseenFollowing < limit) {
       yield* _fetchForYou(limit: limit - unseenFollowing);
     }
+
+    Logger.info('$_logTag Done requesting events');
   }
 
   Stream<IonConnectEntity> _fetchForYou({required int limit}) async* {
@@ -107,13 +110,13 @@ class FeedForYouContent extends _$FeedForYouContent implements PagedNotifier {
 
     if (retryCounter.isReached) {
       state = state.copyWith(forYouRetryLimitReached: true);
-      Logger.warning('$_logTag For you retry limit reached');
+      Logger.warning('$_logTag Retry limit reached');
     }
   }
 
   Future<RetryCounter> _buildRetryCounter() async {
     final feedConfig = await ref.read(feedConfigProvider.future);
-    final maxRetries = (feedType.pageSize * feedConfig.forYouMaxRetriesMultiplier).ceil();
+    final maxRetries = (feedType.pageSize * feedConfig.followingMaxRetriesMultiplier).ceil();
     return RetryCounter(limit: maxRetries);
   }
 
@@ -232,6 +235,12 @@ class FeedForYouContent extends _$FeedForYouContent implements PagedNotifier {
 
     final nextPageRelays =
         getNextPageSources(sources: state.modifiersPagination[modifier]!, limit: limit);
+
+    Logger.info(
+      nextPageRelays.isEmpty
+          ? '$_logTag No sources for the next page of events with [${modifier.name}] modifier'
+          : '$_logTag Next page sources are [${nextPageRelays.entries.length}] relays: ${nextPageRelays.keys} with [${modifier.name}] modifier',
+    );
 
     if (nextPageRelays.isEmpty) return;
 
@@ -606,21 +615,4 @@ class InterestPagination with _$InterestPagination {
     required bool hasMore,
     int? lastEventCreatedAt,
   }) = _InterestPagination;
-}
-
-class RetryCounter {
-  RetryCounter({
-    required this.limit,
-  }) : _current = 0;
-
-  final int limit;
-  int _current;
-
-  bool get isReached => _current >= limit;
-
-  int get triesLeft => limit - _current;
-
-  void increment() {
-    _current++;
-  }
 }
