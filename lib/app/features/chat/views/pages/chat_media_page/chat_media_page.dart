@@ -195,30 +195,31 @@ class _MediaBottomOverlay extends ConsumerWidget {
       bottom: 0,
       start: 0,
       end: 0,
-      child: ColoredBox(
-        color: context.theme.appColors.primaryText.withValues(alpha: 0.5),
+      child: SizedBox(
+        height: 125.s,
         child: ScreenSideOffset.small(
           child: Padding(
             padding: EdgeInsetsDirectional.only(
-              bottom: 20.0.s + MediaQuery.paddingOf(context).bottom,
-              top: 16.0.s,
+              top: 12.0.s,
             ),
             child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Expanded(
-                  child: BadgesUserListItem(
-                    pubkey: messageEntity.masterPubkey,
-                    title: Text(
-                      userMetadata.data.displayName,
-                      style: context.theme.appTextThemes.subtitle3.copyWith(
-                        color: context.theme.appColors.onPrimaryAccent,
+                  child: IntrinsicHeight(
+                    child: BadgesUserListItem(
+                      pubkey: messageEntity.masterPubkey,
+                      title: Text(
+                        userMetadata.data.displayName,
+                        style: context.theme.appTextThemes.subtitle3.copyWith(
+                          color: context.theme.appColors.onPrimaryAccent,
+                        ),
                       ),
-                    ),
-                    subtitle: Text(
-                      prefixUsername(username: userMetadata.data.name, context: context),
-                      style: context.theme.appTextThemes.caption.copyWith(
-                        color: context.theme.appColors.onPrimaryAccent,
+                      subtitle: Text(
+                        prefixUsername(username: userMetadata.data.name, context: context),
+                        style: context.theme.appTextThemes.caption.copyWith(
+                          color: context.theme.appColors.onPrimaryAccent,
+                        ),
                       ),
                     ),
                   ),

@@ -31,6 +31,8 @@ class VideoPage extends HookConsumerWidget {
     this.thumbnailUrl,
     this.blurhash,
     this.aspectRatio,
+    this.playerController,
+    this.hideBottomOverlay = false,
     super.key,
   });
 
@@ -45,6 +47,8 @@ class VideoPage extends HookConsumerWidget {
   final String? thumbnailUrl;
   final String? blurhash;
   final double? aspectRatio;
+  final CachedVideoPlayerPlusController? playerController;
+  final bool hideBottomOverlay;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -52,19 +56,20 @@ class VideoPage extends HookConsumerWidget {
       return Text(context.i18n.video_not_found);
     }
 
-    final playerController = ref
-        .watch(
-          videoControllerProvider(
-            VideoControllerParams(
-              sourcePath: videoUrl,
-              authorPubkey: authorPubkey,
-              autoPlay: true,
-              looping: looping,
-              uniqueId: framedEventReference?.encode() ?? '',
-            ),
-          ),
-        )
-        .value;
+    final playerController = this.playerController ??
+        ref
+            .watch(
+              videoControllerProvider(
+                VideoControllerParams(
+                  sourcePath: videoUrl,
+                  authorPubkey: authorPubkey,
+                  autoPlay: true,
+                  looping: looping,
+                  uniqueId: framedEventReference?.encode() ?? '',
+                ),
+              ),
+            )
+            .value;
 
     if (playerController == null || !playerController.value.isInitialized) {
       final thumbnailAspectRatio = aspectRatio ?? 16 / 9;
@@ -188,6 +193,7 @@ class VideoPage extends HookConsumerWidget {
             child: Center(
               child: SafeArea(
                 top: false,
+                bottom: !hideBottomOverlay,
                 child: Padding(
                   padding: EdgeInsetsDirectional.only(bottom: videoBottomPadding.s),
                   child: AnimatedSwitcher(
@@ -210,42 +216,44 @@ class VideoPage extends HookConsumerWidget {
                 onPressed: playerController.play,
               ),
             ),
-          SafeArea(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                const Spacer(),
-                if (videoInfo != null) videoInfo!,
-                VideoProgress(
-                  controller: playerController,
-                  builder: (context, position, duration) => VideoSlider(
-                    position: position,
-                    duration: duration,
-                    onChangeStart: (_) => playerController.pause(),
-                    onChangeEnd: (_) => playerController.play(),
-                    onChanged: (value) {
-                      if (playerController.value.isInitialized) {
-                        playerController.seekTo(
-                          Duration(milliseconds: value.toInt()),
-                        );
-                      }
-                    },
+          if (!hideBottomOverlay)
+            SafeArea(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const Spacer(),
+                  if (videoInfo != null) videoInfo!,
+                  VideoProgress(
+                    controller: playerController,
+                    builder: (context, position, duration) => VideoSlider(
+                      position: position,
+                      duration: duration,
+                      onChangeStart: (_) => playerController.pause(),
+                      onChangeEnd: (_) => playerController.play(),
+                      onChanged: (value) {
+                        if (playerController.value.isInitialized) {
+                          playerController.seekTo(
+                            Duration(milliseconds: value.toInt()),
+                          );
+                        }
+                      },
+                    ),
                   ),
-                ),
-                if (bottomOverlay != null) bottomOverlay!,
-              ],
-            ),
-          ),
-          Align(
-            alignment: Alignment.bottomCenter,
-            child: ColoredBox(
-              color: context.theme.appColors.primaryText,
-              child: SizedBox(
-                height: MediaQuery.paddingOf(context).bottom,
-                width: double.infinity,
+                  if (bottomOverlay != null) bottomOverlay!,
+                ],
               ),
             ),
-          ),
+          if (!hideBottomOverlay)
+            Align(
+              alignment: Alignment.bottomCenter,
+              child: ColoredBox(
+                color: context.theme.appColors.primaryText,
+                child: SizedBox(
+                  height: MediaQuery.paddingOf(context).bottom,
+                  width: double.infinity,
+                ),
+              ),
+            ),
         ],
       ),
     );

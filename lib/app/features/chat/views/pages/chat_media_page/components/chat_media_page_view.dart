@@ -11,9 +11,12 @@ import 'package:ion/app/features/chat/e2ee/model/entities/private_direct_message
 import 'package:ion/app/features/chat/e2ee/providers/chat_message_load_media_provider.r.dart';
 import 'package:ion/app/features/chat/model/database/chat_database.m.dart';
 import 'package:ion/app/features/core/model/media_type.dart';
+import 'package:ion/app/features/core/providers/video_player_provider.r.dart';
 import 'package:ion/app/features/feed/views/pages/fullscreen_media/hooks/use_image_zoom.dart';
 import 'package:ion/app/features/ion_connect/model/event_reference.f.dart';
 import 'package:ion/app/features/ion_connect/model/media_attachment.dart';
+import 'package:ion/app/features/video/views/components/video_progress.dart';
+import 'package:ion/app/features/video/views/components/video_slider.dart';
 import 'package:ion/app/features/video/views/pages/video_page.dart';
 import 'package:ion/app/services/file_cache/ion_file_cache_manager.r.dart';
 import 'package:ion/app/utils/url.dart';
@@ -117,14 +120,59 @@ class _ChatMediaItem extends HookConsumerWidget {
     final path = fileFuture.data!;
 
     if (media.mediaType == MediaType.video) {
-      return VideoPage(
-        key: ValueKey('video_${media.url}'),
-        videoUrl: path,
-        authorPubkey: entity.masterPubkey,
-        thumbnailUrl: media.thumb,
-        blurhash: media.blurhash,
-        aspectRatio: media.aspectRatio,
-        videoBottomPadding: 0,
+      final playerController = ref
+          .watch(
+            videoControllerProvider(
+              VideoControllerParams(
+                sourcePath: path,
+                authorPubkey: entity.masterPubkey,
+                autoPlay: true,
+              ),
+            ),
+          )
+          .value;
+
+      return Stack(
+        children: [
+          VideoPage(
+            key: ValueKey('video_${media.url}'),
+            videoUrl: path,
+            authorPubkey: entity.masterPubkey,
+            thumbnailUrl: media.thumb,
+            blurhash: media.blurhash,
+            aspectRatio: media.aspectRatio,
+            videoBottomPadding: 0,
+            hideBottomOverlay: true,
+            playerController: playerController,
+          ),
+          if (playerController != null)
+            PositionedDirectional(
+              bottom: 0,
+              start: 0,
+              end: 0,
+              child: Container(
+                height: 125.s,
+                color: context.theme.appColors.primaryText.withValues(alpha: 0.3),
+                child: VideoProgress(
+                  controller: playerController,
+                  builder: (context, position, duration) => VideoSlider(
+                    backgroundColor: Colors.transparent,
+                    position: position,
+                    duration: duration,
+                    onChangeStart: (_) => playerController.pause(),
+                    onChangeEnd: (_) => playerController.play(),
+                    onChanged: (value) {
+                      if (playerController.value.isInitialized) {
+                        playerController.seekTo(
+                          Duration(milliseconds: value.toInt()),
+                        );
+                      }
+                    },
+                  ),
+                ),
+              ),
+            ),
+        ],
       );
     }
 
@@ -146,30 +194,45 @@ class _ImagePreview extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    return ColoredBox(
-      color: Colors.transparent,
-      child: GestureDetector(
-        onDoubleTapDown: zoomController.onDoubleTapDown,
-        onDoubleTap: zoomController.onDoubleTap,
-        child: InteractiveViewer(
-          transformationController: zoomController.transformationController,
-          maxScale: 6.0.s,
-          clipBehavior: Clip.none,
-          onInteractionStart: zoomController.onInteractionStart,
-          onInteractionUpdate: zoomController.onInteractionUpdate,
-          onInteractionEnd: zoomController.onInteractionEnd,
-          child: Container(
-            padding: EdgeInsetsDirectional.only(
-              top: MediaQuery.paddingOf(context).top,
-              bottom: MediaQuery.paddingOf(context).bottom,
-            ),
-            child: Image.file(
-              File(filePath),
-              fit: BoxFit.contain,
+    return Stack(
+      children: [
+        Positioned.fill(
+          child: ColoredBox(
+            color: Colors.transparent,
+            child: GestureDetector(
+              onDoubleTapDown: zoomController.onDoubleTapDown,
+              onDoubleTap: zoomController.onDoubleTap,
+              child: InteractiveViewer(
+                transformationController: zoomController.transformationController,
+                maxScale: 6.0.s,
+                clipBehavior: Clip.none,
+                onInteractionStart: zoomController.onInteractionStart,
+                onInteractionUpdate: zoomController.onInteractionUpdate,
+                onInteractionEnd: zoomController.onInteractionEnd,
+                child: Container(
+                  padding: EdgeInsetsDirectional.only(
+                    top: MediaQuery.paddingOf(context).top,
+                    bottom: MediaQuery.paddingOf(context).bottom,
+                  ),
+                  child: Image.file(
+                    File(filePath),
+                    fit: BoxFit.contain,
+                  ),
+                ),
+              ),
             ),
           ),
         ),
-      ),
+        PositionedDirectional(
+          bottom: 0,
+          start: 0,
+          end: 0,
+          child: Container(
+            height: 125.s,
+            color: context.theme.appColors.primaryText.withValues(alpha: 0.3),
+          ),
+        ),
+      ],
     );
   }
 }
