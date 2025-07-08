@@ -37,6 +37,7 @@ import 'package:ion/app/features/user/providers/user_events_metadata_provider.r.
 import 'package:ion/app/services/compressors/image_compressor.r.dart';
 import 'package:ion/app/services/markdown/quill.dart';
 import 'package:ion/app/services/media_service/media_service.m.dart';
+import 'package:ion/app/services/media_service/media_upload_service.dart';
 import 'package:ion/app/utils/image_path.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
@@ -326,10 +327,25 @@ class CreateArticle extends _$CreateArticle {
   ) async {
     if (imagePath == null) return null;
 
-    final uploadResult = await _uploadImage(imagePath, extractColor: true);
+    final uploadResult = await _uploadImage(imagePath);
     files.add(uploadResult.fileMetadata);
     mediaAttachments.add(uploadResult.mediaAttachment);
     return uploadResult.mediaAttachment.url;
+  }
+
+  Future<UploadResult> _uploadImage(String imagePath) async {
+    final imageCompressor = ref.read(imageCompressorProvider);
+
+    final file = MediaFile(
+      path: imagePath,
+    );
+    final compressedImage = await imageCompressor.compress(file);
+
+    final result = await ref.read(ionConnectUploadNotifierProvider.notifier).upload(
+          compressedImage,
+          alt: FileAlt.article,
+        );
+    return result;
   }
 
   Future<Delta> _prepareContent({
@@ -363,12 +379,43 @@ class CreateArticle extends _$CreateArticle {
     );
 
     if (mediaIds != null && mediaIds.isNotEmpty) {
-      await Future.wait(
+      final mediaUploadService = MediaUploadService(
+        ref: ref,
+        fileAlt: FileAlt.article,
+      );
+
+      final mediaFiles = await Future.wait(
         mediaIds.map((assetId) async {
-          final imagePath = await getOriginalAssetPath(assetId);
-          final (:fileMetadata, :mediaAttachment) = await _uploadImage(imagePath);
+          final assetEntity = await ref.read(assetEntityProvider(assetId).future);
+          if (assetEntity == null) {
+            throw AssetEntityFileNotFoundException(assetId: assetId);
+          }
+
+          final assetFileFuture = getAssetFile(assetEntity);
+          final (mimeType, file) = await (assetEntity.mimeTypeAsync, assetFileFuture).wait;
+
+          if (file == null) {
+            throw AssetEntityFileNotFoundException(assetId: assetId);
+          }
+
+          return MediaFile(
+            path: file.path,
+            height: assetEntity.height,
+            width: assetEntity.width,
+            mimeType: mimeType,
+            duration: assetEntity.duration,
+          );
+        }),
+      );
+
+      await Future.wait(
+        mediaFiles.map((mediaFile) async {
+          final assetId = mediaIds[mediaFiles.indexOf(mediaFile)];
+          final (:fileMetadatas, :mediaAttachment) =
+              await mediaUploadService.uploadMedia(mediaFile);
+
           uploadedUrls[assetId] = mediaAttachment.url;
-          files.add(fileMetadata);
+          files.addAll(fileMetadatas);
           mediaAttachments.add(mediaAttachment);
         }),
       );
@@ -402,21 +449,6 @@ class CreateArticle extends _$CreateArticle {
         return operation;
       }).toList(),
     );
-  }
-
-  Future<UploadResult> _uploadImage(String imagePath, {bool extractColor = false}) async {
-    final imageCompressor = ref.read(imageCompressorProvider);
-
-    final file = MediaFile(
-      path: imagePath,
-    );
-    final compressedImage = await imageCompressor.compress(file);
-
-    final result = await ref.read(ionConnectUploadNotifierProvider.notifier).upload(
-          compressedImage,
-          alt: FileAlt.article,
-        );
-    return result;
   }
 
   Future<String> getOriginalAssetPath(String assetId) async {

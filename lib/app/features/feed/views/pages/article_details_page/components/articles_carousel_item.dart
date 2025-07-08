@@ -49,7 +49,7 @@ class ArticlesCarouselItem extends ConsumerWidget {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      if (topics.isNotEmpty) ...[
+                      if (topics.isNotEmpty && topicsNames.isNotEmpty) ...[
                         SizedBox(height: 10.0.s),
                         Text(
                           context.i18n.article_page_in_topic(topicsNames.first),
