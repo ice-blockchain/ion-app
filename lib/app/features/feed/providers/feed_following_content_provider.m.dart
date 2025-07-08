@@ -194,7 +194,6 @@ class FeedFollowingContent extends _$FeedFollowingContent implements PagedNotifi
     if (followList == null || followList.data.list.isEmpty) return [];
 
     final dataSourcePubkeys = [
-      if (feedType == FeedType.story) ref.read(currentPubkeySelectorProvider),
       for (final followee in followList.data.list) followee.pubkey,
     ];
 
