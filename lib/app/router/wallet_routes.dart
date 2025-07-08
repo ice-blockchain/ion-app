@@ -56,9 +56,9 @@ class WalletRoutes {
         TypedGoRoute<NftSelectContactRoute>(path: 'select-contact-to-send-nft'),
         TypedGoRoute<NftSendScanRoute>(path: 'scan-receiver-wallet'),
         TypedGoRoute<SendNftConfirmRoute>(path: 'nft-confirm'),
-        TypedGoRoute<NftTransactionResultRoute>(path: 'nft-transaction-result'),
       ],
     ),
+    TypedGoRoute<NftTransactionResultRoute>(path: 'nft-transaction-result'),
   ];
 
   static const coinSendRoutes = <TypedRoute<RouteData>>[
