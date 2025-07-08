@@ -61,18 +61,7 @@ class ConfigRepository {
 
       final networkData = await _getFromNetwork<T>(configName, parser, checkVersion);
       if (networkData != null) {
-        if (checkVersion && networkData is! AppConfigWithVersion) {
-          final error = Exception(
-            'Config "$configName" must implement AppConfigWithVersion when checkVersion is true.',
-          );
-          Logger.error(error);
-          throw AppConfigException(
-            error,
-            configName: configName,
-            errorMessage: 'Invalid config version type',
-          );
-        }
-
+        _verifyNetworkData(configName, networkData, checkVersion);
         await _saveToCache(configName, networkData, cacheStrategy);
         return networkData;
       }
@@ -170,6 +159,20 @@ class ConfigRepository {
   }
 
   bool _isDateValid(String dateString) => DateTime.tryParse(dateString) != null;
+
+  void _verifyNetworkData<T>(String configName, T data, bool checkVersion) {
+    if (checkVersion && data is! AppConfigWithVersion) {
+      final error = Exception(
+        'Config "$configName" must implement AppConfigWithVersion when checkVersion is true.',
+      );
+      Logger.error(error);
+      throw AppConfigException(
+        error,
+        configName: configName,
+        errorMessage: 'Invalid config version type',
+      );
+    }
+  }
 
   Future<void> _saveToCache<T>(
     String configName,
