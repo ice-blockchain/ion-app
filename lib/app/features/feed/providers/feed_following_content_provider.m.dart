@@ -406,15 +406,20 @@ class FeedFollowingContent extends _$FeedFollowingContent implements PagedNotifi
     if (seenSequenceEnd == null) {
       // If the entity is not seen, we save it as a new seen event,
       // update the state items and pagination.
+
       await seenEventsRepository.save(entity, feedType: feedType, feedModifier: feedModifier);
+
       final duplicatedRepost = await _isDuplicatedRepost(entity);
       final isInReqTimeFrame = await _isInReqTimeFrame(entity.createdAt);
+
+      // For stories we fetch only one event per author. The rest are fetched on entering the story view.
+      final isStory = feedType == FeedType.story;
 
       state = state.copyWith(
         unseenPagination: {
           ...state.unseenPagination!,
           pubkey: pagination.copyWith(
-            hasMore: isInReqTimeFrame,
+            hasMore: isInReqTimeFrame && !isStory,
             lastEvent: (
               eventReference: entity.toEventReference(),
               createdAt: entity.createdAt,
@@ -428,12 +433,18 @@ class FeedFollowingContent extends _$FeedFollowingContent implements PagedNotifi
       // but we update the pagination with the seen sequence end.
       // This is to ensure that we do not request the same entity again
       // and skip all the seen events in between.
+
       final isInReqTimeFrame = await _isInReqTimeFrame(seenSequenceEnd.createdAt);
+
+      // For stories, we fetch only one event per author. Stop, if no fresh stories found, because
+      // we confider all the stories that go after the first seen one as also seen.
+      final isStory = feedType == FeedType.story;
+
       state = state.copyWith(
         unseenPagination: {
           ...state.unseenPagination!,
           pubkey: pagination.copyWith(
-            hasMore: isInReqTimeFrame,
+            hasMore: isInReqTimeFrame && !isStory,
             lastEvent: (
               eventReference: seenSequenceEnd.eventReference,
               createdAt: seenSequenceEnd.createdAt
