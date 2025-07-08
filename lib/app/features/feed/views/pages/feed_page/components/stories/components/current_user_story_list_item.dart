@@ -3,6 +3,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:ion/app/features/feed/stories/data/models/stories_references.f.dart';
 import 'package:ion/app/features/feed/stories/providers/feed_stories_provider.r.dart';
 import 'package:ion/app/features/feed/stories/providers/viewed_stories_provider.r.dart';
 import 'package:ion/app/features/feed/views/pages/feed_page/components/stories/components/current_user_avatar_with_permission.dart';
@@ -23,11 +24,13 @@ class CurrentUserStoryListItem extends HookConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final currentUserMetadata = ref.watch(currentUserMetadataProvider);
     final userStories = ref.watch(feedStoriesByPubkeyProvider(pubkey));
-    final viewedStories = ref.watch(viewedStoriesControllerProvider);
+    final storiesReferences =
+        StoriesReferences(userStories.map((e) => e.story.toEventReference()).toList());
+    final viewedStories = ref.watch(viewedStoriesControllerProvider(storiesReferences));
     final hasStories = userStories.isNotEmpty;
 
     final allStoriesViewed = useMemoized(
-      () => hasStories && viewedStories.contains(userStories.first.story.toEventReference()),
+      () => hasStories && viewedStories.isNotEmpty,
       [userStories, viewedStories],
     );
 

@@ -3,6 +3,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:ion/app/features/feed/stories/data/models/stories_references.f.dart';
 import 'package:ion/app/features/feed/stories/providers/feed_stories_provider.r.dart';
 import 'package:ion/app/features/feed/stories/providers/viewed_stories_provider.r.dart';
 import 'package:ion/app/features/feed/views/pages/feed_page/components/stories/components/story_item_content.dart';
@@ -23,10 +24,11 @@ class StoryListItem extends HookConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final userMetadata = ref.watch(cachedUserMetadataProvider(pubkey));
     final userStories = ref.watch(feedStoriesByPubkeyProvider(pubkey));
-    final viewedStories = ref.watch(viewedStoriesControllerProvider);
+    final storiesReferences = StoriesReferences(userStories.map((e) => e.story.toEventReference()));
+    final viewedStories = ref.watch(viewedStoriesControllerProvider(storiesReferences));
 
     final allStoriesViewed = useMemoized(
-      () => viewedStories.contains(userStories.first.story.toEventReference()),
+      () => viewedStories.isNotEmpty,
       [userStories, viewedStories],
     );
 

@@ -8,6 +8,7 @@ import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/components/screen_offset/screen_bottom_offset.dart';
 import 'package:ion/app/extensions/extensions.dart';
+import 'package:ion/app/features/feed/stories/data/models/stories_references.f.dart';
 import 'package:ion/app/features/feed/stories/providers/story_pause_provider.r.dart';
 import 'package:ion/app/features/feed/stories/providers/story_viewing_provider.r.dart';
 import 'package:ion/app/features/feed/stories/providers/user_stories_provider.r.dart';
@@ -39,6 +40,7 @@ class StoryViewerPage extends HookConsumerWidget {
     final stories =
         ref.watch(userStoriesProvider(storyViewerState.currentStory?.pubkey ?? pubkey))?.toList() ??
             [];
+    final storiesReferences = StoriesReferences(stories.map((e) => e.toEventReference()));
 
     useOnInit(
       () {
@@ -51,7 +53,7 @@ class StoryViewerPage extends HookConsumerWidget {
 
     useOnInit(
       () async {
-        final viewedStories = ref.read(viewedStoriesControllerProvider);
+        final viewedStories = ref.read(viewedStoriesControllerProvider(storiesReferences));
         final firstNotViewedStoryIndex =
             stories.indexWhere((story) => !viewedStories.contains(story.toEventReference()));
         final initialStoryIndex = initialStoryReference != null
@@ -78,10 +80,22 @@ class StoryViewerPage extends HookConsumerWidget {
     useOnInit(
       () {
         if (currentStory != null) {
-          ref.read(viewedStoriesControllerProvider.notifier).markStoryAsViewed(currentStory);
+          ref
+              .read(viewedStoriesControllerProvider(storiesReferences).notifier)
+              .markStoryAsViewed(currentStory);
         }
       },
       [currentStory?.id],
+    );
+
+    useOnInit(
+      () {
+        final currentUserStoriesLeft = stories.length - storyViewerState.currentStoryIndex - 1;
+        if (currentUserStoriesLeft <= 20) {
+          ref.read(userStoriesProvider(storyViewerState.nextUserPubkey));
+        }
+      },
+      [storyViewerState.currentStoryIndex],
     );
 
     return KeyboardVisibilityBuilder(

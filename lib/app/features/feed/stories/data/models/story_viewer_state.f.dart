@@ -30,4 +30,8 @@ class StoryViewerState with _$StoryViewerState {
 
     return userStories[currentUserIndex].pubkey;
   }
+
+  String get nextUserPubkey {
+    return userStories.elementAtOrNull(currentUserIndex + 1)?.pubkey ?? '';
+  }
 }

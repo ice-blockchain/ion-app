@@ -66,6 +66,21 @@ class SeenEventsDao extends DatabaseAccessor<FollowingFeedDatabase> with _$SeenE
     return query.getSingleOrNull();
   }
 
+  Stream<List<SeenEvent>> watchByReferences({
+    required Iterable<EventReference> eventsReferences,
+    required FeedType feedType,
+    FeedModifier? feedModifier,
+  }) {
+    final query = select(db.seenEventsTable)
+      ..where((tbl) => tbl.eventReference.isInValues(eventsReferences))
+      ..where((tbl) => tbl.feedType.equalsValue(feedType))
+      ..where(
+        (tbl) => tbl.feedModifier.equals(const FeedModifierConverter().toSql(feedModifier)),
+      );
+
+    return query.watch();
+  }
+
   /// Finds the end of the sequence -
   /// the first older event starting from [since] for provided [feedType] + [feedModifier]
   /// without [nextEventReference], ordered by createdAt

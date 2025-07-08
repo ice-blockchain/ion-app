@@ -1,23 +1,27 @@
 // SPDX-License-Identifier: ice License 1.0
 
 import 'package:ion/app/features/feed/data/models/feed_type.dart';
-import 'package:ion/app/features/feed/providers/repository/following_feed_seen_events_repository.r.dart';
+import 'package:ion/app/features/feed/data/repository/following_feed_seen_events_repository.r.dart';
+import 'package:ion/app/features/feed/stories/data/models/stories_references.f.dart';
 import 'package:ion/app/features/ion_connect/model/event_reference.f.dart';
 import 'package:ion/app/features/ion_connect/model/ion_connect_entity.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'viewed_stories_provider.r.g.dart';
 
-@Riverpod(keepAlive: true)
+@riverpod
 class ViewedStoriesController extends _$ViewedStoriesController {
   @override
-  Set<EventReference> build() {
+  Set<EventReference> build(StoriesReferences storiesReferences) {
     final seenEventsRepository = ref.watch(followingFeedSeenEventsRepositoryProvider);
-    seenEventsRepository.getEventReferences(
-      feedType: FeedType.story,
-      exclude: [],
-    ).then((seenEvents) => state = seenEvents.map((e) => e.eventReference).toSet());
+    final subscription = seenEventsRepository
+        .watchByReferences(
+          eventsReferences: storiesReferences.references,
+          feedType: FeedType.story,
+        )
+        .listen((seenEvents) => state = seenEvents.map((e) => e.eventReference).toSet());
 
+    ref.onDispose(subscription.cancel);
     return {};
   }
 
