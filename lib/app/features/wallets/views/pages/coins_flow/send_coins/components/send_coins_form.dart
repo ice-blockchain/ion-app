@@ -19,10 +19,10 @@ import 'package:ion/app/features/wallets/model/crypto_asset_to_send_data.f.dart'
 import 'package:ion/app/features/wallets/model/network_data.f.dart';
 import 'package:ion/app/features/wallets/providers/send_asset_form_provider.r.dart';
 import 'package:ion/app/features/wallets/utils/wallet_address_validator.dart';
+import 'package:ion/app/features/wallets/views/components/not_enough_coins_for_network_fee_message.dart';
 import 'package:ion/app/features/wallets/views/pages/coins_flow/send_coins/components/buttons/coin_amount_input.dart';
 import 'package:ion/app/features/wallets/views/pages/coins_flow/send_coins/components/coins_network_fee_selector.dart';
 import 'package:ion/app/features/wallets/views/pages/coins_flow/send_coins/components/contact_input_switcher.dart';
-import 'package:ion/app/features/wallets/views/pages/coins_flow/send_coins/components/widgets/not_enough_coins_for_network_fee_message.dart';
 import 'package:ion/app/features/wallets/views/utils/amount_parser.dart';
 import 'package:ion/app/features/wallets/views/utils/crypto_formatter.dart';
 import 'package:ion/app/features/wallets/views/utils/network_validator.dart';
