@@ -1,7 +1,6 @@
 // SPDX-License-Identifier: ice License 1.0
 
 import 'package:flutter/material.dart';
-import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/components/button/button.dart';
@@ -9,7 +8,6 @@ import 'package:ion/app/components/screen_offset/screen_bottom_offset.dart';
 import 'package:ion/app/components/screen_offset/screen_side_offset.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/components/verify_identity/verify_identity_prompt_dialog_helper.dart';
-import 'package:ion/app/features/ion_connect/providers/device_keypair_dialog_manager.r.dart';
 import 'package:ion/app/features/ion_connect/providers/device_keypair_dialog_state.f.dart';
 import 'package:ion/app/features/ion_connect/providers/restore_device_keypair_notifier.r.dart';
 import 'package:ion/app/features/ion_connect/providers/upload_device_keypair_notifier.r.dart';
@@ -30,13 +28,6 @@ class DeviceKeypairDialog extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    useEffect(
-      () {
-        return () => ref.read(deviceKeypairDialogManagerProvider.notifier).reject();
-      },
-      [],
-    );
-
     return switch (state) {
       DeviceKeypairState.needsUpload || DeviceKeypairState.uploadInProgress => _UploadDialog(
           isInProgress: state == DeviceKeypairState.uploadInProgress,
