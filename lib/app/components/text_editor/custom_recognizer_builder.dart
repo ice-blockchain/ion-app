@@ -17,7 +17,7 @@ GestureRecognizer? customRecognizerBuilder(
       ..onTap = isEditing
           ? null
           : () {
-              FeedAdvancedSearchRoute(query: attribute.value as String).go(context);
+              FeedAdvancedSearchRoute(query: attribute.value as String).push<void>(context);
             };
   }
   return null;
