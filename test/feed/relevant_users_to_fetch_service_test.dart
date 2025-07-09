@@ -101,7 +101,7 @@ void main() {
       expect(result.last.state.pubkey, 'user1');
     });
 
-    test('user with more recent lastFetchTime has higher score', () async {
+    test('user with more recent lastFetchTime has lower score', () async {
       final userOlderFetch = UserFetchState(
         pubkey: 'user1',
         lastFetchTime: now.subtract(const Duration(hours: 10)),
