@@ -63,7 +63,7 @@ class FollowingFeedDatabase extends _$FollowingFeedDatabase {
   final String pubkey;
 
   @override
-  int get schemaVersion => 3;
+  int get schemaVersion => 4;
 
   @override
   MigrationStrategy get migration {
@@ -77,6 +77,18 @@ class FollowingFeedDatabase extends _$FollowingFeedDatabase {
           await m.deleteTable('seen_events_table');
           await m.createTable(schema.seenEventsTable);
           await m.createTable(schema.userFetchStatesTable);
+        },
+        from3To4: (Migrator m, Schema4 schema) async {
+          // Remove lastContentTime column from userFetchStatesTable
+          await m.alterTable(
+            TableMigration(
+              schema.userFetchStatesTable,
+              columnTransformer: {
+                // Remove the column by not including it in the transformer
+                // No mapping for 'lastContentTime'
+              },
+            ),
+          );
         },
       ),
     );

@@ -3,6 +3,7 @@
 import 'dart:math';
 
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:ion/app/extensions/num.dart';
 import 'package:ion/app/features/feed/data/models/feed_modifier.dart';
 import 'package:ion/app/features/feed/data/models/feed_type.dart';
 import 'package:ion/app/features/feed/data/models/user_fetch_state.dart';
@@ -60,7 +61,8 @@ class RelevantUsersToFetchService {
     now ??= DateTime.now();
 
     final lastFetch = state.lastFetchTime;
-    final lastContent = state.lastContentTime ?? DateTime.fromMillisecondsSinceEpoch(0);
+    final lastContent =
+        contentTime?.firstOrNull?.toDateTime ?? DateTime.fromMillisecondsSinceEpoch(0);
 
     // If never fetched, return the highest score
     if (lastFetch == null) return 1;

@@ -11,7 +11,6 @@ class UserFetchStatesTable extends Table {
   TextColumn get pubkey => text()();
   IntColumn get emptyFetchCount => integer()();
   IntColumn get lastFetchTime => integer()();
-  IntColumn get lastContentTime => integer().nullable()();
 
   @override
   Set<Column> get primaryKey => {feedType, feedModifier, pubkey};
