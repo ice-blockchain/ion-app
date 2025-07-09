@@ -91,7 +91,7 @@ class AuthScrollContainer extends HookWidget {
               toolbarHeight: NavigationAppBar.modalHeaderHeight,
               pinned: true,
             ),
-            if (children.isEmpty)
+            if (children.isEmpty && slivers.isEmpty)
               SliverFillRemaining(
                 hasScrollBody: false,
                 child: Center(
