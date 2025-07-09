@@ -24,7 +24,7 @@ class UsersRelays extends _$UsersRelays {
     if (masterPubkeys.isEmpty) return {};
 
     final userToRelays = <String, List<String>>{};
-    final currentUserMasterPubkey = ref.watch(currentPubkeySelectorProvider);
+    final currentUserMasterPubkey = ref.read(currentPubkeySelectorProvider);
 
     if (currentUserMasterPubkey != null && masterPubkeys.contains(currentUserMasterPubkey)) {
       final currentUserRelays = await ref.read(currentUserRelaysProvider.future);
