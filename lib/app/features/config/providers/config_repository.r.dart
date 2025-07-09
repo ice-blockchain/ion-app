@@ -107,22 +107,23 @@ class ConfigRepository {
     AppConfigCacheStrategy cacheStrategy, {
     int? version,
   }) async {
-    final (data, headerVersion) = await _getFromNetwork<T>(
+    final result = await _getFromNetwork<T>(
       configName,
       parser,
       checkVersion,
       version: version,
     );
 
-    if (data != null) {
-      _verifyNetworkData(configName, data, checkVersion, headerVersion);
-      await _saveToCache(configName, data, cacheStrategy, headerVersion);
-      return data;
+    if (result.data != null) {
+      _verifyNetworkData(configName, result.data, checkVersion, result.headerVersion);
+      await _saveToCache(configName, result.data, cacheStrategy, result.headerVersion);
+      return result.data;
     }
+
     return null;
   }
 
-  Future<(T?, int?)> _getFromNetwork<T>(
+  Future<({T? data, int? headerVersion})> _getFromNetwork<T>(
     String configName,
     T Function(String) parser,
     bool checkVersion, {
@@ -136,7 +137,7 @@ class ConfigRepository {
       );
       final response = await _dio.get<dynamic>(uri.toString());
       if (response.statusCode == HttpStatus.noContent) {
-        return (null, null);
+        return (data: null, headerVersion: null);
       } else {
         // Get version from header if available
         final xVersion = response.headers.value('x-version');
@@ -146,7 +147,7 @@ class ConfigRepository {
           response.data is String ? response.data as String : jsonEncode(response.data),
         );
 
-        return (parsedData, headerVersion);
+        return (data: parsedData, headerVersion: headerVersion);
       }
     } catch (error) {
       Logger.error(error);
