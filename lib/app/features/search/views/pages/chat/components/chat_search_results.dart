@@ -15,7 +15,7 @@ class ChatSearchResults extends ConsumerWidget {
   });
 
   final bool showLastMessage;
-  final List<(String, String)> pubkeysAndContentTuples;
+  final List<(String, String, bool)> pubkeysAndContentTuples;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {

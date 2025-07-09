@@ -13,7 +13,7 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 part 'chat_users_search_provider.r.g.dart';
 
 @riverpod
-Future<List<(String, String)>?> chatUsersSearch(Ref ref, String query) async {
+Future<List<(String, String, bool)>?> chatUsersSearch(Ref ref, String query) async {
   if (query.isEmpty) return null;
 
   final caseInsensitiveQuery = query.toLowerCase();
@@ -63,14 +63,23 @@ Future<List<(String, String)>?> chatUsersSearch(Ref ref, String query) async {
     ).then((entries) => entries.nonNulls),
   );
 
-  // Combine and filter results
-  final filteredAndSortedPubkeys = {
-    ...filteredConversationPubkeysMap,
-    ...Map.fromEntries(
-      foundUsersPubkeysMap.entries
-          .where((entry) => !filteredConversationPubkeysMap.containsKey(entry.key)),
-    ),
-  };
+  // // Combine and filter results
+  // final filteredAndSortedPubkeys = {
+  //   ...filteredConversationPubkeysMap,
+  //   ...Map.fromEntries(
+  //     foundUsersPubkeysMap.entries
+  //         .where((entry) => !filteredConversationPubkeysMap.containsKey(entry.key)),
+  //   ),
+  // };
 
-  return filteredAndSortedPubkeys.entries.map((entry) => (entry.key, entry.value)).toList();
+  // return filteredAndSortedPubkeys.entries.map((entry) => (entry.key, entry.value)).toList();
+
+  return [
+    ...filteredConversationPubkeysMap.entries.map(
+      (entry) => (entry.key, entry.value, true),
+    ),
+    ...foundUsersPubkeysMap.entries
+        .where((entry) => !filteredConversationPubkeysMap.containsKey(entry.key))
+        .map((entry) => (entry.key, '', false)),
+  ];
 }

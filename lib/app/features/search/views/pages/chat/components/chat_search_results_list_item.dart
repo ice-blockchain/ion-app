@@ -9,6 +9,7 @@ import 'package:ion/app/components/skeleton/skeleton.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/search/providers/chat_search_history_provider.m.dart';
 import 'package:ion/app/features/search/views/pages/chat/components/chat_search_list_item_shape.dart';
+import 'package:ion/app/features/user/model/user_metadata.f.dart';
 import 'package:ion/app/features/user/providers/user_metadata_provider.r.dart';
 import 'package:ion/app/router/app_routes.gr.dart';
 import 'package:ion/app/utils/username.dart';
@@ -22,11 +23,16 @@ class ChatSearchResultListItem extends ConsumerWidget {
   });
 
   final bool showLastMessage;
-  final (String, String) pubkeyAndContent;
+  final (String, String, bool) pubkeyAndContent;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final userMetadata = ref.watch(userMetadataFromDbProvider(pubkeyAndContent.$1));
+    final UserMetadataEntity? userMetadata;
+    if (pubkeyAndContent.$3) {
+      userMetadata = ref.watch(userMetadataFromDbProvider(pubkeyAndContent.$1));
+    } else {
+      userMetadata = ref.watch(cachedUserMetadataProvider(pubkeyAndContent.$1));
+    }
 
     return Padding(
       padding: EdgeInsets.symmetric(vertical: 8.0.s),
@@ -38,7 +44,7 @@ class ChatSearchResultListItem extends ConsumerWidget {
                 onTap: () {
                   ref
                       .read(chatSearchHistoryProvider.notifier)
-                      .addUserIdToTheHistory(userMetadata.masterPubkey);
+                      .addUserIdToTheHistory(userMetadata!.masterPubkey);
                   context.pushReplacement(
                     ConversationRoute(receiverMasterPubkey: pubkeyAndContent.$1).location,
                   );

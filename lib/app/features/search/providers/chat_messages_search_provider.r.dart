@@ -11,7 +11,7 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 part 'chat_messages_search_provider.r.g.dart';
 
 @riverpod
-Future<List<(String, String)>?> chatMessagesSearch(Ref ref, String query) async {
+Future<List<(String, String, bool)>?> chatMessagesSearch(Ref ref, String query) async {
   if (query.isEmpty) return null;
 
   final currentUserMasterPubkey = ref.watch(currentPubkeySelectorProvider);
@@ -31,7 +31,8 @@ Future<List<(String, String)>?> chatMessagesSearch(Ref ref, String query) async 
       .map(
         (message) => (
           message.allPubkeys.firstWhereOrNull((key) => key != currentUserMasterPubkey) ?? '',
-          message.data.content
+          message.data.content,
+          true,
         ),
       )
       .toList();
