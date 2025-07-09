@@ -48,8 +48,8 @@ class ShareCopyLinkOption extends HookConsumerWidget {
           children: [
             Assets.svg.iconBlockCopy1.icon(size: iconSize, color: Colors.black),
             if (isCopied.value)
-              Positioned(
-                right: 5.s,
+              PositionedDirectional(
+                end: 5.s,
                 top: 2.s,
                 child: Assets.svg.iconBlockCheckGreen.icon(size: 16.s),
               ),
