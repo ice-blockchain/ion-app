@@ -7,6 +7,7 @@ import 'package:ion/app/components/list_item/badges_user_list_item.dart';
 import 'package:ion/app/components/screen_offset/screen_side_offset.dart';
 import 'package:ion/app/components/skeleton/skeleton.dart';
 import 'package:ion/app/extensions/extensions.dart';
+import 'package:ion/app/features/search/model/chat_search_result_item.f.dart';
 import 'package:ion/app/features/search/providers/chat_search_history_provider.m.dart';
 import 'package:ion/app/features/search/views/pages/chat/components/chat_search_list_item_shape.dart';
 import 'package:ion/app/features/user/model/user_metadata.f.dart';
@@ -18,20 +19,20 @@ import 'package:ion/generated/assets.gen.dart';
 class ChatSearchResultListItem extends ConsumerWidget {
   const ChatSearchResultListItem({
     required this.showLastMessage,
-    required this.pubkeyAndContent,
+    required this.item,
     super.key,
   });
 
   final bool showLastMessage;
-  final (String, String, bool) pubkeyAndContent;
+  final ChatSearchResultItem item;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final UserMetadataEntity? userMetadata;
-    if (pubkeyAndContent.$3) {
-      userMetadata = ref.watch(userMetadataFromDbProvider(pubkeyAndContent.$1));
+    if (item.isFromLocalDb) {
+      userMetadata = ref.watch(userMetadataFromDbProvider(item.masterPubkey));
     } else {
-      userMetadata = ref.watch(cachedUserMetadataProvider(pubkeyAndContent.$1));
+      userMetadata = ref.watch(cachedUserMetadataProvider(item.masterPubkey));
     }
 
     return Padding(
@@ -46,7 +47,7 @@ class ChatSearchResultListItem extends ConsumerWidget {
                       .read(chatSearchHistoryProvider.notifier)
                       .addUserIdToTheHistory(userMetadata!.masterPubkey);
                   context.pushReplacement(
-                    ConversationRoute(receiverMasterPubkey: pubkeyAndContent.$1).location,
+                    ConversationRoute(receiverMasterPubkey: item.masterPubkey).location,
                   );
                 },
                 child: Row(
@@ -55,9 +56,9 @@ class ChatSearchResultListItem extends ConsumerWidget {
                       child: BadgesUserListItem(
                         pubkey: userMetadata.masterPubkey,
                         title: Text(userMetadata.data.displayName),
-                        subtitle: pubkeyAndContent.$2.isNotEmpty && showLastMessage
+                        subtitle: item.lastMessageContent.isNotEmpty && showLastMessage
                             ? Text(
-                                pubkeyAndContent.$2,
+                                item.lastMessageContent,
                                 maxLines: 1,
                                 overflow: TextOverflow.ellipsis,
                               )

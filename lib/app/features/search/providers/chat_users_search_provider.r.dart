@@ -6,6 +6,7 @@ import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/auth/providers/auth_provider.m.dart';
 import 'package:ion/app/features/chat/e2ee/model/entities/private_direct_message_data.f.dart';
 import 'package:ion/app/features/chat/providers/conversations_provider.r.dart';
+import 'package:ion/app/features/search/model/chat_search_result_item.f.dart';
 import 'package:ion/app/features/user/providers/search_users_provider.r.dart';
 import 'package:ion/app/features/user/providers/user_metadata_provider.r.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
@@ -13,7 +14,7 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 part 'chat_users_search_provider.r.g.dart';
 
 @riverpod
-Future<List<(String, String, bool)>?> chatUsersSearch(Ref ref, String query) async {
+Future<List<ChatSearchResultItem>?> chatUsersSearch(Ref ref, String query) async {
   if (query.isEmpty) return null;
 
   final caseInsensitiveQuery = query.toLowerCase();
@@ -63,23 +64,17 @@ Future<List<(String, String, bool)>?> chatUsersSearch(Ref ref, String query) asy
     ).then((entries) => entries.nonNulls),
   );
 
-  // // Combine and filter results
-  // final filteredAndSortedPubkeys = {
-  //   ...filteredConversationPubkeysMap,
-  //   ...Map.fromEntries(
-  //     foundUsersPubkeysMap.entries
-  //         .where((entry) => !filteredConversationPubkeysMap.containsKey(entry.key)),
-  //   ),
-  // };
-
-  // return filteredAndSortedPubkeys.entries.map((entry) => (entry.key, entry.value)).toList();
-
+  // Combine and filter results
   return [
     ...filteredConversationPubkeysMap.entries.map(
-      (entry) => (entry.key, entry.value, true),
+      (entry) => ChatSearchResultItem(
+        masterPubkey: entry.key,
+        lastMessageContent: entry.value,
+        isFromLocalDb: true,
+      ),
     ),
     ...foundUsersPubkeysMap.entries
         .where((entry) => !filteredConversationPubkeysMap.containsKey(entry.key))
-        .map((entry) => (entry.key, '', false)),
+        .map((entry) => ChatSearchResultItem(masterPubkey: entry.key, lastMessageContent: '')),
   ];
 }

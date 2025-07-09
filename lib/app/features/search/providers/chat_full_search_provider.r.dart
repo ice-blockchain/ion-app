@@ -7,13 +7,14 @@ import 'package:ion/app/features/auth/providers/auth_provider.m.dart';
 import 'package:ion/app/features/chat/e2ee/model/entities/private_direct_message_data.f.dart';
 import 'package:ion/app/features/chat/model/database/chat_database.m.dart';
 import 'package:ion/app/features/chat/providers/conversations_provider.r.dart';
+import 'package:ion/app/features/search/model/chat_search_result_item.f.dart';
 import 'package:ion/app/features/user/providers/user_metadata_provider.r.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'chat_full_search_provider.r.g.dart';
 
 @riverpod
-Future<List<(String, String, bool)>?> chatFullSearch(Ref ref, String query) async {
+Future<List<ChatSearchResultItem>?> chatFullSearch(Ref ref, String query) async {
   if (query.isEmpty) return null;
 
   final currentUserMasterPubkey = ref.watch(currentPubkeySelectorProvider);
@@ -34,17 +35,18 @@ Future<List<(String, String, bool)>?> chatFullSearch(Ref ref, String query) asyn
       .toList()
     ..sortBy((message) => message.createdAt.toDateTime);
 
-  final conversationsTuples = lastConversationEntities.reversed.map(
-    (message) => (
-      message.allPubkeys.firstWhereOrNull((key) => key != currentUserMasterPubkey) ?? '',
-      message.data.content,
-      true,
+  final conversationsResults = lastConversationEntities.reversed.map(
+    (message) => ChatSearchResultItem(
+      masterPubkey:
+          message.allPubkeys.firstWhereOrNull((key) => key != currentUserMasterPubkey) ?? '',
+      lastMessageContent: message.data.content,
+      isFromLocalDb: true,
     ),
   );
 
-  final filteredConversationsTuples = await Future.wait(
-    conversationsTuples.map((entry) async {
-      final userMetadata = await ref.watch(userMetadataProvider(entry.$1).future);
+  final filteredConversationResults = await Future.wait(
+    conversationsResults.map((entry) async {
+      final userMetadata = await ref.watch(userMetadataProvider(entry.masterPubkey).future);
       if (userMetadata == null) return null;
 
       final nameMatches = userMetadata.data.name.toLowerCase().contains(caseInsensitiveQuery);
@@ -60,17 +62,14 @@ Future<List<(String, String, bool)>?> chatFullSearch(Ref ref, String query) asyn
   final entities =
       messagesSearchResults.map(ReplaceablePrivateDirectMessageEntity.fromEventMessage);
 
-  final messagesTuples = entities
-      .sortedBy((entity) => entity.createdAt.toDateTime)
-      .reversed
-      .map(
-        (message) => (
-          message.allPubkeys.firstWhereOrNull((key) => key != currentUserMasterPubkey) ?? '',
-          message.data.content,
-          true,
+  final messageResults = entities.sortedBy((entity) => entity.createdAt.toDateTime).reversed.map(
+        (message) => ChatSearchResultItem(
+          masterPubkey:
+              message.allPubkeys.firstWhereOrNull((key) => key != currentUserMasterPubkey) ?? '',
+          lastMessageContent: message.data.content,
+          isFromLocalDb: true,
         ),
-      )
-      .toList();
+      );
 
-  return [...filteredConversationsTuples, ...messagesTuples];
+  return [...filteredConversationResults, ...messageResults];
 }

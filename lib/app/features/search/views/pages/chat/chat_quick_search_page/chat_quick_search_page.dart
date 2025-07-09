@@ -49,8 +49,8 @@ class ChatQuickSearchPage extends HookConsumerWidget {
               onTextChanged: (String text) => ChatQuickSearchRoute(query: text).replace(context),
             ),
             usersSearchResults.maybeWhen(
-              data: (pubkeysAndContentTuples) {
-                return pubkeysAndContentTuples == null
+              data: (searchResults) {
+                return searchResults == null
                     ? history.pubKeys.isEmpty && history.queries.isEmpty
                         ? SearchHistoryEmpty(
                             title: hideCommunity
@@ -67,11 +67,10 @@ class ChatQuickSearchPage extends HookConsumerWidget {
                               pubkey: history.pubKeys[index],
                             ),
                           )
-                    : pubkeysAndContentTuples.isEmpty
+                    : searchResults.isEmpty
                         ? const Expanded(child: ChatSearchNoResults())
                         : Expanded(
-                            child:
-                                ChatSearchResults(pubkeysAndContentTuples: pubkeysAndContentTuples),
+                            child: ChatSearchResults(searchResults: searchResults),
                           );
               },
               orElse: ChatSearchResultsSkeleton.new,

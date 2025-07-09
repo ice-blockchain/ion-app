@@ -20,11 +20,11 @@ class ChatAdvancedSearchChats extends HookConsumerWidget {
     final chatsSearchResults = ref.watch(chatMessagesSearchProvider(query));
 
     return chatsSearchResults.maybeWhen(
-      data: (pubkeysAndContentTuples) {
-        if (pubkeysAndContentTuples!.isEmpty) {
+      data: (searchResults) {
+        if (searchResults!.isEmpty) {
           return const ChatSearchNoResults();
         } else {
-          return ChatSearchResults(pubkeysAndContentTuples: pubkeysAndContentTuples);
+          return ChatSearchResults(searchResults: searchResults);
         }
       },
       orElse: ChatSearchResultsSkeleton.new,
