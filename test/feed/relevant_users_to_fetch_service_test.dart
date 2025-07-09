@@ -222,6 +222,42 @@ void main() {
       expect(result.last.state.pubkey, 'user2');
     },
   );
+  test('user with irregular posting frequency is handled', () async {
+    final now = DateTime(2025, 7, 7, 12);
+    final userIrregular = UserFetchState(
+      pubkey: 'user1',
+      lastFetchTime: now.subtract(const Duration(hours: 10)),
+    );
+    final userRegular = UserFetchState(
+      pubkey: 'user2',
+      lastFetchTime: now.subtract(const Duration(hours: 10)),
+    );
+    final fetchStateRepository = FakeUserFetchRepository([userIrregular, userRegular]);
+    final seenEventsRepository = FakeFollowingFeedSeenEventsRepository({
+      'user1': [
+        now.subtract(const Duration(hours: 1)).millisecondsSinceEpoch ~/ 1000,
+        now.subtract(const Duration(hours: 5)).millisecondsSinceEpoch ~/ 1000,
+        now.subtract(const Duration(hours: 10)).millisecondsSinceEpoch ~/ 1000,
+      ],
+      'user2': [
+        now.subtract(const Duration(hours: 2)).millisecondsSinceEpoch ~/ 1000,
+        now.subtract(const Duration(hours: 4)).millisecondsSinceEpoch ~/ 1000,
+        now.subtract(const Duration(hours: 6)).millisecondsSinceEpoch ~/ 1000,
+      ],
+    });
+    final service = RelevantUsersToFetchService(
+      fetchStatesRepository: fetchStateRepository,
+      seenEventsRepository: seenEventsRepository,
+    );
+    final result = await service.getRelevantUsersToFetch(
+      ['user1', 'user2'],
+      feedType: FeedType.post,
+      limit: 2,
+    );
+    // user2 is more regular, so should be ranked higher
+    expect(result.first.state.pubkey, 'user2');
+    expect(result.last.state.pubkey, 'user1');
+  });
 }
 
 class FakeUserFetchRepository implements UsersFetchStatesRepository {
