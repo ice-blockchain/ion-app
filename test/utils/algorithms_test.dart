@@ -14,7 +14,7 @@ void main() {
         'key5': ['option3', 'option4'],
         'key6': ['option5'],
       };
-      final bestOptions = findBestOptions(input);
+      final bestOptions = findMostMatchingOptions(input);
 
       expect(bestOptions, {
         'option1': ['key1', 'key2', 'key3'],
@@ -29,7 +29,7 @@ void main() {
         'key2': ['option1', 'option3'],
         'key3': ['option4', 'option4', 'option4'],
       };
-      final bestOptions = findBestOptions(input);
+      final bestOptions = findMostMatchingOptions(input);
 
       expect(bestOptions, {
         'option1': ['key1', 'key2'],
@@ -39,7 +39,7 @@ void main() {
 
     test('findBestOptions handles empty input', () {
       final input = <String, List<String>>{};
-      final bestOptions = findBestOptions(input);
+      final bestOptions = findMostMatchingOptions(input);
 
       expect(bestOptions, <String, List<String>>{});
     });
@@ -50,7 +50,7 @@ void main() {
         'key2': ['option2', 'option3'],
         'key3': <String>[],
       };
-      final bestOptions = findBestOptions(input);
+      final bestOptions = findMostMatchingOptions(input);
 
       expect(bestOptions, {
         'option2': ['key1', 'key2'],

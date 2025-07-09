@@ -2,22 +2,23 @@
 
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/exceptions/exceptions.dart';
+import 'package:ion/app/features/auth/providers/auth_provider.m.dart';
 import 'package:ion/app/features/feed/data/models/feed_filter.dart';
 import 'package:ion/app/features/feed/providers/feed_current_filter_provider.m.dart';
-import 'package:ion/app/features/user/model/user_relays.f.dart';
 import 'package:ion/app/features/user/providers/follow_list_provider.r.dart';
-import 'package:ion/app/features/user/providers/user_relays_manager.r.dart';
-import 'package:ion/app/utils/algorithm.dart';
+import 'package:ion/app/features/user/providers/users_relays_provider.r.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'feed_filter_relays_provider.r.g.dart';
 
+/// Provides relay mapping based on the current feed filter.
 @riverpod
 Future<Map<String, List<String>>> feedFilterRelays(Ref ref) async {
-  final filter = ref.watch(feedCurrentFilterProvider.select((state) => state.filter));
+  final filter = ref.watch(
+    feedCurrentFilterProvider.select((state) => state.filter),
+  );
 
-  // Use ref.read instead of ref.watch to avoid triggering data source provider which depends on this filter,
-  // preventing unnecessary feed rerenders
+  // Use ref.read to avoid unnecessary feed rerenders.
   switch (filter) {
     case FeedFilter.forYou:
       return ref.read(feedForYouFilterRelaysProvider.future);
@@ -26,35 +27,41 @@ Future<Map<String, List<String>>> feedFilterRelays(Ref ref) async {
   }
 }
 
+/// Provides relay mapping for the "For You" feed filter.
 @riverpod
 Future<Map<String, List<String>>> feedForYouFilterRelays(Ref ref) async {
   final followList = await ref.watch(currentUserFollowListProvider.future);
 
-  final followListRelays = followList != null
-      ? await ref.watch(userRelaysManagerProvider.notifier).fetch(followList.pubkeys)
-      : <UserRelaysEntity>[];
+  final currentUserPubkey = ref.watch(currentPubkeySelectorProvider);
 
-  final userRelays = await ref.watch(currentUserRelaysProvider.future);
-  if (userRelays == null) {
-    throw UserRelaysNotFoundException();
+  if (currentUserPubkey == null) {
+    throw const CurrentUserNotFoundException();
   }
 
-  final options = {
-    for (final relays in [...followListRelays, userRelays]) relays.masterPubkey: relays.urls,
-  };
-  return findBestOptions(options);
+  final masterPubkeys = [
+    currentUserPubkey,
+    if (followList != null) ...followList.masterPubkeys,
+  ];
+
+  final relayMapping = await ref.read(usersRelaysProvider.notifier).fetch(
+        masterPubkeys: masterPubkeys,
+        strategy: UsersRelaysStrategy.mostUsers,
+      );
+
+  return relayMapping;
 }
 
+/// Provides relay mapping for the "Following" feed filter.
 @riverpod
 Future<Map<String, List<String>>> feedFollowingFilterRelays(Ref ref) async {
   final followList = await ref.watch(currentUserFollowListProvider.future);
 
-  final followListRelays = followList != null
-      ? await ref.watch(userRelaysManagerProvider.notifier).fetch(followList.pubkeys)
-      : <UserRelaysEntity>[];
+  final masterPubkeys = [if (followList != null) ...followList.masterPubkeys];
 
-  final options = {
-    for (final relays in followListRelays) relays.masterPubkey: relays.urls,
-  };
-  return findBestOptions(options);
+  final relayMapping = await ref.read(usersRelaysProvider.notifier).fetch(
+        masterPubkeys: masterPubkeys,
+        strategy: UsersRelaysStrategy.mostUsers,
+      );
+
+  return relayMapping;
 }

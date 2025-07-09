@@ -20,8 +20,7 @@ import 'package:ion/app/features/ion_connect/providers/ion_connect_entity_provid
 import 'package:ion/app/features/ion_connect/providers/ion_connect_event_parser.r.dart';
 import 'package:ion/app/features/user/model/account_notifications_sets.f.dart';
 import 'package:ion/app/features/user/model/user_notifications_type.dart';
-import 'package:ion/app/features/user/providers/user_relays_manager.r.dart';
-import 'package:ion/app/utils/algorithm.dart';
+import 'package:ion/app/features/user/providers/users_relays_provider.r.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'account_notifications_sync_provider.r.g.dart';
@@ -123,7 +122,10 @@ class AccountNotificationsSync extends _$AccountNotificationsSync {
         continue;
       }
 
-      final optimalRelayMapping = await _getOptimalRelayMapping(users);
+      final optimalRelayMapping = await ref.read(usersRelaysProvider.notifier).fetch(
+            masterPubkeys: users,
+            strategy: UsersRelaysStrategy.mostUsers,
+          );
 
       for (final relayEntry in optimalRelayMapping.entries) {
         await _syncEventsFromRelay(
@@ -203,19 +205,6 @@ class AccountNotificationsSync extends _$AccountNotificationsSync {
       }
     }
 
-    return result;
-  }
-
-  Future<Map<String, List<String>>> _getOptimalRelayMapping(List<String> users) async {
-    final userToRelays = <String, List<String>>{};
-    final userRelaysManager = ref.read(userRelaysManagerProvider.notifier);
-    final userRelaysList = await userRelaysManager.fetch(users);
-
-    for (final userRelay in userRelaysList) {
-      userToRelays[userRelay.masterPubkey] = userRelay.urls;
-    }
-
-    final result = findBestOptions(userToRelays);
     return result;
   }
 

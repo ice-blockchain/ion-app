@@ -256,7 +256,7 @@ class IonConnectPushDataPayload {
     } else if (entity is ReactionEntity) {
       return entity.data.eventReference.masterPubkey == currentPubkey;
     } else if (entity is FollowListEntity) {
-      return entity.pubkeys.lastOrNull == currentPubkey;
+      return entity.masterPubkeys.lastOrNull == currentPubkey;
     } else if (entity is IonConnectGiftWrapEntity) {
       return entity.data.relatedPubkeys
           .any((relatedPubkey) => relatedPubkey.value == currentPubkey);
