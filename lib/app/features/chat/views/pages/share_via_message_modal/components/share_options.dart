@@ -11,7 +11,7 @@ import 'package:ion/app/extensions/asset_gen_image.dart';
 import 'package:ion/app/extensions/build_context.dart';
 import 'package:ion/app/extensions/num.dart';
 import 'package:ion/app/features/auth/providers/auth_provider.m.dart';
-import 'package:ion/app/features/chat/views/pages/share_via_message_modal/components/share_copy_link.dart';
+import 'package:ion/app/features/chat/views/pages/share_via_message_modal/components/share_copy_link_option.dart';
 import 'package:ion/app/features/chat/views/pages/share_via_message_modal/components/share_options_menu_item.dart';
 import 'package:ion/app/features/chat/views/pages/share_via_message_modal/components/share_post_to_story_content.dart';
 import 'package:ion/app/features/feed/data/models/bookmarks/bookmarks_set.f.dart';
@@ -63,7 +63,7 @@ class ShareOptions extends HookConsumerWidget {
                 label: context.i18n.feed_add_story,
                 onPressed: isCapturing.value ? () {} : () => _onSharePostToStory(ref, isCapturing),
               ),
-            CopyLinkOption(shareUrl: shareUrl, iconSize: iconSize),
+            ShareCopyLinkOption(shareUrl: shareUrl, iconSize: iconSize),
             if (isPost)
               ShareOptionsMenuItem(
                 buttonType: ButtonType.dropdown,

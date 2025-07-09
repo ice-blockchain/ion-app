@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: ice License 1.0
+
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
@@ -8,8 +10,8 @@ import 'package:ion/app/features/chat/views/pages/share_via_message_modal/compon
 import 'package:ion/app/services/share/share_provider.r.dart';
 import 'package:ion/generated/assets.gen.dart';
 
-class CopyLinkOption extends HookConsumerWidget {
-  const CopyLinkOption({required this.shareUrl, required this.iconSize, super.key});
+class ShareCopyLinkOption extends HookConsumerWidget {
+  const ShareCopyLinkOption({required this.shareUrl, required this.iconSize, super.key});
 
   final String shareUrl;
   final double iconSize;
