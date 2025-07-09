@@ -125,88 +125,26 @@ void main() {
       expect(result.last.state.pubkey, 'user2');
     });
 
-    test('user with more recent lastContentTime has higher score', () async {
-      final userBest = UserFetchState(
-        pubkey: 'user1',
-        lastFetchTime: now.subtract(const Duration(hours: 10)),
-      );
-      final userWorst = UserFetchState(
-        pubkey: 'user2',
-        lastFetchTime: now.subtract(const Duration(hours: 10)),
-      );
-      final fetchStateRepository = FakeUserFetchRepository([userBest, userWorst]);
-      final seenEventsRepository = FakeFollowingFeedSeenEventsRepository({});
-      final service = RelevantUsersToFetchService(
-        fetchStatesRepository: fetchStateRepository,
-        seenEventsRepository: seenEventsRepository,
-      );
-      final result = await service.getRelevantUsersToFetch(
-        ['user1', 'user2'],
-        feedType: FeedType.post,
-        limit: 2,
-      );
-      expect(result.first.state.pubkey, 'user1');
-      expect(result.last.state.pubkey, 'user2');
-    });
-  });
-
-  test('user with more frequent content has higher score', () async {
-    final now = DateTime(2025, 7, 7, 12);
-    final userFrequent = UserFetchState(
-      pubkey: 'user1',
-      lastFetchTime: now.subtract(const Duration(hours: 10)),
-    );
-    final userRare = UserFetchState(
-      pubkey: 'user2',
-      lastFetchTime: now.subtract(const Duration(hours: 10)),
-    );
-    final fetchStateRepository = FakeUserFetchRepository([userFrequent, userRare]);
-    // user1 has more content timestamps (more frequent content)
-    final seenEventsRepository = FakeFollowingFeedSeenEventsRepository({
-      'user1': [
-        now.subtract(const Duration(hours: 1)).microsecondsSinceEpoch,
-        now.subtract(const Duration(hours: 2)).microsecondsSinceEpoch,
-      ],
-      'user2': [
-        now.subtract(const Duration(hours: 2)).microsecondsSinceEpoch,
-        now.subtract(const Duration(hours: 4)).microsecondsSinceEpoch,
-      ],
-    });
-    final service = RelevantUsersToFetchService(
-      fetchStatesRepository: fetchStateRepository,
-      seenEventsRepository: seenEventsRepository,
-    );
-    final result = await service.getRelevantUsersToFetch(
-      ['user1', 'user2'],
-      feedType: FeedType.post,
-      limit: 2,
-    );
-    expect(result.first.state.pubkey, 'user1');
-    expect(result.last.state.pubkey, 'user2');
-  });
-
-  test(
-    'user with unknown frequency (only 1 event) has lower score comparing to a user with frequent content',
-    () async {
+    test('user with more frequent content has higher score', () async {
       final now = DateTime(2025, 7, 7, 12);
       final userFrequent = UserFetchState(
         pubkey: 'user1',
         lastFetchTime: now.subtract(const Duration(hours: 10)),
       );
-      final userUnknown = UserFetchState(
+      final userRare = UserFetchState(
         pubkey: 'user2',
         lastFetchTime: now.subtract(const Duration(hours: 10)),
       );
-      final fetchStateRepository = FakeUserFetchRepository([userFrequent, userUnknown]);
-      // user1 has 3 events (frequent), user2 has only 1 event (unknown frequency)
+      final fetchStateRepository = FakeUserFetchRepository([userFrequent, userRare]);
+      // user1 has more content timestamps (more frequent content)
       final seenEventsRepository = FakeFollowingFeedSeenEventsRepository({
-        'user2': [
-          now.subtract(const Duration(hours: 2)).microsecondsSinceEpoch,
-        ],
         'user1': [
           now.subtract(const Duration(hours: 1)).microsecondsSinceEpoch,
           now.subtract(const Duration(hours: 2)).microsecondsSinceEpoch,
-          now.subtract(const Duration(hours: 3)).microsecondsSinceEpoch,
+        ],
+        'user2': [
+          now.subtract(const Duration(hours: 2)).microsecondsSinceEpoch,
+          now.subtract(const Duration(hours: 4)).microsecondsSinceEpoch,
         ],
       });
       final service = RelevantUsersToFetchService(
@@ -220,43 +158,81 @@ void main() {
       );
       expect(result.first.state.pubkey, 'user1');
       expect(result.last.state.pubkey, 'user2');
-    },
-  );
-  test('user with irregular posting frequency is handled', () async {
-    final now = DateTime(2025, 7, 7, 12);
-    final userIrregular = UserFetchState(
-      pubkey: 'user1',
-      lastFetchTime: now.subtract(const Duration(hours: 10)),
-    );
-    final userRegular = UserFetchState(
-      pubkey: 'user2',
-      lastFetchTime: now.subtract(const Duration(hours: 10)),
-    );
-    final fetchStateRepository = FakeUserFetchRepository([userIrregular, userRegular]);
-    final seenEventsRepository = FakeFollowingFeedSeenEventsRepository({
-      'user1': [
-        now.subtract(const Duration(hours: 1)).microsecondsSinceEpoch,
-        now.subtract(const Duration(hours: 5)).microsecondsSinceEpoch,
-        now.subtract(const Duration(hours: 10)).microsecondsSinceEpoch,
-      ],
-      'user2': [
-        now.subtract(const Duration(hours: 2)).microsecondsSinceEpoch,
-        now.subtract(const Duration(hours: 4)).microsecondsSinceEpoch,
-        now.subtract(const Duration(hours: 6)).microsecondsSinceEpoch,
-      ],
     });
-    final service = RelevantUsersToFetchService(
-      fetchStatesRepository: fetchStateRepository,
-      seenEventsRepository: seenEventsRepository,
+
+    test(
+      'user with unknown frequency (only 1 event) has lower score comparing to a user with frequent content',
+      () async {
+        final now = DateTime(2025, 7, 7, 12);
+        final userFrequent = UserFetchState(
+          pubkey: 'user1',
+          lastFetchTime: now.subtract(const Duration(hours: 10)),
+        );
+        final userUnknown = UserFetchState(
+          pubkey: 'user2',
+          lastFetchTime: now.subtract(const Duration(hours: 10)),
+        );
+        final fetchStateRepository = FakeUserFetchRepository([userFrequent, userUnknown]);
+        // user1 has 3 events (frequent), user2 has only 1 event (unknown frequency)
+        final seenEventsRepository = FakeFollowingFeedSeenEventsRepository({
+          'user2': [
+            now.subtract(const Duration(hours: 2)).microsecondsSinceEpoch,
+          ],
+          'user1': [
+            now.subtract(const Duration(hours: 1)).microsecondsSinceEpoch,
+            now.subtract(const Duration(hours: 2)).microsecondsSinceEpoch,
+            now.subtract(const Duration(hours: 3)).microsecondsSinceEpoch,
+          ],
+        });
+        final service = RelevantUsersToFetchService(
+          fetchStatesRepository: fetchStateRepository,
+          seenEventsRepository: seenEventsRepository,
+        );
+        final result = await service.getRelevantUsersToFetch(
+          ['user1', 'user2'],
+          feedType: FeedType.post,
+          limit: 2,
+        );
+        expect(result.first.state.pubkey, 'user1');
+        expect(result.last.state.pubkey, 'user2');
+      },
     );
-    final result = await service.getRelevantUsersToFetch(
-      ['user1', 'user2'],
-      feedType: FeedType.post,
-      limit: 2,
-    );
-    // user2 is more regular, so should be ranked higher
-    expect(result.first.state.pubkey, 'user2');
-    expect(result.last.state.pubkey, 'user1');
+    test('user with irregular posting frequency is handled', () async {
+      final now = DateTime(2025, 7, 7, 12);
+      final userIrregular = UserFetchState(
+        pubkey: 'user1',
+        lastFetchTime: now.subtract(const Duration(hours: 10)),
+      );
+      final userRegular = UserFetchState(
+        pubkey: 'user2',
+        lastFetchTime: now.subtract(const Duration(hours: 10)),
+      );
+      final fetchStateRepository = FakeUserFetchRepository([userIrregular, userRegular]);
+      final seenEventsRepository = FakeFollowingFeedSeenEventsRepository({
+        'user1': [
+          now.subtract(const Duration(hours: 1)).microsecondsSinceEpoch,
+          now.subtract(const Duration(hours: 5)).microsecondsSinceEpoch,
+          now.subtract(const Duration(hours: 10)).microsecondsSinceEpoch,
+        ],
+        'user2': [
+          now.subtract(const Duration(hours: 2)).microsecondsSinceEpoch,
+          now.subtract(const Duration(hours: 4)).microsecondsSinceEpoch,
+          now.subtract(const Duration(hours: 6)).microsecondsSinceEpoch,
+        ],
+      });
+      final service = RelevantUsersToFetchService(
+        fetchStatesRepository: fetchStateRepository,
+        seenEventsRepository: seenEventsRepository,
+      );
+      final result = await service.getRelevantUsersToFetch(
+        ['user1', 'user2'],
+        feedType: FeedType.post,
+        limit: 2,
+      );
+      // user2 is more regular, so should be ranked higher
+      expect(result.first.state.pubkey, 'user2');
+      expect(result.last.state.pubkey, 'user1');
+    });
   });
 }
 
