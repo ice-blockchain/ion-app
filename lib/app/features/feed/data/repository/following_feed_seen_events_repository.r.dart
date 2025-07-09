@@ -139,4 +139,12 @@ class FollowingFeedSeenEventsRepository {
     if (seenRepost == null) return null;
     return DateTime.fromMicrosecondsSinceEpoch(seenRepost.seenAt);
   }
+
+  /// Returns a map of pubkeys to the list of created_at timestamps for the last
+  /// `maxUserEvents` events created by each user.
+  Future<Map<String, List<int>>> getUsersCreatedContentTime({
+    required int maxUserEvents,
+  }) async {
+    return _seenEventsDao.getUsersCreatedContentTime(maxUserEvents: maxUserEvents);
+  }
 }

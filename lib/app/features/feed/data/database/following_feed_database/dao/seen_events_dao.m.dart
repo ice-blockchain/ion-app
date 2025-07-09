@@ -135,6 +135,20 @@ class SeenEventsDao extends DatabaseAccessor<FollowingFeedDatabase> with _$SeenE
       );
     await query.go();
   }
+
+  Future<Map<String, List<int>>> getUsersCreatedContentTime({
+    required int maxUserEvents,
+  }) async {
+    final result = await db.getEventCreatedAts(maxUserEvents).get();
+
+    final grouped = <String, List<int>>{};
+
+    for (final row in result) {
+      grouped.putIfAbsent(row.pubkey, () => []).add(row.createdAt);
+    }
+
+    return grouped;
+  }
 }
 
 @Riverpod(keepAlive: true)

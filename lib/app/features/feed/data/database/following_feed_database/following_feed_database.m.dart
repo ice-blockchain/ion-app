@@ -40,6 +40,22 @@ FollowingFeedDatabase followingFeedDatabase(Ref ref) {
     SeenRepostsTable,
     UserFetchStatesTable,
   ],
+  queries: {
+    'getEventCreatedAts': '''
+      SELECT pubkey, created_at
+        FROM (
+          SELECT
+            pubkey,
+            created_at,
+            ROW_NUMBER() OVER (
+              PARTITION BY pubkey
+              ORDER BY created_at DESC
+            ) as rn
+          FROM seen_events_table
+        )
+        WHERE rn <= :limit
+    ''',
+  },
 )
 class FollowingFeedDatabase extends _$FollowingFeedDatabase {
   FollowingFeedDatabase(this.pubkey) : super(_openConnection(pubkey));

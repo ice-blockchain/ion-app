@@ -6,16 +6,21 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/features/feed/data/models/feed_modifier.dart';
 import 'package:ion/app/features/feed/data/models/feed_type.dart';
 import 'package:ion/app/features/feed/data/models/user_fetch_state.dart';
+import 'package:ion/app/features/feed/data/repository/following_feed_seen_events_repository.r.dart';
 import 'package:ion/app/features/feed/data/repository/following_users_fetch_states_repository.r.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'relevant_users_to_fetch_service.r.g.dart';
 
 class RelevantUsersToFetchService {
-  RelevantUsersToFetchService({required UsersFetchStatesRepository repository})
-      : _repository = repository;
+  RelevantUsersToFetchService({
+    required UsersFetchStatesRepository fetchStatesRepository,
+    required FollowingFeedSeenEventsRepository seenEventsRepository,
+  })  : _fetchStatesRepository = fetchStatesRepository,
+        _seenEventsRepository = seenEventsRepository;
 
-  final UsersFetchStatesRepository _repository;
+  final UsersFetchStatesRepository _fetchStatesRepository;
+  final FollowingFeedSeenEventsRepository _seenEventsRepository;
 
   Future<List<({double score, UserFetchState state})>> getRelevantUsersToFetch(
     List<String> pubkeys, {
@@ -25,19 +30,33 @@ class RelevantUsersToFetchService {
   }) async {
     final now = DateTime.now();
 
-    final userStates =
-        await _repository.select(pubkeys: pubkeys, feedType: feedType, feedModifier: feedModifier);
+    final usersCreatedContentTime =
+        await _seenEventsRepository.getUsersCreatedContentTime(maxUserEvents: 20);
 
-    final scored = userStates.map((userState) {
-      final score = _calculateUserScore(userState, now: now);
-      return (state: userState, score: score);
+    final userFetchStates = await _fetchStatesRepository.select(
+      pubkeys: pubkeys,
+      feedType: feedType,
+      feedModifier: feedModifier,
+    );
+
+    final scored = userFetchStates.map((userFetchState) {
+      final score = _calculateUserScore(
+        userFetchState,
+        contentTime: usersCreatedContentTime[userFetchState.pubkey],
+        now: now,
+      );
+      return (state: userFetchState, score: score);
     }).toList()
       ..sort((a, b) => b.score.compareTo(a.score));
 
     return scored.take(limit).toList();
   }
 
-  double _calculateUserScore(UserFetchState state, {DateTime? now}) {
+  double _calculateUserScore(
+    UserFetchState state, {
+    List<int>? contentTime,
+    DateTime? now,
+  }) {
     now ??= DateTime.now();
 
     final lastFetch = state.lastFetchTime;
@@ -94,6 +113,10 @@ abstract class UsersFetchStatesRepository {
 
 @Riverpod(keepAlive: true)
 RelevantUsersToFetchService relevantFollowingUsersToFetchService(Ref ref) {
-  final repository = ref.watch(followingUsersFetchStatesRepositoryProvider);
-  return RelevantUsersToFetchService(repository: repository);
+  final fetchStatesRepository = ref.watch(followingUsersFetchStatesRepositoryProvider);
+  final seenEventsRepository = ref.watch(followingFeedSeenEventsRepositoryProvider);
+  return RelevantUsersToFetchService(
+    fetchStatesRepository: fetchStatesRepository,
+    seenEventsRepository: seenEventsRepository,
+  );
 }
