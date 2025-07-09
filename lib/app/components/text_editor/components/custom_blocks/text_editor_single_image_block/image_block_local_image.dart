@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/components/video_preview/video_preview.dart';
+import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/gallery/providers/gallery_provider.r.dart';
 import 'package:ion/app/services/media_service/aspect_ratio.dart';
 import 'package:photo_manager/photo_manager.dart';
@@ -61,7 +62,7 @@ class ImageBlockLocalImage extends HookConsumerWidget {
       return AspectRatio(
         aspectRatio: aspectRatio.value!,
         child: ClipRRect(
-          borderRadius: BorderRadius.circular(12),
+          borderRadius: BorderRadius.circular(12.s),
           child: VideoPreview(
             videoUrl: file.value!.path,
             authorPubkey: authorPubkey ?? '',
