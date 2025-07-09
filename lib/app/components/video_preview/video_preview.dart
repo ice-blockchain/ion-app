@@ -151,7 +151,7 @@ class VideoPreview extends HookConsumerWidget {
             ),
           if (controller != null && controller.value.isInitialized)
             PositionedDirectional(
-              bottom: 5.0.s,
+              bottom: 12.0.s,
               start: 5.0.s,
               end: 5.0.s,
               child: Row(
