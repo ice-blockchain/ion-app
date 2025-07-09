@@ -14,7 +14,6 @@ import 'package:ion/app/features/chat/views/components/message_items/message_typ
 import 'package:ion/app/features/chat/views/components/message_items/message_types/visual_media_message/visual_media_message.dart';
 import 'package:ion/app/features/chat/views/components/scroll_to_bottom_button.dart';
 import 'package:ion/app/features/ion_connect/ion_connect.dart';
-import 'package:ion/app/hooks/use_on_init.dart';
 import 'package:scrollable_positioned_list/scrollable_positioned_list.dart';
 
 class OneToOneMessageList extends HookConsumerWidget {
@@ -26,16 +25,6 @@ class OneToOneMessageList extends HookConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final itemScrollController = useMemoized(ItemScrollController.new);
     final scrollOffsetListener = useMemoized(ScrollOffsetListener.create);
-
-    final totalScrollOffset = useState<double>(0);
-
-    useOnInit(() {
-      scrollOffsetListener.changes.listen(
-        (offset) {
-          totalScrollOffset.value += offset;
-        },
-      );
-    });
 
     final allMessages = messages.values.expand((e) => e).toList()
       ..sortByCompare((e) => e.publishedAt, (a, b) => b.compareTo(a));
@@ -157,7 +146,7 @@ class OneToOneMessageList extends HookConsumerWidget {
             ),
           ),
           ScrollToBottomButton(
-            isVisible: totalScrollOffset.value > 0,
+            scrollOffsetListener: scrollOffsetListener,
             onTap: () => itemScrollController.scrollTo(
               index: 0,
               duration: const Duration(milliseconds: 300),
