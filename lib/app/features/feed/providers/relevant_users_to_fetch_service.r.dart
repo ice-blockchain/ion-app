@@ -32,7 +32,7 @@ class RelevantUsersToFetchService {
     final now = DateTime.now();
 
     final usersCreatedContentTime =
-        await _seenEventsRepository.getUsersCreatedContentTime(maxUserEvents: 20);
+        await _seenEventsRepository.getUsersCreatedContentTime(maxUserEvents: 10);
 
     final userFetchStates = await _fetchStatesRepository.select(
       pubkeys: pubkeys,
@@ -61,40 +61,81 @@ class RelevantUsersToFetchService {
     now ??= DateTime.now();
 
     final lastFetch = state.lastFetchTime;
-    final lastContent =
-        contentTime?.firstOrNull?.toDateTime ?? DateTime.fromMillisecondsSinceEpoch(0);
 
     // If never fetched, return the highest score
     if (lastFetch == null) return 1;
 
-    final contentAgeSeconds = now.difference(lastContent).inSeconds;
-    final timeSinceLastFetchSeconds = now.difference(lastFetch).inSeconds;
+    final contentFrequencyFactor = _calculateContentFrequencyFactor(contentTime: contentTime);
 
-    // Content recency factor: scales from 0.5 (old content) to 1 (fresh content)
-    // 5 seconds  ≈ 0.9993
-    // 1 minute   ≈ 0.9918
-    // 1 hour     ≈ 0.75
-    // 1 day      ≈ 0.5
-    final contentRecencyFactor = 0.5 + 0.5 / (1 + contentAgeSeconds / 3600); // scale by hours
+    final backoffFactor = _calculateBackoffFactor(emptyFetchCount: state.emptyFetchCount);
 
-    // Exponential backoff factor
-    // 0 = 1
-    // 1 = 0.5
-    // 2 = 0.25
-    // 3 = 0.125
-    // 4 = 0.0625
-    final backoffFactor = 1 / pow(2, state.emptyFetchCount);
-
-    // Fetch recency factor: scales from 0 (just fetched) to 1 as time passes
-    // 5 seconds ≈ 0.00139
-    // 1 minute  ≈ 0.01653
-    // 10 minutes   ≈ 0.15485
-    // 1 hour ≈ 0.63212
-    // 1 day ≈ 0.99998
-    final fetchRecencyFactor = 1 - exp(-(1 / 3600) * timeSinceLastFetchSeconds);
+    final fetchRecencyFactor = _calculateFetchRecencyFactor(lastFetch: lastFetch, now: now);
 
     // Final score
-    return contentRecencyFactor * fetchRecencyFactor * backoffFactor;
+    return contentFrequencyFactor * fetchRecencyFactor * backoffFactor;
+  }
+
+  /// Content frequency factor: scales from 0.5 (no content) to 1 (frequent content)
+  ///
+  /// So depending on the average gap between last events,
+  /// the factor will be:
+  /// 1 minute gap    ≈ 0.994
+  /// 30 minutes gap  ≈ 0.853
+  /// 1 hour gap      ≈ 0.75
+  /// 2 hours gap     ≈ 0.625
+  /// 1 day gap       ≈ 0.5
+  double _calculateContentFrequencyFactor({List<int>? contentTime}) {
+    const minScore = 0.5;
+
+    if (contentTime == null || contentTime.length < 2) return minScore;
+
+    final times = contentTime.map((time) => time.toDateTime).toList();
+
+    // Calculate time gaps between consecutive events in seconds
+    final gaps = <int>[];
+    for (var i = 1; i < times.length; i++) {
+      gaps.add(times[i - 1].difference(times[i]).inSeconds);
+    }
+
+    // Use exponential decay on gaps to score frequency:
+    // smaller gaps => higher weight
+    // Half-life = 1 hour gap (3600s): gap of 0s = 1.0, gap of 1h = 0.5, 2h = 0.25, etc.
+    final decayRate = log(2) / 3600;
+
+    final gapsScoresSum = gaps.map((gap) => exp(-decayRate * gap)).reduce((a, b) => a + b);
+
+    final averageGapScore = min(gapsScoresSum / gaps.length, 1);
+
+    return minScore + (1 - minScore) * averageGapScore;
+  }
+
+  /// Fetch recency factor: scales from 0 (just fetched) to 1 as time passes
+  ///
+  /// So depending on the time since last fetch,
+  /// the factor will be:
+  /// 1 minute    ≈ 0.01653
+  /// 10 minutes  ≈ 0.15485
+  /// 1 hour      ≈ 0.63212
+  /// 1 day       ≈ 0.99998
+  double _calculateFetchRecencyFactor({
+    required DateTime now,
+    required DateTime lastFetch,
+  }) {
+    final timeSinceLastFetchSeconds = now.difference(lastFetch).inSeconds;
+    return 1 - exp(-(1 / 3600) * timeSinceLastFetchSeconds);
+  }
+
+  /// Backoff factor
+  ///
+  /// So depending on subsequent number of empty fetches,
+  /// the factor will be:
+  /// 0 = 1
+  /// 1 = 0.5
+  /// 2 = 0.25
+  /// 3 = 0.125
+  /// 4 = 0.0625
+  double _calculateBackoffFactor({required int emptyFetchCount}) {
+    return 1 / pow(2, emptyFetchCount);
   }
 }
 
