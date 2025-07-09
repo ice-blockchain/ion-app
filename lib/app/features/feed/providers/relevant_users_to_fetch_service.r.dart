@@ -27,12 +27,13 @@ class RelevantUsersToFetchService {
     List<String> pubkeys, {
     required FeedType feedType,
     required int limit,
+    int maxUserEvents = 10,
     FeedModifier? feedModifier,
   }) async {
     final now = DateTime.now();
 
     final usersCreatedContentTime =
-        await _seenEventsRepository.getUsersCreatedContentTime(maxUserEvents: 10);
+        await _seenEventsRepository.getUsersCreatedContentTime(maxUserEvents: maxUserEvents);
 
     final userFetchStates = await _fetchStatesRepository.select(
       pubkeys: pubkeys,
