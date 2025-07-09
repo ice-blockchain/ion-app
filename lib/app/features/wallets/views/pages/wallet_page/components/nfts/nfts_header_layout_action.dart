@@ -20,56 +20,30 @@ class NftHeaderLayoutAction extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final nftLayoutType = ref.watch(nftLayoutTypeSelectorProvider);
-    final activeColor = context.theme.appColors.primaryText;
-    final inactiveColor = context.theme.appColors.tertararyText;
+    final inactiveLayoutType =
+        nftLayoutType == NftLayoutType.grid ? NftLayoutType.list : NftLayoutType.grid;
 
-    return Row(
-      children: [
-        TextButton(
-          onPressed: () {
-            final identityKeyName = ref.read(currentIdentityKeyNameSelectorProvider) ?? '';
-            ref
-                .read(
-                  walletUserPreferencesNotifierProvider(identityKeyName: identityKeyName).notifier,
-                )
-                .setNftLayoutType(NftLayoutType.grid);
-          },
-          child: Padding(
-            padding: EdgeInsetsDirectional.only(
-              top: UiConstants.hitSlop,
-              start: UiConstants.hitSlop,
-              end: 7.0.s,
-              bottom: UiConstants.hitSlop,
-            ),
-            child: NftLayoutType.grid.iconAsset.icon(
-              color: NftLayoutType.grid == nftLayoutType ? activeColor : inactiveColor,
-              size: 20.0.s,
-            ),
-          ),
+    return TextButton(
+      onPressed: () {
+        final identityKeyName = ref.read(currentIdentityKeyNameSelectorProvider) ?? '';
+        ref
+            .read(
+              walletUserPreferencesNotifierProvider(identityKeyName: identityKeyName).notifier,
+            )
+            .setNftLayoutType(inactiveLayoutType);
+      },
+      child: Padding(
+        padding: EdgeInsetsDirectional.only(
+          top: UiConstants.hitSlop,
+          start: UiConstants.hitSlop,
+          end: 7.0.s,
+          bottom: UiConstants.hitSlop,
         ),
-        TextButton(
-          onPressed: () {
-            final identityKeyName = ref.read(currentIdentityKeyNameSelectorProvider) ?? '';
-            ref
-                .read(
-                  walletUserPreferencesNotifierProvider(identityKeyName: identityKeyName).notifier,
-                )
-                .setNftLayoutType(NftLayoutType.list);
-          },
-          child: Padding(
-            padding: EdgeInsetsDirectional.only(
-              top: UiConstants.hitSlop,
-              start: UiConstants.hitSlop,
-              end: 7.0.s,
-              bottom: UiConstants.hitSlop,
-            ),
-            child: NftLayoutType.list.iconAsset.icon(
-              color: NftLayoutType.list == nftLayoutType ? activeColor : inactiveColor,
-              size: 20.0.s,
-            ),
-          ),
+        child: inactiveLayoutType.iconAsset.icon(
+          color: context.theme.appColors.primaryText,
+          size: 20.0.s,
         ),
-      ],
+      ),
     );
   }
 }
