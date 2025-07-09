@@ -37,6 +37,8 @@ class RestoreDeviceKeypairNotifier extends _$RestoreDeviceKeypairNotifier {
           throw DeviceKeypairRestoreException('Could not extract file ID from device keypair URL');
         }
 
+        final encryptedData = await DeviceKeypairUtils.downloadEncryptedKeypair(fileId, ref);
+
         final deviceKey = await DeviceKeypairUtils.findOrCreateDeviceKey(
           ref: ref,
           signer: signer,
@@ -47,7 +49,6 @@ class RestoreDeviceKeypairNotifier extends _$RestoreDeviceKeypairNotifier {
           signer: signer,
         );
 
-        final encryptedData = await DeviceKeypairUtils.downloadEncryptedKeypair(fileId, ref);
         final decryptedPrivateKey = await DeviceKeypairUtils.decryptDeviceKeypair(
           encryptedData,
           derivation.output,
