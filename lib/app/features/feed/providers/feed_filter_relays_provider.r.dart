@@ -56,11 +56,7 @@ Future<Map<String, List<String>>> feedForYouFilterRelays(Ref ref) async {
 Future<Map<String, List<String>>> feedFollowingFilterRelays(Ref ref) async {
   final followList = await ref.watch(currentUserFollowListProvider.future);
 
-  if (followList == null) {
-    throw FollowListNotFoundException();
-  }
-
-  final masterPubkeys = [...followList.masterPubkeys];
+  final masterPubkeys = [if (followList != null) ...followList.masterPubkeys];
 
   final relayMapping = await ref.read(usersRelaysProvider.notifier).fetch(
         masterPubkeys: masterPubkeys,
