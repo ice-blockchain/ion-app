@@ -32,13 +32,13 @@ class VideoPostInfo extends StatelessWidget {
           padding: EdgeInsetsDirectional.only(top: 6.0.s, start: 16.0.s, end: 16.0.s),
           decoration: BoxDecoration(
             gradient: LinearGradient(
-              begin: Alignment.bottomCenter,
-              end: Alignment.topCenter,
-              stops: const [0.0, 0.55, 1.0],
+              begin: Alignment.topCenter,
+              end: Alignment.bottomCenter,
+              stops: const [0.0, 0.5497, 1.0],
               colors: [
-                context.theme.appColors.primaryText.withValues(alpha: 1),
-                context.theme.appColors.primaryText.withValues(alpha: 0.71),
                 context.theme.appColors.primaryText.withValues(alpha: 0),
+                context.theme.appColors.primaryText.withValues(alpha: 0.3),
+                context.theme.appColors.primaryText.withValues(alpha: 0.7),
               ],
             ),
           ),
