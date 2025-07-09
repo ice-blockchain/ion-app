@@ -10,6 +10,7 @@ import 'package:ion/app/features/ion_connect/model/ion_connect_entity.dart';
 import 'package:ion/app/features/ion_connect/providers/ion_connect_cache.r.dart';
 import 'package:ion/app/features/ion_connect/providers/ion_connect_db_cache_notifier.r.dart';
 import 'package:ion/app/features/ion_connect/providers/ion_connect_notifier.r.dart';
+import 'package:ion/app/features/user/providers/users_relays_provider.r.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'ion_connect_entity_provider.r.g.dart';
@@ -24,6 +25,22 @@ IonConnectEntity? ionConnectCachedEntity(
         cacheSelector(CacheableEntity.cacheKeyBuilder(eventReference: eventReference)),
       ),
     );
+
+@riverpod
+List<IonConnectEntity> ionConnectCachedEntities(
+  Ref ref, {
+  required List<EventReference> eventReferences,
+}) =>
+    eventReferences
+        .map(
+          (eventReference) => ref.watch(
+            ionConnectCacheProvider.select(
+              cacheSelector(CacheableEntity.cacheKeyBuilder(eventReference: eventReference)),
+            ),
+          ),
+        )
+        .nonNulls
+        .toList();
 
 @riverpod
 Future<IonConnectEntity?> ionConnectNetworkEntity(
@@ -68,6 +85,66 @@ Future<IonConnectEntity?> ionConnectNetworkEntity(
   } else {
     throw UnsupportedEventReference(eventReference);
   }
+}
+
+@riverpod
+Future<List<IonConnectEntity>> ionConnectNetworkEntities(
+  Ref ref, {
+  required ActionSource actionSource,
+  required List<EventReference> eventReferences,
+  String? search,
+}) async {
+  if (eventReferences.isEmpty) {
+    return <IonConnectEntity>[];
+  }
+
+  final immutableRefs = eventReferences.whereType<ImmutableEventReference>().toList();
+  final replaceableRefs = eventReferences.whereType<ReplaceableEventReference>().toList();
+
+  final results = <IonConnectEntity>[];
+
+  if (immutableRefs.isNotEmpty) {
+    final requestMessage = RequestMessage()
+      ..addFilter(
+        RequestFilter(
+          search: search,
+          ids: immutableRefs.map((e) => e.eventId).toList(),
+        ),
+      );
+    final entitiesStream = ref.read(ionConnectNotifierProvider.notifier).requestEntities(
+          requestMessage,
+          actionSource: actionSource,
+        );
+    final entities = await entitiesStream.toList();
+    results.addAll(entities);
+  }
+
+  if (replaceableRefs.isNotEmpty) {
+    final filters = replaceableRefs
+        .map(
+          (replaceableEventRef) => RequestFilter(
+            kinds: [replaceableEventRef.kind],
+            authors: [replaceableEventRef.masterPubkey],
+            tags: {
+              if (replaceableEventRef.dTag.isNotEmpty) '#d': [replaceableEventRef.dTag],
+            },
+            search: search,
+          ),
+        )
+        .toList();
+
+    final requestMessage = RequestMessage()..filters.addAll(filters);
+
+    final entityStream = ref.read(ionConnectNotifierProvider.notifier).requestEntities(
+          requestMessage,
+          actionSource: actionSource,
+        );
+    final entityList = await entityStream.toList();
+
+    results.addAll(entityList);
+  }
+
+  return results;
 }
 
 @riverpod
@@ -140,4 +217,57 @@ IonConnectEntity? ionConnectSyncEntity(
         .valueOrNull;
   }
   return null;
+}
+
+@riverpod
+Future<List<IonConnectEntity>> ionConnectEntities(
+  Ref ref, {
+  required List<EventReference> eventReferences,
+  String? search,
+  bool cache = true,
+  bool network = true,
+}) async {
+  final cachedResults = <IonConnectEntity>[];
+  final networkResults = <IonConnectEntity>[];
+
+  final currentUser = ref.watch(currentIdentityKeyNameSelectorProvider);
+  if (currentUser == null) {
+    throw const CurrentUserNotFoundException();
+  }
+  if (cache) {
+    cachedResults.addAll(
+      ref.watch(ionConnectCachedEntitiesProvider(eventReferences: eventReferences)),
+    );
+  }
+  if (network) {
+    final notCachedEvents = eventReferences.toSet().difference(cachedResults.toSet());
+
+    final relaysMap = await ref.watch(usersRelaysProvider.notifier).fetch(
+          strategy: UsersRelaysStrategy.mostUsers,
+          masterPubkeys: notCachedEvents.map((e) => e.masterPubkey).toList(),
+        );
+
+    final eventReferencesMap = relaysMap.map(
+      (url, masterPubkeys) => MapEntry(
+        url,
+        notCachedEvents.where((e) => masterPubkeys.contains(e.masterPubkey)).toList(),
+      ),
+    );
+
+    for (final url in eventReferencesMap.keys) {
+      final eventReferences = eventReferencesMap[url] ?? [];
+      if (eventReferences.isEmpty) continue;
+
+      final result = await ref.watch(
+        ionConnectNetworkEntitiesProvider(
+          search: search,
+          eventReferences: eventReferences,
+          actionSource: ActionSource.relayUrl(url),
+        ).future,
+      );
+
+      networkResults.addAll(result);
+    }
+  }
+  return [...cachedResults, ...networkResults];
 }
