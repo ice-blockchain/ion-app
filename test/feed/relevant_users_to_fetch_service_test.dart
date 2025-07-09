@@ -164,12 +164,12 @@ void main() {
     // user1 has more content timestamps (more frequent content)
     final seenEventsRepository = FakeFollowingFeedSeenEventsRepository({
       'user1': [
-        now.subtract(const Duration(hours: 1)).millisecondsSinceEpoch ~/ 1000,
-        now.subtract(const Duration(hours: 2)).millisecondsSinceEpoch ~/ 1000,
+        now.subtract(const Duration(hours: 1)).microsecondsSinceEpoch,
+        now.subtract(const Duration(hours: 2)).microsecondsSinceEpoch,
       ],
       'user2': [
-        now.subtract(const Duration(hours: 2)).millisecondsSinceEpoch ~/ 1000,
-        now.subtract(const Duration(hours: 4)).millisecondsSinceEpoch ~/ 1000,
+        now.subtract(const Duration(hours: 2)).microsecondsSinceEpoch,
+        now.subtract(const Duration(hours: 4)).microsecondsSinceEpoch,
       ],
     });
     final service = RelevantUsersToFetchService(
@@ -201,12 +201,12 @@ void main() {
       // user1 has 3 events (frequent), user2 has only 1 event (unknown frequency)
       final seenEventsRepository = FakeFollowingFeedSeenEventsRepository({
         'user2': [
-          now.subtract(const Duration(hours: 2)).millisecondsSinceEpoch ~/ 1000,
+          now.subtract(const Duration(hours: 2)).microsecondsSinceEpoch,
         ],
         'user1': [
-          now.subtract(const Duration(hours: 1)).millisecondsSinceEpoch ~/ 1000,
-          now.subtract(const Duration(hours: 2)).millisecondsSinceEpoch ~/ 1000,
-          now.subtract(const Duration(hours: 3)).millisecondsSinceEpoch ~/ 1000,
+          now.subtract(const Duration(hours: 1)).microsecondsSinceEpoch,
+          now.subtract(const Duration(hours: 2)).microsecondsSinceEpoch,
+          now.subtract(const Duration(hours: 3)).microsecondsSinceEpoch,
         ],
       });
       final service = RelevantUsersToFetchService(
@@ -235,14 +235,14 @@ void main() {
     final fetchStateRepository = FakeUserFetchRepository([userIrregular, userRegular]);
     final seenEventsRepository = FakeFollowingFeedSeenEventsRepository({
       'user1': [
-        now.subtract(const Duration(hours: 1)).millisecondsSinceEpoch ~/ 1000,
-        now.subtract(const Duration(hours: 5)).millisecondsSinceEpoch ~/ 1000,
-        now.subtract(const Duration(hours: 10)).millisecondsSinceEpoch ~/ 1000,
+        now.subtract(const Duration(hours: 1)).microsecondsSinceEpoch,
+        now.subtract(const Duration(hours: 5)).microsecondsSinceEpoch,
+        now.subtract(const Duration(hours: 10)).microsecondsSinceEpoch,
       ],
       'user2': [
-        now.subtract(const Duration(hours: 2)).millisecondsSinceEpoch ~/ 1000,
-        now.subtract(const Duration(hours: 4)).millisecondsSinceEpoch ~/ 1000,
-        now.subtract(const Duration(hours: 6)).millisecondsSinceEpoch ~/ 1000,
+        now.subtract(const Duration(hours: 2)).microsecondsSinceEpoch,
+        now.subtract(const Duration(hours: 4)).microsecondsSinceEpoch,
+        now.subtract(const Duration(hours: 6)).microsecondsSinceEpoch,
       ],
     });
     final service = RelevantUsersToFetchService(
