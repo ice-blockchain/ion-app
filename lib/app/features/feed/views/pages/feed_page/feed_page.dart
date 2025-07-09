@@ -46,16 +46,10 @@ class FeedPage extends HookConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final feedData = ref.watch(_feedDataProvider).valueOrNull;
-    if (feedData == null) {
-      // Return loading or use fallback values
-      return const Scaffold(
-        body: Center(child: CircularProgressIndicator()),
-      );
-    }
 
-    final feedCategory = feedData.feedCategory;
-    final hasMorePosts = feedData.hasMorePosts;
-    final showTrendingVideos = feedData.showTrendingVideos;
+    final feedCategory = feedData?.feedCategory;
+    final hasMorePosts = feedData?.hasMorePosts;
+    final showTrendingVideos = feedData?.showTrendingVideos;
 
     final scrollController = useScrollController();
 
@@ -67,8 +61,8 @@ class FeedPage extends HookConsumerWidget {
           children: [
             if (feedCategory == FeedCategory.articles) const ArticleCategoriesMenu(),
             if (feedCategory != FeedCategory.articles) const Stories(),
-            if (feedCategory == FeedCategory.feed && showTrendingVideos) const TrendingVideos(),
-            if (feedCategory == FeedCategory.videos && showTrendingVideos) const TrendingVideos(),
+            if (feedCategory == FeedCategory.feed && (showTrendingVideos ?? false)) const TrendingVideos(),
+            if (feedCategory == FeedCategory.videos && (showTrendingVideos ?? false)) const TrendingVideos(),
           ],
         ),
       ),
