@@ -31,6 +31,7 @@ Iterable<ModifiablePostEntity>? userStories(Ref ref, String pubkey) {
 List<EntitiesDataSource>? userStoriesDataSource(
   Ref ref, {
   required String pubkey,
+  int limit = 100,
 }) {
   final currentPubkey = ref.watch(currentPubkeySelectorProvider);
   if (currentPubkey == null) {
@@ -41,7 +42,7 @@ List<EntitiesDataSource>? userStoriesDataSource(
       actionSource: ActionSource.user(pubkey),
       authors: [pubkey],
       currentPubkey: currentPubkey,
-      limit: 100,
+      limit: limit,
     ),
   ];
 }

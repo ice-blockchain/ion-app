@@ -10,6 +10,7 @@ import 'package:ion/app/features/feed/providers/feed_current_filter_provider.m.d
 import 'package:ion/app/features/feed/providers/feed_following_content_provider.m.dart';
 import 'package:ion/app/features/feed/providers/feed_for_you_content_provider.m.dart';
 import 'package:ion/app/features/feed/stories/data/models/user_story.f.dart';
+import 'package:ion/app/features/feed/stories/providers/current_user_story_provider.r.dart';
 import 'package:ion/app/features/ion_connect/model/ion_connect_entity.dart';
 import 'package:ion/app/features/ion_connect/providers/entities_paged_data_provider.m.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
@@ -21,6 +22,7 @@ class FeedStories extends _$FeedStories with DelegatedPagedNotifier {
   @override
   ({Iterable<UserStory>? items, bool hasMore}) build() {
     final filter = ref.watch(feedCurrentFilterProvider);
+    final currentUserStory = ref.watch(currentUserStoryProvider);
     final data = switch (filter.filter) {
       FeedFilter.following => ref.watch(
           feedFollowingContentProvider(FeedType.story)
@@ -31,7 +33,12 @@ class FeedStories extends _$FeedStories with DelegatedPagedNotifier {
               .select((data) => (items: data.items, hasMore: data.hasMore)),
         ),
     };
-    return (items: _sortedStories(data.items), hasMore: data.hasMore);
+    var stories = _userStories(data.items);
+    if (currentUserStory != null) {
+      stories = [currentUserStory, ...?stories];
+    }
+
+    return (items: stories, hasMore: data.hasMore);
   }
 
   @override
@@ -43,13 +50,13 @@ class FeedStories extends _$FeedStories with DelegatedPagedNotifier {
     };
   }
 
-  Iterable<UserStory>? _sortedStories(Iterable<IonConnectEntity>? entities) {
+  Iterable<UserStory>? _userStories(Iterable<IonConnectEntity>? entities) {
     if (entities == null) return null;
 
     final postEntities = entities.whereType<ModifiablePostEntity>().where((post) {
       final mediaType = post.data.media.values.firstOrNull?.mediaType;
       return mediaType == MediaType.image || mediaType == MediaType.video;
-    }).sorted((a, b) => a.createdAt.compareTo(b.createdAt));
+    });
 
     final userStoriesMap = <String, UserStory>{};
 

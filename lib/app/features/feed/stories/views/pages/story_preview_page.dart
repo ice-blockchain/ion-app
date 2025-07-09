@@ -165,10 +165,15 @@ class StoryPreviewPage extends HookConsumerWidget {
                           }
 
                           final pubkey = ref.read(currentPubkeySelectorProvider) ?? '';
-                          final dataSource =
-                              ref.read(userStoriesDataSourceProvider(pubkey: pubkey));
-                          if (dataSource != null) {
-                            ref.invalidate(entitiesPagedDataProvider(dataSource));
+                          final firstUserStoryDatasource =
+                              ref.watch(userStoriesDataSourceProvider(pubkey: pubkey, limit: 1));
+                          if (firstUserStoryDatasource != null) {
+                            ref.invalidate(entitiesPagedDataProvider(firstUserStoryDatasource));
+                          }
+                          final allUserStoriesDatasource =
+                              ref.watch(userStoriesDataSourceProvider(pubkey: pubkey));
+                          if (allUserStoriesDatasource != null) {
+                            ref.invalidate(entitiesPagedDataProvider(allUserStoriesDatasource));
                           }
 
                           if (context.mounted) {
