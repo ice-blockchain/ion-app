@@ -14,6 +14,7 @@ import 'package:ion/app/features/chat/views/components/message_items/message_typ
 import 'package:ion/app/features/chat/views/components/message_items/message_types/visual_media_message/visual_media_message.dart';
 import 'package:ion/app/features/chat/views/components/scroll_to_bottom_button.dart';
 import 'package:ion/app/features/ion_connect/ion_connect.dart';
+import 'package:ion/app/utils/future.dart';
 import 'package:scrollable_positioned_list/scrollable_positioned_list.dart';
 
 class OneToOneMessageList extends HookConsumerWidget {
@@ -149,7 +150,7 @@ class OneToOneMessageList extends HookConsumerWidget {
             scrollOffsetListener: scrollOffsetListener,
             onTap: () => itemScrollController.scrollTo(
               index: 0,
-              duration: const Duration(milliseconds: 300),
+              duration: 300.milliseconds,
             ),
           ),
         ],

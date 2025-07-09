@@ -1,6 +1,7 @@
 // SPDX-License-Identifier: ice License 1.0
 
 import 'package:flutter/widgets.dart';
+import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/hooks/use_on_init.dart';
@@ -34,7 +35,7 @@ class ScrollToBottomButton extends HookWidget {
       bottom: 16.0.s,
       end: 16.0.s,
       child: AnimatedSwitcher(
-        duration: const Duration(milliseconds: 300),
+        duration: 300.milliseconds,
         transitionBuilder: (child, animation) {
           return ScaleTransition(
             scale: animation,
@@ -64,25 +65,24 @@ class _ScrollButton extends StatelessWidget {
     return GestureDetector(
       onTap: onTap,
       child: Container(
-        padding: EdgeInsets.all(8.0.s),
+        padding: EdgeInsets.all(8.s),
         decoration: BoxDecoration(
           boxShadow: [
             BoxShadow(
               color: context.theme.appColors.darkBlue.withValues(alpha: 0.05),
-              blurRadius: 16.0.s,
-              spreadRadius: 0.0.s,
+              blurRadius: 16.s,
               offset: Offset(-2.s, -2.s),
             ),
           ],
           color: context.theme.appColors.tertararyBackground,
-          borderRadius: BorderRadiusDirectional.circular(20.0.s),
+          borderRadius: BorderRadiusDirectional.circular(20.s),
           border: Border.all(
             color: context.theme.appColors.onTerararyFill,
-            width: 1.0.s,
+            width: 1.s,
           ),
         ),
         child: Assets.svg.iconArrowDown.icon(
-          size: 24.0.s,
+          size: 24.s,
           color: context.theme.appColors.primaryAccent,
         ),
       ),
