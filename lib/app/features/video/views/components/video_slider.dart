@@ -10,6 +10,7 @@ class VideoSlider extends StatelessWidget {
     this.onChangeStart,
     this.onChangeEnd,
     this.onChanged,
+    this.backgroundColor,
     super.key,
   });
 
@@ -18,6 +19,7 @@ class VideoSlider extends StatelessWidget {
   final ValueChanged<double>? onChangeStart;
   final ValueChanged<double>? onChangeEnd;
   final ValueChanged<double>? onChanged;
+  final Color? backgroundColor;
 
   @override
   Widget build(BuildContext context) {
@@ -26,7 +28,7 @@ class VideoSlider extends StatelessWidget {
     final trackHeight = 4.0.s;
 
     return ColoredBox(
-      color: context.theme.appColors.primaryText,
+      color: backgroundColor ?? context.theme.appColors.primaryText,
       child: SliderTheme(
         data: SliderThemeData(
           thumbShape: const _CustomSliderComponentShape(),

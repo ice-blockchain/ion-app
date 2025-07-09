@@ -195,51 +195,54 @@ class _MediaBottomOverlay extends ConsumerWidget {
       bottom: 0,
       start: 0,
       end: 0,
-      child: ColoredBox(
-        color: context.theme.appColors.primaryText.withValues(alpha: 0.5),
+      child: SizedBox(
+        height: 91.s + MediaQuery.paddingOf(context).bottom,
         child: ScreenSideOffset.small(
           child: Padding(
             padding: EdgeInsetsDirectional.only(
-              bottom: 20.0.s + MediaQuery.paddingOf(context).bottom,
-              top: 16.0.s,
+              top: 12.0.s,
             ),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Expanded(
-                  child: BadgesUserListItem(
-                    pubkey: messageEntity.masterPubkey,
-                    title: Text(
-                      userMetadata.data.displayName,
-                      style: context.theme.appTextThemes.subtitle3.copyWith(
-                        color: context.theme.appColors.onPrimaryAccent,
-                      ),
-                    ),
-                    subtitle: Text(
-                      prefixUsername(username: userMetadata.data.name, context: context),
-                      style: context.theme.appTextThemes.caption.copyWith(
-                        color: context.theme.appColors.onPrimaryAccent,
-                      ),
-                    ),
-                  ),
-                ),
-                if (isVideo)
-                  GestureDetector(
-                    onTap: () async {
-                      await HapticFeedback.lightImpact();
-                      await ref.read(globalMuteNotifierProvider.notifier).toggle();
-                    },
-                    child: isMuted
-                        ? Assets.svg.iconChannelMute.icon(
-                            size: 24.0.s,
-                            color: context.theme.appColors.onPrimaryAccent,
-                          )
-                        : Assets.svg.iconChannelUnmute.icon(
-                            size: 24.0.s,
+            child: Align(
+              alignment: AlignmentDirectional.topCenter,
+              child: Row(
+                children: [
+                  Expanded(
+                    child: IntrinsicHeight(
+                      child: BadgesUserListItem(
+                        pubkey: messageEntity.masterPubkey,
+                        title: Text(
+                          userMetadata.data.displayName,
+                          style: context.theme.appTextThemes.subtitle3.copyWith(
                             color: context.theme.appColors.onPrimaryAccent,
                           ),
+                        ),
+                        subtitle: Text(
+                          prefixUsername(username: userMetadata.data.name, context: context),
+                          style: context.theme.appTextThemes.caption.copyWith(
+                            color: context.theme.appColors.onPrimaryAccent,
+                          ),
+                        ),
+                      ),
+                    ),
                   ),
-              ],
+                  if (isVideo)
+                    GestureDetector(
+                      onTap: () async {
+                        await HapticFeedback.lightImpact();
+                        await ref.read(globalMuteNotifierProvider.notifier).toggle();
+                      },
+                      child: isMuted
+                          ? Assets.svg.iconChannelMute.icon(
+                              size: 24.0.s,
+                              color: context.theme.appColors.onPrimaryAccent,
+                            )
+                          : Assets.svg.iconChannelUnmute.icon(
+                              size: 24.0.s,
+                              color: context.theme.appColors.onPrimaryAccent,
+                            ),
+                    ),
+                ],
+              ),
             ),
           ),
         ),
