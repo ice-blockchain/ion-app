@@ -16,6 +16,7 @@ import 'package:ion/app/features/feed/data/models/feed_interests.f.dart';
 import 'package:ion/app/features/feed/data/models/feed_interests_interaction.dart';
 import 'package:ion/app/features/feed/data/models/who_can_reply_settings_option.f.dart';
 import 'package:ion/app/features/feed/providers/feed_user_interests_provider.r.dart';
+import 'package:ion/app/features/feed/providers/media_upload_provider.r.dart';
 import 'package:ion/app/features/gallery/providers/gallery_provider.r.dart';
 import 'package:ion/app/features/ion_connect/model/action_source.f.dart';
 import 'package:ion/app/features/ion_connect/model/color_label.f.dart';
@@ -37,7 +38,6 @@ import 'package:ion/app/features/user/providers/user_events_metadata_provider.r.
 import 'package:ion/app/services/compressors/image_compressor.r.dart';
 import 'package:ion/app/services/markdown/quill.dart';
 import 'package:ion/app/services/media_service/media_service.m.dart';
-import 'package:ion/app/services/media_service/media_upload_service.dart';
 import 'package:ion/app/utils/image_path.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
@@ -379,9 +379,10 @@ class CreateArticle extends _$CreateArticle {
     );
 
     if (mediaIds != null && mediaIds.isNotEmpty) {
-      final mediaUploadService = MediaUploadService(
-        ref: ref,
-        fileAlt: FileAlt.article,
+      final mediaUploadService = ref.read(
+        mediaUploadProvider(
+          fileAlt: FileAlt.article,
+        ),
       );
 
       final mediaFiles = await Future.wait(

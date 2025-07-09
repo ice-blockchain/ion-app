@@ -23,6 +23,7 @@ import 'package:ion/app/features/feed/polls/models/poll_data.f.dart';
 import 'package:ion/app/features/feed/providers/counters/replies_count_provider.r.dart';
 import 'package:ion/app/features/feed/providers/counters/reposts_count_provider.r.dart';
 import 'package:ion/app/features/feed/providers/feed_user_interests_provider.r.dart';
+import 'package:ion/app/features/feed/providers/media_upload_provider.r.dart';
 import 'package:ion/app/features/ion_connect/model/action_source.f.dart';
 import 'package:ion/app/features/ion_connect/model/entity_data_with_parent.dart';
 import 'package:ion/app/features/ion_connect/model/entity_data_with_settings.dart';
@@ -50,7 +51,6 @@ import 'package:ion/app/features/user/providers/verified_user_events_metadata_pr
 import 'package:ion/app/services/compressors/image_compressor.r.dart';
 import 'package:ion/app/services/markdown/quill.dart';
 import 'package:ion/app/services/media_service/media_service.m.dart';
-import 'package:ion/app/services/media_service/media_upload_service.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'create_post_notifier.m.g.dart';
@@ -354,11 +354,12 @@ class CreatePostNotifier extends _$CreatePostNotifier {
     final files = <FileMetadata>[];
     final attachments = <MediaAttachment>[];
     if (mediaFiles != null && mediaFiles.isNotEmpty) {
-      final mediaUploadService = MediaUploadService(
-        ref: ref,
-        fileAlt: _getFileAlt(),
-        imageCompressionSettings: ImageCompressionSettings(
-          shouldCompressGif: createOption != CreatePostOption.story,
+      final mediaUploadService = ref.read(
+        mediaUploadProvider(
+          fileAlt: _getFileAlt(),
+          imageCompressionSettings: ImageCompressionSettings(
+            shouldCompressGif: createOption != CreatePostOption.story,
+          ),
         ),
       );
 
