@@ -12,7 +12,7 @@ part 'users_relays_provider.r.g.dart';
 enum UsersRelaysStrategy { mostUsers, bestLatency }
 
 @riverpod
-class UsersRelaysProvider extends _$UsersRelaysProvider {
+class UsersRelays extends _$UsersRelays {
   @override
   FutureOr<void> build() async {}
 

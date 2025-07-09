@@ -43,7 +43,7 @@ Future<Map<String, List<String>>> feedForYouFilterRelays(Ref ref) async {
     if (followList != null) ...followList.masterPubkeys,
   ];
 
-  final relayMapping = await ref.read(usersRelaysProviderProvider.notifier).fetch(
+  final relayMapping = await ref.read(usersRelaysProvider.notifier).fetch(
         masterPubkeys: masterPubkeys,
         strategy: UsersRelaysStrategy.mostUsers,
       );
@@ -62,7 +62,7 @@ Future<Map<String, List<String>>> feedFollowingFilterRelays(Ref ref) async {
 
   final masterPubkeys = [...followList.masterPubkeys];
 
-  final relayMapping = await ref.read(usersRelaysProviderProvider.notifier).fetch(
+  final relayMapping = await ref.read(usersRelaysProvider.notifier).fetch(
         masterPubkeys: masterPubkeys,
         strategy: UsersRelaysStrategy.mostUsers,
       );
