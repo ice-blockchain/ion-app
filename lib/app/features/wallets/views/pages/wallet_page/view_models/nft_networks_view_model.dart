@@ -38,21 +38,32 @@ class NftNetworksViewModel {
 
   late final StateCommand<String> searchQueryCommand;
   late final Command<Set<String>, Set<NetworkData>> selectedNetworks;
+  late final Command<void, Set<String>> _allNetworksCommand;
 
   late final ValueListenable<Set<String>> filteredNetworks;
   ValueListenable<Set<String>> get selectedNetworkIds => _filterService.selectedNetworksCommand;
 
   void _initializeCommands() {
     searchQueryCommand = stateCommand('');
+    _allNetworksCommand = Command.createAsync(_loadAllNetworks, initialValue: {});
 
-    filteredNetworks = _filterService.availableNetworksCommand.combineLatest(
+    filteredNetworks = _allNetworksCommand.combineLatest(
       searchQueryCommand,
       _filterNetworks,
     );
 
     selectedNetworks = Command.createAsync(_loadSelectedNetworks, initialValue: {});
 
-    _filterService.selectedNetworksCommand.listen((networks, __) => selectedNetworks(networks));
+    _filterService.selectedNetworksCommand.listen((networks, __) {
+      selectedNetworks(networks);
+    });
+
+    _allNetworksCommand();
+  }
+
+  Future<Set<String>> _loadAllNetworks(void _) async {
+    final allNetworks = await _networksRepository.getNftNetworks();
+    return allNetworks.map((network) => network.id).toSet();
   }
 
   Set<String> _filterNetworks(Set<String> networks, String query) {
@@ -78,5 +89,6 @@ class NftNetworksViewModel {
 
   void _dispose() {
     searchQueryCommand.dispose();
+    _allNetworksCommand.dispose();
   }
 }

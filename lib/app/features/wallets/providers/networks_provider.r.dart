@@ -25,8 +25,7 @@ Future<List<NetworkData>> networksByTier(Ref ref, {required int tier}) {
 
 @riverpod
 Future<List<NetworkData>> networksWithNft(Ref ref) {
-  // Only tier 1 networks support NFTs
-  return ref.watch(networksRepositoryProvider).getByFilters(tiers: [1]);
+  return ref.watch(networksRepositoryProvider).getNftNetworks();
 }
 
 @riverpod
