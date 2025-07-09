@@ -140,6 +140,7 @@ dependencies:
   shimmer: ^3.0.0
   showcaseview: ^4.0.1
   smooth_sheets: ^1.0.0-f324.0.10.2
+  social_sharing_plus: ^1.2.3
   stream_transform: ^2.1.1
   synchronized: ^3.3.0+3
   talker_dio_logger: 4.7.1

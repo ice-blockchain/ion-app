@@ -10,6 +10,7 @@ class ShareOptionsMenuItem extends StatelessWidget {
     required this.label,
     required this.onPressed,
     required this.buttonType,
+    this.borderColor,
     super.key,
   });
 
@@ -17,6 +18,7 @@ class ShareOptionsMenuItem extends StatelessWidget {
   final String label;
   final VoidCallback onPressed;
   final ButtonType buttonType;
+  final Color? borderColor;
 
   @override
   Widget build(BuildContext context) {
@@ -28,6 +30,7 @@ class ShareOptionsMenuItem extends StatelessWidget {
             type: buttonType,
             onPressed: onPressed,
             icon: icon,
+            borderColor: borderColor,
           ),
           SizedBox(height: 6.0.s),
           Text(

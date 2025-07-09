@@ -11,6 +11,7 @@ import 'package:ion/app/extensions/asset_gen_image.dart';
 import 'package:ion/app/extensions/build_context.dart';
 import 'package:ion/app/extensions/num.dart';
 import 'package:ion/app/features/auth/providers/auth_provider.m.dart';
+import 'package:ion/app/features/chat/views/pages/share_via_message_modal/components/share_copy_link.dart';
 import 'package:ion/app/features/chat/views/pages/share_via_message_modal/components/share_options_menu_item.dart';
 import 'package:ion/app/features/chat/views/pages/share_via_message_modal/components/share_post_to_story_content.dart';
 import 'package:ion/app/features/feed/data/models/bookmarks/bookmarks_set.f.dart';
@@ -21,9 +22,7 @@ import 'package:ion/app/features/ion_connect/model/event_reference.f.dart';
 import 'package:ion/app/features/ion_connect/providers/ion_connect_entity_provider.r.dart';
 import 'package:ion/app/features/user/providers/user_metadata_provider.r.dart';
 import 'package:ion/app/router/app_routes.gr.dart';
-import 'package:ion/app/services/clipboard/clipboard.dart';
-import 'package:ion/app/services/deep_link/deep_link_service.r.dart';
-import 'package:ion/app/services/share/share.dart';
+import 'package:ion/app/services/share/share_provider.r.dart';
 import 'package:ion/app/utils/screenshot_utils.dart';
 import 'package:ion/generated/assets.gen.dart';
 
@@ -64,15 +63,7 @@ class ShareOptions extends HookConsumerWidget {
                 label: context.i18n.feed_add_story,
                 onPressed: isCapturing.value ? () {} : () => _onSharePostToStory(ref, isCapturing),
               ),
-            ShareOptionsMenuItem(
-              buttonType: ButtonType.dropdown,
-              icon: Assets.svg.iconBlockCopy1.icon(size: iconSize, color: Colors.black),
-              label: context.i18n.feed_copy_link,
-              onPressed: () {
-                copyToClipboard(shareUrl);
-                context.pop();
-              },
-            ),
+            CopyLinkOption(shareUrl: shareUrl, iconSize: iconSize),
             if (isPost)
               ShareOptionsMenuItem(
                 buttonType: ButtonType.dropdown,
@@ -95,27 +86,32 @@ class ShareOptions extends HookConsumerWidget {
               buttonType: ButtonType.dropdown,
               icon: Assets.svg.iconFeedWhatsapp.icon(size: iconSize),
               label: context.i18n.feed_whatsapp,
-              onPressed: () {},
+              onPressed: () {
+                ref.read(socialShareServiceProvider.notifier).shareToWhatsApp(shareUrl);
+              },
             ),
             ShareOptionsMenuItem(
               buttonType: ButtonType.dropdown,
               icon: Assets.svg.iconFeedTelegram.icon(size: iconSize),
               label: context.i18n.feed_telegram,
-              onPressed: () {},
+              onPressed: () {
+                ref.read(socialShareServiceProvider.notifier).shareToTelegram(shareUrl);
+              },
             ),
             ShareOptionsMenuItem(
               buttonType: ButtonType.dropdown,
               icon: Assets.svg.iconLoginXlogo.icon(size: iconSize),
               label: context.i18n.feed_x,
-              onPressed: () {},
+              onPressed: () {
+                ref.read(socialShareServiceProvider.notifier).shareToTwitter(shareUrl);
+              },
             ),
             ShareOptionsMenuItem(
               buttonType: ButtonType.dropdown,
               icon: Assets.svg.iconFeedMore.icon(size: iconSize),
               label: context.i18n.feed_more,
-              onPressed: () async {
-                final url = await ref.read(deepLinkServiceProvider).createDeeplink(shareUrl);
-                shareContent(url);
+              onPressed: () {
+                ref.read(socialShareServiceProvider.notifier).shareToMore(shareUrl);
               },
             ),
           ],
