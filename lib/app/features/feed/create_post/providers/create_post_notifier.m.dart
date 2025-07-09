@@ -357,9 +357,9 @@ class CreatePostNotifier extends _$CreatePostNotifier {
       final mediaUploadService = MediaUploadService(
         ref: ref,
         fileAlt: _getFileAlt(),
-        imageCompressionSettings: createOption != CreatePostOption.story
-            ? const ImageCompressionSettings(shouldCompressGif: true)
-            : const ImageCompressionSettings(),
+        imageCompressionSettings: ImageCompressionSettings(
+          shouldCompressGif: createOption != CreatePostOption.story,
+        ),
       );
 
       final results = await Future.wait(

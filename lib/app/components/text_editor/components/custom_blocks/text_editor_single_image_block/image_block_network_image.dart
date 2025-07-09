@@ -3,11 +3,12 @@
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/components/video_preview/video_preview.dart';
+import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/core/model/media_type.dart';
 import 'package:ion/app/features/ion_connect/model/media_attachment.dart';
 import 'package:ion/app/services/media_service/aspect_ratio.dart';
 
-class ImageBlockNetworkImage extends HookConsumerWidget {
+class ImageBlockNetworkImage extends ConsumerWidget {
   const ImageBlockNetworkImage({
     required this.path,
     required this.media,
@@ -34,7 +35,7 @@ class ImageBlockNetworkImage extends HookConsumerWidget {
         return AspectRatio(
           aspectRatio: aspectRatio,
           child: ClipRRect(
-            borderRadius: BorderRadius.circular(12),
+            borderRadius: BorderRadius.circular(12.s),
             child: VideoPreview(
               videoUrl: path,
               authorPubkey: authorPubkey ?? '',
