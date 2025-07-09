@@ -6,19 +6,26 @@ import 'package:ion/app/components/empty_list/empty_list.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/components/entities_list/entities_list.dart';
 import 'package:ion/app/features/components/entities_list/entities_list_skeleton.dart';
+import 'package:ion/app/features/core/providers/throttled_provider.dart';
 import 'package:ion/app/features/feed/providers/feed_current_filter_provider.m.dart';
 import 'package:ion/app/features/feed/providers/feed_posts_provider.r.dart';
+import 'package:ion/app/features/ion_connect/model/ion_connect_entity.dart';
 import 'package:ion/app/features/user/providers/muted_users_notifier.r.dart';
 import 'package:ion/app/hooks/use_on_init.dart';
 import 'package:ion/app/router/app_routes.gr.dart';
 import 'package:ion/generated/assets.gen.dart';
+
+final _provider = StreamProvider<Iterable<IonConnectEntity>?>((ref) async* {
+  final entities = ref.watch(feedPostsProvider.select((state) => state.items));
+  yield entities;
+}).throttled();
 
 class FeedPostsList extends HookConsumerWidget {
   const FeedPostsList({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final entities = ref.watch(feedPostsProvider.select((state) => state.items));
+    final entities = ref.watch(_provider).valueOrNull;
 
     // Prefetching mute list here so it can be used later with sync provider
     useOnInit(() {

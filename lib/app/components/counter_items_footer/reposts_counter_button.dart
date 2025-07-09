@@ -5,12 +5,19 @@ import 'package:flutter/services.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/components/counter_items_footer/text_action_button.dart';
 import 'package:ion/app/extensions/extensions.dart';
+import 'package:ion/app/features/core/providers/throttled_provider.dart';
 import 'package:ion/app/features/feed/providers/counters/reposted_events_provider.r.dart';
 import 'package:ion/app/features/feed/providers/counters/reposts_count_provider.r.dart';
 import 'package:ion/app/features/ion_connect/model/event_reference.f.dart';
 import 'package:ion/app/router/utils/quote_routing_utils.dart';
 import 'package:ion/app/utils/num.dart';
 import 'package:ion/generated/assets.gen.dart';
+
+final _provider = Provider.family<({int? repostsCount, bool? isReposted}), EventReference>((ref, eventRef) {
+  final repostsCount = ref.watch(repostsCountProvider(eventRef));
+  final isReposted = ref.watch(isRepostedProvider(eventRef));
+  return (repostsCount: repostsCount, isReposted: isReposted);
+}).throttled();
 
 class RepostsCounterButton extends ConsumerWidget {
   const RepostsCounterButton({
@@ -24,8 +31,9 @@ class RepostsCounterButton extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final repostsCount = ref.watch(repostsCountProvider(eventReference));
-    final isReposted = ref.watch(isRepostedProvider(eventReference));
+    final value = ref.watch(_provider(eventReference)).valueOrNull;
+    final repostsCount = value?.repostsCount ?? 0;
+    final isReposted = value?.isReposted ?? false;
 
     return GestureDetector(
       behavior: HitTestBehavior.opaque,

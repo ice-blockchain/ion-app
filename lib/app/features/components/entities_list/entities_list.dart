@@ -7,6 +7,7 @@ import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/components/entities_list/components/article_list_item.dart';
 import 'package:ion/app/features/components/entities_list/components/post_list_item.dart';
 import 'package:ion/app/features/components/entities_list/components/repost_list_item.dart';
+import 'package:ion/app/features/core/providers/throttled_provider.dart';
 import 'package:ion/app/features/feed/data/models/entities/article_data.f.dart';
 import 'package:ion/app/features/feed/data/models/entities/generic_repost.f.dart';
 import 'package:ion/app/features/feed/data/models/entities/modifiable_post_data.f.dart';
@@ -60,6 +61,16 @@ class EntitiesList extends HookWidget {
   }
 }
 
+final _entityProvider =
+    Provider.family<IonConnectEntity?, ({EventReference eventReference, bool readFromDB})>(
+        (ref, params) {
+  final entity = ref.watch(
+    ionConnectSyncEntityProvider(eventReference: params.eventReference, db: params.readFromDB),
+  );
+
+  return entity;
+}).throttled();
+
 class _EntityListItem extends ConsumerWidget {
   _EntityListItem({
     required this.eventReference,
@@ -82,8 +93,9 @@ class _EntityListItem extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     // Subscribing to the entity here instead of passing it as param to get the updates
     // e.g. when the entity is deleted
-    final entity =
-        ref.watch(ionConnectSyncEntityProvider(eventReference: eventReference, db: readFromDB));
+    final entity = ref
+        .watch(_entityProvider((eventReference: eventReference, readFromDB: readFromDB)))
+        .valueOrNull;
 
     if (entity == null ||
         _isBlockedOrMutedOrBlocking(ref, entity, showMuted) ||

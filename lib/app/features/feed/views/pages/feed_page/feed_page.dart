@@ -9,6 +9,7 @@ import 'package:ion/app/components/scroll_view/pull_to_refresh_builder.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/core/model/feature_flags.dart';
 import 'package:ion/app/features/core/providers/feature_flags_provider.r.dart';
+import 'package:ion/app/features/core/providers/throttled_provider.dart';
 import 'package:ion/app/features/feed/data/models/feed_category.dart';
 import 'package:ion/app/features/feed/providers/feed_current_filter_provider.m.dart';
 import 'package:ion/app/features/feed/providers/feed_posts_provider.r.dart';
@@ -22,17 +23,40 @@ import 'package:ion/app/features/feed/views/pages/feed_page/components/stories/s
 import 'package:ion/app/features/feed/views/pages/feed_page/components/trending_videos/trending_videos.dart';
 import 'package:ion/app/hooks/use_scroll_top_on_tab_press.dart';
 import 'package:ion/app/router/components/navigation_app_bar/collapsing_app_bar.dart';
+import 'package:ion/app/services/logger/logger.dart';
+
+final _feedDataProvider =
+    StreamProvider<({FeedCategory feedCategory, bool hasMorePosts, bool showTrendingVideos})>(
+        (ref) async* {
+  final feedCategory = ref.watch(feedCurrentFilterProvider.select((state) => state.category));
+  final hasMorePosts = ref.watch(feedPostsProvider.select((state) => state.hasMore)).falseOrValue;
+  final showTrendingVideos =
+      ref.watch(featureFlagsProvider.notifier).get(FeedFeatureFlag.showTrendingVideo);
+
+  yield (
+    feedCategory: feedCategory,
+    hasMorePosts: hasMorePosts,
+    showTrendingVideos: showTrendingVideos
+  );
+}).throttled();
 
 class FeedPage extends HookConsumerWidget {
   const FeedPage({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final feedCategory = ref.watch(feedCurrentFilterProvider.select((state) => state.category));
-    final hasMorePosts = ref.watch(feedPostsProvider.select((state) => state.hasMore)).falseOrValue;
-    final showTrendingVideos = useRef(
-      ref.watch(featureFlagsProvider.notifier).get(FeedFeatureFlag.showTrendingVideo),
-    );
+    final feedData = ref.watch(_feedDataProvider).valueOrNull;
+    if (feedData == null) {
+      // Return loading or use fallback values
+      return const Scaffold(
+        body: Center(child: CircularProgressIndicator()),
+      );
+    }
+
+    final feedCategory = feedData.feedCategory;
+    final hasMorePosts = feedData.hasMorePosts;
+    final showTrendingVideos = feedData.showTrendingVideos;
+
     final scrollController = useScrollController();
 
     useScrollTopOnTabPress(context, scrollController: scrollController);
@@ -43,10 +67,8 @@ class FeedPage extends HookConsumerWidget {
           children: [
             if (feedCategory == FeedCategory.articles) const ArticleCategoriesMenu(),
             if (feedCategory != FeedCategory.articles) const Stories(),
-            if (feedCategory == FeedCategory.feed && showTrendingVideos.value)
-              const TrendingVideos(),
-            if (feedCategory == FeedCategory.videos && showTrendingVideos.value)
-              const TrendingVideos(),
+            if (feedCategory == FeedCategory.feed && showTrendingVideos) const TrendingVideos(),
+            if (feedCategory == FeedCategory.videos && showTrendingVideos) const TrendingVideos(),
           ],
         ),
       ),

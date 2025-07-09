@@ -6,6 +6,7 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/components/counter_items_footer/text_action_button.dart';
 import 'package:ion/app/extensions/extensions.dart';
+import 'package:ion/app/features/core/providers/throttled_provider.dart';
 import 'package:ion/app/features/feed/data/models/entities/article_data.f.dart';
 import 'package:ion/app/features/feed/providers/can_reply_notifier.r.dart';
 import 'package:ion/app/features/feed/providers/counters/replied_events_provider.r.dart';
@@ -17,6 +18,19 @@ import 'package:ion/app/router/app_routes.gr.dart';
 import 'package:ion/app/router/utils/show_simple_bottom_sheet.dart';
 import 'package:ion/app/utils/num.dart';
 import 'package:ion/generated/assets.gen.dart';
+
+final _provider =
+    Provider.family<({int repliesCount, bool isReplied, bool canReply}), EventReference>(
+        (ref, eventRef) {
+  final repliesCount = ref.watch(repliesCountProvider(eventRef));
+  final isReplied = ref.watch(isRepliedProvider(eventRef));
+  final canReply = ref.watch(canReplyProvider(eventRef));
+  return (
+    repliesCount: repliesCount,
+    isReplied: isReplied,
+    canReply: canReply.valueOrNull ?? false
+  );
+}).throttled();
 
 class RepliesCounterButton extends HookConsumerWidget {
   const RepliesCounterButton({
@@ -30,9 +44,11 @@ class RepliesCounterButton extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final repliesCount = ref.watch(repliesCountProvider(eventReference));
-    final isReplied = ref.watch(isRepliedProvider(eventReference));
-    final canReply = ref.watch(canReplyProvider(eventReference)).valueOrNull ?? false;
+    final value = ref.watch(_provider(eventReference)).valueOrNull;
+    final repliesCount = value?.repliesCount ?? 0;
+    final isReplied = value?.isReplied ?? false;
+    final canReply = value?.canReply ?? false;
+
     final isLoading = useRef(false);
 
     return GestureDetector(

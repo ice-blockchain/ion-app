@@ -8,6 +8,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/components/avatar/avatar.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/components/ion_connect_avatar/ion_connect_avatar.dart';
+import 'package:ion/app/features/core/providers/throttled_provider.dart';
 import 'package:ion/app/features/feed/stories/providers/feed_stories_provider.r.dart';
 import 'package:ion/app/features/feed/stories/providers/viewed_stories_provider.r.dart';
 import 'package:ion/app/features/feed/views/pages/feed_page/components/stories/components/story_colored_border.dart';
@@ -25,7 +26,7 @@ final _storyStatusProvider =
       hasStories && userStories.first.stories.every((story) => viewedStories.contains(story.id));
 
   return (hasStories: hasStories, allStoriesViewed: allStoriesViewed);
-});
+}).throttled();
 
 class StoryColoredProfileAvatar extends HookConsumerWidget {
   const StoryColoredProfileAvatar({
@@ -51,7 +52,7 @@ class StoryColoredProfileAvatar extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final storyStatus = ref.watch(_storyStatusProvider(pubkey));
+    final storyStatus = ref.watch(_storyStatusProvider(pubkey)).value!;
     final hasStories = storyStatus.hasStories;
     final allStoriesViewed = storyStatus.allStoriesViewed;
 
