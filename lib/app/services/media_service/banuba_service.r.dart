@@ -112,7 +112,11 @@ BanubaService banubaService(Ref ref) {
 }
 
 @riverpod
-Future<MediaFile?> editMedia(Ref ref, MediaFile mediaFile) async {
+Future<MediaFile?> editMedia(
+  Ref ref,
+  MediaFile mediaFile, {
+  Duration? maxVideoDuration,
+}) async {
   final filePath = path.isAbsolute(mediaFile.path)
       ? mediaFile.path
       : await ref.read(assetFilePathProvider(mediaFile.path).future);
@@ -143,7 +147,10 @@ Future<MediaFile?> editMedia(Ref ref, MediaFile mediaFile) async {
       if (newPath == null) return null;
       return mediaFile.copyWith(path: newPath);
     case MediaType.video:
-      final editVideoData = await ref.read(banubaServiceProvider).editVideo(filePath);
+      final editVideoData = await ref.read(banubaServiceProvider).editVideo(
+            filePath,
+            maxVideoDuration: maxVideoDuration,
+          );
       if (editVideoData == null) return null;
       return mediaFile.copyWith(path: editVideoData.newPath, thumb: editVideoData.thumb);
     case MediaType.unknown || MediaType.audio:

@@ -3,6 +3,7 @@
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/extensions/extensions.dart';
+import 'package:ion/app/features/feed/constants/video_constants.dart';
 import 'package:ion/app/services/logger/logger.dart';
 import 'package:ion/app/services/media_service/banuba_service.r.dart';
 import 'package:ion/app/services/media_service/media_service.m.dart';
@@ -23,7 +24,12 @@ class VideoPreviewEditCover extends ConsumerWidget {
         if (attachedVideo == null) return;
 
         try {
-          final editedMedia = await ref.read(editMediaProvider(attachedVideo).future);
+          final editedMedia = await ref.read(
+            editMediaProvider(
+              attachedVideo,
+              maxVideoDuration: VideoConstants.feedVideoMaxDuration,
+            ).future,
+          );
 
           if (editedMedia != null && editedMedia.path != attachedVideo.path) {
             final timestamp = DateTime.now().millisecondsSinceEpoch;

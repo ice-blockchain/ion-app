@@ -3,6 +3,7 @@
 import 'dart:async';
 
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:ion/app/features/feed/constants/video_constants.dart';
 import 'package:ion/app/features/gallery/data/models/camera_state.f.dart';
 import 'package:ion/app/features/gallery/providers/camera_provider.r.dart';
 import 'package:ion/app/services/media_service/banuba_service.r.dart';
@@ -25,7 +26,13 @@ class MediaEditingService {
 
     if (!isCameraPaused) await camera.pauseCamera();
     try {
-      return (await _ref.read(editMediaProvider(file).future))?.path;
+      return (await _ref.read(
+        editMediaProvider(
+          file,
+          maxVideoDuration: VideoConstants.storyVideoMaxDuration,
+        ).future,
+      ))
+          ?.path;
     } finally {
       if (resumeCamera && !isCameraPaused) await camera.resumeCamera();
     }

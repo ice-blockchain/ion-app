@@ -8,6 +8,7 @@ import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/core/permissions/data/models/permissions_types.dart';
 import 'package:ion/app/features/core/permissions/views/components/permission_aware_widget.dart';
 import 'package:ion/app/features/core/permissions/views/components/permission_dialogs/permission_sheets.dart';
+import 'package:ion/app/features/feed/constants/video_constants.dart';
 import 'package:ion/app/features/feed/data/models/feed_type.dart';
 import 'package:ion/app/features/gallery/views/pages/media_picker_page.dart';
 import 'package:ion/app/features/gallery/views/pages/media_picker_type.dart';
@@ -74,7 +75,12 @@ class FeedMainModalPage extends ConsumerWidget {
                       );
 
                       if (result != null && result.isNotEmpty && context.mounted) {
-                        final editedMedia = await ref.read(editMediaProvider(result[0]).future);
+                        final editedMedia = await ref.read(
+                          editMediaProvider(
+                            result[0],
+                            maxVideoDuration: VideoConstants.feedVideoMaxDuration,
+                          ).future,
+                        );
                         if (!context.mounted || editedMedia == null) return;
                         final editingResult = await CreateVideoRoute(
                               videoPath: editedMedia.path,
