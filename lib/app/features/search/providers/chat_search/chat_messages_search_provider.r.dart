@@ -7,6 +7,7 @@ import 'package:ion/app/features/auth/providers/auth_provider.m.dart';
 import 'package:ion/app/features/chat/e2ee/model/entities/private_direct_message_data.f.dart';
 import 'package:ion/app/features/chat/model/database/chat_database.m.dart';
 import 'package:ion/app/features/search/model/chat_search_result_item.f.dart';
+import 'package:ion/app/features/user_profile/database/dao/user_metadata_dao.m.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'chat_messages_search_provider.r.g.dart';
@@ -26,16 +27,26 @@ Future<List<ChatSearchResultItem>?> chatMessagesSearch(Ref ref, String query) as
 
   final entities = searchResults.map(ReplaceablePrivateDirectMessageEntity.fromEventMessage);
 
-  return entities
-      .sortedBy((entity) => entity.createdAt.toDateTime)
-      .reversed
-      .map(
-        (message) => ChatSearchResultItem(
-          masterPubkey:
-              message.allPubkeys.firstWhereOrNull((key) => key != currentUserMasterPubkey) ?? '',
-          lastMessageContent: message.data.content,
-          isFromLocalDb: true,
-        ),
-      )
-      .toList();
+  final result = <ChatSearchResultItem>[];
+
+  entities.sortedBy((entity) => entity.createdAt.toDateTime).reversed.forEach((message) async {
+    final receiverMasterPubkey = message.allPubkeys.firstWhereOrNull(
+      (key) => key != currentUserMasterPubkey,
+    );
+
+    if (receiverMasterPubkey == null) return;
+
+    final userMetadata = await ref.watch(userMetadataDaoProvider).get(receiverMasterPubkey);
+
+    if (userMetadata == null) return;
+
+    result.add(
+      ChatSearchResultItem(
+        userMetadata: userMetadata,
+        lastMessageContent: message.data.content,
+      ),
+    );
+  });
+
+  return result;
 }
