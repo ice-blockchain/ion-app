@@ -28,36 +28,33 @@ class SelectableUserListItem extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final userMetadataResult = ref.watch(userMetadataProvider(masterPubkey));
+    final userMetadataResult = ref.watch(cachedUserMetadataProvider(masterPubkey));
+    
+    if (userMetadataResult == null) {
+      return const SizedBox.shrink();
+    }
 
-    return userMetadataResult.maybeWhen(
-      data: (user) {
-        if (user == null) return const SizedBox.shrink();
+    final isSelected =
+        selectedPubkeys.contains(masterPubkey) || (selectedPubkeys.contains(pubkey));
 
-        final isSelected =
-            selectedPubkeys.contains(masterPubkey) || (selectedPubkeys.contains(pubkey));
-
-        return BadgesUserListItem(
-          onTap: () => onUserSelected(user),
-          title: Text(user.data.displayName),
-          subtitle: Text(prefixUsername(username: user.data.name, context: context)),
-          pubkey: masterPubkey,
-          contentPadding: EdgeInsets.symmetric(
-            vertical: 8.0.s,
-            horizontal: ScreenSideOffset.defaultSmallMargin,
-          ),
-          trailing: selectable
-              ? isSelected
-                  ? Assets.svg.iconBlockCheckboxOnblue.icon(
-                      color: context.theme.appColors.success,
-                    )
-                  : Assets.svg.iconBlockCheckboxOff.icon(
-                      color: context.theme.appColors.onTerararyFill,
-                    )
-              : null,
-        );
-      },
-      orElse: SizedBox.shrink,
+    return BadgesUserListItem(
+      onTap: () => onUserSelected(userMetadataResult),
+      title: Text(userMetadataResult.data.displayName),
+      subtitle: Text(prefixUsername(username: userMetadataResult.data.name, context: context)),
+      pubkey: masterPubkey,
+      contentPadding: EdgeInsets.symmetric(
+        vertical: 8.0.s,
+        horizontal: ScreenSideOffset.defaultSmallMargin,
+      ),
+      trailing: selectable
+          ? isSelected
+              ? Assets.svg.iconBlockCheckboxOnblue.icon(
+                  color: context.theme.appColors.success,
+                )
+              : Assets.svg.iconBlockCheckboxOff.icon(
+                  color: context.theme.appColors.onTerararyFill,
+                )
+          : null,
     );
   }
 }
