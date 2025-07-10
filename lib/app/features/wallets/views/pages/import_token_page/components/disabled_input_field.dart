@@ -12,6 +12,7 @@ class DisabledTextInput extends ConsumerWidget {
   const DisabledTextInput({
     required this.controller,
     required this.labelText,
+    super.key,
   });
 
   final TextEditingController controller;
