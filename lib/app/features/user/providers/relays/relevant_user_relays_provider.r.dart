@@ -12,7 +12,7 @@ part 'relevant_user_relays_provider.r.g.dart';
 
 /// Relevant relays are the ones that might be used by a user.
 ///
-/// They are fetched based on the top relay URL from the ranked user relays.
+/// They are fetched from identity based on the top relay URL from the ranked user relays.
 
 @Riverpod(keepAlive: true)
 Future<List<String>> relevantCurrentUserRelays(Ref ref) async {
