@@ -29,7 +29,6 @@ class UserFetchStatesDao extends DatabaseAccessor<FollowingFeedDatabase>
         pubkey: pubkey,
         emptyFetchCount: hasContent ? 0 : 1,
         lastFetchTime: DateTime.now().microsecondsSinceEpoch,
-        lastContentTime: Value(hasContent ? DateTime.now().microsecondsSinceEpoch : null),
       ),
       onConflict: DoUpdate(
         (old) => UserFetchStatesTableCompanion.custom(
@@ -38,7 +37,6 @@ class UserFetchStatesDao extends DatabaseAccessor<FollowingFeedDatabase>
           pubkey: old.pubkey,
           emptyFetchCount: hasContent ? const Constant(0) : old.emptyFetchCount + const Constant(1),
           lastFetchTime: Constant(DateTime.now().microsecondsSinceEpoch),
-          lastContentTime: hasContent ? Constant(DateTime.now().microsecondsSinceEpoch) : null,
         ),
       ),
     );

@@ -54,7 +54,6 @@ class FollowingUsersFetchStatesRepository implements UsersFetchStatesRepository 
           pubkey: pubkey,
           emptyFetchCount: savedState.emptyFetchCount,
           lastFetchTime: savedState.lastFetchTime.toDateTime,
-          lastContentTime: savedState.lastContentTime?.toDateTime,
         );
       }
       return UserFetchState(pubkey: pubkey);
