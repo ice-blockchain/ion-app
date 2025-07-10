@@ -7,7 +7,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/components/button/button.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/chat/views/pages/share_via_message_modal/components/share_options_menu_item.dart';
-import 'package:ion/app/services/share/share_provider.r.dart';
+import 'package:ion/app/services/share/social_share_service.r.dart';
 import 'package:ion/generated/assets.gen.dart';
 
 class ShareCopyLinkOption extends HookConsumerWidget {
@@ -46,7 +46,8 @@ class ShareCopyLinkOption extends HookConsumerWidget {
         child: Stack(
           alignment: Alignment.center,
           children: [
-            Assets.svg.iconBlockCopy1.icon(size: iconSize, color: Colors.black),
+            Assets.svg.iconBlockCopy1
+                .icon(size: iconSize, color: context.theme.appColors.primaryText),
             if (isCopied.value)
               PositionedDirectional(
                 end: 5.s,
@@ -58,7 +59,7 @@ class ShareCopyLinkOption extends HookConsumerWidget {
       ),
       label: isCopied.value ? context.i18n.common_copied : context.i18n.feed_copy_link,
       onPressed: () {
-        ref.read(socialShareServiceProvider.notifier).shareToClipboard(shareUrl);
+        ref.read(socialShareServiceProvider).shareToClipboard(shareUrl);
         isCopied.value = true;
       },
     );

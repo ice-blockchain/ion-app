@@ -22,7 +22,7 @@ import 'package:ion/app/features/ion_connect/model/event_reference.f.dart';
 import 'package:ion/app/features/ion_connect/providers/ion_connect_entity_provider.r.dart';
 import 'package:ion/app/features/user/providers/user_metadata_provider.r.dart';
 import 'package:ion/app/router/app_routes.gr.dart';
-import 'package:ion/app/services/share/share_provider.r.dart';
+import 'package:ion/app/services/share/social_share_service.r.dart';
 import 'package:ion/app/utils/screenshot_utils.dart';
 import 'package:ion/generated/assets.gen.dart';
 
@@ -87,7 +87,7 @@ class ShareOptions extends HookConsumerWidget {
               icon: Assets.svg.iconFeedWhatsapp.icon(size: iconSize),
               label: context.i18n.feed_whatsapp,
               onPressed: () {
-                ref.read(socialShareServiceProvider.notifier).shareToWhatsApp(shareUrl);
+                ref.read(socialShareServiceProvider).shareToWhatsApp(shareUrl);
               },
             ),
             ShareOptionsMenuItem(
@@ -95,7 +95,7 @@ class ShareOptions extends HookConsumerWidget {
               icon: Assets.svg.iconFeedTelegram.icon(size: iconSize),
               label: context.i18n.feed_telegram,
               onPressed: () {
-                ref.read(socialShareServiceProvider.notifier).shareToTelegram(shareUrl);
+                ref.read(socialShareServiceProvider).shareToTelegram(shareUrl);
               },
             ),
             ShareOptionsMenuItem(
@@ -103,7 +103,7 @@ class ShareOptions extends HookConsumerWidget {
               icon: Assets.svg.iconLoginXlogo.icon(size: iconSize),
               label: context.i18n.feed_x,
               onPressed: () {
-                ref.read(socialShareServiceProvider.notifier).shareToTwitter(shareUrl);
+                ref.read(socialShareServiceProvider).shareToTwitter(shareUrl);
               },
             ),
             ShareOptionsMenuItem(
@@ -111,7 +111,7 @@ class ShareOptions extends HookConsumerWidget {
               icon: Assets.svg.iconFeedMore.icon(size: iconSize),
               label: context.i18n.feed_more,
               onPressed: () {
-                ref.read(socialShareServiceProvider.notifier).shareToMore(shareUrl);
+                ref.read(socialShareServiceProvider).shareToMore(shareUrl);
               },
             ),
           ],
