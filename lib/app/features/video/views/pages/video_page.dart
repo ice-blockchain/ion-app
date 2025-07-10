@@ -81,10 +81,13 @@ class VideoPage extends HookConsumerWidget {
       );
 
       if (thumbnailAspectRatio < 1) {
-        thumbnailWidget = SizedBox.expand(
-          child: FittedBox(
-            fit: BoxFit.cover,
-            child: thumbnailWidget,
+        thumbnailWidget = ClipRect(
+          child: OverflowBox(
+            maxHeight: double.infinity,
+            child: AspectRatio(
+              aspectRatio: thumbnailAspectRatio,
+              child: thumbnailWidget,
+            ),
           ),
         );
       } else {
@@ -147,25 +150,7 @@ class VideoPage extends HookConsumerWidget {
       }
     });
 
-    Widget videoPlayer = SizedBox(
-      height: playerController.value.size.height,
-      width: playerController.value.size.width,
-      child: CachedVideoPlayerPlus(playerController),
-    );
-
-    if (playerController.value.aspectRatio < 1) {
-      videoPlayer = SizedBox.expand(
-        child: FittedBox(
-          fit: BoxFit.cover,
-          child: videoPlayer,
-        ),
-      );
-    } else {
-      videoPlayer = AspectRatio(
-        aspectRatio: playerController.value.aspectRatio,
-        child: videoPlayer,
-      );
-    }
+    final videoPlayer = _VideoPlayerWidget(controller: playerController);
 
     return VisibilityDetector(
       key: ValueKey(videoUrl),
@@ -191,15 +176,13 @@ class VideoPage extends HookConsumerWidget {
               }
             },
             child: Center(
-              child: SafeArea(
-                top: false,
-                bottom: !hideBottomOverlay,
-                child: Padding(
-                  padding: EdgeInsetsDirectional.only(bottom: videoBottomPadding.s),
-                  child: AnimatedSwitcher(
-                    duration: const Duration(milliseconds: 300),
-                    child: videoPlayer,
-                  ),
+              child: Padding(
+                padding: EdgeInsetsDirectional.only(
+                  bottom: !hideBottomOverlay ? videoBottomPadding.s : 0,
+                ),
+                child: AnimatedSwitcher(
+                  duration: const Duration(milliseconds: 300),
+                  child: videoPlayer,
                 ),
               ),
             ),
@@ -255,6 +238,39 @@ class VideoPage extends HookConsumerWidget {
               ),
             ),
         ],
+      ),
+    );
+  }
+}
+
+class _VideoPlayerWidget extends StatelessWidget {
+  const _VideoPlayerWidget({
+    required this.controller,
+  });
+
+  final CachedVideoPlayerPlusController controller;
+
+  @override
+  Widget build(BuildContext context) {
+    final videoWidget = CachedVideoPlayerPlus(controller);
+
+    if (controller.value.aspectRatio < 1) {
+      return SizedBox.expand(
+        child: FittedBox(
+          fit: BoxFit.cover,
+          child: SizedBox(
+            width: controller.value.size.width,
+            height: controller.value.size.height,
+            child: videoWidget,
+          ),
+        ),
+      );
+    }
+
+    return Center(
+      child: AspectRatio(
+        aspectRatio: controller.value.aspectRatio,
+        child: videoWidget,
       ),
     );
   }
