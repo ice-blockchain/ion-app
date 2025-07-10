@@ -59,49 +59,95 @@ class ConfigRepository {
         return cachedData;
       }
 
-      final networkData = await _getFromNetwork<T>(configName, parser, checkVersion);
+      final networkData = await _fetchAndProcess(
+        configName,
+        parser,
+        checkVersion,
+        cacheStrategy,
+      );
       if (networkData != null) {
-        await _saveToCache(configName, networkData, cacheStrategy);
         return networkData;
       }
 
       // Server returned 204 No Content - always update cache timestamp to prevent repeated requests
       await _updateCacheTimestamp(configName, cacheStrategy);
 
-      final fallbackData = await _getFromCache(
+      final fallbackCacheData = await _getFromCache(
         configName,
         cacheStrategy,
         const Duration(milliseconds: -1),
         parser,
       );
 
-      if (fallbackData == null) {
-        Logger.warning('Server returned 204 No Content but no cached data found for: $configName');
-        throw AppConfigNotFoundException(configName);
+      if (fallbackCacheData != null) {
+        return fallbackCacheData;
       }
 
-      return fallbackData;
+      // Try to get latest config version from network (version 0)
+      final forceNetworkData = await _fetchAndProcess(
+        configName,
+        parser,
+        checkVersion,
+        cacheStrategy,
+        version: 0,
+      );
+      if (forceNetworkData != null) {
+        return forceNetworkData;
+      }
+
+      Logger.warning('Server returned 204 No Content but no cached data found for: $configName');
+      throw AppConfigNotFoundException(configName);
     });
   }
 
-  Future<T?> _getFromNetwork<T>(
+  Future<T?> _fetchAndProcess<T>(
     String configName,
     T Function(String) parser,
     bool checkVersion,
-  ) async {
+    AppConfigCacheStrategy cacheStrategy, {
+    int? version,
+  }) async {
+    final result = await _getFromNetwork<T>(
+      configName,
+      parser,
+      checkVersion,
+      version: version,
+    );
+
+    if (result.data != null) {
+      _verifyNetworkData(configName, result.data, checkVersion, result.headerVersion);
+      await _saveToCache(configName, result.data, cacheStrategy, result.headerVersion);
+      return result.data;
+    }
+
+    return null;
+  }
+
+  Future<({T? data, int? headerVersion})> _getFromNetwork<T>(
+    String configName,
+    T Function(String) parser,
+    bool checkVersion, {
+    int? version,
+  }) async {
     try {
-      final cacheVersion = _localStorage.getInt(getCacheVersionKey(configName)) ?? 0;
+      final cacheVersion = version ?? _localStorage.getInt(getCacheVersionKey(configName)) ?? 0;
       final uri = Uri.parse(_ionOrigin).replace(
         path: '/v1/config/$configName',
         queryParameters: checkVersion ? {'version': cacheVersion.toString()} : null,
       );
       final response = await _dio.get<dynamic>(uri.toString());
       if (response.statusCode == HttpStatus.noContent) {
-        return null;
+        return (data: null, headerVersion: null);
       } else {
-        return parser(
+        // Get version from header if available
+        final xVersion = response.headers.value('x-version');
+        final headerVersion = xVersion != null ? int.tryParse(xVersion) : null;
+
+        final parsedData = parser(
           response.data is String ? response.data as String : jsonEncode(response.data),
         );
+
+        return (data: parsedData, headerVersion: headerVersion);
       }
     } catch (error) {
       Logger.error(error);
@@ -159,10 +205,25 @@ class ConfigRepository {
 
   bool _isDateValid(String dateString) => DateTime.tryParse(dateString) != null;
 
+  void _verifyNetworkData<T>(String configName, T data, bool checkVersion, int? version) {
+    if (checkVersion && data is! AppConfigWithVersion && version == null) {
+      final error = Exception(
+        'Config "$configName" must implement AppConfigWithVersion or include version information in the response header, when checkVersion is true.',
+      );
+      Logger.error(error);
+      throw AppConfigException(
+        error,
+        configName: configName,
+        errorMessage: 'Invalid config version type',
+      );
+    }
+  }
+
   Future<void> _saveToCache<T>(
     String configName,
     T data,
     AppConfigCacheStrategy cacheStrategy,
+    int? headerVersion,
   ) async {
     final isString = data is String;
     final now = DateTime.now();
@@ -182,8 +243,11 @@ class ConfigRepository {
         await cacheFile.setLastModified(now);
       }
 
+      // Save version from data if it's AppConfigWithVersion, otherwise use headerVersion if available
       if (data is AppConfigWithVersion) {
         await _localStorage.setInt(getCacheVersionKey(configName), data.version);
+      } else if (headerVersion != null) {
+        await _localStorage.setInt(getCacheVersionKey(configName), headerVersion);
       }
     } catch (error) {
       Logger.error(error);

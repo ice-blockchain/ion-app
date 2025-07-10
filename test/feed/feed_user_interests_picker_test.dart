@@ -18,6 +18,7 @@ void main() {
 
     setUp(() {
       config = const FeedConfig(
+        version: 0,
         interestedThreshold: 0.5,
         notInterestedCategoryChance: 0.5,
         followingReqMaxAge: Duration(days: 1),
