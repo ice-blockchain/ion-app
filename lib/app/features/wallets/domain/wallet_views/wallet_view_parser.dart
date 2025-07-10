@@ -20,69 +20,22 @@ class WalletViewParser {
   }) async {
     final coinGroups = <String, CoinsGroup>{};
     final symbolGroups = <String>{};
-
     var totalViewBalanceUSD = 0.0;
 
     for (final coinInWalletDTO in viewDTO.coins) {
-      final coinDTO = coinInWalletDTO.coin;
-      final network = networks[coinDTO.network]!;
-
-      var coin = CoinData.fromDTO(coinDTO, network);
-      if (!coin.isValid) {
-        final fromDB = await coinsRepository.getCoinById(coinDTO.id);
-        if (fromDB != null) coin = fromDB;
-      }
-
-      if (!coin.isValid) {
-        // coin is not valid, skip it
-        continue;
-      }
-
-      // Now calculate amounts and balances for valid coins only
-      var coinAmount = 0.0;
-      var rawCoinAmount = '0';
-      var coinBalanceUSD = 0.0;
-
-      final aggregationItem = _searchAggregationItem(
-        coinInWalletDTO: coinInWalletDTO,
-        aggregation: viewDTO.aggregation,
+      final coinInWallet = await _processCoinInWallet(
+        coinInWalletDTO,
+        networks,
+        viewDTO.aggregation,
       );
 
-      if (aggregationItem != null) {
-        final asset = aggregationItem.wallets
-            .firstWhereOrNull(
-              (wallet) => wallet.walletId == coinInWalletDTO.walletId,
-            )
-            ?.asset;
+      if (coinInWallet == null) continue;
 
-        if (asset != null) {
-          rawCoinAmount = asset.balance;
-          coinAmount = parseCryptoAmount(asset.balance, asset.decimals);
-          coinBalanceUSD = coinAmount * coinDTO.priceUSD;
-        }
-      }
-
-      totalViewBalanceUSD += coinBalanceUSD;
-      final symbolGroup = coinDTO.symbolGroup;
+      totalViewBalanceUSD += coinInWallet.balanceUSD;
+      final symbolGroup = coinInWallet.coin.symbolGroup;
       symbolGroups.add(symbolGroup);
 
-      final coinInWallet = CoinInWalletData(
-        coin: coin,
-        amount: coinAmount,
-        rawAmount: rawCoinAmount,
-        balanceUSD: coinBalanceUSD,
-        walletId: coinInWalletDTO.walletId,
-      );
-
-      final currentGroup = coinGroups[symbolGroup] ?? CoinsGroup.fromCoin(coinInWallet.coin);
-      coinGroups[symbolGroup] = currentGroup.copyWith(
-        totalAmount: currentGroup.totalAmount + coinInWallet.amount,
-        totalBalanceUSD: currentGroup.totalBalanceUSD + coinInWallet.balanceUSD,
-        coins: [
-          ...currentGroup.coins,
-          coinInWallet,
-        ],
-      );
+      coinGroups[symbolGroup] = _updateCoinGroup(coinInWallet, symbolGroup, coinGroups);
     }
 
     return WalletViewData(
@@ -95,6 +48,104 @@ class WalletViewParser {
       updatedAt: viewDTO.updatedAt.microsecondsSinceEpoch,
       usdBalance: totalViewBalanceUSD,
       isMainWalletView: isMainWalletView,
+    );
+  }
+
+  Future<CoinInWalletData?> _processCoinInWallet(
+    CoinInWallet coinInWalletDTO,
+    Map<String, NetworkData> networks,
+    Map<String, WalletViewAggregationItem> aggregation,
+  ) async {
+    final coinDTO = coinInWalletDTO.coin;
+    final network = networks[coinDTO.network]!;
+
+    final coin = await _getValidCoinData(coinDTO, network);
+    if (coin == null) return null;
+
+    final amounts = _calculateCoinAmounts(
+      coinInWalletDTO,
+      aggregation,
+      coinDTO,
+    );
+
+    return CoinInWalletData(
+      coin: coin,
+      amount: amounts.coinAmount,
+      rawAmount: amounts.rawCoinAmount,
+      balanceUSD: amounts.coinBalanceUSD,
+      walletId: coinInWalletDTO.walletId,
+    );
+  }
+
+  Future<CoinData?> _getValidCoinData(Coin coinDTO, NetworkData network) async {
+    var coin = CoinData.fromDTO(coinDTO, network);
+    if (!coin.isValid) {
+      final fromDB = await coinsRepository.getCoinById(coinDTO.id);
+      if (fromDB != null) coin = fromDB;
+    }
+
+    // Coin steel is not valid, even after adding info from the DB.
+    // Log it and return null.
+    if (!coin.isValid) {
+      Logger.info(
+        'Invalid coin filtered out: ${coinDTO.id} '
+        '(name: "${coinDTO.name}", symbol: "${coinDTO.symbol}", '
+        'network: ${network.id}, contractAddress: "${coinDTO.contractAddress}")',
+      );
+      return null;
+    }
+
+    return coin;
+  }
+
+  ({double coinAmount, String rawCoinAmount, double coinBalanceUSD}) _calculateCoinAmounts(
+    CoinInWallet coinInWalletDTO,
+    Map<String, WalletViewAggregationItem> aggregation,
+    Coin coinDTO,
+  ) {
+    var coinAmount = 0.0;
+    var rawCoinAmount = '0';
+    var coinBalanceUSD = 0.0;
+
+    final aggregationItem = _searchAggregationItem(
+      coinInWalletDTO: coinInWalletDTO,
+      aggregation: aggregation,
+    );
+
+    if (aggregationItem != null) {
+      final asset = aggregationItem.wallets
+          .firstWhereOrNull(
+            (wallet) => wallet.walletId == coinInWalletDTO.walletId,
+          )
+          ?.asset;
+
+      if (asset != null) {
+        rawCoinAmount = asset.balance;
+        coinAmount = parseCryptoAmount(asset.balance, asset.decimals);
+        coinBalanceUSD = coinAmount * coinDTO.priceUSD;
+      }
+    }
+
+    return (
+      coinAmount: coinAmount,
+      rawCoinAmount: rawCoinAmount,
+      coinBalanceUSD: coinBalanceUSD,
+    );
+  }
+
+  CoinsGroup _updateCoinGroup(
+    CoinInWalletData coinInWallet,
+    String symbolGroup,
+    Map<String, CoinsGroup> coinGroups,
+  ) {
+    final currentGroup = coinGroups[symbolGroup] ?? CoinsGroup.fromCoin(coinInWallet.coin);
+    return currentGroup.copyWith(
+      totalAmount: currentGroup.totalAmount + coinInWallet.amount,
+      totalBalanceUSD: currentGroup.totalBalanceUSD + coinInWallet.balanceUSD,
+      coins: [
+        ...currentGroup.coins,
+        coinInWallet,
+      ],
     );
   }
 
