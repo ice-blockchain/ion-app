@@ -242,7 +242,7 @@ IonConnectEntity? filterMainEntity({
   //    A repost can be either a main event (current user or other user reposted something)
   //    or a dependency - repost from the current user in addition to some regular post.
   //    So in one response there might be several entities that pass the filter, defined in the data source.
-  //    If this happens we assume that one of the entities is a repost that is returned as a dependency, we filtering it out.
+  //    If this happens we assume that one of the entities is a repost that is returned as a dependency, we filter it out.
   final notReposts = filtered
       .whereNot((entity) => entity is GenericRepostEntity || entity is RepostEntity)
       .toList();
