@@ -71,7 +71,8 @@ TextStyle customTextStyleBuilder(
   Color? tagsColor,
 }) {
   if (attribute.key == HashtagAttribute.attributeKey ||
-      attribute.key == CashtagAttribute.attributeKey) {
+      attribute.key == CashtagAttribute.attributeKey ||
+      attribute.key == MentionAttribute.attributeKey) {
     return TextStyle(
       color: tagsColor ?? context.theme.appColors.primaryAccent,
       decoration: TextDecoration.none,

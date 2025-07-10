@@ -3,7 +3,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_quill/flutter_quill.dart';
 import 'package:ion/app/components/text_editor/attributes.dart';
-import 'package:ion/app/components/text_editor/components/custom_blocks/text_editor_profile_block/text_editor_profile_block.dart';
 import 'package:ion/app/components/text_editor/utils/text_editor_typing_listener.dart';
 import 'package:ion/app/features/feed/providers/suggestions/suggestions_notifier_provider.r.dart';
 import 'package:ion/app/features/user/providers/user_metadata_provider.r.dart';
@@ -43,32 +42,43 @@ class MentionsHashtagsHandler extends TextEditorTypingListener {
 
   void onMentionSuggestionSelected(({String pubkey, String username}) pubkeyUsernamePair) {
     final userMetadata = ref.read(cachedUserMetadataProvider(pubkeyUsernamePair.pubkey));
-    if (userMetadata == null) {
-      return;
-    }
+    if (userMetadata == null) return;
     final userMetadataEncoded = userMetadata.toEventReference().encode();
 
     final fullText = controller.document.toPlainText();
     final cursorIndex = controller.selection.baseOffset;
-
     final tags = _extractTags(fullText);
     final tag = tags.lastWhere(
       (t) => t.start < cursorIndex && t.start + t.length >= cursorIndex - 1,
       orElse: () => _TagInfo(start: -1, length: 0, text: '', tagChar: ''),
     );
-
     if (tag.start == -1) return;
+
+    final suggestionWithTagChar = pubkeyUsernamePair.username.startsWith(tag.tagChar)
+        ? pubkeyUsernamePair.username
+        : '${tag.tagChar}${pubkeyUsernamePair.username}';
 
     controller
       ..removeListener(editorListener)
-      ..replaceText(tag.start, tag.length, '', null, shouldNotifyListeners: false);
+      // remove the current '@...' placeholder
+      ..replaceText(tag.start, tag.length, suggestionWithTagChar, null)
+      // apply MentionAttribute using the encoded reference as its value
+      ..formatText(
+        tag.start,
+        suggestionWithTagChar.length,
+        MentionAttribute.withValue(userMetadataEncoded),
+      )
+      // add a trailing space and move cursor after it
+      ..replaceText(tag.start + suggestionWithTagChar.length, 0, ' ', null)
+      ..updateSelection(
+        TextSelection.collapsed(offset: tag.start + suggestionWithTagChar.length + 1),
+        ChangeSource.local,
+      )
+      ..addListener(editorListener);
 
-    controller.document.insert(tag.start, TextEditorProfileEmbed(userMetadataEncoded));
-    controller.document.insert(tag.start + 1, ' ');
-
-    controller
-      ..addListener(editorListener)
-      ..moveCursorToPosition(tag.start + 2);
+    // reapply attributes for other tags and reset suggestions
+    _reapplyAllTags(controller.document.toPlainText());
+    ref.invalidate(suggestionsNotifierProvider);
   }
 
   void onSuggestionSelected(String suggestion) {
