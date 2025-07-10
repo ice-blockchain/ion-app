@@ -602,8 +602,3 @@ class NoAvailableInterests extends IONException {
           'No available interests for relay: $relayUrl, modifier: $modifier',
         );
 }
-
-class FailedToFindMainEvent extends IONException {
-  FailedToFindMainEvent({required dynamic response})
-      : super(10121, 'Failed to find main event from $response');
-}

@@ -1,7 +1,5 @@
 // SPDX-License-Identifier: ice License 1.0
 
-import 'package:collection/collection.dart';
-import 'package:ion/app/exceptions/exceptions.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/feed/data/models/entities/article_data.f.dart';
 import 'package:ion/app/features/feed/data/models/entities/generic_repost.f.dart';
@@ -152,18 +150,45 @@ EntitiesDataSource buildPostsDataSource({
     if (searchExtensions != null) ...searchExtensions,
   ]).toString();
 
+  bool entityFilter(IonConnectEntity entity) {
+    if (authors != null && !authors.contains(entity.masterPubkey)) {
+      return false;
+    }
+
+    return (entity is ModifiablePostEntity && entity.data.parentEvent == null) ||
+        (entity is PostEntity && entity.data.parentEvent == null) ||
+        entity is RepostEntity ||
+        entity is GenericRepostEntity ||
+        entity is ArticleEntity;
+  }
+
   return EntitiesDataSource(
     actionSource: actionSource,
-    entityFilter: (entity) {
-      if (authors != null && !authors.contains(entity.masterPubkey)) {
-        return false;
-      }
+    entityFilter: entityFilter,
+    responseFilter: (entities) {
+      final filtered = entities.where(entityFilter).toList();
 
-      return (entity is ModifiablePostEntity && entity.data.parentEvent == null) ||
-          (entity is PostEntity && entity.data.parentEvent == null) ||
-          entity is RepostEntity ||
-          entity is GenericRepostEntity ||
-          entity is ArticleEntity;
+      // Handle the reposts corner case:
+      //    A repost can be either a main event (current user or other user reposted something)
+      //    or a dependency - repost from the current user in addition to some regular post.
+      //    To handle it, we filter out reposts that have a reposted event in the same response.
+      return filtered.where((entity) {
+        final repostedReference = switch (entity) {
+          GenericRepostEntity() => entity.data.eventReference,
+          RepostEntity() => entity.data.eventReference,
+          _ => null,
+        };
+
+        // If the entity is not a repost, we keep it.
+        if (repostedReference == null) return true;
+
+        // Check if there is a reposted event in the same response.
+        final hasReposedEvent =
+            filtered.any((entity) => entity.toEventReference() == repostedReference);
+
+        // If we found a reposted event, we filter out the repost, assuming that this is a dependency
+        return !hasReposedEvent;
+      }).toList();
     },
     requestFilters: [
       RequestFilter(
@@ -228,26 +253,4 @@ EntitiesDataSource buildStoriesDataSource({
       ),
     ],
   );
-}
-
-IonConnectEntity? filterMainEntity({
-  required List<IonConnectEntity> response,
-  required EntitiesDataSource dataSource,
-}) {
-  final filtered = response.where(dataSource.entityFilter).toList();
-  if (filtered.isEmpty) return null;
-  if (filtered.length == 1) return filtered.first;
-
-  // Handle the reposts corner case:
-  //    A repost can be either a main event (current user or other user reposted something)
-  //    or a dependency - repost from the current user in addition to some regular post.
-  //    So in one response there might be several entities that pass the filter, defined in the data source.
-  //    If this happens we assume that one of the entities is a repost that is returned as a dependency, we filter it out.
-  final notReposts = filtered
-      .whereNot((entity) => entity is GenericRepostEntity || entity is RepostEntity)
-      .toList();
-
-  if (notReposts.length == 1) return notReposts.first;
-
-  throw FailedToFindMainEvent(response: filtered);
 }

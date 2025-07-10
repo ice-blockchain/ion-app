@@ -306,13 +306,10 @@ class FeedFollowingContent extends _$FeedFollowingContent implements PagedNotifi
     }
 
     final entities = await ionConnectNotifier
-        .requestEntities(
-          requestMessage,
-          actionSource: dataSource.actionSource,
-        )
+        .requestEntities(requestMessage, actionSource: dataSource.actionSource)
         .toList();
 
-    return filterMainEntity(response: entities, dataSource: dataSource);
+    return dataSource.responseFilter?.call(entities).first;
   }
 
   Stream<IonConnectEntity> _requestEntitiesByReferences({

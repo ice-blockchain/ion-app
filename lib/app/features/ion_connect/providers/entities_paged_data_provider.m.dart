@@ -57,6 +57,7 @@ class EntitiesDataSource with _$EntitiesDataSource {
     required List<RequestFilter> requestFilters,
     required bool Function(IonConnectEntity entity) entityFilter,
     bool Function(IonConnectEntity entity)? pagedFilter,
+    List<IonConnectEntity> Function(List<IonConnectEntity> entities)? responseFilter,
   }) = _EntitiesDataSource;
 }
 

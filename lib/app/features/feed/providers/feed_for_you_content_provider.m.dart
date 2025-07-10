@@ -451,13 +451,10 @@ class FeedForYouContent extends _$FeedForYouContent implements PagedNotifier {
     }
 
     final entities = await ionConnectNotifier
-        .requestEntities(
-          requestMessage,
-          actionSource: dataSource.actionSource,
-        )
+        .requestEntities(requestMessage, actionSource: dataSource.actionSource)
         .toList();
 
-    return filterMainEntity(response: entities, dataSource: dataSource);
+    return dataSource.responseFilter?.call(entities).first;
   }
 
   EntitiesDataSource _getDataSource({
