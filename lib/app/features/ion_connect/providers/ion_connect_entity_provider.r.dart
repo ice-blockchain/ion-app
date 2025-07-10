@@ -11,6 +11,7 @@ import 'package:ion/app/features/ion_connect/providers/ion_connect_cache.r.dart'
 import 'package:ion/app/features/ion_connect/providers/ion_connect_db_cache_notifier.r.dart';
 import 'package:ion/app/features/ion_connect/providers/ion_connect_notifier.r.dart';
 import 'package:ion/app/features/user/providers/users_relays_provider.r.dart';
+import 'package:ion/app/services/logger/logger.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'ion_connect_entity_provider.r.g.dart';
@@ -139,7 +140,15 @@ Future<List<IonConnectEntity>> ionConnectNetworkEntities(
           requestMessage,
           actionSource: actionSource,
         );
-    final entityList = await entityStream.toList();
+    final entityList = <IonConnectEntity>[];
+    await for (final entity in entityStream.handleError(
+      (Object error) {
+        Logger.error('Error fetching entities for $actionSource: $error');
+      },
+      test: (_) => true,
+    )) {
+      entityList.add(entity);
+    }
 
     results.addAll(entityList);
   }
