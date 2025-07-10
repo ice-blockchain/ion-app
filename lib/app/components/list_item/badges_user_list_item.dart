@@ -4,7 +4,10 @@ import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/components/list_item/list_item.dart';
 import 'package:ion/app/extensions/extensions.dart';
+import 'package:ion/app/features/user/model/badges/profile_badges.f.dart';
+import 'package:ion/app/features/user/model/user_metadata.f.dart';
 import 'package:ion/app/features/user/providers/badges_notifier.r.dart';
+import 'package:ion/app/features/user/providers/user_metadata_provider.r.dart';
 
 class BadgesUserListItem extends ConsumerWidget {
   const BadgesUserListItem({
@@ -46,9 +49,12 @@ class BadgesUserListItem extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final badgeVerificationState = ref.watch(userBadgeVerificationStateProvider(pubkey));
-    final isUserVerified = badgeVerificationState.valueOrNull?.isVerified ?? false;
-    final isNicknameProven = badgeVerificationState.valueOrNull?.isNicknameProven ?? true;
+    final cachedProfileBadges = ref.watch(cachedProfileBadgesDataProvider(pubkey));
+    final cachedUserMetadata = ref.watch(cachedUserMetadataProvider(pubkey));
+
+    final isUserVerified = _calculateIsVerifiedCacheOnly(cachedProfileBadges);
+    final isNicknameProven =
+        _calculateIsNicknameProvenCacheOnly(cachedProfileBadges, cachedUserMetadata);
 
     return ListItem.user(
       pubkey: pubkey,
@@ -78,5 +84,28 @@ class BadgesUserListItem extends ConsumerWidget {
       isSelected: isSelected,
       avatarSize: avatarSize,
     );
+  }
+
+  bool _calculateIsVerifiedCacheOnly(ProfileBadgesEntity? profileBadges) {
+    if (profileBadges?.data == null) return false;
+
+    return profileBadges!.data.entries.any((entry) => entry.definitionRef.dTag == 'verified');
+  }
+
+  bool _calculateIsNicknameProvenCacheOnly(
+    ProfileBadgesEntity? profileBadges,
+    UserMetadataEntity? userMetadata,
+  ) {
+    if (profileBadges?.data == null || userMetadata?.data == null) {
+      return true;
+    }
+
+    final hasMatchingProof = profileBadges!.data.entries.any(
+      (entry) =>
+          entry.definitionRef.dTag.contains('username_proof') &&
+          entry.definitionRef.dTag.endsWith('~${userMetadata!.data.name}'),
+    );
+
+    return hasMatchingProof;
   }
 }
