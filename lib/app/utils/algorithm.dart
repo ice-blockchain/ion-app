@@ -2,7 +2,7 @@
 
 import 'package:collection/collection.dart';
 
-/// Finds the best options from a given map of keys to their associated options.
+/// Finds the options that have the most associated keys from a given map of keys to their associated options.
 ///
 /// Example:
 /// If the input is:
@@ -58,6 +58,62 @@ Map<String, List<String>> findMostMatchingOptions(Map<String, List<String>> keys
   }
 
   return {maxEntry.key: maxEntry.value.toList()};
+}
+
+/// Finds the options that have the highest priority based on a given list of options priority.
+///
+/// Example:
+/// If the input is:
+/// {
+///   "Key1": ["Option1", "Option2", "Option3", "Option7"],
+///   "Key2": ["Option4", "Option5", "Option6", "Option7"],
+///   "Key3": ["Option8", "Option9", "Option10", "Option11"]
+/// }
+/// And options priority is ["Option9", "Option8", "Option7", "Option6", "Option5", "Option4", "Option3", "Option2", "Option1"],
+/// so from the most preferred to the least preferred.
+///
+/// The output will be:
+/// {
+///   "Option9": ["Key3"],
+///   "Option7": ["Key2", "Key1"]
+/// }
+Map<String, List<String>> findPriorityOptions(
+  Map<String, List<String>> keysToOptions, {
+  required List<String> optionsPriority,
+}) {
+  if (keysToOptions.isEmpty || optionsPriority.isEmpty) {
+    return {};
+  }
+
+  // Find the highest priority option present in the current keysToOptions
+  String? highestPriorityOption;
+  for (final option in optionsPriority) {
+    if (keysToOptions.values.any((options) => options.contains(option))) {
+      highestPriorityOption = option;
+      break;
+    }
+  }
+
+  if (highestPriorityOption == null) {
+    return {};
+  }
+
+  // Find all keys that have this option
+  final matchingKeys = keysToOptions.entries
+      .where((entry) => entry.value.contains(highestPriorityOption))
+      .map((entry) => entry.key)
+      .toList();
+
+  final remainingKeysToOptions = {...keysToOptions}
+    ..removeWhere((key, _) => matchingKeys.contains(key));
+
+  return {
+    highestPriorityOption: matchingKeys,
+    ...findPriorityOptions(
+      remainingKeysToOptions,
+      optionsPriority: optionsPriority,
+    ),
+  };
 }
 
 /// Calculates the reading time (in minutes) of a given content.
