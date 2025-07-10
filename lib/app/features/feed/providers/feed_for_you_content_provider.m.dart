@@ -2,7 +2,6 @@
 
 import 'dart:async';
 
-import 'package:async/async.dart';
 import 'package:collection/collection.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:ion/app/exceptions/exceptions.dart';
@@ -451,13 +450,11 @@ class FeedForYouContent extends _$FeedForYouContent implements PagedNotifier {
       );
     }
 
-    return ionConnectNotifier
-        .requestEntities(
-          requestMessage,
-          actionSource: dataSource.actionSource,
-        )
-        .where(dataSource.entityFilter)
-        .firstOrNull;
+    final entities = await ionConnectNotifier
+        .requestEntities(requestMessage, actionSource: dataSource.actionSource)
+        .toList();
+
+    return dataSource.responseFilter?.call(entities).first;
   }
 
   EntitiesDataSource _getDataSource({

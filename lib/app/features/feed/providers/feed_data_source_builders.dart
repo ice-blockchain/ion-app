@@ -8,6 +8,7 @@ import 'package:ion/app/features/feed/data/models/entities/post_data.f.dart';
 import 'package:ion/app/features/feed/data/models/entities/repost_data.f.dart';
 import 'package:ion/app/features/ion_connect/ion_connect.dart';
 import 'package:ion/app/features/ion_connect/model/action_source.f.dart';
+import 'package:ion/app/features/ion_connect/model/ion_connect_entity.dart';
 import 'package:ion/app/features/ion_connect/model/related_event.f.dart';
 import 'package:ion/app/features/ion_connect/model/related_event_marker.dart';
 import 'package:ion/app/features/ion_connect/model/search_extension.dart';
@@ -33,10 +34,6 @@ EntitiesDataSource buildArticlesDataSource({
   return EntitiesDataSource(
     actionSource: actionSource,
     entityFilter: (entity) {
-      if (entity.masterPubkey == currentPubkey) {
-        return false;
-      }
-
       if (authors != null && !authors.contains(entity.masterPubkey)) {
         return false;
       }
@@ -91,10 +88,6 @@ EntitiesDataSource buildVideosDataSource({
   return EntitiesDataSource(
     actionSource: actionSource,
     entityFilter: (entity) {
-      if (entity.masterPubkey == currentPubkey) {
-        return false;
-      }
-
       if (authors != null && !authors.contains(entity.masterPubkey)) {
         return false;
       }
@@ -157,22 +150,45 @@ EntitiesDataSource buildPostsDataSource({
     if (searchExtensions != null) ...searchExtensions,
   ]).toString();
 
+  bool entityFilter(IonConnectEntity entity) {
+    if (authors != null && !authors.contains(entity.masterPubkey)) {
+      return false;
+    }
+
+    return (entity is ModifiablePostEntity && entity.data.parentEvent == null) ||
+        (entity is PostEntity && entity.data.parentEvent == null) ||
+        entity is RepostEntity ||
+        entity is GenericRepostEntity ||
+        entity is ArticleEntity;
+  }
+
   return EntitiesDataSource(
     actionSource: actionSource,
-    entityFilter: (entity) {
-      if (entity.masterPubkey == currentPubkey) {
-        return false;
-      }
+    entityFilter: entityFilter,
+    responseFilter: (entities) {
+      final filtered = entities.where(entityFilter).toList();
 
-      if (authors != null && !authors.contains(entity.masterPubkey)) {
-        return false;
-      }
+      // Handle the reposts corner case:
+      //    A repost can be either a main event (current user or other user reposted something)
+      //    or a dependency - repost from the current user in addition to some regular post.
+      //    To handle it, we filter out reposts that have a reposted event in the same response.
+      return filtered.where((entity) {
+        final repostedReference = switch (entity) {
+          GenericRepostEntity() => entity.data.eventReference,
+          RepostEntity() => entity.data.eventReference,
+          _ => null,
+        };
 
-      return (entity is ModifiablePostEntity && entity.data.parentEvent == null) ||
-          (entity is PostEntity && entity.data.parentEvent == null) ||
-          entity is RepostEntity ||
-          entity is GenericRepostEntity ||
-          entity is ArticleEntity;
+        // If the entity is not a repost, we keep it.
+        if (repostedReference == null) return true;
+
+        // Check if there is a reposted event in the same response.
+        final hasReposedEvent =
+            filtered.any((entity) => entity.toEventReference() == repostedReference);
+
+        // If we found a reposted event, we filter out the repost, assuming that this is a dependency
+        return !hasReposedEvent;
+      }).toList();
     },
     requestFilters: [
       RequestFilter(
