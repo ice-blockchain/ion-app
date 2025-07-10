@@ -1,5 +1,7 @@
 // SPDX-License-Identifier: ice License 1.0
 
+import 'package:collection/collection.dart';
+import 'package:ion/app/exceptions/exceptions.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/feed/data/models/entities/article_data.f.dart';
 import 'package:ion/app/features/feed/data/models/entities/generic_repost.f.dart';
@@ -8,6 +10,7 @@ import 'package:ion/app/features/feed/data/models/entities/post_data.f.dart';
 import 'package:ion/app/features/feed/data/models/entities/repost_data.f.dart';
 import 'package:ion/app/features/ion_connect/ion_connect.dart';
 import 'package:ion/app/features/ion_connect/model/action_source.f.dart';
+import 'package:ion/app/features/ion_connect/model/ion_connect_entity.dart';
 import 'package:ion/app/features/ion_connect/model/related_event.f.dart';
 import 'package:ion/app/features/ion_connect/model/related_event_marker.dart';
 import 'package:ion/app/features/ion_connect/model/search_extension.dart';
@@ -33,10 +36,6 @@ EntitiesDataSource buildArticlesDataSource({
   return EntitiesDataSource(
     actionSource: actionSource,
     entityFilter: (entity) {
-      if (entity.masterPubkey == currentPubkey) {
-        return false;
-      }
-
       if (authors != null && !authors.contains(entity.masterPubkey)) {
         return false;
       }
@@ -91,10 +90,6 @@ EntitiesDataSource buildVideosDataSource({
   return EntitiesDataSource(
     actionSource: actionSource,
     entityFilter: (entity) {
-      if (entity.masterPubkey == currentPubkey) {
-        return false;
-      }
-
       if (authors != null && !authors.contains(entity.masterPubkey)) {
         return false;
       }
@@ -160,10 +155,6 @@ EntitiesDataSource buildPostsDataSource({
   return EntitiesDataSource(
     actionSource: actionSource,
     entityFilter: (entity) {
-      if (entity.masterPubkey == currentPubkey) {
-        return false;
-      }
-
       if (authors != null && !authors.contains(entity.masterPubkey)) {
         return false;
       }
@@ -237,4 +228,26 @@ EntitiesDataSource buildStoriesDataSource({
       ),
     ],
   );
+}
+
+IonConnectEntity? filterMainEntity({
+  required List<IonConnectEntity> response,
+  required EntitiesDataSource dataSource,
+}) {
+  final filtered = response.where(dataSource.entityFilter).toList();
+  if (filtered.isEmpty) return null;
+  if (filtered.length == 1) return filtered.first;
+
+  // Handle the reposts corner case:
+  //    A repost can be either a main event (current user or other user reposted something)
+  //    or a dependency - repost from the current user in addition to some regular post.
+  //    So in one response there might be several entities that pass the filter, defined in the data source.
+  //    If this happens we assume that one of the entities is a repost that is returned as a dependency, we filtering it out.
+  final notReposts = filtered
+      .whereNot((entity) => entity is GenericRepostEntity || entity is RepostEntity)
+      .toList();
+
+  if (notReposts.length == 1) return notReposts.first;
+
+  throw FailedToFindMainEvent(response: filtered);
 }
