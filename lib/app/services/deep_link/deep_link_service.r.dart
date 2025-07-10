@@ -81,9 +81,10 @@ AppsflyerSdk appsflyerSdk(Ref ref) {
       afDevKey: devKey,
       appId: appId,
       appInviteOneLink: templateId,
-      disableAdvertisingIdentifier: false,
-      disableCollectASA: false,
+      disableAdvertisingIdentifier: true,
+      disableCollectASA: true,
       showDebug: kDebugMode,
+      manualStart: true,
     ),
   );
 }
@@ -104,22 +105,23 @@ final class DeepLinkService {
   bool _isInitialized = false;
 
   Future<void> init({required void Function(String path) onDeeplink}) async {
-    _appsflyerSdk.onDeepLinking((link) {
-      Logger.log('onDeepLinking $link');
-      if (link.status == Status.FOUND) {
-        final path = link.deepLink?.deepLinkValue;
-        if (path == null || path.isEmpty) return;
+    // No need to start the SDK for generating links
+    _appsflyerSdk
+      ..onDeepLinking((link) {
+        Logger.log('onDeepLinking $link');
+        if (link.status == Status.FOUND) {
+          final path = link.deepLink?.deepLinkValue;
+          if (path == null || path.isEmpty) return;
 
-        return onDeeplink(path);
-      }
+          return onDeeplink(path);
+        }
 
-      onDeeplink(_fallbackUrl);
-    });
+        onDeeplink(_fallbackUrl);
+      })
+      ..stop(true);
 
     final result = await _appsflyerSdk.initSdk(
       registerOnDeepLinkingCallback: true,
-      registerConversionDataCallback: true,
-      registerOnAppOpenAttributionCallback: true,
     );
 
     //For some reason AppsFlyer on Android and iOS returns different results...
