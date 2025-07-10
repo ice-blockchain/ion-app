@@ -4,8 +4,7 @@ part of 'wallet_views_service.r.dart';
 
 @riverpod
 WalletViewParser walletViewParser(Ref ref) {
-  final parser = WalletViewParser(ref.watch(coinsRepositoryProvider));
-  return parser;
+  return WalletViewParser(ref.watch(coinsRepositoryProvider));
 }
 
 class WalletViewParser {
