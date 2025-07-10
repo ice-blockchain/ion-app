@@ -3,6 +3,7 @@
 import 'dart:async';
 
 import 'package:flutter/services.dart';
+import 'package:ion/app/features/core/providers/volume_stream_provider.r.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'mute_provider.r.g.dart';
@@ -10,11 +11,13 @@ part 'mute_provider.r.g.dart';
 @Riverpod(keepAlive: true)
 class GlobalMuteNotifier extends _$GlobalMuteNotifier {
   static const _channel = MethodChannel('audio_focus_channel');
+  double _previousVolume = 0;
 
   @override
   bool build() {
     _setupMethodChannelHandler();
     _initializeAudioFocus();
+    _setupVolumeListener();
     return true;
   }
 
@@ -26,6 +29,27 @@ class GlobalMuteNotifier extends _$GlobalMuteNotifier {
 
   Future<void> _initializeAudioFocus() async {
     await _channel.invokeMethod<bool>('initAudioFocus');
+  }
+
+  void _setupVolumeListener() {
+    ref.listen(volumeStreamProvider, (previous, next) {
+      next.whenData((volume) {
+        final currentMuteState = state;
+        final prevVol = _previousVolume;
+
+        // If video is muted and volume increased - unmute
+        if (currentMuteState && volume > prevVol && volume > 0.0) {
+          toggle();
+        }
+
+        // If device is in silent mode (volume is 0) - mute video
+        if (volume == 0.0 && !currentMuteState) {
+          toggle();
+        }
+
+        _previousVolume = volume;
+      });
+    });
   }
 
   Future<void> toggle() async {
