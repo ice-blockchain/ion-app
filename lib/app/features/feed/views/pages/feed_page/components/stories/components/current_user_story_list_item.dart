@@ -33,7 +33,7 @@ class CurrentUserStoryListItem extends HookConsumerWidget {
     final hasStories = userStory != null;
 
     final allStoriesViewed = useMemoized(
-      () => hasStories && viewedStories.isNotEmpty,
+      () => hasStories && (viewedStories == null || viewedStories.isNotEmpty),
       [userStory, viewedStories],
     );
 

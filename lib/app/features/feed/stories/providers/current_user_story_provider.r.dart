@@ -4,6 +4,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/features/auth/providers/auth_provider.m.dart';
 import 'package:ion/app/features/feed/data/models/entities/modifiable_post_data.f.dart';
 import 'package:ion/app/features/feed/stories/data/models/user_story.f.dart';
+import 'package:ion/app/features/feed/stories/providers/stories_count_provider.r.dart';
 import 'package:ion/app/features/feed/stories/providers/user_stories_provider.r.dart';
 import 'package:ion/app/features/ion_connect/providers/entities_paged_data_provider.m.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
@@ -32,6 +33,11 @@ UserStory? currentUserStory(Ref ref) {
   if (story == null) {
     return null;
   } else {
-    return UserStory(pubkey: currentPubkey, story: story);
+    // preload stories count
+    ref.read(storiesCountProvider(currentPubkey));
+    return UserStory(
+      pubkey: currentPubkey,
+      story: story,
+    );
   }
 }

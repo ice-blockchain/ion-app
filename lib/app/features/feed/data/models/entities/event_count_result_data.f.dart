@@ -9,12 +9,14 @@ import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/chat/community/models/entities/community_join_data.f.dart';
 import 'package:ion/app/features/feed/data/models/entities/event_count_request_data.f.dart';
 import 'package:ion/app/features/feed/data/models/entities/generic_repost.f.dart';
+import 'package:ion/app/features/feed/data/models/entities/modifiable_post_data.f.dart';
 import 'package:ion/app/features/feed/data/models/entities/reaction_data.f.dart';
 import 'package:ion/app/features/feed/data/models/entities/repost_data.f.dart';
 import 'package:ion/app/features/feed/polls/models/poll_vote.f.dart';
 import 'package:ion/app/features/ion_connect/ion_connect.dart';
 import 'package:ion/app/features/ion_connect/model/event_reference.f.dart';
 import 'package:ion/app/features/ion_connect/model/ion_connect_entity.dart';
+import 'package:ion/app/features/ion_connect/model/search_extension.dart';
 import 'package:ion/app/features/ion_connect/providers/ion_connect_cache.r.dart';
 import 'package:ion/app/features/user/model/follow_list.f.dart';
 
@@ -28,6 +30,7 @@ enum EventCountResultType {
   reactions,
   members,
   pollVotes,
+  stories,
 }
 
 @Freezed(equal: false)
@@ -153,6 +156,11 @@ class EventCountResultData with _$EventCountResultData {
       return EventCountResultType.quotes;
     } else if (filter.kinds != null && filter.kinds!.contains(CommunityJoinEntity.kind)) {
       return EventCountResultType.members;
+    } else if (filter.kinds != null &&
+        filter.kinds!.contains(ModifiablePostEntity.kind) &&
+        filter.search != null &&
+        filter.search!.contains(ExpirationSearchExtension(expiration: true).query)) {
+      return EventCountResultType.stories;
     } else {
       throw UnknownEventCountResultType(eventReference);
     }

@@ -18,7 +18,15 @@ class StoryProgressTracker extends HookConsumerWidget {
     super.key,
   });
 
-  final ModifiablePostEntity post;
+  const StoryProgressTracker.placeholder({
+    required this.isCurrent,
+    required this.isPreviousStory,
+    this.margin,
+    super.key,
+  })  : post = null,
+        onCompleted = null;
+
+  final ModifiablePostEntity? post;
   final bool isCurrent;
   final bool isPreviousStory;
   final VoidCallback? onCompleted;
@@ -26,19 +34,26 @@ class StoryProgressTracker extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    if (post == null) {
+      return StoryProgressSegment.placeholder(
+        isCurrent: isCurrent,
+        isPreviousStory: isPreviousStory,
+        margin: margin,
+      );
+    }
+
     final isPaused = ref.watch(storyPauseControllerProvider);
 
     final progressController = useStoryProgressController(
       ref: ref,
-      post: post,
+      post: post!,
       isCurrent: isCurrent,
       isPaused: isPaused,
       onCompleted: onCompleted ?? () {},
     );
 
     return StoryProgressSegment(
-      key: ValueKey(post.id),
-      post: post,
+      key: ValueKey(post!.id),
       isCurrent: isCurrent,
       isPreviousStory: isPreviousStory,
       margin: margin,

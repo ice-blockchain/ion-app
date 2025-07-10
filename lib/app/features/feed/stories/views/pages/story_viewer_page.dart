@@ -42,7 +42,7 @@ class StoryViewerPage extends HookConsumerWidget {
         ref.watch(userStoriesProvider(storyViewerState.currentStory?.pubkey ?? pubkey))?.toList() ??
             [];
     final storiesReferences = StoriesReferences(stories.map((e) => e.toEventReference()));
-    final viewedStories = ref.watch(viewedStoriesControllerProvider(storiesReferences));
+    final viewedStories = ref.watch(viewedStoriesControllerProvider(storiesReferences)) ?? {};
 
     useOnInit(
       () {

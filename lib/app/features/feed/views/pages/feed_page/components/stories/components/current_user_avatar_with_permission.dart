@@ -33,7 +33,7 @@ class CurrentUserAvatarWithPermission extends StatelessWidget {
       onGrantedPredicate: () =>
           GoRouter.of(context).state.fullPath?.startsWith(FeedRoute().location) ?? false,
       onGranted: () => hasStories
-          ? StoryViewerRoute(pubkey: pubkey).push<void>(context)
+          ? StoryViewerRoute(pubkey: pubkey, showOnlySelectedUser: true).push<void>(context)
           : StoryRecordRoute().push<void>(context),
       requestDialog: const PermissionRequestSheet(permission: Permission.camera),
       settingsDialog: SettingsRedirectSheet.fromType(context, Permission.camera),

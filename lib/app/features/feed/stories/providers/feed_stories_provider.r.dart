@@ -11,6 +11,7 @@ import 'package:ion/app/features/feed/providers/feed_following_content_provider.
 import 'package:ion/app/features/feed/providers/feed_for_you_content_provider.m.dart';
 import 'package:ion/app/features/feed/stories/data/models/user_story.f.dart';
 import 'package:ion/app/features/feed/stories/providers/current_user_story_provider.r.dart';
+import 'package:ion/app/features/feed/stories/providers/stories_count_provider.r.dart';
 import 'package:ion/app/features/ion_connect/model/ion_connect_entity.dart';
 import 'package:ion/app/features/ion_connect/providers/entities_paged_data_provider.m.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
@@ -33,12 +34,18 @@ class FeedStories extends _$FeedStories with DelegatedPagedNotifier {
               .select((data) => (items: data.items, hasMore: data.hasMore)),
         ),
     };
-    var stories = _userStories(data.items);
-    if (currentUserStory != null) {
-      stories = [currentUserStory, ...?stories];
-    }
 
-    return (items: stories, hasMore: data.hasMore);
+    Iterable<UserStory>? stories;
+    _userStories(data.items).then((userStories) {
+      stories = userStories;
+      if (currentUserStory != null) {
+        stories = {currentUserStory, ...?stories};
+      }
+
+      state = (items: stories, hasMore: data.hasMore);
+    });
+
+    return (items: null, hasMore: true);
   }
 
   @override
@@ -50,7 +57,7 @@ class FeedStories extends _$FeedStories with DelegatedPagedNotifier {
     };
   }
 
-  Iterable<UserStory>? _userStories(Iterable<IonConnectEntity>? entities) {
+  Future<Iterable<UserStory>?> _userStories(Iterable<IonConnectEntity>? entities) async {
     if (entities == null) return null;
 
     final postEntities = entities.whereType<ModifiablePostEntity>().where((post) {
@@ -66,6 +73,9 @@ class FeedStories extends _$FeedStories with DelegatedPagedNotifier {
       if (userStoriesMap.containsKey(pubkey)) {
         continue;
       }
+
+      // preload stories count
+      ref.read(storiesCountProvider(pubkey));
 
       final userStory = UserStory(
         pubkey: pubkey,

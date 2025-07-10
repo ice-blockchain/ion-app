@@ -22,7 +22,7 @@ final _storyStatusProvider =
   final viewedStories = ref.watch(viewedStoriesControllerProvider(storiesReferences));
 
   final hasStories = userStory.isNotEmpty;
-  final allStoriesViewed = viewedStories.isNotEmpty;
+  final allStoriesViewed = viewedStories == null || viewedStories.isNotEmpty;
 
   return (hasStories: hasStories, allStoriesViewed: allStoriesViewed);
 });

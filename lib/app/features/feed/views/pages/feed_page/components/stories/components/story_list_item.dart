@@ -28,7 +28,7 @@ class StoryListItem extends HookConsumerWidget {
     final viewedStories = ref.watch(viewedStoriesControllerProvider(storiesReferences));
 
     final allStoriesViewed = useMemoized(
-      () => viewedStories.isNotEmpty,
+      () => viewedStories == null || viewedStories.isNotEmpty,
       [userStories, viewedStories],
     );
 

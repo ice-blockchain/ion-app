@@ -12,21 +12,22 @@ part 'viewed_stories_provider.r.g.dart';
 @riverpod
 class ViewedStoriesController extends _$ViewedStoriesController {
   @override
-  Set<EventReference> build(StoriesReferences storiesReferences) {
+  Set<EventReference>? build(StoriesReferences storiesReferences) {
     final seenEventsRepository = ref.watch(followingFeedSeenEventsRepositoryProvider);
     final subscription = seenEventsRepository
         .watchByReferences(eventsReferences: storiesReferences.references)
         .listen((seenEvents) => state = seenEvents.map((e) => e.eventReference).toSet());
 
     ref.onDispose(subscription.cancel);
-    return {};
+    return null;
   }
 
   Future<void> markStoryAsViewed(IonConnectEntity storyEntity) async {
     final storyReference = storyEntity.toEventReference();
+    final state = this.state ?? {};
     if (!state.contains(storyReference)) {
       final updated = {...state, storyReference};
-      state = updated;
+      this.state = updated;
 
       final seenEventsRepository = ref.read(followingFeedSeenEventsRepositoryProvider);
       await seenEventsRepository.save(storyEntity, feedType: FeedType.story);
