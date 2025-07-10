@@ -2,6 +2,7 @@
 
 import 'package:ion/app/features/core/model/media_type.dart';
 import 'package:ion/app/features/feed/data/models/entities/modifiable_post_data.f.dart';
+import 'package:ion/app/features/ion_connect/model/entity_expiration.f.dart';
 import 'package:ion/app/features/ion_connect/model/event_reference.f.dart';
 import 'package:ion/app/features/ion_connect/model/media_attachment.dart';
 import 'package:mocktail/mocktail.dart';
@@ -19,9 +20,11 @@ class FakeAttachment extends Fake implements MediaAttachment {
 }
 
 class FakePostData extends Fake implements ModifiablePostData {
-  FakePostData(this.mediaType);
+  FakePostData(this.mediaType, this.expiration);
 
   final MediaType mediaType;
+  @override
+  final EntityExpiration? expiration;
 
   @override
   Map<String, MediaAttachment> get media => {'0': FakeAttachment(mediaType)};
@@ -37,11 +40,17 @@ ModifiablePostEntity buildPost(
   String id, {
   String author = 'alice',
   MediaType mediaType = MediaType.image,
+  DateTime? expiration,
 }) {
   final post = MockPost();
   when(() => post.id).thenReturn(id);
   when(() => post.masterPubkey).thenReturn(author);
-  when(() => post.data).thenReturn(FakePostData(mediaType));
+  when(() => post.data).thenReturn(
+    FakePostData(
+      mediaType,
+      expiration != null ? EntityExpiration(value: expiration.microsecondsSinceEpoch) : null,
+    ),
+  );
   when(post.toEventReference).thenReturn(FakeEventReference());
   return post;
 }

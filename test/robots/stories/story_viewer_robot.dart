@@ -21,6 +21,7 @@ import 'package:ion/generated/app_localizations.dart';
 import 'package:mocktail/mocktail.dart';
 
 import '../../app/features/stories/data/fake_feed_stories_state.dart';
+import '../../app/features/stories/data/fake_user_stories_provider.dart';
 import '../../helpers/robot_test_harness.dart';
 import '../../mocks.dart';
 import '../base_robot.dart';
@@ -152,7 +153,7 @@ class StoryViewerRobot extends BaseRobot with ProviderScopeMixin, StoryStateMixi
     return [
       feedStoriesProvider.overrideWith(() => FakeFeedStories([stories])),
       feedStoriesByPubkeyProvider(pubkey).overrideWith((_) => [stories]),
-      userStoriesProvider(pubkey).overrideWith((_) => [post]),
+      userStoriesProvider(pubkey).overrideWith(() => FakeUserStories([post])),
     ];
   }
 }

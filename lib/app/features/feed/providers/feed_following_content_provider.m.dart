@@ -235,7 +235,7 @@ class FeedFollowingContent extends _$FeedFollowingContent implements PagedNotifi
       excludePubkeys: uniqAuthors ? stateEntityPubkeys.toList() : [],
       limit: limit,
       until: state.seenPagination.lastEvent?.createdAt,
-      groupByPubkey: false,
+      groupByPubkey: uniqAuthors,
     );
 
     state = state.copyWith(

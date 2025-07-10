@@ -22,6 +22,7 @@ import 'package:video_player_platform_interface/video_player_platform_interface.
 import '../../../../fixtures/stories/story_fixtures.dart';
 import '../../../../mocks.dart';
 import '../../../../robots/stories/story_viewer_robot.dart';
+import '../data/fake_user_stories_provider.dart';
 import '../data/fake_viewed_stories_controller.dart';
 
 void main() {
@@ -70,7 +71,7 @@ void main() {
         userPreferencesServiceProvider(identityKeyName: alice)
             .overrideWith((_) => UserPreferencesService(alice, mockStorage)),
         goRouterProvider.overrideWithValue(router),
-        userStoriesProvider(alice).overrideWith((_) => [aliceStories.story]),
+        userStoriesProvider(alice).overrideWith(() => FakeUserStories([aliceStories.story])),
         viewedStoriesControllerProvider(StoriesReferences([aliceStories.story.toEventReference()]))
             .overrideWith(FakeViewedStoriesController.new),
       ],

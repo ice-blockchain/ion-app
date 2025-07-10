@@ -26,9 +26,7 @@ FutureOr<int?> storiesCount(
   final filters = [
     RequestFilter(
       kinds: const [ModifiablePostEntity.kind],
-      tags: {
-        '#p': [pubkey],
-      },
+      authors: [pubkey],
       search: search,
     ),
   ];
@@ -36,9 +34,12 @@ FutureOr<int?> storiesCount(
   return await ref.watch(
     countProvider(
       actionSource: ActionSourceUser(pubkey),
-      requestData: EventCountRequestData(filters: filters),
+      requestData: EventCountRequestData(
+        filters: filters,
+      ),
       key: pubkey,
       type: EventCountResultType.stories,
+      addCurrentPubkey: false,
     ).future,
   ) as FutureOr<int?>;
 }

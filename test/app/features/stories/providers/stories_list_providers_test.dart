@@ -7,7 +7,10 @@ import 'package:ion/app/features/feed/data/models/entities/modifiable_post_data.
 import 'package:ion/app/features/feed/data/models/feed_modifier.dart';
 import 'package:ion/app/features/feed/data/models/feed_type.dart';
 import 'package:ion/app/features/feed/providers/feed_for_you_content_provider.m.dart';
+import 'package:ion/app/features/feed/stories/data/models/user_story.f.dart';
+import 'package:ion/app/features/feed/stories/providers/current_user_story_provider.r.dart';
 import 'package:ion/app/features/feed/stories/providers/feed_stories_provider.r.dart';
+import 'package:ion/app/features/feed/stories/providers/stories_count_provider.r.dart';
 import 'package:mocktail/mocktail.dart';
 
 import '../../../../fixtures/posts/post_fixtures.dart';
@@ -28,13 +31,22 @@ class _FakeFeedForYouContent extends FeedForYouContent {
       _state;
 }
 
+class _FakeCurrentUserStory extends CurrentUserStory {
+  _FakeCurrentUserStory(this._story);
+  final UserStory? _story;
+
+  @override
+  UserStory? build() => _story;
+}
+
 ModifiablePostEntity _post({
   required String id,
   required String author,
   required MediaType mediaType,
   required DateTime createdAt,
+  DateTime? expiration,
 }) {
-  final post = buildPost(id, author: author, mediaType: mediaType);
+  final post = buildPost(id, author: author, mediaType: mediaType, expiration: expiration);
   when(() => post.createdAt).thenReturn(createdAt.microsecondsSinceEpoch);
   return post;
 }
@@ -53,19 +65,24 @@ ProviderContainer _containerWith(List<ModifiablePostEntity> posts) {
       feedForYouContentProvider(FeedType.story).overrideWith(
         () => _FakeFeedForYouContent(_stateWith(posts)),
       ),
+      currentUserStoryProvider.overrideWith(
+        () => _FakeCurrentUserStory(null),
+      ),
+      for (final post in posts) storiesCountProvider(post.masterPubkey).overrideWith((_) => 1),
     ],
   );
 }
 
 void main() {
   group('storiesProvider – transformation logic', () {
-    test('filters out posts with non-image/video media', () {
+    test('filters out posts with no expiration', () async {
       final posts = [
         _post(
           id: 'image_1',
           author: 'alice',
           mediaType: MediaType.image,
           createdAt: DateTime(2024),
+          expiration: DateTime(2025),
         ),
         _post(
           id: 'audio_ignored',
@@ -78,6 +95,7 @@ void main() {
           author: 'bob',
           mediaType: MediaType.video,
           createdAt: DateTime(2024, 1, 2),
+          expiration: DateTime(2025),
         ),
       ];
 
@@ -88,33 +106,36 @@ void main() {
       expect(keptIds, unorderedEquals(['image_1', 'video_1']));
     });
 
-    test('returns N UserStories for N distinct authors', () {
+    test('returns N UserStories for N distinct authors', () async {
       final posts = [
         _post(
           id: 'p1',
           author: 'alice',
           mediaType: MediaType.image,
           createdAt: DateTime(2024),
+          expiration: DateTime(2025),
         ),
         _post(
           id: 'p2',
           author: 'bob',
           mediaType: MediaType.video,
           createdAt: DateTime(2024),
+          expiration: DateTime(2025),
         ),
         _post(
           id: 'p3',
           author: 'carol',
           mediaType: MediaType.image,
           createdAt: DateTime(2024),
+          expiration: DateTime(2025),
         ),
       ];
 
       final container = _containerWith(posts);
-      final list = container.read(feedStoriesProvider).items;
+      final result = container.read(feedStoriesProvider);
 
-      expect(list?.length, 3);
-      expect(list?.map((u) => u.pubkey).toSet(), equals({'alice', 'bob', 'carol'}));
+      expect(result.items?.length, 3);
+      expect(result.items?.map((u) => u.pubkey).toSet(), equals({'alice', 'bob', 'carol'}));
     });
   });
 

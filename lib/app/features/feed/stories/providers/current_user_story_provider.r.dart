@@ -1,10 +1,8 @@
 // SPDX-License-Identifier: ice License 1.0
 
-import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/features/auth/providers/auth_provider.m.dart';
 import 'package:ion/app/features/feed/data/models/entities/modifiable_post_data.f.dart';
 import 'package:ion/app/features/feed/stories/data/models/user_story.f.dart';
-import 'package:ion/app/features/feed/stories/providers/stories_count_provider.r.dart';
 import 'package:ion/app/features/feed/stories/providers/user_stories_provider.r.dart';
 import 'package:ion/app/features/ion_connect/providers/entities_paged_data_provider.m.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
@@ -35,8 +33,6 @@ class CurrentUserStory extends _$CurrentUserStory {
     if (story == null) {
       return null;
     } else {
-      // preload stories count
-      ref.read(storiesCountProvider(currentPubkey));
       return UserStory(
         pubkey: currentPubkey,
         story: story,
@@ -45,7 +41,7 @@ class CurrentUserStory extends _$CurrentUserStory {
   }
 
   void refresh() {
-    final currentPubkey = ref.watch(currentPubkeySelectorProvider);
+    final currentPubkey = ref.read(currentPubkeySelectorProvider);
     if (currentPubkey != null) {
       ref.invalidate(userStoriesDataSourceProvider(pubkey: currentPubkey, limit: 1));
     }

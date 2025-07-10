@@ -23,17 +23,16 @@ class StoryProgressBarContainer extends ConsumerWidget {
     final storyState = ref.watch(storyViewingControllerProvider(pubkey));
     final currentStoryIndex = storyState.currentStoryIndex;
     final stories = ref.watch(userStoriesProvider(storyState.currentUserPubkey))?.toList() ?? [];
-    var storiesCount = ref.watch(storiesCountProvider(pubkey)).valueOrNull;
-    storiesCount = 20;
+    final storiesCount = ref.watch(storiesCountProvider(pubkey)).valueOrNull;
 
-    if (stories.isEmpty && storiesCount == null) {
+    if (stories.isEmpty || storiesCount == null) {
       return const SizedBox();
     }
 
     return Padding(
       padding: EdgeInsets.symmetric(horizontal: 16.0.s),
       child: Row(
-        children: List.generate(storiesCount!, (index) {
+        children: List.generate(storiesCount, (index) {
           final storyEntry = stories.elementAtOrNull(index);
           if (storyEntry == null) {
             return Expanded(

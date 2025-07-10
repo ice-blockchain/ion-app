@@ -92,8 +92,9 @@ class StoryViewerPage extends HookConsumerWidget {
     useOnInit(
       () {
         final currentUserStoriesLeft = stories.length - storyViewerState.currentStoryIndex - 1;
-        if (currentUserStoriesLeft < 10) {
-          ref.read(userStoriesProvider(storyViewerState.nextUserPubkey));
+        final nextUserPubkey = storyViewerState.nextUserPubkey;
+        if (currentUserStoriesLeft < 10 && nextUserPubkey.isNotEmpty) {
+          ref.read(userStoriesProvider(nextUserPubkey));
         }
       },
       [storyViewerState.currentStoryIndex],

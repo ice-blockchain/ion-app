@@ -1,8 +1,7 @@
 // SPDX-License-Identifier: ice License 1.0
 
-import 'package:collection/collection.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:ion/app/features/core/model/media_type.dart';
+import 'package:ion/app/features/feed/data/models/entities/event_count_result_data.f.dart';
 import 'package:ion/app/features/feed/data/models/entities/modifiable_post_data.f.dart';
 import 'package:ion/app/features/feed/data/models/feed_filter.dart';
 import 'package:ion/app/features/feed/data/models/feed_type.dart';
@@ -14,6 +13,7 @@ import 'package:ion/app/features/feed/stories/providers/current_user_story_provi
 import 'package:ion/app/features/feed/stories/providers/stories_count_provider.r.dart';
 import 'package:ion/app/features/ion_connect/model/ion_connect_entity.dart';
 import 'package:ion/app/features/ion_connect/providers/entities_paged_data_provider.m.dart';
+import 'package:ion/app/features/ion_connect/providers/ion_connect_cache.r.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'feed_stories_provider.r.g.dart';
@@ -35,17 +35,15 @@ class FeedStories extends _$FeedStories with DelegatedPagedNotifier {
         ),
     };
 
-    Iterable<UserStory>? stories;
-    _userStories(data.items).then((userStories) {
-      stories = userStories;
-      if (currentUserStory != null) {
-        stories = {currentUserStory, ...?stories};
-      }
+    final userStories = _userStories(data.items) ?? {};
+    final stories = {
+      if (currentUserStory != null) currentUserStory,
+      ...userStories,
+    };
 
-      state = (items: stories, hasMore: data.hasMore);
-    });
+    _fetchCountersFor(stories);
 
-    return stateOrNull ?? (items: null, hasMore: true);
+    return (items: stories, hasMore: data.hasMore);
   }
 
   @override
@@ -57,25 +55,30 @@ class FeedStories extends _$FeedStories with DelegatedPagedNotifier {
     };
   }
 
-  Future<Iterable<UserStory>?> _userStories(Iterable<IonConnectEntity>? entities) async {
+  @override
+  void refresh() {
+    getDelegate().refresh();
+    final stories = state.items?.toList() ?? [];
+    for (final story in stories) {
+      ref.read(ionConnectCacheProvider.notifier).remove(
+            EventCountResultEntity.cacheKeyBuilder(
+              key: story.pubkey,
+              type: EventCountResultType.stories,
+            ),
+          );
+    }
+  }
+
+  Iterable<UserStory>? _userStories(Iterable<IonConnectEntity>? entities) {
     if (entities == null) return null;
 
-    final postEntities = entities.whereType<ModifiablePostEntity>().where((post) {
-      final mediaType = post.data.media.values.firstOrNull?.mediaType;
-      return mediaType == MediaType.image || mediaType == MediaType.video;
-    });
+    final postEntities =
+        entities.whereType<ModifiablePostEntity>().where((post) => post.data.expiration != null);
 
     final userStoriesMap = <String, UserStory>{};
 
     for (final post in postEntities) {
       final pubkey = post.masterPubkey;
-
-      if (userStoriesMap.containsKey(pubkey)) {
-        continue;
-      }
-
-      // preload stories count
-      ref.read(storiesCountProvider(pubkey));
 
       final userStory = UserStory(
         pubkey: pubkey,
@@ -86,6 +89,12 @@ class FeedStories extends _$FeedStories with DelegatedPagedNotifier {
     }
 
     return userStoriesMap.values;
+  }
+
+  void _fetchCountersFor(Iterable<UserStory> stories) {
+    for (final story in stories) {
+      ref.read(storiesCountProvider(story.pubkey));
+    }
   }
 }
 

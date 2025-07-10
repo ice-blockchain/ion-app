@@ -20,18 +20,20 @@ class UserStories extends _$UserStories {
       return null;
     }
 
-    return ref
+    final data = ref
         .watch(entitiesPagedDataProvider(dataSources))
         ?.data
         .items
         ?.whereType<ModifiablePostEntity>()
         .toList()
-        .reversed;
+        .reversed
+        .toList();
+
+    return data;
   }
 
   void refresh() {
-    final dataSources =
-        ref.watch(userStoriesDataSourceProvider(pubkey: state?.firstOrNull?.pubkey ?? ''));
+    final dataSources = ref.read(userStoriesDataSourceProvider(pubkey: pubkey));
     if (dataSources != null) {
       ref.invalidate(entitiesPagedDataProvider(dataSources));
     }
