@@ -83,7 +83,7 @@ class WalletViewParser {
       if (fromDB != null) coin = fromDB;
     }
 
-    // Coin steel is not valid, even after adding info from the DB.
+    // Coin still is not valid, even after adding info from the DB.
     // Log it and return null.
     if (!coin.isValid) {
       Logger.info(
