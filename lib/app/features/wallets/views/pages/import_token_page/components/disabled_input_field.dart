@@ -6,7 +6,7 @@ import 'package:ion/app/components/inputs/text_input/components/text_input_borde
 import 'package:ion/app/components/inputs/text_input/text_input.dart';
 import 'package:ion/app/components/progress_bar/ion_loading_indicator.dart';
 import 'package:ion/app/extensions/extensions.dart';
-import 'package:ion/app/features/wallets/views/pages/import_token_page/providers/token_data_notifier_provider.c.dart';
+import 'package:ion/app/features/wallets/views/pages/import_token_page/providers/token_data_notifier_provider.r.dart';
 
 class DisabledTextInput extends ConsumerWidget {
   const DisabledTextInput({

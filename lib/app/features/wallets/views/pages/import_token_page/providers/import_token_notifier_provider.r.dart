@@ -1,13 +1,10 @@
 // SPDX-License-Identifier: ice License 1.0
 
-import 'package:ion/app/features/wallets/data/repository/coins_repository.c.dart';
-import 'package:ion/app/features/wallets/providers/update_wallet_view_provider.c.dart';
-import 'package:ion/app/features/wallets/providers/wallet_view_data_provider.c.dart';
-import 'package:ion/app/features/wallets/views/pages/import_token_page/providers/token_data_notifier_provider.c.dart';
-import 'package:ion/app/features/wallets/views/pages/import_token_page/providers/token_form_notifier_provider.c.dart';
+import 'package:ion/app/features/wallets/data/repository/coins_repository.r.dart';
 import 'package:ion/app/features/wallets/providers/update_wallet_view_provider.r.dart';
 import 'package:ion/app/features/wallets/providers/wallet_view_data_provider.r.dart';
 import 'package:ion/app/features/wallets/views/pages/import_token_page/providers/token_data_notifier_provider.r.dart';
+import 'package:ion/app/features/wallets/views/pages/import_token_page/providers/token_form_notifier_provider.r.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'import_token_notifier_provider.r.g.dart';

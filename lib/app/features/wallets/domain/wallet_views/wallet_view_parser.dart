@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: ice License 1.0
 
-part of 'wallet_views_service.c.dart';
+part of 'wallet_views_service.r.dart';
 
 @riverpod
 WalletViewParser walletViewParser(Ref ref) {
@@ -27,6 +27,18 @@ class WalletViewParser {
       final coinDTO = coinInWalletDTO.coin;
       final network = networks[coinDTO.network]!;
 
+      var coin = CoinData.fromDTO(coinDTO, network);
+      if (!coin.isValid) {
+        final fromDB = await coinsRepository.getCoinById(coinDTO.id);
+        if (fromDB != null) coin = fromDB;
+      }
+
+      if (!coin.isValid) {
+        // coin is not valid, skip it
+        continue;
+      }
+
+      // Now calculate amounts and balances for valid coins only
       var coinAmount = 0.0;
       var rawCoinAmount = '0';
       var coinBalanceUSD = 0.0;
@@ -53,12 +65,6 @@ class WalletViewParser {
       totalViewBalanceUSD += coinBalanceUSD;
       final symbolGroup = coinDTO.symbolGroup;
       symbolGroups.add(symbolGroup);
-
-      var coin = CoinData.fromDTO(coinDTO, network);
-      if (!coin.isValid) {
-        final fromDB = await coinsRepository.getCoinById(coinDTO.id);
-        if (fromDB != null) coin = fromDB;
-      }
 
       final coinInWallet = CoinInWalletData(
         coin: coin,

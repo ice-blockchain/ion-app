@@ -77,9 +77,5 @@ class CoinData with _$CoinData {
       );
 
   bool get isValid =>
-      id.isNotEmpty &&
-      contractAddress.isNotEmpty &&
-      decimals > 0 &&
-      abbreviation.isNotEmpty &&
-      symbolGroup.isNotEmpty;
+      id.isNotEmpty && decimals > 0 && abbreviation.isNotEmpty && symbolGroup.isNotEmpty;
 }

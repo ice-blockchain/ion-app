@@ -11,18 +11,12 @@ import 'package:ion/app/components/select/select_network_button.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/wallets/model/coin_data.f.dart';
 import 'package:ion/app/features/wallets/model/network_data.f.dart';
-import 'package:ion/app/features/wallets/model/coin_data.c.dart';
-import 'package:ion/app/features/wallets/model/network_data.c.dart';
 import 'package:ion/app/features/wallets/views/pages/import_token_page/components/disabled_input_field.dart';
 import 'package:ion/app/features/wallets/views/pages/import_token_page/components/token_already_exists_dialog.dart';
 import 'package:ion/app/features/wallets/views/pages/import_token_page/components/token_not_found_dialog.dart';
-import 'package:ion/app/features/wallets/views/pages/import_token_page/providers/selected_network_provider.r.dart';
-import 'package:ion/app/features/wallets/views/pages/import_token_page/providers/token_address_provider.r.dart';
 import 'package:ion/app/features/wallets/views/pages/import_token_page/providers/token_already_exists_provider.r.dart';
 import 'package:ion/app/features/wallets/views/pages/import_token_page/providers/token_data_notifier_provider.r.dart';
-import 'package:ion/app/features/wallets/views/pages/import_token_page/providers/token_already_exists_provider.c.dart';
-import 'package:ion/app/features/wallets/views/pages/import_token_page/providers/token_data_notifier_provider.c.dart';
-import 'package:ion/app/features/wallets/views/pages/import_token_page/providers/token_form_notifier_provider.c.dart';
+import 'package:ion/app/features/wallets/views/pages/import_token_page/providers/token_form_notifier_provider.r.dart';
 import 'package:ion/app/hooks/use_on_init.dart';
 import 'package:ion/app/router/app_routes.gr.dart';
 import 'package:ion/app/router/utils/show_simple_bottom_sheet.dart';
@@ -33,8 +27,6 @@ class ImportTokenForm extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    ref.watch(tokenFormNotifierProvider);
-
     final isAdditionalInputFieldsEnabled = useState(false);
     final tokenAddressController = useTextEditingController();
     final tokenSymbolController = useTextEditingController();

@@ -1,9 +1,9 @@
 // SPDX-License-Identifier: ice License 1.0
 
 import 'package:freezed_annotation/freezed_annotation.dart';
-import 'package:ion/app/features/wallets/model/network_data.c.dart';
+import 'package:ion/app/features/wallets/model/network_data.f.dart';
 
-part 'token_form.c.freezed.dart';
+part 'token_form.f.freezed.dart';
 
 @freezed
 class TokenForm with _$TokenForm {
