@@ -129,6 +129,61 @@ class SeenEventsDao extends DatabaseAccessor<FollowingFeedDatabase> with _$SeenE
     return query.get();
   }
 
+  Future<List<SeenEvent>> getGroupedByPubkeyEvents({
+    required FeedType feedType,
+    required int limit,
+    List<EventReference>? excludeReferences,
+    List<String>? excludePubkeys,
+    int? since,
+    int? until,
+    FeedModifier? feedModifier,
+  }) async {
+    final tbl = db.seenEventsTable;
+    final feedMod = const FeedModifierConverter().toSql(feedModifier);
+
+    final preGroupFilters = <Expression<bool>>[
+      tbl.feedType.equalsValue(feedType),
+      tbl.feedModifier.equals(feedMod),
+    ];
+    if (excludeReferences != null && excludeReferences.isNotEmpty) {
+      preGroupFilters.add(tbl.eventReference.isNotInValues(excludeReferences));
+    }
+    if (excludePubkeys != null && excludePubkeys.isNotEmpty) {
+      preGroupFilters.add(tbl.pubkey.isNotIn(excludePubkeys));
+    }
+    if (since != null) {
+      preGroupFilters.add(tbl.createdAt.isBiggerThanValue(since.toMicroseconds));
+    }
+    if (until != null) {
+      preGroupFilters.add(tbl.createdAt.isSmallerThanValue(until.toMicroseconds));
+    }
+
+    final groupingStmt = selectOnly(tbl)
+      ..addColumns([tbl.pubkey, tbl.createdAt.max()])
+      ..groupBy([tbl.pubkey]);
+    for (final filter in preGroupFilters) {
+      groupingStmt.where(filter);
+    }
+
+    final grouped = Subquery(groupingStmt, 'grouped');
+
+    final joined = select(tbl).join([
+      innerJoin(
+        grouped,
+        grouped.ref(tbl.pubkey).equalsExp(tbl.pubkey) &
+            grouped.ref(tbl.createdAt.max()).equalsExp(tbl.createdAt),
+        useColumns: false,
+      ),
+    ])
+      ..orderBy([
+        OrderingTerm(expression: tbl.createdAt, mode: OrderingMode.desc),
+      ])
+      ..limit(limit);
+
+    final rows = await joined.get();
+    return rows.map((r) => r.readTable(tbl)).toList();
+  }
+
   Future<void> deleteEvents({
     required FeedType feedType,
     required List<String> retainPubkeys,

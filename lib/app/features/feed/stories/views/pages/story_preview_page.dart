@@ -15,6 +15,7 @@ import 'package:ion/app/features/feed/create_post/providers/create_post_notifier
 import 'package:ion/app/features/feed/data/models/who_can_reply_settings_option.f.dart';
 import 'package:ion/app/features/feed/providers/selected_interests_notifier.r.dart';
 import 'package:ion/app/features/feed/providers/selected_who_can_reply_option_provider.r.dart';
+import 'package:ion/app/features/feed/stories/providers/current_user_story_provider.r.dart';
 import 'package:ion/app/features/feed/stories/providers/user_stories_provider.r.dart';
 import 'package:ion/app/features/feed/stories/views/components/story_preview/actions/story_share_button.dart';
 import 'package:ion/app/features/feed/stories/views/components/story_preview/actions/story_topics_button.dart';
@@ -23,7 +24,6 @@ import 'package:ion/app/features/feed/stories/views/components/story_preview/med
 import 'package:ion/app/features/feed/stories/views/components/story_preview/media/story_video_preview.dart';
 import 'package:ion/app/features/feed/views/pages/who_can_reply_settings_modal/who_can_reply_settings_modal.dart';
 import 'package:ion/app/features/ion_connect/model/event_reference.f.dart';
-import 'package:ion/app/features/ion_connect/providers/entities_paged_data_provider.m.dart';
 import 'package:ion/app/router/app_routes.gr.dart';
 import 'package:ion/app/router/components/navigation_app_bar/navigation_app_bar.dart';
 import 'package:ion/app/router/utils/show_simple_bottom_sheet.dart';
@@ -165,16 +165,8 @@ class StoryPreviewPage extends HookConsumerWidget {
                           }
 
                           final pubkey = ref.read(currentPubkeySelectorProvider) ?? '';
-                          final firstUserStoryDatasource =
-                              ref.watch(userStoriesDataSourceProvider(pubkey: pubkey, limit: 1));
-                          if (firstUserStoryDatasource != null) {
-                            ref.invalidate(entitiesPagedDataProvider(firstUserStoryDatasource));
-                          }
-                          final allUserStoriesDatasource =
-                              ref.watch(userStoriesDataSourceProvider(pubkey: pubkey));
-                          if (allUserStoriesDatasource != null) {
-                            ref.invalidate(entitiesPagedDataProvider(allUserStoriesDatasource));
-                          }
+                          ref.read(currentUserStoryProvider.notifier).refresh();
+                          ref.read(userStoriesProvider(pubkey).notifier).refresh();
 
                           if (context.mounted) {
                             isPublishing.value = false;

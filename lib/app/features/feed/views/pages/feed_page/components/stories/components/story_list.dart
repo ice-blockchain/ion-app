@@ -47,6 +47,7 @@ class StoryList extends ConsumerWidget {
 
           final pubkey = filteredPubkeys[index - 1];
           return StoryListItem(
+            key: Key(pubkey),
             pubkey: pubkey,
             gradient: storyBorderGradients[Random().nextInt(storyBorderGradients.length)],
           );

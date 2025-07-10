@@ -12,32 +12,42 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 part 'current_user_story_provider.r.g.dart';
 
 @riverpod
-UserStory? currentUserStory(Ref ref) {
-  keepAliveWhenAuthenticated(ref);
-  final currentPubkey = ref.watch(currentPubkeySelectorProvider);
-  if (currentPubkey == null) {
-    return null;
-  }
-  final dataSources = ref.watch(userStoriesDataSourceProvider(pubkey: currentPubkey, limit: 1));
-  if (dataSources == null) {
-    return null;
+class CurrentUserStory extends _$CurrentUserStory {
+  @override
+  UserStory? build() {
+    keepAliveWhenAuthenticated(ref);
+    final currentPubkey = ref.watch(currentPubkeySelectorProvider);
+    if (currentPubkey == null) {
+      return null;
+    }
+    final dataSources = ref.watch(userStoriesDataSourceProvider(pubkey: currentPubkey, limit: 1));
+    if (dataSources == null) {
+      return null;
+    }
+
+    final story = ref
+        .watch(entitiesPagedDataProvider(dataSources))
+        ?.data
+        .items
+        ?.whereType<ModifiablePostEntity>()
+        .firstOrNull;
+
+    if (story == null) {
+      return null;
+    } else {
+      // preload stories count
+      ref.read(storiesCountProvider(currentPubkey));
+      return UserStory(
+        pubkey: currentPubkey,
+        story: story,
+      );
+    }
   }
 
-  final story = ref
-      .watch(entitiesPagedDataProvider(dataSources))
-      ?.data
-      .items
-      ?.whereType<ModifiablePostEntity>()
-      .firstOrNull;
-
-  if (story == null) {
-    return null;
-  } else {
-    // preload stories count
-    ref.read(storiesCountProvider(currentPubkey));
-    return UserStory(
-      pubkey: currentPubkey,
-      story: story,
-    );
+  void refresh() {
+    final currentPubkey = ref.watch(currentPubkeySelectorProvider);
+    if (currentPubkey != null) {
+      ref.invalidate(userStoriesDataSourceProvider(pubkey: currentPubkey, limit: 1));
+    }
   }
 }

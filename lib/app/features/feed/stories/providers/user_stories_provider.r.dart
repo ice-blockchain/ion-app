@@ -11,20 +11,31 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 part 'user_stories_provider.r.g.dart';
 
 @riverpod
-Iterable<ModifiablePostEntity>? userStories(Ref ref, String pubkey) {
-  keepAliveWhenAuthenticated(ref);
-  final dataSources = ref.watch(userStoriesDataSourceProvider(pubkey: pubkey));
-  if (dataSources == null) {
-    return null;
+class UserStories extends _$UserStories {
+  @override
+  Iterable<ModifiablePostEntity>? build(String pubkey) {
+    keepAliveWhenAuthenticated(ref);
+    final dataSources = ref.watch(userStoriesDataSourceProvider(pubkey: pubkey));
+    if (dataSources == null) {
+      return null;
+    }
+
+    return ref
+        .watch(entitiesPagedDataProvider(dataSources))
+        ?.data
+        .items
+        ?.whereType<ModifiablePostEntity>()
+        .toList()
+        .reversed;
   }
 
-  return ref
-      .watch(entitiesPagedDataProvider(dataSources))
-      ?.data
-      .items
-      ?.whereType<ModifiablePostEntity>()
-      .toList()
-      .reversed;
+  void refresh() {
+    final dataSources =
+        ref.watch(userStoriesDataSourceProvider(pubkey: state?.firstOrNull?.pubkey ?? ''));
+    if (dataSources != null) {
+      ref.invalidate(entitiesPagedDataProvider(dataSources));
+    }
+  }
 }
 
 @riverpod

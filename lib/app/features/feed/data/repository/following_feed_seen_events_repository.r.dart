@@ -96,16 +96,27 @@ class FollowingFeedSeenEventsRepository {
     int? since,
     int? until,
     FeedModifier? feedModifier,
+    bool groupByPubkey = false,
   }) async {
-    final seenEvents = await _seenEventsDao.getEvents(
-      feedType: feedType,
-      feedModifier: feedModifier,
-      excludeReferences: excludeReferences,
-      excludePubkeys: excludePubkeys,
-      limit: limit,
-      since: since,
-      until: until,
-    );
+    final seenEvents = await (groupByPubkey
+        ? _seenEventsDao.getGroupedByPubkeyEvents(
+            feedType: feedType,
+            feedModifier: feedModifier,
+            excludeReferences: excludeReferences,
+            excludePubkeys: excludePubkeys,
+            limit: limit,
+            since: since,
+            until: until,
+          )
+        : _seenEventsDao.getEvents(
+            feedType: feedType,
+            feedModifier: feedModifier,
+            excludeReferences: excludeReferences,
+            excludePubkeys: excludePubkeys,
+            limit: limit,
+            since: since,
+            until: until,
+          ));
     return seenEvents
         .map(
           (event) => (eventReference: event.eventReference, createdAt: event.createdAt),

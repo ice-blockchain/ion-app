@@ -45,7 +45,7 @@ class FeedStories extends _$FeedStories with DelegatedPagedNotifier {
       state = (items: stories, hasMore: data.hasMore);
     });
 
-    return (items: null, hasMore: true);
+    return stateOrNull ?? (items: null, hasMore: true);
   }
 
   @override
