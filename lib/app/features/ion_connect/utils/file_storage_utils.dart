@@ -10,7 +10,7 @@ import 'package:ion/app/features/ion_connect/ion_connect.dart';
 import 'package:ion/app/features/ion_connect/model/file_storage_metadata.f.dart';
 import 'package:ion/app/features/ion_connect/model/ion_connect_auth.f.dart';
 import 'package:ion/app/features/ion_connect/providers/ion_connect_notifier.r.dart';
-import 'package:ion/app/features/user/providers/ranked_user_relays_provider.r.dart';
+import 'package:ion/app/features/user/providers/relays/ranked_user_relays_provider.r.dart';
 
 Future<String> generateAuthorizationToken({
   required Ref ref,

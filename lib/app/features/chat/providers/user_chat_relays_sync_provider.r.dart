@@ -8,7 +8,7 @@ import 'package:ion/app/features/auth/providers/delegation_complete_provider.r.d
 import 'package:ion/app/features/ion_connect/providers/ion_connect_notifier.r.dart';
 import 'package:ion/app/features/user/model/user_chat_relays.f.dart';
 import 'package:ion/app/features/user/model/user_relays.f.dart';
-import 'package:ion/app/features/user/providers/user_relays_manager.r.dart';
+import 'package:ion/app/features/user/providers/relays/user_relays_manager.r.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'user_chat_relays_sync_provider.r.g.dart';

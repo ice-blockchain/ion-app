@@ -20,8 +20,8 @@ import 'package:ion/app/features/ion_connect/providers/global_subscription.r.dar
 import 'package:ion/app/features/push_notifications/background/firebase_messaging_background_service.dart';
 import 'package:ion/app/features/push_notifications/providers/pushes_init_provider.r.dart';
 import 'package:ion/app/features/user/providers/account_notifications_sync_provider.r.dart';
-import 'package:ion/app/features/user/providers/user_file_storage_relays_sync_provider.r.dart';
-import 'package:ion/app/features/user/providers/user_relays_sync_provider.r.dart';
+import 'package:ion/app/features/user/providers/relays/user_file_storage_relays_sync_provider.r.dart';
+import 'package:ion/app/features/user/providers/relays/user_relays_sync_provider.r.dart';
 import 'package:ion/app/features/wallets/providers/coins_sync_provider.r.dart';
 import 'package:ion/app/features/wallets/providers/user_public_wallets_sync_provider.r.dart';
 import 'package:ion/app/features/wallets/providers/wallets_initializer_provider.r.dart';

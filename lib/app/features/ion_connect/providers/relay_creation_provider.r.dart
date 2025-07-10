@@ -11,8 +11,8 @@ import 'package:ion/app/features/ion_connect/providers/active_relays_provider.r.
 import 'package:ion/app/features/ion_connect/providers/relay_provider.r.dart';
 import 'package:ion/app/features/user/model/user_relays.f.dart';
 import 'package:ion/app/features/user/providers/current_user_identity_provider.r.dart';
-import 'package:ion/app/features/user/providers/ranked_user_relays_provider.r.dart';
-import 'package:ion/app/features/user/providers/user_relays_manager.r.dart';
+import 'package:ion/app/features/user/providers/relays/ranked_user_relays_provider.r.dart';
+import 'package:ion/app/features/user/providers/relays/user_relays_manager.r.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'relay_creation_provider.r.g.dart';
