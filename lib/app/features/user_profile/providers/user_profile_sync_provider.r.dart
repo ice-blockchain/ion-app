@@ -68,7 +68,7 @@ class UserProfileSync extends _$UserProfileSync {
         lastSyncTime == null ||
         masterPubkeysDifference.isNotEmpty ||
         lastSyncTime.isBefore(DateTime.now().subtract(Duration(minutes: syncWindow)))) {
-      await _fetchUsersProfiles(ref, masterPubkeysToFetch: masterPubkeysToSync);
+      await _fetchUsersProfiles(ref, masterPubkeysToSync: masterPubkeysToSync);
 
       await localStorage.setString(localStorageKey, DateTime.now().toIso8601String());
     }
@@ -76,16 +76,16 @@ class UserProfileSync extends _$UserProfileSync {
 
   Future<void> _fetchUsersProfiles(
     Ref ref, {
-    required Set<String> masterPubkeysToFetch,
+    required Set<String> masterPubkeysToSync,
   }) async {
     final userBadgesDao = ref.watch(userBadgeInfoDaoProvider);
     final userMetadataDao = ref.watch(userMetadataDaoProvider);
     final userDelegationDao = ref.watch(userDelegationDaoProvider);
 
-    if (masterPubkeysToFetch.isEmpty) return;
+    if (masterPubkeysToSync.isEmpty) return;
 
     final usersProfileEntities =
-        await ref.watch(usersProfileProvider(masterPubkeysToFetch.toList()).future);
+        await ref.watch(usersProfileProvider(masterPubkeysToSync.toList()).future);
 
     final usersMetadata = usersProfileEntities.whereType<UserMetadataEntity>().toList();
     final usersDelegation = usersProfileEntities.whereType<UserDelegationEntity>().toList();
@@ -101,7 +101,7 @@ class UserProfileSync extends _$UserProfileSync {
 
     final loadedMetadataMasterPubkeys = usersMetadata.map((e) => e.masterPubkey).toSet();
     final missingMetadataMasterPubkeys =
-        masterPubkeysToFetch.difference(loadedMetadataMasterPubkeys).toList();
+        masterPubkeysToSync.difference(loadedMetadataMasterPubkeys).toList();
 
     await userMetadataDao.deleteMetadata(missingMetadataMasterPubkeys);
     await userDelegationDao.deleteDelegation(missingMetadataMasterPubkeys);
