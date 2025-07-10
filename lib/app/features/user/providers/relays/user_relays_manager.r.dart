@@ -19,32 +19,17 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'user_relays_manager.r.g.dart';
 
-@riverpod
-Future<UserRelaysEntity?> userRelay(Ref ref, String pubkey) async {
-  final currentUser = ref.watch(currentIdentityKeyNameSelectorProvider);
-  if (currentUser == null) {
-    throw const CurrentUserNotFoundException();
-  }
-  final relays = await ref.watch(userRelaysManagerProvider.notifier).fetch([pubkey]);
-  return relays.elementAtOrNull(0);
-}
-
-@riverpod
-Future<UserRelaysEntity?> currentUserRelays(Ref ref) async {
-  final userIdentity = await ref.watch(currentUserIdentityProvider.future);
-  final identityConnectRelays = userIdentity?.ionConnectRelays;
-  if (userIdentity == null || identityConnectRelays == null) {
-    return null;
-  }
-  final updatedUserRelays = UserRelaysData(
-    list: identityConnectRelays.map((url) => UserRelay(url: url)).toList(),
-  );
-  final userRelaysEvent =
-      await ref.read(ionConnectNotifierProvider.notifier).sign(updatedUserRelays);
-
-  return UserRelaysEntity.fromEventMessage(userRelaysEvent);
-}
-
+/// Finds the relays for the given user pubkeys.
+///
+/// Use this method when you need to find relays for a specific user or users.
+/// Returns a list of user relays for each provided pubkey.
+///
+/// If a relay list is already cached in the database,
+///   it will be returned from there (excluding unreachable relay urls).
+/// If a relay list is not found in the database,
+///   it will be fetched from indexers and cached.
+/// If a relay list is still not found,
+///   it will be fetched from the identity and cached.
 @riverpod
 class UserRelaysManager extends _$UserRelaysManager {
   @override
@@ -184,4 +169,30 @@ class UserRelaysManager extends _$UserRelaysManager {
       await reachabilityInfoNotifier.clear(url);
     }
   }
+}
+
+@riverpod
+Future<UserRelaysEntity?> userRelay(Ref ref, String pubkey) async {
+  final currentUser = ref.watch(currentIdentityKeyNameSelectorProvider);
+  if (currentUser == null) {
+    throw const CurrentUserNotFoundException();
+  }
+  final relays = await ref.watch(userRelaysManagerProvider.notifier).fetch([pubkey]);
+  return relays.elementAtOrNull(0);
+}
+
+@riverpod
+Future<UserRelaysEntity?> currentUserRelays(Ref ref) async {
+  final userIdentity = await ref.watch(currentUserIdentityProvider.future);
+  final identityConnectRelays = userIdentity?.ionConnectRelays;
+  if (userIdentity == null || identityConnectRelays == null) {
+    return null;
+  }
+  final updatedUserRelays = UserRelaysData(
+    list: identityConnectRelays.map((url) => UserRelay(url: url)).toList(),
+  );
+  final userRelaysEvent =
+      await ref.read(ionConnectNotifierProvider.notifier).sign(updatedUserRelays);
+
+  return UserRelaysEntity.fromEventMessage(userRelaysEvent);
 }

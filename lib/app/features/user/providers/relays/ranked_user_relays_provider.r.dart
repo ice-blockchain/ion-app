@@ -7,12 +7,15 @@ import 'package:dio/dio.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/features/core/providers/env_provider.r.dart';
 import 'package:ion/app/features/user/model/user_relays.f.dart';
-import 'package:ion/app/features/user/providers/relays/relevant_current_user_relays_provider.r.dart';
 import 'package:ion/app/features/user/providers/relays/user_relays_manager.r.dart';
 import 'package:ion/app/services/ion_connect/ion_connect_relays_ranker.r.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'ranked_user_relays_provider.r.g.dart';
+
+/// Ranked relays are the relays that are sorted based on their latency.
+///
+/// Latency is measured by pinging the relays (check [ionConnectRelaysRankerProvider] for details).
 
 @Riverpod(keepAlive: true)
 Future<UserRelaysEntity?> rankedCurrentUserRelays(Ref ref) async {
@@ -26,20 +29,6 @@ Future<UserRelaysEntity?> rankedCurrentUserRelays(Ref ref) async {
   ref.onDispose(timer.cancel);
 
   return ref.watch(rankedRelayProvider(currentUserRelayEntity).future);
-}
-
-@Riverpod(keepAlive: true)
-Future<List<String>> rankedRelevantCurrentUserRelaysUrls(Ref ref) async {
-  final relevantRelaysUrls = await ref.watch(relevantCurrentUserRelaysProvider.future);
-
-  final pingIntervalSeconds =
-      ref.read(envProvider.notifier).get<int>(EnvVariable.RELAY_PING_INTERVAL_SECONDS);
-  final timer = Timer.periodic(Duration(seconds: pingIntervalSeconds), (_) {
-    ref.invalidate(rankedRelayUrlsProvider(relevantRelaysUrls));
-  });
-  ref.onDispose(timer.cancel);
-
-  return ref.watch(rankedRelayUrlsProvider(relevantRelaysUrls).future);
 }
 
 @riverpod
@@ -57,9 +46,7 @@ Future<UserRelaysEntity?> rankedRelay(
         cancelToken: cancelToken,
       );
   final rankedRelays = rankedRelaysUrls
-      .map(
-        (url) => relayEntity.data.list.firstWhereOrNull((e) => e.url == url),
-      )
+      .map((url) => relayEntity.data.list.firstWhereOrNull((e) => e.url == url))
       .nonNulls
       .toList();
 

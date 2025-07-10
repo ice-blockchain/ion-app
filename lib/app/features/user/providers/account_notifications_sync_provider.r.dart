@@ -20,7 +20,7 @@ import 'package:ion/app/features/ion_connect/providers/ion_connect_entity_provid
 import 'package:ion/app/features/ion_connect/providers/ion_connect_event_parser.r.dart';
 import 'package:ion/app/features/user/model/account_notifications_sets.f.dart';
 import 'package:ion/app/features/user/model/user_notifications_type.dart';
-import 'package:ion/app/features/user/providers/relays/users_relays_provider.r.dart';
+import 'package:ion/app/features/user/providers/relays/optimal_user_relays_provider.r.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'account_notifications_sync_provider.r.g.dart';
@@ -122,9 +122,9 @@ class AccountNotificationsSync extends _$AccountNotificationsSync {
         continue;
       }
 
-      final optimalRelayMapping = await ref.read(usersRelaysProvider.notifier).fetch(
+      final optimalRelayMapping = await ref.read(optimalUserRelaysProvider.notifier).fetch(
             masterPubkeys: users,
-            strategy: UsersRelaysStrategy.mostUsers,
+            strategy: OptimalRelaysStrategy.mostUsers,
           );
 
       for (final relayEntry in optimalRelayMapping.entries) {

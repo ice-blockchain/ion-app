@@ -6,20 +6,28 @@ import 'package:ion/app/features/user/providers/relays/user_relays_manager.r.dar
 import 'package:ion/app/utils/algorithm.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
-part 'users_relays_provider.r.g.dart';
+part 'optimal_user_relays_provider.r.g.dart';
 
-/// Strategy for selecting user relays.
-enum UsersRelaysStrategy { mostUsers, bestLatency }
+enum OptimalRelaysStrategy {
+  //TODO:add comment to each strategy
+  mostUsers,
+  bestLatency
+}
 
+/// Finds the optimal relays for the given user pubkeys.
+///
+/// Use it when you need to find relays shared by multiple users.
+/// Returns a map where each key is a relay URL
+/// and the value is a list of pubkeys available on that relay
+///
 @riverpod
-class UsersRelays extends _$UsersRelays {
+class OptimalUserRelays extends _$OptimalUserRelays {
   @override
   FutureOr<void> build() async {}
 
-  /// Fetches relays for the given [masterPubkeys] using the specified [strategy].
   Future<Map<String, List<String>>> fetch({
     required List<String> masterPubkeys,
-    required UsersRelaysStrategy strategy,
+    required OptimalRelaysStrategy strategy,
   }) async {
     if (masterPubkeys.isEmpty) return {};
 
@@ -44,9 +52,9 @@ class UsersRelays extends _$UsersRelays {
     }
 
     switch (strategy) {
-      case UsersRelaysStrategy.mostUsers:
+      case OptimalRelaysStrategy.mostUsers:
         return findMostMatchingOptions(userToRelays);
-      case UsersRelaysStrategy.bestLatency:
+      case OptimalRelaysStrategy.bestLatency:
         // TODO: Handle this case.
         throw UnimplementedError();
     }
