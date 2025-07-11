@@ -18,6 +18,7 @@ class Logger {
     _talker = TalkerFlutter.init(
       settings: TalkerSettings(
         useConsoleLogs: verbose,
+        maxHistoryItems: 100000,
         colors: {
           TalkerLogType.critical.key: AnsiPen()..xterm(196), // Bright red
           TalkerLogType.warning.key: AnsiPen()..xterm(214), // Golden yellow
