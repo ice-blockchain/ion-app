@@ -7,9 +7,10 @@ import 'package:ion/app/components/screen_offset/screen_top_offset.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/core/model/feature_flags.dart';
 import 'package:ion/app/features/core/providers/feature_flags_provider.r.dart';
-import 'package:ion/app/features/search/providers/chat_search_history_provider.m.dart'
+import 'package:ion/app/features/search/model/chat_search_result_item.f.dart';
+import 'package:ion/app/features/search/providers/chat_search/chat_local_user_search_provider.r.dart';
+import 'package:ion/app/features/search/providers/chat_search/chat_search_history_provider.m.dart'
     show chatSearchHistoryProvider;
-import 'package:ion/app/features/search/providers/chat_users_search_provider.r.dart';
 import 'package:ion/app/features/search/views/components/feed_search_history/feed_search_history_user_list_item.dart';
 import 'package:ion/app/features/search/views/components/search_history/search_history.dart';
 import 'package:ion/app/features/search/views/components/search_history_empty/search_history_empty.dart';
@@ -17,8 +18,8 @@ import 'package:ion/app/features/search/views/components/search_navigation/searc
 import 'package:ion/app/features/search/views/pages/chat/components/chat_no_results_found.dart';
 import 'package:ion/app/features/search/views/pages/chat/components/chat_search_results.dart';
 import 'package:ion/app/features/search/views/pages/chat/components/chat_search_results_skeleton.dart';
+import 'package:ion/app/features/user/providers/search_users_provider.r.dart';
 import 'package:ion/app/router/app_routes.gr.dart';
-import 'package:ion/app/utils/future.dart';
 
 class ChatQuickSearchPage extends HookConsumerWidget {
   const ChatQuickSearchPage({required this.query, super.key});
@@ -28,12 +29,23 @@ class ChatQuickSearchPage extends HookConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final history = ref.watch(chatSearchHistoryProvider);
-
-    final debouncedText = useDebounced<String>(query, 300.milliseconds) ?? '';
-    final usersSearchResults = ref.watch(chatUsersSearchProvider(debouncedText));
+    final debouncedQuery = useDebounced(query, const Duration(milliseconds: 300)) ?? '';
 
     final hideCommunity =
         ref.watch(featureFlagsProvider.notifier).get(ChatFeatureFlag.hideCommunity);
+
+    final remoteUserSearch = ref.watch(searchUsersProvider(query: debouncedQuery));
+    final localUserSearch = ref.watch(chatLocalUserSearchProvider(debouncedQuery));
+
+    final isLoading = remoteUserSearch.isLoading || localUserSearch.isLoading;
+
+    final searchResults = [
+      ...?localUserSearch.valueOrNull,
+      if (remoteUserSearch.valueOrNull?.users != null)
+        ...remoteUserSearch.value!.users!.map(
+          (a) => ChatSearchResultItem(userMetadata: a),
+        ),
+    ].distinctBy((item) => item.userMetadata).toList();
 
     return Scaffold(
       body: ScreenTopOffset(
@@ -41,41 +53,40 @@ class ChatQuickSearchPage extends HookConsumerWidget {
           children: [
             SearchNavigation(
               query: query,
-              loading: usersSearchResults.isLoading,
+              loading: isLoading,
               onSubmitted: (String query) {
                 ChatAdvancedSearchRoute(query: query).go(context);
                 ref.read(chatSearchHistoryProvider.notifier).addQueryToTheHistory(query);
               },
               onTextChanged: (String text) => ChatQuickSearchRoute(query: text).replace(context),
             ),
-            usersSearchResults.maybeWhen(
-              data: (pubkeysAndContentTuples) {
-                return pubkeysAndContentTuples == null
-                    ? history.pubKeys.isEmpty && history.queries.isEmpty
-                        ? SearchHistoryEmpty(
-                            title: hideCommunity
-                                ? context.i18n.chat_search_no_community_empty
-                                : context.i18n.chat_search_empty,
-                          )
-                        : SearchHistory(
-                            queries: history.queries,
-                            itemCount: history.pubKeys.length,
-                            onSelectQuery: (String text) =>
-                                ChatQuickSearchRoute(query: text).replace(context),
-                            onClearHistory: ref.read(chatSearchHistoryProvider.notifier).clear,
-                            itemBuilder: (context, index) => FeedSearchHistoryUserListItem(
-                              pubkey: history.pubKeys[index],
-                            ),
-                          )
-                    : pubkeysAndContentTuples.isEmpty
-                        ? const Expanded(child: ChatSearchNoResults())
-                        : Expanded(
-                            child:
-                                ChatSearchResults(pubkeysAndContentTuples: pubkeysAndContentTuples),
-                          );
-              },
-              orElse: ChatSearchResultsSkeleton.new,
-            ),
+            if (debouncedQuery.isEmpty)
+              history.pubKeys.isEmpty && history.queries.isEmpty
+                  ? SearchHistoryEmpty(
+                      title: hideCommunity
+                          ? context.i18n.chat_search_no_community_empty
+                          : context.i18n.chat_search_empty,
+                    )
+                  : SearchHistory(
+                      queries: history.queries,
+                      itemCount: history.pubKeys.length,
+                      onSelectQuery: (String text) =>
+                          ChatQuickSearchRoute(query: text).replace(context),
+                      onClearHistory: ref.read(chatSearchHistoryProvider.notifier).clear,
+                      itemBuilder: (context, index) => FeedSearchHistoryUserListItem(
+                        pubkey: history.pubKeys[index],
+                      ),
+                    )
+            else if (isLoading)
+              const ChatSearchResultsSkeleton()
+            else if (searchResults.isEmpty)
+              const Expanded(child: ChatSearchNoResults())
+            else
+              Expanded(
+                child: ChatSearchResults(
+                  searchResults: searchResults,
+                ),
+              ),
           ],
         ),
       ),

@@ -6,12 +6,14 @@ import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/auth/providers/auth_provider.m.dart';
 import 'package:ion/app/features/chat/e2ee/model/entities/private_direct_message_data.f.dart';
 import 'package:ion/app/features/chat/model/database/chat_database.m.dart';
+import 'package:ion/app/features/search/model/chat_search_result_item.f.dart';
+import 'package:ion/app/features/user_profile/database/dao/user_metadata_dao.m.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'chat_messages_search_provider.r.g.dart';
 
 @riverpod
-Future<List<(String, String)>?> chatMessagesSearch(Ref ref, String query) async {
+Future<List<ChatSearchResultItem>?> chatMessagesSearch(Ref ref, String query) async {
   if (query.isEmpty) return null;
 
   final currentUserMasterPubkey = ref.watch(currentPubkeySelectorProvider);
@@ -25,16 +27,26 @@ Future<List<(String, String)>?> chatMessagesSearch(Ref ref, String query) async 
 
   final entities = searchResults.map(ReplaceablePrivateDirectMessageEntity.fromEventMessage);
 
-  final tuples = entities
-      .sortedBy((entity) => entity.createdAt.toDateTime)
-      .reversed
-      .map(
-        (message) => (
-          message.allPubkeys.firstWhereOrNull((key) => key != currentUserMasterPubkey) ?? '',
-          message.data.content
-        ),
-      )
-      .toList();
+  final result = <ChatSearchResultItem>[];
 
-  return tuples;
+  entities.sortedBy((entity) => entity.createdAt.toDateTime).reversed.forEach((message) async {
+    final receiverMasterPubkey = message.allPubkeys.firstWhereOrNull(
+      (key) => key != currentUserMasterPubkey,
+    );
+
+    if (receiverMasterPubkey == null) return;
+
+    final userMetadata = await ref.watch(userMetadataDaoProvider).get(receiverMasterPubkey);
+
+    if (userMetadata == null) return;
+
+    result.add(
+      ChatSearchResultItem(
+        userMetadata: userMetadata,
+        lastMessageContent: message.data.content,
+      ),
+    );
+  });
+
+  return result;
 }

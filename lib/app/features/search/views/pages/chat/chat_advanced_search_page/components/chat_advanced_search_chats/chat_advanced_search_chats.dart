@@ -3,7 +3,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:ion/app/features/search/providers/chat_messages_search_provider.r.dart';
+import 'package:ion/app/features/search/providers/chat_search/chat_messages_search_provider.r.dart';
 import 'package:ion/app/features/search/views/pages/chat/components/chat_no_results_found.dart';
 import 'package:ion/app/features/search/views/pages/chat/components/chat_search_results.dart';
 import 'package:ion/app/features/search/views/pages/chat/components/chat_search_results_skeleton.dart';
@@ -20,11 +20,11 @@ class ChatAdvancedSearchChats extends HookConsumerWidget {
     final chatsSearchResults = ref.watch(chatMessagesSearchProvider(query));
 
     return chatsSearchResults.maybeWhen(
-      data: (pubkeysAndContentTuples) {
-        if (pubkeysAndContentTuples!.isEmpty) {
+      data: (searchResults) {
+        if (searchResults!.isEmpty) {
           return const ChatSearchNoResults();
         } else {
-          return ChatSearchResults(pubkeysAndContentTuples: pubkeysAndContentTuples);
+          return ChatSearchResults(searchResults: searchResults);
         }
       },
       orElse: ChatSearchResultsSkeleton.new,
