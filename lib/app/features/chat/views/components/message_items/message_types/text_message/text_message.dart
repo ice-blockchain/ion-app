@@ -119,7 +119,7 @@ class _TextMessageContent extends HookWidget {
   final bool hasRepliedMessage;
   @override
   Widget build(BuildContext context) {
-    final maxAvailableWidth = MessageItemWrapper.maxWidth - (12.0.s * 2) - 32.0.s;
+    final maxAvailableWidth = MessageItemWrapper.maxWidth - (12.0.s * 2);
     final content = eventMessage.content;
 
     final metadataRef = useRef(GlobalKey());
@@ -143,7 +143,8 @@ class _TextMessageContent extends HookWidget {
       text: TextSpan(text: content, style: textStyle),
       textDirection: TextDirection.ltr,
       textWidthBasis: TextWidthBasis.longestLine,
-    )..layout(maxWidth: maxAvailableWidth - metadataWidth.value.s + 32.0.s);
+      textScaler: MediaQuery.textScalerOf(context),
+    )..layout(maxWidth: maxAvailableWidth - metadataWidth.value.s);
 
     final oneLineMetrics = oneLineTextPainter.computeLineMetrics();
     final multiline = oneLineMetrics.length > 1;
@@ -158,7 +159,10 @@ class _TextMessageContent extends HookWidget {
         children: [
           _TextRichContent(text: content, textStyle: textStyle),
           if (hasRepliedMessage) const Spacer(),
-          MessageMetaData(eventMessage: eventMessage, key: metadataRef.value),
+          Offstage(
+            offstage: metadataWidth.value.s <= 0,
+            child: MessageMetaData(eventMessage: eventMessage, key: metadataRef.value),
+          ),
         ],
       );
     } else {
@@ -167,43 +171,26 @@ class _TextMessageContent extends HookWidget {
         textDirection: TextDirection.ltr,
         textWidthBasis: TextWidthBasis.longestLine,
         textScaler: MediaQuery.textScalerOf(context),
-      )..layout(maxWidth: maxAvailableWidth + 32.0.s);
+      )..layout(maxWidth: maxAvailableWidth);
 
       final lineMetrics = multiLineTextPainter.computeLineMetrics();
 
-      final wouldOverlap =
-          lineMetrics.last.width.s > (maxAvailableWidth - metadataWidth.value.s + 32.0.s);
-
-      final contentPadding =
-          _calculateContentPadding(lineMetrics, maxAvailableWidth, metadataWidth.value);
+      final wouldOverlap = lineMetrics.last.width.s > (maxAvailableWidth - metadataWidth.value.s);
 
       return Stack(
         alignment: AlignmentDirectional.bottomEnd,
         children: [
-          Padding(
-            padding: EdgeInsetsDirectional.only(end: contentPadding),
-            child:
-                _TextRichContent(text: wouldOverlap ? '$content\n' : content, textStyle: textStyle),
-          ),
-          MessageMetaData(
-            eventMessage: eventMessage,
-            key: metadataRef.value,
+          _TextRichContent(text: wouldOverlap ? '$content\n' : content, textStyle: textStyle),
+          Offstage(
+            offstage: metadataWidth.value.s <= 0,
+            child: MessageMetaData(
+              eventMessage: eventMessage,
+              key: metadataRef.value,
+            ),
           ),
         ],
       );
     }
-  }
-
-  double _calculateContentPadding(
-    List<LineMetrics> lineMetrics,
-    double maxAvailableWidth,
-    double metadataWidth,
-  ) {
-    final maxLineWidth = lineMetrics.map((e) => e.width).reduce((a, b) => a > b ? a : b);
-    if (maxLineWidth.s > maxAvailableWidth) {
-      return 0.0.s;
-    }
-    return metadataWidth.s + 8.0.s;
   }
 }
 
