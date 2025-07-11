@@ -2,7 +2,7 @@
 
 import 'package:flutter_test/flutter_test.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:ion/app/features/ion_connect/providers/active_relays_provider.r.dart';
+import 'package:ion/app/features/ion_connect/providers/relays/active_relays_provider.r.dart';
 
 void main() {
   group('ActiveRelays Provider Tests', () {

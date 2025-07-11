@@ -6,7 +6,7 @@ import 'package:ion/app/features/auth/providers/auth_provider.m.dart';
 import 'package:ion/app/features/feed/data/models/feed_filter.dart';
 import 'package:ion/app/features/feed/providers/feed_current_filter_provider.m.dart';
 import 'package:ion/app/features/user/providers/follow_list_provider.r.dart';
-import 'package:ion/app/features/user/providers/users_relays_provider.r.dart';
+import 'package:ion/app/features/user/providers/relays/optimal_user_relays_provider.r.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'feed_filter_relays_provider.r.g.dart';
@@ -43,9 +43,9 @@ Future<Map<String, List<String>>> feedForYouFilterRelays(Ref ref) async {
     if (followList != null) ...followList.masterPubkeys,
   ];
 
-  final relayMapping = await ref.read(usersRelaysProvider.notifier).fetch(
+  final relayMapping = await ref.read(optimalUserRelaysServiceProvider).fetch(
         masterPubkeys: masterPubkeys,
-        strategy: UsersRelaysStrategy.mostUsers,
+        strategy: OptimalRelaysStrategy.mostUsers,
       );
 
   return relayMapping;
@@ -58,9 +58,9 @@ Future<Map<String, List<String>>> feedFollowingFilterRelays(Ref ref) async {
 
   final masterPubkeys = [if (followList != null) ...followList.masterPubkeys];
 
-  final relayMapping = await ref.read(usersRelaysProvider.notifier).fetch(
+  final relayMapping = await ref.read(optimalUserRelaysServiceProvider).fetch(
         masterPubkeys: masterPubkeys,
-        strategy: UsersRelaysStrategy.mostUsers,
+        strategy: OptimalRelaysStrategy.mostUsers,
       );
 
   return relayMapping;

@@ -3,7 +3,7 @@
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/features/ion_connect/ion_connect.dart';
 import 'package:ion/app/features/ion_connect/providers/ion_connect_event_signer_provider.r.dart';
-import 'package:ion/app/features/ion_connect/providers/relay_auth_provider.r.dart';
+import 'package:ion/app/features/ion_connect/providers/relays/relay_auth_provider.r.dart';
 import 'package:ion/app/features/user/model/user_delegation.f.dart';
 import 'package:ion/app/features/user/providers/user_delegation_provider.r.dart';
 

@@ -2,7 +2,7 @@
 
 import 'package:ion/app/features/auth/providers/auth_provider.m.dart';
 import 'package:ion/app/features/ion_connect/providers/ion_connect_event_signer_provider.r.dart';
-import 'package:ion/app/features/ion_connect/providers/relay_provider.r.dart';
+import 'package:ion/app/features/ion_connect/providers/relays/relay_provider.r.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'active_relays_provider.r.g.dart';

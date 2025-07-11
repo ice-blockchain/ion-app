@@ -23,7 +23,7 @@ import 'package:ion/app/features/ion_connect/model/ion_connect_entity.dart';
 import 'package:ion/app/features/ion_connect/model/related_hashtag.f.dart';
 import 'package:ion/app/features/ion_connect/providers/entities_paged_data_provider.m.dart';
 import 'package:ion/app/features/ion_connect/providers/ion_connect_notifier.r.dart';
-import 'package:ion/app/features/user/providers/relevant_current_user_relays_provider.r.dart';
+import 'package:ion/app/features/user/providers/relays/relevant_user_relays_provider.r.dart';
 import 'package:ion/app/services/logger/logger.dart';
 import 'package:ion/app/utils/functions.dart';
 import 'package:ion/app/utils/pagination.dart';

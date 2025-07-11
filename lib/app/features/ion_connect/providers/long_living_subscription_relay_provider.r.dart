@@ -7,7 +7,7 @@ import 'package:ion/app/features/auth/providers/auth_provider.m.dart';
 import 'package:ion/app/features/ion_connect/ion_connect.dart';
 import 'package:ion/app/features/ion_connect/model/action_source.f.dart';
 import 'package:ion/app/features/ion_connect/model/disliked_relay_urls_collection.f.dart';
-import 'package:ion/app/features/ion_connect/providers/relay_creation_provider.r.dart';
+import 'package:ion/app/features/ion_connect/providers/relays/relay_creation_provider.r.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'long_living_subscription_relay_provider.r.g.dart';

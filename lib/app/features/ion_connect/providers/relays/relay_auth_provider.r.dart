@@ -10,8 +10,8 @@ import 'package:ion/app/features/ion_connect/ion_connect.dart' hide requestEvent
 import 'package:ion/app/features/ion_connect/model/action_source.f.dart';
 import 'package:ion/app/features/ion_connect/model/auth_event.f.dart';
 import 'package:ion/app/features/ion_connect/providers/ion_connect_notifier.r.dart';
+import 'package:ion/app/features/user/providers/relays/user_relays_manager.r.dart';
 import 'package:ion/app/features/user/providers/user_delegation_provider.r.dart';
-import 'package:ion/app/features/user/providers/user_relays_manager.r.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'relay_auth_provider.r.g.dart';

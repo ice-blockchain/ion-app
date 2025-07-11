@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: ice License 1.0
 
-import 'package:ion/app/features/user/providers/ranked_user_relays_provider.r.dart';
+import 'package:ion/app/features/user/providers/relays/ranked_user_relays_provider.r.dart';
 import 'package:ion/app/utils/url.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
