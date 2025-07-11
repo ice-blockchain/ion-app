@@ -10,6 +10,7 @@ import 'package:ion/app/features/ion_connect/model/related_pubkey.f.dart';
 import 'package:ion/app/services/ion_connect/ed25519_key_store.dart';
 import 'package:ion/app/services/ion_connect/encrypted_message_service.r.dart';
 import 'package:ion/app/utils/date.dart';
+import 'package:nip44/nip44.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'ion_connect_gift_wrap_service.r.g.dart';
@@ -59,6 +60,7 @@ class IonConnectGiftWrapServiceImpl implements IonConnectGiftWrapService {
       encodedEvent,
       publicKey: receiverPubkey,
       privateKey: oneTimeSigner.privateKey,
+      compressionAlgorithm: CompressionAlgorithm.brotli,
     );
 
     final createdAt = randomDateBefore(
@@ -88,6 +90,7 @@ class IonConnectGiftWrapServiceImpl implements IonConnectGiftWrapService {
       content,
       publicKey: senderPubkey,
       privateKey: privateKey,
+      compressionAlgorithm: CompressionAlgorithm.brotli,
     );
 
     return EventMessage.fromPayloadJson(

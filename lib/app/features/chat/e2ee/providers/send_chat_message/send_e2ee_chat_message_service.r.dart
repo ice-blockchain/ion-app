@@ -364,7 +364,7 @@ class SendE2eeChatMessageService {
         ReplaceablePrivateDirectMessageData.fromEventMessage(eventMessage).messageType;
 
     Logger.log(
-      '🗜️ $messageType - Original: $size | Encrypted: $encryptedSize | Difference: ${encryptedSize - size} (${((encryptedSize - size) / size * 100).toStringAsFixed(1)}%)',
+      '🗜️ Encrypted id: ${encryptedEventMessage.id} $messageType - Original: $size | Encrypted: $encryptedSize | Difference: ${encryptedSize - size} (${((encryptedSize - size) / size * 100).toStringAsFixed(1)}%)',
     );
   }
 

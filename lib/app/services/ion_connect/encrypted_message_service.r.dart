@@ -41,7 +41,12 @@ class EncryptedMessageService {
   final EventSigner eventSigner;
   final String currentUserPubkey;
 
-  Future<String> encryptMessage(String message, {String? publicKey, String? privateKey}) async {
+  Future<String> encryptMessage(
+    String message, {
+    String? publicKey,
+    String? privateKey,
+    CompressionAlgorithm compressionAlgorithm = CompressionAlgorithm.none,
+  }) async {
     final x25519PublicKey = _convertEd25519PkToX25519(publicKey ?? currentUserPubkey);
     final x25519PrivateKey = _convertEd25519SkToX25519(privateKey ?? eventSigner.privateKey);
 
@@ -55,11 +60,16 @@ class EncryptedMessageService {
       x25519PrivateKey,
       x25519PublicKey,
       customConversationKey: conversationKey,
-      compressionAlgorithm: CompressionAlgorithm.brotli,
+      compressionAlgorithm: compressionAlgorithm,
     );
   }
 
-  Future<String> decryptMessage(String message, {String? publicKey, String? privateKey}) async {
+  Future<String> decryptMessage(
+    String message, {
+    String? publicKey,
+    String? privateKey,
+    CompressionAlgorithm compressionAlgorithm = CompressionAlgorithm.none,
+  }) async {
     final x25519PublicKey = _convertEd25519PkToX25519(publicKey ?? currentUserPubkey);
     final x25519PrivateKey = _convertEd25519SkToX25519(privateKey ?? eventSigner.privateKey);
 
@@ -73,7 +83,7 @@ class EncryptedMessageService {
       x25519PrivateKey,
       x25519PublicKey,
       customConversationKey: conversationKey,
-      compressionAlgorithm: CompressionAlgorithm.brotli,
+      compressionAlgorithm: compressionAlgorithm,
     );
   }
 

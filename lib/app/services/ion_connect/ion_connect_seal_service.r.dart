@@ -11,6 +11,7 @@ import 'package:ion/app/features/chat/community/models/entities/tags/master_pubk
 import 'package:ion/app/features/ion_connect/ion_connect.dart';
 import 'package:ion/app/services/ion_connect/encrypted_message_service.r.dart';
 import 'package:ion/app/utils/date.dart';
+import 'package:nip44/nip44.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'ion_connect_seal_service.r.g.dart';
@@ -58,6 +59,7 @@ class IonConnectSealServiceImpl implements IonConnectSealService {
       encodedRumor,
       publicKey: receiverPubkey,
       privateKey: signer.privateKey,
+      compressionAlgorithm: CompressionAlgorithm.brotli,
     );
 
     final createdAt = randomDateBefore(
@@ -89,6 +91,7 @@ class IonConnectSealServiceImpl implements IonConnectSealService {
       content,
       publicKey: senderPubkey,
       privateKey: privateKey,
+      compressionAlgorithm: CompressionAlgorithm.brotli,
     );
 
     return EventMessage.fromPayloadJson(
