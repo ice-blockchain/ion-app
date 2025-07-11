@@ -67,17 +67,18 @@ class PaginatedUsersMetadata extends _$PaginatedUsersMetadata {
       final userRelaysInfo = await _fetcher(_limit, _offset, currentData, ionIdentityClient);
 
       final masterPubkeys = userRelaysInfo.map((e) => e.masterPubKey).toSet();
-      final usersMetadataWithDependencies = await ref.read(ionConnectEntitiesManagerProvider.notifier).fetch(
-            eventReferences: masterPubkeys
-                .map(
-                  (masterPubkey) => ReplaceableEventReference(
-                    masterPubkey: masterPubkey,
-                    kind: UserMetadataEntity.kind,
-                  ),
-                )
-                .toList(),
-            search: ProfileBadgesSearchExtension(forKind: UserMetadataEntity.kind).toString(),
-          );
+      final usersMetadataWithDependencies =
+          await ref.read(ionConnectEntitiesManagerProvider.notifier).fetch(
+                eventReferences: masterPubkeys
+                    .map(
+                      (masterPubkey) => ReplaceableEventReference(
+                        masterPubkey: masterPubkey,
+                        kind: UserMetadataEntity.kind,
+                      ),
+                    )
+                    .toList(),
+                search: ProfileBadgesSearchExtension(forKind: UserMetadataEntity.kind).toString(),
+              );
 
       final merged = [
         ...currentData,
