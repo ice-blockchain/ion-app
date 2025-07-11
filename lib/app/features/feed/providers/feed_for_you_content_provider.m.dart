@@ -132,20 +132,20 @@ class FeedForYouContent extends _$FeedForYouContent implements PagedNotifier {
         // trending and explore modifiers equally (explore also has the "trending" search ext).
         feedModifier == FeedModifier.trending
             ? {
-                FeedModifier.trending: 1,
                 FeedModifier.explore: 1,
+                FeedModifier.trending: 1,
               }
             : switch (feedType) {
                 // Regular feeds has equal distribution of all modifiers.
                 FeedType.post || FeedType.video || FeedType.article => {
+                    FeedModifier.explore: 1,
                     FeedModifier.top: 1,
                     FeedModifier.trending: 1,
-                    FeedModifier.explore: 1,
                   },
                 // Stories feed has only explore and trending modifiers.
                 FeedType.story => {
-                    FeedModifier.trending: 1,
                     FeedModifier.explore: 1,
+                    FeedModifier.trending: 1,
                   },
               };
     final totalWeight = modifierWeights.values.sum;
