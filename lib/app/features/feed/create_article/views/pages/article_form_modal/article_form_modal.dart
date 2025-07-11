@@ -11,6 +11,7 @@ import 'package:ion/app/components/separated/separator.dart';
 import 'package:ion/app/components/text_editor/components/suggestions_container.dart';
 import 'package:ion/app/components/text_editor/text_editor.dart';
 import 'package:ion/app/extensions/extensions.dart';
+import 'package:ion/app/features/auth/providers/auth_provider.m.dart';
 import 'package:ion/app/features/feed/create_article/views/pages/article_form_modal/components/article_form_add_image.dart';
 import 'package:ion/app/features/feed/create_article/views/pages/article_form_modal/components/article_form_toolbar.dart';
 import 'package:ion/app/features/feed/create_article/views/pages/article_form_modal/hooks/use_article_form.dart';
@@ -54,6 +55,7 @@ class ArticleFormModal extends HookConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final articleState = useArticleForm(ref, modifiedEvent: modifiedEvent);
+    final currentPubkey = ref.watch(currentPubkeySelectorProvider);
 
     final scrollController = ScrollController();
     final textEditorKey = useMemoized(TextEditorKeys.createArticle);
@@ -167,11 +169,12 @@ class ArticleFormModal extends HookConsumerWidget {
                           valueListenable: articleState.editorFocusNotifier,
                           builder: (context, isFocused, child) {
                             return TextEditor(
+                              articleState.textEditorController,
+                              key: textEditorKey,
                               autoFocus: isFocused,
                               media: modifiedEvent != null ? articleState.media.value : null,
-                              articleState.textEditorController,
+                              authorPubkey: currentPubkey,
                               placeholder: context.i18n.create_article_story_placeholder,
-                              key: textEditorKey,
                               scrollController: scrollController,
                             );
                           },
