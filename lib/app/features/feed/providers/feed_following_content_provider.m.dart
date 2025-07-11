@@ -2,6 +2,7 @@
 
 import 'dart:async';
 
+import 'package:collection/collection.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:ion/app/exceptions/exceptions.dart';
 import 'package:ion/app/extensions/num.dart';
@@ -267,6 +268,12 @@ class FeedFollowingContent extends _$FeedFollowingContent implements PagedNotifi
           }
           await _updateUserFetchState(pubkey, hasContent: valid);
         }).catchError((Object? error) {
+          state = state.copyWith(
+            unseenPagination: {
+              ...state.unseenPagination!,
+              pubkey: _getPubkeyPagination(pubkey).copyWith(hasMore: false),
+            },
+          );
           Logger.error(
             error ?? '',
             message: 'Error requesting entities for pubkey: $pubkey',
@@ -309,7 +316,12 @@ class FeedFollowingContent extends _$FeedFollowingContent implements PagedNotifi
         .requestEntities(requestMessage, actionSource: dataSource.actionSource)
         .toList();
 
-    return dataSource.responseFilter?.call(entities).first;
+    // TODO: Create a separate data source model that handles it internally
+    if (dataSource.responseFilter != null) {
+      return dataSource.responseFilter!.call(entities).firstOrNull;
+    } else {
+      return entities.firstWhereOrNull(dataSource.entityFilter);
+    }
   }
 
   Stream<IonConnectEntity> _requestEntitiesByReferences({

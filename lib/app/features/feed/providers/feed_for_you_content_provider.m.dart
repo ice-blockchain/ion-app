@@ -454,7 +454,12 @@ class FeedForYouContent extends _$FeedForYouContent implements PagedNotifier {
         .requestEntities(requestMessage, actionSource: dataSource.actionSource)
         .toList();
 
-    return dataSource.responseFilter?.call(entities).first;
+    // TODO: Create a separate data source model that handles it internally
+    if (dataSource.responseFilter != null) {
+      return dataSource.responseFilter!.call(entities).firstOrNull;
+    } else {
+      return entities.firstWhereOrNull(dataSource.entityFilter);
+    }
   }
 
   EntitiesDataSource _getDataSource({
