@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: ice License 1.0
 
 import 'package:flutter_test/flutter_test.dart';
-import 'package:ion/app/utils/algorithm.dart';
+import 'package:ion/app/features/user/providers/relays/relay_selectors.dart';
 
 void main() {
   group('findMostMatchingOptions tests', () {

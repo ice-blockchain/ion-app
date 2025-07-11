@@ -2,9 +2,9 @@
 
 import 'package:ion/app/exceptions/exceptions.dart';
 import 'package:ion/app/features/auth/providers/auth_provider.m.dart';
+import 'package:ion/app/features/user/providers/relays/relay_selectors.dart';
 import 'package:ion/app/features/user/providers/relays/relevant_user_relays_provider.r.dart';
 import 'package:ion/app/features/user/providers/relays/user_relays_manager.r.dart';
-import 'package:ion/app/utils/algorithm.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'optimal_user_relays_provider.r.g.dart';
