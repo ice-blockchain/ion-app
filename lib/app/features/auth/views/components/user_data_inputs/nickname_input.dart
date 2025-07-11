@@ -1,6 +1,7 @@
 // SPDX-License-Identifier: ice License 1.0
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/auth/views/components/user_data_inputs/general_user_data_input.dart';
 import 'package:ion/app/utils/validators.dart';
@@ -46,6 +47,14 @@ class NicknameInput extends StatelessWidget {
     return GeneralUserDataInput(
       onChanged: onChanged,
       prefixIconAssetName: Assets.svg.iconFieldNickname,
+      inputFormatters: [
+        TextInputFormatter.withFunction(
+          (oldValue, newValue) => newValue.copyWith(
+            text: newValue.text.toLowerCase(),
+            selection: newValue.selection,
+          ),
+        ),
+      ],
       labelText: context.i18n.fill_profile_input_nickname,
       textInputAction: textInputAction,
       initialValue: initialValue,
