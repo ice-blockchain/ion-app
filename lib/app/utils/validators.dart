@@ -31,7 +31,7 @@ class Validators {
   }
 
   static bool isInvalidNickname(String? value) {
-    return isEmpty(value) || !RegExp(r'^[a-zA-Z0-9.]+$').hasMatch(value!);
+    return isEmpty(value) || !RegExp(r'^[a-z0-9.]+$').hasMatch(value!);
   }
 
   static bool isInvalidLength(String? value, {int? minLength, int? maxLength}) {

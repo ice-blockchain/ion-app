@@ -2,6 +2,7 @@
 
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/components/global_notification_bar/providers/global_notification_notifier_provider.r.dart';
+import 'package:ion/app/features/auth/providers/auth_provider.m.dart';
 import 'package:ion/app/features/core/views/pages/error_modal.dart';
 import 'package:ion/app/features/feed/create_article/providers/create_article_provider.r.dart';
 import 'package:ion/app/features/feed/create_post/model/create_post_option.dart';
@@ -52,6 +53,14 @@ void _handleNotification(
   required AsyncValue<void> state,
   required FeedNotificationContentType type,
 }) {
+  final isAuthenticated = ref.read(
+        authProvider.select((state) => state.valueOrNull?.isAuthenticated),
+      ) ??
+      false;
+  if (!isAuthenticated) {
+    return;
+  }
+
   if (state.isLoading) {
     ref.read(globalNotificationNotifierProvider.notifier).show(type.loading(), isPermanent: true);
   } else if (state.hasError && state.error != null) {
