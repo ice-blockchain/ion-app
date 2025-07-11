@@ -17,7 +17,6 @@ import 'package:ion/app/features/wallets/views/pages/import_token_page/component
 import 'package:ion/app/features/wallets/views/pages/import_token_page/providers/token_already_exists_provider.r.dart';
 import 'package:ion/app/features/wallets/views/pages/import_token_page/providers/token_data_notifier_provider.r.dart';
 import 'package:ion/app/features/wallets/views/pages/import_token_page/providers/token_form_notifier_provider.r.dart';
-import 'package:ion/app/hooks/use_on_init.dart';
 import 'package:ion/app/router/app_routes.gr.dart';
 import 'package:ion/app/router/utils/show_simple_bottom_sheet.dart';
 import 'package:ion/app/services/clipboard/clipboard.dart';
@@ -59,34 +58,41 @@ class ImportTokenForm extends HookConsumerWidget {
         (exists) => _onTokenAlreadyExists(context, exists: exists ?? false),
       );
 
-    useOnInit(
+    useEffect(
       () {
-        tokenAddressController.addListener(
-          () {
-            ref.read(tokenFormNotifierProvider.notifier).address = tokenAddressController.text;
-            isAdditionalInputFieldsEnabled.value = false;
-          },
-        );
+        void onTokenAddressChanged() {
+          ref.read(tokenFormNotifierProvider.notifier).address = tokenAddressController.text;
+          isAdditionalInputFieldsEnabled.value = false;
+        }
+
+        tokenAddressController.addListener(onTokenAddressChanged);
+        return () => tokenAddressController.removeListener(onTokenAddressChanged);
       },
       [tokenAddressController],
     );
 
-    useOnInit(
-      () => tokenDecimalsController.addListener(
-        () {
+    useEffect(
+      () {
+        void onDecimalsChanged() {
           ref.read(tokenFormNotifierProvider.notifier).decimals =
               int.tryParse(tokenDecimalsController.text);
-        },
-      ),
+        }
+
+        tokenDecimalsController.addListener(onDecimalsChanged);
+        return () => tokenDecimalsController.removeListener(onDecimalsChanged);
+      },
       [tokenDecimalsController],
     );
 
-    useOnInit(
-      () => tokenSymbolController.addListener(
-        () {
+    useEffect(
+      () {
+        void onTokenSymbolChanged() {
           ref.read(tokenFormNotifierProvider.notifier).symbol = tokenSymbolController.text;
-        },
-      ),
+        }
+
+        tokenSymbolController.addListener(onTokenSymbolChanged);
+        return () => tokenSymbolController.removeListener(onTokenSymbolChanged);
+      },
       [tokenSymbolController],
     );
 
