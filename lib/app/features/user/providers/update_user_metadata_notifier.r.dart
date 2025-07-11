@@ -8,7 +8,7 @@ import 'package:ion/app/features/ion_connect/providers/ion_connect_upload_notifi
 import 'package:ion/app/features/settings/model/privacy_options.dart';
 import 'package:ion/app/features/user/model/user_metadata.f.dart';
 import 'package:ion/app/features/user/providers/badges_notifier.r.dart';
-import 'package:ion/app/features/user/providers/user_metadata_provider.r.dart';
+import 'package:ion/app/features/user/providers/user_metadata_provider.r.dart' hide UserMetadata;
 import 'package:ion/app/features/user/providers/user_social_profile_provider.r.dart';
 import 'package:ion/app/features/wallets/providers/connected_crypto_wallets_provider.r.dart';
 import 'package:ion/app/services/media_service/media_service.m.dart';

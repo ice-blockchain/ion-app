@@ -8,7 +8,6 @@ import 'package:ion/app/features/auth/providers/auth_provider.m.dart';
 import 'package:ion/app/features/auth/providers/delegation_complete_provider.r.dart';
 import 'package:ion/app/features/core/providers/env_provider.r.dart';
 import 'package:ion/app/features/ion_connect/model/event_reference.f.dart';
-import 'package:ion/app/features/ion_connect/model/ion_connect_entity.dart';
 import 'package:ion/app/features/ion_connect/model/search_extension.dart';
 import 'package:ion/app/features/ion_connect/providers/ion_connect_entity_provider.r.dart';
 import 'package:ion/app/features/user/model/badges/badge_award.f.dart';
@@ -84,8 +83,22 @@ class UserProfileSync extends _$UserProfileSync {
 
     if (masterPubkeysToSync.isEmpty) return;
 
-    final usersProfileEntities =
-        await ref.watch(usersProfileProvider(masterPubkeysToSync.toList()).future);
+    final usersProfileEntities = await ref.read(ionConnectEntitiesManagerProvider.notifier).fetch(
+          eventReferences: masterPubkeysToSync
+              .map(
+                (pubkey) =>
+                    ReplaceableEventReference(masterPubkey: pubkey, kind: UserMetadataEntity.kind),
+              )
+              .toList(),
+          search: SearchExtensions([
+            // GenericIncludeSearchExtension(
+            //   forKind: UserMetadataEntity.kind,
+            //   includeKind: UserDelegationEntity.kind,
+            // ),
+            ProfileBadgesSearchExtension(forKind: UserMetadataEntity.kind),
+          ]).toString(),
+          cache: false,
+        );
 
     final usersMetadata = usersProfileEntities.whereType<UserMetadataEntity>().toList();
     final usersDelegation = usersProfileEntities.whereType<UserDelegationEntity>().toList();
@@ -106,30 +119,4 @@ class UserProfileSync extends _$UserProfileSync {
     await userMetadataDao.deleteMetadata(missingMetadataMasterPubkeys);
     await userDelegationDao.deleteDelegation(missingMetadataMasterPubkeys);
   }
-}
-
-@riverpod
-Future<List<IonConnectEntity>> usersProfile(
-  Ref ref,
-  List<String> masterPubkeys, {
-  bool cache = false,
-}) async {
-  return await ref.watch(
-    ionConnectEntitiesProvider(
-      eventReferences: masterPubkeys
-          .map(
-            (pubkey) =>
-                ReplaceableEventReference(masterPubkey: pubkey, kind: UserMetadataEntity.kind),
-          )
-          .toList(),
-      search: SearchExtensions([
-        GenericIncludeSearchExtension(
-          forKind: UserMetadataEntity.kind,
-          includeKind: UserDelegationEntity.kind,
-        ),
-        ProfileBadgesSearchExtension(forKind: UserMetadataEntity.kind),
-      ]).toString(),
-      cache: cache,
-    ).future,
-  );
 }
