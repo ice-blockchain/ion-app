@@ -23,8 +23,8 @@ import 'package:ion/app/features/ion_connect/providers/ion_connect_cache.r.dart'
 import 'package:ion/app/features/ion_connect/providers/ion_connect_event_parser.r.dart';
 import 'package:ion/app/features/ion_connect/providers/ion_connect_event_signer_provider.r.dart';
 import 'package:ion/app/features/ion_connect/providers/long_living_subscription_relay_provider.r.dart';
-import 'package:ion/app/features/ion_connect/providers/relay_auth_provider.r.dart';
-import 'package:ion/app/features/ion_connect/providers/relay_creation_provider.r.dart';
+import 'package:ion/app/features/ion_connect/providers/relays/relay_auth_provider.r.dart';
+import 'package:ion/app/features/ion_connect/providers/relays/relay_creation_provider.r.dart';
 import 'package:ion/app/features/user/model/badges/badge_award.f.dart';
 import 'package:ion/app/features/user/model/badges/badge_definition.f.dart';
 import 'package:ion/app/features/user/model/user_delegation.f.dart';
