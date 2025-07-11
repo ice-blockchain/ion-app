@@ -274,13 +274,22 @@ class FakeFollowingFeedSeenEventsRepository implements FollowingFeedSeenEventsRe
   }
 
   @override
-  Future<List<({int createdAt, EventReference eventReference})>> getEventReferences({
+  Future<List<({EventReference eventReference, int createdAt})>> getEventReferences({
     required FeedType feedType,
-    required List<EventReference> exclude,
     required int limit,
+    List<EventReference>? excludeReferences,
+    List<String>? excludePubkeys,
     int? since,
     int? until,
     FeedModifier? feedModifier,
+    bool groupByPubkey = false,
+  }) {
+    throw UnimplementedError();
+  }
+
+  @override
+  Stream<List<({EventReference eventReference, int createdAt})>> watchByReferences({
+    required Iterable<EventReference> eventsReferences,
   }) {
     throw UnimplementedError();
   }

@@ -6,7 +6,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:go_router/go_router.dart';
 import 'package:ion/app/features/core/model/media_type.dart';
 import 'package:ion/app/features/core/providers/video_player_provider.r.dart';
-import 'package:ion/app/features/feed/stories/data/models/story.f.dart';
+import 'package:ion/app/features/feed/stories/data/models/user_story.f.dart';
 import 'package:ion/app/features/feed/stories/providers/story_pause_provider.r.dart';
 import 'package:ion/app/features/feed/stories/views/pages/story_viewer_page.dart';
 import 'package:ion/app/router/providers/go_router_provider.r.dart';
@@ -35,13 +35,9 @@ void main() {
   const viewerPubkey = StoryFixtures.alice;
   const otherPubkey = StoryFixtures.bob;
 
-  final aliceStories = StoryFixtures.simpleStories(
-    pubkey: viewerPubkey,
-    count: 2,
-  );
-  final bobStories = StoryFixtures.simpleStories(
+  final aliceStories = StoryFixtures.userStory();
+  final bobStories = StoryFixtures.userStory(
     pubkey: otherPubkey,
-    count: 2,
   );
 
   group('StoryViewerPage – gestures', () {
@@ -119,7 +115,7 @@ void main() {
       await StoryViewerRobot.launch(
         tester,
         stories: [
-          UserStories(pubkey: viewerPubkey, stories: [lastVideoPost]),
+          UserStory(pubkey: viewerPubkey, story: lastVideoPost),
         ],
         viewerPubkey: viewerPubkey,
         autoPush: true,

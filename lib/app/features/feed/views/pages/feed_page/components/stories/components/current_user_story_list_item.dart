@@ -3,10 +3,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:ion/app/features/feed/stories/providers/feed_stories_provider.r.dart';
+import 'package:ion/app/features/feed/stories/data/models/stories_references.f.dart';
+import 'package:ion/app/features/feed/stories/providers/current_user_story_provider.r.dart';
 import 'package:ion/app/features/feed/stories/providers/viewed_stories_provider.r.dart';
 import 'package:ion/app/features/feed/views/pages/feed_page/components/stories/components/current_user_avatar_with_permission.dart';
 import 'package:ion/app/features/feed/views/pages/feed_page/components/stories/components/plus_button_with_permission.dart';
+import 'package:ion/app/features/ion_connect/model/event_reference.f.dart';
 import 'package:ion/app/features/user/providers/user_metadata_provider.r.dart';
 
 class CurrentUserStoryListItem extends HookConsumerWidget {
@@ -22,15 +24,17 @@ class CurrentUserStoryListItem extends HookConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final currentUserMetadata = ref.watch(currentUserMetadataProvider);
-    final userStories = ref.watch(feedStoriesByPubkeyProvider(pubkey));
-    final viewedStories = ref.watch(viewedStoriesControllerProvider);
-    final hasStories = userStories.isNotEmpty;
+    final userStory = ref.watch(currentUserStoryProvider);
+    final storyReference = userStory?.story.toEventReference();
+    final storiesReferences = StoriesReferences(
+      storyReference != null ? [storyReference] : const <EventReference>[],
+    );
+    final viewedStories = ref.watch(viewedStoriesControllerProvider(storiesReferences));
+    final hasStories = userStory != null;
 
     final allStoriesViewed = useMemoized(
-      () =>
-          hasStories &&
-          userStories.first.stories.every((story) => viewedStories.contains(story.id)),
-      [userStories, viewedStories],
+      () => hasStories && (viewedStories == null || viewedStories.isNotEmpty),
+      [userStory, viewedStories],
     );
 
     return currentUserMetadata.maybeWhen(

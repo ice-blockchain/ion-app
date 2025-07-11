@@ -4,14 +4,12 @@ import 'package:cached_video_player_plus/cached_video_player_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/core/model/media_type.dart';
-import 'package:ion/app/features/feed/data/models/entities/modifiable_post_data.f.dart';
 import 'package:ion/app/features/feed/stories/views/components/story_viewer/components/progress/story_progress_fill.dart';
 import 'package:ion/app/features/video/views/components/video_progress.dart';
 import 'package:ion/app/features/video/views/components/video_slider.dart';
 
 class StoryProgressSegment extends StatelessWidget {
   const StoryProgressSegment({
-    required this.post,
     required this.mediaType,
     required this.isCurrent,
     required this.isPreviousStory,
@@ -21,7 +19,15 @@ class StoryProgressSegment extends StatelessWidget {
     this.margin,
   });
 
-  final ModifiablePostEntity post;
+  const StoryProgressSegment.placeholder({
+    required this.isCurrent,
+    required this.isPreviousStory,
+    this.margin,
+    super.key,
+  })  : mediaType = MediaType.image,
+        imageController = null,
+        videoController = null;
+
   final bool isCurrent;
   final bool isPreviousStory;
   final EdgeInsetsGeometry? margin;
@@ -41,7 +47,6 @@ class StoryProgressSegment extends StatelessWidget {
         borderRadius: BorderRadius.circular(1.0.s),
       ),
       child: _ProgressContent(
-        post: post,
         isCurrent: isCurrent,
         isPreviousStory: isPreviousStory,
         imageController: imageController,
@@ -54,7 +59,6 @@ class StoryProgressSegment extends StatelessWidget {
 
 class _ProgressContent extends StatelessWidget {
   const _ProgressContent({
-    required this.post,
     required this.isCurrent,
     required this.isPreviousStory,
     required this.imageController,
@@ -62,7 +66,6 @@ class _ProgressContent extends StatelessWidget {
     required this.videoController,
   });
 
-  final ModifiablePostEntity post;
   final bool isCurrent;
   final bool isPreviousStory;
   final AnimationController? imageController;
@@ -76,6 +79,10 @@ class _ProgressContent extends StatelessWidget {
 
     if (isPreviousStory) return fullProgress;
     if (!isCurrent) return emptyProgress;
+
+    if (imageController == null && videoController == null) {
+      return emptyProgress;
+    }
 
     switch (mediaType) {
       case MediaType.image:

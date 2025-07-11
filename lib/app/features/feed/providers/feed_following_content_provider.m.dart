@@ -194,7 +194,6 @@ class FeedFollowingContent extends _$FeedFollowingContent implements PagedNotifi
     if (followList == null || followList.data.list.isEmpty) return [];
 
     final dataSourcePubkeys = [
-      if (feedType == FeedType.story) ref.read(currentPubkeySelectorProvider),
       for (final followee in followList.data.list) followee.pubkey,
     ];
 
@@ -213,17 +212,30 @@ class FeedFollowingContent extends _$FeedFollowingContent implements PagedNotifi
     return state.unseenPagination?[pubkey] ?? const Pagination(hasMore: true);
   }
 
+  /// Fetches the next seen event references, excluding those already in the state.
+  ///
+  /// In case of stories, it fetches only one event per author.
   Future<List<EventReference>> _getNextSeenReferences({required int limit}) async {
     final seenEventsRepository = ref.read(followingFeedSeenEventsRepositoryProvider);
 
-    final stateEntityReferences =
-        state.items?.map((entity) => entity.toEventReference()).toList() ?? [];
+    final stateEntityReferences = <EventReference>[];
+    final stateEntityPubkeys = <String>{};
+    for (final entity in state.items ?? <IonConnectEntity>{}) {
+      final reference = entity.toEventReference();
+      stateEntityReferences.add(reference);
+      stateEntityPubkeys.add(reference.masterPubkey);
+    }
+
+    final uniqAuthors = feedType == FeedType.story;
+
     final seenEvents = await seenEventsRepository.getEventReferences(
       feedType: feedType,
       feedModifier: feedModifier,
-      exclude: stateEntityReferences,
+      excludeReferences: uniqAuthors ? [] : stateEntityReferences,
+      excludePubkeys: uniqAuthors ? stateEntityPubkeys.toList() : [],
       limit: limit,
       until: state.seenPagination.lastEvent?.createdAt,
+      groupByPubkey: uniqAuthors,
     );
 
     state = state.copyWith(
@@ -376,7 +388,7 @@ class FeedFollowingContent extends _$FeedFollowingContent implements PagedNotifi
   /// * Updates the provider state: items, pagination.
   /// * Updates the seen entities state
   ///
-  /// returns `true` if the entity is in the required time frame
+  /// returns `true` if the entity should be shown to the user
   Future<bool> _handleRequestedPubkeyEntity({
     required String pubkey,
     required IonConnectEntity? entity,
@@ -415,15 +427,22 @@ class FeedFollowingContent extends _$FeedFollowingContent implements PagedNotifi
     if (seenSequenceEnd == null) {
       // If the entity is not seen, we save it as a new seen event,
       // update the state items and pagination.
-      await seenEventsRepository.save(entity, feedType: feedType, feedModifier: feedModifier);
+      // We don't mark stories as seen, as they are handled separately when
+      // they are actually seen through stories viewer.
+      if (feedType != FeedType.story) {
+        await seenEventsRepository.save(entity, feedType: feedType, feedModifier: feedModifier);
+      }
       final duplicatedRepost = await _isDuplicatedRepost(entity);
       final isInReqTimeFrame = await _isInReqTimeFrame(entity.createdAt);
+
+      // For stories we fetch only one event per author. The rest are fetched on entering the story view.
+      final isStory = feedType == FeedType.story;
 
       state = state.copyWith(
         unseenPagination: {
           ...state.unseenPagination!,
           pubkey: pagination.copyWith(
-            hasMore: isInReqTimeFrame,
+            hasMore: isInReqTimeFrame && !isStory,
             lastEvent: (
               eventReference: entity.toEventReference(),
               createdAt: entity.createdAt,
@@ -437,12 +456,18 @@ class FeedFollowingContent extends _$FeedFollowingContent implements PagedNotifi
       // but we update the pagination with the seen sequence end.
       // This is to ensure that we do not request the same entity again
       // and skip all the seen events in between.
+
       final isInReqTimeFrame = await _isInReqTimeFrame(seenSequenceEnd.createdAt);
+
+      // For stories, we fetch only one event per author. Stop, if no fresh stories found, because
+      // we confider all the stories that go after the first seen one as also seen.
+      final isStory = feedType == FeedType.story;
+
       state = state.copyWith(
         unseenPagination: {
           ...state.unseenPagination!,
           pubkey: pagination.copyWith(
-            hasMore: isInReqTimeFrame,
+            hasMore: isInReqTimeFrame && !isStory,
             lastEvent: (
               eventReference: seenSequenceEnd.eventReference,
               createdAt: seenSequenceEnd.createdAt

@@ -90,25 +90,49 @@ class FollowingFeedSeenEventsRepository {
 
   Future<List<({EventReference eventReference, int createdAt})>> getEventReferences({
     required FeedType feedType,
-    required List<EventReference> exclude,
     required int limit,
+    List<EventReference>? excludeReferences,
+    List<String>? excludePubkeys,
     int? since,
     int? until,
     FeedModifier? feedModifier,
+    bool groupByPubkey = false,
   }) async {
-    final seenEvents = await _seenEventsDao.getEventsExcluding(
-      feedType: feedType,
-      feedModifier: feedModifier,
-      exclude: exclude,
-      limit: limit,
-      since: since,
-      until: until,
-    );
+    final seenEvents = await (groupByPubkey
+        ? _seenEventsDao.getGroupedByPubkeyEvents(
+            feedType: feedType,
+            feedModifier: feedModifier,
+            excludeReferences: excludeReferences,
+            excludePubkeys: excludePubkeys,
+            limit: limit,
+            since: since,
+            until: until,
+          )
+        : _seenEventsDao.getEvents(
+            feedType: feedType,
+            feedModifier: feedModifier,
+            excludeReferences: excludeReferences,
+            excludePubkeys: excludePubkeys,
+            limit: limit,
+            since: since,
+            until: until,
+          ));
     return seenEvents
         .map(
           (event) => (eventReference: event.eventReference, createdAt: event.createdAt),
         )
         .toList();
+  }
+
+  Stream<List<({EventReference eventReference, int createdAt})>> watchByReferences({
+    required Iterable<EventReference> eventsReferences,
+  }) {
+    final seenEventsStream = _seenEventsDao.watchByReferences(eventsReferences: eventsReferences);
+    return seenEventsStream.map(
+      (eventsList) => eventsList
+          .map((event) => (eventReference: event.eventReference, createdAt: event.createdAt))
+          .toList(),
+    );
   }
 
   Future<void> deleteEvents({

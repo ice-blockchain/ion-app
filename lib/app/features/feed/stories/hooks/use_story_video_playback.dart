@@ -6,6 +6,7 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/features/feed/stories/providers/story_pause_provider.r.dart';
 import 'package:ion/app/features/feed/stories/providers/story_viewing_provider.r.dart';
+import 'package:ion/app/features/feed/stories/providers/user_stories_provider.r.dart';
 
 void _post(VoidCallback action) => WidgetsBinding.instance.addPostFrameCallback((_) => action());
 
@@ -20,7 +21,9 @@ void useStoryVideoPlayback({
 
   final paused = ref.watch(storyPauseControllerProvider);
   final viewing = ref.watch(storyViewingControllerProvider(viewerPubkey));
-  final isCurrent = viewing.currentStory?.id == storyId;
+  final stories = ref.watch(userStoriesProvider(viewerPubkey))?.toList() ?? [];
+  final story = stories.elementAtOrNull(viewing.currentStoryIndex);
+  final isCurrent = story?.id == storyId;
 
   final hasStarted = useRef(false);
   final completedSent = useRef(false);

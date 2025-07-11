@@ -80,6 +80,12 @@ class ProfilePage extends HookConsumerWidget {
                 type: EventCountResultType.followers,
               ),
             );
+        ref.read(ionConnectCacheProvider.notifier).remove(
+              EventCountResultEntity.cacheKeyBuilder(
+                key: pubkey,
+                type: EventCountResultType.stories,
+              ),
+            );
       },
       [userMetadata.value?.cacheKey],
     );

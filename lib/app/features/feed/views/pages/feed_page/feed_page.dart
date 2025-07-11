@@ -7,13 +7,16 @@ import 'package:ion/app/components/screen_offset/screen_top_offset.dart';
 import 'package:ion/app/components/scroll_view/load_more_builder.dart';
 import 'package:ion/app/components/scroll_view/pull_to_refresh_builder.dart';
 import 'package:ion/app/extensions/extensions.dart';
+import 'package:ion/app/features/auth/providers/auth_provider.m.dart';
 import 'package:ion/app/features/core/model/feature_flags.dart';
 import 'package:ion/app/features/core/providers/feature_flags_provider.r.dart';
 import 'package:ion/app/features/feed/data/models/feed_category.dart';
 import 'package:ion/app/features/feed/providers/feed_current_filter_provider.m.dart';
 import 'package:ion/app/features/feed/providers/feed_posts_provider.r.dart';
 import 'package:ion/app/features/feed/providers/feed_trending_videos_provider.r.dart';
+import 'package:ion/app/features/feed/stories/providers/current_user_story_provider.r.dart';
 import 'package:ion/app/features/feed/stories/providers/feed_stories_provider.r.dart';
+import 'package:ion/app/features/feed/stories/providers/user_stories_provider.r.dart';
 import 'package:ion/app/features/feed/views/pages/feed_page/components/article_categories_menu/article_categories_menu.dart';
 import 'package:ion/app/features/feed/views/pages/feed_page/components/feed_controls/components/feed_navigation/feed_notifications_button.dart';
 import 'package:ion/app/features/feed/views/pages/feed_page/components/feed_controls/feed_controls.dart';
@@ -89,5 +92,8 @@ class FeedPage extends HookConsumerWidget {
     ref.read(feedPostsProvider.notifier).refresh();
     ref.read(feedTrendingVideosProvider.notifier).refresh();
     ref.read(feedStoriesProvider.notifier).refresh();
+    final pubkey = ref.read(currentPubkeySelectorProvider) ?? '';
+    ref.read(currentUserStoryProvider.notifier).refresh();
+    ref.read(userStoriesProvider(pubkey).notifier).refresh();
   }
 }

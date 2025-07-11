@@ -28,6 +28,7 @@ class Count extends _$Count {
     required ActionSource actionSource,
     Duration? cacheExpirationDuration,
     bool cache = true,
+    bool addCurrentPubkey = true,
   }) async {
     if (cache) {
       final countEntity = ref.watch(
@@ -47,13 +48,19 @@ class Count extends _$Count {
       }
     }
 
-    return _fetchCount(key: key, actionSource: actionSource, requestData: requestData);
+    return _fetchCount(
+      key: key,
+      actionSource: actionSource,
+      requestData: requestData,
+      addCurrentPubkey: addCurrentPubkey,
+    );
   }
 
   Future<dynamic> _fetchCount({
     required String key,
     required ActionSource actionSource,
     required EventCountRequestData requestData,
+    required bool addCurrentPubkey,
   }) async {
     final currentPubkey = ref.read(currentPubkeySelectorProvider);
     if (currentPubkey == null) {
@@ -68,22 +75,18 @@ class Count extends _$Count {
       ..addFilter(
         RequestFilter(
           kinds: const [EventCountResultEntity.kind, EventCountErrorEntity.kind],
-          tags: {
-            '#p': [currentPubkey],
-          },
+          tags: addCurrentPubkey
+              ? {
+                  '#p': [currentPubkey],
+                }
+              : null,
         ),
       );
 
     final subscription = relay.subscribe(subscriptionMessage);
 
     try {
-      await ref.read(ionConnectNotifierProvider.notifier).sendEvent(
-            requestEvent,
-            actionSource: ActionSourceRelayUrl(relay.url),
-            cache: false,
-          );
-
-      final responseEntity = await subscription.messages
+      final messagesFuture = subscription.messages
           .where((message) => message is EventMessage)
           .cast<EventMessage>()
           .map<dynamic>((message) {
@@ -102,6 +105,14 @@ class Count extends _$Count {
             },
           )
           .timeout(const Duration(seconds: 30));
+
+      await ref.read(ionConnectNotifierProvider.notifier).sendEvent(
+            requestEvent,
+            actionSource: ActionSourceRelayUrl(relay.url),
+            cache: false,
+          );
+
+      final responseEntity = await messagesFuture;
 
       if (responseEntity is EventCountErrorEntity) {
         final errorContent = responseEntity.data.content;

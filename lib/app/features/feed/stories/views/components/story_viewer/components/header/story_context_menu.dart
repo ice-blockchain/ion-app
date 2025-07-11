@@ -11,7 +11,6 @@ import 'package:ion/app/features/core/views/pages/unfollow_user_page.dart';
 import 'package:ion/app/features/feed/data/models/delete/delete_confirmation_type.dart';
 import 'package:ion/app/features/feed/data/models/entities/modifiable_post_data.f.dart';
 import 'package:ion/app/features/feed/stories/providers/story_pause_provider.r.dart';
-import 'package:ion/app/features/feed/stories/providers/story_viewing_provider.r.dart';
 import 'package:ion/app/features/feed/views/pages/entity_delete_confirmation_modal/entity_delete_confirmation_modal.dart';
 import 'package:ion/app/features/user/pages/profile_page/components/header/context_menu_item.dart';
 import 'package:ion/app/features/user/pages/profile_page/components/header/context_menu_item_divider.dart';
@@ -41,17 +40,12 @@ class StoryContextMenu extends HookConsumerWidget {
 
     final handleDeleteConfirmation = useCallback(
       () async {
-        final currentStory = ref.read(storyViewingControllerProvider(pubkey)).currentStory;
-        if (currentStory == null) {
-          return;
-        }
-
         isDeletingStory.value = true;
 
         final confirmed = await showSimpleBottomSheet<bool>(
           context: context,
           child: EntityDeleteConfirmationModal(
-            eventReference: currentStory.toEventReference(),
+            eventReference: post.toEventReference(),
             deleteConfirmationType: DeleteConfirmationType.story,
           ),
         );
@@ -81,6 +75,7 @@ class StoryContextMenu extends HookConsumerWidget {
       menuBuilder: (closeMenu) => OverlayMenuContainer(
         child: _StoryContextMenuContent(
           pubkey: pubkey,
+          post: post,
           isCurrentUser: isCurrentUser,
           onClose: closeMenu,
           onDeleteRequest: () {
@@ -97,12 +92,14 @@ class StoryContextMenu extends HookConsumerWidget {
 class _StoryContextMenuContent extends HookConsumerWidget {
   const _StoryContextMenuContent({
     required this.pubkey,
+    required this.post,
     required this.isCurrentUser,
     required this.onClose,
     required this.onDeleteRequest,
   });
 
   final String pubkey;
+  final ModifiablePostEntity post;
   final bool isCurrentUser;
   final VoidCallback onClose;
   final VoidCallback onDeleteRequest;
@@ -119,6 +116,7 @@ class _StoryContextMenuContent extends HookConsumerWidget {
         else
           _OtherUserMenuItems(
             pubkey: pubkey,
+            post: post,
             onClose: onClose,
           ),
       ],
@@ -151,10 +149,12 @@ class _CurrentUserMenuItems extends ConsumerWidget {
 class _OtherUserMenuItems extends ConsumerWidget {
   const _OtherUserMenuItems({
     required this.pubkey,
+    required this.post,
     required this.onClose,
   });
 
   final String pubkey;
+  final ModifiablePostEntity post;
   final VoidCallback onClose;
 
   @override
@@ -172,15 +172,9 @@ class _OtherUserMenuItems extends ConsumerWidget {
           iconAsset: Assets.svg.iconReport,
           onPressed: () {
             onClose();
-            final currentStory = ref.read(storyViewingControllerProvider(pubkey)).currentStory;
-
-            if (currentStory == null) {
-              return;
-            }
-
             ref
                 .read(reportNotifierProvider.notifier)
-                .report(ReportReason.content(eventReference: currentStory.toEventReference()));
+                .report(ReportReason.content(eventReference: post.toEventReference()));
           },
         ),
         const ContextMenuItemDivider(),

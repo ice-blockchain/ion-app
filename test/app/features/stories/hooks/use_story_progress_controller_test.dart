@@ -56,8 +56,8 @@ void main() {
 
   group('useStoryProgressController', () {
     testWidgets('image story completes after 5 s', (tester) async {
-      final userStories = StoryFixtures.singleStory();
-      final firstStory = userStories.stories.first;
+      final userStories = StoryFixtures.userStory();
+      final firstStory = userStories.story;
       var completed = false;
 
       await tester.pumpWithHarness(
@@ -87,8 +87,8 @@ void main() {
 
     testWidgets('video story completes when position == duration', (tester) async {
       const duration = Duration(seconds: 3);
-      final userStories = StoryFixtures.singleStory(mediaType: MediaType.video);
-      final firstStory = userStories.stories.first;
+      final userStories = StoryFixtures.userStory(mediaType: MediaType.video);
+      final firstStory = userStories.story;
       final videoController = FakeVideoController(duration);
       var completed = false;
 

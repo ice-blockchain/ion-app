@@ -1,17 +1,19 @@
 // SPDX-License-Identifier: ice License 1.0
 
-import 'package:collection/collection.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:ion/app/features/core/model/media_type.dart';
+import 'package:ion/app/features/feed/data/models/entities/event_count_result_data.f.dart';
 import 'package:ion/app/features/feed/data/models/entities/modifiable_post_data.f.dart';
 import 'package:ion/app/features/feed/data/models/feed_filter.dart';
 import 'package:ion/app/features/feed/data/models/feed_type.dart';
 import 'package:ion/app/features/feed/providers/feed_current_filter_provider.m.dart';
 import 'package:ion/app/features/feed/providers/feed_following_content_provider.m.dart';
 import 'package:ion/app/features/feed/providers/feed_for_you_content_provider.m.dart';
-import 'package:ion/app/features/feed/stories/data/models/story.f.dart';
+import 'package:ion/app/features/feed/stories/data/models/user_story.f.dart';
+import 'package:ion/app/features/feed/stories/providers/current_user_story_provider.r.dart';
+import 'package:ion/app/features/feed/stories/providers/stories_count_provider.r.dart';
 import 'package:ion/app/features/ion_connect/model/ion_connect_entity.dart';
 import 'package:ion/app/features/ion_connect/providers/entities_paged_data_provider.m.dart';
+import 'package:ion/app/features/ion_connect/providers/ion_connect_cache.r.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'feed_stories_provider.r.g.dart';
@@ -19,13 +21,29 @@ part 'feed_stories_provider.r.g.dart';
 @riverpod
 class FeedStories extends _$FeedStories with DelegatedPagedNotifier {
   @override
-  ({Iterable<UserStories>? items, bool hasMore}) build() {
+  ({Iterable<UserStory>? items, bool hasMore}) build() {
     final filter = ref.watch(feedCurrentFilterProvider);
+    final currentUserStory = ref.watch(currentUserStoryProvider);
     final data = switch (filter.filter) {
-      FeedFilter.following => ref.watch(feedFollowingContentProvider(FeedType.story)),
-      FeedFilter.forYou => ref.watch(feedForYouContentProvider(FeedType.story)),
+      FeedFilter.following => ref.watch(
+          feedFollowingContentProvider(FeedType.story)
+              .select((data) => (items: data.items, hasMore: data.hasMore)),
+        ),
+      FeedFilter.forYou => ref.watch(
+          feedForYouContentProvider(FeedType.story)
+              .select((data) => (items: data.items, hasMore: data.hasMore)),
+        ),
     };
-    return (items: _groupByPubkey(data.items), hasMore: data.hasMore);
+
+    final userStories = _userStories(data.items) ?? {};
+    final stories = {
+      if (currentUserStory != null) currentUserStory,
+      ...userStories,
+    };
+
+    _fetchCountersFor(stories);
+
+    return (items: stories, hasMore: data.hasMore);
   }
 
   @override
@@ -37,41 +55,51 @@ class FeedStories extends _$FeedStories with DelegatedPagedNotifier {
     };
   }
 
-  Iterable<UserStories>? _groupByPubkey(Iterable<IonConnectEntity>? entities) {
+  @override
+  void refresh() {
+    getDelegate().refresh();
+    final stories = state.items?.toList() ?? [];
+    for (final story in stories) {
+      ref.read(ionConnectCacheProvider.notifier).remove(
+            EventCountResultEntity.cacheKeyBuilder(
+              key: story.pubkey,
+              type: EventCountResultType.stories,
+            ),
+          );
+    }
+  }
+
+  Iterable<UserStory>? _userStories(Iterable<IonConnectEntity>? entities) {
     if (entities == null) return null;
 
-    final postEntities = entities.whereType<ModifiablePostEntity>().where((post) {
-      final mediaType = post.data.media.values.firstOrNull?.mediaType;
-      return mediaType == MediaType.image || mediaType == MediaType.video;
-    }).sorted((a, b) => a.createdAt.compareTo(b.createdAt));
+    final postEntities =
+        entities.whereType<ModifiablePostEntity>().where((post) => post.data.expiration != null);
 
-    final groupedStories = groupBy<ModifiablePostEntity, String>(
-      postEntities,
-      (post) => post.masterPubkey,
-    );
+    final userStoriesMap = <String, UserStory>{};
 
-    final userStoriesList = <UserStories>[];
+    for (final post in postEntities) {
+      final pubkey = post.masterPubkey;
 
-    for (final entry in groupedStories.entries) {
-      final pubkey = entry.key;
-      final userPosts = entry.value;
-
-      if (userPosts.isEmpty) continue;
-
-      final userStories = UserStories(
+      final userStory = UserStory(
         pubkey: pubkey,
-        stories: userPosts,
+        story: post,
       );
 
-      userStoriesList.add(userStories);
+      userStoriesMap[pubkey] = userStory;
     }
 
-    return userStoriesList;
+    return userStoriesMap.values;
+  }
+
+  void _fetchCountersFor(Iterable<UserStory> stories) {
+    for (final story in stories) {
+      ref.read(storiesCountProvider(story.pubkey));
+    }
   }
 }
 
 @riverpod
-List<UserStories> feedStoriesByPubkey(Ref ref, String pubkey, {bool showOnlySelectedUser = false}) {
+List<UserStory> feedStoriesByPubkey(Ref ref, String pubkey, {bool showOnlySelectedUser = false}) {
   final stories = ref.watch(feedStoriesProvider.select((state) => state.items?.toList() ?? []));
   final userIndex = stories.indexWhere((userStories) => userStories.pubkey == pubkey);
 

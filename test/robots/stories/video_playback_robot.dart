@@ -35,7 +35,8 @@ class _TestVideoPlayback extends HookConsumerWidget {
       controller: ctrl,
       storyId: post.id,
       viewerPubkey: viewerPubkey,
-      onCompleted: () => ref.read(storyViewingControllerProvider(viewerPubkey).notifier).advance(),
+      onCompleted: () =>
+          ref.read(storyViewingControllerProvider(viewerPubkey).notifier).advance(stories: []),
     );
 
     return const SizedBox.shrink();

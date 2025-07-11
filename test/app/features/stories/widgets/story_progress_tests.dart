@@ -15,16 +15,16 @@ void main() {
   ScreenUtil.ensureScreenSize();
 
   const viewerPubkey = StoryFixtures.alice;
-  final viewerStories = StoryFixtures.simpleStories(
-    pubkey: viewerPubkey,
-    count: 2,
+  final viewerUserStory = StoryFixtures.userStory();
+  final viewerStories = StoryFixtures.stories(
+    count: 1,
   );
 
   group('StoryProgressBarContainer', () {
     testWidgets('renders N segments for N stories', (tester) async {
       final robot = await StoryProgressBarRobot.launch(
         tester,
-        stories: [viewerStories],
+        stories: [viewerUserStory],
         viewerPubkey: viewerPubkey,
       );
       robot.expectSegmentCount(2);
@@ -33,10 +33,10 @@ void main() {
     testWidgets('advance() marks previous/current segments correctly', (tester) async {
       final robot = await StoryProgressBarRobot.launch(
         tester,
-        stories: [viewerStories],
+        stories: [viewerUserStory],
         viewerPubkey: viewerPubkey,
       );
-      robot.advance();
+      robot.advance(stories: viewerStories);
       await tester.pump();
       robot
         ..expectSegmentState(index: 0, isCurrent: false, isPrevious: true)
@@ -44,19 +44,18 @@ void main() {
     });
 
     testWidgets('advance past last story moves to next user and resets index', (tester) async {
-      final bobStories = StoryFixtures.simpleStories(
+      final bobStories = StoryFixtures.userStory(
         pubkey: StoryFixtures.bob,
-        count: 2,
       );
 
       final robot = await StoryProgressBarRobot.launch(
         tester,
-        stories: [viewerStories, bobStories],
+        stories: [viewerUserStory, bobStories],
         viewerPubkey: viewerPubkey,
       );
       robot
-        ..advance()
-        ..advance();
+        ..advance(stories: viewerStories)
+        ..advance(stories: viewerStories);
       await tester.pump();
       robot
         ..expectViewerState(userIndex: 1, storyIndex: 0)

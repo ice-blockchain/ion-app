@@ -8,10 +8,13 @@ import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/components/screen_offset/screen_bottom_offset.dart';
 import 'package:ion/app/extensions/extensions.dart';
+import 'package:ion/app/features/feed/stories/data/models/stories_references.f.dart';
 import 'package:ion/app/features/feed/stories/providers/story_pause_provider.r.dart';
 import 'package:ion/app/features/feed/stories/providers/story_viewing_provider.r.dart';
+import 'package:ion/app/features/feed/stories/providers/user_stories_provider.r.dart';
 import 'package:ion/app/features/feed/stories/providers/viewed_stories_provider.r.dart';
 import 'package:ion/app/features/feed/stories/views/components/story_viewer/components/components.dart';
+import 'package:ion/app/features/feed/views/pages/feed_page/components/stories/hooks/use_preload_story_image.dart';
 import 'package:ion/app/features/ion_connect/model/event_reference.f.dart';
 import 'package:ion/app/features/video/views/hooks/use_status_bar_color.dart';
 import 'package:ion/app/hooks/use_on_init.dart';
@@ -35,6 +38,11 @@ class StoryViewerPage extends HookConsumerWidget {
 
     final storyViewerState = ref
         .watch(storyViewingControllerProvider(pubkey, showOnlySelectedUser: showOnlySelectedUser));
+    final stories =
+        ref.watch(userStoriesProvider(storyViewerState.currentStory?.pubkey ?? pubkey))?.toList() ??
+            [];
+    final storiesReferences = StoriesReferences(stories.map((e) => e.toEventReference()));
+    final viewedStories = ref.watch(viewedStoriesControllerProvider(storiesReferences)) ?? {};
 
     useOnInit(
       () {
@@ -47,19 +55,21 @@ class StoryViewerPage extends HookConsumerWidget {
 
     useOnInit(
       () async {
-        final viewedStories = ref.read(viewedStoriesControllerProvider);
-        final firstNotViewedStory = storyViewerState.currentStoriesList
-            .firstWhereOrNull((story) => !viewedStories.contains(story.id));
-        if (initialStoryReference != null || firstNotViewedStory != null) {
+        final firstNotViewedStoryIndex =
+            stories.indexWhere((story) => !viewedStories.contains(story.toEventReference()));
+        final initialStoryIndex = initialStoryReference != null
+            ? stories.indexWhere((story) => story.toEventReference() == initialStoryReference)
+            : null;
+        if (initialStoryIndex != null || firstNotViewedStoryIndex != -1) {
           ref
               .watch(
                 storyViewingControllerProvider(pubkey, showOnlySelectedUser: showOnlySelectedUser)
                     .notifier,
               )
-              .moveToStory(initialStoryReference ?? firstNotViewedStory!.toEventReference());
+              .moveToStoryIndex(initialStoryIndex ?? firstNotViewedStoryIndex);
         }
       },
-      [storyViewerState.userStories.isEmpty],
+      [stories.isEmpty, viewedStories],
     );
 
     useRoutePresence(
@@ -67,15 +77,30 @@ class StoryViewerPage extends HookConsumerWidget {
       onBecameActive: () => ref.read(storyPauseControllerProvider.notifier).paused = false,
     );
 
-    final currentStory = storyViewerState.currentStory;
+    final currentStory = stories.elementAtOrNull(storyViewerState.currentStoryIndex);
     useOnInit(
       () {
         if (currentStory != null) {
-          ref.read(viewedStoriesControllerProvider.notifier).markStoryAsViewed(currentStory.id);
+          ref
+              .read(viewedStoriesControllerProvider(storiesReferences).notifier)
+              .markStoryAsViewed(currentStory);
         }
       },
       [currentStory?.id],
     );
+
+    useOnInit(
+      () {
+        final currentUserStoriesLeft = stories.length - storyViewerState.currentStoryIndex - 1;
+        final nextUserPubkey = storyViewerState.nextUserPubkey;
+        if (currentUserStoriesLeft < 10 && nextUserPubkey.isNotEmpty) {
+          ref.read(userStoriesProvider(nextUserPubkey));
+        }
+      },
+      [storyViewerState.currentStoryIndex],
+    );
+
+    usePreloadStoryImage(ref, stories.elementAtOrNull(storyViewerState.currentStoryIndex + 1));
 
     return KeyboardVisibilityBuilder(
       builder: (context, isKeyboardVisible) {
