@@ -2424,14 +2424,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "3.0.0"
-  scrollable_positioned_list:
-    dependency: "direct main"
-    description:
-      name: scrollable_positioned_list
-      sha256: "1b54d5f1329a1e263269abc9e2543d90806131aa14fe7c6062a8054d57249287"
-      url: "https://pub.dev"
-    source: hosted
-    version: "0.3.8"
   sensors_plus:
     dependency: "direct main"
     description:
@@ -2741,6 +2733,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.1.0"
+  super_sliver_list:
+    dependency: "direct main"
+    description:
+      name: super_sliver_list
+      sha256: b1e1e64d08ce40e459b9bb5d9f8e361617c26b8c9f3bb967760b0f436b6e3f56
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.4.1"
   synchronized:
     dependency: "direct main"
     description:
