@@ -55,6 +55,7 @@ class EncryptedMessageService {
       x25519PrivateKey,
       x25519PublicKey,
       customConversationKey: conversationKey,
+      compressionAlgorithm: CompressionAlgorithm.brotli,
     );
   }
 
@@ -72,6 +73,7 @@ class EncryptedMessageService {
       x25519PrivateKey,
       x25519PublicKey,
       customConversationKey: conversationKey,
+      compressionAlgorithm: CompressionAlgorithm.brotli,
     );
   }
 

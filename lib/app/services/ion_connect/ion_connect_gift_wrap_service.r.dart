@@ -53,8 +53,10 @@ class IonConnectGiftWrapServiceImpl implements IonConnectGiftWrapService {
   }) async {
     final oneTimeSigner = await Ed25519KeyStore.generate();
 
+    final encodedEvent = jsonEncode(event.toJson().last);
+
     final encryptedEvent = await _encryptedMessageService.encryptMessage(
-      jsonEncode(event.toJson().last),
+      encodedEvent,
       publicKey: receiverPubkey,
       privateKey: oneTimeSigner.privateKey,
     );
