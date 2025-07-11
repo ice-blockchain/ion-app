@@ -10,6 +10,7 @@ import 'package:ion/app/features/ion_connect/model/ion_connect_entity.dart';
 import 'package:ion/app/features/ion_connect/providers/ion_connect_cache.r.dart';
 import 'package:ion/app/features/ion_connect/providers/ion_connect_db_cache_notifier.r.dart';
 import 'package:ion/app/features/ion_connect/providers/ion_connect_notifier.r.dart';
+import 'package:ion/app/features/user/model/user_metadata.f.dart';
 import 'package:ion/app/features/user/providers/users_relays_provider.r.dart';
 import 'package:ion/app/services/logger/logger.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
@@ -26,22 +27,6 @@ IonConnectEntity? ionConnectCachedEntity(
         cacheSelector(CacheableEntity.cacheKeyBuilder(eventReference: eventReference)),
       ),
     );
-
-@riverpod
-List<IonConnectEntity> ionConnectCachedEntities(
-  Ref ref, {
-  required List<EventReference> eventReferences,
-}) =>
-    eventReferences
-        .map(
-          (eventReference) => ref.watch(
-            ionConnectCacheProvider.select(
-              cacheSelector(CacheableEntity.cacheKeyBuilder(eventReference: eventReference)),
-            ),
-          ),
-        )
-        .nonNulls
-        .toList();
 
 @riverpod
 Future<IonConnectEntity?> ionConnectNetworkEntity(
@@ -95,62 +80,93 @@ Future<List<IonConnectEntity>> ionConnectNetworkEntities(
   required List<EventReference> eventReferences,
   String? search,
 }) async {
+  // Helper method to build filters for replaceable event references
+  List<RequestFilter> buildReplaceableRefsFilters(
+      List<ReplaceableEventReference> replaceableRefs, String? search) {
+    final filters = <RequestFilter>[];
+
+    if (replaceableRefs.isNotEmpty) {
+      // Group by kind and dTag
+      final grouped = <String, Map<String, List<ReplaceableEventReference>>>{};
+
+      for (final ref in replaceableRefs) {
+        final kindKey = ref.kind.toString();
+        final dTagKey = ref.dTag;
+        grouped.putIfAbsent(kindKey, () => <String, List<ReplaceableEventReference>>{});
+        grouped[kindKey]!.putIfAbsent(dTagKey, () => <ReplaceableEventReference>[]);
+        grouped[kindKey]![dTagKey]!.add(ref);
+      }
+
+      for (final kindEntry in grouped.entries) {
+        final kind = int.parse(kindEntry.key);
+        for (final dTagEntry in kindEntry.value.entries) {
+          final dTag = dTagEntry.key;
+          final refs = dTagEntry.value;
+          if (dTag.isEmpty) {
+            // Combine all masterPubkeys for this kind with empty dTag
+            filters.add(
+              RequestFilter(
+                kinds: [kind],
+                authors: refs.map((e) => e.masterPubkey).toList(),
+                search: search,
+              ),
+            );
+          } else {
+            // Create separate filter for each ref with non-empty dTag
+            for (final ref in refs) {
+              filters.add(
+                RequestFilter(
+                  kinds: [ref.kind],
+                  authors: [ref.masterPubkey],
+                  tags: {
+                    '#d': [ref.dTag],
+                  },
+                  search: search,
+                ),
+              );
+            }
+          }
+        }
+      }
+    }
+
+    return filters;
+  }
+
   if (eventReferences.isEmpty) {
     return <IonConnectEntity>[];
   }
 
+  final results = <IonConnectEntity>[];
   final immutableRefs = eventReferences.whereType<ImmutableEventReference>().toList();
   final replaceableRefs = eventReferences.whereType<ReplaceableEventReference>().toList();
 
-  final results = <IonConnectEntity>[];
+  final replaceableRefsFilters = buildReplaceableRefsFilters(replaceableRefs, search);
 
-  if (immutableRefs.isNotEmpty) {
-    final requestMessage = RequestMessage()
-      ..addFilter(
-        RequestFilter(
-          search: search,
-          ids: immutableRefs.map((e) => e.eventId).toList(),
-        ),
-      );
-    final entitiesStream = ref.read(ionConnectNotifierProvider.notifier).requestEntities(
-          requestMessage,
-          actionSource: actionSource,
-        );
-    final entities = await entitiesStream.toList();
-    results.addAll(entities);
-  }
-
-  if (replaceableRefs.isNotEmpty) {
-    final filters = replaceableRefs
-        .map(
-          (replaceableEventRef) => RequestFilter(
-            kinds: [replaceableEventRef.kind],
-            authors: [replaceableEventRef.masterPubkey],
-            tags: {
-              if (replaceableEventRef.dTag.isNotEmpty) '#d': [replaceableEventRef.dTag],
-            },
+  final requestMessage = RequestMessage()
+    ..filters.addAll(
+      [
+        if (immutableRefs.isNotEmpty)
+          RequestFilter(
             search: search,
+            ids: immutableRefs.map((e) => e.eventId).toList(),
           ),
-        )
-        .toList();
+        ...replaceableRefsFilters,
+      ],
+    );
 
-    final requestMessage = RequestMessage()..filters.addAll(filters);
+  final entityStream = ref.read(ionConnectNotifierProvider.notifier).requestEntities(
+        requestMessage,
+        actionSource: actionSource,
+      );
 
-    final entityStream = ref.read(ionConnectNotifierProvider.notifier).requestEntities(
-          requestMessage,
-          actionSource: actionSource,
-        );
-    final entityList = <IonConnectEntity>[];
-    await for (final entity in entityStream.handleError(
-      (Object error) {
-        Logger.error('Error fetching entities for $actionSource: $error');
-      },
-      test: (_) => true,
-    )) {
-      entityList.add(entity);
-    }
-
-    results.addAll(entityList);
+  await for (final entity in entityStream.handleError(
+    (Object error) {
+      Logger.error('Error fetching entities for $actionSource: $error');
+    },
+    test: (_) => true,
+  )) {
+    results.add(entity);
   }
 
   return results;
@@ -229,54 +245,91 @@ IonConnectEntity? ionConnectSyncEntity(
 }
 
 @riverpod
-Future<List<IonConnectEntity>> ionConnectEntities(
-  Ref ref, {
-  required List<EventReference> eventReferences,
-  String? search,
-  bool cache = true,
-  bool network = true,
-}) async {
-  final cachedResults = <IonConnectEntity>[];
-  final networkResults = <IonConnectEntity>[];
+class IonConnectEntitiesManager extends _$IonConnectEntitiesManager {
+  @override
+  FutureOr<void> build() {}
 
-  final currentUser = ref.watch(currentIdentityKeyNameSelectorProvider);
-  if (currentUser == null) {
-    throw const CurrentUserNotFoundException();
-  }
-  if (cache) {
-    cachedResults.addAll(
-      ref.watch(ionConnectCachedEntitiesProvider(eventReferences: eventReferences)),
-    );
-  }
-  if (network) {
-    final notCachedEvents = eventReferences.toSet().difference(cachedResults.toSet());
+  Future<List<IonConnectEntity>> fetch({
+    required List<EventReference> eventReferences,
+    String? search,
+    bool cache = true,
+    bool network = true,
+  }) async {
+    final cachedResults = <IonConnectEntity>[];
+    final networkResults = <IonConnectEntity>[];
 
-    final relaysMap = await ref.watch(usersRelaysProvider.notifier).fetch(
-          strategy: UsersRelaysStrategy.mostUsers,
-          masterPubkeys: notCachedEvents.map((e) => e.masterPubkey).toList(),
-        );
+    final currentUser = ref.read(currentIdentityKeyNameSelectorProvider);
+    if (currentUser == null) {
+      throw const CurrentUserNotFoundException();
+    }
 
-    final eventReferencesMap = relaysMap.map(
-      (url, masterPubkeys) => MapEntry(
-        url,
-        notCachedEvents.where((e) => masterPubkeys.contains(e.masterPubkey)).toList(),
-      ),
-    );
+    if (cache) {
+      cachedResults.addAll(
+        eventReferences
+            .map(
+              (eventReference) => ref.read(
+                ionConnectCacheProvider.select(
+                  cacheSelector(CacheableEntity.cacheKeyBuilder(eventReference: eventReference)),
+                ),
+              ),
+            )
+            .nonNulls
+            .toList(),
+      );
+    }
 
-    for (final url in eventReferencesMap.keys) {
-      final eventReferences = eventReferencesMap[url] ?? [];
-      if (eventReferences.isEmpty) continue;
+    if (network) {
+      final notCachedEvents = eventReferences
+          .toSet()
+          .difference(cachedResults.map((e) => e.toEventReference()).toSet())
+          .toList();
 
-      final result = await ref.watch(
-        ionConnectNetworkEntitiesProvider(
-          search: search,
-          eventReferences: eventReferences,
-          actionSource: ActionSource.relayUrl(url),
-        ).future,
+      final relaysMap = await ref.read(usersRelaysProvider.notifier).fetch(
+            strategy: UsersRelaysStrategy.mostUsers,
+            masterPubkeys: notCachedEvents.map((e) => e.masterPubkey).toSet().toList(),
+          );
+
+      final eventReferencesMap = relaysMap.map(
+        (url, masterPubkeys) => MapEntry(
+          url,
+          notCachedEvents.where((e) => masterPubkeys.contains(e.masterPubkey)).toList(),
+        ),
       );
 
-      networkResults.addAll(result);
+      final futures = <Future<List<IonConnectEntity>>>[];
+
+      for (final url in eventReferencesMap.keys) {
+        final eventReferences = eventReferencesMap[url] ?? [];
+        if (eventReferences.isEmpty) continue;
+
+        final future = ref.read(
+          ionConnectNetworkEntitiesProvider(
+            search: search,
+            eventReferences: eventReferences,
+            actionSource: ActionSource.relayUrl(url),
+          ).future,
+        );
+        futures.add(future);
+      }
+
+      final results = await Future.wait(
+        futures.map(
+          (future) => future
+            ..catchError((Object e, StackTrace stack) {
+              Logger.error('Error fetching network entities: $e, stackTrace: $stack');
+              return <IonConnectEntity>[];
+            }),
+        ),
+      );
+
+      for (final result in results) {
+        networkResults.addAll(result);
+      }
     }
+
+    Logger.log(
+        'Cached results: ${cachedResults.whereType<UserMetadataEntity>().length}, Network results: ${networkResults.whereType<UserMetadataEntity>().length}');
+
+    return [...cachedResults, ...networkResults];
   }
-  return [...cachedResults, ...networkResults];
 }

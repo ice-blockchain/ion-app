@@ -14,7 +14,7 @@ import 'package:ion/app/components/skeleton/skeleton.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/auth/providers/onboarding_complete_notifier.r.dart';
 import 'package:ion/app/features/auth/providers/onboarding_data_provider.m.dart';
-import 'package:ion/app/features/auth/providers/paginated_users_metadata_provider.r.dart';
+import 'package:ion/app/features/user/providers/paginated_users_metadata_provider.r.dart';
 import 'package:ion/app/features/auth/views/components/auth_scrolled_body/auth_scrolled_body.dart';
 import 'package:ion/app/features/auth/views/pages/discover_creators/creator_list_item.dart';
 import 'package:ion/app/features/components/verify_identity/verify_identity_prompt_dialog_helper.dart';
