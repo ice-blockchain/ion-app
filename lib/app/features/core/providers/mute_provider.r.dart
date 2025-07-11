@@ -3,6 +3,8 @@
 import 'dart:async';
 
 import 'package:flutter/services.dart';
+import 'package:flutter_volume_controller/flutter_volume_controller.dart';
+import 'package:ion/app/features/auth/providers/auth_provider.m.dart';
 import 'package:ion/app/features/core/providers/volume_stream_provider.r.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
@@ -18,6 +20,7 @@ class GlobalMuteNotifier extends _$GlobalMuteNotifier {
     _setupMethodChannelHandler();
     _initializeAudioFocus();
     _setupVolumeListener();
+    _setupAuthListener();
     return true;
   }
 
@@ -29,9 +32,16 @@ class GlobalMuteNotifier extends _$GlobalMuteNotifier {
 
   Future<void> _initializeAudioFocus() async {
     await _channel.invokeMethod<bool>('initAudioFocus');
+    await _channel.invokeMethod<bool>('abandonAudioFocus');
   }
 
   void _setupVolumeListener() {
+    FlutterVolumeController.getVolume().then((volume) {
+      if (volume != null) {
+        _previousVolume = volume;
+      }
+    });
+
     ref.listen(volumeStreamProvider, (previous, next) {
       next.whenData((volume) {
         final currentMuteState = state;
@@ -49,6 +59,14 @@ class GlobalMuteNotifier extends _$GlobalMuteNotifier {
 
         _previousVolume = volume;
       });
+    });
+  }
+
+  void _setupAuthListener() {
+    ref.listen(currentIdentityKeyNameSelectorProvider, (previous, next) {
+      if (previous != next && next != null) {
+        reset();
+      }
     });
   }
 
@@ -76,5 +94,11 @@ class GlobalMuteNotifier extends _$GlobalMuteNotifier {
     if (success) {
       state = willBeMuted;
     }
+  }
+
+  Future<void> reset() async {
+    state = true;
+    _previousVolume = 0;
+    await _channel.invokeMethod<bool>('abandonAudioFocus');
   }
 }
