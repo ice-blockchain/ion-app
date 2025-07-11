@@ -82,7 +82,7 @@ Future<List<IonConnectEntity>> ionConnectNetworkEntities(
 }) async {
   // Helper method to build filters for replaceable event references
   List<RequestFilter> buildReplaceableRefsFilters(
-      List<ReplaceableEventReference> replaceableRefs, String? search) {
+      List<ReplaceableEventReference> replaceableRefs, String? search,) {
     final filters = <RequestFilter>[];
 
     if (replaceableRefs.isNotEmpty) {
@@ -328,7 +328,7 @@ class IonConnectEntitiesManager extends _$IonConnectEntitiesManager {
     }
 
     Logger.log(
-        'Cached results: ${cachedResults.whereType<UserMetadataEntity>().length}, Network results: ${networkResults.whereType<UserMetadataEntity>().length}');
+        'Cached results: ${cachedResults.whereType<UserMetadataEntity>().length}, Network results: ${networkResults.whereType<UserMetadataEntity>().length}',);
 
     return [...cachedResults, ...networkResults];
   }
