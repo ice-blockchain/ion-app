@@ -6,42 +6,31 @@ import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/components/inputs/text_input/components/paste_suffix_button.dart';
-import 'package:ion/app/components/inputs/text_input/components/text_input_border.dart';
 import 'package:ion/app/components/inputs/text_input/text_input.dart';
-import 'package:ion/app/components/progress_bar/ion_loading_indicator.dart';
 import 'package:ion/app/components/select/select_network_button.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/wallets/model/coin_data.f.dart';
 import 'package:ion/app/features/wallets/model/network_data.f.dart';
+import 'package:ion/app/features/wallets/views/pages/import_token_page/components/disabled_input_field.dart';
 import 'package:ion/app/features/wallets/views/pages/import_token_page/components/token_already_exists_dialog.dart';
 import 'package:ion/app/features/wallets/views/pages/import_token_page/components/token_not_found_dialog.dart';
-import 'package:ion/app/features/wallets/views/pages/import_token_page/providers/selected_network_provider.r.dart';
-import 'package:ion/app/features/wallets/views/pages/import_token_page/providers/token_address_provider.r.dart';
 import 'package:ion/app/features/wallets/views/pages/import_token_page/providers/token_already_exists_provider.r.dart';
 import 'package:ion/app/features/wallets/views/pages/import_token_page/providers/token_data_notifier_provider.r.dart';
-import 'package:ion/app/hooks/use_on_init.dart';
+import 'package:ion/app/features/wallets/views/pages/import_token_page/providers/token_form_notifier_provider.r.dart';
 import 'package:ion/app/router/app_routes.gr.dart';
 import 'package:ion/app/router/utils/show_simple_bottom_sheet.dart';
 import 'package:ion/app/services/clipboard/clipboard.dart';
 
 class ImportTokenForm extends HookConsumerWidget {
-  const ImportTokenForm({
-    required this.onValidationStateChanged,
-    super.key,
-  });
-
-  final ValueChanged<bool> onValidationStateChanged;
+  const ImportTokenForm({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    ref
-      ..watch(selectedNetworkProvider)
-      ..watch(tokenAddressProvider);
-
-    final selectedNetwork = ref.watch(selectedNetworkProvider);
+    final isAdditionalInputFieldsEnabled = useState(false);
     final tokenAddressController = useTextEditingController();
     final tokenSymbolController = useTextEditingController();
     final tokenDecimalsController = useTextEditingController();
+    final selectedNetwork = ref.watch(tokenFormNotifierProvider.select((state) => state.network));
 
     ref
       ..listen(tokenDataNotifierProvider, (previous, next) {
@@ -53,7 +42,15 @@ class ImportTokenForm extends HookConsumerWidget {
         tokenDecimalsController.text = decimalsString;
 
         if (tokenAddressController.text.isNotEmpty && !next.isLoading) {
-          _checkIfTokenNotFound(context, token);
+          if (isTokenNotFound(token)) {
+            if (context.mounted) {
+              showSimpleBottomSheet<void>(
+                context: context,
+                child: const TokenNotFoundDialog(),
+              );
+            }
+            isAdditionalInputFieldsEnabled.value = true;
+          }
         }
       })
       ..listenSuccess(
@@ -61,14 +58,42 @@ class ImportTokenForm extends HookConsumerWidget {
         (exists) => _onTokenAlreadyExists(context, exists: exists ?? false),
       );
 
-    _useListenAddressChanges(ref, tokenAddressController);
-
-    useOnInit(
+    useEffect(
       () {
-        final isValid = selectedNetwork != null && tokenAddressController.text.isNotEmpty;
-        onValidationStateChanged(isValid);
+        void onTokenAddressChanged() {
+          ref.read(tokenFormNotifierProvider.notifier).address = tokenAddressController.text;
+          isAdditionalInputFieldsEnabled.value = false;
+        }
+
+        tokenAddressController.addListener(onTokenAddressChanged);
+        return () => tokenAddressController.removeListener(onTokenAddressChanged);
       },
-      [selectedNetwork, tokenAddressController.text],
+      [tokenAddressController],
+    );
+
+    useEffect(
+      () {
+        void onDecimalsChanged() {
+          ref.read(tokenFormNotifierProvider.notifier).decimals =
+              int.tryParse(tokenDecimalsController.text);
+        }
+
+        tokenDecimalsController.addListener(onDecimalsChanged);
+        return () => tokenDecimalsController.removeListener(onDecimalsChanged);
+      },
+      [tokenDecimalsController],
+    );
+
+    useEffect(
+      () {
+        void onTokenSymbolChanged() {
+          ref.read(tokenFormNotifierProvider.notifier).symbol = tokenSymbolController.text;
+        }
+
+        tokenSymbolController.addListener(onTokenSymbolChanged);
+        return () => tokenSymbolController.removeListener(onTokenSymbolChanged);
+      },
+      [tokenSymbolController],
     );
 
     return Column(
@@ -95,15 +120,30 @@ class ImportTokenForm extends HookConsumerWidget {
           },
         ),
         SizedBox(height: 16.0.s),
-        _DisabledTextInput(
-          labelText: context.i18n.wallet_import_token_symbol_label,
-          controller: tokenSymbolController,
-        ),
+        if (isAdditionalInputFieldsEnabled.value)
+          TextInput(
+            labelText: context.i18n.wallet_import_token_symbol_label,
+            controller: tokenSymbolController,
+            onTapOutside: (_) => FocusScope.of(context).unfocus(),
+          )
+        else
+          DisabledTextInput(
+            labelText: context.i18n.wallet_import_token_symbol_label,
+            controller: tokenSymbolController,
+          ),
         SizedBox(height: 16.0.s),
-        _DisabledTextInput(
-          labelText: context.i18n.wallet_import_token_decimals_label,
-          controller: tokenDecimalsController,
-        ),
+        if (isAdditionalInputFieldsEnabled.value)
+          TextInput(
+            keyboardType: TextInputType.number,
+            labelText: context.i18n.wallet_import_token_decimals_label,
+            controller: tokenDecimalsController,
+            onTapOutside: (_) => FocusScope.of(context).unfocus(),
+          )
+        else
+          DisabledTextInput(
+            labelText: context.i18n.wallet_import_token_decimals_label,
+            controller: tokenDecimalsController,
+          ),
       ],
     );
   }
@@ -111,7 +151,7 @@ class ImportTokenForm extends HookConsumerWidget {
   Future<void> _onNetworkPressed(WidgetRef ref) async {
     final newNetwork = await SelectNetworkForTokenRoute().push<NetworkData?>(ref.context);
     if (newNetwork != null) {
-      ref.read(selectedNetworkProvider.notifier).network = newNetwork;
+      ref.read(tokenFormNotifierProvider.notifier).network = newNetwork;
       unawaited(ref.read(tokenDataNotifierProvider.notifier).fetchTokenData());
     }
   }
@@ -125,62 +165,6 @@ class ImportTokenForm extends HookConsumerWidget {
     }
   }
 
-  void _checkIfTokenNotFound(BuildContext context, CoinData? token) {
-    if (context.mounted && (token == null || token.name.isEmpty)) {
-      showSimpleBottomSheet<void>(
-        context: context,
-        child: const TokenNotFoundDialog(),
-      );
-    }
-  }
-
-  void _useListenAddressChanges(
-    WidgetRef ref,
-    TextEditingController tokenAddressController,
-  ) {
-    useOnInit(
-      () {
-        tokenAddressController.addListener(
-          () {
-            ref.read(tokenAddressProvider.notifier).address = tokenAddressController.text;
-          },
-        );
-      },
-      [tokenAddressController],
-    );
-  }
-}
-
-class _DisabledTextInput extends ConsumerWidget {
-  const _DisabledTextInput({
-    required this.controller,
-    required this.labelText,
-  });
-
-  final TextEditingController controller;
-  final String labelText;
-
-  @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final isLoading = ref.watch(tokenDataNotifierProvider.select((state) => state.isLoading));
-
-    return TextInput(
-      labelText: labelText,
-      controller: controller,
-      suffixIcon: isLoading
-          ? Padding(
-              padding: EdgeInsetsDirectional.only(end: 8.0.s),
-              child: const IONLoadingIndicatorThemed(),
-            )
-          : null,
-      enabled: false,
-      color: context.theme.appColors.onTertararyBackground,
-      disabledBorder: TextInputBorder(
-        borderSide: BorderSide(color: context.theme.appColors.onTerararyFill),
-      ),
-      fillColor: context.theme.appColors.secondaryBackground,
-      labelColor: context.theme.appColors.sheetLine,
-      floatingLabelColor: context.theme.appColors.sheetLine,
-    );
-  }
+  bool isTokenNotFound(CoinData? token) =>
+      token == null || token.name.isEmpty || token.abbreviation.isEmpty || token.decimals == 0;
 }

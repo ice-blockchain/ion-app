@@ -60,4 +60,22 @@ class CoinData with _$CoinData {
   }
 
   const CoinData._();
+
+  db.Coin toDB() => db.Coin(
+        id: id,
+        contractAddress: contractAddress,
+        decimals: decimals,
+        iconURL: iconUrl,
+        name: name,
+        networkId: network.id,
+        priceUSD: priceUSD,
+        symbol: abbreviation,
+        symbolGroup: symbolGroup,
+        syncFrequency: syncFrequency,
+        native: native,
+        prioritized: prioritized,
+      );
+
+  bool get isValid =>
+      id.isNotEmpty && decimals > 0 && abbreviation.isNotEmpty && symbolGroup.isNotEmpty;
 }

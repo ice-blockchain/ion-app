@@ -13,6 +13,7 @@ import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/wallets/views/pages/import_token_page/components/import_token_form.dart';
 import 'package:ion/app/features/wallets/views/pages/import_token_page/components/security_risks.dart';
 import 'package:ion/app/features/wallets/views/pages/import_token_page/providers/import_token_notifier_provider.r.dart';
+import 'package:ion/app/features/wallets/views/pages/import_token_page/providers/token_form_notifier_provider.r.dart';
 import 'package:ion/app/router/app_routes.gr.dart';
 import 'package:ion/app/router/components/navigation_app_bar/navigation_app_bar.dart';
 import 'package:ion/app/router/components/sheet_content/sheet_content.dart';
@@ -27,7 +28,8 @@ class ImportTokenPage extends HookConsumerWidget {
 
     ref
       ..displayErrors(importTokenNotifierProvider)
-      ..listenSuccess(importTokenNotifierProvider, (_) => _onTokenImported(context));
+      ..listenSuccess(importTokenNotifierProvider, (_) => _onTokenImported(context))
+      ..listen(tokenFormNotifierProvider, (_, next) => isFormValid.value = next.canBeImported);
 
     final isButtonDisabled = !isFormValid.value || ref.watch(importTokenNotifierProvider).isLoading;
 
@@ -43,15 +45,13 @@ class ImportTokenPage extends HookConsumerWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: [
-                    Expanded(
+                    const Expanded(
                       child: SingleChildScrollView(
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.stretch,
                           children: [
-                            ImportTokenForm(
-                              onValidationStateChanged: (isValid) => isFormValid.value = isValid,
-                            ),
-                            const SecurityRisks(),
+                            ImportTokenForm(),
+                            SecurityRisks(),
                           ],
                         ),
                       ),
