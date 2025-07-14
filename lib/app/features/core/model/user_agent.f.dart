@@ -8,6 +8,8 @@ class UserAgent with _$UserAgent {
     required List<UserAgentComponent> components,
   }) = _UserAgent;
 
+  const UserAgent._();
+
   @override
   String toString() => components.map((component) => component.toString()).join(' ');
 }
@@ -18,6 +20,8 @@ class UserAgentComponent with _$UserAgentComponent {
     required String name,
     required String version,
   }) = _UserAgentComponent;
+
+  const UserAgentComponent._();
 
   @override
   String toString() => '$name/$version';
