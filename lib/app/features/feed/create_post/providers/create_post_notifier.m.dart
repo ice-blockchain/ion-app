@@ -11,7 +11,6 @@ import 'package:ion/app/components/text_editor/utils/build_empty_delta.dart';
 import 'package:ion/app/components/text_editor/utils/extract_tags.dart';
 import 'package:ion/app/exceptions/exceptions.dart';
 import 'package:ion/app/extensions/delta.dart';
-import 'package:ion/app/features/core/model/media_type.dart';
 import 'package:ion/app/features/core/providers/env_provider.r.dart';
 import 'package:ion/app/features/feed/create_post/model/create_post_option.dart';
 import 'package:ion/app/features/feed/data/models/entities/article_data.f.dart';
@@ -24,6 +23,7 @@ import 'package:ion/app/features/feed/polls/models/poll_data.f.dart';
 import 'package:ion/app/features/feed/providers/counters/replies_count_provider.r.dart';
 import 'package:ion/app/features/feed/providers/counters/reposts_count_provider.r.dart';
 import 'package:ion/app/features/feed/providers/feed_user_interests_provider.r.dart';
+import 'package:ion/app/features/feed/providers/media_upload_provider.r.dart';
 import 'package:ion/app/features/ion_connect/model/action_source.f.dart';
 import 'package:ion/app/features/ion_connect/model/entity_data_with_parent.dart';
 import 'package:ion/app/features/ion_connect/model/entity_data_with_settings.dart';
@@ -46,13 +46,10 @@ import 'package:ion/app/features/ion_connect/model/rich_text.f.dart';
 import 'package:ion/app/features/ion_connect/providers/ion_connect_delete_file_notifier.m.dart';
 import 'package:ion/app/features/ion_connect/providers/ion_connect_entity_provider.r.dart';
 import 'package:ion/app/features/ion_connect/providers/ion_connect_notifier.r.dart';
-import 'package:ion/app/features/ion_connect/providers/ion_connect_upload_notifier.m.dart';
 import 'package:ion/app/features/user/providers/user_events_metadata_provider.r.dart';
 import 'package:ion/app/features/user/providers/verified_user_events_metadata_provider.r.dart';
 import 'package:ion/app/services/compressors/image_compressor.r.dart';
-import 'package:ion/app/services/compressors/video_compressor.r.dart';
 import 'package:ion/app/services/markdown/quill.dart';
-import 'package:ion/app/services/media_service/blurhash_service.r.dart';
 import 'package:ion/app/services/media_service/media_service.m.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
@@ -357,8 +354,17 @@ class CreatePostNotifier extends _$CreatePostNotifier {
     final files = <FileMetadata>[];
     final attachments = <MediaAttachment>[];
     if (mediaFiles != null && mediaFiles.isNotEmpty) {
+      final mediaUploadService = ref.read(
+        mediaUploadProvider(
+          fileAlt: _getFileAlt(),
+          imageCompressionSettings: createOption != CreatePostOption.story
+              ? const ImageCompressionSettings(shouldCompressGif: true)
+              : const ImageCompressionSettings(),
+        ),
+      );
+
       final results = await Future.wait(
-        mediaFiles.map(_uploadMedia),
+        mediaFiles.map(mediaUploadService.uploadMedia),
       );
       for (final result in results) {
         files.addAll(result.fileMetadatas);
@@ -507,88 +513,6 @@ class CreatePostNotifier extends _$CreatePostNotifier {
     final originalMediaHashes = post.data.media.values.map((e) => e.originalFileHash).toSet();
     final attachedMediaHashes = mediaAttachments.map((e) => e.originalFileHash).toSet();
     return originalMediaHashes.difference(attachedMediaHashes).toList();
-  }
-
-  Future<({List<FileMetadata> fileMetadatas, MediaAttachment mediaAttachment})> _uploadMedia(
-    MediaFile mediaFile,
-  ) async {
-    final mediaType = MediaType.fromMimeType(mediaFile.mimeType ?? '');
-    return switch (mediaType) {
-      MediaType.image => _uploadImage(mediaFile),
-      MediaType.video => _uploadVideo(mediaFile),
-      _ => throw UnknownMediaTypeException(),
-    };
-  }
-
-  Future<({List<FileMetadata> fileMetadatas, MediaAttachment mediaAttachment})> _uploadImage(
-    MediaFile file,
-  ) async {
-    var compressedImage = file;
-
-    // Compress image if it's not a story
-    // The stories has its own compression logic in ImageProcessorNotifier
-    if (createOption != CreatePostOption.story) {
-      compressedImage = await ref.read(imageCompressorProvider).compress(
-            file,
-            settings: const ImageCompressionSettings(shouldCompressGif: true),
-          );
-    }
-
-    final blurhash = await ref.read(generateBlurhashProvider(compressedImage));
-
-    final uploadResult = await ref.read(ionConnectUploadNotifierProvider.notifier).upload(
-          compressedImage,
-          alt: _getFileAlt(),
-        );
-
-    final mediaAttachment = uploadResult.mediaAttachment.copyWith(
-      blurhash: blurhash,
-    );
-
-    final fileMetadata = uploadResult.fileMetadata.copyWith(
-      blurhash: blurhash,
-    );
-
-    return (fileMetadatas: [fileMetadata], mediaAttachment: mediaAttachment);
-  }
-
-  Future<({List<FileMetadata> fileMetadatas, MediaAttachment mediaAttachment})> _uploadVideo(
-    MediaFile file,
-  ) async {
-    final videoCompressor = ref.read(videoCompressorProvider);
-    final compressedVideo = await videoCompressor.compress(file);
-
-    final videoUploadResult = await ref
-        .read(ionConnectUploadNotifierProvider.notifier)
-        .upload(compressedVideo, alt: _getFileAlt());
-
-    final thumbImage = await videoCompressor.getThumbnail(compressedVideo, thumb: file.thumb);
-
-    final thumbUploadResult = await ref
-        .read(ionConnectUploadNotifierProvider.notifier)
-        .upload(thumbImage, alt: _getFileAlt());
-
-    final thumbUrl = thumbUploadResult.fileMetadata.url;
-
-    // Generate blurhash from thumbnail for videos
-    final blurhash = await ref.read(generateBlurhashProvider(thumbImage));
-
-    final mediaAttachment = videoUploadResult.mediaAttachment.copyWith(
-      thumb: thumbUrl,
-      image: thumbUrl,
-      blurhash: blurhash,
-    );
-
-    final videoFileMetadata = videoUploadResult.fileMetadata.copyWith(
-      thumb: thumbUrl,
-      image: thumbUrl,
-      blurhash: blurhash,
-    );
-
-    return (
-      fileMetadatas: [videoFileMetadata, thumbUploadResult.fileMetadata],
-      mediaAttachment: mediaAttachment
-    );
   }
 
   FileAlt _getFileAlt() {
