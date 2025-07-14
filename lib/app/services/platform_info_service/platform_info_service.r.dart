@@ -38,7 +38,7 @@ class AndroidPlatformInfoDelegate implements PlatformInfoDelegate {
   @override
   Future<String> get version async {
     final info = await DeviceInfoPlugin().androidInfo;
-    return info.version.release;
+    return info.version.sdkInt.toString();
   }
 }
 
