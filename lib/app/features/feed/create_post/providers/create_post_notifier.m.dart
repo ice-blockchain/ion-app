@@ -354,11 +354,12 @@ class CreatePostNotifier extends _$CreatePostNotifier {
     final files = <FileMetadata>[];
     final attachments = <MediaAttachment>[];
     if (mediaFiles != null && mediaFiles.isNotEmpty) {
-      final isNotStory = createOption != CreatePostOption.story;
       final mediaUploadService = ref.read(
         mediaUploadProvider(
           fileAlt: _getFileAlt(),
-          imageCompressionSettings: ImageCompressionSettings(shouldCompressGif: isNotStory),
+          imageCompressionSettings: createOption != CreatePostOption.story
+              ? const ImageCompressionSettings(shouldCompressGif: true)
+              : const ImageCompressionSettings(),
         ),
       );
 
