@@ -64,8 +64,10 @@ class PeriodicTransfersSyncService {
 
     if (broadcastedTransfers.isNotEmpty) {
       final txDetails = broadcastedTransfers
-          .map((tx) =>
-              'txHash: ${tx.txHash}, wallet: ${tx.senderWalletAddress}, network: ${tx.network.id}')
+          .map(
+            (tx) =>
+                'txHash: ${tx.txHash}, wallet: ${tx.senderWalletAddress}, network: ${tx.network.id}',
+          )
           .join('; ');
       final message =
           'Found ${broadcastedTransfers.length} broadcasted transactions, starting sync. Details: [$txDetails]';
@@ -140,7 +142,9 @@ class PeriodicTransfersSyncService {
   }
 
   Future<void> _performWalletSync(
-      String walletAddress, List<TransactionData> expectedTransactions) async {
+    String walletAddress,
+    List<TransactionData> expectedTransactions,
+  ) async {
     if (!_isRunning) return;
 
     // Get current broadcasted transfers for this wallet
