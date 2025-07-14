@@ -1,7 +1,6 @@
 // SPDX-License-Identifier: ice License 1.0
 
 import 'dart:async';
-import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
@@ -17,9 +16,7 @@ import 'package:ion/app/features/core/permissions/views/components/permission_aw
 import 'package:ion/app/features/core/permissions/views/components/permission_dialogs/permission_request_sheet.dart';
 import 'package:ion/app/features/core/permissions/views/components/permission_dialogs/settings_redirect_sheet.dart';
 import 'package:ion/app/router/app_routes.gr.dart';
-import 'package:ion/app/services/compressors/output_path_generator.dart';
 import 'package:ion/app/services/media_service/media_service.m.dart';
-import 'package:ion/app/utils/image_path.dart';
 import 'package:ion/generated/assets.gen.dart';
 
 class BottomBarInitialView extends HookConsumerWidget {
@@ -69,10 +66,9 @@ class BottomBarInitialView extends HookConsumerWidget {
 
     final onContentInserted = useCallback(
       (KeyboardInsertedContent content) async {
-        if (content.hasData && content.uri.isGif) {
-          final outputPath = await generateOutputPath(extension: 'gif');
-          final file = File(outputPath)..writeAsBytesSync(content.data!);
-          final mediaFile = MediaFile(path: file.path, mimeType: content.mimeType);
+        final mediaFile =
+            await ref.read(mediaServiceProvider).convertKeyboardGifToMediaFile(content);
+        if (mediaFile != null) {
           unawaited(onSubmitted(mediaFiles: [mediaFile]));
         }
       },

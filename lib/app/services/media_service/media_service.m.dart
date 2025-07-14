@@ -15,6 +15,7 @@ import 'package:ion/app/exceptions/exceptions.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/gallery/providers/gallery_provider.r.dart';
 import 'package:ion/app/features/gallery/views/pages/media_picker_type.dart';
+import 'package:ion/app/services/compressors/output_path_generator.dart';
 import 'package:ion/app/services/logger/logger.dart';
 import 'package:ion/app/utils/image_path.dart';
 import 'package:path/path.dart' as p;
@@ -308,6 +309,21 @@ class MediaService {
     if (!file.existsSync()) return null;
 
     return file;
+  }
+
+  Future<MediaFile?> convertKeyboardGifToMediaFile(KeyboardInsertedContent content) async {
+    MediaFile? mediaFile;
+    if (content.hasData && content.uri.isGif) {
+      final outputPath = await generateOutputPath(extension: 'gif');
+      final file = await File(outputPath).writeAsBytes(content.data!);
+      mediaFile = MediaFile(path: file.path, mimeType: content.mimeType);
+    } else {
+      Logger.log(
+        'Keyboard content is not a valid - mimeType ${content.mimeType} - uri: ${content.uri}',
+      );
+    }
+
+    return mediaFile;
   }
 }
 
