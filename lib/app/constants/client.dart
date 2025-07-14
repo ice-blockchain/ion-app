@@ -3,5 +3,5 @@
 class Client {
   Client._();
 
-  static String id = 'ion-app';
+  static const String id = 'ion-app';
 }
