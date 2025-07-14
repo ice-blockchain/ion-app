@@ -64,6 +64,16 @@ class BottomBarInitialView extends HookConsumerWidget {
       [controller],
     );
 
+    final onContentInserted = useCallback(
+      (KeyboardInsertedContent content) async {
+        final mediaFile =
+            await ref.read(mediaServiceProvider).convertKeyboardGifToMediaFile(content);
+        if (mediaFile != null) {
+          unawaited(onSubmitted(mediaFiles: [mediaFile]));
+        }
+      },
+    );
+
     return Column(
       children: [
         Container(
@@ -118,6 +128,10 @@ class BottomBarInitialView extends HookConsumerWidget {
                       ref.read(messagingBottomBarActiveStateProvider.notifier).setHasText();
                     }
                   },
+                  contentInsertionConfiguration: ContentInsertionConfiguration(
+                    allowedMimeTypes: ['image/gif'],
+                    onContentInserted: onContentInserted,
+                  ),
                   onChanged: onTextChanged,
                   maxLines: 5,
                   minLines: 1,
