@@ -41,11 +41,11 @@ class FeedEntitiesDataSource {
       if (repostedReference == null) return true;
 
       // Check if there is a reposted event in the same response.
-      final hasReposedEvent =
+      final hasRepostedEvent =
           filtered.any((entity) => entity.toEventReference() == repostedReference);
 
       // If we found a reposted event, we filter out the repost, assuming that this is a dependency
-      return !hasReposedEvent;
+      return !hasRepostedEvent;
     }).toList();
   }
 }
