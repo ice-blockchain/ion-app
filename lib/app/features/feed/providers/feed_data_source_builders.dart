@@ -188,21 +188,19 @@ FeedEntitiesDataSource buildPostsDataSource({
     if (searchExtensions != null) ...searchExtensions,
   ]).toString();
 
-  bool entityFilter(IonConnectEntity entity) {
-    if (authors != null && !authors.contains(entity.masterPubkey)) {
-      return false;
-    }
-
-    return (entity is ModifiablePostEntity && entity.data.parentEvent == null) ||
-        (entity is PostEntity && entity.data.parentEvent == null) ||
-        entity is RepostEntity ||
-        entity is GenericRepostEntity ||
-        entity is ArticleEntity;
-  }
-
   final dataSource = EntitiesDataSource(
     actionSource: actionSource,
-    entityFilter: entityFilter,
+    entityFilter: (IonConnectEntity entity) {
+      if (authors != null && !authors.contains(entity.masterPubkey)) {
+        return false;
+      }
+
+      return (entity is ModifiablePostEntity && entity.data.parentEvent == null) ||
+          (entity is PostEntity && entity.data.parentEvent == null) ||
+          entity is RepostEntity ||
+          entity is GenericRepostEntity ||
+          entity is ArticleEntity;
+    },
     requestFilters: [
       RequestFilter(
         kinds: const [
