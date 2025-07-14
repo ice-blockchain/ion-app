@@ -14,6 +14,10 @@ import 'package:ion/app/router/utils/show_simple_bottom_sheet.dart';
 import 'package:ion/app/services/ion_identity/ion_identity_provider.r.dart';
 import 'package:ion_identity_client/ion_identity.dart';
 
+const excludedPasskeyExceptions = {
+  PasskeyCancelledException,
+};
+
 Future<void> guardPasskeyDialog(
   BuildContext context,
   Widget Function(Widget child) passkeyRequestBuilder, {

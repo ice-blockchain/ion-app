@@ -36,7 +36,10 @@ class SendNftConfirmPage extends ConsumerWidget {
     final nft = formData.nft!;
 
     ref
-      ..displayErrors(sendNftNotifierProvider)
+      ..displayErrors(
+        sendNftNotifierProvider,
+        excludedExceptions: excludedPasskeyExceptions,
+      )
       ..listenSuccess(sendNftNotifierProvider, (transactionDetails) {
         if (context.mounted && transactionDetails != null) {
           ref.read(transactionNotifierProvider.notifier).details = transactionDetails;

@@ -123,6 +123,7 @@ class RecoverUserPage extends HookConsumerWidget {
           TwoFARequiredException,
           InvalidTwoFaCodeException,
           InvalidRecoveryCredentialsException,
+          ...excludedPasskeyExceptions,
         },
       )
       ..listenSuccess(initUserRecoveryActionNotifierProvider, (value) {

@@ -82,7 +82,10 @@ class _Body extends HookConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final recoveryData = ref.watch(createRecoveryKeyActionNotifierProvider);
 
-    ref.displayErrors(createRecoveryKeyActionNotifierProvider);
+    ref.displayErrors(
+      createRecoveryKeyActionNotifierProvider,
+      excludedExceptions: excludedPasskeyExceptions,
+    );
 
     useOnInit(() {
       guardPasskeyDialog(

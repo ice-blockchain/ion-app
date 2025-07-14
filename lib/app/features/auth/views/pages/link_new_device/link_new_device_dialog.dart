@@ -61,7 +61,10 @@ class LinkNewDeviceDialog extends HookConsumerWidget {
     );
 
     final state = ref.watch(onboardingCompleteNotifierProvider);
-    ref.displayErrors(onboardingCompleteNotifierProvider);
+    ref.displayErrors(
+      onboardingCompleteNotifierProvider,
+      excludedExceptions: excludedPasskeyExceptions,
+    );
 
     return ScreenSideOffset.medium(
       child: Column(

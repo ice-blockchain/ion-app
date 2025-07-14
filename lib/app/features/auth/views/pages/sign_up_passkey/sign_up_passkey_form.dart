@@ -24,7 +24,10 @@ class SignUpPasskeyForm extends HookConsumerWidget {
     final authState = ref.watch(authProvider);
     final registerActionState = ref.watch(registerActionNotifierProvider);
 
-    ref.displayErrors(registerActionNotifierProvider);
+    ref.displayErrors(
+      registerActionNotifierProvider,
+      excludedExceptions: excludedPasskeyExceptions,
+    );
 
     return Form(
       key: formKey.value,

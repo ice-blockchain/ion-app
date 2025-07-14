@@ -20,7 +20,10 @@ class CloudBackupOption extends HookConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     ref
-      ..displayErrors(createRecoveryKeyActionNotifierProvider)
+      ..displayErrors(
+        createRecoveryKeyActionNotifierProvider,
+        excludedExceptions: excludedPasskeyExceptions,
+      )
       ..listenSuccess(createRecoveryKeyActionNotifierProvider, (recoveryCredentials) {
         if (recoveryCredentials != null && context.mounted) {
           BackupWithCloudRoute().push<void>(context);
