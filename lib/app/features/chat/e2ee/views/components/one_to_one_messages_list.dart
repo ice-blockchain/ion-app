@@ -15,7 +15,7 @@ import 'package:ion/app/features/chat/views/components/message_items/message_typ
 import 'package:ion/app/features/chat/views/components/scroll_to_bottom_button.dart';
 import 'package:ion/app/features/ion_connect/ion_connect.dart';
 import 'package:ion/app/utils/future.dart';
-import 'package:scrollable_positioned_list/scrollable_positioned_list.dart';
+import 'package:super_sliver_list/super_sliver_list.dart';
 
 class OneToOneMessageList extends HookConsumerWidget {
   const OneToOneMessageList(this.messages, {super.key});
@@ -24,11 +24,24 @@ class OneToOneMessageList extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final itemScrollController = useMemoized(ItemScrollController.new);
-    final scrollOffsetListener = useMemoized(ScrollOffsetListener.create);
+    final scrollController = useScrollController();
+    final listController = useMemoized(ListController.new);
 
     final allMessages = messages.values.expand((e) => e).toList()
       ..sortByCompare((e) => e.publishedAt, (a, b) => b.compareTo(a));
+
+    final animateToItem = useCallback(
+      (int index) {
+        listController.animateToItem(
+          index: index,
+          scrollController: scrollController,
+          alignment: 0,
+          duration: (d) => 300.milliseconds,
+          curve: (c) => Curves.easeInOut,
+        );
+      },
+      [scrollController, listController],
+    );
 
     final onTapReply = useCallback(
       (ReplaceablePrivateDirectMessageEntity entity) {
@@ -38,13 +51,10 @@ class OneToOneMessageList extends HookConsumerWidget {
           final replyMessageIndex = allMessages.indexWhere(
             (element) => element.sharedId == replyMessage.eventReference.dTag,
           );
-          itemScrollController.scrollTo(
-            index: replyMessageIndex,
-            duration: const Duration(milliseconds: 300),
-          );
+          animateToItem(replyMessageIndex);
         }
       },
-      [allMessages, itemScrollController],
+      [allMessages, scrollController, listController],
     );
 
     return NotificationListener<ScrollUpdateNotification>(
@@ -60,13 +70,18 @@ class OneToOneMessageList extends HookConsumerWidget {
           ColoredBox(
             color: context.theme.appColors.primaryBackground,
             child: ScreenSideOffset.small(
-              child: ScrollablePositionedList.builder(
+              child: SuperListView.builder(
+                key: const Key('one_to_one_messages_list'),
                 physics: const BouncingScrollPhysics(
                   parent: AlwaysScrollableScrollPhysics(),
                 ),
+                findChildIndexCallback: (key) {
+                  final valueKey = key as ValueKey<String>;
+                  return allMessages.indexWhere((e) => e.id == valueKey.value);
+                },
                 itemCount: allMessages.length,
-                itemScrollController: itemScrollController,
-                scrollOffsetListener: scrollOffsetListener,
+                controller: scrollController,
+                listController: listController,
                 reverse: true,
                 itemBuilder: (context, index) {
                   final message = allMessages[index];
@@ -147,11 +162,8 @@ class OneToOneMessageList extends HookConsumerWidget {
             ),
           ),
           ScrollToBottomButton(
-            scrollOffsetListener: scrollOffsetListener,
-            onTap: () => itemScrollController.scrollTo(
-              index: 0,
-              duration: 300.milliseconds,
-            ),
+            scrollController: scrollController,
+            onTap: () => animateToItem(0),
           ),
         ],
       ),

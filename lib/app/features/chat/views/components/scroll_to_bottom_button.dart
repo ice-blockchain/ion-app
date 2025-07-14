@@ -4,31 +4,30 @@ import 'package:flutter/widgets.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:ion/app/extensions/extensions.dart';
-import 'package:ion/app/hooks/use_on_init.dart';
 import 'package:ion/generated/assets.gen.dart';
-import 'package:scrollable_positioned_list/scrollable_positioned_list.dart';
 
 class ScrollToBottomButton extends HookWidget {
   const ScrollToBottomButton({
-    required this.scrollOffsetListener,
+    required this.scrollController,
     required this.onTap,
     super.key,
   });
   static final _offsetThreshold = 16.s;
 
   final VoidCallback onTap;
-  final ScrollOffsetListener scrollOffsetListener;
+  final ScrollController scrollController;
 
   @override
   Widget build(BuildContext context) {
-    final totalScrollOffset = useState<double>(0);
+    final isVisible = useState(false);
 
-    useOnInit(() {
-      scrollOffsetListener.changes.listen(
-        (offset) {
-          totalScrollOffset.value += offset;
-        },
-      );
+    useEffect(() {
+      void listener() {
+        isVisible.value = scrollController.offset > _offsetThreshold;
+      }
+
+      scrollController.addListener(listener);
+      return () => scrollController.removeListener(listener);
     });
 
     return PositionedDirectional(
@@ -45,7 +44,7 @@ class ScrollToBottomButton extends HookWidget {
             ),
           );
         },
-        child: totalScrollOffset.value > _offsetThreshold
+        child: isVisible.value
             ? _ScrollButton(
                 onTap: onTap,
               )
