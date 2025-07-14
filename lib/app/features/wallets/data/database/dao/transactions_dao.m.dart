@@ -205,22 +205,33 @@ class TransactionsDao extends DatabaseAccessor<WalletsDatabase> with _$Transacti
     }).get();
   }
 
-  Stream<Map<CoinData, List<TransactionData>>> watchBroadcastedTransfersByCoins(
-    List<String> coinIds,
-  ) {
+  Stream<List<TransactionData>> watchBroadcastedTransfers({
+    List<String>? coinIds,
+    String? walletAddress,
+  }) {
     final transactionCoinAlias = alias(coinsTable, 'transactionCoin');
     final nativeCoinAlias = alias(coinsTable, 'nativeCoin');
 
     final query = (select(transactionsTable)
           ..where(
             (tbl) {
-              return tbl.coinId.isIn(coinIds) &
-                  tbl.networkId.isNotNull() &
-                  tbl.type.equals(TransactionType.send.value) &
-                  (tbl.status.isNull() |
-                      tbl.status.equals(TransactionStatus.broadcasted.toJson())) &
-                  tbl.transferredAmount.isNotNull() &
-                  tbl.transferredAmountUsd.isNotNull();
+              var expr = tbl.type.equals(TransactionType.send.value) &
+                  tbl.id.isNotNull() &
+                  (tbl.status.isNull() | tbl.status.equals(TransactionStatus.broadcasted.toJson()));
+
+              if (coinIds != null && coinIds.isNotEmpty) {
+                expr = expr & 
+                    tbl.coinId.isIn(coinIds) &
+                    tbl.networkId.isNotNull() &
+                    tbl.transferredAmount.isNotNull() &
+                    tbl.transferredAmountUsd.isNotNull();
+              }
+
+              if (walletAddress != null) {
+                expr = expr & tbl.senderWalletAddress.equals(walletAddress);
+              }
+
+              return expr;
             },
           ))
         .join([
@@ -238,27 +249,15 @@ class TransactionsDao extends DatabaseAccessor<WalletsDatabase> with _$Transacti
       ),
     ]);
 
-    return query
-        .watch()
-        .map(
-          (rows) => rows.map(
-            (row) => _mapRowToDomainModel(
-              row,
-              nativeCoinAlias: nativeCoinAlias,
-              transactionCoinAlias: transactionCoinAlias,
-            ),
-          ),
-        )
-        .map((transactions) {
-      final transactionsByCoin = <CoinData, List<TransactionData>>{};
-
-      for (final transaction in transactions) {
-        final coin = (transaction.cryptoAsset as CoinTransactionAsset).coin;
-        transactionsByCoin.putIfAbsent(coin, () => []).add(transaction);
-      }
-
-      return transactionsByCoin;
-    });
+    return query.watch().map(
+      (rows) => rows.map(
+        (row) => _mapRowToDomainModel(
+          row,
+          nativeCoinAlias: nativeCoinAlias,
+          transactionCoinAlias: transactionCoinAlias,
+        ),
+      ).toList(),
+    );
   }
 
   Future<TransactionData?> getTransactionByTxHash(String txHash) {

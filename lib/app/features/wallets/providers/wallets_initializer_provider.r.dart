@@ -5,6 +5,7 @@ import 'dart:async';
 import 'package:ion/app/features/auth/providers/auth_provider.m.dart';
 import 'package:ion/app/features/wallets/domain/coins/coin_initializer.r.dart';
 import 'package:ion/app/features/wallets/domain/networks/networks_initializer.r.dart';
+import 'package:ion/app/features/wallets/domain/transactions/periodic_transfers_sync_service.r.dart';
 import 'package:ion/app/features/wallets/domain/transactions/sync_transactions_service.r.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
@@ -32,16 +33,22 @@ class WalletsInitializerNotifier extends _$WalletsInitializerNotifier {
       final coinInitializer = ref.watch(coinInitializerProvider);
       final networksInitializer = ref.watch(networksInitializerProvider);
       final syncServiceFuture = ref.watch(syncTransactionsServiceProvider.future);
+      final periodicSyncServiceFuture = ref.watch(periodicTransfersSyncServiceProvider.future);
 
-      final (_, _, syncService) = await (
+      final (_, _, syncService, periodicSyncService) = await (
         coinInitializer.initialize(),
         networksInitializer.initialize(),
         syncServiceFuture,
+        periodicSyncServiceFuture,
       ).wait;
 
       unawaited(
-        syncService.sync(),
+        syncService.syncAll(),
       );
+
+      // Start periodic syncing for broadcasted transactions
+      periodicSyncService.startWatching();
+      ref.onDispose(periodicSyncService.stopWatching);
 
       // Only complete if not already completed
       if (!_completer!.isCompleted) {

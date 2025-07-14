@@ -75,7 +75,7 @@ class WalletPage extends HookConsumerWidget {
 
             await ref
                 .read(syncTransactionsServiceProvider.future)
-                .then((service) => service.sync());
+                .then((service) => service.syncAll());
 
             ref
               ..invalidate(walletViewsDataNotifierProvider)

@@ -12,6 +12,7 @@ import 'package:ion/app/components/scroll_view/load_more_builder.dart';
 import 'package:ion/app/components/scroll_view/pull_to_refresh_builder.dart';
 import 'package:ion/app/components/section_separator/section_separator.dart';
 import 'package:ion/app/extensions/extensions.dart';
+import 'package:ion/app/features/wallets/domain/transactions/sync_transactions_service.r.dart';
 import 'package:ion/app/features/wallets/model/coin_transaction_data.f.dart';
 import 'package:ion/app/features/wallets/model/transaction_details.f.dart';
 import 'package:ion/app/features/wallets/providers/transaction_provider.r.dart';
@@ -151,6 +152,10 @@ class CoinDetailsPage extends HookConsumerWidget {
             ref
               ..invalidate(walletViewsDataNotifierProvider)
               ..invalidate(coinTransactionHistoryNotifierProvider(symbolGroup: symbolGroup));
+
+            // Sync transactions for this specific coin across all networks
+            final syncService = await ref.read(syncTransactionsServiceProvider.future);
+            await syncService.syncForCoin(symbolGroup);
           },
           slivers: slivers,
         ),
