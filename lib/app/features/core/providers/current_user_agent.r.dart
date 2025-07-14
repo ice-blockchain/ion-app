@@ -1,12 +1,9 @@
-import 'dart:io';
-
-import 'package:device_info_plus/device_info_plus.dart';
-import 'package:flutter/foundation.dart';
 import 'package:ion/app/features/core/model/user_agent.f.dart';
 import 'package:ion/app/features/core/providers/app_info_provider.r.dart';
+import 'package:ion/app/services/platform_info_service/platform_info_service.r.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
-part 'user_agent.r.g.dart';
+part 'current_user_agent.r.g.dart';
 
 @Riverpod(keepAlive: true)
 class CurrentUserAgent extends _$CurrentUserAgent {
@@ -29,18 +26,10 @@ class CurrentUserAgent extends _$CurrentUserAgent {
   }
 
   Future<UserAgentComponent> _buildPlatformComponent() async {
-    final deviceInfo = DeviceInfoPlugin();
-    final version = switch (defaultTargetPlatform) {
-      TargetPlatform.android => (await deviceInfo.androidInfo).version.release,
-      TargetPlatform.iOS => (await deviceInfo.iosInfo).systemVersion,
-      TargetPlatform.macOS => (await deviceInfo.macOsInfo).osRelease,
-      TargetPlatform.windows => (await deviceInfo.windowsInfo).computerName,
-      TargetPlatform.linux => (await deviceInfo.linuxInfo).prettyName,
-      _ => 'Unknown',
-    };
+    final platformInfo = ref.watch(platformInfoServiceProvider);
     return UserAgentComponent(
-      name: Platform.operatingSystem,
-      version: version,
+      name: platformInfo.name,
+      version: await platformInfo.version,
     );
   }
 }
