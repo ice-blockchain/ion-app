@@ -56,9 +56,13 @@ class UserPosts extends _$UserPosts with DelegatedPagedNotifier {
       return false;
     }
 
-    return (entity is ModifiablePostEntity && entity.data.parentEvent == null) ||
+    return (entity is ModifiablePostEntity &&
+            entity.data.parentEvent == null &&
+            entity.data.expiration == null) ||
         entity is GenericRepostEntity ||
-        (entity is PostEntity && entity.data.parentEvent == null) ||
+        (entity is PostEntity &&
+            entity.data.parentEvent == null &&
+            entity.data.expiration == null) ||
         entity is RepostEntity ||
         entity is ArticleEntity;
   }
