@@ -56,6 +56,6 @@ List<EntitiesDataSource>? userStoriesDataSource(
       authors: [pubkey],
       currentPubkey: currentPubkey,
       limit: limit,
-    ),
+    ).dataSource,
   ];
 }

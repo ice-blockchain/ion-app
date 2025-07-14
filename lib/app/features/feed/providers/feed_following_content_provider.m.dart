@@ -308,7 +308,8 @@ class FeedFollowingContent extends _$FeedFollowingContent implements PagedNotifi
     final ionConnectNotifier = ref.read(ionConnectNotifierProvider.notifier);
 
     final feedConfig = await ref.read(feedConfigProvider.future);
-    final dataSource = _getDataSourceForPubkey(pubkey, feedConfig);
+    final FeedEntitiesDataSource(:dataSource, :responseFilter) =
+        _getDataSourceForPubkey(pubkey, feedConfig);
 
     final until = lastEventCreatedAt != null ? lastEventCreatedAt - 1 : null;
     final requestMessage = RequestMessage();
@@ -328,12 +329,7 @@ class FeedFollowingContent extends _$FeedFollowingContent implements PagedNotifi
         .requestEntities(requestMessage, actionSource: dataSource.actionSource)
         .toList();
 
-    // TODO: Create a separate data source model that handles it internally
-    if (dataSource.responseFilter != null) {
-      return dataSource.responseFilter!.call(entities).firstOrNull;
-    } else {
-      return entities.firstWhereOrNull(dataSource.entityFilter);
-    }
+    return responseFilter(entities).firstOrNull;
   }
 
   Stream<IonConnectEntity> _requestEntitiesByReferences({
@@ -485,7 +481,7 @@ class FeedFollowingContent extends _$FeedFollowingContent implements PagedNotifi
     return !duplicatedRepost;
   }
 
-  EntitiesDataSource _getDataSourceForPubkey(String pubkey, FeedConfig feedConfig) {
+  FeedEntitiesDataSource _getDataSourceForPubkey(String pubkey, FeedConfig feedConfig) {
     final currentPubkey = ref.read(currentPubkeySelectorProvider);
 
     if (currentPubkey == null) {
