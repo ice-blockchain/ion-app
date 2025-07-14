@@ -124,7 +124,7 @@ class PostBody extends HookConsumerWidget {
                             )
                           : null,
                       enableInteractiveSelection: isTextSelectable,
-                      tagsColor: accentTheme ? context.theme.appColors.lightBlue : null,
+                      tagsColor: accentTheme ? context.theme.appColors.anakiwa : null,
                     ),
                   if (hasOverflow)
                     Align(
