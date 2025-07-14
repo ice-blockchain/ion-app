@@ -318,3 +318,40 @@ Future<({bool isVerified, bool isNicknameProven})> userBadgeVerificationState(
 
   return (isVerified: isVerified, isNicknameProven: isNicknameProven);
 }
+
+@riverpod
+({bool isVerified, bool isNicknameProven}) cachedUserBadgeVerificationState(
+  Ref ref,
+  String pubkey,
+) {
+  final cachedProfileBadges = ref.watch(cachedProfileBadgesDataProvider(pubkey));
+  final cachedUserMetadata = ref.watch(cachedUserMetadataProvider(pubkey));
+  
+  final servicePubkeys = ref.watch(servicePubkeysProvider).valueOrNull ?? <String>[];
+
+  var isVerified = false;
+  if (cachedProfileBadges?.data != null) {
+    isVerified = cachedProfileBadges!.data.entries.any((entry) {
+      final isBadgeAwardValid = servicePubkeys.isEmpty || 
+          ref.watch(cachedBadgeAwardProvider(entry.awardId, servicePubkeys)) != null;
+      final isBadgeDefinitionValid = 
+          ref.watch(isValidVerifiedBadgeDefinitionProvider(entry.definitionRef, servicePubkeys));
+      return isBadgeDefinitionValid && isBadgeAwardValid;
+    });
+  }
+
+  var isNicknameProven = true;
+  if (cachedProfileBadges?.data != null && cachedUserMetadata?.data != null) {
+    isNicknameProven = cachedProfileBadges!.data.entries.any((entry) {
+      final isBadgeAwardValid = servicePubkeys.isEmpty || 
+          ref.watch(cachedBadgeAwardProvider(entry.awardId, servicePubkeys)) != null;
+      final isBadgeDefinitionValid = 
+          ref.watch(isValidNicknameProofBadgeDefinitionProvider(entry.definitionRef, servicePubkeys));
+      return isBadgeDefinitionValid && 
+          isBadgeAwardValid && 
+          entry.definitionRef.dTag.endsWith('~${cachedUserMetadata!.data.name}');
+    });
+  }
+
+  return (isVerified: isVerified, isNicknameProven: isNicknameProven);
+}
