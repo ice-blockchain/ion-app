@@ -22,10 +22,10 @@ class CategorySelector extends HookConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final selected = useState(selectedCategory);
-    final categories = ref.watch(userCategoriesProvider).valueOrNull;
+    final categories = ref.watch(userCategoriesProvider);
 
     final label = selected.value != null
-        ? (categories?[selected.value]?.name ?? selectedCategory!)
+        ? (categories[selected.value]?.name ?? selectedCategory!)
         : context.i18n.dropdown_select_category;
 
     return Button.dropdown(

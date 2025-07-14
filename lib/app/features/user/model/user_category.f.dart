@@ -6,7 +6,7 @@ part 'user_category.f.g.dart';
 
 @JsonSerializable()
 class UserCategory {
-  UserCategory({
+  const UserCategory({
     required this.key,
     required this.name,
   });
