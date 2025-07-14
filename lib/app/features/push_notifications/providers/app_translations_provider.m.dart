@@ -5,6 +5,7 @@ import 'dart:ui';
 
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:ion/app/constants/client.dart';
 import 'package:ion/app/exceptions/exceptions.dart';
 import 'package:ion/app/features/config/data/models/app_config_cache_strategy.dart';
 import 'package:ion/app/features/config/data/models/app_config_with_version.dart';
@@ -65,7 +66,7 @@ class Translator<T extends AppConfigWithVersion> {
     }
     return translations[locale] =
         await _translationsRepository.getConfig<PushNotificationTranslations>(
-      'ion-app_push-notifications_translations_${locale.languageCode}',
+      '${Client.id}_push-notifications_translations_${locale.languageCode}',
       cacheStrategy: AppConfigCacheStrategy.file,
       parser: (data) =>
           PushNotificationTranslations.fromJson(jsonDecode(data) as Map<String, dynamic>),

@@ -1,3 +1,4 @@
+import 'package:ion/app/constants/client.dart';
 import 'package:ion/app/features/core/model/user_agent.f.dart';
 import 'package:ion/app/features/core/providers/app_info_provider.r.dart';
 import 'package:ion/app/services/platform_info_service/platform_info_service.r.dart';
@@ -20,7 +21,7 @@ class CurrentUserAgent extends _$CurrentUserAgent {
   Future<UserAgentComponent> _buildClientComponent() async {
     final packageInfo = await ref.watch(appInfoProvider.future);
     return UserAgentComponent(
-      name: 'ion-app',
+      name: Client.id,
       version: '${packageInfo.version}.${packageInfo.buildNumber}',
     );
   }
