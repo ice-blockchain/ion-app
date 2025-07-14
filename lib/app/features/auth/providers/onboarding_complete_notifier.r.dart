@@ -57,7 +57,7 @@ class OnboardingCompleteNotifier extends _$OnboardingCompleteNotifier {
 
         final userMetadata =
             await _buildUserMetadata(avatarAttachment: uploadedAvatar?.mediaAttachment);
-        final usernameProofsJsonPayloads = await ref.read(
+        final updateUserSocialProfileResponse = await ref.read(
           updateUserSocialProfileProvider(
             data: UserSocialProfileData(
               username: userMetadata.name,
@@ -66,10 +66,10 @@ class OnboardingCompleteNotifier extends _$OnboardingCompleteNotifier {
             ),
           ).future,
         );
-
+        final usernameProofsJsonPayloads = updateUserSocialProfileResponse.usernameProof ?? [];
         final (:interestSetData, :interestsData) = _buildUserLanguages();
 
-        final followList = _buildFollowList();
+        final followList = _buildFollowList(updateUserSocialProfileResponse.referralMasterKey);
 
         final usernameProofsEvents =
             usernameProofsJsonPayloads.map(EventMessage.fromPayloadJson).toList();
@@ -205,12 +205,15 @@ class OnboardingCompleteNotifier extends _$OnboardingCompleteNotifier {
         );
   }
 
-  FollowListData _buildFollowList() {
+  FollowListData _buildFollowList(String? referralPubkey) {
     final OnboardingState(:followees) = ref.read(onboardingDataProvider);
+    final pubkeys = {
+      if (followees != null) ...followees,
+      if (referralPubkey != null) referralPubkey,
+    };
+    final followeeList = pubkeys.map((pubkey) => Followee(pubkey: pubkey)).toList();
 
-    return FollowListData(
-      list: followees == null ? [] : followees.map((pubkey) => Followee(pubkey: pubkey)).toList(),
-    );
+    return FollowListData(list: followeeList);
   }
 
   Future<({FileMetadata fileMetadata, MediaAttachment mediaAttachment})?> _uploadAvatar() async {

@@ -26,6 +26,7 @@ mixin _$UpdateUserSocialProfileResponse {
   String? get referral => throw _privateConstructorUsedError;
   List<Map<String, dynamic>>? get usernameProof =>
       throw _privateConstructorUsedError;
+  String? get referralMasterKey => throw _privateConstructorUsedError;
 
   /// Serializes this UpdateUserSocialProfileResponse to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
@@ -49,7 +50,8 @@ abstract class $UpdateUserSocialProfileResponseCopyWith<$Res> {
       {String username,
       String? displayName,
       String? referral,
-      List<Map<String, dynamic>>? usernameProof});
+      List<Map<String, dynamic>>? usernameProof,
+      String? referralMasterKey});
 }
 
 /// @nodoc
@@ -72,6 +74,7 @@ class _$UpdateUserSocialProfileResponseCopyWithImpl<$Res,
     Object? displayName = freezed,
     Object? referral = freezed,
     Object? usernameProof = freezed,
+    Object? referralMasterKey = freezed,
   }) {
     return _then(_value.copyWith(
       username: null == username
@@ -90,6 +93,10 @@ class _$UpdateUserSocialProfileResponseCopyWithImpl<$Res,
           ? _value.usernameProof
           : usernameProof // ignore: cast_nullable_to_non_nullable
               as List<Map<String, dynamic>>?,
+      referralMasterKey: freezed == referralMasterKey
+          ? _value.referralMasterKey
+          : referralMasterKey // ignore: cast_nullable_to_non_nullable
+              as String?,
     ) as $Val);
   }
 }
@@ -107,7 +114,8 @@ abstract class _$$UpdateUserSocialProfileResponseImplCopyWith<$Res>
       {String username,
       String? displayName,
       String? referral,
-      List<Map<String, dynamic>>? usernameProof});
+      List<Map<String, dynamic>>? usernameProof,
+      String? referralMasterKey});
 }
 
 /// @nodoc
@@ -129,6 +137,7 @@ class __$$UpdateUserSocialProfileResponseImplCopyWithImpl<$Res>
     Object? displayName = freezed,
     Object? referral = freezed,
     Object? usernameProof = freezed,
+    Object? referralMasterKey = freezed,
   }) {
     return _then(_$UpdateUserSocialProfileResponseImpl(
       username: null == username
@@ -147,6 +156,10 @@ class __$$UpdateUserSocialProfileResponseImplCopyWithImpl<$Res>
           ? _value._usernameProof
           : usernameProof // ignore: cast_nullable_to_non_nullable
               as List<Map<String, dynamic>>?,
+      referralMasterKey: freezed == referralMasterKey
+          ? _value.referralMasterKey
+          : referralMasterKey // ignore: cast_nullable_to_non_nullable
+              as String?,
     ));
   }
 }
@@ -159,7 +172,8 @@ class _$UpdateUserSocialProfileResponseImpl
       {required this.username,
       required this.displayName,
       required this.referral,
-      required final List<Map<String, dynamic>>? usernameProof})
+      required final List<Map<String, dynamic>>? usernameProof,
+      required this.referralMasterKey})
       : _usernameProof = usernameProof;
 
   factory _$UpdateUserSocialProfileResponseImpl.fromJson(
@@ -183,8 +197,11 @@ class _$UpdateUserSocialProfileResponseImpl
   }
 
   @override
+  final String? referralMasterKey;
+
+  @override
   String toString() {
-    return 'UpdateUserSocialProfileResponse(username: $username, displayName: $displayName, referral: $referral, usernameProof: $usernameProof)';
+    return 'UpdateUserSocialProfileResponse(username: $username, displayName: $displayName, referral: $referral, usernameProof: $usernameProof, referralMasterKey: $referralMasterKey)';
   }
 
   @override
@@ -199,13 +216,15 @@ class _$UpdateUserSocialProfileResponseImpl
             (identical(other.referral, referral) ||
                 other.referral == referral) &&
             const DeepCollectionEquality()
-                .equals(other._usernameProof, _usernameProof));
+                .equals(other._usernameProof, _usernameProof) &&
+            (identical(other.referralMasterKey, referralMasterKey) ||
+                other.referralMasterKey == referralMasterKey));
   }
 
   @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   int get hashCode => Object.hash(runtimeType, username, displayName, referral,
-      const DeepCollectionEquality().hash(_usernameProof));
+      const DeepCollectionEquality().hash(_usernameProof), referralMasterKey);
 
   /// Create a copy of UpdateUserSocialProfileResponse
   /// with the given fields replaced by the non-null parameter values.
@@ -231,7 +250,8 @@ abstract class _UpdateUserSocialProfileResponse
           {required final String username,
           required final String? displayName,
           required final String? referral,
-          required final List<Map<String, dynamic>>? usernameProof}) =
+          required final List<Map<String, dynamic>>? usernameProof,
+          required final String? referralMasterKey}) =
       _$UpdateUserSocialProfileResponseImpl;
 
   factory _UpdateUserSocialProfileResponse.fromJson(Map<String, dynamic> json) =
@@ -245,6 +265,8 @@ abstract class _UpdateUserSocialProfileResponse
   String? get referral;
   @override
   List<Map<String, dynamic>>? get usernameProof;
+  @override
+  String? get referralMasterKey;
 
   /// Create a copy of UpdateUserSocialProfileResponse
   /// with the given fields replaced by the non-null parameter values.

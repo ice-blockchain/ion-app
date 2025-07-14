@@ -15,6 +15,7 @@ _$UpdateUserSocialProfileResponseImpl
           usernameProof: (json['usernameProof'] as List<dynamic>?)
               ?.map((e) => e as Map<String, dynamic>)
               .toList(),
+          referralMasterKey: json['referralMasterKey'] as String?,
         );
 
 Map<String, dynamic> _$$UpdateUserSocialProfileResponseImplToJson(
@@ -24,4 +25,5 @@ Map<String, dynamic> _$$UpdateUserSocialProfileResponseImplToJson(
       'displayName': instance.displayName,
       'referral': instance.referral,
       'usernameProof': instance.usernameProof,
+      'referralMasterKey': instance.referralMasterKey,
     };

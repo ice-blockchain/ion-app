@@ -1,6 +1,7 @@
 // SPDX-License-Identifier: ice License 1.0
 
 import 'package:ion_identity_client/src/users/update_user_social_profile/data_sources/update_user_social_profile_data_source.dart';
+import 'package:ion_identity_client/src/users/update_user_social_profile/models/update_user_social_profile_response.f.dart';
 import 'package:ion_identity_client/src/users/update_user_social_profile/models/user_social_profile_data.f.dart';
 
 class UpdateUserSocialProfileService {
@@ -12,7 +13,7 @@ class UpdateUserSocialProfileService {
   final String username;
   final UpdateUserSocialProfileDataSource _dataSource;
 
-  Future<List<Map<String, dynamic>>> updateUserSocialProfile({
+  Future<UpdateUserSocialProfileResponse> updateUserSocialProfile({
     required String userId,
     required UserSocialProfileData data,
   }) async =>
