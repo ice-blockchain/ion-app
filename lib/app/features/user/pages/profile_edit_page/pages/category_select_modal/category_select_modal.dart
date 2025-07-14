@@ -23,7 +23,7 @@ class CategorySelectModal extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final categories = ref.watch(userCategoriesProvider).valueOrNull ?? {};
+    final categories = ref.watch(userCategoriesProvider);
     final searchValue = useState('');
     final filteredCategories = useMemoized(
       () {
