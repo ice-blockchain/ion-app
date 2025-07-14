@@ -155,7 +155,7 @@ class CoinDetailsPage extends HookConsumerWidget {
 
             // Sync transactions for this specific coin across all networks
             final syncService = await ref.read(syncTransactionsServiceProvider.future);
-            await syncService.syncForCoin(symbolGroup);
+            await syncService.syncCoinTransactions(symbolGroup);
           },
           slivers: slivers,
         ),

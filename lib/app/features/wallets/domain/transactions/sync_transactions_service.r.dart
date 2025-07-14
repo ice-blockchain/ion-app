@@ -93,7 +93,6 @@ class SyncTransactionsService {
 
     if (walletsToSync.isEmpty) {
       Logger.info('No broadcasted transfers found, skipping sync');
-      print('[${DateTime.now().toString().substring(11, 23)}] No broadcasted transfers found, skipping sync');
       return;
     }
 
@@ -107,7 +106,38 @@ class SyncTransactionsService {
     );
 
     Logger.info('Completed syncing wallets with broadcasted transfers');
-    print('[${DateTime.now().toString().substring(11, 23)}] Completed syncing wallets with broadcasted transfers');
+  }
+
+  /// Syncs broadcasted transfers for a specific wallet
+  Future<void> syncBroadcastedTransfersForWallet(String walletAddress) async {
+    final syncObjects = await _prepareSyncObjects();
+
+    // Find the wallet with the specified address
+    final wallet = _userWallets.firstWhere(
+      (w) => w.address == walletAddress,
+      orElse: () => throw Exception('Wallet with address $walletAddress not found'),
+    );
+
+    // Check if this wallet has broadcasted transfers
+    final broadcastedTransfers = await _transactionsRepository.getBroadcastedTransfers(
+      walletAddress: walletAddress,
+    );
+
+    if (broadcastedTransfers.isEmpty) {
+      Logger.info('No broadcasted transfers found for wallet $walletAddress, skipping sync');
+      return;
+    }
+
+    _logWalletSync('Syncing wallet with broadcasted transfers', [wallet], syncObjects);
+
+    await _syncWallets(
+      wallets: [wallet],
+      syncObjects: syncObjects,
+      isFullLoad: false,
+      updateHistoryLoaded: false,
+    );
+
+    Logger.info('Completed syncing wallet $walletAddress with broadcasted transfers');
   }
 
   /// Gets wallets that have broadcasted transfers
@@ -125,13 +155,12 @@ class SyncTransactionsService {
   }
 
   /// Syncs transactions for a specific coin across all networks/wallets
-  Future<void> syncForCoin(String symbolGroup) async {
+  Future<void> syncCoinTransactions(String symbolGroup) async {
     final syncObjects = await _prepareSyncObjects();
     final walletsWithCoin = _getWalletsWithCoin(symbolGroup, syncObjects);
 
     if (walletsWithCoin.isEmpty) {
       Logger.info('No wallets found with coin symbolGroup: $symbolGroup');
-      print('[${DateTime.now().toString().substring(11, 23)}] No wallets found with coin symbolGroup: $symbolGroup');
       return;
     }
 
@@ -145,7 +174,6 @@ class SyncTransactionsService {
     );
 
     Logger.info('Completed syncing coin $symbolGroup across all networks');
-    print('[${DateTime.now().toString().substring(11, 23)}] Completed syncing coin $symbolGroup across all networks');
   }
 
   List<Wallet> _getWalletsWithCoin(String symbolGroup, _SyncObjects context) {
@@ -161,7 +189,6 @@ class SyncTransactionsService {
     final message = '$operation across ${wallets.length} wallets: '
         '${wallets.map((w) => '${w.address}(${syncObjects.networks[w.network]?.id ?? w.network})').join(', ')}';
     Logger.info(message);
-    print('[${DateTime.now().toString().substring(11, 23)}] $message');
   }
 
   /// Syncs multiple wallets with the same configuration
@@ -195,15 +222,14 @@ class SyncTransactionsService {
       final errorMessage = 'We are not support ${wallet.network} right now. '
           'Skip history sync for the wallet (id: ${wallet.id}, address: ${wallet.address}).';
       Logger.error(errorMessage);
-      print('[${DateTime.now().toString().substring(11, 23)}] $errorMessage');
       return;
     }
 
     if (walletViewId == null) {
-      final infoMessage = 'Wallet (id: ${wallet.id}, address: ${wallet.address}) is not connected to any existed wallet view. '
+      final infoMessage =
+          'Wallet (id: ${wallet.id}, address: ${wallet.address}) is not connected to any existed wallet view. '
           'Skip history sync.';
       Logger.info(infoMessage);
-      print('[${DateTime.now().toString().substring(11, 23)}] $infoMessage');
       return;
     }
 

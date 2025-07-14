@@ -32,7 +32,7 @@ class PeriodicTransfersSyncService {
 
   StreamSubscription<List<TransactionData>>? _broadcastedTransfersSubscription;
   bool _isRunning = false;
-  bool _isSyncInProgress = false;
+  final Map<String, bool> _walletSyncInProgress = {};
 
   /// Starts watching for broadcasted transactions and syncing them periodically
   void startWatching() {
@@ -40,8 +40,6 @@ class PeriodicTransfersSyncService {
 
     _isRunning = true;
     Logger.info('Starting periodic transfers sync service');
-    print(
-        '[${DateTime.now().toString().substring(11, 23)}] Starting periodic transfers sync service');
 
     // Watch for changes in broadcasted transactions
     _broadcastedTransfersSubscription = _transactionsRepository
@@ -56,8 +54,6 @@ class PeriodicTransfersSyncService {
 
     _isRunning = false;
     Logger.info('Stopping periodic transfers sync service');
-    print(
-        '[${DateTime.now().toString().substring(11, 23)}] Stopping periodic transfers sync service');
 
     _broadcastedTransfersSubscription?.cancel();
     _broadcastedTransfersSubscription = null;
@@ -74,28 +70,60 @@ class PeriodicTransfersSyncService {
       final message =
           'Found ${broadcastedTransfers.length} broadcasted transactions, starting sync. Details: [$txDetails]';
       Logger.info(message);
-      print('[${DateTime.now().toString().substring(11, 23)}] $message');
 
       _startSyncing();
     }
   }
 
   Future<void> _startSyncing() async {
-    if (_isSyncInProgress) {
-      Logger.info('Transfers sync is already in progress, skip sync request');
-      print(
-          '[${DateTime.now().toString().substring(11, 23)}] Transfers sync is already in progress, skip sync request');
+    Logger.info('Starting wallet-specific periodic transfers sync');
+
+    // Get all broadcasted transfers and group by wallet
+    final broadcastedTransfers = await _transactionsRepository.getBroadcastedTransfers();
+
+    if (broadcastedTransfers.isEmpty) {
+      Logger.info('No broadcasted transfers found, skipping sync');
       return;
     }
 
-    _isSyncInProgress = true;
-    Logger.info('Starting periodic transfers sync');
-    print('[${DateTime.now().toString().substring(11, 23)}] Starting periodic transfers sync');
+    // Group transactions by wallet address
+    final walletGroups = <String, List<TransactionData>>{};
+    for (final tx in broadcastedTransfers) {
+      final walletAddress = tx.senderWalletAddress;
+      if (walletAddress != null) {
+        walletGroups.putIfAbsent(walletAddress, () => []).add(tx);
+      }
+    }
+
+    // Start independent sync processes for each wallet
+    final syncFutures = walletGroups.entries.map((entry) {
+      final walletAddress = entry.key;
+      final transactions = entry.value;
+      return _startWalletSync(walletAddress, transactions);
+    });
+
+    // Wait for all wallet syncs to complete
+    await Future.wait(syncFutures);
+  }
+
+  Future<void> _startWalletSync(String walletAddress, List<TransactionData> transactions) async {
+    // Skip if this wallet is already being synced
+    if (_walletSyncInProgress[walletAddress] ?? false) {
+      Logger.info('Wallet $walletAddress sync is already in progress, skipping');
+      return;
+    }
+
+    _walletSyncInProgress[walletAddress] = true;
+
+    final networkId = transactions.first.network.id;
+    Logger.info('Starting periodic sync for wallet $walletAddress (network: $networkId)');
 
     try {
+      // Exponential backoff delay progression:
+      // 30s → 1m → 2m → 4m → 8m → 16m → 30m (capped) → 30m → 30m...
       await withRetry(
         ({Object? error}) async {
-          final response = await _performSync();
+          final response = await _performWalletSync(walletAddress, transactions);
           return response;
         },
         initialDelay: const Duration(seconds: 30),
@@ -106,42 +134,39 @@ class PeriodicTransfersSyncService {
         retryWhen: (result) => result is Exception,
       );
     } finally {
-      _isSyncInProgress = false;
-      Logger.info('Periodic transfers sync completed');
-      print('[${DateTime.now().toString().substring(11, 23)}] Periodic transfers sync completed');
+      _walletSyncInProgress[walletAddress] = false;
+      Logger.info('Periodic sync completed for wallet $walletAddress (network: $networkId)');
     }
   }
 
-  Future<void> _performSync() async {
-    print('[${DateTime.now().toString().substring(11, 23)}] Perform sync');
-
+  Future<void> _performWalletSync(
+      String walletAddress, List<TransactionData> expectedTransactions) async {
     if (!_isRunning) return;
 
-    // Get count before sync
-    final broadcastedBefore = await _transactionsRepository.getBroadcastedTransfers();
+    // Get current broadcasted transfers for this wallet
+    final broadcastedBefore = await _transactionsRepository.getBroadcastedTransfers(
+      walletAddress: walletAddress,
+    );
     final totalBroadcastedBefore = broadcastedBefore.length;
 
     if (broadcastedBefore.isEmpty) {
-      Logger.info('No broadcasted transfers found during sync, skipping sync');
-      print(
-          '[${DateTime.now().toString().substring(11, 23)}] No broadcasted transfers found during sync, skipping sync');
+      Logger.info('No broadcasted transfers found for wallet $walletAddress, skipping sync');
       return;
     }
 
-    final beforeDetails = broadcastedBefore
-        .map((tx) =>
-            'txHash: ${tx.txHash}, wallet: ${tx.senderWalletAddress}, network: ${tx.network.id}')
-        .join('; ');
+    final beforeDetails =
+        broadcastedBefore.map((tx) => 'txHash: ${tx.txHash}, network: ${tx.network.id}').join('; ');
     final syncMessage =
-        'Syncing $totalBroadcastedBefore broadcasted transfers. Details: [$beforeDetails]';
+        'Syncing $totalBroadcastedBefore broadcasted transfers for wallet $walletAddress.\nDetails: [$beforeDetails]';
     Logger.info(syncMessage);
-    print('[${DateTime.now().toString().substring(11, 23)}] $syncMessage');
 
-    // Perform the sync
-    await _syncTransactionsService.syncBroadcastedTransfers();
+    // Perform the sync for this specific wallet
+    await _syncTransactionsService.syncBroadcastedTransfersForWallet(walletAddress);
 
-    // Get count after sync
-    final broadcastedAfter = await _transactionsRepository.getBroadcastedTransfers();
+    // Get count after sync for this wallet
+    final broadcastedAfter = await _transactionsRepository.getBroadcastedTransfers(
+      walletAddress: walletAddress,
+    );
     final totalBroadcastedAfter = broadcastedAfter.length;
 
     final updatedCount = totalBroadcastedBefore - totalBroadcastedAfter;
@@ -151,24 +176,18 @@ class PeriodicTransfersSyncService {
           .toList();
 
       final updatedDetails = updatedTransactions
-          .map(
-            (tx) =>
-                'txHash: ${tx.txHash}, wallet: ${tx.senderWalletAddress}, network: ${tx.network.id}',
-          )
+          .map((tx) => 'txHash: ${tx.txHash}, network: ${tx.network.id}')
           .join('; ');
 
       final updateMessage =
-          'Transfers sync updated $updatedCount transfers from broadcasted to confirmed. Updated: [$updatedDetails]';
+          'Wallet $walletAddress sync updated $updatedCount transfers from broadcasted to confirmed. Updated: [$updatedDetails]';
       Logger.info(updateMessage);
-      print('[${DateTime.now().toString().substring(11, 23)}] $updateMessage');
     } else {
-      Logger.info('No transfers were updated during sync');
-      print(
-          '[${DateTime.now().toString().substring(11, 23)}] No transfers were updated during sync');
+      Logger.info('No transfers were updated during sync for wallet $walletAddress');
     }
 
     if (totalBroadcastedAfter > 0) {
-      throw Exception('$totalBroadcastedAfter transfers left to sync');
+      throw Exception('$totalBroadcastedAfter transfers left to sync for wallet $walletAddress');
     }
   }
 }
