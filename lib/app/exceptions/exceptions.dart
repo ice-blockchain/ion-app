@@ -602,3 +602,13 @@ class NoAvailableInterests extends IONException {
           'No available interests for relay: $relayUrl, modifier: $modifier',
         );
 }
+
+class WalletSyncRetryException extends IONException {
+  WalletSyncRetryException({
+    required String walletAddress,
+    required int remainingTransfers,
+  }) : super(
+          10121,
+          '$remainingTransfers transfers left to sync for wallet $walletAddress',
+        );
+}
