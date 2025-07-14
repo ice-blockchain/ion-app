@@ -220,7 +220,7 @@ class TransactionsDao extends DatabaseAccessor<WalletsDatabase> with _$Transacti
                   (tbl.status.isNull() | tbl.status.equals(TransactionStatus.broadcasted.toJson()));
 
               if (coinIds != null && coinIds.isNotEmpty) {
-                expr = expr & 
+                expr = expr &
                     tbl.coinId.isIn(coinIds) &
                     tbl.networkId.isNotNull() &
                     tbl.transferredAmount.isNotNull() &
@@ -250,14 +250,16 @@ class TransactionsDao extends DatabaseAccessor<WalletsDatabase> with _$Transacti
     ]);
 
     return query.watch().map(
-      (rows) => rows.map(
-        (row) => _mapRowToDomainModel(
-          row,
-          nativeCoinAlias: nativeCoinAlias,
-          transactionCoinAlias: transactionCoinAlias,
-        ),
-      ).toList(),
-    );
+          (rows) => rows
+              .map(
+                (row) => _mapRowToDomainModel(
+                  row,
+                  nativeCoinAlias: nativeCoinAlias,
+                  transactionCoinAlias: transactionCoinAlias,
+                ),
+              )
+              .toList(),
+        );
   }
 
   Future<TransactionData?> getTransactionByTxHash(String txHash) {
