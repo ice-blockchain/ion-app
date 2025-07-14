@@ -147,8 +147,7 @@ class _TextMessageContent extends HookWidget {
     )..layout(maxWidth: maxAvailableWidth - metadataWidth.value.s);
 
     final oneLineMetrics = oneLineTextPainter.computeLineMetrics();
-    final multiline = oneLineMetrics.length > 1;
-
+    final multiline = oneLineMetrics.length > 1 && !oneLineMetrics.every((m) => m.hardBreak);
     if (hasReactionsOrMetadata) {
       return _TextRichContent(text: content, textStyle: textStyle);
     }
