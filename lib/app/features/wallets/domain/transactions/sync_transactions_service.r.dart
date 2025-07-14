@@ -2,6 +2,7 @@
 
 import 'dart:async';
 
+import 'package:collection/collection.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/features/core/providers/wallets_provider.r.dart';
 import 'package:ion/app/features/wallets/data/repository/crypto_wallets_repository.r.dart';
@@ -17,20 +18,6 @@ import 'package:ion_identity_client/ion_identity.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'sync_transactions_service.r.g.dart';
-
-typedef _NetworkId = String;
-typedef _CryptoWalletId = String;
-
-/// Objects container for sync operations
-class _SyncObjects {
-  const _SyncObjects({
-    required this.networks,
-    required this.walletViews,
-  });
-
-  final Map<_NetworkId, NetworkData> networks;
-  final Map<_CryptoWalletId, WalletViewData> walletViews;
-}
 
 @Riverpod(keepAlive: true)
 Future<SyncTransactionsService> syncTransactionsService(Ref ref) async {
@@ -67,20 +54,15 @@ class SyncTransactionsService {
 
   final TransactionLoader _transactionLoader;
   final TransferStatusUpdater _transferStatusUpdater;
-
-  // Cache for networks data
-  Map<String, NetworkData>? _cachedNetworks;
+  final Map<String, NetworkData> _cachedNetworks = {};
 
   Future<void> syncAll() async {
-    final syncObjects = await _prepareSyncObjects();
-
     await _userWallets.map((wallet) async {
       final isHistoryLoaded =
           await _cryptoWalletsRepository.isHistoryLoadedForWallet(walletId: wallet.id);
 
       await _syncWallet(
         wallet: wallet,
-        syncObjects: syncObjects,
         isFullLoad: !isHistoryLoaded,
         updateHistoryLoaded: true,
       );
@@ -88,7 +70,6 @@ class SyncTransactionsService {
   }
 
   Future<void> syncBroadcastedTransfers() async {
-    final syncObjects = await _prepareSyncObjects();
     final walletsToSync = await _getWalletsWithBroadcastedTransfers();
 
     if (walletsToSync.isEmpty) {
@@ -96,11 +77,8 @@ class SyncTransactionsService {
       return;
     }
 
-    _logWalletSync('Syncing wallets with broadcasted transfers', walletsToSync, syncObjects);
-
     await _syncWallets(
       wallets: walletsToSync,
-      syncObjects: syncObjects,
       isFullLoad: false,
       updateHistoryLoaded: false,
     );
@@ -108,17 +86,14 @@ class SyncTransactionsService {
     Logger.info('Completed syncing wallets with broadcasted transfers');
   }
 
-  /// Syncs broadcasted transfers for a specific wallet
   Future<void> syncBroadcastedTransfersForWallet(String walletAddress) async {
-    final syncObjects = await _prepareSyncObjects();
+    final wallet = _userWallets.firstWhereOrNull((w) => w.address == walletAddress);
 
-    // Find the wallet with the specified address
-    final wallet = _userWallets.firstWhere(
-      (w) => w.address == walletAddress,
-      orElse: () => throw Exception('Wallet with address $walletAddress not found'),
-    );
+    if (wallet == null) {
+      Logger.error('Wallet with address $walletAddress not found');
+      return;
+    }
 
-    // Check if this wallet has broadcasted transfers
     final broadcastedTransfers = await _transactionsRepository.getBroadcastedTransfers(
       walletAddress: walletAddress,
     );
@@ -128,11 +103,8 @@ class SyncTransactionsService {
       return;
     }
 
-    _logWalletSync('Syncing wallet with broadcasted transfers', [wallet], syncObjects);
-
     await _syncWallets(
       wallets: [wallet],
-      syncObjects: syncObjects,
       isFullLoad: false,
       updateHistoryLoaded: false,
     );
@@ -140,7 +112,6 @@ class SyncTransactionsService {
     Logger.info('Completed syncing wallet $walletAddress with broadcasted transfers');
   }
 
-  /// Gets wallets that have broadcasted transfers
   Future<List<Wallet>> _getWalletsWithBroadcastedTransfers() async {
     final broadcastedTransfers = await _transactionsRepository.getBroadcastedTransfers();
 
@@ -156,19 +127,15 @@ class SyncTransactionsService {
 
   /// Syncs transactions for a specific coin across all networks/wallets
   Future<void> syncCoinTransactions(String symbolGroup) async {
-    final syncObjects = await _prepareSyncObjects();
-    final walletsWithCoin = _getWalletsWithCoin(symbolGroup, syncObjects);
+    final walletsWithCoin = await _getWalletsWithCoin(symbolGroup);
 
     if (walletsWithCoin.isEmpty) {
       Logger.info('No wallets found with coin symbolGroup: $symbolGroup');
       return;
     }
 
-    _logWalletSync('Syncing coin $symbolGroup', walletsWithCoin, syncObjects);
-
     await _syncWallets(
       wallets: walletsWithCoin,
-      syncObjects: syncObjects,
       isFullLoad: false,
       updateHistoryLoaded: false,
     );
@@ -176,32 +143,25 @@ class SyncTransactionsService {
     Logger.info('Completed syncing coin $symbolGroup across all networks');
   }
 
-  List<Wallet> _getWalletsWithCoin(String symbolGroup, _SyncObjects context) {
+  Future<List<Wallet>> _getWalletsWithCoin(String symbolGroup) async {
+    final walletViews = await _getWalletViews();
+
     return _userWallets.where((wallet) {
-      final walletView = context.walletViews[wallet.id];
+      final walletView = walletViews[wallet.id];
       if (walletView == null) return false;
 
       return walletView.coinGroups.any((group) => group.symbolGroup == symbolGroup);
     }).toList();
   }
 
-  void _logWalletSync(String operation, List<Wallet> wallets, _SyncObjects syncObjects) {
-    final message = '$operation across ${wallets.length} wallets: '
-        '${wallets.map((w) => '${w.address}(${syncObjects.networks[w.network]?.id ?? w.network})').join(', ')}';
-    Logger.info(message);
-  }
-
-  /// Syncs multiple wallets with the same configuration
   Future<void> _syncWallets({
     required List<Wallet> wallets,
-    required _SyncObjects syncObjects,
     required bool isFullLoad,
     required bool updateHistoryLoaded,
   }) async {
     await wallets.map((wallet) async {
       await _syncWallet(
         wallet: wallet,
-        syncObjects: syncObjects,
         isFullLoad: isFullLoad,
         updateHistoryLoaded: updateHistoryLoaded,
       );
@@ -211,25 +171,27 @@ class SyncTransactionsService {
   /// Syncs a specific wallet with the blockchain
   Future<void> _syncWallet({
     required Wallet wallet,
-    required _SyncObjects syncObjects,
     required bool isFullLoad,
     required bool updateHistoryLoaded,
   }) async {
-    final network = syncObjects.networks[wallet.network];
-    final walletViewId = syncObjects.walletViews[wallet.id]?.id;
+    final networks = await _getNetworks();
+    final walletViews = await _getWalletViews();
+
+    final network = networks[wallet.network];
+    final walletViewId = walletViews[wallet.id]?.id;
 
     if (network == null) {
-      final errorMessage = 'We are not support ${wallet.network} right now. '
+      final message = '${wallet.network} network is not supported. '
           'Skip history sync for the wallet (id: ${wallet.id}, address: ${wallet.address}).';
-      Logger.error(errorMessage);
+      Logger.error(message);
       return;
     }
 
     if (walletViewId == null) {
-      final infoMessage =
+      final message =
           'Wallet (id: ${wallet.id}, address: ${wallet.address}) is not connected to any existed wallet view. '
           'Skip history sync.';
-      Logger.info(infoMessage);
+      Logger.info(message);
       return;
     }
 
@@ -249,17 +211,19 @@ class SyncTransactionsService {
     }
   }
 
-  /// Prepares objects to sync wallets
-  Future<_SyncObjects> _prepareSyncObjects() async {
-    final networks = _cachedNetworks ??= await _networksRepository.getAllAsMap();
+  Future<Map<String, NetworkData>> _getNetworks() async {
+    if (_cachedNetworks.isEmpty) {
+      _cachedNetworks.addAll(await _networksRepository.getAllAsMap());
+    }
+    return _cachedNetworks;
+  }
+
+  Future<Map<String, WalletViewData>> _getWalletViews() async {
     final walletViews = _walletViewsService.lastEmitted.isNotEmpty
         ? _walletViewsService.lastEmitted
         : await _walletViewsService.walletViews.first;
 
-    return _SyncObjects(
-      networks: networks,
-      walletViews: walletViews.walletIdToWalletView(),
-    );
+    return walletViews.walletIdToWalletView();
   }
 }
 
