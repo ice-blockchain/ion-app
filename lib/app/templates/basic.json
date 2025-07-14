@@ -29,7 +29,8 @@
         "pink": "#A640FF",
         "medBlue": "#4340FF",
         "postContent": "#0F1419",
-        "lossRed": "#FF396E"
+        "lossRed": "#FF396E",
+        "anakiwa": "#91D4FF"
       },
       "dark": {
         "primaryAccent": "#0166FF",
@@ -59,7 +60,8 @@
         "pink": "#A640FF",
         "medBlue": "#4340FF",
         "postContent": "#0F1419",
-        "lossRed": "#FF396E"
+        "lossRed": "#FF396E",
+        "anakiwa": "#91D4FF"
       }
     },
     "textThemes": {

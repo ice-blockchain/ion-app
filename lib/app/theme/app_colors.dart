@@ -33,6 +33,7 @@ class AppColorsExtension extends ThemeExtension<AppColorsExtension> {
     required this.medBlue,
     required this.postContent,
     required this.lossRed,
+    required this.anakiwa,
   });
 
   factory AppColorsExtension.fromTemplate(TemplateColors templateColors) {
@@ -65,6 +66,7 @@ class AppColorsExtension extends ThemeExtension<AppColorsExtension> {
       medBlue: templateColors.medBlue,
       postContent: templateColors.postContent,
       lossRed: templateColors.lossRed,
+      anakiwa: templateColors.anakiwa,
     );
   }
 
@@ -98,6 +100,7 @@ class AppColorsExtension extends ThemeExtension<AppColorsExtension> {
       medBlue: const Color(0xFF4340FF),
       postContent: const Color(0xFF0F1419),
       lossRed: const Color(0xFFFF396E),
+      anakiwa: const Color(0xFF91D4FF),
     );
   }
 
@@ -129,6 +132,7 @@ class AppColorsExtension extends ThemeExtension<AppColorsExtension> {
   final Color medBlue;
   final Color postContent;
   final Color lossRed;
+  final Color anakiwa;
 
   @override
   ThemeExtension<AppColorsExtension> copyWith({
@@ -160,6 +164,7 @@ class AppColorsExtension extends ThemeExtension<AppColorsExtension> {
     Color? medBlue,
     Color? postContent,
     Color? lossRed,
+    Color? anakiwa,
   }) {
     return AppColorsExtension(
       primaryAccent: primaryAccent ?? this.primaryAccent,
@@ -190,6 +195,7 @@ class AppColorsExtension extends ThemeExtension<AppColorsExtension> {
       medBlue: medBlue ?? this.medBlue,
       postContent: postContent ?? this.postContent,
       lossRed: lossRed ?? this.lossRed,
+      anakiwa: anakiwa ?? this.anakiwa,
     );
   }
 
@@ -231,6 +237,7 @@ class AppColorsExtension extends ThemeExtension<AppColorsExtension> {
       medBlue: Color.lerp(medBlue, other.medBlue, t)!,
       postContent: Color.lerp(postContent, other.postContent, t)!,
       lossRed: Color.lerp(lossRed, other.lossRed, t)!,
+      anakiwa: Color.lerp(anakiwa, other.anakiwa, t)!,
     );
   }
 }
