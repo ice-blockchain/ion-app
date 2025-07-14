@@ -6,6 +6,7 @@ import 'dart:convert';
 import 'package:ion/app/exceptions/exceptions.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/auth/providers/delegation_complete_provider.r.dart';
+import 'package:ion/app/features/core/providers/current_user_agent.r.dart';
 import 'package:ion/app/features/ion_connect/ion_connect.dart' hide requestEvents;
 import 'package:ion/app/features/ion_connect/model/action_source.f.dart';
 import 'package:ion/app/features/ion_connect/model/auth_event.f.dart';
@@ -30,12 +31,14 @@ class RelayAuth extends _$RelayAuth {
         final delegationComplete = await ref.read(cacheDelegationCompleteProvider.future);
         final delegation = await ref.read(currentUserCachedDelegationProvider.future);
         final userRelays = await ref.read(currentUserRelaysProvider.future);
+        final userAgent = await ref.read(currentUserAgentProvider.future);
 
         final isRelayInUserRelays = userRelays?.urls.contains(relay.url) ?? false;
 
         final authEvent = AuthEvent(
           challenge: challenge,
           relay: relayUrl,
+          userAgent: userAgent,
           userDelegation:
               (delegationComplete.falseOrValue && !isRelayInUserRelays) ? delegation : null,
         );
