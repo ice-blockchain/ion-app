@@ -445,7 +445,7 @@ class FeedForYouContent extends _$FeedForYouContent implements PagedNotifier {
     final ionConnectNotifier = ref.read(ionConnectNotifierProvider.notifier);
     final feedConfig = await ref.read(feedConfigProvider.future);
 
-    final dataSource = _getDataSource(
+    final FeedEntitiesDataSource(:dataSource, :responseFilter) = _getDataSource(
       relayUrl: relayUrl,
       modifier: modifier,
       interest: interest,
@@ -475,15 +475,10 @@ class FeedForYouContent extends _$FeedForYouContent implements PagedNotifier {
         .requestEntities(requestMessage, actionSource: dataSource.actionSource)
         .toList();
 
-    // TODO: Create a separate data source model that handles it internally
-    if (dataSource.responseFilter != null) {
-      return dataSource.responseFilter!.call(entities).firstOrNull;
-    } else {
-      return entities.firstWhereOrNull(dataSource.entityFilter);
-    }
+    return responseFilter(entities).firstOrNull;
   }
 
-  EntitiesDataSource _getDataSource({
+  FeedEntitiesDataSource _getDataSource({
     required String relayUrl,
     required FeedModifier modifier,
     required String interest,

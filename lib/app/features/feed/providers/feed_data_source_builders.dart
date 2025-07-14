@@ -16,7 +16,41 @@ import 'package:ion/app/features/ion_connect/providers/entities_paged_data_provi
 import 'package:ion/app/features/user/model/block_list.f.dart';
 import 'package:ion/app/features/user/model/user_metadata.f.dart';
 
-EntitiesDataSource buildArticlesDataSource({
+class FeedEntitiesDataSource {
+  FeedEntitiesDataSource({
+    required this.dataSource,
+  });
+
+  final EntitiesDataSource dataSource;
+
+  List<IonConnectEntity> responseFilter(List<IonConnectEntity> entities) {
+    final filtered = entities.where(dataSource.entityFilter).toList();
+
+    // Handle the reposts corner case:
+    //    A repost can be either a main event (current user or other user reposted something)
+    //    or a dependency - repost from the current user in addition to some regular post.
+    //    To handle it, we filter out reposts that have a reposted event in the same response.
+    return filtered.where((entity) {
+      final repostedReference = switch (entity) {
+        GenericRepostEntity() => entity.data.eventReference,
+        RepostEntity() => entity.data.eventReference,
+        _ => null,
+      };
+
+      // If the entity is not a repost, we keep it.
+      if (repostedReference == null) return true;
+
+      // Check if there is a reposted event in the same response.
+      final hasReposedEvent =
+          filtered.any((entity) => entity.toEventReference() == repostedReference);
+
+      // If we found a reposted event, we filter out the repost, assuming that this is a dependency
+      return !hasReposedEvent;
+    }).toList();
+  }
+}
+
+FeedEntitiesDataSource buildArticlesDataSource({
   required ActionSource actionSource,
   required String currentPubkey,
   List<String>? authors,
@@ -31,7 +65,7 @@ EntitiesDataSource buildArticlesDataSource({
     if (searchExtensions != null) ...searchExtensions,
   ]).toString();
 
-  return EntitiesDataSource(
+  final dataSource = EntitiesDataSource(
     actionSource: actionSource,
     entityFilter: (entity) {
       if (authors != null && !authors.contains(entity.masterPubkey)) {
@@ -53,9 +87,11 @@ EntitiesDataSource buildArticlesDataSource({
       ),
     ],
   );
+
+  return FeedEntitiesDataSource(dataSource: dataSource);
 }
 
-EntitiesDataSource buildVideosDataSource({
+FeedEntitiesDataSource buildVideosDataSource({
   required ActionSource actionSource,
   required String currentPubkey,
   List<String>? authors,
@@ -85,7 +121,7 @@ EntitiesDataSource buildVideosDataSource({
     if (searchExtensions != null) ...searchExtensions,
   ]).toString();
 
-  return EntitiesDataSource(
+  final dataSource = EntitiesDataSource(
     actionSource: actionSource,
     entityFilter: (entity) {
       if (authors != null && !authors.contains(entity.masterPubkey)) {
@@ -116,9 +152,11 @@ EntitiesDataSource buildVideosDataSource({
       ),
     ],
   );
+
+  return FeedEntitiesDataSource(dataSource: dataSource);
 }
 
-EntitiesDataSource buildPostsDataSource({
+FeedEntitiesDataSource buildPostsDataSource({
   required ActionSource actionSource,
   required String currentPubkey,
   List<String>? authors,
@@ -162,34 +200,9 @@ EntitiesDataSource buildPostsDataSource({
         entity is ArticleEntity;
   }
 
-  return EntitiesDataSource(
+  final dataSource = EntitiesDataSource(
     actionSource: actionSource,
     entityFilter: entityFilter,
-    responseFilter: (entities) {
-      final filtered = entities.where(entityFilter).toList();
-
-      // Handle the reposts corner case:
-      //    A repost can be either a main event (current user or other user reposted something)
-      //    or a dependency - repost from the current user in addition to some regular post.
-      //    To handle it, we filter out reposts that have a reposted event in the same response.
-      return filtered.where((entity) {
-        final repostedReference = switch (entity) {
-          GenericRepostEntity() => entity.data.eventReference,
-          RepostEntity() => entity.data.eventReference,
-          _ => null,
-        };
-
-        // If the entity is not a repost, we keep it.
-        if (repostedReference == null) return true;
-
-        // Check if there is a reposted event in the same response.
-        final hasReposedEvent =
-            filtered.any((entity) => entity.toEventReference() == repostedReference);
-
-        // If we found a reposted event, we filter out the repost, assuming that this is a dependency
-        return !hasReposedEvent;
-      }).toList();
-    },
     requestFilters: [
       RequestFilter(
         kinds: const [
@@ -207,9 +220,11 @@ EntitiesDataSource buildPostsDataSource({
       ),
     ],
   );
+
+  return FeedEntitiesDataSource(dataSource: dataSource);
 }
 
-EntitiesDataSource buildStoriesDataSource({
+FeedEntitiesDataSource buildStoriesDataSource({
   required ActionSource actionSource,
   required String currentPubkey,
   List<String>? authors,
@@ -236,7 +251,7 @@ EntitiesDataSource buildStoriesDataSource({
     ],
   ).toString();
 
-  return EntitiesDataSource(
+  final dataSource = EntitiesDataSource(
     actionSource: actionSource,
     entityFilter: (entity) =>
         (authors == null || authors.contains(entity.masterPubkey)) &&
@@ -253,4 +268,6 @@ EntitiesDataSource buildStoriesDataSource({
       ),
     ],
   );
+
+  return FeedEntitiesDataSource(dataSource: dataSource);
 }
