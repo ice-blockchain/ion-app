@@ -180,19 +180,3 @@ Future<UserRelaysEntity?> userRelay(Ref ref, String pubkey) async {
   final relays = await ref.watch(userRelaysManagerProvider.notifier).fetch([pubkey]);
   return relays.elementAtOrNull(0);
 }
-
-@riverpod
-Future<UserRelaysEntity?> currentUserRelays(Ref ref) async {
-  final userIdentity = await ref.watch(currentUserIdentityProvider.future);
-  final identityConnectRelays = userIdentity?.ionConnectRelays;
-  if (userIdentity == null || identityConnectRelays == null) {
-    return null;
-  }
-  final updatedUserRelays = UserRelaysData(
-    list: identityConnectRelays.map((relay) => relay.toUserRelay()).toList(),
-  );
-  final userRelaysEvent =
-      await ref.read(ionConnectNotifierProvider.notifier).sign(updatedUserRelays);
-
-  return UserRelaysEntity.fromEventMessage(userRelaysEvent);
-}

@@ -79,6 +79,7 @@ class IonConnectNotifier extends _$IonConnectNotifier {
         return null;
       },
       retryWhen: (error) =>
+          // TODO: Handle relay is read only exception
           error is RelayRequestFailedException ||
           RelayAuthService.isRelayAuthError(error) ||
           (error is RelayUnreachableException && !dislikedRelaysUrls.contains(error.relayUrl)),
@@ -88,6 +89,7 @@ class IonConnectNotifier extends _$IonConnectNotifier {
         } else if (error is RelayUnreachableException) {
           dislikedRelaysUrls.add(error.relayUrl);
         }
+        // TODO: Handle relay is read only exception
       },
     );
   }
