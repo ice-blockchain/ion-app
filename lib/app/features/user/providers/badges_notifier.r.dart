@@ -148,11 +148,12 @@ bool isValidNicknameProofBadgeDefinition(
 @riverpod
 Future<bool> isUserVerified(
   Ref ref,
-  String pubkey,
-) async {
-  final profileBadgesData = await ref.watch(
-    profileBadgesDataProvider(pubkey).future,
-  );
+  String pubkey, {
+  bool useCache = false,
+}) async {
+  final profileBadgesData = useCache
+      ? ref.watch(cachedProfileBadgesDataProvider(pubkey))?.data
+      : await ref.watch(profileBadgesDataProvider(pubkey).future);
   final pubkeys = await ref.watch(servicePubkeysProvider.future);
 
   return profileBadgesData?.entries.any((entry) {
@@ -168,15 +169,21 @@ Future<bool> isUserVerified(
 @riverpod
 Future<bool> isNicknameProven(
   Ref ref,
-  String pubkey,
-) async {
+  String pubkey, {
+  bool useCache = false,
+}) async {
   final [
     profileBadgesData as ProfileBadgesData?,
     userMetadata as UserMetadataEntity?,
     pubkeys as List<String>
   ] = await Future.wait([
-    ref.watch(profileBadgesDataProvider(pubkey).future),
-    ref.watch(userMetadataProvider(pubkey).future),
+    if (useCache) ...[
+      Future.value(ref.watch(cachedProfileBadgesDataProvider(pubkey))),
+      Future.value(ref.watch(cachedUserMetadataProvider(pubkey))),
+    ] else ...[
+      ref.watch(profileBadgesDataProvider(pubkey).future),
+      ref.watch(userMetadataProvider(pubkey).future),
+    ],
     ref.watch(servicePubkeysProvider.future),
   ]);
 
@@ -307,14 +314,13 @@ Future<ProfileBadgesData?> updateProfileBadgesWithUsernameProofs(
 }
 
 @riverpod
-Future<({bool isVerified, bool isNicknameProven})> userBadgeVerificationState(
+({bool isVerified, bool isNicknameProven}) cachedUserBadgeVerificationState(
   Ref ref,
   String pubkey,
-) async {
-  final [isVerified, isNicknameProven] = await Future.wait([
-    ref.watch(isUserVerifiedProvider(pubkey).future),
-    ref.watch(isNicknameProvenProvider(pubkey).future),
-  ]);
+) {
+  final isVerified = ref.watch(isUserVerifiedProvider(pubkey, useCache: true)).valueOrNull ?? false;
+  final isNicknameProven =
+      ref.watch(isNicknameProvenProvider(pubkey, useCache: true)).valueOrNull ?? true;
 
   return (isVerified: isVerified, isNicknameProven: isNicknameProven);
 }
