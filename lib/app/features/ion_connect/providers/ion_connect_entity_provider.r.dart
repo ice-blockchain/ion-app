@@ -12,7 +12,7 @@ import 'package:ion/app/features/ion_connect/providers/ion_connect_cache.r.dart'
 import 'package:ion/app/features/ion_connect/providers/ion_connect_db_cache_notifier.r.dart';
 import 'package:ion/app/features/ion_connect/providers/ion_connect_notifier.r.dart';
 import 'package:ion/app/features/user/model/user_metadata.f.dart';
-import 'package:ion/app/features/user/providers/users_relays_provider.r.dart';
+import 'package:ion/app/features/user/providers/relays/optimal_user_relays_provider.r.dart';
 import 'package:ion/app/services/logger/logger.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
@@ -143,9 +143,9 @@ class IonConnectNetworkEntitiesNotifier extends _$IonConnectNetworkEntitiesNotif
       for (final ref in replaceableRefs) {
         final kindKey = ref.kind.toString();
         final dTagKey = ref.dTag;
-        grouped.putIfAbsent(kindKey, () => <String, List<ReplaceableEventReference>>{});
-        grouped[kindKey]!.putIfAbsent(dTagKey, () => <ReplaceableEventReference>[]);
-        grouped[kindKey]![dTagKey]!.add(ref);
+        final dTagMap =
+            grouped.putIfAbsent(kindKey, () => <String, List<ReplaceableEventReference>>{});
+        dTagMap.putIfAbsent(dTagKey, () => <ReplaceableEventReference>[]).add(ref);
       }
 
       for (final kindEntry in grouped.entries) {
@@ -292,8 +292,8 @@ class IonConnectEntitiesManager extends _$IonConnectEntitiesManager {
           .difference(cachedResults.map((e) => e.toEventReference()).toSet())
           .toList();
 
-      final relaysMap = await ref.read(usersRelaysProvider.notifier).fetch(
-            strategy: UsersRelaysStrategy.mostUsers,
+      final relaysMap = await ref.read(optimalUserRelaysServiceProvider).fetch(
+            strategy: OptimalRelaysStrategy.mostUsers,
             masterPubkeys: notCachedEvents.map((e) => e.masterPubkey).toSet().toList(),
           );
 
