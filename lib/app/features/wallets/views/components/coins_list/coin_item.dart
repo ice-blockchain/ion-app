@@ -1,6 +1,7 @@
 // SPDX-License-Identifier: ice License 1.0
 
 import 'package:flutter/material.dart';
+import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/components/coins/coin_icon.dart';
 import 'package:ion/app/components/list_item/list_item.dart';
@@ -8,10 +9,12 @@ import 'package:ion/app/components/skeleton/container_skeleton.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/wallets/model/coins_group.f.dart';
 import 'package:ion/app/features/wallets/providers/wallet_user_preferences/user_preferences_selectors.r.dart';
+import 'package:ion/app/features/wallets/views/pages/coins_flow/coin_details/providers/network_selector_notifier.r.dart';
 import 'package:ion/app/utils/num.dart';
+import 'package:ion/app/utils/precache_pictures.dart';
 import 'package:ion/generated/assets.gen.dart';
 
-class CoinsGroupItem extends ConsumerWidget {
+class CoinsGroupItem extends HookConsumerWidget {
   const CoinsGroupItem({
     required this.coinsGroup,
     required this.onTap,
@@ -25,7 +28,24 @@ class CoinsGroupItem extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final isBalanceVisible = ref.watch(isBalanceVisibleSelectorProvider);
 
+    final icons = ref.watch(
+      networkSelectorNotifierProvider(symbolGroup: coinsGroup.symbolGroup)
+          .select((value) => value?.items.map((item) => item.image)),
+    );
+
+    useEffect(
+      () {
+        if (icons != null) {
+          precachePictures(icons);
+        }
+
+        return null;
+      },
+      [icons],
+    );
+
     return ListItem(
+      key: Key(coinsGroup.symbolGroup),
       title: Text(coinsGroup.name),
       subtitle: Text(coinsGroup.abbreviation),
       backgroundColor: context.theme.appColors.tertararyBackground,

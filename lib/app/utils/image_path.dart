@@ -7,6 +7,11 @@ import 'package:photo_manager/photo_manager.dart';
 extension ImagePathExtension on String {
   bool get isSvg => toLowerCase().endsWith('.svg');
   bool get isGif => toLowerCase().endsWith('.gif');
+  bool get isNetworkSvg {
+    final lowerCase = toLowerCase();
+
+    return (lowerCase.startsWith('https://') || lowerCase.startsWith('http://')) && isSvg;
+  }
 }
 
 Future<bool> isGifAsset(AssetEntity assetEntity) async {
