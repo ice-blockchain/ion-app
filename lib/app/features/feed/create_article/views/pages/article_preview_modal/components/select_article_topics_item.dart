@@ -47,7 +47,7 @@ class SelectArticleTopicsItem extends ConsumerWidget {
             trailing: Assets.svg.iconArrowRight.icon(color: context.theme.appColors.primaryText),
             constraints: BoxConstraints(minHeight: 40.0.s),
             onTap: () {
-              SelectTopicsCategoriesRoute(feedType: FeedType.article).push<void>(context);
+              SelectTopicsRoute(feedType: FeedType.article).push<void>(context);
             },
           ),
         ),

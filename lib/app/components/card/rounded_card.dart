@@ -6,7 +6,7 @@ import 'package:ion/app/extensions/extensions.dart';
 class RoundedCard extends StatelessWidget {
   factory RoundedCard.filled({
     required Widget child,
-    EdgeInsets? padding,
+    EdgeInsetsGeometry? padding,
     Color? backgroundColor,
   }) {
     return RoundedCard._(
@@ -19,7 +19,7 @@ class RoundedCard extends StatelessWidget {
 
   factory RoundedCard.outlined({
     required Widget child,
-    EdgeInsets? padding,
+    EdgeInsetsGeometry? padding,
     Color? borderColor,
     Color? backgroundColor,
   }) {
@@ -40,7 +40,7 @@ class RoundedCard extends StatelessWidget {
   });
 
   final Widget child;
-  final EdgeInsets? padding;
+  final EdgeInsetsGeometry? padding;
   final Color? borderColor;
   final Color? backgroundColor;
   final bool isOutlined;

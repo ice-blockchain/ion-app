@@ -53,8 +53,7 @@ class FeedRoutes {
         TypedGoRoute<CreateArticleRoute>(path: 'create-article'),
         TypedGoRoute<FeedSearchFiltersRoute>(path: 'feed-search_filters'),
         TypedGoRoute<ArticlePreviewRoute>(path: 'article-preview'),
-        TypedGoRoute<SelectTopicsCategoriesRoute>(path: 'topics-categories'),
-        TypedGoRoute<SelectTopicsSubcategoriesRoute>(path: 'topics-subcategories'),
+        TypedGoRoute<SelectTopicsRoute>(path: 'topics'),
         TypedGoRoute<EditArticleRoute>(path: 'create-article/edit/:modifiedEvent'),
         TypedGoRoute<EditArticlePreviewRoute>(path: 'article-preview/edit/:modifiedEvent'),
       ],
@@ -73,29 +72,13 @@ class ArticleDetailsRoute extends BaseRouteData with _$ArticleDetailsRoute {
   final String eventReference;
 }
 
-class SelectTopicsCategoriesRoute extends BaseRouteData with _$SelectTopicsCategoriesRoute {
-  SelectTopicsCategoriesRoute({required this.feedType})
+class SelectTopicsRoute extends BaseRouteData with _$SelectTopicsRoute {
+  SelectTopicsRoute({required this.feedType})
       : super(
-          child: SelectTopicsCategoriesModal(feedType: feedType),
+          child: SelectTopicsModal(feedType: feedType),
           type: IceRouteType.bottomSheet,
         );
 
-  final FeedType feedType;
-}
-
-class SelectTopicsSubcategoriesRoute extends BaseRouteData with _$SelectTopicsSubcategoriesRoute {
-  SelectTopicsSubcategoriesRoute({
-    required this.categoryKey,
-    required this.feedType,
-  }) : super(
-          child: SelectTopicsSubcategoriesModal(
-            categoryKey: categoryKey,
-            feedType: feedType,
-          ),
-          type: IceRouteType.bottomSheet,
-        );
-
-  final String categoryKey;
   final FeedType feedType;
 }
 

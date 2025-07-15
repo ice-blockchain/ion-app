@@ -4,19 +4,20 @@ import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/components/inputs/search_input/search_input.dart';
-import 'package:ion/app/components/list_item/list_item.dart';
 import 'package:ion/app/components/screen_offset/screen_side_offset.dart';
 import 'package:ion/app/extensions/extensions.dart';
+import 'package:ion/app/features/feed/data/models/feed_interests.f.dart';
 import 'package:ion/app/features/feed/data/models/feed_type.dart';
 import 'package:ion/app/features/feed/providers/feed_user_interests_provider.r.dart';
 import 'package:ion/app/features/feed/providers/selected_interests_notifier.r.dart';
-import 'package:ion/app/router/app_routes.gr.dart';
+import 'package:ion/app/features/feed/views/pages/topics_modal/selected_topics.dart';
+import 'package:ion/app/features/feed/views/pages/topics_modal/topics_category_section.dart';
+import 'package:ion/app/hooks/use_on_init.dart';
 import 'package:ion/app/router/components/navigation_app_bar/navigation_app_bar.dart';
 import 'package:ion/app/router/components/sheet_content/sheet_content.dart';
-import 'package:ion/generated/assets.gen.dart';
 
-class SelectTopicsCategoriesModal extends HookConsumerWidget {
-  const SelectTopicsCategoriesModal({
+class SelectTopicsModal extends HookConsumerWidget {
+  const SelectTopicsModal({
     required this.feedType,
     super.key,
   });
@@ -33,25 +34,23 @@ class SelectTopicsCategoriesModal extends HookConsumerWidget {
         (interests) => interests.where(availableSubcategories.containsKey).toSet(),
       ),
     );
-    final colors = context.theme.appColors;
-    final textStyles = context.theme.appTextThemes;
+    final initialSelectedSubcategories = useState(<String, FeedInterestsSubcategory>{});
     final searchValue = useState('');
 
-    final filteredTopics = useMemoized(
+    useOnInit(
       () {
-        final query = searchValue.value.toLowerCase();
-        return Map.fromEntries(
-          availableCategories.entries.where((topicEntry) {
-            final title = topicEntry.value.display.toLowerCase();
-            return title.contains(query);
-          }),
+        initialSelectedSubcategories.value = Map.fromEntries(
+          availableSubcategories.entries
+              .where((entry) => selectedSubcategories.contains(entry.key)),
         );
       },
-      [searchValue.value],
+      [availableCategories],
     );
 
     return SheetContent(
       topPadding: 0,
+      bottomPadding: 0,
+      bottomBar: const SizedBox.shrink(),
       body: Column(
         children: [
           NavigationAppBar.modal(
@@ -80,23 +79,24 @@ class SelectTopicsCategoriesModal extends HookConsumerWidget {
               },
             ),
           ),
+          SelectedTopics(
+            feedType: feedType,
+            initialSelectedSubcategories: initialSelectedSubcategories.value,
+            searchQuery: searchValue.value,
+          ),
           SizedBox(height: 8.0.s),
           Expanded(
             child: ListView.builder(
-              itemCount: filteredTopics.length,
-              itemBuilder: (BuildContext context, int index) {
-                final categoryEntry = filteredTopics.entries.elementAt(index);
-
-                return ListItem(
-                  contentPadding: EdgeInsets.symmetric(horizontal: 16.0.s, vertical: 8.0.s),
-                  constraints: const BoxConstraints(),
-                  onTap: () => SelectTopicsSubcategoriesRoute(
-                    categoryKey: categoryEntry.key,
-                    feedType: feedType,
-                  ).push<void>(context),
-                  backgroundColor: colors.secondaryBackground,
-                  trailing: Assets.svg.iconArrowRight.icon(color: colors.tertararyText),
-                  title: Text(categoryEntry.value.display, style: textStyles.body),
+              padding: EdgeInsetsDirectional.only(
+                bottom: MediaQuery.paddingOf(context).bottom,
+              ),
+              itemCount: availableCategories.length,
+              itemBuilder: (context, index) {
+                return TopicsCategorySection(
+                  feedType: feedType,
+                  category: availableCategories.keys.elementAt(index),
+                  searchQuery: searchValue.value,
+                  addTopPadding: index != 0,
                 );
               },
             ),
