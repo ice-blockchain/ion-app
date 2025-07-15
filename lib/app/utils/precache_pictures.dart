@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: ice License 1.0
+
 import 'package:flutter_cache_manager/flutter_cache_manager.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:ion/app/services/logger/logger.dart';
