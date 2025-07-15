@@ -38,7 +38,9 @@ class WebsiteInput extends StatelessWidget {
       labelText: context.i18n.profile_website,
       initialValue: initialValue,
       inputFormatters: [
-        FilteringTextInputFormatter.deny(RegExp(r'\s')),
+        FilteringTextInputFormatter.allow(
+          RegExp(r'[a-zA-Z0-9\-._~:/?#@!$&()*+,;=%]'),
+        ),
       ],
       validator: (String? value) {
         if (Validators.isEmpty(value)) return null;
