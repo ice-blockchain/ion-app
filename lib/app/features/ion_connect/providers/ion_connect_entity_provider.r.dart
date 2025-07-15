@@ -1,5 +1,6 @@
 // SPDX-License-Identifier: ice License 1.0
 
+import 'package:async/async.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/exceptions/exceptions.dart';
 import 'package:ion/app/features/auth/providers/auth_provider.m.dart';
@@ -74,14 +75,62 @@ Future<IonConnectEntity?> ionConnectNetworkEntity(
 }
 
 @riverpod
-Future<List<IonConnectEntity>> ionConnectNetworkEntities(
-  Ref ref, {
-  required ActionSource actionSource,
-  required List<EventReference> eventReferences,
-  String? search,
-}) async {
+class IonConnectNetworkEntitiesNotifier extends _$IonConnectNetworkEntitiesNotifier {
+  @override
+  FutureOr<void> build() {}
+
+  Stream<IonConnectEntity> fetch({
+    required ActionSource actionSource,
+    required List<EventReference> eventReferences,
+    String? search,
+  }) async* {
+    if (eventReferences.isEmpty) {
+      yield* const Stream.empty();
+    }
+
+    final immutableRefs = eventReferences.whereType<ImmutableEventReference>().toList();
+    final replaceableRefs = eventReferences.whereType<ReplaceableEventReference>().toList();
+
+    final replaceableRefsFilters = _buildReplaceableRefsFilters(replaceableRefs, search);
+    final immutableRefsFilters = _buildImmutableRefsFilters(immutableRefs, search);
+
+    final requestMessage = RequestMessage()
+      ..filters.addAll(
+        [
+          ...immutableRefsFilters,
+          ...replaceableRefsFilters,
+        ],
+      );
+
+    final entityStream = ref.read(ionConnectNotifierProvider.notifier).requestEntities(
+          requestMessage,
+          actionSource: actionSource,
+        );
+
+    yield* entityStream;
+  }
+
   // Helper method to build filters for replaceable event references
-  List<RequestFilter> buildReplaceableRefsFilters(
+  List<RequestFilter> _buildImmutableRefsFilters(
+    List<ImmutableEventReference> immutableRefs,
+    String? search,
+  ) {
+    final filters = <RequestFilter>[];
+
+    if (immutableRefs.isNotEmpty) {
+      filters.add(
+        RequestFilter(
+          search: search,
+          ids: immutableRefs.map((e) => e.eventId).toList(),
+        ),
+      );
+    }
+
+    return filters;
+  }
+
+  // Helper method to build filters for replaceable event references
+  List<RequestFilter> _buildReplaceableRefsFilters(
     List<ReplaceableEventReference> replaceableRefs,
     String? search,
   ) {
@@ -134,44 +183,6 @@ Future<List<IonConnectEntity>> ionConnectNetworkEntities(
 
     return filters;
   }
-
-  if (eventReferences.isEmpty) {
-    return <IonConnectEntity>[];
-  }
-
-  final results = <IonConnectEntity>[];
-  final immutableRefs = eventReferences.whereType<ImmutableEventReference>().toList();
-  final replaceableRefs = eventReferences.whereType<ReplaceableEventReference>().toList();
-
-  final replaceableRefsFilters = buildReplaceableRefsFilters(replaceableRefs, search);
-
-  final requestMessage = RequestMessage()
-    ..filters.addAll(
-      [
-        if (immutableRefs.isNotEmpty)
-          RequestFilter(
-            search: search,
-            ids: immutableRefs.map((e) => e.eventId).toList(),
-          ),
-        ...replaceableRefsFilters,
-      ],
-    );
-
-  final entityStream = ref.read(ionConnectNotifierProvider.notifier).requestEntities(
-        requestMessage,
-        actionSource: actionSource,
-      );
-
-  await for (final entity in entityStream.handleError(
-    (Object error) {
-      Logger.error('Error fetching entities for $actionSource: $error');
-    },
-    test: (_) => true,
-  )) {
-    results.add(entity);
-  }
-
-  return results;
 }
 
 @riverpod
@@ -260,11 +271,6 @@ class IonConnectEntitiesManager extends _$IonConnectEntitiesManager {
     final cachedResults = <IonConnectEntity>[];
     final networkResults = <IonConnectEntity>[];
 
-    final currentUser = ref.read(currentIdentityKeyNameSelectorProvider);
-    if (currentUser == null) {
-      throw const CurrentUserNotFoundException();
-    }
-
     if (cache) {
       cachedResults.addAll(
         eventReferences
@@ -298,34 +304,27 @@ class IonConnectEntitiesManager extends _$IonConnectEntitiesManager {
         ),
       );
 
-      final futures = <Future<List<IonConnectEntity>>>[];
+      final streams = <Stream<IonConnectEntity>>[];
 
       for (final url in eventReferencesMap.keys) {
         final eventReferences = eventReferencesMap[url] ?? [];
         if (eventReferences.isEmpty) continue;
 
-        final future = ref.read(
-          ionConnectNetworkEntitiesProvider(
-            search: search,
-            eventReferences: eventReferences,
-            actionSource: ActionSource.relayUrl(url),
-          ).future,
-        );
-        futures.add(future);
+        final stream = ref.read(ionConnectNetworkEntitiesNotifierProvider.notifier).fetch(
+              search: search,
+              eventReferences: eventReferences,
+              actionSource: ActionSource.relayUrl(url),
+            );
+
+        streams.add(stream);
       }
 
-      final results = await Future.wait(
-        futures.map(
-          (future) => future
-            ..catchError((Object e, StackTrace stack) {
-              Logger.error('Error fetching network entities: $e, stackTrace: $stack');
-              return <IonConnectEntity>[];
-            }),
-        ),
-      );
-
-      for (final result in results) {
-        networkResults.addAll(result);
+      if (streams.isNotEmpty) {
+        try {
+          networkResults.addAll(await StreamGroup.merge(streams).toList());
+        } catch (e, st) {
+          Logger.log('Error fetching network entities: $e\n$st');
+        }
       }
     }
 

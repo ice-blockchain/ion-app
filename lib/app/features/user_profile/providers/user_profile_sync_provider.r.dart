@@ -44,11 +44,11 @@ class UserProfileSync extends _$UserProfileSync {
     bool forceSync = false,
     Set<String> masterPubkeys = const {},
   }) async {
-    final masterPubkey = ref.watch(currentPubkeySelectorProvider);
+    final masterPubkey = ref.read(currentPubkeySelectorProvider);
 
     if (masterPubkey == null) throw UserMasterPubkeyNotFoundException();
 
-    final userMetadataDao = ref.watch(userMetadataDaoProvider);
+    final userMetadataDao = ref.read(userMetadataDaoProvider);
 
     final existingMasterPubkeys = await userMetadataDao.getExistingMasterPubkeys();
 
@@ -59,7 +59,7 @@ class UserProfileSync extends _$UserProfileSync {
     final syncWindow =
         ref.read(envProvider.notifier).get<int>(EnvVariable.USER_METADATA_SYNC_MINUTES);
 
-    final localStorage = await ref.watch(localStorageAsyncProvider.future);
+    final localStorage = await ref.read(localStorageAsyncProvider.future);
 
     final lastSyncTime = DateTime.tryParse(localStorage.getString(localStorageKey) ?? '');
 
@@ -77,9 +77,9 @@ class UserProfileSync extends _$UserProfileSync {
     Ref ref, {
     required Set<String> masterPubkeysToSync,
   }) async {
-    final userBadgesDao = ref.watch(userBadgeInfoDaoProvider);
-    final userMetadataDao = ref.watch(userMetadataDaoProvider);
-    final userDelegationDao = ref.watch(userDelegationDaoProvider);
+    final userBadgesDao = ref.read(userBadgeInfoDaoProvider);
+    final userMetadataDao = ref.read(userMetadataDaoProvider);
+    final userDelegationDao = ref.read(userDelegationDaoProvider);
 
     if (masterPubkeysToSync.isEmpty) return;
 
