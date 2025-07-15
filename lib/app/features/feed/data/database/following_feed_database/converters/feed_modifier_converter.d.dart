@@ -12,9 +12,11 @@ class FeedModifierConverter extends TypeConverter<FeedModifier?, int> {
   FeedModifier? fromSql(int fromDb) {
     return switch (fromDb) {
       -1 => null,
-      0 => FeedModifier.top,
-      1 => FeedModifier.trending,
-      2 => FeedModifier.explore,
+      0 => FeedModifier.top(),
+      1 => FeedModifier.trending(),
+      2 => FeedModifier.explore(
+          ExploreModifierType.unclassified, //TODO[modifiers]: what should we save here?
+        ),
       _ => throw UnsupportedError('Unknown FeedModifier value: $fromDb'),
     };
   }
@@ -22,9 +24,9 @@ class FeedModifierConverter extends TypeConverter<FeedModifier?, int> {
   @override
   int toSql(FeedModifier? value) {
     return switch (value) {
-      FeedModifier.top => 0,
-      FeedModifier.trending => 1,
-      FeedModifier.explore => 2,
+      FeedModifierTop() => 0,
+      FeedModifierTrending() => 1,
+      FeedModifierExplore() => 2,
       null => -1
     };
   }

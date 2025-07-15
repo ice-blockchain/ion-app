@@ -488,9 +488,7 @@ class FeedFollowingContent extends _$FeedFollowingContent implements PagedNotifi
       throw const CurrentUserNotFoundException();
     }
 
-    final feedFilterFactory = FeedFilterFactory(feedConfig: feedConfig);
-    final feedModifierFilter =
-        feedModifier != null ? feedFilterFactory.create(feedModifier!) : null;
+    final feedModifierFilter = feedModifier?.filter();
 
     return switch (feedType) {
       FeedType.post => buildPostsDataSource(
