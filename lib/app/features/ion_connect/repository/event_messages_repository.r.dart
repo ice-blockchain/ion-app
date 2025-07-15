@@ -4,7 +4,6 @@ import 'package:collection/collection.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/ion_connect/database/dao/event_messages_dao.m.dart';
-import 'package:ion/app/features/ion_connect/database/event_messages_database.m.dart';
 import 'package:ion/app/features/ion_connect/ion_connect.dart';
 import 'package:ion/app/features/ion_connect/model/event_reference.f.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
@@ -62,11 +61,24 @@ class EventMessagesRepository {
     return eventsList.map((e) => e.toEventMessage()).toList();
   }
 
-  Future<List<EventMessageDbModel>> getFilteredRaw(
-    List<EventReference> eventReferences,
-    String query,
-  ) {
-    return _eventMessagesDao.getFiltered(eventReferences, query);
+  Future<List<({EventReference eventReference, EventMessage eventMessage})>> getFiltered({
+    required String query,
+    List<int>? kinds,
+    List<EventReference>? eventReferences,
+  }) async {
+    final results = await _eventMessagesDao.getFiltered(
+      query: query,
+      eventReferences: eventReferences,
+      kinds: kinds,
+    );
+    return results
+        .map(
+          (row) => (
+            eventReference: row.eventReference,
+            eventMessage: row.toEventMessage(),
+          ),
+        )
+        .toList();
   }
 
   Future<List<EventReference>> getNonSavedRefs(

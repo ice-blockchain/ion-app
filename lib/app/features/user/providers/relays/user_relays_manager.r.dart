@@ -77,7 +77,26 @@ class UserRelaysManager extends _$UserRelaysManager {
   }
 
   Future<void> markRelayInDbAsReadOnly(String relayUrl) async {
-    //TODO:impl
+    final outdatedEntities = (await ref
+            .read(ionConnectDbCacheProvider.notifier)
+            .getFiltered(query: relayUrl, kinds: [UserRelaysEntity.kind]))
+        .cast<UserRelaysEntity?>()
+        .nonNulls
+        .toList();
+
+    final updatedEntities = outdatedEntities
+        .map(
+          (entity) => entity.copyWith(
+            data: entity.data.copyWith(
+              list: entity.data.list
+                  .map((relay) => relay.url == relayUrl ? relay.copyWith(write: false) : relay)
+                  .toList(),
+            ),
+          ),
+        )
+        .toList();
+
+    await ref.read(ionConnectDbCacheProvider.notifier).saveAll(updatedEntities);
   }
 
   Future<List<UserRelaysEntity>> _fetchRelaysFromIndexers({
