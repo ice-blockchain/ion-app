@@ -310,21 +310,22 @@ class IonConnectEntitiesManager extends _$IonConnectEntitiesManager {
         final eventReferences = eventReferencesMap[url] ?? [];
         if (eventReferences.isEmpty) continue;
 
-        final stream = ref.read(ionConnectNetworkEntitiesNotifierProvider.notifier).fetch(
+        final stream = ref
+            .read(ionConnectNetworkEntitiesNotifierProvider.notifier)
+            .fetch(
               search: search,
               eventReferences: eventReferences,
               actionSource: ActionSource.relayUrl(url),
-            );
+            )
+            .handleError((Object e, StackTrace stack) {
+          Logger.log('Error fetching network entities for $url', stackTrace: stack, error: e);
+        });
 
         streams.add(stream);
       }
 
       if (streams.isNotEmpty) {
-        try {
-          networkResults.addAll(await StreamGroup.merge(streams).toList());
-        } catch (e, st) {
-          Logger.log('Error fetching network entities: $e\n$st');
-        }
+        networkResults.addAll(await StreamGroup.merge(streams).toList());
       }
     }
 
