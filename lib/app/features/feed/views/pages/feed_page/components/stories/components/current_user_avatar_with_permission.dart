@@ -27,26 +27,32 @@ class CurrentUserAvatarWithPermission extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    if (hasStories) {
+      return StoryItemContent(
+        pubkey: pubkey,
+        name: context.i18n.common_you,
+        gradient: gradient,
+        isViewed: isViewed,
+        onTap: () =>
+            StoryViewerRoute(pubkey: pubkey, showOnlySelectedUser: true).push<void>(context),
+      );
+    }
+
     return PermissionAwareWidget(
       permissionType: Permission.camera,
       requestId: 'story_record',
       onGrantedPredicate: () =>
           GoRouter.of(context).state.fullPath?.startsWith(FeedRoute().location) ?? false,
-      onGranted: () => hasStories
-          ? StoryViewerRoute(pubkey: pubkey, showOnlySelectedUser: true).push<void>(context)
-          : StoryRecordRoute().push<void>(context),
+      onGranted: () => StoryRecordRoute().push<void>(context),
       requestDialog: const PermissionRequestSheet(permission: Permission.camera),
       settingsDialog: SettingsRedirectSheet.fromType(context, Permission.camera),
       builder: (context, onPressed) {
-        return GestureDetector(
+        return StoryItemContent(
+          pubkey: pubkey,
+          name: context.i18n.common_you,
+          gradient: gradient,
+          isViewed: isViewed,
           onTap: onPressed,
-          child: StoryItemContent(
-            pubkey: pubkey,
-            name: context.i18n.common_you,
-            gradient: gradient,
-            isViewed: isViewed,
-            onTap: onPressed,
-          ),
         );
       },
     );
