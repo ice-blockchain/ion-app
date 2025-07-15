@@ -29,7 +29,7 @@ class AudioFocusHandler: NSObject {
     
     private func setupAudioSession() {
         do {
-            try AVAudioSession.sharedInstance().setCategory(.soloAmbient, mode: .default, options: [.mixWithOthers])
+            try AVAudioSession.sharedInstance().setCategory(.playback, mode: .default, options: [.mixWithOthers])
         } catch {
             print("Failed to set up audio session: \(error)")
         }
@@ -46,9 +46,9 @@ class AudioFocusHandler: NSObject {
                 
             case "requestAudioFocus":
                 do {
-                    // When requesting focus, use soloAmbient category without mixWithOthers
-                    // This will pause any external audio and respect silent switch
-                    try AVAudioSession.sharedInstance().setCategory(.soloAmbient, mode: .default)
+                    // When requesting focus, use playback category without mixWithOthers
+                    // This will pause any external audio
+                    try AVAudioSession.sharedInstance().setCategory(.playback, mode: .default)
                     try AVAudioSession.sharedInstance().setActive(true)
                     self.hasFocus = true
                     self.channel.invokeMethod("onAudioFocusChange", arguments: true)
@@ -61,7 +61,7 @@ class AudioFocusHandler: NSObject {
             case "abandonAudioFocus":
                 do {
                     // When abandoning focus, set back to mixWithOthers
-                    try AVAudioSession.sharedInstance().setCategory(.soloAmbient, mode: .default, options: [.mixWithOthers])
+                    try AVAudioSession.sharedInstance().setCategory(.playback, mode: .default, options: [.mixWithOthers])
                     try AVAudioSession.sharedInstance().setActive(true)
                     self.hasFocus = false
                     self.channel.invokeMethod("onAudioFocusChange", arguments: false)
