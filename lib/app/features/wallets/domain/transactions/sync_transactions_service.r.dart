@@ -168,7 +168,6 @@ class SyncTransactionsService {
     }).wait;
   }
 
-  /// Syncs a specific wallet with the blockchain
   Future<void> _syncWallet({
     required Wallet wallet,
     required bool isFullLoad,
@@ -228,7 +227,6 @@ class SyncTransactionsService {
 }
 
 extension on List<WalletViewData> {
-  /// Returns a map of wallet IDs to the wallet views, that contains the wallet.
   Map<String, WalletViewData> walletIdToWalletView() {
     final walletIdToWalletView = <String, WalletViewData>{};
 

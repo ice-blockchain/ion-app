@@ -135,7 +135,6 @@ class PeriodicTransfersSyncService {
   Future<void> _performWalletSync(String walletAddress) async {
     if (!_isRunning) return;
 
-    // Get current broadcasted transfers for this wallet
     final broadcastedBefore = await _transactionsRepository.getBroadcastedTransfers(
       walletAddress: walletAddress,
     );
@@ -152,10 +151,8 @@ class PeriodicTransfersSyncService {
         'Syncing $totalBroadcastedBefore broadcasted transfers for wallet $walletAddress. Details: \n[$beforeDetails]';
     Logger.log(syncMessage);
 
-    // Perform the sync for this specific wallet
     await _syncTransactionsService.syncBroadcastedTransfersForWallet(walletAddress);
 
-    // Get count after sync for this wallet
     final broadcastedAfter = await _transactionsRepository.getBroadcastedTransfers(
       walletAddress: walletAddress,
     );
