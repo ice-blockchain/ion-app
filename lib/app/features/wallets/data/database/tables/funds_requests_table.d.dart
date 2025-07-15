@@ -23,4 +23,5 @@ class FundsRequestsTable extends Table {
   TextColumn get amountUsd => text().nullable()();
   TextColumn get transactionId => text().nullable().references(TransactionsTable, #txHash)();
   TextColumn get request => text().nullable()();
+  BoolColumn get deleted => boolean().withDefault(const Constant(false))();
 }

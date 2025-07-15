@@ -69,4 +69,16 @@ class FundsRequestsDao extends DatabaseAccessor<WalletsDatabase> with _$FundsReq
 
     return rowsAffected > 0;
   }
+
+  Future<bool> markRequestAsDeleted(String eventId) async {
+    final query = update(fundsRequestsTable)..where((t) => t.eventId.equals(eventId));
+
+    final rowsAffected = await query.write(
+      const FundsRequestsTableCompanion(
+        deleted: Value(true),
+      ),
+    );
+
+    return rowsAffected > 0;
+  }
 }

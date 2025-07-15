@@ -9,7 +9,6 @@ import 'package:ion/app/components/button/button.dart';
 import 'package:ion/app/components/progress_bar/ion_loading_indicator.dart';
 import 'package:ion/app/exceptions/exceptions.dart';
 import 'package:ion/app/extensions/extensions.dart';
-import 'package:ion/app/features/chat/e2ee/providers/e2ee_delete_event_provider.r.dart';
 import 'package:ion/app/features/core/views/pages/error_modal.dart';
 import 'package:ion/app/features/ion_connect/ion_connect.dart';
 import 'package:ion/app/features/wallets/model/coins_group.f.dart';
@@ -17,6 +16,7 @@ import 'package:ion/app/features/wallets/model/entities/funds_request_entity.f.d
 import 'package:ion/app/features/wallets/model/transaction_data.f.dart';
 import 'package:ion/app/features/wallets/model/transaction_details.f.dart';
 import 'package:ion/app/features/wallets/providers/coins_provider.r.dart';
+import 'package:ion/app/features/wallets/providers/funds_request_delete_notifier.r.dart';
 import 'package:ion/app/features/wallets/providers/networks_provider.r.dart';
 import 'package:ion/app/features/wallets/providers/send_asset_form_provider.r.dart';
 import 'package:ion/app/features/wallets/providers/transaction_provider.r.dart';
@@ -29,6 +29,7 @@ class RequestedMoneyMessageButton extends StatelessWidget {
     required this.isMe,
     required this.eventId,
     required this.isPaid,
+    required this.isDeleted,
     required this.eventMessage,
     required this.request,
     super.key,
@@ -37,6 +38,7 @@ class RequestedMoneyMessageButton extends StatelessWidget {
   final bool isMe;
   final String eventId;
   final bool isPaid;
+  final bool isDeleted;
   final FundsRequestEntity request;
   final EventMessage eventMessage;
 
@@ -45,8 +47,17 @@ class RequestedMoneyMessageButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return switch (isMe) {
-      true => _CancelMoneyRequestButton(eventMessage: eventMessage, isPaid: isPaid),
-      false => _SendMoneyButton(eventId: eventId, request: request, isPaid: isPaid),
+      true => _CancelMoneyRequestButton(
+          eventMessage: eventMessage,
+          isPaid: isPaid,
+          isDeleted: isDeleted,
+        ),
+      false => _SendMoneyButton(
+          eventId: eventId,
+          request: request,
+          isPaid: isPaid,
+          isDeleted: isDeleted,
+        ),
     };
   }
 }
@@ -55,26 +66,30 @@ class _CancelMoneyRequestButton extends ConsumerWidget {
   const _CancelMoneyRequestButton({
     required this.eventMessage,
     required this.isPaid,
+    required this.isDeleted,
   });
 
   final EventMessage eventMessage;
   final bool isPaid;
+  final bool isDeleted;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final isLoading =
-        ref.watch(e2eeDeleteMessageNotifierProvider(eventMessage: eventMessage)).isLoading;
+        ref.watch(fundsRequestDeleteNotifierProvider(eventMessage: eventMessage)).isLoading;
+
+    final isDisabled = isLoading || isPaid || isDeleted;
 
     return AnimatedOpacity(
       duration: const Duration(milliseconds: 200),
-      opacity: isPaid ? 0.2 : 1.0,
+      opacity: isDisabled ? 0.2 : 1.0,
       child: Button.compact(
         type: ButtonType.outlined,
         backgroundColor: context.theme.appColors.tertararyBackground,
         minimumSize: RequestedMoneyMessageButton._defaultMinimumSize,
-        disabled: isLoading || isPaid,
+        disabled: isDisabled,
         label: isLoading
-            ? const IONLoadingIndicator()
+            ? const IONLoadingIndicator(type: IndicatorType.dark)
             : Text(
                 context.i18n.button_cancel,
                 style: context.theme.appTextThemes.caption2.copyWith(
@@ -83,8 +98,8 @@ class _CancelMoneyRequestButton extends ConsumerWidget {
               ),
         onPressed: () {
           ref
-              .read(e2eeDeleteMessageNotifierProvider(eventMessage: eventMessage).notifier)
-              .deleteMessage(forEveryone: true);
+              .read(fundsRequestDeleteNotifierProvider(eventMessage: eventMessage).notifier)
+              .deleteFundsRequest();
         },
       ),
     );
@@ -96,17 +111,19 @@ class _SendMoneyButton extends ConsumerWidget {
     required this.eventId,
     required this.request,
     required this.isPaid,
+    required this.isDeleted,
   });
 
   final String eventId;
   final FundsRequestEntity? request;
   final bool isPaid;
+  final bool isDeleted;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     ref.watch(sendAssetFormControllerProvider);
 
-    final disabled = isPaid;
+    final disabled = isPaid || isDeleted;
 
     return Button.compact(
       type: disabled ? ButtonType.disabled : ButtonType.outlined,
