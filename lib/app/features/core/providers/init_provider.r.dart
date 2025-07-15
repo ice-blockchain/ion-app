@@ -6,7 +6,6 @@ import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/features/auth/providers/auth_provider.m.dart';
 import 'package:ion/app/features/auth/providers/onboarding_complete_provider.r.dart';
-import 'package:ion/app/features/chat/providers/user_chat_relays_sync_provider.r.dart';
 import 'package:ion/app/features/core/model/feature_flags.dart';
 import 'package:ion/app/features/core/permissions/providers/permissions_provider.r.dart';
 import 'package:ion/app/features/core/providers/feature_flags_provider.r.dart';
@@ -20,6 +19,7 @@ import 'package:ion/app/features/ion_connect/providers/global_subscription.r.dar
 import 'package:ion/app/features/push_notifications/background/firebase_messaging_background_service.dart';
 import 'package:ion/app/features/push_notifications/providers/pushes_init_provider.r.dart';
 import 'package:ion/app/features/user/providers/account_notifications_sync_provider.r.dart';
+import 'package:ion/app/features/user/providers/relays/user_chat_relays_sync_provider.r.dart';
 import 'package:ion/app/features/user/providers/relays/user_file_storage_relays_sync_provider.r.dart';
 import 'package:ion/app/features/user/providers/relays/user_relays_sync_provider.r.dart';
 import 'package:ion/app/features/wallets/providers/coins_sync_provider.r.dart';

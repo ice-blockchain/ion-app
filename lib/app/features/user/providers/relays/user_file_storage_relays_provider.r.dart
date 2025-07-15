@@ -6,10 +6,10 @@ import 'package:ion/app/features/ion_connect/providers/ion_connect_entity_provid
 import 'package:ion/app/features/user/model/user_file_storage_relays.f.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
-part 'user_file_storage_relay_provider.r.g.dart';
+part 'user_file_storage_relays_provider.r.g.dart';
 
 @riverpod
-Future<UserFileStorageRelaysEntity?> userFileStorageRelay(
+Future<UserFileStorageRelaysEntity?> userFileStorageRelays(
   Ref ref, {
   required String pubkey,
 }) async {

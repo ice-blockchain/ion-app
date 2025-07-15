@@ -198,6 +198,10 @@ class UserRelaysManager extends _$UserRelaysManager {
   static bool isRelayReadOnlyError(Object? error) {
     return error is SendEventException && error.code.startsWith('relay-is-read-only');
   }
+
+  static bool relayListsEqual(List<UserRelay>? list1, List<UserRelay>? list2) {
+    return const UnorderedIterableEquality<UserRelay>().equals(list1, list2);
+  }
 }
 
 @riverpod
