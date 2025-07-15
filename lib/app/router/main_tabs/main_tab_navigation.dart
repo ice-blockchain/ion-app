@@ -9,6 +9,7 @@ import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/chat/recent_chats/providers/conversations_edit_mode_provider.r.dart';
 import 'package:ion/app/features/chat/recent_chats/views/components/conversation_edit_bottom_bar/conversation_edit_bottom_bar.dart';
 import 'package:ion/app/features/chat/views/components/unread_messages_counter.dart';
+import 'package:ion/app/features/wallets/views/components/unseen_transactions_counter.dart';
 import 'package:ion/app/router/main_tabs/components/components.dart';
 
 class MainTabNavigation extends HookWidget {
@@ -145,6 +146,7 @@ class _BottomNavBarContent extends ConsumerWidget {
                         children: [
                           tabItem.getIcon(isSelected: isSelected),
                           if (tabItem == TabItem.chat) const UnreadMessagesCounter(),
+                          if (tabItem == TabItem.wallet) const UnseenTransactionsCounter(),
                         ],
                       ),
                     ),

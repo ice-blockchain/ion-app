@@ -9,6 +9,7 @@ import 'package:ion/app/components/skeleton/container_skeleton.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/wallets/model/coins_group.f.dart';
 import 'package:ion/app/features/wallets/providers/wallet_user_preferences/user_preferences_selectors.r.dart';
+import 'package:ion/app/features/wallets/views/components/coins_list/unseen_transaction_indicator.dart';
 import 'package:ion/app/features/wallets/views/pages/coins_flow/coin_details/providers/network_selector_notifier.r.dart';
 import 'package:ion/app/utils/num.dart';
 import 'package:ion/app/utils/precache_pictures.dart';
@@ -18,11 +19,13 @@ class CoinsGroupItem extends HookConsumerWidget {
   const CoinsGroupItem({
     required this.coinsGroup,
     required this.onTap,
+    this.showNewTransactionsIndicator = false,
     super.key,
   });
 
   final CoinsGroup coinsGroup;
   final VoidCallback onTap;
+  final bool showNewTransactionsIndicator;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -51,10 +54,19 @@ class CoinsGroupItem extends HookConsumerWidget {
       trailing: Column(
         crossAxisAlignment: CrossAxisAlignment.end,
         children: [
-          Text(
-            isBalanceVisible ? formatDouble(coinsGroup.totalAmount) : '****',
-            style: context.theme.appTextThemes.body
-                .copyWith(color: context.theme.appColors.primaryText),
+          Row(
+            children: [
+              if (showNewTransactionsIndicator)
+                UnseenTransactionsIndicator(
+                  coinIds: coinsGroup.coins.map((e) => e.coin.id).toList(),
+                ),
+              SizedBox(width: 4.0.s),
+              Text(
+                isBalanceVisible ? formatDouble(coinsGroup.totalAmount) : '****',
+                style: context.theme.appTextThemes.body
+                    .copyWith(color: context.theme.appColors.primaryText),
+              ),
+            ],
           ),
           Text(
             isBalanceVisible ? formatToCurrency(coinsGroup.totalBalanceUSD) : '******',
