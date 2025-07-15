@@ -208,10 +208,26 @@ class TransactionsRepository {
     return updatedTxs;
   }
 
+  Stream<List<TransactionData>> watchBroadcastedTransfers({
+    List<String>? coinIds,
+    String? walletAddress,
+  }) =>
+      _transactionsDao.watchBroadcastedTransfers(coinIds: coinIds, walletAddress: walletAddress);
+
   Stream<Map<CoinData, List<TransactionData>>> watchBroadcastedTransfersByCoins(
     List<String> coinIds,
-  ) =>
-      _transactionsDao.watchBroadcastedTransfersByCoins(coinIds);
+  ) {
+    return watchBroadcastedTransfers(coinIds: coinIds).map((transactions) {
+      final transactionsByCoin = <CoinData, List<TransactionData>>{};
+
+      for (final transaction in transactions) {
+        final coin = (transaction.cryptoAsset as CoinTransactionAsset).coin;
+        transactionsByCoin.putIfAbsent(coin, () => []).add(transaction);
+      }
+
+      return transactionsByCoin;
+    });
+  }
 
   Future<List<TransactionData>> getBroadcastedTransfers({String? walletAddress}) =>
       _transactionsDao.getBroadcastedTransfers(walletAddress: walletAddress);
