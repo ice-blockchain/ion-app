@@ -15,13 +15,11 @@ class UrlPreviewContent extends HookWidget {
   const UrlPreviewContent({
     required this.url,
     this.clickable = true,
-    this.onPreviewVisibilityChanged,
     super.key,
   });
 
   final String url;
   final bool clickable;
-  final ValueChanged<bool>? onPreviewVisibilityChanged;
 
   @override
   Widget build(BuildContext context) {
@@ -31,9 +29,6 @@ class UrlPreviewContent extends HookWidget {
       child: UrlPreview(
         key: ValueKey(url),
         url: url,
-        metaListener: (meta) {
-          onPreviewVisibilityChanged?.call(meta?.title?.isNotEmpty ?? false);
-        },
         builder: (meta, favIconUrl) {
           if (meta == null || meta.title == null || meta.title!.isEmpty) {
             return const SizedBox.shrink();
