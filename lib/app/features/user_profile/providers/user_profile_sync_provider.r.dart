@@ -16,9 +16,11 @@ import 'package:ion/app/features/user/model/badges/profile_badges.f.dart';
 import 'package:ion/app/features/user/model/user_delegation.f.dart';
 
 import 'package:ion/app/features/user/model/user_metadata.f.dart';
+import 'package:ion/app/features/user/providers/user_delegation_provider.r.dart';
 import 'package:ion/app/features/user_profile/database/dao/user_badge_info_dao.m.dart';
 import 'package:ion/app/features/user_profile/database/dao/user_delegation_dao.m.dart';
 import 'package:ion/app/features/user_profile/database/dao/user_metadata_dao.m.dart';
+import 'package:ion/app/services/logger/logger.dart';
 import 'package:ion/app/services/storage/local_storage.r.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
@@ -101,7 +103,12 @@ class UserProfileSync extends _$UserProfileSync {
         );
 
     final usersMetadata = usersProfileEntities.whereType<UserMetadataEntity>().toList();
-    final usersDelegation = usersProfileEntities.whereType<UserDelegationEntity>().toList();
+    // TODO Temporary fix for missing delegation data from delegeation extension
+    //final usersDelegation = usersProfileEntities.whereType<UserDelegationEntity>().toList();
+    final usersDelegation = await _fetchUsersDelegation(
+      ref: ref,
+      masterPubkeys: masterPubkeysToSync,
+    );
     final profileBadges = usersProfileEntities.whereType<ProfileBadgesEntity>().toList();
     final badgeDefinitions = usersProfileEntities.whereType<BadgeDefinitionEntity>().toList();
     final badgeAwards = usersProfileEntities.whereType<BadgeAwardEntity>().toList();
@@ -118,5 +125,32 @@ class UserProfileSync extends _$UserProfileSync {
 
     await userMetadataDao.deleteMetadata(missingMetadataMasterPubkeys);
     await userDelegationDao.deleteDelegation(missingMetadataMasterPubkeys);
+  }
+
+  Future<List<UserDelegationEntity>> _fetchUsersDelegation({
+    required Ref ref,
+    required Set<String> masterPubkeys,
+  }) async {
+    final usersDelegation = <UserDelegationEntity>[];
+
+    if (masterPubkeys.isEmpty) return usersDelegation;
+
+    for (final masterPubkey in masterPubkeys) {
+      try {
+        final index = masterPubkeys.toList().indexOf(masterPubkey);
+        if (index == 1) {
+          throw Exception();
+        }
+        final delegation =
+            await ref.read(userDelegationProvider(masterPubkey, cache: false).future);
+        if (delegation != null) {
+          usersDelegation.add(delegation);
+        }
+      } catch (e) {
+        Logger.error('Failed to fetch user delegation for master pubkey: $masterPubkey');
+      }
+    }
+
+    return usersDelegation;
   }
 }
