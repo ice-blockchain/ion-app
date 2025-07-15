@@ -209,3 +209,16 @@ Future<UserRelaysEntity?> userRelay(Ref ref, String pubkey) async {
   final relays = await ref.watch(userRelaysManagerProvider.notifier).fetch([pubkey]);
   return relays.elementAtOrNull(0);
 }
+
+@Riverpod(keepAlive: true)
+Future<UserRelaysEntity?> currentUserRelays(Ref ref) async {
+  final identityConnectRelays = await ref.watch(currentUserIdentityConnectRelaysProvider.future);
+  if (identityConnectRelays == null) {
+    return null;
+  }
+  final updatedUserRelays = UserRelaysData(list: identityConnectRelays);
+  final userRelaysEvent =
+      await ref.read(ionConnectNotifierProvider.notifier).sign(updatedUserRelays);
+
+  return UserRelaysEntity.fromEventMessage(userRelaysEvent);
+}

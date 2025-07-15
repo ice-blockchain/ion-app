@@ -4,7 +4,6 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/exceptions/exceptions.dart';
 import 'package:ion/app/features/auth/providers/auth_provider.m.dart';
 import 'package:ion/app/features/user/model/user_relays.f.dart';
-import 'package:ion/app/features/user/providers/current_user_identity_provider.r.dart';
 import 'package:ion/app/features/user/providers/relays/relay_selectors.dart';
 import 'package:ion/app/features/user/providers/relays/relevant_user_relays_provider.r.dart';
 import 'package:ion/app/features/user/providers/relays/user_relays_manager.r.dart';
@@ -31,7 +30,7 @@ enum OptimalRelaysStrategy {
 class OptimalUserRelaysService {
   OptimalUserRelaysService({
     required String? currentUserMasterPubkey,
-    required Future<List<UserRelay>?> Function() getCurrentUserRelays,
+    required Future<UserRelaysEntity?> Function() getCurrentUserRelays,
     required Future<List<UserRelaysEntity>> Function(List<String> pubkeys) getGenericUserRelays,
     required Future<List<String>> Function() getCurrentUserRankedRelevantRelays,
   })  : _currentUserMasterPubkey = currentUserMasterPubkey,
@@ -41,7 +40,7 @@ class OptimalUserRelaysService {
 
   final String? _currentUserMasterPubkey;
 
-  final Future<List<UserRelay>?> Function() _getCurrentUserRelays;
+  final Future<UserRelaysEntity?> Function() _getCurrentUserRelays;
 
   final Future<List<UserRelaysEntity>> Function(List<String> pubkeys) _getGenericUserRelays;
 
@@ -69,7 +68,7 @@ class OptimalUserRelaysService {
       if (currentUserRelays == null) {
         throw UserRelaysNotFoundException();
       }
-      userToRelays[_currentUserMasterPubkey] = currentUserRelays.map((relay) => relay.url).toList();
+      userToRelays[_currentUserMasterPubkey] = currentUserRelays.urls;
     }
 
     final otherPubkeys =
@@ -118,8 +117,7 @@ class OptimalUserRelaysService {
 @riverpod
 OptimalUserRelaysService optimalUserRelaysService(Ref ref) {
   final currentUserMasterPubkey = ref.watch(currentPubkeySelectorProvider);
-  Future<List<UserRelay>?> getCurrentUserRelays() =>
-      ref.read(currentUserIdentityConnectRelaysProvider.future);
+  Future<UserRelaysEntity?> getCurrentUserRelays() => ref.read(currentUserRelaysProvider.future);
   Future<List<UserRelaysEntity>> getGenericUserRelays(List<String> pubkeys) =>
       ref.read(userRelaysManagerProvider.notifier).fetch(pubkeys);
   Future<List<String>> getCurrentUserRankedRelevantRelays() =>
