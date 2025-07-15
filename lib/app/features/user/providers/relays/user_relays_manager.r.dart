@@ -40,10 +40,11 @@ class UserRelaysManager extends _$UserRelaysManager {
     final pubkeysToFetch = [...pubkeys];
 
     final dbCachedRelays = await _getRelaysFromDb(pubkeys: pubkeys);
-    result.addAll(dbCachedRelays);
+    final validDbCachedRelays = _filterValidRelays(dbCachedRelays);
+    result.addAll(validDbCachedRelays);
 
     pubkeysToFetch
-        .removeWhere((pubkey) => dbCachedRelays.any((relay) => relay.masterPubkey == pubkey));
+        .removeWhere((pubkey) => validDbCachedRelays.any((relay) => relay.masterPubkey == pubkey));
 
     if (pubkeysToFetch.isEmpty) {
       return result;
@@ -52,12 +53,14 @@ class UserRelaysManager extends _$UserRelaysManager {
     final fetchedRelays = <UserRelaysEntity>[];
 
     final relaysFromIndexers = await _fetchRelaysFromIndexers(pubkeys: pubkeysToFetch);
+    final validRelaysFromIndexers = _filterValidRelays(relaysFromIndexers);
 
-    fetchedRelays.addAll(relaysFromIndexers);
-    result.addAll(relaysFromIndexers);
+    fetchedRelays.addAll(validRelaysFromIndexers);
+    result.addAll(validRelaysFromIndexers);
 
-    pubkeysToFetch
-        .removeWhere((pubkey) => relaysFromIndexers.any((relay) => relay.masterPubkey == pubkey));
+    pubkeysToFetch.removeWhere(
+      (pubkey) => validRelaysFromIndexers.any((relay) => relay.masterPubkey == pubkey),
+    );
 
     if (pubkeysToFetch.isEmpty) {
       return result;
@@ -71,6 +74,10 @@ class UserRelaysManager extends _$UserRelaysManager {
     await _clearReachabilityInfoFor(fetchedRelays);
 
     return result;
+  }
+
+  Future<void> markRelayInDbAsReadOnly(String relayUrl) async {
+    //TODO:impl
   }
 
   Future<List<UserRelaysEntity>> _fetchRelaysFromIndexers({
@@ -100,8 +107,6 @@ class UserRelaysManager extends _$UserRelaysManager {
   Future<List<UserRelaysEntity>> _getRelaysFromDb({
     required List<String> pubkeys,
   }) async {
-    final result = <UserRelaysEntity>[];
-
     final eventReferences = pubkeys
         .map(
           (pubkey) => ReplaceableEventReference(
@@ -111,22 +116,10 @@ class UserRelaysManager extends _$UserRelaysManager {
         )
         .toList();
 
-    final dbCachedRelays =
-        (await ref.read(ionConnectDbCacheProvider.notifier).getAll(eventReferences))
-            .cast<UserRelaysEntity?>()
-            .nonNulls
-            .toList();
-
-    // Remove unreachable relays
-    for (final relay in dbCachedRelays) {
-      final filteredRelayEntity =
-          ref.read(relayReachabilityProvider.notifier).getFilteredRelayEntity(relay);
-      if (filteredRelayEntity != null) {
-        result.add(filteredRelayEntity);
-      }
-    }
-
-    return result;
+    return (await ref.read(ionConnectDbCacheProvider.notifier).getAll(eventReferences))
+        .cast<UserRelaysEntity?>()
+        .nonNulls
+        .toList();
   }
 
   Future<List<UserRelaysEntity>> _fetchRelaysFromIdentity({
@@ -160,6 +153,19 @@ class UserRelaysManager extends _$UserRelaysManager {
     return userRelays;
   }
 
+  List<UserRelaysEntity> _filterValidRelays(List<UserRelaysEntity> relays) {
+    // Remove unreachable relays from relay lists
+    final reachableRelays = relays
+        .map(ref.read(relayReachabilityProvider.notifier).getFilteredRelayEntity)
+        .nonNulls
+        .toList();
+
+    // Relay list is invalid if all relays are read-only
+    return reachableRelays
+        .where((relayEntity) => relayEntity.data.list.any((relay) => relay.write))
+        .toList();
+  }
+
   Future<void> _clearReachabilityInfoFor(
     List<UserRelaysEntity> relays,
   ) async {
@@ -168,6 +174,10 @@ class UserRelaysManager extends _$UserRelaysManager {
     for (final url in relayUrls) {
       await reachabilityInfoNotifier.clear(url);
     }
+  }
+
+  static bool isRelayReadOnlyError(Object? error) {
+    return error is SendEventException && error.code.startsWith('relay-is-read-only');
   }
 }
 

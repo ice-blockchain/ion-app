@@ -49,6 +49,7 @@ class RelayPicker extends _$RelayPicker {
     };
 
     final writeRelays = relays.data.list.where((relay) => relay.write).toList();
+
     final randomValidWriteRelay = _userRelaysAvoidingDislikedUrls(writeRelays, dislikedUrls).random;
 
     if (randomValidWriteRelay == null) {
