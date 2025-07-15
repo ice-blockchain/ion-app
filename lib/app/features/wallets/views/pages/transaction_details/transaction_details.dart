@@ -76,7 +76,6 @@ class TransactionDetailsPage extends ConsumerWidget {
                 children: [
                   ScreenSideOffset.small(
                     child: SingleChildScrollView(
-                      padding: EdgeInsetsDirectional.only(top: 10.0.s),
                       child: Column(
                         children: [
                           transactionData.assetData.maybeMap(
@@ -120,7 +119,7 @@ class TransactionDetailsPage extends ConsumerWidget {
                               ),
                             ],
                           ),
-                          SizedBox(height: 16.0.s),
+                          SizedBox(height: 12.0.s),
                           TransactionParticipant(
                             address: participantAddress,
                             transactionType: transactionData.type,
@@ -143,7 +142,7 @@ class TransactionDetailsPage extends ConsumerWidget {
                             ),
                           ...transactionData.assetData.maybeMap(
                                 coin: (coin) => [
-                                  SizedBox(height: 16.0.s),
+                                  SizedBox(height: 12.0.s),
                                   ListItem.textWithIcon(
                                     title: Text(locale.wallet_asset),
                                     value: coin.coinsGroup.abbreviation,
