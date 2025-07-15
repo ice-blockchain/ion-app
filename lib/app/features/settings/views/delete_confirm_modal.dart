@@ -23,7 +23,10 @@ class ConfirmDeleteModal extends HookConsumerWidget {
 
     final processing = useState<bool>(false);
 
-    ref.displayErrors(deleteAccountNotifierProvider);
+    ref.displayErrors(
+      deleteAccountNotifierProvider,
+      excludedExceptions: excludedPasskeyExceptions,
+    );
 
     return SimpleModalSheet.alert(
       isBottomSheet: true,

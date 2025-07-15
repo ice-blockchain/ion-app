@@ -39,6 +39,7 @@ class GetStartedPage extends HookConsumerWidget {
       excludedExceptions: {
         TwoFARequiredException,
         NoLocalPasskeyCredsFoundIONIdentityException,
+        ...excludedPasskeyExceptions,
       },
     );
 

@@ -58,7 +58,10 @@ class ConfirmationSheet extends ConsumerWidget {
     final coin = formData.assetData.as<CoinAssetToSendData>();
 
     ref
-      ..displayErrors(sendCoinsNotifierProvider)
+      ..displayErrors(
+        sendCoinsNotifierProvider,
+        excludedExceptions: excludedPasskeyExceptions,
+      )
       ..listenSuccess(sendCoinsNotifierProvider, (transactionDetails) async {
         ref.invalidate(walletViewsDataNotifierProvider);
 

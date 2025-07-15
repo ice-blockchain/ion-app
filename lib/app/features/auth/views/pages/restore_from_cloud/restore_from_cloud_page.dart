@@ -27,7 +27,10 @@ class RestoreFromCloudPage extends HookConsumerWidget {
     final twoFAOptions = useRef<Map<TwoFaType, String>?>(null);
     final twoFAOptionsCount = useRef<int>(0);
 
-    ref.displayErrors(recoveryKeyCloudBackupRestoreNotifierProvider);
+    ref.displayErrors(
+      recoveryKeyCloudBackupRestoreNotifierProvider,
+      excludedExceptions: excludedPasskeyExceptions,
+    );
     _listenInitRecoverResult(
       ref: ref,
       twoFAOptions: twoFAOptions,
@@ -132,6 +135,7 @@ class RestoreFromCloudPage extends HookConsumerWidget {
         initUserRecoveryActionNotifierProvider,
         excludedExceptions: {
           TwoFARequiredException,
+          ...excludedPasskeyExceptions,
         },
       )
       ..listenSuccess(initUserRecoveryActionNotifierProvider, (value) {
