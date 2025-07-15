@@ -65,7 +65,7 @@ class UpdateUserMetadataNotifier extends _$UpdateUserMetadataNotifier {
       final usernameChanged = currentUserMetadata?.data.name != data.name;
       final displayNameChanged = currentUserMetadata?.data.displayName != data.displayName;
       if (currentUserMetadata != null && (usernameChanged || displayNameChanged)) {
-        final usernameProofsJsonPayloads = await ref.read(
+        final updateUserSocialProfileResponse = await ref.read(
           updateUserSocialProfileProvider(
             data: UserSocialProfileData(
               username: usernameChanged ? data.name : null,
@@ -73,6 +73,7 @@ class UpdateUserMetadataNotifier extends _$UpdateUserMetadataNotifier {
             ),
           ).future,
         );
+        final usernameProofsJsonPayloads = updateUserSocialProfileResponse.usernameProof ?? [];
         if (usernameChanged && usernameProofsJsonPayloads.isNotEmpty) {
           final usernameProofsEvents =
               usernameProofsJsonPayloads.map(EventMessage.fromPayloadJson).toList();

@@ -12,6 +12,7 @@ class UpdateUserSocialProfileResponse with _$UpdateUserSocialProfileResponse {
     required String? displayName,
     required String? referral,
     required List<Map<String, dynamic>>? usernameProof,
+    required String? referralMasterKey,
   }) = _UpdateUserSocialProfileResponse;
 
   factory UpdateUserSocialProfileResponse.fromJson(Map<String, dynamic> json) =>

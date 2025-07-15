@@ -33,6 +33,7 @@ export 'src/users/ion_connect_indexers/models/ion_connect_indexers_response.f.da
 export 'src/users/models/user_relays_info.f.dart';
 export 'src/users/search_users_social_profile/models/search_users_social_profile_type.dart';
 export 'src/users/set_ion_connect_relays/models/set_ion_connect_relays_response.f.dart';
+export 'src/users/update_user_social_profile/models/update_user_social_profile_response.f.dart';
 export 'src/users/update_user_social_profile/models/user_social_profile_data.f.dart';
 export 'src/users/user_details/models/user_details.f.dart';
 export 'src/wallets/models/wallet.f.dart';

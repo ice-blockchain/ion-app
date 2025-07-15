@@ -10,7 +10,7 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 part 'user_social_profile_provider.r.g.dart';
 
 @riverpod
-Future<List<Map<String, dynamic>>> updateUserSocialProfile(
+Future<UpdateUserSocialProfileResponse> updateUserSocialProfile(
   Ref ref, {
   required UserSocialProfileData data,
 }) async {

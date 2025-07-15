@@ -88,7 +88,7 @@ class IONIdentityUsers {
         nickname: nickname,
       );
 
-  Future<List<Map<String, dynamic>>> updateUserSocialProfile({
+  Future<UpdateUserSocialProfileResponse> updateUserSocialProfile({
     required UserSocialProfileData data,
   }) async {
     final userId = _extractUserIdService.extractUserId(username: username);

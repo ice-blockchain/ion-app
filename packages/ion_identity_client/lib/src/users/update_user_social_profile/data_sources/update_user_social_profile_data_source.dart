@@ -6,7 +6,6 @@ import 'package:ion_identity_client/src/core/network/network_client.dart';
 import 'package:ion_identity_client/src/core/network/utils.dart';
 import 'package:ion_identity_client/src/core/storage/token_storage.dart';
 import 'package:ion_identity_client/src/core/types/request_headers.dart';
-import 'package:ion_identity_client/src/users/update_user_social_profile/models/update_user_social_profile_response.f.dart';
 
 class UpdateUserSocialProfileDataSource {
   UpdateUserSocialProfileDataSource(
@@ -19,7 +18,7 @@ class UpdateUserSocialProfileDataSource {
 
   static const basePath = '/v1/users';
 
-  Future<List<Map<String, dynamic>>> updateUserSocialProfile({
+  Future<UpdateUserSocialProfileResponse> updateUserSocialProfile({
     required String username,
     required String userId,
     required UserSocialProfileData data,
@@ -30,7 +29,7 @@ class UpdateUserSocialProfileDataSource {
     }
 
     try {
-      final response = await _networkClient.patch(
+      return await _networkClient.patch(
         '$basePath/$userId/profiles/social',
         data: data.toJson(),
         headers: RequestHeaders.getAuthorizationHeaders(
@@ -40,7 +39,6 @@ class UpdateUserSocialProfileDataSource {
         decoder: (result) =>
             parseJsonObject(result, fromJson: UpdateUserSocialProfileResponse.fromJson),
       );
-      return response.usernameProof ?? [];
     } on RequestExecutionException catch (e) {
       final exception = _mapException(e);
       throw exception;
