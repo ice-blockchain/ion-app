@@ -118,10 +118,7 @@ class PeriodicTransfersSyncService {
       // Exponential backoff delay progression:
       // 30s → 1m → 2m → 4m → 8m → 16m → 30m (capped) → 30m → 30m...
       await withRetry(
-        ({Object? error}) async {
-          final response = await _performWalletSync(walletAddress);
-          return response;
-        },
+        ({Object? error}) => _performWalletSync(walletAddress),
         initialDelay: const Duration(seconds: 30),
         maxDelay: const Duration(minutes: 30),
         multiplier: 2,
