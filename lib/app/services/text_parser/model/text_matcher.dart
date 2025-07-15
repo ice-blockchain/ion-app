@@ -10,7 +10,7 @@ class MentionMatcher extends TextMatcher {
   const MentionMatcher();
 
   @override
-  String get pattern => r'@\w+\b';
+  String get pattern => r'@[A-Za-z0-9.]+\b';
 }
 
 class HashtagMatcher extends TextMatcher {
@@ -25,7 +25,7 @@ class UrlMatcher extends TextMatcher {
 
   @override
   String get pattern =>
-      r'(\b((?:https?:\/\/)?(?:[A-Za-z0-9-]+\.)+[A-Za-z]{2,6}(?::\d+)?(?:[-A-Za-z0-9()@:%_+.~#?&\/=]*)?)\b)';
+      r'(?<!@)(\b((?:https?:\/\/)?(?:[A-Za-z0-9-]+\.)+[A-Za-z]{2,6}(?::\d+)?(?:[-A-Za-z0-9()@:%_+.~#?&\/=]*)?)\b)';
 }
 
 class CashtagMatcher extends TextMatcher {
