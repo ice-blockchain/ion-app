@@ -36,7 +36,6 @@ void main() async {
   );
 }
 
-
 class IONApp extends ConsumerWidget {
   const IONApp({super.key});
 
