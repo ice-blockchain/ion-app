@@ -29,13 +29,12 @@ class SelectableUserListItem extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final userMetadataResult = ref.watch(cachedUserMetadataProvider(masterPubkey));
-    
+
     if (userMetadataResult == null) {
       return const SizedBox.shrink();
     }
 
-    final isSelected =
-        selectedPubkeys.contains(masterPubkey) || (selectedPubkeys.contains(pubkey));
+    final isSelected = selectedPubkeys.contains(masterPubkey) || (selectedPubkeys.contains(pubkey));
 
     return BadgesUserListItem(
       onTap: () => onUserSelected(userMetadataResult),
