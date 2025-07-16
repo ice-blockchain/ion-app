@@ -59,8 +59,28 @@ class EventMessageDao extends DatabaseAccessor<ChatDatabase> with _$EventMessage
   }
 
   Future<void> deleteByEventReference(EventReference eventReference) async {
-    await (delete(db.eventMessageTable)
-          ..where((table) => table.eventReference.equalsValue(eventReference)))
-        .go();
+    await db.batch((batch) {
+      batch
+        ..deleteWhere(
+          db.conversationMessageTable,
+          (table) => table.messageEventReference.equalsValue(eventReference),
+        )
+        ..deleteWhere(
+          db.messageMediaTable,
+          (table) => table.messageEventReference.equalsValue(eventReference),
+        )
+        ..deleteWhere(
+          db.messageStatusTable,
+          (table) => table.messageEventReference.equalsValue(eventReference),
+        )
+        ..deleteWhere(
+          db.reactionTable,
+          (table) => table.messageEventReference.equalsValue(eventReference),
+        )
+        ..deleteWhere(
+          db.eventMessageTable,
+          (table) => table.eventReference.equalsValue(eventReference),
+        );
+    });
   }
 }
