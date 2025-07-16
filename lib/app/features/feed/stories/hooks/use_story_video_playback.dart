@@ -20,9 +20,12 @@ void useStoryVideoPlayback({
   if (controller == null || !controller.value.isInitialized) return;
 
   final paused = ref.watch(storyPauseControllerProvider);
-  final viewing = ref.watch(storyViewingControllerProvider(viewerPubkey));
+  final currentStoryIndex = ref.watch(
+    singleUserStoryViewingControllerProvider(viewerPubkey)
+        .select((state) => state.currentStoryIndex),
+  );
   final stories = ref.watch(userStoriesProvider(viewerPubkey))?.toList() ?? [];
-  final story = stories.elementAtOrNull(viewing.currentStoryIndex);
+  final story = stories.elementAtOrNull(currentStoryIndex);
   final isCurrent = story?.id == storyId;
 
   final hasStarted = useRef(false);

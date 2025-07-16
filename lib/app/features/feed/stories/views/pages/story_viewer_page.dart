@@ -1,6 +1,5 @@
 // SPDX-License-Identifier: ice License 1.0
 
-import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_keyboard_visibility/flutter_keyboard_visibility.dart';
@@ -14,7 +13,6 @@ import 'package:ion/app/features/feed/stories/providers/story_viewing_provider.r
 import 'package:ion/app/features/feed/stories/providers/user_stories_provider.r.dart';
 import 'package:ion/app/features/feed/stories/providers/viewed_stories_provider.r.dart';
 import 'package:ion/app/features/feed/stories/views/components/story_viewer/components/components.dart';
-import 'package:ion/app/features/feed/views/pages/feed_page/components/stories/hooks/use_preload_story_image.dart';
 import 'package:ion/app/features/ion_connect/model/event_reference.f.dart';
 import 'package:ion/app/features/video/views/hooks/use_status_bar_color.dart';
 import 'package:ion/app/hooks/use_on_init.dart';
@@ -36,8 +34,12 @@ class StoryViewerPage extends HookConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     useStatusBarColor();
 
-    final storyViewerState = ref
-        .watch(storyViewingControllerProvider(pubkey, showOnlySelectedUser: showOnlySelectedUser));
+    final storyViewerState = ref.watch(
+      userStoriesViewingNotifierProvider(pubkey, showOnlySelectedUser: showOnlySelectedUser),
+    );
+    final singleUserStoriesViewerState = ref.watch(
+      singleUserStoryViewingControllerProvider(storyViewerState.currentUserPubkey),
+    );
     final stories =
         ref.watch(userStoriesProvider(storyViewerState.currentStory?.pubkey ?? pubkey))?.toList() ??
             [];
@@ -63,8 +65,7 @@ class StoryViewerPage extends HookConsumerWidget {
         if (initialStoryIndex != null || firstNotViewedStoryIndex != -1) {
           ref
               .watch(
-                storyViewingControllerProvider(pubkey, showOnlySelectedUser: showOnlySelectedUser)
-                    .notifier,
+                singleUserStoryViewingControllerProvider(pubkey).notifier,
               )
               .moveToStoryIndex(initialStoryIndex ?? firstNotViewedStoryIndex);
         }
@@ -77,30 +78,17 @@ class StoryViewerPage extends HookConsumerWidget {
       onBecameActive: () => ref.read(storyPauseControllerProvider.notifier).paused = false,
     );
 
-    final currentStory = stories.elementAtOrNull(storyViewerState.currentStoryIndex);
     useOnInit(
       () {
-        if (currentStory != null) {
-          ref
-              .read(viewedStoriesControllerProvider(storiesReferences).notifier)
-              .markStoryAsViewed(currentStory);
-        }
-      },
-      [currentStory?.id],
-    );
-
-    useOnInit(
-      () {
-        final currentUserStoriesLeft = stories.length - storyViewerState.currentStoryIndex - 1;
+        final currentUserStoriesLeft =
+            stories.length - singleUserStoriesViewerState.currentStoryIndex - 1;
         final nextUserPubkey = storyViewerState.nextUserPubkey;
         if (currentUserStoriesLeft < 10 && nextUserPubkey.isNotEmpty) {
           ref.read(userStoriesProvider(nextUserPubkey));
         }
       },
-      [storyViewerState.currentStoryIndex],
+      [singleUserStoriesViewerState.currentStoryIndex],
     );
-
-    usePreloadStoryImage(ref, stories.elementAtOrNull(storyViewerState.currentStoryIndex + 1));
 
     return KeyboardVisibilityBuilder(
       builder: (context, isKeyboardVisible) {
@@ -133,6 +121,7 @@ class StoryViewerPage extends HookConsumerWidget {
                       pubkey: pubkey,
                       userStories: storyViewerState.userStories,
                       currentUserIndex: storyViewerState.currentUserIndex,
+                      showOnlySelectedUser: showOnlySelectedUser,
                     ),
                   ),
                   PositionedDirectional(
@@ -149,7 +138,10 @@ class StoryViewerPage extends HookConsumerWidget {
                           mainAxisSize: MainAxisSize.min,
                           children: [
                             SizedBox(height: 28.0.s),
-                            StoryProgressBarContainer(pubkey: pubkey),
+                            StoryProgressBarContainer(
+                              pubkey: pubkey,
+                              showOnlySelectedUser: showOnlySelectedUser,
+                            ),
                             ScreenBottomOffset(margin: 16.0.s),
                           ],
                         ),

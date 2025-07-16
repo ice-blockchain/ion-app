@@ -13,17 +13,35 @@ import 'package:ion/app/features/feed/stories/views/components/story_viewer/comp
 class StoryProgressBarContainer extends ConsumerWidget {
   const StoryProgressBarContainer({
     required this.pubkey,
+    required this.showOnlySelectedUser,
     super.key,
   });
 
   final String pubkey;
+  final bool showOnlySelectedUser;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final storyState = ref.watch(storyViewingControllerProvider(pubkey));
-    final currentStoryIndex = storyState.currentStoryIndex;
-    final stories = ref.watch(userStoriesProvider(storyState.currentUserPubkey))?.toList() ?? [];
-    final storiesCount = ref.watch(storiesCountProvider(pubkey)).valueOrNull;
+    final currentUserPubkey = ref.watch(
+      userStoriesViewingNotifierProvider(
+        pubkey,
+        showOnlySelectedUser: showOnlySelectedUser,
+      ).select((state) => state.currentUserPubkey),
+    );
+    final userStoriesNotifier = ref.watch(
+      userStoriesViewingNotifierProvider(
+        pubkey,
+        showOnlySelectedUser: showOnlySelectedUser,
+      ).notifier,
+    );
+    final singleUserStoriesViewingState =
+        ref.watch(singleUserStoryViewingControllerProvider(currentUserPubkey));
+    final singleUserStoriesNotifier = ref.watch(
+      singleUserStoryViewingControllerProvider(currentUserPubkey).notifier,
+    );
+    final currentStoryIndex = singleUserStoriesViewingState.currentStoryIndex;
+    final stories = ref.watch(userStoriesProvider(currentUserPubkey))?.toList() ?? [];
+    final storiesCount = ref.watch(storiesCountProvider(currentUserPubkey)).valueOrNull;
 
     if (stories.isEmpty || storiesCount == null) {
       return const SizedBox();
@@ -54,9 +72,10 @@ class StoryProgressBarContainer extends ConsumerWidget {
               isPreviousStory: index < currentStoryIndex,
               onCompleted: isVideo
                   ? null
-                  : () => ref
-                      .read(storyViewingControllerProvider(pubkey).notifier)
-                      .advance(stories: stories, onClose: () => context.pop()),
+                  : () => singleUserStoriesNotifier.advance(
+                        storiesLength: stories.length,
+                        onSeenAll: () => userStoriesNotifier.advance(onClose: () => context.pop()),
+                      ),
               margin: index > 0 ? EdgeInsetsDirectional.only(start: 4.0.s) : null,
             ),
           );

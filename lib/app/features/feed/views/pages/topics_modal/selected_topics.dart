@@ -2,6 +2,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:ion/app/components/screen_offset/screen_side_offset.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/feed/data/models/feed_interests.f.dart';
 import 'package:ion/app/features/feed/data/models/feed_type.dart';
@@ -46,7 +47,9 @@ class SelectedTopics extends HookConsumerWidget {
         child: ListView.separated(
           scrollDirection: Axis.horizontal,
           itemCount: selected.length,
-          padding: EdgeInsetsDirectional.symmetric(horizontal: 16.s),
+          padding: EdgeInsetsDirectional.symmetric(
+            horizontal: ScreenSideOffset.defaultSmallMargin,
+          ),
           separatorBuilder: (_, __) => SizedBox(width: 8.s),
           itemBuilder: (context, index) {
             final subcategoryKey = selected.elementAt(index);

@@ -10,11 +10,13 @@ class StoryViewerContent extends StatelessWidget {
   const StoryViewerContent({
     required this.post,
     required this.viewerPubkey,
+    required this.onNext,
     super.key,
   });
 
   final ModifiablePostEntity post;
   final String viewerPubkey;
+  final VoidCallback onNext;
 
   @override
   Widget build(BuildContext context) {
@@ -33,6 +35,7 @@ class StoryViewerContent extends StatelessWidget {
           authorPubkey: post.masterPubkey,
           storyId: post.id,
           viewerPubkey: viewerPubkey,
+          onVideoCompleted: onNext,
         ),
       _ => const CenteredLoadingIndicator(),
     };

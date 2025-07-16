@@ -12,19 +12,19 @@ part 'story_viewing_provider.r.g.dart';
 
 /// A controller for managing story viewing state and navigation in a story viewer interface.
 ///
-/// This controller maintains the state of currently viewed stories and provides methods
-/// to navigate between stories and users.
+/// This controller maintains the state of currently viewed user stories and provides methods
+/// to navigate between users and their stories.
 @riverpod
-class StoryViewingController extends _$StoryViewingController {
+class UserStoriesViewingNotifier extends _$UserStoriesViewingNotifier {
   @override
-  StoryViewerState build(String pubkey, {bool showOnlySelectedUser = false}) {
-    final stories =
-        ref.watch(feedStoriesByPubkeyProvider(pubkey, showOnlySelectedUser: showOnlySelectedUser));
+  UserStoriesViewerState build(String initialPubkey, {bool showOnlySelectedUser = false}) {
+    final stories = ref.watch(
+      feedStoriesByPubkeyProvider(initialPubkey, showOnlySelectedUser: showOnlySelectedUser),
+    );
 
-    return StoryViewerState(
+    return UserStoriesViewerState(
       userStories: stories,
       currentUserIndex: 0,
-      currentStoryIndex: 0,
     );
   }
 
@@ -40,36 +40,24 @@ class StoryViewingController extends _$StoryViewingController {
     state = state.copyWith(
       userStories: [
         UserStory(
-          pubkey: pubkey,
+          pubkey: initialPubkey,
           story: storyEntity as ModifiablePostEntity,
         ),
       ],
       currentUserIndex: 0,
-      currentStoryIndex: 0,
     );
   }
 
-  void _moveToNextStory() => state = state.copyWith(currentStoryIndex: state.currentStoryIndex + 1);
-
-  void _moveToPreviousStory() =>
-      state = state.copyWith(currentStoryIndex: state.currentStoryIndex - 1);
-
   void _moveToNextUser() => state = state.copyWith(
         currentUserIndex: state.currentUserIndex + 1,
-        currentStoryIndex: 0,
       );
 
   void _moveToPreviousUser() => state = state.copyWith(
         currentUserIndex: state.currentUserIndex - 1,
-        currentStoryIndex: 0,
       );
 
-  /// story → nextStory → nextUser → close
-  bool advance({required List<ModifiablePostEntity> stories, VoidCallback? onClose}) {
-    if (state.currentStoryIndex < stories.length - 1) {
-      _moveToNextStory();
-      return true;
-    }
+  /// user -> nextUser -> close
+  bool advance({VoidCallback? onClose}) {
     if (state.hasNextUser) {
       _moveToNextUser();
       return true;
@@ -78,12 +66,8 @@ class StoryViewingController extends _$StoryViewingController {
     return false;
   }
 
-  /// story ← prevStory ← prevUser ← close
+  /// user ← prevUser ← close
   bool rewind({VoidCallback? onClose}) {
-    if (state.hasPreviousStory) {
-      _moveToPreviousStory();
-      return true;
-    }
     if (state.hasPreviousUser) {
       _moveToPreviousUser();
       return true;
@@ -92,16 +76,50 @@ class StoryViewingController extends _$StoryViewingController {
     return false;
   }
 
-  void moveToUser(int userIndex) {
-    // Do nothing if this is the same author
-    if (userIndex == state.currentUserIndex) return;
+  void moveTo(int index) {
+    if (index == -1) return;
 
-    if (userIndex >= 0 && userIndex < state.userStories.length) {
-      state = state.copyWith(
-        currentUserIndex: userIndex,
+    state = state.copyWith(
+      currentUserIndex: index,
+    );
+  }
+}
+
+/// A controller for managing single user stories viewing state and navigation in a story page view.
+///
+/// This controller maintains the state of currently viewed single user stories and provides methods
+/// to navigate between stories.
+@riverpod
+class SingleUserStoryViewingController extends _$SingleUserStoryViewingController {
+  @override
+  SingleUserStoriesViewerState build(String pubkey) => SingleUserStoriesViewerState(
+        pubkey: pubkey,
         currentStoryIndex: 0,
       );
+
+  void _moveToNextStory() => state = state.copyWith(currentStoryIndex: state.currentStoryIndex + 1);
+
+  void _moveToPreviousStory() =>
+      state = state.copyWith(currentStoryIndex: state.currentStoryIndex - 1);
+
+  /// story → nextStory → close
+  bool advance({required int storiesLength, VoidCallback? onSeenAll}) {
+    if (state.currentStoryIndex < storiesLength - 1) {
+      _moveToNextStory();
+      return true;
     }
+    onSeenAll?.call();
+    return false;
+  }
+
+  /// story ← prevStory ← close
+  bool rewind({VoidCallback? onRewoundAll}) {
+    if (state.hasPreviousStory) {
+      _moveToPreviousStory();
+      return true;
+    }
+    onRewoundAll?.call();
+    return false;
   }
 
   void moveToStoryIndex(int index) {
