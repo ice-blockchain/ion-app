@@ -171,8 +171,10 @@ class PeriodicTransfersSyncService {
     }
 
     final beforeDetails = pendingTransactionsBefore
-        .map((tx) =>
-            '${tx.type.value}: txHash (${tx.txHash}) status (${tx.status}) in ${tx.network.id}')
+        .map(
+          (tx) =>
+              '${tx.type.value}: txHash (${tx.txHash}) status (${tx.status}) in ${tx.network.id}',
+        )
         .join('; ');
     final syncMessage =
         'Syncing $totalTransactionsBefore pending transactions for wallet $walletAddress. Details: \n[$beforeDetails]';
