@@ -24,6 +24,7 @@ class BadgesUserListItem extends ConsumerWidget {
     this.iceBadge = false,
     this.isSelected = false,
     this.avatarSize,
+    this.isOwnershipIgnored = false,
     super.key,
   });
 
@@ -42,6 +43,7 @@ class BadgesUserListItem extends ConsumerWidget {
   final VoidCallback? onTap;
   final bool iceBadge;
   final bool isSelected;
+  final bool isOwnershipIgnored;
   final double? avatarSize;
 
   @override
@@ -53,7 +55,7 @@ class BadgesUserListItem extends ConsumerWidget {
     return ListItem.user(
       pubkey: pubkey,
       title: title,
-      subtitle: isNicknameProven
+      subtitle: isNicknameProven || isOwnershipIgnored
           ? subtitle
           : Row(
               mainAxisSize: MainAxisSize.min,
