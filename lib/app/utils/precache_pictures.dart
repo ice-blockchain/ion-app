@@ -19,9 +19,9 @@ Future<void> _precachePicture(String url) async {
 
     await svg.cache.putIfAbsent(loader.cacheKey(null), () => loader.loadBytes(null));
   } else {
-    final contains = DefaultCacheManager().store.memoryCacheContainsKey(url);
-    if (!contains) {
-      await DefaultCacheManager().downloadFile(url, key: url);
-    }
+    // For other image types, let the cache manager handle everything.
+    // .getSingleFile() will download the file if not cached, then return it.
+    // We don't need the file itself, just the action of caching.
+    await DefaultCacheManager().getSingleFile(url);
   }
 }
