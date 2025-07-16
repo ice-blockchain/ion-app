@@ -98,8 +98,8 @@ final class DeepLinkService {
 
   static const _baseUrl = 'https://ion.onelink.me';
 
-  //Defined on AppsFlyer portal for each template
-  //Use in case if generateInviteLink fails
+  // Defined on AppsFlyer portal for each template.
+  // Used in case if generateInviteLink fails.
   String get _fallbackUrl => '$_baseUrl/$_templateId/feed';
 
   static const Duration _linkGenerationTimeout = Duration(seconds: 10);
@@ -125,7 +125,7 @@ final class DeepLinkService {
       registerOnDeepLinkingCallback: true,
     );
 
-    //For some reason AppsFlyer on Android and iOS returns different results...
+    // For some reason AppsFlyer on Android and iOS returns different results...
 
     if (Platform.isAndroid && result is String) {
       _isInitialized = result == 'success';
