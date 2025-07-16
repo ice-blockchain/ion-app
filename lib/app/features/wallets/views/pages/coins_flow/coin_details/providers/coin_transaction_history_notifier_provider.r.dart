@@ -103,7 +103,8 @@ class CoinTransactionHistoryNotifier extends _$CoinTransactionHistoryNotifier {
     final currentState = state.value;
     if (currentState == null) return;
 
-    final validTransactions = transactions.where((tx) => _isValidTransaction(tx, allowDuplicates: true)).toList();
+    final validTransactions =
+        transactions.where((tx) => _isValidTransaction(tx, allowDuplicates: true)).toList();
 
     var hasUpdates = false;
     final updatedHistory = List<CoinTransactionData>.from(_history);
