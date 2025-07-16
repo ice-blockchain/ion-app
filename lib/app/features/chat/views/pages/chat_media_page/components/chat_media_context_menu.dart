@@ -110,10 +110,7 @@ class ChatMediaContextMenu extends HookConsumerWidget {
                     labelColor: context.theme.appColors.attentionRed,
                     icon: Assets.svg.iconBlockDelete
                         .icon(size: iconSize, color: context.theme.appColors.attentionRed),
-                    onPressed: () async {
-                      unawaited(onDelete());
-                      context.pop();
-                    },
+                    onPressed: onDelete,
                   ),
                 ],
               ),
