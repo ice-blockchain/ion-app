@@ -278,7 +278,7 @@ class FakeFollowingFeedSeenEventsRepository implements FollowingFeedSeenEventsRe
     required FeedType feedType,
     required int limit,
     List<EventReference>? excludeReferences,
-    List<String>? excludePubkeys,
+    List<String>? pubkeys,
     int? since,
     int? until,
     FeedModifier? feedModifier,
