@@ -37,6 +37,13 @@ class RichTextInput extends HookConsumerWidget {
     final hasFocus = useNodeFocused(focusNode);
 
     final fieldKey = useMemoized(GlobalKey<FormFieldState<String>>.new);
+    final fieldInitialValue = useMemoized(
+      () {
+        final doc = textEditorController.document;
+        return doc.toPlainText();
+      },
+      [],
+    );
     useEffect(
       () {
         void listener() {
@@ -58,7 +65,7 @@ class RichTextInput extends HookConsumerWidget {
 
     return FormField<String>(
       key: fieldKey,
-      initialValue: initialValue ?? '',
+      initialValue: fieldInitialValue,
       validator: validator,
       autovalidateMode: AutovalidateMode.onUserInteraction,
       builder: (FormFieldState<String> state) {
