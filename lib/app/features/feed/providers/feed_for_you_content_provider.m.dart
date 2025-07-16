@@ -94,7 +94,7 @@ class FeedForYouContent extends _$FeedForYouContent implements PagedNotifier {
     Logger.info('$_logTag Requesting [$limit] interested events');
 
     final retryCounter = await _buildRetryCounter();
-    final modifiersDistribution = _getFeedModifiersDistribution(limit: limit);
+    final modifiersDistribution = await _getFeedModifiersDistribution(limit: limit);
 
     for (final MapEntry(key: modifier, value: modifierLimit) in modifiersDistribution.entries) {
       if (modifierLimit > 0) {
@@ -125,26 +125,27 @@ class FeedForYouContent extends _$FeedForYouContent implements PagedNotifier {
     };
   }
 
-  Map<FeedModifier, int> _getFeedModifiersDistribution({required int limit}) {
-    // TODO[modifiers]: define ExploreModifierType depending on the feed config and for Articles depending on the selected topics
+  Future<Map<FeedModifier, int>> _getFeedModifiersDistribution({required int limit}) async {
+    final exploreModifier = await _getFeedExploreModifier();
+
     final modifierWeights =
         // If the "global" feed modifier is "trending", distribute to the
         // trending and explore modifiers equally (explore also has the "trending" search ext).
         feedModifier is FeedModifierTrending
             ? {
-                FeedModifier.explore(ExploreModifierType.unclassified): 1,
+                exploreModifier: 1,
                 FeedModifier.trending(): 1,
               }
             : switch (feedType) {
                 // Regular feeds has equal distribution of all modifiers.
                 FeedType.post || FeedType.video || FeedType.article => {
-                    FeedModifier.explore(ExploreModifierType.unclassified): 1,
+                    exploreModifier: 1,
                     FeedModifier.top(): 1,
                     FeedModifier.trending(): 1,
                   },
                 // Stories feed has only explore and trending modifiers.
                 FeedType.story => {
-                    FeedModifier.explore(ExploreModifierType.unclassified): 1,
+                    exploreModifier: 1,
                     FeedModifier.trending(): 1,
                   },
               };
@@ -153,6 +154,20 @@ class FeedForYouContent extends _$FeedForYouContent implements PagedNotifier {
       for (final entry in modifierWeights.entries)
         entry.key: (limit * entry.value / totalWeight).ceil(),
     };
+  }
+
+  Future<FeedModifier> _getFeedExploreModifier() async {
+    if (feedType == FeedType.article &&
+        ref.read(feedSelectedArticleCategoriesProvider).isNotEmpty) {
+      return FeedModifier.explore(ExploreModifierType.interests);
+    }
+
+    final feedConfig = await ref.read(feedConfigProvider.future);
+    if (feedConfig.excludeUnclassifiedFromExplore) {
+      return FeedModifier.explore(ExploreModifierType.any);
+    }
+
+    return FeedModifier.explore(ExploreModifierType.withAnyTopic);
   }
 
   @override
@@ -490,37 +505,39 @@ class FeedForYouContent extends _$FeedForYouContent implements PagedNotifier {
       throw const CurrentUserNotFoundException();
     }
 
-    final feedModifierFilter = feedModifier?.filter();
+    final distributionFilter = modifier.filter(interest: interest);
+    final globalFilter = feedModifier?.filter(interest: interest);
 
-    // Global [feedModifier] has priority over the local [modifier].
-    // This is for the "Trending Videos" case, where we have to apply the
-    // "trending" modifier even to the "explore" [modifier].
-    final modifiersSearch = (feedModifier?.filter() ?? modifier.filter()).search;
+    // Global [feedModifier] has priority over the local/distribution [modifier] for the search.
+    // This is for the "Trending Videos" case, where we have to apply the global
+    // "trending" modifier even to the distribution "explore" modifier.
+    final modifierSearch = (globalFilter ?? distributionFilter).search;
+    final modifierTags = distributionFilter.tags;
 
     return switch (feedType) {
       FeedType.post => buildPostsDataSource(
           actionSource: ActionSource.relayUrl(relayUrl),
           currentPubkey: currentPubkey,
-          searchExtensions: modifiersSearch,
-          tags: feedModifierFilter?.tags,
+          searchExtensions: modifierSearch,
+          tags: modifierTags,
         ),
       FeedType.article => buildArticlesDataSource(
           actionSource: ActionSource.relayUrl(relayUrl),
           currentPubkey: currentPubkey,
-          searchExtensions: modifiersSearch,
-          tags: feedModifierFilter?.tags,
+          searchExtensions: modifierSearch,
+          tags: modifierTags,
         ),
       FeedType.video => buildVideosDataSource(
           actionSource: ActionSource.relayUrl(relayUrl),
           currentPubkey: currentPubkey,
-          searchExtensions: modifiersSearch,
-          tags: feedModifierFilter?.tags,
+          searchExtensions: modifierSearch,
+          tags: modifierTags,
         ),
       FeedType.story => buildStoriesDataSource(
           actionSource: ActionSource.relayUrl(relayUrl),
           currentPubkey: currentPubkey,
-          searchExtensions: modifiersSearch,
-          tags: feedModifierFilter?.tags,
+          searchExtensions: modifierSearch,
+          tags: modifierTags,
         ),
     };
   }
@@ -532,16 +549,20 @@ class FeedForYouContent extends _$FeedForYouContent implements PagedNotifier {
   }
 
   /// Determines which interests should be used for the given modifier and feed type.
+  ///
+  /// For the "Explore" modifier, it returns the stub interest.
   Future<List<String>> _getInterestsForModifier(FeedModifier modifier) async {
-    if (modifier is FeedModifierExplore) {
-      return [_exploreInterest];
+    if (feedType == FeedType.article) {
+      // For articles, we use the selected article categories if they are set.
+      // Even for the explore modifier.
+      final selectedArticleCategories = ref.read(feedSelectedArticleCategoriesProvider);
+      if (selectedArticleCategories.isNotEmpty) {
+        return selectedArticleCategories.toList();
+      }
     }
 
-    if (feedType == FeedType.article) {
-      final selectedArticleCategories = ref.read(feedSelectedArticleCategoriesProvider);
-      return selectedArticleCategories.isEmpty
-          ? [_exploreInterest]
-          : selectedArticleCategories.toList();
+    if (modifier is FeedModifierExplore) {
+      return [_explorePaginationInterest];
     }
 
     final userInterests = await ref.read(feedUserInterestsProvider(feedType).future);
@@ -550,7 +571,7 @@ class FeedForYouContent extends _$FeedForYouContent implements PagedNotifier {
 
   String get _logTag => '[FEED FOR_YOU ${feedType.name}]';
 
-  static final String _exploreInterest = '_${FeedModifier.explore}';
+  static const String _explorePaginationInterest = '_explore';
 }
 
 @Freezed(equal: false)

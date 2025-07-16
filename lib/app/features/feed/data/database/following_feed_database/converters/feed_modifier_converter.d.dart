@@ -14,9 +14,9 @@ class FeedModifierConverter extends TypeConverter<FeedModifier?, int> {
       -1 => null,
       0 => FeedModifier.top(),
       1 => FeedModifier.trending(),
-      2 => FeedModifier.explore(
-          ExploreModifierType.unclassified, //TODO[modifiers]: what should we save here?
-        ),
+      2 => FeedModifier.explore(ExploreModifierType.withAnyTopic),
+      3 => FeedModifier.explore(ExploreModifierType.interests),
+      4 => FeedModifier.explore(ExploreModifierType.any),
       _ => throw UnsupportedError('Unknown FeedModifier value: $fromDb'),
     };
   }
@@ -26,7 +26,11 @@ class FeedModifierConverter extends TypeConverter<FeedModifier?, int> {
     return switch (value) {
       FeedModifierTop() => 0,
       FeedModifierTrending() => 1,
-      FeedModifierExplore() => 2,
+      final FeedModifierExplore explore => switch (explore.type) {
+          ExploreModifierType.withAnyTopic => 2,
+          ExploreModifierType.interests => 3,
+          ExploreModifierType.any => 4,
+        },
       null => -1
     };
   }

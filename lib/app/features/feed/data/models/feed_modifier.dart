@@ -56,16 +56,24 @@ class FeedModifierExplore extends FeedModifier {
     return (
       search: [],
       tags: switch (type) {
-        ExploreModifierType.unclassified => {
+        /// Fetch events with any topic specified.
+        ///
+        /// When a content is created and user does not select any topics,
+        /// we add the `unclassified` tag.
+        ExploreModifierType.withAnyTopic => {
             '!#${RelatedHashtag.tagName}': [FeedInterests.unclassified],
           },
+
+        /// Fetch events for the provided tag.
         ExploreModifierType.interests => {
             if (interest != null) '#${RelatedHashtag.tagName}': [interest],
           },
-        ExploreModifierType.plain => {},
+
+        /// Fetch all events, with or without tags.
+        ExploreModifierType.any => {},
       }
     );
   }
 }
 
-enum ExploreModifierType { unclassified, interests, plain }
+enum ExploreModifierType { withAnyTopic, interests, any }
