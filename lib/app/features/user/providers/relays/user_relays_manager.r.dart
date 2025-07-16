@@ -177,7 +177,9 @@ class UserRelaysManager extends _$UserRelaysManager {
         .nonNulls
         .toList();
 
-    // Relay list is invalid if all relays are read-only
+    // Relay list is invalid if all relays are read-only.
+    // That might be a case if user has outdated relay list
+    // published to the ion-connect or in the local DB.
     return reachableRelays
         .where((relayEntity) => relayEntity.data.list.any((relay) => relay.write))
         .toList();
@@ -202,7 +204,7 @@ class UserRelaysManager extends _$UserRelaysManager {
   }
 }
 
-@Riverpod(keepAlive: true)
+@riverpod
 Future<UserRelaysEntity?> currentUserRelays(Ref ref) async {
   final identityConnectRelays = await ref.watch(currentUserIdentityConnectRelaysProvider.future);
   if (identityConnectRelays == null) {
