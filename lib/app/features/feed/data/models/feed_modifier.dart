@@ -77,7 +77,7 @@ class FeedModifierExplore extends FeedModifier {
         /// When a content is created and user does not select any topics,
         /// we add the `unclassified` tag.
         ExploreModifierType.withAnyTopic => {
-            '!#${RelatedHashtag.tagName}': [FeedInterests.unclassified],
+            '#!${RelatedHashtag.tagName}': [FeedInterests.unclassified],
           },
 
         /// Fetch events for the provided tag.
