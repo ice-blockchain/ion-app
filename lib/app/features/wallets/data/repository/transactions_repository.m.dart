@@ -84,9 +84,8 @@ class TransactionsRepository {
 
   Future<DateTime?> getLastCreatedAt() => _transactionsDao.lastCreatedAt();
 
-  Future<DateTime?> firstCreatedAt({DateTime? after}) async {
-    return _transactionsDao.getFirstCreatedAt(after: after);
-  }
+  Future<DateTime?> firstCreatedAt({DateTime? after}) =>
+      _transactionsDao.getFirstCreatedAt(after: after);
 
   Future<void> saveTransactionDetails(TransactionDetails details) async {
     final mapped = _coinMapper.fromTransactionDetails(details);
@@ -211,8 +210,27 @@ class TransactionsRepository {
   Stream<List<TransactionData>> watchBroadcastedTransfers({
     List<String>? coinIds,
     String? walletAddress,
-  }) =>
-      _transactionsDao.watchBroadcastedTransfers(coinIds: coinIds, walletAddress: walletAddress);
+  }) {
+    return _transactionsDao.watchTransactions(
+      coinIds: coinIds ?? [],
+      walletAddresses: walletAddress != null ? [walletAddress] : [],
+      statuses: [
+        TransactionStatus.broadcasted,
+        TransactionStatus.pending,
+        TransactionStatus.executing,
+      ],
+    ).map(
+      (transactions) => transactions.where((tx) {
+        final isValidCoinIds = coinIds == null || coinIds.isEmpty;
+        final isValidCryptoAsset = tx.cryptoAsset.maybeMap(
+          coin: (coin) => true,
+          orElse: () => false,
+        );
+
+        return tx.type.isSend && tx.id != null && (isValidCoinIds || isValidCryptoAsset);
+      }).toList(),
+    );
+  }
 
   Stream<Map<CoinData, List<TransactionData>>> watchBroadcastedTransfersByCoins(
     List<String> coinIds,
@@ -229,38 +247,70 @@ class TransactionsRepository {
     });
   }
 
-  Future<List<TransactionData>> getBroadcastedTransfers({String? walletAddress}) =>
-      _transactionsDao.getBroadcastedTransfers(walletAddress: walletAddress);
+  Future<List<TransactionData>> getBroadcastedTransfers({String? walletAddress}) async {
+    final transactions = await _transactionsDao.getTransactions(
+      walletAddresses: walletAddress != null ? [walletAddress] : [],
+      statuses: [
+        TransactionStatus.broadcasted,
+        TransactionStatus.pending,
+        TransactionStatus.executing,
+      ],
+    );
+    return transactions.where((tx) => tx.type == TransactionType.send && tx.id != null).toList();
+  }
 
   Future<void> remove({
     Iterable<String> txHashes = const [],
     Iterable<String> walletViewIds = const [],
-  }) {
-    return _transactionsDao.remove(
-      txHashes: txHashes,
-      walletViewIds: walletViewIds,
-    );
-  }
+  }) =>
+      _transactionsDao.remove(
+        txHashes: txHashes,
+        walletViewIds: walletViewIds,
+      );
+
+  Stream<List<TransactionData>> watchTransactions({
+    List<String> coinIds = const [],
+    List<String> txHashes = const [],
+    List<String> walletAddresses = const [],
+    List<String> walletViewIds = const [],
+    List<TransactionStatus> statuses = const [],
+    int limit = 20,
+    int offset = 0,
+    NetworkData? network,
+    DateTime? since,
+  }) =>
+      _transactionsDao.watchTransactions(
+        walletAddresses: walletAddresses,
+        txHashes: txHashes,
+        limit: limit,
+        offset: offset,
+        coinIds: coinIds,
+        networkId: network?.id,
+        walletViewIds: walletViewIds,
+        statuses: statuses,
+        since: since,
+      );
 
   Future<List<TransactionData>> getTransactions({
     List<String> coinIds = const [],
     List<String> txHashes = const [],
     List<String> walletAddresses = const [],
     List<String> walletViewIds = const [],
+    List<TransactionStatus> statuses = const [],
     int limit = 20,
     int offset = 0,
     NetworkData? network,
-  }) {
-    return _transactionsDao.getTransactions(
-      walletAddresses: walletAddresses,
-      txHashes: txHashes,
-      limit: limit,
-      offset: offset,
-      coinIds: coinIds,
-      networkId: network?.id,
-      walletViewIds: walletViewIds,
-    );
-  }
+  }) =>
+      _transactionsDao.getTransactions(
+        walletAddresses: walletAddresses,
+        txHashes: txHashes,
+        limit: limit,
+        offset: offset,
+        coinIds: coinIds,
+        networkId: network?.id,
+        walletViewIds: walletViewIds,
+        statuses: statuses,
+      );
 
   Future<WalletTransferRequests> loadTransfers(
     String walletId, {
@@ -379,9 +429,8 @@ class TransactionsRepository {
     return (transactions: transactions.nonNulls.toList(), nextPageToken: result.nextPageToken);
   }
 
-  Stream<TransactionData?> watchTransactionByEventId(String eventId) {
-    return _transactionsDao.watchTransactionByEventId(eventId);
-  }
+  Stream<TransactionData?> watchTransactionByEventId(String eventId) =>
+      _transactionsDao.watchTransactionByEventId(eventId);
 
   String? _resolveTransactionAddress({
     required String? direct,

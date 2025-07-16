@@ -4,6 +4,7 @@ import 'dart:async';
 
 import 'package:collection/collection.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:ion/app/exceptions/exceptions.dart';
 import 'package:ion/app/features/core/providers/wallets_provider.r.dart';
 import 'package:ion/app/features/wallets/data/repository/crypto_wallets_repository.r.dart';
 import 'package:ion/app/features/wallets/data/repository/networks_repository.r.dart';
@@ -12,6 +13,7 @@ import 'package:ion/app/features/wallets/domain/transactions/transaction_loader.
 import 'package:ion/app/features/wallets/domain/transactions/transfer_status_updater.r.dart';
 import 'package:ion/app/features/wallets/domain/wallet_views/wallet_views_service.r.dart';
 import 'package:ion/app/features/wallets/model/network_data.f.dart';
+import 'package:ion/app/features/wallets/model/transaction_status.f.dart';
 import 'package:ion/app/features/wallets/model/wallet_view_data.f.dart';
 import 'package:ion/app/services/logger/logger.dart';
 import 'package:ion_identity_client/ion_identity.dart';
@@ -86,20 +88,28 @@ class SyncTransactionsService {
     Logger.info('Completed syncing wallets with broadcasted transfers');
   }
 
-  Future<void> syncBroadcastedTransfersForWallet(String walletAddress) async {
+  Future<void> syncBroadcastedTransactionsForWallet(String walletAddress) async {
     final wallet = _userWallets.firstWhereOrNull((w) => w.address == walletAddress);
 
     if (wallet == null) {
       Logger.error('Wallet with address $walletAddress not found');
-      return;
+      throw WalletNotFoundException(walletAddress: walletAddress);
     }
 
     final broadcastedTransfers = await _transactionsRepository.getBroadcastedTransfers(
       walletAddress: walletAddress,
     );
+    final broadcastedIncomingTransactions = await _transactionsRepository.getTransactions(
+      statuses: [
+        TransactionStatus.pending,
+        TransactionStatus.executing,
+        TransactionStatus.broadcasted,
+      ],
+      walletAddresses: [walletAddress],
+    );
 
-    if (broadcastedTransfers.isEmpty) {
-      Logger.info('No broadcasted transfers found for wallet $walletAddress, skipping sync');
+    if (broadcastedTransfers.isEmpty && broadcastedIncomingTransactions.isEmpty) {
+      Logger.info('No broadcasted transactions found for wallet $walletAddress, skipping sync');
       return;
     }
 
@@ -109,7 +119,9 @@ class SyncTransactionsService {
       updateHistoryLoaded: false,
     );
 
-    Logger.info('Completed syncing wallet $walletAddress with broadcasted transfers');
+    Logger.info(
+      'Completed syncing wallet $walletAddress with broadcasted transactions (${broadcastedTransfers.length} outgoing, ${broadcastedIncomingTransactions.length} incoming)',
+    );
   }
 
   Future<List<Wallet>> _getWalletsWithBroadcastedTransfers() async {
