@@ -197,7 +197,7 @@ class FeedFollowingContent extends _$FeedFollowingContent implements PagedNotifi
       for (final followee in followList.data.list) followee.pubkey,
     ];
 
-    return dataSourcePubkeys.nonNulls.toList();
+    return dataSourcePubkeys.toList();
   }
 
   Future<void> _refreshUnseenPagination() async {
@@ -217,6 +217,7 @@ class FeedFollowingContent extends _$FeedFollowingContent implements PagedNotifi
   /// In case of stories, it fetches only one event per author.
   Future<List<EventReference>> _getNextSeenReferences({required int limit}) async {
     final seenEventsRepository = ref.read(followingFeedSeenEventsRepositoryProvider);
+    final dataSourcePubkeys = await _getDataSourcePubkeys();
 
     final stateEntityReferences = <EventReference>[];
     final stateEntityPubkeys = <String>{};
@@ -227,12 +228,15 @@ class FeedFollowingContent extends _$FeedFollowingContent implements PagedNotifi
     }
 
     final uniqAuthors = feedType == FeedType.story;
+    final pubkeys = uniqAuthors
+        ? dataSourcePubkeys.where((pubkey) => !stateEntityPubkeys.contains(pubkey)).toList()
+        : dataSourcePubkeys;
 
     final seenEvents = await seenEventsRepository.getEventReferences(
       feedType: feedType,
       feedModifier: feedModifier,
-      excludeReferences: uniqAuthors ? [] : stateEntityReferences,
-      excludePubkeys: uniqAuthors ? stateEntityPubkeys.toList() : [],
+      excludeReferences: stateEntityReferences,
+      pubkeys: pubkeys,
       limit: limit,
       until: state.seenPagination.lastEvent?.createdAt,
       groupByPubkey: uniqAuthors,
