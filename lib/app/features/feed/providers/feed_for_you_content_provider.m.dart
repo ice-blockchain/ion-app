@@ -243,8 +243,6 @@ class FeedForYouContent extends _$FeedForYouContent implements PagedNotifier {
   }) async* {
     if (retryCounter.isReached) return;
 
-    Logger.info('$_logTag Requesting [$limit] events with [${modifier.name}] modifier');
-
     await _refreshModifierPagination(modifier: modifier);
 
     final nextPageRelays =
@@ -257,6 +255,8 @@ class FeedForYouContent extends _$FeedForYouContent implements PagedNotifier {
     );
 
     if (nextPageRelays.isEmpty) return;
+
+    Logger.info('$_logTag Requesting [$limit] events with [${modifier.name}] modifier');
 
     var requestedCount = 0;
     await for (final entity in _requestEntitiesFromRelays(
