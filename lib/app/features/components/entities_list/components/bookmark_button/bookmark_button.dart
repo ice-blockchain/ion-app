@@ -17,12 +17,14 @@ class BookmarkButton extends HookConsumerWidget {
     required this.eventReference,
     this.size,
     this.color,
+    this.padding,
     super.key,
   });
 
   final EventReference eventReference;
   final double? size;
   final Color? color;
+  final EdgeInsetsGeometry? padding;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -73,8 +75,7 @@ class BookmarkButton extends HookConsumerWidget {
             },
       behavior: HitTestBehavior.opaque,
       child: Padding(
-        padding: EdgeInsetsDirectional.symmetric(horizontal: 8.0.s) +
-            EdgeInsetsDirectional.only(bottom: 1.0.s),
+        padding: padding ?? EdgeInsets.zero,
         child: Center(
           child: TextActionButton(
             icon: isBookmarked

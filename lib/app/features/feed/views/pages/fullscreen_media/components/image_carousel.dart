@@ -74,14 +74,9 @@ class ImageCarousel extends HookConsumerWidget {
                           top: false,
                           child: ColoredBox(
                             color: Colors.transparent,
-                            child: Padding(
-                              padding: EdgeInsets.symmetric(horizontal: horizontalPadding),
-                              child: CounterItemsFooter(
-                                eventReference: eventReference,
-                                color: onPrimaryAccentColor,
-                                bottomPadding: 0,
-                                topPadding: 0,
-                              ),
+                            child: CounterItemsFooter(
+                              eventReference: eventReference,
+                              color: onPrimaryAccentColor,
                             ),
                           ),
                         )

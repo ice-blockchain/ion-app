@@ -22,11 +22,13 @@ class RepliesCounterButton extends HookConsumerWidget {
   const RepliesCounterButton({
     required this.eventReference,
     this.color,
+    this.padding,
     super.key,
   });
 
   final EventReference eventReference;
   final Color? color;
+  final EdgeInsetsGeometry? padding;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -49,6 +51,7 @@ class RepliesCounterButton extends HookConsumerWidget {
             },
       child: Container(
         constraints: BoxConstraints(minWidth: 50.0.s),
+        padding: padding,
         alignment: AlignmentDirectional.centerStart,
         child: TextActionButton(
           icon: Assets.svg.iconBlockComment.icon(

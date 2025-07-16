@@ -116,9 +116,7 @@ class ArticleDetailsPage extends HookConsumerWidget {
                         ),
                       ),
                     ],
-                    ScreenSideOffset.small(
-                      child: CounterItemsFooter(eventReference: eventReference),
-                    ),
+                    CounterItemsFooter(eventReference: eventReference),
                     const SectionSeparator(),
                     SizedBox(height: 20.0.s),
                     ScreenSideOffset.small(

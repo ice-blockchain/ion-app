@@ -16,11 +16,13 @@ class RepostsCounterButton extends ConsumerWidget {
   const RepostsCounterButton({
     required this.eventReference,
     this.color,
+    this.padding,
     super.key,
   });
 
   final EventReference eventReference;
   final Color? color;
+  final EdgeInsetsGeometry? padding;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -35,6 +37,7 @@ class RepostsCounterButton extends ConsumerWidget {
       },
       child: Container(
         constraints: BoxConstraints(minWidth: 50.0.s),
+        padding: padding,
         alignment: Alignment.center,
         child: TextActionButton(
           icon: Assets.svg.iconBlockRepost.icon(

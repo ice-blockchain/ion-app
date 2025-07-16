@@ -56,7 +56,6 @@ class RepostListItem extends ConsumerWidget {
             padding: EdgeInsetsDirectional.only(start: 16.0.s),
             child: RepostAuthorHeader(pubkey: repostEntity.masterPubkey),
           ),
-          SizedBox(height: 6.0.s),
           switch (repostEntity) {
             RepostEntity() => Post(
                 eventReference: repostEntity.data.eventReference,

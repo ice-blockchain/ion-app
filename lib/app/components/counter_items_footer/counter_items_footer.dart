@@ -6,69 +6,75 @@ import 'package:ion/app/components/counter_items_footer/likes_counter_button.dar
 import 'package:ion/app/components/counter_items_footer/replies_counter_button.dart';
 import 'package:ion/app/components/counter_items_footer/reposts_counter_button.dart';
 import 'package:ion/app/components/counter_items_footer/share_button.dart';
+import 'package:ion/app/components/screen_offset/screen_side_offset.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/components/entities_list/components/bookmark_button/bookmark_button.dart';
 import 'package:ion/app/features/ion_connect/model/event_reference.f.dart';
 
 class CounterItemsFooter extends HookConsumerWidget {
-  CounterItemsFooter({
+  const CounterItemsFooter({
     required this.eventReference,
-    double? bottomPadding,
-    double? topPadding,
+    this.itemPadding,
+    this.sidePadding,
     this.color,
     super.key,
-  })  : bottomPadding = bottomPadding ?? 12.0.s,
-        topPadding = topPadding ?? 10.0.s;
+  });
 
   final EventReference eventReference;
-  final double bottomPadding;
-  final double topPadding;
+  final EdgeInsetsDirectional? itemPadding;
+  final double? sidePadding;
   final Color? color;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    return Padding(
-      padding: EdgeInsetsDirectional.only(bottom: bottomPadding, top: topPadding),
-      child: SizedBox(
-        height: 28.0.s,
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Center(
-              child: RepliesCounterButton(
-                eventReference: eventReference,
-                color: color,
-              ),
+    final iconPadding = EdgeInsetsDirectional.symmetric(vertical: 6.0.s);
+    final sidePadding = this.sidePadding ?? ScreenSideOffset.defaultSmallMargin;
+    final itemPadding =
+        this.itemPadding ?? EdgeInsetsDirectional.only(top: 10.0.s, bottom: 12.0.s) + iconPadding;
+
+    return SizedBox(
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Center(
+            child: RepliesCounterButton(
+              eventReference: eventReference,
+              padding: itemPadding + EdgeInsetsDirectional.only(start: sidePadding),
+              color: color,
             ),
-            Center(
-              child: RepostsCounterButton(
-                eventReference: eventReference,
-                color: color,
-              ),
+          ),
+          Center(
+            child: RepostsCounterButton(
+              eventReference: eventReference,
+              padding: itemPadding,
+              color: color,
             ),
-            Center(
-              child: LikesCounterButton(
-                eventReference: eventReference,
-                color: color,
-              ),
+          ),
+          Center(
+            child: LikesCounterButton(
+              eventReference: eventReference,
+              padding: itemPadding,
+              color: color,
             ),
-            Center(
-              child: Row(
-                children: [
-                  BookmarkButton(
-                    eventReference: eventReference,
-                    size: 16.0.s,
-                    color: color ?? context.theme.appColors.onTertararyBackground,
-                  ),
-                  ShareButton(
-                    eventReference: eventReference,
-                    color: color,
-                  ),
-                ],
-              ),
+          ),
+          Center(
+            child: Row(
+              children: [
+                BookmarkButton(
+                  eventReference: eventReference,
+                  size: 16.0.s,
+                  padding: itemPadding + EdgeInsetsDirectional.only(end: 8.0.s, start: 16.0.s),
+                  color: color ?? context.theme.appColors.onTertararyBackground,
+                ),
+                ShareButton(
+                  eventReference: eventReference,
+                  padding: itemPadding + EdgeInsetsDirectional.only(end: sidePadding, start: 8.0.s),
+                  color: color,
+                ),
+              ],
             ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }

@@ -12,12 +12,14 @@ class ShareButton extends StatelessWidget {
   const ShareButton({
     required this.eventReference,
     this.color,
+    this.padding,
     super.key,
   });
 
   final EventReference eventReference;
   final Color? color;
-
+  final EdgeInsetsGeometry? padding;
+  
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
@@ -28,7 +30,7 @@ class ShareButton extends StatelessWidget {
       behavior: HitTestBehavior.opaque,
       child: Center(
         child: Padding(
-          padding: EdgeInsetsDirectional.only(start: 8.0.s),
+          padding: padding ?? EdgeInsets.zero,
           child: TextActionButton(
             icon: Assets.svg.iconBlockShare.icon(
               size: 16.0.s,
