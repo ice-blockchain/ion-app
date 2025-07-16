@@ -30,6 +30,7 @@ class Article extends ConsumerWidget {
     this.footer,
     this.isReplied = false,
     this.accentTheme = false,
+    this.addTrailingPadding = true,
     this.showActionButtons = true,
     this.timeFormat = TimestampFormat.short,
     super.key,
@@ -44,6 +45,7 @@ class Article extends ConsumerWidget {
     return Article(
       header: header,
       showActionButtons: false,
+      addTrailingPadding: false,
       accentTheme: accentTheme,
       eventReference: eventReference,
       footer: footer,
@@ -64,6 +66,7 @@ class Article extends ConsumerWidget {
     );
   }
 
+  final bool addTrailingPadding;
   final EventReference eventReference;
   final bool showActionButtons;
   final TimestampFormat timeFormat;
@@ -188,16 +191,17 @@ class Article extends ConsumerWidget {
                           ],
                         ),
                       ),
-                      SizedBox(width: ScreenSideOffset.defaultSmallMargin),
+                      if (addTrailingPadding) SizedBox(width: ScreenSideOffset.defaultSmallMargin),
                     ],
                   ),
                 ),
-                if (isReplied)
+                if (isReplied && showActionButtons)
                   footer ?? CounterItemsFooter(eventReference: eventReference, sidePadding: 0),
               ],
             ),
           ),
-          if (!isReplied) footer ?? CounterItemsFooter(eventReference: eventReference),
+          if (!isReplied && showActionButtons)
+            footer ?? CounterItemsFooter(eventReference: eventReference),
         ],
       ),
     );
