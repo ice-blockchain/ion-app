@@ -3,6 +3,7 @@
 import 'package:ion/app/features/feed/data/models/feed_interests.f.dart';
 import 'package:ion/app/features/ion_connect/model/related_hashtag.f.dart';
 import 'package:ion/app/features/ion_connect/model/search_extension.dart';
+import 'package:meta/meta.dart';
 
 typedef FeedFilterData = ({List<SearchExtension> search, Map<String, List<String>> tags});
 
@@ -18,6 +19,7 @@ sealed class FeedModifier {
   FeedFilterData filter({String? interest});
 }
 
+@immutable
 class FeedModifierTop extends FeedModifier {
   const FeedModifierTop() : super(name: 'top');
 
@@ -30,8 +32,15 @@ class FeedModifierTop extends FeedModifier {
       }
     );
   }
+
+  @override
+  bool operator ==(Object other) => identical(this, other) || other is FeedModifierTop;
+
+  @override
+  int get hashCode => name.hashCode;
 }
 
+@immutable
 class FeedModifierTrending extends FeedModifier {
   const FeedModifierTrending() : super(name: 'trending');
 
@@ -44,8 +53,15 @@ class FeedModifierTrending extends FeedModifier {
       }
     );
   }
+
+  @override
+  bool operator ==(Object other) => identical(this, other) || other is FeedModifierTrending;
+
+  @override
+  int get hashCode => name.hashCode;
 }
 
+@immutable
 class FeedModifierExplore extends FeedModifier {
   FeedModifierExplore(this.type) : super(name: 'explore-${type.name}');
 
@@ -74,6 +90,13 @@ class FeedModifierExplore extends FeedModifier {
       }
     );
   }
+
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) || other is FeedModifierExplore && type == other.type;
+
+  @override
+  int get hashCode => type.hashCode;
 }
 
 enum ExploreModifierType { withAnyTopic, interests, any }
