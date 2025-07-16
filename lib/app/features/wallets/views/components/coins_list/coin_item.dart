@@ -29,14 +29,13 @@ class CoinsGroupItem extends HookConsumerWidget {
     final isBalanceVisible = ref.watch(isBalanceVisibleSelectorProvider);
 
     final icons = ref.watch(
-      networkSelectorNotifierProvider(symbolGroup: coinsGroup.symbolGroup)
-          .select((value) => value?.items.map((item) => item.image)),
+      networkSelectorNotifierProvider(symbolGroup: coinsGroup.symbolGroup).select((value) => value),
     );
 
     useEffect(
       () {
         if (icons != null) {
-          precachePictures(icons);
+          precachePictures(icons.items.map((item) => item.image));
         }
 
         return null;

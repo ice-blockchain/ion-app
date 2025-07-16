@@ -8,8 +8,8 @@ import 'package:ion/app/utils/image_path.dart';
 Future<void> precachePictures(Iterable<String> urls) async {
   try {
     await Future.wait(urls.map(_precachePicture));
-  } catch (e) {
-    Logger.error(e, stackTrace: StackTrace.current, message: 'Failed to precache pictures: $urls');
+  } catch (e, stackTrace) {
+    Logger.error(e, stackTrace: stackTrace, message: 'Failed to precache pictures: $urls');
   }
 }
 
