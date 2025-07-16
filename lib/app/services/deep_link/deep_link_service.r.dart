@@ -98,8 +98,6 @@ final class DeepLinkService {
 
   static const _baseUrl = 'https://ion.onelink.me';
 
-  static final urlRegex = RegExp(r'@?(https://ion\.onelink\.me/[A-Za-z0-9\-_/\?&%=#]*)');
-
   //Defined on AppsFlyer portal for each template
   //Use in case if generateInviteLink fails
   String get _fallbackUrl => '$_baseUrl/$_templateId/feed';

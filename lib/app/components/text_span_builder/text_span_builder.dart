@@ -97,7 +97,7 @@ class TextSpanBuilder {
     required TextMatch match,
   }) {
     if (match.matcher is UrlMatcher) {
-      if (DeepLinkService.urlRegex.hasMatch(match.text)) {
+      if (isOneLinkUrl(match.text)) {
         ref.read(deepLinkServiceProvider).resolveDeeplink(match.text);
       } else {
         openUrlInAppBrowser(normalizeUrl(match.text));

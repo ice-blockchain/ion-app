@@ -60,3 +60,7 @@ bool isNetworkUrl(String url) {
 String? extractFirstUrl(String text) {
   return RegExp(const UrlMatcher().pattern).firstMatch(text)?.group(0);
 }
+
+bool isOneLinkUrl(String url) {
+  return RegExp(r'@?(https://ion\.onelink\.me/[A-Za-z0-9\-_/\?&%=#]*)').hasMatch(url);
+}
