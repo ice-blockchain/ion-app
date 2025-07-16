@@ -549,8 +549,6 @@ class FeedForYouContent extends _$FeedForYouContent implements PagedNotifier {
   }
 
   /// Determines which interests should be used for the given modifier and feed type.
-  ///
-  /// For the "Explore" modifier, it returns the stub interest.
   Future<List<String>> _getInterestsForModifier(FeedModifier modifier) async {
     if (feedType == FeedType.article) {
       // For articles, we use the selected article categories if they are set.
@@ -562,6 +560,8 @@ class FeedForYouContent extends _$FeedForYouContent implements PagedNotifier {
     }
 
     if (modifier is FeedModifierExplore) {
+      // In other cases, for the "Explore" modifier, we return a stub interest, since we still need
+      // some key for the pagination.
       return [_explorePaginationInterest];
     }
 
