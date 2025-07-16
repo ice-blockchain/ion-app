@@ -616,3 +616,11 @@ class WalletSyncRetryException extends IONException {
 class FailedToPickUserRelay extends IONException {
   FailedToPickUserRelay([dynamic error]) : super(10122, 'Failed to pick user relay: $error');
 }
+
+class WalletNotFoundException extends IONException {
+  WalletNotFoundException({required String walletAddress})
+      : super(
+          10123,
+          'Wallet $walletAddress not found',
+        );
+}

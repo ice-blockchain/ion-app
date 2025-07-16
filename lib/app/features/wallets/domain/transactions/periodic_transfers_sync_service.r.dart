@@ -9,6 +9,7 @@ import 'package:ion/app/features/wallets/data/repository/transactions_repository
 import 'package:ion/app/features/wallets/domain/transactions/sync_transactions_service.r.dart';
 import 'package:ion/app/features/wallets/model/network_data.f.dart';
 import 'package:ion/app/features/wallets/model/transaction_data.f.dart';
+import 'package:ion/app/features/wallets/model/transaction_status.f.dart';
 import 'package:ion/app/services/logger/logger.dart';
 import 'package:ion/app/utils/retry.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
@@ -40,56 +41,73 @@ class PeriodicTransfersSyncService {
     if (_isRunning) return;
 
     _isRunning = true;
-    Logger.info('Starting periodic transfers sync service');
+    Logger.log('Starting periodic transfers sync service');
 
     _broadcastedTransfersSubscription = _transactionsRepository
-        .watchBroadcastedTransfers()
+        .watchTransactions(
+          statuses: [
+            TransactionStatus.pending,
+            TransactionStatus.executing,
+            TransactionStatus.broadcasted,
+          ],
+          limit: 100,
+        )
         .distinct((list1, list2) => const ListEquality<TransactionData>().equals(list1, list2))
-        .listen(_onBroadcastedTransfersChanged);
+        .listen(_onPendingTransactionsChanged);
   }
 
   void stopWatching() {
     if (!_isRunning) return;
 
     _isRunning = false;
-    Logger.info('Stopping periodic transfers sync service');
+    Logger.log('Stopping periodic transfers sync service');
 
     _broadcastedTransfersSubscription?.cancel();
     _broadcastedTransfersSubscription = null;
   }
 
-  void _onBroadcastedTransfersChanged(List<TransactionData> broadcastedTransfers) {
+  void _onPendingTransactionsChanged(List<TransactionData> pendingTransactions) {
     if (!_isRunning) return;
 
-    if (broadcastedTransfers.isNotEmpty) {
-      final txDetails = broadcastedTransfers
+    if (pendingTransactions.isNotEmpty) {
+      final txDetails = pendingTransactions
           .map(
             (tx) =>
-                'txHash: ${tx.txHash}, network: ${tx.network.id}, wallet: ${tx.senderWalletAddress}',
+                'txHash: ${tx.txHash}, network: ${tx.network.id}, type: ${tx.type.value}, status: ${tx.status}, wallet: ${tx.type.isSend ? tx.senderWalletAddress : tx.receiverWalletAddress}',
           )
           .join('\n');
       final message =
-          'Found ${broadcastedTransfers.length} broadcasted transactions, starting sync. Details:\n[$txDetails]';
-      Logger.info(message);
+          'Found ${pendingTransactions.length} pending transactions, starting sync. Details:\n[$txDetails]';
+      Logger.log(message);
 
       _startSyncing();
     }
   }
 
   Future<void> _startSyncing() async {
-    Logger.info('Starting wallet-specific periodic transfers sync');
+    Logger.log('Starting wallet-specific periodic transfers sync');
 
-    final broadcastedTransfers = await _transactionsRepository.getBroadcastedTransfers();
+    final pendingTransactions = await _transactionsRepository.getTransactions(
+      statuses: [
+        TransactionStatus.pending,
+        TransactionStatus.executing,
+        TransactionStatus.broadcasted,
+      ],
+      limit: 100,
+    );
 
-    if (broadcastedTransfers.isEmpty) {
-      Logger.info('No broadcasted transfers found, skipping sync');
+    if (pendingTransactions.isEmpty) {
+      Logger.log('No pending transactions found, skipping sync');
       return;
     }
 
     // Group wallets by address and extract their networks
     final walletNetworks = <String, NetworkData>{};
-    for (final tx in broadcastedTransfers) {
-      final walletAddress = tx.senderWalletAddress;
+
+    // Add wallets from all pending transactions
+    for (final tx in pendingTransactions) {
+      // Choose the appropriate wallet address based on transaction type
+      final walletAddress = tx.type.isSend ? tx.senderWalletAddress : tx.receiverWalletAddress;
       if (walletAddress != null && !walletNetworks.containsKey(walletAddress)) {
         walletNetworks[walletAddress] = tx.network;
       }
@@ -106,13 +124,13 @@ class PeriodicTransfersSyncService {
     required NetworkData network,
   }) async {
     if (_walletSyncInProgress[walletAddress] ?? false) {
-      Logger.info('Wallet $walletAddress sync is already in progress, skipping');
+      Logger.log('Wallet $walletAddress sync is already in progress, skipping');
       return;
     }
 
     _walletSyncInProgress[walletAddress] = true;
 
-    Logger.info('Starting periodic sync for wallet $walletAddress in ${network.id}');
+    Logger.log('Starting periodic sync for wallet $walletAddress in ${network.id}');
 
     try {
       // Exponential backoff delay progression:
@@ -124,7 +142,7 @@ class PeriodicTransfersSyncService {
         multiplier: 2,
         minJitter: 2,
         maxJitter: 2,
-        retryWhen: (result) => result is Exception,
+        retryWhen: (result) => result is WalletSyncRetryException,
       );
     } finally {
       _walletSyncInProgress[walletAddress] = false;
@@ -135,49 +153,66 @@ class PeriodicTransfersSyncService {
   Future<void> _performWalletSync(String walletAddress) async {
     if (!_isRunning) return;
 
-    final broadcastedBefore = await _transactionsRepository.getBroadcastedTransfers(
-      walletAddress: walletAddress,
+    final pendingTransactionsBefore = await _transactionsRepository.getTransactions(
+      walletAddresses: [walletAddress],
+      statuses: [
+        TransactionStatus.pending,
+        TransactionStatus.executing,
+        TransactionStatus.broadcasted,
+      ],
+      limit: 100,
     );
-    final totalBroadcastedBefore = broadcastedBefore.length;
 
-    if (broadcastedBefore.isEmpty) {
-      Logger.log('No broadcasted transfers found for wallet $walletAddress, skipping sync');
+    final totalTransactionsBefore = pendingTransactionsBefore.length;
+
+    if (pendingTransactionsBefore.isEmpty) {
+      Logger.log('No pending transactions found for wallet $walletAddress, skipping sync');
       return;
     }
 
-    final beforeDetails =
-        broadcastedBefore.map((tx) => 'txHash (${tx.txHash}) in ${tx.network.id}').join('; ');
+    final beforeDetails = pendingTransactionsBefore
+        .map((tx) =>
+            '${tx.type.value}: txHash (${tx.txHash}) status (${tx.status}) in ${tx.network.id}')
+        .join('; ');
     final syncMessage =
-        'Syncing $totalBroadcastedBefore broadcasted transfers for wallet $walletAddress. Details: \n[$beforeDetails]';
+        'Syncing $totalTransactionsBefore pending transactions for wallet $walletAddress. Details: \n[$beforeDetails]';
     Logger.log(syncMessage);
 
-    await _syncTransactionsService.syncBroadcastedTransfersForWallet(walletAddress);
+    await _syncTransactionsService.syncBroadcastedTransactionsForWallet(walletAddress);
 
-    final broadcastedAfter = await _transactionsRepository.getBroadcastedTransfers(
-      walletAddress: walletAddress,
+    final pendingTransactionsAfter = await _transactionsRepository.getTransactions(
+      walletAddresses: [walletAddress],
+      statuses: [
+        TransactionStatus.pending,
+        TransactionStatus.executing,
+        TransactionStatus.broadcasted,
+      ],
+      limit: 100,
     );
-    final totalBroadcastedAfter = broadcastedAfter.length;
 
-    final updatedCount = totalBroadcastedBefore - totalBroadcastedAfter;
+    final totalTransactionsAfter = pendingTransactionsAfter.length;
+    final updatedCount = totalTransactionsBefore - totalTransactionsAfter;
+
     if (updatedCount > 0) {
-      final updatedTransactions = broadcastedBefore
-          .where((tx) => !broadcastedAfter.any((afterTx) => afterTx.txHash == tx.txHash))
+      final updatedTransactions = pendingTransactionsBefore
+          .where((tx) => !pendingTransactionsAfter.any((afterTx) => afterTx.txHash == tx.txHash))
           .toList();
 
-      final updatedDetails =
-          updatedTransactions.map((tx) => 'txHash (${tx.txHash}) in ${tx.network.id}').join('\n');
+      final updatedDetails = updatedTransactions
+          .map((tx) => '${tx.type.value}: txHash (${tx.txHash}) in ${tx.network.id}')
+          .join('\n');
 
       final updateMessage =
-          'Wallet $walletAddress sync updated $updatedCount transfers from broadcasted to confirmed. Updated: [$updatedDetails]';
+          'Wallet $walletAddress sync updated $updatedCount transactions to confirmed. Updated: [$updatedDetails]';
       Logger.log(updateMessage);
     } else {
-      Logger.log('No transfers were updated during sync for wallet $walletAddress');
+      Logger.log('No transactions were updated during sync for wallet $walletAddress');
     }
 
-    if (totalBroadcastedAfter > 0) {
+    if (totalTransactionsAfter > 0) {
       throw WalletSyncRetryException(
         walletAddress: walletAddress,
-        remainingTransfers: totalBroadcastedAfter,
+        remainingTransfers: totalTransactionsAfter,
       );
     }
   }
