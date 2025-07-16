@@ -28,6 +28,7 @@ class NotificationListItem extends StatelessWidget {
       padding: EdgeInsets.symmetric(horizontal: 43.0.s),
       child: BadgesUserListItem(
         pubkey: '',
+        isOwnershipIgnored: true,
         // that is a mock notification
         title: Text(
           title,
