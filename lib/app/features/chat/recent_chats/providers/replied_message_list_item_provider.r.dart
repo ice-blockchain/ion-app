@@ -9,7 +9,7 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'replied_message_list_item_provider.r.g.dart';
 
-@riverpod
+@Riverpod(keepAlive: true, dependencies: [])
 Stream<EventMessage?> repliedMessageListItem(Ref ref, ChatMessageInfoItem messageItem) {
   final entity = ReplaceablePrivateDirectMessageEntity.fromEventMessage(messageItem.eventMessage);
 
