@@ -19,6 +19,9 @@ Future<void> _precachePicture(String url) async {
 
     await svg.cache.putIfAbsent(loader.cacheKey(null), () => loader.loadBytes(null));
   } else {
-    await DefaultCacheManager().downloadFile(url);
+    final file = await DefaultCacheManager().getFileFromCache(url);
+    if (file == null) {
+      await DefaultCacheManager().downloadFile(url, key: url);
+    }
   }
 }
