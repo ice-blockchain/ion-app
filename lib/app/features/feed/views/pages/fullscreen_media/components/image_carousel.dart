@@ -27,7 +27,6 @@ class ImageCarousel extends HookConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final pageController = usePageController(initialPage: initialIndex);
     final onPrimaryAccentColor = context.theme.appColors.onPrimaryAccent;
-    final horizontalPadding = 16.0.s;
 
     final zoomController = useImageZoom(ref, withReset: true);
     final currentPage = useState(initialIndex);
