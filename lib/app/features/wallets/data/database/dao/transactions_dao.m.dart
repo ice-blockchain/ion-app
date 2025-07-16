@@ -227,11 +227,13 @@ class TransactionsDao extends DatabaseAccessor<WalletsDatabase> with _$Transacti
       ),
     ]);
 
-    return query.map((row) => _mapRowToDomainModel(
-          row,
-          nativeCoinAlias: nativeCoinAlias,
-          transactionCoinAlias: transactionCoinAlias,
-        ));
+    return query.map(
+      (row) => _mapRowToDomainModel(
+        row,
+        nativeCoinAlias: nativeCoinAlias,
+        transactionCoinAlias: transactionCoinAlias,
+      ),
+    );
   }
 
   /// Builds a where clause for transaction queries with common filters.
