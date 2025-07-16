@@ -75,7 +75,7 @@ Future<IonConnectEntity?> ionConnectNetworkEntity(
 }
 
 @riverpod
-class IonConnectNetworkEntitiesNotifier extends _$IonConnectNetworkEntitiesNotifier {
+class IonConnectNetworkEntitiesManager extends _$IonConnectNetworkEntitiesManager {
   @override
   FutureOr<void> build() {}
 
@@ -311,7 +311,7 @@ class IonConnectEntitiesManager extends _$IonConnectEntitiesManager {
         if (eventReferences.isEmpty) continue;
 
         final stream = ref
-            .read(ionConnectNetworkEntitiesNotifierProvider.notifier)
+            .read(ionConnectNetworkEntitiesManagerProvider.notifier)
             .fetch(
               search: search,
               eventReferences: eventReferences,
