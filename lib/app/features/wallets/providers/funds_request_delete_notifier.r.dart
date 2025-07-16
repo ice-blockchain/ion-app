@@ -28,70 +28,73 @@ class FundsRequestDeleteNotifier extends _$FundsRequestDeleteNotifier {
       await _deleteFundsRequest(ref: ref, eventMessage: eventMessage);
     });
   }
-}
 
-Future<void> _deleteFundsRequest({
-  required Ref ref,
-  required EventMessage eventMessage,
-}) async {
-  // Extract event reference from chat message content
-  final eventReference = EventReference.fromEncoded(eventMessage.content);
+  Future<void> _deleteFundsRequest({
+    required Ref ref,
+    required EventMessage eventMessage,
+  }) async {
+    // Extract event reference from chat message content
+    final eventReference = EventReference.fromEncoded(eventMessage.content);
 
-  if (eventReference is! ImmutableEventReference) {
-    throw Exception('Invalid event reference type');
-  }
+    if (eventReference is! ImmutableEventReference) {
+      throw Exception('Invalid event reference type');
+    }
 
-  if (eventReference.kind != FundsRequestEntity.kind) {
-    throw Exception('Event is not a FundsRequest');
-  }
+    if (eventReference.kind != FundsRequestEntity.kind) {
+      throw Exception('Event is not a FundsRequest');
+    }
 
-  final currentUserMasterPubkey = ref.read(currentPubkeySelectorProvider);
-  final eventSigner = await ref.read(currentUserIonConnectEventSignerProvider.future);
-  final conversationPubkeysNotifier = ref.read(conversationPubkeysProvider.notifier);
+    final currentUserMasterPubkey = ref.read(currentPubkeySelectorProvider);
+    final eventSigner = await ref.read(currentUserIonConnectEventSignerProvider.future);
+    final conversationPubkeysNotifier = ref.read(conversationPubkeysProvider.notifier);
 
-  if (eventSigner == null) {
-    throw EventSignerNotFoundException();
-  }
+    if (eventSigner == null) {
+      throw EventSignerNotFoundException();
+    }
 
-  if (currentUserMasterPubkey == null) {
-    throw UserMasterPubkeyNotFoundException();
-  }
+    if (currentUserMasterPubkey == null) {
+      throw UserMasterPubkeyNotFoundException();
+    }
 
-  // Create deletion request for the FundsRequest event
-  final deletionRequest = DeletionRequest(
-    events: [
-      EventToDelete(
-        eventReference: ImmutableEventReference(
-          eventId: eventReference.eventId,
-          masterPubkey: eventReference.masterPubkey,
-          kind: FundsRequestEntity.kind,
+    // Create deletion request for the FundsRequest event
+    final deletionRequest = DeletionRequest(
+      events: [
+        EventToDelete(
+          eventReference: ImmutableEventReference(
+            eventId: eventReference.eventId,
+            masterPubkey: eventReference.masterPubkey,
+            kind: FundsRequestEntity.kind,
+          ),
         ),
-      ),
-    ],
-  );
+      ],
+    );
 
-  final deletionEvent = await deletionRequest.toEventMessage(
-    NoPrivateSigner(eventSigner.publicKey),
-    masterPubkey: currentUserMasterPubkey,
-  );
+    final deletionEvent = await deletionRequest.toEventMessage(
+      NoPrivateSigner(eventSigner.publicKey),
+      masterPubkey: currentUserMasterPubkey,
+    );
 
-  // Get all participants
-  final participantsMasterPubkeys = eventMessage.participantsMasterPubkeys;
-
-  // Send wrapped deletion event to all participants
-  for (final masterPubkey in participantsMasterPubkeys) {
+    // Get all participants
+    final participantsMasterPubkeys = eventMessage.participantsMasterPubkeys;
     final participantsKeysMap =
         await conversationPubkeysNotifier.fetchUsersKeys(participantsMasterPubkeys);
-    final pubkeys = participantsKeysMap[masterPubkey];
-    if (pubkeys == null) continue;
-    for (final pubkey in pubkeys) {
-      await ref.read(sendE2eeChatMessageServiceProvider).sendWrappedMessage(
-            eventSigner: eventSigner,
-            masterPubkey: masterPubkey,
-            eventMessage: deletionEvent,
-            wrappedKinds: [DeletionRequestEntity.kind.toString()],
-            pubkey: pubkey,
-          );
+
+    // Send wrapped deletion event to all participants
+    for (final masterPubkey in participantsMasterPubkeys) {
+      final pubkeys = participantsKeysMap[masterPubkey];
+      if (pubkeys == null) continue;
+
+      final sendOperationFutures = pubkeys.map(
+        (pubkey) => ref.read(sendE2eeChatMessageServiceProvider).sendWrappedMessage(
+              eventSigner: eventSigner,
+              masterPubkey: masterPubkey,
+              eventMessage: deletionEvent,
+              wrappedKinds: [DeletionRequestEntity.kind.toString()],
+              pubkey: pubkey,
+            ),
+      );
+
+      await Future.wait(sendOperationFutures);
     }
   }
 }

@@ -16,7 +16,6 @@ import 'package:ion/app/features/ion_connect/model/global_subscription_event_han
 import 'package:ion/app/features/ion_connect/model/ion_connect_gift_wrap.f.dart';
 import 'package:ion/app/features/user_block/providers/encrypted_blocked_users_handler.r.dart';
 import 'package:ion/app/features/wallets/providers/fund_request_handler.r.dart';
-import 'package:ion/app/features/wallets/providers/funds_request_deletion_handler.r.dart';
 import 'package:ion/app/features/wallets/providers/wallet_asset_handler.r.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
@@ -60,7 +59,6 @@ Future<EncryptedMessageEventHandler> encryptedMessageEventHandler(Ref ref) async
     ref.watch(encryptedRepostHandlerProvider),
     ref.watch(encryptedBlockedUserHandlerProvider),
     await ref.watch(fundsRequestHandlerProvider.future),
-    await ref.watch(fundsRequestDeletionHandlerProvider.future),
     await ref.watch(walletAssetHandlerProvider.future),
   ];
 
