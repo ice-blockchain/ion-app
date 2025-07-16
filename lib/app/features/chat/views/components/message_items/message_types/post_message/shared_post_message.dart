@@ -37,6 +37,8 @@ class SharedPostMessage extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    useAutomaticKeepAlive();
+
     final isMe = ref.watch(isCurrentUserSelectorProvider(sharedEventMessage.masterPubkey));
 
     final postData = useMemoized(
