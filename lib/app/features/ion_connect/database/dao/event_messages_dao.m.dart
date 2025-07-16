@@ -57,11 +57,11 @@ class EventMessagesDao extends DatabaseAccessor<EventMessagesDatabase>
     final pattern = '%${query.toLowerCase()}%';
     final filteredQuery = select(db.eventMessagesTable);
 
-    if (eventReferences != null && eventReferences.isNotEmpty) {
+    if (eventReferences != null) {
       filteredQuery.where((tbl) => tbl.eventReference.isInValues(eventReferences));
     }
 
-    if (kinds != null && kinds.isNotEmpty) {
+    if (kinds != null) {
       filteredQuery.where((tbl) => tbl.kind.isIn(kinds));
     }
 
