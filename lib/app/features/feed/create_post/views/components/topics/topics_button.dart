@@ -69,7 +69,7 @@ class TopicsButton extends HookConsumerWidget {
         );
         if (!setsAreEqual) {
           WidgetsBinding.instance.addPostFrameCallback(
-            (_) => ref.read(selectedInterestsNotifierProvider.notifier).selectInterests =
+            (_) => ref.read(selectedInterestsNotifierProvider.notifier).interests =
                 selectedAvailableKeys,
           );
         }
@@ -91,7 +91,7 @@ class TopicsButton extends HookConsumerWidget {
       child: GestureDetector(
         behavior: HitTestBehavior.opaque,
         onTap: () {
-          SelectTopicsCategoriesRoute(feedType: type).push<void>(context);
+          SelectTopicsRoute(feedType: type).push<void>(context);
         },
         child: DecoratedBox(
           decoration: BoxDecoration(
@@ -116,7 +116,8 @@ class TopicsButton extends HookConsumerWidget {
                     style: context.theme.appTextThemes.caption2.copyWith(
                       color: context.theme.appColors.primaryAccent,
                     ),
-                    textHeightBehavior: const TextHeightBehavior(applyHeightToFirstAscent: false),
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
                   ),
                 ),
                 SizedBox(width: 2.s),

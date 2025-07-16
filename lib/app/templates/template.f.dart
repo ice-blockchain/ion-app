@@ -5,6 +5,7 @@ import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:ion/app/templates/converters.dart';
 
 part 'template.f.freezed.dart';
+
 part 'template.f.g.dart';
 
 @freezed
@@ -139,6 +140,7 @@ class TemplateTextThemes with _$TemplateTextThemes {
     TemplateTextTheme caption3,
     TemplateTextTheme caption4,
     TemplateTextTheme caption5,
+    TemplateTextTheme caption6,
     TemplateTextTheme notificationCaption,
   ) = _TemplateTextThemes;
 
@@ -146,6 +148,7 @@ class TemplateTextThemes with _$TemplateTextThemes {
       _$TemplateTextThemesFromJson(json);
 
   factory TemplateTextThemes.empty() => TemplateTextThemes(
+        TemplateTextTheme.empty(),
         TemplateTextTheme.empty(),
         TemplateTextTheme.empty(),
         TemplateTextTheme.empty(),

@@ -44,7 +44,7 @@ class StoryTopicsButton extends HookConsumerWidget {
       ),
       constraints: BoxConstraints(minHeight: 40.0.s),
       onTap: () {
-        SelectTopicsCategoriesRoute(feedType: FeedType.story).push<void>(context);
+        SelectTopicsRoute(feedType: FeedType.story).push<void>(context);
       },
     );
   }

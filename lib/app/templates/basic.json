@@ -120,6 +120,11 @@
         "fontSize": 10,
         "fontWeight": 500
       },
+      "caption6": {
+        "fontSize": 11,
+        "height": 1.6,
+        "fontWeight": 500
+      },
       "notificationCaption": {
         "fontSize": 6,
         "fontWeight": 700

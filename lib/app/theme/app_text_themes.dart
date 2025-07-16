@@ -18,6 +18,7 @@ class AppTextThemesExtension extends ThemeExtension<AppTextThemesExtension> {
     required this.caption3,
     required this.caption4,
     required this.caption5,
+    required this.caption6,
     required this.notificationCaption,
   });
 
@@ -36,6 +37,7 @@ class AppTextThemesExtension extends ThemeExtension<AppTextThemesExtension> {
       caption3: TemplateTextStyle.fromTemplate(textThemes.caption3),
       caption4: TemplateTextStyle.fromTemplate(textThemes.caption4),
       caption5: TemplateTextStyle.fromTemplate(textThemes.caption5),
+      caption6: TemplateTextStyle.fromTemplate(textThemes.caption6),
       notificationCaption: TemplateTextStyle.fromTemplate(textThemes.notificationCaption),
     );
   }
@@ -53,8 +55,9 @@ class AppTextThemesExtension extends ThemeExtension<AppTextThemesExtension> {
       caption: TextStyle(fontSize: 12, fontWeight: FontWeight.w500),
       caption2: TextStyle(fontSize: 12, fontWeight: FontWeight.w400),
       caption3: TextStyle(fontSize: 11, height: 1.63, fontWeight: FontWeight.w400),
-      caption4: TextStyle(fontSize: 11, height: 1.45, fontWeight: FontWeight.w500),
+      caption4: TextStyle(fontSize: 11, height: 1.45, fontWeight: FontWeight.w600),
       caption5: TextStyle(fontSize: 10, fontWeight: FontWeight.w400),
+      caption6: TextStyle(fontSize: 11, height: 1.6, fontWeight: FontWeight.w500),
       notificationCaption: TextStyle(fontSize: 10, fontWeight: FontWeight.w400),
     );
   }
@@ -72,6 +75,7 @@ class AppTextThemesExtension extends ThemeExtension<AppTextThemesExtension> {
   final TextStyle caption3;
   final TextStyle caption4;
   final TextStyle caption5;
+  final TextStyle caption6;
   final TextStyle notificationCaption;
 
   @override
@@ -89,6 +93,7 @@ class AppTextThemesExtension extends ThemeExtension<AppTextThemesExtension> {
     TextStyle? caption3,
     TextStyle? caption4,
     TextStyle? caption5,
+    TextStyle? caption6,
     TextStyle? notificationCaption,
   }) {
     return AppTextThemesExtension(
@@ -105,6 +110,7 @@ class AppTextThemesExtension extends ThemeExtension<AppTextThemesExtension> {
       caption3: caption3 ?? this.caption3,
       caption4: caption4 ?? this.caption4,
       caption5: caption5 ?? this.caption5,
+      caption6: caption6 ?? this.caption6,
       notificationCaption: notificationCaption ?? this.notificationCaption,
     );
   }
@@ -132,6 +138,7 @@ class AppTextThemesExtension extends ThemeExtension<AppTextThemesExtension> {
       caption3: TextStyle.lerp(caption3, other.caption3, t)!,
       caption4: TextStyle.lerp(caption4, other.caption4, t)!,
       caption5: TextStyle.lerp(caption5, other.caption5, t)!,
+      caption6: TextStyle.lerp(caption6, other.caption6, t)!,
       notificationCaption: TextStyle.lerp(notificationCaption, other.notificationCaption, t)!,
     );
   }

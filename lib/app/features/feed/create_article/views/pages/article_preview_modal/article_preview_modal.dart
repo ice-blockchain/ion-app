@@ -71,7 +71,7 @@ class ArticlePreviewModal extends HookConsumerWidget {
         if (modifiableEntity is! ArticleEntity) return;
 
         WidgetsBinding.instance.addPostFrameCallback(
-          (_) => ref.read(selectedInterestsNotifierProvider.notifier).selectInterests =
+          (_) => ref.read(selectedInterestsNotifierProvider.notifier).interests =
               modifiableEntity.data.topics.toSet(),
         );
       },
