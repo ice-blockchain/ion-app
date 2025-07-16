@@ -193,7 +193,7 @@ class _TextMessageContent extends HookWidget {
   }
 }
 
-class _TextRichContent extends HookWidget {
+class _TextRichContent extends HookConsumerWidget {
   const _TextRichContent({
     required this.textStyle,
     required this.text,
@@ -203,7 +203,7 @@ class _TextRichContent extends HookWidget {
   final String text;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     return Text.rich(
       useTextSpanBuilder(
         context,
@@ -216,7 +216,7 @@ class _TextRichContent extends HookWidget {
         },
       ).build(
         TextParser(matchers: {const UrlMatcher()}).parse(text),
-        onTap: (match) => TextSpanBuilder.defaultOnTap(context, match: match),
+        onTap: (match) => TextSpanBuilder.defaultOnTap(context, ref, match: match),
       ),
     );
   }
