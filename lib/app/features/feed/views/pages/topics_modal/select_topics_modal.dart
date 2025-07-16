@@ -36,6 +36,10 @@ class SelectTopicsModal extends HookConsumerWidget {
     );
     final initialSelectedSubcategories = useState(<String, FeedInterestsSubcategory>{});
     final searchValue = useState('');
+    final isAnythingSelected = useMemoized(
+      () => selectedSubcategories.isNotEmpty,
+      [selectedSubcategories],
+    );
 
     useOnInit(
       () {
@@ -56,19 +60,20 @@ class SelectTopicsModal extends HookConsumerWidget {
           NavigationAppBar.modal(
             onBackPress: () => Navigator.pop(context, false),
             actions: [
-              if (selectedSubcategories.isNotEmpty)
-                GestureDetector(
-                  onTap: () => Navigator.pop(context, false),
-                  child: Padding(
-                    padding: EdgeInsets.symmetric(horizontal: 8.0.s),
-                    child: Text(
-                      '${context.i18n.topics_add} (${selectedSubcategories.length})',
-                      style: context.theme.appTextThemes.body.copyWith(
-                        color: context.theme.appColors.primaryAccent,
-                      ),
+              GestureDetector(
+                onTap: isAnythingSelected ? () => Navigator.pop(context, false) : null,
+                child: Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 8.0.s),
+                  child: Text(
+                    '${context.i18n.topics_add}${isAnythingSelected ? ' (${selectedSubcategories.length})' : ''}',
+                    style: context.theme.appTextThemes.body.copyWith(
+                      color: isAnythingSelected
+                          ? context.theme.appColors.primaryAccent
+                          : context.theme.appColors.sheetLine,
                     ),
                   ),
                 ),
+              ),
             ],
             title: Text(context.i18n.topics_title),
           ),
