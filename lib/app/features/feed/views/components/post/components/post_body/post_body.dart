@@ -9,6 +9,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/components/text_editor/text_editor_preview.dart';
 import 'package:ion/app/components/text_editor/utils/is_attributed_operation.dart';
 import 'package:ion/app/components/text_editor/utils/text_editor_styles.dart';
+import 'package:ion/app/components/url_preview/providers/url_metadata_provider.r.dart';
 import 'package:ion/app/extensions/delta.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/feed/data/models/entities/modifiable_post_data.f.dart';
@@ -22,6 +23,7 @@ import 'package:ion/app/features/ion_connect/model/event_reference.f.dart';
 import 'package:ion/app/features/ion_connect/model/ion_connect_entity.dart';
 import 'package:ion/app/features/ion_connect/views/hooks/use_parsed_media_content.dart';
 import 'package:ion/app/typedefs/typedefs.dart';
+import 'package:ion/app/utils/url.dart';
 
 class PostBody extends HookConsumerWidget {
   const PostBody({
@@ -62,31 +64,38 @@ class PostBody extends HookConsumerWidget {
       key: ValueKey(postData.hashCode),
     );
 
-    final firstLinkOperation = useMemoized(
-      () => content.operations.firstWhereOrNull(
-        (operation) => isAttributedOperation(operation, attribute: Attribute.link),
-      ),
+    final firstUrlInPost = useMemoized(
+      () {
+        final firstOperationLink = content.operations
+            .firstWhereOrNull(
+              (operation) => isAttributedOperation(operation, attribute: Attribute.link),
+            )
+            ?.value as String?;
+
+        return firstOperationLink == null ? null : normalizeUrl(firstOperationLink);
+      },
       [content],
     );
 
-    final urlPreviewVisible = useState(false);
-
-    final urlPreview = useMemoized(
-      () => firstLinkOperation != null
-          ? UrlPreviewContent(
-              key: ValueKey(firstLinkOperation.value),
-              url: firstLinkOperation.value as String,
-              onPreviewVisibilityChanged: (previewVisible) {
-                urlPreviewVisible.value = previewVisible;
-              },
-            )
-          : null,
-      [firstLinkOperation],
+    final hasValidUrlMetadata = useMemoized(
+      () =>
+          firstUrlInPost != null &&
+          (ref.watch(urlMetadataProvider(firstUrlInPost)).valueOrNull?.title?.isNotEmpty ?? false),
+      [firstUrlInPost],
     );
 
     final showTextContent = useMemoized(
-      () => content.isNotEmpty && (!content.isSingleLinkOnly || !urlPreviewVisible.value),
-      [content, urlPreviewVisible.value],
+      () {
+        if (content.isEmpty) {
+          return false;
+        }
+
+        if (content.isSingleLinkOnly && hasValidUrlMetadata && media.isEmpty) {
+          return false;
+        }
+        return true;
+      },
+      [content, hasValidUrlMetadata, media],
     );
 
     // Extract poll data from post
@@ -166,11 +175,13 @@ class PostBody extends HookConsumerWidget {
                   framedEventReference: framedEventReference,
                 ),
               ),
-            if (media.isEmpty && urlPreview != null)
+            if (media.isEmpty && hasValidUrlMetadata)
               Padding(
                 padding: EdgeInsetsDirectional.symmetric(horizontal: sidePadding ?? 16.0.s) +
                     EdgeInsetsDirectional.only(top: 10.0.s),
-                child: urlPreview,
+                child: UrlPreviewContent(
+                  url: firstUrlInPost!,
+                ),
               ),
           ],
         );
