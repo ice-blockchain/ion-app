@@ -207,7 +207,7 @@ class PostFormModal extends HookConsumerWidget {
           attachedMediaLinksNotifier.value = modifiedEntity.data.media;
           final topics = RelatedHashtag.extractTopics(modifiedEntity.data.relatedHashtags);
           WidgetsBinding.instance.addPostFrameCallback(
-            (_) => ref.read(selectedInterestsNotifierProvider.notifier).selectInterests = topics,
+            (_) => ref.read(selectedInterestsNotifierProvider.notifier).interests = topics,
           );
           return null;
         },

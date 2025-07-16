@@ -1,6 +1,5 @@
 // SPDX-License-Identifier: ice License 1.0
 
-import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/extensions/extensions.dart';
@@ -47,40 +46,22 @@ class SelectedTopics extends HookConsumerWidget {
         child: ListView.separated(
           scrollDirection: Axis.horizontal,
           itemCount: selected.length,
-          padding: EdgeInsetsDirectional.symmetric(horizontal: 15.s),
+          padding: EdgeInsetsDirectional.symmetric(horizontal: 16.s),
           separatorBuilder: (_, __) => SizedBox(width: 8.s),
           itemBuilder: (context, index) {
             final subcategoryKey = selected.elementAt(index);
             return SelectedTopicPill(
               key: ValueKey(subcategoryKey),
               categoryName: availableSubcategories[subcategoryKey]?.display ?? subcategoryKey,
-              onRemove: () => _removeSubcategory(
-                ref,
-                subcategoryKey,
-                availableInterests,
-              ),
+              onRemove: () =>
+                  ref.read(selectedInterestsNotifierProvider.notifier).toggleSubcategory(
+                        feedType: feedType,
+                        subcategoryKey: subcategoryKey,
+                      ),
             );
           },
         ),
       ),
     );
-  }
-
-  void _removeSubcategory(
-    WidgetRef ref,
-    String subcategoryKey,
-    FeedInterests availableInterests,
-  ) {
-    final selectedInterests = ref.read(selectedInterestsNotifierProvider);
-    final notifier = ref.read(selectedInterestsNotifierProvider.notifier);
-    final category = availableInterests.parentFor(subcategoryKey);
-    if (category == null) return;
-
-    final updatedInterests = Set<String>.from(selectedInterests)..remove(subcategoryKey);
-    final subcategoriesKeys = availableInterests.categories[category]?.children.keys ?? {};
-    if (subcategoriesKeys.none(updatedInterests.contains)) {
-      updatedInterests.remove(category);
-    }
-    notifier.selectInterests = updatedInterests;
   }
 }

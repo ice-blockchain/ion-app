@@ -69,7 +69,7 @@ class TopicsButton extends HookConsumerWidget {
         );
         if (!setsAreEqual) {
           WidgetsBinding.instance.addPostFrameCallback(
-            (_) => ref.read(selectedInterestsNotifierProvider.notifier).selectInterests =
+            (_) => ref.read(selectedInterestsNotifierProvider.notifier).interests =
                 selectedAvailableKeys,
           );
         }

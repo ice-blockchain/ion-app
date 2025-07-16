@@ -1,6 +1,5 @@
 // SPDX-License-Identifier: ice License 1.0
 
-import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
@@ -68,40 +67,14 @@ class TopicsCategorySection extends HookConsumerWidget {
         ),
         Subcategories(
           subcategories: filteredSubcategories,
-          onSubcategorySelected: (subcategoryKey) => _toggleTopicSelection(
-            ref,
-            selected,
-            subcategoryKey,
-            availableCategories.keys.toSet(),
-          ),
+          onSubcategorySelected: (subcategoryKey) =>
+              ref.read(selectedInterestsNotifierProvider.notifier).toggleSubcategory(
+                    feedType: feedType,
+                    subcategoryKey: subcategoryKey,
+                  ),
           selectedSubcategories: selected,
         ),
       ],
     );
-  }
-
-  void _toggleTopicSelection(
-    WidgetRef ref,
-    Set<String> currentCategorySelectedSubcategories,
-    String subcategoryKey,
-    Set<String> availableCategories,
-  ) {
-    final selectedInterests = ref.read(selectedInterestsNotifierProvider);
-    final notifier = ref.read(selectedInterestsNotifierProvider.notifier);
-
-    if (selectedInterests.contains(subcategoryKey)) {
-      notifier.selectInterests = Set.from(selectedInterests)..remove(subcategoryKey);
-      final newCurrentCategorySelectedSubcategories =
-          Set<String>.from(currentCategorySelectedSubcategories)..remove(subcategoryKey);
-      if (newCurrentCategorySelectedSubcategories.isEmpty) {
-        notifier.selectInterests = Set.from(selectedInterests)
-          ..removeAll([subcategoryKey, category]);
-      }
-    } else {
-      final selectedSubcategories =
-          selectedInterests.whereNot((key) => availableCategories.contains(key));
-      if (selectedSubcategories.length >= 3) return;
-      notifier.selectInterests = Set.from(selectedInterests)..addAll([subcategoryKey, category]);
-    }
   }
 }
