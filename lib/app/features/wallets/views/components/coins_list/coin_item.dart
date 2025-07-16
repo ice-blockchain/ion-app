@@ -28,9 +28,7 @@ class CoinsGroupItem extends HookConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final isBalanceVisible = ref.watch(isBalanceVisibleSelectorProvider);
 
-    final icons = ref.watch(
-      networkSelectorNotifierProvider(symbolGroup: coinsGroup.symbolGroup).select((value) => value),
-    );
+    final icons = ref.watch(networkSelectorNotifierProvider(symbolGroup: coinsGroup.symbolGroup));
 
     useEffect(
       () {
