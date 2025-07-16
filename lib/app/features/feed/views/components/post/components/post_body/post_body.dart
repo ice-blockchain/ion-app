@@ -90,15 +90,9 @@ class PostBody extends HookConsumerWidget {
           return false;
         }
 
-        if (content.isSingleLinkOnly) {
-          if (hasValidUrlMetadata) {
-            if (media.isEmpty) {
-              return false;
-            }
-            return true;
-          }
+        if (content.isSingleLinkOnly && hasValidUrlMetadata && media.isEmpty) {
+          return false;
         }
-
         return true;
       },
       [content, hasValidUrlMetadata, media],
