@@ -1,7 +1,5 @@
 // SPDX-License-Identifier: ice License 1.0
 
-import 'dart:math';
-
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/components/screen_offset/screen_side_offset.dart';
@@ -49,7 +47,6 @@ class StoryList extends ConsumerWidget {
           return StoryListItem(
             key: Key(pubkey),
             pubkey: pubkey,
-            gradient: storyBorderGradients[Random().nextInt(storyBorderGradients.length)],
           );
         },
       ),
