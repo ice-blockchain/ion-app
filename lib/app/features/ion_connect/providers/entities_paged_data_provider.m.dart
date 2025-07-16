@@ -16,13 +16,17 @@ part 'entities_paged_data_provider.m.g.dart';
 
 abstract class PagedNotifier {
   Future<void> fetchEntities();
+
   void refresh();
+
   void insertEntity(IonConnectEntity entity);
+
   void deleteEntity(IonConnectEntity entity);
 }
 
 abstract class PagedState {
   Set<IonConnectEntity>? get items;
+
   bool get hasMore;
 }
 
@@ -145,50 +149,57 @@ class EntitiesPagedData extends _$EntitiesPagedData implements PagedNotifier {
   Future<MapEntry<ActionSource, PaginationParams>> _fetchEntitiesFromDataSource(
     EntitiesDataSource dataSource,
   ) async {
-    final currentState = state;
-    final paginationParams = state?.data.pagination[dataSource.actionSource];
+    try {
+      final currentState = state;
+      final paginationParams = state?.data.pagination[dataSource.actionSource];
 
-    if (currentState == null || paginationParams == null || !paginationParams.hasMore) {
-      return MapEntry(dataSource.actionSource, PaginationParams(hasMore: false));
-    }
+      if (currentState == null || paginationParams == null || !paginationParams.hasMore) {
+        return MapEntry(dataSource.actionSource, PaginationParams(hasMore: false));
+      }
 
-    final requestMessage = RequestMessage();
-    for (final filter in dataSource.requestFilters) {
-      requestMessage.addFilter(
-        filter.copyWith(until: () => paginationParams.until?.microsecondsSinceEpoch),
+      final requestMessage = RequestMessage();
+      for (final filter in dataSource.requestFilters) {
+        requestMessage.addFilter(
+          filter.copyWith(until: () => paginationParams.until?.microsecondsSinceEpoch),
+        );
+      }
+
+      final entitiesStream = ref.read(ionConnectNotifierProvider.notifier).requestEntities(
+            requestMessage,
+            actionSource: dataSource.actionSource,
+          );
+
+      DateTime? lastEventTime;
+      final pagedFilter = dataSource.pagedFilter ?? dataSource.entityFilter;
+
+      await for (final entity in entitiesStream) {
+        final stateFilter = !(state?.data.items?.contains(entity)).falseOrValue;
+
+        // Update pagination params
+        if (pagedFilter(entity) && stateFilter) {
+          lastEventTime = entity.createdAt.toDateTime;
+        }
+
+        // Update state
+        if (dataSource.entityFilter(entity) && stateFilter) {
+          state = state?.copyWith(
+            data: Paged.loading(
+              {...state!.data.items ?? {}}..add(entity),
+              pagination: state!.data.pagination,
+            ),
+          );
+        }
+      }
+
+      return MapEntry(
+        dataSource.actionSource,
+        PaginationParams(hasMore: lastEventTime != null, lastEventTime: lastEventTime),
+      );
+    } catch (e) {
+      return MapEntry(
+        dataSource.actionSource,
+        PaginationParams(hasMore: false),
       );
     }
-
-    final entitiesStream = ref.read(ionConnectNotifierProvider.notifier).requestEntities(
-          requestMessage,
-          actionSource: dataSource.actionSource,
-        );
-
-    DateTime? lastEventTime;
-    final pagedFilter = dataSource.pagedFilter ?? dataSource.entityFilter;
-
-    await for (final entity in entitiesStream) {
-      final stateFilter = !(state?.data.items?.contains(entity)).falseOrValue;
-
-      // Update pagination params
-      if (pagedFilter(entity) && stateFilter) {
-        lastEventTime = entity.createdAt.toDateTime;
-      }
-
-      // Update state
-      if (dataSource.entityFilter(entity) && stateFilter) {
-        state = state?.copyWith(
-          data: Paged.loading(
-            {...state!.data.items ?? {}}..add(entity),
-            pagination: state!.data.pagination,
-          ),
-        );
-      }
-    }
-
-    return MapEntry(
-      dataSource.actionSource,
-      PaginationParams(hasMore: lastEventTime != null, lastEventTime: lastEventTime),
-    );
   }
 }

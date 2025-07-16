@@ -18,9 +18,16 @@ class FollowCounters extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final followingNumber = ref.watch(followListProvider(pubkey)).valueOrNull?.data.list.length;
-    final followersNumber = ref.watch(followersCountProvider(pubkey)).valueOrNull;
+    final followListAsync = ref.watch(followListProvider(pubkey));
+    final followersCountAsync = ref.watch(followersCountProvider(pubkey));
+    final followingNumber = followListAsync.valueOrNull?.data.list.length;
+    final followersNumber = followersCountAsync.valueOrNull;
     final bothAvailable = followingNumber != null && followersNumber != null;
+
+    final isLoading = followListAsync.isLoading || followersCountAsync.isLoading;
+    if (!isLoading && !bothAvailable) {
+      return const SizedBox.shrink();
+    }
 
     return Container(
       height: 36.0.s,
