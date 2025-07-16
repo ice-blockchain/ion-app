@@ -92,7 +92,6 @@ class TextSpanBuilder {
 
   /// Add default onTap for all matchers
   static void defaultOnTap(
-    BuildContext context,
     WidgetRef ref, {
     required TextMatch match,
   }) {
@@ -105,7 +104,7 @@ class TextSpanBuilder {
     }
 
     if (match.matcher is HashtagMatcher || match.matcher is CashtagMatcher) {
-      FeedAdvancedSearchRoute(query: match.text).push<void>(context);
+      FeedAdvancedSearchRoute(query: match.text).push<void>(ref.context);
     }
   }
 }
