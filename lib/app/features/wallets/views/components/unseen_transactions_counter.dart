@@ -10,8 +10,7 @@ class UnseenTransactionsCounter extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final unseenCount =
-        ref.watch(getAllUnseenTransactionsCountProvider).valueOrNull ?? 0;
+    final unseenCount = ref.watch(getAllUnseenTransactionsCountProvider).valueOrNull ?? 0;
 
     if (unseenCount == 0) {
       return const SizedBox();

@@ -57,10 +57,12 @@ class CoinsGroupItem extends HookConsumerWidget {
           Row(
             children: [
               if (showNewTransactionsIndicator)
-                UnseenTransactionsIndicator(
-                  coinIds: coinsGroup.coins.map((e) => e.coin.id).toList(),
+                Padding(
+                  padding: EdgeInsetsDirectional.only(end: 4.0.s),
+                  child: UnseenTransactionsIndicator(
+                    coinIds: coinsGroup.coins.map((e) => e.coin.id).toList(),
+                  ),
                 ),
-              SizedBox(width: 4.0.s),
               Text(
                 isBalanceVisible ? formatDouble(coinsGroup.totalAmount) : '****',
                 style: context.theme.appTextThemes.body
