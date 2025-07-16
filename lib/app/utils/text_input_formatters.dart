@@ -10,6 +10,12 @@ TextInputFormatter decimalInputFormatter({required int maxDecimals}) {
   return FilteringTextInputFormatter.allow(RegExp('^\\d*\\,?\\d{0,$maxDecimals}'));
 }
 
+TextInputFormatter emojiRestrictionFormatter() {
+  return FilteringTextInputFormatter.allow(
+    RegExp(r'[a-zA-Z0-9\-._~:/?#@!$&()*+,;=%]'),
+  );
+}
+
 class CoinInputFormatter extends TextInputFormatter {
   static const int maxDecimalsNumber = 18;
   final _numberFormat = NumberFormat('#,###', 'en_US');

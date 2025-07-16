@@ -6,6 +6,7 @@ import 'package:flutter_quill/flutter_quill.dart';
 import 'package:ion/app/components/text_editor/utils/quill_style_manager.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/feed/views/components/actions_toolbar_button/actions_toolbar_button.dart';
+import 'package:ion/app/utils/text_input_formatters.dart';
 import 'package:ion/generated/assets.gen.dart';
 
 class ToolbarLinkButton extends HookWidget {
@@ -69,6 +70,9 @@ class ToolbarLinkButton extends HookWidget {
                 style: context.theme.appTextThemes.body2.copyWith(
                   color: context.theme.appColors.primaryText,
                 ),
+                inputFormatters: [
+                  emojiRestrictionFormatter(),
+                ],
               ),
             ],
           ),
