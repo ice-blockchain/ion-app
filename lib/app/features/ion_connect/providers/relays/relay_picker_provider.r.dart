@@ -184,11 +184,11 @@ class RelayPicker extends _$RelayPicker {
   }
 
   Future<UserRelaysEntity> _getUserRawRelays(String pubkey) async {
-    final relays = await ref.read(userRelayProvider(pubkey).future);
-    if (relays == null) {
+    final relays = await ref.watch(userRelaysManagerProvider.notifier).fetch([pubkey]);
+    if (relays.isEmpty) {
       throw UserRelaysNotFoundException(pubkey);
     }
-    return relays;
+    return relays.first;
   }
 
   List<UserRelay> _userRelaysAvoidingDislikedUrls(

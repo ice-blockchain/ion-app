@@ -33,12 +33,11 @@ Future<void> userRelaysSync(Ref ref) async {
     return;
   }
 
-  final userRelays = await ref.watch(userRelayProvider(masterPubkey).future);
-  final connectUserRelays = userRelays?.data.list;
+  final userRelays = await ref.watch(userRelaysManagerProvider.notifier).fetch([masterPubkey]);
+  final connectUserRelays = userRelays.firstOrNull?.data.list;
 
   if (!UserRelaysManager.relayListsEqual(connectUserRelays, identityUserRelays)) {
     final updatedUserRelays = UserRelaysData(list: identityUserRelays);
     await ref.watch(ionConnectNotifierProvider.notifier).sendEntityData(updatedUserRelays);
-    ref.invalidate(userRelayProvider(masterPubkey));
   }
 }

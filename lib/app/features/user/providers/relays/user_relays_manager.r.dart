@@ -2,8 +2,6 @@
 
 import 'package:collection/collection.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:ion/app/exceptions/exceptions.dart';
-import 'package:ion/app/features/auth/providers/auth_provider.m.dart';
 import 'package:ion/app/features/ion_connect/ion_connect.dart';
 import 'package:ion/app/features/ion_connect/model/action_source.f.dart';
 import 'package:ion/app/features/ion_connect/model/event_reference.f.dart';
@@ -202,16 +200,6 @@ class UserRelaysManager extends _$UserRelaysManager {
   static bool relayListsEqual(List<UserRelay>? list1, List<UserRelay>? list2) {
     return const UnorderedIterableEquality<UserRelay>().equals(list1, list2);
   }
-}
-
-@riverpod
-Future<UserRelaysEntity?> userRelay(Ref ref, String pubkey) async {
-  final currentUser = ref.watch(currentIdentityKeyNameSelectorProvider);
-  if (currentUser == null) {
-    throw const CurrentUserNotFoundException();
-  }
-  final relays = await ref.watch(userRelaysManagerProvider.notifier).fetch([pubkey]);
-  return relays.elementAtOrNull(0);
 }
 
 @Riverpod(keepAlive: true)
