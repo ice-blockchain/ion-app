@@ -11,8 +11,8 @@ extension ListExtension<T> on List<T>? {
 }
 
 extension ListRandomExtension<T> on List<T> {
-  T get random {
-    return this[Random().nextInt(length)];
+  T? get random {
+    return isNotEmpty ? this[Random().nextInt(length)] : null;
   }
 }
 

@@ -612,3 +612,7 @@ class WalletSyncRetryException extends IONException {
           '$remainingTransfers transfers left to sync for wallet $walletAddress',
         );
 }
+
+class FailedToPickUserRelay extends IONException {
+  FailedToPickUserRelay([dynamic error]) : super(10122, 'Failed to pick user relay: $error');
+}
