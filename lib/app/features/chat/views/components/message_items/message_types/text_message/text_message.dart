@@ -216,7 +216,7 @@ class _TextRichContent extends HookConsumerWidget {
         },
       ).build(
         TextParser(matchers: {const UrlMatcher()}).parse(text),
-        onTap: (match) => TextSpanBuilder.defaultOnTap(context, ref, match: match),
+        onTap: (match) => TextSpanBuilder.defaultOnTap(ref, match: match),
       ),
     );
   }
