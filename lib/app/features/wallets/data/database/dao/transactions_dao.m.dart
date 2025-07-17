@@ -2,10 +2,12 @@
 
 import 'package:drift/drift.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:ion/app/features/wallets/data/database/dao/transactions_visibility_status_dao.m.dart';
 import 'package:ion/app/features/wallets/data/database/tables/coins_table.d.dart';
 import 'package:ion/app/features/wallets/data/database/tables/networks_table.d.dart';
 import 'package:ion/app/features/wallets/data/database/tables/transactions_table.d.dart';
 import 'package:ion/app/features/wallets/data/database/wallets_database.m.dart';
+
 import 'package:ion/app/features/wallets/model/coin_data.f.dart';
 import 'package:ion/app/features/wallets/model/network_data.f.dart';
 import 'package:ion/app/features/wallets/model/transaction_crypto_asset.f.dart';
@@ -18,11 +20,21 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 part 'transactions_dao.m.g.dart';
 
 @Riverpod(keepAlive: true)
-TransactionsDao transactionsDao(Ref ref) => TransactionsDao(db: ref.watch(walletsDatabaseProvider));
+TransactionsDao transactionsDao(Ref ref) => TransactionsDao(
+      db: ref.watch(walletsDatabaseProvider),
+      visibilityStatusDao: ref.watch(transactionsVisibilityStatusDaoProvider),
+    );
 
-@DriftAccessor(tables: [TransactionsTable, NetworksTable, CoinsTable])
+@DriftAccessor(
+  tables: [TransactionsTable, NetworksTable, CoinsTable],
+)
 class TransactionsDao extends DatabaseAccessor<WalletsDatabase> with _$TransactionsDaoMixin {
-  TransactionsDao({required WalletsDatabase db}) : super(db);
+  TransactionsDao({
+    required WalletsDatabase db,
+    required this.visibilityStatusDao,
+  }) : super(db);
+
+  final TransactionsVisibilityStatusDao visibilityStatusDao;
 
   Future<DateTime?> lastCreatedAt() async {
     final maxCreatedAt = transactionsTable.createdAtInRelay.max();
@@ -77,6 +89,8 @@ class TransactionsDao extends DatabaseAccessor<WalletsDatabase> with _$Transacti
       await batch((batch) {
         batch.insertAllOnConflictUpdate(transactionsTable, toInsert);
       });
+
+      await visibilityStatusDao.addOrUpdateVisibilityStatus(transactions: transactions);
 
       return newTransactions.isNotEmpty || updatedTransactions.isNotEmpty;
     });

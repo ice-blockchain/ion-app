@@ -6,12 +6,14 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/exceptions/exceptions.dart';
 import 'package:ion/app/extensions/database.dart';
 import 'package:ion/app/features/auth/providers/auth_provider.m.dart';
+import 'package:ion/app/features/wallets/data/database/dao/transactions_visibility_status_dao.m.dart';
 import 'package:ion/app/features/wallets/data/database/tables/coins_table.d.dart';
 import 'package:ion/app/features/wallets/data/database/tables/crypto_wallets_table.d.dart';
 import 'package:ion/app/features/wallets/data/database/tables/duration_type.dart';
 import 'package:ion/app/features/wallets/data/database/tables/funds_requests_table.d.dart';
 import 'package:ion/app/features/wallets/data/database/tables/networks_table.d.dart';
 import 'package:ion/app/features/wallets/data/database/tables/sync_coins_table.d.dart';
+import 'package:ion/app/features/wallets/data/database/tables/transaction_visibility_status_table.d.dart';
 import 'package:ion/app/features/wallets/data/database/tables/transactions_table.d.dart';
 import 'package:ion/app/features/wallets/data/database/wallets_database.m.steps.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
@@ -43,6 +45,7 @@ WalletsDatabase walletsDatabase(Ref ref) {
     SyncCoinsTable,
     NetworksTable,
     TransactionsTable,
+    TransactionVisibilityStatusTable,
     CryptoWalletsTable,
     FundsRequestsTable,
   ],
@@ -53,7 +56,7 @@ class WalletsDatabase extends _$WalletsDatabase {
   final String pubkey;
 
   @override
-  int get schemaVersion => 14;
+  int get schemaVersion => 15;
 
   static QueryExecutor _openConnection(String pubkey) {
     return driftDatabase(name: 'wallets_database_$pubkey');
@@ -173,6 +176,9 @@ class WalletsDatabase extends _$WalletsDatabase {
           if (!columnExists) {
             await m.addColumn(schema.fundsRequestsTable, schema.fundsRequestsTable.deleted);
           }
+        },
+        from14To15: (m, schema) async {
+          await m.createTable(transactionVisibilityStatusTable);
         },
       ),
     );

@@ -5,6 +5,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/components/screen_offset/screen_side_offset.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/extensions/num.dart';
+import 'package:ion/app/features/wallets/data/database/dao/transactions_visibility_status_dao.m.dart';
 import 'package:ion/app/features/wallets/providers/filtered_assets_provider.r.dart';
 import 'package:ion/app/features/wallets/providers/wallet_page_loader_provider.r.dart';
 import 'package:ion/app/features/wallets/views/components/coins_list/coin_item.dart';
@@ -58,8 +59,15 @@ class CoinsTab extends ConsumerWidget {
           child: isUpdating
               ? const CoinsGroupItemPlaceholder()
               : CoinsGroupItem(
+                  showNewTransactionsIndicator: true,
                   coinsGroup: group,
-                  onTap: () => CoinsDetailsRoute(symbolGroup: group.symbolGroup).go(context),
+                  onTap: () {
+                    ref.read(transactionsVisibilityStatusDaoProvider).addOrUpdateVisibilityStatus(
+                          coinIds: group.coins.map((e) => e.coin.id).toList(),
+                          status: TransactionVisibilityStatus.seen,
+                        );
+                    return CoinsDetailsRoute(symbolGroup: group.symbolGroup).go(context);
+                  },
                 ),
         );
       },

@@ -173,7 +173,7 @@ dev_dependencies:
   riverpod_generator: ^2.6.1
   riverpod_lint: ^2.6.1
   sentry_dart_plugin: ^2.4.1
-  very_good_analysis: ^5.1.0
+  very_good_analysis: ^6.0.0
   video_player_platform_interface: ^6.3.0
 
 flutter:
