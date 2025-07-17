@@ -2,6 +2,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:go_router/go_router.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/user/model/user_metadata.f.dart';
 import 'package:ion/app/features/wallets/views/pages/contact_modal_page/components/contact_item_avatar.dart';
@@ -20,8 +21,13 @@ class ContactItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: () {
-        ProfileRoute(pubkey: userMetadata.masterPubkey).push<void>(context);
+      onTap: () async {
+        context.pop();
+        await ProfileRoute(pubkey: userMetadata.masterPubkey).push<void>(context);
+        final rootContext = rootNavigatorKey.currentContext;
+        if (rootContext != null && rootContext.mounted) {
+          await ContactRoute(pubkey: userMetadata.masterPubkey).push<void>(rootContext);
+        }
       },
       child: Column(
         children: [
