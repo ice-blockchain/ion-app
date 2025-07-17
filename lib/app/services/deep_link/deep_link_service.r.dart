@@ -96,9 +96,11 @@ final class DeepLinkService {
 
   final String _templateId;
 
-  static final oneLinkUrlRegex = RegExp(r'@?(https://ion\.onelink\.me/[A-Za-z0-9\-_/\?&%=#]*)');
-
   static const _baseUrl = 'https://ion.onelink.me';
+
+  static final oneLinkUrlRegex = RegExp(
+    '@?(${RegExp.escape(_baseUrl)}/[A-Za-z0-9\\-_/?&%=#]*)',
+  );
 
   // Defined on AppsFlyer portal for each template.
   // Used in case if generateInviteLink fails.
