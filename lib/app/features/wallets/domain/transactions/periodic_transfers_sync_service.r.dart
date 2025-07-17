@@ -45,11 +45,7 @@ class PeriodicTransfersSyncService {
 
     _broadcastedTransfersSubscription = _transactionsRepository
         .watchTransactions(
-          statuses: [
-            TransactionStatus.pending,
-            TransactionStatus.executing,
-            TransactionStatus.broadcasted,
-          ],
+          statuses: TransactionStatus.inProgressStatuses,
           limit: 100,
         )
         .distinct((list1, list2) => const ListEquality<TransactionData>().equals(list1, list2))
@@ -88,11 +84,7 @@ class PeriodicTransfersSyncService {
     Logger.log('Starting wallet-specific periodic transfers sync');
 
     final pendingTransactions = await _transactionsRepository.getTransactions(
-      statuses: [
-        TransactionStatus.pending,
-        TransactionStatus.executing,
-        TransactionStatus.broadcasted,
-      ],
+      statuses: TransactionStatus.inProgressStatuses,
       limit: 100,
     );
 
@@ -155,11 +147,7 @@ class PeriodicTransfersSyncService {
 
     final pendingTransactionsBefore = await _transactionsRepository.getTransactions(
       walletAddresses: [walletAddress],
-      statuses: [
-        TransactionStatus.pending,
-        TransactionStatus.executing,
-        TransactionStatus.broadcasted,
-      ],
+      statuses: TransactionStatus.inProgressStatuses,
       limit: 100,
     );
 
@@ -184,11 +172,7 @@ class PeriodicTransfersSyncService {
 
     final pendingTransactionsAfter = await _transactionsRepository.getTransactions(
       walletAddresses: [walletAddress],
-      statuses: [
-        TransactionStatus.pending,
-        TransactionStatus.executing,
-        TransactionStatus.broadcasted,
-      ],
+      statuses: TransactionStatus.inProgressStatuses,
       limit: 100,
     );
 
