@@ -23,7 +23,6 @@ import 'package:ion/app/features/user/model/user_delegation.f.dart';
 import 'package:ion/app/features/user/model/user_metadata.f.dart';
 import 'package:ion/app/features/wallets/model/entities/funds_request_entity.f.dart';
 import 'package:ion/app/features/wallets/model/entities/wallet_asset_entity.f.dart';
-import 'package:ion/app/utils/image_path.dart';
 
 part 'ion_connect_push_data_payload.f.freezed.dart';
 part 'ion_connect_push_data_payload.f.g.dart';
@@ -162,18 +161,18 @@ class IonConnectPushDataPayload {
     final mediaItems = message.data.media.values.toList();
 
     if (mediaItems.every((media) => media.mediaType == MediaType.image)) {
-      final isGif = mediaItems.every((media) => media.url.isGif);
-
       if (mediaItems.length == 1) {
+        final isGif = mediaItems.first.mimeType.contains('gif');
         return isGif ? PushNotificationType.chatGifMessage : PushNotificationType.chatPhotoMessage;
       } else {
+        final isGif = mediaItems.every((media) => media.mimeType.contains('gif'));
         return isGif
             ? PushNotificationType.chatMultiGifMessage
             : PushNotificationType.chatMultiPhotoMessage;
       }
     } else if (mediaItems.any((media) => media.mediaType == MediaType.video)) {
       final videoItems = mediaItems.where((media) => media.mediaType == MediaType.video).toList();
-      final thumbItems = mediaItems.where((media) => media.thumb != null).toList();
+      final thumbItems = mediaItems.where((media) => media.mediaType == MediaType.image).toList();
 
       if (videoItems.length == 1 && thumbItems.length == 1) {
         return PushNotificationType.chatVideoMessage;
@@ -187,7 +186,7 @@ class IonConnectPushDataPayload {
     return PushNotificationType.chatMultiMediaMessage;
   }
 
-  Map<String, String> get placeholders {
+  Map<String, String> placeholders(PushNotificationType notificationType) {
     final mainEntityUserMetadata = _getUserMetadata(pubkey: mainEntity.masterPubkey);
 
     final data = <String, String>{};
@@ -205,13 +204,25 @@ class IonConnectPushDataPayload {
       data['messageContent'] = decryptedEvent!.content;
       data['reactionContent'] = decryptedEvent!.content;
       final entity = mainEntity;
+
       if (entity is IonConnectGiftWrapEntity) {
         if (entity.data.kinds
             .any((list) => list.contains(ReplaceablePrivateDirectMessageEntity.kind.toString()))) {
           final message = ReplaceablePrivateDirectMessageEntity.fromEventMessage(decryptedEvent!);
-          data['fileCount'] = message.data.media.values.length.toString();
 
-          if (message.data.media.isNotEmpty) {
+          if (notificationType == PushNotificationType.chatMultiGifMessage ||
+              notificationType == PushNotificationType.chatMultiPhotoMessage) {
+            data['fileCount'] = message.data.media.values.length.toString();
+          }
+
+          if (notificationType == PushNotificationType.chatMultiVideoMessage) {
+            data['fileCount'] = message.data.media.values
+                .where((media) => media.mediaType == MediaType.video)
+                .length
+                .toString();
+          }
+
+          if (notificationType == PushNotificationType.chatDocumentMessage) {
             final splitMimeType = message.data.media.values.first.mimeType.split('/');
             if (splitMimeType.first == 'application') {
               data['documentExt'] = splitMimeType.last;

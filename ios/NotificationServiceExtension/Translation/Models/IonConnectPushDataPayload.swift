@@ -31,7 +31,7 @@ class IonConnectPushDataPayload: Decodable {
             if let metadata = result?.metadata {
                 placeholders = [
                     "username": metadata.name,
-                    "displayName": metadata.displayName
+                    "displayName": metadata.displayName,
                 ]
             }
 
@@ -183,7 +183,7 @@ class IonConnectPushDataPayload: Decodable {
         return nil
     }
 
-    var placeholders: [String: String] {
+    func placeholders(type: PushNotificationType) -> [String: String] {
         guard let masterPubkey = mainEntity?.masterPubkey else {
             return [:]
         }
@@ -208,8 +208,17 @@ class IonConnectPushDataPayload: Decodable {
                 entity.data.kinds.contains(String(ReplaceablePrivateDirectMessageEntity.kind))
             {
                 if let message = try? ReplaceablePrivateDirectMessageEntity.fromEventMessage(decryptedEvent) {
-                    data["fileCount"] = String(message.data.media.count)
-                    if let media = message.data.media.first, media.mediaType == .document {
+
+                    if type == PushNotificationType.chatMultiGifMessage || type == PushNotificationType.chatMultiPhotoMessage {
+                        data["fileCount"] = String(message.data.media.count)
+                    }
+
+                    if type == PushNotificationType.chatMultiVideoMessage {
+                        let videoItems = message.data.media.filter { $0.mediaType == .video }
+                        data["fileCount"] = String(videoItems.count)
+                    }
+
+                    if type == PushNotificationType.chatDocumentMessage, let media = message.data.media.first {
                         data["documentExt"] = media.mediaExt
                     }
                 }
@@ -295,33 +304,18 @@ class IonConnectPushDataPayload: Decodable {
     private func getVisualMediaNotificationType(message: ReplaceablePrivateDirectMessageEntity) -> PushNotificationType {
         let mediaItems = message.data.media
 
-        // Check if all media items are images
-        let allImages = mediaItems.allSatisfy { media in
-            return media.mediaType == .image
-        }
+        if let mediaType = mediaItems.first?.mediaType, mediaItems.count == 1 {
+            if mediaType == .image { return .chatPhotoMessage }
+            if mediaType == .gif { return .chatGifMessage }
+            if mediaType == .video { return .chatVideoMessage }
+        } else {
+            if mediaItems.allSatisfy({ $0.mediaType == .image }) { return .chatMultiPhotoMessage }
+            if mediaItems.allSatisfy({ $0.mediaType == .gif }) { return .chatMultiGifMessage }
 
-        if allImages {
-            // Check if all are GIFs
-            let allGifs = mediaItems.allSatisfy { media in
-                return media.url.isGif
-            }
-
-            if mediaItems.count == 1 {
-                return allGifs ? .chatGifMessage : .chatPhotoMessage
-            } else {
-                return allGifs ? .chatMultiGifMessage : .chatMultiPhotoMessage
-            }
-        } else if mediaItems.contains(where: { $0.mediaType == .video }) {
-            // Count video items and thumbnails
             let videoItems = mediaItems.filter { $0.mediaType == .video }
-            let thumbItems = mediaItems.filter { $0.thumb != nil }
-
-            if videoItems.count == 1 && thumbItems.count == 1 {
-                return .chatVideoMessage
-            } else if videoItems.count == thumbItems.count {
-                return .chatMultiVideoMessage
-            } else {
-                return .chatMultiMediaMessage
+            let thumbItems = mediaItems.filter { $0.mediaType == .image || $0.mediaType == .gif }
+            if videoItems.count == thumbItems.count {
+                return videoItems.count == 1 ? .chatVideoMessage : .chatMultiVideoMessage
             }
         }
 
@@ -387,14 +381,4 @@ enum PushNotificationType: String, Decodable {
     case chatMultiMediaMessage
     case chatMultiPhotoMessage
     case chatMultiVideoMessage
-}
-
-// MARK: - Helper Extensions
-
-extension String {
-    /// Determines if a URL string points to a GIF image
-    var isGif: Bool {
-        let lowercased = self.lowercased()
-        return lowercased.hasSuffix(".gif") || lowercased.contains("gif")
-    }
 }

@@ -1,7 +1,6 @@
 // SPDX-License-Identifier: ice License 1.0
 
 import Foundation
-
 // Import necessary models and utilities
 import UIKit
 
@@ -12,7 +11,7 @@ struct ReplaceablePrivateDirectMessageData {
     let relatedPubkeys: [RelatedPubkey]?
     let primaryAudio: MediaItem?
     let quotedEvent: SimpleEventReference?
-    
+
     init(
         content: String,
         recipient: String,
@@ -31,7 +30,7 @@ struct ReplaceablePrivateDirectMessageData {
 
     static func fromEventMessage(_ eventMessage: EventMessage) -> ReplaceablePrivateDirectMessageData {
         let content = eventMessage.content
-        
+
         var tagsByType: [String: [[String]]] = [:]
         for tag in eventMessage.tags {
             if tag.count >= 1 {
@@ -42,22 +41,22 @@ struct ReplaceablePrivateDirectMessageData {
                 tagsByType[tagType]?.append(tag)
             }
         }
-        
+
         var recipient = ""
         if let pTags = tagsByType["p"], !pTags.isEmpty, pTags[0].count >= 2 {
             recipient = pTags[0][1]
         }
-        
+
         let mediaItems = MediaItem.parseImeta(tagsByType["imeta"])
-        
+
         let primaryAudio = mediaItems.first { $0.mediaType == .audio }
-        
+
         var quotedEvent: SimpleEventReference? = nil
         if let quotedTags = tagsByType["e"], !quotedTags.isEmpty, quotedTags[0].count >= 2 {
             let eventId = quotedTags[0][1]
             quotedEvent = SimpleEventReference(id: eventId)
         }
-        
+
         var relatedPubkeys: [RelatedPubkey]? = nil
         if let pubkeyTags = tagsByType["p"], pubkeyTags.count > 1 {
             relatedPubkeys = pubkeyTags.dropFirst().compactMap { tag in
@@ -67,7 +66,7 @@ struct ReplaceablePrivateDirectMessageData {
                 return nil
             }
         }
-        
+
         return ReplaceablePrivateDirectMessageData(
             content: content,
             recipient: recipient,
@@ -77,7 +76,7 @@ struct ReplaceablePrivateDirectMessageData {
             quotedEvent: quotedEvent
         )
     }
-    
+
     /// Computed property to determine the message type based on content and media
     var messageType: MessageType {
         if primaryAudio != nil {
@@ -91,7 +90,8 @@ struct ReplaceablePrivateDirectMessageData {
         } else if media.count > 0 {
             return .document
         } else if IonConnectProtocolIdentifierTypeValidator.isEventIdentifier(content),
-                  let eventReference = EventReferenceFactory.fromEncoded(content) as? ImmutableEventReference {
+            let eventReference = EventReferenceFactory.fromEncoded(content) as? ImmutableEventReference
+        {
             switch eventReference.kind {
             case FundsRequestEntity.kind:
                 return .requestFunds
@@ -103,14 +103,14 @@ struct ReplaceablePrivateDirectMessageData {
         } else if quotedEvent != nil {
             return .sharedPost
         }
-        
+
         return .text
     }
-    
+
     /// Returns media items that are images or videos (visual media)
     var visualMedias: [MediaItem] {
         return media.filter { item in
-            return item.mediaType == .image || item.mediaType == .video
+            return item.mediaType == .image || item.mediaType == .video || item.mediaType == .gif
         }
     }
 }

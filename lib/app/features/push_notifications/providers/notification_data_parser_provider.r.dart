@@ -52,7 +52,7 @@ class NotificationDataParser {
       return null;
     }
 
-    final placeholders = data.placeholders;
+    final placeholders = data.placeholders(notificationType);
     final result = (
       title: replacePlaceholders(title, placeholders),
       body: replacePlaceholders(body, placeholders)
