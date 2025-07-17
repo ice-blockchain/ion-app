@@ -9,12 +9,7 @@ import 'package:ion/app/features/wallets/domain/transactions/sync_transactions_s
 import 'package:ion/app/features/wallets/domain/transactions/transaction_loader.r.dart';
 import 'package:ion/app/features/wallets/domain/transactions/transfer_status_updater.r.dart';
 import 'package:ion/app/features/wallets/domain/wallet_views/wallet_views_service.r.dart';
-import 'package:ion/app/features/wallets/model/coin_data.f.dart';
-import 'package:ion/app/features/wallets/model/coin_in_wallet_data.f.dart';
-import 'package:ion/app/features/wallets/model/coins_group.f.dart';
 import 'package:ion/app/features/wallets/model/network_data.f.dart';
-import 'package:ion/app/features/wallets/model/nft_data.f.dart';
-import 'package:ion/app/features/wallets/model/transaction_crypto_asset.f.dart';
 import 'package:ion/app/features/wallets/model/transaction_data.f.dart';
 import 'package:ion/app/features/wallets/model/transaction_status.f.dart';
 import 'package:ion/app/features/wallets/model/transaction_type.dart';
@@ -22,17 +17,12 @@ import 'package:ion/app/features/wallets/model/wallet_view_data.f.dart';
 import 'package:ion_identity_client/ion_identity.dart';
 import 'package:mocktail/mocktail.dart';
 
-class MockNetworksRepository extends Mock implements NetworksRepository {}
+import '../data/fake_network_data.dart';
+import '../data/fake_transaction_data.dart';
+import '../data/fake_wallet.dart';
+import '../data/fake_wallet_view_data.dart';
 
-class MockCryptoWalletsRepository extends Mock implements CryptoWalletsRepository {}
-
-class MockTransactionLoader extends Mock implements TransactionLoader {}
-
-class MockTransferStatusUpdater extends Mock implements TransferStatusUpdater {}
-
-class MockWalletViewsService extends Mock implements WalletViewsService {}
-
-class MockTransactionsRepository extends Mock implements TransactionsRepository {}
+part 'sync_transactions_service_test_helpers.dart';
 
 void main() {
   late List<Wallet> mockUserWallets;
@@ -45,73 +35,16 @@ void main() {
   late SyncTransactionsService service;
 
   setUpAll(() {
-    registerFallbackValue(
-      Wallet(
-        id: 'fallback',
-        network: 'fallback',
-        address: 'fallback',
-        status: 'active',
-        name: 'Fallback Wallet',
-        signingKey: WalletSigningKey(
-          scheme: 'Ed25519',
-          curve: 'Ed25519',
-          publicKey: 'fallback_key',
-        ),
-      ),
-    );
+    registerFallbackValue(FakeWallet.create(
+      id: 'fallback',
+      network: 'fallback',
+      address: 'fallback',
+      name: 'Fallback Wallet',
+    ));
   });
 
   setUp(() {
-    mockUserWallets = [
-      Wallet(
-        id: 'wallet1',
-        network: 'network1',
-        address: 'address1',
-        status: 'active',
-        name: 'Bitcoin Wallet',
-        signingKey: WalletSigningKey(
-          scheme: 'Ed25519',
-          curve: 'Ed25519',
-          publicKey: 'key1',
-        ),
-      ),
-      Wallet(
-        id: 'wallet2',
-        network: 'network2',
-        address: 'address2',
-        status: 'active',
-        name: 'Ethereum Wallet',
-        signingKey: WalletSigningKey(
-          scheme: 'Ed25519',
-          curve: 'Ed25519',
-          publicKey: 'key2',
-        ),
-      ),
-      Wallet(
-        id: 'wallet3',
-        network: 'network3',
-        address: 'address3',
-        status: 'active',
-        name: 'Solana Wallet',
-        signingKey: WalletSigningKey(
-          scheme: 'Ed25519',
-          curve: 'Ed25519',
-          publicKey: 'key3',
-        ),
-      ),
-      Wallet(
-        id: 'wallet4',
-        network: 'network4',
-        address: 'address4',
-        status: 'active',
-        name: 'Cardano Wallet',
-        signingKey: WalletSigningKey(
-          scheme: 'Ed25519',
-          curve: 'Ed25519',
-          publicKey: 'key4',
-        ),
-      ),
-    ];
+    mockUserWallets = FakeWallet.createStandardWallets();
 
     mockNetworksRepository = MockNetworksRepository();
     mockCryptoWalletsRepository = MockCryptoWalletsRepository();
@@ -132,178 +65,25 @@ void main() {
   });
 
   void setupStandardMocks() {
-    when(() => mockNetworksRepository.getAllAsMap()).thenAnswer(
-      (_) async => {
-        'network1': createNetworkData(
-          id: 'network1',
-          isIonHistorySupported: true,
-        ),
-        'network2': createNetworkData(
-          id: 'network2',
-          isIonHistorySupported: true,
-        ),
-        'network3': createNetworkData(
-          id: 'network3',
-          isIonHistorySupported: true,
-        ),
-        'network4': createNetworkData(
-          id: 'network4',
-          isIonHistorySupported: true,
-        ),
-      },
-    );
-
-    when(() => mockWalletViewsService.lastEmitted).thenReturn([
-      createWalletViewData(
-        id: 'walletView1',
-        walletId: 'wallet1',
-        symbolGroup: 'BTC',
-      ),
-      createWalletViewData(
-        id: 'walletView2',
-        walletId: 'wallet2',
-        symbolGroup: 'ETH',
-      ),
-      createWalletViewData(
-        id: 'walletView3',
-        walletId: 'wallet3',
-        symbolGroup: 'SOL',
-      ),
-      createWalletViewData(
-        id: 'walletView4',
-        walletId: 'wallet4',
-        symbolGroup: 'ADA',
-      ),
-    ]);
-
-    when(() => mockWalletViewsService.walletViews).thenAnswer(
-      (_) => Stream.value([
-        createWalletViewData(
-          id: 'walletView1',
-          walletId: 'wallet1',
-          symbolGroup: 'BTC',
-        ),
-        createWalletViewData(
-          id: 'walletView2',
-          walletId: 'wallet2',
-          symbolGroup: 'ETH',
-        ),
-        createWalletViewData(
-          id: 'walletView3',
-          walletId: 'wallet3',
-          symbolGroup: 'SOL',
-        ),
-        createWalletViewData(
-          id: 'walletView4',
-          walletId: 'wallet4',
-          symbolGroup: 'ADA',
-        ),
-      ]),
-    );
+    MockSetupHelper.setupNetworkMocks(mockNetworksRepository);
+    MockSetupHelper.setupWalletViewsMocks(mockWalletViewsService);
+    MockSetupHelper.setupCryptoWalletMocks(mockCryptoWalletsRepository);
+    MockSetupHelper.setupTransactionLoaderMocks(mockTransactionLoader);
+    MockSetupHelper.setupTransferStatusUpdaterMocks(mockTransferStatusUpdater);
   }
 
   void setupBroadcastedTransfersMocks() {
-    when(() => mockNetworksRepository.getAllAsMap()).thenAnswer(
-      (_) async => {
-        'network1': createNetworkData(
-          id: 'network1',
-          isIonHistorySupported: true,
-        ),
-        'network2': createNetworkData(
-          id: 'network2',
-          isIonHistorySupported: false,
-        ),
-        'network3': createNetworkData(
-          id: 'network3',
-          isIonHistorySupported: true,
-        ),
-        'network4': createNetworkData(
-          id: 'network4',
-          isIonHistorySupported: true,
-        ),
-      },
+    MockSetupHelper.setupNetworkMocks(
+      mockNetworksRepository,
+      ionHistorySupported: [true, false, true, true],
     );
-
-    when(() => mockWalletViewsService.lastEmitted).thenReturn([
-      createWalletViewData(
-        id: 'walletView1',
-        walletId: 'wallet1',
-        symbolGroup: 'BTC',
-      ),
-      createWalletViewData(
-        id: 'walletView2',
-        walletId: 'wallet2',
-        symbolGroup: 'ETH',
-      ),
-    ]);
-
-    when(() => mockWalletViewsService.walletViews).thenAnswer(
-      (_) => Stream.value([
-        createWalletViewData(
-          id: 'walletView1',
-          walletId: 'wallet1',
-          symbolGroup: 'BTC',
-        ),
-        createWalletViewData(
-          id: 'walletView2',
-          walletId: 'wallet2',
-          symbolGroup: 'ETH',
-        ),
-      ]),
+    MockSetupHelper.setupWalletViewsMocks(
+      mockWalletViewsService,
+      walletIds: ['wallet1', 'wallet2'],
+      symbolGroups: ['BTC', 'ETH'],
     );
-  }
-
-  List<TransactionData> createBroadcastedTransfersTestData() {
-    return [
-      createTransactionData(
-        txHash: 'tx1',
-        network: 'network1',
-        type: TransactionType.send,
-        status: TransactionStatus.broadcasted,
-        senderWalletAddress: 'address1',
-        receiverWalletAddress: 'other1',
-      ),
-      createTransactionData(
-        txHash: 'tx2',
-        network: 'network2',
-        type: TransactionType.send,
-        status: TransactionStatus.executing,
-        senderWalletAddress: 'address2',
-        receiverWalletAddress: 'other2',
-      ),
-      createTransactionData(
-        txHash: 'tx3',
-        network: 'network3',
-        type: TransactionType.receive,
-        status: TransactionStatus.pending,
-        senderWalletAddress: 'other3',
-        receiverWalletAddress: 'address3',
-      ),
-      createTransactionData(
-        txHash: 'tx4',
-        network: 'network4',
-        type: TransactionType.receive,
-        status: TransactionStatus.broadcasted,
-        senderWalletAddress: 'other4',
-        receiverWalletAddress: 'address4',
-      ),
-      createTransactionData(
-        txHash: 'tx5',
-        network: 'network1',
-        type: TransactionType.send,
-        status: TransactionStatus.executing,
-        senderWalletAddress: 'unknown_address',
-        receiverWalletAddress: 'other5',
-      ),
-      createTransactionData(
-        txHash: 'tx6',
-        network: 'network1',
-        type: TransactionType.send,
-        status: TransactionStatus.broadcasted,
-        senderWalletAddress: null,
-        receiverWalletAddress: 'other6',
-      ),
-    ];
+    MockSetupHelper.setupTransactionLoaderMocks(mockTransactionLoader, returnValue: true);
+    MockSetupHelper.setupTransferStatusUpdaterMocks(mockTransferStatusUpdater);
   }
 
   group('SyncTransactionsService', () {
@@ -410,7 +190,7 @@ void main() {
       test('skips sync when wallet network is not supported', () async {
         when(() => mockNetworksRepository.getAllAsMap()).thenAnswer(
           (_) async => {
-            'network1': createNetworkData(
+            'network1': FakeNetworkData.create(
               id: 'network1',
               isIonHistorySupported: true,
             ),
@@ -419,12 +199,12 @@ void main() {
         );
 
         when(() => mockWalletViewsService.lastEmitted).thenReturn([
-          createWalletViewData(
+          FakeWalletViewData.create(
             id: 'walletView1',
             walletId: 'wallet1',
             symbolGroup: 'BTC',
           ),
-          createWalletViewData(
+          FakeWalletViewData.create(
             id: 'walletView2',
             walletId: 'wallet2',
             symbolGroup: 'ETH',
@@ -433,12 +213,12 @@ void main() {
 
         when(() => mockWalletViewsService.walletViews).thenAnswer(
           (_) => Stream.value([
-            createWalletViewData(
+            FakeWalletViewData.create(
               id: 'walletView1',
               walletId: 'wallet1',
               symbolGroup: 'BTC',
             ),
-            createWalletViewData(
+            FakeWalletViewData.create(
               id: 'walletView2',
               walletId: 'wallet2',
               symbolGroup: 'ETH',
@@ -507,11 +287,11 @@ void main() {
       test('skips sync when wallet is not connected to any wallet view', () async {
         when(() => mockNetworksRepository.getAllAsMap()).thenAnswer(
           (_) async => {
-            'network1': createNetworkData(
+            'network1': FakeNetworkData.create(
               id: 'network1',
               isIonHistorySupported: true,
             ),
-            'network2': createNetworkData(
+            'network2': FakeNetworkData.create(
               id: 'network2',
               isIonHistorySupported: true,
             ),
@@ -519,7 +299,7 @@ void main() {
         );
 
         when(() => mockWalletViewsService.lastEmitted).thenReturn([
-          createWalletViewData(
+          FakeWalletViewData.create(
             id: 'walletView1',
             walletId: 'wallet1',
             symbolGroup: 'BTC',
@@ -529,7 +309,7 @@ void main() {
 
         when(() => mockWalletViewsService.walletViews).thenAnswer(
           (_) => Stream.value([
-            createWalletViewData(
+            FakeWalletViewData.create(
               id: 'walletView1',
               walletId: 'wallet1',
               symbolGroup: 'BTC',
@@ -620,7 +400,7 @@ void main() {
       test('syncs only wallets with broadcasted transfers from user wallets', () async {
         setupBroadcastedTransfersMocks();
 
-        final broadcastedTransfers = createBroadcastedTransfersTestData();
+        final broadcastedTransfers = MockSetupHelper.createBroadcastedTransfersTestData();
         when(() => mockTransactionsRepository.getBroadcastedTransfers())
             .thenAnswer((_) async => broadcastedTransfers);
 
@@ -754,7 +534,7 @@ void main() {
         setupStandardMocks();
 
         final inProgressTransactions = [
-          createTransactionData(
+          FakeTransactionData.create(
             txHash: 'tx1',
             network: 'network1',
             type: TransactionType.send,
@@ -762,7 +542,7 @@ void main() {
             senderWalletAddress: 'address1',
             receiverWalletAddress: 'other1',
           ),
-          createTransactionData(
+          FakeTransactionData.create(
             txHash: 'tx2',
             network: 'network1',
             type: TransactionType.receive,
@@ -850,7 +630,7 @@ void main() {
 
         when(() => mockWalletViewsService.walletViews).thenAnswer(
           (_) => Stream.value([
-            createWalletViewDataWithCoin(
+            FakeWalletViewData.create(
               id: 'walletView1',
               walletId: 'wallet1',
               symbolGroup: 'BTC',
@@ -878,11 +658,11 @@ void main() {
       test('syncs wallets that have the specified coin', () async {
         when(() => mockNetworksRepository.getAllAsMap()).thenAnswer(
           (_) async => {
-            'network1': createNetworkData(
+            'network1': FakeNetworkData.create(
               id: 'network1',
               isIonHistorySupported: true,
             ),
-            'network2': createNetworkData(
+            'network2': FakeNetworkData.create(
               id: 'network2',
               isIonHistorySupported: true,
             ),
@@ -893,19 +673,18 @@ void main() {
 
         when(() => mockWalletViewsService.walletViews).thenAnswer(
           (_) => Stream.value([
-            createWalletViewDataWithCoin(
+            FakeWalletViewData.create(
               id: 'walletView1',
               walletId: 'wallet1',
               symbolGroup: 'BTC',
-              networkId: 'network1',
             ),
-            createWalletViewDataWithCoin(
+            FakeWalletViewData.create(
               id: 'walletView2',
               walletId: 'wallet2',
               symbolGroup: 'BTC',
               networkId: 'network2',
             ),
-            createWalletViewDataWithCoin(
+            FakeWalletViewData.create(
               id: 'walletView3',
               walletId: 'unknown_wallet',
               symbolGroup: 'BTC',
@@ -964,162 +743,4 @@ void main() {
       });
     });
   });
-}
-
-TransactionData createTransactionData({
-  required String txHash,
-  required String network,
-  required TransactionType type,
-  required TransactionStatus status,
-  required String? senderWalletAddress,
-  required String? receiverWalletAddress,
-}) {
-  return TransactionData(
-    txHash: txHash,
-    walletViewId: 'walletView1',
-    network: createNetworkData(
-      id: network,
-      isIonHistorySupported: network != 'network2',
-    ),
-    type: type,
-    cryptoAsset: createTransactionCryptoAsset(),
-    senderWalletAddress: senderWalletAddress,
-    receiverWalletAddress: receiverWalletAddress,
-    fee: '1',
-    status: status,
-  );
-}
-
-TransactionCryptoAsset createTransactionCryptoAsset() {
-  return TransactionCryptoAsset.coin(
-    coin: CoinData(
-      id: 'Test Coin',
-      name: 'Test Coin',
-      contractAddress: 'contractAddress',
-      decimals: 18,
-      iconUrl: 'image.png',
-      abbreviation: 'TEST',
-      network: createNetworkData(
-        id: 'network1',
-        isIonHistorySupported: true,
-      ),
-      priceUSD: 0,
-      symbolGroup: '',
-      syncFrequency: const Duration(hours: 1),
-    ),
-    amount: 100,
-    amountUSD: 100,
-    rawAmount: '100',
-  );
-}
-
-NetworkData createNetworkData({
-  required String id,
-  required bool isIonHistorySupported,
-}) {
-  return NetworkData(
-    id: id,
-    image: 'image.png',
-    isTestnet: false,
-    displayName: 'Test Network',
-    explorerUrl: 'https://explorer.test/{txHash}',
-    tier: isIonHistorySupported ? 1 : 2,
-  );
-}
-
-WalletViewData createWalletViewData({
-  required String id,
-  required String walletId,
-  required String symbolGroup,
-}) {
-  final coinData = CoinData(
-    id: '$symbolGroup-coin',
-    name: '$symbolGroup Coin',
-    contractAddress: 'contract-$symbolGroup',
-    decimals: 18,
-    iconUrl: 'icon.png',
-    abbreviation: symbolGroup,
-    network: createNetworkData(
-      id: 'network1',
-      isIonHistorySupported: true,
-    ),
-    priceUSD: 0,
-    symbolGroup: symbolGroup,
-    syncFrequency: const Duration(hours: 1),
-  );
-
-  final coinInWallet = CoinInWalletData(
-    coin: coinData,
-    walletId: walletId,
-    walletAddress: 'address1',
-  );
-
-  final coinsGroup = CoinsGroup(
-    name: '$symbolGroup Group',
-    iconUrl: 'icon.png',
-    symbolGroup: symbolGroup,
-    abbreviation: symbolGroup,
-    coins: [coinInWallet],
-  );
-
-  return WalletViewData(
-    id: id,
-    name: '$symbolGroup Wallet View',
-    coinGroups: [coinsGroup],
-    symbolGroups: {symbolGroup},
-    nfts: const <NftData>[],
-    usdBalance: 0.0,
-    createdAt: 0,
-    updatedAt: 0,
-    isMainWalletView: true,
-  );
-}
-
-WalletViewData createWalletViewDataWithCoin({
-  required String id,
-  required String walletId,
-  required String symbolGroup,
-  String? networkId,
-}) {
-  final coinData = CoinData(
-    id: '$symbolGroup-coin',
-    name: '$symbolGroup Coin',
-    contractAddress: 'contract-$symbolGroup',
-    decimals: 18,
-    iconUrl: 'icon.png',
-    abbreviation: symbolGroup,
-    network: createNetworkData(
-      id: networkId ?? 'network1',
-      isIonHistorySupported: true,
-    ),
-    priceUSD: 0,
-    symbolGroup: symbolGroup,
-    syncFrequency: const Duration(hours: 1),
-  );
-
-  final coinInWallet = CoinInWalletData(
-    coin: coinData,
-    walletId: walletId,
-    walletAddress: 'address1',
-  );
-
-  final coinsGroup = CoinsGroup(
-    name: '$symbolGroup Group',
-    iconUrl: 'icon.png',
-    symbolGroup: symbolGroup,
-    abbreviation: symbolGroup,
-    coins: [coinInWallet],
-  );
-
-  return WalletViewData(
-    id: id,
-    name: '$symbolGroup Wallet View',
-    coinGroups: [coinsGroup],
-    symbolGroups: {symbolGroup},
-    nfts: const <NftData>[],
-    usdBalance: 0.0,
-    createdAt: 0,
-    updatedAt: 0,
-    isMainWalletView: true,
-  );
 }

@@ -6,13 +6,12 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:ion/app/features/wallets/data/repository/transactions_repository.m.dart';
 import 'package:ion/app/features/wallets/domain/transactions/periodic_transactions_sync_service.r.dart';
 import 'package:ion/app/features/wallets/domain/transactions/sync_transactions_service.r.dart';
-import 'package:ion/app/features/wallets/model/coin_data.f.dart';
-import 'package:ion/app/features/wallets/model/network_data.f.dart';
-import 'package:ion/app/features/wallets/model/transaction_crypto_asset.f.dart';
 import 'package:ion/app/features/wallets/model/transaction_data.f.dart';
 import 'package:ion/app/features/wallets/model/transaction_status.f.dart';
 import 'package:ion/app/features/wallets/model/transaction_type.dart';
 import 'package:mocktail/mocktail.dart';
+
+import '../data/fake_transaction_data.dart';
 
 class MockSyncTransactionsService extends Mock implements SyncTransactionsService {}
 
@@ -74,26 +73,32 @@ void main() {
 
   List<TransactionData> createTestTransactions() {
     return [
-      _createTransactionWithStatus(
-        isSend: true,
-        networkTier: 1,
-        walletAddress: 'wallet1',
+      FakeTransactionData.create(
         txHash: 'tx1',
+        network: 'network_1',
+        type: TransactionType.send,
         status: TransactionStatus.executing,
-      ),
-      _createTransactionWithStatus(
-        isSend: true,
+        senderWalletAddress: 'wallet1',
+        receiverWalletAddress: 'other',
         networkTier: 1,
-        walletAddress: 'wallet1',
+      ),
+      FakeTransactionData.create(
         txHash: 'tx2',
+        network: 'network_1',
+        type: TransactionType.send,
         status: TransactionStatus.pending,
-      ),
-      _createTransactionWithStatus(
-        isSend: true,
+        senderWalletAddress: 'wallet1',
+        receiverWalletAddress: 'other',
         networkTier: 1,
-        walletAddress: 'wallet1',
+      ),
+      FakeTransactionData.create(
         txHash: 'tx3',
+        network: 'network_1',
+        type: TransactionType.send,
         status: TransactionStatus.broadcasted,
+        senderWalletAddress: 'wallet1',
+        receiverWalletAddress: 'other',
+        networkTier: 1,
       ),
     ];
   }
@@ -133,11 +138,14 @@ void main() {
 
     group('transaction filtering', () {
       test('should sync outgoing transactions in tier 1 networks', () {
-        final tx = _createTransaction(
-          isSend: true,
-          networkTier: 1,
-          walletAddress: 'wallet1',
+        final tx = FakeTransactionData.create(
           txHash: 'tx1',
+          network: 'network_1',
+          type: TransactionType.send,
+          status: TransactionStatus.executing,
+          senderWalletAddress: 'wallet1',
+          receiverWalletAddress: 'other',
+          networkTier: 1,
         );
 
         final shouldSync = service.shouldSyncTransaction(tx);
@@ -145,11 +153,14 @@ void main() {
       });
 
       test('should sync outgoing transactions in tier 2 networks', () {
-        final tx = _createTransaction(
-          isSend: true,
-          networkTier: 2,
-          walletAddress: 'wallet1',
+        final tx = FakeTransactionData.create(
           txHash: 'tx1',
+          network: 'network_2',
+          type: TransactionType.send,
+          status: TransactionStatus.executing,
+          senderWalletAddress: 'wallet1',
+          receiverWalletAddress: 'other',
+          networkTier: 2,
         );
 
         final shouldSync = service.shouldSyncTransaction(tx);
@@ -157,11 +168,14 @@ void main() {
       });
 
       test('should sync incoming transactions in tier 1 networks', () {
-        final tx = _createTransaction(
-          isSend: false,
-          networkTier: 1,
-          walletAddress: 'wallet1',
+        final tx = FakeTransactionData.create(
           txHash: 'tx1',
+          network: 'network_1',
+          type: TransactionType.receive,
+          status: TransactionStatus.executing,
+          senderWalletAddress: 'other',
+          receiverWalletAddress: 'wallet1',
+          networkTier: 1,
         );
 
         final shouldSync = service.shouldSyncTransaction(tx);
@@ -169,11 +183,14 @@ void main() {
       });
 
       test('should NOT sync incoming transactions in tier 2 networks', () {
-        final tx = _createTransaction(
-          isSend: false,
-          networkTier: 2,
-          walletAddress: 'wallet1',
+        final tx = FakeTransactionData.create(
           txHash: 'tx1',
+          network: 'network_2',
+          type: TransactionType.receive,
+          status: TransactionStatus.executing,
+          senderWalletAddress: 'other',
+          receiverWalletAddress: 'wallet1',
+          networkTier: 2,
         );
 
         final shouldSync = service.shouldSyncTransaction(tx);
@@ -233,11 +250,14 @@ void main() {
 
       test('handles service not running during stream processing', () async {
         final streamController = StreamController<List<TransactionData>>();
-        final tx = _createTransaction(
-          isSend: true,
-          networkTier: 1,
-          walletAddress: 'wallet1',
+        final tx = FakeTransactionData.create(
           txHash: 'tx1',
+          network: 'network_1',
+          type: TransactionType.send,
+          status: TransactionStatus.executing,
+          senderWalletAddress: 'wallet1',
+          receiverWalletAddress: 'other',
+          networkTier: 1,
         );
 
         setupWatchTransactionsMock(streamController);
@@ -261,12 +281,14 @@ void main() {
 
       test('executes wallet sync with pending transactions', () async {
         final streamController = StreamController<List<TransactionData>>();
-        final pendingTx = _createTransactionWithStatus(
-          isSend: true,
-          networkTier: 1,
-          walletAddress: 'wallet1',
+        final pendingTx = FakeTransactionData.create(
           txHash: 'tx1',
+          network: 'network_1',
+          type: TransactionType.send,
           status: TransactionStatus.pending,
+          senderWalletAddress: 'wallet1',
+          receiverWalletAddress: 'other',
+          networkTier: 1,
         );
 
         setupWatchTransactionsMock(streamController);
@@ -311,73 +333,4 @@ void main() {
       });
     });
   });
-}
-
-TransactionData _createTransaction({
-  required bool isSend,
-  required int networkTier,
-  required String walletAddress,
-  required String txHash,
-}) {
-  return TransactionData(
-    txHash: txHash,
-    walletViewId: 'walletView1',
-    network: _createNetwork(tier: networkTier),
-    type: isSend ? TransactionType.send : TransactionType.receive,
-    cryptoAsset: _createCryptoAsset(),
-    senderWalletAddress: isSend ? walletAddress : 'other',
-    receiverWalletAddress: isSend ? 'other' : walletAddress,
-    fee: '1',
-  );
-}
-
-TransactionData _createTransactionWithStatus({
-  required bool isSend,
-  required int networkTier,
-  required String walletAddress,
-  required String txHash,
-  required TransactionStatus status,
-}) {
-  return TransactionData(
-    txHash: txHash,
-    walletViewId: 'walletView1',
-    network: _createNetwork(tier: networkTier),
-    type: isSend ? TransactionType.send : TransactionType.receive,
-    cryptoAsset: _createCryptoAsset(),
-    senderWalletAddress: isSend ? walletAddress : 'other',
-    receiverWalletAddress: isSend ? 'other' : walletAddress,
-    fee: '1',
-    status: status,
-  );
-}
-
-NetworkData _createNetwork({required int tier}) {
-  return NetworkData(
-    id: 'network_$tier',
-    image: 'image.png',
-    isTestnet: false,
-    displayName: 'Test Network',
-    explorerUrl: 'https://explorer.test/{txHash}',
-    tier: tier,
-  );
-}
-
-TransactionCryptoAsset _createCryptoAsset() {
-  return TransactionCryptoAsset.coin(
-    coin: CoinData(
-      id: 'Test Coin',
-      name: 'Test Coin',
-      contractAddress: 'contractAddress',
-      decimals: 18,
-      iconUrl: 'image.png',
-      abbreviation: 'TEST',
-      network: _createNetwork(tier: 1),
-      priceUSD: 0,
-      symbolGroup: '',
-      syncFrequency: const Duration(microseconds: 3600000000000),
-    ),
-    amount: 100,
-    amountUSD: 100,
-    rawAmount: '100',
-  );
 }
