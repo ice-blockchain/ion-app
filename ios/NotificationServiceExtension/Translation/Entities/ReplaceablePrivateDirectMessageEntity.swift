@@ -5,6 +5,26 @@ import Foundation
 struct ReplaceablePrivateDirectMessageData {
     let content: String
     let recipient: String
+    let media: [String: MediaItem]
+    let relatedPubkeys: [RelatedPubkey]?
+    let primaryAudio: MediaItem?
+    let quotedEvent: EventReference?
+    
+    init(
+        content: String,
+        recipient: String,
+        media: [String: MediaItem] = [:],
+        relatedPubkeys: [RelatedPubkey]? = nil,
+        primaryAudio: MediaItem? = nil,
+        quotedEvent: EventReference? = nil
+    ) {
+        self.content = content
+        self.recipient = recipient
+        self.media = media
+        self.relatedPubkeys = relatedPubkeys
+        self.primaryAudio = primaryAudio
+        self.quotedEvent = quotedEvent
+    }
 
     static func fromEventMessage(_ eventMessage: EventMessage) -> ReplaceablePrivateDirectMessageData {
         let content = eventMessage.content
@@ -17,11 +37,52 @@ struct ReplaceablePrivateDirectMessageData {
                 break
             }
         }
-
+        
+        // In a real implementation, you would parse media, relatedPubkeys, etc. from tags
+        // For now, we'll just create an empty dictionary for media
+        let media: [String: MediaItem] = [:]
+        
         return ReplaceablePrivateDirectMessageData(
             content: content,
-            recipient: recipient
+            recipient: recipient,
+            media: media
         )
+    }
+    
+    /// Computed property to determine the message type based on content and media
+    var messageType: MessageType {
+        if primaryAudio != nil {
+            return .audio
+        } else if IonConnectProtocolIdentifierTypeValidator.isProfileIdentifier(content) {
+            return .profile
+        } else if content.isEmoji {
+            return .emoji
+        } else if visualMedias.count > 0 {
+            return .visualMedia
+        } else if media.count > 0 {
+            return .document
+        } else if IonConnectProtocolIdentifierTypeValidator.isEventIdentifier(content),
+                  let eventReference = EventReferenceFactory.fromEncoded(content) as? ImmutableEventReference {
+            switch eventReference.kind {
+            case FundsRequestEntity.kind:
+                return .requestFunds
+            case WalletAssetEntity.kind:
+                return .moneySent
+            default:
+                return .text
+            }
+        } else if quotedEvent != nil {
+            return .sharedPost
+        }
+        
+        return .text
+    }
+    
+    /// Returns media items that are images or videos (visual media)
+    var visualMedias: [MediaItem] {
+        return media.values.filter { item in
+            return item.mediaType == .image || item.mediaType == .video
+        }
     }
 }
 

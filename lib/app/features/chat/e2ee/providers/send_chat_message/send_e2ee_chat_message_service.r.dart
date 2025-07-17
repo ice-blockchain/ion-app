@@ -344,28 +344,11 @@ class SendE2eeChatMessageService {
       ],
     );
 
-    _logSize(eventMessage, giftWrap);
-
     await ref.read(ionConnectNotifierProvider.notifier).sendEvent(
           giftWrap,
           cache: false,
           actionSource: ActionSource.user(masterPubkey, anonymous: true),
         );
-  }
-
-  void _logSize(EventMessage eventMessage, EventMessage encryptedEventMessage) {
-    final json = eventMessage.toJson();
-    final size = utf8.encode(jsonEncode(json)).length;
-
-    final encryptedJson = encryptedEventMessage.toJson();
-    final encryptedSize = utf8.encode(jsonEncode(encryptedJson)).length;
-
-    final messageType =
-        ReplaceablePrivateDirectMessageData.fromEventMessage(eventMessage).messageType;
-
-    Logger.log(
-      '🗜️ Encrypted id: ${encryptedEventMessage.id} $messageType - Original: $size | Encrypted: $encryptedSize | Difference: ${encryptedSize - size} (${((encryptedSize - size) / size * 100).toStringAsFixed(1)}%)',
-    );
   }
 
   Future<void> resendMessage({required EventMessage eventMessage}) async {

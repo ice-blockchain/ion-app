@@ -25,10 +25,6 @@ class DatabaseManager {
             return false
         }
         
-        if !fileManager.fileExists(atPath: databasePath) {
-            return false
-        }
-        
         if sqlite3_open(databasePath, &database) != SQLITE_OK {
             sqlite3_close(database)
             database = nil
@@ -55,8 +51,9 @@ class DatabaseManager {
         let appGroupIdentifier = storage.appGroupIdentifier
         
         if let sharedContainerURL = fileManager.containerURL(forSecurityApplicationGroupIdentifier: appGroupIdentifier) {
-            let databaseName = "user_metadata_database_\(pubkey).sqlite"
+            let databaseName = "user_profile_database_\(pubkey).sqlite"
             let sharedDatabaseURL = sharedContainerURL.appendingPathComponent(databaseName)
+            print(sharedDatabaseURL)
             
             if fileManager.fileExists(atPath: sharedDatabaseURL.path) {
                 return sharedDatabaseURL.path

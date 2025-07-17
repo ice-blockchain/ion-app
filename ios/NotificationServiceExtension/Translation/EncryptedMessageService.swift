@@ -1,0 +1,146 @@
+// SPDX-License-Identifier: ice License 1.0
+
+import Clibsodium
+import CryptoKit
+import Foundation
+import NostrSDK
+import Sodium
+
+class EncryptedMessageService: NIP44v2Encrypting {
+    enum DecryptionError: Error {
+        case invalidPublicKey
+        case invalidPrivateKey
+        case keyConversionFailed
+        case sharedSecretFailed
+        case jsonDecodingFailed
+        case sodiumInitializationFailed
+        case hexDecodingFailed
+    }
+
+    private let keychainService: KeychainService
+    private let pubkey: String
+
+    init(keychainService: KeychainService, pubkey: String) {
+        self.keychainService = keychainService
+        self.pubkey = pubkey
+    }
+
+    /// Decrypts an E2E encrypted message using the private key from keychain
+    /// - Parameter eventMessage: The encrypted event message to decrypt
+    /// - Returns: The decrypted event message
+    func decryptMessage(_ eventMessage: EventMessage) async throws -> EventMessage? {
+        guard let privateKeyString = try keychainService.getPrivateKey() else {
+            throw DecryptionError.invalidPrivateKey
+        }
+
+        let content = eventMessage.content
+        let senderPubkey = eventMessage.pubkey
+        
+        let seal = try decrypt(privateKeyString: privateKeyString, senderPubkey: senderPubkey, content: content)
+        let sealEvent = try JSONDecoder().decode(EventMessage.self, from: seal!)
+        
+        let rumor = try decrypt(privateKeyString: privateKeyString, senderPubkey: sealEvent.pubkey, content: sealEvent.content)
+        let rumorEvent = try JSONDecoder().decode(EventMessage.self, from: rumor!)
+        
+        return rumorEvent
+    }
+
+    private func decrypt(privateKeyString: String, senderPubkey: String, content: String) throws -> Data? {
+        guard let x25519PrivateKey = convertEd25519SkToX25519(privateKeyString),
+            let x25519PublicKey = try convertEd25519PkToX25519(senderPubkey)
+        else {
+            NSLog("Failed to convert keys from Ed25519 to X25519")
+            throw DecryptionError.keyConversionFailed
+        }
+        
+        let sharedSecretData = try getX25519SharedSecret(
+            privateKeyHex: x25519PrivateKey,
+            publicKeyHex: x25519PublicKey
+        )
+        
+        guard let privateKey = PrivateKey(hex: x25519PrivateKey),
+            let publicKey = PublicKey(hex: x25519PublicKey)
+        else {
+            throw DecryptionError.invalidPrivateKey
+        }
+
+        let decryptedContent = try decrypt(
+            payload: content,
+            privateKeyA: privateKey,
+            publicKeyB: publicKey,
+            customConversationKey: sharedSecretData,
+            compressionAlgorithm: .brotli,
+        )
+        
+        guard let data = decryptedContent.data(using: .utf8) else {
+            NSLog("Failed to convert decrypted content to data")
+            return nil
+        }
+        
+        return data
+    }
+
+    /// Converts Ed25519 public key to X25519 public key
+    private func convertEd25519PkToX25519(_ hexPublicKey: String) throws -> String? {
+        let edPkBytes = [UInt8](hex: hexPublicKey)
+
+        if edPkBytes.count != crypto_sign_publickeybytes() {
+            throw DecryptionError.invalidPublicKey
+        }
+
+        var curve25519Bytes = [UInt8](repeating: 0, count: crypto_box_publickeybytes())
+
+        let result = crypto_sign_ed25519_pk_to_curve25519(&curve25519Bytes, edPkBytes)
+
+        if result == 0 {
+            return curve25519Bytes.toHexString()
+        } else {
+            return nil
+        }
+    }
+
+    /// Converts Ed25519 private key to X25519 private key
+    private func convertEd25519SkToX25519(_ hexPrivateKey: String) -> String? {
+        let seed = [UInt8](hex: hexPrivateKey)
+
+        if seed.count != crypto_sign_seedbytes() {
+            return nil
+        }
+
+        var pk = [UInt8](repeating: 0, count: crypto_sign_publickeybytes())
+        var sk = [UInt8](repeating: 0, count: crypto_sign_secretkeybytes())
+
+        // Generate Ed25519 keypair from seed (same as TweetNaCl does)
+        crypto_sign_seed_keypair(&pk, &sk, seed)
+
+        var x25519Sk = [UInt8](repeating: 0, count: crypto_box_secretkeybytes())
+        let result = crypto_sign_ed25519_sk_to_curve25519(&x25519Sk, sk)
+
+        return result == 0 ? x25519Sk.toHexString() : nil
+    }
+
+    func getX25519SharedSecret(privateKeyHex: String, publicKeyHex: String) throws -> Data {
+        guard let privateKeyData = privateKeyHex.hexadecimal else {
+            throw DecryptionError.hexDecodingFailed
+        }
+
+        guard let publicKeyData = publicKeyHex.hexadecimal else {
+            throw DecryptionError.hexDecodingFailed
+        }
+
+        let privateKey = try Curve25519.KeyAgreement.PrivateKey(rawRepresentation: privateKeyData)
+        let publicKey = try Curve25519.KeyAgreement.PublicKey(rawRepresentation: publicKeyData)
+        let sharedSecret = try privateKey.sharedSecretFromKeyAgreement(with: publicKey)
+
+        // Extract the shared secret bytes
+        let sharedSecretData = sharedSecret.withUnsafeBytes { Data($0) }
+
+        // NIP-44 only uses HMAC-SHA256 (the extract step of HKDF), not the full HKDF
+        // This matches the Dart implementation in Nip44.deriveConversationKey and hkdfExtract
+        let salt = "nip44-v2".data(using: .utf8)!
+        let key = SymmetricKey(data: salt)
+        let hmac = HMAC<SHA256>.authenticationCode(for: sharedSecretData, using: key)
+
+        return Data(hmac)
+    }
+}
