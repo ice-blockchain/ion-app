@@ -60,9 +60,6 @@ class TopicsCategorySection extends HookConsumerWidget {
       children: [
         CategoryHeader(
           categoryName: interestsCategory.display,
-          count: filteredSubcategories.isNotEmpty
-              ? filteredSubcategories.length
-              : interestsCategory.children.length,
           addTopPadding: addTopPadding,
         ),
         Subcategories(
