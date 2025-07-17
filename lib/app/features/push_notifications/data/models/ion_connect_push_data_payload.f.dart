@@ -5,7 +5,6 @@ import 'dart:io';
 
 import 'package:collection/collection.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
-import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/chat/e2ee/model/entities/private_direct_message_data.f.dart';
 import 'package:ion/app/features/chat/model/message_type.dart';
 import 'package:ion/app/features/core/model/media_type.dart';
@@ -45,7 +44,7 @@ class IonConnectPushDataPayload {
   static Future<IonConnectPushDataPayload> fromEncoded(
     Map<String, dynamic> data, {
     required Future<(EventMessage, UserMetadataEntity?)> Function(EventMessage eventMassage)
-        decryptEvent,
+        unwrapGift,
   }) async {
     final EncodedIonConnectPushData(:event, :relevantEvents, :compression) =
         EncodedIonConnectPushData.fromJson(data);
@@ -68,7 +67,7 @@ class IonConnectPushDataPayload {
     UserMetadataEntity? userMetadata;
 
     if (parsedEvent.kind == IonConnectGiftWrapEntity.kind) {
-      final result = await decryptEvent(parsedEvent);
+      final result = await unwrapGift(parsedEvent);
       decryptedEvent = result.$1;
       userMetadata = result.$2;
     }
@@ -118,14 +117,16 @@ class IonConnectPushDataPayload {
     } else if (entity is FollowListEntity) {
       return PushNotificationType.follower;
     } else if (entity is IonConnectGiftWrapEntity) {
-      if (entity.data.kinds.containsDeep([ReactionEntity.kind.toString()])) {
+      if (entity.data.kinds.any((list) => list.contains(ReactionEntity.kind.toString()))) {
         return PushNotificationType.chatReaction;
-      } else if (entity.data.kinds.containsDeep([FundsRequestEntity.kind.toString()])) {
+      } else if (entity.data.kinds
+          .any((list) => list.contains(FundsRequestEntity.kind.toString()))) {
         return PushNotificationType.paymentRequest;
-      } else if (entity.data.kinds.containsDeep([WalletAssetEntity.kind.toString()])) {
+      } else if (entity.data.kinds
+          .any((list) => list.contains(WalletAssetEntity.kind.toString()))) {
         return PushNotificationType.paymentReceived;
       } else if (entity.data.kinds
-          .containsDeep([ReplaceablePrivateDirectMessageEntity.kind.toString()])) {
+          .any((list) => list.contains(ReplaceablePrivateDirectMessageEntity.kind.toString()))) {
         if (decryptedEvent == null) return null;
 
         final message = ReplaceablePrivateDirectMessageEntity.fromEventMessage(decryptedEvent!);
@@ -206,7 +207,7 @@ class IonConnectPushDataPayload {
       final entity = mainEntity;
       if (entity is IonConnectGiftWrapEntity) {
         if (entity.data.kinds
-            .containsDeep([ReplaceablePrivateDirectMessageEntity.kind.toString()])) {
+            .any((list) => list.contains(ReplaceablePrivateDirectMessageEntity.kind.toString()))) {
           final message = ReplaceablePrivateDirectMessageEntity.fromEventMessage(decryptedEvent!);
           data['fileCount'] = message.data.media.values.length.toString();
 
