@@ -88,38 +88,6 @@ class SyncTransactionsService {
     Logger.info('Completed syncing wallets with broadcasted transfers');
   }
 
-  Future<void> syncBroadcastedTransactionsForWallet(String walletAddress) async {
-    final wallet = _userWallets.firstWhereOrNull((w) => w.address == walletAddress);
-
-    if (wallet == null) {
-      Logger.error('Wallet with address $walletAddress not found');
-      throw WalletNotFoundException(walletAddress: walletAddress);
-    }
-
-    final broadcastedTransfers = await _transactionsRepository.getBroadcastedTransfers(
-      walletAddress: walletAddress,
-    );
-    final broadcastedIncomingTransactions = await _transactionsRepository.getTransactions(
-      statuses: TransactionStatus.inProgressStatuses,
-      walletAddresses: [walletAddress],
-    );
-
-    if (broadcastedTransfers.isEmpty && broadcastedIncomingTransactions.isEmpty) {
-      Logger.info('No broadcasted transactions found for wallet $walletAddress, skipping sync');
-      return;
-    }
-
-    await _syncWallets(
-      wallets: [wallet],
-      isFullLoad: false,
-      updateHistoryLoaded: false,
-    );
-
-    Logger.info(
-      'Completed syncing wallet $walletAddress with broadcasted transactions (${broadcastedTransfers.length} outgoing, ${broadcastedIncomingTransactions.length} incoming)',
-    );
-  }
-
   Future<List<Wallet>> _getWalletsWithBroadcastedTransfers() async {
     final broadcastedTransfers = await _transactionsRepository.getBroadcastedTransfers();
 
@@ -131,6 +99,35 @@ class SyncTransactionsService {
     return _userWallets
         .where((wallet) => walletsWithBroadcastedTransfers.contains(wallet.address))
         .toList();
+  }
+
+  Future<void> syncBroadcastedTransactionsForWallet(String walletAddress) async {
+    final wallet = _userWallets.firstWhereOrNull((w) => w.address == walletAddress);
+
+    if (wallet == null) {
+      Logger.error('Wallet with address $walletAddress not found');
+      throw WalletNotFoundException(walletAddress: walletAddress);
+    }
+
+    final inProgressTransactions = await _transactionsRepository.getTransactions(
+      statuses: TransactionStatus.inProgressStatuses,
+      walletAddresses: [walletAddress],
+    );
+
+    if (inProgressTransactions.isEmpty) {
+      Logger.info('No broadcasted transactions found for wallet $walletAddress, skipping sync');
+      return;
+    }
+
+    await _syncWallets(
+      wallets: [wallet],
+      isFullLoad: false,
+      updateHistoryLoaded: false,
+    );
+
+    Logger.info(
+      'Completed syncing wallet $walletAddress with transactions (${inProgressTransactions.length} in progress)',
+    );
   }
 
   /// Syncs transactions for a specific coin across all networks/wallets

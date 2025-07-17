@@ -28,12 +28,14 @@ Future<PeriodicTransfersSyncService> periodicTransfersSyncService(Ref ref) async
 class PeriodicTransfersSyncService {
   PeriodicTransfersSyncService(
     this._syncTransactionsService,
-    this._transactionsRepository,
-  );
+    this._transactionsRepository, {
+    this.initialSyncDelay = const Duration(seconds: 30),
+  });
 
   final SyncTransactionsService _syncTransactionsService;
   final TransactionsRepository _transactionsRepository;
   final Map<String, bool> _walletSyncInProgress = {};
+  final Duration initialSyncDelay;
 
   StreamSubscription<List<TransactionData>>? _broadcastedTransfersSubscription;
   bool _isRunning = false;
