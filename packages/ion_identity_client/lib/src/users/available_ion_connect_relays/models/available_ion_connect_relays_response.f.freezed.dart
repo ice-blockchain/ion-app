@@ -21,8 +21,7 @@ AvailableIONConnectRelaysResponse _$AvailableIONConnectRelaysResponseFromJson(
 
 /// @nodoc
 mixin _$AvailableIONConnectRelaysResponse {
-  List<IonConnectRelayInfo> get ionConnectRelays =>
-      throw _privateConstructorUsedError;
+  List<String> get ionConnectRelays => throw _privateConstructorUsedError;
 
   /// Serializes this AvailableIONConnectRelaysResponse to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
@@ -42,7 +41,7 @@ abstract class $AvailableIONConnectRelaysResponseCopyWith<$Res> {
       _$AvailableIONConnectRelaysResponseCopyWithImpl<$Res,
           AvailableIONConnectRelaysResponse>;
   @useResult
-  $Res call({List<IonConnectRelayInfo> ionConnectRelays});
+  $Res call({List<String> ionConnectRelays});
 }
 
 /// @nodoc
@@ -67,7 +66,7 @@ class _$AvailableIONConnectRelaysResponseCopyWithImpl<$Res,
       ionConnectRelays: null == ionConnectRelays
           ? _value.ionConnectRelays
           : ionConnectRelays // ignore: cast_nullable_to_non_nullable
-              as List<IonConnectRelayInfo>,
+              as List<String>,
     ) as $Val);
   }
 }
@@ -81,7 +80,7 @@ abstract class _$$AvailableIONConnectRelaysResponseImplCopyWith<$Res>
       __$$AvailableIONConnectRelaysResponseImplCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call({List<IonConnectRelayInfo> ionConnectRelays});
+  $Res call({List<String> ionConnectRelays});
 }
 
 /// @nodoc
@@ -105,7 +104,7 @@ class __$$AvailableIONConnectRelaysResponseImplCopyWithImpl<$Res>
       ionConnectRelays: null == ionConnectRelays
           ? _value._ionConnectRelays
           : ionConnectRelays // ignore: cast_nullable_to_non_nullable
-              as List<IonConnectRelayInfo>,
+              as List<String>,
     ));
   }
 }
@@ -115,16 +114,16 @@ class __$$AvailableIONConnectRelaysResponseImplCopyWithImpl<$Res>
 class _$AvailableIONConnectRelaysResponseImpl
     implements _AvailableIONConnectRelaysResponse {
   const _$AvailableIONConnectRelaysResponseImpl(
-      {required final List<IonConnectRelayInfo> ionConnectRelays})
+      {required final List<String> ionConnectRelays})
       : _ionConnectRelays = ionConnectRelays;
 
   factory _$AvailableIONConnectRelaysResponseImpl.fromJson(
           Map<String, dynamic> json) =>
       _$$AvailableIONConnectRelaysResponseImplFromJson(json);
 
-  final List<IonConnectRelayInfo> _ionConnectRelays;
+  final List<String> _ionConnectRelays;
   @override
-  List<IonConnectRelayInfo> get ionConnectRelays {
+  List<String> get ionConnectRelays {
     if (_ionConnectRelays is EqualUnmodifiableListView)
       return _ionConnectRelays;
     // ignore: implicit_dynamic_type
@@ -171,7 +170,7 @@ class _$AvailableIONConnectRelaysResponseImpl
 abstract class _AvailableIONConnectRelaysResponse
     implements AvailableIONConnectRelaysResponse {
   const factory _AvailableIONConnectRelaysResponse(
-          {required final List<IonConnectRelayInfo> ionConnectRelays}) =
+          {required final List<String> ionConnectRelays}) =
       _$AvailableIONConnectRelaysResponseImpl;
 
   factory _AvailableIONConnectRelaysResponse.fromJson(
@@ -179,7 +178,7 @@ abstract class _AvailableIONConnectRelaysResponse
       _$AvailableIONConnectRelaysResponseImpl.fromJson;
 
   @override
-  List<IonConnectRelayInfo> get ionConnectRelays;
+  List<String> get ionConnectRelays;
 
   /// Create a copy of AvailableIONConnectRelaysResponse
   /// with the given fields replaced by the non-null parameter values.

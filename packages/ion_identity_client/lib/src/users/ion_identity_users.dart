@@ -71,7 +71,7 @@ class IONIdentityUsers {
     );
   }
 
-  Future<List<IonConnectRelayInfo>> availableIonConnectRelays({
+  Future<List<String>> availableIonConnectRelays({
     required String relayUrl,
   }) async {
     final userId = _extractUserIdService.extractUserId(username: username);

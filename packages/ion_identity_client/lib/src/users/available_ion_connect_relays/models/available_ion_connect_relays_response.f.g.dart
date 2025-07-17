@@ -11,14 +11,12 @@ _$AvailableIONConnectRelaysResponseImpl
             Map<String, dynamic> json) =>
         _$AvailableIONConnectRelaysResponseImpl(
           ionConnectRelays: (json['ionConnectRelays'] as List<dynamic>)
-              .map((e) =>
-                  IonConnectRelayInfo.fromJson(e as Map<String, dynamic>))
+              .map((e) => e as String)
               .toList(),
         );
 
 Map<String, dynamic> _$$AvailableIONConnectRelaysResponseImplToJson(
         _$AvailableIONConnectRelaysResponseImpl instance) =>
     <String, dynamic>{
-      'ionConnectRelays':
-          instance.ionConnectRelays.map((e) => e.toJson()).toList(),
+      'ionConnectRelays': instance.ionConnectRelays,
     };
