@@ -15,18 +15,18 @@ import 'package:ion/app/services/logger/logger.dart';
 import 'package:ion/app/utils/retry.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
-part 'periodic_transfers_sync_service.r.g.dart';
+part 'periodic_transactions_sync_service.r.g.dart';
 
 @Riverpod(keepAlive: true)
-Future<PeriodicTransfersSyncService> periodicTransfersSyncService(Ref ref) async {
-  return PeriodicTransfersSyncService(
+Future<PeriodicTransactionsSyncService> periodicTransactionsSyncService(Ref ref) async {
+  return PeriodicTransactionsSyncService(
     await ref.watch(syncTransactionsServiceProvider.future),
     await ref.watch(transactionsRepositoryProvider.future),
   );
 }
 
-class PeriodicTransfersSyncService {
-  PeriodicTransfersSyncService(
+class PeriodicTransactionsSyncService {
+  PeriodicTransactionsSyncService(
     this._syncTransactionsService,
     this._transactionsRepository, {
     this.initialSyncDelay = const Duration(seconds: 30),
@@ -37,16 +37,16 @@ class PeriodicTransfersSyncService {
   final Map<String, bool> _walletSyncInProgress = {};
   final Duration initialSyncDelay;
 
-  StreamSubscription<List<TransactionData>>? _broadcastedTransfersSubscription;
+  StreamSubscription<List<TransactionData>>? _broadcastedTransactionsSubscription;
   bool _isRunning = false;
 
   void startWatching() {
     if (_isRunning) return;
 
     _isRunning = true;
-    Logger.log('Starting periodic transfers sync service');
+    Logger.log('Starting periodic transactions sync service');
 
-    _broadcastedTransfersSubscription = _transactionsRepository
+    _broadcastedTransactionsSubscription = _transactionsRepository
         .watchTransactions(
           statuses: TransactionStatus.inProgressStatuses,
           limit: 100,
@@ -59,10 +59,10 @@ class PeriodicTransfersSyncService {
     if (!_isRunning) return;
 
     _isRunning = false;
-    Logger.log('Stopping periodic transfers sync service');
+    Logger.log('Stopping periodic transactions sync service');
 
-    _broadcastedTransfersSubscription?.cancel();
-    _broadcastedTransfersSubscription = null;
+    _broadcastedTransactionsSubscription?.cancel();
+    _broadcastedTransactionsSubscription = null;
   }
 
   void _onPendingTransactionsChanged(List<TransactionData> pendingTransactions) {
@@ -84,7 +84,7 @@ class PeriodicTransfersSyncService {
   }
 
   Future<void> _startSyncing() async {
-    Logger.log('Starting wallet-specific periodic transfers sync');
+    Logger.log('Starting wallet-specific periodic transactions sync');
 
     final pendingTransactions = await _transactionsRepository.getTransactions(
       statuses: TransactionStatus.inProgressStatuses,
@@ -217,7 +217,7 @@ class PeriodicTransfersSyncService {
     if (totalTransactionsAfter > 0) {
       throw WalletSyncRetryException(
         walletAddress: walletAddress,
-        remainingTransfers: totalTransactionsAfter,
+        remainingTransactions: totalTransactionsAfter,
       );
     }
   }
