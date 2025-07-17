@@ -109,6 +109,7 @@ class _RequestedMoneyMessage extends ConsumerWidget {
         isMe: isMe,
         eventId: eventReference.eventId,
         isPaid: fundsRequest.data.transaction != null,
+        isDeleted: fundsRequest.data.deleted,
         request: fundsRequest,
         eventMessage: eventMessage,
       ),

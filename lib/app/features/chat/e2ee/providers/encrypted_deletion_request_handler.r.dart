@@ -16,6 +16,8 @@ import 'package:ion/app/features/ion_connect/model/global_subscription_encrypted
 import 'package:ion/app/features/ion_connect/model/ion_connect_gift_wrap.f.dart';
 import 'package:ion/app/features/ion_connect/providers/ion_connect_event_signer_provider.r.dart';
 import 'package:ion/app/features/user_profile/providers/user_profile_sync_provider.r.dart';
+import 'package:ion/app/features/wallets/data/repository/request_assets_repository.r.dart';
+import 'package:ion/app/features/wallets/model/entities/funds_request_entity.f.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'encrypted_deletion_request_handler.r.g.dart';
@@ -30,6 +32,7 @@ class EncryptedDeletionRequestHandler extends GlobalSubscriptionEncryptedEventMe
     this.masterPubkey,
     this.eventSigner,
     this.userProfileSyncProvider,
+    this.requestAssetsRepository,
   );
 
   final ConversationMessageDao conversationMessageDao;
@@ -37,6 +40,7 @@ class EncryptedDeletionRequestHandler extends GlobalSubscriptionEncryptedEventMe
   final ConversationDao conversationDao;
   final EventMessageDao eventMessageDao;
   final UserProfileSync userProfileSyncProvider;
+  final RequestAssetsRepository requestAssetsRepository;
 
   final Env env;
   final String masterPubkey;
@@ -54,6 +58,7 @@ class EncryptedDeletionRequestHandler extends GlobalSubscriptionEncryptedEventMe
     unawaited(_deleteConversation(rumor));
     unawaited(_deleteConversationMessages(rumor));
     unawaited(userProfileSyncProvider.syncUserProfile(masterPubkeys: {rumor.masterPubkey}));
+    unawaited(_deleteFundsRequest(rumor));
   }
 
   Future<void> _deleteConversation(EventMessage rumor) async {
@@ -105,6 +110,23 @@ class EncryptedDeletionRequestHandler extends GlobalSubscriptionEncryptedEventMe
       }
     }
   }
+
+  Future<void> _deleteFundsRequest(EventMessage rumor) async {
+    final deletionRequest = DeletionRequest.fromEventMessage(rumor);
+
+    final eventsToDelete = deletionRequest.events.whereType<EventToDelete>().toList();
+
+    for (final event in eventsToDelete) {
+      final eventReference = event.eventReference;
+
+      final isFundsRequest = eventReference is ImmutableEventReference &&
+          eventReference.kind == FundsRequestEntity.kind;
+
+      if (isFundsRequest) {
+        await requestAssetsRepository.markRequestAsDeleted(eventReference.eventId);
+      }
+    }
+  }
 }
 
 @riverpod
@@ -124,5 +146,6 @@ Future<EncryptedDeletionRequestHandler?> encryptedDeletionRequestHandler(Ref ref
     masterPubkey,
     eventSigner,
     ref.watch(userProfileSyncProvider.notifier),
+    ref.watch(requestAssetsRepositoryProvider),
   );
 }

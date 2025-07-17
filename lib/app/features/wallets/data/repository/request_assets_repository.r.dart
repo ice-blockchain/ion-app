@@ -64,4 +64,8 @@ class RequestAssetsRepository {
   Future<bool> markRequestAsPaid(String requestId, String transactionId) {
     return _fundsRequestDao.markRequestAsPaid(requestId, transactionId);
   }
+
+  Future<bool> markRequestAsDeleted(String requestId) {
+    return _fundsRequestDao.markRequestAsDeleted(requestId);
+  }
 }

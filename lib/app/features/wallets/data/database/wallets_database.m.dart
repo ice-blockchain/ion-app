@@ -53,7 +53,7 @@ class WalletsDatabase extends _$WalletsDatabase {
   final String pubkey;
 
   @override
-  int get schemaVersion => 13;
+  int get schemaVersion => 14;
 
   static QueryExecutor _openConnection(String pubkey) {
     return driftDatabase(name: 'wallets_database_$pubkey');
@@ -164,6 +164,15 @@ class WalletsDatabase extends _$WalletsDatabase {
               },
             ),
           );
+        },
+        from13To14: (m, schema) async {
+          final columnExists = await isColumnExists(
+            tableName: schema.fundsRequestsTable.actualTableName,
+            columnName: 'deleted',
+          );
+          if (!columnExists) {
+            await m.addColumn(schema.fundsRequestsTable, schema.fundsRequestsTable.deleted);
+          }
         },
       ),
     );

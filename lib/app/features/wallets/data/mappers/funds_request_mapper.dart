@@ -22,6 +22,7 @@ class FundsRequestMapper {
       amountUsd: entity.data.content.amountUsd,
       request: entity.data.request,
       transactionId: entity.data.transaction?.id,
+      deleted: false,
     );
   }
 
@@ -50,7 +51,12 @@ class FundsRequestMapper {
         pubkey: db.userPubkey,
         request: db.request,
         transaction: transaction,
+        deleted: db.deleted,
       ),
     );
+  }
+
+  bool isDeleted(FundsRequest db) {
+    return db.deleted;
   }
 }
