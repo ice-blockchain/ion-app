@@ -23,9 +23,11 @@ class ContactItemName extends ConsumerWidget {
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        Text(
-          userMetadata.data.displayName,
-          style: context.theme.appTextThemes.title,
+        Flexible(
+          child: Text(
+            userMetadata.data.displayName,
+            style: context.theme.appTextThemes.title,
+          ),
         ),
         if (isVerified)
           Padding(
