@@ -58,7 +58,7 @@ class TabEntitiesList extends ConsumerWidget {
     final isBlockedOrBlockedBy =
         ref.watch(isBlockedOrBlockedByNotifierProvider(pubkey)).valueOrNull ?? false;
     final tabData = ref.watch(tabEntitiesDataProvider(type: type, pubkey: pubkey));
-    final entities = tabData.items;
+    final entities = tabData.items ?? [];
 
     return LoadMoreBuilder(
       onLoadMore: () async {
@@ -73,7 +73,7 @@ class TabEntitiesList extends ConsumerWidget {
       },
       hasMore: tabData.hasMore,
       slivers: [
-        if (entities == null)
+        if (entities.isEmpty && tabData.hasMore)
           const EntitiesListSkeleton()
         else if (entities.isEmpty || isBlockedOrBlockedBy)
           EmptyState(

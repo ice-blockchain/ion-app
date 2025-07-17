@@ -3,6 +3,7 @@
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/components/button/follow_button.dart';
+import 'package:ion/app/exceptions/exceptions.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/auth/providers/auth_provider.m.dart';
 import 'package:ion/app/features/core/views/pages/unfollow_user_page.dart';
@@ -25,7 +26,7 @@ class FollowUserButton extends ConsumerWidget {
       return const SizedBox.shrink();
     }
 
-    ref.displayErrors(followListManagerProvider);
+    ref.displayErrors(followListManagerProvider, excludedExceptions: {UserRelaysNotFoundException});
 
     final following = ref.watch(isCurrentUserFollowingSelectorProvider(pubkey));
     final isCurrentUserFollowed = ref.watch(isCurrentUserFollowedProvider(pubkey));
