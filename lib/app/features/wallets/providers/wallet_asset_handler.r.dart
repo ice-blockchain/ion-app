@@ -12,6 +12,7 @@ import 'package:ion/app/features/wallets/data/repository/request_assets_reposito
 import 'package:ion/app/features/wallets/data/repository/transactions_repository.m.dart';
 import 'package:ion/app/features/wallets/domain/wallet_views/wallet_views_service.r.dart';
 import 'package:ion/app/features/wallets/model/entities/wallet_asset_entity.f.dart';
+import 'package:ion/app/features/wallets/providers/wallet_asset_request_validator.r.dart';
 import 'package:ion/app/services/logger/logger.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
@@ -23,12 +24,14 @@ class WalletAssetHandler extends GlobalSubscriptionEncryptedEventMessageHandler 
     this.walletViewsService,
     this.transactionsRepository,
     this.requestAssetsRepository,
+    this.requestValidator,
   );
 
   final String currentPubkey;
   final WalletViewsService walletViewsService;
   final TransactionsRepository transactionsRepository;
   final RequestAssetsRepository requestAssetsRepository;
+  final WalletAssetRequestValidator requestValidator;
 
   @override
   bool canHandle({required IonConnectGiftWrapEntity entity}) {
@@ -48,12 +51,27 @@ class WalletAssetHandler extends GlobalSubscriptionEncryptedEventMessageHandler 
           )
         : message;
 
+    final requestJson = adjustedMessage.data.request;
+    if (requestJson != null) {
+      // Validate the request according to ICIP-6000 before processing
+      final isValidRequest = await requestValidator.validateRequest(
+        walletAssetEntity: adjustedMessage,
+        requestJson: requestJson,
+      );
+
+      if (!isValidRequest) {
+        Logger.error(
+          'Request validation failed for 1756 event: ${adjustedMessage.id}. Ignoring transaction.',
+        );
+        return; // Skip processing if validation fails
+      }
+    }
+
     final walletViews = walletViewsService.lastEmitted.isNotEmpty
         ? walletViewsService.lastEmitted
         : await walletViewsService.walletViews.first;
     await transactionsRepository.saveEntities([adjustedMessage], walletViews);
 
-    final requestJson = adjustedMessage.data.request;
     if (requestJson != null) {
       try {
         final decodedJson = jsonDecode(requestJson) as Map;
@@ -74,6 +92,7 @@ Future<WalletAssetHandler?> walletAssetHandler(Ref ref) async {
   final walletViewsService = await ref.watch(walletViewsServiceProvider.future);
   final transactionsRepository = await ref.watch(transactionsRepositoryProvider.future);
   final requestAssetsRepository = ref.watch(requestAssetsRepositoryProvider);
+  final requestValidator = ref.watch(walletAssetRequestValidatorProvider);
 
   if (currentPubkey == null) {
     return null;
@@ -84,5 +103,6 @@ Future<WalletAssetHandler?> walletAssetHandler(Ref ref) async {
     walletViewsService,
     transactionsRepository,
     requestAssetsRepository,
+    requestValidator,
   );
 }
