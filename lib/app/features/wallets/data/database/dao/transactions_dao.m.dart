@@ -102,12 +102,12 @@ class TransactionsDao extends DatabaseAccessor<WalletsDatabase> with _$Transacti
     List<String> walletAddresses = const [],
     List<String> walletViewIds = const [],
     List<String> externalHashes = const [],
+    List<String> eventIds = const [],
     List<TransactionStatus> statuses = const [],
     int limit = 20,
     int? offset,
     String? symbol,
     String? networkId,
-    DateTime? since,
   }) {
     return _createTransactionQuery(
       where: (tbl, transactionCoinAlias, nativeCoinAlias) => _buildTransactionWhereClause(
@@ -119,8 +119,8 @@ class TransactionsDao extends DatabaseAccessor<WalletsDatabase> with _$Transacti
         externalHashes: externalHashes,
         statuses: statuses,
         symbol: symbol,
+        eventIds: eventIds,
         networkId: networkId,
-        since: since,
         transactionCoinAlias: transactionCoinAlias,
       ),
       limit: limit,
@@ -134,6 +134,7 @@ class TransactionsDao extends DatabaseAccessor<WalletsDatabase> with _$Transacti
     List<String> walletAddresses = const [],
     List<String> walletViewIds = const [],
     List<String> externalHashes = const [],
+    List<String> eventIds = const [],
     List<TransactionStatus> statuses = const [],
     int limit = 20,
     int? offset,
@@ -150,42 +151,13 @@ class TransactionsDao extends DatabaseAccessor<WalletsDatabase> with _$Transacti
         externalHashes: externalHashes,
         statuses: statuses,
         symbol: symbol,
+        eventIds: eventIds,
         networkId: networkId,
         transactionCoinAlias: transactionCoinAlias,
       ),
       limit: limit,
       offset: offset,
     ).get();
-  }
-
-  Future<TransactionData?> getTransactionByTxHash(String txHash) {
-    final transactionCoinAlias = alias(coinsTable, 'transactionCoin');
-    final nativeCoinAlias = alias(coinsTable, 'nativeCoin');
-
-    final query = (select(transactionsTable)..where((tbl) => tbl.txHash.equals(txHash))).join([
-      leftOuterJoin(
-        networksTable,
-        networksTable.id.equalsExp(transactionsTable.networkId),
-      ),
-      leftOuterJoin(
-        transactionCoinAlias,
-        transactionCoinAlias.id.equalsExp(transactionsTable.coinId),
-      ),
-      leftOuterJoin(
-        nativeCoinAlias,
-        nativeCoinAlias.id.equalsExp(transactionsTable.nativeCoinId),
-      ),
-    ]);
-
-    return query
-        .map(
-          (row) => _mapRowToDomainModel(
-            row,
-            transactionCoinAlias: transactionCoinAlias,
-            nativeCoinAlias: nativeCoinAlias,
-          ),
-        )
-        .getSingleOrNull();
   }
 
   /// Creates the standard query with joins for transaction tables
@@ -237,7 +209,6 @@ class TransactionsDao extends DatabaseAccessor<WalletsDatabase> with _$Transacti
   }
 
   /// Builds a where clause for transaction queries with common filters.
-  /// This method eliminates duplication between similar query methods.
   Expression<bool> _buildTransactionWhereClause(
     $TransactionsTableTable tbl, {
     List<String> coinIds = const [],
@@ -245,10 +216,10 @@ class TransactionsDao extends DatabaseAccessor<WalletsDatabase> with _$Transacti
     List<String> walletAddresses = const [],
     List<String> walletViewIds = const [],
     List<String> externalHashes = const [],
+    List<String> eventIds = const [],
     List<TransactionStatus> statuses = const [],
     String? symbol,
     String? networkId,
-    DateTime? since,
     $CoinsTableTable? transactionCoinAlias,
   }) {
     Expression<bool> expr = const Constant(true);
@@ -283,21 +254,19 @@ class TransactionsDao extends DatabaseAccessor<WalletsDatabase> with _$Transacti
       expr = expr & tbl.networkId.equals(networkId);
     }
 
+    if (eventIds.isNotEmpty) {
+      expr = expr & tbl.eventId.isIn(eventIds);
+    }
+
     if (statuses.isNotEmpty) {
       final statusStrings = statuses.map((s) => s.toJson()).toList();
       var statusExpr = tbl.status.isIn(statusStrings);
+
       // Include null status if broadcasted is in the list (null is treated as broadcasted)
-      if (statusStrings.contains(TransactionStatus.broadcasted.toJson())) {
+      if (statuses.any((s) => s.isInProgress)) {
         statusExpr = statusExpr | tbl.status.isNull();
       }
       expr = expr & statusExpr;
-    }
-
-    if (since != null) {
-      expr = expr &
-          (tbl.dateConfirmed.isBiggerThanValue(since) |
-              tbl.dateRequested.isBiggerThanValue(since) |
-              tbl.createdAtInRelay.isBiggerThanValue(since));
     }
 
     return expr;

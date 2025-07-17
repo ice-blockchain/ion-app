@@ -100,11 +100,7 @@ class SyncTransactionsService {
       walletAddress: walletAddress,
     );
     final broadcastedIncomingTransactions = await _transactionsRepository.getTransactions(
-      statuses: [
-        TransactionStatus.pending,
-        TransactionStatus.executing,
-        TransactionStatus.broadcasted,
-      ],
+      statuses: TransactionStatus.inProgressStatuses,
       walletAddresses: [walletAddress],
     );
 
