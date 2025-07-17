@@ -37,6 +37,10 @@ class PeriodicTransfersSyncService {
   StreamSubscription<List<TransactionData>>? _broadcastedTransfersSubscription;
   bool _isRunning = false;
 
+  bool _shouldSyncTransaction(TransactionData tx) {
+    return tx.type.isSend || tx.network.isIonHistorySupported;
+  }
+
   void startWatching() {
     if (_isRunning) return;
 
@@ -98,8 +102,15 @@ class PeriodicTransfersSyncService {
 
     // Add wallets from all pending transactions
     for (final tx in pendingTransactions) {
-      // Choose the appropriate wallet address based on transaction type
       final walletAddress = tx.type.isSend ? tx.senderWalletAddress : tx.receiverWalletAddress;
+
+      if (!_shouldSyncTransaction(tx)) {
+        Logger.log(
+          'Skipping incoming transaction ${tx.txHash} for tier 2 network ${tx.network.id}',
+        );
+        continue;
+      }
+
       if (walletAddress != null && !walletNetworks.containsKey(walletAddress)) {
         walletNetworks[walletAddress] = tx.network;
       }
@@ -145,12 +156,13 @@ class PeriodicTransfersSyncService {
   Future<void> _performWalletSync(String walletAddress) async {
     if (!_isRunning) return;
 
-    final pendingTransactionsBefore = await _transactionsRepository.getTransactions(
+    final allPendingTransactions = await _transactionsRepository.getTransactions(
       walletAddresses: [walletAddress],
       statuses: TransactionStatus.inProgressStatuses,
       limit: 100,
     );
 
+    final pendingTransactionsBefore = allPendingTransactions.where(_shouldSyncTransaction).toList();
     final totalTransactionsBefore = pendingTransactionsBefore.length;
 
     if (pendingTransactionsBefore.isEmpty) {
@@ -170,11 +182,14 @@ class PeriodicTransfersSyncService {
 
     await _syncTransactionsService.syncBroadcastedTransactionsForWallet(walletAddress);
 
-    final pendingTransactionsAfter = await _transactionsRepository.getTransactions(
+    final allPendingTransactionsAfter = await _transactionsRepository.getTransactions(
       walletAddresses: [walletAddress],
       statuses: TransactionStatus.inProgressStatuses,
       limit: 100,
     );
+
+    final pendingTransactionsAfter =
+        allPendingTransactionsAfter.where(_shouldSyncTransaction).toList();
 
     final totalTransactionsAfter = pendingTransactionsAfter.length;
     final updatedCount = totalTransactionsBefore - totalTransactionsAfter;
