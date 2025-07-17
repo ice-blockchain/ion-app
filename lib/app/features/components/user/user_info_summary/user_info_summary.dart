@@ -8,7 +8,7 @@ import 'package:ion/app/features/components/user/user_info_summary/user_info_til
 import 'package:ion/app/features/user/model/user_metadata.f.dart';
 import 'package:ion/app/features/user/providers/follow_list_provider.r.dart';
 import 'package:ion/app/features/user/providers/user_categories_provider.r.dart';
-import 'package:ion/app/features/user/providers/user_metadata_provider.r.dart';
+import 'package:ion/app/features/user/providers/user_metadata_provider.r.dart' hide UserMetadata;
 import 'package:ion/app/utils/date.dart';
 import 'package:ion/generated/assets.gen.dart';
 

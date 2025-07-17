@@ -13,21 +13,37 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 part 'user_metadata_provider.r.g.dart';
 
 @riverpod
-Future<UserMetadataEntity?> userMetadata(
-  Ref ref,
-  String pubkey, {
-  bool cache = true,
-}) async {
-  return await ref.watch(
-    ionConnectEntityProvider(
-      eventReference:
-          ReplaceableEventReference(masterPubkey: pubkey, kind: UserMetadataEntity.kind),
-      // Always include ProfileBadgesSearchExtension to avoid provider rebuilds
-      // when badge data changes from null to cached
-      search: ProfileBadgesSearchExtension(forKind: UserMetadataEntity.kind).toString(),
-      cache: cache,
-    ).future,
-  ) as UserMetadataEntity?;
+class UserMetadata extends _$UserMetadata {
+  @override
+  Future<UserMetadataEntity?> build(
+    String pubkey, {
+    bool cache = true,
+  }) async {
+    return await ref.watch(
+      ionConnectEntityProvider(
+        eventReference: ReplaceableEventReference(
+          masterPubkey: pubkey,
+          kind: UserMetadataEntity.kind,
+        ),
+        // Always include ProfileBadgesSearchExtension to avoid provider rebuilds
+        // when badge data changes from null to cached
+        search: ProfileBadgesSearchExtension(forKind: UserMetadataEntity.kind).toString(),
+        cache: cache,
+      ).future,
+    ) as UserMetadataEntity?;
+  }
+
+  Future<void> preloadCache(Ref ref, List<String> masterPubkeys) async {
+    await ref.read(ionConnectEntitiesManagerProvider.notifier).fetch(
+          eventReferences: masterPubkeys
+              .map(
+                (pubkey) =>
+                    ReplaceableEventReference(masterPubkey: pubkey, kind: UserMetadataEntity.kind),
+              )
+              .toList(),
+          search: ProfileBadgesSearchExtension(forKind: UserMetadataEntity.kind).toString(),
+        );
+  }
 }
 
 @riverpod

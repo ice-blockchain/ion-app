@@ -2,12 +2,9 @@
 
 import 'dart:async';
 
-import 'package:ion/app/features/ion_connect/ion_connect.dart';
-import 'package:ion/app/features/ion_connect/model/action_source.f.dart';
 import 'package:ion/app/features/ion_connect/model/event_reference.f.dart';
 import 'package:ion/app/features/ion_connect/model/search_extension.dart';
 import 'package:ion/app/features/ion_connect/providers/ion_connect_entity_provider.r.dart';
-import 'package:ion/app/features/ion_connect/providers/ion_connect_notifier.r.dart';
 import 'package:ion/app/features/user/model/user_metadata.f.dart';
 import 'package:ion/app/services/ion_identity/ion_identity_client_provider.r.dart';
 import 'package:ion_identity_client/ion_identity.dart';
@@ -69,47 +66,23 @@ class PaginatedUsersMetadata extends _$PaginatedUsersMetadata {
       final ionIdentityClient = await ref.watch(ionIdentityClientProvider.future);
       final userRelaysInfo = await _fetcher(_limit, _offset, currentData, ionIdentityClient);
 
-      final client = ref.read(ionConnectNotifierProvider.notifier);
-      final metas = await Future.wait(
-        userRelaysInfo.map((creator) async {
-          // Try each relay in random order until we get metadata
-          for (final relay in creator.ionConnectRelays.toList()..shuffle()) {
-            final entityEventReference = ReplaceableEventReference(
-              masterPubkey: creator.masterPubKey,
-              kind: UserMetadataEntity.kind,
-            );
-            final cachedEntity =
-                ref.read(ionConnectCachedEntityProvider(eventReference: entityEventReference));
-            if (cachedEntity != null) {
-              return cachedEntity;
-            }
-            final requestMessage = RequestMessage()
-              ..addFilter(
-                RequestFilter(
-                  kinds: const [UserMetadataEntity.kind],
-                  authors: [creator.masterPubKey],
-                  search: ProfileBadgesSearchExtension(forKind: UserMetadataEntity.kind).toString(),
-                  limit: 1,
-                ),
+      final masterPubkeys = userRelaysInfo.map((e) => e.masterPubKey).toSet();
+      final usersMetadataWithDependencies =
+          await ref.read(ionConnectEntitiesManagerProvider.notifier).fetch(
+                eventReferences: masterPubkeys
+                    .map(
+                      (masterPubkey) => ReplaceableEventReference(
+                        masterPubkey: masterPubkey,
+                        kind: UserMetadataEntity.kind,
+                      ),
+                    )
+                    .toList(),
+                search: ProfileBadgesSearchExtension(forKind: UserMetadataEntity.kind).toString(),
               );
-            final entity = await client.requestEntity(
-              requestMessage,
-              actionSource: ActionSourceRelayUrl(relay),
-              entityEventReference: entityEventReference,
-            ) as UserMetadataEntity?;
-            if (entity != null) {
-              return entity;
-            }
-          }
-
-          // All relays exhausted without success
-          return null;
-        }),
-      );
 
       final merged = [
         ...currentData,
-        ...metas.whereType<UserMetadataEntity>(),
+        ...usersMetadataWithDependencies.whereType<UserMetadataEntity>(),
       ];
       return PaginatedUsersMetadataData(items: merged, hasMore: userRelaysInfo.length == _limit);
     });

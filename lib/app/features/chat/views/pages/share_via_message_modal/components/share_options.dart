@@ -132,7 +132,6 @@ class ShareOptions extends HookConsumerWidget {
         return;
       }
 
-      final userMetadataAsyncValue = ref.read(userMetadataProvider(eventReference.masterPubkey));
       final postEntityAsyncValue = ref.read(
         ionConnectEntityWithCountersProvider(eventReference: eventReference),
       );
@@ -149,9 +148,7 @@ class ShareOptions extends HookConsumerWidget {
             eventReference: eventReference,
           ).overrideWithValue(postEntityAsyncValue),
           // ignore: scoped_providers_should_specify_dependencies
-          userMetadataProvider(eventReference.masterPubkey).overrideWith(
-            (_) async => userMetadataAsyncValue.valueOrNull,
-          ),
+          userMetadataProvider(eventReference.masterPubkey),
         ],
         child: SharePostToStoryContent(
           eventReference: eventReference,
