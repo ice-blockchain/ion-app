@@ -57,6 +57,7 @@ class TopicsCategorySection extends HookConsumerWidget {
     }
 
     return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         CategoryHeader(
           categoryName: interestsCategory.display,
