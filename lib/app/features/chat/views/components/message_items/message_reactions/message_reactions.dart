@@ -7,6 +7,7 @@ import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/auth/providers/auth_provider.m.dart';
 import 'package:ion/app/features/chat/e2ee/model/entities/private_direct_message_data.f.dart';
 import 'package:ion/app/features/chat/e2ee/providers/e2ee_delete_event_provider.r.dart';
+import 'package:ion/app/features/chat/e2ee/providers/send_e2ee_reaction_provider.r.dart';
 import 'package:ion/app/features/chat/model/database/chat_database.m.dart';
 import 'package:ion/app/features/chat/model/message_reaction_group.f.dart';
 import 'package:ion/app/features/chat/views/components/message_items/message_types/emoji_message/emoji_message.dart';
@@ -57,11 +58,13 @@ class MessageReactions extends ConsumerWidget {
                       emoji: reactionGroup.emoji,
                       masterPubkeys: reactionMasterPubkeys,
                       currentUserHasReaction: isCurrentUserHasReaction,
-                      onTap: () {
-                        if (isCurrentUserHasReaction) {
-                          final messageEntity =
-                              ReplaceablePrivateDirectMessageEntity.fromEventMessage(eventMessage);
+                      onTap: () async {
+                        final messageEntity =
+                            ReplaceablePrivateDirectMessageEntity.fromEventMessage(
+                          eventMessage,
+                        );
 
+                        if (isCurrentUserHasReaction) {
                           final userReactionEventMessage = reactionGroup.eventMessages.firstWhere(
                             (e) => e.masterPubkey == currentMasterPubkey,
                           );
@@ -70,6 +73,13 @@ class MessageReactions extends ConsumerWidget {
                               reactionEvent: userReactionEventMessage,
                               participantsMasterPubkeys: messageEntity.allPubkeys,
                             ),
+                          );
+                        } else {
+                          final e2eeReactionService =
+                              await ref.read(sendE2eeReactionServiceProvider.future);
+                          await e2eeReactionService.sendReaction(
+                            content: reactionGroup.emoji,
+                            kind14Rumor: eventMessage,
                           );
                         }
                       },
