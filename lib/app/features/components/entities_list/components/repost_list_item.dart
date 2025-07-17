@@ -70,7 +70,10 @@ class RepostListItem extends ConsumerWidget {
             GenericRepostEntity() when repostEntity.data.kind == ArticleEntity.kind => Padding(
                 padding: EdgeInsetsDirectional.symmetric(vertical: 12.0.s) +
                     EdgeInsetsDirectional.only(end: 16.0.s),
-                child: Article(eventReference: repostEntity.data.eventReference),
+                child: Article(
+                  eventReference: repostEntity.data.eventReference,
+                  addTrailingPadding: false,
+                ),
               ),
             _ => const SizedBox.shrink(),
           },

@@ -32,50 +32,48 @@ class CounterItemsFooter extends HookConsumerWidget {
     final itemPadding =
         this.itemPadding ?? EdgeInsetsDirectional.only(top: 10.0.s, bottom: 12.0.s) + iconPadding;
 
-    return SizedBox(
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          Center(
-            child: RepliesCounterButton(
-              eventReference: eventReference,
-              padding: itemPadding + EdgeInsetsDirectional.only(start: sidePadding),
-              color: color,
-            ),
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        Center(
+          child: RepliesCounterButton(
+            eventReference: eventReference,
+            padding: itemPadding + EdgeInsetsDirectional.only(start: sidePadding),
+            color: color,
           ),
-          Center(
-            child: RepostsCounterButton(
-              eventReference: eventReference,
-              padding: itemPadding,
-              color: color,
-            ),
+        ),
+        Center(
+          child: RepostsCounterButton(
+            eventReference: eventReference,
+            padding: itemPadding,
+            color: color,
           ),
-          Center(
-            child: LikesCounterButton(
-              eventReference: eventReference,
-              padding: itemPadding,
-              color: color,
-            ),
+        ),
+        Center(
+          child: LikesCounterButton(
+            eventReference: eventReference,
+            padding: itemPadding,
+            color: color,
           ),
-          Center(
-            child: Row(
-              children: [
-                BookmarkButton(
-                  eventReference: eventReference,
-                  size: 16.0.s,
-                  padding: itemPadding + EdgeInsetsDirectional.only(end: 8.0.s, start: 16.0.s),
-                  color: color ?? context.theme.appColors.onTertararyBackground,
-                ),
-                ShareButton(
-                  eventReference: eventReference,
-                  padding: itemPadding + EdgeInsetsDirectional.only(end: sidePadding, start: 8.0.s),
-                  color: color,
-                ),
-              ],
-            ),
+        ),
+        Center(
+          child: Row(
+            children: [
+              BookmarkButton(
+                eventReference: eventReference,
+                size: 16.0.s,
+                padding: itemPadding + EdgeInsetsDirectional.only(end: 8.0.s, start: 16.0.s),
+                color: color ?? context.theme.appColors.onTertararyBackground,
+              ),
+              ShareButton(
+                eventReference: eventReference,
+                padding: itemPadding + EdgeInsetsDirectional.only(end: sidePadding, start: 8.0.s),
+                color: color,
+              ),
+            ],
           ),
-        ],
-      ),
+        ),
+      ],
     );
   }
 }
