@@ -38,6 +38,7 @@ import 'package:ion/app/services/logger/logger.dart';
 import 'package:ion/app/services/media_service/media_service.m.dart';
 import 'package:ion/app/services/uuid/uuid.dart';
 import 'package:isolate_manager/isolate_manager.dart';
+import 'package:nip44/nip44.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'send_e2ee_chat_message_service.r.g.dart';
@@ -471,5 +472,6 @@ Future<EventMessage> createGiftWrapFn(List<dynamic> args) async {
     receiverPubkey: receiverPubkey,
     receiverMasterPubkey: receiverMasterPubkey,
     expirationTag: expirationTag,
+    compressionAlgorithm: CompressionAlgorithm.brotli,
   );
 }

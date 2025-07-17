@@ -28,12 +28,14 @@ abstract class IonConnectGiftWrapService {
     required String receiverMasterPubkey,
     required List<String> contentKinds,
     List<String>? expirationTag,
+    CompressionAlgorithm compressionAlgorithm = CompressionAlgorithm.none,
   });
 
   Future<EventMessage> decodeWrap({
     required String content,
     required String senderPubkey,
     required String privateKey,
+    CompressionAlgorithm compressionAlgorithm = CompressionAlgorithm.none,
   });
 }
 
@@ -50,6 +52,7 @@ class IonConnectGiftWrapServiceImpl implements IonConnectGiftWrapService {
     required String receiverPubkey,
     required String receiverMasterPubkey,
     required List<String> contentKinds,
+    CompressionAlgorithm compressionAlgorithm = CompressionAlgorithm.none,
     List<String>? expirationTag,
   }) async {
     final oneTimeSigner = await Ed25519KeyStore.generate();
@@ -60,7 +63,7 @@ class IonConnectGiftWrapServiceImpl implements IonConnectGiftWrapService {
       encodedEvent,
       publicKey: receiverPubkey,
       privateKey: oneTimeSigner.privateKey,
-      compressionAlgorithm: CompressionAlgorithm.brotli,
+      compressionAlgorithm: compressionAlgorithm,
     );
 
     final createdAt = randomDateBefore(
@@ -85,12 +88,13 @@ class IonConnectGiftWrapServiceImpl implements IonConnectGiftWrapService {
     required String content,
     required String senderPubkey,
     required String privateKey,
+    CompressionAlgorithm compressionAlgorithm = CompressionAlgorithm.none,
   }) async {
     final decryptedContent = await _encryptedMessageService.decryptMessage(
       content,
       publicKey: senderPubkey,
       privateKey: privateKey,
-      compressionAlgorithm: CompressionAlgorithm.brotli,
+      compressionAlgorithm: compressionAlgorithm,
     );
 
     return EventMessage.fromPayloadJson(
