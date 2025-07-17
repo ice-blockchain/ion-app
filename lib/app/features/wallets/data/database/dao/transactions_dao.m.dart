@@ -119,7 +119,6 @@ class TransactionsDao extends DatabaseAccessor<WalletsDatabase> with _$Transacti
         externalHashes: externalHashes,
         statuses: statuses,
         symbol: symbol,
-        eventIds: eventIds,
         networkId: networkId,
         transactionCoinAlias: transactionCoinAlias,
       ),
@@ -151,7 +150,6 @@ class TransactionsDao extends DatabaseAccessor<WalletsDatabase> with _$Transacti
         externalHashes: externalHashes,
         statuses: statuses,
         symbol: symbol,
-        eventIds: eventIds,
         networkId: networkId,
         transactionCoinAlias: transactionCoinAlias,
       ),
@@ -200,11 +198,13 @@ class TransactionsDao extends DatabaseAccessor<WalletsDatabase> with _$Transacti
     ]);
 
     return query.map(
-      (row) => _mapRowToDomainModel(
-        row,
-        nativeCoinAlias: nativeCoinAlias,
-        transactionCoinAlias: transactionCoinAlias,
-      ),
+      (row) {
+        return _mapRowToDomainModel(
+          row,
+          nativeCoinAlias: nativeCoinAlias,
+          transactionCoinAlias: transactionCoinAlias,
+        );
+      },
     );
   }
 
@@ -216,7 +216,6 @@ class TransactionsDao extends DatabaseAccessor<WalletsDatabase> with _$Transacti
     List<String> walletAddresses = const [],
     List<String> walletViewIds = const [],
     List<String> externalHashes = const [],
-    List<String> eventIds = const [],
     List<TransactionStatus> statuses = const [],
     String? symbol,
     String? networkId,
@@ -252,10 +251,6 @@ class TransactionsDao extends DatabaseAccessor<WalletsDatabase> with _$Transacti
 
     if (networkId != null) {
       expr = expr & tbl.networkId.equals(networkId);
-    }
-
-    if (eventIds.isNotEmpty) {
-      expr = expr & tbl.eventId.isIn(eventIds);
     }
 
     if (statuses.isNotEmpty) {
