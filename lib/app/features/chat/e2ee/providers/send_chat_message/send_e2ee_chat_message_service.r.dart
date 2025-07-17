@@ -464,7 +464,12 @@ Future<EventMessage> createGiftWrapFn(List<dynamic> args) async {
   final expirationTag = args[6] as List<String>;
   final kinds = args[7] as List<String>;
 
-  final seal = await sealService.createSeal(eventMessage, signer, receiverPubkey);
+  final seal = await sealService.createSeal(
+    eventMessage,
+    signer,
+    receiverPubkey,
+    compressionAlgorithm: CompressionAlgorithm.brotli,
+  );
 
   return giftWrapService.createWrap(
     event: seal,

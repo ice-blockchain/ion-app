@@ -26,14 +26,16 @@ abstract class IonConnectSealService {
   Future<EventMessage> createSeal(
     EventMessage rumor,
     EventSigner signer,
-    String receiverPubkey,
-  );
+    String receiverPubkey, {
+    CompressionAlgorithm compressionAlgorithm = CompressionAlgorithm.none,
+  });
 
   Future<EventMessage> decodeSeal(
     String content,
     String senderPubkey,
-    String privateKey,
-  );
+    String privateKey, {
+    CompressionAlgorithm compressionAlgorithm = CompressionAlgorithm.none,
+  });
 }
 
 class IonConnectSealServiceImpl implements IonConnectSealService {
@@ -51,15 +53,16 @@ class IonConnectSealServiceImpl implements IonConnectSealService {
   Future<EventMessage> createSeal(
     EventMessage rumor,
     EventSigner signer,
-    String receiverPubkey,
-  ) async {
+    String receiverPubkey, {
+    CompressionAlgorithm compressionAlgorithm = CompressionAlgorithm.none,
+  }) async {
     final encodedRumor = jsonEncode(rumor.toJson().last);
 
     final encryptedRumor = await _encryptedMessageService.encryptMessage(
       encodedRumor,
       publicKey: receiverPubkey,
       privateKey: signer.privateKey,
-      compressionAlgorithm: CompressionAlgorithm.brotli,
+      compressionAlgorithm: compressionAlgorithm,
     );
 
     final createdAt = randomDateBefore(
@@ -85,13 +88,14 @@ class IonConnectSealServiceImpl implements IonConnectSealService {
   Future<EventMessage> decodeSeal(
     String content,
     String senderPubkey,
-    String privateKey,
-  ) async {
+    String privateKey, {
+    CompressionAlgorithm compressionAlgorithm = CompressionAlgorithm.none,
+  }) async {
     final decryptedContent = await _encryptedMessageService.decryptMessage(
       content,
       publicKey: senderPubkey,
       privateKey: privateKey,
-      compressionAlgorithm: CompressionAlgorithm.brotli,
+      compressionAlgorithm: compressionAlgorithm,
     );
 
     return EventMessage.fromPayloadJson(

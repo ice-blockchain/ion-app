@@ -113,6 +113,7 @@ Future<(EventMessage, EventMessage)> unwrapGiftFn(List<dynamic> args) async {
     seal.content,
     seal.pubkey,
     privateKey,
+    compressionAlgorithm: CompressionAlgorithm.brotli,
   );
 
   // Check if:

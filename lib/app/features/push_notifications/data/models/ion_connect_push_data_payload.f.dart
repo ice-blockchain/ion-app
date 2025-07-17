@@ -224,9 +224,11 @@ class IonConnectPushDataPayload {
   }
 
   Future<bool> validate({required String currentPubkey}) async {
-    return await _checkEventsSignatures() &&
-        _checkMainEventRelevant(currentPubkey: currentPubkey) &&
-        _checkRequiredRelevantEvents();
+    final signaturesValid = await _checkEventsSignatures();
+    final isMainEventRelevant = _checkMainEventRelevant(currentPubkey: currentPubkey);
+    final requiredEventsPresent = _checkRequiredRelevantEvents();
+
+    return signaturesValid && isMainEventRelevant && requiredEventsPresent;
   }
 
   static String _decompress({required String input, required Compression compression}) {
