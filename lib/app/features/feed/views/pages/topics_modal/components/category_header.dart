@@ -6,13 +6,11 @@ import 'package:ion/app/extensions/extensions.dart';
 class CategoryHeader extends StatelessWidget {
   const CategoryHeader({
     required this.categoryName,
-    required this.count,
     required this.addTopPadding,
     super.key,
   });
 
   final String categoryName;
-  final int count;
   final bool addTopPadding;
 
   @override
@@ -24,22 +22,11 @@ class CategoryHeader extends StatelessWidget {
         top: addTopPadding ? 16.s : 2.s,
         bottom: 6.s,
       ),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          Text(
-            categoryName.toUpperCase(),
-            style: context.theme.appTextThemes.caption6.copyWith(
-              color: context.theme.appColors.tertararyText,
-            ),
-          ),
-          Text(
-            count.toString(),
-            style: context.theme.appTextThemes.caption6.copyWith(
-              color: context.theme.appColors.tertararyText,
-            ),
-          ),
-        ],
+      child: Text(
+        categoryName.toUpperCase(),
+        style: context.theme.appTextThemes.caption6.copyWith(
+          color: context.theme.appColors.tertararyText,
+        ),
       ),
     );
   }

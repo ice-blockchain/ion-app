@@ -57,12 +57,10 @@ class TopicsCategorySection extends HookConsumerWidget {
     }
 
     return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         CategoryHeader(
           categoryName: interestsCategory.display,
-          count: filteredSubcategories.isNotEmpty
-              ? filteredSubcategories.length
-              : interestsCategory.children.length,
           addTopPadding: addTopPadding,
         ),
         Subcategories(
