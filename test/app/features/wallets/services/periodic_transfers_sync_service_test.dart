@@ -34,6 +34,7 @@ void main() {
     service = PeriodicTransfersSyncService(
       mockSyncTransactionsService,
       mockTransactionsRepository,
+      initialSyncDelay: const Duration(microseconds: 10),
     );
   });
 
@@ -41,15 +42,66 @@ void main() {
     service.stopWatching();
   });
 
+  void setupWatchTransactionsMock(StreamController<List<TransactionData>> controller) {
+    when(
+      () => mockTransactionsRepository.watchTransactions(
+        statuses: any(named: 'statuses'),
+        limit: any(named: 'limit'),
+      ),
+    ).thenAnswer((_) => controller.stream);
+  }
+
+  void setupStandardMocks() {
+    when(
+      () => mockTransactionsRepository.getTransactions(
+        statuses: any(named: 'statuses'),
+        limit: any(named: 'limit'),
+      ),
+    ).thenAnswer((_) async => []);
+
+    when(
+      () => mockTransactionsRepository.getTransactions(
+        walletAddresses: any(named: 'walletAddresses'),
+        statuses: any(named: 'statuses'),
+        limit: any(named: 'limit'),
+      ),
+    ).thenAnswer((_) async => []);
+
+    when(
+      () => mockSyncTransactionsService.syncBroadcastedTransactionsForWallet(any()),
+    ).thenAnswer((_) async {});
+  }
+
+  List<TransactionData> createTestTransactions() {
+    return [
+      _createTransactionWithStatus(
+        isSend: true,
+        networkTier: 1,
+        walletAddress: 'wallet1',
+        txHash: 'tx1',
+        status: TransactionStatus.executing,
+      ),
+      _createTransactionWithStatus(
+        isSend: true,
+        networkTier: 1,
+        walletAddress: 'wallet1',
+        txHash: 'tx2',
+        status: TransactionStatus.pending,
+      ),
+      _createTransactionWithStatus(
+        isSend: true,
+        networkTier: 1,
+        walletAddress: 'wallet1',
+        txHash: 'tx3',
+        status: TransactionStatus.broadcasted,
+      ),
+    ];
+  }
+
   group('PeriodicTransfersSyncService', () {
     group('service lifecycle', () {
       test('can start and stop watching', () {
-        when(
-          () => mockTransactionsRepository.watchTransactions(
-            statuses: any(named: 'statuses'),
-            limit: any(named: 'limit'),
-          ),
-        ).thenAnswer((_) => const Stream.empty());
+        setupWatchTransactionsMock(StreamController());
 
         service
           ..startWatching()
@@ -64,12 +116,7 @@ void main() {
       });
 
       test('does not start watching if already running', () {
-        when(
-          () => mockTransactionsRepository.watchTransactions(
-            statuses: any(named: 'statuses'),
-            limit: any(named: 'limit'),
-          ),
-        ).thenAnswer((_) => const Stream.empty());
+        setupWatchTransactionsMock(StreamController());
 
         service
           ..startWatching()
@@ -134,95 +181,58 @@ void main() {
       });
     });
 
-    group('transaction processing', () {
-      test('filters transactions correctly when processing', () {
-        final tier1IncomingTx = _createTransaction(
-          isSend: false,
-          networkTier: 1,
-          walletAddress: 'wallet1',
-          txHash: 'tx1',
-        );
-        final tier2IncomingTx = _createTransaction(
-          isSend: false,
-          networkTier: 2,
-          walletAddress: 'wallet2',
-          txHash: 'tx2',
-        );
-        final tier2OutgoingTx = _createTransaction(
-          isSend: true,
-          networkTier: 2,
-          walletAddress: 'wallet3',
-          txHash: 'tx3',
-        );
-
-        final allTransactions = [tier1IncomingTx, tier2IncomingTx, tier2OutgoingTx];
-
-        // Test the filtering logic
-        final shouldSyncTier1Incoming = service.shouldSyncTransaction(tier1IncomingTx);
-        final shouldSyncTier2Incoming = service.shouldSyncTransaction(tier2IncomingTx);
-        final shouldSyncTier2Outgoing = service.shouldSyncTransaction(tier2OutgoingTx);
-
-        expect(shouldSyncTier1Incoming, isTrue, reason: 'Tier 1 incoming should be synced');
-        expect(shouldSyncTier2Incoming, isFalse, reason: 'Tier 2 incoming should NOT be synced');
-        expect(shouldSyncTier2Outgoing, isTrue, reason: 'Tier 2 outgoing should be synced');
-
-        // Count transactions that should be synced
-        final transactionsToSync = allTransactions.where(service.shouldSyncTransaction).toList();
-        expect(transactionsToSync.length, 2, reason: 'Should sync 2 out of 3 transactions');
-        expect(transactionsToSync, contains(tier1IncomingTx));
-        expect(transactionsToSync, contains(tier2OutgoingTx));
-        expect(transactionsToSync, isNot(contains(tier2IncomingTx)));
-      });
-
-      test('handles empty transaction list', () {
-        final emptyList = <TransactionData>[];
-        final transactionsToSync = emptyList.where(service.shouldSyncTransaction).toList();
-        expect(transactionsToSync, isEmpty);
-      });
-    });
-
-    group('stream processing', () {
-      test('starts watching with correct parameters', () {
+    group('successful sync flow behavior', () {
+      test('triggers _startSyncing when stream emits transactions', () async {
         final streamController = StreamController<List<TransactionData>>();
+        final testTransactions = createTestTransactions();
 
-        when(
-          () => mockTransactionsRepository.watchTransactions(
-            statuses: any(named: 'statuses'),
-            limit: any(named: 'limit'),
-          ),
-        ).thenAnswer((_) => streamController.stream);
-
-        service.startWatching();
-
-        verify(
-          () => mockTransactionsRepository.watchTransactions(
-            statuses: TransactionStatus.inProgressStatuses,
-            limit: 100,
-          ),
-        ).called(1);
-
-        streamController.close();
-      });
-
-      test('handles stream events', () async {
-        final streamController = StreamController<List<TransactionData>>();
-
-        when(
-          () => mockTransactionsRepository.watchTransactions(
-            statuses: any(named: 'statuses'),
-            limit: any(named: 'limit'),
-          ),
-        ).thenAnswer((_) => streamController.stream);
+        setupWatchTransactionsMock(streamController);
+        setupStandardMocks();
 
         when(
           () => mockTransactionsRepository.getTransactions(
             statuses: any(named: 'statuses'),
             limit: any(named: 'limit'),
           ),
-        ).thenAnswer((_) async => []);
+        ).thenAnswer((_) async => testTransactions);
 
         service.startWatching();
+        streamController.add(testTransactions);
 
+        await Future<void>.delayed(const Duration(microseconds: 50));
+
+        verify(
+          () => mockTransactionsRepository.getTransactions(
+            statuses: TransactionStatus.inProgressStatuses,
+            limit: 100,
+          ),
+        ).called(1);
+
+        await streamController.close();
+      });
+
+      test('skips processing when stream emits empty transaction list', () async {
+        final streamController = StreamController<List<TransactionData>>();
+
+        setupWatchTransactionsMock(streamController);
+
+        service.startWatching();
+        streamController.add([]);
+
+        await Future<void>.delayed(const Duration(microseconds: 50));
+
+        verifyNever(
+          () => mockTransactionsRepository.getTransactions(
+            statuses: any(named: 'statuses'),
+            limit: any(named: 'limit'),
+          ),
+        );
+
+        await streamController.close();
+      });
+
+      test('handles service not running during stream processing', () async {
+        final streamController = StreamController<List<TransactionData>>();
         final tx = _createTransaction(
           isSend: true,
           networkTier: 1,
@@ -230,17 +240,72 @@ void main() {
           txHash: 'tx1',
         );
 
+        setupWatchTransactionsMock(streamController);
+
+        service
+          ..startWatching()
+          ..stopWatching();
         streamController.add([tx]);
 
-        // Give time for stream processing
-        await Future<void>.delayed(const Duration(milliseconds: 10));
+        await Future<void>.delayed(const Duration(microseconds: 50));
+
+        verifyNever(
+          () => mockTransactionsRepository.getTransactions(
+            statuses: any(named: 'statuses'),
+            limit: any(named: 'limit'),
+          ),
+        );
+
+        await streamController.close();
+      });
+
+      test('executes wallet sync with pending transactions', () async {
+        final streamController = StreamController<List<TransactionData>>();
+        final pendingTx = _createTransactionWithStatus(
+          isSend: true,
+          networkTier: 1,
+          walletAddress: 'wallet1',
+          txHash: 'tx1',
+          status: TransactionStatus.pending,
+        );
+
+        setupWatchTransactionsMock(streamController);
+
+        when(
+          () => mockTransactionsRepository.getTransactions(
+            statuses: any(named: 'statuses'),
+            limit: any(named: 'limit'),
+          ),
+        ).thenAnswer((_) async => [pendingTx]);
+
+        when(
+          () => mockTransactionsRepository.getTransactions(
+            walletAddresses: ['wallet1'],
+            statuses: any(named: 'statuses'),
+            limit: any(named: 'limit'),
+          ),
+        ).thenAnswer((_) async => [pendingTx]);
+
+        when(
+          () => mockSyncTransactionsService.syncBroadcastedTransactionsForWallet('wallet1'),
+        ).thenAnswer((_) async {});
+
+        service.startWatching();
+        streamController.add([pendingTx]);
+
+        await Future<void>.delayed(const Duration(microseconds: 100));
+
+        verify(
+          () => mockSyncTransactionsService.syncBroadcastedTransactionsForWallet('wallet1'),
+        ).called(1);
 
         verify(
           () => mockTransactionsRepository.getTransactions(
+            walletAddresses: ['wallet1'],
             statuses: TransactionStatus.inProgressStatuses,
             limit: 100,
           ),
-        ).called(1);
+        ).called(2);
 
         await streamController.close();
       });
@@ -263,6 +328,26 @@ TransactionData _createTransaction({
     senderWalletAddress: isSend ? walletAddress : 'other',
     receiverWalletAddress: isSend ? 'other' : walletAddress,
     fee: '1',
+  );
+}
+
+TransactionData _createTransactionWithStatus({
+  required bool isSend,
+  required int networkTier,
+  required String walletAddress,
+  required String txHash,
+  required TransactionStatus status,
+}) {
+  return TransactionData(
+    txHash: txHash,
+    walletViewId: 'walletView1',
+    network: _createNetwork(tier: networkTier),
+    type: isSend ? TransactionType.send : TransactionType.receive,
+    cryptoAsset: _createCryptoAsset(),
+    senderWalletAddress: isSend ? walletAddress : 'other',
+    receiverWalletAddress: isSend ? 'other' : walletAddress,
+    fee: '1',
+    status: status,
   );
 }
 
