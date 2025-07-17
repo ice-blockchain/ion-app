@@ -4,7 +4,7 @@ import 'dart:async';
 
 import 'package:flutter_test/flutter_test.dart';
 import 'package:ion/app/features/wallets/data/repository/transactions_repository.m.dart';
-import 'package:ion/app/features/wallets/domain/transactions/periodic_transfers_sync_service.r.dart';
+import 'package:ion/app/features/wallets/domain/transactions/periodic_transactions_sync_service.r.dart';
 import 'package:ion/app/features/wallets/domain/transactions/sync_transactions_service.r.dart';
 import 'package:ion/app/features/wallets/model/coin_data.f.dart';
 import 'package:ion/app/features/wallets/model/network_data.f.dart';
@@ -21,7 +21,7 @@ class MockTransactionsRepository extends Mock implements TransactionsRepository 
 void main() {
   late MockSyncTransactionsService mockSyncTransactionsService;
   late MockTransactionsRepository mockTransactionsRepository;
-  late PeriodicTransfersSyncService service;
+  late PeriodicTransactionsSyncService service;
 
   setUpAll(() {
     registerFallbackValue(<String>[]);
@@ -31,7 +31,7 @@ void main() {
   setUp(() {
     mockSyncTransactionsService = MockSyncTransactionsService();
     mockTransactionsRepository = MockTransactionsRepository();
-    service = PeriodicTransfersSyncService(
+    service = PeriodicTransactionsSyncService(
       mockSyncTransactionsService,
       mockTransactionsRepository,
       initialSyncDelay: const Duration(microseconds: 10),

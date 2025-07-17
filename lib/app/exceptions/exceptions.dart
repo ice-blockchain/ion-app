@@ -606,10 +606,10 @@ class NoAvailableInterests extends IONException {
 class WalletSyncRetryException extends IONException {
   WalletSyncRetryException({
     required String walletAddress,
-    required int remainingTransfers,
+    required int remainingTransactions,
   }) : super(
           10121,
-          '$remainingTransfers transfers left to sync for wallet $walletAddress',
+          '$remainingTransactions transfers left to sync for wallet $walletAddress',
         );
 }
 
