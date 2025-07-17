@@ -31,7 +31,7 @@ void useStoryVideoPlayback({
   useEffect(
     () {
       if (!isCurrent) completedSent.value = false;
-      return null;
+      return () => _post(controller.pause);
     },
     [isCurrent],
   );
