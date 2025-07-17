@@ -9,6 +9,7 @@ import 'package:ion/app/features/ion_connect/ion_connect.dart';
 import 'package:ion/app/features/ion_connect/model/action_source.f.dart';
 import 'package:ion/app/features/ion_connect/model/ion_connect_entity.dart';
 import 'package:ion/app/features/ion_connect/providers/ion_connect_notifier.r.dart';
+import 'package:ion/app/services/logger/logger.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'entities_paged_data_provider.m.freezed.dart';
@@ -195,7 +196,8 @@ class EntitiesPagedData extends _$EntitiesPagedData implements PagedNotifier {
         dataSource.actionSource,
         PaginationParams(hasMore: lastEventTime != null, lastEventTime: lastEventTime),
       );
-    } catch (e) {
+    } catch (e, stackTrace) {
+      Logger.error(e, stackTrace: stackTrace, message: 'Data source data fetching failed');
       return MapEntry(
         dataSource.actionSource,
         PaginationParams(hasMore: false),
