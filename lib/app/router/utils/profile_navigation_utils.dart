@@ -12,8 +12,7 @@ class ProfileNavigationUtils {
     final currentState = GoRouterState.of(context);
     final currentPath = currentState.matchedLocation;
 
-    final isCurrentlyOnProfile =
-        currentPath.startsWith('/profile/user/') || currentPath.contains('/user/');
+    final isCurrentlyOnProfile = currentPath.contains('/user/');
 
     if (isCurrentlyOnProfile) {
       final currentPubkey = currentState.pathParameters['pubkey'];
