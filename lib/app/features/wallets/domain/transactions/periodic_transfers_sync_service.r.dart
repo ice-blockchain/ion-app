@@ -3,6 +3,7 @@
 import 'dart:async';
 
 import 'package:collection/collection.dart';
+import 'package:flutter/foundation.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/exceptions/exceptions.dart';
 import 'package:ion/app/features/wallets/data/repository/transactions_repository.m.dart';
@@ -36,10 +37,6 @@ class PeriodicTransfersSyncService {
 
   StreamSubscription<List<TransactionData>>? _broadcastedTransfersSubscription;
   bool _isRunning = false;
-
-  bool _shouldSyncTransaction(TransactionData tx) {
-    return tx.type.isSend || tx.network.isIonHistorySupported;
-  }
 
   void startWatching() {
     if (_isRunning) return;
@@ -104,7 +101,7 @@ class PeriodicTransfersSyncService {
     for (final tx in pendingTransactions) {
       final walletAddress = tx.type.isSend ? tx.senderWalletAddress : tx.receiverWalletAddress;
 
-      if (!_shouldSyncTransaction(tx)) {
+      if (!shouldSyncTransaction(tx)) {
         Logger.log(
           'Skipping incoming transaction ${tx.txHash} for tier 2 network ${tx.network.id}',
         );
@@ -120,6 +117,11 @@ class PeriodicTransfersSyncService {
       (entry) => _startWalletSync(walletAddress: entry.key, network: entry.value),
     );
     await Future.wait(syncFutures);
+  }
+
+  @visibleForTesting
+  bool shouldSyncTransaction(TransactionData tx) {
+    return tx.type.isSend || tx.network.isIonHistorySupported;
   }
 
   Future<void> _startWalletSync({
@@ -162,7 +164,7 @@ class PeriodicTransfersSyncService {
       limit: 100,
     );
 
-    final pendingTransactionsBefore = allPendingTransactions.where(_shouldSyncTransaction).toList();
+    final pendingTransactionsBefore = allPendingTransactions.where(shouldSyncTransaction).toList();
     final totalTransactionsBefore = pendingTransactionsBefore.length;
 
     if (pendingTransactionsBefore.isEmpty) {
@@ -189,7 +191,7 @@ class PeriodicTransfersSyncService {
     );
 
     final pendingTransactionsAfter =
-        allPendingTransactionsAfter.where(_shouldSyncTransaction).toList();
+        allPendingTransactionsAfter.where(shouldSyncTransaction).toList();
 
     final totalTransactionsAfter = pendingTransactionsAfter.length;
     final updatedCount = totalTransactionsBefore - totalTransactionsAfter;
