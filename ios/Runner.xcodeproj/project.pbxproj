@@ -14,6 +14,7 @@
 		0A4D3DCF2E09CEBC00B34272 /* Clibsodium in Frameworks */ = {isa = PBXBuildFile; productRef = 0A4D3DCE2E09CEBC00B34272 /* Clibsodium */; };
 		0A4D3DD12E09CEBC00B34272 /* Sodium in Frameworks */ = {isa = PBXBuildFile; productRef = 0A4D3DD02E09CEBC00B34272 /* Sodium */; };
 		0ACC6B822E28D60100A63CBA /* NostrSDK in Frameworks */ = {isa = PBXBuildFile; productRef = 0ACC6B812E28D60100A63CBA /* NostrSDK */; };
+		0ACC6BDE2E28DBE000A63CBA /* NostrSDK in Frameworks */ = {isa = PBXBuildFile; productRef = 0ACC6BDD2E28DBE000A63CBA /* NostrSDK */; };
 		1498D2341E8E89220040F4C2 /* GeneratedPluginRegistrant.m in Sources */ = {isa = PBXBuildFile; fileRef = 1498D2331E8E89220040F4C2 /* GeneratedPluginRegistrant.m */; };
 		3B3967161E833CAA004F5970 /* AppFrameworkInfo.plist in Resources */ = {isa = PBXBuildFile; fileRef = 3B3967151E833CAA004F5970 /* AppFrameworkInfo.plist */; };
 		6B02DE462A94B8A9008D3035 /* Environment.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = 6B02DE452A94B8A9008D3035 /* Environment.xcconfig */; };
@@ -130,6 +131,7 @@
 			files = (
 				0ACC6B822E28D60100A63CBA /* NostrSDK in Frameworks */,
 				0A25F4F02E0577950007CA92 /* NostrSDK in Frameworks */,
+				0ACC6BDE2E28DBE000A63CBA /* NostrSDK in Frameworks */,
 				9613F56C14742CFE85B46677 /* Pods_NotificationServiceExtension.framework in Frameworks */,
 				0A201AF22E2804EF00346747 /* NostrSDK in Frameworks */,
 				0A4D3DCF2E09CEBC00B34272 /* Clibsodium in Frameworks */,
@@ -307,7 +309,7 @@
 			mainGroup = 97C146E51CF9000F007C117D;
 			packageReferences = (
 				0A4D3DCD2E09CEBC00B34272 /* XCRemoteSwiftPackageReference "swift-sodium" */,
-				0ACC6B802E28D60100A63CBA /* XCRemoteSwiftPackageReference "nostr-sdk-ios" */,
+				0ACC6BDC2E28DBE000A63CBA /* XCRemoteSwiftPackageReference "nostr-sdk-ios" */,
 			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = 97C146EF1CF9000F007C117D /* Products */;
@@ -964,7 +966,15 @@
 			repositoryURL = "https://github.com/ice-blockchain/nostr-sdk-ios";
 			requirement = {
 				kind = upToNextMajorVersion;
-				minimumVersion = 0.3.0;
+				minimumVersion = 0.4.0;
+			};
+		};
+		0ACC6BDC2E28DBE000A63CBA /* XCRemoteSwiftPackageReference "nostr-sdk-ios" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/ice-blockchain/nostr-sdk-ios";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 0.4.0;
 			};
 		};
 /* End XCRemoteSwiftPackageReference section */
@@ -1001,6 +1011,11 @@
 		0ACC6B812E28D60100A63CBA /* NostrSDK */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = 0ACC6B802E28D60100A63CBA /* XCRemoteSwiftPackageReference "nostr-sdk-ios" */;
+			productName = NostrSDK;
+		};
+		0ACC6BDD2E28DBE000A63CBA /* NostrSDK */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 0ACC6BDC2E28DBE000A63CBA /* XCRemoteSwiftPackageReference "nostr-sdk-ios" */;
 			productName = NostrSDK;
 		};
 /* End XCSwiftPackageProductDependency section */
