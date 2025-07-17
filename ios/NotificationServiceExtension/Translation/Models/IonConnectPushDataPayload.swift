@@ -184,7 +184,7 @@ class IonConnectPushDataPayload: Decodable {
     }
 
     var placeholders: [String: String] {
-        guard let masterPubkey = try? mainEntity?.masterPubkey else {
+        guard let masterPubkey = mainEntity?.masterPubkey else {
             return [:]
         }
 
@@ -209,6 +209,9 @@ class IonConnectPushDataPayload: Decodable {
             {
                 if let message = try? ReplaceablePrivateDirectMessageEntity.fromEventMessage(decryptedEvent) {
                     data["fileCount"] = String(message.data.media.count)
+                    if let media = message.data.media.first, media.mediaType == .document {
+                        data["documentExt"] = media.mediaExt
+                    }
                 }
             }
         }
@@ -290,7 +293,7 @@ class IonConnectPushDataPayload: Decodable {
     /// - Parameter message: The private direct message entity containing visual media
     /// - Returns: The appropriate push notification type based on media content
     private func getVisualMediaNotificationType(message: ReplaceablePrivateDirectMessageEntity) -> PushNotificationType {
-        let mediaItems = Array(message.data.media.values)
+        let mediaItems = message.data.media
 
         // Check if all media items are images
         let allImages = mediaItems.allSatisfy { media in

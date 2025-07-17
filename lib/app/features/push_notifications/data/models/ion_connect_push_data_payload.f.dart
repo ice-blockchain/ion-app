@@ -209,6 +209,11 @@ class IonConnectPushDataPayload {
             .containsDeep([ReplaceablePrivateDirectMessageEntity.kind.toString()])) {
           final message = ReplaceablePrivateDirectMessageEntity.fromEventMessage(decryptedEvent!);
           data['fileCount'] = message.data.media.values.length.toString();
+
+          final splitMimeType = message.data.media.values.first.mimeType.split('/');
+          if (splitMimeType.first == 'application') {
+            data['documentExt'] = splitMimeType.last;
+          }
         }
       }
     }

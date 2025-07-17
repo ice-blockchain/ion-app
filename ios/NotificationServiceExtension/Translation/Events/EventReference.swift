@@ -7,6 +7,20 @@ protocol EventReference {
     func toString() -> String
 }
 
+/// A simple event reference implementation that just stores an ID
+struct SimpleEventReference: EventReference {
+    let id: String
+    let pubkey: String = ""
+    
+    init(id: String) {
+        self.id = id
+    }
+    
+    func toString() -> String {
+        return id
+    }
+}
+
 /// Utility class for creating EventReference instances
 class EventReferenceFactory {
     /// Creates an EventReference from an encoded string

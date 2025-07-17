@@ -2,21 +2,24 @@
 
 import Foundation
 
+// Import necessary models and utilities
+import UIKit
+
 struct ReplaceablePrivateDirectMessageData {
     let content: String
     let recipient: String
-    let media: [String: MediaItem]
+    let media: [MediaItem]
     let relatedPubkeys: [RelatedPubkey]?
     let primaryAudio: MediaItem?
-    let quotedEvent: EventReference?
+    let quotedEvent: SimpleEventReference?
     
     init(
         content: String,
         recipient: String,
-        media: [String: MediaItem] = [:],
+        media: [MediaItem] = [],
         relatedPubkeys: [RelatedPubkey]? = nil,
         primaryAudio: MediaItem? = nil,
-        quotedEvent: EventReference? = nil
+        quotedEvent: SimpleEventReference? = nil
     ) {
         self.content = content
         self.recipient = recipient
@@ -28,24 +31,50 @@ struct ReplaceablePrivateDirectMessageData {
 
     static func fromEventMessage(_ eventMessage: EventMessage) -> ReplaceablePrivateDirectMessageData {
         let content = eventMessage.content
-
-        // Get the first p tag for recipient
-        var recipient = ""
+        
+        var tagsByType: [String: [[String]]] = [:]
         for tag in eventMessage.tags {
-            if tag.count >= 2 && tag[0] == "p" {
-                recipient = tag[1]
-                break
+            if tag.count >= 1 {
+                let tagType = tag[0]
+                if tagsByType[tagType] == nil {
+                    tagsByType[tagType] = []
+                }
+                tagsByType[tagType]?.append(tag)
             }
         }
         
-        // In a real implementation, you would parse media, relatedPubkeys, etc. from tags
-        // For now, we'll just create an empty dictionary for media
-        let media: [String: MediaItem] = [:]
+        var recipient = ""
+        if let pTags = tagsByType["p"], !pTags.isEmpty, pTags[0].count >= 2 {
+            recipient = pTags[0][1]
+        }
+        
+        let mediaItems = MediaItem.parseImeta(tagsByType["imeta"])
+        
+        let primaryAudio = mediaItems.first { $0.mediaType == .audio }
+        
+        var quotedEvent: SimpleEventReference? = nil
+        if let quotedTags = tagsByType["e"], !quotedTags.isEmpty, quotedTags[0].count >= 2 {
+            let eventId = quotedTags[0][1]
+            quotedEvent = SimpleEventReference(id: eventId)
+        }
+        
+        var relatedPubkeys: [RelatedPubkey]? = nil
+        if let pubkeyTags = tagsByType["p"], pubkeyTags.count > 1 {
+            relatedPubkeys = pubkeyTags.dropFirst().compactMap { tag in
+                if tag.count >= 2 {
+                    return RelatedPubkey(pubkey: tag[1])
+                }
+                return nil
+            }
+        }
         
         return ReplaceablePrivateDirectMessageData(
             content: content,
             recipient: recipient,
-            media: media
+            media: mediaItems,
+            relatedPubkeys: relatedPubkeys,
+            primaryAudio: primaryAudio,
+            quotedEvent: quotedEvent
         )
     }
     
@@ -80,7 +109,7 @@ struct ReplaceablePrivateDirectMessageData {
     
     /// Returns media items that are images or videos (visual media)
     var visualMedias: [MediaItem] {
-        return media.values.filter { item in
+        return media.filter { item in
             return item.mediaType == .image || item.mediaType == .video
         }
     }

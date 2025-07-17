@@ -53,7 +53,6 @@ class DatabaseManager {
         if let sharedContainerURL = fileManager.containerURL(forSecurityApplicationGroupIdentifier: appGroupIdentifier) {
             let databaseName = "user_profile_database_\(pubkey).sqlite"
             let sharedDatabaseURL = sharedContainerURL.appendingPathComponent(databaseName)
-            print(sharedDatabaseURL)
             
             if fileManager.fileExists(atPath: sharedDatabaseURL.path) {
                 return sharedDatabaseURL.path
