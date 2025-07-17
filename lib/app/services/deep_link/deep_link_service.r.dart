@@ -22,8 +22,8 @@ void deepLinkHandler(Ref ref) {
   ref.listen<String?>(deeplinkPathProvider, (prev, next) {
     if (next != null) {
       final currentContext = rootNavigatorKey.currentContext;
-      if (currentContext != null && currentContext.mounted) {
-        GoRouter.of(currentContext).go(next);
+      if (currentContext != null) {
+        GoRouter.of(currentContext).push(next);
         ref.read(deeplinkPathProvider.notifier).clear();
       }
     }
@@ -96,16 +96,19 @@ final class DeepLinkService {
 
   final String _templateId;
 
-  //Defined on AppsFlyer portal for each template
-  //Use in case if generateInviteLink fails
-  String get _fallbackUrl => 'https://ion.onelink.me/$_templateId/feed';
+  static final oneLinkUrlRegex = RegExp(r'@?(https://ion\.onelink\.me/[A-Za-z0-9\-_/\?&%=#]*)');
+
+  static const _baseUrl = 'https://ion.onelink.me';
+
+  // Defined on AppsFlyer portal for each template.
+  // Used in case if generateInviteLink fails.
+  String get _fallbackUrl => '$_baseUrl/$_templateId/feed';
 
   static const Duration _linkGenerationTimeout = Duration(seconds: 10);
 
   bool _isInitialized = false;
 
   Future<void> init({required void Function(String path) onDeeplink}) async {
-    // No need to start the SDK for generating links
     _appsflyerSdk
       ..onDeepLinking((link) {
         Logger.log('onDeepLinking $link');
@@ -124,10 +127,17 @@ final class DeepLinkService {
       registerOnDeepLinkingCallback: true,
     );
 
-    //For some reason AppsFlyer on Android and iOS returns different results...
+    // For some reason AppsFlyer on Android and iOS returns different results...
 
     if (Platform.isAndroid && result is String) {
       _isInitialized = result == 'success';
+      if (_isInitialized) {
+        // Start the SDK for generating links and then stop reporting immediately
+        // ios does not need this
+        _appsflyerSdk
+          ..startSDK()
+          ..stop(true);
+      }
     }
 
     if (Platform.isIOS && result is Map<dynamic, dynamic>) {
@@ -210,4 +220,6 @@ final class DeepLinkService {
 
     return Map<String, String?>.from(payload as Map<String, dynamic>);
   }
+
+  void resolveDeeplink(String url) => _appsflyerSdk.resolveOneLinkUrl(url);
 }

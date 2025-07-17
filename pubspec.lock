@@ -76,7 +76,7 @@ packages:
     description:
       path: "."
       ref: master
-      resolved-ref: d4e8d04fa1472e0fac0d98d99e011c4c2c0abb2e
+      resolved-ref: "193f861ef3ef414e57856fe68778cbe69105696b"
       url: "https://github.com/ice-blockchain/appsflyer-flutter-plugin.git"
     source: git
     version: "6.16.21"
