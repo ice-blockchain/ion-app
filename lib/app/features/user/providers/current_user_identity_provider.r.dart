@@ -1,6 +1,8 @@
 // SPDX-License-Identifier: ice License 1.0
 
+import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/features/auth/providers/auth_provider.m.dart';
+import 'package:ion/app/features/user/model/user_relays.f.dart';
 import 'package:ion/app/services/ion_identity/ion_identity_client_provider.r.dart';
 import 'package:ion_identity_client/ion_identity.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
@@ -19,13 +21,19 @@ class CurrentUserIdentity extends _$CurrentUserIdentity {
     return null;
   }
 
-  Future<List<String>> assignUserRelays({List<String>? followees}) async {
+  Future<List<UserRelay>> assignUserRelays({List<String>? followees}) async {
     final ionIdentityClient = await ref.watch(ionIdentityClientProvider.future);
     final response =
         await ionIdentityClient.users.setIONConnectRelays(followeeList: followees ?? []);
     state = AsyncData(state.valueOrNull!.copyWith(ionConnectRelays: response.ionConnectRelays));
-    return response.ionConnectRelays;
+    return response.ionConnectRelays.map((relay) => relay.toUserRelay()).toList();
   }
+}
+
+@Riverpod(keepAlive: true)
+Future<List<UserRelay>?> currentUserIdentityConnectRelays(Ref ref) async {
+  final identity = await ref.watch(currentUserIdentityProvider.future);
+  return identity?.ionConnectRelays?.map((relay) => relay.toUserRelay()).toList();
 }
 
 @Riverpod(keepAlive: true)
@@ -37,5 +45,15 @@ class CurrentUserIndexers extends _$CurrentUserIndexers {
       return userIdentity.ionConnectIndexerRelays;
     }
     return null;
+  }
+}
+
+extension IonConnectRelayInfoToUserRelay on IonConnectRelayInfo {
+  UserRelay toUserRelay() {
+    return UserRelay(
+      url: url,
+      write: type == null || type == IonConnectRelayType.write,
+      read: type == null || type == IonConnectRelayType.read,
+    );
   }
 }

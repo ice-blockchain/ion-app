@@ -27,9 +27,8 @@ Future<List<String>> relevantCurrentUserRelays(Ref ref) async {
 @riverpod
 Future<List<String>> relevantRelays(Ref ref, String relayUrl) async {
   final client = await ref.watch(ionIdentityClientProvider.future);
-  return client.users.availableIonConnectRelays(
-    relayUrl: relayUrl,
-  );
+  final availableRelays = await client.users.availableIonConnectRelays(relayUrl: relayUrl);
+  return availableRelays.map((relay) => relay.url).toList();
 }
 
 @Riverpod(keepAlive: true)

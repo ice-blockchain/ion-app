@@ -30,7 +30,8 @@ mixin _$UserDetails {
   List<String>? get twoFaOptions => throw _privateConstructorUsedError;
   List<String>? get email => throw _privateConstructorUsedError;
   List<String>? get phoneNumber => throw _privateConstructorUsedError;
-  List<String>? get ionConnectRelays => throw _privateConstructorUsedError;
+  List<IonConnectRelayInfo>? get ionConnectRelays =>
+      throw _privateConstructorUsedError;
 
   /// Serializes this UserDetails to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
@@ -57,7 +58,7 @@ abstract class $UserDetailsCopyWith<$Res> {
       @JsonKey(name: '2faOptions') List<String>? twoFaOptions,
       List<String>? email,
       List<String>? phoneNumber,
-      List<String>? ionConnectRelays});
+      List<IonConnectRelayInfo>? ionConnectRelays});
 }
 
 /// @nodoc
@@ -121,7 +122,7 @@ class _$UserDetailsCopyWithImpl<$Res, $Val extends UserDetails>
       ionConnectRelays: freezed == ionConnectRelays
           ? _value.ionConnectRelays
           : ionConnectRelays // ignore: cast_nullable_to_non_nullable
-              as List<String>?,
+              as List<IonConnectRelayInfo>?,
     ) as $Val);
   }
 }
@@ -143,7 +144,7 @@ abstract class _$$UserDetailsImplCopyWith<$Res>
       @JsonKey(name: '2faOptions') List<String>? twoFaOptions,
       List<String>? email,
       List<String>? phoneNumber,
-      List<String>? ionConnectRelays});
+      List<IonConnectRelayInfo>? ionConnectRelays});
 }
 
 /// @nodoc
@@ -205,7 +206,7 @@ class __$$UserDetailsImplCopyWithImpl<$Res>
       ionConnectRelays: freezed == ionConnectRelays
           ? _value._ionConnectRelays
           : ionConnectRelays // ignore: cast_nullable_to_non_nullable
-              as List<String>?,
+              as List<IonConnectRelayInfo>?,
     ));
   }
 }
@@ -222,7 +223,7 @@ class _$UserDetailsImpl implements _UserDetails {
       @JsonKey(name: '2faOptions') final List<String>? twoFaOptions,
       final List<String>? email,
       final List<String>? phoneNumber,
-      final List<String>? ionConnectRelays})
+      final List<IonConnectRelayInfo>? ionConnectRelays})
       : _ionConnectIndexerRelays = ionConnectIndexerRelays,
         _twoFaOptions = twoFaOptions,
         _email = email,
@@ -280,9 +281,9 @@ class _$UserDetailsImpl implements _UserDetails {
     return EqualUnmodifiableListView(value);
   }
 
-  final List<String>? _ionConnectRelays;
+  final List<IonConnectRelayInfo>? _ionConnectRelays;
   @override
-  List<String>? get ionConnectRelays {
+  List<IonConnectRelayInfo>? get ionConnectRelays {
     final value = _ionConnectRelays;
     if (value == null) return null;
     if (_ionConnectRelays is EqualUnmodifiableListView)
@@ -358,7 +359,7 @@ abstract class _UserDetails implements UserDetails {
       @JsonKey(name: '2faOptions') final List<String>? twoFaOptions,
       final List<String>? email,
       final List<String>? phoneNumber,
-      final List<String>? ionConnectRelays}) = _$UserDetailsImpl;
+      final List<IonConnectRelayInfo>? ionConnectRelays}) = _$UserDetailsImpl;
 
   factory _UserDetails.fromJson(Map<String, dynamic> json) =
       _$UserDetailsImpl.fromJson;
@@ -381,7 +382,7 @@ abstract class _UserDetails implements UserDetails {
   @override
   List<String>? get phoneNumber;
   @override
-  List<String>? get ionConnectRelays;
+  List<IonConnectRelayInfo>? get ionConnectRelays;
 
   /// Create a copy of UserDetails
   /// with the given fields replaced by the non-null parameter values.

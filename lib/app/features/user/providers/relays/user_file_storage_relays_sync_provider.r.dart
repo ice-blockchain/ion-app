@@ -8,7 +8,7 @@ import 'package:ion/app/features/auth/providers/delegation_complete_provider.r.d
 import 'package:ion/app/features/ion_connect/providers/ion_connect_notifier.r.dart';
 import 'package:ion/app/features/user/model/user_file_storage_relays.f.dart';
 import 'package:ion/app/features/user/model/user_relays.f.dart';
-import 'package:ion/app/features/user/providers/relays/user_relays_manager.r.dart';
+import 'package:ion/app/features/user/providers/current_user_identity_provider.r.dart';
 import 'package:ion/app/features/user/providers/user_file_storage_relay_provider.r.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
@@ -27,28 +27,21 @@ Future<void> userFileStorageRelaysSync(Ref ref) async {
   }
 
   final masterPubkey = ref.watch(currentPubkeySelectorProvider);
+  final identityUserRelays = await ref.watch(currentUserIdentityConnectRelaysProvider.future);
   final delegationComplete = ref.watch(delegationCompleteProvider).valueOrNull.falseOrValue;
-  final userRelays = await ref.watch(currentUserRelaysProvider.future);
 
-  if (masterPubkey == null || userRelays == null || !delegationComplete) {
+  if (masterPubkey == null || identityUserRelays == null || !delegationComplete) {
     return;
   }
 
-  final relayUrls = userRelays.urls;
-
   final userFileStorageRelays =
       await ref.watch(userFileStorageRelayProvider(pubkey: masterPubkey).future);
-  if (userFileStorageRelays != null) {
-    final fileStorageRelays = userFileStorageRelays.data.list.map((e) => e.url).toSet();
-    if (const SetEquality<String>().equals(fileStorageRelays, relayUrls.toSet())) {
-      return;
-    }
+  final connectFileStorageRelays = userFileStorageRelays?.data.list;
+
+  if (!(const UnorderedIterableEquality<UserRelay>())
+      .equals(connectFileStorageRelays, identityUserRelays)) {
+    final fileStorageRelays = UserFileStorageRelaysData(list: identityUserRelays);
+    await ref.watch(ionConnectNotifierProvider.notifier).sendEntityData(fileStorageRelays);
+    ref.invalidate(userFileStorageRelayProvider(pubkey: masterPubkey));
   }
-
-  final fileStorageRelays = UserFileStorageRelaysData(
-    list: relayUrls.map((url) => UserRelay(url: url)).toList(),
-  );
-
-  await ref.read(ionConnectNotifierProvider.notifier).sendEntityData(fileStorageRelays);
-  ref.invalidate(userFileStorageRelayProvider(pubkey: masterPubkey));
 }

@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: ice License 1.0
 
-import 'package:flutter/foundation.dart';
+import 'package:collection/collection.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/auth/providers/auth_provider.m.dart';
@@ -27,26 +27,20 @@ Future<void> userRelaysSync(Ref ref) async {
   }
 
   final masterPubkey = ref.watch(currentPubkeySelectorProvider);
-  final identity = await ref.watch(currentUserIdentityProvider.future);
-  final identityConnectRelays = identity?.ionConnectRelays;
+  final identityUserRelays = await ref.watch(currentUserIdentityConnectRelaysProvider.future);
   final delegationComplete = ref.watch(delegationCompleteProvider).valueOrNull.falseOrValue;
 
-  if (masterPubkey == null ||
-      identity == null ||
-      identityConnectRelays == null ||
-      !delegationComplete) {
+  if (masterPubkey == null || identityUserRelays == null || !delegationComplete) {
     return;
   }
 
   final userRelays = await ref.watch(userRelayProvider(masterPubkey).future);
+  final connectUserRelays = userRelays?.data.list;
 
-  if (userRelays != null && !listEquals(userRelays.urls, identityConnectRelays)) {
-    final updatedUserRelays = UserRelaysData(
-      list: identityConnectRelays.map((url) => UserRelay(url: url)).toList(),
-    );
-    await ref
-        .watch(ionConnectNotifierProvider.notifier)
-        .sendEntityData<UserRelaysEntity>(updatedUserRelays);
+  if (!(const UnorderedIterableEquality<UserRelay>()
+      .equals(connectUserRelays, identityUserRelays))) {
+    final updatedUserRelays = UserRelaysData(list: identityUserRelays);
+    await ref.watch(ionConnectNotifierProvider.notifier).sendEntityData(updatedUserRelays);
     ref.invalidate(userRelayProvider(masterPubkey));
   }
 }

@@ -25,7 +25,7 @@ _$UserDetailsImpl _$$UserDetailsImplFromJson(Map<String, dynamic> json) =>
           ?.map((e) => e as String)
           .toList(),
       ionConnectRelays: (json['ionConnectRelays'] as List<dynamic>?)
-          ?.map((e) => e as String)
+          ?.map((e) => IonConnectRelayInfo.fromJson(e as Map<String, dynamic>))
           .toList(),
     );
 
@@ -39,5 +39,6 @@ Map<String, dynamic> _$$UserDetailsImplToJson(_$UserDetailsImpl instance) =>
       '2faOptions': instance.twoFaOptions,
       'email': instance.email,
       'phoneNumber': instance.phoneNumber,
-      'ionConnectRelays': instance.ionConnectRelays,
+      'ionConnectRelays':
+          instance.ionConnectRelays?.map((e) => e.toJson()).toList(),
     };

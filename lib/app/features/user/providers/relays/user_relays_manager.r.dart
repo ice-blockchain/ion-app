@@ -152,7 +152,7 @@ class UserRelaysManager extends _$UserRelaysManager {
             pubkey: details.masterPubKey,
             createdAt: DateTime.now().microsecondsSinceEpoch,
             data: UserRelaysData(
-              list: details.ionConnectRelays!.map((url) => UserRelay(url: url)).toList(),
+              list: details.ionConnectRelays!.map((relay) => relay.toUserRelay()).toList(),
             ),
           ),
     ]..forEach(ref.read(ionConnectCacheProvider.notifier).cache);
@@ -189,7 +189,7 @@ Future<UserRelaysEntity?> currentUserRelays(Ref ref) async {
     return null;
   }
   final updatedUserRelays = UserRelaysData(
-    list: identityConnectRelays.map((url) => UserRelay(url: url)).toList(),
+    list: identityConnectRelays.map((relay) => relay.toUserRelay()).toList(),
   );
   final userRelaysEvent =
       await ref.read(ionConnectNotifierProvider.notifier).sign(updatedUserRelays);

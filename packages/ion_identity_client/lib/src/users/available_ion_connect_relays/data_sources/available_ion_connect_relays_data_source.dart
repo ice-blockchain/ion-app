@@ -18,7 +18,7 @@ class AvailableIONConnectRelaysDataSource {
 
   static const basePath = '/v1/users';
 
-  Future<List<String>> fetchAllAvailableIONConnectRelays({
+  Future<List<IonConnectRelayInfo>> fetchAllAvailableIONConnectRelays({
     required String username,
     required String userId,
     required String relayUrl,
