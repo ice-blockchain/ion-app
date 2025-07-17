@@ -33,23 +33,24 @@ class FeedPage extends HookConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final feedCategory = ref.watch(feedCurrentFilterProvider.select((state) => state.category));
     final hasMorePosts = ref.watch(feedPostsProvider.select((state) => state.hasMore)).falseOrValue;
-    final showTrendingVideos = useRef(
+    final showTrendingVideosFeatureFlag = useRef(
       ref.watch(featureFlagsProvider.notifier).get(FeedFeatureFlag.showTrendingVideo),
     );
     final scrollController = useScrollController();
 
     useScrollTopOnTabPress(context, scrollController: scrollController);
 
+    final showStories = feedCategory != FeedCategory.articles;
+    final showTrendingVideos = showTrendingVideosFeatureFlag.value &&
+        (feedCategory == FeedCategory.feed || feedCategory == FeedCategory.videos);
+
     final slivers = [
       SliverToBoxAdapter(
         child: Column(
           children: [
             if (feedCategory == FeedCategory.articles) const ArticleCategoriesMenu(),
-            if (feedCategory != FeedCategory.articles) const Stories(),
-            if (feedCategory == FeedCategory.feed && showTrendingVideos.value)
-              const TrendingVideos(),
-            if (feedCategory == FeedCategory.videos && showTrendingVideos.value)
-              const TrendingVideos(),
+            if (showStories) const Stories(),
+            if (showTrendingVideos) const TrendingVideos(),
           ],
         ),
       ),
@@ -69,7 +70,8 @@ class FeedPage extends HookConsumerWidget {
               child: FeedControls(scrollController: scrollController),
             ),
             slivers: slivers,
-            onRefresh: () => _onRefresh(ref),
+            onRefresh: () =>
+                _onRefresh(ref, showStories: showStories, showTrendingVideos: showTrendingVideos),
             refreshIndicatorEdgeOffset: FeedControls.height +
                 MediaQuery.paddingOf(context).top +
                 ScreenTopOffset.defaultMargin,
@@ -88,12 +90,19 @@ class FeedPage extends HookConsumerWidget {
     return ref.read(feedPostsProvider.notifier).fetchEntities();
   }
 
-  Future<void> _onRefresh(WidgetRef ref) async {
+  Future<void> _onRefresh(
+    WidgetRef ref, {
+    required bool showStories,
+    required bool showTrendingVideos,
+  }) async {
     ref.read(feedPostsProvider.notifier).refresh();
-    ref.read(feedTrendingVideosProvider.notifier).refresh();
-    ref.read(feedStoriesProvider.notifier).refresh();
-    final pubkey = ref.read(currentPubkeySelectorProvider) ?? '';
-    ref.read(currentUserStoryProvider.notifier).refresh();
-    ref.read(userStoriesProvider(pubkey).notifier).refresh();
+    if (showTrendingVideos) {
+      ref.read(feedTrendingVideosProvider.notifier).refresh();
+    }
+    if (showStories) {
+      ref.read(feedStoriesProvider.notifier).refresh();
+      ref.read(currentUserStoryProvider.notifier).refresh();
+      ref.read(userStoriesProvider(ref.read(currentPubkeySelectorProvider)!).notifier).refresh();
+    }
   }
 }

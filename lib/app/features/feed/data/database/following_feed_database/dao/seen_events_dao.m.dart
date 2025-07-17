@@ -102,7 +102,7 @@ class SeenEventsDao extends DatabaseAccessor<FollowingFeedDatabase> with _$SeenE
     required FeedType feedType,
     required int limit,
     List<EventReference>? excludeReferences,
-    List<String>? excludePubkeys,
+    List<String>? pubkeys,
     int? since,
     int? until,
     FeedModifier? feedModifier,
@@ -117,8 +117,8 @@ class SeenEventsDao extends DatabaseAccessor<FollowingFeedDatabase> with _$SeenE
     if (excludeReferences != null && excludeReferences.isNotEmpty) {
       query.where((tbl) => tbl.eventReference.isNotInValues(excludeReferences));
     }
-    if (excludePubkeys != null && excludePubkeys.isNotEmpty) {
-      query.where((tbl) => tbl.pubkey.isNotIn(excludePubkeys));
+    if (pubkeys != null) {
+      query.where((tbl) => tbl.pubkey.isIn(pubkeys));
     }
     if (since != null) {
       query.where((tbl) => tbl.createdAt.isBiggerThanValue(since.toMicroseconds));
@@ -133,7 +133,7 @@ class SeenEventsDao extends DatabaseAccessor<FollowingFeedDatabase> with _$SeenE
     required FeedType feedType,
     required int limit,
     List<EventReference>? excludeReferences,
-    List<String>? excludePubkeys,
+    List<String>? pubkeys,
     int? since,
     int? until,
     FeedModifier? feedModifier,
@@ -148,8 +148,8 @@ class SeenEventsDao extends DatabaseAccessor<FollowingFeedDatabase> with _$SeenE
     if (excludeReferences != null && excludeReferences.isNotEmpty) {
       preGroupFilters.add(tbl.eventReference.isNotInValues(excludeReferences));
     }
-    if (excludePubkeys != null && excludePubkeys.isNotEmpty) {
-      preGroupFilters.add(tbl.pubkey.isNotIn(excludePubkeys));
+    if (pubkeys != null) {
+      preGroupFilters.add(tbl.pubkey.isIn(pubkeys));
     }
     if (since != null) {
       preGroupFilters.add(tbl.createdAt.isBiggerThanValue(since.toMicroseconds));

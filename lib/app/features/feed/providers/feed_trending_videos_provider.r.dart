@@ -19,11 +19,11 @@ class FeedTrendingVideos extends _$FeedTrendingVideos with DelegatedPagedNotifie
     final filter = ref.watch(feedCurrentFilterProvider);
     final data = switch (filter.filter) {
       FeedFilter.following => ref.watch(
-          feedFollowingContentProvider(FeedType.video, feedModifier: FeedModifier.trending)
+          feedFollowingContentProvider(FeedType.video, feedModifier: FeedModifier.trending())
               .select((data) => (items: data.items, hasMore: data.hasMore)),
         ),
       FeedFilter.forYou => ref.watch(
-          feedForYouContentProvider(FeedType.video, feedModifier: FeedModifier.trending)
+          feedForYouContentProvider(FeedType.video, feedModifier: FeedModifier.trending())
               .select((data) => (items: data.items, hasMore: data.hasMore)),
         ),
     };
@@ -35,11 +35,11 @@ class FeedTrendingVideos extends _$FeedTrendingVideos with DelegatedPagedNotifie
     final filter = ref.read(feedCurrentFilterProvider);
     return switch (filter.filter) {
       FeedFilter.following => ref.read(
-          feedFollowingContentProvider(FeedType.video, feedModifier: FeedModifier.trending)
+          feedFollowingContentProvider(FeedType.video, feedModifier: FeedModifier.trending())
               .notifier,
         ),
       FeedFilter.forYou => ref.read(
-          feedForYouContentProvider(FeedType.video, feedModifier: FeedModifier.trending).notifier,
+          feedForYouContentProvider(FeedType.video, feedModifier: FeedModifier.trending()).notifier,
         ),
     };
   }

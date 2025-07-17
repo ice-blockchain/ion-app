@@ -1,43 +1,102 @@
 // SPDX-License-Identifier: ice License 1.0
 
-import 'package:ion/app/features/feed/data/models/feed_config.f.dart';
 import 'package:ion/app/features/feed/data/models/feed_interests.f.dart';
 import 'package:ion/app/features/ion_connect/model/related_hashtag.f.dart';
 import 'package:ion/app/features/ion_connect/model/search_extension.dart';
+import 'package:meta/meta.dart';
 
 typedef FeedFilterData = ({List<SearchExtension> search, Map<String, List<String>> tags});
 
-enum FeedModifier {
-  top,
-  trending,
-  explore;
+sealed class FeedModifier {
+  const FeedModifier({required this.name});
 
-  FeedFilterData filter({required bool excludeUnclassifiedFromExplore}) {
-    switch (this) {
-      case FeedModifier.top:
-        return (search: [TopSearchExtension()], tags: {});
-      case FeedModifier.trending:
-        return (search: [TrendingSearchExtension()], tags: {});
-      case FeedModifier.explore:
-        return (
-          search: [],
-          tags: {
-            if (excludeUnclassifiedFromExplore)
-              '!#${RelatedHashtag.tagName}': [FeedInterests.unclassified],
-          }
-        );
-    }
-  }
+  factory FeedModifier.top() = FeedModifierTop;
+  factory FeedModifier.trending() = FeedModifierTrending;
+  factory FeedModifier.explore(ExploreModifierType type) = FeedModifierExplore;
+
+  final String name;
+
+  FeedFilterData filter({String? interest});
 }
 
-class FeedFilterFactory {
-  FeedFilterFactory({required this.feedConfig});
+@immutable
+class FeedModifierTop extends FeedModifier {
+  const FeedModifierTop() : super(name: 'top');
 
-  final FeedConfig feedConfig;
-
-  FeedFilterData create(FeedModifier modifier) {
-    return modifier.filter(
-      excludeUnclassifiedFromExplore: feedConfig.excludeUnclassifiedFromExplore,
+  @override
+  FeedFilterData filter({String? interest}) {
+    return (
+      search: [TopSearchExtension()],
+      tags: {
+        if (interest != null) '#${RelatedHashtag.tagName}': [interest],
+      }
     );
   }
+
+  @override
+  bool operator ==(Object other) => identical(this, other) || other is FeedModifierTop;
+
+  @override
+  int get hashCode => name.hashCode;
 }
+
+@immutable
+class FeedModifierTrending extends FeedModifier {
+  const FeedModifierTrending() : super(name: 'trending');
+
+  @override
+  FeedFilterData filter({String? interest}) {
+    return (
+      search: [TrendingSearchExtension()],
+      tags: {
+        if (interest != null) '#${RelatedHashtag.tagName}': [interest],
+      }
+    );
+  }
+
+  @override
+  bool operator ==(Object other) => identical(this, other) || other is FeedModifierTrending;
+
+  @override
+  int get hashCode => name.hashCode;
+}
+
+@immutable
+class FeedModifierExplore extends FeedModifier {
+  FeedModifierExplore(this.type) : super(name: 'explore-${type.name}');
+
+  final ExploreModifierType type;
+
+  @override
+  FeedFilterData filter({String? interest}) {
+    return (
+      search: [],
+      tags: switch (type) {
+        /// Fetch events with any topic specified.
+        ///
+        /// When a content is created and user does not select any topics,
+        /// we add the `unclassified` tag.
+        ExploreModifierType.withAnyTopic => {
+            '#!${RelatedHashtag.tagName}': [FeedInterests.unclassified],
+          },
+
+        /// Fetch events for the provided tag.
+        ExploreModifierType.interests => {
+            if (interest != null) '#${RelatedHashtag.tagName}': [interest],
+          },
+
+        /// Fetch all events, with or without tags.
+        ExploreModifierType.any => {},
+      }
+    );
+  }
+
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) || other is FeedModifierExplore && type == other.type;
+
+  @override
+  int get hashCode => type.hashCode;
+}
+
+enum ExploreModifierType { withAnyTopic, interests, any }
