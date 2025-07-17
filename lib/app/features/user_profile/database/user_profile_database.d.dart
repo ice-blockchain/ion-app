@@ -24,51 +24,60 @@ part 'user_profile_database.d.g.dart';
   ],
 )
 class UserProfileDatabase extends _$UserProfileDatabase {
-  UserProfileDatabase(this.masterPubkey) : super(_openConnection(masterPubkey));
+  UserProfileDatabase(
+    this.masterPubkey, {
+    this.appGroupId,
+  }) : super(_openConnection(masterPubkey, appGroupId));
 
   final String masterPubkey;
+  final String? appGroupId;
 
   @override
   int get schemaVersion => 1;
 
   /// Opens a connection to the database with the given pubkey
-  /// For iOS, it uses the shared app group container if available
-  /// For other platforms, it uses the default location
-  static QueryExecutor _openConnection(String pubkey) {
-    const appGroupId = String.fromEnvironment('FOUNDATION_APP_GROUP');
+  /// Uses app group container for iOS extensions if appGroupId is provided
+  static QueryExecutor _openConnection(String pubkey, String? appGroupId) {
     final databaseName = 'user_profile_database_$pubkey';
 
-    if (Platform.isIOS && appGroupId.isNotEmpty) {
-      return driftDatabase(
-        name: databaseName,
-        native: DriftNativeOptions(
-          databasePath: () async {
+    if (appGroupId == null) {
+      return driftDatabase(name: databaseName);
+    }
+
+    return driftDatabase(
+      name: databaseName,
+      native: DriftNativeOptions(
+        databasePath: () async {
+          try {
             final sharedPath =
                 await PathProviderFoundation().getContainerPath(appGroupIdentifier: appGroupId);
 
-            if (sharedPath == null || sharedPath.isEmpty) {
-              return (await getApplicationDocumentsDirectory()).path;
-            }
+            final basePath = (sharedPath?.isNotEmpty ?? false)
+                ? sharedPath!
+                : (await getApplicationDocumentsDirectory()).path;
 
-            final dbFile = join(sharedPath, '$databaseName.sqlite');
+            final dbFile = join(basePath, '$databaseName.sqlite');
 
-            final dbDir = Directory(dirname(dbFile));
-            if (!dbDir.existsSync()) {
-              dbDir.createSync(recursive: true);
-            }
+            _ensureDirectoryExists(dbFile);
 
             return dbFile;
-          },
-          shareAcrossIsolates: true,
-        ),
-      );
-    } else {
-      return driftDatabase(
-        name: databaseName,
-        native: const DriftNativeOptions(
-          shareAcrossIsolates: true,
-        ),
-      );
+          } catch (e) {
+            final dbFile =
+                join((await getApplicationDocumentsDirectory()).path, '$databaseName.sqlite');
+            _ensureDirectoryExists(dbFile);
+
+            return dbFile;
+          }
+        },
+        shareAcrossIsolates: true,
+      ),
+    );
+  }
+
+  static void _ensureDirectoryExists(String filePath) {
+    final dir = Directory(dirname(filePath));
+    if (!dir.existsSync()) {
+      dir.createSync(recursive: true);
     }
   }
 }

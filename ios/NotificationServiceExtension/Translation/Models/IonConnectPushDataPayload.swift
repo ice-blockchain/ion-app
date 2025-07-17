@@ -25,7 +25,7 @@ class IonConnectPushDataPayload: Decodable {
         // Check if we need to decrypt the event
         if payload.event.kind == IonConnectGiftWrapEntity.kind {
             let result = try await decryptEvent(payload.event)
-            
+
             // Create placeholders dictionary from metadata if available
             var placeholders: [String: String]? = nil
             if let metadata = result?.metadata {
@@ -184,21 +184,19 @@ class IonConnectPushDataPayload: Decodable {
     }
 
     var placeholders: [String: String] {
-        guard let masterPubkey = try? event.masterPubkey() else {
+        guard let masterPubkey = try? mainEntity?.masterPubkey else {
             return [:]
         }
-        
+
         var data = [String: String]()
-        
-        // First check if we have decrypted placeholders from database metadata
-        if let decryptedPlaceholders = decryptedPlaceholders {
-            data.merge(decryptedPlaceholders) { (_, new) in new }
+
+        let mainEntityUserMetadata = getUserMetadata(pubkey: masterPubkey)
+        if let mainEntityUserMetadata = mainEntityUserMetadata {
+            data["username"] = mainEntityUserMetadata.data.name
+            data["displayName"] = mainEntityUserMetadata.data.displayName
         } else {
-            // Fall back to metadata from relevant events if database metadata is not available
-            let mainEntityUserMetadata = getUserMetadata(pubkey: masterPubkey)
-            if let mainEntityUserMetadata = mainEntityUserMetadata {
-                data["username"] = mainEntityUserMetadata.data.name
-                data["displayName"] = mainEntityUserMetadata.data.displayName
+            if let decryptedPlaceholders = decryptedPlaceholders {
+                data.merge(decryptedPlaceholders) { (_, new) in new }
             }
         }
 
@@ -209,7 +207,6 @@ class IonConnectPushDataPayload: Decodable {
             if let entity = try? IonConnectGiftWrapEntity.fromEventMessage(event),
                 entity.data.kinds.contains(String(ReplaceablePrivateDirectMessageEntity.kind))
             {
-
                 if let message = try? ReplaceablePrivateDirectMessageEntity.fromEventMessage(decryptedEvent) {
                     data["fileCount"] = String(message.data.media.count)
                 }

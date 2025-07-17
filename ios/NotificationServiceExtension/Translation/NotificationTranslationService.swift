@@ -77,25 +77,23 @@ class NotificationTranslationService {
     private func parsePayload(from pushPayload: [AnyHashable: Any]) async -> IonConnectPushDataPayload? {
         do {
             let payload = try await IonConnectPushDataPayload.fromJson(data: pushPayload) { event in
-                
+
                 let decryptedEvent = try? await self.encryptedMessageService?.decryptMessage(event)
-                
+
                 if let decryptedEvent = decryptedEvent {
                     NSLog("Successfully decrypted event: \(decryptedEvent.id)")
                 } else {
                     NSLog("Failed to decrypt event or decryption returned nil")
                 }
-                
+
                 var metadata: UserMetadata? = nil
-                
+
                 if let decryptedEvent = decryptedEvent, let pubkey = try? decryptedEvent.masterPubkey() {
-                    NSLog("Extracted master pubkey from decrypted event: \(pubkey)")
-                    // Try to fetch user metadata from database
                     metadata = self.getUserMetadataFromDatabase(pubkey: pubkey)
                 } else {
                     NSLog("Could not extract master pubkey from decrypted event")
                 }
-                
+
                 return (event: decryptedEvent, metadata: metadata)
             }
 
@@ -201,59 +199,68 @@ class NotificationTranslationService {
         let regex = try! NSRegularExpression(pattern: "\\{\\{(.*?)\\}\\}", options: [])
         return regex.firstMatch(in: input, options: [], range: NSRange(location: 0, length: (input as NSString).length)) != nil
     }
-    
+
     /// Fetches user metadata from the SQLite database for a given pubkey
     /// - Parameter pubkey: The pubkey of the user to fetch metadata for
     /// - Returns: UserMetadata if found, nil otherwise
     private func getUserMetadataFromDatabase(pubkey: String) -> UserMetadata? {
         guard let database = database else {
-            return nil 
+            return nil
         }
 
         if !database.openDatabase() {
             NSLog("Failed to open database connection")
             return nil
         }
-        
+
         defer { database.closeDatabase() }
-        
-        let query = "SELECT content FROM user_metadata_entities WHERE master_pubkey = '\(pubkey)' ORDER BY created_at DESC LIMIT 1"
-        
+
+        let query = "SELECT content FROM user_metadata_table WHERE master_pubkey = '\(pubkey)' ORDER BY created_at DESC LIMIT 1"
+
         guard let results = database.executeQuery(query) else {
             return nil
         }
-        
+
         if results.isEmpty {
             NSLog("No user metadata found in database for pubkey: \(pubkey)")
             return nil
         }
-        
-        NSLog("Found user metadata results: \(results)")
-        
-        // Extract content from the first result
-        guard let content = results.first?["content"] as? String else {
-            NSLog("Content field missing or not a string in result")
+
+        var content: String? = nil
+
+        if let firstResult = results.first as? [String: Any], let contentValue = firstResult["content"] as? String {
+            content = contentValue
+        } else if let firstResult = results.first as? [Any], firstResult.count > 0 {
+            if let contentDict = firstResult.first as? [String: String], let contentValue = contentDict["content"] {
+                content = contentValue
+            } else if let contentDict = firstResult.first as? [String: Any],
+                let contentValue = contentDict["content"] as? String
+            {
+                content = contentValue
+            }
+        }
+
+        guard let extractedContent = content else {
             return nil
         }
-        
-        guard let contentData = content.data(using: .utf8) else {
+
+        guard let contentData = extractedContent.data(using: .utf8) else {
             NSLog("Failed to convert content string to data")
             return nil
         }
-        
+
         do {
-            // Parse the JSON content into UserDataEventMessageContent
             let userData = try JSONDecoder().decode(
                 UserDataEventMessageContent.self,
                 from: contentData
             )
-            
+
             // Create and return UserMetadata
             let metadata = UserMetadata(
                 name: userData.name ?? "",
                 displayName: userData.displayName ?? ""
             )
-            
+
             return metadata
         } catch {
             NSLog("Error parsing user metadata: \(error)")

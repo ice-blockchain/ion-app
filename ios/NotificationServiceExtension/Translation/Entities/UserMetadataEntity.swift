@@ -52,4 +52,9 @@ struct UserMetadata {
 struct UserDataEventMessageContent: Codable {
     let name: String?
     let displayName: String?
+    
+    enum CodingKeys: String, CodingKey {
+        case name
+        case displayName = "display_name"
+    }
 }
