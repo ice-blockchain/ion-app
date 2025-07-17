@@ -169,7 +169,7 @@ class RelayPicker extends _$RelayPicker {
 
   Future<UserRelaysEntity> _getCurrentUserRankedRelays() async {
     final relays = await ref.read(rankedCurrentUserRelaysProvider.future);
-    if (relays == null) {
+    if (relays == null || relays.urls.isEmpty) {
       throw UserRelaysNotFoundException();
     }
     return relays;
@@ -177,7 +177,7 @@ class RelayPicker extends _$RelayPicker {
 
   Future<UserRelaysEntity> _getCurrentUserRawRelays() async {
     final relays = await ref.read(currentUserRelaysProvider.future);
-    if (relays == null) {
+    if (relays == null || relays.urls.isEmpty) {
       throw UserRelaysNotFoundException();
     }
     return relays;

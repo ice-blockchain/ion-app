@@ -121,6 +121,10 @@ class OnboardingCompleteNotifier extends _$OnboardingCompleteNotifier {
   Future<EventMessage> _buildUserRelaysEvent({
     required List<UserRelay> userRelays,
   }) async {
+    if (userRelays.isEmpty) {
+      throw RequiredFieldIsEmptyException(field: 'userRelays');
+    }
+
     final userRelaysData = UserRelaysData(list: userRelays);
 
     return ref.read(ionConnectNotifierProvider.notifier).sign(userRelaysData);
