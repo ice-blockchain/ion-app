@@ -1,5 +1,6 @@
 // SPDX-License-Identifier: ice License 1.0
 
+import 'package:ion/app/services/deep_link/deep_link_service.r.dart';
 import 'package:ion/app/services/text_parser/model/text_matcher.dart';
 
 String? removeHttpsPrefix(String? url) {
@@ -62,5 +63,5 @@ String? extractFirstUrl(String text) {
 }
 
 bool isOneLinkUrl(String url) {
-  return RegExp(r'@?(https://ion\.onelink\.me/[A-Za-z0-9\-_/\?&%=#]*)').hasMatch(url);
+  return DeepLinkService.oneLinkUrlRegex.hasMatch(url);
 }
