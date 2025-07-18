@@ -61,8 +61,7 @@ class SingleMediaView extends HookWidget {
             child: CounterItemsFooter(
               eventReference: eventReference,
               color: onPrimaryAccentColor,
-              bottomPadding: 0,
-              topPadding: 0,
+              itemPadding: EdgeInsetsDirectional.symmetric(vertical: 12.0.s),
             ),
           ),
         ),

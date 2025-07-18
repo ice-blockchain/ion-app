@@ -27,7 +27,6 @@ class ImageCarousel extends HookConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final pageController = usePageController(initialPage: initialIndex);
     final onPrimaryAccentColor = context.theme.appColors.onPrimaryAccent;
-    final horizontalPadding = 16.0.s;
 
     final zoomController = useImageZoom(ref, withReset: true);
     final currentPage = useState(initialIndex);
@@ -74,14 +73,9 @@ class ImageCarousel extends HookConsumerWidget {
                           top: false,
                           child: ColoredBox(
                             color: Colors.transparent,
-                            child: Padding(
-                              padding: EdgeInsets.symmetric(horizontal: horizontalPadding),
-                              child: CounterItemsFooter(
-                                eventReference: eventReference,
-                                color: onPrimaryAccentColor,
-                                bottomPadding: 0,
-                                topPadding: 0,
-                              ),
+                            child: CounterItemsFooter(
+                              eventReference: eventReference,
+                              color: onPrimaryAccentColor,
                             ),
                           ),
                         )

@@ -101,21 +101,16 @@ class Post extends ConsumerWidget {
           isTextSelectable: isTextSelectable,
           framedEventReference: repostEventReference ?? quotedEventReference,
         ),
-        ScreenSideOffset.small(
-          child: Column(
-            children: [
-              if (displayQuote && quotedEventReference != null)
-                _QuotedEvent(
-                  accentTheme: accentTheme,
-                  eventReference: quotedEventReference,
-                  header: accentTheme && header != null ? header : null,
-                  footer: quotedEventFooter,
-                ),
-              SizedBox(height: 8.0.s),
-              footer ?? CounterItemsFooter(eventReference: eventReference),
-            ],
+        if (displayQuote && quotedEventReference != null)
+          ScreenSideOffset.small(
+            child: _QuotedEvent(
+              accentTheme: accentTheme,
+              eventReference: quotedEventReference,
+              header: accentTheme && header != null ? header : null,
+              footer: quotedEventFooter,
+            ),
           ),
-        ),
+        footer ?? CounterItemsFooter(eventReference: eventReference),
       ],
     );
 

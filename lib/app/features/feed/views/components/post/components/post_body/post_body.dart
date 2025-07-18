@@ -164,16 +164,13 @@ class PostBody extends HookConsumerWidget {
             ],
 
             if (media.isNotEmpty)
-              Padding(
-                padding: EdgeInsetsDirectional.only(top: 10.0.s),
-                child: PostMedia(
-                  media: media,
-                  onVideoTap: onVideoTap,
-                  sidePadding: sidePadding,
-                  videoAutoplay: videoAutoplay,
-                  eventReference: entity.toEventReference(),
-                  framedEventReference: framedEventReference,
-                ),
+              PostMedia(
+                media: media,
+                onVideoTap: onVideoTap,
+                sidePadding: sidePadding,
+                videoAutoplay: videoAutoplay,
+                eventReference: entity.toEventReference(),
+                framedEventReference: framedEventReference,
               ),
             if (media.isEmpty && hasValidUrlMetadata)
               Padding(

@@ -3,6 +3,7 @@
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/components/counter_items_footer/counter_items_footer.dart';
+import 'package:ion/app/components/screen_offset/screen_side_offset.dart';
 import 'package:ion/app/components/skeleton/skeleton.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/auth/providers/auth_provider.m.dart';
@@ -29,6 +30,7 @@ class Article extends ConsumerWidget {
     this.footer,
     this.isReplied = false,
     this.accentTheme = false,
+    this.addTrailingPadding = true,
     this.showActionButtons = true,
     this.timeFormat = TimestampFormat.short,
     super.key,
@@ -43,6 +45,7 @@ class Article extends ConsumerWidget {
     return Article(
       header: header,
       showActionButtons: false,
+      addTrailingPadding: false,
       accentTheme: accentTheme,
       eventReference: eventReference,
       footer: footer,
@@ -63,6 +66,7 @@ class Article extends ConsumerWidget {
     );
   }
 
+  final bool addTrailingPadding;
   final EventReference eventReference;
   final bool showActionButtons;
   final TimestampFormat timeFormat;
@@ -184,22 +188,20 @@ class Article extends ConsumerWidget {
                                   ? context.theme.appColors.onPrimaryAccent
                                   : context.theme.appColors.sharkText,
                             ),
-                            if (!isReplied)
-                              footer ??
-                                  CounterItemsFooter(
-                                    eventReference: eventReference,
-                                    bottomPadding: 0,
-                                  ),
                           ],
                         ),
                       ),
+                      if (addTrailingPadding) SizedBox(width: ScreenSideOffset.defaultSmallMargin),
                     ],
                   ),
                 ),
-                if (isReplied) footer ?? CounterItemsFooter(eventReference: eventReference),
+                if (isReplied && showActionButtons)
+                  footer ?? CounterItemsFooter(eventReference: eventReference, sidePadding: 0),
               ],
             ),
           ),
+          if (!isReplied && showActionButtons)
+            footer ?? CounterItemsFooter(eventReference: eventReference),
         ],
       ),
     );
