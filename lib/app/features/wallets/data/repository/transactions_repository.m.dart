@@ -256,6 +256,7 @@ class TransactionsRepository {
     int limit = 20,
     int offset = 0,
     NetworkData? network,
+    DateTime? confirmedSince,
   }) {
     return _transactionsDao.watchTransactions(
       walletAddresses: walletAddresses,
@@ -266,6 +267,7 @@ class TransactionsRepository {
       networkId: network?.id,
       walletViewIds: walletViewIds,
       statuses: statuses,
+      confirmedSince: confirmedSince,
     );
   }
 
