@@ -14,7 +14,7 @@ struct MediaItem: Codable {
         mimeType: String,
         dimension: String? = nil,
         thumb: String? = nil,
-        mediaExt: String? = nil,
+        mediaExt: String? = nil
     ) {
         self.url = url
         self.mimeType = mimeType

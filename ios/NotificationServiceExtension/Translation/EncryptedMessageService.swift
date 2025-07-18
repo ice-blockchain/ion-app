@@ -69,7 +69,7 @@ class EncryptedMessageService: NIP44v2Encrypting {
             privateKeyA: privateKey,
             publicKeyB: publicKey,
             customConversationKey: sharedSecretData,
-            compressionAlgorithm: .brotli,
+            compressionAlgorithm: .brotli
         )
         
         guard let data = decryptedContent.data(using: .utf8) else {
