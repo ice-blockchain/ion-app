@@ -211,11 +211,15 @@ class TransactionsRepository {
     List<String> coinIds,
   ) {
     return _transactionsDao
-        .watchTransactions(coinIds: coinIds, statuses: TransactionStatus.inProgressStatuses)
+        .watchTransactions(
+      coinIds: coinIds,
+      statuses: TransactionStatus.inProgressStatuses,
+      type: TransactionType.send,
+    )
         .map((transactions) {
       final filtered = transactions.where((tx) {
         final isValidCryptoAsset = tx.cryptoAsset is CoinTransactionAsset;
-        return tx.type.isSend && tx.id != null && isValidCryptoAsset;
+        return tx.id != null && isValidCryptoAsset;
       }).toList();
 
       final transactionsByCoin = <CoinData, List<TransactionData>>{};
@@ -233,8 +237,9 @@ class TransactionsRepository {
     final transactions = await _transactionsDao.getTransactions(
       walletAddresses: walletAddress != null ? [walletAddress] : [],
       statuses: TransactionStatus.inProgressStatuses,
+      type: TransactionType.send,
     );
-    return transactions.where((tx) => tx.type.isSend && tx.id != null).toList();
+    return transactions.where((tx) => tx.id != null).toList();
   }
 
   Future<void> remove({
@@ -297,13 +302,12 @@ class TransactionsRepository {
     String walletId, {
     int? pageSize,
     String? pageToken,
-  }) {
-    return _ionIdentityClient.wallets.getWalletTransferRequests(
-      walletId,
-      pageSize: pageSize,
-      pageToken: pageToken,
-    );
-  }
+  }) =>
+      _ionIdentityClient.wallets.getWalletTransferRequests(
+        walletId,
+        pageSize: pageSize,
+        pageToken: pageToken,
+      );
 
   Future<TransactionsPage> loadCoinTransactions(
     String walletId, {
