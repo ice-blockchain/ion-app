@@ -41,7 +41,7 @@ class TransactionsVisibilityStatusDao extends DatabaseAccessor<WalletsDatabase>
     }
 
     if (transactions.isNotEmpty) {
-      await _addOrUpdateVisibilityStatusForTransactions(transactions, status);
+      await _addOrUpdateVisibilityStatusForTxWalletPairs(transactions, status);
     }
   }
 
@@ -55,13 +55,6 @@ class TransactionsVisibilityStatusDao extends DatabaseAccessor<WalletsDatabase>
     if (transactionsForCoinIds.isEmpty) return;
 
     await _addOrUpdateVisibilityStatusForTxWalletPairs(transactionsForCoinIds, status);
-  }
-
-  Future<void> _addOrUpdateVisibilityStatusForTransactions(
-    List<Transaction> transactions,
-    TransactionVisibilityStatus status,
-  ) async {
-    await _addOrUpdateVisibilityStatusForTxWalletPairs(transactions, status);
   }
 
   Future<void> _addOrUpdateVisibilityStatusForTxWalletPairs(
