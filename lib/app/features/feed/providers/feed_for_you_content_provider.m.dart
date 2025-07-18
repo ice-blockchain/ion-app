@@ -17,6 +17,7 @@ import 'package:ion/app/features/feed/providers/feed_request_queue.r.dart';
 import 'package:ion/app/features/feed/providers/feed_selected_article_categories_provider.r.dart';
 import 'package:ion/app/features/feed/providers/feed_user_interest_picker_provider.r.dart';
 import 'package:ion/app/features/feed/providers/feed_user_interests_provider.r.dart';
+import 'package:ion/app/features/feed/reposts/providers/optimistic/post_repost_provider.r.dart';
 import 'package:ion/app/features/ion_connect/ion_connect.dart';
 import 'package:ion/app/features/ion_connect/model/action_source.f.dart';
 import 'package:ion/app/features/ion_connect/model/ion_connect_entity.dart';
@@ -182,6 +183,7 @@ class FeedForYouContent extends _$FeedForYouContent implements PagedNotifier {
             autoFetch: false,
           ),
         )
+        ..invalidate(loadRepostsFromCacheProvider)
         ..invalidateSelf();
     }
   }
