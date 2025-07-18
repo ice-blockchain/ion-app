@@ -118,7 +118,10 @@ class PeriodicTransactionsSyncService {
     final syncFutures = walletNetworks.entries.map(
       (entry) => _startWalletSync(walletAddress: entry.key, network: entry.value),
     );
-    await Future.wait(syncFutures);
+
+    if (syncFutures.isNotEmpty) {
+      await Future.wait(syncFutures);
+    }
   }
 
   @visibleForTesting

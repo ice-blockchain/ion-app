@@ -107,6 +107,7 @@ class TransactionsDao extends DatabaseAccessor<WalletsDatabase> with _$Transacti
     int limit = 20,
     int? offset,
     String? symbol,
+    TransactionType? type,
     DateTime? confirmedSince,
     String? networkId,
   }) {
@@ -120,6 +121,7 @@ class TransactionsDao extends DatabaseAccessor<WalletsDatabase> with _$Transacti
         externalHashes: externalHashes,
         statuses: statuses,
         symbol: symbol,
+        type: type,
         networkId: networkId,
         confirmedSince: confirmedSince,
         transactionCoinAlias: transactionCoinAlias,
@@ -142,6 +144,7 @@ class TransactionsDao extends DatabaseAccessor<WalletsDatabase> with _$Transacti
     String? symbol,
     String? networkId,
     DateTime? confirmedSince,
+    TransactionType? type,
   }) async {
     return _createTransactionQuery(
       where: (tbl, transactionCoinAlias, nativeCoinAlias) => _buildTransactionWhereClause(
@@ -155,6 +158,7 @@ class TransactionsDao extends DatabaseAccessor<WalletsDatabase> with _$Transacti
         symbol: symbol,
         networkId: networkId,
         confirmedSince: confirmedSince,
+        type: type,
         transactionCoinAlias: transactionCoinAlias,
       ),
       limit: limit,
@@ -222,6 +226,7 @@ class TransactionsDao extends DatabaseAccessor<WalletsDatabase> with _$Transacti
     List<String> externalHashes = const [],
     List<TransactionStatus> statuses = const [],
     String? symbol,
+    TransactionType? type,
     String? networkId,
     $CoinsTableTable? transactionCoinAlias,
     DateTime? confirmedSince,
@@ -271,6 +276,10 @@ class TransactionsDao extends DatabaseAccessor<WalletsDatabase> with _$Transacti
 
     if (confirmedSince != null) {
       expr = expr & tbl.dateConfirmed.isBiggerThanValue(confirmedSince);
+    }
+
+    if (type != null) {
+      expr = expr & tbl.type.equals(type.value);
     }
 
     return expr;
