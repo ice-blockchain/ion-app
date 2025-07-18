@@ -12,6 +12,7 @@ class LoadMoreBuilder extends HookWidget {
     required this.onLoadMore,
     required this.hasMore,
     Widget Function(BuildContext context, List<Widget> slivers)? builder,
+    this.loadingIndicatorContainerBuilder,
     this.loadMoreOffset,
     this.forceLoadMore = false,
     this.showIndicator = true,
@@ -20,6 +21,8 @@ class LoadMoreBuilder extends HookWidget {
             ((BuildContext context, List<Widget> slivers) => CustomScrollView(slivers: slivers));
 
   final Widget Function(BuildContext context, List<Widget> slivers) builder;
+
+  final Widget Function(BuildContext context, Widget child)? loadingIndicatorContainerBuilder;
 
   final List<Widget> slivers;
 
@@ -56,6 +59,13 @@ class LoadMoreBuilder extends HookWidget {
       [forceLoadMore, loadMore],
     );
 
+    final loadingIndicator = Center(
+      child: Padding(
+        padding: EdgeInsetsDirectional.all(10.0.s),
+        child: const IONLoadingIndicatorThemed(),
+      ),
+    );
+
     return NotificationListener<ScrollNotification>(
       onNotification: (notification) => _onMetricsChanged(notification, loadMore),
       child: builder(
@@ -64,10 +74,11 @@ class LoadMoreBuilder extends HookWidget {
             ? [
                 ...slivers,
                 SliverToBoxAdapter(
-                  child: Padding(
-                    padding: EdgeInsetsDirectional.only(top: 8.0.s),
-                    child: const Center(child: IONLoadingIndicatorThemed()),
-                  ),
+                  child: loadingIndicatorContainerBuilder?.call(
+                        context,
+                        loadingIndicator,
+                      ) ??
+                      loadingIndicator,
                 ),
               ]
             : slivers,

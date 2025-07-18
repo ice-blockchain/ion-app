@@ -2,6 +2,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:ion/app/components/screen_offset/screen_side_offset.dart';
 import 'package:ion/app/components/scroll_view/load_more_builder.dart';
 import 'package:ion/app/components/section_separator/section_separator.dart';
 import 'package:ion/app/extensions/extensions.dart';
@@ -47,6 +48,18 @@ class Stories extends HookConsumerWidget {
             ],
             hasMore: hasMore,
             onLoadMore: () => _onLoadMore(ref),
+            loadingIndicatorContainerBuilder: (context, child) {
+              return Align(
+                alignment: Alignment.topCenter,
+                child: Padding(
+                  padding: EdgeInsetsDirectional.only(end: ScreenSideOffset.defaultSmallMargin),
+                  child: SizedBox(
+                    height: StoryItemContent.width,
+                    child: child,
+                  ),
+                ),
+              );
+            },
             builder: (context, slivers) {
               return SizedBox(
                 height: StoryItemContent.height,
