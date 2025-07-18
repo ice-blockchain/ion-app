@@ -11,7 +11,7 @@ protocol VideoEditor {
     
     func openVideoEditorPIP(fromViewController controller: FlutterViewController, videoURL: URL, flutterResult: @escaping FlutterResult)
     
-    func openVideoEditorTrimmer(fromViewController controller: FlutterViewController, videoURL: URL, maxVideoDuration: Int, flutterResult: @escaping FlutterResult)
+    func openVideoEditorTrimmer(fromViewController controller: FlutterViewController, videoURL: URL, maxVideoDuration: Int, coverSelectionEnabled: Bool, flutterResult: @escaping FlutterResult)
 }
 
 class VideoEditorModule: VideoEditor {
@@ -92,6 +92,7 @@ class VideoEditorModule: VideoEditor {
         fromViewController controller: FlutterViewController,
         videoURL: URL,
         maxVideoDuration: Int = 60,
+        coverSelectionEnabled: Bool,
         flutterResult: @escaping FlutterResult
     ) {
         self.flutterResult = flutterResult
@@ -118,6 +119,7 @@ class VideoEditorModule: VideoEditor {
         config?.videoEditorViewConfiguration.primaryAspectRatio = AspectRatio(videoAspectRatio: aspectRatio)
         config?.videoDurationConfiguration.maximumVideoDuration = TimeInterval(maxVideoDuration)
         config?.videoDurationConfiguration.videoDurations = [TimeInterval(maxVideoDuration)]
+        config?.featureConfiguration.isVideoCoverSelectionEnabled = coverSelectionEnabled
         if let newConfig = config {
             videoEditorSDK?.updateVideoEditorConfig(newConfig)
         }

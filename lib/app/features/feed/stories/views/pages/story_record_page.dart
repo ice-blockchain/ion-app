@@ -106,8 +106,11 @@ class StoryRecordPage extends HookConsumerWidget {
         final mediaType = MediaType.fromMimeType(file.mimeType ?? '');
 
         if (mediaType == MediaType.video) {
-          final edited =
-              await ref.read(mediaEditingServiceProvider).edit(file, resumeCamera: false);
+          final edited = await ref.read(mediaEditingServiceProvider).edit(
+                file,
+                resumeCamera: false,
+                videoCoverSelectionEnabled: false,
+              );
 
           if (edited != null && edited != file.path && context.mounted) {
             await StoryPreviewRoute(path: edited, mimeType: file.mimeType).push<void>(context);
@@ -157,7 +160,11 @@ class StoryRecordPage extends HookConsumerWidget {
     final mediaType = MediaType.fromMimeType(file.mimeType ?? '');
 
     if (mediaType == MediaType.video) {
-      final edited = await ref.read(mediaEditingServiceProvider).edit(file, resumeCamera: false);
+      final edited = await ref.read(mediaEditingServiceProvider).edit(
+            file,
+            resumeCamera: false,
+            videoCoverSelectionEnabled: false,
+          );
 
       if (edited != null && edited != file.path && context.mounted) {
         await StoryPreviewRoute(path: edited, mimeType: file.mimeType).push<void>(context);
