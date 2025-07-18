@@ -56,7 +56,7 @@ class EncryptedDeletionRequestHandler extends GlobalSubscriptionEncryptedEventMe
   @override
   Future<void> handle(EventMessage rumor) async {
     unawaited(_deleteConversation(rumor));
-    unawaited(_deleteConversationMessages(rumor));
+    unawaited(deleteConversationMessages(rumor));
     unawaited(userProfileSyncProvider.syncUserProfile(masterPubkeys: {rumor.masterPubkey}));
     unawaited(_deleteFundsRequest(rumor));
   }
@@ -77,36 +77,59 @@ class EncryptedDeletionRequestHandler extends GlobalSubscriptionEncryptedEventMe
     }
   }
 
-  Future<void> _deleteConversationMessages(EventMessage rumor) async {
-    final eventsToDelete = DeletionRequest.fromEventMessage(rumor).events;
+  Future<void> deleteConversationMessages(EventMessage rumor) async {
+    final eventsToDelete =
+        DeletionRequest.fromEventMessage(rumor).events.whereType<EventToDelete>().toList();
 
-    if (eventsToDelete.isEmpty) {
-      return;
+    if (eventsToDelete.isEmpty) return;
+
+    for (final event in eventsToDelete) {
+      final eventReference = event.eventReference;
+      if (eventReference is ReplaceableEventReference) {
+        await conversationMessageDao.removeMessages(
+          env: env,
+          masterPubkey: masterPubkey,
+          eventReferences: [eventReference],
+          eventSignerPubkey: eventSigner.publicKey,
+        );
+      } else if (eventReference is ImmutableEventReference) {
+        await conversationMessageDao.removeMessages(
+          env: env,
+          masterPubkey: masterPubkey,
+          eventReferences: [eventReference],
+          eventSignerPubkey: eventSigner.publicKey,
+        );
+        await conversationMessageReactionDao.remove(reactionEventReference: eventReference);
+      }
     }
+  }
 
-    final eventToDeleteReferences =
-        eventsToDelete.map((event) => (event as EventToDelete).eventReference).toList();
+  Future<void> revertDeletedConversationMessages(EventMessage rumor) async {
+    final eventsToDelete =
+        DeletionRequest.fromEventMessage(rumor).events.whereType<EventToDelete>().toList();
 
-    for (final eventReference in eventToDeleteReferences) {
-      switch (eventReference) {
-        case ReplaceableEventReference():
-          await conversationMessageDao.removeMessages(
-            env: env,
-            masterPubkey: masterPubkey,
-            eventReferences: [eventReference],
-            eventSignerPubkey: eventSigner.publicKey,
-          );
-        case ImmutableEventReference():
-          // If this is shared post kind 16 event
-          await conversationMessageDao.removeMessages(
-            env: env,
-            masterPubkey: masterPubkey,
-            eventReferences: [eventReference],
-            eventSignerPubkey: eventSigner.publicKey,
-          );
-          await conversationMessageReactionDao.remove(reactionEventReference: eventReference);
-        default:
-          break;
+    if (eventsToDelete.isEmpty) return;
+
+    for (final event in eventsToDelete) {
+      final eventReference = event.eventReference;
+      if (eventReference is ReplaceableEventReference) {
+        await conversationMessageDao.revertDeletedMessages(
+          env: env,
+          masterPubkey: masterPubkey,
+          eventReferences: [eventReference],
+          eventSignerPubkey: eventSigner.publicKey,
+        );
+      } else if (eventReference is ImmutableEventReference) {
+        await conversationMessageDao.revertDeletedMessages(
+          env: env,
+          masterPubkey: masterPubkey,
+          eventReferences: [eventReference],
+          eventSignerPubkey: eventSigner.publicKey,
+        );
+
+        await conversationMessageReactionDao.revertDeletedReaction(
+          reactionEventReference: eventReference,
+        );
       }
     }
   }

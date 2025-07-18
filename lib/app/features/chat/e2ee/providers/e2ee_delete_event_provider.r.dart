@@ -1,5 +1,7 @@
 // SPDX-License-Identifier: ice License 1.0
 
+import 'dart:async';
+
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/exceptions/exceptions.dart';
 import 'package:ion/app/extensions/extensions.dart';
@@ -7,6 +9,7 @@ import 'package:ion/app/features/auth/providers/auth_provider.m.dart';
 import 'package:ion/app/features/chat/e2ee/model/conversation_to_delete.f.dart';
 import 'package:ion/app/features/chat/e2ee/model/entities/private_direct_message_data.f.dart';
 import 'package:ion/app/features/chat/e2ee/model/entities/private_message_reaction_data.f.dart';
+import 'package:ion/app/features/chat/e2ee/providers/encrypted_deletion_request_handler.r.dart';
 import 'package:ion/app/features/chat/e2ee/providers/send_chat_message/send_e2ee_chat_message_service.r.dart';
 import 'package:ion/app/features/chat/model/database/chat_database.m.dart';
 import 'package:ion/app/features/chat/providers/conversation_pubkeys_provider.r.dart';
@@ -185,28 +188,38 @@ Future<void> _deleteMessages({
     masterPubkey: currentUserMasterPubkey,
   );
 
-  await Future.wait(
-    participantsMasterPubkeys.map((masterPubkey) async {
-      final participantsKeysMap =
-          await conversationPubkeysNotifier.fetchUsersKeys(participantsMasterPubkeys);
+  // Mark message as deleted in the database
+  final deletionHandler = await ref.watch(encryptedDeletionRequestHandlerProvider.future);
+  await deletionHandler?.deleteConversationMessages(eventMessage);
 
-      final pubkeys = participantsKeysMap[masterPubkey];
+  try {
+    await Future.wait(
+      participantsMasterPubkeys.map((masterPubkey) async {
+        final participantsKeysMap =
+            await conversationPubkeysNotifier.fetchUsersKeys(participantsMasterPubkeys);
 
-      if (pubkeys == null) {
-        throw UserPubkeyNotFoundException(masterPubkey);
-      }
+        final pubkeys = participantsKeysMap[masterPubkey];
 
-      for (final pubkey in pubkeys) {
-        await ref.read(sendE2eeChatMessageServiceProvider).sendWrappedMessage(
-              eventSigner: eventSigner,
-              masterPubkey: masterPubkey,
-              eventMessage: eventMessage,
-              wrappedKinds: [DeletionRequestEntity.kind.toString()],
-              pubkey: pubkey,
-            );
-      }
-    }),
-  );
+        if (pubkeys == null) {
+          throw UserPubkeyNotFoundException(masterPubkey);
+        }
+
+        for (final pubkey in pubkeys) {
+          await ref.read(sendE2eeChatMessageServiceProvider).sendWrappedMessage(
+                eventSigner: eventSigner,
+                masterPubkey: masterPubkey,
+                eventMessage: eventMessage,
+                wrappedKinds: [DeletionRequestEntity.kind.toString()],
+                pubkey: pubkey,
+              );
+        }
+      }),
+    );
+  } catch (e) {
+    // Revert the deletion in the database if sending fails
+    final deletionHandler = await ref.watch(encryptedDeletionRequestHandlerProvider.future);
+    unawaited(deletionHandler?.revertDeletedConversationMessages(eventMessage));
+  }
 }
 
 Future<void> _deleteConversations({
