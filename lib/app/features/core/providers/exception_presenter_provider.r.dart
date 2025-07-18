@@ -6,6 +6,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/exceptions/exceptions.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/core/providers/env_provider.r.dart';
+import 'package:ion/app/features/ion_connect/ion_connect.dart';
 import 'package:ion/generated/assets.gen.dart';
 import 'package:ion_identity_client/ion_identity.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
@@ -49,7 +50,8 @@ class ExceptionPresenter {
     return switch (error) {
       PaymentNoDestinationException() => locale.error_payment_no_destination_title,
       final IONIdentityException identityException => identityException.title(context),
-      _ => context.i18n.error_general_title,
+      SendEventException => locale.error_network_sync_failed_title,
+      _ => locale.error_general_title,
     };
   }
 
@@ -62,6 +64,7 @@ class ExceptionPresenter {
       Object _ when showDebugInfo => error.toString(),
       IONException(code: final int code) =>
         context.i18n.error_general_description(context.i18n.error_general_error_code(code)),
+      SendEventException => locale.error_network_sync_failed_description,
       _ => context.i18n.error_general_description('')
     };
   }
