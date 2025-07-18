@@ -41,6 +41,16 @@ class ConversationMessageReactionDao extends DatabaseAccessor<ChatDatabase>
     );
   }
 
+  Future<void> revertDeletedReaction({
+    required ImmutableEventReference reactionEventReference,
+  }) async {
+    await (update(reactionTable)
+          ..where((table) => table.reactionEventReference.equalsValue(reactionEventReference)))
+        .write(
+      const ReactionTableCompanion(isDeleted: Value(false)),
+    );
+  }
+
   Stream<List<MessageReactionGroup>> messageReactions(EventMessage kind14EventMessage) async* {
     final eventReference =
         ReplaceablePrivateDirectMessageEntity.fromEventMessage(kind14EventMessage)
