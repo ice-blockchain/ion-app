@@ -194,7 +194,9 @@ Future<List<EventReference>> filteredBookmarksRefs(
 
   if (query.isEmpty) return allRefs;
 
-  final rawEvents = await ref.read(eventMessagesRepositoryProvider).getFilteredRaw(allRefs, query);
+  final rawEvents = await ref
+      .read(eventMessagesRepositoryProvider)
+      .getFiltered(eventReferences: allRefs, query: query);
   return rawEvents.map((event) => event.eventReference).toList();
 }
 

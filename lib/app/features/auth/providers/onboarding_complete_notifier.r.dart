@@ -37,10 +37,10 @@ class OnboardingCompleteNotifier extends _$OnboardingCompleteNotifier {
     state = const AsyncLoading();
     state = await AsyncValue.guard(
       () async {
-        final relayUrls = await _assignUserRelays();
+        final userRelays = await _assignUserRelays();
 
         // BE requires sending user relays alongside the user delegation event
-        final userRelaysEvent = await _buildUserRelaysEvent(relayUrls: relayUrls);
+        final userRelaysEvent = await _buildUserRelaysEvent(userRelays: userRelays);
 
         // Send user delegation event in advance so all subsequent events pass delegation attestation
         try {
@@ -108,8 +108,8 @@ class OnboardingCompleteNotifier extends _$OnboardingCompleteNotifier {
     );
   }
 
-  Future<List<String>> _assignUserRelays() async {
-    final UserDetails(:ionConnectRelays) = (await ref.read(currentUserIdentityProvider.future))!;
+  Future<List<UserRelay>> _assignUserRelays() async {
+    final ionConnectRelays = await ref.read(currentUserIdentityConnectRelaysProvider.future);
     if (ionConnectRelays != null && ionConnectRelays.isNotEmpty) {
       return ionConnectRelays;
     }
@@ -118,12 +118,16 @@ class OnboardingCompleteNotifier extends _$OnboardingCompleteNotifier {
     return ref.read(currentUserIdentityProvider.notifier).assignUserRelays(followees: followees);
   }
 
-  Future<EventMessage> _buildUserRelaysEvent({required List<String> relayUrls}) async {
-    final userRelays = UserRelaysData(
-      list: relayUrls.map((url) => UserRelay(url: url)).toList(),
-    );
+  Future<EventMessage> _buildUserRelaysEvent({
+    required List<UserRelay> userRelays,
+  }) async {
+    if (userRelays.isEmpty) {
+      throw RequiredFieldIsEmptyException(field: 'userRelays');
+    }
 
-    return ref.read(ionConnectNotifierProvider.notifier).sign(userRelays);
+    final userRelaysData = UserRelaysData(list: userRelays);
+
+    return ref.read(ionConnectNotifierProvider.notifier).sign(userRelaysData);
   }
 
   Future<UserMetadata> _buildUserMetadata({MediaAttachment? avatarAttachment}) async {

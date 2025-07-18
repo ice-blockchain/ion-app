@@ -58,8 +58,14 @@ class RelayFirebaseAppConfig extends _$RelayFirebaseAppConfig {
       return null;
     }
 
+    final randomFirebaseConfig = firebaseConfigs.random;
+
+    if (randomFirebaseConfig == null) {
+      return null;
+    }
+
     return RelayFirebaseConfig(
-      firebaseConfig: firebaseConfigs.random,
+      firebaseConfig: randomFirebaseConfig,
       relayUrl: relayUrl,
       relayPubkey: relayPubkey,
     );

@@ -30,6 +30,16 @@ class IonConnectDbCache extends _$IonConnectDbCache {
     return eventMessages.map(parser.parse).toList();
   }
 
+  Future<List<IonConnectEntity>> getFiltered({
+    required String query,
+    List<int>? kinds,
+  }) async {
+    final results =
+        await ref.read(eventMessagesRepositoryProvider).getFiltered(query: query, kinds: kinds);
+    final parser = ref.read(eventParserProvider);
+    return results.map((item) => parser.parse(item.eventMessage)).toList();
+  }
+
   Future<IonConnectEntity?> get(EventReference eventReference) async {
     final eventMessages = await ref.read(eventMessagesRepositoryProvider).getAll([eventReference]);
     final parser = ref.read(eventParserProvider);

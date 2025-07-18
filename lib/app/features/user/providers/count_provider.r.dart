@@ -11,7 +11,7 @@ import 'package:ion/app/features/ion_connect/ion_connect.dart';
 import 'package:ion/app/features/ion_connect/model/action_source.f.dart';
 import 'package:ion/app/features/ion_connect/providers/ion_connect_cache.r.dart';
 import 'package:ion/app/features/ion_connect/providers/ion_connect_notifier.r.dart';
-import 'package:ion/app/features/ion_connect/providers/relays/relay_creation_provider.r.dart';
+import 'package:ion/app/features/ion_connect/providers/relays/relay_picker_provider.r.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'count_provider.r.g.dart';
@@ -67,7 +67,9 @@ class Count extends _$Count {
       throw UserMasterPubkeyNotFoundException();
     }
 
-    final relay = await ref.read(relayCreationProvider.notifier).getRelay(actionSource);
+    final relay = await ref
+        .read(relayPickerProvider.notifier)
+        .getActionSourceRelay(actionSource, actionType: ActionType.read);
 
     final requestEvent = await _buildRequestEvent(relayUrl: relay.url, requestData: requestData);
 

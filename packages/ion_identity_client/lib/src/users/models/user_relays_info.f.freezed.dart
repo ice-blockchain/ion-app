@@ -21,7 +21,8 @@ UserRelaysInfo _$UserRelaysInfoFromJson(Map<String, dynamic> json) {
 /// @nodoc
 mixin _$UserRelaysInfo {
   String get masterPubKey => throw _privateConstructorUsedError;
-  List<String> get ionConnectRelays => throw _privateConstructorUsedError;
+  List<IonConnectRelayInfo> get ionConnectRelays =>
+      throw _privateConstructorUsedError;
 
   /// Serializes this UserRelaysInfo to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
@@ -39,7 +40,7 @@ abstract class $UserRelaysInfoCopyWith<$Res> {
           UserRelaysInfo value, $Res Function(UserRelaysInfo) then) =
       _$UserRelaysInfoCopyWithImpl<$Res, UserRelaysInfo>;
   @useResult
-  $Res call({String masterPubKey, List<String> ionConnectRelays});
+  $Res call({String masterPubKey, List<IonConnectRelayInfo> ionConnectRelays});
 }
 
 /// @nodoc
@@ -68,7 +69,7 @@ class _$UserRelaysInfoCopyWithImpl<$Res, $Val extends UserRelaysInfo>
       ionConnectRelays: null == ionConnectRelays
           ? _value.ionConnectRelays
           : ionConnectRelays // ignore: cast_nullable_to_non_nullable
-              as List<String>,
+              as List<IonConnectRelayInfo>,
     ) as $Val);
   }
 }
@@ -81,7 +82,7 @@ abstract class _$$UserRelaysInfoImplCopyWith<$Res>
       __$$UserRelaysInfoImplCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call({String masterPubKey, List<String> ionConnectRelays});
+  $Res call({String masterPubKey, List<IonConnectRelayInfo> ionConnectRelays});
 }
 
 /// @nodoc
@@ -108,7 +109,7 @@ class __$$UserRelaysInfoImplCopyWithImpl<$Res>
       ionConnectRelays: null == ionConnectRelays
           ? _value._ionConnectRelays
           : ionConnectRelays // ignore: cast_nullable_to_non_nullable
-              as List<String>,
+              as List<IonConnectRelayInfo>,
     ));
   }
 }
@@ -118,7 +119,7 @@ class __$$UserRelaysInfoImplCopyWithImpl<$Res>
 class _$UserRelaysInfoImpl implements _UserRelaysInfo {
   const _$UserRelaysInfoImpl(
       {required this.masterPubKey,
-      required final List<String> ionConnectRelays})
+      required final List<IonConnectRelayInfo> ionConnectRelays})
       : _ionConnectRelays = ionConnectRelays;
 
   factory _$UserRelaysInfoImpl.fromJson(Map<String, dynamic> json) =>
@@ -126,9 +127,9 @@ class _$UserRelaysInfoImpl implements _UserRelaysInfo {
 
   @override
   final String masterPubKey;
-  final List<String> _ionConnectRelays;
+  final List<IonConnectRelayInfo> _ionConnectRelays;
   @override
-  List<String> get ionConnectRelays {
+  List<IonConnectRelayInfo> get ionConnectRelays {
     if (_ionConnectRelays is EqualUnmodifiableListView)
       return _ionConnectRelays;
     // ignore: implicit_dynamic_type
@@ -175,8 +176,9 @@ class _$UserRelaysInfoImpl implements _UserRelaysInfo {
 
 abstract class _UserRelaysInfo implements UserRelaysInfo {
   const factory _UserRelaysInfo(
-      {required final String masterPubKey,
-      required final List<String> ionConnectRelays}) = _$UserRelaysInfoImpl;
+          {required final String masterPubKey,
+          required final List<IonConnectRelayInfo> ionConnectRelays}) =
+      _$UserRelaysInfoImpl;
 
   factory _UserRelaysInfo.fromJson(Map<String, dynamic> json) =
       _$UserRelaysInfoImpl.fromJson;
@@ -184,7 +186,7 @@ abstract class _UserRelaysInfo implements UserRelaysInfo {
   @override
   String get masterPubKey;
   @override
-  List<String> get ionConnectRelays;
+  List<IonConnectRelayInfo> get ionConnectRelays;
 
   /// Create a copy of UserRelaysInfo
   /// with the given fields replaced by the non-null parameter values.

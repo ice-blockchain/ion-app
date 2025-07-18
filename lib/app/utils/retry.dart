@@ -13,7 +13,7 @@ Future<T> withRetry<T>(
   double multiplier = 3,
   double minJitter = 0.5,
   double maxJitter = 1.5,
-  void Function(Object? error)? onRetry,
+  FutureOr<void> Function(Object? error)? onRetry,
   bool Function(Object)? retryWhen,
 }) async {
   return withRetryStream<T>(
@@ -37,7 +37,7 @@ Stream<T> withRetryStream<T>(
   double multiplier = 3,
   double minJitter = 0.5,
   double maxJitter = 1.5,
-  void Function(Object? error)? onRetry,
+  FutureOr<void> Function(Object? error)? onRetry,
   bool Function(Object)? retryWhen,
 }) async* {
   var attempt = 0;
@@ -77,7 +77,8 @@ Stream<T> withRetryStream<T>(
       Logger.log('Retry #$attempt after ${delay.inMilliseconds}ms...');
       await Future<void>.delayed(delay);
     }
-    onRetry?.call(lastError);
+
+    await onRetry?.call(lastError);
   }
 
   throw Exception('Unreachable');

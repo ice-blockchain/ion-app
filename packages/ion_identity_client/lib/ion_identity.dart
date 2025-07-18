@@ -30,6 +30,7 @@ export 'src/signer/password_user_action_signer.dart';
 export 'src/signer/user_action_signer_factory.dart';
 export 'src/signer/user_action_signer_new.dart';
 export 'src/users/ion_connect_indexers/models/ion_connect_indexers_response.f.dart';
+export 'src/users/models/ion_connect_relay_info.f.dart';
 export 'src/users/models/user_relays_info.f.dart';
 export 'src/users/search_users_social_profile/models/search_users_social_profile_type.dart';
 export 'src/users/set_ion_connect_relays/models/set_ion_connect_relays_response.f.dart';

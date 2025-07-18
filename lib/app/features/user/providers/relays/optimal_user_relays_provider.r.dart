@@ -65,7 +65,7 @@ class OptimalUserRelaysService {
 
     if (_currentUserMasterPubkey != null && masterPubkeys.contains(_currentUserMasterPubkey)) {
       final currentUserRelays = await _getCurrentUserRelays();
-      if (currentUserRelays == null) {
+      if (currentUserRelays == null || currentUserRelays.urls.isEmpty) {
         throw UserRelaysNotFoundException();
       }
       userToRelays[_currentUserMasterPubkey] = currentUserRelays.urls;

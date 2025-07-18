@@ -16,14 +16,51 @@ import 'package:ion/app/features/user/providers/relays/relevant_user_relays_prov
 import 'package:ion/app/features/user/providers/relays/user_relays_manager.r.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
-part 'relay_creation_provider.r.g.dart';
+part 'relay_picker_provider.r.g.dart';
+
+enum ActionType { read, write }
 
 @riverpod
-class RelayCreation extends _$RelayCreation {
+class RelayPicker extends _$RelayPicker {
   @override
   FutureOr<void> build() {}
 
-  Future<IonConnectRelay> getRelay(
+  Future<IonConnectRelay> getActionSourceRelay(
+    ActionSource actionSource, {
+    required ActionType actionType,
+    DislikedRelayUrlsCollection dislikedUrls = const DislikedRelayUrlsCollection({}),
+  }) async {
+    return switch (actionType) {
+      ActionType.read => _getReadActionSourceRelay(actionSource, dislikedUrls: dislikedUrls),
+      ActionType.write => _getWriteActionSourceRelay(actionSource, dislikedUrls: dislikedUrls),
+    };
+  }
+
+  Future<IonConnectRelay> _getWriteActionSourceRelay(
+    ActionSource actionSource, {
+    DislikedRelayUrlsCollection dislikedUrls = const DislikedRelayUrlsCollection({}),
+  }) async {
+    final relays = switch (actionSource) {
+      ActionSourceCurrentUser() => await _getCurrentUserRawRelays().then(_filterWriteRelays),
+      ActionSourceUser() => await _getUserRawRelays(actionSource.pubkey).then(_filterWriteRelays),
+      ActionSourceRelayUrl() => [UserRelay(url: actionSource.url)],
+      _ => throw UnsupportedError(
+          'ActionSource $actionSource is not supported for write action type.',
+        )
+    };
+
+    final randomValidWriteRelay = _userRelaysAvoidingDislikedUrls(relays, dislikedUrls).random;
+
+    if (randomValidWriteRelay == null) {
+      throw FailedToPickUserRelay();
+    }
+
+    return ref.read(
+      relayProvider(randomValidWriteRelay.url, anonymous: actionSource.anonymous).future,
+    );
+  }
+
+  Future<IonConnectRelay> _getReadActionSourceRelay(
     ActionSource actionSource, {
     DislikedRelayUrlsCollection dislikedUrls = const DislikedRelayUrlsCollection({}),
   }) async {
@@ -51,8 +88,9 @@ class RelayCreation extends _$RelayCreation {
 
       case ActionSourceUser():
         if (ref.read(isCurrentUserSelectorProvider(actionSource.pubkey))) {
-          return getRelay(
+          return getActionSourceRelay(
             ActionSource.currentUser(anonymous: actionSource.anonymous),
+            actionType: ActionType.read,
             dislikedUrls: dislikedUrls,
           );
         }
@@ -88,7 +126,12 @@ class RelayCreation extends _$RelayCreation {
         );
         if (lastUsedRelays != null) return lastUsedRelays;
 
-        return ref.read(relayProvider(relays.random, anonymous: actionSource.anonymous).future);
+        final randomRelay = relays.random;
+        if (randomRelay == null) {
+          throw FailedToPickUserRelay();
+        }
+
+        return ref.read(relayProvider(randomRelay, anonymous: actionSource.anonymous).future);
 
       case ActionSourceRelayUrl():
         final relay = actionSource.url;
@@ -125,18 +168,26 @@ class RelayCreation extends _$RelayCreation {
 
   Future<UserRelaysEntity> _getCurrentUserRankedRelays() async {
     final relays = await ref.read(rankedCurrentUserRelaysProvider.future);
-    if (relays == null) {
-      throw UserRelaysNotFoundException('current_user');
+    if (relays == null || relays.urls.isEmpty) {
+      throw UserRelaysNotFoundException();
+    }
+    return relays;
+  }
+
+  Future<UserRelaysEntity> _getCurrentUserRawRelays() async {
+    final relays = await ref.read(currentUserRelaysProvider.future);
+    if (relays == null || relays.urls.isEmpty) {
+      throw UserRelaysNotFoundException();
     }
     return relays;
   }
 
   Future<UserRelaysEntity> _getUserRawRelays(String pubkey) async {
-    final relays = await ref.read(userRelayProvider(pubkey).future);
-    if (relays == null) {
+    final relays = await ref.read(userRelaysManagerProvider.notifier).fetch([pubkey]);
+    if (relays.isEmpty) {
       throw UserRelaysNotFoundException(pubkey);
     }
-    return relays;
+    return relays.first;
   }
 
   List<UserRelay> _userRelaysAvoidingDislikedUrls(
@@ -167,9 +218,17 @@ class RelayCreation extends _$RelayCreation {
     final relevantRelays = await ref.read(rankedRelevantCurrentUserRelaysUrlsProvider.future);
     final commonRelays = relevantRelays.where((url) => urls.contains(url)).toList();
     if (relevantRelays.isEmpty || commonRelays.isEmpty) {
-      return ref.read(relayProvider(urls.random, anonymous: anonymous).future);
+      final randomRelayUrl = urls.random;
+      if (randomRelayUrl == null) {
+        throw FailedToPickUserRelay();
+      }
+      return ref.read(relayProvider(randomRelayUrl, anonymous: anonymous).future);
     }
 
     return ref.read(relayProvider(commonRelays.first, anonymous: anonymous).future);
+  }
+
+  List<UserRelay> _filterWriteRelays(UserRelaysEntity relayEntity) {
+    return relayEntity.data.list.where((relay) => relay.write).toList();
   }
 }

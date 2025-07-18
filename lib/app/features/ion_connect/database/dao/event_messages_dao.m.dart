@@ -49,17 +49,24 @@ class EventMessagesDao extends DatabaseAccessor<EventMessagesDatabase>
     return query.get();
   }
 
-  Future<List<EventMessageDbModel>> getFiltered(
-    List<EventReference> eventReferences,
-    String query,
-  ) {
+  Future<List<EventMessageDbModel>> getFiltered({
+    required String query,
+    List<int>? kinds,
+    List<EventReference>? eventReferences,
+  }) {
     final pattern = '%${query.toLowerCase()}%';
-    final filteredQuery = select(db.eventMessagesTable)
-      ..where(
-        (tbl) =>
-            tbl.eventReference.isInValues(eventReferences) &
-            (tbl.content.like(pattern) | tbl.tags.like(pattern)),
-      );
+    final filteredQuery = select(db.eventMessagesTable);
+
+    if (eventReferences != null) {
+      filteredQuery.where((tbl) => tbl.eventReference.isInValues(eventReferences));
+    }
+
+    if (kinds != null) {
+      filteredQuery.where((tbl) => tbl.kind.isIn(kinds));
+    }
+
+    filteredQuery.where((tbl) => tbl.content.like(pattern) | tbl.tags.like(pattern));
+
     return filteredQuery.get();
   }
 

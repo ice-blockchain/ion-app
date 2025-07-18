@@ -2,8 +2,6 @@
 
 import 'package:collection/collection.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:ion/app/exceptions/exceptions.dart';
-import 'package:ion/app/features/auth/providers/auth_provider.m.dart';
 import 'package:ion/app/features/ion_connect/ion_connect.dart';
 import 'package:ion/app/features/ion_connect/model/action_source.f.dart';
 import 'package:ion/app/features/ion_connect/model/event_reference.f.dart';
@@ -40,10 +38,11 @@ class UserRelaysManager extends _$UserRelaysManager {
     final pubkeysToFetch = [...pubkeys];
 
     final dbCachedRelays = await _getRelaysFromDb(pubkeys: pubkeys);
-    result.addAll(dbCachedRelays);
+    final validDbCachedRelays = _filterValidRelays(dbCachedRelays);
+    result.addAll(validDbCachedRelays);
 
     pubkeysToFetch
-        .removeWhere((pubkey) => dbCachedRelays.any((relay) => relay.masterPubkey == pubkey));
+        .removeWhere((pubkey) => validDbCachedRelays.any((relay) => relay.masterPubkey == pubkey));
 
     if (pubkeysToFetch.isEmpty) {
       return result;
@@ -52,12 +51,14 @@ class UserRelaysManager extends _$UserRelaysManager {
     final fetchedRelays = <UserRelaysEntity>[];
 
     final relaysFromIndexers = await _fetchRelaysFromIndexers(pubkeys: pubkeysToFetch);
+    final validRelaysFromIndexers = _filterValidRelays(relaysFromIndexers);
 
-    fetchedRelays.addAll(relaysFromIndexers);
-    result.addAll(relaysFromIndexers);
+    fetchedRelays.addAll(validRelaysFromIndexers);
+    result.addAll(validRelaysFromIndexers);
 
-    pubkeysToFetch
-        .removeWhere((pubkey) => relaysFromIndexers.any((relay) => relay.masterPubkey == pubkey));
+    pubkeysToFetch.removeWhere(
+      (pubkey) => validRelaysFromIndexers.any((relay) => relay.masterPubkey == pubkey),
+    );
 
     if (pubkeysToFetch.isEmpty) {
       return result;
@@ -71,6 +72,29 @@ class UserRelaysManager extends _$UserRelaysManager {
     await _clearReachabilityInfoFor(fetchedRelays);
 
     return result;
+  }
+
+  Future<void> markRelayInDbAsReadOnly(String relayUrl) async {
+    final outdatedEntities = (await ref
+            .read(ionConnectDbCacheProvider.notifier)
+            .getFiltered(query: relayUrl, kinds: [UserRelaysEntity.kind]))
+        .cast<UserRelaysEntity?>()
+        .nonNulls
+        .toList();
+
+    final updatedEntities = outdatedEntities
+        .map(
+          (entity) => entity.copyWith(
+            data: entity.data.copyWith(
+              list: entity.data.list
+                  .map((relay) => relay.url == relayUrl ? relay.copyWith(write: false) : relay)
+                  .toList(),
+            ),
+          ),
+        )
+        .toList();
+
+    await ref.read(ionConnectDbCacheProvider.notifier).saveAll(updatedEntities);
   }
 
   Future<List<UserRelaysEntity>> _fetchRelaysFromIndexers({
@@ -100,8 +124,6 @@ class UserRelaysManager extends _$UserRelaysManager {
   Future<List<UserRelaysEntity>> _getRelaysFromDb({
     required List<String> pubkeys,
   }) async {
-    final result = <UserRelaysEntity>[];
-
     final eventReferences = pubkeys
         .map(
           (pubkey) => ReplaceableEventReference(
@@ -111,22 +133,10 @@ class UserRelaysManager extends _$UserRelaysManager {
         )
         .toList();
 
-    final dbCachedRelays =
-        (await ref.read(ionConnectDbCacheProvider.notifier).getAll(eventReferences))
-            .cast<UserRelaysEntity?>()
-            .nonNulls
-            .toList();
-
-    // Remove unreachable relays
-    for (final relay in dbCachedRelays) {
-      final filteredRelayEntity =
-          ref.read(relayReachabilityProvider.notifier).getFilteredRelayEntity(relay);
-      if (filteredRelayEntity != null) {
-        result.add(filteredRelayEntity);
-      }
-    }
-
-    return result;
+    return (await ref.read(ionConnectDbCacheProvider.notifier).getAll(eventReferences))
+        .cast<UserRelaysEntity?>()
+        .nonNulls
+        .toList();
   }
 
   Future<List<UserRelaysEntity>> _fetchRelaysFromIdentity({
@@ -152,12 +162,27 @@ class UserRelaysManager extends _$UserRelaysManager {
             pubkey: details.masterPubKey,
             createdAt: DateTime.now().microsecondsSinceEpoch,
             data: UserRelaysData(
-              list: details.ionConnectRelays!.map((url) => UserRelay(url: url)).toList(),
+              list: details.ionConnectRelays!.map((relay) => relay.toUserRelay()).toList(),
             ),
           ),
     ]..forEach(ref.read(ionConnectCacheProvider.notifier).cache);
 
     return userRelays;
+  }
+
+  List<UserRelaysEntity> _filterValidRelays(List<UserRelaysEntity> relays) {
+    // Remove unreachable relays from relay lists
+    final reachableRelays = relays
+        .map(ref.read(relayReachabilityProvider.notifier).getFilteredRelayEntity)
+        .nonNulls
+        .toList();
+
+    // Relay list is invalid if all relays are read-only.
+    // That might be a case if user has outdated relay list
+    // published to the ion-connect or in the local DB.
+    return reachableRelays
+        .where((relayEntity) => relayEntity.data.list.any((relay) => relay.write))
+        .toList();
   }
 
   Future<void> _clearReachabilityInfoFor(
@@ -169,28 +194,23 @@ class UserRelaysManager extends _$UserRelaysManager {
       await reachabilityInfoNotifier.clear(url);
     }
   }
-}
 
-@riverpod
-Future<UserRelaysEntity?> userRelay(Ref ref, String pubkey) async {
-  final currentUser = ref.watch(currentIdentityKeyNameSelectorProvider);
-  if (currentUser == null) {
-    throw const CurrentUserNotFoundException();
+  static bool isRelayReadOnlyError(Object? error) {
+    return error is SendEventException && error.code.startsWith('relay-is-read-only');
   }
-  final relays = await ref.watch(userRelaysManagerProvider.notifier).fetch([pubkey]);
-  return relays.elementAtOrNull(0);
+
+  static bool relayListsEqual(List<UserRelay>? list1, List<UserRelay>? list2) {
+    return const UnorderedIterableEquality<UserRelay>().equals(list1, list2);
+  }
 }
 
 @riverpod
 Future<UserRelaysEntity?> currentUserRelays(Ref ref) async {
-  final userIdentity = await ref.watch(currentUserIdentityProvider.future);
-  final identityConnectRelays = userIdentity?.ionConnectRelays;
-  if (userIdentity == null || identityConnectRelays == null) {
+  final identityConnectRelays = await ref.watch(currentUserIdentityConnectRelaysProvider.future);
+  if (identityConnectRelays == null) {
     return null;
   }
-  final updatedUserRelays = UserRelaysData(
-    list: identityConnectRelays.map((url) => UserRelay(url: url)).toList(),
-  );
+  final updatedUserRelays = UserRelaysData(list: identityConnectRelays);
   final userRelaysEvent =
       await ref.read(ionConnectNotifierProvider.notifier).sign(updatedUserRelays);
 

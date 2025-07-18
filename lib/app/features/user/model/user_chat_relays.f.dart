@@ -68,7 +68,7 @@ class UserChatRelaysData
     return UserChatRelaysData(
       list: [
         for (final tag in eventMessage.tags)
-          if (tag[0] == 'relay') fromRelayTag(tag),
+          if (tag[0] == 'r') UserRelay.fromTag(tag),
       ],
     );
   }
@@ -85,7 +85,7 @@ class UserChatRelaysData
       kind: UserChatRelaysEntity.kind,
       tags: [
         ...tags,
-        ...list.map(toRelayTag),
+        ...list.map((relay) => relay.toTag()),
       ],
       content: '',
     );
@@ -98,8 +98,4 @@ class UserChatRelaysData
       masterPubkey: pubkey,
     );
   }
-
-  static List<String> toRelayTag(UserRelay relay) => ['relay', relay.url];
-
-  static UserRelay fromRelayTag(List<String> tag) => UserRelay(url: tag[1]);
 }

@@ -24,10 +24,11 @@ import 'package:ion/app/features/ion_connect/providers/ion_connect_event_parser.
 import 'package:ion/app/features/ion_connect/providers/ion_connect_event_signer_provider.r.dart';
 import 'package:ion/app/features/ion_connect/providers/long_living_subscription_relay_provider.r.dart';
 import 'package:ion/app/features/ion_connect/providers/relays/relay_auth_provider.r.dart';
-import 'package:ion/app/features/ion_connect/providers/relays/relay_creation_provider.r.dart';
+import 'package:ion/app/features/ion_connect/providers/relays/relay_picker_provider.r.dart';
 import 'package:ion/app/features/user/model/badges/badge_award.f.dart';
 import 'package:ion/app/features/user/model/badges/badge_definition.f.dart';
 import 'package:ion/app/features/user/model/user_delegation.f.dart';
+import 'package:ion/app/features/user/providers/relays/user_relays_manager.r.dart';
 import 'package:ion/app/services/ion_identity/ion_identity_provider.r.dart';
 import 'package:ion/app/services/logger/logger.dart';
 import 'package:ion/app/utils/retry.dart';
@@ -55,9 +56,11 @@ class IonConnectNotifier extends _$IonConnectNotifier {
 
     return withRetry(
       ({error}) async {
-        relay ??= await ref
-            .read(relayCreationProvider.notifier)
-            .getRelay(actionSource, dislikedUrls: DislikedRelayUrlsCollection(dislikedRelaysUrls));
+        relay = await ref.read(relayPickerProvider.notifier).getActionSourceRelay(
+              actionSource,
+              actionType: ActionType.write,
+              dislikedUrls: DislikedRelayUrlsCollection(dislikedRelaysUrls),
+            );
 
         await ref
             .read(relayAuthProvider(relay!))
@@ -79,12 +82,13 @@ class IonConnectNotifier extends _$IonConnectNotifier {
       retryWhen: (error) =>
           error is RelayRequestFailedException ||
           RelayAuthService.isRelayAuthError(error) ||
-          (error is RelayUnreachableException && !dislikedRelaysUrls.contains(error.relayUrl)),
-      onRetry: (error) {
-        if (relay != null) {
-          dislikedRelaysUrls.add(relay!.url);
-        } else if (error is RelayUnreachableException) {
+          (error is RelayUnreachableException && !dislikedRelaysUrls.contains(error.relayUrl)) ||
+          UserRelaysManager.isRelayReadOnlyError(error),
+      onRetry: (error) async {
+        if (error is RelayUnreachableException) {
           dislikedRelaysUrls.add(error.relayUrl);
+        } else if (UserRelaysManager.isRelayReadOnlyError(error)) {
+          await ref.read(userRelaysManagerProvider.notifier).markRelayInDbAsReadOnly(relay!.url);
         }
       },
     );
@@ -175,8 +179,9 @@ class IonConnectNotifier extends _$IonConnectNotifier {
                   dislikedUrls: DislikedRelayUrlsCollection(dislikedRelaysUrls),
                 ).future,
               )
-            : await ref.read(relayCreationProvider.notifier).getRelay(
+            : await ref.read(relayPickerProvider.notifier).getActionSourceRelay(
                   actionSource,
+                  actionType: ActionType.read,
                   dislikedUrls: DislikedRelayUrlsCollection(dislikedRelaysUrls),
                 );
 
@@ -209,9 +214,7 @@ class IonConnectNotifier extends _$IonConnectNotifier {
           RelayAuthService.isRelayAuthError(error) ||
           (error is RelayUnreachableException && !dislikedRelaysUrls.contains(error.relayUrl)),
       onRetry: (error) {
-        if (relay != null) {
-          dislikedRelaysUrls.add(relay!.url);
-        } else if (error is RelayUnreachableException) {
+        if (error is RelayUnreachableException) {
           dislikedRelaysUrls.add(error.relayUrl);
         }
       },
