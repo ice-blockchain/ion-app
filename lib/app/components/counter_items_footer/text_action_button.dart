@@ -48,6 +48,7 @@ class TextActionButton extends StatelessWidget {
               value!,
               style: context.theme.appTextThemes.caption2.copyWith(
                 color: effectiveTextColor,
+                height: 1.1,
               ),
             ),
           ),

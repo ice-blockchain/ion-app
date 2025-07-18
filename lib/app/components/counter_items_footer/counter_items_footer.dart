@@ -38,7 +38,7 @@ class CounterItemsFooter extends HookConsumerWidget {
         Center(
           child: RepliesCounterButton(
             eventReference: eventReference,
-            padding: itemPadding + EdgeInsetsDirectional.only(start: sidePadding),
+            padding: itemPadding + EdgeInsetsDirectional.symmetric(horizontal: sidePadding),
             color: color,
           ),
         ),
@@ -62,7 +62,7 @@ class CounterItemsFooter extends HookConsumerWidget {
               BookmarkButton(
                 eventReference: eventReference,
                 size: 16.0.s,
-                padding: itemPadding + EdgeInsetsDirectional.only(end: 8.0.s, start: 16.0.s),
+                padding: itemPadding + EdgeInsetsDirectional.only(end: 8.0.s, start: 14.0.s),
                 color: color ?? context.theme.appColors.onTertararyBackground,
               ),
               ShareButton(
