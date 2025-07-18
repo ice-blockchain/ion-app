@@ -35,13 +35,11 @@ class CoinTransactionHistoryNotifier extends _$CoinTransactionHistoryNotifier {
   var _offset = 0;
   DateTime? _lastLoadTime;
 
-  // Dual stream subscriptions
   StreamSubscription<List<TransactionData>>? _newTransactionsWatcher;
   StreamSubscription<List<TransactionData>>? _inProgressTransactionsWatcher;
 
   @override
   Future<CoinTransactionHistoryState> build({required String symbolGroup}) async {
-    // Cancel any existing watchers
     await _cancelWatchers();
 
     try {
