@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_quill/flutter_quill.dart';
 import 'package:flutter_quill/quill_delta.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/components/text_editor/components/custom_blocks/text_editor_code_block/text_editor_code_block.dart';
 import 'package:ion/app/components/text_editor/components/custom_blocks/text_editor_separator_block/text_editor_separator_block.dart';
 import 'package:ion/app/components/text_editor/components/custom_blocks/text_editor_single_image_block/text_editor_single_image_block.dart';
@@ -11,6 +12,7 @@ import 'package:ion/app/components/text_editor/components/custom_blocks/unknown/
 import 'package:ion/app/components/text_editor/custom_recognizer_builder.dart';
 import 'package:ion/app/components/text_editor/utils/text_editor_styles.dart';
 import 'package:ion/app/features/ion_connect/model/media_attachment.dart';
+import 'package:ion/app/services/browser/browser.dart';
 
 class TextEditorPreview extends HookWidget {
   const TextEditorPreview({
@@ -64,7 +66,7 @@ class TextEditorPreview extends HookWidget {
   bool _isEmptyContent(Delta delta) => delta.length == 1 && delta.first.value == '\n';
 }
 
-class _QuillFormattedContent extends StatelessWidget {
+class _QuillFormattedContent extends ConsumerWidget {
   const _QuillFormattedContent({
     required this.controller,
     required this.enableInteractiveSelection,
@@ -86,12 +88,13 @@ class _QuillFormattedContent extends StatelessWidget {
   final String? authorPubkey;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final effectiveStyles = customStyles ?? textEditorStyles(context);
 
     return QuillEditor.basic(
       controller: controller,
       config: QuillEditorConfig(
+        onLaunchUrl: (url) => openDeepLinkOrInAppBrowser(url, ref),
         floatingCursorDisabled: true,
         showCursor: false,
         scrollable: scrollable,
