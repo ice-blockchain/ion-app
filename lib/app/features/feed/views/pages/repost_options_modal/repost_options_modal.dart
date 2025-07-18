@@ -1,18 +1,16 @@
 // SPDX-License-Identifier: ice License 1.0
 
 import 'package:flutter/material.dart';
-import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/components/modal_action_button/modal_action_button.dart';
-import 'package:ion/app/components/progress_bar/ion_loading_indicator.dart';
 import 'package:ion/app/components/screen_offset/screen_bottom_offset.dart';
 import 'package:ion/app/components/screen_offset/screen_side_offset.dart';
 import 'package:ion/app/components/separated/separated_column.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/feed/providers/counters/reposted_events_provider.r.dart';
-import 'package:ion/app/features/feed/providers/delete_entity_provider.r.dart';
 import 'package:ion/app/features/feed/providers/repost_notifier.r.dart';
+import 'package:ion/app/features/feed/reposts/providers/optimistic/post_repost_provider.r.dart';
 import 'package:ion/app/features/feed/views/pages/repost_options_modal/repost_option_action.dart';
 import 'package:ion/app/features/ion_connect/model/event_reference.f.dart';
 import 'package:ion/app/router/components/navigation_app_bar/navigation_app_bar.dart';
@@ -32,14 +30,10 @@ class RepostOptionsModal extends HookConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     ref.displayErrors(repostNotifierProvider);
 
-    final selectedAction = useState<RepostOptionAction?>(null);
-    final repostLoading = ref.watch(repostNotifierProvider).isLoading;
-    final repostUndoing = ref.watch(deleteEntityControllerProvider).isLoading;
-    final isLoading = repostLoading || repostUndoing;
-    final repostReference = ref.watch(repostReferenceProvider(eventReference));
+    final isReposted = ref.watch(isRepostedProvider(eventReference));
 
     final actions = [
-      if (repostReference != null) RepostOptionAction.undoRepost else RepostOptionAction.repost,
+      if (isReposted) RepostOptionAction.undoRepost else RepostOptionAction.repost,
       RepostOptionAction.quotePost,
     ];
 
@@ -61,21 +55,18 @@ class RepostOptionsModal extends HookConsumerWidget {
                 children: [
                   for (final option in actions)
                     ModalActionButton(
-                      icon: (isLoading && selectedAction.value == option)
-                          ? const IONLoadingIndicator(type: IndicatorType.dark)
-                          : option.getIcon(context),
+                      icon: option.getIcon(context),
                       label: option.getLabel(context),
                       labelStyle: context.theme.appTextThemes.body.copyWith(
                         color: option.getLabelColor(context),
                       ),
                       onTap: () async {
-                        selectedAction.value = option;
                         switch (option) {
                           case RepostOptionAction.repost:
                             await ref
-                                .read(repostNotifierProvider.notifier)
-                                .repost(eventReference: eventReference);
-                            if (!ref.read(repostNotifierProvider).hasError && context.mounted) {
+                                .read(toggleRepostNotifierProvider.notifier)
+                                .toggle(eventReference);
+                            if (context.mounted) {
                               context.pop();
                             }
 
@@ -91,16 +82,13 @@ class RepostOptionsModal extends HookConsumerWidget {
                             }
 
                           case RepostOptionAction.undoRepost:
-                            if (repostReference != null) {
-                              await ref
-                                  .read(deleteEntityControllerProvider.notifier)
-                                  .deleteByReference(repostReference);
-                              if (context.mounted) {
-                                context.pop();
-                              }
+                            await ref
+                                .read(toggleRepostNotifierProvider.notifier)
+                                .toggle(eventReference);
+                            if (context.mounted) {
+                              context.pop();
                             }
                         }
-                        selectedAction.value = null;
                       },
                     ),
                 ],

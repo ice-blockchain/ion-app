@@ -10,7 +10,6 @@ import 'package:ion/app/features/feed/data/models/entities/modifiable_post_data.
 import 'package:ion/app/features/feed/data/models/entities/post_data.f.dart';
 import 'package:ion/app/features/feed/data/models/entities/repost_data.f.dart';
 import 'package:ion/app/features/feed/data/models/feed_interests_interaction.dart';
-import 'package:ion/app/features/feed/providers/counters/reposts_count_provider.r.dart';
 import 'package:ion/app/features/feed/providers/feed_user_interests_provider.r.dart';
 import 'package:ion/app/features/ion_connect/model/action_source.f.dart';
 import 'package:ion/app/features/ion_connect/model/event_reference.f.dart';
@@ -34,12 +33,12 @@ class RepostNotifier extends _$RepostNotifier {
   @override
   FutureOr<void> build() {}
 
-  Future<void> repost({
+  Future<IonConnectEntity> repost({
     required EventReference eventReference,
   }) async {
     state = const AsyncValue.loading();
 
-    state = await AsyncValue.guard(() async {
+    return AsyncValue.guard(() async {
       final entity = ref.read(ionConnectEntityProvider(eventReference: eventReference)).valueOrNull;
 
       if (entity == null) {
@@ -80,13 +79,17 @@ class RepostNotifier extends _$RepostNotifier {
         )
       ).wait;
 
-      if (repostEntity != null) {
-        _createRepostNotifierStreamController.add(repostEntity);
+      if (repostEntity == null) {
+        throw Exception('Failed to create repost entity');
       }
 
-      ref.read(repostsCountProvider(eventReference).notifier).addOne();
-
+      _createRepostNotifierStreamController.add(repostEntity);
       await _updateInterests(entity);
+
+      return repostEntity;
+    }).then((value) {
+      state = const AsyncValue.data(null);
+      return value.requireValue;
     });
   }
 
