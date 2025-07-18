@@ -40,7 +40,7 @@ void main() {
       network: 'fallback',
       address: 'fallback',
       name: 'Fallback Wallet',
-    ));
+    ),);
   });
 
   setUp(() {
