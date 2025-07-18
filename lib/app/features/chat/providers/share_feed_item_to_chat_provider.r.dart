@@ -1,5 +1,6 @@
 // SPDX-License-Identifier: ice License 1.0
 
+import 'dart:async';
 import 'dart:convert';
 
 import 'package:ion/app/exceptions/exceptions.dart';
@@ -21,6 +22,7 @@ import 'package:ion/app/features/ion_connect/model/event_reference.f.dart';
 import 'package:ion/app/features/ion_connect/model/quoted_event.f.dart';
 import 'package:ion/app/features/ion_connect/model/related_pubkey.f.dart';
 import 'package:ion/app/features/ion_connect/providers/ion_connect_event_signer_provider.r.dart';
+import 'package:ion/app/features/user_profile/providers/user_profile_sync_provider.r.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'share_feed_item_to_chat_provider.r.g.dart';
@@ -61,6 +63,12 @@ class ShareFeedItemToChat extends _$ShareFeedItemToChat {
         };
 
         final feedItemAsContent = jsonEncode(feedItemEventMessage.toJson().last);
+
+        unawaited(
+          ref
+              .read(userProfileSyncProvider.notifier)
+              .syncUserProfile(masterPubkeys: receiversMasterPubkeys.toSet()),
+        );
 
         await Future.wait(
           receiversMasterPubkeys.map((masterPubkey) async {
