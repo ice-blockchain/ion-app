@@ -133,7 +133,8 @@ class StoryViewerRobot extends BaseRobot with ProviderScopeMixin, StoryStateMixi
 
   void expectStoryIndex(int index) {
     expectViewerState(
-      userIndex: container.read(storyViewingControllerProvider(viewerPubkey)).currentUserIndex,
+      userIndex:
+          container.read(singleUserStoryViewingControllerProvider(viewerPubkey)).currentStoryIndex,
       storyIndex: index,
     );
   }
@@ -141,7 +142,7 @@ class StoryViewerRobot extends BaseRobot with ProviderScopeMixin, StoryStateMixi
   void expectUserIndex(int index) {
     expectViewerState(
       userIndex: index,
-      storyIndex: container.read(storyViewingControllerProvider(viewerPubkey)).currentStoryIndex,
+      storyIndex: container.read(userStoriesViewingNotifierProvider(viewerPubkey)).currentUserIndex,
     );
   }
 

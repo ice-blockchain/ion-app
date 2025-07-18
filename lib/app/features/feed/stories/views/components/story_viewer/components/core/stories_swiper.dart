@@ -7,7 +7,6 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/features/feed/stories/data/models/story_viewer_state.f.dart';
 import 'package:ion/app/features/feed/stories/data/models/user_story.f.dart';
 import 'package:ion/app/features/feed/stories/providers/story_viewing_provider.r.dart';
-import 'package:ion/app/features/feed/stories/providers/user_stories_provider.r.dart';
 import 'package:ion/app/features/feed/stories/views/components/story_viewer/components/core/core.dart';
 
 const Key storiesSwiperKey = Key('stories_swiper');
@@ -18,19 +17,25 @@ class StoriesSwiper extends HookConsumerWidget {
     required this.userStories,
     required this.currentUserIndex,
     required this.pubkey,
+    required this.showOnlySelectedUser,
     Key? key,
   }) : super(key: key ?? storiesSwiperKey);
 
   final List<UserStory> userStories;
   final int currentUserIndex;
   final String pubkey;
+  final bool showOnlySelectedUser;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final userPageController = usePageController(initialPage: currentUserIndex);
+    final userStoriesViewingState = ref.watch(
+      userStoriesViewingNotifierProvider(pubkey, showOnlySelectedUser: showOnlySelectedUser),
+    );
+    final userStoriesNotifier = ref.watch(userStoriesViewingNotifierProvider(pubkey).notifier);
 
-    ref.listen<StoryViewerState>(
-      storyViewingControllerProvider(pubkey),
+    ref.listen<UserStoriesViewerState>(
+      userStoriesViewingNotifierProvider(pubkey),
       (prev, next) {
         if (prev?.currentUserIndex != next.currentUserIndex && userPageController.hasClients) {
           userPageController.animateToPage(
@@ -42,31 +47,13 @@ class StoriesSwiper extends HookConsumerWidget {
       },
     );
 
-    final storyNotifier = ref.read(
-      storyViewingControllerProvider(pubkey).notifier,
-    );
-
-    final stories = ref
-            .watch(
-              userStoriesProvider(
-                ref.watch(storyViewingControllerProvider(pubkey)).currentUserPubkey,
-              ),
-            )
-            ?.toList() ??
-        [];
-
     return CubePageView.builder(
       controller: userPageController,
       itemCount: userStories.length,
-      onPageChanged: (newIndex) {
-        final currentIndex = ref.read(storyViewingControllerProvider(pubkey)).currentUserIndex;
-
-        if (newIndex != currentIndex) {
-          storyNotifier.moveToUser(newIndex);
-        }
-      },
+      onPageChanged: userStoriesNotifier.moveTo,
       itemBuilder: (context, userIndex, pageNotifier) {
         final isCurrentUser = userIndex == currentUserIndex;
+        final userPubkey = userStoriesViewingState.pubkeyAtIndex(userIndex);
 
         void closeViewer() => context.pop();
 
@@ -74,16 +61,16 @@ class StoriesSwiper extends HookConsumerWidget {
           index: userIndex,
           pageNotifier: pageNotifier,
           child: UserStoryPageView(
-            pubkey: pubkey,
+            pubkey: userPubkey,
             isCurrentUser: isCurrentUser,
-            onNextStory: () => storyNotifier.advance(stories: stories, onClose: closeViewer),
-            onPreviousStory: () => storyNotifier.rewind(onClose: closeViewer),
+            onClose: closeViewer,
             onNextUser: () {
               if (userPageController.hasClients && userIndex < userStories.length - 1) {
                 userPageController.nextPage(
                   duration: _pageTransitionDuration,
                   curve: Curves.easeInOut,
                 );
+                userStoriesNotifier.advance(onClose: () => context.pop());
               } else {
                 closeViewer();
               }
@@ -94,6 +81,7 @@ class StoriesSwiper extends HookConsumerWidget {
                   duration: _pageTransitionDuration,
                   curve: Curves.easeInOut,
                 );
+                userStoriesNotifier.rewind(onClose: () => context.pop());
               } else {
                 closeViewer();
               }

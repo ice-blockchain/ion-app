@@ -30,7 +30,7 @@ class StoryProgressBarRobot extends BaseRobot with ProviderScopeMixin, StoryStat
     await tester.pumpWidget(
       RobotTestHarness(
         childBuilder: (_) => Scaffold(
-          body: StoryProgressBarContainer(pubkey: viewerPubkey),
+          body: StoryProgressBarContainer(pubkey: viewerPubkey, showOnlySelectedUser: true),
         ),
         overrides: [
           feedStoriesProvider.overrideWith(() => FakeFeedStories(stories)),
@@ -52,8 +52,8 @@ class StoryProgressBarRobot extends BaseRobot with ProviderScopeMixin, StoryStat
   Finder get _segmentFinder => find.byType(StoryProgressSegment);
 
   void advance({required List<ModifiablePostEntity> stories}) => container
-      .read(storyViewingControllerProvider(viewerPubkey).notifier)
-      .advance(stories: stories);
+      .read(singleUserStoryViewingControllerProvider(viewerPubkey).notifier)
+      .advance(storiesLength: stories.length);
 
   List<StoryProgressSegment> get segments =>
       tester.widgetList<StoryProgressSegment>(_segmentFinder).toList();

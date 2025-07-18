@@ -42,7 +42,7 @@ StoryProgressControllerResult useStoryProgressController({
     ref: ref,
   );
 
-  final video = isVideo
+  final video = isVideo && isCurrent
       ? ref
           .watch(
             videoControllerProvider(

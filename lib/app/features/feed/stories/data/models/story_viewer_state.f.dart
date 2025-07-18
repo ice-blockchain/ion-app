@@ -6,16 +6,26 @@ import 'package:ion/app/features/feed/stories/data/models/user_story.f.dart';
 part 'story_viewer_state.f.freezed.dart';
 
 @freezed
-class StoryViewerState with _$StoryViewerState {
-  const factory StoryViewerState({
-    required List<UserStory> userStories,
-    required int currentUserIndex,
+class SingleUserStoriesViewerState with _$SingleUserStoriesViewerState {
+  const factory SingleUserStoriesViewerState({
+    required String pubkey,
     required int currentStoryIndex,
-  }) = _StoryViewerState;
+  }) = _SingleUserStoriesViewerState;
 
-  const StoryViewerState._();
+  const SingleUserStoriesViewerState._();
 
   bool get hasPreviousStory => currentStoryIndex > 0;
+}
+
+@freezed
+class UserStoriesViewerState with _$UserStoriesViewerState {
+  const factory UserStoriesViewerState({
+    required List<UserStory> userStories,
+    required int currentUserIndex,
+  }) = _UserStoriesViewerState;
+
+  const UserStoriesViewerState._();
+
   bool get hasNextUser => currentUserIndex < userStories.length - 1;
   bool get hasPreviousUser => currentUserIndex > 0;
 
@@ -32,6 +42,10 @@ class StoryViewerState with _$StoryViewerState {
   }
 
   String get nextUserPubkey {
-    return userStories.elementAtOrNull(currentUserIndex + 1)?.pubkey ?? '';
+    return pubkeyAtIndex(currentUserIndex + 1);
+  }
+
+  String pubkeyAtIndex(int index) {
+    return userStories.elementAtOrNull(index)?.pubkey ?? '';
   }
 }

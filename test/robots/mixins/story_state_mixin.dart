@@ -34,9 +34,12 @@ mixin StoryStateMixin on BaseRobot {
     required int userIndex,
     required int storyIndex,
   }) {
-    final state = container.read(storyViewingControllerProvider(viewerPubkey));
+    final storiesState = container.read(userStoriesViewingNotifierProvider(viewerPubkey));
+    final singleUserStoriesState = container.read(
+      singleUserStoryViewingControllerProvider(viewerPubkey),
+    );
 
-    expect(state.currentUserIndex, userIndex, reason: 'currentUserIndex');
-    expect(state.currentStoryIndex, storyIndex, reason: 'currentStoryIndex');
+    expect(storiesState.currentUserIndex, userIndex, reason: 'currentUserIndex');
+    expect(singleUserStoriesState.currentStoryIndex, storyIndex, reason: 'currentStoryIndex');
   }
 }

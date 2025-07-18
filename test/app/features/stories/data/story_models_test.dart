@@ -1,8 +1,7 @@
 // SPDX-License-Identifier: ice License 1.0
 
 import 'package:flutter_test/flutter_test.dart';
-import 'package:ion/app/features/feed/stories/data/models/story_viewer_state.f.dart';
-import 'package:ion/app/features/feed/stories/data/models/user_story.f.dart';
+import 'package:ion/app/features/feed/stories/data/models/models.dart';
 
 import '../../../../fixtures/posts/post_fixtures.dart';
 
@@ -16,54 +15,72 @@ void main() {
     story: buildPost('b1'),
   );
 
-  group('StoryViewerState navigation getters', () {
-    test('hasPreviousStory behave at boundaries', () {
-      var state = StoryViewerState(
-        userStories: [userA, userB],
-        currentUserIndex: 0,
+  group('SingleUserStoriesViewerState navigation getters', () {
+    test('hasPreviousStory behaves at boundaries', () {
+      var singleState = const SingleUserStoriesViewerState(
+        pubkey: 'alice',
         currentStoryIndex: 0,
       );
-      expect(state.hasPreviousStory, isFalse);
+      expect(singleState.hasPreviousStory, isFalse);
 
-      state = state.copyWith(currentStoryIndex: 1);
-      expect(state.hasPreviousStory, isTrue);
-    });
-
-    test('hasNextUser / hasPreviousUser behave at boundaries', () {
-      var state = StoryViewerState(
-        userStories: [userA, userB],
-        currentUserIndex: 0,
-        currentStoryIndex: 0,
-      );
-      expect(state.hasNextUser, isTrue);
-      expect(state.hasPreviousUser, isFalse);
-
-      state = state.copyWith(currentUserIndex: 1);
-      expect(state.hasNextUser, isFalse);
-      expect(state.hasPreviousUser, isTrue);
+      singleState = singleState.copyWith(currentStoryIndex: 1);
+      expect(singleState.hasPreviousStory, isTrue);
     });
   });
 
-  group('currentStory & currentUser getters', () {
-    test('currentStory returns correct entity', () {
-      final state = StoryViewerState(
+  group('UserStoriesViewerState navigation getters', () {
+    test('hasNextUser / hasPreviousUser behave at boundaries', () {
+      var multiState = UserStoriesViewerState(
+        userStories: [userA, userB],
+        currentUserIndex: 0,
+      );
+      expect(multiState.hasNextUser, isTrue);
+      expect(multiState.hasPreviousUser, isFalse);
+
+      multiState = multiState.copyWith(currentUserIndex: 1);
+      expect(multiState.hasNextUser, isFalse);
+      expect(multiState.hasPreviousUser, isTrue);
+    });
+  });
+
+  group('UserStoriesViewerState current getters', () {
+    test('currentStory & currentUserPubkey return correct values', () {
+      final multiState = UserStoriesViewerState(
         userStories: [userA, userB],
         currentUserIndex: 1,
-        currentStoryIndex: 0,
       );
 
-      expect(state.currentStory?.story.id, equals('b1'));
-      expect(state.currentUserPubkey, equals('bob'));
+      expect(multiState.currentStory?.story.id, equals('b1'));
+      expect(multiState.currentUserPubkey, equals('bob'));
     });
 
-    test('currentStory returns null when indices are out of range', () {
-      final state = StoryViewerState(
+    test('currentStory returns null when index is out of range', () {
+      final multiState = UserStoriesViewerState(
         userStories: [userA],
         currentUserIndex: 5,
-        currentStoryIndex: 0,
       );
 
-      expect(state.currentStory, isNull);
+      expect(multiState.currentStory, isNull);
+    });
+
+    test('nextUserPubkey returns correct pubkey or empty string', () {
+      var multiState = UserStoriesViewerState(
+        userStories: [userA, userB],
+        currentUserIndex: 0,
+      );
+      expect(multiState.nextUserPubkey, equals('bob'));
+
+      multiState = multiState.copyWith(currentUserIndex: 1);
+      expect(multiState.nextUserPubkey, equals(''));
+    });
+
+    test('pubkeyAtIndex returns pubkey or empty string', () {
+      final multiState = UserStoriesViewerState(
+        userStories: [userA, userB],
+        currentUserIndex: 0,
+      );
+      expect(multiState.pubkeyAtIndex(1), equals('bob'));
+      expect(multiState.pubkeyAtIndex(5), equals(''));
     });
   });
 }

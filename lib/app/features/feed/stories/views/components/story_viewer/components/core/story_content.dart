@@ -23,11 +23,13 @@ class StoryContent extends HookConsumerWidget {
   const StoryContent({
     required this.story,
     required this.viewerPubkey,
+    required this.onNext,
     super.key,
   });
 
   final ModifiablePostEntity story;
   final String viewerPubkey;
+  final VoidCallback onNext;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -56,8 +58,10 @@ class StoryContent extends HookConsumerWidget {
             ),
             clipBehavior: Clip.hardEdge,
             child: StoryViewerContent(
+              key: Key(story.id),
               post: story,
               viewerPubkey: viewerPubkey,
+              onNext: onNext,
             ),
           ),
         ),
