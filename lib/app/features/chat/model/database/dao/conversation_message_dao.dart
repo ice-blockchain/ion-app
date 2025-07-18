@@ -218,7 +218,7 @@ class ConversationMessageDao extends DatabaseAccessor<ChatDatabase>
             masterPubkey: masterPubkey,
             pubkey: eventSignerPubkey,
             messageEventReference: eventReference,
-            status: MessageDeliveryStatus.deleted,
+            status: MessageDeliveryStatus.read,
           ),
         );
         continue;
