@@ -155,7 +155,6 @@ class VideoPage extends HookConsumerWidget {
     return VisibilityDetector(
       key: ValueKey(videoUrl),
       onVisibilityChanged: (info) {
-        if (!context.mounted) return;
         if (info.visibleFraction <= 0.5) {
           if (playerController.value.isInitialized && playerController.value.isPlaying) {
             playerController.pause();

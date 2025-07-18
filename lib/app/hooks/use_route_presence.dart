@@ -13,7 +13,10 @@ void useRoutePresence({
   void Function()? onBecameActive,
 }) {
   final context = useContext();
-  final router = GoRouter.of(context);
+  final router = GoRouter.maybeOf(context);
+  if (router == null) {
+    return;
+  }
   final state = router.state;
   final fullPath = useState(state.fullPath);
   final fullPathRef = useRef(state.fullPath);
