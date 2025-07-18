@@ -35,12 +35,14 @@ void main() {
   late SyncTransactionsService service;
 
   setUpAll(() {
-    registerFallbackValue(FakeWallet.create(
-      id: 'fallback',
-      network: 'fallback',
-      address: 'fallback',
-      name: 'Fallback Wallet',
-    ),);
+    registerFallbackValue(
+      FakeWallet.create(
+        id: 'fallback',
+        network: 'fallback',
+        address: 'fallback',
+        name: 'Fallback Wallet',
+      ),
+    );
   });
 
   setUp(() {
