@@ -19,7 +19,7 @@ class ShareButton extends StatelessWidget {
   final EventReference eventReference;
   final Color? color;
   final EdgeInsetsGeometry? padding;
-  
+
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
