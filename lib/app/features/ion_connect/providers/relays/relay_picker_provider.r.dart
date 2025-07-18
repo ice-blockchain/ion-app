@@ -41,16 +41,15 @@ class RelayPicker extends _$RelayPicker {
     DislikedRelayUrlsCollection dislikedUrls = const DislikedRelayUrlsCollection({}),
   }) async {
     final relays = switch (actionSource) {
-      ActionSourceCurrentUser() => await _getCurrentUserRawRelays(),
-      ActionSourceUser() => await _getUserRawRelays(actionSource.pubkey),
+      ActionSourceCurrentUser() => await _getCurrentUserRawRelays().then(_filterWriteRelays),
+      ActionSourceUser() => await _getUserRawRelays(actionSource.pubkey).then(_filterWriteRelays),
+      ActionSourceRelayUrl() => [UserRelay(url: actionSource.url)],
       _ => throw UnsupportedError(
           'ActionSource $actionSource is not supported for write action type.',
         )
     };
 
-    final writeRelays = relays.data.list.where((relay) => relay.write).toList();
-
-    final randomValidWriteRelay = _userRelaysAvoidingDislikedUrls(writeRelays, dislikedUrls).random;
+    final randomValidWriteRelay = _userRelaysAvoidingDislikedUrls(relays, dislikedUrls).random;
 
     if (randomValidWriteRelay == null) {
       throw FailedToPickUserRelay();
@@ -227,5 +226,9 @@ class RelayPicker extends _$RelayPicker {
     }
 
     return ref.read(relayProvider(commonRelays.first, anonymous: anonymous).future);
+  }
+
+  List<UserRelay> _filterWriteRelays(UserRelaysEntity relayEntity) {
+    return relayEntity.data.list.where((relay) => relay.write).toList();
   }
 }
