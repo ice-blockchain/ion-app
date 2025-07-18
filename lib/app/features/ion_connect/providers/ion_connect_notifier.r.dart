@@ -56,7 +56,7 @@ class IonConnectNotifier extends _$IonConnectNotifier {
 
     return withRetry(
       ({error}) async {
-        relay ??= await ref.read(relayPickerProvider.notifier).getActionSourceRelay(
+        relay = await ref.read(relayPickerProvider.notifier).getActionSourceRelay(
               actionSource,
               actionType: ActionType.write,
               dislikedUrls: DislikedRelayUrlsCollection(dislikedRelaysUrls),
