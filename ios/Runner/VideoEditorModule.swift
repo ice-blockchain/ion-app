@@ -117,6 +117,7 @@ class VideoEditorModule: VideoEditor {
         var config = videoEditorSDK?.currentConfiguration
         config?.videoEditorViewConfiguration.primaryAspectRatio = AspectRatio(videoAspectRatio: aspectRatio)
         config?.videoDurationConfiguration.maximumVideoDuration = TimeInterval(maxVideoDuration)
+        config?.videoDurationConfiguration.videoDurations = [TimeInterval(maxVideoDuration)]
         if let newConfig = config {
             videoEditorSDK?.updateVideoEditorConfig(newConfig)
         }
