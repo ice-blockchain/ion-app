@@ -20,7 +20,11 @@ class MediaEditingService {
 
   final Ref _ref;
 
-  Future<String?> edit(MediaFile file, {bool resumeCamera = true}) async {
+  Future<String?> edit(
+    MediaFile file, {
+    bool resumeCamera = true,
+    bool videoCoverSelectionEnabled = true,
+  }) async {
     final camera = _ref.read(cameraControllerNotifierProvider.notifier);
     final isCameraPaused = _ref.read(cameraControllerNotifierProvider) is CameraPaused;
 
@@ -30,6 +34,7 @@ class MediaEditingService {
         editMediaProvider(
           file,
           maxVideoDuration: VideoConstants.storyVideoMaxDuration,
+          videoCoverSelectionEnabled: videoCoverSelectionEnabled,
         ).future,
       ))
           ?.path;

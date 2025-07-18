@@ -34,6 +34,7 @@ class BanubaService {
   static const methodStartVideoEditorTrimmer = 'startVideoEditorTrimmer';
   static const argVideoFilePath = 'videoFilePath';
   static const argMaxVideoDurationMs = 'maxVideoDurationMs';
+  static const argCoverSelectionEnabled = 'coverSelectionEnabled';
   static const argExportedVideoFile = 'argExportedVideoFilePath';
   static const argExportedVideoCoverPreview = 'argExportedVideoCoverPreviewPath';
 
@@ -83,6 +84,7 @@ class BanubaService {
   Future<EditVideResult?> editVideo(
     String filePath, {
     Duration? maxVideoDuration = const Duration(seconds: 60),
+    bool coverSelectionEnabled = true,
   }) async {
     await platformChannel.invokeMethod(
       methodInitVideoEditor,
@@ -94,6 +96,7 @@ class BanubaService {
       {
         argVideoFilePath: filePath,
         argMaxVideoDurationMs: maxVideoDuration?.inMilliseconds,
+        argCoverSelectionEnabled: coverSelectionEnabled,
       },
     );
 
@@ -116,6 +119,7 @@ Future<MediaFile?> editMedia(
   Ref ref,
   MediaFile mediaFile, {
   Duration? maxVideoDuration,
+  bool videoCoverSelectionEnabled = true,
 }) async {
   final filePath = path.isAbsolute(mediaFile.path)
       ? mediaFile.path
@@ -150,6 +154,7 @@ Future<MediaFile?> editMedia(
       final editVideoData = await ref.read(banubaServiceProvider).editVideo(
             filePath,
             maxVideoDuration: maxVideoDuration,
+            coverSelectionEnabled: videoCoverSelectionEnabled,
           );
       if (editVideoData == null) return null;
       return mediaFile.copyWith(path: editVideoData.newPath, thumb: editVideoData.thumb);

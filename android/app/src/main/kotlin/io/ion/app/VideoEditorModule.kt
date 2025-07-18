@@ -19,6 +19,7 @@ import com.banuba.sdk.ve.di.VeSdkKoinModule
 import com.banuba.sdk.ve.flow.di.VeFlowKoinModule
 import com.banuba.sdk.veui.data.EditorConfig
 import com.banuba.sdk.veui.di.VeUiSdkKoinModule
+import com.banuba.sdk.veui.domain.CoverProvider
 import org.koin.android.ext.koin.androidContext
 import org.koin.core.context.startKoin
 import org.koin.core.qualifier.named
@@ -30,6 +31,7 @@ class VideoEditorModule {
         application: Application,
         videoAspectRatio: Double?,
         maxVideoDurationMs: Long? = 60_000,
+        coverSelectionEnabled: Boolean = true,
     ) {
         startKoin {
             androidContext(application)
@@ -53,7 +55,11 @@ class VideoEditorModule {
                 GalleryKoinModule().module,
 
                 // Sample integration module
-                SampleIntegrationVeKoinModule(videoAspectRatio, maxVideoDurationMs).module,
+                SampleIntegrationVeKoinModule(
+                    videoAspectRatio,
+                    maxVideoDurationMs,
+                    coverSelectionEnabled,
+                ).module,
             )
         }
     }
@@ -68,6 +74,7 @@ class VideoEditorModule {
 private class SampleIntegrationVeKoinModule(
     videoAspectRatio: Double?,
     maxVideoDurationMs: Long? = 60_000,
+    coverSelectionEnabled: Boolean = true,
 ) {
     val module = module {
         single<ArEffectsRepositoryProvider>(createdAtStart = true) {
@@ -86,6 +93,10 @@ private class SampleIntegrationVeKoinModule(
             named("musicTrackProvider")
         ) {
             AudioBrowserMusicProvider()
+        }
+
+        single<CoverProvider>(createdAtStart = true) {
+            if (coverSelectionEnabled) CoverProvider.EXTENDED else CoverProvider.NONE
         }
 
         single(createdAtStart = true) {
