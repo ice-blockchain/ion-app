@@ -183,7 +183,7 @@ class RelayPicker extends _$RelayPicker {
   }
 
   Future<UserRelaysEntity> _getUserRawRelays(String pubkey) async {
-    final relays = await ref.watch(userRelaysManagerProvider.notifier).fetch([pubkey]);
+    final relays = await ref.read(userRelaysManagerProvider.notifier).fetch([pubkey]);
     if (relays.isEmpty) {
       throw UserRelaysNotFoundException(pubkey);
     }
