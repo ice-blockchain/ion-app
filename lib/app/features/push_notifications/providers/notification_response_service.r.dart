@@ -1,5 +1,6 @@
 // SPDX-License-Identifier: ice License 1.0
 
+import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/exceptions/exceptions.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/auth/providers/auth_provider.m.dart';
@@ -17,7 +18,6 @@ import 'package:ion/app/features/ion_connect/model/event_reference.f.dart';
 import 'package:ion/app/features/ion_connect/model/ion_connect_gift_wrap.f.dart';
 import 'package:ion/app/features/ion_connect/providers/ion_connect_event_parser.r.dart';
 import 'package:ion/app/features/push_notifications/data/models/ion_connect_push_data_payload.f.dart';
-import 'package:ion/app/features/push_notifications/providers/notification_response_data_provider.r.dart';
 import 'package:ion/app/features/user/model/follow_list.f.dart';
 import 'package:ion/app/features/user/providers/user_metadata_provider.r.dart';
 import 'package:ion/app/features/wallets/model/entities/funds_request_entity.f.dart';
@@ -26,34 +26,32 @@ import 'package:ion/app/router/app_routes.gr.dart';
 import 'package:ion/app/services/logger/logger.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
-part 'notification_response_handler.r.g.dart';
+part 'notification_response_service.r.g.dart';
 
-@Riverpod(keepAlive: true)
-class NotificationResponseHandler extends _$NotificationResponseHandler {
-  @override
-  FutureOr<void> build() async {
-    final notificationResponses = ref.watch(notificationResponseDataProvider);
-    final notificationResponse = notificationResponses.firstOrNull;
-    if (notificationResponse != null) {
-      await _handleNotificationResponse(notificationResponse);
-    }
-  }
+@riverpod
+NotificationResponseService notificationResponseService(Ref ref) =>
+    NotificationResponseService._(ref);
 
-  Future<void> _handleNotificationResponse(Map<String, dynamic> response) async {
+class NotificationResponseService {
+  const NotificationResponseService._(this._ref);
+
+  final Ref _ref;
+
+  Future<void> handleNotificationResponse(Map<String, dynamic> response) async {
     try {
       final notificationPayload = await IonConnectPushDataPayload.fromEncoded(
         response,
         unwrapGift: (eventMassage) async {
-          final giftUnwrapService = await ref.read(giftUnwrapServiceProvider.future);
+          final giftUnwrapService = await _ref.read(giftUnwrapServiceProvider.future);
 
           final event = await giftUnwrapService.unwrap(eventMassage);
-          final userMetadata = ref.read(userMetadataFromDbProvider(event.masterPubkey));
+          final userMetadata = _ref.read(userMetadataFromDbProvider(event.masterPubkey));
 
           return (event, userMetadata);
         },
       );
 
-      final eventParser = ref.read(eventParserProvider);
+      final eventParser = _ref.read(eventParserProvider);
       final entity = eventParser.parse(notificationPayload.event);
 
       switch (entity) {
@@ -75,18 +73,14 @@ class NotificationResponseHandler extends _$NotificationResponseHandler {
         default:
           throw UnsupportedEntityType(entity);
       }
-
-      ref.watch(notificationResponseDataProvider.notifier).removeFirst();
     } catch (error, stackTrace) {
       Logger.error(error, stackTrace: stackTrace, message: 'Error handling notification response');
-    } finally {
-      ref.read(notificationResponseDataProvider.notifier).removeFirst();
     }
   }
 
   Future<void> _handleGiftWrap(EventMessage giftWrap) async {
-    final giftUnwrapService = await ref.watch(giftUnwrapServiceProvider.future);
-    final currentPubkey = ref.watch(currentPubkeySelectorProvider);
+    final giftUnwrapService = await _ref.watch(giftUnwrapServiceProvider.future);
+    final currentPubkey = _ref.watch(currentPubkeySelectorProvider);
 
     if (currentPubkey == null) {
       throw UserMasterPubkeyNotFoundException();
