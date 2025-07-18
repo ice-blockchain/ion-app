@@ -6,10 +6,8 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/router/app_routes.gr.dart';
 import 'package:ion/app/services/browser/browser.dart';
-import 'package:ion/app/services/deep_link/deep_link_service.r.dart';
 import 'package:ion/app/services/text_parser/model/text_match.f.dart';
 import 'package:ion/app/services/text_parser/model/text_matcher.dart';
-import 'package:ion/app/utils/url.dart';
 
 /// Constructs TextSpan from TextMatch objects with customizable styles and tap handling.
 class TextSpanBuilder {
@@ -96,11 +94,7 @@ class TextSpanBuilder {
     required TextMatch match,
   }) {
     if (match.matcher is UrlMatcher) {
-      if (isOneLinkUrl(match.text)) {
-        ref.read(deepLinkServiceProvider).resolveDeeplink(match.text);
-      } else {
-        openUrlInAppBrowser(normalizeUrl(match.text));
-      }
+      openDeepLinkOrInAppBrowser(match.text, ref);
     }
 
     if (match.matcher is HashtagMatcher || match.matcher is CashtagMatcher) {
