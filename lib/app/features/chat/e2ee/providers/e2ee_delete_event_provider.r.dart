@@ -189,35 +189,37 @@ Future<void> _deleteMessages({
   );
 
   // Mark message as deleted in the database
-  final deletionHandler = await ref.watch(encryptedDeletionRequestHandlerProvider.future);
+  final deletionHandler = await ref.read(encryptedDeletionRequestHandlerProvider.future);
   await deletionHandler?.deleteConversationMessages(eventMessage);
 
   try {
+    final participantsKeysMap =
+        await conversationPubkeysNotifier.fetchUsersKeys(participantsMasterPubkeys);
+
     await Future.wait(
       participantsMasterPubkeys.map((masterPubkey) async {
-        final participantsKeysMap =
-            await conversationPubkeysNotifier.fetchUsersKeys(participantsMasterPubkeys);
-
         final pubkeys = participantsKeysMap[masterPubkey];
 
         if (pubkeys == null) {
           throw UserPubkeyNotFoundException(masterPubkey);
         }
 
-        for (final pubkey in pubkeys) {
-          await ref.read(sendE2eeChatMessageServiceProvider).sendWrappedMessage(
-                eventSigner: eventSigner,
-                masterPubkey: masterPubkey,
-                eventMessage: eventMessage,
-                wrappedKinds: [DeletionRequestEntity.kind.toString()],
-                pubkey: pubkey,
-              );
-        }
+        await Future.wait(
+          pubkeys.map((pubkey) async {
+            await ref.read(sendE2eeChatMessageServiceProvider).sendWrappedMessage(
+                  eventSigner: eventSigner,
+                  masterPubkey: masterPubkey,
+                  eventMessage: eventMessage,
+                  wrappedKinds: [DeletionRequestEntity.kind.toString()],
+                  pubkey: pubkey,
+                );
+          }),
+        );
       }),
     );
   } catch (e) {
     // Revert the deletion in the database if sending fails
-    final deletionHandler = await ref.watch(encryptedDeletionRequestHandlerProvider.future);
+    final deletionHandler = await ref.read(encryptedDeletionRequestHandlerProvider.future);
     unawaited(deletionHandler?.revertDeletedConversationMessages(eventMessage));
   }
 }
