@@ -601,6 +601,8 @@
   "error_identity_2fa_required_description": "Two-factor authentication is required to access this account. Please complete the 2FA process to proceed.",
   "error_payment_no_destination_title": "Unable to Transfer",
   "error_payment_no_destination_description": "To receive this coin, the receiver must have an existing {abbreviation} balance",
+  "error_network_sync_failed_title": "Network sync failed",
+  "error_network_sync_failed_description": "Please retry or reopen the app.",
   "warning_avoid_storing_keys": "Avoid storing keys on any device to prevent losing access to funds in case of a hack",
   "warning_authenticator_setup": "Keep this key safe to restore access if you lose your device.",
   "authenticator_setup_title": "Authenticator setup",
