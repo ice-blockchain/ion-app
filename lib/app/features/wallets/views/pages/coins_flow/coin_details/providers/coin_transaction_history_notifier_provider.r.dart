@@ -148,7 +148,7 @@ class CoinTransactionHistoryNotifier extends _$CoinTransactionHistoryNotifier {
           confirmedSince: _lastLoadTime,
         )
         .distinct((list1, list2) => const ListEquality<TransactionData>().equals(list1, list2))
-        .listen(_onNewTransactionsReceived, onError: _onWatcherError);
+        .listen(_onTransactionsUpdated, onError: _onWatcherError);
 
     // Stream 2: Watch for in-progress transaction status updates
     _inProgressTransactionsWatcher = repository
@@ -161,45 +161,15 @@ class CoinTransactionHistoryNotifier extends _$CoinTransactionHistoryNotifier {
           limit: 100, // 100 for rare cases, on average no more than 20 is expected
         )
         .distinct((list1, list2) => const ListEquality<TransactionData>().equals(list1, list2))
-        .listen(_onInProgressTransactionsUpdated, onError: _onWatcherError);
+        .listen(_onTransactionsUpdated, onError: _onWatcherError);
 
     Logger.info('$_tag Started real-time watching for new and in-progress transactions');
   }
 
-  void _onNewTransactionsReceived(List<TransactionData> transactions) {
-    Logger.info('$_tag Received ${transactions.length} new transactions');
+  void _onTransactionsUpdated(List<TransactionData> transactions) {
+    Logger.info('$_tag Received ${transactions.length} transaction updates');
 
-    var hasNewTransactions = false;
-    final updatedHistory = List<CoinTransactionData>.from(_history);
-
-    for (final tx in transactions) {
-      if (!_isValidTransaction(tx)) continue;
-
-      final coinTransactionData = _convertToCoinTransactionData(tx);
-      if (coinTransactionData == null) continue;
-
-      // Check if transaction already exists
-      final existingIndex = updatedHistory
-          .indexWhere((h) => h.origin.txHash == tx.txHash || h.origin.txHash == tx.externalHash);
-
-      if (existingIndex == -1) {
-        // Add new transaction at the beginning
-        updatedHistory.insert(0, coinTransactionData);
-        hasNewTransactions = true;
-        Logger.info('$_tag Added new transaction: ${tx.txHash} (${tx.status})');
-      }
-    }
-
-    if (hasNewTransactions) {
-      _history = updatedHistory;
-      _updateState();
-    }
-  }
-
-  void _onInProgressTransactionsUpdated(List<TransactionData> transactions) {
-    Logger.info('$_tag Checking ${transactions.length} in-progress transactions for updates');
-
-    var hasUpdates = false;
+    var hasChanges = false;
     final updatedHistory = List<CoinTransactionData>.from(_history);
 
     for (final tx in transactions) {
@@ -208,26 +178,27 @@ class CoinTransactionHistoryNotifier extends _$CoinTransactionHistoryNotifier {
       final coinTransactionData = _convertToCoinTransactionData(tx);
       if (coinTransactionData == null) continue;
 
+      // Check if transaction already exists
       final existingIndex = updatedHistory
           .indexWhere((h) => h.origin.txHash == tx.txHash || h.origin.txHash == tx.externalHash);
 
       if (existingIndex >= 0) {
-        // Update existing transaction if status, amount, or other data changed
+        // Update existing transaction if status or data changed
         final existingTx = updatedHistory[existingIndex];
         if (_hasTransactionStatusChanged(existingTx, coinTransactionData)) {
           updatedHistory[existingIndex] = coinTransactionData;
-          hasUpdates = true;
-          Logger.info('$_tag Updated in-progress transaction: ${tx.txHash} -> ${tx.status}');
+          hasChanges = true;
+          Logger.info('$_tag Updated transaction: ${tx.txHash} -> ${tx.status}');
         }
       } else {
-        // Add new in-progress transaction
+        // Add new transaction
         updatedHistory.insert(0, coinTransactionData);
-        hasUpdates = true;
-        Logger.info('$_tag Added new in-progress transaction: ${tx.txHash}');
+        hasChanges = true;
+        Logger.info('$_tag Added new transaction: ${tx.txHash} (${tx.status})');
       }
     }
 
-    if (hasUpdates) {
+    if (hasChanges) {
       // Sort to maintain chronological order (newest first)
       updatedHistory.sort((a, b) => b.timestamp.compareTo(a.timestamp));
       _history = updatedHistory;
