@@ -7,32 +7,43 @@ class IonConnectPushDataPayload: Decodable {
     let event: EventMessage
     let decryptedEvent: EventMessage?
     let relevantEvents: [EventMessage]
+    let decryptedPlaceholders: [String: String]?
 
     enum CodingKeys: String, CodingKey {
         case compression
         case event
         case relevantEvents = "relevant_events"
     }
-    
+
     static func fromJson(
         data: [AnyHashable: Any],
-        decryptEvent: @escaping (EventMessage) async throws -> EventMessage?
+        decryptEvent: @escaping (EventMessage) async throws -> (event: EventMessage?, metadata: UserMetadata?)?
     ) async throws -> IonConnectPushDataPayload {
         let jsonData = try JSONSerialization.data(withJSONObject: data)
         let payload = try JSONDecoder().decode(IonConnectPushDataPayload.self, from: jsonData)
-        
+
         // Check if we need to decrypt the event
         if payload.event.kind == IonConnectGiftWrapEntity.kind {
-            let decryptedEvent = try await decryptEvent(payload.event)
-            
+            let result = try await decryptEvent(payload.event)
+
+            // Create placeholders dictionary from metadata if available
+            var placeholders: [String: String]? = nil
+            if let metadata = result?.metadata {
+                placeholders = [
+                    "username": metadata.name,
+                    "displayName": metadata.displayName,
+                ]
+            }
+
             return IonConnectPushDataPayload(
                 compression: payload.compression,
                 event: payload.event,
-                decryptedEvent: decryptedEvent,
-                relevantEvents: payload.relevantEvents
+                decryptedEvent: result?.event,
+                relevantEvents: payload.relevantEvents,
+                decryptedPlaceholders: placeholders
             )
         }
-        
+
         return payload
     }
 
@@ -78,21 +89,24 @@ class IonConnectPushDataPayload: Decodable {
                 relevantEvents = []
             }
         }
-        // In the decoder init, we don't decrypt yet - that happens in fromEncoded
+
         self.decryptedEvent = nil
+        self.decryptedPlaceholders = nil
     }
-    
+
     /// Internal initializer for creating a payload with a decrypted event
     internal init(
         compression: String?,
         event: EventMessage,
         decryptedEvent: EventMessage?,
-        relevantEvents: [EventMessage]
+        relevantEvents: [EventMessage],
+        decryptedPlaceholders: [String: String]? = nil
     ) {
         self.compression = compression
         self.event = event
         self.decryptedEvent = decryptedEvent
         self.relevantEvents = relevantEvents
+        self.decryptedPlaceholders = decryptedPlaceholders
     }
 
     var mainEntity: IonConnectEntity? {
@@ -126,42 +140,92 @@ class IonConnectPushDataPayload: Decodable {
         } else if entity is FollowListEntity {
             return .follower
         } else if let entity = entity as? IonConnectGiftWrapEntity {
-            if entity.data.kinds.contains(
-                String(ReplaceablePrivateDirectMessageEntity.kind)
-            ) {
-                return .chatMessage
-            } else if entity.data.kinds.contains(String(ReactionEntity.kind)) {
+            if entity.data.kinds.contains(String(ReactionEntity.kind)) {
                 return .chatReaction
-            } else if entity.data.kinds.contains(
-                String(FundsRequestEntity.kind)
-            ) {
+            } else if entity.data.kinds.contains(String(FundsRequestEntity.kind)) {
                 return .paymentRequest
             } else if entity.data.kinds.contains(String(WalletAssetEntity.kind)) {
                 return .paymentReceived
+            } else if entity.data.kinds.contains(String(ReplaceablePrivateDirectMessageEntity.kind)) {
+                // If we don't have a decrypted event, we can't determine the message type
+                guard let decryptedEvent = decryptedEvent else { return nil }
+
+                do {
+                    let message = try ReplaceablePrivateDirectMessageEntity.fromEventMessage(decryptedEvent)
+
+                    switch message.data.messageType {
+                    case .audio:
+                        return .chatVoiceMessage
+                    case .document:
+                        return .chatDocumentMessage
+                    case .text:
+                        return .chatTextMessage
+                    case .emoji:
+                        return .chatEmojiMessage
+                    case .profile:
+                        return .chatProfileMessage
+                    case .sharedPost:
+                        return .chatSharePostMessage
+                    case .requestFunds:
+                        return .paymentRequest
+                    case .moneySent:
+                        return .paymentReceived
+                    case .visualMedia:
+                        return getVisualMediaNotificationType(message: message)
+                    }
+                } catch {
+                    NSLog("Error parsing decrypted message: \(error)")
+                    return nil
+                }
             }
         }
 
         return nil
     }
 
-    var placeholders: [String: String] {
-        guard let masterPubkey = try? event.masterPubkey() else {
+    func placeholders(type: PushNotificationType) -> [String: String] {
+        guard let masterPubkey = mainEntity?.masterPubkey else {
             return [:]
         }
 
-        let mainEntityUserMetadata = getUserMetadata(
-            pubkey: masterPubkey
-        )
+        var data = [String: String]()
 
+        let mainEntityUserMetadata = getUserMetadata(pubkey: masterPubkey)
         if let mainEntityUserMetadata = mainEntityUserMetadata {
-            return [
-                "username": mainEntityUserMetadata.data.displayName.isEmpty
-                    ? mainEntityUserMetadata.data.name
-                    : mainEntityUserMetadata.data.displayName
-            ]
+            data["username"] = mainEntityUserMetadata.data.name
+            data["displayName"] = mainEntityUserMetadata.data.displayName
+        } else {
+            if let decryptedPlaceholders = decryptedPlaceholders {
+                data.merge(decryptedPlaceholders) { (_, new) in new }
+            }
         }
 
-        return [:]
+        if let decryptedEvent = decryptedEvent {
+            data["messageContent"] = decryptedEvent.content
+            data["reactionContent"] = decryptedEvent.content
+
+            if let entity = try? IonConnectGiftWrapEntity.fromEventMessage(event),
+                entity.data.kinds.contains(String(ReplaceablePrivateDirectMessageEntity.kind))
+            {
+                if let message = try? ReplaceablePrivateDirectMessageEntity.fromEventMessage(decryptedEvent) {
+
+                    if type == PushNotificationType.chatMultiGifMessage || type == PushNotificationType.chatMultiPhotoMessage {
+                        data["fileCount"] = String(message.data.media.count)
+                    }
+
+                    if type == PushNotificationType.chatMultiVideoMessage {
+                        let videoItems = message.data.media.filter { $0.mediaType == .video }
+                        data["fileCount"] = String(videoItems.count)
+                    }
+
+                    if type == PushNotificationType.chatDocumentMessage, let media = message.data.media.first {
+                        data["documentExt"] = media.mediaExt
+                    }
+                }
+            }
+        }
+
+        return data
     }
 
     func validate(currentPubkey: String) -> Bool {
@@ -234,6 +298,30 @@ class IonConnectPushDataPayload: Decodable {
         }
     }
 
+    /// Determines the notification type for visual media messages based on media content
+    /// - Parameter message: The private direct message entity containing visual media
+    /// - Returns: The appropriate push notification type based on media content
+    private func getVisualMediaNotificationType(message: ReplaceablePrivateDirectMessageEntity) -> PushNotificationType {
+        let mediaItems = message.data.media
+
+        if let mediaType = mediaItems.first?.mediaType, mediaItems.count == 1 {
+            if mediaType == .image { return .chatPhotoMessage }
+            if mediaType == .gif { return .chatGifMessage }
+            if mediaType == .video { return .chatVideoMessage }
+        } else {
+            if mediaItems.allSatisfy({ $0.mediaType == .image }) { return .chatMultiPhotoMessage }
+            if mediaItems.allSatisfy({ $0.mediaType == .gif }) { return .chatMultiGifMessage }
+
+            let videoItems = mediaItems.filter { $0.mediaType == .video }
+            let thumbItems = mediaItems.filter { $0.mediaType == .image || $0.mediaType == .gif }
+            if videoItems.count == thumbItems.count {
+                return videoItems.count == 1 ? .chatVideoMessage : .chatMultiVideoMessage
+            }
+        }
+
+        return .chatMultiMediaMessage
+    }
+
     private func getUserMetadata(pubkey: String) -> UserMetadataEntity? {
         let delegationEvent = relevantEvents.first { event in
             return event.kind == UserDelegationEntity.kind
@@ -274,8 +362,23 @@ enum PushNotificationType: String, Decodable {
     case repost
     case like
     case follower
-    case chatMessage
-    case chatReaction
     case paymentRequest
     case paymentReceived
+    case chatDocumentMessage
+    case chatEmojiMessage
+    case chatPhotoMessage
+    case chatProfileMessage
+    case chatReaction
+    case chatSharePostMessage
+    case chatShareStoryMessage
+    case chatSharedStoryReplyMessage
+    case chatTextMessage
+    case chatVideoMessage
+    case chatVoiceMessage
+    case chatFirstContactMessage
+    case chatGifMessage
+    case chatMultiGifMessage
+    case chatMultiMediaMessage
+    case chatMultiPhotoMessage
+    case chatMultiVideoMessage
 }

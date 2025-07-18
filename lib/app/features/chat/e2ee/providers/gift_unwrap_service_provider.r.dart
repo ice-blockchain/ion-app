@@ -12,6 +12,7 @@ import 'package:ion/app/services/ion_connect/ion_connect_gift_wrap_service.r.dar
 import 'package:ion/app/services/ion_connect/ion_connect_logger.dart';
 import 'package:ion/app/services/ion_connect/ion_connect_seal_service.r.dart';
 import 'package:isolate_manager/isolate_manager.dart';
+import 'package:nip44/nip44.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'gift_unwrap_service_provider.r.g.dart';
@@ -105,12 +106,14 @@ Future<(EventMessage, EventMessage)> unwrapGiftFn(List<dynamic> args) async {
     privateKey: privateKey,
     content: content,
     senderPubkey: senderPubkey,
+    compressionAlgorithm: CompressionAlgorithm.brotli,
   );
 
   final rumor = await sealService.decodeSeal(
     seal.content,
     seal.pubkey,
     privateKey,
+    compressionAlgorithm: CompressionAlgorithm.brotli,
   );
 
   // Check if:

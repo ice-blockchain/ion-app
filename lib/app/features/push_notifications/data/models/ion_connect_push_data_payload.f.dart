@@ -5,7 +5,6 @@ import 'dart:io';
 
 import 'package:collection/collection.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
-import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/chat/e2ee/model/entities/private_direct_message_data.f.dart';
 import 'package:ion/app/features/chat/model/message_type.dart';
 import 'package:ion/app/features/core/model/media_type.dart';
@@ -24,7 +23,6 @@ import 'package:ion/app/features/user/model/user_delegation.f.dart';
 import 'package:ion/app/features/user/model/user_metadata.f.dart';
 import 'package:ion/app/features/wallets/model/entities/funds_request_entity.f.dart';
 import 'package:ion/app/features/wallets/model/entities/wallet_asset_entity.f.dart';
-import 'package:ion/app/utils/image_path.dart';
 
 part 'ion_connect_push_data_payload.f.freezed.dart';
 part 'ion_connect_push_data_payload.f.g.dart';
@@ -45,7 +43,7 @@ class IonConnectPushDataPayload {
   static Future<IonConnectPushDataPayload> fromEncoded(
     Map<String, dynamic> data, {
     required Future<(EventMessage, UserMetadataEntity?)> Function(EventMessage eventMassage)
-        decryptEvent,
+        unwrapGift,
   }) async {
     final EncodedIonConnectPushData(:event, :relevantEvents, :compression) =
         EncodedIonConnectPushData.fromJson(data);
@@ -68,7 +66,7 @@ class IonConnectPushDataPayload {
     UserMetadataEntity? userMetadata;
 
     if (parsedEvent.kind == IonConnectGiftWrapEntity.kind) {
-      final result = await decryptEvent(parsedEvent);
+      final result = await unwrapGift(parsedEvent);
       decryptedEvent = result.$1;
       userMetadata = result.$2;
     }
@@ -118,14 +116,16 @@ class IonConnectPushDataPayload {
     } else if (entity is FollowListEntity) {
       return PushNotificationType.follower;
     } else if (entity is IonConnectGiftWrapEntity) {
-      if (entity.data.kinds.containsDeep([ReactionEntity.kind.toString()])) {
+      if (entity.data.kinds.any((list) => list.contains(ReactionEntity.kind.toString()))) {
         return PushNotificationType.chatReaction;
-      } else if (entity.data.kinds.containsDeep([FundsRequestEntity.kind.toString()])) {
+      } else if (entity.data.kinds
+          .any((list) => list.contains(FundsRequestEntity.kind.toString()))) {
         return PushNotificationType.paymentRequest;
-      } else if (entity.data.kinds.containsDeep([WalletAssetEntity.kind.toString()])) {
+      } else if (entity.data.kinds
+          .any((list) => list.contains(WalletAssetEntity.kind.toString()))) {
         return PushNotificationType.paymentReceived;
       } else if (entity.data.kinds
-          .containsDeep([ReplaceablePrivateDirectMessageEntity.kind.toString()])) {
+          .any((list) => list.contains(ReplaceablePrivateDirectMessageEntity.kind.toString()))) {
         if (decryptedEvent == null) return null;
 
         final message = ReplaceablePrivateDirectMessageEntity.fromEventMessage(decryptedEvent!);
@@ -161,18 +161,18 @@ class IonConnectPushDataPayload {
     final mediaItems = message.data.media.values.toList();
 
     if (mediaItems.every((media) => media.mediaType == MediaType.image)) {
-      final isGif = mediaItems.every((media) => media.url.isGif);
-
       if (mediaItems.length == 1) {
+        final isGif = mediaItems.first.mimeType.contains('gif');
         return isGif ? PushNotificationType.chatGifMessage : PushNotificationType.chatPhotoMessage;
       } else {
+        final isGif = mediaItems.every((media) => media.mimeType.contains('gif'));
         return isGif
             ? PushNotificationType.chatMultiGifMessage
             : PushNotificationType.chatMultiPhotoMessage;
       }
     } else if (mediaItems.any((media) => media.mediaType == MediaType.video)) {
       final videoItems = mediaItems.where((media) => media.mediaType == MediaType.video).toList();
-      final thumbItems = mediaItems.where((media) => media.thumb != null).toList();
+      final thumbItems = mediaItems.where((media) => media.mediaType == MediaType.image).toList();
 
       if (videoItems.length == 1 && thumbItems.length == 1) {
         return PushNotificationType.chatVideoMessage;
@@ -186,7 +186,7 @@ class IonConnectPushDataPayload {
     return PushNotificationType.chatMultiMediaMessage;
   }
 
-  Map<String, String> get placeholders {
+  Map<String, String> placeholders(PushNotificationType notificationType) {
     final mainEntityUserMetadata = _getUserMetadata(pubkey: mainEntity.masterPubkey);
 
     final data = <String, String>{};
@@ -204,11 +204,30 @@ class IonConnectPushDataPayload {
       data['messageContent'] = decryptedEvent!.content;
       data['reactionContent'] = decryptedEvent!.content;
       final entity = mainEntity;
+
       if (entity is IonConnectGiftWrapEntity) {
         if (entity.data.kinds
-            .containsDeep([ReplaceablePrivateDirectMessageEntity.kind.toString()])) {
+            .any((list) => list.contains(ReplaceablePrivateDirectMessageEntity.kind.toString()))) {
           final message = ReplaceablePrivateDirectMessageEntity.fromEventMessage(decryptedEvent!);
-          data['fileCount'] = message.data.media.values.length.toString();
+
+          if (notificationType == PushNotificationType.chatMultiGifMessage ||
+              notificationType == PushNotificationType.chatMultiPhotoMessage) {
+            data['fileCount'] = message.data.media.values.length.toString();
+          }
+
+          if (notificationType == PushNotificationType.chatMultiVideoMessage) {
+            data['fileCount'] = message.data.media.values
+                .where((media) => media.mediaType == MediaType.video)
+                .length
+                .toString();
+          }
+
+          if (notificationType == PushNotificationType.chatDocumentMessage) {
+            final splitMimeType = message.data.media.values.first.mimeType.split('/');
+            if (splitMimeType.first == 'application') {
+              data['documentExt'] = splitMimeType.last;
+            }
+          }
         }
       }
     }
@@ -217,9 +236,11 @@ class IonConnectPushDataPayload {
   }
 
   Future<bool> validate({required String currentPubkey}) async {
-    return await _checkEventsSignatures() &&
-        _checkMainEventRelevant(currentPubkey: currentPubkey) &&
-        _checkRequiredRelevantEvents();
+    final signaturesValid = await _checkEventsSignatures();
+    final isMainEventRelevant = _checkMainEventRelevant(currentPubkey: currentPubkey);
+    final requiredEventsPresent = _checkRequiredRelevantEvents();
+
+    return signaturesValid && isMainEventRelevant && requiredEventsPresent;
   }
 
   static String _decompress({required String input, required Compression compression}) {

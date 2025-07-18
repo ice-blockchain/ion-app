@@ -3,10 +3,18 @@
 import Foundation
 
 struct RelatedPubkey {
+    let pubkey: String
     let value: String
     let relationType: String?
 
+    init(pubkey: String, relationType: String? = nil) {
+        self.pubkey = pubkey
+        self.value = pubkey // For backward compatibility
+        self.relationType = relationType
+    }
+    
     init(value: String, relationType: String? = nil) {
+        self.pubkey = value
         self.value = value
         self.relationType = relationType
     }
@@ -17,6 +25,6 @@ struct RelatedPubkey {
         let value = tag[1]
         let relationType = tag.count >= 3 ? tag[2] : nil
 
-        return RelatedPubkey(value: value, relationType: relationType)
+        return RelatedPubkey(pubkey: value, relationType: relationType)
     }
 }

@@ -11,6 +11,7 @@ import 'package:ion/app/features/chat/community/models/entities/tags/master_pubk
 import 'package:ion/app/features/ion_connect/ion_connect.dart';
 import 'package:ion/app/services/ion_connect/encrypted_message_service.r.dart';
 import 'package:ion/app/utils/date.dart';
+import 'package:nip44/nip44.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'ion_connect_seal_service.r.g.dart';
@@ -25,14 +26,16 @@ abstract class IonConnectSealService {
   Future<EventMessage> createSeal(
     EventMessage rumor,
     EventSigner signer,
-    String receiverPubkey,
-  );
+    String receiverPubkey, {
+    CompressionAlgorithm compressionAlgorithm = CompressionAlgorithm.none,
+  });
 
   Future<EventMessage> decodeSeal(
     String content,
     String senderPubkey,
-    String privateKey,
-  );
+    String privateKey, {
+    CompressionAlgorithm compressionAlgorithm = CompressionAlgorithm.none,
+  });
 }
 
 class IonConnectSealServiceImpl implements IonConnectSealService {
@@ -50,14 +53,16 @@ class IonConnectSealServiceImpl implements IonConnectSealService {
   Future<EventMessage> createSeal(
     EventMessage rumor,
     EventSigner signer,
-    String receiverPubkey,
-  ) async {
+    String receiverPubkey, {
+    CompressionAlgorithm compressionAlgorithm = CompressionAlgorithm.none,
+  }) async {
     final encodedRumor = jsonEncode(rumor.toJson().last);
 
     final encryptedRumor = await _encryptedMessageService.encryptMessage(
       encodedRumor,
       publicKey: receiverPubkey,
       privateKey: signer.privateKey,
+      compressionAlgorithm: compressionAlgorithm,
     );
 
     final createdAt = randomDateBefore(
@@ -83,12 +88,14 @@ class IonConnectSealServiceImpl implements IonConnectSealService {
   Future<EventMessage> decodeSeal(
     String content,
     String senderPubkey,
-    String privateKey,
-  ) async {
+    String privateKey, {
+    CompressionAlgorithm compressionAlgorithm = CompressionAlgorithm.none,
+  }) async {
     final decryptedContent = await _encryptedMessageService.decryptMessage(
       content,
       publicKey: senderPubkey,
       privateKey: privateKey,
+      compressionAlgorithm: compressionAlgorithm,
     );
 
     return EventMessage.fromPayloadJson(

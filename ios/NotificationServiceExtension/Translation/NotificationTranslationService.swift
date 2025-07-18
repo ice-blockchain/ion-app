@@ -5,7 +5,8 @@ import Foundation
 class NotificationTranslationService {
     private let translator: Translator<PushNotificationTranslations>
     private let storage: SharedStorageService
-    private let e2eDecryptionService: E2EDecryptionService?
+    private let encryptedMessageService: EncryptedMessageService?
+    private let database: DatabaseManager?
 
     init(storage: SharedStorageService) {
         self.storage = storage
@@ -23,12 +24,14 @@ class NotificationTranslationService {
         )
 
         if let pubkey = storage.getCurrentPubkey(), let currentIdentityKeyName = storage.getCurrentIdentityKeyName() {
-            self.e2eDecryptionService = E2EDecryptionService(
+            self.encryptedMessageService = EncryptedMessageService(
                 keychainService: KeychainService(currentIdentityKeyName: currentIdentityKeyName),
                 pubkey: pubkey
             )
+            self.database = DatabaseManager(storage: storage)
         } else {
-            self.e2eDecryptionService = nil
+            self.encryptedMessageService = nil
+            self.database = nil
         }
     }
 
@@ -55,7 +58,7 @@ class NotificationTranslationService {
             return (title: nil, body: nil)
         }
 
-        let placeholders = data.placeholders
+        let placeholders = data.placeholders(type: notificationType)
 
         let result = (
             title: replacePlaceholders(title, placeholders),
@@ -74,11 +77,29 @@ class NotificationTranslationService {
     private func parsePayload(from pushPayload: [AnyHashable: Any]) async -> IonConnectPushDataPayload? {
         do {
             let payload = try await IonConnectPushDataPayload.fromJson(data: pushPayload) { event in
-                return try? await self.e2eDecryptionService?.decryptMessage(event)
+
+                let decryptedEvent = try? await self.encryptedMessageService?.decryptMessage(event)
+
+                if let decryptedEvent = decryptedEvent {
+                    NSLog("Successfully decrypted event: \(decryptedEvent.id)")
+                } else {
+                    NSLog("Failed to decrypt event or decryption returned nil")
+                }
+
+                var metadata: UserMetadata? = nil
+
+                if let decryptedEvent = decryptedEvent, let pubkey = try? decryptedEvent.masterPubkey() {
+                    metadata = self.getUserMetadataFromDatabase(pubkey: pubkey)
+                } else {
+                    NSLog("Could not extract master pubkey from decrypted event")
+                }
+
+                return (event: decryptedEvent, metadata: metadata)
             }
 
             return payload
         } catch {
+            NSLog("Error parsing payload: \(error)")
             return nil
         }
     }
@@ -97,14 +118,44 @@ class NotificationTranslationService {
                 return translations.like
             case .follower:
                 return translations.follower
-            case .chatMessage:
-                return translations.chatMessage
-            case .chatReaction:
-                return translations.chatReaction
             case .paymentRequest:
                 return translations.paymentRequest
             case .paymentReceived:
                 return translations.paymentReceived
+            case .chatDocumentMessage:
+                return translations.chatDocumentMessage
+            case .chatEmojiMessage:
+                return translations.chatEmojiMessage
+            case .chatPhotoMessage:
+                return translations.chatPhotoMessage
+            case .chatProfileMessage:
+                return translations.chatProfileMessage
+            case .chatReaction:
+                return translations.chatReaction
+            case .chatSharePostMessage:
+                return translations.chatSharePostMessage
+            case .chatShareStoryMessage:
+                return translations.chatShareStoryMessage
+            case .chatSharedStoryReplyMessage:
+                return translations.chatSharedStoryReplyMessage
+            case .chatTextMessage:
+                return translations.chatTextMessage
+            case .chatVideoMessage:
+                return translations.chatVideoMessage
+            case .chatVoiceMessage:
+                return translations.chatVoiceMessage
+            case .chatFirstContactMessage:
+                return translations.chatFirstContactMessage
+            case .chatGifMessage:
+                return translations.chatGifMessage
+            case .chatMultiGifMessage:
+                return translations.chatMultiGifMessage
+            case .chatMultiMediaMessage:
+                return translations.chatMultiMediaMessage
+            case .chatMultiPhotoMessage:
+                return translations.chatMultiPhotoMessage
+            case .chatMultiVideoMessage:
+                return translations.chatMultiVideoMessage
             }
         }
 
@@ -147,5 +198,73 @@ class NotificationTranslationService {
     private func hasPlaceholders(_ input: String) -> Bool {
         let regex = try! NSRegularExpression(pattern: "\\{\\{(.*?)\\}\\}", options: [])
         return regex.firstMatch(in: input, options: [], range: NSRange(location: 0, length: (input as NSString).length)) != nil
+    }
+
+    /// Fetches user metadata from the SQLite database for a given pubkey
+    /// - Parameter pubkey: The pubkey of the user to fetch metadata for
+    /// - Returns: UserMetadata if found, nil otherwise
+    private func getUserMetadataFromDatabase(pubkey: String) -> UserMetadata? {
+        guard let database = database else {
+            return nil
+        }
+
+        if !database.openDatabase() {
+            NSLog("Failed to open database connection")
+            return nil
+        }
+
+        defer { database.closeDatabase() }
+
+        let query = "SELECT content FROM user_metadata_table WHERE master_pubkey = '\(pubkey)' ORDER BY created_at DESC LIMIT 1"
+
+        guard let results = database.executeQuery(query) else {
+            return nil
+        }
+
+        if results.isEmpty {
+            NSLog("No user metadata found in database for pubkey: \(pubkey)")
+            return nil
+        }
+
+        var content: String? = nil
+
+        if let firstResult = results.first as? [String: Any], let contentValue = firstResult["content"] as? String {
+            content = contentValue
+        } else if let firstResult = results.first as? [Any], firstResult.count > 0 {
+            if let contentDict = firstResult.first as? [String: String], let contentValue = contentDict["content"] {
+                content = contentValue
+            } else if let contentDict = firstResult.first as? [String: Any],
+                let contentValue = contentDict["content"] as? String
+            {
+                content = contentValue
+            }
+        }
+
+        guard let extractedContent = content else {
+            return nil
+        }
+
+        guard let contentData = extractedContent.data(using: .utf8) else {
+            NSLog("Failed to convert content string to data")
+            return nil
+        }
+
+        do {
+            let userData = try JSONDecoder().decode(
+                UserDataEventMessageContent.self,
+                from: contentData
+            )
+
+            // Create and return UserMetadata
+            let metadata = UserMetadata(
+                name: userData.name ?? "",
+                displayName: userData.displayName ?? ""
+            )
+
+            return metadata
+        } catch {
+            NSLog("Error parsing user metadata: \(error)")
+            return nil
+        }
     }
 }

@@ -39,7 +39,7 @@ dependencies:
   drift_db_viewer: ^2.1.0
   drift_flutter: ^0.2.4
   email_validator: ^3.0.0
-  es_compression: ^2.0.13
+  es_compression: ^2.0.14
   extended_text: ^15.0.2
   extension_google_sign_in_as_googleapis_auth: ^2.0.12
   external_app_launcher: ^4.0.3
@@ -111,8 +111,8 @@ dependencies:
   mocktail: ^1.0.4
   nip44:
     git:
-      url: https://github.com/chebizarro/dart-nip44.git
-      ref: master
+      url: https://github.com/ice-blockchain/dart-nip44.git
+      ref: 1.1.0
   nostr_dart:
     git:
       url: https://github.com/ice-blockchain/nostr-dart
@@ -122,6 +122,7 @@ dependencies:
   palette_generator: ^0.3.3+5
   path: ^1.9.0
   path_provider: ^2.1.4
+  path_provider_foundation: ^2.4.1
   permission_handler: ^11.3.0
   photo_manager: ^3.6.3
   photo_manager_image_provider: ^2.1.1

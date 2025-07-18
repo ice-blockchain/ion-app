@@ -43,7 +43,7 @@ class NotificationResponseHandler extends _$NotificationResponseHandler {
     try {
       final notificationPayload = await IonConnectPushDataPayload.fromEncoded(
         response,
-        decryptEvent: (eventMassage) async {
+        unwrapGift: (eventMassage) async {
           final giftUnwrapService = await ref.read(giftUnwrapServiceProvider.future);
 
           final event = await giftUnwrapService.unwrap(eventMassage);

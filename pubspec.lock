@@ -1842,9 +1842,9 @@ packages:
     dependency: "direct main"
     description:
       path: "."
-      ref: master
-      resolved-ref: "73379b8b1332f1ee78a250055494e6b73e673ea2"
-      url: "https://github.com/chebizarro/dart-nip44.git"
+      ref: "1.1.0"
+      resolved-ref: "20d74f1fcb010fb0e02e99077161e3ea966696cb"
+      url: "https://github.com/ice-blockchain/dart-nip44.git"
     source: git
     version: "1.0.0"
   nm:
@@ -2001,7 +2001,7 @@ packages:
     source: hosted
     version: "2.2.17"
   path_provider_foundation:
-    dependency: transitive
+    dependency: "direct main"
     description:
       name: path_provider_foundation
       sha256: "4843174df4d288f5e29185bd6e72a6fbdf5a4a4602717eed565497429f179942"

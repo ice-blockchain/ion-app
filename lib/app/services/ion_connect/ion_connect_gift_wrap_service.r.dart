@@ -10,6 +10,7 @@ import 'package:ion/app/features/ion_connect/model/related_pubkey.f.dart';
 import 'package:ion/app/services/ion_connect/ed25519_key_store.dart';
 import 'package:ion/app/services/ion_connect/encrypted_message_service.r.dart';
 import 'package:ion/app/utils/date.dart';
+import 'package:nip44/nip44.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'ion_connect_gift_wrap_service.r.g.dart';
@@ -27,12 +28,14 @@ abstract class IonConnectGiftWrapService {
     required String receiverMasterPubkey,
     required List<String> contentKinds,
     List<String>? expirationTag,
+    CompressionAlgorithm compressionAlgorithm = CompressionAlgorithm.none,
   });
 
   Future<EventMessage> decodeWrap({
     required String content,
     required String senderPubkey,
     required String privateKey,
+    CompressionAlgorithm compressionAlgorithm = CompressionAlgorithm.none,
   });
 }
 
@@ -49,14 +52,18 @@ class IonConnectGiftWrapServiceImpl implements IonConnectGiftWrapService {
     required String receiverPubkey,
     required String receiverMasterPubkey,
     required List<String> contentKinds,
+    CompressionAlgorithm compressionAlgorithm = CompressionAlgorithm.none,
     List<String>? expirationTag,
   }) async {
     final oneTimeSigner = await Ed25519KeyStore.generate();
 
+    final encodedEvent = jsonEncode(event.toJson().last);
+
     final encryptedEvent = await _encryptedMessageService.encryptMessage(
-      jsonEncode(event.toJson().last),
+      encodedEvent,
       publicKey: receiverPubkey,
       privateKey: oneTimeSigner.privateKey,
+      compressionAlgorithm: compressionAlgorithm,
     );
 
     final createdAt = randomDateBefore(
@@ -81,11 +88,13 @@ class IonConnectGiftWrapServiceImpl implements IonConnectGiftWrapService {
     required String content,
     required String senderPubkey,
     required String privateKey,
+    CompressionAlgorithm compressionAlgorithm = CompressionAlgorithm.none,
   }) async {
     final decryptedContent = await _encryptedMessageService.decryptMessage(
       content,
       publicKey: senderPubkey,
       privateKey: privateKey,
+      compressionAlgorithm: compressionAlgorithm,
     );
 
     return EventMessage.fromPayloadJson(

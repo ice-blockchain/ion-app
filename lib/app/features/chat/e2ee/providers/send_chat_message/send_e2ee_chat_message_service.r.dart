@@ -38,6 +38,7 @@ import 'package:ion/app/services/logger/logger.dart';
 import 'package:ion/app/services/media_service/media_service.m.dart';
 import 'package:ion/app/services/uuid/uuid.dart';
 import 'package:isolate_manager/isolate_manager.dart';
+import 'package:nip44/nip44.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'send_e2ee_chat_message_service.r.g.dart';
@@ -463,7 +464,12 @@ Future<EventMessage> createGiftWrapFn(List<dynamic> args) async {
   final expirationTag = args[6] as List<String>;
   final kinds = args[7] as List<String>;
 
-  final seal = await sealService.createSeal(eventMessage, signer, receiverPubkey);
+  final seal = await sealService.createSeal(
+    eventMessage,
+    signer,
+    receiverPubkey,
+    compressionAlgorithm: CompressionAlgorithm.brotli,
+  );
 
   return giftWrapService.createWrap(
     event: seal,
@@ -471,5 +477,6 @@ Future<EventMessage> createGiftWrapFn(List<dynamic> args) async {
     receiverPubkey: receiverPubkey,
     receiverMasterPubkey: receiverMasterPubkey,
     expirationTag: expirationTag,
+    compressionAlgorithm: CompressionAlgorithm.brotli,
   );
 }

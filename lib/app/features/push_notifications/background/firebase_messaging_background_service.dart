@@ -38,7 +38,7 @@ Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
 
   final data = await IonConnectPushDataPayload.fromEncoded(
     message.data,
-    decryptEvent: (eventMassage) async {
+    unwrapGift: (eventMassage) async {
       riverpodContainer.updateOverrides([
         currentUserIonConnectEventSignerProvider.overrideWith((ref) async {
           final savedIdentityKeyName = await ref.watch(currentIdentityKeyNameStoreProvider.future);

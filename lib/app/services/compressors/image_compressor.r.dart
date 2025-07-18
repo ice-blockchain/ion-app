@@ -48,8 +48,10 @@ class ImageCompressor implements Compressor<ImageCompressionSettings> {
     try {
       final output = await generateOutputPath();
 
+      final isGif = file.mimeType == 'image/gif' && file.path.isGif && settings.shouldCompressGif;
+
       List<String> command;
-      if (file.mimeType == 'image/gif' && file.path.isGif && settings.shouldCompressGif) {
+      if (isGif) {
         command = FFmpegCommands.gifToAnimatedWebP(
           inputPath: file.path,
           outputPath: output,
@@ -80,7 +82,7 @@ class ImageCompressor implements Compressor<ImageCompressionSettings> {
 
       return MediaFile(
         path: output,
-        mimeType: 'image/webp',
+        mimeType: isGif ? 'image/gif+webp' : 'image/webp',
         width: outputDimension.width,
         height: outputDimension.height,
       );
