@@ -24,7 +24,7 @@ class BadgesUserListItem extends ConsumerWidget {
     this.iceBadge = false,
     this.isSelected = false,
     this.avatarSize,
-    this.isOwnershipIgnored = false,
+    this.isMockData = false,
     super.key,
   });
 
@@ -43,19 +43,23 @@ class BadgesUserListItem extends ConsumerWidget {
   final VoidCallback? onTap;
   final bool iceBadge;
   final bool isSelected;
-  final bool isOwnershipIgnored;
+  final bool isMockData;
   final double? avatarSize;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final badgeVerificationState = ref.watch(cachedUserBadgeVerificationStateProvider(pubkey));
-    final isUserVerified = badgeVerificationState.isVerified;
-    final isNicknameProven = badgeVerificationState.isNicknameProven;
+    final (isUserVerified, isNicknameProven) = switch (isMockData) {
+      true => (false, true),
+      false => (
+          ref.watch(cachedUserBadgeVerificationStateProvider(pubkey)).isVerified,
+          ref.watch(cachedUserBadgeVerificationStateProvider(pubkey)).isNicknameProven
+        )
+    };
 
     return ListItem.user(
       pubkey: pubkey,
       title: title,
-      subtitle: isNicknameProven || isOwnershipIgnored
+      subtitle: isNicknameProven
           ? subtitle
           : Row(
               mainAxisSize: MainAxisSize.min,
