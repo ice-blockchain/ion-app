@@ -67,7 +67,8 @@ bool isOneLinkUrl(String url) {
 }
 
 bool isIPv4(String input) =>
-    RegExp(r'^((25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)(\.|$)){4}$').hasMatch(input);
+    RegExp(r'^((25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)\.){3}(25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)$')
+        .hasMatch(input);
 
 bool isIPv6(String input) => RegExp(r'^([0-9a-fA-F]{1,4}:){7}[0-9a-fA-F]{1,4}$').hasMatch(input);
 
