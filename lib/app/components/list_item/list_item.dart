@@ -23,12 +23,14 @@ class ListItem extends StatelessWidget {
     EdgeInsetsGeometry? leadingPadding,
     EdgeInsetsGeometry? trailingPadding,
     BoxConstraints? constraints,
+    CrossAxisAlignment? crossAxisAlignment,
     bool? switchTitleStyles,
     this.secondary,
     this.isSelected,
     this.backgroundColor,
     this.onTap,
-  })  : borderRadius = borderRadius ?? defaultBorderRadius,
+  })  : crossAxisAlignment = crossAxisAlignment ?? defaultCrossAxisAlignment,
+        borderRadius = borderRadius ?? defaultBorderRadius,
         contentPadding = contentPadding ?? defaultContentPadding,
         leadingPadding = leadingPadding ?? defaultLeadingPadding,
         trailingPadding = trailingPadding ?? defaultTrailingPadding,
@@ -103,6 +105,7 @@ class ListItem extends StatelessWidget {
   final EdgeInsetsGeometry contentPadding;
   final EdgeInsetsGeometry leadingPadding;
   final EdgeInsetsGeometry trailingPadding;
+  final CrossAxisAlignment? crossAxisAlignment;
   final BoxConstraints constraints;
   final Color? backgroundColor;
   final VoidCallback? onTap;
@@ -123,6 +126,8 @@ class ListItem extends StatelessWidget {
 
   static BoxConstraints get defaultConstraints => BoxConstraints(minHeight: 60.0.s);
 
+  static CrossAxisAlignment get defaultCrossAxisAlignment => CrossAxisAlignment.center;
+
   static double get defaultAvatarSize => 30.0.s;
 
   @override
@@ -135,6 +140,7 @@ class ListItem extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Row(
+            crossAxisAlignment: crossAxisAlignment ?? defaultCrossAxisAlignment,
             children: [
               if (leading != null)
                 if (leadingPadding != EdgeInsets.zero)
