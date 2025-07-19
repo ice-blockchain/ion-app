@@ -152,10 +152,11 @@ class VideoPreview extends HookConsumerWidget {
           if (controller != null && controller.value.isInitialized)
             PositionedDirectional(
               bottom: 12.0.s,
-              start: 5.0.s,
-              end: 5.0.s,
+              start: 12.0.s,
+              end: 12.0.s,
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                crossAxisAlignment: CrossAxisAlignment.end,
                 children: [
                   _VideoDurationLabel(controller: controller),
                   _MuteButton(
@@ -186,7 +187,7 @@ class _VideoDurationLabel extends StatelessWidget {
         final remaining = controller.value.duration - value.position;
 
         return Container(
-          padding: EdgeInsets.symmetric(horizontal: 4.0.s, vertical: 1.0.s),
+          padding: EdgeInsets.symmetric(horizontal: 4.0.s),
           decoration: BoxDecoration(
             color: context.theme.appColors.backgroundSheet.withValues(alpha: 0.7),
             borderRadius: BorderRadius.circular(6.0.s),
