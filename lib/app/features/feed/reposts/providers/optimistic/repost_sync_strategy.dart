@@ -22,11 +22,13 @@ class RepostSyncStrategy implements SyncStrategy<PostRepost> {
 
     if (toggledToRepost) {
       final createdRepostReference = await createRepost(optimistic.eventReference);
+      invalidateCounterCache(optimistic.eventReference);
 
       return optimistic.copyWith(myRepostReference: createdRepostReference);
     } else if (toggledToUnrepost) {
       if (previous.myRepostReference != null) {
         await deleteRepost(previous.myRepostReference!);
+        invalidateCounterCache(optimistic.eventReference);
       }
 
       return optimistic;

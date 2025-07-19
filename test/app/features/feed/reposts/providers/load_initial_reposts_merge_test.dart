@@ -6,42 +6,18 @@ import 'package:ion/app/features/auth/providers/auth_provider.m.dart';
 import 'package:ion/app/features/feed/data/models/entities/generic_repost.f.dart';
 import 'package:ion/app/features/feed/reposts/models/post_repost.f.dart';
 import 'package:ion/app/features/feed/reposts/providers/optimistic/post_repost_provider.r.dart';
-import 'package:ion/app/features/feed/reposts/providers/optimistic/repost_sync_strategy.dart';
 import 'package:ion/app/features/feed/reposts/providers/optimistic/repost_sync_strategy_provider.r.dart';
 import 'package:ion/app/features/ion_connect/model/event_reference.f.dart';
 import 'package:ion/app/features/ion_connect/providers/ion_connect_cache.r.dart';
 import 'package:mocktail/mocktail.dart';
 
-import '../../../../mocks.dart';
-import '../../../../test_utils.dart';
-import '../../feed/helpers/repost_test_helpers.dart';
-
-class MockRepostSyncStrategy extends Mock implements RepostSyncStrategy {}
-
-class FakeCurrentPubkeySelector extends CurrentPubkeySelector {
-  FakeCurrentPubkeySelector(this._pubkey);
-
-  final String? _pubkey;
-
-  @override
-  String? build() => _pubkey;
-}
-
-class FakeIonConnectCache extends IonConnectCache {
-  FakeIonConnectCache(this._state);
-
-  final Map<String, CacheEntry> _state;
-
-  @override
-  Map<String, CacheEntry> build() => _state;
-}
+import '../../../../../mocks.dart';
+import '../../../../../test_utils.dart';
+import '../../helpers/repost_test_helpers.dart';
+import '../mocks/repost_mocks.dart';
 
 void main() {
-  setUpAll(() {
-    registerFallbackValue(PostRepostFactory.createNotReposted());
-    registerFallbackValue(const AsyncValue<PostRepost?>.data(null));
-    registerFallbackValue(const AsyncValue<PostRepost?>.loading());
-  });
+  setUpAll(registerRepostFallbackValues);
 
   group('Post repost providers integration', () {
     const testPubkey = RepostTestConstants.currentUserPubkey;

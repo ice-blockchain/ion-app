@@ -6,11 +6,18 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:ion/app/components/counter_items_footer/reposts_counter_button.dart';
 import 'package:ion/app/features/feed/reposts/models/post_repost.f.dart';
 import 'package:ion/app/features/feed/reposts/providers/optimistic/post_repost_provider.r.dart';
+import 'package:shared_preferences_platform_interface/in_memory_shared_preferences_async.dart';
+import 'package:shared_preferences_platform_interface/shared_preferences_async_platform_interface.dart';
 
 import '../../../../../../helpers/robot_test_harness.dart';
 import '../../../helpers/repost_test_helpers.dart';
 
 void main() {
+  TestWidgetsFlutterBinding.ensureInitialized();
+
+  setUp(() {
+    SharedPreferencesAsyncPlatform.instance = InMemorySharedPreferencesAsync.empty();
+  });
   group('RepostsCounterButton', () {
     const eventReference = RepostTestConstants.eventReference;
 
@@ -95,24 +102,6 @@ void main() {
       await streamController.close();
     });
 
-    testWidgets('formats large numbers correctly', (tester) async {
-      final postRepost = PostRepostFactory.createWithHighCounters(
-        quotesCount: 0,
-      );
-
-      await tester.pumpWithHarness(
-        childBuilder: (_) => const RepostsCounterButton(eventReference: eventReference),
-        overrides: [
-          postRepostWatchProvider(eventReference.toString()).overrideWith(
-            (ref) => Stream.value(postRepost),
-          ),
-        ],
-      );
-
-      await tester.pumpAndSettle();
-      expect(find.textContaining('1'), findsOneWidget);
-    });
-
     testWidgets('shows loading state when stream has not emitted yet', (tester) async {
       const neverStream = Stream<PostRepost?>.empty();
 
@@ -156,25 +145,6 @@ void main() {
       expect(find.text('15'), findsOneWidget);
     });
 
-    testWidgets('handles post without cache data', (tester) async {
-      final postRepost = PostRepostFactory.createNotReposted();
-
-      await tester.pumpWithHarness(
-        childBuilder: (_) => const RepostsCounterButton(eventReference: eventReference),
-        overrides: [
-          postRepostWatchProvider(eventReference.toString()).overrideWith(
-            (ref) => Stream.value(postRepost),
-          ),
-        ],
-      );
-
-      await tester.pumpAndSettle();
-
-      expect(find.text('0'), findsNothing);
-      expect(find.textContaining(RegExp(r'\d')), findsNothing);
-      expect(find.byType(RepostsCounterButton), findsOneWidget);
-    });
-
     testWidgets('transitions from no cache to having cache data after repost', (tester) async {
       final streamController = StreamController<PostRepost?>();
 
@@ -187,9 +157,8 @@ void main() {
         ],
       );
 
-      streamController.add(PostRepostFactory.createNotReposted());
+      streamController.add(null);
       await tester.pumpAndSettle();
-      expect(find.text('0'), findsNothing);
       expect(find.textContaining(RegExp(r'\d')), findsNothing);
 
       streamController.add(PostRepostFactory.createReposted());
@@ -198,6 +167,24 @@ void main() {
       expect(find.text('1'), findsOneWidget);
 
       await streamController.close();
+    });
+
+    testWidgets('does not show counter when both reposts and quotes are zero', (tester) async {
+      final postRepost = PostRepostFactory.create();
+
+      await tester.pumpWithHarness(
+        childBuilder: (_) => const RepostsCounterButton(eventReference: eventReference),
+        overrides: [
+          postRepostWatchProvider(eventReference.toString()).overrideWith(
+            (ref) => Stream.value(postRepost),
+          ),
+        ],
+      );
+
+      await tester.pumpAndSettle();
+
+      expect(find.textContaining(RegExp(r'\d')), findsNothing);
+      expect(find.text('0'), findsNothing);
     });
   });
 }

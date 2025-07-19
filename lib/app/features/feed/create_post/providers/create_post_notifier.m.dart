@@ -24,9 +24,6 @@ import 'package:ion/app/features/feed/providers/counters/helpers/counter_cache_h
 import 'package:ion/app/features/feed/providers/counters/replies_count_provider.r.dart';
 import 'package:ion/app/features/feed/providers/feed_user_interests_provider.r.dart';
 import 'package:ion/app/features/feed/providers/media_upload_provider.r.dart';
-import 'package:ion/app/features/feed/reposts/models/post_repost.f.dart';
-import 'package:ion/app/features/feed/reposts/providers/optimistic/intents/add_quote_intent.dart';
-import 'package:ion/app/features/feed/reposts/providers/optimistic/post_repost_provider.r.dart';
 import 'package:ion/app/features/ion_connect/model/action_source.f.dart';
 import 'package:ion/app/features/ion_connect/model/entity_data_with_parent.dart';
 import 'package:ion/app/features/ion_connect/model/entity_data_with_settings.dart';
@@ -132,7 +129,7 @@ class CreatePostNotifier extends _$CreatePostNotifier {
       _createPostNotifierStreamController.add(post);
 
       if (quotedEvent != null) {
-        await _updateQuoteCounter(quotedEvent);
+        await updateQuoteCounter(ref, quotedEvent, isAdding: true);
       }
       if (parentEvent != null) {
         ref.read(repliesCountProvider(parentEvent).notifier).addOne();
@@ -548,24 +545,6 @@ class CreatePostNotifier extends _$CreatePostNotifier {
       ArticleEntity() => entity.data.relatedHashtags,
       _ => null,
     };
-  }
-
-  Future<void> _updateQuoteCounter(EventReference quotedEvent) async {
-    final service = ref.read(postRepostServiceProvider);
-    final id = quotedEvent.toString();
-
-    var current = ref.read(postRepostWatchProvider(id)).valueOrNull;
-    if (current == null) {
-      final counts = getRepostCountsFromCache(ref, quotedEvent);
-      current = PostRepost(
-        eventReference: quotedEvent,
-        repostsCount: counts.repostsCount,
-        quotesCount: counts.quotesCount,
-        repostedByMe: false,
-      );
-    }
-
-    await service.dispatch(const AddQuoteIntent(), current);
   }
 
   Future<void> _updateInterests(ModifiablePostEntity post) async {
