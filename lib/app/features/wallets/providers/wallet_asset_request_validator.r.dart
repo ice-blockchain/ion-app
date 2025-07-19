@@ -8,6 +8,7 @@ import 'package:ion/app/features/wallets/data/repository/request_assets_reposito
 import 'package:ion/app/features/wallets/model/entities/funds_request_entity.f.dart';
 import 'package:ion/app/features/wallets/model/entities/wallet_asset_entity.f.dart';
 import 'package:ion/app/services/logger/logger.dart';
+import 'package:ion/app/utils/validators.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'wallet_asset_request_validator.r.g.dart';
@@ -34,21 +35,21 @@ class WalletAssetRequestValidator {
       final requestEventJson = jsonDecode(requestJson) as Map<String, dynamic>;
 
       // Validate it's a proper event structure
-      if (!_isValidEventStructure(requestEventJson)) {
+      if (!Validators.hasAllKeys(
+        requestEventJson,
+        keys: ['id', 'pubkey', 'kind', 'created_at', 'content', 'tags'],
+      )) {
         Logger.error('Invalid 1755 event structure in request tag');
         return false;
       }
 
+      final eventMessage = EventMessage.fromPayloadJson(requestEventJson);
+
       // Validate it's a 1755 event
-      final eventKind = requestEventJson['kind'] as int?;
-      if (eventKind != FundsRequestEntity.kind) {
-        Logger.error('Request tag must contain a 1755 event, found kind: $eventKind');
+      if (eventMessage.kind != FundsRequestEntity.kind) {
+        Logger.error('Request tag must contain a 1755 event, found kind: ${eventMessage.kind}');
         return false;
       }
-
-      // Create EventMessage from the request JSON
-      // Note: 1755 events are rumors (unsigned), so no signature validation needed
-      final eventMessage = EventMessage.fromPayloadJson(requestEventJson);
 
       // Validate event ID calculation (integrity check for rumors)
       final calculatedId = EventMessage.calculateEventId(
@@ -67,7 +68,7 @@ class WalletAssetRequestValidator {
       }
 
       // 2. Check if the 1755 event exists in local DB
-      final requestId = requestEventJson['id'] as String;
+      final requestId = eventMessage.id;
       final fundsRequestStream = requestAssetsRepository.watchRequestAssetById(requestId);
       final fundsRequest = await fundsRequestStream.first;
 
@@ -89,12 +90,6 @@ class WalletAssetRequestValidator {
       Logger.error('Error validating request: $e');
       return false;
     }
-  }
-
-  /// Validates that the JSON has the required event structure
-  bool _isValidEventStructure(Map<String, dynamic> json) {
-    final requiredFields = ['id', 'pubkey', 'kind', 'created_at', 'content', 'tags'];
-    return requiredFields.every((field) => json.containsKey(field));
   }
 
   /// Validates that 1755 and 1756 events have matching information (except amount)
