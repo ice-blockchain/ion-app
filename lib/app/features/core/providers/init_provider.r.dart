@@ -26,6 +26,7 @@ import 'package:ion/app/features/wallets/providers/coins_sync_provider.r.dart';
 import 'package:ion/app/features/wallets/providers/user_public_wallets_sync_provider.r.dart';
 import 'package:ion/app/features/wallets/providers/wallets_initializer_provider.r.dart';
 import 'package:ion/app/services/deep_link/deep_link_service.r.dart';
+import 'package:ion/app/services/http_client/http_client.dart';
 import 'package:ion/app/services/ion_connect/ion_connect.dart';
 import 'package:ion/app/services/ion_connect/ion_connect_logger.dart';
 import 'package:ion/app/services/storage/local_storage.r.dart';
@@ -39,6 +40,8 @@ part 'init_provider.r.g.dart';
 Future<void> initApp(Ref ref) async {
   final featureFlagsNotifier = ref.read(featureFlagsProvider.notifier);
   final logIonConnect = featureFlagsNotifier.get(LoggerFeatureFlag.logIonConnect);
+
+  setGlobalHttpOverrides();
 
   ErrorWidget.builder = WidgetErrorBuilder.new;
 

@@ -65,3 +65,9 @@ String? extractFirstUrl(String text) {
 bool isOneLinkUrl(String url) {
   return DeepLinkService.oneLinkUrlRegex.hasMatch(url);
 }
+
+bool isIPv4(String input) {
+  final ipv4Regex =
+      RegExp(r'^((25[0-5]|2[0-4]\d|1\d{2}|[1-9]?\d)\.){3}(25[0-5]|2[0-4]\d|1\d{2}|[1-9]?\d)$');
+  return ipv4Regex.hasMatch(input);
+}
