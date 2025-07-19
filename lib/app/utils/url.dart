@@ -1,5 +1,7 @@
 // SPDX-License-Identifier: ice License 1.0
 
+import 'dart:io';
+
 import 'package:ion/app/services/deep_link/deep_link_service.r.dart';
 import 'package:ion/app/services/text_parser/model/text_matcher.dart';
 
@@ -65,3 +67,7 @@ String? extractFirstUrl(String text) {
 bool isOneLinkUrl(String url) {
   return DeepLinkService.oneLinkUrlRegex.hasMatch(url);
 }
+
+/// Returns `false` If [address] is not a numeric IPv4 (dotted-decimal
+/// notation) or IPv6 (hexadecimal representation) address
+bool isIP(String address) => InternetAddress.tryParse(address) != null;
