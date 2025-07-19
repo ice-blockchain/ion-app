@@ -8,6 +8,7 @@ import 'package:ion/app/components/screen_offset/screen_side_offset.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/chat/e2ee/model/entities/private_direct_message_data.f.dart';
 import 'package:ion/app/features/chat/model/message_type.dart';
+import 'package:ion/app/features/chat/providers/messaging_bottom_bar_state_provider.r.dart';
 import 'package:ion/app/features/chat/views/components/message_items/components.dart';
 import 'package:ion/app/features/chat/views/components/message_items/message_types/document_message/document_message.dart';
 import 'package:ion/app/features/chat/views/components/message_items/message_types/post_message/post_message.dart';
@@ -60,6 +61,7 @@ class OneToOneMessageList extends HookConsumerWidget {
     return NotificationListener<ScrollUpdateNotification>(
       onNotification: (notification) {
         if (notification.scrollDelta != null && notification.scrollDelta! > 0) {
+          ref.invalidate(isPreviousMoreProvider);
           FocusManager.instance.primaryFocus?.unfocus();
         }
         return false;

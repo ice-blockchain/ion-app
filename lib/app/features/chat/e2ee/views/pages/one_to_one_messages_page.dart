@@ -15,6 +15,7 @@ import 'package:ion/app/features/chat/e2ee/views/components/one_to_one_messages_
 import 'package:ion/app/features/chat/model/database/chat_database.m.dart';
 import 'package:ion/app/features/chat/providers/conversation_messages_provider.r.dart';
 import 'package:ion/app/features/chat/providers/exist_chat_conversation_id_provider.r.dart';
+import 'package:ion/app/features/chat/providers/messaging_bottom_bar_state_provider.r.dart';
 import 'package:ion/app/features/chat/recent_chats/providers/selected_edit_message_provider.r.dart';
 import 'package:ion/app/features/chat/recent_chats/providers/selected_reply_message_provider.r.dart';
 import 'package:ion/app/features/chat/views/components/message_items/edit_message_info/edit_message_info.dart';
@@ -85,7 +86,9 @@ class OneToOneMessagesPage extends HookConsumerWidget {
 
     return Scaffold(
       backgroundColor: context.theme.appColors.secondaryBackground,
+      resizeToAvoidBottomInset: false,
       body: SafeArea(
+        maintainBottomViewPadding: true,
         child: Column(
           children: [
             _Header(
@@ -141,7 +144,10 @@ class _MessagesList extends ConsumerWidget {
 
     return Expanded(
       child: GestureDetector(
-        onTap: FocusManager.instance.primaryFocus?.unfocus,
+        onTap: () {
+          FocusManager.instance.primaryFocus?.unfocus();
+          ref.invalidate(isPreviousMoreProvider);
+        },
         child: messages.maybeWhen(
           data: (messages) {
             if (messages.isEmpty) {

@@ -55,6 +55,7 @@ class MainTabNavigation extends HookWidget {
           tabPressStream: tabPressStreamController.stream,
           child: shell,
         ),
+        resizeToAvoidBottomInset: currentTab != TabItem.chat,
         bottomNavigationBar: state.shouldHideBottomBar
             ? null
             : _BottomNavBarContent(
