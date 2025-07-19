@@ -17,9 +17,6 @@ import 'package:ion/app/features/feed/providers/counters/replies_count_provider.
 import 'package:ion/app/features/feed/providers/feed_posts_provider.r.dart';
 import 'package:ion/app/features/feed/providers/user_posts_data_source_provider.r.dart';
 import 'package:ion/app/features/feed/providers/user_videos_data_source_provider.r.dart';
-import 'package:ion/app/features/feed/reposts/models/post_repost.f.dart';
-import 'package:ion/app/features/feed/reposts/providers/optimistic/intents/remove_quote_intent.dart';
-import 'package:ion/app/features/feed/reposts/providers/optimistic/post_repost_provider.r.dart';
 import 'package:ion/app/features/feed/stories/providers/feed_stories_provider.r.dart';
 import 'package:ion/app/features/ion_connect/model/action_source.f.dart';
 import 'package:ion/app/features/ion_connect/model/deletion_request.f.dart';
@@ -203,29 +200,11 @@ Future<void> _deleteFromCounters(Ref ref, IonConnectEntity entity) async {
             .read(repliesCountProvider(entity.data.parentEvent!.eventReference).notifier)
             .removeOne();
       } else if (entity.data.quotedEvent != null) {
-        await _updateQuoteCounter(ref, entity.data.quotedEvent!.eventReference);
+        await updateQuoteCounter(ref, entity.data.quotedEvent!.eventReference, isAdding: false);
       }
     default:
       break;
   }
-}
-
-Future<void> _updateQuoteCounter(Ref ref, EventReference quotedEvent) async {
-  final service = ref.read(postRepostServiceProvider);
-  final id = quotedEvent.toString();
-
-  var current = ref.read(postRepostWatchProvider(id)).valueOrNull;
-  if (current == null) {
-    final counts = getRepostCountsFromCache(ref, quotedEvent);
-    current = PostRepost(
-      eventReference: quotedEvent,
-      repostsCount: counts.repostsCount,
-      quotesCount: counts.quotesCount,
-      repostedByMe: false,
-    );
-  }
-
-  await service.dispatch(const RemoveQuoteIntent(), current);
 }
 
 void _deleteMedia(Ref ref, EntityDataWithMediaContent entity) {

@@ -133,7 +133,7 @@ void main() {
       expect(result.myRepostReference, createdRepostRef);
       expect(repostSent, isTrue);
       expect(deletionSent, isFalse);
-      expect(invalidatedCacheRefs, isEmpty);
+      expect(invalidatedCacheRefs, [ref]);
     });
 
     test('calls deleteRepost when unreposting', () async {
@@ -163,7 +163,7 @@ void main() {
       expect(repostSent, isFalse);
       expect(deletionSent, isTrue);
       expect(deletedRepostRef, repostRef);
-      expect(invalidatedCacheRefs, isEmpty);
+      expect(invalidatedCacheRefs, [ref]);
     });
 
     test('handles null myRepostReference gracefully', () async {
@@ -262,7 +262,7 @@ void main() {
       );
     });
 
-    test('does not invalidate cache after deletion', () async {
+    test('invalidates cache after deletion', () async {
       const repostRef = ImmutableEventReference(
         masterPubkey: 'mypubkey',
         eventId: 'repost123',
@@ -290,7 +290,7 @@ void main() {
 
       await strategy.send(prev, opt);
 
-      expect(invalidatedCacheRefs, isEmpty);
+      expect(invalidatedCacheRefs, [ref]);
       expect(deletionCallCount, 1);
     });
   });
