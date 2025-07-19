@@ -36,3 +36,17 @@ class MessagingBottomBarActiveState extends _$MessagingBottomBarActiveState {
     state = MessagingBottomBarState.voicePaused;
   }
 }
+
+@riverpod
+class IsPreviousMore extends _$IsPreviousMore {
+  @override
+  bool build() {
+    ref.listen(messagingBottomBarActiveStateProvider, (prev, next) {
+      if (prev != MessagingBottomBarState.more) {
+        state = next == MessagingBottomBarState.more;
+      }
+    });
+
+    return false;
+  }
+}

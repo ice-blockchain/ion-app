@@ -22,6 +22,7 @@ import 'package:ion/generated/assets.gen.dart';
 class BottomBarInitialView extends HookConsumerWidget {
   const BottomBarInitialView({
     required this.controller,
+    required this.textControllerFocusNode,
     required this.onSubmitted,
     this.receiverPubKey,
     super.key,
@@ -29,11 +30,11 @@ class BottomBarInitialView extends HookConsumerWidget {
 
   final String? receiverPubKey;
   final TextEditingController controller;
+  final FocusNode textControllerFocusNode;
   final Future<void> Function({String? content, List<MediaFile>? mediaFiles}) onSubmitted;
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final bottomBarState = ref.watch(messagingBottomBarActiveStateProvider);
-    final focusNode = useFocusNode();
 
     final editMessage = ref.watch(selectedEditMessageProvider);
     final repliedMessage = ref.watch(selectedReplyMessageProvider);
@@ -41,7 +42,7 @@ class BottomBarInitialView extends HookConsumerWidget {
     useEffect(
       () {
         if (editMessage != null || repliedMessage != null) {
-          focusNode.requestFocus();
+          textControllerFocusNode.requestFocus();
         }
         return null;
       },
@@ -51,6 +52,7 @@ class BottomBarInitialView extends HookConsumerWidget {
     final onTextChanged = useCallback(
       (String text) {
         if (controller.text.isEmpty) {
+          textControllerFocusNode.requestFocus();
           ref.read(messagingBottomBarActiveStateProvider.notifier).setText();
         } else {
           final text = controller.text.trim();
@@ -78,9 +80,6 @@ class BottomBarInitialView extends HookConsumerWidget {
       children: [
         Container(
           color: context.theme.appColors.onPrimaryAccent,
-          constraints: BoxConstraints(
-            minHeight: 52.0.s,
-          ),
           padding: EdgeInsetsDirectional.fromSTEB(8.0.s, 8.0.s, 44.0.s, 8.0.s),
           child: Row(
             crossAxisAlignment: CrossAxisAlignment.end,
@@ -89,6 +88,7 @@ class BottomBarInitialView extends HookConsumerWidget {
                 GestureDetector(
                   onTap: () async {
                     ref.read(messagingBottomBarActiveStateProvider.notifier).setText();
+                    textControllerFocusNode.requestFocus();
                   },
                   child: Padding(
                     padding: EdgeInsets.all(4.0.s),
@@ -102,7 +102,6 @@ class BottomBarInitialView extends HookConsumerWidget {
                 GestureDetector(
                   onTap: () async {
                     FocusManager.instance.primaryFocus?.unfocus();
-                    await Future<void>.delayed(const Duration(milliseconds: 700));
                     ref.read(messagingBottomBarActiveStateProvider.notifier).setMore();
                   },
                   child: Padding(
@@ -116,7 +115,7 @@ class BottomBarInitialView extends HookConsumerWidget {
               SizedBox(width: 6.0.s),
               Expanded(
                 child: TextField(
-                  focusNode: focusNode,
+                  focusNode: textControllerFocusNode,
                   controller: controller,
                   style: context.theme.appTextThemes.body2.copyWith(
                     color: context.theme.appColors.primaryText,
