@@ -41,7 +41,8 @@ class RequestAssetsRepository {
         .map((request) => request?.transactionId)
         .whereNotNull()
         .asyncMap(
-          (transactionId) async => _transactionsDao.getTransactionByTxHash(transactionId),
+          (transactionId) => _transactionsDao
+              .getTransactions(txHashes: [transactionId]).then((list) => list.firstOrNull),
         )
         .startWith(null);
 

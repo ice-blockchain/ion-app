@@ -84,9 +84,8 @@ class TransactionsRepository {
 
   Future<DateTime?> getLastCreatedAt() => _transactionsDao.lastCreatedAt();
 
-  Future<DateTime?> firstCreatedAt({DateTime? after}) async {
-    return _transactionsDao.getFirstCreatedAt(after: after);
-  }
+  Future<DateTime?> firstCreatedAt({DateTime? after}) =>
+      _transactionsDao.getFirstCreatedAt(after: after);
 
   Future<void> saveTransactionDetails(TransactionDetails details) async {
     final mapped = _coinMapper.fromTransactionDetails(details);
@@ -208,19 +207,24 @@ class TransactionsRepository {
     return updatedTxs;
   }
 
-  Stream<List<TransactionData>> watchBroadcastedTransfers({
-    List<String>? coinIds,
-    String? walletAddress,
-  }) =>
-      _transactionsDao.watchBroadcastedTransfers(coinIds: coinIds, walletAddress: walletAddress);
-
   Stream<Map<CoinData, List<TransactionData>>> watchBroadcastedTransfersByCoins(
     List<String> coinIds,
   ) {
-    return watchBroadcastedTransfers(coinIds: coinIds).map((transactions) {
+    return _transactionsDao
+        .watchTransactions(
+      coinIds: coinIds,
+      statuses: TransactionStatus.inProgressStatuses,
+      type: TransactionType.send,
+    )
+        .map((transactions) {
+      final filtered = transactions.where((tx) {
+        final isValidCryptoAsset = tx.cryptoAsset is CoinTransactionAsset;
+        return tx.id != null && isValidCryptoAsset;
+      }).toList();
+
       final transactionsByCoin = <CoinData, List<TransactionData>>{};
 
-      for (final transaction in transactions) {
+      for (final transaction in filtered) {
         final coin = (transaction.cryptoAsset as CoinTransactionAsset).coin;
         transactionsByCoin.putIfAbsent(coin, () => []).add(transaction);
       }
@@ -229,8 +233,14 @@ class TransactionsRepository {
     });
   }
 
-  Future<List<TransactionData>> getBroadcastedTransfers({String? walletAddress}) =>
-      _transactionsDao.getBroadcastedTransfers(walletAddress: walletAddress);
+  Future<List<TransactionData>> getBroadcastedTransfers({String? walletAddress}) async {
+    final transactions = await _transactionsDao.getTransactions(
+      walletAddresses: walletAddress != null ? [walletAddress] : [],
+      statuses: TransactionStatus.inProgressStatuses,
+      type: TransactionType.send,
+    );
+    return transactions.where((tx) => tx.id != null).toList();
+  }
 
   Future<void> remove({
     Iterable<String> txHashes = const [],
@@ -242,11 +252,36 @@ class TransactionsRepository {
     );
   }
 
+  Stream<List<TransactionData>> watchTransactions({
+    List<String> coinIds = const [],
+    List<String> txHashes = const [],
+    List<String> walletAddresses = const [],
+    List<String> walletViewIds = const [],
+    List<TransactionStatus> statuses = const [],
+    int limit = 20,
+    int offset = 0,
+    NetworkData? network,
+    DateTime? confirmedSince,
+  }) {
+    return _transactionsDao.watchTransactions(
+      walletAddresses: walletAddresses,
+      txHashes: txHashes,
+      limit: limit,
+      offset: offset,
+      coinIds: coinIds,
+      networkId: network?.id,
+      walletViewIds: walletViewIds,
+      statuses: statuses,
+      confirmedSince: confirmedSince,
+    );
+  }
+
   Future<List<TransactionData>> getTransactions({
     List<String> coinIds = const [],
     List<String> txHashes = const [],
     List<String> walletAddresses = const [],
     List<String> walletViewIds = const [],
+    List<TransactionStatus> statuses = const [],
     int limit = 20,
     int offset = 0,
     NetworkData? network,
@@ -259,6 +294,7 @@ class TransactionsRepository {
       coinIds: coinIds,
       networkId: network?.id,
       walletViewIds: walletViewIds,
+      statuses: statuses,
     );
   }
 
