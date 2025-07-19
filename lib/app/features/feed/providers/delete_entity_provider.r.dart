@@ -12,9 +12,8 @@ import 'package:ion/app/features/feed/data/models/entities/modifiable_post_data.
 import 'package:ion/app/features/feed/data/models/entities/post_data.f.dart';
 import 'package:ion/app/features/feed/data/models/entities/reaction_data.f.dart';
 import 'package:ion/app/features/feed/data/models/entities/repost_data.f.dart';
+import 'package:ion/app/features/feed/providers/counters/helpers/counter_cache_helpers.dart';
 import 'package:ion/app/features/feed/providers/counters/replies_count_provider.r.dart';
-import 'package:ion/app/features/feed/providers/counters/reposted_events_notifier.r.dart';
-import 'package:ion/app/features/feed/providers/counters/reposts_count_provider.r.dart';
 import 'package:ion/app/features/feed/providers/feed_posts_provider.r.dart';
 import 'package:ion/app/features/feed/providers/user_posts_data_source_provider.r.dart';
 import 'package:ion/app/features/feed/providers/user_videos_data_source_provider.r.dart';
@@ -86,12 +85,11 @@ class DeleteEntityController extends _$DeleteEntityController {
           if (entity is PostEntity) _deleteMedia(ref, entity.data);
           _deleteFromDataSources(ref, entity);
           _deleteFromCache(ref, entity);
-          _deleteFromCounters(ref, entity);
-          _deleteFromProviders(ref, entity);
+          await _deleteFromCounters(ref, entity);
         }
       case ModifiablePostEntity():
         {
-          _deleteFromCounters(ref, entity);
+          await _deleteFromCounters(ref, entity);
           await ref
               .read(createPostNotifierProvider(CreatePostOption.softDelete).notifier)
               .softDelete(eventReference: entity.toEventReference());
@@ -190,36 +188,22 @@ void _deleteFromCache(Ref ref, IonConnectEntity entity) {
   }
 }
 
-void _deleteFromCounters(Ref ref, IonConnectEntity entity) {
+Future<void> _deleteFromCounters(Ref ref, IonConnectEntity entity) async {
   switch (entity) {
     case RepostEntity():
-      ref.read(repostsCountProvider(entity.data.eventReference).notifier).removeOne();
     case GenericRepostEntity():
-      ref.read(repostsCountProvider(entity.data.eventReference).notifier).removeOne();
+      // Counter updates are handled by Optimistic UI
+      break;
     case ModifiablePostEntity():
       if (entity.data.parentEvent != null) {
         ref
             .read(repliesCountProvider(entity.data.parentEvent!.eventReference).notifier)
             .removeOne();
       } else if (entity.data.quotedEvent != null) {
-        ref
-            .read(repostsCountProvider(entity.data.quotedEvent!.eventReference).notifier)
-            .removeOne(isQuote: true);
+        await updateQuoteCounter(ref, entity.data.quotedEvent!.eventReference, isAdding: false);
       }
     default:
       break;
-  }
-}
-
-void _deleteFromProviders(Ref ref, IonConnectEntity entity) {
-  final eventReference = switch (entity) {
-    RepostEntity() => entity.data.eventReference,
-    GenericRepostEntity() => entity.data.eventReference,
-    _ => null,
-  };
-
-  if (eventReference != null) {
-    ref.read(repostedEventsNotifierProvider.notifier).removeRepost(eventReference);
   }
 }
 

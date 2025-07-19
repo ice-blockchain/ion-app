@@ -50,7 +50,8 @@ class FeedPosts extends _$FeedPosts with DelegatedPagedNotifier {
               .select((data) => (items: data.items, hasMore: data.hasMore)),
         ),
     };
-    return (items: data.items, hasMore: data.hasMore);
+
+    return data;
   }
 
   @override
