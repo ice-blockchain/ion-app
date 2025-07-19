@@ -177,12 +177,7 @@ class UserRelaysManager extends _$UserRelaysManager {
         .nonNulls
         .toList();
 
-    // Relay list is invalid if all relays are read-only.
-    // That might be a case if user has outdated relay list
-    // published to the ion-connect or in the local DB.
-    return reachableRelays
-        .where((relayEntity) => relayEntity.data.list.any((relay) => relay.write))
-        .toList();
+    return reachableRelays;
   }
 
   Future<void> _clearReachabilityInfoFor(
