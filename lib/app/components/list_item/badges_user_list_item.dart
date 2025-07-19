@@ -24,7 +24,6 @@ class BadgesUserListItem extends ConsumerWidget {
     this.iceBadge = false,
     this.isSelected = false,
     this.avatarSize,
-    this.isMockData = false,
     super.key,
   });
 
@@ -43,7 +42,6 @@ class BadgesUserListItem extends ConsumerWidget {
   final VoidCallback? onTap;
   final bool iceBadge;
   final bool isSelected;
-  final bool isMockData;
   final double? avatarSize;
 
   @override
