@@ -136,6 +136,8 @@ class ShareOptions extends HookConsumerWidget {
         ionConnectEntityWithCountersProvider(eventReference: eventReference),
       );
 
+      final userMetadata = ref.read(cachedUserMetadataProvider(eventReference.masterPubkey));
+
       // ignore: scoped_providers_should_specify_dependencies
       final postWidget = ProviderScope(
         overrides: [
@@ -148,7 +150,11 @@ class ShareOptions extends HookConsumerWidget {
             eventReference: eventReference,
           ).overrideWithValue(postEntityAsyncValue),
           // ignore: scoped_providers_should_specify_dependencies
-          userMetadataProvider(eventReference.masterPubkey),
+          if (userMetadata != null)
+            ionConnectCachedEntityProvider(eventReference: userMetadata.toEventReference())
+                .overrideWithValue(
+              userMetadata,
+            ),
         ],
         child: SharePostToStoryContent(
           eventReference: eventReference,
