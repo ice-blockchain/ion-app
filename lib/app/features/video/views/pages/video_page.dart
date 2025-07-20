@@ -229,7 +229,7 @@ class VideoPage extends HookConsumerWidget {
             Align(
               alignment: Alignment.bottomCenter,
               child: ColoredBox(
-                color: context.theme.appColors.primaryText,
+                color: Colors.black,
                 child: SizedBox(
                   height: MediaQuery.paddingOf(context).bottom,
                   width: double.infinity,

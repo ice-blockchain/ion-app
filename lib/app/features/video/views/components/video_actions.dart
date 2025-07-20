@@ -15,13 +15,12 @@ class VideoActions extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      height: 42.0.s,
-      color: context.theme.appColors.primaryText,
+    return ColoredBox(
+      color: Colors.black,
       child: CounterItemsFooter(
         itemPadding: EdgeInsetsDirectional.only(
           bottom: 16.0.s,
-          top: 10.0.s,
+          top: 24.0.s,
         ),
         eventReference: eventReference,
         color: context.theme.appColors.secondaryBackground,
