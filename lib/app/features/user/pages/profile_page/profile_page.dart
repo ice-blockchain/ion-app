@@ -55,9 +55,9 @@ class ProfilePage extends HookConsumerWidget {
 
     final didRefresh = useState(false);
 
-    final isLoading = !didRefresh.value && (userMetadata.isLoading || !userMetadata.hasValue);
+    final isInitialLoading = !didRefresh.value && (!userMetadata.hasValue);
 
-    if (isLoading) {
+    if (isInitialLoading) {
       return ProfileSkeleton(showBackButton: showBackButton);
     }
 
