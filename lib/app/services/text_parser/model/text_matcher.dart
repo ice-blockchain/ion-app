@@ -24,8 +24,11 @@ class UrlMatcher extends TextMatcher {
   const UrlMatcher();
 
   @override
-  String get pattern =>
-      r'(?<!@)(\b((?:https?:\/\/)?(?:[A-Za-z0-9-]+\.)+[A-Za-z]{2,6}(?::\d+)?(?:[-A-Za-z0-9()@:%_+.~#?&\/=]*)?)\b)';
+  String get pattern => r'\b(?:(?:[a-z][a-z0-9+\-.]*):\/\/|www\.)' // scheme:// or www.
+      r'(?:[^@\s]+@)?' // optional auth
+      r'(?:(?:(?!-)[A-Za-z0-9-]+(?<!-)\.)+[A-Za-z0-9-]{2,}|(?!-)[A-Za-z0-9-]{2,}(?<!-))' // host
+      r'(?::\d{2,5})?' // optional port
+      r'(?:\/[^\s!?.,;:]*[A-Za-z0-9\/])?'; // optional path ending in slash or alnum
 }
 
 class CashtagMatcher extends TextMatcher {
