@@ -97,7 +97,7 @@ class _ProfileDetails extends StatelessWidget {
     final items = [
       _SkeletonBox(width: 343.0.s, height: 36.0.s),
       SizedBox(height: 12.0.s),
-      _SkeletonBox(width: 218.0.s, height: 16.0.s), // July 2025
+      _SkeletonBox(width: 218.0.s, height: 16.0.s),
       SizedBox(height: 32.0.s),
       Row(
         children: [
