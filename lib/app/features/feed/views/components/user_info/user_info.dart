@@ -20,6 +20,7 @@ class UserInfo extends HookConsumerWidget {
     this.createdAt,
     this.accentTheme = false,
     this.timeFormat = TimestampFormat.short,
+    this.shadow,
     super.key,
   });
 
@@ -29,7 +30,7 @@ class UserInfo extends HookConsumerWidget {
   final TextStyle? textStyle;
   final int? createdAt;
   final TimestampFormat timeFormat;
-
+  final BoxShadow? shadow;
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final userMetadata = ref.watch(userMetadataProvider(pubkey));
@@ -76,6 +77,7 @@ class UserInfo extends HookConsumerWidget {
             child: IonConnectAvatar(
               size: ListItem.defaultAvatarSize,
               pubkey: pubkey,
+              shadow: shadow,
             ),
           ),
           trailing: trailing,
