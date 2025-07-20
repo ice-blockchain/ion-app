@@ -162,7 +162,6 @@ class _ChatMediaItem extends HookConsumerWidget {
                     child: VideoProgress(
                       controller: playerController,
                       builder: (context, position, duration) => VideoSlider(
-                        backgroundColor: Colors.transparent,
                         position: position,
                         duration: duration,
                         onChangeStart: (_) => playerController.pause(),
