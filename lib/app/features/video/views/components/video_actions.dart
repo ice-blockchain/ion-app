@@ -16,7 +16,7 @@ class VideoActions extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ColoredBox(
-      color: Colors.black,
+      color: context.theme.appColors.primaryText,
       child: CounterItemsFooter(
         itemPadding: EdgeInsetsDirectional.only(
           bottom: 16.0.s,

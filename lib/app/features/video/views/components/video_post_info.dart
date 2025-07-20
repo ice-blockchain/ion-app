@@ -34,11 +34,11 @@ class VideoPostInfo extends StatelessWidget {
             gradient: LinearGradient(
               begin: Alignment.topCenter,
               end: Alignment.bottomCenter,
-              stops: const [0.0, 0.5497, 0.9],
+              stops: const [0.0, 0.5497, 1.0],
               colors: [
-                Colors.black.withValues(alpha: 0),
-                Colors.black.withValues(alpha: 0.71),
-                Colors.black.withValues(alpha: 1),
+                context.theme.appColors.primaryText.withValues(alpha: 0),
+                context.theme.appColors.primaryText.withValues(alpha: 0.3),
+                context.theme.appColors.primaryText.withValues(alpha: 0.7),
               ],
             ),
           ),
@@ -73,8 +73,7 @@ class VideoPostInfo extends StatelessWidget {
               ),
               Padding(
                 padding: EdgeInsetsDirectional.only(
-                  top: 10.0.s,
-                  bottom: 14.0.s,
+                  bottom: 12.0.s,
                 ),
                 child: VideoTextPost(entity: videoPost),
               ),

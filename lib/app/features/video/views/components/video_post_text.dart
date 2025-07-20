@@ -59,6 +59,7 @@ class VideoTextPost extends HookWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
+        SizedBox(height: 10.0.s),
         GestureDetector(
           onTap: isOneLine ? null : () => isTextExpanded.value = !isTextExpanded.value,
           child: AnimatedSwitcher(

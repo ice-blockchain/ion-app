@@ -10,7 +10,6 @@ class VideoSlider extends StatelessWidget {
     this.onChangeStart,
     this.onChangeEnd,
     this.onChanged,
-    this.backgroundColor,
     super.key,
   });
 
@@ -19,34 +18,30 @@ class VideoSlider extends StatelessWidget {
   final ValueChanged<double>? onChangeStart;
   final ValueChanged<double>? onChangeEnd;
   final ValueChanged<double>? onChanged;
-  final Color? backgroundColor;
 
   @override
   Widget build(BuildContext context) {
     final secondaryBackgroundColor = context.theme.appColors.secondaryBackground;
-    final secondaryTextColor = context.theme.appColors.secondaryText;
+    final secondaryTextColor = context.theme.appColors.secondaryText.withValues(alpha: 0.6);
     final height = 4.0.s;
 
     return SizedBox(
       height: height,
-      child: ColoredBox(
-        color: backgroundColor ?? context.theme.appColors.primaryText,
-        child: SliderTheme(
-          data: SliderThemeData(
-            thumbShape: const _CustomSliderComponentShape(),
-            overlayShape: const _CustomSliderComponentShape(),
-            trackHeight: height,
-            trackShape: const RectangularSliderTrackShape(),
-          ),
-          child: Slider(
-            max: duration.inMilliseconds.toDouble(),
-            value: position.inMilliseconds.toDouble(),
-            onChangeStart: onChangeStart,
-            onChangeEnd: onChangeEnd,
-            onChanged: onChanged,
-            activeColor: secondaryBackgroundColor,
-            inactiveColor: secondaryTextColor,
-          ),
+      child: SliderTheme(
+        data: SliderThemeData(
+          thumbShape: const _CustomSliderComponentShape(),
+          overlayShape: const _CustomSliderComponentShape(),
+          trackHeight: height,
+          trackShape: const RectangularSliderTrackShape(),
+        ),
+        child: Slider(
+          max: duration.inMilliseconds.toDouble(),
+          value: position.inMilliseconds.toDouble(),
+          onChangeStart: onChangeStart,
+          onChangeEnd: onChangeEnd,
+          onChanged: onChanged,
+          activeColor: secondaryBackgroundColor,
+          inactiveColor: secondaryTextColor,
         ),
       ),
     );
