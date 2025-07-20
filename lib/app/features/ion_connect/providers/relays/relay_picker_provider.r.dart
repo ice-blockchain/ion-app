@@ -52,7 +52,8 @@ class RelayPicker extends _$RelayPicker {
     final randomValidWriteRelay = _userRelaysAvoidingDislikedUrls(relays, dislikedUrls).random;
 
     if (randomValidWriteRelay == null) {
-      throw FailedToPickUserRelay();
+      // If no valid write relay is found, fallback to read action source relay
+      return _getReadActionSourceRelay(actionSource, dislikedUrls: dislikedUrls);
     }
 
     return ref.read(

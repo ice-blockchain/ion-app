@@ -10,15 +10,13 @@ import 'package:ion/app/features/ion_connect/model/event_reference.f.dart';
 import 'package:ion/app/features/ion_connect/model/event_serializable.dart';
 import 'package:ion/app/features/ion_connect/model/ion_connect_entity.dart';
 import 'package:ion/app/features/ion_connect/providers/ion_connect_cache.r.dart';
-import 'package:ion/app/features/ion_connect/providers/ion_connect_db_cache_notifier.r.dart';
 import 'package:ion/app/features/user/model/user_relays.f.dart';
 
 part 'user_file_storage_relays.f.freezed.dart';
 
 @Freezed(equal: false)
 class UserFileStorageRelaysEntity
-    with IonConnectEntity, CacheableEntity, ReplaceableEntity, _$UserFileStorageRelaysEntity
-    implements DbCacheableEntity {
+    with IonConnectEntity, CacheableEntity, ReplaceableEntity, _$UserFileStorageRelaysEntity {
   const factory UserFileStorageRelaysEntity({
     required String id,
     required String pubkey,
@@ -45,9 +43,6 @@ class UserFileStorageRelaysEntity
       data: UserFileStorageRelaysData.fromEventMessage(eventMessage),
     );
   }
-
-  @override
-  FutureOr<EventMessage> toEntityEventMessage() => toEventMessage(data);
 
   List<String> get urls => data.list.map((relay) => relay.url).toList();
 

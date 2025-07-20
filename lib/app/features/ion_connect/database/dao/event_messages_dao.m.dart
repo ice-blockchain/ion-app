@@ -77,4 +77,11 @@ class EventMessagesDao extends DatabaseAccessor<EventMessagesDatabase>
     final existingReferences = (await query.map((message) => message.eventReference).get()).toSet();
     return eventReferences.difference(existingReferences);
   }
+
+  Future<void> removeAll(List<EventReference> eventReferences) {
+    final query = delete(db.eventMessagesTable)
+      ..where((event) => event.eventReference.isInValues(eventReferences));
+
+    return query.go();
+  }
 }

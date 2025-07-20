@@ -88,7 +88,7 @@ class IonConnectNotifier extends _$IonConnectNotifier {
         if (error is RelayUnreachableException) {
           dislikedRelaysUrls.add(error.relayUrl);
         } else if (UserRelaysManager.isRelayReadOnlyError(error)) {
-          await ref.read(userRelaysManagerProvider.notifier).markRelayInDbAsReadOnly(relay!.url);
+          await ref.read(userRelaysManagerProvider.notifier).handleCachedReadOnlyRelay(relay!.url);
         }
       },
     );

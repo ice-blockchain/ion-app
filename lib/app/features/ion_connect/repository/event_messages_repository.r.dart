@@ -88,4 +88,8 @@ class EventMessagesRepository {
         await _eventMessagesDao.nonExistingReferences(eventReferences.toSet());
     return nonExistingReferences.toList();
   }
+
+  Future<void> removeAll(List<EventReference> eventReferences) {
+    return _eventMessagesDao.removeAll(eventReferences);
+  }
 }
