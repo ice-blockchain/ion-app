@@ -52,7 +52,7 @@ class VideoTextPost extends HookWidget {
       ],
     );
 
-    if (content.isEmpty) {
+    if (content.isEmpty || content.first.data.toString().trim().isEmpty) {
       return const SizedBox.shrink();
     }
 
