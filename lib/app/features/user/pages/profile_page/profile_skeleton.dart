@@ -55,12 +55,12 @@ class _ProfileInfo extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Padding(
-                  padding: EdgeInsets.only(top: 12.0.s),
+                  padding: EdgeInsetsDirectional.only(top: 12.0.s),
                   child: _SkeletonBox.square(size: 24.0.s, borderRadius: 8.0.s),
                 ),
                 _SkeletonBox.square(size: 65.0.s),
                 Padding(
-                  padding: EdgeInsets.only(top: 12.0.s),
+                  padding: EdgeInsetsDirectional.only(top: 12.0.s),
                   child: _SkeletonBox.square(size: 24.0.s, borderRadius: 8.0.s),
                 ),
               ],
