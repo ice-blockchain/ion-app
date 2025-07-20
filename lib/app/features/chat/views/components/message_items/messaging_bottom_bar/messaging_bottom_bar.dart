@@ -180,6 +180,7 @@ class MessagingBottomBar extends HookConsumerWidget {
             ),
           TextMessageLimitLabel(textEditingController: controller),
           ActionButton(
+            paddingBottom: 0,
             controller: controller,
             recorderController: recorderController.value,
             onSubmitted: isTextLimitReached.value

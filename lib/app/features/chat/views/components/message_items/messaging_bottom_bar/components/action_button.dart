@@ -19,12 +19,14 @@ class ActionButton extends HookConsumerWidget {
     required this.controller,
     required this.onSubmitted,
     required this.recorderController,
+    required this.paddingBottom,
     super.key,
   });
 
   final TextEditingController controller;
   final Future<void> Function()? onSubmitted;
   final RecorderController recorderController;
+  final double paddingBottom;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
