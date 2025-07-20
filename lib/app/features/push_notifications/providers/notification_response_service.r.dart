@@ -128,10 +128,10 @@ class NotificationResponseService {
 @riverpod
 NotificationResponseService notificationResponseService(Ref ref) {
   final currentPubkey = ref.watch(currentPubkeySelectorProvider);
-  Future<GiftUnwrapService> getGiftUnwrapService() => ref.read(giftUnwrapServiceProvider.future);
+  Future<GiftUnwrapService> getGiftUnwrapService() => ref.watch(giftUnwrapServiceProvider.future);
   UserMetadataEntity? getUserMetadata(String pubkey) =>
       ref.read(userMetadataFromDbProvider(pubkey));
-  final eventParser = ref.read(eventParserProvider);
+  final eventParser = ref.watch(eventParserProvider);
 
   return NotificationResponseService(
     getGiftUnwrapService: getGiftUnwrapService,
