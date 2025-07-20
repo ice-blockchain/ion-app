@@ -98,10 +98,6 @@ class Logger {
     _talker?.warning(message);
   }
 
-  static void debug(String message) {
-    _talker?.debug(message);
-  }
-
   static void error(
     Object error, {
     StackTrace? stackTrace,

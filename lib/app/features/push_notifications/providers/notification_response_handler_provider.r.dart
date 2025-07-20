@@ -8,10 +8,10 @@ import 'package:ion/app/services/firebase/firebase_messaging_service_provider.r.
 import 'package:ion/app/services/local_notifications/local_notifications.r.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
-part 'notification_response_data_provider.r.g.dart';
+part 'notification_response_handler_provider.r.g.dart';
 
 @Riverpod(keepAlive: true)
-class NotificationResponseData extends _$NotificationResponseData {
+class NotificationResponseHandler extends _$NotificationResponseHandler {
   @override
   void build() {
     final firebaseAppConfigured = ref.watch(configureFirebaseAppProvider).valueOrNull ?? false;

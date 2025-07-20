@@ -19,6 +19,7 @@ import 'package:ion/app/features/ion_connect/model/ion_connect_gift_wrap.f.dart'
 import 'package:ion/app/features/ion_connect/providers/ion_connect_event_parser.r.dart';
 import 'package:ion/app/features/push_notifications/data/models/ion_connect_push_data_payload.f.dart';
 import 'package:ion/app/features/user/model/follow_list.f.dart';
+import 'package:ion/app/features/user/model/user_metadata.f.dart';
 import 'package:ion/app/features/user/providers/user_metadata_provider.r.dart';
 import 'package:ion/app/features/wallets/model/entities/funds_request_entity.f.dart';
 import 'package:ion/app/features/wallets/model/entities/wallet_asset_entity.f.dart';
@@ -28,31 +29,37 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'notification_response_service.r.g.dart';
 
-@riverpod
-NotificationResponseService notificationResponseService(Ref ref) =>
-    NotificationResponseService._(ref);
-
 class NotificationResponseService {
-  const NotificationResponseService._(this._ref);
+  NotificationResponseService({
+    required Future<GiftUnwrapService> Function() getGiftUnwrapService,
+    required UserMetadataEntity? Function(String pubkey) getUserMetadata,
+    required EventParser eventParser,
+    required String? currentPubkey,
+  })  : _getGiftUnwrapService = getGiftUnwrapService,
+        _getUserMetadata = getUserMetadata,
+        _eventParser = eventParser,
+        _currentPubkey = currentPubkey;
 
-  final Ref _ref;
+  final Future<GiftUnwrapService> Function() _getGiftUnwrapService;
+  final UserMetadataEntity? Function(String pubkey) _getUserMetadata;
+  final EventParser _eventParser;
+  final String? _currentPubkey;
 
   Future<void> handleNotificationResponse(Map<String, dynamic> response) async {
     try {
       final notificationPayload = await IonConnectPushDataPayload.fromEncoded(
         response,
         unwrapGift: (eventMassage) async {
-          final giftUnwrapService = await _ref.read(giftUnwrapServiceProvider.future);
+          final giftUnwrapService = await _getGiftUnwrapService();
 
           final event = await giftUnwrapService.unwrap(eventMassage);
-          final userMetadata = _ref.read(userMetadataFromDbProvider(event.masterPubkey));
+          final userMetadata = _getUserMetadata(event.masterPubkey);
 
           return (event, userMetadata);
         },
       );
 
-      final eventParser = _ref.read(eventParserProvider);
-      final entity = eventParser.parse(notificationPayload.event);
+      final entity = _eventParser.parse(notificationPayload.event);
 
       switch (entity) {
         case ModifiablePostEntity():
@@ -79,10 +86,9 @@ class NotificationResponseService {
   }
 
   Future<void> _handleGiftWrap(EventMessage giftWrap) async {
-    final giftUnwrapService = await _ref.watch(giftUnwrapServiceProvider.future);
-    final currentPubkey = _ref.watch(currentPubkeySelectorProvider);
+    final giftUnwrapService = await _getGiftUnwrapService();
 
-    if (currentPubkey == null) {
+    if (_currentPubkey == null) {
       throw UserMasterPubkeyNotFoundException();
     }
 
@@ -117,4 +123,20 @@ class NotificationResponseService {
     await ConversationRoute(receiverMasterPubkey: pubkey)
         .push<void>(rootNavigatorKey.currentContext!);
   }
+}
+
+@riverpod
+NotificationResponseService notificationResponseService(Ref ref) {
+  final currentPubkey = ref.watch(currentPubkeySelectorProvider);
+  Future<GiftUnwrapService> getGiftUnwrapService() => ref.read(giftUnwrapServiceProvider.future);
+  UserMetadataEntity? getUserMetadata(String pubkey) =>
+      ref.read(userMetadataFromDbProvider(pubkey));
+  final eventParser = ref.read(eventParserProvider);
+
+  return NotificationResponseService(
+    getGiftUnwrapService: getGiftUnwrapService,
+    getUserMetadata: getUserMetadata,
+    eventParser: eventParser,
+    currentPubkey: currentPubkey,
+  );
 }
