@@ -74,27 +74,44 @@ class UserRelaysManager extends _$UserRelaysManager {
     return result;
   }
 
-  Future<void> markRelayInDbAsReadOnly(String relayUrl) async {
-    final outdatedEntities = (await ref
+  /// Marks a relay as read-only in the local cache.
+  ///
+  /// If after the update no write relays remain in the list,
+  /// the entire entity is removed from the cache.
+  /// That in turn leads to refetching from the remote source
+  /// on the next request for the user relays.
+  Future<void> handleCachedReadOnlyRelay(String relayUrl) async {
+    final cachedRelayEntities = (await ref
             .read(ionConnectDbCacheProvider.notifier)
             .getFiltered(query: relayUrl, kinds: [UserRelaysEntity.kind]))
-        .cast<UserRelaysEntity?>()
-        .nonNulls
-        .toList();
+        .cast<UserRelaysEntity>();
 
-    final updatedEntities = outdatedEntities
-        .map(
-          (entity) => entity.copyWith(
-            data: entity.data.copyWith(
-              list: entity.data.list
-                  .map((relay) => relay.url == relayUrl ? relay.copyWith(write: false) : relay)
-                  .toList(),
-            ),
-          ),
-        )
-        .toList();
+    final updatedEntities = <UserRelaysEntity>[];
+    final outdatedEntities = <UserRelaysEntity>[];
+    for (final entity in cachedRelayEntities) {
+      if (entity.data.list.any((relay) => relay.url == relayUrl && !relay.write)) {
+        continue; // Skip if the relay is already marked as read-only
+      }
 
-    await ref.read(ionConnectDbCacheProvider.notifier).saveAll(updatedEntities);
+      final updatedData = entity.data.copyWith(
+        list: entity.data.list
+            .map((relay) => relay.url == relayUrl ? relay.copyWith(write: false) : relay)
+            .toList(),
+      );
+
+      if (updatedData.list.any((relay) => relay.write)) {
+        updatedEntities.add(entity.copyWith(data: updatedData));
+      } else {
+        outdatedEntities.add(entity);
+      }
+    }
+
+    await Future.wait([
+      ref
+          .read(ionConnectDbCacheProvider.notifier)
+          .removeAll(outdatedEntities.map((entity) => entity.toEventReference()).toList()),
+      ref.read(ionConnectDbCacheProvider.notifier).saveAll(updatedEntities),
+    ]);
   }
 
   Future<List<UserRelaysEntity>> _fetchRelaysFromIndexers({

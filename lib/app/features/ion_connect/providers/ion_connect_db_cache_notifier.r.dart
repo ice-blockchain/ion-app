@@ -95,4 +95,8 @@ class IonConnectDbCache extends _$IonConnectDbCache {
 
     return saveAll(entities);
   }
+
+  Future<void> removeAll(List<EventReference> eventReferences) {
+    return ref.read(eventMessagesRepositoryProvider).removeAll(eventReferences);
+  }
 }
