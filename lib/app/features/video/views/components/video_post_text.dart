@@ -5,6 +5,7 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_quill/flutter_quill.dart';
 import 'package:ion/app/components/text_editor/text_editor_preview.dart';
 import 'package:ion/app/components/text_editor/utils/text_editor_styles.dart';
+import 'package:ion/app/extensions/delta.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/feed/data/models/entities/modifiable_post_data.f.dart';
 import 'package:ion/app/features/feed/data/models/entities/post_data.f.dart';
@@ -52,7 +53,7 @@ class VideoTextPost extends HookWidget {
       ],
     );
 
-    if (content.isEmpty || content.first.data.toString().trim().isEmpty) {
+    if (content.isBlank) {
       return const SizedBox.shrink();
     }
 

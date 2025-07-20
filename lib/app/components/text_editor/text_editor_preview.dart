@@ -11,6 +11,7 @@ import 'package:ion/app/components/text_editor/components/custom_blocks/text_edi
 import 'package:ion/app/components/text_editor/components/custom_blocks/unknown/text_editor_unknown_embed_builder.dart';
 import 'package:ion/app/components/text_editor/custom_recognizer_builder.dart';
 import 'package:ion/app/components/text_editor/utils/text_editor_styles.dart';
+import 'package:ion/app/extensions/delta.dart';
 import 'package:ion/app/features/ion_connect/model/media_attachment.dart';
 import 'package:ion/app/services/browser/browser.dart';
 
@@ -47,7 +48,7 @@ class TextEditorPreview extends HookWidget {
       [content],
     );
 
-    if (_isEmptyContent(content)) {
+    if (content.isBlank) {
       return const SizedBox.shrink();
     }
 
@@ -62,8 +63,6 @@ class TextEditorPreview extends HookWidget {
       authorPubkey: authorPubkey,
     );
   }
-
-  bool _isEmptyContent(Delta delta) => delta.length == 1 && delta.first.value == '\n';
 }
 
 class _QuillFormattedContent extends ConsumerWidget {
