@@ -36,7 +36,7 @@ class ChatAttachMenu extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     return Padding(
-      padding: EdgeInsets.only(top: 20.s),
+      padding: EdgeInsetsDirectional.only(top: 20.s),
       child: StaggeredGrid.count(
         crossAxisCount: 3,
         mainAxisSpacing: 30.s,
