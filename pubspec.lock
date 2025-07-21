@@ -1859,11 +1859,11 @@ packages:
     dependency: "direct main"
     description:
       path: "."
-      ref: "0.0.39"
-      resolved-ref: "320ee05ed23259b0535f6849288997ac5729d8e3"
+      ref: "0.0.40"
+      resolved-ref: "66ab21f48af7df4589d6f70e056efc417035cee0"
       url: "https://github.com/ice-blockchain/nostr-dart"
     source: git
-    version: "0.0.39"
+    version: "0.0.40"
   octo_image:
     dependency: transitive
     description:
@@ -3089,10 +3089,10 @@ packages:
     dependency: transitive
     description:
       name: web_socket_client
-      sha256: "0ec5230852349191188c013112e4d2be03e3fc83dbe80139ead9bf3a136e53b5"
+      sha256: "394789177aa3bc1b7b071622a1dbf52a4631d7ce23c555c39bb2523e92316b07"
       url: "https://pub.dev"
     source: hosted
-    version: "0.1.5"
+    version: "0.2.1"
   win32:
     dependency: transitive
     description:

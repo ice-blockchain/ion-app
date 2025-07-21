@@ -9,6 +9,7 @@ import 'package:ion/app/features/core/providers/env_provider.r.dart';
 import 'package:ion/app/features/user/model/user_relays.f.dart';
 import 'package:ion/app/features/user/providers/relays/user_relays_manager.r.dart';
 import 'package:ion/app/services/ion_connect/ion_connect_relays_ranker.r.dart';
+import 'package:ion/app/services/logger/logger.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'ranked_user_relays_provider.r.g.dart';
@@ -39,8 +40,12 @@ Future<UserRelaysEntity?> rankedRelay(
   if (relayEntity == null) {
     return null;
   }
+
   final cancelToken = CancelToken();
   final relaysUrls = relayEntity.data.list.map((e) => e.url).toList();
+
+  Logger.log('[RELAY] Start ranking relays: $relaysUrls');
+
   final rankedRelaysUrls = await ref.watch(ionConnectRelaysRankerProvider).ranked(
         relaysUrls,
         cancelToken: cancelToken,
@@ -49,6 +54,8 @@ Future<UserRelaysEntity?> rankedRelay(
       .map((url) => relayEntity.data.list.firstWhereOrNull((e) => e.url == url))
       .nonNulls
       .toList();
+
+  Logger.log('[RELAY] Ranked relays: $rankedRelaysUrls');
 
   final updatedRelayEntity = relayEntity.copyWith(
     data: relayEntity.data.copyWith(list: rankedRelays),

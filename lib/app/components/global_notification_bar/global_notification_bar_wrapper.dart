@@ -3,7 +3,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:internet_connection_checker_plus/internet_connection_checker_plus.dart';
 import 'package:ion/app/components/global_notification_bar/components/no_internet_connection_notification_view.dart';
 import 'package:ion/app/components/global_notification_bar/global_notification_bar.dart';
 import 'package:ion/app/components/global_notification_bar/providers/global_notification_notifier_provider.r.dart';
@@ -25,8 +24,7 @@ class GlobalNotificationBarWrapper extends HookConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final notification = ref.watch(globalNotificationNotifierProvider);
-    final hasInternetConnection =
-        ref.watch(internetStatusStreamProvider).valueOrNull != InternetStatus.disconnected;
+    final hasInternetConnection = ref.watch(hasInternetConnectionProvider);
     final showNotification = notification != null || !hasInternetConnection;
 
     final isShowSafeArea = useState(false);

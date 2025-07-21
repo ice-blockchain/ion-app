@@ -2,7 +2,6 @@
 
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:internet_connection_checker_plus/internet_connection_checker_plus.dart';
 import 'package:ion/app/components/card/info_card.dart';
 import 'package:ion/app/components/screen_offset/screen_side_offset.dart';
 import 'package:ion/app/extensions/extensions.dart';
@@ -21,8 +20,7 @@ class ErrorPage extends HookConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final showDebugInfo = ref.watch(envProvider.notifier).get<bool>(EnvVariable.SHOW_DEBUG_INFO);
-    final noInternetConnection =
-        ref.watch(internetStatusStreamProvider).valueOrNull == InternetStatus.disconnected;
+    final noInternetConnection = !ref.watch(hasInternetConnectionProvider);
 
     return Scaffold(
       body: Center(

@@ -19,3 +19,8 @@ Stream<InternetStatus> internetStatusStream(Ref ref) async* {
   }
   yield* ref.watch(internetConnectionCheckerProvider).onStatusChange;
 }
+
+@riverpod
+bool hasInternetConnection(Ref ref) {
+  return ref.watch(internetStatusStreamProvider).valueOrNull != InternetStatus.disconnected;
+}

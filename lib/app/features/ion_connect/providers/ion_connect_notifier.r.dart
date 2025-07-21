@@ -61,6 +61,7 @@ class IonConnectNotifier extends _$IonConnectNotifier {
               actionType: ActionType.write,
               dislikedUrls: DislikedRelayUrlsCollection(dislikedRelaysUrls),
             );
+        Logger.log('[RELAY] ${relay?.url} is chosen for sending events, $dislikedRelaysUrls');
 
         await ref
             .read(relayAuthProvider(relay!))
@@ -79,13 +80,17 @@ class IonConnectNotifier extends _$IonConnectNotifier {
 
         return null;
       },
-      retryWhen: (error) =>
-          error is RelayRequestFailedException ||
-          RelayAuthService.isRelayAuthError(error) ||
-          (error is RelayUnreachableException && !dislikedRelaysUrls.contains(error.relayUrl)) ||
-          UserRelaysManager.isRelayReadOnlyError(error),
+      retryWhen: (error) {
+        final retry = error is RelayRequestFailedException ||
+            RelayAuthService.isRelayAuthError(error) ||
+            (error is RelayUnreachableException && !dislikedRelaysUrls.contains(error.relayUrl)) ||
+            UserRelaysManager.isRelayReadOnlyError(error);
+        Logger.log('[RELAY] Got error $error, retry: $retry');
+        return retry;
+      },
       onRetry: (error) async {
         if (error is RelayUnreachableException) {
+          Logger.log('[RELAY] ${error.relayUrl} Adding to the list of unreachable relays');
           dislikedRelaysUrls.add(error.relayUrl);
         } else if (UserRelaysManager.isRelayReadOnlyError(error)) {
           await ref.read(userRelaysManagerProvider.notifier).handleCachedReadOnlyRelay(relay!.url);
@@ -184,6 +189,7 @@ class IonConnectNotifier extends _$IonConnectNotifier {
                   actionType: ActionType.read,
                   dislikedUrls: DislikedRelayUrlsCollection(dislikedRelaysUrls),
                 );
+        Logger.log('[RELAY] ${relay?.url} is chosen for reading events, $dislikedRelaysUrls');
 
         await ref
             .read(relayAuthProvider(relay!))
@@ -209,12 +215,16 @@ class IonConnectNotifier extends _$IonConnectNotifier {
           }
         }
       },
-      retryWhen: (error) =>
-          error is RelayRequestFailedException ||
-          RelayAuthService.isRelayAuthError(error) ||
-          (error is RelayUnreachableException && !dislikedRelaysUrls.contains(error.relayUrl)),
+      retryWhen: (error) {
+        final retry = error is RelayRequestFailedException ||
+            RelayAuthService.isRelayAuthError(error) ||
+            (error is RelayUnreachableException && !dislikedRelaysUrls.contains(error.relayUrl));
+        Logger.log('[RELAY] Got error $error, retry: $retry');
+        return retry;
+      },
       onRetry: (error) {
         if (error is RelayUnreachableException) {
+          Logger.log('[RELAY] ${error.relayUrl} Adding to the list of unreachable relays');
           dislikedRelaysUrls.add(error.relayUrl);
         }
       },

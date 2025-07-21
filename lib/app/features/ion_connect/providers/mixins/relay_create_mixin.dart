@@ -5,44 +5,53 @@ import 'dart:io';
 
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/exceptions/exceptions.dart';
+import 'package:ion/app/features/core/providers/internet_status_stream_provider.r.dart';
 import 'package:ion/app/features/ion_connect/ion_connect.dart';
 import 'package:ion/app/features/user/providers/relays_reachability_provider.r.dart';
+import 'package:ion/app/services/logger/logger.dart';
 
 mixin RelayCreateMixin {
   Future<IonConnectRelay> createRelay(Ref ref, String url) async {
     final socket = WebSocket(Uri.parse(url));
+
     final relay = IonConnectRelay(url: url, socket: socket);
     final connectionState = await socket.connection.firstWhere(
       (state) => state is Connected || state is Reconnected || state is Disconnected,
     );
-    if (_isRelayUnreachable(connectionState)) {
+
+    final hasInternetConnection = ref.read(hasInternetConnectionProvider);
+    if (_isRelayUnreachable(
+      connectionState: connectionState,
+      hasInternetConnection: hasInternetConnection,
+    )) {
       socket.close();
       await _updateRelayReachabilityInfo(ref, url);
       throw RelayUnreachableException(url);
     }
+
     await ref.read(relayReachabilityProvider.notifier).clear(url);
     return relay;
   }
 
-  bool _isRelayUnreachable(ConnectionState connectionState) {
-    if (connectionState is! Disconnected) {
+  bool _isRelayUnreachable({
+    required ConnectionState connectionState,
+    required bool hasInternetConnection,
+  }) {
+    if (connectionState is! Disconnected || connectionState.error == null) {
       return false;
     }
-    final error = connectionState.error;
-    if (error == null || error is! SocketException) {
-      return false;
-    }
-    final osError = error.osError;
-    if (osError == null) {
-      return false;
-    }
-    return _unreachableRelayErrorCodes.contains(osError.errorCode);
-  }
 
-  List<int> get _unreachableRelayErrorCodes => [
-        8, // android connection refused
-        61, // ios connection refused
-      ];
+    Logger.error(connectionState.error!, message: '[RELAY] has disconnected with error');
+
+    if (!hasInternetConnection) {
+      return false;
+    }
+
+    return switch (connectionState.error) {
+      SocketException() || TimeoutException() => true,
+      _ => false,
+    };
+  }
 
   Future<void> _updateRelayReachabilityInfo(Ref ref, String url) async {
     final relayReachabilityInfo = ref.read(relayReachabilityProvider.notifier).get(url);

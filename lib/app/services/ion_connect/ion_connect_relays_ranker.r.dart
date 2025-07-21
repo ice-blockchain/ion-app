@@ -3,6 +3,7 @@
 import 'package:dio/dio.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/features/core/providers/dio_provider.r.dart';
+import 'package:ion/app/services/logger/logger.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'ion_connect_relays_ranker.r.g.dart';
@@ -24,6 +25,7 @@ final class IonConnectRelaysRanker {
   Future<List<String>> ranked(List<String> relaysUrls, {CancelToken? cancelToken}) async {
     final relaysMeasured =
         await Future.wait(relaysUrls.map((url) => _getRelayRank(url, cancelToken)));
+    Logger.log('[RELAY] Relays ping results $relaysMeasured');
     relaysMeasured.sort((a, b) => a.time.compareTo(b.time));
     return relaysMeasured.map((e) => e.url).toList();
   }
