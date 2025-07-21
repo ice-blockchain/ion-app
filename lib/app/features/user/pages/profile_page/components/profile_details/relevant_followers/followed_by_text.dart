@@ -1,5 +1,7 @@
 // SPDX-License-Identifier: ice License 1.0
 
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/extensions/extensions.dart';
@@ -29,11 +31,17 @@ class FollowedByText extends HookConsumerWidget {
     );
 
     final othersTapRecognizer = useTapGestureRecognizer(
-      onTap: () {
-        FollowListRoute(
+      onTap: () async {
+        final pickedUserPubkey = await FollowListRoute(
           pubkey: pubkey,
           followType: FollowType.relevant,
-        ).push<void>(context);
+        ).push<String>(context);
+
+        if (pickedUserPubkey != null && context.mounted) {
+          unawaited(
+            ProfileRoute(pubkey: pickedUserPubkey).push<void>(context),
+          );
+        }
       },
     );
 
