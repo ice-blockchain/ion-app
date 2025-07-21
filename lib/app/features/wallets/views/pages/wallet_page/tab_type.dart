@@ -26,7 +26,7 @@ enum WalletTabType {
   String get bottomActionAsset {
     return switch (this) {
       WalletTabType.coins => Assets.svg.iconButtonManagecoin,
-      WalletTabType.nfts => Assets.svg.iconButtonWalletnft,
+      WalletTabType.nfts => Assets.svg.iconPostAddanswer,
     };
   }
 
@@ -40,7 +40,7 @@ enum WalletTabType {
   String getBottomActionTitle(BuildContext context) {
     return switch (this) {
       WalletTabType.coins => context.i18n.wallet_manage_coins,
-      WalletTabType.nfts => context.i18n.wallet_buy_nfts,
+      WalletTabType.nfts => context.i18n.wallet_receive_nft,
     };
   }
 
