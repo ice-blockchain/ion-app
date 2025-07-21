@@ -35,4 +35,15 @@ enum TransactionStatus {
       _$TransactionStatusEnumMap.map((key, value) => MapEntry(value, key))[json]!;
 
   String toJson() => _$TransactionStatusEnumMap[this]!;
+
+  static List<TransactionStatus> get inProgressStatuses => [
+        TransactionStatus.pending,
+        TransactionStatus.executing,
+        TransactionStatus.broadcasted,
+      ];
+
+  bool get isInProgress =>
+      this == TransactionStatus.pending ||
+      this == TransactionStatus.executing ||
+      this == TransactionStatus.broadcasted;
 }

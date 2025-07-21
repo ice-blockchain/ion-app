@@ -96,56 +96,91 @@ class TransactionsDao extends DatabaseAccessor<WalletsDatabase> with _$Transacti
     });
   }
 
+  Stream<List<TransactionData>> watchTransactions({
+    List<String> coinIds = const [],
+    List<String> txHashes = const [],
+    List<String> walletAddresses = const [],
+    List<String> walletViewIds = const [],
+    List<String> externalHashes = const [],
+    List<String> eventIds = const [],
+    List<TransactionStatus> statuses = const [],
+    int limit = 20,
+    int? offset,
+    String? symbol,
+    TransactionType? type,
+    DateTime? confirmedSince,
+    String? networkId,
+  }) {
+    return _createTransactionQuery(
+      where: (tbl, transactionCoinAlias, nativeCoinAlias) => _buildTransactionWhereClause(
+        tbl,
+        coinIds: coinIds,
+        txHashes: txHashes,
+        walletAddresses: walletAddresses,
+        walletViewIds: walletViewIds,
+        externalHashes: externalHashes,
+        statuses: statuses,
+        symbol: symbol,
+        type: type,
+        networkId: networkId,
+        confirmedSince: confirmedSince,
+        transactionCoinAlias: transactionCoinAlias,
+      ),
+      limit: limit,
+      offset: offset,
+    ).watch().map((rows) => rows.toList());
+  }
+
   Future<List<TransactionData>> getTransactions({
     List<String> coinIds = const [],
     List<String> txHashes = const [],
     List<String> walletAddresses = const [],
     List<String> walletViewIds = const [],
     List<String> externalHashes = const [],
+    List<String> eventIds = const [],
+    List<TransactionStatus> statuses = const [],
     int limit = 20,
     int? offset,
     String? symbol,
     String? networkId,
+    DateTime? confirmedSince,
+    TransactionType? type,
   }) async {
+    return _createTransactionQuery(
+      where: (tbl, transactionCoinAlias, nativeCoinAlias) => _buildTransactionWhereClause(
+        tbl,
+        coinIds: coinIds,
+        txHashes: txHashes,
+        walletAddresses: walletAddresses,
+        walletViewIds: walletViewIds,
+        externalHashes: externalHashes,
+        statuses: statuses,
+        symbol: symbol,
+        networkId: networkId,
+        confirmedSince: confirmedSince,
+        type: type,
+        transactionCoinAlias: transactionCoinAlias,
+      ),
+      limit: limit,
+      offset: offset,
+    ).get();
+  }
+
+  /// Creates the standard query with joins for transaction tables
+  Selectable<TransactionData> _createTransactionQuery({
+    required Expression<bool> Function(
+      $TransactionsTableTable tbl,
+      $CoinsTableTable transactionCoinAlias,
+      $CoinsTableTable nativeCoinAlias,
+    ) where,
+    int limit = 20,
+    int? offset,
+  }) {
     final transactionCoinAlias = alias(coinsTable, 'transactionCoin');
     final nativeCoinAlias = alias(coinsTable, 'nativeCoin');
 
     final query = (select(transactionsTable)
-          ..where((tbl) {
-            Expression<bool> expr = const Constant(true);
-
-            if (coinIds.isNotEmpty) {
-              expr = expr & tbl.coinId.isIn(coinIds);
-            }
-
-            if (txHashes.isNotEmpty) {
-              expr = expr & tbl.txHash.isIn(txHashes);
-            }
-
-            if (externalHashes.isNotEmpty) {
-              expr = expr & tbl.externalHash.isIn(externalHashes);
-            }
-
-            if (walletViewIds.isNotEmpty) {
-              expr = expr & tbl.walletViewId.isIn(walletViewIds);
-            }
-
-            if (symbol != null) {
-              expr = expr & transactionCoinAlias.symbol.lower().equals(symbol.toLowerCase());
-            }
-
-            if (walletAddresses.isNotEmpty) {
-              expr = expr &
-                  (tbl.receiverWalletAddress.isIn(walletAddresses) |
-                      tbl.senderWalletAddress.isIn(walletAddresses));
-            }
-
-            if (networkId != null) {
-              expr = expr & tbl.networkId.equals(networkId);
-            }
-
-            return expr;
-          })
+          ..where((tbl) => where(tbl, transactionCoinAlias, nativeCoinAlias))
           ..orderBy([
             (tbl) => OrderingTerm(
                   expression: CustomExpression(
@@ -170,140 +205,84 @@ class TransactionsDao extends DatabaseAccessor<WalletsDatabase> with _$Transacti
       ),
     ]);
 
-    return query.map((row) {
-      return _mapRowToDomainModel(
-        row,
-        nativeCoinAlias: nativeCoinAlias,
-        transactionCoinAlias: transactionCoinAlias,
-      );
-    }).get();
-  }
-
-  Future<List<TransactionData>> getBroadcastedTransfers({String? walletAddress}) {
-    final transactionCoinAlias = alias(coinsTable, 'transactionCoin');
-    final nativeCoinAlias = alias(coinsTable, 'nativeCoin');
-
-    final query = (select(transactionsTable)
-          ..where((tbl) {
-            var expr = tbl.type.equals(TransactionType.send.value) &
-                tbl.id.isNotNull() &
-                (tbl.status.isNull() | tbl.status.equals(TransactionStatus.broadcasted.toJson()));
-
-            if (walletAddress != null) {
-              expr = expr & tbl.senderWalletAddress.equals(walletAddress);
-            }
-
-            return expr;
-          }))
-        .join([
-      leftOuterJoin(
-        networksTable,
-        networksTable.id.equalsExp(transactionsTable.networkId),
-      ),
-      leftOuterJoin(
-        transactionCoinAlias,
-        transactionCoinAlias.id.equalsExp(transactionsTable.coinId),
-      ),
-      leftOuterJoin(
-        nativeCoinAlias,
-        nativeCoinAlias.id.equalsExp(transactionsTable.nativeCoinId),
-      ),
-    ]);
-
-    return query.map((row) {
-      return _mapRowToDomainModel(
-        row,
-        nativeCoinAlias: nativeCoinAlias,
-        transactionCoinAlias: transactionCoinAlias,
-      );
-    }).get();
-  }
-
-  Stream<List<TransactionData>> watchBroadcastedTransfers({
-    List<String>? coinIds,
-    String? walletAddress,
-  }) {
-    final transactionCoinAlias = alias(coinsTable, 'transactionCoin');
-    final nativeCoinAlias = alias(coinsTable, 'nativeCoin');
-
-    final query = (select(transactionsTable)
-          ..where(
-            (tbl) {
-              var expr = tbl.type.equals(TransactionType.send.value) &
-                  tbl.id.isNotNull() &
-                  (tbl.status.isNull() | tbl.status.equals(TransactionStatus.broadcasted.toJson()));
-
-              if (coinIds != null && coinIds.isNotEmpty) {
-                expr = expr &
-                    tbl.coinId.isIn(coinIds) &
-                    tbl.networkId.isNotNull() &
-                    tbl.transferredAmount.isNotNull() &
-                    tbl.transferredAmountUsd.isNotNull();
-              }
-
-              if (walletAddress != null) {
-                expr = expr & tbl.senderWalletAddress.equals(walletAddress);
-              }
-
-              return expr;
-            },
-          ))
-        .join([
-      leftOuterJoin(
-        networksTable,
-        networksTable.id.equalsExp(transactionsTable.networkId),
-      ),
-      leftOuterJoin(
-        transactionCoinAlias,
-        transactionCoinAlias.id.equalsExp(transactionsTable.coinId),
-      ),
-      leftOuterJoin(
-        nativeCoinAlias,
-        nativeCoinAlias.id.equalsExp(transactionsTable.nativeCoinId),
-      ),
-    ]);
-
-    return query.watch().map(
-          (rows) => rows
-              .map(
-                (row) => _mapRowToDomainModel(
-                  row,
-                  nativeCoinAlias: nativeCoinAlias,
-                  transactionCoinAlias: transactionCoinAlias,
-                ),
-              )
-              .toList(),
+    return query.map(
+      (row) {
+        return _mapRowToDomainModel(
+          row,
+          nativeCoinAlias: nativeCoinAlias,
+          transactionCoinAlias: transactionCoinAlias,
         );
+      },
+    );
   }
 
-  Future<TransactionData?> getTransactionByTxHash(String txHash) {
-    final transactionCoinAlias = alias(coinsTable, 'transactionCoin');
-    final nativeCoinAlias = alias(coinsTable, 'nativeCoin');
+  /// Builds a where clause for transaction queries with common filters.
+  Expression<bool> _buildTransactionWhereClause(
+    $TransactionsTableTable tbl, {
+    List<String> coinIds = const [],
+    List<String> txHashes = const [],
+    List<String> walletAddresses = const [],
+    List<String> walletViewIds = const [],
+    List<String> externalHashes = const [],
+    List<TransactionStatus> statuses = const [],
+    String? symbol,
+    TransactionType? type,
+    String? networkId,
+    $CoinsTableTable? transactionCoinAlias,
+    DateTime? confirmedSince,
+  }) {
+    Expression<bool> expr = const Constant(true);
 
-    final query = (select(transactionsTable)..where((tbl) => tbl.txHash.equals(txHash))).join([
-      leftOuterJoin(
-        networksTable,
-        networksTable.id.equalsExp(transactionsTable.networkId),
-      ),
-      leftOuterJoin(
-        transactionCoinAlias,
-        transactionCoinAlias.id.equalsExp(transactionsTable.coinId),
-      ),
-      leftOuterJoin(
-        nativeCoinAlias,
-        nativeCoinAlias.id.equalsExp(transactionsTable.nativeCoinId),
-      ),
-    ]);
+    if (coinIds.isNotEmpty) {
+      expr = expr & tbl.coinId.isIn(coinIds);
+    }
 
-    return query
-        .map(
-          (row) => _mapRowToDomainModel(
-            row,
-            transactionCoinAlias: transactionCoinAlias,
-            nativeCoinAlias: nativeCoinAlias,
-          ),
-        )
-        .getSingleOrNull();
+    if (txHashes.isNotEmpty) {
+      expr = expr & tbl.txHash.isIn(txHashes);
+    }
+
+    if (externalHashes.isNotEmpty) {
+      expr = expr & tbl.externalHash.isIn(externalHashes);
+    }
+
+    if (walletViewIds.isNotEmpty) {
+      expr = expr & tbl.walletViewId.isIn(walletViewIds);
+    }
+
+    if (symbol != null && transactionCoinAlias != null) {
+      expr = expr & transactionCoinAlias.symbol.lower().equals(symbol.toLowerCase());
+    }
+
+    if (walletAddresses.isNotEmpty) {
+      expr = expr &
+          (tbl.receiverWalletAddress.isIn(walletAddresses) |
+              tbl.senderWalletAddress.isIn(walletAddresses));
+    }
+
+    if (networkId != null) {
+      expr = expr & tbl.networkId.equals(networkId);
+    }
+
+    if (statuses.isNotEmpty) {
+      final statusStrings = statuses.map((s) => s.toJson()).toList();
+      var statusExpr = tbl.status.isIn(statusStrings);
+
+      // Include null status if broadcasted is in the list (null is treated as broadcasted)
+      if (statuses.any((s) => s.isInProgress)) {
+        statusExpr = statusExpr | tbl.status.isNull();
+      }
+      expr = expr & statusExpr;
+    }
+
+    if (confirmedSince != null) {
+      expr = expr & tbl.dateConfirmed.isBiggerThanValue(confirmedSince);
+    }
+
+    if (type != null) {
+      expr = expr & tbl.type.equals(type.value);
+    }
+
+    return expr;
   }
 
   Stream<TransactionData?> watchTransactionByEventId(String eventId) async* {

@@ -1,5 +1,8 @@
 // SPDX-License-Identifier: ice License 1.0
 
+import 'dart:async';
+
+import 'package:collection/collection.dart';
 import 'package:ion/app/extensions/object.dart';
 import 'package:ion/app/features/wallets/data/repository/transactions_repository.m.dart';
 import 'package:ion/app/features/wallets/model/coin_in_wallet_data.f.dart';
@@ -8,6 +11,7 @@ import 'package:ion/app/features/wallets/model/coin_transaction_history_state.f.
 import 'package:ion/app/features/wallets/model/network_data.f.dart';
 import 'package:ion/app/features/wallets/model/transaction_crypto_asset.f.dart';
 import 'package:ion/app/features/wallets/model/transaction_data.f.dart';
+import 'package:ion/app/features/wallets/model/transaction_status.f.dart';
 import 'package:ion/app/features/wallets/providers/connected_crypto_wallets_provider.r.dart';
 import 'package:ion/app/features/wallets/providers/synced_coins_by_symbol_group_provider.r.dart';
 import 'package:ion/app/features/wallets/providers/wallet_view_data_provider.r.dart';
@@ -29,9 +33,32 @@ class CoinTransactionHistoryNotifier extends _$CoinTransactionHistoryNotifier {
   List<CoinTransactionData> _history = [];
   NetworkData? _network;
   var _offset = 0;
+  DateTime? _lastLoadTime;
+
+  StreamSubscription<List<TransactionData>>? _newTransactionsWatcher;
+  StreamSubscription<List<TransactionData>>? _inProgressTransactionsWatcher;
 
   @override
   Future<CoinTransactionHistoryState> build({required String symbolGroup}) async {
+    await _cancelWatchers();
+
+    try {
+      await _initializeData(symbolGroup);
+      final initialState = await _loadInitialTransactions();
+      await _startRealtimeWatching();
+
+      return initialState;
+    } catch (error, stackTrace) {
+      Logger.error('$_tag Failed to initialize: $error', stackTrace: stackTrace);
+      return const CoinTransactionHistoryState(
+        transactions: [],
+        isLoading: false,
+        hasMore: false,
+      );
+    }
+  }
+
+  Future<void> _initializeData(String symbolGroup) async {
     _walletViewId = await ref.watch(currentWalletViewIdProvider.future);
     _coins = await ref.watch(syncedCoinsBySymbolGroupProvider(symbolGroup).future);
     _coinWalletAddresses = await ref
@@ -46,50 +73,41 @@ class CoinTransactionHistoryNotifier extends _$CoinTransactionHistoryNotifier {
 
     _reset();
 
-    return _getStateWithNewPage();
+    ref.onDispose(() async {
+      await _cancelWatchers();
+    });
   }
 
   void _reset() {
-    Logger.warning('$_tag reset history, since notifier dependencies changed');
+    Logger.info('$_tag Resetting history due to dependency changes');
     _offset = 0;
     _history = [];
+    _lastLoadTime = null;
   }
 
-  Future<void> loadMore() async {
-    if (state.value?.hasMore ?? false) {
-      state = await AsyncValue.guard(_getStateWithNewPage);
-    }
+  Future<void> _cancelWatchers() async {
+    await _newTransactionsWatcher?.cancel();
+    await _inProgressTransactionsWatcher?.cancel();
+    _newTransactionsWatcher = null;
+    _inProgressTransactionsWatcher = null;
   }
 
-  bool _canLoadNextPage() {
-    if (_coinWalletAddresses.isEmpty) {
-      Logger.warning('$_tag wallet addresses list is empty');
-      return false;
-    }
-
-    return true;
-  }
-
-  Future<CoinTransactionHistoryState> _getStateWithNewPage() async {
-    if (!_canLoadNextPage()) {
-      return CoinTransactionHistoryState(
-        transactions: _history,
-        hasMore: false,
+  Future<CoinTransactionHistoryState> _loadInitialTransactions() async {
+    if (!_canLoadTransactions()) {
+      return const CoinTransactionHistoryState(
+        transactions: [],
         isLoading: false,
+        hasMore: false,
       );
     }
 
     final repository = await ref.read(transactionsRepositoryProvider.future);
-
-    final coinIds = _coins
-        .where((coin) => _network == null || coin.coin.network == _network)
-        .map((c) => c.coin.id)
-        .toList();
+    final coinIds = _getFilteredCoinIds();
 
     Logger.info(
-      '$_tag Load the next page of the history with the next params: '
-      'offset: $_offset, network: ${_network?.id}, walletViewId: $_walletViewId, coinIds: $coinIds, '
-      'coinWalletAddresses: $_coinWalletAddresses',
+      '$_tag Loading initial transactions with params: '
+      'offset: $_offset, network: ${_network?.id}, walletViewId: $_walletViewId, '
+      'coinIds: $coinIds, walletAddresses: $_coinWalletAddresses',
     );
 
     final transactions = await repository.getTransactions(
@@ -100,48 +118,184 @@ class CoinTransactionHistoryNotifier extends _$CoinTransactionHistoryNotifier {
       walletAddresses: _coinWalletAddresses,
     );
 
+    _lastLoadTime = DateTime.now();
     _processTransactions(transactions);
-    _logTransactionHistory();
 
     return CoinTransactionHistoryState(
-      isLoading: false,
       transactions: _history,
+      isLoading: false,
       hasMore: transactions.length >= _pageSize,
     );
+  }
+
+  Future<void> _startRealtimeWatching() async {
+    if (!_canLoadTransactions() || _lastLoadTime == null) return;
+
+    final repository = await ref.read(transactionsRepositoryProvider.future);
+    final coinIds = _getFilteredCoinIds();
+
+    // Stream 1: Watch for new transactions (both in-progress and confirmed) since initial load
+    _newTransactionsWatcher = repository
+        .watchTransactions(
+          coinIds: coinIds,
+          network: _network,
+          walletViewIds: [_walletViewId],
+          walletAddresses: _coinWalletAddresses,
+          statuses: [
+            ...TransactionStatus.inProgressStatuses,
+            TransactionStatus.confirmed,
+          ],
+          confirmedSince: _lastLoadTime,
+        )
+        .distinct((list1, list2) => const ListEquality<TransactionData>().equals(list1, list2))
+        .listen(_onTransactionsUpdated, onError: _onWatcherError);
+
+    // Stream 2: Watch for in-progress transaction status updates
+    _inProgressTransactionsWatcher = repository
+        .watchTransactions(
+          coinIds: coinIds,
+          network: _network,
+          walletViewIds: [_walletViewId],
+          walletAddresses: _coinWalletAddresses,
+          statuses: TransactionStatus.inProgressStatuses,
+          limit: 100, // 100 for rare cases, on average no more than 20 is expected
+        )
+        .distinct((list1, list2) => const ListEquality<TransactionData>().equals(list1, list2))
+        .listen(_onTransactionsUpdated, onError: _onWatcherError);
+
+    Logger.info('$_tag Started real-time watching for new and in-progress transactions');
+  }
+
+  void _onTransactionsUpdated(List<TransactionData> transactions) {
+    Logger.info('$_tag Received ${transactions.length} transaction updates');
+
+    var hasChanges = false;
+    final updatedHistory = List<CoinTransactionData>.from(_history);
+
+    for (final tx in transactions) {
+      if (!_isValidTransaction(tx, allowDuplicates: true)) continue;
+
+      final coinTransactionData = _convertToCoinTransactionData(tx);
+      if (coinTransactionData == null) continue;
+
+      // Check if transaction already exists
+      final existingIndex = updatedHistory
+          .indexWhere((h) => h.origin.txHash == tx.txHash || h.origin.txHash == tx.externalHash);
+
+      if (existingIndex >= 0) {
+        // Update existing transaction if status or data changed
+        final existingTx = updatedHistory[existingIndex];
+        if (_hasTransactionStatusChanged(existingTx, coinTransactionData)) {
+          updatedHistory[existingIndex] = coinTransactionData;
+          hasChanges = true;
+          Logger.info('$_tag Updated transaction: ${tx.txHash} -> ${tx.status}');
+        }
+      } else {
+        // Add new transaction
+        updatedHistory.insert(0, coinTransactionData);
+        hasChanges = true;
+        Logger.info('$_tag Added new transaction: ${tx.txHash} (${tx.status})');
+      }
+    }
+
+    if (hasChanges) {
+      // Sort to maintain chronological order (newest first)
+      updatedHistory.sort((a, b) => b.timestamp.compareTo(a.timestamp));
+      _history = updatedHistory;
+      _updateState();
+    }
+  }
+
+  bool _hasTransactionStatusChanged(CoinTransactionData existing, CoinTransactionData updated) {
+    return existing.origin.status != updated.origin.status;
+  }
+
+  void _onWatcherError(Object error, StackTrace stackTrace) {
+    Logger.error('$_tag Real-time transactions watcher error: $error', stackTrace: stackTrace);
+  }
+
+  Future<void> loadMore() async {
+    final currentState = state.value;
+    if (currentState == null || !currentState.hasMore || currentState.isLoading) {
+      return;
+    }
+
+    _updateState();
+
+    try {
+      final repository = await ref.read(transactionsRepositoryProvider.future);
+      final coinIds = _getFilteredCoinIds();
+
+      Logger.info('$_tag Loading more transactions from offset: $_offset');
+
+      final transactions = await repository.getTransactions(
+        offset: _offset,
+        network: _network,
+        walletViewIds: [_walletViewId],
+        coinIds: coinIds,
+        walletAddresses: _coinWalletAddresses,
+      );
+
+      _processTransactions(transactions);
+
+      _updateState(hasMore: transactions.length >= _pageSize);
+    } catch (error, stackTrace) {
+      Logger.error('$_tag Failed to load more transactions: $error', stackTrace: stackTrace);
+      _updateState();
+    }
+  }
+
+  List<String> _getFilteredCoinIds() {
+    return _coins
+        .where((coin) => _network == null || coin.coin.network == _network)
+        .map((c) => c.coin.id)
+        .toList();
+  }
+
+  bool _canLoadTransactions() {
+    if (_coinWalletAddresses.isEmpty) {
+      Logger.warning('$_tag Wallet addresses list is empty');
+      return false;
+    }
+    return true;
   }
 
   void _processTransactions(List<TransactionData> transactions) {
     _offset += transactions.length;
 
-    _history.addAll(
-      transactions.where(_isValidTransaction).map(
-        (t) {
-          final asset = t.cryptoAsset.as<CoinTransactionAsset>();
-          if (asset == null) {
-            Logger.warning('$_tag Unexpected null CoinTransactionAsset for transaction: ${t.id}');
-            return null;
-          }
+    final validTransactions = transactions
+        .where(_isValidTransaction)
+        .map(_convertToCoinTransactionData)
+        .nonNulls
+        .toList();
 
-          final timestamp = t.dateRequested ?? t.createdAtInRelay ?? t.dateConfirmed;
-          if (timestamp == null) {
-            Logger.warning('$_tag Unexpected null timestamp for transaction: ${t.id}');
-            return null;
-          }
+    _history.addAll(validTransactions);
+  }
 
-          return CoinTransactionData(
-            network: t.network,
-            transactionType: t.type,
-            coinAmount: asset.amount,
-            usdAmount: asset.amountUSD,
-            timestamp: timestamp.millisecondsSinceEpoch,
-            origin: t,
-          );
-        },
-      ).nonNulls,
+  CoinTransactionData? _convertToCoinTransactionData(TransactionData t) {
+    final asset = t.cryptoAsset.as<CoinTransactionAsset>();
+    if (asset == null) {
+      Logger.warning('$_tag Unexpected null CoinTransactionAsset for transaction: ${t.id}');
+      return null;
+    }
+
+    final timestamp = t.dateRequested ?? t.createdAtInRelay ?? t.dateConfirmed;
+    if (timestamp == null) {
+      Logger.warning('$_tag Unexpected null timestamp for transaction: ${t.id}');
+      return null;
+    }
+
+    return CoinTransactionData(
+      network: t.network,
+      transactionType: t.type,
+      coinAmount: asset.amount,
+      usdAmount: asset.amountUSD,
+      timestamp: timestamp.millisecondsSinceEpoch,
+      origin: t,
     );
   }
 
-  bool _isValidTransaction(TransactionData tx) {
+  bool _isValidTransaction(TransactionData tx, {bool allowDuplicates = false}) {
     if (tx.cryptoAsset is! CoinTransactionAsset) {
       Logger.warning('$_tag Ignored non-coin transaction: ${tx.txHash}');
       return false;
@@ -154,29 +308,23 @@ class CoinTransactionHistoryNotifier extends _$CoinTransactionHistoryNotifier {
       return false;
     }
 
-    if (_history.any((h) => h.origin.txHash == tx.txHash)) {
-      Logger.warning('$_tag Ignored duplicate transaction: ${tx.txHash}');
-      return false;
+    if (!allowDuplicates && _history.any((h) => h.origin.txHash == tx.txHash)) {
+      return false; // Skip duplicate without warning for real-time updates
     }
 
     return true;
   }
 
-  void _logTransactionHistory() {
-    final historyBuffer = StringBuffer();
-    for (final item in _history) {
-      final origin = item.origin;
-      historyBuffer.writeln(
-        'txHash: ${origin.txHash}, walletViewId: ${origin.walletViewId}, status: ${origin.status}, '
-        'amount: ${item.coinAmount}, type: ${item.transactionType.value}, id: ${origin.id}, '
-        'externalHash: ${origin.externalHash}, native coin: ${origin.nativeCoin?.abbreviation}, '
-        'userPubkey: ${origin.userPubkey}, network: ${item.network.id}, '
-        'dateRequested: ${origin.dateRequested}, createdAtInRelay: ${origin.createdAtInRelay} '
-        'dateConfirmed: ${origin.dateConfirmed}',
-      );
-    }
-    Logger.info(
-      '$_tag The next page of the history loaded. The full history information:\n$historyBuffer',
+  void _updateState({bool? hasMore}) {
+    final currentState = state.value;
+    if (currentState == null) return;
+
+    state = AsyncValue.data(
+      currentState.copyWith(
+        transactions: _history,
+        isLoading: false,
+        hasMore: hasMore ?? currentState.hasMore,
+      ),
     );
   }
 }
