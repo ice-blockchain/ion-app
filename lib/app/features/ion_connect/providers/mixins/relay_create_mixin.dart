@@ -5,6 +5,7 @@ import 'dart:io';
 
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/exceptions/exceptions.dart';
+import 'package:ion/app/features/core/providers/internet_status_stream_provider.r.dart';
 import 'package:ion/app/features/ion_connect/ion_connect.dart';
 import 'package:ion/app/features/user/providers/relays_reachability_provider.r.dart';
 
@@ -15,7 +16,7 @@ mixin RelayCreateMixin {
     final connectionState = await socket.connection.firstWhere(
       (state) => state is Connected || state is Reconnected || state is Disconnected,
     );
-    if (_isRelayUnreachable(connectionState)) {
+    if (_isRelayUnreachable(ref, connectionState)) {
       socket.close();
       await _updateRelayReachabilityInfo(ref, url);
       throw RelayUnreachableException(url);
@@ -24,25 +25,22 @@ mixin RelayCreateMixin {
     return relay;
   }
 
-  bool _isRelayUnreachable(ConnectionState connectionState) {
+  bool _isRelayUnreachable(Ref ref, ConnectionState connectionState) {
     if (connectionState is! Disconnected) {
       return false;
     }
-    final error = connectionState.error;
-    if (error == null || error is! SocketException) {
-      return false;
-    }
-    final osError = error.osError;
-    if (osError == null) {
-      return false;
-    }
-    return _unreachableRelayErrorCodes.contains(osError.errorCode);
-  }
 
-  List<int> get _unreachableRelayErrorCodes => [
-        8, // android connection refused
-        61, // ios connection refused
-      ];
+    final hasInternetConnection = ref.read(hasInternetConnectionProvider);
+    if (!hasInternetConnection) {
+      return false;
+    }
+
+    return switch (connectionState.error) {
+      final SocketException error when error.osError != null => true,
+      TimeoutException() => true,
+      _ => false,
+    };
+  }
 
   Future<void> _updateRelayReachabilityInfo(Ref ref, String url) async {
     final relayReachabilityInfo = ref.read(relayReachabilityProvider.notifier).get(url);
