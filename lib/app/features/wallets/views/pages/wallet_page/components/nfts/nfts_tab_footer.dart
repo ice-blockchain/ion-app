@@ -21,8 +21,8 @@ class NftsTabFooter extends ConsumerWidget {
         child: BottomAction(
           asset: tabType.bottomActionAsset,
           title: tabType.getBottomActionTitle(context),
-          onTap: () async {
-            await SelectNetworkToReceiveNftRoute().push<void>(ref.context);
+          onTap: () {
+            SelectNetworkToReceiveNftRoute().push<void>(ref.context);
           },
         ),
       ),
