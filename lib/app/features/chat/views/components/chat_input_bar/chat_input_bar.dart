@@ -16,17 +16,17 @@ import 'package:ion/app/features/chat/providers/messaging_bottom_bar_state_provi
 import 'package:ion/app/features/chat/recent_chats/providers/selected_edit_message_provider.r.dart';
 import 'package:ion/app/features/chat/recent_chats/providers/selected_reply_message_provider.r.dart';
 import 'package:ion/app/features/chat/views/components/chat_input_bar/chat_attach_menu.dart';
+import 'package:ion/app/features/chat/views/components/chat_input_bar/chat_blocked_user_bar.dart';
 import 'package:ion/app/features/chat/views/components/chat_input_bar/chat_input_bar_recording_overlay.dart';
 import 'package:ion/app/features/chat/views/components/chat_input_bar/components/action_button.dart';
 import 'package:ion/app/features/chat/views/components/chat_input_bar/components/chat_attachment_menu_switch_button.dart';
 import 'package:ion/app/features/chat/views/components/chat_input_bar/components/chat_input_bar_camera_button.dart';
 import 'package:ion/app/features/chat/views/components/chat_input_bar/components/chat_text_field.dart';
 import 'package:ion/app/features/chat/views/components/chat_input_bar/components/text_message_limit_label.dart';
+import 'package:ion/app/features/user_block/providers/block_list_notifier.r.dart';
 import 'package:ion/app/hooks/use_on_init.dart';
 import 'package:ion/app/services/compressors/audio_compressor.r.dart';
 import 'package:ion/app/services/media_service/media_service.m.dart';
-
-const nenuHeight = 264.0;
 
 class ChatInputBar extends HookConsumerWidget {
   const ChatInputBar({
@@ -49,10 +49,13 @@ class ChatInputBar extends HookConsumerWidget {
     final isAttachMenuShown = ref.watch(attachMenuShownProvider);
     final editMessage = ref.watch(selectedEditMessageProvider);
     final repliedMessage = ref.watch(selectedReplyMessageProvider);
+    final isBlocked =
+        ref.watch(isBlockedNotifierProvider(receiverMasterPubkey)).valueOrNull ?? true;
 
     final isTogglingBottomView = useRef(false);
     final recordedMediaFile = useState<MediaFile?>(null);
     final isTextLimitReached = useState<bool>(false);
+    final hasText = useState<bool>(false);
     final isKeyboardVisible = useState(false);
     final cachePadding = useState<double>(0);
 
@@ -71,6 +74,7 @@ class ChatInputBar extends HookConsumerWidget {
     useEffect(
       () {
         void onTextChanged() {
+          hasText.value = textFieldController.text.trim().isNotEmpty;
           if (conversationId != null) {
             ref.read(draftMessageProvider(conversationId!).notifier).draftMessage =
                 textFieldController.text;
@@ -131,6 +135,12 @@ class ChatInputBar extends HookConsumerWidget {
       },
       [textFieldFocusNode, isAttachMenuShown, isKeyboardVisible.value, isTogglingBottomView],
     );
+
+    if (isBlocked) {
+      return ChatBlockedUserBar(
+        receiverMasterPubkey: receiverMasterPubkey,
+      );
+    }
 
     final double bottomPadding = max(
       MediaQuery.viewInsetsOf(context).bottom - MediaQuery.viewPaddingOf(context).bottom,
@@ -196,12 +206,7 @@ class ChatInputBar extends HookConsumerWidget {
                     textFieldFocusNode: textFieldFocusNode,
                     onSubmitted: onSubmitted,
                   ),
-                  Column(
-                    children: [
-                      TextMessageLimitLabel(textEditingController: textFieldController),
-                      ChatInputBarCameraButton(onSubmitted: onSubmitted),
-                    ],
-                  ),
+                  if (!hasText.value) ChatInputBarCameraButton(onSubmitted: onSubmitted),
                   ActionButton(
                     textFieldController: textFieldController,
                     recorderController: voiceRecorderController.value,
@@ -224,6 +229,7 @@ class ChatInputBar extends HookConsumerWidget {
                   ),
                 ],
               ),
+              TextMessageLimitLabel(textEditingController: textFieldController),
               ChatInputBarRecordingOverlay(
                 onRecordingFinished: (mediaFile) async {
                   if (recordedMediaFile.value == null) {
@@ -250,9 +256,7 @@ class ChatInputBar extends HookConsumerWidget {
             width: double.infinity,
             height: bottomViewInset,
             child: ChatAttachMenu(
-              onSubmitted: ({content, mediaFiles}) {
-                return Future.value();
-              },
+              onSubmitted: onSubmitted,
               receiverPubKey: receiverMasterPubkey,
             ),
           ),
