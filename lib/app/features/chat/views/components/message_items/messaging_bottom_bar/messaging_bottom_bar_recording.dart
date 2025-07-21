@@ -28,10 +28,17 @@ class BottomBarRecordingView extends HookConsumerWidget {
   final RecorderController recorderController;
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final bottomBarState = ref.watch(messagingBottomBarActiveStateProvider);
-    final duration = useState('00:00');
+    final voiceRecordingState = ref.watch(voiceRecordingActiveStateProvider);
+    final duration = useState<Duration>(Duration.zero);
     final previousDuration = useRef<Duration>(Duration.zero);
     final audioPath = useState<String?>(null);
+
+    ref.listen(voiceRecordingActiveStateProvider, (_, state) {
+      if (state.isIdle) {
+        previousDuration.value = Duration.zero;
+        audioPath.value = null;
+      }
+    });
 
     useEffect(
       () {
@@ -44,10 +51,10 @@ class BottomBarRecordingView extends HookConsumerWidget {
         });
 
         final durationSubscription = recorderController.onCurrentDuration.listen((currentDuration) {
-          duration.value = formatDuration(currentDuration + previousDuration.value);
+          duration.value = currentDuration + previousDuration.value;
           if (currentDuration.inSeconds ==
               ReplaceablePrivateDirectMessageData.audioMessageDurationLimitInSeconds) {
-            ref.read(messagingBottomBarActiveStateProvider.notifier).setVoicePaused();
+            ref.read(voiceRecordingActiveStateProvider.notifier).pause();
             return;
           }
         });
@@ -64,7 +71,7 @@ class BottomBarRecordingView extends HookConsumerWidget {
 
     useEffect(
       () {
-        if (bottomBarState.isVoicePaused) {
+        if (voiceRecordingState.isPaused) {
           recorderController.stop().then((path) async {
             if (path == null) {
               return;
@@ -79,25 +86,29 @@ class BottomBarRecordingView extends HookConsumerWidget {
         }
         return null;
       },
-      [bottomBarState],
+      [voiceRecordingState],
     );
+
+    if (voiceRecordingState.isIdle) {
+      return const SizedBox.shrink();
+    }
 
     return Container(
       color: context.theme.appColors.onPrimaryAccent,
       constraints: BoxConstraints(
-        minHeight: 48.0.s,
+        minHeight: 32.0.s,
       ),
-      width: double.infinity,
+      width: MediaQuery.sizeOf(context).width - 62.0.s,
       child: Row(
         children: [
-          if (bottomBarState.isVoicePaused) ...[
+          if (voiceRecordingState.isPaused) ...[
             DeleteAudioButton(
               onPressed: onCancelled,
             ),
             SizedBox(width: 6.0.s),
             if (audioPath.value != null)
               VoiceMessagePreviewTile(
-                duration: duration.value,
+                duration: formatDuration(duration.value),
                 path: audioPath.value!,
               ),
           ] else ...[
@@ -105,9 +116,8 @@ class BottomBarRecordingView extends HookConsumerWidget {
             const Spacer(),
             const RecordingRedIndicator(),
             SizedBox(width: 4.0.s),
-            DurationText(duration: duration.value),
+            DurationText(duration: formatDuration(duration.value)),
           ],
-          SizedBox(width: 62.0.s),
         ],
       ),
     );

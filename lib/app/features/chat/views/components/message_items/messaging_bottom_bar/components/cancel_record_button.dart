@@ -21,7 +21,7 @@ class CancelRecordButton extends ConsumerWidget {
       child: GestureDetector(
         onTap: () {
           recorderController.stop();
-          ref.read(messagingBottomBarActiveStateProvider.notifier).setText();
+          ref.invalidate(voiceRecordingActiveStateProvider);
         },
         child: Text(
           'Cancel',

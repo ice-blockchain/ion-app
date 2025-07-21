@@ -1,38 +1,27 @@
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:ion/app/extensions/extensions.dart';
+import 'package:ion/app/features/chat/providers/attach_menu_shown_notifier.r.dart';
+import 'package:ion/generated/assets.gen.dart';
 
 class ChatAttachmentMenuSwitchButton extends HookConsumerWidget {
-  const ChatAttachmentMenuSwitchButton({super.key});
+  const ChatAttachmentMenuSwitchButton({required this.onTap, super.key});
+
+  final VoidCallback onTap;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    //  return  if (showMenu.value)
-    //               GestureDetector(
-    //                 onTap: () async {
-    //                   onDefaultMode();
-    //                 },
-    //                 child: Padding(
-    //                   padding: EdgeInsets.all(4.0.s),
-    //                   child: Assets.svg.iconChatKeyboard.icon(
-    //                     color: context.theme.appColors.primaryText,
-    //                     size: 24.0.s,
-    //                   ),
-    //                 ),
-    //               )
-    //             else
-    //               GestureDetector(
-    //                 onTap: () async {
-    //                   menuMode();
-    //                 },
-    //                 child: Padding(
-    //                   padding: EdgeInsets.all(4.0.s),
-    //                   child: Assets.svg.iconChatAttatch.icon(
-    //                     color: context.theme.appColors.primaryText,
-    //                     size: 24.0.s,
-    //                   ),
-    //                 ),
-    //               ),
+    final isAttachMenuShown = ref.watch(attachMenuShownProvider);
 
-    return Container();
+    return GestureDetector(
+      onTap: onTap,
+      child: Padding(
+        padding: EdgeInsets.all(4.0.s),
+        child: (isAttachMenuShown ? Assets.svg.iconChatKeyboard : Assets.svg.iconChatAttatch).icon(
+          color: context.theme.appColors.primaryText,
+          size: 24.0.s,
+        ),
+      ),
+    );
   }
 }

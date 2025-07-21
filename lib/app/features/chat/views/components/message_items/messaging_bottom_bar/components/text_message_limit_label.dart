@@ -5,7 +5,6 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/chat/e2ee/model/entities/private_direct_message_data.f.dart';
-import 'package:ion/app/features/chat/providers/messaging_bottom_bar_state_provider.r.dart';
 
 class TextMessageLimitLabel extends HookConsumerWidget {
   const TextMessageLimitLabel({
@@ -17,7 +16,6 @@ class TextMessageLimitLabel extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final bottomBarState = ref.watch(messagingBottomBarActiveStateProvider);
     final exceededLimit = useState<int>(0);
 
     useEffect(
@@ -33,7 +31,7 @@ class TextMessageLimitLabel extends HookConsumerWidget {
       [textEditingController],
     );
 
-    if (exceededLimit.value > 0 && bottomBarState.isHasText) {
+    if (exceededLimit.value > 0) {
       return PositionedDirectional(
         top: 8.0.s,
         end: 15.0.s,

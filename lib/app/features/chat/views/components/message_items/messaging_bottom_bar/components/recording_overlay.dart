@@ -19,7 +19,7 @@ class RecordingOverlay extends ConsumerWidget {
   final Future<void> Function() onResumeRecording;
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final bottomBarState = ref.watch(messagingBottomBarActiveStateProvider);
+    final voiceRecordingState = ref.watch(voiceRecordingActiveStateProvider);
 
     return PositionedDirectional(
       bottom: MediaQuery.of(context).viewInsets.bottom + 8.0.s,
@@ -37,10 +37,10 @@ class RecordingOverlay extends ConsumerWidget {
             mainAxisSize: MainAxisSize.min,
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              if (bottomBarState.isVoiceLocked)
+              if (voiceRecordingState.isLocked)
                 GestureDetector(
                   onTap: () {
-                    ref.read(messagingBottomBarActiveStateProvider.notifier).setVoicePaused();
+                    ref.read(voiceRecordingActiveStateProvider.notifier).pause();
                   },
                   child: Padding(
                     padding: EdgeInsetsDirectional.only(top: 8.0.s),
@@ -50,7 +50,7 @@ class RecordingOverlay extends ConsumerWidget {
                     ),
                   ),
                 )
-              else if (bottomBarState.isVoicePaused)
+              else if (voiceRecordingState.isPaused)
                 GestureDetector(
                   onTap: onResumeRecording,
                   child: Padding(
@@ -87,7 +87,7 @@ class RecordingOverlay extends ConsumerWidget {
                   color: context.theme.appColors.primaryAccent,
                   borderRadius: BorderRadius.circular(12.0.s),
                 ),
-                child: bottomBarState.isVoicePaused
+                child: voiceRecordingState.isPaused
                     ? GestureDetector(
                         onTap: onSubmitted,
                         child: Assets.svg.iconChatSendmessage.icon(

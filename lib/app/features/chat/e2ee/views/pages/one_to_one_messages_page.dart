@@ -97,7 +97,11 @@ class OneToOneMessagesPage extends HookConsumerWidget {
             _MessagesList(conversationId: conversationId.value),
             const EditMessageInfo(),
             const RepliedMessageInfo(),
-            const ChatInputBar(),
+            ChatInputBar(
+              onSubmitted: onSubmitted,
+              receiverMasterPubkey: receiverMasterPubkey,
+              conversationId: conversationId.value,
+            ),
           ],
         ),
       ),

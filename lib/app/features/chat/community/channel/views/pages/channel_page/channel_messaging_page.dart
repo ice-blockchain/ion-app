@@ -18,6 +18,7 @@ import 'package:ion/app/features/chat/community/view/components/community_member
 import 'package:ion/app/features/chat/components/messaging_header/messaging_header.dart';
 import 'package:ion/app/features/chat/model/database/chat_database.m.dart';
 import 'package:ion/app/features/chat/providers/conversation_messages_provider.r.dart';
+import 'package:ion/app/features/chat/views/components/chat_input_bar/chat_input_bar.dart';
 import 'package:ion/app/features/chat/views/components/message_items/components.dart';
 import 'package:ion/app/features/feed/create_post/model/create_post_option.dart';
 import 'package:ion/app/features/feed/create_post/providers/create_post_notifier.m.dart';
@@ -141,7 +142,7 @@ class _ActionButton extends HookConsumerWidget {
     }
 
     if (canPost) {
-      return MessagingBottomBar(
+      return ChatInputBar(
         receiverMasterPubkey: '', //TODO: set when channels are impl
         onSubmitted: ({content, mediaFiles}) async {
           await ref.read(createPostNotifierProvider(CreatePostOption.community).notifier).create(

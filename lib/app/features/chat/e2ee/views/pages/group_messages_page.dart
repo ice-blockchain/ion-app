@@ -15,7 +15,7 @@ import 'package:ion/app/features/chat/e2ee/views/components/e2ee_conversation_em
 import 'package:ion/app/features/chat/e2ee/views/components/one_to_one_messages_list.dart';
 import 'package:ion/app/features/chat/model/database/chat_database.m.dart';
 import 'package:ion/app/features/chat/providers/conversation_messages_provider.r.dart';
-import 'package:ion/app/features/chat/views/components/message_items/messaging_bottom_bar/messaging_bottom_bar.dart';
+import 'package:ion/app/features/chat/views/components/chat_input_bar/chat_input_bar.dart';
 import 'package:ion/app/features/ion_connect/ion_connect.dart';
 import 'package:ion/app/services/media_service/media_encryption_service.m.dart';
 
@@ -48,7 +48,7 @@ class GroupMessagesPage extends HookConsumerWidget {
           children: [
             _Header(lastMessage: lastMessage),
             _MessagesList(conversationId: conversationId),
-            MessagingBottomBar(
+            ChatInputBar(
               receiverMasterPubkey: '', //TODO: set when groups are impl
               conversationId: conversationId,
               onSubmitted: ({content, mediaFiles}) async {

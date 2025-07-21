@@ -7,8 +7,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:ion/app/extensions/extensions.dart';
-import 'package:ion/app/features/chat/model/messaging_bottom_bar_state.dart';
 import 'package:ion/app/features/chat/providers/messaging_bottom_bar_state_provider.r.dart';
 import 'package:ion/app/features/chat/views/components/message_items/messaging_bottom_bar/components/components.dart';
 import 'package:ion/app/features/core/permissions/data/models/permissions_types.dart';
@@ -16,24 +14,40 @@ import 'package:ion/app/features/core/permissions/providers/permissions_provider
 
 class ActionButton extends HookConsumerWidget {
   const ActionButton({
-    required this.controller,
+    required this.textFieldController,
     required this.onSubmitted,
     required this.recorderController,
-    required this.paddingBottom,
     super.key,
   });
 
-  final TextEditingController controller;
+  final TextEditingController textFieldController;
   final Future<void> Function()? onSubmitted;
   final RecorderController recorderController;
-  final double paddingBottom;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final bottomBarState = ref.watch(messagingBottomBarActiveStateProvider);
+    final isRecordingCancelled = useRef<bool>(false);
     final paddingBottom = useState<double>(0);
+    final hasText = useState<bool>(false);
+    final voiceRecordingState = ref.watch(voiceRecordingActiveStateProvider);
+
+    useEffect(
+      () {
+        void onTextChanged() {
+          hasText.value = textFieldController.text.trim().isNotEmpty;
+        }
+
+        textFieldController.addListener(onTextChanged);
+
+        return () {
+          textFieldController.removeListener(onTextChanged);
+        };
+      },
+      [],
+    );
+
     final onSend = useCallback(() async {
-      ref.read(messagingBottomBarActiveStateProvider.notifier).setText();
+      ref.invalidate(voiceRecordingActiveStateProvider);
       await onSubmitted?.call();
     });
 
@@ -44,81 +58,72 @@ class ActionButton extends HookConsumerWidget {
       [recorderController],
     );
 
-    final isRecordingCancelled = useRef<bool>(false);
-
     Widget subButton() {
-      switch (bottomBarState) {
-        case MessagingBottomBarState.hasText:
-          return SendButton(
-            onSend: onSend,
-            disabled: onSubmitted == null,
-          );
-        case MessagingBottomBarState.voicePaused:
-        case MessagingBottomBarState.voice:
-        case MessagingBottomBarState.voiceLocked:
-          return AudioRecordingButton(
-            paddingBottom: paddingBottom.value,
-            onSubmitted: onSend,
-            onResumeRecording: () async {
-              ref.read(messagingBottomBarActiveStateProvider.notifier).setVoiceLocked();
-              await startRecording();
-            },
-          );
-        case MessagingBottomBarState.text:
-        case MessagingBottomBarState.more:
-          return const AudioRecordButton();
+      if (hasText.value) {
+        return SendButton(
+          onSend: onSend,
+          disabled: onSubmitted == null,
+        );
+      } else if (!voiceRecordingState.isIdle) {
+        return AudioRecordingButton(
+          paddingBottom: paddingBottom.value,
+          onSubmitted: onSend,
+          onResumeRecording: () async {
+            ref.read(voiceRecordingActiveStateProvider.notifier).lock();
+            await startRecording();
+          },
+        );
+      } else {
+        return const AudioRecordButton();
       }
     }
 
-    return PositionedDirectional(
-      bottom: 8.0.s + (bottomBarState.isMore ? moreContentHeight : 0),
-      end: 12.0.s,
-      child: GestureDetector(
-        onLongPressStart: (details) async {
-          if (!bottomBarState.isVoice) {
-            await ref.read(permissionsProvider.notifier).checkPermission(Permission.microphone);
-            final status = ref.read(
-              permissionsProvider.select((value) => value.permissions[Permission.microphone]),
+    return GestureDetector(
+      onLongPressStart: (details) async {
+        if (!hasText.value) {
+          await ref.read(permissionsProvider.notifier).checkPermission(Permission.microphone);
+          final status = ref.read(
+            permissionsProvider.select((value) => value.permissions[Permission.microphone]),
+          );
+          if (status == PermissionStatus.granted) {
+            isRecordingCancelled.value = false;
+            await startRecording();
+            if (isRecordingCancelled.value) {
+              ref.invalidate(voiceRecordingActiveStateProvider);
+              await recorderController.stop();
+              return;
+            }
+            ref.read(voiceRecordingActiveStateProvider.notifier).start();
+            unawaited(HapticFeedback.lightImpact());
+          } else {
+            unawaited(
+              ref.read(permissionsProvider.notifier).requestPermission(Permission.microphone),
             );
-            if (status == PermissionStatus.granted) {
-              isRecordingCancelled.value = false;
-              await startRecording();
-              if (isRecordingCancelled.value) {
-                await recorderController.stop();
-                return;
-              }
-              ref.read(messagingBottomBarActiveStateProvider.notifier).setVoice();
-              unawaited(HapticFeedback.lightImpact());
-            } else {
-              unawaited(
-                ref.read(permissionsProvider.notifier).requestPermission(Permission.microphone),
-              );
-            }
           }
-        },
-        onLongPressMoveUpdate: (details) {
-          if (details.localOffsetFromOrigin.dy < 0) {
-            paddingBottom.value = details.localOffsetFromOrigin.dy * -1;
-          } else {
+        }
+      },
+      onLongPressMoveUpdate: (details) {
+        if (details.localOffsetFromOrigin.dy < 0) {
+          paddingBottom.value = details.localOffsetFromOrigin.dy * -1;
+        } else {
+          paddingBottom.value = 0;
+        }
+      },
+      onLongPressEnd: (details) {
+        if (recorderController.elapsedDuration > Duration.zero) {
+          if (paddingBottom.value > 20) {
+            ref.read(voiceRecordingActiveStateProvider.notifier).lock();
             paddingBottom.value = 0;
-          }
-        },
-        onLongPressEnd: (details) {
-          if (recorderController.elapsedDuration > Duration.zero) {
-            if (paddingBottom.value > 20) {
-              ref.read(messagingBottomBarActiveStateProvider.notifier).setVoiceLocked();
-              paddingBottom.value = 0;
-            } else {
-              ref.read(messagingBottomBarActiveStateProvider.notifier).setVoicePaused();
-            }
           } else {
-            isRecordingCancelled.value = true;
+            ref.read(voiceRecordingActiveStateProvider.notifier).pause();
           }
-        },
-        child: AbsorbPointer(
-          absorbing: bottomBarState.isVoiceLocked,
-          child: subButton(),
-        ),
+        } else {
+          isRecordingCancelled.value = true;
+        }
+      },
+      child: AbsorbPointer(
+        absorbing: ref.watch(voiceRecordingActiveStateProvider).isLocked,
+        child: subButton(),
       ),
     );
   }
