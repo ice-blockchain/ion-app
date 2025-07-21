@@ -25,21 +25,32 @@ class AppTextThemesExtension extends ThemeExtension<AppTextThemesExtension> {
   factory AppTextThemesExtension.fromTemplate(TemplateTextThemes textThemes) {
     final defaults = AppTextThemesExtension.defaultTextThemes();
     return AppTextThemesExtension(
-      headline1: TemplateTextStyle.fromTemplate(textThemes.headline1, defaultStyle: defaults.headline1),
-      headline2: TemplateTextStyle.fromTemplate(textThemes.headline2, defaultStyle: defaults.headline2),
+      headline1:
+          TemplateTextStyle.fromTemplate(textThemes.headline1, defaultStyle: defaults.headline1),
+      headline2:
+          TemplateTextStyle.fromTemplate(textThemes.headline2, defaultStyle: defaults.headline2),
       title: TemplateTextStyle.fromTemplate(textThemes.title, defaultStyle: defaults.title),
-      subtitle: TemplateTextStyle.fromTemplate(textThemes.subtitle, defaultStyle: defaults.subtitle),
-      subtitle2: TemplateTextStyle.fromTemplate(textThemes.subtitle2, defaultStyle: defaults.subtitle2),
-      subtitle3: TemplateTextStyle.fromTemplate(textThemes.subtitle3, defaultStyle: defaults.subtitle3),
+      subtitle:
+          TemplateTextStyle.fromTemplate(textThemes.subtitle, defaultStyle: defaults.subtitle),
+      subtitle2:
+          TemplateTextStyle.fromTemplate(textThemes.subtitle2, defaultStyle: defaults.subtitle2),
+      subtitle3:
+          TemplateTextStyle.fromTemplate(textThemes.subtitle3, defaultStyle: defaults.subtitle3),
       body: TemplateTextStyle.fromTemplate(textThemes.body, defaultStyle: defaults.body),
       body2: TemplateTextStyle.fromTemplate(textThemes.body2, defaultStyle: defaults.body2),
       caption: TemplateTextStyle.fromTemplate(textThemes.caption, defaultStyle: defaults.caption),
-      caption2: TemplateTextStyle.fromTemplate(textThemes.caption2, defaultStyle: defaults.caption2),
-      caption3: TemplateTextStyle.fromTemplate(textThemes.caption3, defaultStyle: defaults.caption3),
-      caption4: TemplateTextStyle.fromTemplate(textThemes.caption4, defaultStyle: defaults.caption4),
-      caption5: TemplateTextStyle.fromTemplate(textThemes.caption5, defaultStyle: defaults.caption5),
-      caption6: TemplateTextStyle.fromTemplate(textThemes.caption6, defaultStyle: defaults.caption6),
-      notificationCaption: TemplateTextStyle.fromTemplate(textThemes.notificationCaption, defaultStyle: defaults.notificationCaption),
+      caption2:
+          TemplateTextStyle.fromTemplate(textThemes.caption2, defaultStyle: defaults.caption2),
+      caption3:
+          TemplateTextStyle.fromTemplate(textThemes.caption3, defaultStyle: defaults.caption3),
+      caption4:
+          TemplateTextStyle.fromTemplate(textThemes.caption4, defaultStyle: defaults.caption4),
+      caption5:
+          TemplateTextStyle.fromTemplate(textThemes.caption5, defaultStyle: defaults.caption5),
+      caption6:
+          TemplateTextStyle.fromTemplate(textThemes.caption6, defaultStyle: defaults.caption6),
+      notificationCaption: TemplateTextStyle.fromTemplate(textThemes.notificationCaption,
+          defaultStyle: defaults.notificationCaption),
     );
   }
 
