@@ -17,8 +17,8 @@ import 'package:ion/app/features/chat/providers/conversation_messages_provider.r
 import 'package:ion/app/features/chat/providers/exist_chat_conversation_id_provider.r.dart';
 import 'package:ion/app/features/chat/recent_chats/providers/selected_edit_message_provider.r.dart';
 import 'package:ion/app/features/chat/recent_chats/providers/selected_reply_message_provider.r.dart';
+import 'package:ion/app/features/chat/views/components/chat_input_bar/chat_input_bar.dart';
 import 'package:ion/app/features/chat/views/components/message_items/edit_message_info/edit_message_info.dart';
-import 'package:ion/app/features/chat/views/components/message_items/messaging_bottom_bar/messaging_bottom_bar.dart';
 import 'package:ion/app/features/chat/views/components/message_items/replied_message_info/replied_message_info.dart';
 import 'package:ion/app/features/user_profile/providers/user_profile_sync_provider.r.dart';
 import 'package:ion/app/hooks/use_on_init.dart';
@@ -85,7 +85,9 @@ class OneToOneMessagesPage extends HookConsumerWidget {
 
     return Scaffold(
       backgroundColor: context.theme.appColors.secondaryBackground,
+      resizeToAvoidBottomInset: false,
       body: SafeArea(
+        maintainBottomViewPadding: true,
         child: Column(
           children: [
             _Header(
@@ -95,10 +97,10 @@ class OneToOneMessagesPage extends HookConsumerWidget {
             _MessagesList(conversationId: conversationId.value),
             const EditMessageInfo(),
             const RepliedMessageInfo(),
-            MessagingBottomBar(
+            ChatInputBar(
               onSubmitted: onSubmitted,
-              conversationId: conversationId.value,
               receiverMasterPubkey: receiverMasterPubkey,
+              conversationId: conversationId.value,
             ),
           ],
         ),
@@ -140,17 +142,14 @@ class _MessagesList extends ConsumerWidget {
         ref.watch(conversationMessagesProvider(conversationId!, ConversationType.oneToOne));
 
     return Expanded(
-      child: GestureDetector(
-        onTap: FocusManager.instance.primaryFocus?.unfocus,
-        child: messages.maybeWhen(
-          data: (messages) {
-            if (messages.isEmpty) {
-              return const E2eeConversationEmptyView();
-            }
-            return OneToOneMessageList(messages);
-          },
-          orElse: E2eeConversationEmptyView.new,
-        ),
+      child: messages.maybeWhen(
+        data: (messages) {
+          if (messages.isEmpty) {
+            return const E2eeConversationEmptyView();
+          }
+          return OneToOneMessageList(messages);
+        },
+        orElse: E2eeConversationEmptyView.new,
       ),
     );
   }

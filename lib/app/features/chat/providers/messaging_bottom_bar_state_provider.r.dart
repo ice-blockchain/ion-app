@@ -1,38 +1,37 @@
 // SPDX-License-Identifier: ice License 1.0
 
-import 'package:ion/app/features/chat/model/messaging_bottom_bar_state.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'messaging_bottom_bar_state_provider.r.g.dart';
 
+enum VoiceRecordingState {
+  idle,
+  started,
+  locked,
+  paused;
+
+  bool get isIdle => this == VoiceRecordingState.idle;
+  bool get isStarted => this == VoiceRecordingState.started;
+  bool get isLocked => this == VoiceRecordingState.locked;
+  bool get isPaused => this == VoiceRecordingState.paused;
+}
+
 @riverpod
-class MessagingBottomBarActiveState extends _$MessagingBottomBarActiveState {
+class VoiceRecordingActiveState extends _$VoiceRecordingActiveState {
   @override
-  MessagingBottomBarState build() {
-    return MessagingBottomBarState.text;
+  VoiceRecordingState build() {
+    return VoiceRecordingState.idle;
   }
 
-  void setVoice() {
-    state = MessagingBottomBarState.voice;
+  void start() {
+    state = VoiceRecordingState.started;
   }
 
-  void setText() {
-    state = MessagingBottomBarState.text;
+  void lock() {
+    state = VoiceRecordingState.locked;
   }
 
-  void setMore() {
-    state = MessagingBottomBarState.more;
-  }
-
-  void setHasText() {
-    state = MessagingBottomBarState.hasText;
-  }
-
-  void setVoiceLocked() {
-    state = MessagingBottomBarState.voiceLocked;
-  }
-
-  void setVoicePaused() {
-    state = MessagingBottomBarState.voicePaused;
+  void pause() {
+    state = VoiceRecordingState.paused;
   }
 }

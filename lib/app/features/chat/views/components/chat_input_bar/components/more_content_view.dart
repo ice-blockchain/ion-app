@@ -34,11 +34,10 @@ class MoreContentView extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    return Container(
-      height: moreContentHeight,
-      width: double.infinity,
+    return ColoredBox(
       color: context.theme.appColors.secondaryBackground,
       child: Column(
+        mainAxisSize: MainAxisSize.min,
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Row(
