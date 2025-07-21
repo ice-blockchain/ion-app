@@ -41,7 +41,7 @@ void main() {
       expect(find.text('8'), findsOneWidget);
     });
 
-    testWidgets('shows empty string when reposts count is null', (tester) async {
+    testWidgets('shows 0 when reposts count is null', (tester) async {
       await tester.pumpWithHarness(
         childBuilder: (_) => const RepostsCounterButton(eventReference: eventReference),
         overrides: [
@@ -53,8 +53,7 @@ void main() {
 
       await tester.pumpAndSettle();
 
-      expect(find.text('0'), findsNothing);
-      expect(find.textContaining(RegExp(r'\d')), findsNothing);
+      expect(find.text('0'), findsOneWidget);
     });
 
     testWidgets('shows active state when reposted by me', (tester) async {
@@ -89,7 +88,7 @@ void main() {
 
       streamController.add(null);
       await tester.pumpAndSettle();
-      expect(find.text('0'), findsNothing);
+      expect(find.text('0'), findsOneWidget);
 
       streamController.add(PostRepostFactory.createNotReposted(repostsCount: 1));
       await tester.pumpAndSettle();
@@ -114,7 +113,7 @@ void main() {
         ],
       );
 
-      expect(find.textContaining(RegExp(r'\d')), findsNothing);
+      expect(find.text('0'), findsOneWidget);
     });
 
     testWidgets('shows count from initial async load', (tester) async {
@@ -137,7 +136,7 @@ void main() {
         ],
       );
 
-      expect(find.textContaining(RegExp(r'\d')), findsNothing);
+      expect(find.text('0'), findsOneWidget);
 
       await tester.pump(const Duration(milliseconds: 150));
       await tester.pumpAndSettle();
@@ -159,7 +158,7 @@ void main() {
 
       streamController.add(null);
       await tester.pumpAndSettle();
-      expect(find.textContaining(RegExp(r'\d')), findsNothing);
+      expect(find.text('0'), findsOneWidget);
 
       streamController.add(PostRepostFactory.createReposted());
       await tester.pumpAndSettle();
@@ -169,7 +168,7 @@ void main() {
       await streamController.close();
     });
 
-    testWidgets('does not show counter when both reposts and quotes are zero', (tester) async {
+    testWidgets('shows 0 when both reposts and quotes are zero', (tester) async {
       final postRepost = PostRepostFactory.create();
 
       await tester.pumpWithHarness(
@@ -183,8 +182,7 @@ void main() {
 
       await tester.pumpAndSettle();
 
-      expect(find.textContaining(RegExp(r'\d')), findsNothing);
-      expect(find.text('0'), findsNothing);
+      expect(find.text('0'), findsOneWidget);
     });
   });
 }

@@ -9,7 +9,7 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 part 'reposts_count_provider.r.g.dart';
 
 @riverpod
-int? repostsCount(Ref ref, EventReference eventReference) {
+int repostsCount(Ref ref, EventReference eventReference) {
   // First, always check cache for counter data
   final counts = ref.watch(repostCountsFromCacheProvider(eventReference));
   final cacheCount = counts.repostsCount + counts.quotesCount;
@@ -20,10 +20,9 @@ int? repostsCount(Ref ref, EventReference eventReference) {
 
   // If we have optimistic data, use it (it includes pending operations)
   if (optimisticData != null) {
-    final totalCount = optimisticData.totalRepostsCount;
-    return totalCount > 0 ? totalCount : null;
+    return optimisticData.totalRepostsCount;
   }
 
   // Otherwise, use cache count
-  return cacheCount > 0 ? cacheCount : null;
+  return cacheCount;
 }
