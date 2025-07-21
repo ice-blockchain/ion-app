@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: ice License 1.0
+
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'attach_menu_shown_notifier.r.g.dart';
