@@ -12,6 +12,8 @@ class FeedImagesCacheManager {
     final config = Config(
       key,
       fileService: LimitedConcurrentHttpFileService(concurrentFetches: maxConcurrentDownloads),
+      stalePeriod: const Duration(days: 1),
+      maxNrOfCacheObjects: 1000,
     );
 
     instance = CacheManager(

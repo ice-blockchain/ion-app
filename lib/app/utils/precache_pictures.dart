@@ -5,6 +5,18 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:ion/app/services/logger/logger.dart';
 import 'package:ion/app/utils/image_path.dart';
 
+class PreCachePicturesCacheManager {
+  static const key = 'preCachePicturesCacheKey';
+
+  static CacheManager instance = CacheManager(
+    Config(
+      key,
+      maxNrOfCacheObjects: 1000,
+      stalePeriod: const Duration(days: 60),
+    ),
+  );
+}
+
 Future<void> precachePictures(Iterable<String> urls) async {
   try {
     await Future.wait(urls.map(_precachePicture));
@@ -22,6 +34,6 @@ Future<void> _precachePicture(String url) async {
     // For other image types, let the cache manager handle everything.
     // .getSingleFile() will download the file if not cached, then return it.
     // We don't need the file itself, just the action of caching.
-    await DefaultCacheManager().getSingleFile(url);
+    await PreCachePicturesCacheManager.instance.getSingleFile(url);
   }
 }

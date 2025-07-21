@@ -6,7 +6,7 @@ import 'package:flutter_cache_manager/flutter_cache_manager.dart';
 import 'package:ion/app/components/placeholder/ion_placeholder.dart';
 
 class IonNetworkImage extends StatelessWidget {
-  const IonNetworkImage({
+  IonNetworkImage({
     required this.imageUrl,
     super.key,
     this.imageBuilder,
@@ -19,12 +19,19 @@ class IonNetworkImage extends StatelessWidget {
     this.fit,
     this.alignment,
     this.filterQuality,
-    this.cacheManager,
+    BaseCacheManager? cacheManager,
     this.placeholder,
     this.errorListener,
     this.errorWidget,
     this.borderRadius,
-  });
+  }) : cacheManager = cacheManager ??
+            CacheManager(
+              Config(
+                'ionNetworkImageCacheKey',
+                maxNrOfCacheObjects: 1000,
+                stalePeriod: const Duration(days: 60),
+              ),
+            );
 
   final String imageUrl;
   final Widget Function(BuildContext, String, Object)? errorWidget;
@@ -38,7 +45,7 @@ class IonNetworkImage extends StatelessWidget {
   final BoxFit? fit;
   final Alignment? alignment;
   final FilterQuality? filterQuality;
-  final BaseCacheManager? cacheManager;
+  final BaseCacheManager cacheManager;
   final ImageWidgetBuilder? imageBuilder;
   final ProgressIndicatorBuilder? progressIndicatorBuilder;
   final BorderRadiusGeometry? borderRadius;
@@ -101,6 +108,7 @@ class IonNetworkImage extends StatelessWidget {
       memCacheWidth: memCacheWidth,
       memCacheHeight: memCacheHeight,
       imageBuilder: imageBuilder,
+      cacheManager: cacheManager,
       progressIndicatorBuilder: progressIndicatorBuilder,
     );
   }
