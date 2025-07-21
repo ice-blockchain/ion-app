@@ -79,29 +79,6 @@ class PostRepostFactory {
 }
 
 class RepostTestData {
-  static final counterDisplayCases = [
-    (
-      name: 'shows zero when no reposts',
-      postRepost: PostRepostFactory.createNotReposted(),
-      expectedText: null,
-    ),
-    (
-      name: 'shows single repost count',
-      postRepost: PostRepostFactory.createNotReposted(repostsCount: 1),
-      expectedText: '1',
-    ),
-    (
-      name: 'shows total count with quotes',
-      postRepost: PostRepostFactory.createNotReposted(repostsCount: 5, quotesCount: 3),
-      expectedText: '8',
-    ),
-    (
-      name: 'formats large numbers',
-      postRepost: PostRepostFactory.createWithHighCounters(),
-      expectedTextContains: '1',
-    ),
-  ];
-
   static final stateTransitionCases = [
     (
       name: 'not reposted to reposted',

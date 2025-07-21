@@ -5,7 +5,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/features/auth/providers/auth_provider.m.dart';
 import 'package:ion/app/features/feed/data/models/entities/generic_repost.f.dart';
 import 'package:ion/app/features/feed/data/models/entities/repost_data.f.dart';
-import 'package:ion/app/features/feed/providers/counters/helpers/counter_cache_helpers.dart';
+import 'package:ion/app/features/feed/providers/counters/helpers/counter_cache_helpers.r.dart';
 import 'package:ion/app/features/feed/reposts/models/post_repost.f.dart';
 import 'package:ion/app/features/feed/reposts/providers/optimistic/intents/toggle_repost_intent.dart';
 import 'package:ion/app/features/feed/reposts/providers/optimistic/repost_sync_strategy_provider.r.dart';
@@ -19,11 +19,11 @@ part 'post_repost_provider.r.g.dart';
 
 @riverpod
 PostRepost? findRepostInCache(Ref ref, EventReference eventReference) {
-  final currentPubkey = ref.read(currentPubkeySelectorProvider);
+  final currentPubkey = ref.watch(currentPubkeySelectorProvider);
   if (currentPubkey == null) return null;
 
   final myRepost = ref
-      .read(ionConnectCacheProvider)
+      .watch(ionConnectCacheProvider)
       .values
       .map((e) => e.entity)
       .where((entity) => entity.masterPubkey == currentPubkey)
@@ -37,7 +37,7 @@ PostRepost? findRepostInCache(Ref ref, EventReference eventReference) {
 
   if (myRepost == null) return null;
 
-  final counts = getRepostCountsFromCache(ref, eventReference);
+  final counts = ref.watch(repostCountsFromCacheProvider(eventReference));
 
   return PostRepost(
     eventReference: eventReference,
@@ -50,11 +50,11 @@ PostRepost? findRepostInCache(Ref ref, EventReference eventReference) {
 
 @riverpod
 List<PostRepost> loadRepostsFromCache(Ref ref) {
-  final currentPubkey = ref.read(currentPubkeySelectorProvider);
+  final currentPubkey = ref.watch(currentPubkeySelectorProvider);
 
   if (currentPubkey == null) return [];
 
-  final allEntities = ref.read(ionConnectCacheProvider).values.map((e) => e.entity).toList();
+  final allEntities = ref.watch(ionConnectCacheProvider).values.map((e) => e.entity).toList();
 
   final repostEntities = allEntities
       .where((entity) => entity.masterPubkey == currentPubkey)
@@ -68,7 +68,7 @@ List<PostRepost> loadRepostsFromCache(Ref ref) {
         ? entity.data.eventReference
         : (entity as GenericRepostEntity).data.eventReference;
 
-    final counts = getRepostCountsFromCache(ref, eventReference);
+    final counts = ref.watch(repostCountsFromCacheProvider(eventReference));
 
     postReposts.add(
       PostRepost(
@@ -82,29 +82,6 @@ List<PostRepost> loadRepostsFromCache(Ref ref) {
   }
 
   return postReposts;
-}
-
-PostRepost _findOrCreatePostRepost(EventReference eventReference, Ref ref) {
-  final manager = ref.read(postRepostManagerProvider);
-  final currentState =
-      manager.snapshot.where((pr) => pr.eventReference == eventReference).firstOrNull;
-
-  if (currentState != null) {
-    return currentState;
-  }
-
-  final cached = ref.read(findRepostInCacheProvider(eventReference));
-
-  if (cached != null) return cached;
-
-  final counts = getRepostCountsFromCache(ref, eventReference);
-
-  return PostRepost(
-    eventReference: eventReference,
-    repostsCount: counts.repostsCount,
-    quotesCount: counts.quotesCount,
-    repostedByMe: false,
-  );
 }
 
 @Riverpod(keepAlive: true)
@@ -147,12 +124,35 @@ class ToggleRepostNotifier extends _$ToggleRepostNotifier {
   void build() {}
 
   Future<void> toggle(EventReference eventReference) async {
-    final service = ref.read(postRepostServiceProvider);
+    final service = ref.watch(postRepostServiceProvider);
     final id = eventReference.toString();
 
     var current = ref.read(postRepostWatchProvider(id)).valueOrNull;
-    current ??= _findOrCreatePostRepost(eventReference, ref);
+    current ??= _findOrCreatePostRepost(eventReference);
 
     await service.dispatch(const ToggleRepostIntent(), current);
+  }
+
+  PostRepost _findOrCreatePostRepost(EventReference eventReference) {
+    final manager = ref.read(postRepostManagerProvider);
+    final currentState =
+        manager.snapshot.where((pr) => pr.eventReference == eventReference).firstOrNull;
+
+    if (currentState != null) {
+      return currentState;
+    }
+
+    final cached = ref.read(findRepostInCacheProvider(eventReference));
+
+    if (cached != null) return cached;
+
+    final counts = ref.read(repostCountsFromCacheProvider(eventReference));
+
+    return PostRepost(
+      eventReference: eventReference,
+      repostsCount: counts.repostsCount,
+      quotesCount: counts.quotesCount,
+      repostedByMe: false,
+    );
   }
 }

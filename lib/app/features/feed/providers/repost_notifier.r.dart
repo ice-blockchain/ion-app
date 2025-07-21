@@ -80,7 +80,7 @@ class RepostNotifier extends _$RepostNotifier {
       ).wait;
 
       if (repostEntity == null) {
-        throw Exception('Failed to create repost entity');
+        throw const RepostCreationFailedException();
       }
 
       _createRepostNotifierStreamController.add(repostEntity);

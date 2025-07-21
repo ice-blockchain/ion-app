@@ -1,6 +1,5 @@
 // SPDX-License-Identifier: ice License 1.0
 
-import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/exceptions/exceptions.dart';
 import 'package:ion/app/extensions/delta.dart';
 import 'package:ion/app/features/feed/create_article/providers/create_article_provider.r.dart';
@@ -12,7 +11,7 @@ import 'package:ion/app/features/feed/data/models/entities/modifiable_post_data.
 import 'package:ion/app/features/feed/data/models/entities/post_data.f.dart';
 import 'package:ion/app/features/feed/data/models/entities/reaction_data.f.dart';
 import 'package:ion/app/features/feed/data/models/entities/repost_data.f.dart';
-import 'package:ion/app/features/feed/providers/counters/helpers/counter_cache_helpers.dart';
+import 'package:ion/app/features/feed/providers/counters/helpers/counter_cache_helpers.r.dart';
 import 'package:ion/app/features/feed/providers/counters/replies_count_provider.r.dart';
 import 'package:ion/app/features/feed/providers/feed_posts_provider.r.dart';
 import 'package:ion/app/features/feed/providers/user_posts_data_source_provider.r.dart';
@@ -81,19 +80,19 @@ class DeleteEntityController extends _$DeleteEntityController {
     switch (entity) {
       case GenericRepostEntity() || RepostEntity() || PostEntity():
         {
-          await _deleteFromServer(ref, entity);
-          if (entity is PostEntity) _deleteMedia(ref, entity.data);
-          _deleteFromDataSources(ref, entity);
-          _deleteFromCache(ref, entity);
-          await _deleteFromCounters(ref, entity);
+          await _deleteFromServer(entity);
+          if (entity is PostEntity) _deleteMedia(entity.data);
+          _deleteFromDataSources(entity);
+          _deleteFromCache(entity);
+          await _deleteFromCounters(entity);
         }
       case ModifiablePostEntity():
         {
-          await _deleteFromCounters(ref, entity);
+          await _deleteFromCounters(entity);
           await ref
               .read(createPostNotifierProvider(CreatePostOption.softDelete).notifier)
               .softDelete(eventReference: entity.toEventReference());
-          _deleteFromDataSources(ref, entity);
+          _deleteFromDataSources(entity);
         }
       case ArticleEntity():
         {
@@ -103,7 +102,7 @@ class DeleteEntityController extends _$DeleteEntityController {
         }
       case ReactionEntity():
         {
-          await _deleteFromServer(ref, entity);
+          await _deleteFromServer(entity);
         }
       default:
         {
@@ -111,104 +110,107 @@ class DeleteEntityController extends _$DeleteEntityController {
         }
     }
   }
-}
 
-Future<void> _deleteFromServer(Ref ref, IonConnectEntity entity) async {
-  final entityKind = switch (entity) {
-    ReactionEntity() => ReactionEntity.kind,
-    PostEntity() => PostEntity.kind,
-    RepostEntity() => RepostEntity.kind,
-    GenericRepostEntity() => GenericRepostEntity.kind,
-    _ => throw DeleteEntityUnsupportedTypeException(),
-  };
+  Future<void> _deleteFromServer(IonConnectEntity entity) async {
+    final entityKind = switch (entity) {
+      ReactionEntity() => ReactionEntity.kind,
+      PostEntity() => PostEntity.kind,
+      RepostEntity() => RepostEntity.kind,
+      GenericRepostEntity() => GenericRepostEntity.kind,
+      _ => throw DeleteEntityUnsupportedTypeException(),
+    };
 
-  final pubkeysToPublish = switch (entity) {
-    ReactionEntity() => [entity.data.eventReference.masterPubkey],
-    PostEntity() => parseAndConvertDelta(
-        entity.data.richText?.content,
-        entity.data.content,
-      ).extractPubkeys(),
-    RepostEntity() => [entity.data.eventReference.masterPubkey],
-    GenericRepostEntity() => [entity.data.eventReference.masterPubkey],
-    _ => <String>[],
-  };
+    final pubkeysToPublish = switch (entity) {
+      ReactionEntity() => [entity.data.eventReference.masterPubkey],
+      PostEntity() => parseAndConvertDelta(
+          entity.data.richText?.content,
+          entity.data.content,
+        ).extractPubkeys(),
+      RepostEntity() => [entity.data.eventReference.masterPubkey],
+      GenericRepostEntity() => [entity.data.eventReference.masterPubkey],
+      _ => <String>[],
+    };
 
-  final deletionRequest = DeletionRequest(
-    events: [
-      EventToDelete(
-        eventReference: ImmutableEventReference(
-          masterPubkey: entity.masterPubkey,
-          eventId: entity.id,
-          kind: entityKind,
+    final deletionRequest = DeletionRequest(
+      events: [
+        EventToDelete(
+          eventReference: ImmutableEventReference(
+            masterPubkey: entity.masterPubkey,
+            eventId: entity.id,
+            kind: entityKind,
+          ),
         ),
+      ],
+    );
+
+    final ionNotifier = ref.read(ionConnectNotifierProvider.notifier);
+
+    final deletionEvent = await ionNotifier.sign(deletionRequest);
+
+    final userEventsMetadataBuilder = await ref.read(userEventsMetadataBuilderProvider.future);
+
+    await Future.wait([
+      ionNotifier.sendEvent(deletionEvent, cache: false),
+      for (final pubkey in pubkeysToPublish)
+        ionNotifier.sendEvent(
+          deletionEvent,
+          actionSource: ActionSourceUser(pubkey),
+          metadataBuilders: [userEventsMetadataBuilder],
+          cache: false,
+        ),
+    ]);
+  }
+
+  void _deleteFromDataSources(IonConnectEntity entity) {
+    final notifiers = <PagedNotifier>[
+      ref.read(
+        entitiesPagedDataProvider(ref.read(userVideosDataSourceProvider(entity.masterPubkey)))
+            .notifier,
       ),
-    ],
-  );
-
-  final ionNotifier = ref.read(ionConnectNotifierProvider.notifier);
-
-  final deletionEvent = await ionNotifier.sign(deletionRequest);
-
-  final userEventsMetadataBuilder = await ref.read(userEventsMetadataBuilderProvider.future);
-
-  await Future.wait([
-    ionNotifier.sendEvent(deletionEvent, cache: false),
-    for (final pubkey in pubkeysToPublish)
-      ionNotifier.sendEvent(
-        deletionEvent,
-        actionSource: ActionSourceUser(pubkey),
-        metadataBuilders: [userEventsMetadataBuilder],
-        cache: false,
+      ref.read(
+        entitiesPagedDataProvider(ref.read(userPostsDataSourceProvider(entity.masterPubkey)))
+            .notifier,
       ),
-  ]);
-}
+      ref.read(feedPostsProvider.notifier),
+      ref.read(feedStoriesProvider.notifier),
+    ];
 
-void _deleteFromDataSources(Ref ref, IonConnectEntity entity) {
-  final notifiers = <PagedNotifier>[
-    ref.read(
-      entitiesPagedDataProvider(ref.read(userVideosDataSourceProvider(entity.masterPubkey)))
-          .notifier,
-    ),
-    ref.read(
-      entitiesPagedDataProvider(ref.read(userPostsDataSourceProvider(entity.masterPubkey)))
-          .notifier,
-    ),
-    ref.read(feedPostsProvider.notifier),
-    ref.read(feedStoriesProvider.notifier),
-  ];
-
-  for (final notifier in notifiers) {
-    notifier.deleteEntity(entity);
+    for (final notifier in notifiers) {
+      notifier.deleteEntity(entity);
+    }
   }
-}
 
-void _deleteFromCache(Ref ref, IonConnectEntity entity) {
-  if (entity is CacheableEntity) {
-    ref.read(ionConnectCacheProvider.notifier).remove(entity.cacheKey);
+  void _deleteFromCache(IonConnectEntity entity) {
+    if (entity is CacheableEntity) {
+      ref.read(ionConnectCacheProvider.notifier).remove(entity.cacheKey);
+    }
   }
-}
 
-Future<void> _deleteFromCounters(Ref ref, IonConnectEntity entity) async {
-  switch (entity) {
-    case RepostEntity():
-    case GenericRepostEntity():
-      // Counter updates are handled by Optimistic UI
-      break;
-    case ModifiablePostEntity():
-      if (entity.data.parentEvent != null) {
-        ref
-            .read(repliesCountProvider(entity.data.parentEvent!.eventReference).notifier)
-            .removeOne();
-      } else if (entity.data.quotedEvent != null) {
-        await updateQuoteCounter(ref, entity.data.quotedEvent!.eventReference, isAdding: false);
-      }
-    default:
-      break;
+  Future<void> _deleteFromCounters(IonConnectEntity entity) async {
+    switch (entity) {
+      case RepostEntity():
+      case GenericRepostEntity():
+        // Counter updates are handled by Optimistic UI
+        break;
+      case ModifiablePostEntity():
+        if (entity.data.parentEvent != null) {
+          ref
+              .read(repliesCountProvider(entity.data.parentEvent!.eventReference).notifier)
+              .removeOne();
+        } else if (entity.data.quotedEvent != null) {
+          await ref.read(quoteCounterUpdaterProvider).updateQuoteCounter(
+                entity.data.quotedEvent!.eventReference,
+                isAdding: false,
+              );
+        }
+      default:
+        break;
+    }
   }
-}
 
-void _deleteMedia(Ref ref, EntityDataWithMediaContent entity) {
-  final media = entity.media.values;
-  final fileHashes = media.map((e) => e.originalFileHash).toList();
-  ref.read(ionConnectDeleteFileNotifierProvider.notifier).deleteMultiple(fileHashes);
+  void _deleteMedia(EntityDataWithMediaContent entity) {
+    final media = entity.media.values;
+    final fileHashes = media.map((e) => e.originalFileHash).toList();
+    ref.read(ionConnectDeleteFileNotifierProvider.notifier).deleteMultiple(fileHashes);
+  }
 }
