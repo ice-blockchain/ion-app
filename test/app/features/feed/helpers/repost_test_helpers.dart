@@ -77,23 +77,3 @@ class PostRepostFactory {
     );
   }
 }
-
-class RepostTestData {
-  static final stateTransitionCases = [
-    (
-      name: 'not reposted to reposted',
-      initial: PostRepostFactory.createNotReposted(),
-      after: PostRepostFactory.createReposted(),
-    ),
-    (
-      name: 'reposted to not reposted',
-      initial: PostRepostFactory.createReposted(repostsCount: 2),
-      after: PostRepostFactory.createNotReposted(repostsCount: 1),
-    ),
-    (
-      name: 'counter increases on repost',
-      initial: PostRepostFactory.createNotReposted(repostsCount: 3),
-      after: PostRepostFactory.createReposted(repostsCount: 4),
-    ),
-  ];
-}
