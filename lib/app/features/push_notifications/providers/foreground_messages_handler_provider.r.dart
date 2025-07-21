@@ -2,6 +2,7 @@
 
 import 'dart:convert';
 
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/auth/providers/auth_provider.m.dart';
 import 'package:ion/app/features/chat/e2ee/providers/gift_unwrap_service_provider.r.dart';
@@ -29,9 +30,9 @@ class ForegroundMessagesHandler extends _$ForegroundMessagesHandler {
     }
   }
 
-  Future<void> _handleForegroundMessage(Map<String, dynamic> response) async {
+  Future<void> _handleForegroundMessage(RemoteMessage response) async {
     final data = await IonConnectPushDataPayload.fromEncoded(
-      response,
+      response.data,
       unwrapGift: (eventMassage) async {
         final giftUnwrapService = await ref.read(giftUnwrapServiceProvider.future);
 
@@ -49,17 +50,19 @@ class ForegroundMessagesHandler extends _$ForegroundMessagesHandler {
     final parser = await ref.read(notificationDataParserProvider.future);
     final parsedData = await parser.parse(data);
 
-    if (parsedData == null) {
+    final title = parsedData?.title ?? response.notification?.title;
+    final body = parsedData?.body ?? response.notification?.body;
+
+    if (title == null || body == null) {
       return;
     }
 
     final notificationsService = await ref.read(localNotificationsServiceProvider.future);
-
     await notificationsService.showNotification(
       id: generateUuid().hashCode,
-      title: parsedData.title,
-      body: parsedData.body,
-      payload: jsonEncode(response),
+      title: title,
+      body: body,
+      payload: jsonEncode(response.data),
     );
   }
 
