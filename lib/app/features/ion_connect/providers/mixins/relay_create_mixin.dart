@@ -18,23 +18,31 @@ mixin RelayCreateMixin {
     final connectionState = await socket.connection.firstWhere(
       (state) => state is Connected || state is Reconnected || state is Disconnected,
     );
-    if (_isRelayUnreachable(ref, connectionState)) {
+
+    final hasInternetConnection = ref.read(hasInternetConnectionProvider);
+    if (_isRelayUnreachable(
+      connectionState: connectionState,
+      hasInternetConnection: hasInternetConnection,
+    )) {
       socket.close();
       await _updateRelayReachabilityInfo(ref, url);
       throw RelayUnreachableException(url);
     }
+
     await ref.read(relayReachabilityProvider.notifier).clear(url);
     return relay;
   }
 
-  bool _isRelayUnreachable(Ref ref, ConnectionState connectionState) {
+  bool _isRelayUnreachable({
+    required ConnectionState connectionState,
+    required bool hasInternetConnection,
+  }) {
     if (connectionState is! Disconnected || connectionState.error == null) {
       return false;
     }
 
     Logger.error(connectionState.error!, message: '[RELAY] has disconnected with error');
 
-    final hasInternetConnection = ref.read(hasInternetConnectionProvider);
     if (!hasInternetConnection) {
       return false;
     }
