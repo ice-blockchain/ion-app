@@ -85,14 +85,17 @@ Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
   final parser = await riverpodContainer.read(notificationDataParserProvider.future);
   final parsedData = await parser.parse(data);
 
-  if (parsedData == null) {
+  final title = parsedData?.title ?? message.notification?.title;
+  final body = parsedData?.body ?? message.notification?.body;
+
+  if (title == null || body == null) {
     return;
   }
 
   await notificationsService.showNotification(
     id: generateUuid().hashCode,
-    title: parsedData.title,
-    body: parsedData.body,
+    title: title,
+    body: body,
     payload: jsonEncode(message.data),
   );
 }
