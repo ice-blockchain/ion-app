@@ -6,7 +6,9 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/components/progress_bar/ion_loading_indicator.dart';
 import 'package:ion/app/extensions/extensions.dart';
-import 'package:ion/app/features/chat/views/components/message_items/messaging_bottom_bar/components/components.dart';
+import 'package:ion/app/features/chat/views/components/chat_input_bar/components/duration_text.dart';
+import 'package:ion/app/features/chat/views/components/chat_input_bar/components/pause_audio_button.dart';
+import 'package:ion/app/features/chat/views/components/chat_input_bar/components/play_audio_button.dart';
 import 'package:ion/app/services/audio_wave_playback_service/audio_wave_playback_service.r.dart';
 
 class VoiceMessagePreviewTile extends HookConsumerWidget {

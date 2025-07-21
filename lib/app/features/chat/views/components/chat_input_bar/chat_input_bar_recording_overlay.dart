@@ -9,14 +9,17 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/chat/e2ee/model/entities/private_direct_message_data.f.dart';
 import 'package:ion/app/features/chat/providers/messaging_bottom_bar_state_provider.r.dart';
-import 'package:ion/app/features/chat/views/components/message_items/messaging_bottom_bar/components/components.dart';
-import 'package:ion/app/features/chat/views/components/message_items/messaging_bottom_bar/components/voice_message_preview_tile.dart';
+import 'package:ion/app/features/chat/views/components/chat_input_bar/components/cancel_record_button.dart';
+import 'package:ion/app/features/chat/views/components/chat_input_bar/components/delete_audio_button.dart';
+import 'package:ion/app/features/chat/views/components/chat_input_bar/components/duration_text.dart';
+import 'package:ion/app/features/chat/views/components/chat_input_bar/components/recording_indicator.dart';
+import 'package:ion/app/features/chat/views/components/chat_input_bar/components/voice_message_preview_tile.dart';
 import 'package:ion/app/services/media_service/media_service.m.dart';
 import 'package:ion/app/utils/date.dart';
 import 'package:mime/mime.dart';
 
-class BottomBarRecordingView extends HookConsumerWidget {
-  const BottomBarRecordingView({
+class ChatInputBarRecordingOverlay extends HookConsumerWidget {
+  const ChatInputBarRecordingOverlay({
     required this.onRecordingFinished,
     required this.onCancelled,
     required this.recorderController,

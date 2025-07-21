@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/extensions/extensions.dart';
-import 'package:ion/app/features/chat/views/components/message_items/messaging_bottom_bar/components/components.dart';
+import 'package:ion/app/features/chat/views/components/chat_input_bar/components/recording_overlay.dart';
 import 'package:ion/generated/assets.gen.dart';
 
 class AudioRecordButton extends ConsumerWidget {

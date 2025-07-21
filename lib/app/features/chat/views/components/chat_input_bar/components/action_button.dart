@@ -8,7 +8,8 @@ import 'package:flutter/services.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/features/chat/providers/messaging_bottom_bar_state_provider.r.dart';
-import 'package:ion/app/features/chat/views/components/message_items/messaging_bottom_bar/components/components.dart';
+import 'package:ion/app/features/chat/views/components/chat_input_bar/components/audio_record_button.dart';
+import 'package:ion/app/features/chat/views/components/chat_input_bar/components/send_button.dart';
 import 'package:ion/app/features/core/permissions/data/models/permissions_types.dart';
 import 'package:ion/app/features/core/permissions/providers/permissions_provider.r.dart';
 

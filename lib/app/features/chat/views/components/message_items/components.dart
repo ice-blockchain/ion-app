@@ -11,5 +11,4 @@ export 'message_types/profile_share_message/profile_share_message.dart';
 export 'message_types/text_message/text_message.dart';
 export 'message_types/text_message/url_preview_block/url_preview_block.dart';
 export 'messages_context_menu/messages_context_menu.dart';
-export 'messaging_bottom_bar/messaging_bottom_bar_recording.dart';
 export 'messaging_empty_view/messaging_empty_view.dart';

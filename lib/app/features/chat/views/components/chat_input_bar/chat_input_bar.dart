@@ -14,12 +14,12 @@ import 'package:ion/app/features/chat/providers/messaging_bottom_bar_state_provi
 import 'package:ion/app/features/chat/recent_chats/providers/selected_edit_message_provider.r.dart';
 import 'package:ion/app/features/chat/recent_chats/providers/selected_reply_message_provider.r.dart';
 import 'package:ion/app/features/chat/views/components/chat_input_bar/chat_attach_menu.dart';
-import 'package:ion/app/features/chat/views/components/chat_input_bar/chat_attachment_menu_switch_button.dart';
-import 'package:ion/app/features/chat/views/components/chat_input_bar/chat_input_bar_camera_button.dart';
-import 'package:ion/app/features/chat/views/components/chat_input_bar/chat_text_field.dart';
-import 'package:ion/app/features/chat/views/components/message_items/messaging_bottom_bar/components/action_button.dart';
-import 'package:ion/app/features/chat/views/components/message_items/messaging_bottom_bar/components/text_message_limit_label.dart';
-import 'package:ion/app/features/chat/views/components/message_items/messaging_bottom_bar/messaging_bottom_bar_recording.dart';
+import 'package:ion/app/features/chat/views/components/chat_input_bar/chat_input_bar_recording_overlay.dart';
+import 'package:ion/app/features/chat/views/components/chat_input_bar/components/action_button.dart';
+import 'package:ion/app/features/chat/views/components/chat_input_bar/components/chat_attachment_menu_switch_button.dart';
+import 'package:ion/app/features/chat/views/components/chat_input_bar/components/chat_input_bar_camera_button.dart';
+import 'package:ion/app/features/chat/views/components/chat_input_bar/components/chat_text_field.dart';
+import 'package:ion/app/features/chat/views/components/chat_input_bar/components/text_message_limit_label.dart';
 import 'package:ion/app/hooks/use_on_init.dart';
 import 'package:ion/app/services/compressors/audio_compressor.r.dart';
 import 'package:ion/app/services/media_service/media_service.m.dart';
@@ -222,7 +222,7 @@ class ChatInputBar extends HookConsumerWidget {
                   ),
                 ],
               ),
-              BottomBarRecordingView(
+              ChatInputBarRecordingOverlay(
                 onRecordingFinished: (mediaFile) async {
                   if (recordedMediaFile.value == null) {
                     recordedMediaFile.value = mediaFile;
