@@ -44,7 +44,7 @@ class CoinsDao extends DatabaseAccessor<WalletsDatabase> with _$CoinsDaoMixin {
       query.where(coinsTable.id.isIn(coinIds!));
     }
 
-    return query.map(_toCoinData).watch();
+    return query.map(_toCoinData).watch().map((coins) => coins.nonNulls.toList());
   }
 
   Future<CoinData?> getById(String coinId) {
@@ -65,7 +65,7 @@ class CoinsDao extends DatabaseAccessor<WalletsDatabase> with _$CoinsDaoMixin {
       query.where(coinsTable.id.isIn(coinIds!));
     }
 
-    return query.map(_toCoinData).get();
+    return query.map(_toCoinData).get().filterValidCoins();
   }
 
   Future<List<CoinData>> search(String searchQuery) {
@@ -102,7 +102,7 @@ class CoinsDao extends DatabaseAccessor<WalletsDatabase> with _$CoinsDaoMixin {
         ),
       ]);
 
-    return query.map(_toCoinData).get();
+    return query.map(_toCoinData).get().filterValidCoins();
   }
 
   Future<CoinData?> getNativeCoin(String networkId) async {
@@ -142,15 +142,20 @@ class CoinsDao extends DatabaseAccessor<WalletsDatabase> with _$CoinsDaoMixin {
       query.where(coinsTable.native.equals(isNative));
     }
 
-    return query.map(_toCoinData).get();
+    return query.map(_toCoinData).get().filterValidCoins();
   }
 
-  CoinData _toCoinData(TypedResult row) {
+  CoinData? _toCoinData(TypedResult row) {
+    final coin = row.readTableOrNull(coinsTable);
+    final network = row.readTableOrNull(networksTable);
+
+    if (coin == null || network == null) {
+      return null;
+    }
+
     return CoinData.fromDB(
-      row.readTable(coinsTable),
-      NetworkData.fromDB(
-        row.readTable(networksTable),
-      ),
+      coin,
+      NetworkData.fromDB(network),
     );
   }
 
@@ -182,7 +187,7 @@ class CoinsDao extends DatabaseAccessor<WalletsDatabase> with _$CoinsDaoMixin {
       ),
     ]);
 
-    final results = await query.map(_toCoinData).get();
+    final results = await query.map(_toCoinData).get().filterValidCoins();
 
     // Group coins by symbolGroup
     final groupsMap = <String, List<CoinData>>{};
@@ -195,5 +200,11 @@ class CoinsDao extends DatabaseAccessor<WalletsDatabase> with _$CoinsDaoMixin {
     }
 
     return groupsMap.entries.map((entry) => CoinsGroup.fromCoinsData(entry.value));
+  }
+}
+
+extension on Future<List<CoinData?>> {
+  Future<List<CoinData>> filterValidCoins() {
+    return then((result) => result.nonNulls.toList());
   }
 }
