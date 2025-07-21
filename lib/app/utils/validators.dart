@@ -90,4 +90,12 @@ class Validators {
     final normalizedUrl = normalizeUrl(value!);
     return !(Uri.tryParse(normalizedUrl)?.hasScheme).falseOrValue;
   }
+
+  /// Validates that a JSON object contains all required fields
+  static bool hasAllKeys(
+    Map<String, dynamic> map, {
+    required List<String> keys,
+  }) {
+    return keys.every((field) => map.containsKey(field));
+  }
 }

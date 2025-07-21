@@ -255,6 +255,7 @@ class SendCoinsNotifier extends _$SendCoinsNotifier {
         txUrl: details.transactionExplorerUrl,
         from: senderAddress,
         to: receiverAddress,
+        assetId: coinAssetData.selectedOption!.coin.id,
       ),
     );
 
