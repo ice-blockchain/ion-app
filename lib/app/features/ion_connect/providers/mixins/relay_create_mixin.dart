@@ -8,10 +8,12 @@ import 'package:ion/app/exceptions/exceptions.dart';
 import 'package:ion/app/features/core/providers/internet_status_stream_provider.r.dart';
 import 'package:ion/app/features/ion_connect/ion_connect.dart';
 import 'package:ion/app/features/user/providers/relays_reachability_provider.r.dart';
+import 'package:ion/app/services/logger/logger.dart';
 
 mixin RelayCreateMixin {
   Future<IonConnectRelay> createRelay(Ref ref, String url) async {
     final socket = WebSocket(Uri.parse(url));
+
     final relay = IonConnectRelay(url: url, socket: socket);
     final connectionState = await socket.connection.firstWhere(
       (state) => state is Connected || state is Reconnected || state is Disconnected,
@@ -26,9 +28,11 @@ mixin RelayCreateMixin {
   }
 
   bool _isRelayUnreachable(Ref ref, ConnectionState connectionState) {
-    if (connectionState is! Disconnected) {
+    if (connectionState is! Disconnected || connectionState.error == null) {
       return false;
     }
+
+    Logger.error(connectionState.error!, message: '[RELAY] has disconnected with error');
 
     final hasInternetConnection = ref.read(hasInternetConnectionProvider);
     if (!hasInternetConnection) {
@@ -36,8 +40,7 @@ mixin RelayCreateMixin {
     }
 
     return switch (connectionState.error) {
-      final SocketException error when error.osError != null => true,
-      TimeoutException() => true,
+      SocketException() || TimeoutException() => true,
       _ => false,
     };
   }

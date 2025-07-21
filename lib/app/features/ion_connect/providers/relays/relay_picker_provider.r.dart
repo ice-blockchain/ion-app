@@ -14,6 +14,7 @@ import 'package:ion/app/features/user/providers/current_user_identity_provider.r
 import 'package:ion/app/features/user/providers/relays/ranked_user_relays_provider.r.dart';
 import 'package:ion/app/features/user/providers/relays/relevant_user_relays_provider.r.dart';
 import 'package:ion/app/features/user/providers/relays/user_relays_manager.r.dart';
+import 'package:ion/app/services/logger/logger.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'relay_picker_provider.r.g.dart';
@@ -49,10 +50,16 @@ class RelayPicker extends _$RelayPicker {
         )
     };
 
+    Logger.log(
+      '[RELAY] Selecting a write relay for action source: $actionSource, relay list: $relays, $dislikedUrls',
+    );
+
     final randomValidWriteRelay = _userRelaysAvoidingDislikedUrls(relays, dislikedUrls).random;
 
     if (randomValidWriteRelay == null) {
-      // If no valid write relay is found, fallback to read action source relay
+      Logger.warning(
+        '[RELAY] No valid write relay found for action source: $actionSource. Fallback to read action source relay.',
+      );
       return _getReadActionSourceRelay(actionSource, dislikedUrls: dislikedUrls);
     }
 
@@ -65,6 +72,8 @@ class RelayPicker extends _$RelayPicker {
     ActionSource actionSource, {
     DislikedRelayUrlsCollection dislikedUrls = const DislikedRelayUrlsCollection({}),
   }) async {
+    Logger.log('[RELAY] Selecting a read relay for action source: $actionSource, $dislikedUrls');
+
     switch (actionSource) {
       case ActionSourceCurrentUser():
         final pubkey = ref.read(currentPubkeySelectorProvider);
