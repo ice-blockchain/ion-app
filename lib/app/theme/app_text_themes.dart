@@ -49,8 +49,10 @@ class AppTextThemesExtension extends ThemeExtension<AppTextThemesExtension> {
           TemplateTextStyle.fromTemplate(textThemes.caption5, defaultStyle: defaults.caption5),
       caption6:
           TemplateTextStyle.fromTemplate(textThemes.caption6, defaultStyle: defaults.caption6),
-      notificationCaption: TemplateTextStyle.fromTemplate(textThemes.notificationCaption,
-          defaultStyle: defaults.notificationCaption),
+      notificationCaption: TemplateTextStyle.fromTemplate(
+        textThemes.notificationCaption,
+        defaultStyle: defaults.notificationCaption,
+      ),
     );
   }
 
