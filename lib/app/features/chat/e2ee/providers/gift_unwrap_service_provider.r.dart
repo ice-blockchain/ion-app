@@ -37,7 +37,10 @@ class GiftUnwrapService {
   final IonConnectGiftWrapService _giftWrapService;
   final VerifyDelegationCallback _verifyDelegationCallback;
 
-  Future<EventMessage> unwrap(EventMessage giftWrap) async {
+  Future<EventMessage> unwrap(
+    EventMessage giftWrap, {
+    CompressionAlgorithm compressionAlgorithm = CompressionAlgorithm.brotli,
+  }) async {
     try {
       final (rumor, seal) = await unwrapGiftSharedIsolate.compute(unwrapGiftFn, [
         _giftWrapService,
@@ -46,6 +49,7 @@ class GiftUnwrapService {
         giftWrap.content,
         giftWrap.pubkey,
         logger,
+        compressionAlgorithm,
       ]);
 
       final sealDelegation = await _verifyDelegationCallback(seal.masterPubkey);
@@ -55,6 +59,8 @@ class GiftUnwrapService {
       }
 
       return rumor;
+    } on FormatException catch (_) {
+      return unwrap(giftWrap, compressionAlgorithm: CompressionAlgorithm.none);
     } catch (e) {
       throw DecodeE2EMessageException(giftWrap.id);
     }
@@ -98,6 +104,7 @@ Future<(EventMessage, EventMessage)> unwrapGiftFn(List<dynamic> args) async {
   final content = args[3] as String;
   final senderPubkey = args[4] as String;
   final logger = args[5] as IonConnectLogger?;
+  final compressionAlgorithm = args[6] as CompressionAlgorithm;
 
   // It is isolated, so we need to initialize it again for sign verification
   IonConnect.initialize(logger);
@@ -106,14 +113,14 @@ Future<(EventMessage, EventMessage)> unwrapGiftFn(List<dynamic> args) async {
     privateKey: privateKey,
     content: content,
     senderPubkey: senderPubkey,
-    compressionAlgorithm: CompressionAlgorithm.brotli,
+    compressionAlgorithm: compressionAlgorithm,
   );
 
   final rumor = await sealService.decodeSeal(
     seal.content,
     seal.pubkey,
     privateKey,
-    compressionAlgorithm: CompressionAlgorithm.brotli,
+    compressionAlgorithm: compressionAlgorithm,
   );
 
   // Check if:
