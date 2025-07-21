@@ -325,7 +325,7 @@
   "privacy_option_wallet_public": "Public",
   "privacy_option_wallet_private": "Private",
   "privacy_option_user_visibility_for_everyone": "Everyone",
-  "privacy_option_user_visibility_for_followed_people": "People I follow",
+  "privacy_option_user_visibility_for_followed_people": "Accounts I follow",
   "privacy_option_user_visibility_for_friends": "Friends",
   "push_notification_device_permission": "Device permission",
   "push_notification_social_group_title": "Social",

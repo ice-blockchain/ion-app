@@ -3,6 +3,7 @@
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/extensions/extensions.dart';
+import 'package:ion/app/features/chat/providers/user_chat_privacy_provider.r.dart';
 import 'package:ion/app/features/components/user/follow_user_button/follow_user_button.dart';
 import 'package:ion/app/features/user/model/user_notifications_type.dart';
 import 'package:ion/app/features/user/pages/profile_page/components/profile_details/profile_actions/profile_action.dart';
@@ -34,13 +35,12 @@ class ProfileActions extends ConsumerWidget {
         ref.watch(userMetadataProvider(pubkey).select((state) => state.value?.data.wallets));
     final hasPrivateWallets = walletsState == null;
     final following = ref.watch(isCurrentUserFollowingSelectorProvider(pubkey));
+    final canSendMessage = ref.watch(canSendMessageProvider(pubkey)).valueOrNull ?? false;
 
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        FollowUserButton(
-          pubkey: pubkey,
-        ),
+        FollowUserButton(pubkey: pubkey),
         if (!hasPrivateWallets) ...[
           SizedBox(width: 8.0.s),
           ProfileAction(
@@ -55,12 +55,13 @@ class ProfileActions extends ConsumerWidget {
           ),
         ],
         SizedBox(width: 8.0.s),
-        ProfileAction(
-          onPressed: () {
-            ConversationRoute(receiverMasterPubkey: pubkey).push<void>(context);
-          },
-          assetName: Assets.svg.iconChatOff,
-        ),
+        if (canSendMessage)
+          ProfileAction(
+            onPressed: () {
+              ConversationRoute(receiverMasterPubkey: pubkey).push<void>(context);
+            },
+            assetName: Assets.svg.iconChatOff,
+          ),
         SizedBox(width: 8.0.s),
         if (following)
           ProfileAction(
