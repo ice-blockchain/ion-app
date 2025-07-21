@@ -27,4 +27,8 @@ extension DeltaExt on Delta {
         isAttributedOperation(operations.first, attribute: Attribute.link) &&
         operations.last.data == '\n';
   }
+
+  bool get isBlank {
+    return isEmpty || operations.every((op) => op.data.toString().trim().isEmpty);
+  }
 }

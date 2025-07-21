@@ -13,6 +13,7 @@ class IonConnectAvatar extends ConsumerWidget {
     required this.size,
     this.borderRadius,
     this.fit,
+    this.shadow,
     super.key,
   });
 
@@ -20,13 +21,13 @@ class IonConnectAvatar extends ConsumerWidget {
   final double size;
   final BorderRadiusGeometry? borderRadius;
   final BoxFit? fit;
-
+  final BoxShadow? shadow;
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final imageUrl =
         ref.watch(userMetadataProvider(pubkey).select((state) => state.valueOrNull?.data.picture));
 
-    return Avatar(
+    final avatar = Avatar(
       imageWidget: imageUrl != null
           ? IonConnectNetworkImage(
               imageUrl: imageUrl,
@@ -39,5 +40,17 @@ class IonConnectAvatar extends ConsumerWidget {
       borderRadius: borderRadius,
       fit: fit,
     );
+
+    if (shadow != null) {
+      return DecoratedBox(
+        decoration: BoxDecoration(
+          borderRadius: borderRadius ?? BorderRadius.circular(size * 0.3),
+          boxShadow: [shadow!],
+        ),
+        child: avatar,
+      );
+    }
+
+    return avatar;
   }
 }

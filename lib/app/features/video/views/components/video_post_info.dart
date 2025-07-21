@@ -5,6 +5,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/core/providers/mute_provider.r.dart';
 import 'package:ion/app/features/feed/data/models/entities/modifiable_post_data.f.dart';
+import 'package:ion/app/features/feed/views/components/overlay_menu/user_info_menu.dart';
 import 'package:ion/app/features/feed/views/components/user_info/user_info.dart';
 import 'package:ion/app/features/ion_connect/model/ion_connect_entity.dart';
 import 'package:ion/app/features/video/views/components/video_button.dart';
@@ -19,12 +20,34 @@ class VideoPostInfo extends StatelessWidget {
 
   final IonConnectEntity videoPost;
 
+  static final shadow = BoxShadow(
+    offset: Offset(0, 1.5.s),
+    blurRadius: 1.5.s,
+    color: Colors.black.withValues(alpha: 0.4),
+  );
+
   @override
   Widget build(BuildContext context) {
     final publishedAt = switch (videoPost) {
       final ModifiablePostEntity post => post.data.publishedAt.value,
       _ => videoPost.createdAt,
     };
+
+    final muteButton = Consumer(
+      builder: (context, ref, child) {
+        final isMuted = ref.watch(globalMuteNotifierProvider);
+        return VideoButton(
+          icon: (isMuted ? Assets.svg.iconChannelMute : Assets.svg.iconChannelUnmute).icon(
+            color: context.theme.appColors.secondaryBackground,
+            size: 20.0.s,
+          ),
+          borderRadius: BorderRadius.circular(16.0.s),
+          onPressed: () async {
+            await ref.read(globalMuteNotifierProvider.notifier).toggle();
+          },
+        );
+      },
+    );
 
     return Column(
       children: [
@@ -43,38 +66,28 @@ class VideoPostInfo extends StatelessWidget {
             ),
           ),
           child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.end,
             children: [
+              muteButton,
+              SizedBox(height: 12.0.s),
               UserInfo(
                 pubkey: videoPost.masterPubkey,
                 createdAt: publishedAt,
-                trailing: Consumer(
-                  builder: (context, ref, child) {
-                    final isMuted = ref.watch(globalMuteNotifierProvider);
-                    return VideoButton(
-                      icon: isMuted
-                          ? Assets.svg.iconChannelMute.icon(
-                              color: context.theme.appColors.secondaryBackground,
-                              size: 20.0.s,
-                            )
-                          : Assets.svg.iconChannelUnmute.icon(
-                              color: context.theme.appColors.secondaryBackground,
-                              size: 20.0.s,
-                            ),
-                      onPressed: () async {
-                        await ref.read(globalMuteNotifierProvider.notifier).toggle();
-                      },
-                    );
-                  },
+                shadow: shadow,
+                trailing: UserInfoMenu(
+                  padding: EdgeInsetsDirectional.only(end: 6.0.s),
+                  eventReference: videoPost.toEventReference(),
+                  iconColor: context.theme.appColors.secondaryBackground,
+                  showShadow: true,
                 ),
                 textStyle: TextStyle(
                   color: context.theme.appColors.secondaryBackground,
+                  shadows: [shadow],
                 ),
               ),
               Padding(
                 padding: EdgeInsetsDirectional.only(
-                  top: 10.0.s,
-                  bottom: 2.0.s,
+                  bottom: 14.0.s,
                 ),
                 child: VideoTextPost(entity: videoPost),
               ),
