@@ -101,7 +101,8 @@ class ChatInputBarRecordingOverlay extends HookConsumerWidget {
       constraints: BoxConstraints(
         minHeight: 32.0.s,
       ),
-      width: MediaQuery.sizeOf(context).width - 62.0.s,
+      width: MediaQuery.sizeOf(context).width,
+      padding: EdgeInsetsDirectional.only(end: 48.0.s),
       child: Row(
         children: [
           if (voiceRecordingState.isPaused) ...[

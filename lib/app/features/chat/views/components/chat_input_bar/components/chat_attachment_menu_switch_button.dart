@@ -3,18 +3,20 @@
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/extensions/extensions.dart';
-import 'package:ion/app/features/chat/providers/attach_menu_shown_notifier.r.dart';
 import 'package:ion/generated/assets.gen.dart';
 
 class ChatAttachmentMenuSwitchButton extends HookConsumerWidget {
-  const ChatAttachmentMenuSwitchButton({required this.onTap, super.key});
+  const ChatAttachmentMenuSwitchButton({
+    required this.onTap,
+    required this.isAttachMenuShown,
+    super.key,
+  });
 
   final VoidCallback onTap;
+  final bool isAttachMenuShown;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final isAttachMenuShown = ref.watch(attachMenuShownProvider);
-
     return GestureDetector(
       onTap: onTap,
       child: Padding(
