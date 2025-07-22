@@ -293,10 +293,10 @@ packages:
     dependency: "direct main"
     description:
       name: cached_video_player_plus
-      sha256: "451ee48bdbd28fac3d49b4389929c44d259b1def5be6dab0c5bfd3ae1f05e8b5"
+      sha256: b9dc3735f344df24915b7209fed6bd0420798ad7ab27a6bc935e19bb3aaa6339
       url: "https://pub.dev"
     source: hosted
-    version: "3.0.3"
+    version: "4.0.1"
   camera:
     dependency: "direct main"
     description:
@@ -2981,6 +2981,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "6.0.0"
+  video_player:
+    dependency: "direct main"
+    description:
+      name: video_player
+      sha256: "0d55b1f1a31e5ad4c4967bfaa8ade0240b07d20ee4af1dfef5f531056512961a"
+      url: "https://pub.dev"
+    source: hosted
+    version: "2.10.0"
   video_player_android:
     dependency: transitive
     description:

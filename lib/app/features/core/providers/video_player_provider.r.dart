@@ -6,13 +6,27 @@ import 'dart:io';
 import 'package:cached_video_player_plus/cached_video_player_plus.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_cache_manager/flutter_cache_manager.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/features/core/providers/ion_connect_media_url_fallback_provider.r.dart';
 import 'package:ion/app/features/core/providers/mute_provider.r.dart';
 import 'package:ion/app/services/logger/logger.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
+import 'package:video_player/video_player.dart';
 
 part 'video_player_provider.r.g.dart';
+
+class NetworkVideosCacheManager {
+  static const key = 'networkVideosCacheKey';
+
+  static CacheManager instance = CacheManager(
+    Config(
+      key,
+      maxNrOfCacheObjects: 100,
+      stalePeriod: const Duration(days: 1),
+    ),
+  );
+}
 
 @immutable
 class VideoControllerParams {
@@ -44,33 +58,38 @@ class VideoControllerParams {
 
 @riverpod
 class VideoController extends _$VideoController {
-  CachedVideoPlayerPlusController? _activeController;
+  CachedVideoPlayerPlus? _activePlayer;
 
   @override
-  Future<Raw<CachedVideoPlayerPlusController>> build(VideoControllerParams params) async {
+  Future<Raw<VideoPlayerController>> build(VideoControllerParams params) async {
     final sourcePath = ref.watch(
       iONConnectMediaUrlFallbackProvider
           .select((state) => state[params.sourcePath] ?? params.sourcePath),
     );
 
-    final controller = ref
+    final player = ref
         .watch(videoPlayerControllerFactoryProvider(sourcePath))
         .createController(VideoPlayerOptions(mixWithOthers: true));
 
     ref.onCancel(() async {
       await Future.wait([
-        controller.dispose(),
         () async {
-          if (_activeController != controller) {
-            await _activeController?.dispose();
-            _activeController = null;
+          if (player.isInitialized) {
+            await player.controller.dispose();
+          }
+        }(),
+        () async {
+          if (_activePlayer != null && _activePlayer != player && _activePlayer!.isInitialized) {
+            await _activePlayer!.controller.dispose();
+            _activePlayer = null;
           }
         }(),
       ]);
     });
 
     try {
-      await controller.initialize();
+      await player.initialize();
+      final controller = player.controller;
       if (!controller.value.hasError) {
         await controller.setLooping(params.looping);
 
@@ -78,8 +97,10 @@ class VideoController extends _$VideoController {
         final isMuted = ref.read(globalMuteNotifierProvider);
         await controller.setVolume(isMuted ? 0.0 : 1.0);
 
-        if (_activeController != null) {
-          final prevController = _activeController!;
+        final prevController = _activePlayer != null && _activePlayer!.isInitialized
+            ? _activePlayer!.controller
+            : null;
+        if (prevController != null) {
           final isPlaying = prevController.value.isBuffering || prevController.value.isPlaying;
           await controller.seekTo(prevController.value.position);
           if (isPlaying) {
@@ -96,15 +117,18 @@ class VideoController extends _$VideoController {
           }
         }
 
-        _activeController = controller;
+        _activePlayer = player;
 
         ref.listen(globalMuteNotifierProvider, (_, muted) {
-          if (_activeController != null && _activeController!.value.isInitialized) {
-            final isPlaying = _activeController!.value.isPlaying;
+          final prevController = _activePlayer != null && _activePlayer!.isInitialized
+              ? _activePlayer!.controller
+              : null;
+          if (prevController != null) {
+            final isPlaying = prevController.value.isPlaying;
             unawaited(
-              _activeController!.setVolume(muted ? 0.0 : 1.0).then((_) {
+              prevController.setVolume(muted ? 0.0 : 1.0).then((_) {
                 if (isPlaying) {
-                  _activeController!.play();
+                  prevController.play();
                 }
               }),
             );
@@ -113,7 +137,10 @@ class VideoController extends _$VideoController {
       }
     } catch (error, stackTrace) {
       final authorPubkey = params.authorPubkey;
-      if (controller.dataSourceType == DataSourceType.network && authorPubkey != null) {
+      final controller = player.isInitialized ? player.controller : null;
+      if (controller != null &&
+          controller.dataSourceType == DataSourceType.network &&
+          authorPubkey != null) {
         await ref
             .watch(iONConnectMediaUrlFallbackProvider.notifier)
             .generateFallback(params.sourcePath, authorPubkey: authorPubkey);
@@ -125,7 +152,7 @@ class VideoController extends _$VideoController {
       );
     }
 
-    return controller;
+    return player.controller;
   }
 }
 
@@ -136,21 +163,22 @@ class VideoPlayerControllerFactory {
 
   final String sourcePath;
 
-  CachedVideoPlayerPlusController createController(VideoPlayerOptions? options) {
+  CachedVideoPlayerPlus createController(VideoPlayerOptions? options) {
     final videoPlayerOptions = options ?? VideoPlayerOptions();
 
     if (_isNetworkSource(sourcePath)) {
-      return CachedVideoPlayerPlusController.networkUrl(
+      return CachedVideoPlayerPlus.networkUrl(
         Uri.parse(sourcePath),
         videoPlayerOptions: videoPlayerOptions,
+        cacheManager: NetworkVideosCacheManager.instance,
       );
     } else if (_isLocalFile(sourcePath)) {
-      return CachedVideoPlayerPlusController.file(
+      return CachedVideoPlayerPlus.file(
         File(sourcePath),
         videoPlayerOptions: videoPlayerOptions,
       );
     }
-    return CachedVideoPlayerPlusController.asset(
+    return CachedVideoPlayerPlus.asset(
       sourcePath,
       videoPlayerOptions: videoPlayerOptions,
     );

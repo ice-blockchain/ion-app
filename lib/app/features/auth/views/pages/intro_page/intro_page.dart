@@ -1,6 +1,5 @@
 // SPDX-License-Identifier: ice License 1.0
 
-import 'package:cached_video_player_plus/cached_video_player_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
@@ -9,6 +8,7 @@ import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/core/providers/video_player_provider.r.dart';
 import 'package:ion/app/router/app_routes.gr.dart';
 import 'package:ion/generated/assets.gen.dart';
+import 'package:video_player/video_player.dart';
 
 class IntroPage extends HookConsumerWidget {
   const IntroPage({super.key});
@@ -17,17 +17,16 @@ class IntroPage extends HookConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     // We watch the intro page video controller here and ensure we pass the same parameters
     // (looping: true) to get the same instance of the already initialized provider from SplashPage.
-    final videoController = ref
-        .watch(
-          videoControllerProvider(
-            VideoControllerParams(
-              sourcePath: Assets.videos.intro,
-              looping: true,
-              autoPlay: true,
-            ),
-          ),
-        )
-        .value;
+    final videoControllerProviderState = ref.watch(
+      videoControllerProvider(
+        VideoControllerParams(
+          sourcePath: Assets.videos.intro,
+          looping: true,
+          autoPlay: true,
+        ),
+      ),
+    );
+    final videoController = videoControllerProviderState.valueOrNull;
 
     return Scaffold(
       resizeToAvoidBottomInset: false,
@@ -36,7 +35,8 @@ class IntroPage extends HookConsumerWidget {
           // Fallback white background if the video isn't initialized or an error occurs.
           if (videoController == null ||
               !videoController.value.isInitialized ||
-              videoController.value.hasError)
+              videoController.value.hasError ||
+              videoControllerProviderState.hasError)
             ColoredBox(
               color: Colors.white,
               child: Center(
@@ -47,7 +47,7 @@ class IntroPage extends HookConsumerWidget {
             Center(
               child: AspectRatio(
                 aspectRatio: videoController.value.aspectRatio,
-                child: CachedVideoPlayerPlus(videoController),
+                child: VideoPlayer(videoController),
               ),
             ),
           PositionedDirectional(
