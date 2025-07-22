@@ -16,6 +16,13 @@ extension StringExtensions on String {
     if (length == 1) return toUpperCase();
     return '${this[0].toUpperCase()}${substring(1)}';
   }
+
+  String toTitleCase() {
+    if (isEmpty) return this;
+    return split('\n').map((line) {
+      return line.split(' ').map((word) => word.capitalize()).join(' ');
+    }).join('\n');
+  }
 }
 
 final placeholderRegExp = RegExp('{{(.*?)}}');
