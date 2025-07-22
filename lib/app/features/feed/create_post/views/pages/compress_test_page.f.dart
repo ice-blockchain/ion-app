@@ -18,6 +18,7 @@ import 'package:ion/app/services/compressors/video_compressor.r.dart';
 import 'package:ion/app/services/logger/logger.dart';
 import 'package:ion/app/services/media_service/media_service.m.dart';
 import 'package:ion/app/utils/filesize.dart';
+import 'package:video_player/video_player.dart';
 
 part 'compress_test_page.f.freezed.dart';
 
@@ -91,7 +92,7 @@ class VideoCompressTab extends HookConsumerWidget {
         Logger.info('Compressed video saved to: $newPath');
 
         final controller =
-            CachedVideoPlayerPlusController.file(File(newPath)); // or .network() / .asset()
+            CachedVideoPlayerPlus.file(File(newPath)).controller; // or .network() / .asset()
 
         await controller.initialize();
         final duration = controller.value.duration;
@@ -291,7 +292,7 @@ class VideoPlayerTab extends HookConsumerWidget {
                 if (remoteVideoController != null)
                   AspectRatio(
                     aspectRatio: remoteVideoController.value.aspectRatio,
-                    child: CachedVideoPlayerPlus(remoteVideoController),
+                    child: VideoPlayer(remoteVideoController),
                   ),
                 if (remoteVideoController != null)
                   PositionedDirectional(

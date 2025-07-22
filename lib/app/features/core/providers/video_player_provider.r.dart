@@ -11,6 +11,7 @@ import 'package:ion/app/features/core/providers/ion_connect_media_url_fallback_p
 import 'package:ion/app/features/core/providers/mute_provider.r.dart';
 import 'package:ion/app/services/logger/logger.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
+import 'package:video_player/video_player.dart';
 
 part 'video_player_provider.r.g.dart';
 
@@ -44,16 +45,16 @@ class VideoControllerParams {
 
 @riverpod
 class VideoController extends _$VideoController {
-  CachedVideoPlayerPlusController? _activeController;
+  VideoPlayerController? _activeController;
 
   @override
-  Future<Raw<CachedVideoPlayerPlusController>> build(VideoControllerParams params) async {
+  Future<Raw<VideoPlayerController>> build(VideoControllerParams params) async {
     final sourcePath = ref.watch(
       iONConnectMediaUrlFallbackProvider
           .select((state) => state[params.sourcePath] ?? params.sourcePath),
     );
 
-    final controller = ref
+    final controller = await ref
         .watch(videoPlayerControllerFactoryProvider(sourcePath))
         .createController(VideoPlayerOptions(mixWithOthers: true));
 
@@ -70,7 +71,6 @@ class VideoController extends _$VideoController {
     });
 
     try {
-      await controller.initialize();
       if (!controller.value.hasError) {
         await controller.setLooping(params.looping);
 
@@ -78,8 +78,8 @@ class VideoController extends _$VideoController {
         final isMuted = ref.read(globalMuteNotifierProvider);
         await controller.setVolume(isMuted ? 0.0 : 1.0);
 
-        if (_activeController != null) {
-          final prevController = _activeController!;
+        final prevController = _activeController;
+        if (prevController != null) {
           final isPlaying = prevController.value.isBuffering || prevController.value.isPlaying;
           await controller.seekTo(prevController.value.position);
           if (isPlaying) {
@@ -136,21 +136,27 @@ class VideoPlayerControllerFactory {
 
   final String sourcePath;
 
-  CachedVideoPlayerPlusController createController(VideoPlayerOptions? options) {
+  Future<VideoPlayerController> createController(VideoPlayerOptions? options) async {
+    final player = _createPlayer(options);
+    await player.initialize();
+    return player.controller;
+  }
+
+  CachedVideoPlayerPlus _createPlayer(VideoPlayerOptions? options) {
     final videoPlayerOptions = options ?? VideoPlayerOptions();
 
     if (_isNetworkSource(sourcePath)) {
-      return CachedVideoPlayerPlusController.networkUrl(
+      return CachedVideoPlayerPlus.networkUrl(
         Uri.parse(sourcePath),
         videoPlayerOptions: videoPlayerOptions,
       );
     } else if (_isLocalFile(sourcePath)) {
-      return CachedVideoPlayerPlusController.file(
+      return CachedVideoPlayerPlus.file(
         File(sourcePath),
         videoPlayerOptions: videoPlayerOptions,
       );
     }
-    return CachedVideoPlayerPlusController.asset(
+    return CachedVideoPlayerPlus.asset(
       sourcePath,
       videoPlayerOptions: videoPlayerOptions,
     );

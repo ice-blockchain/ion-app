@@ -1,6 +1,5 @@
 // SPDX-License-Identifier: ice License 1.0
 
-import 'package:cached_video_player_plus/cached_video_player_plus.dart';
 import 'package:flutter/widgets.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/features/core/providers/video_player_provider.r.dart';
@@ -9,6 +8,7 @@ import 'package:ion/app/features/wallets/providers/selected_wallet_view_id_provi
 import 'package:ion/app/features/wallets/providers/wallet_view_data_provider.r.dart';
 import 'package:ion/app/services/storage/local_storage.r.dart';
 import 'package:mocktail/mocktail.dart';
+import 'package:video_player/video_player.dart';
 import 'package:video_player_platform_interface/video_player_platform_interface.dart';
 
 class Listener<T> extends Mock {
@@ -74,9 +74,8 @@ class FakeVideoPlayerPlatform extends VideoPlayerPlatform {
   Widget buildView(int textureId) => const SizedBox();
 }
 
-class FakeVideoController extends ValueNotifier<CachedVideoPlayerPlusValue>
-    implements CachedVideoPlayerPlusController {
-  FakeVideoController(Duration duration) : super(const CachedVideoPlayerPlusValue.uninitialized()) {
+class FakeVideoController extends ValueNotifier<VideoPlayerValue> implements VideoPlayerController {
+  FakeVideoController(Duration duration) : super(const VideoPlayerValue.uninitialized()) {
     value = value.copyWith(
       isInitialized: true,
       duration: duration,
@@ -84,9 +83,6 @@ class FakeVideoController extends ValueNotifier<CachedVideoPlayerPlusValue>
       size: const Size(1280, 720),
     );
   }
-
-  @override
-  int get textureId => 1;
 
   @override
   DataSourceType get dataSourceType => DataSourceType.asset;
@@ -109,8 +105,8 @@ class FakeVideoController extends ValueNotifier<CachedVideoPlayerPlusValue>
 
 class FakeVideoFactory extends VideoPlayerControllerFactory {
   FakeVideoFactory(this._controller) : super(sourcePath: 'dummy');
-  final CachedVideoPlayerPlusController _controller;
+  final VideoPlayerController _controller;
 
   @override
-  CachedVideoPlayerPlusController createController(VideoPlayerOptions? _) => _controller;
+  Future<VideoPlayerController> createController(VideoPlayerOptions? _) async => _controller;
 }
