@@ -84,25 +84,39 @@ OptimisticOperationManager<PostLike> postLikeManager(Ref ref) {
 
 @riverpod
 class ToggleLikeNotifier extends _$ToggleLikeNotifier {
+  final _processingOperations = <String>{};
+
   @override
   void build() {}
 
   Future<void> toggle(EventReference eventReference) async {
-    final service = ref.read(postLikeServiceProvider);
-    final id = eventReference.toString();
+    final key = eventReference.toString();
 
-    var current = ref.read(postLikeWatchProvider(id)).valueOrNull;
+    if (_processingOperations.contains(key)) return;
 
-    current ??= PostLike(
-      eventReference: eventReference,
-      likesCount: ref.read(likesCountProvider(eventReference)),
-      likedByMe: ref.read(isLikedProvider(eventReference)),
-    );
+    _processingOperations.add(key);
 
-    await service.dispatch(ToggleLikeIntent(), current);
+    try {
+      final service = ref.read(postLikeServiceProvider);
+      final id = eventReference.toString();
 
-    if (!current.likedByMe) {
-      await _updateInterestsOnLike(eventReference);
+      var current = ref.read(postLikeWatchProvider(id)).valueOrNull;
+
+      current ??= PostLike(
+        eventReference: eventReference,
+        likesCount: ref.read(likesCountProvider(eventReference)),
+        likedByMe: ref.read(isLikedProvider(eventReference)),
+      );
+
+      await service.dispatch(ToggleLikeIntent(), current);
+
+      if (!current.likedByMe) {
+        await _updateInterestsOnLike(eventReference);
+      }
+
+      await Future<void>.delayed(const Duration(milliseconds: 300));
+    } finally {
+      _processingOperations.remove(key);
     }
   }
 
