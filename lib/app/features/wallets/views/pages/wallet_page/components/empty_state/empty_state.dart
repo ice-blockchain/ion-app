@@ -55,8 +55,8 @@ class EmptyState extends ConsumerWidget {
                         ),
                         SizedBox(height: 8.s),
                         TextButton(
-                          onPressed: () async {
-                            await SelectNetworkToReceiveNftRoute().push<void>(ref.context);
+                          onPressed: () {
+                            SelectNetworkToReceiveNftRoute().push<void>(ref.context);
                           },
                           child: Text(
                             context.i18n.wallet_receive_nft,
