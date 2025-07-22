@@ -8,11 +8,11 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 part 'user_chat_privacy_provider.r.g.dart';
 
 @riverpod
-Future<bool> canSendMessage(Ref ref, String masterPubkey) async {
-  final currentUserIsFollowed = isCurrentUserFollowed(ref, masterPubkey, cache: false);
+Future<bool> canSendMessage(Ref ref, String masterPubkey, {bool cache = true}) async {
+  final currentUserIsFollowed = isCurrentUserFollowed(ref, masterPubkey, cache: cache);
 
   final userPrivacySettings = await ref.watch(
-    userMetadataProvider(masterPubkey, cache: false).future,
+    userMetadataProvider(masterPubkey, cache: cache).future,
   );
   final everyoneCanSend = userPrivacySettings?.data.whoCanMessageYou == null;
 

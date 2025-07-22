@@ -20,6 +20,7 @@ class UserPickerSheet extends HookConsumerWidget {
     super.key,
     this.selectedPubkeys = const [],
     this.selectable = false,
+    this.controlPrivacy = false,
     this.header,
     this.footer,
   });
@@ -27,6 +28,7 @@ class UserPickerSheet extends HookConsumerWidget {
   final NavigationAppBar navigationBar;
   final List<String> selectedPubkeys;
   final bool selectable;
+  final bool controlPrivacy;
   final void Function(UserMetadataEntity user) onUserSelected;
 
   final Widget? header;
@@ -68,16 +70,18 @@ class UserPickerSheet extends HookConsumerWidget {
         if (header != null) header!,
         if (debouncedQuery.isEmpty)
           FollowingUsers(
-            onUserSelected: onUserSelected,
-            selectedPubkeys: selectedPubkeys,
             selectable: selectable,
+            onUserSelected: onUserSelected,
+            controlPrivacy: controlPrivacy,
+            selectedPubkeys: selectedPubkeys,
           )
         else
           SearchedUsers(
-            users: searchResults.valueOrNull?.users,
+            selectable: selectable,
+            controlPrivacy: controlPrivacy,
             onUserSelected: onUserSelected,
             selectedPubkeys: selectedPubkeys,
-            selectable: selectable,
+            users: searchResults.valueOrNull?.users,
           ),
         SliverToBoxAdapter(child: SizedBox(height: 8.0.s)),
         if (footer != null) footer!,

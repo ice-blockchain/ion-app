@@ -31,6 +31,7 @@ class ShareViaMessageModal extends HookWidget {
           Flexible(
             child: UserPickerSheet(
               selectable: true,
+              controlPrivacy: true,
               selectedPubkeys: selectedPubkeys,
               navigationBar: NavigationAppBar.modal(
                 title: Text(context.i18n.feed_share_via),
