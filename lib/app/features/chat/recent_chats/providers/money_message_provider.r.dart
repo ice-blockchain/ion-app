@@ -11,6 +11,7 @@ import 'package:ion/app/features/wallets/model/entities/funds_request_entity.f.d
 import 'package:ion/app/features/wallets/model/entities/wallet_asset_entity.f.dart';
 import 'package:ion/app/features/wallets/model/transaction_data.f.dart';
 import 'package:ion/app/features/wallets/providers/coins_provider.r.dart';
+import 'package:ion/app/utils/num.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'money_message_provider.r.g.dart';
@@ -51,7 +52,10 @@ Future<MoneyDisplayData?> fundsRequestDisplayData(
     return null;
   }
 
-  return (amount: amount.toString(), coin: coin.abbreviation);
+  return (
+    amount: formatDouble(amount, maximumFractionDigits: 10),
+    coin: coin.abbreviation,
+  );
 }
 
 @riverpod
@@ -77,7 +81,7 @@ Future<MoneyDisplayData?> transactionDisplayData(
   Ref ref,
   EventMessage eventMessage,
 ) async {
-  final transactionData = await ref.read(transactionDataForMessageProvider(eventMessage).future);
+  final transactionData = await ref.watch(transactionDataForMessageProvider(eventMessage).future);
 
   if (transactionData == null) {
     return null;
@@ -92,5 +96,8 @@ Future<MoneyDisplayData?> transactionDisplayData(
     return null;
   }
 
-  return (amount: amount.toString(), coin: coin.abbreviation);
+  return (
+    amount: formatDouble(amount, maximumFractionDigits: 10),
+    coin: coin.abbreviation,
+  );
 }
