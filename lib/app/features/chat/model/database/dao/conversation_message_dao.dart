@@ -199,6 +199,41 @@ class ConversationMessageDao extends DatabaseAccessor<ChatDatabase>
     }
   }
 
+  Future<void> revertDeletedMessages({
+    required Env env,
+    required String masterPubkey,
+    required String eventSignerPubkey,
+    required List<EventReference> eventReferences,
+  }) async {
+    for (final eventReference in eventReferences) {
+      final existingStatusRow = await (select(messageStatusTable)
+            ..where((table) => table.masterPubkey.equals(masterPubkey))
+            ..where((table) => table.pubkey.equals(eventSignerPubkey))
+            ..where((table) => table.messageEventReference.equalsValue(eventReference)))
+          .getSingleOrNull();
+
+      if (existingStatusRow == null) {
+        await into(messageStatusTable).insert(
+          MessageStatusTableCompanion.insert(
+            masterPubkey: masterPubkey,
+            pubkey: eventSignerPubkey,
+            messageEventReference: eventReference,
+            status: MessageDeliveryStatus.read,
+          ),
+        );
+        continue;
+      }
+
+      await (update(messageStatusTable)
+            ..where((table) => table.masterPubkey.equals(masterPubkey))
+            ..where((table) => table.pubkey.equals(eventSignerPubkey))
+            ..where((table) => table.messageEventReference.equalsValue(eventReference)))
+          .write(
+        const MessageStatusTableCompanion(status: Value(MessageDeliveryStatus.read)),
+      );
+    }
+  }
+
   Future<void> _removeExpiredMessages(List<EventReference> eventReferences, Env env) async {
     final expiration = env.get<int>(EnvVariable.GIFT_WRAP_EXPIRATION_HOURS);
 
