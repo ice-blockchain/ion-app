@@ -42,7 +42,7 @@ class ChatInputBarCameraButton extends ConsumerWidget {
       builder: (_, onPressed) => GestureDetector(
         onTap: onPressed,
         child: Padding(
-          padding: EdgeInsetsDirectional.fromSTEB(0.0.s, 4.0.s, 0, 4.0.s),
+          padding: EdgeInsetsDirectional.fromSTEB(10.0.s, 4.0.s, 0, 4.0.s),
           child: Assets.svg.iconCameraOpen.icon(
             color: context.theme.appColors.primaryText,
             size: 24.0.s,

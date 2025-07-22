@@ -10,7 +10,6 @@ import 'package:flutter_keyboard_visibility/flutter_keyboard_visibility.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/chat/e2ee/model/entities/private_direct_message_data.f.dart';
-import 'package:ion/app/features/chat/providers/attach_menu_shown_notifier.r.dart';
 import 'package:ion/app/features/chat/providers/draft_message_provider.r.dart';
 import 'package:ion/app/features/chat/providers/messaging_bottom_bar_state_provider.r.dart';
 import 'package:ion/app/features/chat/recent_chats/providers/selected_edit_message_provider.r.dart';
@@ -46,12 +45,12 @@ class ChatInputBar extends HookConsumerWidget {
     final textFieldController = useTextEditingController();
     final voiceRecorderController = useRef(RecorderController());
 
-    final isAttachMenuShown = ref.watch(attachMenuShownProvider);
     final editMessage = ref.watch(selectedEditMessageProvider);
     final repliedMessage = ref.watch(selectedReplyMessageProvider);
     final isBlocked =
         ref.watch(isBlockedNotifierProvider(receiverMasterPubkey)).valueOrNull ?? true;
 
+    final isAttachMenuShown = useState<bool>(false);
     final isTogglingBottomView = useRef(false);
     final recordedMediaFile = useState<MediaFile?>(null);
     final isTextLimitReached = useState<bool>(false);
@@ -119,13 +118,13 @@ class ChatInputBar extends HookConsumerWidget {
           if (isTogglingBottomView.value) return;
 
           if (textFieldFocusNode.hasFocus) {
-            if (isAttachMenuShown) {
-              ref.read(attachMenuShownProvider.notifier).hide();
+            if (isAttachMenuShown.value) {
+              isAttachMenuShown.value = false;
             }
           } else {
             if (isKeyboardVisible.value) {
               cachePadding.value = 0;
-              ref.read(attachMenuShownProvider.notifier).hide();
+              isAttachMenuShown.value = false;
             }
           }
         }
@@ -151,48 +150,48 @@ class ChatInputBar extends HookConsumerWidget {
         ? cachePadding.value
         : bottomPadding > 0
             ? bottomPadding
-            : isAttachMenuShown
+            : isAttachMenuShown.value
                 ? ChatAttachMenu.moreContentHeight.s
                 : 0.0);
 
     final showAttachMenu = useCallback(
       () {
-        if (isAttachMenuShown) return;
+        if (isAttachMenuShown.value) return;
 
         textFieldFocusNode.unfocus();
         cachePadding.value = bottomPadding;
-        ref.read(attachMenuShownProvider.notifier).show();
+        isAttachMenuShown.value = true;
       },
       [isAttachMenuShown, textFieldFocusNode, bottomPadding],
     );
 
     final hideAttachMenu = useCallback(
       () {
-        if (!isAttachMenuShown) return;
-        ref.read(attachMenuShownProvider.notifier).hide();
+        if (!isAttachMenuShown.value) return;
+        isAttachMenuShown.value = false;
         textFieldFocusNode.requestFocus();
 
         Future<void>.delayed(const Duration(milliseconds: 600)).then((_) {
-          if (!isAttachMenuShown) cachePadding.value = 0;
+          if (!isAttachMenuShown.value) cachePadding.value = 0;
         });
       },
       [isAttachMenuShown, textFieldFocusNode],
     );
 
     return Padding(
-      padding: EdgeInsetsDirectional.fromSTEB(8.s, 8.s, 14.0.s, 8.s),
+      padding: EdgeInsetsDirectional.all(8.s),
       child: Column(
         children: [
           Stack(
             children: [
               Row(
                 crossAxisAlignment: CrossAxisAlignment.end,
-                spacing: 6.0.s,
                 children: [
                   ChatAttachmentMenuSwitchButton(
+                    isAttachMenuShown: isAttachMenuShown.value,
                     onTap: () async {
                       isTogglingBottomView.value = true;
-                      if (isAttachMenuShown) {
+                      if (isAttachMenuShown.value) {
                         hideAttachMenu();
                       } else {
                         showAttachMenu();
@@ -201,6 +200,7 @@ class ChatInputBar extends HookConsumerWidget {
                       isTogglingBottomView.value = false;
                     },
                   ),
+                  SizedBox(width: 6.s),
                   ChatTextField(
                     textFieldController: textFieldController,
                     textFieldFocusNode: textFieldFocusNode,

@@ -18,8 +18,10 @@ class SendButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: disabled ? null : onSend,
+      behavior: HitTestBehavior.opaque,
       child: Container(
         padding: EdgeInsets.symmetric(horizontal: 4.0.s, vertical: 4.0.s),
+        margin: EdgeInsetsDirectional.symmetric(horizontal: 6.0.s),
         decoration: BoxDecoration(
           color:
               disabled ? context.theme.appColors.sheetLine : context.theme.appColors.primaryAccent,
