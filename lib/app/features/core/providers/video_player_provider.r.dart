@@ -6,9 +6,11 @@ import 'dart:io';
 import 'package:cached_video_player_plus/cached_video_player_plus.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_cache_manager/flutter_cache_manager.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/features/core/providers/ion_connect_media_url_fallback_provider.r.dart';
 import 'package:ion/app/features/core/providers/mute_provider.r.dart';
+import 'package:ion/app/services/http_client/http_client.dart';
 import 'package:ion/app/services/logger/logger.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:video_player/video_player.dart';
@@ -149,6 +151,14 @@ class VideoPlayerControllerFactory {
       return CachedVideoPlayerPlus.networkUrl(
         Uri.parse(sourcePath),
         videoPlayerOptions: videoPlayerOptions,
+        cacheManager: CacheManager(
+          Config(
+            'videoCache',
+            fileService: HttpFileService(
+              client: CustomHttpOverrides().createHttpClient(SecurityContext.defaultContext),
+            ),
+          ),
+        ),
       );
     } else if (_isLocalFile(sourcePath)) {
       return CachedVideoPlayerPlus.file(
@@ -176,4 +186,63 @@ VideoPlayerControllerFactory videoPlayerControllerFactory(Ref ref, String source
   return VideoPlayerControllerFactory(
     sourcePath: sourcePath,
   );
+}
+
+class HttpFileService extends FileService {
+  HttpFileService({required HttpClient client}) : _httpClient = client;
+
+  final HttpClient _httpClient;
+
+  @override
+  Future<FileServiceResponse> get(
+    String url, {
+    Map<String, String>? headers,
+  }) async {
+    try {
+      final httpRequest = await _httpClient.getUrl(Uri.parse(url));
+      final httpResponse = await httpRequest.close();
+
+      return HttpGetResponse(httpResponse);
+    } finally {
+      _httpClient.close();
+    }
+  }
+}
+
+class HttpGetResponse implements FileServiceResponse {
+  HttpGetResponse(this._response);
+
+  final HttpClientResponse _response;
+
+  @override
+  Stream<List<int>> get content => _response;
+
+  @override
+  int? get contentLength => _response.contentLength >= 0 ? _response.contentLength : null;
+
+  @override
+  String? get eTag => _response.headers.value('etag');
+
+  @override
+  String get fileExtension {
+    final contentType = _response.headers.contentType?.mimeType ?? '';
+    if (contentType.contains('/')) {
+      return '.${contentType.split('/').last}';
+    }
+    return '';
+  }
+
+  @override
+  int get statusCode => _response.statusCode;
+
+  @override
+  DateTime get validTill {
+    final expires = _response.headers.value('expires');
+    if (expires != null) {
+      try {
+        return HttpDate.parse(expires);
+      } catch (_) {}
+    }
+    return DateTime.now().add(const Duration(days: 7));
+  }
 }
