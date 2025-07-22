@@ -51,6 +51,11 @@ class ProfilePage extends HookConsumerWidget {
     }
 
     final userMetadata = ref.watch(userMetadataProvider(pubkey));
+
+    if (userMetadata.hasError) {
+      return const CantFindProfilePage();
+    }
+
     final isCurrentUserProfile = ref.watch(isCurrentUserSelectorProvider(pubkey));
 
     final didRefresh = useState(false);
