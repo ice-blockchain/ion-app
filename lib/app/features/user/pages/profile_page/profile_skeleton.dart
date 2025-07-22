@@ -3,6 +3,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:ion/app/components/screen_offset/screen_side_offset.dart';
+import 'package:ion/app/components/screen_offset/screen_top_offset.dart';
 import 'package:ion/app/components/skeleton/skeleton.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/router/components/navigation_app_bar/navigation_back_button.dart';
@@ -15,7 +16,7 @@ class ProfileSkeleton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: SafeArea(
+      body: ScreenTopOffset(
         child: SingleChildScrollView(
           child: Column(
             children: [
@@ -53,9 +54,15 @@ class _ProfileInfo extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                _SkeletonBox.square(size: 24.0.s, borderRadius: 8.0.s),
+                Padding(
+                  padding: EdgeInsetsDirectional.only(top: 12.0.s),
+                  child: _SkeletonBox.square(size: 24.0.s, borderRadius: 8.0.s),
+                ),
                 _SkeletonBox.square(size: 65.0.s),
-                _SkeletonBox.square(size: 24.0.s, borderRadius: 8.0.s),
+                Padding(
+                  padding: EdgeInsetsDirectional.only(top: 12.0.s),
+                  child: _SkeletonBox.square(size: 24.0.s, borderRadius: 8.0.s),
+                ),
               ],
             ),
           SizedBox(height: 16.0.s),
@@ -74,7 +81,7 @@ class _ProfileInfo extends StatelessWidget {
             width: 120.0.s,
             height: 28.0.s,
           ),
-          SizedBox(height: 12.0.s),
+          SizedBox(height: 16.0.s),
           const _ProfileDetails(),
         ],
       ),
@@ -91,16 +98,22 @@ class _ProfileDetails extends StatelessWidget {
       _SkeletonBox(width: 343.0.s, height: 36.0.s),
       SizedBox(height: 12.0.s),
       _SkeletonBox(width: 218.0.s, height: 16.0.s),
-      SizedBox(height: 12.0.s),
-      _SkeletonBox(width: 343.0.s, height: 16.0.s),
-      SizedBox(height: 5.0.s),
-      _SkeletonBox(width: 280.0.s, height: 16.0.s),
-      SizedBox(height: 12.0.s),
-      _SkeletonBox(width: 343.0.s, height: 16.0.s),
-      SizedBox(height: 12.0.s),
-      _SkeletonBox(width: 343.0.s, height: 16.0.s),
-      SizedBox(height: 12.0.s),
-      _SkeletonBox(width: 343.0.s, height: 30.0.s),
+      SizedBox(height: 32.0.s),
+      Row(
+        children: [
+          _SkeletonBox(
+            width: 80.0.s,
+            height: 20.0.s,
+            borderRadius: 8.0.s,
+          ),
+          SizedBox(width: 24.0.s),
+          _SkeletonBox(
+            width: 80.0.s,
+            height: 20.0.s,
+            borderRadius: 8.0.s,
+          ),
+        ],
+      ),
     ];
 
     return Column(
@@ -133,12 +146,12 @@ class _AdditionalInfo extends StatelessWidget {
           SizedBox(height: 12.0.s),
           _SkeletonBox(
             width: double.infinity,
-            height: 35.0.s,
+            height: 30.0.s,
           ),
           SizedBox(height: 12.0.s),
           _SkeletonBox(
             width: double.infinity,
-            height: 200.0.s,
+            height: 100.0.s,
           ),
         ],
       ),
