@@ -7,6 +7,7 @@ import 'package:collection/collection.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:ion/app/features/chat/e2ee/model/entities/private_direct_message_data.f.dart';
 import 'package:ion/app/features/chat/model/message_type.dart';
+import 'package:ion/app/features/chat/recent_chats/providers/money_message_provider.r.dart';
 import 'package:ion/app/features/core/model/media_type.dart';
 import 'package:ion/app/features/feed/data/models/entities/generic_repost.f.dart';
 import 'package:ion/app/features/feed/data/models/entities/modifiable_post_data.f.dart';
@@ -186,7 +187,11 @@ class IonConnectPushDataPayload {
     return PushNotificationType.chatMultiMediaMessage;
   }
 
-  Map<String, String> placeholders(PushNotificationType notificationType) {
+  Future<Map<String, String>> placeholders(
+    PushNotificationType notificationType, {
+    required Future<MoneyDisplayData?> Function(EventMessage) getFundsRequestData,
+    required Future<MoneyDisplayData?> Function(EventMessage) getTransactionData,
+  }) async {
     final mainEntityUserMetadata = _getUserMetadata(pubkey: mainEntity.masterPubkey);
 
     final data = <String, String>{};
@@ -210,10 +215,20 @@ class IonConnectPushDataPayload {
             .any((list) => list.contains(ReplaceablePrivateDirectMessageEntity.kind.toString()))) {
           final message = ReplaceablePrivateDirectMessageEntity.fromEventMessage(decryptedEvent!);
 
-          if (message.data.messageType == MessageType.requestFunds ||
-              message.data.messageType == MessageType.moneySent) {
-            data['coinAmount'] = '0.01';
-            data['coinSymbol'] = 'ICE';
+          if (message.data.messageType == MessageType.requestFunds) {
+            final fundsRequestData = await getFundsRequestData(decryptedEvent!);
+            if (fundsRequestData != null) {
+              data['coinAmount'] = fundsRequestData.amount;
+              data['coinSymbol'] = fundsRequestData.coin;
+            }
+          }
+
+          if (message.data.messageType == MessageType.moneySent) {
+            final transactionData = await getTransactionData(decryptedEvent!);
+            if (transactionData != null) {
+              data['coinAmount'] = transactionData.amount;
+              data['coinSymbol'] = transactionData.coin;
+            }
           }
 
           if (notificationType == PushNotificationType.chatMultiGifMessage ||
@@ -237,12 +252,23 @@ class IonConnectPushDataPayload {
         }
 
         if (entity.data.kinds.any(
-          (list) =>
-              list.contains(FundsRequestEntity.kind.toString()) ||
-              list.contains(WalletAssetEntity.kind.toString()),
+          (list) => list.contains(FundsRequestEntity.kind.toString()),
         )) {
-          data['coinAmount'] = '0.01';
-          data['coinSymbol'] = 'ICE';
+          final transactionData = await getFundsRequestData(decryptedEvent!);
+          if (transactionData != null) {
+            data['coinAmount'] = transactionData.amount;
+            data['coinSymbol'] = transactionData.coin;
+          }
+        }
+
+        if (entity.data.kinds.any(
+          (list) => list.contains(WalletAssetEntity.kind.toString()),
+        )) {
+          final transactionData = await getTransactionData(decryptedEvent!);
+          if (transactionData != null) {
+            data['coinAmount'] = transactionData.amount;
+            data['coinSymbol'] = transactionData.coin;
+          }
         }
       }
     }

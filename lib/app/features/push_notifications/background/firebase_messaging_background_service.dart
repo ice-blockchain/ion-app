@@ -10,6 +10,7 @@ import 'package:ion/app/exceptions/exceptions.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/auth/providers/auth_provider.m.dart';
 import 'package:ion/app/features/chat/e2ee/providers/gift_unwrap_service_provider.r.dart';
+import 'package:ion/app/features/chat/recent_chats/providers/money_message_provider.r.dart';
 import 'package:ion/app/features/ion_connect/providers/ion_connect_event_signer_provider.r.dart';
 import 'package:ion/app/features/push_notifications/data/models/ion_connect_push_data_payload.f.dart';
 import 'package:ion/app/features/push_notifications/providers/notification_data_parser_provider.r.dart';
@@ -83,7 +84,13 @@ Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
   );
 
   final parser = await riverpodContainer.read(notificationDataParserProvider.future);
-  final parsedData = await parser.parse(data);
+  final parsedData = await parser.parse(
+    data,
+    getFundsRequestData: (eventMessage) =>
+        riverpodContainer.read(fundsRequestDisplayDataProvider(eventMessage).future),
+    getTransactionData: (eventMessage) =>
+        riverpodContainer.read(transactionDisplayDataProvider(eventMessage).future),
+  );
 
   final title = parsedData?.title ?? message.notification?.title;
   final body = parsedData?.body ?? message.notification?.body;
