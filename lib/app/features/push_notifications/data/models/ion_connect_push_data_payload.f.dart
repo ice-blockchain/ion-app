@@ -143,9 +143,9 @@ class IonConnectPushDataPayload {
           case MessageType.sharedPost:
             return PushNotificationType.chatSharePostMessage;
           case MessageType.requestFunds:
-            return PushNotificationType.paymentRequest;
+            return PushNotificationType.chatPaymentRequestMessage;
           case MessageType.moneySent:
-            return PushNotificationType.paymentReceived;
+            return PushNotificationType.chatPaymentReceivedMessage;
           case MessageType.visualMedia:
             return _getVisualMediaNotificationType(message);
         }
@@ -210,6 +210,12 @@ class IonConnectPushDataPayload {
             .any((list) => list.contains(ReplaceablePrivateDirectMessageEntity.kind.toString()))) {
           final message = ReplaceablePrivateDirectMessageEntity.fromEventMessage(decryptedEvent!);
 
+          if (message.data.messageType == MessageType.requestFunds ||
+              message.data.messageType == MessageType.moneySent) {
+            data['coinAmount'] = '0.01';
+            data['coinSymbol'] = 'ICE';
+          }
+
           if (notificationType == PushNotificationType.chatMultiGifMessage ||
               notificationType == PushNotificationType.chatMultiPhotoMessage) {
             data['fileCount'] = message.data.media.values.length.toString();
@@ -228,6 +234,15 @@ class IonConnectPushDataPayload {
               data['documentExt'] = splitMimeType.last;
             }
           }
+        }
+
+        if (entity.data.kinds.any(
+          (list) =>
+              list.contains(FundsRequestEntity.kind.toString()) ||
+              list.contains(WalletAssetEntity.kind.toString()),
+        )) {
+          data['coinAmount'] = '0.01';
+          data['coinSymbol'] = 'ICE';
         }
       }
     }
@@ -365,4 +380,6 @@ enum PushNotificationType {
   chatMultiMediaMessage,
   chatMultiPhotoMessage,
   chatMultiVideoMessage,
+  chatPaymentRequestMessage,
+  chatPaymentReceivedMessage,
 }

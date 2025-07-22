@@ -107,25 +107,30 @@ class ConfigRepository {
     AppConfigCacheStrategy cacheStrategy, {
     int? version,
   }) async {
-    final result = await _getFromNetwork<T>(
+    final networkData = await _getFromNetwork(
       configName,
-      parser,
       checkVersion,
       version: version,
     );
 
-    if (result.data != null) {
-      _verifyNetworkData(configName, result.data, checkVersion, result.headerVersion);
-      await _saveToCache(configName, result.data, cacheStrategy, result.headerVersion);
-      return result.data;
+    final data = networkData.data;
+
+    if (data != null) {
+      final parsedData = parser(data);
+
+      final version =
+          (parsedData is AppConfigWithVersion) ? parsedData.version : networkData.headerVersion;
+
+      _verifyNetworkData(configName, parsedData, checkVersion, version);
+      await _saveToCache(configName, data, cacheStrategy, version);
+      return parsedData;
     }
 
     return null;
   }
 
-  Future<({T? data, int? headerVersion})> _getFromNetwork<T>(
+  Future<({String? data, int? headerVersion})> _getFromNetwork(
     String configName,
-    T Function(String) parser,
     bool checkVersion, {
     int? version,
   }) async {
@@ -143,11 +148,10 @@ class ConfigRepository {
         final xVersion = response.headers.value('x-version');
         final headerVersion = xVersion != null ? int.tryParse(xVersion) : null;
 
-        final parsedData = parser(
-          response.data is String ? response.data as String : jsonEncode(response.data),
+        return (
+          data: response.data is String ? response.data as String : jsonEncode(response.data),
+          headerVersion: headerVersion
         );
-
-        return (data: parsedData, headerVersion: headerVersion);
       }
     } catch (error) {
       Logger.error(error);
@@ -219,13 +223,12 @@ class ConfigRepository {
     }
   }
 
-  Future<void> _saveToCache<T>(
+  Future<void> _saveToCache(
     String configName,
-    T data,
+    String json,
     AppConfigCacheStrategy cacheStrategy,
-    int? headerVersion,
+    int? version,
   ) async {
-    final isString = data is String;
     final now = DateTime.now();
 
     try {
@@ -234,20 +237,17 @@ class ConfigRepository {
           _localStorage.setString(getSyncDateKey(configName), now.toIso8601String()),
           _localStorage.setString(
             getDataKey(configName),
-            isString ? data : jsonEncode(data),
+            json,
           ),
         ]);
       } else {
         final cacheFile = File(await _getCacheFilePath(configName));
-        await cacheFile.writeAsString(isString ? data : jsonEncode(data));
+        await cacheFile.writeAsString(json);
         await cacheFile.setLastModified(now);
       }
 
-      // Save version from data if it's AppConfigWithVersion, otherwise use headerVersion if available
-      if (data is AppConfigWithVersion) {
-        await _localStorage.setInt(getCacheVersionKey(configName), data.version);
-      } else if (headerVersion != null) {
-        await _localStorage.setInt(getCacheVersionKey(configName), headerVersion);
+      if (version != null) {
+        await _localStorage.setInt(getCacheVersionKey(configName), version);
       }
     } catch (error) {
       Logger.error(error);

@@ -168,6 +168,14 @@ class NotificationDataParser {
             await translator.translate((t) => t.chatMultiVideoMessage?.title),
             await translator.translate((t) => t.chatMultiVideoMessage?.body)
           ),
+        PushNotificationType.chatPaymentRequestMessage => (
+            await translator.translate((t) => t.chatPaymentRequestMessage?.title),
+            await translator.translate((t) => t.chatPaymentRequestMessage?.body)
+          ),
+        PushNotificationType.chatPaymentReceivedMessage => (
+            await translator.translate((t) => t.chatPaymentReceivedMessage?.title),
+            await translator.translate((t) => t.chatPaymentReceivedMessage?.body)
+          ),
       };
     } catch (error) {
       return (null, null);
