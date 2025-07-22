@@ -123,6 +123,7 @@ import 'package:ion/app/features/user/pages/profile_page/pages/request_coins_for
 import 'package:ion/app/features/user/pages/profile_page/profile_page.dart';
 import 'package:ion/app/features/user/pages/profile_page/self_profile_page.dart';
 import 'package:ion/app/features/user/pages/switch_account_modal/switch_account_modal.dart';
+import 'package:ion/app/features/video/views/pages/article_video_page.dart';
 import 'package:ion/app/features/video/views/pages/feed_advanced_search_videos_page.dart';
 import 'package:ion/app/features/video/views/pages/feed_videos_page.dart';
 import 'package:ion/app/features/video/views/pages/profile_videos_page.dart';

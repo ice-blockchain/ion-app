@@ -24,10 +24,15 @@ class TextEditorSingleImageEmbed extends CustomBlockEmbed {
 /// Embed builder for [TextEditorSingleImageEmbed].
 ///
 class TextEditorSingleImageBuilder extends EmbedBuilder {
-  TextEditorSingleImageBuilder({this.media, this.authorPubkey});
+  TextEditorSingleImageBuilder({
+    this.media,
+    this.authorPubkey,
+    this.eventReference,
+  });
 
   final Map<String, MediaAttachment>? media;
   final String? authorPubkey;
+  final String? eventReference;
 
   @override
   String get key => textEditorSingleImageKey;
@@ -51,6 +56,7 @@ class TextEditorSingleImageBuilder extends EmbedBuilder {
               path: path,
               media: media,
               authorPubkey: authorPubkey,
+              eventReference: eventReference,
             ),
           ),
         ),

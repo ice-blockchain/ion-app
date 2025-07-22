@@ -113,6 +113,7 @@ class ArticleDetailsPage extends HookConsumerWidget {
                           media: articleEntity.data.media,
                           authorPubkey: articleEntity.masterPubkey,
                           enableInteractiveSelection: true,
+                          eventReference: eventReference.encode(),
                         ),
                       ),
                     ],
