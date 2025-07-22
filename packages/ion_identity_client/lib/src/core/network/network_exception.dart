@@ -45,5 +45,5 @@ class DecodeException extends NetworkException {
   final StackTrace stackTrace;
 
   @override
-  String toString() => 'DecodeException: Failed to decode response - $error';
+  String toString() => 'DecodeException: Failed to decode response - $error\n$stackTrace';
 }
