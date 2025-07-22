@@ -11,6 +11,7 @@ import 'package:ion/app/features/wallets/model/coins_group.f.dart';
 import 'package:ion/app/features/wallets/providers/wallet_user_preferences/user_preferences_selectors.r.dart';
 import 'package:ion/app/features/wallets/views/components/coins_list/unseen_transaction_indicator.dart';
 import 'package:ion/app/features/wallets/views/pages/coins_flow/coin_details/providers/network_selector_notifier.r.dart';
+import 'package:ion/app/features/wallets/views/utils/crypto_formatter.dart';
 import 'package:ion/app/utils/num.dart';
 import 'package:ion/app/utils/precache_pictures.dart';
 import 'package:ion/generated/assets.gen.dart';
@@ -64,7 +65,7 @@ class CoinsGroupItem extends HookConsumerWidget {
                   ),
                 ),
               Text(
-                isBalanceVisible ? formatDouble(coinsGroup.totalAmount) : '****',
+                isBalanceVisible ? formatCrypto(coinsGroup.totalAmount) : '****',
                 style: context.theme.appTextThemes.body
                     .copyWith(color: context.theme.appColors.primaryText),
               ),
