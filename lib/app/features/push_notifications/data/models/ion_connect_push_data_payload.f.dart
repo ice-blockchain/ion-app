@@ -250,26 +250,6 @@ class IonConnectPushDataPayload {
             }
           }
         }
-
-        if (entity.data.kinds.any(
-          (list) => list.contains(FundsRequestEntity.kind.toString()),
-        )) {
-          final transactionData = await getFundsRequestData(decryptedEvent!);
-          if (transactionData != null) {
-            data['coinAmount'] = transactionData.amount;
-            data['coinSymbol'] = transactionData.coin;
-          }
-        }
-
-        if (entity.data.kinds.any(
-          (list) => list.contains(WalletAssetEntity.kind.toString()),
-        )) {
-          final transactionData = await getTransactionData(decryptedEvent!);
-          if (transactionData != null) {
-            data['coinAmount'] = transactionData.amount;
-            data['coinSymbol'] = transactionData.coin;
-          }
-        }
       }
     }
 
