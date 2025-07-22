@@ -133,7 +133,6 @@ class PostBody extends HookConsumerWidget {
                   enableInteractiveSelection: isTextSelectable,
                   tagsColor: accentTheme ? context.theme.appColors.anakiwa : null,
                 ),
-          
               if (hasOverflow)
                 Text(
                   context.i18n.common_show_more,
@@ -143,13 +142,11 @@ class PostBody extends HookConsumerWidget {
                         : context.theme.appColors.darkBlue,
                   ),
                 ),
-          
               if (pollData != null)
                 PostPoll(
                   pollData: pollData,
                   postReference: entity.toEventReference(),
                 ),
-          
               if (media.isNotEmpty)
                 PostMedia(
                   media: media,
@@ -159,7 +156,6 @@ class PostBody extends HookConsumerWidget {
                   eventReference: entity.toEventReference(),
                   framedEventReference: framedEventReference,
                 ),
-          
               if (media.isEmpty && hasValidUrlMetadata)
                 UrlPreviewContent(
                   url: firstUrlInPost!,
