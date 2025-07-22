@@ -9,8 +9,11 @@ String formatCrypto(double value, [String? currency]) {
     // For values 1-9.99: max 6 decimals, min 2 decimals
     // Handle truncation for cases like 1.1234567 -> 1.123456 and 2.0000001 -> 2.00
     _ when value >= 1 => _formatWithSmartTruncation(value, maxDecimals: 6, minDecimals: 2),
-    // For values < 1: max 6 decimals, min 2 decimals, but handle very small numbers
+    // For values < 1e-6: specific format as 0.0(n)d
+    // - n is number of zeros after decimal point
+    // - d is first non-zero digit
     _ when value < 1e-6 => _formatVerySmallNumber(value),
+    // For values < 1: max 6 decimals, min 2 decimals
     _ => _formatWithSmartTruncation(value, maxDecimals: 6, minDecimals: 2),
   };
 
