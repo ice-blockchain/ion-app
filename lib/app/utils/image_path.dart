@@ -25,10 +25,35 @@ Future<bool> isGifAsset(AssetEntity assetEntity) async {
   return false;
 }
 
-Future<File?> getAssetFile(AssetEntity assetEntity) async {
-  if (await isGifAsset(assetEntity)) {
-    return assetEntity.originFile;
-  } else {
-    return assetEntity.file;
+Future<bool> isAnimatedAsset(AssetEntity assetEntity) async {
+  final isGif = await isGifAsset(assetEntity);
+  if (isGif) {
+    return true;
   }
+
+  if (assetEntity.mimeType == 'image/webp') {
+    return true;
+  }
+
+  final file = await assetEntity.originFile;
+  final path = file?.path;
+
+  if (path != null && path.toLowerCase().endsWith('.webp')) {
+    return true;
+  }
+
+  return false;
+}
+
+Future<File?> getAssetFile(AssetEntity assetEntity) async {
+  final isAnimated = await isAnimatedAsset(assetEntity);
+
+  File? resultFile;
+  if (isAnimated) {
+    resultFile = await assetEntity.originFile;
+  } else {
+    resultFile = await assetEntity.file;
+  }
+
+  return resultFile;
 }
