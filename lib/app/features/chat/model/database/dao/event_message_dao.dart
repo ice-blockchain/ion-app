@@ -20,6 +20,8 @@ class EventMessageDao extends DatabaseAccessor<ChatDatabase> with _$EventMessage
   Future<void> add(EventMessage event) async {
     final EventReference eventReference;
     switch (event.kind) {
+      case DeletionRequestEntity.kind:
+        eventReference = DeletionRequestEntity.fromEventMessage(event).toEventReference();
       case GenericRepostEntity.kind:
         eventReference = GenericRepostEntity.fromEventMessage(event).toEventReference();
       case ReplaceablePrivateDirectMessageEntity.kind:

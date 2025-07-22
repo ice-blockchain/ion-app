@@ -1,6 +1,7 @@
 // SPDX-License-Identifier: ice License 1.0
 
 import 'dart:async';
+import 'dart:developer' as Logger;
 
 import 'package:collection/collection.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
@@ -34,11 +35,15 @@ class DeletionRequestEntity with IonConnectEntity, ImmutableEntity, _$DeletionRe
       throw IncorrectEventKindException(eventMessage.id, kind: kind);
     }
 
+    if (eventMessage.sig == null) {
+      Logger.log('Event message ${eventMessage.id} does not have a signature');
+    }
+
     return DeletionRequestEntity(
       id: eventMessage.id,
       pubkey: eventMessage.pubkey,
       masterPubkey: eventMessage.masterPubkey,
-      signature: eventMessage.sig!,
+      signature: eventMessage.sig ?? '',
       createdAt: eventMessage.createdAt,
       data: DeletionRequest.fromEventMessage(eventMessage),
     );
