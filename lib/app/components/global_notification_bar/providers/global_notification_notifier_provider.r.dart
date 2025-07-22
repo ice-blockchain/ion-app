@@ -36,7 +36,7 @@ class GlobalNotificationNotifier extends _$GlobalNotificationNotifier {
     _hideTimer?.cancel();
 
     if (!isPermanent) {
-      _hideTimer = Timer(_notificationDuration, hide);
+      _hideTimer = Timer(_notificationDuration - GlobalNotificationBar.animationDuration, hide);
     }
   }
 
