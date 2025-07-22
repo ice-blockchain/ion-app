@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:ion/app/components/list_item/list_item.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/feed/data/models/feed_interests.f.dart';
+import 'package:ion/app/utils/string.dart';
 import 'package:ion/generated/assets.gen.dart';
 
 class Subcategories extends StatelessWidget {
@@ -35,7 +36,7 @@ class Subcategories extends StatelessWidget {
             trailing: isSelected
                 ? Assets.svg.iconBlockCheckboxOnblue.icon(color: colors.success)
                 : Assets.svg.iconBlockCheckboxOff.icon(color: colors.tertararyText),
-            title: Text(subcategoryEntry.value.display, style: textStyles.body),
+            title: Text(subcategoryEntry.value.display.toTitleCase(), style: textStyles.body),
           );
         },
       ).toList(),
