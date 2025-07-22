@@ -53,6 +53,7 @@ Future<MoneyDisplayData?> fundsRequestDisplayData(
   }
 
   return (
+    // TODO: use new crypto formatter when implemented
     amount: formatDouble(amount, maximumFractionDigits: 10),
     coin: coin.abbreviation,
   );
@@ -97,6 +98,7 @@ Future<MoneyDisplayData?> transactionDisplayData(
   }
 
   return (
+    // TODO: use new crypto formatter when implemented
     amount: formatDouble(amount, maximumFractionDigits: 10),
     coin: coin.abbreviation,
   );
