@@ -39,10 +39,12 @@ Map<String, dynamic> _$$WalletTransferRequestImplToJson(
       'requestBody': instance.requestBody.toJson(),
       'status': instance.status,
       'dateRequested': instance.dateRequested.toIso8601String(),
-      'txHash': instance.txHash,
-      'fee': instance.fee,
-      'dateBroadcasted': instance.dateBroadcasted?.toIso8601String(),
-      'dateConfirmed': instance.dateConfirmed?.toIso8601String(),
-      'reason': instance.reason,
-      'metadata': instance.metadata,
+      if (instance.txHash case final value?) 'txHash': value,
+      if (instance.fee case final value?) 'fee': value,
+      if (instance.dateBroadcasted?.toIso8601String() case final value?)
+        'dateBroadcasted': value,
+      if (instance.dateConfirmed?.toIso8601String() case final value?)
+        'dateConfirmed': value,
+      if (instance.reason case final value?) 'reason': value,
+      if (instance.metadata case final value?) 'metadata': value,
     };

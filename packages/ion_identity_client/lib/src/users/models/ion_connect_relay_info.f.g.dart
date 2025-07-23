@@ -17,7 +17,8 @@ Map<String, dynamic> _$$IonConnectRelayInfoImplToJson(
         _$IonConnectRelayInfoImpl instance) =>
     <String, dynamic>{
       'url': instance.url,
-      'type': _$IonConnectRelayTypeEnumMap[instance.type],
+      if (_$IonConnectRelayTypeEnumMap[instance.type] case final value?)
+        'type': value,
     };
 
 const _$IonConnectRelayTypeEnumMap = {

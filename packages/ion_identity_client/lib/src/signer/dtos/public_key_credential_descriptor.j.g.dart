@@ -19,5 +19,6 @@ Map<String, dynamic> _$PublicKeyCredentialDescriptorToJson(
     <String, dynamic>{
       'type': instance.type,
       'id': instance.id,
-      'encryptedPrivateKey': instance.encryptedPrivateKey,
+      if (instance.encryptedPrivateKey case final value?)
+        'encryptedPrivateKey': value,
     };

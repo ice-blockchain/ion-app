@@ -14,6 +14,6 @@ export 'recovery_challenge_response.j.dart';
 export 'recovery_key_data.dart';
 export 'register_complete_response.dart';
 export 'register_complete_wallet.j.dart';
-export 'register_init_request.j.dart';
+export 'register_init_request.f.dart';
 export 'signed_challenge.f.dart';
 export 'user.dart';

@@ -21,5 +21,5 @@ Map<String, dynamic> _$$WalletViewAggregationWalletImplToJson(
       'asset': instance.asset.toJson(),
       'walletId': instance.walletId,
       'network': instance.network,
-      'coinId': instance.coinId,
+      if (instance.coinId case final value?) 'coinId': value,
     };

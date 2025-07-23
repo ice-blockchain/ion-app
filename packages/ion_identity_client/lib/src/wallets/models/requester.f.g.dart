@@ -16,6 +16,6 @@ _$RequesterImpl _$$RequesterImplFromJson(Map<String, dynamic> json) =>
 Map<String, dynamic> _$$RequesterImplToJson(_$RequesterImpl instance) =>
     <String, dynamic>{
       'userId': instance.userId,
-      'tokenId': instance.tokenId,
-      'appId': instance.appId,
+      if (instance.tokenId case final value?) 'tokenId': value,
+      if (instance.appId case final value?) 'appId': value,
     };

@@ -24,7 +24,7 @@ Map<String, dynamic> _$$KeyResponseImplToJson(_$KeyResponseImpl instance) =>
       'scheme': instance.scheme,
       'curve': instance.curve,
       'publicKey': instance.publicKey,
-      'name': instance.name,
+      if (instance.name case final value?) 'name': value,
       'status': _$KeyStatusEnumMap[instance.status]!,
       'custodial': instance.custodial,
       'dateCreated': instance.dateCreated.toIso8601String(),

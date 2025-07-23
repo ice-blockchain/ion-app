@@ -21,5 +21,5 @@ Map<String, dynamic> _$$WalletTransferRequestsImplToJson(
     <String, dynamic>{
       'walletId': instance.walletId,
       'items': instance.items.map((e) => e.toJson()).toList(),
-      'nextPageToken': instance.nextPageToken,
+      if (instance.nextPageToken case final value?) 'nextPageToken': value,
     };

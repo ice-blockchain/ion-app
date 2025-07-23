@@ -17,5 +17,5 @@ Map<String, dynamic> _$$WalletViewCoinDataImplToJson(
         _$WalletViewCoinDataImpl instance) =>
     <String, dynamic>{
       'coinId': instance.coinId,
-      'walletId': instance.walletId,
+      if (instance.walletId case final value?) 'walletId': value,
     };

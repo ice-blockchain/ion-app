@@ -22,8 +22,9 @@ Map<String, dynamic> _$$UpdateUserSocialProfileResponseImplToJson(
         _$UpdateUserSocialProfileResponseImpl instance) =>
     <String, dynamic>{
       'username': instance.username,
-      'displayName': instance.displayName,
-      'referral': instance.referral,
-      'usernameProof': instance.usernameProof,
-      'referralMasterKey': instance.referralMasterKey,
+      if (instance.displayName case final value?) 'displayName': value,
+      if (instance.referral case final value?) 'referral': value,
+      if (instance.usernameProof case final value?) 'usernameProof': value,
+      if (instance.referralMasterKey case final value?)
+        'referralMasterKey': value,
     };

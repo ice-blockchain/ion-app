@@ -39,5 +39,6 @@ Map<String, dynamic> _$$WalletViewImplToJson(_$WalletViewImpl instance) =>
       'createdAt': instance.createdAt.toIso8601String(),
       'updatedAt': instance.updatedAt.toIso8601String(),
       'userId': instance.userId,
-      'nfts': instance.nfts?.map((e) => e.toJson()).toList(),
+      if (instance.nfts?.map((e) => e.toJson()).toList() case final value?)
+        'nfts': value,
     };

@@ -1,23 +1,22 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'signed_challenge.f.dart';
+part of 'register_init_request.f.dart';
 
 // **************************************************************************
 // JsonSerializableGenerator
 // **************************************************************************
 
-_$SignedChallengeImpl _$$SignedChallengeImplFromJson(
+_$RegisterInitRequestImpl _$$RegisterInitRequestImplFromJson(
         Map<String, dynamic> json) =>
-    _$SignedChallengeImpl(
-      firstFactorCredential: CredentialRequestData.fromJson(
-          json['firstFactorCredential'] as Map<String, dynamic>),
+    _$RegisterInitRequestImpl(
+      email: json['email'] as String,
       earlyAccessEmail: json['earlyAccessEmail'] as String?,
     );
 
-Map<String, dynamic> _$$SignedChallengeImplToJson(
-        _$SignedChallengeImpl instance) =>
+Map<String, dynamic> _$$RegisterInitRequestImplToJson(
+        _$RegisterInitRequestImpl instance) =>
     <String, dynamic>{
-      'firstFactorCredential': instance.firstFactorCredential.toJson(),
+      'email': instance.email,
       if (instance.earlyAccessEmail case final value?)
         'earlyAccessEmail': value,
     };
