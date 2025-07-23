@@ -11,7 +11,7 @@ import 'package:ion/app/features/wallets/model/entities/funds_request_entity.f.d
 import 'package:ion/app/features/wallets/model/entities/wallet_asset_entity.f.dart';
 import 'package:ion/app/features/wallets/model/transaction_data.f.dart';
 import 'package:ion/app/features/wallets/providers/coins_provider.r.dart';
-import 'package:ion/app/utils/num.dart';
+import 'package:ion/app/features/wallets/views/utils/crypto_formatter.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'money_message_provider.r.g.dart';
@@ -53,8 +53,7 @@ Future<MoneyDisplayData?> fundsRequestDisplayData(
   }
 
   return (
-    // TODO: use new crypto formatter when implemented
-    amount: formatDouble(amount, maximumFractionDigits: 10),
+    amount: formatCrypto(amount),
     coin: coin.abbreviation,
   );
 }
@@ -98,8 +97,7 @@ Future<MoneyDisplayData?> transactionDisplayData(
   }
 
   return (
-    // TODO: use new crypto formatter when implemented
-    amount: formatDouble(amount, maximumFractionDigits: 10),
+    amount: formatCrypto(amount),
     coin: coin.abbreviation,
   );
 }
