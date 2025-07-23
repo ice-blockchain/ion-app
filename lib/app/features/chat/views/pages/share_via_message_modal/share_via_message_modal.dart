@@ -33,6 +33,7 @@ class ShareViaMessageModal extends HookWidget {
               selectable: true,
               controlPrivacy: true,
               selectedPubkeys: selectedPubkeys,
+              expirationDuration: const Duration(minutes: 2),
               navigationBar: NavigationAppBar.modal(
                 title: Text(context.i18n.feed_share_via),
                 actions: const [NavigationCloseButton()],

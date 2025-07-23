@@ -26,7 +26,12 @@ class ChatAdvancedSearchAll extends HookConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     useAutomaticKeepAlive();
 
-    final remoteUserSearch = ref.watch(searchUsersProvider(query: query));
+    final remoteUserSearch = ref.watch(
+      searchUsersProvider(
+        query: query,
+        expirationDuration: const Duration(minutes: 2),
+      ),
+    );
     final localUserSearch = ref.watch(chatLocalUserSearchProvider(query));
     final localMessageSearch = ref.watch(chatMessagesSearchProvider(query));
 
@@ -83,14 +88,28 @@ class ChatAdvancedSearchAll extends HookConsumerWidget {
           ),
       ],
       onRefresh: () async {
-        unawaited(ref.read(searchUsersProvider(query: query).notifier).refresh());
+        unawaited(
+          ref
+              .read(
+                searchUsersProvider(
+                  query: query,
+                  expirationDuration: const Duration(minutes: 2),
+                ).notifier,
+              )
+              .refresh(),
+        );
         ref
           ..invalidate(chatLocalUserSearchProvider(query))
           ..invalidate(chatMessagesSearchProvider(query));
       },
       builder: (context, slivers) => LoadMoreBuilder(
         slivers: slivers,
-        onLoadMore: ref.read(searchUsersProvider(query: query).notifier).loadMore,
+        onLoadMore: ref
+            .read(
+              searchUsersProvider(query: query, expirationDuration: const Duration(minutes: 2))
+                  .notifier,
+            )
+            .loadMore,
         hasMore: remoteUserSearch.valueOrNull?.hasMore ?? false,
       ),
     );

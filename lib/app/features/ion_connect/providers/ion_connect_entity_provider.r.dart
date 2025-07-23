@@ -267,6 +267,7 @@ class IonConnectEntitiesManager extends _$IonConnectEntitiesManager {
     String? search,
     bool cache = true,
     bool network = true,
+    Duration? expirationDuration,
   }) async {
     final cachedResults = <IonConnectEntity>[];
     final networkResults = <IonConnectEntity>[];
@@ -277,7 +278,10 @@ class IonConnectEntitiesManager extends _$IonConnectEntitiesManager {
             .map(
               (eventReference) => ref.read(
                 ionConnectCacheProvider.select(
-                  cacheSelector(CacheableEntity.cacheKeyBuilder(eventReference: eventReference)),
+                  cacheSelector(
+                    CacheableEntity.cacheKeyBuilder(eventReference: eventReference),
+                    expirationDuration: expirationDuration,
+                  ),
                 ),
               ),
             )

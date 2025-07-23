@@ -14,7 +14,7 @@ class SearchedUsers extends ConsumerWidget {
     required this.users,
     required this.onUserSelected,
     this.selectable = false,
-    this.controlPrivacy = false,
+    this.controlChatPrivacy = false,
     this.selectedPubkeys = const [],
     super.key,
   });
@@ -22,7 +22,7 @@ class SearchedUsers extends ConsumerWidget {
   final List<UserMetadataEntity>? users;
   final void Function(UserMetadataEntity user) onUserSelected;
   final bool selectable;
-  final bool controlPrivacy;
+  final bool controlChatPrivacy;
   final List<String> selectedPubkeys;
 
   @override
@@ -44,7 +44,7 @@ class SearchedUsers extends ConsumerWidget {
       itemCount: searchedUsers.length,
       itemBuilder: (BuildContext context, int index) {
         final user = searchedUsers.elementAt(index);
-        final canSendMessage = controlPrivacy &&
+        final canSendMessage = controlChatPrivacy &&
             (ref.watch(canSendMessageProvider(user.masterPubkey)).valueOrNull ?? false);
 
         return SelectableUserListItem(

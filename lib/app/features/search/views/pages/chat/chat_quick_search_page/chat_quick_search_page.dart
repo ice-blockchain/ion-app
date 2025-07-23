@@ -34,7 +34,9 @@ class ChatQuickSearchPage extends HookConsumerWidget {
     final hideCommunity =
         ref.watch(featureFlagsProvider.notifier).get(ChatFeatureFlag.hideCommunity);
 
-    final remoteUserSearch = ref.watch(searchUsersProvider(query: debouncedQuery));
+    final remoteUserSearch = ref.watch(
+      searchUsersProvider(query: debouncedQuery, expirationDuration: const Duration(minutes: 2)),
+    );
     final localUserSearch = ref.watch(chatLocalUserSearchProvider(debouncedQuery));
 
     final isLoading = remoteUserSearch.isLoading || localUserSearch.isLoading;

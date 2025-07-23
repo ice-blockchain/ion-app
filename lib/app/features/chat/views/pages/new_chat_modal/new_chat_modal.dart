@@ -38,6 +38,7 @@ class NewChatModal extends HookConsumerWidget {
       topPadding: 0,
       body: UserPickerSheet(
         controlPrivacy: true,
+        expirationDuration: const Duration(minutes: 2),
         navigationBar: NavigationAppBar.modal(
           showBackButton: false,
           title: Text(context.i18n.new_chat_modal_title),
