@@ -18,12 +18,14 @@ class GlobalNotificationNotifier extends _$GlobalNotificationNotifier {
 
   Timer? _hideTimer;
   CancelableOperation<void>? _cancelableShowOperation;
+  CancelableOperation<void>? _cancelableHideOperation;
 
   static const _notificationDuration = Duration(seconds: 3);
 
   void show(GlobalNotification notification, {bool isPermanent = false}) {
     // Prevent bottom sheet from jumping when showing notification
     _cancelableShowOperation?.cancel();
+    _cancelableHideOperation?.cancel();
     _cancelableShowOperation = CancelableOperation.fromFuture(
       Future.delayed(
         GlobalNotificationBar.animationDuration,
@@ -34,12 +36,20 @@ class GlobalNotificationNotifier extends _$GlobalNotificationNotifier {
     _hideTimer?.cancel();
 
     if (!isPermanent) {
-      _hideTimer = Timer(_notificationDuration, hide);
+      _hideTimer = Timer(_notificationDuration - GlobalNotificationBar.animationDuration, hide);
     }
   }
 
   void hide() {
-    _hideTimer?.cancel();
-    state = null;
+    _cancelableHideOperation?.cancel();
+    _cancelableHideOperation = CancelableOperation.fromFuture(
+      Future.delayed(
+        GlobalNotificationBar.animationDuration,
+        () {
+          _hideTimer?.cancel();
+          state = null;
+        },
+      ),
+    );
   }
 }
