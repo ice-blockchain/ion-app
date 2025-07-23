@@ -46,6 +46,19 @@ class ImageCompressor implements Compressor<ImageCompressionSettings> {
     ImageCompressionSettings settings = const ImageCompressionSettings(),
   }) async {
     try {
+      final isWebP = file.mimeType == 'image/webp' || file.path.toLowerCase().endsWith('.webp');
+      if (isWebP) {
+        if (file.width == null || file.height == null) {
+          final imageDimensions = await getImageDimension(path: file.path);
+          return file.copyWith(
+            width: imageDimensions.width,
+            height: imageDimensions.height,
+            mimeType: file.mimeType ?? 'image/webp',
+          );
+        }
+        return file;
+      }
+
       final output = await generateOutputPath();
 
       final isGif = file.mimeType == 'image/gif' && file.path.isGif && settings.shouldCompressGif;
