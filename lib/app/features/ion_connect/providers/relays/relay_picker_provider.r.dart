@@ -200,6 +200,7 @@ class RelayPicker extends _$RelayPicker {
     return relays.first;
   }
 
+  //TODO:REFACTOR - RENAME _userRelaysAvoidingDislikedUrls cuz it's not avoiding + RENAME dislikedRelaysUrls to lowPriorityRelays
   List<UserRelay> _userRelaysAvoidingDislikedUrls(
     List<UserRelay> relays,
     DislikedRelayUrlsCollection dislikedRelaysUrls,
