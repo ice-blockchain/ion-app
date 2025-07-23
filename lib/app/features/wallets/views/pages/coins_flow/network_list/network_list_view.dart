@@ -56,22 +56,19 @@ class NetworkListView extends ConsumerWidget {
         ? const AsyncValue<List<CoinInWalletData>>.loading()
         : ref.watch(syncedCoinsBySymbolGroupProvider(coinsGroup.symbolGroup));
 
-    Widget? child;
-    if (coinsState.hasValue) {
-      child = _NetworksList(
-        itemCount: coinsState.value!.length,
-        itemBuilder: (BuildContext context, int index) {
-          final coin = coinsState.value![index];
-          return NetworkItem(
-            coinInWallet: coin,
-            network: coin.coin.network,
-            onTap: () => _onTap(context, ref, coin.coin.network),
-          );
-        },
-      );
-    } else {
-      child = _LoadingState(itemCount: coinsGroup?.coins.length ?? 1);
-    }
+    final child = coinsState.hasValue
+        ? _NetworksList(
+            itemCount: coinsState.value!.length,
+            itemBuilder: (BuildContext context, int index) {
+              final coin = coinsState.value![index];
+              return NetworkItem(
+                coinInWallet: coin,
+                network: coin.coin.network,
+                onTap: () => _onTap(context, ref, coin.coin.network),
+              );
+            },
+          )
+        : _LoadingState(itemCount: coinsGroup?.coins.length ?? 1);
 
     return SheetContent(
       body: Column(
