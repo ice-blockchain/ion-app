@@ -23,13 +23,10 @@ enum EnvVariable {
   MIN_APP_VERSION_CONFIG_CACHE_DURATION,
   GENERIC_CONFIG_CACHE_DURATION,
   ICLOUD_CONTAINER_ID,
-  CONTENT_CREATORS_RELAY,
-  USER_SEARCH_RELAY,
   SENTRY_DSN,
   FOUNDATION_APP_GROUP,
   FIREBASE_CONFIG,
   RELAY_PING_INTERVAL_SECONDS,
-  BLOCKED_USERS_SYNC_OVERLAP_DAYS,
   CHECKSUM,
   FEED_MIN_VISIBLE_ARTICLE_CATEGORIES_NUMBER,
   ACCOUNT_NOTIFICATION_SETTINGS_SYNC_INTERVAL_MINUTES,
@@ -52,9 +49,6 @@ class Env extends _$Env {
       EnvVariable.ION_ORIGIN => const String.fromEnvironment('ION_ORIGIN') as T,
       EnvVariable.SHOW_DEBUG_INFO => const bool.fromEnvironment('SHOW_DEBUG_INFO') as T,
       EnvVariable.BANUBA_TOKEN => const String.fromEnvironment('BANUBA_TOKEN') as T,
-      EnvVariable.CONTENT_CREATORS_RELAY =>
-        const String.fromEnvironment('CONTENT_CREATORS_RELAY') as T,
-      EnvVariable.USER_SEARCH_RELAY => const String.fromEnvironment('USER_SEARCH_RELAY') as T,
       EnvVariable.STORY_EXPIRATION_HOURS =>
         const int.fromEnvironment('STORY_EXPIRATION_HOURS') as T,
       EnvVariable.USER_METADATA_SYNC_MINUTES =>
@@ -87,8 +81,6 @@ class Env extends _$Env {
           'RELAY_PING_INTERVAL_SECONDS',
           defaultValue: 3600,
         ) as T,
-      EnvVariable.BLOCKED_USERS_SYNC_OVERLAP_DAYS =>
-        const int.fromEnvironment('BLOCKED_USERS_SYNC_OVERLAP_DAYS') as T,
       EnvVariable.CHECKSUM => const String.fromEnvironment('CHECKSUM') as T,
       EnvVariable.FEED_MIN_VISIBLE_ARTICLE_CATEGORIES_NUMBER => const int.fromEnvironment(
           'FEED_MIN_VISIBLE_ARTICLE_CATEGORIES_NUMBER',
