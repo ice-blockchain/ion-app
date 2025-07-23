@@ -68,6 +68,7 @@ class RequestCoinsSubmitNotifier extends _$RequestCoinsSubmitNotifier {
 
       final chatService = await ref.read(sendChatMessageServiceProvider.future);
       await chatService.send(
+        kind: event.kind,
         receiverPubkey: pubkeys.receiver.masterPubkey,
         content: content,
         tags: [tag],

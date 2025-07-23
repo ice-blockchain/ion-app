@@ -67,12 +67,20 @@ class SelectedPushCategoriesIonSubscription extends _$SelectedPushCategoriesIonS
   }
 
   Future<List<RequestFilter>> _getFilters() async {
-    final selectedPushCategories = ref.watch(selectedPushCategoriesProvider);
-    return selectedPushCategories.enabledCategories
+    final selectedPushCategories = ref.watch(selectedPushCategoriesProvider).enabledCategories;
+
+    final filters = selectedPushCategories
         .map(_buildFilterForCategory)
         .nonNulls
         .expand<RequestFilter>((filters) => filters)
         .toList();
+
+    final messageFilter = _buildFilterForMessages(selectedPushCategories);
+    if (messageFilter != null) {
+      filters.add(messageFilter);
+    }
+
+    return filters;
   }
 
   List<RequestFilter>? _buildFilterForCategory(PushNotificationCategory category) {
@@ -81,10 +89,6 @@ class SelectedPushCategoriesIonSubscription extends _$SelectedPushCategoriesIonS
       PushNotificationCategory.reposts => _buildFilterForReposts(),
       PushNotificationCategory.likes => _buildFilterForLikes(),
       PushNotificationCategory.newFollowers => _buildFilterForNewFollowers(),
-      PushNotificationCategory.directMessages => _buildFilterForDirectMessages(),
-      // TODO: TBD how to filter for chat payments
-      // PushNotificationCategory.messagePaymentRequest => _buildFilterForChatPaymentRequest(),
-      // PushNotificationCategory.messagePaymentReceived => _buildFilterForChatPaymentReceived(),
       _ => null,
     };
   }
@@ -177,47 +181,42 @@ class SelectedPushCategoriesIonSubscription extends _$SelectedPushCategoriesIonS
     ];
   }
 
-  List<RequestFilter> _buildFilterForDirectMessages() {
+  RequestFilter? _buildFilterForMessages(List<PushNotificationCategory> categories) {
+    final messageCategories = [
+      PushNotificationCategory.directMessages,
+      PushNotificationCategory.messagePaymentRequest,
+      PushNotificationCategory.messagePaymentReceived,
+    ];
+
+    if (!categories.any(messageCategories.contains)) return null;
+
     final currentUserPubkey = ref.watch(currentPubkeySelectorProvider);
     if (currentUserPubkey == null) throw UserMasterPubkeyNotFoundException();
-    return [
-      RequestFilter(
-        kinds: const [IonConnectGiftWrapEntity.kind],
-        tags: {
-          '#k': [
+
+    return RequestFilter(
+      kinds: const [IonConnectGiftWrapEntity.kind],
+      tags: {
+        '#k': [
+          // reactions to direct messages
+          [ReactionEntity.kind.toString(), ReactionEntity.kind.toString()],
+          // direct messages
+          if (categories.contains(PushNotificationCategory.directMessages))
             ReplaceablePrivateDirectMessageEntity.kind.toString(),
-          ],
-          '#p': [currentUserPubkey],
-        },
-      ),
-    ];
-  }
-
-  List<RequestFilter> _buildFilterForChatPaymentRequest() {
-    final currentUserPubkey = ref.watch(currentPubkeySelectorProvider);
-    if (currentUserPubkey == null) throw UserMasterPubkeyNotFoundException();
-    return [
-      RequestFilter(
-        kinds: const [IonConnectGiftWrapEntity.kind],
-        tags: {
-          '#k': [FundsRequestEntity.kind.toString()],
-          '#p': [currentUserPubkey],
-        },
-      ),
-    ];
-  }
-
-  List<RequestFilter> _buildFilterForChatPaymentReceived() {
-    final currentUserPubkey = ref.watch(currentPubkeySelectorProvider);
-    if (currentUserPubkey == null) throw UserMasterPubkeyNotFoundException();
-    return [
-      RequestFilter(
-        kinds: const [IonConnectGiftWrapEntity.kind],
-        tags: {
-          '#k': [WalletAssetEntity.kind.toString()],
-          '#p': [currentUserPubkey],
-        },
-      ),
-    ];
+          // money request message
+          if (categories.contains(PushNotificationCategory.messagePaymentRequest))
+            [
+              ReplaceablePrivateDirectMessageEntity.kind.toString(),
+              FundsRequestEntity.kind.toString(),
+            ],
+          // money sent message
+          if (categories.contains(PushNotificationCategory.messagePaymentReceived))
+            [
+              ReplaceablePrivateDirectMessageEntity.kind.toString(),
+              WalletAssetEntity.kind.toString(),
+            ],
+        ],
+        '#p': [currentUserPubkey],
+      },
+    );
   }
 }

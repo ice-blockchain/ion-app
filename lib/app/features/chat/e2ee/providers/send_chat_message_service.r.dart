@@ -34,6 +34,7 @@ class SendChatMessageService {
   Future<void> send({
     required String receiverPubkey,
     required String content,
+    int? kind,
     List<MediaFile> mediaFiles = const [],
     List<List<String>>? tags,
   }) async {
@@ -52,6 +53,7 @@ class SendChatMessageService {
 
     await sendChatMessageService.sendMessage(
       tags: tags,
+      kind: kind,
       content: content,
       mediaFiles: mediaFiles,
       conversationId: conversationId,

@@ -57,7 +57,7 @@ class SendE2eeChatMessageService {
     required String content,
     required String conversationId,
     required List<String> participantsMasterPubkeys,
-    int kind = ReplaceablePrivateDirectMessageEntity.kind,
+    int? kind,
     List<List<String>>? tags,
     String? subject,
     EventMessage? editedMessage,
@@ -190,11 +190,13 @@ class SendE2eeChatMessageService {
               ).toEventMessage(NoPrivateSigner(eventSigner.publicKey), createdAt: createdAt);
 
               if (!isBlockedByReceiver) {
+                final messageKind = ReplaceablePrivateDirectMessageEntity.kind.toString();
+
                 await sendWrappedMessage(
                   pubkey: pubkey,
                   eventSigner: eventSigner,
                   masterPubkey: masterPubkey,
-                  wrappedKinds: [kind.toString()],
+                  wrappedKinds: kind != null ? [kind.toString(), messageKind] : [messageKind],
                   eventMessage: remoteEventMessage,
                 );
               }
