@@ -2,6 +2,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:ion/app/features/feed/data/models/entities/article_data.f.dart';
 import 'package:ion/app/features/feed/data/models/entities/modifiable_post_data.f.dart';
 import 'package:ion/app/features/feed/views/pages/fullscreen_media/components/media_content_handler.dart';
 import 'package:ion/app/features/ion_connect/model/event_reference.f.dart';
@@ -21,20 +22,26 @@ class AdaptiveMediaView extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final postAsync = ref.watch(ionConnectEntityProvider(eventReference: eventReference));
+    final entityAsync = ref.watch(ionConnectEntityProvider(eventReference: eventReference));
 
-    return postAsync.maybeWhen(
-      data: (post) {
-        if (post is! ModifiablePostEntity) {
-          return const SizedBox.shrink();
+    return entityAsync.maybeWhen(
+      data: (entity) {
+        if (entity is ModifiablePostEntity) {
+          return MediaContentHandler(
+            post: entity,
+            eventReference: eventReference,
+            initialMediaIndex: initialMediaIndex,
+            framedEventReference: framedEventReference,
+          );
+        } else if (entity is ArticleEntity) {
+          return MediaContentHandler(
+            article: entity,
+            eventReference: eventReference,
+            initialMediaIndex: initialMediaIndex,
+            framedEventReference: framedEventReference,
+          );
         }
-
-        return MediaContentHandler(
-          post: post,
-          eventReference: eventReference,
-          initialMediaIndex: initialMediaIndex,
-          framedEventReference: framedEventReference,
-        );
+        return const SizedBox.shrink();
       },
       orElse: () => const SizedBox.shrink(),
     );

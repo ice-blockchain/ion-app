@@ -7,7 +7,6 @@ class FeedRoutes {
     TypedGoRoute<StoryViewerRoute>(path: 'story-viewing-fullstack/:pubkey'),
     TypedGoRoute<TrendingVideosRoute>(path: 'trending-videos-fullstack/:eventReference'),
     TypedGoRoute<FeedVideosRoute>(path: 'feed-videos-fullstack/:eventReference'),
-    TypedGoRoute<ArticleVideosRoute>(path: 'article-videos-fullstack/:eventReference'),
     TypedGoRoute<FeedAdvancedSearchVideosRoute>(
       path: 'feed-advanced-search-videos-fullstack/:eventReference',
     ),
@@ -434,27 +433,6 @@ class FeedVideosRoute extends BaseRouteData with _$FeedVideosRoute {
     this.framedEventReference,
   }) : super(
           child: FeedVideosPage(
-            eventReference: EventReference.fromEncoded(eventReference),
-            framedEventReference: framedEventReference != null
-                ? EventReference.fromEncoded(framedEventReference)
-                : null,
-            initialMediaIndex: initialMediaIndex,
-          ),
-          type: IceRouteType.swipeDismissible,
-        );
-
-  final String eventReference;
-  final int initialMediaIndex;
-  final String? framedEventReference;
-}
-
-class ArticleVideosRoute extends BaseRouteData with _$ArticleVideosRoute {
-  ArticleVideosRoute({
-    required this.eventReference,
-    this.initialMediaIndex = 0,
-    this.framedEventReference,
-  }) : super(
-          child: ArticleVideoPage(
             eventReference: EventReference.fromEncoded(eventReference),
             framedEventReference: framedEventReference != null
                 ? EventReference.fromEncoded(framedEventReference)

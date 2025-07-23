@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/features/core/model/media_type.dart';
+import 'package:ion/app/features/feed/data/models/entities/article_data.f.dart';
 import 'package:ion/app/features/feed/data/models/entities/modifiable_post_data.f.dart';
 import 'package:ion/app/features/feed/views/pages/fullscreen_media/components/image_carousel.dart';
 import 'package:ion/app/features/feed/views/pages/fullscreen_media/components/single_media_view.dart';
@@ -13,14 +14,16 @@ import 'package:ion/app/features/ion_connect/model/media_attachment.dart';
 
 class MediaContentHandler extends HookConsumerWidget {
   const MediaContentHandler({
-    required this.post,
     required this.eventReference,
     required this.initialMediaIndex,
+    this.post,
+    this.article,
     this.framedEventReference,
     super.key,
-  });
+  }) : assert(post != null || article != null, 'Either post or article must be provided');
 
-  final ModifiablePostEntity post;
+  final ModifiablePostEntity? post;
+  final ArticleEntity? article;
   final EventReference eventReference;
   final EventReference? framedEventReference;
   final int initialMediaIndex;
@@ -32,8 +35,11 @@ class MediaContentHandler extends HookConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final allMedia = useMemoized(
-      () => _filterKnownMedia(post.data.media.values.toList()),
-      [post.data.media],
+      () {
+        final media = post?.data.media ?? article?.data.media ?? {};
+        return _filterKnownMedia(media.values.toList());
+      },
+      [post?.data.media, article?.data.media],
     );
 
     if (allMedia.isEmpty) {
@@ -53,6 +59,7 @@ class MediaContentHandler extends HookConsumerWidget {
     if (filteredMedia.length <= 1) {
       return SingleMediaView(
         post: post,
+        article: article,
         media: selectedMedia,
         eventReference: eventReference,
         framedEventReference: framedEventReference,
@@ -65,6 +72,7 @@ class MediaContentHandler extends HookConsumerWidget {
     return isVideoSelected
         ? VideoCarousel(
             post: post,
+            article: article,
             videos: filteredMedia,
             initialIndex: startIndex,
             eventReference: eventReference,

@@ -53,7 +53,7 @@ class ImageBlockNetworkImage extends ConsumerWidget {
               final mediaEntries = media!.entries.toList();
               final videoIndex = mediaEntries.indexWhere((entry) => entry.key == normalizedPath);
 
-              ArticleVideosRoute(
+              FullscreenMediaRoute(
                 eventReference: eventReference!,
                 initialMediaIndex: videoIndex >= 0 ? videoIndex : 0,
               ).push<void>(context);
