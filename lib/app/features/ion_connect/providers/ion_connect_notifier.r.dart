@@ -83,12 +83,8 @@ class IonConnectNotifier extends _$IonConnectNotifier {
 
         return null;
       },
-      retryWhen: (error) {
-        final retry = error is! FailedToPickUserRelay;
-        Logger.log('[RELAY] Got error $error, retry: $retry');
-        return retry;
-      },
       onRetry: (error) async {
+        Logger.error(error ?? '', message: '[RELAY] Got error $error');
         if (triedRelay case final IonConnectRelay relay) {
           Logger.log('[RELAY] ${relay.url} Adding to the list of disliked relays');
           dislikedRelaysUrls.add(relay.url);
@@ -216,12 +212,8 @@ class IonConnectNotifier extends _$IonConnectNotifier {
           }
         }
       },
-      retryWhen: (error) {
-        final retry = error is! FailedToPickUserRelay;
-        Logger.log('[RELAY] Got error $error, retry: $retry');
-        return retry;
-      },
       onRetry: (error) {
+        Logger.error(error ?? '', message: '[RELAY] Got error $error');
         if (triedRelay case final IonConnectRelay relay) {
           Logger.log('[RELAY] ${relay.url} Adding to the list of disliked relays');
           dislikedRelaysUrls.add(relay.url);
