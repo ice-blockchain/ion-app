@@ -26,6 +26,7 @@ Map<String, dynamic> _$AllowCredentialsToJson(AllowCredentials instance) =>
     <String, dynamic>{
       'webauthn': instance.webauthn.map((e) => e.toJson()).toList(),
       'key': instance.key.map((e) => e.toJson()).toList(),
-      'passwordProtectedKey':
-          instance.passwordProtectedKey?.map((e) => e.toJson()).toList(),
+      if (instance.passwordProtectedKey?.map((e) => e.toJson()).toList()
+          case final value?)
+        'passwordProtectedKey': value,
     };

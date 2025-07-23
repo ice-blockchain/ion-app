@@ -20,8 +20,8 @@ Map<String, dynamic> _$$WalletImplToJson(_$WalletImpl instance) =>
     <String, dynamic>{
       'id': instance.id,
       'network': instance.network,
-      'status': instance.status,
+      if (instance.status case final value?) 'status': value,
       'signingKey': instance.signingKey.toJson(),
-      'address': instance.address,
-      'name': instance.name,
+      if (instance.address case final value?) 'address': value,
+      if (instance.name case final value?) 'name': value,
     };

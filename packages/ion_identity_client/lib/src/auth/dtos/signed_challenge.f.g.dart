@@ -18,5 +18,6 @@ Map<String, dynamic> _$$SignedChallengeImplToJson(
         _$SignedChallengeImpl instance) =>
     <String, dynamic>{
       'firstFactorCredential': instance.firstFactorCredential.toJson(),
-      'earlyAccessEmail': instance.earlyAccessEmail,
+      if (instance.earlyAccessEmail case final value?)
+        'earlyAccessEmail': value,
     };

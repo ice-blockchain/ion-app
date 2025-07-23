@@ -22,6 +22,7 @@ Map<String, dynamic> _$$WalletViewAggregationItemImplToJson(
         _$WalletViewAggregationItemImpl instance) =>
     <String, dynamic>{
       'wallets': instance.wallets.map((e) => e.toJson()).toList(),
-      'totalBalance':
-          const NumberToStringConverter().toJson(instance.totalBalance),
+      if (const NumberToStringConverter().toJson(instance.totalBalance)
+          case final value?)
+        'totalBalance': value,
     };

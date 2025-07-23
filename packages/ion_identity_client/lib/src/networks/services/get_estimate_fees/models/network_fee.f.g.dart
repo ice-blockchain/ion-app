@@ -18,12 +18,16 @@ _$NetworkFeeImpl _$$NetworkFeeImplFromJson(Map<String, dynamic> json) =>
 
 Map<String, dynamic> _$$NetworkFeeImplToJson(_$NetworkFeeImpl instance) =>
     <String, dynamic>{
-      'maxFeePerGas':
-          const NumberToStringConverter().toJson(instance.maxFeePerGas),
-      'maxPriorityFeePerGas':
-          const NumberToStringConverter().toJson(instance.maxPriorityFeePerGas),
-      'waitTime': _$JsonConverterToJson<int, Duration>(
-          instance.waitTime, const DurationConverter().toJson),
+      if (const NumberToStringConverter().toJson(instance.maxFeePerGas)
+          case final value?)
+        'maxFeePerGas': value,
+      if (const NumberToStringConverter().toJson(instance.maxPriorityFeePerGas)
+          case final value?)
+        'maxPriorityFeePerGas': value,
+      if (_$JsonConverterToJson<int, Duration>(
+              instance.waitTime, const DurationConverter().toJson)
+          case final value?)
+        'waitTime': value,
     };
 
 Value? _$JsonConverterFromJson<Json, Value>(

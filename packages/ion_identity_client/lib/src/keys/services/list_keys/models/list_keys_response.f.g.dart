@@ -19,5 +19,5 @@ Map<String, dynamic> _$$ListKeysResponseImplToJson(
         _$ListKeysResponseImpl instance) =>
     <String, dynamic>{
       'items': instance.items.map((e) => e.toJson()).toList(),
-      'nextPageToken': instance.nextPageToken,
+      if (instance.nextPageToken case final value?) 'nextPageToken': value,
     };

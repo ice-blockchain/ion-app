@@ -17,5 +17,5 @@ _$WalletHistoryImpl _$$WalletHistoryImplFromJson(Map<String, dynamic> json) =>
 Map<String, dynamic> _$$WalletHistoryImplToJson(_$WalletHistoryImpl instance) =>
     <String, dynamic>{
       'items': instance.items.map((e) => e.toJson()).toList(),
-      'nextPageToken': instance.nextPageToken,
+      if (instance.nextPageToken case final value?) 'nextPageToken': value,
     };

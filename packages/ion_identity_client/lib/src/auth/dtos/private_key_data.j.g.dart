@@ -14,5 +14,6 @@ PrivateKeyData _$PrivateKeyDataFromJson(Map<String, dynamic> json) =>
 
 Map<String, dynamic> _$PrivateKeyDataToJson(PrivateKeyData instance) =>
     <String, dynamic>{
-      'biometricsEncryptedPassword': instance.biometricsEncryptedPassword,
+      if (instance.biometricsEncryptedPassword case final value?)
+        'biometricsEncryptedPassword': value,
     };

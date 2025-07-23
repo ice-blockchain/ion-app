@@ -40,7 +40,9 @@ Map<String, dynamic> _$$CreateCredentialsResponseImplToJson(
       'pubKeyCredParams':
           instance.pubKeyCredParams.map((e) => e.toJson()).toList(),
       'attestation': instance.attestation,
-      'excludeCredentials':
-          instance.excludeCredentials?.map((e) => e.toJson()).toList(),
-      'authenticatorSelection': instance.authenticatorSelection?.toJson(),
+      if (instance.excludeCredentials?.map((e) => e.toJson()).toList()
+          case final value?)
+        'excludeCredentials': value,
+      if (instance.authenticatorSelection?.toJson() case final value?)
+        'authenticatorSelection': value,
     };

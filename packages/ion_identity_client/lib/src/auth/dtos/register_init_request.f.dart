@@ -9,7 +9,7 @@ part 'register_init_request.f.g.dart';
 class RegisterInitRequest with _$RegisterInitRequest {
   const factory RegisterInitRequest({
     required String email,
-    @JsonKey(includeIfNull: false) String? earlyAccessEmail,
+    String? earlyAccessEmail,
   }) = _RegisterInitRequest;
 
   factory RegisterInitRequest.fromJson(Map<String, dynamic> json) =>

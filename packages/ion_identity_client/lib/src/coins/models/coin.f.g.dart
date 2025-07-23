@@ -35,6 +35,6 @@ Map<String, dynamic> _$$CoinImplToJson(_$CoinImpl instance) =>
       'symbolGroup': instance.symbolGroup,
       'syncFrequency':
           const SyncFrequencyConverter().toJson(instance.syncFrequency),
-      'native': instance.native,
-      'prioritized': instance.prioritized,
+      if (instance.native case final value?) 'native': value,
+      if (instance.prioritized case final value?) 'prioritized': value,
     };

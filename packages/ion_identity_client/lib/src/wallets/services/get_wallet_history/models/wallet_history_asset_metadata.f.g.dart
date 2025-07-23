@@ -18,6 +18,6 @@ Map<String, dynamic> _$$WalletHistoryAssetMetadataImplToJson(
         _$WalletHistoryAssetMetadataImpl instance) =>
     <String, dynamic>{
       'symbol': instance.symbol,
-      'decimals': instance.decimals,
-      'verified': instance.verified,
+      if (instance.decimals case final value?) 'decimals': value,
+      if (instance.verified case final value?) 'verified': value,
     };

@@ -40,18 +40,22 @@ UserRegistrationChallenge _$UserRegistrationChallengeFromJson(
 Map<String, dynamic> _$UserRegistrationChallengeToJson(
         UserRegistrationChallenge instance) =>
     <String, dynamic>{
-      'temporaryAuthenticationToken': instance.temporaryAuthenticationToken,
+      if (instance.temporaryAuthenticationToken case final value?)
+        'temporaryAuthenticationToken': value,
       'rp': instance.rp.toJson(),
       'user': instance.user.toJson(),
-      'supportedCredentialKinds': instance.supportedCredentialKinds?.toJson(),
-      'otpUrl': instance.otpUrl,
+      if (instance.supportedCredentialKinds?.toJson() case final value?)
+        'supportedCredentialKinds': value,
+      if (instance.otpUrl case final value?) 'otpUrl': value,
       'challenge': instance.challenge,
-      'authenticatorSelection': instance.authenticatorSelection?.toJson(),
+      if (instance.authenticatorSelection?.toJson() case final value?)
+        'authenticatorSelection': value,
       'attestation': instance.attestation,
       'pubKeyCredParams':
           instance.pubKeyCredParams.map((e) => e.toJson()).toList(),
       'excludeCredentials':
           instance.excludeCredentials.map((e) => e.toJson()).toList(),
-      'allowedRecoveryCredentials':
-          instance.allowedRecoveryCredentials?.map((e) => e.toJson()).toList(),
+      if (instance.allowedRecoveryCredentials?.map((e) => e.toJson()).toList()
+          case final value?)
+        'allowedRecoveryCredentials': value,
     };

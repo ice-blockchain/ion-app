@@ -21,7 +21,6 @@ RegisterInitRequest _$RegisterInitRequestFromJson(Map<String, dynamic> json) {
 /// @nodoc
 mixin _$RegisterInitRequest {
   String get email => throw _privateConstructorUsedError;
-  @JsonKey(includeIfNull: false)
   String? get earlyAccessEmail => throw _privateConstructorUsedError;
 
   /// Serializes this RegisterInitRequest to a JSON map.
@@ -40,8 +39,7 @@ abstract class $RegisterInitRequestCopyWith<$Res> {
           RegisterInitRequest value, $Res Function(RegisterInitRequest) then) =
       _$RegisterInitRequestCopyWithImpl<$Res, RegisterInitRequest>;
   @useResult
-  $Res call(
-      {String email, @JsonKey(includeIfNull: false) String? earlyAccessEmail});
+  $Res call({String email, String? earlyAccessEmail});
 }
 
 /// @nodoc
@@ -83,8 +81,7 @@ abstract class _$$RegisterInitRequestImplCopyWith<$Res>
       __$$RegisterInitRequestImplCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call(
-      {String email, @JsonKey(includeIfNull: false) String? earlyAccessEmail});
+  $Res call({String email, String? earlyAccessEmail});
 }
 
 /// @nodoc
@@ -119,9 +116,7 @@ class __$$RegisterInitRequestImplCopyWithImpl<$Res>
 /// @nodoc
 @JsonSerializable()
 class _$RegisterInitRequestImpl implements _RegisterInitRequest {
-  const _$RegisterInitRequestImpl(
-      {required this.email,
-      @JsonKey(includeIfNull: false) this.earlyAccessEmail});
+  const _$RegisterInitRequestImpl({required this.email, this.earlyAccessEmail});
 
   factory _$RegisterInitRequestImpl.fromJson(Map<String, dynamic> json) =>
       _$$RegisterInitRequestImplFromJson(json);
@@ -129,7 +124,6 @@ class _$RegisterInitRequestImpl implements _RegisterInitRequest {
   @override
   final String email;
   @override
-  @JsonKey(includeIfNull: false)
   final String? earlyAccessEmail;
 
   @override
@@ -170,9 +164,8 @@ class _$RegisterInitRequestImpl implements _RegisterInitRequest {
 
 abstract class _RegisterInitRequest implements RegisterInitRequest {
   const factory _RegisterInitRequest(
-          {required final String email,
-          @JsonKey(includeIfNull: false) final String? earlyAccessEmail}) =
-      _$RegisterInitRequestImpl;
+      {required final String email,
+      final String? earlyAccessEmail}) = _$RegisterInitRequestImpl;
 
   factory _RegisterInitRequest.fromJson(Map<String, dynamic> json) =
       _$RegisterInitRequestImpl.fromJson;
@@ -180,7 +173,6 @@ abstract class _RegisterInitRequest implements RegisterInitRequest {
   @override
   String get email;
   @override
-  @JsonKey(includeIfNull: false)
   String? get earlyAccessEmail;
 
   /// Create a copy of RegisterInitRequest

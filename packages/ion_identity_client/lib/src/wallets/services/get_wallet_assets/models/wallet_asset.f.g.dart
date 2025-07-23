@@ -22,10 +22,12 @@ Map<String, dynamic> _$$WalletAssetNativeImplToJson(
     <String, dynamic>{
       'symbol': instance.symbol,
       'decimals': instance.decimals,
-      'balance': const StringOrIntConverter().toJson(instance.balance),
+      if (const StringOrIntConverter().toJson(instance.balance)
+          case final value?)
+        'balance': value,
       'kind': instance.kind,
-      'verified': instance.verified,
-      'name': instance.name,
+      if (instance.verified case final value?) 'verified': value,
+      if (instance.name case final value?) 'name': value,
     };
 
 _$WalletAssetErc20Impl _$$WalletAssetErc20ImplFromJson(
@@ -45,11 +47,13 @@ Map<String, dynamic> _$$WalletAssetErc20ImplToJson(
     <String, dynamic>{
       'symbol': instance.symbol,
       'decimals': instance.decimals,
-      'balance': const StringOrIntConverter().toJson(instance.balance),
+      if (const StringOrIntConverter().toJson(instance.balance)
+          case final value?)
+        'balance': value,
       'kind': instance.kind,
-      'verified': instance.verified,
-      'contract': instance.contract,
-      'name': instance.name,
+      if (instance.verified case final value?) 'verified': value,
+      if (instance.contract case final value?) 'contract': value,
+      if (instance.name case final value?) 'name': value,
     };
 
 _$WalletAssetAsaImpl _$$WalletAssetAsaImplFromJson(Map<String, dynamic> json) =>
@@ -70,9 +74,11 @@ Map<String, dynamic> _$$WalletAssetAsaImplToJson(
       'symbol': instance.symbol,
       'decimals': instance.decimals,
       'verified': instance.verified,
-      'balance': const StringOrIntConverter().toJson(instance.balance),
+      if (const StringOrIntConverter().toJson(instance.balance)
+          case final value?)
+        'balance': value,
       'kind': instance.kind,
-      'name': instance.name,
+      if (instance.name case final value?) 'name': value,
     };
 
 _$WalletAssetSplImpl _$$WalletAssetSplImplFromJson(Map<String, dynamic> json) =>
@@ -91,9 +97,11 @@ Map<String, dynamic> _$$WalletAssetSplImplToJson(
       'mint': instance.mint,
       'symbol': instance.symbol,
       'decimals': instance.decimals,
-      'balance': const StringOrIntConverter().toJson(instance.balance),
+      if (const StringOrIntConverter().toJson(instance.balance)
+          case final value?)
+        'balance': value,
       'kind': instance.kind,
-      'name': instance.name,
+      if (instance.name case final value?) 'name': value,
     };
 
 _$WalletAssetSpl2022Impl _$$WalletAssetSpl2022ImplFromJson(
@@ -113,9 +121,11 @@ Map<String, dynamic> _$$WalletAssetSpl2022ImplToJson(
       'mint': instance.mint,
       'symbol': instance.symbol,
       'decimals': instance.decimals,
-      'balance': const StringOrIntConverter().toJson(instance.balance),
+      if (const StringOrIntConverter().toJson(instance.balance)
+          case final value?)
+        'balance': value,
       'kind': instance.kind,
-      'name': instance.name,
+      if (instance.name case final value?) 'name': value,
     };
 
 _$WalletAssetSep41Impl _$$WalletAssetSep41ImplFromJson(
@@ -135,9 +145,11 @@ Map<String, dynamic> _$$WalletAssetSep41ImplToJson(
       'mint': instance.mint,
       'symbol': instance.symbol,
       'decimals': instance.decimals,
-      'balance': const StringOrIntConverter().toJson(instance.balance),
+      if (const StringOrIntConverter().toJson(instance.balance)
+          case final value?)
+        'balance': value,
       'kind': instance.kind,
-      'name': instance.name,
+      if (instance.name case final value?) 'name': value,
     };
 
 _$WalletAssetTep74Impl _$$WalletAssetTep74ImplFromJson(
@@ -157,9 +169,11 @@ Map<String, dynamic> _$$WalletAssetTep74ImplToJson(
       'mint': instance.mint,
       'symbol': instance.symbol,
       'decimals': instance.decimals,
-      'balance': const StringOrIntConverter().toJson(instance.balance),
+      if (const StringOrIntConverter().toJson(instance.balance)
+          case final value?)
+        'balance': value,
       'kind': instance.kind,
-      'name': instance.name,
+      if (instance.name case final value?) 'name': value,
     };
 
 _$WalletAssetTrc10Impl _$$WalletAssetTrc10ImplFromJson(
@@ -179,9 +193,11 @@ Map<String, dynamic> _$$WalletAssetTrc10ImplToJson(
       'tokenId': instance.tokenId,
       'symbol': instance.symbol,
       'decimals': instance.decimals,
-      'balance': const StringOrIntConverter().toJson(instance.balance),
+      if (const StringOrIntConverter().toJson(instance.balance)
+          case final value?)
+        'balance': value,
       'kind': instance.kind,
-      'name': instance.name,
+      if (instance.name case final value?) 'name': value,
     };
 
 _$WalletAssetTrc20Impl _$$WalletAssetTrc20ImplFromJson(
@@ -201,9 +217,11 @@ Map<String, dynamic> _$$WalletAssetTrc20ImplToJson(
       'contract': instance.contract,
       'symbol': instance.symbol,
       'decimals': instance.decimals,
-      'balance': const StringOrIntConverter().toJson(instance.balance),
+      if (const StringOrIntConverter().toJson(instance.balance)
+          case final value?)
+        'balance': value,
       'kind': instance.kind,
-      'name': instance.name,
+      if (instance.name case final value?) 'name': value,
     };
 
 _$WalletAssetAip21Impl _$$WalletAssetAip21ImplFromJson(
@@ -224,8 +242,10 @@ Map<String, dynamic> _$$WalletAssetAip21ImplToJson(
       'symbol': instance.symbol,
       'decimals': instance.decimals,
       'kind': instance.kind,
-      'balance': const StringOrIntConverter().toJson(instance.balance),
-      'name': instance.name,
+      if (const StringOrIntConverter().toJson(instance.balance)
+          case final value?)
+        'balance': value,
+      if (instance.name case final value?) 'name': value,
     };
 
 _$WalletAssetUnknownImpl _$$WalletAssetUnknownImplFromJson(
@@ -248,12 +268,14 @@ Map<String, dynamic> _$$WalletAssetUnknownImplToJson(
     <String, dynamic>{
       'symbol': instance.symbol,
       'decimals': instance.decimals,
-      'balance': const StringOrIntConverter().toJson(instance.balance),
+      if (const StringOrIntConverter().toJson(instance.balance)
+          case final value?)
+        'balance': value,
       'kind': instance.kind,
-      'contract': instance.contract,
-      'name': instance.name,
-      'assetId': instance.assetId,
-      'mint': instance.mint,
-      'tokenId': instance.tokenId,
-      'verified': instance.verified,
+      if (instance.contract case final value?) 'contract': value,
+      if (instance.name case final value?) 'name': value,
+      if (instance.assetId case final value?) 'assetId': value,
+      if (instance.mint case final value?) 'mint': value,
+      if (instance.tokenId case final value?) 'tokenId': value,
+      if (instance.verified case final value?) 'verified': value,
     };

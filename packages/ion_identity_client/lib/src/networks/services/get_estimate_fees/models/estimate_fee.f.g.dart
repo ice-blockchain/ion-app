@@ -25,9 +25,10 @@ _$EstimateFeeImpl _$$EstimateFeeImplFromJson(Map<String, dynamic> json) =>
 Map<String, dynamic> _$$EstimateFeeImplToJson(_$EstimateFeeImpl instance) =>
     <String, dynamic>{
       'network': instance.network,
-      'estimatedBaseFee': instance.estimatedBaseFee,
-      'kind': instance.kind,
-      'fast': instance.fast?.toJson(),
-      'standard': instance.standard?.toJson(),
-      'slow': instance.slow?.toJson(),
+      if (instance.estimatedBaseFee case final value?)
+        'estimatedBaseFee': value,
+      if (instance.kind case final value?) 'kind': value,
+      if (instance.fast?.toJson() case final value?) 'fast': value,
+      if (instance.standard?.toJson() case final value?) 'standard': value,
+      if (instance.slow?.toJson() case final value?) 'slow': value,
     };

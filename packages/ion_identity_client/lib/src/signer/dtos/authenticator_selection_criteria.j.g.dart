@@ -18,7 +18,8 @@ AuthenticatorSelectionCriteria _$AuthenticatorSelectionCriteriaFromJson(
 Map<String, dynamic> _$AuthenticatorSelectionCriteriaToJson(
         AuthenticatorSelectionCriteria instance) =>
     <String, dynamic>{
-      'authenticatorAttachment': instance.authenticatorAttachment,
+      if (instance.authenticatorAttachment case final value?)
+        'authenticatorAttachment': value,
       'residentKey': instance.residentKey,
       'requireResidentKey': instance.requireResidentKey,
       'userVerification': instance.userVerification,

@@ -31,5 +31,5 @@ Map<String, dynamic> _$$WalletNftImplToJson(_$WalletNftImpl instance) =>
       'name': instance.name,
       'network': instance.network,
       'collectionImageUri': instance.collectionImageUri,
-      'walletId': instance.walletId,
+      if (instance.walletId case final value?) 'walletId': value,
     };

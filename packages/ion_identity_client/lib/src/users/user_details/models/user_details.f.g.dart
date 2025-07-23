@@ -33,12 +33,13 @@ Map<String, dynamic> _$$UserDetailsImplToJson(_$UserDetailsImpl instance) =>
     <String, dynamic>{
       'ionConnectIndexerRelays': instance.ionConnectIndexerRelays,
       'masterPubKey': instance.masterPubKey,
-      'name': instance.name,
-      'userId': instance.userId,
-      'username': instance.username,
-      '2faOptions': instance.twoFaOptions,
-      'email': instance.email,
-      'phoneNumber': instance.phoneNumber,
-      'ionConnectRelays':
-          instance.ionConnectRelays?.map((e) => e.toJson()).toList(),
+      if (instance.name case final value?) 'name': value,
+      if (instance.userId case final value?) 'userId': value,
+      if (instance.username case final value?) 'username': value,
+      if (instance.twoFaOptions case final value?) '2faOptions': value,
+      if (instance.email case final value?) 'email': value,
+      if (instance.phoneNumber case final value?) 'phoneNumber': value,
+      if (instance.ionConnectRelays?.map((e) => e.toJson()).toList()
+          case final value?)
+        'ionConnectRelays': value,
     };
