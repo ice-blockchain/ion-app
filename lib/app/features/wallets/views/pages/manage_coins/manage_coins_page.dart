@@ -3,6 +3,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:ion/app/components/inputs/search_input/components/search_app_bar_delegate.dart';
 import 'package:ion/app/components/inputs/search_input/search_input.dart';
 import 'package:ion/app/components/list_items_loading_state/list_items_loading_state.dart';
 import 'package:ion/app/components/nothing_is_found/nothing_is_found.dart';
@@ -14,7 +15,6 @@ import 'package:ion/app/features/wallets/views/pages/manage_coins/components/imp
 import 'package:ion/app/features/wallets/views/pages/manage_coins/components/manage_coin_item_widget.dart';
 import 'package:ion/app/features/wallets/views/pages/manage_coins/providers/manage_coins_provider.r.dart';
 import 'package:ion/app/hooks/use_on_init.dart';
-import 'package:ion/app/router/components/navigation_app_bar/collapsing_app_bar.dart';
 import 'package:ion/app/router/components/navigation_app_bar/navigation_app_bar.dart';
 import 'package:ion/app/router/components/sheet_content/sheet_content.dart';
 
@@ -52,15 +52,18 @@ class ManageCoinsPage extends HookConsumerWidget {
           Expanded(
             child: CustomScrollView(
               slivers: [
-                CollapsingAppBar(
-                  height: SearchInput.height,
-                  child: ScreenSideOffset.small(
-                    child: SearchInput(
-                      onTextChanged: (String value) => searchText.value = value,
-                      loading: searchResult.isLoading,
+                SliverPersistentHeader(
+                  pinned: true,
+                  delegate: SearchAppBarDelegate(
+                    child: ScreenSideOffset.small(
+                      child: SearchInput(
+                        onTextChanged: (String value) => searchText.value = value,
+                        loading: searchResult.isLoading,
+                      ),
                     ),
                   ),
                 ),
+                SliverToBoxAdapter(child: SizedBox(height: 12.s)),
                 if (searchText.value.isEmpty)
                   manageCoins.maybeWhen(
                     data: (coins) {
