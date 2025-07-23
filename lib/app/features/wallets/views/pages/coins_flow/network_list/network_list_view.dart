@@ -56,41 +56,21 @@ class NetworkListView extends ConsumerWidget {
         ? const AsyncValue<List<CoinInWalletData>>.loading()
         : ref.watch(syncedCoinsBySymbolGroupProvider(coinsGroup.symbolGroup));
 
-    Future<void> onTap(NetworkData network) async {
-      if (onSelectReturnType) {
-        Navigator.of(context).pop(network);
-        return;
-      }
-
-      switch (type) {
-        case NetworkListViewType.send:
-          final state = ref.read(sendAssetFormControllerProvider);
-          final isNetworkValid = await checkWalletExists(ref, state.contactPubkey, network);
-
-          if (!isNetworkValid) {
-            return;
-          }
-
-          if (context.mounted) {
-            unawaited(ref.read(sendAssetFormControllerProvider.notifier).setNetwork(network));
-            unawaited(context.push<void>(sendFormRouteLocationBuilder!()));
-          }
-        case NetworkListViewType.receive:
-          ref.read(receiveCoinsFormControllerProvider.notifier).setNetwork(network);
-          unawaited(ShareAddressToGetCoinsRoute().push<void>(context));
-        case NetworkListViewType.request:
-          final form = ref.read(requestCoinsFormControllerProvider);
-          final isNetworkValid = await checkWalletExists(ref, form.contactPubkey, network);
-
-          if (!isNetworkValid) {
-            return;
-          }
-
-          if (context.mounted) {
-            unawaited(ref.read(requestCoinsFormControllerProvider.notifier).setNetwork(network));
-            unawaited(context.push(sendFormRouteLocationBuilder!()));
-          }
-      }
+    Widget? child;
+    if (coinsState.hasValue) {
+      child = _NetworksList(
+        itemCount: coinsState.value!.length,
+        itemBuilder: (BuildContext context, int index) {
+          final coin = coinsState.value![index];
+          return NetworkItem(
+            coinInWallet: coin,
+            network: coin.coin.network,
+            onTap: () => _onTap(context, ref, coin.coin.network),
+          );
+        },
+      );
+    } else {
+      child = _LoadingState(itemCount: coinsGroup?.coins.length ?? 1);
     }
 
     return SheetContent(
@@ -110,20 +90,7 @@ class NetworkListView extends ConsumerWidget {
             child: Padding(
               padding: EdgeInsetsDirectional.only(bottom: 32.0.s),
               child: ScreenSideOffset.small(
-                child: coinsState.maybeMap(
-                  data: (data) => _NetworksList(
-                    itemCount: data.value.length,
-                    itemBuilder: (BuildContext context, int index) {
-                      final coin = data.value[index];
-                      return NetworkItem(
-                        coinInWallet: coin,
-                        network: coin.coin.network,
-                        onTap: () => onTap(coin.coin.network),
-                      );
-                    },
-                  ),
-                  orElse: () => const _LoadingState(),
-                ),
+                child: child,
               ),
             ),
           ),
@@ -131,16 +98,55 @@ class NetworkListView extends ConsumerWidget {
       ),
     );
   }
+
+  Future<void> _onTap(BuildContext context, WidgetRef ref, NetworkData network) async {
+    if (onSelectReturnType) {
+      Navigator.of(context).pop(network);
+      return;
+    }
+
+    switch (type) {
+      case NetworkListViewType.send:
+        final state = ref.read(sendAssetFormControllerProvider);
+        final isNetworkValid = await checkWalletExists(ref, state.contactPubkey, network);
+
+        if (!isNetworkValid) {
+          return;
+        }
+
+        if (context.mounted) {
+          unawaited(ref.read(sendAssetFormControllerProvider.notifier).setNetwork(network));
+          unawaited(context.push<void>(sendFormRouteLocationBuilder!()));
+        }
+      case NetworkListViewType.receive:
+        ref.read(receiveCoinsFormControllerProvider.notifier).setNetwork(network);
+        unawaited(ShareAddressToGetCoinsRoute().push<void>(context));
+      case NetworkListViewType.request:
+        final form = ref.read(requestCoinsFormControllerProvider);
+        final isNetworkValid = await checkWalletExists(ref, form.contactPubkey, network);
+
+        if (!isNetworkValid) {
+          return;
+        }
+
+        if (context.mounted) {
+          unawaited(ref.read(requestCoinsFormControllerProvider.notifier).setNetwork(network));
+          unawaited(context.push(sendFormRouteLocationBuilder!()));
+        }
+    }
+  }
 }
 
 class _LoadingState extends StatelessWidget {
-  const _LoadingState();
+  const _LoadingState({required this.itemCount});
+
+  final int itemCount;
 
   @override
   Widget build(BuildContext context) {
     return Skeleton(
       child: _NetworksList(
-        itemCount: 3,
+        itemCount: itemCount,
         itemBuilder: (_, __) {
           return NetworkItem(
             coinInWallet: const CoinInWalletData(
