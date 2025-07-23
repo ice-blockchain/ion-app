@@ -76,11 +76,6 @@ class RelayPicker extends _$RelayPicker {
 
     switch (actionSource) {
       case ActionSourceCurrentUser():
-        final pubkey = ref.read(currentPubkeySelectorProvider);
-        if (pubkey == null) {
-          throw UserMasterPubkeyNotFoundException();
-        }
-
         final userRelays =
             await _getCurrentUserRankedRelays().then((userRelays) => userRelays.data.list);
         final relays = _userRelaysAvoidingDislikedUrls(userRelays, dislikedUrls)
@@ -185,13 +180,14 @@ class RelayPicker extends _$RelayPicker {
   }
 
   Future<UserRelaysEntity> _getCurrentUserRawRelays() async {
-    final relays = await ref.read(currentUserRelaysProvider.future);
-    if (relays == null || relays.urls.isEmpty) {
-      throw UserRelaysNotFoundException();
+    final pubkey = ref.read(currentPubkeySelectorProvider);
+    if (pubkey == null) {
+      throw UserMasterPubkeyNotFoundException();
     }
-    return relays;
+    return _getUserRawRelays(pubkey);
   }
 
+  //TODO[REFACTOR]: Rename this method to _getUserReachableRelays
   Future<UserRelaysEntity> _getUserRawRelays(String pubkey) async {
     final relays = await ref.read(userRelaysManagerProvider.notifier).fetch([pubkey]);
     if (relays.isEmpty) {
@@ -200,7 +196,7 @@ class RelayPicker extends _$RelayPicker {
     return relays.first;
   }
 
-  //TODO:REFACTOR - RENAME _userRelaysAvoidingDislikedUrls cuz it's not avoiding + RENAME dislikedRelaysUrls to lowPriorityRelays
+  //TODO[REFACTOR]: - RENAME _userRelaysAvoidingDislikedUrls cuz it's not avoiding + RENAME dislikedRelaysUrls to lowPriorityRelays
   List<UserRelay> _userRelaysAvoidingDislikedUrls(
     List<UserRelay> relays,
     DislikedRelayUrlsCollection dislikedRelaysUrls,

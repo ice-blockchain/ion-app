@@ -33,6 +33,7 @@ Future<void> userRelaysSync(Ref ref) async {
     return;
   }
 
+  //TODO[REFACTOR] - make _fetchRelaysFromIndexers public, use it here
   final userRelays = await ref.watch(userRelaysManagerProvider.notifier).fetch([masterPubkey]);
   final connectUserRelays = userRelays.firstOrNull?.data.list;
 

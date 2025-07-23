@@ -60,6 +60,7 @@ class OptimalUserRelaysService {
     };
   }
 
+  //TODO[REFACTOR] exclude separate _getCurrentUserRelays processing from here, rename _getGenericUserRelays to _getReachableUserRelays
   Future<Map<String, List<String>>> _getUserRelays(List<String> masterPubkeys) async {
     final userToRelays = <String, List<String>>{};
 

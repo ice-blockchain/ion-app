@@ -33,6 +33,7 @@ class UserRelaysManager extends _$UserRelaysManager {
   @override
   FutureOr<void> build() async {}
 
+  // TODO[REFACTOR] - RENAME to fetchReachableRelays + process the current user separately
   Future<List<UserRelaysEntity>> fetch(List<String> pubkeys) async {
     final result = <UserRelaysEntity>[];
     final pubkeysToFetch = [...pubkeys];
