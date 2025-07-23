@@ -82,8 +82,9 @@ class SelectedPushCategoriesIonSubscription extends _$SelectedPushCategoriesIonS
       PushNotificationCategory.likes => _buildFilterForLikes(),
       PushNotificationCategory.newFollowers => _buildFilterForNewFollowers(),
       PushNotificationCategory.directMessages => _buildFilterForDirectMessages(),
-      PushNotificationCategory.paymentRequest => _buildFilterForPaymentRequest(),
-      PushNotificationCategory.paymentReceived => _buildFilterForPaymentReceived(),
+      // TODO: TBD how to filter for chat payments
+      // PushNotificationCategory.messagePaymentRequest => _buildFilterForChatPaymentRequest(),
+      // PushNotificationCategory.messagePaymentReceived => _buildFilterForChatPaymentReceived(),
       _ => null,
     };
   }
@@ -192,7 +193,7 @@ class SelectedPushCategoriesIonSubscription extends _$SelectedPushCategoriesIonS
     ];
   }
 
-  List<RequestFilter> _buildFilterForPaymentRequest() {
+  List<RequestFilter> _buildFilterForChatPaymentRequest() {
     final currentUserPubkey = ref.watch(currentPubkeySelectorProvider);
     if (currentUserPubkey == null) throw UserMasterPubkeyNotFoundException();
     return [
@@ -206,7 +207,7 @@ class SelectedPushCategoriesIonSubscription extends _$SelectedPushCategoriesIonS
     ];
   }
 
-  List<RequestFilter> _buildFilterForPaymentReceived() {
+  List<RequestFilter> _buildFilterForChatPaymentReceived() {
     final currentUserPubkey = ref.watch(currentPubkeySelectorProvider);
     if (currentUserPubkey == null) throw UserMasterPubkeyNotFoundException();
     return [

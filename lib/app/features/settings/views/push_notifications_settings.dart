@@ -82,18 +82,6 @@ class PushNotificationsSettings extends ConsumerWidget {
                       enabled: hasNotificationsPermission,
                     ),
                     SelectableOptionsGroup(
-                      title: context.i18n.push_notification_wallet_group_title,
-                      selected: _filterSelectedOptions(
-                        WalletNotificationOption.values,
-                        selected: selectedCategories,
-                      ),
-                      options: WalletNotificationOption.values,
-                      onSelected: (option) => ref
-                          .read(selectedPushCategoriesProvider.notifier)
-                          .toggleCategory(option.category),
-                      enabled: hasNotificationsPermission,
-                    ),
-                    SelectableOptionsGroup(
                       title: context.i18n.push_notification_system_group_title,
                       selected: _filterSelectedOptions(
                         SystemNotificationOption.values,

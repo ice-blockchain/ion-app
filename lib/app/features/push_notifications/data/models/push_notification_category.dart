@@ -9,7 +9,7 @@ enum PushNotificationCategory {
   directMessages,
   groupChats,
   channels,
-  paymentRequest,
-  paymentReceived,
+  messagePaymentRequest,
+  messagePaymentReceived,
   updates,
 }
