@@ -37,6 +37,8 @@ class SharedStoryMessage extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final currentUserMasterPubkey = ref.watch(currentPubkeySelectorProvider);
+
     final isMe = ref.watch(isCurrentUserSelectorProvider(replyEventMessage.masterPubkey));
 
     final storyEntityData = useMemoized(
@@ -62,14 +64,16 @@ class SharedStoryMessage extends HookConsumerWidget {
       () => (storyMedia.mediaType == MediaType.video ? storyMedia.thumb : storyMedia.url) ?? '',
     );
 
-    final storyExpired = useMemoized(
-      () => switch (storyEntity) {
-        final ModifiablePostEntity post =>
-          post.data.expiration!.value.toDateTime.isBefore(DateTime.now()),
-        final PostEntity post => post.data.expiration!.value.toDateTime.isBefore(DateTime.now()),
-        _ => true,
-      },
-    );
+    final storyExpired = storyEntity.masterPubkey != currentUserMasterPubkey &&
+        useMemoized(
+          () => switch (storyEntity) {
+            final ModifiablePostEntity post => post.data.expiration!.value.toDateTime
+                .isBefore(DateTime.now().add(const Duration(days: 3))),
+            final PostEntity post => post.data.expiration!.value.toDateTime
+                .isBefore(DateTime.now().add(const Duration(days: 3))),
+            _ => true,
+          },
+        );
 
     final storyDeleted = useMemoized(
       () => switch (storyEntity) {
