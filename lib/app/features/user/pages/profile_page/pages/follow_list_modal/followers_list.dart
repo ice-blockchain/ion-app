@@ -15,7 +15,6 @@ import 'package:ion/app/features/user/pages/profile_page/pages/follow_list_modal
 import 'package:ion/app/features/user/pages/profile_page/pages/follow_list_modal/components/follow_list_item.dart';
 import 'package:ion/app/features/user/pages/profile_page/pages/follow_list_modal/components/follow_list_loading.dart';
 import 'package:ion/app/features/user/pages/profile_page/pages/follow_list_modal/components/follow_search_bar.dart';
-import 'package:ion/app/features/user/providers/followers_count_provider.r.dart';
 import 'package:ion/app/features/user/providers/followers_data_source_provider.r.dart';
 
 final _followersEntitiesProvider =
@@ -34,8 +33,6 @@ class FollowersList extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final followersCount = ref.watch(followersCountProvider(pubkey)).valueOrNull;
-
     final searchQuery = useState('');
     final debouncedQuery = useDebounced(searchQuery.value, const Duration(milliseconds: 300)) ?? '';
 
@@ -45,6 +42,7 @@ class FollowersList extends HookConsumerWidget {
       ),
     );
     final entities = entitiesAsync.value;
+    final followersCount = entities?.length ?? 0;
 
     final currentDataSource = ref.watch(
       followersDataSourceProvider(pubkey, query: debouncedQuery.isEmpty ? null : debouncedQuery),
@@ -52,7 +50,7 @@ class FollowersList extends HookConsumerWidget {
     final currentEntitiesPagedData = ref.watch(entitiesPagedDataProvider(currentDataSource));
 
     final slivers = [
-      FollowAppBar(title: FollowType.followers.getTitleWithCounter(context, followersCount ?? 0)),
+      FollowAppBar(title: FollowType.followers.getTitleWithCounter(context, followersCount)),
       FollowSearchBar(onTextChanged: (query) => searchQuery.value = query),
       if (entities == null)
         const FollowListLoading()

@@ -6,7 +6,7 @@ import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/user/model/follow_type.dart';
 import 'package:ion/app/features/user/pages/profile_page/components/profile_details/follow_counters/follow_counters_cell.dart';
 import 'package:ion/app/features/user/providers/follow_list_provider.r.dart';
-import 'package:ion/app/features/user/providers/followers_count_provider.r.dart';
+import 'package:ion/app/features/user/providers/followers_entities_provider.r.dart';
 
 class FollowCounters extends ConsumerWidget {
   const FollowCounters({
@@ -19,12 +19,13 @@ class FollowCounters extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final followListAsync = ref.watch(followListProvider(pubkey));
-    final followersCountAsync = ref.watch(followersCountProvider(pubkey));
+    final followersListAsync = ref.watch(followersEntitiesProvider(pubkey: pubkey));
+
     final followingNumber = followListAsync.valueOrNull?.data.list.length;
-    final followersNumber = followersCountAsync.valueOrNull;
+    final followersNumber = followersListAsync?.length;
     final bothAvailable = followingNumber != null && followersNumber != null;
 
-    final isLoading = followListAsync.isLoading || followersCountAsync.isLoading;
+    final isLoading = followListAsync.isLoading || followersListAsync == null;
     if (!isLoading && !bothAvailable) {
       return const SizedBox.shrink();
     }
