@@ -62,6 +62,8 @@ class SendCoinsForm extends HookConsumerWidget {
 
     final amount = coin?.amount ?? 0.0;
     final amountController = useTextEditingController();
+    final usdAmount =
+        (parseAmount(amountController.text) ?? 0) * (coin?.selectedOption?.coin.priceUSD ?? 0);
 
     useOnInit(() => amountController.text = amount == 0.0 ? '' : formatCrypto(amount), []);
 
@@ -175,6 +177,7 @@ class SendCoinsForm extends HookConsumerWidget {
                         controller: amountController,
                         maxValue: coin?.selectedOption?.amount ?? 0,
                         coinAbbreviation: coin?.coinsGroup.abbreviation ?? '',
+                        balanceUSD: usdAmount,
                         errorText:
                             exceedsMaxAmount ? locale.wallet_coin_amount_insufficient_funds : null,
                       ),
