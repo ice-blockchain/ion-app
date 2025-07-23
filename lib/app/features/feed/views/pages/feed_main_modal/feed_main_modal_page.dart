@@ -1,5 +1,7 @@
 // SPDX-License-Identifier: ice License 1.0
 
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
@@ -16,6 +18,7 @@ import 'package:ion/app/router/app_routes.gr.dart';
 import 'package:ion/app/router/components/navigation_app_bar/navigation_app_bar.dart';
 import 'package:ion/app/router/components/sheet_content/main_modal_item.dart';
 import 'package:ion/app/router/components/sheet_content/sheet_content.dart';
+import 'package:ion/app/router/model/main_modal_list_item.dart';
 import 'package:ion/app/router/utils/show_simple_bottom_sheet.dart';
 import 'package:ion/app/services/media_service/banuba_service.r.dart';
 import 'package:ion/app/services/media_service/media_service.m.dart';
@@ -44,101 +47,138 @@ class FeedMainModalPage extends ConsumerWidget {
             itemCount: feedTypeValues.length,
             itemBuilder: (BuildContext context, int index) {
               final type = feedTypeValues[index];
-
-              if (type == FeedType.story) {
-                return PermissionAwareWidget(
-                  permissionType: Permission.camera,
-                  requestId: 'story_record',
-                  builder: (_, onPressed) => MainModalItem(
-                    item: type,
-                    onTap: onPressed,
-                    index: index,
-                  ),
-                  onGranted: () => StoryRecordRoute().push<void>(context),
-                  requestDialog: const PermissionRequestSheet(
-                    permission: Permission.camera,
-                  ),
-                  settingsDialog: SettingsRedirectSheet.fromType(context, Permission.camera),
-                );
-              } else if (type == FeedType.video) {
-                return PermissionAwareWidget(
-                  permissionType: Permission.photos,
-                  onGranted: () async {
-                    Future<void> showMediaPickerAndCreatePost() async {
-                      final result = await showSimpleBottomSheet<List<MediaFile>>(
-                        context: context,
-                        child: const MediaPickerPage(
-                          maxSelection: 1,
-                          isBottomSheet: true,
-                          type: MediaPickerType.video,
-                        ),
-                      );
-
-                      if (result != null && result.isNotEmpty && context.mounted) {
-                        final editedMedia = await ref.read(
-                          editMediaProvider(
-                            result[0],
-                            maxVideoDuration: VideoConstants.feedVideoMaxDuration,
-                          ).future,
-                        );
-                        if (!context.mounted || editedMedia == null) return;
-                        final editingResult = await CreateVideoRoute(
-                              videoPath: editedMedia.path,
-                              videoThumbPath: editedMedia.thumb,
-                              mimeType: result[0].mimeType ?? '',
-                            ).push<bool>(context) ??
-                            false;
-
-                        if (editingResult && context.mounted) {
-                          WidgetsBinding.instance.addPostFrameCallback((_) {
-                            if (context.mounted) {
-                              context.pop();
-                            }
-                          });
-                        }
-                      }
-                    }
-
-                    await showMediaPickerAndCreatePost();
-                  },
-                  requestDialog: const PermissionRequestSheet(permission: Permission.photos),
-                  settingsDialog: SettingsRedirectSheet.fromType(context, Permission.photos),
-                  builder: (_, onPressed) => MainModalItem(
-                    item: type,
-                    onTap: onPressed,
-                    index: index,
-                  ),
-                );
+              switch (type) {
+                case FeedType.post:
+                  return _SharePostButton(type: type, index: index);
+                case FeedType.story:
+                  return _ShareStoryButton(type: type, index: index);
+                case FeedType.video:
+                  return _ShareVideoButton(type: type, index: index);
+                case FeedType.article:
+                  return _ShareArticleButton(type: type, index: index);
               }
-
-              return MainModalItem(
-                item: type,
-                onTap: () async {
-                  final createFlowRouteLocation = _getCreateFlowRouteLocation(type);
-                  final result = await context.push<bool>(createFlowRouteLocation);
-
-                  if ((result ?? false) && context.mounted) {
-                    WidgetsBinding.instance.addPostFrameCallback((_) {
-                      if (context.mounted) {
-                        context.pop();
-                      }
-                    });
-                  }
-                },
-                index: index,
-              );
             },
           ),
         ],
       ),
     );
   }
+}
 
-  String _getCreateFlowRouteLocation(FeedType type) {
-    return switch (type) {
-      FeedType.post => CreatePostRoute().location,
-      FeedType.article => CreateArticleRoute().location,
-      _ => throw UnimplementedError(),
-    };
+class _SharePostButton extends HookConsumerWidget {
+  const _SharePostButton({required this.type, required this.index});
+  final MainModalListItem type;
+  final int index;
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    return MainModalItem(
+      item: type,
+      onTap: () => CreatePostRoute().go(context),
+      index: index,
+    );
+  }
+}
+
+class _ShareStoryButton extends HookConsumerWidget {
+  const _ShareStoryButton({required this.type, required this.index});
+  final MainModalListItem type;
+  final int index;
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    return PermissionAwareWidget(
+      permissionType: Permission.camera,
+      requestId: 'story_record',
+      builder: (_, onPressed) => MainModalItem(
+        item: type,
+        onTap: onPressed,
+        index: index,
+      ),
+      onGranted: () async {
+        await StoryRecordRoute().push<void>(context);
+        WidgetsBinding.instance.addPostFrameCallback((_) {
+          if (context.mounted) {
+            context.pop();
+          }
+        });
+      },
+      requestDialog: const PermissionRequestSheet(
+        permission: Permission.camera,
+      ),
+      settingsDialog: SettingsRedirectSheet.fromType(context, Permission.camera),
+    );
+  }
+}
+
+class _ShareVideoButton extends HookConsumerWidget {
+  const _ShareVideoButton({required this.type, required this.index});
+  final MainModalListItem type;
+  final int index;
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    return PermissionAwareWidget(
+      permissionType: Permission.photos,
+      onGranted: () async {
+        Future<void> showMediaPickerAndCreatePost() async {
+          final result = await showSimpleBottomSheet<List<MediaFile>>(
+            context: context,
+            child: const MediaPickerPage(
+              maxSelection: 1,
+              isBottomSheet: true,
+              type: MediaPickerType.video,
+            ),
+          );
+
+          if (context.mounted) {
+            if (result != null && result.isNotEmpty) {
+              final editedMedia = await ref.read(
+                editMediaProvider(
+                  result[0],
+                  maxVideoDuration: VideoConstants.feedVideoMaxDuration,
+                ).future,
+              );
+              if (!context.mounted) return;
+              if (editedMedia == null) {
+                context.pop();
+              } else {
+                CreateVideoRoute(
+                  videoPath: editedMedia.path,
+                  videoThumbPath: editedMedia.thumb,
+                  mimeType: result[0].mimeType ?? '',
+                ).go(context);
+              }
+            } else {
+              context.pop();
+            }
+          }
+        }
+
+        await showMediaPickerAndCreatePost();
+      },
+      requestDialog: const PermissionRequestSheet(permission: Permission.photos),
+      settingsDialog: SettingsRedirectSheet.fromType(context, Permission.photos),
+      builder: (_, onPressed) => MainModalItem(
+        item: type,
+        onTap: onPressed,
+        index: index,
+      ),
+    );
+  }
+}
+
+class _ShareArticleButton extends HookConsumerWidget {
+  const _ShareArticleButton({required this.type, required this.index});
+  final MainModalListItem type;
+  final int index;
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    return MainModalItem(
+      item: type,
+      onTap: () => CreateArticleRoute().go(context),
+      index: index,
+    );
   }
 }
