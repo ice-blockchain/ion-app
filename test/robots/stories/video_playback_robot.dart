@@ -28,7 +28,7 @@ class _TestVideoPlayback extends HookConsumerWidget {
             const VideoControllerParams(sourcePath: 'dummy', authorPubkey: 'alice'),
           ),
         )
-        .value;
+        .valueOrNull;
 
     useStoryVideoPlayback(
       ref: ref,

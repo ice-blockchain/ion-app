@@ -9,6 +9,7 @@ import 'package:ion/app/features/wallets/providers/selected_wallet_view_id_provi
 import 'package:ion/app/features/wallets/providers/wallet_view_data_provider.r.dart';
 import 'package:ion/app/services/storage/local_storage.r.dart';
 import 'package:mocktail/mocktail.dart';
+import 'package:video_player/video_player.dart';
 import 'package:video_player_platform_interface/video_player_platform_interface.dart';
 
 class Listener<T> extends Mock {
@@ -74,9 +75,8 @@ class FakeVideoPlayerPlatform extends VideoPlayerPlatform {
   Widget buildView(int textureId) => const SizedBox();
 }
 
-class FakeVideoController extends ValueNotifier<CachedVideoPlayerPlusValue>
-    implements CachedVideoPlayerPlusController {
-  FakeVideoController(Duration duration) : super(const CachedVideoPlayerPlusValue.uninitialized()) {
+class FakeVideoController extends ValueNotifier<VideoPlayerValue> implements VideoPlayerController {
+  FakeVideoController(Duration duration) : super(const VideoPlayerValue.uninitialized()) {
     value = value.copyWith(
       isInitialized: true,
       duration: duration,
@@ -86,7 +86,7 @@ class FakeVideoController extends ValueNotifier<CachedVideoPlayerPlusValue>
   }
 
   @override
-  int get textureId => 1;
+  int get playerId => 1;
 
   @override
   DataSourceType get dataSourceType => DataSourceType.asset;
@@ -107,10 +107,27 @@ class FakeVideoController extends ValueNotifier<CachedVideoPlayerPlusValue>
   dynamic noSuchMethod(Invocation invocation) => super.noSuchMethod(invocation);
 }
 
+class MockCachedVideoPlayerPlus extends Mock implements CachedVideoPlayerPlus {
+  MockCachedVideoPlayerPlus() {
+    // initialize() should immediately complete
+    when(initialize).thenAnswer((_) async {});
+    // After initialize, isInitialized must return true
+    when(() => isInitialized).thenReturn(true);
+    // controller must return a valid VideoPlayerController
+    when(() => controller).thenReturn(
+      FakeVideoController(Duration.zero),
+    );
+  }
+}
+
 class FakeVideoFactory extends VideoPlayerControllerFactory {
   FakeVideoFactory(this._controller) : super(sourcePath: 'dummy');
-  final CachedVideoPlayerPlusController _controller;
+  final VideoPlayerController _controller;
 
   @override
-  CachedVideoPlayerPlusController createController(VideoPlayerOptions? _) => _controller;
+  CachedVideoPlayerPlus createController(VideoPlayerOptions? _) {
+    final mock = MockCachedVideoPlayerPlus();
+    when(() => mock.controller).thenReturn(_controller);
+    return mock;
+  }
 }

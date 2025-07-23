@@ -37,7 +37,7 @@ class _StoryConsumer extends HookConsumerWidget {
             const VideoControllerParams(sourcePath: 'dummy', authorPubkey: 'alice'),
           ),
         )
-        .value;
+        .valueOrNull;
 
     useStoryVideoPlayback(
       ref: ref,

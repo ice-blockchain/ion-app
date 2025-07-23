@@ -8,7 +8,7 @@ import 'package:ion/app/components/image/ion_network_image.dart';
 import 'package:ion/app/features/core/providers/ion_connect_media_url_fallback_provider.r.dart';
 
 class IonConnectNetworkImage extends ConsumerWidget {
-  const IonConnectNetworkImage({
+  IonConnectNetworkImage({
     required this.imageUrl,
     required this.authorPubkey,
     this.imageBuilder,
@@ -17,7 +17,7 @@ class IonConnectNetworkImage extends ConsumerWidget {
     this.height,
     this.alignment = Alignment.center,
     this.filterQuality = FilterQuality.low,
-    this.cacheManager,
+    BaseCacheManager? cacheManager,
     this.fit,
     this.errorWidget,
     this.placeholder,
@@ -25,11 +25,18 @@ class IonConnectNetworkImage extends ConsumerWidget {
     this.fadeOutDuration,
     this.borderRadius,
     super.key,
-  });
+  }) : cacheManager = cacheManager ??
+            CacheManager(
+              Config(
+                'ionConnectNetworkImageCacheKey',
+                maxNrOfCacheObjects: 1000,
+                stalePeriod: const Duration(days: 1),
+              ),
+            );
 
   final String imageUrl;
   final String authorPubkey;
-  final BaseCacheManager? cacheManager;
+  final BaseCacheManager cacheManager;
   final ImageWidgetBuilder? imageBuilder;
   final ProgressIndicatorBuilder? progressIndicatorBuilder;
   final LoadingErrorWidgetBuilder? errorWidget;
@@ -42,6 +49,7 @@ class IonConnectNetworkImage extends ConsumerWidget {
   final Duration? fadeInDuration;
   final Duration? fadeOutDuration;
   final BorderRadiusGeometry? borderRadius;
+
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final sourcePath = ref

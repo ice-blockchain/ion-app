@@ -1,11 +1,11 @@
 // SPDX-License-Identifier: ice License 1.0
 
-import 'package:cached_video_player_plus/cached_video_player_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/components/progress_bar/centered_loading_indicator.dart';
 import 'package:ion/app/features/core/providers/video_player_provider.r.dart';
 import 'package:ion/app/features/feed/stories/hooks/use_story_video_playback.dart';
+import 'package:video_player/video_player.dart';
 
 class VideoStoryViewer extends HookConsumerWidget {
   const VideoStoryViewer({
@@ -31,7 +31,7 @@ class VideoStoryViewer extends HookConsumerWidget {
             VideoControllerParams(sourcePath: videoPath, authorPubkey: authorPubkey),
           ),
         )
-        .value;
+        .valueOrNull;
 
     if (videoController == null || !videoController.value.isInitialized) {
       return const CenteredLoadingIndicator();
@@ -45,7 +45,7 @@ class VideoStoryViewer extends HookConsumerWidget {
       onCompleted: onVideoCompleted,
     );
 
-    Widget videoPlayer = CachedVideoPlayerPlus(videoController);
+    Widget videoPlayer = VideoPlayer(videoController);
 
     final aspect = videoController.value.aspectRatio;
     final isHorizontal = aspect > 1.0;

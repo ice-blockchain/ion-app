@@ -2,7 +2,6 @@
 
 import 'dart:async';
 
-import 'package:cached_video_player_plus/cached_video_player_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
@@ -12,6 +11,7 @@ import 'package:ion/app/features/core/providers/splash_provider.r.dart';
 import 'package:ion/app/features/core/providers/video_player_provider.r.dart';
 import 'package:ion/app/hooks/use_on_init.dart';
 import 'package:ion/generated/assets.gen.dart';
+import 'package:video_player/video_player.dart';
 
 class SplashPage extends HookConsumerWidget {
   const SplashPage({super.key});
@@ -22,16 +22,16 @@ class SplashPage extends HookConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     _setSystemChrome();
 
-    final splashVideoController = ref
-        .watch(
-          videoControllerProvider(
-            VideoControllerParams(
-              sourcePath: Assets.videos.logoStatic,
-              autoPlay: true,
-            ),
-          ),
-        )
-        .value;
+    final splashVideoControllerState = ref.watch(
+      videoControllerProvider(
+        VideoControllerParams(
+          sourcePath: Assets.videos.logoStatic,
+          autoPlay: true,
+        ),
+      ),
+    );
+
+    final splashVideoController = splashVideoControllerState.valueOrNull;
 
     // We watch the intro video controller here to initialize the intro video in advance.
     // This ensures a seamless transition to the IntroPage without flickering or delays.
@@ -83,11 +83,12 @@ class SplashPage extends HookConsumerWidget {
 
     useOnInit(
       () {
-        if (splashVideoController != null && splashVideoController.value.hasError) {
+        if (splashVideoController != null && splashVideoController.value.hasError ||
+            splashVideoControllerState.hasError) {
           ref.read(splashProvider.notifier).animationCompleted = true;
         }
       },
-      [splashVideoController?.value.hasError],
+      [splashVideoController?.value.hasError, splashVideoControllerState.hasError],
     );
 
     return Scaffold(
@@ -98,9 +99,10 @@ class SplashPage extends HookConsumerWidget {
                 !splashVideoController.value.hasError
             ? AspectRatio(
                 aspectRatio: splashVideoController.value.aspectRatio,
-                child: CachedVideoPlayerPlus(splashVideoController),
+                child: VideoPlayer(splashVideoController),
               )
-            : splashVideoController != null && splashVideoController.value.hasError
+            : (splashVideoController != null && splashVideoController.value.hasError ||
+                    splashVideoControllerState.hasError)
                 ? Assets.svg.logo.logoCircle.icon(size: 148.0.s)
                 : const SizedBox.shrink(),
       ),

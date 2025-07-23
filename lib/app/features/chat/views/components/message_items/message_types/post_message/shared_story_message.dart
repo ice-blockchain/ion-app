@@ -15,6 +15,7 @@ import 'package:ion/app/features/components/ion_connect_network_image/ion_connec
 import 'package:ion/app/features/core/model/media_type.dart';
 import 'package:ion/app/features/feed/data/models/entities/modifiable_post_data.f.dart';
 import 'package:ion/app/features/feed/data/models/entities/post_data.f.dart';
+import 'package:ion/app/features/feed/stories/providers/story_image_loading_provider.r.dart';
 import 'package:ion/app/features/feed/stories/providers/story_viewing_provider.r.dart';
 import 'package:ion/app/features/ion_connect/ion_connect.dart';
 import 'package:ion/app/features/ion_connect/model/entity_data_with_media_content.dart';
@@ -175,7 +176,7 @@ class _SenderReceiverLabel extends StatelessWidget {
   }
 }
 
-class _StoryPreviewImage extends StatelessWidget {
+class _StoryPreviewImage extends HookConsumerWidget {
   const _StoryPreviewImage({
     required this.isMe,
     required this.storyUrl,
@@ -189,10 +190,13 @@ class _StoryPreviewImage extends StatelessWidget {
   final EventMessage replyEventMessage;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final cacheManager = ref.watch(storyImageCacheManagerProvider);
+
     return ClipRRect(
       borderRadius: BorderRadius.circular(12.0.s),
       child: IonConnectNetworkImage(
+        cacheManager: cacheManager,
         imageUrl: storyUrl,
         height: 220.0.s,
         authorPubkey: replyEventMessage.masterPubkey,

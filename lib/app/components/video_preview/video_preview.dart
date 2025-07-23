@@ -2,7 +2,6 @@
 
 import 'dart:ui';
 
-import 'package:cached_video_player_plus/cached_video_player_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
@@ -16,6 +15,7 @@ import 'package:ion/app/hooks/use_on_init.dart';
 import 'package:ion/app/hooks/use_route_presence.dart';
 import 'package:ion/app/utils/date.dart';
 import 'package:ion/generated/assets.gen.dart';
+import 'package:video_player/video_player.dart';
 import 'package:visibility_detector/visibility_detector.dart';
 
 class VideoPreview extends HookConsumerWidget {
@@ -37,19 +37,17 @@ class VideoPreview extends HookConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final uniqueId = useRef(UniqueKey().toString());
-
-    final controller = ref
-        .watch(
-          videoControllerProvider(
-            VideoControllerParams(
-              sourcePath: videoUrl,
-              authorPubkey: authorPubkey,
-              looping: true,
-              uniqueId: framedEventReference?.encode() ?? '',
-            ),
-          ),
-        )
-        .value;
+    final videoControllerProviderState = ref.watch(
+      videoControllerProvider(
+        VideoControllerParams(
+          sourcePath: videoUrl,
+          authorPubkey: authorPubkey,
+          looping: true,
+          uniqueId: framedEventReference?.encode() ?? '',
+        ),
+      ),
+    );
+    final controller = videoControllerProviderState.valueOrNull;
 
     final isFullyVisible = useState(false);
     final isRouteFocused = useState(true);
@@ -114,6 +112,9 @@ class VideoPreview extends HookConsumerWidget {
       [controller?.value.isInitialized],
     );
 
+    final hasError =
+        controller != null && controller.value.hasError || videoControllerProviderState.hasError;
+
     return VisibilityDetector(
       key: ValueKey(uniqueId),
       onVisibilityChanged: handleVisibilityChanged,
@@ -124,28 +125,26 @@ class VideoPreview extends HookConsumerWidget {
               color: context.theme.appColors.primaryBackground,
             ),
           ),
-          if (thumbnailUrl != null &&
-              (!(controller?.value.isInitialized ?? false) ||
-                  (controller?.value.hasError ?? false)))
+          if (thumbnailUrl != null && videoControllerProviderState.isLoading)
             Positioned.fill(
               child: _BlurredThumbnail(
                 thumbnailUrl: thumbnailUrl!,
                 authorPubkey: authorPubkey,
-                isLoading: !(controller?.value.hasError ?? false),
+                isLoading: videoControllerProviderState.isLoading,
               ),
             ),
-          if (controller != null && controller.value.isInitialized && !controller.value.hasError)
+          if (controller != null && controller.value.isInitialized && !hasError)
             Positioned.fill(
               child: FittedBox(
                 fit: BoxFit.cover,
                 child: SizedBox(
                   width: controller.value.size.width,
                   height: controller.value.size.height,
-                  child: CachedVideoPlayerPlus(controller),
+                  child: VideoPlayer(controller),
                 ),
               ),
             ),
-          if (controller != null && controller.value.hasError)
+          if (hasError)
             const Positioned.fill(
               child: IonPlaceholder(),
             ),
@@ -177,7 +176,7 @@ class VideoPreview extends HookConsumerWidget {
 class _VideoDurationLabel extends StatelessWidget {
   const _VideoDurationLabel({required this.controller});
 
-  final CachedVideoPlayerPlusController controller;
+  final VideoPlayerController controller;
 
   @override
   Widget build(BuildContext context) {
