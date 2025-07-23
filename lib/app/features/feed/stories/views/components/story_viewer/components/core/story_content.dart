@@ -9,8 +9,8 @@ import 'package:flutter_keyboard_visibility/flutter_keyboard_visibility.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/auth/providers/auth_provider.m.dart';
+import 'package:ion/app/features/chat/providers/user_chat_privacy_provider.r.dart';
 import 'package:ion/app/features/feed/data/models/entities/modifiable_post_data.f.dart';
-import 'package:ion/app/features/feed/providers/can_reply_notifier.r.dart';
 import 'package:ion/app/features/feed/stories/hooks/use_keyboard_height.dart';
 import 'package:ion/app/features/feed/stories/providers/story_pause_provider.r.dart';
 import 'package:ion/app/features/feed/stories/providers/story_reply_notification_provider.m.dart';
@@ -36,9 +36,7 @@ class StoryContent extends HookConsumerWidget {
     final storyReplyNotificationState = ref.watch(storyReplyNotificationControllerProvider);
     final textController = useTextEditingController();
     final isKeyboardVisible = KeyboardVisibilityProvider.isKeyboardVisible(context);
-    final canReply = ref.watch(canReplyProvider(story.toEventReference())).valueOrNull ?? false;
-    final currentPubkey = ref.watch(currentPubkeySelectorProvider);
-    final isOwnerStory = currentPubkey == story.masterPubkey;
+
     final borderRadius = 16.0.s;
 
     return Stack(
@@ -71,7 +69,6 @@ class StoryContent extends HookConsumerWidget {
           viewerPubkey: viewerPubkey,
           textController: textController,
           isKeyboardShown: isKeyboardVisible,
-          canReply: canReply && !isOwnerStory,
         ),
         if (storyReplyNotificationState.showNotification) const StoryReplyNotification(),
       ],
@@ -85,19 +82,21 @@ class _StoryControlsPanel extends HookConsumerWidget {
     required this.viewerPubkey,
     required this.textController,
     required this.isKeyboardShown,
-    required this.canReply,
   });
 
   final ModifiablePostEntity story;
   final String viewerPubkey;
   final TextEditingController textController;
   final bool isKeyboardShown;
-  final bool canReply;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final panelKey = useMemoized(GlobalKey.new);
     final controlsHeight = useState<double>(65.0.s);
+    final currentPubkey = ref.watch(currentPubkeySelectorProvider);
+    final isOwnerStory = currentPubkey == story.masterPubkey;
+    final canSendMessage =
+        ref.watch(canSendMessageProvider(story.masterPubkey)).valueOrNull ?? false;
 
     useEffect(
       () {
@@ -134,7 +133,7 @@ class _StoryControlsPanel extends HookConsumerWidget {
 
     return Stack(
       children: [
-        if (canReply)
+        if (canSendMessage && !isOwnerStory)
           AnimatedPositionedDirectional(
             key: panelKey,
             duration: 50.ms,
