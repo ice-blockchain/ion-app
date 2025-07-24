@@ -289,6 +289,7 @@ class SendCoinsNotifier extends _$SendCoinsNotifier {
 
     final chatService = await ref.read(sendChatMessageServiceProvider.future);
     await chatService.send(
+      kind: event.kind,
       receiverPubkey: details.participantPubkey!,
       content: content,
       tags: [tag],

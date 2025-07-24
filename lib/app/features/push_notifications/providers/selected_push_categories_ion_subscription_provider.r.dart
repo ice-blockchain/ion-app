@@ -67,12 +67,20 @@ class SelectedPushCategoriesIonSubscription extends _$SelectedPushCategoriesIonS
   }
 
   Future<List<RequestFilter>> _getFilters() async {
-    final selectedPushCategories = ref.watch(selectedPushCategoriesProvider);
-    return selectedPushCategories.enabledCategories
+    final selectedPushCategories = ref.watch(selectedPushCategoriesProvider).enabledCategories;
+
+    final filters = selectedPushCategories
         .map(_buildFilterForCategory)
         .nonNulls
         .expand<RequestFilter>((filters) => filters)
         .toList();
+
+    final messageFilter = _buildFilterForMessages(selectedPushCategories);
+    if (messageFilter != null) {
+      filters.add(messageFilter);
+    }
+
+    return filters;
   }
 
   List<RequestFilter>? _buildFilterForCategory(PushNotificationCategory category) {
@@ -81,9 +89,6 @@ class SelectedPushCategoriesIonSubscription extends _$SelectedPushCategoriesIonS
       PushNotificationCategory.reposts => _buildFilterForReposts(),
       PushNotificationCategory.likes => _buildFilterForLikes(),
       PushNotificationCategory.newFollowers => _buildFilterForNewFollowers(),
-      PushNotificationCategory.directMessages => _buildFilterForDirectMessages(),
-      PushNotificationCategory.paymentRequest => _buildFilterForPaymentRequest(),
-      PushNotificationCategory.paymentReceived => _buildFilterForPaymentReceived(),
       _ => null,
     };
   }
@@ -147,19 +152,6 @@ class SelectedPushCategoriesIonSubscription extends _$SelectedPushCategoriesIonS
           '#p': [currentUserPubkey],
         },
       ),
-      RequestFilter(
-        kinds: const [IonConnectGiftWrapEntity.kind],
-        tags: {
-          '#k': [
-            // Using doubled kind 7 filter to take only the reactions (skipping statuses).
-            [
-              PrivateMessageReactionEntity.kind.toString(),
-              PrivateMessageReactionEntity.kind.toString(),
-            ],
-          ],
-          '#p': [currentUserPubkey],
-        },
-      ),
     ];
   }
 
@@ -176,47 +168,47 @@ class SelectedPushCategoriesIonSubscription extends _$SelectedPushCategoriesIonS
     ];
   }
 
-  List<RequestFilter> _buildFilterForDirectMessages() {
-    final currentUserPubkey = ref.watch(currentPubkeySelectorProvider);
-    if (currentUserPubkey == null) throw UserMasterPubkeyNotFoundException();
-    return [
-      RequestFilter(
-        kinds: const [IonConnectGiftWrapEntity.kind],
-        tags: {
-          '#k': [
-            ReplaceablePrivateDirectMessageEntity.kind.toString(),
-          ],
-          '#p': [currentUserPubkey],
-        },
-      ),
+  RequestFilter? _buildFilterForMessages(List<PushNotificationCategory> categories) {
+    final messageCategories = [
+      PushNotificationCategory.directMessages,
+      PushNotificationCategory.messagePaymentRequest,
+      PushNotificationCategory.messagePaymentReceived,
     ];
-  }
 
-  List<RequestFilter> _buildFilterForPaymentRequest() {
-    final currentUserPubkey = ref.watch(currentPubkeySelectorProvider);
-    if (currentUserPubkey == null) throw UserMasterPubkeyNotFoundException();
-    return [
-      RequestFilter(
-        kinds: const [IonConnectGiftWrapEntity.kind],
-        tags: {
-          '#k': [FundsRequestEntity.kind.toString()],
-          '#p': [currentUserPubkey],
-        },
-      ),
-    ];
-  }
+    if (!categories.any(messageCategories.contains)) return null;
 
-  List<RequestFilter> _buildFilterForPaymentReceived() {
     final currentUserPubkey = ref.watch(currentPubkeySelectorProvider);
     if (currentUserPubkey == null) throw UserMasterPubkeyNotFoundException();
-    return [
-      RequestFilter(
-        kinds: const [IonConnectGiftWrapEntity.kind],
-        tags: {
-          '#k': [WalletAssetEntity.kind.toString()],
-          '#p': [currentUserPubkey],
-        },
-      ),
-    ];
+
+    return RequestFilter(
+      kinds: const [IonConnectGiftWrapEntity.kind],
+      tags: {
+        '#k': [
+          // direct messages
+          if (categories.contains(PushNotificationCategory.directMessages))
+            [ReplaceablePrivateDirectMessageEntity.kind.toString(), ''],
+          if (categories.contains(PushNotificationCategory.directMessages))
+            // Using doubled kind 7 filter to take only the reactions (skipping statuses).
+            [
+              PrivateMessageReactionEntity.kind.toString(),
+              PrivateMessageReactionEntity.kind.toString(),
+            ],
+
+          // money request message
+          if (categories.contains(PushNotificationCategory.messagePaymentRequest))
+            [
+              ReplaceablePrivateDirectMessageEntity.kind.toString(),
+              FundsRequestEntity.kind.toString(),
+            ],
+          // money sent message
+          if (categories.contains(PushNotificationCategory.messagePaymentReceived))
+            [
+              ReplaceablePrivateDirectMessageEntity.kind.toString(),
+              WalletAssetEntity.kind.toString(),
+            ],
+        ],
+        '#p': [currentUserPubkey],
+      },
+    );
   }
 }

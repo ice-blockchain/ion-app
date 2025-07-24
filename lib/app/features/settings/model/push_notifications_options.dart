@@ -54,7 +54,9 @@ enum SocialNotificationOption implements SelectableOption, PushNotificationOptio
 enum ChatNotificationOption implements SelectableOption, PushNotificationOption {
   directMessages,
   groupChats,
-  channels;
+  channels,
+  paymentRequest,
+  paymentReceived;
 
   @override
   String getLabel(BuildContext context) => switch (this) {
@@ -62,6 +64,10 @@ enum ChatNotificationOption implements SelectableOption, PushNotificationOption 
           context.i18n.push_notification_chat_option_direct_messages,
         ChatNotificationOption.groupChats => context.i18n.push_notification_chat_option_group_chats,
         ChatNotificationOption.channels => context.i18n.push_notification_chat_option_channels,
+        ChatNotificationOption.paymentRequest =>
+          context.i18n.push_notification_chat_option_payment_request,
+        ChatNotificationOption.paymentReceived =>
+          context.i18n.push_notification_chat_option_payment_received,
       };
 
   @override
@@ -70,6 +76,8 @@ enum ChatNotificationOption implements SelectableOption, PushNotificationOption 
       ChatNotificationOption.directMessages => Assets.svg.iconChatOff,
       ChatNotificationOption.groupChats => Assets.svg.iconSearchGroups,
       ChatNotificationOption.channels => Assets.svg.iconSearchChannel,
+      ChatNotificationOption.paymentRequest => Assets.svg.iconButtonAddstroke,
+      ChatNotificationOption.paymentReceived => Assets.svg.iconButtonReceive,
     };
 
     return icon.icon(color: context.theme.appColors.primaryAccent);
@@ -80,35 +88,8 @@ enum ChatNotificationOption implements SelectableOption, PushNotificationOption 
         ChatNotificationOption.directMessages => PushNotificationCategory.directMessages,
         ChatNotificationOption.groupChats => PushNotificationCategory.groupChats,
         ChatNotificationOption.channels => PushNotificationCategory.channels,
-      };
-}
-
-enum WalletNotificationOption implements SelectableOption, PushNotificationOption {
-  paymentRequest,
-  paymentReceived;
-
-  @override
-  String getLabel(BuildContext context) => switch (this) {
-        WalletNotificationOption.paymentRequest =>
-          context.i18n.push_notification_wallet_option_payment_request,
-        WalletNotificationOption.paymentReceived =>
-          context.i18n.push_notification_wallet_option_payment_received,
-      };
-
-  @override
-  Widget getIcon(BuildContext context) {
-    final icon = switch (this) {
-      WalletNotificationOption.paymentRequest => Assets.svg.iconButtonAddstroke,
-      WalletNotificationOption.paymentReceived => Assets.svg.iconButtonReceive,
-    };
-
-    return icon.icon(color: context.theme.appColors.primaryAccent);
-  }
-
-  @override
-  PushNotificationCategory get category => switch (this) {
-        WalletNotificationOption.paymentRequest => PushNotificationCategory.paymentRequest,
-        WalletNotificationOption.paymentReceived => PushNotificationCategory.paymentReceived,
+        ChatNotificationOption.paymentRequest => PushNotificationCategory.messagePaymentRequest,
+        ChatNotificationOption.paymentReceived => PushNotificationCategory.messagePaymentReceived,
       };
 }
 
