@@ -5,7 +5,7 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/features/feed/stories/providers/camera_capture_provider.r.dart';
 
-final Duration maxRecordingDuration = 20.seconds;
+final Duration maxRecordingDuration = 60.seconds;
 
 typedef RecordingProgressResult = (
   Duration recordingDuration,
