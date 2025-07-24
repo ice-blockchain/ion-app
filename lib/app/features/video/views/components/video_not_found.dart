@@ -19,7 +19,7 @@ class VideoNotFound extends StatelessWidget {
           ),
           Text(
             context.i18n.video_not_found,
-            style: context.theme.textTheme.bodyMedium?.copyWith(
+            style: context.theme.appTextThemes.caption2.copyWith(
               color: context.theme.appColors.sheetLine,
             ),
           ),
