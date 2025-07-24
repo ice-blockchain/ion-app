@@ -53,7 +53,6 @@ class ManageCoinsPage extends HookConsumerWidget {
               slivers: [
                 SliverAppBar(
                   pinned: true,
-                  floating: true,
                   automaticallyImplyLeading: false,
                   backgroundColor: context.theme.appColors.onPrimaryAccent,
                   surfaceTintColor: context.theme.appColors.onPrimaryAccent,
