@@ -18,6 +18,7 @@ import 'package:ion/app/features/ion_connect/model/event_reference.f.dart';
 import 'package:ion/app/features/ion_connect/model/ion_connect_entity.dart';
 import 'package:ion/app/features/ion_connect/model/media_attachment.dart';
 import 'package:ion/app/features/video/views/components/video_actions.dart';
+import 'package:ion/app/features/video/views/components/video_not_found.dart';
 import 'package:ion/app/features/video/views/components/video_post_info.dart';
 import 'package:ion/app/features/video/views/hooks/use_status_bar_color.dart';
 import 'package:ion/app/features/video/views/hooks/use_wake_lock.dart';
@@ -63,11 +64,10 @@ class VideosVerticalScrollPage extends HookConsumerWidget {
 
     final ionConnectEntity =
         ref.watch(ionConnectEntityWithCountersProvider(eventReference: eventReference));
+
     if (ionConnectEntity == null ||
         (ionConnectEntity is! ModifiablePostEntity && ionConnectEntity is! PostEntity)) {
-      return Center(
-        child: Text(context.i18n.video_not_found),
-      );
+      return const VideoNotFound();
     }
 
     final filteredVideos = entities.where((item) {
