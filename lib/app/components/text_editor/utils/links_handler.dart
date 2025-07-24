@@ -40,17 +40,28 @@ class LinksHandler extends TextEditorTypingListener {
 
   void _formatLinks(String text) {
     _isFormatting = true;
+    // Remove only existing link attributes
+    final deltaOps = controller.document.toDelta().toList();
+    var offset = 0;
+    for (final op in deltaOps) {
+      final attrs = op.attributes;
+      final len = op.data is String ? (op.data! as String).length : 1;
+      if (attrs != null && attrs.containsKey(Attribute.link.key)) {
+        // Unset link attribute without affecting other attributes
+        controller.formatText(
+          offset,
+          len,
+          Attribute.clone(Attribute.link, null),
+        );
+      }
+      offset += len;
+    }
+
     final matches = RegExp(_urlMatcher.pattern).allMatches(text);
-    final doc = controller.document;
     for (final match in matches) {
       final url = match.group(0);
       if (url == null) continue;
-      final attrs = doc.collectStyle(match.start, match.end - match.start).attributes;
-      final isAlreadyLink =
-          attrs.containsKey(Attribute.link.key) && attrs[Attribute.link.key]?.value == url;
-      if (!isAlreadyLink) {
-        controller.formatText(match.start, match.end - match.start, LinkAttribute(url));
-      }
+      controller.formatText(match.start, match.end - match.start, LinkAttribute(url));
     }
     _isFormatting = false;
   }

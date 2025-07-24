@@ -69,10 +69,10 @@ void main() {
     });
 
     test('should not parse as URLs any text with dot', () {
-      final results = parser.parse('Some dummy text.To test links');
+      final results = parser.parse('Some dummy text.To test links.to test links');
 
       expect(results.length, equals(1));
-      expect(results[0].text, equals('Some dummy text.To test links'));
+      expect(results[0].text, equals('Some dummy text.To test links.to test links'));
     });
 
     test('should parse www-prefixed URLs correctly', () {
@@ -109,11 +109,27 @@ void main() {
       expect(results.length, 2);
     });
 
-    test('should not parse URLs without protocol or www prefix', () {
-      final results = parser.parse('Check example.com and foo.bar');
+    test('should parse URLs with query params correctly', () {
+      final results = parser.parse('Login at http://pass@example.com/files?q=test');
 
-      expect(results.length, equals(1));
-      expect(results[0].text, equals('Check example.com and foo.bar'));
+      expect(results.length, equals(2));
+      expect(results[0].text, equals('Login at '));
+      expect(results[1].text, equals('http://pass@example.com/files?q=test'));
+      expect(results[1].matcher, isA<UrlMatcher>());
+
+      expect(results.length, 2);
+    });
+
+    test('should parse URLs with query params correctly', () {
+      final results = parser.parse('Visit http://pass@example.com/files?q=test.no questions');
+
+      expect(results.length, equals(3));
+      expect(results[0].text, equals('Visit '));
+      expect(results[1].text, equals('http://pass@example.com/files?q=test'));
+      expect(results[1].matcher, isA<UrlMatcher>());
+      expect(results[2].text, equals('.no questions'));
+
+      expect(results.length, 3);
     });
 
     test('should parse mixed content correctly', () {
@@ -172,6 +188,23 @@ void main() {
         () => TextParser(matchers: const {}),
         throwsA(isA<AssertionError>()),
       );
+    });
+
+    test('should parse bare domain with TLD correctly', () {
+      final results = parser.parse('Visit ice.io for info');
+
+      expect(results.length, equals(3));
+      expect(results[0].text, equals('Visit '));
+      expect(results[1].text, equals('ice.io'));
+      expect(results[1].matcher, isA<UrlMatcher>());
+      expect(results[2].text, equals(' for info'));
+    });
+
+    test('should not parse valid bare domain with TLD but followed by extra symbols', () {
+      final results = parser.parse('Visit ice.ion for info');
+
+      expect(results.length, equals(1));
+      expect(results[0].text, equals('Visit ice.ion for info'));
     });
   });
 }
