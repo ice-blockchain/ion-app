@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: ice License 1.0
+
 import 'package:ion/app/features/chat/model/database/chat_database.m.dart';
 import 'package:uuid/uuid.dart';
 
