@@ -83,6 +83,10 @@ class IonConnectNotifier extends _$IonConnectNotifier {
 
         return null;
       },
+      retryWhen: (error) {
+        //TODO[REFACTOR] - Do not retry if UserRelaysNotFound?! Case during register (no user relays found)
+        return true;
+      },
       onRetry: (error) async {
         Logger.error(error ?? '', message: '[RELAY] Got error $error');
         if (triedRelay case final IonConnectRelay relay) {
@@ -211,6 +215,10 @@ class IonConnectNotifier extends _$IonConnectNotifier {
             onEose();
           }
         }
+      },
+      retryWhen: (error) {
+        //TODO[REFACTOR] - Do not retry if UserRelaysNotFound?! Case during register (no user relays found)
+        return true;
       },
       onRetry: (error) {
         Logger.error(error ?? '', message: '[RELAY] Got error $error');
