@@ -45,18 +45,25 @@ class VideoStoryViewer extends HookConsumerWidget {
       onCompleted: onVideoCompleted,
     );
 
-    Widget videoPlayer = VideoPlayer(videoController);
-
     final aspect = videoController.value.aspectRatio;
     final isHorizontal = aspect > 1.0;
     if (isHorizontal) {
-      videoPlayer = Center(
+      return Center(
         child: AspectRatio(
           aspectRatio: aspect,
-          child: videoPlayer,
+          child: VideoPlayer(videoController),
         ),
       );
     }
-    return videoPlayer;
+    return SizedBox.expand(
+      child: FittedBox(
+        fit: BoxFit.cover,
+        child: SizedBox(
+          width: videoController.value.size.width,
+          height: videoController.value.size.height,
+          child: VideoPlayer(videoController),
+        ),
+      ),
+    );
   }
 }
