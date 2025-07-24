@@ -190,6 +190,7 @@ class SelectedPushCategoriesIonSubscription extends _$SelectedPushCategoriesIonS
           if (categories.contains(PushNotificationCategory.directMessages))
             [
               ReplaceablePrivateDirectMessageEntity.kind.toString(),
+              // Using doubled kind 7 filter to take only the reactions (skipping statuses).
               [
                 PrivateMessageReactionEntity.kind.toString(),
                 PrivateMessageReactionEntity.kind.toString(),
