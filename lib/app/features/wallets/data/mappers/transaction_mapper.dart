@@ -2,12 +2,9 @@
 
 import 'package:collection/collection.dart';
 import 'package:ion/app/extensions/extensions.dart';
-import 'package:ion/app/extensions/object.dart';
 import 'package:ion/app/features/wallets/data/database/wallets_database.m.dart' as db;
 import 'package:ion/app/features/wallets/model/coin_data.f.dart';
-import 'package:ion/app/features/wallets/model/crypto_asset_to_send_data.f.dart';
 import 'package:ion/app/features/wallets/model/entities/wallet_asset_entity.f.dart';
-import 'package:ion/app/features/wallets/model/transaction_crypto_asset.f.dart';
 import 'package:ion/app/features/wallets/model/transaction_data.f.dart';
 import 'package:ion/app/features/wallets/model/transaction_details.f.dart';
 import 'package:ion/app/features/wallets/model/transaction_type.dart';
@@ -16,24 +13,48 @@ import 'package:ion_identity_client/ion_identity.dart';
 
 class CoinTransactionsMapper {
   db.Transaction fromTransactionDetails(TransactionDetails details) {
-    final coinAssetData = details.assetData as CoinAssetToSendData;
-
-    return db.Transaction(
-      id: details.id,
-      txHash: details.txHash,
-      type: details.type.value,
-      walletViewId: details.walletViewId,
-      networkId: details.network.id,
-      coinId: coinAssetData.selectedOption!.coin.id,
-      nativeCoinId: details.nativeCoin?.id,
-      senderWalletAddress: details.senderAddress,
-      receiverWalletAddress: details.receiverAddress,
-      userPubkey: details.participantPubkey,
-      transferredAmount: coinAssetData.rawAmount,
-      transferredAmountUsd: coinAssetData.amountUSD,
-      status: details.status.toJson(),
-      dateConfirmed: details.dateConfirmed,
-      dateRequested: details.dateRequested,
+    return details.assetData.when(
+      coin: (
+        coinsGroup,
+        amount,
+        amountUSD,
+        rawAmount,
+        selectedOption,
+        associatedAssetWithSelectedOption,
+      ) =>
+          db.Transaction(
+        id: details.id,
+        txHash: details.txHash,
+        type: details.type.value,
+        walletViewId: details.walletViewId,
+        networkId: details.network.id,
+        coinId: selectedOption!.coin.id,
+        nativeCoinId: details.nativeCoin?.id,
+        senderWalletAddress: details.senderAddress,
+        receiverWalletAddress: details.receiverAddress,
+        userPubkey: details.participantPubkey,
+        transferredAmount: rawAmount,
+        transferredAmountUsd: amountUSD,
+        status: details.status.toJson(),
+        dateConfirmed: details.dateConfirmed,
+        dateRequested: details.dateRequested,
+      ),
+      nft: (nft) => db.Transaction(
+        id: details.id,
+        txHash: details.txHash,
+        type: details.type.value,
+        walletViewId: details.walletViewId,
+        networkId: details.network.id,
+        assetId: '${nft.contract}_${nft.tokenId}',
+        nativeCoinId: details.nativeCoin?.id,
+        senderWalletAddress: details.senderAddress,
+        receiverWalletAddress: details.receiverAddress,
+        userPubkey: details.participantPubkey,
+        status: details.status.toJson(),
+        dateConfirmed: details.dateConfirmed,
+        dateRequested: details.dateRequested,
+      ),
+      notInitialized: () => throw ArgumentError('Cannot save uninitialized asset data'),
     );
   }
 
@@ -100,28 +121,45 @@ class CoinTransactionsMapper {
 
   List<db.Transaction> fromDomainToDB(Iterable<TransactionData> transactions) =>
       transactions.map((transaction) {
-        final coinTransactionAsset = transaction.cryptoAsset.as<CoinTransactionAsset>();
-
-        return db.Transaction(
-          type: transaction.type.value,
-          txHash: transaction.txHash,
-          id: transaction.id,
-          fee: transaction.fee,
-          externalHash: transaction.externalHash,
-          walletViewId: transaction.walletViewId,
-          dateConfirmed: transaction.dateConfirmed,
-          dateRequested: transaction.dateRequested,
-          // assetId: , // Here should be nftId in case of nfts
-          networkId: transaction.network.id,
-          status: transaction.status.toJson(),
-          coinId: coinTransactionAsset?.coin.id,
-          nativeCoinId: transaction.nativeCoin?.id,
-          senderWalletAddress: transaction.senderWalletAddress,
-          receiverWalletAddress: transaction.receiverWalletAddress,
-          createdAtInRelay: transaction.createdAtInRelay,
-          userPubkey: transaction.userPubkey,
-          transferredAmount: coinTransactionAsset?.rawAmount,
-          transferredAmountUsd: coinTransactionAsset?.amountUSD,
+        return transaction.cryptoAsset.when(
+          coin: (coin, amount, amountUSD, rawAmount, unusedParam) => db.Transaction(
+            type: transaction.type.value,
+            txHash: transaction.txHash,
+            id: transaction.id,
+            fee: transaction.fee,
+            externalHash: transaction.externalHash,
+            walletViewId: transaction.walletViewId,
+            dateConfirmed: transaction.dateConfirmed,
+            dateRequested: transaction.dateRequested,
+            networkId: transaction.network.id,
+            status: transaction.status.toJson(),
+            coinId: coin.id,
+            nativeCoinId: transaction.nativeCoin?.id,
+            senderWalletAddress: transaction.senderWalletAddress,
+            receiverWalletAddress: transaction.receiverWalletAddress,
+            createdAtInRelay: transaction.createdAtInRelay,
+            userPubkey: transaction.userPubkey,
+            transferredAmount: rawAmount,
+            transferredAmountUsd: amountUSD,
+          ),
+          nft: (nft) => db.Transaction(
+            type: transaction.type.value,
+            txHash: transaction.txHash,
+            id: transaction.id,
+            fee: transaction.fee,
+            externalHash: transaction.externalHash,
+            walletViewId: transaction.walletViewId,
+            dateConfirmed: transaction.dateConfirmed,
+            dateRequested: transaction.dateRequested,
+            networkId: transaction.network.id,
+            status: transaction.status.toJson(),
+            assetId: '${nft.contract}_${nft.tokenId}',
+            nativeCoinId: transaction.nativeCoin?.id,
+            senderWalletAddress: transaction.senderWalletAddress,
+            receiverWalletAddress: transaction.receiverWalletAddress,
+            createdAtInRelay: transaction.createdAtInRelay,
+            userPubkey: transaction.userPubkey,
+          ),
         );
       }).toList();
 }

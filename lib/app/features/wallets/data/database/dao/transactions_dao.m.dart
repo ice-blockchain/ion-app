@@ -9,6 +9,7 @@ import 'package:ion/app/features/wallets/data/database/tables/transactions_table
 import 'package:ion/app/features/wallets/data/database/wallets_database.m.dart';
 
 import 'package:ion/app/features/wallets/model/coin_data.f.dart';
+import 'package:ion/app/features/wallets/model/crypto_asset_type.dart';
 import 'package:ion/app/features/wallets/model/network_data.f.dart';
 import 'package:ion/app/features/wallets/model/transaction_crypto_asset.f.dart';
 import 'package:ion/app/features/wallets/model/transaction_data.f.dart';
@@ -98,6 +99,7 @@ class TransactionsDao extends DatabaseAccessor<WalletsDatabase> with _$Transacti
 
   Stream<List<TransactionData>> watchTransactions({
     List<String> coinIds = const [],
+    List<String> assetIds = const [],
     List<String> txHashes = const [],
     List<String> walletAddresses = const [],
     List<String> walletViewIds = const [],
@@ -110,11 +112,13 @@ class TransactionsDao extends DatabaseAccessor<WalletsDatabase> with _$Transacti
     TransactionType? type,
     DateTime? confirmedSince,
     String? networkId,
+    CryptoAssetType? assetType,
   }) {
     return _createTransactionQuery(
       where: (tbl, transactionCoinAlias, nativeCoinAlias) => _buildTransactionWhereClause(
         tbl,
         coinIds: coinIds,
+        assetIds: assetIds,
         txHashes: txHashes,
         walletAddresses: walletAddresses,
         walletViewIds: walletViewIds,
@@ -125,6 +129,7 @@ class TransactionsDao extends DatabaseAccessor<WalletsDatabase> with _$Transacti
         networkId: networkId,
         confirmedSince: confirmedSince,
         transactionCoinAlias: transactionCoinAlias,
+        assetType: assetType,
       ),
       limit: limit,
       offset: offset,
@@ -133,6 +138,7 @@ class TransactionsDao extends DatabaseAccessor<WalletsDatabase> with _$Transacti
 
   Future<List<TransactionData>> getTransactions({
     List<String> coinIds = const [],
+    List<String> assetIds = const [],
     List<String> txHashes = const [],
     List<String> walletAddresses = const [],
     List<String> walletViewIds = const [],
@@ -145,11 +151,13 @@ class TransactionsDao extends DatabaseAccessor<WalletsDatabase> with _$Transacti
     String? networkId,
     DateTime? confirmedSince,
     TransactionType? type,
+    CryptoAssetType? assetType,
   }) async {
     return _createTransactionQuery(
       where: (tbl, transactionCoinAlias, nativeCoinAlias) => _buildTransactionWhereClause(
         tbl,
         coinIds: coinIds,
+        assetIds: assetIds,
         txHashes: txHashes,
         walletAddresses: walletAddresses,
         walletViewIds: walletViewIds,
@@ -160,6 +168,7 @@ class TransactionsDao extends DatabaseAccessor<WalletsDatabase> with _$Transacti
         confirmedSince: confirmedSince,
         type: type,
         transactionCoinAlias: transactionCoinAlias,
+        assetType: assetType,
       ),
       limit: limit,
       offset: offset,
@@ -220,6 +229,7 @@ class TransactionsDao extends DatabaseAccessor<WalletsDatabase> with _$Transacti
   Expression<bool> _buildTransactionWhereClause(
     $TransactionsTableTable tbl, {
     List<String> coinIds = const [],
+    List<String> assetIds = const [],
     List<String> txHashes = const [],
     List<String> walletAddresses = const [],
     List<String> walletViewIds = const [],
@@ -230,11 +240,25 @@ class TransactionsDao extends DatabaseAccessor<WalletsDatabase> with _$Transacti
     String? networkId,
     $CoinsTableTable? transactionCoinAlias,
     DateTime? confirmedSince,
+    CryptoAssetType? assetType,
   }) {
     Expression<bool> expr = const Constant(true);
 
     if (coinIds.isNotEmpty) {
       expr = expr & tbl.coinId.isIn(coinIds);
+    }
+
+    if (assetIds.isNotEmpty) {
+      expr = expr & tbl.assetId.isIn(assetIds);
+    }
+
+    if (assetType != null) {
+      switch (assetType) {
+        case CryptoAssetType.coin:
+          expr = expr & tbl.coinId.isNotNull();
+        case CryptoAssetType.nft:
+          expr = expr & tbl.assetId.isNotNull();
+      }
     }
 
     if (txHashes.isNotEmpty) {

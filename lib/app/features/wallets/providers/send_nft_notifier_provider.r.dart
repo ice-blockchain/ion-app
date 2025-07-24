@@ -1,6 +1,7 @@
 // SPDX-License-Identifier: ice License 1.0
 
 import 'package:ion/app/exceptions/exceptions.dart';
+import 'package:ion/app/features/wallets/data/repository/transactions_repository.m.dart';
 import 'package:ion/app/features/wallets/domain/coins/coins_service.r.dart';
 import 'package:ion/app/features/wallets/domain/nfts/send_nft_use_case.r.dart';
 import 'package:ion/app/features/wallets/model/crypto_asset_to_send_data.f.dart';
@@ -80,6 +81,15 @@ class SendNftNotifier extends _$SendNftNotifier {
         type: TransactionType.send,
         networkFeeOption: form.selectedNetworkFeeOption,
       );
+
+      // Save NFT transaction to database
+      try {
+        final transactionsRepository = await ref.read(transactionsRepositoryProvider.future);
+        await transactionsRepository.saveTransactionDetails(details);
+        Logger.info('NFT transaction saved to database: ${details.txHash}');
+      } catch (error) {
+        Logger.error('Failed to save NFT transaction to database: $error');
+      }
 
       return details;
     });

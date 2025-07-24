@@ -14,6 +14,7 @@ import 'package:ion/app/features/wallets/data/database/tables/transactions_table
 import 'package:ion/app/features/wallets/data/database/wallets_database.m.dart' as db;
 import 'package:ion/app/features/wallets/data/mappers/transaction_mapper.dart';
 import 'package:ion/app/features/wallets/model/coin_data.f.dart';
+import 'package:ion/app/features/wallets/model/crypto_asset_type.dart';
 import 'package:ion/app/features/wallets/model/entities/wallet_asset_entity.f.dart';
 import 'package:ion/app/features/wallets/model/network_data.f.dart';
 import 'package:ion/app/features/wallets/model/transaction_crypto_asset.f.dart';
@@ -233,6 +234,7 @@ class TransactionsRepository {
     });
   }
 
+
   Future<List<TransactionData>> getBroadcastedTransfers({String? walletAddress}) async {
     final transactions = await _transactionsDao.getTransactions(
       walletAddresses: walletAddress != null ? [walletAddress] : [],
@@ -254,6 +256,7 @@ class TransactionsRepository {
 
   Stream<List<TransactionData>> watchTransactions({
     List<String> coinIds = const [],
+    List<String> assetIds = const [],
     List<String> txHashes = const [],
     List<String> walletAddresses = const [],
     List<String> walletViewIds = const [],
@@ -262,6 +265,8 @@ class TransactionsRepository {
     int offset = 0,
     NetworkData? network,
     DateTime? confirmedSince,
+    CryptoAssetType? assetType,
+    TransactionType? type,
   }) {
     return _transactionsDao.watchTransactions(
       walletAddresses: walletAddresses,
@@ -269,15 +274,20 @@ class TransactionsRepository {
       limit: limit,
       offset: offset,
       coinIds: coinIds,
+      assetIds: assetIds,
       networkId: network?.id,
       walletViewIds: walletViewIds,
       statuses: statuses,
       confirmedSince: confirmedSince,
+      assetType: assetType,
+      type: type,
     );
   }
 
+
   Future<List<TransactionData>> getTransactions({
     List<String> coinIds = const [],
+    List<String> assetIds = const [],
     List<String> txHashes = const [],
     List<String> walletAddresses = const [],
     List<String> walletViewIds = const [],
@@ -285,6 +295,7 @@ class TransactionsRepository {
     int limit = 20,
     int offset = 0,
     NetworkData? network,
+    CryptoAssetType? assetType,
   }) {
     return _transactionsDao.getTransactions(
       walletAddresses: walletAddresses,
@@ -292,9 +303,11 @@ class TransactionsRepository {
       limit: limit,
       offset: offset,
       coinIds: coinIds,
+      assetIds: assetIds,
       networkId: network?.id,
       walletViewIds: walletViewIds,
       statuses: statuses,
+      assetType: assetType,
     );
   }
 
