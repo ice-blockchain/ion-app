@@ -26,7 +26,7 @@ class ChatPrivacyTooltip extends StatelessWidget {
         borderRadius: BorderRadius.circular(16.0.s),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withValues(alpha: 0.08),
+            color: context.theme.appColors.primaryText.withValues(alpha: 0.08),
             blurRadius: 16.0.s,
           ),
         ],

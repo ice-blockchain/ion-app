@@ -154,7 +154,7 @@ class ConversationDao extends DatabaseAccessor<ChatDatabase> with _$Conversation
   /// Get the id of the conversation with the given receiver master pubkey
   /// Only searches for non-deleted conversations of type [ConversationType.oneToOne]
   ///
-  Future<String?> getExistOneToOneConversationId(List<String> participantsMasterPubkeys) async {
+  Future<String?> getExistingConversationId(List<String> participantsMasterPubkeys) async {
     final query = select(conversationTable).join([
       innerJoin(
         conversationMessageTable,
@@ -181,6 +181,15 @@ class ConversationDao extends DatabaseAccessor<ChatDatabase> with _$Conversation
     }
 
     return row.readTable(conversationTable).id;
+  }
+
+  Future<bool> checkIfConversationExists(String conversationId) async {
+    final query = select(conversationTable)
+      ..where((t) => t.id.equals(conversationId))
+      ..limit(1);
+
+    final row = await query.getSingleOrNull();
+    return row != null;
   }
 
   /// Set the archived status of a conversation
@@ -265,7 +274,7 @@ class ConversationDao extends DatabaseAccessor<ChatDatabase> with _$Conversation
 
     for (final event in kind5Events) {
       final eventMessage = event.toEventMessage();
-      // Assuming deletion request events have tags in the format [['h', conversationId], ...]
+      // Assuming deletion request events have tags in the format [[ConversationIdentifier.tagName, conversationId], ...]
       final hasConversationTag = eventMessage.tags.any(
         (tag) =>
             tag.isNotEmpty &&

@@ -15,14 +15,14 @@ class FollowingUsers extends ConsumerWidget {
     required this.onUserSelected,
     this.selectedPubkeys = const [],
     this.selectable = false,
-    this.controlPrivacy = false,
+    this.controlChatPrivacy = false,
     super.key,
   });
 
   final void Function(UserMetadataEntity user) onUserSelected;
   final List<String> selectedPubkeys;
   final bool selectable;
-  final bool controlPrivacy;
+  final bool controlChatPrivacy;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -36,16 +36,16 @@ class FollowingUsers extends ConsumerWidget {
         return SliverList.builder(
           itemBuilder: (context, index) {
             final masterPubkey = pubkeys.elementAt(index);
-            final canSendMessage = controlPrivacy &&
+            final canSendMessage = controlChatPrivacy &&
                 (ref.watch(canSendMessageProvider(masterPubkey)).valueOrNull ?? false);
 
             return SelectableUserListItem(
+              selectable: selectable,
               pubkey: pubkeys[index],
               masterPubkey: pubkeys[index],
               onUserSelected: onUserSelected,
               selectedPubkeys: selectedPubkeys,
-              selectable: selectable,
-              canSendMessage: controlPrivacy && canSendMessage,
+              canSendMessage: canSendMessage,
             );
           },
           itemCount: pubkeys.length,

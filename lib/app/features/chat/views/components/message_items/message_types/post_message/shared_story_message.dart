@@ -64,16 +64,16 @@ class SharedStoryMessage extends HookConsumerWidget {
       () => (storyMedia.mediaType == MediaType.video ? storyMedia.thumb : storyMedia.url) ?? '',
     );
 
-    final storyExpired = storyEntity.masterPubkey != currentUserMasterPubkey &&
-        useMemoized(
-          () => switch (storyEntity) {
-            final ModifiablePostEntity post =>
-              post.data.expiration!.value.toDateTime.isBefore(DateTime.now()),
-            final PostEntity post =>
-              post.data.expiration!.value.toDateTime.isBefore(DateTime.now()),
-            _ => true,
-          },
-        );
+    final storyExpired = useMemoized(
+      () => switch (storyEntity) {
+        final ModifiablePostEntity post =>
+          post.data.expiration!.value.toDateTime.isBefore(DateTime.now()),
+        final PostEntity post => post.data.expiration!.value.toDateTime.isBefore(DateTime.now()),
+        _ => true,
+      },
+    );
+
+    final storyBelongsToCurrentUser = storyEntity.masterPubkey != currentUserMasterPubkey;
 
     final storyDeleted = useMemoized(
       () => switch (storyEntity) {
@@ -94,6 +94,8 @@ class SharedStoryMessage extends HookConsumerWidget {
             GestureDetector(
               behavior: HitTestBehavior.opaque,
               onTap: () async {
+                if (storyExpired) return;
+
                 var storyViewerState = ref.read(
                   userStoriesViewingNotifierProvider(
                     storyEntity.masterPubkey,
@@ -132,7 +134,8 @@ class SharedStoryMessage extends HookConsumerWidget {
                 crossAxisAlignment: isMe ? CrossAxisAlignment.end : CrossAxisAlignment.start,
                 children: [
                   if (isReplyToStory) _SenderReceiverLabel(isMe: isMe),
-                  if (storyUrl.isNotEmpty && !storyExpired && !storyDeleted)
+                  if (storyBelongsToCurrentUser ||
+                      (storyUrl.isNotEmpty && !storyDeleted && !storyExpired))
                     _StoryPreviewImage(
                       isMe: isMe,
                       storyUrl: storyUrl,

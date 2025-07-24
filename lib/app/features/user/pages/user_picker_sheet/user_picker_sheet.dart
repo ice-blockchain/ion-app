@@ -79,7 +79,7 @@ class UserPickerSheet extends HookConsumerWidget {
           FollowingUsers(
             selectable: selectable,
             onUserSelected: onUserSelected,
-            controlPrivacy: controlPrivacy,
+            controlChatPrivacy: controlPrivacy,
             selectedPubkeys: selectedPubkeys,
           )
         else
