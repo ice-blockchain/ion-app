@@ -13,6 +13,7 @@ class CollapsingAppBar extends StatelessWidget {
     super.key,
     double? bottomOffset,
     double? topOffset,
+    this.shouldCollapse = true,
   })  : bottomOffset = bottomOffset ?? 10.0.s,
         topOffset = topOffset ?? ScreenTopOffset.defaultMargin;
 
@@ -20,6 +21,7 @@ class CollapsingAppBar extends StatelessWidget {
   final double height;
   final double bottomOffset;
   final double topOffset;
+  final bool shouldCollapse;
 
   @override
   Widget build(BuildContext context) {
@@ -37,31 +39,34 @@ class CollapsingAppBar extends StatelessWidget {
       toolbarHeight: 0,
       backgroundColor: context.theme.appColors.onPrimaryAccent,
       surfaceTintColor: context.theme.appColors.onPrimaryAccent,
-      flexibleSpace: LayoutBuilder(
-        builder: (BuildContext context, BoxConstraints constraints) {
-          final overlayOpacity = ((totalHeight - constraints.maxHeight) / fadeOffset).clamp(0, 1);
-          return Align(
-            alignment: Alignment.bottomCenter,
-            child: Stack(
-              clipBehavior: Clip.none,
-              children: [
-                Padding(
-                  padding: EdgeInsetsDirectional.only(bottom: bottomOffset),
-                  child: child,
-                ),
-                Positioned.fill(
-                  child: IgnorePointer(
-                    child: ColoredBox(
-                      color: context.theme.appColors.onPrimaryAccent
-                          .withValues(alpha: overlayOpacity.toDouble()),
-                    ),
+      flexibleSpace: shouldCollapse
+          ? LayoutBuilder(
+              builder: (BuildContext context, BoxConstraints constraints) {
+                final overlayOpacity =
+                    ((totalHeight - constraints.maxHeight) / fadeOffset).clamp(0, 1);
+                return Align(
+                  alignment: Alignment.bottomCenter,
+                  child: Stack(
+                    clipBehavior: Clip.none,
+                    children: [
+                      Padding(
+                        padding: EdgeInsetsDirectional.only(bottom: bottomOffset),
+                        child: child,
+                      ),
+                      Positioned.fill(
+                        child: IgnorePointer(
+                          child: ColoredBox(
+                            color: context.theme.appColors.onPrimaryAccent
+                                .withValues(alpha: overlayOpacity.toDouble()),
+                          ),
+                        ),
+                      ),
+                    ],
                   ),
-                ),
-              ],
-            ),
-          );
-        },
-      ),
+                );
+              },
+            )
+          : child,
     );
   }
 }

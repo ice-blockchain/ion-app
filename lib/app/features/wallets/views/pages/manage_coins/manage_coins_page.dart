@@ -15,6 +15,7 @@ import 'package:ion/app/features/wallets/views/pages/manage_coins/components/imp
 import 'package:ion/app/features/wallets/views/pages/manage_coins/components/manage_coin_item_widget.dart';
 import 'package:ion/app/features/wallets/views/pages/manage_coins/providers/manage_coins_provider.r.dart';
 import 'package:ion/app/hooks/use_on_init.dart';
+import 'package:ion/app/router/components/navigation_app_bar/collapsing_app_bar.dart';
 import 'package:ion/app/router/components/navigation_app_bar/navigation_app_bar.dart';
 import 'package:ion/app/router/components/sheet_content/sheet_content.dart';
 
@@ -52,10 +53,12 @@ class ManageCoinsPage extends HookConsumerWidget {
           Expanded(
             child: CustomScrollView(
               slivers: [
-                SliverPersistentHeader(
-                  pinned: true,
-                  delegate: SearchAppBarDelegate(
-                    child: ScreenSideOffset.small(
+                CollapsingAppBar(
+                  height: SearchInput.height,
+                  shouldCollapse: false,
+                  child: ScreenSideOffset.small(
+                    child: SafeArea(
+                      bottom: false,
                       child: SearchInput(
                         onTextChanged: (String value) => searchText.value = value,
                         loading: searchResult.isLoading,
@@ -63,7 +66,6 @@ class ManageCoinsPage extends HookConsumerWidget {
                     ),
                   ),
                 ),
-                SliverToBoxAdapter(child: SizedBox(height: 12.s)),
                 if (searchText.value.isEmpty)
                   manageCoins.maybeWhen(
                     data: (coins) {
