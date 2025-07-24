@@ -118,6 +118,8 @@ class PushNotificationTranslations
     NotificationTranslation? chatMultiMediaMessage,
     NotificationTranslation? chatMultiPhotoMessage,
     NotificationTranslation? chatMultiVideoMessage,
+    NotificationTranslation? chatPaymentRequestMessage,
+    NotificationTranslation? chatPaymentReceivedMessage,
   }) = _PushNotificationTranslations;
 
   factory PushNotificationTranslations.fromJson(Map<String, dynamic> json) =>

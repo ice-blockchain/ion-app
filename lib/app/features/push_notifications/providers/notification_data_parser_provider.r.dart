@@ -2,6 +2,8 @@
 
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/features/auth/providers/auth_provider.m.dart';
+import 'package:ion/app/features/chat/recent_chats/providers/money_message_provider.r.dart';
+import 'package:ion/app/features/ion_connect/ion_connect.dart';
 import 'package:ion/app/features/push_notifications/data/models/ion_connect_push_data_payload.f.dart';
 import 'package:ion/app/features/push_notifications/providers/app_translations_provider.m.dart';
 import 'package:ion/app/services/storage/local_storage.r.dart';
@@ -22,8 +24,10 @@ class NotificationDataParser {
   final Translator<PushNotificationTranslations> _translator;
 
   Future<({String title, String body})?> parse(
-    IonConnectPushDataPayload data,
-  ) async {
+    IonConnectPushDataPayload data, {
+    required Future<MoneyDisplayData?> Function(EventMessage) getFundsRequestData,
+    required Future<MoneyDisplayData?> Function(EventMessage) getTransactionData,
+  }) async {
     // reading from shared prefs because this method might be used from a background service
     final currentPubkey = await _prefs.getString(CurrentPubkeySelector.persistenceKey);
 
@@ -52,7 +56,12 @@ class NotificationDataParser {
       return null;
     }
 
-    final placeholders = data.placeholders(notificationType);
+    final placeholders = await data.placeholders(
+      notificationType,
+      getFundsRequestData: getFundsRequestData,
+      getTransactionData: getTransactionData,
+    );
+
     final result = (
       title: replacePlaceholders(title, placeholders),
       body: replacePlaceholders(body, placeholders)
@@ -167,6 +176,14 @@ class NotificationDataParser {
         PushNotificationType.chatMultiVideoMessage => (
             await translator.translate((t) => t.chatMultiVideoMessage?.title),
             await translator.translate((t) => t.chatMultiVideoMessage?.body)
+          ),
+        PushNotificationType.chatPaymentRequestMessage => (
+            await translator.translate((t) => t.chatPaymentRequestMessage?.title),
+            await translator.translate((t) => t.chatPaymentRequestMessage?.body)
+          ),
+        PushNotificationType.chatPaymentReceivedMessage => (
+            await translator.translate((t) => t.chatPaymentReceivedMessage?.title),
+            await translator.translate((t) => t.chatPaymentReceivedMessage?.body)
           ),
       };
     } catch (error) {

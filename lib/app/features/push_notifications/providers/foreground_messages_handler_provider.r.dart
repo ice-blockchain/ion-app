@@ -6,6 +6,7 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/auth/providers/auth_provider.m.dart';
 import 'package:ion/app/features/chat/e2ee/providers/gift_unwrap_service_provider.r.dart';
+import 'package:ion/app/features/chat/recent_chats/providers/money_message_provider.r.dart';
 import 'package:ion/app/features/ion_connect/model/ion_connect_gift_wrap.f.dart';
 import 'package:ion/app/features/push_notifications/data/models/ion_connect_push_data_payload.f.dart';
 import 'package:ion/app/features/push_notifications/providers/configure_firebase_app_provider.r.dart';
@@ -48,7 +49,13 @@ class ForegroundMessagesHandler extends _$ForegroundMessagesHandler {
     }
 
     final parser = await ref.read(notificationDataParserProvider.future);
-    final parsedData = await parser.parse(data);
+    final parsedData = await parser.parse(
+      data,
+      getFundsRequestData: (eventMessage) =>
+          ref.read(fundsRequestDisplayDataProvider(eventMessage).future),
+      getTransactionData: (eventMessage) =>
+          ref.read(transactionDisplayDataProvider(eventMessage).future),
+    );
 
     final title = parsedData?.title ?? response.notification?.title;
     final body = parsedData?.body ?? response.notification?.body;
