@@ -43,6 +43,7 @@ class ImageBlockNetworkImage extends ConsumerWidget {
               videoUrl: path,
               authorPubkey: authorPubkey ?? '',
               thumbnailUrl: attachment.thumb,
+              visibilityThreshold: 0.5,
             ),
           ),
         );
