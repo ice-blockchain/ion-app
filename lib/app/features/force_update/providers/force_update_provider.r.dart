@@ -23,14 +23,17 @@ class ForceUpdate extends _$ForceUpdate {
       appLifecycleProvider,
       (previous, next) async {
         if (next == AppLifecycleState.resumed) {
-          state = AsyncData(await _isForceUpdateRequired());
+          final isForceUpdateRequired = await _checkIsForceUpdateRequired();
+          if (state.valueOrNull != isForceUpdateRequired) {
+            state = AsyncData(isForceUpdateRequired);
+          }
         }
       },
     );
-    return _isForceUpdateRequired();
+    return _checkIsForceUpdateRequired();
   }
 
-  Future<bool> _isForceUpdateRequired() async {
+  Future<bool> _checkIsForceUpdateRequired() async {
     try {
       final repository = await ref.read(configRepositoryProvider.future);
 
