@@ -25,6 +25,7 @@ class VideoPreview extends HookConsumerWidget {
     this.thumbnailUrl,
     this.autoplay = true,
     this.framedEventReference,
+    this.visibilityThreshold = 1.0,
     super.key,
   });
 
@@ -33,6 +34,7 @@ class VideoPreview extends HookConsumerWidget {
   final String authorPubkey;
   final String? thumbnailUrl;
   final EventReference? framedEventReference;
+  final double visibilityThreshold;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -65,10 +67,10 @@ class VideoPreview extends HookConsumerWidget {
     final handleVisibilityChanged = useCallback(
       (VisibilityInfo info) {
         if (context.mounted) {
-          isFullyVisible.value = info.visibleFraction == 1;
+          isFullyVisible.value = info.visibleFraction >= visibilityThreshold;
         }
       },
-      [isFullyVisible, context],
+      [isFullyVisible, context, visibilityThreshold],
     );
 
     useOnInit(

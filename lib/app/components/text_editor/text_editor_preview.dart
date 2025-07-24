@@ -25,6 +25,7 @@ class TextEditorPreview extends HookWidget {
     this.tagsColor,
     this.scrollable = true,
     this.authorPubkey,
+    this.eventReference,
     super.key,
   });
 
@@ -36,6 +37,7 @@ class TextEditorPreview extends HookWidget {
   final bool scrollable;
   final Color? tagsColor;
   final String? authorPubkey;
+  final String? eventReference;
 
   @override
   Widget build(BuildContext context) {
@@ -61,6 +63,7 @@ class TextEditorPreview extends HookWidget {
       scrollable: scrollable,
       enableInteractiveSelection: enableInteractiveSelection,
       authorPubkey: authorPubkey,
+      eventReference: eventReference,
     );
   }
 }
@@ -75,6 +78,7 @@ class _QuillFormattedContent extends ConsumerWidget {
     this.tagsColor,
     this.scrollable = true,
     this.authorPubkey,
+    this.eventReference,
   });
 
   final QuillController controller;
@@ -85,6 +89,7 @@ class _QuillFormattedContent extends ConsumerWidget {
   final bool scrollable;
   final Color? tagsColor;
   final String? authorPubkey;
+  final String? eventReference;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -101,7 +106,11 @@ class _QuillFormattedContent extends ConsumerWidget {
         customStyles: effectiveStyles,
         maxHeight: maxHeight,
         embedBuilders: [
-          TextEditorSingleImageBuilder(media: media, authorPubkey: authorPubkey),
+          TextEditorSingleImageBuilder(
+            media: media,
+            authorPubkey: authorPubkey,
+            eventReference: eventReference,
+          ),
           TextEditorSeparatorBuilder(readOnly: true),
           TextEditorCodeBuilder(readOnly: true),
         ],

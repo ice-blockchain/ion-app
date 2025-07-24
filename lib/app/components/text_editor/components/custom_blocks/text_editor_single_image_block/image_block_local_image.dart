@@ -66,6 +66,7 @@ class ImageBlockLocalImage extends HookConsumerWidget {
           child: VideoPreview(
             videoUrl: file.value!.path,
             authorPubkey: authorPubkey ?? '',
+            visibilityThreshold: 0.5,
           ),
         ),
       );

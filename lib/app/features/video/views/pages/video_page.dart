@@ -9,6 +9,7 @@ import 'package:ion/app/features/core/providers/app_lifecycle_provider.r.dart';
 import 'package:ion/app/features/core/providers/video_player_provider.r.dart';
 import 'package:ion/app/features/ion_connect/model/event_reference.f.dart';
 import 'package:ion/app/features/video/views/components/video_button.dart';
+import 'package:ion/app/features/video/views/components/video_not_found.dart';
 import 'package:ion/app/features/video/views/components/video_progress.dart';
 import 'package:ion/app/features/video/views/components/video_slider.dart';
 import 'package:ion/app/features/video/views/components/video_thumbnail_preview.dart';
@@ -53,7 +54,7 @@ class VideoPage extends HookConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     if (videoUrl.isEmpty) {
-      return Text(context.i18n.video_not_found);
+      return const VideoNotFound();
     }
 
     final playerController = this.playerController ??
