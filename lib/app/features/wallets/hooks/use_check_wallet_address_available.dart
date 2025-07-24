@@ -18,23 +18,39 @@ void useCheckWalletAddressAvailable(
   List<Object?> keys = const [],
 }) {
   useOnInit(
-    () async {
-      final address = await ref
-          .read(walletAddressNotifierProvider.notifier)
-          .loadWalletAddress(network: network, coinsGroup: coinsGroup);
-
-      if (!ref.context.mounted) return;
-
-      if (address != null && onAddressFound != null) {
-        onAddressFound(address);
-      } else if (address == null && network?.displayName == 'ION') {
-        _createIonWallet(ref, network!, onAddressFound);
-      } else if (address == null && network != null) {
-        onAddressMissing();
-      }
+    () {
+      checkWalletAddressAvailable(
+        ref,
+        network: network,
+        coinsGroup: coinsGroup,
+        onAddressMissing: onAddressMissing,
+        onAddressFound: onAddressFound,
+      );
     },
     keys,
   );
+}
+
+Future<void> checkWalletAddressAvailable(
+  WidgetRef ref, {
+  required NetworkData? network,
+  required CoinsGroup? coinsGroup,
+  required VoidCallback onAddressMissing,
+  ValueChanged<String>? onAddressFound,
+}) async {
+  final address = await ref
+      .read(walletAddressNotifierProvider.notifier)
+      .loadWalletAddress(network: network, coinsGroup: coinsGroup);
+
+  if (!ref.context.mounted) return;
+
+  if (address != null && onAddressFound != null) {
+    onAddressFound(address);
+  } else if (address == null && network?.displayName == 'ION') {
+    _createIonWallet(ref, network!, onAddressFound);
+  } else if (address == null && network != null) {
+    onAddressMissing();
+  }
 }
 
 void _createIonWallet(

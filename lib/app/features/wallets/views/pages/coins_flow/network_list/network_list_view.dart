@@ -10,6 +10,7 @@ import 'package:ion/app/components/skeleton/skeleton.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/extensions/object.dart';
 import 'package:ion/app/features/user/providers/request_coins_form_provider.r.dart';
+import 'package:ion/app/features/wallets/hooks/use_check_wallet_address_available.dart';
 import 'package:ion/app/features/wallets/model/coin_data.f.dart';
 import 'package:ion/app/features/wallets/model/coin_in_wallet_data.f.dart';
 import 'package:ion/app/features/wallets/model/crypto_asset_to_send_data.f.dart';
@@ -116,8 +117,17 @@ class NetworkListView extends ConsumerWidget {
           unawaited(context.push<void>(sendFormRouteLocationBuilder!()));
         }
       case NetworkListViewType.receive:
+        final coin = ref.read(receiveCoinsFormControllerProvider).selectedCoin;
         ref.read(receiveCoinsFormControllerProvider.notifier).setNetwork(network);
-        unawaited(ShareAddressToGetCoinsRoute().push<void>(context));
+        unawaited(
+          checkWalletAddressAvailable(
+            ref,
+            network: network,
+            coinsGroup: coin,
+            onAddressMissing: () => AddressNotFoundReceiveCoinsRoute().push<void>(ref.context),
+            onAddressFound: (_) => ShareAddressToGetCoinsRoute().push<void>(context),
+          ),
+        );
       case NetworkListViewType.request:
         final form = ref.read(requestCoinsFormControllerProvider);
         final isNetworkValid = await checkWalletExists(ref, form.contactPubkey, network);
