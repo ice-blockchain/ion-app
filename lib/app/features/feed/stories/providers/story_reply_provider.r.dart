@@ -20,6 +20,7 @@ import 'package:ion/app/features/ion_connect/model/event_reference.f.dart';
 import 'package:ion/app/features/ion_connect/model/quoted_event.f.dart';
 import 'package:ion/app/features/ion_connect/model/related_pubkey.f.dart';
 import 'package:ion/app/features/ion_connect/providers/ion_connect_event_signer_provider.r.dart';
+import 'package:ion/app/services/uuid/generate_conversation_id.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'story_reply_provider.r.g.dart';
@@ -48,14 +49,18 @@ class StoryReply extends _$StoryReply {
         throw UserMasterPubkeyNotFoundException();
       }
 
-      final sendChatMessageService = ref.read(sendE2eeChatMessageServiceProvider);
+      final participantsMasterPubkeys = [
+        story.masterPubkey,
+        currentUserMasterPubkey,
+      ];
 
       final existingConversationId =
-          await ref.read(existChatConversationIdProvider(story.masterPubkey).future);
+          await ref.read(existChatConversationIdProvider(participantsMasterPubkeys).future);
 
       final conversationId = existingConversationId ??
-          sendChatMessageService.generateConversationId(
-            receiverPubkey: story.masterPubkey,
+          generateConversationId(
+            conversationType: ConversationType.oneToOne,
+            receiverMasterPubkeys: [story.masterPubkey, currentUserMasterPubkey],
           );
 
       final storyEventMessage = await story.toEventMessage(story.data);
@@ -86,11 +91,6 @@ class StoryReply extends _$StoryReply {
         createdAt: storyEventMessage.createdAt,
         sig: null,
       );
-
-      final participantsMasterPubkeys = [
-        story.masterPubkey,
-        currentUserMasterPubkey,
-      ];
 
       final conversationPubkeysNotifier = ref.read(conversationPubkeysProvider.notifier);
 

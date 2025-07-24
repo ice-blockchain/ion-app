@@ -7,6 +7,7 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 part 'exist_chat_conversation_id_provider.r.g.dart';
 
 @riverpod
-Future<String?> existChatConversationId(Ref ref, String receiverMasterPubKey) async {
-  return ref.watch(conversationDaoProvider).getExistOneToOneConversationId(receiverMasterPubKey);
+Future<String?> existChatConversationId(Ref ref, List<String> participantsMasterPubkeys) async {
+  final sortedMasterPubkeys = List<String>.from(participantsMasterPubkeys)..sort();
+  return ref.watch(conversationDaoProvider).getExistOneToOneConversationId(sortedMasterPubkeys);
 }

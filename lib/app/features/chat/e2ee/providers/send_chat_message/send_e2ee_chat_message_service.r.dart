@@ -52,7 +52,6 @@ class SendE2eeChatMessageService {
   SendE2eeChatMessageService(this.ref);
 
   final Ref ref;
-
   Future<EventMessage> sendMessage({
     required String content,
     required String conversationId,
@@ -386,19 +385,6 @@ class SendE2eeChatMessageService {
       failedParticipantsMasterPubkeys:
           failedParticipantsMasterPubkeys.isNotEmpty ? failedParticipantsMasterPubkeys : null,
     );
-  }
-
-  String generateConversationId({
-    required String receiverPubkey,
-  }) {
-    final currentPubkey = ref.read(currentPubkeySelectorProvider);
-
-    if (currentPubkey == null) {
-      throw UserMasterPubkeyNotFoundException();
-    }
-
-    final sorted = [receiverPubkey, currentPubkey]..sort();
-    return sorted.join();
   }
 
   Future<List<String>> _generateCacheKeys(List<MediaFile> mediaFiles) async {

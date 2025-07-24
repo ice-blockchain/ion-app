@@ -23,6 +23,7 @@ import 'package:ion/app/features/ion_connect/model/quoted_event.f.dart';
 import 'package:ion/app/features/ion_connect/model/related_pubkey.f.dart';
 import 'package:ion/app/features/ion_connect/providers/ion_connect_event_signer_provider.r.dart';
 import 'package:ion/app/features/user_profile/providers/user_profile_sync_provider.r.dart';
+import 'package:ion/app/services/uuid/generate_conversation_id.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'share_feed_item_to_chat_provider.r.g.dart';
@@ -139,11 +140,22 @@ class ShareFeedItemToChat extends _$ShareFeedItemToChat {
     required EventMessage feedItemEventMessage,
     required SendE2eeChatMessageService sendChatMessageService,
   }) async {
+    final currentUserMasterPubkey = ref.watch(currentPubkeySelectorProvider);
+
+    if (currentUserMasterPubkey == null) {
+      throw UserMasterPubkeyNotFoundException();
+    }
+
+    final participantsMasterPubkeys = [masterPubkey, currentUserMasterPubkey];
+
     final existingConversationId =
-        await ref.read(existChatConversationIdProvider(masterPubkey).future);
+        await ref.read(existChatConversationIdProvider(participantsMasterPubkeys).future);
 
     final conversationId = existingConversationId ??
-        sendChatMessageService.generateConversationId(receiverPubkey: masterPubkey);
+        generateConversationId(
+          conversationType: ConversationType.oneToOne,
+          receiverMasterPubkeys: [masterPubkey, currentUserMasterPubkey],
+        );
 
     final tags = [
       MasterPubkeyTag(value: currentUserMasterPubkey).toTag(),
@@ -170,8 +182,6 @@ class ShareFeedItemToChat extends _$ShareFeedItemToChat {
       createdAt: feedItemEventMessage.createdAt,
       sig: null,
     );
-
-    final participantsMasterPubkeys = [masterPubkey, currentUserMasterPubkey];
 
     final conversationPubkeysNotifier = ref.read(conversationPubkeysProvider.notifier);
 

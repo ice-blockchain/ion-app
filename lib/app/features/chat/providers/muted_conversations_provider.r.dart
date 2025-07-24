@@ -3,10 +3,11 @@
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/exceptions/exceptions.dart';
 import 'package:ion/app/features/auth/providers/auth_provider.m.dart';
-import 'package:ion/app/features/chat/e2ee/providers/send_chat_message/send_e2ee_chat_message_service.r.dart';
+import 'package:ion/app/features/chat/model/database/chat_database.m.dart';
 import 'package:ion/app/features/ion_connect/ion_connect.dart';
 import 'package:ion/app/features/ion_connect/model/mute_set.f.dart';
 import 'package:ion/app/features/ion_connect/providers/ion_connect_notifier.r.dart';
+import 'package:ion/app/services/uuid/generate_conversation_id.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'muted_conversations_provider.r.g.dart';
@@ -72,14 +73,24 @@ class MutedConversations extends _$MutedConversations {
 
 @riverpod
 Future<List<String>> mutedConversationIds(Ref ref) async {
+  final currentUserMasterPubkey = ref.watch(currentPubkeySelectorProvider);
+
+  if (currentUserMasterPubkey == null) {
+    throw UserMasterPubkeyNotFoundException();
+  }
+
   final mutedConversations = await ref.watch(mutedConversationsProvider.future);
   final mutedCommunityIds = mutedConversations?.data.communityIds ?? [];
 
   final mutedReceiverPubkeys = mutedConversations?.data.masterPubkeys ?? [];
-  final e2eeChatMessageService = ref.watch(sendE2eeChatMessageServiceProvider);
+
   final mutedOneToOneConversationIds = [
-    ...mutedReceiverPubkeys
-        .map((pubkey) => e2eeChatMessageService.generateConversationId(receiverPubkey: pubkey)),
+    ...mutedReceiverPubkeys.map(
+      (masterPubkey) => generateConversationId(
+        conversationType: ConversationType.oneToOne,
+        receiverMasterPubkeys: [masterPubkey, currentUserMasterPubkey],
+      ),
+    ),
   ];
 
   return [

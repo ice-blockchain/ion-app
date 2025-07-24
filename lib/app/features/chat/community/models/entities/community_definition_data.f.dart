@@ -11,13 +11,14 @@ import 'package:ion/app/features/chat/community/models/entities/tags/community_v
 import 'package:ion/app/features/chat/community/models/entities/tags/conversation_identifier.f.dart';
 import 'package:ion/app/features/chat/community/models/entities/tags/description_tag.f.dart';
 import 'package:ion/app/features/chat/community/models/entities/tags/name_tag.f.dart';
+import 'package:ion/app/features/chat/model/database/chat_database.m.dart';
 import 'package:ion/app/features/ion_connect/ion_connect.dart';
 import 'package:ion/app/features/ion_connect/model/event_serializable.dart';
 import 'package:ion/app/features/ion_connect/model/event_setting.f.dart';
 import 'package:ion/app/features/ion_connect/model/ion_connect_entity.dart';
 import 'package:ion/app/features/ion_connect/model/media_attachment.dart';
 import 'package:ion/app/features/ion_connect/model/replaceable_event_identifier.f.dart';
-import 'package:ion/app/services/uuid/uuid.dart';
+import 'package:ion/app/services/uuid/generate_conversation_id.dart';
 
 part 'community_definition_data.f.freezed.dart';
 
@@ -82,7 +83,7 @@ class CommunityDefinitionData with _$CommunityDefinitionData implements EventSer
     required List<String> moderators,
     required List<String> admins,
   }) {
-    final uuid = generateUuid();
+    final uuid = generateConversationId(conversationType: ConversationType.community);
     return CommunityDefinitionData(
       uuid: uuid,
       id: uuid,
