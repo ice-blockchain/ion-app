@@ -14,9 +14,7 @@ import 'package:ion/app/features/auth/providers/auth_provider.m.dart';
 import 'package:ion/app/features/chat/views/pages/share_via_message_modal/components/share_copy_link_option.dart';
 import 'package:ion/app/features/chat/views/pages/share_via_message_modal/components/share_options_menu_item.dart';
 import 'package:ion/app/features/chat/views/pages/share_via_message_modal/components/share_post_to_story_content.dart';
-import 'package:ion/app/features/feed/data/models/bookmarks/bookmarks_set.f.dart';
 import 'package:ion/app/features/feed/data/models/entities/modifiable_post_data.f.dart';
-import 'package:ion/app/features/feed/providers/feed_bookmarks_notifier.r.dart';
 import 'package:ion/app/features/feed/providers/ion_connect_entity_with_counters_provider.r.dart';
 import 'package:ion/app/features/ion_connect/model/event_reference.f.dart';
 import 'package:ion/app/features/ion_connect/providers/ion_connect_entity_provider.r.dart';
@@ -64,24 +62,6 @@ class ShareOptions extends HookConsumerWidget {
                 onPressed: isCapturing.value ? () {} : () => _onSharePostToStory(ref, isCapturing),
               ),
             ShareCopyLinkOption(shareUrl: shareUrl, iconSize: iconSize),
-            if (isPost)
-              ShareOptionsMenuItem(
-                buttonType: ButtonType.dropdown,
-                icon: Assets.svg.iconBookmarks.icon(size: iconSize, color: Colors.black),
-                label: context.i18n.button_bookmark,
-                onPressed: () async {
-                  await ref
-                      .read(
-                        feedBookmarksNotifierProvider(
-                          collectionDTag: BookmarksSetType.homeFeedCollectionsAll.dTagName,
-                        ).notifier,
-                      )
-                      .toggleBookmark(eventReference);
-                  if (context.mounted) {
-                    context.pop();
-                  }
-                },
-              ),
             ShareOptionsMenuItem(
               buttonType: ButtonType.dropdown,
               icon: Assets.svg.iconFeedWhatsapp.icon(size: iconSize),
