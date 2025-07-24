@@ -19,21 +19,6 @@ bool isReposted(Ref ref, EventReference eventReference) {
     return optimisticState.repostedByMe;
   }
 
-  return ref.watch(repostReferenceProvider(eventReference)) != null;
-}
-
-@riverpod
-EventReference? repostReference(Ref ref, EventReference eventReference) {
-  final optimisticState = ref
-      .watch(
-        postRepostWatchProvider(eventReference.toString()),
-      )
-      .valueOrNull;
-
-  if (optimisticState != null) {
-    return optimisticState.myRepostReference;
-  }
-
   final cached = ref.watch(findRepostInCacheProvider(eventReference));
-  return cached?.myRepostReference;
+  return cached != null;
 }
