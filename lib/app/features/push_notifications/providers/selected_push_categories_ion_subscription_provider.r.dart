@@ -152,19 +152,6 @@ class SelectedPushCategoriesIonSubscription extends _$SelectedPushCategoriesIonS
           '#p': [currentUserPubkey],
         },
       ),
-      RequestFilter(
-        kinds: const [IonConnectGiftWrapEntity.kind],
-        tags: {
-          '#k': [
-            // Using doubled kind 7 filter to take only the reactions (skipping statuses).
-            [
-              PrivateMessageReactionEntity.kind.toString(),
-              PrivateMessageReactionEntity.kind.toString(),
-            ],
-          ],
-          '#p': [currentUserPubkey],
-        },
-      ),
     ];
   }
 
@@ -201,7 +188,13 @@ class SelectedPushCategoriesIonSubscription extends _$SelectedPushCategoriesIonS
           [ReactionEntity.kind.toString(), ReactionEntity.kind.toString()],
           // direct messages
           if (categories.contains(PushNotificationCategory.directMessages))
-            ReplaceablePrivateDirectMessageEntity.kind.toString(),
+            [
+              ReplaceablePrivateDirectMessageEntity.kind.toString(),
+              [
+                PrivateMessageReactionEntity.kind.toString(),
+                PrivateMessageReactionEntity.kind.toString(),
+              ],
+            ],
           // money request message
           if (categories.contains(PushNotificationCategory.messagePaymentRequest))
             [
