@@ -186,15 +186,14 @@ class SelectedPushCategoriesIonSubscription extends _$SelectedPushCategoriesIonS
         '#k': [
           // direct messages
           if (categories.contains(PushNotificationCategory.directMessages))
-            {
-              ReplaceablePrivateDirectMessageEntity.kind.toString(),
+            [ReplaceablePrivateDirectMessageEntity.kind.toString(), ''],
+          if (categories.contains(PushNotificationCategory.directMessages))
+            // Using doubled kind 7 filter to take only the reactions (skipping statuses).
+            [
+              PrivateMessageReactionEntity.kind.toString(),
+              PrivateMessageReactionEntity.kind.toString(),
+            ],
 
-              // Using doubled kind 7 filter to take only the reactions (skipping statuses).
-              [
-                PrivateMessageReactionEntity.kind.toString(),
-                PrivateMessageReactionEntity.kind.toString(),
-              ],
-            },
           // money request message
           if (categories.contains(PushNotificationCategory.messagePaymentRequest))
             [
