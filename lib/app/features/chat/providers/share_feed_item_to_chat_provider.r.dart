@@ -140,14 +140,16 @@ class ShareFeedItemToChat extends _$ShareFeedItemToChat {
     required EventMessage feedItemEventMessage,
     required SendE2eeChatMessageService sendChatMessageService,
   }) async {
-    final existingConversationId =
-        await ref.read(existChatConversationIdProvider(masterPubkey).future);
-
     final currentUserMasterPubkey = ref.watch(currentPubkeySelectorProvider);
 
     if (currentUserMasterPubkey == null) {
       throw UserMasterPubkeyNotFoundException();
     }
+
+    final participantsMasterPubkeys = [masterPubkey, currentUserMasterPubkey];
+
+    final existingConversationId =
+        await ref.read(existChatConversationIdProvider(participantsMasterPubkeys).future);
 
     final conversationId = existingConversationId ??
         generateConversationId(
@@ -180,8 +182,6 @@ class ShareFeedItemToChat extends _$ShareFeedItemToChat {
       createdAt: feedItemEventMessage.createdAt,
       sig: null,
     );
-
-    final participantsMasterPubkeys = [masterPubkey, currentUserMasterPubkey];
 
     final conversationPubkeysNotifier = ref.read(conversationPubkeysProvider.notifier);
 

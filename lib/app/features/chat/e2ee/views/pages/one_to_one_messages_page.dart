@@ -51,10 +51,15 @@ class OneToOneMessagesPage extends HookConsumerWidget {
           throw UserMasterPubkeyNotFoundException();
         }
 
-        final existingConversationId =
-            await ref.read(existChatConversationIdProvider(receiverMasterPubkey).future);
+        final participantsMasterPubkeys = [
+          receiverMasterPubkey,
+          currentUserMasterPubkey,
+        ];
 
-        print('Existing conversation ID: $existingConversationId');
+        final existingConversationId = await ref.read(
+          existChatConversationIdProvider(participantsMasterPubkeys).future,
+        );
+
         conversationId.value = existingConversationId ??
             generateConversationId(
               conversationType: ConversationType.oneToOne,

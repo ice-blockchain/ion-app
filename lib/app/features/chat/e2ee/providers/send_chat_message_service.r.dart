@@ -17,8 +17,15 @@ Future<SendChatMessageService> sendChatMessageService(Ref ref) async {
   return SendChatMessageService(
     currentUserMasterPubkey: ref.watch(currentPubkeySelectorProvider),
     sendChatMessageService: ref.watch(sendE2eeChatMessageServiceProvider),
-    getExistingConversationId: (String pubkey) =>
-        ref.read(existChatConversationIdProvider(pubkey).future),
+    getExistingConversationId: (String masterPubkey) {
+      final currentUserMasterPubkey = ref.read(currentPubkeySelectorProvider);
+      if (currentUserMasterPubkey == null) {
+        throw UserMasterPubkeyNotFoundException();
+      }
+      final participantsMasterPubkeys = [masterPubkey, currentUserMasterPubkey];
+
+      return ref.read(existChatConversationIdProvider(participantsMasterPubkeys).future);
+    },
   );
 }
 

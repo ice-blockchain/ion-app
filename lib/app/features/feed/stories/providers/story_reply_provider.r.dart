@@ -49,8 +49,13 @@ class StoryReply extends _$StoryReply {
         throw UserMasterPubkeyNotFoundException();
       }
 
+      final participantsMasterPubkeys = [
+        story.masterPubkey,
+        currentUserMasterPubkey,
+      ];
+
       final existingConversationId =
-          await ref.read(existChatConversationIdProvider(story.masterPubkey).future);
+          await ref.read(existChatConversationIdProvider(participantsMasterPubkeys).future);
 
       final conversationId = existingConversationId ??
           generateConversationId(
@@ -86,11 +91,6 @@ class StoryReply extends _$StoryReply {
         createdAt: storyEventMessage.createdAt,
         sig: null,
       );
-
-      final participantsMasterPubkeys = [
-        story.masterPubkey,
-        currentUserMasterPubkey,
-      ];
 
       final conversationPubkeysNotifier = ref.read(conversationPubkeysProvider.notifier);
 
