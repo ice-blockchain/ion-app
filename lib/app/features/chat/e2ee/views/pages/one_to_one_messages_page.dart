@@ -23,6 +23,7 @@ import 'package:ion/app/features/chat/views/components/message_items/replied_mes
 import 'package:ion/app/features/user_profile/providers/user_profile_sync_provider.r.dart';
 import 'package:ion/app/hooks/use_on_init.dart';
 import 'package:ion/app/services/media_service/media_service.m.dart';
+import 'package:ion/app/services/uuid/generate_conversation_id.dart';
 
 class OneToOneMessagesPage extends HookConsumerWidget {
   const OneToOneMessagesPage({
@@ -36,25 +37,29 @@ class OneToOneMessagesPage extends HookConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final conversationId = useState<String?>(null);
 
-    useOnInit(() {
-      unawaited(
-        ref
-            .read(userProfileSyncProvider.notifier)
-            .syncUserProfile(masterPubkeys: {receiverMasterPubkey}),
-      );
-    });
-
-    useEffect(
-      () {
-        ref.read(existChatConversationIdProvider(receiverMasterPubkey).future).then(
-          (value) {
-            conversationId.value = value ??
-                ref.read(sendE2eeChatMessageServiceProvider).generateConversationId(
-                      receiverPubkey: receiverMasterPubkey,
-                    );
-          },
+    useOnInit(
+      () async {
+        unawaited(
+          ref
+              .read(userProfileSyncProvider.notifier)
+              .syncUserProfile(masterPubkeys: {receiverMasterPubkey}),
         );
-        return null;
+
+        final currentUserMasterPubkey = ref.read(currentPubkeySelectorProvider);
+
+        if (currentUserMasterPubkey == null) {
+          throw UserMasterPubkeyNotFoundException();
+        }
+
+        final existingConversationId =
+            await ref.read(existChatConversationIdProvider(receiverMasterPubkey).future);
+
+        print('Existing conversation ID: $existingConversationId');
+        conversationId.value = existingConversationId ??
+            generateConversationId(
+              conversationType: ConversationType.oneToOne,
+              receiverMasterPubkeys: [receiverMasterPubkey, currentUserMasterPubkey],
+            );
       },
     );
 
