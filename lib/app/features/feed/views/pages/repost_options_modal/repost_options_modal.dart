@@ -57,9 +57,7 @@ class RepostOptionsModal extends HookConsumerWidget {
                     ModalActionButton(
                       icon: option.getIcon(context),
                       label: option.getLabel(context),
-                      labelStyle: context.theme.appTextThemes.body.copyWith(
-                        color: option.getLabelColor(context),
-                      ),
+                      labelStyle: context.theme.appTextThemes.subtitle2,
                       onTap: () async {
                         switch (option) {
                           case RepostOptionAction.repost:
