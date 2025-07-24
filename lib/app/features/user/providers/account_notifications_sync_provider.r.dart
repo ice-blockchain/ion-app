@@ -32,6 +32,17 @@ class AccountNotificationsSync extends _$AccountNotificationsSync {
   @override
   FutureOr<void> build() async {
     keepAliveWhenAuthenticated(ref);
+
+    final authState = await ref.watch(authProvider.future);
+    if (!authState.isAuthenticated) {
+      return;
+    }
+
+    final currentPubkey = ref.read(currentPubkeySelectorProvider);
+    if (currentPubkey == null) {
+      return;
+    }
+
     await _initializeSync();
     ref.onDispose(cancelAllSync);
   }
@@ -43,13 +54,18 @@ class AccountNotificationsSync extends _$AccountNotificationsSync {
 
   Future<void> _initializeSync() async {
     final syncInterval = _getSyncInterval();
-
-    final lastSyncTime = await _getLastSyncTime();
-
-    if (_shouldSyncImmediately(lastSyncTime, syncInterval)) {
-      await _syncAndScheduleNext(syncInterval);
-    } else {
-      _scheduleDelayedSync(lastSyncTime!, syncInterval);
+    try {
+      final lastSyncTime = await _getLastSyncTime();
+      if (_shouldSyncImmediately(lastSyncTime, syncInterval)) {
+        await _syncAndScheduleNext(syncInterval);
+      } else {
+        _scheduleDelayedSync(lastSyncTime!, syncInterval);
+      }
+    } catch (error) {
+      // Fallback: schedule a retry
+      Timer(syncInterval, () async {
+        await _initializeSync();
+      });
     }
   }
 
