@@ -130,9 +130,9 @@ class CreatePostNotifier extends _$CreatePostNotifier {
 
       if (quotedEvent != null) {
         await ref.read(quoteCounterUpdaterProvider).updateQuoteCounter(
-          quotedEvent,
-          isAdding: true,
-        );
+              quotedEvent,
+              isAdding: true,
+            );
       }
       if (parentEvent != null) {
         ref.read(repliesCountProvider(parentEvent).notifier).addOne();
