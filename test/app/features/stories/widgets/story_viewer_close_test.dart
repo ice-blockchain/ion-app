@@ -83,7 +83,7 @@ void main() {
       ..value = fakeCtrl.value.copyWith(position: videoDuration)
       ..notifyListeners();
 
-    await tester.pumpAndSettle(const Duration(seconds: 1));
+    await tester.pumpAndSettle();
 
     expect(find.byType(StoryViewerPage), findsNothing);
   });

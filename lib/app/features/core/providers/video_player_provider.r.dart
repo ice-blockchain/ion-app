@@ -6,8 +6,11 @@ import 'dart:io';
 import 'package:cached_video_player_plus/cached_video_player_plus.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_cache_manager/flutter_cache_manager.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:ion/app/exceptions/exceptions.dart';
+import 'package:ion/app/extensions/bool.dart';
 import 'package:ion/app/features/core/providers/ion_connect_media_url_fallback_provider.r.dart';
 import 'package:ion/app/features/core/providers/mute_provider.r.dart';
 import 'package:ion/app/services/logger/logger.dart';
@@ -58,7 +61,7 @@ class VideoControllerParams {
 
 @riverpod
 class VideoController extends _$VideoController {
-  CachedVideoPlayerPlus? _activePlayer;
+  VideoPlayerController? _activeController;
 
   @override
   Future<Raw<VideoPlayerController>> build(VideoControllerParams params) async {
@@ -67,39 +70,45 @@ class VideoController extends _$VideoController {
           .select((state) => state[params.sourcePath] ?? params.sourcePath),
     );
 
-    final player = ref
-        .watch(videoPlayerControllerFactoryProvider(sourcePath))
-        .createController(VideoPlayerOptions(mixWithOthers: true));
-
-    ref.onCancel(() async {
-      await Future.wait([
-        () async {
-          if (player.isInitialized) {
-            await player.controller.dispose();
-          }
-        }(),
-        () async {
-          if (_activePlayer != null && _activePlayer != player && _activePlayer!.isInitialized) {
-            await _activePlayer!.controller.dispose();
-            _activePlayer = null;
-          }
-        }(),
-      ]);
-    });
-
     try {
-      await player.initialize();
-      final controller = player.controller;
+      final controller = await ref
+          .watch(videoPlayerControllerFactoryProvider(sourcePath))
+          .createController(options: VideoPlayerOptions(mixWithOthers: true));
+
+      ref.onCancel(() async {
+        await Future.wait([
+          () async {
+            if (controller.value.isInitialized) {
+              await controller.dispose();
+            }
+          }(),
+          () async {
+            if (_activeController != null &&
+                _activeController != controller &&
+                _activeController!.value.isInitialized) {
+              await _activeController!.dispose();
+              _activeController = null;
+            }
+          }(),
+        ]);
+      });
+
       if (!controller.value.hasError) {
-        await controller.setLooping(params.looping);
+        if (params.looping != controller.value.isLooping) {
+          await controller.setLooping(params.looping);
+        }
 
         // Set initial volume based on global mute state
         final isMuted = ref.read(globalMuteNotifierProvider);
-        await controller.setVolume(isMuted ? 0.0 : 1.0);
+        if (isMuted) {
+          if (controller.value.volume != 0) {
+            await controller.setVolume(0);
+          }
+        } else if (controller.value.volume != 1) {
+          await controller.setVolume(1);
+        }
 
-        final prevController = _activePlayer != null && _activePlayer!.isInitialized
-            ? _activePlayer!.controller
-            : null;
+        final prevController = _activeController;
         if (prevController != null) {
           final isPlaying = prevController.value.isBuffering || prevController.value.isPlaying;
           await controller.seekTo(prevController.value.position);
@@ -117,12 +126,10 @@ class VideoController extends _$VideoController {
           }
         }
 
-        _activePlayer = player;
+        _activeController = controller;
 
         ref.listen(globalMuteNotifierProvider, (_, muted) {
-          final prevController = _activePlayer != null && _activePlayer!.isInitialized
-              ? _activePlayer!.controller
-              : null;
+          final prevController = _activeController;
           if (prevController != null) {
             final isPlaying = prevController.value.isPlaying;
             unawaited(
@@ -135,24 +142,16 @@ class VideoController extends _$VideoController {
           }
         });
       }
-    } catch (error, stackTrace) {
+      return controller;
+    } on FailedToInitVideoPlayer catch (error) {
       final authorPubkey = params.authorPubkey;
-      final controller = player.isInitialized ? player.controller : null;
-      if (controller != null &&
-          controller.dataSourceType == DataSourceType.network &&
-          authorPubkey != null) {
+      if (error.dataSourceType == DataSourceType.network && authorPubkey != null) {
         await ref
             .watch(iONConnectMediaUrlFallbackProvider.notifier)
             .generateFallback(params.sourcePath, authorPubkey: authorPubkey);
       }
-      Logger.log(
-        'Error during video controller initialisation for source: ${params.sourcePath}',
-        error: error,
-        stackTrace: stackTrace,
-      );
+      rethrow;
     }
-
-    return player.controller;
   }
 }
 
@@ -163,12 +162,46 @@ class VideoPlayerControllerFactory {
 
   final String sourcePath;
 
-  CachedVideoPlayerPlus createController(VideoPlayerOptions? options) {
+  Future<VideoPlayerController> createController({
+    VideoPlayerOptions? options,
+    bool? forceNetworkDataSource,
+  }) async {
     final videoPlayerOptions = options ?? VideoPlayerOptions();
 
-    if (_isNetworkSource(sourcePath)) {
+    final player = _getPlayer(videoPlayerOptions, forceNetworkDataSource.falseOrValue);
+    try {
+      await player.initialize();
+      return player.controller;
+    } catch (e, stackTrace) {
+      Logger.log(
+        'Error during video player initialisation'
+        ' | dataSourceType: ${player.dataSourceType}'
+        ' | dataSource: ${player.dataSource}',
+        error: e,
+        stackTrace: stackTrace,
+      );
+      if (player.dataSourceType == DataSourceType.file &&
+          e.runtimeType == PlatformException &&
+          forceNetworkDataSource != true) {
+        return createController(
+          options: options,
+          forceNetworkDataSource: true,
+        );
+      }
+      throw FailedToInitVideoPlayer(
+        dataSource: player.dataSource,
+        dataSourceType: player.dataSourceType,
+      );
+    }
+  }
+
+  CachedVideoPlayerPlus _getPlayer(
+    VideoPlayerOptions videoPlayerOptions,
+    bool forceNetworkDataSource,
+  ) {
+    if (_isNetworkSource(sourcePath) || forceNetworkDataSource) {
       return CachedVideoPlayerPlus.networkUrl(
-        Uri.parse(sourcePath),
+        _isLocalFile(sourcePath) ? Uri.file(sourcePath) : Uri.parse(sourcePath),
         videoPlayerOptions: videoPlayerOptions,
         cacheManager: NetworkVideosCacheManager.instance,
       );
