@@ -1,6 +1,7 @@
 // SPDX-License-Identifier: ice License 1.0
 
 import 'package:ion/app/features/ion_connect/ion_connect.dart';
+import 'package:video_player/video_player.dart';
 
 sealed class IONException implements Exception {
   const IONException(this.code, this.message);
@@ -623,4 +624,18 @@ class WalletNotFoundException extends IONException {
           10123,
           'Wallet $walletAddress not found',
         );
+}
+
+class FailedToInitVideoPlayer extends IONException {
+  FailedToInitVideoPlayer({
+    required this.dataSourceType,
+    required this.dataSource,
+  }) : super(
+            10124,
+            'Failed to initialize video player'
+            ' | dataSourceType: $dataSourceType'
+            ' | dataSource: $dataSource');
+
+  final DataSourceType dataSourceType;
+  final String dataSource;
 }

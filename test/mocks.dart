@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: ice License 1.0
 
-import 'package:cached_video_player_plus/cached_video_player_plus.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/widgets.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/features/core/providers/video_player_provider.r.dart';
@@ -81,6 +81,7 @@ class FakeVideoController extends ValueNotifier<VideoPlayerValue> implements Vid
       isInitialized: true,
       duration: duration,
       position: Duration.zero,
+      volume: 0,
       size: const Size(1280, 720),
     );
   }
@@ -107,27 +108,15 @@ class FakeVideoController extends ValueNotifier<VideoPlayerValue> implements Vid
   dynamic noSuchMethod(Invocation invocation) => super.noSuchMethod(invocation);
 }
 
-class MockCachedVideoPlayerPlus extends Mock implements CachedVideoPlayerPlus {
-  MockCachedVideoPlayerPlus() {
-    // initialize() should immediately complete
-    when(initialize).thenAnswer((_) async {});
-    // After initialize, isInitialized must return true
-    when(() => isInitialized).thenReturn(true);
-    // controller must return a valid VideoPlayerController
-    when(() => controller).thenReturn(
-      FakeVideoController(Duration.zero),
-    );
-  }
-}
-
 class FakeVideoFactory extends VideoPlayerControllerFactory {
   FakeVideoFactory(this._controller) : super(sourcePath: 'dummy');
   final VideoPlayerController _controller;
 
   @override
-  CachedVideoPlayerPlus createController(VideoPlayerOptions? _) {
-    final mock = MockCachedVideoPlayerPlus();
-    when(() => mock.controller).thenReturn(_controller);
-    return mock;
+  Future<VideoPlayerController> createController({
+    VideoPlayerOptions? options,
+    bool? forceNetworkDataSource,
+  }) async {
+    return SynchronousFuture<VideoPlayerController>(_controller);
   }
 }

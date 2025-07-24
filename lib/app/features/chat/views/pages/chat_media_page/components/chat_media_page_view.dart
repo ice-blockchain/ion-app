@@ -82,6 +82,7 @@ class _ChatMediaItem extends HookConsumerWidget {
   final MediaAttachment media;
   final ImageZoomController zoomController;
   final ReplaceablePrivateDirectMessageEntity entity;
+
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final fileFuture = useFuture<String?>(
@@ -130,7 +131,7 @@ class _ChatMediaItem extends HookConsumerWidget {
               ),
             ),
           )
-          .value;
+          .valueOrNull;
 
       return Stack(
         children: [

@@ -52,7 +52,7 @@ class VideoPreviewCover extends HookConsumerWidget {
             ),
           ),
         )
-        .value;
+        .valueOrNull;
 
     if (videoController == null || !videoController.value.isInitialized) {
       return const _VideoPlaceholder();
