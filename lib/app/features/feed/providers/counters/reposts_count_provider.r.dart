@@ -10,19 +10,13 @@ part 'reposts_count_provider.r.g.dart';
 
 @riverpod
 int repostsCount(Ref ref, EventReference eventReference) {
-  // First, always check cache for counter data
+  final optimistic = ref
+      .watch(postRepostWatchProvider(eventReference.toString()))
+      .valueOrNull
+      ?.totalRepostsCount;
+
+  if (optimistic != null) return optimistic;
+
   final counts = ref.watch(repostCountsFromCacheProvider(eventReference));
-  final cacheCount = counts.repostsCount + counts.quotesCount;
-
-  // Then check optimistic UI for any pending operations
-  final optimisticAsync = ref.watch(postRepostWatchProvider(eventReference.toString()));
-  final optimisticData = optimisticAsync.valueOrNull;
-
-  // If we have optimistic data, use it (it includes pending operations)
-  if (optimisticData != null) {
-    return optimisticData.totalRepostsCount;
-  }
-
-  // Otherwise, use cache count
-  return cacheCount;
+  return counts.repostsCount + counts.quotesCount;
 }

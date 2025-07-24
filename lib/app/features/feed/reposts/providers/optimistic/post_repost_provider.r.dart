@@ -87,13 +87,9 @@ List<PostRepost> loadRepostsFromCache(Ref ref) {
 @Riverpod(keepAlive: true)
 OptimisticService<PostRepost> postRepostService(Ref ref) {
   final manager = ref.watch(postRepostManagerProvider);
-  final service = OptimisticService<PostRepost>(manager: manager);
-  final initialData = ref.read(loadRepostsFromCacheProvider);
-  service.initialize(initialData);
-
-  ref.listen(loadRepostsFromCacheProvider, (previous, next) {
-    service.initialize(next);
-  });
+  final postReposts = ref.watch(loadRepostsFromCacheProvider);
+  final service = OptimisticService<PostRepost>(manager: manager)
+    ..initialize(postReposts);
 
   return service;
 }
@@ -124,7 +120,7 @@ class ToggleRepostNotifier extends _$ToggleRepostNotifier {
   void build() {}
 
   Future<void> toggle(EventReference eventReference) async {
-    final service = ref.watch(postRepostServiceProvider);
+    final service = ref.read(postRepostServiceProvider);
     final id = eventReference.toString();
 
     var current = ref.read(postRepostWatchProvider(id)).valueOrNull;
