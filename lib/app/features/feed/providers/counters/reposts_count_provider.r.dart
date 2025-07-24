@@ -1,69 +1,28 @@
 // SPDX-License-Identifier: ice License 1.0
 
-import 'package:ion/app/features/feed/data/models/entities/event_count_result_data.f.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:ion/app/features/feed/providers/counters/helpers/counter_cache_helpers.r.dart';
+import 'package:ion/app/features/feed/reposts/providers/optimistic/post_repost_provider.r.dart';
 import 'package:ion/app/features/ion_connect/model/event_reference.f.dart';
-import 'package:ion/app/features/ion_connect/providers/ion_connect_cache.r.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'reposts_count_provider.r.g.dart';
 
 @riverpod
-class RepostsCount extends _$RepostsCount {
-  @override
-  int? build(EventReference eventReference) {
-    final repostsCount = _getCountFromCache(EventCountResultType.reposts);
-    final quotesCount = _getCountFromCache(EventCountResultType.quotes);
+int repostsCount(Ref ref, EventReference eventReference) {
+  // First, always check cache for counter data
+  final counts = ref.watch(repostCountsFromCacheProvider(eventReference));
+  final cacheCount = counts.repostsCount + counts.quotesCount;
 
-    return repostsCount + quotesCount;
+  // Then check optimistic UI for any pending operations
+  final optimisticAsync = ref.watch(postRepostWatchProvider(eventReference.toString()));
+  final optimisticData = optimisticAsync.valueOrNull;
+
+  // If we have optimistic data, use it (it includes pending operations)
+  if (optimisticData != null) {
+    return optimisticData.totalRepostsCount;
   }
 
-  void addOne() {
-    if (state != null) {
-      state = state! + 1;
-    }
-  }
-
-  void removeOne({bool isQuote = false}) {
-    if (state == null) return;
-
-    final countType = isQuote ? EventCountResultType.quotes : EventCountResultType.reposts;
-    final count = _getCountFromCache(countType, subscribe: false);
-
-    if (count == 1) {
-      _removeCacheEntry(countType);
-    }
-
-    if (state! > 0) {
-      state = state! - 1;
-    }
-  }
-
-  int _getCountFromCache(EventCountResultType type, {bool subscribe = true}) {
-    final method = subscribe ? ref.watch : ref.read;
-    final entity = method(
-      ionConnectCacheProvider.select(
-        cacheSelector<EventCountResultEntity>(
-          _buildCacheKey(type),
-        ),
-      ),
-    );
-
-    return entity != null ? entity.data.content as int : 0;
-  }
-
-  String _buildCacheKey(EventCountResultType type) {
-    return EventCountResultEntity.cacheKeyBuilder(
-      key: eventReference.toString(),
-      type: type,
-    );
-  }
-
-  void _removeCacheEntry(EventCountResultType type) {
-    // Manually remove the cache entry when counter reaches zero.
-    // This is necessary because when the backend counter is 0, no event is sent to the frontend,
-    // but the old value remains in the cache, causing stale data to be displayed.
-    ref.read(ionConnectCacheProvider.notifier).remove(
-          _buildCacheKey(type),
-        );
-  }
+  // Otherwise, use cache count
+  return cacheCount;
 }

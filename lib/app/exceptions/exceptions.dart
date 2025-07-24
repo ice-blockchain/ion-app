@@ -618,6 +618,10 @@ class FailedToPickUserRelay extends IONException {
   FailedToPickUserRelay([dynamic error]) : super(10122, 'Failed to pick user relay: $error');
 }
 
+class RepostCreationFailedException extends IONException {
+  const RepostCreationFailedException() : super(10124, 'Failed to create repost entity');
+}
+
 class WalletNotFoundException extends IONException {
   WalletNotFoundException({required String walletAddress})
       : super(
