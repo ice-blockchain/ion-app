@@ -217,15 +217,18 @@ class RelayPicker extends _$RelayPicker {
     return urls;
   }
 
-  Future<IonConnectRelay> _selectRelayForOtherUser(List<String> urls, bool anonymous) async {
-    if (urls.length == 1) {
-      return ref.read(relayProvider(urls.first, anonymous: anonymous).future);
+  Future<IonConnectRelay> _selectRelayForOtherUser(
+    List<String> userRelayUrls,
+    bool anonymous,
+  ) async {
+    if (userRelayUrls.length == 1) {
+      return ref.read(relayProvider(userRelayUrls.first, anonymous: anonymous).future);
     }
 
     final relevantRelays = await ref.read(rankedRelevantCurrentUserRelaysUrlsProvider.future);
-    final commonRelays = relevantRelays.where((url) => urls.contains(url)).toList();
+    final commonRelays = relevantRelays.where((url) => userRelayUrls.contains(url)).toList();
     if (relevantRelays.isEmpty || commonRelays.isEmpty) {
-      final randomRelayUrl = urls.random;
+      final randomRelayUrl = userRelayUrls.random;
       if (randomRelayUrl == null) {
         throw FailedToPickUserRelay();
       }
