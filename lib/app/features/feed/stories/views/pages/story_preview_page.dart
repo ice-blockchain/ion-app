@@ -128,7 +128,10 @@ class StoryPreviewPage extends HookConsumerWidget {
                                 ),
                               ],
                               whoCanReply: whoCanReply,
-                              quotedEvent: eventReference,
+                              // For post screenshots, use sourcePostReference instead of quotedEvent
+                              // This maintains visual connection without affecting counters
+                              quotedEvent: isPostScreenshot ? null : eventReference,
+                              sourcePostReference: isPostScreenshot ? eventReference : null,
                               topics: ref.read(selectedInterestsNotifierProvider),
                             );
                           } else if (mediaType == MediaType.video) {
