@@ -42,7 +42,9 @@ class EncryptedDirectMessageHandler extends GlobalSubscriptionEncryptedEventMess
   bool canHandle({
     required IonConnectGiftWrapEntity entity,
   }) {
-    return entity.data.kinds.containsDeep([ReplaceablePrivateDirectMessageEntity.kind.toString()]);
+    return entity.data.kinds.any(
+      (kinds) => kinds.contains(ReplaceablePrivateDirectMessageEntity.kind.toString()),
+    );
   }
 
   @override
