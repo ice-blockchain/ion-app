@@ -232,7 +232,7 @@
   "dapp_details_tips_vote": "Vote",
   "dapp_details_tips_voted": "Voted",
   "search_placeholder": "Search",
-  "search_nothing_found": "Nothing was found for your query",
+  "search_nothing_found": "Oops! We couldn’t find anything matching your search.",
   "profile_following": "Following",
   "profile_followers": "Followers",
   "profile_following_with_counter": "Following ({counter})",
