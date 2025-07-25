@@ -1,8 +1,10 @@
 // SPDX-License-Identifier: ice License 1.0
 
+import 'package:collection/collection.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/exceptions/exceptions.dart';
 import 'package:ion/app/extensions/extensions.dart';
+import 'package:ion/app/features/chat/community/models/entities/tags/compression_tag.f.dart';
 import 'package:ion/app/features/ion_connect/ion_connect.dart';
 import 'package:ion/app/features/ion_connect/providers/ion_connect_event_signer_provider.r.dart';
 import 'package:ion/app/features/user/model/user_delegation.f.dart';
@@ -37,11 +39,15 @@ class GiftUnwrapService {
   final IonConnectGiftWrapService _giftWrapService;
   final VerifyDelegationCallback _verifyDelegationCallback;
 
-  Future<EventMessage> unwrap(
-    EventMessage giftWrap, {
-    CompressionAlgorithm compressionAlgorithm = CompressionAlgorithm.brotli,
-  }) async {
+  Future<EventMessage> unwrap(EventMessage giftWrap) async {
     try {
+      final compressionTag = giftWrap.tags.firstWhereOrNull(
+        (tag) => tag[0] == CompressionTag.tagName,
+      );
+      final compression = compressionTag != null
+          ? CompressionTag.fromTag(compressionTag).algorithm
+          : CompressionAlgorithm.none;
+
       final (rumor, seal) = await unwrapGiftSharedIsolate.compute(unwrapGiftFn, [
         _giftWrapService,
         _sealService,
@@ -49,7 +55,7 @@ class GiftUnwrapService {
         giftWrap.content,
         giftWrap.pubkey,
         logger,
-        compressionAlgorithm,
+        compression,
       ]);
 
       final sealDelegation = await _verifyDelegationCallback(seal.masterPubkey);
@@ -59,8 +65,6 @@ class GiftUnwrapService {
       }
 
       return rumor;
-    } on FormatException catch (_) {
-      return unwrap(giftWrap, compressionAlgorithm: CompressionAlgorithm.none);
     } catch (e) {
       throw DecodeE2EMessageException(giftWrap.id);
     }
@@ -116,11 +120,19 @@ Future<(EventMessage, EventMessage)> unwrapGiftFn(List<dynamic> args) async {
     compressionAlgorithm: compressionAlgorithm,
   );
 
+  final compressionTag = seal.tags.firstWhereOrNull(
+    (tag) => tag[0] == CompressionTag.tagName,
+  );
+
+  final compression = compressionTag != null
+      ? CompressionTag.fromTag(compressionTag).algorithm
+      : compressionAlgorithm;
+
   final rumor = await sealService.decodeSeal(
     seal.content,
     seal.pubkey,
     privateKey,
-    compressionAlgorithm: compressionAlgorithm,
+    compressionAlgorithm: compression,
   );
 
   // Check if:

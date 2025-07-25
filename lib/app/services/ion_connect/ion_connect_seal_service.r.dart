@@ -7,6 +7,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/exceptions/exceptions.dart';
 import 'package:ion/app/extensions/string.dart';
 import 'package:ion/app/features/auth/providers/auth_provider.m.dart';
+import 'package:ion/app/features/chat/community/models/entities/tags/compression_tag.f.dart';
 import 'package:ion/app/features/chat/community/models/entities/tags/master_pubkey_tag.f.dart';
 import 'package:ion/app/features/ion_connect/ion_connect.dart';
 import 'package:ion/app/services/ion_connect/encrypted_message_service.r.dart';
@@ -80,6 +81,8 @@ class IonConnectSealServiceImpl implements IonConnectSealService {
       content: encryptedRumor,
       tags: [
         MasterPubkeyTag(value: currentUserMasterPubkey).toTag(),
+        if (compressionAlgorithm != CompressionAlgorithm.none)
+          CompressionTag(value: compressionAlgorithm.name).toTag(),
       ],
     );
   }

@@ -4,6 +4,7 @@ import 'dart:async';
 import 'dart:convert';
 
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:ion/app/features/chat/community/models/entities/tags/compression_tag.f.dart';
 import 'package:ion/app/features/ion_connect/ion_connect.dart';
 import 'package:ion/app/features/ion_connect/model/ion_connect_gift_wrap.f.dart';
 import 'package:ion/app/features/ion_connect/model/related_pubkey.f.dart';
@@ -79,6 +80,8 @@ class IonConnectGiftWrapServiceImpl implements IonConnectGiftWrapService {
         [RelatedPubkey.tagName, receiverMasterPubkey, '', receiverPubkey],
         ['k', ...contentKinds],
         if (expirationTag != null) expirationTag,
+        if (compressionAlgorithm != CompressionAlgorithm.none)
+          CompressionTag(value: compressionAlgorithm.name).toTag(),
       ],
     );
   }
