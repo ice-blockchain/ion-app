@@ -53,18 +53,19 @@ class RelayPicker extends _$RelayPicker {
     };
 
     Logger.log(
-      '[RELAY] Selecting a write relay for action source: $actionSource, reachable relay list: $reachableRelays, $dislikedUrls',
+      '[RELAY] Selecting a write relay for action source: $actionSource, reachable write relay list: $reachableRelays, $dislikedUrls',
     );
 
-    if (reachableRelays.isEmpty) {
+    final reachableRelayUrls = reachableRelays.map((relay) => relay.url).toList();
+    final filteredWriteRelayUrls = _filterOutDislikedRelayUrls(reachableRelayUrls, dislikedUrls);
+
+    if (filteredWriteRelayUrls.isEmpty) {
       Logger.warning(
-        '[RELAY] No reachable write relay found for action source: $actionSource. Fallback to read action source relay.',
+        '[RELAY] No available write relays found for action source: $actionSource. Fallback to read action source relay.',
       );
       return _getReadActionSourceRelay(actionSource, dislikedUrls: dislikedUrls);
     }
 
-    final reachableRelayUrls = reachableRelays.map((relay) => relay.url).toList();
-    final filteredWriteRelayUrls = _filterOutDislikedRelayUrls(reachableRelayUrls, dislikedUrls);
     final chosenRelayUrl =
         _getFirstActiveRelayUrl(filteredWriteRelayUrls) ?? filteredWriteRelayUrls.random!;
     return ref.read(relayProvider(chosenRelayUrl, anonymous: actionSource.anonymous).future);
@@ -84,6 +85,11 @@ class RelayPicker extends _$RelayPicker {
             currentUserRankedRelays.map((relay) => relay.url).toList();
         final filteredRankedRelays =
             _filterOutDislikedRelayUrls(currentUserRankedRelayUrls, dislikedUrls);
+
+        if (filteredRankedRelays.isEmpty) {
+          throw FailedToPickUserRelay('All available relays are disliked.');
+        }
+
         final chosenRelayUrl =
             _getFirstActiveRelayUrl(filteredRankedRelays) ?? filteredRankedRelays.first;
         return ref.read(relayProvider(chosenRelayUrl, anonymous: actionSource.anonymous).future);
@@ -101,6 +107,11 @@ class RelayPicker extends _$RelayPicker {
         final reachableRelayUrls = reachableRelays.map((relay) => relay.url).toList();
         final filteredReachableRelays =
             _filterOutDislikedRelayUrls(reachableRelayUrls, dislikedUrls);
+
+        if (filteredReachableRelays.isEmpty) {
+          throw FailedToPickUserRelay('All available relays are disliked.');
+        }
+
         final chosenRelayUrl = _getFirstActiveRelayUrl(filteredReachableRelays) ??
             await _selectRelayUrlForOtherUser(reachableRelayUrls);
         return ref.read(relayProvider(chosenRelayUrl, anonymous: actionSource.anonymous).future);
@@ -112,6 +123,11 @@ class RelayPicker extends _$RelayPicker {
         }
 
         final filteredIndexerUrls = _filterOutDislikedRelayUrls(indexerUrls, dislikedUrls);
+
+        if (filteredIndexerUrls.isEmpty) {
+          throw FailedToPickUserRelay('All indexer relays are disliked.');
+        }
+
         final chosenIndexerUrl =
             _getFirstActiveRelayUrl(filteredIndexerUrls) ?? filteredIndexerUrls.random!;
         return ref.read(relayProvider(chosenIndexerUrl, anonymous: actionSource.anonymous).future);
@@ -138,7 +154,8 @@ class RelayPicker extends _$RelayPicker {
   }
 
   Future<UserRelaysEntity> _getUserReachableRelays(String pubkey) async {
-    final relays = await ref.read(userRelaysManagerProvider.notifier).fetch([pubkey]);
+    final relays =
+        await ref.read(userRelaysManagerProvider.notifier).fetchReachableRelays([pubkey]);
     if (relays.isEmpty) {
       throw UserRelaysNotFoundException(pubkey);
     }
@@ -149,18 +166,11 @@ class RelayPicker extends _$RelayPicker {
   ///
   /// This is a mechanism for retry on another relay if something happened on a chosen one.
   /// For example, if an error happened during read / write operation, on retry, we should try another relay.
-  ///
-  /// throws [AllRelaysAreDisliked] if no relays are left after filtering.
   List<String> _filterOutDislikedRelayUrls(
     List<String> relayUrls,
     DislikedRelayUrlsCollection dislikedRelaysUrls,
   ) {
-    final filteredRelays = relayUrls.toSet().difference(dislikedRelaysUrls.urls).toList();
-    if (filteredRelays.isEmpty) {
-      Logger.warning('[RELAY] No valid relays found after filtering disliked relays');
-      throw AllRelaysAreDisliked();
-    }
-    return filteredRelays;
+    return relayUrls.toSet().difference(dislikedRelaysUrls.urls).toList();
   }
 
   /// Returns the first found active relay url for the given relay url list.
