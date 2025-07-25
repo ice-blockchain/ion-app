@@ -45,8 +45,13 @@ class UserRelaysManager extends _$UserRelaysManager {
     final result = <UserRelaysEntity>[
       if (currentUserReachableRelays != null) currentUserReachableRelays,
     ];
+
     final pubkeysToFetch =
         pubkeys.where((pubkey) => pubkey != currentUserReachableRelays?.masterPubkey).toList();
+
+    if (pubkeysToFetch.isEmpty) {
+      return result;
+    }
 
     final dbCachedRelays = await _getRelaysFromDb(pubkeys: pubkeys);
     final reachableDbCachedRelays = _filterReachableRelays(dbCachedRelays);
