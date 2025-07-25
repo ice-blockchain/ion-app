@@ -14,6 +14,7 @@ import 'package:ion/app/features/feed/stories/views/components/story_viewer/comp
 import 'package:ion/app/features/ion_connect/model/event_reference.f.dart';
 import 'package:ion/app/features/ion_connect/model/quoted_event.f.dart';
 import 'package:ion/app/router/app_routes.gr.dart';
+import 'package:ion/app/services/logger/logger.dart';
 
 class ImageStoryViewer extends ConsumerWidget {
   const ImageStoryViewer({
@@ -34,7 +35,7 @@ class ImageStoryViewer extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final cacheManager = ref.watch(storyImageCacheManagerProvider);
-    
+
     // Extract source post reference from richText if present
     EventReference? sourcePostReference;
     if (richTextContent != null && quotedEvent == null) {
@@ -48,10 +49,10 @@ class ImageStoryViewer extends ConsumerWidget {
           }
         }
       } catch (_) {
-        // Ignore parsing errors
+        Logger.error('Failed to parse rich text content for source post reference');
       }
     }
-    
+
     final hasQuotedPost = quotedEvent != null || sourcePostReference != null;
 
     final imageWidget = IonConnectNetworkImage(

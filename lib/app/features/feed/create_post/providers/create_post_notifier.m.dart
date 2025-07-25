@@ -411,7 +411,7 @@ class CreatePostNotifier extends _$CreatePostNotifier {
       content: content,
       media: media,
     );
-    
+
     // Add source post reference as a special attribute if provided
     final finalContent = sourcePostReference != null
         ? _addSourcePostReference(contentWithMedia, sourcePostReference)
@@ -439,14 +439,14 @@ class CreatePostNotifier extends _$CreatePostNotifier {
           .toList(),
     ).concat(newContentDelta);
   }
-  
+
   Delta _addSourcePostReference(Delta content, EventReference sourcePostReference) {
     // Add an invisible character with a custom attribute containing the source post reference
     final sourcePostOp = Operation.insert(
       '\u200B', // Zero-width space
       {'sourcePost': sourcePostReference.encode()},
     );
-    
+
     return Delta.fromOperations([sourcePostOp]).concat(content);
   }
 

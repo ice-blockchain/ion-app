@@ -19,6 +19,6 @@ int repostsCount(Ref ref, EventReference eventReference) {
 
   final counts = ref.watch(repostCountsFromCacheProvider(eventReference));
   final totalCount = counts.repostsCount + counts.quotesCount;
-  
+
   return totalCount;
 }

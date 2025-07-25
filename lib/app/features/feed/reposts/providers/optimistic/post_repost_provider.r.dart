@@ -24,10 +24,10 @@ PostRepost? findRepostInCache(Ref ref, EventReference eventReference) {
     return null;
   }
 
-  // First check if we have an optimistic state
-  final manager = ref.read(postRepostManagerProvider);
-  final optimisticState = manager.snapshot.where((pr) => pr.eventReference == eventReference).firstOrNull;
-  
+  final manager = ref.watch(postRepostManagerProvider);
+  final optimisticState =
+      manager.snapshot.where((pr) => pr.eventReference == eventReference).firstOrNull;
+
   if (optimisticState != null) {
     return optimisticState;
   }
@@ -58,7 +58,7 @@ PostRepost? findRepostInCache(Ref ref, EventReference eventReference) {
     repostedByMe: true,
     myRepostReference: myRepost.toEventReference(),
   );
-  
+
   return result;
 }
 
@@ -68,8 +68,7 @@ List<PostRepost> loadRepostsFromCache(Ref ref) {
 
   if (currentPubkey == null) return [];
 
-  // Get current optimistic states
-  final manager = ref.read(postRepostManagerProvider);
+  final manager = ref.watch(postRepostManagerProvider);
   final optimisticStates = Map.fromEntries(
     manager.snapshot.map((pr) => MapEntry(pr.eventReference, pr)),
   );
@@ -88,7 +87,6 @@ List<PostRepost> loadRepostsFromCache(Ref ref) {
         ? entity.data.eventReference
         : (entity as GenericRepostEntity).data.eventReference;
 
-    // Check if we have an optimistic state for this event
     final optimisticState = optimisticStates[eventReference];
     if (optimisticState != null) {
       postReposts.add(optimisticState);
@@ -115,10 +113,8 @@ List<PostRepost> loadRepostsFromCache(Ref ref) {
 OptimisticService<PostRepost> postRepostService(Ref ref) {
   final manager = ref.watch(postRepostManagerProvider);
   final postReposts = ref.watch(loadRepostsFromCacheProvider);
-  
-  
-  final service = OptimisticService<PostRepost>(manager: manager)
-    ..initialize(postReposts);
+
+  final service = OptimisticService<PostRepost>(manager: manager)..initialize(postReposts);
 
   return service;
 }
@@ -135,7 +131,6 @@ Stream<PostRepost?> postRepostWatch(Ref ref, String id) {
 OptimisticOperationManager<PostRepost> postRepostManager(Ref ref) {
   final strategy = ref.watch(repostSyncStrategyProvider);
 
-  
   final manager = OptimisticOperationManager<PostRepost>(
     syncCallback: strategy.send,
     onError: (_, __) async => true,
@@ -157,7 +152,6 @@ class ToggleRepostNotifier extends _$ToggleRepostNotifier {
 
     var current = ref.read(postRepostWatchProvider(id)).valueOrNull;
     current ??= _findOrCreatePostRepost(eventReference);
-
 
     await service.dispatch(const ToggleRepostIntent(), current);
   }

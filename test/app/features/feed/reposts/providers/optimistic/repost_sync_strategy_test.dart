@@ -49,13 +49,11 @@ void main() {
         invalidateCounterCache: mockInvalidateCache.call,
       );
 
-      // Register fallback values for mocktail
       registerFallbackValue(eventRef);
     });
 
     group('delete repost scenarios', () {
       test('handles EntityNotFoundException as successful deletion with zero count', () async {
-        // Previous state: reposted
         const previous = PostRepost(
           eventReference: eventRef,
           repostsCount: 1,
@@ -64,7 +62,6 @@ void main() {
           myRepostReference: myRepostRef,
         );
 
-        // Optimistic state: not reposted
         const optimistic = PostRepost(
           eventReference: eventRef,
           repostsCount: 0,
@@ -72,23 +69,18 @@ void main() {
           repostedByMe: false,
         );
 
-        // Mock delete to throw EntityNotFoundException
         when(() => mockDeleteRepost.call(myRepostRef)).thenThrow(EntityNotFoundException('test'));
 
-        // Execute
         final result = await strategy.send(previous, optimistic);
 
-        // Verify result
         expect(result.repostedByMe, isFalse);
         expect(result.myRepostReference, isNull);
         expect(result.repostsCount, 0);
 
-        // Verify cache was invalidated twice (once normally, once for count=0)
         verify(() => mockInvalidateCache.call(eventRef)).called(2);
       });
 
       test('handles EntityNotFoundException with non-zero count', () async {
-        // Previous state: reposted
         const previous = PostRepost(
           eventReference: eventRef,
           repostsCount: 5,
@@ -97,7 +89,6 @@ void main() {
           myRepostReference: myRepostRef,
         );
 
-        // Optimistic state: not reposted
         const optimistic = PostRepost(
           eventReference: eventRef,
           repostsCount: 4,
@@ -105,23 +96,18 @@ void main() {
           repostedByMe: false,
         );
 
-        // Mock delete to throw EntityNotFoundException
         when(() => mockDeleteRepost.call(myRepostRef)).thenThrow(EntityNotFoundException('test'));
 
-        // Execute
         final result = await strategy.send(previous, optimistic);
 
-        // Verify result
         expect(result.repostedByMe, isFalse);
         expect(result.myRepostReference, isNull);
         expect(result.repostsCount, 4);
 
-        // Verify cache was invalidated only once (count > 0)
         verify(() => mockInvalidateCache.call(eventRef)).called(1);
       });
 
       test('rethrows other exceptions', () async {
-        // Previous state: reposted
         const previous = PostRepost(
           eventReference: eventRef,
           repostsCount: 1,
@@ -130,7 +116,6 @@ void main() {
           myRepostReference: myRepostRef,
         );
 
-        // Optimistic state: not reposted
         const optimistic = PostRepost(
           eventReference: eventRef,
           repostsCount: 0,
@@ -138,21 +123,17 @@ void main() {
           repostedByMe: false,
         );
 
-        // Mock delete to throw different exception
         when(() => mockDeleteRepost.call(myRepostRef)).thenThrow(Exception('Network error'));
 
-        // Execute and expect exception
         expect(
           () => strategy.send(previous, optimistic),
           throwsA(isA<Exception>()),
         );
 
-        // Verify cache was not invalidated
         verifyNever(() => mockInvalidateCache.call(any()));
       });
 
       test('successful delete with zero count', () async {
-        // Previous state: reposted
         const previous = PostRepost(
           eventReference: eventRef,
           repostsCount: 1,
@@ -161,7 +142,6 @@ void main() {
           myRepostReference: myRepostRef,
         );
 
-        // Optimistic state: not reposted
         const optimistic = PostRepost(
           eventReference: eventRef,
           repostsCount: 0,
@@ -169,18 +149,14 @@ void main() {
           repostedByMe: false,
         );
 
-        // Mock successful delete
         when(() => mockDeleteRepost.call(myRepostRef)).thenAnswer((_) async {});
 
-        // Execute
         final result = await strategy.send(previous, optimistic);
 
-        // Verify result
         expect(result.repostedByMe, isFalse);
         expect(result.myRepostReference, isNull);
         expect(result.repostsCount, 0);
 
-        // Verify cache was invalidated twice (once normally, once for count=0)
         verify(() => mockInvalidateCache.call(eventRef)).called(2);
       });
     });
@@ -193,7 +169,6 @@ void main() {
           dTag: 'newTag',
         );
 
-        // Previous state: not reposted
         const previous = PostRepost(
           eventReference: eventRef,
           repostsCount: 0,
@@ -201,7 +176,6 @@ void main() {
           repostedByMe: false,
         );
 
-        // Optimistic state: reposted
         const optimistic = PostRepost(
           eventReference: eventRef,
           repostsCount: 1,
@@ -209,23 +183,18 @@ void main() {
           repostedByMe: true,
         );
 
-        // Mock successful create
         when(() => mockCreateRepost.call(eventRef)).thenAnswer((_) async => createdRef);
 
-        // Execute
         final result = await strategy.send(previous, optimistic);
 
-        // Verify result
         expect(result.repostedByMe, isTrue);
         expect(result.myRepostReference, createdRef);
         expect(result.repostsCount, 1);
 
-        // Verify cache was invalidated once
         verify(() => mockInvalidateCache.call(eventRef)).called(1);
       });
 
       test('create failure throws exception', () async {
-        // Previous state: not reposted
         const previous = PostRepost(
           eventReference: eventRef,
           repostsCount: 0,
@@ -233,7 +202,6 @@ void main() {
           repostedByMe: false,
         );
 
-        // Optimistic state: reposted
         const optimistic = PostRepost(
           eventReference: eventRef,
           repostsCount: 1,
@@ -241,22 +209,18 @@ void main() {
           repostedByMe: true,
         );
 
-        // Mock create failure
         when(() => mockCreateRepost.call(eventRef)).thenThrow(Exception('Create failed'));
 
-        // Execute and expect exception
         expect(
           () => strategy.send(previous, optimistic),
           throwsA(isA<Exception>()),
         );
 
-        // Verify cache was not invalidated
         verifyNever(() => mockInvalidateCache.call(any()));
       });
     });
 
     test('no action when states are the same', () async {
-      // Both states are the same
       const state = PostRepost(
         eventReference: eventRef,
         repostsCount: 5,
@@ -265,13 +229,10 @@ void main() {
         myRepostReference: myRepostRef,
       );
 
-      // Execute
       final result = await strategy.send(state, state);
 
-      // Verify result is unchanged
       expect(result, state);
 
-      // Verify no methods were called
       verifyNever(() => mockCreateRepost.call(any()));
       verifyNever(() => mockDeleteRepost.call(any()));
       verifyNever(() => mockInvalidateCache.call(any()));
