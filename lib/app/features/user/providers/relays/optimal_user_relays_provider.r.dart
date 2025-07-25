@@ -1,8 +1,6 @@
 // SPDX-License-Identifier: ice License 1.0
 
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:ion/app/exceptions/exceptions.dart';
-import 'package:ion/app/features/auth/providers/auth_provider.m.dart';
 import 'package:ion/app/features/user/model/user_relays.f.dart';
 import 'package:ion/app/features/user/providers/relays/relay_selectors.dart';
 import 'package:ion/app/features/user/providers/relays/relevant_user_relays_provider.r.dart';
@@ -29,20 +27,12 @@ enum OptimalRelaysStrategy {
 ///
 class OptimalUserRelaysService {
   OptimalUserRelaysService({
-    required String? currentUserMasterPubkey,
-    required Future<UserRelaysEntity?> Function() getCurrentUserRelays,
-    required Future<List<UserRelaysEntity>> Function(List<String> pubkeys) getGenericUserRelays,
+    required Future<List<UserRelaysEntity>> Function(List<String> pubkeys) getReachableUserRelays,
     required Future<List<String>> Function() getCurrentUserRankedRelevantRelays,
-  })  : _currentUserMasterPubkey = currentUserMasterPubkey,
-        _getCurrentUserRelays = getCurrentUserRelays,
-        _getGenericUserRelays = getGenericUserRelays,
+  })  : _getReachableUserRelays = getReachableUserRelays,
         _getCurrentUserRankedRelevantRelays = getCurrentUserRankedRelevantRelays;
 
-  final String? _currentUserMasterPubkey;
-
-  final Future<UserRelaysEntity?> Function() _getCurrentUserRelays;
-
-  final Future<List<UserRelaysEntity>> Function(List<String> pubkeys) _getGenericUserRelays;
+  final Future<List<UserRelaysEntity>> Function(List<String> pubkeys) _getReachableUserRelays;
 
   final Future<List<String>> Function() _getCurrentUserRankedRelevantRelays;
 
@@ -61,26 +51,10 @@ class OptimalUserRelaysService {
   }
 
   Future<Map<String, List<String>>> _getUserRelays(List<String> masterPubkeys) async {
-    final userToRelays = <String, List<String>>{};
-
-    if (_currentUserMasterPubkey != null && masterPubkeys.contains(_currentUserMasterPubkey)) {
-      final currentUserRelays = await _getCurrentUserRelays();
-      if (currentUserRelays == null || currentUserRelays.urls.isEmpty) {
-        throw UserRelaysNotFoundException();
-      }
-      userToRelays[_currentUserMasterPubkey] = currentUserRelays.urls;
-    }
-
-    final otherPubkeys =
-        masterPubkeys.where((pubkey) => pubkey != _currentUserMasterPubkey).toList();
-    if (otherPubkeys.isNotEmpty) {
-      final otherUsersRelaysList = await _getGenericUserRelays(otherPubkeys);
-      for (final userRelay in otherUsersRelaysList) {
-        userToRelays[userRelay.masterPubkey] = userRelay.urls;
-      }
-    }
-
-    return userToRelays;
+    final reachableUserRelays = await _getReachableUserRelays(masterPubkeys);
+    return {
+      for (final userRelay in reachableUserRelays) userRelay.masterPubkey: userRelay.urls,
+    };
   }
 
   Map<String, List<String>> _getSharedRelaysByMostUsers(
@@ -116,16 +90,12 @@ class OptimalUserRelaysService {
 
 @riverpod
 OptimalUserRelaysService optimalUserRelaysService(Ref ref) {
-  final currentUserMasterPubkey = ref.watch(currentPubkeySelectorProvider);
-  Future<UserRelaysEntity?> getCurrentUserRelays() => ref.read(currentUserRelaysProvider.future);
-  Future<List<UserRelaysEntity>> getGenericUserRelays(List<String> pubkeys) =>
-      ref.read(userRelaysManagerProvider.notifier).fetch(pubkeys);
+  Future<List<UserRelaysEntity>> getReachableUserRelays(List<String> pubkeys) =>
+      ref.read(userRelaysManagerProvider.notifier).fetchReachableRelays(pubkeys);
   Future<List<String>> getCurrentUserRankedRelevantRelays() =>
       ref.read(rankedRelevantCurrentUserRelaysUrlsProvider.future);
   return OptimalUserRelaysService(
-    currentUserMasterPubkey: currentUserMasterPubkey,
-    getCurrentUserRelays: getCurrentUserRelays,
-    getGenericUserRelays: getGenericUserRelays,
+    getReachableUserRelays: getReachableUserRelays,
     getCurrentUserRankedRelevantRelays: getCurrentUserRankedRelevantRelays,
   );
 }

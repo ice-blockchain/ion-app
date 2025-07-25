@@ -33,7 +33,8 @@ Future<void> userRelaysSync(Ref ref) async {
     return;
   }
 
-  final userRelays = await ref.watch(userRelaysManagerProvider.notifier).fetch([masterPubkey]);
+  final userRelays =
+      await ref.watch(userRelaysManagerProvider.notifier).fetchRelaysFromIndexers([masterPubkey]);
   final connectUserRelays = userRelays.firstOrNull?.data.list;
 
   if (!UserRelaysManager.relayListsEqual(connectUserRelays, identityUserRelays)) {

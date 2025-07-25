@@ -1,5 +1,6 @@
 // SPDX-License-Identifier: ice License 1.0
 
+import 'package:collection/collection.dart';
 import 'package:ion/app/exceptions/exceptions.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/auth/providers/auth_provider.m.dart';
@@ -41,9 +42,10 @@ class RelayPicker extends _$RelayPicker {
     ActionSource actionSource, {
     DislikedRelayUrlsCollection dislikedUrls = const DislikedRelayUrlsCollection({}),
   }) async {
-    final relays = switch (actionSource) {
-      ActionSourceCurrentUser() => await _getCurrentUserRawRelays().then(_filterWriteRelays),
-      ActionSourceUser() => await _getUserRawRelays(actionSource.pubkey).then(_filterWriteRelays),
+    final reachableRelays = switch (actionSource) {
+      ActionSourceCurrentUser() => await _getCurrentUserReachableRelays().then(_filterWriteRelays),
+      ActionSourceUser() =>
+        await _getUserReachableRelays(actionSource.pubkey).then(_filterWriteRelays),
       ActionSourceRelayUrl() => [UserRelay(url: actionSource.url)],
       _ => throw UnsupportedError(
           'ActionSource $actionSource is not supported for write action type.',
@@ -51,21 +53,22 @@ class RelayPicker extends _$RelayPicker {
     };
 
     Logger.log(
-      '[RELAY] Selecting a write relay for action source: $actionSource, relay list: $relays, $dislikedUrls',
+      '[RELAY] Selecting a write relay for action source: $actionSource, reachable write relay list: $reachableRelays, $dislikedUrls',
     );
 
-    final randomValidWriteRelay = _userRelaysAvoidingDislikedUrls(relays, dislikedUrls).random;
+    final reachableRelayUrls = reachableRelays.map((relay) => relay.url).toList();
+    final filteredWriteRelayUrls = _filterOutDislikedRelayUrls(reachableRelayUrls, dislikedUrls);
 
-    if (randomValidWriteRelay == null) {
+    if (filteredWriteRelayUrls.isEmpty) {
       Logger.warning(
-        '[RELAY] No valid write relay found for action source: $actionSource. Fallback to read action source relay.',
+        '[RELAY] No available write relays found for action source: $actionSource. Fallback to read action source relay.',
       );
       return _getReadActionSourceRelay(actionSource, dislikedUrls: dislikedUrls);
     }
 
-    return ref.read(
-      relayProvider(randomValidWriteRelay.url, anonymous: actionSource.anonymous).future,
-    );
+    final chosenRelayUrl =
+        _getFirstActiveRelayUrl(filteredWriteRelayUrls) ?? filteredWriteRelayUrls.random!;
+    return ref.read(relayProvider(chosenRelayUrl, anonymous: actionSource.anonymous).future);
   }
 
   Future<IonConnectRelay> _getReadActionSourceRelay(
@@ -76,104 +79,62 @@ class RelayPicker extends _$RelayPicker {
 
     switch (actionSource) {
       case ActionSourceCurrentUser():
-        final pubkey = ref.read(currentPubkeySelectorProvider);
-        if (pubkey == null) {
-          throw UserMasterPubkeyNotFoundException();
+        final currentUserRankedRelays =
+            await _getCurrentUserRankedRelays().then((userRelays) => userRelays.data.list);
+        final currentUserRankedRelayUrls =
+            currentUserRankedRelays.map((relay) => relay.url).toList();
+        final filteredRankedRelays =
+            _filterOutDislikedRelayUrls(currentUserRankedRelayUrls, dislikedUrls);
+
+        if (filteredRankedRelays.isEmpty) {
+          throw FailedToPickUserRelay('All available relays are disliked.');
         }
 
-        final userRelays =
-            await _getCurrentUserRankedRelays().then((userRelays) => userRelays.data.list);
-        final relays = _userRelaysAvoidingDislikedUrls(userRelays, dislikedUrls)
-            .map((relay) => relay.url)
-            .toList();
-
-        final lastUsedRelays = await _getLastUsedRelay(
-          relays,
-          dislikedUrls,
-          actionSource.anonymous,
-        );
-        if (lastUsedRelays != null) return lastUsedRelays;
-
-        return ref.read(relayProvider(relays.first, anonymous: actionSource.anonymous).future);
+        final chosenRelayUrl =
+            _getFirstActiveRelayUrl(filteredRankedRelays) ?? filteredRankedRelays.first;
+        return ref.read(relayProvider(chosenRelayUrl, anonymous: actionSource.anonymous).future);
 
       case ActionSourceUser():
         if (ref.read(isCurrentUserSelectorProvider(actionSource.pubkey))) {
-          return getActionSourceRelay(
+          return _getReadActionSourceRelay(
             ActionSource.currentUser(anonymous: actionSource.anonymous),
-            actionType: ActionType.read,
             dislikedUrls: dislikedUrls,
           );
         }
 
-        final userRelays =
-            await _getUserRawRelays(actionSource.pubkey).then((userRelays) => userRelays.data.list);
-        final relays = _userRelaysAvoidingDislikedUrls(userRelays, dislikedUrls)
-            .map((relay) => relay.url)
-            .toList();
+        final reachableRelays = await _getUserReachableRelays(actionSource.pubkey)
+            .then((userRelays) => userRelays.data.list);
+        final reachableRelayUrls = reachableRelays.map((relay) => relay.url).toList();
+        final filteredReachableRelays =
+            _filterOutDislikedRelayUrls(reachableRelayUrls, dislikedUrls);
 
-        final lastUsedRelays = await _getLastUsedRelay(
-          relays,
-          dislikedUrls,
-          actionSource.anonymous,
-        );
+        if (filteredReachableRelays.isEmpty) {
+          throw FailedToPickUserRelay('All available relays are disliked.');
+        }
 
-        if (lastUsedRelays != null) return lastUsedRelays;
-
-        return _selectRelayForOtherUser(relays, actionSource.anonymous);
+        final chosenRelayUrl = _getFirstActiveRelayUrl(filteredReachableRelays) ??
+            await _selectRelayUrlForOtherUser(reachableRelayUrls);
+        return ref.read(relayProvider(chosenRelayUrl, anonymous: actionSource.anonymous).future);
 
       case ActionSourceIndexers():
-        final indexers = await ref.read(currentUserIndexersProvider.future);
-        if (indexers == null) {
+        final indexerUrls = await ref.read(currentUserIndexersProvider.future);
+        if (indexerUrls == null) {
           throw UserIndexersNotFoundException();
         }
 
-        final relays = _indexersAvoidingDislikedUrls(indexers, dislikedUrls);
+        final filteredIndexerUrls = _filterOutDislikedRelayUrls(indexerUrls, dislikedUrls);
 
-        final lastUsedRelays = await _getLastUsedRelay(
-          relays,
-          dislikedUrls,
-          actionSource.anonymous,
-        );
-        if (lastUsedRelays != null) return lastUsedRelays;
-
-        final randomRelay = relays.random;
-        if (randomRelay == null) {
-          throw FailedToPickUserRelay();
+        if (filteredIndexerUrls.isEmpty) {
+          throw FailedToPickUserRelay('All indexer relays are disliked.');
         }
 
-        return ref.read(relayProvider(randomRelay, anonymous: actionSource.anonymous).future);
+        final chosenIndexerUrl =
+            _getFirstActiveRelayUrl(filteredIndexerUrls) ?? filteredIndexerUrls.random!;
+        return ref.read(relayProvider(chosenIndexerUrl, anonymous: actionSource.anonymous).future);
 
       case ActionSourceRelayUrl():
-        final relay = actionSource.url;
-
-        final lastUsedRelays = await _getLastUsedRelay(
-          [relay],
-          dislikedUrls,
-          actionSource.anonymous,
-        );
-        if (lastUsedRelays != null) return lastUsedRelays;
-
-        return ref.read(relayProvider(relay, anonymous: actionSource.anonymous).future);
+        return ref.read(relayProvider(actionSource.url, anonymous: actionSource.anonymous).future);
     }
-  }
-
-  Future<IonConnectRelay?> _getLastUsedRelay(
-    List<String> userRelays,
-    DislikedRelayUrlsCollection dislikedUrls,
-    bool anonymous,
-  ) async {
-    final activeRelaysSet = ref.read(activeRelaysProvider);
-    if (activeRelaysSet.isEmpty) return null;
-
-    final availableRelays = userRelays
-        .where(
-          (relayUrl) => activeRelaysSet.contains(relayUrl) && !dislikedUrls.contains(relayUrl),
-        )
-        .toList();
-
-    if (availableRelays.isEmpty) return null;
-
-    return ref.read(relayProvider(availableRelays.first, anonymous: anonymous).future);
   }
 
   Future<UserRelaysEntity> _getCurrentUserRankedRelays() async {
@@ -184,58 +145,66 @@ class RelayPicker extends _$RelayPicker {
     return relays;
   }
 
-  Future<UserRelaysEntity> _getCurrentUserRawRelays() async {
-    final relays = await ref.read(currentUserRelaysProvider.future);
-    if (relays == null || relays.urls.isEmpty) {
-      throw UserRelaysNotFoundException();
+  Future<UserRelaysEntity> _getCurrentUserReachableRelays() async {
+    final pubkey = ref.read(currentPubkeySelectorProvider);
+    if (pubkey == null) {
+      throw UserMasterPubkeyNotFoundException();
     }
-    return relays;
+    return _getUserReachableRelays(pubkey);
   }
 
-  Future<UserRelaysEntity> _getUserRawRelays(String pubkey) async {
-    final relays = await ref.read(userRelaysManagerProvider.notifier).fetch([pubkey]);
+  Future<UserRelaysEntity> _getUserReachableRelays(String pubkey) async {
+    final relays =
+        await ref.read(userRelaysManagerProvider.notifier).fetchReachableRelays([pubkey]);
     if (relays.isEmpty) {
       throw UserRelaysNotFoundException(pubkey);
     }
     return relays.first;
   }
 
-  List<UserRelay> _userRelaysAvoidingDislikedUrls(
-    List<UserRelay> relays,
+  /// Filters provided user relay urls by excluding those that are disliked.
+  ///
+  /// This is a mechanism for retry on another relay if something happened on a chosen one.
+  /// For example, if an error happened during read / write operation, on retry, we should try another relay.
+  List<String> _filterOutDislikedRelayUrls(
+    List<String> relayUrls,
     DislikedRelayUrlsCollection dislikedRelaysUrls,
   ) {
-    final urls = relays.where((relay) => !dislikedRelaysUrls.contains(relay.url)).toList();
-    if (urls.isEmpty) return relays;
-    return urls;
+    return relayUrls.toSet().difference(dislikedRelaysUrls.urls).toList();
   }
 
-  List<String> _indexersAvoidingDislikedUrls(
-    List<String> indexers,
-    DislikedRelayUrlsCollection dislikedUrls,
-  ) {
-    var urls = indexers.where((indexer) => !dislikedUrls.contains(indexer)).toList();
-    if (urls.isEmpty) {
-      urls = indexers;
-    }
-    return urls;
+  /// Returns the first found active relay url for the given relay url list.
+  ///
+  /// This is a mechanism to reuse already established connections.
+  /// Active relay is a relay that is currently connected and available for use.
+  String? _getFirstActiveRelayUrl(List<String> userRelayUrls) {
+    final activeRelaysSet = ref.read(activeRelaysProvider);
+    if (activeRelaysSet.isEmpty) return null;
+
+    return userRelayUrls.firstWhereOrNull(activeRelaysSet.contains);
   }
 
-  Future<IonConnectRelay> _selectRelayForOtherUser(List<String> urls, bool anonymous) async {
-    if (urls.length == 1) {
-      return ref.read(relayProvider(urls.first, anonymous: anonymous).future);
+  /// Selects a relay url that might be used to fetch other user's content
+  /// based on the current user's ranked relevant relays.
+  Future<String> _selectRelayUrlForOtherUser(List<String> userRelayUrls) async {
+    if (userRelayUrls.length == 1) return userRelayUrls.first;
+
+    final rankedRelevantCurrentUserRelaysUrls =
+        await ref.read(rankedRelevantCurrentUserRelaysUrlsProvider.future);
+
+    final optimalUserRelayUrl =
+        rankedRelevantCurrentUserRelaysUrls.firstWhereOrNull(userRelayUrls.contains);
+
+    if (optimalUserRelayUrl != null) {
+      return optimalUserRelayUrl;
     }
 
-    final relevantRelays = await ref.read(rankedRelevantCurrentUserRelaysUrlsProvider.future);
-    final commonRelays = relevantRelays.where((url) => urls.contains(url)).toList();
-    if (relevantRelays.isEmpty || commonRelays.isEmpty) {
-      final randomRelayUrl = urls.random;
-      if (randomRelayUrl == null) {
-        throw FailedToPickUserRelay();
-      }
-      return ref.read(relayProvider(randomRelayUrl, anonymous: anonymous).future);
+    final randomUserRelayUrl = userRelayUrls.random;
+    if (randomUserRelayUrl == null) {
+      throw FailedToPickUserRelay();
     }
 
-    return ref.read(relayProvider(commonRelays.first, anonymous: anonymous).future);
+    return randomUserRelayUrl;
   }
 
   List<UserRelay> _filterWriteRelays(UserRelaysEntity relayEntity) {

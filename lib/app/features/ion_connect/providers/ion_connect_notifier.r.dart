@@ -48,26 +48,30 @@ class IonConnectNotifier extends _$IonConnectNotifier {
     List<EventMessage> events, {
     ActionSource actionSource = const ActionSourceCurrentUser(),
     bool cache = true,
-    IonConnectRelay? relay,
   }) async {
     _warnSendIssues(events);
 
     final dislikedRelaysUrls = <String>{};
 
+    IonConnectRelay? triedRelay;
+
     return withRetry(
       ({error}) async {
-        relay = await ref.read(relayPickerProvider.notifier).getActionSourceRelay(
+        triedRelay = null;
+        final relay = await ref.read(relayPickerProvider.notifier).getActionSourceRelay(
               actionSource,
               actionType: ActionType.write,
               dislikedUrls: DislikedRelayUrlsCollection(dislikedRelaysUrls),
             );
-        Logger.log('[RELAY] ${relay?.url} is chosen for sending events, $dislikedRelaysUrls');
+        triedRelay = relay;
+
+        Logger.log('[RELAY] ${relay.url} is chosen for sending events, $dislikedRelaysUrls');
 
         await ref
-            .read(relayAuthProvider(relay!))
+            .read(relayAuthProvider(relay))
             .handleRelayAuthOnAction(actionSource: actionSource, error: error);
 
-        await relay!.sendEvents(events).timeout(
+        await relay.sendEvents(events).timeout(
               _defaultTimeout,
               onTimeout: () => throw TimeoutException(
                 'Sending events timed out after ${_defaultTimeout.inSeconds} seconds',
@@ -81,19 +85,18 @@ class IonConnectNotifier extends _$IonConnectNotifier {
         return null;
       },
       retryWhen: (error) {
-        final retry = error is RelayRequestFailedException ||
-            RelayAuthService.isRelayAuthError(error) ||
-            (error is RelayUnreachableException && !dislikedRelaysUrls.contains(error.relayUrl)) ||
-            UserRelaysManager.isRelayReadOnlyError(error);
-        Logger.log('[RELAY] Got error $error, retry: $retry');
-        return retry;
+        // Retry should not be attempted if no relay is selected (i.e., no relays are available for the specified action)
+        return triedRelay != null;
       },
       onRetry: (error) async {
-        if (error is RelayUnreachableException) {
-          Logger.log('[RELAY] ${error.relayUrl} Adding to the list of unreachable relays');
-          dislikedRelaysUrls.add(error.relayUrl);
-        } else if (UserRelaysManager.isRelayReadOnlyError(error)) {
-          await ref.read(userRelaysManagerProvider.notifier).handleCachedReadOnlyRelay(relay!.url);
+        if (triedRelay case final IonConnectRelay relay
+            when !RelayAuthService.isRelayAuthError(error)) {
+          Logger.error(error ?? '', message: '[RELAY] Got error $error');
+          Logger.log('[RELAY] ${relay.url} Adding to the list of disliked relays');
+          dislikedRelaysUrls.add(relay.url);
+          if (UserRelaysManager.isRelayReadOnlyError(error)) {
+            await ref.read(userRelaysManagerProvider.notifier).handleCachedReadOnlyRelay(relay.url);
+          }
         }
       },
     );
@@ -104,7 +107,6 @@ class IonConnectNotifier extends _$IonConnectNotifier {
     ActionSource actionSource = const ActionSourceCurrentUser(),
     List<EventsMetadataBuilder> metadataBuilders = const [],
     bool cache = true,
-    IonConnectRelay? relay,
   }) async {
     final eventsToSend = [...events];
     if (metadataBuilders.isNotEmpty) {
@@ -114,7 +116,7 @@ class IonConnectNotifier extends _$IonConnectNotifier {
       );
       eventsToSend.addAll(metadataEvents);
     }
-    return _sendEvents(eventsToSend, actionSource: actionSource, cache: cache, relay: relay);
+    return _sendEvents(eventsToSend, actionSource: actionSource, cache: cache);
   }
 
   Future<IonConnectEntity?> sendEvent(
@@ -122,12 +124,10 @@ class IonConnectNotifier extends _$IonConnectNotifier {
     ActionSource actionSource = const ActionSourceCurrentUser(),
     List<EventsMetadataBuilder> metadataBuilders = const [],
     bool cache = true,
-    IonConnectRelay? relay,
   }) async {
     final result = await sendEvents(
       [event],
       cache: cache,
-      relay: relay,
       actionSource: actionSource,
       metadataBuilders: metadataBuilders,
     );
@@ -173,11 +173,12 @@ class IonConnectNotifier extends _$IonConnectNotifier {
     VoidCallback? onEose,
   }) async* {
     final dislikedRelaysUrls = <String>{};
-    IonConnectRelay? relay;
+    IonConnectRelay? triedRelay;
 
     yield* withRetryStream(
       ({error}) async* {
-        relay = subscriptionBuilder != null
+        triedRelay = null;
+        final relay = subscriptionBuilder != null
             ? await ref.read(
                 longLivingSubscriptionRelayProvider(
                   actionSource,
@@ -189,15 +190,17 @@ class IonConnectNotifier extends _$IonConnectNotifier {
                   actionType: ActionType.read,
                   dislikedUrls: DislikedRelayUrlsCollection(dislikedRelaysUrls),
                 );
-        Logger.log('[RELAY] ${relay?.url} is chosen for reading events, $dislikedRelaysUrls');
+        triedRelay = relay;
+
+        Logger.log('[RELAY] ${relay.url} is chosen for reading events, $dislikedRelaysUrls');
 
         await ref
-            .read(relayAuthProvider(relay!))
+            .read(relayAuthProvider(relay))
             .handleRelayAuthOnAction(actionSource: actionSource, error: error);
 
         final events = subscriptionBuilder != null
-            ? subscriptionBuilder(requestMessage, relay!)
-            : ion.requestEvents(requestMessage, relay!);
+            ? subscriptionBuilder(requestMessage, relay)
+            : ion.requestEvents(requestMessage, relay);
 
         await for (final event in events) {
           // Note: The ion.requestEvents method automatically handles unsubscription for certain messages.
@@ -205,7 +208,7 @@ class IonConnectNotifier extends _$IonConnectNotifier {
           // then additional unsubscription logic should be implemented here.
           if (event is NoticeMessage || event is ClosedMessage) {
             throw RelayRequestFailedException(
-              relayUrl: relay!.url,
+              relayUrl: relay.url,
               event: event,
             );
           } else if (event is EventMessage) {
@@ -216,16 +219,15 @@ class IonConnectNotifier extends _$IonConnectNotifier {
         }
       },
       retryWhen: (error) {
-        final retry = error is RelayRequestFailedException ||
-            RelayAuthService.isRelayAuthError(error) ||
-            (error is RelayUnreachableException && !dislikedRelaysUrls.contains(error.relayUrl));
-        Logger.log('[RELAY] Got error $error, retry: $retry');
-        return retry;
+        // Retry should not be attempted if no relay is selected (i.e., no relays are available for the specified action)
+        return triedRelay != null;
       },
       onRetry: (error) {
-        if (error is RelayUnreachableException) {
-          Logger.log('[RELAY] ${error.relayUrl} Adding to the list of unreachable relays');
-          dislikedRelaysUrls.add(error.relayUrl);
+        if (triedRelay case final IonConnectRelay relay
+            when !RelayAuthService.isRelayAuthError(error)) {
+          Logger.error(error ?? '', message: '[RELAY] Got error $error');
+          Logger.log('[RELAY] ${relay.url} Adding to the list of disliked relays');
+          dislikedRelaysUrls.add(relay.url);
         }
       },
     );
