@@ -39,6 +39,7 @@ class VideoControllerParams {
     this.uniqueId = '',
     this.autoPlay = false,
     this.looping = false,
+    this.onlyOneShouldPlay = false,
   });
 
   final String sourcePath;
@@ -47,6 +48,7 @@ class VideoControllerParams {
       uniqueId; // an optional uniqueId parameter which should be used when needed independent controllers for the same sourcePath
   final bool autoPlay;
   final bool looping;
+  final bool onlyOneShouldPlay;
 
   @override
   bool operator ==(Object other) =>
@@ -61,6 +63,8 @@ class VideoControllerParams {
 
 @riverpod
 class VideoController extends _$VideoController {
+  /// Tracks the currently playing controller to enforce one-at-a-time playback.
+  static VideoPlayerController? _currentlyPlayingController;
   VideoPlayerController? _activeController;
 
   @override
@@ -141,6 +145,18 @@ class VideoController extends _$VideoController {
             );
           }
         });
+
+        if (params.onlyOneShouldPlay) {
+          controller.addListener(() {
+            if (controller.value.isPlaying) {
+              final prev = VideoController._currentlyPlayingController;
+              if (prev != null && prev != controller) {
+                prev.pause();
+              }
+              VideoController._currentlyPlayingController = controller;
+            }
+          });
+        }
       }
       return controller;
     } on FailedToInitVideoPlayer catch (error) {
