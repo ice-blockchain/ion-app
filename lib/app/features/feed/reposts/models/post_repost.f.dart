@@ -20,7 +20,7 @@ class PostRepost with _$PostRepost implements OptimisticModel {
 
   @override
   String get optimisticId => eventReference.toString();
-  
+
   /// Returns the total count of reposts and quotes.
   /// Ensures minimum count of 1 if the current user has reposted.
   int get totalRepostsCount {

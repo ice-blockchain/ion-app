@@ -30,7 +30,6 @@ void main() {
     );
 
     test('returns true when optimistic state shows repostedByMe true', () {
-      // Test that when optimistic state has repostedByMe = true, isReposted returns true
       const optimisticPostRepost = PostRepost(
         eventReference: eventRef,
         repostsCount: 1,
@@ -42,7 +41,6 @@ void main() {
       final container = createContainer(
         overrides: [
           currentPubkeySelectorProvider.overrideWith(() => FakeCurrentPubkeySelector('testPubkey')),
-          // Override findRepostInCacheProvider to return optimistic state
           findRepostInCacheProvider(eventRef).overrideWith((ref) => optimisticPostRepost),
         ],
       );
@@ -52,7 +50,6 @@ void main() {
     });
 
     test('returns false when optimistic state shows repostedByMe false', () {
-      // Test that when optimistic state has repostedByMe = false, isReposted returns false
       const optimisticPostRepost = PostRepost(
         eventReference: eventRef,
         repostsCount: 0,
@@ -63,7 +60,6 @@ void main() {
       final container = createContainer(
         overrides: [
           currentPubkeySelectorProvider.overrideWith(() => FakeCurrentPubkeySelector('testPubkey')),
-          // Override findRepostInCacheProvider to return optimistic state
           findRepostInCacheProvider(eventRef).overrideWith((ref) => optimisticPostRepost),
         ],
       );
@@ -97,7 +93,6 @@ void main() {
         overrides: [
           currentPubkeySelectorProvider.overrideWith(() => FakeCurrentPubkeySelector('testPubkey')),
           findRepostInCacheProvider(eventRef).overrideWith((ref) {
-            // This can happen after rollback - cached object exists but repostedByMe is false
             return const PostRepost(
               eventReference: eventRef,
               repostsCount: 0,
@@ -127,30 +122,22 @@ void main() {
     });
 
     test('crucial test - checks repostedByMe field not just null', () {
-      // This test verifies the fix we made to isRepostedProvider
-      // Before: it was checking cached != null
-      // After: it checks cached?.repostedByMe ?? false
-      
       final container = createContainer(
         overrides: [
           currentPubkeySelectorProvider.overrideWith(() => FakeCurrentPubkeySelector('testPubkey')),
           findRepostInCacheProvider(eventRef).overrideWith((ref) {
-            // Return a PostRepost object that exists but has repostedByMe = false
-            // This simulates the case after rollback when optimistic state was reverted
             return const PostRepost(
               eventReference: eventRef,
-              repostsCount: 10, // High count from cache
+              repostsCount: 10,
               quotesCount: 0,
-              repostedByMe: false, // But not reposted by current user
+              repostedByMe: false,
             );
           }),
         ],
       );
 
       final result = container.read(isRepostedProvider(eventRef));
-      
-      // This is the key assertion - even though cached object exists,
-      // isReposted should return false because repostedByMe is false
+
       expect(result, false);
     });
   });
@@ -177,7 +164,6 @@ void main() {
         myRepostReference: myRepostRef,
       );
 
-      // This test verifies our fix for the visual inconsistency
       expect(postRepost.totalRepostsCount, 1);
       expect(postRepost.repostedByMe, true);
     });

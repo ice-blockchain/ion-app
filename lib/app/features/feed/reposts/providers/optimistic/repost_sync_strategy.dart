@@ -26,8 +26,6 @@ class RepostSyncStrategy implements SyncStrategy<PostRepost> {
         final createdRepostReference = await createRepost(optimistic.eventReference);
         invalidateCounterCache(optimistic.eventReference);
 
-        // Return optimistic state with the created reference
-        // The counts should remain as they were set optimistically
         final result = optimistic.copyWith(
           myRepostReference: createdRepostReference,
         );
@@ -48,17 +46,13 @@ class RepostSyncStrategy implements SyncStrategy<PostRepost> {
         await deleteRepost(previous.myRepostReference!);
         invalidateCounterCache(optimistic.eventReference);
 
-        // Return optimistic state with null reference
-        // The counts should remain as they were set optimistically
         final result = optimistic.copyWith(
           myRepostReference: null,
         );
 
         // Additional cache clearing if backend counter is 0
         // This is necessary because backend doesn't send events when counter is 0
-        // Note: totalRepostsCount now returns minimum 1 if repostedByMe is true
         if (result.repostsCount == 0 && result.quotesCount == 0) {
-          // Force invalidate cache again to ensure it's cleared
           invalidateCounterCache(result.eventReference);
         }
 
@@ -74,7 +68,6 @@ class RepostSyncStrategy implements SyncStrategy<PostRepost> {
             myRepostReference: null,
           );
 
-          // Note: totalRepostsCount now returns minimum 1 if repostedByMe is true
           if (result.repostsCount == 0 && result.quotesCount == 0) {
             invalidateCounterCache(result.eventReference);
           }

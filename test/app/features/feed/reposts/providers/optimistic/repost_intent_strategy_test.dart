@@ -237,7 +237,6 @@ void main() {
       expect(repostSent, isFalse);
       expect(deletionSent, isTrue);
       expect(deletedRepostRef, repostRef);
-      // Cache is invalidated twice when counter reaches 0
       expect(invalidatedCacheRefs, [ref, ref]);
     });
 
@@ -365,7 +364,6 @@ void main() {
 
       await strategy.send(prev, opt);
 
-      // Cache is invalidated twice when counter reaches 0
       expect(invalidatedCacheRefs, [ref, ref]);
       expect(deletionCallCount, 1);
     });
@@ -397,7 +395,6 @@ void main() {
 
       await strategy.send(prev, opt);
 
-      // Should be called twice: once normally, once for zero counter
       expect(invalidateCacheCallCount, 2);
       expect(invalidatedCacheRefs, [ref, ref]);
     });
@@ -429,7 +426,6 @@ void main() {
 
       await strategy.send(prev, opt);
 
-      // Should be called only once when counter is not 0
       expect(invalidateCacheCallCount, 1);
       expect(invalidatedCacheRefs, [ref]);
     });
@@ -460,7 +456,6 @@ void main() {
 
       await strategy.send(prev, opt);
 
-      // Should be called only once when totalRepostsCount > 0
       expect(invalidateCacheCallCount, 1);
     });
   });

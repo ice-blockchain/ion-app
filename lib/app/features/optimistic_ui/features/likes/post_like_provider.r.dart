@@ -57,8 +57,7 @@ List<PostLike> loadInitialLikesFromCache(Ref ref) {
 OptimisticService<PostLike> postLikeService(Ref ref) {
   final manager = ref.watch(postLikeManagerProvider);
   final loadInitialLikes = ref.watch(loadInitialLikesFromCacheProvider);
-  final service = OptimisticService<PostLike>(manager: manager)
-    ..initialize(loadInitialLikes);
+  final service = OptimisticService<PostLike>(manager: manager)..initialize(loadInitialLikes);
 
   return service;
 }
