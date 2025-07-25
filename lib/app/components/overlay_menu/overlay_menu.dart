@@ -60,13 +60,12 @@ class OverlayMenu extends HookWidget {
 
         final dir = Directionality.of(context);
         final globalOffset = renderBox.localToGlobal(Offset.zero);
-        final screenWidth = MediaQuery.of(context).size.width;
-        final screenHeight = MediaQuery.of(context).size.height;
-        final shouldAlignStart = (globalOffset.dx + menuWidth.value) < screenWidth;
-        final shouldAlignBelow = (globalOffset.dy + menuHeight.value) < screenHeight;
+        final screenSize = MediaQuery.sizeOf(context);
+        final shouldAlignStart = (globalOffset.dx + menuWidth.value) < screenSize.width;
+        final shouldAlignBelow = (globalOffset.dy + menuHeight.value) < screenSize.height;
         final offset = Offset(
           shouldAlignStart ? 0 : renderBox.size.width,
-          shouldAlignBelow ? renderBox.size.height + 6.0.s : -(renderBox.size.height + 6.0.s),
+          shouldAlignBelow ? renderBox.size.height + 6.0.s : -6.0.s,
         );
         final anchorAlignment = (shouldAlignBelow
                 ? (shouldAlignStart ? AlignmentDirectional.topStart : AlignmentDirectional.topEnd)

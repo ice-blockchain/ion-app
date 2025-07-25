@@ -5,7 +5,6 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/core/providers/mute_provider.r.dart';
 import 'package:ion/app/features/feed/data/models/entities/modifiable_post_data.f.dart';
-import 'package:ion/app/features/feed/views/components/overlay_menu/user_info_menu.dart';
 import 'package:ion/app/features/feed/views/components/user_info/user_info.dart';
 import 'package:ion/app/features/ion_connect/model/ion_connect_entity.dart';
 import 'package:ion/app/features/video/views/components/video_button.dart';
@@ -68,22 +67,15 @@ class VideoPostInfo extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.end,
             children: [
-              muteButton,
-              SizedBox(height: 12.0.s),
               UserInfo(
                 pubkey: videoPost.masterPubkey,
                 createdAt: publishedAt,
                 shadow: shadow,
-                trailing: UserInfoMenu(
-                  padding: EdgeInsetsDirectional.only(end: 6.0.s),
-                  eventReference: videoPost.toEventReference(),
-                  iconColor: context.theme.appColors.secondaryBackground,
-                  showShadow: true,
-                ),
                 textStyle: TextStyle(
                   color: context.theme.appColors.secondaryBackground,
                   shadows: [shadow],
                 ),
+                trailing: muteButton,
               ),
               Padding(
                 padding: EdgeInsetsDirectional.only(
