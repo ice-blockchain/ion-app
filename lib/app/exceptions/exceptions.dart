@@ -630,6 +630,7 @@ class WalletNotFoundException extends IONException {
         );
 }
 
+<<<<<<< HEAD
 class FailedToInitVideoPlayer extends IONException {
   FailedToInitVideoPlayer({
     required this.dataSourceType,
@@ -642,4 +643,8 @@ class FailedToInitVideoPlayer extends IONException {
 
   final DataSourceType dataSourceType;
   final String dataSource;
+=======
+class AllRelaysAreDisliked extends IONException {
+  AllRelaysAreDisliked() : super(10124, 'All provided relays are disliked');
+>>>>>>> f15905000 (refactor: getActionSourceRelay)
 }

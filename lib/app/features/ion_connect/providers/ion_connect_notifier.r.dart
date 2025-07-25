@@ -57,6 +57,7 @@ class IonConnectNotifier extends _$IonConnectNotifier {
 
     return withRetry(
       ({error}) async {
+        triedRelay = null;
         final relay = await ref.read(relayPickerProvider.notifier).getActionSourceRelay(
               actionSource,
               actionType: ActionType.write,
@@ -176,6 +177,7 @@ class IonConnectNotifier extends _$IonConnectNotifier {
 
     yield* withRetryStream(
       ({error}) async* {
+        triedRelay = null;
         final relay = subscriptionBuilder != null
             ? await ref.read(
                 longLivingSubscriptionRelayProvider(
@@ -188,7 +190,6 @@ class IonConnectNotifier extends _$IonConnectNotifier {
                   actionType: ActionType.read,
                   dislikedUrls: DislikedRelayUrlsCollection(dislikedRelaysUrls),
                 );
-
         triedRelay = relay;
 
         Logger.log('[RELAY] ${relay.url} is chosen for reading events, $dislikedRelaysUrls');
