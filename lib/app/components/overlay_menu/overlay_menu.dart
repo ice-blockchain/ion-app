@@ -23,6 +23,10 @@ class OverlayMenu extends HookWidget {
 
   @override
   Widget build(BuildContext context) {
+    final menuKey = useMemoized(GlobalKey.new, []);
+    final menuWidth = useState<double>(0);
+    final menuHeight = useState<double>(0);
+
     final overlayPortalController = useMemoized(OverlayPortalController.new);
     final followLink = useMemoized(LayerLink.new);
     final animationController = useAnimationController(duration: const Duration(milliseconds: 400));
@@ -56,14 +60,19 @@ class OverlayMenu extends HookWidget {
 
         final dir = Directionality.of(context);
         final globalOffset = renderBox.localToGlobal(Offset.zero);
-        final maxMenuWidth = 300.0.s;
-        final shouldAlignStart = globalOffset.dx + renderBox.size.width < maxMenuWidth;
-        final offset = shouldAlignStart
-            ? Offset(0, renderBox.size.height + 6.0.s)
-            : Offset(renderBox.size.width, renderBox.size.height + 6.0.s);
-        final anchorAlignment =
-            (shouldAlignStart ? AlignmentDirectional.topStart : AlignmentDirectional.topEnd)
-                .resolve(dir);
+        final screenSize = MediaQuery.sizeOf(context);
+        final shouldAlignStart = (globalOffset.dx + menuWidth.value) < screenSize.width;
+        final shouldAlignBelow = (globalOffset.dy + menuHeight.value) < screenSize.height;
+        final offset = Offset(
+          shouldAlignStart ? 0 : renderBox.size.width,
+          shouldAlignBelow ? renderBox.size.height + 6.0.s : -6.0.s,
+        );
+        final anchorAlignment = (shouldAlignBelow
+                ? (shouldAlignStart ? AlignmentDirectional.topStart : AlignmentDirectional.topEnd)
+                : (shouldAlignStart
+                    ? AlignmentDirectional.bottomStart
+                    : AlignmentDirectional.bottomEnd))
+            .resolve(dir);
 
         return GestureDetector(
           behavior: HitTestBehavior.translucent,
@@ -78,7 +87,26 @@ class OverlayMenu extends HookWidget {
                 child: ScaleTransition(
                   alignment: anchorAlignment,
                   scale: scaleAnimation,
-                  child: IntrinsicWidth(child: menuBuilder(hideMenu)),
+                  child: Builder(
+                    builder: (ctx) {
+                      WidgetsBinding.instance.addPostFrameCallback((_) {
+                        final kb = menuKey.currentContext;
+                        if (kb != null) {
+                          final size = (kb.findRenderObject()! as RenderBox).size;
+                          if (size.width != menuWidth.value) {
+                            menuWidth.value = size.width;
+                            menuHeight.value = size.height;
+                          }
+                        }
+                      });
+                      return IntrinsicHeight(
+                        child: IntrinsicWidth(
+                          key: menuKey,
+                          child: menuBuilder(hideMenu),
+                        ),
+                      );
+                    },
+                  ),
                 ),
               ),
             ],
