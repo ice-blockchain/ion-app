@@ -154,7 +154,7 @@ class ConversationDao extends DatabaseAccessor<ChatDatabase> with _$Conversation
   /// Get the id of the conversation with the given receiver master pubkey
   /// Only searches for non-deleted conversations of type [ConversationType.oneToOne]
   ///
-  Future<String?> getExistOneToOneConversationId(List<String> participantsMasterPubkeys) async {
+  Future<String?> getExistingConversationId(List<String> participantsMasterPubkeys) async {
     final query = select(conversationTable).join([
       innerJoin(
         conversationMessageTable,
@@ -181,6 +181,15 @@ class ConversationDao extends DatabaseAccessor<ChatDatabase> with _$Conversation
     }
 
     return row.readTable(conversationTable).id;
+  }
+
+  Future<bool> checkIfConversationExists(String conversationId) async {
+    final query = select(conversationTable)
+      ..where((t) => t.id.equals(conversationId))
+      ..limit(1);
+
+    final row = await query.getSingleOrNull();
+    return row != null;
   }
 
   /// Set the archived status of a conversation
@@ -241,6 +250,59 @@ class ConversationDao extends DatabaseAccessor<ChatDatabase> with _$Conversation
     }
 
     return [];
+  }
+
+  Future<bool> checkAnotherUserDeletedConversation({
+    required String masterPubkey,
+    required String conversationId,
+  }) async {
+    // Check if conversation is already marked as deleted in conversationTable
+    final conversation = await (select(conversationTable)
+          ..where((t) => t.id.equals(conversationId))
+          ..where((t) => t.isDeleted.equals(true)))
+        .getSingleOrNull();
+
+    if (conversation != null) {
+      return true;
+    }
+
+    // Check for kind 5 (deletion request) events from the specified masterPubkey
+    final kind5Events = await (select(eventMessageTable)
+          ..where((t) => t.kind.equals(5))
+          ..where((t) => t.masterPubkey.equals(masterPubkey)))
+        .get();
+
+    for (final event in kind5Events) {
+      final eventMessage = event.toEventMessage();
+      // Assuming deletion request events have tags in the format [[ConversationIdentifier.tagName, conversationId], ...]
+      final hasConversationTag = eventMessage.tags.any(
+        (tag) =>
+            tag.isNotEmpty &&
+            tag[0] == ConversationIdentifier.tagName &&
+            tag.length > 1 &&
+            tag[1] == conversationId,
+      );
+      if (hasConversationTag) {
+        // Check if there are newer messages for this conversation
+        final latestMessage = await (select(eventMessageTable).join([
+          innerJoin(
+            conversationMessageTable,
+            conversationMessageTable.messageEventReference
+                .equalsExp(eventMessageTable.eventReference),
+          ),
+        ])
+              ..where(conversationMessageTable.conversationId.equals(conversationId))
+              ..where(eventMessageTable.createdAt.isBiggerThanValue(eventMessage.createdAt))
+              ..limit(1))
+            .getSingleOrNull();
+
+        if (latestMessage == null) {
+          return true;
+        }
+      }
+    }
+
+    return false;
   }
 
   Future<void> removeConversations({

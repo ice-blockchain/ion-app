@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/components/screen_offset/screen_side_offset.dart';
 import 'package:ion/app/extensions/extensions.dart';
+import 'package:ion/app/features/chat/providers/user_chat_privacy_provider.r.dart';
 import 'package:ion/app/features/user/model/user_metadata.f.dart';
 import 'package:ion/app/features/user/pages/user_picker_sheet/components/selectable_user_list_item.dart';
 import 'package:ion/app/features/user/providers/follow_list_provider.r.dart';
@@ -14,12 +15,14 @@ class FollowingUsers extends ConsumerWidget {
     required this.onUserSelected,
     this.selectedPubkeys = const [],
     this.selectable = false,
+    this.controlChatPrivacy = false,
     super.key,
   });
 
   final void Function(UserMetadataEntity user) onUserSelected;
   final List<String> selectedPubkeys;
   final bool selectable;
+  final bool controlChatPrivacy;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -32,12 +35,17 @@ class FollowingUsers extends ConsumerWidget {
 
         return SliverList.builder(
           itemBuilder: (context, index) {
+            final masterPubkey = pubkeys.elementAt(index);
+            final canSendMessage = controlChatPrivacy &&
+                (ref.watch(canSendMessageProvider(masterPubkey)).valueOrNull ?? false);
+
             return SelectableUserListItem(
+              selectable: selectable,
               pubkey: pubkeys[index],
               masterPubkey: pubkeys[index],
               onUserSelected: onUserSelected,
               selectedPubkeys: selectedPubkeys,
-              selectable: selectable,
+              canSendMessage: canSendMessage,
             );
           },
           itemCount: pubkeys.length,

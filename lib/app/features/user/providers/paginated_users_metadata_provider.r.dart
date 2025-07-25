@@ -37,7 +37,10 @@ class PaginatedUsersMetadata extends _$PaginatedUsersMetadata {
   int _offset = 0;
 
   @override
-  Future<PaginatedUsersMetadataData> build(UserRelaysInfoFetcher fetcher) async {
+  Future<PaginatedUsersMetadataData> build(
+    UserRelaysInfoFetcher fetcher, {
+    Duration? expirationDuration,
+  }) async {
     _fetcher = fetcher;
     if (!_initialized) {
       await _init();
@@ -69,6 +72,7 @@ class PaginatedUsersMetadata extends _$PaginatedUsersMetadata {
       final masterPubkeys = userRelaysInfo.map((e) => e.masterPubKey).toSet();
       final usersMetadataWithDependencies =
           await ref.read(ionConnectEntitiesManagerProvider.notifier).fetch(
+                expirationDuration: expirationDuration,
                 eventReferences: masterPubkeys
                     .map(
                       (masterPubkey) => ReplaceableEventReference(

@@ -32,8 +32,6 @@ class PrivacySettingsModal extends ConsumerWidget {
     final walletPrivacy = WalletAddressPrivacyOption.fromWalletsMap(metadata.data.wallets);
     final messagingPrivacy =
         UserVisibilityPrivacyOption.fromWhoCanSetting(metadata.data.whoCanMessageYou);
-    final invitingPrivacy =
-        UserVisibilityPrivacyOption.fromWhoCanSetting(metadata.data.whoCanInviteYouToGroups);
 
     return SheetContent(
       body: SingleChildScrollView(
@@ -69,13 +67,6 @@ class PrivacySettingsModal extends ConsumerWidget {
                       onSelected: (option) =>
                           _onMessagingPrivacyOptionSelected(ref, metadata, option),
                     ),
-                    SelectableOptionsGroup(
-                      title: context.i18n.privacy_group_who_can_invite_you_title,
-                      selected: [invitingPrivacy],
-                      options: UserVisibilityPrivacyOption.values,
-                      onSelected: (option) =>
-                          _onInvitingPrivacyOptionSelected(ref, metadata, option),
-                    ),
                   ],
                 ),
               ),
@@ -92,16 +83,6 @@ class PrivacySettingsModal extends ConsumerWidget {
     UserVisibilityPrivacyOption option,
   ) {
     final updatedMetadata = metadata.data.copyWith(whoCanMessageYou: option.toWhoCanSetting());
-    ref.read(updateUserMetadataNotifierProvider.notifier).publish(updatedMetadata);
-  }
-
-  void _onInvitingPrivacyOptionSelected(
-    WidgetRef ref,
-    UserMetadataEntity metadata,
-    UserVisibilityPrivacyOption option,
-  ) {
-    final updatedMetadata =
-        metadata.data.copyWith(whoCanInviteYouToGroups: option.toWhoCanSetting());
     ref.read(updateUserMetadataNotifierProvider.notifier).publish(updatedMetadata);
   }
 }

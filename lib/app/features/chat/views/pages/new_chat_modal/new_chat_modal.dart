@@ -7,6 +7,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/components/button/button.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/core/model/feature_flags.dart';
+import 'package:ion/app/features/core/providers/env_provider.r.dart';
 import 'package:ion/app/features/core/providers/feature_flags_provider.r.dart';
 import 'package:ion/app/features/user/model/user_metadata.f.dart';
 import 'package:ion/app/features/user/pages/user_picker_sheet/user_picker_sheet.dart';
@@ -34,9 +35,16 @@ class NewChatModal extends HookConsumerWidget {
     final hideCommunity =
         ref.watch(featureFlagsProvider.notifier).get(ChatFeatureFlag.hideCommunity);
 
+    final env = ref.read(envProvider.notifier);
+    final expirationDuration = Duration(
+      minutes: env.get<int>(EnvVariable.CHAT_PRIVACY_CACHE_MINUTES),
+    );
+
     return SheetContent(
       topPadding: 0,
       body: UserPickerSheet(
+        controlPrivacy: true,
+        expirationDuration: expirationDuration,
         navigationBar: NavigationAppBar.modal(
           showBackButton: false,
           title: Text(context.i18n.new_chat_modal_title),

@@ -14,10 +14,12 @@ class SearchUsers extends _$SearchUsers {
   @override
   FutureOr<({List<UserMetadataEntity>? users, bool hasMore})?> build({
     required String query,
+    Duration? expirationDuration,
   }) async {
     final masterPubkey = ref.watch(currentPubkeySelectorProvider);
-    final paginatedUsersMetadataData =
-        await ref.watch(paginatedUsersMetadataProvider(_fetcher).future);
+    final paginatedUsersMetadataData = await ref.watch(
+      paginatedUsersMetadataProvider(_fetcher, expirationDuration: expirationDuration).future,
+    );
     final blockedUsersMasterPubkeys = ref
             .watch(currentUserBlockListNotifierProvider)
             .valueOrNull
@@ -38,11 +40,17 @@ class SearchUsers extends _$SearchUsers {
   }
 
   Future<void> loadMore() async {
-    return ref.read(paginatedUsersMetadataProvider(_fetcher).notifier).loadMore();
+    return ref
+        .read(
+          paginatedUsersMetadataProvider(_fetcher, expirationDuration: expirationDuration).notifier,
+        )
+        .loadMore();
   }
 
   Future<void> refresh() async {
-    return ref.invalidate(paginatedUsersMetadataProvider(_fetcher));
+    return ref.invalidate(
+      paginatedUsersMetadataProvider(_fetcher, expirationDuration: expirationDuration),
+    );
   }
 
   Future<List<UserRelaysInfo>> _fetcher(

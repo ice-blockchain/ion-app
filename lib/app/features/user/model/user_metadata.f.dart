@@ -201,8 +201,7 @@ class UserDataEventMessageContent {
 
 enum WhoCanSetting {
   everyone,
-  follows,
-  friends;
+  follows;
 
   static WhoCanSetting? fromString(String? value) => value == null
       ? null

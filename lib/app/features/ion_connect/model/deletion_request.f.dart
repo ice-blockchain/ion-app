@@ -12,6 +12,7 @@ import 'package:ion/app/features/ion_connect/model/deletable_event.dart';
 import 'package:ion/app/features/ion_connect/model/event_reference.f.dart';
 import 'package:ion/app/features/ion_connect/model/event_serializable.dart';
 import 'package:ion/app/features/ion_connect/model/ion_connect_entity.dart';
+import 'package:ion/app/services/logger/logger.dart';
 
 part 'deletion_request.f.freezed.dart';
 
@@ -34,11 +35,15 @@ class DeletionRequestEntity with IonConnectEntity, ImmutableEntity, _$DeletionRe
       throw IncorrectEventKindException(eventMessage.id, kind: kind);
     }
 
+    if (eventMessage.sig == null) {
+      Logger.log('Event message ${eventMessage.id} does not have a signature');
+    }
+
     return DeletionRequestEntity(
       id: eventMessage.id,
       pubkey: eventMessage.pubkey,
       masterPubkey: eventMessage.masterPubkey,
-      signature: eventMessage.sig!,
+      signature: eventMessage.sig ?? '',
       createdAt: eventMessage.createdAt,
       data: DeletionRequest.fromEventMessage(eventMessage),
     );

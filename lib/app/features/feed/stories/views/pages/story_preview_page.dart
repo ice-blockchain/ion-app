@@ -3,7 +3,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:ion/app/components/list_item/list_item.dart';
 import 'package:ion/app/components/progress_bar/centered_loading_indicator.dart';
 import 'package:ion/app/components/screen_offset/screen_bottom_offset.dart';
 import 'package:ion/app/components/separated/separator.dart';
@@ -13,7 +12,6 @@ import 'package:ion/app/features/core/model/media_type.dart';
 import 'package:ion/app/features/feed/create_post/model/create_post_option.dart';
 import 'package:ion/app/features/feed/create_post/providers/create_post_notifier.m.dart';
 import 'package:ion/app/features/feed/data/models/entities/event_count_result_data.f.dart';
-import 'package:ion/app/features/feed/data/models/who_can_reply_settings_option.f.dart';
 import 'package:ion/app/features/feed/providers/selected_interests_notifier.r.dart';
 import 'package:ion/app/features/feed/providers/selected_who_can_reply_option_provider.r.dart';
 import 'package:ion/app/features/feed/stories/providers/current_user_story_provider.r.dart';
@@ -23,15 +21,12 @@ import 'package:ion/app/features/feed/stories/views/components/story_preview/act
 import 'package:ion/app/features/feed/stories/views/components/story_preview/media/post_screenshot_preview.dart';
 import 'package:ion/app/features/feed/stories/views/components/story_preview/media/story_image_preview.dart';
 import 'package:ion/app/features/feed/stories/views/components/story_preview/media/story_video_preview.dart';
-import 'package:ion/app/features/feed/views/pages/who_can_reply_settings_modal/who_can_reply_settings_modal.dart';
 import 'package:ion/app/features/ion_connect/model/event_reference.f.dart';
 import 'package:ion/app/features/ion_connect/providers/ion_connect_cache.r.dart';
 import 'package:ion/app/router/app_routes.gr.dart';
 import 'package:ion/app/router/components/navigation_app_bar/navigation_app_bar.dart';
-import 'package:ion/app/router/utils/show_simple_bottom_sheet.dart';
 import 'package:ion/app/services/compressors/image_compressor.r.dart';
 import 'package:ion/app/services/media_service/media_service.m.dart';
-import 'package:ion/generated/assets.gen.dart';
 
 class StoryPreviewPage extends HookConsumerWidget {
   const StoryPreviewPage({
@@ -91,28 +86,6 @@ class StoryPreviewPage extends HookConsumerWidget {
                       },
                     ),
                     SizedBox(height: 8.0.s),
-                    ListItem(
-                      title: Text(
-                        whoCanReply.getTitle(context),
-                        style: context.theme.appTextThemes.caption.copyWith(
-                          color: context.theme.appColors.primaryAccent,
-                        ),
-                      ),
-                      contentPadding: EdgeInsets.zero,
-                      backgroundColor: context.theme.appColors.secondaryBackground,
-                      leading: whoCanReply.getIcon(context),
-                      trailing: Assets.svg.iconArrowRight.icon(
-                        color: context.theme.appColors.primaryAccent,
-                        size: 16.s,
-                      ),
-                      constraints: BoxConstraints(minHeight: 40.0.s),
-                      onTap: () => showSimpleBottomSheet<void>(
-                        context: context,
-                        child: WhoCanReplySettingsModal(
-                          title: context.i18n.who_can_reply_settings_title_story,
-                        ),
-                      ),
-                    ),
                     Padding(
                       padding: EdgeInsets.symmetric(vertical: 7.s),
                       child: const HorizontalSeparator(),

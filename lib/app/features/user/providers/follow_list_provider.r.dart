@@ -49,10 +49,10 @@ bool isCurrentUserFollowingSelector(Ref ref, String pubkey) {
 }
 
 @riverpod
-bool isCurrentUserFollowed(Ref ref, String pubkey) {
+bool isCurrentUserFollowed(Ref ref, String pubkey, {bool cache = true}) {
   final currentPubkey = ref.watch(currentPubkeySelectorProvider);
   return ref.watch(
-    followListProvider(pubkey).select(
+    followListProvider(pubkey, cache: cache).select(
       (state) =>
           state.valueOrNull?.data.list.any((followee) => followee.pubkey == currentPubkey) ?? false,
     ),

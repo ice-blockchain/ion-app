@@ -5,6 +5,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/components/list_items_loading_state/list_items_loading_state.dart';
 import 'package:ion/app/components/nothing_is_found/nothing_is_found.dart';
 import 'package:ion/app/extensions/extensions.dart';
+import 'package:ion/app/features/chat/providers/user_chat_privacy_provider.r.dart';
 import 'package:ion/app/features/user/model/user_metadata.f.dart';
 import 'package:ion/app/features/user/pages/user_picker_sheet/components/selectable_user_list_item.dart';
 
@@ -13,6 +14,7 @@ class SearchedUsers extends ConsumerWidget {
     required this.users,
     required this.onUserSelected,
     this.selectable = false,
+    this.controlChatPrivacy = false,
     this.selectedPubkeys = const [],
     super.key,
   });
@@ -20,6 +22,7 @@ class SearchedUsers extends ConsumerWidget {
   final List<UserMetadataEntity>? users;
   final void Function(UserMetadataEntity user) onUserSelected;
   final bool selectable;
+  final bool controlChatPrivacy;
   final List<String> selectedPubkeys;
 
   @override
@@ -41,12 +44,16 @@ class SearchedUsers extends ConsumerWidget {
       itemCount: searchedUsers.length,
       itemBuilder: (BuildContext context, int index) {
         final user = searchedUsers.elementAt(index);
+        final canSendMessage = controlChatPrivacy &&
+            (ref.watch(canSendMessageProvider(user.masterPubkey)).valueOrNull ?? false);
+
         return SelectableUserListItem(
           pubkey: user.pubkey,
+          selectable: selectable,
+          canSendMessage: canSendMessage,
           masterPubkey: user.masterPubkey,
           onUserSelected: onUserSelected,
           selectedPubkeys: selectedPubkeys,
-          selectable: selectable,
         );
       },
     );

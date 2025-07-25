@@ -9,5 +9,10 @@ part 'exist_chat_conversation_id_provider.r.g.dart';
 @riverpod
 Future<String?> existChatConversationId(Ref ref, List<String> participantsMasterPubkeys) async {
   final sortedMasterPubkeys = List<String>.from(participantsMasterPubkeys)..sort();
-  return ref.watch(conversationDaoProvider).getExistOneToOneConversationId(sortedMasterPubkeys);
+  return ref.watch(conversationDaoProvider).getExistingConversationId(sortedMasterPubkeys);
+}
+
+@riverpod
+Future<bool> checkIfConversationExists(Ref ref, String conversationId) async {
+  return ref.watch(conversationDaoProvider).checkIfConversationExists(conversationId);
 }

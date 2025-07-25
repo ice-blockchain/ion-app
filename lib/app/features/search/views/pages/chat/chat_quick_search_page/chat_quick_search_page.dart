@@ -6,6 +6,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/components/screen_offset/screen_top_offset.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/core/model/feature_flags.dart';
+import 'package:ion/app/features/core/providers/env_provider.r.dart';
 import 'package:ion/app/features/core/providers/feature_flags_provider.r.dart';
 import 'package:ion/app/features/search/model/chat_search_result_item.f.dart';
 import 'package:ion/app/features/search/providers/chat_search/chat_local_user_search_provider.r.dart';
@@ -34,7 +35,14 @@ class ChatQuickSearchPage extends HookConsumerWidget {
     final hideCommunity =
         ref.watch(featureFlagsProvider.notifier).get(ChatFeatureFlag.hideCommunity);
 
-    final remoteUserSearch = ref.watch(searchUsersProvider(query: debouncedQuery));
+    final env = ref.read(envProvider.notifier);
+    final expirationDuration = Duration(
+      minutes: env.get<int>(EnvVariable.CHAT_PRIVACY_CACHE_MINUTES),
+    );
+
+    final remoteUserSearch = ref.watch(
+      searchUsersProvider(query: debouncedQuery, expirationDuration: expirationDuration),
+    );
     final localUserSearch = ref.watch(chatLocalUserSearchProvider(debouncedQuery));
 
     final isLoading = remoteUserSearch.isLoading || localUserSearch.isLoading;

@@ -32,13 +32,11 @@ enum WalletAddressPrivacyOption implements SelectableOption {
 
 enum UserVisibilityPrivacyOption implements SelectableOption {
   everyone,
-  followedPeople,
-  friends;
+  followedPeople;
 
   static UserVisibilityPrivacyOption fromWhoCanSetting(WhoCanSetting? setting) => switch (setting) {
         WhoCanSetting.everyone => UserVisibilityPrivacyOption.everyone,
         WhoCanSetting.follows => UserVisibilityPrivacyOption.followedPeople,
-        WhoCanSetting.friends => UserVisibilityPrivacyOption.friends,
         null => UserVisibilityPrivacyOption.everyone,
       };
 
@@ -48,8 +46,6 @@ enum UserVisibilityPrivacyOption implements SelectableOption {
           context.i18n.privacy_option_user_visibility_for_everyone,
         UserVisibilityPrivacyOption.followedPeople =>
           context.i18n.privacy_option_user_visibility_for_followed_people,
-        UserVisibilityPrivacyOption.friends =>
-          context.i18n.privacy_option_user_visibility_for_friends,
       };
 
   @override
@@ -57,7 +53,6 @@ enum UserVisibilityPrivacyOption implements SelectableOption {
     final icon = switch (this) {
       UserVisibilityPrivacyOption.everyone => Assets.svg.iconPostEveryone,
       UserVisibilityPrivacyOption.followedPeople => Assets.svg.iconSearchFollow,
-      UserVisibilityPrivacyOption.friends => Assets.svg.iconSearchGroups,
     };
 
     return icon.icon(color: context.theme.appColors.primaryAccent);
@@ -66,6 +61,5 @@ enum UserVisibilityPrivacyOption implements SelectableOption {
   WhoCanSetting? toWhoCanSetting() => switch (this) {
         UserVisibilityPrivacyOption.everyone => null,
         UserVisibilityPrivacyOption.followedPeople => WhoCanSetting.follows,
-        UserVisibilityPrivacyOption.friends => WhoCanSetting.friends,
       };
 }

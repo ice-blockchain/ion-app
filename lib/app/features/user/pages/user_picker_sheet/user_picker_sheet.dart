@@ -20,13 +20,17 @@ class UserPickerSheet extends HookConsumerWidget {
     super.key,
     this.selectedPubkeys = const [],
     this.selectable = false,
+    this.controlPrivacy = false,
     this.header,
     this.footer,
+    this.expirationDuration,
   });
 
   final NavigationAppBar navigationBar;
   final List<String> selectedPubkeys;
   final bool selectable;
+  final bool controlPrivacy;
+  final Duration? expirationDuration;
   final void Function(UserMetadataEntity user) onUserSelected;
 
   final Widget? header;
@@ -37,7 +41,12 @@ class UserPickerSheet extends HookConsumerWidget {
     final searchQuery = ref.watch(searchUsersQueryProvider);
     final debouncedQuery = useDebounced(searchQuery, const Duration(milliseconds: 300)) ?? '';
 
-    final searchResults = ref.watch(searchUsersProvider(query: debouncedQuery));
+    final searchResults = ref.watch(
+      searchUsersProvider(
+        query: debouncedQuery,
+        expirationDuration: expirationDuration,
+      ),
+    );
 
     return LoadMoreBuilder(
       slivers: [
@@ -68,16 +77,18 @@ class UserPickerSheet extends HookConsumerWidget {
         if (header != null) header!,
         if (debouncedQuery.isEmpty)
           FollowingUsers(
-            onUserSelected: onUserSelected,
-            selectedPubkeys: selectedPubkeys,
             selectable: selectable,
+            onUserSelected: onUserSelected,
+            controlChatPrivacy: controlPrivacy,
+            selectedPubkeys: selectedPubkeys,
           )
         else
           SearchedUsers(
-            users: searchResults.valueOrNull?.users,
+            selectable: selectable,
+            controlChatPrivacy: controlPrivacy,
             onUserSelected: onUserSelected,
             selectedPubkeys: selectedPubkeys,
-            selectable: selectable,
+            users: searchResults.valueOrNull?.users,
           ),
         SliverToBoxAdapter(child: SizedBox(height: 8.0.s)),
         if (footer != null) footer!,

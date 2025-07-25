@@ -37,6 +37,8 @@ class SharedStoryMessage extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final currentUserMasterPubkey = ref.watch(currentPubkeySelectorProvider);
+
     final isMe = ref.watch(isCurrentUserSelectorProvider(replyEventMessage.masterPubkey));
 
     final storyEntityData = useMemoized(
@@ -71,6 +73,8 @@ class SharedStoryMessage extends HookConsumerWidget {
       },
     );
 
+    final storyBelongsToCurrentUser = storyEntity.masterPubkey != currentUserMasterPubkey;
+
     final storyDeleted = useMemoized(
       () => switch (storyEntity) {
         final ModifiablePostEntity post => post.isDeleted,
@@ -90,6 +94,8 @@ class SharedStoryMessage extends HookConsumerWidget {
             GestureDetector(
               behavior: HitTestBehavior.opaque,
               onTap: () async {
+                if (storyExpired) return;
+
                 var storyViewerState = ref.read(
                   userStoriesViewingNotifierProvider(
                     storyEntity.masterPubkey,
@@ -128,7 +134,8 @@ class SharedStoryMessage extends HookConsumerWidget {
                 crossAxisAlignment: isMe ? CrossAxisAlignment.end : CrossAxisAlignment.start,
                 children: [
                   if (isReplyToStory) _SenderReceiverLabel(isMe: isMe),
-                  if (storyUrl.isNotEmpty && !storyExpired && !storyDeleted)
+                  if (storyBelongsToCurrentUser ||
+                      (storyUrl.isNotEmpty && !storyDeleted && !storyExpired))
                     _StoryPreviewImage(
                       isMe: isMe,
                       storyUrl: storyUrl,
