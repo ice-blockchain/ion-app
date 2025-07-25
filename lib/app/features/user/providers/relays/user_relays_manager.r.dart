@@ -2,6 +2,7 @@
 
 import 'package:collection/collection.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:ion/app/features/auth/providers/auth_provider.m.dart';
 import 'package:ion/app/features/ion_connect/ion_connect.dart';
 import 'package:ion/app/features/ion_connect/model/action_source.f.dart';
 import 'package:ion/app/features/ion_connect/model/event_reference.f.dart';
@@ -17,33 +18,43 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'user_relays_manager.r.g.dart';
 
-/// Finds the relays for the given user pubkeys.
+/// Finds reachable relays for the given user pubkeys.
 ///
 /// Use this method when you need to find relays for a specific user or users.
-/// Returns a list of user relays for each provided pubkey.
+/// Returns a list of reachable user relays for each provided pubkey.
 ///
+/// Current user:
+/// Relay list is taken directly from the identity, because, for example,
+///   during onboarding, the user does not have relays yet in the database / indexers.
+///
+/// Other users:
 /// If a relay list is already cached in the database,
-///   it will be returned from there (excluding unreachable relay urls).
+///   it is returned from there.
 /// If a relay list is not found in the database,
-///   it will be fetched from indexers and cached.
+///   it is fetched from indexers and cached.
 /// If a relay list is still not found,
-///   it will be fetched from the identity and cached.
+///   it is fetched from the identity and cached.
 @riverpod
 class UserRelaysManager extends _$UserRelaysManager {
   @override
   FutureOr<void> build() async {}
 
-  // TODO[REFACTOR] - RENAME to fetchReachableRelays + process the current user separately
-  Future<List<UserRelaysEntity>> fetch(List<String> pubkeys) async {
-    final result = <UserRelaysEntity>[];
-    final pubkeysToFetch = [...pubkeys];
+  Future<List<UserRelaysEntity>> fetchReachableRelays(List<String> pubkeys) async {
+    final currentUserReachableRelays = await _getCurrentUserReachableRelaysIfRequested(pubkeys);
+
+    final result = <UserRelaysEntity>[
+      if (currentUserReachableRelays != null) currentUserReachableRelays,
+    ];
+    final pubkeysToFetch =
+        pubkeys.where((pubkey) => pubkey != currentUserReachableRelays?.masterPubkey).toList();
 
     final dbCachedRelays = await _getRelaysFromDb(pubkeys: pubkeys);
-    final validDbCachedRelays = _filterValidRelays(dbCachedRelays);
-    result.addAll(validDbCachedRelays);
+    final reachableDbCachedRelays = _filterReachableRelays(dbCachedRelays);
+    result.addAll(reachableDbCachedRelays);
 
-    pubkeysToFetch
-        .removeWhere((pubkey) => validDbCachedRelays.any((relay) => relay.masterPubkey == pubkey));
+    pubkeysToFetch.removeWhere(
+      (pubkey) => reachableDbCachedRelays.any((relay) => relay.masterPubkey == pubkey),
+    );
 
     if (pubkeysToFetch.isEmpty) {
       return result;
@@ -51,21 +62,21 @@ class UserRelaysManager extends _$UserRelaysManager {
 
     final fetchedRelays = <UserRelaysEntity>[];
 
-    final relaysFromIndexers = await _fetchRelaysFromIndexers(pubkeys: pubkeysToFetch);
-    final validRelaysFromIndexers = _filterValidRelays(relaysFromIndexers);
+    final relaysFromIndexers = await fetchRelaysFromIndexers(pubkeysToFetch);
+    final reachableRelaysFromIndexers = _filterReachableRelays(relaysFromIndexers);
 
-    fetchedRelays.addAll(validRelaysFromIndexers);
-    result.addAll(validRelaysFromIndexers);
+    fetchedRelays.addAll(reachableRelaysFromIndexers);
+    result.addAll(reachableRelaysFromIndexers);
 
     pubkeysToFetch.removeWhere(
-      (pubkey) => validRelaysFromIndexers.any((relay) => relay.masterPubkey == pubkey),
+      (pubkey) => reachableRelaysFromIndexers.any((relay) => relay.masterPubkey == pubkey),
     );
 
     if (pubkeysToFetch.isEmpty) {
       return result;
     }
 
-    final relaysFromIdentity = await _fetchRelaysFromIdentity(pubkeys: pubkeysToFetch);
+    final relaysFromIdentity = await fetchRelaysFromIdentity(pubkeysToFetch);
 
     fetchedRelays.addAll(relaysFromIdentity);
     result.addAll(relaysFromIdentity);
@@ -115,9 +126,7 @@ class UserRelaysManager extends _$UserRelaysManager {
     ]);
   }
 
-  Future<List<UserRelaysEntity>> _fetchRelaysFromIndexers({
-    required List<String> pubkeys,
-  }) async {
+  Future<List<UserRelaysEntity>> fetchRelaysFromIndexers(List<String> pubkeys) async {
     final result = <UserRelaysEntity>[];
     final indexers = await ref.read(currentUserIndexersProvider.future);
     if (indexers != null && indexers.isNotEmpty) {
@@ -139,27 +148,7 @@ class UserRelaysManager extends _$UserRelaysManager {
     return result;
   }
 
-  Future<List<UserRelaysEntity>> _getRelaysFromDb({
-    required List<String> pubkeys,
-  }) async {
-    final eventReferences = pubkeys
-        .map(
-          (pubkey) => ReplaceableEventReference(
-            masterPubkey: pubkey,
-            kind: UserRelaysEntity.kind,
-          ),
-        )
-        .toList();
-
-    return (await ref.read(ionConnectDbCacheProvider.notifier).getAll(eventReferences))
-        .cast<UserRelaysEntity?>()
-        .nonNulls
-        .toList();
-  }
-
-  Future<List<UserRelaysEntity>> _fetchRelaysFromIdentity({
-    required List<String> pubkeys,
-  }) async {
+  Future<List<UserRelaysEntity>> fetchRelaysFromIdentity(List<String> pubkeys) async {
     final ionIdentity = await ref.read(ionIdentityClientProvider.future);
     final userDetails = await Future.wait(
       pubkeys.map((pubkey) async {
@@ -188,14 +177,42 @@ class UserRelaysManager extends _$UserRelaysManager {
     return userRelays;
   }
 
-  List<UserRelaysEntity> _filterValidRelays(List<UserRelaysEntity> relays) {
-    // Remove unreachable relays from relay lists
-    final reachableRelays = relays
+  Future<UserRelaysEntity?> _getCurrentUserReachableRelaysIfRequested(List<String> pubkeys) async {
+    final currentUserPubkey = ref.read(currentPubkeySelectorProvider);
+
+    if (currentUserPubkey != null && pubkeys.contains(currentUserPubkey)) {
+      final currentUserRelays = await ref.read(currentUserRelaysProvider.future);
+      if (currentUserRelays != null) {
+        return _filterReachableRelays([currentUserRelays]).firstOrNull;
+      }
+    }
+
+    return null;
+  }
+
+  Future<List<UserRelaysEntity>> _getRelaysFromDb({
+    required List<String> pubkeys,
+  }) async {
+    final eventReferences = pubkeys
+        .map(
+          (pubkey) => ReplaceableEventReference(
+            masterPubkey: pubkey,
+            kind: UserRelaysEntity.kind,
+          ),
+        )
+        .toList();
+
+    return (await ref.read(ionConnectDbCacheProvider.notifier).getAll(eventReferences))
+        .cast<UserRelaysEntity?>()
+        .nonNulls
+        .toList();
+  }
+
+  List<UserRelaysEntity> _filterReachableRelays(List<UserRelaysEntity> relays) {
+    return relays
         .map(ref.read(relayReachabilityProvider.notifier).getFilteredRelayEntity)
         .nonNulls
         .toList();
-
-    return reachableRelays;
   }
 
   Future<void> _clearReachabilityInfoFor(

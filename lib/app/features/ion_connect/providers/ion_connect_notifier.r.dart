@@ -89,9 +89,10 @@ class IonConnectNotifier extends _$IonConnectNotifier {
         return triedRelay != null;
       },
       onRetry: (error) async {
-        Logger.error(error ?? '', message: '[RELAY] Got error $error');
         if (triedRelay case final IonConnectRelay relay
             when !RelayAuthService.isRelayAuthError(error)) {
+          //TODO[REFACTOR] - check legal SEND ERRORs, do we need to retry then?
+          Logger.error(error ?? '', message: '[RELAY] Got error $error');
           Logger.log('[RELAY] ${relay.url} Adding to the list of disliked relays');
           dislikedRelaysUrls.add(relay.url);
           if (UserRelaysManager.isRelayReadOnlyError(error)) {
