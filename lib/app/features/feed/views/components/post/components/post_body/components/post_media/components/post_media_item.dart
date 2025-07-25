@@ -64,6 +64,7 @@ class PostMediaItem extends HookWidget {
                 authorPubkey: eventReference.masterPubkey,
                 thumbnailUrl: mediaItem.thumb,
                 framedEventReference: framedEventReference,
+                visibilityThreshold: 0.5,
               ),
             _ => const SizedBox.shrink(),
           },
