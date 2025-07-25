@@ -85,13 +85,12 @@ class IonConnectNotifier extends _$IonConnectNotifier {
         return null;
       },
       retryWhen: (error) {
-        //TODO[REFACTOR] - is it ok? add comment why
+        // Retry should not be attempted if no relay is selected (i.e., no relays are available for the specified action)
         return triedRelay != null;
       },
       onRetry: (error) async {
         if (triedRelay case final IonConnectRelay relay
             when !RelayAuthService.isRelayAuthError(error)) {
-          //TODO[REFACTOR] - check legal SEND ERRORs, do we need to retry then?
           Logger.error(error ?? '', message: '[RELAY] Got error $error');
           Logger.log('[RELAY] ${relay.url} Adding to the list of disliked relays');
           dislikedRelaysUrls.add(relay.url);
@@ -220,7 +219,7 @@ class IonConnectNotifier extends _$IonConnectNotifier {
         }
       },
       retryWhen: (error) {
-        //TODO[REFACTOR] - is it ok? add comment why
+        // Retry should not be attempted if no relay is selected (i.e., no relays are available for the specified action)
         return triedRelay != null;
       },
       onRetry: (error) {
