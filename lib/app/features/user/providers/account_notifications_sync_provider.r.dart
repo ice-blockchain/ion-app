@@ -38,7 +38,7 @@ class AccountNotificationsSync extends _$AccountNotificationsSync {
       return;
     }
 
-    final currentPubkey = ref.read(currentPubkeySelectorProvider);
+    final currentPubkey = ref.watch(currentPubkeySelectorProvider);
     if (currentPubkey == null) {
       return;
     }
@@ -63,7 +63,7 @@ class AccountNotificationsSync extends _$AccountNotificationsSync {
       }
     } catch (error) {
       // Fallback: schedule a retry
-      Timer(syncInterval, () async {
+      _syncTimer = Timer(syncInterval, () async {
         await _initializeSync();
       });
     }
