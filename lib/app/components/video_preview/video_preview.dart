@@ -24,12 +24,14 @@ class VideoPreview extends HookConsumerWidget {
     required this.authorPubkey,
     this.thumbnailUrl,
     this.autoplay = true,
+    this.onlyOneShouldPlay = true,
     this.framedEventReference,
     this.visibilityThreshold = 1.0,
     super.key,
   });
 
   final bool autoplay;
+  final bool onlyOneShouldPlay;
   final String videoUrl;
   final String authorPubkey;
   final String? thumbnailUrl;
@@ -46,6 +48,7 @@ class VideoPreview extends HookConsumerWidget {
           authorPubkey: authorPubkey,
           looping: true,
           uniqueId: framedEventReference?.encode() ?? '',
+          onlyOneShouldPlay: onlyOneShouldPlay,
         ),
       ),
     );
