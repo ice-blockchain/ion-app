@@ -15,12 +15,6 @@ enum RepostOptionAction {
         RepostOptionAction.quotePost => context.i18n.feed_quote,
       };
 
-  Color getLabelColor(BuildContext context) => switch (this) {
-        RepostOptionAction.repost => context.theme.appColors.primaryAccent,
-        RepostOptionAction.undoRepost => context.theme.appColors.attentionRed,
-        RepostOptionAction.quotePost => context.theme.appColors.primaryAccent,
-      };
-
   Color getIconColor(BuildContext context) => switch (this) {
         RepostOptionAction.repost => context.theme.appColors.primaryAccent,
         RepostOptionAction.undoRepost => context.theme.appColors.attentionRed,
