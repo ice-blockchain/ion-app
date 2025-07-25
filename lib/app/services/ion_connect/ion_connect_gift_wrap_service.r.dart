@@ -41,15 +41,11 @@ abstract class IonConnectGiftWrapService {
 }
 
 class IonConnectGiftWrapServiceImpl implements IonConnectGiftWrapService {
-  IonConnectGiftWrapServiceImpl({
+  const IonConnectGiftWrapServiceImpl({
     required EncryptedMessageService encryptedMessageService,
   }) : _encryptedMessageService = encryptedMessageService;
 
   final EncryptedMessageService _encryptedMessageService;
-  
-  Ed25519KeyStore? _cachedOneTimeSigner;
-  DateTime? _oneTimeSignerCreatedAt;
-  static const Duration _oneTimeSignerCacheDuration = Duration(minutes: 5);
 
   @override
   Future<EventMessage> createWrap({
@@ -60,7 +56,7 @@ class IonConnectGiftWrapServiceImpl implements IonConnectGiftWrapService {
     CompressionAlgorithm compressionAlgorithm = CompressionAlgorithm.none,
     List<String>? expirationTag,
   }) async {
-    final oneTimeSigner = await _getOrCreateOneTimeSigner();
+    final oneTimeSigner = await Ed25519KeyStore.generate();
 
     final encodedEvent = jsonEncode(event.toJson().last);
 
@@ -107,21 +103,5 @@ class IonConnectGiftWrapServiceImpl implements IonConnectGiftWrapService {
     return EventMessage.fromPayloadJson(
       jsonDecode(decryptedContent) as Map<String, dynamic>,
     );
-  }
-  
-  Future<Ed25519KeyStore> _getOrCreateOneTimeSigner() async {
-    final now = DateTime.now();
-    
-    if (_cachedOneTimeSigner != null && 
-        _oneTimeSignerCreatedAt != null &&
-        now.difference(_oneTimeSignerCreatedAt!) < _oneTimeSignerCacheDuration) {
-      return _cachedOneTimeSigner!;
-    }
-    
-    final newSigner = await Ed25519KeyStore.generate();
-    _cachedOneTimeSigner = newSigner;
-    _oneTimeSignerCreatedAt = now;
-    
-    return newSigner;
   }
 }

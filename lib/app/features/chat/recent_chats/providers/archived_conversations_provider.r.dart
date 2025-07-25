@@ -33,11 +33,11 @@ Future<List<String>> archivedConversations(Ref ref) async {
 
   final content = archivedConversationBookmarksSetData.content;
 
-  if (content.isEmpty) {
-    return [];
-  }
-
-  final decryptedContent = await encryptedMessageService.decryptMessage(content);
+  final decryptedContent = content.isNotEmpty
+      ? await encryptedMessageService.decryptMessage(
+          archivedConversationBookmarksSetData.content,
+        )
+      : archivedConversationBookmarksSetData.content;
 
   final encryptedConversationCommunityIds = decryptedContent.isNotEmpty
       ? (jsonDecode(decryptedContent) as List<dynamic>)
