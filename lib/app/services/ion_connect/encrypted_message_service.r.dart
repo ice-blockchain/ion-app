@@ -41,16 +41,23 @@ class EncryptedMessageService {
   final EventSigner eventSigner;
   final String currentUserPubkey;
 
+  final Map<String, String> _x25519PublicKeyCache = {};
+  final Map<String, String> _x25519PrivateKeyCache = {};
+  
+  final Map<String, _ConversationKeyEntry> _conversationKeyCache = {};
+  
+  static const Duration _cacheTimeout = Duration(minutes: 15);
+
   Future<String> encryptMessage(
     String message, {
     String? publicKey,
     String? privateKey,
     CompressionAlgorithm compressionAlgorithm = CompressionAlgorithm.none,
   }) async {
-    final x25519PublicKey = _convertEd25519PkToX25519(publicKey ?? currentUserPubkey);
-    final x25519PrivateKey = _convertEd25519SkToX25519(privateKey ?? eventSigner.privateKey);
+    final x25519PublicKey = _getCachedX25519PublicKey(publicKey ?? currentUserPubkey);
+    final x25519PrivateKey = _getCachedX25519PrivateKey(privateKey ?? eventSigner.privateKey);
 
-    final conversationKey = await _buildConversationKey(
+    final conversationKey = await _getCachedConversationKey(
       x25519PrivateKey: x25519PrivateKey,
       x25519PublicKey: x25519PublicKey,
     );
@@ -70,10 +77,10 @@ class EncryptedMessageService {
     String? privateKey,
     CompressionAlgorithm compressionAlgorithm = CompressionAlgorithm.none,
   }) async {
-    final x25519PublicKey = _convertEd25519PkToX25519(publicKey ?? currentUserPubkey);
-    final x25519PrivateKey = _convertEd25519SkToX25519(privateKey ?? eventSigner.privateKey);
+    final x25519PublicKey = _getCachedX25519PublicKey(publicKey ?? currentUserPubkey);
+    final x25519PrivateKey = _getCachedX25519PrivateKey(privateKey ?? eventSigner.privateKey);
 
-    final conversationKey = await _buildConversationKey(
+    final conversationKey = await _getCachedConversationKey(
       x25519PrivateKey: x25519PrivateKey,
       x25519PublicKey: x25519PublicKey,
     );
@@ -84,6 +91,20 @@ class EncryptedMessageService {
       x25519PublicKey,
       customConversationKey: conversationKey,
       compressionAlgorithm: compressionAlgorithm,
+    );
+  }
+
+  String _getCachedX25519PublicKey(String ed25519PublicKey) {
+    return _x25519PublicKeyCache.putIfAbsent(
+      ed25519PublicKey,
+      () => _convertEd25519PkToX25519(ed25519PublicKey),
+    );
+  }
+
+  String _getCachedX25519PrivateKey(String ed25519PrivateKey) {
+    return _x25519PrivateKeyCache.putIfAbsent(
+      ed25519PrivateKey,
+      () => _convertEd25519SkToX25519(ed25519PrivateKey),
     );
   }
 
@@ -101,6 +122,35 @@ class EncryptedMessageService {
     return hex.encode(x25519Sk);
   }
 
+  Future<Uint8List> _getCachedConversationKey({
+    required String x25519PublicKey,
+    required String x25519PrivateKey,
+  }) async {
+    final cacheKey = '${x25519PrivateKey}_$x25519PublicKey';
+    final now = DateTime.now();
+    
+    final cached = _conversationKeyCache[cacheKey];
+    if (cached != null && now.difference(cached.timestamp) < _cacheTimeout) {
+      return cached.key;
+    }
+    
+    final conversationKey = await _buildConversationKey(
+      x25519PrivateKey: x25519PrivateKey,
+      x25519PublicKey: x25519PublicKey,
+    );
+    
+    _conversationKeyCache[cacheKey] = _ConversationKeyEntry(
+      key: conversationKey,
+      timestamp: now,
+    );
+    
+    if (_conversationKeyCache.length > 50) {
+      _cleanExpiredConversationKeys();
+    }
+    
+    return conversationKey;
+  }
+
   Future<Uint8List> _buildConversationKey({
     required String x25519PublicKey,
     required String x25519PrivateKey,
@@ -112,4 +162,21 @@ class EncryptedMessageService {
 
     return Nip44.deriveConversationKey(sharedSecret);
   }
+  
+  void _cleanExpiredConversationKeys() {
+    final now = DateTime.now();
+    _conversationKeyCache.removeWhere(
+      (key, entry) => now.difference(entry.timestamp) >= _cacheTimeout,
+    );
+  }
+}
+
+class _ConversationKeyEntry {
+  const _ConversationKeyEntry({
+    required this.key,
+    required this.timestamp,
+  });
+  
+  final Uint8List key;
+  final DateTime timestamp;
 }
