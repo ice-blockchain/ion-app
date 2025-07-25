@@ -228,7 +228,7 @@
   "dapp_details_tips_vote": "Abstimmen",
   "dapp_details_tips_voted": "Abgestimmt",
   "search_placeholder": "Suchen",
-  "search_nothing_found": "Für Ihre Suche wurde nichts gefunden",
+  "search_nothing_found": "Hoppla! Wir konnten nichts finden, das Ihrer Suche entspricht.",
   "profile_following": "Folgend",
   "profile_followers": "Follower",
   "profile_following_with_counter": "Folgt ({counter})",

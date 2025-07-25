@@ -220,7 +220,7 @@
   "dapp_details_tips_vote": "صوت",
   "dapp_details_tips_voted": "تم التصويت",
   "search_placeholder": "بحث",
-  "search_nothing_found": "لم يتم العثور على نتائج لطلبك",
+  "search_nothing_found": "عفوًا! لم نعثر على أي شيء يطابق بحثك.",
   "profile_following": "الحسابات التي تتابعها",
   "profile_followers": "الحسابات التي تتابعك",
   "profile_following_with_counter": "الحسابات التي تتابعها ({counter})",
