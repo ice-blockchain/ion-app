@@ -89,7 +89,8 @@ class IonConnectNotifier extends _$IonConnectNotifier {
       },
       onRetry: (error) async {
         Logger.error(error ?? '', message: '[RELAY] Got error $error');
-        if (triedRelay case final IonConnectRelay relay) {
+        if (triedRelay case final IonConnectRelay relay
+            when !RelayAuthService.isRelayAuthError(error)) {
           Logger.log('[RELAY] ${relay.url} Adding to the list of disliked relays');
           dislikedRelaysUrls.add(relay.url);
           if (UserRelaysManager.isRelayReadOnlyError(error)) {
@@ -221,8 +222,9 @@ class IonConnectNotifier extends _$IonConnectNotifier {
         return triedRelay != null;
       },
       onRetry: (error) {
-        Logger.error(error ?? '', message: '[RELAY] Got error $error');
-        if (triedRelay case final IonConnectRelay relay) {
+        if (triedRelay case final IonConnectRelay relay
+            when !RelayAuthService.isRelayAuthError(error)) {
+          Logger.error(error ?? '', message: '[RELAY] Got error $error');
           Logger.log('[RELAY] ${relay.url} Adding to the list of disliked relays');
           dislikedRelaysUrls.add(relay.url);
         }
