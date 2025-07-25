@@ -20,5 +20,6 @@ bool isReposted(Ref ref, EventReference eventReference) {
   }
 
   final cached = ref.watch(findRepostInCacheProvider(eventReference));
-  return cached != null;
+  final result = cached?.repostedByMe ?? false;
+  return result;
 }

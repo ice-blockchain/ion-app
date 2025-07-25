@@ -10,13 +10,15 @@ part 'reposts_count_provider.r.g.dart';
 
 @riverpod
 int repostsCount(Ref ref, EventReference eventReference) {
-  final optimistic = ref
-      .watch(postRepostWatchProvider(eventReference.toString()))
-      .valueOrNull
-      ?.totalRepostsCount;
+  final optimistic =
+      ref.watch(postRepostWatchProvider(eventReference.toString())).valueOrNull?.totalRepostsCount;
 
-  if (optimistic != null) return optimistic;
+  if (optimistic != null) {
+    return optimistic;
+  }
 
   final counts = ref.watch(repostCountsFromCacheProvider(eventReference));
-  return counts.repostsCount + counts.quotesCount;
+  final totalCount = counts.repostsCount + counts.quotesCount;
+  
+  return totalCount;
 }

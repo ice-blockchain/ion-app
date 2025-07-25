@@ -11,16 +11,18 @@ final class ToggleRepostIntent implements OptimisticIntent<PostRepost> {
   PostRepost optimistic(PostRepost current) {
     if (current.repostedByMe) {
       // Remove repost
+      final newCount = current.repostsCount > 0 ? current.repostsCount - 1 : 0;
       return current.copyWith(
         repostedByMe: false,
-        repostsCount: current.repostsCount > 0 ? current.repostsCount - 1 : 0,
+        repostsCount: newCount,
         myRepostReference: null,
       );
     } else {
       // Add repost
+      final newCount = current.repostsCount + 1;
       return current.copyWith(
         repostedByMe: true,
-        repostsCount: current.repostsCount + 1,
+        repostsCount: newCount,
       );
     }
   }

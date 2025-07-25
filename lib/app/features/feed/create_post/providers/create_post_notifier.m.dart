@@ -72,6 +72,7 @@ class CreatePostNotifier extends _$CreatePostNotifier {
     WhoCanReplySettingsOption whoCanReply = const WhoCanReplySettingsOption.everyone(),
     EventReference? parentEvent,
     EventReference? quotedEvent,
+    EventReference? sourcePostReference,
     List<MediaFile>? mediaFiles,
     String? communityId,
     PollData? poll,
@@ -114,6 +115,7 @@ class CreatePostNotifier extends _$CreatePostNotifier {
         richText: await _buildRichTextContentWithMediaLinks(
           content: postContent,
           media: media.values.toList(),
+          sourcePostReference: sourcePostReference,
         ),
         poll: poll,
       );
@@ -403,15 +405,21 @@ class CreatePostNotifier extends _$CreatePostNotifier {
   Future<RichText> _buildRichTextContentWithMediaLinks({
     required Delta content,
     required List<MediaAttachment> media,
+    EventReference? sourcePostReference,
   }) async {
     final contentWithMedia = await _buildContentWithMediaLinksDelta(
       content: content,
       media: media,
     );
+    
+    // Add source post reference as a special attribute if provided
+    final finalContent = sourcePostReference != null
+        ? _addSourcePostReference(contentWithMedia, sourcePostReference)
+        : contentWithMedia;
 
     final richText = RichText(
       protocol: 'quill_delta',
-      content: jsonEncode(contentWithMedia.toJson()),
+      content: jsonEncode(finalContent.toJson()),
     );
 
     return richText;
@@ -430,6 +438,16 @@ class CreatePostNotifier extends _$CreatePostNotifier {
           )
           .toList(),
     ).concat(newContentDelta);
+  }
+  
+  Delta _addSourcePostReference(Delta content, EventReference sourcePostReference) {
+    // Add an invisible character with a custom attribute containing the source post reference
+    final sourcePostOp = Operation.insert(
+      '\u200B', // Zero-width space
+      {'sourcePost': sourcePostReference.encode()},
+    );
+    
+    return Delta.fromOperations([sourcePostOp]).concat(content);
   }
 
   List<RelatedEvent> _buildRelatedEvents(IonConnectEntity parentEntity) {
