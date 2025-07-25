@@ -11,6 +11,7 @@ import 'package:ion/app/features/core/providers/env_provider.r.dart';
 import 'package:ion/app/features/feed/data/models/entities/article_data.f.dart';
 import 'package:ion/app/features/feed/data/models/entities/modifiable_post_data.f.dart';
 import 'package:ion/app/features/ion_connect/model/event_reference.f.dart';
+import 'package:ion/app/features/user/model/user_metadata.f.dart';
 import 'package:ion/app/router/app_routes.gr.dart';
 import 'package:ion/app/services/logger/logger.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
@@ -58,6 +59,7 @@ Future<void> deeplinkInitializer(Ref ref) async {
         final location = switch (event.kind) {
           ModifiablePostEntity.kind => PostDetailsRoute(eventReference: eventReference).location,
           ArticleEntity.kind => ArticleDetailsRoute(eventReference: eventReference).location,
+          UserMetadataEntity.kind => ProfileRoute(pubkey: event.masterPubkey).location,
           _ => null,
         };
 
