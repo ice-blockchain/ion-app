@@ -16,8 +16,8 @@ import 'package:ion/app/features/user/pages/profile_page/pages/follow_list_modal
 import 'package:ion/app/features/user/pages/profile_page/pages/follow_list_modal/components/follow_search_bar.dart';
 import 'package:ion/app/features/user/providers/followers_data_source_provider.r.dart';
 
-final _followersEntitiesProvider =
-    Provider.family<List<UserMetadataEntity>?, ({String pubkey, String? query})>((ref, params) {
+final _followersEntitiesProvider = Provider.autoDispose
+    .family<List<UserMetadataEntity>?, ({String pubkey, String? query})>((ref, params) {
   final dataSource = ref.watch(followersDataSourceProvider(params.pubkey, query: params.query));
   final entitiesPagedData = ref.watch(entitiesPagedDataProvider(dataSource));
   return entitiesPagedData?.data.items?.whereType<UserMetadataEntity>().toList();
