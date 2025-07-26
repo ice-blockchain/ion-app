@@ -15,7 +15,7 @@ class PlusButtonWithPermission extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final plusSize = 24.0.s;
-    final iconPosition = plusSize - 6.0.s;
+    final iconPosition = plusSize - 14.0.s;
 
     return PositionedDirectional(
       bottom: iconPosition,
@@ -29,8 +29,12 @@ class PlusButtonWithPermission extends StatelessWidget {
         settingsDialog: SettingsRedirectSheet.fromType(context, Permission.camera),
         builder: (context, onPressed) {
           return GestureDetector(
+            behavior: HitTestBehavior.opaque,
             onTap: onPressed,
-            child: PlusIcon(size: plusSize),
+            child: Padding(
+              padding: EdgeInsets.symmetric(horizontal: 8.0.s, vertical: 4.0.s),
+              child: PlusIcon(size: plusSize),
+            ),
           );
         },
       ),
