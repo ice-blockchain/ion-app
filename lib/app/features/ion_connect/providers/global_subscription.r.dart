@@ -56,7 +56,6 @@ class GlobalSubscription {
   static const List<int> _encryptedEventKinds = [IonConnectGiftWrapEntity.kind];
 
   void init() {
-    print('CUSTOM LOG - init');
     final now = DateTime.now().microsecondsSinceEpoch;
     final regularLatestEventTimestamp = latestEventTimestampService.get(EventType.regular);
 
