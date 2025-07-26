@@ -2,11 +2,13 @@
 
 import 'dart:async';
 
+import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/exceptions/exceptions.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/auth/providers/auth_provider.m.dart';
 import 'package:ion/app/features/auth/providers/delegation_complete_provider.r.dart';
+import 'package:ion/app/features/core/providers/app_lifecycle_provider.r.dart';
 import 'package:ion/app/features/feed/data/models/entities/generic_repost.f.dart';
 import 'package:ion/app/features/feed/data/models/entities/modifiable_post_data.f.dart';
 import 'package:ion/app/features/feed/data/models/entities/reaction_data.f.dart';
@@ -157,22 +159,33 @@ class GlobalSubscription {
 
 @riverpod
 class GlobalSubscriptionNotifier extends _$GlobalSubscriptionNotifier {
+  StreamSubscription<EventMessage>? _subscription;
+
   @override
-  void build() {}
+  void build() {
+    ref.onDispose(() {
+      _subscription?.cancel();
+    });
+  }
 
   void subscribe(
     RequestMessage requestMessage, {
     required void Function(EventMessage) onEvent,
   }) {
     final stream = ref.watch(ionConnectEventsSubscriptionProvider(requestMessage));
-    final subscription = stream.listen(onEvent);
-    ref.onDispose(subscription.cancel);
+    _subscription = stream.listen(onEvent);
   }
 }
 
 @riverpod
 GlobalSubscription? globalSubscription(Ref ref) {
   keepAliveWhenAuthenticated(ref);
+
+  final appState = ref.watch(appLifecycleProvider);
+
+  if (appState != AppLifecycleState.resumed) {
+    return null;
+  }
 
   final currentUserMasterPubkey = ref.watch(currentPubkeySelectorProvider);
   final devicePubkey = ref.watch(currentUserIonConnectEventSignerProvider).valueOrNull?.publicKey;
