@@ -29,6 +29,7 @@ class StoryViewerContent extends StatelessWidget {
           authorPubkey: post.masterPubkey,
           storyId: post.id,
           quotedEvent: post.data.quotedEvent,
+          sourcePostReference: post.data.sourcePostReference,
         ),
       MediaType.video => VideoStoryViewer(
           videoPath: media.url,

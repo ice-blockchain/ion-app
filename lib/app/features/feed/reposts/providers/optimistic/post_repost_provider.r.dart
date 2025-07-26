@@ -20,7 +20,17 @@ part 'post_repost_provider.r.g.dart';
 @riverpod
 PostRepost? findRepostInCache(Ref ref, EventReference eventReference) {
   final currentPubkey = ref.watch(currentPubkeySelectorProvider);
-  if (currentPubkey == null) return null;
+  if (currentPubkey == null) {
+    return null;
+  }
+
+  final manager = ref.watch(postRepostManagerProvider);
+  final optimisticState =
+      manager.snapshot.where((pr) => pr.eventReference == eventReference).firstOrNull;
+
+  if (optimisticState != null) {
+    return optimisticState;
+  }
 
   final myRepost = ref
       .watch(ionConnectCacheProvider)
@@ -35,17 +45,21 @@ PostRepost? findRepostInCache(Ref ref, EventReference eventReference) {
     return repostedEventRef == eventReference;
   }).firstOrNull;
 
-  if (myRepost == null) return null;
+  if (myRepost == null) {
+    return null;
+  }
 
   final counts = ref.watch(repostCountsFromCacheProvider(eventReference));
 
-  return PostRepost(
+  final result = PostRepost(
     eventReference: eventReference,
     repostsCount: counts.repostsCount,
     quotesCount: counts.quotesCount,
     repostedByMe: true,
     myRepostReference: myRepost.toEventReference(),
   );
+
+  return result;
 }
 
 @riverpod
@@ -53,6 +67,11 @@ List<PostRepost> loadRepostsFromCache(Ref ref) {
   final currentPubkey = ref.watch(currentPubkeySelectorProvider);
 
   if (currentPubkey == null) return [];
+
+  final manager = ref.watch(postRepostManagerProvider);
+  final optimisticStates = Map.fromEntries(
+    manager.snapshot.map((pr) => MapEntry(pr.eventReference, pr)),
+  );
 
   final allEntities = ref.watch(ionConnectCacheProvider).values.map((e) => e.entity).toList();
 
@@ -67,6 +86,12 @@ List<PostRepost> loadRepostsFromCache(Ref ref) {
     final eventReference = entity is RepostEntity
         ? entity.data.eventReference
         : (entity as GenericRepostEntity).data.eventReference;
+
+    final optimisticState = optimisticStates[eventReference];
+    if (optimisticState != null) {
+      postReposts.add(optimisticState);
+      continue;
+    }
 
     final counts = ref.watch(repostCountsFromCacheProvider(eventReference));
 
@@ -84,16 +109,14 @@ List<PostRepost> loadRepostsFromCache(Ref ref) {
   return postReposts;
 }
 
-@Riverpod(keepAlive: true)
+@riverpod
 OptimisticService<PostRepost> postRepostService(Ref ref) {
+  keepAliveWhenAuthenticated(ref);
+  
   final manager = ref.watch(postRepostManagerProvider);
-  final service = OptimisticService<PostRepost>(manager: manager);
-  final initialData = ref.read(loadRepostsFromCacheProvider);
-  service.initialize(initialData);
+  final postReposts = ref.watch(loadRepostsFromCacheProvider);
 
-  ref.listen(loadRepostsFromCacheProvider, (previous, next) {
-    service.initialize(next);
-  });
+  final service = OptimisticService<PostRepost>(manager: manager)..initialize(postReposts);
 
   return service;
 }
@@ -101,11 +124,15 @@ OptimisticService<PostRepost> postRepostService(Ref ref) {
 @riverpod
 Stream<PostRepost?> postRepostWatch(Ref ref, String id) {
   final service = ref.watch(postRepostServiceProvider);
-  return service.watch(id);
+  return service.watch(id).map((postRepost) {
+    return postRepost;
+  });
 }
 
-@Riverpod(keepAlive: true)
+@riverpod
 OptimisticOperationManager<PostRepost> postRepostManager(Ref ref) {
+  keepAliveWhenAuthenticated(ref);
+  
   final strategy = ref.watch(repostSyncStrategyProvider);
 
   final manager = OptimisticOperationManager<PostRepost>(
@@ -124,7 +151,7 @@ class ToggleRepostNotifier extends _$ToggleRepostNotifier {
   void build() {}
 
   Future<void> toggle(EventReference eventReference) async {
-    final service = ref.watch(postRepostServiceProvider);
+    final service = ref.read(postRepostServiceProvider);
     final id = eventReference.toString();
 
     var current = ref.read(postRepostWatchProvider(id)).valueOrNull;
