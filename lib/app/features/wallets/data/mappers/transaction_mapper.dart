@@ -39,21 +39,38 @@ class CoinTransactionsMapper {
         dateConfirmed: details.dateConfirmed,
         dateRequested: details.dateRequested,
       ),
-      nft: (nft) => db.Transaction(
-        id: details.id,
-        txHash: details.txHash,
-        type: details.type.value,
-        walletViewId: details.walletViewId,
-        networkId: details.network.id,
-        assetId: '${nft.contract}_${nft.tokenId}',
-        nativeCoinId: details.nativeCoin?.id,
-        senderWalletAddress: details.senderAddress,
-        receiverWalletAddress: details.receiverAddress,
-        userPubkey: details.participantPubkey,
-        status: details.status.toJson(),
-        dateConfirmed: details.dateConfirmed,
-        dateRequested: details.dateRequested,
-      ),
+      nft: (nft) {
+        final nftIdentifier = '${nft.contract}_${nft.tokenId}';
+        
+        Logger.info(
+          '[NFT_MAPPER_DEBUG] Mapping NFT transaction to DB | '
+          'TxHash: ${details.txHash} | '
+          'NFT Contract: ${nft.contract} | '
+          'NFT TokenId: ${nft.tokenId} | '
+          'NFT_Identifier: $nftIdentifier | '
+          'WalletViewId: ${details.walletViewId} | '
+          'NetworkId: ${details.network.id} | '
+          'Status: ${details.status.toJson()} | '
+          'Type: ${details.type.value} | '
+          'SenderAddress: ${details.senderAddress}',
+        );
+        
+        return db.Transaction(
+          id: details.id,
+          txHash: details.txHash,
+          type: details.type.value,
+          walletViewId: details.walletViewId,
+          networkId: details.network.id,
+          nftIdentifier: nftIdentifier,
+          nativeCoinId: details.nativeCoin?.id,
+          senderWalletAddress: details.senderAddress,
+          receiverWalletAddress: details.receiverAddress,
+          userPubkey: details.participantPubkey,
+          status: details.status.toJson(),
+          dateConfirmed: details.dateConfirmed,
+          dateRequested: details.dateRequested,
+        );
+      },
       notInitialized: () => throw ArgumentError('Cannot save uninitialized asset data'),
     );
   }
@@ -153,7 +170,25 @@ class CoinTransactionsMapper {
             dateRequested: transaction.dateRequested,
             networkId: transaction.network.id,
             status: transaction.status.toJson(),
-            assetId: '${nft.contract}_${nft.tokenId}',
+            nftIdentifier: '${nft.contract}_${nft.tokenId}',
+            nativeCoinId: transaction.nativeCoin?.id,
+            senderWalletAddress: transaction.senderWalletAddress,
+            receiverWalletAddress: transaction.receiverWalletAddress,
+            createdAtInRelay: transaction.createdAtInRelay,
+            userPubkey: transaction.userPubkey,
+          ),
+          nftIdentifier: (identifier, network) => db.Transaction(
+            type: transaction.type.value,
+            txHash: transaction.txHash,
+            id: transaction.id,
+            fee: transaction.fee,
+            externalHash: transaction.externalHash,
+            walletViewId: transaction.walletViewId,
+            dateConfirmed: transaction.dateConfirmed,
+            dateRequested: transaction.dateRequested,
+            networkId: transaction.network.id,
+            status: transaction.status.toJson(),
+            nftIdentifier: identifier.value,
             nativeCoinId: transaction.nativeCoin?.id,
             senderWalletAddress: transaction.senderWalletAddress,
             receiverWalletAddress: transaction.receiverWalletAddress,

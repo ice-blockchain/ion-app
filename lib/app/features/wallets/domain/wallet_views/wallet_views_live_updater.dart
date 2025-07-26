@@ -1,32 +1,12 @@
 // SPDX-License-Identifier: ice License 1.0
 
-import 'package:collection/collection.dart';
-import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:ion/app/features/core/providers/wallets_provider.r.dart';
-import 'package:ion/app/features/wallets/data/repository/coins_repository.r.dart';
-import 'package:ion/app/features/wallets/data/repository/transactions_repository.m.dart';
-import 'package:ion/app/features/wallets/model/coin_data.f.dart';
-import 'package:ion/app/features/wallets/model/coin_in_wallet_data.f.dart';
-import 'package:ion/app/features/wallets/model/crypto_asset_type.dart';
-import 'package:ion/app/features/wallets/model/nft_data.f.dart';
-import 'package:ion/app/features/wallets/model/transaction_crypto_asset.f.dart';
-import 'package:ion/app/features/wallets/model/transaction_data.f.dart';
-import 'package:ion/app/features/wallets/model/transaction_status.f.dart';
-import 'package:ion/app/features/wallets/model/transaction_type.dart';
-import 'package:ion/app/features/wallets/model/wallet_view_data.f.dart';
-import 'package:ion/app/features/wallets/model/wallet_view_update.f.dart';
-import 'package:ion/app/features/wallets/utils/crypto_amount_parser.dart';
-import 'package:ion/app/services/logger/logger.dart';
-import 'package:ion_identity_client/ion_identity.dart';
-import 'package:riverpod_annotation/riverpod_annotation.dart';
-import 'package:stream_transform/stream_transform.dart';
-
-part 'wallet_views_live_updater.r.g.dart';
+part of 'wallet_views_service.r.dart';
 
 /// Helper class to tag different stream types for combination
 class _StreamUpdate {
-  const _StreamUpdate.coinTransactions(Map<CoinData, List<TransactionData>> data)
-      : coinTransactions = data,
+  const _StreamUpdate.coinTransactions(
+    Map<CoinData, List<TransactionData>> data,
+  )   : coinTransactions = data,
         nftTransactions = null,
         coins = null;
 
@@ -72,9 +52,13 @@ class WalletViewsLiveUpdater {
 
   /// Watches for live updates to wallet views and applies them automatically.
   /// Returns a stream of fully updated wallet views.
-  Stream<List<WalletViewData>> watchWalletViews(List<WalletViewData> walletViews) async* {
+  Stream<List<WalletViewData>> watchWalletViews(
+    List<WalletViewData> walletViews,
+  ) async* {
     if (walletViews.isEmpty) {
-      Logger.info('WalletViewsLiveUpdater: No wallet views to watch, returning empty stream');
+      Logger.info(
+        'WalletViewsLiveUpdater: No wallet views to watch, returning empty stream',
+      );
       return;
     }
 
@@ -86,13 +70,15 @@ class WalletViewsLiveUpdater {
     );
 
     if (coinIds.isEmpty && !hasNfts) {
-      Logger.info('WalletViewsLiveUpdater: No coins or NFTs to watch, returning empty stream');
+      Logger.info(
+        'WalletViewsLiveUpdater: No coins or NFTs to watch, returning empty stream',
+      );
       return;
     }
 
     // Create individual streams
     final coinTransactionsStream = _createCoinTransactionsStream(coinIds);
-    final nftTransactionsStream = _createNftTransactionsStream(hasNfts);
+    final nftTransactionsStream = _createNftTransactionsStream(walletViews);
     final coinsStream = _createCoinsStream(coinIds);
 
     // Combine all streams into update objects and apply them to wallet views
@@ -139,22 +125,58 @@ class WalletViewsLiveUpdater {
   }
 
   /// Creates stream for NFT transactions (broadcasted transfers)
-  Stream<List<TransactionData>> _createNftTransactionsStream(bool hasNfts) {
-    if (!hasNfts) {
+  Stream<List<TransactionData>> _createNftTransactionsStream(
+    List<WalletViewData> walletViews,
+  ) {
+    // Extract NFT identifiers from current wallet views
+    final nftIdentifiers =
+        walletViews.expand((view) => view.nfts).map((nft) => nft.identifier).toList();
+
+    if (nftIdentifiers.isEmpty) {
       return Stream.value(<TransactionData>[]);
     }
+
+    Logger.info(
+      '[NFT_STREAM_DEBUG] Setting up NFT transactions stream | '
+      'Watching ${nftIdentifiers.length} NFT identifiers | '
+      'NFT_IDs: [${nftIdentifiers.map((id) => id.value).join(', ')}] | '
+      'WalletViews: ${walletViews.length} | '
+      'Query: type=SEND, assetType=NFT, statuses=IN_PROGRESS',
+    );
 
     return _transactionsRepository
         .watchTransactions(
       type: TransactionType.send,
       assetType: CryptoAssetType.nft,
+      nftIdentifiers: nftIdentifiers,
       statuses: TransactionStatus.inProgressStatuses,
     )
         .map((transactions) {
       // Filter out tier 2 networks for NFTs
+      final tier1Transactions = transactions.where((tx) => tx.network.tier == 1).toList();
+
       Logger.info(
-          'WalletViewsLiveUpdater: Found ${transactions.length} NFT transactions with in-progress status');
-      return transactions.where((tx) => tx.network.tier == 1).toList();
+        '[NFT_STREAM_DEBUG] ✅ NFT Stream Results | '
+        'Total: ${transactions.length} transactions | '
+        'Tier1: ${tier1Transactions.length} transactions | '
+        'Status: All IN_PROGRESS | Type: SEND',
+      );
+
+      for (final tx in tier1Transactions) {
+        final nftId = tx.cryptoAsset.when(
+          coin: (_, __, ___, ____, _____) => 'N/A',
+          nft: (nft) => nft.identifier.value,
+          nftIdentifier: (identifier, _) => identifier.value,
+        );
+        Logger.info(
+          '[NFT_STREAM_DEBUG] Stream TX | '
+          'Hash: ${tx.txHash} | Status: ${tx.status} | '
+          'NFT_ID: $nftId | Network: ${tx.network.id} | '
+          'WalletView: ${tx.walletViewId} | Sender: ${tx.senderWalletAddress}',
+        );
+      }
+
+      return tier1Transactions;
     });
   }
 
@@ -340,7 +362,9 @@ class WalletViewsLiveUpdater {
       final adjustedBalanceUSD = adjustedAmount * coinInWallet.coin.priceUSD;
 
       if (adjustedAmount > 0 && balanceHackApplied) {
-        Logger.info('The reduction is complete. Adjusted amount: $adjustedAmount');
+        Logger.info(
+          'The reduction is complete. Adjusted amount: $adjustedAmount',
+        );
       }
 
       updatedCoin = coinInWallet.copyWith(
@@ -353,7 +377,7 @@ class WalletViewsLiveUpdater {
     return updatedCoin;
   }
 
-  /// Filters out NFTs that have been sent but are still in broadcasted status.
+  /// Filters out NFTs that have been sent and are still in-progress (pending, executing, broadcasted).
   List<NftData> _applyExecutingNftTransactions({
     required String walletViewId,
     required List<NftData> nfts,
@@ -361,14 +385,43 @@ class WalletViewsLiveUpdater {
   }) {
     if (transactions.isEmpty) {
       Logger.info(
-        'WalletViewsLiveUpdater: No NFT transactions to filter for wallet view $walletViewId',
+        '[NFT_DEBUG] FILTER: No NFT transactions to filter for wallet view $walletViewId, returning ${nfts.length} NFTs unchanged',
       );
       return nfts;
     }
 
     Logger.info(
-      'WalletViewsLiveUpdater: Filtering ${nfts.length} NFTs against ${transactions.length} NFT transactions for wallet view $walletViewId',
+      '[NFT_FILTER_DEBUG] 🔍 Starting NFT filtering | '
+      'WalletView: $walletViewId | '
+      'NFTs to filter: ${nfts.length} | '
+      'Transactions to check: ${transactions.length} | '
+      'User wallets: ${_userWallets.length}',
     );
+
+    // Log the NFTs in the wallet view
+    Logger.info('[NFT_FILTER_DEBUG] 📋 Available NFTs in wallet view:');
+    for (final nft in nfts) {
+      Logger.info(
+        '[NFT_FILTER_DEBUG] NFT | Name: ${nft.name} | '
+        'ID: ${nft.identifier.value} | '
+        'Contract: ${nft.contract} | TokenId: ${nft.tokenId} | Symbol: ${nft.symbol}',
+      );
+    }
+
+    // Log the transactions we're filtering against
+    Logger.info('[NFT_FILTER_DEBUG] 📝 In-progress send transactions to check:');
+    for (final tx in transactions) {
+      final nftId = tx.cryptoAsset.when(
+        coin: (_, __, ___, ____, _____) => 'N/A',
+        nft: (nft) => nft.identifier.value,
+        nftIdentifier: (identifier, _) => identifier.value,
+      );
+      Logger.info(
+        '[NFT_FILTER_DEBUG] TX | Hash: ${tx.txHash} | '
+        'Status: ${tx.status} | NFT_ID: $nftId | '
+        'WalletView: ${tx.walletViewId} | Sender: ${tx.senderWalletAddress}',
+      );
+    }
 
     final filteredNfts = <NftData>[];
     var nftsFiltered = 0;
@@ -386,13 +439,36 @@ class WalletViewsLiveUpdater {
         final isTransactionRelatedToWalletView = transaction.walletViewId == walletViewId;
         final transactionNft = transaction.cryptoAsset;
 
+        // Check if this is an NFT transaction (either full or minimized)
+        final isNftTransaction = transactionNft is NftTransactionAsset ||
+            transactionNft is NftIdentifierTransactionAsset;
+
+        // Get the NFT identifier from either variant
+        final transactionNftIdentifier = switch (transactionNft) {
+          NftTransactionAsset(nft: final nft) => nft.identifier,
+          NftIdentifierTransactionAsset(nftIdentifier: final identifier) => identifier,
+          _ => null,
+        };
+
+        Logger.info(
+          '[NFT_FILTER_DEBUG] 🔍 Checking NFT vs Transaction | '
+          'NFT_ID: ${nft.identifier.value} | TX: ${transaction.txHash} | '
+          'TxNftId: $transactionNftIdentifier | IDMatch: ${transactionNftIdentifier == nft.identifier} | '
+          'RelatedToNft: $isTransactionRelatedToNft | IsNftTx: $isNftTransaction | '
+          'RelatedToWalletView: $isTransactionRelatedToWalletView | '
+          'TxSender: ${transaction.senderWalletAddress} | WalletAddr: ${wallet?.address}',
+        );
+
         if (isTransactionRelatedToNft &&
-            transactionNft is NftTransactionAsset &&
+            isNftTransaction &&
             isTransactionRelatedToWalletView &&
-            transactionNft.nft.identifier == nft.identifier) {
+            transactionNftIdentifier != null &&
+            transactionNftIdentifier == nft.identifier) {
           Logger.info(
-            'WalletViewsLiveUpdater: Filtering out NFT ${nft.name} (${nft.contract}:${nft.tokenId}) '
-            'due to broadcasted transaction ${transaction.txHash} on network ${transaction.network.id}',
+            '[NFT_FILTER_DEBUG] ❌ FILTERING OUT NFT | '
+            'Name: ${nft.name} | NFT_ID: ${nft.identifier.value} | '
+            'Reason: ${transaction.status} transaction | '
+            'TX: ${transaction.txHash} | Network: ${transaction.network.id}',
           );
           shouldFilterOut = true;
           nftsFiltered++;
@@ -406,8 +482,25 @@ class WalletViewsLiveUpdater {
     }
 
     Logger.info(
-      'WalletViewsLiveUpdater: Filtered out $nftsFiltered NFTs, ${filteredNfts.length} NFTs remaining',
+      '[NFT_FILTER_DEBUG] ✅ FILTERING COMPLETE | '
+      'WalletView: $walletViewId | '
+      'Filtered out: $nftsFiltered NFTs | '
+      'Remaining: ${filteredNfts.length} NFTs | '
+      'Original: ${nfts.length} NFTs',
     );
+
+    // Log remaining NFTs
+    if (filteredNfts.isNotEmpty) {
+      Logger.info('[NFT_FILTER_DEBUG] 📋 Remaining NFTs after filtering:');
+      for (final nft in filteredNfts) {
+        Logger.info(
+          '[NFT_FILTER_DEBUG] Remaining | Name: ${nft.name} | ID: ${nft.identifier.value} | Contract: ${nft.contract} | TokenId: ${nft.tokenId} | Symbol: ${nft.symbol}',
+        );
+      }
+    } else {
+      Logger.info('[NFT_FILTER_DEBUG] 🚫 No NFTs remaining after filtering');
+    }
+
     return filteredNfts;
   }
 }
