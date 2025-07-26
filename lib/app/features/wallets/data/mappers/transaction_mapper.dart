@@ -41,7 +41,7 @@ class CoinTransactionsMapper {
       ),
       nft: (nft) {
         final nftIdentifier = '${nft.contract}_${nft.tokenId}';
-        
+
         Logger.info(
           '[NFT_MAPPER_DEBUG] Mapping NFT transaction to DB | '
           'TxHash: ${details.txHash} | '
@@ -54,7 +54,7 @@ class CoinTransactionsMapper {
           'Type: ${details.type.value} | '
           'SenderAddress: ${details.senderAddress}',
         );
-        
+
         return db.Transaction(
           id: details.id,
           txHash: details.txHash,

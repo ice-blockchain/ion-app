@@ -157,7 +157,7 @@ class TransactionsDao extends DatabaseAccessor<WalletsDatabase> with _$Transacti
           'Type: $type | Statuses: [${statuses.map((s) => s.name).join(', ')}] | '
           'WalletViews: [${walletViewIds.join(', ')}]',
         );
-        
+
         for (final tx in results) {
           final nftId = tx.cryptoAsset.when(
             coin: (_, __, ___, ____, _____) => 'N/A',
