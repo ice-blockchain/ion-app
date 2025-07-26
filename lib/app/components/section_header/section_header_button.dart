@@ -8,13 +8,13 @@ import 'package:ion/app/extensions/num.dart';
 import 'package:ion/generated/assets.gen.dart';
 
 class SectionHeaderButton extends StatelessWidget {
-  const SectionHeaderButton(
-    this.onPress, {
+  const SectionHeaderButton({
+    this.onPress,
     super.key,
     this.iconSize,
   });
 
-  final VoidCallback onPress;
+  final VoidCallback? onPress;
   final double? iconSize;
 
   static double get hitSlop => 10.0.s;

@@ -33,35 +33,32 @@ class TrendingVideoAuthor extends ConsumerWidget {
       ),
     ];
 
-    return Padding(
-      padding: EdgeInsets.all(8.0.s),
-      child: TextButton(
-        onPressed: () {
-          ProfileRoute(pubkey: pubkey).push<void>(context);
-        },
-        child: Padding(
-          padding: EdgeInsets.all(4.0.s),
-          child: Row(
-            children: [
-              IonConnectAvatar(
-                size: 20.0.s,
-                pubkey: pubkey,
-              ),
-              Flexible(
-                child: Padding(
-                  padding: EdgeInsetsDirectional.only(start: 4.0.s),
-                  child: Text(
-                    userMetadata.data.displayName,
-                    overflow: TextOverflow.ellipsis,
-                    style: context.theme.appTextThemes.caption3.copyWith(
-                      color: context.theme.appColors.secondaryBackground,
-                      shadows: boxShadow,
-                    ),
+    return TextButton(
+      onPressed: () {
+        ProfileRoute(pubkey: pubkey).push<void>(context);
+      },
+      child: Padding(
+        padding: EdgeInsets.all(12.0.s),
+        child: Row(
+          children: [
+            IonConnectAvatar(
+              size: 20.0.s,
+              pubkey: pubkey,
+            ),
+            Flexible(
+              child: Padding(
+                padding: EdgeInsetsDirectional.only(start: 4.0.s),
+                child: Text(
+                  userMetadata.data.displayName,
+                  overflow: TextOverflow.ellipsis,
+                  style: context.theme.appTextThemes.caption3.copyWith(
+                    color: context.theme.appColors.secondaryBackground,
+                    shadows: boxShadow,
                   ),
                 ),
               ),
-            ],
-          ),
+            ),
+          ],
         ),
       ),
     );
