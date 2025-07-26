@@ -126,7 +126,8 @@ class SyncTransactionsService {
     );
 
     Logger.info(
-      'Completed syncing wallet $walletAddress with transactions (${inProgressTransactions.length} in progress)',
+      'Completed syncing wallet $walletAddress with transactions (${inProgressTransactions.length} in progress)\n'
+      '${inProgressTransactions.map((tx) => tx.txHash).join('\n')}',
     );
   }
 
