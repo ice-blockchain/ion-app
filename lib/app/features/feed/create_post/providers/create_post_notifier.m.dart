@@ -43,6 +43,7 @@ import 'package:ion/app/features/ion_connect/model/related_hashtag.f.dart';
 import 'package:ion/app/features/ion_connect/model/related_pubkey.f.dart';
 import 'package:ion/app/features/ion_connect/model/replaceable_event_identifier.f.dart';
 import 'package:ion/app/features/ion_connect/model/rich_text.f.dart';
+import 'package:ion/app/features/ion_connect/model/source_post_reference.f.dart';
 import 'package:ion/app/features/ion_connect/providers/ion_connect_delete_file_notifier.m.dart';
 import 'package:ion/app/features/ion_connect/providers/ion_connect_entity_provider.r.dart';
 import 'package:ion/app/features/ion_connect/providers/ion_connect_notifier.r.dart';
@@ -97,6 +98,8 @@ class CreatePostNotifier extends _$CreatePostNotifier {
         ...extractTags(postContent).map((tag) => RelatedHashtag(value: tag)),
       }.toList();
 
+      final relatedEvents = parentEntity != null ? _buildRelatedEvents(parentEntity) : null;
+
       final postData = ModifiablePostData(
         textContent: '',
         media: media,
@@ -105,7 +108,10 @@ class CreatePostNotifier extends _$CreatePostNotifier {
         editingEndedAt: _buildEditingEndedAt(),
         relatedHashtags: relatedHashtags,
         quotedEvent: quotedEvent != null ? _buildQuotedEvent(quotedEvent) : null,
-        relatedEvents: parentEntity != null ? _buildRelatedEvents(parentEntity) : null,
+        relatedEvents: relatedEvents,
+        sourcePostReference: sourcePostReference != null
+            ? SourcePostReference(eventReference: sourcePostReference)
+            : null,
         relatedPubkeys:
             _buildRelatedPubkeys(mentions: mentions, parentEntity: parentEntity).toList(),
         settings:
@@ -115,7 +121,6 @@ class CreatePostNotifier extends _$CreatePostNotifier {
         richText: await _buildRichTextContentWithMediaLinks(
           content: postContent,
           media: media.values.toList(),
-          sourcePostReference: sourcePostReference,
         ),
         poll: poll,
       );
@@ -405,21 +410,15 @@ class CreatePostNotifier extends _$CreatePostNotifier {
   Future<RichText> _buildRichTextContentWithMediaLinks({
     required Delta content,
     required List<MediaAttachment> media,
-    EventReference? sourcePostReference,
   }) async {
     final contentWithMedia = await _buildContentWithMediaLinksDelta(
       content: content,
       media: media,
     );
 
-    // Add source post reference as a special attribute if provided
-    final finalContent = sourcePostReference != null
-        ? _addSourcePostReference(contentWithMedia, sourcePostReference)
-        : contentWithMedia;
-
     final richText = RichText(
       protocol: 'quill_delta',
-      content: jsonEncode(finalContent.toJson()),
+      content: jsonEncode(contentWithMedia.toJson()),
     );
 
     return richText;
@@ -438,16 +437,6 @@ class CreatePostNotifier extends _$CreatePostNotifier {
           )
           .toList(),
     ).concat(newContentDelta);
-  }
-
-  Delta _addSourcePostReference(Delta content, EventReference sourcePostReference) {
-    // Add an invisible character with a custom attribute containing the source post reference
-    final sourcePostOp = Operation.insert(
-      '\u200B', // Zero-width space
-      {'sourcePost': sourcePostReference.encode()},
-    );
-
-    return Delta.fromOperations([sourcePostOp]).concat(content);
   }
 
   List<RelatedEvent> _buildRelatedEvents(IonConnectEntity parentEntity) {
