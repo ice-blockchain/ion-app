@@ -1,5 +1,7 @@
 // SPDX-License-Identifier: ice License 1.0
 
+import 'dart:developer' as dev;
+
 import 'package:flutter_command/flutter_command.dart';
 import 'package:talker_dio_logger/talker_dio_logger_interceptor.dart';
 import 'package:talker_dio_logger/talker_dio_logger_settings.dart';
@@ -9,13 +11,48 @@ import 'package:talker_riverpod_logger/talker_riverpod_logger_settings.dart';
 
 const _verboseRiverpod = false;
 
+// class SimpleLogFormatter implements LoggerFormatter {
+//   const SimpleLogFormatter();
+
+//   @override
+//   String fmt(LogDetails details, TalkerLoggerSettings settings) {
+//     return details.pen.call((details.message ?? '').toString());
+//   }
+// }
+
+
+class CompactLogger extends TalkerLogger {
+  CompactLogger()
+      : super(
+          formatter: const ColoredLoggerFormatter(),
+          output: (message) {
+            final parts = message.split('<separator/>');
+            if (parts.length == 2) {
+              dev.log(parts[0], name: parts[1]);
+            } else {
+              dev.log(message, name: 'log');
+            }
+          },
+        );
+
+  @override
+  void log(dynamic msg, {LogLevel? level, AnsiPen? pen}) {
+    print('lKEK');
+    super.log('$level<separator/>$msg', pen: pen);
+  }
+}
+
 class Logger {
   Logger._();
 
   static Talker? _talker;
 
   static void init({bool verbose = false}) {
-    _talker = TalkerFlutter.init(
+    _talker = Talker(
+      // logger: CompactLogger(), //SimpleLogLogger(),
+      logger: CompactLogger(
+
+      ),
       settings: TalkerSettings(
         useConsoleLogs: verbose,
         maxHistoryItems: 100000,
@@ -41,7 +78,8 @@ class Logger {
 
           // Riverpod section
           TalkerLogType.riverpodAdd.key: AnsiPen()..xterm(67), // Steel blue
-          TalkerLogType.riverpodUpdate.key: AnsiPen()..xterm(71), // Bright green
+          TalkerLogType.riverpodUpdate.key: AnsiPen()
+            ..xterm(71), // Bright green
           TalkerLogType.riverpodDispose.key: AnsiPen()..xterm(161), // Magenta
           TalkerLogType.riverpodFail.key: AnsiPen()..xterm(160), // Deep red
 
@@ -67,7 +105,8 @@ class Logger {
         ),
       );
 
-  static TalkerRiverpodObserver get talkerRiverpodObserver => TalkerRiverpodObserver(
+  static TalkerRiverpodObserver get talkerRiverpodObserver =>
+      TalkerRiverpodObserver(
         // enable logger by default + printProviderFailed->true
         settings: const TalkerRiverpodLoggerSettings(
           printProviderAdded: _verboseRiverpod,

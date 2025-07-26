@@ -144,9 +144,9 @@ dependencies:
   stream_transform: ^2.1.1
   super_sliver_list: ^0.4.1
   synchronized: ^3.3.0+3
-  talker_dio_logger: 4.7.1
-  talker_flutter: 4.7.1
-  talker_riverpod_logger: 4.7.1
+  talker_dio_logger: 4.8.4
+  talker_flutter: 4.8.4
+  talker_riverpod_logger: 4.8.4
   timeago: ^3.6.1
   uri_to_file: ^1.0.0
   url_launcher: ^6.3.1
