@@ -77,9 +77,7 @@ class TransactionsDao extends DatabaseAccessor<WalletsDatabase> with _$Transacti
           dateRequested: Value(existing.dateRequested ?? toInsertRaw.dateRequested),
           dateConfirmed: Value(existing.dateConfirmed ?? toInsertRaw.dateConfirmed),
           createdAtInRelay: Value(existing.createdAtInRelay ?? toInsertRaw.createdAtInRelay),
-          transferredAmount: Value(
-            existing.transferredAmount ?? toInsertRaw.transferredAmount,
-          ),
+          transferredAmount: Value(existing.transferredAmount ?? toInsertRaw.transferredAmount),
           transferredAmountUsd: Value(
             existing.transferredAmountUsd ?? toInsertRaw.transferredAmountUsd,
           ),
@@ -94,9 +92,7 @@ class TransactionsDao extends DatabaseAccessor<WalletsDatabase> with _$Transacti
         batch.insertAllOnConflictUpdate(transactionsTable, toInsert);
       });
 
-      await visibilityStatusDao.addOrUpdateVisibilityStatus(
-        transactions: transactions,
-      );
+      await visibilityStatusDao.addOrUpdateVisibilityStatus(transactions: transactions);
 
       return newTransactions.isNotEmpty || updatedTransactions.isNotEmpty;
     });
@@ -119,15 +115,6 @@ class TransactionsDao extends DatabaseAccessor<WalletsDatabase> with _$Transacti
     String? networkId,
     CryptoAssetType? assetType,
   }) {
-    if (nftIdentifiers.isNotEmpty || assetType == CryptoAssetType.nft) {
-      Logger.info(
-        '[NFT_DEBUG] DAO_QUERY: Watching NFT transactions | '
-        'NftIdentifiers: [${nftIdentifiers.join(', ')}] | '
-        'AssetType: $assetType | Type: $type | '
-        'Statuses: [${statuses.map((s) => s.name).join(', ')}] | '
-        'WalletViewIds: [${walletViewIds.join(', ')}]',
-      );
-    }
     return _createTransactionQuery(
       where: (tbl, transactionCoinAlias, nativeCoinAlias) => _buildTransactionWhereClause(
         tbl,
@@ -147,33 +134,7 @@ class TransactionsDao extends DatabaseAccessor<WalletsDatabase> with _$Transacti
       ),
       limit: limit,
       offset: offset,
-    ).watch().map((rows) {
-      final results = rows.toList();
-      if (nftIdentifiers.isNotEmpty || assetType == CryptoAssetType.nft) {
-        Logger.info(
-          '[NFT_DAO_DEBUG] NFT Query Results | '
-          'Found ${results.length} transactions | '
-          'Query - NFTIds: [${nftIdentifiers.join(', ')}] | '
-          'Type: $type | Statuses: [${statuses.map((s) => s.name).join(', ')}] | '
-          'WalletViews: [${walletViewIds.join(', ')}]',
-        );
-
-        for (final tx in results) {
-          final nftId = tx.cryptoAsset.when(
-            coin: (_, __, ___, ____, _____) => 'N/A',
-            nft: (nft) => nft.identifier.value,
-            nftIdentifier: (identifier, _) => identifier.value,
-          );
-          Logger.info(
-            '[NFT_DAO_DEBUG] Result TX | '
-            'Hash: ${tx.txHash} | NFT_ID: $nftId | '
-            'Status: ${tx.status} | WalletView: ${tx.walletViewId} | '
-            'Sender: ${tx.senderWalletAddress}',
-          );
-        }
-      }
-      return results;
-    });
+    ).watch().map((transactions) => transactions.whereType<TransactionData>().toList());
   }
 
   Future<List<TransactionData>> getTransactions({
@@ -193,7 +154,7 @@ class TransactionsDao extends DatabaseAccessor<WalletsDatabase> with _$Transacti
     TransactionType? type,
     CryptoAssetType? assetType,
   }) async {
-    return _createTransactionQuery(
+    final result = await _createTransactionQuery(
       where: (tbl, transactionCoinAlias, nativeCoinAlias) => _buildTransactionWhereClause(
         tbl,
         coinIds: coinIds,
@@ -213,10 +174,12 @@ class TransactionsDao extends DatabaseAccessor<WalletsDatabase> with _$Transacti
       limit: limit,
       offset: offset,
     ).get();
+
+    return result.whereType<TransactionData>().toList();
   }
 
   /// Creates the standard query with joins for transaction tables
-  Selectable<TransactionData> _createTransactionQuery({
+  Selectable<TransactionData?> _createTransactionQuery({
     required Expression<bool> Function(
       $TransactionsTableTable tbl,
       $CoinsTableTable transactionCoinAlias,
@@ -379,7 +342,7 @@ class TransactionsDao extends DatabaseAccessor<WalletsDatabase> with _$Transacti
         .watchSingleOrNull();
   }
 
-  TransactionData _mapRowToDomainModel(
+  TransactionData? _mapRowToDomainModel(
     TypedResult row, {
     required $CoinsTableTable nativeCoinAlias,
     required $CoinsTableTable transactionCoinAlias,
@@ -396,24 +359,12 @@ class TransactionsDao extends DatabaseAccessor<WalletsDatabase> with _$Transacti
     }
 
     final domainNetwork = NetworkData.fromDB(network);
-
-    // Determine if this is an NFT or coin transaction
     final isNftTransaction = transaction.nftIdentifier != null && transaction.coinId == null;
-
-    Logger.info(
-      '[NFT_DEBUG] DAO_MAPPING: TX ${transaction.txHash} | IsNFT: $isNftTransaction | '
-      'NftIdentifier: ${transaction.nftIdentifier} | '
-      'CoinId: ${transaction.coinId} | Status: ${transaction.status}',
-    );
 
     TransactionCryptoAsset cryptoAsset;
 
     if (isNftTransaction) {
       final identifierSource = transaction.nftIdentifier!;
-      Logger.info(
-        '[NFT_DEBUG] DAO_MAPPING: Creating NFT transaction | TX: ${transaction.txHash} | '
-        'IdentifierSource: $identifierSource',
-      );
       cryptoAsset = TransactionCryptoAsset.nftIdentifier(
         nftIdentifier: NftIdentifier.parseIdentifier(identifierSource),
         network: domainNetwork,
@@ -421,9 +372,12 @@ class TransactionsDao extends DatabaseAccessor<WalletsDatabase> with _$Transacti
     } else {
       // Handle coin transaction
       if (transactionCoin == null) {
-        throw StateError(
-          'Transaction ${transaction.txHash} has no associated coin',
+        Logger.warning(
+          '[TRANSACTIONS_DAO] Transaction ${transaction.txHash} has no associated coin. '
+          'Coin ID: ${transaction.coinId} | Network: ${network.id} | WalletView: ${transaction.walletViewId}. '
+          'This can happen when coins are removed from supported list over time. Skipping transaction.',
         );
+        return null;
       }
 
       final transferredAmount = transaction.transferredAmount ?? '0';
