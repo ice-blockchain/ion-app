@@ -77,15 +77,19 @@ class WalletViewsDataNotifier extends _$WalletViewsDataNotifier {
         'Found: ${currentTransactions.length} in-progress send transactions | '
         'Type: SEND | Status: IN_PROGRESS',
       );
-      
+
       // Log breakdown by asset type
-      final coinTxs = currentTransactions.where((tx) => tx.cryptoAsset.when(
-        coin: (_, __, ___, ____, _____) => true,
-        nft: (_) => false,
-        nftIdentifier: (_, __) => false,
-      ),).length;
+      final coinTxs = currentTransactions
+          .where(
+            (tx) => tx.cryptoAsset.when(
+              coin: (_, __, ___, ____, _____) => true,
+              nft: (_) => false,
+              nftIdentifier: (_, __) => false,
+            ),
+          )
+          .length;
       final nftTxs = currentTransactions.length - coinTxs;
-      
+
       Logger.info(
         '[UNIFIED_TX_DEBUG] Transaction breakdown | '
         'Coins: $coinTxs | NFTs: $nftTxs | Total: ${currentTransactions.length}',
@@ -123,7 +127,7 @@ class WalletViewsDataNotifier extends _$WalletViewsDataNotifier {
           Logger.info('[UNIFIED_TX_DEBUG] Refreshing wallet view: $walletViewId');
           await walletViewsService.refresh(walletViewId);
         }
-        
+
         Logger.info('[UNIFIED_TX_DEBUG] ✅ All affected wallet views refreshed');
       }
     });
