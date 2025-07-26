@@ -146,7 +146,11 @@ class _TopControls extends StatelessWidget {
             iconSize: 16.0.s,
             eventReference: eventReference,
             iconColor: context.theme.appColors.onPrimaryAccent,
-            padding: EdgeInsetsDirectional.only(end: 6.0.s, top: 12.0.s),
+            padding: EdgeInsetsDirectional.only(
+              start: 6.0.s,
+              end: 6.0.s,
+              top: 12.0.s,
+            ),
           ),
         ],
       ),
