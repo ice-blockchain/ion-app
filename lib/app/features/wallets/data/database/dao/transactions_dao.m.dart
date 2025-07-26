@@ -7,15 +7,16 @@ import 'package:ion/app/features/wallets/data/database/tables/coins_table.d.dart
 import 'package:ion/app/features/wallets/data/database/tables/networks_table.d.dart';
 import 'package:ion/app/features/wallets/data/database/tables/transactions_table.d.dart';
 import 'package:ion/app/features/wallets/data/database/wallets_database.m.dart';
-
 import 'package:ion/app/features/wallets/model/coin_data.f.dart';
 import 'package:ion/app/features/wallets/model/crypto_asset_type.dart';
 import 'package:ion/app/features/wallets/model/network_data.f.dart';
+import 'package:ion/app/features/wallets/model/nft_identifier.f.dart';
 import 'package:ion/app/features/wallets/model/transaction_crypto_asset.f.dart';
 import 'package:ion/app/features/wallets/model/transaction_data.f.dart';
 import 'package:ion/app/features/wallets/model/transaction_status.f.dart';
 import 'package:ion/app/features/wallets/model/transaction_type.dart';
 import 'package:ion/app/features/wallets/utils/crypto_amount_parser.dart';
+import 'package:ion/app/services/logger/logger.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'transactions_dao.m.g.dart';
@@ -76,7 +77,9 @@ class TransactionsDao extends DatabaseAccessor<WalletsDatabase> with _$Transacti
           dateRequested: Value(existing.dateRequested ?? toInsertRaw.dateRequested),
           dateConfirmed: Value(existing.dateConfirmed ?? toInsertRaw.dateConfirmed),
           createdAtInRelay: Value(existing.createdAtInRelay ?? toInsertRaw.createdAtInRelay),
-          transferredAmount: Value(existing.transferredAmount ?? toInsertRaw.transferredAmount),
+          transferredAmount: Value(
+            existing.transferredAmount ?? toInsertRaw.transferredAmount,
+          ),
           transferredAmountUsd: Value(
             existing.transferredAmountUsd ?? toInsertRaw.transferredAmountUsd,
           ),
@@ -91,7 +94,9 @@ class TransactionsDao extends DatabaseAccessor<WalletsDatabase> with _$Transacti
         batch.insertAllOnConflictUpdate(transactionsTable, toInsert);
       });
 
-      await visibilityStatusDao.addOrUpdateVisibilityStatus(transactions: transactions);
+      await visibilityStatusDao.addOrUpdateVisibilityStatus(
+        transactions: transactions,
+      );
 
       return newTransactions.isNotEmpty || updatedTransactions.isNotEmpty;
     });
@@ -99,7 +104,7 @@ class TransactionsDao extends DatabaseAccessor<WalletsDatabase> with _$Transacti
 
   Stream<List<TransactionData>> watchTransactions({
     List<String> coinIds = const [],
-    List<String> assetIds = const [],
+    List<String> nftIdentifiers = const [],
     List<String> txHashes = const [],
     List<String> walletAddresses = const [],
     List<String> walletViewIds = const [],
@@ -114,11 +119,20 @@ class TransactionsDao extends DatabaseAccessor<WalletsDatabase> with _$Transacti
     String? networkId,
     CryptoAssetType? assetType,
   }) {
+    if (nftIdentifiers.isNotEmpty || assetType == CryptoAssetType.nft) {
+      Logger.info(
+        '[NFT_DEBUG] DAO_QUERY: Watching NFT transactions | '
+        'NftIdentifiers: [${nftIdentifiers.join(', ')}] | '
+        'AssetType: $assetType | Type: $type | '
+        'Statuses: [${statuses.map((s) => s.name).join(', ')}] | '
+        'WalletViewIds: [${walletViewIds.join(', ')}]',
+      );
+    }
     return _createTransactionQuery(
       where: (tbl, transactionCoinAlias, nativeCoinAlias) => _buildTransactionWhereClause(
         tbl,
         coinIds: coinIds,
-        assetIds: assetIds,
+        nftIdentifiers: nftIdentifiers,
         txHashes: txHashes,
         walletAddresses: walletAddresses,
         walletViewIds: walletViewIds,
@@ -133,12 +147,38 @@ class TransactionsDao extends DatabaseAccessor<WalletsDatabase> with _$Transacti
       ),
       limit: limit,
       offset: offset,
-    ).watch().map((rows) => rows.toList());
+    ).watch().map((rows) {
+      final results = rows.toList();
+      if (nftIdentifiers.isNotEmpty || assetType == CryptoAssetType.nft) {
+        Logger.info(
+          '[NFT_DAO_DEBUG] NFT Query Results | '
+          'Found ${results.length} transactions | '
+          'Query - NFTIds: [${nftIdentifiers.join(', ')}] | '
+          'Type: $type | Statuses: [${statuses.map((s) => s.name).join(', ')}] | '
+          'WalletViews: [${walletViewIds.join(', ')}]',
+        );
+        
+        for (final tx in results) {
+          final nftId = tx.cryptoAsset.when(
+            coin: (_, __, ___, ____, _____) => 'N/A',
+            nft: (nft) => nft.identifier.value,
+            nftIdentifier: (identifier, _) => identifier.value,
+          );
+          Logger.info(
+            '[NFT_DAO_DEBUG] Result TX | '
+            'Hash: ${tx.txHash} | NFT_ID: $nftId | '
+            'Status: ${tx.status} | WalletView: ${tx.walletViewId} | '
+            'Sender: ${tx.senderWalletAddress}',
+          );
+        }
+      }
+      return results;
+    });
   }
 
   Future<List<TransactionData>> getTransactions({
     List<String> coinIds = const [],
-    List<String> assetIds = const [],
+    List<String> nftIdentifiers = const [],
     List<String> txHashes = const [],
     List<String> walletAddresses = const [],
     List<String> walletViewIds = const [],
@@ -157,7 +197,7 @@ class TransactionsDao extends DatabaseAccessor<WalletsDatabase> with _$Transacti
       where: (tbl, transactionCoinAlias, nativeCoinAlias) => _buildTransactionWhereClause(
         tbl,
         coinIds: coinIds,
-        assetIds: assetIds,
+        nftIdentifiers: nftIdentifiers,
         txHashes: txHashes,
         walletAddresses: walletAddresses,
         walletViewIds: walletViewIds,
@@ -229,7 +269,7 @@ class TransactionsDao extends DatabaseAccessor<WalletsDatabase> with _$Transacti
   Expression<bool> _buildTransactionWhereClause(
     $TransactionsTableTable tbl, {
     List<String> coinIds = const [],
-    List<String> assetIds = const [],
+    List<String> nftIdentifiers = const [],
     List<String> txHashes = const [],
     List<String> walletAddresses = const [],
     List<String> walletViewIds = const [],
@@ -248,8 +288,8 @@ class TransactionsDao extends DatabaseAccessor<WalletsDatabase> with _$Transacti
       expr = expr & tbl.coinId.isIn(coinIds);
     }
 
-    if (assetIds.isNotEmpty) {
-      expr = expr & tbl.assetId.isIn(assetIds);
+    if (nftIdentifiers.isNotEmpty) {
+      expr = expr & tbl.nftIdentifier.isIn(nftIdentifiers);
     }
 
     if (assetType != null) {
@@ -257,7 +297,7 @@ class TransactionsDao extends DatabaseAccessor<WalletsDatabase> with _$Transacti
         case CryptoAssetType.coin:
           expr = expr & tbl.coinId.isNotNull();
         case CryptoAssetType.nft:
-          expr = expr & tbl.assetId.isNotNull();
+          expr = expr & tbl.nftIdentifier.isNotNull();
       }
     }
 
@@ -349,9 +389,56 @@ class TransactionsDao extends DatabaseAccessor<WalletsDatabase> with _$Transacti
     final nativeCoin = row.readTableOrNull(nativeCoinAlias);
     final transactionCoin = row.readTableOrNull(transactionCoinAlias);
 
-    final domainNetwork = NetworkData.fromDB(network!);
-    final transferredAmount = transaction.transferredAmount ?? '0';
-    final transferredCoin = CoinData.fromDB(transactionCoin!, domainNetwork);
+    if (network == null) {
+      throw StateError(
+        'Transaction ${transaction.txHash} has no associated network',
+      );
+    }
+
+    final domainNetwork = NetworkData.fromDB(network);
+
+    // Determine if this is an NFT or coin transaction
+    final isNftTransaction = transaction.nftIdentifier != null && transaction.coinId == null;
+
+    Logger.info(
+      '[NFT_DEBUG] DAO_MAPPING: TX ${transaction.txHash} | IsNFT: $isNftTransaction | '
+      'NftIdentifier: ${transaction.nftIdentifier} | '
+      'CoinId: ${transaction.coinId} | Status: ${transaction.status}',
+    );
+
+    TransactionCryptoAsset cryptoAsset;
+
+    if (isNftTransaction) {
+      final identifierSource = transaction.nftIdentifier!;
+      Logger.info(
+        '[NFT_DEBUG] DAO_MAPPING: Creating NFT transaction | TX: ${transaction.txHash} | '
+        'IdentifierSource: $identifierSource',
+      );
+      cryptoAsset = TransactionCryptoAsset.nftIdentifier(
+        nftIdentifier: NftIdentifier.parseIdentifier(identifierSource),
+        network: domainNetwork,
+      );
+    } else {
+      // Handle coin transaction
+      if (transactionCoin == null) {
+        throw StateError(
+          'Transaction ${transaction.txHash} has no associated coin',
+        );
+      }
+
+      final transferredAmount = transaction.transferredAmount ?? '0';
+      final transferredCoin = CoinData.fromDB(transactionCoin, domainNetwork);
+
+      cryptoAsset = TransactionCryptoAsset.coin(
+        coin: transferredCoin,
+        amount: parseCryptoAmount(
+          transferredAmount,
+          transferredCoin.decimals,
+        ),
+        amountUSD: transaction.transferredAmountUsd ?? 0.0,
+        rawAmount: transferredAmount,
+      );
+    }
 
     return TransactionData(
       txHash: transaction.txHash,
@@ -361,15 +448,7 @@ class TransactionsDao extends DatabaseAccessor<WalletsDatabase> with _$Transacti
       senderWalletAddress: transaction.senderWalletAddress,
       receiverWalletAddress: transaction.receiverWalletAddress,
       nativeCoin: nativeCoin != null ? CoinData.fromDB(nativeCoin, domainNetwork) : null,
-      cryptoAsset: CoinTransactionAsset(
-        coin: transferredCoin,
-        amount: parseCryptoAmount(
-          transferredAmount,
-          transferredCoin.decimals,
-        ),
-        amountUSD: transaction.transferredAmountUsd!,
-        rawAmount: transferredAmount,
-      ),
+      cryptoAsset: cryptoAsset,
       id: transaction.id,
       fee: transaction.fee,
       externalHash: transaction.externalHash,
@@ -405,7 +484,9 @@ class TransactionsDao extends DatabaseAccessor<WalletsDatabase> with _$Transacti
 
       if (conditions.isEmpty) {
         // Should never happen, but defensive
-        throw StateError('Attempted to delete transactions with no WHERE condition.');
+        throw StateError(
+          'Attempted to delete transactions with no WHERE condition.',
+        );
       }
 
       deleteQuery.where((_) => conditions.reduce((a, b) => a & b));

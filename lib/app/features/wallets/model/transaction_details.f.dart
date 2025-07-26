@@ -58,6 +58,9 @@ class TransactionDetails with _$TransactionDetails {
           amountUSD: coin.amountUSD,
         ),
         nft: (nft) => CryptoAssetToSendData.nft(nft: nft.nft),
+        nftIdentifier: (_) => throw const FormatException(
+          'NFT identifier is not supported for the TransactionDetails',
+        ),
       ),
       walletViewName: walletViewName,
       senderAddress: transaction.senderWalletAddress,

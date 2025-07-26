@@ -218,6 +218,10 @@ class PeriodicTransactionsSyncService {
     }
 
     if (totalTransactionsAfter > 0) {
+      Logger.log(
+        'Wallet $walletAddress sync completed with $totalTransactionsAfter remaining transactions:\n'
+        '${pendingTransactionsAfter.map((tx) => tx.txHash).join('\n')}',
+      );
       throw WalletSyncRetryException(
         walletAddress: walletAddress,
         remainingTransactions: totalTransactionsAfter,

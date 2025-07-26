@@ -56,7 +56,7 @@ class WalletsDatabase extends _$WalletsDatabase {
   final String pubkey;
 
   @override
-  int get schemaVersion => 15;
+  int get schemaVersion => 16;
 
   static QueryExecutor _openConnection(String pubkey) {
     return driftDatabase(name: 'wallets_database_$pubkey');
@@ -179,6 +179,16 @@ class WalletsDatabase extends _$WalletsDatabase {
         },
         from14To15: (m, schema) async {
           await m.createTable(transactionVisibilityStatusTable);
+        },
+        from15To16: (m, schema) async {
+          final columnExists = await isColumnExists(
+            tableName: schema.transactionsTableV2.actualTableName,
+            columnName: 'nft_identifier',
+          );
+
+          if (!columnExists) {
+            await m.addColumn(schema.transactionsTableV2, schema.transactionsTableV2.nftIdentifier);
+          }
         },
       ),
     );

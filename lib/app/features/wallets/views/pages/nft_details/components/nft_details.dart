@@ -8,7 +8,7 @@ import 'package:ion/app/components/card/rounded_card.dart';
 import 'package:ion/app/components/list_item/list_item.dart';
 import 'package:ion/app/components/read_more_text/read_more_text.dart';
 import 'package:ion/app/extensions/extensions.dart';
-import 'package:ion/app/features/wallets/model/nft_data.f.dart';
+import 'package:ion/app/features/wallets/model/nft_identifier.f.dart';
 import 'package:ion/app/features/wallets/providers/send_nft_form_provider.r.dart';
 import 'package:ion/app/features/wallets/views/components/network_icon_widget.dart';
 import 'package:ion/app/features/wallets/views/components/nft_name.dart';

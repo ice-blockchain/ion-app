@@ -85,10 +85,29 @@ class SendNftNotifier extends _$SendNftNotifier {
       // Save NFT transaction to database
       try {
         final transactionsRepository = await ref.read(transactionsRepositoryProvider.future);
+        
+        // Enhanced logging for NFT transaction saving
+        final nftId = details.assetData.when(
+          coin: (_, __, ___, ____, _____, ______) => 'N/A',
+          nft: (nft) => '${nft.contract}_${nft.tokenId}',
+          notInitialized: () => 'NOT_INITIALIZED',
+        );
+        
+        Logger.info(
+          '[NFT_SEND_DEBUG] Saving NFT transaction | '
+          'TxHash: ${details.txHash} | '
+          'NFT_ID: $nftId | '
+          'WalletViewId: ${details.walletViewId} | '
+          'Status: ${details.status} | '
+          'Type: ${details.type} | '
+          'SenderAddress: ${details.senderAddress} | '
+          'ReceiverAddress: ${details.receiverAddress}',
+        );
+        
         await transactionsRepository.saveTransactionDetails(details);
-        Logger.info('NFT transaction saved to database: ${details.txHash}');
+        Logger.info('[NFT_SEND_DEBUG] ✅ NFT transaction saved successfully: ${details.txHash}');
       } catch (error) {
-        Logger.error('Failed to save NFT transaction to database: $error');
+        Logger.error('[NFT_SEND_DEBUG] ❌ Failed to save NFT transaction: $error');
       }
 
       return details;
