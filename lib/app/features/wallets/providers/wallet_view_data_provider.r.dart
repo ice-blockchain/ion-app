@@ -42,6 +42,7 @@ class WalletViewsDataNotifier extends _$WalletViewsDataNotifier {
     ref.onDispose(() {
       _subscription?.cancel();
       _broadcastedTransfersSubscription?.cancel();
+      _walletViewTransactions.clear();
     });
 
     return walletViews;
@@ -50,87 +51,88 @@ class WalletViewsDataNotifier extends _$WalletViewsDataNotifier {
   Future<void> _setupBroadcastedTransfersListener(List<WalletViewData> walletViews) async {
     await _broadcastedTransfersSubscription?.cancel();
 
-    if (walletViews.isEmpty) {
-      return;
-    }
-
-    final walletViewIds = walletViews.map((view) => view.id).toList();
+    if (walletViews.isEmpty) return;
 
     final transactionsRepository = await ref.read(transactionsRepositoryProvider.future);
+    final walletViewIds = walletViews.map((view) => view.id).toList();
 
-    Logger.info(
-      '[UNIFIED_TX_DEBUG] Setting up unified transaction listener | '
-      'WalletViews: ${walletViewIds.length} | '
-      'Query: type=SEND, statuses=IN_PROGRESS | '
-      'Watches: BOTH coins and NFTs',
-    );
-
-    _broadcastedTransfersSubscription = transactionsRepository
-        .watchTransactions(
+    final currentTransactions = await transactionsRepository.getTransactions(
       type: TransactionType.send,
       walletViewIds: walletViewIds,
       statuses: TransactionStatus.inProgressStatuses,
-    )
-        .listen((List<TransactionData> currentTransactions) async {
-      Logger.info(
-        '[UNIFIED_TX_DEBUG] ✅ Unified Transaction Results | '
-        'Found: ${currentTransactions.length} in-progress send transactions | '
-        'Type: SEND | Status: IN_PROGRESS',
-      );
+    );
 
-      // Log breakdown by asset type
-      final coinTxs = currentTransactions
-          .where(
-            (tx) => tx.cryptoAsset.when(
-              coin: (_, __, ___, ____, _____) => true,
-              nft: (_) => false,
-              nftIdentifier: (_, __) => false,
-            ),
-          )
-          .length;
-      final nftTxs = currentTransactions.length - coinTxs;
+    _initializeTransactionCache(currentTransactions);
 
-      Logger.info(
-        '[UNIFIED_TX_DEBUG] Transaction breakdown | '
-        'Coins: $coinTxs | NFTs: $nftTxs | Total: ${currentTransactions.length}',
-      );
+    _broadcastedTransfersSubscription = transactionsRepository
+        .watchTransactions(
+          type: TransactionType.send,
+          walletViewIds: walletViewIds,
+          statuses: TransactionStatus.inProgressStatuses,
+        )
+        .listen(_onBroadcastedTransfersUpdate);
+  }
 
-      // Group transactions by wallet view ID
-      final currentTransactionsByWalletView = <String, Set<String>>{};
-      for (final transaction in currentTransactions) {
-        currentTransactionsByWalletView
-            .putIfAbsent(transaction.walletViewId, () => <String>{})
-            .add(transaction.txHash);
-      }
+  Future<void> _onBroadcastedTransfersUpdate(List<TransactionData> transactions) async {
+    final currentTransactionsByWalletView = _groupTransactionsByWalletView(transactions);
+    final affectedWalletViewIds = _findAffectedWalletViews(currentTransactionsByWalletView);
 
-      final affectedWalletViewIds = <String>{};
-      for (final walletViewId in walletViewIds) {
-        final currentTxs = currentTransactionsByWalletView[walletViewId] ?? <String>{};
-        final cachedTxs = _walletViewTransactions[walletViewId] ?? <String>{};
+    if (affectedWalletViewIds.isNotEmpty) {
+      await _refreshAffectedWalletViews(affectedWalletViewIds);
+    }
+  }
 
-        if (!const SetEquality<String>().equals(currentTxs, cachedTxs)) {
-          affectedWalletViewIds.add(walletViewId);
-          _walletViewTransactions[walletViewId] = currentTxs;
-        }
-      }
+  /// Finds wallet view IDs that have transaction changes compared to cached state
+  Set<String> _findAffectedWalletViews(Map<String, Set<String>> currentTransactionsByWalletView) {
+    final affectedWalletViewIds = <String>{};
 
-      if (affectedWalletViewIds.isNotEmpty) {
+    final allWalletViewIds = <String>{
+      ...currentTransactionsByWalletView.keys,
+      ..._walletViewTransactions.keys,
+    };
+
+    for (final walletViewId in allWalletViewIds) {
+      final currentTxs = currentTransactionsByWalletView[walletViewId] ?? <String>{};
+      final cachedTxs = _walletViewTransactions[walletViewId] ?? <String>{};
+
+      if (!const SetEquality<String>().equals(currentTxs, cachedTxs)) {
+        affectedWalletViewIds.add(walletViewId);
+        _walletViewTransactions[walletViewId] = currentTxs;
+
         Logger.info(
-          '[UNIFIED_TX_DEBUG] 🔄 Triggering wallet view refresh | '
-          'Affected: ${affectedWalletViewIds.length} wallet views | '
-          'WalletViewIds: [${affectedWalletViewIds.join(', ')}] | '
-          'Reason: Transaction list changed',
+          '[WalletViewDataNotifier] Wallet view affected | '
+          'ID: $walletViewId | '
+          'Current TXs: ${currentTxs.length} | '
+          'Cached TXs: ${cachedTxs.length}',
         );
-
-        final walletViewsService = await ref.read(walletViewsServiceProvider.future);
-        for (final walletViewId in affectedWalletViewIds) {
-          Logger.info('[UNIFIED_TX_DEBUG] Refreshing wallet view: $walletViewId');
-          await walletViewsService.refresh(walletViewId);
-        }
-
-        Logger.info('[UNIFIED_TX_DEBUG] ✅ All affected wallet views refreshed');
       }
-    });
+    }
+
+    return affectedWalletViewIds;
+  }
+
+  void _initializeTransactionCache(List<TransactionData> currentTransactions) {
+    _walletViewTransactions.clear();
+    final grouped = _groupTransactionsByWalletView(currentTransactions);
+    _walletViewTransactions.addAll(grouped);
+  }
+
+  /// Groups transactions by wallet view id
+  Map<String, Set<String>> _groupTransactionsByWalletView(List<TransactionData> transactions) {
+    final grouped = <String, Set<String>>{};
+    for (final transaction in transactions) {
+      grouped.putIfAbsent(transaction.walletViewId, () => <String>{}).add(transaction.txHash);
+    }
+    return grouped;
+  }
+
+  Future<void> _refreshAffectedWalletViews(Set<String> affectedWalletViewIds) async {
+    final walletViewsService = await ref.read(walletViewsServiceProvider.future);
+
+    for (final walletViewId in affectedWalletViewIds) {
+      Logger.info('[WalletViewDataNotifier] Refreshing wallet view: $walletViewId');
+      await walletViewsService.refresh(walletViewId);
+    }
   }
 
   Future<void> create(String walletViewName) async {

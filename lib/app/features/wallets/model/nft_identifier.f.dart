@@ -11,7 +11,6 @@ class NftIdentifier with _$NftIdentifier {
     required String tokenId,
   }) = _NftIdentifier;
 
-  /// Parses a string identifier back to NFT identifier record
   /// Expected format: "${contract}_${tokenId}"
   factory NftIdentifier.parseIdentifier(String identifier) {
     final parts = identifier.split('_');
@@ -19,7 +18,6 @@ class NftIdentifier with _$NftIdentifier {
       throw ArgumentError('Invalid NFT identifier format: $identifier');
     }
 
-    // Handle case where contract address or tokenId might contain underscores
     final contract = parts.first;
     final tokenId = parts.skip(1).join('_');
 
@@ -28,7 +26,5 @@ class NftIdentifier with _$NftIdentifier {
 
   const NftIdentifier._();
 
-  /// Generates a string identifier from NFT identifier record
-  /// Format: "${contract}_${tokenId}"
   String get value => '${contract}_$tokenId';
 }

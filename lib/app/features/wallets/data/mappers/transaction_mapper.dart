@@ -21,47 +21,33 @@ class CoinTransactionsMapper {
         rawAmount,
         selectedOption,
         associatedAssetWithSelectedOption,
-      ) =>
-          db.Transaction(
-        id: details.id,
-        txHash: details.txHash,
-        type: details.type.value,
-        walletViewId: details.walletViewId,
-        networkId: details.network.id,
-        coinId: selectedOption!.coin.id,
-        nativeCoinId: details.nativeCoin?.id,
-        senderWalletAddress: details.senderAddress,
-        receiverWalletAddress: details.receiverAddress,
-        userPubkey: details.participantPubkey,
-        transferredAmount: rawAmount,
-        transferredAmountUsd: amountUSD,
-        status: details.status.toJson(),
-        dateConfirmed: details.dateConfirmed,
-        dateRequested: details.dateRequested,
-      ),
-      nft: (nft) {
-        final nftIdentifier = '${nft.contract}_${nft.tokenId}';
-
-        Logger.info(
-          '[NFT_MAPPER_DEBUG] Mapping NFT transaction to DB | '
-          'TxHash: ${details.txHash} | '
-          'NFT Contract: ${nft.contract} | '
-          'NFT TokenId: ${nft.tokenId} | '
-          'NFT_Identifier: $nftIdentifier | '
-          'WalletViewId: ${details.walletViewId} | '
-          'NetworkId: ${details.network.id} | '
-          'Status: ${details.status.toJson()} | '
-          'Type: ${details.type.value} | '
-          'SenderAddress: ${details.senderAddress}',
-        );
-
+      ) {
         return db.Transaction(
           id: details.id,
           txHash: details.txHash,
           type: details.type.value,
           walletViewId: details.walletViewId,
           networkId: details.network.id,
-          nftIdentifier: nftIdentifier,
+          coinId: selectedOption!.coin.id,
+          nativeCoinId: details.nativeCoin?.id,
+          senderWalletAddress: details.senderAddress,
+          receiverWalletAddress: details.receiverAddress,
+          userPubkey: details.participantPubkey,
+          transferredAmount: rawAmount,
+          transferredAmountUsd: amountUSD,
+          status: details.status.toJson(),
+          dateConfirmed: details.dateConfirmed,
+          dateRequested: details.dateRequested,
+        );
+      },
+      nft: (nft) {
+        return db.Transaction(
+          id: details.id,
+          txHash: details.txHash,
+          type: details.type.value,
+          walletViewId: details.walletViewId,
+          networkId: details.network.id,
+          nftIdentifier: nft.identifier.value,
           nativeCoinId: details.nativeCoin?.id,
           senderWalletAddress: details.senderAddress,
           receiverWalletAddress: details.receiverAddress,
@@ -119,7 +105,6 @@ class CoinTransactionsMapper {
                 ? TransactionType.send.value
                 : TransactionType.receive.value,
             txHash: content.txHash,
-            // assetId: , // Here should be nftId in case of nfts
             networkId: entity.data.networkId,
             coinId: coin?.id,
             nativeCoinId: nativeCoin?.id,

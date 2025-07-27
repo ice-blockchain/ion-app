@@ -19,6 +19,7 @@ import 'package:ion/app/features/wallets/model/coins_group.f.dart';
 import 'package:ion/app/features/wallets/model/crypto_asset_type.dart';
 import 'package:ion/app/features/wallets/model/network_data.f.dart';
 import 'package:ion/app/features/wallets/model/nft_data.f.dart';
+import 'package:ion/app/features/wallets/model/nft_identifier.f.dart';
 import 'package:ion/app/features/wallets/model/transaction_crypto_asset.f.dart';
 import 'package:ion/app/features/wallets/model/transaction_data.f.dart';
 import 'package:ion/app/features/wallets/model/transaction_status.f.dart';
@@ -123,22 +124,12 @@ class WalletViewsService {
         .wait
         .then((result) => result.toList());
 
-    Logger.info(
-      '[WALLET_FETCH_DEBUG] Parsed ${_originWalletViews.length} wallet views from API | '
-      'Total NFTs: ${_originWalletViews.expand((wv) => wv.nfts).length}',
-    );
-
-    // Trigger subscription refresh so live updater can apply filtering
-    // This ensures fetch() and refresh() follow the same pattern
-    Logger.info('[WALLET_FETCH_DEBUG] Triggering subscription refresh to apply filtering');
-    _updateEmittedWalletViews(walletViews: _originWalletViews);
+    await _updateEmittedWalletViews(walletViews: _originWalletViews);
 
     return _originWalletViews;
   }
 
   Future<void> refresh(String walletViewId) async {
-    Logger.info('[WALLET_REFRESH_DEBUG] Starting refresh for wallet view: $walletViewId');
-
     final viewDTO = await _identity.wallets.getWalletView(walletViewId);
     final networks = await _networksRepository.getAllAsMap();
 
@@ -154,35 +145,24 @@ class WalletViewsService {
       networks,
       isMainWalletView: currentWalletView.isMainWalletView,
     );
-
-    Logger.info(
-      '[WALLET_REFRESH_DEBUG] Parsed refreshed wallet view | '
-      'WalletViewId: $walletViewId | '
-      'NFTs: ${refreshedWalletView.nfts.length} | '
-      'NFT_IDs: [${refreshedWalletView.nfts.map((nft) => nft.identifier.value).join(', ')}]',
-    );
-
-    // Update _originWalletViews with raw API data
     _originWalletViews[index] = refreshedWalletView;
-
-    // Trigger subscription refresh so live updater can apply filtering
-    // This follows the same pattern as fetch() method
-    Logger.info('[WALLET_REFRESH_DEBUG] Triggering subscription refresh to apply filtering');
-    _updateEmittedWalletViews(walletViews: _originWalletViews);
+    await _updateEmittedWalletViews(walletViews: _originWalletViews);
   }
 
-  void _updateEmittedWalletViews({
+  Future<void> _updateEmittedWalletViews({
     List<WalletViewData>? walletViews,
     bool refreshSubscriptions = true,
     bool updatePeriodicCoinsSync = true,
-  }) {
+    bool applyCurrentFiltering = true,
+  }) async {
     if (updatePeriodicCoinsSync) {
       final coins = _originWalletViews.expand((wv) => wv.coins).map((c) => c.coin).toList();
-      _syncWalletViewCoinsService.start(coins);
+      await _syncWalletViewCoinsService.start(coins);
     }
 
     if (walletViews != null) {
-      _modifiedWalletViews = walletViews;
+      _modifiedWalletViews =
+          applyCurrentFiltering ? await _liveUpdater.applyFiltering(walletViews) : walletViews;
     }
 
     _walletViewsController.add(_modifiedWalletViews);
@@ -193,23 +173,16 @@ class WalletViewsService {
   void _refreshUpdateSubscription() {
     if (_originWalletViews.isEmpty) return;
 
-    Logger.info(
-      'WalletViewsService: Setting up live updates for ${_originWalletViews.length} wallet views',
-    );
-
     _updatesSubscription?.cancel();
-    _updatesSubscription = _liveUpdater.watchWalletViews(_originWalletViews).listen((updatedViews) {
-      Logger.info('WalletViewsService: Received updated wallet views from live updater.');
-      Logger.info(
-        'WalletViewsService: Nfts in walletViews\n${_originWalletViews.expand((wv) => wv.nfts).map((nft) => '${nft.name} | ${nft.contract} | ${nft.tokenId} | ${nft.symbol}').join('\n')}',
-      );
-
+    _updatesSubscription =
+        _liveUpdater.watchWalletViews(_originWalletViews).listen((updatedViews) async {
       if (_originWalletViews.isEmpty) return;
 
-      _updateEmittedWalletViews(
+      await _updateEmittedWalletViews(
         walletViews: updatedViews,
         refreshSubscriptions: false,
         updatePeriodicCoinsSync: false,
+        applyCurrentFiltering: false, // Already filtered by live updater
       );
     });
   }
@@ -222,7 +195,7 @@ class WalletViewsService {
         );
 
     _originWalletViews = [..._originWalletViews, newWalletView];
-    _updateEmittedWalletViews(walletViews: _originWalletViews);
+    await _updateEmittedWalletViews(walletViews: _originWalletViews);
 
     return newWalletView;
   }
@@ -257,7 +230,7 @@ class WalletViewsService {
       _originWalletViews.add(updatedWalletView);
     }
 
-    _updateEmittedWalletViews(walletViews: _originWalletViews);
+    await _updateEmittedWalletViews(walletViews: _originWalletViews);
 
     return updatedWalletView;
   }
@@ -273,7 +246,7 @@ class WalletViewsService {
 
     _originWalletViews = _originWalletViews.where((view) => view.id != walletViewId).toList();
 
-    _updateEmittedWalletViews(walletViews: _originWalletViews);
+    await _updateEmittedWalletViews(walletViews: _originWalletViews);
   }
 
   void dispose() {

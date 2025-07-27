@@ -268,51 +268,20 @@ class TransactionsRepository {
     CryptoAssetType? assetType,
     TransactionType? type,
   }) {
-    final nftIdentifierValues = nftIdentifiers.map((e) => e.value).toList();
-
-    if (nftIdentifierValues.isNotEmpty || assetType == CryptoAssetType.nft) {
-      Logger.info(
-        '[NFT_DEBUG] REPO: watchTransactions called with | '
-        'NftIdentifiers: [${nftIdentifierValues.join(', ')}] | '
-        'AssetType: $assetType | Type: $type | '
-        'Statuses: [${statuses.map((s) => s.name).join(', ')}] | '
-        'WalletViewIds: [${walletViewIds.join(', ')}]',
-      );
-    }
-
-    return _transactionsDao
-        .watchTransactions(
+    return _transactionsDao.watchTransactions(
       walletAddresses: walletAddresses,
       txHashes: txHashes,
       limit: limit,
       offset: offset,
       coinIds: coinIds,
-      nftIdentifiers: nftIdentifierValues,
+      nftIdentifiers: nftIdentifiers.map((e) => e.value).toList(),
       networkId: network?.id,
       walletViewIds: walletViewIds,
       statuses: statuses,
       confirmedSince: confirmedSince,
       assetType: assetType,
       type: type,
-    )
-        .map((transactions) {
-      if (nftIdentifierValues.isNotEmpty || assetType == CryptoAssetType.nft) {
-        Logger.info(
-          '[NFT_DEBUG] REPO: watchTransactions returning ${transactions.length} transactions',
-        );
-        for (final tx in transactions) {
-          final nftId = tx.cryptoAsset.when(
-            coin: (_, __, ___, ____, _____) => 'N/A',
-            nft: (nft) => nft.identifier.value,
-            nftIdentifier: (identifier, _) => identifier.value,
-          );
-          Logger.info(
-            '[NFT_DEBUG] REPO: Returned TX ${tx.txHash} | Status: ${tx.status} | NFT: $nftId | WalletView: ${tx.walletViewId}',
-          );
-        }
-      }
-      return transactions;
-    });
+    );
   }
 
   Future<List<TransactionData>> getTransactions({
@@ -326,6 +295,7 @@ class TransactionsRepository {
     int offset = 0,
     NetworkData? network,
     CryptoAssetType? assetType,
+    TransactionType? type,
   }) {
     return _transactionsDao.getTransactions(
       walletAddresses: walletAddresses,
@@ -338,6 +308,7 @@ class TransactionsRepository {
       walletViewIds: walletViewIds,
       statuses: statuses,
       assetType: assetType,
+      type: type,
     );
   }
 
@@ -389,7 +360,6 @@ class TransactionsRepository {
             fallbackAddress: !type.isSend ? wallet.address : null,
           );
 
-          // First, try to parse as a coin transaction
           CoinData? coin;
 
           if (transaction.isNativeTransfer) {
