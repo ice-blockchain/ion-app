@@ -2,6 +2,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:ion/app/components/screen_offset/screen_side_offset.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/core/model/media_type.dart';
 import 'package:ion/app/features/feed/views/components/post/components/post_body/components/post_media/components/post_media_index_indicator.dart';
@@ -37,6 +38,9 @@ class PostMediaCarouselVertical extends HookConsumerWidget {
       child: ListView.separated(
         itemCount: media.length,
         scrollDirection: Axis.horizontal,
+        padding: EdgeInsets.symmetric(
+          horizontal: ScreenSideOffset.defaultSmallMargin,
+        ),
         separatorBuilder: (context, index) {
           return SizedBox(
             width: 12.0.s,

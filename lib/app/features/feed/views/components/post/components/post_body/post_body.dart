@@ -114,54 +114,62 @@ class PostBody extends HookConsumerWidget {
         final displayDelta = truncResult.delta;
         final hasOverflow = truncResult.hasOverflow;
 
-        return Padding(
-          padding: EdgeInsetsDirectional.symmetric(horizontal: sidePadding ?? 16.0.s),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            spacing: 10.0.s,
-            children: [
-              if (showTextContent)
-                TextEditorPreview(
-                  scrollable: false,
-                  content: displayDelta,
-                  customStyles: accentTheme
-                      ? textEditorStyles(
-                          context,
-                          color: context.theme.appColors.onPrimaryAccent,
-                        )
-                      : null,
-                  enableInteractiveSelection: isTextSelectable,
-                  tagsColor: accentTheme ? context.theme.appColors.anakiwa : null,
+        return Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          spacing: 10.0.s,
+          children: [
+            if (showTextContent || hasOverflow || pollData != null)
+              Padding(
+                padding: EdgeInsetsDirectional.symmetric(horizontal: sidePadding ?? 16.0.s),
+                child: Column(
+                  children: [
+                    if (showTextContent)
+                      TextEditorPreview(
+                        scrollable: false,
+                        content: displayDelta,
+                        customStyles: accentTheme
+                            ? textEditorStyles(
+                                context,
+                                color: context.theme.appColors.onPrimaryAccent,
+                              )
+                            : null,
+                        enableInteractiveSelection: isTextSelectable,
+                        tagsColor: accentTheme ? context.theme.appColors.anakiwa : null,
+                      ),
+                    if (hasOverflow)
+                      Text(
+                        context.i18n.common_show_more,
+                        style: context.theme.appTextThemes.body2.copyWith(
+                          color: accentTheme
+                              ? context.theme.appColors.primaryBackground
+                              : context.theme.appColors.darkBlue,
+                        ),
+                      ),
+                    if (pollData != null)
+                      PostPoll(
+                        pollData: pollData,
+                        postReference: entity.toEventReference(),
+                      ),
+                  ],
                 ),
-              if (hasOverflow)
-                Text(
-                  context.i18n.common_show_more,
-                  style: context.theme.appTextThemes.body2.copyWith(
-                    color: accentTheme
-                        ? context.theme.appColors.primaryBackground
-                        : context.theme.appColors.darkBlue,
-                  ),
-                ),
-              if (pollData != null)
-                PostPoll(
-                  pollData: pollData,
-                  postReference: entity.toEventReference(),
-                ),
-              if (media.isNotEmpty)
-                PostMedia(
-                  media: media,
-                  onVideoTap: onVideoTap,
-                  sidePadding: 0,
-                  videoAutoplay: videoAutoplay,
-                  eventReference: entity.toEventReference(),
-                  framedEventReference: framedEventReference,
-                ),
-              if (media.isEmpty && hasValidUrlMetadata)
-                UrlPreviewContent(
+              ),
+            if (media.isNotEmpty)
+              PostMedia(
+                media: media,
+                onVideoTap: onVideoTap,
+                sidePadding: sidePadding,
+                videoAutoplay: videoAutoplay,
+                eventReference: entity.toEventReference(),
+                framedEventReference: framedEventReference,
+              ),
+            if (media.isEmpty && hasValidUrlMetadata)
+              Padding(
+                padding: EdgeInsetsDirectional.symmetric(horizontal: sidePadding ?? 16.0.s),
+                child: UrlPreviewContent(
                   url: firstUrlInPost!,
                 ),
-            ],
-          ),
+              ),
+          ],
         );
       },
     );
