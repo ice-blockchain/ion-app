@@ -93,12 +93,25 @@ class ChatInputBar extends HookConsumerWidget {
 
     useEffect(
       () {
-        if (editMessage != null || repliedMessage != null) {
+        if (repliedMessage != null) {
           textFieldFocusNode.requestFocus();
         }
         return null;
       },
-      [editMessage, repliedMessage],
+      [repliedMessage],
+    );
+
+    useEffect(
+      () {
+        if (editMessage != null) {
+          textFieldFocusNode.requestFocus();
+          textFieldController.text = editMessage.contentDescription;
+        } else {
+          textFieldController.clear();
+        }
+        return null;
+      },
+      [editMessage],
     );
 
     useEffect(
