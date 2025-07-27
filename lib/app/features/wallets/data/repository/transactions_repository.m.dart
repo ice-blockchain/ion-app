@@ -431,7 +431,7 @@ class TransactionsRepository {
             );
           }
 
-          // If neither coin nor NFT parsing worked, log error and return null
+          // If neither coin nor NFT parsing worked, log error and return null to skip this later
           Logger.error(
             "Ignore transaction ${transaction.txHash}, because transferred coin wasn't found and NFT parsing failed. "
             'Tried symbol: ${transaction.metadata.asset.symbol}, '
@@ -442,19 +442,6 @@ class TransactionsRepository {
         .wait
         .then((result) => result.toList());
 
-    if (transactions.contains(null)) {
-      final tokensLog = await _coinsDao.getByFilters(isNative: true).then(
-            (result) => result
-                .map(
-                  (e) => '${e.abbreviation} in ${e.network.id}(${e.id})',
-                )
-                .join('\n'),
-          );
-      Logger.error(
-        'Result transaction list for ${network.id} contains null. '
-        'All available native tokens: \n$tokensLog',
-      );
-    }
     return (transactions: transactions.nonNulls.toList(), nextPageToken: result.nextPageToken);
   }
 
