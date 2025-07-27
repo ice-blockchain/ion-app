@@ -50,13 +50,13 @@ class WalletViewsLiveUpdater {
   final CoinsRepository _coinsRepository;
   final List<Wallet> _userWallets;
 
-  /// Watches for live updates to wallet views and applies them automatically.
+  /// Watches for live updates to wallet views.
   /// Returns a stream of fully updated wallet views.
   Stream<List<WalletViewData>> watchWalletViews(
     List<WalletViewData> walletViews,
   ) async* {
     if (walletViews.isEmpty) {
-      Logger.info(
+      Logger.error(
         'WalletViewsLiveUpdater: No wallet views to watch, returning empty stream',
       );
       return;
@@ -70,26 +70,143 @@ class WalletViewsLiveUpdater {
     );
 
     if (coinIds.isEmpty && !hasNfts) {
-      Logger.info(
-        'WalletViewsLiveUpdater: No coins or NFTs to watch, returning empty stream',
-      );
+      Logger.info('WalletViewsLiveUpdater: No coins or NFTs to watch, returning empty stream');
       return;
     }
 
-    // Create individual streams
     final coinTransactionsStream = _createCoinTransactionsStream(coinIds);
     final nftTransactionsStream = _createNftTransactionsStream(walletViews);
     final coinsStream = _createCoinsStream(coinIds);
 
-    // Combine all streams into update objects and apply them to wallet views
     await for (final update in _combineStreams(
       coinTransactionsStream,
       nftTransactionsStream,
       coinsStream,
     )) {
-      final updatedWalletViews = _applyWalletViewUpdates(walletViews, update);
-      yield updatedWalletViews;
+      yield _applyWalletViewUpdates(walletViews, update);
     }
+  }
+
+  /// Applies filtering rules to wallet views without creating streams.
+  /// Uses the same unified logic as the stream-based filtering.
+  Future<List<WalletViewData>> applyFiltering(
+    List<WalletViewData> walletViews,
+  ) async {
+    if (walletViews.isEmpty) {
+      return walletViews;
+    }
+
+    final coinIds = _extractCoinIds(walletViews);
+    final hasNfts = _hasNfts(walletViews);
+
+    if (coinIds.isEmpty && !hasNfts) {
+      return walletViews;
+    }
+
+    Logger.info(
+      '[NFT_SYNC_FILTER_DEBUG] 🔄 Applying synchronous filtering | '
+      'WalletViews: ${walletViews.length} | '
+      'CoinIds: ${coinIds.length} | HasNfts: $hasNfts',
+    );
+
+    // Get current data using the same logic as streams but synchronously
+    final coinTransactions = await _getCoinTransactionsData(coinIds);
+    final nftTransactions = await _getNftTransactionsData(walletViews);
+    final updatedCoins = await _getCoinsData(coinIds);
+
+    Logger.info(
+      '[NFT_SYNC_FILTER_DEBUG] ✅ Data retrieved | '
+      'CoinTransactions: ${coinTransactions.values.fold(0, (sum, txs) => sum + txs.length)} | '
+      'NftTransactions: ${nftTransactions.length} | '
+      'UpdatedCoins: ${updatedCoins.length}',
+    );
+
+    // Create update object and apply filtering
+    final update = WalletViewUpdate(
+      coinTransactions: coinTransactions,
+      nftTransactions: nftTransactions,
+      updatedCoins: updatedCoins,
+    );
+
+    return _applyWalletViewUpdates(walletViews, update);
+  }
+
+  Future<Map<CoinData, List<TransactionData>>> _getCoinTransactionsData(
+    Set<String> coinIds,
+  ) async {
+    if (coinIds.isEmpty) {
+      return <CoinData, List<TransactionData>>{};
+    }
+
+    final transactions =
+        await _transactionsRepository.watchBroadcastedTransfersByCoins(coinIds.toList()).first;
+
+    // Filter out tier 2 networks
+    return Map.fromEntries(
+      transactions.entries.where((e) => e.key.network.tier == 1),
+    );
+  }
+
+  /// Gets NFT transactions data synchronously or as stream
+  Future<List<TransactionData>> _getNftTransactionsData(
+    List<WalletViewData> walletViews,
+  ) async {
+    final nftIdentifiers = _extractNftIdentifiers(walletViews);
+
+    if (nftIdentifiers.isEmpty) {
+      return <TransactionData>[];
+    }
+
+    Logger.info(
+      '[NFT_UNIFIED_DEBUG] Getting NFT transactions data | '
+      'Watching ${nftIdentifiers.length} NFT identifiers | '
+      'NFT_IDs: [${nftIdentifiers.map((id) => id.value).join(', ')}] | '
+      'Query: type=SEND, assetType=NFT, statuses=IN_PROGRESS',
+    );
+
+    final transactions = await _transactionsRepository
+        .watchTransactions(
+          type: TransactionType.send,
+          assetType: CryptoAssetType.nft,
+          nftIdentifiers: nftIdentifiers,
+          statuses: TransactionStatus.inProgressStatuses,
+        )
+        .first;
+
+    // Filter out tier 2 networks for NFTs
+    final tier1Transactions = transactions.where((tx) => tx.network.tier == 1).toList();
+
+    Logger.info(
+      '[NFT_UNIFIED_DEBUG] ✅ NFT Data Results | '
+      'Total: ${transactions.length} transactions | '
+      'Tier1: ${tier1Transactions.length} transactions | '
+      'Status: All IN_PROGRESS | Type: SEND',
+    );
+
+    for (final tx in tier1Transactions) {
+      final nftId = tx.cryptoAsset.when(
+        coin: (_, __, ___, ____, _____) => 'N/A',
+        nft: (nft) => nft.identifier.value,
+        nftIdentifier: (identifier, _) => identifier.value,
+      );
+      Logger.info(
+        '[NFT_UNIFIED_DEBUG] Data TX | '
+        'Hash: ${tx.txHash} | Status: ${tx.status} | '
+        'NFT_ID: $nftId | Network: ${tx.network.id} | '
+        'WalletView: ${tx.walletViewId} | Sender: ${tx.senderWalletAddress}',
+      );
+    }
+
+    return tier1Transactions;
+  }
+
+  /// Gets coins data synchronously or as stream
+  Future<List<CoinData>> _getCoinsData(Set<String> coinIds) async {
+    if (coinIds.isEmpty) {
+      return <CoinData>[];
+    }
+
+    return _coinsRepository.watchCoins(coinIds).first;
   }
 
   /// Extracts unique coin IDs from wallet views
@@ -106,86 +223,46 @@ class WalletViewsLiveUpdater {
     return walletViews.any((view) => view.nfts.isNotEmpty);
   }
 
-  /// Creates stream for coin transactions (broadcasted transfers)
-  Stream<Map<CoinData, List<TransactionData>>> _createCoinTransactionsStream(
-    Set<String> coinIds,
-  ) {
+  /// Extracts NFT identifiers from wallet views
+  List<NftIdentifier> _extractNftIdentifiers(List<WalletViewData> walletViews) {
+    return walletViews.expand((view) => view.nfts).map((nft) => nft.identifier).toList();
+  }
+
+  Stream<Map<CoinData, List<TransactionData>>> _createCoinTransactionsStream(Set<String> coinIds) {
     if (coinIds.isEmpty) {
       return Stream.value(<CoinData, List<TransactionData>>{});
     }
 
-    return _transactionsRepository
-        .watchBroadcastedTransfersByCoins(coinIds.toList())
-        .map((transactions) {
-      // Filter out tier 2 networks
-      return Map.fromEntries(
-        transactions.entries.where((e) => e.key.network.tier == 1),
-      );
-    });
+    return _transactionsRepository.watchBroadcastedTransfersByCoins(coinIds.toList()).map(
+          (transactions) => Map.fromEntries(
+            transactions.entries.where((e) => e.key.network.tier == 1),
+          ),
+        );
   }
 
-  /// Creates stream for NFT transactions (broadcasted transfers)
   Stream<List<TransactionData>> _createNftTransactionsStream(
     List<WalletViewData> walletViews,
   ) {
-    // Extract NFT identifiers from current wallet views
-    final nftIdentifiers =
-        walletViews.expand((view) => view.nfts).map((nft) => nft.identifier).toList();
+    final nftIdentifiers = _extractNftIdentifiers(walletViews);
 
     if (nftIdentifiers.isEmpty) {
       return Stream.value(<TransactionData>[]);
     }
 
-    Logger.info(
-      '[NFT_STREAM_DEBUG] Setting up NFT transactions stream | '
-      'Watching ${nftIdentifiers.length} NFT identifiers | '
-      'NFT_IDs: [${nftIdentifiers.map((id) => id.value).join(', ')}] | '
-      'WalletViews: ${walletViews.length} | '
-      'Query: type=SEND, assetType=NFT, statuses=IN_PROGRESS',
-    );
-
     return _transactionsRepository
         .watchTransactions(
-      type: TransactionType.send,
-      assetType: CryptoAssetType.nft,
-      nftIdentifiers: nftIdentifiers,
-      statuses: TransactionStatus.inProgressStatuses,
-    )
-        .map((transactions) {
-      // Filter out tier 2 networks for NFTs
-      final tier1Transactions = transactions.where((tx) => tx.network.tier == 1).toList();
-
-      Logger.info(
-        '[NFT_STREAM_DEBUG] ✅ NFT Stream Results | '
-        'Total: ${transactions.length} transactions | '
-        'Tier1: ${tier1Transactions.length} transactions | '
-        'Status: All IN_PROGRESS | Type: SEND',
-      );
-
-      for (final tx in tier1Transactions) {
-        final nftId = tx.cryptoAsset.when(
-          coin: (_, __, ___, ____, _____) => 'N/A',
-          nft: (nft) => nft.identifier.value,
-          nftIdentifier: (identifier, _) => identifier.value,
-        );
-        Logger.info(
-          '[NFT_STREAM_DEBUG] Stream TX | '
-          'Hash: ${tx.txHash} | Status: ${tx.status} | '
-          'NFT_ID: $nftId | Network: ${tx.network.id} | '
-          'WalletView: ${tx.walletViewId} | Sender: ${tx.senderWalletAddress}',
-        );
-      }
-
-      return tier1Transactions;
-    });
+          type: TransactionType.send,
+          assetType: CryptoAssetType.nft,
+          nftIdentifiers: nftIdentifiers,
+          statuses: TransactionStatus.inProgressStatuses,
+        )
+        .map((transactions) => transactions.where((tx) => tx.network.tier == 1).toList());
   }
 
-  /// Creates stream for coin data updates (price changes)
   Stream<List<CoinData>> _createCoinsStream(Set<String> coinIds) {
     if (coinIds.isEmpty) {
       return Stream.value(<CoinData>[]);
     }
-
     return _coinsRepository.watchCoins(coinIds);
   }
 
