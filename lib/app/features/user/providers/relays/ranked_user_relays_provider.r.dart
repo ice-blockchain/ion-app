@@ -17,7 +17,8 @@ part 'ranked_user_relays_provider.r.g.dart';
 /// Ranked relays are the relays that are sorted based on their latency.
 ///
 /// Latency is measured by pinging the relays (check [ionConnectRelaysRankerProvider] for details).
-
+/// Emits the ranked relays every time a relay ping is completed.
+/// That is done to avoid hanging the app while waiting for unreachable relays to respond.
 @Riverpod(keepAlive: true)
 class RankedCurrentUserRelays extends _$RankedCurrentUserRelays {
   @override
