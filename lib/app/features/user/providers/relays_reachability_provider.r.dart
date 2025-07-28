@@ -48,7 +48,7 @@ class RelayReachability extends _$RelayReachability {
   }
 
   UserRelaysEntity? getFilteredRelayEntity(UserRelaysEntity relaysEntity) {
-    final reachableRelays = _getReachableRelaysSorted(relaysEntity.data.list);
+    final reachableRelays = _filterReachableRelays(relaysEntity.data.list);
     if (reachableRelays == null) {
       return null;
     }
@@ -82,7 +82,7 @@ class RelayReachability extends _$RelayReachability {
     return 'relay_reachability_info_$relayUrl';
   }
 
-  List<UserRelay>? _getReachableRelaysSorted(List<UserRelay> relaysList) {
+  List<UserRelay>? _filterReachableRelays(List<UserRelay> relaysList) {
     final reachabilityInfoNotifier = ref.read(relayReachabilityProvider.notifier);
     final reachabilityInfos = relaysList
         .map((relay) => reachabilityInfoNotifier.get(relay.url))
