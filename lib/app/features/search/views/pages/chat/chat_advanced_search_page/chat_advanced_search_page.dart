@@ -48,8 +48,8 @@ class ChatAdvancedSearchPage extends HookConsumerWidget {
             children: [
               AdvancedSearchNavigation(
                 query: query,
-                onTapSearch: () {
-                  ChatQuickSearchRoute(query: query).push<void>(context);
+                onTapSearch: (text) {
+                  ChatQuickSearchRoute(query: text).push<void>(context);
                 },
               ),
               SizedBox(height: 16.0.s),

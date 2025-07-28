@@ -21,7 +21,7 @@ class AdvancedSearchNavigation extends HookConsumerWidget {
 
   final String query;
 
-  final VoidCallback onTapSearch;
+  final ValueSetter<String> onTapSearch;
 
   final VoidCallback? onFiltersPressed;
 
@@ -48,12 +48,9 @@ class AdvancedSearchNavigation extends HookConsumerWidget {
           ),
           SizedBox(width: 12.0.s),
           Expanded(
-            child: GestureDetector(
-              behavior: HitTestBehavior.opaque,
+            child: SearchInput(
+              controller: searchController,
               onTap: onTapSearch,
-              child: IgnorePointer(
-                child: SearchInput(controller: searchController, suffix: const SizedBox.shrink()),
-              ),
             ),
           ),
           SizedBox(width: 12.0.s),

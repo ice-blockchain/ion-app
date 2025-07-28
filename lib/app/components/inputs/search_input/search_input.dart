@@ -24,6 +24,7 @@ class SearchInput extends HookWidget {
     this.onSubmitted,
     this.suffix,
     this.showCancelButton = true,
+    this.onTap,
     FocusNode? focusNode,
     TextEditingController? controller,
   })  : externalFocusNode = focusNode,
@@ -41,6 +42,7 @@ class SearchInput extends HookWidget {
   final TextInputAction? textInputAction;
   final ValueChanged<String>? onSubmitted;
   final Widget? suffix;
+  final ValueSetter<String>? onTap;
 
   @override
   Widget build(BuildContext context) {
@@ -64,6 +66,7 @@ class SearchInput extends HookWidget {
           child: SizedBox(
             height: height,
             child: TextField(
+              onTap: () => onTap?.call(searchController.text),
               focusNode: focusNode,
               style: context.theme.appTextThemes.body.copyWith(
                 color: context.theme.appColors.primaryText,
