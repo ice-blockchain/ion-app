@@ -354,40 +354,40 @@ class WalletViewsLiveUpdater {
       return nfts;
     }
 
-    final filteredNfts = <NftData>[];
+    final walletAddressMap = <String, Wallet>{
+      for (final wallet in _userWallets)
+        if (wallet.address != null) wallet.address!: wallet,
+    };
 
-    for (final nft in nfts) {
-      var shouldFilterOut = false;
+    final nftIdentifiersToExclude = <NftIdentifier>{};
 
-      for (final transaction in transactions) {
-        final wallet = _userWallets.firstWhereOrNull(
-          (w) => w.address == transaction.senderWalletAddress,
-        );
+    for (final transaction in transactions) {
+      final wallet = walletAddressMap[transaction.senderWalletAddress];
 
-        final isCurrentUserSender = transaction.senderWalletAddress == wallet?.address;
-        final isTransactionRelatedToWalletView = transaction.walletViewId == walletViewId;
-        final transactionNft = transaction.cryptoAsset;
+      // Skip transaction if not from a user wallet or not related to current wallet view
+      if (wallet == null || transaction.walletViewId != walletViewId) {
+        continue;
+      }
 
-        final isNftTransaction = transactionNft is NftTransactionAsset ||
-            transactionNft is NftIdentifierTransactionAsset;
+      final transactionNft = transaction.cryptoAsset;
+      final isNftTransaction =
+          transactionNft is NftTransactionAsset || transactionNft is NftIdentifierTransactionAsset;
 
+      if (isNftTransaction) {
         final transactionNftIdentifier = switch (transactionNft) {
           NftTransactionAsset(nft: final nft) => nft.identifier,
           NftIdentifierTransactionAsset(nftIdentifier: final identifier) => identifier,
           _ => null,
         };
 
-        if (isNftTransaction &&
-            isCurrentUserSender &&
-            isTransactionRelatedToWalletView &&
-            transactionNftIdentifier == nft.identifier) {
-          shouldFilterOut = true;
-          break;
+        if (transactionNftIdentifier != null) {
+          nftIdentifiersToExclude.add(transactionNftIdentifier);
         }
       }
-
-      if (!shouldFilterOut) filteredNfts.add(nft);
     }
+
+    final filteredNfts =
+        nfts.where((nft) => !nftIdentifiersToExclude.contains(nft.identifier)).toList();
 
     if (filteredNfts.isNotEmpty) {
       Logger.info(
