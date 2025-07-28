@@ -8,10 +8,6 @@ part of 'user_details.f.dart';
 
 _$UserDetailsImpl _$$UserDetailsImplFromJson(Map<String, dynamic> json) =>
     _$UserDetailsImpl(
-      ionConnectIndexerRelays:
-          (json['ionConnectIndexerRelays'] as List<dynamic>)
-              .map((e) => e as String)
-              .toList(),
       masterPubKey: json['masterPubKey'] as String,
       name: json['name'] as String?,
       userId: json['userId'] as String?,
@@ -27,11 +23,14 @@ _$UserDetailsImpl _$$UserDetailsImplFromJson(Map<String, dynamic> json) =>
       ionConnectRelays: (json['ionConnectRelays'] as List<dynamic>?)
           ?.map((e) => IonConnectRelayInfo.fromJson(e as Map<String, dynamic>))
           .toList(),
+      ionConnectIndexerRelays:
+          (json['ionConnectIndexerRelays'] as List<dynamic>?)
+              ?.map((e) => e as String)
+              .toList(),
     );
 
 Map<String, dynamic> _$$UserDetailsImplToJson(_$UserDetailsImpl instance) =>
     <String, dynamic>{
-      'ionConnectIndexerRelays': instance.ionConnectIndexerRelays,
       'masterPubKey': instance.masterPubKey,
       if (instance.name case final value?) 'name': value,
       if (instance.userId case final value?) 'userId': value,
@@ -42,4 +41,6 @@ Map<String, dynamic> _$$UserDetailsImplToJson(_$UserDetailsImpl instance) =>
       if (instance.ionConnectRelays?.map((e) => e.toJson()).toList()
           case final value?)
         'ionConnectRelays': value,
+      if (instance.ionConnectIndexerRelays case final value?)
+        'ionConnectIndexerRelays': value,
     };
