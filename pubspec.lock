@@ -301,18 +301,18 @@ packages:
     dependency: "direct main"
     description:
       name: camera
-      sha256: "413d2b34fe28496c35c69ede5b232fb9dd5ca2c3a4cb606b14efc1c7546cc8cb"
+      sha256: d6ec2cbdbe2fa8f5e0d07d8c06368fe4effa985a4a5ddade9cc58a8cd849557d
       url: "https://pub.dev"
     source: hosted
-    version: "0.11.1"
+    version: "0.11.2"
   camera_android_camerax:
-    dependency: transitive
+    dependency: "direct main"
     description:
       name: camera_android_camerax
-      sha256: ea7e40bd63afb8f55058e48ec529ce96562be9d08393f79631a06f781161fd0d
+      sha256: "4b6c1bef4270c39df96402c4d62f2348c3bb2bbaefd0883b9dbd58f426306ad0"
       url: "https://pub.dev"
     source: hosted
-    version: "0.6.16"
+    version: "0.6.19"
   camera_avfoundation:
     dependency: transitive
     description:
