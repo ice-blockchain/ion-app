@@ -8,7 +8,7 @@ import 'package:ion/app/features/auth/providers/auth_provider.m.dart';
 import 'package:ion/app/features/core/providers/env_provider.r.dart';
 import 'package:ion/app/features/ion_connect/model/relay_info.f.dart';
 import 'package:ion/app/features/ion_connect/providers/relays/relay_info_provider.r.dart';
-import 'package:ion/app/features/user/providers/relays/ranked_user_relays_provider.r.dart';
+import 'package:ion/app/features/user/providers/current_user_identity_provider.r.dart';
 import 'package:ion/app/services/logger/logger.dart';
 import 'package:ion/app/services/storage/local_storage.r.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
@@ -25,7 +25,7 @@ class RelayFirebaseAppConfig extends _$RelayFirebaseAppConfig {
       return null;
     }
 
-    final userRelays = await ref.watch(rankedCurrentUserRelaysProvider.future);
+    final userRelays = await ref.watch(currentUserIdentityConnectRelaysProvider.future);
     if (userRelays == null) {
       return null;
     }

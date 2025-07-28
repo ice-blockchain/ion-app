@@ -16,8 +16,9 @@ part 'relevant_user_relays_provider.r.g.dart';
 
 @Riverpod(keepAlive: true)
 Future<List<String>> relevantCurrentUserRelays(Ref ref) async {
-  final rankedCurrentUserRelays = await ref.watch(rankedCurrentUserRelaysProvider.future);
-  final topRelayUrl = rankedCurrentUserRelays?.firstOrNull?.url;
+  final topRelayUrl = await ref.watch(
+    rankedCurrentUserRelaysProvider.selectAsync((state) => state?.firstOrNull?.url),
+  );
   if (topRelayUrl == null) {
     return [];
   }
