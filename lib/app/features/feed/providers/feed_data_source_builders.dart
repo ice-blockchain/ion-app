@@ -233,7 +233,6 @@ FeedEntitiesDataSource buildStoriesDataSource({
   final search = SearchExtensions(
     [
       ReactionsSearchExtension(currentPubkey: currentPubkey),
-      ReferencesSearchExtension(contain: false),
       ExpirationSearchExtension(expiration: true),
       MediaSearchExtension(contain: true),
       GenericIncludeSearchExtension(

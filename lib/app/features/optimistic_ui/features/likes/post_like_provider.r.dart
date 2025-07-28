@@ -56,8 +56,8 @@ List<PostLike> loadInitialLikesFromCache(Ref ref) {
 @riverpod
 OptimisticService<PostLike> postLikeService(Ref ref) {
   final manager = ref.watch(postLikeManagerProvider);
-  final service = OptimisticService<PostLike>(manager: manager)
-    ..initialize(loadInitialLikesFromCache(ref));
+  final loadInitialLikes = ref.watch(loadInitialLikesFromCacheProvider);
+  final service = OptimisticService<PostLike>(manager: manager)..initialize(loadInitialLikes);
 
   return service;
 }

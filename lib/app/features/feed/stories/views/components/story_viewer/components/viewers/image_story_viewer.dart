@@ -9,6 +9,7 @@ import 'package:ion/app/features/feed/stories/providers/story_image_loading_prov
 import 'package:ion/app/features/feed/stories/providers/story_pause_provider.r.dart';
 import 'package:ion/app/features/feed/stories/views/components/story_viewer/components/viewers/tap_to_see_hint.dart';
 import 'package:ion/app/features/ion_connect/model/quoted_event.f.dart';
+import 'package:ion/app/features/ion_connect/model/source_post_reference.f.dart';
 import 'package:ion/app/router/app_routes.gr.dart';
 
 class ImageStoryViewer extends ConsumerWidget {
@@ -17,6 +18,7 @@ class ImageStoryViewer extends ConsumerWidget {
     required this.authorPubkey,
     required this.storyId,
     this.quotedEvent,
+    this.sourcePostReference,
     super.key,
   });
 
@@ -24,11 +26,14 @@ class ImageStoryViewer extends ConsumerWidget {
   final String authorPubkey;
   final String storyId;
   final QuotedEvent? quotedEvent;
+  final SourcePostReference? sourcePostReference;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final cacheManager = ref.watch(storyImageCacheManagerProvider);
-    final hasQuotedPost = quotedEvent != null;
+
+
+    final hasQuotedPost = quotedEvent != null || sourcePostReference != null;
 
     final imageWidget = IonConnectNetworkImage(
       imageUrl: imageUrl,
@@ -61,7 +66,8 @@ class ImageStoryViewer extends ConsumerWidget {
             heightFactor: 0.7,
             child: TapToSeeHint(
               onTap: () {
-                final eventReference = quotedEvent!.eventReference;
+                final eventReference =
+                    quotedEvent?.eventReference ?? sourcePostReference!.eventReference;
                 PostDetailsRoute(
                   eventReference: eventReference.encode(),
                 ).push<void>(context);

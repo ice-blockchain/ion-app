@@ -3,6 +3,7 @@
 import 'package:collection/collection.dart';
 import 'package:ion/app/features/ion_connect/model/related_event.f.dart';
 import 'package:ion/app/features/ion_connect/model/related_event_marker.dart';
+import 'package:ion/app/services/logger/logger.dart';
 
 mixin EntityDataWithRelatedEvents<T extends RelatedEvent> {
   List<T>? get relatedEvents;
@@ -34,8 +35,25 @@ mixin EntityDataWithRelatedEvents<T extends RelatedEvent> {
   static List<RelatedEvent>? fromTags(Map<String, List<List<String>>> tags) {
     final relatedEvents = <RelatedEvent>[
       ...(tags[RelatedImmutableEvent.tagName]?.map(RelatedImmutableEvent.fromTag) ?? []),
-      ...(tags[RelatedReplaceableEvent.tagName]?.map(RelatedReplaceableEvent.fromTag) ?? []),
     ];
+    
+    // Filter out "a" tags with "mention" marker
+    final aTags = tags[RelatedReplaceableEvent.tagName];
+    if (aTags != null) {
+      for (final tag in aTags) {
+        // Skip if it's a source post reference tag
+        if (tag.length >= 4 && tag[3] == 'mention') {
+          continue;
+        }
+        
+        try {
+          relatedEvents.add(RelatedReplaceableEvent.fromTag(tag));
+        } catch (_) {
+          Logger.warning('Failed to parse tag as RelatedReplaceableEvent: $tag');
+        }
+      }
+    }
+    
     return relatedEvents.isEmpty ? null : relatedEvents;
   }
 }

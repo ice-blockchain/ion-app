@@ -14,9 +14,9 @@ part 'repost_sync_strategy_provider.r.g.dart';
 
 @riverpod
 SyncStrategy<PostRepost> repostSyncStrategy(Ref ref) {
-  final repostNotifier = ref.read(repostNotifierProvider.notifier);
-  final deleteController = ref.read(deleteEntityControllerProvider.notifier);
-  final cacheNotifier = ref.read(ionConnectCacheProvider.notifier);
+  final repostNotifier = ref.watch(repostNotifierProvider.notifier);
+  final deleteController = ref.watch(deleteEntityControllerProvider.notifier);
+  final cacheNotifier = ref.watch(ionConnectCacheProvider.notifier);
 
   return RepostSyncStrategy(
     createRepost: (eventReference) async {

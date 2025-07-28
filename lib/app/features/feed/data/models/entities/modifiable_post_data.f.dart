@@ -28,6 +28,7 @@ import 'package:ion/app/features/ion_connect/model/related_pubkey.f.dart';
 import 'package:ion/app/features/ion_connect/model/replaceable_event_identifier.f.dart';
 import 'package:ion/app/features/ion_connect/model/rich_text.f.dart';
 import 'package:ion/app/features/ion_connect/model/soft_deletable_entity.dart';
+import 'package:ion/app/features/ion_connect/model/source_post_reference.f.dart';
 import 'package:ion/app/features/ion_connect/providers/ion_connect_cache.r.dart';
 
 part 'modifiable_post_data.f.freezed.dart';
@@ -102,12 +103,14 @@ class ModifiablePostData
     String? communityId,
     RichText? richText,
     PollData? poll,
+    SourcePostReference? sourcePostReference,
   }) = _ModifiablePostData;
 
   factory ModifiablePostData.fromEventMessage(EventMessage eventMessage) {
     final tags = groupBy(eventMessage.tags, (tag) => tag[0]);
     final quotedEventTag =
         tags[QuotedImmutableEvent.tagName] ?? tags[QuotedReplaceableEvent.tagName];
+
 
     return ModifiablePostData(
       textContent: eventMessage.content,
@@ -131,6 +134,7 @@ class ModifiablePostData
       richText:
           tags[RichText.tagName] != null ? RichText.fromTag(tags[RichText.tagName]!.first) : null,
       poll: tags['poll']?.firstOrNull != null ? PollData.fromTag(tags['poll']!.first) : null,
+      sourcePostReference: SourcePostReference.fromTags(eventMessage.tags),
     );
   }
 
@@ -145,27 +149,32 @@ class ModifiablePostData
     List<List<String>> tags = const [],
     int? createdAt,
   }) {
+
+    final allTags = [
+      ...tags,
+      replaceableEventId.toTag(),
+      publishedAt.toTag(),
+      if (editingEndedAt != null) editingEndedAt!.toTag(),
+      if (expiration != null) expiration!.toTag(),
+      if (quotedEvent != null) quotedEvent!.toTag(),
+      if (relatedPubkeys != null) ...relatedPubkeys!.map((pubkey) => pubkey.toTag()),
+      if (relatedHashtags != null) ...relatedHashtags!.map((hashtag) => hashtag.toTag()),
+      if (relatedEvents != null) ...relatedEvents!.map((event) => event.toTag()),
+      if (media.isNotEmpty) ...media.values.map((mediaAttachment) => mediaAttachment.toTag()),
+      if (settings != null) ...settings!.map((setting) => setting.toTag()),
+      if (communityId != null) ConversationIdentifier(value: communityId!).toTag(),
+      if (richText != null) richText!.toTag(),
+      if (poll != null) poll!.toTag(),
+      if (sourcePostReference != null) sourcePostReference!.toTag(),
+    ];
+
+
     return EventMessage.fromData(
       signer: signer,
       createdAt: createdAt,
       kind: ModifiablePostEntity.kind,
       content: richText != null ? '' : content,
-      tags: [
-        ...tags,
-        replaceableEventId.toTag(),
-        publishedAt.toTag(),
-        if (editingEndedAt != null) editingEndedAt!.toTag(),
-        if (expiration != null) expiration!.toTag(),
-        if (quotedEvent != null) quotedEvent!.toTag(),
-        if (relatedPubkeys != null) ...relatedPubkeys!.map((pubkey) => pubkey.toTag()),
-        if (relatedHashtags != null) ...relatedHashtags!.map((hashtag) => hashtag.toTag()),
-        if (relatedEvents != null) ...relatedEvents!.map((event) => event.toTag()),
-        if (media.isNotEmpty) ...media.values.map((mediaAttachment) => mediaAttachment.toTag()),
-        if (settings != null) ...settings!.map((setting) => setting.toTag()),
-        if (communityId != null) ConversationIdentifier(value: communityId!).toTag(),
-        if (richText != null) richText!.toTag(),
-        if (poll != null) poll!.toTag(),
-      ],
+      tags: allTags,
     );
   }
 

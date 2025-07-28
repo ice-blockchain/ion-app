@@ -128,7 +128,8 @@ class StoryPreviewPage extends HookConsumerWidget {
                                 ),
                               ],
                               whoCanReply: whoCanReply,
-                              quotedEvent: eventReference,
+                              quotedEvent: isPostScreenshot ? null : eventReference,
+                              sourcePostReference: isPostScreenshot ? eventReference : null,
                               topics: ref.read(selectedInterestsNotifierProvider),
                             );
                           } else if (mediaType == MediaType.video) {
