@@ -7,7 +7,6 @@ import 'package:ion/app/components/nothing_is_found/nothing_is_found.dart';
 import 'package:ion/app/components/screen_offset/screen_side_offset.dart';
 import 'package:ion/app/components/scroll_view/load_more_builder.dart';
 import 'package:ion/app/extensions/extensions.dart';
-import 'package:ion/app/features/core/providers/throttled_provider.dart';
 import 'package:ion/app/features/ion_connect/providers/entities_paged_data_provider.m.dart';
 import 'package:ion/app/features/user/model/follow_type.dart';
 import 'package:ion/app/features/user/model/user_metadata.f.dart';
@@ -18,14 +17,12 @@ import 'package:ion/app/features/user/pages/profile_page/pages/follow_list_modal
 import 'package:ion/app/features/user/providers/followers_count_provider.r.dart';
 import 'package:ion/app/features/user/providers/followers_data_source_provider.r.dart';
 
-final _followersEntitiesProvider =
-    Provider.family<List<UserMetadataEntity>?, ({String pubkey, String? query})>((ref, params) {
+final _followersEntitiesProvider = Provider.autoDispose
+    .family<List<UserMetadataEntity>?, ({String pubkey, String? query})>((ref, params) {
   final dataSource = ref.watch(followersDataSourceProvider(params.pubkey, query: params.query));
   final entitiesPagedData = ref.watch(entitiesPagedDataProvider(dataSource));
   return entitiesPagedData?.data.items?.whereType<UserMetadataEntity>().toList();
 });
-
-final throttledFollowersEntitiesProvider = _followersEntitiesProvider.throttled();
 
 class FollowersList extends HookConsumerWidget {
   const FollowersList({required this.pubkey, super.key});
@@ -39,12 +36,11 @@ class FollowersList extends HookConsumerWidget {
     final searchQuery = useState('');
     final debouncedQuery = useDebounced(searchQuery.value, const Duration(milliseconds: 300)) ?? '';
 
-    final entitiesAsync = ref.watch(
-      throttledFollowersEntitiesProvider(
+    final entities = ref.watch(
+      _followersEntitiesProvider(
         (pubkey: pubkey, query: debouncedQuery.isEmpty ? null : debouncedQuery),
       ),
     );
-    final entities = entitiesAsync.value;
 
     final currentDataSource = ref.watch(
       followersDataSourceProvider(pubkey, query: debouncedQuery.isEmpty ? null : debouncedQuery),
