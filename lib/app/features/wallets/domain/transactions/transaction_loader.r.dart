@@ -41,7 +41,7 @@ class TransactionLoader {
 
     try {
       while (nextPageToken != null) {
-        final result = await _transactionsRepository.loadCoinTransactions(
+        final result = await _transactionsRepository.loadTransactions(
           wallet.id,
           walletViewId: walletViewId,
           pageSize: isFullLoad ? 500 : null,

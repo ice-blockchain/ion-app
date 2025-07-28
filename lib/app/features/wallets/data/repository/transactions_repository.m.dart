@@ -323,7 +323,7 @@ class TransactionsRepository {
         pageToken: pageToken,
       );
 
-  Future<TransactionsPage> loadCoinTransactions(
+  Future<TransactionsPage> loadTransactions(
     String walletId, {
     required String walletViewId,
     int? pageSize,
