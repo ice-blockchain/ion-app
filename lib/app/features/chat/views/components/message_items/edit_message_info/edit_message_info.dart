@@ -34,7 +34,7 @@ class EditMessageInfo extends HookConsumerWidget {
                   Text(
                     editMessage.contentDescription,
                     style: context.theme.appTextThemes.body2.copyWith(
-                      color: context.theme.appColors.onTertararyBackground,
+                      color: context.theme.appColors.onTertiaryBackground,
                     ),
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,

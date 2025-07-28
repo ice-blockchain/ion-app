@@ -17,7 +17,7 @@ class TextEditorSeparatorDot extends StatelessWidget {
       dimension: size,
       child: DecoratedBox(
         decoration: BoxDecoration(
-          color: context.theme.appColors.onTertararyBackground,
+          color: context.theme.appColors.onTertiaryBackground,
           shape: BoxShape.circle,
         ),
       ),

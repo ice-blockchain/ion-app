@@ -56,7 +56,7 @@ class AlbumItem extends StatelessWidget {
               if (isSelected)
                 Assets.svg.iconBlockCheckboxOn.icon()
               else
-                Assets.svg.iconBlockCheckboxOff.icon(color: context.theme.appColors.onTerararyFill),
+                Assets.svg.iconBlockCheckboxOff.icon(color: context.theme.appColors.onTertiaryFill),
             ],
           ),
         ),

@@ -42,7 +42,7 @@ class QuotedEntityFrame extends StatelessWidget {
       child: DecoratedBox(
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(16.0.s),
-          border: Border.all(color: context.theme.appColors.onTerararyFill, width: 1.0.s),
+          border: Border.all(color: context.theme.appColors.onTertiaryFill, width: 1.0.s),
         ),
         child: Padding(
           padding: padding,

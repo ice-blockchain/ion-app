@@ -66,13 +66,13 @@ class ChatSearchResultListItem extends ConsumerWidget {
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
                   style: context.theme.appTextThemes.body2.copyWith(
-                    color: context.theme.appColors.onTertararyBackground,
+                    color: context.theme.appColors.onTertiaryBackground,
                   ),
                 )
               : Text(
                   prefixUsername(username: userMetadata.data.name, context: context),
                   style: context.theme.appTextThemes.body2.copyWith(
-                    color: context.theme.appColors.onTertararyBackground,
+                    color: context.theme.appColors.onTertiaryBackground,
                   ),
                 ),
           avatarSize: 48.0.s,

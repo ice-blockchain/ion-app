@@ -60,7 +60,7 @@ class RecentChatsTimelinePage extends HookConsumerWidget {
     });
 
     return PullToRefreshBuilder(
-      sliverAppBar: SliverAppBar(
+      collapsibleChild: SliverAppBar(
         pinned: true,
         backgroundColor: context.theme.appColors.secondaryBackground,
         surfaceTintColor: context.theme.appColors.secondaryBackground,
@@ -210,7 +210,7 @@ class CommunityRecentChatTile extends ConsumerWidget {
         height: 40.0.s,
         alignment: Alignment.center,
         decoration: BoxDecoration(
-          color: context.theme.appColors.onTerararyFill,
+          color: context.theme.appColors.onTertiaryFill,
           borderRadius: BorderRadius.circular(12.0.s),
         ),
         child: Assets.svg.iconChannelEmptychannel.icon(

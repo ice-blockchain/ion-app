@@ -15,7 +15,7 @@ class InfoCard extends StatelessWidget {
     return Container(
       padding: EdgeInsets.symmetric(vertical: 8.0.s, horizontal: 18.0.s),
       decoration: BoxDecoration(
-        color: context.theme.appColors.tertararyBackground,
+        color: context.theme.appColors.tertiaryBackground,
         borderRadius: BorderRadius.circular(16.0.s),
       ),
       child: Row(

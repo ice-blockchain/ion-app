@@ -36,7 +36,7 @@ class SelectionListItem extends ConsumerWidget {
         title,
         style: textStyles.body,
       ),
-      backgroundColor: colors.tertararyBackground,
+      backgroundColor: colors.tertiaryBackground,
       onTap: onTap,
       leading: ButtonIconFrame(
         containerSize: 36.0.s,
@@ -47,7 +47,7 @@ class SelectionListItem extends ConsumerWidget {
           color: colors.primaryAccent,
         ),
         border: Border.fromBorderSide(
-          BorderSide(color: colors.onTerararyFill, width: 1.0.s),
+          BorderSide(color: colors.onTertiaryFill, width: 1.0.s),
         ),
       ),
       trailing: Padding(

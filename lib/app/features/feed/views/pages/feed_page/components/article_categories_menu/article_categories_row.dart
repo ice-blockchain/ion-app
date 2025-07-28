@@ -35,7 +35,7 @@ class ArticleCategoriesRow extends StatelessWidget {
             padding: EdgeInsetsDirectional.only(end: 12.0.s),
             child: Button.icon(
               borderRadius: BorderRadius.circular(12.0.s),
-              borderColor: colors.onTerararyFill,
+              borderColor: colors.onTertiaryFill,
               size: 40.0.s,
               type: ButtonType.secondary,
               icon: Assets.svg.iconPlusCreatechannel.icon(
@@ -79,7 +79,7 @@ class _CategoryButton extends StatelessWidget {
     final colors = context.theme.appColors;
 
     return Button.compact(
-      backgroundColor: colors.tertararyBackground,
+      backgroundColor: colors.tertiaryBackground,
       type: ButtonType.outlined,
       leadingIconOffset: 6.0.s,
       leadingIcon: NetworkIconWidget(
@@ -99,7 +99,7 @@ class _CategoryButton extends StatelessWidget {
           vertical: 8.0.s,
         ),
         side: BorderSide(
-          color: isSelected ? colors.primaryAccent : colors.onTerararyFill,
+          color: isSelected ? colors.primaryAccent : colors.onTertiaryFill,
         ),
       ),
     );

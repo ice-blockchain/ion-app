@@ -170,13 +170,13 @@ class _HeaderSkeleton extends StatelessWidget {
                 ContainerSkeleton(
                   height: context.theme.appTextThemes.subtitle3.fontSize!.s,
                   width: 120.0.s,
-                  skeletonBaseColor: context.theme.appColors.onTerararyFill,
+                  skeletonBaseColor: context.theme.appColors.onTertiaryFill,
                 ),
                 SizedBox(height: 4.0.s),
                 ContainerSkeleton(
                   height: context.theme.appTextThemes.subtitle3.fontSize!.s,
                   width: 150.0.s,
-                  skeletonBaseColor: context.theme.appColors.onTerararyFill,
+                  skeletonBaseColor: context.theme.appColors.onTertiaryFill,
                 ),
               ],
             ),

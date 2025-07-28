@@ -34,7 +34,7 @@ class MessagingEmptyView extends StatelessWidget {
                   EmptyList(
                     title: title,
                     asset: asset,
-                    color: context.theme.appColors.onTertararyBackground,
+                    color: context.theme.appColors.onTertiaryBackground,
                   ),
                   if (trailing != null) ...[
                     SizedBox(height: 10.0.s),

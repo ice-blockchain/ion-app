@@ -21,7 +21,7 @@ class AllChainsItem extends ConsumerWidget {
 
         return ListItem(
           title: Text(context.i18n.all_chains_item),
-          backgroundColor: context.theme.appColors.tertararyBackground,
+          backgroundColor: context.theme.appColors.tertiaryBackground,
           leading: Assets.svg.walletallnetwork.icon(size: 40.0.s),
           trailing: isSelected
               ? Assets.svg.iconBlockCheckboxOn.icon()

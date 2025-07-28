@@ -35,7 +35,7 @@ class Markers extends HookWidget {
             decoration: BoxDecoration(
               color: stop <= currentSliderValue
                   ? context.theme.appColors.primaryAccent
-                  : context.theme.appColors.onTerararyFill,
+                  : context.theme.appColors.onTertiaryFill,
               borderRadius: BorderRadius.circular(markerRadius.s),
             ),
           ),

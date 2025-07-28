@@ -61,7 +61,7 @@ class GridItem extends HookWidget {
                         child: IconTheme(
                           data: IconThemeData(
                             size: 16.0.s,
-                            color: context.theme.appColors.onTertararyBackground,
+                            color: context.theme.appColors.onTertiaryBackground,
                           ),
                           child: Assets.svg.iconBadgeVerify.icon(size: 16.0.s),
                         ),
@@ -80,7 +80,7 @@ class GridItem extends HookWidget {
                       IconTheme(
                         data: IconThemeData(
                           size: 12.0.s,
-                          color: context.theme.appColors.onTertararyBackground,
+                          color: context.theme.appColors.onTertiaryBackground,
                         ),
                         child: Assets.svg.iconButtonIceStroke.icon(size: 12.0.s),
                       ),

@@ -32,7 +32,7 @@ class FollowCounters extends ConsumerWidget {
     return Container(
       height: 36.0.s,
       decoration: BoxDecoration(
-        color: context.theme.appColors.tertararyBackground,
+        color: context.theme.appColors.tertiaryBackground,
         borderRadius: BorderRadius.circular(16.0.s),
       ),
       child: Row(
@@ -52,7 +52,7 @@ class FollowCounters extends ConsumerWidget {
             thickness: 0.5.s,
             indent: 8.0.s,
             endIndent: 8.0.s,
-            color: context.theme.appColors.onTerararyFill,
+            color: context.theme.appColors.onTertiaryFill,
           ),
           Expanded(
             child: bothAvailable

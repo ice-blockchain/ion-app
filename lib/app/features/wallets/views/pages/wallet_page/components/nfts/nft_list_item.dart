@@ -25,7 +25,7 @@ class NftListItem extends StatelessWidget {
       title: Text(nftData.name),
       onTap: onTap,
       subtitle: Text('#${nftData.tokenId}'),
-      backgroundColor: context.theme.appColors.tertararyBackground,
+      backgroundColor: context.theme.appColors.tertiaryBackground,
       leading: Avatar(
         size: 36.0.s,
         imageUrl: nftData.tokenUri,

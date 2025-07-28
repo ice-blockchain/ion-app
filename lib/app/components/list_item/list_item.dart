@@ -204,7 +204,7 @@ class ListItem extends StatelessWidget {
   Color _getBackgroundColor(BuildContext context) {
     return (isSelected ?? false)
         ? context.theme.appColors.primaryAccent
-        : backgroundColor ?? context.theme.appColors.tertararyBackground;
+        : backgroundColor ?? context.theme.appColors.tertiaryBackground;
   }
 
   TextStyle _getDefaultTitleStyle(BuildContext context) {
