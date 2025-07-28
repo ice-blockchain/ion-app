@@ -80,14 +80,3 @@ class RankedCurrentUserRelays extends _$RankedCurrentUserRelays {
     Logger.log('[RELAY] Ranked relays: $rankedRelays');
   }
 }
-
-@riverpod
-Stream<List<String>> rankedRelayUrls(Ref ref, List<String>? relaysUrls) async* {
-  if (relaysUrls == null || relaysUrls.isEmpty) {
-    yield [];
-    return;
-  }
-  final cancelToken = CancelToken();
-  ref.onDispose(cancelToken.cancel);
-  yield* ref.watch(ionConnectRelaysRankerProvider).ranked(relaysUrls, cancelToken: cancelToken);
-}
