@@ -79,8 +79,7 @@ class RelayPicker extends _$RelayPicker {
 
     switch (actionSource) {
       case ActionSourceCurrentUser():
-        final currentUserRankedRelays =
-            await _getCurrentUserRankedRelays().then((userRelays) => userRelays.data.list);
+        final currentUserRankedRelays = await _getCurrentUserRankedRelays();
         final currentUserRankedRelayUrls =
             currentUserRankedRelays.map((relay) => relay.url).toList();
         final filteredRankedRelays =
@@ -137,9 +136,9 @@ class RelayPicker extends _$RelayPicker {
     }
   }
 
-  Future<UserRelaysEntity> _getCurrentUserRankedRelays() async {
+  Future<List<UserRelay>> _getCurrentUserRankedRelays() async {
     final relays = await ref.read(rankedCurrentUserRelaysProvider.future);
-    if (relays == null || relays.urls.isEmpty) {
+    if (relays == null || relays.isEmpty) {
       throw UserRelaysNotFoundException();
     }
     return relays;

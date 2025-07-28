@@ -25,14 +25,14 @@ class RelayFirebaseAppConfig extends _$RelayFirebaseAppConfig {
       return null;
     }
 
-    final userRelay = await ref.watch(rankedCurrentUserRelaysProvider.future);
-    if (userRelay == null) {
+    final userRelays = await ref.watch(rankedCurrentUserRelaysProvider.future);
+    if (userRelays == null) {
       return null;
     }
 
     final savedConfig = ref.watch(savedRelayFirebaseAppConfigProvider);
 
-    final relayUrls = [...userRelay.urls];
+    final relayUrls = [for (final userRelay in userRelays) userRelay.url];
 
     if (savedConfig != null && relayUrls.contains(savedConfig.relayUrl)) {
       return savedConfig;

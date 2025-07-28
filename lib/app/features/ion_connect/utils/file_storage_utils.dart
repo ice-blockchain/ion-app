@@ -38,10 +38,10 @@ Future<String> getFileStorageApiUrl(
   CancelToken? cancelToken,
 }) async {
   final userRelays = await ref.read(rankedCurrentUserRelaysProvider.future);
-  if (userRelays == null || userRelays.urls.isEmpty) {
+  if (userRelays == null || userRelays.isEmpty) {
     throw UserRelaysNotFoundException();
   }
-  final relayUrl = userRelays.data.list.first.url;
+  final relayUrl = userRelays.first.url;
 
   try {
     final parsedRelayUrl = Uri.parse(relayUrl);

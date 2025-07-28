@@ -31,7 +31,7 @@ class IONConnectMediaUrlFallback extends _$IONConnectMediaUrlFallback {
       return null;
     }
 
-    final userRelayUri = Uri.parse(userRelays.urls.first);
+    final userRelayUri = Uri.parse(userRelays.first.url);
     final assetUri = Uri.parse(mediaUrl);
     final fallbackUrl = assetUri.replace(host: userRelayUri.host).toString();
 
