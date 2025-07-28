@@ -64,17 +64,19 @@ class RankedCurrentUserRelays extends _$RankedCurrentUserRelays {
 
     Logger.log('[RELAY] Start ranking relays: $relaysUrls');
 
-    final rankedRelaysUrls =
-        await ref.read(ionConnectRelaysRankerProvider).ranked(relaysUrls, cancelToken: cancelToken);
+    final rankedResultsStream =
+        ref.read(ionConnectRelaysRankerProvider).ranked(relaysUrls, cancelToken: cancelToken);
 
-    final rankedRelays = rankedRelaysUrls
-        .map((url) => relays.firstWhereOrNull((relay) => relay.url == url))
-        .nonNulls
-        .toList();
+    var rankedRelays = <UserRelay>[];
+    await for (final results in rankedResultsStream) {
+      rankedRelays = results
+          .map((url) => relays.firstWhereOrNull((relay) => relay.url == url))
+          .nonNulls
+          .toList();
+      yield rankedRelays;
+    }
 
-    Logger.log('[RELAY] Ranked relays: $rankedRelaysUrls');
-
-    yield rankedRelays;
+    Logger.log('[RELAY] Ranked relays: $rankedRelays');
   }
 }
 
@@ -85,5 +87,7 @@ Future<List<String>> rankedRelayUrls(Ref ref, List<String>? relaysUrls) async {
   }
   final cancelToken = CancelToken();
   ref.onDispose(cancelToken.cancel);
-  return ref.watch(ionConnectRelaysRankerProvider).ranked(relaysUrls, cancelToken: cancelToken);
+  final rankedResultsStream =
+      ref.watch(ionConnectRelaysRankerProvider).ranked(relaysUrls, cancelToken: cancelToken);
+  return rankedResultsStream.last;
 }

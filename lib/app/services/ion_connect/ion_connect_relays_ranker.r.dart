@@ -1,5 +1,7 @@
 // SPDX-License-Identifier: ice License 1.0
 
+import 'dart:async';
+
 import 'package:dio/dio.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/features/core/providers/dio_provider.r.dart';
@@ -22,12 +24,40 @@ final class IonConnectRelaysRanker {
 
   final Dio dio;
 
-  Future<List<String>> ranked(List<String> relaysUrls, {CancelToken? cancelToken}) async {
-    final relaysMeasured =
-        await Future.wait(relaysUrls.map((url) => _getRelayRank(url, cancelToken)));
-    Logger.log('[RELAY] Relays ping results $relaysMeasured');
-    relaysMeasured.sort((a, b) => a.time.compareTo(b.time));
-    return relaysMeasured.map((e) => e.url).toList();
+  /// Ranks the relays based on their latency.
+  ///
+  /// Returns a List of relay URLs sorted by their latency in ascending order (from best to worst).
+  /// Emits results each time a relay is pinged.
+  Stream<List<String>> ranked(List<String> relaysUrls, {CancelToken? cancelToken}) {
+    final resultsController = StreamController<List<String>>();
+    final measurements = <({int time, String url})>[];
+    var completedCount = 0;
+    for (final relayUrl in relaysUrls) {
+      _getRelayRank(relayUrl, cancelToken).then(
+        (result) {
+          Logger.log('[RELAY] Relays ping results $result');
+          measurements
+            ..add(result)
+            ..sort((a, b) => a.time.compareTo(b.time));
+          resultsController.add(
+            measurements.map((measurement) => measurement.url).toList(),
+          );
+        },
+      ).catchError(
+        (Object? reason) {
+          final error = reason is Object ? reason : 'Unknown error';
+          Logger.error(error, message: '[RELAY] Error pinging relay $relayUrl: $error');
+          resultsController.addError(error);
+        },
+      ).whenComplete(() {
+        completedCount++;
+        if (completedCount == relaysUrls.length) {
+          resultsController.close();
+        }
+      });
+    }
+
+    return resultsController.stream;
   }
 
   Future<({String url, int time})> _getRelayRank(
