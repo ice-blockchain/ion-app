@@ -53,7 +53,7 @@ class UserRelaysManager extends _$UserRelaysManager {
       return result;
     }
 
-    final dbCachedRelays = await _getRelaysFromDb(pubkeys: pubkeys);
+    final dbCachedRelays = await _getRelaysFromDb(pubkeys: pubkeysToFetch);
     final reachableDbCachedRelays = _filterReachableRelays(dbCachedRelays);
     result.addAll(reachableDbCachedRelays);
 
