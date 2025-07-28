@@ -30,8 +30,8 @@ class FeedAdvancedSearchPage extends HookConsumerWidget {
             children: [
               AdvancedSearchNavigation(
                 query: query,
-                onTapSearch: () {
-                  FeedSimpleSearchRoute(query: query).push<void>(context);
+                onTapSearch: (text) {
+                  FeedSimpleSearchRoute(query: text).push<void>(context);
                 },
                 onFiltersPressed: () {
                   FeedSearchFiltersRoute().push<void>(context);
