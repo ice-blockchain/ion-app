@@ -1,7 +1,6 @@
 // SPDX-License-Identifier: ice License 1.0
 
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_keyboard_visibility/flutter_keyboard_visibility.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
@@ -97,59 +96,52 @@ class StoryViewerPage extends HookConsumerWidget {
         final size = MediaQuery.sizeOf(context);
         final footerHeight = 82.0.s;
 
-        return AnnotatedRegion<SystemUiOverlayStyle>(
-          value: SystemUiOverlayStyle(
-            statusBarColor: context.theme.appColors.primaryText,
-            statusBarIconBrightness: Brightness.light,
-            statusBarBrightness: Brightness.dark,
-          ),
-          child: MediaQuery(
-            // Prevent story's content from shrinking on keyboard open
-            data: media
-                .removeViewInsets(removeBottom: true)
-                .removeViewPadding(removeBottom: true, removeTop: true),
-            child: Scaffold(
-              resizeToAvoidBottomInset: false,
-              backgroundColor: Colors.black,
-              body: Stack(
-                children: [
-                  PositionedDirectional(
-                    top: fixedTop,
-                    width: size.width,
-                    height: size.height - fixedTop - footerHeight,
-                    child: StoriesSwiper(
-                      pubkey: pubkey,
-                      userStories: storyViewerState.userStories,
-                      currentUserIndex: storyViewerState.currentUserIndex,
-                      showOnlySelectedUser: showOnlySelectedUser,
-                    ),
+        return MediaQuery(
+          // Prevent story's content from shrinking on keyboard open
+          data: media
+              .removeViewInsets(removeBottom: true)
+              .removeViewPadding(removeBottom: true, removeTop: true),
+          child: Scaffold(
+            resizeToAvoidBottomInset: false,
+            backgroundColor: Colors.black,
+            body: Stack(
+              children: [
+                PositionedDirectional(
+                  top: fixedTop,
+                  width: size.width,
+                  height: size.height - fixedTop - footerHeight,
+                  child: StoriesSwiper(
+                    pubkey: pubkey,
+                    userStories: storyViewerState.userStories,
+                    currentUserIndex: storyViewerState.currentUserIndex,
+                    showOnlySelectedUser: showOnlySelectedUser,
                   ),
-                  PositionedDirectional(
-                    start: 0,
-                    end: 0,
-                    bottom: 0,
-                    height: footerHeight,
-                    child: IgnorePointer(
-                      ignoring: isKeyboardVisible,
-                      child: AnimatedOpacity(
-                        opacity: isKeyboardVisible ? 0 : 1,
-                        duration: const Duration(milliseconds: 150),
-                        child: Column(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            SizedBox(height: 28.0.s),
-                            StoryProgressBarContainer(
-                              pubkey: pubkey,
-                              showOnlySelectedUser: showOnlySelectedUser,
-                            ),
-                            ScreenBottomOffset(margin: 16.0.s),
-                          ],
-                        ),
+                ),
+                PositionedDirectional(
+                  start: 0,
+                  end: 0,
+                  bottom: 0,
+                  height: footerHeight,
+                  child: IgnorePointer(
+                    ignoring: isKeyboardVisible,
+                    child: AnimatedOpacity(
+                      opacity: isKeyboardVisible ? 0 : 1,
+                      duration: const Duration(milliseconds: 150),
+                      child: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          SizedBox(height: 28.0.s),
+                          StoryProgressBarContainer(
+                            pubkey: pubkey,
+                            showOnlySelectedUser: showOnlySelectedUser,
+                          ),
+                          ScreenBottomOffset(margin: 16.0.s),
+                        ],
                       ),
                     ),
                   ),
-                ],
-              ),
+                ),
+              ],
             ),
           ),
         );

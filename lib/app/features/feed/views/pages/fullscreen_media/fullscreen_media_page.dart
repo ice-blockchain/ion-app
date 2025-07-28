@@ -1,7 +1,6 @@
 // SPDX-License-Identifier: ice License 1.0
 
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/extensions/extensions.dart';
@@ -36,49 +35,42 @@ class FullscreenMediaPage extends HookConsumerWidget {
 
     return Material(
       color: Colors.transparent,
-      child: AnnotatedRegion<SystemUiOverlayStyle>(
-        value: SystemUiOverlayStyle(
-          statusBarColor: context.theme.appColors.primaryText,
-          statusBarIconBrightness: Brightness.light,
-          statusBarBrightness: Brightness.dark,
-        ),
-        child: Scaffold(
-          backgroundColor: context.theme.appColors.primaryText,
-          extendBodyBehindAppBar: true,
-          appBar: NavigationAppBar.screen(
-            backgroundColor: Colors.transparent,
-            leading: NavigationBackButton(
-              () => context.pop(),
-              icon: Assets.svg.iconChatBack.icon(
-                size: NavigationAppBar.actionButtonSide,
-                color: context.theme.appColors.onPrimaryAccent,
-                flipForRtl: true,
-              ),
+      child: Scaffold(
+        backgroundColor: context.theme.appColors.primaryText,
+        extendBodyBehindAppBar: true,
+        appBar: NavigationAppBar.screen(
+          backgroundColor: Colors.transparent,
+          leading: NavigationBackButton(
+            () => context.pop(),
+            icon: Assets.svg.iconChatBack.icon(
+              size: NavigationAppBar.actionButtonSide,
+              color: context.theme.appColors.onPrimaryAccent,
+              flipForRtl: true,
             ),
-            onBackPress: () => context.pop(),
-            actions: [
-              Padding(
-                padding: EdgeInsetsDirectional.only(end: 6.0.s),
-                child: isOwnedByCurrentUser
-                    ? OwnEntityMenu(
-                        eventReference: eventReference,
-                        iconColor: context.theme.appColors.onPrimaryAccent,
-                        onDelete: () {
-                          context.canPop();
-                        },
-                      )
-                    : UserInfoMenu(
-                        eventReference: eventReference,
-                        iconColor: context.theme.appColors.onPrimaryAccent,
-                      ),
-              ),
-            ],
           ),
-          body: AdaptiveMediaView(
-            eventReference: eventReference,
-            initialMediaIndex: initialMediaIndex,
-            framedEventReference: framedEventReference,
-          ),
+          onBackPress: () => context.pop(),
+          actions: [
+            Padding(
+              padding: EdgeInsetsDirectional.only(end: 6.0.s),
+              child: isOwnedByCurrentUser
+                  ? OwnEntityMenu(
+                      eventReference: eventReference,
+                      iconColor: context.theme.appColors.onPrimaryAccent,
+                      onDelete: () {
+                        context.canPop();
+                      },
+                    )
+                  : UserInfoMenu(
+                      eventReference: eventReference,
+                      iconColor: context.theme.appColors.onPrimaryAccent,
+                    ),
+            ),
+          ],
+        ),
+        body: AdaptiveMediaView(
+          eventReference: eventReference,
+          initialMediaIndex: initialMediaIndex,
+          framedEventReference: framedEventReference,
         ),
       ),
     );

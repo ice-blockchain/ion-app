@@ -87,62 +87,55 @@ class ChatMediaPage extends HookConsumerWidget {
 
     return Material(
       color: context.theme.appColors.primaryText,
-      child: AnnotatedRegion<SystemUiOverlayStyle>(
-        value: SystemUiOverlayStyle(
-          statusBarColor: context.theme.appColors.primaryText,
-          statusBarIconBrightness: Brightness.light,
-          statusBarBrightness: Brightness.dark,
-        ),
-        child: Scaffold(
-          backgroundColor: context.theme.appColors.primaryText,
-          extendBodyBehindAppBar: true,
-          body: Stack(
-            children: [
-              ChatMediaPageView(
-                medias: medias,
-                eventReference: eventReference,
-                initialIndex: initialIndex,
-                zoomController: zoomController,
-                isZoomed: isZoomed,
-                pageController: pageController,
-              ),
-              PositionedDirectional(
-                top: 0,
-                start: 0,
-                end: 0,
-                child: ColoredBox(
-                  color: context.theme.appColors.primaryText.withValues(alpha: 0.5),
-                  child: NavigationAppBar.screen(
-                    backgroundColor: Colors.transparent,
-                    leading: NavigationBackButton(
-                      () => context.pop(),
-                      icon: Assets.svg.iconChatBack.icon(
-                        size: NavigationAppBar.actionButtonSide,
-                        color: context.theme.appColors.onPrimaryAccent,
-                        flipForRtl: true,
-                      ),
+      child: Scaffold(
+        backgroundColor: context.theme.appColors.primaryText,
+        extendBodyBehindAppBar: true,
+        body: Stack(
+          children: [
+            ChatMediaPageView(
+              medias: medias,
+              eventReference: eventReference,
+              initialIndex: initialIndex,
+              zoomController: zoomController,
+              isZoomed: isZoomed,
+              pageController: pageController,
+            ),
+            PositionedDirectional(
+              top: 0,
+              start: 0,
+              end: 0,
+              child: ColoredBox(
+                color: context.theme.appColors.primaryText.withValues(alpha: 0.5),
+                child: NavigationAppBar.screen(
+                  backgroundColor: Colors.transparent,
+                  leading: NavigationBackButton(
+                    () => context.pop(),
+                    icon: Assets.svg.iconChatBack.icon(
+                      size: NavigationAppBar.actionButtonSide,
+                      color: context.theme.appColors.onPrimaryAccent,
+                      flipForRtl: true,
                     ),
-                    onBackPress: () => context.pop(),
-                    actions: [
-                      ChatMediaContextMenu(
-                        eventMessage: eventMessage,
-                        activeMedia: medias[currentPage.value],
-                      ),
-                    ],
-                    title: _MediaPagerCounter(
-                      currentPage: currentPage.value,
-                      totalPages: medias.length,
+                  ),
+                  onBackPress: () => context.pop(),
+                  actions: [
+                    ChatMediaContextMenu(
+                      eventMessage: eventMessage,
+                      activeMedia: medias[currentPage.value],
                     ),
+                  ],
+                  title: _MediaPagerCounter(
+                    currentPage: currentPage.value,
+                    totalPages: medias.length,
                   ),
                 ),
               ),
-              _MediaBottomOverlay(
-                messageEntity: entity,
-                medias: medias,
-                currentIndex: currentPage.value,
-              ),
-            ],
-          ),
+            ),
+            _MediaBottomOverlay(
+              messageEntity: entity,
+              medias: medias,
+              currentIndex: currentPage.value,
+            ),
+          ],
         ),
       ),
     );
