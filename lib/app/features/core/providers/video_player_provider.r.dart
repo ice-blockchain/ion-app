@@ -74,12 +74,17 @@ class VideoController extends _$VideoController {
           .select((state) => state[params.sourcePath] ?? params.sourcePath),
     );
 
+    VoidCallback? onlyOneListener;
+
     try {
       final controller = await ref
           .watch(videoPlayerControllerFactoryProvider(sourcePath))
           .createController(options: VideoPlayerOptions(mixWithOthers: true));
 
       ref.onCancel(() async {
+        if (onlyOneListener != null) {
+          controller.removeListener(onlyOneListener);
+        }
         await Future.wait([
           () async {
             if (controller.value.isInitialized) {
@@ -147,7 +152,7 @@ class VideoController extends _$VideoController {
         });
 
         if (params.onlyOneShouldPlay) {
-          controller.addListener(() {
+          onlyOneListener = () {
             if (controller.value.isPlaying) {
               final prev = VideoController._currentlyPlayingController;
               if (prev != null && prev != controller) {
@@ -155,7 +160,8 @@ class VideoController extends _$VideoController {
               }
               VideoController._currentlyPlayingController = controller;
             }
-          });
+          };
+          controller.addListener(onlyOneListener);
         }
       }
       return controller;
