@@ -3,6 +3,7 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:ion/app/exceptions/exceptions.dart';
 import 'package:ion/app/features/ion_connect/model/event_reference.f.dart';
+import 'package:ion/app/features/ion_connect/model/related_event_marker.dart';
 
 part 'source_post_reference.f.freezed.dart';
 
@@ -10,7 +11,7 @@ part 'source_post_reference.f.freezed.dart';
 class SourcePostReference with _$SourcePostReference {
   const factory SourcePostReference({
     required EventReference eventReference,
-    @Default('mention') String marker,
+    RelatedEventMarker? marker,
   }) = _SourcePostReference;
 
   const SourcePostReference._();
@@ -28,10 +29,11 @@ class SourcePostReference with _$SourcePostReference {
       throw IncorrectEventTagException(tag: tag.toString());
     }
 
-    final marker = tag.length >= 4 ? tag[3] : 'mention';
+    final markerString = tag.length >= 4 ? tag[3] : null;
+    final marker = RelatedEventMarker.fromValue(markerString);
 
-    // Only parse tags with "mention" marker (or default to mention if no marker)
-    if (marker != 'mention') {
+    // Only parse tags with "mention" marker
+    if (marker != RelatedEventMarker.mention) {
       throw IncorrectEventTagException(tag: 'SourcePostReference requires mention marker');
     }
 
@@ -44,7 +46,7 @@ class SourcePostReference with _$SourcePostReference {
   static const String tagName = 'a';
 
   List<String> toTag() {
-    return [tagName, eventReference.toString(), '', marker];
+    return [tagName, eventReference.toString(), '', marker?.toValue() ?? 'mention'];
   }
 
   /// Check if a tag is a source post reference (has "mention" marker)
@@ -52,8 +54,18 @@ class SourcePostReference with _$SourcePostReference {
     if (tag.isEmpty || tag[0] != tagName) return false;
     if (tag.length < 2) return false;
 
-    // Check if it has "mention" marker or no marker (default to mention)
-    final marker = tag.length >= 4 ? tag[3] : 'mention';
-    return marker == 'mention';
+    // Check if it has explicit "mention" marker
+    final markerString = tag.length >= 4 ? tag[3] : null;
+    final marker = RelatedEventMarker.fromValue(markerString);
+    return marker == RelatedEventMarker.mention;
+  }
+  
+  static SourcePostReference? fromTags(List<List<String>> tags) {
+    for (final tag in tags) {
+      if (isSourcePostTag(tag)) {
+        return SourcePostReference.fromTag(tag);
+      }
+    }
+    return null;
   }
 }

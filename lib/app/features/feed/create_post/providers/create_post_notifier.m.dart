@@ -98,8 +98,6 @@ class CreatePostNotifier extends _$CreatePostNotifier {
         ...extractTags(postContent).map((tag) => RelatedHashtag(value: tag)),
       }.toList();
 
-      final relatedEvents = parentEntity != null ? _buildRelatedEvents(parentEntity) : null;
-
       final postData = ModifiablePostData(
         textContent: '',
         media: media,
@@ -108,7 +106,7 @@ class CreatePostNotifier extends _$CreatePostNotifier {
         editingEndedAt: _buildEditingEndedAt(),
         relatedHashtags: relatedHashtags,
         quotedEvent: quotedEvent != null ? _buildQuotedEvent(quotedEvent) : null,
-        relatedEvents: relatedEvents,
+        relatedEvents: parentEntity != null ? _buildRelatedEvents(parentEntity) : null,
         sourcePostReference: sourcePostReference != null
             ? SourcePostReference(eventReference: sourcePostReference)
             : null,

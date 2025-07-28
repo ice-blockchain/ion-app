@@ -42,11 +42,8 @@ mixin EntityDataWithRelatedEvents<T extends RelatedEvent> {
     if (aTags != null) {
       for (final tag in aTags) {
         // Skip if it's a source post reference tag
-        if (tag.length >= 2 && tag.length <= 4) {
-          final marker = tag.length >= 4 ? tag[3] : 'mention';
-          if (marker == 'mention') {
-            continue;
-          }
+        if (tag.length >= 4 && tag[3] == 'mention') {
+          continue;
         }
         
         try {
