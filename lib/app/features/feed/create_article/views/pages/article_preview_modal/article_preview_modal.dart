@@ -22,6 +22,7 @@ import 'package:ion/app/hooks/use_on_init.dart';
 import 'package:ion/app/router/components/navigation_app_bar/navigation_app_bar.dart';
 import 'package:ion/app/router/components/sheet_content/sheet_content.dart';
 import 'package:ion/generated/assets.gen.dart';
+import 'package:showcaseview/showcaseview.dart';
 
 class ArticlePreviewModal extends HookConsumerWidget {
   factory ArticlePreviewModal({
@@ -79,82 +80,86 @@ class ArticlePreviewModal extends HookConsumerWidget {
     );
 
     return SheetContent(
-      body: Column(
-        children: [
-          NavigationAppBar.modal(
-            title: Text(context.i18n.article_preview_title),
-          ),
-          const HorizontalSeparator(),
-          Expanded(
-            child: SingleChildScrollView(
-              child: Column(
-                children: [
-                  SizedBox(height: 12.0.s),
-                  const ArticlePreview(),
-                  SizedBox(height: 12.0.s),
-                  const HorizontalSeparator(),
-                  SizedBox(height: 40.0.s),
-                  const SelectArticleTopicsItem(),
-                  SizedBox(height: 20.0.s),
-                  const HorizontalSeparator(),
-                  SizedBox(height: 20.0.s),
-                  const SelectArticleWhoCanReplyItem(),
-                  SizedBox(height: 40.0.s),
-                ],
-              ),
+      body: ShowCaseWidget(
+        disableMovingAnimation: true,
+        disableScaleAnimation: true,
+        builder: (context) => Column(
+          children: [
+            NavigationAppBar.modal(
+              title: Text(context.i18n.article_preview_title),
             ),
-          ),
-          Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              const HorizontalSeparator(),
-              SizedBox(height: 16.0.s),
-              ScreenSideOffset.large(
-                child: Button(
-                  leadingIcon: Assets.svg.iconFeedArticles.icon(
-                    color: context.theme.appColors.onPrimaryAccent,
-                  ),
-                  onPressed: () {
-                    final type = modifiedEvent != null
-                        ? CreateArticleOption.modify
-                        : CreateArticleOption.plain;
-
-                    if (modifiedEvent != null) {
-                      ref.read(createArticleProvider(type).notifier).modify(
-                            title: title,
-                            content: content,
-                            topics: selectedTopics,
-                            coverImagePath: image?.path,
-                            whoCanReply: whoCanReply,
-                            imageColor: imageColor,
-                            originalImageUrl: imageUrl,
-                            eventReference: modifiedEvent!,
-                          );
-                    } else {
-                      ref.read(createArticleProvider(type).notifier).create(
-                            title: title,
-                            content: content,
-                            topics: selectedTopics,
-                            coverImagePath: image?.path,
-                            mediaIds: imageIds,
-                            whoCanReply: whoCanReply,
-                            imageColor: imageColor,
-                          );
-                    }
-
-                    if (!ref.read(createArticleProvider(type)).hasError && ref.context.mounted) {
-                      final state = GoRouterState.of(ref.context);
-                      ref.context.go(state.currentTab.baseRouteLocation);
-                    }
-                  },
-                  label: Text(context.i18n.button_publish),
-                  mainAxisSize: MainAxisSize.max,
+            const HorizontalSeparator(),
+            Expanded(
+              child: SingleChildScrollView(
+                child: Column(
+                  children: [
+                    SizedBox(height: 12.0.s),
+                    const ArticlePreview(),
+                    SizedBox(height: 12.0.s),
+                    const HorizontalSeparator(),
+                    SizedBox(height: 40.0.s),
+                    const SelectArticleTopicsItem(),
+                    SizedBox(height: 20.0.s),
+                    const HorizontalSeparator(),
+                    SizedBox(height: 20.0.s),
+                    const SelectArticleWhoCanReplyItem(),
+                    SizedBox(height: 40.0.s),
+                  ],
                 ),
               ),
-              ScreenBottomOffset(margin: 36.0.s),
-            ],
-          ),
-        ],
+            ),
+            Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                const HorizontalSeparator(),
+                SizedBox(height: 16.0.s),
+                ScreenSideOffset.large(
+                  child: Button(
+                    leadingIcon: Assets.svg.iconFeedArticles.icon(
+                      color: context.theme.appColors.onPrimaryAccent,
+                    ),
+                    onPressed: () {
+                      final type = modifiedEvent != null
+                          ? CreateArticleOption.modify
+                          : CreateArticleOption.plain;
+
+                      if (modifiedEvent != null) {
+                        ref.read(createArticleProvider(type).notifier).modify(
+                              title: title,
+                              content: content,
+                              topics: selectedTopics,
+                              coverImagePath: image?.path,
+                              whoCanReply: whoCanReply,
+                              imageColor: imageColor,
+                              originalImageUrl: imageUrl,
+                              eventReference: modifiedEvent!,
+                            );
+                      } else {
+                        ref.read(createArticleProvider(type).notifier).create(
+                              title: title,
+                              content: content,
+                              topics: selectedTopics,
+                              coverImagePath: image?.path,
+                              mediaIds: imageIds,
+                              whoCanReply: whoCanReply,
+                              imageColor: imageColor,
+                            );
+                      }
+
+                      if (!ref.read(createArticleProvider(type)).hasError && ref.context.mounted) {
+                        final state = GoRouterState.of(ref.context);
+                        ref.context.go(state.currentTab.baseRouteLocation);
+                      }
+                    },
+                    label: Text(context.i18n.button_publish),
+                    mainAxisSize: MainAxisSize.max,
+                  ),
+                ),
+                ScreenBottomOffset(margin: 36.0.s),
+              ],
+            ),
+          ],
+        ),
       ),
     );
   }
