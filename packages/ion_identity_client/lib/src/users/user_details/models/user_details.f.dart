@@ -9,7 +9,6 @@ part 'user_details.f.g.dart';
 @freezed
 class UserDetails with _$UserDetails {
   const factory UserDetails({
-    required List<String> ionConnectIndexerRelays,
     required String masterPubKey,
     String? name,
     String? userId,
@@ -18,6 +17,7 @@ class UserDetails with _$UserDetails {
     List<String>? email,
     List<String>? phoneNumber,
     List<IonConnectRelayInfo>? ionConnectRelays,
+    List<String>? ionConnectIndexerRelays,
   }) = _UserDetails;
 
   factory UserDetails.fromJson(Map<String, dynamic> json) => _$UserDetailsFromJson(json);

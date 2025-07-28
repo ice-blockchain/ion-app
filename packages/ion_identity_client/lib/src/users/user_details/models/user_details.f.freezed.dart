@@ -20,8 +20,6 @@ UserDetails _$UserDetailsFromJson(Map<String, dynamic> json) {
 
 /// @nodoc
 mixin _$UserDetails {
-  List<String> get ionConnectIndexerRelays =>
-      throw _privateConstructorUsedError;
   String get masterPubKey => throw _privateConstructorUsedError;
   String? get name => throw _privateConstructorUsedError;
   String? get userId => throw _privateConstructorUsedError;
@@ -31,6 +29,8 @@ mixin _$UserDetails {
   List<String>? get email => throw _privateConstructorUsedError;
   List<String>? get phoneNumber => throw _privateConstructorUsedError;
   List<IonConnectRelayInfo>? get ionConnectRelays =>
+      throw _privateConstructorUsedError;
+  List<String>? get ionConnectIndexerRelays =>
       throw _privateConstructorUsedError;
 
   /// Serializes this UserDetails to a JSON map.
@@ -50,15 +50,15 @@ abstract class $UserDetailsCopyWith<$Res> {
       _$UserDetailsCopyWithImpl<$Res, UserDetails>;
   @useResult
   $Res call(
-      {List<String> ionConnectIndexerRelays,
-      String masterPubKey,
+      {String masterPubKey,
       String? name,
       String? userId,
       String? username,
       @JsonKey(name: '2faOptions') List<String>? twoFaOptions,
       List<String>? email,
       List<String>? phoneNumber,
-      List<IonConnectRelayInfo>? ionConnectRelays});
+      List<IonConnectRelayInfo>? ionConnectRelays,
+      List<String>? ionConnectIndexerRelays});
 }
 
 /// @nodoc
@@ -76,7 +76,6 @@ class _$UserDetailsCopyWithImpl<$Res, $Val extends UserDetails>
   @pragma('vm:prefer-inline')
   @override
   $Res call({
-    Object? ionConnectIndexerRelays = null,
     Object? masterPubKey = null,
     Object? name = freezed,
     Object? userId = freezed,
@@ -85,12 +84,9 @@ class _$UserDetailsCopyWithImpl<$Res, $Val extends UserDetails>
     Object? email = freezed,
     Object? phoneNumber = freezed,
     Object? ionConnectRelays = freezed,
+    Object? ionConnectIndexerRelays = freezed,
   }) {
     return _then(_value.copyWith(
-      ionConnectIndexerRelays: null == ionConnectIndexerRelays
-          ? _value.ionConnectIndexerRelays
-          : ionConnectIndexerRelays // ignore: cast_nullable_to_non_nullable
-              as List<String>,
       masterPubKey: null == masterPubKey
           ? _value.masterPubKey
           : masterPubKey // ignore: cast_nullable_to_non_nullable
@@ -123,6 +119,10 @@ class _$UserDetailsCopyWithImpl<$Res, $Val extends UserDetails>
           ? _value.ionConnectRelays
           : ionConnectRelays // ignore: cast_nullable_to_non_nullable
               as List<IonConnectRelayInfo>?,
+      ionConnectIndexerRelays: freezed == ionConnectIndexerRelays
+          ? _value.ionConnectIndexerRelays
+          : ionConnectIndexerRelays // ignore: cast_nullable_to_non_nullable
+              as List<String>?,
     ) as $Val);
   }
 }
@@ -136,15 +136,15 @@ abstract class _$$UserDetailsImplCopyWith<$Res>
   @override
   @useResult
   $Res call(
-      {List<String> ionConnectIndexerRelays,
-      String masterPubKey,
+      {String masterPubKey,
       String? name,
       String? userId,
       String? username,
       @JsonKey(name: '2faOptions') List<String>? twoFaOptions,
       List<String>? email,
       List<String>? phoneNumber,
-      List<IonConnectRelayInfo>? ionConnectRelays});
+      List<IonConnectRelayInfo>? ionConnectRelays,
+      List<String>? ionConnectIndexerRelays});
 }
 
 /// @nodoc
@@ -160,7 +160,6 @@ class __$$UserDetailsImplCopyWithImpl<$Res>
   @pragma('vm:prefer-inline')
   @override
   $Res call({
-    Object? ionConnectIndexerRelays = null,
     Object? masterPubKey = null,
     Object? name = freezed,
     Object? userId = freezed,
@@ -169,12 +168,9 @@ class __$$UserDetailsImplCopyWithImpl<$Res>
     Object? email = freezed,
     Object? phoneNumber = freezed,
     Object? ionConnectRelays = freezed,
+    Object? ionConnectIndexerRelays = freezed,
   }) {
     return _then(_$UserDetailsImpl(
-      ionConnectIndexerRelays: null == ionConnectIndexerRelays
-          ? _value._ionConnectIndexerRelays
-          : ionConnectIndexerRelays // ignore: cast_nullable_to_non_nullable
-              as List<String>,
       masterPubKey: null == masterPubKey
           ? _value.masterPubKey
           : masterPubKey // ignore: cast_nullable_to_non_nullable
@@ -207,6 +203,10 @@ class __$$UserDetailsImplCopyWithImpl<$Res>
           ? _value._ionConnectRelays
           : ionConnectRelays // ignore: cast_nullable_to_non_nullable
               as List<IonConnectRelayInfo>?,
+      ionConnectIndexerRelays: freezed == ionConnectIndexerRelays
+          ? _value._ionConnectIndexerRelays
+          : ionConnectIndexerRelays // ignore: cast_nullable_to_non_nullable
+              as List<String>?,
     ));
   }
 }
@@ -215,32 +215,23 @@ class __$$UserDetailsImplCopyWithImpl<$Res>
 @JsonSerializable()
 class _$UserDetailsImpl implements _UserDetails {
   const _$UserDetailsImpl(
-      {required final List<String> ionConnectIndexerRelays,
-      required this.masterPubKey,
+      {required this.masterPubKey,
       this.name,
       this.userId,
       this.username,
       @JsonKey(name: '2faOptions') final List<String>? twoFaOptions,
       final List<String>? email,
       final List<String>? phoneNumber,
-      final List<IonConnectRelayInfo>? ionConnectRelays})
-      : _ionConnectIndexerRelays = ionConnectIndexerRelays,
-        _twoFaOptions = twoFaOptions,
+      final List<IonConnectRelayInfo>? ionConnectRelays,
+      final List<String>? ionConnectIndexerRelays})
+      : _twoFaOptions = twoFaOptions,
         _email = email,
         _phoneNumber = phoneNumber,
-        _ionConnectRelays = ionConnectRelays;
+        _ionConnectRelays = ionConnectRelays,
+        _ionConnectIndexerRelays = ionConnectIndexerRelays;
 
   factory _$UserDetailsImpl.fromJson(Map<String, dynamic> json) =>
       _$$UserDetailsImplFromJson(json);
-
-  final List<String> _ionConnectIndexerRelays;
-  @override
-  List<String> get ionConnectIndexerRelays {
-    if (_ionConnectIndexerRelays is EqualUnmodifiableListView)
-      return _ionConnectIndexerRelays;
-    // ignore: implicit_dynamic_type
-    return EqualUnmodifiableListView(_ionConnectIndexerRelays);
-  }
 
   @override
   final String masterPubKey;
@@ -292,9 +283,20 @@ class _$UserDetailsImpl implements _UserDetails {
     return EqualUnmodifiableListView(value);
   }
 
+  final List<String>? _ionConnectIndexerRelays;
+  @override
+  List<String>? get ionConnectIndexerRelays {
+    final value = _ionConnectIndexerRelays;
+    if (value == null) return null;
+    if (_ionConnectIndexerRelays is EqualUnmodifiableListView)
+      return _ionConnectIndexerRelays;
+    // ignore: implicit_dynamic_type
+    return EqualUnmodifiableListView(value);
+  }
+
   @override
   String toString() {
-    return 'UserDetails(ionConnectIndexerRelays: $ionConnectIndexerRelays, masterPubKey: $masterPubKey, name: $name, userId: $userId, username: $username, twoFaOptions: $twoFaOptions, email: $email, phoneNumber: $phoneNumber, ionConnectRelays: $ionConnectRelays)';
+    return 'UserDetails(masterPubKey: $masterPubKey, name: $name, userId: $userId, username: $username, twoFaOptions: $twoFaOptions, email: $email, phoneNumber: $phoneNumber, ionConnectRelays: $ionConnectRelays, ionConnectIndexerRelays: $ionConnectIndexerRelays)';
   }
 
   @override
@@ -302,8 +304,6 @@ class _$UserDetailsImpl implements _UserDetails {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$UserDetailsImpl &&
-            const DeepCollectionEquality().equals(
-                other._ionConnectIndexerRelays, _ionConnectIndexerRelays) &&
             (identical(other.masterPubKey, masterPubKey) ||
                 other.masterPubKey == masterPubKey) &&
             (identical(other.name, name) || other.name == name) &&
@@ -316,14 +316,15 @@ class _$UserDetailsImpl implements _UserDetails {
             const DeepCollectionEquality()
                 .equals(other._phoneNumber, _phoneNumber) &&
             const DeepCollectionEquality()
-                .equals(other._ionConnectRelays, _ionConnectRelays));
+                .equals(other._ionConnectRelays, _ionConnectRelays) &&
+            const DeepCollectionEquality().equals(
+                other._ionConnectIndexerRelays, _ionConnectIndexerRelays));
   }
 
   @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   int get hashCode => Object.hash(
       runtimeType,
-      const DeepCollectionEquality().hash(_ionConnectIndexerRelays),
       masterPubKey,
       name,
       userId,
@@ -331,7 +332,8 @@ class _$UserDetailsImpl implements _UserDetails {
       const DeepCollectionEquality().hash(_twoFaOptions),
       const DeepCollectionEquality().hash(_email),
       const DeepCollectionEquality().hash(_phoneNumber),
-      const DeepCollectionEquality().hash(_ionConnectRelays));
+      const DeepCollectionEquality().hash(_ionConnectRelays),
+      const DeepCollectionEquality().hash(_ionConnectIndexerRelays));
 
   /// Create a copy of UserDetails
   /// with the given fields replaced by the non-null parameter values.
@@ -351,21 +353,19 @@ class _$UserDetailsImpl implements _UserDetails {
 
 abstract class _UserDetails implements UserDetails {
   const factory _UserDetails(
-      {required final List<String> ionConnectIndexerRelays,
-      required final String masterPubKey,
+      {required final String masterPubKey,
       final String? name,
       final String? userId,
       final String? username,
       @JsonKey(name: '2faOptions') final List<String>? twoFaOptions,
       final List<String>? email,
       final List<String>? phoneNumber,
-      final List<IonConnectRelayInfo>? ionConnectRelays}) = _$UserDetailsImpl;
+      final List<IonConnectRelayInfo>? ionConnectRelays,
+      final List<String>? ionConnectIndexerRelays}) = _$UserDetailsImpl;
 
   factory _UserDetails.fromJson(Map<String, dynamic> json) =
       _$UserDetailsImpl.fromJson;
 
-  @override
-  List<String> get ionConnectIndexerRelays;
   @override
   String get masterPubKey;
   @override
@@ -383,6 +383,8 @@ abstract class _UserDetails implements UserDetails {
   List<String>? get phoneNumber;
   @override
   List<IonConnectRelayInfo>? get ionConnectRelays;
+  @override
+  List<String>? get ionConnectIndexerRelays;
 
   /// Create a copy of UserDetails
   /// with the given fields replaced by the non-null parameter values.
