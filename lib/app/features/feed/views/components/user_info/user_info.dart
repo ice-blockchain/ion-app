@@ -21,6 +21,7 @@ class UserInfo extends HookConsumerWidget {
     this.accentTheme = false,
     this.timeFormat = TimestampFormat.short,
     this.shadow,
+    this.padding,
     super.key,
   });
 
@@ -31,6 +32,7 @@ class UserInfo extends HookConsumerWidget {
   final int? createdAt;
   final TimestampFormat timeFormat;
   final BoxShadow? shadow;
+  final EdgeInsetsDirectional? padding;
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final userMetadata = ref.watch(userMetadataProvider(pubkey));
@@ -41,51 +43,54 @@ class UserInfo extends HookConsumerWidget {
         if (userMetadataEntity == null) {
           return const SizedBox.shrink();
         }
-        return BadgesUserListItem(
-          title: GestureDetector(
-            onTap: openProfile,
-            child: Text(
-              userMetadataEntity.data.displayName,
-              style: textStyle,
-            ),
-          ),
-          subtitle: Row(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              GestureDetector(
-                onTap: openProfile,
-                child: Text(
-                  prefixUsername(username: userMetadataEntity.data.name, context: context),
-                  style: textStyle,
-                ),
+        return GestureDetector(
+          onTap: openProfile,
+          behavior: HitTestBehavior.opaque,
+          child: Padding(
+            padding: padding ?? EdgeInsets.zero,
+            child: BadgesUserListItem(
+              title: Text(
+                userMetadataEntity.data.displayName,
+                style: textStyle,
               ),
-              if (createdAt != null) ...[
-                SizedBox(width: 4.0.s),
-                Text('•', style: textStyle),
-                SizedBox(width: 4.0.s),
-                TimeAgo(
-                  time: createdAt!.toDateTime,
-                  timeFormat: timeFormat,
-                  style: textStyle,
-                ),
-              ],
-            ],
-          ),
-          pubkey: pubkey,
-          leading: GestureDetector(
-            onTap: openProfile,
-            child: IonConnectAvatar(
-              size: ListItem.defaultAvatarSize,
+              subtitle: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Text(
+                    prefixUsername(
+                      username: userMetadataEntity.data.name,
+                      context: context,
+                    ),
+                    style: textStyle,
+                  ),
+                  if (createdAt != null) ...[
+                    SizedBox(width: 4.0.s),
+                    Text('•', style: textStyle),
+                    SizedBox(width: 4.0.s),
+                    TimeAgo(
+                      time: createdAt!.toDateTime,
+                      timeFormat: timeFormat,
+                      style: textStyle,
+                    ),
+                  ],
+                ],
+              ),
               pubkey: pubkey,
-              shadow: shadow,
+              leading: IonConnectAvatar(
+                size: ListItem.defaultAvatarSize,
+                pubkey: pubkey,
+                shadow: shadow,
+              ),
+              trailing: trailing,
+              trailingPadding: EdgeInsetsDirectional.only(start: 34.0.s),
             ),
           ),
-          trailing: trailing,
-          trailingPadding: EdgeInsetsDirectional.only(start: 34.0.s),
         );
       },
       orElse: () => Skeleton(
-        child: ListItemUserShape(color: accentTheme ? Colors.white.withValues(alpha: 0.1) : null),
+        child: ListItemUserShape(
+          color: accentTheme ? Colors.white.withValues(alpha: 0.1) : null,
+        ),
       ),
     );
   }

@@ -89,6 +89,8 @@ class Post extends ConsumerWidget {
 
     final parentEventReference = _getParentEventReference(entity: entity);
 
+    final isParentShown = displayParent && parentEventReference != null;
+
     final content = Column(
       children: [
         SizedBox(height: headerOffset ?? 10.0.s),
@@ -117,31 +119,39 @@ class Post extends ConsumerWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        SizedBox(height: topOffset ?? 12.0.s),
-        if (displayParent && parentEventReference != null)
+        if (isParentShown) ...[
+          SizedBox(height: topOffset ?? 12.0.s),
           _ParentEvent(
             accentTheme: accentTheme,
             eventReference: parentEventReference,
             header: accentTheme && header != null ? header : null,
           ),
-        ScreenSideOffset.small(
-          child: header ??
-              UserInfo(
-                pubkey: eventReference.masterPubkey,
-                createdAt: entity is ModifiablePostEntity
-                    ? entity.data.publishedAt.value
-                    : entity.createdAt,
-                timeFormat: timeFormat,
-                textStyle: accentTheme
-                    ? context.theme.appTextThemes.caption.copyWith(
-                        color: context.theme.appColors.onPrimaryAccent,
-                      )
-                    : null,
-                trailing: isOwnedByCurrentUser
-                    ? OwnEntityMenu(eventReference: eventReference, onDelete: onDelete)
-                    : UserInfoMenu(eventReference: eventReference),
+        ],
+        header ??
+            UserInfo(
+              pubkey: eventReference.masterPubkey,
+              createdAt:
+                  entity is ModifiablePostEntity ? entity.data.publishedAt.value : entity.createdAt,
+              timeFormat: timeFormat,
+              textStyle: accentTheme
+                  ? context.theme.appTextThemes.caption.copyWith(
+                      color: context.theme.appColors.onPrimaryAccent,
+                    )
+                  : null,
+              trailing: isOwnedByCurrentUser
+                  ? OwnEntityMenu(eventReference: eventReference, onDelete: onDelete)
+                  : UserInfoMenu(
+                      eventReference: eventReference,
+                      padding: EdgeInsetsGeometry.symmetric(
+                        horizontal: ScreenSideOffset.defaultSmallMargin,
+                        vertical: 5.0.s,
+                      ),
+                    ),
+              padding: EdgeInsetsDirectional.only(
+                start: ScreenSideOffset.defaultSmallMargin,
+                top: isParentShown ? 0 : (topOffset ?? 12.0.s),
               ),
-        ),
+            ),
         if (contentWrapper != null) contentWrapper!(content) else content,
       ],
     );

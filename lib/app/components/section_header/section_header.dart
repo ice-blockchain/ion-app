@@ -26,35 +26,38 @@ class SectionHeader extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ScreenSideOffset.small(
-      only: ScreenOffsetSide.left,
-      child: SizedBox(
-        height: 46.0.s,
-        child: Row(
-          children: [
-            if (leadingIcon != null)
-              Padding(
-                padding: EdgeInsetsDirectional.only(end: leadingIconOffset),
-                child: leadingIcon,
-              ),
-            Expanded(
-              child: Text(
-                title,
-                style: context.theme.appTextThemes.subtitle
-                    .copyWith(color: context.theme.appColors.primaryText),
-              ),
-            ),
-            if (onPress != null)
-              Padding(
-                padding: EdgeInsetsDirectional.only(
-                  end: ScreenSideOffset.defaultSmallMargin - SectionHeaderButton.hitSlop,
+    return GestureDetector(
+      behavior: HitTestBehavior.opaque,
+      onTap: onPress,
+      child: ScreenSideOffset.small(
+        only: ScreenOffsetSide.left,
+        child: SizedBox(
+          height: 46.0.s,
+          child: Row(
+            children: [
+              if (leadingIcon != null)
+                Padding(
+                  padding: EdgeInsetsDirectional.only(end: leadingIconOffset),
+                  child: leadingIcon,
                 ),
-                child: SectionHeaderButton(
-                  onPress!,
-                  iconSize: trailingIconSize,
+              Expanded(
+                child: Text(
+                  title,
+                  style: context.theme.appTextThemes.subtitle
+                      .copyWith(color: context.theme.appColors.primaryText),
                 ),
               ),
-          ],
+              if (onPress != null)
+                Padding(
+                  padding: EdgeInsetsDirectional.only(
+                    end: ScreenSideOffset.defaultSmallMargin - SectionHeaderButton.hitSlop,
+                  ),
+                  child: SectionHeaderButton(
+                    iconSize: trailingIconSize,
+                  ),
+                ),
+            ],
+          ),
         ),
       ),
     );
