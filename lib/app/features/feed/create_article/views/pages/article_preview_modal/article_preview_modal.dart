@@ -147,8 +147,7 @@ class ArticlePreviewModal extends HookConsumerWidget {
                       }
 
                       if (!ref.read(createArticleProvider(type)).hasError && ref.context.mounted) {
-                        final state = GoRouterState.of(ref.context);
-                        ref.context.go(state.currentTab.baseRouteLocation);
+                        context.pop();
                       }
                     },
                     label: Text(context.i18n.button_publish),

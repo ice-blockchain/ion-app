@@ -222,6 +222,7 @@ final transitionObserver = NavigationSheetTransitionObserver();
           path: '/profile',
           routes: [
             ...ProfileRoutes.routes,
+            TypedGoRoute<ProfileMainModalRoute>(path: 'main-modal'),
           ],
         ),
       ],
@@ -314,6 +315,14 @@ class IntroRoute extends BaseRouteData with _$IntroRoute {
 
 class FeedMainModalRoute extends BaseRouteData with _$FeedMainModalRoute {
   FeedMainModalRoute()
+      : super(
+          child: const FeedMainModalPage(),
+          type: IceRouteType.mainModalSheet,
+        );
+}
+
+class ProfileMainModalRoute extends BaseRouteData with _$ProfileMainModalRoute {
+  ProfileMainModalRoute()
       : super(
           child: const FeedMainModalPage(),
           type: IceRouteType.mainModalSheet,

@@ -2,6 +2,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
+import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/components/progress_bar/centered_loading_indicator.dart';
 import 'package:ion/app/components/screen_offset/screen_bottom_offset.dart';
@@ -23,7 +24,6 @@ import 'package:ion/app/features/feed/stories/views/components/story_preview/med
 import 'package:ion/app/features/feed/stories/views/components/story_preview/media/story_video_preview.dart';
 import 'package:ion/app/features/ion_connect/model/event_reference.f.dart';
 import 'package:ion/app/features/ion_connect/providers/ion_connect_cache.r.dart';
-import 'package:ion/app/router/app_routes.gr.dart';
 import 'package:ion/app/router/components/navigation_app_bar/navigation_app_bar.dart';
 import 'package:ion/app/services/compressors/image_compressor.r.dart';
 import 'package:ion/app/services/media_service/media_service.m.dart';
@@ -54,7 +54,7 @@ class StoryPreviewPage extends HookConsumerWidget {
         createPostNotifierProvider(CreatePostOption.story),
         (_) {
           if (context.mounted) {
-            FeedRoute().go(context);
+            context.pop(true);
           }
         },
       );
