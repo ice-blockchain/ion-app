@@ -18,9 +18,13 @@ class CameraPreviewWidget extends StatelessWidget {
     return Stack(
       fit: StackFit.expand,
       children: [
-        AspectRatio(
-          aspectRatio: controller.value.aspectRatio,
-          child: CameraPreview(controller),
+        FittedBox(
+          fit: BoxFit.cover,
+          child: SizedBox(
+            width: controller.value.previewSize?.height,
+            height: controller.value.previewSize?.width,
+            child: CameraPreview(controller),
+          ),
         ),
         Center(
           child: Assets.svg.iconCameraOpen.icon(
