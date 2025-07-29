@@ -99,11 +99,16 @@ Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
     return;
   }
 
+  final avatar = parsedData?.avatar;
+  final media = parsedData?.media;
+
   await notificationsService.showNotification(
     id: generateUuid().hashCode,
     title: title,
     body: body,
     payload: jsonEncode(message.data),
+    iconFilePath: avatar,
+    attachmentFilePath: media,
   );
 }
 
