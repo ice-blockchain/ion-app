@@ -4,6 +4,7 @@ import 'package:dio/dio.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/features/core/providers/dio_provider.r.dart';
 import 'package:ion/app/features/wallets/model/nft_data.f.dart';
+import 'package:ion/app/features/wallets/model/nft_identifier.f.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'nfts_repository.r.g.dart';

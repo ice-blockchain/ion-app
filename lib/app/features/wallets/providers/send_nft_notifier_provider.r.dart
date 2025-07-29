@@ -1,6 +1,7 @@
 // SPDX-License-Identifier: ice License 1.0
 
 import 'package:ion/app/exceptions/exceptions.dart';
+import 'package:ion/app/features/wallets/data/repository/transactions_repository.m.dart';
 import 'package:ion/app/features/wallets/domain/coins/coins_service.r.dart';
 import 'package:ion/app/features/wallets/domain/nfts/send_nft_use_case.r.dart';
 import 'package:ion/app/features/wallets/model/crypto_asset_to_send_data.f.dart';
@@ -61,6 +62,7 @@ class SendNftNotifier extends _$SendNftNotifier {
       final nativeCoin = await ref
           .read(coinsServiceProvider.future)
           .then((service) => service.getNativeCoin(nft.network));
+      final asset = CryptoAssetToSendData.nft(nft: nft);
 
       final details = TransactionDetails(
         id: result.id,
@@ -72,7 +74,7 @@ class SendNftNotifier extends _$SendNftNotifier {
         dateRequested: result.dateRequested,
         dateConfirmed: result.dateConfirmed,
         dateBroadcasted: result.dateBroadcasted,
-        assetData: CryptoAssetToSendData.nft(nft: nft),
+        assetData: asset,
         walletViewName: form.walletView!.name,
         senderAddress: form.senderWallet!.address,
         receiverAddress: form.receiverAddress,
@@ -80,6 +82,10 @@ class SendNftNotifier extends _$SendNftNotifier {
         type: TransactionType.send,
         networkFeeOption: form.selectedNetworkFeeOption,
       );
+
+      await ref
+          .read(transactionsRepositoryProvider.future)
+          .then((repo) => repo.saveTransactionDetails(details));
 
       return details;
     });
