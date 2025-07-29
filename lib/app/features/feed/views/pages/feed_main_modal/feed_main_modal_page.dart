@@ -76,8 +76,12 @@ class _SharePostButton extends HookConsumerWidget {
       item: type,
       onTap: () async {
         await CreatePostRoute().push<void>(context);
-        if (context.mounted) {
-          context.pop();
+        if (context.mounted && context.canPop()) {
+          WidgetsBinding.instance.addPostFrameCallback((_) {
+            if (context.mounted) {
+              context.pop();
+            }
+          });
         }
       },
       index: index,
